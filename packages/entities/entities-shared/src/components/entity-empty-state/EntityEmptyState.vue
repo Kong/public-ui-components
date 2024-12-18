@@ -33,7 +33,7 @@
       </div>
 
       <div
-        v-if="pricing"
+        v-if="pricing || $slots.pricing"
         class="entity-empty-state-pricing"
       >
         <p>
@@ -51,26 +51,33 @@
       <slot name="message" />
     </div>
 
-    <div class="entity-empty-state-action">
-      <KButton
-        v-if="actionButtonText || $slots.action"
-        appearance="primary"
-        size="large"
-        @click="$emit('create-button-clicked')"
-      >
-        <AddIcon />
-        {{ actionButtonText }}
-      </KButton>
+    <div
+      v-if="(canCreate && actionButtonText) || learnMoreLink || $slots.actions"
+      class="entity-empty-state-action"
+    >
+      <slot name="actions">
+        <KButton
+          v-if="canCreate && actionButtonText"
+          appearance="primary"
+          data-testid="entity-create-button"
+          size="large"
+          @click="$emit('click:create')"
+        >
+          <AddIcon />
+          {{ actionButtonText }}
+        </KButton>
 
-      <KButton
-        v-if="learnMoreLink"
-        appearance="secondary"
-        size="large"
-        @click="$emit('learning-hub-button-clicked')"
-      >
-        <BookIcon decorative />
-        {{ t('emptyState.learnMore') }}
-      </KButton>
+        <KButton
+          v-if="learnMoreLink"
+          appearance="secondary"
+          data-testid="entity-learn-more-button"
+          size="large"
+          @click="$emit('click:learn-more')"
+        >
+          <BookIcon decorative />
+          {{ t('emptyState.learnMore') }}
+        </KButton>
+      </slot>
     </div>
 
     <div class="entity-empty-state-card-container">
@@ -118,8 +125,14 @@ defineProps({
     required: true,
   },
   pricing: {
-    type: Boolean,
-    default: false,
+    type: String,
+    default: '',
+  },
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new entity */
+  canCreate: {
+    type: Function as PropType<() => boolean | Promise<boolean>>,
+    required: false,
+    default: async () => true,
   },
   actionButtonText: {
     type: String,
@@ -135,7 +148,7 @@ defineProps({
   },
 })
 
-defineEmits(['create-button-clicked', 'learning-hub-button-clicked'])
+defineEmits(['click:create', 'click:learn-more'])
 
 const { i18n: { t } } = composables.useI18n()
 </script>

@@ -38,10 +38,10 @@ Description for the empty state.
 
 #### `pricing`
 
-- type: `Boolean`
-- default: false
+- type: `String`
+- default: `''`
 
-If provided, will display pricing information for transparency.
+If provided, will display pricing information.
 
 #### `actionButtonText`
 
@@ -53,7 +53,7 @@ If provided, a CTA button will show with text and icon typically, for creating a
 #### `learnMoreLink`
 
 - type: `Boolean`
-- default: false
+- default: `false`
 
 If provided, will show the Learning Hub button for the entity.
 
