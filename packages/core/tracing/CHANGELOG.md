@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.4.6...@kong-ui-public/tracing@0.5.0) (2024-12-18)
+
+
+### Features
+
+* **tracing:** allow zooming in trace viewer ([#1855](https://github.com/Kong/public-ui-components/issues/1855)) ([cb12e7c](https://github.com/Kong/public-ui-components/commit/cb12e7c3d1be74466b83f39b3d4884e327281578))
+
+
+
+
+
 ## [0.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.4.5...@kong-ui-public/tracing@0.4.6) (2024-12-17)
 
 **Note:** Version bump only for package @kong-ui-public/tracing
