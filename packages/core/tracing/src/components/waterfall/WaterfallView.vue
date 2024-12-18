@@ -17,9 +17,7 @@
       <div class="waterfall-row">
         <div />
         <div class="minimap-wrapper">
-          <div
-            class="minimap"
-          />
+          <div class="minimap" />
         </div>
       </div>
 
@@ -145,9 +143,10 @@ const getRowsAreaRect = () => rowsAreaRef.value?.getBoundingClientRect()
 const getSBMRect = () => spanBarMeasurementRef.value?.getBoundingClientRect()
 
 const handleRowsAreaMove = (e: MouseEvent) => {
-  const rowsAreaRect = getRowsAreaRect()!
-  const sbmRect = getSBMRect()!
-  if (sbmRect.x < e.x && e.x <= sbmRect.x + sbmRect.width) {
+  const rowsAreaRect = getRowsAreaRect()
+  const sbmRect = getSBMRect()
+
+  if (rowsAreaRect && sbmRect && sbmRect.x < e.x && e.x <= sbmRect.x + sbmRect.width) {
     rowsAreaGuideX.value = e.x - (rowsAreaRect.x ?? 0)
   } else {
     rowsAreaGuideX.value = undefined
@@ -169,11 +168,12 @@ watch(() => config.selectedSpan, (span) => {
 const handleWheel = (e: WheelEvent) => {
   e.preventDefault()
 
-  const sbmRect = getSBMRect()!
-  if (e.x < sbmRect.x) {
-    if (rootRef.value) {
-      rootRef.value.scrollBy(0, e.deltaY)
-    }
+  const sbmRect = getSBMRect()
+  if (!sbmRect) {
+    // in case
+    return
+  } else if (e.x < sbmRect.x) {
+    rootRef.value?.scrollBy(0, e.deltaY)
     return
   }
 
@@ -287,7 +287,7 @@ const handleWheel = (e: WheelEvent) => {
   }
 
   .waterfall-rows {
-    cursor: v-bind('rowsAreaGuideX !== undefined ? "crosshair" : "crosshair"');
+    cursor: crosshair;
     font-family: $kui-font-family-code;
     overflow: hidden;
     position: relative;
