@@ -9,16 +9,14 @@
       </div>
 
       <div
-        v-if="title || $slots.title || $slots['title-after']"
+        v-if="title || $slots.title"
         class="entity-empty-state-title"
       >
-        <slot name="title" />
-        <div :title="title">
-          {{ title }}
-        </div>
-        <span v-if="$slots['title-after']">
-          <slot name="title-after" />
-        </span>
+        <h1>
+          <slot name="title">
+            {{ title }}
+          </slot>
+        </h1>
       </div>
 
       <div
@@ -52,12 +50,12 @@
     </div>
 
     <div
-      v-if="(canCreate && actionButtonText) || learnMoreLink || $slots.actions"
+      v-if="showCreateButton || learnMore || $slots.actions"
       class="entity-empty-state-action"
     >
       <slot name="actions">
         <KButton
-          v-if="canCreate && actionButtonText"
+          v-if="showCreateButton"
           appearance="primary"
           data-testid="entity-create-button"
           size="large"
@@ -68,7 +66,7 @@
         </KButton>
 
         <KButton
-          v-if="learnMoreLink"
+          v-if="learnMore"
           appearance="secondary"
           data-testid="entity-learn-more-button"
           size="large"
@@ -109,13 +107,13 @@
 </template>
 
 <script lang="ts" setup>
-import { type PropType } from 'vue'
+import { type PropType, computed, ref, onBeforeMount } from 'vue'
 import { KButton } from '@kong/kongponents'
 import { BookIcon, AddIcon } from '@kong/icons'
 import composables from '../../composables'
 import type { EmptyStateFeature } from 'src/types/entity-empty-state'
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true,
@@ -138,7 +136,7 @@ defineProps({
     type: String,
     default: '',
   },
-  learnMoreLink: {
+  learnMore: {
     type: Boolean,
     default: false,
   },
@@ -148,9 +146,20 @@ defineProps({
   },
 })
 
-defineEmits(['click:create', 'click:learn-more'])
+defineEmits<{
+  (e: 'click:create'): void,
+  (e: 'click:learn-more'): void,
+}>()
 
 const { i18n: { t } } = composables.useI18n()
+
+const useCanCreate = ref(false)
+const showCreateButton = computed((): boolean => useCanCreate.value && !!props.actionButtonText)
+
+onBeforeMount(async () => {
+  // Evaluate if the user has create permissions
+  useCanCreate.value = await props.canCreate()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -177,13 +186,14 @@ const { i18n: { t } } = composables.useI18n()
     text-align: center;
     width: 100%;
 
-    .entity-empty-state-title {
+    .entity-empty-state-title h1 {
       color: $kui-color-text;
       display: flex;
       font-size: $kui-font-size-70;
       font-weight: $kui-font-weight-bold;
       gap: $kui-space-40;
       line-height: $kui-line-height-60;
+      margin: $kui-space-0;
     }
   }
 
