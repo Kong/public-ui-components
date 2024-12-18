@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.5.2...@kong-ui-public/tracing@0.5.3) (2024-12-18)
+
+
+### Bug Fixes
+
+* **tracing:** incorrect span bar position and undefined access error ([#1859](https://github.com/Kong/public-ui-components/issues/1859)) ([6bc2d67](https://github.com/Kong/public-ui-components/commit/6bc2d67717389070d0a0cfafd9edcf6b6f329406))
+
+
+
+
+
 ## [0.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.5.1...@kong-ui-public/tracing@0.5.2) (2024-12-18)
 
 **Note:** Version bump only for package @kong-ui-public/tracing
