@@ -179,9 +179,14 @@ export default function useExploreResultToTimeDataset(
           }
         })
 
-        // Display largest dataset on top
-        // sort by total, descending
-        datasets.sort((a, b) => (Number(a.total) < Number(b.total) ? -1 : 1))
+        if (dimension === 'status_code' || dimension === 'status_code_grouped') {
+          // Sort by dimension labels.
+          datasets.sort((a, b) => (a.label ?? '') < (b.label ?? '') ? -1 : 1)
+        } else {
+          // Display largest dataset on top
+          // sort by total, descending
+          datasets.sort((a, b) => (Number(a.total) < Number(b.total) ? -1 : 1))
+        }
 
         // Draw threshold lines, if any
         if (deps.threshold) {

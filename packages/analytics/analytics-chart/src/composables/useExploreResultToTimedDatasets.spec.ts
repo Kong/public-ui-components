@@ -334,6 +334,68 @@ describe('useVitalsExploreDatasets', () => {
     expect(result.value.datasets[0].label).toEqual('metric2')
   })
 
+  it('special sorting for status code', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: '200',
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: '300',
+            metric1: 1,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: '200',
+            metric1: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            status_code: '300',
+            metric1: 1,
+          },
+        } as GroupByResult,
+      ],
+      meta: {
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: ['metric1'] as any as ExploreAggregations[],
+        display: {
+          status_code: {
+            '200': {
+              name: '200',
+              deleted: false,
+            },
+            '300': {
+              name: '300',
+              deleted: false,
+            },
+          },
+        },
+        query_id: '',
+        metric_units: { metric1: 'units' } as MetricUnit,
+      },
+    }))
+    const result = useExploreResultToTimeDataset(
+      { fill: false },
+      exploreResult,
+    )
+
+    // 200 should come first, even though it has higher counts.
+    expect(result.value.datasets[0].label).toEqual('200')
+  })
+
   it('handle no dimension query', () => {
     const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
       data: [
