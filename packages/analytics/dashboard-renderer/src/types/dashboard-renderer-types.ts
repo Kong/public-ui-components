@@ -349,7 +349,10 @@ const filtersFn = <T extends readonly string[]>(filterableDimensions: T) => ({
             enum: exploreFilterTypesV2,
           },
           value: {
-            type: ['string', 'number', 'null'],
+            type: 'array',
+            items: {
+              type: ['string', 'number', 'null'],
+            },
           },
         },
         required: [
