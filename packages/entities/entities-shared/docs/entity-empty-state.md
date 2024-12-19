@@ -6,6 +6,8 @@ An empty state component that displays title, description, and optionally pricin
 - [Usage](#usage)
   - [Install](#install)
   - [Props](#props)
+  - [Events](#events)
+  - [Slots](#slots)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
 
@@ -25,7 +27,7 @@ An empty state component that displays title, description, and optionally pricin
 #### `title`
 
 - type: `String`
-- required: `true`
+- default: `''`
 
 Title for the empty state.
 
@@ -38,24 +40,31 @@ Description for the empty state.
 
 #### `pricing`
 
-- type: `Boolean`
-- default: false
+- type: `String`
+- default: `''`
 
-If provided, will display pricing information for transparency.
+If provided, will display pricing information.
 
 #### `actionButtonText`
 
 - type: `String`
+- default: `'async () => true'`
+
+If provided, a CTA button for creating the entity.
+
+#### `canCreate`
+
+- type: `() => boolean | Promise<boolean>`
 - default: ``
 
-If provided, a CTA button will show with text and icon typically, for creating an entity.
+A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a new entity
 
-#### `learnMoreLink`
+#### `learnMore`
 
 - type: `Boolean`
-- default: false
+- default: `false`
 
-If provided, will show the Learning Hub button for the entity.
+If provided, will show the Learn More button for the entity.
 
 #### `features`
 
@@ -63,6 +72,42 @@ If provided, will show the Learning Hub button for the entity.
 - default: `[]`
 
 If provided, will display card for each feature of that entity, along with an icon slot, a title, and a short description.
+
+### Events
+
+#### click:create
+
+A `@click:create` event is emitted when the CTA button is clicked.
+
+#### click:learn-more
+
+A `@click:learn-more` event is emitted when the Learn More button is clicked.
+
+### Slots
+
+#### image
+
+Content to be displayed at the top of the component, usually an icon or image.
+
+#### title
+
+Content to be displayed instead of the `title` property, displayed below the image slot.
+
+#### default
+
+Content to be displayed instead of the `description` property, displayed below the `title`.
+
+#### pricing
+
+Content to be displayed instead of the `pricing` property, displayed below the `description`/default slot content.
+
+#### message
+
+Content to be displayed just above the action buttons.
+
+#### actions
+
+Content to be displayed instead of the default CTA and Learn More buttons, at the bottom of the component.
 
 ### Usage example
 
