@@ -1,14 +1,8 @@
 <template>
   <slot
-    v-if="!loading && passThrough"
     :has-analytics="analytics"
     :has-percentiles="percentiles"
-  />
-  <slot
-    v-else-if="!loading"
-    :has-analytics="analytics"
-    :has-percentiles="percentiles"
-    name="fallback"
+    :name="!loading && passThrough ? '' : 'fallback'"
   />
 </template>
 <script setup lang="ts">
