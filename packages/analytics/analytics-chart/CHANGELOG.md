@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.8.1...@kong-ui-public/analytics-chart@5.8.2) (2024-12-19)
+
+
+### Bug Fixes
+
+* **analytics-chart:** sorting for status codes [MA-3521] ([#1862](https://github.com/Kong/public-ui-components/issues/1862)) ([f087d81](https://github.com/Kong/public-ui-components/commit/f087d814efe1c19c4d9229d941a785bd484b6f7f))
+
+
+
+
+
 ## [5.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.8.0...@kong-ui-public/analytics-chart@5.8.1) (2024-12-17)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
