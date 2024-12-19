@@ -2,6 +2,7 @@ import {
   type AnalyticsBridge,
   type ExploreAggregations,
   type ExploreFilter,
+  type ExploreFilterAll,
   type FilterableExploreDimensions,
   type QueryDatasource, stripUnknownFilters,
   type Timeframe,
@@ -30,7 +31,7 @@ interface FetcherOptions {
   datasource: Ref<QueryDatasource>
   dimension?: FilterableExploreDimensions
   dimensionFilterValue?: string
-  additionalFilter: Ref<ExploreFilter[] | undefined>
+  additionalFilter: Ref<ExploreFilterAll[] | undefined>
   queryReady: Ref<boolean>
   timeframe: Ref<Timeframe>
   tz: Ref<string>

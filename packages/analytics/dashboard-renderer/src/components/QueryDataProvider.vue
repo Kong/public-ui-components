@@ -101,7 +101,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
       datasource = 'basic'
     }
 
-    const mergedFilters = deriveFilters(datasource, props.query.filters, props.context.filters)
+    const mergedFilters = deriveFilters(datasource, props.query.filters as FilterTypeMap[typeof datasource][], props.context.filters)
 
     // TODO: similar to other places, consider adding a type guard to ensure the query
     // matches the datasource.  Currently, this block effectively pretends all queries

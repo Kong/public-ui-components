@@ -15,6 +15,7 @@ import {
   queryableBasicExploreDimensions,
   queryableExploreDimensions,
   relativeTimeRangeValuesV4,
+  requestFilterTypeEmptyV2,
 } from '@kong-ui-public/analytics-utilities'
 
 export interface DashboardRendererContext {
@@ -306,32 +307,78 @@ const dimensionsFn = <T extends readonly string[]>(dimensions: T) => ({
 
 const filtersFn = <T extends readonly string[]>(filterableDimensions: T) => ({
   type: 'array',
-  description: 'A list of filters to apply to the query.',
+  description: 'A list of filters to apply to the query',
   items: {
-    type: 'object',
-    description: 'A filter that specifies which data to include in the query',
-    properties: {
-      dimension: {
-        type: 'string',
-        enum: filterableDimensions,
-      },
-      type: {
-        type: 'string',
-        enum: exploreFilterTypesV2,
-      },
-      values: {
-        type: 'array',
-        items: {
-          type: ['string', 'number', 'null'],
+    oneOf: [
+      {
+        type: 'object',
+        description: 'A filter that specifies which data to include in the query',
+        properties: {
+          dimension: {
+            type: 'string',
+            enum: filterableDimensions,
+          },
+          type: {
+            type: 'string',
+            enum: exploreFilterTypesV2,
+          },
+          values: {
+            type: 'array',
+            items: {
+              type: ['string', 'number', 'null'],
+            },
+          },
         },
+        required: [
+          'dimension',
+          'type',
+          'values',
+        ],
+        additionalProperties: false,
       },
-    },
-    required: [
-      'dimension',
-      'type',
-      'values',
+      {
+        type: 'object',
+        description: 'In filter',
+        properties: {
+          field: {
+            type: 'string',
+            enum: filterableDimensions,
+          },
+          operator: {
+            type: 'string',
+            enum: exploreFilterTypesV2,
+          },
+          value: {
+            type: ['string', 'number', 'null'],
+          },
+        },
+        required: [
+          'field',
+          'operator',
+          'value',
+        ],
+        additionalProperties: false,
+      },
+      {
+        type: 'object',
+        description: 'Empty filter',
+        properties: {
+          field: {
+            type: 'string',
+            enum: filterableDimensions,
+          },
+          operator: {
+            type: 'string',
+            enum: requestFilterTypeEmptyV2,
+          },
+        },
+        required: [
+          'field',
+          'operator',
+        ],
+        additionalProperties: false,
+      },
     ],
-    additionalProperties: false,
   },
 } as const satisfies JSONSchema)
 
