@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.11.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.11.0...@kong-ui-public/analytics-utilities@5.11.1) (2024-12-19)
+
+
+### Bug Fixes
+
+* dashboard support new explore filter format ([#1861](https://github.com/Kong/public-ui-components/issues/1861)) ([817c92e](https://github.com/Kong/public-ui-components/commit/817c92ebd971884161a3359eb78a02985e1850a8))
+
+
+
+
+
 # [5.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.10.0...@kong-ui-public/analytics-utilities@5.11.0) (2024-12-12)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.32.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.32.21...@kong-ui-public/dashboard-renderer@0.32.22) (2024-12-19)
+
+
+### Bug Fixes
+
+* dashboard support new explore filter format ([#1861](https://github.com/Kong/public-ui-components/issues/1861)) ([817c92e](https://github.com/Kong/public-ui-components/commit/817c92ebd971884161a3359eb78a02985e1850a8))
+
+
+
+
+
 ## [0.32.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.32.20...@kong-ui-public/dashboard-renderer@0.32.21) (2024-12-19)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
