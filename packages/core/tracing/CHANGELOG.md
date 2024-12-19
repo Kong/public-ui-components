@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.5.3...@kong-ui-public/tracing@0.5.4) (2024-12-19)
+
+
+### Bug Fixes
+
+* **tracing:** exported types ([#1863](https://github.com/Kong/public-ui-components/issues/1863)) ([b980cd8](https://github.com/Kong/public-ui-components/commit/b980cd8c4c512452ca2bab9b5b81d0ecf97ff7cd))
+
+
+
+
+
 ## [0.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.5.2...@kong-ui-public/tracing@0.5.3) (2024-12-18)
 
 
