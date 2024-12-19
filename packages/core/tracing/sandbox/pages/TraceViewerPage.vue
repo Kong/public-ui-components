@@ -14,7 +14,7 @@
     class="trace-viewer-slideout"
     :close-on-blur="false"
     :has-overlay="false"
-    max-width="min(100%, 1020px)"
+    max-width="min(100%, 1200px)"
     :visible="slideoutVisible"
     @close="slideoutVisible = false"
   >
