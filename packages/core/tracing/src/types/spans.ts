@@ -74,7 +74,7 @@ export interface SpanAttributeSampling {
    * Aliases for the usage in Expressions (ATC). This field is currently preserved.
    * If a string is used as an alias, the type is inferred from the sampling rules configuration.
    */
-  aliases?: (SpanAttributeExprAlias | string)[]
+  aliases: (SpanAttributeExprAlias | string)[]
 }
 
 export interface SpanAttributeSchema extends AttributeSchema {
