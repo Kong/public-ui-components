@@ -171,8 +171,12 @@ onBeforeMount(async () => {
   flex-direction: column;
   font-family: $kui-font-family-text;
   gap: $kui-space-90;
-  padding: $kui-space-130 $kui-space-150;
+  padding: $kui-space-130 $kui-space-0;
   width: 100%;
+
+  @media (min-width: $kui-breakpoint-mobile) {
+    padding: $kui-space-130 $kui-space-150;
+  }
 
   .empty-state-image {
     margin-bottom: $kui-space-40;
