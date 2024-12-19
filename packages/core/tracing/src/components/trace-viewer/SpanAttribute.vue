@@ -112,7 +112,7 @@ const entityRequest = computed(() => {
   switch (props.keyValue.key) {
     case SpanAttributeKeys.KONG_PLUGIN_ID: {
       // We will need to parse the plugin name from the span name
-      request.plugin = getPhaseAndPlugin(props.span.name)?.[1]
+      request.plugin = getPhaseAndPlugin(props.span.name)?.plugin
       if (!request.plugin) {
         // Missing plugin name
         console.warn(`Failed to parse plugin name from span name "${props.span.name}"`)

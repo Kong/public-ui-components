@@ -112,18 +112,30 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
 export const spanMaybeIncomplete = (node: SpanNode): boolean =>
   node.durationNano === undefined || node.durationNano < 0
 
+// e.g., `kong.access.plugin.jwt.abc.def`
+export interface ParsedPluginSpan {
+  phase: string // e.g., `access`
+  plugin: string // e.g., `jwt`
+  suffix?: string // e.g., `.abc.def`
+}
+
 /**
  * Parse the plugin name and phase from a span name.
  *
  * @param spanName the span name to parse
  * @returns the parsed phase and plugin or undefined if the span is not a plugin span
  */
-export const getPhaseAndPlugin = (spanName: string): [phase: string, plugin: string] | undefined => {
-  const matches = /^kong\.([^.]+)\.plugin\.(.+?)(?:$|\..*)/gi.exec(spanName)
+export const getPhaseAndPlugin = (spanName: string): ParsedPluginSpan | undefined => {
+  const matches = /^kong\.([^.]+)\.plugin\.([^.]+)(?:$|(.*))/gi.exec(spanName)
   if (!matches) {
     return undefined
   }
-  return [matches[1], matches[2]]
+
+  return {
+    phase: matches[1],
+    plugin: matches[2],
+    suffix: matches[3],
+  }
 }
 
 export const unwrapAnyValue = <T = any> (value: IAnyValue): T | null => {

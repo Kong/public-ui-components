@@ -22,14 +22,9 @@
       />
 
       <div class="label-content">
-        <KTooltip
-          class="name"
-          :text="spanNode.span.name"
-        >
-          <div class="name">
-            {{ spanNode.span.name }}
-          </div>
-        </KTooltip>
+        <div class="name">
+          {{ spanNode.span.name }}
+        </div>
 
         <div class="end-decorator">
           <WarningIcon
@@ -309,10 +304,6 @@ const handleSelect = () => {
       width: v-bind(WATERFALL_SPAN_BAR_FADING_WIDTH);
       z-index: 10;
     }
-  }
-
-  :deep(.k-tooltip) {
-    max-width: 300px;
   }
 }
 </style>

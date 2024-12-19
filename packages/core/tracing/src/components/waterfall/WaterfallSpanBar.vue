@@ -6,6 +6,7 @@
 import { computed, inject } from 'vue'
 import { WATERFALL_CONFIG, WATERFALL_LEGENDS, WATERFALL_SPAN_BAR_FADING_WIDTH, WaterfallLegendItemKind } from '../../constants'
 import type { SpanNode, WaterfallConfig } from '../../types'
+import { KUI_BORDER_RADIUS_20 } from '@kong/design-tokens'
 
 const config = inject<WaterfallConfig>(WATERFALL_CONFIG)
 if (!config) {
@@ -48,20 +49,20 @@ const barEdges = computed(() => {
     return { left: 0, right: 0 }
   }
 
-  const left = (Number(spanStart - traceStart) / (config.totalDurationNano))
-  const right = (Number(traceEnd - spanEnd) / (config.totalDurationNano))
+  const left = (Number(spanStart - traceStart) / config.totalDurationNano)
+  const right = (Number(traceEnd - spanEnd) / config.totalDurationNano)
 
   return { left, right }
 })
 
 const barLeft = computed(() => {
   const unclampedLeft = `calc((100% * ${config.zoom}) * (${barEdges.value.left} - ${config.viewport.left}))`
-  return `min(calc(100% + ${WATERFALL_SPAN_BAR_FADING_WIDTH} / 2), max(-${WATERFALL_SPAN_BAR_FADING_WIDTH}, ${unclampedLeft}))`
+  return `min(calc(100% + ${WATERFALL_SPAN_BAR_FADING_WIDTH} / 2), max(calc(-${WATERFALL_SPAN_BAR_FADING_WIDTH} - ${KUI_BORDER_RADIUS_20}), ${unclampedLeft}))`
 })
 
 const barRight = computed(() =>{
   const unclampedRight = `calc((100% * ${config.zoom}) * (${barEdges.value.right} - ${config.viewport.right}))`
-  return `min(calc(100% + ${WATERFALL_SPAN_BAR_FADING_WIDTH} / 2), max(-${WATERFALL_SPAN_BAR_FADING_WIDTH}, ${unclampedRight}))`
+  return `min(calc(100% + ${WATERFALL_SPAN_BAR_FADING_WIDTH} / 2), max(calc(-${WATERFALL_SPAN_BAR_FADING_WIDTH} - ${KUI_BORDER_RADIUS_20}), ${unclampedRight}))`
 })
 </script>
 

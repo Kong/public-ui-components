@@ -64,6 +64,8 @@
         v-else-if="selectedSpan"
         class="span-details"
       >
+        <SpanDescription :span="selectedSpan.span" />
+
         <KAlert
           v-if="spanMaybeIncomplete(selectedSpan)"
           appearance="danger"
@@ -81,6 +83,7 @@
           v-if="selectedSpan.span.events && selectedSpan.span.events.length > 0"
           :span="selectedSpan.span"
         />
+
         <SpanAttributeTable
           :span="selectedSpan.span"
         />
@@ -111,6 +114,7 @@ import { spanMaybeIncomplete } from '../../utils'
 import WaterfallLegend from '../waterfall/WaterfallLegend.vue'
 import WaterfallView from '../waterfall/WaterfallView.vue'
 import SpanAttributeTable from './SpanAttributeTable.vue'
+import SpanDescription from './SpanDescription.vue'
 import SpanEventList from './SpanEventList.vue'
 
 import '@kong/splitpanes/dist/splitpanes.css'
