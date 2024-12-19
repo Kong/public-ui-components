@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.14.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.1...@kong-ui-public/entities-shared@3.14.2) (2024-12-19)
+
+
+### Bug Fixes
+
+* **entity-empty-state:** mobile style ([#1867](https://github.com/Kong/public-ui-components/issues/1867)) ([9b2f6f4](https://github.com/Kong/public-ui-components/commit/9b2f6f428c190f517b24d5128107d4f9a092bce0))
+
+
+
+
+
 ## [3.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.0...@kong-ui-public/entities-shared@3.14.1) (2024-12-19)
 
 
