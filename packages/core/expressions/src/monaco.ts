@@ -77,12 +77,13 @@ export const registerLanguage = (schema: Schema) => {
             '@default': 'variable',
           },
         }],
+        [/[()]/, 'delimiter.parenthesis'],
         [/==|!=|~|\^=|=\^|>=?|<=?|&&|\|\|/, 'operators'],
-        [/[()]/, 'brackets'],
         [/".*?"/, 'string'],
         [/\d+/, 'number'],
       ],
     },
+    brackets: [{ open: '(', close: ')', token: 'delimiter.parenthesis' }],
   } as MonarchLanguage)
 
   monaco.languages.registerCompletionItemProvider(languageId, {
@@ -130,7 +131,9 @@ export const registerLanguage = (schema: Schema) => {
       })
 
       const words = lastChars.replace('\t', '').split(' ')
-      const activeTyping = words[words.length - 1] // what the user is currently typing (everything after the last space)
+      let activeTyping = words[words.length - 1] // what the user is currently typing (everything after the last space)
+      // Here, we will start counting the characters after the last open parenthesis
+      activeTyping = activeTyping.slice(activeTyping.lastIndexOf('(') + 1)
 
       const inputTokens = activeTyping.split('.').slice(0, -1)
       let token: Token = tokenTree
