@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.5.7...@kong-ui-public/expressions@0.5.8) (2024-12-20)
+
+
+### Bug Fixes
+
+* **expressions:** autocompletion in parentheses ([#1868](https://github.com/Kong/public-ui-components/issues/1868)) ([9e66bbf](https://github.com/Kong/public-ui-components/commit/9e66bbf3fd64993dfc7ca0b66b5349ca3af465bd))
+
+
+
+
+
 ## [0.5.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.5.6...@kong-ui-public/expressions@0.5.7) (2024-12-05)
 
 **Note:** Version bump only for package @kong-ui-public/expressions
