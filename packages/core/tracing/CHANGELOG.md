@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.3...@kong-ui-public/tracing@0.6.4) (2024-12-23)
+
+
+### Bug Fixes
+
+* **tracing:** map some span names to their new names ([#1870](https://github.com/Kong/public-ui-components/issues/1870)) ([e0d020a](https://github.com/Kong/public-ui-components/commit/e0d020aafac94f040eba35cb11251cfadc9c2ed3))
+
+
+
+
+
 ## [0.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.2...@kong-ui-public/tracing@0.6.3) (2024-12-20)
 
 
