@@ -3,6 +3,16 @@ import { SPAN_ZERO_ID } from '../constants'
 import { type IAnyValue, type Span, type SpanNode } from '../types'
 
 /**
+ * These are spans whose names are changed.
+ * Here we will map them to their new names, and use them in the following steps.
+ */
+const MAPPED_SPAN_NAMES: Record<string, string> = {
+  'kong.upstream.try_select': 'kong.find_upstream',
+  'kong.upstream.ttfb': 'kong.waiting_for_upstream',
+  'kong.upstream.read_response': 'kong.read_response_from_upstream',
+}
+
+/**
  * Iterate over the spans and build span trees, where each tree stores a trace.
  *
  * @param spans the spans to build the trees from
@@ -50,7 +60,7 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
         traceId,
         spanId,
         parentSpanId,
-        name,
+        name: MAPPED_SPAN_NAMES[name] || name,
         startTimeUnixNano,
         endTimeUnixNano,
         attributes: cloneDeep(attributes), // Avoid mutating the original attributes

@@ -1,5 +1,5 @@
 <template>
-  <KCard>
+  <KCard class="span-description-card">
     <p class="span-description">
       <span class="name">
         {{ span.name }}:
@@ -21,10 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import { getPhaseAndPlugin } from '../../utils'
+import { computed } from 'vue'
 import composables from '../../composables'
 import type { SpanNode } from '../../types'
-import { computed } from 'vue'
+import { getPhaseAndPlugin } from '../../utils'
 
 const { i18n: { t, te } } = composables.useI18n()
 
@@ -40,6 +40,10 @@ const description = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+.span-description-card {
+  padding: $kui-space-50;
+}
+
 .span-description {
   margin: 0;
 
