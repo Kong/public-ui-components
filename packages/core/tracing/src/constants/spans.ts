@@ -1,4 +1,5 @@
 
+import type { TranslationKey } from '../composables/useI18n'
 import { type SpanAttributeSchema, type SpanEventAttributeSchema } from '../types'
 
 export const SPAN_ZERO_ID = '0000000000000000'
@@ -246,3 +247,11 @@ export const SPAN_EVENT_ATTRIBUTES = {
     type: 'String',
   },
 } satisfies Record<string, SpanEventAttributeSchema>
+
+export const SPAN_LATENCY_ATTRIBUTES: Record<string, TranslationKey> = {
+  'proxy.kong.latency.total': 'trace_viewer.latency.labels.total',
+  'proxy.kong.latency.internal': 'trace_viewer.latency.labels.internal',
+  'proxy.kong.latency.upstream': 'trace_viewer.latency.labels.upstream',
+  'proxy.kong.latency.3p.total_io': 'trace_viewer.latency.labels.3p',
+  'proxy.kong.latency.client': 'trace_viewer.latency.labels.client',
+}

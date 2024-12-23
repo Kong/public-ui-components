@@ -11,6 +11,10 @@ export const getDurationFormatter = (locales: Intl.LocalesArgument = 'en') => {
 
     let t = nanoseconds
 
+    if (t === 0) {
+      return '0'
+    }
+
     if (t < 1000) {
       return `${fmt.format(t)}ns`
     }
@@ -33,6 +37,17 @@ export const getDurationFormatter = (locales: Intl.LocalesArgument = 'en') => {
 
     return `${fmt.format(t / 60)}h`
   }
+}
+
+/**
+ * Latencies are rounded up and formatted in milliseconds with one decimal place.
+ */
+export const formatLatency = (milliseconds?: number) => {
+  if (milliseconds === undefined || Number.isNaN(milliseconds)) {
+    return 'N/A'
+  }
+
+  return `${Math.round(milliseconds * 10 + Number.EPSILON) / 10}ms`
 }
 
 /**

@@ -1,3 +1,4 @@
+import type { TranslationKey } from '../composables/useI18n'
 import type { IKeyValue } from './otlp'
 
 /**
@@ -87,3 +88,9 @@ export interface SpanAttributeSchema extends AttributeSchema {
 }
 
 export type SpanEventAttributeSchema = AttributeSchema
+
+export interface SpanLatency {
+  key: string
+  labelKey: TranslationKey
+  milliseconds: number
+}

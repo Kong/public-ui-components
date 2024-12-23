@@ -18,8 +18,8 @@
             width="25"
           />
         </template>
-        <template v-else>
-          <WaterfallLegend />
+        <template v-else-if="rootSpan">
+          <TraceLatency :span="rootSpan.span" />
 
           <div
             v-if="url"
@@ -84,6 +84,10 @@
           :span="selectedSpan.span"
         />
 
+        <SpanLatencyTable
+          :span="selectedSpan.span"
+        />
+
         <SpanAttributeTable
           :span="selectedSpan.span"
         />
@@ -111,11 +115,12 @@ import composables from '../../composables'
 import { TRACE_VIEWER_CONFIG, WATERFALL_ROW_COLUMN_GAP, WATERFALL_ROW_LABEL_WIDTH, WATERFALL_ROW_PADDING_X, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
 import type { SpanNode, TraceViewerConfig } from '../../types'
 import { spanMaybeIncomplete } from '../../utils'
-import WaterfallLegend from '../waterfall/WaterfallLegend.vue'
 import WaterfallView from '../waterfall/WaterfallView.vue'
 import SpanAttributeTable from './SpanAttributeTable.vue'
 import SpanDescription from './SpanDescription.vue'
 import SpanEventList from './SpanEventList.vue'
+import SpanLatencyTable from './SpanLatencyTable.vue'
+import TraceLatency from './TraceLatency.vue'
 
 import '@kong/splitpanes/dist/splitpanes.css'
 
@@ -224,7 +229,7 @@ const handleUpdateSelectedSpan = (span?: SpanNode) => {
         flex-direction: row;
         gap: $kui-space-40;
         justify-content: flex-end;
-        min-width: 30%;
+        max-width: 30%;
 
         .label {
           font-size: $kui-font-size-30;

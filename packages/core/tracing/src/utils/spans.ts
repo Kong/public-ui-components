@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash-es'
-import { SPAN_ZERO_ID } from '../constants'
-import { type IAnyValue, type Span, type SpanNode } from '../types'
+import { SPAN_LATENCY_ATTRIBUTES, SPAN_ZERO_ID } from '../constants'
+import { type IAnyValue, type IKeyValue, type Span, type SpanLatency, type SpanNode } from '../types'
 
 /**
  * These are spans whose names are changed.
@@ -181,4 +181,29 @@ export const unwrapAnyValue = <T = any> (value: IAnyValue): T | null => {
   }
 
   return null
+}
+
+const latencyOrdering = Object.keys(SPAN_LATENCY_ATTRIBUTES)
+
+export const toSpanLatencies = (attributes?: IKeyValue[]): SpanLatency[] => {
+  if (!attributes) {
+    return []
+  }
+
+  return attributes
+    .reduce((attrs, attr) => {
+      const labelKey = SPAN_LATENCY_ATTRIBUTES[attr.key]
+      if (!labelKey) {
+        return attrs
+      }
+
+      attrs.push({
+        key: attr.key,
+        labelKey,
+        milliseconds: unwrapAnyValue(attr.value) as number,
+      })
+
+      return attrs
+    }, [] as SpanLatency[])
+    .sort((a, b) => latencyOrdering.indexOf(a.key) - latencyOrdering.indexOf(b.key))
 }

@@ -18,6 +18,17 @@
       "message": "This span is incomplete, this could be because of a sampling issue. Please exercise caution when interpreting this span.",
       "title": "Incomplete span"
     },
+    "latency": {
+      "label": "Latency",
+      "labels": {
+        "3p": "3rd-party",
+        "client": "Client",
+        "internal": "Kong (internal)",
+        "total": "Total",
+        "upstream": "Upstream"
+      },
+      "section_title": "Span latencies"
+    },
     "no_span_description": "No description available for this span",
     "span_attributes": {
       "not_applicable": "Not applicable",
@@ -79,16 +90,6 @@
     "action": {
       "collapse_all": "Collapse all",
       "expand_all": "Expand all"
-    },
-    "legend": {
-      "labels": {
-        "client": "Client",
-        "kong": "Kong (internal)",
-        "third_party": "Third party",
-        "total": "Total",
-        "upstream": "Upstream"
-      },
-      "latency": "Latency"
     }
   }
 }
