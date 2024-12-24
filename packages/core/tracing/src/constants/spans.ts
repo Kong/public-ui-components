@@ -6,8 +6,8 @@ import samplerAttributes from './sampler-attributes.json'
 export const SPAN_ZERO_ID = '0000000000000000'
 export const SPAN_ATTRIBUTE_VALUE_UNKNOWN = 'unknown'
 
-
-export const SPAN_SAMPLER_ATTRIBUTES = samplerAttributes satisfies Record<string, SpanSamplerAttribute>
+export const SPAN_SAMPLER_ATTRIBUTES: Record<keyof typeof samplerAttributes, SpanSamplerAttribute> =
+  samplerAttributes satisfies Record<string, SpanSamplerAttribute>
 
 export const SPAN_LATENCY_ATTRIBUTES: Record<string, TranslationKey> = {
   'proxy.kong.latency.total': 'trace_viewer.latency.labels.total',
