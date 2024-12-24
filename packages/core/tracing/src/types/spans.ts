@@ -51,43 +51,31 @@ export interface SpanNode {
   }
 }
 
-interface AttributeSchema {
+/**
+ * Presenting the definition of a field in the Expressions (ATC) language.
+ */
+export interface ExpressionsField {
   name: string
-  type: string
-}
-
-export interface SpanAttributeExprAlias {
-  name: string
-  type: string
+  /**
+   * When this field is omitted, we will use the `type` of its residing attribute.
+   */
+  type?: string
 }
 
 /**
- * Definition of the sampling rule configuration for a span attribute.
- * This is mainly used under the context of the Expressions (ATC) language.
+ * The span attribute that will be used for sampling.
  */
-export interface SpanAttributeSampling {
+export interface SpanSamplerAttribute {
+  name: string
   /**
-   * Type of the value in Expressions (ATC). This field is currently preserved.
-   * When omitted, the type is inferred from the span attribute.
+   * Type under the context of the Expressions (ATC) language.
    */
-  type?: string
+  type: string
   /**
-   * Aliases for the usage in Expressions (ATC). This field is currently preserved.
-   * If a string is used as an alias, the type is inferred from the sampling rules configuration.
+   * Aliases for the usage in Expressions (ATC).
    */
-  aliases: (SpanAttributeExprAlias | string)[]
+  aliases?: ExpressionsField[]
 }
-
-export interface SpanAttributeSchema extends AttributeSchema {
-  /**
-   * Configuration for sampling rules associated with this attribute.
-   * When omitted, the attribute is not used for sampling.
-   */
-  sampling?: boolean | SpanAttributeSampling
-  internal?: boolean
-}
-
-export type SpanEventAttributeSchema = AttributeSchema
 
 export interface SpanLatency {
   key: string

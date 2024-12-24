@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import composables from '../../composables'
-import { SPAN_LATENCY_ATTRIBUTES, SpanAttributeKeys, WATERFALL_ROW_PADDING_X } from '../../constants'
+import { SPAN_LATENCY_ATTRIBUTES, WATERFALL_ROW_PADDING_X } from '../../constants'
 import type { IKeyValue, SpanNode } from '../../types'
 import { formatNanoDateTimeString } from '../../utils'
 import SpanAttribute from './SpanAttribute.vue'
@@ -40,14 +40,16 @@ const props = defineProps<{ span: SpanNode['span'] }>()
 const internalAttributes = computed<(IKeyValue & { label?: string })[]>(() => {
   return [
     {
-      key: SpanAttributeKeys._INTERNAL_START_TIME,
+      // Hardcoding the key here as it's not used elsewhere
+      key: '_internal.start_time',
       value: {
         stringValue: formatNanoDateTimeString(props.span.startTimeUnixNano),
       },
       label: t('span_attributes.labels.start_time'),
     },
     {
-      key: SpanAttributeKeys._INTERNAL_END_TIME,
+      // Hardcoding the key here as it's not used elsewhere
+      key: '_internal.end_time',
       value: {
         stringValue: formatNanoDateTimeString(props.span.endTimeUnixNano),
       },

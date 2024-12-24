@@ -75,7 +75,8 @@
           :title="t('trace_viewer.incomplete_span_warning.title')"
         >
           <template #icon>
-            <DangerCircleIcon />
+            <!-- TODO: Waiting for https://github.com/Kong/kongponents/pull/2550 to be adopted -->
+            <DangerIcon />
           </template>
         </KAlert>
 
@@ -108,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import { DangerCircleIcon } from '@kong/icons'
+import { DangerIcon } from '@kong/icons'
 import { Pane, Splitpanes } from '@kong/splitpanes'
 import { provide, reactive, shallowRef } from 'vue'
 import composables from '../../composables'
