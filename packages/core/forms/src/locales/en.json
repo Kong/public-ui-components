@@ -107,6 +107,28 @@
       "address_example": "e.g. localhost:6379"
     }
   },
+  "redis": {
+    "title": "Redis Configuration",
+    "shared_configuration": {
+      "label": "Use shared configuration",
+      "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins.",
+      "title": "Shared Redis Configuration",
+      "configuration_selector_label": "Select stored Redis configuration",
+      "configuration_selector_placeholder": "Pick Redis configuration",
+      "create_new_configuration": "New shared configuration",
+      "empty_state": "No shared configurations",
+      "selector": {
+        "title": "Select a Redis configuration",
+        "placeholder": "Filter Configurations",
+        "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins."
+      }
+    },
+    "dedicated_configuration": {
+      "label": "Use dedicated configuration",
+      "description": "Create a Redis configuration exclusively for this plugin, with settings that won’t impact other plugins.",
+      "title": "Connection Settings"
+    }
+  },
   "vfg": {
     "labels": {
       "on": "On",

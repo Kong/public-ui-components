@@ -79,6 +79,7 @@ import { useAxios, useHelpers } from '@kong-ui-public/entities-shared'
 import {
   AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
+  FORMS_CONFIG,
   customFields,
   getSharedFormName,
   sharedForms,
@@ -270,6 +271,8 @@ provide(FORMS_API_KEY, {
   getAll,
 })
 
+provide(FORMS_CONFIG, props.config)
+
 const sharedFormName = ref('')
 const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
@@ -325,6 +328,10 @@ const getModel = (): Record<string, any> => {
   // Kong Admin APIs request expectations for submission
   formModelFields.forEach(fieldName => {
     if (!schema[fieldName]) {
+      // special handling for partials
+      if (fieldName === 'partials') {
+        outputModel[fieldName] = inputModel[fieldName]
+      }
       return
     }
 

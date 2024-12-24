@@ -198,10 +198,9 @@
       @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
     />
 
-    <KCard
+    <div
       v-if="formModel['config-strategy'] === 'redis'"
       class="rla-form-redis-card"
-      :title="t('rla.redis.title')"
     >
       <VueFormGenerator
         :model="formModel"
@@ -209,7 +208,7 @@
         :schema="advancedSchema.redis"
         @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
       />
-    </KCard>
+    </div>
 
     <VueFormGenerator
       :model="formModel"
@@ -375,7 +374,7 @@ const advancedSchema = computed(() => {
 
   return {
     endsWithStrategy: { fields: endsWithStrategy },
-    redis: { fields: redis },
+    redis: { fields: [{ fields: redis, id: '_redis', model: 'redis_partial' }] }, // TODO: replace with real redis partial model name
     afterStrategy: { fields: afterStrategy },
   }
 })
