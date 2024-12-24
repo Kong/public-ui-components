@@ -510,3 +510,11 @@ const fileName = ref('exportFilename')
 </script>
 
 ```
+
+## Development
+
+Follow the setup instructions for the [top level README](../../../README.md). Then run the sandbox with:
+
+```
+pnpm run dev
+```

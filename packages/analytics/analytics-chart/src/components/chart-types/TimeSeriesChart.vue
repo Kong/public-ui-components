@@ -203,6 +203,8 @@ const plugins = computed(() => [
 const remountLineKey = computed(() => `line-${plugins.value.map(p => p.id).join('-')}`)
 const remountBarKey = computed(() => `bar-${plugins.value.map(p => p.id).join('-')}`)
 
+const pointsWithoutHover = computed(() => props.chartData?.length == 1)
+
 const { options } = composables.useLinechartOptions({
   tooltipState: tooltipData,
   timeRangeMs: toRef(props, 'timeRangeMs'),
@@ -211,6 +213,7 @@ const { options } = composables.useLinechartOptions({
   stacked: toRef(props, 'stacked'),
   metricAxesTitle: toRef(props, 'metricAxesTitle'),
   dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
+  pointsWithoutHover: pointsWithoutHover,
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))

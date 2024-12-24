@@ -124,7 +124,7 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
       },
       elements: {
         point: {
-          radius: 0,
+          radius: chartOptions.pointsWithoutHover ? 2 : 0,
           hitRadius: 4,
           hoverRadius: 4,
         },

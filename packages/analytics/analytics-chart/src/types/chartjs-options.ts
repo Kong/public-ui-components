@@ -46,6 +46,7 @@ export interface BarChartOptions extends BaseChartOptions {
 export interface LineChartOptions extends BaseChartOptions {
   timeRangeMs: Ref<number | undefined>, // time range in seconds
   granularity: Ref<GranularityValues>,
+  pointsWithoutHover?: boolean,
 }
 
 export interface DoughnutChartOptions {
