@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import composables from '../../composables'
-import { SPAN_LATENCY_ATTRIBUTES, WATERFALL_ROW_PADDING_X } from '../../constants'
+import { SPAN_ATTR_KEY_KONG_LATENCY_PREFIX, WATERFALL_ROW_PADDING_X } from '../../constants'
 import type { IKeyValue, SpanNode } from '../../types'
 import { formatNanoDateTimeString } from '../../utils'
 import SpanAttribute from './SpanAttribute.vue'
@@ -64,7 +64,7 @@ const filteredAttributes = computed(() => {
   }
 
   return props.span.attributes
-    .filter((attr) => !SPAN_LATENCY_ATTRIBUTES[attr.key])
+    .filter((attr) => !attr.key.startsWith(SPAN_ATTR_KEY_KONG_LATENCY_PREFIX))
 })
 </script>
 

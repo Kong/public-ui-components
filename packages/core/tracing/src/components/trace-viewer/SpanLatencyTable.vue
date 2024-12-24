@@ -14,7 +14,7 @@
         :item="{
           type: ConfigurationSchemaType.Text,
           key: latency.key,
-          label: t(latency.labelKey),
+          label: latency.labelKey ? t(latency.labelKey) : latency.key,
           value: formatLatency(latency.milliseconds),
         }"
       />

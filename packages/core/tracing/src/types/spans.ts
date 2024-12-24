@@ -79,6 +79,9 @@ export interface SpanSamplerAttribute {
 
 export interface SpanLatency {
   key: string
-  labelKey: TranslationKey
+  /**
+   * When omitted, we will use the `key` as the label.
+   */
+  labelKey?: TranslationKey
   milliseconds: number
 }

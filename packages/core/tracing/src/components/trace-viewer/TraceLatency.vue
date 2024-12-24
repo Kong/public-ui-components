@@ -9,7 +9,7 @@
       :key="latency.key"
       class="latency"
     >
-      {{ t(latency.labelKey) }}: {{ formatLatency(latency.milliseconds) }}
+      {{ latency.labelKey ? t(latency.labelKey) : latency.key }}: {{ formatLatency(latency.milliseconds) }}
     </div>
   </div>
 </template>
