@@ -248,6 +248,19 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     const pluginName = formModel.name
     const metadata = PLUGIN_METADATA[pluginName]
 
+
+    const redisFields = []
+    const isRedisField = (field: Field): boolean => {
+      const excludePatterns = ['cluster-cache']
+      for (const pattern of excludePatterns) {
+        if (field.model.includes(pattern)) {
+          return false
+        }
+      }
+      return /redis/.test(field.model)
+    }
+
+
     if (getSharedFormName(pluginName) || metadata?.useLegacyForm || options?.credential) {
       /**
        * Do not generate grouped schema when:
@@ -257,6 +270,24 @@ export const useSchemas = (options?: UseSchemasOptions) => {
        */
 
       // Assume the fields are sorted, unless they have an `order` property
+      if (metadata?.useLegacyForm) {
+        for (const field of formSchema.fields!) {
+          // We group redis fields separately
+          if (isRedisField(field)) {
+            redisFields.push(field)
+            continue
+          }
+        }
+        formSchema.fields = formSchema.fields!.filter((field) => !isRedisField(field))
+        // Add redis fields to advanced fields
+        if (redisFields.length) formSchema.fields!.push({
+          id: '_redis',
+          fields: redisFields,
+          model: 'redis_partial', // TODO: replace with real redis partial model name
+        })
+      }
+
+
       formSchema.fields!.sort((a: Record<string, any>, b: Record<string, any>) => {
         a.order = a.order || 0
         b.order = b.order || 0
@@ -269,6 +300,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       const pinnedFields = []
       const defaultVisibleFields = []
       const advancedFields = []
+      const redisFields = []
 
       // Transform the any of field sets into a flatten set for fast lookup
       // The boolean values help us to know if we have unknown fields in the plugin metadata
@@ -294,8 +326,12 @@ export const useSchemas = (options?: UseSchemasOptions) => {
           }
         }
       }
-
       for (const field of formSchema.fields!) {
+        // We group redis fields separately
+        if (isRedisField(field)) {
+          redisFields.push(field)
+          continue
+        }
         // Fields that don't start with 'config-' are considered common fields
         if (field.pinned) {
           pinnedFields.push(field)
@@ -305,7 +341,8 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         // A field is hoisted if any of the following is true:
         // - It has a `required` property and it's set to true
         // - Is a field with one or more field rules
-        if (field.required || ruledFields[field.model] !== undefined) {
+        // set Redis fields as advanced fields
+        if ((field.required && !isRedisField(field)) || ruledFields[field.model] !== undefined) {
           if (ruledFields[field.model] === false) {
             ruledFields[field.model] = true // Mark this as visited
           }
@@ -316,6 +353,13 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         // Otherwise, consider it an advanced field
         advancedFields.push(field)
       }
+
+      // Add redis fields to advanced fields
+      if (redisFields.length) advancedFields.push({
+        id: '_redis',
+        fields: redisFields,
+        model: 'redis_partial', // TODO: replace with real redis partial model name
+      })
 
       // For better dev: warn about unknown checked fields
       const unknownRuleFields = Object.entries(ruledFields)
