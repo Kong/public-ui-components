@@ -11,10 +11,6 @@ export const getDurationFormatter = (locales: Intl.LocalesArgument = 'en') => {
 
     let t = nanoseconds
 
-    if (t === 0) {
-      return '0'
-    }
-
     if (t < 1000) {
       return `${fmt.format(t)}ns`
     }
