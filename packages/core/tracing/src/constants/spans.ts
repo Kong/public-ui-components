@@ -24,12 +24,16 @@ const SPAN_ATTR_KEY_KONG_PREFIX = 'proxy.kong'
  * Why not using enums? --Because we don't want to make the list here exhaustive.
  */
 export const SPAN_ATTRIBUTE_KEYS = {
-  KONG_SERVICE_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}.service.id`,
-  KONG_ROUTE_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}.route.id`,
+  HTTP_REQUEST_METHOD: 'http.request.method',
+  HTTP_RESPONSE_STATUS_CODE: 'http.response.status_code',
+  HTTP_ROUTE: 'http.route',
   KONG_CONSUMER_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}.consumer.id`,
   KONG_PLUGIN_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}.plugin.id`,
+  KONG_ROUTE_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}.route.id`,
+  KONG_SERVICE_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}.service.id`,
   KONG_TARGET_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}.target.id`,
   KONG_UPSTREAM_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}.upstream.id`,
+  URL_FULL: 'url.full',
 } satisfies Record<string, string>
 
 /**
