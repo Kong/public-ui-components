@@ -36,6 +36,17 @@ export const getDurationFormatter = (locales: Intl.LocalesArgument = 'en') => {
 }
 
 /**
+ * Latencies are rounded up and formatted in milliseconds with one decimal place.
+ */
+export const formatLatency = (milliseconds?: number) => {
+  if (milliseconds === undefined || Number.isNaN(milliseconds)) {
+    return 'N/A'
+  }
+
+  return `${Math.round(milliseconds * 10 + Number.EPSILON) / 10}ms`
+}
+
+/**
  * This function formats a nanosecond duration into a human-readable string.
  * The output string will use the local time zone.
  *

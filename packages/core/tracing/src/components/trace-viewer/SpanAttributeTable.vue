@@ -13,9 +13,9 @@
         :span="span"
       />
 
-      <template v-if="span.attributes">
+      <template v-if="filteredAttributes.length > 0">
         <SpanAttribute
-          v-for="keyValue in span.attributes"
+          v-for="keyValue in filteredAttributes"
           :key="keyValue.key"
           :key-value="keyValue"
           :span="span"
@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import composables from '../../composables'
-import { SpanAttributeKeys, WATERFALL_ROW_PADDING_X } from '../../constants'
+import { SPAN_ATTR_KEY_KONG_LATENCY_PREFIX, WATERFALL_ROW_PADDING_X } from '../../constants'
 import type { IKeyValue, SpanNode } from '../../types'
 import { formatNanoDateTimeString } from '../../utils'
 import SpanAttribute from './SpanAttribute.vue'
@@ -40,20 +40,31 @@ const props = defineProps<{ span: SpanNode['span'] }>()
 const internalAttributes = computed<(IKeyValue & { label?: string })[]>(() => {
   return [
     {
-      key: SpanAttributeKeys._INTERNAL_START_TIME,
+      // Hardcoding the key here as it's not used elsewhere
+      key: '_internal.start_time',
       value: {
         stringValue: formatNanoDateTimeString(props.span.startTimeUnixNano),
       },
       label: t('span_attributes.labels.start_time'),
     },
     {
-      key: SpanAttributeKeys._INTERNAL_END_TIME,
+      // Hardcoding the key here as it's not used elsewhere
+      key: '_internal.end_time',
       value: {
         stringValue: formatNanoDateTimeString(props.span.endTimeUnixNano),
       },
       label: t('span_attributes.labels.end_time'),
     },
   ]
+})
+
+const filteredAttributes = computed(() => {
+  if (!props.span.attributes) {
+    return []
+  }
+
+  return props.span.attributes
+    .filter((attr) => !attr.key.startsWith(SPAN_ATTR_KEY_KONG_LATENCY_PREFIX))
 })
 </script>
 

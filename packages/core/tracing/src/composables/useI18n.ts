@@ -14,3 +14,5 @@ export default function useI18n(): UseI18nReturn {
     i18nT: i18nTComponent<typeof english>(i18n), // Translation component <i18n-t>
   }
 }
+
+export type TranslationKey = Parameters<UseI18nReturn['i18n']['t']>[0]

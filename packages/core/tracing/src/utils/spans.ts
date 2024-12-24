@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash-es'
-import { SPAN_ZERO_ID } from '../constants'
-import { type IAnyValue, type Span, type SpanNode } from '../types'
+import type { TranslationKey } from '../composables/useI18n'
+import { SPAN_ATTR_KEY_KONG_LATENCY_PREFIX, SPAN_LATENCY_ATTRIBUTES, SPAN_ZERO_ID } from '../constants'
+import { type IAnyValue, type IKeyValue, type Span, type SpanLatency, type SpanNode } from '../types'
 
 /**
  * These are spans whose names are changed.
@@ -181,4 +182,33 @@ export const unwrapAnyValue = <T = any> (value: IAnyValue): T | null => {
   }
 
   return null
+}
+
+const LATENCY_ORDERING = Object.keys(SPAN_LATENCY_ATTRIBUTES)
+
+export const toSpanLatencies = (attributes?: IKeyValue[]): SpanLatency[] => {
+  if (!attributes) {
+    return []
+  }
+
+  return attributes
+    .reduce((attrs, attr) => {
+      if (!attr.key.startsWith(SPAN_ATTR_KEY_KONG_LATENCY_PREFIX)) {
+        return attrs
+      }
+      const labelKey: TranslationKey | undefined = SPAN_LATENCY_ATTRIBUTES[attr.key]
+
+      attrs.push({
+        key: attr.key,
+        labelKey,
+        milliseconds: unwrapAnyValue(attr.value) as number,
+      })
+
+      return attrs
+    }, [] as SpanLatency[])
+    .sort((a, b) => {
+      const ia = LATENCY_ORDERING.indexOf(a.key)
+      const ib = LATENCY_ORDERING.indexOf(b.key)
+      return (ia >= 0 ? ia : LATENCY_ORDERING.length) - (ib >= 0 ? ib : LATENCY_ORDERING.length)
+    })
 }

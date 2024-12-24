@@ -3,10 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue'
-import { WATERFALL_CONFIG, WATERFALL_LEGENDS, WATERFALL_SPAN_BAR_FADING_WIDTH, WaterfallLegendItemKind } from '../../constants'
-import type { SpanNode, WaterfallConfig } from '../../types'
 import { KUI_BORDER_RADIUS_20 } from '@kong/design-tokens'
+import { computed, inject } from 'vue'
+import { WATERFALL_CONFIG, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
+import type { SpanNode, WaterfallConfig } from '../../types'
 
 const config = inject<WaterfallConfig>(WATERFALL_CONFIG)
 if (!config) {
@@ -16,27 +16,6 @@ if (!config) {
 const props = defineProps<{
   spanNode: SpanNode
 }>()
-
-// TODO: This is not final
-const barColor = computed(() => {
-  if (props.spanNode.root) {
-    return WATERFALL_LEGENDS[WaterfallLegendItemKind.TOTAL].color
-  }
-
-  if (props.spanNode.span.name.includes('client')) {
-    return WATERFALL_LEGENDS[WaterfallLegendItemKind.CLIENT].color
-  }
-
-  if (props.spanNode.span.name.includes('upstream')) {
-    return WATERFALL_LEGENDS[WaterfallLegendItemKind.UPSTREAM].color
-  }
-
-  if (props.spanNode.span.name === 'kong.dns') {
-    return WATERFALL_LEGENDS[WaterfallLegendItemKind.THIRD_PARTY].color
-  }
-
-  return WATERFALL_LEGENDS[WaterfallLegendItemKind.KONG].color
-})
 
 const barEdges = computed(() => {
   const spanStart = props.spanNode.span.startTimeUnixNano
@@ -74,7 +53,7 @@ const barRight = computed(() =>{
   z-index: 1;
 
   &::after {
-    background-color: v-bind(barColor);
+    background-color: $kui-color-background-primary;
     border-radius: $kui-border-radius-20;
     content: '';
     height: 100%;
