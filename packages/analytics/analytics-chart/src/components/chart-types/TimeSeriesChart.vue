@@ -75,6 +75,7 @@ import type { GranularityValues, AbsoluteTimeRangeV4 } from '@kong-ui-public/ana
 import type { Chart } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import { formatByGranularity, generateLegendItems } from '../../utils'
+import { hasExactlyOneDatapoint } from '../../utils/commonOptions'
 
 const props = defineProps({
   chartData: {
@@ -199,6 +200,8 @@ const plugins = computed(() => [
 const remountLineKey = computed(() => `line-${plugins.value.map(p => p.id).join('-')}`)
 const remountBarKey = computed(() => `bar-${plugins.value.map(p => p.id).join('-')}`)
 
+const pointsWithoutHover = computed(() => hasExactlyOneDatapoint(props.chartData))
+
 const { options } = composables.useLinechartOptions({
   tooltipState: tooltipData,
   timeRangeMs: toRef(props, 'timeRangeMs'),
@@ -207,6 +210,7 @@ const { options } = composables.useLinechartOptions({
   stacked: toRef(props, 'stacked'),
   metricAxesTitle: toRef(props, 'metricAxesTitle'),
   dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
+  pointsWithoutHover: pointsWithoutHover,
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
