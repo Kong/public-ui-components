@@ -1,13 +1,7 @@
 import {
-  KUI_COLOR_BACKGROUND_PRIMARY,
-  KUI_METHOD_COLOR_TEXT_TRACE,
-  KUI_COLOR_TEXT_DECORATIVE_AQUA,
-  KUI_COLOR_TEXT_DECORATIVE_PURPLE,
-  KUI_METHOD_COLOR_TEXT_PATCH,
   KUI_SPACE_40,
   KUI_SPACE_50,
 } from '@kong/design-tokens'
-import type { WaterfallLegendItem } from '../types'
 
 // Vue provide/inject keys
 export const WATERFALL_CONFIG = Symbol('WaterfallConfig')
