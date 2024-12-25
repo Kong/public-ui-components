@@ -64,7 +64,7 @@
         v-else-if="selectedSpan"
         class="span-details"
       >
-        <SpanDescription :span="selectedSpan.span" />
+        <SpanBasicInfo :span="selectedSpan.span" />
 
         <KAlert
           v-if="spanMaybeIncomplete(selectedSpan)"
@@ -118,7 +118,7 @@ import type { SpanNode, TraceViewerConfig } from '../../types'
 import { spanMaybeIncomplete } from '../../utils'
 import WaterfallView from '../waterfall/WaterfallView.vue'
 import SpanAttributeTable from './SpanAttributeTable.vue'
-import SpanDescription from './SpanDescription.vue'
+import SpanBasicInfo from './SpanBasicInfo.vue'
 import SpanEventList from './SpanEventList.vue'
 import SpanLatencyTable from './SpanLatencyTable.vue'
 import TraceLatency from './TraceLatency.vue'

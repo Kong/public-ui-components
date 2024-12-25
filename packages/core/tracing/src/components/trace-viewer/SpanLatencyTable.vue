@@ -8,16 +8,33 @@
     </div>
 
     <div class="latencies">
-      <ConfigCardItem
+      <template
         v-for="latency in latencies"
         :key="latency.key"
-        :item="{
-          type: ConfigurationSchemaType.Text,
-          key: latency.key,
-          label: latency.labelKey ? t(latency.labelKey) : latency.key,
-          value: formatLatency(latency.milliseconds),
-        }"
-      />
+      >
+        <ConfigCardItem
+          :item="{
+            type: ConfigurationSchemaType.Text,
+            key: latency.key,
+            label: latency.labelKey ? t(latency.labelKey) : latency.key,
+            value: formatLatency(latency.milliseconds),
+          }"
+        />
+
+        <template v-if="Array.isArray(latency.children) && latency.children.length > 0">
+          <ConfigCardItem
+            v-for="child in latency.children"
+            :key="child.key"
+            class="latency-nested"
+            :item="{
+              type: ConfigurationSchemaType.Text,
+              key: child.key,
+              label: child.labelKey ? t(child.labelKey) : child.key,
+              value: formatLatency(child.milliseconds),
+            }"
+          />
+        </template>
+      </template>
     </div>
   </div>
 </template>
@@ -61,6 +78,12 @@ const latencies = computed(() => toSpanLatencies(props.span.attributes))
 
       .copy-text {
         font-size: $kui-font-size-30;
+      }
+    }
+
+    .latency-nested {
+      :deep(.config-card-details-label) {
+        padding-left: $kui-space-40;
       }
     }
   }

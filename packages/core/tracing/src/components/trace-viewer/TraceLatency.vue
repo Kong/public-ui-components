@@ -18,13 +18,13 @@
 import { computed } from 'vue'
 import composables from '../../composables'
 import type { SpanNode } from '../../types'
-import { formatLatency, toSpanLatencies } from '../../utils'
+import { formatLatency, toOverviewLatencies } from '../../utils'
 
 const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps<{ span: SpanNode['span'] }>()
 
-const latencies = computed(() => toSpanLatencies(props.span.attributes))
+const latencies = computed(() => toOverviewLatencies(props.span.attributes))
 </script>
 
 <style lang="scss" scoped>

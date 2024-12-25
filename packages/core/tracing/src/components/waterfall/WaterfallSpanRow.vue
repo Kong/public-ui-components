@@ -22,7 +22,10 @@
       />
 
       <div class="label-content">
-        <div class="name">
+        <div
+          class="name"
+          :title="spanNode.span.name"
+        >
           {{ spanNode.span.name }}
         </div>
 

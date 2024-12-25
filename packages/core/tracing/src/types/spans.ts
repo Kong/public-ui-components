@@ -77,11 +77,12 @@ export interface SpanSamplerAttribute {
   aliases?: ExpressionsField[]
 }
 
-export interface SpanLatency {
+export interface SpanLatency<Children = never> {
   key: string
   /**
    * When omitted, we will use the `key` as the label.
    */
   labelKey?: TranslationKey
   milliseconds: number
+  children?: Children
 }

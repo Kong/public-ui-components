@@ -1,6 +1,5 @@
 import { cloneDeep } from 'lodash-es'
-import type { TranslationKey } from '../composables/useI18n'
-import { SPAN_ATTR_KEY_KONG_LATENCY_PREFIX, SPAN_LATENCY_ATTRIBUTES, SPAN_ZERO_ID } from '../constants'
+import { SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX, SPAN_ATTRIBUTE_KEYS, SPAN_LATENCY_ATTR_LABEL_KEYS, SPAN_ZERO_ID } from '../constants'
 import { type IAnyValue, type IKeyValue, type Span, type SpanLatency, type SpanNode } from '../types'
 
 /**
@@ -184,31 +183,77 @@ export const unwrapAnyValue = <T = any> (value: IAnyValue): T | null => {
   return null
 }
 
-const LATENCY_ORDERING = Object.keys(SPAN_LATENCY_ATTRIBUTES)
+const LATENCY_ORDERING = [
+  SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL,
+  SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_INTERNAL,
+  SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_UPSTREAM,
+  SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_3P_TOTAL_IO,
+  SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_CLIENT,
+].reduce((map, key, index) => {
+  map[key] = index
+  return map
+}, {} as Record<string, number>)
 
-export const toSpanLatencies = (attributes?: IKeyValue[]): SpanLatency[] => {
+/**
+ * IMPORTANT: Please pass the attributes of a root span.
+ */
+export const toOverviewLatencies = (attributes?: IKeyValue[]): SpanLatency[] => {
   if (!attributes) {
     return []
   }
 
   return attributes
     .reduce((attrs, attr) => {
-      if (!attr.key.startsWith(SPAN_ATTR_KEY_KONG_LATENCY_PREFIX)) {
+      if (!Object.prototype.hasOwnProperty.call(LATENCY_ORDERING, attr.key)) {
         return attrs
       }
-      const labelKey: TranslationKey | undefined = SPAN_LATENCY_ATTRIBUTES[attr.key]
 
       attrs.push({
         key: attr.key,
-        labelKey,
+        labelKey: SPAN_LATENCY_ATTR_LABEL_KEYS[attr.key],
         milliseconds: unwrapAnyValue(attr.value) as number,
       })
 
       return attrs
     }, [] as SpanLatency[])
-    .sort((a, b) => {
-      const ia = LATENCY_ORDERING.indexOf(a.key)
-      const ib = LATENCY_ORDERING.indexOf(b.key)
-      return (ia >= 0 ? ia : LATENCY_ORDERING.length) - (ib >= 0 ? ib : LATENCY_ORDERING.length)
-    })
+    .sort((a, b) => LATENCY_ORDERING[a.key] - LATENCY_ORDERING[b.key])
+}
+
+export const toSpanLatencies = (attributes?: IKeyValue[]): SpanLatency<SpanLatency[]>[] => {
+  if (!attributes) {
+    return []
+  }
+
+  const latencies: SpanLatency<SpanLatency[]>[] = []
+  let latency3rdParty: SpanLatency<SpanLatency[]> | undefined
+  const latencies3rdParty: SpanLatency[] = []
+
+  for (const attr of attributes) {
+    if (Object.prototype.hasOwnProperty.call(LATENCY_ORDERING, attr.key)) {
+      // Handle the major latencies
+      const latency: SpanLatency<SpanLatency[]> = {
+        key: attr.key,
+        labelKey: SPAN_LATENCY_ATTR_LABEL_KEYS[attr.key],
+        milliseconds: unwrapAnyValue(attr.value) as number,
+        children: [],
+      }
+      if (attr.key === SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_3P_TOTAL_IO) {
+        latency3rdParty = latency
+      }
+      latencies.push(latency)
+    } else if (attr.key.startsWith(SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX)) {
+      // Handle the NESTED 3rd-party latencies; we will later add them to the major 3rd-party latency
+      latencies3rdParty.push({
+        key: attr.key,
+        labelKey:  SPAN_LATENCY_ATTR_LABEL_KEYS[attr.key],
+        milliseconds: unwrapAnyValue(attr.value) as number,
+      })
+    }
+  }
+
+  if (latency3rdParty) {
+    latency3rdParty.children = latencies3rdParty
+  }
+
+  return latencies.sort((a, b) => LATENCY_ORDERING[a.key] - LATENCY_ORDERING[b.key])
 }
