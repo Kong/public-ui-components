@@ -527,7 +527,7 @@ onMounted(async () => {
   isLoading.value = false
 
   nextTick(() => {
-    if (route.query.anchor) {
+    if (route?.query?.anchor) {
       const card = document.getElementById(route.query.anchor as string)
       if (card) {
         card.scrollIntoView()

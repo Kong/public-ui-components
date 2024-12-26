@@ -1102,7 +1102,7 @@ watch([entityMap, initialized], (newData, oldData) => {
  * ---------------
  */
 const handleClickCancel = (): void => {
-  if (route.query.cancelRoute) {
+  if (route?.query?.cancelRoute) {
     const cancelRoute = JSON.parse(route.query.cancelRoute as string)
     router.push(cancelRoute)
   } else if (props.config.cancelRoute) {
