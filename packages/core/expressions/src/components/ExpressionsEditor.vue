@@ -25,6 +25,7 @@ const props = withDefaults(defineProps<{
   parseDebounce?: number,
   inactiveUntilFocused?: boolean,
   allowEmptyInput?: boolean,
+  defaultShowDetails?: boolean,
   editorOptions?: Monaco.editor.IEditorOptions
 }>(), {
   parseDebounce: 500,
@@ -80,6 +81,10 @@ onMounted(() => {
     ...props.editorOptions,
   })
 
+  if (props.defaultShowDetails) {
+    editor.getContribution<Record<string, any> & Monaco.editor.IEditorContribution>('editor.contrib.suggestController')
+      ?.widget?.value._setDetailsVisible(true)
+  }
   editor.onDidChangeModelContent(() => {
     const value = editor!.getValue()
     expression.value = value

@@ -60,6 +60,14 @@ To control whether the editor should be inactive until its initial focus.
 
 To control whether the editor should pass validation with an empty input.
 
+#### `defaultShowDetails`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+To control whether the editor should show the details of the autocompletion item by default.
+
 #### `editorOptions`
 
 - type: `Monaco.editor.IEditorOptions`
