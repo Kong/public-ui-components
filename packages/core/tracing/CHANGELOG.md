@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.4...@kong-ui-public/tracing@0.6.5) (2024-12-26)
+
+
+### Bug Fixes
+
+* **tracing:** overall and per-span latency display ([#1871](https://github.com/Kong/public-ui-components/issues/1871)) ([0b418a4](https://github.com/Kong/public-ui-components/commit/0b418a4c4c28af3150e77e95bbea4459def7fe83))
+
+
+
+
+
 ## [0.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.3...@kong-ui-public/tracing@0.6.4) (2024-12-23)
 
 
