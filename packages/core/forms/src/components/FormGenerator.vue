@@ -20,6 +20,7 @@
           :tag="tag"
           :vfg="vfg"
           @model-updated="onModelUpdated"
+          @partial-toggled="onPartialToggled"
           @validated="onFieldValidated"
         />
         <form-group
@@ -113,6 +114,7 @@
                 :tag="tag"
                 :vfg="vfg"
                 @model-updated="onModelUpdated"
+                @partial-toggled="onPartialToggled"
                 @validated="onFieldValidated"
               />
               <form-group
@@ -251,7 +253,7 @@ export default {
       },
     },
   },
-  emits: ['validated', 'modelUpdated', 'refreshModel'],
+  emits: ['validated', 'modelUpdated', 'refreshModel', 'partialToggled'],
 
   data() {
     return {
@@ -360,6 +362,10 @@ export default {
 
     onModelUpdated(newVal, schema) {
       this.$emit('modelUpdated', newVal, schema)
+    },
+
+    onPartialToggled(field, model) {
+      this.$emit('partialToggled', field, model)
     },
 
     // Validating the model properties

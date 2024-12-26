@@ -20,7 +20,7 @@ export default function useRedisPartial(formSchema: any, formModel?: any) {
         return false
       }
     }
-    return /(-|_)redis(-|_)/.test(field.model)
+    return /(?<=config-redis-).*/.test(field.model)
   }
   formSchema.fields.forEach((field: Field) => {
     if (isRedisField(field)) {

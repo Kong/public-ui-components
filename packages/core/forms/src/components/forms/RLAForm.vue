@@ -207,6 +207,7 @@
         :options="formOptions"
         :schema="advancedSchema.redis"
         @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
+        @partial-toggled="onPartialToggled"
       />
     </div>
 
@@ -327,6 +328,7 @@ const props = defineProps<{
   formModel: Record<string, any>
   formOptions: any
   onModelUpdated: (value: any, model: string) => void
+  onPartialToggled: (field: string, model: any) => void
   isEditing?: boolean
 }>()
 

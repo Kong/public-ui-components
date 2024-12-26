@@ -32,6 +32,7 @@
     >
       <h3>{{ t("redis.shared_configuration.title") }}</h3>
       <KSelect
+        v-model="selectedRedisConfigItem"
         data-testid="redis-config-select"
         :items="availableRedisConfigs"
         :loading="loadingRedisConfigs"
@@ -103,7 +104,7 @@ import type { SelectItem } from '@kong/kongponents'
 import { AddIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
 import type { PropType } from 'vue'
-import { computed, onBeforeMount, ref, inject } from 'vue'
+import { computed, onBeforeMount, ref, inject, watch } from 'vue'
 import formGroup from './FormGroup.vue'
 import RedisConfigCard from './RedisConfigCard.vue'
 
@@ -165,6 +166,7 @@ const props = defineProps({
 
 const emits = defineEmits<{
   (e: 'modelUpdated', payload: any, schema: any): void,
+  (e: 'partialToggled', field: string, model: any): void,
   (e: 'refreshModel'): void,
   (e: 'validated', res: boolean, errors: any[], field: any): void,
 }>()
@@ -172,9 +174,13 @@ const emits = defineEmits<{
 const { t } = createI18n<typeof english>('en-us', english)
 
 const usePartial = ref(props.usePartial)
+const selectedRedisConfigItem = ref()
 const selectedRedisConfig = ref(null)
 const newRedisConfigurationModal = ref(false)
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+
+const redisFieldsSaved = ref([] as { model: any; schema: any }[])
+const partialsSaved = ref()
 
 const fieldVisible = (field: any) => {
   if (isFunction(field.visible)) return field.visible.call(this, props.model, field, this)
@@ -189,6 +195,7 @@ const redisConfigSelected = async (item: SelectItem | null) => {
   if (!item) return
 
   emits('modelUpdated', [{ id: item.value }], 'partials')
+  partialsSaved.value = [{ id: item.value }]
   //
   try {
     const configRes = await axiosInstance.get(`/partials/${item.value}`)
@@ -223,6 +230,7 @@ const {
 const availableRedisConfigs = computed((): SelectItem[] => redisConfigsResults.value?.map(el => ({ label: el.id, name: el.name, value: el.id })))
 
 const onModelUpdated = (model: any, schema: any) => {
+  redisFieldsSaved.value = { ...redisFieldsSaved.value, [schema]: model }
   emits('modelUpdated', model, schema)
 }
 
@@ -237,8 +245,22 @@ const onFieldValidated = (res: boolean, errors: any[], field: any) => {
   emits('validated', res, errors, field)
 }
 
+watch(() => usePartial.value, (usePartial) => {
+  if (usePartial) {
+    emits('partialToggled', 'redis', { 'partials': partialsSaved.value })
+  } else {
+    emits('partialToggled', 'partials', redisFieldsSaved.value)
+  }
+})
+
 // fetch available redis configs under the control plane
 onBeforeMount(async () => {
+  redisFieldsSaved.value = props.field.fields.reduce((acc: Record<string,any>, field: { model: string }) => {
+    if (Object.keys(props.model!).includes(field.model)) {
+      acc[field.model] = props.model![field.model]
+    }
+    return acc
+  }, {})
   await loadConfigs()
 })
 

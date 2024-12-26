@@ -95,6 +95,7 @@
             :options="formOptions"
             :schema="advancedFieldsSchema"
             @model-updated="onModelUpdated"
+            @partial-toggled="onPartialToggled"
           />
         </div>
       </template>
@@ -148,6 +149,10 @@ export default {
       default: () => { },
     },
     onModelUpdated: {
+      type: Function,
+      required: true,
+    },
+    onPartialToggled: {
       type: Function,
       required: true,
     },

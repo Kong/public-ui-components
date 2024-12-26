@@ -17,6 +17,7 @@
         :form-schema="formSchema"
         :is-editing="editing"
         :on-model-updated="onModelUpdated"
+        :on-partial-toggled="onPartialToggled"
       >
         <template
           v-if="enableVaultSecretPicker"
@@ -36,6 +37,7 @@
         :options="formOptions"
         :schema="formSchema"
         @model-updated="onModelUpdated"
+        @partial-toggled="onPartialToggled"
         @refresh-model="getModel"
       >
         <template #plugin-config-empty-state>
@@ -184,7 +186,7 @@ const { parseSchema } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,
   credential: props.credential,
 })
-const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
+const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
@@ -514,6 +516,15 @@ const getModel = (): Record<string, any> => {
   return unFlattenObject(outputModel)
 }
 
+const onPartialToggled = (dismissSchemaField: string | undefined, additionalModel: Record<string, any> = {}) => {
+  dismissField(formModel, additionalModel, dismissSchemaField)
+  emit('model-updated', {
+    model: formModel,
+    originalModel,
+    data: getModel(),
+  })
+}
+
 // fired whenever the form data is modified
 const onModelUpdated = (model: any, schema: string) => {
   const newData = { [schema]: model }
@@ -523,7 +534,6 @@ const onModelUpdated = (model: any, schema: string) => {
   const newModel = Object.assign({}, formModel, newData)
 
   Object.assign(formModel, newModel)
-
   emit('model-updated', {
     model: formModel,
     originalModel,
