@@ -18,53 +18,119 @@
       "message": "This span is incomplete, this could be because of a sampling issue. Please exercise caution when interpreting this span.",
       "title": "Incomplete span"
     },
+    "latency": {
+      "label": "Latency",
+      "labels": {
+        "3p": "3rd-party",
+        "3p_dns": "DNS",
+        "3p_http_client": "HTTP client",
+        "3p_redis": "Redis",
+        "3p_tcpsock": "TCP socket",
+        "client": "Client",
+        "internal": "Kong (internal)",
+        "total": "Total",
+        "upstream": "Upstream"
+      },
+      "section_title": "Latency breakdown"
+    },
     "no_span_description": "No description available for this span",
     "span_attributes": {
       "not_applicable": "Not applicable",
       "title": "Span attributes"
     },
-    "span_descriptions": {
-      "kong": {
-        "access": {
-          "plugin": "This span captures the execution time of the plugin that runs in the access phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
-        },
-        "body_filter": {
-          "plugin": "This span captures the execution time of the plugin that runs in the body_filter phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
-        },
-        "certificate": {
-          "plugin": "This span captures the execution time of the plugin that runs in the certificate phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
-        },
-        "dns": "Kong does most of it's DNS lookup asynchronously, but depending on configuration or custom_plugin code Kong may have to do synchronous DNS lookups. This span captures the time taken to resolve DNS queries.",
-        "find_upstream": "For each upstream target marked as healthy, Kong will attempt to open a TCP connection, optionally do a TLS handshake and send over the request headers. If all of this succeeds, Kong will finish sending the full request and wait for a response. If any of the step fails, Kong will switch to the next upstream and try again. This span captures the time taken to validate a specific upstream.",
-        "flush_to_downstream": "This span measures the time taken for the client to read the response once it sent from Kong. This span can identify clients that are slow at reading responses, or are trying to read responses over slow connections.",
-        "header_filter": {
-          "plugin": "This span captures the execution time of the plugin that runs in the header_filter phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
-        },
-        "io": {
-          "func": "Depending on configuration or custom plugin behaviour, Kong may have to reach out to 3rd parties (like redis, IdP, http-api etc) as part of normal request processing. This span captures the amount of time Kong spent waiting for the 3rd party to respond. Multiple instances of this span can occur, one per 3rd party i/o. This span does not capture the time spent waiting on the actual upstream, that is captured in it's own dedicated span."
-        },
-        "phase": {
-          "access": "This span captures the cumulative execution time of all the plugins that may run in the access phase of the request lifecycle.",
-          "body_filter": "This span captures the cumulative execution time of all the plugins that may run in the body filter phase of the request lifecycle.",
-          "certificate": "This span captures the cumulative execution time of all the plugins that may run in the certificate phase of the request lifecycle.",
-          "header_filter": "This span captures the cumulative execution time of all the plugins that may run in the header filter phase of the request lifecycle.",
-          "response": "This span captures the cumulative execution time of all the plugins that may run in the response phase of the request lifecycle.",
-          "rewrite": "This span captures the cumulative execution time of all the plugins that may run in the rewrite phase of the request lifecycle."
-        },
-        "read_client_http_body": "This span captures the time taken to read the full body of the request from the client. This span can be very useful to determine if a client is on a slow network, sending a large body or simply taking too long to send a POST/PUT/PATCH body.",
-        "read_client_http_headers": "This span captures the time taken to read the full set of http headers from the client. This span can be very useful to determine if a client is slow or may be coming over a slow or problematic network.",
-        "read_response_from_upstream": "Span capturing the time taken for the upstream to generate a full response. This effectively measures the time Kong sees between the first byte of the response header and the last byte of the response body coming from the upstream. This span can be used to identify slowness in response generation from upstream.",
-        "response": {
-          "plugin": "This span captures the execution time of the plugin that runs in the response phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
-        },
-        "rewrite": {
-          "plugin": "This span captures the execution time of the plugin that runs in the rewrite phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
-        },
-        "router": "This span captures the time taken by the router to search for a match. The span attributes return interesting information about the match.",
-        "upstream": {
-          "selection": "Depending on configuration, Kong will try to find a healthy upstream by trying various targets in order determined by the configured load balancing algorithm. This span captures the total time spent in finding a healthy upstream. Child spans of this span capture the individual attempts."
-        },
-        "waiting_for_upstream": "Span capturing the \"time to first byte\" from the upstream. This includes the time taken to finish writing the http request to upstream, and the time taken by the upstream to start generating a response. This span can be used to identify network delays between Kong and an upstream as well as identifying upstreams that take long to start generating a response."
+    "span_basic_info": {
+      "descriptions": {
+        "kong": {
+          "$": "This span captures the entire request-response duration.",
+          "access": {
+            "plugin": {
+              "$": "This span captures the execution time of the plugin that runs in the access phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
+            }
+          },
+          "body_filter": {
+            "plugin": {
+              "$": "This span captures the execution time of the plugin that runs in the body_filter phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
+            }
+          },
+          "certificate": {
+            "plugin": {
+              "$": "This span captures the execution time of the plugin that runs in the certificate phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
+            }
+          },
+          "dns": {
+            "$": "Kong does most of it's DNS lookup asynchronously, but depending on configuration or custom_plugin code Kong may have to do synchronous DNS lookups. This span captures the time taken to resolve DNS queries."
+          },
+          "find_upstream": {
+            "$": "For each upstream target marked as healthy, Kong will attempt to open a TCP connection, optionally do a TLS handshake and send over the request headers. If all of this succeeds, Kong will finish sending the full request and wait for a response. If any of the step fails, Kong will switch to the next upstream and try again. This span captures the time taken to validate a specific upstream."
+          },
+          "flush_to_downstream": {
+            "$": "This span measures the time taken for the client to read the response once it sent from Kong. This span can identify clients that are slow at reading responses, or are trying to read responses over slow connections."
+          },
+          "header_filter": {
+            "plugin": {
+              "$": "This span captures the execution time of the plugin that runs in the header_filter phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
+            }
+          },
+          "io": {
+            "func": {
+              "$": "Depending on configuration or custom plugin behaviour, Kong may have to reach out to 3rd parties (like redis, IdP, http-api etc) as part of normal request processing. This span captures the amount of time Kong spent waiting for the 3rd party to respond. Multiple instances of this span can occur, one per 3rd party i/o. This span does not capture the time spent waiting on the actual upstream, that is captured in it's own dedicated span."
+            }
+          },
+          "phase": {
+            "access": {
+              "$": "This span captures the cumulative execution time of all the plugins that may run in the access phase of the request lifecycle."
+            },
+            "body_filter": {
+              "$": "This span captures the cumulative execution time of all the plugins that may run in the body filter phase of the request lifecycle."
+            },
+            "certificate": {
+              "$": "This span captures the cumulative execution time of all the plugins that may run in the certificate phase of the request lifecycle."
+            },
+            "header_filter": {
+              "$": "This span captures the cumulative execution time of all the plugins that may run in the header filter phase of the request lifecycle."
+            },
+            "response": {
+              "$": "This span captures the cumulative execution time of all the plugins that may run in the response phase of the request lifecycle."
+            },
+            "rewrite": {
+              "$": "This span captures the cumulative execution time of all the plugins that may run in the rewrite phase of the request lifecycle."
+            }
+          },
+          "read_client_http_body": {
+            "$": "This span captures the time taken to read the full body of the request from the client. This span can be very useful to determine if a client is on a slow network, sending a large body or simply taking too long to send a POST/PUT/PATCH body."
+          },
+          "read_client_http_headers": {
+            "$": "This span captures the time taken to read the full set of http headers from the client. This span can be very useful to determine if a client is slow or may be coming over a slow or problematic network."
+          },
+          "read_response_from_upstream": {
+            "$": "Span capturing the time taken for the upstream to generate a full response. This effectively measures the time Kong sees between the first byte of the response header and the last byte of the response body coming from the upstream. This span can be used to identify slowness in response generation from upstream."
+          },
+          "response": {
+            "plugin": {
+              "$": "This span captures the execution time of the plugin that runs in the response phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
+            }
+          },
+          "rewrite": {
+            "plugin": {
+              "$": "This span captures the execution time of the plugin that runs in the rewrite phase. Multiple instances of this span can occur, one per plugin configured to run in this phase."
+            }
+          },
+          "router": {
+            "$": "This span captures the time taken by the router to search for a match. The span attributes return interesting information about the match."
+          },
+          "upstream": {
+            "selection": {
+              "$": "Depending on configuration, Kong will try to find a healthy upstream by trying various targets in order determined by the configured load balancing algorithm. This span captures the total time spent in finding a healthy upstream. Child spans of this span capture the individual attempts."
+            }
+          },
+          "waiting_for_upstream": {
+            "$": "Span capturing the \"time to first byte\" from the upstream. This includes the time taken to finish writing the http request to upstream, and the time taken by the upstream to start generating a response. This span can be used to identify network delays between Kong and an upstream as well as identifying upstreams that take long to start generating a response."
+          }
+        }
+      },
+      "labels": {
+        "description": "Description",
+        "name": "Name"
       }
     },
     "span_events": {
@@ -79,16 +145,6 @@
     "action": {
       "collapse_all": "Collapse all",
       "expand_all": "Expand all"
-    },
-    "legend": {
-      "labels": {
-        "client": "Client",
-        "kong": "Kong (internal)",
-        "third_party": "Third party",
-        "total": "Total",
-        "upstream": "Upstream"
-      },
-      "latency": "Latency"
     }
   }
 }

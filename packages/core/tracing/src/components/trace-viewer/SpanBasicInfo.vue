@@ -1,13 +1,22 @@
 <template>
-  <KCard class="span-description-card">
-    <p class="span-description">
-      <span class="name">
-        {{ span.name }}:
-      </span>
-      <span :class="['description', { 'not-available': !description }]">
-        {{ description || t('trace_viewer.no_span_description') }}
-      </span>
-    </p>
+  <KCard class="span-basic-info">
+    <div class="rows">
+      <div class="label">
+        {{ t('trace_viewer.span_basic_info.labels.name') }}
+      </div>
+      <div class="value">
+        {{ span.name }}
+      </div>
+
+      <template v-if="description">
+        <div class="label">
+          {{ t('trace_viewer.span_basic_info.labels.description') }}
+        </div>
+        <div class="value">
+          {{ description }}
+        </div>
+      </template>
+    </div>
 
     <KExternalLink
       v-if="description"
@@ -34,29 +43,28 @@ const description = computed(() => {
   const pluginSpan = getPhaseAndPlugin(props.span.name)
   // We will use general description for plugin spans that exactly match `kong.(phase).plugin.(plugin)`.
   const subI18nKey = pluginSpan && !pluginSpan.suffix ? `kong.${pluginSpan.phase}.plugin` : props.span.name
-  const i18nKey = `trace_viewer.span_descriptions.${subI18nKey}`
+  const i18nKey = `trace_viewer.span_basic_info.descriptions.${subI18nKey}.$`
   return te(i18nKey as any) ? t(i18nKey as any) : undefined
 })
 </script>
 
 <style lang="scss" scoped>
-.span-description-card {
-  padding: $kui-space-50;
-}
+.span-basic-info {
+  padding: $kui-space-60;
 
-.span-description {
-  margin: 0;
+  .rows {
+    display: grid;
+    gap: $kui-space-20 $kui-space-40;
+    grid-template-columns: min-content auto;
 
-  .name {
-    font-weight: $kui-font-weight-semibold;
-  }
-
-  .description.not-available {
-    font-style: italic;
+    .label {
+      font-weight: $kui-font-weight-semibold;
+    }
   }
 }
 
 .docs-link {
   align-self: flex-end;
+  margin-top: $kui-space-40;
 }
 </style>

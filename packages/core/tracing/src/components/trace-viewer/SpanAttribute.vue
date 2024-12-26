@@ -30,7 +30,7 @@
 import { ConfigCardItem, ConfigurationSchemaType, EntityLink, type EntityLinkData } from '@kong-ui-public/entities-shared'
 import { computed, inject, onWatcherCleanup, shallowRef, watch } from 'vue'
 import composables from '../../composables'
-import { SPAN_ATTRIBUTE_VALUE_UNKNOWN, SpanAttributeKeys, TRACE_VIEWER_CONFIG } from '../../constants'
+import { SPAN_ATTRIBUTE_KEYS, SPAN_ATTRIBUTE_VALUE_UNKNOWN, TRACE_VIEWER_CONFIG } from '../../constants'
 import type { EntityRequest, IKeyValue, SpanNode, TraceViewerConfig } from '../../types'
 import { getPhaseAndPlugin, unwrapAnyValue } from '../../utils'
 
@@ -75,12 +75,12 @@ const formattedValue = computed(() => {
 // A map of keys of attributes whose values are IDs of entities (services, routes, consumers, etc.)
 // to their corresponding entities
 const ATTRIBUTE_KEY_TO_ENTITY: Record<string, string> = {
-  [SpanAttributeKeys.KONG_SERVICE_ID]: 'services',
-  [SpanAttributeKeys.KONG_ROUTE_ID]: 'routes',
-  [SpanAttributeKeys.KONG_CONSUMER_ID]: 'consumers',
-  [SpanAttributeKeys.KONG_PLUGIN_ID]: 'plugins',
-  [SpanAttributeKeys.KONG_TARGET_ID]: 'targets',
-  [SpanAttributeKeys.KONG_UPSTREAM_ID]: 'upstreams',
+  [SPAN_ATTRIBUTE_KEYS.KONG_SERVICE_ID]: 'services',
+  [SPAN_ATTRIBUTE_KEYS.KONG_ROUTE_ID]: 'routes',
+  [SPAN_ATTRIBUTE_KEYS.KONG_CONSUMER_ID]: 'consumers',
+  [SPAN_ATTRIBUTE_KEYS.KONG_PLUGIN_ID]: 'plugins',
+  [SPAN_ATTRIBUTE_KEYS.KONG_TARGET_ID]: 'targets',
+  [SPAN_ATTRIBUTE_KEYS.KONG_UPSTREAM_ID]: 'upstreams',
 }
 
 // Let's only make the attributes listed above copyable, for now.
@@ -110,7 +110,7 @@ const entityRequest = computed(() => {
   }
 
   switch (props.keyValue.key) {
-    case SpanAttributeKeys.KONG_PLUGIN_ID: {
+    case SPAN_ATTRIBUTE_KEYS.KONG_PLUGIN_ID: {
       // We will need to parse the plugin name from the span name
       request.plugin = getPhaseAndPlugin(props.span.name)?.plugin
       if (!request.plugin) {
@@ -120,8 +120,8 @@ const entityRequest = computed(() => {
       }
       break
     }
-    case SpanAttributeKeys.KONG_TARGET_ID: {
-      const upstreamIdAttrValue = props.span.attributes?.find((attr) => attr.key === SpanAttributeKeys.KONG_UPSTREAM_ID)?.value
+    case SPAN_ATTRIBUTE_KEYS.KONG_TARGET_ID: {
+      const upstreamIdAttrValue = props.span.attributes?.find((attr) => attr.key === SPAN_ATTRIBUTE_KEYS.KONG_UPSTREAM_ID)?.value
       const upstreamId = upstreamIdAttrValue && unwrapAnyValue<string>(upstreamIdAttrValue)
       if (!upstreamId) {
         console.warn(`Failed to look up the upstream ID for the upstream target in the span "${props.span.name}"`)

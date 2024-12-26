@@ -22,7 +22,10 @@
       />
 
       <div class="label-content">
-        <div class="name">
+        <div
+          class="name"
+          :title="spanNode.span.name"
+        >
           {{ spanNode.span.name }}
         </div>
 
@@ -33,7 +36,7 @@
             :size="KUI_FONT_SIZE_30"
           />
 
-          <DangerCircleIcon
+          <DangerIcon
             v-if="maybeIncomplete"
             :color="KUI_COLOR_TEXT_DANGER"
             :size="KUI_FONT_SIZE_30"
@@ -71,9 +74,9 @@
 
 <script lang="ts" setup>
 import { KUI_COLOR_TEXT_DANGER, KUI_COLOR_TEXT_WARNING, KUI_FONT_SIZE_30 } from '@kong/design-tokens'
-import { WarningIcon, DangerCircleIcon } from '@kong/icons'
+import { DangerIcon, WarningIcon } from '@kong/icons'
 import { computed, inject, ref, watch, type PropType, type Ref } from 'vue'
-import { SPAN_EVENT_ATTRIBUTES, WATERFALL_CONFIG, WATERFALL_ROWS_STATE, WATERFALL_SPAN_BAR_FADING_WIDTH, WaterfallRowsState } from '../../constants'
+import { SPAN_EVENT_ATTRIBUTE_KEYS, WATERFALL_CONFIG, WATERFALL_ROWS_STATE, WATERFALL_SPAN_BAR_FADING_WIDTH, WaterfallRowsState } from '../../constants'
 import { type SpanNode, type WaterfallConfig } from '../../types'
 import { getDurationFormatter, spanMaybeIncomplete } from '../../utils'
 import WaterfallSpanBar from './WaterfallSpanBar.vue'
@@ -152,7 +155,7 @@ const hasException = computed(() => {
       continue
     }
     for (const keyValue of event.attributes) {
-      if (keyValue.key === SPAN_EVENT_ATTRIBUTES.EXCEPTION_MESSAGE.name) {
+      if (keyValue.key === SPAN_EVENT_ATTRIBUTE_KEYS.EXCEPTION_MESSAGE) {
         return true
       }
     }
