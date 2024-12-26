@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.5.8...@kong-ui-public/expressions@0.6.0) (2024-12-26)
+
+
+### Features
+
+* **expressions:** support token doc ([#1874](https://github.com/Kong/public-ui-components/issues/1874)) ([68c525a](https://github.com/Kong/public-ui-components/commit/68c525aeb3f8829f2203890bbad4335e69ba04a8))
+
+
+
+
+
 ## [0.5.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.5.7...@kong-ui-public/expressions@0.5.8) (2024-12-20)
 
 
