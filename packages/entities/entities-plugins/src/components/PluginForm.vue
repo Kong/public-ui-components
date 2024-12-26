@@ -150,7 +150,7 @@ import type { Tab } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
 import { computed, onBeforeMount, reactive, ref, watch, type PropType } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
@@ -276,6 +276,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const route = useRoute()
 const { i18n: { t } } = composables.useI18n()
 const { customSchemas, typedefs } = composables.useSchemas({ app: props.config.app, credential: props.credential })
 const { formatPluginFieldLabel } = composables.usePluginHelpers()
@@ -1101,7 +1102,10 @@ watch([entityMap, initialized], (newData, oldData) => {
  * ---------------
  */
 const handleClickCancel = (): void => {
-  if (props.config.cancelRoute) {
+  if (route.query.cancelRoute) {
+    const cancelRoute = JSON.parse(route.query.cancelRoute as string)
+    router.push(cancelRoute)
+  } else if (props.config.cancelRoute) {
     router.push(props.config.cancelRoute)
   } else {
     emit('cancel')

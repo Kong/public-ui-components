@@ -1,5 +1,8 @@
 <template>
-  <div class="plugin-select-card-wrapper">
+  <div
+    :id="plugin.id"
+    class="plugin-select-card-wrapper"
+  >
     <KTooltip :text="plugin.disabledMessage">
       <a
         class="plugin-select-card"

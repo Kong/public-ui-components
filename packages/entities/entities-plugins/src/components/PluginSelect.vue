@@ -124,7 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onBeforeMount, onMounted, type PropType } from 'vue'
+import { computed, ref, watch, onBeforeMount, onMounted, type PropType, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   PluginGroup,
@@ -525,6 +525,15 @@ onMounted(async () => {
   }
 
   isLoading.value = false
+
+  nextTick(() => {
+    if (route.query.anchor) {
+      const card = document.getElementById(route.query.anchor as string)
+      if (card) {
+        card.scrollIntoView()
+      }
+    }
+  })
 })
 </script>
 
