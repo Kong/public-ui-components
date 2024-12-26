@@ -1,5 +1,5 @@
 import * as monaco from 'monaco-editor'
-import { type Schema, type SchemaDefinition } from './schema'
+import { type Schema } from './schema'
 
 interface MonarchLanguage extends monaco.languages.IMonarchLanguage {
   keywords: string[];
@@ -8,12 +8,14 @@ interface MonarchLanguage extends monaco.languages.IMonarchLanguage {
 interface Token {
   detail?: string;
   children?: Record<string, Token>;
+  documentation?: string;
 }
 
-const buildTokenTree = (schemaDefinition: SchemaDefinition) => {
+const buildTokenTree = (schema: Schema) => {
+  const { definition, documentation } = schema
   const root: Token = {}
 
-  for (const [kind, fields] of Object.entries(schemaDefinition)) {
+  for (const [kind, fields] of Object.entries(definition)) {
     for (const field of fields) {
       let token = root
       for (const t of field.split('.')) {
@@ -26,6 +28,7 @@ const buildTokenTree = (schemaDefinition: SchemaDefinition) => {
         token = token.children[t]
       }
       token.detail = kind
+      token.documentation = documentation?.[field]
     }
   }
 
@@ -61,7 +64,7 @@ export const registerLanguage = (schema: Schema) => {
     return { languageId }
   }
 
-  const tokenTree = buildTokenTree(schema.definition)
+  const tokenTree = buildTokenTree(schema)
 
   const keywords = ['not', 'in', 'contains']
 
@@ -154,6 +157,7 @@ export const registerLanguage = (schema: Schema) => {
           label: token === '*' ? '...' : token,
           kind: monaco.languages.CompletionItemKind.Property,
           detail: props.detail,
+          documentation: props.documentation,
           insertText: token === '*' ? '' : token,
           range,
         })),

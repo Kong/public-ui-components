@@ -1,12 +1,13 @@
 import { Schema as AtcSchema, type AstType } from '@kong/atc-router'
 
 export type SchemaDefinition = {
-  [K in AstType]?: string[];
+  [K in AstType]?: string[]
 }
 
 export interface Schema {
-  name: string;
-  definition: SchemaDefinition;
+  name: string
+  definition: SchemaDefinition
+  documentation?: Record<string, string>
 }
 
 export const createSchema = (definition: SchemaDefinition) => {
