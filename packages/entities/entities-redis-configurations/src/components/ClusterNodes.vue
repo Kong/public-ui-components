@@ -10,6 +10,7 @@
       <FieldArrayCardContainer
         v-for="(node, index) of nodes"
         :key="`${index}`"
+        :disabled="readonly"
         @remove-item="removeItem(index)"
       >
         <div class="cluster-node-items">
@@ -20,6 +21,7 @@
               info: t('form.fields.cluster_node_ip.tooltip'),
               tooltipAttributes: { maxWidth: '400' },
             }"
+            :readonly="readonly"
             required
           />
           <KInput
@@ -29,12 +31,14 @@
               info: t('form.fields.cluster_node_port.tooltip'),
               tooltipAttributes: { maxWidth: '400' },
             }"
+            :readonly="readonly"
             type="number"
           />
         </div>
       </FieldArrayCardContainer>
       <KButton
         appearance="tertiary"
+        :disabled="readonly"
         @click="addItem"
       >
         <AddCircleIcon />
@@ -51,6 +55,10 @@ import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
 import composables from '../composables'
 import type { ClusterNode, Identifiable } from '../types'
 import { genDefaultClusterNode } from '../helpers'
+
+defineProps<{
+  readonly?: boolean
+}>()
 
 const nodes = defineModel<Identifiable<ClusterNode>[]>({ required: true })
 

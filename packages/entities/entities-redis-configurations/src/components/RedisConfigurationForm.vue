@@ -21,8 +21,10 @@
       >
         <KSelect
           v-model="form.fields.mode"
+          :disabled="isEdit"
           :items="typeOptions"
           :label="t('form.fields.type.label')"
+          :readonly="form.readonly"
           required
         >
           <template #selected-item-template="{ item }">
@@ -39,6 +41,7 @@
           v-model.trim="form.fields.name"
           :label="t('form.fields.name.label')"
           :placeholder="t('form.fields.name.placeholder')"
+          :readonly="form.readonly"
           required
         />
       </EntityFormSection>
@@ -55,6 +58,7 @@
             info: t('form.fields.sentinel_master.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
         />
         <KSelect
           v-model="form.fields.sentinel_role"
@@ -64,8 +68,12 @@
             info: t('form.fields.sentinel_role.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
         />
-        <SentinelNodes v-model="form.fields.sentinel_nodes" />
+        <SentinelNodes
+          v-model="form.fields.sentinel_nodes"
+          :readonly="form.readonly"
+        />
         <KInput
           v-model.trim="form.fields.sentinel_username"
           :label="t('form.fields.sentinel_username.label')"
@@ -73,9 +81,11 @@
             info: t('form.fields.sentinel_username.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
         />
         <VaultSecretPickerProvider
           class="secret-picker-provider"
+          :disabled="form.readonly"
           :update="v => form.fields.sentinel_username = v"
           :value="form.fields.sentinel_username"
           @open="(value, update) => setUpVaultSecretPicker(value, update)"
@@ -87,10 +97,12 @@
             info: t('form.fields.sentinel_password.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
           type="password"
         />
         <VaultSecretPickerProvider
           class="secret-picker-provider"
+          :disabled="form.readonly"
           :update="v => form.fields.sentinel_password = v"
           :value="form.fields.sentinel_password"
           @open="(value, update) => setUpVaultSecretPicker(value, update)"
@@ -102,7 +114,10 @@
         :description="t('form.sections.cluster.description')"
         :title="t('form.sections.cluster.title')"
       >
-        <ClusterNodes v-model="form.fields.cluster_nodes" />
+        <ClusterNodes
+          v-model="form.fields.cluster_nodes"
+          :readonly="form.readonly"
+        />
         <KInput
           v-model="form.fields.cluster_max_redirections"
           :label="t('form.fields.cluster_max_redirections.label')"
@@ -110,6 +125,7 @@
             info: t('form.fields.cluster_max_redirections.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
           type="number"
         />
       </EntityFormSection>
@@ -126,7 +142,7 @@
             info: t('form.fields.host.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
-          required
+          :readonly="form.readonly"
         />
         <KInput
           v-if="form.fields.mode === Mode.HOST_PORT_OPEN_SOURCE || form.fields.mode === Mode.HOST_PORT_ENTERPRISE"
@@ -136,12 +152,14 @@
             info: t('form.fields.port.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
           type="number"
         />
 
         <KCheckbox
           v-if="form.fields.mode === Mode.HOST_PORT_ENTERPRISE"
           v-model="form.fields.connection_is_proxied"
+          :disabled="form.readonly"
           :label="t('form.fields.connection_is_proxied.label')"
           :label-attributes="{
             info: t('form.fields.connection_is_proxied.tooltip'),
@@ -157,6 +175,7 @@
             info: t('form.fields.timeout.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
           type="number"
         />
 
@@ -167,6 +186,7 @@
             info: t('form.fields.database.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
           type="number"
         />
         <KInput
@@ -176,9 +196,11 @@
             info: t('form.fields.username.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
         />
         <VaultSecretPickerProvider
           class="secret-picker-provider"
+          :disabled="form.readonly"
           :update="v => form.fields.username = v"
           :value="form.fields.username"
           @open="(value, update) => setUpVaultSecretPicker(value, update)"
@@ -190,10 +212,12 @@
             info: t('form.fields.password.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
           type="password"
         />
         <VaultSecretPickerProvider
           class="secret-picker-provider"
+          :disabled="form.readonly"
           :update="v => form.fields.password = v"
           :value="form.fields.password"
           @open="(value, update) => setUpVaultSecretPicker(value, update)"
@@ -207,11 +231,13 @@
         <KCheckbox
           v-model="form.fields.ssl"
           :description="t('form.fields.ssl.description')"
+          :disabled="form.readonly"
           :label="t('form.fields.ssl.label')"
         />
         <KCheckbox
           v-model="form.fields.ssl_verify"
           :description="t('form.fields.ssl_verify.description')"
+          :disabled="form.readonly"
           :label="t('form.fields.ssl_verify.label')"
         />
         <KInput
@@ -221,6 +247,7 @@
             info: t('form.fields.server_name.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
         />
       </EntityFormSection>
 
@@ -236,6 +263,7 @@
             info: t('form.fields.keepalive_backlog.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
           type="number"
         />
         <KInput
@@ -245,6 +273,7 @@
             info: t('form.fields.keepalive_pool_size.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
+          :readonly="form.readonly"
           type="number"
         />
       </EntityFormSection>
@@ -257,16 +286,19 @@
         <KInput
           v-model="form.fields.read_timeout"
           :label="t('form.fields.read_timeout.label')"
+          :readonly="form.readonly"
           type="number"
         />
         <KInput
           v-model="form.fields.send_timeout"
           :label="t('form.fields.send_timeout.label')"
+          :readonly="form.readonly"
           type="number"
         />
         <KInput
           v-model="form.fields.connect_timeout"
           :label="t('form.fields.connect_timeout.label')"
+          :readonly="form.readonly"
           type="number"
         />
       </EntityFormSection>
@@ -357,7 +389,10 @@ const {
   form,
   canSubmit,
   payload,
-} = useRedisConfigurationForm()
+  isEdit,
+} = useRedisConfigurationForm({
+  partialId: props.partialId,
+})
 </script>
 
 <style lang="scss" scoped>
