@@ -14,6 +14,16 @@ export const SPAN_ATTR_KEY_KONG_LATENCY_PREFIX = `${SPAN_ATTR_KEY_KONG_PREFIX}la
 export const SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX = `${SPAN_ATTR_KEY_KONG_LATENCY_PREFIX}3p.`
 
 /**
+ * These are known span names for ease of access.
+ * Why not using enums? --Because we don't want to make the list here exhaustive.
+ */
+export const SPAN_NAMES = {
+  READ_BODY: 'kong.read_client_http_body',
+  CLIENT_HEADERS: 'kong.read_client_http_headers',
+  FLUSH_TO_DOWNSTREAM: 'kong.wait_for_client_read',
+}
+
+/**
  * These are known attributes that will appear in the spans for ease of access.
  * Why not using enums? --Because we don't want to make the list here exhaustive.
  */

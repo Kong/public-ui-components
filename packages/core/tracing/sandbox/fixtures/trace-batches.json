@@ -1,1 +1,385 @@
-{"batches":[{"resource":{"attributes":[{"key":"service.instance.id","value":{"stringValue":"5445b0c8-417b-47a0-b747-c7565e925795"}},{"key":"service.version","value":{"stringValue":"3.10.0.0"}},{"key":"session.id","value":{"stringValue":"0193f2d3-3c27-72c1-8c98-968e21c0aee1"}},{"key":"service.name","value":{"stringValue":"kong"}}]},"scopeSpans":[{"scope":{"name":"kong-internal","version":"0.1.0"},"spans":[{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"XGRJrQWeLiY=","name":"kong","kind":"SPAN_KIND_SERVER","startTimeUnixNano":"1734945777892000000","endTimeUnixNano":"1734945778545911040","attributes":[{"key":"proxy.kong.route.id","value":{"stringValue":"d4783d0e-f7bd-41e5-b676-4bea060a4482"}},{"key":"proxy.kong.consumer.id","value":{"stringValue":"26c55ffc-ff1e-44ee-8c1d-a57d0efed5bb"}},{"key":"proxy.kong.upstream.id","value":{"stringValue":"unknown"}},{"key":"proxy.kong.latency.3p.redis.total_io","value":{"doubleValue":0}},{"key":"proxy.kong.upstream.addr","value":{"stringValue":"98.85.100.80"}},{"key":"proxy.kong.upstream.host","value":{"stringValue":"98.85.100.80:80"}},{"key":"proxy.kong.latency.client","value":{"doubleValue":1.230848}},{"key":"proxy.kong.target.id","value":{"stringValue":"unknown"}},{"key":"http.request.header.host","value":{"stringValue":"localhost"}},{"key":"proxy.kong.latency.upstream","value":{"doubleValue":553.02685546875}},{"key":"proxy.kong.request.id","value":{"stringValue":"15016151c88a7d6efdd9f70211390e00"}},{"key":"http.request.method","value":{"stringValue":"GET"}},{"key":"proxy.kong.latency.3p.total_io","value":{"doubleValue":97.96864}},{"key":"url.scheme","value":{"stringValue":"http"}},{"key":"http.request.size","value":{"stringValue":"177"}},{"key":"proxy.kong.latency.upstream.ttfb","value":{"doubleValue":273}},{"key":"network.protocol.version","value":{"stringValue":"1.1"}},{"key":"network.protocol.name","value":{"stringValue":"http"}},{"key":"proxy.kong.latency.3p.http_client.total_io","value":{"doubleValue":0}},{"key":"network.peer.address","value":{"stringValue":"98.85.100.80"}},{"key":"http.response.status_code","value":{"doubleValue":200}},{"key":"proxy.kong.latency.internal","value":{"doubleValue":0.7736565312499124}},{"key":"proxy.kong.latency.total","value":{"doubleValue":653}},{"key":"url.full","value":{"stringValue":"http://localhost/headers"}},{"key":"proxy.kong.latency.3p.tcpsock.total_io","value":{"doubleValue":0}},{"key":"http.route","value":{"stringValue":"/"}},{"key":"proxy.kong.latency.3p.dns.total_io","value":{"doubleValue":97.96864}},{"key":"client.port","value":{"stringValue":"54336"}},{"key":"proxy.kong.latency.upstream.read_response_duration","value":{"doubleValue":42}},{"key":"client.address","value":{"stringValue":"10.88.0.3"}},{"key":"network.peer.port","value":{"doubleValue":80}},{"key":"proxy.kong.service.id","value":{"stringValue":"1e4a129d-fc17-454f-91ae-e9e337d91ef7"}}],"status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"aacSUwadpqE=","parentSpanId":"XGRJrQWeLiY=","name":"kong.read_client_http_headers","kind":"SPAN_KIND_SERVER","startTimeUnixNano":"1734945777892000000","endTimeUnixNano":"1734945777892954368","attributes":[{"key":"proxy.kong.http.request.headers.count","value":{"doubleValue":7}},{"key":"proxy.kong.http.request.headers.size","value":{"doubleValue":154}}],"status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"PEs/Bv4uaTI=","parentSpanId":"XGRJrQWeLiY=","name":"kong.phase.rewrite","kind":"SPAN_KIND_INTERNAL","startTimeUnixNano":"1734945777892962048","endTimeUnixNano":"1734945777893030656","status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"7pDGDX3R5Oo=","parentSpanId":"XGRJrQWeLiY=","name":"kong.phase.access","kind":"SPAN_KIND_INTERNAL","startTimeUnixNano":"1734945777893038080","endTimeUnixNano":"1734945777992456960","status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"SjF7n5NjpnM=","parentSpanId":"7pDGDX3R5Oo=","name":"kong.router","kind":"SPAN_KIND_INTERNAL","startTimeUnixNano":"1734945777893170176","endTimeUnixNano":"1734945777893306368","attributes":[{"key":"proxy.kong.router.matched","value":{"boolValue":true}},{"key":"proxy.kong.router.upstream_path","value":{"stringValue":"/"}},{"key":"proxy.kong.route.id","value":{"stringValue":"d4783d0e-f7bd-41e5-b676-4bea060a4482"}},{"key":"proxy.kong.service.id","value":{"stringValue":"1e4a129d-fc17-454f-91ae-e9e337d91ef7"}}],"status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"IassFhpADd4=","parentSpanId":"7pDGDX3R5Oo=","name":"kong.access.plugin.basic-auth","kind":"SPAN_KIND_INTERNAL","startTimeUnixNano":"1734945777893407232","endTimeUnixNano":"1734945777893959680","attributes":[{"key":"proxy.kong.plugin.id","value":{"stringValue":"9159d5cf-a5c2-4b52-9b7b-ef8364738bd5"}}],"status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"+SHWMqgXcNI=","parentSpanId":"7pDGDX3R5Oo=","name":"kong.access.plugin.rate-limiting","kind":"SPAN_KIND_INTERNAL","startTimeUnixNano":"1734945777893981696","endTimeUnixNano":"1734945777894172928","attributes":[{"key":"proxy.kong.plugin.id","value":{"stringValue":"6def3c80-02b6-4c06-9cc8-aa4b6054083d"}}],"status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"QS939BibQew=","parentSpanId":"7pDGDX3R5Oo=","name":"kong.access.plugin.request-transformer","kind":"SPAN_KIND_INTERNAL","startTimeUnixNano":"1734945777894209280","endTimeUnixNano":"1734945777894420992","attributes":[{"key":"proxy.kong.plugin.id","value":{"stringValue":"a20e552b-a9ec-442e-8112-519fd4cba2cd"}}],"status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"ouLjxrSPI+U=","parentSpanId":"7pDGDX3R5Oo=","name":"kong.dns","kind":"SPAN_KIND_CLIENT","startTimeUnixNano":"1734945777894442496","endTimeUnixNano":"1734945777992443648","attributes":[{"key":"proxy.kong.dns.record.ip","value":{"stringValue":"98.85.100.80"}},{"key":"proxy.kong.dns.record.port","value":{"doubleValue":80}},{"key":"proxy.kong.dns.tries","value":{"arrayValue":{"values":[{"kvlistValue":{"values":[{"key":"msg","value":{"arrayValue":{"values":[{"stringValue":"cache-miss"}]}}},{"key":"qname","value":{"stringValue":"(short)httpbin.org"}}]}},{"kvlistValue":{"values":[{"key":"qtype","value":{"doubleValue":33}},{"key":"msg","value":{"arrayValue":{"values":[{"stringValue":"cache-miss"},{"stringValue":"querying"},{"stringValue":"dns server error: 3 name error"}]}}},{"key":"qname","value":{"stringValue":"httpbin.org"}}]}},{"kvlistValue":{"values":[{"key":"qtype","value":{"doubleValue":1}},{"key":"msg","value":{"arrayValue":{"values":[{"stringValue":"cache-miss"},{"stringValue":"querying"}]}}},{"key":"qname","value":{"stringValue":"httpbin.org"}}]}}]}}},{"key":"proxy.kong.dns.record.domain","value":{"stringValue":"httpbin.org"}}],"status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"VhrEVU4LHpU=","parentSpanId":"XGRJrQWeLiY=","name":"kong.read_client_http_body","kind":"SPAN_KIND_SERVER","startTimeUnixNano":"1734945777992481536","endTimeUnixNano":"1734945777992624128","status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"9lvYW/eP63k=","parentSpanId":"XGRJrQWeLiY=","name":"kong.phase.header_filter","kind":"SPAN_KIND_INTERNAL","startTimeUnixNano":"1734945778503905792","endTimeUnixNano":"1734945778504432640","status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"QqQCNGmyUrQ=","parentSpanId":"XGRJrQWeLiY=","name":"kong.phase.body_filter","kind":"SPAN_KIND_INTERNAL","startTimeUnixNano":"1734945778545603072","endTimeUnixNano":"1734945778545764864","status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"UO4zpoqc014=","parentSpanId":"XGRJrQWeLiY=","name":"kong.upstream.selection","kind":"SPAN_KIND_CLIENT","startTimeUnixNano":"1734945777992626432","endTimeUnixNano":"1734945778230653440","attributes":[{"key":"proxy.kong.upstream.id","value":{"stringValue":"unknown"}},{"key":"try_count","value":{"doubleValue":1}},{"key":"proxy.kong.upstream.lb_algorithm","value":{"stringValue":"unknown"}}],"status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"5r+nlh8z2Os=","parentSpanId":"UO4zpoqc014=","name":"kong.upstream.try_select","kind":"SPAN_KIND_CLIENT","startTimeUnixNano":"1734945777992626432","endTimeUnixNano":"1734945778230653440","attributes":[{"key":"network.peer.port","value":{"doubleValue":80}},{"key":"try_count","value":{"doubleValue":1}},{"key":"network.peer.address","value":{"stringValue":"98.85.100.80"}},{"key":"proxy.kong.latency.upstream.connect_duration","value":{"doubleValue":238}},{"key":"keepalive","value":{"boolValue":true}},{"key":"network.peer.name","value":{"stringValue":"httpbin.org"}},{"key":"proxy.kong.target.id","value":{"stringValue":"unknown"}}],"status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"NkBDHdQ8Prk=","parentSpanId":"XGRJrQWeLiY=","name":"kong.upstream.ttfb","kind":"SPAN_KIND_CLIENT","startTimeUnixNano":"1734945778230653440","endTimeUnixNano":"1734945778503653376","status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"Tx2fk5OVCb4=","parentSpanId":"XGRJrQWeLiY=","name":"kong.upstream.read_response","kind":"SPAN_KIND_CLIENT","startTimeUnixNano":"1734945778503653376","endTimeUnixNano":"1734945778545653248","status":{}},{"traceId":"OO2ACWBe0hJbXNOOKR4m6A==","spanId":"bcQ4HvPhEGo=","parentSpanId":"XGRJrQWeLiY=","name":"kong.wait_for_client_read","kind":"SPAN_KIND_SERVER","startTimeUnixNano":"1734945778545764864","endTimeUnixNano":"1734945778545898752","status":{}}]}]}]}
+{
+  "batches": [
+    {
+      "resource": {
+        "attributes": [
+          { "key": "service.version", "value": { "stringValue": "3.10.0.0" } },
+          { "key": "session.id", "value": { "stringValue": "01940283-85ee-7c33-83e7-0856a2a1ca4f" } },
+          { "key": "service.instance.id", "value": { "stringValue": "0bd91cfe-ba75-4357-bdb4-78f7e13854fd" } },
+          { "key": "service.name", "value": { "stringValue": "kong" } }
+        ]
+      },
+      "scopeSpans": [
+        {
+          "scope": { "name": "kong-internal", "version": "0.1.0" },
+          "spans": [
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "lLK1dNr/tSI=",
+              "parentSpanId": "DpaN/NfNMxQ=",
+              "name": "kong.read_client_http_headers",
+              "kind": "SPAN_KIND_SERVER",
+              "startTimeUnixNano": "1735208963957999872",
+              "endTimeUnixNano": "1735208963958648064",
+              "attributes": [
+                { "key": "proxy.kong.http.request.headers.count", "value": { "doubleValue": 6 } },
+                { "key": "proxy.kong.http.request.headers.size", "value": { "doubleValue": 128 } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "DpaN/NfNMxQ=",
+              "name": "kong",
+              "kind": "SPAN_KIND_SERVER",
+              "startTimeUnixNano": "1735208963958000128",
+              "endTimeUnixNano": "1735208964459319296",
+              "attributes": [
+                { "key": "proxy.kong.upstream.id", "value": { "stringValue": "unknown" } },
+                { "key": "proxy.kong.latency.internal", "value": { "doubleValue": 1.0300405312499947 } },
+                { "key": "proxy.kong.upstream.addr", "value": { "stringValue": "3.218.7.103" } },
+                { "key": "proxy.kong.upstream.host", "value": { "stringValue": "3.218.7.103:80" } },
+                { "key": "network.protocol.name", "value": { "stringValue": "http" } },
+                { "key": "proxy.kong.target.id", "value": { "stringValue": "unknown" } },
+                { "key": "network.protocol.version", "value": { "stringValue": "1.1" } },
+                { "key": "url.full", "value": { "stringValue": "http://localhost/headers" } },
+                { "key": "proxy.kong.request.id", "value": { "stringValue": "3a83076d3be6743b50369545c6d4f77c" } },
+                { "key": "proxy.kong.latency.upstream.read_response_duration", "value": { "doubleValue": 1 } },
+                { "key": "proxy.kong.latency.3p.dns.total_io", "value": { "doubleValue": 0.175872 } },
+                { "key": "url.scheme", "value": { "stringValue": "http" } },
+                { "key": "network.peer.port", "value": { "doubleValue": 80 } },
+                { "key": "proxy.kong.latency.upstream.ttfb", "value": { "doubleValue": 498 } },
+                { "key": "network.peer.address", "value": { "stringValue": "3.218.7.103" } },
+                { "key": "http.response.status_code", "value": { "doubleValue": 200 } },
+                { "key": "http.request.method", "value": { "stringValue": "GET" } },
+                { "key": "proxy.kong.latency.upstream", "value": { "doubleValue": 499.02685546875 } },
+                { "key": "proxy.kong.latency.client", "value": { "doubleValue": 0.767232 } },
+                { "key": "http.route", "value": { "stringValue": "/" } },
+                { "key": "proxy.kong.latency.total", "value": { "doubleValue": 501 } },
+                { "key": "proxy.kong.latency.3p.redis.total_io", "value": { "doubleValue": 0 } },
+                { "key": "proxy.kong.latency.3p.tcpsock.total_io", "value": { "doubleValue": 0 } },
+                { "key": "proxy.kong.latency.3p.http_client.total_io", "value": { "doubleValue": 0 } },
+                { "key": "http.request.size", "value": { "stringValue": "177" } },
+                { "key": "proxy.kong.latency.3p.total_io", "value": { "doubleValue": 0.175872 } },
+                { "key": "client.address", "value": { "stringValue": "10.88.0.7" } },
+                { "key": "client.port", "value": { "stringValue": "51156" } },
+                { "key": "http.request.header.host", "value": { "stringValue": "localhost" } },
+                { "key": "proxy.kong.service.id", "value": { "stringValue": "1e4a129d-fc17-454f-91ae-e9e337d91ef7" } },
+                { "key": "proxy.kong.route.id", "value": { "stringValue": "d4783d0e-f7bd-41e5-b676-4bea060a4482" } },
+                { "key": "proxy.kong.consumer.id", "value": { "stringValue": "26c55ffc-ff1e-44ee-8c1d-a57d0efed5bb" } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "PiKdoTJgc/c=",
+              "parentSpanId": "DpaN/NfNMxQ=",
+              "name": "kong.phase.rewrite",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208963958753792",
+              "endTimeUnixNano": "1735208963958865408",
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "yXWBGXhZ29Y=",
+              "parentSpanId": "DpaN/NfNMxQ=",
+              "name": "kong.phase.access",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208963958894080",
+              "endTimeUnixNano": "1735208963960036096",
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "lY5gQCcaL5I=",
+              "parentSpanId": "yXWBGXhZ29Y=",
+              "name": "kong.router",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208963958917632",
+              "endTimeUnixNano": "1735208963958934016",
+              "attributes": [
+                { "key": "proxy.kong.route.id", "value": { "stringValue": "d4783d0e-f7bd-41e5-b676-4bea060a4482" } },
+                { "key": "proxy.kong.service.id", "value": { "stringValue": "1e4a129d-fc17-454f-91ae-e9e337d91ef7" } },
+                { "key": "proxy.kong.router.matched", "value": { "boolValue": true } },
+                { "key": "proxy.kong.router.upstream_path", "value": { "stringValue": "/" } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "SLlzu6kPyXE=",
+              "parentSpanId": "yXWBGXhZ29Y=",
+              "name": "kong.access.plugin.basic-auth",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208963958967040",
+              "endTimeUnixNano": "1735208963959254016",
+              "attributes": [
+                { "key": "proxy.kong.plugin.id", "value": { "stringValue": "9159d5cf-a5c2-4b52-9b7b-ef8364738bd5" } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "GRPV92v/pt8=",
+              "parentSpanId": "yXWBGXhZ29Y=",
+              "name": "kong.access.plugin.rate-limiting",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208963959268864",
+              "endTimeUnixNano": "1735208963959515648",
+              "attributes": [
+                { "key": "proxy.kong.plugin.id", "value": { "stringValue": "6def3c80-02b6-4c06-9cc8-aa4b6054083d" } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "DClAYL6Qsf8=",
+              "parentSpanId": "yXWBGXhZ29Y=",
+              "name": "kong.access.plugin.response-ratelimiting",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208963959536128",
+              "endTimeUnixNano": "1735208963959665664",
+              "attributes": [
+                { "key": "proxy.kong.plugin.id", "value": { "stringValue": "627e56c6-b0e0-4022-b0ec-ef75c6ff97c8" } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "bO51KmlY3w4=",
+              "parentSpanId": "yXWBGXhZ29Y=",
+              "name": "kong.access.plugin.request-transformer",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208963959688448",
+              "endTimeUnixNano": "1735208963959779584",
+              "attributes": [
+                { "key": "proxy.kong.plugin.id", "value": { "stringValue": "a20e552b-a9ec-442e-8112-519fd4cba2cd" } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "h9ixbTDJBqo=",
+              "parentSpanId": "yXWBGXhZ29Y=",
+              "name": "kong.dns",
+              "kind": "SPAN_KIND_CLIENT",
+              "startTimeUnixNano": "1735208963959851776",
+              "endTimeUnixNano": "1735208963960031232",
+              "attributes": [
+                {
+                  "key": "proxy.kong.dns.tries",
+                  "value": {
+                    "arrayValue": {
+                      "values": [
+                        {
+                          "kvlistValue": {
+                            "values": [
+                              { "key": "qname", "value": { "stringValue": "(short)httpbin.org" } },
+                              {
+                                "key": "msg",
+                                "value": {
+                                  "arrayValue": {
+                                    "values": [{ "stringValue": "cache-hit" }, { "stringValue": "stale" }]
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "kvlistValue": {
+                            "values": [
+                              { "key": "qname", "value": { "stringValue": "httpbin.org" } },
+                              { "key": "qtype", "value": { "doubleValue": 1 } },
+                              {
+                                "key": "msg",
+                                "value": {
+                                  "arrayValue": {
+                                    "values": [
+                                      { "stringValue": "cache-hit" },
+                                      { "stringValue": "stale" },
+                                      { "stringValue": "scheduled" },
+                                      { "stringValue": "querying" }
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                { "key": "proxy.kong.dns.record.domain", "value": { "stringValue": "httpbin.org" } },
+                { "key": "proxy.kong.dns.record.ip", "value": { "stringValue": "3.218.7.103" } },
+                { "key": "proxy.kong.dns.record.port", "value": { "doubleValue": 80 } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "kC9mHmFwa/0=",
+              "parentSpanId": "DpaN/NfNMxQ=",
+              "name": "kong.read_client_http_body",
+              "kind": "SPAN_KIND_SERVER",
+              "startTimeUnixNano": "1735208963960070656",
+              "endTimeUnixNano": "1735208963960130048",
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "PXNRSA6elsM=",
+              "parentSpanId": "+AvT13McUuI=",
+              "name": "kong.upstream.try_select",
+              "kind": "SPAN_KIND_CLIENT",
+              "startTimeUnixNano": "1735208963960132096",
+              "endTimeUnixNano": "1735208963960158976",
+              "attributes": [
+                { "key": "proxy.kong.latency.upstream.connect_duration", "value": { "doubleValue": 0 } },
+                { "key": "network.peer.name", "value": { "stringValue": "httpbin.org" } },
+                { "key": "try_count", "value": { "doubleValue": 1 } },
+                { "key": "network.peer.port", "value": { "doubleValue": 80 } },
+                { "key": "proxy.kong.target.id", "value": { "stringValue": "unknown" } },
+                { "key": "network.peer.address", "value": { "stringValue": "3.218.7.103" } },
+                { "key": "keepalive", "value": { "boolValue": true } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "+AvT13McUuI=",
+              "parentSpanId": "DpaN/NfNMxQ=",
+              "name": "kong.upstream.selection",
+              "kind": "SPAN_KIND_CLIENT",
+              "startTimeUnixNano": "1735208963960132096",
+              "endTimeUnixNano": "1735208963960158976",
+              "attributes": [
+                { "key": "proxy.kong.upstream.lb_algorithm", "value": { "stringValue": "unknown" } },
+                { "key": "try_count", "value": { "doubleValue": 1 } },
+                { "key": "proxy.kong.upstream.id", "value": { "stringValue": "unknown" } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "HrEJpmxqb9o=",
+              "parentSpanId": "DpaN/NfNMxQ=",
+              "name": "kong.upstream.ttfb",
+              "kind": "SPAN_KIND_CLIENT",
+              "startTimeUnixNano": "1735208963960158976",
+              "endTimeUnixNano": "1735208964458159104",
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "ybawGhha0Lw=",
+              "parentSpanId": "DpaN/NfNMxQ=",
+              "name": "kong.upstream.read_response",
+              "kind": "SPAN_KIND_CLIENT",
+              "startTimeUnixNano": "1735208964458159104",
+              "endTimeUnixNano": "1735208964459159040",
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "PHuK4T5xMSE=",
+              "parentSpanId": "DpaN/NfNMxQ=",
+              "name": "kong.phase.header_filter",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208964458645504",
+              "endTimeUnixNano": "1735208964459145984",
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "8e5qvahyFPo=",
+              "parentSpanId": "PHuK4T5xMSE=",
+              "name": "kong.header_filter.plugin.response-ratelimiting",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208964458738688",
+              "endTimeUnixNano": "1735208964458847232",
+              "attributes": [
+                { "key": "proxy.kong.plugin.id", "value": { "stringValue": "627e56c6-b0e0-4022-b0ec-ef75c6ff97c8" } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "qx7nPzCFq5w=",
+              "parentSpanId": "PHuK4T5xMSE=",
+              "name": "kong.header_filter.plugin.response-transformer",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208964459056640",
+              "endTimeUnixNano": "1735208964459081728",
+              "attributes": [
+                { "key": "proxy.kong.plugin.id", "value": { "stringValue": "6bd5b000-87d5-46a5-8cc1-568745b48d42" } }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "fFfwaIB277w=",
+              "parentSpanId": "DpaN/NfNMxQ=",
+              "name": "kong.phase.body_filter",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208964459182848",
+              "endTimeUnixNano": "1735208964459252736",
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "QqdulrNubBk=",
+              "parentSpanId": "fFfwaIB277w=",
+              "name": "kong.body_filter.plugin.response-transformer",
+              "kind": "SPAN_KIND_INTERNAL",
+              "startTimeUnixNano": "1735208964459199232",
+              "endTimeUnixNano": "1735208964459250432",
+              "attributes": [
+                { "key": "num_chunks", "value": { "doubleValue": 2 } },
+                { "key": "proxy.kong.plugin.id", "value": { "stringValue": "6bd5b000-87d5-46a5-8cc1-568745b48d42" } },
+                {
+                  "key": "chunks",
+                  "value": {
+                    "arrayValue": {
+                      "values": [
+                        {
+                          "kvlistValue": {
+                            "values": [
+                              { "key": "execution_time", "value": { "doubleValue": 5632 } },
+                              { "key": "chunk_n", "value": { "doubleValue": 1 } }
+                            ]
+                          }
+                        },
+                        {
+                          "kvlistValue": {
+                            "values": [
+                              { "key": "execution_time", "value": { "doubleValue": 49408 } },
+                              { "key": "chunk_n", "value": { "doubleValue": 2 } }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ],
+              "status": {}
+            },
+            {
+              "traceId": "tD2fUL28u9XHxzjrlhPqlw==",
+              "spanId": "8fGtGUQHMJA=",
+              "parentSpanId": "DpaN/NfNMxQ=",
+              "name": "kong.wait_for_client_read",
+              "kind": "SPAN_KIND_SERVER",
+              "startTimeUnixNano": "1735208964459252736",
+              "endTimeUnixNano": "1735208964459312384",
+              "status": {}
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

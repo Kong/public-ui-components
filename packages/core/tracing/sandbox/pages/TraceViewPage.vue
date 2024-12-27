@@ -41,12 +41,12 @@
       :tabs="tabs"
     >
       <template #summary>
-        <LifecycleView />
+        <LifecycleView :root-span="spanTrees.roots[0]" />
       </template>
       <template #trace>
         <TraceView
           :config="config"
-          :root-span="spanRoots[0]"
+          :root-span="spanTrees.roots[0]"
           :show-skeleton="showSkeleton"
           :url="url"
         />
@@ -74,7 +74,7 @@ import traceBatches from '../fixtures/trace-batches.json'
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 // const spanRoots = computed(() => buildSpanTrees(rawSpans))
-const spanRoots = computed(() => buildSpanTrees(mergeSpansInTraceBatches(traceBatches)))
+const spanTrees = computed(() => buildSpanTrees(mergeSpansInTraceBatches(traceBatches)))
 const showSkeleton = ref(false)
 const slideoutVisible = ref(false)
 const tabs = [

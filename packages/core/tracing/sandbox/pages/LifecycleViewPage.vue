@@ -1,9 +1,13 @@
 <template>
-  <LifecycleView />
+  <LifecycleView :root-span="spanTrees.roots[0]" />
 </template>
 
 <script setup lang="ts">
-import { LifecycleView } from '../../src'
+import { computed } from 'vue'
+import { buildSpanTrees, LifecycleView, mergeSpansInTraceBatches } from '../../src'
+import traceBatches from '../fixtures/trace-batches.json'
+
+const spanTrees = computed(() => buildSpanTrees(mergeSpansInTraceBatches(traceBatches)))
 </script>
 
 <style lang="scss" scoped>

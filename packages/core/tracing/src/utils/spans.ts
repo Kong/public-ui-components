@@ -58,16 +58,16 @@ export const calculateSpanDuration = (span: Span<bigint>): number | undefined =>
   return durationNano
 }
 
-export interface BuildSpanTreesResult {
+export interface SpanTrees {
   /**
    * Root spans of the span trees.
    */
-  rootSpans: SpanNode[]
+  roots: SpanNode[]
 
   /**
-   * Sorted spans by their start time.
+   * All spans sorted by start time.
    */
-  sortedSpans: Span<bigint>[]
+  spans: Span<bigint>[]
 }
 
 /**
@@ -76,7 +76,7 @@ export interface BuildSpanTreesResult {
  * @param spans the spans to build the trees from
  * @returns the array of root nodes of the span trees
  */
-export const buildSpanTrees = (spans: Span[]): BuildSpanTreesResult => {
+export const buildSpanTrees = (spans: Span[]): SpanTrees => {
   const nodes = new Map<string, SpanNode>()
 
   for (const span of spans) {
@@ -163,8 +163,8 @@ export const buildSpanTrees = (spans: Span[]): BuildSpanTreesResult => {
   }
 
   return {
-    rootSpans: roots,
-    sortedSpans: Array.from(nodes.values()).sort(compareSpanNode).map(node => node.span),
+    roots: roots,
+    spans: Array.from(nodes.values()).sort(compareSpanNode).map(node => node.span),
   }
 }
 

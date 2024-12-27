@@ -1,12 +1,12 @@
 import type { Edge, Node } from '@vue-flow/core'
 import type { LifecycleNodeType } from '../constants'
-import type { Span } from './spans'
+import type { SpanNode } from './spans'
 
 export interface LifecycleNodeData {
   label: string
   durationNano?: number
   type: LifecycleNodeType
-  spans?: Span<bigint>[]
+  spans?: SpanNode[]
 }
 
 export interface LifecycleNode extends Node<LifecycleNodeData, any, LifecycleNodeType> {

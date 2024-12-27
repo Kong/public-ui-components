@@ -51,14 +51,16 @@ const props = defineProps<{
 
 const tooltipText = computed(() => props.data.type === 'upstream' ? 'This is an upstream phase' : undefined)
 
+// TODO: This is skipped for now
 const nodeLatencyClass = computed(() => {
-  if (props.data.durationNano <= 1 * 1e6) {
-    return 'latency-low'
-  } else if (props.data.durationNano <= 10 * 1e6) {
-    return 'latency-medium'
-  } else {
-    return 'latency-high'
-  }
+  return ''
+  // if (props.data.durationNano <= 1 * 1e6) {
+  //   return 'latency-low'
+  // } else if (props.data.durationNano <= 10 * 1e6) {
+  //   return 'latency-medium'
+  // } else {
+  //   return 'latency-high'
+  // }
 })
 </script>
 
@@ -79,10 +81,10 @@ const nodeLatencyClass = computed(() => {
     font-weight: $kui-font-weight-semibold;
     gap: $kui-space-10;
   }
+
   .duration {
     font-size: $kui-font-size-20;
   }
-
 
   &.latency-low {
     background-color: $kui-color-background-primary-weakest;

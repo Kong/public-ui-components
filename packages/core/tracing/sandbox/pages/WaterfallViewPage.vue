@@ -10,7 +10,7 @@
   </KCard>
 
   <WaterfallView
-    v-for="(root, i) in spanRoots"
+    v-for="(root, i) in spanTrees.roots"
     :key="i"
     :root-span="root"
     :show-skeleton="showSkeleton"
@@ -23,7 +23,7 @@ import { buildSpanTrees, WaterfallView } from '../../src'
 import rawSpans from '../fixtures/spans.json'
 
 const showSkeleton = ref(false)
-const spanRoots = computed(() => buildSpanTrees(rawSpans))
+const spanTrees = computed(() => buildSpanTrees(rawSpans))
 </script>
 
 <style lang="scss" scoped>
