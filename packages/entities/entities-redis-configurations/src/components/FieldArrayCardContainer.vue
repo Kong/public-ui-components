@@ -7,6 +7,7 @@
     <KButton
       appearance="tertiary"
       class="array-card-remove-button"
+      :disabled="disabled"
       @click="$emit('remove-item')"
     >
       <TrashIcon />
@@ -29,6 +30,10 @@ defineProps({
   index: {
     type: Number,
     default: undefined,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 })
 

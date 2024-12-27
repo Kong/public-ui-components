@@ -10,6 +10,7 @@
       <FieldArrayCardContainer
         v-for="(node, index) of nodes"
         :key="node.id"
+        :disabled="readonly"
         @remove-item="removeItem(index)"
       >
         <div class="sentinel-node-items">
@@ -20,6 +21,7 @@
               info: t('form.fields.sentinel_node_host.tooltip'),
               tooltipAttributes: { maxWidth: '400' },
             }"
+            :readonly="readonly"
             required
           />
           <KInput
@@ -29,12 +31,14 @@
               info: t('form.fields.sentinel_node_port.tooltip'),
               tooltipAttributes: { maxWidth: '400' },
             }"
+            :readonly="readonly"
             type="number"
           />
         </div>
       </FieldArrayCardContainer>
       <KButton
         appearance="tertiary"
+        :disabled="readonly"
         @click="addItem"
       >
         <AddCircleIcon />
@@ -51,6 +55,10 @@ import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
 import composables from '../composables'
 import type { Identifiable, SentinelNode } from '../types'
 import { genDefaultSentinelNode } from '../helpers'
+
+defineProps<{
+  readonly?: boolean
+}>()
 
 const nodes = defineModel<Identifiable<SentinelNode>[]>({ required: true })
 

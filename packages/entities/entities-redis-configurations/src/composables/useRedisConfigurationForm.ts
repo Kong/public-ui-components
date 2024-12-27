@@ -5,7 +5,13 @@ import { shallowCopyWithoutId } from '../helpers'
 
 import type { RedisConfigurationFormState } from '../types'
 
-export const useRedisConfigurationForm = () => {
+export type Options = {
+  partialId?: string
+}
+
+export const useRedisConfigurationForm = (options: Options) => {
+  const { partialId } = options
+  const isEdit = !!partialId
   const form = reactive<RedisConfigurationFormState>({
     fields: {
       name: '',
@@ -139,5 +145,6 @@ export const useRedisConfigurationForm = () => {
     form,
     canSubmit,
     payload,
+    isEdit,
   }
 }

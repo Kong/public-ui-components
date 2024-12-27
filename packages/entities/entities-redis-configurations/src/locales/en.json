@@ -108,7 +108,7 @@
         "tooltip": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels."
       },
       "cluster_node_ip": {
-        "label": "Ip",
+        "label": "IP",
         "tooltip": "A string representing a host name, such as example.com."
       },
       "cluster_node_port": {
