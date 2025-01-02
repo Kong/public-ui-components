@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.67](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.5.66...@kong-ui-public/entities-consumer-groups@3.5.67) (2025-01-02)
+
+
+### Bug Fixes
+
+* **entities-consumers:** provide correct description for cascade delete ([#1878](https://github.com/Kong/public-ui-components/issues/1878)) ([981ad4a](https://github.com/Kong/public-ui-components/commit/981ad4a77538bbef391a2eb0ce94b224ea4a429e))
+
+
+
+
+
 ## [3.5.66](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.5.65...@kong-ui-public/entities-consumer-groups@3.5.66) (2024-12-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
