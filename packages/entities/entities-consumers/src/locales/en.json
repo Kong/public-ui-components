@@ -35,7 +35,7 @@
     },
     "delete": {
       "title": "Delete a Consumer",
-      "description": "Deleting this consumer will also remove this consumer from any associated consumer group. This action cannot be reversed."
+      "description": "Deleting this consumer will also remove this consumer from any associated consumer group and delete all its plugins. This action cannot be reversed."
     },
     "consumer_groups": {
       "add": {
