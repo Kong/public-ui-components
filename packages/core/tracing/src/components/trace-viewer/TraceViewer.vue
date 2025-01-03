@@ -64,7 +64,11 @@
         v-else-if="selectedSpan"
         class="span-details"
       >
-        <SpanBasicInfo :span="selectedSpan.span" />
+        <SpanBasicInfo
+          v-if="selectedSpan && spanDescription"
+          :description="spanDescription"
+          :name="selectedSpan.span.name"
+        />
 
         <KAlert
           v-if="spanMaybeIncomplete(selectedSpan)"
@@ -111,11 +115,11 @@
 <script setup lang="ts">
 import { DangerIcon } from '@kong/icons'
 import { Pane, Splitpanes } from '@kong/splitpanes'
-import { provide, reactive, shallowRef } from 'vue'
+import { computed, provide, reactive, shallowRef } from 'vue'
 import composables from '../../composables'
 import { TRACE_VIEWER_CONFIG, WATERFALL_ROW_COLUMN_GAP, WATERFALL_ROW_LABEL_WIDTH, WATERFALL_ROW_PADDING_X, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
 import type { SpanNode, TraceViewerConfig } from '../../types'
-import { spanMaybeIncomplete } from '../../utils'
+import { getPhaseAndPlugin, spanMaybeIncomplete } from '../../utils'
 import WaterfallView from '../waterfall/WaterfallView.vue'
 import SpanAttributeTable from './SpanAttributeTable.vue'
 import SpanBasicInfo from './SpanBasicInfo.vue'
@@ -125,7 +129,7 @@ import TraceLatency from './TraceLatency.vue'
 
 import '@kong/splitpanes/dist/splitpanes.css'
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t, te } } = composables.useI18n()
 
 const props = defineProps<{
   config: TraceViewerConfig
@@ -138,6 +142,19 @@ const props = defineProps<{
 provide<TraceViewerConfig>(TRACE_VIEWER_CONFIG, reactive(props.config))
 
 const selectedSpan = shallowRef<SpanNode | undefined>(undefined)
+
+const spanDescription = computed(() => {
+  const span = selectedSpan.value?.span
+  if (!span) {
+    return false
+  }
+
+  const pluginSpan = getPhaseAndPlugin(span.name)
+  // We will use general description for plugin spans that exactly match `kong.(phase).plugin.(plugin)`.
+  const subI18nKey = pluginSpan && !pluginSpan.suffix ? `kong.${pluginSpan.phase}.plugin` : span.name
+  const i18nKey = `trace_viewer.span_basic_info.descriptions.${subI18nKey}.$`
+  return te(i18nKey as any) ? t(i18nKey as any) : undefined
+})
 
 const handleUpdateSelectedSpan = (span?: SpanNode) => {
   selectedSpan.value = span
