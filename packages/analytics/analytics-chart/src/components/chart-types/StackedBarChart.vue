@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ChartDataset, ChartOptions } from 'chart.js'
+import type { ChartDataset, ChartOptions, LegendItem } from 'chart.js'
 import { Chart } from 'chart.js'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
@@ -57,7 +57,7 @@ import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmou
 import type { PropType, Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
-import type { BarChartData } from '../../utils'
+import { type BarChartData, generateLegendItems } from '../../utils'
 import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, dataTotal, conditionalDataTotal, debounce } from '../../utils'
 import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
@@ -206,7 +206,7 @@ const axis = ref< HTMLCanvasElement>()
 const legendID = ref(uuidv4())
 const reactiveAnnotationsID = uuidv4()
 const maxOverflowPluginID = uuidv4()
-const legendItems = ref([])
+const legendItems = ref<LegendItem[]>([])
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
 const axesTooltip = ref<AxesTooltipState>({
   show: false,
@@ -248,10 +248,8 @@ const htmlLegendPlugin = {
     // Update any computed properties that depend on chart state.
     // As of writing, this is important for correctly calculating maxOverflow based on dataset visibility.
     dependsOnChartUpdate.value += 1
-    // @ts-ignore - ChartJS types are incomplete
-    legendItems.value = chart.options.plugins.legend.labels.generateLabels(chart)
-      .map(e => ({ ...e, value: props.legendValues && props.legendValues[e.text] }))
-      .sort(props.chartLegendSortFn)
+
+    legendItems.value = generateLegendItems(chart, props.legendValues, props.chartLegendSortFn)
   },
 }
 

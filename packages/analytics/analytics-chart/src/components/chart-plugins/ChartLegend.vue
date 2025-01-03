@@ -7,7 +7,7 @@
     data-testid="legend"
   >
     <li
-      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value } in (items as any[])"
+      v-for="{ fillStyle, strokeStyle, text, datasetIndex, index, value, isSegmentEmpty } in (items as any[])"
       :key="text"
       ref="legendItemsRef"
       @click="handleLegendItemClick(datasetIndex, index)"
@@ -22,7 +22,7 @@
       >
         <div
           class="label"
-          :class="{ 'truncate-label' : shouldTruncate }"
+          :class="{ 'truncate-label' : shouldTruncate, empty: isSegmentEmpty }"
           :title="text"
         >
           {{ text }}
@@ -336,6 +336,10 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
     .strike-through {
       text-decoration: line-through;
+    }
+
+    .empty {
+      font-style: italic;
     }
   }
 }

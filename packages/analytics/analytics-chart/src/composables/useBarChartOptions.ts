@@ -1,4 +1,4 @@
-import type { BarChartOptions, ExternalTooltipContext } from '../types'
+import type { BarChartOptions, ExternalTooltipContext, KChartData } from '../types'
 import { Tooltip, Interaction } from 'chart.js'
 import type {
   TooltipPositionerFunction,
@@ -8,6 +8,7 @@ import type {
   InteractionModeFunction,
   InteractionItem,
   CategoryScale,
+  Chart,
 } from 'chart.js'
 import { isNullOrUndef, getRelativePosition } from 'chart.js/helpers'
 import { FONT_SIZE_SMALL, FONT_SIZE_REGULAR, MAX_LABEL_LENGTH, horizontalTooltipPositioning, tooltipBehavior } from '../utils'
@@ -76,6 +77,28 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
   // For larger datasets, allow enough vertical space to display all axis labels
   const labelFontSize = chartOptions.numLabels.value > 25 ? FONT_SIZE_SMALL : FONT_SIZE_REGULAR
 
+  const genTickFont = ({ chart, index }: { chart: Chart, index: number }) => {
+    const data = chart.data as KChartData | undefined
+    return {
+      size: labelFontSize,
+      style: data?.isLabelEmpty?.[index] ? 'italic' : 'normal',
+    }
+  }
+
+  const genTickLabel = (scale: CategoryScale, value: string, index: number) => {
+    if (scale.chart.options.indexAxis === scale.axis) {
+      value = scale.getLabelForValue(index)
+
+      if (value && value.length > MAX_LABEL_LENGTH) {
+        return value.slice(0, MAX_LABEL_LENGTH) + '...'
+      } else {
+        return value
+      }
+    }
+
+    return scale.getLabelForValue(Number(value))
+  }
+
   const options = computed(() => {
     return {
       indexAxis: chartOptions.indexAxis,
@@ -93,20 +116,10 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
           ticks: {
             maxRotation: 90,
             autoSkip: false,
-            font: labelFontSize,
+            font: genTickFont,
             callback: function(value: string, index: number): string {
               const that = this as unknown as CategoryScale
-              if (that.chart.options.indexAxis === that.axis) {
-                value = that.getLabelForValue(index)
-                const maxLabelLength = 10
-                if (value && value.length > maxLabelLength) {
-                  return value.slice(0, maxLabelLength) + '...'
-                } else {
-                  return value
-                }
-              }
-
-              return that.getLabelForValue(Number(value))
+              return genTickLabel(that, value, index)
             },
           },
           title: {
@@ -133,21 +146,10 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
             drawBorder: false,
           },
           ticks: {
-            font: labelFontSize,
+            font: genTickFont,
             callback: function(value: string, index: number): string {
               const that = this as unknown as CategoryScale
-
-              if (that.chart.options.indexAxis === that.axis) {
-                value = that.getLabelForValue(index)
-
-                if (value && value.length > MAX_LABEL_LENGTH) {
-                  return value.slice(0, MAX_LABEL_LENGTH) + '...'
-                } else {
-                  return value
-                }
-              }
-
-              return that.getLabelForValue(Number(value))
+              return genTickLabel(that, value, index)
             },
           },
           title: {

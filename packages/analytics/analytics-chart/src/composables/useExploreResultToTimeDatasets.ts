@@ -134,15 +134,13 @@ export default function useExploreResultToTimeDataset(
             return acc
           }, {})
 
-        const dimensionsCrossMetrics = metricNames.length === 1
-          ? metricNames.flatMap(metric => {
-            return datasetLabels.map(label => [metric, label.name])
+        const dimensionsCrossMetrics: [string, string, boolean][] = metricNames.length === 1
+          ? metricNames.flatMap<[string, string, boolean]>(metric => {
+            return datasetLabels.map<[string, string, boolean]>(label => [metric, label.name, label.id === 'empty'])
           })
-          : datasetLabels.map(label => [label.name, label.name])
+          : datasetLabels.map(label => [label.name, label.name, label.id === 'empty'])
 
-        const colorMap: { [label: string]: string } = {}
-
-        const datasets: Dataset[] = [...dimensionsCrossMetrics].map(([metric, dimension], i) => {
+        const datasets: Dataset[] = [...dimensionsCrossMetrics].map(([metric, dimension, isSegmentEmpty], i) => {
           const filled = zeroFilledTimeSeries.map(ts => {
             if (ts in timedEvents && metric in timedEvents[ts]) {
               return { x: ts, y: timedEvents[ts][metric][dimension] || 0 }
@@ -162,8 +160,6 @@ export default function useExploreResultToTimeDataset(
             ? lookupDatavisColor(i, colorPalette)
             : colorPalette[dimension] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
 
-          colorMap[dimension] = baseColor
-
           return {
             rawDimension: dimension,
             rawMetric: metric,
@@ -176,6 +172,7 @@ export default function useExploreResultToTimeDataset(
             ...defaultLineOptions,
             fill,
             borderWidth: fill ? NO_BORDER : BORDER_WIDTH,
+            isSegmentEmpty,
           }
         })
 
@@ -214,7 +211,6 @@ export default function useExploreResultToTimeDataset(
         }
         return {
           datasets,
-          colorMap,
         }
       }
     } catch (err) {

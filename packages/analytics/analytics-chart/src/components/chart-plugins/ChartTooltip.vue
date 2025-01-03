@@ -28,7 +28,7 @@
       class="tooltip"
     >
       <template
-        v-for="{ backgroundColor, borderColor, label, value } in (series as any)"
+        v-for="{ backgroundColor, borderColor, label, value, isSegmentEmpty } in (series as any)"
         :key="label"
       >
         <li v-if="series.length">
@@ -36,7 +36,10 @@
             class="square-marker"
             :style="{ background: backgroundColor, 'border-color': borderColor }"
           />
-          <span class="display-label">{{ label }}</span>
+          <span
+            class="display-label"
+            :class="{ empty: isSegmentEmpty }"
+          >{{ label }}</span>
           <span class="display-value">{{ value }}</span>
         </li>
       </template>
@@ -268,10 +271,15 @@ ul.tooltip {
   }
 
   .display-label {
+    flex: 1;
     max-width: 75%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    &.empty {
+      font-style: italic;
+    }
   }
 
   .display-value {

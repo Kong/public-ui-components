@@ -35,21 +35,20 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
       return []
     }
 
-    const colorMap: { [label: string]: string } = {}
-
     const baseColor = Array.isArray(colorPalette)
       ? lookupDatavisColor(i, colorPalette)
       : colorPalette[dimension.name] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
 
-    colorMap[dimension.name] = baseColor
-
+    // The label here matters for the title in the tooltip and legend.  It doesn't impact axes.
     return {
+      // Note: there's a bug here; if an entity name overlaps with a dimension name, it'll get translated.
       // @ts-ignore - dynamic i18n key
       label: (i18n && i18n.te(`chartLabels.${dimension.name}`) && i18n.t(`chartLabels.${dimension.name}`)) || dimension.name,
       backgroundColor: baseColor,
       data: rowLabels.map(rowPosition => {
         return pivotRecords[`${rowPosition.id},${dimension.id}`] || null
       }),
+      isSegmentEmpty: dimension.id === 'empty',
     } as Dataset
   })
 
@@ -136,15 +135,19 @@ export default function useExploreResultToDatasets(
           colorPalette: deps.colorPalette || datavisPalette,
         })
 
+        // The labels here are for the axes.  They don't impact the tooltip or legend.
         const labels = !hasDimensions
           // @ts-ignore - dynamic i18n key
           ? metricNames.map(name => (i18n && i18n.te(`chartLabels.${name}`) && i18n.t(`chartLabels.${name}`)) || name)
           // @ts-ignore - dynamic i18n key
           : rowLabels.map(label => (i18n && i18n.te(`chartLabels.${label.name}`) && i18n.t(`chartLabels.${label.name}`)) || label.name)
 
+        const isLabelEmpty = rowLabels.map(rowPosition => rowPosition.id === 'empty')
+
         const data: KChartData = {
           labels,
           datasets,
+          isLabelEmpty,
         }
 
         return data

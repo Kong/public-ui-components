@@ -4,19 +4,20 @@ import type { ChartTooltipSortFn } from './chartjs-options'
 import type { ChartType, SimpleChartType } from './chart-types'
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 
-// Chart.js extendend interfaces
+// Chart.js extended interfaces
 export type Dataset = ChartDataset & { rawDimension: string,
   rawMetric?: string,
   total?: number,
   lineTension?: number,
   fill?: boolean,
-  isThreshold?: boolean
+  isThreshold?: boolean,
+  isSegmentEmpty?: boolean,
 }
 
 export interface KChartData extends ChartData {
   datasets: Dataset[]
   labels?: string[]
-  colorMap?: { [label: string]: string }
+  isLabelEmpty?: boolean[]
 }
 
 export interface AnalyticsDataPoint {
@@ -26,7 +27,7 @@ export interface AnalyticsDataPoint {
 
 /**
  * Dimension value to color hex code mapping
- * for custom color pallettes
+ * for custom color palettes
  *
  * Use for deterministic dimension values for example
  * graphing requests by status code over time, dimensions
