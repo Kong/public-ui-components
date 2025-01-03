@@ -37,6 +37,14 @@ const konnectConfig = ref<KonnectPluginSelectConfig>({
       control_plane_id: controlPlaneId.value,
       plugin,
     },
+    query: {
+      cancelRoute: JSON.stringify({
+        name: 'select-plugin',
+        query: {
+          anchor: plugin,
+        },
+      }),
+    },
   }),
   // custom plugins
   createCustomRoute: { name: 'create-custom-plugin' },
