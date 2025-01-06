@@ -1,4 +1,4 @@
-name: On PR close
+name: PR on close
 on:
   pull_request:
     types: ['closed']
