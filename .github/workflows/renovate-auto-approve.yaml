@@ -1,5 +1,4 @@
----
-name: Renovate Bot dependency updates auto-approve
+name: Renovate Bot dependency updates PR auto-approval
 
 permissions:
   pull-requests: write
