@@ -243,6 +243,11 @@ const debouncedSetNotificationHeight = debounce((force = false): void => {
 // Add a ResizeObserver to determine when the navbar element content changes
 const resizeObserver = ref<ResizeObserver>()
 
+defineExpose({
+  /** Expose the computed top offset */
+  topOffset: notificationHeight,
+})
+
 onMounted(() => {
   // Add classes to the `html` and `body` elements to scope styles
   document?.body?.classList.add('kong-ui-app-layout-body')
