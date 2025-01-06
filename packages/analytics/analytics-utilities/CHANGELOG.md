@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.11.1...@kong-ui-public/analytics-utilities@5.12.0) (2025-01-06)
+
+
+### Features
+
+* **analytics:** Type support for new dimensions for query and filter ([#1881](https://github.com/Kong/public-ui-components/issues/1881)) ([000bad6](https://github.com/Kong/public-ui-components/commit/000bad64a7873bee850103c9a5364a3af08f2503))
+
+
+
+
+
 ## [5.11.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.11.0...@kong-ui-public/analytics-utilities@5.11.1) (2024-12-19)
 
 
