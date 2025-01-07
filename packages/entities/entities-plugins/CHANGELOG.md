@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.8.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.8.11...@kong-ui-public/entities-plugins@9.8.12) (2025-01-07)
+
+
+### Bug Fixes
+
+* **pluginform:** remove reset type of cancel button ([#1883](https://github.com/Kong/public-ui-components/issues/1883)) ([196ffae](https://github.com/Kong/public-ui-components/commit/196ffae5a359e685c84f350e72182d1c76b134f1))
+
+
+
+
+
 ## [9.8.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.8.10...@kong-ui-public/entities-plugins@9.8.11) (2025-01-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
