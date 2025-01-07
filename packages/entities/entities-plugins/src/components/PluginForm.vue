@@ -74,7 +74,6 @@
               class="form-action-button"
               :data-testid="`plugin-${isEditing ? 'edit' : 'create'}-form-cancel`"
               :disabled="form.isReadonly"
-              type="reset"
               @click="handleClickCancel"
             >
               {{ t('actions.cancel') }}
