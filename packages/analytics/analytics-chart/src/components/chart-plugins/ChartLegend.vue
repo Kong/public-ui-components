@@ -16,34 +16,45 @@
         class="square-marker"
         :style="{ background: fillStyle, 'border-color': strokeStyle }"
       />
-      <div
-        class="label-container"
-        :class="{ 'strike-through': !isDatasetVisible(datasetIndex, index) }"
-      >
+      <KTooltip>
         <div
-          class="label"
-          :class="{ 'truncate-label' : shouldTruncate, empty: isSegmentEmpty }"
-          :title="text"
+          class="label-container"
+          :class="{ 'strike-through': !isDatasetVisible(datasetIndex, index) }"
         >
-          {{ text }}
+          <div
+            class="label"
+            :class="{ 'truncate-label' : shouldTruncate, empty: isSegmentEmpty }"
+          >
+            {{ text }}
+          </div>
+          <div
+            v-if="value && showValues"
+            class="sub-label"
+          >
+            {{ value.formatted }}
+          </div>
         </div>
-        <div
-          v-if="value && showValues"
-          class="sub-label"
+        <template
+          v-if="isSegmentEmpty"
+          #content
         >
-          {{ value.formatted }}
-        </div>
-      </div>
+          <div class="tooltip-content">
+            {{ i18n.t('emptyEntityInfo') }}
+          </div>
+        </template>
+      </KTooltip>
     </li>
   </ul>
 </template>
 
 <script setup lang="ts">
 import { ChartLegendPosition } from '../../enums'
-import { Chart, type LegendItem } from 'chart.js'
+import { Chart } from 'chart.js'
 import { inject, onBeforeUnmount, onMounted, ref, watch, type PropType, computed } from 'vue'
 import { KUI_SPACE_100, KUI_SPACE_80, KUI_SPACE_110 } from '@kong/design-tokens'
 import { debounce } from '../../utils'
+import type { EnhancedLegendItem } from 'src/types'
+import composables from '../../composables'
 
 const props = defineProps({
   id: {
@@ -51,7 +62,7 @@ const props = defineProps({
     required: true,
   },
   items: {
-    type: Object as PropType<LegendItem[]>,
+    type: Object as PropType<EnhancedLegendItem[]>,
     required: true,
   },
   chartInstance: {
@@ -61,11 +72,12 @@ const props = defineProps({
   },
 })
 
+const { i18n } = composables.useI18n()
 const legendContainerRef = ref<HTMLElement>()
 const legendItemsRef = ref<HTMLElement[]>([])
 const showValues = inject('showLegendValues', true)
 const position = inject('legendPosition', ref(ChartLegendPosition.Right))
-const legendItemsTracker = ref<LegendItem[]>([])
+const legendItemsTracker = ref<EnhancedLegendItem[]>([])
 const legendHeight = ref<string>(KUI_SPACE_80)
 
 // Check if the legend wraps by comparing the top position of each item.
@@ -341,6 +353,10 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
     .empty {
       font-style: italic;
+    }
+
+    .tooltip-content {
+      max-width: 40ch;
     }
   }
 }
