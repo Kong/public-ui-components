@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.0...@kong-ui-public/app-layout@4.3.1) (2025-01-08)
+
+
+### Bug Fixes
+
+* topoffset ([2669218](https://github.com/Kong/public-ui-components/commit/2669218be90643baa7074f33df8aec03f3eb5272))
+
+
+
+
+
 # [4.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.2.63...@kong-ui-public/app-layout@4.3.0) (2025-01-06)
 
 
