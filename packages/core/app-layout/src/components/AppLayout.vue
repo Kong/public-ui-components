@@ -243,9 +243,11 @@ const debouncedSetNotificationHeight = debounce((force = false): void => {
 // Add a ResizeObserver to determine when the navbar element content changes
 const resizeObserver = ref<ResizeObserver>()
 
+const topOffset = computed((): number => notificationHeight.value)
+
 defineExpose({
   /** Expose the computed top offset */
-  topOffset: notificationHeight,
+  topOffset,
 })
 
 onMounted(() => {
