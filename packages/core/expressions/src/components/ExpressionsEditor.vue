@@ -11,12 +11,13 @@ import type { ParseResult, ParseResultOk, Schema as AtcSchema } from '@kong/atc-
 import { Parser } from '@kong/atc-router'
 import type * as Monaco from 'monaco-editor'
 import * as monaco from 'monaco-editor'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { createSchema, type Schema } from '../schema'
 import { registerLanguage, registerTheme, theme } from '../monaco'
 
 let editor: Monaco.editor.IStandaloneCodeEditor | undefined
 let editorModel: Monaco.editor.ITextModel
+const editorRef = shallowRef<Monaco.editor.IStandaloneCodeEditor>()
 
 const { debounce } = useDebounce()
 
@@ -80,6 +81,8 @@ onMounted(() => {
     value: expression.value,
     ...props.editorOptions,
   })
+
+  editorRef.value = editor
 
   if (props.defaultShowDetails) {
     editor.getContribution<Record<string, any> & Monaco.editor.IEditorContribution>('editor.contrib.suggestController')
@@ -207,6 +210,10 @@ watch(() => parseResult.value, (result?: ParseResult) => {
   }
 
   monaco.editor.setModelMarkers(editorModel, 'kong-expressions-editor', markers)
+})
+
+defineExpose({
+  editor: editorRef,
 })
 </script>
 
