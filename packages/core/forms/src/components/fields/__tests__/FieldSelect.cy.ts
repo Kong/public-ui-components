@@ -6,6 +6,8 @@ describe('<FieldTester /> - FieldSelect', () => {
   const fieldLabels = ['HTTPS Redirect Status Code', 'Protocols']
   const fieldValues = [307, 'http, https']
   const updatedValues = [426, 'https']
+  const styleClasses = ['', 'plugin-protocols-select']
+
   const schema: FormSchema = {
     fields: [
       // with number[] and no groups
@@ -38,6 +40,7 @@ describe('<FieldTester /> - FieldSelect', () => {
           hideNoneSelectedText: true,
         },
         required: true,
+        styleClasses: styleClasses[1],
         values: [
           {
             name: 'grpc',
@@ -178,6 +181,11 @@ describe('<FieldTester /> - FieldSelect', () => {
         cy.get(`.field-select.required label[for="${fieldKey}"]`).should('exist')
       } else {
         cy.get(`.field-select.required label[for="${fieldKey}"]`).should('not.exist')
+      }
+
+      // check style classes
+      if (schema.fields[i].styleClasses) {
+        cy.get('.form-group.field-select').should('have.class', styleClasses[i])
       }
 
       // check all groups / options render

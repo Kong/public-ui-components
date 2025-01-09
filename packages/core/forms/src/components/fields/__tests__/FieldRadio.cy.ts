@@ -15,6 +15,7 @@ describe('<FieldTester /> - FieldRadio', () => {
       label: fieldLabel,
       required: true,
       help: 'Specify a gender if it is known',
+      styleClasses: 'cool-cats',
       values: [
         { name: 'Male', value: fieldValue },
         { name: 'Female', value: 'female' },
@@ -50,6 +51,11 @@ describe('<FieldTester /> - FieldRadio', () => {
       cy.get('.required').find(`.form-group-label[for="${fieldKey}"]`).should('exist')
     } else {
       cy.get('.required').find(`.form-group-label[for="${fieldKey}"]`).should('not.exist')
+    }
+
+    // check style classes
+    if (schema.fields[0].styleClasses) {
+      cy.get('.form-group.field-radio').should('have.class', schema.fields[0].styleClasses)
     }
 
     // check help text

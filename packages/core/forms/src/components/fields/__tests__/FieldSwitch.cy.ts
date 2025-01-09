@@ -12,6 +12,7 @@ describe('<FieldTester /> - FieldSwitch', () => {
       id: fieldKey,
       inputType: 'text',
       label: fieldLabel,
+      styleClasses: 'cool-cats',
       required: true,
     }],
   }
@@ -41,6 +42,11 @@ describe('<FieldTester /> - FieldSwitch', () => {
       cy.get('.required').find(`.form-group-label[for="${fieldKey}"]`).should('exist')
     } else {
       cy.get('.required').find(`.form-group-label[for="${fieldKey}"]`).should('not.exist')
+    }
+
+    // check style classes
+    if (schema.fields[0].styleClasses) {
+      cy.get('.form-group.field-switch').should('have.class', schema.fields[0].styleClasses)
     }
 
     // check help text
