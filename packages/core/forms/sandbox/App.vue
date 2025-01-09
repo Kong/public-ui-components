@@ -67,6 +67,31 @@ const fieldSchema = {
         { name: 'Female', value: 'female' },
       ],
     },
+    // FieldSelect
+    {
+      type: 'select',
+      model: 'https_redirect_status_code',
+      label: 'HTTPS Redirect Status Code',
+      values: [426, 301, 302, 307, 308],
+    },
+    // FieldMultiselect
+    {
+      type: 'multiselect',
+      model: 'protocols',
+      label:'Protocols',
+      values: [
+        { label: 'GRPC', value: 'grpc' },
+        { label: 'GRPCS', value: 'grpcs' },
+        { label: 'HTTP', value: 'http' },
+        { label: 'HTTPS', value: 'https' },
+        { label: 'TCP', value: 'tcp' },
+        { label: 'TLS', value: 'tls' },
+        { label: 'TLS_PASSTHROUGH', value: 'tls_passthrough' },
+        { label: 'UDP', value: 'udp' },
+        { label: 'WS', value: 'ws' },
+        { label: 'WSS', value: 'wss' },
+      ],
+    },
     // FieldSwitch
     {
       type: 'switch',
@@ -92,6 +117,8 @@ const fieldModelDefault = ref({
   is_friendly: true,
   is_cute: true,
   gender: 'male',
+  https_redirect_status_code: '',
+  protocols: ['http', 'https'],
 })
 
 const fieldModelModified = ref({
@@ -100,6 +127,8 @@ const fieldModelModified = ref({
   is_cute: false,
   gender: null,
   personality: 'A little bit of a brat',
+  https_redirect_status_code: 307,
+  protocols: ['https', 'wss'],
 })
 </script>
 
