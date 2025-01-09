@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.6.0...@kong-ui-public/expressions@0.7.0) (2025-01-09)
+
+
+### Features
+
+* **expressions:** expose editor ([#1876](https://github.com/Kong/public-ui-components/issues/1876)) ([6eabc32](https://github.com/Kong/public-ui-components/commit/6eabc321c7abec784530ad13cb55fc7905abbacb))
+
+
+
+
+
 # [0.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.5.8...@kong-ui-public/expressions@0.6.0) (2024-12-26)
 
 
