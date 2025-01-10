@@ -72,12 +72,12 @@ defineProps({
   border-radius: $kui-border-radius-30;
 
   .collapsible-section-header {
-    padding: $kui-space-70;
     align-items: center;
     cursor: pointer;
     display: flex;
     gap: $kui-space-20;
     justify-content: space-between;
+    padding: $kui-space-70;
 
     .collapsible-section-default-header {
       display: flex;
@@ -104,10 +104,10 @@ defineProps({
   .collapsible-section-content {
     background: $kui-color-background-neutral-weakest;
     border-top: $kui-border-width-10 solid $kui-color-border;
-    padding: $kui-space-70;
     display: flex;
     flex-direction: column;
     gap: $kui-space-40;
+    padding: $kui-space-70;
 
     :deep(.k-table-view) {
       background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
