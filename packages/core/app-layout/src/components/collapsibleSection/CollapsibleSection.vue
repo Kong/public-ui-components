@@ -15,12 +15,14 @@
             :is="titleTag"
             v-if="title"
             class="collapsible-section-title"
+            data-testid="collapsible-section-title"
           >
             {{ title }}
           </component>
           <div
             v-if="description"
             class="collapsible-section-description"
+            data-testid="collapsible-section-description"
           >
             {{ description }}
           </div>
@@ -136,6 +138,8 @@ defineProps({
 }
 
 details.collapsible-section {
+  overflow: auto;
+
   &[open] {
     .collapsible-section-chevron-icon {
       transform: rotate(90deg);
