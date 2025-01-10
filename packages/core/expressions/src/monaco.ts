@@ -1,38 +1,30 @@
 import * as monaco from 'monaco-editor'
+import { type AstType } from '@kong/atc-router'
 import { type Schema } from './schema'
 
 interface MonarchLanguage extends monaco.languages.IMonarchLanguage {
   keywords: string[];
 }
 
-interface Token {
-  detail?: string;
-  children?: Record<string, Token>;
-  documentation?: string;
+interface Item {
+  property: string
+  kind: AstType
+  documentation?: string
 }
 
-const buildTokenTree = (schema: Schema) => {
+const flattenProperties = (schema: Schema): Array<Item> => {
   const { definition, documentation } = schema
-  const root: Token = {}
-
-  for (const [kind, fields] of Object.entries(definition)) {
-    for (const field of fields) {
-      let token = root
-      for (const t of field.split('.')) {
-        if (token.children === undefined) {
-          token.children = {}
-        }
-        if (token.children[t] === undefined) {
-          token.children[t] = {}
-        }
-        token = token.children[t]
-      }
-      token.detail = kind
-      token.documentation = documentation?.[field]
-    }
-  }
-
-  return root
+  const properties: Array<Item> = []
+  Object.entries(definition).forEach(([kind, fields]) => {
+    fields.forEach((field) => {
+      properties.push({
+        property: field,
+        kind: kind as AstType,
+        documentation: documentation?.[field],
+      })
+    })
+  })
+  return properties
 }
 
 export const theme = 'kong-expr-theme'
@@ -64,7 +56,7 @@ export const registerLanguage = (schema: Schema) => {
     return { languageId }
   }
 
-  const tokenTree = buildTokenTree(schema)
+  const flatProperties = flattenProperties(schema)
 
   const keywords = ['not', 'in', 'contains']
 
@@ -111,54 +103,36 @@ export const registerLanguage = (schema: Schema) => {
   })
 
   monaco.languages.registerCompletionItemProvider(languageId, {
-    // run the following function when a period is typed
-    triggerCharacters: ['.'],
+    // additional characters to trigger the following function
+    triggerCharacters: ['.', '*'],
 
     // function to generate object autocompletion
     provideCompletionItems: (model, position) => {
-      const word = model.getWordUntilPosition(position)
+      const lineContent = model.getLineContent(position.lineNumber)
+      let startColumn = 0
+
+      // find the start of the current word, note that '.' is also considered a word character
+      for (let i = position.column - 2; i >= 0; i--) {
+        if (!/[\w.]/.test(lineContent[i])) {
+          startColumn = i + 2
+          break
+        }
+      }
 
       const range = {
         startLineNumber: position.lineNumber,
         endLineNumber: position.lineNumber,
-        startColumn: word.startColumn,
-        endColumn: word.endColumn,
-      }
-
-      // split everything the user has typed on the current line up at each space, and only look at the last word
-      const lastChars = model.getValueInRange({
-        startLineNumber: position.lineNumber,
-        startColumn: 0,
-        endLineNumber: position.lineNumber,
+        startColumn,
         endColumn: position.column,
-      })
-
-      const words = lastChars.replace('\t', '').split(' ')
-      let activeTyping = words[words.length - 1] // what the user is currently typing (everything after the last space)
-      // Here, we will start counting the characters after the last open parenthesis
-      activeTyping = activeTyping.slice(activeTyping.lastIndexOf('(') + 1)
-
-      const inputTokens = activeTyping.split('.').slice(0, -1)
-      let token: Token = tokenTree
-      for (const t of inputTokens) {
-        const child = token?.children?.[t]
-        if (child === undefined) {
-          return { suggestions: [] }
-        }
-        token = child
-      }
-
-      if (token?.children === undefined) {
-        return { suggestions: [] }
       }
 
       return {
-        suggestions: Object.entries(token.children).map(([token, props]) => ({
-          label: token === '*' ? '...' : token,
+        suggestions: flatProperties.map((item) => ({
+          label: item.property,
           kind: monaco.languages.CompletionItemKind.Property,
-          detail: props.detail,
-          documentation: props.documentation,
-          insertText: token === '*' ? '' : token,
+          detail: item.kind,
+          documentation: item.documentation,
+          insertText: item.property.replace(/\*/g, ''),
           range,
         })),
       }
