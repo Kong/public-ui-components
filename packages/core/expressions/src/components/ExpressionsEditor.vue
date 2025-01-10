@@ -5,15 +5,19 @@
   />
 </template>
 
+<script lang="ts">
+export type ProvideRhsCompletion = (lhsValue: string, rhsValue: string, lhsRange: monaco.Range, rhsRange: monaco.Range) => Promise<monaco.languages.CompletionList | undefined>
+</script>
+
 <script setup lang="ts">
 import { useDebounce } from '@kong-ui-public/core'
-import type { ParseResult, ParseResultOk, Schema as AtcSchema } from '@kong/atc-router'
+import type { AstType, Schema as AtcSchema, ParseResult, ParseResultOk } from '@kong/atc-router'
 import { Parser } from '@kong/atc-router'
 import type * as Monaco from 'monaco-editor'
 import * as monaco from 'monaco-editor'
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { getRangeFromTokens, LANGUAGE_ID, locateLhsIdent, locateToken, registerLanguage, registerTheme, scanTokens, theme, TokenType, transformTokens, type ProvideCompletionItems, type Token } from '../monaco'
 import { createSchema, type Schema } from '../schema'
-import { registerLanguage, registerTheme, theme } from '../monaco'
 
 let editor: Monaco.editor.IStandaloneCodeEditor | undefined
 let editorModel: Monaco.editor.ITextModel
@@ -28,9 +32,11 @@ const props = withDefaults(defineProps<{
   allowEmptyInput?: boolean,
   defaultShowDetails?: boolean,
   editorOptions?: Monaco.editor.IEditorOptions
+  provideRhsCompletion?: ProvideRhsCompletion
 }>(), {
   parseDebounce: 500,
   editorOptions: undefined,
+  provideRhsCompletion: undefined,
 })
 
 const parse = (expression: string, schema: AtcSchema) => {
@@ -56,9 +62,112 @@ const editorClass = computed(() => [
   { invalid: isParsingActive.value && parseResult.value?.status !== 'ok' },
 ])
 
-const registerSchema = (schema: Schema) => {
-  const { languageId } = registerLanguage(schema)
-  monaco.editor.setModelLanguage(editorModel, languageId)
+interface Item {
+  property: string
+  kind: AstType
+  documentation?: string
+}
+
+const flattenProperties = (schema: Schema): Array<Item> => {
+  const { definition, documentation } = schema
+  const properties: Array<Item> = []
+  Object.entries(definition).forEach(([kind, fields]) => {
+    fields.forEach((field) => {
+      properties.push({
+        property: field,
+        kind: kind as AstType,
+        documentation: documentation?.[field],
+      })
+    })
+  })
+  return properties
+}
+
+const cachedTokens = ref<[Token[], Token[][]] | undefined>(undefined)
+const schema = computed(() => createSchema(props.schema.definition))
+const flatSchemaProperties = computed(() => flattenProperties(props.schema))
+const functions = ['any', 'lower']
+
+const provideCompletionItems: ProvideCompletionItems = async (model, position) => {
+  if (!cachedTokens.value) {
+    cachedTokens.value = transformTokens(model, monaco.editor.tokenize(model.getValue(), LANGUAGE_ID))
+  }
+
+  const [flatTokens, nestedTokens] = cachedTokens.value
+  const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
+
+  if (token) {
+    switch (token.shortType) {
+      case TokenType.QUOTE_OPEN:
+        return { suggestions: [] }
+      case TokenType.STR_LITERAL:
+      case TokenType.STR_ESCAPE:
+      case TokenType.STR_INVALID_ESCAPE: {
+        const [rhsRange, rhsFirstTokenIndex] = scanTokens(model, flatTokens, token.flatIndex, (t) =>
+          !(t.shortType === TokenType.STR_LITERAL && t.shortType === TokenType.STR_ESCAPE && t.shortType === TokenType.STR_INVALID_ESCAPE),
+        )
+        if (rhsRange) {
+          const rhsValue = model.getValueInRange(rhsRange)
+          const lhsIdentTokenIndex = locateLhsIdent(flatTokens, rhsFirstTokenIndex)
+          if (lhsIdentTokenIndex >= 0) {
+            const lhsIdentRange = getRangeFromTokens(model, flatTokens, lhsIdentTokenIndex, lhsIdentTokenIndex + 1)
+            const lhsIdentValue = model.getValueInRange(lhsIdentRange)
+            const completion = await props.provideRhsCompletion?.(lhsIdentValue, rhsValue, lhsIdentRange, rhsRange)
+            if (completion) {
+              return completion
+            }
+          }
+        }
+        break
+      }
+      case TokenType.IDENT: {
+        const identRange = getRangeFromTokens(model, flatTokens, token.flatIndex, token.flatIndex + 1)
+        return {
+          suggestions: [
+            ...flatSchemaProperties.value.map((item) => ({
+              label: item.property,
+              kind: monaco.languages.CompletionItemKind.Property,
+              detail: item.kind,
+              documentation: item.documentation,
+              insertText: item.property.replace(/\*/g, ''),
+              range: identRange,
+            })),
+            ...functions.map((func) => ({
+              label: func,
+              kind: monaco.languages.CompletionItemKind.Function,
+              insertText: `${func}($${1})`,
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              range: identRange,
+            })),
+          ],
+        }
+      }
+      default:
+        break
+    }
+  }
+
+  const range = new monaco.Range(position.lineNumber, position.column, position.lineNumber, position.column)
+
+  return {
+    suggestions: [
+      ...flatSchemaProperties.value.map((item) => ({
+        label: item.property,
+        kind: monaco.languages.CompletionItemKind.Property,
+        detail: item.kind,
+        documentation: item.documentation,
+        insertText: item.property.replace(/\*/g, ''),
+        range,
+      })),
+      ...functions.map((func) => ({
+        label: func,
+        kind: monaco.languages.CompletionItemKind.Function,
+        insertText: `${func}($${1})`,
+        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+        range,
+      })),
+    ],
+  }
 }
 
 onMounted(() => {
@@ -79,6 +188,7 @@ onMounted(() => {
     scrollBeyondLastLine: false,
     theme,
     value: expression.value,
+    maxTokenizationLineLength: 1000,
     ...props.editorOptions,
   })
 
@@ -88,8 +198,28 @@ onMounted(() => {
     editor.getContribution<Record<string, any> & Monaco.editor.IEditorContribution>('editor.contrib.suggestController')
       ?.widget?.value._setDetailsVisible(true)
   }
-  editor.onDidChangeModelContent(() => {
-    const value = editor!.getValue()
+  editor.onDidChangeModelContent((e) => {
+    const model = editor!.getModel()!
+    const value = model.getValue()!
+
+    const position = editor!.getPosition()
+    if (position) {
+      const tokens = monaco.editor.tokenize(value, LANGUAGE_ID)
+      cachedTokens.value = transformTokens(model, tokens)
+      const [, nestedTokens] = cachedTokens.value
+      const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
+      switch (token?.shortType) {
+        case TokenType.STR_LITERAL:
+        case TokenType.STR_ESCAPE:
+        case TokenType.STR_INVALID_ESCAPE:
+          editor!.getContribution<Record<string, any> & Monaco.editor.IEditorContribution>('editor.contrib.suggestController')
+            ?.triggerSuggest()
+          break
+        default:
+          break
+      }
+    }
+
     expression.value = value
   })
 
@@ -98,13 +228,15 @@ onMounted(() => {
   if (props.inactiveUntilFocused) {
     editor.onDidFocusEditorWidget(() => {
       if (!isParsingActive.value) {
-        registerSchema(props.schema)
+        registerLanguage(provideCompletionItems)
+        monaco.editor.setModelLanguage(editorModel, LANGUAGE_ID)
         isParsingActive.value = true
         parseResult.value = parse(expression.value, createSchema(props.schema.definition))
       }
     })
   } else {
-    registerSchema(props.schema)
+    registerLanguage(provideCompletionItems)
+    monaco.editor.setModelLanguage(editorModel, LANGUAGE_ID)
     isParsingActive.value = true
     parseResult.value = parse(expression.value, createSchema(props.schema.definition))
   }
@@ -114,12 +246,6 @@ onBeforeUnmount(() => {
   editor?.dispose()
 })
 
-const schema = computed(() => createSchema(props.schema.definition))
-
-watch(() => props.schema, (newSchema) => {
-  const { languageId } = registerLanguage(newSchema)
-  monaco.editor.setModelLanguage(editorModel, languageId)
-}, { deep: true })
 
 watch(expression, (newExpression) => {
   if (!isParsingActive.value) {
