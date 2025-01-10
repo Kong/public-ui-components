@@ -43,7 +43,7 @@
       class="collapsible-section-content"
       data-testid="collapsible-section-content"
     >
-      <slot />
+      <slot name="default" />
     </div>
   </component>
 </template>
