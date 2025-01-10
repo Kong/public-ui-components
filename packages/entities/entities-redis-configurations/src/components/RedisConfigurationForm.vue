@@ -20,12 +20,12 @@
         :title="t('form.sections.type.title')"
       >
         <KSelect
-          v-model="form.fields.mode"
           :disabled="isEdit"
           :items="typeOptions"
           :label="t('form.fields.type.label')"
           :readonly="form.readonly"
           required
+          @change="handleTypeChange"
         >
           <template #selected-item-template="{ item }">
             {{ getSelectedText(item) }}
@@ -47,12 +47,12 @@
       </EntityFormSection>
 
       <EntityFormSection
-        v-if="form.fields.mode === Mode.SENTINEL"
+        v-if="redisType === RedisType.SENTINEL"
         :description="t('form.sections.sentinel_configuration.description')"
         :title="t('form.sections.sentinel_configuration.title')"
       >
         <KInput
-          v-model="form.fields.sentinel_master"
+          v-model="form.fields.config.sentinel_master"
           :label="t('form.fields.sentinel_master.label')"
           :label-attributes="{
             info: t('form.fields.sentinel_master.tooltip'),
@@ -61,7 +61,7 @@
           :readonly="form.readonly"
         />
         <KSelect
-          v-model="form.fields.sentinel_role"
+          v-model="form.fields.config.sentinel_role"
           :items="sentinelRoleOptions"
           :label="t('form.fields.sentinel_role.label')"
           :label-attributes="{
@@ -71,11 +71,11 @@
           :readonly="form.readonly"
         />
         <SentinelNodes
-          v-model="form.fields.sentinel_nodes"
+          v-model="form.fields.config.sentinel_nodes"
           :readonly="form.readonly"
         />
         <KInput
-          v-model.trim="form.fields.sentinel_username"
+          v-model.trim="form.fields.config.sentinel_username"
           :label="t('form.fields.sentinel_username.label')"
           :label-attributes="{
             info: t('form.fields.sentinel_username.tooltip'),
@@ -86,12 +86,12 @@
         <VaultSecretPickerProvider
           class="secret-picker-provider"
           :disabled="form.readonly"
-          :update="v => form.fields.sentinel_username = v"
-          :value="form.fields.sentinel_username"
+          :update="v => form.fields.config.sentinel_username = v"
+          :value="form.fields.config.sentinel_username"
           @open="(value, update) => setUpVaultSecretPicker(value, update)"
         />
         <KInput
-          v-model.trim="form.fields.sentinel_password"
+          v-model.trim="form.fields.config.sentinel_password"
           :label="t('form.fields.sentinel_password.label')"
           :label-attributes="{
             info: t('form.fields.sentinel_password.tooltip'),
@@ -103,23 +103,23 @@
         <VaultSecretPickerProvider
           class="secret-picker-provider"
           :disabled="form.readonly"
-          :update="v => form.fields.sentinel_password = v"
-          :value="form.fields.sentinel_password"
+          :update="v => form.fields.config.sentinel_password = v"
+          :value="form.fields.config.sentinel_password"
           @open="(value, update) => setUpVaultSecretPicker(value, update)"
         />
       </EntityFormSection>
 
       <EntityFormSection
-        v-if="form.fields.mode === Mode.CLUSTER"
+        v-if="redisType === RedisType.CLUSTER"
         :description="t('form.sections.cluster.description')"
         :title="t('form.sections.cluster.title')"
       >
         <ClusterNodes
-          v-model="form.fields.cluster_nodes"
+          v-model="form.fields.config.cluster_nodes"
           :readonly="form.readonly"
         />
         <KInput
-          v-model="form.fields.cluster_max_redirections"
+          v-model="form.fields.config.cluster_max_redirections"
           :label="t('form.fields.cluster_max_redirections.label')"
           :label-attributes="{
             info: t('form.fields.cluster_max_redirections.tooltip'),
@@ -135,8 +135,8 @@
         :title="t('form.sections.connection.title')"
       >
         <KInput
-          v-if="form.fields.mode === Mode.HOST_PORT_OPEN_SOURCE || form.fields.mode === Mode.HOST_PORT_ENTERPRISE"
-          v-model.trim="form.fields.host"
+          v-if="redisType === RedisType.HOST_PORT_CE || redisType === RedisType.HOST_PORT_EE"
+          v-model.trim="form.fields.config.host"
           :label="t('form.fields.host.label')"
           :label-attributes="{
             info: t('form.fields.host.tooltip'),
@@ -145,8 +145,8 @@
           :readonly="form.readonly"
         />
         <KInput
-          v-if="form.fields.mode === Mode.HOST_PORT_OPEN_SOURCE || form.fields.mode === Mode.HOST_PORT_ENTERPRISE"
-          v-model.trim="form.fields.port"
+          v-if="redisType === RedisType.HOST_PORT_CE || redisType === RedisType.HOST_PORT_EE"
+          v-model.trim="form.fields.config.port"
           :label="t('form.fields.port.label')"
           :label-attributes="{
             info: t('form.fields.port.tooltip'),
@@ -157,8 +157,8 @@
         />
 
         <KCheckbox
-          v-if="form.fields.mode === Mode.HOST_PORT_ENTERPRISE"
-          v-model="form.fields.connection_is_proxied"
+          v-if="redisType === RedisType.HOST_PORT_EE"
+          v-model="form.fields.config.connection_is_proxied"
           :disabled="form.readonly"
           :label="t('form.fields.connection_is_proxied.label')"
           :label-attributes="{
@@ -168,8 +168,8 @@
         />
 
         <KInput
-          v-if="form.fields.mode === Mode.HOST_PORT_OPEN_SOURCE"
-          v-model.trim="form.fields.timeout"
+          v-if="redisType === RedisType.HOST_PORT_CE"
+          v-model.trim="form.fields.config.timeout"
           :label="t('form.fields.timeout.label')"
           :label-attributes="{
             info: t('form.fields.timeout.tooltip'),
@@ -180,7 +180,7 @@
         />
 
         <KInput
-          v-model.trim="form.fields.database"
+          v-model.trim="form.fields.config.database"
           :label="t('form.fields.database.label')"
           :label-attributes="{
             info: t('form.fields.database.tooltip'),
@@ -190,7 +190,7 @@
           type="number"
         />
         <KInput
-          v-model.trim="form.fields.username"
+          v-model.trim="form.fields.config.username"
           :label="t('form.fields.username.label')"
           :label-attributes="{
             info: t('form.fields.username.tooltip'),
@@ -201,12 +201,12 @@
         <VaultSecretPickerProvider
           class="secret-picker-provider"
           :disabled="form.readonly"
-          :update="v => form.fields.username = v"
-          :value="form.fields.username"
+          :update="v => form.fields.config.username = v"
+          :value="form.fields.config.username"
           @open="(value, update) => setUpVaultSecretPicker(value, update)"
         />
         <KInput
-          v-model.trim="form.fields.password"
+          v-model.trim="form.fields.config.password"
           :label="t('form.fields.password.label')"
           :label-attributes="{
             info: t('form.fields.password.tooltip'),
@@ -218,8 +218,8 @@
         <VaultSecretPickerProvider
           class="secret-picker-provider"
           :disabled="form.readonly"
-          :update="v => form.fields.password = v"
-          :value="form.fields.password"
+          :update="v => form.fields.config.password = v"
+          :value="form.fields.config.password"
           @open="(value, update) => setUpVaultSecretPicker(value, update)"
         />
       </EntityFormSection>
@@ -229,19 +229,19 @@
         :title="t('form.sections.tls.title')"
       >
         <KCheckbox
-          v-model="form.fields.ssl"
+          v-model="form.fields.config.ssl"
           :description="t('form.fields.ssl.description')"
           :disabled="form.readonly"
           :label="t('form.fields.ssl.label')"
         />
         <KCheckbox
-          v-model="form.fields.ssl_verify"
+          v-model="form.fields.config.ssl_verify"
           :description="t('form.fields.ssl_verify.description')"
           :disabled="form.readonly"
           :label="t('form.fields.ssl_verify.label')"
         />
         <KInput
-          v-model.trim="form.fields.server_name"
+          v-model.trim="form.fields.config.server_name"
           :label="t('form.fields.server_name.label')"
           :label-attributes="{
             info: t('form.fields.server_name.tooltip'),
@@ -252,12 +252,12 @@
       </EntityFormSection>
 
       <EntityFormSection
-        v-if="form.fields.mode !== Mode.HOST_PORT_OPEN_SOURCE"
+        v-if="redisType !== RedisType.HOST_PORT_CE"
         :description="t('form.sections.keepalive.description')"
         :title="t('form.sections.keepalive.title')"
       >
         <KInput
-          v-model="form.fields.keepalive_backlog"
+          v-model="form.fields.config.keepalive_backlog"
           :label="t('form.fields.keepalive_backlog.label')"
           :label-attributes="{
             info: t('form.fields.keepalive_backlog.tooltip'),
@@ -267,7 +267,7 @@
           type="number"
         />
         <KInput
-          v-model="form.fields.keepalive_pool_size"
+          v-model="form.fields.config.keepalive_pool_size"
           :label="t('form.fields.keepalive_pool_size.label')"
           :label-attributes="{
             info: t('form.fields.keepalive_pool_size.tooltip'),
@@ -279,24 +279,24 @@
       </EntityFormSection>
 
       <EntityFormSection
-        v-if="form.fields.mode !== Mode.HOST_PORT_OPEN_SOURCE"
+        v-if="redisType !== RedisType.HOST_PORT_CE"
         :description="t('form.sections.read_write_configuration.description')"
         :title="t('form.sections.read_write_configuration.title')"
       >
         <KInput
-          v-model="form.fields.read_timeout"
+          v-model="form.fields.config.read_timeout"
           :label="t('form.fields.read_timeout.label')"
           :readonly="form.readonly"
           type="number"
         />
         <KInput
-          v-model="form.fields.send_timeout"
+          v-model="form.fields.config.send_timeout"
           :label="t('form.fields.send_timeout.label')"
           :readonly="form.readonly"
           type="number"
         />
         <KInput
-          v-model="form.fields.connect_timeout"
+          v-model="form.fields.config.connect_timeout"
           :label="t('form.fields.connect_timeout.label')"
           :readonly="form.readonly"
           type="number"
@@ -314,26 +314,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import {
-  EntityBaseForm,
-  EntityFormSection,
-  SupportedEntityType,
-} from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 import '@kong-ui-public/entities-vaults/dist/style.css'
+import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import { ref, computed } from 'vue'
+import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 
-import composables from '../composables'
-import ClusterNodes from './ClusterNodes.vue'
-import SentinelNodes from './SentinelNodes.vue'
+import { RedisType } from '../types'
 import { useRedisConfigurationForm } from '../composables/useRedisConfigurationForm'
+import ClusterNodes from './ClusterNodes.vue'
+import composables from '../composables'
+import SentinelNodes from './SentinelNodes.vue'
 
 import type { PropType } from 'vue'
-import {
-  Mode,
-  type KonnectRedisConfigurationFormConfig,
-} from '../types'
+import type { KonnectRedisConfigurationFormConfig } from '../types'
+import type { SelectItem } from '@kong/kongponents/dist/types'
 
 const props = defineProps({
   config: {
@@ -363,12 +358,34 @@ const handleVaultSecretPickerAutofill = (secretRef: string) => {
   vaultSecretPickerSetup.value = false
 }
 
-const typeOptions = [
-  { label: t('form.options.type.host_port'), group: ` ${t('form.options.type.open_source')}`, value: Mode.HOST_PORT_OPEN_SOURCE }, // the space before the group name is intentional, it makes the group to be the first one
-  { label: t('form.options.type.host_port'), group: t('form.options.type.enterprise'), value: Mode.HOST_PORT_ENTERPRISE },
-  { label: t('form.options.type.cluster'), group: t('form.options.type.enterprise'), value: Mode.CLUSTER },
-  { label: t('form.options.type.sentinel'), group: t('form.options.type.enterprise'), value: Mode.SENTINEL },
-]
+const typeOptions = computed<SelectItem[]>(() => {
+  return [
+    {
+      label: t('form.options.type.host_port'),
+      group: ` ${t('form.options.type.open_source')}`, // the space before the group name is intentional, it makes the group to be the first one
+      value: RedisType.HOST_PORT_CE,
+      selected: redisType.value === RedisType.HOST_PORT_CE,
+    },
+    {
+      label: t('form.options.type.host_port'),
+      group: t('form.options.type.enterprise'),
+      value: RedisType.HOST_PORT_EE,
+      selected: redisType.value === RedisType.HOST_PORT_EE,
+    },
+    {
+      label: t('form.options.type.cluster'),
+      group: t('form.options.type.enterprise'),
+      value: RedisType.CLUSTER,
+      selected: redisType.value === RedisType.CLUSTER,
+    },
+    {
+      label: t('form.options.type.sentinel'),
+      group: t('form.options.type.enterprise'),
+      value: RedisType.SENTINEL,
+      selected: redisType.value === RedisType.SENTINEL,
+    },
+  ]
+})
 
 const sentinelRoleOptions = [
   { label: t('form.options.sentinel_role.master'), value: 'master' },
@@ -379,10 +396,14 @@ const sentinelRoleOptions = [
 const noop = () => {}
 
 const getSelectedText = (item: any) => {
-  const suffix = item.value === Mode.HOST_PORT_OPEN_SOURCE
+  const suffix = item.value === RedisType.HOST_PORT_CE
     ? t('form.options.type.suffix_open_source')
     : t('form.options.type.suffix_enterprise')
   return `${item.label}${suffix}`
+}
+
+const handleTypeChange = (item: SelectItem | null) => {
+  userSelectedRedisType.value = item!.value as RedisType
 }
 
 const {
@@ -390,6 +411,8 @@ const {
   canSubmit,
   payload,
   isEdit,
+  userSelectedRedisType,
+  redisType,
 } = useRedisConfigurationForm({
   partialId: props.partialId,
 })
