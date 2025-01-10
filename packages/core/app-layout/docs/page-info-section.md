@@ -1,4 +1,4 @@
-# PageInfoSection.vue
+# AppPageInfoSection.vue
 
 A Kong UI simple optionally collapsible section component.
 
