@@ -5,7 +5,7 @@
     :aria-labelledby="getLabelId(schema)"
     :class="schema.fieldClasses"
     data-testid="field-multiselect"
-    :disabled="disabled || undefined"
+    :disabled="disabled"
     :items="items"
     :kpop-attributes="{ 'data-testid': `${getFieldID(schema)}-items` }"
     :label-attributes="{ info: schema.help }"
@@ -81,7 +81,7 @@ const items = computed((): MultiselectItem[] => {
   }
 
   if (props.schema.elements?.one_of?.length) {
-    return props.schema.elements.one_of.map((value: string | number | boolean) => ({ label: String(value), value: String(value) } as MultiselectItem))
+    return props.schema.elements.one_of.map((value: string | number | boolean) => ({ label: String(value), value: String(value) } satisfies MultiselectItem))
   }
 
   return []
