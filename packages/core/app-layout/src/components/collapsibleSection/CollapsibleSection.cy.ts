@@ -43,7 +43,7 @@ describe('<CollapsibleSection />', () => {
       cy.getTestId('collapsible-section-header').click()
 
       cy.getTestId('collapsible-section').should('have.attr', 'open')
-      cy.getTestId('hidden-content').should('be.visible')
+      cy.getTestId('slotted-hidden-content').should('be.visible')
 
       // collapse the section
       cy.getTestId('collapsible-section-header').click()

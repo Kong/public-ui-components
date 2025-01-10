@@ -120,6 +120,7 @@
         description="This is a collapsible section that's rendered open by default. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         open
         title="Collapsible section"
+        title-tag="h2"
       >
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae. Repellat quam voluptas vitae, maxime consequuntur praesentium et suscipit. Numquam aliquid nulla vel esse accusantium reiciendis error?
       </CollapsibleSection>

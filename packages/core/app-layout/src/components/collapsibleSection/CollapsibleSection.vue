@@ -11,12 +11,13 @@
     >
       <slot name="header">
         <div class="collapsible-section-default-header">
-          <div
+          <component
+            :is="titleTag"
             v-if="title"
             class="collapsible-section-title"
           >
             {{ title }}
-          </div>
+          </component>
           <div
             v-if="description"
             class="collapsible-section-description"
@@ -48,7 +49,10 @@
 </template>
 
 <script setup lang="ts">
+import type { PropType } from 'vue'
 import { ChevronRightIcon } from '@kong/icons'
+import type { HeaderTag } from '@kong/kongponents'
+import { HeaderTags } from '@kong/kongponents'
 
 defineProps({
   collapsible: {
@@ -63,6 +67,11 @@ defineProps({
     type: String,
     default: '',
   },
+  titleTag: {
+    type: String as PropType<HeaderTag>,
+    default: 'div',
+    validator: (value: HeaderTag): boolean => HeaderTags.includes(value),
+  },
 })
 </script>
 
@@ -73,7 +82,6 @@ defineProps({
 
   .collapsible-section-header {
     align-items: center;
-    cursor: pointer;
     display: flex;
     gap: $kui-space-20;
     justify-content: space-between;
@@ -90,6 +98,7 @@ defineProps({
         font-size: $kui-font-size-40;
         font-weight: $kui-font-weight-bold;
         line-height: $kui-line-height-30;
+        margin: $kui-space-0;
       }
 
       .collapsible-section-description {
@@ -146,6 +155,8 @@ details.collapsible-section {
   }
 
   .collapsible-section-header {
+    cursor: pointer;
+
     .collapsible-section-chevron-icon {
       flex-shrink: 0;
       pointer-events: none;
