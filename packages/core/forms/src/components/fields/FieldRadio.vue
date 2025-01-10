@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { toRefs, type PropType } from 'vue'
+import { toRef, type PropType } from 'vue'
 import composables from '../../composables'
 
 const props = defineProps({
@@ -58,10 +58,10 @@ const emit = defineEmits<{
   (event: 'modelUpdated', value: any, model: Record<string, any>): void
 }>()
 
-const propsRefs = toRefs(props)
+const modelRef = toRef(props, 'model')
 
 const { updateModelValue, value: inputValue, clearValidationErrors } = composables.useAbstractFields({
-  model: propsRefs.model,
+  model: modelRef,
   schema: props.schema,
   formOptions: props.formOptions,
   emitModelUpdated: (data: { value: any, model: Record<string, any> }): void => {
