@@ -5,7 +5,7 @@
     :aria-labelledby="getLabelId(schema)"
     :class="schema.fieldClasses"
     data-testid="field-multiselect"
-    :disabled="disabled"
+    :disabled="disabled || undefined"
     :items="items"
     :kpop-attributes="{ 'data-testid': `${getFieldID(schema)}-items` }"
     :label-attributes="{ info: schema.help }"
@@ -60,7 +60,7 @@ const emit = defineEmits<{
   (event: 'modelUpdated', value: any, model: Record<string, any>): void
 }>()
 
-const modelRef = toRef(props)
+const modelRef = toRef(props, 'model')
 
 const { getLabelId, getFieldID, clearValidationErrors, value: inputValue } = composables.useAbstractFields({
   model: modelRef,
