@@ -619,8 +619,8 @@ describe('useVitalsExploreDatasets', () => {
           rawDimension: 'emptyConsumer',
           rawMetric: 'request_count',
           label: 'emptyConsumer',
-          borderColor: '#a86cd5',
-          backgroundColor: '#a86cd5',
+          borderColor: '#afb7c5',
+          backgroundColor: '#afb7c5',
           data: [
             {
               x: START_FOR_DAILY_QUERY.getTime(),

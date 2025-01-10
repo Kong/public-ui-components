@@ -260,9 +260,9 @@ ul.tooltip {
   }
 
   li {
+    align-items: center;
     display: flex;
     font-size: var(--kui-font-size-30, $kui-font-size-30);
-    line-height: 1;
     margin: var(--kui-space-40, $kui-space-40);
   }
 

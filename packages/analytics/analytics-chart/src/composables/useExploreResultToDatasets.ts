@@ -1,5 +1,5 @@
 import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { lookupDatavisColor, datavisPalette } from '../utils'
+import { lookupDatavisColor, datavisPalette, determineBaseColor } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type { Dataset, ExploreToDatasetDeps, KChartData, BarChartDatasetGenerationParams, DatasetLabel } from '../types'
@@ -35,9 +35,7 @@ function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationPara
       return []
     }
 
-    const baseColor = Array.isArray(colorPalette)
-      ? lookupDatavisColor(i, colorPalette)
-      : colorPalette[dimension.name] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
+    const baseColor = determineBaseColor(i, dimension.name, dimension.id === 'empty', colorPalette)
 
     // The label here matters for the title in the tooltip and legend.  It doesn't impact axes.
     return {

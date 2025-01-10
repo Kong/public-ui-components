@@ -242,7 +242,7 @@ describe('useVitalsExploreDatasets', () => {
           { label: 'ThenBy1', backgroundColor: '#a86cd5', data: [null, 100], isSegmentEmpty: false },
           { label: 'ThenBy3', backgroundColor: '#6a86d2', data: [200, null], isSegmentEmpty: false },
           { label: 'ThenBy4', backgroundColor: '#00bbf9', data: [250, null], isSegmentEmpty: false },
-          { label: 'ThenBy2', backgroundColor: '#00c4b0', data: [null, 150], isSegmentEmpty: true },
+          { label: 'ThenBy2', backgroundColor: '#afb7c5', data: [null, 150], isSegmentEmpty: true },
         ],
         isLabelEmpty: [false, true],
       },

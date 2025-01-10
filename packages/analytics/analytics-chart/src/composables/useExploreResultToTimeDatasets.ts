@@ -1,5 +1,11 @@
 import type { ExploreAggregations, ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
-import { defaultLineOptions, lookupDatavisColor, datavisPalette, BORDER_WIDTH, NO_BORDER } from '../utils'
+import {
+  defaultLineOptions,
+  datavisPalette,
+  BORDER_WIDTH,
+  NO_BORDER,
+  determineBaseColor,
+} from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
@@ -156,9 +162,7 @@ export default function useExploreResultToTimeDataset(
             colorPalette = datavisPalette
           }
 
-          const baseColor = Array.isArray(colorPalette)
-            ? lookupDatavisColor(i, colorPalette)
-            : colorPalette[dimension] || lookupDatavisColor(i) // fallback to default datavis palette if no color found
+          const baseColor = determineBaseColor(i, dimension, isSegmentEmpty, colorPalette)
 
           return {
             rawDimension: dimension,

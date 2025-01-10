@@ -305,6 +305,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
       margin-top: 0;
       .label {
         line-height: $kui-line-height-40;
+        padding-right: $kui-space-10;  // Ensure italics text doesn't get cut off.
         white-space: nowrap;
       }
     }
