@@ -503,6 +503,7 @@ describe('useVitalsExploreDatasets', () => {
           pointBorderWidth: 1.2,
           borderJoinStyle: 'round',
           fill: false,
+          isSegmentEmpty: false,
         },
         {
           rawDimension: 'metric2',
@@ -526,11 +527,120 @@ describe('useVitalsExploreDatasets', () => {
           pointBorderWidth: 1.2,
           borderJoinStyle: 'round',
           fill: false,
+          isSegmentEmpty: false,
         },
       ],
     )
 
     expect(result.value.datasets[0].label).toEqual('metric1')
+  })
+
+  it('handles empty', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            consumer: 'id',
+            request_count: 1,
+          },
+        } as GroupByResult,
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            consumer: 'empty',
+            request_count: 2,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            consumer: 'id',
+            request_count: 3,
+          },
+        } as GroupByResult,
+        {
+          timestamp: END_FOR_DAILY_QUERY.toISOString(),
+          event: {
+            consumer: 'empty',
+            request_count: 4,
+          },
+        } as GroupByResult,
+      ],
+      meta: {
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: [
+          'request_count',
+        ] as any as ExploreAggregations[],
+        query_id: '',
+        metric_units: { request_count: 'units' } as MetricUnit,
+        display: {
+          consumer: {
+            empty: { name: 'emptyConsumer' },
+            id: { name: 'ID' },
+          },
+        },
+      },
+    }))
+    const result = useExploreResultToTimeDataset(
+      { fill: false },
+      exploreResult,
+    )
+
+    expect(result.value.datasets).toEqual(
+      [
+        {
+          rawDimension: 'ID',
+          rawMetric: 'request_count',
+          label: 'ID',
+          borderColor: '#6a86d2',
+          backgroundColor: '#6a86d2',
+          data: [
+            {
+              x: START_FOR_DAILY_QUERY.getTime(),
+              y: 1,
+            },
+            {
+              x: END_FOR_DAILY_QUERY.getTime(),
+              y: 3,
+            },
+          ],
+          total: 4,
+          lineTension: 0,
+          borderWidth: BORDER_WIDTH,
+          pointBorderWidth: 1.2,
+          borderJoinStyle: 'round',
+          fill: false,
+          isSegmentEmpty: false,
+        },
+        {
+          rawDimension: 'emptyConsumer',
+          rawMetric: 'request_count',
+          label: 'emptyConsumer',
+          borderColor: '#afb7c5',
+          backgroundColor: '#afb7c5',
+          data: [
+            {
+              x: START_FOR_DAILY_QUERY.getTime(),
+              y: 2,
+            },
+            {
+              x: END_FOR_DAILY_QUERY.getTime(),
+              y: 4,
+            },
+          ],
+          total: 6,
+          lineTension: 0,
+          borderWidth: BORDER_WIDTH,
+          pointBorderWidth: 1.2,
+          borderJoinStyle: 'round',
+          fill: false,
+          isSegmentEmpty: true,
+        },
+      ],
+    )
   })
 
   it('borderWidth 0 when fill === true', () => {

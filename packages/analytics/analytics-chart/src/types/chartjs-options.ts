@@ -9,6 +9,7 @@ export interface TooltipEntry {
   label: string
   value: string | number
   rawValue: number
+  isSegmentEmpty?: boolean
 }
 
 export type ChartTooltipSortFn = (a: TooltipEntry, b: TooltipEntry) => number

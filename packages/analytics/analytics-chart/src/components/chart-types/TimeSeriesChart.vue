@@ -74,7 +74,7 @@ import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartD
 import type { GranularityValues, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { Chart, LegendItem } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
-import { formatByGranularity } from '../../utils'
+import { formatByGranularity, generateLegendItems } from '../../utils'
 
 const props = defineProps({
   chartData: {
@@ -185,11 +185,7 @@ const tooltipData = reactive({
 const htmlLegendPlugin = {
   id: legendID.value,
   afterUpdate(chart: Chart) {
-    // @ts-ignore - ChartJS types are incomplete
-    legendItems.value = chart.options.plugins.legend.labels.generateLabels(chart)
-      .map(e => ({ ...e, value: props.legendValues && props.legendValues[e.text] }))
-      .filter(e => !e.value.isThreshold)
-      .sort(props.chartLegendSortFn)
+    legendItems.value = generateLegendItems(chart, props.legendValues, props.chartLegendSortFn)
   },
 }
 

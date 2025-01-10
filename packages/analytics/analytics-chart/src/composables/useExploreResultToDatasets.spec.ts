@@ -58,11 +58,13 @@ describe('useVitalsExploreDatasets', () => {
             null,
           ],
           label: 'dimension',
+          isSegmentEmpty: false,
         },
       ],
       labels: [
         'dimension',
       ],
+      isLabelEmpty: [false],
     })
   })
 
@@ -106,8 +108,9 @@ describe('useVitalsExploreDatasets', () => {
       {
         labels: ['dimension1'],
         datasets: [
-          { label: 'dimension1', backgroundColor: '#a86cd5', data: [1] },
+          { label: 'dimension1', backgroundColor: '#a86cd5', data: [1], isSegmentEmpty: false },
         ],
+        isLabelEmpty: [false],
       },
     )
   })
@@ -169,11 +172,79 @@ describe('useVitalsExploreDatasets', () => {
       {
         labels: ['GroupBy2', 'GroupBy1'],
         datasets: [
-          { label: 'ThenBy1', backgroundColor: '#a86cd5', data: [null, 100] },
-          { label: 'ThenBy2', backgroundColor: '#6a86d2', data: [null, 150] },
-          { label: 'ThenBy3', backgroundColor: '#00bbf9', data: [200, null] },
-          { label: 'ThenBy4', backgroundColor: '#00c4b0', data: [250, null] },
+          { label: 'ThenBy1', backgroundColor: '#a86cd5', data: [null, 100], isSegmentEmpty: false },
+          { label: 'ThenBy2', backgroundColor: '#6a86d2', data: [null, 150], isSegmentEmpty: false },
+          { label: 'ThenBy3', backgroundColor: '#00bbf9', data: [200, null], isSegmentEmpty: false },
+          { label: 'ThenBy4', backgroundColor: '#00c4b0', data: [250, null], isSegmentEmpty: false },
         ],
+        isLabelEmpty: [false, false],
+      },
+    )
+  })
+
+  it('handles empty by looking at ID', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: '2023-02-20T21:00:00.000Z',
+          event: {
+            GroupBy: 'empty',
+            ThenBy: 'then-by-1',
+            request_count: 100,
+          },
+        },
+        {
+          timestamp: '2023-02-20T21:00:00.000Z',
+          event: {
+            GroupBy: 'empty',
+            ThenBy: 'empty',
+            request_count: 150,
+          },
+        },
+        {
+          timestamp: '2023-02-20T21:00:00.000Z',
+          event: {
+            GroupBy: 'group-by-2',
+            ThenBy: 'then-by-3',
+            request_count: 200,
+          },
+        },
+        {
+          timestamp: '2023-02-20T21:00:00.000Z',
+          event: {
+            GroupBy: 'group-by-2',
+            ThenBy: 'then-by-4',
+            request_count: 250,
+          },
+        },
+      ],
+      meta: {
+        start_ms: 1669928400000,
+        end_ms: 1670014800000,
+        granularity_ms: 86400000,
+        metric_names: ['request_count'],
+        display: {
+          GroupBy: { 'empty': { name: 'GroupBy1' }, 'group-by-2': { name: 'GroupBy2' } },
+          ThenBy: { 'then-by-1': { name: 'ThenBy1' }, 'empty': { name: 'ThenBy2' }, 'then-by-3': { name: 'ThenBy3' }, 'then-by-4': { name: 'ThenBy4' } },
+        },
+        query_id: '',
+        metric_units: { request_count: 'units' },
+        truncated: false,
+        limit: 15,
+      } as QueryResponseMeta,
+    }))
+    const result = useExploreResultToDatasets({ fill: true }, exploreResult)
+
+    expect(result.value).toEqual(
+      {
+        labels: ['GroupBy2', 'GroupBy1'],
+        datasets: [
+          { label: 'ThenBy1', backgroundColor: '#a86cd5', data: [null, 100], isSegmentEmpty: false },
+          { label: 'ThenBy3', backgroundColor: '#6a86d2', data: [200, null], isSegmentEmpty: false },
+          { label: 'ThenBy4', backgroundColor: '#00bbf9', data: [250, null], isSegmentEmpty: false },
+          { label: 'ThenBy2', backgroundColor: '#afb7c5', data: [null, 150], isSegmentEmpty: true },
+        ],
+        isLabelEmpty: [false, true],
       },
     )
   })
@@ -206,8 +277,9 @@ describe('useVitalsExploreDatasets', () => {
       {
         labels: ['Request Count'],
         datasets: [
-          { label: 'Request Count', backgroundColor: '#a86cd5', data: [1] },
+          { label: 'Request Count', backgroundColor: '#a86cd5', data: [1], isSegmentEmpty: false },
         ],
+        isLabelEmpty: [false],
       },
     )
   })
@@ -247,6 +319,7 @@ describe('useVitalsExploreDatasets', () => {
           { label: 'metric1', backgroundColor: '#a86cd5', data: [1, null] },
           { label: 'metric2', backgroundColor: '#6a86d2', data: [null, 2] },
         ],
+        isLabelEmpty: [false, false],
       },
     )
   })
@@ -300,6 +373,7 @@ describe('useVitalsExploreDatasets', () => {
           { label: 'metric1', backgroundColor: '#a86cd5', data: [3, 1] },
           { label: 'metric2', backgroundColor: '#6a86d2', data: [4, 2] },
         ],
+        isLabelEmpty: [false, false],
       },
     )
   })

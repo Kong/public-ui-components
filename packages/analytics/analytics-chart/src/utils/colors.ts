@@ -111,6 +111,7 @@ export const latencyColors: AnalyticsChartColors = {
 }
 
 export const OTHERS_COLOR = '#dad4c7'
+export const EMPTY_COLOR = '#afb7c5'
 
 /**
  * Maps the first character of a dataset's label to a predefined list of colors
@@ -119,4 +120,18 @@ export const lookupColor = (label: string) => {
   const found = Object.entries(kongManangerColorPalette).find(([key]) => (new RegExp(key).test(label)))
 
   return (found && found[1]) || kongManangerColorPalette.standard
+}
+
+export const determineBaseColor = (i: number, dimensionName: string, isEmpty: boolean, colorPalette: string[] | AnalyticsChartColors): string => {
+  let baseColor
+
+  if (isEmpty) {
+    baseColor = EMPTY_COLOR
+  } else if (Array.isArray(colorPalette)) {
+    baseColor = lookupDatavisColor(i, colorPalette)
+  } else {
+    baseColor = colorPalette[dimensionName]
+  }
+
+  return baseColor || lookupDatavisColor(i) // fallback to default datavis palette if no color found
 }

@@ -1,8 +1,8 @@
 import prettyBytes from 'pretty-bytes'
-import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry } from '../types'
+import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues } from '../types'
 import { DECIMAL_DISPLAY, numberFormatter } from '../utils'
 import { isValid } from 'date-fns'
-import type { Point, ScatterDataPoint } from 'chart.js'
+import type { Chart, Point, ScatterDataPoint } from 'chart.js'
 
 // TODO: we should implement a separate tooltip behavior for each broad chart type
 // as the "tooltip behaviors" are beggining to diverge more across chart types.
@@ -39,12 +39,16 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
         value = `${prefix}${rawValue % 1 === 0 ? numberFormatter.format(rawValue) : numberFormatter.format(Number(rawValue.toFixed(DECIMAL_DISPLAY)))} ${translatedUnits}`
       }
 
-      const tooltipLabel = isBarChart && p.dataset.label !== p.label
-        ? p.dataset.label
-        : isDoughnutChart
-          // @ts-ignore - doughnut chart contains a single dataset, with a `labels` (plural) array
-          ? p.dataset.labels[p.dataIndex]
-          : p.dataset.label
+      let tooltipLabel
+
+      if (isBarChart && p.dataset.label !== p.label) {
+        tooltipLabel = p.dataset.label
+      } else if (isDoughnutChart) {
+        // @ts-ignore - doughnut chart contains a single dataset, with a `labels` (plural) array
+        tooltipLabel = p.dataset.labels[p.dataIndex]
+      } else {
+        tooltipLabel = p.dataset.label
+      }
 
       return {
         backgroundColor: colors[i].backgroundColor,
@@ -52,6 +56,7 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
         label: tooltipLabel,
         value,
         rawValue,
+        isSegmentEmpty: (p.dataset as Dataset).isSegmentEmpty,
       } as TooltipEntry
     }).sort(sortFn)
 
@@ -135,4 +140,18 @@ export function debounce(fn: Function, delay: number) {
       fn(...args)
     }, delay)
   }
+}
+
+export const generateLegendItems = (chart: Chart, legendValues: LegendValues | null, chartLegendSortFn: ChartLegendSortFn) => {
+  const data = chart.data as KChartData
+
+  // @ts-ignore: ChartJS has incomplete types
+  return (chart.options.plugins.legend.labels.generateLabels(chart) as EnhancedLegendItem[])
+    .filter(e => !legendValues?.[e.text]?.isThreshold)
+    .map(((e, i) => ({
+      ...e,
+      value: legendValues && legendValues[e.text],
+      isSegmentEmpty: data.datasets[i].isSegmentEmpty,
+    })))
+    .sort(chartLegendSortFn)
 }
