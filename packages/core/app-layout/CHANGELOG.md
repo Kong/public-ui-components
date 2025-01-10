@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.2...@kong-ui-public/app-layout@4.3.3) (2025-01-10)
+
+
+### Bug Fixes
+
+* **app-layout:** add collapsiblesection component [KHCP-14578] ([#1888](https://github.com/Kong/public-ui-components/issues/1888)) ([977c718](https://github.com/Kong/public-ui-components/commit/977c718e8278ac5ccc632679bf56bfebfcf5387d))
+
+
+
+
+
 ## [4.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.1...@kong-ui-public/app-layout@4.3.2) (2025-01-10)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
