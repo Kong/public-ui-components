@@ -33,7 +33,7 @@
         decorative
       />
       <slot
-        v-else
+        v-else-if="$slots.actions"
         name="actions"
       />
     </component>
