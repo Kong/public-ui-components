@@ -1,41 +1,89 @@
 <template>
   <KMultiselect
+    :id="getFieldID(schema)"
+    v-model="inputValue"
     :aria-labelledby="getLabelId(schema)"
+    :class="schema.fieldClasses"
     data-testid="field-multiselect"
+    :disabled="disabled || undefined"
     :items="items"
+    :kpop-attributes="{ 'data-testid': `${getFieldID(schema)}-items` }"
     :label-attributes="{ info: schema.help }"
-    :model-value="value"
+    :name="schema.inputName"
     :placeholder="schema.placeholder"
     :required="schema.required || undefined"
     width="100%"
-    @update:model-value="onUpdate"
   />
 </template>
 
-<script>
-import abstractField from './abstractField'
+<script lang="ts" setup>
+import { computed, toRef, type PropType } from 'vue'
+import type { MultiselectItem } from '@kong/kongponents'
+import composables from '../../composables'
 
-export default {
-  mixins: [abstractField],
-
-  emits: ['model-updated'],
-
-  computed: {
-    items() {
-      if (this.schema.values) {
-        return this.schema.values
-      }
-      if (this.schema.elements?.one_of?.length) {
-        return this.schema.elements.one_of.map(value => ({ label: value, value }))
-      }
-      return []
-    },
+const props = defineProps({
+  disabled: {
+    type: Boolean,
+    default: false,
   },
-
-  methods: {
-    onUpdate(value) {
-      this.$emit('model-updated', value, this.schema.model)
-    },
+  formOptions: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => undefined,
   },
-}
+  model: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => undefined,
+  },
+  schema: {
+    type: Object as PropType<Record<string, any>>,
+    required: true,
+  },
+  vfg: {
+    type: Object,
+    required: true,
+  },
+  /**
+   * TODO: stronger type
+   * TODO: pass this down to KInput error and errorMessage
+   */
+  errors: {
+    type: Array,
+    default: () => [],
+  },
+  hint: {
+    type: String,
+    default: '',
+  },
+})
+
+const emit = defineEmits<{
+  (event: 'modelUpdated', value: any, model: Record<string, any>): void
+}>()
+
+const modelRef = toRef(props, 'model')
+
+const { getLabelId, getFieldID, clearValidationErrors, value: inputValue } = composables.useAbstractFields({
+  model: modelRef,
+  schema: props.schema,
+  formOptions: props.formOptions,
+  emitModelUpdated: (data: { value: any, model: Record<string, any> }): void => {
+    emit('modelUpdated', data.value, data.model)
+  },
+})
+
+defineExpose({
+  clearValidationErrors,
+})
+
+const items = computed((): MultiselectItem[] => {
+  if (props.schema.values) {
+    return props.schema.values
+  }
+
+  if (props.schema.elements?.one_of?.length) {
+    return props.schema.elements.one_of.map((value: string | number | boolean) => ({ label: String(value), value: String(value) } satisfies MultiselectItem))
+  }
+
+  return []
+})
 </script>

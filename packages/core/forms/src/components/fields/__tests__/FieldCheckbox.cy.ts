@@ -13,6 +13,7 @@ describe('<FieldTester /> - FieldCheckbox', () => {
       label: fieldLabel,
       help: 'Check if the cat is cool.',
       required: true,
+      styleClasses: 'cool-cats',
     }],
   }
 
@@ -41,6 +42,11 @@ describe('<FieldTester /> - FieldCheckbox', () => {
       cy.get('.required').find(`.form-group-label[for="${fieldKey}"]`).should('exist')
     } else {
       cy.get('.required').find(`.form-group-label[for="${fieldKey}"]`).should('not.exist')
+    }
+
+    // check style classes
+    if (schema.fields[0].styleClasses) {
+      cy.get('.form-group.field-checkbox').should('have.class', schema.fields[0].styleClasses)
     }
 
     // check help text

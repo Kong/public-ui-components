@@ -12,6 +12,7 @@ describe('<FieldTester /> - FieldTextArea', () => {
       id: fieldKey,
       label: fieldLabel,
       help: 'Describe the personality of the cat.',
+      styleClasses: 'cool-cats',
       required: true,
     }],
   }
@@ -41,6 +42,11 @@ describe('<FieldTester /> - FieldTextArea', () => {
       cy.get('.required').find(`.form-group-label[for="${fieldKey}"]`).should('exist')
     } else {
       cy.get('.required').find(`.form-group-label[for="${fieldKey}"]`).should('not.exist')
+    }
+
+    // check style classes
+    if (schema.fields[0].styleClasses) {
+      cy.get('.form-group.field-text-area').should('have.class', schema.fields[0].styleClasses)
     }
 
     // check help text

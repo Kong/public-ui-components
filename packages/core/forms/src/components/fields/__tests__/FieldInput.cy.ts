@@ -12,6 +12,7 @@ describe('<FieldTester /> - FieldInput', () => {
       id: fieldKey,
       inputType: 'text',
       label: fieldLabel,
+      styleClasses: 'awesome-cats',
       help: 'The name of the cat.',
       required: true,
     }],
@@ -59,6 +60,11 @@ describe('<FieldTester /> - FieldInput', () => {
     if (schema.fields[0].help) {
       cy.get(`label[for="${fieldKey}"] .info-icon`).should('be.visible')
       cy.get(`label[for="${fieldKey}"]`).should('contain.text', schema.fields[0].help)
+    }
+
+    // check style classes
+    if (schema.fields[0].styleClasses) {
+      cy.get('.form-group.field-input').should('have.class', schema.fields[0].styleClasses)
     }
   })
 
