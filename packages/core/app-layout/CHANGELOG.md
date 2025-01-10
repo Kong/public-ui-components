@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.3...@kong-ui-public/app-layout@4.3.4) (2025-01-10)
+
+
+### Bug Fixes
+
+* **app-layout:** rename apppageinfosection ([#1890](https://github.com/Kong/public-ui-components/issues/1890)) ([f2b8072](https://github.com/Kong/public-ui-components/commit/f2b80728726ed4f7d5b79a5d22b5b2d67273b66d))
+
+
+
+
+
 ## [4.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.2...@kong-ui-public/app-layout@4.3.3) (2025-01-10)
 
 
