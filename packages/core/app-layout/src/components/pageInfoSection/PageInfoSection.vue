@@ -1,28 +1,28 @@
 <template>
   <component
     :is="collapsible ? 'details' : 'div'"
-    class="collapsible-section"
-    data-testid="collapsible-section"
+    class="page-info-section"
+    data-testid="page-info-section"
   >
     <component
       :is="collapsible ? 'summary' : 'div'"
-      class="collapsible-section-header"
-      data-testid="collapsible-section-header"
+      class="page-info-section-header"
+      data-testid="page-info-section-header"
     >
       <slot name="header">
-        <div class="collapsible-section-default-header">
+        <div class="page-info-section-default-header">
           <component
             :is="titleTag"
             v-if="title"
-            class="collapsible-section-title"
-            data-testid="collapsible-section-title"
+            class="page-info-section-title"
+            data-testid="page-info-section-title"
           >
             {{ title }}
           </component>
           <div
             v-if="description"
-            class="collapsible-section-description"
-            data-testid="collapsible-section-description"
+            class="page-info-section-description"
+            data-testid="page-info-section-description"
           >
             {{ description }}
           </div>
@@ -31,7 +31,7 @@
 
       <ChevronRightIcon
         v-if="collapsible"
-        class="collapsible-section-chevron-icon"
+        class="page-info-section-chevron-icon"
         decorative
       />
       <slot
@@ -42,8 +42,8 @@
 
     <div
       v-if="$slots.default"
-      class="collapsible-section-content"
-      data-testid="collapsible-section-content"
+      class="page-info-section-content"
+      data-testid="page-info-section-content"
     >
       <slot name="default" />
     </div>
@@ -78,24 +78,24 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-.collapsible-section {
+.page-info-section {
   border: $kui-border-width-10 solid $kui-color-border;
   border-radius: $kui-border-radius-30;
 
-  .collapsible-section-header {
+  .page-info-section-header {
     align-items: center;
     display: flex;
     gap: $kui-space-20;
     justify-content: space-between;
     padding: $kui-space-70;
 
-    .collapsible-section-default-header {
+    .page-info-section-default-header {
       display: flex;
       flex-direction: column;
       gap: $kui-space-40;
       max-width: 700px;
 
-      .collapsible-section-title {
+      .page-info-section-title {
         color: $kui-color-text;
         font-size: $kui-font-size-40;
         font-weight: $kui-font-weight-bold;
@@ -103,7 +103,7 @@ defineProps({
         margin: $kui-space-0;
       }
 
-      .collapsible-section-description {
+      .page-info-section-description {
         color: $kui-color-text-neutral;
         font-size: $kui-font-size-30;
         line-height: $kui-line-height-30;
@@ -112,7 +112,7 @@ defineProps({
     }
   }
 
-  .collapsible-section-content {
+  .page-info-section-content {
     background: $kui-color-background-neutral-weakest;
     border-top: $kui-border-width-10 solid $kui-color-border;
     display: flex;
@@ -137,11 +137,11 @@ defineProps({
   }
 }
 
-details.collapsible-section {
+details.page-info-section {
   overflow: auto;
 
   &[open] {
-    .collapsible-section-chevron-icon {
+    .page-info-section-chevron-icon {
       transform: rotate(90deg);
     }
   }
@@ -158,10 +158,10 @@ details.collapsible-section {
     }
   }
 
-  .collapsible-section-header {
+  .page-info-section-header {
     cursor: pointer;
 
-    .collapsible-section-chevron-icon {
+    .page-info-section-chevron-icon {
       flex-shrink: 0;
       pointer-events: none;
       transition: transform $kui-animation-duration-20 ease;

@@ -109,27 +109,27 @@
     <p>This is the top.</p>
 
     <div class="collapsible-sections-container">
-      <CollapsibleSection
+      <PageInfoSection
         description="This is a collapsible section that's rendered collapsed by default. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         title="Collapsible section"
       >
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae. Repellat quam voluptas vitae, maxime consequuntur praesentium et suscipit. Numquam aliquid nulla vel esse accusantium reiciendis error?
-      </CollapsibleSection>
+      </PageInfoSection>
 
-      <CollapsibleSection
+      <PageInfoSection
         description="This is a collapsible section that's rendered open by default. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
         open
         title="Collapsible section"
         title-tag="h2"
       >
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae. Repellat quam voluptas vitae, maxime consequuntur praesentium et suscipit. Numquam aliquid nulla vel esse accusantium reiciendis error?
-      </CollapsibleSection>
+      </PageInfoSection>
 
       <KComponent
         v-slot="{ data }"
         :data="{ toggleModel: true }"
       >
-        <CollapsibleSection
+        <PageInfoSection
           :collapsible="false"
           description="This is a non-collapsible section with a toggle in the header. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
           title="Non-collapsible section"
@@ -139,7 +139,7 @@
           </template>
 
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Id quidem aperiam similique vitae beatae. Repellat quam voluptas vitae, maxime consequuntur praesentium et suscipit. Numquam aliquid nulla vel esse accusantium reiciendis error?
-        </CollapsibleSection>
+        </PageInfoSection>
       </KComponent>
     </div>
 
@@ -164,7 +164,7 @@ import AppGruceLogo from '../components/icons/AppGruceLogo.vue'
 import AppLogo from '../components/icons/AppLogo.vue'
 import { OverviewIcon, RuntimesIcon, ServiceHubIcon, MeshIcon, DevPortalIcon, BarChartIcon, PeopleIcon, CogIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import CollapsibleSection from '../../src/components/collapsibleSection/CollapsibleSection.vue'
+import PageInfoSection from '../../src/components/pageInfoSection/PageInfoSection.vue'
 
 const userNameAndEmail = ref<string>('Jackie Jiang\njackie.jiang@konghq.com')
 

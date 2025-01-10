@@ -1,6 +1,6 @@
-# CollapsibleSection.vue
+# PageInfoSection.vue
 
-A Kong UI simple collapsible section component.
+A Kong UI simple optionally collapsible section component.
 
 - [Requirements](#requirements)
 - [Usage](#usage)
