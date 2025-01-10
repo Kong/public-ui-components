@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.9.0...@kong-ui-public/forms@4.10.0) (2025-01-10)
+
+
+### Features
+
+* **field-multiselect:** setup syntax [khcp-11341] ([#1885](https://github.com/Kong/public-ui-components/issues/1885)) ([df4ffbb](https://github.com/Kong/public-ui-components/commit/df4ffbb17e87eaf1ce356cf1e6425dd5eb20612a))
+
+
+
+
+
 # [4.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.8.2...@kong-ui-public/forms@4.9.0) (2024-12-05)
 
 
