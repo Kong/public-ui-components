@@ -8,6 +8,7 @@ import AppNavbar from './components/navbar/AppNavbar.vue'
 import AppPageHeader from './components/pageHeader/AppPageHeader.vue'
 import AppSidebar from './components/sidebar/AppSidebar.vue'
 import SidebarToggle from './components/sidebar/SidebarToggle.vue'
+import CollapsibleSection from './components/collapsibleSection/CollapsibleSection.vue'
 
 // Export Vue plugin as the default
 export default {
@@ -28,6 +29,7 @@ export {
   AppPageHeader,
   AppSidebar,
   SidebarToggle,
+  CollapsibleSection,
 }
 
 export * from './types'
