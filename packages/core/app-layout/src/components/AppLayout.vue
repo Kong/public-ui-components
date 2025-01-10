@@ -122,7 +122,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { ref, reactive, computed, watchEffect, onMounted, onBeforeUnmount, toRef, useSlots } from 'vue'
+import { ref, reactive, computed, watchEffect, onMounted, onBeforeUnmount, toRef, useSlots, watch } from 'vue'
 import AppNavbar from './navbar/AppNavbar.vue'
 import AppSidebar from './sidebar/AppSidebar.vue'
 import SidebarToggle from './sidebar/SidebarToggle.vue'
@@ -171,7 +171,10 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['sidebar-click'])
+const emit = defineEmits<{
+  (e: 'sidebar-click', item: SidebarPrimaryItem | SidebarSecondaryItem): void
+  (e: 'update:topOffset', offset: number): void
+}>()
 
 const slots = useSlots()
 const slotContent = reactive({
@@ -243,12 +246,9 @@ const debouncedSetNotificationHeight = debounce((force = false): void => {
 // Add a ResizeObserver to determine when the navbar element content changes
 const resizeObserver = ref<ResizeObserver>()
 
-const topOffset = computed((): number => notificationHeight.value)
-
-defineExpose({
-  /** Expose the computed top offset */
-  topOffset,
-})
+watch(notificationHeight, (offset) => {
+  emit('update:topOffset', offset || 0)
+}, { immediate: true })
 
 onMounted(() => {
   // Add classes to the `html` and `body` elements to scope styles
