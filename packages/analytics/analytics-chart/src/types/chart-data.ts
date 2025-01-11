@@ -49,6 +49,7 @@ export interface LegendValueEntry {
 export interface EnhancedLegendItem extends LegendItem {
   value: LegendValueEntry
   text: string
+  isSegmentEmpty?: boolean
 }
 
 /**

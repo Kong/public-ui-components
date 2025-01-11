@@ -1,5 +1,5 @@
 import prettyBytes from 'pretty-bytes'
-import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues } from '../types'
+import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues, EnhancedLegendItem } from '../types'
 import { DECIMAL_DISPLAY, numberFormatter } from '../utils'
 import { isValid } from 'date-fns'
 import type { Chart, Point, ScatterDataPoint } from 'chart.js'
@@ -131,8 +131,7 @@ export const verticalTooltipPositioning = (position: Point, tooltipHeight: numbe
   return y
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function debounce(fn: Function, delay: number) {
+export function debounce(fn: (...args: any) => any, delay: number) {
   let timeoutId: number
   return (...args: any) => {
     clearTimeout(timeoutId)
@@ -142,16 +141,16 @@ export function debounce(fn: Function, delay: number) {
   }
 }
 
-export const generateLegendItems = (chart: Chart, legendValues: LegendValues | null, chartLegendSortFn: ChartLegendSortFn) => {
+export const generateLegendItems = (chart: Chart, legendValues: LegendValues | null, chartLegendSortFn: ChartLegendSortFn): EnhancedLegendItem[] => {
   const data = chart.data as KChartData
 
   // @ts-ignore: ChartJS has incomplete types
-  return (chart.options.plugins.legend.labels.generateLabels(chart) as EnhancedLegendItem[])
+  return (chart.options.plugins.legend.labels.generateLabels(chart))
     .filter(e => !legendValues?.[e.text]?.isThreshold)
     .map(((e, i) => ({
       ...e,
       value: legendValues && legendValues[e.text],
       isSegmentEmpty: data.datasets[i].isSegmentEmpty,
-    })))
+    } as EnhancedLegendItem)))
     .sort(chartLegendSortFn)
 }

@@ -27,8 +27,11 @@
       v-if="axesTooltip.show"
       class="axis-tooltip"
       :style="{ top: axesTooltip.top, left: axesTooltip.left}"
+      width="auto"
     >
-      {{ axesTooltip.text }}
+      <div class="axis-tooltip-content">
+        {{ axesTooltip.text }}
+      </div>
     </div>
     <ToolTip
       :context="tooltipData.tooltipContext"
@@ -49,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ChartDataset, ChartOptions, LegendItem } from 'chart.js'
+import type { ChartDataset, ChartOptions } from 'chart.js'
 import { Chart } from 'chart.js'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
@@ -206,7 +209,7 @@ const axis = ref< HTMLCanvasElement>()
 const legendID = ref(uuidv4())
 const reactiveAnnotationsID = uuidv4()
 const maxOverflowPluginID = uuidv4()
-const legendItems = ref<LegendItem[]>([])
+const legendItems = ref<EnhancedLegendItem[]>([])
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
 const axesTooltip = ref<AxesTooltipState>({
   show: false,
@@ -279,8 +282,10 @@ const axesTooltipPlugin = {
       const evt = args.event
       const indexAxis = chart.options.indexAxis as ('x' | 'y')
       const scales = chart.scales
-      const text = chart.scales[indexAxis].getLabelForValue(Number(chart.scales[indexAxis].getValueForPixel(evt[indexAxis])))
-
+      const label = chart.scales[indexAxis].getLabelForValue(Number(chart.scales[indexAxis].getValueForPixel(evt[indexAxis])))
+      const labels = chart.scales[indexAxis].getLabels()
+      const indexOfLabel = labels.indexOf(label)
+      const isEmptyLabel = props.chartData.isLabelEmpty?.[indexOfLabel]
       const compareByIndexAxis = (axis: string) => {
         return axis === 'x'
           ? evt.y > scales.x.top
@@ -292,20 +297,22 @@ const axesTooltipPlugin = {
         if (!tooltipData.locked) {
           tooltipData.showTooltip = false
         }
-        if (text.length > MAX_LABEL_LENGTH) {
-          const context = chart.canvas.getContext('2d') as CanvasRenderingContext2D
-          const textWidthPixels = context.measureText(text).width
+        const context = chart.canvas.getContext('2d') as CanvasRenderingContext2D
+        const textWidthPixels = context.measureText(label).width
 
-          const leftOfCursor = Math.abs(Math.round(evt.x - textWidthPixels * 0.5))
-          const rightOfCursor = Math.round(evt.x + textWidthPixels * 0.5)
+        const leftOfCursor = Math.abs(Math.round(evt.x - textWidthPixels * 0.5))
+        const rightOfCursor = Math.round(evt.x + textWidthPixels * 0.5)
 
-          axesTooltip.value.left = indexAxis === 'x'
-            ? `${(leftOfCursor > 0 ? leftOfCursor : rightOfCursor) - axesTooltip.value.offset}px`
-            : `${(evt.x - textWidthPixels * 0.5) - axesTooltip.value.offset}px`
-          axesTooltip.value.top = `${evt.y - 50}px`
-
+        axesTooltip.value.left = indexAxis === 'x'
+          ? `${(leftOfCursor > 0 ? leftOfCursor : rightOfCursor) - axesTooltip.value.offset}px`
+          : `${(evt.x - textWidthPixels * 0.5) - axesTooltip.value.offset}px`
+        axesTooltip.value.top = `${evt.y - 50}px`
+        if (label.length > MAX_LABEL_LENGTH) {
           axesTooltip.value.show = true
-          axesTooltip.value.text = text
+          axesTooltip.value.text = label
+        } else if (isEmptyLabel) {
+          axesTooltip.value.text = i18n.t('emptyEntityInfo')
+          axesTooltip.value.show = true
         } else {
           axesTooltip.value.show = false
         }
@@ -599,12 +606,23 @@ const handleChartClick = () => {
 }
 
 .axis-tooltip {
-  background-color: $kui-color-background-neutral-stronger;
+  background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
+  border: none;
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   color: var(--kui-color-text-inverse, $kui-color-text-inverse);
+  max-width: 40ch;
   padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
   position: absolute;
   width: max-content;
   z-index: 100;
+
+  .axis-tooltip-content {
+    color: var(--kui-color-text-inverse, $kui-color-text-inverse);
+    font-family: var(--kui-font-family-text, $kui-font-family-text);
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+    line-height: var(--kui-line-height-20, $kui-line-height-20);
+  }
 }
 
 .tooltip-boundary {
