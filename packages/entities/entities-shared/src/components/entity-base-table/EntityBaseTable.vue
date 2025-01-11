@@ -206,7 +206,6 @@ const props = defineProps({
   preferencesStorageKey: {
     type: String,
     default: '',
-    required: true,
   },
   /** default table preferences to use if no user preferences are found */
   defaultTablePreferences: {
