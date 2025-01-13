@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.4...@kong-ui-public/app-layout@4.3.5) (2025-01-13)
+
+
+### Bug Fixes
+
+* add stylelint rule and brace rules ([#1891](https://github.com/Kong/public-ui-components/issues/1891)) ([f0e0260](https://github.com/Kong/public-ui-components/commit/f0e02606ab6b8e4328cfd88783fcd45c984286dd))
+
+
+
+
+
 ## [4.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.3...@kong-ui-public/app-layout@4.3.4) (2025-01-10)
 
 

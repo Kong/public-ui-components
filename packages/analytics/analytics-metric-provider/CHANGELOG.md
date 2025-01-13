@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.6.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.6.13...@kong-ui-public/analytics-metric-provider@8.6.14) (2025-01-13)
+
+
+### Bug Fixes
+
+* add stylelint rule and brace rules ([#1891](https://github.com/Kong/public-ui-components/issues/1891)) ([f0e0260](https://github.com/Kong/public-ui-components/commit/f0e02606ab6b8e4328cfd88783fcd45c984286dd))
+
+
+
+
+
 ## [8.6.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.6.12...@kong-ui-public/analytics-metric-provider@8.6.13) (2025-01-06)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider

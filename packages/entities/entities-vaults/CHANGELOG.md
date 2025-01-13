@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.13.61](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.13.60...@kong-ui-public/entities-vaults@3.13.61) (2025-01-13)
+
+
+### Bug Fixes
+
+* add stylelint rule and brace rules ([#1891](https://github.com/Kong/public-ui-components/issues/1891)) ([f0e0260](https://github.com/Kong/public-ui-components/commit/f0e02606ab6b8e4328cfd88783fcd45c984286dd))
+
+
+
+
+
 ## [3.13.60](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.13.59...@kong-ui-public/entities-vaults@3.13.60) (2024-12-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

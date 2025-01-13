@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.0...@kong-ui-public/forms@4.10.1) (2025-01-13)
+
+
+### Bug Fixes
+
+* add stylelint rule and brace rules ([#1891](https://github.com/Kong/public-ui-components/issues/1891)) ([f0e0260](https://github.com/Kong/public-ui-components/commit/f0e02606ab6b8e4328cfd88783fcd45c984286dd))
+
+
+
+
+
 # [4.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.9.0...@kong-ui-public/forms@4.10.0) (2025-01-10)
 
 

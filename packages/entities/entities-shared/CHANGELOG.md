@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.14.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.2...@kong-ui-public/entities-shared@3.14.3) (2025-01-13)
+
+
+### Bug Fixes
+
+* add stylelint rule and brace rules ([#1891](https://github.com/Kong/public-ui-components/issues/1891)) ([f0e0260](https://github.com/Kong/public-ui-components/commit/f0e02606ab6b8e4328cfd88783fcd45c984286dd))
+
+
+
+
+
 ## [3.14.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.1...@kong-ui-public/entities-shared@3.14.2) (2024-12-19)
 
 
