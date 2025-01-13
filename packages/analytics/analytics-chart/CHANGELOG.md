@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.9.0...@kong-ui-public/analytics-chart@5.9.1) (2025-01-13)
+
+
+### Bug Fixes
+
+* show tooltip explaining an empty entity in the axis ([#1884](https://github.com/Kong/public-ui-components/issues/1884)) ([75e73e4](https://github.com/Kong/public-ui-components/commit/75e73e498346e4bcd5dc1261bd182c3d50647dba))
+
+
+
+
+
 # [5.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@5.8.4...@kong-ui-public/analytics-chart@5.9.0) (2025-01-10)
 
 
