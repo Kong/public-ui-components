@@ -243,9 +243,11 @@ export default {
 
 <style lang="scss">
 $errorColor: #f00;
+
 .form-group:not([class*=" col-"]) {
   width: 100%;
 }
+
 .form-group {
   display: inline-block;
   margin-bottom: 16px;
@@ -253,9 +255,11 @@ $errorColor: #f00;
 
   label {
     font-weight: 400;
+
     & > :first-child {
       display: inline-block;
     }
+
     & > div[role="button"] {
       display: inline-block;
     }
@@ -293,6 +297,7 @@ $errorColor: #f00;
     .errors {
       color: $errorColor;
       font-size: 12px;
+
       span {
         background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAiklEQVR4Xt2TMQoCQQxF3xdhu72MpZU3GU/meBFLOztPYrVWsQmEWSaMsIXgK8P8RyYkMjO2sAN+K9gTIAmDAlzoUzE7p4IFytvDCQWJKSStYB2efcAvqZFM0BcstMx5naSDYFzfLhh/4SmRM+6Agw/xIX0tKEDFufeDNRUc4XqLRz3qabVIf3BMHwl6Ktexn3nmAAAAAElFTkSuQmCC");
         background-repeat: no-repeat;

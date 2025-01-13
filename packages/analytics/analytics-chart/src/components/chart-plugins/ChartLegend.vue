@@ -305,6 +305,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     height: v-bind('legendHeight');
     justify-content: center;  // Legend below chart only allows one line of text
     width: 99%;
+
     .truncate-label {
       max-width: 20ch;
       overflow: hidden;
@@ -315,6 +316,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     li {
       align-items: center;
       margin-top: 0;
+
       .label {
         line-height: $kui-line-height-40;
         padding-right: $kui-space-10;  // Ensure italics text doesn't get cut off.

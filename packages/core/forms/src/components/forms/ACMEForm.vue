@@ -384,12 +384,15 @@ const onChangeStorage = (payload: string, schema: string): void => {
   margin-bottom: 16px;
   width: 100%;
 }
+
 .header-wrapper {
   margin-bottom: 8px;
 }
+
 .sub-form {
   margin-left: 24px;
 }
+
 .description {
   margin-bottom: 12px;
 }

@@ -293,9 +293,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.autosuggest  {
+.autosuggest {
   width: 100%;
 }
+
 .k-select {
   border: none!important;
   padding: 0!important;

@@ -38,6 +38,7 @@ defineProps<{
   color: $kui-color-text;
   font-size: $kui-font-size-70;
   font-weight: $kui-font-weight-bold;
+
   .title {
     word-break: break-all;
   }

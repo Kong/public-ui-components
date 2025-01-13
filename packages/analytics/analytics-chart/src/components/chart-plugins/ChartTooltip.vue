@@ -209,6 +209,7 @@ function handleMouseUp() {
 .locked {
   cursor: move;
 }
+
 .tooltip-container {
   background-color: $kui-color-background;
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
@@ -231,6 +232,7 @@ function handleMouseUp() {
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
+
     .subtitle {
       font-size: var(--kui-font-size-20, $kui-font-size-20);
       margin-top: var(--kui-space-40, $kui-space-40);

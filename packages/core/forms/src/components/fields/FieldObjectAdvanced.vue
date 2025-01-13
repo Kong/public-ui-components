@@ -239,23 +239,28 @@ export default {
 .object-advanced-wrapper {
   width: 100%;
 }
+
 .item-wrapper {
   margin-left: 28px;
 }
+
 .index-wrapper {
   align-items: center;
   display: flex;
   justify-content: space-between;
   margin-top: 4px;
 }
+
 .divider {
   margin-bottom: 8px;
   margin-top: 8px;
 }
+
 .wide-divider {
   margin-bottom: 16px;
   margin-top: 16px;
 }
+
 .input-wrapper {
   margin-right: 16px;
   margin-top: 16px;
@@ -264,6 +269,7 @@ export default {
     margin-left: 28px;
   }
 }
+
 .input-item {
   display: flex;
 

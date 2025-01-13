@@ -17,10 +17,12 @@ $scrollbar-background-color: $kui-color-background-transparent;
     opacity: 1;
     width: $size;
   }
+
   &::-webkit-scrollbar-thumb {
     background: $kui-color-background-transparent; // Hide the scrollbar until hovered
     border-radius: $kui-border-radius-40;
   }
+
   &::-webkit-scrollbar-track {
     background: $kui-color-background-transparent; // Hide the scrollbar until hovered
   }
@@ -42,6 +44,7 @@ $scrollbar-background-color: $kui-color-background-transparent;
   &::-webkit-scrollbar-thumb {
     background: $foreground-color; // update the color to be visible
   }
+
   &::-webkit-scrollbar-track {
     background: $background-color; // update the color to be visible
   }

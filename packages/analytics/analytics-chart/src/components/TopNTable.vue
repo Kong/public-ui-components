@@ -236,6 +236,7 @@ const getValue = (record: AnalyticsExploreRecord): string => {
   border: none !important;
   max-height: 100%;
   padding: 0 !important;
+
   .top-n-card-description {
     color: $kui-color-text-neutral;
     font-size: $kui-font-size-20;
@@ -294,6 +295,7 @@ const getValue = (record: AnalyticsExploreRecord): string => {
 
     .table-body {
       overflow-y: auto;
+
       .table-row:first-of-type {
         border-top: $kui-border-width-10 solid $kui-color-border;
       }

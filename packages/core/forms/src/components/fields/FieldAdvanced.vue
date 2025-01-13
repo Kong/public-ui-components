@@ -67,10 +67,12 @@ export default {
   margin-bottom: 32px !important;
   margin-top: -16px;
 }
+
 .advanced-field-dropdown-wrapper {
   display: flex;
   flex-direction: column;
   width: 100%;
+
   .advanced-field-title {
     align-items: center;
     color: #0077cc;
@@ -80,15 +82,18 @@ export default {
     margin-top: 16px;
     order: 2;
     padding: 0;
+
     i {
       color: #0077cc;
       font-size: 16px;
     }
+
     &:hover span {
       color: #0077cc;
       text-decoration: underline;
     }
   }
+
   .advanced-field-dropdown {
     display: block;
     height: auto;

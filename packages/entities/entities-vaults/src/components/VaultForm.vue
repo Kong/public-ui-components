@@ -1090,6 +1090,7 @@ const saveFormData = async (): Promise<void> => {
 .appear-enter-active {
   transition: all 0.5s ease;
 }
+
 .appear-enter-from,
 .appear-leave-to {
   opacity: 0;

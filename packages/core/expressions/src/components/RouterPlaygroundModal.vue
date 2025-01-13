@@ -49,21 +49,26 @@ const expression = ref('')
   .k-modal-backdrop {
     overflow-y: scroll;
   }
+
   .modal-container {
     max-width: 1280px !important;
     width: 100% !important;
   }
+
   .k-modal-header {
     margin-bottom: $kui-space-0 !important;
   }
+
   .k-prompt-header hr {
     margin-bottom: $kui-space-0;
     margin-top: $kui-space-50;
   }
+
   .k-prompt-body hr {
     margin-bottom: $kui-space-0;
     margin-top: $kui-space-0;
   }
+
   .k-prompt-body-content {
     max-height: 800px !important;
     padding: $kui-space-80 $kui-space-0;

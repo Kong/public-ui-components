@@ -255,6 +255,7 @@ watch(() => props.type, (val, oldVal) => {
     margin-bottom: $kui-space-20;
     margin-top: 0;
   }
+
   &-text {
     color: $kui-color-text-disabled;
     font-size: $kui-font-size-30;
@@ -263,6 +264,7 @@ watch(() => props.type, (val, oldVal) => {
     margin-top: 0;
   }
 }
+
 .margin-top-6 {
   margin-top: $kui-space-80;
 }

@@ -443,7 +443,7 @@ onBeforeUnmount(() => {
     position: relative;
     width: 100%;
 
-    &:before{
+    &:before {
       background-image: linear-gradient(transparent, $kui-color-background-inverse);
       content: '';
       display: block;
@@ -516,7 +516,7 @@ onBeforeUnmount(() => {
     }
   }
 
-  &:after{
+  &:after {
     background-image: linear-gradient($kui-color-background-inverse, transparent);
     bottom: 0;
     content: '';

@@ -284,6 +284,7 @@ const submitData = async (): Promise<void> => {
     margin-bottom: 4px;
     margin-top: 0;
   }
+
   &-text {
     color: rgba(0, 0, 0, 0.45);
     font-size: $kui-font-size-30;

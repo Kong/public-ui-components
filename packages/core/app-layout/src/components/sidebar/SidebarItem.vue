@@ -334,9 +334,11 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
         &-17 {
           max-width: 17ch;
         }
+
         &-18 {
           max-width: 18ch;
         }
+
         &-24 {
           max-width: 24ch;
         }
