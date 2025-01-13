@@ -7,7 +7,7 @@
   "total": "Total",
   "jumpToExplore": "Open in Explorer",
   "more_actions": "More actions",
-  "emptyEntityInfo": "A collection of requests that are not categorized into any defined metric group",
+  "emptyEntityInfo": "A collection of requests that are not categorized into the selected group-by",
   "chartUnits": {
     "ms": "ms",
     "bytes": "Byte{plural}",
