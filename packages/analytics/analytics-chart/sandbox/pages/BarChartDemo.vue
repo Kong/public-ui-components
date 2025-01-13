@@ -288,7 +288,7 @@ const dimensionItems = [{
 
 // Short labels
 const statusCodeLabels = [
-  '500', '200', '300', '400',
+  '500', '200', '300', '400', 'empty',
 ]
 
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))

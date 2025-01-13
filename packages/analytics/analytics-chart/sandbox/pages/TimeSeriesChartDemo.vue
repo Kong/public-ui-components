@@ -315,7 +315,7 @@ const metricItems = [{
 
 // Short labels
 const statusCodeLabels = [
-  '200', '300', '400', '500', '5XX',
+  '200', '300', '400', '500', '5XX', 'empty',
 ]
 
 const statusCodeDimensionValues = ref(new Set(statusCodeLabels))

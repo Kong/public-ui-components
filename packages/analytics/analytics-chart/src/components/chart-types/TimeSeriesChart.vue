@@ -51,7 +51,7 @@
       :id="legendID"
       :chart-instance="chartInstance"
       data-testid="legend"
-      :items="(legendItems as LegendItem[])"
+      :items="legendItems"
     />
   </div>
 </template>
@@ -72,7 +72,7 @@ import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
 import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry } from '../../types'
 import type { GranularityValues, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
-import type { Chart, LegendItem } from 'chart.js'
+import type { Chart } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import { formatByGranularity, generateLegendItems } from '../../utils'
 
@@ -160,7 +160,7 @@ const { translateUnit } = composables.useTranslatedUnits()
 const chartInstance = ref<{ chart: Chart }>()
 const legendID = ref(uuidv4())
 const chartID = ref(uuidv4())
-const legendItems = ref<LegendItem[]>([])
+const legendItems = ref<EnhancedLegendItem[]>([])
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
 const isDoingSelection = ref(false)
