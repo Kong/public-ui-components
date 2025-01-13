@@ -245,6 +245,7 @@ watch(tableData, () => {
         height: auto;   // Match KTable legacy styling
       }
     }
+
     .modal-footer {
       .vitals-report-export-button {
         display: inline-flex;

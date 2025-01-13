@@ -64,6 +64,7 @@ import BananaSplit from '../icons/BananaSplit.vue'
     opacity: 0;
     transform: translateY(50px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

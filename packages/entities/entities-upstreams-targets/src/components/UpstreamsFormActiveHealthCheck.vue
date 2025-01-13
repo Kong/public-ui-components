@@ -487,9 +487,11 @@ const removeHeader = (i: number): void => {
 .margin-bottom-6 {
   margin-bottom: $kui-space-80;
 }
+
 .margin-top-6 {
   margin-top: $kui-space-80;
 }
+
 .fields-group {
   &-title {
     color: $kui-color-text;
@@ -499,6 +501,7 @@ const removeHeader = (i: number): void => {
     margin-bottom: $kui-space-20;
     margin-top: 0;
   }
+
   &-text {
     color: $kui-color-text-disabled;
     font-size: $kui-font-size-30;
@@ -507,6 +510,7 @@ const removeHeader = (i: number): void => {
     margin-top: 0;
   }
 }
+
 .headers-row {
   align-items: center;
   column-gap: $kui-space-60;

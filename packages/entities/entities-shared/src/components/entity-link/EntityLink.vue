@@ -155,6 +155,7 @@ const onCopyUuid = async (copyToClipboard: (str: string) => Promise<boolean>): P
     align-items: center;
     cursor: pointer;
     display: flex;
+
     .entity-link-copy-id {
       margin-left: $kui-space-10;
     }

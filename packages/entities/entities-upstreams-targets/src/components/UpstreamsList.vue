@@ -454,6 +454,7 @@ onBeforeMount(async () => {
   .kong-ui-entity-filter-input {
     margin-right: $kui-space-50;
   }
+
   .upstream-name {
     font-weight: 600;
   }

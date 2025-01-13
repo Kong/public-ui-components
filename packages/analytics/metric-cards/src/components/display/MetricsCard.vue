@@ -279,13 +279,16 @@ $row-gap-size: 12px;
     &.sm {
       font-size: $kui-font-size-20;
     }
+
     &.md {
       font-size: $kui-font-size-30;
       font-weight: $kui-font-weight-semibold;
     }
+
     &.lg {
       font-size: $kui-font-size-30;
     }
+
     &.xl {
       font-size: $kui-font-size-30;
     }
@@ -315,6 +318,7 @@ $row-gap-size: 12px;
       font-size: $kui-font-size-30;
       line-height: $kui-line-height-40;
     }
+
     &.xl {
       font-size: $kui-font-size-100;
     }
@@ -350,14 +354,17 @@ $row-gap-size: 12px;
       .kui-icon {
         margin-right: 4px;
       }
+
       &.positive {
         background-color: var(--kong-ui-metric-card-trend-bg-positive, $kui-color-background-success-weakest);
         color: var(--kong-ui-metric-card-trend-positive, $kui-color-text-success);
       }
+
       &.negative {
         background-color: var(--kong-ui-metric-card-trend-bg-negative, $kui-color-background-danger-weakest);
         color: var(--kong-ui-metric-card-trend-negative, $kui-color-text-danger-strong);
       }
+
       &.neutral {
         background-color: var(--kong-ui-metric-card-trend-bg-neutral, $kui-color-background-neutral-weaker);
         color: var(--kong-ui-metric-card-trend-neutral, $kui-color-text-neutral-strong);

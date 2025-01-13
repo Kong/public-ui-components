@@ -190,6 +190,7 @@ const showMetricSmall = computed(() => props.metricDisplay === ChartMetricDispla
       font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
       line-height: var(--kui-line-height-50, $kui-line-height-50);
     }
+
     .metric-small {
       color: var(--kui-color-text-neutral, $kui-color-text-neutral);
       font-size: var(--kui-font-size-10, $kui-font-size-10);

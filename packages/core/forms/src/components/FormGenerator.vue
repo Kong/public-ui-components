@@ -409,9 +409,11 @@ export default {
     &:last-child {
       margin-bottom: 32px;
     }
+
     &.hide-label > label {
       display: none;
     }
+
     label {
       font-weight: 500;
     }
@@ -444,13 +446,16 @@ export default {
     padding: $kui-space-40 $kui-space-60;
     transition: color .1s ease, box-shadow .1s ease, border-color ease-in-out 0.15s;
     width: 100%;
+
     &:hover {
       box-shadow: inset 0 0 0 1px #bdd3f9;
     }
+
     &:focus {
       box-shadow: inset 0 0 0 1px #3972d5;
       outline: none;
     }
+
     &:not([class*=" col-"]) {
       width: 100%;
     }
@@ -549,6 +554,7 @@ export default {
   box-shadow: none;
   color: $kui-color-text-inverse;
 }
+
 .vue-form-generator .field-wrap button.tertiary:hover,
 .vue-form-generator .field-wrap input[type=submit].tertiary:hover,
 .vue-form-generator .field-wrap button.tertiary:active,

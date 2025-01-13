@@ -90,6 +90,7 @@ fieldset.config-card-fieldset {
     width: unset;
   }
 }
+
 .config-card-json-item, fieldset.config-card-fieldset {
   .config-card-details-row {
     margin: $kui-space-0 $kui-space-60;

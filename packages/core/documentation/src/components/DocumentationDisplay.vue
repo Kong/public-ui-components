@@ -237,6 +237,7 @@ defineExpose({ download: handleDownload, edit: handleEdit })
 .markdown-content-loading :deep(.skeleton-card) {
   min-height: 450px; // fixes flaky jump when markdown content loads and renders, changing height of the container
 }
+
 .content-card-view {
   @media (min-width: $kui-breakpoint-phablet) {
     max-height: 450px;
@@ -275,6 +276,7 @@ defineExpose({ download: handleDownload, edit: handleEdit })
     font-size: $kui-font-size-40;
     font-weight: $kui-font-weight-bold;
     margin-right: $kui-space-50;
+
     &-extension {
       color: $kui-color-text-neutral;
     }

@@ -503,6 +503,7 @@ onBeforeMount(async () => {
     .select-item-label {
       font-weight: $kui-font-weight-semibold;
     }
+
     .select-item-description {
       color: $kui-color-text-neutral;
       font-size: $kui-font-size-20;

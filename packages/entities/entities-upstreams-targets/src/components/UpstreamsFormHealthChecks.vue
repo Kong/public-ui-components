@@ -110,6 +110,7 @@ const emit = defineEmits<{
     margin-bottom: $kui-space-20;
     margin-top: 0;
   }
+
   &-text {
     color: $kui-color-text-disabled;
     font-size: $kui-font-size-30;

@@ -74,7 +74,7 @@ watch(() => props.active, (active) => {
         transform: translateY(8px) rotate(45deg);
       }
 
-      &:nth-child(3){
+      &:nth-child(3) {
         transform: translateY(-8px) rotate(-45deg);
       }
     }

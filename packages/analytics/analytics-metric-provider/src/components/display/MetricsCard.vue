@@ -269,13 +269,16 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
     &.sm {
       font-size: var(--kui-font-size-20, $kui-font-size-20);
     }
+
     &.md {
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
+
     &.lg {
       font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
+
     &.xl {
       font-size: var(--kui-font-size-30, $kui-font-size-30);
     }
@@ -305,6 +308,7 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
       font-size: var(--kui-font-size-30, $kui-font-size-30);
       line-height: var(--kui-line-height-40, $kui-line-height-40);
     }
+
     &.xl {
       font-size: var(--kui-font-size-100, $kui-font-size-100);
     }
@@ -345,14 +349,17 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
       .kui-icon {
         margin-right: var(--kui-space-20, $kui-space-20);
       }
+
       &.positive {
         background-color: var(--kui-color-background-success-weakest, $kui-color-background-success-weakest);
         color: var(--kui-color-text-success, $kui-color-text-success);
       }
+
       &.negative {
         background-color: var(--kui-color-background-danger-weakest, $kui-color-background-danger-weakest);
         color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
       }
+
       &.neutral {
         background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
         color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);

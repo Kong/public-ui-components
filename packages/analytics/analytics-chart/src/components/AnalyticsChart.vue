@@ -397,6 +397,7 @@ provide('legendPosition', toRef(props, 'legendPosition'))
       var(--kui-space-60, $kui-space-60)
       var(--kui-space-0, $kui-space-0);
   }
+
   .chart-header {
     align-items: center;
     display: flex;
