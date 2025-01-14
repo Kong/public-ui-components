@@ -18,6 +18,23 @@
         <template #feature-1-icon>
           <PlugIcon />
         </template>
+        <template #bottom>
+          <div class="bottom-content-title-container">
+            <h2>
+              Get started with the CLI
+            </h2>
+            <KExternalLink href="https://docs.konghq.com/">
+              Read the docs
+            </KExternalLink>
+          </div>
+          <KCodeBlock
+            id="bottom-content-code-block"
+            code="{example code here}"
+            language="plaintext"
+            single-line
+            theme="dark"
+          />
+        </template>
       </EntityEmptyState>
     </main>
   </div>
@@ -41,3 +58,18 @@ const features = [
   },
 ]
 </script>
+
+<style lang="scss" scoped>
+.bottom-content-title-container {
+  display: flex;
+  justify-content: space-between;
+
+  h2 {
+    color: $kui-color-text;
+    font-size: $kui-font-size-50;
+    font-weight: $kui-font-weight-semibold;
+    line-height: $kui-line-height-50;
+    margin: $kui-space-0;
+  }
+}
+</style>
