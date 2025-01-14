@@ -30,7 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import type { RendererProps, TopNTableOptions } from '../types'
+import type { RendererProps } from '../types'
+import type { TopNTableOptions } from '@kong-ui-public/analytics-utilities'
 import { CP_ID_TOKEN, ENTITY_ID_TOKEN } from '../constants'
 import { TopNTable } from '@kong-ui-public/analytics-chart'
 import type { TopNTableRecord } from '@kong-ui-public/analytics-chart'

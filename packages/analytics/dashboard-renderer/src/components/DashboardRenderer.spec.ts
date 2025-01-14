@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import Ajv from 'ajv'
-import { dashboardConfigSchema } from '../types'
+import { dashboardConfigSchema } from '@kong-ui-public/analytics-utilities'
 
 const ajv = new Ajv()
 const validate = ajv.compile(dashboardConfigSchema)

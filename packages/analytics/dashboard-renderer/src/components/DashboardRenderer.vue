@@ -35,7 +35,8 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardConfig, DashboardRendererContext, GridTile, TileConfig, TileDefinition, DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
+import type { DashboardConfig, TileConfig, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject, ref } from 'vue'
 import composables from '../composables'

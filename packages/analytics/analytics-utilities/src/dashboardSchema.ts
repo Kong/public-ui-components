@@ -1,7 +1,4 @@
 import type { FromSchema, JSONSchema } from 'json-schema-to-ts'
-import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
-import { DEFAULT_TILE_HEIGHT } from '../constants'
-import type { AllFilters, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import {
   aiExploreAggregations,
   basicExploreAggregations,
@@ -16,20 +13,9 @@ import {
   queryableExploreDimensions,
   relativeTimeRangeValuesV4,
   requestFilterTypeEmptyV2,
-} from '@kong-ui-public/analytics-utilities'
-
-export interface DashboardRendererContext {
-  filters: AllFilters[]
-  timeSpec?: TimeRangeV4
-  tz?: string
-  refreshInterval?: number
-  editable?: boolean
-}
+} from './types'
 
 type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaultedPropertiesOptional: true }>
-
-// The DashboardRenderer component fills in optional values before passing them down to the tile renderers.
-export type DashboardRendererContextInternal = Required<DashboardRendererContext>
 
 // TODO: Once we support all chart types, this could potentially be replaced with a direct reference to `chartTypes`.
 // This is partially overlapping with analytics chart types, but not strictly so.
@@ -142,7 +128,7 @@ export const gaugeChartSchema = {
     },
     metricDisplay: {
       type: 'string',
-      enum: Object.values(ChartMetricDisplay),
+      enum: ['hidden', 'single', 'full'], // This matches the SimpleChartMetricDisplay type.
     },
     reverseDataset: {
       type: 'boolean',
@@ -526,7 +512,7 @@ export const dashboardConfigSchema = {
     },
     tileHeight: {
       type: 'number',
-      description: `Height of each tile in pixels. Default: ${DEFAULT_TILE_HEIGHT}`,
+      description: 'Height of each tile in pixels.',
     },
     gridSize: {
       type: 'object',
@@ -548,12 +534,3 @@ export const dashboardConfigSchema = {
 } as const satisfies JSONSchema
 
 export type DashboardConfig = FromSchemaWithOptions<typeof dashboardConfigSchema>
-
-export interface RendererProps<T> {
-  query: ValidDashboardQuery
-  context: DashboardRendererContextInternal
-  queryReady: boolean
-  chartOptions: T
-  height: number
-  refreshCounter: number
-}

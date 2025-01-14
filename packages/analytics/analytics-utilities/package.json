@@ -54,13 +54,14 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "500KB"
+    "errorLimit": "600KB"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.17.2"
+    "@kong/design-tokens": "1.17.2",
+    "json-schema-to-ts": "^3.1.1"
   }
 }

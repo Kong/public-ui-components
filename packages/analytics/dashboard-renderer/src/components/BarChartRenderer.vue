@@ -13,7 +13,8 @@
 
 <script setup lang="ts">
 import BaseAnalyticsChartRenderer from './BaseAnalyticsChartRenderer.vue'
-import type { BarChartOptions, RendererProps } from '../types'
+import type { RendererProps } from '../types'
+import type { BarChartOptions } from '@kong-ui-public/analytics-utilities'
 
 defineProps<RendererProps<BarChartOptions>>()
 </script>
