@@ -280,12 +280,12 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
   }
 
   .entity-empty-state-bottom-container {
-    width: 100%;
-    padding-top: $kui-space-110;
     border-top: $kui-border-width-10 solid $kui-color-border;
     display: flex;
     flex-direction: column;
     gap: $kui-space-60;
+    padding-top: $kui-space-110;
+    width: 100%;
 
     @media (min-width: $kui-breakpoint-mobile) {
       width: $entity-empty-state-max-width;
