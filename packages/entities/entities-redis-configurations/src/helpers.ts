@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import { DEFAULT_CLUSTER_NODE, DEFAULT_SENTINEL_NODE } from './constants'
-import type { Identifiable, PartialType, RedisConfigurationFields } from './types'
+import { PartialType, type ClusterNode, type Identifiable, type RedisConfigurationFields, type SentinelNode } from './types'
 import { RedisType } from './types'
 
 export const shallowCopyWithId = <T extends Record<any, any>>(node: T): Identifiable<T> => {
@@ -18,7 +18,7 @@ export const genDefaultSentinelNode = () => shallowCopyWithId(DEFAULT_SENTINEL_N
 export const genDefaultClusterNode = () => shallowCopyWithId(DEFAULT_CLUSTER_NODE)
 
 export const getRedisType = (fields: RedisConfigurationFields): RedisType => {
-  if (fields.type === 'redis-ce') {
+  if (fields.type === PartialType.REDIS_CE) {
     return RedisType.HOST_PORT_CE
   }
 
@@ -34,5 +34,35 @@ export const getRedisType = (fields: RedisConfigurationFields): RedisType => {
 }
 
 export const mapRedisTypeToPartialType = (type: RedisType): PartialType => {
-  return type === RedisType.HOST_PORT_CE ? 'redis-ce' : 'redis-ee'
+  return type === RedisType.HOST_PORT_CE ? PartialType.REDIS_CE : PartialType.REDIS_EE
+}
+
+export const standardize = {
+  integer<T>(value: string | number | undefined | null, defaultValue?: T): number | T {
+    if (value === undefined || value === null) {
+      return defaultValue as T
+    }
+    return parseInt(value.toString(), 10)
+  },
+
+  string<T>(value: string | number | undefined | null, defaultValue?: T): string | T {
+    if (value === undefined || value === null || value === '') {
+      return defaultValue as T
+    }
+    return value.toString()
+  },
+
+  clusterNodes(nodes: Identifiable<ClusterNode>[]): ClusterNode[] {
+    return nodes.map(node => ({
+      ...shallowCopyWithoutId(node),
+      port: standardize.integer(node.port)!,
+    }))
+  },
+
+  sentinelNodes(nodes: Identifiable<SentinelNode>[]): SentinelNode[] {
+    return nodes.map(node => ({
+      ...shallowCopyWithoutId(node),
+      port: standardize.integer(node.port)!,
+    }))
+  },
 }
