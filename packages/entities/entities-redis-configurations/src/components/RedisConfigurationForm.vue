@@ -1,19 +1,19 @@
 <template>
-  <div class="kong-ui-entities-redis-configurations-form">
+  <div>
     <EntityBaseForm
       :can-submit="canSubmit"
       :config="config"
       :edit-id="partialId"
       :entity-type="SupportedEntityType.RedisConfiguration"
-      :error-message="undefined"
-      :fetch-url="undefined"
+      :error-message="form.errorMessage"
+      :fetch-url="fetchUrl"
       :form-fields="payload"
       :is-readonly="form.readonly"
       @cancel="noop"
       @fetch:error="noop"
-      @fetch:success="noop"
+      @fetch:success="updateFormValues"
       @loading="noop"
-      @submit="noop"
+      @submit="submit"
     >
       <EntityFormSection
         :description="t('form.sections.type.description')"
@@ -59,6 +59,7 @@
             tooltipAttributes: { maxWidth: '400' },
           }"
           :readonly="form.readonly"
+          required
         />
         <KSelect
           v-model="form.fields.config.sentinel_role"
@@ -69,6 +70,7 @@
             tooltipAttributes: { maxWidth: '400' },
           }"
           :readonly="form.readonly"
+          required
         />
         <SentinelNodes
           v-model="form.fields.config.sentinel_nodes"
@@ -325,19 +327,28 @@ import { useRedisConfigurationForm } from '../composables/useRedisConfigurationF
 import ClusterNodes from './ClusterNodes.vue'
 import composables from '../composables'
 import SentinelNodes from './SentinelNodes.vue'
+import endpoints from '../partials-endpoints'
 
 import type { PropType } from 'vue'
-import type { KonnectRedisConfigurationFormConfig } from '../types'
+import type {
+  KongManagerRedisConfigurationFormConfig,
+  KonnectRedisConfigurationFormConfig,
+} from '../types'
 import type { SelectItem } from '@kong/kongponents/dist/types'
 
 const props = defineProps({
   config: {
-    type: Object as PropType<KonnectRedisConfigurationFormConfig>,
+    type: Object as PropType<KonnectRedisConfigurationFormConfig | KongManagerRedisConfigurationFormConfig>,
     required: true,
-    validator: (config: unknown) => {
+    validator: (config: KonnectRedisConfigurationFormConfig | KongManagerRedisConfigurationFormConfig) => {
+      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (config?.app === 'konnect' && !config?.controlPlaneId) return false
+      if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
+      if (!config?.cancelRoute) return false
       return true
     },
   },
+  /** If a valid partialId is provided, it will put the form in Edit mode instead of Create */
   partialId: {
     type: String,
     required: false,
@@ -413,16 +424,23 @@ const {
   isEdit,
   userSelectedRedisType,
   redisType,
+  fetchUrl,
+  submit,
 } = useRedisConfigurationForm({
   partialId: props.partialId,
+  config: props.config,
 })
+
+const updateFormValues = (data: Record<string, any>) => {
+  form.fields.config = Object.assign({}, form.fields.config, data.config)
+  form.fields.config.sentinel_nodes = data.config.sentinel_nodes ?? []
+  form.fields.config.cluster_nodes = data.config.cluster_nodes ?? []
+  form.fields.name = data.name
+  form.fields.type = data.type
+}
 </script>
 
 <style lang="scss" scoped>
-.kong-ui-entities-redis-configurations-form {
-  // Add component styles as needed
-}
-
 .secret-picker-provider {
   margin-top: $kui-space-40 !important;
 }
