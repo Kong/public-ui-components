@@ -111,7 +111,7 @@ Content to be displayed instead of the default CTA and Learn More buttons, at th
 
 #### bottom
 
-Content to be displayed at the bottom of the empty state component, separated by divider line.
+Content to be displayed at the bottom of the empty state component, separated by a divider line.
 
 ### Usage example
 
