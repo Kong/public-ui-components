@@ -16,7 +16,7 @@ import { Parser } from '@kong/atc-router'
 import type * as Monaco from 'monaco-editor'
 import * as monaco from 'monaco-editor'
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
-import { getRangeFromTokens, LANGUAGE_ID, locateLhsIdent, locateToken, registerLanguage, registerTheme, scanTokens, theme, TokenType, transformTokens, type ProvideCompletionItems, type Token } from '../monaco'
+import { getRangeFromTokens, LANGUAGE_ID, locateLhsIdent, locateToken, registerLanguage, registerTheme, scanTokens, theme, TokenType, transformTokens, type ProvideCompletionItems } from '../monaco'
 import { createSchema, type Schema } from '../schema'
 
 let editor: Monaco.editor.IStandaloneCodeEditor | undefined
@@ -83,17 +83,12 @@ const flattenProperties = (schema: Schema): Array<Item> => {
   return properties
 }
 
-const cachedTokens = ref<[Token[], Token[][]] | undefined>(undefined)
 const schema = computed(() => createSchema(props.schema.definition))
 const flatSchemaProperties = computed(() => flattenProperties(props.schema))
 const functions = ['any', 'lower']
 
 const provideCompletionItems: ProvideCompletionItems = async (model, position) => {
-  if (!cachedTokens.value) {
-    cachedTokens.value = transformTokens(model, monaco.editor.tokenize(model.getValue(), LANGUAGE_ID))
-  }
-
-  const [flatTokens, nestedTokens] = cachedTokens.value
+  const [flatTokens, nestedTokens] = transformTokens(model, monaco.editor.tokenize(model.getValue(), LANGUAGE_ID))
   const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
 
   if (token) {
@@ -204,21 +199,21 @@ onMounted(() => {
     const model = editor!.getModel()!
     const value = model.getValue()!
 
-    const position = editor!.getPosition()
-    if (position) {
-      const tokens = monaco.editor.tokenize(value, LANGUAGE_ID)
-      cachedTokens.value = transformTokens(model, tokens)
-      const [, nestedTokens] = cachedTokens.value
-      const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
-      switch (token?.shortType) {
-        case TokenType.STR_LITERAL:
-        case TokenType.STR_ESCAPE:
-        case TokenType.STR_INVALID_ESCAPE:
-          editor!.getContribution<Record<string, any> & Monaco.editor.IEditorContribution>('editor.contrib.suggestController')
-            ?.triggerSuggest()
-          break
-        default:
-          break
+    if (props.provideRhsCompletion) {
+      const position = editor!.getPosition()
+      if (position) {
+        const [, nestedTokens] = transformTokens(model, monaco.editor.tokenize(value, LANGUAGE_ID))
+        const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
+        switch (token?.shortType) {
+          case TokenType.STR_LITERAL:
+          case TokenType.STR_ESCAPE:
+          case TokenType.STR_INVALID_ESCAPE:
+            editor!.getContribution<Record<string, any> & Monaco.editor.IEditorContribution>('editor.contrib.suggestController')
+              ?.triggerSuggest()
+            break
+          default:
+            break
+        }
       }
     }
 
