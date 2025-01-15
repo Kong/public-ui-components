@@ -53,7 +53,8 @@
       "updated_at_label": "Last Updated",
       "created_at_label": "Created",
       "tags_label": "Tags",
-      "link": "Link"
+      "link": "Link",
+      "partial_label": "Redis Configuration"
     },
     "statusBadge": {
       "enabledLabel": "Enabled",

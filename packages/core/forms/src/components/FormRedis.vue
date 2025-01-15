@@ -34,12 +34,24 @@
       <KSelect
         v-model="selectedRedisConfigItem"
         data-testid="redis-config-select"
+        enable-filtering
         :items="availableRedisConfigs"
         :loading="loadingRedisConfigs"
         :placeholder="t('redis.shared_configuration.selector.placeholder')"
         @change="redisConfigSelected"
         @query-change="debouncedRedisConfigsQuery"
       >
+        <template #item-template="{ item }">
+          <div class="plugin-form-redis-configuration-dropdown-item">
+            <span class="select-item-name">{{ item.name }}</span>
+            <KBadge
+              appearance="info"
+              class="select-item-label"
+            >
+              {{ item.type }}
+            </KBadge>
+          </div>
+        </template>
         <template #empty>
           <div class="empty-redis-config">
             {{ t('redis.shared_configuration.empty_state') }}
@@ -162,6 +174,11 @@ const props = defineProps({
       return []
     },
   },
+  redisPath: {
+    type: String,
+    default: undefined,
+    required: false,
+  },
 })
 
 const emits = defineEmits<{
@@ -194,8 +211,8 @@ const redisConfigSelected = async (item: SelectItem | null) => {
   // selector cleared
   if (!item) return
 
-  emits('modelUpdated', [{ id: item.value }], 'partials')
-  partialsSaved.value = [{ id: item.value }]
+  emits('modelUpdated', [{ id: item.value, path: props.redisPath }], 'partials')
+  partialsSaved.value = [{ id: item.value, path: props.redisPath }]
   //
   try {
     const configRes = await axiosInstance.get(`/partials/${item.value}`)
@@ -282,6 +299,16 @@ onBeforeMount(async () => {
   }
   :deep(.form-group:last-child) {
     margin-bottom: 0;
+  }
+  .plugin-form-redis-configuration-dropdown-item {
+    display: flex;
+    padding: $kui-space-50 $kui-space-60;
+    align-items: center;
+    gap: $kui-space-60;
+    .select-item-name {
+      line-height: $kui-line-height-40;
+      color: $kui-color-text-neutral;
+    }
   }
 }
 
