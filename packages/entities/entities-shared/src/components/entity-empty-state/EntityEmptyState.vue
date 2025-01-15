@@ -103,6 +103,13 @@
         </KCard>
       </template>
     </div>
+
+    <div
+      v-if="$slots.bottom"
+      class="entity-empty-state-bottom-container"
+    >
+      <slot name="bottom" />
+    </div>
   </div>
 </template>
 
@@ -163,6 +170,9 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
+$entity-empty-state-feature-card-width: 312px;
+$entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width} + #{$kui-space-60}); // 2 columns per row + gap
+
 .kong-ui-public-entity-empty-state {
   align-items: center;
   background-color: $kui-color-background;
@@ -170,7 +180,7 @@ onBeforeMount(async () => {
   display: flex;
   flex-direction: column;
   font-family: $kui-font-family-text;
-  gap: $kui-space-90;
+  gap: $kui-space-110;
   padding: $kui-space-130 $kui-space-0;
   width: 100%;
 
@@ -221,17 +231,15 @@ onBeforeMount(async () => {
   }
 
   .entity-empty-state-card-container {
-    $feature-card-width: 312px;
     display: flex;
     flex-wrap: wrap;
     gap: $kui-space-60;
     justify-content: space-around;
     /** single column on mobile */
-    width: $feature-card-width;
+    width: $entity-empty-state-feature-card-width;
 
     @media (min-width: $kui-breakpoint-mobile) {
-      /** 2 columns per row + gap */
-      width: calc(2 * #{$feature-card-width} + #{$kui-space-60}); /* stylelint-disable-line */
+      width: $entity-empty-state-max-width;
     }
 
     .entity-empty-state-card {
@@ -242,7 +250,7 @@ onBeforeMount(async () => {
       gap: $kui-space-40;
       height: 160px;
       padding: $kui-space-70;
-      width: $feature-card-width;
+      width: $entity-empty-state-feature-card-width;
 
       .feature-icon {
         color: $kui-color-text-neutral-stronger;
@@ -268,6 +276,19 @@ onBeforeMount(async () => {
         line-clamp: 3;
         overflow: hidden;
       }
+    }
+  }
+
+  .entity-empty-state-bottom-container {
+    border-top: $kui-border-width-10 solid $kui-color-border;
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-60;
+    padding-top: $kui-space-110;
+    width: 100%;
+
+    @media (min-width: $kui-breakpoint-mobile) {
+      width: $entity-empty-state-max-width;
     }
   }
 }

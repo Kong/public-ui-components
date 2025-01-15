@@ -109,6 +109,10 @@ Content to be displayed just above the action buttons.
 
 Content to be displayed instead of the default CTA and Learn More buttons, at the bottom of the component.
 
+#### bottom
+
+Content to be displayed at the bottom of the empty state component, separated by a divider line.
+
 ### Usage example
 
 Please refer to the [sandbox](../src/components/entity-empty-state/EntityEmptyState.vue).
