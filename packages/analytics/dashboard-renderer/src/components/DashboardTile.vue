@@ -77,11 +77,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { DashboardRendererContextInternal, DashboardTileType, TileDefinition } from '../types'
-import type {
-  Component,
-} from 'vue'
-import { computed, inject, ref } from 'vue'
+import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardTileType, TileDefinition } from '@kong-ui-public/analytics-utilities'
+import { type Component, computed, inject, ref } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'

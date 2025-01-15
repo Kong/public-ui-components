@@ -12,7 +12,8 @@
 
 <script setup lang="ts">
 import BaseAnalyticsChartRenderer from './BaseAnalyticsChartRenderer.vue'
-import type { TimeseriesChartOptions, RendererProps } from '../types'
+import type { RendererProps } from '../types'
+import type { TimeseriesChartOptions } from '@kong-ui-public/analytics-utilities'
 
 defineProps<RendererProps<TimeseriesChartOptions>>()
 </script>

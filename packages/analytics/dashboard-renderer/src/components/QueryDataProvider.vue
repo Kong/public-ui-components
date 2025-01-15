@@ -34,14 +34,20 @@ import { computed, inject, onUnmounted, ref, watch } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import composables from '../composables'
-import {
-  type AllFilters,
-  type AnalyticsBridge,
-  type DatasourceAwareQuery, type ExploreFilter,
-  type ExploreQuery, type ExploreResultV4, type FilterTypeMap, type QueryDatasource, stripUnknownFilters,
+import type {
+  AllFilters,
+  AnalyticsBridge,
+  DatasourceAwareQuery,
+  ExploreFilter,
+  ExploreQuery,
+  ExploreResultV4,
+  FilterTypeMap,
+  QueryDatasource,
+  ValidDashboardQuery,
 } from '@kong-ui-public/analytics-utilities'
+import { stripUnknownFilters } from '@kong-ui-public/analytics-utilities'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import type { DashboardRendererContextInternal, ValidDashboardQuery } from '../types'
+import type { DashboardRendererContextInternal } from '../types'
 
 const props = defineProps<{
   context: DashboardRendererContextInternal

@@ -1,4 +1,3 @@
-import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
 import { INJECT_QUERY_PROVIDER, CP_ID_TOKEN, ENTITY_ID_TOKEN } from '../constants'
 import type {
   AdvancedDatasourceQuery,
@@ -153,7 +152,7 @@ describe('<DashboardRenderer />', () => {
             definition: {
               chart: {
                 type: 'gauge',
-                metricDisplay: ChartMetricDisplay.Full,
+                metricDisplay: 'full',
                 reverseDataset: true,
                 numerator: 0,
               },

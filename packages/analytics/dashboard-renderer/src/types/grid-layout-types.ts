@@ -1,4 +1,4 @@
-import type { TileLayout } from './dashboard-renderer-types'
+import type { TileLayout } from '@kong-ui-public/analytics-utilities'
 
 export interface TilePosition {
   col: number,

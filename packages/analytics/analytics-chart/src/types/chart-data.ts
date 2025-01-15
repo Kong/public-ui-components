@@ -1,5 +1,4 @@
 import type { ChartData, ChartDataset, LegendItem } from 'chart.js'
-import type { ChartMetricDisplay } from '../enums'
 import type { ChartTooltipSortFn } from './chartjs-options'
 import type { ChartType, SimpleChartType } from './chart-types'
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
@@ -100,6 +99,13 @@ export interface AnalyticsChartOptions {
 }
 
 /**
+ * Metric display for simple charts
+ */
+export const simpleChartMetricDisplay = ['hidden', 'single', 'full'] as const
+
+export type SimpleChartMetricDisplay = typeof simpleChartMetricDisplay[number]
+
+/**
  * Simple Chart options
  */
 export interface SimpleChartOptions {
@@ -114,7 +120,7 @@ export interface SimpleChartOptions {
   /**
    * Determines how much detail about the metric (eg: value, info text, etc) is to be shown in the center
    */
-  metricDisplay?: ChartMetricDisplay,
+  metricDisplay?: SimpleChartMetricDisplay,
   /**
    * Determines whether the dataset order will be reversed
    */
