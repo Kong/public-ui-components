@@ -100,6 +100,7 @@ export interface DefaultCommonFieldsConfigurationSchema {
   updated_at: ConfigurationSchemaItem
   created_at: ConfigurationSchemaItem
   tags: ConfigurationSchemaItem
+  partials: ConfigurationSchemaItem
 }
 
 export interface ComponentAttrsData {
