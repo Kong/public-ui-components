@@ -103,18 +103,20 @@ const provideCompletionItems: ProvideCompletionItems = async (model, position) =
       case TokenType.STR_LITERAL:
       case TokenType.STR_ESCAPE:
       case TokenType.STR_INVALID_ESCAPE: {
-        const [rhsRange, rhsFirstTokenIndex] = scanTokens(model, flatTokens, token.flatIndex, (t) =>
-          !(t.shortType === TokenType.STR_LITERAL && t.shortType === TokenType.STR_ESCAPE && t.shortType === TokenType.STR_INVALID_ESCAPE),
-        )
-        if (rhsRange) {
-          const rhsValue = model.getValueInRange(rhsRange)
-          const lhsIdentTokenIndex = locateLhsIdent(flatTokens, rhsFirstTokenIndex)
-          if (lhsIdentTokenIndex >= 0) {
-            const lhsIdentRange = getRangeFromTokens(model, flatTokens, lhsIdentTokenIndex, lhsIdentTokenIndex + 1)
-            const lhsIdentValue = model.getValueInRange(lhsIdentRange)
-            const completion = await props.provideRhsCompletion?.(lhsIdentValue, rhsValue, lhsIdentRange, rhsRange)
-            if (completion) {
-              return completion
+        if (props.provideRhsCompletion) {
+          const [rhsRange, rhsFirstTokenIndex] = scanTokens(model, flatTokens, token.flatIndex, (t) =>
+            !(t.shortType === TokenType.STR_LITERAL || t.shortType === TokenType.STR_ESCAPE || t.shortType === TokenType.STR_INVALID_ESCAPE),
+          )
+          if (rhsRange) {
+            const rhsValue = model.getValueInRange(rhsRange)
+            const lhsIdentTokenIndex = locateLhsIdent(flatTokens, rhsFirstTokenIndex)
+            if (lhsIdentTokenIndex >= 0) {
+              const lhsIdentRange = getRangeFromTokens(model, flatTokens, lhsIdentTokenIndex, lhsIdentTokenIndex + 1)
+              const lhsIdentValue = model.getValueInRange(lhsIdentRange)
+              const completion = await props.provideRhsCompletion(lhsIdentValue, rhsValue, lhsIdentRange, rhsRange)
+              if (completion) {
+                return completion
+              }
             }
           }
         }

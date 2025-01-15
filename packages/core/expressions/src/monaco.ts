@@ -213,8 +213,7 @@ export const getRangeFromTokens = (model: monaco.editor.ITextModel, tokens: Toke
  * @returns the range of the tokens and the index of the first token in the range
  */
 export const scanTokens = (model: monaco.editor.ITextModel, tokens: Token[], fromIndex: number, until: (token: Token) => boolean): [monaco.Range, number] => {
-  // Left is exclusive. Move to the next token.
-  const left = scanBackward(tokens, fromIndex, until) + 1
+  const left = scanBackward(tokens, fromIndex, until) + 1 // Adding 1 because the output range is inclusive
   const right = scanForward(tokens, fromIndex, until)
 
   return [getRangeFromTokens(model, tokens, left, right), left]
