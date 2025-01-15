@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.14.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.3...@kong-ui-public/entities-shared@3.14.4) (2025-01-15)
+
+
+### Bug Fixes
+
+* **entityemptystate:** add bottom slot [TDX-4934] ([#1894](https://github.com/Kong/public-ui-components/issues/1894)) ([74a2f23](https://github.com/Kong/public-ui-components/commit/74a2f23004c3fb2727507132f8c5aa6a2fee1c5b))
+
+
+
+
+
 ## [3.14.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.2...@kong-ui-public/entities-shared@3.14.3) (2025-01-13)
 
 
