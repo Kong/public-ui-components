@@ -120,7 +120,7 @@ defineProps({
     gap: $kui-space-40;
     padding: $kui-space-70;
 
-    :deep(.k-table-view) {
+    :slotted(.k-table-view) {
       background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
 
       tr.is-scrolled {
@@ -131,7 +131,7 @@ defineProps({
       }
     }
 
-    :deep(.k-empty-state) {
+    :slotted(.k-empty-state) {
       background-color: $kui-color-background-neutral-weakest;
     }
   }
