@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.33.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.32.28...@kong-ui-public/dashboard-renderer@0.33.0) (2025-01-15)
+
+
+### Code Refactoring
+
+* **analytics:** move dashboard schema [MA-3389] ([#1893](https://github.com/Kong/public-ui-components/issues/1893)) ([4f60840](https://github.com/Kong/public-ui-components/commit/4f6084020412f50d5a1b68cb6c87ef022c12cb4d))
+
+
+### BREAKING CHANGES
+
+* **analytics:** Dashboard schema definitions are in a different package.
+* **analytics:** Simple chart no longer uses an enum for metric display prop.
+
+
+
+
+
 ## [0.32.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.32.27...@kong-ui-public/dashboard-renderer@0.32.28) (2025-01-13)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

@@ -6,7 +6,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { MetricCardOptions, RendererProps } from '../types'
+import type { RendererProps } from '../types'
+import type { MetricCardOptions } from '@kong-ui-public/analytics-utilities'
 import { MetricsProvider, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
 import { computed, type Ref } from 'vue'
 import { type ExploreFilter, Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'

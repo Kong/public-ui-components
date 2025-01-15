@@ -45,9 +45,8 @@ import { datavisPalette } from '../../utils'
 import { v4 as uuidv4 } from 'uuid'
 import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
-import type { AnalyticsChartColors, KChartData } from '../../types'
+import type { AnalyticsChartColors, KChartData, SimpleChartMetricDisplay } from '../../types'
 import type { Chart, ChartDataset } from 'chart.js'
-import { ChartMetricDisplay } from '../../enums'
 import type { DoughnutChartData } from '../../types/chart-data'
 
 const props = defineProps({
@@ -57,9 +56,9 @@ const props = defineProps({
     default: null,
   },
   metricDisplay: {
-    type: String as PropType<ChartMetricDisplay>,
+    type: String as PropType<SimpleChartMetricDisplay>,
     required: false,
-    default: ChartMetricDisplay.Hidden,
+    default: 'hidden',
   },
   numerator: {
     type: Number,
@@ -151,8 +150,8 @@ const metricTotal = computed(() => approxNum(formattedDataset?.value[0]?.data[0]
 const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[props.numerator]}`)
 
 // Conditionally show large or small metric value, or neither
-const showMetricLarge = computed(() => [ChartMetricDisplay.Full, ChartMetricDisplay.SingleMetric].includes(props.metricDisplay))
-const showMetricSmall = computed(() => props.metricDisplay === ChartMetricDisplay.Full)
+const showMetricLarge = computed(() => ['full', 'single'].includes(props.metricDisplay))
+const showMetricSmall = computed(() => props.metricDisplay === 'full')
 </script>
 
 <style lang="scss" scoped>

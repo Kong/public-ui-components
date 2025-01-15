@@ -42,27 +42,27 @@
               <KRadio
                 v-model="metricDisplay"
                 name="metricDisplay"
-                :selected-value="ChartMetricDisplay.SingleMetric"
+                :selected-value="'single'"
               >
-                {{ ChartMetricDisplay.SingleMetric }}
+                single
               </KRadio>
             </div>
             <div>
               <KRadio
                 v-model="metricDisplay"
                 name="metricDisplay"
-                :selected-value="ChartMetricDisplay.Full"
+                :selected-value="'full'"
               >
-                {{ ChartMetricDisplay.Full }}
+                full
               </KRadio>
             </div>
             <div>
               <KRadio
                 v-model="metricDisplay"
                 name="metricDisplay"
-                :selected-value="ChartMetricDisplay.Hidden"
+                :selected-value="'hidden'"
               >
-                {{ ChartMetricDisplay.Hidden }}
+                hidden
               </KRadio>
             </div>
           </div>
@@ -224,7 +224,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, inject } from 'vue'
 import {
-  ChartMetricDisplay,
   SimpleChart,
   type SimpleChartType,
   TopNTable,
@@ -236,6 +235,7 @@ import { rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
+import type { SimpleChartMetricDisplay } from '../../src'
 
 enum Metrics {
   TotalRequests = 'TotalRequests',
@@ -259,7 +259,7 @@ const multiDimensionToggle = ref(false)
 const showLoadingState = ref(false)
 const emptyState = ref(false)
 const chartType = ref<SimpleChartType>('gauge')
-const metricDisplay = ref(ChartMetricDisplay.Full)
+const metricDisplay = ref<SimpleChartMetricDisplay>('full')
 const reverseDataset = ref(true)
 const gaugeNumerator = ref(0)
 const selectedMetric = ref<MetricSelection>({

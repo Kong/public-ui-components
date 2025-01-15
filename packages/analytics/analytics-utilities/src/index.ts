@@ -1,4 +1,5 @@
 export * from './constants'
+export * from './dashboardSchema'
 export * from './types'
 export * from './format'
 export * from './granularity'

@@ -230,9 +230,9 @@ export default defineComponent({
 
 Optional value which can be any one of the following:
 
-- `Hidden`: will only show the outer doughnut chart
-- `SingleMetric`: displays only the large metric value
-- `Full`: displays both the large metric and subtext
+- `hidden`: will only show the outer doughnut chart
+- `single`: displays only the large metric value
+- `full`: displays both the large metric and subtext
 
 #### `reverseDataset`
 
@@ -306,7 +306,7 @@ export default defineComponent({
 
     const chartOptions = ref<SimpleChartOptions>({
       type: 'gauge',
-      metricDisplay: ChartMetricDisplay.Full
+      metricDisplay: 'full'
     })
 
     return {
