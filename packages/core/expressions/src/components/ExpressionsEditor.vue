@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-export type ProvideRhsCompletion = (lhsValue: string, rhsValue: string, lhsRange: monaco.Range, rhsRange: monaco.Range) => Promise<monaco.languages.CompletionList | undefined>
+export type ProvideRhsValueCompletion = (lhsValue: string, rhsValueValue: string, lhsRange: monaco.Range, rhsValueRange: monaco.Range) => Promise<monaco.languages.CompletionList | undefined>
 </script>
 
 <script setup lang="ts">
@@ -32,11 +32,11 @@ const props = withDefaults(defineProps<{
   allowEmptyInput?: boolean,
   defaultShowDetails?: boolean,
   editorOptions?: Monaco.editor.IEditorOptions
-  provideRhsCompletion?: ProvideRhsCompletion
+  provideRhsValueCompletion?: ProvideRhsValueCompletion
 }>(), {
   parseDebounce: 500,
   editorOptions: undefined,
-  provideRhsCompletion: undefined,
+  provideRhsValueCompletion: undefined,
 })
 
 const parse = (expression: string, schema: AtcSchema) => {
@@ -85,7 +85,6 @@ const flattenProperties = (schema: Schema): Array<Item> => {
 
 const schema = computed(() => createSchema(props.schema.definition))
 const flatSchemaProperties = computed(() => flattenProperties(props.schema))
-const functions = ['any', 'lower']
 
 const provideCompletionItems: ProvideCompletionItems = async (model, position) => {
   const [flatTokens, nestedTokens] = transformTokens(model, monaco.editor.tokenize(model.getValue(), LANGUAGE_ID))
@@ -98,17 +97,17 @@ const provideCompletionItems: ProvideCompletionItems = async (model, position) =
       case TokenType.STR_LITERAL:
       case TokenType.STR_ESCAPE:
       case TokenType.STR_INVALID_ESCAPE: {
-        if (props.provideRhsCompletion) {
-          const [rhsRange, rhsFirstTokenIndex] = scanTokens(model, flatTokens, token.flatIndex, (t) =>
+        if (props.provideRhsValueCompletion) {
+          const [rhsValueRange, rhsValueFirstTokenIndex] = scanTokens(model, flatTokens, token.flatIndex, (t) =>
             !(t.shortType === TokenType.STR_LITERAL || t.shortType === TokenType.STR_ESCAPE || t.shortType === TokenType.STR_INVALID_ESCAPE),
           )
-          if (rhsRange) {
-            const rhsValue = model.getValueInRange(rhsRange)
-            const lhsIdentTokenIndex = locateLhsIdent(flatTokens, rhsFirstTokenIndex)
+          if (rhsValueRange) {
+            const rhsValueValue = model.getValueInRange(rhsValueRange)
+            const lhsIdentTokenIndex = locateLhsIdent(flatTokens, rhsValueFirstTokenIndex)
             if (lhsIdentTokenIndex >= 0) {
               const lhsIdentRange = getRangeFromTokens(model, flatTokens, lhsIdentTokenIndex, lhsIdentTokenIndex + 1)
               const lhsIdentValue = model.getValueInRange(lhsIdentRange)
-              const completion = await props.provideRhsCompletion(lhsIdentValue, rhsValue, lhsIdentRange, rhsRange)
+              const completion = await props.provideRhsValueCompletion(lhsIdentValue, rhsValueValue, lhsIdentRange, rhsValueRange)
               if (completion) {
                 return completion
               }
@@ -129,13 +128,13 @@ const provideCompletionItems: ProvideCompletionItems = async (model, position) =
               insertText: item.property.replace(/\*/g, ''),
               range: identRange,
             })),
-            ...functions.map((func) => ({
+            ...(props.schema.functions?.map((func) => ({
               label: func,
               kind: monaco.languages.CompletionItemKind.Function,
               insertText: `${func}($${1})`,
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
               range: identRange,
-            })),
+            })) ?? []),
           ],
         }
       }
@@ -156,13 +155,13 @@ const provideCompletionItems: ProvideCompletionItems = async (model, position) =
         insertText: item.property.replace(/\*/g, ''),
         range,
       })),
-      ...functions.map((func) => ({
+      ...(props.schema.functions?.map((func) => ({
         label: func,
         kind: monaco.languages.CompletionItemKind.Function,
         insertText: `${func}($${1})`,
         insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
         range,
-      })),
+      })) ?? []),
     ],
   }
 }
@@ -199,7 +198,7 @@ onMounted(() => {
     const model = editor!.getModel()!
     const value = model.getValue()!
 
-    if (props.provideRhsCompletion) {
+    if (props.provideRhsValueCompletion) {
       const position = editor!.getPosition()
       if (position) {
         const [, nestedTokens] = transformTokens(model, monaco.editor.tokenize(value, LANGUAGE_ID))
