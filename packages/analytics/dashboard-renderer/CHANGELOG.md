@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.33.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.33.2...@kong-ui-public/dashboard-renderer@0.33.3) (2025-01-16)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** unique data-testid for each tile ([#1902](https://github.com/Kong/public-ui-components/issues/1902)) ([b70e16d](https://github.com/Kong/public-ui-components/commit/b70e16d1e89a033c21697bdcaca6a5e7313a2a15))
+
+
+
+
+
 ## [0.33.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.33.1...@kong-ui-public/dashboard-renderer@0.33.2) (2025-01-16)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
