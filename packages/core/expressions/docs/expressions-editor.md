@@ -107,8 +107,8 @@ http.path == "foo"
 
 This function will only be triggered in either of the following cases:
 
-- The completion is manually triggered by the user (e.g. with `Ctrl` `I`)
-- The cursor inside the string and a character is typed
+- The completion is manually triggered by the user (e.g., with `Ctrl` `I`)
+- A character is typed while the cursor is inside the range of the string value
 
 ### Events
 
