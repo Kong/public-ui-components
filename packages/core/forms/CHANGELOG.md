@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.1...@kong-ui-public/forms@4.10.2) (2025-01-16)
+
+
+### Bug Fixes
+
+* **forms:** make textarea resizable ([#1898](https://github.com/Kong/public-ui-components/issues/1898)) ([d8bc5ce](https://github.com/Kong/public-ui-components/commit/d8bc5ce8e2f4c5bf4cb98e11a21a2b9d0173ff33))
+
+
+
+
+
 ## [4.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.0...@kong-ui-public/forms@4.10.1) (2025-01-13)
 
 
