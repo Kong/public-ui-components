@@ -1,51 +1,57 @@
 <template>
   <div
     class="tile-boundary"
+    :data-testid="`tile-${tileId}`"
   >
     <div
       v-if="hasKebabMenuAccess && definition.chart.type !== 'slottable'"
       class="tile-header"
     >
-      <div class="title">
+      <div
+        class="title"
+        :data-testid="`tile-title-${tileId}`"
+      >
         {{ definition.chart.chartTitle }}
       </div>
       <div
         v-if="canShowKebabMenu"
         class="tile-actions"
+        :data-testid="`tile-actions-${tileId}`"
       >
         <EditIcon
           v-if="context.editable"
           class="edit-icon"
           :color="KUI_COLOR_TEXT_NEUTRAL"
+          :data-testid="`edit-tile-${tileId}`"
           :size="KUI_ICON_SIZE_40"
           @click="editTile"
         />
         <KDropdown
           class="dropdown"
-          data-testid="chart-action-menu"
+          :data-testid="`chart-action-menu-${tileId}`"
           :kpop-attributes="{ placement: 'bottom-end' }"
         >
           <MoreIcon
             class="kebab-action-menu"
             :color="KUI_COLOR_TEXT_NEUTRAL"
-            data-testid="kebab-action-menu"
+            :data-testid="`kebab-action-menu-${tileId}`"
             :size="KUI_ICON_SIZE_40"
           />
           <template #items>
             <KDropdownItem
               v-if="!!exploreLink"
-              data-testid="chart-jump-to-explore"
+              :data-testid="`chart-jump-to-explore-${tileId}`"
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLink }"
             />
             <KDropdownItem
               v-if="'allowCsvExport' in definition.chart && definition.chart.allowCsvExport"
               class="chart-export-button"
-              data-testid="chart-csv-export"
+              :data-testid="`chart-csv-export-${tileId}`"
               @click="exportCsv()"
             >
               <span
                 class="chart-export-trigger"
-                data-testid="csv-export-button"
+                :data-testid="`csv-export-button-${tileId}`"
               >
                 {{ i18n.t('csvExport.exportAsCsv') }}
               </span>
@@ -56,17 +62,22 @@
       <div
         v-else-if="'description' in definition.chart"
         class="header-description"
+        :data-testid="`tile-description-${tileId}`"
       >
         {{ definition.chart.description }}
       </div>
       <CsvExportModal
         v-if="exportModalVisible"
         :chart-data="(chartData as ExploreResultV4)"
+        :data-testid="`csv-export-modal-${tileId}`"
         :filename="csvFilename"
         @toggle-modal="setExportModalVisibility"
       />
     </div>
-    <div class="tile-content">
+    <div
+      class="tile-content"
+      :data-testid="`tile-content-${tileId}`"
+    >
       <component
         :is="componentData.component"
         v-if="componentData"
@@ -103,6 +114,7 @@ const props = withDefaults(defineProps<{
   height?: number,
   queryReady: boolean,
   refreshCounter: number,
+  tileId: string | number,
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
 })
