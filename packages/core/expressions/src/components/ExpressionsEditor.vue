@@ -5,10 +5,6 @@
   />
 </template>
 
-<script lang="ts">
-export type ProvideRhsValueCompletion = (lhsValue: string, rhsValueValue: string, lhsRange: monaco.Range, rhsValueRange: monaco.Range) => Promise<monaco.languages.CompletionList | undefined>
-</script>
-
 <script setup lang="ts">
 import { useDebounce } from '@kong-ui-public/core'
 import type { AstType, Schema as AtcSchema, ParseResult, ParseResultOk } from '@kong/atc-router'
@@ -18,6 +14,7 @@ import * as monaco from 'monaco-editor'
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import { getRangeFromTokens, LANGUAGE_ID, locateLhsIdent, locateToken, registerLanguage, registerTheme, scanTokens, theme, TokenType, transformTokens, type ProvideCompletionItems } from '../monaco'
 import { createSchema, type Schema } from '../schema'
+import type { ProvideRhsValueCompletion } from '../types'
 
 let editor: Monaco.editor.IStandaloneCodeEditor | undefined
 let editorModel: Monaco.editor.ITextModel
