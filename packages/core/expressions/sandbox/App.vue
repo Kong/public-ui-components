@@ -25,7 +25,7 @@
 
       <ExpressionsEditor
         v-model="expression"
-        :provide-rhs-completion="provideRhsCompletion"
+        :provide-rhs-value-completion="provideRhsCompletion"
         :schema="schemaDefinition"
         @parse-result-update="onParseResultUpdate"
       />
@@ -62,7 +62,7 @@ import * as monaco from 'monaco-editor'
 import { ref, watch } from 'vue'
 import type { SchemaDefinition } from '../src'
 import { ExpressionsEditor, HTTP_SCHEMA_DEFINITION, RouterPlaygroundModal, STREAM_SCHEMA_DEFINITION } from '../src'
-import type { ProvideRhsCompletion } from '../src/components/ExpressionsEditor.vue'
+import type { ProvideRhsValueCompletion } from '../src/components/ExpressionsEditor.vue'
 
 type NamedSchemaDefinition = { name: string; definition: SchemaDefinition }
 
@@ -101,16 +101,16 @@ const handleCommit = (exp: string) => {
   isVisible.value = false
 }
 
-const provideRhsCompletion: ProvideRhsCompletion = async (lhsValue, rhsValue, lhsRange, rhsRange) => {
+const provideRhsCompletion: ProvideRhsValueCompletion = async (lhsValue, rhsValueValue, lhsRange, rhsValueRange) => {
   return {
     suggestions: new Array(10).fill(0).map(() => {
-      const text = `${rhsValue}+${Math.random().toString(36).slice(2, 6)}`
+      const text = `${rhsValueValue}+${Math.random().toString(36).slice(2, 6)}`
       return {
         label: text,
         kind: monaco.languages.CompletionItemKind.Value,
         detail: `lhs = ${lhsValue}`,
         insertText:text,
-        range: rhsRange,
+        range: rhsValueRange,
       }
     }),
   }
