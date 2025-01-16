@@ -27,6 +27,7 @@
           :height="tile.layout.size.rows * (config.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
           :query-ready="queryReady"
           :refresh-counter="refreshCounter"
+          :tile-id="tile.id"
           @edit-tile="onEditTile(tile)"
         />
       </template>
