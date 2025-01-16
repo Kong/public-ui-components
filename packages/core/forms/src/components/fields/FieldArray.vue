@@ -57,7 +57,8 @@
           :placeholder="schema.placeholder"
           :readonly="schema.readonly"
           :required="schema.required"
-          :rows="schema.rows || 2"
+          resizable
+          :rows="schema.rows || 3"
         />
 
         <KInput
