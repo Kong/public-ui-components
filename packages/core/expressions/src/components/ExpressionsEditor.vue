@@ -12,9 +12,9 @@ import { Parser } from '@kong/atc-router'
 import type * as Monaco from 'monaco-editor'
 import * as monaco from 'monaco-editor'
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
-import { getRangeFromTokens, LANGUAGE_ID, locateLhsIdent, locateToken, registerLanguage, registerTheme, scanTokens, theme, TokenType, transformTokens, type ProvideCompletionItems } from '../monaco'
+import { buildLanguageId, getRangeFromTokens, locateLhsIdent, locateToken, registerLanguage, registerTheme, scanTokens, theme, TokenType, transformTokens } from '../monaco'
 import { createSchema, type Schema } from '../schema'
-import type { ProvideRhsValueCompletion } from '../types'
+import type { ProvideCompletionItems, ProvideRhsValueCompletion } from '../types'
 
 let editor: Monaco.editor.IStandaloneCodeEditor | undefined
 let editorModel: Monaco.editor.ITextModel
@@ -23,11 +23,11 @@ const editorRef = shallowRef<Monaco.editor.IStandaloneCodeEditor>()
 const { debounce } = useDebounce()
 
 const props = withDefaults(defineProps<{
-  schema: Schema,
-  parseDebounce?: number,
-  inactiveUntilFocused?: boolean,
-  allowEmptyInput?: boolean,
-  defaultShowDetails?: boolean,
+  schema: Schema
+  parseDebounce?: number
+  inactiveUntilFocused?: boolean
+  allowEmptyInput?: boolean
+  defaultShowDetails?: boolean
   editorOptions?: Monaco.editor.IEditorOptions
   provideRhsValueCompletion?: ProvideRhsValueCompletion
 }>(), {
@@ -84,7 +84,7 @@ const schema = computed(() => createSchema(props.schema.definition))
 const flatSchemaProperties = computed(() => flattenProperties(props.schema))
 
 const provideCompletionItems: ProvideCompletionItems = async (model, position) => {
-  const [flatTokens, nestedTokens] = transformTokens(model, monaco.editor.tokenize(model.getValue(), LANGUAGE_ID))
+  const [flatTokens, nestedTokens] = transformTokens(model, monaco.editor.tokenize(model.getValue(), model.getLanguageId()))
   const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
 
   if (token) {
@@ -141,7 +141,6 @@ const provideCompletionItems: ProvideCompletionItems = async (model, position) =
   }
 
   const range = new monaco.Range(position.lineNumber, position.column, position.lineNumber, position.column)
-
   return {
     suggestions: [
       ...flatSchemaProperties.value.map((item) => ({
@@ -191,14 +190,14 @@ onMounted(() => {
     editor.getContribution<Record<string, any> & Monaco.editor.IEditorContribution>('editor.contrib.suggestController')
       ?.widget?.value._setDetailsVisible(true)
   }
-  editor.onDidChangeModelContent((e) => {
+  editor.onDidChangeModelContent(() => {
     const model = editor!.getModel()!
     const value = model.getValue()!
 
     if (props.provideRhsValueCompletion) {
       const position = editor!.getPosition()
       if (position) {
-        const [, nestedTokens] = transformTokens(model, monaco.editor.tokenize(value, LANGUAGE_ID))
+        const [, nestedTokens] = transformTokens(model, monaco.editor.tokenize(value, model.getLanguageId()))
         const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
         switch (token?.shortType) {
           case TokenType.STR_LITERAL:
@@ -221,15 +220,15 @@ onMounted(() => {
   if (props.inactiveUntilFocused) {
     editor.onDidFocusEditorWidget(() => {
       if (!isParsingActive.value) {
-        registerLanguage(provideCompletionItems)
-        monaco.editor.setModelLanguage(editorModel, LANGUAGE_ID)
+        const { languageId } = registerLanguage(buildLanguageId(props.schema), provideCompletionItems)
+        monaco.editor.setModelLanguage(editorModel, languageId)
         isParsingActive.value = true
         parseResult.value = parse(expression.value, createSchema(props.schema.definition))
       }
     })
   } else {
-    registerLanguage(provideCompletionItems)
-    monaco.editor.setModelLanguage(editorModel, LANGUAGE_ID)
+    const { languageId } = registerLanguage(buildLanguageId(props.schema), provideCompletionItems)
+    monaco.editor.setModelLanguage(editorModel, languageId)
     isParsingActive.value = true
     parseResult.value = parse(expression.value, createSchema(props.schema.definition))
   }
@@ -238,7 +237,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   editor?.dispose()
 })
-
 
 watch(expression, (newExpression) => {
   if (!isParsingActive.value) {

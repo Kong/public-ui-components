@@ -5,6 +5,9 @@ export type SchemaDefinition = {
 }
 
 export interface Schema {
+  /**
+   * Codename of the schema. Should conform to `[a-zA-Z0-9-]+`.
+   */
   name: string
   definition: SchemaDefinition
   /**

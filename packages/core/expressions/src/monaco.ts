@@ -1,12 +1,14 @@
 import * as monaco from 'monaco-editor'
+import type { Schema } from './schema'
+import type { ProvideCompletionItems } from './types'
 
 interface MonarchLanguage extends monaco.languages.IMonarchLanguage {
-  keywords: string[];
+  keywords: string[]
 }
 
 export const theme = 'kong-expr-theme'
 
-export const LANGUAGE_ID = 'kong-expressions'
+export const buildLanguageId = (schema: Schema) => `kong-expressions-${schema.name}`
 
 export const TokenType = {
   IDENT: 'identifier',
@@ -59,13 +61,9 @@ export interface Token extends monaco.Token {
   flatOffset: number
 }
 
-const TOKEN_TYPE_SUFFIX = `.${LANGUAGE_ID}`
-
-export const tokenType = (shortType: string) => `${shortType}${TOKEN_TYPE_SUFFIX}`
-
-const shortTokenType = (fullType: string) => {
-  if (fullType.endsWith(TOKEN_TYPE_SUFFIX)) {
-    return fullType.slice(0, -TOKEN_TYPE_SUFFIX.length)
+const shortTokenType = (languageId: string, fullType: string) => {
+  if (fullType.endsWith(`.${languageId}`)) {
+    return fullType.slice(0, -`.${languageId}`.length)
   }
   return fullType
 }
@@ -122,7 +120,7 @@ export const transformTokens = (model: monaco.editor.ITextModel, tokens: monaco.
     for (const t of tokens[lineIndex]) {
       const token: Token = {
         ...t,
-        shortType: shortTokenType(t.type),
+        shortType: shortTokenType(model.getLanguageId(), t.type),
         lineIndex,
         flatIndex: flatTokens.length,
         flatOffset: lineCumulativeOffset + t.offset,
@@ -289,16 +287,14 @@ export const locateLhsIdent = (tokens: Token[], fromIndex: number): number => {
   return -1
 }
 
-export type ProvideCompletionItems = monaco.languages.CompletionItemProvider['provideCompletionItems']
-
-export const registerLanguage = (provideCompletionItems?: ProvideCompletionItems) => {
-  if (monaco.languages.getEncodedLanguageId(LANGUAGE_ID) !== 0) {
-    return { languageId: LANGUAGE_ID }
+export const registerLanguage = (languageId: string, provideCompletionItems?: ProvideCompletionItems) => {
+  if (monaco.languages.getEncodedLanguageId(languageId) !== 0) {
+    return { languageId }
   }
 
-  monaco.languages.register({ id: LANGUAGE_ID })
+  monaco.languages.register({ id: languageId })
 
-  monaco.languages.setMonarchTokensProvider(LANGUAGE_ID, {
+  monaco.languages.setMonarchTokensProvider(languageId, {
     keywords: [], // keywords are not used but required
 
     tokenizer: {
@@ -362,7 +358,7 @@ export const registerLanguage = (provideCompletionItems?: ProvideCompletionItems
     },
   } as MonarchLanguage)
 
-  monaco.languages.registerCompletionItemProvider(LANGUAGE_ID, {
+  monaco.languages.registerCompletionItemProvider(languageId, {
     // additional characters to trigger the following function
     triggerCharacters: ['.', '*', '"'],
 
@@ -375,7 +371,7 @@ export const registerLanguage = (provideCompletionItems?: ProvideCompletionItems
     },
   })
 
-  monaco.languages.setLanguageConfiguration(LANGUAGE_ID, {
+  monaco.languages.setLanguageConfiguration(languageId, {
     brackets: [['(', ')']],
     autoClosingPairs: [
       { open: '(', close: ')' },
@@ -383,5 +379,5 @@ export const registerLanguage = (provideCompletionItems?: ProvideCompletionItems
     ],
   })
 
-  return { LANGUAGE_ID }
+  return { languageId }
 }
