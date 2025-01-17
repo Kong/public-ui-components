@@ -1,7 +1,7 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { EntityBaseFormType, useAxios, useErrors } from '@kong-ui-public/entities-shared'
 
-import { getRedisType, mapRedisTypeToPartialType, shallowCopyWithoutId, standardize as s } from '../helpers'
+import { getRedisType, mapRedisTypeToPartialType, standardize as s } from '../helpers'
 import { RedisType } from '../types'
 import { DEFAULT_REDIS_TYPE } from '../constants'
 import endpoints from '../partials-endpoints'
@@ -84,7 +84,11 @@ export const useRedisConfigurationForm = (options: Options) => {
       case RedisType.CLUSTER:
         return !!config.cluster_nodes.length && config.cluster_nodes.every((node) => node.ip.length > 0 && node.port > 0)
       case RedisType.SENTINEL:
-        return !!config.sentinel_nodes.length && config.sentinel_nodes.every((node) => node.host.length > 0 && node.port > 0) && config.sentinel_master.length > 0 && config.sentinel_role && config.sentinel_role.length > 0
+        return !!config.sentinel_nodes.length
+          && config.sentinel_nodes.every((node) => node.host.length > 0 && node.port > 0)
+          && config.sentinel_master.length > 0
+          && config.sentinel_role
+          && config.sentinel_role.length > 0
       default:
         throw new Error('Invalid redis type')
     }
@@ -99,13 +103,13 @@ export const useRedisConfigurationForm = (options: Options) => {
           config: {
             host: form.fields.config.host,
             port: form.fields.config.port,
-            timeout: s.integer(form.fields.config.timeout),
-            username: s.string(form.fields.config.username, null),
-            database: s.integer(form.fields.config.database),
-            password: s.string(form.fields.config.password, null),
+            timeout: s.int(form.fields.config.timeout),
+            username: s.str(form.fields.config.username, null),
+            database: s.int(form.fields.config.database),
+            password: s.str(form.fields.config.password, null),
             ssl: form.fields.config.ssl,
             ssl_verify: form.fields.config.ssl_verify,
-            server_name: s.string(form.fields.config.server_name, null),
+            server_name: s.str(form.fields.config.server_name, null),
           },
         }
       case RedisType.HOST_PORT_EE:
@@ -113,20 +117,20 @@ export const useRedisConfigurationForm = (options: Options) => {
           name: form.fields.name,
           type: form.fields.type,
           config: {
-            connect_timeout: s.integer(form.fields.config.connect_timeout),
+            connect_timeout: s.int(form.fields.config.connect_timeout),
             connection_is_proxied: form.fields.config.connection_is_proxied,
-            database: s.integer(form.fields.config.database),
+            database: s.int(form.fields.config.database),
             host: form.fields.config.host,
-            keepalive_backlog: s.integer(form.fields.config.keepalive_backlog),
-            keepalive_pool_size: s.integer(form.fields.config.keepalive_pool_size),
-            password: s.string(form.fields.config.password, null),
-            port: s.integer(form.fields.config.port),
-            read_timeout: s.integer(form.fields.config.read_timeout),
-            send_timeout: s.integer(form.fields.config.send_timeout),
-            server_name: s.string(form.fields.config.server_name, null),
+            keepalive_backlog: s.int(form.fields.config.keepalive_backlog),
+            keepalive_pool_size: s.int(form.fields.config.keepalive_pool_size),
+            password: s.str(form.fields.config.password, null),
+            port: s.int(form.fields.config.port),
+            read_timeout: s.int(form.fields.config.read_timeout),
+            send_timeout: s.int(form.fields.config.send_timeout),
+            server_name: s.str(form.fields.config.server_name, null),
             ssl_verify: form.fields.config.ssl_verify,
             ssl: form.fields.config.ssl,
-            username: s.string(form.fields.config.username, null),
+            username: s.str(form.fields.config.username, null),
           },
         }
       case RedisType.CLUSTER:
@@ -135,17 +139,17 @@ export const useRedisConfigurationForm = (options: Options) => {
           type: form.fields.type,
           config: {
             cluster_nodes: s.clusterNodes(form.fields.config.cluster_nodes),
-            cluster_max_redirections: s.integer(form.fields.config.cluster_max_redirections),
-            username: s.string(form.fields.config.username, null),
-            password: s.string(form.fields.config.password, null),
+            cluster_max_redirections: s.int(form.fields.config.cluster_max_redirections),
+            username: s.str(form.fields.config.username, null),
+            password: s.str(form.fields.config.password, null),
             ssl: form.fields.config.ssl,
             ssl_verify: form.fields.config.ssl_verify,
-            server_name: s.string(form.fields.config.server_name, null),
-            connect_timeout: s.integer(form.fields.config.connect_timeout),
-            send_timeout: s.integer(form.fields.config.send_timeout),
-            read_timeout: s.integer(form.fields.config.read_timeout),
-            keepalive_pool_size: s.integer(form.fields.config.keepalive_pool_size),
-            keepalive_backlog: s.integer(form.fields.config.keepalive_backlog),
+            server_name: s.str(form.fields.config.server_name, null),
+            connect_timeout: s.int(form.fields.config.connect_timeout),
+            send_timeout: s.int(form.fields.config.send_timeout),
+            read_timeout: s.int(form.fields.config.read_timeout),
+            keepalive_pool_size: s.int(form.fields.config.keepalive_pool_size),
+            keepalive_backlog: s.int(form.fields.config.keepalive_backlog),
             connection_is_proxied: form.fields.config.connection_is_proxied,
           },
         }
@@ -154,19 +158,19 @@ export const useRedisConfigurationForm = (options: Options) => {
           name: form.fields.name,
           type: form.fields.type,
           config: {
-            sentinel_master: s.string(form.fields.config.sentinel_master, null),
+            sentinel_master: s.str(form.fields.config.sentinel_master, null),
             sentinel_nodes: s.sentinelNodes(form.fields.config.sentinel_nodes),
-            sentinel_role: s.string(form.fields.config.sentinel_role, null),
-            username: s.string(form.fields.config.username, null),
-            password: s.string(form.fields.config.password, null),
+            sentinel_role: s.str(form.fields.config.sentinel_role, null),
+            username: s.str(form.fields.config.username, null),
+            password: s.str(form.fields.config.password, null),
             ssl: form.fields.config.ssl,
             ssl_verify: form.fields.config.ssl_verify,
-            server_name: s.string(form.fields.config.server_name, null),
-            connect_timeout: s.integer(form.fields.config.connect_timeout),
-            send_timeout: s.integer(form.fields.config.send_timeout),
-            read_timeout: s.integer(form.fields.config.read_timeout),
-            keepalive_pool_size: s.integer(form.fields.config.keepalive_pool_size),
-            keepalive_backlog: s.integer(form.fields.config.keepalive_backlog),
+            server_name: s.str(form.fields.config.server_name, null),
+            connect_timeout: s.int(form.fields.config.connect_timeout),
+            send_timeout: s.int(form.fields.config.send_timeout),
+            read_timeout: s.int(form.fields.config.read_timeout),
+            keepalive_pool_size: s.int(form.fields.config.keepalive_pool_size),
+            keepalive_backlog: s.int(form.fields.config.keepalive_backlog),
             connection_is_proxied: form.fields.config.connection_is_proxied,
           },
         }
@@ -205,6 +209,7 @@ export const useRedisConfigurationForm = (options: Options) => {
     } catch (e: unknown) {
       form.errorMessage = getMessageFromError(e)
       form.readonly = false
+      throw e
     }
   }
 

@@ -22,11 +22,11 @@ export const getRedisType = (fields: RedisConfigurationFields): RedisType => {
     return RedisType.HOST_PORT_CE
   }
 
-  if (fields.config.sentinel_nodes.length) {
+  if (fields.config.sentinel_nodes?.length) {
     return RedisType.SENTINEL
   }
 
-  if (fields.config.cluster_nodes.length) {
+  if (fields.config.cluster_nodes?.length) {
     return RedisType.CLUSTER
   }
 
@@ -38,14 +38,14 @@ export const mapRedisTypeToPartialType = (type: RedisType): PartialType => {
 }
 
 export const standardize = {
-  integer<T>(value: string | number | undefined | null, defaultValue?: T): number | T {
+  int<T>(value: string | number | undefined | null, defaultValue?: T): number | T {
     if (value === undefined || value === null) {
       return defaultValue as T
     }
     return parseInt(value.toString(), 10)
   },
 
-  string<T>(value: string | number | undefined | null, defaultValue?: T): string | T {
+  str<T>(value: string | number | undefined | null, defaultValue?: T): string | T {
     if (value === undefined || value === null || value === '') {
       return defaultValue as T
     }
@@ -55,14 +55,14 @@ export const standardize = {
   clusterNodes(nodes: Identifiable<ClusterNode>[]): ClusterNode[] {
     return nodes.map(node => ({
       ...shallowCopyWithoutId(node),
-      port: standardize.integer(node.port)!,
+      port: standardize.int(node.port)!,
     }))
   },
 
   sentinelNodes(nodes: Identifiable<SentinelNode>[]): SentinelNode[] {
     return nodes.map(node => ({
       ...shallowCopyWithoutId(node),
-      port: standardize.integer(node.port)!,
+      port: standardize.int(node.port)!,
     }))
   },
 }
