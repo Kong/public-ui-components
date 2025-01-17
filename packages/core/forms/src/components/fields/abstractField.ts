@@ -8,7 +8,7 @@ import isString from 'lodash-es/isString'
 import arrayUniq from 'lodash-es/uniq'
 import uniqueId from 'lodash-es/uniqueId'
 import { slugifyFormID } from '../../utils/schema'
-import validators from '../../utils/validators'
+import { validators } from '../../utils/validators'
 
 function convertValidator(validator) {
   if (isString(validator)) {
