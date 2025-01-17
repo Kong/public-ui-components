@@ -335,7 +335,7 @@ import type {
   KonnectRedisConfigurationFormConfig,
   RedisConfigurationFormState,
 } from '../types'
-import type { AxiosError, AxiosResponse } from 'axios'
+import type { AxiosError } from 'axios'
 import type { SelectItem } from '@kong/kongponents/dist/types'
 
 const props = defineProps({
