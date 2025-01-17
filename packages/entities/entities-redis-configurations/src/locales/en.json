@@ -1,4 +1,13 @@
 {
+  "actions": {
+    "create": "New Redis Configuration",
+    "copy_id": "Copy ID",
+    "copy_json": "Copy JSON",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View Details",
+    "loading": "Loading..."
+  },
   "form": {
     "sections": {
       "type": {

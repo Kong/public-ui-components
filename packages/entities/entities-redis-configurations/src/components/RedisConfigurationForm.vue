@@ -9,11 +9,11 @@
       :fetch-url="fetchUrl"
       :form-fields="payload"
       :is-readonly="form.readonly"
-      @cancel="noop"
-      @fetch:error="noop"
+      @cancel="cancelHandler"
+      @fetch:error="fetchErrorHandler"
       @fetch:success="updateFormValues"
-      @loading="noop"
-      @submit="submit"
+      @loading="loadingHandler"
+      @submit="submitHandler"
     >
       <EntityFormSection
         :description="t('form.sections.type.description')"
@@ -321,19 +321,21 @@ import '@kong-ui-public/entities-vaults/dist/style.css'
 import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import { ref, computed } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
+import { useRouter } from 'vue-router'
 
 import { RedisType } from '../types'
 import { useRedisConfigurationForm } from '../composables/useRedisConfigurationForm'
 import ClusterNodes from './ClusterNodes.vue'
 import composables from '../composables'
 import SentinelNodes from './SentinelNodes.vue'
-import endpoints from '../partials-endpoints'
 
 import type { PropType } from 'vue'
 import type {
   KongManagerRedisConfigurationFormConfig,
   KonnectRedisConfigurationFormConfig,
+  RedisConfigurationFormState,
 } from '../types'
+import type { AxiosError, AxiosResponse } from 'axios'
 import type { SelectItem } from '@kong/kongponents/dist/types'
 
 const props = defineProps({
@@ -356,7 +358,14 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'update', data: RedisConfigurationFormState): void,
+  (e: 'error', error: AxiosError): void,
+  (e: 'loading', isLoading: boolean): void,
+}>()
+
 const { i18n: { t } } = composables.useI18n()
+const router = useRouter()
 
 const vaultSecretPickerSetup = ref<string | false>()
 const vaultSecretPickerAutofillAction = ref<(secretRef: string) => void | undefined>()
@@ -404,8 +413,6 @@ const sentinelRoleOptions = [
   { label: t('form.options.sentinel_role.any'), value: 'any' },
 ]
 
-const noop = () => {}
-
 const getSelectedText = (item: any) => {
   const suffix = item.value === RedisType.HOST_PORT_CE
     ? t('form.options.type.suffix_open_source')
@@ -430,6 +437,26 @@ const {
   partialId: props.partialId,
   config: props.config,
 })
+
+const submitHandler = async () => {
+  try {
+    await submit()
+  } catch (e) {
+    emit('error', e as AxiosError)
+  }
+}
+
+const cancelHandler = (): void => {
+  router.push(props.config?.cancelRoute || { name: 'redis-configuration-list' })
+}
+
+const loadingHandler = (val: boolean): void => {
+  emit('loading', val)
+}
+
+const fetchErrorHandler = (err: AxiosError): void => {
+  emit('error', err)
+}
 
 const updateFormValues = (data: Record<string, any>) => {
   form.fields.config = Object.assign({}, form.fields.config, data.config)

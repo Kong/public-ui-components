@@ -2,15 +2,14 @@ const konnectBaseApiUrl = '/v2/control-planes/{controlPlaneId}/core-entities'
 const KMBaseApiUrl = '/{workspace}'
 
 export default {
-  // list: {
-  //   konnect: {
-  //     getAll: `${konnectBaseApiUrl}/vaults`,
-  //     deleteConfigStore: `${konnectConfigStoreApiUrl}/{id}?force=true`,
-  //   },
-  //   kongManager: {
-  //     getAll: `${KMBaseApiUrl}/vaults`,
-  //   },
-  // },
+  list: {
+    konnect: {
+      all: `${konnectBaseApiUrl}/partials`,
+    },
+    kongManager: {
+      all: `${KMBaseApiUrl}/partials`,
+    },
+  },
   form: {
     konnect: {
       create: `${konnectBaseApiUrl}/partials`,
