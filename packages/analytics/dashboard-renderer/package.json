@@ -46,7 +46,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.14.16",
+    "@kong/kongponents": "9.17.2-pr.2577.4073f5b4f.0",
     "pinia": ">= 2.1.7 < 3",
     "swrv": "^1.0.4",
     "vue": "^3.5.12"
