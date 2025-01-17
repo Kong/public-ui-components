@@ -1,5 +1,5 @@
 <template>
-  <div class="json-config">
+  <div class="json-config config-card-code-block">
     <div
       v-if="props.fetcherUrl"
       class="json-endpoint"
