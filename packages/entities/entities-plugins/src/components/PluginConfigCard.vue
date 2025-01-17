@@ -120,6 +120,24 @@
           :text="getPropValue('rowValue', slotProps).id"
         />
       </template>
+      <template #partials="slotProps">
+        <span v-if="!getPropValue('rowValue', slotProps)">–</span>
+        <InternalLinkItem
+          v-else-if="showIdAsLink"
+          :item="{
+            key: getPropValue('rowValue', slotProps)?.[0]?.id,
+            value: getPropValue('rowValue', slotProps)?.[0]?.id + (getPropValue('rowValue', slotProps)?.[0]?.name ? '/' + getPropValue('rowValue', slotProps)?.[0]?.name : ''),
+            type: ConfigurationSchemaType.LinkInternal
+          }"
+          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'partial')"
+        />
+        <KCopy
+          v-else
+          :copy-tooltip="t('copy.tooltip', { label: getPropValue('row', slotProps).label })"
+          data-testid="partial-copy-uuid"
+          :text="getPropValue('rowValue', slotProps)?.[0].id"
+        />
+      </template>
     </EntityBaseConfigCard>
   </div>
 </template>
@@ -156,7 +174,7 @@ const emit = defineEmits<{
   (e: 'fetch:error', error: AxiosError): void,
   (e: 'error:fetch-schema', error: AxiosError): void,
   (e: 'fetch:success', data: Record<string, any>): void,
-  (e: 'navigation-click', data: string, direction: 'route' | 'consumer' | 'consumer_group' | 'service'): void
+  (e: 'navigation-click', data: string, direction: 'route' | 'consumer' | 'consumer_group' | 'service' | 'partial'): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -204,6 +222,11 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  /** Whether to expand partial in config */
+  expandPartial: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const { i18n: { t } } = composables.useI18n()
@@ -214,7 +237,8 @@ const { getPropValue } = useHelpers()
 const fetchUrl = computed<string>(
   () => endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
     .replace(/{entityType}/gi, props.scopedEntityType)
-    .replace(/{entityId}/gi, props.scopedEntityId),
+    .replace(/{entityId}/gi, props.scopedEntityId)
+    .concat(props.expandPartial ? '?expand_partials=true' : ''),
 )
 
 // schema for the basic properties

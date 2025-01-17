@@ -30,17 +30,25 @@
       v-if="usePartial"
       class="shared-redis-config"
     >
-      <h3>{{ t("redis.shared_configuration.title") }}</h3>
+      <div class="shared-redis-config-title">
+        {{ t('redis.shared_configuration.title') }}
+      </div>
       <KSelect
         v-model="selectedRedisConfigItem"
         data-testid="redis-config-select"
         enable-filtering
+        :filter-function="() => true"
         :items="availableRedisConfigs"
         :loading="loadingRedisConfigs"
         :placeholder="t('redis.shared_configuration.selector.placeholder')"
-        @change="redisConfigSelected"
+        @change="(item) => redisConfigSelected(item?.value)"
         @query-change="debouncedRedisConfigsQuery"
       >
+        <template #selected-item-template="{ item }">
+          <div class="selected-redis-config">
+            {{ (item as SelectItem).name }}
+          </div>
+        </template>
         <template #item-template="{ item }">
           <div class="plugin-form-redis-configuration-dropdown-item">
             <span class="select-item-name">{{ item.name }}</span>
@@ -75,9 +83,11 @@
     </div>
     <div
       v-else
-      class="shared-redis-config"
+      class="dedicated-redis-config"
     >
-      <h3>{{ t('redis.dedicated_configuration.title') }}</h3>
+      <div class="dedicated-redis-config-title">
+        {{ t('redis.dedicated_configuration.title') }}
+      </div>
       <component
         :is="tag"
       >
@@ -115,7 +125,6 @@ import {
 import type { SelectItem } from '@kong/kongponents'
 import { AddIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
-import type { PropType } from 'vue'
 import { computed, onBeforeMount, ref, inject, watch } from 'vue'
 import formGroup from './FormGroup.vue'
 import RedisConfigCard from './RedisConfigCard.vue'
@@ -126,25 +135,20 @@ import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
 import { FORMS_CONFIG } from '../const'
 
-const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBaseTableConfig | KongManagerBaseTableConfig | undefined = inject(FORMS_CONFIG)
+const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBaseTableConfig | KongManagerBaseTableConfig = inject(FORMS_CONFIG)!
 
 const endpoints = {
-  konnect: '/v2/control-planes/{controlPlaneId}/core-entities/partials',
-  kongManager: '/{workspace}/partials',
+  konnect: {
+    getOne: '/v2/control-planes/{controlPlaneId}/core-entities/partials/{id}',
+    getAll: '/v2/control-planes/{controlPlaneId}/core-entities/partials',
+  },
+  kongManager: {
+    getOne: '/{workspace}/partials/{id}',
+    getAll: '/{workspace}/partials',
+  },
 }
 
 const props = defineProps({
-  config: {
-    type: Object as PropType<any>,
-    required: true,
-    validator: (): boolean => {
-      return true
-    },
-  },
-  usePartial: {
-    type: Boolean,
-    default: false,
-  },
   tag: {
     type: String,
     default: 'fieldset',
@@ -190,11 +194,12 @@ const emits = defineEmits<{
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const usePartial = ref(props.usePartial)
+
+const usePartial = ref(false)
 const selectedRedisConfigItem = ref()
 const selectedRedisConfig = ref(null)
 const newRedisConfigurationModal = ref(false)
-const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const { axiosInstance } = useAxios(formConfig?.axiosRequestConfig)
 
 const redisFieldsSaved = ref([] as { model: any; schema: any }[])
 const partialsSaved = ref()
@@ -207,27 +212,36 @@ const fieldVisible = (field: any) => {
   return field.visible
 }
 
-const redisConfigSelected = async (item: SelectItem | null) => {
-  // selector cleared
-  if (!item) return
+/**
+ * Build the validate and submit URL
+ */
+const getOnePartialUrl = (partialId: string | number): string => {
+  let url = `${formConfig.apiBaseUrl}${endpoints[formConfig.app].getOne}`
 
-  emits('modelUpdated', [{ id: item.value, path: props.redisPath }], 'partials')
-  partialsSaved.value = [{ id: item.value, path: props.redisPath }]
+  if (formConfig.app === 'konnect') {
+    url = url.replace(/{controlPlaneId}/gi, formConfig?.controlPlaneId || '')
+  } else if (formConfig.app === 'kongManager') {
+    url = url.replace(/\/{workspace}/gi, formConfig?.workspace ? `/${formConfig.workspace}` : '')
+  }
+  // Always replace the id when editing
+  url = url.replace(/{id}/gi, String(partialId))
+  return url
+}
+
+const redisConfigSelected = async (val: string | number | undefined) => {
+  // when selector is cleared, do nothing
+  if (!val) return
+
+  emits('modelUpdated', [{ id: val, path: props.redisPath }], 'partials')
+  partialsSaved.value = [{ id: val, path: props.redisPath }]
   //
   try {
-    const configRes = await axiosInstance.get(`/partials/${item.value}`)
-    configRes.data = {
-      'database': 0,
-      'host': null,
-      'password': '1111',
-      'port': 637,
-      'server_name': null,
-      'ssl': false,
-      'ssl_verify': false,
-      'timeout': 2000,
-      'username': null,
+    const configRes = await axiosInstance.get(getOnePartialUrl(val))
+    if (configRes.data.config) {
+      const flattenedConfigRes = Object.assign(configRes.data, configRes.data.config)
+      delete flattenedConfigRes.config
+      selectedRedisConfig.value = flattenedConfigRes
     }
-    selectedRedisConfig.value = configRes.data
   } catch (error) {
     console.error(error)
   }
@@ -239,7 +253,7 @@ const {
   // error: redisConfigsFetchError,
   loadItems: loadConfigs,
   results: redisConfigsResults,
-} = useDebouncedFilter(formConfig!, endpoints[formConfig!.app], undefined, {
+} = useDebouncedFilter(formConfig!, endpoints[formConfig!.app].getAll, undefined, {
   fetchedItemsKey: 'data',
   searchKeys: ['id', 'name'],
 })
@@ -279,6 +293,12 @@ onBeforeMount(async () => {
     return acc
   }, {})
   await loadConfigs()
+  if (props?.model?.partials?.[0]?.id) {
+    const selectedPartialId = props.model.partials[0].id
+    usePartial.value = true
+    selectedRedisConfigItem.value = selectedPartialId
+    redisConfigSelected(selectedPartialId)
+  }
 })
 
 </script>
@@ -286,9 +306,11 @@ onBeforeMount(async () => {
 <style lang="scss">
 .redis-config-card {
   margin-bottom: $kui-space-60;
+
   .empty-redis-config {
     color: $kui-color-text-neutral;
   }
+
   .new-redis-config-area {
     align-items: center;
     color: $kui-color-text-primary;
@@ -297,23 +319,52 @@ onBeforeMount(async () => {
     gap: $kui-space-10;
     pointer-events: auto;
   }
+
   :deep(.form-group:last-child) {
     margin-bottom: 0;
   }
+
   .plugin-form-redis-configuration-dropdown-item {
-    display: flex;
-    padding: $kui-space-50 $kui-space-60;
     align-items: center;
+    display: flex;
     gap: $kui-space-60;
+
     .select-item-name {
+      color: $kui-color-text-neutral-stronger;
       line-height: $kui-line-height-40;
-      color: $kui-color-text-neutral;
     }
+  }
+
+  .selected-redis-config {
+    font-weight: $kui-font-weight-bold;
+    line-height: $kui-line-height-40;
+  }
+
+  .plugin-form-selected-redis-config {
+    font-weight: $kui-font-weight-bold;
+    line-height: $kui-line-height-40;
   }
 }
 
-.redis-config-title {
-  margin-block-start: 0;
+.shared-redis-config {
+  margin-top: $kui-space-60;
+
+  .shared-redis-config-title {
+    font-weight: $kui-font-weight-semibold;
+    line-height: $kui-line-height-30;
+    margin-bottom: $kui-space-40;
+  }
+}
+
+.dedicated-redis-config {
+  margin-top: $kui-space-60;
+
+  .dedicated-redis-config-title {
+    font-size: $kui-font-size-40;
+    font-weight: $kui-font-weight-bold;
+    line-height: $kui-line-height-30;
+    margin-bottom: $kui-space-60;
+  }
 }
 
 .redis-config-radio-group {

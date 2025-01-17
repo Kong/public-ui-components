@@ -45,6 +45,35 @@ import type { PropType } from 'vue'
 import type { Field } from '../composables/useRedisPartial'
 import composables from '../composables'
 import { useStringHelpers } from '@kong-ui-public/entities-shared'
+import { computed } from 'vue'
+import { createI18n } from '@kong-ui-public/i18n'
+import english from '../locales/en.json'
+
+const { t, formatUnixTimeStamp } = createI18n<typeof english>('en-us', english)
+
+const standardEntityfields: Record<string,any> = {
+  id: {
+    order: 1,
+  },
+  name: {
+    order: 1,
+  },
+  type: {
+    label: t('redis.config_card.common_fields.type_label'),
+    hidden: true,
+    type: 'hidden',
+  },
+  created_at: {
+    label: t('redis.config_card.common_fields.created_at_label'),
+    formatter: formatUnixTimeStamp,
+    order: 2,
+  },
+  updated_at: {
+    label: t('redis.config_card.common_fields.updated_at_label'),
+    formatter: formatUnixTimeStamp,
+    order: 3,
+  },
+}
 
 const props = defineProps({
   configFields: {
@@ -75,19 +104,22 @@ const fieldEncrptyed = (key: string, val: any) => {
 
 const { convertKeyToTitle } = useStringHelpers()
 
-const configDetails = Object.entries(props.configFields).map(([key, value]) => {
-  return {
-    key,
-    label: convertKeyToTitle(key),
-    value,
-    type: fieldEncrptyed(key, value),
+const configDetails = computed(()=>{
+  return Object.entries(props.configFields).map(([key, value]) => {
+    return {
+      key,
+      label: standardEntityfields[key]?.label ?? convertKeyToTitle(key),
+      value: standardEntityfields[key]?.formatter ? standardEntityfields[key].formatter(value) : value,
+      type: standardEntityfields[key]?.type ?? fieldEncrptyed(key, value),
+      order: standardEntityfields[key]?.order ?? 100,
     // attrs: value.attrs,
-  }
+    }
+  }).sort((a, b) => a.order - b.order).filter((item) => item.type !== 'hidden')
 })
 
 const nonStandardConfigDetails = composables.useRedisNonStandardFields(props.configFields, props.pluginRedisFields)
 
-const allConfigDetails = configDetails.concat(nonStandardConfigDetails)
+const allConfigDetails = computed(() => configDetails.value.concat(nonStandardConfigDetails as any[]))
 
 </script>
 
@@ -112,6 +144,7 @@ const allConfigDetails = configDetails.concat(nonStandardConfigDetails)
         line-height: $kui-line-height-40;
       }
     }
+
     .config-card-row-value {
       align-items: center;
       display: flex;

@@ -644,6 +644,11 @@ const initFormModel = (): void => {
         })
       }
 
+      // handle partials and provide to formRedis component
+      if (props.record.partials) {
+        onPartialToggled('redis', { partials: props.record.partials })
+      }
+
       // main plugin configuration
       updateModel(props.record.config, 'config')
     }

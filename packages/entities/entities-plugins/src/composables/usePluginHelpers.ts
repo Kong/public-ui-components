@@ -132,7 +132,7 @@ export default function useHelpers() {
   * @returns {void}
   */
   const dismissField = (formModel: Record<string, any>, additionalModel: Record<string, any>, fieldName = 'redis') => {
-    const redisFieldPattern = /(?<=config-redis-).*/
+    const redisFieldPattern = /(?<=-redis-).*/
     if (typeof formModel !== 'object' || formModel === null) {
       return formModel
     }
