@@ -257,7 +257,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
           return false
         }
       }
-      return /redis/.test(field.model)
+      return /redis-/.test(field.model)
     }
 
 

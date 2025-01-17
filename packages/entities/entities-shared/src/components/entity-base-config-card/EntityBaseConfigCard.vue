@@ -305,30 +305,6 @@ const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const record = ref<Record<string, any>>({})
 
-const parseConfigSchema = (sKey: (string | number)[]) => {
-  const key = sKey[0] as string
-  let recordEntry
-  const configEntry = props.configSchema?.[key] || {}
-  const defaultConfigSchema = DEFAULT_BASIC_FIELDS_CONFIGURATION[key as keyof DefaultCommonFieldsConfigurationSchema]
-
-  if (key === 'partials') {
-    const partial = record.value?.[key]?.[0]
-    recordEntry = partial?.id + '/' + partial?.name
-  } else {
-    recordEntry = record.value?.[key]
-  }
-
-  return {
-    key,
-    value: recordEntry,
-    hidden: configEntry.hidden || false,
-    type: configEntry.type ?? (defaultConfigSchema?.type || ConfigurationSchemaType.Text),
-    label: configEntry.label ?? (defaultConfigSchema?.label || convertKeyToTitle(key)),
-    tooltip: configEntry.tooltip ?? (defaultConfigSchema?.tooltip || undefined),
-    section: configEntry.section ?? (defaultConfigSchema?.section || ConfigurationSchemaSection.Advanced),
-  } as RecordItem
-}
-
 // Handle sorting by 'order' prop
 const orderedRecordArray = computed((): RecordItem[] => {
   if (!record.value) {
@@ -365,7 +341,22 @@ const orderedRecordArray = computed((): RecordItem[] => {
     return (a[1] as number) - (b[1] as number)
   })
 
-  return sortableKeys.map((sKey: (string | number)[]) => parseConfigSchema(sKey)).filter(item => !item.hidden && item.key !== props.pluginConfigKey) // strip hidden & plugin config fields
+  return sortableKeys.map((sKey: (string | number)[]) => {
+    const key = sKey[0] as string
+    const recordEntry = record.value?.[key]
+    const configEntry = props.configSchema?.[key] || {}
+    const defaultConfigSchema = DEFAULT_BASIC_FIELDS_CONFIGURATION[key as keyof DefaultCommonFieldsConfigurationSchema]
+
+    return {
+      key,
+      value: recordEntry,
+      hidden: configEntry.hidden || false,
+      type: configEntry.type ?? (defaultConfigSchema?.type || ConfigurationSchemaType.Text),
+      label: configEntry.label ?? (defaultConfigSchema?.label || convertKeyToTitle(key)),
+      tooltip: configEntry.tooltip ?? (defaultConfigSchema?.tooltip || undefined),
+      section: configEntry.section ?? (defaultConfigSchema?.section || ConfigurationSchemaSection.Advanced),
+    } as RecordItem
+  }).filter(item => !item.hidden && item.key !== props.pluginConfigKey) // strip hidden & plugin config fields
 })
 
 // Handle sorting by 'order' prop

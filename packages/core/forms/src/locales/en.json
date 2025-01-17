@@ -152,6 +152,13 @@
       "label": "Use dedicated configuration",
       "description": "Create a Redis configuration exclusively for this plugin, with settings that won’t impact other plugins.",
       "title": "Connection Settings"
+    },
+    "config_card": {
+      "common_fields": {
+        "created_at_label": "Created at",
+        "updated_at_label": "Last Updated at",
+        "type_label": "Redis Type"
+      }
     }
   },
   "vfg": {
