@@ -978,15 +978,30 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
     devDependencies:
+      '@kong-ui-public/entities-shared':
+        specifier: workspace:^
+        version: link:../entities-shared
+      '@kong-ui-public/entities-vaults':
+        specifier: workspace:^
+        version: link:../entities-vaults
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 1.17.2
         version: 1.17.2
+      '@kong/icons':
+        specifier: ^1.20.0
+        version: 1.20.0(vue@3.5.12(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.14.8
         version: 9.14.8(axios@1.7.7)(vue-router@4.4.5(vue@3.5.12(typescript@5.6.3)))(vue@3.5.12(typescript@5.6.3))
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
+      axios:
+        specifier: ^1.7.7
+        version: 1.7.7
       vue:
         specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
