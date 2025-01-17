@@ -518,7 +518,7 @@
         "custom": {
           "title": "Custom Plugins",
           "description": "Custom plugins will be available in this control plane only.",
-          "disabled_tooltip": "Custom Plugins are not available with this Gateway. Create a Hybrid Gateway to leverage Custom Plugins.",
+          "disabled_tooltip": "Custom Plugins are not available with this Gateway. Create a Hybrid or Dedicated Cloud Gateway to leverage Custom Plugins.",
           "empty_title": "No Custom Plugins",
           "empty_description": "No custom plugins have been added to this Control Plane.",
           "create": {

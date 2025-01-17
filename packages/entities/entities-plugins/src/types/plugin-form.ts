@@ -1,6 +1,6 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { EntityType } from './plugin'
+import type { CustomPluginType, EntityType } from './plugin'
 import type { CommonSchemaFields } from './plugins/shared'
 import type { ApplicationRegistrationSchema } from './plugins/application-registration-schema'
 import type { StatsDSchema } from './plugins/stats-d'
@@ -45,7 +45,7 @@ export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, Konne
   /** Route for creating a custom plugin */
   createCustomRoute?: RouteLocationRaw
   /** A function that returns the route for editing a custom plugin */
-  getCustomEditRoute?: (id: string) => RouteLocationRaw
+  getCustomEditRoute?: (id: string, type: CustomPluginType) => RouteLocationRaw
 }
 
 export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {}

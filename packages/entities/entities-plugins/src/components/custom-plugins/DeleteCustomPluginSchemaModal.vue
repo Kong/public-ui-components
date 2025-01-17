@@ -54,10 +54,12 @@
 <script setup lang="ts">
 import { ref, computed, type PropType } from 'vue'
 import {
+  type CustomPluginType,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
 } from '../../types'
 import composables from '../../composables'
+import endpoints from '../../plugins-endpoints'
 import { useAxios, useErrors, EntityTypes, EntityDeleteModal } from '@kong-ui-public/entities-shared'
 
 const props = defineProps({
@@ -71,7 +73,7 @@ const props = defineProps({
     },
   },
   plugin: {
-    type: Object as PropType<{ name: string, id: string }>,
+    type: Object as PropType<{ name: string, id: string, customPluginType?: CustomPluginType }>,
     required: true,
   },
 })
@@ -93,6 +95,20 @@ const isLoading = ref(false)
 const errorMessage = ref('')
 const isPluginSchemaInUse = ref(false)
 
+const requestUrl = computed(() => {
+  if (props.config.app === 'konnect') {
+    const partialPluginURL = props.plugin.customPluginType === 'streaming'
+      ? endpoints.select[props.config.app].streamingCustomPluginItem
+      : endpoints.select[props.config.app].schemaCustomPluginItem
+    let url = `${props.config.apiBaseUrl}${partialPluginURL}`
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+    url = url.replace(/{pluginId}/gi, props.plugin.id)
+    return url
+  }
+  // Kong Manager does not have this feature
+  return null
+})
+
 const handleSubmit = async (): Promise<void> => {
   isLoading.value = true
   errorMessage.value = ''
@@ -102,8 +118,9 @@ const handleSubmit = async (): Promise<void> => {
   }
 
   try {
-    const url = `${props.config.apiBaseUrl}/v2/control-planes/${props.config.controlPlaneId}/core-entities/plugin-schemas/${props.plugin?.name}`
-    await axiosInstance.delete(url)
+    if (requestUrl.value) {
+      await axiosInstance.delete(requestUrl.value)
+    }
 
     emit('proceed')
   } catch (err: any) {
