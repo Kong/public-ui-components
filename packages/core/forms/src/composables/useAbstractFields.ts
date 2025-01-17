@@ -7,7 +7,7 @@ import isFunction from 'lodash-es/isFunction'
 import isString from 'lodash-es/isString'
 import arrayUniq from 'lodash-es/uniq'
 import uniqueId from 'lodash-es/uniqueId'
-import validators from '../utils/validators'
+import { validators } from '../utils/validators'
 import { slugifyFormID } from '../utils/schema'
 
 interface AbstractFieldParams {
