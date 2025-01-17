@@ -1,0 +1,23 @@
+{
+  "form": {
+    "sections": {
+      "type": {
+        "title": "Redis type",
+        "description": "Both Enterprise and Open Source plugins support Redis. Enterprise plugins can connect to a standalone Redis instance (host/port), Cluster, or Sentinel, while Open Source plugins support only a simplified host/port configuration."
+      },
+      "general": {
+        "title": "General information",
+        "description": "Name your Redis configuration."
+      }
+    },
+    "fields": {
+      "type": {
+        "label": "Redis type"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter unique name"
+      }
+    }
+  }
+}
