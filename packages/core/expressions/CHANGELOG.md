@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.8.1...@kong-ui-public/expressions@0.8.2) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
 ## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.8.0...@kong-ui-public/expressions@0.8.1) (2025-01-20)
 
 **Note:** Version bump only for package @kong-ui-public/expressions
