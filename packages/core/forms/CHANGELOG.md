@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.3...@kong-ui-public/forms@4.10.4) (2025-01-20)
+
+
+### Bug Fixes
+
+* **vfg:** typescript clean up [khcp-11325] ([#1900](https://github.com/Kong/public-ui-components/issues/1900)) ([d6c9564](https://github.com/Kong/public-ui-components/commit/d6c9564eb3a742ad88ed7b209838128c8a187b3d))
+
+
+
+
+
 ## [4.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.2...@kong-ui-public/forms@4.10.3) (2025-01-16)
 
 
