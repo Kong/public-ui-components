@@ -21,6 +21,7 @@
           :vfg="vfg"
           @model-updated="onModelUpdated"
           @partial-toggled="onPartialToggled"
+          @show-new-partial-modal="$emit('showNewPartialModal')"
           @validated="onFieldValidated"
         />
         <form-group
@@ -115,6 +116,7 @@
                 :vfg="vfg"
                 @model-updated="onModelUpdated"
                 @partial-toggled="onPartialToggled"
+                @show-new-partial-modal="$emit('showNewPartialModal')"
                 @validated="onFieldValidated"
               />
               <form-group
@@ -253,7 +255,7 @@ export default {
       },
     },
   },
-  emits: ['validated', 'modelUpdated', 'refreshModel', 'partialToggled'],
+  emits: ['validated', 'modelUpdated', 'refreshModel', 'partialToggled', 'showNewPartialModal'],
 
   data() {
     return {

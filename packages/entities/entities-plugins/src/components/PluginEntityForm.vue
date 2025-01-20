@@ -18,6 +18,7 @@
         :is-editing="editing"
         :on-model-updated="onModelUpdated"
         :on-partial-toggled="onPartialToggled"
+        :show-new-partial-modal="() => $emit('showNewPartialModal')"
       >
         <template
           v-if="enableVaultSecretPicker"
@@ -39,6 +40,7 @@
         @model-updated="onModelUpdated"
         @partial-toggled="onPartialToggled"
         @refresh-model="getModel"
+        @show-new-partial-modal="$emit('showNewPartialModal')"
       >
         <template #plugin-config-empty-state>
           <div class="plugin-config-empty-state">
@@ -122,6 +124,7 @@ const emit = defineEmits<{
       data: Record<string, any>
     }
   ): void,
+  (e: 'showNewPartialModal'): void,
 }>()
 
 const props = defineProps({
