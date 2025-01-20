@@ -68,7 +68,7 @@
         <template #dropdown-footer-text>
           <div
             class="new-redis-config-area"
-            @click="newRedisConfigurationModal = true"
+            @click="$emit('showNewPartialModal')"
           >
             <AddIcon :size="KUI_ICON_SIZE_20" />
             <span>{{ t('redis.shared_configuration.create_new_configuration') }}</span>
@@ -188,6 +188,7 @@ const props = defineProps({
 const emits = defineEmits<{
   (e: 'modelUpdated', payload: any, schema: any): void,
   (e: 'partialToggled', field: string, model: any): void,
+  (e: 'showNewPartialModal'): void,
   (e: 'refreshModel'): void,
   (e: 'validated', res: boolean, errors: any[], field: any): void,
 }>()
@@ -198,7 +199,6 @@ const { t } = createI18n<typeof english>('en-us', english)
 const usePartial = ref(false)
 const selectedRedisConfigItem = ref()
 const selectedRedisConfig = ref(null)
-const newRedisConfigurationModal = ref(false)
 const { axiosInstance } = useAxios(formConfig?.axiosRequestConfig)
 
 const redisFieldsSaved = ref([] as { model: any; schema: any }[])

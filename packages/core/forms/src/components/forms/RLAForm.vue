@@ -208,6 +208,7 @@
         :schema="advancedSchema.redis"
         @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
         @partial-toggled="onPartialToggled"
+        @show-new-partial-modal="showNewPartialModal"
       />
     </div>
 
@@ -329,6 +330,7 @@ const props = defineProps<{
   formOptions: any
   onModelUpdated: (value: any, model: string) => void
   onPartialToggled: (field: string, model: any) => void
+  showNewPartialModal: () => void
   isEditing?: boolean
 }>()
 
