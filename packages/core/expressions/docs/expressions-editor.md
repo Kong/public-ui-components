@@ -76,6 +76,40 @@ To control whether the editor should show the details of the autocompletion item
 
 Options to pass when creating the Monaco editor.
 
+#### `provideRhsValueCompletion`
+
+- type: `ProvideRhsValueCompletion`
+- required: `false`
+- default: `undefined`
+
+A function to provide completion items for the value of the right-hand side (RHS) of the expression. The function should return a `Promise` that resolves to a `CompletionList` or `undefined`.
+
+For example, in the following case:
+
+```
+http.path == "fo"
+                ^cursor
+
+↓↓ type "o" ↓↓
+
+http.path == "foo"
+                 ^cursor
+```
+
+… the `provideRhsValueCompletion` function will be called with the following arguments:
+
+| Argument        | Value                                                                      |
+| :-------------- | :------------------------------------------------------------------------- |
+| `lhsValue`      | `"http.path"`                                                              |
+| `rhsValueValue` | `"foo"`                                                                    |
+| `lhsRange`      | `{ startLineNumber: 1, startColumn: 1, endLineNumber: 1, endColumn: 9 }`   |
+| `rhsValueRange` | `{ startLineNumber: 1, startColumn: 15, endLineNumber: 1, endColumn: 17 }` |
+
+This function will only be triggered in either of the following cases:
+
+- The completion is manually triggered by the user (e.g., with `Ctrl` `I`)
+- A character is typed while the cursor is inside the range of the string value
+
 ### Events
 
 #### update:modelValue

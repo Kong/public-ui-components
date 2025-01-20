@@ -109,6 +109,29 @@
       "address_example": "e.g. localhost:6379"
     }
   },
+  "validators": {
+    "field_is_required": "This field is required",
+    "invalid_format": "Invalid format",
+    "number_too_small": "The number is too small. Minimum: {0}",
+    "number_too_large": "The number is too large. Maximum: {0}",
+    "invalid_number": "Invalid number",
+    "invalid_integer": "The value is not an integer",
+    "text_too_short": "The length of text is too short. Current: {0}, Minimum: {1}",
+    "text_too_long": "The length of text is too long. Current: {0}, Maximum: {1}",
+    "this_not_text": "This is not a text",
+    "this_not_array": "This is not an array",
+    "select_min_items": "Select minimum {0} items",
+    "select_max_items": "Select maximum {0} items",
+    "invalid_date": "Invalid date",
+    "date_is_early": "The date is too early. Current: {0}, Minimum: {1}",
+    "date_is_late": "The date is too late. Current: {0}, Maximum: {1}",
+    "invalid_email": "Invalid e-mail address",
+    "invalid_url": "Invalid URL",
+    "invalid_card": "Invalid card format",
+    "invalid_card_number": "Invalid card number",
+    "invalid_text_contain_number": "Invalid text - cannot contains numbers or special characters",
+    "invalid_tex_contain_spec": "Invalid text - cannot contains special characters"
+  },
   "vfg": {
     "labels": {
       "on": "On",
