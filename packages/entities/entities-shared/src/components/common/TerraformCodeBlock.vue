@@ -1,5 +1,5 @@
 <template>
-  <div class="terraform-config">
+  <div class="terraform-config config-card-code-block">
     <KCodeBlock
       v-if="props.entityRecord"
       id="terraform-codeblock"

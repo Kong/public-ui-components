@@ -1,5 +1,5 @@
 <template>
-  <div class="yaml-config">
+  <div class="yaml-config config-card-code-block">
     <KCodeBlock
       v-if="props.entityRecord"
       id="yaml-codeblock"
