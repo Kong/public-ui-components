@@ -24,3 +24,8 @@ export interface AutofillSlotProps {
 }
 
 export type AutofillSlot = Slot<AutofillSlotProps>
+
+export type Validator = (value: any, field: any, model: any, messages: Record<string, string>) => string[]
+export interface Validators {
+  [key: string]: Validator
+}

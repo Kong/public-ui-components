@@ -1,3 +1,6 @@
+import { createI18n } from '@kong-ui-public/i18n'
+import type { Validators } from '../types/form-generator'
+import fecha from 'fecha'
 import defaults from 'lodash-es/defaults'
 import isFinite from 'lodash-es/isFinite'
 import isFunction from 'lodash-es/isFunction'
@@ -5,41 +8,62 @@ import isInteger from 'lodash-es/isInteger'
 import isString from 'lodash-es/isString'
 import isNil from 'lodash-es/isNil'
 import isNumber from 'lodash-es/isNumber'
-import fecha from 'fecha'
+import english from '../locales/en.json'
 
-const resources = {
-  fieldIsRequired: 'This field is required!',
-  invalidFormat: 'Invalid format!',
+const { t } = createI18n<typeof english>('en-us', english)
 
-  numberTooSmall: 'The number is too small! Minimum: {0}',
-  numberTooBig: 'The number is too big! Maximum: {0}',
-  invalidNumber: 'Invalid number',
-  invalidInteger: 'The value is not an integer',
+const resources: Record<string, string> = {
+  fieldIsRequired: t('validators.field_is_required'),
+  invalidFormat: t('validators.invalid_format'),
 
-  textTooSmall: 'The length of text is too small! Current: {0}, Minimum: {1}',
-  textTooBig: 'The length of text is too big! Current: {0}, Maximum: {1}',
-  thisNotText: 'This is not a text!',
+  numberTooSmall: t('validators.number_too_small'),
+  numberTooBig: t('validators.number_too_large'),
+  invalidNumber: t('validators.invalid_number'),
+  invalidInteger: t('validators.invalid_integer'),
 
-  thisNotArray: 'This is not an array!',
+  textTooSmall: t('validators.text_too_short'),
+  textTooBig: t('validators.text_too_long'),
+  thisNotText: t('validators.this_not_text'),
 
-  selectMinItems: 'Select minimum {0} items!',
-  selectMaxItems: 'Select maximum {0} items!',
+  thisNotArray: t('validators.this_not_array'),
 
-  invalidDate: 'Invalid date!',
-  dateIsEarly: 'The date is too early! Current: {0}, Minimum: {1}',
-  dateIsLate: 'The date is too late! Current: {0}, Maximum: {1}',
+  selectMinItems: t('validators.select_min_items'),
+  selectMaxItems: t('validators.select_max_items'),
 
-  invalidEmail: 'Invalid e-mail address!',
-  invalidURL: 'Invalid URL!',
+  invalidDate: t('validators.invalid_date'),
+  dateIsEarly: t('validators.date_is_early'),
+  dateIsLate: t('validators.date_is_late'),
 
-  invalidCard: 'Invalid card format!',
-  invalidCardNumber: 'Invalid card number!',
+  invalidEmail: t('validators.invalid_email'),
+  invalidURL: t('validators.invalid_url'),
 
-  invalidTextContainNumber: 'Invalid text! Cannot contains numbers or special characters',
-  invalidTextContainSpec: 'Invalid text! Cannot contains special characters',
+  invalidCard: t('validators.invalid_card'),
+  invalidCardNumber: t('validators.invalid_card_number'),
+
+  invalidTextContainNumber: t('validators.invalid_text_contain_number'),
+  invalidTextContainSpec: t('validators.invalid_tex_contain_spec'),
 }
 
-function checkEmpty(value: any, required: any, messages = resources) {
+// string substitution for user passed custom messages.
+const msg = (text: string, ...args: any[]): string => {
+  if (text && args.length > 0) {
+    for (let i = 0; i < args.length; i++) {
+      text = text.replace('{' + (i - 1) + '}', String(args[i] || ''))
+    }
+  }
+
+  return text
+}
+
+/**
+ * Check emptiness of a value and return error message if the field is required.
+ *
+ * @param value The value to check
+ * @param required Whether or not the field is required
+ * @param messages Error message resources
+ * @returns If the value is not empty, return null, otherwise return an array (with error message if field is required)
+ */
+const checkEmpty = (value: any, required: boolean, messages = resources) => {
   if (isNil(value) || value === '') {
     if (required) {
       return [msg(messages.fieldIsRequired)]
@@ -47,50 +71,45 @@ function checkEmpty(value: any, required: any, messages = resources) {
       return []
     }
   }
+
   return null
 }
 
-function msg(text: any, ...args: any) {
-  if (text != null && args.length > 0) {
-    for (let i = 0; i < args.length; i++) {
-      text = text.replace('{' + (i - 1) + '}', args[i])
-    }
-  }
-
-  return text
-}
-
-export const validators: any = {
-  resources,
-
-  required(value: any, field: any, model: any, messages = resources) {
-    return checkEmpty(value, field.required, messages)
+export const validators: Validators = {
+  required: (value: any, field: any, model: any, messages = resources) => {
+    return checkEmpty(value, field.required, messages) || []
   },
 
-  number(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
+  number: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    let errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
+    errs = []
 
-    const err = []
+    // real/valid number check
     if (isFinite(value)) {
-      if (!isNil(field.min) && value < field.min) {
-        err.push(msg(messages.numberTooSmall, field.min))
+      // min/max check
+      if (!isNil(field.min) && value < field.min, messages = resources) {
+        errs.push(msg(messages.numberTooSmall, field.min))
       }
 
-      if (!isNil(field.max) && value > field.max) {
-        err.push(msg(messages.numberTooBig, field.max))
+      if (!isNil(field.max) && value > field.max, messages = resources) {
+        errs.push(msg(messages.numberTooBig, field.max))
       }
     } else {
-      err.push(msg(messages.invalidNumber))
+      errs.push(msg(messages.invalidNumber))
     }
 
-    return err
+    return errs
   },
 
-  integer(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
-    const errs = validators.number(value, field, model, messages)
+  integer: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    let errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
+    errs = []
+
+    errs.concat(validators.number(value, field, model, messages))
 
     if (!isInteger(value)) {
       errs.push(msg(messages.invalidInteger))
@@ -99,36 +118,42 @@ export const validators: any = {
     return errs
   },
 
-  double(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
+  double: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    const errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
 
     if (!isNumber(value) || isNaN(value)) {
       return [msg(messages.invalidNumber)]
     }
+
+    return []
   },
 
-  string(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
+  string: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    let errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
+    errs = []
 
-    const err = []
     if (isString(value)) {
+      // min/max length check
       if (!isNil(field.min) && value.length < field.min) {
-        err.push(msg(messages.textTooSmall, value.length, field.min))
+        errs.push(msg(messages.textTooSmall, value.length, field.min))
       }
 
       if (!isNil(field.max) && value.length > field.max) {
-        err.push(msg(messages.textTooBig, value.length, field.max))
+        errs.push(msg(messages.textTooBig, value.length, field.max))
       }
     } else {
-      err.push(msg(messages.thisNotText))
+      errs.push(msg(messages.thisNotText))
     }
 
-    return err
+    return errs
   },
 
-  array(value: any, field: any, model: any, messages = resources) {
+  array: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
     if (field.required) {
       if (!Array.isArray(value)) {
         return [msg(messages.thisNotArray)]
@@ -139,6 +164,7 @@ export const validators: any = {
       }
     }
 
+    // min/max items check
     if (!isNil(value)) {
       if (!isNil(field.min) && value.length < field.min) {
         return [msg(messages.selectMinItems, field.min)]
@@ -148,89 +174,114 @@ export const validators: any = {
         return [msg(messages.selectMaxItems, field.max)]
       }
     }
+
+    return []
   },
 
-  date(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
+  date: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    let errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
+    errs = []
 
-    const m = new Date(value)
-    if (isNaN(m.getDate())) {
+    // valid date check
+    const dateVal = new Date(value)
+    if (isNaN(dateVal.getDate())) {
       return [msg(messages.invalidDate)]
     }
 
-    const err = []
-
+    // min/max check
     if (!isNil(field.min)) {
       const min = new Date(field.min)
-      if (m.valueOf() < min.valueOf()) {
-        err.push(msg(messages.dateIsEarly, fecha.format(m), fecha.format(min)))
+      if (dateVal.valueOf() < min.valueOf()) {
+        errs.push(msg(messages.dateIsEarly, fecha.format(dateVal), fecha.format(min)))
       }
     }
 
     if (!isNil(field.max)) {
       const max = new Date(field.max)
-      if (m.valueOf() > max.valueOf()) {
-        err.push(msg(messages.dateIsLate, fecha.format(m), fecha.format(max)))
+      if (dateVal.valueOf() > max.valueOf()) {
+        errs.push(msg(messages.dateIsLate, fecha.format(dateVal), fecha.format(max)))
       }
     }
 
-    return err
+    return errs
   },
 
-  regexp(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
+  regexp: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    const errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
 
+    // regex pattern check
     if (!isNil(field.pattern)) {
       const re = new RegExp(field.pattern)
+
       if (!re.test(value)) {
         return [msg(messages.invalidFormat)]
       }
     }
+
+    return []
   },
 
-  email(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
+  email: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    const errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
 
+    // email regex check
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ // eslint-disable-line no-useless-escape
     if (!re.test(value)) {
       return [msg(messages.invalidEmail)]
     }
+
+    return []
   },
 
-  url(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
+  url: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    const errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
 
+    // url regex check
     const re = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g // eslint-disable-line no-useless-escape
     if (!re.test(value)) {
       return [msg(messages.invalidURL)]
     }
+
+    return []
   },
 
-  creditCard(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
+  creditCard: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    const errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
 
-    /*  From validator.js code
-      https://github.com/chriso/validator.js/blob/master/src/lib/isCreditCard.js
-    */
+    /**
+     * From validator.js code
+     * https://github.com/chriso/validator.js/blob/master/src/lib/isCreditCard.js
+     */
     const creditCard = /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/
-    const sanitized = value.replace(/[^0-9]+/g, '')
+    const sanitized = value.replace(/[^0-9]+/g, '') // remove all non-digits
+
+    // credit card regex check
     if (!creditCard.test(sanitized)) {
       return [msg(messages.invalidCard)]
     }
+
     let sum = 0
     let digit
     let tmpNum
     let shouldDouble
+
     for (let i = sanitized.length - 1; i >= 0; i--) {
       digit = sanitized.substring(i, i + 1)
       tmpNum = parseInt(digit, 10)
+
       if (shouldDouble) {
         tmpNum *= 2
+
         if (tmpNum >= 10) {
           sum += tmpNum % 10 + 1
         } else {
@@ -239,41 +290,50 @@ export const validators: any = {
       } else {
         sum += tmpNum
       }
+
       shouldDouble = !shouldDouble
     }
 
     if (!(sum % 10 === 0 ? sanitized : false)) {
       return [msg(messages.invalidCardNumber)]
     }
+
+    return []
   },
 
-  alpha(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
+  alpha: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    const errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
 
+    // letters only regex check
     const re = /^[a-zA-Z]*$/
     if (!re.test(value)) {
       return [msg(messages.invalidTextContainNumber)]
     }
+
+    return []
   },
 
-  alphaNumeric(value: any, field: any, model: any, messages = resources) {
-    const res = checkEmpty(value, field.required, messages)
-    if (res != null) return res
+  alphaNumeric: (value: any, field: any, model: any, messages = resources) => {
+    // requiredness check
+    const errs = checkEmpty(value, field.required, messages)
+    if (errs != null) return errs
 
+    // letters and numbers only regex check
     const re = /^[a-zA-Z0-9]*$/
     if (!re.test(value)) {
       return [msg(messages.invalidTextContainSpec)]
     }
+
+    return []
   },
 }
 
-Object.keys(validators).forEach(name => {
+Object.keys(validators).forEach((name: keyof typeof validators) => {
   const fn = validators[name]
   if (isFunction(fn)) {
     // @ts-ignore: allow custom
     fn.locale = customMessages => (value, field, model) => fn(value, field, model, defaults(customMessages, resources))
   }
 })
-
-export default validators
