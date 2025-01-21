@@ -1,6 +1,7 @@
 <template>
   <div>
     <EntityBaseForm
+      :action-teleport-target="actionTeleportTarget"
       :can-submit="canSubmit"
       :config="config"
       :edit-id="partialId"
@@ -9,6 +10,7 @@
       :fetch-url="fetchUrl"
       :form-fields="payload"
       :is-readonly="form.readonly"
+      :slidout-top-offset="slidoutTopOffset"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"
       @fetch:success="updateFormValues"
@@ -321,7 +323,6 @@ import '@kong-ui-public/entities-vaults/dist/style.css'
 import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import { ref, computed } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
-import { useRouter } from 'vue-router'
 
 import { RedisType } from '../types'
 import { useRedisConfigurationForm } from '../composables/useRedisConfigurationForm'
@@ -347,7 +348,6 @@ const props = defineProps({
       if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
       if (config?.app === 'konnect' && !config?.controlPlaneId) return false
       if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
-      if (!config?.cancelRoute) return false
       return true
     },
   },
@@ -357,6 +357,19 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  /**
+   * Teleport target for the actions
+   */
+  actionTeleportTarget: {
+    type: String,
+  },
+  /**
+   * Top offset for the slideout
+   */
+  slidoutTopOffset: {
+    type: Number,
+    default: 60,
+  },
 })
 
 const emit = defineEmits<{
@@ -364,10 +377,10 @@ const emit = defineEmits<{
   (e: 'update', data: RedisConfigurationFormState): void,
   (e: 'error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
+  (e: 'cancel'): void,
 }>()
 
 const { i18n: { t } } = composables.useI18n()
-const router = useRouter()
 
 const vaultSecretPickerSetup = ref<string | false>()
 const vaultSecretPickerAutofillAction = ref<(secretRef: string) => void | undefined>()
@@ -450,7 +463,7 @@ const submitHandler = async () => {
 }
 
 const cancelHandler = (): void => {
-  router.push(props.config?.cancelRoute || { name: 'redis-configuration-list' })
+  emit('cancel')
 }
 
 const loadingHandler = (val: boolean): void => {

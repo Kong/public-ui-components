@@ -1,44 +1,52 @@
 <template>
   <h2>Konnect API</h2>
-  <KButton @click="konnectModalVisible = true">
+  <KButton @click="handleKonnectModalOpen">
     Create Redis Configuration
   </KButton>
 
   <h2>Kong Manager API</h2>
-  <KButton @click="kmModalVisible = true">
+  <KButton @click="handleKMModalOpen">
     Create Redis Configuration
   </KButton>
 
   <KModal
     full-screen
     :visible="konnectModalVisible"
-    @cancel="konnectModalVisible = false"
-    @proceed="konnectModalVisible = false"
+    @cancel="handleKonnectModalClose"
+    @proceed="handleKonnectModalClose"
   >
     <RedisConfigurationForm
+      :action-teleport-target="konnectModalActionTeleportTarget"
       :config="konnectConfig"
       :partial-id="partialId"
-      @error="onError"
-      @update="onUpdate"
-      @updated="onUpdated"
-    />
-  </KModal>
-
-  <KModal
-    full-screen
-    :visible="kmModalVisible"
-    @cancel="kmModalVisible = false"
-    @proceed="kmModalVisible = false"
-  >
-    <RedisConfigurationForm
-      :config="kongManagerConfig"
-      :partial-id="partialId"
+      :slidout-top-offset="0"
       @error="onError"
       @update="onUpdate"
       @updated="onUpdated"
     />
     <template #footer>
-      <div id="modal-footer" />
+      <div id="konnect-modal-footer" />
+    </template>
+  </KModal>
+
+  <KModal
+    full-screen
+    :visible="kmModalVisible"
+    @cancel="handleKMModalClose"
+    @proceed="handleKMModalClose"
+  >
+    <RedisConfigurationForm
+      :action-teleport-target="kmModalActionTeleportTarget"
+      :config="kongManagerConfig"
+      :partial-id="partialId"
+      :slidout-top-offset="0"
+      @cancel="handleKMModalClose"
+      @error="onError"
+      @update="onUpdate"
+      @updated="onUpdated"
+    />
+    <template #footer>
+      <div id="km-modal-footer" />
     </template>
   </KModal>
 </template>
@@ -55,6 +63,7 @@ import type {
 } from '../../src'
 
 import type { AxiosError } from 'axios'
+import { nextTick } from 'process'
 
 const route = useRoute()
 const router = useRouter()
@@ -63,6 +72,9 @@ const partialId = computed((): string => route?.params?.id as string || '')
 
 const konnectModalVisible = ref(false)
 const kmModalVisible = ref(false)
+
+const konnectModalActionTeleportTarget = ref<string>()
+const kmModalActionTeleportTarget = ref<string>()
 
 const konnectConfig: KonnectRedisConfigurationFormConfig = {
   app: 'konnect',
@@ -74,7 +86,34 @@ const kongManagerConfig: KongManagerRedisConfigurationFormConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
-  cancelRoute: { name: 'redis-configuration-list' },
+}
+
+const handleKMModalOpen = () => {
+  kmModalVisible.value = true
+  nextTick(() => {
+    kmModalActionTeleportTarget.value = '#km-modal-footer'
+  })
+}
+
+const handleKMModalClose = () => {
+  kmModalActionTeleportTarget.value = undefined
+  nextTick(() => {
+    kmModalVisible.value = false
+  })
+}
+
+const handleKonnectModalOpen = () => {
+  konnectModalVisible.value = true
+  nextTick(() => {
+    konnectModalActionTeleportTarget.value = '#konnect-modal-footer'
+  })
+}
+
+const handleKonnectModalClose = () => {
+  konnectModalActionTeleportTarget.value = undefined
+  nextTick(() => {
+    konnectModalVisible.value = false
+  })
 }
 
 const onError = (error: AxiosError) => {
@@ -91,3 +130,9 @@ const onUpdated = (data: RedisConfigurationResponse) => {
   router.push({ name: 'view-redis-configuration', params: { id: data.id } })
 }
 </script>
+
+<style>
+#konnect-modal-footer, #km-modal-footer {
+  width: 100%;
+}
+</style>

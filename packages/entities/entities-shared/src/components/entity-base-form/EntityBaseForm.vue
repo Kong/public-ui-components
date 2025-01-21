@@ -40,43 +40,50 @@
         :message="errorMessage"
       />
 
-      <!-- Form actions -->
-      <div
-        class="form-actions"
-        data-testid="form-actions"
+      <Teleport
+        :disabled="!actionTeleportTarget"
+        :to="actionTeleportTarget"
       >
-        <slot name="form-actions">
-          <KButton
-            appearance="tertiary"
-            :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-view-configuration`"
-            @click="toggle()"
-          >
-            {{ t('baseForm.actions.viewConfiguration') }}
-          </KButton>
-          <KButton
-            appearance="secondary"
-            :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-cancel`"
-            :disabled="isReadonly"
-            type="reset"
-          >
-            {{ t('baseForm.actions.cancel') }}
-          </KButton>
-          <KButton
-            appearance="primary"
-            :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-submit`"
-            :disabled="disableSave"
-            type="submit"
-          >
-            {{ t('baseForm.actions.save') }}
-          </KButton>
-        </slot>
-      </div>
+        <!-- Form actions -->
+        <div
+          class="form-actions"
+          data-testid="form-actions"
+        >
+          <slot name="form-actions">
+            <KButton
+              appearance="tertiary"
+              :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-view-configuration`"
+              @click="toggle()"
+            >
+              {{ t('baseForm.actions.viewConfiguration') }}
+            </KButton>
+            <KButton
+              appearance="secondary"
+              :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-cancel`"
+              :disabled="isReadonly"
+              type="reset"
+              @click="!!actionTeleportTarget && handleClickCancel()"
+            >
+              {{ t('baseForm.actions.cancel') }}
+            </KButton>
+            <KButton
+              appearance="primary"
+              :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-submit`"
+              :disabled="disableSave"
+              type="submit"
+              @click="!!actionTeleportTarget && handleClickSave()"
+            >
+              {{ t('baseForm.actions.save') }}
+            </KButton>
+          </slot>
+        </div>
+      </Teleport>
     </form>
     <KSlideout
       :close-on-blur="false"
       data-testid="form-view-configuration-slideout"
       :has-overlay="false"
-      :offset-top="60"
+      :offset-top="slidoutTopOffset"
       :title="t('baseForm.configuration.title')"
       :visible="isToggled"
       @close="toggle()"
@@ -207,6 +214,19 @@ const props = defineProps({
   wrapperComponent: {
     type: String,
     default: 'KCard',
+  },
+  /**
+   * Teleport target for the actions
+   */
+  actionTeleportTarget: {
+    type: String,
+  },
+  /**
+   * Top offset for the slideout
+   */
+  slidoutTopOffset: {
+    type: Number,
+    default: 60,
   },
 })
 
