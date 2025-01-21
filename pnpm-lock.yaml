@@ -1002,6 +1002,9 @@ importers:
       axios:
         specifier: ^1.7.7
         version: 1.7.7
+      entities-plugins%workspace:^:
+        specifier: link:@kong-ui-public/entities-plugins%workspace:^
+        version: link:@kong-ui-public/entities-plugins%workspace:^
       vue:
         specifier: ^3.5.12
         version: 3.5.12(typescript@5.6.3)
@@ -1851,6 +1854,7 @@ packages:
 
   '@evilmartians/lefthook@1.8.2':
     resolution: {integrity: sha512-SZdQk3W9q7tcJwnSwEMUubQqVIK7SHxv52hEAnV7o3nPI+xKcmd+rN0hZIJg07wjBaJRAjzdvoQySKQQYPW5Qw==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 

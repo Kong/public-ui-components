@@ -6,7 +6,7 @@ import { RedisType } from '../types'
 import { DEFAULT_REDIS_TYPE } from '../constants'
 import endpoints from '../partials-endpoints'
 
-import type { KongManagerRedisConfigurationFormConfig, KonnectRedisConfigurationFormConfig, RedisConfigurationConfigDTO, RedisConfigurationFormState, RedisConfigurationResponse } from '../types'
+import type { KongManagerRedisConfigurationFormConfig, KonnectRedisConfigurationFormConfig, RedisConfigurationFormState, RedisConfigurationResponse } from '../types'
 
 export type Options = {
   partialId?: string
