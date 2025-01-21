@@ -37,6 +37,9 @@
       @update="onUpdate"
       @updated="onUpdated"
     />
+    <template #footer>
+      <div id="modal-footer" />
+    </template>
   </KModal>
 </template>
 

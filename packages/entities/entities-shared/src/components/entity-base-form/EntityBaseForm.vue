@@ -328,20 +328,6 @@ onBeforeMount(async () => {
   max-width: $kui-breakpoint-desktop;
   width: 100%;
 
-  .form-actions {
-    align-items: center;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: $kui-space-80;
-
-    :deep(.k-button) {
-      &:last-of-type,
-      &:nth-last-of-type(2) {
-        margin-left: $kui-space-60;
-      }
-    }
-  }
-
   & :deep(.k-slideout-title) {
     color: $kui-color-text !important;
     font-size: $kui-font-size-70 !important;
@@ -364,6 +350,20 @@ onBeforeMount(async () => {
   & :deep(.tab-item.active > div.tab-link.has-panels) {
     color: $kui-color-text !important;
     font-weight: $kui-font-weight-semibold !important;
+  }
+}
+
+.form-actions {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: $kui-space-80;
+
+  :deep(.k-button) {
+    &:last-of-type,
+    &:nth-last-of-type(2) {
+      margin-left: $kui-space-60;
+    }
   }
 }
 </style>
