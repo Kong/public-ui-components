@@ -5,6 +5,7 @@
     :partial-id="partialId"
     @error="onError"
     @update="onUpdate"
+    @updated="onUpdated"
   />
 
   <h2>Kong Manager API</h2>
@@ -13,6 +14,7 @@
     :partial-id="partialId"
     @error="onError"
     @update="onUpdate"
+    @updated="onUpdated"
   />
 </template>
 
@@ -52,6 +54,10 @@ const onError = (error: AxiosError) => {
 }
 
 const onUpdate = (data: RedisConfigurationResponse) => {
+  router.push({ name: 'view-redis-configuration', params: { id: data.id } })
+}
+
+const onUpdated = (data: RedisConfigurationResponse) => {
   router.push({ name: 'view-redis-configuration', params: { id: data.id } })
 }
 </script>
