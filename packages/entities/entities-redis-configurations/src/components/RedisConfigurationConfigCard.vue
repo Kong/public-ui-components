@@ -37,6 +37,7 @@ import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import endpoints from '../partials-endpoints'
 import { getRedisType } from '../helpers'
+import { DEFAULT_REDIS_TYPE } from '../constants'
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
@@ -78,7 +79,7 @@ const emit = defineEmits<{
 const { i18n: { t } } = composables.useI18n()
 const fetchUrl = computed((): string => endpoints.form[props.config.app].edit)
 
-const redisType = ref(RedisType.HOST_PORT_CE)
+const redisType = ref<RedisType>(DEFAULT_REDIS_TYPE)
 
 const handleData = (data: any) => {
   redisType.value = getRedisType(data as RedisConfigurationResponse)
