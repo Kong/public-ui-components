@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.8.23...@kong-ui-public/entities-plugins@9.9.0) (2025-01-21)
+
+
+### Features
+
+* **entities-plugin:** add streaming custom plugin support ([#1896](https://github.com/Kong/public-ui-components/issues/1896)) ([0a482db](https://github.com/Kong/public-ui-components/commit/0a482dbfc89587f7059c40548a5b0b3edea17c54))
+
+
+
+
+
 ## [9.8.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.8.22...@kong-ui-public/entities-plugins@9.8.23) (2025-01-20)
 
 
