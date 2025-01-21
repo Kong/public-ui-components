@@ -40,7 +40,7 @@
                 <KDropdownItem
                   v-if="canDeleteCustomPlugin"
                   data-testid="edit-plugin-schema"
-                  @click.stop="handleCustomEdit(plugin.name)"
+                  @click.stop="handleCustomEdit(plugin.name, plugin.customPluginType!)"
                 >
                   {{ t('actions.edit') }}
                 </KDropdownItem>
@@ -104,6 +104,7 @@ import { computed, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   PluginGroup,
+  type CustomPluginType,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
   type PluginType,
@@ -187,10 +188,10 @@ const handleCustomDelete = (): void => {
   }
 }
 
-const handleCustomEdit = (pluginName: string): void => {
+const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
   const konnectConfig = props.config as KonnectPluginSelectConfig
   if (props.config.app === 'konnect' && typeof konnectConfig.getCustomEditRoute === 'function' && konnectConfig.getCustomEditRoute) {
-    router.push(konnectConfig.getCustomEditRoute(pluginName))
+    router.push(konnectConfig.getCustomEditRoute(pluginName, type))
   }
 }
 

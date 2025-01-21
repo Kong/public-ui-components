@@ -51,14 +51,14 @@
     >
       <!-- Konnect -->
       <KTabs
-        v-if="tabs.length && !hideCustomPlugins"
+        v-if="tabs.length && customPluginSupport !== 'none'"
         v-model="activeTab"
         data-testid="plugins-tabs"
         :tabs="tabs"
         @change="onTabsChange"
       >
         <template
-          v-if="disableCustomPlugins"
+          v-if="customPluginSupport === 'disabled'"
           #custom-anchor
         >
           <KTooltip
@@ -129,11 +129,13 @@ import { useRoute, useRouter } from 'vue-router'
 import {
   PluginGroup,
   PluginScope,
+  type CustomPluginSupportLevel,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
   type PluginType,
   type DisabledPlugin,
   type PluginCardList,
+  type StreamingCustomPluginSchema,
 } from '../types'
 import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
@@ -152,15 +154,10 @@ const props = defineProps({
       return true
     },
   },
-  /** If true disable UIs related to custom plugins */
-  disableCustomPlugins: {
-    type: Boolean,
-    default: false,
-  },
-  /** If true don't display UIs related to custom plugins */
-  hideCustomPlugins: {
-    type: Boolean,
-    default: false,
+  /** custom plugin support level */
+  customPluginSupport: {
+    type: String as PropType<CustomPluginSupportLevel>,
+    default: 'none',
   },
   /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can create a custom plugin */
   canCreateCustomPlugin: {
@@ -247,7 +244,8 @@ const filter = ref('')
 const isLoading = ref(true)
 const hasError = ref(false)
 const fetchErrorMessage = ref('')
-const availablePlugins = ref<string[]>([])
+const availablePlugins = ref<string[]>([]) // all available plugins
+const streamingCustomPlugins = ref<StreamingCustomPluginSchema[]>([])
 const pluginsList = ref<PluginCardList>({})
 const existingEntityPlugins = ref<string[]>([])
 
@@ -318,14 +316,15 @@ const tabs = computed(() => {
     {
       hash: '#custom',
       title: t('plugins.select.tabs.custom.title'),
-      disabled: props.disableCustomPlugins,
+      disabled: ['none', 'disabled'].includes(props.customPluginSupport),
     }]
     : []
 })
+
 const activeTab = computed(() => {
   let hash = tabs.value.length ? route?.hash || tabs.value[0]?.hash || '' : ''
   // If custom plugins are disabled, default to kong tab
-  if (hash === '#custom' && props.disableCustomPlugins) {
+  if (hash === '#custom' && ['none', 'disabled'].includes(props.customPluginSupport)) {
     hash = '#kong'
   }
   return hash
@@ -383,14 +382,20 @@ const buildPluginList = (): PluginCardList => {
     // build the actual card list
     .reduce((list: PluginCardList, pluginId: string) => {
       const pluginName = (pluginMetaData[pluginId] && pluginMetaData[pluginId].name) || pluginId
-      const plugin = {
+      const plugin: PluginType = {
         ...pluginMetaData[pluginId],
         id: pluginId,
         name: pluginName,
         available: availablePlugins.value.includes(pluginId),
         disabledMessage: '',
         group: pluginMetaData[pluginId]?.group || PluginGroup.CUSTOM_PLUGINS,
-      } as PluginType
+      }
+
+      if (plugin.group === PluginGroup.CUSTOM_PLUGINS) {
+        plugin.customPluginType = streamingCustomPlugins.value.find(sp => sp.name === pluginId)
+          ? 'streaming'
+          : 'schema'
+      }
 
       if (props.disabledPlugins) {
         plugin.disabledMessage = props.disabledPlugins[pluginId]
@@ -424,6 +429,16 @@ const availablePluginsUrl = computed((): string => {
   }
 
   return url
+})
+
+const streamingPluginsUrl = computed<string | null>(() => {
+  if (props.config.app === 'konnect' && props.customPluginSupport === 'streaming') {
+    let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].streamingCustomPlugins}`
+    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+    return url
+  }
+  // Kong Manager and other support level does not support streaming custom plugins now
+  return null
 })
 
 const fetchEntityPluginsUrl = computed((): string => {
@@ -487,8 +502,13 @@ onMounted(async () => {
 
     // TODO: endpoints temporarily return different formats
     if (props.config.app === 'konnect') {
-      const { names: available } = data
-      availablePlugins.value = available || []
+      const { names: allAvailablePlugins } = data
+      availablePlugins.value = allAvailablePlugins || []
+      if (streamingPluginsUrl.value) {
+        // fetch streaming custom plugins for plugin type partition
+        const { data: streamingCustomPluginsData } = await axiosInstance.get<{ data: StreamingCustomPluginSchema[] }>(streamingPluginsUrl.value)
+        streamingCustomPlugins.value = streamingCustomPluginsData.data || []
+      }
     } else if (props.config.app === 'kongManager') {
       const { plugins: { available_on_server: aPlugins } } = data
       availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
