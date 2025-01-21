@@ -3,6 +3,7 @@
 - [Conventional Commits](#conventional-commits)
 - [Versioning](#versioning)
   - [New Packages](#new-packages)
+  - [Approvals](#approvals)
   - [Releasing 1.x.x](#releasing-1xx)
   - [Breaking Changes](#breaking-changes)
 - [Automation in CI](#automation-in-ci)
@@ -20,6 +21,14 @@ Versioning is done via the [`lerna version`](https://github.com/lerna/lerna/tree
 Packages are versioned using conventional commits and semantic versioning. When a package is first created it should have `0.0.1` in its `package.json`, which leads to the `0.1.0` being the first package version published during CI given a `feat` commit is used.
 
 When a package is in `0.x.x` stage, any breaking changes will only bump the minor version. It is __STRONGLY SUGGESTED__ to keep new packages in this versioning stage for a period of __at least 6 months__. Breaking changes are inevitable in the early stages of a new package and it takes time for consumers to become more familiar with the package API.
+
+### Approvals
+
+- All pull requests require review and approval from authorized team members.
+- Automated approvals through workflows are strictly prohibited.
+  - There is an exception for automated pull request approvals originating from generated dependency updates that satisfy status checks and other requirements.
+- Protected branches require at least one approval from code owners.
+- All status checks must pass before a pull request may be merged.
 
 ### Releasing 1.x.x
 
