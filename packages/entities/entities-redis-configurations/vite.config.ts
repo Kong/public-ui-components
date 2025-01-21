@@ -19,8 +19,15 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     rollupOptions: {
       external: [
         // '@kong-ui-public/entities-vaults/dist/style.css',
-        // '@kong-ui-public/entities-vaults',
+        '@kong-ui-public/entities-plugins',
+        '@kong-ui-public/entities-vaults',
       ],
+      output: {
+        globals: {
+          '@kong-ui-public/entities-plugins': 'kong-ui-public-entities-plugins',
+          '@kong-ui-public/entities-vaults': 'kong-ui-public-entities-vaults',
+        },
+      },
     },
   },
   server: {
