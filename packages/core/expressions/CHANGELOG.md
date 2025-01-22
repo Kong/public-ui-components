@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.8.2...@kong-ui-public/expressions@0.9.0) (2025-01-22)
+
+
+### Features
+
+* **expressions:** add func to check if rhs autocompletion is necessary; dispose after use ([#1907](https://github.com/Kong/public-ui-components/issues/1907)) ([824da5a](https://github.com/Kong/public-ui-components/commit/824da5ae9b9efc142247a24bc3726f1f9b0b3b69))
+
+
+
+
+
 ## [0.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.8.1...@kong-ui-public/expressions@0.8.2) (2025-01-20)
 
 
