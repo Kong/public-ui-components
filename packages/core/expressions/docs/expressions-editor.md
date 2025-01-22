@@ -76,13 +76,29 @@ To control whether the editor should show the details of the autocompletion item
 
 Options to pass when creating the Monaco editor.
 
-#### `provideRhsValueCompletion`
+#### `rhsValueCompletion`
 
-- type: `ProvideRhsValueCompletion`
+- type: `RhsValueCompletion`
 - required: `false`
 - default: `undefined`
+- properties:
+  - `provide`:
+    - type: `ProvideRhsValueCompletion`
+    - required: `true`
+
+  - `shouldProvide`:
+    - type: `(lhsIdentValue: string) => boolean`
+    - required: `true`
+
+##### `provide`
 
 A function to provide completion items for the value of the right-hand side (RHS) of the expression. The function should return a `Promise` that resolves to a `CompletionList` or `undefined`.
+
+##### `shouldProvide`
+
+A function to determine whether the completion items should be provided for the value of the left-hand side (LHS) of the expression. The function accepts the string value of an identifier token and returns a `boolean`.
+
+##### Example
 
 For example, in the following case:
 
@@ -96,7 +112,7 @@ http.path == "foo"
                  ^cursor
 ```
 
-… the `provideRhsValueCompletion` function will be called with the following arguments:
+… the `provide` function will be called with the following arguments:
 
 | Argument        | Value                                                                      |
 | :-------------- | :------------------------------------------------------------------------- |
@@ -107,8 +123,8 @@ http.path == "foo"
 
 This function will only be triggered in either of the following cases:
 
-- The completion is manually triggered by the user (e.g., with `Ctrl` `I`)
-- A character is typed while the cursor is inside the range of the string value
+1. The completion is manually triggered by the user (e.g., with `Ctrl` `I`). If the cursor is inside the range of a string value, please refer to the 2nd case.
+2. A character is typed while the cursor is inside the range of a string value, AND `shouldProvide` function returns `true` for the value of the identifier token on the LHS.
 
 ### Events
 

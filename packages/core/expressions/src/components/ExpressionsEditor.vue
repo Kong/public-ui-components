@@ -9,16 +9,15 @@
 import { useDebounce } from '@kong-ui-public/core'
 import type { AstType, Schema as AtcSchema, ParseResult, ParseResultOk } from '@kong/atc-router'
 import { Parser } from '@kong/atc-router'
-import type * as Monaco from 'monaco-editor'
 import * as monaco from 'monaco-editor'
 import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
-import { buildLanguageId, getRangeFromTokens, locateLhsIdent, locateToken, registerLanguage, registerTheme, scanTokens, theme, TokenType, transformTokens } from '../monaco'
+import { buildLanguageId, getTokensRange, locateStringLhsIdent, locateToken, registerLanguage, registerTheme, scanTokenBackward, scanTokensBidirectional, theme, TokenType, transformTokens } from '../monaco'
 import { createSchema, type Schema } from '../schema'
-import type { ProvideCompletionItems, ProvideRhsValueCompletion } from '../types'
+import type { ProvideCompletionItems, RhsValueCompletion } from '../types'
 
-let editor: Monaco.editor.IStandaloneCodeEditor | undefined
-let editorModel: Monaco.editor.ITextModel
-const editorRef = shallowRef<Monaco.editor.IStandaloneCodeEditor>()
+let editor: monaco.editor.IStandaloneCodeEditor | undefined
+let editorModel: monaco.editor.ITextModel
+const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor>()
 
 const { debounce } = useDebounce()
 
@@ -28,12 +27,12 @@ const props = withDefaults(defineProps<{
   inactiveUntilFocused?: boolean
   allowEmptyInput?: boolean
   defaultShowDetails?: boolean
-  editorOptions?: Monaco.editor.IEditorOptions
-  provideRhsValueCompletion?: ProvideRhsValueCompletion
+  editorOptions?: monaco.editor.IEditorOptions
+  rhsValueCompletion?: RhsValueCompletion
 }>(), {
   parseDebounce: 500,
   editorOptions: undefined,
-  provideRhsValueCompletion: undefined,
+  rhsValueCompletion: undefined,
 })
 
 const parse = (expression: string, schema: AtcSchema) => {
@@ -94,27 +93,28 @@ const provideCompletionItems: ProvideCompletionItems = async (model, position) =
       case TokenType.STR_LITERAL:
       case TokenType.STR_ESCAPE:
       case TokenType.STR_INVALID_ESCAPE: {
-        if (props.provideRhsValueCompletion) {
-          const [rhsValueRange, rhsValueFirstTokenIndex] = scanTokens(model, flatTokens, token.flatIndex, (t) =>
+        if (props.rhsValueCompletion) {
+          const [rhsValueRange, rhsValueFirstTokenIndex] = scanTokensBidirectional(model, flatTokens, token.flatIndex, (t) =>
             !(t.shortType === TokenType.STR_LITERAL || t.shortType === TokenType.STR_ESCAPE || t.shortType === TokenType.STR_INVALID_ESCAPE),
           )
-          if (rhsValueRange) {
-            const rhsValueValue = model.getValueInRange(rhsValueRange)
-            const lhsIdentTokenIndex = locateLhsIdent(flatTokens, rhsValueFirstTokenIndex)
-            if (lhsIdentTokenIndex >= 0) {
-              const lhsIdentRange = getRangeFromTokens(model, flatTokens, lhsIdentTokenIndex, lhsIdentTokenIndex + 1)
-              const lhsIdentValue = model.getValueInRange(lhsIdentRange)
-              const completion = await props.provideRhsValueCompletion(lhsIdentValue, rhsValueValue, lhsIdentRange, rhsValueRange)
+          const rhsValueValue = model.getValueInRange(rhsValueRange)
+          const lhsIdentTokenIndex = locateStringLhsIdent(flatTokens, rhsValueFirstTokenIndex)
+          if (lhsIdentTokenIndex >= 0) {
+            const lhsIdentRange = getTokensRange(model, flatTokens, lhsIdentTokenIndex, lhsIdentTokenIndex + 1)
+            const lhsIdentValue = model.getValueInRange(lhsIdentRange)
+            if (props.rhsValueCompletion?.shouldProvide(lhsIdentValue)) {
+              const completion = await props.rhsValueCompletion.provide(lhsIdentValue, rhsValueValue, lhsIdentRange, rhsValueRange)
               if (completion) {
                 return completion
               }
             }
           }
         }
-        break
+        // Do not provide any extra suggestions
+        return { suggestions: [] }
       }
       case TokenType.IDENT: {
-        const identRange = getRangeFromTokens(model, flatTokens, token.flatIndex, token.flatIndex + 1)
+        const identRange = getTokensRange(model, flatTokens, token.flatIndex, token.flatIndex + 1)
         return {
           suggestions: [
             ...flatSchemaProperties.value.map((item) => ({
@@ -187,25 +187,36 @@ onMounted(() => {
   editorRef.value = editor
 
   if (props.defaultShowDetails) {
-    editor.getContribution<Record<string, any> & Monaco.editor.IEditorContribution>('editor.contrib.suggestController')
+    editor.getContribution<Record<string, any> & monaco.editor.IEditorContribution>('editor.contrib.suggestController')
       ?.widget?.value._setDetailsVisible(true)
   }
   editor.onDidChangeModelContent(() => {
     const model = editor!.getModel()!
     const value = model.getValue()!
 
-    if (props.provideRhsValueCompletion) {
+    if (props.rhsValueCompletion) {
       const position = editor!.getPosition()
       if (position) {
-        const [, nestedTokens] = transformTokens(model, monaco.editor.tokenize(value, model.getLanguageId()))
+        const [flatTokens, nestedTokens] = transformTokens(model, monaco.editor.tokenize(value, model.getLanguageId()))
         const token = locateToken(nestedTokens, position.lineNumber - 1, position.column - 2)
         switch (token?.shortType) {
           case TokenType.STR_LITERAL:
           case TokenType.STR_ESCAPE:
-          case TokenType.STR_INVALID_ESCAPE:
-            editor!.getContribution<Record<string, any> & Monaco.editor.IEditorContribution>('editor.contrib.suggestController')
-              ?.triggerSuggest()
+          case TokenType.STR_INVALID_ESCAPE: {
+            const stringLeftTokenIndex = scanTokenBackward(flatTokens, token.flatIndex, (t) =>
+              !(t.shortType === TokenType.STR_LITERAL || t.shortType === TokenType.STR_ESCAPE || t.shortType === TokenType.STR_INVALID_ESCAPE),
+            ) + 1
+            const lhsIdentTokenIndex = locateStringLhsIdent(flatTokens, stringLeftTokenIndex)
+            if (lhsIdentTokenIndex >= 0) {
+              const lhsIdentRange = getTokensRange(model, flatTokens, lhsIdentTokenIndex, lhsIdentTokenIndex + 1)
+              const lhsIdentValue = model.getValueInRange(lhsIdentRange)
+              if (props.rhsValueCompletion.shouldProvide(lhsIdentValue)) {
+                editor!.getContribution<Record<string, any> & monaco.editor.IEditorContribution>('editor.contrib.suggestController')
+                  ?.triggerSuggest()
+              }
+            }
             break
+          }
           default:
             break
         }
@@ -265,7 +276,7 @@ watch(() => parseResult.value, (result?: ParseResult) => {
     return
   }
 
-  let markers: Monaco.editor.IMarkerData[] = []
+  let markers: monaco.editor.IMarkerData[] = []
 
   if (result !== undefined) {
     emit('parse-result-update', result)
@@ -277,9 +288,9 @@ watch(() => parseResult.value, (result?: ParseResult) => {
       case 'parseError': {
         const { parseError } = result
         const message =
-        'parsingError' in parseError.variant
-          ? parseError.variant.parsingError
-          : parseError.variant.customError
+          'parsingError' in parseError.variant
+            ? parseError.variant.parsingError
+            : parseError.variant.customError
         if ('pos' in parseError.lineCol) {
           const [line, col] = parseError.lineCol.pos
 
@@ -295,7 +306,7 @@ watch(() => parseResult.value, (result?: ParseResult) => {
           ]
         } else {
           const [[startLineNumber, startColumn], [endLineNumber, endColumn]] =
-          parseError.lineCol.span
+            parseError.lineCol.span
 
           markers = [
             {

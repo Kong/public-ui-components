@@ -61,11 +61,21 @@ export interface Token extends monaco.Token {
   flatOffset: number
 }
 
-const shortTokenType = (languageId: string, fullType: string) => {
+/**
+ * Token names are suffixed with the language ID (e.g., `identifier.kong-expressions-http`).
+ *
+ * This function removes the language ID suffix from the token type and returns the shortened token
+ * type. You can find a list of short token types in the {@link TokenType} object.
+ *
+ * @param languageId the language ID
+ * @param fullType the full token type
+ * @returns the shortened type or the full type if the full type does not end with the language ID
+ */
+export const shortenTokenType = (languageId: string, fullType: string) => {
   if (fullType.endsWith(`.${languageId}`)) {
     return fullType.slice(0, -`.${languageId}`.length)
   }
-  return fullType
+  return fullType // fallback
 }
 
 /**
@@ -120,7 +130,7 @@ export const transformTokens = (model: monaco.editor.ITextModel, tokens: monaco.
     for (const t of tokens[lineIndex]) {
       const token: Token = {
         ...t,
-        shortType: shortTokenType(model.getLanguageId(), t.type),
+        shortType: shortenTokenType(model.getLanguageId(), t.type),
         lineIndex,
         flatIndex: flatTokens.length,
         flatOffset: lineCumulativeOffset + t.offset,
@@ -135,16 +145,39 @@ export const transformTokens = (model: monaco.editor.ITextModel, tokens: monaco.
 }
 
 /**
+ * Get the range for the given tokens.
+ *
+ * Time complexity = O(1)
+ *
+ * @param model the text model
+ * @param tokens the tokens to get the range from (1D array)
+ * @param fromIndex the index of the first TOKEN (inclusive)
+ * @param toIndex the index of the last TOKEN (exclusive)
+ * @returns
+ */
+export const getTokensRange = (model: monaco.editor.ITextModel, tokens: Token[], fromIndex: number, toIndex: number): monaco.Range => {
+  const endLineNumber = toIndex >= tokens.length ? model.getLineCount() : tokens[toIndex].lineIndex + 1
+  const endColumn = toIndex >= tokens.length ? model.getLineMaxColumn(endLineNumber) : tokens[toIndex].offset + 1
+
+  return new monaco.Range(
+    fromIndex >= tokens.length ? model.getLineCount() : tokens[fromIndex].lineIndex + 1,
+    fromIndex >= tokens.length ? model.getLineMaxColumn(model.getLineCount()) : tokens[fromIndex].offset + 1,
+    endLineNumber,
+    endColumn,
+  )
+}
+
+/**
  * Scan forward (right) until the token that satisfies the condition is found.
  *
  * Time complexity = O(n)
  *
  * @param tokens the tokens to scan (1D array)
- * @param fromIndex the index to start scanning from (exclusive)
+ * @param fromIndex the index of the TOKEN to start scanning from (exclusive)
  * @param until the condition to stop scanning
- * @returns the index of the token that satisfies the condition or the length of the tokens if not found
+ * @returns the index of the TOKEN that satisfies the condition or the length of the tokens if not found
  */
-export const scanForward = (tokens: Token[], fromIndex: number, until: (token: Token) => boolean): number => {
+export const scanTokenForward = (tokens: Token[], fromIndex: number, until: (token: Token) => boolean): number => {
   let index
   for (index = fromIndex + 1; index < tokens.length; index++) {
     if (until(tokens[index])) {
@@ -160,11 +193,11 @@ export const scanForward = (tokens: Token[], fromIndex: number, until: (token: T
  * Time complexity = O(n)
  *
  * @param tokens the tokens to scan (1D array)
- * @param fromIndex the index to start scanning from (exclusive)
+ * @param fromIndex the index of the TOKEN to start scanning from (exclusive)
  * @param until the condition to stop scanning
- * @returns the index of the token that satisfies the condition or -1 if not found
+ * @returns the index of the TOKEN that satisfies the condition or `-1` if not found
  */
-const scanBackward = (tokens: Token[], fromIndex: number, until: (token: Token) => boolean) => {
+export const scanTokenBackward = (tokens: Token[], fromIndex: number, until: (token: Token) => boolean): number => {
   let index
   for (index = fromIndex - 1 ; index >= 0; index--) {
     if (until(tokens[index])) {
@@ -172,29 +205,6 @@ const scanBackward = (tokens: Token[], fromIndex: number, until: (token: Token) 
     }
   }
   return index
-}
-
-/**
- * Get the range for the given tokens.
- *
- * Time complexity = O(1)
- *
- * @param model the text model
- * @param tokens the tokens to get the range from (1D array)
- * @param fromIndex the index of the first token (inclusive)
- * @param toIndex the index of the last token (exclusive)
- * @returns
- */
-export const getRangeFromTokens = (model: monaco.editor.ITextModel, tokens: Token[], fromIndex: number, toIndex: number): monaco.Range => {
-  const endLineNumber = toIndex >= tokens.length ? model.getLineCount() : tokens[toIndex].lineIndex + 1
-  const endColumn = toIndex >= tokens.length ? model.getLineMaxColumn(endLineNumber) : tokens[toIndex].offset + 1
-
-  return new monaco.Range(
-    fromIndex >= tokens.length ? model.getLineCount() : tokens[fromIndex].lineIndex + 1,
-    fromIndex >= tokens.length ? model.getLineMaxColumn(model.getLineCount()) : tokens[fromIndex].offset + 1,
-    endLineNumber,
-    endColumn,
-  )
 }
 
 /**
@@ -210,11 +220,11 @@ export const getRangeFromTokens = (model: monaco.editor.ITextModel, tokens: Toke
  * @param until the condition to stop scanning
  * @returns the range of the tokens and the index of the first token in the range
  */
-export const scanTokens = (model: monaco.editor.ITextModel, tokens: Token[], fromIndex: number, until: (token: Token) => boolean): [monaco.Range, number] => {
-  const left = scanBackward(tokens, fromIndex, until) + 1 // Adding 1 because the output range is inclusive
-  const right = scanForward(tokens, fromIndex, until)
+export const scanTokensBidirectional = (model: monaco.editor.ITextModel, tokens: Token[], fromIndex: number, until: (token: Token) => boolean): [monaco.Range, number] => {
+  const left = scanTokenBackward(tokens, fromIndex, until) + 1 // Adding 1 because the output range is inclusive
+  const right = scanTokenForward(tokens, fromIndex, until)
 
-  return [getRangeFromTokens(model, tokens, left, right), left]
+  return [getTokensRange(model, tokens, left, right), left]
 }
 
 /**
@@ -225,9 +235,9 @@ export const scanTokens = (model: monaco.editor.ITextModel, tokens: Token[], fro
  *
  * @param tokens the tokens to locate the LHS from (1D array)
  * @param fromIndex the index of the string tokens (STR_LITERAL, STR_ESCAPE, STR_INVALID_ESCAPE)
- * @returns the index of the LHS or -1 if not found
+ * @returns the index of the LHS or `-1` if not found
  */
-export const locateLhsIdent = (tokens: Token[], fromIndex: number): number => {
+export const locateStringLhsIdent = (tokens: Token[], fromIndex: number): number => {
   let quote = false
   let op = false
   let rawStrOpen = false
@@ -287,97 +297,115 @@ export const locateLhsIdent = (tokens: Token[], fromIndex: number): number => {
   return -1
 }
 
+export const languageDisposables: Record<string, () => void> = {}
+
 export const registerLanguage = (languageId: string, provideCompletionItems?: ProvideCompletionItems) => {
-  if (monaco.languages.getEncodedLanguageId(languageId) !== 0) {
-    return { languageId }
+  if (monaco.languages.getEncodedLanguageId(languageId) === 0) {
+    monaco.languages.register({ id: languageId })
   }
 
-  monaco.languages.register({ id: languageId })
+  languageDisposables[languageId]?.()
+  const disposables: monaco.IDisposable[] = []
 
-  monaco.languages.setMonarchTokensProvider(languageId, {
-    keywords: [], // keywords are not used but required
+  disposables.push(
+    monaco.languages.setMonarchTokensProvider(languageId, {
+      keywords: [], // keywords are not used but required
 
-    tokenizer: {
-      root: [
-        [/[ \t\r\n]+/, TokenType.WHITESPACE],
-        [/==|!=|~|\^=|=\^|>=?|<=?|&&|\|\||(?:not )?in|contains/, TokenType.OPERATOR],
+      tokenizer: {
+        root: [
+          [/[ \t\r\n]+/, TokenType.WHITESPACE],
+          [/==|!=|~|\^=|=\^|>=?|<=?|&&|\|\||(?:not )?in|contains/, TokenType.OPERATOR],
 
-        [/(r#)(")/, [
-          TokenType.RAW_STR_OPEN,
-          { token: TokenType.QUOTE_OPEN, next: '@rawString' },
-        ]],
+          [/(r#)(")/, [
+            TokenType.RAW_STR_OPEN,
+            { token: TokenType.QUOTE_OPEN, next: '@rawString' },
+          ]],
 
-        [/"/, { token: TokenType.QUOTE_OPEN, next: '@string' }],
+          [/"/, { token: TokenType.QUOTE_OPEN, next: '@string' }],
 
-        { include: '@lhs' },
+          { include: '@lhs' },
 
-        // IP addresses + CIDRs
-        [/(?:\d{1,3}\.){3}\d{1,3}(?:\/\d{1,2})?/, TokenType.IP_V4],
-        [/(?::|[A-Fa-f0-9]{1,4}):(?:[A-Fa-f0-9]{1,4}|:)*(?:\/\d{1,3})?/, TokenType.IP_V6],
+          // IP addresses + CIDRs
+          [/(?:\d{1,3}\.){3}\d{1,3}(?:\/\d{1,2})?/, TokenType.IP_V4],
+          [/(?::|[A-Fa-f0-9]{1,4}):(?:[A-Fa-f0-9]{1,4}|:)*(?:\/\d{1,3})?/, TokenType.IP_V6],
 
-        // Hexadecimal, octal, and decimal numbers
-        [/-?0x[a-fA-F0-9]+/, TokenType.NUMBER],
-        [/-?0[0-7]+/, TokenType.NUMBER],
-        [/-?\d+/, TokenType.NUMBER],
+          // Hexadecimal, octal, and decimal numbers
+          [/-?0x[a-fA-F0-9]+/, TokenType.NUMBER],
+          [/-?0[0-7]+/, TokenType.NUMBER],
+          [/-?\d+/, TokenType.NUMBER],
 
-        // Misc
-        [/\(/, { token: TokenType.PAREN_OPEN, bracket: '@open' }],
-        [/\)/, { token: TokenType.PAREN_CLOSE, bracket: '@close' }],
-      ],
+          // Misc
+          [/\(/, { token: TokenType.PAREN_OPEN, bracket: '@open' }],
+          [/\)/, { token: TokenType.PAREN_CLOSE, bracket: '@close' }],
+        ],
 
-      lhs: [
-        [/([a-zA-Z][a-zA-Z0-9_.]*)([ \t\r\n]*)(\()/, [
-          TokenType.FUNC_NAME, TokenType.WHITESPACE, { token: TokenType.PAREN_OPEN, bracket: '@open' },
-        ]],
+        lhs: [
+          [/([a-zA-Z][a-zA-Z0-9_.]*)([ \t\r\n]*)(\()/, [
+            TokenType.FUNC_NAME, TokenType.WHITESPACE, { token: TokenType.PAREN_OPEN, bracket: '@open' },
+          ]],
 
-        [/[a-zA-Z][a-zA-Z0-9_.]*/, TokenType.IDENT],
-      ],
+          [/[a-zA-Z][a-zA-Z0-9_.]*/, TokenType.IDENT],
+        ],
 
-      string: [
-        [/^$/, TokenType.STR_LITERAL],
-        [/[^\\"]+/, TokenType.STR_LITERAL],
-        [/\\[ntr\\"]/, TokenType.STR_ESCAPE],
-        [/\\(?:.|$)/, TokenType.STR_INVALID_ESCAPE], // these are invalid escape sequences
-        [/"/, { token: TokenType.QUOTE_CLOSE, next: '@pop' }],
-      ],
+        string: [
+          [/^$/, TokenType.STR_LITERAL],
+          [/[^\\"]+/, TokenType.STR_LITERAL],
+          [/\\[ntr\\"]/, TokenType.STR_ESCAPE],
+          [/\\(?:.|$)/, TokenType.STR_INVALID_ESCAPE], // these are invalid escape sequences
+          [/"/, { token: TokenType.QUOTE_CLOSE, next: '@pop' }],
+        ],
 
-      rawString: [
-        [/[^"]+/, TokenType.STR_LITERAL], // characters before the closing quote
-        [/(")(#)/, [
-          { token: TokenType.RAW_STR_CLOSE, next: '@pop' },
-          TokenType.QUOTE_CLOSE,
-        ]],
-        [/"/, TokenType.STR_LITERAL],
-      ],
+        rawString: [
+          [/[^"]+/, TokenType.STR_LITERAL], // characters before the closing quote
+          [/(")(#)/, [
+            { token: TokenType.RAW_STR_CLOSE, next: '@pop' },
+            TokenType.QUOTE_CLOSE,
+          ]],
+          [/"/, TokenType.STR_LITERAL],
+        ],
 
-      function: [
-        { include: '@lhs' },
+        function: [
+          { include: '@lhs' },
 
-        [/\)/, { token: TokenType.PAREN_CLOSE, bracket: '@close', next: '@pop' }],
-      ],
-    },
-  } as MonarchLanguage)
+          [/\)/, { token: TokenType.PAREN_CLOSE, bracket: '@close', next: '@pop' }],
+        ],
+      },
+    } as MonarchLanguage),
+  )
 
-  monaco.languages.registerCompletionItemProvider(languageId, {
+  disposables.push(
+    monaco.languages.registerCompletionItemProvider(languageId, {
     // additional characters to trigger the following function
-    triggerCharacters: ['.', '*', '"'],
+      triggerCharacters: ['.', '*', '"'],
 
-    // function to generate object autocompletion
-    provideCompletionItems: async (...args) => {
-      if (!provideCompletionItems) {
-        return { suggestions: [] }
-      }
-      return provideCompletionItems(...args)
-    },
-  })
+      // function to generate object autocompletion
+      provideCompletionItems: async (...args) => {
+        if (!provideCompletionItems) {
+          return { suggestions: [] }
+        }
+        return provideCompletionItems(...args)
+      },
+    }),
+  )
 
-  monaco.languages.setLanguageConfiguration(languageId, {
-    brackets: [['(', ')']],
-    autoClosingPairs: [
-      { open: '(', close: ')' },
-      { open: '"', close: '"', notIn: [TokenType.STR_LITERAL] },
-    ],
-  })
+  disposables.push(
+    monaco.languages.setLanguageConfiguration(languageId, {
+      brackets: [['(', ')']],
+      autoClosingPairs: [
+        { open: '(', close: ')' },
+        { open: '"', close: '"', notIn: [TokenType.STR_LITERAL] },
+      ],
+    }),
+  )
+
+  languageDisposables[languageId] = () => {
+    while (disposables.length > 0) {
+      disposables.pop()?.dispose()
+    }
+    delete languageDisposables[languageId]
+  }
 
   return { languageId }
 }
+
+export const tokenize = monaco.editor.tokenize
