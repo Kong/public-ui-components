@@ -1,133 +1,99 @@
 <template>
-  <KCard
-    class="redis-config-card"
-    :title="t('redis.title')"
-  >
-    <div class="redis-config-radio-group">
-      <KRadio
-        v-model="usePartial"
-        card
-        card-orientation="horizontal"
-        data-testid="shared-redis-config"
-        :description="t('redis.shared_configuration.description')"
-        :label="t('redis.shared_configuration.label')"
-        :selected-value="true"
-      >
-        <KBadge appearance="success">
-          Recommended
-        </KBadge>
-      </KRadio>
-      <KRadio
-        v-model="usePartial"
-        card
-        card-orientation="horizontal"
-        :description="t('redis.dedicated_configuration.description')"
-        :label="t('redis.dedicated_configuration.label')"
-        :selected-value="false"
+  <div>
+    <div v-if="isCustomPlugin">
+      <KAlert :message="t('redis.custom_plugin.alert')" />
+      <RedisConfigSelect
+        :default-redis-config-item="selectedRedisConfigItem"
+        :on-redis-config-selected="redisConfigSelected"
       />
     </div>
-    <div
-      v-if="usePartial"
-      class="shared-redis-config"
-    >
-      <div class="shared-redis-config-title">
-        {{ t('redis.shared_configuration.title') }}
-      </div>
-      <KSelect
-        v-model="selectedRedisConfigItem"
-        data-testid="redis-config-select"
-        enable-filtering
-        :filter-function="() => true"
-        :items="availableRedisConfigs"
-        :loading="loadingRedisConfigs"
-        :placeholder="t('redis.shared_configuration.selector.placeholder')"
-        @change="(item) => redisConfigSelected(item?.value)"
-        @query-change="debouncedRedisConfigsQuery"
-      >
-        <template #selected-item-template="{ item }">
-          <div class="selected-redis-config">
-            {{ (item as SelectItem).name }}
-          </div>
-        </template>
-        <template #item-template="{ item }">
-          <div class="plugin-form-redis-configuration-dropdown-item">
-            <span class="select-item-name">{{ item.name }}</span>
-            <KBadge
-              appearance="info"
-              class="select-item-label"
-            >
-              {{ item.type }}
-            </KBadge>
-          </div>
-        </template>
-        <template #empty>
-          <div class="empty-redis-config">
-            {{ t('redis.shared_configuration.empty_state') }}
-          </div>
-        </template>
-        <template #dropdown-footer-text>
-          <div
-            class="new-redis-config-area"
-            @click="$emit('showNewPartialModal')"
-          >
-            <AddIcon :size="KUI_ICON_SIZE_20" />
-            <span>{{ t('redis.shared_configuration.create_new_configuration') }}</span>
-          </div>
-        </template>
-      </KSelect>
-      <RedisConfigCard
-        v-if="selectedRedisConfig"
-        :config-fields="selectedRedisConfig"
-        :plugin-redis-fields="field.fields"
-      />
-    </div>
-    <div
+    <KCard
       v-else
-      class="dedicated-redis-config"
+      class="redis-config-card"
+      :title="t('redis.title')"
     >
-      <div class="dedicated-redis-config-title">
-        {{ t('redis.dedicated_configuration.title') }}
-      </div>
-      <component
-        :is="tag"
-      >
-        <template
-          v-for="field in field.fields"
-          :key="field.model"
+      <div class="redis-config-radio-group">
+        <KRadio
+          v-model="usePartial"
+          card
+          card-orientation="horizontal"
+          data-testid="shared-redis-config"
+          :description="t('redis.shared_configuration.description')"
+          :label="t('redis.shared_configuration.label')"
+          :selected-value="true"
         >
-          <form-group
-            v-if="fieldVisible(field)"
-            ref="children"
-            :errors="errors"
-            :field="field"
-            :model="model"
-            :options="options"
-            :vfg="vfg"
-            @model-updated="onModelUpdated"
-            @refresh-model="onRefreshModel"
-            @validated="onFieldValidated"
-          />
-        </template>
-      </component>
-    </div>
-  </KCard>
+          <KBadge appearance="success">
+            {{ t('redis.shared_configuration.badge') }}
+          </KBadge>
+        </KRadio>
+        <KRadio
+          v-model="usePartial"
+          card
+          card-orientation="horizontal"
+          :description="t('redis.dedicated_configuration.description')"
+          :label="t('redis.dedicated_configuration.label')"
+          :selected-value="false"
+        />
+      </div>
+      <div
+        v-if="usePartial"
+        class="shared-redis-config"
+      >
+        <RedisConfigSelect
+          :default-redis-config-item="selectedRedisConfigItem"
+          :on-redis-config-selected="redisConfigSelected"
+        />
+        <RedisConfigCard
+          v-if="selectedRedisConfig"
+          :config-fields="selectedRedisConfig"
+          :plugin-redis-fields="field.fields"
+        />
+      </div>
+      <div
+        v-else
+        class="dedicated-redis-config"
+      >
+        <div class="dedicated-redis-config-title">
+          {{ t('redis.dedicated_configuration.title') }}
+        </div>
+        <component
+          :is="tag"
+        >
+          <template
+            v-for="field in field.fields"
+            :key="field.model"
+          >
+            <form-group
+              v-if="fieldVisible(field)"
+              ref="children"
+              :errors="errors"
+              :field="field"
+              :model="model"
+              :options="options"
+              :vfg="vfg"
+              @model-updated="onModelUpdated"
+              @refresh-model="onRefreshModel"
+              @validated="onFieldValidated"
+            />
+          </template>
+        </component>
+      </div>
+    </KCard>
+  </div>
 </template>
 
 <script setup lang="ts">
 import {
   useAxios,
-  useDebouncedFilter,
   type KongManagerBaseFormConfig,
   type KongManagerBaseTableConfig,
   type KonnectBaseFormConfig,
   type KonnectBaseTableConfig,
 } from '@kong-ui-public/entities-shared'
-import type { SelectItem } from '@kong/kongponents'
-import { AddIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
 import { computed, onBeforeMount, ref, inject, watch } from 'vue'
 import formGroup from './FormGroup.vue'
 import RedisConfigCard from './RedisConfigCard.vue'
+import RedisConfigSelect from './RedisConfigSelect.vue'
 
 import isFunction from 'lodash-es/isFunction'
 import isNil from 'lodash-es/isNil'
@@ -195,7 +161,8 @@ const emits = defineEmits<{
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-
+// if the plugin is custom, show redis configuration selector instead of the whole card
+const isCustomPlugin = computed(() => props.field.pluginType === 'custom')
 const usePartial = ref(false)
 const selectedRedisConfigItem = ref()
 const selectedRedisConfig = ref(null)
@@ -247,19 +214,6 @@ const redisConfigSelected = async (val: string | number | undefined) => {
   }
 }
 
-const {
-  debouncedQueryChange: debouncedRedisConfigsQuery,
-  loading: loadingRedisConfigs,
-  // error: redisConfigsFetchError,
-  loadItems: loadConfigs,
-  results: redisConfigsResults,
-} = useDebouncedFilter(formConfig!, endpoints[formConfig!.app].getAll, undefined, {
-  fetchedItemsKey: 'data',
-  searchKeys: ['id', 'name'],
-})
-
-const availableRedisConfigs = computed((): SelectItem[] => redisConfigsResults.value?.map(el => ({ label: el.id, name: el.name, value: el.id })))
-
 const onModelUpdated = (model: any, schema: any) => {
   redisFieldsSaved.value = { ...redisFieldsSaved.value, [schema]: model }
   emits('modelUpdated', model, schema)
@@ -292,7 +246,6 @@ onBeforeMount(async () => {
     }
     return acc
   }, {})
-  await loadConfigs()
   if (props?.model?.partials?.[0]?.id) {
     const selectedPartialId = props.model.partials[0].id
     usePartial.value = true
@@ -303,7 +256,11 @@ onBeforeMount(async () => {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+:deep(.form-group:last-child) {
+  margin-bottom: 0 !important;
+}
+
 .redis-config-card {
   margin-bottom: $kui-space-60;
 
@@ -318,10 +275,6 @@ onBeforeMount(async () => {
     display: flex;
     gap: $kui-space-10;
     pointer-events: auto;
-  }
-
-  :deep(.form-group:last-child) {
-    margin-bottom: 0;
   }
 
   .plugin-form-redis-configuration-dropdown-item {
@@ -343,16 +296,6 @@ onBeforeMount(async () => {
   .plugin-form-selected-redis-config {
     font-weight: $kui-font-weight-bold;
     line-height: $kui-line-height-40;
-  }
-}
-
-.shared-redis-config {
-  margin-top: $kui-space-60;
-
-  .shared-redis-config-title {
-    font-weight: $kui-font-weight-semibold;
-    line-height: $kui-line-height-30;
-    margin-bottom: $kui-space-40;
   }
 }
 

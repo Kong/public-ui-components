@@ -378,7 +378,7 @@ const advancedSchema = computed(() => {
 
   return {
     endsWithStrategy: { fields: endsWithStrategy },
-    redis: { fields: [{ fields: redis, id: '_redis', model: 'redis_partial' }] }, // TODO: replace with real redis partial model name
+    redis: { fields: [{ fields: redis, id: '_redis', model: 'redis_partial' }] },
     afterStrategy: { fields: afterStrategy },
   }
 })

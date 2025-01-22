@@ -905,6 +905,8 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }
   })
 
+  if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
+
   return initialFormSchema
 }
 
