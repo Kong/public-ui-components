@@ -20,6 +20,7 @@
       :config="konnectConfig"
       :partial-id="partialId"
       :slidout-top-offset="0"
+      @cancel="handleKonnectModalClose"
       @error="onError"
       @update="onUpdate"
       @updated="onUpdated"
@@ -52,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import { RedisConfigurationForm } from '../../src'
@@ -63,7 +64,6 @@ import type {
 } from '../../src'
 
 import type { AxiosError } from 'axios'
-import { nextTick } from 'process'
 
 const route = useRoute()
 const router = useRouter()
