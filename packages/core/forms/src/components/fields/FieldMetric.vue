@@ -69,7 +69,7 @@ export default {
 
 .field-dropdown {
   .title {
-    align-items:center;
+    align-items: center;
     background-color: $kui-color-background-neutral-weakest;
     border-bottom: 1px solid #eee;
     cursor: pointer;
