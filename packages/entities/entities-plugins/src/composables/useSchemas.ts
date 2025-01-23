@@ -62,6 +62,11 @@ export interface UseSchemasOptions {
    * @defaultValue false
    */
   credential?: boolean
+  /**
+   * Whether to enable the Redis partial in form.
+   * @defaultValue false
+   */
+  enableRedisPartial?: boolean
 }
 
 /** Sorts non-config fields and place them at the top */
@@ -273,7 +278,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       if (metadata?.useLegacyForm) {
         for (const field of formSchema.fields!) {
           // We group redis fields separately
-          if (isRedisField(field)) {
+          if (options?.enableRedisPartial && isRedisField(field)) {
             redisFields.push(field)
             continue
           }
@@ -285,7 +290,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
           fields: redisFields,
           model: 'redis_partial',
           pluginType: currentSchema._isCustomPlugin ? 'custom' : 'bundled',
-          order: -1, // Place redis fields at the top of the advanced fields
         })
       }
 
@@ -330,7 +334,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       }
       for (const field of formSchema.fields!) {
         // We group redis fields separately
-        if (isRedisField(field)) {
+        if (options?.enableRedisPartial && isRedisField(field)) {
           redisFields.push(field)
           continue
         }

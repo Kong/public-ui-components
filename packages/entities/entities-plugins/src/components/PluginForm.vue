@@ -45,6 +45,7 @@
         :config="config"
         :credential="treatAsCredential"
         :editing="formType === EntityBaseFormType.Edit"
+        :enable-redis-partial="props.enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
         :record="record || undefined"
@@ -172,15 +173,15 @@ import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 
 const emit = defineEmits<{
-  (e: 'cancel'): void,
-  (e: 'error:fetch-schema', error: AxiosError): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
-  (e: 'update', data: Record<string, any>): void,
+  (e: 'cancel'): void
+  (e: 'error:fetch-schema', error: AxiosError): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
+  (e: 'update', data: Record<string, any>): void
   (e: 'model-updated',
     payload: {
-      model: Record<string, any>,
-      data: Record<string, any>,
+      model: Record<string, any>
+      data: Record<string, any>
       resourceEndpoint: string
     }
   ): void
@@ -281,6 +282,13 @@ const props = defineProps({
   schema: {
     type: Object as PropType<Record<string, any>>,
     default: null,
+  },
+  /**
+   * Control if the redis partial is enabled for plugins.
+   */
+  enableRedisPartial: {
+    type: Boolean,
+    default: false,
   },
 })
 
