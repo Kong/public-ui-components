@@ -34,6 +34,7 @@
 
       <VueFormGenerator
         v-if="!sharedFormName && (formModel.id && editing || !editing)"
+        :enable-redis-partial="props.enableRedisPartial"
         :model="formModel"
         :options="formOptions"
         :schema="formSchema"
@@ -181,6 +182,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Control if the redis partial is enabled for plugins.
+   */
+  enableRedisPartial: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -188,6 +196,7 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { parseSchema } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,
   credential: props.credential,
+  enableRedisPartial: props.enableRedisPartial,
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
