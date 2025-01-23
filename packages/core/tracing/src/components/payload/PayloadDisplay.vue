@@ -148,10 +148,10 @@ const payloadContent = computed(() => {
 
     :deep(.k-code-block .code-block-content .highlighted-code-block) {
       overflow: visible;
-    }
 
-    :deep(.k-code-block .code-block-content .highlighted-code-block .line-number-rows .line) {
-      box-sizing: border-box;
+      .line-number-rows .line {
+        box-sizing: border-box;
+      }
     }
   }
 }
