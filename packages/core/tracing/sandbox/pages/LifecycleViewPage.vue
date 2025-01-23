@@ -1,5 +1,7 @@
 <template>
-  <LifecycleView :root-span="spanTrees.roots[0]" />
+  <div class="lifecycle-view-wrapper">
+    <LifecycleView :root-span="spanTrees.roots[0]" />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -11,7 +13,8 @@ const spanTrees = computed(() => buildSpanTrees(mergeSpansInTraceBatches(traceBa
 </script>
 
 <style lang="scss" scoped>
-.controls {
-  margin-bottom: 16px;
+.lifecycle-view-wrapper {
+  width: 100vw;
+  height: 100vh;
 }
 </style>
