@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.1.0...@kong-ui-public/analytics-utilities@6.1.1) (2025-01-23)
+
+
+### Bug Fixes
+
+* make sure timeperiods from the singleton map is cloned ([#1912](https://github.com/Kong/public-ui-components/issues/1912)) ([5c95099](https://github.com/Kong/public-ui-components/commit/5c95099141d357edf6e0722f6740e7a154a06991))
+
+
+
+
+
 # [6.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.0.0...@kong-ui-public/analytics-utilities@6.1.0) (2025-01-23)
 
 
