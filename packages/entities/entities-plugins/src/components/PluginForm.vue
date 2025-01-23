@@ -45,6 +45,7 @@
         :config="config"
         :credential="treatAsCredential"
         :editing="formType === EntityBaseFormType.Edit"
+        :enable-redis-partial="props.enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
         :record="record || undefined"
@@ -271,6 +272,13 @@ const props = defineProps({
    * Control if the vault secret picker is enabled for applicable fields. (referenceable = true)
    */
   enableVaultSecretPicker: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Control if the redis partial is enabled for plugins.
+   */
+  enableRedisPartial: {
     type: Boolean,
     default: false,
   },

@@ -12,7 +12,7 @@
         :key="field.model"
       >
         <form-redis
-          v-if="field.model === 'redis_partial'"
+          v-if="field.model === 'redis_partial' && enableRedisPartial"
           :errors="errors"
           :field="field"
           :model="model"
@@ -107,7 +107,7 @@
               :key="field.model"
             >
               <form-redis
-                v-if="field.model === 'redis_partial'"
+                v-if="field.model === 'redis_partial' && enableRedisPartial"
                 :errors="errors"
                 :field="field"
                 :model="model"
@@ -253,6 +253,11 @@ export default {
       validator: function(value) {
         return value.length > 0
       },
+    },
+
+    enableRedisPartial: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['validated', 'modelUpdated', 'refreshModel', 'partialToggled', 'showNewPartialModal'],
