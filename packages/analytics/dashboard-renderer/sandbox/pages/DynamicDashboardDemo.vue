@@ -24,13 +24,14 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardConfig, DashboardRendererContext } from '../../src'
-import { dashboardConfigSchema, DashboardRenderer } from '../../src'
+import type { DashboardRendererContext } from '../../src'
+import { DashboardRenderer } from '../../src'
 import { computed, ref, inject } from 'vue'
 import Ajv from 'ajv'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
+import { type DashboardConfig, dashboardConfigSchema } from '@kong-ui-public/analytics-utilities'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
