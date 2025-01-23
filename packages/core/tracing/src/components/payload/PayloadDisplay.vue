@@ -146,7 +146,11 @@ const payloadContent = computed(() => {
     padding: $kui-space-60 0;
     width: 100%;
 
-    :deep(.k-code-block .code-block-content .line-number-rows .line) {
+    :deep(.k-code-block .code-block-content .highlighted-code-block) {
+      overflow: visible;
+    }
+
+    :deep(.k-code-block .code-block-content .highlighted-code-block .line-number-rows .line) {
       box-sizing: border-box;
     }
   }
