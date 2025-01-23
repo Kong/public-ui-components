@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.0.0...@kong-ui-public/analytics-utilities@6.1.0) (2025-01-23)
+
+
+### Features
+
+* add response/request size sum aggregations ([#1911](https://github.com/Kong/public-ui-components/issues/1911)) ([23b391e](https://github.com/Kong/public-ui-components/commit/23b391e78636a8023e6b2e2c61f845d3db0d293d))
+
+
+
+
+
 # [6.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.12.0...@kong-ui-public/analytics-utilities@6.0.0) (2025-01-15)
 
 
