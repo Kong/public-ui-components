@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.71](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.70...@kong-ui-public/entities-key-sets@3.5.71) (2025-01-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
 ## [3.5.70](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.69...@kong-ui-public/entities-key-sets@3.5.70) (2025-01-20)
 
 

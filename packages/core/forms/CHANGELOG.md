@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.5...@kong-ui-public/forms@4.10.6) (2025-01-23)
+
+
+### Bug Fixes
+
+* **stylelint:** add spacing rules ([#1910](https://github.com/Kong/public-ui-components/issues/1910)) ([e9cbce5](https://github.com/Kong/public-ui-components/commit/e9cbce528b1042482306d1ab5f3ef17ae77d9b2f))
+
+
+
+
+
 ## [4.10.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.4...@kong-ui-public/forms@4.10.5) (2025-01-20)
 
 
