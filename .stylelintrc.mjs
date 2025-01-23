@@ -20,8 +20,7 @@ export default {
     '@stylistic/indentation': [2, { baseIndentLevel: 0 }],
     // Only allow @kong/design-tokens or `--kong-ui-*` CSS custom properties
     'custom-property-pattern': [
-      // TODO: Remove allowed `K` prefix here once Kongponents theming variables are no longer supported
-      '^(kui-|kong-ui-|K).+$',
+      '^(kui-|kong-ui-).+$',
       {
         message: "Expected custom property \"%s\" to be sourced from @kong/design-tokens with prefix '--kui-' or to have prefix '--kong-ui-'",
       },
@@ -29,6 +28,8 @@ export default {
     'custom-property-no-missing-var-function': true,
     'rule-empty-line-before': ['always', { ignore: ['after-comment', 'first-nested'] }],
     '@stylistic/block-opening-brace-space-before': 'always',
+    '@stylistic/declaration-colon-space-after': 'always',
+    '@stylistic/media-feature-colon-space-after': 'always',
     // Disable the following rules
     'no-descending-specificity': null,
   },
