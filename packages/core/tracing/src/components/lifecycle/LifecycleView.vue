@@ -25,7 +25,10 @@
         <span>{{ fmt(props.rootSpan.durationNano) }}</span>
       </div>
 
-      <Controls :show-interactive="false" />
+      <Controls
+        :fit-view-params="fitViewParams"
+        :show-interactive="false"
+      />
       <Background />
     </VueFlow>
   </div>
@@ -38,6 +41,7 @@ import {
   Position,
   useVueFlow,
   VueFlow,
+  type FitViewParams,
   type GraphNode,
   type NodeProps,
 } from '@vue-flow/core'
@@ -73,6 +77,10 @@ const {
 } = useVueFlow()
 
 const { findNode, fitView } = useVueFlow()
+
+const fitViewParams: FitViewParams = {
+  maxZoom: 1,
+}
 
 /**
  * This function takes a list of nodes, computes the positions, and updated the nodes in-place.
@@ -222,7 +230,7 @@ onNodesInitialized((nodes) => {
     updateNode(diff.id, diff)
   }
   nextTick(() => {
-    fitView()
+    fitView(fitViewParams)
   })
 })
 
@@ -243,7 +251,7 @@ let resizeObserver: ResizeObserver | undefined
 onMounted(() => {
   if (rootRef.value) {
     resizeObserver = new ResizeObserver(() => {
-      fitView()
+      fitView(fitViewParams)
     })
     resizeObserver.observe(rootRef.value)
   }

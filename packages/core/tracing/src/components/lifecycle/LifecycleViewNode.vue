@@ -1,5 +1,5 @@
 <template>
-  <div class="lifecycle-view-node">
+  <div :class="['lifecycle-view-node', { client: data.type === LifecycleNodeType.CLIENT }]">
     <KBadge
       v-if="data.badge"
       appearance="neutral"
@@ -79,7 +79,7 @@ const tooltipText = computed(() => props.data.type === 'upstream' ? 'This is an 
 <style lang="scss" scoped>
 .client-handle {
   background: $kui-color-background !important;
-  font-size: $kui-font-size-10;
+  font-size: $kui-font-size-20;
   height: auto;
   padding: 0 $kui-space-10;
   width: auto;
@@ -94,6 +94,10 @@ const tooltipText = computed(() => props.data.type === 'upstream' ? 'This is an 
   justify-content: center;
   min-height: 60px;
   padding: $kui-space-50;
+
+  &.client {
+    min-width: 90px;
+  }
 
   .badge {
     margin-bottom: $kui-space-20;
