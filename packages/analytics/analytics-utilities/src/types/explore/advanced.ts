@@ -48,11 +48,13 @@ export const exploreAggregations = [
   'response_size_p99',
   'response_size_p95',
   'response_size_p50',
+  'response_size_average',
+  'response_size_sum',
   'request_size_p99',
   'request_size_p95',
   'request_size_p50',
   'request_size_average',
-  'response_size_average',
+  'request_size_sum',
 ] as const
 
 export type ExploreAggregations = typeof exploreAggregations[number]
