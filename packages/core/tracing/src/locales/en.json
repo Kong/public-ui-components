@@ -3,6 +3,27 @@
     "content": "Content of the header",
     "title": "Title of the header"
   },
+  "lifecycle": {
+    "request": "Request",
+    "response": "Response",
+    "total_latency": "Total latency"
+  },
+  "payload": {
+    "request_body": "Request body",
+    "request_headers": "Request headers",
+    "response_body": "Response body",
+    "response_headers": "Response headers"
+  },
+  "request_info": {
+    "attributes": {
+      "latency": "Latency",
+      "start_time": "Start time",
+      "status_code": "Status code",
+      "upstream_status_code": "Upstream status code"
+    },
+    "not_available": "N/A",
+    "title": "Information"
+  },
   "span_attributes": {
     "labels": {
       "end_time": "End time",

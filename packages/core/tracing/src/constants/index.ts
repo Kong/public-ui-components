@@ -1,3 +1,6 @@
+export * from './kong'
+export * from './lifecycle'
 export * from './spans'
-export * from './trace-viewer'
+export * from './trace'
 export * from './waterfall'
+
