@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.1.1...@kong-ui-public/analytics-utilities@6.2.0) (2025-01-27)
+
+
+### Features
+
+* **dashboard-renderer:** show badge for timeframe overrides [MA-3562] ([#1916](https://github.com/Kong/public-ui-components/issues/1916)) ([cd1524f](https://github.com/Kong/public-ui-components/commit/cd1524f838082f46f4982b71fce62e593fd01954))
+
+
+
+
+
 ## [6.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.1.0...@kong-ui-public/analytics-utilities@6.1.1) (2025-01-23)
 
 

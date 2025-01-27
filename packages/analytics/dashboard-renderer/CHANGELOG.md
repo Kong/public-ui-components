@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.34.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.33.9...@kong-ui-public/dashboard-renderer@0.34.0) (2025-01-27)
+
+
+### Features
+
+* **dashboard-renderer:** show badge for timeframe overrides [MA-3562] ([#1916](https://github.com/Kong/public-ui-components/issues/1916)) ([cd1524f](https://github.com/Kong/public-ui-components/commit/cd1524f838082f46f4982b71fce62e593fd01954))
+
+
+
+
+
 ## [0.33.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.33.8...@kong-ui-public/dashboard-renderer@0.33.9) (2025-01-23)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
