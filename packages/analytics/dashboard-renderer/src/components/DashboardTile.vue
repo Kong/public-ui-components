@@ -14,12 +14,15 @@
         {{ definition.chart.chartTitle }}
       </div>
       <div
-        v-if="canShowKebabMenu"
+        v-if="canShowKebabMenu || badgeData"
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
+        <KBadge v-if="badgeData">
+          {{ badgeData }}
+        </KBadge>
         <EditIcon
-          v-if="context.editable"
+          v-if="canShowKebabMenu && context.editable"
           class="edit-icon"
           :color="KUI_COLOR_TEXT_NEUTRAL"
           :data-testid="`edit-tile-${tileId}`"
@@ -27,6 +30,7 @@
           @click="editTile"
         />
         <KDropdown
+          v-if="canShowKebabMenu"
           class="dropdown"
           :data-testid="`chart-action-menu-${tileId}`"
           :kpop-attributes="{ placement: 'bottom-end' }"
@@ -89,7 +93,7 @@
 </template>
 <script setup lang="ts">
 import type { DashboardRendererContextInternal } from '../types'
-import type { DashboardTileType, TileDefinition } from '@kong-ui-public/analytics-utilities'
+import { type DashboardTileType, formatTime, type TileDefinition, TimePeriods } from '@kong-ui-public/analytics-utilities'
 import { type Component, computed, inject, ref } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
@@ -105,6 +109,7 @@ import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon } from '@kong/icons'
 import { msToGranularity, type AiExploreAggregations, type AiExploreQuery, type AnalyticsBridge, type ExploreAggregations, type ExploreQuery, type ExploreResultV4, type QueryableAiExploreDimensions, type QueryableExploreDimensions, type TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
+import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -150,6 +155,7 @@ const exploreLink = computed(() => {
 })
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
+
 const canShowKebabMenu = computed(() => hasKebabMenuAccess && !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
@@ -178,6 +184,27 @@ const componentData = computed(() => {
       refreshCounter: props.refreshCounter,
     },
   }
+})
+
+const badgeData = computed<string | null>(() => {
+  const timeRange = props.definition.query?.time_range
+
+  if (timeRange?.type === 'relative') {
+    const timeframe = TimePeriods.get(TIMEFRAME_LOOKUP[timeRange.time_range])
+    if (timeframe) {
+      return timeframe.display
+    }
+
+    console.warn('Did not recognize the given relative time range:', timeRange.time_range)
+    return timeRange.time_range
+  } else if (timeRange?.type === 'absolute') {
+    // Fall back to UTC if `tz` isn't explicitly specified because this gives the best results for dates without times.
+    // When we support fine-grained absolute time, this assumption may need to be adjusted.
+    const tz = timeRange.tz || 'Etc/UTC'
+    return `${formatTime(timeRange.start, { short: true, tz })} - ${formatTime(timeRange.end, { short: true, tz })}`
+  }
+
+  return null
 })
 
 const chartDataGranularity = computed(() => {

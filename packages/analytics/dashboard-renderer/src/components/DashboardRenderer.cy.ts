@@ -6,6 +6,7 @@ import type {
   DatasourceAwareQuery,
   ExploreFilter,
   ExploreResultV4,
+  TileConfig,
   Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import {
@@ -583,5 +584,190 @@ describe('<DashboardRenderer />', () => {
       // Check that it replaces the description token.
       cy.get('.header-description').should('have.text', 'Last 7-Day Summary')
     })
+  })
+
+  it('renders tile timeframe overrides in a badge', () => {
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '24h',
+        },
+      },
+      config: {
+        gridSize: {
+          cols: 6,
+          rows: 4,
+        },
+        tileHeight: 167,
+        tiles: [
+          {
+            definition: {
+              chart: {
+                type: 'timeseries_line',
+                chartTitle: 'Total Traffic over Time',
+              },
+              query: {
+                metrics: [
+                  'request_count',
+                ],
+                dimensions: [
+                  'time',
+                ],
+                filters: [{
+                  dimension: 'control_plane',
+                  type: 'in',
+                  values: ['default_uuid'],
+                }],
+                time_range: {
+                  // This should still render a badge even though it matches the global context.
+                  type: 'relative',
+                  time_range: '24h',
+                },
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 0,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
+          {
+            definition: {
+              chart: {
+                type: 'timeseries_line',
+                chartTitle: 'Latency Breakdown over Time',
+              },
+              query: {
+                metrics: [
+                  'response_latency_p99',
+                  'response_latency_p95',
+                  'response_latency_p50',
+                ],
+                dimensions: [
+                  'time',
+                ],
+                time_range: {
+                  type: 'absolute',
+                  start: '2024-01-01',
+                  end: '2024-02-01',
+                },
+              },
+            },
+            layout: {
+              position: {
+                col: 3,
+                row: 0,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
+          {
+            definition: {
+              chart: {
+                type: 'timeseries_line',
+                chartTitle: 'Total Traffic over Time Global Timeframe',
+              },
+              query: {
+                metrics: [
+                  'request_count',
+                ],
+                dimensions: [
+                  'time',
+                ],
+                filters: [],
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 2,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
+          {
+            definition: {
+              chart: {
+                type: 'top_n',
+                chartTitle: 'TopN',
+              },
+              query: {
+                metrics: [
+                  'request_count',
+                ],
+                dimensions: [
+                  'route',
+                ],
+                filters: [],
+                time_range: {
+                  type: 'relative',
+                  time_range: '7d',
+                },
+              },
+            },
+            layout: {
+              position: {
+                col: 3,
+                row: 2,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
+        ],
+      },
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    cy.get('[data-testid="tile-0"] .tile-actions .k-badge').should('have.text', 'Last 24 hours')
+    cy.get('[data-testid="tile-1"] .tile-actions .k-badge').should('have.text', 'Jan 01, 2024 - Feb 01, 2024')
+    cy.get('[data-testid="tile-2"] .tile-actions .k-badge').should('not.exist')
+    cy.get('[data-testid="tile-3"] .tile-actions .k-badge').should('have.text', 'Last 7 days')
+
+    cy.get('@fetcher').should('have.callCount', 4)
+
+    // Global time + one overridden tile
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
+      query: {
+        time_range: { time_range: '24h' },
+      },
+    }))
+
+    // Absolute time overridden tile
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
+      query: {
+        time_range: { type: 'absolute', start: '2024-01-01', end: '2024-02-01' },
+      },
+    }))
+
+    // Relative time overridden tile
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
+      query: {
+        time_range: { type: 'relative', time_range: '7d' },
+      },
+    }))
   })
 })

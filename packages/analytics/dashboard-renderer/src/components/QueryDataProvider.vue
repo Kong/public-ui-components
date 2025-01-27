@@ -43,6 +43,7 @@ import type {
   ExploreResultV4,
   FilterTypeMap,
   QueryDatasource,
+  TimeRangeV4,
   ValidDashboardQuery,
 } from '@kong-ui-public/analytics-utilities'
 import { stripUnknownFilters } from '@kong-ui-public/analytics-utilities'
@@ -109,6 +110,22 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
 
     const mergedFilters = deriveFilters(datasource, props.query.filters as FilterTypeMap[typeof datasource][], props.context.filters)
 
+    // TODO: the cast is necessary because TimeRangeV4 specifies date objects for absolute time ranges.
+    // If they're coming from a definition, they're strings; should clean this up as part of the dashboard type work.
+    let time_range = props.query.time_range as TimeRangeV4 | undefined
+
+    if (!time_range) {
+      time_range = {
+        ...props.context.timeSpec,
+        tz: props.context.tz,
+      }
+    } else if (!time_range.tz) {
+      time_range = {
+        ...time_range,
+        tz: props.context.tz,
+      }
+    }
+
     // TODO: similar to other places, consider adding a type guard to ensure the query
     // matches the datasource.  Currently, this block effectively pretends all queries
     // are advanced in order to make the types work out.
@@ -116,10 +133,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
       datasource: datasource as 'advanced',
       query: {
         ...rest as ExploreQuery,
-        time_range: {
-          ...props.context.timeSpec,
-          tz: props.context.tz,
-        },
+        time_range,
         filters: mergedFilters as ExploreFilter[],
       },
     }
