@@ -224,9 +224,9 @@ function handleMouseUp() {
     border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     display: flex;
     flex-direction: column;
-    margin: var(--kui-space-40, $kui-space-40);
+    margin: var(--kui-space-30, $kui-space-30);
     min-height: 24px;
-    padding-bottom: var(--kui-space-40, $kui-space-40);
+    padding-bottom: var(--kui-space-30, $kui-space-30);
 
     .title {
       font-size: var(--kui-font-size-30, $kui-font-size-30);
@@ -235,7 +235,7 @@ function handleMouseUp() {
 
     .subtitle {
       font-size: var(--kui-font-size-20, $kui-font-size-20);
-      margin-top: var(--kui-space-40, $kui-space-40);
+      margin-top: var(--kui-space-30, $kui-space-30);
     }
 
     .drag-icon {
@@ -245,57 +245,53 @@ function handleMouseUp() {
       top: 0;
     }
   }
-}
 
-ul.tooltip {
-  list-style: none;
-  margin: var(--kui-space-0, $kui-space-0);
-  max-height: 300px;
-  min-width: 250px;
-  overflow-y: var(--kui-space-auto, $kui-space-auto);
-  padding-left: var(--kui-space-0, $kui-space-0);
+  .tooltip {
+    list-style: none;
+    margin: var(--kui-space-30, $kui-space-30);
+    max-height: 300px;
+    min-width: 250px;
+    overflow-y: var(--kui-space-auto, $kui-space-auto);
+    padding-left: var(--kui-space-0, $kui-space-0);
 
-  // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
-  // stylelint-disable-next-line no-duplicate-selectors
-  & {
-    @include scrollbarBase;
-  }
-
-  li {
-    align-items: center;
-    display: flex;
-    font-size: var(--kui-font-size-30, $kui-font-size-30);
-    margin: var(--kui-space-40, $kui-space-40);
-  }
-
-  li:last-child {
-    padding-bottom: var(--kui-space-40, $kui-space-40);
-  }
-
-  .display-label {
-    flex: 1;
-    max-width: 75%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    &.empty {
-      font-style: italic;
+    // fixing mixed-decls deprecation: https://sass-lang.com/d/mixed-decls
+    // stylelint-disable-next-line no-duplicate-selectors
+    & {
+      @include scrollbarBase;
     }
-  }
 
-  .display-value {
-    margin-left: var(--kui-space-auto, $kui-space-auto);
-    padding-left: var(--kui-space-40, $kui-space-40);
-    white-space: nowrap;
-  }
+    li {
+      align-items: center;
+      display: flex;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
+    }
 
-  .square-marker {
-    display: inline-flex;
-    flex-direction: row;
-    height: 12px;
-    margin-right: var(--kui-space-30, $kui-space-30);
-    width: 12px;
+    .display-label {
+      flex: 1;
+      max-width: 75%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &.empty {
+        font-style: italic;
+      }
+    }
+
+    .display-value {
+      margin-left: var(--kui-space-auto, $kui-space-auto);
+      padding-left: var(--kui-space-40, $kui-space-40);
+      white-space: nowrap;
+    }
+
+    .square-marker {
+      display: inline-flex;
+      flex-direction: row;
+      height: 12px;
+      margin-right: var(--kui-space-30, $kui-space-30);
+      width: 12px;
+    }
   }
 }
 </style>
