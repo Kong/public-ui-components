@@ -6,5 +6,6 @@ export const mockingSchema: MockingSchema = {
     placeholder: 'Enter an API spec',
     type: 'textArea',
     rows: 10,
+    max: false,
   },
 }
