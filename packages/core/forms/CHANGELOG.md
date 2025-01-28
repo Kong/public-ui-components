@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.6...@kong-ui-public/forms@4.10.7) (2025-01-28)
+
+
+### Bug Fixes
+
+* **plugins:** mocking spec max length ([#1917](https://github.com/Kong/public-ui-components/issues/1917)) ([1b3c028](https://github.com/Kong/public-ui-components/commit/1b3c028e4721ce6e267bcce2e2f2657c1d7b5dd7))
+
+
+
+
+
 ## [4.10.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.5...@kong-ui-public/forms@4.10.6) (2025-01-23)
 
 
