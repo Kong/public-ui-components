@@ -38,6 +38,13 @@ Title for the empty state.
 
 Description for the empty state.
 
+#### `appearance`
+
+- type: `String`
+- default: `'primary'`
+
+Appearance of the empty state, component takes one of the following appearance values: `primary`, `secondary`
+
 #### `pricing`
 
 - type: `String`

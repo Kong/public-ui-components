@@ -12,7 +12,7 @@
         v-if="title || $slots.title"
         class="entity-empty-state-title"
       >
-        <h1 :class="appearance">
+        <h1 :class="Appearance">
           <slot name="title">
             {{ title }}
           </slot>
@@ -128,7 +128,7 @@ const props = defineProps({
     type: String as PropType<AppearanceTypes>,
     default: () => 'primary',
     validator: (value: AppearanceTypes): boolean => {
-      return Object.values(Appearances).indexOf(value) !== -1
+      return Appearances.includes(value)
     },
   },
   title: {
@@ -172,6 +172,16 @@ const { i18n: { t } } = composables.useI18n()
 
 const useCanCreate = ref(false)
 const showCreateButton = computed((): boolean => useCanCreate.value && !!props.actionButtonText)
+
+const Appearance = computed((): AppearanceTypes | [AppearanceTypes, string] => {
+  // If the appearance is invalid, output both to keep backwards compatibility
+  // in case some of the tests rely on the invalid appearance output
+  if (!Appearances.includes(props.appearance)) {
+    return ['primary', props.appearance]
+  }
+
+  return props.appearance
+})
 
 onBeforeMount(async () => {
   // Evaluate if the user has create permissions

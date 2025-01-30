@@ -5,7 +5,7 @@ export interface EmptyStateFeature {
 
 export type AppearanceTypes = 'primary' | 'secondary'
 
-export const Appearances = {
-  primary: 'primary',
-  secondary: 'secondary',
-}
+export const Appearances = [
+  'primary',
+  'secondary',
+]
