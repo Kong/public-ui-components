@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.9.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.4...@kong-ui-public/entities-plugins@9.9.5) (2025-01-30)
+
+
+### Bug Fixes
+
+* **plugins:** remove custom schema for request validator [km-923] ([#1920](https://github.com/Kong/public-ui-components/issues/1920)) ([46b8ff0](https://github.com/Kong/public-ui-components/commit/46b8ff0acbc39194b60eee89ed7110ef304bb9e0))
+
+
+
+
+
 ## [9.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.3...@kong-ui-public/entities-plugins@9.9.4) (2025-01-28)
 
 
