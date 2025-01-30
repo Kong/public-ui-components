@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.9.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.5...@kong-ui-public/entities-plugins@9.9.6) (2025-01-30)
+
+
+### Bug Fixes
+
+* **plugins:** oas validation schema ([#1922](https://github.com/Kong/public-ui-components/issues/1922)) ([71d9929](https://github.com/Kong/public-ui-components/commit/71d9929fbc113759f0162604139d6a70bf9db579))
+
+
+
+
+
 ## [9.9.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.4...@kong-ui-public/entities-plugins@9.9.5) (2025-01-30)
 
 
