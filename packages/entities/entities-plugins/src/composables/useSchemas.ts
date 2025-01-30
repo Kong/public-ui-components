@@ -12,6 +12,7 @@ import { dataDogSchema } from '../definitions/schemas/Datadog'
 import { graphqlRateLimitingAdvancedSchema } from '../definitions/schemas/GraphQLRateLimitingAdvanced'
 import { injectionProtectionSchema } from '../definitions/schemas/InjectionProtection'
 import { mockingSchema } from '../definitions/schemas/Mocking'
+import { oasValidationSchema } from '../definitions/schemas/OASValidation'
 import { preFunctionSchema } from '../definitions/schemas/PreFunction'
 import { rateLimitingSchema } from '../definitions/schemas/RateLimiting'
 import { requestTransformerAdvancedSchema } from '../definitions/schemas/RequestTransformerAdvanced'
@@ -141,10 +142,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     },
 
     'oas-validation': {
-      'config-api_spec': {
-        type: 'textArea',
-        rows: 15,
-      },
+      ...oasValidationSchema,
     },
 
     mocking: {
