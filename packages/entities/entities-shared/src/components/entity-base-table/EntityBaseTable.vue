@@ -89,7 +89,7 @@
       </template>
 
       <template
-        v-if="!query && !enableV2EmptyStates"
+        v-if="!query"
         #empty-state-action-icon
       >
         <AddIcon />
