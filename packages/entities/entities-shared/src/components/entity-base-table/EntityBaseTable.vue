@@ -54,7 +54,7 @@
       </template>
 
       <template
-        v-if="$slots['empty-state'] && enableV2EmptyStates"
+        v-if="$slots['empty-state']"
         #empty-state
       >
         <slot name="empty-state" />
@@ -239,14 +239,6 @@ const props = defineProps({
   hideToolbar: {
     type: Boolean,
     default: undefined,
-  },
-  /**
-   * Enables the new empty state design, this prop can be removed when
-   * the khcp-14756-empty-states-m2 FF is removed.
-   */
-  enableV2EmptyStates: {
-    type: Boolean,
-    default: false,
   },
 })
 
