@@ -12,7 +12,7 @@
         v-if="title || $slots.title"
         class="entity-empty-state-title"
       >
-        <h1>
+        <h1 :class="appearance">
           <slot name="title">
             {{ title }}
           </slot>
@@ -78,7 +78,10 @@
       </slot>
     </div>
 
-    <div class="entity-empty-state-card-container">
+    <div
+      v-if="features.length"
+      class="entity-empty-state-card-container"
+    >
       <template
         v-for="(feature, idx) in features"
         :key="feature"
@@ -118,9 +121,16 @@ import { type PropType, computed, ref, onBeforeMount } from 'vue'
 import { KButton } from '@kong/kongponents'
 import { BookIcon, AddIcon } from '@kong/icons'
 import composables from '../../composables'
-import type { EmptyStateFeature } from 'src/types/entity-empty-state'
+import { type EmptyStateFeature, type AppearanceTypes, Appearances } from '../../types/entity-empty-state'
 
 const props = defineProps({
+  appearance: {
+    type: String as PropType<AppearanceTypes>,
+    default: () => 'primary',
+    validator: (value: AppearanceTypes): boolean => {
+      return Object.values(Appearances).indexOf(value) !== -1
+    },
+  },
   title: {
     type: String,
     default: '',
@@ -209,6 +219,10 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
       gap: $kui-space-40;
       line-height: $kui-line-height-60;
       margin: $kui-space-0;
+
+      &.secondary {
+        font-size: $kui-font-size-50;
+      }
     }
   }
 
