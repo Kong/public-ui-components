@@ -54,9 +54,16 @@
       </template>
 
       <template
+        v-if="$slots['empty-state'] && enableV2EmptyStates"
+        #empty-state
+      >
+        <slot name="empty-state" />
+      </template>
+
+      <template
         v-for="(header, key) in tableHeaders"
         :key="key"
-        #[key]="{ row, rowKey, rowValue }"
+        #[key]="{ row, rowValue }"
       >
         <EntityBaseTableCell
           :key-name="String(key)"
@@ -82,7 +89,7 @@
       </template>
 
       <template
-        v-if="!query"
+        v-if="!query && !enableV2EmptyStates"
         #empty-state-action-icon
       >
         <AddIcon />
@@ -106,7 +113,6 @@ import type {
   InternalHeader,
   TableSortParams,
   TableErrorMessage,
-  TableStateParams,
 } from '../../types'
 import { AddIcon } from '@kong/icons'
 
@@ -233,6 +239,14 @@ const props = defineProps({
   hideToolbar: {
     type: Boolean,
     default: undefined,
+  },
+  /**
+   * Enables the new empty state design, this prop can be removed when
+   * the khcp-14756-empty-states-m2 FF is removed.
+   */
+  enableV2EmptyStates: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -388,6 +402,13 @@ const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): vo
 
   .toolbar-button-container {
     margin-left: auto;
+  }
+
+  // shared styles for entity empty state
+  :deep(.empty-state-icon-gateway) {
+    background-color: $kui-method-color-background-patch;
+    border-radius: $kui-border-radius-20;
+    padding: $kui-space-40;
   }
 }
 </style>

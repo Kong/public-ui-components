@@ -49,6 +49,31 @@
         </Teleport>
       </template>
 
+      <template
+        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        #empty-state
+      >
+        <EntityEmptyState
+          :action-button-text="t('consumers.list.toolbar_actions.new_consumer')"
+          appearance="secondary"
+          :can-create="() => canCreate()"
+          :description="t('consumers.list.empty_state_v2.description')"
+          learn-more
+          :title="t('consumers.list.empty_state_v2.title')"
+          @click:create="handleCreateClick"
+          @click:learn-more="$emit('click:learn-more')"
+        >
+          <template #image>
+            <div class="empty-state-icon-gateway">
+              <TeamIcon
+                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
+                :size="KUI_ICON_SIZE_50"
+              />
+            </div>
+          </template>
+        </EntityEmptyState>
+      </template>
+
       <!-- Column Formatting -->
       <template #username="{ rowValue }">
         <b>{{ getRowValue(rowValue) }}</b>
@@ -169,12 +194,14 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
-import { AddIcon } from '@kong/icons'
+import { AddIcon, TeamIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 import composables from '../composables'
 import endpoints from '../consumers-endpoints'
 import {
   EntityBaseTable,
   EntityDeleteModal,
+  EntityEmptyState,
   EntityFilter,
   EntityTypes,
   FetcherStatus,
@@ -202,6 +229,7 @@ import AddConsumerModal from './AddConsumerModal.vue'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
+  (e: 'click:learn-more'): void,
   (e: 'copy:success', payload: CopyEventPayload): void,
   (e: 'copy:error', payload: CopyEventPayload): void,
   (e: 'delete:success', consumer: EntityRow): void,
@@ -256,6 +284,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Enables the new empty state design, this prop can be removed when
+   * the khcp-14756-empty-states-m2 FF is removed.
+   */
+  enableV2EmptyStates: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18nT, i18n: { t } } = composables.useI18n()
@@ -278,6 +314,15 @@ const tableHeaders: BaseTableHeaders = fields
 const rowAttributes = (row: Record<string, any>) => ({
   'data-testid': row.username ?? row.custom_id ?? row.id,
 })
+
+const handleCreateClick = (): void => {
+  // if consumer is in consumer group, open add consumer modal
+  if (props.config.consumerGroupId) {
+    handleAddConsumerClick()
+  } else { // else go to create consumer page
+    router.push(props.config.createRoute)
+  }
+}
 
 /**
  * Fetcher & Filtering

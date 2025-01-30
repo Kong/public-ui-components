@@ -12,8 +12,12 @@
         "description": "Consumers are the end users of a service.",
         "title_for_consumer_group": "Configure a New Consumer"
       },
+      "empty_state_v2": {
+        "title": "Configure your first consumer",
+        "description": "Consumers represent users or apps accessing your APIs, allowing for tailored authentication and access control individually."
+      },
       "toolbar_actions": {
-        "new_consumer": "New Consumer"
+        "new_consumer": "New consumer"
       }
     },
     "title": "Consumers",
