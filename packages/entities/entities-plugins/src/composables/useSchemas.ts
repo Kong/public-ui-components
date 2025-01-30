@@ -15,7 +15,6 @@ import { mockingSchema } from '../definitions/schemas/Mocking'
 import { preFunctionSchema } from '../definitions/schemas/PreFunction'
 import { rateLimitingSchema } from '../definitions/schemas/RateLimiting'
 import { requestTransformerAdvancedSchema } from '../definitions/schemas/RequestTransformerAdvanced'
-import RequestValidatorSchema from '../definitions/schemas/RequestValidator'
 import { routeByHeaderSchema } from '../definitions/schemas/RouteByHeader'
 import { samlSchema } from '../definitions/schemas/SAML'
 import { statsDSchema } from '../definitions/schemas/StatsD'
@@ -186,10 +185,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'request-transformer-advanced': {
       ...requestTransformerAdvancedSchema,
-    },
-
-    'request-validator': {
-      ...RequestValidatorSchema,
     },
 
     zipkin: {

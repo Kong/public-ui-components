@@ -209,7 +209,6 @@ export interface CustomSchemas {
   'pre-function': CommonSchemaFields & Record<string, any>
   'post-function': CommonSchemaFields & Record<string, any>
   'request-transformer-advanced': CommonSchemaFields & Record<string, any>
-  'request-validator': CommonSchemaFields & Record<string, any>
   zipkin: CommonSchemaFields & Record<string, any>
   saml: SAMLSchema
   'oas-validation': OasValidationSchema
