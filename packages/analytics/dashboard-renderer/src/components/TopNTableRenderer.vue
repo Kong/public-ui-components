@@ -16,7 +16,7 @@
         v-if="props.chartOptions.entityLink"
         #name="{ record }"
       >
-        <EntityLink
+        <AsyncEntityLink
           :entity-link-data="{
             id: record.id,
             label: record.name,
@@ -31,18 +31,36 @@
 
 <script setup lang="ts">
 import type { RendererProps } from '../types'
-import type { TopNTableOptions } from '@kong-ui-public/analytics-utilities'
-import { CP_ID_TOKEN, ENTITY_ID_TOKEN } from '../constants'
+import type { AnalyticsBridge, TopNTableOptions } from '@kong-ui-public/analytics-utilities'
+import { CP_ID_TOKEN, ENTITY_ID_TOKEN, INJECT_QUERY_PROVIDER } from '../constants'
 import { TopNTable } from '@kong-ui-public/analytics-chart'
 import type { TopNTableRecord } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'
-import { EntityLink } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
-import '@kong-ui-public/entities-shared/dist/style.css'
+import { inject, defineAsyncComponent } from 'vue'
+import FallbackEntityLink from './FallbackEntityLink.vue'
 
 const props = defineProps<RendererProps<TopNTableOptions>>()
 const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
 const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
+
+const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
+
+// EntityLink is an optional component -- it might be available, or it might not be.
+// Attempt to fetch it from the analytics bridge.
+// We don't use `loader` / `errorComponent` here because Vue treats not finding the
+// component as an error, and spams the console accordingly.
+const AsyncEntityLink = defineAsyncComponent(async () => {
+  if (queryBridge?.fetchComponent) {
+    try {
+      return await queryBridge.fetchComponent('EntityLink')
+    } catch (e) {
+      return FallbackEntityLink
+    }
+  }
+
+  return FallbackEntityLink
+})
 
 const parseLink = (record: TopNTableRecord) => {
   if (props.chartOptions?.entityLink) {
