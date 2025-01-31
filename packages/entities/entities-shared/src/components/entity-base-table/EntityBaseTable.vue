@@ -409,12 +409,6 @@ const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): vo
     border-radius: $kui-border-radius-20;
     padding: $kui-space-40;
   }
-
-  :deep(.button-row) {
-    align-items: center;
-    display: flex;
-    gap: $kui-space-50;
-  }
 }
 </style>
 
