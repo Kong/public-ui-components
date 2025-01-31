@@ -34,29 +34,31 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <KButton
-            v-if="!showEmptyState && config.app === 'konnect'"
-            appearance="secondary"
-            class="open-learning-hub"
-            data-testid="consumers-learn-more-button"
-            icon
-            @click="$emit('click:learn-more')"
-          >
-            <BookIcon decorative />
-          </KButton>
-          <PermissionsWrapper :auth-function="() => canCreate()">
-            <!-- Hide Create button if table is empty -->
+          <div class="button-row">
             <KButton
-              appearance="primary"
-              data-testid="toolbar-add-consumer"
-              :size="useActionOutside ? 'medium' : 'large'"
-              :to="config.consumerGroupId ? undefined : config.createRoute"
-              @click="() => config.consumerGroupId ? handleAddConsumerClick() : undefined"
+              v-if="!showEmptyState && config.app === 'konnect'"
+              appearance="secondary"
+              class="open-learning-hub"
+              data-testid="consumers-learn-more-button"
+              icon
+              @click="$emit('click:learn-more')"
             >
-              <AddIcon />
-              {{ config.consumerGroupId ? t('consumers.actions.add_consumer') : t('consumers.list.toolbar_actions.new_consumer') }}
+              <BookIcon decorative />
             </KButton>
-          </PermissionsWrapper>
+            <PermissionsWrapper :auth-function="() => canCreate()">
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-consumer"
+                :size="useActionOutside ? 'medium' : 'large'"
+                :to="config.consumerGroupId ? undefined : config.createRoute"
+                @click="() => config.consumerGroupId ? handleAddConsumerClick() : undefined"
+              >
+                <AddIcon />
+                {{ config.consumerGroupId ? t('consumers.actions.add_consumer') : t('consumers.list.toolbar_actions.new_consumer') }}
+              </KButton>
+            </PermissionsWrapper>
+          </div>
         </Teleport>
       </template>
 
