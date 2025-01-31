@@ -114,6 +114,8 @@ defineProps({
 
   .app-page-info-section-content {
     background: $kui-color-background-neutral-weakest;
+    border-bottom-left-radius: $kui-border-radius-30;
+    border-bottom-right-radius: $kui-border-radius-30;
     border-top: $kui-border-width-10 solid $kui-color-border;
     display: flex;
     flex-direction: column;
