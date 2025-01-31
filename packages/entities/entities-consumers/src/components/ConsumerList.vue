@@ -35,7 +35,7 @@
           to="#kong-ui-app-page-header-action-button"
         >
           <KButton
-            v-if="hideEmptyState && config.app === 'konnect'"
+            v-if="!showEmptyState && config.app === 'konnect'"
             appearance="secondary"
             class="open-learning-hub"
             data-testid="consumers-learn-more-button"
@@ -310,7 +310,7 @@ const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const { hideTableToolbar: hideEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
 
 /**
  * Table Headers
