@@ -1,12 +1,10 @@
-import type { ResponseTransformerAdvancedSchema } from '../../types/plugins/response-transformer-advanced'
+import type { ResponseTransformerSchema } from '../../types/plugins/response-transformer'
 import { ArrayInputFieldSchema } from './ArrayInputFieldSchema'
-import { responseTransformerSchema } from './ResponseTransformer'
 
-export const responseTransformerAdvancedSchema: ResponseTransformerAdvancedSchema = {
-  ...responseTransformerSchema,
-  'config-allow-json': {
+export const responseTransformerSchema: ResponseTransformerSchema = {
+  'config-add-json': {
     ...ArrayInputFieldSchema,
-    label: 'Config.Allow.Json',
+    label: 'Config.Add.Json',
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',
@@ -14,9 +12,9 @@ export const responseTransformerAdvancedSchema: ResponseTransformerAdvancedSchem
       max: false,
     },
   },
-  'config-replace-body': {
+  'config-append-json': {
     ...ArrayInputFieldSchema,
-    label: 'Config.Replace.Body',
+    label: 'Config.Append.Json',
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',
@@ -24,9 +22,9 @@ export const responseTransformerAdvancedSchema: ResponseTransformerAdvancedSchem
       max: false,
     },
   },
-  'config-transform-functions': {
+  'config-remove-json': {
     ...ArrayInputFieldSchema,
-    label: 'Config.Transform.Functions',
+    label: 'Config.Remove.Json',
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',
@@ -34,9 +32,9 @@ export const responseTransformerAdvancedSchema: ResponseTransformerAdvancedSchem
       max: false,
     },
   },
-  'config-transform-json': {
+  'config-replace-json': {
     ...ArrayInputFieldSchema,
-    label: 'Config.Transform.Json',
+    label: 'Config.Replace.Json',
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',

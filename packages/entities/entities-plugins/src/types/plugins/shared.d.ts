@@ -21,7 +21,7 @@ interface ArrayItem extends Field {
     style?: {
       minWidth?: string
     },
-    type: string
+    type?: string
     rows?: number
     max?: boolean | number
   }
