@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.6...@kong-ui-public/entities-plugins@9.9.7) (2025-01-31)
+
+
+### Bug Fixes
+
+* **plugins:** response transformer textareas ([#1924](https://github.com/Kong/public-ui-components/issues/1924)) ([171b27d](https://github.com/Kong/public-ui-components/commit/171b27dba2842a24e3b4875015d4dfac653c269e))
+
+
+
+
+
 ## [9.9.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.5...@kong-ui-public/entities-plugins@9.9.6) (2025-01-30)
 
 
