@@ -12,7 +12,7 @@
         v-if="title || $slots.title"
         class="entity-empty-state-title"
       >
-        <h1 :class="Appearance">
+        <h1 :class="EmptyStateAppearance">
           <slot name="title">
             {{ title }}
           </slot>
@@ -174,7 +174,7 @@ const { i18n: { t } } = composables.useI18n()
 const useCanCreate = ref(false)
 const showCreateButton = computed((): boolean => useCanCreate.value && !!props.actionButtonText)
 
-const Appearance = computed((): AppearanceTypes | [AppearanceTypes, string] => {
+const EmptyStateAppearance = computed((): AppearanceTypes | [AppearanceTypes, string] => {
   // If the appearance is invalid, output both to keep backwards compatibility
   // in case some of the tests rely on the invalid appearance output
   if (!Appearances.includes(props.appearance)) {
@@ -201,7 +201,7 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
   display: flex;
   flex-direction: column;
   font-family: $kui-font-family-text;
-  gap: $kui-space-110;
+  gap: $kui-space-80;
   padding: $kui-space-130 $kui-space-0;
   width: 100%;
 
@@ -245,8 +245,12 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
     max-width: 640px; // limit width so the description stays readable if it is too long
 
     p {
-      margin: $kui-space-30;
+      margin: $kui-space-0;
     }
+  }
+
+  .entity-empty-state-pricing {
+    margin-top: $kui-space-60;
   }
 
   .entity-empty-state-action {
@@ -260,6 +264,7 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
     flex-wrap: wrap;
     gap: $kui-space-60;
     justify-content: space-around;
+    margin-top: $kui-space-40;
     /** single column on mobile */
     width: $entity-empty-state-feature-card-width;
 
