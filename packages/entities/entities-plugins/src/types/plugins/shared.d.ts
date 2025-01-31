@@ -17,10 +17,13 @@ interface ArrayItem extends Field {
   fieldClasses?: string
   fieldItemsClasses?: string
   inputAttributes?: {
-    class: string
-    style: {
-      minWidth: string
-    }
+    class?: string
+    style?: {
+      minWidth?: string
+    },
+    type: string
+    rows?: number
+    max?: boolean | number
   }
 }
 
