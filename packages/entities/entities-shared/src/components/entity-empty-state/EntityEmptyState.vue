@@ -12,7 +12,7 @@
         v-if="title || $slots.title"
         class="entity-empty-state-title"
       >
-        <h1 :class="EmptyStateAppearance">
+        <h1 :class="emptyStateAppearance">
           <slot name="title">
             {{ title }}
           </slot>
@@ -174,7 +174,7 @@ const { i18n: { t } } = composables.useI18n()
 const useCanCreate = ref(false)
 const showCreateButton = computed((): boolean => useCanCreate.value && !!props.actionButtonText)
 
-const EmptyStateAppearance = computed((): AppearanceTypes | [AppearanceTypes, string] => {
+const emptyStateAppearance = computed((): AppearanceTypes | [AppearanceTypes, string] => {
   // If the appearance is invalid, output both to keep backwards compatibility
   // in case some of the tests rely on the invalid appearance output
   if (!Appearances.includes(props.appearance)) {
