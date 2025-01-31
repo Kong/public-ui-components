@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.7...@kong-ui-public/app-layout@4.3.8) (2025-01-31)
+
+
+### Bug Fixes
+
+* **app-layout:** apppageinfosection content border radius ([#1923](https://github.com/Kong/public-ui-components/issues/1923)) ([2c5610f](https://github.com/Kong/public-ui-components/commit/2c5610f66cead65875af17bd48dc2f3f3967f348))
+
+
+
+
+
 ## [4.3.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.6...@kong-ui-public/app-layout@4.3.7) (2025-01-20)
 
 
