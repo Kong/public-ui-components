@@ -121,7 +121,7 @@ import { type PropType, computed, ref, onBeforeMount } from 'vue'
 import { KButton } from '@kong/kongponents'
 import { BookIcon, AddIcon } from '@kong/icons'
 import composables from '../../composables'
-import type { EmptyStateFeature, AppearanceTypes } from 'src/types/entity-empty-state'
+import type { EmptyStateFeature, AppearanceTypes } from '../../types/entity-empty-state'
 import { Appearances } from '../../types/entity-empty-state'
 
 const props = defineProps({
