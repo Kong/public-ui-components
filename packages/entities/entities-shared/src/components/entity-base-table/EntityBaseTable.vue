@@ -36,7 +36,7 @@
       @empty-state-action-click="handleEmptyStateCtaClicked"
       @row:click="handleRowClick"
       @sort="(params: any) => handleSortChanged(params)"
-      @state="handleStateChange"
+      @state="handleStateChangeAndEmit"
       @update:table-preferences="handleUpdateTablePreferences"
     >
       <template #toolbar>
@@ -101,6 +101,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
+import type { TableStateParams } from '../../types'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
 import type { HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams, TableDataProps } from '@kong/kongponents'
@@ -247,6 +248,7 @@ const emit = defineEmits<{
   (e: 'sort', sortParams: TableSortParams) : void,
   (e: 'clear-search-input'): void,
   (e: 'empty-state-cta-clicked'): void,
+  (e: 'state', state: TableStateParams): void,
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -323,6 +325,11 @@ const cellAttrs = (params: Record<string, any>) => {
   }
 
   return result
+}
+
+const handleStateChangeAndEmit = (state: TableStateParams) => {
+  handleStateChange(state)
+  emit('state', state)
 }
 
 const handleEmptyStateCtaClicked = () => {

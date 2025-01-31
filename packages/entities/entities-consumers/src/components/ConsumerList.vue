@@ -18,6 +18,7 @@
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @empty-state-cta-clicked="handleEmptyStateCtaClicked"
       @sort="resetPagination"
+      @state="handleStateChange"
     >
       <!-- Filter -->
       <template #toolbar-filter>
@@ -33,6 +34,16 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
+          <KButton
+            v-if="hideEmptyState && config.app === 'konnect'"
+            appearance="secondary"
+            class="open-learning-hub"
+            data-testid="consumers-learn-more-button"
+            icon
+            @click="$emit('click:learn-more')"
+          >
+            <BookIcon decorative />
+          </KButton>
           <PermissionsWrapper :auth-function="() => canCreate()">
             <!-- Hide Create button if table is empty -->
             <KButton
@@ -58,7 +69,7 @@
           appearance="secondary"
           :can-create="() => canCreate()"
           :description="t('consumers.list.empty_state_v2.description')"
-          learn-more
+          :learn-more="config.app === 'konnect'"
           :title="t('consumers.list.empty_state_v2.title')"
           @click:create="handleCreateClick"
           @click:learn-more="$emit('click:learn-more')"
@@ -194,7 +205,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
-import { AddIcon, TeamIcon } from '@kong/icons'
+import { AddIcon, BookIcon, TeamIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 import composables from '../composables'
 import endpoints from '../consumers-endpoints'
@@ -210,6 +221,7 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
   TableTags,
+  useTableState,
 } from '@kong-ui-public/entities-shared'
 import type {
   KongManagerConsumerListConfig,
@@ -298,6 +310,7 @@ const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const { hideTableToolbar: hideEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
 
 /**
  * Table Headers
