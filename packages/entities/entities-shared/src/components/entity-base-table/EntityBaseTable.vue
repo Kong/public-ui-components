@@ -36,7 +36,7 @@
       @empty-state-action-click="handleEmptyStateCtaClicked"
       @row:click="handleRowClick"
       @sort="(params: any) => handleSortChanged(params)"
-      @state="handleStateChange"
+      @state="handleStateChangeAndEmit"
       @update:table-preferences="handleUpdateTablePreferences"
     >
       <template #toolbar>
@@ -54,9 +54,16 @@
       </template>
 
       <template
+        v-if="$slots['empty-state']"
+        #empty-state
+      >
+        <slot name="empty-state" />
+      </template>
+
+      <template
         v-for="(header, key) in tableHeaders"
         :key="key"
-        #[key]="{ row, rowKey, rowValue }"
+        #[key]="{ row, rowValue }"
       >
         <EntityBaseTableCell
           :key-name="String(key)"
@@ -94,6 +101,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
+import type { TableStateParams } from '../../types'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
 import type { HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams, TableDataProps } from '@kong/kongponents'
@@ -106,7 +114,6 @@ import type {
   InternalHeader,
   TableSortParams,
   TableErrorMessage,
-  TableStateParams,
 } from '../../types'
 import { AddIcon } from '@kong/icons'
 
@@ -241,6 +248,7 @@ const emit = defineEmits<{
   (e: 'sort', sortParams: TableSortParams) : void,
   (e: 'clear-search-input'): void,
   (e: 'empty-state-cta-clicked'): void,
+  (e: 'state', state: TableStateParams): void,
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -319,6 +327,11 @@ const cellAttrs = (params: Record<string, any>) => {
   return result
 }
 
+const handleStateChangeAndEmit = (state: TableStateParams) => {
+  handleStateChange(state)
+  emit('state', state)
+}
+
 const handleEmptyStateCtaClicked = () => {
   emit('empty-state-cta-clicked')
   clearSearchInput()
@@ -388,6 +401,13 @@ const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): vo
 
   .toolbar-button-container {
     margin-left: auto;
+  }
+
+  // shared styles for entity empty state
+  :deep(.empty-state-icon-gateway) {
+    background-color: $kui-method-color-background-patch;
+    border-radius: $kui-border-radius-20;
+    padding: $kui-space-40;
   }
 }
 </style>
