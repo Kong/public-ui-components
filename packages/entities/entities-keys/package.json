@@ -27,7 +27,7 @@
     "@kong/kongponents": "^9.14.16",
     "axios": "^1.7.7",
     "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
@@ -37,7 +37,7 @@
     "@kong/kongponents": "9.17.2",
     "axios": "^1.7.7",
     "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.5.0"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
