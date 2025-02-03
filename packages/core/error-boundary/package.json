@@ -41,7 +41,7 @@
   "devDependencies": {
     "@kong/design-tokens": "1.17.2",
     "@kong/icons": "^1.20.0",
-    "vue": "^3.5.12"
+    "vue": "^3.5.13"
   },
   "repository": {
     "type": "git",
