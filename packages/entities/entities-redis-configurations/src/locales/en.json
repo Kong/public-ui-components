@@ -1,0 +1,202 @@
+{
+  "actions": {
+    "create": "New Redis Configuration",
+    "copy_id": "Copy ID",
+    "copy_json": "Copy JSON",
+    "edit": "Edit",
+    "delete": "Delete",
+    "done": "Done",
+    "view": "View Details",
+    "loading": "Loading...",
+    "view_plugin": "View Plugin"
+  },
+  "search": {
+    "placeholder": "Filter by name",
+    "no_results": "No results found"
+  },
+  "delete": {
+    "title": "Delete Redis configuration",
+    "description": "You’re about to delete this item. Are you sure you want to proceed?"
+  },
+  "errors": {
+    "general": "Redis configuration could not be retrieved",
+    "delete": "The redis configuration could not be deleted at this time."
+  },
+  "form": {
+    "sections": {
+      "type": {
+        "title": "Redis type",
+        "description": "Both Enterprise and Open Source plugins support Redis. Enterprise plugins can connect to a standalone Redis instance (host/port), Cluster, or Sentinel, while Open Source plugins support only a simplified host/port configuration."
+      },
+      "general": {
+        "title": "General information",
+        "description": "Name your Redis configuration."
+      },
+      "connection": {
+        "title": "Connection settings",
+        "description": "Define the Redis server’s host, port, authentication, and timeout options for establishing a connection."
+      },
+      "cluster": {
+        "title": "Cluster configuration",
+        "description": "Enables data sharding and distribution across multiple Redis nodes, allowing for scalability and load balancing."
+      },
+      "tls": {
+        "title": "TLS settings",
+        "description": "Configure secure connections to Redis, including SSL and verification options."
+      },
+      "keepalive": {
+        "title": "Keepalive configuration",
+        "description": "Keepalive reuses active connections to Redis, improving performance and efficiency."
+      },
+      "read_write_configuration": {
+        "title": "Read/Write configuration",
+        "description": "Set timeouts for reading from and writing to the Redis server to control data transmission reliability."
+      },
+      "sentinel_configuration": {
+        "title": "Sentinel configuration",
+        "description": "Manages Redis failover and high availability by connecting to Sentinel nodes that monitor and switch masters."
+      }
+    },
+    "fields": {
+      "type": {
+        "label": "Redis type"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Enter unique name"
+      },
+      "host": {
+        "label": "Host",
+        "tooltip": "A string representing a host name, such as example.com."
+      },
+      "port": {
+        "label": "Port",
+        "tooltip": "An integer representing a port number between 0 and 65535, inclusive."
+      },
+      "database": {
+        "label": "Database",
+        "tooltip": "Database to use for the Redis connection when using the `redis` strategy"
+      },
+      "password": {
+        "label": "Password",
+        "tooltip": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis."
+      },
+      "username": {
+        "label": "Username",
+        "tooltip": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`."
+      },
+      "ssl": {
+        "label": "SSL",
+        "description": "If set to true, uses SSL to connect to Redis."
+      },
+      "ssl_verify": {
+        "label": "SSL Verify",
+        "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure lua_ssl_trusted_certificate in kong. conf to specify the CA (or server) certificate used by your Redis server. You may also need to configure lua_ss1_verify_depth accordingly."
+      },
+      "server_name": {
+        "label": "Server name",
+        "tooltip": "A string representing an SNI (server name indication) value for TLS."
+      },
+      "keepalive_backlog": {
+        "label": "Keepalive backlog",
+        "tooltip": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
+      },
+      "keepalive_pool_size": {
+        "label": "Keepalive pool size",
+        "tooltip": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low."
+      },
+      "read_timeout": {
+        "label": "Read timeout"
+      },
+      "send_timeout": {
+        "label": "Send timeout"
+      },
+      "connect_timeout": {
+        "label": "Connect timeout"
+      },
+      "sentinel_master": {
+        "label": "Sentinel master",
+        "tooltip": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
+      },
+      "sentinel_role": {
+        "label": "Sentinel role",
+        "tooltip": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
+      },
+      "sentinel_username": {
+        "label": "Sentinel username",
+        "tooltip": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+."
+      },
+      "sentinel_password": {
+        "label": "Sentinel password",
+        "tooltip": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels."
+      },
+      "cluster_node_ip": {
+        "label": "IP",
+        "tooltip": "A string representing a host name, such as example.com."
+      },
+      "cluster_node_port": {
+        "label": "Port",
+        "tooltip": "An integer representing a port number between 0 and 65535, inclusive."
+      },
+      "cluster_max_redirections": {
+        "label": "Cluster max redirections",
+        "tooltip": "Maximum retry attempts for redirection."
+      },
+      "timeout": {
+        "label": "Timeout",
+        "tooltip": "redis schema field `timeout` is deprecated, use `connect_timeout`, `send_timeout` and `read_timeout`"
+      },
+      "connection_is_proxied": {
+        "label": "Connection is proxied",
+        "tooltip": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address."
+      },
+      "cluster_nodes": {
+        "title": "Cluster nodes",
+        "tooltip": "This is a really long tooltip. Hopefully we won't have anything this long but we might. I wonder how it handles long inputs",
+        "add_button": "New item"
+      },
+      "sentinel_nodes": {
+        "title": "Sentinel nodes",
+        "tooltip": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element.",
+        "add_button": "New item"
+      },
+      "sentinel_node_host": {
+        "label": "Host",
+        "tooltip": "A string representing a host name, such as example.com."
+      },
+      "sentinel_node_port": {
+        "label": "Port",
+        "tooltip": "An integer representing a port number between 0 and 65535, inclusive."
+      }
+    },
+    "options": {
+      "type": {
+        "host_port": "Host/Port",
+        "cluster": "Cluster",
+        "sentinel": "Sentinel",
+        "open_source": "Open Source",
+        "enterprise": "Enterprise",
+        "suffix_open_source": " (Open Source)",
+        "suffix_enterprise": " (Enterprise)"
+      },
+      "sentinel_role": {
+        "master": "master",
+        "slave": "slave",
+        "any": "any"
+      }
+    }
+  },
+  "linked_plugins_modal": {
+    "title": "Associated plugins ({count})",
+    "headers": {
+      "plugin": "Plugin"
+    }
+  },
+  "redis": {
+    "title": "Redis Configurations",
+    "empty_state": {
+      "title": "Configure a Redis Configuration",
+      "description": "Create a new Redis configuration to reference in your plugins."
+    }
+  }
+}
