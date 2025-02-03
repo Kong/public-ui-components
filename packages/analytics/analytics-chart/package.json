@@ -35,7 +35,7 @@
     "lodash.mapkeys": "^4.6.0",
     "lodash.pick": "^4.4.0",
     "lodash.pickby": "^4.6.0",
-    "papaparse": "^5.4.1",
+    "papaparse": "^5.5.1",
     "vue": "^3.5.12"
   },
   "scripts": {
