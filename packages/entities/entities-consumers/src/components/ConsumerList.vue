@@ -51,8 +51,7 @@
                 appearance="primary"
                 data-testid="toolbar-add-consumer"
                 :size="useActionOutside ? 'medium' : 'large'"
-                :to="config.consumerGroupId ? undefined : config.createRoute"
-                @click="() => config.consumerGroupId ? handleAddConsumerClick() : undefined"
+                @click="handleCreateClick"
               >
                 <AddIcon />
                 {{ config.consumerGroupId ? t('consumers.actions.add_consumer') : t('consumers.list.toolbar_actions.new_consumer') }}
