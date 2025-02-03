@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.7...@kong-ui-public/entities-shared@3.15.0) (2025-02-03)
+
+
+### Features
+
+* **entityemptystate:** added appreance prop support [KHCP-14905] ([#1919](https://github.com/Kong/public-ui-components/issues/1919)) ([e8cda9b](https://github.com/Kong/public-ui-components/commit/e8cda9bf7c5193bf8cb065776b730e6275c0f571))
+
+
+
+
+
 ## [3.14.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.6...@kong-ui-public/entities-shared@3.14.7) (2025-01-23)
 
 
