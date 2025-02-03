@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.15.0...@kong-ui-public/entities-shared@3.16.0) (2025-02-03)
+
+
+### Features
+
+* **consumers:** new empty state [khcp-14823] ([#1921](https://github.com/Kong/public-ui-components/issues/1921)) ([8262a4e](https://github.com/Kong/public-ui-components/commit/8262a4e06d302f280f7cfbadf087020ea4c3c832))
+
+
+
+
+
 # [3.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.7...@kong-ui-public/entities-shared@3.15.0) (2025-02-03)
 
 
