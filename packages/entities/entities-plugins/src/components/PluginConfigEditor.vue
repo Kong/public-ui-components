@@ -200,10 +200,33 @@ onBeforeUnmount(() => {
   editorDisposables.forEach((d) => d?.dispose())
 })
 
+const assertPropertyValueNode = (node: ASTNode, keyPath: string[]) => {
+  if (node.type === 'property') {
+    return false // "property" node is not a value node
+  }
+
+  let n: ASTNode | undefined = node.parent
+  for (let i = keyPath.length - 1; i >= 0; i--) {
+    if (!n || n.type !== 'property') {
+      return false
+    }
+    if (n.keyNode.value !== keyPath[i]) {
+      return false
+    }
+    n = n.parent
+    if (!n || n.type !== 'object') {
+      return false
+    }
+    n = n.parent
+  }
+  return n?.parent === undefined
+}
+
 onMounted(async () => {
   editor = monaco.editor.create(editorRef.value as HTMLElement, {
     theme: 'vs',
     automaticLayout: true,
+    tabSize: 2,
   })
 
   makeDetailsVisible()
@@ -282,6 +305,48 @@ onMounted(async () => {
   )
 
   editorDisposables.push(
+    monaco.languages.registerHoverProvider('json', {
+      provideHover: async (model, position) => {
+        const node = languageSpecificDocument.value.getNodeFromOffset(textDocument.value.offsetAt({
+          line: position.lineNumber - 1,
+          character: position.column - 1,
+        }))
+
+
+        if (!node) {
+          return
+        }
+
+        if (assertPropertyValueNode(node, ['service', 'id'])) {
+          return {
+            range: {
+              startLineNumber: position.lineNumber,
+              startColumn: position.column,
+              endLineNumber: position.lineNumber,
+              endColumn: position.column,
+            },
+            contents: [{
+              value: 'TODO: Hovering on a service ID. Show something meaningful here.',
+            }],
+          }
+        } else if (assertPropertyValueNode(node, ['service', 'name'])) {
+          return {
+            range: {
+              startLineNumber: position.lineNumber,
+              startColumn: position.column,
+              endLineNumber: position.lineNumber,
+              endColumn: position.column,
+            },
+            contents: [{
+              value: 'TODO: Hovering on a service name. Show something meaningful here.',
+            }],
+          }
+        }
+      },
+    }),
+  )
+
+  editorDisposables.push(
     monaco.languages.registerCompletionItemProvider('json', {
       triggerCharacters: [' ', ':', '"'],
       provideCompletionItems: async (model, position) => {
@@ -298,7 +363,8 @@ onMounted(async () => {
               {
                 label: 'Search for a service',
                 kind: monaco.languages.CompletionItemKind.Snippet,
-                insertText: JSON.stringify(''),
+                insertText: '"$1"',
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
                 markdownDescription: [
                   '1. Search for a service by typing keywords inside the `""` (e.g. `"my-service"`)',
                   '2. Wait for the search results',
@@ -367,6 +433,10 @@ onMounted(async () => {
   )
 
   editor.setModel(model.value)
+  model.value.setValue(JSON.stringify({
+    'service': { 'id': 'cf1d88f6-cbb1-4068-9771-a128a846bafa' },
+  }, null, 2))
+
   updateSchemaUri(schema.value, uri.value)
 
   editor.focus()
