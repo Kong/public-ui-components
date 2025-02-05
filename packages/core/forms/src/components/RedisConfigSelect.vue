@@ -106,6 +106,10 @@ const props = defineProps({
     type: Array<Field>,
     required: true,
   },
+  redisType: {
+    type: String,
+    default: 'all',
+  },
 })
 
 const selectedRedisConfigItem = ref(props.defaultRedisConfigItem)
@@ -139,7 +143,14 @@ const getOnePartialUrl = (partialId: string | number): string => {
   return url
 }
 
-const availableRedisConfigs = computed((): SelectItem[] => redisConfigsResults.value?.map((el) => ({ label: el.id, name: el.name, value: el.id, tag: getRedisType(el as RedisConfigurationFields) })) || [])
+const availableRedisConfigs = computed((): SelectItem[] => {
+  const configs = redisConfigsResults.value?.map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: getRedisType(el as RedisConfigurationFields) })) || []
+  if (props.redisType !== 'all') {
+    // filter redis configs by redis type supported by the plugin
+    return configs.filter((el) => el.type === props.redisType)
+  }
+  return configs
+})
 
 const { axiosInstance } = useAxios(formConfig?.axiosRequestConfig)
 
