@@ -26,6 +26,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong-ui-public/entities-redis-configurations": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.21.1",
     "@kong/kongponents": "^9.21.5",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong-ui-public/entities-redis-configurations": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.2",
