@@ -43,6 +43,7 @@
         <RedisConfigSelect
           :default-redis-config-item="selectedRedisConfigItem"
           :plugin-redis-fields="field.fields"
+          :redis-type="field.redisType"
           :update-redis-model="updateRedisModel"
         />
       </div>

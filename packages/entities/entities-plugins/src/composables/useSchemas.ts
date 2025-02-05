@@ -218,7 +218,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
    * @returns {Array} an array of form fields not to render across all entity forms
    */
   const getBlacklist = () => {
-    return ['created_at', 'updated_at', 'id', '_isCustomPlugin']
+    return ['created_at', 'updated_at', 'id', '_isCustomPlugin', '_supported_redis_partial_type', '_redis_partial_path']
   }
 
   /**
@@ -290,6 +290,8 @@ export const useSchemas = (options?: UseSchemasOptions) => {
           fields: redisFields,
           model: 'redis_partial',
           pluginType: currentSchema._isCustomPlugin ? 'custom' : 'bundled',
+          redisType: currentSchema._supported_redis_partial_type,
+          redisPath: currentSchema._redis_partial_path,
         })
       }
 
@@ -366,6 +368,8 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         fields: redisFields,
         model: 'redis_partial',
         pluginType: currentSchema._isCustomPlugin ? 'custom' : 'bundled',
+        redisType: currentSchema._supported_redis_partial_type,
+        redisPath: currentSchema._redis_partial_path,
         order: -1, // Place redis fields at the top of the advanced fields
       })
 
