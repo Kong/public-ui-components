@@ -95,8 +95,8 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
         }
         break
       case SPAN_NAMES.KONG_UPSTREAM_SELECTION:
-      case SPAN_NAMES.KONG_WAITING_FOR_UPSTREAM:
-      case SPAN_NAMES.KONG_READ_RESPONSE_FROM_UPSTREAM:
+      case SPAN_NAMES.KONG_READ_HEADERS_FROM_UPSTREAM:
+      case SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM:
         upstreamSpans.push(n)
         break
       default: {
