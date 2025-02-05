@@ -196,7 +196,7 @@
     "title": "Redis Configurations",
     "empty_state": {
       "title": "Configure a Redis Configuration",
-      "description": "Create a new Redis configuration to reference in your plugins."
+      "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing."
     }
   }
 }

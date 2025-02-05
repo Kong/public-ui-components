@@ -1,17 +1,22 @@
 <template>
   <div class="kong-ui-consumer-group-entity-config-card">
     <EntityBaseConfigCard
+      :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
-      data-key="config"
       :entity-type="SupportedEntityType.RedisConfiguration"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
+      :record-resolver="recordResolver"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
       @fetch:success="handleData"
       @loading="(val: boolean) => $emit('loading', val)"
-    />
+    >
+      <template #type>
+        <div>{{ redisTypeText }}</div>
+      </template>
+    </EntityBaseConfigCard>
   </div>
 </template>
 
@@ -73,7 +78,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:error', error: AxiosError): void,
-  (e: 'fetch:success', data: Record<string, any>): void,
+  (e: 'fetch:success', data: RedisConfigurationResponse): void,
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -86,9 +91,71 @@ const handleData = (data: any) => {
   emit('fetch:success', data)
 }
 
+const redisTypeText = computed(() => {
+  const suffix = redisType.value === RedisType.HOST_PORT_CE
+    ? t('form.options.type.suffix_open_source')
+    : t('form.options.type.suffix_enterprise')
+  let prefix = ''
+  switch (redisType.value) {
+    case RedisType.HOST_PORT_CE:
+      prefix = t('form.options.type.host_port')
+      break
+    case RedisType.HOST_PORT_EE:
+      prefix = t('form.options.type.host_port')
+      break
+    case RedisType.CLUSTER:
+      prefix = t('form.options.type.cluster')
+      break
+    case RedisType.SENTINEL:
+      prefix = t('form.options.type.sentinel')
+      break
+  }
+  return `${prefix}${suffix}`
+})
+
+const recordResolver = (data: RedisConfigurationResponse) => {
+  return {
+    id: data.id,
+    name: data.name,
+    created_at: data.created_at,
+    updated_at: data.updated_at,
+    type: data.type,
+    ...data.config,
+  }
+}
+
+const codeBlockRecordFormatter = (record: Record<string, any>) => {
+  const { id, name, created_at, updated_at, type, ...config } = record
+  return {
+    id, name, created_at, updated_at, type, config,
+  }
+}
+
+type BasicFields = {
+  id: string
+  name: string
+  updated_at: string
+  created_at: string
+  type: string
+}
+type Fields = RedisConfigurationConfigDTO & BasicFields
+
 const schemaFieldConfigs: {
-  [key in keyof RedisConfigurationConfigDTO]: ConfigurationSchemaItem
+  [key in keyof Fields]: ConfigurationSchemaItem
 } = {
+  id: {},
+  name: {
+    type: ConfigurationSchemaType.Text,
+    section: ConfigurationSchemaSection.Basic,
+    label: t('form.fields.name.label'),
+  },
+  updated_at: {},
+  created_at: {},
+  type: {
+    type: ConfigurationSchemaType.Text,
+    section: ConfigurationSchemaSection.Basic,
+    label: t('form.fields.type.label'),
+  },
   cluster_max_redirections: {
     type: ConfigurationSchemaType.Text,
     section: ConfigurationSchemaSection.Basic,
@@ -217,9 +284,9 @@ const schemaFieldConfigs: {
   },
 }
 
-const pickSchemaFields = (fields: Array<keyof RedisConfigurationConfigDTO>): ConfigurationSchema => {
+const pickSchemaFields = (fields: Array<keyof Fields>): ConfigurationSchema => {
   const schema: ConfigurationSchema = {}
-  const keys = Object.keys(schemaFieldConfigs) as Array<keyof RedisConfigurationConfigDTO>
+  const keys = Object.keys(schemaFieldConfigs) as Array<keyof Fields>
   for (const field of keys) {
     if (fields.includes(field)) {
       schema[field] = {
@@ -237,9 +304,11 @@ const pickSchemaFields = (fields: Array<keyof RedisConfigurationConfigDTO>): Con
 }
 
 const configSchema = computed<ConfigurationSchema>(() => {
+  const commonFields: Array<keyof Fields> = ['id', 'name', 'type', 'updated_at', 'created_at']
   switch (redisType.value) {
     case RedisType.HOST_PORT_CE:
       return pickSchemaFields([
+        ...commonFields,
         'host',
         'port',
         'timeout',
@@ -252,6 +321,7 @@ const configSchema = computed<ConfigurationSchema>(() => {
       ])
     case RedisType.HOST_PORT_EE:
       return pickSchemaFields([
+        ...commonFields,
         'host',
         'port',
         'connection_is_proxied',
@@ -269,6 +339,7 @@ const configSchema = computed<ConfigurationSchema>(() => {
       ])
     case RedisType.CLUSTER:
       return pickSchemaFields([
+        ...commonFields,
         'cluster_nodes',
         'cluster_max_redirections',
         'database',
@@ -285,6 +356,7 @@ const configSchema = computed<ConfigurationSchema>(() => {
       ])
     case RedisType.SENTINEL:
       return pickSchemaFields([
+        ...commonFields,
         'sentinel_master',
         'sentinel_role',
         'sentinel_nodes',

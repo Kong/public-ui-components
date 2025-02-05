@@ -82,6 +82,9 @@ export interface PropList {
   plugin?: RecordItem[]
 }
 
+export type CodeFormat = 'yaml' | 'json' | 'terraform'
+export type Format = 'structured' | CodeFormat
+
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
@@ -100,7 +103,7 @@ const props = defineProps({
     default: () => null,
   },
   format: {
-    type: String,
+    type: String as PropType<Format>,
     required: false,
     default: 'structured',
     validator: (val: string) => ['structured', 'yaml', 'json', 'terraform'].includes(val),
@@ -122,6 +125,14 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  /**
+   * A function to format the entity record before displaying it in the code block.
+   */
+  codeBlockRecordFormatter: {
+    type: Function as PropType<(entityRecord: Record<string, any>, format: CodeFormat) => Record<string, any>>,
+    required: false,
+    default: (entityRecord: Record<string, any>) => entityRecord,
+  },
 })
 
 const slots = useSlots()
@@ -132,7 +143,11 @@ const entityRecord = computed((): PropType<Record<string, any>> => {
   if (!props.record) {
     return props.record
   }
-  const processedRecord = JSON.parse(JSON.stringify(props.record))
+  let record = props.record
+  if (props.codeBlockRecordFormatter) {
+    record = props.codeBlockRecordFormatter(record, props.format as CodeFormat)
+  }
+  const processedRecord = JSON.parse(JSON.stringify(record))
   // remove dates from JSON/YAML config [KHCP-9837]
   delete processedRecord.created_at
   delete processedRecord.updated_at
