@@ -38,6 +38,10 @@
       "empty_state": {
         "title": "Configure a New Route",
         "description": "Routes proxy requests to an associated Service."
+      },
+      "empty_state_v2": {
+        "title": "Configure your first route",
+        "description": "Routes direct incoming API requests to the appropriate services, facilitating organized and efficient traffic flow within your architecture."
       }
     }
   },
