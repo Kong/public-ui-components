@@ -21,8 +21,36 @@ export const SPAN_NAMES = {
   CLIENT_HEADERS: 'kong.read_client_http_headers',
   FIND_UPSTREAM: 'kong.find_upstream',
   FLUSH_TO_DOWNSTREAM: 'kong.wait_for_client_read',
+
+  /**
+   * Previously known as:
+   * - `kong.upstream.read_response`
+   * - {@link SPAN_NAMES.KONG_READ_RESPONSE_FROM_UPSTREAM}
+   */
+  KONG_READ_BODY_FROM_UPSTREAM: 'kong.read_body_from_upstream',
+
+  /**
+   * Previously known as:
+   * - `kong.upstream.ttfb`
+   * - {@link SPAN_NAMES.KONG_WAITING_FOR_UPSTREAM}
+   */
+  KONG_READ_HEADERS_FROM_UPSTREAM: 'kong.read_headers_from_upstream',
+
+  /**
+   * @deprecated Use {@link SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM} instead
+   *
+   * Previously known as:
+   * - `kong.upstream.read_response`
+   */
   KONG_READ_RESPONSE_FROM_UPSTREAM: 'kong.read_response_from_upstream',
   KONG_UPSTREAM_SELECTION: 'kong.upstream.selection',
+
+  /**
+   * @deprecated Use {@link SPAN_NAMES.KONG_READ_HEADERS_FROM_UPSTREAM} instead
+   *
+   * Previously known as:
+   * - `kong.upstream.ttfb`
+   */
   KONG_WAITING_FOR_UPSTREAM: 'kong.waiting_for_upstream',
   READ_BODY: 'kong.read_client_http_body',
 }

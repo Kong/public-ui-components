@@ -8,8 +8,10 @@ import { type IAnyValue, type IKeyValue, type Span, type SpanLatency, type SpanN
  */
 const MAPPED_SPAN_NAMES: Record<string, string> = {
   'kong.upstream.try_select': SPAN_NAMES.FIND_UPSTREAM,
-  'kong.upstream.ttfb': SPAN_NAMES.KONG_WAITING_FOR_UPSTREAM,
-  'kong.upstream.read_response': SPAN_NAMES.KONG_READ_RESPONSE_FROM_UPSTREAM,
+  'kong.upstream.ttfb': SPAN_NAMES.KONG_READ_HEADERS_FROM_UPSTREAM,
+  [SPAN_NAMES.KONG_WAITING_FOR_UPSTREAM]: SPAN_NAMES.KONG_READ_HEADERS_FROM_UPSTREAM,
+  'kong.upstream.read_response': SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM,
+  [SPAN_NAMES.KONG_READ_RESPONSE_FROM_UPSTREAM]: SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM,
 }
 
 const compareSpanNode = (a: SpanNode, b: SpanNode) => {
