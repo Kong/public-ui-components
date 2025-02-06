@@ -81,6 +81,7 @@
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
-    "ajv": "^8.17.1"
+    "ajv": "^8.17.1",
+    "gridstack": "^11.3.0"
   }
 }

@@ -6,11 +6,13 @@
     >
       {{ i18n.t('renderer.noQueryBridge') }}
     </KAlert>
-    <GridLayout
+    <component
+      :is="draggable ? DraggableGridLayout : GridLayout"
       v-else
       :grid-size="config.gridSize"
       :tile-height="config.tileHeight"
       :tiles="gridTiles"
+      @update-tiles="handleUpdateTiles"
     >
       <template #tile="{ tile }">
         <div
@@ -31,7 +33,7 @@
           @edit-tile="onEditTile(tile)"
         />
       </template>
-    </GridLayout>
+    </component>
   </div>
 </template>
 
@@ -42,6 +44,7 @@ import DashboardTile from './DashboardTile.vue'
 import { computed, inject, ref } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
+import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import type { AnalyticsBridge, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import {
   DEFAULT_TILE_HEIGHT,
@@ -52,13 +55,17 @@ import {
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   context: DashboardRendererContext,
   config: DashboardConfig,
-}>()
+  draggable?: boolean,
+}>(), {
+  draggable: false,
+})
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
+  (e: 'update-tiles', tiles: TileConfig[]): void
 }>()
 
 const { i18n } = composables.useI18n()
@@ -171,6 +178,16 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
 
 const refreshTiles = () => {
   refreshCounter.value++
+}
+
+const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
+  const updatedTiles = tiles.map(tile => {
+    return {
+      layout: tile.layout,
+      definition: tile.meta,
+    } as TileConfig
+  })
+  emit('update-tiles', updatedTiles)
 }
 
 defineExpose({ refresh: refreshTiles })

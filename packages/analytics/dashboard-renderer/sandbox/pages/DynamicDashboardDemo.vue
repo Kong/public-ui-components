@@ -18,6 +18,8 @@
         v-if="definition.type === ValidationResultType.Success"
         :config="definition.data"
         :context="context"
+        draggable
+        @update-tiles="handleUpdateTiles"
       />
     </div>
   </SandboxLayout>
@@ -169,6 +171,14 @@ const context: DashboardRendererContext = {
     type: 'relative',
     time_range: '24h',
   },
+}
+
+const handleUpdateTiles = (tiles: any) => {
+  console.log('update tiles', tiles)
+  definitionText.value = JSON.stringify({
+    ...definition.value.type === ValidationResultType.Success ? definition.value.data : {},
+    tiles,
+  }, null, 2)
 }
 
 </script>
