@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.35.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.34.3...@kong-ui-public/dashboard-renderer@0.35.0) (2025-02-06)
+
+
+### Features
+
+* draggable and resizable dashboard ([#1930](https://github.com/Kong/public-ui-components/issues/1930)) ([90f2eb4](https://github.com/Kong/public-ui-components/commit/90f2eb4ea8ee80bd6af327e1d20d9af0c8f8d2e0))
+
+
+
+
+
 ## [0.34.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.34.2...@kong-ui-public/dashboard-renderer@0.34.3) (2025-02-03)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
