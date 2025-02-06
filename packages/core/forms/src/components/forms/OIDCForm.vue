@@ -91,6 +91,7 @@
           </div>
           <VueFormGenerator
             v-if="displayForm"
+            :enable-redis-partial="enableRedisPartial"
             :model="formModel"
             :options="formOptions"
             :schema="advancedFieldsSchema"
@@ -159,6 +160,10 @@ export default {
     isEditing: {
       type: Boolean,
       required: true,
+    },
+    enableRedisPartial: {
+      type: Boolean,
+      required: false,
     },
   },
   data() {
@@ -251,7 +256,7 @@ export default {
                 && field.model !== 'config-auth_methods'
                 && !COMMON_FIELD_MODELS.has(field.model)
                 && !AUTH_FIELD_MODELS.has(field.model)
-                && !redisModels.includes(field.model))
+                && (!this.enableRedisPartial || !redisModels.includes(field.model))) // if redis partial is enabled, don't include redis fields in advanced
               || field.model === 'tags',
             )
             .reduce((fields, field) => {
@@ -290,7 +295,7 @@ export default {
         }
 
         // Add Redis partial to the front of advanced fields
-        this.advancedFieldsSchema.fields.unshift(redis)
+        if (this.enableRedisPartial) this.advancedFieldsSchema.fields.unshift(redis)
 
         // Use checkboxes for auth methods
         this.sessionManagement = this.isEditing ? this.formModel['config-auth_methods'].includes('session') : false
