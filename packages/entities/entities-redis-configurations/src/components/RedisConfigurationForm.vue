@@ -323,6 +323,7 @@ import '@kong-ui-public/entities-vaults/dist/style.css'
 import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import { ref, computed } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
+import { useRouter } from 'vue-router'
 
 import { RedisType } from '../types'
 import { useRedisConfigurationForm } from '../composables/useRedisConfigurationForm'
@@ -373,14 +374,14 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'updated', data: RedisConfigurationResponse): void
-  (e: 'update', data: RedisConfigurationFormState): void,
+  (e: 'update', data: RedisConfigurationResponse): void
   (e: 'error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
   (e: 'cancel'): void,
 }>()
 
 const { i18n: { t } } = composables.useI18n()
+const router = useRouter()
 
 const vaultSecretPickerSetup = ref<string | false>()
 const vaultSecretPickerAutofillAction = ref<(secretRef: string) => void | undefined>()
@@ -456,13 +457,16 @@ const {
 const submitHandler = async () => {
   try {
     const { data } = await submit()
-    emit('updated', data)
+    emit('update', data)
   } catch (e) {
     emit('error', e as AxiosError)
   }
 }
 
 const cancelHandler = (): void => {
+  if (props.config.cancelRoute) {
+    router.push(props.config.cancelRoute)
+  }
   emit('cancel')
 }
 

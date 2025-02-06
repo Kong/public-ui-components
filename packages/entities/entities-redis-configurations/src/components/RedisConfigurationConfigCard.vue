@@ -113,6 +113,9 @@ const redisTypeText = computed(() => {
   return `${prefix}${suffix}`
 })
 
+/**
+ * Flatten the config object to display in the structure tab
+ */
 const recordResolver = (data: RedisConfigurationResponse) => {
   return {
     id: data.id,
@@ -124,6 +127,9 @@ const recordResolver = (data: RedisConfigurationResponse) => {
   }
 }
 
+/**
+ * Put config details into `config` object to display in the code block tab
+ */
 const codeBlockRecordFormatter = (record: Record<string, any>) => {
   const { id, name, created_at, updated_at, type, ...config } = record
   return {
@@ -140,6 +146,9 @@ type BasicFields = {
 }
 type Fields = RedisConfigurationConfigDTO & BasicFields
 
+/**
+ * Configuration schema for all fields
+ */
 const schemaFieldConfigs: {
   [key in keyof Fields]: ConfigurationSchemaItem
 } = {
@@ -284,6 +293,9 @@ const schemaFieldConfigs: {
   },
 }
 
+/**
+ * Pick fields to display in the configuration schema
+ */
 const pickSchemaFields = (fields: Array<keyof Fields>): ConfigurationSchema => {
   const schema: ConfigurationSchema = {}
   const keys = Object.keys(schemaFieldConfigs) as Array<keyof Fields>
@@ -303,6 +315,9 @@ const pickSchemaFields = (fields: Array<keyof Fields>): ConfigurationSchema => {
   return schema
 }
 
+/**
+ * Pick fields to display in the configuration card based on the Redis type
+ */
 const configSchema = computed<ConfigurationSchema>(() => {
   const commonFields: Array<keyof Fields> = ['id', 'name', 'type', 'updated_at', 'created_at']
   switch (redisType.value) {

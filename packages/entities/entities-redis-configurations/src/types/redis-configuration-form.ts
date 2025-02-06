@@ -30,7 +30,7 @@ export interface RedisConfigurationFields {
     server_name?: string
     ssl_verify: boolean
     ssl: boolean
-    timeout?: number // todo: not sure
+    timeout?: number
     username: string
   }
 }
