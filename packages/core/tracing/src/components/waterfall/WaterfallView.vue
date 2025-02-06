@@ -49,6 +49,24 @@
               <RemoveIcon />
             </KButton>
           </KTooltip>
+
+          <div class="waterfall-top-n">
+            <KSegmentedControl
+              v-model="importantSpanStrategy"
+              :options="[
+                { label: 'Highlight', value: 'highlight' },
+                { label: 'Show only', value: 'showOnly' },
+              ]"
+            />
+
+            <KInput
+              v-model="topN"
+              :error="topN !== '' && !importantSpanIds"
+              min="0"
+              placeholder="Top-N"
+              type="number"
+            />
+          </div>
         </div>
 
         <div>
@@ -83,11 +101,13 @@
 
 <script setup lang="ts">
 import { AddIcon, RemoveIcon } from '@kong/icons'
+import { KInput } from '@kong/kongponents'
 import { computed, provide, reactive, ref, toRef, useTemplateRef, watch, type PropType, type Ref } from 'vue'
 import composables from '../../composables'
 import { WATERFALL_ROW_COLUMN_GAP, WATERFALL_ROW_LABEL_WIDTH, WATERFALL_ROW_PADDING_X, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
 import { WATERFALL_CONFIG, WATERFALL_ROWS_STATE, WaterfallRowsState } from '../../constants/waterfall'
 import { type MarkReactiveInputRefs, type SpanNode, type WaterfallConfig } from '../../types'
+import { walkTopList } from '../../utils'
 import WaterfallScale from './WaterfallScale.vue'
 import WaterfallSpanRow from './WaterfallSpanRow.vue'
 
@@ -117,9 +137,22 @@ const rootRef = useTemplateRef<HTMLElement>('root')
 const rowsAreaRef = useTemplateRef<HTMLElement>('rowsArea')
 const spanBarMeasurementRef = useTemplateRef<HTMLElement>('spanBarMeasurement')
 
+const importantSpanStrategy = ref<'highlight' | 'showOnly'>('highlight')
+const topN = ref<string>('')
 const rowsAreaGuideX = ref<number | undefined>(undefined)
 
-const config = reactive<MarkReactiveInputRefs<WaterfallConfig, 'ticks' | 'root' | 'totalDurationNano'>>({
+const importantSpanIds = computed(() => {
+  if (!props.rootSpan || !topN.value) {
+    return undefined
+  }
+  const n = Number(topN.value)
+  if (!Number.isInteger(n) || n < 1) {
+    return undefined
+  }
+  return new Set(walkTopList(props.rootSpan, Number(topN.value)).map((span) => span.span.spanId))
+})
+
+const config = reactive<MarkReactiveInputRefs<WaterfallConfig, 'ticks' | 'root' | 'totalDurationNano' | 'importantSpanIds' | 'importantSpanStrategy'>>({
   ticks: toRef(props, 'ticks'),
   root: toRef(props, 'rootSpan'),
   totalDurationNano: computed(() => {
@@ -131,6 +164,8 @@ const config = reactive<MarkReactiveInputRefs<WaterfallConfig, 'ticks' | 'root' 
   }),
   zoom: 1,
   viewport: { left: 0, right: 0 },
+  importantSpanIds,
+  importantSpanStrategy,
 })
 
 const rowsState = ref(WaterfallRowsState.EXPANDED)
@@ -260,6 +295,39 @@ const handleWheel = (e: WheelEvent) => {
     flex-direction: row;
     gap: $kui-space-10;
     justify-content: flex-start;
+  }
+
+  .waterfall-top-n {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: $kui-space-40;
+    justify-content: flex-end;
+    width: 100%;
+
+    .k-segmented-control {
+      width: auto;
+
+      :deep(button) {
+        font-size: $kui-font-size-20;
+        height: auto;
+        padding: $kui-space-20 $kui-space-40;
+        width: auto;
+      }
+    }
+
+    .k-input {
+      width: 100px;
+
+      &:deep(input) {
+        border-radius: $kui-border-radius-20;
+        padding: $kui-space-10 $kui-space-30;
+
+        &, &::placeholder {
+          font-size: $kui-font-size-20;
+        }
+      }
+    }
   }
 
   .minimap-wrapper {

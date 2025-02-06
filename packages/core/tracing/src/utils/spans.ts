@@ -14,7 +14,7 @@ const MAPPED_SPAN_NAMES: Record<string, string> = {
   [SPAN_NAMES.KONG_READ_RESPONSE_FROM_UPSTREAM]: SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM,
 }
 
-const compareSpanNode = (a: SpanNode, b: SpanNode) => {
+const compareSpanStartAsc = (a: SpanNode, b: SpanNode) => {
   if (a.span.startTimeUnixNano !== undefined && b.span.startTimeUnixNano !== undefined) {
     return Number(a.span.startTimeUnixNano - b.span.startTimeUnixNano)
   }
@@ -23,6 +23,17 @@ const compareSpanNode = (a: SpanNode, b: SpanNode) => {
     return 0
   }
   return a.span.startTimeUnixNano === undefined ? -1 : 1
+}
+
+const compareSpanDurationDsc = (a: SpanNode, b: SpanNode) => {
+  if (a.durationNano !== undefined && b.durationNano !== undefined) {
+    return Number(b.durationNano - a.durationNano)
+  }
+  if (a.durationNano === undefined && b.durationNano === undefined) {
+    return 0
+  }
+  // Spans without duration are placed at the end
+  return b.durationNano === undefined ? -1 : 1
 }
 
 export const calculateSpanDuration = (span: Span<bigint>): number | undefined => {
@@ -143,12 +154,12 @@ export const buildSpanTrees = (spans: Span[]): SpanTrees => {
   }
 
   for (const node of nodes.values()) {
-    node.children.sort(compareSpanNode)
+    node.children.sort(compareSpanStartAsc)
   }
 
   return {
     roots,
-    spans: Array.from(nodes.values()).sort(compareSpanNode).map(node => node.span),
+    spans: Array.from(nodes.values()).sort(compareSpanStartAsc).map(node => node.span),
   }
 }
 
@@ -157,6 +168,23 @@ export const buildSpanTrees = (spans: Span[]): SpanTrees => {
  */
 export const spanMaybeIncomplete = (node: SpanNode): boolean =>
   node.durationNano === undefined || node.durationNano < 0
+
+export const walkTopList = (root: SpanNode, n: number): SpanNode[] => {
+  const topList : SpanNode[] = []
+  const maxList: SpanNode[] = [root]
+  while (maxList.length > 0) {
+    const node = maxList.shift()!
+    topList.push(node)
+    if (topList.length >= n) {
+      break
+    }
+    if (node?.children && node.children.length > 0) {
+      maxList.push(...node.children)
+      maxList.sort(compareSpanDurationDsc)
+    }
+  }
+  return topList
+}
 
 // e.g., `kong.access.plugin.jwt.abc.def`
 export interface ParsedPluginSpan {

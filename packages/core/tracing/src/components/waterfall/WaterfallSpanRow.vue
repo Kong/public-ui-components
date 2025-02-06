@@ -1,6 +1,11 @@
 <template>
   <div
-    :class="['waterfall-row', 'waterfall-span-row', { selected }]"
+    v-if="important || config.importantSpanStrategy !== 'showOnly'"
+    :class="[
+      'waterfall-row', 'waterfall-span-row', {
+        selected,
+        unimportant: !important && config.importantSpanStrategy === 'highlight',
+      }]"
     @click="handleSelect"
   >
     <div class="label">
@@ -127,6 +132,10 @@ const selected = computed(
     config.selectedSpan?.span.spanId === props.spanNode.span.spanId,
 )
 
+const important = computed(() =>
+  !config.importantSpanIds || config.importantSpanIds.has(props.spanNode.span.spanId),
+)
+
 const hasChildren = computed(() =>
   props.spanNode.children !== undefined && props.spanNode.children.length > 0,
 )
@@ -197,6 +206,10 @@ const handleSelect = () => {
   overflow: hidden;
   position: relative;
   width: 100%;
+
+  &.unimportant {
+    opacity: 0.3;
+  }
 
   &:hover, &.selected {
     $row-background-color: $kui-color-background-primary-weakest;
