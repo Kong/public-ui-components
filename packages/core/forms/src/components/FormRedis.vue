@@ -6,6 +6,7 @@
         :default-redis-config-item="selectedRedisConfigItem"
         :plugin-redis-fields="field.fields"
         :update-redis-model="updateRedisModel"
+        @show-new-partial-modal="$emit('showNewPartialModal')"
       />
     </div>
     <KCard
@@ -45,6 +46,7 @@
           :plugin-redis-fields="field.fields"
           :redis-type="field.redisType"
           :update-redis-model="updateRedisModel"
+          @show-new-partial-modal="$emit('showNewPartialModal')"
         />
       </div>
       <div
