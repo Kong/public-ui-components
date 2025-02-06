@@ -366,6 +366,9 @@ importers:
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
+      gridstack:
+        specifier: ^11.3.0
+        version: 11.3.0
     devDependencies:
       '@kong-ui-public/analytics-chart':
         specifier: workspace:^
@@ -5694,6 +5697,9 @@ packages:
   gray-matter@4.0.3:
     resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
     engines: {node: '>=6.0'}
+
+  gridstack@11.3.0:
+    resolution: {integrity: sha512-Z0eRovKcZTRTs3zetJwjO6CNwrgIy845WfOeZGk8ybpeMCE8fMA8tScyKU72Y2M6uGHkjgwnjflglvPiv+RcBQ==}
 
   gzip-size@6.0.0:
     resolution: {integrity: sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==}
@@ -15588,6 +15594,8 @@ snapshots:
       kind-of: 6.0.3
       section-matter: 1.0.0
       strip-bom-string: 1.0.0
+
+  gridstack@11.3.0: {}
 
   gzip-size@6.0.0:
     dependencies:
