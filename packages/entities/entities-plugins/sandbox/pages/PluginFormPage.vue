@@ -3,7 +3,6 @@
     <h2>Konnect API</h2>
     <PluginForm
       :config="konnectConfig"
-      enable-redis-partial
       enable-vault-secret-picker
       :plugin-id="id"
       :plugin-type="plugin"
