@@ -45,6 +45,31 @@
         </Teleport>
       </template>
 
+      <template
+        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        #empty-state
+      >
+        <EntityEmptyState
+          :action-button-text="t('gateway_services.empty_state_v2.create')"
+          appearance="secondary"
+          :can-create="() => canCreate()"
+          :description="t('gateway_services.empty_state_v2.description')"
+          :learn-more="config.app === 'konnect'"
+          :title="t('gateway_services.empty_state_v2.title')"
+          @click:create="handleCreate"
+          @click:learn-more="$emit('click:learn-more')"
+        >
+          <template #image>
+            <div class="empty-state-icon-gateway">
+              <ServicesIcon
+                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
+                :size="KUI_ICON_SIZE_50"
+              />
+            </div>
+          </template>
+        </EntityEmptyState>
+      </template>
+
       <!-- Column Formatting -->
       <template #name="{ rowValue }">
         <b>{{ rowValue ?? '-' }}</b>
@@ -160,7 +185,7 @@
 import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
-import { AddIcon } from '@kong/icons'
+import { AddIcon, ServicesIcon } from '@kong/icons'
 import composables from '../composables'
 import endpoints from '../gateway-services-endpoints'
 import type { AxiosError } from 'axios'
@@ -184,6 +209,7 @@ import {
   EntityFilter,
   EntityToggleModal,
   EntityTypes,
+  EntityEmptyState,
   FetcherStatus,
   PermissionsWrapper,
   useAxios,
@@ -191,10 +217,12 @@ import {
   useDeleteUrlBuilder,
   TableTags,
 } from '@kong-ui-public/entities-shared'
+import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
+  (e: 'click:learn-more'): void,
   (e: 'copy:success', payload: CopyEventPayload): void,
   (e: 'copy:error', payload: CopyEventPayload): void,
   (e: 'delete:success', gatewayService: EntityRow): void,
@@ -250,6 +278,14 @@ const props = defineProps({
   },
   /** user is onboarding, use onboarding text */
   isServerless: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Enables the new empty state design, this prop can be removed when
+   * the khcp-14756-empty-states-m2 FF is removed.
+   */
+  enableV2EmptyStates: {
     type: Boolean,
     default: false,
   },
@@ -550,6 +586,12 @@ const deleteRow = async (): Promise<void> => {
   } finally {
     isDeletePending.value = false
   }
+}
+/**
+ * Add Gateway Service
+ */
+const handleCreate = (): void => {
+  router.push(props.config.createRoute)
 }
 
 /**

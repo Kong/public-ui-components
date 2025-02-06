@@ -166,6 +166,14 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 Indicates that the user is in the onboarding Serverless control plane and should use explanatory text.
 
+#### `enableV2EmptyStates`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Enables the new empty state design, this prop can be removed when the khcp-14756-empty-states-m2 FF is removed.
+
 ### Events
 
 #### error
