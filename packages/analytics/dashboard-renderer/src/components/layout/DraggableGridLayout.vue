@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script lang='ts' setup>
+<script lang='ts' setup generic="T">
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { GridStack } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
@@ -31,14 +31,14 @@ import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 
 const props = withDefaults(defineProps<{
-  tiles: GridTile<any>[],
+  tiles: GridTile<T>[],
   gridSize: GridSize,
   tileHeight?: number,
 }>(), {
   tileHeight: 200,
 })
 const emit = defineEmits<{
-  (e: 'update-tiles', tiles: GridTile<any>[]): void,
+  (e: 'update-tiles', tiles: GridTile<T>[]): void,
 }>()
 
 const gridContainer = ref<HTMLDivElement | null>(null)
