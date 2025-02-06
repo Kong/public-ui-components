@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { PluginIcon } from '@kong-ui-public/entities-plugins'
-
+// todo
 </script>
 
 

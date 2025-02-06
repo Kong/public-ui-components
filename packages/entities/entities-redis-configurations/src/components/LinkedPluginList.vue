@@ -47,6 +47,7 @@ const tableData: RedisConfigurationLinkedPlugin[] = [
 ]
 
 const fetcher = async (): Promise<any> => {
+  // todo
   // const { rows } = tableData.value
 
   // isLoading.value = false
