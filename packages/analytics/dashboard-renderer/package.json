@@ -43,14 +43,15 @@
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
+    "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.17.2",
     "@kong/kongponents": "9.17.2",
+    "ajv": "^8.17.1",
     "pinia": ">= 2.1.7 < 3",
     "swrv": "^1.0.4",
-    "vue": "^3.5.12",
-    "ajv": "^8.17.1"
+    "vue": "^3.5.12"
   },
   "repository": {
     "type": "git",
@@ -74,14 +75,19 @@
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
+    "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^9.14.16",
     "swrv": "^1.0.4",
     "vue": ">= 3.3.13 < 4"
   },
+  "peerDependenciesMeta": {
+    "@kong-ui-public/entities-shared": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "@kong-ui-public/entities-shared": "workspace:^",
     "gridstack": "^11.3.0"
   }
 }
