@@ -12,6 +12,7 @@
       <component
         :is="sharedFormName"
         v-if="sharedFormName && (formModel.id && editing || !editing)"
+        :enable-redis-partial="props.enableRedisPartial"
         :form-model="formModel"
         :form-options="formOptions"
         :form-schema="formSchema"

@@ -198,11 +198,14 @@
       @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
     />
 
-    <div
+    <component
+      :is="enableRedisPartial ? 'div' : 'KCard'"
       v-if="formModel['config-strategy'] === 'redis'"
       class="rla-form-redis-card"
+      :title="t('rla.redis.title')"
     >
       <VueFormGenerator
+        :enable-redis-partial="enableRedisPartial"
         :model="formModel"
         :options="formOptions"
         :schema="advancedSchema.redis"
@@ -210,7 +213,7 @@
         @partial-toggled="onPartialToggled"
         @show-new-partial-modal="showNewPartialModal"
       />
-    </div>
+    </component>
 
     <VueFormGenerator
       :class="{ 'rla-last-vfg': formModel['config-strategy'] !== 'redis' }"
@@ -332,6 +335,7 @@ const props = defineProps<{
   onPartialToggled: (field: string, model: any) => void
   showNewPartialModal: () => void
   isEditing?: boolean
+  enableRedisPartial?: boolean
 }>()
 
 const globalFields = computed(() => {
@@ -378,7 +382,7 @@ const advancedSchema = computed(() => {
 
   return {
     endsWithStrategy: { fields: endsWithStrategy },
-    redis: { fields: [{ fields: redis, id: '_redis', model: 'redis_partial' }] },
+    redis: props.enableRedisPartial ? { fields: [{ fields: redis, id: '_redis', model: 'redis_partial' }] } : { fields: redis },
     afterStrategy: { fields: afterStrategy },
   }
 })
