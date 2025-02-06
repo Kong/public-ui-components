@@ -233,6 +233,7 @@ const exportCsv = () => {
   display: flex;
   flex-direction: column;
   height: v-bind('`${height}px`');
+  overflow: hidden;
 
   .tile-header {
     align-items: center;
@@ -293,6 +294,7 @@ const exportCsv = () => {
 
   .tile-content {
     flex-grow: 1;
+    overflow: hidden;
   }
 }
 </style>

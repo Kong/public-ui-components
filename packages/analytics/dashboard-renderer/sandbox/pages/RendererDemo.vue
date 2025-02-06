@@ -22,6 +22,7 @@
         :class="{ 'custom-styling': isToggled}"
         :config="dashboardConfig"
         :context="context"
+        draggable
         @edit-tile="onEditTile"
       >
         <template #slot-1>

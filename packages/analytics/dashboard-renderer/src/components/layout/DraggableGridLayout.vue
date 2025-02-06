@@ -48,7 +48,6 @@ onMounted(() => {
   if (gridContainer.value) {
     grid = GridStack.init({
       column: props.gridSize.cols,
-      row: props.gridSize.rows,
       cellHeight: props.tileHeight,
       resizable: { handles: 'all' },
     }, gridContainer.value)
