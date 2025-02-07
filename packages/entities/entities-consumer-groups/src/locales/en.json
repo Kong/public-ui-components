@@ -10,10 +10,14 @@
       "empty_state": {
         "title": "Configure a New Consumer Group",
         "description": "Use consumer groups to manage custom rate limiting configuration for subsets of consumers.",
-        "title_for_consumer": "Add to a Consumer Group"
+        "title_for_consumer": "Add to a consumer group"
+      },
+      "empty_state_v2": {
+        "title": "Configure your first consumer group",
+        "description": "Consumer groups allow you to manage shared rate limiting and access control policies for multiple consumers."
       },
       "toolbar_actions": {
-        "new_consumer_group": "New Consumer Group"
+        "new_consumer_group": "New consumer group"
       }
     },
     "title": "Consumer Groups",
@@ -21,8 +25,8 @@
       "placeholder": "Filter by exact name or ID"
     },
     "actions": {
-      "add_to_group": "Add to Consumer Group",
-      "create": "New Consumer Group",
+      "add_to_group": "Add to consumer group",
+      "create": "New consumer group",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",
