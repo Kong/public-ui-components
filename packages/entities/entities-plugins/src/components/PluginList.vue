@@ -17,6 +17,7 @@
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
+      @state="handleStateChange"
     >
       <!-- Filter -->
       <template #toolbar-filter>
@@ -31,18 +32,30 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <PermissionsWrapper :auth-function="() => canCreate()">
-            <!-- Hide Create button if table is empty -->
+          <div class="button-row">
             <KButton
-              appearance="primary"
-              data-testid="toolbar-add-plugin"
-              :size="useActionOutside ? 'medium' : 'large'"
-              :to="config.createRoute"
+              v-if="!showEmptyState && config.app === 'konnect'"
+              appearance="secondary"
+              class="open-learning-hub"
+              data-testid="plugins-learn-more-button"
+              icon
+              @click="$emit('click:learn-more')"
             >
-              <AddIcon />
-              {{ t('plugins.list.toolbar_actions.new_plugin') }}
+              <BookIcon decorative />
             </KButton>
-          </PermissionsWrapper>
+            <PermissionsWrapper :auth-function="() => canCreate()">
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-plugin"
+                :size="useActionOutside ? 'medium' : 'large'"
+                :to="config.createRoute"
+              >
+                <AddIcon />
+                {{ t('plugins.list.toolbar_actions.new_plugin') }}
+              </KButton>
+            </PermissionsWrapper>
+          </div>
         </Teleport>
       </template>
 
@@ -248,6 +261,7 @@ import {
   useAxios,
   useFetcher,
   useDeleteUrlBuilder,
+  useTableState,
   useGatewayFeatureSupported,
   TableTags,
 } from '@kong-ui-public/entities-shared'
@@ -261,7 +275,7 @@ import type {
   FuzzyMatchFilterConfig,
   TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
-import { AddIcon, PlugIcon } from '@kong/icons'
+import { AddIcon, BookIcon, PlugIcon } from '@kong/icons'
 
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
@@ -380,6 +394,8 @@ const { i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+
 
 const isConsumerPage = computed((): boolean => props.config?.entityType === 'consumers')
 const isConsumerGroupPage = computed((): boolean => props.config?.entityType === 'consumer_groups')
@@ -799,6 +815,12 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .kong-ui-entities-plugins-list {
   width: 100%;
+
+  .button-row {
+    align-items: center;
+    display: flex;
+    gap: $kui-space-50;
+  }
 
   .kong-ui-entity-filter-input {
     margin-right: $kui-space-50;
