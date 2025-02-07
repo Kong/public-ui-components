@@ -146,6 +146,13 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given entity.
 
+#### `enableV2EmptyStates`
+
+- type: `boolean`
+- default: `false`
+
+Enables the new empty state design, this prop can be removed when the khcp-14756-empty-states-m2 FF is removed.
+
 ### Events
 
 #### error
