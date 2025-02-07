@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.6.74...@kong-ui-public/entities-certificates@3.7.0) (2025-02-07)
+
+
+### Features
+
+* certificat, ca-certificate empty states ([#1933](https://github.com/Kong/public-ui-components/issues/1933)) ([23d3ede](https://github.com/Kong/public-ui-components/commit/23d3edebbf8fb2572df5ca651e92fc8d57be288a))
+
+
+
+
+
 ## [3.6.74](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.6.73...@kong-ui-public/entities-certificates@3.6.74) (2025-02-03)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates
