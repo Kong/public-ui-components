@@ -101,7 +101,7 @@
 <script setup lang="ts">
 import type { DashboardRendererContextInternal } from '../types'
 import { type DashboardTileType, formatTime, type TileDefinition, TimePeriods } from '@kong-ui-public/analytics-utilities'
-import { type Component, computed, inject, nextTick, onMounted, ref } from 'vue'
+import { type Component, computed, inject, nextTick, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -145,11 +145,10 @@ const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 
-onMounted(async () => {
+watch(() => titleRef.value, async () => {
   await nextTick()
-  const element = titleRef.value
-  if (element) {
-    isTitleTruncated.value = element.scrollWidth > element.clientWidth
+  if (titleRef.value) {
+    isTitleTruncated.value = titleRef.value.scrollWidth > titleRef.value.clientWidth
   }
 })
 
