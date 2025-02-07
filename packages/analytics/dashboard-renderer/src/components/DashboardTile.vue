@@ -7,12 +7,19 @@
       v-if="hasKebabMenuAccess && definition.chart.type !== 'slottable'"
       class="tile-header"
     >
-      <div
-        class="title"
-        :data-testid="`tile-title-${tileId}`"
+      <KTooltip
+        class="title-tooltip"
+        :disabled="!isTitleTruncated"
+        max-width="500"
+        :text="definition.chart.chartTitle"
       >
-        {{ definition.chart.chartTitle }}
-      </div>
+        <div
+          ref="titleRef"
+          class="title"
+        >
+          {{ definition.chart.chartTitle }}
+        </div>
+      </KTooltip>
       <div
         v-if="canShowKebabMenu || badgeData"
         class="tile-actions"
@@ -94,7 +101,7 @@
 <script setup lang="ts">
 import type { DashboardRendererContextInternal } from '../types'
 import { type DashboardTileType, formatTime, type TileDefinition, TimePeriods } from '@kong-ui-public/analytics-utilities'
-import { type Component, computed, inject, ref } from 'vue'
+import { type Component, computed, inject, nextTick, onMounted, ref } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -135,6 +142,16 @@ const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-me
 
 const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
+const titleRef = ref<HTMLElement>()
+const isTitleTruncated = ref(false)
+
+onMounted(async () => {
+  await nextTick()
+  const element = titleRef.value
+  if (element) {
+    isTitleTruncated.value = element.scrollWidth > element.clientWidth
+  }
+})
 
 const exploreLink = computed(() => {
   if (queryBridge && queryBridge.exploreBaseUrl) {
@@ -243,8 +260,16 @@ const exportCsv = () => {
     right: 0;
     width: 100%;
 
-    .title {
-      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    .title-tooltip {
+      margin-right: $kui-space-20;
+      overflow: hidden;
+
+      .title {
+        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
 
     .tile-actions {

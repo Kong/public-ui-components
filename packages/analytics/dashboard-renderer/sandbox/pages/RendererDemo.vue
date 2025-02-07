@@ -149,7 +149,7 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: 'horizontal_bar',
-          chartTitle: 'Horizontal bar chart of mock data',
+          chartTitle: 'This is a really long title lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
           allowCsvExport: true,
         },
         query: {
