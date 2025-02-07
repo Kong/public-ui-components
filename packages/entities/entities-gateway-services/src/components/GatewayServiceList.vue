@@ -16,6 +16,7 @@
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
+      @state="handleStateChange"
     >
       <!-- Filter -->
       <template #toolbar-filter>
@@ -30,18 +31,30 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <PermissionsWrapper :auth-function="() => canCreate()">
-            <!-- Hide Create button if table is empty -->
+          <div class="button-row">
             <KButton
-              appearance="primary"
-              data-testid="toolbar-add-gateway-service"
-              :size="useActionOutside ? 'medium' : 'large'"
-              :to="config.createRoute"
+              v-if="!showEmptyState && config.app === 'konnect'"
+              appearance="secondary"
+              class="open-learning-hub"
+              data-testid="gateway-services-learn-more-button"
+              icon
+              @click="$emit('click:learn-more')"
             >
-              <AddIcon />
-              {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
+              <BookIcon decorative />
             </KButton>
-          </PermissionsWrapper>
+            <PermissionsWrapper :auth-function="() => canCreate()">
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-gateway-service"
+                :size="useActionOutside ? 'medium' : 'large'"
+                :to="config.createRoute"
+              >
+                <AddIcon />
+                {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
+              </KButton>
+            </PermissionsWrapper>
+          </div>
         </Teleport>
       </template>
 
@@ -185,7 +198,7 @@
 import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
-import { AddIcon, ServicesIcon } from '@kong/icons'
+import { AddIcon, BookIcon, ServicesIcon } from '@kong/icons'
 import composables from '../composables'
 import endpoints from '../gateway-services-endpoints'
 import type { AxiosError } from 'axios'
@@ -213,6 +226,7 @@ import {
   FetcherStatus,
   PermissionsWrapper,
   useAxios,
+  useTableState,
   useFetcher,
   useDeleteUrlBuilder,
   TableTags,
@@ -295,6 +309,8 @@ const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+
 
 /**
  * Table Headers
@@ -623,6 +639,12 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .kong-ui-entities-gateway-services-list {
   width: 100%;
+
+  .button-row {
+    align-items: center;
+    display: flex;
+    gap: $kui-space-50;
+  }
 
   .kong-ui-entity-filter-input {
     margin-right: $kui-space-50;
