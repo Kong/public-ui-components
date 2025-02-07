@@ -33,18 +33,30 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <PermissionsWrapper :auth-function="() => canCreate()">
-            <!-- Hide Create button if table is empty -->
+          <div class="button-row">
             <KButton
-              appearance="primary"
-              data-testid="toolbar-add-route"
-              :size="useActionOutside ? 'medium' : 'large'"
-              :to="config.createRoute"
+              v-if="!showEmptyState && config.app === 'konnect'"
+              appearance="secondary"
+              class="open-learning-hub"
+              data-testid="consumers-learn-more-button"
+              icon
+              @click="$emit('click:learn-more')"
             >
-              <AddIcon />
-              {{ t('routes.list.toolbar_actions.new_route') }}
+              <BookIcon decorative />
             </KButton>
-          </PermissionsWrapper>
+            <PermissionsWrapper :auth-function="() => canCreate()">
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-route"
+                :size="useActionOutside ? 'medium' : 'large'"
+                :to="config.createRoute"
+              >
+                <AddIcon />
+                {{ t('routes.list.toolbar_actions.new_route') }}
+              </KButton>
+            </PermissionsWrapper>
+          </div>
         </Teleport>
       </template>
 
@@ -213,7 +225,7 @@ import { useRouter } from 'vue-router'
 
 import { BadgeMethodAppearances } from '@kong/kongponents'
 import type { BadgeMethodAppearance, HeaderTag } from '@kong/kongponents'
-import { AddIcon, ForwardIcon } from '@kong/icons'
+import { AddIcon, ForwardIcon, BookIcon } from '@kong/icons'
 import {
   EntityBaseTable,
   EntityDeleteModal,
@@ -224,6 +236,7 @@ import {
   PermissionsWrapper,
   useAxios,
   useFetcher,
+  useTableState,
   useDeleteUrlBuilder,
   TableTags,
 } from '@kong-ui-public/entities-shared'
@@ -432,6 +445,8 @@ const resetPagination = (): void => {
   fetcherCacheKey.value++
 }
 
+const { hideTableToolbar: showEmptyState } = useTableState(() => filterQuery.value)
+
 /**
  * loading, Error, Empty state
  */
@@ -613,6 +628,12 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
+.button-row {
+  align-items: center;
+  display: flex;
+  gap: $kui-space-50;
+}
+
 .kong-ui-entities-routes-list {
   width: 100%;
 
