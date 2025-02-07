@@ -19,6 +19,7 @@
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
+      @state="handleStateChange"
     >
       <!-- Filter -->
       <template #toolbar-filter>
@@ -345,6 +346,8 @@ const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+
 
 /**
  * Table Headers
@@ -444,8 +447,6 @@ const resetPagination = (): void => {
   // Increment the cache key on sort
   fetcherCacheKey.value++
 }
-
-const { hideTableToolbar: showEmptyState } = useTableState(() => filterQuery.value)
 
 /**
  * loading, Error, Empty state

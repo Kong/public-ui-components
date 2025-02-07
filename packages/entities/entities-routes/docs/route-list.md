@@ -168,7 +168,6 @@ Whether to show the "Expression" column. Defaults to `false`.
 
 #### `enableV2EmptyStates`
 - type: `boolean`
-- required: `false`
 - default: `false`
 
 Enables the new empty state design, this prop can be removed when the khcp-14756-empty-states-m2 FF is removed.
