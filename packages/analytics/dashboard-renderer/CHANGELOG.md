@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.0...@kong-ui-public/dashboard-renderer@0.35.1) (2025-02-07)
+
+
+### Bug Fixes
+
+* tile header overflow issue ([#1937](https://github.com/Kong/public-ui-components/issues/1937)) ([5ac5abf](https://github.com/Kong/public-ui-components/commit/5ac5abf29216553c498dde0f014cd0f1512d3240))
+
+
+
+
+
 # [0.35.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.34.3...@kong-ui-public/dashboard-renderer@0.35.0) (2025-02-06)
 
 
