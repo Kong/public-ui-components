@@ -145,12 +145,12 @@ const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 
-watch(() => titleRef.value, async () => {
+watch(() => props.definition, async () => {
   await nextTick()
   if (titleRef.value) {
     isTitleTruncated.value = titleRef.value.scrollWidth > titleRef.value.clientWidth
   }
-})
+}, { deep: true })
 
 const exploreLink = computed(() => {
   if (queryBridge && queryBridge.exploreBaseUrl) {
