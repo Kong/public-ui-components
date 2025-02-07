@@ -52,17 +52,25 @@ export const standardize = {
     return value.toString()
   },
 
-  clusterNodes(nodes: Identifiable<ClusterNode>[]): ClusterNode[] {
+  removeIdClusterNodes(nodes: Identifiable<ClusterNode>[]): ClusterNode[] {
     return nodes.map(node => ({
       ...shallowCopyWithoutId(node),
       port: standardize.int(node.port)!,
     }))
   },
 
-  sentinelNodes(nodes: Identifiable<SentinelNode>[]): SentinelNode[] {
+  removeIdFromSentinelNodes(nodes: Identifiable<SentinelNode>[]): SentinelNode[] {
     return nodes.map(node => ({
       ...shallowCopyWithoutId(node),
       port: standardize.int(node.port)!,
     }))
+  },
+
+  addIdToClusterNodes(nodes: ClusterNode[]): Identifiable<ClusterNode>[] {
+    return nodes.map(shallowCopyWithId)
+  },
+
+  addIdToSentinelNodes(nodes: SentinelNode[]): Identifiable<SentinelNode>[] {
+    return nodes.map(shallowCopyWithId)
   },
 }

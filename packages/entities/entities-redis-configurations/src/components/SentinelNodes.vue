@@ -1,6 +1,7 @@
 <template>
   <div>
     <KLabel
+      class="required"
       :info="t('form.fields.sentinel_nodes.tooltip')"
       :tooltip-attributes="{ maxWidth: '400' }"
     >
@@ -10,6 +11,7 @@
       <FieldArrayCardContainer
         v-for="(node, index) of nodes"
         :key="node.id"
+        data-testid="redis-sentinel-nodes"
         :disabled="readonly"
         @remove-item="removeItem(index)"
       >
@@ -21,6 +23,7 @@
               info: t('form.fields.sentinel_node_host.tooltip'),
               tooltipAttributes: { maxWidth: '400' },
             }"
+            name="host"
             :readonly="readonly"
             required
           />
@@ -31,6 +34,7 @@
               info: t('form.fields.sentinel_node_port.tooltip'),
               tooltipAttributes: { maxWidth: '400' },
             }"
+            name="port"
             :readonly="readonly"
             type="number"
           />
@@ -38,6 +42,7 @@
       </FieldArrayCardContainer>
       <KButton
         appearance="tertiary"
+        data-testid="redis-add-sentinel-node-button"
         :disabled="readonly"
         @click="addItem"
       >

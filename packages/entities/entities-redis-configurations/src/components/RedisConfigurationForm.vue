@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="kong-ui-entities-redis-configurations-form">
     <EntityBaseForm
       :action-teleport-target="actionTeleportTarget"
       :can-submit="canSubmit"
@@ -17,13 +17,17 @@
       @loading="loadingHandler"
       @submit="submitHandler"
     >
+      <!-- type section -->
       <EntityFormSection
+        data-testid="redis-type-section"
         :description="t('form.sections.type.description')"
         :title="t('form.sections.type.title')"
       >
         <KSelect
+          data-testid="redis-type-select"
           :disabled="isEdit"
           :items="typeOptions"
+          :kpop-attributes="{ 'data-testid': 'redis-type-select-popover' }"
           :label="t('form.fields.type.label')"
           :readonly="form.readonly"
           required
@@ -35,12 +39,15 @@
         </KSelect>
       </EntityFormSection>
 
+      <!-- general section -->
       <EntityFormSection
+        data-testid="redis-general-section"
         :description="t('form.sections.general.description')"
         :title="t('form.sections.general.title')"
       >
         <KInput
           v-model.trim="form.fields.name"
+          data-testid="redis-name-input"
           :label="t('form.fields.name.label')"
           :placeholder="t('form.fields.name.placeholder')"
           :readonly="form.readonly"
@@ -48,13 +55,16 @@
         />
       </EntityFormSection>
 
+      <!-- sentinel configuration section -->
       <EntityFormSection
         v-if="redisType === RedisType.SENTINEL"
+        data-testid="redis-sentinel-configuration-section"
         :description="t('form.sections.sentinel_configuration.description')"
         :title="t('form.sections.sentinel_configuration.title')"
       >
         <KInput
           v-model="form.fields.config.sentinel_master"
+          data-testid="redis-sentinel-master-input"
           :label="t('form.fields.sentinel_master.label')"
           :label-attributes="{
             info: t('form.fields.sentinel_master.tooltip'),
@@ -65,7 +75,9 @@
         />
         <KSelect
           v-model="form.fields.config.sentinel_role"
+          data-testid="redis-sentinel-role-select"
           :items="sentinelRoleOptions"
+          :kpop-attributes="{ 'data-testid': 'redis-sentinel-role-select-popover' }"
           :label="t('form.fields.sentinel_role.label')"
           :label-attributes="{
             info: t('form.fields.sentinel_role.tooltip'),
@@ -113,8 +125,10 @@
         />
       </EntityFormSection>
 
+      <!-- cluster configuration section -->
       <EntityFormSection
         v-if="redisType === RedisType.CLUSTER"
+        data-testid="redis-cluster-configuration-section"
         :description="t('form.sections.cluster.description')"
         :title="t('form.sections.cluster.title')"
       >
@@ -124,6 +138,7 @@
         />
         <KInput
           v-model="form.fields.config.cluster_max_redirections"
+          data-testid="redis-cluster-max-redirections-input"
           :label="t('form.fields.cluster_max_redirections.label')"
           :label-attributes="{
             info: t('form.fields.cluster_max_redirections.tooltip'),
@@ -134,13 +149,16 @@
         />
       </EntityFormSection>
 
+      <!-- connection configuration section -->
       <EntityFormSection
+        data-testid="redis-connection-configuration-section"
         :description="t('form.sections.connection.description')"
         :title="t('form.sections.connection.title')"
       >
         <KInput
           v-if="redisType === RedisType.HOST_PORT_CE || redisType === RedisType.HOST_PORT_EE"
           v-model.trim="form.fields.config.host"
+          data-testid="redis-host-input"
           :label="t('form.fields.host.label')"
           :label-attributes="{
             info: t('form.fields.host.tooltip'),
@@ -151,6 +169,7 @@
         <KInput
           v-if="redisType === RedisType.HOST_PORT_CE || redisType === RedisType.HOST_PORT_EE"
           v-model.trim="form.fields.config.port"
+          data-testid="redis-port-input"
           :label="t('form.fields.port.label')"
           :label-attributes="{
             info: t('form.fields.port.tooltip'),
@@ -163,6 +182,7 @@
         <KCheckbox
           v-if="redisType === RedisType.HOST_PORT_EE"
           v-model="form.fields.config.connection_is_proxied"
+          data-testid="redis-connection-is-proxied-checkbox"
           :disabled="form.readonly"
           :label="t('form.fields.connection_is_proxied.label')"
           :label-attributes="{
@@ -174,6 +194,7 @@
         <KInput
           v-if="redisType === RedisType.HOST_PORT_CE"
           v-model.trim="form.fields.config.timeout"
+          data-testid="redis-timeout-input"
           :label="t('form.fields.timeout.label')"
           :label-attributes="{
             info: t('form.fields.timeout.tooltip'),
@@ -185,6 +206,7 @@
 
         <KInput
           v-model.trim="form.fields.config.database"
+          data-testid="redis-database-input"
           :label="t('form.fields.database.label')"
           :label-attributes="{
             info: t('form.fields.database.tooltip'),
@@ -195,6 +217,7 @@
         />
         <KInput
           v-model.trim="form.fields.config.username"
+          data-testid="redis-username-input"
           :label="t('form.fields.username.label')"
           :label-attributes="{
             info: t('form.fields.username.tooltip'),
@@ -211,6 +234,7 @@
         />
         <KInput
           v-model.trim="form.fields.config.password"
+          data-testid="redis-password-input"
           :label="t('form.fields.password.label')"
           :label-attributes="{
             info: t('form.fields.password.tooltip'),
@@ -228,18 +252,22 @@
         />
       </EntityFormSection>
 
+      <!-- TLS configuration section -->
       <EntityFormSection
+        data-testid="redis-tls-configuration-section"
         :description="t('form.sections.tls.description')"
         :title="t('form.sections.tls.title')"
       >
         <KCheckbox
           v-model="form.fields.config.ssl"
+          data-testid="redis-ssl-checkbox"
           :description="t('form.fields.ssl.description')"
           :disabled="form.readonly"
           :label="t('form.fields.ssl.label')"
         />
         <KCheckbox
           v-model="form.fields.config.ssl_verify"
+          data-testid="redis-ssl-verify-checkbox"
           :description="t('form.fields.ssl_verify.description')"
           :disabled="form.readonly"
           :label="t('form.fields.ssl_verify.label')"
@@ -255,13 +283,16 @@
         />
       </EntityFormSection>
 
+      <!-- keepalive section -->
       <EntityFormSection
         v-if="redisType !== RedisType.HOST_PORT_CE"
+        data-testid="redis-keepalive-section"
         :description="t('form.sections.keepalive.description')"
         :title="t('form.sections.keepalive.title')"
       >
         <KInput
           v-model="form.fields.config.keepalive_backlog"
+          data-testid="redis-keepalive-backlog-input"
           :label="t('form.fields.keepalive_backlog.label')"
           :label-attributes="{
             info: t('form.fields.keepalive_backlog.tooltip'),
@@ -272,6 +303,7 @@
         />
         <KInput
           v-model="form.fields.config.keepalive_pool_size"
+          data-testid="redis-keepalive-pool-size-input"
           :label="t('form.fields.keepalive_pool_size.label')"
           :label-attributes="{
             info: t('form.fields.keepalive_pool_size.tooltip'),
@@ -282,25 +314,30 @@
         />
       </EntityFormSection>
 
+      <!-- read/write configuration section -->
       <EntityFormSection
         v-if="redisType !== RedisType.HOST_PORT_CE"
+        data-testid="redis-read-write-configuration-section"
         :description="t('form.sections.read_write_configuration.description')"
         :title="t('form.sections.read_write_configuration.title')"
       >
         <KInput
           v-model="form.fields.config.read_timeout"
+          data-testid="redis-read-timeout-input"
           :label="t('form.fields.read_timeout.label')"
           :readonly="form.readonly"
           type="number"
         />
         <KInput
           v-model="form.fields.config.send_timeout"
+          data-testid="redis-send-timeout-input"
           :label="t('form.fields.send_timeout.label')"
           :readonly="form.readonly"
           type="number"
         />
         <KInput
           v-model="form.fields.config.connect_timeout"
+          data-testid="redis-connect-timeout-input"
           :label="t('form.fields.connect_timeout.label')"
           :readonly="form.readonly"
           type="number"
@@ -335,7 +372,6 @@ import type { PropType } from 'vue'
 import type {
   KongManagerRedisConfigurationFormConfig,
   KonnectRedisConfigurationFormConfig,
-  RedisConfigurationFormState,
   RedisConfigurationResponse,
 } from '../types'
 import type { AxiosError } from 'axios'
@@ -449,6 +485,7 @@ const {
   redisType,
   fetchUrl,
   submit,
+  setInitialFormValues,
 } = useRedisConfigurationForm({
   partialId: props.partialId,
   config: props.config,
@@ -479,15 +516,15 @@ const fetchErrorHandler = (err: AxiosError): void => {
 }
 
 const updateFormValues = (data: Record<string, any>) => {
-  form.fields.config = Object.assign({}, form.fields.config, data.config)
-  form.fields.config.sentinel_nodes = data.config.sentinel_nodes ?? []
-  form.fields.config.cluster_nodes = data.config.cluster_nodes ?? []
-  form.fields.name = data.name
-  form.fields.type = data.type
+  setInitialFormValues(data as RedisConfigurationResponse)
 }
 </script>
 
 <style lang="scss" scoped>
+.kong-ui-entities-redis-configurations-form {
+  width: 100%;
+}
+
 .secret-picker-provider {
   margin-top: $kui-space-40 !important;
 }

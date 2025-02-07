@@ -37,7 +37,7 @@ export type RedisConfigurationConfigDTO = {
   keepalive_pool_size: number | null
   password: string | null
   port: number | null
-  timeout: number | null // todo: not sure
+  timeout: number | null
   read_timeout: number | null
   send_timeout: number | null
   sentinel_master: string | null
@@ -50,7 +50,6 @@ export type RedisConfigurationConfigDTO = {
   ssl: boolean | null
   username: string | null
 }
-// todo: separate this by redis type?
 
 export type RedisConfigurationResponse = RedisConfigurationDTO & {
   created_at: string
