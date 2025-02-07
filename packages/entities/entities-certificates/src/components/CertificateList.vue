@@ -35,7 +35,7 @@
               v-if="!showEmptyState && config.app === 'konnect'"
               appearance="secondary"
               class="open-learning-hub"
-              data-testid="consumers-learn-more-button"
+              data-testid="certificates-learn-more-button"
               icon
               @click="$emit('click:learn-more')"
             >
