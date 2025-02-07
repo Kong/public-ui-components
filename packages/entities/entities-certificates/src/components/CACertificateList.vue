@@ -15,6 +15,7 @@
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
+      @state="handleStateChange"
     >
       <!-- Filter -->
       <template #toolbar-filter>
@@ -29,18 +30,30 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <PermissionsWrapper :auth-function="() => canCreate()">
-            <!-- Hide Create button if table is empty -->
+          <div class="button-row">
             <KButton
-              appearance="primary"
-              data-testid="toolbar-add-ca-certificate"
-              :size="useActionOutside ? 'medium' : 'large'"
-              :to="config.createRoute"
+              v-if="!showEmptyState && config.app === 'konnect'"
+              appearance="secondary"
+              class="open-learning-hub"
+              data-testid="consumers-learn-more-button"
+              icon
+              @click="$emit('click:learn-more')"
             >
-              <AddIcon />
-              {{ t('ca-certificates.list.toolbar_actions.new_ca_certificate') }}
+              <BookIcon decorative />
             </KButton>
-          </PermissionsWrapper>
+            <PermissionsWrapper :auth-function="() => canCreate()">
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-ca-certificate"
+                :size="useActionOutside ? 'medium' : 'large'"
+                :to="config.createRoute"
+              >
+                <AddIcon />
+                {{ t('ca-certificates.list.toolbar_actions.new_ca_certificate') }}
+              </KButton>
+            </PermissionsWrapper>
+          </div>
         </Teleport>
       </template>
 
@@ -159,7 +172,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
-import { AddIcon, ServiceDocumentIcon } from '@kong/icons'
+import { AddIcon, BookIcon, ServiceDocumentIcon } from '@kong/icons'
 import composables from '../composables'
 import endpoints from '../ca-certificates-endpoints'
 import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
@@ -174,6 +187,7 @@ import {
   PermissionsWrapper,
   EntityEmptyState,
   useAxios,
+  useTableState,
   useFetcher,
   useDeleteUrlBuilder,
   TableTags,
@@ -262,6 +276,8 @@ const { i18n: { t, formatUnixTimeStamp }, i18nT } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+
 
 /**
  * Table Headers
@@ -512,6 +528,12 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .kong-ui-entities-ca-certificates-list {
   width: 100%;
+
+  .button-row {
+    align-items: center;
+    display: flex;
+    gap: $kui-space-50;
+  }
 
   .kong-ui-entity-filter-input {
     margin-right: $kui-space-50;
