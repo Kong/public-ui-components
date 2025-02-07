@@ -637,14 +637,14 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
+.button-row {
+  align-items: center;
+  display: flex;
+  gap: $kui-space-50;
+}
+
 .kong-ui-entities-gateway-services-list {
   width: 100%;
-
-  .button-row {
-    align-items: center;
-    display: flex;
-    gap: $kui-space-50;
-  }
 
   .kong-ui-entity-filter-input {
     margin-right: $kui-space-50;
