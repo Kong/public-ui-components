@@ -51,8 +51,7 @@
                 appearance="primary"
                 data-testid="toolbar-add-consumer-group"
                 :size="useActionOutside ? 'medium' : 'large'"
-                :to="config.consumerId ? undefined : config.createRoute"
-                @click="() => config.consumerId ? handleAddToGroupClick() : undefined"
+                @click="handleCreateClick"
               >
                 <AddIcon />
                 {{ config.consumerId ? t('consumer_groups.actions.add_to_group') : t('consumer_groups.list.toolbar_actions.new_consumer_group') }}
@@ -73,7 +72,7 @@
           :description="t('consumer_groups.list.empty_state_v2.description')"
           :learn-more="config.app === 'konnect'"
           :title="t('consumer_groups.list.empty_state_v2.title')"
-          @click:create="() => config.consumerId ? handleAddToGroupClick() : undefined"
+          @click:create="handleCreateClick"
           @click:learn-more="$emit('click:learn-more')"
         >
           <template #image>
@@ -333,6 +332,15 @@ const tableHeaders: BaseTableHeaders = fields
 const rowAttributes = (row: Record<string, any>) => ({
   'data-testid': row.username ?? row.custom_id ?? row.id,
 })
+
+const handleCreateClick = (): void => {
+  // if consumer is in consumer group, open add consumer modal
+  if (props.config.consumerId) {
+    handleAddToGroupClick()
+  } else { // else go to create consumer group page
+    router.push(props.config.createRoute)
+  }
+}
 
 /**
  * Fetcher & Filtering
