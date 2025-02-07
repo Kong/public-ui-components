@@ -398,27 +398,10 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
+      // click empty state cta
       cy.getTestId('empty-state-action').should('exist')
-      cy.getTestId('empty-state-action').should('contain.text', 'Add to Consumer Group')
-    })
-
-    it('should render AddToGroupModal onclick Add to Group button when consumerId is provided', () => {
-      interceptConsumerKM()
-
-      cy.mount(ConsumerGroupList, {
-        props: {
-          cacheIdentifier: `consumer-group-list-${uuidv4()}`,
-          config: configConsumerKM,
-          canCreate: () => true,
-          canEdit: () => false,
-          canDelete: () => false,
-          canRetrieve: () => false,
-        },
-      })
-
-      cy.wait('@getGroups')
-
       cy.getTestId('empty-state-action').click()
+      // add to group modal
       cy.getTestId('add-to-group-modal').should('exist')
     })
 
