@@ -150,7 +150,7 @@ watch(() => props.definition, async () => {
   if (titleRef.value) {
     isTitleTruncated.value = titleRef.value.scrollWidth > titleRef.value.clientWidth
   }
-}, { deep: true })
+}, { immediate: true, deep: true })
 
 const exploreLink = computed(() => {
   if (queryBridge && queryBridge.exploreBaseUrl) {
