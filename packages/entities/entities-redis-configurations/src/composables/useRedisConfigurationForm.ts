@@ -1,12 +1,13 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { EntityBaseFormType, useAxios, useErrors } from '@kong-ui-public/entities-shared'
+import { isEqual } from 'lodash-es'
 
 import { getRedisType, mapRedisTypeToPartialType, standardize as s } from '../helpers'
 import { RedisType } from '../types'
 import { DEFAULT_REDIS_TYPE } from '../constants'
 import endpoints from '../partials-endpoints'
 
-import type { KongManagerRedisConfigurationFormConfig, KonnectRedisConfigurationFormConfig, RedisConfigurationFormState, RedisConfigurationResponse } from '../types'
+import type { KongManagerRedisConfigurationFormConfig, KonnectRedisConfigurationFormConfig, RedisConfigurationFields, RedisConfigurationFormState, RedisConfigurationResponse } from '../types'
 
 export type Options = {
   partialId?: string
@@ -21,7 +22,6 @@ export const useRedisConfigurationForm = (options: Options) => {
   const formType = computed((): EntityBaseFormType => partialId
     ? EntityBaseFormType.Edit
     : EntityBaseFormType.Create)
-
 
   const form = reactive<RedisConfigurationFormState>({
     fields: {
@@ -54,6 +54,10 @@ export const useRedisConfigurationForm = (options: Options) => {
     readonly: false,
     errorMessage: '',
   })
+
+  // Used to diff the form values when editing
+  const initialPayload = ref<RedisConfigurationFields>()
+
   const userSelectedRedisType = ref<RedisType>()
   const redisType = computed(() => {
     if (isEdit) {
@@ -70,6 +74,12 @@ export const useRedisConfigurationForm = (options: Options) => {
   })
 
   const canSubmit = computed(() => {
+    if (isEdit) {
+      if (isEqual(initialPayload.value, payload.value)) {
+        return false
+      }
+    }
+
     if (!form.fields.name.length) {
       return false
     }
@@ -78,11 +88,11 @@ export const useRedisConfigurationForm = (options: Options) => {
 
     switch (redisType.value) {
       case RedisType.HOST_PORT_CE:
-        return config.host.length > 0 && config.port > 0
       case RedisType.HOST_PORT_EE:
         return config.host.length > 0 && config.port > 0
       case RedisType.CLUSTER:
-        return !!config.cluster_nodes.length && config.cluster_nodes.every((node) => node.ip.length > 0 && node.port > 0)
+        return !!config.cluster_nodes.length
+          && config.cluster_nodes.every((node) => node.ip.length > 0 && node.port > 0)
       case RedisType.SENTINEL:
         return !!config.sentinel_nodes.length
           && config.sentinel_nodes.every((node) => node.host.length > 0 && node.port > 0)
@@ -138,7 +148,7 @@ export const useRedisConfigurationForm = (options: Options) => {
           name: form.fields.name,
           type: form.fields.type,
           config: {
-            cluster_nodes: s.clusterNodes(form.fields.config.cluster_nodes),
+            cluster_nodes: s.removeIdClusterNodes(form.fields.config.cluster_nodes),
             cluster_max_redirections: s.int(form.fields.config.cluster_max_redirections),
             username: s.str(form.fields.config.username, null),
             password: s.str(form.fields.config.password, null),
@@ -159,7 +169,7 @@ export const useRedisConfigurationForm = (options: Options) => {
           type: form.fields.type,
           config: {
             sentinel_master: s.str(form.fields.config.sentinel_master, null),
-            sentinel_nodes: s.sentinelNodes(form.fields.config.sentinel_nodes),
+            sentinel_nodes: s.removeIdFromSentinelNodes(form.fields.config.sentinel_nodes),
             sentinel_role: s.str(form.fields.config.sentinel_role, null),
             username: s.str(form.fields.config.username, null),
             password: s.str(form.fields.config.password, null),
@@ -213,6 +223,15 @@ export const useRedisConfigurationForm = (options: Options) => {
     }
   }
 
+  const setInitialFormValues = (data: RedisConfigurationResponse) => {
+    form.fields.config = Object.assign({}, form.fields.config, data.config)
+    form.fields.config.sentinel_nodes = s.addIdToSentinelNodes(data.config.sentinel_nodes ?? [])
+    form.fields.config.cluster_nodes = s.addIdToClusterNodes(data.config.cluster_nodes ?? [])
+    form.fields.name = data.name
+    form.fields.type = data.type
+    initialPayload.value = JSON.parse(JSON.stringify(payload.value))
+  }
+
   return {
     form,
     canSubmit,
@@ -223,5 +242,6 @@ export const useRedisConfigurationForm = (options: Options) => {
     formType,
     fetchUrl,
     submit,
+    setInitialFormValues,
   }
 }
