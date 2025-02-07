@@ -45,12 +45,10 @@ const props = defineProps<RendererProps<TopNTableOptions>>()
 const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
 const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
 
-const AsyncEntityLink = defineAsyncComponent(() =>
-  import('@kong-ui-public/entities-shared').then(({ EntityLink }) => {
-    return EntityLink
-  }).catch(() => {
-    return FallbackEntityLink
-  }))
+const AsyncEntityLink = defineAsyncComponent({
+  loader: () => import('@kong-ui-public/entities-shared').then(({ EntityLink }) => EntityLink),
+  errorComponent: FallbackEntityLink,
+})
 
 const parseLink = (record: TopNTableRecord) => {
   if (props.chartOptions?.entityLink) {
