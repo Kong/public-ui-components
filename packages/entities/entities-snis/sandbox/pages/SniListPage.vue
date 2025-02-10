@@ -12,6 +12,7 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
+    :enable-v2-empty-states="true"
     @copy:error="onCopyError"
     @copy:success="onCopySuccess"
     @delete:success="onDeleteSNISuccess"
