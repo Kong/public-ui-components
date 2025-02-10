@@ -44,6 +44,32 @@
         </Teleport>
       </template>
 
+
+      <template
+        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        #empty-state
+      >
+        <EntityEmptyState
+          :action-button-text="t('vaults.list.toolbar_actions.new_vault')"
+          appearance="secondary"
+          :can-create="() => canCreate()"
+          :description="t('vaults.list.empty_state_v2.description')"
+          :learn-more="config.app === 'konnect'"
+          :title="t('vaults.list.empty_state_v2.title')"
+          @click:create="handleCreate"
+          @click:learn-more="$emit('click:learn-more')"
+        >
+          <template #image>
+            <div class="empty-state-icon-gateway">
+              <SecurityIcon
+                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
+                :size="KUI_ICON_SIZE_50"
+              />
+            </div>
+          </template>
+        </EntityEmptyState>
+      </template>
+
       <!-- Column Formatting -->
       <template #prefix="{ rowValue }">
         <div class="table-content-overflow-wrapper">
@@ -125,11 +151,12 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
-import { AddIcon } from '@kong/icons'
+import { AddIcon, SecurityIcon } from '@kong/icons'
 
 import {
   EntityBaseTable,
   EntityDeleteModal,
+  EntityEmptyState,
   EntityFilter,
   EntityTypes,
   FetcherStatus,
@@ -137,6 +164,7 @@ import {
   useAxios,
   useFetcher,
   useDeleteUrlBuilder,
+  useTableState,
   TableTags,
 } from '@kong-ui-public/entities-shared'
 
@@ -158,11 +186,13 @@ import type {
   EntityRow,
   CopyEventPayload,
 } from '../types'
+import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
+  (e: 'click:learn-more'): void,
   (e: 'copy:success', payload: CopyEventPayload): void,
   (e: 'copy:error', payload: CopyEventPayload): void,
   (e: 'delete:success', route: EntityRow): void,
@@ -215,12 +245,22 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Enables the new empty state design, this prop can be removed when
+   * the khcp-14756-empty-states-m2 FF is removed.
+   */
+  enableV2EmptyStates: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+
 
 /**
  * Table Headers
@@ -439,6 +479,13 @@ const confirmDelete = async (): Promise<void> => {
 }
 
 /**
+ * Add New Vault
+ */
+const handleCreate = (): void => {
+  router.push(props.config.createRoute)
+}
+
+/**
  * Watchers
  */
 watch(fetcherState, (state) => {
@@ -480,6 +527,12 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
+.button-row {
+  align-items: center;
+  display: flex;
+  gap: $kui-space-50;
+}
+
 .kong-ui-entities-vaults-list {
   width: 100%;
 
