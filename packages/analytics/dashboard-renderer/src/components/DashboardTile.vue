@@ -256,6 +256,8 @@ const exportCsv = () => {
     display: flex;
     justify-content: space-between;
     margin-bottom: var(--kui-space-30, $kui-space-30);
+    // So any "handlers" for the tile header includes the padding
+    padding-top: var(--kui-space-70, $kui-space-70);
     right: 0;
     width: 100%;
 
