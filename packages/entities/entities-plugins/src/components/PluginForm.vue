@@ -1201,6 +1201,7 @@ const saveFormData = async (): Promise<void> => {
         originalModel: formFieldsOriginal,
         model: form.fields,
         payload,
+        schema: schema.value,
       })
     }
 
