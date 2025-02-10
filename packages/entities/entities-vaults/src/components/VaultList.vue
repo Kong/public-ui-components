@@ -15,6 +15,7 @@
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
+      @state="handleStateChange"
     >
       <!-- Filter -->
       <template #toolbar-filter>
@@ -29,18 +30,30 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <PermissionsWrapper :auth-function="() => canCreate()">
-            <!-- Hide Create button if table is empty -->
+          <div class="button-row">
             <KButton
-              appearance="primary"
-              data-testid="toolbar-add-vault"
-              :size="useActionOutside ? 'medium' : 'large'"
-              :to="config.createRoute"
+              v-if="!showEmptyState && config.app === 'konnect'"
+              appearance="secondary"
+              class="open-learning-hub"
+              data-testid="vault-learn-more-button"
+              icon
+              @click="$emit('click:learn-more')"
             >
-              <AddIcon />
-              {{ t('vaults.list.toolbar_actions.new_vault') }}
+              <BookIcon decorative />
             </KButton>
-          </PermissionsWrapper>
+            <PermissionsWrapper :auth-function="() => canCreate()">
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-vault"
+                :size="useActionOutside ? 'medium' : 'large'"
+                :to="config.createRoute"
+              >
+                <AddIcon />
+                {{ t('vaults.list.toolbar_actions.new_vault') }}
+              </KButton>
+            </PermissionsWrapper>
+          </div>
         </Teleport>
       </template>
 
@@ -151,7 +164,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
-import { AddIcon, SecurityIcon } from '@kong/icons'
+import { AddIcon, BookIcon, SecurityIcon } from '@kong/icons'
 
 import {
   EntityBaseTable,
