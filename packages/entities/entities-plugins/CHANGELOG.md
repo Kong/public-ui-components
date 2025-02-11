@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.1...@kong-ui-public/entities-plugins@9.10.2) (2025-02-11)
+
+
+### Bug Fixes
+
+* ff guard v2 empty state changes ([#1947](https://github.com/Kong/public-ui-components/issues/1947)) ([b408aea](https://github.com/Kong/public-ui-components/commit/b408aeaf7124673ab288409eee9151871e3b8c87))
+
+
+
+
+
 ## [9.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.0...@kong-ui-public/entities-plugins@9.10.1) (2025-02-11)
 
 

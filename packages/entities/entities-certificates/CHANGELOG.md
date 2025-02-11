@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.7.0...@kong-ui-public/entities-certificates@3.7.1) (2025-02-11)
+
+
+### Bug Fixes
+
+* ff guard v2 empty state changes ([#1947](https://github.com/Kong/public-ui-components/issues/1947)) ([b408aea](https://github.com/Kong/public-ui-components/commit/b408aeaf7124673ab288409eee9151871e3b8c87))
+
+
+
+
+
 # [3.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.6.74...@kong-ui-public/entities-certificates@3.7.0) (2025-02-07)
 
 
