@@ -90,14 +90,16 @@ onUnmounted(() => {
 watch(() => props.tiles.length, async (newLen, oldLen) => {
   if (newLen > oldLen && grid) {
     await nextTick()
-    const tileToAdd = props.tiles[newLen - 1]
-    const el = gridContainer.value?.querySelector(`[data-id="${tileToAdd.id}"]`)
-    grid.load([{
-      w: tileToAdd.layout.size.cols,
-      h: tileToAdd.layout.size.rows,
-      autoPosition: true,
-      el: el as HTMLElement,
-    } as GridStackNode])
+    const tileToAdd = props.tiles.slice(oldLen)
+    const nodesToAdd = tileToAdd.map(e => {
+      return {
+        w: e.layout.size.cols,
+        h: e.layout.size.rows,
+        autoPosition: true,
+        el: gridContainer.value?.querySelector(`[data-id="${e.id}"]`) as HTMLElement,
+      } as GridStackNode
+    })
+    grid.load(nodesToAdd)
   }
 })
 </script>
