@@ -36,7 +36,7 @@
         >
           <div class="button-row">
             <KButton
-              v-if="!showEmptyState && config.app === 'konnect'"
+              v-if="!showEmptyState && !isConsumerGroupPage && config.app === 'konnect'"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="consumers-learn-more-button"
