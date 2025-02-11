@@ -27,7 +27,7 @@
 <script lang='ts' setup generic="T">
 import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { GridStack } from 'gridstack'
-import type { GridStackElement, GridStackNode } from 'gridstack'
+import type { GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
@@ -106,14 +106,8 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
     })
     grid.load(nodesToAdd)
   } else if (newLen < oldLen && grid) {
-    const tileToRemove = props.tiles.slice(newLen)
-    const elementsToRemove = tileToRemove.map(e => {
-      return gridContainer.value?.querySelector(`[data-id="${e.id}"]`) as GridStackElement
-    })
-    elementsToRemove.forEach(e => {
-      grid?.removeWidget(e)
-    })
-
+    await nextTick()
+    grid.compact()
   }
 })
 </script>

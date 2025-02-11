@@ -407,6 +407,9 @@ const addTile = () => {
 
 const onRemoveTile = (tile: GridTile<TileDefinition>) => {
   console.log('@remove-tile', tile)
+  console.log('before:', dashboardConfig.value.tiles.length)
+  dashboardConfig.value.tiles = dashboardConfig.value.tiles.filter((_, i) => i !== tile.id)
+  console.log('after:', dashboardConfig.value.tiles.length)
 }
 </script>
 
