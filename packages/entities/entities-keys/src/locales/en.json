@@ -14,6 +14,11 @@
       "empty_state": {
         "title": "Configure a New Key",
         "description": "A Key object holds a representation of asymmetric keys in various formats."
+      },
+      "empty_state_v2": {
+        "title": "Configure your first key set",
+        "description": "Key sets group multiple asymmetric keys, organizing them by purpose for easier management and usage.",
+        "create_cta": "New key set"
       }
     },
     "actions": {

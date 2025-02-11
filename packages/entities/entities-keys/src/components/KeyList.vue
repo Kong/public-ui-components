@@ -29,19 +29,56 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <PermissionsWrapper :auth-function="() => canCreate()">
-            <!-- Hide Create button if table is empty -->
+          <div class="button-row">
             <KButton
-              appearance="primary"
-              data-testid="toolbar-add-key"
-              :size="useActionOutside ? 'medium' : 'large'"
-              :to="config.createRoute"
+              v-if="!showEmptyState && config.app === 'konnect'"
+              appearance="secondary"
+              class="open-learning-hub"
+              data-testid="routes-learn-more-button"
+              icon
+              @click="$emit('click:learn-more')"
             >
-              <AddIcon />
-              {{ t('keys.list.toolbar_actions.new_key') }}
+              <BookIcon decorative />
             </KButton>
-          </PermissionsWrapper>
+            <PermissionsWrapper :auth-function="() => canCreate()">
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-key"
+                :size="useActionOutside ? 'medium' : 'large'"
+                :to="config.createRoute"
+              >
+                <AddIcon />
+                {{ t('keys.list.toolbar_actions.new_key') }}
+              </KButton>
+            </PermissionsWrapper>
+          </div>
         </Teleport>
+      </template>
+
+      <template
+        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        #empty-state
+      >
+        <EntityEmptyState
+          :action-button-text="t('keys.list.empty_state_v2.create_cta')"
+          appearance="secondary"
+          :can-create="() => canCreate()"
+          :description="t('keys.list.empty_state_v2.description')"
+          :learn-more="config.app === 'konnect'"
+          :title="t('keys.list.empty_state_v2.title')"
+          @click:create="handleCreate"
+          @click:learn-more="$emit('click:learn-more')"
+        >
+          <template #image>
+            <div class="empty-state-icon-gateway">
+              <KeyIcon
+                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
+                :size="KUI_ICON_SIZE_50"
+              />
+            </div>
+          </template>
+        </EntityEmptyState>
       </template>
 
       <!-- Column Formatting -->
@@ -125,7 +162,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
-import { AddIcon } from '@kong/icons'
+import { AddIcon, BookIcon, KeyIcon } from '@kong/icons'
 import composables from '../composables'
 import endpoints from '../keys-endpoints'
 import {
@@ -135,9 +172,11 @@ import {
   EntityTypes,
   FetcherStatus,
   PermissionsWrapper,
+  EntityEmptyState,
   useAxios,
   useFetcher,
   useDeleteUrlBuilder,
+  useTableState,
   TableTags,
 } from '@kong-ui-public/entities-shared'
 import type {
@@ -154,10 +193,12 @@ import type {
   FuzzyMatchFilterConfig,
   TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
+import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
+  (e: 'click:learn-more'): void,
   (e: 'copy:success', payload: CopyEventPayload): void,
   (e: 'copy:error', payload: CopyEventPayload): void,
   (e: 'delete:success', key: EntityRow): void,
@@ -210,12 +251,22 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Enables the new empty state design, this prop can be removed when
+   * the khcp-14756-empty-states-m2 FF is removed.
+   */
+  enableV2EmptyStates: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
+const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+
 
 /**
  * Table Headers
@@ -421,6 +472,14 @@ const confirmDelete = async (): Promise<void> => {
 }
 
 /**
+ * Create
+ */
+const handleCreate = (): void => {
+  router.push(props.config.createRoute)
+}
+
+
+/**
  * Watchers
  */
 watch(fetcherState, (state) => {
@@ -462,6 +521,12 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
+.button-row {
+  align-items: center;
+  display: flex;
+  gap: $kui-space-50;
+}
+
 .kong-ui-entities-keys-list {
   width: 100%;
 
