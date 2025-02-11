@@ -60,8 +60,10 @@ const props = withDefaults(defineProps<{
   context: DashboardRendererContext,
   config: DashboardConfig,
   draggable?: boolean,
+  canRemoveTiles?: boolean,
 }>(), {
   draggable: false,
+  canRemoveTiles: false,
 })
 
 const emit = defineEmits<{
