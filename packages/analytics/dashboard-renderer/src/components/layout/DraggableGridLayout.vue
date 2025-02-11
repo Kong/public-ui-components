@@ -5,13 +5,14 @@
   >
     <div
       v-for="(tile, i) in tiles"
-      :key="'tile-' + i"
+      :key="i"
       class="grid-stack-item"
-      :data-index="i"
+      :data-id="tile.id"
       :gs-h="tile.layout.size.rows"
+      :gs-lazy-load="true"
       :gs-w="tile.layout.size.cols"
-      :gs-x="tile.layout.position.col"
-      :gs-y="tile.layout.position.row"
+      :gs-x="tile.layout.position.col >= 0 ? tile.layout.position.col : undefined"
+      :gs-y="tile.layout.position.row >= 0 ? tile.layout.position.row : undefined"
     >
       <div class="grid-stack-item-content">
         <slot
@@ -24,7 +25,7 @@
 </template>
 
 <script lang='ts' setup generic="T">
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { GridStack, type GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
@@ -45,8 +46,8 @@ const gridContainer = ref<HTMLDivElement | null>(null)
 let grid: GridStack | null = null
 
 const makeTilesFromGridstackNodes = (items: GridStackNode[]) => {
-  return props.tiles.map((tile, i) => {
-    const item = items.find(item => Number(item.el?.getAttribute('data-index')) === i)
+  return props.tiles.map((tile) => {
+    const item = items.find(item => Number(item.el?.getAttribute('data-id')) === tile.id)
     if (item) {
       return {
         ...tile,
@@ -74,7 +75,6 @@ onMounted(() => {
       emit('update-tiles', updatedTiles)
     })
     grid.on('added', (_, items) => {
-      grid?.compact()
       const updatedTiles = makeTilesFromGridstackNodes(items)
       emit('update-tiles', updatedTiles)
     })
@@ -87,21 +87,19 @@ onUnmounted(() => {
   }
 })
 
-watch(() => props.tiles, newTiles => {
-  if (grid && gridContainer.value) {
-    newTiles.forEach((tile, i) => {
-      const el = gridContainer.value?.querySelector(`[data-index="${i}"]`)
-      if (el) {
-        grid?.update(el as HTMLElement, {
-          x: tile.layout.position.col,
-          y: tile.layout.position.row,
-          w: tile.layout.size.cols,
-          h: tile.layout.size.rows,
-        })
-      }
-    })
+watch(() => props.tiles.length, async (newLen, oldLen) => {
+  if (newLen > oldLen && grid) {
+    await nextTick()
+    const tileToAdd = props.tiles[newLen - 1]
+    const el = gridContainer.value?.querySelector(`[data-id="${tileToAdd.id}"]`)
+    grid.load([{
+      w: tileToAdd.layout.size.cols,
+      h: tileToAdd.layout.size.rows,
+      autoPosition: true,
+      el: el as HTMLElement,
+    } as GridStackNode])
   }
-}, { deep: true })
+})
 </script>
 
 <style lang="scss" scoped>

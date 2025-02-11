@@ -17,6 +17,12 @@
       >
         refresh
       </KButton>
+      <KButton
+        size="small"
+        @click="addTile"
+      >
+        Add tile
+      </KButton>
       <DashboardRenderer
         ref="dashboardRendererRef"
         :class="{ 'custom-styling': isToggled}"
@@ -64,7 +70,7 @@ const context: DashboardRendererContext = {
   editable: true,
 }
 
-const dashboardConfig: DashboardConfig = {
+const dashboardConfig = ref <DashboardConfig>({
   gridSize: {
     cols: 6,
     rows: 7,
@@ -352,7 +358,7 @@ const dashboardConfig: DashboardConfig = {
       },
     } satisfies TileConfig,
   ],
-}
+})
 
 const isToggled = ref(false)
 
@@ -365,6 +371,37 @@ const dashboardRendererRef = ref<InstanceType<typeof DashboardRenderer> | null>(
 
 const refresh = () => {
   dashboardRendererRef.value?.refresh()
+}
+
+const addTile = () => {
+  dashboardConfig.value.tiles.push({
+    definition: {
+      chart: {
+        type: 'top_n',
+        chartTitle: 'Top N chart of mock data',
+        description: 'Description',
+      },
+      query: {
+        datasource: 'basic',
+        limit: 3,
+        time_range: {
+          type: 'relative',
+          time_range: 'current_month',
+        },
+      },
+    },
+    layout: {
+      position: {
+        col: -1,
+        row: -1,
+      },
+      size: {
+        cols: 3,
+        rows: 2,
+        fitToContent: true,
+      },
+    },
+  })
 }
 </script>
 
