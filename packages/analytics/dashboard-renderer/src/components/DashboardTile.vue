@@ -68,6 +68,7 @@
               </span>
             </KDropdownItem>
             <KDropdownItem
+              v-if="hasDashboardsNextAccess"
               :data-testid="`remove-tile-${tileId}`"
               @click="removeTile"
             >
@@ -146,6 +147,7 @@ const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
 const { i18n } = composables.useI18n()
 const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
+const hasDashboardsNextAccess = evaluateFeatureFlag('ma-3601-custom-dashboards-next', false)
 
 const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
