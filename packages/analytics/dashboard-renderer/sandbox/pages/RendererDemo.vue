@@ -25,6 +25,7 @@
       </KButton>
       <DashboardRenderer
         ref="dashboardRendererRef"
+        can-remove-tiles
         :class="{ 'custom-styling': isToggled}"
         :config="dashboardConfig"
         :context="context"

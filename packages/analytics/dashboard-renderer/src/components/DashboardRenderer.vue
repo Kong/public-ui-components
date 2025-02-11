@@ -23,6 +23,7 @@
         </div>
         <DashboardTile
           v-else
+          :can-remove-tile="canRemoveTiles"
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
