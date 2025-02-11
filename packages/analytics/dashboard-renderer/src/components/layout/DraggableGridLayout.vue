@@ -25,7 +25,7 @@
 
 <script lang='ts' setup generic="T">
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import { GridStack } from 'gridstack'
+import { GridStack, type GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
@@ -44,6 +44,22 @@ const emit = defineEmits<{
 const gridContainer = ref<HTMLDivElement | null>(null)
 let grid: GridStack | null = null
 
+const makeTilesFromGridstackNodes = (items: GridStackNode[]) => {
+  return props.tiles.map((tile, i) => {
+    const item = items.find(item => Number(item.el?.getAttribute('data-index')) === i)
+    if (item) {
+      return {
+        ...tile,
+        layout: {
+          position: { col: item.x, row: item.y },
+          size: { cols: item.w, rows: item.h },
+        },
+      } as GridTile<any>
+    }
+    return tile
+  })
+}
+
 onMounted(() => {
   if (gridContainer.value) {
     grid = GridStack.init({
@@ -54,19 +70,12 @@ onMounted(() => {
       handle: '.tile-header',
     }, gridContainer.value)
     grid.on('change', (_, items) => {
-      const updatedTiles: GridTile<any>[] = props.tiles.map((tile, i) => {
-        const item = items.find(item => Number(item.el?.getAttribute('data-index')) === i)
-        if (item) {
-          return {
-            ...tile,
-            layout: {
-              position: { col: item.x, row: item.y },
-              size: { cols: item.w, rows: item.h },
-            },
-          } as GridTile<any>
-        }
-        return tile
-      })
+      const updatedTiles = makeTilesFromGridstackNodes(items)
+      emit('update-tiles', updatedTiles)
+    })
+    grid.on('added', (_, items) => {
+      grid?.compact()
+      const updatedTiles = makeTilesFromGridstackNodes(items)
       emit('update-tiles', updatedTiles)
     })
   }
