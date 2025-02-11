@@ -25,13 +25,13 @@
       </KButton>
       <DashboardRenderer
         ref="dashboardRendererRef"
-        can-remove-tiles
+        can-edit
         :class="{ 'custom-styling': isToggled}"
         :config="dashboardConfig"
         :context="context"
-        draggable
         @edit-tile="onEditTile"
         @remove-tile="onRemoveTile"
+        @update-tiles="onUpdateTiles"
       >
         <template #slot-1>
           <div class="slot-container">
@@ -379,16 +379,19 @@ const addTile = () => {
   dashboardConfig.value.tiles.push({
     definition: {
       chart: {
-        type: 'top_n',
-        chartTitle: 'Top N chart of mock data',
-        description: 'Description',
+        type: 'timeseries_line',
+        chartTitle: 'Timeseries line chart of mock data',
+        threshold: {
+          'request_count': 3200,
+        } as Record<ExploreAggregations, number>,
       },
       query: {
         datasource: 'basic',
-        limit: 3,
+        dimensions: ['time'],
         time_range: {
-          type: 'relative',
-          time_range: 'current_month',
+          type: 'absolute',
+          start: '2024-01-01',
+          end: '2024-02-01',
         },
       },
     },
@@ -408,9 +411,12 @@ const addTile = () => {
 
 const onRemoveTile = (tile: GridTile<TileDefinition>) => {
   console.log('@remove-tile', tile)
-  console.log('before:', dashboardConfig.value.tiles.length)
   dashboardConfig.value.tiles = dashboardConfig.value.tiles.filter((_, i) => i !== tile.id)
-  console.log('after:', dashboardConfig.value.tiles.length)
+}
+
+const onUpdateTiles = (tiles: TileConfig[]) => {
+  console.log('@update-tiles', tiles)
+  dashboardConfig.value.tiles = tiles
 }
 </script>
 

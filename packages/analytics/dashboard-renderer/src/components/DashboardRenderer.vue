@@ -7,7 +7,7 @@
       {{ i18n.t('renderer.noQueryBridge') }}
     </KAlert>
     <component
-      :is="draggable ? DraggableGridLayout : GridLayout"
+      :is="canEdit ? DraggableGridLayout : GridLayout"
       v-else
       :grid-size="config.gridSize"
       :tile-height="config.tileHeight"
@@ -23,7 +23,7 @@
         </div>
         <DashboardTile
           v-else
-          :can-remove-tile="canRemoveTiles"
+          :can-remove-tile="canEdit"
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
@@ -60,11 +60,9 @@ import { KUI_SPACE_70 } from '@kong/design-tokens'
 const props = withDefaults(defineProps<{
   context: DashboardRendererContext,
   config: DashboardConfig,
-  draggable?: boolean,
-  canRemoveTiles?: boolean,
+  canEdit?: boolean,
 }>(), {
-  draggable: false,
-  canRemoveTiles: false,
+  canEdit: false,
 })
 
 const emit = defineEmits<{

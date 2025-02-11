@@ -79,10 +79,6 @@ onMounted(() => {
       const updatedTiles = makeTilesFromGridstackNodes(items)
       emit('update-tiles', updatedTiles)
     })
-    grid.on('removed', async (_, items) => {
-      const updatedTiles = makeTilesFromGridstackNodes(items)
-      emit('update-tiles', updatedTiles)
-    })
   }
 })
 
@@ -105,11 +101,27 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
       } as GridStackNode
     })
     grid.load(nodesToAdd)
-  } else if (newLen < oldLen && grid) {
-    await nextTick()
-    grid.compact()
   }
 })
+
+watch(() => props.tiles, async (newTiles, oldTiles) => {
+  if (newTiles.length < oldTiles.length && grid) {
+
+    // We havn't actually added a concept of "unique ids" to the tiles yet, so the actual tile "id" is simply tied
+    // to the index by default. This works fine for modifying tiles, however, when it comes to identifying a tile
+    // that was removed, it gets a little tricky. Since the "layout" of a tile is unique, we can use that to uniquely
+    // identify tiles in order to detect what was removed.
+    const tileToRemove = oldTiles.find(oldTile => !newTiles.find(newTile => JSON.stringify(newTile.layout) === JSON.stringify(oldTile.layout)))
+
+    if (tileToRemove) {
+      const el = gridContainer.value?.querySelector(`[data-id="${tileToRemove.id}"]`) as HTMLElement
+      if (el) {
+        grid.removeWidget(el)
+      }
+    }
+  }
+})
+
 </script>
 
 <style lang="scss" scoped>
