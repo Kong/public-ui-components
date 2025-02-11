@@ -1,31 +1,45 @@
 # @kong-ui-public/entities-plugins-metadata
 
-{A description of this package}
+Plugin metadata management package that provides static metadata for Kong Gateway plugins.
 
 - [Features](#features)
-- [Requirements](#requirements)
 - [Usage](#usage)
   - [Install](#install)
-  - [Props](#props)
+  - [Import](#import)
+- [Why this package?](#why-this-package)
 
 ## Features
 
-- List of package features
-
-## Requirements
-
-- List of package requirements (e.g. "`vue` and must be initialized in the host application")
+- Provides static plugin metadata including:
+  - Plugin groups (Authentication, Security, Traffic Control, etc.)
+  - Plugin scopes (Global, Service, Route, Consumer, Consumer Group)
+- Exports TypeScript enums for plugin groups and plugin scopes
 
 ## Usage
 
 ### Install
 
-{Installation instructions}
+Install the package in your host application:
 
-### Props
+```sh
+yarn add @kong-ui-public/entities-plugins-metadata
+```
 
-#### `example`
+### Import
 
-- type: `Boolean`
-- required: `false`
-- default: `false`
+```ts
+import { 
+  PLUGIN_GROUP_AND_SCOPE_MAP,
+  PluginGroup,
+  PluginScope 
+} from '@kong-ui-public/entities-plugins-metadata'
+```
+
+The package exports:
+- `PLUGIN_GROUP_AND_SCOPE_MAP`: Mapping of plugin names to their groups and supported scopes
+- `PluginGroup`: Enum of available plugin groups
+- `PluginScope`: Enum of available plugin scopes
+
+## Why this package?
+
+Previously, the mapping of plugin names to their groups and supported scopes lived in the `@kong-ui-public/entities-plugins` package. Now it is a separate package, providing a consistent and reliable source of plugin metadata to be consumed by various front-end and back-end applications. It contains a simple mapping without introducing any complexity or dependencies.
