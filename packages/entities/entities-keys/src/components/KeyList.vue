@@ -15,6 +15,7 @@
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
+      @state="handleStateChange"
     >
       <!-- Filter -->
       <template #toolbar-filter>
@@ -34,7 +35,7 @@
               v-if="!showEmptyState && config.app === 'konnect'"
               appearance="secondary"
               class="open-learning-hub"
-              data-testid="routes-learn-more-button"
+              data-testid="keys-learn-more-button"
               icon
               @click="$emit('click:learn-more')"
             >
