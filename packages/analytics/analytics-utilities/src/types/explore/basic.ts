@@ -8,6 +8,7 @@ export const queryableBasicExploreDimensions = [
   'control_plane_group',
   'data_plane_node',
   'gateway_service',
+  'portal',
   'route',
   'status_code',
   'status_code_grouped',
