@@ -92,6 +92,11 @@
       "empty_state": {
         "title": "Configure a New Plugin",
         "description": "Plugins are used to extend Kong functionality."
+      },
+      "empty_state_v2": {
+        "title": "Configure your first plugin",
+        "description": "Plugins extend API functionalities, offering features like authentication, rate limiting, and request transformations to enhance security and performance.",
+        "create_cta": "New plugin"
       }
     },
     "meta": {

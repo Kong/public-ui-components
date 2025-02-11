@@ -44,6 +44,11 @@
         "serverless_title": "Configure your first Gateway Service"
       }
     },
+    "empty_state_v2": {
+      "create": "New gateway service",
+      "title": "Configure your first gateway service",
+      "description": "Services represent your upstream APIs, allowing for centralized configuration and streamlined management of backend endpoints."
+    },
     "form": {
       "sections": {
         "general": {

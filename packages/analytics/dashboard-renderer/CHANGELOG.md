@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.2...@kong-ui-public/dashboard-renderer@0.35.3) (2025-02-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.35.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.1...@kong-ui-public/dashboard-renderer@0.35.2) (2025-02-10)
+
+
+### Bug Fixes
+
+* draggable dashboard ui tweaks ([#1943](https://github.com/Kong/public-ui-components/issues/1943)) ([0bd52f9](https://github.com/Kong/public-ui-components/commit/0bd52f9560cb912f3def72bf870fa8dc4efd501f))
+
+
+
+
+
+## [0.35.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.0...@kong-ui-public/dashboard-renderer@0.35.1) (2025-02-07)
+
+
+### Bug Fixes
+
+* tile header overflow issue ([#1937](https://github.com/Kong/public-ui-components/issues/1937)) ([5ac5abf](https://github.com/Kong/public-ui-components/commit/5ac5abf29216553c498dde0f014cd0f1512d3240))
+
+
+
+
+
 # [0.35.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.34.3...@kong-ui-public/dashboard-renderer@0.35.0) (2025-02-06)
 
 

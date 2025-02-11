@@ -149,7 +149,7 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: 'horizontal_bar',
-          chartTitle: 'Horizontal bar chart of mock data',
+          chartTitle: 'This is a really long title lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
           allowCsvExport: true,
         },
         query: {
@@ -284,6 +284,66 @@ const dashboardConfig: DashboardConfig = {
         position: {
           col: 0,
           row: 5,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+          chartTitle: 'Timeseries line chart of mock data',
+          threshold: {
+            'request_count': 3200,
+          } as Record<ExploreAggregations, number>,
+        },
+        query: {
+          datasource: 'basic',
+          dimensions: ['time'],
+          time_range: {
+            type: 'absolute',
+            start: '2024-01-01',
+            end: '2024-02-01',
+          },
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 7,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+          chartTitle: 'Timeseries line chart of mock data',
+          threshold: {
+            'request_count': 3200,
+          } as Record<ExploreAggregations, number>,
+        },
+        query: {
+          datasource: 'basic',
+          dimensions: ['time'],
+          time_range: {
+            type: 'absolute',
+            start: '2024-01-01',
+            end: '2024-02-01',
+          },
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 9,
         },
         size: {
           cols: 3,

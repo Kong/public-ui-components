@@ -49,7 +49,9 @@ onMounted(() => {
     grid = GridStack.init({
       column: props.gridSize.cols,
       cellHeight: props.tileHeight,
-      resizable: { handles: 'all' },
+      resizable: { handles: 'se' },
+      lazyLoad: true,
+      handle: '.tile-header',
     }, gridContainer.value)
     grid.on('change', (_, items) => {
       const updatedTiles: GridTile<any>[] = props.tiles.map((tile, i) => {
@@ -92,3 +94,9 @@ watch(() => props.tiles, newTiles => {
   }
 }, { deep: true })
 </script>
+
+<style lang="scss" scoped>
+:deep(.tile-header) {
+  cursor: move;
+}
+</style>
