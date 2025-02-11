@@ -1,18 +1,5 @@
 import type { PathToDotNotation } from '@kong-ui-public/i18n/dist/types/types'
-
-export enum PluginGroup {
-  AUTHENTICATION = 'Authentication',
-  AI = 'AI',
-  SECURITY = 'Security',
-  TRAFFIC_CONTROL = 'Traffic Control',
-  SERVERLESS = 'Serverless',
-  ANALYTICS_AND_MONITORING = 'Analytics & Monitoring',
-  TRANSFORMATIONS = 'Transformations',
-  LOGGING = 'Logging',
-  DEPLOYMENT = 'Deployment',
-  WEBSOCKET = 'WebSocket Plugins',
-  CUSTOM_PLUGINS = 'Custom Plugins',
-}
+import { PluginGroup, PluginScope } from '@kong-ui-public/entities-plugins-metadata'
 
 export const PluginGroupArray = [
   PluginGroup.AUTHENTICATION,
@@ -48,14 +35,6 @@ export enum EntityTypeIdField {
   ROUTE = 'route_id',
   CONSUMER = 'consumer_id',
   CONSUMER_GROUP = 'consumer_group_id',
-}
-
-export enum PluginScope {
-  GLOBAL = 'global',
-  SERVICE = 'service',
-  ROUTE = 'route',
-  CONSUMER = 'consumer',
-  CONSUMER_GROUP = 'consumer_group',
 }
 
 export interface PluginEntityInfo {
@@ -187,3 +166,5 @@ export interface StreamingCustomPluginSchema {
   updated_at?: number
   tags?: string[]
 }
+
+export { PluginGroup, PluginScope }
