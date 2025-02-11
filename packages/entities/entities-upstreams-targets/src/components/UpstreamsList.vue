@@ -36,7 +36,7 @@
               v-if="!showEmptyState && config.app === 'konnect'"
               appearance="secondary"
               class="open-learning-hub"
-              data-testid="routes-learn-more-button"
+              data-testid="upstream-learn-more-button"
               icon
               @click="$emit('click:learn-more')"
             >
