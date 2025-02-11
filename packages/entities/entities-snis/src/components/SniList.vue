@@ -157,6 +157,7 @@
 import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
+import { useRouter } from 'vue-router'
 import composables from '../composables'
 import endpoints from '../snis-endpoints'
 import {
@@ -257,6 +258,8 @@ const props = defineProps({
 })
 
 const { i18n: { t } } = composables.useI18n()
+const router = useRouter()
+
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
@@ -463,7 +466,7 @@ const confirmDelete = async (): Promise<void> => {
 }
 
 const handleCreate = (): void => {
-
+  router.push(props.config.createRoute)
 }
 
 /**
