@@ -67,6 +67,12 @@
                 {{ i18n.t('csvExport.exportAsCsv') }}
               </span>
             </KDropdownItem>
+            <KDropdownItem
+              :data-testid="`remove-tile-${tileId}`"
+              @click="removeTile"
+            >
+              {{ i18n.t('renderer.remove') }}
+            </KDropdownItem>
           </template>
         </KDropdown>
       </div>
@@ -133,6 +139,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: TileDefinition): void
+  (e: 'remove-tile', tile: TileDefinition): void
 }>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
@@ -229,6 +236,10 @@ const chartDataGranularity = computed(() => {
 
 const editTile = () => {
   emit('edit-tile', props.definition)
+}
+
+const removeTile = () => {
+  emit('remove-tile', props.definition)
 }
 
 const onChartData = (data: ExploreResultV4) => {

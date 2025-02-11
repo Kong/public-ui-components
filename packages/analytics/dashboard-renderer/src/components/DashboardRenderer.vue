@@ -31,6 +31,7 @@
           :refresh-counter="refreshCounter"
           :tile-id="tile.id"
           @edit-tile="onEditTile(tile)"
+          @remove-tile="onRemoveTile(tile)"
         />
       </template>
     </component>
@@ -65,6 +66,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
+  (e: 'remove-tile', tile: GridTile<TileDefinition>): void
   (e: 'update-tiles', tiles: TileConfig[]): void
 }>()
 
@@ -174,6 +176,10 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
 
 const onEditTile = (tile: GridTile<TileDefinition>) => {
   emit('edit-tile', tile)
+}
+
+const onRemoveTile = (tile: GridTile<TileDefinition>) => {
+  emit('remove-tile', tile)
 }
 
 const refreshTiles = () => {

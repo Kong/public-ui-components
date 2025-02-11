@@ -30,6 +30,7 @@
         :context="context"
         draggable
         @edit-tile="onEditTile"
+        @remove-tile="onRemoveTile"
       >
         <template #slot-1>
           <div class="slot-container">
@@ -402,6 +403,10 @@ const addTile = () => {
       },
     },
   })
+}
+
+const onRemoveTile = (tile: GridTile<TileDefinition>) => {
+  console.log('@remove-tile', tile)
 }
 </script>
 
