@@ -158,7 +158,7 @@
 import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
-import { AddIcon, KeyIcon } from '@kong/icons'
+import { AddIcon, BookIcon, KeyIcon } from '@kong/icons'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import endpoints from '../key-sets-endpoints'
