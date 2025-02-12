@@ -4,15 +4,15 @@
     class="grid-stack"
   >
     <div
-      v-for="(tile, i) in tiles"
-      :key="i"
+      v-for="tile in tiles"
+      :id="`tile-${tile.id}`"
+      :key="tile.id"
       class="grid-stack-item"
-      :data-id="tile.id"
       :gs-h="tile.layout.size.rows"
       :gs-lazy-load="true"
       :gs-w="tile.layout.size.cols"
-      :gs-x="tile.layout.position.col >= 0 ? tile.layout.position.col : undefined"
-      :gs-y="tile.layout.position.row >= 0 ? tile.layout.position.row : undefined"
+      :gs-x="tile.layout.position.col"
+      :gs-y="tile.layout.position.row"
     >
       <div class="grid-stack-item-content">
         <slot
@@ -48,7 +48,9 @@ let grid: GridStack | null = null
 
 const makeTilesFromGridstackNodes = (items: GridStackNode[]) => {
   return props.tiles.map((tile) => {
-    const item = items.find(item => Number(item.el?.getAttribute('data-id')) === tile.id)
+    const item = items.find(item => {
+      return item.el?.id === `tile-${tile.id}`
+    })
     if (item) {
       return {
         ...tile,
@@ -70,6 +72,7 @@ onMounted(() => {
       resizable: { handles: 'se' },
       lazyLoad: true,
       handle: '.tile-header',
+
     }, gridContainer.value)
     grid.on('change', (_, items) => {
       const updatedTiles = makeTilesFromGridstackNodes(items)
@@ -92,31 +95,28 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
   if (newLen > oldLen && grid) {
     await nextTick()
     const tileToAdd = props.tiles.slice(oldLen)
-    const nodesToAdd = tileToAdd.map(e => {
-      return {
-        w: e.layout.size.cols,
-        h: e.layout.size.rows,
+    for (const tile of tileToAdd) {
+      grid.makeWidget(`#tile-${tile.id}`, {
         autoPosition: true,
-        el: gridContainer.value?.querySelector(`[data-id="${e.id}"]`) as HTMLElement,
-      } as GridStackNode
-    })
-    grid.load(nodesToAdd)
+        w: tile.layout.size.cols,
+        h: tile.layout.size.rows,
+        lazyLoad: true,
+      })
+    }
   }
 })
 
-watch(() => props.tiles, async (newTiles, oldTiles) => {
-  if (newTiles.length < oldTiles.length && grid) {
-
-    // We havn't actually added a concept of "unique ids" to the tiles yet, so the actual tile "id" is simply tied
-    // to the index by default. This works fine for modifying tiles, however, when it comes to identifying a tile
-    // that was removed, it gets a little tricky. Since the "layout" of a tile is unique, we can use that to uniquely
-    // identify tiles in order to detect what was removed.
-    const tileToRemove = oldTiles.find(oldTile => !newTiles.find(newTile => JSON.stringify(newTile.layout) === JSON.stringify(oldTile.layout)))
-
-    if (tileToRemove) {
-      const el = gridContainer.value?.querySelector(`[data-id="${tileToRemove.id}"]`) as HTMLElement
+watch(() => props.tiles, async (tiles) => {
+  if (grid && gridContainer.value) {
+    for (const tile of tiles) {
+      const el = gridContainer.value.querySelector(`#tile-${tile.id}`) as HTMLElement
       if (el) {
-        grid.removeWidget(el)
+        grid.update(el, {
+          x: tile.layout.position.col,
+          y: tile.layout.position.row,
+          w: tile.layout.size.cols,
+          h: tile.layout.size.rows,
+        })
       }
     }
   }
