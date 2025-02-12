@@ -275,7 +275,7 @@ const exportCsv = () => {
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding: var(--kui-space-70, $kui-space-70) var(--kui-space-30, $kui-space-30) var(--kui-space-70, $kui-space-70) var(--kui-space-70, $kui-space-70);
+    padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60);
     right: 0;
     width: 100%;
 
@@ -338,7 +338,7 @@ const exportCsv = () => {
 
   .tile-content {
     flex-grow: 1;
-    margin: var(--kui-space-60, $kui-space-60);
+    margin: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60);
     overflow: hidden;
   }
 }
