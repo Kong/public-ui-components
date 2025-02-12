@@ -36,7 +36,7 @@
         >
           <div class="button-row">
             <KButton
-              v-if="!showEmptyState && !isConsumerGroupPage && config.app === 'konnect'"
+              v-if="!isConsumerGroupPage && showLHButton"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="consumers-learn-more-button"
@@ -312,6 +312,10 @@ const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+// Current empty state logic is only for Konnect, KM will pick up at GA.
+// If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
+// If new empty states are not enabled, show the learning hub button (for Konnect)
+const showLHButton = computed((): boolean => props.enableV2EmptyStates ? !showEmptyState.value && props.config.app === 'konnect' : props.config.app === 'konnect')
 
 /**
  * Table Headers
