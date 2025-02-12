@@ -345,19 +345,19 @@ const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const { hasRecords: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+const { handleStateChange } = useTableState(() => filterQuery.value)
 
-const isLearningHubButtonEnabled = computed((): boolean => {
-  if (props.config.app === 'konnect') {
-    // if no records are present and emptyStatev2 flag is enabled
-    if (props.enableV2EmptyStates) {
-      if (showEmptyState.value) return false
-      else return true
-    } else return true
-  }
+// const isLearningHubButtonEnabled = computed((): boolean => {
+//   if (props.config.app === 'konnect') {
+//     // if no records are present and emptyStatev2 flag is enabled
+//     if (props.enableV2EmptyStates) {
+//       if (showEmptyState.value) return false
+//       else return true
+//     } else return true
+//   }
 
-  return false
-})
+//   return false
+// })
 
 
 /**
