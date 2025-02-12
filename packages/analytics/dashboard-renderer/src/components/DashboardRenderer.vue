@@ -23,10 +23,10 @@
         </div>
         <DashboardTile
           v-else
-          :can-remove-tile="canEdit"
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
+          :editable="canEdit"
           :height="tile.layout.size.rows * (config.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
           :query-ready="queryReady"
           :refresh-counter="refreshCounter"
@@ -208,7 +208,6 @@ defineExpose({ refresh: refreshTiles })
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 100%;
-    padding: 0 var(--kui-space-70, $kui-space-70) var(--kui-space-70, $kui-space-70) var(--kui-space-70, $kui-space-70);
   }
 }
 </style>

@@ -69,7 +69,7 @@ onMounted(() => {
     grid = GridStack.init({
       column: props.gridSize.cols,
       cellHeight: props.tileHeight,
-      resizable: { handles: 'se' },
+      resizable: { handles: 'se, sw' },
       lazyLoad: true,
       handle: '.tile-header',
 
@@ -120,7 +120,7 @@ watch(() => props.tiles, async (tiles) => {
       }
     }
   }
-})
+}, { deep: true })
 
 </script>
 
@@ -128,4 +128,18 @@ watch(() => props.tiles, async (tiles) => {
 :deep(.tile-header) {
   cursor: move;
 }
+$rotate-values: (
+  'se': 0deg,
+  'sw': 90deg,
+);
+
+@each $direction, $rotate in $rotate-values {
+  :deep(.ui-resizable-#{$direction}) {
+    background-image: url('../../icons/arrows_more_down.svg');
+    cursor: se-resize;
+    margin: 5px;
+    transform: rotate($rotate);
+  }
+}
+
 </style>

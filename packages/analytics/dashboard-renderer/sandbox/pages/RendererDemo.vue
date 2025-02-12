@@ -101,58 +101,58 @@ const dashboardConfig = ref <DashboardConfig>({
         },
       },
     } satisfies TileConfig,
-    // {
-    //   definition: {
-    //     chart: {
-    //       type: 'top_n',
-    //       chartTitle: 'Top N chart of mock data',
-    //       description: '{timeframe}',
-    //     },
-    //     query: {
-    //       datasource: 'basic',
-    //       limit: 1,
-    //     },
-    //   },
-    //   layout: {
-    //     position: {
-    //       col: 0,
-    //       row: 1,
-    //     },
-    //     size: {
-    //       cols: 3,
-    //       rows: 1,
-    //       fitToContent: true,
-    //     },
-    //   },
-    // } satisfies TileConfig,
-    // {
-    //   definition: {
-    //     chart: {
-    //       type: 'top_n',
-    //       chartTitle: 'Top N chart of mock data',
-    //       description: 'Description',
-    //     },
-    //     query: {
-    //       datasource: 'basic',
-    //       limit: 3,
-    //       time_range: {
-    //         type: 'relative',
-    //         time_range: 'current_month',
-    //       },
-    //     },
-    //   },
-    //   layout: {
-    //     position: {
-    //       col: 3,
-    //       row: 1,
-    //     },
-    //     size: {
-    //       cols: 3,
-    //       rows: 1,
-    //       fitToContent: true,
-    //     },
-    //   },
-    // } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'top_n',
+          chartTitle: 'Top N chart of mock data',
+          description: '{timeframe}',
+        },
+        query: {
+          datasource: 'basic',
+          limit: 1,
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 1,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+          fitToContent: true,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'top_n',
+          chartTitle: 'Top N chart of mock data',
+          description: 'Description',
+        },
+        query: {
+          datasource: 'basic',
+          limit: 3,
+          time_range: {
+            type: 'relative',
+            time_range: 'current_month',
+          },
+        },
+      },
+      layout: {
+        position: {
+          col: 3,
+          row: 1,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+          fitToContent: true,
+        },
+      },
+    } satisfies TileConfig,
     {
       definition: {
         chart: {
@@ -211,71 +211,71 @@ const dashboardConfig = ref <DashboardConfig>({
         },
       },
     } satisfies TileConfig,
-    // {
-    //   definition: {
-    //     chart: {
-    //       type: 'gauge',
-    //       metricDisplay: 'full',
-    //       reverseDataset: true,
-    //       numerator: 0,
-    //     },
-    //     query: {
-    //       datasource: 'basic',
-    //     },
-    //   },
-    //   layout: {
-    //     position: {
-    //       col: 0,
-    //       row: 4,
-    //     },
-    //     size: {
-    //       cols: 1,
-    //       rows: 1,
-    //     },
-    //   },
-    // } satisfies TileConfig,
-    // {
-    //   definition: {
-    //     chart: {
-    //       type: 'slottable',
-    //       id: 'slot-1',
-    //     },
-    //     query: {
-    //       datasource: 'basic',
-    //     },
-    //   },
-    //   layout: {
-    //     position: {
-    //       col: 1,
-    //       row: 4,
-    //     },
-    //     size: {
-    //       cols: 1,
-    //       rows: 1,
-    //     },
-    //   },
-    // } satisfies TileConfig,
-    // {
-    //   definition: {
-    //     chart: {
-    //       type: 'slottable',
-    //       id: 'slot-2',
-    //     },
-    //     query: {
-    //       datasource: 'basic',
-    //     },
-    //   },
-    //   layout: {
-    //     position: {
-    //       col: 2,
-    //       row: 4,
-    //     },
-    //     size: {
-    //       cols: 3,
-    //       rows: 1,
-    //     },
-    //   },
-    // } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'gauge',
+          metricDisplay: 'full',
+          reverseDataset: true,
+          numerator: 0,
+        },
+        query: {
+          datasource: 'basic',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 4,
+        },
+        size: {
+          cols: 1,
+          rows: 1,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'slottable',
+          id: 'slot-1',
+        },
+        query: {
+          datasource: 'basic',
+        },
+      },
+      layout: {
+        position: {
+          col: 1,
+          row: 4,
+        },
+        size: {
+          cols: 1,
+          rows: 1,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'slottable',
+          id: 'slot-2',
+        },
+        query: {
+          datasource: 'basic',
+        },
+      },
+      layout: {
+        position: {
+          col: 2,
+          row: 4,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+        },
+      },
+    } satisfies TileConfig,
     {
       definition: {
         chart: {

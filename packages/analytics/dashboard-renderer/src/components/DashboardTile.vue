@@ -68,7 +68,7 @@
               </span>
             </KDropdownItem>
             <KDropdownItem
-              v-if="canRemoveTile"
+              v-if="editable"
               :data-testid="`remove-tile-${tileId}`"
               @click="removeTile"
             >
@@ -134,10 +134,10 @@ const props = withDefaults(defineProps<{
   queryReady: boolean,
   refreshCounter: number,
   tileId: string | number,
-  canRemoveTile?: boolean,
+  editable?: boolean,
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
-  canRemoveTile: false,
+  editable: false,
 })
 
 const emit = defineEmits<{
@@ -265,13 +265,17 @@ const exportCsv = () => {
   height: v-bind('`${height}px`');
   overflow: hidden;
 
+  &:hover {
+    .tile-header {
+      background: $kui-color-background-neutral-weakest;
+    }
+  }
+
   .tile-header {
     align-items: center;
     display: flex;
     justify-content: space-between;
-    margin-bottom: var(--kui-space-30, $kui-space-30);
-    // So any "handlers" for the tile header includes the padding
-    padding-top: var(--kui-space-70, $kui-space-70);
+    padding: var(--kui-space-70, $kui-space-70) var(--kui-space-30, $kui-space-30) var(--kui-space-70, $kui-space-70) var(--kui-space-70, $kui-space-70);
     right: 0;
     width: 100%;
 
@@ -334,6 +338,7 @@ const exportCsv = () => {
 
   .tile-content {
     flex-grow: 1;
+    margin: var(--kui-space-60, $kui-space-60);
     overflow: hidden;
   }
 }
