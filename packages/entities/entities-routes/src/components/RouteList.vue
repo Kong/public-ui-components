@@ -350,9 +350,8 @@ const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(()
 
 const isLearningHubButtonEnabled = computed((): boolean => {
   if (props.config.app === 'konnect') {
-    debugger
     // if no records are present and emptyStatev2 flag is enabled
-    if (showEmptyState && props.enableV2EmptyStates) return false
+    if (showEmptyState.value && props.enableV2EmptyStates) return false
     else return true
   }
 
