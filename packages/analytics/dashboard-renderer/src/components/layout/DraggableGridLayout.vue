@@ -11,8 +11,8 @@
       :gs-h="tile.layout.size.rows"
       :gs-lazy-load="true"
       :gs-w="tile.layout.size.cols"
-      :gs-x="tile.layout.position.col"
-      :gs-y="tile.layout.position.row"
+      :gs-x="tile.layout.position.col >= 0 ? tile.layout.position.col : undefined"
+      :gs-y="tile.layout.position.row >= 0 ? tile.layout.position.row : undefined"
     >
       <div class="grid-stack-item-content">
         <slot
