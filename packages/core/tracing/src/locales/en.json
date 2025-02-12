@@ -4,9 +4,15 @@
     "title": "Title of the header"
   },
   "lifecycle": {
+    "client_in": {
+      "tooltip": "Time taken for client to read the response from Kong. A high value here may be indicative of a slow network or connectivity issue."
+    },
+    "client_out": {
+      "tooltip": "Time taken for the client to write the request to Kong. A high value here may be indicative of a slow network or connectivity issue."
+    },
     "request": "Request",
     "response": "Response",
-    "total_latency": "Total latency"
+    "total": "Total"
   },
   "payload": {
     "request_body": "Request body",
