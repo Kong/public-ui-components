@@ -33,7 +33,7 @@
         >
           <div class="button-row">
             <KButton
-              v-if="!showEmptyState && config.app === 'konnect'"
+              v-if="isLearningHubButtonEnabled"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="gateway-services-learn-more-button"
@@ -311,6 +311,15 @@ const router = useRouter()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
 
+
+const isLearningHubButtonEnabled = computed((): boolean => {
+  if (props.config.app === 'konnect') {
+    // if no records are present and emptyStatev2 flag is enabled
+    if (showEmptyState && props.enableV2EmptyStates) return false
+    else return true
+  }
+  return false
+})
 
 /**
  * Table Headers

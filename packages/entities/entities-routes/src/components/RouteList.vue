@@ -36,6 +36,7 @@
         >
           <div class="button-row">
             <KButton
+              v-if="isLearningHubButtonEnabled"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="routes-learn-more-button"
@@ -345,19 +346,16 @@ const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const { handleStateChange } = useTableState(() => filterQuery.value)
+const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
 
-// const isLearningHubButtonEnabled = computed((): boolean => {
-//   if (props.config.app === 'konnect') {
-//     // if no records are present and emptyStatev2 flag is enabled
-//     if (props.enableV2EmptyStates) {
-//       if (showEmptyState.value) return false
-//       else return true
-//     } else return true
-//   }
-
-//   return false
-// })
+const isLearningHubButtonEnabled = computed((): boolean => {
+  if (props.config.app === 'konnect') {
+    // if no records are present and emptyStatev2 flag is enabled
+    if (showEmptyState && props.enableV2EmptyStates) return false
+    else return true
+  }
+  return false
+})
 
 
 /**
