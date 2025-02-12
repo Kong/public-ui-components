@@ -33,7 +33,7 @@
         >
           <div class="button-row">
             <KButton
-              v-if="enableV2EmptyStates && !showEmptyState && config.app === 'konnect'"
+              v-if="!showEmptyState && config.app === 'konnect'"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="gateway-services-learn-more-button"
