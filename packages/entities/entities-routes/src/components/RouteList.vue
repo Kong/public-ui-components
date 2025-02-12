@@ -36,7 +36,6 @@
         >
           <div class="button-row">
             <KButton
-              v-if="isLearningHubButtonEnabled"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="routes-learn-more-button"
