@@ -311,11 +311,11 @@ const { i18nT, i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+const { hasRecords, handleStateChange } = useTableState(() => filterQuery.value)
 // Current empty state logic is only for Konnect, KM will pick up at GA.
 // If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
 // If new empty states are not enabled, show the learning hub button (for Konnect)
-const showLHButton = computed((): boolean => props.enableV2EmptyStates ? !showEmptyState.value && props.config.app === 'konnect' : props.config.app === 'konnect')
+const showLHButton = computed((): boolean => props.enableV2EmptyStates ? hasRecords.value && props.config.app === 'konnect' : props.config.app === 'konnect')
 
 /**
  * Table Headers
