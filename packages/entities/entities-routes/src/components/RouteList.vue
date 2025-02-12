@@ -346,7 +346,7 @@ const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+const { hasRecords: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
 
 const isLearningHubButtonEnabled = computed((): boolean => {
   if (props.config.app === 'konnect') {
