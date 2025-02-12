@@ -34,6 +34,7 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
+    :enable-v2-empty-states="true"
     :has-expression-column="routeListHasExpressionColumn"
     :hide-traditional-columns="routeListHideTraditionalColumns"
     title="Routes"
