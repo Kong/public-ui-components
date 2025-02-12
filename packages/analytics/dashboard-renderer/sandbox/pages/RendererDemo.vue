@@ -30,7 +30,6 @@
         :config="dashboardConfig"
         :context="context"
         @edit-tile="onEditTile"
-        @remove-tile="onRemoveTile"
         @update-tiles="onUpdateTiles"
       >
         <template #slot-1>
@@ -407,11 +406,6 @@ const addTile = () => {
       },
     },
   })
-}
-
-const onRemoveTile = (tile: GridTile<TileDefinition>) => {
-  console.log('@remove-tile', tile)
-  dashboardConfig.value.tiles = dashboardConfig.value.tiles.filter((_, i) => i !== tile.id)
 }
 
 const onUpdateTiles = (tiles: TileConfig[]) => {

@@ -32,6 +32,10 @@ import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 
+export type DraggableGridLayoutExpose = {
+  removeWidget: (id: number | string) => void
+}
+
 const props = withDefaults(defineProps<{
   tiles: GridTile<T>[],
   gridSize: GridSize,
@@ -55,10 +59,10 @@ const makeTilesFromGridstackNodes = (items: GridStackNode[]) => {
       return {
         ...tile,
         layout: {
-          position: { col: item.x, row: item.y },
-          size: { cols: item.w, rows: item.h },
+          position: { col: Number(item.x), row: Number(item.y) },
+          size: { cols: Number(item.w), rows: Number(item.h) },
         },
-      } as GridTile<any>
+      } satisfies GridTile<T>
     }
     return tile
   })
@@ -121,6 +125,18 @@ watch(() => props.tiles, async (tiles) => {
     }
   }
 }, { deep: true })
+
+const removeWidget = (id: number | string) => {
+  if (grid && gridContainer.value) {
+    const el = gridContainer.value.querySelector(`#tile-${id}`) as HTMLElement
+    if (el) {
+      grid.removeWidget(el)
+      grid.compact('compact', false)
+    }
+  }
+}
+
+defineExpose({ removeWidget })
 
 </script>
 

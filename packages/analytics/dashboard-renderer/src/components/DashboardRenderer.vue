@@ -9,6 +9,7 @@
     <component
       :is="canEdit ? DraggableGridLayout : GridLayout"
       v-else
+      ref="gridLayoutRef"
       :grid-size="config.gridSize"
       :tile-height="config.tileHeight"
       :tiles="gridTiles"
@@ -44,9 +45,11 @@ import type { DashboardRendererContext, DashboardRendererContextInternal, GridTi
 import type { DashboardConfig, TileConfig, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject, ref } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import DraggableGridLayout from './layout/DraggableGridLayout.vue'
+import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
 import type { AnalyticsBridge, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import {
   DEFAULT_TILE_HEIGHT,
@@ -67,12 +70,12 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
-  (e: 'remove-tile', tile: GridTile<TileDefinition>): void
   (e: 'update-tiles', tiles: TileConfig[]): void
 }>()
 
 const { i18n } = composables.useI18n()
 const refreshCounter = ref(0)
+const gridLayoutRef = ref<ComponentPublicInstance<DraggableGridLayoutExpose> | null>(null)
 
 // Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
@@ -180,7 +183,9 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
 }
 
 const onRemoveTile = (tile: GridTile<TileDefinition>) => {
-  emit('remove-tile', tile)
+  if (gridLayoutRef.value) {
+    gridLayoutRef.value.removeWidget(tile.id)
+  }
 }
 
 const refreshTiles = () => {
