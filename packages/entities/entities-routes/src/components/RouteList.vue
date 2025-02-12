@@ -1,5 +1,37 @@
 <template>
   <div class="kong-ui-entities-routes-list">
+    <Teleport
+      :disabled="!useActionOutside"
+      to="#kong-ui-app-page-header-action-button"
+    >
+      <div
+        v-if="useActionOutside"
+        class="button-row"
+      >
+        <KButton
+          v-if="showLhButton"
+          appearance="secondary"
+          class="open-learning-hub"
+          data-testid="routes-learn-more-button"
+          icon
+          @click="$emit('click:learn-more')"
+        >
+          <BookIcon decorative />
+        </KButton>
+        <PermissionsWrapper :auth-function="() => canCreate()">
+          <!-- Hide Create button if table is empty -->
+          <KButton
+            appearance="primary"
+            data-testid="toolbar-add-route"
+            :size="useActionOutside ? 'medium' : 'large'"
+            :to="config.createRoute"
+          >
+            <AddIcon />
+            {{ t('routes.list.toolbar_actions.new_route') }}
+          </KButton>
+        </PermissionsWrapper>
+      </div>
+    </Teleport>
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
       :cell-attributes="getCellAttrs"
@@ -29,36 +61,7 @@
         />
       </template>
       <!-- Create action -->
-      <template #toolbar-button>
-        <Teleport
-          :disabled="!useActionOutside"
-          to="#kong-ui-app-page-header-action-button"
-        >
-          <div class="button-row">
-            <KButton
-              appearance="secondary"
-              class="open-learning-hub"
-              data-testid="routes-learn-more-button"
-              icon
-              @click="$emit('click:learn-more')"
-            >
-              <BookIcon decorative />
-            </KButton>
-            <PermissionsWrapper :auth-function="() => canCreate()">
-              <!-- Hide Create button if table is empty -->
-              <KButton
-                appearance="primary"
-                data-testid="toolbar-add-route"
-                :size="useActionOutside ? 'medium' : 'large'"
-                :to="config.createRoute"
-              >
-                <AddIcon />
-                {{ t('routes.list.toolbar_actions.new_route') }}
-              </KButton>
-            </PermissionsWrapper>
-          </div>
-        </Teleport>
-      </template>
+      <template #toolbar-button />
 
       <template
         v-if="enableV2EmptyStates && config.app === 'konnect'"
@@ -345,7 +348,13 @@ const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const { handleStateChange } = useTableState(() => filterQuery.value)
+const { handleStateChange, hasRecords } = useTableState(() => filterQuery.value)
+
+const showLhButton = computed((): boolean => {
+  if (props.config.app !== 'konnect') return false
+  if (props.enableV2EmptyStates && hasRecords.value) return false
+  else return true
+})
 
 /**
  * Table Headers
