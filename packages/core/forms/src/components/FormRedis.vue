@@ -1,7 +1,10 @@
 <template>
   <div>
     <div v-if="isCustomPlugin">
-      <KAlert :message="t('redis.custom_plugin.alert')" />
+      <KAlert
+        data-testid="custom-plugin-redis-config-note"
+        :message="t('redis.custom_plugin.alert')"
+      />
       <RedisConfigSelect
         :default-redis-config-item="selectedRedisConfigItem"
         :plugin-redis-fields="field.fields"
@@ -12,14 +15,18 @@
     <KCard
       v-else
       class="redis-config-card"
+      data-testid="redis-config-card"
       :title="t('redis.title')"
     >
-      <div class="redis-config-radio-group">
+      <div
+        class="redis-config-radio-group"
+        data-testid="redis-config-radio-group"
+      >
         <KRadio
           v-model="usePartial"
           card
           card-orientation="horizontal"
-          data-testid="shared-redis-config"
+          data-testid="shared-redis-config-radio"
           :description="t('redis.shared_configuration.description')"
           :label="t('redis.shared_configuration.label')"
           :selected-value="true"
@@ -32,6 +39,7 @@
           v-model="usePartial"
           card
           card-orientation="horizontal"
+          data-testid="dedicated-redis-config-radio"
           :description="t('redis.dedicated_configuration.description')"
           :label="t('redis.dedicated_configuration.label')"
           :selected-value="false"

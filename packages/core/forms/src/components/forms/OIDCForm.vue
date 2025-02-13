@@ -97,6 +97,7 @@
             :schema="advancedFieldsSchema"
             @model-updated="onModelUpdated"
             @partial-toggled="onPartialToggled"
+            @show-new-partial-modal="showNewPartialModal"
           />
         </div>
       </template>
@@ -164,6 +165,10 @@ export default {
     enableRedisPartial: {
       type: Boolean,
       required: false,
+    },
+    showNewPartialModal: {
+      type: Function,
+      default: () => { },
     },
   },
   data() {

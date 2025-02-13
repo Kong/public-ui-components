@@ -1,11 +1,14 @@
 <template>
-  <div class="redis-config-select">
+  <div
+    class="redis-config-select"
+    data-testid="redis-config-select"
+  >
     <div class="shared-redis-config-title">
       {{ t('redis.shared_configuration.title') }}
     </div>
     <KSelect
       v-model="selectedRedisConfigItem"
-      data-testid="redis-config-select"
+      data-testid="redis-config-select-trigger"
       enable-filtering
       :filter-function="() => true"
       :items="availableRedisConfigs"
@@ -20,8 +23,14 @@
         </div>
       </template>
       <template #item-template="{ item }">
-        <div class="plugin-form-redis-configuration-dropdown-item">
-          <span class="select-item-name">{{ item.name }}</span>
+        <div
+          class="plugin-form-redis-configuration-dropdown-item"
+          :data-testid="`redis-configuration-dropdown-item-${item.name}`"
+        >
+          <span
+            class="select-item-name"
+            data-testid="selected-redis-config"
+          >{{ item.name }}</span>
           <KBadge
             appearance="info"
             class="select-item-label"
@@ -31,13 +40,17 @@
         </div>
       </template>
       <template #empty>
-        <div class="empty-redis-config">
+        <div
+          class="empty-redis-config"
+          data-testid="empty-redis-config"
+        >
           {{ t('redis.shared_configuration.empty_state') }}
         </div>
       </template>
       <template #dropdown-footer-text>
         <div
           class="new-redis-config-area"
+          data-testid="new-redis-config-area"
           @click="$emit('showNewPartialModal')"
         >
           <AddIcon :size="KUI_ICON_SIZE_20" />

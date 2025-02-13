@@ -231,6 +231,7 @@ import { AddIcon, RemoveIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents'
 import cloneDeep from 'lodash-es/cloneDeep'
 import { computed, nextTick, provide, ref, useSlots } from 'vue'
+import VueFormGenerator from '../FormGenerator.vue'
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import english from '../../locales/en.json'
 import type { AutofillSlot } from '../../types'
@@ -382,7 +383,7 @@ const advancedSchema = computed(() => {
 
   return {
     endsWithStrategy: { fields: endsWithStrategy },
-    redis: props.enableRedisPartial ? { fields: [{ fields: redis, id: '_redis', model: 'redis_partial' }] } : { fields: redis },
+    redis: props.enableRedisPartial ? { fields: [{ fields: redis, id: '_redis', model: '__redis_partial', redisType: props.formSchema._supported_redis_partial_type }] } : { fields: redis },
     afterStrategy: { fields: afterStrategy },
   }
 })

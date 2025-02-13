@@ -11,7 +11,7 @@ export interface Field {
   valueType?: string
 }
 
-export default function useRedisPartial(formSchema: any, formModel?: any) {
+export default function useRedisPartial(formSchema: any) {
   const redisFields: Field[] = []
   const isRedisField = (field: Field): boolean => {
     const excludePatterns = ['cluster-cache','cluster_cache']
@@ -31,7 +31,9 @@ export default function useRedisPartial(formSchema: any, formModel?: any) {
     redis: {
       id: '_redis',
       fields: redisFields,
-      model: 'redis_partial', // todo: replace with actual model name
+      model: '__redis_partial',
+      redisType: formSchema._supported_redis_partial_type,
+      redisPath: formSchema._redis_partial_path,
     },
     redisModels: redisFields.map((field: Field) => field.model),
   }

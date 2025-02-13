@@ -10,7 +10,10 @@
           {{ label }}
         </div>
       </div>
-      <div class="config-card-row-value">
+      <div
+        class="config-card-row-value"
+        :data-testid="`${key}-property-value`"
+      >
         <div
           v-if="!itemHasValue(value)"
           :data-testid="`${key}-no-value`"
