@@ -10,27 +10,20 @@
         :label="isToggled ? 'Custom styling' : 'Normal styling'"
       />
       <br>
-      <KButton
-        appearance="primary"
-        size="small"
-        @click="refresh"
-      >
-        refresh
-      </KButton>
-      <KButton
-        size="small"
-        @click="addTile"
-      >
-        Add tile
-      </KButton>
+      <div style="display: flex; gap: 5px; margin: 5px;">
+        <KButton
+          appearance="primary"
+          size="small"
+          @click="refresh"
+        >
+          refresh
+        </KButton>
+      </div>
       <DashboardRenderer
         ref="dashboardRendererRef"
-        can-edit
         :class="{ 'custom-styling': isToggled}"
         :config="dashboardConfig"
         :context="context"
-        @edit-tile="onEditTile"
-        @update-tiles="onUpdateTiles"
       >
         <template #slot-1>
           <div class="slot-container">
@@ -50,14 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext, GridTile } from '../../src'
+import type { DashboardRendererContext } from '../../src'
 import { DashboardRenderer } from '../../src'
 import { inject, ref } from 'vue'
 import type {
   DashboardConfig,
   ExploreAggregations,
   TileConfig,
-  TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
@@ -298,119 +290,16 @@ const dashboardConfig = ref <DashboardConfig>({
         },
       },
     } satisfies TileConfig,
-    {
-      definition: {
-        chart: {
-          type: 'timeseries_line',
-          chartTitle: 'Timeseries line chart of mock data',
-          threshold: {
-            'request_count': 3200,
-          } as Record<ExploreAggregations, number>,
-        },
-        query: {
-          datasource: 'basic',
-          dimensions: ['time'],
-          time_range: {
-            type: 'absolute',
-            start: '2024-01-01',
-            end: '2024-02-01',
-          },
-        },
-      },
-      layout: {
-        position: {
-          col: 0,
-          row: 7,
-        },
-        size: {
-          cols: 3,
-          rows: 2,
-        },
-      },
-    } satisfies TileConfig,
-    {
-      definition: {
-        chart: {
-          type: 'timeseries_line',
-          chartTitle: 'Timeseries line chart of mock data',
-          threshold: {
-            'request_count': 3200,
-          } as Record<ExploreAggregations, number>,
-        },
-        query: {
-          datasource: 'basic',
-          dimensions: ['time'],
-          time_range: {
-            type: 'absolute',
-            start: '2024-01-01',
-            end: '2024-02-01',
-          },
-        },
-      },
-      layout: {
-        position: {
-          col: 0,
-          row: 9,
-        },
-        size: {
-          cols: 3,
-          rows: 2,
-        },
-      },
-    } satisfies TileConfig,
   ],
 })
 
 const isToggled = ref(false)
-
-const onEditTile = (tile: GridTile<TileDefinition>) => {
-  console.log('@edit-tile', tile)
-}
 
 const dashboardRendererRef = ref<InstanceType<typeof DashboardRenderer> | null>(null)
 
 
 const refresh = () => {
   dashboardRendererRef.value?.refresh()
-}
-
-const addTile = () => {
-  dashboardConfig.value.tiles.push({
-    definition: {
-      chart: {
-        type: 'timeseries_line',
-        chartTitle: 'Timeseries line chart of mock data',
-        threshold: {
-          'request_count': 3200,
-        } as Record<ExploreAggregations, number>,
-      },
-      query: {
-        datasource: 'basic',
-        dimensions: ['time'],
-        time_range: {
-          type: 'absolute',
-          start: '2024-01-01',
-          end: '2024-02-01',
-        },
-      },
-    },
-    layout: {
-      position: {
-        col: -1,
-        row: -1,
-      },
-      size: {
-        cols: 3,
-        rows: 2,
-        fitToContent: true,
-      },
-    },
-  })
-}
-
-const onUpdateTiles = (tiles: TileConfig[]) => {
-  console.log('@update-tiles', tiles)
-  dashboardConfig.value.tiles = tiles
 }
 </script>
 

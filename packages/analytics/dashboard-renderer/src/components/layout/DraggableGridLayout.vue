@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script lang='ts' setup generic="T">
+<script lang='ts' setup>
 import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { GridStack } from 'gridstack'
 import { useDebounceFn } from '@vueuse/core'
@@ -32,20 +32,21 @@ import type { GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
+import type { TileDefinition } from '@kong-ui-public/analytics-utilities'
 
 export type DraggableGridLayoutExpose = {
   removeWidget: (id: number | string) => void
 }
 
 const props = withDefaults(defineProps<{
-  tiles: GridTile<T>[],
+  tiles: GridTile<TileDefinition>[],
   gridSize: GridSize,
   tileHeight?: number,
 }>(), {
   tileHeight: 200,
 })
 const emit = defineEmits<{
-  (e: 'update-tiles', tiles: GridTile<T>[]): void,
+  (e: 'update-tiles', tiles: GridTile<TileDefinition>[]): void,
 }>()
 
 const gridContainer = ref<HTMLDivElement | null>(null)
@@ -64,7 +65,7 @@ const makeTilesFromGridstackNodes = (items: GridStackNode[]) => {
           position: { col: Number(item.x), row: Number(item.y) },
           size: { cols: Number(item.w), rows: Number(item.h) },
         },
-      } satisfies GridTile<T>
+      } satisfies GridTile<TileDefinition>
     }
     return tile
   })
@@ -75,7 +76,7 @@ const removeTile = (items: GridStackNode[]) => {
     return !items.find(item => {
       return item.el?.id === `tile-${tile.id}`
     })
-  }) as GridTile<T>[]
+  }) as GridTile<TileDefinition>[]
 }
 
 const changeHandler = useDebounceFn((_: Event, items: GridStackNode[]) => {
@@ -107,6 +108,16 @@ onUnmounted(() => {
   }
 })
 
+const removeWidget = (id: number | string) => {
+  if (grid && gridContainer.value) {
+    const el = gridContainer.value.querySelector(`#tile-${id}`) as HTMLElement
+    if (el) {
+      grid.removeWidget(el)
+      grid.compact('compact', false)
+    }
+  }
+}
+
 watch(() => props.tiles.length, async (newLen, oldLen) => {
   if (newLen > oldLen && grid) {
     const tileToAdd = props.tiles.slice(oldLen)
@@ -123,15 +134,17 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
   }
 })
 
-const removeWidget = (id: number | string) => {
-  if (grid && gridContainer.value) {
-    const el = gridContainer.value.querySelector(`#tile-${id}`) as HTMLElement
-    if (el) {
-      grid.removeWidget(el)
-      grid.compact('compact', false)
+// Gridstack widgets are driven by a copy of props.tiles.
+// If the meta of a tile changes, we need to update the copy to keep it in sync.
+watch(() => props.tiles, (newTiles, oldTiles) => {
+  if (newTiles.length === oldTiles.length) {
+    for (const [i, tile] of newTiles.entries()) {
+      if (JSON.stringify(tile.meta) !== JSON.stringify(tilesRef.value[i].meta)) {
+        tilesRef.value[i].meta = tile.meta
+      }
     }
   }
-}
+})
 
 defineExpose({ removeWidget })
 
