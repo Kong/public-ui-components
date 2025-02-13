@@ -5,9 +5,9 @@
   >
     <div
       v-for="tile in tilesRef.values()"
-      :id="`${tile.id}`"
       :key="tile.id"
       class="grid-stack-item"
+      :data-id="`${tile.id}`"
       :gs-h="tile.layout.size.rows"
       :gs-lazy-load="true"
       :gs-w="tile.layout.size.cols"
@@ -48,16 +48,19 @@ const emit = defineEmits<{
 }>()
 
 const gridContainer = ref<HTMLDivElement | null>(null)
-//const tilesRef = ref<GridTile<any>[]>(props.tiles)
 
 const tilesRef = ref<Map<string, GridTile<any>>>(new Map(props.tiles.map(t => [`${t.id}`, t])))
 
 let grid: GridStack | null = null
 
+const makeSelector = (id: number | string) => {
+  return `[data-id="${id}"]`
+}
+
 const makeTilesFromGridItemHtmlElements = (items: GridItemHTMLElement[]) => {
   return Array.from(tilesRef.value.values()).map((tile: GridTile<any>) => {
     const item = items.find(item => {
-      return item.id === `${tile.id}`
+      return item.getAttribute('data-id') === `${tile.id}`
     })
     if (item) {
       return {
@@ -76,7 +79,7 @@ const updateTiles = () => {
   if (grid) {
     const items = grid.getGridItems()
     const updates = makeTilesFromGridItemHtmlElements(items)
-    updates.forEach((tile, i) => {
+    updates.forEach((tile) => {
       tilesRef.value.set(`${tile.id}`, tile)
     })
     emit('update-tiles', Array.from(tilesRef.value.values()))
@@ -85,7 +88,7 @@ const updateTiles = () => {
 
 const removeHandler = (_: Event, items: GridStackNode[]) => {
   items.forEach(item => {
-    tilesRef.value.delete(`${item.el?.id}`)
+    tilesRef.value.delete(`${item.el?.getAttribute('data-id')}`)
   })
   emit('update-tiles', Array.from(tilesRef.value.values()))
 }
@@ -114,7 +117,7 @@ onUnmounted(() => {
 
 const removeWidget = async (id: number | string) => {
   if (grid && gridContainer.value) {
-    const el = gridContainer.value.querySelector(`#${id}`) as HTMLElement
+    const el = gridContainer.value.querySelector(makeSelector(id)) as HTMLElement
     if (el) {
       grid.removeWidget(el)
     }
@@ -127,7 +130,7 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
     for (const tile of tileToAdd) {
       tilesRef.value.set(`${tile.id}`, tile)
       await nextTick()
-      grid.makeWidget(`#${tile.id}`, {
+      grid.makeWidget(makeSelector(tile.id), {
         autoPosition: true,
         w: tile.layout.size.cols,
         h: tile.layout.size.rows,
@@ -150,7 +153,7 @@ watch(() => props.tiles, (newTiles, oldTiles) => {
       }
     })
   }
-})
+}, { deep: true })
 
 defineExpose({ removeWidget })
 
