@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script lang='ts' setup>
+<script lang='ts' setup generic="T">
 import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { GridStack } from 'gridstack'
 import { useDebounceFn } from '@vueuse/core'
@@ -32,21 +32,20 @@ import type { GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
-import type { TileDefinition } from '@kong-ui-public/analytics-utilities'
 
 export type DraggableGridLayoutExpose = {
   removeWidget: (id: number | string) => void
 }
 
 const props = withDefaults(defineProps<{
-  tiles: GridTile<TileDefinition>[],
+  tiles: GridTile<T>[],
   gridSize: GridSize,
   tileHeight?: number,
 }>(), {
   tileHeight: 200,
 })
 const emit = defineEmits<{
-  (e: 'update-tiles', tiles: GridTile<TileDefinition>[]): void,
+  (e: 'update-tiles', tiles: GridTile<T>[]): void,
 }>()
 
 const gridContainer = ref<HTMLDivElement | null>(null)
@@ -65,7 +64,7 @@ const makeTilesFromGridstackNodes = (items: GridStackNode[]) => {
           position: { col: Number(item.x), row: Number(item.y) },
           size: { cols: Number(item.w), rows: Number(item.h) },
         },
-      } satisfies GridTile<TileDefinition>
+      } satisfies GridTile<T>
     }
     return tile
   })
@@ -76,7 +75,7 @@ const removeTile = (items: GridStackNode[]) => {
     return !items.find(item => {
       return item.el?.id === `tile-${tile.id}`
     })
-  }) as GridTile<TileDefinition>[]
+  })
 }
 
 const changeHandler = useDebounceFn((_: Event, items: GridStackNode[]) => {
