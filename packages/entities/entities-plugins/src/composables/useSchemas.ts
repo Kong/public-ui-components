@@ -46,6 +46,8 @@ export interface Group {
 export interface Schema {
   fields?: Field[]
   groups?: Group[]
+  _supported_redis_partial_type?: string
+  _redis_partial_path?: string
 }
 
 export interface UseSchemasOptions {
@@ -265,6 +267,8 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       return /redis-/.test(field.model)
     }
 
+    formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
+    formSchema._redis_partial_path = currentSchema._redis_partial_path
 
     if (getSharedFormName(pluginName) || metadata?.useLegacyForm || options?.credential) {
       /**
@@ -288,7 +292,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         if (redisFields.length) formSchema.fields!.push({
           id: '_redis',
           fields: redisFields,
-          model: 'redis_partial',
+          model: '__redis_partial',
           pluginType: currentSchema._isCustomPlugin ? 'custom' : 'bundled',
           redisType: currentSchema._supported_redis_partial_type,
           redisPath: currentSchema._redis_partial_path,
@@ -366,7 +370,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       if (redisFields.length) advancedFields.push({
         id: '_redis',
         fields: redisFields,
-        model: 'redis_partial',
+        model: '__redis_partial',
         pluginType: currentSchema._isCustomPlugin ? 'custom' : 'bundled',
         redisType: currentSchema._supported_redis_partial_type,
         redisPath: currentSchema._redis_partial_path,

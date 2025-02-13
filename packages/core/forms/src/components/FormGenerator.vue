@@ -12,7 +12,7 @@
         :key="field.model"
       >
         <form-redis
-          v-if="field.model === 'redis_partial' && enableRedisPartial"
+          v-if="field.model === '__redis_partial' && enableRedisPartial"
           :errors="errors"
           :field="field"
           :model="model"
@@ -107,7 +107,7 @@
               :key="field.model"
             >
               <form-redis
-                v-if="field.model === 'redis_partial' && enableRedisPartial"
+                v-if="field.model === '__redis_partial' && enableRedisPartial"
                 :errors="errors"
                 :field="field"
                 :model="model"
