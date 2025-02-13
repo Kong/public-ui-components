@@ -15,8 +15,9 @@ export type RequestsRetentionMs =
 export interface ControlPlaneConfig {
   analytics: boolean
 }
+
 export interface ApiAnalyticsV2 {
-  percentiles: boolean,
+  percentiles: boolean
   retention_ms: AnalyticsRetentionMs
 }
 
@@ -24,7 +25,14 @@ export interface ApiRequestsV2 {
   retention_ms: RequestsRetentionMs
 }
 
+export interface UiOptions {
+  maxParallelRequests?: number
+  requestInterval?: number
+  requestIntervalCap?: number
+}
+
 export interface AnalyticsConfigV2 {
-  analytics: null | ApiAnalyticsV2,
+  analytics: null | ApiAnalyticsV2
   requests: null | ApiRequestsV2
+  ui?: UiOptions
 }

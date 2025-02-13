@@ -99,7 +99,6 @@ onMounted(() => {
       column: props.gridSize.cols,
       cellHeight: props.tileHeight,
       resizable: { handles: 'se, sw' },
-      lazyLoad: true,
       handle: '.tile-header',
 
     }, gridContainer.value)
