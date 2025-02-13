@@ -4,8 +4,8 @@
     class="grid-stack"
   >
     <div
-      v-for="tile in tilesRef"
-      :id="`tile-${tile.id}`"
+      v-for="tile in tilesRef.values()"
+      :id="`${tile.id}`"
       :key="tile.id"
       class="grid-stack-item"
       :gs-h="tile.layout.size.rows"
@@ -48,13 +48,16 @@ const emit = defineEmits<{
 }>()
 
 const gridContainer = ref<HTMLDivElement | null>(null)
-const tilesRef = ref<GridTile<any>[]>(props.tiles)
+//const tilesRef = ref<GridTile<any>[]>(props.tiles)
+
+const tilesRef = ref<Map<string, GridTile<any>>>(new Map(props.tiles.map(t => [`${t.id}`, t])))
+
 let grid: GridStack | null = null
 
 const makeTilesFromGridItemHtmlElements = (items: GridItemHTMLElement[]) => {
-  return tilesRef.value.map((tile: GridTile<any>) => {
+  return Array.from(tilesRef.value.values()).map((tile: GridTile<any>) => {
     const item = items.find(item => {
-      return item.id === `tile-${tile.id}`
+      return item.id === `${tile.id}`
     })
     if (item) {
       return {
@@ -72,23 +75,19 @@ const makeTilesFromGridItemHtmlElements = (items: GridItemHTMLElement[]) => {
 const updateTiles = () => {
   if (grid) {
     const items = grid.getGridItems()
-    tilesRef.value = makeTilesFromGridItemHtmlElements(items)
-    emit('update-tiles', tilesRef.value)
+    const updates = makeTilesFromGridItemHtmlElements(items)
+    updates.forEach((tile, i) => {
+      tilesRef.value.set(`${tile.id}`, tile)
+    })
+    emit('update-tiles', Array.from(tilesRef.value.values()))
   }
 }
 
 const removeHandler = (_: Event, items: GridStackNode[]) => {
-  tilesRef.value = removeTile(items)
-  emit('update-tiles', tilesRef.value)
-}
-
-
-const removeTile = (items: GridStackNode[]) => {
-  return tilesRef.value.filter(tile => {
-    return !items.find(item => {
-      return item.el?.id === `tile-${tile.id}`
-    })
+  items.forEach(item => {
+    tilesRef.value.delete(`${item.el?.id}`)
   })
+  emit('update-tiles', Array.from(tilesRef.value.values()))
 }
 
 onMounted(() => {
@@ -115,7 +114,7 @@ onUnmounted(() => {
 
 const removeWidget = async (id: number | string) => {
   if (grid && gridContainer.value) {
-    const el = gridContainer.value.querySelector(`#tile-${id}`) as HTMLElement
+    const el = gridContainer.value.querySelector(`#${id}`) as HTMLElement
     if (el) {
       grid.removeWidget(el)
     }
@@ -126,9 +125,9 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
   if (newLen > oldLen && grid) {
     const tileToAdd = props.tiles.slice(oldLen)
     for (const tile of tileToAdd) {
-      tilesRef.value.push(tile)
+      tilesRef.value.set(`${tile.id}`, tile)
       await nextTick()
-      grid.makeWidget(`#tile-${tile.id}`, {
+      grid.makeWidget(`#${tile.id}`, {
         autoPosition: true,
         w: tile.layout.size.cols,
         h: tile.layout.size.rows,
@@ -141,10 +140,13 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
 // If the meta of a tile changes, we need to update the copy to keep it in sync.
 watch(() => props.tiles, (newTiles, oldTiles) => {
   if (newTiles.length === oldTiles.length) {
-    tilesRef.value.forEach((tile, i) => {
-      const found = newTiles.find(t => t.id === tile.id)
-      if (found) {
-        tilesRef.value[i].meta = found.meta
+    newTiles.forEach(tile => {
+      const current = tilesRef.value.get(`${tile.id}`)
+      if (current) {
+        tilesRef.value.set(`${tile.id}`, {
+          ...current,
+          meta: tile.meta,
+        })
       }
     })
   }
