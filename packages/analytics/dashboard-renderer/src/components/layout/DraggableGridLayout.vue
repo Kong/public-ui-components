@@ -123,22 +123,6 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
   }
 })
 
-// watch(() => props.tiles, async (tiles) => {
-//   if (grid && gridContainer.value) {
-//     for (const tile of tiles) {
-//       const el = gridContainer.value.querySelector(`#tile-${tile.id}`) as HTMLElement
-//       if (el) {
-//         grid.update(el, {
-//           x: tile.layout.position.col,
-//           y: tile.layout.position.row,
-//           w: tile.layout.size.cols,
-//           h: tile.layout.size.rows,
-//         })
-//       }
-//     }
-//   }
-// }, { deep: true })
-
 const removeWidget = (id: number | string) => {
   if (grid && gridContainer.value) {
     const el = gridContainer.value.querySelector(`#tile-${id}`) as HTMLElement
