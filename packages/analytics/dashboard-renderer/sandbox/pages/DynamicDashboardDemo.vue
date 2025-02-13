@@ -16,7 +16,6 @@
     <div class="sandbox-container">
       <DashboardRenderer
         v-if="definition.type === ValidationResultType.Success"
-        can-edit
         :config="definition.data"
         :context="context"
         draggable
@@ -172,6 +171,7 @@ const context: DashboardRendererContext = {
     type: 'relative',
     time_range: '24h',
   },
+  editable: true,
 }
 
 const handleUpdateTiles = (tiles: any) => {

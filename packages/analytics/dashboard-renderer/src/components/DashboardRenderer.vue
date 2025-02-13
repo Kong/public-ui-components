@@ -7,7 +7,7 @@
       {{ i18n.t('renderer.noQueryBridge') }}
     </KAlert>
     <component
-      :is="canEdit ? DraggableGridLayout : GridLayout"
+      :is="context.editable ? DraggableGridLayout : GridLayout"
       v-else
       ref="gridLayoutRef"
       :grid-size="config.gridSize"
@@ -27,7 +27,6 @@
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
-          :editable="canEdit"
           :height="tile.layout.size.rows * (config.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
           :query-ready="queryReady"
           :refresh-counter="refreshCounter"
@@ -60,13 +59,10 @@ import {
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   context: DashboardRendererContext,
   config: DashboardConfig,
-  canEdit?: boolean,
-}>(), {
-  canEdit: false,
-})
+}>()
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
@@ -141,7 +137,7 @@ const gridTiles = computed(() => {
       }
     }
 
-    if (props.canEdit && !tile.id) {
+    if (props.context.editable && !tile.id) {
       console.warn(
         'No id provided for tile. One will be generated automatically,',
         'however tracking changes to this tile may not work as expected.',

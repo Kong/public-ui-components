@@ -1,6 +1,7 @@
 <template>
   <div
     class="tile-boundary"
+    :class="{ 'editable': context.editable }"
     :data-testid="`tile-${tileId}`"
   >
     <div
@@ -68,7 +69,7 @@
               </span>
             </KDropdownItem>
             <KDropdownItem
-              v-if="editable"
+              v-if="context.editable"
               :data-testid="`remove-tile-${tileId}`"
               @click="removeTile"
             >
@@ -134,10 +135,8 @@ const props = withDefaults(defineProps<{
   queryReady: boolean,
   refreshCounter: number,
   tileId: string | number,
-  editable?: boolean,
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
-  editable: false,
 })
 
 const emit = defineEmits<{
@@ -265,7 +264,7 @@ const exportCsv = () => {
   height: v-bind('`${height}px`');
   overflow: hidden;
 
-  &:hover {
+  &.editable:hover {
     .tile-header {
       background: $kui-color-background-neutral-weakest;
     }

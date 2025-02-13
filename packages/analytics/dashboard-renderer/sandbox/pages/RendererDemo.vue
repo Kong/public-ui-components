@@ -60,7 +60,6 @@ const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 const context: DashboardRendererContext = {
   filters: [],
   refreshInterval: 0,
-  editable: true,
 }
 
 const dashboardConfig = ref <DashboardConfig>({

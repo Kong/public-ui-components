@@ -22,7 +22,6 @@
       </div>
       <DashboardRenderer
         ref="dashboardRendererRef"
-        can-edit
         :config="dashboardConfig"
         :context="context"
         @edit-tile="onEditTile"

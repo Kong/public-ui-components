@@ -115,7 +115,7 @@ onUnmounted(() => {
   }
 })
 
-const removeWidget = async (id: number | string) => {
+const removeWidget = (id: number | string) => {
   if (grid && gridContainer.value) {
     const el = gridContainer.value.querySelector(makeSelector(id)) as HTMLElement
     if (el) {
