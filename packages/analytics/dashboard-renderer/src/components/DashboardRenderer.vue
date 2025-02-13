@@ -141,11 +141,19 @@ const gridTiles = computed(() => {
       }
     }
 
+    if (props.canEdit && !tile.id) {
+      console.warn(
+        'No id provided for tile. One will be generated automatically,',
+        'however tracking changes to this tile may not work as expected.',
+        tile,
+      )
+    }
+
     return {
       layout: tile.layout,
       meta: tileMeta,
       // Add a unique key to each tile internally.
-      id: i,
+      id: tile.id ?? crypto.randomUUID(),
     } as GridTile<TileDefinition>
   })
 })
@@ -195,6 +203,7 @@ const refreshTiles = () => {
 const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
   const updatedTiles = tiles.map(tile => {
     return {
+      id: tile.id,
       layout: tile.layout,
       definition: tile.meta,
     } as TileConfig

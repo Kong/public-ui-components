@@ -11,8 +11,8 @@
       :gs-h="tile.layout.size.rows"
       :gs-lazy-load="true"
       :gs-w="tile.layout.size.cols"
-      :gs-x="tile.layout.position.col >= 0 ? tile.layout.position.col : undefined"
-      :gs-y="tile.layout.position.row >= 0 ? tile.layout.position.row : undefined"
+      :gs-x="tile.layout.position.col"
+      :gs-y="tile.layout.position.row"
     >
       <div class="grid-stack-item-content">
         <slot
@@ -27,8 +27,7 @@
 <script lang='ts' setup generic="T">
 import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { GridStack } from 'gridstack'
-import { useDebounceFn } from '@vueuse/core'
-import type { GridStackNode } from 'gridstack'
+import type { GridItemHTMLElement, GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
@@ -52,23 +51,37 @@ const gridContainer = ref<HTMLDivElement | null>(null)
 const tilesRef = ref<GridTile<any>[]>(props.tiles)
 let grid: GridStack | null = null
 
-const makeTilesFromGridstackNodes = (items: GridStackNode[]) => {
+const makeTilesFromGridItemHtmlElements = (items: GridItemHTMLElement[]) => {
   return tilesRef.value.map((tile: GridTile<any>) => {
     const item = items.find(item => {
-      return item.el?.id === `tile-${tile.id}`
+      return item.id === `tile-${tile.id}`
     })
     if (item) {
       return {
         ...tile,
         layout: {
-          position: { col: Number(item.x), row: Number(item.y) },
-          size: { cols: Number(item.w), rows: Number(item.h) },
+          position: { col: Number(item.gridstackNode?.x), row: Number(item.gridstackNode?.y) },
+          size: { cols: Number(item.gridstackNode?.w), rows: Number(item.gridstackNode?.h) },
         },
       } satisfies GridTile<T>
     }
     return tile
   })
 }
+
+const updateTiles = () => {
+  if (grid) {
+    const items = grid.getGridItems()
+    tilesRef.value = makeTilesFromGridItemHtmlElements(items)
+    emit('update-tiles', tilesRef.value)
+  }
+}
+
+const removeHandler = (_: Event, items: GridStackNode[]) => {
+  tilesRef.value = removeTile(items)
+  emit('update-tiles', tilesRef.value)
+}
+
 
 const removeTile = (items: GridStackNode[]) => {
   return tilesRef.value.filter(tile => {
@@ -77,11 +90,6 @@ const removeTile = (items: GridStackNode[]) => {
     })
   })
 }
-
-const changeHandler = useDebounceFn((_: Event, items: GridStackNode[]) => {
-  const updatedTiles = makeTilesFromGridstackNodes(items)
-  emit('update-tiles', updatedTiles)
-}, 200)
 
 onMounted(() => {
   if (gridContainer.value) {
@@ -93,11 +101,9 @@ onMounted(() => {
       handle: '.tile-header',
 
     }, gridContainer.value)
-    grid.on('change', changeHandler)
-    grid.on('added', changeHandler)
-    grid.on('removed', (_, items) => {
-      tilesRef.value = removeTile(items)
-    })
+    grid.on('change', updateTiles)
+    grid.on('added', updateTiles)
+    grid.on('removed', removeHandler)
   }
 })
 
@@ -107,12 +113,11 @@ onUnmounted(() => {
   }
 })
 
-const removeWidget = (id: number | string) => {
+const removeWidget = async (id: number | string) => {
   if (grid && gridContainer.value) {
     const el = gridContainer.value.querySelector(`#tile-${id}`) as HTMLElement
     if (el) {
       grid.removeWidget(el)
-      grid.compact('compact', false)
     }
   }
 }
@@ -127,7 +132,6 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
         autoPosition: true,
         w: tile.layout.size.cols,
         h: tile.layout.size.rows,
-        lazyLoad: true,
       })
     }
   }
@@ -137,11 +141,12 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
 // If the meta of a tile changes, we need to update the copy to keep it in sync.
 watch(() => props.tiles, (newTiles, oldTiles) => {
   if (newTiles.length === oldTiles.length) {
-    for (const [i, tile] of newTiles.entries()) {
-      if (JSON.stringify(tile.meta) !== JSON.stringify(tilesRef.value[i].meta)) {
-        tilesRef.value[i].meta = tile.meta
+    tilesRef.value.forEach((tile, i) => {
+      const found = newTiles.find(t => t.id === tile.id)
+      if (found) {
+        tilesRef.value[i].meta = found.meta
       }
-    }
+    })
   }
 })
 

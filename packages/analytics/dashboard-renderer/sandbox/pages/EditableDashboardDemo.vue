@@ -76,6 +76,7 @@ const dashboardConfig = ref <DashboardConfig>({
   tileHeight: 167,
   tiles: [
     {
+      id: crypto.randomUUID(),
       definition: {
         chart: {
           type: 'horizontal_bar',
@@ -104,6 +105,7 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      id: crypto.randomUUID(),
       definition: {
         chart: {
           type: 'timeseries_line',
@@ -134,6 +136,7 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      id: crypto.randomUUID(),
       definition: {
         chart: {
           type: 'timeseries_bar',
@@ -173,11 +176,11 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
     top_n: 'top_n',
   }
 
-  dashboardConfig.value.tiles = dashboardConfig.value.tiles.map((t, i) => {
+  dashboardConfig.value.tiles = dashboardConfig.value.tiles.map(t => {
 
     const newType = chartTypeToggleMap[t.definition.chart.type] || t.definition.chart.type
 
-    if (i === tile.id) {
+    if (t.id === tile.id) {
       return {
         ...t,
         definition: {
@@ -200,12 +203,14 @@ const dashboardRendererRef = ref<InstanceType<typeof DashboardRenderer> | null>(
 const refresh = () => {
   dashboardRendererRef.value?.refresh()
 }
-
+let last = 0
 const addTile = () => {
+  last = (last + 1) % 2
   dashboardConfig.value.tiles.push({
+    id: crypto.randomUUID(),
     definition: {
       chart: {
-        type: 'timeseries_line',
+        type: ['timeseries_line', 'timeseries_bar'][last] as any,
         chartTitle: 'Timeseries line chart of mock data',
         threshold: {
           'request_count': 3200,
@@ -223,13 +228,12 @@ const addTile = () => {
     },
     layout: {
       position: {
-        col: -1,
-        row: -1,
+        col: 0,
+        row: 0,
       },
       size: {
         cols: 3,
         rows: 2,
-        fitToContent: true,
       },
     },
   })
