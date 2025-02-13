@@ -354,7 +354,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         // - It has a `required` property and it's set to true
         // - Is a field with one or more field rules
         // set Redis fields as advanced fields
-        if ((field.required && !isRedisField(field)) || ruledFields[field.model] !== undefined) {
+        if (field.required || ruledFields[field.model] !== undefined) {
           if (ruledFields[field.model] === false) {
             ruledFields[field.model] = true // Mark this as visited
           }
