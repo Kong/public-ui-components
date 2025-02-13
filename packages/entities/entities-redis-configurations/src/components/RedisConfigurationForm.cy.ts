@@ -35,10 +35,11 @@ describe('<RedisConfigurationForm />', {
     describe(app, () => {
       const config = app === 'Kong Manager' ? baseConfigKM : baseConfigKonnect
 
-      const stubCreateEdit = () => {
+      const stubCreateEdit = ({ status = 200 }: { status?: number } = {}) => {
         const handler: RouteHandler = req => {
           const { body: { name, type, config } } = req
           req.reply({
+            statusCode: status,
             body: {
               name: name,
               type: type,
@@ -58,20 +59,26 @@ describe('<RedisConfigurationForm />', {
           cy.intercept('POST', `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials`, handler)
             .as('createRedisConfiguration')
 
-          cy.intercept('PUT', `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials/*`, handler)
+          cy.intercept('PATCH', `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials/*`, handler)
             .as('editRedisConfiguration')
         }
       }
 
-      const intercept = (body: RedisConfigurationResponse = redisConfigurationCE) => {
+      const interceptDetail = ({
+        body = redisConfigurationCE,
+        status = 200,
+      }: {
+        body?: RedisConfigurationResponse
+        status?: number
+      } = {}) => {
         if (app === 'Kong Manager') {
           cy.intercept('GET', `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/partials/*`, {
-            statusCode: 200,
+            statusCode: status,
             body,
           }).as('getRedisConfiguration')
         } else {
           cy.intercept('GET', `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials/*`, {
-            statusCode: 200,
+            statusCode: status,
             body,
           }).as('getRedisConfiguration')
         }
@@ -387,7 +394,7 @@ describe('<RedisConfigurationForm />', {
 
       it('should show edit form', () => {
         // CE
-        intercept(redisConfigurationCE)
+        interceptDetail({ body: redisConfigurationCE })
 
         cy.mount(RedisConfigurationForm, {
           props: {
@@ -425,7 +432,7 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-ssl-verify-checkbox').should('be.visible').should('not.be.checked')
 
         // Host/Port EE
-        intercept(redisConfigurationHostPortEE)
+        interceptDetail({ body: redisConfigurationHostPortEE })
 
         cy.mount(RedisConfigurationForm, {
           props: {
@@ -436,7 +443,9 @@ describe('<RedisConfigurationForm />', {
 
         cy.wait('@getRedisConfiguration')
 
-        cy.getTestId('redis-type-select-popover').should('contain.text', 'Host/Port (Enterprise)')
+        cy.getTestId('redis-type-select')
+          .should('be.visible')
+          .should('have.value', 'Host/Port')
 
         // redis type cannot be changed
         cy.getTestId('redis-type-select').should('be.disabled')
@@ -459,7 +468,7 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-connect-timeout-input').should('be.visible').should('have.value', redisConfigurationHostPortEE.config.connect_timeout)
 
         // Cluster EE
-        intercept(redisConfigurationCluster)
+        interceptDetail({ body: redisConfigurationCluster })
 
         cy.mount(RedisConfigurationForm, {
           props: {
@@ -470,7 +479,9 @@ describe('<RedisConfigurationForm />', {
 
         cy.wait('@getRedisConfiguration')
 
-        cy.getTestId('redis-type-select-popover').should('contain.text', 'Cluster (Enterprise)')
+        cy.getTestId('redis-type-select')
+          .should('be.visible')
+          .should('have.value', 'Cluster')
 
         // redis type cannot be changed
         cy.getTestId('redis-type-select').should('be.disabled')
@@ -508,7 +519,7 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-connect-timeout-input').should('be.visible').should('have.value', redisConfigurationCluster.config.connect_timeout)
 
         // Sentinel EE
-        intercept(redisConfigurationSentinel)
+        interceptDetail({ body: redisConfigurationSentinel })
 
         cy.mount(RedisConfigurationForm, {
           props: {
@@ -519,7 +530,9 @@ describe('<RedisConfigurationForm />', {
 
         cy.wait('@getRedisConfiguration')
 
-        cy.getTestId('redis-type-select-popover').should('contain.text', 'Sentinel (Enterprise)')
+        cy.getTestId('redis-type-select')
+          .should('be.visible')
+          .should('have.value', 'Sentinel')
 
         // Sentinel fields
         cy.getTestId('redis-cluster-configuration-section').should('not.exist')
@@ -553,6 +566,122 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-connect-timeout-input').should('be.visible').should('have.value', redisConfigurationSentinel.config.connect_timeout)
         cy.getTestId('redis-connect-timeout-input').should('be.visible').should('have.value', redisConfigurationSentinel.config.connect_timeout)
       })
+
+      it('should correctly handle button state - edit', () => {
+        stubCreateEdit()
+
+        interceptDetail({ body: redisConfigurationCE })
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            partialId: redisConfigurationCE.id,
+          },
+        })
+
+        cy.wait('@getRedisConfiguration')
+
+        cy.getTestId('redis_configuration-edit-form-submit').should('be.disabled')
+
+        cy.getTestId('redis-name-input').type('test')
+
+        cy.getTestId('redis_configuration-edit-form-submit')
+          .should('be.enabled')
+          .click()
+
+        cy.wait('@editRedisConfiguration')
+
+        cy.getTestId('redis_configuration-edit-form-submit').should('be.disabled')
+      })
+
+      it('should show error message', () => {
+        interceptDetail({ status: 404 })
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            partialId: 'invalid-id',
+          },
+        })
+
+        cy.wait('@getRedisConfiguration')
+
+        // error state is displayed
+        cy.getTestId('form-fetch-error').should('be.visible')
+
+        // buttons and form hidden
+        cy.getTestId('route-edit-form-cancel').should('not.exist')
+        cy.getTestId('route-edit-form-submit').should('not.exist')
+        cy.get('.kong-ui-entities-route-form form').should('not.exist')
+      })
+
+      it('@update should be emitted when form is submitted', () => {
+        stubCreateEdit()
+        interceptDetail()
+
+        // create
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            onUpdate: cy.stub().as('onCreateUpdateSpy'),
+          },
+        })
+
+        cy.getTestId('redis-name-input').type('test')
+        cy.getTestId('redis_configuration-create-form-submit').click()
+        cy.wait('@createRedisConfiguration')
+        cy.get('@onCreateUpdateSpy').should('have.been.calledOnce')
+
+        // edit
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            partialId: redisConfigurationCE.id,
+            onUpdate: cy.stub().as('onEditUpdateSpy'),
+          },
+        })
+
+        cy.wait('@getRedisConfiguration')
+        cy.getTestId('redis-name-input').type('test')
+
+        cy.getTestId('redis_configuration-edit-form-submit').click()
+
+        cy.wait('@editRedisConfiguration')
+
+        cy.get('@onEditUpdateSpy').should('have.been.calledOnce')
+      })
+
+      it('props `slidoutTopOffset` should be working', () => {
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            slidoutTopOffset: 0,
+          },
+        })
+
+        cy.getTestId('redis_configuration-create-form-view-configuration').click()
+        cy.getTestId('slideout-container').should('be.visible').should('have.css', 'top', '0px')
+      })
+
+      it('props `actionTeleportTarget` should be working', () => {
+        cy.document().then(doc => {
+          const elem = doc.createElement('div')
+          elem.id = 'test'
+          doc.body.appendChild(elem)
+
+          cy.mount(RedisConfigurationForm, {
+            props: {
+              config,
+              actionTeleportTarget: '#test',
+            },
+          })
+
+          cy.get('#test')
+            .should('be.visible')
+            .findTestId('redis_configuration-create-form-view-configuration').should('be.visible')
+        })
+      })
+
     })
 
   }
