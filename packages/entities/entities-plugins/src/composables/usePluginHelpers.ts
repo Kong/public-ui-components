@@ -145,8 +145,9 @@ export default function useHelpers() {
         }
       })
     } else {
-      // remove partials field
-      delete formModel[fieldName]
+      // set partials field to null when toggling
+      // delete formModel[fieldName]
+      formModel[fieldName] = null
     }
 
     Object.assign(formModel, additionalModel)
