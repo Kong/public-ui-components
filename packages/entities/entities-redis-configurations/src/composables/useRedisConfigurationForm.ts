@@ -4,7 +4,7 @@ import { isEqual } from 'lodash-es'
 
 import { getRedisType, mapRedisTypeToPartialType, standardize as s } from '../helpers'
 import { RedisType } from '../types'
-import { DEFAULT_REDIS_TYPE } from '../constants'
+import { DEFAULT_REDIS_TYPE, DEFAULT_FIELDS } from '../constants'
 import endpoints from '../partials-endpoints'
 
 import type { KongManagerRedisConfigurationFormConfig, KonnectRedisConfigurationFormConfig, RedisConfigurationFields, RedisConfigurationFormState, RedisConfigurationResponse } from '../types'
@@ -27,29 +27,7 @@ export const useRedisConfigurationForm = (options: Options) => {
     fields: {
       name: '',
       type: mapRedisTypeToPartialType(DEFAULT_REDIS_TYPE),
-      config: {
-        port: 6379,
-        host: '127.0.0.1',
-        database: 0,
-        username: '',
-        password: '',
-        ssl: false,
-        ssl_verify: false,
-        server_name: '',
-        connect_timeout: 2000,
-        send_timeout: 2000,
-        read_timeout: 2000,
-        sentinel_username: '',
-        sentinel_password: '',
-        keepalive_pool_size: 256,
-        keepalive_backlog: 0,
-        sentinel_master: '',
-        sentinel_nodes: [],
-        cluster_nodes: [],
-        cluster_max_redirections: 0,
-        connection_is_proxied: false,
-        timeout: 2000,
-      },
+      config: JSON.parse(JSON.stringify(DEFAULT_FIELDS)),
     },
     readonly: false,
     errorMessage: '',
@@ -57,17 +35,8 @@ export const useRedisConfigurationForm = (options: Options) => {
 
   // Used to diff the form values when editing
   const initialPayload = ref<RedisConfigurationFields>()
-
-  const userSelectedRedisType = ref<RedisType>()
-  const redisType = computed(() => {
-    if (isEdit) {
-      return getRedisType(form.fields)
-    }
-    if (userSelectedRedisType.value) {
-      return userSelectedRedisType.value
-    }
-    return DEFAULT_REDIS_TYPE
-  })
+  const redisType = ref<RedisType>(DEFAULT_REDIS_TYPE)
+  const redisTypeIsEnterprise = computed(() => redisType.value === RedisType.HOST_PORT_EE || redisType.value === RedisType.CLUSTER || redisType.value === RedisType.SENTINEL)
 
   watch(redisType, (newValue) => {
     form.fields.type = mapRedisTypeToPartialType(newValue)
@@ -96,9 +65,9 @@ export const useRedisConfigurationForm = (options: Options) => {
       case RedisType.SENTINEL:
         return !!config.sentinel_nodes.length
           && config.sentinel_nodes.every((node) => node.host.length > 0 && node.port > 0)
-          && config.sentinel_master.length > 0
+          && !!config.sentinel_master?.length
           && config.sentinel_role
-          && config.sentinel_role.length > 0
+          && !!config.sentinel_role.length
       default:
         throw new Error('Invalid redis type')
     }
@@ -141,6 +110,12 @@ export const useRedisConfigurationForm = (options: Options) => {
             ssl_verify: form.fields.config.ssl_verify,
             ssl: form.fields.config.ssl,
             username: s.str(form.fields.config.username, null),
+            // reset other EE fields
+            cluster_nodes: null,
+            cluster_max_redirections: 0,
+            sentinel_master: null,
+            sentinel_role: null,
+            sentinel_nodes: null,
           },
         }
       case RedisType.CLUSTER:
@@ -161,6 +136,10 @@ export const useRedisConfigurationForm = (options: Options) => {
             keepalive_pool_size: s.int(form.fields.config.keepalive_pool_size),
             keepalive_backlog: s.int(form.fields.config.keepalive_backlog),
             connection_is_proxied: form.fields.config.connection_is_proxied,
+            // reset other EE fields
+            sentinel_master: null,
+            sentinel_role: null,
+            sentinel_nodes: null,
           },
         }
       case RedisType.SENTINEL:
@@ -182,6 +161,9 @@ export const useRedisConfigurationForm = (options: Options) => {
             keepalive_pool_size: s.int(form.fields.config.keepalive_pool_size),
             keepalive_backlog: s.int(form.fields.config.keepalive_backlog),
             connection_is_proxied: form.fields.config.connection_is_proxied,
+            // reset other EE fields
+            cluster_nodes: null,
+            cluster_max_redirections: 0,
           },
         }
       default:
@@ -229,6 +211,7 @@ export const useRedisConfigurationForm = (options: Options) => {
     form.fields.config.cluster_nodes = s.addIdToClusterNodes(data.config.cluster_nodes ?? [])
     form.fields.name = data.name
     form.fields.type = data.type
+    redisType.value = getRedisType(data)
     initialPayload.value = JSON.parse(JSON.stringify(payload.value))
   }
 
@@ -238,7 +221,7 @@ export const useRedisConfigurationForm = (options: Options) => {
     payload,
     isEdit,
     redisType,
-    userSelectedRedisType,
+    redisTypeIsEnterprise,
     formType,
     fetchUrl,
     submit,
