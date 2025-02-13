@@ -4,7 +4,7 @@
     class="grid-stack"
   >
     <div
-      v-for="tile in tiles"
+      v-for="tile in tilesRef"
       :id="`tile-${tile.id}`"
       :key="tile.id"
       class="grid-stack-item"
@@ -27,6 +27,7 @@
 <script lang='ts' setup generic="T">
 import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { GridStack } from 'gridstack'
+import { useDebounceFn } from '@vueuse/core'
 import type { GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
@@ -48,10 +49,11 @@ const emit = defineEmits<{
 }>()
 
 const gridContainer = ref<HTMLDivElement | null>(null)
+const tilesRef = ref<GridTile<any>[]>(props.tiles)
 let grid: GridStack | null = null
 
 const makeTilesFromGridstackNodes = (items: GridStackNode[]) => {
-  return props.tiles.map((tile) => {
+  return tilesRef.value.map((tile: GridTile<any>) => {
     const item = items.find(item => {
       return item.el?.id === `tile-${tile.id}`
     })
@@ -68,6 +70,19 @@ const makeTilesFromGridstackNodes = (items: GridStackNode[]) => {
   })
 }
 
+const removeTile = (items: GridStackNode[]) => {
+  return tilesRef.value.filter(tile => {
+    return !items.find(item => {
+      return item.el?.id === `tile-${tile.id}`
+    })
+  }) as GridTile<T>[]
+}
+
+const changeHandler = useDebounceFn((_: Event, items: GridStackNode[]) => {
+  const updatedTiles = makeTilesFromGridstackNodes(items)
+  emit('update-tiles', updatedTiles)
+}, 200)
+
 onMounted(() => {
   if (gridContainer.value) {
     grid = GridStack.init({
@@ -78,13 +93,10 @@ onMounted(() => {
       handle: '.tile-header',
 
     }, gridContainer.value)
-    grid.on('change', (_, items) => {
-      const updatedTiles = makeTilesFromGridstackNodes(items)
-      emit('update-tiles', updatedTiles)
-    })
-    grid.on('added', (_, items) => {
-      const updatedTiles = makeTilesFromGridstackNodes(items)
-      emit('update-tiles', updatedTiles)
+    grid.on('change', changeHandler)
+    grid.on('added', changeHandler)
+    grid.on('removed', (_, items) => {
+      tilesRef.value = removeTile(items)
     })
   }
 })
@@ -97,9 +109,10 @@ onUnmounted(() => {
 
 watch(() => props.tiles.length, async (newLen, oldLen) => {
   if (newLen > oldLen && grid) {
-    await nextTick()
     const tileToAdd = props.tiles.slice(oldLen)
     for (const tile of tileToAdd) {
+      tilesRef.value.push(tile)
+      await nextTick()
       grid.makeWidget(`#tile-${tile.id}`, {
         autoPosition: true,
         w: tile.layout.size.cols,
@@ -110,21 +123,21 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
   }
 })
 
-watch(() => props.tiles, async (tiles) => {
-  if (grid && gridContainer.value) {
-    for (const tile of tiles) {
-      const el = gridContainer.value.querySelector(`#tile-${tile.id}`) as HTMLElement
-      if (el) {
-        grid.update(el, {
-          x: tile.layout.position.col,
-          y: tile.layout.position.row,
-          w: tile.layout.size.cols,
-          h: tile.layout.size.rows,
-        })
-      }
-    }
-  }
-}, { deep: true })
+// watch(() => props.tiles, async (tiles) => {
+//   if (grid && gridContainer.value) {
+//     for (const tile of tiles) {
+//       const el = gridContainer.value.querySelector(`#tile-${tile.id}`) as HTMLElement
+//       if (el) {
+//         grid.update(el, {
+//           x: tile.layout.position.col,
+//           y: tile.layout.position.row,
+//           w: tile.layout.size.cols,
+//           h: tile.layout.size.rows,
+//         })
+//       }
+//     }
+//   }
+// }, { deep: true })
 
 const removeWidget = (id: number | string) => {
   if (grid && gridContainer.value) {
