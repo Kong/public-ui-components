@@ -914,9 +914,6 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
     }
   })
 
-  // pass whether the plugin is a custom plugin to the form schema
-  if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
-
   return initialFormSchema
 }
 
@@ -1330,6 +1327,8 @@ onBeforeMount(async () => {
               initialFormSchema._supported_redis_partial_type = redisType
               initialFormSchema._redis_partial_path = data.supported_partials?.redisType
             }
+            // pass whether the plugin is a custom plugin to the form schema
+            if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
             schema.value = initialFormSchema
           }
         }
