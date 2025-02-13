@@ -22,7 +22,7 @@ export interface RedisConfigurationFields {
     port: number
     read_timeout: number
     send_timeout: number
-    sentinel_master: string
+    sentinel_master?: string
     sentinel_nodes: Identifiable<SentinelNode>[]
     sentinel_password: string
     sentinel_role?: 'master' | 'slave' | 'any'

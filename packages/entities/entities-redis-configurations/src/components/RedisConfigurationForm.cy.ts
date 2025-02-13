@@ -110,25 +110,25 @@ describe('<RedisConfigurationForm />', {
           .should('be.visible')
 
         cy.getTestId('redis-type-select-popover')
-          .find('button:eq(0)')
+          .find(`button[value="${RedisType.HOST_PORT_CE}"]`)
           .should('be.visible')
           .should('be.enabled')
           .should('have.attr', 'value', RedisType.HOST_PORT_CE)
 
         cy.getTestId('redis-type-select-popover')
-          .find('button:eq(1)')
+          .find(`button[value="${RedisType.HOST_PORT_EE}"]`)
           .should('be.visible')
           .should('be.enabled')
           .should('have.attr', 'value', RedisType.HOST_PORT_EE)
 
         cy.getTestId('redis-type-select-popover')
-          .find('button:eq(2)')
+          .find(`button[value="${RedisType.CLUSTER}"]`)
           .should('be.visible')
           .should('be.enabled')
           .should('have.attr', 'value', RedisType.CLUSTER)
 
         cy.getTestId('redis-type-select-popover')
-          .find('button:eq(3)')
+          .find(`button[value="${RedisType.SENTINEL}"]`)
           .should('be.visible')
           .should('be.enabled')
           .should('have.attr', 'value', RedisType.SENTINEL)
@@ -447,8 +447,8 @@ describe('<RedisConfigurationForm />', {
           .should('be.visible')
           .should('have.value', 'Host/Port')
 
-        // redis type cannot be changed
-        cy.getTestId('redis-type-select').should('be.disabled')
+        // an EE type can be changed to other EE types
+        cy.getTestId('redis-type-select').should('not.be.disabled')
 
         // Host/port EE fields
         cy.getTestId('redis-sentinel-configuration-section').should('not.exist')
@@ -483,8 +483,8 @@ describe('<RedisConfigurationForm />', {
           .should('be.visible')
           .should('have.value', 'Cluster')
 
-        // redis type cannot be changed
-        cy.getTestId('redis-type-select').should('be.disabled')
+        // an EE type can be changed to other EE types
+        cy.getTestId('redis-type-select').should('not.be.disabled')
 
         // Cluster fields
         cy.getTestId('redis-sentinel-configuration-section').should('not.exist')
@@ -533,6 +533,9 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-type-select')
           .should('be.visible')
           .should('have.value', 'Sentinel')
+
+        // an EE type can be changed to other EE types
+        cy.getTestId('redis-type-select').should('not.be.disabled')
 
         // Sentinel fields
         cy.getTestId('redis-cluster-configuration-section').should('not.exist')

@@ -24,14 +24,14 @@
         :title="t('form.sections.type.title')"
       >
         <KSelect
+          v-model="redisType"
           data-testid="redis-type-select"
-          :disabled="isEdit"
+          :disabled="isEdit && redisType === RedisType.HOST_PORT_CE"
           :items="typeOptions"
           :kpop-attributes="{ 'data-testid': 'redis-type-select-popover' }"
           :label="t('form.fields.type.label')"
           :readonly="form.readonly"
           required
-          @change="handleTypeChange"
         >
           <template #selected-item-template="{ item }">
             {{ getSelectedText(item) }}
@@ -437,6 +437,7 @@ const typeOptions = computed<SelectItem[]>(() => {
       group: ` ${t('form.options.type.open_source')}`, // the space before the group name is intentional, it makes the group to be the first one
       value: RedisType.HOST_PORT_CE,
       selected: redisType.value === RedisType.HOST_PORT_CE,
+      disabled: isEdit && redisTypeIsEnterprise.value,
     },
     {
       label: t('form.options.type.host_port'),
@@ -472,17 +473,13 @@ const getSelectedText = (item: any) => {
   return `${item.label}${suffix}`
 }
 
-const handleTypeChange = (item: SelectItem | null) => {
-  userSelectedRedisType.value = item!.value as RedisType
-}
-
 const {
   form,
   canSubmit,
   payload,
   isEdit,
-  userSelectedRedisType,
   redisType,
+  redisTypeIsEnterprise,
   fetchUrl,
   submit,
   setInitialFormValues,
