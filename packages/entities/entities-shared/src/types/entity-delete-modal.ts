@@ -24,4 +24,5 @@ export enum EntityTypes {
   Target = 'target',
   Policy = 'policy',
   Secret = 'secret',
+  RedisConfiguration = 'redis configuration',
 }
