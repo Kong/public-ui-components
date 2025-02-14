@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.5.74...@kong-ui-public/entities-consumer-groups@3.6.0) (2025-02-14)
+
+
+### Features
+
+* **consumer-groups:** new empty state [khcp-14827] ([#1936](https://github.com/Kong/public-ui-components/issues/1936)) ([1443167](https://github.com/Kong/public-ui-components/commit/1443167185e9a2bf9c4acca02220e0d8a7981a73))
+
+
+
+
+
 ## [3.5.74](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.5.73...@kong-ui-public/entities-consumer-groups@3.5.74) (2025-02-03)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
