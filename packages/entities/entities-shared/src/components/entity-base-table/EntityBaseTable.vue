@@ -95,6 +95,15 @@
         <AddIcon />
       </template>
     </KTableData>
+
+    <!-- TODO: remove this slot when empty states M2 is cleaned up -->
+    <!-- This slot is for teleported actions that should be visible even if the toolbar is hidden -->
+    <div
+      v-if="$slots['outside-actions'] && hideTableToolbar"
+      class="hidden"
+    >
+      <slot name="outside-actions" />
+    </div>
   </KCard>
 </template>
 
@@ -401,6 +410,10 @@ const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): vo
 
   .toolbar-button-container {
     margin-left: auto;
+  }
+
+  .hidden {
+    display: none;
   }
 
   // shared styles for entity empty state
