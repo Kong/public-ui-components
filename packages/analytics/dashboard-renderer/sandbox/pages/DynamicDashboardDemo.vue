@@ -171,6 +171,7 @@ const context: DashboardRendererContext = {
     type: 'relative',
     time_range: '24h',
   },
+  editable: true,
 }
 
 const handleUpdateTiles = (tiles: any) => {

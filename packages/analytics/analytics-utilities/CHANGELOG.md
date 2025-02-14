@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.0...@kong-ui-public/analytics-utilities@6.3.1) (2025-02-13)
+
+
+### Bug Fixes
+
+* handle adding/removing tiles (widgets) ([#1944](https://github.com/Kong/public-ui-components/issues/1944)) ([82359a2](https://github.com/Kong/public-ui-components/commit/82359a25f0acef6378ca0ab575cbf82ad6d9f863))
+
+
+
+
+
 # [6.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.2.0...@kong-ui-public/analytics-utilities@6.3.0) (2025-02-11)
 
 
