@@ -21,6 +21,7 @@ export const queryableRequestDimensions = [
   'header_user_agent',
   'http_method',
   'iso_code',
+  'portal',
   'request_id',
   'request_uri',
   'response_header_content_type',
