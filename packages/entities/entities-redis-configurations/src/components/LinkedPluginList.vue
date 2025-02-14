@@ -2,7 +2,7 @@
   <KTableData
     :fetcher="fetcher"
     :headers="headers"
-    :pagination-attributes="{ totalCount: tableData.length, disablePageJump: true }"
+    :pagination-attributes="{ totalCount, disablePageJump: true }"
   >
     <template #name="{ rowValue }">
       <PluginName :plugin-name="rowValue" />
@@ -17,14 +17,29 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import composables from '../composables'
 import PluginName from './PluginItem.vue'
+import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
 
+import type { TableDataFetcherParams } from '@kong/kongponents'
 import type { TableViewHeader } from '@kong/kongponents/dist/types'
-import type { RedisConfigurationLinkedPlugin } from '../types'
+import type { KonnectConfig, KongManagerConfig } from '@kong-ui-public/entities-shared'
+import type { PropType } from 'vue'
 
-defineProps({
-  redisConfigurationId: {
+const props = defineProps({
+  config: {
+    type: Object as PropType<KonnectConfig | KongManagerConfig>,
+    required: true,
+    validator: (config: KonnectConfig | KongManagerConfig) => {
+      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (config.app === 'konnect' && !config.controlPlaneId) return false
+      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      return true
+    },
+  },
+  partialId: {
     type: String,
     required: true,
   },
@@ -41,22 +56,24 @@ const headers: TableViewHeader[] = [
   { key: 'actions', hideLabel: true },
 ]
 
-const tableData: RedisConfigurationLinkedPlugin[] = [
-  { name: 'rate-limiting-advanced', instance_name: 'my-rla-1', id: '90ffda46-273c-4c20-8ad5-2b7a169c1818' },
-  { name: 'rate-limiting', instance_name: 'my-rla-1', id: '62dc8be8-c75a-4211-ad41-ff4f3b6caacb' },
-]
+const { fetcher: linksFetcher } = useLinkedPluginsFetcher({
+  config: props.config,
+  partialId: props.partialId,
+})
 
-const fetcher = async (): Promise<any> => {
-  // todo
-  // const { rows } = tableData.value
+const totalCount = ref(0)
 
-  // isLoading.value = false
+const fetcher = async (param: TableDataFetcherParams): Promise<any> => {
+  const { data } = await linksFetcher({
+    size: param.pageSize,
+    offset: param.offset,
+  })
 
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  totalCount.value = data.length // fixme(zehao): need total count from endpoint https://kongstrong.slack.com/lists/T0DS5NB27/F089F4H18HX?record_id=Rec08DNLCMTLH
 
   return {
-    total: Number(tableData.length) || 0,
-    data: tableData,
+    total: Number(data.length) || 0,
+    data: data,
   }
 }
 </script>

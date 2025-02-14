@@ -1,5 +1,8 @@
 <template>
-  <div class="linked-plugins-modal">
+  <div
+    class="linked-plugins-modal"
+    data-testid="linked-plugins-modal"
+  >
     <KModal
       :action-button-text="t('actions.done')"
       hide-cancel-button
@@ -9,7 +12,8 @@
       @proceed="proceed"
     >
       <LinkedPluginList
-        :redis-configuration-id="redisConfigurationId"
+        :config="config"
+        :partial-id="redisConfigurationId"
         @view-plugin="($event) => emit('view-plugin', $event)"
       />
     </KModal>
@@ -17,12 +21,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type PropType } from 'vue'
 
 import composables from '../composables'
 import LinkedPluginList from './LinkedPluginList.vue'
+import type { KonnectConfig, KongManagerConfig } from '@kong-ui-public/entities-shared'
 
 defineProps({
+  config: {
+    type: Object as PropType<KonnectConfig | KongManagerConfig>,
+    required: true,
+    validator: (config: KonnectConfig | KongManagerConfig) => {
+      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (config.app === 'konnect' && !config.controlPlaneId) return false
+      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      return true
+    },
+  },
   redisConfigurationId: {
     type: String,
     required: true,

@@ -46,7 +46,11 @@
         {{ renderRedisType(row) }}
       </template>
       <template #plugins="{ row }">
-        <LinkedPluginsInline @click.stop="showLinkedPlugins(row.id)" />
+        <LinkedPluginsInline
+          :config="config"
+          :partial-id="row.id"
+          @click.stop="showLinkedPlugins(row.id)"
+        />
       </template>
 
       <!-- Row actions -->
@@ -91,6 +95,7 @@
     />
 
     <LinkedPluginListModal
+      :config="config"
       :redis-configuration-id="idToBeViewedPlugins"
       :visible="linkedPluginsModalVisible"
       @cancel="linkedPluginsModalVisible = false"
@@ -248,7 +253,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 // IMPORTANT: you must initialize this object assuming the user does **NOT** have create permissions so that the onBeforeMount hook can properly evaluate the props.canCreate function.
 const emptyStateOptions = ref<EmptyStateOptions>({
   ctaPath: props.config.createRoute,
-  ctaText: t('actions.create'),
+  ctaText: undefined,
   message: `${t('redis.empty_state.description')}${props.config.additionMessageForEmptyState ? ` ${props.config.additionMessageForEmptyState}` : ''}`,
   title: t('redis.title'),
 })
@@ -365,6 +370,20 @@ watch(fetcherState, (state) => {
   }
 
   errorMessage.value = null
+})
+
+watch(props.canCreate, async (canCreate) => {
+  // Evaluate if the user has create permissions
+  const userCanCreate = await canCreate
+
+  // If a user can create, we need to modify the empty state actions/messaging
+  if (userCanCreate) {
+    emptyStateOptions.value.ctaText = t('actions.create')
+  } else {
+    emptyStateOptions.value.ctaText = undefined
+  }
+}, {
+  immediate: true,
 })
 </script>
 
