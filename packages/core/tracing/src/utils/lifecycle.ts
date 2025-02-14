@@ -348,9 +348,7 @@ export const getNodeStripeColor = (durationNano?: number) => {
   return NODE_STRIPE_COLOR_MAPPING[
     Math.min(
       NODE_STRIPE_COLOR_MAPPING.length - 1,
-      Math.max(
-        NODE_STRIPE_COLOR_MAPPING_START_EXP, Math.floor(Math.log10(durationNano)) - NODE_STRIPE_COLOR_MAPPING_START_EXP,
-      ),
+      Math.max(0, Math.floor(Math.log10(durationNano)) - NODE_STRIPE_COLOR_MAPPING_START_EXP),
     )
   ]
 }
