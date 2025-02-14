@@ -13,6 +13,11 @@
       "empty_state": {
         "title": "Configure a New Key Set",
         "description": "A Key Set object holds a collection of asymmetric key objects. This entity allows to logically group keys by their purpose."
+      },
+      "empty_state_v2": {
+        "title": "Configure your first key set",
+        "description": "Key sets group multiple asymmetric keys, organizing them by purpose for easier management and usage.",
+        "create_cta": "New key set"
       }
     },
     "actions": {
