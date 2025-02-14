@@ -27,6 +27,11 @@
       "empty_state": {
         "title": "Configure a New SNI",
         "description": "SNIs are used to map hostnames to a certificate."
+      },
+      "empty_state_v2": {
+        "title": "Configure your first SNI",
+        "description": "Server Name Indications (SNIs) map hostnames to SSL/TLS certificates, enabling secure connections for domain-specific traffic.",
+        "create_cta": "New SNI"
       }
     }
   },
