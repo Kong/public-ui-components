@@ -1,37 +1,5 @@
 <template>
   <div class="kong-ui-entities-routes-list">
-    <Teleport
-      :disabled="!useActionOutside"
-      to="#kong-ui-app-page-header-action-button"
-    >
-      <div
-        v-if="useActionOutside"
-        class="button-row"
-      >
-        <KButton
-          v-if="showLhButton"
-          appearance="secondary"
-          class="open-learning-hub"
-          data-testid="routes-learn-more-button"
-          icon
-          @click="$emit('click:learn-more')"
-        >
-          <BookIcon decorative />
-        </KButton>
-        <PermissionsWrapper :auth-function="() => canCreate()">
-          <!-- Hide Create button if table is empty -->
-          <KButton
-            appearance="primary"
-            data-testid="toolbar-add-route"
-            :size="useActionOutside ? 'medium' : 'large'"
-            :to="config.createRoute"
-          >
-            <AddIcon />
-            {{ t('routes.list.toolbar_actions.new_route') }}
-          </KButton>
-        </PermissionsWrapper>
-      </div>
-    </Teleport>
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
       :cell-attributes="getCellAttrs"
@@ -61,7 +29,40 @@
         />
       </template>
       <!-- Create action -->
-      <template #toolbar-button />
+      <template #toolbar-button>
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <div
+            v-if="useActionOutside"
+            class="button-row"
+          >
+            <KButton
+              v-if="showHeaderLHButton"
+              appearance="secondary"
+              class="open-learning-hub"
+              data-testid="routes-learn-more-button"
+              icon
+              @click="$emit('click:learn-more')"
+            >
+              <BookIcon decorative />
+            </KButton>
+            <PermissionsWrapper :auth-function="() => canCreate()">
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-route"
+                :size="useActionOutside ? 'medium' : 'large'"
+                :to="config.createRoute"
+              >
+                <AddIcon />
+                {{ t('routes.list.toolbar_actions.new_route') }}
+              </KButton>
+            </PermissionsWrapper>
+          </div>
+        </Teleport>
+      </template>
 
       <template
         v-if="enableV2EmptyStates && config.app === 'konnect'"
@@ -86,6 +87,27 @@
             </div>
           </template>
         </EntityEmptyState>
+      </template>
+
+      <!-- TODO: remove this slot when empty states M2 is cleaned up -->
+      <template
+        v-if="!hasRecords && isLegacyLHButton"
+        #outside-actions
+      >
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <KButton
+            appearance="secondary"
+            class="open-learning-hub"
+            data-testid="consumer-groups-learn-more-button"
+            icon
+            @click="$emit('click:learn-more')"
+          >
+            <BookIcon decorative />
+          </KButton>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
@@ -349,12 +371,11 @@ const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { handleStateChange, hasRecords } = useTableState(() => filterQuery.value)
-
-const showLhButton = computed((): boolean => {
-  if (props.config.app !== 'konnect') return false
-  if (props.enableV2EmptyStates && hasRecords.value) return false
-  else return true
-})
+// Current empty state logic is only for Konnect, KM will pick up at GA.
+// If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
+// If new empty states are not enabled, show the learning hub button (for Konnect)
+const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
+const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
 
 /**
  * Table Headers
