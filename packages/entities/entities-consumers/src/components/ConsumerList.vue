@@ -29,7 +29,10 @@
         />
       </template>
       <!-- Create action -->
-      <template #toolbar-button>
+      <template
+        v-if="!useExternalCreate"
+        #toolbar-button
+      >
         <Teleport
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
@@ -326,6 +329,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * POC: externalize create/LH actions for list view
+   */
+  useExternalCreate: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18nT, i18n: { t } } = composables.useI18n()
@@ -404,6 +414,12 @@ const { hasRecords, handleStateChange } = useTableState(filterQuery)
 // If new empty states are not enabled, show the learning hub button (for Konnect)
 const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
 const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
+
+// Let the host app know if the table has records in order to show/hide action buttons in the header
+defineExpose({
+  hasRecords,
+  handleCreateClick,
+})
 
 const isConsumerGroupPage = computed<boolean>(() => !!props.config.consumerGroupId)
 const preferencesStorageKey = computed<string>(
