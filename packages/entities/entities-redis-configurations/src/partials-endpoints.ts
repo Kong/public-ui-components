@@ -20,4 +20,12 @@ export default {
       edit: `${KMBaseApiUrl}/partials/{id}`,
     },
   },
+  links: {
+    konnect: {
+      all: `${konnectBaseApiUrl}/partials/{id}/links`,
+    },
+    kongManager: {
+      all: `${KMBaseApiUrl}/partials/{id}/links`,
+    },
+  },
 }

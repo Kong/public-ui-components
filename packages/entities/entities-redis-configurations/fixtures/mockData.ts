@@ -137,3 +137,18 @@ export const redisConfigurationSentinel: Readonly<RedisConfigurationResponse> = 
     username: '',
   },
 }
+
+export const partials = {
+  data: [
+    redisConfigurationCE,
+    redisConfigurationHostPortEE,
+    redisConfigurationCluster,
+    redisConfigurationSentinel,
+  ],
+  next: null,
+}
+
+export const links = {
+  data: [{ id: '1', name: 'rate-limiting' }],
+  next: null,
+}
