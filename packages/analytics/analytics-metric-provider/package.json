@@ -53,7 +53,7 @@
     "@kong-ui-public/core": "1.1.0",
     "@kong/icons": "^1.20.0",
     "approximate-number": "^2.1.1",
-    "axios": "^1.7.7",
+    "axios": "^1.7.9",
     "swrv": "^1.0.4"
   },
   "peerDependencies": {
