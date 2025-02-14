@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@6.1.5...@kong-ui-public/analytics-chart@6.1.6) (2025-02-14)
+
+
+### Bug Fixes
+
+* **analytics-chart:** render timeseries charts with a single point [MA-2682] ([#1954](https://github.com/Kong/public-ui-components/issues/1954)) ([242e4a4](https://github.com/Kong/public-ui-components/commit/242e4a4c9505a7d8e431d9181de4321611810b9e))
+
+
+
+
+
 ## [6.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@6.1.4...@kong-ui-public/analytics-chart@6.1.5) (2025-02-13)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
