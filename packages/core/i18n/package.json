@@ -59,8 +59,8 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@formatjs/intl": "^2.10.11",
+    "@formatjs/intl": "^2.10.15",
     "flat": "^6.0.1",
-    "intl-messageformat": "^10.7.3"
+    "intl-messageformat": "^10.7.14"
   }
 }
