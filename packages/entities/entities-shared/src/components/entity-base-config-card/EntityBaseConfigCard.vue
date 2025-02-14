@@ -292,6 +292,12 @@ const DEFAULT_BASIC_FIELDS_CONFIGURATION: DefaultCommonFieldsConfigurationSchema
     order: -1, // the last property displayed
     section: ConfigurationSchemaSection.Basic,
   },
+  partials: {
+    type: ConfigurationSchemaType.LinkInternal,
+    label: t('baseConfigCard.commonFields.partial_label'),
+    order: -1, // the last property displayed
+    section: ConfigurationSchemaSection.Basic,
+  },
 }
 
 const isLoading = ref(false)

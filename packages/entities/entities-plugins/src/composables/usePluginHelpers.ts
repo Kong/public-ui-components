@@ -124,6 +124,36 @@ export default function useHelpers() {
   }
 
   /**
+  * Delete all redis fields or partials in model and restore additional fields in model
+  * This is used when redis partial is toggled
+  * @param {Object} formModel
+  * @param {Object} additionalModel
+  * @param {string} fieldName
+  * @returns {void}
+  */
+  const dismissField = (formModel: Record<string, any>, additionalModel: Record<string, any>, fieldName = 'redis') => {
+    const redisFieldPattern = /(?<=-redis-).*/
+    if (typeof formModel !== 'object' || formModel === null) {
+      return formModel
+    }
+
+    // delete all redis fields in model
+    if (fieldName === 'redis') {
+      Object.keys(formModel).forEach(key => {
+        if (key.match(redisFieldPattern)) {
+          delete formModel[key]
+        }
+      })
+    } else {
+      // set partials field to null when toggling
+      // delete formModel[fieldName]
+      formModel[fieldName] = null
+    }
+
+    Object.assign(formModel, additionalModel)
+  }
+
+  /**
    * A method to easily check if an object is empty or not
    * @param {Object} obj object to check
    * @return {Boolean}
@@ -186,6 +216,7 @@ export default function useHelpers() {
     setFieldType,
     convertToDotNotation,
     unFlattenObject,
+    dismissField,
     isObjectEmpty,
     unsetNullForeignKey,
     formatPluginFieldLabel,

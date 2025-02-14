@@ -19,6 +19,7 @@ export enum SupportedEntityType {
   Upstream = 'upstream',
   Target = 'target',
   Vault = 'vault',
+  RedisConfiguration = 'redis_configuration', // todo(zehao): not sure
   // Use this for any entity type that is not supported by terraform
   // If entityType is 'other' terraform scripts will not be available
   // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!
@@ -99,6 +100,7 @@ export interface DefaultCommonFieldsConfigurationSchema {
   updated_at: ConfigurationSchemaItem
   created_at: ConfigurationSchemaItem
   tags: ConfigurationSchemaItem
+  partials: ConfigurationSchemaItem
 }
 
 export interface ComponentAttrsData {

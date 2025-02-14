@@ -12,11 +12,14 @@
       <component
         :is="sharedFormName"
         v-if="sharedFormName && (formModel.id && editing || !editing)"
+        :enable-redis-partial="props.enableRedisPartial"
         :form-model="formModel"
         :form-options="formOptions"
         :form-schema="formSchema"
         :is-editing="editing"
         :on-model-updated="onModelUpdated"
+        :on-partial-toggled="onPartialToggled"
+        :show-new-partial-modal="() => $emit('showNewPartialModal')"
       >
         <template
           v-if="enableVaultSecretPicker"
@@ -32,11 +35,14 @@
 
       <VueFormGenerator
         v-if="!sharedFormName && (formModel.id && editing || !editing)"
+        :enable-redis-partial="props.enableRedisPartial"
         :model="formModel"
         :options="formOptions"
         :schema="formSchema"
         @model-updated="onModelUpdated"
+        @partial-toggled="onPartialToggled"
         @refresh-model="getModel"
+        @show-new-partial-modal="$emit('showNewPartialModal')"
       >
         <template #plugin-config-empty-state>
           <div class="plugin-config-empty-state">
@@ -84,6 +90,7 @@ import { useAxios, useHelpers } from '@kong-ui-public/entities-shared'
 import {
   AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
+  FORMS_CONFIG,
   customFields,
   getSharedFormName,
   sharedForms,
@@ -119,6 +126,7 @@ const emit = defineEmits<{
       data: Record<string, any>
     }
   ): void,
+  (e: 'showNewPartialModal'): void,
 }>()
 
 const props = defineProps({
@@ -175,6 +183,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Control if the redis partial is enabled for plugins.
+   */
+  enableRedisPartial: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -182,8 +197,9 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { parseSchema } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,
   credential: props.credential,
+  enableRedisPartial: props.enableRedisPartial,
 })
-const { convertToDotNotation, unFlattenObject, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
+const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
@@ -273,6 +289,8 @@ provide(FORMS_API_KEY, {
   getAll,
 })
 
+provide(FORMS_CONFIG, props.config)
+
 const sharedFormName = ref('')
 const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
@@ -328,6 +346,10 @@ const getModel = (): Record<string, any> => {
   // Kong Admin APIs request expectations for submission
   formModelFields.forEach(fieldName => {
     if (!schema[fieldName]) {
+      // special handling for partials
+      if (fieldName === 'partials') {
+        outputModel[fieldName] = inputModel[fieldName]
+      }
       return
     }
 
@@ -507,6 +529,15 @@ const getModel = (): Record<string, any> => {
   return unFlattenObject(outputModel)
 }
 
+const onPartialToggled = (dismissSchemaField: string | undefined, additionalModel: Record<string, any> = {}) => {
+  dismissField(formModel, additionalModel, dismissSchemaField)
+  emit('model-updated', {
+    model: formModel,
+    originalModel,
+    data: getModel(),
+  })
+}
+
 // fired whenever the form data is modified
 const onModelUpdated = (model: any, schema: string) => {
   const newData = { [schema]: model }
@@ -516,7 +547,6 @@ const onModelUpdated = (model: any, schema: string) => {
   const newModel = Object.assign({}, formModel, newData)
 
   Object.assign(formModel, newModel)
-
   emit('model-updated', {
     model: formModel,
     originalModel,
@@ -625,6 +655,11 @@ const initFormModel = (): void => {
           consumer_id: props.record.consumer_id || props.record.consumer,
           consumer_group_id: props.record.consumer_group_id || props.record.consumer_group,
         })
+      }
+
+      // handle partials and provide to formRedis component
+      if (props.record.partials) {
+        onPartialToggled('redis', { partials: props.record.partials })
       }
 
       // main plugin configuration

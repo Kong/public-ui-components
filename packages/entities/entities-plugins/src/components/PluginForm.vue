@@ -45,12 +45,14 @@
         :config="config"
         :credential="treatAsCredential"
         :editing="formType === EntityBaseFormType.Edit"
+        :enable-redis-partial="props.enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
         :record="record || undefined"
         :schema="schema || {}"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
+        @show-new-partial-modal="$emit('showNewPartialModal')"
       />
 
       <template #form-actions>
@@ -145,6 +147,7 @@ import {
   useStringHelpers,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
+import { PartialType } from '@kong-ui-public/entities-redis-configurations'
 import type { Tab } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
@@ -183,6 +186,7 @@ const emit = defineEmits<{
       resourceEndpoint: string
     }
   ): void
+  (e: 'showNewPartialModal'): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -269,6 +273,13 @@ const props = defineProps({
    * Control if the vault secret picker is enabled for applicable fields. (referenceable = true)
    */
   enableVaultSecretPicker: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Control if the redis partial is enabled for plugins.
+   */
+  enableRedisPartial: {
     type: Boolean,
     default: false,
   },
@@ -1309,7 +1320,16 @@ onBeforeMount(async () => {
 
           // if editing, wait for record to load before building schema
           if (initialized.value || formType.value === EntityBaseFormType.Create) {
-            schema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
+            const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
+            // pass the redis partial type and redis path in plugin with the schema
+            if (data?.supported_partials) {
+              const redisType = Object.keys(data.supported_partials).find(key => [PartialType.REDIS_CE, PartialType.REDIS_EE].includes(key as PartialType))
+              initialFormSchema._supported_redis_partial_type = redisType
+              initialFormSchema._redis_partial_path = data.supported_partials?.redisType
+            }
+            // pass whether the plugin is a custom plugin to the form schema
+            if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
+            schema.value = initialFormSchema
           }
         }
       }

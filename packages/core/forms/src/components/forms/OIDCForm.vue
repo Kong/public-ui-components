@@ -91,10 +91,13 @@
           </div>
           <VueFormGenerator
             v-if="displayForm"
+            :enable-redis-partial="enableRedisPartial"
             :model="formModel"
             :options="formOptions"
             :schema="advancedFieldsSchema"
             @model-updated="onModelUpdated"
+            @partial-toggled="onPartialToggled"
+            @show-new-partial-modal="showNewPartialModal"
           />
         </div>
       </template>
@@ -104,6 +107,7 @@
 
 <script>
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
+import composables from '../../composables'
 import VueFormGenerator from '../FormGenerator.vue'
 
 const COMMON_FIELD_MODELS = new Set([
@@ -150,9 +154,21 @@ export default {
       type: Function,
       required: true,
     },
+    onPartialToggled: {
+      type: Function,
+      required: true,
+    },
     isEditing: {
       type: Boolean,
       required: true,
+    },
+    enableRedisPartial: {
+      type: Boolean,
+      required: false,
+    },
+    showNewPartialModal: {
+      type: Function,
+      default: () => { },
     },
   },
   data() {
@@ -236,13 +252,16 @@ export default {
             }, []),
         }
 
+        const { redis, redisModels } = composables.useRedisPartial(this.formSchema)
+
         this.advancedFieldsSchema = {
           fields: this.formSchema.fields
             .filter(field =>
               (field.model.startsWith('config')
                 && field.model !== 'config-auth_methods'
                 && !COMMON_FIELD_MODELS.has(field.model)
-                && !AUTH_FIELD_MODELS.has(field.model))
+                && !AUTH_FIELD_MODELS.has(field.model)
+                && (!this.enableRedisPartial || !redisModels.includes(field.model))) // if redis partial is enabled, don't include redis fields in advanced
               || field.model === 'tags',
             )
             .reduce((fields, field) => {
@@ -279,6 +298,9 @@ export default {
               return fields
             }, []),
         }
+
+        // Add Redis partial to the front of advanced fields
+        if (this.enableRedisPartial) this.advancedFieldsSchema.fields.unshift(redis)
 
         // Use checkboxes for auth methods
         this.sessionManagement = this.isEditing ? this.formModel['config-auth_methods'].includes('session') : false
