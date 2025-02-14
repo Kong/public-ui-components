@@ -33,7 +33,6 @@
         >
           <div class="button-row">
             <KButton
-              v-if="enableV2EmptyStates && !showEmptyState && config.app === 'konnect'"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="gateway-services-learn-more-button"
@@ -309,8 +308,7 @@ const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
-
+const { handleStateChange } = useTableState(() => filterQuery.value)
 
 /**
  * Table Headers
