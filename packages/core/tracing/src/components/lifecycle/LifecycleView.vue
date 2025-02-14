@@ -313,7 +313,7 @@ const currentGraph = computed(() => buildLifecycleGraph(props.rootSpan))
  */
 const fitFlow = () => {
   const flowEl = flowRef.value?.$el
-  if (!(flowEl instanceof HTMLElement)) {
+  if (!flowEl) {
     return
   }
 
@@ -321,29 +321,31 @@ const fitFlow = () => {
   const legendEl = legendRef.value?.$el
 
   const flowWidth = flowEl.getBoundingClientRect().width
+  const flowHeight = flowEl.getBoundingClientRect().height
+
   let accumulatedPadding = 0
   let accumulatedOffsetX = 0
 
   // Best effort–it's okay to miss this measurement
   if (controlsEl instanceof HTMLElement) {
     accumulatedPadding += controlsEl.getBoundingClientRect().width + 2 * TOOLBAR_MARGIN
-    accumulatedOffsetX = controlsEl.getBoundingClientRect().width
+    accumulatedOffsetX -= controlsEl.getBoundingClientRect().width
   }
 
   // Best effort–it's okay to miss this measurement
   if (legendEl instanceof HTMLElement) {
     accumulatedPadding += legendEl.getBoundingClientRect().width + 2 * TOOLBAR_MARGIN
-    accumulatedOffsetX -= legendEl.getBoundingClientRect().width
+    accumulatedOffsetX += legendEl.getBoundingClientRect().width
   }
 
   fitViewParams.value = {
     maxZoom: 1,
     ...flowWidth > 0 && {
-      padding: accumulatedPadding / 2 / flowWidth,
+      padding: accumulatedPadding / 2 / Math.min(flowWidth, flowHeight),
     }, // Use default value otherwise
     ...accumulatedOffsetX !== 0 && {
       offset: {
-        x: accumulatedOffsetX / 2,
+        x: -accumulatedOffsetX / 2,
       },
     }, // Use default value otherwise
   }
@@ -378,16 +380,28 @@ onMounted(() => {
   resizeObserver = new ResizeObserver(() => {
     fitFlow()
   })
-  if (flowRef.value && flowRef.value.$el instanceof HTMLElement) {
-    resizeObserver.observe(flowRef.value.$el)
-  }
-  if (controlsRef.value && controlsRef.value.$el instanceof HTMLElement) {
-    resizeObserver.observe(controlsRef.value.$el)
-  }
-  if (legendRef.value && legendRef.value.$el instanceof HTMLElement) {
-    resizeObserver.observe(legendRef.value.$el)
-  }
 })
+
+const replaceResizeObserver = (maybeElement: any, onCleanup: (cb: () => void) => void) => {
+  if (maybeElement instanceof HTMLElement) {
+    resizeObserver?.observe(maybeElement)
+    onCleanup(() => {
+      resizeObserver?.unobserve(maybeElement)
+    })
+  }
+}
+
+watch(flowRef, (newRef, _, cleanup) => {
+  replaceResizeObserver(newRef?.$el, cleanup)
+}, { immediate: true })
+
+watch(controlsRef, (newRef, _, cleanup) => {
+  replaceResizeObserver(newRef?.$el, cleanup)
+}, { immediate: true })
+
+watch(legendRef, (newRef, _, cleanup) => {
+  replaceResizeObserver(newRef?.$el, cleanup)
+}, { immediate: true })
 
 onBeforeUnmount(() => {
   if (resizeObserver) {
