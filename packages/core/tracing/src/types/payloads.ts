@@ -3,14 +3,14 @@ export type Headers = Record<string, string>
 export type Body = string
 
 export type Payload = {
-  direction: Direction;
+  direction: Direction
 } & (
   | {
-    type: 'headers';
-    headers: Headers;
+    type: 'headers'
+    headers: Headers
   }
   | {
-    type: 'body';
-    content: Body;
+    type: 'body'
+    content: Body
   }
 )
