@@ -16,7 +16,7 @@
         v-if="props.chartOptions.entityLink"
         #name="{ record }"
       >
-        <EntityLink
+        <AsyncEntityLink
           :entity-link-data="{
             id: record.id,
             label: record.name,
@@ -30,19 +30,27 @@
 </template>
 
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue'
 import type { RendererProps } from '../types'
 import type { TopNTableOptions } from '@kong-ui-public/analytics-utilities'
 import { CP_ID_TOKEN, ENTITY_ID_TOKEN } from '../constants'
 import { TopNTable } from '@kong-ui-public/analytics-chart'
 import type { TopNTableRecord } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'
-import { EntityLink } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
+import FallbackEntityLink from './FallbackEntityLink.vue'
 
 const props = defineProps<RendererProps<TopNTableOptions>>()
 const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
 const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
+
+const AsyncEntityLink = defineAsyncComponent(() =>
+  import('@kong-ui-public/entities-shared').then(({ EntityLink }) => {
+    return EntityLink
+  }).catch(() => {
+    return FallbackEntityLink
+  }))
 
 const parseLink = (record: TopNTableRecord) => {
   if (props.chartOptions?.entityLink) {
