@@ -1,5 +1,5 @@
 
-export const exploreFilterTypesV2 = ['in', 'not_in', 'selector'] as const
+export const exploreFilterTypesV2 = ['in', 'not_in', 'selector', '=', '!='] as const
 
 export type ExploreFilterTypesV2 = typeof exploreFilterTypesV2[number]
 
