@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.7.0...@kong-ui-public/entities-consumers@3.7.1) (2025-02-14)
+
+
+### Bug Fixes
+
+* **consumers:** lh button display [khcp-14827] ([#1953](https://github.com/Kong/public-ui-components/issues/1953)) ([64cf21d](https://github.com/Kong/public-ui-components/commit/64cf21d7d5b03ef11cc398690e82027bc2b6676b))
+
+
+
+
+
 # [3.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.6.1...@kong-ui-public/entities-consumers@3.7.0) (2025-02-14)
 
 
