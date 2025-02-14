@@ -1,6 +1,5 @@
 <template>
   <div class="legend">
-    <!-- Hide total latency for now -->
     <div class="latency">
       <span>{{ t('lifecycle.total') }}: </span>
       <span>{{ fmt(props.rootSpan.durationNano) }}</span>
