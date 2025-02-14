@@ -42,6 +42,11 @@
       "empty_state": {
         "title": "Configure a New Vault",
         "description": "Improve the security of your Kong Gateway deployment with centralized secrets."
+      },
+      "empty_state_v2": {
+        "title": "Configure your first vault",
+        "description": "Vaults securely store sensitive information, such as credentials and certificates, enhancing the security of your API infrastructure.",
+        "create_cta": "New vault"
       }
     }
   },
