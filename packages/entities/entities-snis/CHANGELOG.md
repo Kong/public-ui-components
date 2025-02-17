@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.5.75...@kong-ui-public/entities-snis@3.6.0) (2025-02-17)
+
+
+### Features
+
+* added snis new empty state ([#1941](https://github.com/Kong/public-ui-components/issues/1941)) ([0be3966](https://github.com/Kong/public-ui-components/commit/0be3966c2011d7c9185fe9c3c6ce5826bef22c3c))
+
+
+
+
+
 ## [3.5.75](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.5.74...@kong-ui-public/entities-snis@3.5.75) (2025-02-17)
 
 

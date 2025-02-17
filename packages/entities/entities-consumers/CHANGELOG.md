@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.7.2...@kong-ui-public/entities-consumers@3.8.0) (2025-02-17)
+
+
+### Features
+
+* vault new empty state ([#1942](https://github.com/Kong/public-ui-components/issues/1942)) ([f09e758](https://github.com/Kong/public-ui-components/commit/f09e75812e11f4468153e602f8ad293c76e8c82c))
+
+
+
+
+
 ## [3.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.7.1...@kong-ui-public/entities-consumers@3.7.2) (2025-02-17)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.5.76...@kong-ui-public/entities-upstreams-targets@3.6.0) (2025-02-17)
+
+
+### Features
+
+* added new upstream list empty state ([#1946](https://github.com/Kong/public-ui-components/issues/1946)) ([59651b8](https://github.com/Kong/public-ui-components/commit/59651b876366ffd47a1751e01f8c7761808840da))
+
+
+
+
+
 ## [3.5.76](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.5.75...@kong-ui-public/entities-upstreams-targets@3.5.76) (2025-02-17)
 
 

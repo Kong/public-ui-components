@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.5.77...@kong-ui-public/entities-keys@3.6.0) (2025-02-17)
+
+
+### Features
+
+* keys new empty state ([#1945](https://github.com/Kong/public-ui-components/issues/1945)) ([2cd3318](https://github.com/Kong/public-ui-components/commit/2cd3318eff6d1c225a23bc0c93535374e29e9a56))
+
+
+
+
+
 ## [3.5.77](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.5.76...@kong-ui-public/entities-keys@3.5.77) (2025-02-17)
 
 
