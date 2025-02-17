@@ -30,7 +30,7 @@
     "title": "Vaults",
     "list": {
       "toolbar_actions": {
-        "new_vault": "New Vault"
+        "new_vault": "New vault"
       },
       "table_headers": {
         "prefix": "Prefix",
