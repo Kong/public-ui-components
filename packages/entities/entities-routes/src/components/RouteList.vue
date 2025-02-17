@@ -34,10 +34,7 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <div
-            v-if="useActionOutside"
-            class="button-row"
-          >
+          <div class="button-row">
             <KButton
               v-if="showHeaderLHButton"
               appearance="secondary"
