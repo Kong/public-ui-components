@@ -32,7 +32,7 @@
         >
           <div class="button-row">
             <KButton
-              v-if="!showEmptyState && config.app === 'konnect'"
+              v-if="showHeaderLHButton"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="vault-learn-more-button"
@@ -57,6 +57,26 @@
         </Teleport>
       </template>
 
+      <!-- TODO: remove this slot when empty states M2 is cleaned up -->
+      <template
+        v-if="!hasRecords && isLegacyLHButton"
+        #outside-actions
+      >
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <KButton
+            appearance="secondary"
+            class="open-learning-hub"
+            data-testid="vault-learn-more-button"
+            icon
+            @click="$emit('click:learn-more')"
+          >
+            <BookIcon decorative />
+          </KButton>
+        </Teleport>
+      </template>
 
       <template
         v-if="enableV2EmptyStates && config.app === 'konnect'"
@@ -272,7 +292,12 @@ const { i18n: { t } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const { hideTableToolbar: showEmptyState, handleStateChange } = useTableState(() => filterQuery.value)
+const { hasRecords, handleStateChange } = useTableState(() => filterQuery.value)
+// Current empty state logic is only for Konnect, KM will pick up at GA.
+// If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
+// If new empty states are not enabled, show the learning hub button (for Konnect)
+const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
+const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
 
 
 /**
