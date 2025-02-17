@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.9.3...@kong-ui-public/entities-routes@3.9.4) (2025-02-17)
+
+
+### Bug Fixes
+
+* hide lear more, string casing ([#1964](https://github.com/Kong/public-ui-components/issues/1964)) ([abfb02c](https://github.com/Kong/public-ui-components/commit/abfb02cb1367a9104e5a55d463ec55c5a5a799c3))
+
+
+
+
+
 ## [3.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.9.2...@kong-ui-public/entities-routes@3.9.3) (2025-02-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
