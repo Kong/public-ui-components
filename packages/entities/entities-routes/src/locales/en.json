@@ -1,6 +1,6 @@
 {
   "actions": {
-    "create": "New Route",
+    "create": "New route",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
@@ -21,7 +21,7 @@
     "title": "Routes",
     "list": {
       "toolbar_actions": {
-        "new_route": "New Route"
+        "new_route": "New route"
       },
       "table_headers": {
         "name": "Name",

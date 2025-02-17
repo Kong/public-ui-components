@@ -3,7 +3,7 @@
     "title": "Certificates",
     "list": {
       "toolbar_actions": {
-        "new_certificate": "New Certificate"
+        "new_certificate": "New certificate"
       },
       "table_headers": {
         "subject": "Subject",
@@ -73,7 +73,7 @@
       }
     },
     "actions": {
-      "create": "New Certificate",
+      "create": "New certificate",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",
@@ -105,7 +105,7 @@
     "title": "CA Certificates",
     "list": {
       "toolbar_actions": {
-        "new_ca_certificate": "New CA Certificate"
+        "new_ca_certificate": "New CA certificate"
       },
       "table_headers": {
         "issuer": "Issuer",
@@ -151,7 +151,7 @@
       }
     },
     "actions": {
-      "create": "New CA Certificate",
+      "create": "New CA certificate",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",

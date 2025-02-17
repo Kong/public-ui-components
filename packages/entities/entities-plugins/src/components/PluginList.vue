@@ -34,7 +34,7 @@
         >
           <div class="button-row">
             <KButton
-              v-if="showHeaderLHButton"
+              v-if="!isEntityPage && showHeaderLHButton"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="plugins-learn-more-button"
@@ -422,6 +422,8 @@ const { hasRecords, handleStateChange } = useTableState(() => filterQuery.value)
 const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
 const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
 
+// if the Plugin list in nested in the plguns tab on a entity detail page
+const isEntityPage = computed<boolean>(() => !!props.config.entityId)
 
 const isConsumerPage = computed((): boolean => props.config?.entityType === 'consumers')
 const isConsumerGroupPage = computed((): boolean => props.config?.entityType === 'consumer_groups')

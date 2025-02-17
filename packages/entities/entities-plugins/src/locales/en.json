@@ -2,7 +2,7 @@
   "actions": {
     "cancel": "Cancel",
     "view_configuration": "View Configuration",
-    "create": "New Plugin",
+    "create": "New plugin",
     "create_custom": "Create",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
@@ -67,7 +67,7 @@
     "title": "Plugins",
     "list": {
       "toolbar_actions": {
-        "new_plugin": "New Plugin"
+        "new_plugin": "New plugin"
       },
       "table_headers": {
         "applied_to": "Applied To",
