@@ -25,7 +25,7 @@
       "placeholder": "Filter by exact name or ID"
     },
     "actions": {
-      "create": "New Upstream",
+      "create": "New upstream",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",
