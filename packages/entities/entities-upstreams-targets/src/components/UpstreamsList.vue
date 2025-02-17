@@ -33,7 +33,7 @@
         >
           <div class="button-row">
             <KButton
-              v-if="hasRecords"
+              v-if="showHeaderLHButton"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="upstream-learn-more-button"
