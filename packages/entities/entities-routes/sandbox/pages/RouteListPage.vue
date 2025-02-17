@@ -24,6 +24,9 @@
     </KCollapse>
   </KCard>
 
+  <h2>Konnect Actions Outside</h2>
+  <div id="kong-ui-app-page-header-action-button" />
+
   <h2>Konnect API</h2>
   <RouteList
     v-if="permissions"
@@ -34,7 +37,6 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
-    :enable-v2-empty-states="false"
     :has-expression-column="routeListHasExpressionColumn"
     :hide-traditional-columns="routeListHideTraditionalColumns"
     title="Routes"

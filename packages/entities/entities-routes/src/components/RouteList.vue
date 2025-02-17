@@ -64,6 +64,27 @@
         </Teleport>
       </template>
 
+      <!-- TODO: remove this slot when empty states M2 is cleaned up -->
+      <template
+        v-if="!hasRecords && isLegacyLHButton"
+        #outside-actions
+      >
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <KButton
+            appearance="secondary"
+            class="open-learning-hub"
+            data-testid="routes-learn-more-button"
+            icon
+            @click="$emit('click:learn-more')"
+          >
+            <BookIcon decorative />
+          </KButton>
+        </Teleport>
+      </template>
+
       <template
         v-if="enableV2EmptyStates && config.app === 'konnect'"
         #empty-state
@@ -87,27 +108,6 @@
             </div>
           </template>
         </EntityEmptyState>
-      </template>
-
-      <!-- TODO: remove this slot when empty states M2 is cleaned up -->
-      <template
-        v-if="!hasRecords && isLegacyLHButton"
-        #outside-actions
-      >
-        <Teleport
-          :disabled="!useActionOutside"
-          to="#kong-ui-app-page-header-action-button"
-        >
-          <KButton
-            appearance="secondary"
-            class="open-learning-hub"
-            data-testid="consumer-groups-learn-more-button"
-            icon
-            @click="$emit('click:learn-more')"
-          >
-            <BookIcon decorative />
-          </KButton>
-        </Teleport>
       </template>
 
       <!-- Column Formatting -->
