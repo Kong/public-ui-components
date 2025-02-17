@@ -1,6 +1,6 @@
 {
   "actions": {
-    "create": "New Route",
+    "create": "New route",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",

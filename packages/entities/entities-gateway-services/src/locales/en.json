@@ -1,6 +1,6 @@
 {
   "actions": {
-    "create": "New Gateway Service",
+    "create": "New gateway service",
     "serverless_create": "Add a Service",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
@@ -23,7 +23,7 @@
     "title": "Gateway Services",
     "list": {
       "toolbar_actions": {
-        "new_gateway_service": "New Gateway Service"
+        "new_gateway_service": "New gateway service"
       },
       "table_headers": {
         "name": "Name",

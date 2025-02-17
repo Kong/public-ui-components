@@ -73,7 +73,7 @@
       }
     },
     "actions": {
-      "create": "New Certificate",
+      "create": "New certificate",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",
@@ -151,7 +151,7 @@
       }
     },
     "actions": {
-      "create": "New CA Certificate",
+      "create": "New CA certificate",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",

@@ -2,7 +2,7 @@
   "actions": {
     "cancel": "Cancel",
     "view_configuration": "View Configuration",
-    "create": "New Plugin",
+    "create": "New plugin",
     "create_custom": "Create",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
