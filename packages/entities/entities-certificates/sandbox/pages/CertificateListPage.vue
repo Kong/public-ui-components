@@ -2,6 +2,10 @@
   <SandboxPermissionsControl
     @update="handlePermissionsUpdate"
   />
+
+  <h2>Konnect Actions Outside</h2>
+  <div id="kong-ui-app-page-header-action-button" />
+
   <h2>Konnect API</h2>
   <CertificateList
     v-if="permissions"
@@ -12,6 +16,7 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
+    use-action-outside
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
     @delete-route:success="onDeleteCertificateSuccess"
