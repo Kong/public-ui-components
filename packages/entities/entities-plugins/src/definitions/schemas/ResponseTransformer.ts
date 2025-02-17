@@ -8,7 +8,6 @@ export const responseTransformerSchema: ResponseTransformerSchema = {
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',
-      rows: 15,
       max: false,
     },
   },
@@ -18,7 +17,6 @@ export const responseTransformerSchema: ResponseTransformerSchema = {
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',
-      rows: 15,
       max: false,
     },
   },
@@ -28,7 +26,15 @@ export const responseTransformerSchema: ResponseTransformerSchema = {
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',
-      rows: 15,
+      max: false,
+    },
+  },
+  'config-rename-json': {
+    ...ArrayInputFieldSchema,
+    label: 'Config.Rename.Json',
+    inputAttributes: {
+      ...ArrayInputFieldSchema.inputAttributes,
+      type: 'textarea',
       max: false,
     },
   },
@@ -38,7 +44,6 @@ export const responseTransformerSchema: ResponseTransformerSchema = {
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',
-      rows: 15,
       max: false,
     },
   },

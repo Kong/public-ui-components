@@ -10,19 +10,13 @@ export const responseTransformerAdvancedSchema: ResponseTransformerAdvancedSchem
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',
-      rows: 15,
       max: false,
     },
   },
   'config-replace-body': {
-    ...ArrayInputFieldSchema,
     label: 'Config.Replace.Body',
-    inputAttributes: {
-      ...ArrayInputFieldSchema.inputAttributes,
-      type: 'textarea',
-      rows: 15,
-      max: false,
-    },
+    type: 'textArea',
+    max: false,
   },
   'config-transform-functions': {
     ...ArrayInputFieldSchema,
@@ -30,7 +24,6 @@ export const responseTransformerAdvancedSchema: ResponseTransformerAdvancedSchem
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',
-      rows: 15,
       max: false,
     },
   },
@@ -40,7 +33,6 @@ export const responseTransformerAdvancedSchema: ResponseTransformerAdvancedSchem
     inputAttributes: {
       ...ArrayInputFieldSchema.inputAttributes,
       type: 'textarea',
-      rows: 15,
       max: false,
     },
   },

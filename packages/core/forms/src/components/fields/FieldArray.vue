@@ -50,6 +50,8 @@
           :id="getFieldID(schema)"
           v-model="value[index]"
           :aria-labelledby="getLabelId(schema)"
+          autosize
+          :character-limit="schema.inputAttributes.max"
           :class="schema.fieldClasses"
           :maxlength="schema.max"
           :minlength="schema.min"
