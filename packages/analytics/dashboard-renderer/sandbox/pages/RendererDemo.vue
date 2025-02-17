@@ -10,20 +10,20 @@
         :label="isToggled ? 'Custom styling' : 'Normal styling'"
       />
       <br>
-      <KButton
-        appearance="primary"
-        size="small"
-        @click="refresh"
-      >
-        refresh
-      </KButton>
+      <div style="display: flex; gap: 5px; margin: 5px;">
+        <KButton
+          appearance="primary"
+          size="small"
+          @click="refresh"
+        >
+          refresh
+        </KButton>
+      </div>
       <DashboardRenderer
         ref="dashboardRendererRef"
         :class="{ 'custom-styling': isToggled}"
         :config="dashboardConfig"
         :context="context"
-        draggable
-        @edit-tile="onEditTile"
       >
         <template #slot-1>
           <div class="slot-container">
@@ -43,14 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext, GridTile } from '../../src'
+import type { DashboardRendererContext } from '../../src'
 import { DashboardRenderer } from '../../src'
 import { inject, ref } from 'vue'
 import type {
   DashboardConfig,
   ExploreAggregations,
   TileConfig,
-  TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
@@ -61,10 +60,9 @@ const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 const context: DashboardRendererContext = {
   filters: [],
   refreshInterval: 0,
-  editable: true,
 }
 
-const dashboardConfig: DashboardConfig = {
+const dashboardConfig = ref <DashboardConfig>({
   gridSize: {
     cols: 6,
     rows: 7,
@@ -292,13 +290,9 @@ const dashboardConfig: DashboardConfig = {
       },
     } satisfies TileConfig,
   ],
-}
+})
 
 const isToggled = ref(false)
-
-const onEditTile = (tile: GridTile<TileDefinition>) => {
-  console.log('@edit-tile', tile)
-}
 
 const dashboardRendererRef = ref<InstanceType<typeof DashboardRenderer> | null>(null)
 

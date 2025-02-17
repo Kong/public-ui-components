@@ -9,7 +9,7 @@
 
     <template v-else>
       <div
-        class="title-wrapper"
+        :class="['title-wrapper', payload.direction]"
         @click="expanded = !expanded"
       >
         <div
@@ -109,6 +109,14 @@ const payloadContent = computed(() => {
     justify-content: space-between;
     padding: $kui-space-40 v-bind(WATERFALL_ROW_COLUMN_GAP);
     width: 100%;
+
+    &.request {
+      background-color: $kui-color-background-primary-weakest;
+    }
+
+    &.response {
+      background-color: $kui-color-background-decorative-purple-weakest;
+    }
 
     .title {
       font-size: $kui-font-size-30;

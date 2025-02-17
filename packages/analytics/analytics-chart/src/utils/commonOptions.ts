@@ -73,12 +73,13 @@ export const hasDatasets = (chartData: KChartData) =>
 export const hasDataInDatasets = (chartData: KChartData) =>
   hasDatasets(chartData) && chartData.datasets.some((ds) => ds.data.length)
 
-export const hasTwoOrMoreDataPoints = (chartData: KChartData) =>
-  hasDataInDatasets(chartData) &&
-  chartData.datasets.some((ds) => ds.data.length > 1)
+export const hasTimeseriesData = (chartData: KChartData) => {
+  return chartData.datasets.some((ds) => ds.data[0] && isValid((ds.data[0] as ScatterDataPoint).x))
+}
 
-export const hasTimeseriesData = (chartData: KChartData) =>
-  hasTwoOrMoreDataPoints(chartData) && chartData.datasets.some((ds) => ds.data[0] && isValid((ds.data[0] as ScatterDataPoint).x))
+export const hasExactlyOneDatapoint = (chartData: KChartData) =>
+  !!hasDataInDatasets(chartData) &&
+  chartData.datasets.some((ds) => ds.data.length == 1)
 
 export const hasMillisecondTimestamps = (chartData: KChartData) =>
   hasTimeseriesData(chartData) &&

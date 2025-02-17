@@ -7,8 +7,9 @@
       {{ i18n.t('renderer.noQueryBridge') }}
     </KAlert>
     <component
-      :is="draggable ? DraggableGridLayout : GridLayout"
+      :is="context.editable ? DraggableGridLayout : GridLayout"
       v-else
+      ref="gridLayoutRef"
       :grid-size="config.gridSize"
       :tile-height="config.tileHeight"
       :tiles="gridTiles"
@@ -31,6 +32,7 @@
           :refresh-counter="refreshCounter"
           :tile-id="tile.id"
           @edit-tile="onEditTile(tile)"
+          @remove-tile="onRemoveTile(tile)"
         />
       </template>
     </component>
@@ -42,9 +44,11 @@ import type { DashboardRendererContext, DashboardRendererContextInternal, GridTi
 import type { DashboardConfig, TileConfig, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject, ref } from 'vue'
+import type { ComponentPublicInstance } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import DraggableGridLayout from './layout/DraggableGridLayout.vue'
+import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
 import type { AnalyticsBridge, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import {
   DEFAULT_TILE_HEIGHT,
@@ -55,13 +59,10 @@ import {
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   context: DashboardRendererContext,
   config: DashboardConfig,
-  draggable?: boolean,
-}>(), {
-  draggable: false,
-})
+}>()
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
@@ -70,6 +71,7 @@ const emit = defineEmits<{
 
 const { i18n } = composables.useI18n()
 const refreshCounter = ref(0)
+const gridLayoutRef = ref<ComponentPublicInstance<DraggableGridLayoutExpose> | null>(null)
 
 // Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
@@ -135,11 +137,19 @@ const gridTiles = computed(() => {
       }
     }
 
+    if (props.context.editable && !tile.id) {
+      console.warn(
+        'No id provided for tile. One will be generated automatically,',
+        'however tracking changes to this tile may not work as expected.',
+        tile,
+      )
+    }
+
     return {
       layout: tile.layout,
       meta: tileMeta,
       // Add a unique key to each tile internally.
-      id: i,
+      id: tile.id ?? crypto.randomUUID(),
     } as GridTile<TileDefinition>
   })
 })
@@ -176,6 +186,12 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
   emit('edit-tile', tile)
 }
 
+const onRemoveTile = (tile: GridTile<TileDefinition>) => {
+  if (gridLayoutRef.value) {
+    gridLayoutRef.value.removeWidget(tile.id)
+  }
+}
+
 const refreshTiles = () => {
   refreshCounter.value++
 }
@@ -183,6 +199,7 @@ const refreshTiles = () => {
 const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
   const updatedTiles = tiles.map(tile => {
     return {
+      id: tile.id,
       layout: tile.layout,
       definition: tile.meta,
     } as TileConfig
@@ -201,7 +218,6 @@ defineExpose({ refresh: refreshTiles })
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 100%;
-    padding: var(--kui-space-70, $kui-space-70);
   }
 }
 </style>

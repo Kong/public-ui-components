@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.9...@kong-ui-public/app-layout@4.3.10) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [4.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.8...@kong-ui-public/app-layout@4.3.9) (2025-02-12)
+
+
+### Bug Fixes
+
+* **app-layout:** sidebar item badge count truncation ([#1951](https://github.com/Kong/public-ui-components/issues/1951)) ([ad50cd1](https://github.com/Kong/public-ui-components/commit/ad50cd17e7c289ebfaac52efb34fda63e2b43ba5))
+
+
+
+
+
 ## [4.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.7...@kong-ui-public/app-layout@4.3.8) (2025-01-31)
 
 
