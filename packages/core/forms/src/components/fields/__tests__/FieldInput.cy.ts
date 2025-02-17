@@ -159,19 +159,19 @@ describe('<FieldTester /> - FieldInput', () => {
     // check VFG input value and type
     cy.get(`#${fieldKey}`).should('be.visible')
     cy.get(`#${fieldKey}`).should('have.value', fieldValue).and('have.attr', 'type', 'password')
-    cy.getTestId('kui-icon-wrapper-visibility-icon').should('be.visible')
+    cy.get('.mask-value-toggle-button').should('be.visible')
 
     // toggle visibility
-    cy.getTestId('kui-icon-wrapper-visibility-icon').click()
+    cy.get('.mask-value-toggle-button').click()
     cy.get(`#${fieldKey}`).should('have.value', fieldValue).and('have.attr', 'type', 'text')
-    cy.getTestId('kui-icon-wrapper-visibility-off-icon').should('be.visible')
+    cy.get('.mask-value-toggle-button').should('be.visible')
 
     cy.get(`#${fieldKey}`).type(editText)
     cy.get(`#${fieldKey}`).should('have.value', fieldValue + editText)
 
     // check VFG input value and type after toggling back
-    cy.getTestId('kui-icon-wrapper-visibility-off-icon').click()
+    cy.get('.mask-value-toggle-button').click()
     cy.get(`#${fieldKey}`).should('have.value', fieldValue + editText).and('have.attr', 'type', 'password')
-    cy.getTestId('kui-icon-wrapper-visibility-icon').should('be.visible')
+    cy.get('.mask-value-toggle-button').should('be.visible')
   })
 })
