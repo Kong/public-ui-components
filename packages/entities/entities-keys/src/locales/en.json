@@ -22,7 +22,7 @@
       }
     },
     "actions": {
-      "create": "New Key",
+      "create": "New key",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",

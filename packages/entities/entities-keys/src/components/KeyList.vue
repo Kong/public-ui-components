@@ -32,7 +32,7 @@
         >
           <div class="button-row">
             <KButton
-              v-if="showHeaderLHButton"
+              v-if="!isKeySetPage && showHeaderLHButton"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="keys-learn-more-button"
@@ -294,6 +294,8 @@ const { hasRecords, handleStateChange } = useTableState(() => filterQuery.value)
 const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
 const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
 
+// if the KeyList in nested in the keys tab on a key set detail page */
+const isKeySetPage = computed<boolean>(() => !!props.config.keySetId)
 /**
  * Table Headers
  */
