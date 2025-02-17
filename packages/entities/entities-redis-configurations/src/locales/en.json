@@ -189,7 +189,8 @@
   "linked_plugins_modal": {
     "title": "Associated plugins ({count})",
     "headers": {
-      "plugin": "Plugin"
+      "plugin": "Plugin",
+      "instance_name": "Name"
     }
   },
   "redis": {

@@ -54,6 +54,7 @@ const { i18n: { t } } = composables.useI18n()
 
 const headers: TableViewHeader[] = [
   { key: 'name', label: t('linked_plugins_modal.headers.plugin') },
+  { key: 'instance_name', label: t('linked_plugins_modal.headers.instance_name') },
   { key: 'actions', hideLabel: true },
 ]
 

@@ -37,6 +37,11 @@ export const useLinkedPluginsFetcher = (param: {
   return {
     fetcher: async (params?: RequestParams) => {
       const { data } = await axiosInstance.get<RedisConfigurationLinkedPluginsResponse>(linksUrl.value, { params })
+      // todo(zehao): remove this when the backend is fixed
+      // https://kongstrong.slack.com/archives/C0663589T3R/p1739519613780909?thread_ts=1739446191.148239&cid=C0663589T3R
+      if (data && !Array.isArray(data.data)) {
+        data.data = []
+      }
       return data
     },
   }
@@ -54,8 +59,8 @@ export const useLinkedPlugins = (param: {
   const result = ref<RedisConfigurationLinkedPluginsResponse['data']>([])
 
   watch(data, () => {
-    console.log('data', data.value)
     result.value = data.value?.data ?? []
+    console.log('result.value', result.value)
   })
 
   return result
