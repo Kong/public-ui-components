@@ -2,6 +2,10 @@
   <SandboxPermissionsControl
     @update="handlePermissionsUpdate"
   />
+
+  <h2>Konnect Actions Outside</h2>
+  <div id="kong-ui-app-page-header-action-button" />
+
   <h2>Konnect API</h2>
   <PluginList
     v-if="permissions"
@@ -15,6 +19,7 @@
     :can-toggle="permissions.canEdit"
     :config="konnectConfig"
     title="Plugins"
+    use-action-outside
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
     @delete-plugin:success="onDeletePluginSuccess"
