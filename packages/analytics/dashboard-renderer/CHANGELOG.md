@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.6...@kong-ui-public/dashboard-renderer@0.35.7) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [0.35.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.5...@kong-ui-public/dashboard-renderer@0.35.6) (2025-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.35.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.4...@kong-ui-public/dashboard-renderer@0.35.5) (2025-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [0.35.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.3...@kong-ui-public/dashboard-renderer@0.35.4) (2025-02-13)
+
+
+### Bug Fixes
+
+* handle adding/removing tiles (widgets) ([#1944](https://github.com/Kong/public-ui-components/issues/1944)) ([82359a2](https://github.com/Kong/public-ui-components/commit/82359a25f0acef6378ca0ab575cbf82ad6d9f863))
+
+
+
+
+
+## [0.35.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.2...@kong-ui-public/dashboard-renderer@0.35.3) (2025-02-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [0.35.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.1...@kong-ui-public/dashboard-renderer@0.35.2) (2025-02-10)
 
 

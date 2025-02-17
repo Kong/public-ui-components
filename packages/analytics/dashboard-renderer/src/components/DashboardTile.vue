@@ -1,6 +1,7 @@
 <template>
   <div
     class="tile-boundary"
+    :class="{ 'editable': context.editable }"
     :data-testid="`tile-${tileId}`"
   >
     <div
@@ -66,6 +67,13 @@
               >
                 {{ i18n.t('csvExport.exportAsCsv') }}
               </span>
+            </KDropdownItem>
+            <KDropdownItem
+              v-if="context.editable"
+              :data-testid="`remove-tile-${tileId}`"
+              @click="removeTile"
+            >
+              {{ i18n.t('renderer.remove') }}
             </KDropdownItem>
           </template>
         </KDropdown>
@@ -133,6 +141,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: TileDefinition): void
+  (e: 'remove-tile', tile: TileDefinition): void
 }>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
@@ -231,6 +240,10 @@ const editTile = () => {
   emit('edit-tile', props.definition)
 }
 
+const removeTile = () => {
+  emit('remove-tile', props.definition)
+}
+
 const onChartData = (data: ExploreResultV4) => {
   chartData.value = data
 }
@@ -251,13 +264,17 @@ const exportCsv = () => {
   height: v-bind('`${height}px`');
   overflow: hidden;
 
+  &.editable:hover {
+    .tile-header {
+      background: $kui-color-background-neutral-weakest;
+    }
+  }
+
   .tile-header {
     align-items: center;
     display: flex;
     justify-content: space-between;
-    margin-bottom: var(--kui-space-30, $kui-space-30);
-    // So any "handlers" for the tile header includes the padding
-    padding-top: var(--kui-space-70, $kui-space-70);
+    padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60);
     right: 0;
     width: 100%;
 
@@ -320,6 +337,7 @@ const exportCsv = () => {
 
   .tile-content {
     flex-grow: 1;
+    margin: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60);
     overflow: hidden;
   }
 }

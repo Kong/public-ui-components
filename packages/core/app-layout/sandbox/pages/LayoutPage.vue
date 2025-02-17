@@ -287,7 +287,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
           active: activeItem.value?.name === 'Appearance',
         },
         {
-          name: 'Access Requests',
+          name: 'Access And Approvals',
           to: '/?access-requests',
           active: activeItem.value?.name === 'Access Requests',
           badgeCount: 100,
