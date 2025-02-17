@@ -6,6 +6,10 @@
     :retrieve-krn="patPermissions.retrieve"
     @update="handlePermissionsUpdate"
   />
+
+  <h2>Konnect Actions Outside</h2>
+  <div id="kong-ui-app-page-header-action-button" />
+
   <h2>Konnect API</h2>
   <UpstreamsList
     v-if="permissions"
@@ -16,7 +20,7 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
-    :enable-v2-empty-states="true"
+    use-action-outside
     @copy:error="onCopyIdError"
     @copy:success="onCopyIdSuccess"
     @delete:success="onDeleteSuccess"
