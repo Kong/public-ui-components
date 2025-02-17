@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.5.76](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.5.75...@kong-ui-public/entities-keys@3.5.76) (2025-02-17)
+
+
+### Bug Fixes
+
+* **entities-keys:** text area char limit ([#1959](https://github.com/Kong/public-ui-components/issues/1959)) ([a8b11cc](https://github.com/Kong/public-ui-components/commit/a8b11cc0231ef6e4d67f0024add5766efd086f30))
+
+
+
+
+
 ## [3.5.75](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.5.74...@kong-ui-public/entities-keys@3.5.75) (2025-02-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys
