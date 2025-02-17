@@ -18,6 +18,7 @@
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @empty-state-cta-clicked="handleEmptyStateCtaClicked"
       @sort="resetPagination"
+      @state="handleStateChange"
     >
       <!-- Filter -->
       <template #toolbar-filter>
@@ -33,20 +34,77 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <PermissionsWrapper :auth-function="() => canCreate()">
-            <!-- Hide Create button if table is empty -->
+          <div class="button-row">
             <KButton
-              appearance="primary"
-              data-testid="toolbar-add-consumer-group"
-              :size="useActionOutside ? 'medium' : 'large'"
-              :to="config.consumerId ? undefined : config.createRoute"
-              @click="() => config.consumerId ? handleAddToGroupClick() : undefined"
+              v-if="showHeaderLHButton"
+              appearance="secondary"
+              class="open-learning-hub"
+              data-testid="consumer-groups-learn-more-button"
+              icon
+              @click="$emit('click:learn-more')"
             >
-              <AddIcon />
-              {{ config.consumerId ? t('consumer_groups.actions.add_to_group') : t('consumer_groups.list.toolbar_actions.new_consumer_group') }}
+              <BookIcon decorative />
             </KButton>
-          </PermissionsWrapper>
+            <PermissionsWrapper :auth-function="() => canCreate()">
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-consumer-group"
+                :size="useActionOutside ? 'medium' : 'large'"
+                @click="handleCreateClick"
+              >
+                <AddIcon />
+                {{ config.consumerId ? t('consumer_groups.actions.add_to_group') : t('consumer_groups.list.toolbar_actions.new_consumer_group') }}
+              </KButton>
+            </PermissionsWrapper>
+          </div>
         </Teleport>
+      </template>
+
+      <!-- TODO: remove this slot when empty states M2 is cleaned up -->
+      <template
+        v-if="!hasRecords && isLegacyLHButton"
+        #outside-actions
+      >
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <KButton
+            appearance="secondary"
+            class="open-learning-hub"
+            data-testid="consumer-groups-learn-more-button"
+            icon
+            @click="$emit('click:learn-more')"
+          >
+            <BookIcon decorative />
+          </KButton>
+        </Teleport>
+      </template>
+
+      <template
+        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        #empty-state
+      >
+        <EntityEmptyState
+          :action-button-text="t('consumer_groups.list.toolbar_actions.new_consumer_group')"
+          appearance="secondary"
+          :can-create="() => canCreate()"
+          :description="t('consumer_groups.list.empty_state_v2.description')"
+          :learn-more="config.app === 'konnect'"
+          :title="t('consumer_groups.list.empty_state_v2.title')"
+          @click:create="handleCreateClick"
+          @click:learn-more="$emit('click:learn-more')"
+        >
+          <template #image>
+            <div class="empty-state-icon-gateway">
+              <TeamIcon
+                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
+                :size="KUI_ICON_SIZE_50"
+              />
+            </div>
+          </template>
+        </EntityEmptyState>
       </template>
 
       <!-- Column Formatting -->
@@ -169,12 +227,14 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
-import { AddIcon } from '@kong/icons'
+import { AddIcon, BookIcon, TeamIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 import composables from '../composables'
 import endpoints from '../consumer-groups-endpoints'
 import {
   EntityBaseTable,
   EntityDeleteModal,
+  EntityEmptyState,
   EntityFilter,
   EntityTypes,
   FetcherStatus,
@@ -183,6 +243,7 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
   TableTags,
+  useTableState,
 } from '@kong-ui-public/entities-shared'
 import type {
   KongManagerConsumerGroupListConfig,
@@ -202,6 +263,7 @@ import AddToGroupModal from './AddToGroupModal.vue'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
+  (e: 'click:learn-more'): void,
   (e: 'copy:success', payload: CopyEventPayload): void,
   (e: 'copy:error', payload: CopyEventPayload): void,
   (e: 'delete:success', consumerGroup: EntityRow): void,
@@ -256,6 +318,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Enables the new empty state design, this prop can be removed when
+   * the khcp-14756-empty-states-m2 FF is removed.
+   */
+  enableV2EmptyStates: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18nT, i18n: { t } } = composables.useI18n()
@@ -282,6 +352,15 @@ const tableHeaders: BaseTableHeaders = fields
 const rowAttributes = (row: Record<string, any>) => ({
   'data-testid': row.username ?? row.custom_id ?? row.id,
 })
+
+const handleCreateClick = (): void => {
+  // if consumer is in consumer group, open add consumer modal
+  if (props.config.consumerId) {
+    handleAddToGroupClick()
+  } else { // else go to create consumer group page
+    router.push(props.config.createRoute)
+  }
+}
 
 /**
  * Fetcher & Filtering
@@ -325,6 +404,13 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
     schema: props.config.filterSchema,
   } as FuzzyMatchFilterConfig
 })
+
+const { hasRecords, handleStateChange } = useTableState(filterQuery)
+// Current empty state logic is only for Konnect, KM will pick up at GA.
+// If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
+// If new empty states are not enabled, show the learning hub button (for Konnect)
+const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
+const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
 
 const isConsumerPage = computed<boolean>(() => !!props.config.consumerId)
 const preferencesStorageKey = computed<string>(
@@ -600,6 +686,12 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
+.button-row {
+  align-items: center;
+  display: flex;
+  gap: $kui-space-50;
+}
+
 .kong-ui-entities-consumer-groups-list {
   width: 100%;
 

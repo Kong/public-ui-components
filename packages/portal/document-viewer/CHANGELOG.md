@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.58](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.1.57...@kong-ui-public/document-viewer@2.1.58) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
 ## [2.1.57](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.1.56...@kong-ui-public/document-viewer@2.1.57) (2025-01-20)
 
 

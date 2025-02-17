@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.17.0...@kong-ui-public/entities-shared@3.17.1) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+# [3.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.16.0...@kong-ui-public/entities-shared@3.17.0) (2025-02-14)
+
+
+### Features
+
+* **consumer-groups:** new empty state [khcp-14827] ([#1936](https://github.com/Kong/public-ui-components/issues/1936)) ([1443167](https://github.com/Kong/public-ui-components/commit/1443167185e9a2bf9c4acca02220e0d8a7981a73))
+
+
+
+
+
 # [3.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.15.0...@kong-ui-public/entities-shared@3.16.0) (2025-02-03)
 
 

@@ -603,6 +603,7 @@ describe('<DashboardRenderer />', () => {
         tileHeight: 167,
         tiles: [
           {
+            id: 0,
             definition: {
               chart: {
                 type: 'timeseries_line',
@@ -639,6 +640,7 @@ describe('<DashboardRenderer />', () => {
             },
           } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
           {
+            id: 1,
             definition: {
               chart: {
                 type: 'timeseries_line',
@@ -672,6 +674,7 @@ describe('<DashboardRenderer />', () => {
             },
           } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
           {
+            id: 2,
             definition: {
               chart: {
                 type: 'timeseries_line',
@@ -699,6 +702,7 @@ describe('<DashboardRenderer />', () => {
             },
           } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
           {
+            id: 3,
             definition: {
               chart: {
                 type: 'top_n',

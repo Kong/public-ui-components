@@ -496,6 +496,10 @@ export const tileConfigSchema = {
   properties: {
     definition: tileDefinitionSchema,
     layout: tileLayoutSchema,
+    id: {
+      type: 'string',
+      description: 'Unique identifier for the tile.  If not provided, one will be generated.',
+    },
   },
   required: ['definition', 'layout'],
   additionalProperties: false,
