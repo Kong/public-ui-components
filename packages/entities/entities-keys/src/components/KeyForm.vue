@@ -128,6 +128,7 @@
         <KTextArea
           v-if="form.fields.key_format === 'jwk'"
           v-model.trim="form.fields.jwk"
+          :character-limit="false"
           class="key-form-textarea"
           data-testid="key-form-jwk"
           :label="t('keys.form.fields.jwk.label')"
@@ -143,6 +144,7 @@
         <KTextArea
           v-if="form.fields.key_format === 'pem'"
           v-model.trim="form.fields.private_key"
+          :character-limit="false"
           class="key-form-textarea"
           data-testid="key-form-private-key"
           :label="t('keys.form.fields.private_key.label')"
@@ -154,6 +156,7 @@
         <KTextArea
           v-if="form.fields.key_format === 'pem'"
           v-model.trim="form.fields.public_key"
+          :character-limit="false"
           class="key-form-textarea"
           data-testid="key-form-public-key"
           :label="t('keys.form.fields.public_key.label')"
