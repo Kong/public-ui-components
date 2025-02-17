@@ -3,7 +3,7 @@
     "title": "Keys",
     "list": {
       "toolbar_actions": {
-        "new_key": "New Key"
+        "new_key": "New key"
       },
       "table_headers": {
         "name": "Name",
@@ -14,10 +14,15 @@
       "empty_state": {
         "title": "Configure a New Key",
         "description": "A Key object holds a representation of asymmetric keys in various formats."
+      },
+      "empty_state_v2": {
+        "title": "Configure your first key",
+        "description": "Keys store asymmetric cryptographic keys in various formats, enabling secure authentication and encryption.",
+        "create_cta": "New key"
       }
     },
     "actions": {
-      "create": "New Key",
+      "create": "New key",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",
