@@ -1,5 +1,5 @@
-import type { RedisConfigurationFields } from '@kong-ui-public/entities-redis-configurations'
-import { PartialType } from '@kong-ui-public/entities-redis-configurations'
+import type { RedisConfigurationFields } from '../types/form-redis-partial'
+import { PartialType } from '../types/form-redis-partial'
 
 export enum RedisTypeDisplay {
   HOST_PORT_CE = 'Host/Port',
@@ -24,5 +24,3 @@ export const getRedisType = (fields: RedisConfigurationFields): RedisTypeDisplay
 
   return RedisTypeDisplay.HOST_PORT_EE
 }
-
-export type { RedisConfigurationFields }
