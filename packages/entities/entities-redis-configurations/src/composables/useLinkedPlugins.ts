@@ -1,11 +1,16 @@
 import { useAxios, type KongManagerConfig, type KonnectConfig } from '@kong-ui-public/entities-shared'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import useSwrv from 'swrv'
 import endpoints from '../partials-endpoints'
-import type { RedisConfigurationLinkedPlugin, RedisConfigurationLinkedPluginsResponse } from '../types'
+import type { RedisConfigurationLinkedPluginsResponse } from '../types'
 
 type RequestParams = {
   size?: number,
   offset?: string | null,
+}
+
+export function buildLinksCacheKey(partialId: string) {
+  return `redis-partial-links-${partialId}`
 }
 
 export const useLinkedPluginsFetcher = (param: {
@@ -31,7 +36,6 @@ export const useLinkedPluginsFetcher = (param: {
 
   return {
     fetcher: async (params?: RequestParams) => {
-      // todo(zehao): use swrv?
       const { data } = await axiosInstance.get<RedisConfigurationLinkedPluginsResponse>(linksUrl.value, { params })
       return data
     },
@@ -45,20 +49,14 @@ export const useLinkedPlugins = (param: {
 }) => {
   const { partialId, config } = param
 
-  const links = ref<RedisConfigurationLinkedPlugin[]>([])
   const { fetcher } = useLinkedPluginsFetcher({ partialId, config })
+  const { data } = useSwrv(buildLinksCacheKey(partialId), () => fetcher())
+  const result = ref<RedisConfigurationLinkedPluginsResponse['data']>([])
 
-  onBeforeMount(async () => {
-    try {
-      const { data } = await fetcher(param.requestParams)
-      links.value = data
-    } catch (e) {
-      if (e instanceof Error) {
-        // log error to DD
-        console.error('Failed to fetch linked plugins', partialId, e.message)
-      }
-    }
+  watch(data, () => {
+    console.log('data', data.value)
+    result.value = data.value?.data ?? []
   })
 
-  return links
+  return result
 }

@@ -1,5 +1,6 @@
 <template>
   <KTableData
+    :cache-identifier="buildLinksCacheKey(partialId)"
     :fetcher="fetcher"
     :headers="headers"
     :pagination-attributes="{ totalCount, disablePageJump: true }"
@@ -21,7 +22,7 @@ import { ref } from 'vue'
 
 import composables from '../composables'
 import PluginName from './PluginItem.vue'
-import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
+import { useLinkedPluginsFetcher, buildLinksCacheKey } from '../composables/useLinkedPlugins'
 
 import type { TableDataFetcherParams } from '@kong/kongponents'
 import type { TableViewHeader } from '@kong/kongponents/dist/types'
