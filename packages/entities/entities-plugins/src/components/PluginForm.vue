@@ -48,7 +48,7 @@
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
         :record="record || undefined"
-        :schema="schema || {}"
+        :schema="loadedSchema || {}"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
       />
@@ -272,6 +272,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
+  /**
+   * Custom loaded schema for the plugin
+   */
+  schema: {
+    type: Object as PropType<Record<string, any>>,
+    default: null,
+  },
 })
 
 const router = useRouter()
@@ -287,7 +295,7 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
-const schema = ref<Record<string, any> | null>(null)
+const loadedSchema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
@@ -1089,7 +1097,7 @@ watch([entityMap, initialized], (newData, oldData) => {
   if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newEntityData || (newinitialized && newinitialized !== oldinitialized))) {
     schemaLoading.value = true
 
-    schema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
+    loadedSchema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
     schemaLoading.value = false
   }
 }, { deep: true })
@@ -1201,7 +1209,7 @@ const saveFormData = async (): Promise<void> => {
         originalModel: formFieldsOriginal,
         model: form.fields,
         payload,
-        schema: schema.value,
+        schema: loadedSchema.value,
       })
     }
 
@@ -1269,21 +1277,20 @@ onBeforeMount(async () => {
       const data = CREDENTIAL_SCHEMAS[pluginType]
       credentialType.value = pluginType
 
-      schema.value = buildFormSchema('', data, {})
+      loadedSchema.value = buildFormSchema('', data, {})
       schemaLoading.value = false
     } else { // handling for standard plugins
-      const response = await axiosInstance.get(schemaUrl.value)
-      const { data } = response
+      const data = props.schema ?? (await axiosInstance.get(schemaUrl.value)).data
 
       if (data) {
         if (treatAsCredential.value) {
           // credential schema response is structured differently, no `config` object or default schema
-          schema.value = buildFormSchema('', data, {})
+          loadedSchema.value = buildFormSchema('', data, {})
           schemaLoading.value = false
         } else {
           // start from the config part of the schema
           const configField = data.fields.find((field: Record<string, any>) => field.config)
-          configResponse.value = configField ? configField.config : response
+          configResponse.value = configField ? configField.config : data
 
           // scoping and global field setup
           initScopeFields()
@@ -1309,7 +1316,7 @@ onBeforeMount(async () => {
 
           // if editing, wait for record to load before building schema
           if (initialized.value || formType.value === EntityBaseFormType.Create) {
-            schema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
+            loadedSchema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
           }
         }
       }
