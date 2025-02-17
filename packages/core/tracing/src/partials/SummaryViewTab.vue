@@ -27,28 +27,28 @@
 
         <PayloadDisplay
           v-if="payloads?.headers?.request"
-          :payload="{ type: 'headers', headers: payloads.headers.request }"
+          :payload="{ direction: 'request', type: 'headers', headers: payloads.headers.request }"
           :show-skeleton="showSkeleton"
           :title="t('payload.request_headers')"
         />
 
         <PayloadDisplay
           v-if="payloads?.body?.request"
-          :payload="{ type: 'body', content: payloads.body.request }"
+          :payload="{ direction: 'request', type: 'body', content: payloads.body.request }"
           :show-skeleton="showSkeleton"
           :title="t('payload.request_body')"
         />
 
         <PayloadDisplay
           v-if="payloads?.headers?.response"
-          :payload="{ type: 'headers', headers: payloads.headers.response }"
+          :payload="{ direction: 'response', type: 'headers', headers: payloads.headers.response }"
           :show-skeleton="showSkeleton"
           :title="t('payload.response_headers')"
         />
 
         <PayloadDisplay
           v-if="payloads?.body?.response"
-          :payload="{ type: 'body', content: payloads.body.response }"
+          :payload="{ direction: 'response', type: 'body', content: payloads.body.response }"
           :show-skeleton="showSkeleton"
           :title="t('payload.response_body')"
         />

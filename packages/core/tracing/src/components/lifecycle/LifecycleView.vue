@@ -1,14 +1,14 @@
 <template>
-  <div
-    ref="root"
-    class="lifecycle-view"
-  >
+  <div class="lifecycle-view">
     <KSkeleton
       v-if="showSkeleton"
       type="spinner"
     />
     <VueFlow
       v-else
+      ref="flow"
+      :elevate-edges-on-select="false"
+      :elevate-nodes-on-select="false"
       :nodes-connectable="false"
       :nodes-draggable="false"
     >
@@ -20,16 +20,21 @@
         />
       </template>
 
-      <div class="total-latency">
-        <span>{{ t('lifecycle.total_latency') }}:</span>
-        <span>{{ fmt(props.rootSpan.durationNano) }}</span>
-      </div>
+      <template #edge-seamless-smoothstep="edgeProps: SmoothStepEdgeProps & Pick<EdgeProps<LifecycleEdgeData>, 'data'>">
+        <LifecycleEdgeSeamlessSmoothstep v-bind="edgeProps" />
+      </template>
+
+      <LifecycleLegend
+        ref="legend"
+        :root-span="rootSpan"
+      />
 
       <Controls
-        :fit-view-params="fitViewParams"
+        ref="controls"
         :show-interactive="false"
+        @fit-view="fitFlow"
       />
-      <Background />
+      <Background variant="lines" />
     </VueFlow>
   </div>
 </template>
@@ -41,31 +46,37 @@ import {
   Position,
   useVueFlow,
   VueFlow,
+  type EdgeProps,
   type FitViewParams,
   type GraphNode,
   type NodeProps,
+  type SmoothStepEdgeProps,
 } from '@vue-flow/core'
-import { computed, nextTick, onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
-import composables from '../../composables'
-import { LifecycleNodeType } from '../../constants'
-import { type LifecycleNode, type LifecycleNodeData, type SpanNode } from '../../types'
-import { buildLifecycleGraph, getDurationFormatter } from '../../utils'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import {
+  CANVAS_COLUMN_GAP,
+  CANVAS_PADDING,
+  CANVAS_ROW_GAP,
+  LifecycleNodeType,
+  NODE_GROUP_COLUMN_GAP,
+  NODE_GROUP_PADDING,
+  NODE_GROUP_ROW_GAP,
+  TOOLBAR_MARGIN,
+} from '../../constants'
+import { type LifecycleEdgeData, type LifecycleNode, type LifecycleNodeData, type SpanNode } from '../../types'
+import { buildLifecycleGraph } from '../../utils'
+import LifecycleEdgeSeamlessSmoothstep from './LifecycleEdgeSeamlessSmoothstep.vue'
+import LifecycleLegend from './LifecycleLegend.vue'
 import LifecycleViewNode from './LifecycleViewNode.vue'
-
-const fmt = getDurationFormatter()
-const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps<{
   rootSpan: SpanNode
   showSkeleton?: boolean
 }>()
 
-const rootRef = useTemplateRef<HTMLDivElement>('root')
-
-const options = {
-  nodeGapX: 30,
-  nodeGapY: 10,
-}
+const flowRef = useTemplateRef<InstanceType<typeof VueFlow>>('flow')
+const controlsRef = useTemplateRef<InstanceType<typeof Controls>>('controls')
+const legendRef = useTemplateRef<InstanceType<typeof LifecycleLegend>>('legend')
 
 const {
   addNodes,
@@ -78,9 +89,9 @@ const {
 
 const { findNode, fitView } = useVueFlow()
 
-const fitViewParams: FitViewParams = {
+const fitViewParams = ref<FitViewParams>({
   maxZoom: 1,
-}
+})
 
 /**
  * This function takes a list of nodes, computes the positions, and updated the nodes in-place.
@@ -92,16 +103,26 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   }
 
   let clientNode: GraphNode | undefined
+  let clientOutNode: GraphNode | undefined
+  let requestGroupNode: GraphNode | undefined
   let upstreamNode: GraphNode | undefined
+  let responseGroupNode: GraphNode | undefined
+  let clientInNode: GraphNode | undefined
 
   const requestNodes: GraphNode[] = []
-  const requestBox = {
+  const requestGroupMetrics = {
+    innerWidth: 0,
+    innerHeight: 0,
+    innerOffsetY: 0,
     width: 0,
     height: 0,
   }
 
   const responseNodes: GraphNode[] = []
-  const responseBox = {
+  const responseGroupMetrics = {
+    innerWidth: 0,
+    innerHeight: 0,
+    innerOffsetY: 0,
     width: 0,
     height: 0,
   }
@@ -110,127 +131,234 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
     const id = nodes[i].id
     const node = findNode<LifecycleNodeData, any>(id)
     if (!node) {
-      throw new Error(`Graph node with ID "${id}" is not found`)
+      throw new Error(`Graph node with ID "${id}" at index ${i} is not found`)
     }
 
     switch (node.data.type) {
       case LifecycleNodeType.CLIENT:
-        if (i !== 0) {
-          throw new Error('The client node did not appear first')
-        }
-
         node.targetPosition = Position.Bottom
         node.sourcePosition = Position.Top
+
         clientNode = node
         break
-      case LifecycleNodeType.REQUEST:
-        if (!clientNode) {
-          throw new Error('Encountered a request node before the client node')
-        } if (upstreamNode) {
-          throw new Error('Encountered a request node after the upstream node')
-        }
+      case LifecycleNodeType.CLIENT_OUT:
+        node.targetPosition = Position.Left
+        node.sourcePosition = Position.Right
 
+        clientOutNode = node
+        break
+      case LifecycleNodeType.REQUEST_GROUP:
+        node.targetPosition = Position.Left
+        node.sourcePosition = Position.Right
+
+        requestGroupNode = node
+        break
+      case LifecycleNodeType.REQUEST:
         node.targetPosition = Position.Left
         node.sourcePosition = Position.Right
 
         requestNodes.push(node)
-        requestBox.width += node.dimensions.width + (requestBox.width > 0 ? options.nodeGapX : 0)
-        if (node.dimensions.height > requestBox.height) {
-          requestBox.height = node.dimensions.height
+        requestGroupMetrics.innerWidth += node.dimensions.width + (requestGroupMetrics.innerWidth > 0 ? NODE_GROUP_COLUMN_GAP : 0)
+        if (node.dimensions.height > requestGroupMetrics.innerHeight) {
+          requestGroupMetrics.innerHeight = node.dimensions.height
         }
         break
       case LifecycleNodeType.UPSTREAM:
-        if (!clientNode) {
-          throw new Error('Encountered the upstream node before the client node')
-        } else if (upstreamNode) {
-          throw new Error(`Duplicate upstream node at index ${i}`)
-        }
-
         node.targetPosition = Position.Top
         node.sourcePosition = Position.Bottom
 
         upstreamNode = node
         break
-      case LifecycleNodeType.RESPONSE:
-        if (i === 0) {
-          throw new Error('Encountered a response node before the client node')
-        } else if (!upstreamNode) {
-          throw new Error('Encountered a response node before the upstream node')
-        }
+      case LifecycleNodeType.RESPONSE_GROUP:
+        node.targetPosition = Position.Right
+        node.sourcePosition = Position.Left
 
+        responseGroupNode = node
+        break
+      case LifecycleNodeType.RESPONSE:
         node.targetPosition = Position.Right
         node.sourcePosition = Position.Left
 
         responseNodes.push(node)
-        responseBox.width += node.dimensions.width + (responseBox.width > 0 ? options.nodeGapX : 0)
-        if (node.dimensions.height > responseBox.height) {
-          responseBox.height = node.dimensions.height
+        responseGroupMetrics.innerWidth += node.dimensions.width + (responseGroupMetrics.innerWidth > 0 ? NODE_GROUP_COLUMN_GAP : 0)
+        if (node.dimensions.height > responseGroupMetrics.innerHeight) {
+          responseGroupMetrics.innerHeight = node.dimensions.height
         }
         break
+      case LifecycleNodeType.CLIENT_IN:
+        node.targetPosition = Position.Right
+        node.sourcePosition = Position.Left
+
+        clientInNode = node
+        break
       default:
-        throw new Error(`Unknown node type: ${node.data.type}`)
+        throw new Error(`Unknown node type: "${node.data.type}" at index ${i}`)
     }
   }
 
   if (!clientNode) {
     throw new Error('Missing the client node')
+  } else if (!clientOutNode) {
+    throw new Error('Missing the client out node')
   } else if (!upstreamNode) {
     throw new Error('Missing the upstream node')
+  } else if (!clientInNode) {
+    throw new Error('Missing the client in node')
   }
 
-  // "lr" stands for "left and right": refers to the client and upstream nodes
-  const lrHeight = Math.max(clientNode.dimensions.height, upstreamNode.dimensions.height)
-  const lrOffsetY = Math.abs(clientNode.dimensions.height - upstreamNode.dimensions.height) / 2
+  // >>> Layout - Request Group
+  if (requestGroupNode) {
+    requestGroupMetrics.innerOffsetY = requestGroupNode.dimensions.height - NODE_GROUP_PADDING + NODE_GROUP_ROW_GAP
+    requestGroupMetrics.width = requestGroupMetrics.innerWidth + NODE_GROUP_PADDING * 2
+    requestGroupMetrics.height = requestGroupNode.dimensions.height + NODE_GROUP_ROW_GAP + requestGroupMetrics.innerHeight
+    requestGroupNode.width = requestGroupMetrics.width
+    requestGroupNode.height = requestGroupMetrics.height
 
-  // "tb" stands for "top and bottom": refers to the request and response nodes
-  const tbWidth = Math.max(requestBox.width, responseBox.width)
-  const tbOffsetX = Math.abs(requestBox.width - responseBox.width) / 2
-
-  clientNode.position.y = requestBox.height + options.nodeGapY
-
-  let x = clientNode.position.x + clientNode.dimensions.width
-  if (requestBox.width < responseBox.width) {
-    x += tbOffsetX
+    let scopedX = NODE_GROUP_PADDING
+    for (let i = 0; i < requestNodes.length; i++) {
+      const node = requestNodes[i]
+      if (i > 0) {
+        scopedX += NODE_GROUP_COLUMN_GAP
+      }
+      node.position.x = scopedX
+      node.position.y = requestGroupMetrics.innerOffsetY + (requestGroupMetrics.innerHeight - node.dimensions.height) / 2
+      scopedX += node.dimensions.width
+    }
   }
-  for (const node of requestNodes) {
-    x += options.nodeGapX
-    node.position.x = x
-    node.position.y = (requestBox.height - node.dimensions.height) / 2
-    x += node.dimensions.width
-  }
+  // <<< Layout - Request Group
 
-  upstreamNode.position.x = clientNode.position.x + clientNode.dimensions.width + options.nodeGapX + tbWidth + options.nodeGapX
-  upstreamNode.position.y = requestBox.height + options.nodeGapY
+  // >>> Layout - Response Group
+  if (responseGroupNode) {
+    responseGroupMetrics.innerOffsetY = NODE_GROUP_PADDING
+    responseGroupMetrics.width = responseGroupMetrics.innerWidth + NODE_GROUP_PADDING * 2
+    responseGroupMetrics.height = responseGroupNode.dimensions.height + NODE_GROUP_ROW_GAP + responseGroupMetrics.innerHeight
+    responseGroupNode.width = responseGroupMetrics.width
+    responseGroupNode.height = responseGroupMetrics.height
 
-  x = clientNode.position.x + clientNode.dimensions.width + options.nodeGapX + tbWidth + options.nodeGapX
-  if (responseBox.width < requestBox.width) {
-    x -= tbOffsetX
+    let localX = responseGroupMetrics.width - NODE_GROUP_PADDING
+    for (let i = 0; i < responseNodes.length; i++) {
+      const node = responseNodes[i]
+      if (i > 0) {
+        localX -= NODE_GROUP_COLUMN_GAP
+      }
+      localX -= node.dimensions.width
+      node.position.x = localX
+      node.position.y = NODE_GROUP_PADDING + (responseGroupMetrics.innerHeight - node.dimensions.height) / 2
+    }
   }
+  // <<< Layout - Response Group
 
-  const bottomBaseY = requestBox.height + options.nodeGapY + lrHeight + options.nodeGapY
-  for (const node of responseNodes) {
-    x -= options.nodeGapX + node.dimensions.width
-    node.position.x = x
-    node.position.y = bottomBaseY + (responseBox.height - node.dimensions.height) / 2
-  }
+  // >>> Layout along X-axis
+  let canvasX = CANVAS_PADDING
 
-  if (clientNode.dimensions.height < upstreamNode.dimensions.height) {
-    clientNode.position.y += lrOffsetY
-  } else {
-    upstreamNode.position.y += lrOffsetY
+  // Client
+  clientNode.position.x = canvasX
+  canvasX += clientNode.dimensions.width + CANVAS_COLUMN_GAP
+
+  // Client In / Client Out (They are horizontally center-aligned)
+  const clientInOutMaxWidth = Math.max(clientOutNode.dimensions.width, clientInNode.dimensions.width)
+  clientOutNode.position.x = canvasX + (clientInOutMaxWidth - clientOutNode.dimensions.width) / 2
+  clientInNode.position.x = canvasX + (clientInOutMaxWidth - clientInNode.dimensions.width) / 2
+  canvasX += clientInOutMaxWidth + CANVAS_COLUMN_GAP
+
+  // Request Group / Response Group (They are horizontally center-aligned)
+  const requestsResponsesMaxWidth = Math.max(requestGroupMetrics.width, responseGroupMetrics.width)
+  if (requestGroupNode) {
+    requestGroupNode.position.x = canvasX + (requestsResponsesMaxWidth - requestGroupMetrics.width) / 2
   }
+  if (responseGroupNode) {
+    responseGroupNode.position.x = canvasX + (requestsResponsesMaxWidth - responseGroupMetrics.width) / 2
+  }
+  canvasX += requestsResponsesMaxWidth + CANVAS_COLUMN_GAP
+
+  // Upstream
+  upstreamNode.position.x = canvasX
+  // <<< Layout along X-axis
+
+  // >>> Layout along Y-axis
+  let layoutY = CANVAS_PADDING
+
+  // Client Out / Request Group (They are vertically center-aligned)
+  const upperInnerMaxHeight = Math.max(clientOutNode.dimensions.height, requestGroupMetrics.innerHeight)
+  clientOutNode.position.y = layoutY + requestGroupMetrics.innerOffsetY + (upperInnerMaxHeight - clientOutNode.dimensions.height) / 2
+  if (requestGroupNode) {
+    requestGroupNode.position.y = layoutY + (upperInnerMaxHeight - requestGroupMetrics.innerHeight) / 2
+  }
+  layoutY = Math.max(
+    clientOutNode.position.y + clientOutNode.dimensions.height,
+    requestGroupNode ? requestGroupNode.position.y + requestGroupMetrics.height : 0,
+  ) + CANVAS_ROW_GAP
+
+  // Client / Upstream (They are vertically center-aligned)
+  const clientUpstreamMaxHeight = Math.max(clientNode.dimensions.height, upstreamNode.dimensions.height)
+  clientNode.position.y = layoutY + (clientUpstreamMaxHeight - clientNode.dimensions.height) / 2
+  upstreamNode.position.y = layoutY + (clientUpstreamMaxHeight - upstreamNode.dimensions.height) / 2
+  layoutY += clientUpstreamMaxHeight + CANVAS_ROW_GAP
+
+  // Client In / Response Group (They are vertically center-aligned)
+  const lowerInnerMaxHeight = Math.max(clientInNode.dimensions.height, responseGroupMetrics.innerHeight)
+  clientInNode.position.y = layoutY + responseGroupMetrics.innerOffsetY + (lowerInnerMaxHeight - clientInNode.dimensions.height) / 2
+  if (responseGroupNode) {
+    responseGroupNode.position.y = layoutY + (lowerInnerMaxHeight - responseGroupMetrics.innerHeight) / 2
+  }
+  // <<< Layout along Y-axis
 
   return nodes
 }
 
 const currentGraph = computed(() => buildLifecycleGraph(props.rootSpan))
 
+/**
+ * To fit the flow chart into the view, taking the toolbar and legend into account.
+ */
+const fitFlow = () => {
+  const flowEl = flowRef.value?.$el
+  if (!flowEl) {
+    return
+  }
+
+  const controlsEl = controlsRef.value?.$el
+  const legendEl = legendRef.value?.$el
+
+  const flowWidth = flowEl.getBoundingClientRect().width
+  const flowHeight = flowEl.getBoundingClientRect().height
+
+  let accumulatedPadding = 0
+  let accumulatedOffsetX = 0
+
+  // Best effort–it's okay to miss this measurement
+  if (controlsEl instanceof HTMLElement) {
+    accumulatedPadding += controlsEl.getBoundingClientRect().width + 2 * TOOLBAR_MARGIN
+    accumulatedOffsetX -= controlsEl.getBoundingClientRect().width
+  }
+
+  // Best effort–it's okay to miss this measurement
+  if (legendEl instanceof HTMLElement) {
+    accumulatedPadding += legendEl.getBoundingClientRect().width + 2 * TOOLBAR_MARGIN
+    accumulatedOffsetX += legendEl.getBoundingClientRect().width
+  }
+
+  fitViewParams.value = {
+    maxZoom: 1,
+    ...flowWidth > 0 && {
+      padding: accumulatedPadding / 2 / Math.min(flowWidth, flowHeight),
+    }, // Use default value otherwise
+    ...accumulatedOffsetX !== 0 && {
+      offset: {
+        x: -accumulatedOffsetX / 2,
+      },
+    }, // Use default value otherwise
+  }
+
+  fitView(fitViewParams.value)
+}
+
 onNodesInitialized((nodes) => {
   for (const diff of layout(nodes as LifecycleNode[])) {
     updateNode(diff.id, diff)
   }
   nextTick(() => {
-    fitView(fitViewParams)
+    fitFlow()
   })
 })
 
@@ -249,13 +377,31 @@ watch(
 let resizeObserver: ResizeObserver | undefined
 
 onMounted(() => {
-  if (rootRef.value) {
-    resizeObserver = new ResizeObserver(() => {
-      fitView(fitViewParams)
-    })
-    resizeObserver.observe(rootRef.value)
-  }
+  resizeObserver = new ResizeObserver(() => {
+    fitFlow()
+  })
 })
+
+const replaceResizeObserver = (maybeElement: any, onCleanup: (cb: () => void) => void) => {
+  if (maybeElement instanceof HTMLElement) {
+    resizeObserver?.observe(maybeElement)
+    onCleanup(() => {
+      resizeObserver?.unobserve(maybeElement)
+    })
+  }
+}
+
+watch(flowRef, (newRef, _, cleanup) => {
+  replaceResizeObserver(newRef?.$el, cleanup)
+}, { immediate: true })
+
+watch(controlsRef, (newRef, _, cleanup) => {
+  replaceResizeObserver(newRef?.$el, cleanup)
+}, { immediate: true })
+
+watch(legendRef, (newRef, _, cleanup) => {
+  replaceResizeObserver(newRef?.$el, cleanup)
+}, { immediate: true })
 
 onBeforeUnmount(() => {
   if (resizeObserver) {
@@ -269,7 +415,9 @@ onBeforeUnmount(() => {
 @import '@vue-flow/core/dist/style.css';
 @import '@vue-flow/controls/dist/style.css';
 @import '@vue-flow/core/dist/theme-default.css';
+</style>
 
+<style lang="scss" scoped>
 .lifecycle-view {
   align-items: center;
   display: flex;
@@ -281,30 +429,31 @@ onBeforeUnmount(() => {
     width: auto;
   }
 
-  .total-latency {
-    align-items: center;
-    background-color: $kui-color-background;
-    bottom: 16px; // = $kui-space-60
-    box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.08); // Hardcoding to keep consistent with VueFlow's built-in Control component's style
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    flex-shrink: 0;
-    font-size: $kui-font-size-20;
-    gap: $kui-space-40;
-    justify-content: flex-start;
-    padding: $kui-space-20 $kui-space-30;
-    position: absolute;
-    right: 16px; // = $kui-space-60
-    z-index: 1000;
+  :deep(.vue-flow__node) {
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: $kui-border-radius-30 !important;
+    padding: 0;
+    width: auto;
+    word-wrap: break-word;
   }
-}
 
-.vue-flow__node {
-  border: $kui-border-width-10 solid #000000; // Hardcoding because we don't have a corresponding token yet
-  border-radius: $kui-border-radius-30;
-  padding: 0;
-  width: auto;
-  word-wrap: break-word;
+  :deep(.vue-flow__controls) {
+    margin: v-bind('`${TOOLBAR_MARGIN}px`') !important;
+  }
+
+  :deep(.vue-flow__edge-path) {
+    /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+    stroke: $kui-color-background-neutral !important;
+  }
+
+  :deep(.vue-flow__arrowhead) {
+    polyline {
+      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      fill: $kui-color-background-neutral !important;
+      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      stroke: $kui-color-background-neutral !important;
+    }
+  }
 }
 </style>

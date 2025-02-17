@@ -4,8 +4,14 @@ export const aiProxyAdvancedSchema: CommonSchemaFields = {
   // For the ai-proxy-advanced plugin, 'config-embeddings' and 'config-vectordb' fields are non-required
   // but they have nested fields that are required. If the nested fields are not provided, 'config-embeddings'
   // and 'config-vectordb' should be set to null in the payload.
-  shamefullyTransformPayload: ({ originalModel, model, payload }) => {
+  shamefullyTransformPayload: ({ originalModel, model, payload, schema }) => {
     const isDirty = (key: string) => {
+      // if the field is required and the model value is not empty
+      // the field is dirty
+      if (schema[key]?.required && model[key]) {
+        return true
+      }
+
       // if the model value is the same as the original value
       // the field is not dirty
       if (originalModel[key] === model[key]) {
