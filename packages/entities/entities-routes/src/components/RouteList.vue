@@ -36,7 +36,7 @@
         >
           <div class="button-row">
             <KButton
-              v-if="showHeaderLHButton"
+              v-if="!isServicePage && showHeaderLHButton"
               appearance="secondary"
               class="open-learning-hub"
               data-testid="routes-learn-more-button"
@@ -373,6 +373,9 @@ const { handleStateChange, hasRecords } = useTableState(() => filterQuery.value)
 // If new empty states are not enabled, show the learning hub button (for Konnect)
 const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
 const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
+
+// if the RouteList in nested in the routes tab on a service detail page
+const isServicePage = computed<boolean>(() => !!props.config.serviceId)
 
 /**
  * Table Headers

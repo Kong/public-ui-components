@@ -3,7 +3,7 @@
     "title": "Certificates",
     "list": {
       "toolbar_actions": {
-        "new_certificate": "New Certificate"
+        "new_certificate": "New certificate"
       },
       "table_headers": {
         "subject": "Subject",
@@ -105,7 +105,7 @@
     "title": "CA Certificates",
     "list": {
       "toolbar_actions": {
-        "new_ca_certificate": "New CA Certificate"
+        "new_ca_certificate": "New CA certificate"
       },
       "table_headers": {
         "issuer": "Issuer",
