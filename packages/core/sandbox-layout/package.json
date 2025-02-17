@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.17.2",
+    "@kong/kongponents": "9.21.5",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5"
   },
@@ -62,10 +62,10 @@
     "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^9.14.16",
+    "@kong/kongponents": "^9.21.5",
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@kong/icons": "^1.20.0"
+    "@kong/icons": "^1.21.1"
   }
 }
