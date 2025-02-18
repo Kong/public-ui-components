@@ -2,11 +2,49 @@
   <div class="documentation">
     <div v-if="documentList && !documentList.length">
       <KCard v-if="emptyStateCard">
+        <EntityEmptyState
+          v-if="enableV2EmptyStates"
+          :action-button-text="t('documentation.show.empty_state_v2.cta')"
+          appearance="secondary"
+          :can-create="() => canEdit()"
+          :description="t('documentation.show.empty_state_v2.description')"
+          :title="t('documentation.show.empty_state_v2.title')"
+          @click:create="handleAddClick"
+          @click:learn-more="$emit('click:learn-more')"
+        >
+          <template #image>
+            <div class="empty-state-icon">
+              <FileEmptyIcon
+                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
+                :size="KUI_ICON_SIZE_50"
+              />
+            </div>
+          </template>
+        </EntityEmptyState>
         <DocumentationPageEmptyState
+          v-else
           :can-edit="canEdit"
           @create-documentation="handleAddClick"
         />
       </KCard>
+      <EntityEmptyState
+        v-else-if="enableV2EmptyStates"
+        :action-button-text="t('documentation.show.empty_state_v2.cta')"
+        appearance="secondary"
+        :can-create="() => canEdit()"
+        :description="t('documentation.show.empty_state_v2.description')"
+        :title="t('documentation.show.empty_state_v2.title')"
+        @click:create="handleAddClick"
+      >
+        <template #image>
+          <div class="empty-state-icon">
+            <FileEmptyIcon
+              :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
+              :size="KUI_ICON_SIZE_50"
+            />
+          </div>
+        </template>
+      </EntityEmptyState>
       <DocumentationPageEmptyState
         v-else
         :can-edit="canEdit"
@@ -63,9 +101,16 @@ import ProductDocumentModal from './ProductDocumentModal.vue'
 import type { PropType } from 'vue'
 import type { DocumentListItem, DocumentTree, FormData } from '../types'
 import type { TreeListItem, TreeListChangeEvent, TreeListChildChangeEvent } from '@kong/kongponents'
+import { EntityEmptyState } from '@kong-ui-public/entities-shared'
+import '@kong-ui-public/entities-shared/dist/style.css'
+import composables from '../composables'
+import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
+import { FileEmptyIcon } from '@kong/icons'
+
 
 const emit = defineEmits<{
   (e: 'child-change', data: TreeListChildChangeEvent): void,
+  (e: 'click:learn-more'): void,
   (e: 'delete'): void,
   (e: 'document-selection', data: TreeListItem): void,
   (e: 'modal-closed'): void,
@@ -78,6 +123,9 @@ const emit = defineEmits<{
 const displayModal = ref<boolean>(false)
 const editing = ref<boolean>(false)
 const documentationDisplay = ref()
+
+const { i18n: { t } } = composables.useI18n()
+
 
 const props = defineProps({
   actionPending: {
@@ -139,6 +187,14 @@ const props = defineProps({
     type: Object as PropType<{ document: DocumentTree, ast: Record<string, any>, markdown?: string, status: 'published' | 'unpublished' }>,
     default: () => null,
   },
+  /**
+   * Enables the new empty state design, this prop can be removed when
+   * the khcp-14756-empty-states-m2 FF is removed.
+   */
+  enableV2EmptyStates: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 watch(() => props.actionSuccess, (newVal: boolean) => {
@@ -193,6 +249,12 @@ defineExpose({ download: handleDownloadClick, edit: handleEditDocClick })
 
   .document-holder {
     width: 83%; // we need to set this explicitly to override width: 100%; inherited from KCard
+  }
+
+  .empty-state-icon {
+    background-color: $kui-method-color-background-patch;
+    border-radius: $kui-border-radius-20;
+    padding: $kui-space-40;
   }
 }
 </style>
