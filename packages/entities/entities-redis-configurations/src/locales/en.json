@@ -152,7 +152,7 @@
       },
       "cluster_nodes": {
         "title": "Cluster nodes",
-        "tooltip": "This is a really long tooltip. Hopefully we won't have anything this long but we might. I wonder how it handles long inputs",
+        "tooltip": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element.",
         "add_button": "New item"
       },
       "sentinel_nodes": {

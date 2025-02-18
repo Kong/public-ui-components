@@ -55,7 +55,13 @@ export const useLinkedPlugins = (param: {
   const { partialId, config } = param
 
   const { fetcher } = useLinkedPluginsFetcher({ partialId, config })
-  const { data } = useSwrv(buildLinksCacheKey(partialId), () => fetcher())
+  const { data } = useSwrv(
+    buildLinksCacheKey(partialId),
+    () => fetcher(),
+    {
+      revalidateOnFocus: false,
+    },
+  )
   const result = ref<RedisConfigurationLinkedPluginsResponse['data']>([])
 
   watch(data, () => {

@@ -119,6 +119,7 @@ import {
 } from '@kong-ui-public/entities-shared'
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { AddIcon } from '@kong/icons'
 
 import endpoints from '../partials-endpoints'
 import composables from '../composables'

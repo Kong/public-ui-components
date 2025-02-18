@@ -852,6 +852,8 @@ describe('<RedisConfigurationForm />', {
             expect(config.sentinel_master).to.be.null
             expect(config.sentinel_role).to.be.null
             expect(config.sentinel_nodes).to.be.null
+            expect(config.sentinel_username).to.be.null
+            expect(config.sentinel_password).to.be.null
           })
         })
 
@@ -883,6 +885,8 @@ describe('<RedisConfigurationForm />', {
             expect(config.sentinel_master).to.be.null
             expect(config.sentinel_role).to.be.null
             expect(config.sentinel_nodes).to.be.null
+            expect(config.sentinel_username).to.be.null
+            expect(config.sentinel_password).to.be.null
           })
         })
       })

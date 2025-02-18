@@ -61,10 +61,10 @@ export const useRedisConfigurationForm = (options: Options) => {
         return (!!fieldValues.host && fieldValues.host.length > 0) && (!!fieldValues.port && fieldValues.port > 0)
       case RedisType.CLUSTER:
         return !!fieldValues.cluster_nodes.length
-          && fieldValues.cluster_nodes.every((node) => node.ip.length > 0 && node.port > 0)
+          && fieldValues.cluster_nodes.every((node) => node.ip.length > 0)
       case RedisType.SENTINEL:
         return !!fieldValues.sentinel_nodes.length
-          && fieldValues.sentinel_nodes.every((node) => node.host.length > 0 && node.port > 0)
+          && fieldValues.sentinel_nodes.every((node) => node.host.length > 0)
           && !!fieldValues.sentinel_master?.length
           && fieldValues.sentinel_role
           && !!fieldValues.sentinel_role.length
@@ -116,6 +116,8 @@ export const useRedisConfigurationForm = (options: Options) => {
             sentinel_master: null,
             sentinel_role: null,
             sentinel_nodes: null,
+            sentinel_username: null,
+            sentinel_password: null,
           },
         }
       case RedisType.CLUSTER:
@@ -131,6 +133,7 @@ export const useRedisConfigurationForm = (options: Options) => {
             ssl_verify: form.fields.config.ssl_verify,
             server_name: s.str(form.fields.config.server_name, null),
             connect_timeout: s.int(form.fields.config.connect_timeout),
+            database: s.int(form.fields.config.database),
             send_timeout: s.int(form.fields.config.send_timeout),
             read_timeout: s.int(form.fields.config.read_timeout),
             keepalive_pool_size: s.int(form.fields.config.keepalive_pool_size),
@@ -140,6 +143,8 @@ export const useRedisConfigurationForm = (options: Options) => {
             sentinel_master: null,
             sentinel_role: null,
             sentinel_nodes: null,
+            sentinel_username: null,
+            sentinel_password: null,
             host: null,
             port: null,
           },
@@ -152,11 +157,14 @@ export const useRedisConfigurationForm = (options: Options) => {
             sentinel_master: s.str(form.fields.config.sentinel_master, null),
             sentinel_nodes: s.removeIdFromSentinelNodes(form.fields.config.sentinel_nodes),
             sentinel_role: s.str(form.fields.config.sentinel_role, null),
+            sentinel_username: s.str(form.fields.config.sentinel_username, null),
+            sentinel_password: s.str(form.fields.config.sentinel_password, null),
             username: s.str(form.fields.config.username, null),
             password: s.str(form.fields.config.password, null),
             ssl: form.fields.config.ssl,
             ssl_verify: form.fields.config.ssl_verify,
             server_name: s.str(form.fields.config.server_name, null),
+            database: s.int(form.fields.config.database),
             connect_timeout: s.int(form.fields.config.connect_timeout),
             send_timeout: s.int(form.fields.config.send_timeout),
             read_timeout: s.int(form.fields.config.read_timeout),
