@@ -149,6 +149,13 @@ yarn add @kong-ui-public/documentation
 - Default: async () => null
 - Use: Denotes which document has been selected
 
+#### `enableV2EmptyStates`
+
+- type: `boolean`
+- default: `false`
+
+Enables the new empty state design, this prop can be removed when the khcp-14756-empty-states-m2 FF is removed.
+
 ## Events
 
 ### `child-change`
