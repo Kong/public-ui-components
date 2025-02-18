@@ -86,6 +86,7 @@
           :action-button-text="t('vaults.list.toolbar_actions.new_vault')"
           appearance="secondary"
           :can-create="() => canCreate()"
+          data-testid="vaults-entity-empty-state"
           :description="t('vaults.list.empty_state_v2.description')"
           :learn-more="config.app === 'konnect'"
           :title="t('vaults.list.empty_state_v2.title')"

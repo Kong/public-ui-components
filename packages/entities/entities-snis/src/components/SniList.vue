@@ -87,6 +87,7 @@
           :action-button-text="t('snis.list.toolbar_actions.new')"
           appearance="secondary"
           :can-create="() => canCreate()"
+          data-testid="snis-entity-empty-state"
           :description="t('snis.list.empty_state_v2.description')"
           :learn-more="config.app === 'konnect'"
           :title="t('snis.list.empty_state_v2.title')"

@@ -87,6 +87,7 @@
           :action-button-text="t('upstreams.list.empty_state_v2.create_cta')"
           appearance="secondary"
           :can-create="() => canCreate()"
+          data-testid="upstreams-entity-empty-state"
           :description="t('upstreams.list.empty_state_v2.description')"
           :learn-more="config.app === 'konnect'"
           :title="t('upstreams.list.empty_state_v2.title')"
