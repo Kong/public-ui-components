@@ -100,7 +100,7 @@
       :visible="linkedPluginsModalVisible"
       @cancel="linkedPluginsModalVisible = false"
       @proceed="linkedPluginsModalVisible = false"
-      @view-plugin="(id: string) => emit('view-plugin', id)"
+      @view-plugin="(param) => emit('view-plugin', param)"
     />
   </div>
 </template>
@@ -140,7 +140,7 @@ import type { AxiosError } from 'axios'
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
   (e: 'delete:success', key: EntityRow): void,
-  (e: 'view-plugin', pluginId: string): void,
+  (e: 'view-plugin', param: { id: string, plugin: string }): void,
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

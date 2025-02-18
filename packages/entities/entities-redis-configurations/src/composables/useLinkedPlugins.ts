@@ -60,7 +60,6 @@ export const useLinkedPlugins = (param: {
 
   watch(data, () => {
     result.value = data.value?.data ?? []
-    console.log('result.value', result.value)
   })
 
   return result

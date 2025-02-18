@@ -19,7 +19,7 @@ export enum SupportedEntityType {
   Upstream = 'upstream',
   Target = 'target',
   Vault = 'vault',
-  RedisConfiguration = 'redis_configuration', // todo(zehao): not sure
+  RedisConfiguration = 'redis_configuration',
   // Use this for any entity type that is not supported by terraform
   // If entityType is 'other' terraform scripts will not be available
   // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!

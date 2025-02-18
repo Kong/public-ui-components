@@ -14,6 +14,7 @@
       <LinkedPluginList
         :config="config"
         :partial-id="redisConfigurationId"
+        @load="({ total }) => count = total"
         @view-plugin="($event) => emit('view-plugin', $event)"
       />
     </KModal>
@@ -21,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
+import { computed, ref, type PropType } from 'vue'
 
 import composables from '../composables'
 import LinkedPluginList from './LinkedPluginList.vue'
@@ -52,12 +53,13 @@ defineProps({
 const emit = defineEmits<{
   (e: 'cancel'): void
   (e: 'proceed'): void
-  (e: 'view-plugin', pluginId: string): void
+  (e: 'view-plugin', param: { id: string, plugin: string }): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()
 
-const title = computed(() => t('linked_plugins_modal.title', { count: 100 }))
+const count = ref(0)
+const title = computed(() => t('linked_plugins_modal.title', { count: count.value }))
 
 const cancel = () => {
   emit('cancel')

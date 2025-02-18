@@ -10,7 +10,7 @@
     </template>
 
     <template #action-items="{ row }">
-      <KDropdownItem @click="() => $emit('view-plugin', row.id)">
+      <KDropdownItem @click="viewPlugin(row)">
         {{ t('actions.view_plugin') }}
       </KDropdownItem>
     </template>
@@ -28,6 +28,7 @@ import type { TableDataFetcherParams } from '@kong/kongponents'
 import type { TableViewHeader } from '@kong/kongponents/dist/types'
 import type { KonnectConfig, KongManagerConfig } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
+import type { RedisConfigurationLinkedPlugin } from '../types'
 
 const props = defineProps({
   config: {
@@ -46,8 +47,9 @@ const props = defineProps({
   },
 })
 
-defineEmits<{
-  (e: 'view-plugin', pluginId: string): void
+const emit = defineEmits<{
+  (e: 'view-plugin', param: { id: string, plugin: string }): void
+  (e: 'load', data: { total: number, data: RedisConfigurationLinkedPlugin[] }): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -73,9 +75,17 @@ const fetcher = async (param: TableDataFetcherParams): Promise<any> => {
 
   totalCount.value = data.length // fixme(zehao): need total count from endpoint https://kongstrong.slack.com/lists/T0DS5NB27/F089F4H18HX?record_id=Rec08DNLCMTLH
 
-  return {
+  const result = {
     total: Number(data.length) || 0,
     data: data,
   }
+
+  emit('load', result)
+
+  return result
+}
+
+const viewPlugin = (row: any) => {
+  emit('view-plugin', { id: row.id, plugin: row.name })
 }
 </script>

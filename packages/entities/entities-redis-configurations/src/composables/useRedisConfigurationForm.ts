@@ -81,7 +81,7 @@ export const useRedisConfigurationForm = (options: Options) => {
           type: form.fields.type,
           config: {
             host: form.fields.config.host,
-            port: form.fields.config.port,
+            port: s.int(form.fields.config.port),
             timeout: s.int(form.fields.config.timeout),
             username: s.str(form.fields.config.username, null),
             database: s.int(form.fields.config.database),
@@ -140,6 +140,8 @@ export const useRedisConfigurationForm = (options: Options) => {
             sentinel_master: null,
             sentinel_role: null,
             sentinel_nodes: null,
+            host: null,
+            port: null,
           },
         }
       case RedisType.SENTINEL:
@@ -164,6 +166,8 @@ export const useRedisConfigurationForm = (options: Options) => {
             // reset other EE fields
             cluster_nodes: null,
             cluster_max_redirections: 0,
+            host: null,
+            port: null,
           },
         }
       default:
