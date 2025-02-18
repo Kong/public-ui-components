@@ -334,6 +334,7 @@ import type {
   KongManagerRedisConfigurationFormConfig,
   KonnectRedisConfigurationFormConfig,
   RedisConfigurationFormState,
+  RedisConfigurationResponse,
 } from '../types'
 import type { AxiosError } from 'axios'
 import type { SelectItem } from '@kong/kongponents/dist/types'
@@ -359,6 +360,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
+  (e: 'updated', data: RedisConfigurationResponse): void
   (e: 'update', data: RedisConfigurationFormState): void,
   (e: 'error', error: AxiosError): void,
   (e: 'loading', isLoading: boolean): void,
@@ -440,7 +442,8 @@ const {
 
 const submitHandler = async () => {
   try {
-    await submit()
+    const { data } = await submit()
+    emit('updated', data)
   } catch (e) {
     emit('error', e as AxiosError)
   }

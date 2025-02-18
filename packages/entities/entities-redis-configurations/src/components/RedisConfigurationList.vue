@@ -3,20 +3,24 @@
     <EntityBaseTable
       :cache-identifier="cacheIdentifier"
       :disable-sorting="disableSorting"
+      :empty-state-options="emptyStateOptions"
       enable-entity-actions
+      :error-message="errorMessage"
       :fetcher="fetcher"
       :fetcher-cache-key="fetcherCacheKey"
       pagination-type="offset"
+      preferences-storage-key="kong-ui-entities-redis-configuration-list"
       :query="filterQuery"
       :table-headers="tableHeaders"
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
-      @sort="resetPagination"
+      @sort="refreshList"
     >
       <!-- Filter -->
       <template #toolbar-filter>
         <EntityFilter
           v-model="filterQuery"
+          :config="filterConfig"
         />
       </template>
       <!-- Create action -->
@@ -33,7 +37,7 @@
               :to="config.createRoute"
             >
               <AddIcon />
-              New Configuration
+              {{ t('actions.create') }}
             </KButton>
           </PermissionsWrapper>
         </Teleport>
@@ -45,6 +49,9 @@
       </template>
       <template #type="{ row }">
         {{ renderRedisType(row) }}
+      </template>
+      <template #plugins="{ row }">
+        <LinkedPluginsInline @click.stop="showLinkedPlugins(row.id)" />
       </template>
 
       <!-- Row actions -->
@@ -74,6 +81,27 @@
         </PermissionsWrapper>
       </template>
     </EntityBaseTable>
+
+    <EntityDeleteModal
+      :action-pending="isDeletePending"
+      :description="t('delete.description')"
+      :entity-name="entityToBeDeleted && (entityToBeDeleted.name || entityToBeDeleted.id)"
+      :entity-type="EntityTypes.RedisConfiguration"
+      :error="deleteModalError"
+      :need-confirmation="true"
+      :title="t('delete.title')"
+      :visible="isDeleteModalVisible"
+      @cancel="hideDeleteModal"
+      @proceed="confirmDelete"
+    />
+
+    <LinkedPluginListModal
+      :redis-configuration-id="idToBeViewedPlugins"
+      :visible="linkedPluginsModalVisible"
+      @cancel="linkedPluginsModalVisible = false"
+      @proceed="linkedPluginsModalVisible = false"
+      @view-plugin="(id: string) => emit('view-plugin', id)"
+    />
   </div>
 </template>
 
@@ -83,24 +111,37 @@ import {
   EntityFilter,
   useFetcher,
   PermissionsWrapper,
-  type BaseTableHeaders,
+  EntityTypes,
+  useAxios,
+  useDeleteUrlBuilder,
+  EntityDeleteModal,
+  FetcherStatus,
 } from '@kong-ui-public/entities-shared'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
 import { getRedisType } from '../helpers'
+import { RedisType } from '../types'
+import LinkedPluginsInline from './LinkedPluginsInline.vue'
+import LinkedPluginListModal from './LinkedPluginListModal.vue'
 
-import {
-  type KonnectRedisConfigurationListConfig,
-  type KongManagerRedisConfigurationListConfig,
-  type EntityRow,
-  type RedisConfigurationFields,
-  RedisType,
-} from '../types'
 import type { PropType } from 'vue'
-import { useRouter } from 'vue-router'
+import type {
+  KonnectRedisConfigurationListConfig,
+  KongManagerRedisConfigurationListConfig,
+  EntityRow,
+  RedisConfigurationFields,
+} from '../types'
+import type { BaseTableHeaders, EmptyStateOptions, ExactMatchFilterConfig, FilterFields, FuzzyMatchFilterConfig, TableErrorMessage } from '@kong-ui-public/entities-shared'
+import type { AxiosError } from 'axios'
 
+const emit = defineEmits<{
+  (e: 'error', error: AxiosError): void,
+  (e: 'delete:success', key: EntityRow): void,
+  (e: 'view-plugin', pluginId: string): void,
+}>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
@@ -167,32 +208,60 @@ const fetcherBaseUrl = computed<string>(() => {
   return url
 })
 
-const filterQuery = ref<string>('')
-// const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
-//   const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
+const linkedPluginsModalVisible = ref<boolean>(false)
+const idToBeViewedPlugins = ref<string>('')
+/**
+ * loading, Error, Empty state
+ */
+const errorMessage = ref<TableErrorMessage>(null)
 
-//   if (isExactMatch) {
-//     return {
-//       isExactMatch: true,
-//       placeholder: t('search.placeholder_for_vaults.konnect'),
-//     } as ExactMatchFilterConfig
-//   }
+const entityToBeDeleted = ref<EntityRow | undefined>(undefined)
+const isDeleteModalVisible = ref<boolean>(false)
+const isDeletePending = ref<boolean>(false)
+const deleteModalError = ref<string>('')
 
-//   const { prefix, name } = fields
-//   const filterFields: FilterFields = { name, prefix }
+const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
-//   return {
-//     isExactMatch: false,
-//     fields: filterFields,
-//     schema: props.config.filterSchema,
-//   } as FuzzyMatchFilterConfig
-// })
 const fetcherCacheKey = ref<number>(1)
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 
-const { fetcher } = useFetcher(props.config, fetcherBaseUrl.value)
+const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
 const { i18n: { t } } = composables.useI18n()
+const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()
+
+const filterQuery = ref<string>('')
+const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
+  const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
+
+  if (isExactMatch) {
+    return {
+      isExactMatch: true,
+      placeholder: t('search.placeholder'),
+    } as ExactMatchFilterConfig
+  }
+
+  const { name } = tableHeaders
+  const filterFields: FilterFields = {
+    name,
+  }
+
+  return {
+    isExactMatch,
+    fields: filterFields,
+    schema: props.config.filterSchema,
+  } as FuzzyMatchFilterConfig
+})
+
+
+// Initialize the empty state options assuming a user does not have create permissions
+// IMPORTANT: you must initialize this object assuming the user does **NOT** have create permissions so that the onBeforeMount hook can properly evaluate the props.canCreate function.
+const emptyStateOptions = ref<EmptyStateOptions>({
+  ctaPath: props.config.createRoute,
+  ctaText: t('actions.create'),
+  message: `${t('redis.empty_state.description')}${props.config.additionMessageForEmptyState ? ` ${props.config.additionMessageForEmptyState}` : ''}`,
+  title: t('redis.title'),
+})
 
 const tableHeaders: BaseTableHeaders = {
   name: { label: 'Name', searchable: true, hidable: false, sortable: true },
@@ -215,8 +284,8 @@ const getEditDropdownItem = (id: string) => {
 }
 
 const deleteRow = (row: EntityRow): void => {
-  // vaultToBeDeleted.value = row
-  // isDeleteModalVisible.value = true
+  entityToBeDeleted.value = row
+  isDeleteModalVisible.value = true
 }
 
 const clearFilter = (): void => {
@@ -233,11 +302,47 @@ const rowClick = async (row: EntityRow): Promise<void> => {
   router.push(props.config.getViewRoute(row.id as string))
 }
 
-const resetPagination = (): void => {
+const hideDeleteModal = (): void => {
+  isDeleteModalVisible.value = false
+}
+
+const showLinkedPlugins = (id: string): void => {
+  idToBeViewedPlugins.value = id
+  linkedPluginsModalVisible.value = true
+}
+
+const confirmDelete = async (): Promise<void> => {
+  if (!entityToBeDeleted.value?.id) {
+    return
+  }
+
+  isDeletePending.value = true
+
+  try {
+    await axiosInstance.delete(buildDeleteUrl(entityToBeDeleted.value.id))
+
+    isDeletePending.value = false
+    isDeleteModalVisible.value = false
+    refreshList()
+
+    // Emit the success event for the host app
+    emit('delete:success', entityToBeDeleted.value)
+  } catch (error: any) {
+    deleteModalError.value = error.response?.data?.message ||
+      error.message ||
+      t('errors.delete')
+
+    // Emit the error event for the host app
+    emit('error', error)
+  } finally {
+    isDeletePending.value = false
+  }
+}
+
+const refreshList = (): void => {
   // Increment the cache key on sort
   fetcherCacheKey.value++
 }
-
 
 const renderRedisType = (item: RedisConfigurationFields) => {
   switch (getRedisType(item)) {
@@ -251,18 +356,30 @@ const renderRedisType = (item: RedisConfigurationFields) => {
       return `${t('form.options.type.cluster')}${t('form.options.type.suffix_enterprise')}`
   }
 }
+
+/**
+ * Watchers
+ */
+watch(fetcherState, (state) => {
+  if (state.status === FetcherStatus.Error) {
+    errorMessage.value = {
+      title: t('errors.general'),
+    }
+    if (state.error?.response?.data?.message) {
+      errorMessage.value.message = state.error.response.data.message
+    }
+    // Emit the error for the host app
+    emit('error', state.error)
+
+    return
+  }
+
+  errorMessage.value = null
+})
 </script>
 
 <style lang="scss" scoped>
 .kong-ui-entities-partials-list {
   width: 100%;
-
-  .kong-ui-entity-filter-input {
-    margin-right: $kui-space-50;
-  }
-
-  .route-list-cell-expression {
-    font-family: $kui-font-family-code;
-  }
 }
 </style>

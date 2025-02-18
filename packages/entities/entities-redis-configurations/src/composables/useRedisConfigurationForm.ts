@@ -6,7 +6,7 @@ import { RedisType } from '../types'
 import { DEFAULT_REDIS_TYPE } from '../constants'
 import endpoints from '../partials-endpoints'
 
-import type { KongManagerRedisConfigurationFormConfig, KonnectRedisConfigurationFormConfig, RedisConfigurationFormState } from '../types'
+import type { KongManagerRedisConfigurationFormConfig, KonnectRedisConfigurationFormConfig, RedisConfigurationConfigDTO, RedisConfigurationFormState, RedisConfigurationResponse } from '../types'
 
 export type Options = {
   partialId?: string
@@ -202,9 +202,9 @@ export const useRedisConfigurationForm = (options: Options) => {
       form.errorMessage = ''
 
       if (formType.value === EntityBaseFormType.Create) {
-        await axiosInstance.post(submitUrl.value, payload.value)
+        return await axiosInstance.post<RedisConfigurationResponse>(submitUrl.value, payload.value)
       } else {
-        await axiosInstance.patch(submitUrl.value, payload.value)
+        return await axiosInstance.patch<RedisConfigurationResponse>(submitUrl.value, payload.value)
       }
     } catch (e: unknown) {
       form.errorMessage = getMessageFromError(e)

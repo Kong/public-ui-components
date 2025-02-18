@@ -5,6 +5,7 @@
     :partial-id="partialId"
     @error="onError"
     @update="onUpdate"
+    @updated="onUpdated"
   />
 
   <h2>Kong Manager API</h2>
@@ -13,6 +14,7 @@
     :partial-id="partialId"
     @error="onError"
     @update="onUpdate"
+    @updated="onUpdated"
   />
 </template>
 
@@ -24,6 +26,7 @@ import { RedisConfigurationForm } from '../../src'
 import type {
   KonnectRedisConfigurationFormConfig,
   KongManagerRedisConfigurationFormConfig,
+  RedisConfigurationResponse,
 } from '../../src'
 
 import type { AxiosError } from 'axios'
@@ -43,7 +46,7 @@ const kongManagerConfig: KongManagerRedisConfigurationFormConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
-  cancelRoute: { name: 'home' },
+  cancelRoute: { name: 'redis-configuration-list' },
 }
 
 const onError = (error: AxiosError) => {
@@ -54,5 +57,9 @@ const onUpdate = (payload: Record<string, any>) => {
   console.log('update', payload)
 
   router.push({ name: 'redis-configuration-list' })
+}
+
+const onUpdated = (data: RedisConfigurationResponse) => {
+  router.push({ name: 'view-redis-configuration', params: { id: data.id } })
 }
 </script>

@@ -5,12 +5,26 @@
 
   <h2>Konnect API</h2>
   <RedisConfigurationList
+    v-if="permissions"
+    cache-identifier="konnect"
+    :can-create="permissions.canCreate"
+    :can-delete="permissions.canDelete"
+    :can-edit="permissions.canEdit"
+    :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
+    @view-plugin="id => console.log('View plugin', id)"
   />
 
   <h2>Kong Manager API</h2>
   <RedisConfigurationList
+    v-if="permissions"
+    cache-identifier="kong-manager"
+    :can-create="permissions.canCreate"
+    :can-delete="permissions.canDelete"
+    :can-edit="permissions.canEdit"
+    :can-retrieve="permissions.canRetrieve"
     :config="kongManagerConfig"
+    @view-plugin="id => console.log('View plugin', id)"
   />
 </template>
 

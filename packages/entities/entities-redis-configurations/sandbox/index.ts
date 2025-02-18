@@ -12,11 +12,6 @@ const init = async () => {
     routes: [
       {
         path: '/',
-        name: 'home',
-        component: () => import('./pages/HomePage.vue'),
-      },
-      {
-        path: '/redis-configuration',
         name: 'redis-configuration-list',
         component: () => import('./pages/RedisConfigurationListPage.vue'),
       },
@@ -33,7 +28,7 @@ const init = async () => {
       {
         path: '/redis-configuration/:id',
         name: 'view-redis-configuration',
-        component: () => import('./pages/RedisConfigurationListPage.vue'),
+        component: () => import('./pages/RedisConfigurationDetail.vue'),
       },
     ],
   })

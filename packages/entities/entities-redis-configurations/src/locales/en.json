@@ -5,8 +5,22 @@
     "copy_json": "Copy JSON",
     "edit": "Edit",
     "delete": "Delete",
+    "done": "Done",
     "view": "View Details",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "view_plugin": "View Plugin"
+  },
+  "search": {
+    "placeholder": "Filter by name",
+    "no_results": "No results found"
+  },
+  "delete": {
+    "title": "Delete Redis configuration",
+    "description": "You’re about to delete this item. Are you sure you want to proceed?"
+  },
+  "errors": {
+    "general": "Redis configuration could not be retrieved",
+    "delete": "The redis configuration could not be deleted at this time."
   },
   "form": {
     "sections": {
@@ -170,6 +184,19 @@
         "slave": "slave",
         "any": "any"
       }
+    }
+  },
+  "linked_plugins_modal": {
+    "title": "Associated plugins ({count})",
+    "headers": {
+      "plugin": "Plugin"
+    }
+  },
+  "redis": {
+    "title": "Redis Configurations",
+    "empty_state": {
+      "title": "Configure a Redis Configuration",
+      "description": "Create a new Redis configuration to reference in your plugins."
     }
   }
 }

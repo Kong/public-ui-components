@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
 import { DEFAULT_CLUSTER_NODE, DEFAULT_SENTINEL_NODE } from './constants'
-import { PartialType, type ClusterNode, type Identifiable, type RedisConfigurationFields, type SentinelNode } from './types'
+import { PartialType, type ClusterNode, type Identifiable, type RedisConfigurationDTO, type RedisConfigurationFields, type SentinelNode } from './types'
 import { RedisType } from './types'
 
 export const shallowCopyWithId = <T extends Record<any, any>>(node: T): Identifiable<T> => {
@@ -17,7 +17,7 @@ export const genDefaultSentinelNode = () => shallowCopyWithId(DEFAULT_SENTINEL_N
 
 export const genDefaultClusterNode = () => shallowCopyWithId(DEFAULT_CLUSTER_NODE)
 
-export const getRedisType = (fields: RedisConfigurationFields): RedisType => {
+export const getRedisType = (fields: RedisConfigurationFields | RedisConfigurationDTO): RedisType => {
   if (fields.type === PartialType.REDIS_CE) {
     return RedisType.HOST_PORT_CE
   }
