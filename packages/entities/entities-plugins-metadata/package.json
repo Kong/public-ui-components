@@ -1,0 +1,51 @@
+{
+  "name": "@kong-ui-public/entities-plugins-metadata",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/entities-plugins-metadata.umd.js",
+  "module": "./dist/entities-plugins-metadata.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/entities-plugins-metadata.es.js",
+      "require": "./dist/entities-plugins-metadata.umd.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='entities/entities-plugins-metadata' vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/entities/entities-plugins-metadata"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/entities/entities-plugins-metadata",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "200KB"
+  }
+}
