@@ -88,7 +88,7 @@
           :action-button-text="t('plugins.list.empty_state_v2.create_cta')"
           appearance="secondary"
           :can-create="() => canCreate()"
-          data-testid="plugins-entity-empty-state"
+          :data-testid="config.entityId ? 'nested-plugins-entity-empty-state' : 'plugins-entity-empty-state'"
           :description="t('plugins.list.empty_state_v2.description')"
           :learn-more="config.app === 'konnect'"
           :title="t('plugins.list.empty_state_v2.title')"
