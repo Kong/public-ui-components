@@ -53,7 +53,12 @@
       "empty_state": {
         "title": "Add New Documentation Page",
         "message": "Pages will allow you to provide guides examples and other useful information about your service to developers.",
-        "ctaText": "New Page"
+        "ctaText": "New page"
+      },
+      "empty_state_v2": {
+        "title": "Create your first documentation",
+        "description": "Documentation provides information about your API products, including release notes, support details, and usage examples, to help developers integrate with your services.",
+        "cta": "New document"
       }
     }
   }
