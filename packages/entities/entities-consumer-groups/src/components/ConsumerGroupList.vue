@@ -90,6 +90,7 @@
           :action-button-text="t('consumer_groups.list.toolbar_actions.new_consumer_group')"
           appearance="secondary"
           :can-create="() => canCreate()"
+          data-testid="consumer-groups-entity-empty-state"
           :description="t('consumer_groups.list.empty_state_v2.description')"
           :learn-more="config.app === 'konnect'"
           :title="t('consumer_groups.list.empty_state_v2.title')"

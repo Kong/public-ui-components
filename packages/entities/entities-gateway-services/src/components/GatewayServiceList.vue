@@ -86,6 +86,7 @@
           :action-button-text="t('gateway_services.empty_state_v2.create')"
           appearance="secondary"
           :can-create="() => canCreate()"
+          data-testid="gateway-services-entity-empty-state"
           :description="t('gateway_services.empty_state_v2.description')"
           :learn-more="config.app === 'konnect'"
           :title="t('gateway_services.empty_state_v2.title')"
