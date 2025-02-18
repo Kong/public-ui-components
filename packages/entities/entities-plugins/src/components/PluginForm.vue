@@ -302,6 +302,7 @@ const schema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
+const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
 const formLoading = ref(false)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
@@ -1100,7 +1101,10 @@ watch([entityMap, initialized], (newData, oldData) => {
   if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newEntityData || (newinitialized && newinitialized !== oldinitialized))) {
     schemaLoading.value = true
 
-    schema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
+    const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
+    if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
+    if (pluginPartialType.value) initialFormSchema._supported_redis_partial_type = pluginPartialType.value
+    schema.value = initialFormSchema
     schemaLoading.value = false
   }
 }, { deep: true })
@@ -1295,6 +1299,7 @@ onBeforeMount(async () => {
           // start from the config part of the schema
           const configField = data.fields.find((field: Record<string, any>) => field.config)
           configResponse.value = configField ? configField.config : response
+          if (data.supported_partials) pluginPartialType.value = Object.keys(data.supported_partials).find(key => [PluginPartialType.REDIS_CE, PluginPartialType.REDIS_EE].includes(key as PluginPartialType)) as PluginPartialType
 
           // scoping and global field setup
           initScopeFields()
@@ -1322,10 +1327,8 @@ onBeforeMount(async () => {
           if (initialized.value || formType.value === EntityBaseFormType.Create) {
             const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
             // pass the redis partial type and redis path in plugin with the schema
-            if (data?.supported_partials) {
-              const redisType = Object.keys(data.supported_partials).find(key => [PluginPartialType.REDIS_CE, PluginPartialType.REDIS_EE].includes(key as PluginPartialType))
-              initialFormSchema._supported_redis_partial_type = redisType
-              initialFormSchema._redis_partial_path = data.supported_partials?.redisType
+            if (pluginPartialType.value) {
+              initialFormSchema._supported_redis_partial_type = pluginPartialType.value
             }
             // pass whether the plugin is a custom plugin to the form schema
             if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
