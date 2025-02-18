@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.8...@kong-ui-public/forms@4.10.9) (2025-02-18)
+
+
+### Bug Fixes
+
+* **plugins:** rta plugin schema ([#1962](https://github.com/Kong/public-ui-components/issues/1962)) ([a4ee43f](https://github.com/Kong/public-ui-components/commit/a4ee43f31e263bbf3d92333c01b80c330dcee11e))
+
+
+
+
+
 ## [4.10.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.7...@kong-ui-public/forms@4.10.8) (2025-02-17)
 
 
