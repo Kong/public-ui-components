@@ -173,7 +173,7 @@ const redisConfigSelected = async (val: string | number | undefined) => {
   if (!val) return
 
   props.updateRedisModel(val)
-  //
+  // show all fields in the same level
   try {
     const configRes = await axiosInstance.get(getOnePartialUrl(val))
     if (configRes.data.config) {
