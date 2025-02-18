@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@entities-shared-sandbox/*": [
+        "../../entities-shared/sandbox/shared/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.vue",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

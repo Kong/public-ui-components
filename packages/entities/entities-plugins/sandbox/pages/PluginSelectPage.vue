@@ -3,6 +3,7 @@
     <h2>Konnect API</h2>
     <PluginSelect
       :config="konnectConfig"
+      custom-plugin-support="schema"
       custom-plugins="disabled"
       :disabled-plugins="{ 'acl': 'ACL is not supported for this entity type'}"
       :highlighted-plugin-ids="highlightedPluginIds"

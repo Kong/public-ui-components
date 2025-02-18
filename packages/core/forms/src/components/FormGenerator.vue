@@ -11,8 +11,21 @@
         v-for="field in fields"
         :key="field.model"
       >
+        <form-redis
+          v-if="field.model === '__redis_partial' && enableRedisPartial"
+          :errors="errors"
+          :field="field"
+          :model="model"
+          :options="options"
+          :tag="tag"
+          :vfg="vfg"
+          @model-updated="onModelUpdated"
+          @partial-toggled="onPartialToggled"
+          @show-new-partial-modal="$emit('showNewPartialModal')"
+          @validated="onFieldValidated"
+        />
         <form-group
-          v-if="fieldVisible(field)"
+          v-else-if="fieldVisible(field)"
           ref="children"
           :errors="errors"
           :field="field"
@@ -93,8 +106,21 @@
               v-for="field in group.collapsible.nestedCollapsible.fields"
               :key="field.model"
             >
+              <form-redis
+                v-if="field.model === '__redis_partial' && enableRedisPartial"
+                :errors="errors"
+                :field="field"
+                :model="model"
+                :options="options"
+                :tag="tag"
+                :vfg="vfg"
+                @model-updated="onModelUpdated"
+                @partial-toggled="onPartialToggled"
+                @show-new-partial-modal="$emit('showNewPartialModal')"
+                @validated="onFieldValidated"
+              />
               <form-group
-                v-if="fieldVisible(field)"
+                v-else-if="fieldVisible(field)"
                 ref="children"
                 :errors="errors"
                 :field="field"
@@ -159,11 +185,12 @@ import isNil from 'lodash-es/isNil'
 import { ref } from 'vue'
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../const'
 import formGroup from './FormGroup.vue'
+import formRedis from './FormRedis.vue'
 import formMixin from './FormMixin.vue'
 
 export default {
   name: 'FormGenerator',
-  components: { formGroup },
+  components: { formGroup, formRedis },
   mixins: [formMixin],
 
   inject: {
@@ -227,8 +254,13 @@ export default {
         return value.length > 0
       },
     },
+
+    enableRedisPartial: {
+      type: Boolean,
+      default: false,
+    },
   },
-  emits: ['validated', 'modelUpdated', 'refreshModel'],
+  emits: ['validated', 'modelUpdated', 'refreshModel', 'partialToggled', 'showNewPartialModal'],
 
   data() {
     return {
@@ -337,6 +369,10 @@ export default {
 
     onModelUpdated(newVal, schema) {
       this.$emit('modelUpdated', newVal, schema)
+    },
+
+    onPartialToggled(field, model) {
+      this.$emit('partialToggled', field, model)
     },
 
     // Validating the model properties
