@@ -8,7 +8,6 @@
           appearance="secondary"
           :can-create="() => canEdit()"
           :description="t('documentation.show.empty_state_v2.description')"
-          learn-more
           :title="t('documentation.show.empty_state_v2.title')"
           @click:create="handleAddClick"
           @click:learn-more="$emit('click:learn-more')"
@@ -34,7 +33,6 @@
         appearance="secondary"
         :can-create="() => canEdit()"
         :description="t('documentation.show.empty_state_v2.description')"
-        learn-more
         :title="t('documentation.show.empty_state_v2.title')"
         @click:create="handleAddClick"
       >
