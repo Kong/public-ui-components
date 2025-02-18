@@ -73,4 +73,14 @@ export const standardize = {
   addIdToSentinelNodes(nodes: SentinelNode[]): Identifiable<SentinelNode>[] {
     return nodes.map(shallowCopyWithId)
   },
+
+  removeNullValues(obj: Record<string, any>): Record<string, any> {
+    const newObj = { ...obj }
+    for (const key in newObj) {
+      if (newObj[key] === null) {
+        delete newObj[key]
+      }
+    }
+    return newObj
+  },
 }

@@ -53,21 +53,21 @@ export const useRedisConfigurationForm = (options: Options) => {
       return false
     }
 
-    const { config } = form.fields
+    const { config: fieldValues } = form.fields
 
     switch (redisType.value) {
       case RedisType.HOST_PORT_CE:
       case RedisType.HOST_PORT_EE:
-        return config.host.length > 0 && config.port > 0
+        return (!!fieldValues.host && fieldValues.host.length > 0) && (!!fieldValues.port && fieldValues.port > 0)
       case RedisType.CLUSTER:
-        return !!config.cluster_nodes.length
-          && config.cluster_nodes.every((node) => node.ip.length > 0 && node.port > 0)
+        return !!fieldValues.cluster_nodes.length
+          && fieldValues.cluster_nodes.every((node) => node.ip.length > 0 && node.port > 0)
       case RedisType.SENTINEL:
-        return !!config.sentinel_nodes.length
-          && config.sentinel_nodes.every((node) => node.host.length > 0 && node.port > 0)
-          && !!config.sentinel_master?.length
-          && config.sentinel_role
-          && !!config.sentinel_role.length
+        return !!fieldValues.sentinel_nodes.length
+          && fieldValues.sentinel_nodes.every((node) => node.host.length > 0 && node.port > 0)
+          && !!fieldValues.sentinel_master?.length
+          && fieldValues.sentinel_role
+          && !!fieldValues.sentinel_role.length
       default:
         throw new Error('Invalid redis type')
     }
@@ -112,7 +112,7 @@ export const useRedisConfigurationForm = (options: Options) => {
             username: s.str(form.fields.config.username, null),
             // reset other EE fields
             cluster_nodes: null,
-            cluster_max_redirections: 0,
+            cluster_max_redirections: null,
             sentinel_master: null,
             sentinel_role: null,
             sentinel_nodes: null,
@@ -165,7 +165,7 @@ export const useRedisConfigurationForm = (options: Options) => {
             connection_is_proxied: form.fields.config.connection_is_proxied,
             // reset other EE fields
             cluster_nodes: null,
-            cluster_max_redirections: 0,
+            cluster_max_redirections: null,
             host: null,
             port: null,
           },
@@ -210,7 +210,12 @@ export const useRedisConfigurationForm = (options: Options) => {
   }
 
   const setInitialFormValues = (data: RedisConfigurationResponse) => {
-    form.fields.config = Object.assign({}, form.fields.config, data.config)
+    // merge the default values with the data
+    form.fields.config = Object.assign(
+      {},
+      form.fields.config,
+      s.removeNullValues(data.config), // remove null values if data, so they can be replaced with default values
+    )
     form.fields.config.sentinel_nodes = s.addIdToSentinelNodes(data.config.sentinel_nodes ?? [])
     form.fields.config.cluster_nodes = s.addIdToClusterNodes(data.config.cluster_nodes ?? [])
     form.fields.name = data.name

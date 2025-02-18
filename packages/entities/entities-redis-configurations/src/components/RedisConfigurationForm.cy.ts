@@ -24,14 +24,12 @@ const baseConfigKonnect: KonnectRedisConfigurationFormConfig = {
   cancelRoute,
 }
 
-const apps = ['Kong Manager', 'Konnect']
-
 describe('<RedisConfigurationForm />', {
   viewportHeight: 700,
   viewportWidth: 700,
 }, () => {
 
-  for (const app of apps) {
+  for (const app of ['Kong Manager', 'Konnect']) {
     describe(app, () => {
       const config = app === 'Kong Manager' ? baseConfigKM : baseConfigKonnect
 
@@ -682,6 +680,210 @@ describe('<RedisConfigurationForm />', {
           cy.get('#test')
             .should('be.visible')
             .findTestId('redis_configuration-create-form-view-configuration').should('be.visible')
+        })
+      })
+
+      describe('fields do not belong to the selected type should be reset when editing', () => {
+        it('Host/Port EE -> Cluster', () => {
+          // Host/Port EE -> Cluster
+          interceptDetail({ body: redisConfigurationHostPortEE })
+          stubCreateEdit()
+
+          cy.mount(RedisConfigurationForm, {
+            props: {
+              config,
+              partialId: redisConfigurationHostPortEE.id,
+            },
+          })
+
+          cy.wait('@getRedisConfiguration')
+
+          cy.getTestId('redis-type-select').click()
+          cy.getTestId('redis-type-select-popover')
+            .find(`button[value="${RedisType.CLUSTER}"]`)
+            .click()
+
+          // Add cluster node
+          cy.getTestId('redis-add-cluster-node-button').click()
+          cy.getTestId('redis_configuration-edit-form-submit').click()
+
+          cy.wait('@editRedisConfiguration').then(({ request }) => {
+            const { body: { config } } = request
+            expect(config.host).to.be.null
+            expect(config.port).to.be.null
+          })
+        })
+
+        it('Host/Port EE -> Sentinel', () => {
+          // Host/Port EE -> Sentinel
+          interceptDetail({ body: redisConfigurationHostPortEE })
+
+          stubCreateEdit()
+          cy.mount(RedisConfigurationForm, {
+            props: {
+              config,
+              partialId: redisConfigurationHostPortEE.id,
+            },
+          })
+
+          cy.wait('@getRedisConfiguration')
+
+          cy.getTestId('redis-type-select').click()
+          cy.getTestId('redis-type-select-popover')
+            .find(`button[value="${RedisType.SENTINEL}"]`)
+            .click()
+
+          // Add sentinel node
+          cy.getTestId('redis-add-sentinel-node-button').click()
+
+          // Set sentinel master
+          cy.getTestId('redis-sentinel-master-input').type('master')
+
+          // Set sentinel role
+          cy.getTestId('redis-sentinel-role-select').click()
+          cy.getTestId('redis-sentinel-role-select-popover')
+            .should('be.visible')
+            .find('button:eq(0)')
+            .click()
+
+          cy.getTestId('redis_configuration-edit-form-submit').click()
+          cy.wait('@editRedisConfiguration').then(({ request }) => {
+            const { body: { config } } = request
+            expect(config.host).to.be.null
+            expect(config.port).to.be.null
+          })
+        })
+
+        it('Cluster -> Host/Port EE', () => {
+          // Cluster -> Host/Port EE
+          interceptDetail({ body: redisConfigurationCluster })
+
+          stubCreateEdit()
+          cy.mount(RedisConfigurationForm, {
+            props: {
+              config,
+              partialId: redisConfigurationCluster.id,
+            },
+          })
+
+          cy.wait('@getRedisConfiguration')
+
+          cy.getTestId('redis-type-select').click()
+          cy.getTestId('redis-type-select-popover')
+            .find(`button[value="${RedisType.HOST_PORT_EE}"]`)
+            .click()
+
+          cy.getTestId('redis-host-input').type('localhost')
+          cy.getTestId('redis-port-input').type('6379')
+
+          cy.getTestId('redis_configuration-edit-form-submit').click()
+          cy.wait('@editRedisConfiguration').then(({ request }) => {
+            const { body: { config } } = request
+            expect(config.cluster_nodes).to.be.null
+            expect(config.cluster_max_redirections).to.be.null
+          })
+        })
+
+        it('Cluster -> Sentinel', () => {
+          // Cluster -> Sentinel
+          interceptDetail({ body: redisConfigurationCluster })
+
+          stubCreateEdit()
+          cy.mount(RedisConfigurationForm, {
+            props: {
+              config,
+              partialId: redisConfigurationCluster.id,
+            },
+          })
+
+          cy.wait('@getRedisConfiguration')
+
+          cy.getTestId('redis-type-select').click()
+          cy.getTestId('redis-type-select-popover')
+            .find(`button[value="${RedisType.SENTINEL}"]`)
+            .click()
+
+          // Add sentinel node
+          cy.getTestId('redis-add-sentinel-node-button').click()
+
+          // Set sentinel master
+          cy.getTestId('redis-sentinel-master-input').type('master')
+
+          // Set sentinel role
+          cy.getTestId('redis-sentinel-role-select').click()
+          cy.getTestId('redis-sentinel-role-select-popover')
+            .should('be.visible')
+            .find('button:eq(0)')
+            .click()
+
+          cy.getTestId('redis_configuration-edit-form-submit').click()
+          cy.wait('@editRedisConfiguration').then(({ request }) => {
+            const { body: { config } } = request
+            expect(config.cluster_nodes).to.be.null
+            expect(config.cluster_max_redirections).to.be.null
+          })
+        })
+
+        it('Sentinel -> Host/Port EE', () => {
+          // Sentinel -> Host/Port EE
+          interceptDetail({ body: redisConfigurationSentinel })
+
+          stubCreateEdit()
+          cy.mount(RedisConfigurationForm, {
+            props: {
+              config,
+              partialId: redisConfigurationSentinel.id,
+            },
+          })
+
+          cy.wait('@getRedisConfiguration')
+
+          cy.getTestId('redis-type-select').click()
+          cy.getTestId('redis-type-select-popover')
+            .find(`button[value="${RedisType.HOST_PORT_EE}"]`)
+            .click()
+
+          cy.getTestId('redis-host-input').type('localhost')
+          cy.getTestId('redis-port-input').type('6379')
+
+          cy.getTestId('redis_configuration-edit-form-submit').click()
+          cy.wait('@editRedisConfiguration').then(({ request }) => {
+            const { body: { config } } = request
+            expect(config.sentinel_master).to.be.null
+            expect(config.sentinel_role).to.be.null
+            expect(config.sentinel_nodes).to.be.null
+          })
+        })
+
+        it('Sentinel -> Cluster', () => {
+          // Sentinel -> Cluster
+          interceptDetail({ body: redisConfigurationSentinel })
+
+          stubCreateEdit()
+          cy.mount(RedisConfigurationForm, {
+            props: {
+              config,
+              partialId: redisConfigurationSentinel.id,
+            },
+          })
+
+          cy.wait('@getRedisConfiguration')
+
+          cy.getTestId('redis-type-select').click()
+          cy.getTestId('redis-type-select-popover')
+            .find(`button[value="${RedisType.CLUSTER}"]`)
+            .click()
+
+          // Add cluster node
+          cy.getTestId('redis-add-cluster-node-button').click()
+          cy.getTestId('redis_configuration-edit-form-submit').click()
+
+          cy.wait('@editRedisConfiguration').then(({ request }) => {
+            const { body: { config } } = request
+            expect(config.sentinel_master).to.be.null
+            expect(config.sentinel_role).to.be.null
+            expect(config.sentinel_nodes).to.be.null
+          })
         })
       })
 

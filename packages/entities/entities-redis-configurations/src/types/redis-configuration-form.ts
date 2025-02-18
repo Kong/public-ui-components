@@ -15,11 +15,11 @@ export interface RedisConfigurationFields {
     connect_timeout: number
     connection_is_proxied: boolean
     database: number
-    host: string
+    host?: string
     keepalive_backlog: number
     keepalive_pool_size: number
     password: string
-    port: number
+    port?: number
     read_timeout: number
     send_timeout: number
     sentinel_master?: string
