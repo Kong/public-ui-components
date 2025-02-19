@@ -8,7 +8,8 @@
     "done": "Done",
     "view": "View Details",
     "loading": "Loading...",
-    "view_plugin": "View Plugin"
+    "view_plugin": "View Plugin",
+    "close": "Close"
   },
   "search": {
     "placeholder": "Filter by name",
@@ -16,7 +17,8 @@
   },
   "delete": {
     "title": "Delete Redis configuration",
-    "description": "You’re about to delete this item. Are you sure you want to proceed?"
+    "description": "You’re about to delete this item. Are you sure you want to proceed?",
+    "warning": "To delete this configuration, first remove it from all associated plugins."
   },
   "errors": {
     "general": "Redis configuration could not be retrieved",

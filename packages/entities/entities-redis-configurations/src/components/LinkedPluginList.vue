@@ -60,15 +60,13 @@ const headers: TableViewHeader[] = [
   { key: 'actions', hideLabel: true },
 ]
 
-const { fetcher: linksFetcher } = useLinkedPluginsFetcher({
-  config: props.config,
-  partialId: props.partialId,
-})
+const { fetcher: linksFetcher } = useLinkedPluginsFetcher(props.config)
 
 const totalCount = ref(0)
 
 const fetcher = async (param: TableDataFetcherParams): Promise<any> => {
   const { data } = await linksFetcher({
+    partialId: props.partialId,
     size: param.pageSize,
     offset: param.offset,
   })

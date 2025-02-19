@@ -222,6 +222,31 @@ describe('<RedisConfigurationList />', () => {
 
           cy.getTestId('linked-plugins-modal').find('.modal-container').should('be.visible')
         })
+
+        it('should stop deleting if user are deleting a partial with linked plugins', () => {
+          interceptList()
+          interceptLinkedPlugins()
+
+          cy.mount(RedisConfigurationList, {
+            props: {
+              config: app === 'Kong Manager' ? baseConfigKM : baseConfigKonnect,
+              cacheIdentifier: uuidv4(),
+            },
+          })
+
+          cy.wait('@getRedisConfigurations')
+
+          cy.get('[data-testid="redis-config-1"]')
+            .find('[data-testid="actions-dropdown"]')
+            .click()
+
+          cy.get('[data-testid="redis-config-1"]')
+            .find('[data-testid="action-entity-delete"]')
+            .click()
+
+          cy.wait('@getLinkedPlugins')
+          cy.getTestId('remove-links-modal').find('.modal-container').should('be.visible')
+        })
       })
     }
   })

@@ -81,6 +81,19 @@
       </template>
     </EntityBaseTable>
 
+    <KModal
+      :action-button-text="t('actions.close')"
+      data-testid="remove-links-modal"
+      hide-cancel-button
+      max-width="640"
+      :title="t('delete.title')"
+      :visible="isRemoveLinksModalVisible"
+      @cancel="isRemoveLinksModalVisible = false"
+      @proceed="isRemoveLinksModalVisible = false"
+    >
+      {{ t('delete.warning') }}
+    </KModal>
+
     <EntityDeleteModal
       :action-pending="isDeletePending"
       :description="t('delete.description')"
@@ -127,6 +140,7 @@ import { getRedisType } from '../helpers'
 import { RedisType } from '../types'
 import LinkedPluginsInline from './LinkedPluginsInline.vue'
 import LinkedPluginListModal from './LinkedPluginListModal.vue'
+import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
 
 import type { PropType } from 'vue'
 import type {
@@ -216,6 +230,8 @@ const isDeleteModalVisible = ref<boolean>(false)
 const isDeletePending = ref<boolean>(false)
 const deleteModalError = ref<string>('')
 
+const isRemoveLinksModalVisible = ref<boolean>(false)
+
 const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
 const fetcherCacheKey = ref<number>(1)
@@ -249,6 +265,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
+const { fetcher: fetchLinkedPlugins } = useLinkedPluginsFetcher(props.config)
 
 // Initialize the empty state options assuming a user does not have create permissions
 // IMPORTANT: you must initialize this object assuming the user does **NOT** have create permissions so that the onBeforeMount hook can properly evaluate the props.canCreate function.
@@ -279,9 +296,17 @@ const getEditDropdownItem = (id: string) => {
   }
 }
 
-const deleteRow = (row: EntityRow): void => {
-  entityToBeDeleted.value = row
-  isDeleteModalVisible.value = true
+const deleteRow = async (row: EntityRow) => {
+  // check if the partial still has plugins linked to it
+  const { data } = await fetchLinkedPlugins({ partialId: row.id as string })
+  if (data.length > 0) {
+    // show warning modal
+    isRemoveLinksModalVisible.value = true
+  } else {
+    // show delete modal
+    entityToBeDeleted.value = row
+    isDeleteModalVisible.value = true
+  }
 }
 
 const clearFilter = (): void => {
