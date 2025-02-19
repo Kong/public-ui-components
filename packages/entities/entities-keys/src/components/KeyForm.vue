@@ -36,6 +36,21 @@
         />
 
         <KInput
+          v-model.trim="form.fields.x5t"
+          autocomplete="off"
+          data-testid="key-form-x5t"
+          :help="t('keys.form.fields.x5t.help')"
+          :label="t('keys.form.fields.x5t.label')"
+          :label-attributes="{
+            info: t('keys.form.fields.x5t.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          :placeholder="t('keys.form.fields.x5t.placeholder')"
+          :readonly="form.isReadonly"
+          type="text"
+        />
+
+        <KInput
           v-model.trim="form.fields.name"
           autocomplete="off"
           data-testid="key-form-name"
@@ -252,6 +267,7 @@ const form = reactive<KeyFormState>({
     name: '',
     tags: '',
     key_id: '',
+    x5t: '',
     key_format: 'jwk',
     key_set: '',
     jwk: '',
@@ -307,6 +323,7 @@ const canSubmit = computed((): boolean => JSON.stringify(form.fields) !== JSON.s
 
 const initForm = (data: Record<string, any>): void => {
   form.fields.key_id = data?.kid || ''
+  form.fields.x5t = data?.x5t || ''
   form.fields.name = data?.name || ''
   form.fields.tags = data?.tags?.join(', ') || ''
   form.fields.key_set = data?.set?.id || ''
@@ -350,6 +367,7 @@ const submitUrl = computed<string>(() => {
 const requestBody = computed((): Record<string, any> => {
   return {
     kid: form.fields.key_id,
+    x5t: form.fields.x5t || null,
     name: form.fields.name || null,
     tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== '') || [],
     set: form.fields.key_set ? { id: form.fields.key_set } : null,
@@ -378,6 +396,7 @@ const saveFormData = async (): Promise<void> => {
       const { data } = response
 
       form.fields.key_id = data?.kid || ''
+      form.fields.x5t = data?.x5t || ''
       form.fields.name = data?.name || ''
       form.fields.tags = data?.tags?.join(', ') || ''
       form.fields.key_set = data?.set?.id || ''
