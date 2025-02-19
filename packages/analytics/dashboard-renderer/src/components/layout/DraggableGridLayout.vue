@@ -170,9 +170,10 @@ $rotate-values: (
 
 @each $direction, $rotate in $rotate-values {
   :deep(.ui-resizable-#{$direction}) {
-    background-image: url('../../icons/arrows_more_down.svg');
+    background-image: url('../../icons/arrows_more_down-lightgray.svg');
+    background-size: 16px 16px;
     cursor: se-resize;
-    margin: 5px;
+    margin: 1px;
     transform: rotate($rotate);
   }
 }
