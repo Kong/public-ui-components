@@ -22,7 +22,7 @@
         </div>
       </KTooltip>
       <div
-        v-if="canShowKebabMenu || badgeData"
+        v-if="canShowTitleActions"
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
@@ -38,7 +38,7 @@
           @click="editTile"
         />
         <KDropdown
-          v-if="canShowKebabMenu"
+          v-if="canShowKebabMenu && kebabMenuHasItems"
           class="dropdown"
           :data-testid="`chart-action-menu-${tileId}`"
           :kpop-attributes="{ placement: 'bottom-end' }"
@@ -181,7 +181,11 @@ const exploreLink = computed(() => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
+const canShowTitleActions = computed((): boolean => (canShowKebabMenu.value && (kebabMenuHasItems.value || props.context.editable)) || !!badgeData.value)
+
 const canShowKebabMenu = computed(() => hasKebabMenuAccess && !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
+
+const kebabMenuHasItems = computed((): boolean => !!exploreLink.value || ('allowCsvExport' in props.definition.chart && props.definition.chart.allowCsvExport) || props.context.editable)
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
