@@ -499,6 +499,21 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
 
+  packages/core/config-editor:
+    devDependencies:
+      '@kong/design-tokens':
+        specifier: 1.17.2
+        version: 1.17.2
+      '@kong/kongponents':
+        specifier: 9.21.5
+        version: 9.21.5(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+      '@kong/vscode-json-languageservice':
+        specifier: 5.4.1-patch.4
+        version: 5.4.1-patch.4
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.13(typescript@5.6.3)
+
   packages/core/core:
     dependencies:
       date-fns:
@@ -1880,7 +1895,6 @@ packages:
 
   '@evilmartians/lefthook@1.8.2':
     resolution: {integrity: sha512-SZdQk3W9q7tcJwnSwEMUubQqVIK7SHxv52hEAnV7o3nPI+xKcmd+rN0hZIJg07wjBaJRAjzdvoQySKQQYPW5Qw==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -2040,6 +2054,10 @@ packages:
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
 
+  '@kong/design-tokens@1.17.2':
+    resolution: {integrity: sha512-979FHvvqPkjdUmbUL7Q2+z04GiVLXqu+OgucD3krAczuTWGfbFG6mOzbO6QIZ7/YlFMbe/N7TH85yJ+YfA/uUg==}
+    engines: {node: '>=18.19.1', pnpm: '>=9.7.0'}
+
   '@kong/design-tokens@1.17.3':
     resolution: {integrity: sha512-se5r7q4Oam6mTQNRAIpZIuY4MGzIBRutGMVmjBe26UpXuQb/KwzkTZjhwDbBmavfKgU+HXHJka51cuH9D67oFw==}
     engines: {node: '>=20.18.2', pnpm: '>=9.15.2'}
@@ -2063,6 +2081,14 @@ packages:
       axios: ^1.6.1
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.4
+
+  '@kong/kongponents@9.21.5':
+    resolution: {integrity: sha512-OG7Ii5d65t877FJE+/YTpQzAnePecnm++BT5ryAN6sZ1KdeFRAMXc1e+TWw8V8VBCWS4hN4PKvvUatpUVSj3RA==}
+    engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0'}
+    peerDependencies:
+      axios: ^1.7.9
+      vue: '>= 3.5.0 < 4'
+      vue-router: ^4.4.5
 
   '@kong/kongponents@9.24.2':
     resolution: {integrity: sha512-Si+pxKC2vT5U/7XnQ5zKFyDItlnlisDG/gJfPSurtJyD3rfgYUHRFXg9RgzM4Jcr6lkV4FNa/JsdKBN1hKdcGw==}
@@ -2090,6 +2116,9 @@ packages:
     resolution: {integrity: sha512-g89NLf7Vu19BJ157fVUkLIrjzTmNE74zGfzktK2rxdZgIUegt4VBDsG8K0MAxDwQELQqSK3kPkamgdD9j1eV3Q==}
     peerDependencies:
       react: 17.0.2
+
+  '@kong/vscode-json-languageservice@5.4.1-patch.4':
+    resolution: {integrity: sha512-qUjiAZT92FD5kWQrmym0V4SLoSgukpqWWejLd5iUzIYnev+cmk+mNsVdg0e6BsTpNQR+DlT8Y+65PyXJhoW0Lw==}
 
   '@kurkle/color@0.3.2':
     resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==}
@@ -3299,6 +3328,9 @@ packages:
 
   '@volar/typescript@2.4.5':
     resolution: {integrity: sha512-mcT1mHvLljAEtHviVcBuOyAwwMKz1ibXTi5uYtP/pf4XxoAzpdkQ+Br2IC0NPCvLCbjPZmbf3I0udndkfB1CDg==}
+
+  '@vscode/l10n@0.0.18':
+    resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
 
   '@vue-flow/background@1.3.2':
     resolution: {integrity: sha512-eJPhDcLj1wEo45bBoqTXw1uhl0yK2RaQGnEINqvvBsAFKh/camHJd5NPmOdS1w+M9lggc9igUewxaEd3iCQX2w==}
@@ -6515,6 +6547,9 @@ packages:
   jsonc-parser@3.2.0:
     resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
 
+  jsonc-parser@3.3.1:
+    resolution: {integrity: sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ==}
+
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
@@ -9580,6 +9615,26 @@ packages:
   vfile@6.0.3:
     resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
+  virtua@0.39.3:
+    resolution: {integrity: sha512-Ep3aiJXSGPm1UUniThr5mGDfG0upAleP7pqQs5mvvCgM1wPhII1ZKa7eNCWAJRLkC+InpXKokKozyaaj/aMYOQ==}
+    peerDependencies:
+      react: '>=16.14.0'
+      react-dom: '>=16.14.0'
+      solid-js: '>=1.0'
+      svelte: '>=5.0'
+      vue: '>=3.2'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
+      solid-js:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+
   virtua@0.40.3:
     resolution: {integrity: sha512-rfl6VohBFoT0U64fVdOGag2p0D+YZbki7HQ5bjFZObStWBaWjjataIHFDjl4KuSr3yHBMgGd/+Va7W4Z2Y0LRg==}
     peerDependencies:
@@ -10964,6 +11019,8 @@ snapshots:
 
   '@kong/atc-router@1.6.0-rc.1': {}
 
+  '@kong/design-tokens@1.17.2': {}
+
   '@kong/design-tokens@1.17.3': {}
 
   '@kong/eslint-config-kong-ui@1.1.2(eslint@9.14.0(jiti@1.21.0))(typescript@5.6.3)':
@@ -11005,6 +11062,32 @@ snapshots:
       vue: 3.5.13(typescript@5.6.3)
       vue-draggable-next: 2.2.1(sortablejs@1.15.6)(vue@3.5.13(typescript@5.6.3))
       vue-router: 4.4.5(vue@3.5.13(typescript@5.6.3))
+
+  '@kong/kongponents@9.21.5(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
+    dependencies:
+      '@floating-ui/vue': 1.1.6(vue@3.5.13(typescript@5.6.3))
+      '@kong/icons': 1.21.2(vue@3.5.13(typescript@5.6.3))
+      '@popperjs/core': 2.11.8
+      axios: 1.7.7
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
+      focus-trap: 7.6.4
+      focus-trap-vue: 4.0.3(focus-trap@7.6.4)(vue@3.5.13(typescript@5.6.3))
+      lodash-es: 4.17.21
+      nanoid: 5.0.9
+      sortablejs: 1.15.6
+      swrv: 1.1.0(vue@3.5.13(typescript@5.6.3))
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.5.13(typescript@5.6.3))
+      virtua: 0.39.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.13(typescript@5.6.3))
+      vue: 3.5.13(typescript@5.6.3)
+      vue-draggable-next: 2.2.1(sortablejs@1.15.6)(vue@3.5.13(typescript@5.6.3))
+      vue-router: 4.4.5(vue@3.5.13(typescript@5.6.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - react
+      - react-dom
+      - solid-js
+      - svelte
 
   '@kong/kongponents@9.24.2(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
     dependencies:
@@ -11098,6 +11181,14 @@ snapshots:
       - supports-color
       - vue
       - vue-router
+
+  '@kong/vscode-json-languageservice@5.4.1-patch.4':
+    dependencies:
+      '@vscode/l10n': 0.0.18
+      jsonc-parser: 3.3.1
+      vscode-languageserver-textdocument: 1.0.12
+      vscode-languageserver-types: 3.17.5
+      vscode-uri: 3.0.8
 
   '@kurkle/color@0.3.2': {}
 
@@ -12839,6 +12930,8 @@ snapshots:
       '@volar/language-core': 2.4.5
       path-browserify: 1.0.1
       vscode-uri: 3.0.8
+
+  '@vscode/l10n@0.0.18': {}
 
   '@vue-flow/background@1.3.2(@vue-flow/core@1.41.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
     dependencies:
@@ -16462,6 +16555,8 @@ snapshots:
 
   jsonc-parser@3.2.0: {}
 
+  jsonc-parser@3.3.1: {}
+
   jsonfile@6.1.0:
     dependencies:
       universalify: 2.0.1
@@ -19989,6 +20084,12 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
+
+  virtua@0.39.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.13(typescript@5.6.3)):
+    optionalDependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      vue: 3.5.13(typescript@5.6.3)
 
   virtua@0.40.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.13(typescript@5.6.3)):
     optionalDependencies:
