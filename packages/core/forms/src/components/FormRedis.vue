@@ -7,6 +7,7 @@
       />
       <RedisConfigSelect
         :default-redis-config-item="selectedRedisConfigItem"
+        is-custom-plugin
         :plugin-redis-fields="field.fields"
         :update-redis-model="updateRedisModel"
         @show-new-partial-modal="$emit('showNewPartialModal')"

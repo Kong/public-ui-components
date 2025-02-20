@@ -530,7 +530,7 @@ const getModel = (): Record<string, any> => {
 }
 
 const onPartialToggled = (dismissSchemaField: string | undefined, additionalModel: Record<string, any> = {}) => {
-  dismissField(formModel, additionalModel, dismissSchemaField)
+  dismissField(formModel, additionalModel, dismissSchemaField, props.editing)
   emit('model-updated', {
     model: formModel,
     originalModel,

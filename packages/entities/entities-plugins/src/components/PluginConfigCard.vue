@@ -129,7 +129,7 @@
             value: getPropValue('rowValue', slotProps)?.[0]?.id + (getPropValue('rowValue', slotProps)?.[0]?.name ? '/' + getPropValue('rowValue', slotProps)?.[0]?.name : ''),
             type: ConfigurationSchemaType.LinkInternal
           }"
-          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'partial')"
+          @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps)?.[0]?.id, 'partial')"
         />
         <KCopy
           v-else

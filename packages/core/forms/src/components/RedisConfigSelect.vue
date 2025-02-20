@@ -3,9 +3,16 @@
     class="redis-config-select"
     data-testid="redis-config-select"
   >
-    <div class="shared-redis-config-title">
+    <KLabel
+      :info="isCustomPlugin ? t('redis.shared_configuration.tooltip') : t('redis.custom_plugin.tooltip')"
+      :tooltip-attributes="{
+        maxWidth: '300',
+        placement: 'top',
+      }"
+    >
       {{ t('redis.shared_configuration.title') }}
-    </div>
+    </KLabel>
+    <div class="shared-redis-config-title" />
     <KSelect
       v-model="selectedRedisConfigItem"
       data-testid="redis-config-select-trigger"
@@ -124,6 +131,10 @@ const props = defineProps({
     type: String,
     default: 'all',
   },
+  isCustomPlugin: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const selectedRedisConfigItem = ref(props.defaultRedisConfigItem)
@@ -173,7 +184,7 @@ const redisConfigSelected = async (val: string | number | undefined) => {
   if (!val) return
 
   props.updateRedisModel(val)
-  //
+  // show all fields in the same level
   try {
     const configRes = await axiosInstance.get(getOnePartialUrl(val))
     if (configRes.data.config) {

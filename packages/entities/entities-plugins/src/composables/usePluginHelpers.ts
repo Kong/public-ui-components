@@ -131,7 +131,7 @@ export default function useHelpers() {
   * @param {string} fieldName
   * @returns {void}
   */
-  const dismissField = (formModel: Record<string, any>, additionalModel: Record<string, any>, fieldName = 'redis') => {
+  const dismissField = (formModel: Record<string, any>, additionalModel: Record<string, any>, fieldName = 'redis', edit = false) => {
     const redisFieldPattern = /(?<=-redis-).*/
     if (typeof formModel !== 'object' || formModel === null) {
       return formModel
@@ -145,9 +145,12 @@ export default function useHelpers() {
         }
       })
     } else {
-      // set partials field to null when toggling
-      // delete formModel[fieldName]
-      formModel[fieldName] = null
+      // editing use PUT so we need to set the partial field to null
+      if (edit) {
+        formModel[fieldName] = null
+      } else {
+        delete formModel[fieldName]
+      }
     }
 
     Object.assign(formModel, additionalModel)
