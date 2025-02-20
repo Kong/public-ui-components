@@ -208,6 +208,7 @@ export const useRedisConfigurationForm = (options: Options) => {
       if (formType.value === EntityBaseFormType.Create) {
         return await axiosInstance.post<RedisConfigurationResponse>(submitUrl.value, payload.value)
       } else {
+        // todo(zehao): check is patch or put in Konnect
         return await axiosInstance.patch<RedisConfigurationResponse>(submitUrl.value, payload.value)
       }
     } catch (e: unknown) {

@@ -1,6 +1,6 @@
 import RedisConfigurationForm from './RedisConfigurationForm.vue'
 import { RedisType, type RedisConfigurationResponse } from '../types'
-import { redisConfigurationCE, redisConfigurationCluster, redisConfigurationHostPortEE, redisConfigurationSentinel } from '../../fixtures/mockData'
+import { redisConfigurationCE, redisConfigurationCluster, redisConfigurationHostPortEE, redisConfigurationSentinel, links } from '../../fixtures/mockData'
 
 import type {
   KongManagerRedisConfigurationFormConfig,
@@ -80,6 +80,28 @@ describe('<RedisConfigurationForm />', {
             body,
           }).as('getRedisConfiguration')
         }
+      }
+
+      function interceptLinkedPlugins({
+        body = { data: [], next: null, total: 0 },
+      }: {
+        body?: typeof links,
+      } = {}) {
+        cy.intercept({
+          method: 'GET',
+          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/partials/*/links*`,
+        }, {
+          statusCode: 200,
+          body,
+        }).as('getLinkedPlugins')
+
+        cy.intercept({
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials/*/links*`,
+        }, {
+          statusCode: 200,
+          body,
+        }).as('getLinkedPlugins')
       }
 
       it('should show create form', () => {
@@ -393,6 +415,7 @@ describe('<RedisConfigurationForm />', {
       it('should show edit form', () => {
         // CE
         interceptDetail({ body: redisConfigurationCE })
+        interceptLinkedPlugins()
 
         cy.mount(RedisConfigurationForm, {
           props: {
@@ -570,7 +593,7 @@ describe('<RedisConfigurationForm />', {
 
       it('should correctly handle button state - edit', () => {
         stubCreateEdit()
-
+        interceptLinkedPlugins()
         interceptDetail({ body: redisConfigurationCE })
 
         cy.mount(RedisConfigurationForm, {
@@ -619,6 +642,7 @@ describe('<RedisConfigurationForm />', {
       it('@update should be emitted when form is submitted', () => {
         stubCreateEdit()
         interceptDetail()
+        interceptLinkedPlugins()
 
         // create
         cy.mount(RedisConfigurationForm, {
@@ -650,6 +674,30 @@ describe('<RedisConfigurationForm />', {
         cy.wait('@editRedisConfiguration')
 
         cy.get('@onEditUpdateSpy').should('have.been.calledOnce')
+      })
+
+      it('should show a warning when modifying a redis configuration that is in use by plugins', () => {
+        interceptDetail({ body: redisConfigurationCE })
+        interceptLinkedPlugins({ body: links })
+        stubCreateEdit()
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            partialId: redisConfigurationCE.id,
+          },
+        })
+
+        cy.wait('@getRedisConfiguration')
+
+        cy.getTestId('redis-name-input').type('test')
+        cy.getTestId('redis_configuration-edit-form-submit').click()
+
+        cy.wait('@getLinkedPlugins')
+        cy.getTestId('redis-update-warning-modal').find('.modal-container').should('be.visible')
+        cy.getTestId('redis-update-warning-modal').find('[data-testid="modal-action-button"]').click()
+
+        cy.wait('@editRedisConfiguration')
       })
 
       it('props `slidoutTopOffset` should be working', () => {
@@ -688,6 +736,7 @@ describe('<RedisConfigurationForm />', {
           // Host/Port EE -> Cluster
           interceptDetail({ body: redisConfigurationHostPortEE })
           stubCreateEdit()
+          interceptLinkedPlugins()
 
           cy.mount(RedisConfigurationForm, {
             props: {
@@ -717,7 +766,7 @@ describe('<RedisConfigurationForm />', {
         it('Host/Port EE -> Sentinel', () => {
           // Host/Port EE -> Sentinel
           interceptDetail({ body: redisConfigurationHostPortEE })
-
+          interceptLinkedPlugins()
           stubCreateEdit()
           cy.mount(RedisConfigurationForm, {
             props: {
@@ -757,7 +806,7 @@ describe('<RedisConfigurationForm />', {
         it('Cluster -> Host/Port EE', () => {
           // Cluster -> Host/Port EE
           interceptDetail({ body: redisConfigurationCluster })
-
+          interceptLinkedPlugins()
           stubCreateEdit()
           cy.mount(RedisConfigurationForm, {
             props: {
@@ -787,7 +836,7 @@ describe('<RedisConfigurationForm />', {
         it('Cluster -> Sentinel', () => {
           // Cluster -> Sentinel
           interceptDetail({ body: redisConfigurationCluster })
-
+          interceptLinkedPlugins()
           stubCreateEdit()
           cy.mount(RedisConfigurationForm, {
             props: {
@@ -827,7 +876,7 @@ describe('<RedisConfigurationForm />', {
         it('Sentinel -> Host/Port EE', () => {
           // Sentinel -> Host/Port EE
           interceptDetail({ body: redisConfigurationSentinel })
-
+          interceptLinkedPlugins()
           stubCreateEdit()
           cy.mount(RedisConfigurationForm, {
             props: {
@@ -860,7 +909,7 @@ describe('<RedisConfigurationForm />', {
         it('Sentinel -> Cluster', () => {
           // Sentinel -> Cluster
           interceptDetail({ body: redisConfigurationSentinel })
-
+          interceptLinkedPlugins()
           stubCreateEdit()
           cy.mount(RedisConfigurationForm, {
             props: {

@@ -6,5 +6,6 @@ export type RedisConfigurationLinkedPlugin = {
 
 export type RedisConfigurationLinkedPluginsResponse = {
   next: string | null
+  total: number
   data: RedisConfigurationLinkedPlugin[]
 }

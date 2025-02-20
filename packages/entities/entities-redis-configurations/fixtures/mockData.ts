@@ -1,4 +1,4 @@
-import { PartialType, type RedisConfigurationResponse } from '../src'
+import { PartialType, type RedisConfigurationLinkedPluginsResponse, type RedisConfigurationResponse } from '../src'
 
 export const redisConfigurationCE: Readonly<RedisConfigurationResponse> = {
   created_at: '2025-02-07T00:00:00Z',
@@ -148,7 +148,8 @@ export const partials = {
   next: null,
 }
 
-export const links = {
+export const links: RedisConfigurationLinkedPluginsResponse = {
+  total: 1,
   data: [{ id: '1', name: 'rate-limiting' }],
   next: null,
 }

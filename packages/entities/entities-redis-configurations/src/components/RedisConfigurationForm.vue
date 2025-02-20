@@ -352,6 +352,19 @@
     @cancel="() => vaultSecretPickerSetup = false"
     @proceed="handleVaultSecretPickerAutofill"
   />
+
+  <KModal
+    :action-button-text="t('form.edit_warning_modal.confirm')"
+    data-testid="redis-update-warning-modal"
+    hide-cancel-button
+    max-width="640"
+    :title="t('form.edit_warning_modal.title')"
+    :visible="isEditWarningModalVisible"
+    @cancel="isEditWarningModalVisible = false"
+    @proceed="confirmEditHandler"
+  >
+    {{ t('form.edit_warning_modal.description', { count: linksCount }) }}
+  </KModal>
 </template>
 
 <script setup lang="ts">
@@ -367,6 +380,7 @@ import { useRedisConfigurationForm } from '../composables/useRedisConfigurationF
 import ClusterNodes from './ClusterNodes.vue'
 import composables from '../composables'
 import SentinelNodes from './SentinelNodes.vue'
+import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
 
 import type { PropType } from 'vue'
 import type {
@@ -488,13 +502,36 @@ const {
   config: props.config,
 })
 
+const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
+
+const isEditWarningModalVisible = ref(false)
+const isReadEditWarning = ref(false)
+const linksCount = ref(0)
+
 const submitHandler = async () => {
   try {
+    // show a warning if user is trying to modify a partial that already has linked plugins
+    if (isEdit && !isReadEditWarning.value) {
+      const { total } = await fetchLinks({ partialId: props.partialId })
+      linksCount.value = total
+      if (total > 0) {
+        // show warning modal
+        isEditWarningModalVisible.value = true
+        return
+      }
+    }
+
     const { data } = await submit()
     emit('update', data)
   } catch (e) {
     emit('error', e as AxiosError)
   }
+}
+
+const confirmEditHandler = () => {
+  isEditWarningModalVisible.value = false
+  isReadEditWarning.value = true
+  submitHandler()
 }
 
 const cancelHandler = (): void => {

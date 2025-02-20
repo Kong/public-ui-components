@@ -265,7 +265,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
-const { fetcher: fetchLinkedPlugins } = useLinkedPluginsFetcher(props.config)
+const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
 
 // Initialize the empty state options assuming a user does not have create permissions
 // IMPORTANT: you must initialize this object assuming the user does **NOT** have create permissions so that the onBeforeMount hook can properly evaluate the props.canCreate function.
@@ -298,8 +298,8 @@ const getEditDropdownItem = (id: string) => {
 
 const deleteRow = async (row: EntityRow) => {
   // check if the partial still has plugins linked to it
-  const { data } = await fetchLinkedPlugins({ partialId: row.id as string })
-  if (data.length > 0) {
+  const { total } = await fetchLinks({ partialId: row.id as string })
+  if (total > 0) {
     // show warning modal
     isRemoveLinksModalVisible.value = true
   } else {

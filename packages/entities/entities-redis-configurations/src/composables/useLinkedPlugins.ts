@@ -1,5 +1,5 @@
 import { useAxios, type KongManagerConfig, type KonnectConfig } from '@kong-ui-public/entities-shared'
-import { computed, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import useSwrv from 'swrv'
 import endpoints from '../partials-endpoints'
 import type { RedisConfigurationLinkedPluginsResponse } from '../types'
@@ -40,6 +40,7 @@ export const useLinkedPluginsFetcher = (config: KonnectConfig | KongManagerConfi
       if (data && !Array.isArray(data.data)) {
         data.data = []
       }
+      data.total = data.total || data.data.length // todo(zehao): remove this line when BE provides `total` field
       return data
     },
   }

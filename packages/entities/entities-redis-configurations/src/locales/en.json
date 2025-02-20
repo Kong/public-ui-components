@@ -186,6 +186,11 @@
         "slave": "slave",
         "any": "any"
       }
+    },
+    "edit_warning_modal": {
+      "title": "Edit Redis configuration",
+      "description": "This Redis configuration is connected to {count} plugins. Any updates will take effect across all associated instances.",
+      "confirm": "Confirm"
     }
   },
   "linked_plugins_modal": {
