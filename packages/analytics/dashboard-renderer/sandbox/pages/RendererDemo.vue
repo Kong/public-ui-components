@@ -289,6 +289,27 @@ const dashboardConfig = ref <DashboardConfig>({
         },
       },
     } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'doughnut',
+          chartTitle: 'Donut chart of mock data',
+        },
+        query: {
+          datasource: 'basic',
+        },
+      },
+      layout: {
+        position: {
+          col: 3,
+          row: 5,
+        },
+        size: {
+          cols: 2,
+          rows: 2,
+        },
+      },
+    } satisfies TileConfig,
   ],
 })
 
