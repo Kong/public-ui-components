@@ -90,6 +90,7 @@
           :action-button-text="t('routes.list.toolbar_actions.new_route')"
           appearance="secondary"
           :can-create="() => canCreate()"
+          :data-testid="config.serviceId ? 'nested-routes-entity-empty-state' : 'routes-entity-empty-state'"
           :description="t('routes.list.empty_state_v2.description')"
           :learn-more="config.app === 'konnect'"
           :title="t('routes.list.empty_state_v2.title')"

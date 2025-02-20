@@ -86,6 +86,7 @@
           :action-button-text="t('certificates.list.empty_state_v2.create')"
           appearance="secondary"
           :can-create="() => canCreate()"
+          data-testid="certificates-entity-empty-state"
           :description="t('certificates.list.empty_state_v2.description')"
           :learn-more="config.app === 'konnect'"
           :title="t('certificates.list.empty_state_v2.title')"

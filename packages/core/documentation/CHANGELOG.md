@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.116...@kong-ui-public/documentation@0.8.0) (2025-02-18)
+
+
+### Features
+
+* documentation new empty state ([#1965](https://github.com/Kong/public-ui-components/issues/1965)) ([25fe26f](https://github.com/Kong/public-ui-components/commit/25fe26fb9f1bb8b45dff51c1a0495c067d1b06e8))
+
+
+
+
+
 ## [0.7.116](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.115...@kong-ui-public/documentation@0.7.116) (2025-02-17)
 
 

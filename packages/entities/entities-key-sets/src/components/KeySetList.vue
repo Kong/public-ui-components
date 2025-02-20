@@ -86,6 +86,7 @@
           :action-button-text="t('keySets.list.empty_state_v2.create_cta')"
           appearance="secondary"
           :can-create="() => canCreate()"
+          data-testid="key-sets-entity-empty-state"
           :description="t('keySets.list.empty_state_v2.description')"
           :learn-more="config.app === 'konnect'"
           :title="t('keySets.list.empty_state_v2.title')"

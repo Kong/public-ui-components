@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.10.0...@kong-ui-public/entities-routes@3.10.1) (2025-02-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+# [3.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.9.5...@kong-ui-public/entities-routes@3.10.0) (2025-02-18)
+
+
+### Features
+
+* **entities:** update empty state data-testids [khcp-15185] ([#1966](https://github.com/Kong/public-ui-components/issues/1966)) ([4e7a3a8](https://github.com/Kong/public-ui-components/commit/4e7a3a827ae8f99662a09c436c2615b52dd09cc2))
+
+
+
+
+
 ## [3.9.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.9.4...@kong-ui-public/entities-routes@3.9.5) (2025-02-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes

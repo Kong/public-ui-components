@@ -161,6 +161,14 @@ Show tags field under *Advanced Fields* collapse or in it's default place (befor
 
 Show/hide the Expressions modal entry button.
 
+#### `schema`
+
+- type: `Object`
+- required: `false`
+- default: `undefined`
+
+The schema object for the form. If provided, the form will not request the schema from the API. Currently only used for the plugin form playground in the sandbox.
+
 ### Slots
 
 #### `form-actions`

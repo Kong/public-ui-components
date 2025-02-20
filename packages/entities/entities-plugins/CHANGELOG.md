@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.0...@kong-ui-public/entities-plugins@9.12.1) (2025-02-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.11.0...@kong-ui-public/entities-plugins@9.12.0) (2025-02-18)
+
+
+### Features
+
+* **entities:** update empty state data-testids [khcp-15185] ([#1966](https://github.com/Kong/public-ui-components/issues/1966)) ([4e7a3a8](https://github.com/Kong/public-ui-components/commit/4e7a3a827ae8f99662a09c436c2615b52dd09cc2))
+
+
+
+
+
+# [9.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.9...@kong-ui-public/entities-plugins@9.11.0) (2025-02-18)
+
+
+### Features
+
+* **entities-plugins-metadata:** new package ([#1940](https://github.com/Kong/public-ui-components/issues/1940)) ([b570254](https://github.com/Kong/public-ui-components/commit/b570254f053c37a96557833df2abd24c11bc0317))
+
+
+
+
+
 ## [9.10.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.8...@kong-ui-public/entities-plugins@9.10.9) (2025-02-18)
 
 
