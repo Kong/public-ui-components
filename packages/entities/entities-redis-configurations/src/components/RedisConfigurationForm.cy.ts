@@ -731,7 +731,7 @@ describe('<RedisConfigurationForm />', {
         })
       })
 
-      it.only('props `disabledPartialType` should be working', () => {
+      it('props `disabledPartialType` should be working', () => {
         cy.mount(RedisConfigurationForm, {
           props: {
             config,
