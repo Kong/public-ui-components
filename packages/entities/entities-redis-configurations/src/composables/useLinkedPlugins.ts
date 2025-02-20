@@ -8,6 +8,7 @@ type RequestParams = {
   partialId: string
   size?: number,
   offset?: string | null,
+  query?: string,
 }
 
 export function buildLinksCacheKey(partialId: string) {
@@ -19,7 +20,7 @@ export const useLinkedPluginsFetcher = (config: KonnectConfig | KongManagerConfi
 
   return {
     fetcher: async (params: RequestParams) => {
-      const { partialId, size, offset } = params
+      const { partialId, size, offset, query } = params
       let url = `${config.apiBaseUrl}${endpoints.links[config.app].all}`
 
       if (config.app === 'konnect') {
@@ -30,6 +31,10 @@ export const useLinkedPluginsFetcher = (config: KonnectConfig | KongManagerConfi
 
       // Always replace the id when editing
       url = url.replace(/{id}/gi, partialId || '')
+
+      if (query) {
+        url = `${url}?${query}`
+      }
 
       const { data } = await axiosInstance.get<RedisConfigurationLinkedPluginsResponse>(
         url,

@@ -4,7 +4,21 @@
     :fetcher="fetcher"
     :headers="headers"
     :pagination-attributes="{ totalCount, disablePageJump: true }"
+    :search-input="filterQuery"
   >
+    <!-- Filter -->
+    <template
+      v-if="filterBarEnabled"
+      #toolbar
+    >
+      <div class="toolbar-container">
+        <EntityFilter
+          v-model="filterQuery"
+          :config="filterConfig"
+        />
+      </div>
+    </template>
+
     <template #name="{ rowValue }">
       <PluginName :plugin-name="rowValue" />
     </template>
@@ -18,7 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { EntityFilter } from '@kong-ui-public/entities-shared'
 
 import composables from '../composables'
 import PluginName from './PluginItem.vue'
@@ -26,7 +41,12 @@ import { useLinkedPluginsFetcher, buildLinksCacheKey } from '../composables/useL
 
 import type { TableDataFetcherParams } from '@kong/kongponents'
 import type { TableViewHeader } from '@kong/kongponents/dist/types'
-import type { KonnectConfig, KongManagerConfig } from '@kong-ui-public/entities-shared'
+import type {
+  KonnectConfig,
+  KongManagerConfig,
+  ExactMatchFilterConfig,
+  FuzzyMatchFilterConfig,
+} from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import type { RedisConfigurationLinkedPlugin } from '../types'
 
@@ -40,6 +60,17 @@ const props = defineProps({
       if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
       return true
     },
+  },
+  /**
+   * Only works when filterBarEnabled is true
+   */
+  isExactMatch: {
+    type: Boolean,
+    default: false,
+  },
+  filterBarEnabled: {
+    type: Boolean,
+    default: false,
   },
   partialId: {
     type: String,
@@ -69,6 +100,7 @@ const fetcher = async (param: TableDataFetcherParams): Promise<any> => {
     partialId: props.partialId,
     size: param.pageSize,
     offset: param.offset,
+    query: param.query,
   })
 
   totalCount.value = total // fixme(zehao): need total count from endpoint https://kongstrong.slack.com/lists/T0DS5NB27/F089F4H18HX?record_id=Rec08DNLCMTLH
@@ -83,7 +115,33 @@ const fetcher = async (param: TableDataFetcherParams): Promise<any> => {
   return result
 }
 
+const filterQuery = ref<string>('')
+const filterConfig = computed<ExactMatchFilterConfig | FuzzyMatchFilterConfig>(() => {
+  // todo(zehao): filter is not supported in BE yet
+  const isExactMatch = (props.config.app === 'konnect' || props.isExactMatch)
+
+  if (isExactMatch) {
+    return {
+      isExactMatch: true,
+    } as ExactMatchFilterConfig
+  }
+
+  return {
+    isExactMatch: false,
+    fields: { name: { searchable: true } },
+    schema: { name: { type: 'text' } },
+  } as FuzzyMatchFilterConfig
+})
+
 const viewPlugin = (row: any) => {
   emit('view-plugin', { id: row.id, plugin: row.name })
 }
 </script>
+
+<style scoped lang="scss">
+.toolbar-container {
+  align-items: center;
+  display: flex;
+  width: 100%;
+}
+</style>
