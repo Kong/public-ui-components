@@ -93,11 +93,11 @@ A `@loading` event is emitted when loading state changes. The event payload is a
 
 #### fetch:error
 
-An `@fetch:error` event is emitted when the component fails to fetch the route. The event payload is the response error.
+An `@fetch:error` event is emitted when the component fails to fetch the redis configuration. The event payload is the response error.
 
 #### fetch:success
 
-A `@fetch:success` event is emitted when the route is successfully fetched. The event payload is the Route object.
+A `@fetch:success` event is emitted when the redis configuration is successfully fetched. The event payload is the redis configuration object.
 
 ### Usage example
 

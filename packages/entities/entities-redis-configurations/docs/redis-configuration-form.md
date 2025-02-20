@@ -55,7 +55,7 @@ A form component for Redis Configurations.
     - type: `RouteLocationRaw`
     - required: `true`
     - default: `undefined`
-    - Route to return to when canceling creation of a Route.
+    - Route to return to when canceling creation of a redis configuration.
 
   - `workspace`:
     - type: `string`
@@ -94,6 +94,14 @@ The name of the teleport target to render the form action buttons.
 - default: `60`
 
 The top offset of the `View Configuration` slidout.
+
+#### `disabledPartialType`
+
+- type: `String`
+- required: `false`
+- default: `''`
+
+The type of the partial to disable. If set it to `PartialType.REDIS_CE`, the Host/Port CE type option will be disabled. If set it to `PartialType.REDIS_EE`, all EE type options will be disabled.
 
 ### Events
 

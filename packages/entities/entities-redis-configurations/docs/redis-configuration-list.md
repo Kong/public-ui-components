@@ -53,25 +53,19 @@ A table component for Redis Configurations.
     - type: `RouteLocationRaw`
     - required: `true`
     - default: `undefined`
-    - Route for creating a route.
+    - Route for creating a redis configuration.
 
   - `getViewRoute`:
     - type: `(id: string) => RouteLocationRaw`
     - required: `true`
     - default: `undefined`
-    - A function that returns the route for viewing a route.
+    - A function that returns the route for viewing a redis configuration.
 
   - `getEditRoute`:
     - type: `(id: string) => RouteLocationRaw`
     - required: `true`
     - default: `undefined`
-    - A function that returns the route for editing a route.
-
-  - `serviceId`:
-    - type: `string`
-    - required: `false`
-    - default: `null`
-    - Current service id if the RouteList is nested in the routes tab on a service detail page.
+    - A function that returns the route for editing a redis configuration.
 
   - `additionMessageForEmptyState`:
     - type: `string`
@@ -156,11 +150,11 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 #### error
 
-An `@error` event is emitted when the table fails to fetch routes or delete a route. The event payload is the response error.
+An `@error` event is emitted when the table fails to fetch redis configurations or delete a redis configuration. The event payload is the response error.
 
 #### delete:success
 
-A `@delete:success` event is emitted when a route is successfully deleted. The event payload is the route item data object.
+A `@delete:success` event is emitted when a redis configuration is successfully deleted. The event payload is the redis configuration item data object.
 
 #### view-plugin
 
