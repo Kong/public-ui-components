@@ -101,7 +101,7 @@ A `@fetch:success` event is emitted when the route is successfully fetched. The 
 
 ### Usage example
 
-Please refer to the [sandbox](../sandbox/pages/RedisConfigurationDetailPage.vue).
+Please refer to the [sandbox](../sandbox/pages/RedisConfigurationDetail.vue).
 
 ## TypeScript interfaces
 
