@@ -189,7 +189,8 @@
     },
     "edit_warning_modal": {
       "title": "Edit Redis configuration",
-      "description": "This Redis configuration is connected to {count} plugins. Any updates will take effect across all associated instances.",
+      "description": "This Redis configuration is connected to {pluginCount}. Any updates will take effect across all associated instances.",
+      "plugin_count": "{count} plugin(s)",
       "confirm": "Confirm"
     }
   },

@@ -11,11 +11,12 @@ import type { KongManagerRedisConfigurationFormConfig, KonnectRedisConfiguration
 
 export type Options = {
   partialId?: string
+  defaultRedisType?: RedisType
   config: KonnectRedisConfigurationFormConfig | KongManagerRedisConfigurationFormConfig
 }
 
 export const useRedisConfigurationForm = (options: Options) => {
-  const { partialId, config } = options
+  const { partialId, config, defaultRedisType = DEFAULT_REDIS_TYPE } = options
   const isEdit = !!partialId
   const { axiosInstance } = useAxios(config.axiosRequestConfig)
   const { getMessageFromError } = useErrors()
@@ -26,7 +27,7 @@ export const useRedisConfigurationForm = (options: Options) => {
   const form = reactive<RedisConfigurationFormState>({
     fields: {
       name: '',
-      type: mapRedisTypeToPartialType(DEFAULT_REDIS_TYPE),
+      type: mapRedisTypeToPartialType(defaultRedisType),
       config: JSON.parse(JSON.stringify(DEFAULT_FIELDS)),
     },
     readonly: false,
@@ -35,7 +36,7 @@ export const useRedisConfigurationForm = (options: Options) => {
 
   // Used to diff the form values when editing
   const initialPayload = ref<RedisConfigurationFields>()
-  const redisType = ref<RedisType>(DEFAULT_REDIS_TYPE)
+  const redisType = ref<RedisType>(defaultRedisType)
   const redisTypeIsEnterprise = computed(() => redisType.value === RedisType.HOST_PORT_EE || redisType.value === RedisType.CLUSTER || redisType.value === RedisType.SENTINEL)
 
   watch(redisType, (newValue) => {

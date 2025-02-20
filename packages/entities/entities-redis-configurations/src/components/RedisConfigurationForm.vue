@@ -17,6 +17,20 @@
       @loading="loadingHandler"
       @submit="submitHandler"
     >
+      <!-- <KAlert
+        appearance="warning"
+        class="warning-alert"
+      >
+        <i18n-t
+          keypath="form.edit_warning_modal.description"
+          tag="div"
+        >
+          <template #pluginCount>
+            <b>{{ t('form.edit_warning_modal.plugin_count', { count: linksCount }) }}</b>
+          </template>
+        </i18n-t>
+      </KAlert> -->
+
       <!-- type section -->
       <EntityFormSection
         data-testid="redis-type-section"
@@ -363,7 +377,14 @@
     @cancel="isEditWarningModalVisible = false"
     @proceed="confirmEditHandler"
   >
-    {{ t('form.edit_warning_modal.description', { count: linksCount }) }}
+    <i18n-t
+      keypath="form.edit_warning_modal.description"
+      tag="div"
+    >
+      <template #pluginCount>
+        <b>{{ t('form.edit_warning_modal.plugin_count', { count: linksCount }) }}</b>
+      </template>
+    </i18n-t>
   </KModal>
 </template>
 
@@ -375,7 +396,7 @@ import { ref, computed } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 import { useRouter } from 'vue-router'
 
-import { RedisType } from '../types'
+import { RedisType, PartialType } from '../types'
 import { useRedisConfigurationForm } from '../composables/useRedisConfigurationForm'
 import ClusterNodes from './ClusterNodes.vue'
 import composables from '../composables'
@@ -421,6 +442,13 @@ const props = defineProps({
     type: Number,
     default: 60,
   },
+  /**
+   * Set disabled partial type, only for create mode
+   */
+  disabledPartialType: {
+    type: String as PropType<PartialType>,
+    default: '',
+  },
 })
 
 const emit = defineEmits<{
@@ -430,7 +458,7 @@ const emit = defineEmits<{
   (e: 'cancel'): void,
 }>()
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n: { t }, i18nT } = composables.useI18n()
 const router = useRouter()
 
 const vaultSecretPickerSetup = ref<string | false>()
@@ -451,25 +479,29 @@ const typeOptions = computed<SelectItem[]>(() => {
       group: ` ${t('form.options.type.open_source')}`, // the space before the group name is intentional, it makes the group to be the first one
       value: RedisType.HOST_PORT_CE,
       selected: redisType.value === RedisType.HOST_PORT_CE,
-      disabled: isEdit && redisTypeIsEnterprise.value,
+      disabled: (isEdit && redisTypeIsEnterprise.value)
+        || (!isEdit && props.disabledPartialType === PartialType.REDIS_CE),
     },
     {
       label: t('form.options.type.host_port'),
       group: t('form.options.type.enterprise'),
       value: RedisType.HOST_PORT_EE,
       selected: redisType.value === RedisType.HOST_PORT_EE,
+      disabled: !isEdit && props.disabledPartialType === PartialType.REDIS_EE,
     },
     {
       label: t('form.options.type.cluster'),
       group: t('form.options.type.enterprise'),
       value: RedisType.CLUSTER,
       selected: redisType.value === RedisType.CLUSTER,
+      disabled: !isEdit && props.disabledPartialType === PartialType.REDIS_EE,
     },
     {
       label: t('form.options.type.sentinel'),
       group: t('form.options.type.enterprise'),
       value: RedisType.SENTINEL,
       selected: redisType.value === RedisType.SENTINEL,
+      disabled: !isEdit && props.disabledPartialType === PartialType.REDIS_EE,
     },
   ]
 })
@@ -499,6 +531,9 @@ const {
   setInitialFormValues,
 } = useRedisConfigurationForm({
   partialId: props.partialId,
+  defaultRedisType: props.disabledPartialType === PartialType.REDIS_CE
+    ? RedisType.HOST_PORT_EE
+    : RedisType.HOST_PORT_CE,
   config: props.config,
 })
 
@@ -506,7 +541,7 @@ const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
 
 const isEditWarningModalVisible = ref(false)
 const isReadEditWarning = ref(false)
-const linksCount = ref(0)
+const linksCount = ref(97)
 
 const submitHandler = async () => {
   try {
@@ -555,6 +590,10 @@ const updateFormValues = (data: Record<string, any>) => {
 </script>
 
 <style lang="scss" scoped>
+.warning-alert {
+  margin-bottom: $kui-space-90;
+}
+
 .kong-ui-entities-redis-configurations-form {
   width: 100%;
 }

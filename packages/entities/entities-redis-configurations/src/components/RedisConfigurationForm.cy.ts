@@ -1,5 +1,5 @@
 import RedisConfigurationForm from './RedisConfigurationForm.vue'
-import { RedisType, type RedisConfigurationResponse } from '../types'
+import { PartialType, RedisType, type RedisConfigurationResponse } from '../types'
 import { redisConfigurationCE, redisConfigurationCluster, redisConfigurationHostPortEE, redisConfigurationSentinel, links } from '../../fixtures/mockData'
 
 import type {
@@ -729,6 +729,58 @@ describe('<RedisConfigurationForm />', {
             .should('be.visible')
             .findTestId('redis_configuration-create-form-view-configuration').should('be.visible')
         })
+      })
+
+      it.only('props `disabledPartialType` should be working', () => {
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            disabledPartialType: PartialType.REDIS_CE,
+          },
+        })
+
+        cy.getTestId('redis-type-select').click()
+        cy.getTestId('redis-type-select-popover')
+          .find(`button[value="${RedisType.HOST_PORT_CE}"]`)
+          .should('be.disabled')
+
+        cy.getTestId('redis-type-select-popover')
+          .find(`button[value="${RedisType.HOST_PORT_EE}"]`)
+          .should('not.be.disabled')
+          .should('have.class', 'selected')
+
+        cy.getTestId('redis-type-select-popover')
+          .find(`button[value="${RedisType.CLUSTER}"]`)
+          .should('not.be.disabled')
+
+        cy.getTestId('redis-type-select-popover')
+          .find(`button[value="${RedisType.SENTINEL}"]`)
+          .should('not.be.disabled')
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            disabledPartialType: PartialType.REDIS_EE,
+          },
+        })
+
+        cy.getTestId('redis-type-select').click()
+        cy.getTestId('redis-type-select-popover')
+          .find(`button[value="${RedisType.HOST_PORT_CE}"]`)
+          .should('not.be.disabled')
+          .should('have.class', 'selected')
+
+        cy.getTestId('redis-type-select-popover')
+          .find(`button[value="${RedisType.HOST_PORT_EE}"]`)
+          .should('be.disabled')
+
+        cy.getTestId('redis-type-select-popover')
+          .find(`button[value="${RedisType.CLUSTER}"]`)
+          .should('be.disabled')
+
+        cy.getTestId('redis-type-select-popover')
+          .find(`button[value="${RedisType.SENTINEL}"]`)
+          .should('be.disabled')
       })
 
       describe('fields do not belong to the selected type should be reset when editing', () => {
