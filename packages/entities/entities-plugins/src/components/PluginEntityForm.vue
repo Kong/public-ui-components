@@ -36,6 +36,7 @@
       <VueFormGenerator
         v-if="!sharedFormName && (formModel.id && editing || !editing)"
         :enable-redis-partial="props.enableRedisPartial"
+        :is-editing="editing"
         :model="formModel"
         :options="formOptions"
         :schema="formSchema"
@@ -657,7 +658,7 @@ const initFormModel = (): void => {
         })
       }
 
-      // handle partials and provide to formRedis component
+      // handle partials and provide to formRedis component  TODO: confirm whether custom plugin need this
       if (props.record.partials) {
         onPartialToggled('redis', { partials: props.record.partials })
       }
