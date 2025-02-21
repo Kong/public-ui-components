@@ -262,7 +262,7 @@ const props = defineProps({
  * Fetcher & Filtering
  */
 const fetcherBaseUrl = computed<string>(() => {
-  let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].all}`
+  let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app]}`
 
   if (props.config.app === 'konnect') {
     url = url

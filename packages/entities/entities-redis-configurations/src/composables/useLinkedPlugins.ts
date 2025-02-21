@@ -21,7 +21,7 @@ export const useLinkedPluginsFetcher = (config: KonnectConfig | KongManagerConfi
   return {
     fetcher: async (params: RequestParams) => {
       const { partialId, size, offset, query } = params
-      let url = `${config.apiBaseUrl}${endpoints.links[config.app].all}`
+      let url = `${config.apiBaseUrl}${endpoints.links[config.app]}`
 
       if (config.app === 'konnect') {
         url = url.replace(/{controlPlaneId}/gi, config?.controlPlaneId || '')

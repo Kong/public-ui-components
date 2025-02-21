@@ -3,12 +3,8 @@ const KMBaseApiUrl = '/{workspace}'
 
 export default {
   list: {
-    konnect: {
-      all: `${konnectBaseApiUrl}/partials`,
-    },
-    kongManager: {
-      all: `${KMBaseApiUrl}/partials`,
-    },
+    konnect: `${konnectBaseApiUrl}/partials`,
+    kongManager: `${KMBaseApiUrl}/partials`,
   },
   form: {
     konnect: {
@@ -21,11 +17,7 @@ export default {
     },
   },
   links: {
-    konnect: {
-      all: `${konnectBaseApiUrl}/partials/{id}/links`,
-    },
-    kongManager: {
-      all: `${KMBaseApiUrl}/partials/{id}/links`,
-    },
+    konnect: `${konnectBaseApiUrl}/partials/{id}/links`,
+    kongManager: `${KMBaseApiUrl}/partials/{id}/links`,
   },
 }
