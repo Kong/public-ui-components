@@ -190,6 +190,7 @@ const props = defineProps({
   },
   /**
    * Function to resolve the record from the fetched response.
+   * This prop only works if dataKey is not provided.
    */
   recordResolver: {
     type: Function as PropType<(data: any) => any>,
