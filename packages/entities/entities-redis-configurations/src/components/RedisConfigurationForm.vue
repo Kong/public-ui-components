@@ -542,7 +542,7 @@ const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
 
 const isEditWarningModalVisible = ref(false)
 const isReadEditWarning = ref(false)
-const linksCount = ref(97)
+const linksCount = ref(0)
 
 const submitHandler = async () => {
   try {
