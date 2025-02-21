@@ -223,11 +223,27 @@ jobs:
       - name: Check dist bundle size against max-limit
         uses: Kong/github-action-dist-size-checker@main
 
+      - name: 'Authenticate to Google Cloud'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: '22045766606'
+          workload_identity_provider: 'projects/22045766606/locations/global/workloadIdentityPools/github/providers/github'
+
+
       - name: Publish Previews
         if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
+        env:
+           GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
+
+          echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
+          echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc
+
+          npx google-artifactregistry-auth
 
           preid="pr.${{ github.event.pull_request.number }}.$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
           tag="pr-${{ github.event.pull_request.number }}"
@@ -236,8 +252,6 @@ jobs:
           git checkout ${{ github.head_ref }}
 
           pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
-
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
           pnpmPublish=$(pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}")
 
