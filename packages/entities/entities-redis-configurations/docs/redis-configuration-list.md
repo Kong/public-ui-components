@@ -152,6 +152,14 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 An `@error` event is emitted when the table fails to fetch redis configurations or delete a redis configuration. The event payload is the response error.
 
+#### copy:success
+
+A `@copy:success` event is emitted when a redis configuration ID or the entity JSON is successfully copied to clipboard. The event payload shape is CopyEventPayload.
+
+#### copy:error
+
+A `@copy:error` event is emitted when an error occurs when trying to copy a redis configuration ID or the entity JSON. The event payload shape is CopyEventPayload.
+
 #### delete:success
 
 A `@delete:success` event is emitted when a redis configuration is successfully deleted. The event payload is the redis configuration item data object.

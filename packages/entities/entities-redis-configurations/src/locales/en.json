@@ -21,8 +21,12 @@
     "warning": "To delete this configuration, first remove it from all associated plugins."
   },
   "errors": {
+    "copy": "Failed to copy to clipboard",
     "general": "Redis configuration could not be retrieved",
     "delete": "The redis configuration could not be deleted at this time."
+  },
+  "copy": {
+    "success": "Copied {val} to clipboard"
   },
   "form": {
     "sections": {

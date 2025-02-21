@@ -55,6 +55,14 @@
 
       <!-- Row actions -->
       <template #actions="{ row }">
+        <KClipboardProvider v-slot="{ copyToClipboard }">
+          <KDropdownItem
+            data-testid="action-entity-copy-id"
+            @click="copyId(row, copyToClipboard)"
+          >
+            {{ t('actions.copy_id') }}
+          </KDropdownItem>
+        </KClipboardProvider>
         <PermissionsWrapper :auth-function="() => canRetrieve(row)">
           <KDropdownItem
             data-testid="action-entity-view"
@@ -199,12 +207,15 @@ import type {
 } from '../types'
 import type { BaseTableHeaders, EmptyStateOptions, ExactMatchFilterConfig, FilterFields, FuzzyMatchFilterConfig, TableErrorMessage } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
+import type { CopyEventPayload } from '@kong-ui-public/entities-plugins'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
   (e: 'delete:success', key: EntityRow): void,
   (e: 'view-plugin', param: { id: string, plugin: string }): void,
   (e: 'click:learn-more'): void,
+  (e: 'copy:error', payload: CopyEventPayload): void,
+  (e: 'delete:success', route: EntityRow): void,
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -437,6 +448,31 @@ const renderRedisType = (item: RedisConfigurationFields) => {
 
 const handleCreate = (): void => {
   router.push(props.config.createRoute)
+}
+
+/**
+ * Copy ID action
+ */
+const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void => {
+  const id = row.id as string
+
+  if (!copyToClipboard(id)) {
+    // Emit the error event for the host app
+    emit('copy:error', {
+      entity: row,
+      field: 'id',
+      message: t('errors.copy'),
+    })
+
+    return
+  }
+
+  // Emit the success event for the host app
+  emit('copy:success', {
+    entity: row,
+    field: 'id',
+    message: t('copy.success', { val: id }),
+  })
 }
 
 /**
