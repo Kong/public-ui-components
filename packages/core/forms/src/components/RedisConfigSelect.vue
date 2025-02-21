@@ -4,7 +4,7 @@
     data-testid="redis-config-select"
   >
     <KLabel
-      :info="isCustomPlugin ? t('redis.shared_configuration.tooltip') : t('redis.custom_plugin.tooltip')"
+      :info="isCustomPlugin ? t('redis.custom_plugin.tooltip') : t('redis.shared_configuration.tooltip')"
       :tooltip-attributes="{
         maxWidth: '300',
         placement: 'top',
@@ -61,7 +61,7 @@
           @click="$emit('showNewPartialModal')"
         >
           <AddIcon :size="KUI_ICON_SIZE_20" />
-          <span>{{ t('redis.shared_configuration.create_new_configuration') }}</span>
+          <span>{{ t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(redisType as PartialType)}) }}</span>
         </div>
       </template>
     </KSelect>
@@ -88,8 +88,8 @@ import { AddIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
-import { getRedisType } from '../utils/redisPartial'
-import type { RedisConfigurationFields } from '../types'
+import { getRedisType, getPartialTypeDisplay } from '../utils/redisPartial'
+import type { PartialType, RedisConfigurationFields } from '../types'
 import type { SelectItem } from '@kong/kongponents/dist/types'
 import type { Field } from '../composables/useRedisPartial'
 import RedisConfigCard from './RedisConfigCard.vue'

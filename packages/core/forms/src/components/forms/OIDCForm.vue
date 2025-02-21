@@ -92,12 +92,13 @@
           <VueFormGenerator
             v-if="displayForm"
             :enable-redis-partial="enableRedisPartial"
+            :is-editing="isEditing"
             :model="formModel"
             :options="formOptions"
             :schema="advancedFieldsSchema"
             @model-updated="onModelUpdated"
             @partial-toggled="onPartialToggled"
-            @show-new-partial-modal="showNewPartialModal"
+            @show-new-partial-modal="() => showNewPartialModal(formSchema._supported_redis_partial_type)"
           />
         </div>
       </template>

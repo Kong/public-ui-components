@@ -136,6 +136,10 @@ const props = defineProps({
     default: undefined,
     required: false,
   },
+  isEditing: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emits = defineEmits<{
@@ -150,7 +154,7 @@ const { t } = createI18n<typeof english>('en-us', english)
 
 // if the plugin is custom, show redis configuration selector instead of the whole card
 const isCustomPlugin = computed(() => props.field.pluginType === 'custom')
-const usePartial = ref(false)
+const usePartial = ref(!props.isEditing)
 const selectedRedisConfigItem = ref()
 
 const redisFieldsSaved = ref([] as { model: any; schema: any }[])

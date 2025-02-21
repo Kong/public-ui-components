@@ -24,3 +24,12 @@ export const getRedisType = (fields: RedisConfigurationFields): RedisTypeDisplay
 
   return RedisTypeDisplay.HOST_PORT_EE
 }
+
+export const partialTypeDisplay = {
+  [PartialType.REDIS_CE]: 'open source',
+  [PartialType.REDIS_EE]: 'enterprise',
+}
+
+export const getPartialTypeDisplay = (type: PartialType): string => {
+  return partialTypeDisplay[type] ?? ''
+}

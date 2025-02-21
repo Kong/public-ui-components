@@ -15,13 +15,14 @@
           v-if="field.model === '__redis_partial' && enableRedisPartial"
           :errors="errors"
           :field="field"
+          :is-editing="isEditing"
           :model="model"
           :options="options"
           :tag="tag"
           :vfg="vfg"
           @model-updated="onModelUpdated"
           @partial-toggled="onPartialToggled"
-          @show-new-partial-modal="$emit('showNewPartialModal')"
+          @show-new-partial-modal="$emit('showNewPartialModal', field.redisType)"
           @validated="onFieldValidated"
         />
         <form-group
@@ -110,13 +111,14 @@
                 v-if="field.model === '__redis_partial' && enableRedisPartial"
                 :errors="errors"
                 :field="field"
+                :is-editing="isEditing"
                 :model="model"
                 :options="options"
                 :tag="tag"
                 :vfg="vfg"
                 @model-updated="onModelUpdated"
                 @partial-toggled="onPartialToggled"
-                @show-new-partial-modal="$emit('showNewPartialModal')"
+                @show-new-partial-modal="$emit('showNewPartialModal', field.redisType)"
                 @validated="onFieldValidated"
               />
               <form-group
@@ -256,6 +258,11 @@ export default {
     },
 
     enableRedisPartial: {
+      type: Boolean,
+      default: false,
+    },
+
+    isEditing: {
       type: Boolean,
       default: false,
     },

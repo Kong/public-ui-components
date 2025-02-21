@@ -52,7 +52,7 @@
         :schema="loadedSchema || {}"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
-        @show-new-partial-modal="$emit('showNewPartialModal')"
+        @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
       />
 
       <template #form-actions>
@@ -186,7 +186,7 @@ const emit = defineEmits<{
       resourceEndpoint: string
     }
   ): void
-  (e: 'showNewPartialModal'): void
+  (e: 'showNewPartialModal', redisType: string): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

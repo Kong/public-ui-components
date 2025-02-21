@@ -206,12 +206,13 @@
     >
       <VueFormGenerator
         :enable-redis-partial="enableRedisPartial"
+        :is-editing="props.isEditing"
         :model="formModel"
         :options="formOptions"
         :schema="advancedSchema.redis"
         @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
         @partial-toggled="onPartialToggled"
-        @show-new-partial-modal="showNewPartialModal"
+        @show-new-partial-modal="() => showNewPartialModal(props.formSchema._supported_redis_partial_type)"
       />
     </component>
 
@@ -334,7 +335,7 @@ const props = defineProps<{
   formOptions: any
   onModelUpdated: (value: any, model: string) => void
   onPartialToggled: (field: string, model: any) => void
-  showNewPartialModal: () => void
+  showNewPartialModal: (redisType: string) => void
   isEditing?: boolean
   enableRedisPartial?: boolean
 }>()
