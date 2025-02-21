@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.35.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.9...@kong-ui-public/dashboard-renderer@0.35.10) (2025-02-21)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** empty csv export dropdown [MA-3523] ([#1969](https://github.com/Kong/public-ui-components/issues/1969)) ([518b784](https://github.com/Kong/public-ui-components/commit/518b784a9fc8f46154d8c44e2775bf18d9894f94))
+
+
+
+
+
 ## [0.35.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.8...@kong-ui-public/dashboard-renderer@0.35.9) (2025-02-19)
 
 
