@@ -21,6 +21,9 @@ jobs:
     name: Build And Test
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
       unitTestFilter: ${{steps.changed_packages.outputs.unitTestFilter}}
