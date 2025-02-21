@@ -153,9 +153,6 @@ export const doughnutChartSchema = {
       type: 'string',
       enum: ['doughnut'],
     },
-    metricUnit: {
-      type: 'string',
-    },
     syntheticsDataKey,
     chartTitle,
   },
