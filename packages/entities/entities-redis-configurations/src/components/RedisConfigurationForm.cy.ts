@@ -620,6 +620,7 @@ describe('<RedisConfigurationForm />', {
 
       it('should show error message', () => {
         interceptDetail({ status: 404 })
+        interceptLinkedPlugins()
 
         cy.mount(RedisConfigurationForm, {
           props: {

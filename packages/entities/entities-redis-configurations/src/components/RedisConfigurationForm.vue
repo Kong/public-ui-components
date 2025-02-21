@@ -18,7 +18,7 @@
       @submit="submitHandler"
     >
       <KAlert
-        v-if="linksCount > 0"
+        v-if="linksCount > 0 && isEdit"
         appearance="warning"
         class="warning-alert"
       >
