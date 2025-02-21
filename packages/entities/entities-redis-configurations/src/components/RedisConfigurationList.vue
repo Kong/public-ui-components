@@ -79,6 +79,51 @@
           </KDropdownItem>
         </PermissionsWrapper>
       </template>
+
+      <template
+        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        #empty-state
+      >
+        <EntityEmptyState
+          :action-button-text="t('list.action')"
+          appearance="secondary"
+          :can-create="() => canCreate()"
+          data-testid="redis-entity-empty-state"
+          :description="t('list.empty_state.description')"
+          :features="[
+            {
+              title: t('list.empty_state.feature_1.title'),
+              description: t('list.empty_state.feature_1.description')
+            },
+            {
+              title: t('list.empty_state.feature_2.title'),
+              description: t('list.empty_state.feature_2.description')
+            },
+          ]"
+          :learn-more="config.app === 'konnect'"
+          :title="t('redis.title')"
+          @click:create="handleCreate"
+          @click:learn-more="() => emit('click:learn-more')"
+        >
+          <template #image>
+            <div class="empty-state-icon-gateway">
+              <!-- todo(zehao): need a new icon -->
+              <DeployIcon
+                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
+                :size="KUI_ICON_SIZE_50"
+              />
+            </div>
+          </template>
+
+          <template #feature-0-icon>
+            <DeployIcon />
+          </template>
+
+          <template #feature-1-icon>
+            <RuntimesIcon /> <!-- todo(zehao): need a new icon -->
+          </template>
+        </EntityEmptyState>
+      </template>
     </EntityBaseTable>
 
     <KModal
@@ -129,10 +174,13 @@ import {
   useDeleteUrlBuilder,
   EntityDeleteModal,
   FetcherStatus,
+  EntityEmptyState,
 } from '@kong-ui-public/entities-shared'
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
+import { RuntimesIcon, DeployIcon } from '@kong/icons'
 
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
@@ -156,6 +204,7 @@ const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
   (e: 'delete:success', key: EntityRow): void,
   (e: 'view-plugin', param: { id: string, plugin: string }): void,
+  (e: 'click:learn-more'): void,
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -198,6 +247,14 @@ const props = defineProps({
     type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
+  },
+  /**
+   * Enables the new empty state design, this prop can be removed when
+   * the khcp-14756-empty-states-m2 FF is removed.
+   */
+  enableV2EmptyStates: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -277,9 +334,9 @@ const emptyStateOptions = ref<EmptyStateOptions>({
 })
 
 const tableHeaders: BaseTableHeaders = {
-  name: { label: 'Name', searchable: true, hidable: false, sortable: true },
-  type: { label: 'Type' },
-  plugins: { label: 'Plugins' },
+  name: { label: t('list.table_headers.name'), searchable: true, hidable: false, sortable: true },
+  type: { label: t('list.table_headers.type') },
+  plugins: { label: t('list.table_headers.plugin') },
 }
 
 const getViewDropdownItem = (id: string) => {
@@ -376,6 +433,10 @@ const renderRedisType = (item: RedisConfigurationFields) => {
     case RedisType.CLUSTER:
       return `${t('form.options.type.cluster')}${t('form.options.type.suffix_enterprise')}`
   }
+}
+
+const handleCreate = (): void => {
+  router.push(props.config.createRoute)
 }
 
 /**

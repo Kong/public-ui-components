@@ -207,5 +207,24 @@
       "title": "Configure a Redis Configuration",
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing."
     }
+  },
+  "list": {
+    "action": "New configuration",
+    "table_headers": {
+      "name": "Name",
+      "type": "Type",
+      "plugin": "Plugin"
+    },
+    "empty_state": {
+      "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing.",
+      "feature_1": {
+        "title": "Store your Redis configurations",
+        "description": "Define a Redis configuration once and use it across multiple plugins."
+      },
+      "feature_2": {
+        "title": "Sync across plugins",
+        "description": "Edits to your configuration will be cascaded automatically to all associated plugins."
+      }
+    }
   }
 }
