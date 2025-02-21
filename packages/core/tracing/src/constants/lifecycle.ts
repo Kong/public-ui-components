@@ -19,6 +19,8 @@ export enum LifecycleNodeType {
   CLIENT_OUT = 'clientOut',
   REQUEST = 'request',
   UPSTREAM = 'upstream',
+  UPSTREAM_IN = 'upstreamIn',
+  UPSTREAM_OUT = 'upstreamOut',
   RESPONSE = 'response',
   REQUEST_GROUP = 'requestGroup',
   RESPONSE_GROUP = 'responseGroup',

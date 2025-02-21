@@ -9,10 +9,23 @@
     </KBadge>
 
     <div
-      v-if="data.label"
+      v-if="data.labelKey || data.label"
       class="label"
     >
-      <span>{{ data.label }}</span>
+      <span class="label-primary">
+        {{ `${
+          data.labelKey ? t(data.labelKey) : data.label
+        }${
+          data.emptyGroup && data.emptyGroupMessageKey ? ': ' : ''
+        }` }}
+      </span>
+
+      <span
+        v-if="data.emptyGroup && data.emptyGroupMessageKey"
+        class="label-secondary"
+      >
+        {{ t(data.emptyGroupMessageKey) }}
+      </span>
 
       <KTooltip
         v-if="data.labelTooltipKey"
@@ -45,7 +58,7 @@
 
   <!-- aka. In -->
   <Handle
-    v-if="!isGroupNode && targetPosition"
+    v-if="targetPosition"
     class="handle"
     :connectable="false"
     :position="targetPosition"
@@ -55,7 +68,7 @@
 
   <!-- aka. Out -->
   <Handle
-    v-if="!isGroupNode && sourcePosition"
+    v-if="sourcePosition"
     class="handle"
     :connectable="false"
     :position="sourcePosition"
@@ -72,7 +85,7 @@ import type { Position } from '@vue-flow/core'
 import { Handle } from '@vue-flow/core'
 import { computed } from 'vue'
 import composables from '../../composables'
-import { LifecycleNodeType, NODE_GROUP_PADDING, NODE_GROUP_ROW_GAP } from '../../constants'
+import { LifecycleNodeType, NODE_GROUP_PADDING } from '../../constants'
 import type { LifecycleNodeData } from '../../types'
 import { getDurationFormatter, getNodeStripeColor } from '../../utils'
 
@@ -110,6 +123,10 @@ const rootClasses = computed(() => {
     )
   }
 
+  if (props.data.emptyGroup) {
+    classes.push('empty-group')
+  }
+
   return classes
 })
 
@@ -126,7 +143,7 @@ const nodeStripeColor = computed(() => getNodeStripeColor(props.data.durationNan
 .lifecycle-view-node {
   $stripe-width: 8px;
 
-  align-items: center;
+  align-items: flex-start;
   background-color: $kui-color-background;
   /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
   border: $kui-border-width-10 solid $kui-color-background-neutral-stronger;
@@ -172,7 +189,7 @@ const nodeStripeColor = computed(() => getNodeStripeColor(props.data.durationNan
     max-width: 200px;
   }
 
-  &:not(.type-client):not(.type-request-group):not(.type-response-group) {
+  &:not(.type-client):not(.type-request-group):not(.type-upstream):not(.type-response-group) {
     padding-left: calc($kui-space-40 + $stripe-width);
 
     > ::after {
@@ -186,22 +203,12 @@ const nodeStripeColor = computed(() => getNodeStripeColor(props.data.durationNan
     }
   }
 
-  &.label-top {
+  &.label-top:not(.empty-group) {
     justify-content: flex-start;
-    padding-top: v-bind('`${NODE_GROUP_ROW_GAP}px`'); // For visual compensation. Does not affect layout calculation.
   }
 
-  &.label-right {
-    align-items: flex-end;
-  }
-
-  &.label-bottom {
+  &.label-bottom:not(.empty-group) {
     justify-content: flex-end;
-    padding-bottom: v-bind('`${NODE_GROUP_ROW_GAP}px`'); // For visual compensation. Does not affect layout calculation.
-  }
-
-  &.label-left {
-    align-items: flex-start;
   }
 
   .badge {
@@ -219,7 +226,14 @@ const nodeStripeColor = computed(() => getNodeStripeColor(props.data.durationNan
 
   .label {
     font-size: $kui-font-size-30;
-    font-weight: $kui-font-weight-semibold;
+
+    .label-primary {
+      font-weight: $kui-font-weight-semibold;
+    }
+
+    .label-primary, .label-secondary {
+      flex-shrink: 0;
+    }
   }
 
   .duration {

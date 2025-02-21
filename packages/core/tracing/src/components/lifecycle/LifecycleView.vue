@@ -34,7 +34,7 @@
         :show-interactive="false"
         @fit-view="fitFlow"
       />
-      <Background variant="lines" />
+      <Background />
     </VueFlow>
   </div>
 </template>
@@ -105,7 +105,9 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   let clientNode: GraphNode | undefined
   let clientOutNode: GraphNode | undefined
   let requestGroupNode: GraphNode | undefined
+  let upstreamInNode: GraphNode | undefined
   let upstreamNode: GraphNode | undefined
+  let upstreamOutNode: GraphNode | undefined
   let responseGroupNode: GraphNode | undefined
   let clientInNode: GraphNode | undefined
 
@@ -163,11 +165,23 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
           requestGroupMetrics.innerHeight = node.dimensions.height
         }
         break
+      case LifecycleNodeType.UPSTREAM_IN:
+        node.targetPosition = Position.Left
+        node.sourcePosition = Position.Right
+
+        upstreamInNode = node
+        break
       case LifecycleNodeType.UPSTREAM:
         node.targetPosition = Position.Top
         node.sourcePosition = Position.Bottom
 
         upstreamNode = node
+        break
+      case LifecycleNodeType.UPSTREAM_OUT:
+        node.targetPosition = Position.Right
+        node.sourcePosition = Position.Left
+
+        upstreamOutNode = node
         break
       case LifecycleNodeType.RESPONSE_GROUP:
         node.targetPosition = Position.Right
@@ -200,8 +214,12 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
     throw new Error('Missing the client node')
   } else if (!clientOutNode) {
     throw new Error('Missing the client out node')
+  } else if (!upstreamInNode) {
+    throw new Error('Missing the upstream in node')
   } else if (!upstreamNode) {
     throw new Error('Missing the upstream node')
+  } else if (!upstreamOutNode) {
+    throw new Error('Missing the upstream out node')
   } else if (!clientInNode) {
     throw new Error('Missing the client in node')
   }
@@ -209,7 +227,7 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   // >>> Layout - Request Group
   if (requestGroupNode) {
     requestGroupMetrics.innerOffsetY = requestGroupNode.dimensions.height - NODE_GROUP_PADDING + NODE_GROUP_ROW_GAP
-    requestGroupMetrics.width = requestGroupMetrics.innerWidth + NODE_GROUP_PADDING * 2
+    requestGroupMetrics.width = Math.max(requestGroupNode.dimensions.width, requestGroupMetrics.innerWidth + NODE_GROUP_PADDING * 2)
     requestGroupMetrics.height = requestGroupNode.dimensions.height + NODE_GROUP_ROW_GAP + requestGroupMetrics.innerHeight
     requestGroupNode.width = requestGroupMetrics.width
     requestGroupNode.height = requestGroupMetrics.height
@@ -230,7 +248,7 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   // >>> Layout - Response Group
   if (responseGroupNode) {
     responseGroupMetrics.innerOffsetY = NODE_GROUP_PADDING
-    responseGroupMetrics.width = responseGroupMetrics.innerWidth + NODE_GROUP_PADDING * 2
+    responseGroupMetrics.width = Math.max(responseGroupNode.dimensions.width, responseGroupMetrics.innerWidth + NODE_GROUP_PADDING * 2)
     responseGroupMetrics.height = responseGroupNode.dimensions.height + NODE_GROUP_ROW_GAP + responseGroupMetrics.innerHeight
     responseGroupNode.width = responseGroupMetrics.width
     responseGroupNode.height = responseGroupMetrics.height
@@ -271,6 +289,11 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   }
   canvasX += requestsResponsesMaxWidth + CANVAS_COLUMN_GAP
 
+  const upstreamInOutMaxWidth = Math.max(upstreamInNode.dimensions.width, upstreamOutNode.dimensions.width)
+  upstreamInNode.position.x = canvasX + (upstreamInOutMaxWidth - upstreamInNode.dimensions.width) / 2
+  upstreamOutNode.position.x = canvasX + (upstreamInOutMaxWidth - upstreamOutNode.dimensions.width) / 2
+  canvasX += upstreamInOutMaxWidth + CANVAS_COLUMN_GAP
+
   // Upstream
   upstreamNode.position.x = canvasX
   // <<< Layout along X-axis
@@ -278,15 +301,30 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   // >>> Layout along Y-axis
   let layoutY = CANVAS_PADDING
 
-  // Client Out / Request Group (They are vertically center-aligned)
-  const upperInnerMaxHeight = Math.max(clientOutNode.dimensions.height, requestGroupMetrics.innerHeight)
-  clientOutNode.position.y = layoutY + requestGroupMetrics.innerOffsetY + (upperInnerMaxHeight - clientOutNode.dimensions.height) / 2
+  // Client Out / Request Group / Upstream In (They are vertically center-aligned)
+  // If align with the child node in the request group:
+  // const upperInnerMaxHeight = Math.max(clientOutNode.dimensions.height, requestGroupMetrics.innerHeight, upstreamInNode.dimensions.height)
+  // clientOutNode.position.y = layoutY + requestGroupMetrics.innerOffsetY + (upperInnerMaxHeight - clientOutNode.dimensions.height) / 2
+  // if (requestGroupNode) {
+  //   requestGroupNode.position.y = layoutY + (upperInnerMaxHeight - requestGroupMetrics.innerHeight) / 2
+  // }
+  // upstreamInNode.position.y = layoutY + requestGroupMetrics.innerOffsetY + (upperInnerMaxHeight - upstreamInNode.dimensions.height) / 2
+  // layoutY = Math.max(
+  //   clientOutNode.position.y + clientOutNode.dimensions.height,
+  //   requestGroupNode ? requestGroupNode.position.y + requestGroupMetrics.height : 0,
+  //   upstreamInNode.position.y + upstreamInNode.dimensions.height,
+  // ) + CANVAS_ROW_GAP
+  // If align with the request group itself:
+  const upperInnerMaxHeight = Math.max(clientOutNode.dimensions.height, requestGroupMetrics.height, upstreamInNode.dimensions.height)
+  clientOutNode.position.y = layoutY + (upperInnerMaxHeight - clientOutNode.dimensions.height) / 2
   if (requestGroupNode) {
-    requestGroupNode.position.y = layoutY + (upperInnerMaxHeight - requestGroupMetrics.innerHeight) / 2
+    requestGroupNode.position.y = layoutY + (upperInnerMaxHeight - requestGroupMetrics.height) / 2
   }
+  upstreamInNode.position.y = layoutY + (upperInnerMaxHeight - upstreamInNode.dimensions.height) / 2
   layoutY = Math.max(
     clientOutNode.position.y + clientOutNode.dimensions.height,
     requestGroupNode ? requestGroupNode.position.y + requestGroupMetrics.height : 0,
+    upstreamInNode.position.y + upstreamInNode.dimensions.height,
   ) + CANVAS_ROW_GAP
 
   // Client / Upstream (They are vertically center-aligned)
@@ -295,12 +333,22 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   upstreamNode.position.y = layoutY + (clientUpstreamMaxHeight - upstreamNode.dimensions.height) / 2
   layoutY += clientUpstreamMaxHeight + CANVAS_ROW_GAP
 
-  // Client In / Response Group (They are vertically center-aligned)
-  const lowerInnerMaxHeight = Math.max(clientInNode.dimensions.height, responseGroupMetrics.innerHeight)
-  clientInNode.position.y = layoutY + responseGroupMetrics.innerOffsetY + (lowerInnerMaxHeight - clientInNode.dimensions.height) / 2
+  // Client In / Response Group / Upstream Out (They are vertically center-aligned)
+  // If align with the child node in the response group:
+  // const lowerInnerMaxHeight = Math.max(clientInNode.dimensions.height, responseGroupMetrics.innerHeight, upstreamOutNode.dimensions.height)
+  // clientInNode.position.y = layoutY + responseGroupMetrics.innerOffsetY + (lowerInnerMaxHeight - clientInNode.dimensions.height) / 2
+  // if (responseGroupNode) {
+  //   responseGroupNode.position.y = layoutY + (lowerInnerMaxHeight - responseGroupMetrics.innerHeight) / 2
+  // }
+  // upstreamOutNode.position.y = layoutY + responseGroupMetrics.innerOffsetY + (lowerInnerMaxHeight - upstreamOutNode.dimensions.height) / 2
+  // If align with the response group itself:
+  const lowerInnerMaxHeight = Math.max(clientInNode.dimensions.height, responseGroupMetrics.height, upstreamOutNode.dimensions.height)
+  clientInNode.position.y = layoutY + (lowerInnerMaxHeight - clientInNode.dimensions.height) / 2
   if (responseGroupNode) {
-    responseGroupNode.position.y = layoutY + (lowerInnerMaxHeight - responseGroupMetrics.innerHeight) / 2
+    responseGroupNode.position.y = layoutY + (lowerInnerMaxHeight - responseGroupMetrics.height) / 2
   }
+  upstreamOutNode.position.y = layoutY + (lowerInnerMaxHeight - upstreamOutNode.dimensions.height) / 2
+
   // <<< Layout along Y-axis
 
   return nodes
