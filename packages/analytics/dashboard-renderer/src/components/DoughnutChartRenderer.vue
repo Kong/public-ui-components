@@ -1,4 +1,3 @@
-<!-- DonutChartRenderer.vue -->
 <template>
   <BaseAnalyticsChartRenderer
     :chart-options="chartOptions"
