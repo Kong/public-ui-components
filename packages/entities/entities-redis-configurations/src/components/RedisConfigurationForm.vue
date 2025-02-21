@@ -21,6 +21,7 @@
         v-if="linksCount > 0 && isEdit"
         appearance="warning"
         class="warning-alert"
+        data-testid="redis-update-warning-alert"
       >
         <i18n-t
           keypath="form.edit_warning_modal.description"

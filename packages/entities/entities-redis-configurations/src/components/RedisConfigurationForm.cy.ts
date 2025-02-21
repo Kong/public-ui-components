@@ -690,6 +690,9 @@ describe('<RedisConfigurationForm />', {
         })
 
         cy.wait('@getRedisConfiguration')
+        cy.wait('@getLinkedPlugins')
+
+        cy.getTestId('redis-update-warning-alert').should('be.visible')
 
         cy.getTestId('redis-name-input').type('test')
         cy.getTestId('redis_configuration-edit-form-submit').click()
@@ -699,6 +702,17 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-update-warning-modal').find('[data-testid="modal-action-button"]').click()
 
         cy.wait('@editRedisConfiguration')
+
+        interceptLinkedPlugins()
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            partialId: redisConfigurationCE.id,
+          },
+        })
+        cy.wait('@getRedisConfiguration')
+        cy.wait('@getLinkedPlugins')
+        cy.getTestId('redis-update-warning-alert').should('not.exist')
       })
 
       it('props `slidoutTopOffset` should be working', () => {
