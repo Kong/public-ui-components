@@ -17,7 +17,8 @@
       @loading="loadingHandler"
       @submit="submitHandler"
     >
-      <!-- <KAlert
+      <KAlert
+        v-if="linksCount > 0"
         appearance="warning"
         class="warning-alert"
       >
@@ -29,7 +30,7 @@
             <b>{{ t('form.edit_warning_modal.plugin_count', { count: linksCount }) }}</b>
           </template>
         </i18n-t>
-      </KAlert> -->
+      </KAlert>
 
       <!-- type section -->
       <EntityFormSection
@@ -392,7 +393,7 @@
 import '@kong-ui-public/entities-shared/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeMount } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 import { useRouter } from 'vue-router'
 
@@ -587,6 +588,13 @@ const fetchErrorHandler = (err: AxiosError): void => {
 const updateFormValues = (data: Record<string, any>) => {
   setInitialFormValues(data as RedisConfigurationResponse)
 }
+
+onBeforeMount(async () => {
+  if (isEdit) {
+    const { total } = await fetchLinks({ partialId: props.partialId })
+    linksCount.value = total
+  }
+})
 </script>
 
 <style lang="scss" scoped>
