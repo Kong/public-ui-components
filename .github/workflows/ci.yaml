@@ -278,8 +278,6 @@ jobs:
           echo "npm_instructions<<EOF" >> $GITHUB_ENV
           echo -e "$npm_instructions" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
 
       - name: Provide preview link info
         if: ${{ env.npm_instructions != '' && env.GH_TOKEN != '' }}
