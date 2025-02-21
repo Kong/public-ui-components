@@ -166,7 +166,7 @@
       :visible="linkedPluginsModalVisible"
       @cancel="linkedPluginsModalVisible = false"
       @proceed="linkedPluginsModalVisible = false"
-      @view-plugin="(param) => emit('view-plugin', param)"
+      @view-plugin="(param) => emit('click:plugin', param)"
     />
   </div>
 </template>
@@ -204,18 +204,18 @@ import type {
   KongManagerRedisConfigurationListConfig,
   EntityRow,
   RedisConfigurationFields,
+  CopyEventPayload,
 } from '../types'
 import type { BaseTableHeaders, EmptyStateOptions, ExactMatchFilterConfig, FilterFields, FuzzyMatchFilterConfig, TableErrorMessage } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
-import type { CopyEventPayload } from '@kong-ui-public/entities-plugins'
 
 const emit = defineEmits<{
-  (e: 'error', error: AxiosError): void,
-  (e: 'delete:success', key: EntityRow): void,
-  (e: 'view-plugin', param: { id: string, plugin: string }): void,
   (e: 'click:learn-more'): void,
+  (e: 'click:plugin', param: { id: string, plugin: string }): void,
   (e: 'copy:error', payload: CopyEventPayload): void,
-  (e: 'delete:success', route: EntityRow): void,
+  (e: 'copy:success', payload: CopyEventPayload): void,
+  (e: 'delete:success', key: EntityRow): void,
+  (e: 'error', error: AxiosError): void,
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -459,7 +459,7 @@ const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void
   if (!copyToClipboard(id)) {
     // Emit the error event for the host app
     emit('copy:error', {
-      entity: row,
+      entity: row as any,
       field: 'id',
       message: t('errors.copy'),
     })

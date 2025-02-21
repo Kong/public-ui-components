@@ -23,3 +23,12 @@ export interface EntityRow extends Record<string, any> {
   id: string
   name: string
 }
+
+export interface CopyEventPayload {
+  /** The entity row */
+  entity: EntityRow
+  /** The field being copied. If omitted, the entity JSON is being copied. */
+  field?: string
+  /** The toaster message */
+  message: string
+}
