@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.1...@kong-ui-public/analytics-utilities@6.3.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 ## [6.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.0...@kong-ui-public/analytics-utilities@6.3.1) (2025-02-13)
 
 
