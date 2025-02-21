@@ -38,8 +38,8 @@
   },
   "devDependencies": {
     "@kong/atc-router": "1.6.0-rc.1",
-    "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.21.5",
+    "@kong/design-tokens": "1.17.3",
+    "@kong/kongponents": "9.21.6",
     "@types/uuid": "^10.0.0",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.4.4",
@@ -65,7 +65,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/forms": "workspace:^",
-    "@kong/kongponents": "^9.21.5",
+    "@kong/kongponents": "^9.21.6",
     "vue": "^3.5.12"
   },
   "dependencies": {
