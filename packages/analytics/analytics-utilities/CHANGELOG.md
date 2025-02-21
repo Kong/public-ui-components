@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.2...@kong-ui-public/analytics-utilities@6.3.3) (2025-02-21)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** enable doughnut charts [MA-3650] ([#1972](https://github.com/Kong/public-ui-components/issues/1972)) ([fc2f3d7](https://github.com/Kong/public-ui-components/commit/fc2f3d7a10e812b06efe8cdf673c13aad3be84c9))
+
+
+
+
+
 ## [6.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.1...@kong-ui-public/analytics-utilities@6.3.2) (2025-02-21)
 
 
