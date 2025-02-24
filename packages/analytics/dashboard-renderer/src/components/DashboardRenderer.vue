@@ -18,7 +18,7 @@
       <template #tile="{ tile }">
         <div
           v-if="tile.meta.chart.type === 'slottable'"
-          class="tile-container"
+          class="tile-container slottable-tile"
         >
           <slot :name="tile.meta.chart.id" />
         </div>
@@ -218,6 +218,10 @@ defineExpose({ refresh: refreshTiles })
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 100%;
+
+    &.slottable-tile {
+      padding: var(--kui-space-60, $kui-space-60);
+    }
   }
 }
 </style>
