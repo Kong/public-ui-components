@@ -36,6 +36,7 @@
         />
 
         <KInput
+          v-if="showx5t"
           v-model.trim="form.fields.x5t"
           autocomplete="off"
           data-testid="key-form-x5t"
@@ -247,6 +248,12 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  /** Whether to provide x5t field in key form */
+  showx5t: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const router = useRouter()
@@ -267,12 +274,12 @@ const form = reactive<KeyFormState>({
     name: '',
     tags: '',
     key_id: '',
-    x5t: '',
     key_format: 'jwk',
     key_set: '',
     jwk: '',
     private_key: '',
     public_key: '',
+    ...(props.showx5t ? { x5t: '' } : {}),
   },
   isReadonly: false,
   errorMessage: '',
@@ -323,7 +330,6 @@ const canSubmit = computed((): boolean => JSON.stringify(form.fields) !== JSON.s
 
 const initForm = (data: Record<string, any>): void => {
   form.fields.key_id = data?.kid || ''
-  form.fields.x5t = data?.x5t || ''
   form.fields.name = data?.name || ''
   form.fields.tags = data?.tags?.join(', ') || ''
   form.fields.key_set = data?.set?.id || ''
@@ -331,6 +337,9 @@ const initForm = (data: Record<string, any>): void => {
   form.fields.jwk = data?.jwk || ''
   form.fields.private_key = data?.pem?.private_key || ''
   form.fields.public_key = data?.pem?.public_key || ''
+  if (props.showx5t) {
+    form.fields.x5t = data?.x5t || ''
+  }
 
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
   Object.assign(formFieldsOriginal, form.fields)
@@ -367,7 +376,7 @@ const submitUrl = computed<string>(() => {
 const requestBody = computed((): Record<string, any> => {
   return {
     kid: form.fields.key_id,
-    x5t: form.fields.x5t || null,
+    ...(props.showx5t ? { x5t: form.fields.x5t || null } : {}),
     name: form.fields.name || null,
     tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== '') || [],
     set: form.fields.key_set ? { id: form.fields.key_set } : null,
@@ -396,7 +405,6 @@ const saveFormData = async (): Promise<void> => {
       const { data } = response
 
       form.fields.key_id = data?.kid || ''
-      form.fields.x5t = data?.x5t || ''
       form.fields.name = data?.name || ''
       form.fields.tags = data?.tags?.join(', ') || ''
       form.fields.key_set = data?.set?.id || ''
@@ -404,6 +412,9 @@ const saveFormData = async (): Promise<void> => {
       form.fields.jwk = data?.jwk || ''
       form.fields.private_key = data?.pem?.private_key || ''
       form.fields.public_key = data?.pem?.public_key || ''
+      if (props.showx5t) {
+        form.fields.x5t = data?.x5t || ''
+      }
 
       // Set initial state of `formFieldsOriginal` to these values in order to detect changes
       Object.assign(formFieldsOriginal, form.fields)

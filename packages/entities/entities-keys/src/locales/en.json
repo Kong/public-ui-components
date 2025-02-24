@@ -71,9 +71,9 @@
           "help": "If using JWK, need to match with the jwk.kid field"
         },
         "x5t": {
-          "label": "x5t",
-          "placeholder": "Enter x5t",
-          "tooltip": "An identifier for a key",
+          "label": "X.509 Certificate Thumbprint (x5t)",
+          "placeholder": "Enter the certificate fingerprint that identifies the key to be used to validate JWT signature",
+          "tooltip": "x5t is a base64url-encoded SHA-1 thumbprint of the DER encoding of X.509 certificate",
           "help": "If using x5t, need to match with the jwk.x5t field"
         },
         "name": {

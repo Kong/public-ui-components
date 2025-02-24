@@ -37,6 +37,7 @@ XNUyqw6DH/QqlEJ6XQIDAQAB
 }
 
 export const kid = 'FdFYFzERwC2uCBB46pZQi4GG85LujR8obt-KWRBICVQ'
+export const x5t = 'I67Q-7SSeuHsXgrpMq_K_3idefI'
 export const jwkString = '{\n  "kty" : "OKP",\n  "crv" : "Ed25519",\n  "x"   : "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",\n  "d"   : "nWGxne_9WmC6hEr0kuwsxERJxWl7MmkZcDusAxyuf2A",\n  "use" : "sig",\n  "kid" : "FdFYFzERwC2uCBB46pZQi4GG85LujR8obt-KWRBICVQ"\n}'
 const jwk = {
   kty: 'RSA',
