@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.36.1...@kong-ui-public/dashboard-renderer@1.0.1) (2025-02-24)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** fix spacing for slottable tiles ([#1981](https://github.com/Kong/public-ui-components/issues/1981)) ([33734dd](https://github.com/Kong/public-ui-components/commit/33734ddfddc01601bfa6848b28632057a9542e05))
+
+
+
+
+
 ## [0.36.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.36.0...@kong-ui-public/dashboard-renderer@0.36.1) (2025-02-24)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
