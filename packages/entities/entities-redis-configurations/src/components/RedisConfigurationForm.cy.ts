@@ -87,21 +87,23 @@ describe('<RedisConfigurationForm />', {
       }: {
         body?: typeof links,
       } = {}) {
-        cy.intercept({
-          method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/partials/*/links*`,
-        }, {
-          statusCode: 200,
-          body,
-        }).as('getLinkedPlugins')
-
-        cy.intercept({
-          method: 'GET',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials/*/links*`,
-        }, {
-          statusCode: 200,
-          body,
-        }).as('getLinkedPlugins')
+        if (app === 'Kong Manager') {
+          cy.intercept({
+            method: 'GET',
+            url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/partials/*/links*`,
+          }, {
+            statusCode: 200,
+            body,
+          }).as('getLinkedPlugins')
+        } else {
+          cy.intercept({
+            method: 'GET',
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials/*/links*`,
+          }, {
+            statusCode: 200,
+            body,
+          }).as('getLinkedPlugins')
+        }
       }
 
       it('should show create form', () => {

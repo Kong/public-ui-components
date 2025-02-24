@@ -1,9 +1,13 @@
 import { PartialType, type RedisConfigurationLinkedPluginsResponse, type RedisConfigurationResponse } from '../src'
+import { v4 as uuid } from 'uuid'
 
 export const redisConfigurationCE: Readonly<RedisConfigurationResponse> = {
   created_at: '2025-02-07T00:00:00Z',
   updated_at: '2025-02-07T00:00:00Z',
-  id: '1',
+  // randomized ID to avoid swrv cache in tests, otherwise cy.wait() will not resolve
+  get id() {
+    return uuid()
+  },
   name: 'redis-config-1',
   type: PartialType.REDIS_CE,
   config: {
@@ -35,7 +39,10 @@ export const redisConfigurationCE: Readonly<RedisConfigurationResponse> = {
 export const redisConfigurationHostPortEE: Readonly<RedisConfigurationResponse> = {
   created_at: '2025-02-07T00:00:00Z',
   updated_at: '2025-02-07T00:00:00Z',
-  id: '2',
+  // randomized ID to avoid swrv cache in tests, otherwise cy.wait() will not resolve
+  get id() {
+    return uuid()
+  },
   name: 'redis-config-2',
   type: PartialType.REDIS_EE,
   config: {
@@ -67,7 +74,10 @@ export const redisConfigurationHostPortEE: Readonly<RedisConfigurationResponse> 
 export const redisConfigurationCluster: Readonly<RedisConfigurationResponse> = {
   created_at: '2025-02-07T00:00:00Z',
   updated_at: '2025-02-07T00:00:00Z',
-  id: '3',
+  // randomized ID to avoid swrv cache in tests, otherwise cy.wait() will not resolve
+  get id() {
+    return uuid()
+  },
   name: 'redis-config-3',
   type: PartialType.REDIS_EE,
   config: {
@@ -104,7 +114,10 @@ export const redisConfigurationCluster: Readonly<RedisConfigurationResponse> = {
 export const redisConfigurationSentinel: Readonly<RedisConfigurationResponse> = {
   created_at: '2025-02-07T00:00:00Z',
   updated_at: '2025-02-07T00:00:00Z',
-  id: '4',
+  // randomized ID to avoid swrv cache in tests, otherwise cy.wait() will not resolve
+  get id() {
+    return uuid()
+  },
   name: 'redis-config-4',
   type: PartialType.REDIS_EE,
   config: {

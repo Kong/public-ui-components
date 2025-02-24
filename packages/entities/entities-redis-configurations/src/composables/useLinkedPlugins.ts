@@ -1,5 +1,5 @@
 import { useAxios, type KongManagerConfig, type KonnectConfig } from '@kong-ui-public/entities-shared'
-import { ref, watch } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import useSwrv from 'swrv'
 import endpoints from '../partials-endpoints'
 import type { RedisConfigurationLinkedPluginsResponse } from '../types'
@@ -59,6 +59,7 @@ export const useLinkedPlugins = (param: {
   const { partialId, config } = param
 
   const { fetcher } = useLinkedPluginsFetcher(config)
+  const result = ref<RedisConfigurationLinkedPluginsResponse['data']>([])
   const { data } = useSwrv(
     buildLinksCacheKey(partialId),
     () => fetcher({ partialId }),
@@ -66,11 +67,15 @@ export const useLinkedPlugins = (param: {
       revalidateOnFocus: false,
     },
   )
-  const result = ref<RedisConfigurationLinkedPluginsResponse['data']>([])
 
   watch(data, () => {
     result.value = data.value?.data ?? []
   })
+
+  // onBeforeMount(async () => {
+  //   const { data } = await fetcher({ partialId })
+  //   result.value = data ?? []
+  // })
 
   return result
 }
