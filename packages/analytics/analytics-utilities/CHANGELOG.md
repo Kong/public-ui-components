@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.3...@kong-ui-public/analytics-utilities@7.0.0) (2025-02-24)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** reduce required dependencies ([#1975](https://github.com/Kong/public-ui-components/issues/1975)) ([182f845](https://github.com/Kong/public-ui-components/commit/182f84557cb15314fc1b5985e810ed2923d780d1))
+
+
+### BREAKING CHANGES
+
+* **dashboard-renderer:** `EntityLink` must be provided from the analytics bridge if full functionality is needed.
+
+
+
+
+
 ## [6.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.2...@kong-ui-public/analytics-utilities@6.3.3) (2025-02-21)
 
 
