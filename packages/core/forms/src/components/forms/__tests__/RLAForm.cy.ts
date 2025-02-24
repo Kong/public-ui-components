@@ -87,9 +87,8 @@ describe('<RLAForm />', () => {
     cy.getTestId('redis-config-card').should('exist')
 
 
-    cy.get('.dedicated-redis-config-title').should('contain.text', 'Connection Settings')
-    cy.getTestId('shared-redis-config-radio').click()
-    cy.getTestId('redis-config-select').click()
+    // should default to shared redis configuration
+    cy.getTestId('redis-config-select-trigger').click()
 
     const [redisCEConfigDetail, redisEEConfigDetail] = redisPartials
     // should filter out CE partials for EE plugin

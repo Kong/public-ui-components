@@ -199,7 +199,7 @@ watch(() => usePartial.value, (usePartial) => {
 })
 
 // fetch available redis configs under the control plane
-onBeforeMount(async () => {
+onBeforeMount(() => {
   redisFieldsSaved.value = props.field.fields.reduce((acc: Record<string,any>, field: { model: string }) => {
     if (Object.keys(props.model!).includes(field.model)) {
       acc[field.model] = props.model![field.model]

@@ -264,7 +264,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
           return false
         }
       }
-      return /redis-/.test(field.model)
+      return /(?<=-redis-).*/.test(field.model)
     }
 
     formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type

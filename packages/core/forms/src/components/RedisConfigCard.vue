@@ -126,7 +126,7 @@ const allConfigDetails = computed(() => configDetails.value.concat(nonStandardCo
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .partial-config-card {
   display: flex;
   flex-direction: column;

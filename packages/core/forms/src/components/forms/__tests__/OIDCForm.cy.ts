@@ -77,7 +77,7 @@ describe('<OIDCForm />', () => {
 
 
     cy.getTestId('shared-redis-config-radio').click()
-    cy.getTestId('redis-config-select').click()
+    cy.getTestId('redis-config-select-trigger').click()
 
     const [redisCEConfigDetail, redisEEConfigDetail] = redisPartials
     // should filter out CE partials for EE plugin

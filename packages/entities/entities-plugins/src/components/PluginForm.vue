@@ -296,7 +296,7 @@ const props = defineProps({
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { customSchemas, typedefs } = composables.useSchemas({ app: props.config.app, credential: props.credential })
-const { formatPluginFieldLabel } = composables.usePluginHelpers()
+const { formatPluginFieldLabel, deleteValueByPath } = composables.usePluginHelpers()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
@@ -311,6 +311,7 @@ const treatAsCredential = computed((): boolean => !!(props.credential && props.c
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
 const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
+const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
 const formLoading = ref(false)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
@@ -1202,6 +1203,12 @@ const getRequestBody = computed((): Record<string, any> => {
 
     delete requestBody.created_at
   }
+
+  // if a partial value is passed, set the redis path of requestBody to null, in this way we
+  if (submitPayload.value.partials && pluginRedisPath.value) {
+    deleteValueByPath(pluginRedisPath.value, requestBody)
+  }
+
   return requestBody
 })
 
@@ -1237,10 +1244,11 @@ const saveFormData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, payload)
     } else if (formType.value === 'edit') {
-      response = props.config.app === 'konnect'
+      response = props.config.app === 'konnect' || (pluginPartialType.value && getRequestBody.value.partials)
         // Note 1: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //         If this changes, the `edit` form methods should be re-evaluated/updated accordingly
         // Note 2: Because Konnect uses PUT, we need to include dynamic ordering in the request body
+        // Note 3: In Kong Manager, if a plugin supports redis partial, we need to use PUT to update the plugin to override redis fields
         ? await axiosInstance.put(submitUrl.value, Object.assign({ ordering: dynamicOrdering.value }, payload))
         : await axiosInstance.patch(submitUrl.value, payload)
     }
@@ -1306,7 +1314,10 @@ onBeforeMount(async () => {
           // start from the config part of the schema
           const configField = data.fields.find((field: Record<string, any>) => field.config)
           configResponse.value = configField ? configField.config : data
-          if (data.supported_partials) pluginPartialType.value = Object.keys(data.supported_partials).find(key => [PluginPartialType.REDIS_CE, PluginPartialType.REDIS_EE].includes(key as PluginPartialType)) as PluginPartialType
+          if (data.supported_partials) {
+            pluginPartialType.value = Object.keys(data.supported_partials).find(key => [PluginPartialType.REDIS_CE, PluginPartialType.REDIS_EE].includes(key as PluginPartialType)) as PluginPartialType
+            pluginRedisPath.value = data.supported_partials[pluginPartialType.value]?.[0]
+          }
 
           // scoping and global field setup
           initScopeFields()
