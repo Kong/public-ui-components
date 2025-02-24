@@ -420,6 +420,7 @@ const getModel = (): Record<string, any> => {
       if (fieldSchema.type === 'array' && fieldSchema.nestedFields) {
         const deepOmitNil = (o: Record<string, any>) => {
           Object.keys(o).forEach(key => {
+            // if the value is an object (not an array or null), recursively call this function
             if (o[key] && typeof o[key] === 'object' && !Array.isArray(o[key]) && o[key] !== null) {
               deepOmitNil(o[key])
             } else if (o[key] === undefined || o[key] === null || (typeof o[key] === 'number' && isNaN(o[key]))
