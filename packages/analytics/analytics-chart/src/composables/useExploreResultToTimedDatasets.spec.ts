@@ -257,6 +257,8 @@ describe('useVitalsExploreDatasets', () => {
       meta: {
         start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
         end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: new Date(Math.trunc(START_FOR_DAILY_QUERY.getTime())).toISOString(),
+        end: new Date(Math.trunc(END_FOR_DAILY_QUERY.getTime())).toISOString(),
         granularity_ms: 86400000,
         metric_names: ['metric1', 'metric2'] as any as ExploreAggregations[],
         display: {},
