@@ -28,59 +28,6 @@
           :config="filterConfig"
         />
       </template>
-      <!-- Create action -->
-      <template #toolbar-button>
-        <Teleport
-          :disabled="!useActionOutside"
-          to="#kong-ui-app-page-header-action-button"
-        >
-          <div class="button-row">
-            <KButton
-              v-if="showHeaderLHButton"
-              appearance="secondary"
-              class="open-learning-hub"
-              data-testid="consumer-groups-learn-more-button"
-              icon
-              @click="$emit('click:learn-more')"
-            >
-              <BookIcon decorative />
-            </KButton>
-            <PermissionsWrapper :auth-function="() => canCreate()">
-              <!-- Hide Create button if table is empty -->
-              <KButton
-                appearance="primary"
-                data-testid="toolbar-add-consumer-group"
-                :size="useActionOutside ? 'medium' : 'large'"
-                @click="handleCreateClick"
-              >
-                <AddIcon />
-                {{ config.consumerId ? t('consumer_groups.actions.add_to_group') : t('consumer_groups.list.toolbar_actions.new_consumer_group') }}
-              </KButton>
-            </PermissionsWrapper>
-          </div>
-        </Teleport>
-      </template>
-
-      <!-- TODO: remove this slot when empty states M2 is cleaned up -->
-      <template
-        v-if="!hasRecords && isLegacyLHButton"
-        #outside-actions
-      >
-        <Teleport
-          :disabled="!useActionOutside"
-          to="#kong-ui-app-page-header-action-button"
-        >
-          <KButton
-            appearance="secondary"
-            class="open-learning-hub"
-            data-testid="consumer-groups-learn-more-button"
-            icon
-            @click="$emit('click:learn-more')"
-          >
-            <BookIcon decorative />
-          </KButton>
-        </Teleport>
-      </template>
 
       <template
         v-if="!filterQuery && enableV2EmptyStates && config.app === 'konnect'"
@@ -235,7 +182,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
-import { AddIcon, BookIcon, TeamIcon } from '@kong/icons'
+import { TeamIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 import composables from '../composables'
 import endpoints from '../consumer-groups-endpoints'
@@ -320,11 +267,6 @@ const props = defineProps({
     type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
-  },
-  /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
-  useActionOutside: {
-    type: Boolean,
-    default: false,
   },
   /**
    * Enables the new empty state design, this prop can be removed when
@@ -414,11 +356,12 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 })
 
 const { hasRecords, handleStateChange } = useTableState(filterQuery)
-// Current empty state logic is only for Konnect, KM will pick up at GA.
-// If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
-// If new empty states are not enabled, show the learning hub button (for Konnect)
-const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
-const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
+
+// Let the host app know if the table has records in order to show/hide action buttons in the header
+defineExpose({
+  hasRecords,
+  handleCreateClick,
+})
 
 const isConsumerPage = computed<boolean>(() => !!props.config.consumerId)
 const preferencesStorageKey = computed<string>(
