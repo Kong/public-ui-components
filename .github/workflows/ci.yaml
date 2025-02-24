@@ -242,8 +242,8 @@ jobs:
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
 
-          echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
-          echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
+          echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/npmjs/" > .npmrc
+          echo "//us-central1-npm.pkg.dev/artifacts-storage/npmjs/:always-auth=true" >> .npmrc
           echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc
 
           npx google-artifactregistry-auth
