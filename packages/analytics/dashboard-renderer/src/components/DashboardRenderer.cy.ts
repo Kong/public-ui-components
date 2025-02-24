@@ -25,10 +25,12 @@ import {
   simpleConfigNoFilters,
 } from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
+import { EntityLink } from '@kong-ui-public/entities-shared'
 
 interface MockOptions {
   failToResolveConfig?: boolean
   shortRetention?: boolean
+  renderEntityLink?: boolean
 }
 
 describe('<DashboardRenderer />', () => {
@@ -107,10 +109,16 @@ describe('<DashboardRenderer />', () => {
       return true
     }
 
+    const fetchComponentFn = (name: string) => {
+      return Promise.resolve(EntityLink)
+    }
+
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
       evaluateFeatureFlagFn,
+
+      fetchComponent: opts?.renderEntityLink ? fetchComponentFn : undefined,
     }
   }
 
@@ -401,13 +409,67 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: true }),
         },
       },
     })
 
     // Check value of href attribute
     cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > .column-1 > [data-testid="entity-link-parent"] > a').should('have.attr', 'href').and('eq', 'https://test.com/cp/b486fb30-e058-4b5f-85c2-495ec26ba522/entity/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
+  })
+
+  it('Renders a dashboard with a TopNTable with fallback EntityLinks', () => {
+    const customTimeframe = datePickerSelectionToTimeframe({
+      timePeriodsKey: 'custom',
+      start: new Date('2024-03-03T21:10:28.969Z'),
+      end: new Date('2024-03-06T21:10:28.969Z'),
+    }) as Timeframe
+
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: customTimeframe.v4Query(),
+      },
+      config: {
+        gridSize: { cols: 3, rows: 2 },
+        tiles: [
+          {
+            definition: {
+              chart: {
+                type: 'top_n',
+                entityLink: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
+              },
+              query: {
+                datasource: 'basic',
+                dimensions: ['route'],
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 0,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          },
+        ],
+      },
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: false }),
+        },
+      },
+    })
+
+    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > .column-1 > [data-testid="entity-link-parent"]').should('have.class', 'fallback-entity-link')
+    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > .column-1 > [data-testid="entity-link-parent"]').should('have.text', 'GetMeAKongDefault (secondaryRuntime)')
   })
 
   it("doesn't issue queries if it's still waiting for the timeSpec", () => {
