@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.2...@kong-ui-public/entities-plugins@9.12.3) (2025-02-24)
+
+
+### Bug Fixes
+
+* **forms:** array elements are deleted ([#1977](https://github.com/Kong/public-ui-components/issues/1977)) ([f0f0e8d](https://github.com/Kong/public-ui-components/commit/f0f0e8deed61a6369794fea2cee69674b60ac51f))
+
+
+
+
+
 ## [9.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.1...@kong-ui-public/entities-plugins@9.12.2) (2025-02-21)
 
 
