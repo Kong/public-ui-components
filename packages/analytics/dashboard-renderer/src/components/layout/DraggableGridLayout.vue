@@ -25,7 +25,7 @@
 </template>
 
 <script lang='ts' setup generic="T">
-import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
+import { onMounted, onUnmounted, ref, watch, nextTick, computed } from 'vue'
 import { GridStack } from 'gridstack'
 import type { GridItemHTMLElement, GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
@@ -49,8 +49,7 @@ const emit = defineEmits<{
 
 const gridContainer = ref<HTMLDivElement | null>(null)
 
-
-const tilesRef = ref<Map<string, GridTile<any>>>(new Map(props.tiles.map(t => [`${t.id}`, t])))
+const tilesRef = computed<Map<string, GridTile<any>>>(() =>new Map(props.tiles.map(t => [`${t.id}`, t])))
 
 let grid: GridStack | null = null
 
@@ -76,6 +75,14 @@ const makeTilesFromGridItemHtmlElements = (items: GridItemHTMLElement[]) => {
   })
 }
 
+const tileSortFn = (a: GridTile<T>, b: GridTile<T>) => {
+  const rowDiff = a.layout.position.row - b.layout.position.row
+  if (rowDiff !== 0) {
+    return rowDiff
+  }
+  return a.layout.position.col - b.layout.position.col
+}
+
 const updateTiles = () => {
   if (grid) {
     const items = grid.getGridItems()
@@ -84,17 +91,7 @@ const updateTiles = () => {
       tilesRef.value.set(`${tile.id}`, tile)
     })
 
-    const tiles = Array.from(tilesRef.value.entries())
-    tiles.sort((a, b) => {
-      const rowDiff = a[1].layout.position.row - b[1].layout.position.row
-      if (rowDiff !== 0) {
-        return rowDiff
-      }
-      return a[1].layout.position.col - b[1].layout.position.col
-    })
-    tilesRef.value = new Map(tiles)
-
-    emit('update-tiles', Array.from(tilesRef.value.values()))
+    emit('update-tiles', Array.from(tilesRef.value.values()).toSorted(tileSortFn))
   }
 }
 
@@ -150,22 +147,6 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
     }
   }
 })
-
-// Gridstack widgets are driven by a copy of props.tiles.
-// If the meta of a tile changes, we need to update the copy to keep it in sync.
-watch(() => props.tiles, (newTiles, oldTiles) => {
-  if (newTiles.length === oldTiles.length) {
-    newTiles.forEach(tile => {
-      const current = tilesRef.value.get(`${tile.id}`)
-      if (current) {
-        tilesRef.value.set(`${tile.id}`, {
-          ...current,
-          meta: tile.meta,
-        })
-      }
-    })
-  }
-}, { deep: true })
 
 defineExpose({ removeWidget })
 
