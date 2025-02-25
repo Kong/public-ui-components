@@ -83,7 +83,7 @@ describe('<RedisConfigurationForm />', {
       }
 
       function interceptLinkedPlugins({
-        body = { data: [], next: null, total: 0 },
+        body = { data: [], next: null, count: 0 },
       }: {
         body?: typeof links,
       } = {}) {

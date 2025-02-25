@@ -549,9 +549,9 @@ const submitHandler = async () => {
   try {
     // show a warning if user is trying to modify a partial that already has linked plugins
     if (isEdit && !isReadEditWarning.value) {
-      const { total } = await fetchLinks({ partialId: props.partialId })
-      linksCount.value = total
-      if (total > 0) {
+      const { count } = await fetchLinks({ partialId: props.partialId })
+      linksCount.value = count
+      if (count > 0) {
         // show warning modal
         isEditWarningModalVisible.value = true
         return
@@ -592,8 +592,8 @@ const updateFormValues = (data: Record<string, any>) => {
 
 onBeforeMount(async () => {
   if (isEdit) {
-    const { total } = await fetchLinks({ partialId: props.partialId })
-    linksCount.value = total
+    const { count } = await fetchLinks({ partialId: props.partialId })
+    linksCount.value = count
   }
 })
 </script>

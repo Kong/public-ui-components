@@ -134,18 +134,10 @@
       </template>
     </EntityBaseTable>
 
-    <KModal
-      :action-button-text="t('actions.close')"
-      data-testid="remove-links-modal"
-      hide-cancel-button
-      max-width="640"
-      :title="t('delete.title')"
+    <DeleteWarningModal
       :visible="isRemoveLinksModalVisible"
-      @cancel="isRemoveLinksModalVisible = false"
-      @proceed="isRemoveLinksModalVisible = false"
-    >
-      {{ t('delete.warning') }}
-    </KModal>
+      @close="isRemoveLinksModalVisible = false"
+    />
 
     <EntityDeleteModal
       :action-pending="isDeletePending"
@@ -197,6 +189,7 @@ import { RedisType } from '../types'
 import LinkedPluginsInline from './LinkedPluginsInline.vue'
 import LinkedPluginListModal from './LinkedPluginListModal.vue'
 import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
+import DeleteWarningModal from './DeleteWarningModal.vue'
 
 import type { PropType } from 'vue'
 import type {
@@ -366,8 +359,8 @@ const getEditDropdownItem = (id: string) => {
 
 const deleteRow = async (row: EntityRow) => {
   // check if the partial still has plugins linked to it
-  const { total } = await fetchLinks({ partialId: row.id as string })
-  if (total > 0) {
+  const { count } = await fetchLinks({ partialId: row.id as string })
+  if (count > 0) {
     // show warning modal
     isRemoveLinksModalVisible.value = true
   } else {

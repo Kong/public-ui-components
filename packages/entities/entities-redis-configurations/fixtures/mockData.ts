@@ -162,7 +162,7 @@ export const partials = {
 }
 
 export const links: RedisConfigurationLinkedPluginsResponse = {
-  total: 1,
+  count: 1,
   data: [{ id: '1', name: 'rate-limiting' }],
   next: null,
 }

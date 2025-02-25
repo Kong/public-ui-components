@@ -96,17 +96,17 @@ const { fetcher: linksFetcher } = useLinkedPluginsFetcher(props.config)
 const totalCount = ref(0)
 
 const fetcher = async (param: TableDataFetcherParams): Promise<any> => {
-  const { data, total } = await linksFetcher({
+  const { data, count } = await linksFetcher({
     partialId: props.partialId,
     size: param.pageSize,
     offset: param.offset,
     query: param.query,
   })
 
-  totalCount.value = total // fixme(zehao): need total count from endpoint https://kongstrong.slack.com/lists/T0DS5NB27/F089F4H18HX?record_id=Rec08DNLCMTLH
+  totalCount.value = count
 
   const result = {
-    total,
+    total: count,
     data: data,
   }
 

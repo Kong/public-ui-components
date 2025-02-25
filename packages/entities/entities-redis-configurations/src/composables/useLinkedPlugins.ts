@@ -42,12 +42,6 @@ export const useLinkedPluginsFetcher = (config: KonnectConfig | KongManagerConfi
         url,
         { params: { size, offset } },
       )
-      // todo(zehao): remove this when the backend is fixed
-      // https://kongstrong.slack.com/archives/C0663589T3R/p1739519613780909?thread_ts=1739446191.148239&cid=C0663589T3R
-      if (data && !Array.isArray(data.data)) {
-        data.data = []
-      }
-      data.total = data.total || data.data.length // todo(zehao): remove this line when BE provides `total` field
       return data
     },
   }
