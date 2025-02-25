@@ -4,7 +4,7 @@
     class="grid-stack"
   >
     <div
-      v-for="tile in tilesRef.values()"
+      v-for="tile in props.tiles"
       :key="tile.id"
       class="grid-stack-item"
       :data-id="`${tile.id}`"
@@ -25,9 +25,9 @@
 </template>
 
 <script lang='ts' setup generic="T">
-import { onMounted, onUnmounted, ref, watch, nextTick, computed } from 'vue'
+import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { GridStack } from 'gridstack'
-import type { GridItemHTMLElement, GridStackNode } from 'gridstack'
+import type { GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
@@ -49,7 +49,7 @@ const emit = defineEmits<{
 
 const gridContainer = ref<HTMLDivElement | null>(null)
 
-const tilesRef = computed<Map<string, GridTile<any>>>(() =>new Map(props.tiles.map(t => [`${t.id}`, t])))
+const tilesRef = ref<Map<string, GridTile<any>>>(new Map(props.tiles.map(t => [`${t.id}`, t])))
 
 let grid: GridStack | null = null
 
@@ -57,41 +57,28 @@ const makeSelector = (id: number | string) => {
   return `[data-id="${id}"]`
 }
 
-const makeTilesFromGridItemHtmlElements = (items: GridItemHTMLElement[]) => {
-  return Array.from(tilesRef.value.values()).map((tile: GridTile<any>) => {
-    const item = items.find(item => {
-      return item.getAttribute('data-id') === `${tile.id}`
-    })
-    if (item) {
+const makeTilesFromGridItems = (items: GridStackNode[]) => {
+  return items.map(item => {
+    const tile = tilesRef.value.get(`${item.el?.getAttribute('data-id')}`)
+    if (tile) {
       return {
         ...tile,
         layout: {
-          position: { col: Number(item.gridstackNode?.x), row: Number(item.gridstackNode?.y) },
-          size: { cols: Number(item.gridstackNode?.w), rows: Number(item.gridstackNode?.h) },
+          position: { col: Number(item.x), row: Number(item.y) },
+          size: { cols: Number(item.w), rows: Number(item.h) },
         },
       } satisfies GridTile<T>
     }
-    return tile
-  })
+  }).filter(t => t !== undefined) as GridTile<T>[]
 }
 
-const tileSortFn = (a: GridTile<T>, b: GridTile<T>) => {
-  const rowDiff = a.layout.position.row - b.layout.position.row
-  if (rowDiff !== 0) {
-    return rowDiff
-  }
-  return a.layout.position.col - b.layout.position.col
-}
-
-const updateTiles = () => {
+const updateTiles = (_: Event, items: GridStackNode[]) => {
   if (grid) {
-    const items = grid.getGridItems()
-    const updates = makeTilesFromGridItemHtmlElements(items)
+    const updates = makeTilesFromGridItems(items)
     updates.forEach((tile) => {
       tilesRef.value.set(`${tile.id}`, tile)
     })
-
-    emit('update-tiles', Array.from(tilesRef.value.values()).toSorted(tileSortFn))
+    emit('update-tiles', Array.from(tilesRef.value.values()))
   }
 }
 
@@ -99,7 +86,7 @@ const removeHandler = (_: Event, items: GridStackNode[]) => {
   items.forEach(item => {
     tilesRef.value.delete(`${item.el?.getAttribute('data-id')}`)
   })
-  emit('update-tiles', Array.from(tilesRef.value.values()).toSorted(tileSortFn))
+  emit('update-tiles', Array.from(tilesRef.value.values()))
 }
 
 onMounted(() => {
