@@ -3,6 +3,50 @@
     "content": "Content of the header",
     "title": "Title of the header"
   },
+  "lifecycle": {
+    "client": {
+      "label": "Client"
+    },
+    "client_in": {
+      "tooltip": "Time taken for client to read the response from Kong. A high value here may be indicative of a slow network or connectivity issue."
+    },
+    "client_out": {
+      "tooltip": "Time taken for the client to write the request to Kong. A high value here may be indicative of a slow network or connectivity issue."
+    },
+    "none_were_executed": "None were executed",
+    "request": {
+      "label": "Request"
+    },
+    "response": {
+      "label": "Response"
+    },
+    "total": "Total",
+    "upstream": {
+      "label": "Upstream"
+    },
+    "upstream_in": {
+      "tooltip": "Time taken for the Kong to write the request to upstream. A high value here may be indicative of a slow network or connectivity issue."
+    },
+    "upstream_out": {
+      "tooltip": "Time taken for Kong to read the response from upstream. A high value here may be indicative of a slow network or connectivity issue."
+    }
+  },
+  "payload": {
+    "request_body": "Request body",
+    "request_headers": "Request headers",
+    "response_body": "Response body",
+    "response_headers": "Response headers"
+  },
+  "request_info": {
+    "attributes": {
+      "latency": "Latency",
+      "start_time": "Start time",
+      "status_code": "Status code",
+      "upstream_status_code": "Upstream status code"
+    },
+    "not_available": "N/A",
+    "title": "Information"
+  },
   "span_attributes": {
     "labels": {
       "end_time": "End time",

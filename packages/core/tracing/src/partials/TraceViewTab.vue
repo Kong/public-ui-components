@@ -1,6 +1,6 @@
 <template>
   <Splitpanes
-    class="trace-viewer"
+    class="trace-view"
     horizontal
   >
     <Pane
@@ -53,13 +53,12 @@
       class="detail-pane"
       size="50"
     >
-      <template v-if="showSkeleton">
-        <KSkeleton
-          :table-columns="2"
-          :table-rows="8"
-          type="table"
-        />
-      </template>
+      <KSkeleton
+        v-if="showSkeleton"
+        :table-columns="2"
+        :table-rows="8"
+        type="table"
+      />
       <div
         v-else-if="selectedSpan"
         class="span-details"
@@ -116,16 +115,16 @@
 import { DangerIcon } from '@kong/icons'
 import { Pane, Splitpanes } from '@kong/splitpanes'
 import { computed, provide, reactive, shallowRef } from 'vue'
-import composables from '../../composables'
-import { TRACE_VIEWER_CONFIG, WATERFALL_ROW_COLUMN_GAP, WATERFALL_ROW_LABEL_WIDTH, WATERFALL_ROW_PADDING_X, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../../constants'
-import type { SpanNode, TraceViewerConfig } from '../../types'
-import { getPhaseAndPlugin, spanMaybeIncomplete } from '../../utils'
-import WaterfallView from '../waterfall/WaterfallView.vue'
-import SpanAttributeTable from './SpanAttributeTable.vue'
-import SpanBasicInfo from './SpanBasicInfo.vue'
-import SpanEventList from './SpanEventList.vue'
-import SpanLatencyTable from './SpanLatencyTable.vue'
-import TraceLatency from './TraceLatency.vue'
+import SpanAttributeTable from '../components/trace/SpanAttributeTable.vue'
+import SpanBasicInfo from '../components/trace/SpanBasicInfo.vue'
+import SpanEventList from '../components/trace/SpanEventList.vue'
+import SpanLatencyTable from '../components/trace/SpanLatencyTable.vue'
+import TraceLatency from '../components/trace/TraceLatency.vue'
+import WaterfallView from '../components/waterfall/WaterfallView.vue'
+import composables from '../composables'
+import { TRACE_VIEWER_CONFIG, WATERFALL_ROW_COLUMN_GAP, WATERFALL_ROW_LABEL_WIDTH, WATERFALL_ROW_PADDING_X, WATERFALL_SPAN_BAR_FADING_WIDTH } from '../constants'
+import type { SpanNode, TraceViewerConfig } from '../types'
+import { getPhaseAndPlugin, spanMaybeIncomplete } from '../utils'
 
 import '@kong/splitpanes/dist/splitpanes.css'
 
@@ -164,7 +163,7 @@ const handleUpdateSelectedSpan = (span?: SpanNode) => {
 <style lang="scss" scoped>
 @use 'sass:math';
 
-.trace-viewer {
+.trace-view {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -212,7 +211,6 @@ const handleUpdateSelectedSpan = (span?: SpanNode) => {
     }
 
     &:hover {
-
       &::before,
       &::after {
         background-color: $kui-color-background-neutral-weak;
@@ -229,7 +227,7 @@ const handleUpdateSelectedSpan = (span?: SpanNode) => {
     display: flex;
     flex-direction: column;
     gap: $kui-space-50;
-    padding: $kui-space-30 0 $kui-space-70;
+    padding: $kui-space-50 0 $kui-space-70;
 
     .above-waterfall {
       align-items: center;

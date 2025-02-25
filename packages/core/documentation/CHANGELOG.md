@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.8.0...@kong-ui-public/documentation@0.8.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.116...@kong-ui-public/documentation@0.8.0) (2025-02-18)
+
+
+### Features
+
+* documentation new empty state ([#1965](https://github.com/Kong/public-ui-components/issues/1965)) ([25fe26f](https://github.com/Kong/public-ui-components/commit/25fe26fb9f1bb8b45dff51c1a0495c067d1b06e8))
+
+
+
+
+
+## [0.7.116](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.115...@kong-ui-public/documentation@0.7.116) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [0.7.115](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.114...@kong-ui-public/documentation@0.7.115) (2025-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.114](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.113...@kong-ui-public/documentation@0.7.114) (2025-02-03)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.113](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.112...@kong-ui-public/documentation@0.7.113) (2025-02-03)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.112](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.111...@kong-ui-public/documentation@0.7.112) (2025-01-23)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [0.7.111](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.110...@kong-ui-public/documentation@0.7.111) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
+## [0.7.110](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.109...@kong-ui-public/documentation@0.7.110) (2025-01-17)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
 ## [0.7.109](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@0.7.108...@kong-ui-public/documentation@0.7.109) (2025-01-15)
 
 **Note:** Version bump only for package @kong-ui-public/documentation

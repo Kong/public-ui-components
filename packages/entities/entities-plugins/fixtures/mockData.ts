@@ -536,6 +536,13 @@ export const konnectAvailablePlugins = {
   ],
 }
 
+export const konnectStreamingCustomPlugins = {
+  data: [
+    { id: '3e26ba5a-9c6b-4e79-9501-0e0bd9ade0ad', name: 'plugin-1', schema: 'schema text', handler: 'handler text' },
+    { id: '3e26ba5a-9c6b-4e79-9501-0e0bd9ade0ae', name: 'plugin-2', schema: 'schema text', handler: 'handler text' },
+  ],
+}
+
 /**
  * Form page data
  */

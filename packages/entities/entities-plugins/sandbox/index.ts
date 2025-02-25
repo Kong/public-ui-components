@@ -55,6 +55,11 @@ const init = async () => {
         component: () => import('./pages/PluginFormPage.vue'),
       },
       {
+        path: '/plugin/playground',
+        name: 'plugin-form-playground',
+        component: () => import('./pages/PluginFormPlayground.vue'),
+      },
+      {
         path: '/service/:id',
         name: 'view-service',
         component: () => import('./pages/FallbackPage.vue'),

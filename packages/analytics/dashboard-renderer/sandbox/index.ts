@@ -21,6 +21,11 @@ const router = createRouter({
       component: () => import('./pages/RendererDemo.vue'),
     },
     {
+      path: '/editable',
+      name: 'editable',
+      component: () => import('./pages/EditableDashboardDemo.vue'),
+    },
+    {
       path: '/',
       name: 'dynamic',
       component: () => import('./pages/DynamicDashboardDemo.vue'),
@@ -38,6 +43,10 @@ const appLinks: SandboxNavigationItem[] = ([
   {
     name: 'Static Dashboard',
     to: { name: 'home' },
+  },
+  {
+    name: 'Editable Dashboard',
+    to: { name: 'editable' },
   },
   {
     name: 'Dynamic Dashboard',

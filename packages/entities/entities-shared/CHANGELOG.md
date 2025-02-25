@@ -3,6 +3,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.17.1...@kong-ui-public/entities-shared@3.17.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+## [3.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.17.0...@kong-ui-public/entities-shared@3.17.1) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+# [3.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.16.0...@kong-ui-public/entities-shared@3.17.0) (2025-02-14)
+
+
+### Features
+
+* **consumer-groups:** new empty state [khcp-14827] ([#1936](https://github.com/Kong/public-ui-components/issues/1936)) ([1443167](https://github.com/Kong/public-ui-components/commit/1443167185e9a2bf9c4acca02220e0d8a7981a73))
+
+
+
+
+
+# [3.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.15.0...@kong-ui-public/entities-shared@3.16.0) (2025-02-03)
+
+
+### Features
+
+* **consumers:** new empty state [khcp-14823] ([#1921](https://github.com/Kong/public-ui-components/issues/1921)) ([8262a4e](https://github.com/Kong/public-ui-components/commit/8262a4e06d302f280f7cfbadf087020ea4c3c832))
+
+
+
+
+
+# [3.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.7...@kong-ui-public/entities-shared@3.15.0) (2025-02-03)
+
+
+### Features
+
+* **entityemptystate:** added appreance prop support [KHCP-14905] ([#1919](https://github.com/Kong/public-ui-components/issues/1919)) ([e8cda9b](https://github.com/Kong/public-ui-components/commit/e8cda9bf7c5193bf8cb065776b730e6275c0f571))
+
+
+
+
+
+## [3.14.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.6...@kong-ui-public/entities-shared@3.14.7) (2025-01-23)
+
+
+### Bug Fixes
+
+* **stylelint:** add spacing rules ([#1910](https://github.com/Kong/public-ui-components/issues/1910)) ([e9cbce5](https://github.com/Kong/public-ui-components/commit/e9cbce528b1042482306d1ab5f3ef17ae77d9b2f))
+
+
+
+
+
+## [3.14.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.5...@kong-ui-public/entities-shared@3.14.6) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
+## [3.14.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.4...@kong-ui-public/entities-shared@3.14.5) (2025-01-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
 ## [3.14.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.14.3...@kong-ui-public/entities-shared@3.14.4) (2025-01-15)
 
 

@@ -22,6 +22,7 @@ import type {
 } from './types'
 import { getTimezoneOffset, toZonedTime, fromZonedTime } from 'date-fns-tz'
 import type { ITimeframe } from './types/timeframe'
+import cloneDeep from 'lodash.clonedeep'
 
 const adjustForTz = (d: Date, tz: string) => {
   // Adjust the given date by the given TZ offset.
@@ -460,7 +461,7 @@ export function datePickerSelectionToTimeframe(datePickerSelection: DatePickerSe
   const timeframeLength = (end.getTime() - start.getTime()) / 1000
 
   const selectedTimePeriod =
-    datePickerSelection.timePeriodsKey && TimePeriods.get(datePickerSelection.timePeriodsKey)
+    datePickerSelection.timePeriodsKey && cloneDeep(TimePeriods.get(datePickerSelection.timePeriodsKey))
 
   // Note: for custom timeframes, the timeframeLength is approximate: due to rounding
   // based on granularity, the actual length will be slightly greater.
@@ -506,4 +507,24 @@ export function timeframeToDatepickerTimeperiod(timeframe: Timeframe): TimePerio
 
 export function dstOffsetHours(d1: Date, d2: Date): number {
   return minutesToHours(d1.getTimezoneOffset() - d2.getTimezoneOffset())
+}
+
+export const TIMEFRAME_LOOKUP: Record<string, TimeframeKeys> = {
+  '15M': TimeframeKeys.FIFTEEN_MIN,
+  '1H': TimeframeKeys.ONE_HOUR,
+  '6H': TimeframeKeys.SIX_HOUR,
+  '12H': TimeframeKeys.TWELVE_HOUR,
+  '24H': TimeframeKeys.ONE_DAY,
+  '7D': TimeframeKeys.SEVEN_DAY,
+  '15m': TimeframeKeys.FIFTEEN_MIN,
+  '1h': TimeframeKeys.ONE_HOUR,
+  '6h': TimeframeKeys.SIX_HOUR,
+  '12h': TimeframeKeys.TWELVE_HOUR,
+  '24h': TimeframeKeys.ONE_DAY,
+  '7d': TimeframeKeys.SEVEN_DAY,
+  '30d': TimeframeKeys.THIRTY_DAY,
+  current_week: TimeframeKeys.CURRENT_WEEK,
+  current_month: TimeframeKeys.CURRENT_MONTH,
+  previous_week: TimeframeKeys.PREVIOUS_WEEK,
+  previous_month: TimeframeKeys.PREVIOUS_MONTH,
 }

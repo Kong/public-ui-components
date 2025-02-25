@@ -6,6 +6,7 @@ import type {
   DatasourceAwareQuery,
   ExploreFilter,
   ExploreResultV4,
+  TileConfig,
   Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import {
@@ -24,10 +25,12 @@ import {
   simpleConfigNoFilters,
 } from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
+import { EntityLink } from '@kong-ui-public/entities-shared'
 
 interface MockOptions {
   failToResolveConfig?: boolean
   shortRetention?: boolean
+  renderEntityLink?: boolean
 }
 
 describe('<DashboardRenderer />', () => {
@@ -106,10 +109,16 @@ describe('<DashboardRenderer />', () => {
       return true
     }
 
+    const fetchComponentFn = (name: string) => {
+      return Promise.resolve(EntityLink)
+    }
+
     return {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
       evaluateFeatureFlagFn,
+
+      fetchComponent: opts?.renderEntityLink ? fetchComponentFn : undefined,
     }
   }
 
@@ -400,13 +409,67 @@ describe('<DashboardRenderer />', () => {
       props,
       global: {
         provide: {
-          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: true }),
         },
       },
     })
 
     // Check value of href attribute
     cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > .column-1 > [data-testid="entity-link-parent"] > a').should('have.attr', 'href').and('eq', 'https://test.com/cp/b486fb30-e058-4b5f-85c2-495ec26ba522/entity/09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6')
+  })
+
+  it('Renders a dashboard with a TopNTable with fallback EntityLinks', () => {
+    const customTimeframe = datePickerSelectionToTimeframe({
+      timePeriodsKey: 'custom',
+      start: new Date('2024-03-03T21:10:28.969Z'),
+      end: new Date('2024-03-06T21:10:28.969Z'),
+    }) as Timeframe
+
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: customTimeframe.v4Query(),
+      },
+      config: {
+        gridSize: { cols: 3, rows: 2 },
+        tiles: [
+          {
+            definition: {
+              chart: {
+                type: 'top_n',
+                entityLink: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
+              },
+              query: {
+                datasource: 'basic',
+                dimensions: ['route'],
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 0,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          },
+        ],
+      },
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider({ renderEntityLink: false }),
+        },
+      },
+    })
+
+    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > .column-1 > [data-testid="entity-link-parent"]').should('have.class', 'fallback-entity-link')
+    cy.get('[data-testid="row-b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6"] > .column-1 > [data-testid="entity-link-parent"]').should('have.text', 'GetMeAKongDefault (secondaryRuntime)')
   })
 
   it("doesn't issue queries if it's still waiting for the timeSpec", () => {
@@ -583,5 +646,194 @@ describe('<DashboardRenderer />', () => {
       // Check that it replaces the description token.
       cy.get('.header-description').should('have.text', 'Last 7-Day Summary')
     })
+  })
+
+  it('renders tile timeframe overrides in a badge', () => {
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '24h',
+        },
+      },
+      config: {
+        gridSize: {
+          cols: 6,
+          rows: 4,
+        },
+        tileHeight: 167,
+        tiles: [
+          {
+            id: 0,
+            definition: {
+              chart: {
+                type: 'timeseries_line',
+                chartTitle: 'Total Traffic over Time',
+              },
+              query: {
+                metrics: [
+                  'request_count',
+                ],
+                dimensions: [
+                  'time',
+                ],
+                filters: [{
+                  dimension: 'control_plane',
+                  type: 'in',
+                  values: ['default_uuid'],
+                }],
+                time_range: {
+                  // This should still render a badge even though it matches the global context.
+                  type: 'relative',
+                  time_range: '24h',
+                },
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 0,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
+          {
+            id: 1,
+            definition: {
+              chart: {
+                type: 'timeseries_line',
+                chartTitle: 'Latency Breakdown over Time',
+              },
+              query: {
+                metrics: [
+                  'response_latency_p99',
+                  'response_latency_p95',
+                  'response_latency_p50',
+                ],
+                dimensions: [
+                  'time',
+                ],
+                time_range: {
+                  type: 'absolute',
+                  start: '2024-01-01',
+                  end: '2024-02-01',
+                },
+              },
+            },
+            layout: {
+              position: {
+                col: 3,
+                row: 0,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
+          {
+            id: 2,
+            definition: {
+              chart: {
+                type: 'timeseries_line',
+                chartTitle: 'Total Traffic over Time Global Timeframe',
+              },
+              query: {
+                metrics: [
+                  'request_count',
+                ],
+                dimensions: [
+                  'time',
+                ],
+                filters: [],
+              },
+            },
+            layout: {
+              position: {
+                col: 0,
+                row: 2,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
+          {
+            id: 3,
+            definition: {
+              chart: {
+                type: 'top_n',
+                chartTitle: 'TopN',
+              },
+              query: {
+                metrics: [
+                  'request_count',
+                ],
+                dimensions: [
+                  'route',
+                ],
+                filters: [],
+                time_range: {
+                  type: 'relative',
+                  time_range: '7d',
+                },
+              },
+            },
+            layout: {
+              position: {
+                col: 3,
+                row: 2,
+              },
+              size: {
+                cols: 3,
+                rows: 2,
+              },
+            },
+          } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
+        ],
+      },
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    cy.get('[data-testid="tile-0"] .tile-actions .k-badge').should('have.text', 'Last 24 hours')
+    cy.get('[data-testid="tile-1"] .tile-actions .k-badge').should('have.text', 'Jan 01, 2024 - Feb 01, 2024')
+    cy.get('[data-testid="tile-2"] .tile-actions .k-badge').should('not.exist')
+    cy.get('[data-testid="tile-3"] .tile-actions .k-badge').should('have.text', 'Last 7 days')
+
+    cy.get('@fetcher').should('have.callCount', 4)
+
+    // Global time + one overridden tile
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
+      query: {
+        time_range: { time_range: '24h' },
+      },
+    }))
+
+    // Absolute time overridden tile
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
+      query: {
+        time_range: { type: 'absolute', start: '2024-01-01', end: '2024-02-01' },
+      },
+    }))
+
+    // Relative time overridden tile
+    cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
+      query: {
+        time_range: { type: 'relative', time_range: '7d' },
+      },
+    }))
   })
 })

@@ -2,7 +2,7 @@
   "actions": {
     "cancel": "Cancel",
     "view_configuration": "View Configuration",
-    "create": "New Plugin",
+    "create": "New plugin",
     "create_custom": "Create",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
@@ -67,7 +67,7 @@
     "title": "Plugins",
     "list": {
       "toolbar_actions": {
-        "new_plugin": "New Plugin"
+        "new_plugin": "New plugin"
       },
       "table_headers": {
         "applied_to": "Applied To",
@@ -92,6 +92,11 @@
       "empty_state": {
         "title": "Configure a New Plugin",
         "description": "Plugins are used to extend Kong functionality."
+      },
+      "empty_state_v2": {
+        "title": "Configure your first plugin",
+        "description": "Plugins extend API functionalities, offering features like authentication, rate limiting, and request transformations to enhance security and performance.",
+        "create_cta": "New plugin"
       }
     },
     "meta": {
@@ -518,7 +523,7 @@
         "custom": {
           "title": "Custom Plugins",
           "description": "Custom plugins will be available in this control plane only.",
-          "disabled_tooltip": "Custom Plugins are not available with this Gateway. Create a Hybrid Gateway to leverage Custom Plugins.",
+          "disabled_tooltip": "Custom Plugins are not available with this Gateway. Create a Hybrid or Dedicated Cloud Gateway to leverage Custom Plugins.",
           "empty_title": "No Custom Plugins",
           "empty_description": "No custom plugins have been added to this Control Plane.",
           "create": {

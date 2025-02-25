@@ -35,7 +35,7 @@
           </div>
           <div class="sidebar-item-name-container">
             <div
-              v-if="subnavItem ? item.name.length < 25 : item.name.length < 18"
+              v-if="subnavItem && !itemHasBadge ? item.name.length < 25 : item.name.length < 18"
               class="sidebar-item-name truncate-text"
               :class="[subnavItem ? 'has-badge-max-width truncate-24' : 'truncate-17']"
             >
@@ -123,7 +123,7 @@ const openInNewWindow = computed((): boolean => {
   return props.item.newWindow && (props.item.to.startsWith('http') || props.item.to.startsWith('/'))
 })
 
-const itemHasBadge = computed(() => props.subnavItem && (props.item as SidebarSecondaryItem).badgeCount !== undefined)
+const itemHasBadge = computed((): boolean => props.subnavItem && (props.item as SidebarSecondaryItem).badgeCount !== undefined && (props.item as SidebarSecondaryItem).badgeCount !== 0)
 
 const itemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void => {
   emit('click', item)

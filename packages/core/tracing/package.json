@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/tracing",
-  "version": "0.6.8",
+  "version": "0.9.0",
   "type": "module",
   "main": "./dist/tracing.umd.js",
   "module": "./dist/tracing.es.js",
@@ -39,11 +39,14 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.14.16",
+    "@kong/design-tokens": "1.17.3",
+    "@kong/kongponents": "9.21.6",
     "@kong/splitpanes": "3.1.6-patch.6",
+    "@vue-flow/background": "^1.3.2",
+    "@vue-flow/controls": "^1.1.2",
+    "@vue-flow/core": "^1.41.5",
     "lodash-es": "^4.17.21",
-    "vue": "^3.5.4"
+    "vue": "^3.5.13"
   },
   "repository": {
     "type": "git",
@@ -60,14 +63,14 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "400KB"
+    "errorLimit": "900KB"
   },
   "peerDependencies": {
-    "@kong/kongponents": "9.14.16",
+    "@kong/kongponents": "9.21.6",
     "vue": "^3.5.4"
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong/icons": "^1.20.0"
+    "@kong/icons": "^1.21.1"
   }
 }

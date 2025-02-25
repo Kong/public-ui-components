@@ -3,6 +3,286 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.2...@kong-ui-public/entities-plugins@9.12.3) (2025-02-24)
+
+
+### Bug Fixes
+
+* **forms:** array elements are deleted ([#1977](https://github.com/Kong/public-ui-components/issues/1977)) ([f0f0e8d](https://github.com/Kong/public-ui-components/commit/f0f0e8deed61a6369794fea2cee69674b60ac51f))
+
+
+
+
+
+## [9.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.1...@kong-ui-public/entities-plugins@9.12.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+## [9.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.0...@kong-ui-public/entities-plugins@9.12.1) (2025-02-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.11.0...@kong-ui-public/entities-plugins@9.12.0) (2025-02-18)
+
+
+### Features
+
+* **entities:** update empty state data-testids [khcp-15185] ([#1966](https://github.com/Kong/public-ui-components/issues/1966)) ([4e7a3a8](https://github.com/Kong/public-ui-components/commit/4e7a3a827ae8f99662a09c436c2615b52dd09cc2))
+
+
+
+
+
+# [9.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.9...@kong-ui-public/entities-plugins@9.11.0) (2025-02-18)
+
+
+### Features
+
+* **entities-plugins-metadata:** new package ([#1940](https://github.com/Kong/public-ui-components/issues/1940)) ([b570254](https://github.com/Kong/public-ui-components/commit/b570254f053c37a96557833df2abd24c11bc0317))
+
+
+
+
+
+## [9.10.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.8...@kong-ui-public/entities-plugins@9.10.9) (2025-02-18)
+
+
+### Bug Fixes
+
+* **plugins:** rta plugin schema ([#1962](https://github.com/Kong/public-ui-components/issues/1962)) ([a4ee43f](https://github.com/Kong/public-ui-components/commit/a4ee43f31e263bbf3d92333c01b80c330dcee11e))
+
+
+
+
+
+## [9.10.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.7...@kong-ui-public/entities-plugins@9.10.8) (2025-02-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.10.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.6...@kong-ui-public/entities-plugins@9.10.7) (2025-02-17)
+
+
+### Bug Fixes
+
+* hide lear more, string casing ([#1964](https://github.com/Kong/public-ui-components/issues/1964)) ([abfb02c](https://github.com/Kong/public-ui-components/commit/abfb02cb1367a9104e5a55d463ec55c5a5a799c3))
+
+
+
+
+
+## [9.10.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.5...@kong-ui-public/entities-plugins@9.10.6) (2025-02-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.10.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.4...@kong-ui-public/entities-plugins@9.10.5) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [9.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.3...@kong-ui-public/entities-plugins@9.10.4) (2025-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.2...@kong-ui-public/entities-plugins@9.10.3) (2025-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.1...@kong-ui-public/entities-plugins@9.10.2) (2025-02-11)
+
+
+### Bug Fixes
+
+* ff guard v2 empty state changes ([#1947](https://github.com/Kong/public-ui-components/issues/1947)) ([b408aea](https://github.com/Kong/public-ui-components/commit/b408aeaf7124673ab288409eee9151871e3b8c87))
+
+
+
+
+
+## [9.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.10.0...@kong-ui-public/entities-plugins@9.10.1) (2025-02-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fields set to null ([#1939](https://github.com/Kong/public-ui-components/issues/1939)) ([a400abf](https://github.com/Kong/public-ui-components/commit/a400abf8a5fa39d6b0288952784373cc9cb2a22d))
+
+
+
+
+
+# [9.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.9...@kong-ui-public/entities-plugins@9.10.0) (2025-02-07)
+
+
+### Features
+
+* plugins list empty state ([#1934](https://github.com/Kong/public-ui-components/issues/1934)) ([71ba295](https://github.com/Kong/public-ui-components/commit/71ba295a347090b6053dfa57e6c3d02a37d8a209))
+
+
+
+
+
+## [9.9.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.8...@kong-ui-public/entities-plugins@9.9.9) (2025-02-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.9.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.7...@kong-ui-public/entities-plugins@9.9.8) (2025-02-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.6...@kong-ui-public/entities-plugins@9.9.7) (2025-01-31)
+
+
+### Bug Fixes
+
+* **plugins:** response transformer textareas ([#1924](https://github.com/Kong/public-ui-components/issues/1924)) ([171b27d](https://github.com/Kong/public-ui-components/commit/171b27dba2842a24e3b4875015d4dfac653c269e))
+
+
+
+
+
+## [9.9.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.5...@kong-ui-public/entities-plugins@9.9.6) (2025-01-30)
+
+
+### Bug Fixes
+
+* **plugins:** oas validation schema ([#1922](https://github.com/Kong/public-ui-components/issues/1922)) ([71d9929](https://github.com/Kong/public-ui-components/commit/71d9929fbc113759f0162604139d6a70bf9db579))
+
+
+
+
+
+## [9.9.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.4...@kong-ui-public/entities-plugins@9.9.5) (2025-01-30)
+
+
+### Bug Fixes
+
+* **plugins:** remove custom schema for request validator [km-923] ([#1920](https://github.com/Kong/public-ui-components/issues/1920)) ([46b8ff0](https://github.com/Kong/public-ui-components/commit/46b8ff0acbc39194b60eee89ed7110ef304bb9e0))
+
+
+
+
+
+## [9.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.3...@kong-ui-public/entities-plugins@9.9.4) (2025-01-28)
+
+
+### Bug Fixes
+
+* **plugins:** mocking spec max length ([#1917](https://github.com/Kong/public-ui-components/issues/1917)) ([1b3c028](https://github.com/Kong/public-ui-components/commit/1b3c028e4721ce6e267bcce2e2f2657c1d7b5dd7))
+
+
+
+
+
+## [9.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.2...@kong-ui-public/entities-plugins@9.9.3) (2025-01-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.1...@kong-ui-public/entities-plugins@9.9.2) (2025-01-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.9.0...@kong-ui-public/entities-plugins@9.9.1) (2025-01-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.8.23...@kong-ui-public/entities-plugins@9.9.0) (2025-01-21)
+
+
+### Features
+
+* **entities-plugin:** add streaming custom plugin support ([#1896](https://github.com/Kong/public-ui-components/issues/1896)) ([0a482db](https://github.com/Kong/public-ui-components/commit/0a482dbfc89587f7059c40548a5b0b3edea17c54))
+
+
+
+
+
+## [9.8.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.8.22...@kong-ui-public/entities-plugins@9.8.23) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
+## [9.8.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.8.21...@kong-ui-public/entities-plugins@9.8.22) (2025-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.8.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.8.20...@kong-ui-public/entities-plugins@9.8.21) (2025-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.8.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.8.19...@kong-ui-public/entities-plugins@9.8.20) (2025-01-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.8.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.8.18...@kong-ui-public/entities-plugins@9.8.19) (2025-01-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

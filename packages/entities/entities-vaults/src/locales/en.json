@@ -1,6 +1,6 @@
 {
   "actions": {
-    "create": "New Vault",
+    "create": "New vault",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
@@ -30,7 +30,7 @@
     "title": "Vaults",
     "list": {
       "toolbar_actions": {
-        "new_vault": "New Vault"
+        "new_vault": "New vault"
       },
       "table_headers": {
         "prefix": "Prefix",
@@ -42,6 +42,11 @@
       "empty_state": {
         "title": "Configure a New Vault",
         "description": "Improve the security of your Kong Gateway deployment with centralized secrets."
+      },
+      "empty_state_v2": {
+        "title": "Configure your first vault",
+        "description": "Vaults securely store sensitive information, such as credentials and certificates, enhancing the security of your API infrastructure.",
+        "create_cta": "New vault"
       }
     }
   },

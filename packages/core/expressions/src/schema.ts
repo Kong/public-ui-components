@@ -5,8 +5,15 @@ export type SchemaDefinition = {
 }
 
 export interface Schema {
+  /**
+   * Codename of the schema. Should conform to `[a-zA-Z0-9-]+`.
+   */
   name: string
   definition: SchemaDefinition
+  /**
+   * Names of the functions that can be used in the expressions
+   */
+  functions?: string[]
   documentation?: Record<string, string>
 }
 
@@ -50,11 +57,11 @@ export const PROTOCOL_TO_SCHEMA = (() => {
   const s: Record<string, Schema> = {}
 
   for (const protocol of HTTP_BASED_PROTOCOLS) {
-    s[protocol] = { name: protocol, definition: HTTP_SCHEMA_DEFINITION }
+    s[protocol] = { name: protocol, definition: HTTP_SCHEMA_DEFINITION, functions: ['any', 'lower'] }
   }
 
   for (const protocol of STREAM_BASED_PROTOCOLS) {
-    s[protocol] = { name: protocol, definition: STREAM_SCHEMA_DEFINITION }
+    s[protocol] = { name: protocol, definition: STREAM_SCHEMA_DEFINITION, functions: ['any', 'lower'] }
   }
 
   return s

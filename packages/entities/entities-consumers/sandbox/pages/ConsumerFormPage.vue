@@ -30,7 +30,7 @@ import type { AxiosError } from 'axios'
 const router = useRouter()
 
 defineProps({
-  /** Grab the Consumer id from the route params */
+  /** Grab the Consumer id from the route params  */
   id: {
     type: String,
     required: false,

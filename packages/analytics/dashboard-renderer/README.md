@@ -6,6 +6,19 @@ Render Analytics charts on a page from a JSON definition.
 - [Usage](#usage)
   - [Props](#props)
   - [Example](#example)
+  - [Slotted content](#slotted-content)
+  - [Auto-fit row content](#auto-fit-row-content)
+- [Editable Dashboard Features](#editable-dashboard-features)
+- [Editable Dashboard Events](#editable-dashboard-events)
+- [Dashboard Config Schema](#dashboard-config-schema)
+  - [Tile Definition](#tile-definition)
+  - [Chart Options](#chart-options)
+  - [Chart Types](#chart-types)
+  - [Common Chart Properties](#common-chart-properties)
+  - [Query Configuration](#query-configuration)
+  - [Time Range Configuration](#time-range-configuration)
+  - [Layout Configuration](#layout-configuration)
+  - [Usage Example](#usage-example)
 
 ## Requirements
 
@@ -27,14 +40,21 @@ Render Analytics charts on a page from a JSON definition.
 
 ### Props
 
-This component only takes two properties:
+This component takes two properties:
 
-- [context](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/dashboard-renderer-types.ts) : The time range that the dashboard should query and any additional filters that should be applied.
-- [config](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/dashboard-renderer-types.ts) : The dashboard config and layout.
+- [context](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/renderer-types.ts): The time range that the dashboard should query, any additional filters that should be applied, and editing configuration.
+- [config](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/dashboardSchema.ts): The dashboard config and layout.
 
-For context `filters` and `timeSpec` see [here](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore-v4.ts).
+#### Context Properties
 
-If a `timeSpec` is not provided in the `context` object, the renderer will determine a default, which is currently 7 days.
+| Property | Type | Required | Default | Description |
+|----------|------|----------|---------|-------------|
+| filters | [AllFilters[]](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore/all.ts) | Yes | - | Filters to be applied to the dashboard. Context filters are merged into tile specic filters. Filters that are not relevent to the tile's query datasource are ignored. |
+| timeSpec | [TimeRangeV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore/common.ts) | No | 7 days | The time range for queries. Tiles can provide their own time range, which will override the global time range, for that tile. |
+| tz | string | No | Local timezone | Timezone to include with queries, if different than the browser timezone |
+| refreshInterval | number | No | DEFAULT_TILE_REFRESH_INTERVAL_MS | Interval for refreshing tiles |
+| editable | boolean | No | false | Enables dashboard editing capabilities |
+
 
 ### Example
 
@@ -42,6 +62,8 @@ If a `timeSpec` is not provided in the `context` object, the renderer will deter
 <DashboardRenderer
   :context="context"
   :config="config"
+  @edit-tile="handleEditTile"
+  @update-tiles="handleUpdateTiles"
 />
 ```
 
@@ -58,6 +80,7 @@ const context: DashboardRendererContext = {
     type: 'relative',
     time_range: '15M',
   },
+  editable: true, // Enable editing capabilities
 }
 
 const config: DashboardConfig = {
@@ -68,6 +91,7 @@ const config: DashboardConfig = {
   },
   tiles: [
     {
+      id: 'unique-tile-id', // Required for editable dashboards
       definition: {
         chart: {
           type: 'horizontal_bar',
@@ -86,8 +110,8 @@ const config: DashboardConfig = {
         },
         // Spans 2 columns and 1 rows
         size: {
-          col: 2,
-          row: 1,
+          cols: 2,
+          rows: 1,
         }
       }
     },
@@ -113,8 +137,8 @@ const config: DashboardConfig = {
         },
         // Spans 2 columns and 1 rows
         size: {
-          col: 2,
-          row: 1,
+          cols: 2,
+          rows: 1,
         }
       }
     },
@@ -178,8 +202,8 @@ const config: DashboardConfig = {
         },
         // Spans 2 columns and 1 rows
         size: {
-          col: 2,
-          row: 1,
+          cols: 2,
+          rows: 1,
         }
       }
     },
@@ -200,8 +224,8 @@ const config: DashboardConfig = {
         },
         // Spans 2 columns and 1 rows
         size: {
-          col: 2,
-          row: 1,
+          cols: 2,
+          rows: 1,
         }
       }
     },
@@ -211,9 +235,12 @@ const config: DashboardConfig = {
 
 #### Auto-fit row content
 
+__Note__: _this will only work in non-editable mode_
+
 This example will create a dynamically-sized row that fits to its content rather than being fixed at the configured row height.  Note that this works because each chart is only rendered in 1 row; if a chart has `fitToContent` and `layout.size.rows > 1`, the `fitToContent` setting will be ignored.
 
 Rendering `AnalyticsChart` components (e.g., horizontal bar, vertical bar, timeseries charts) with dynamic row heights may lead to undefined behavior.  This option is best used with non-canvas charts (e.g., TopN charts).
+
 
 ```typescript
 import type { DashboardRendererContext, DashboardConfig } from '@kong-ui-public/dashboard-renderer'
@@ -277,5 +304,277 @@ const config: DashboardConfig = {
       },
     },
   ],
+}
+```
+
+### Editable Dashboard Example
+
+```typescript
+const context: DashboardRendererContext = {
+  filters: [],
+  timeSpec: {
+    type: 'relative',
+    time_range: '15M',
+  },
+  editable: true, // Enable editing capabilities
+}
+
+const config: DashboardConfig = {
+  gridSize: {
+    cols: 4,
+    rows: 1,
+  },
+  tiles: [
+    {
+      id: 'unique-tile-id', // Required for editable dashboards
+      definition: {
+        chart: {
+          type: 'horizontal_bar',
+        },
+        query: {
+          metrics: ['request_count'],
+          dimensions: ['route']
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: {
+          cols: 2,
+          rows: 1,
+        }
+      }
+    }
+  ]
+}
+```
+
+```html
+<DashboardRenderer
+  :context="context"
+  :config="config"
+  @edit-tile="handleEditTile"
+  @update-tiles="handleUpdateTiles"
+/>
+```
+
+## Editable Dashboard Features
+
+When `editable` is enabled:
+
+### User Interface Features
+- Tiles can be dragged and repositioned using the tile header
+- Tiles can be resized using handles in the bottom corners
+- Each tile displays an edit button and a kebab menu with additional options
+- Tiles can be removed via the kebab menu
+
+## Editable Dashboard Events
+
+The DashboardRenderer component emits the following events when in editable mode:
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `edit-tile` | `GridTile<TileDefinition>` | Emitted when the edit button is clicked on a tile. The payload includes the complete tile configuration including its layout and metadata. |
+| `update-tiles` | `TileConfig[]` | Emitted when tiles are moved, resized, or removed. The payload is an array of all tiles with their updated positions and sizes. |
+| `remove-tile` | `GridTile<TileDefinition>` | Emitted when a tile is removed via the kebab menu. The payload includes the configuration of the removed tile. |
+
+
+```Html
+<DashboardRenderer
+  :context="context"
+  :config="config"
+  @edit-tile="handleTileEdit"
+  @update-tiles="handleLayoutUpdate"
+  @remove-tile="handleTileRemoval"
+/>
+```
+
+```typescript
+const handleEditTile = (tile: GridTile<TileDefinition>) => {
+  // Handle tile editing, e.g., open an edit modal
+  console.log('Editing tile:', tile.id)
+}
+
+const handleUpdateTiles = (tiles: TileConfig[]) => {
+  // Handle layout updates, e.g., save to backend
+  console.log('Updated tiles:', tiles)
+}
+
+const handleRemoveTile = (tile: GridTile<TileDefinition>) => {
+  // Handle tile removal, e.g., update backend
+  console.log('Removed tile:', tile.id)
+}
+```
+
+Note: These events are only emitted when the dashboard is in editable mode (`context.editable = true`).
+
+Note: When using editable dashboards, each tile should have a unique `id` property to properly track changes and handle events correctly. If no `id` is provided, one will be generated automatically, but this may lead to unexpected behavior when tracking changes to the tile.
+
+## Dashboard Config Schema
+
+The dashboard configuration schema is defined in `@kong-ui-public/analytics-utilities`.
+
+### DashboardConfig
+The root configuration type for a dashboard.
+
+```typescript
+interface DashboardConfig {
+  tiles: TileConfig[]         // Array of tile configurations
+  tileHeight?: number         // Optional height of each tile in pixels
+  gridSize: {                 // Required grid layout configuration
+    cols: number              // Number of columns in the grid
+    rows: number              // Number of rows in the grid
+  }
+}
+```
+
+### Tile Config
+Configuration for individual dashboard tiles.
+
+```typescript
+interface TileConfig {
+  definition: TileDefinition   // The tile's chart and query configuration
+  layout: TileLayout           // The tile's position and size in the grid
+  id?: string                  // Optional unique identifier (required for editable dashboards)
+}
+```
+
+### Tile Definition
+Configuration for the chart and query within a tile.
+
+```typescript
+interface TileDefinition {
+  chart: ChartOptions         // Configuration for the chart type and options
+  query: ValidDashboardQuery  // Configuration for the data query
+}
+```
+
+### Chart Options
+Chart type and options configuration.
+
+```typescript
+interface ChartOptions {
+  type: DashboardTileType     // The type of chart
+  chartTitle?: string         // Optional title for the chart
+  syntheticsDataKey?: string  // Optional key for synthetic tests
+  allowCsvExport?: boolean    // Optional flag to allow CSV export
+  chartDatasetColors?: AnalyticsChartColors | string[]  // Optional custom colors for datasets
+}
+```
+
+### Chart Types
+
+The following chart types are supported:
+
+- `horizontal_bar`: Horizontal bar chart
+- `vertical_bar`: Vertical bar chart
+- `gauge`: Gauge chart
+- `timeseries_line`: Line chart for time series data
+- `timeseries_bar`: Bar chart for time series data
+- `golden_signals`: Metric cards showing key performance indicators
+- `top_n`: Table showing top N results
+- `slottable`: Custom content slot
+
+Each chart type has its own configuration schema with specific options.
+
+### Common Chart Properties
+
+Most chart types support these common properties:
+- `chartTitle`: String title for the chart
+- `syntheticsDataKey`: Key for synthetic tests (if applicable)
+- `allowCsvExport`: Boolean to enable/disable CSV export
+- `chartDatasetColors`: Custom colors for datasets (object or array) `{ [key: string]: string } | string[]`
+
+### Query Configuration
+
+[See here](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore) for explore query types.
+
+Queries can be configured for three different data sources:
+
+1. `advanced`: Uses the advanced explore API
+2. `basic`: Uses the basic explore API
+3. `ai`: Uses the AI explore API
+
+Each query type supports:
+- `metrics`: Array of aggregations to collect
+- `dimensions`: Array of attributes to group by (max 2)
+- `filters`: Array of query filters
+- `time_range`: Time range configuration (relative or absolute)
+- `granularity`: Time bucket size for temporal queries
+- `limit`: Number of results to return
+
+### Time Range Configuration
+
+[See here](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore/common.ts) for time range types.
+
+__Note:__ _Providing a time range in with the tile query will override the global time range provided in the dashboard context._
+
+Two types of time ranges are supported:
+
+1. Relative:
+```typescript
+{
+  type: 'relative'
+  time_range: string       // e.g., '1h', '7d'
+  tz?: string              // Renderer defaults to browser timezone if not provided'
+}
+```
+
+2. Absolute:
+```typescript
+{
+  type: 'absolute'
+  start: string           // Start timestamp
+  end: string             // End timestamp
+  tz?: string             // Timezone
+}
+```
+
+### Layout Configuration
+
+The `TileLayout` type controls tile positioning and sizing:
+
+```typescript
+interface TileLayout {
+  position: {
+    col: number            // Starting column (0-based)
+    row: number            // Starting row (0-based)
+  }
+  size: {
+    cols: number           // Number of columns to span
+    rows: number           // Number of rows to span
+    fitToContent?: boolean // Enable auto-height for the row
+  }
+}
+```
+
+### Usage Example
+
+```typescript
+const dashboardConfig: DashboardConfig = {
+  gridSize: {
+    cols: 4,
+    rows: 2
+  },
+  tiles: [{
+    id: 'requests-by-route',
+    definition: {
+      chart: {
+        type: 'horizontal_bar',
+        chartTitle: 'Requests by Route'
+      },
+      query: {
+        datasource: 'advanced',
+        metrics: ['request_count'],
+        dimensions: ['route']
+      }
+    },
+    layout: {
+      position: { col: 0, row: 0 },
+      size: { cols: 2, rows: 1 }
+    }
+  }]
 }
 ```

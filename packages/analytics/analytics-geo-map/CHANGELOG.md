@@ -3,6 +3,103 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.79](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.78...@kong-ui-public/analytics-geo-map@0.2.79) (2025-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [0.2.78](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.77...@kong-ui-public/analytics-geo-map@0.2.78) (2025-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [0.2.77](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.76...@kong-ui-public/analytics-geo-map@0.2.77) (2025-02-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [0.2.76](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.75...@kong-ui-public/analytics-geo-map@0.2.76) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+## [0.2.75](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.74...@kong-ui-public/analytics-geo-map@0.2.75) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [0.2.74](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.73...@kong-ui-public/analytics-geo-map@0.2.74) (2025-02-13)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [0.2.73](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.72...@kong-ui-public/analytics-geo-map@0.2.73) (2025-02-11)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [0.2.72](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.71...@kong-ui-public/analytics-geo-map@0.2.72) (2025-01-27)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [0.2.71](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.70...@kong-ui-public/analytics-geo-map@0.2.71) (2025-01-23)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [0.2.70](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.69...@kong-ui-public/analytics-geo-map@0.2.70) (2025-01-23)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [0.2.69](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.68...@kong-ui-public/analytics-geo-map@0.2.69) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
 ## [0.2.68](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.67...@kong-ui-public/analytics-geo-map@0.2.68) (2025-01-15)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-geo-map

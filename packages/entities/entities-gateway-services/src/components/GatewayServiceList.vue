@@ -16,6 +16,7 @@
       @clear-search-input="clearFilter"
       @click:row="(row: any) => rowClick(row as EntityRow)"
       @sort="resetPagination"
+      @state="handleStateChange"
     >
       <!-- Filter -->
       <template #toolbar-filter>
@@ -30,19 +31,77 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <PermissionsWrapper :auth-function="() => canCreate()">
-            <!-- Hide Create button if table is empty -->
+          <div class="button-row">
             <KButton
-              appearance="primary"
-              data-testid="toolbar-add-gateway-service"
-              :size="useActionOutside ? 'medium' : 'large'"
-              :to="config.createRoute"
+              v-if="showHeaderLHButton"
+              appearance="secondary"
+              class="open-learning-hub"
+              data-testid="gateway-services-learn-more-button"
+              icon
+              @click="$emit('click:learn-more')"
             >
-              <AddIcon />
-              {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
+              <BookIcon decorative />
             </KButton>
-          </PermissionsWrapper>
+            <PermissionsWrapper :auth-function="() => canCreate()">
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-gateway-service"
+                :size="useActionOutside ? 'medium' : 'large'"
+                :to="config.createRoute"
+              >
+                <AddIcon />
+                {{ t('gateway_services.list.toolbar_actions.new_gateway_service') }}
+              </KButton>
+            </PermissionsWrapper>
+          </div>
         </Teleport>
+      </template>
+
+      <!-- TODO: remove this slot when empty states M2 is cleaned up -->
+      <template
+        v-if="!hasRecords && isLegacyLHButton"
+        #outside-actions
+      >
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <KButton
+            appearance="secondary"
+            class="open-learning-hub"
+            data-testid="gateway-services-more-button"
+            icon
+            @click="$emit('click:learn-more')"
+          >
+            <BookIcon decorative />
+          </KButton>
+        </Teleport>
+      </template>
+      <template
+        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        #empty-state
+      >
+        <EntityEmptyState
+          :action-button-text="t('gateway_services.empty_state_v2.create')"
+          appearance="secondary"
+          :can-create="() => canCreate()"
+          data-testid="gateway-services-entity-empty-state"
+          :description="t('gateway_services.empty_state_v2.description')"
+          :learn-more="config.app === 'konnect'"
+          :title="t('gateway_services.empty_state_v2.title')"
+          @click:create="handleCreate"
+          @click:learn-more="$emit('click:learn-more')"
+        >
+          <template #image>
+            <div class="empty-state-icon-gateway">
+              <ServicesIcon
+                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
+                :size="KUI_ICON_SIZE_50"
+              />
+            </div>
+          </template>
+        </EntityEmptyState>
       </template>
 
       <!-- Column Formatting -->
@@ -160,7 +219,7 @@
 import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
-import { AddIcon } from '@kong/icons'
+import { AddIcon, BookIcon, ServicesIcon } from '@kong/icons'
 import composables from '../composables'
 import endpoints from '../gateway-services-endpoints'
 import type { AxiosError } from 'axios'
@@ -184,17 +243,21 @@ import {
   EntityFilter,
   EntityToggleModal,
   EntityTypes,
+  EntityEmptyState,
   FetcherStatus,
   PermissionsWrapper,
   useAxios,
+  useTableState,
   useFetcher,
   useDeleteUrlBuilder,
   TableTags,
 } from '@kong-ui-public/entities-shared'
+import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
+  (e: 'click:learn-more'): void,
   (e: 'copy:success', payload: CopyEventPayload): void,
   (e: 'copy:error', payload: CopyEventPayload): void,
   (e: 'delete:success', gatewayService: EntityRow): void,
@@ -253,13 +316,26 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  /**
+   * Enables the new empty state design, this prop can be removed when
+   * the khcp-14756-empty-states-m2 FF is removed.
+   */
+  enableV2EmptyStates: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
 const router = useRouter()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-
+const { hasRecords, handleStateChange } = useTableState(() => filterQuery.value)
+// Current empty state logic is only for Konnect, KM will pick up at GA.
+// If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
+// If new empty states are not enabled, show the learning hub button (for Konnect)
+const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
+const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
 /**
  * Table Headers
  */
@@ -551,6 +627,12 @@ const deleteRow = async (): Promise<void> => {
     isDeletePending.value = false
   }
 }
+/**
+ * Add Gateway Service
+ */
+const handleCreate = (): void => {
+  router.push(props.config.createRoute)
+}
 
 /**
  * Watchers
@@ -579,6 +661,12 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
+.button-row {
+  align-items: center;
+  display: flex;
+  gap: $kui-space-50;
+}
+
 .kong-ui-entities-gateway-services-list {
   width: 100%;
 

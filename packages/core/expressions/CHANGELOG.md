@@ -3,6 +3,104 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.5...@kong-ui-public/expressions@0.9.6) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+## [0.9.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.4...@kong-ui-public/expressions@0.9.5) (2025-02-18)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.3...@kong-ui-public/expressions@0.9.4) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [0.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.2...@kong-ui-public/expressions@0.9.3) (2025-01-28)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.1...@kong-ui-public/expressions@0.9.2) (2025-01-23)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.0...@kong-ui-public/expressions@0.9.1) (2025-01-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency monaco-editor to v0.52.2 ([#1909](https://github.com/Kong/public-ui-components/issues/1909)) ([528c1d3](https://github.com/Kong/public-ui-components/commit/528c1d3f246b9ba2682119607aad2af47c242c49))
+
+
+
+
+
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.8.2...@kong-ui-public/expressions@0.9.0) (2025-01-22)
+
+
+### Features
+
+* **expressions:** add func to check if rhs autocompletion is necessary; dispose after use ([#1907](https://github.com/Kong/public-ui-components/issues/1907)) ([824da5a](https://github.com/Kong/public-ui-components/commit/824da5ae9b9efc142247a24bc3726f1f9b0b3b69))
+
+
+
+
+
+## [0.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.8.1...@kong-ui-public/expressions@0.8.2) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
+## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.8.0...@kong-ui-public/expressions@0.8.1) (2025-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.7.5...@kong-ui-public/expressions@0.8.0) (2025-01-20)
+
+
+### Features
+
+* **expressions:** better language support ([#1895](https://github.com/Kong/public-ui-components/issues/1895)) ([f36e911](https://github.com/Kong/public-ui-components/commit/f36e911942b6693aed895f9aeba26322648629c2))
+
+
+
+
+
 ## [0.7.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.7.4...@kong-ui-public/expressions@0.7.5) (2025-01-16)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

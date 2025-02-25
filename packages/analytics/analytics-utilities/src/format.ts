@@ -11,7 +11,7 @@ export function formatISOTimeWithTZ(ts: number | Date) {
   return format(ts, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
 }
 
-export function formatTime(ts: number, options: TimeFormatOptions = {}) {
+export function formatTime(ts: number | string, options: TimeFormatOptions = {}) {
   if (!ts) {
     return ts
   }

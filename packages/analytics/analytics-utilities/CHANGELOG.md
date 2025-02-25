@@ -3,6 +3,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@7.0.0...@kong-ui-public/analytics-utilities@7.1.0) (2025-02-24)
+
+
+### Features
+
+* **analytics-utilities:** add start/end string as required result set ([#1980](https://github.com/Kong/public-ui-components/issues/1980)) ([22c95eb](https://github.com/Kong/public-ui-components/commit/22c95ebfef24cb01432797e8f45304ecc0343f5e))
+
+
+
+
+
+# [7.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.3...@kong-ui-public/analytics-utilities@7.0.0) (2025-02-24)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** reduce required dependencies ([#1975](https://github.com/Kong/public-ui-components/issues/1975)) ([182f845](https://github.com/Kong/public-ui-components/commit/182f84557cb15314fc1b5985e810ed2923d780d1))
+
+
+### BREAKING CHANGES
+
+* **dashboard-renderer:** `EntityLink` must be provided from the analytics bridge if full functionality is needed.
+
+
+
+
+
+## [6.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.2...@kong-ui-public/analytics-utilities@6.3.3) (2025-02-21)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** enable doughnut charts [MA-3650] ([#1972](https://github.com/Kong/public-ui-components/issues/1972)) ([fc2f3d7](https://github.com/Kong/public-ui-components/commit/fc2f3d7a10e812b06efe8cdf673c13aad3be84c9))
+
+
+
+
+
+## [6.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.1...@kong-ui-public/analytics-utilities@6.3.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+## [6.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.0...@kong-ui-public/analytics-utilities@6.3.1) (2025-02-13)
+
+
+### Bug Fixes
+
+* handle adding/removing tiles (widgets) ([#1944](https://github.com/Kong/public-ui-components/issues/1944)) ([82359a2](https://github.com/Kong/public-ui-components/commit/82359a25f0acef6378ca0ab575cbf82ad6d9f863))
+
+
+
+
+
+# [6.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.2.0...@kong-ui-public/analytics-utilities@6.3.0) (2025-02-11)
+
+
+### Features
+
+* add portal dimension ([#1948](https://github.com/Kong/public-ui-components/issues/1948)) ([3669a64](https://github.com/Kong/public-ui-components/commit/3669a64b8836bac67ba7d6c9ce9f0b389ba95449))
+
+
+
+
+
+# [6.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.1.1...@kong-ui-public/analytics-utilities@6.2.0) (2025-01-27)
+
+
+### Features
+
+* **dashboard-renderer:** show badge for timeframe overrides [MA-3562] ([#1916](https://github.com/Kong/public-ui-components/issues/1916)) ([cd1524f](https://github.com/Kong/public-ui-components/commit/cd1524f838082f46f4982b71fce62e593fd01954))
+
+
+
+
+
+## [6.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.1.0...@kong-ui-public/analytics-utilities@6.1.1) (2025-01-23)
+
+
+### Bug Fixes
+
+* make sure timeperiods from the singleton map is cloned ([#1912](https://github.com/Kong/public-ui-components/issues/1912)) ([5c95099](https://github.com/Kong/public-ui-components/commit/5c95099141d357edf6e0722f6740e7a154a06991))
+
+
+
+
+
+# [6.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.0.0...@kong-ui-public/analytics-utilities@6.1.0) (2025-01-23)
+
+
+### Features
+
+* add response/request size sum aggregations ([#1911](https://github.com/Kong/public-ui-components/issues/1911)) ([23b391e](https://github.com/Kong/public-ui-components/commit/23b391e78636a8023e6b2e2c61f845d3db0d293d))
+
+
+
+
+
 # [6.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@5.12.0...@kong-ui-public/analytics-utilities@6.0.0) (2025-01-15)
 
 

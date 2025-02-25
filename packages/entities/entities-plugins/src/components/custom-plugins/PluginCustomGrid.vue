@@ -72,6 +72,7 @@ import { computed, nextTick, onMounted, ref, onUnmounted } from 'vue'
 import type { PropType } from 'vue'
 import {
   PluginGroup,
+  type CustomPluginType,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
   type PluginType,
@@ -165,13 +166,14 @@ const modifiedCustomPlugins = computed((): PluginType[] => {
 })
 
 const openDeleteModal = ref(false)
-const selectedPlugin = ref<{ name: string, id: string } | null>(null)
+const selectedPlugin = ref<{ name: string, id: string, customPluginType?: CustomPluginType } | null>(null)
 
 const handleCustomPluginDelete = (plugin: PluginType): void => {
   openDeleteModal.value = true
   selectedPlugin.value = {
     id: plugin.id,
     name: plugin.name,
+    customPluginType: plugin.customPluginType,
   }
 }
 

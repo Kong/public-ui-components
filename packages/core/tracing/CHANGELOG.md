@@ -3,6 +3,123 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.8.3...@kong-ui-public/tracing@0.9.0) (2025-02-25)
+
+
+### Features
+
+* **tracing:** split upstream node into three nodes ([#1973](https://github.com/Kong/public-ui-components/issues/1973)) ([cf0c523](https://github.com/Kong/public-ui-components/commit/cf0c523998a53230c8c53d684db8daf33d3b31de))
+
+
+
+
+
+## [0.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.8.2...@kong-ui-public/tracing@0.8.3) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+## [0.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.8.1...@kong-ui-public/tracing@0.8.2) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.8.0...@kong-ui-public/tracing@0.8.1) (2025-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.7.0...@kong-ui-public/tracing@0.8.0) (2025-02-14)
+
+
+### Features
+
+* **tracing:** display more info in the lifecycle view ([#1952](https://github.com/Kong/public-ui-components/issues/1952)) ([68ffb95](https://github.com/Kong/public-ui-components/commit/68ffb9582a3bedfcb4e36d5c63af031811b69db4))
+
+
+
+
+
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.14...@kong-ui-public/tracing@0.7.0) (2025-02-05)
+
+
+### Features
+
+* **tracing:** update span name mappings ([#1928](https://github.com/Kong/public-ui-components/issues/1928)) ([cb886da](https://github.com/Kong/public-ui-components/commit/cb886da7edb9c73ba3e57830cf517f3736dcbc96))
+
+
+
+
+
+## [0.6.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.13...@kong-ui-public/tracing@0.6.14) (2025-02-03)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.6.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.12...@kong-ui-public/tracing@0.6.13) (2025-02-03)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.6.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.11...@kong-ui-public/tracing@0.6.12) (2025-01-24)
+
+
+### Bug Fixes
+
+* **tracing:** lifecycle view and tab partials ([#1908](https://github.com/Kong/public-ui-components/issues/1908)) ([28ebb40](https://github.com/Kong/public-ui-components/commit/28ebb40e20e9743c171726e0c407a9d4c4942a0f))
+
+
+
+
+
+## [0.6.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.10...@kong-ui-public/tracing@0.6.11) (2025-01-23)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.6.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.9...@kong-ui-public/tracing@0.6.10) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
+## [0.6.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.8...@kong-ui-public/tracing@0.6.9) (2025-01-17)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
 ## [0.6.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.6.7...@kong-ui-public/tracing@0.6.8) (2025-01-15)
 
 **Note:** Version bump only for package @kong-ui-public/tracing

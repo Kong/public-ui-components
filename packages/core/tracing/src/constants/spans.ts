@@ -14,6 +14,49 @@ export const SPAN_ATTR_KEY_KONG_LATENCY_PREFIX = `${SPAN_ATTR_KEY_KONG_PREFIX}la
 export const SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX = `${SPAN_ATTR_KEY_KONG_LATENCY_PREFIX}3p.`
 
 /**
+ * These are known span names for ease of access.
+ * Why not using enums? --Because we don't want to make the list here exhaustive.
+ */
+export const SPAN_NAMES = {
+  CLIENT_HEADERS: 'kong.read_client_http_headers',
+  FIND_UPSTREAM: 'kong.find_upstream',
+  FLUSH_TO_DOWNSTREAM: 'kong.wait_for_client_read',
+
+  /**
+   * Previously known as:
+   * - `kong.upstream.read_response`
+   * - {@link SPAN_NAMES.KONG_READ_RESPONSE_FROM_UPSTREAM}
+   */
+  KONG_READ_BODY_FROM_UPSTREAM: 'kong.read_body_from_upstream',
+
+  /**
+   * Previously known as:
+   * - `kong.upstream.ttfb`
+   * - {@link SPAN_NAMES.KONG_WAITING_FOR_UPSTREAM}
+   */
+  KONG_READ_HEADERS_FROM_UPSTREAM: 'kong.read_headers_from_upstream',
+
+  /**
+   * @deprecated Use {@link SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM} instead
+   *
+   * Previously known as:
+   * - `kong.upstream.read_response`
+   */
+  KONG_READ_RESPONSE_FROM_UPSTREAM: 'kong.read_response_from_upstream',
+  KONG_SEND_REQUEST_TO_UPSTREAM: 'kong.send_request_to_upstream',
+  KONG_UPSTREAM_SELECTION: 'kong.upstream.selection',
+
+  /**
+   * @deprecated Use {@link SPAN_NAMES.KONG_READ_HEADERS_FROM_UPSTREAM} instead
+   *
+   * Previously known as:
+   * - `kong.upstream.ttfb`
+   */
+  KONG_WAITING_FOR_UPSTREAM: 'kong.waiting_for_upstream',
+  READ_BODY: 'kong.read_client_http_body',
+}
+
+/**
  * These are known attributes that will appear in the spans for ease of access.
  * Why not using enums? --Because we don't want to make the list here exhaustive.
  */
@@ -36,6 +79,7 @@ export const SPAN_ATTRIBUTE_KEYS = {
   KONG_SERVICE_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}service.id`,
   KONG_TARGET_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}target.id`,
   KONG_UPSTREAM_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}upstream.id`,
+  KONG_UPSTREAM_STATUS_CODE: `${SPAN_ATTR_KEY_KONG_PREFIX}upstream.status_code`,
   URL_FULL: 'url.full',
 } satisfies Record<string, string>
 

@@ -11,8 +11,13 @@
         "title": "Configure a New Upstream",
         "description": "Upstreams are used to load balance incoming requests."
       },
+      "empty_state_v2": {
+        "title": "Configure your first upstream",
+        "description": "Upstreams enable load balancing across multiple backend services, ensuring efficient and reliable API traffic handling.",
+        "create_cta": "New upstream"
+      },
       "toolbar_actions": {
-        "new_upstream": "New Upstream"
+        "new_upstream": "New upstream"
       }
     },
     "title": "Upstreams",
@@ -20,7 +25,7 @@
       "placeholder": "Filter by exact name or ID"
     },
     "actions": {
-      "create": "New Upstream",
+      "create": "New upstream",
       "copy_id": "Copy ID",
       "copy_json": "Copy JSON",
       "edit": "Edit",

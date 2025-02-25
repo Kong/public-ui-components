@@ -1,15 +1,57 @@
 import { cloneDeep } from 'lodash-es'
-import { SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX, SPAN_ATTRIBUTE_KEYS, SPAN_LATENCY_ATTR_LABEL_KEYS, SPAN_ZERO_ID } from '../constants'
-import { type IAnyValue, type IKeyValue, type Span, type SpanLatency, type SpanNode } from '../types'
+import { SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX, SPAN_ATTRIBUTE_KEYS, SPAN_LATENCY_ATTR_LABEL_KEYS, SPAN_NAMES, SPAN_ZERO_ID } from '../constants'
+import { type IAnyValue, type IKeyValue, type Span, type SpanLatency, type SpanNode, type SpanTrees } from '../types'
 
 /**
  * These are spans whose names are changed.
  * Here we will map them to their new names, and use them in the following steps.
  */
 const MAPPED_SPAN_NAMES: Record<string, string> = {
-  'kong.upstream.try_select': 'kong.find_upstream',
-  'kong.upstream.ttfb': 'kong.waiting_for_upstream',
-  'kong.upstream.read_response': 'kong.read_response_from_upstream',
+  'kong.upstream.try_select': SPAN_NAMES.FIND_UPSTREAM,
+  'kong.upstream.ttfb': SPAN_NAMES.KONG_READ_HEADERS_FROM_UPSTREAM,
+  [SPAN_NAMES.KONG_WAITING_FOR_UPSTREAM]: SPAN_NAMES.KONG_READ_HEADERS_FROM_UPSTREAM,
+  'kong.upstream.read_response': SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM,
+  [SPAN_NAMES.KONG_READ_RESPONSE_FROM_UPSTREAM]: SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM,
+}
+
+export const compareSpanNode = (a: SpanNode, b: SpanNode) => {
+  if (a.span.startTimeUnixNano !== undefined && b.span.startTimeUnixNano !== undefined) {
+    return Number(a.span.startTimeUnixNano - b.span.startTimeUnixNano)
+  }
+  // Hoist the spans without start time to the top
+  if (a.span.startTimeUnixNano === undefined && b.span.startTimeUnixNano === undefined) {
+    return 0
+  }
+  return a.span.startTimeUnixNano === undefined ? -1 : 1
+}
+
+export const calculateSpanDuration = (span: Span<bigint>): number | undefined => {
+  let startTimeUnixNano: bigint | undefined
+  let endTimeUnixNano: bigint | undefined
+
+  try {
+    startTimeUnixNano = BigInt(span.startTimeUnixNano!)
+  } catch (e) {
+    console.warn(`Failed to convert the start time "${span.startTimeUnixNano}" to bigint:`, { error: e, span })
+    return undefined
+  }
+
+  try {
+    endTimeUnixNano = BigInt(span.endTimeUnixNano!)
+  } catch (e) {
+    console.warn(`Failed to convert the end time "${span.endTimeUnixNano}" to bigint:`, { error: e, span })
+    return undefined
+  }
+
+  const durationNano = startTimeUnixNano !== undefined && endTimeUnixNano !== undefined
+    ? Number(endTimeUnixNano - startTimeUnixNano)
+    : undefined
+
+  if (durationNano !== undefined && durationNano < 0) {
+    console.warn(`Invalid span duration "${durationNano}":`, { span })
+  }
+
+  return durationNano
 }
 
 /**
@@ -18,7 +60,7 @@ const MAPPED_SPAN_NAMES: Record<string, string> = {
  * @param spans the spans to build the trees from
  * @returns the array of root nodes of the span trees
  */
-export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
+export const buildSpanTrees = (spans: Span[]): SpanTrees => {
   const nodes = new Map<string, SpanNode>()
 
   for (const span of spans) {
@@ -75,14 +117,14 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
       },
     }
     node.span.attributes?.sort((a, b) => a.key.localeCompare(b.key))
-    nodes.set(span.spanId, node)
+    nodes.set(`${span.traceId}~${span.spanId}`, node)
   }
 
   const roots: SpanNode[] = []
 
   for (const node of nodes.values()) {
     if (!node.root) {
-      const parent = nodes.get(node.span.parentSpanId!)!
+      const parent = nodes.get(`${node.span.traceId}~${node.span.parentSpanId!}`)!
       parent.children.push(node)
       // Update subtree values when necessary
       if (node.subtreeValues.startTimeUnixNano !== undefined
@@ -101,19 +143,13 @@ export const buildSpanTrees = (spans: Span[]): SpanNode[] => {
   }
 
   for (const node of nodes.values()) {
-    node.children.sort((a, b) => {
-      if (a.span.startTimeUnixNano !== undefined && b.span.startTimeUnixNano !== undefined) {
-        return Number(a.span.startTimeUnixNano - b.span.startTimeUnixNano)
-      }
-      // Hoist the spans without start time to the top
-      if (a.span.startTimeUnixNano === undefined && b.span.startTimeUnixNano === undefined) {
-        return 0
-      }
-      return a.span.startTimeUnixNano === undefined ? -1 : 1
-    })
+    node.children.sort(compareSpanNode)
   }
 
-  return roots
+  return {
+    roots,
+    spans: Array.from(nodes.values()).sort(compareSpanNode).map(node => node.span),
+  }
 }
 
 /**

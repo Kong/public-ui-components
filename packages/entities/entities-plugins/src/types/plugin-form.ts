@@ -1,6 +1,6 @@
 import type { RouteLocationRaw } from 'vue-router'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { EntityType } from './plugin'
+import type { CustomPluginType, EntityType } from './plugin'
 import type { CommonSchemaFields } from './plugins/shared'
 import type { ApplicationRegistrationSchema } from './plugins/application-registration-schema'
 import type { StatsDSchema } from './plugins/stats-d'
@@ -13,6 +13,8 @@ import type { RouteByHeaderSchema } from './plugins/route-by-header'
 import type { AIPromptDecoratorSchema } from './plugins/ai-prompt-decorator'
 import type { AIPromptTemplateSchema } from './plugins/ai-prompt-template'
 import type { AIRateLimitingAdvancedSchema } from './plugins/ai-rate-limiting-advanced'
+import type { ResponseTransformerSchema } from './plugins/response-transformer'
+import type { ResponseTransformerAdvancedSchema } from './plugins/response-transformer-advanced'
 import type { VaultAuthSchema } from './plugins/vault-auth'
 import type { GraphQLRateLimitingAdvancedSchema } from './plugins/graphql-rate-limiting-advanced'
 import type { SAMLSchema } from './plugins/saml'
@@ -45,7 +47,7 @@ export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, Konne
   /** Route for creating a custom plugin */
   createCustomRoute?: RouteLocationRaw
   /** A function that returns the route for editing a custom plugin */
-  getCustomEditRoute?: (id: string) => RouteLocationRaw
+  getCustomEditRoute?: (id: string, type: CustomPluginType) => RouteLocationRaw
 }
 
 export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {}
@@ -209,7 +211,8 @@ export interface CustomSchemas {
   'pre-function': CommonSchemaFields & Record<string, any>
   'post-function': CommonSchemaFields & Record<string, any>
   'request-transformer-advanced': CommonSchemaFields & Record<string, any>
-  'request-validator': CommonSchemaFields & Record<string, any>
+  'response-transformer': ResponseTransformerSchema
+  'response-transformer-advanced': ResponseTransformerAdvancedSchema
   zipkin: CommonSchemaFields & Record<string, any>
   saml: SAMLSchema
   'oas-validation': OasValidationSchema

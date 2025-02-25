@@ -2,13 +2,12 @@
 import { PluginGroupArray, PluginGroup, type KongManagerPluginSelectConfig, type KonnectPluginSelectConfig } from '../types'
 import {
   kmAvailablePlugins,
-  kmLimitedAvailablePlugins,
   konnectAvailablePlugins,
-  konnectLimitedAvailablePlugins,
   firstShownPlugin,
   firstShownCustomPlugin,
   kongPluginNames,
   customPluginNames,
+  konnectStreamingCustomPlugins,
 } from '../../fixtures/mockData'
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
@@ -27,11 +26,12 @@ const baseConfigKonnect: KonnectPluginSelectConfig = {
   }),
   // custom plugins
   createCustomRoute: { name: 'create-custom-plugin' },
-  getCustomEditRoute: (plugin: string) => ({
+  getCustomEditRoute: (plugin: string, type: 'schema' | 'streaming') => ({
     name: 'edit-custom-plugin',
     params: {
       control_plane_id: 'abc-123-i-love-cats',
       plugin,
+      customPluginType: type,
     },
   }),
 }
@@ -238,32 +238,6 @@ describe('<PluginSelect />', {
       cy.get('.plugin-select-card[data-testid="custom-plugin-b-card"]').should('be.visible')
     })
 
-    it('should correctly render available plugins when isAvailableOnly is true', () => {
-      interceptKM({
-        mockData: kmLimitedAvailablePlugins,
-      })
-
-      cy.mount(PluginSelect, {
-        props: {
-          config: baseConfigKM,
-          showAvailableOnly: true,
-        },
-      })
-
-      cy.wait('@getAvailablePlugins')
-
-      cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
-      cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-
-      // renders all plugins
-      for (const pluginName in kmLimitedAvailablePlugins.plugins.available_on_server) {
-        cy.getTestId(`${pluginName}-card`).should('exist')
-      }
-
-      // does not render a plugin when not available
-      cy.getTestId(`${firstShownPlugin}-card`).should('not.exist')
-    })
-
     it('should allow filtering of plugins', () => {
       interceptKM()
 
@@ -358,10 +332,7 @@ describe('<PluginSelect />', {
   describe('Konnect', () => {
     // Create a new router instance for each test
     let router: Router
-    const interceptKonnect = (params?: {
-      mockData?: object
-      alias?: string
-    }) => {
+    const interceptKonnect = () => {
       cy.intercept(
         {
           method: 'GET',
@@ -369,9 +340,20 @@ describe('<PluginSelect />', {
         },
         {
           statusCode: 200,
-          body: params?.mockData ?? konnectAvailablePlugins,
+          body: konnectAvailablePlugins,
         },
-      ).as(params?.alias ?? 'getAvailablePlugins')
+      ).as('getAvailablePlugins')
+
+      cy.intercept(
+        {
+          method: 'GET',
+          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/custom-plugins`,
+        },
+        {
+          statusCode: 200,
+          body: konnectStreamingCustomPlugins,
+        },
+      ).as('getStreamingCustomPlugins')
     }
 
     beforeEach(() => {
@@ -390,6 +372,7 @@ describe('<PluginSelect />', {
       cy.mount(PluginSelect, {
         props: {
           config: baseConfigKonnect,
+          customPluginSupport: 'schema',
         },
         router,
       })
@@ -429,6 +412,40 @@ describe('<PluginSelect />', {
       customPluginNames.forEach((pluginName: string) => {
         cy.getTestId(`${pluginName}-card`).should('exist')
       })
+    })
+
+    it('should hide custom plugins tab', () => {
+      interceptKonnect()
+
+      cy.mount(PluginSelect, {
+        props: {
+          config: baseConfigKonnect,
+          customPluginSupport: 'none',
+        },
+        router,
+      })
+
+      cy.wait('@getAvailablePlugins')
+
+      cy.get('#custom-tab').should('not.exist')
+    })
+
+    it('should show disabled custom plugins tab', () => {
+      interceptKonnect()
+
+      cy.mount(PluginSelect, {
+        props: {
+          config: baseConfigKonnect,
+          customPluginSupport: 'disabled',
+        },
+        router,
+      })
+
+      cy.wait('@getAvailablePlugins')
+
+      // custom plugins
+      cy.get('#custom-tab').should('be.visible')
+      cy.get('#custom-tab .disabled').should('exist')
     })
 
     it('should show highlighted plugins', () => {
@@ -533,33 +550,6 @@ describe('<PluginSelect />', {
       })
     })
 
-    it('should correctly render available plugins when isAvailableOnly is true', () => {
-      interceptKonnect({
-        mockData: konnectLimitedAvailablePlugins,
-      })
-
-      cy.mount(PluginSelect, {
-        props: {
-          config: baseConfigKonnect,
-          showAvailableOnly: true,
-        },
-        router,
-      })
-
-      cy.wait('@getAvailablePlugins')
-
-      cy.get('.kong-ui-entities-plugin-select-form').should('be.visible')
-      cy.get('.kong-ui-entities-plugin-select-form .plugins-results-container').should('be.visible')
-
-      // renders all plugins
-      konnectLimitedAvailablePlugins.names.forEach((pluginName: string) => {
-        cy.getTestId(`${pluginName}-card`).should('exist')
-      })
-
-      // does not render a plugin when not available
-      cy.getTestId(`${firstShownPlugin}-card`).should('not.exist')
-    })
-
     it('should allow filtering of plugins', () => {
       interceptKonnect()
 
@@ -661,6 +651,7 @@ describe('<PluginSelect />', {
         cy.mount(PluginSelect, {
           props: {
             config: baseConfigKonnect,
+            customPluginSupport: 'schema',
             canCreateCustomPlugin: () => false,
             canEditCustomPlugin: () => true,
             canDeleteCustomPlugin: () => true,
@@ -688,6 +679,7 @@ describe('<PluginSelect />', {
         cy.mount(PluginSelect, {
           props: {
             config: baseConfigKonnect,
+            customPluginSupport: 'streaming',
             canCreateCustomPlugin: () => true,
             canEditCustomPlugin: () => false,
             canDeleteCustomPlugin: () => false,
@@ -696,6 +688,7 @@ describe('<PluginSelect />', {
         })
 
         cy.wait('@getAvailablePlugins')
+        cy.wait('@getStreamingCustomPlugins')
 
         // custom plugins
         cy.get('#custom-tab').should('be.visible')

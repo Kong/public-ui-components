@@ -3,6 +3,129 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.9.0...@kong-ui-public/entities-consumers@3.9.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+# [3.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.8.0...@kong-ui-public/entities-consumers@3.9.0) (2025-02-18)
+
+
+### Features
+
+* **entities:** update empty state data-testids [khcp-15185] ([#1966](https://github.com/Kong/public-ui-components/issues/1966)) ([4e7a3a8](https://github.com/Kong/public-ui-components/commit/4e7a3a827ae8f99662a09c436c2615b52dd09cc2))
+
+
+
+
+
+# [3.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.7.2...@kong-ui-public/entities-consumers@3.8.0) (2025-02-17)
+
+
+### Features
+
+* vault new empty state ([#1942](https://github.com/Kong/public-ui-components/issues/1942)) ([f09e758](https://github.com/Kong/public-ui-components/commit/f09e75812e11f4468153e602f8ad293c76e8c82c))
+
+
+
+
+
+## [3.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.7.1...@kong-ui-public/entities-consumers@3.7.2) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [3.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.7.0...@kong-ui-public/entities-consumers@3.7.1) (2025-02-14)
+
+
+### Bug Fixes
+
+* **consumers:** lh button display [khcp-14827] ([#1953](https://github.com/Kong/public-ui-components/issues/1953)) ([64cf21d](https://github.com/Kong/public-ui-components/commit/64cf21d7d5b03ef11cc398690e82027bc2b6676b))
+
+
+
+
+
+# [3.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.6.1...@kong-ui-public/entities-consumers@3.7.0) (2025-02-14)
+
+
+### Features
+
+* **consumer-groups:** new empty state [khcp-14827] ([#1936](https://github.com/Kong/public-ui-components/issues/1936)) ([1443167](https://github.com/Kong/public-ui-components/commit/1443167185e9a2bf9c4acca02220e0d8a7981a73))
+
+
+
+
+
+## [3.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.6.0...@kong-ui-public/entities-consumers@3.6.1) (2025-02-11)
+
+
+### Bug Fixes
+
+* ff guard v2 empty state changes ([#1947](https://github.com/Kong/public-ui-components/issues/1947)) ([b408aea](https://github.com/Kong/public-ui-components/commit/b408aeaf7124673ab288409eee9151871e3b8c87))
+
+
+
+
+
+# [3.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.5.73...@kong-ui-public/entities-consumers@3.6.0) (2025-02-03)
+
+
+### Features
+
+* **consumers:** new empty state [khcp-14823] ([#1921](https://github.com/Kong/public-ui-components/issues/1921)) ([8262a4e](https://github.com/Kong/public-ui-components/commit/8262a4e06d302f280f7cfbadf087020ea4c3c832))
+
+
+
+
+
+## [3.5.73](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.5.72...@kong-ui-public/entities-consumers@3.5.73) (2025-02-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [3.5.72](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.5.71...@kong-ui-public/entities-consumers@3.5.72) (2025-01-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
+## [3.5.71](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.5.70...@kong-ui-public/entities-consumers@3.5.71) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
+## [3.5.70](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.5.69...@kong-ui-public/entities-consumers@3.5.70) (2025-01-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
 ## [3.5.69](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.5.68...@kong-ui-public/entities-consumers@3.5.69) (2025-01-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumers

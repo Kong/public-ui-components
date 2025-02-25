@@ -1,21 +1,14 @@
-// import type { App } from 'vue'
-import TraceViewer from './components/trace-viewer/TraceViewer.vue'
+import LifecycleView from './components/lifecycle/LifecycleView.vue'
+import PayloadDisplay from './components/payload/PayloadDisplay.vue'
+import RequestInfo from './components/payload/RequestInfo.vue'
 import WaterfallView from './components/waterfall/WaterfallView.vue'
+
+import SummaryViewTab from './partials/SummaryViewTab.vue'
+import TraceViewTab from './partials/TraceViewTab.vue'
 
 export * from './constants'
 export * from './types'
 export * from './utils'
 
-// Export Vue plugin
-// We rarely want to export components as a plugin as we prefer to support proper tree-shaking in the host application. Only enable if you're packing a Vue plugin.
-// export default {
-//   // Customize Vue plugin options as desired
-//   // Providing a `name` property allows for customizing the registered
-//   // name of your component (useful if exporting a single component).
-//   install: (app: App, options: { name?: string, [key: string]: any } = {}): void => {
-//     app.component(options.name || 'Tracing', Tracing)
-//   },
-// }
-
-export { TraceViewer, WaterfallView }
+export { LifecycleView, PayloadDisplay, RequestInfo, SummaryViewTab, TraceViewTab, WaterfallView }
 

@@ -3,6 +3,101 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.7.0...@kong-ui-public/entities-key-sets@3.7.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+# [3.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.6.0...@kong-ui-public/entities-key-sets@3.7.0) (2025-02-18)
+
+
+### Features
+
+* **entities:** update empty state data-testids [khcp-15185] ([#1966](https://github.com/Kong/public-ui-components/issues/1966)) ([4e7a3a8](https://github.com/Kong/public-ui-components/commit/4e7a3a827ae8f99662a09c436c2615b52dd09cc2))
+
+
+
+
+
+# [3.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.75...@kong-ui-public/entities-key-sets@3.6.0) (2025-02-17)
+
+
+### Features
+
+* keys new empty state ([#1945](https://github.com/Kong/public-ui-components/issues/1945)) ([2cd3318](https://github.com/Kong/public-ui-components/commit/2cd3318eff6d1c225a23bc0c93535374e29e9a56))
+
+
+
+
+
+## [3.5.75](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.74...@kong-ui-public/entities-key-sets@3.5.75) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [3.5.74](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.73...@kong-ui-public/entities-key-sets@3.5.74) (2025-02-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.5.73](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.72...@kong-ui-public/entities-key-sets@3.5.73) (2025-02-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.5.72](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.71...@kong-ui-public/entities-key-sets@3.5.72) (2025-02-03)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.5.71](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.70...@kong-ui-public/entities-key-sets@3.5.71) (2025-01-23)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.5.70](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.69...@kong-ui-public/entities-key-sets@3.5.70) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
+## [3.5.69](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.68...@kong-ui-public/entities-key-sets@3.5.69) (2025-01-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
 ## [3.5.68](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.5.67...@kong-ui-public/entities-key-sets@3.5.68) (2025-01-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-key-sets

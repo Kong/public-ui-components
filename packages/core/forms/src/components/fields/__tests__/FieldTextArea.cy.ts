@@ -14,6 +14,7 @@ describe('<FieldTester /> - FieldTextArea', () => {
       help: 'Describe the personality of the cat.',
       styleClasses: 'cool-cats',
       required: true,
+      max: 1000,
     }],
   }
 

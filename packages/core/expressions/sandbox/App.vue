@@ -25,6 +25,7 @@
 
       <ExpressionsEditor
         v-model="expression"
+        :rhs-value-completion="rhsValueCompletion"
         :schema="schemaDefinition"
         @parse-result-update="onParseResultUpdate"
       />
@@ -33,7 +34,9 @@
         href="#"
         style="color: #0030cc; font-weight: bold;"
         @click.prevent="isVisible = true"
-      >Test with Router Playground</a>
+      >
+        Test with Router Playground
+      </a>
 
       <RouterPlaygroundModal
         :hide-editor-actions="false"
@@ -57,9 +60,10 @@
 </template>
 
 <script setup lang="ts">
+import * as monaco from 'monaco-editor'
 import { ref, watch } from 'vue'
-import type { SchemaDefinition } from '../src'
-import { ExpressionsEditor, HTTP_SCHEMA_DEFINITION, STREAM_SCHEMA_DEFINITION, RouterPlaygroundModal } from '../src'
+import type { RhsValueCompletion, SchemaDefinition } from '../src'
+import { ExpressionsEditor, HTTP_SCHEMA_DEFINITION, RouterPlaygroundModal, STREAM_SCHEMA_DEFINITION } from '../src'
 
 type NamedSchemaDefinition = { name: string; definition: SchemaDefinition }
 
@@ -84,7 +88,7 @@ const expressionPresets = [
 
 const btoa = (s: string) => window.btoa(s)
 
-const expression = ref(expressionPresets[0])
+const expression = ref('lower(http.path) == "/kong" || lower(lower(http.path)) == "/kong"')
 const schemaDefinition = ref<NamedSchemaDefinition>(schemaPresets[0])
 const parseResult = ref('')
 const isVisible = ref(false)
@@ -96,6 +100,26 @@ const onParseResultUpdate = (result: any) => {
 const handleCommit = (exp: string) => {
   expression.value = exp
   isVisible.value = false
+}
+
+const rhsValueCompletion: RhsValueCompletion = {
+  provide: async (lhsValue, rhsValueValue, lhsRange, rhsValueRange) => {
+    return {
+      suggestions: new Array(10).fill(0).map(() => {
+        const text = `${rhsValueValue}+${Math.random().toString(36).slice(2, 6)}`
+        return {
+          label: text,
+          kind: monaco.languages.CompletionItemKind.Value,
+          detail: `lhs = ${lhsValue}`,
+          insertText:text,
+          range: rhsValueRange,
+        }
+      }),
+    }
+  },
+  shouldProvide: (lhsIdentValue) => {
+    return lhsIdentValue === 'http.path'
+  },
 }
 
 watch(schemaDefinition, (newSchemaDefinition) => {

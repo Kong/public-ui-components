@@ -1,6 +1,6 @@
 {
   "actions": {
-    "create": "New Route",
+    "create": "New route",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
@@ -21,7 +21,7 @@
     "title": "Routes",
     "list": {
       "toolbar_actions": {
-        "new_route": "New Route"
+        "new_route": "New route"
       },
       "table_headers": {
         "name": "Name",
@@ -38,6 +38,10 @@
       "empty_state": {
         "title": "Configure a New Route",
         "description": "Routes proxy requests to an associated Service."
+      },
+      "empty_state_v2": {
+        "title": "Configure your first route",
+        "description": "Routes direct incoming API requests to the appropriate services, facilitating organized and efficient traffic flow within your architecture."
       }
     }
   },

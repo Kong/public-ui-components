@@ -12,7 +12,7 @@
         v-if="title || $slots.title"
         class="entity-empty-state-title"
       >
-        <h1>
+        <h1 :class="emptyStateAppearance">
           <slot name="title">
             {{ title }}
           </slot>
@@ -78,7 +78,10 @@
       </slot>
     </div>
 
-    <div class="entity-empty-state-card-container">
+    <div
+      v-if="features.length"
+      class="entity-empty-state-card-container"
+    >
       <template
         v-for="(feature, idx) in features"
         :key="feature"
@@ -118,9 +121,17 @@ import { type PropType, computed, ref, onBeforeMount } from 'vue'
 import { KButton } from '@kong/kongponents'
 import { BookIcon, AddIcon } from '@kong/icons'
 import composables from '../../composables'
-import type { EmptyStateFeature } from 'src/types/entity-empty-state'
+import type { EmptyStateFeature, AppearanceTypes } from '../../types/entity-empty-state'
+import { Appearances } from '../../types/entity-empty-state'
 
 const props = defineProps({
+  appearance: {
+    type: String as PropType<AppearanceTypes>,
+    default: () => 'primary',
+    validator: (value: AppearanceTypes): boolean => {
+      return Appearances.includes(value)
+    },
+  },
   title: {
     type: String,
     default: '',
@@ -163,6 +174,16 @@ const { i18n: { t } } = composables.useI18n()
 const useCanCreate = ref(false)
 const showCreateButton = computed((): boolean => useCanCreate.value && !!props.actionButtonText)
 
+const emptyStateAppearance = computed((): AppearanceTypes | [AppearanceTypes, string] => {
+  // If the appearance is invalid, output both to keep backwards compatibility
+  // in case some of the tests rely on the invalid appearance output
+  if (!Appearances.includes(props.appearance)) {
+    return ['primary', props.appearance]
+  }
+
+  return props.appearance
+})
+
 onBeforeMount(async () => {
   // Evaluate if the user has create permissions
   useCanCreate.value = await props.canCreate()
@@ -180,7 +201,7 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
   display: flex;
   flex-direction: column;
   font-family: $kui-font-family-text;
-  gap: $kui-space-110;
+  gap: $kui-space-80;
   padding: $kui-space-130 $kui-space-0;
   width: 100%;
 
@@ -209,6 +230,10 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
       gap: $kui-space-40;
       line-height: $kui-line-height-60;
       margin: $kui-space-0;
+
+      &.secondary {
+        font-size: $kui-font-size-50;
+      }
     }
   }
 
@@ -220,8 +245,12 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
     max-width: 640px; // limit width so the description stays readable if it is too long
 
     p {
-      margin: $kui-space-30;
+      margin: $kui-space-0;
     }
+  }
+
+  .entity-empty-state-pricing {
+    margin-top: $kui-space-60;
   }
 
   .entity-empty-state-action {
@@ -235,6 +264,7 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
     flex-wrap: wrap;
     gap: $kui-space-60;
     justify-content: space-around;
+    margin-top: $kui-space-40;
     /** single column on mobile */
     width: $entity-empty-state-feature-card-width;
 

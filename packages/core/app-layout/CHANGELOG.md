@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.10...@kong-ui-public/app-layout@4.3.11) (2025-02-21)
+
+
+### Bug Fixes
+
+* **app-layout:** fix subnav item badge condition [TDX-5119] ([#1971](https://github.com/Kong/public-ui-components/issues/1971)) ([bff5f4a](https://github.com/Kong/public-ui-components/commit/bff5f4a780233259461d2606ef5715aae0e4cabd))
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+## [4.3.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.9...@kong-ui-public/app-layout@4.3.10) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [4.3.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.8...@kong-ui-public/app-layout@4.3.9) (2025-02-12)
+
+
+### Bug Fixes
+
+* **app-layout:** sidebar item badge count truncation ([#1951](https://github.com/Kong/public-ui-components/issues/1951)) ([ad50cd1](https://github.com/Kong/public-ui-components/commit/ad50cd17e7c289ebfaac52efb34fda63e2b43ba5))
+
+
+
+
+
+## [4.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.7...@kong-ui-public/app-layout@4.3.8) (2025-01-31)
+
+
+### Bug Fixes
+
+* **app-layout:** apppageinfosection content border radius ([#1923](https://github.com/Kong/public-ui-components/issues/1923)) ([2c5610f](https://github.com/Kong/public-ui-components/commit/2c5610f66cead65875af17bd48dc2f3f3967f348))
+
+
+
+
+
+## [4.3.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.6...@kong-ui-public/app-layout@4.3.7) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
 ## [4.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.5...@kong-ui-public/app-layout@4.3.6) (2025-01-15)
 
 

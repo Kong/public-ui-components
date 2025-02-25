@@ -108,6 +108,8 @@ export const mockExploreResponse = (
   const meta: QueryResponseMeta = {
     start_ms: start,
     end_ms: end,
+    start: new Date(start).toISOString(),
+    end: new Date(end).toISOString(),
     granularity_ms: granularity,
     display: primaryDimension
       ? {

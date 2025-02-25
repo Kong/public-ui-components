@@ -12,10 +12,12 @@ import { dataDogSchema } from '../definitions/schemas/Datadog'
 import { graphqlRateLimitingAdvancedSchema } from '../definitions/schemas/GraphQLRateLimitingAdvanced'
 import { injectionProtectionSchema } from '../definitions/schemas/InjectionProtection'
 import { mockingSchema } from '../definitions/schemas/Mocking'
+import { oasValidationSchema } from '../definitions/schemas/OASValidation'
 import { preFunctionSchema } from '../definitions/schemas/PreFunction'
 import { rateLimitingSchema } from '../definitions/schemas/RateLimiting'
 import { requestTransformerAdvancedSchema } from '../definitions/schemas/RequestTransformerAdvanced'
-import RequestValidatorSchema from '../definitions/schemas/RequestValidator'
+import { responseTransformerSchema } from '../definitions/schemas/ResponseTransformer'
+import { responseTransformerAdvancedSchema } from '../definitions/schemas/ResponseTransformerAdvanced'
 import { routeByHeaderSchema } from '../definitions/schemas/RouteByHeader'
 import { samlSchema } from '../definitions/schemas/SAML'
 import { statsDSchema } from '../definitions/schemas/StatsD'
@@ -142,10 +144,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     },
 
     'oas-validation': {
-      'config-api_spec': {
-        type: 'textArea',
-        rows: 15,
-      },
+      ...oasValidationSchema,
     },
 
     mocking: {
@@ -188,8 +187,12 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       ...requestTransformerAdvancedSchema,
     },
 
-    'request-validator': {
-      ...RequestValidatorSchema,
+    'response-transformer': {
+      ...responseTransformerSchema,
+    },
+
+    'response-transformer-advanced': {
+      ...responseTransformerAdvancedSchema,
     },
 
     zipkin: {

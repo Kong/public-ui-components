@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "0.33.2",
+  "version": "1.0.1",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -43,13 +43,15 @@
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
+    "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "1.17.2",
-    "@kong/kongponents": "9.14.16",
+    "@kong/design-tokens": "1.17.3",
+    "@kong/kongponents": "9.21.6",
+    "ajv": "^8.17.1",
     "pinia": ">= 2.1.7 < 3",
     "swrv": "^1.0.4",
-    "vue": "^3.5.12"
+    "vue": "^3.5.13"
   },
   "repository": {
     "type": "git",
@@ -66,7 +68,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "512KB"
+    "errorLimit": "600KB"
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
@@ -74,13 +76,12 @@
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.14.16",
+    "@kong/kongponents": "^9.21.6",
     "swrv": "^1.0.4",
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "@kong-ui-public/entities-shared": "workspace:^",
-    "ajv": "^8.17.1"
+    "gridstack": "^11.3.0"
   }
 }

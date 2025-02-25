@@ -246,31 +246,32 @@ In some cases HMR (hot module reloading) is not working out of the box in this c
 1. add `watch: ignored` into the `server` config:
 
     ```ts
-      server: {
-          watch: {
-            ignored: ['!**/node_modules/@kong-ui-public/forms/**']
-          },
+    server: {
+        watch: {
+          ignored: ['!**/node_modules/@kong-ui-public/forms/**']
+        }
+    }
     ```
 
-1. add `optimizeDeps` into the root of the config:
+2. add `optimizeDeps` into the root of the config:
 
     ```ts
-        optimizeDeps: {
-          exclude: ['@kong-ui-public/forms']
-        },
+    optimizeDeps: {
+      exclude: ['@kong-ui-public/forms']
+    }
     ```
 
     _Please do not commit these changes_
 
     And finally, when you done working with local (linked copy) of your `public-ui-components` package, unlink it:
 
-1. In the folder `public-ui-components/packages/{workspace}/forms` run
+3. In the folder `public-ui-components/packages/{workspace}/forms` run
 
     ```sh
     pnpm remove -g @kong-ui-public/forms
     ```
 
-1. In the root folder of the host application/package run:
+4. In the root folder of the host application/package run:
 
     ```sh
     pnpm unlink -g @kong-ui-public/forms

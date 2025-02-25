@@ -4,10 +4,11 @@
       v-bind="$attrs"
       :id="getFieldID(schema)"
       v-model="inputValue"
+      autosize
+      :character-limit="schema.max"
       :class="schema.fieldClasses"
       :disabled="disabled || undefined"
       :help="hint || undefined"
-      :maxlength="schema.max"
       :minlength="schema.min"
       :name="schema.inputName"
       :placeholder="schema.placeholder"

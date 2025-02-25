@@ -10,19 +10,20 @@
         :label="isToggled ? 'Custom styling' : 'Normal styling'"
       />
       <br>
-      <KButton
-        appearance="primary"
-        size="small"
-        @click="refresh"
-      >
-        refresh
-      </KButton>
+      <div style="display: flex; gap: 5px; margin: 5px;">
+        <KButton
+          appearance="primary"
+          size="small"
+          @click="refresh"
+        >
+          refresh
+        </KButton>
+      </div>
       <DashboardRenderer
         ref="dashboardRendererRef"
         :class="{ 'custom-styling': isToggled}"
-        :config="(dashboardConfig as DashboardConfig)"
+        :config="dashboardConfig"
         :context="context"
-        @edit-tile="onEditTile"
       >
         <template #slot-1>
           <div class="slot-container">
@@ -42,11 +43,14 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardConfig, DashboardRendererContext, TileConfig, TileDefinition, GridTile } from '../../src'
+import type { DashboardRendererContext } from '../../src'
 import { DashboardRenderer } from '../../src'
 import { inject, ref } from 'vue'
-import { ChartMetricDisplay } from '@kong-ui-public/analytics-chart'
-import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import type {
+  DashboardConfig,
+  ExploreAggregations,
+  TileConfig,
+} from '@kong-ui-public/analytics-utilities'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
@@ -56,10 +60,9 @@ const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 const context: DashboardRendererContext = {
   filters: [],
   refreshInterval: 0,
-  editable: true,
 }
 
-const dashboardConfig: DashboardConfig = {
+const dashboardConfig = ref <DashboardConfig>({
   gridSize: {
     cols: 6,
     rows: 7,
@@ -122,6 +125,10 @@ const dashboardConfig: DashboardConfig = {
         query: {
           datasource: 'basic',
           limit: 3,
+          time_range: {
+            type: 'relative',
+            time_range: 'current_month',
+          },
         },
       },
       layout: {
@@ -140,13 +147,17 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: 'horizontal_bar',
-          chartTitle: 'Horizontal bar chart of mock data',
+          chartTitle: 'This is a really long title lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
           allowCsvExport: true,
         },
         query: {
           datasource: 'advanced',
           dimensions: ['route'],
           metrics: ['request_count'],
+          time_range: {
+            type: 'relative',
+            time_range: '1h',
+          },
         },
       },
       layout: {
@@ -172,6 +183,11 @@ const dashboardConfig: DashboardConfig = {
         query: {
           datasource: 'basic',
           dimensions: ['time'],
+          time_range: {
+            type: 'absolute',
+            start: '2024-01-01',
+            end: '2024-02-01',
+          },
         },
       },
       layout: {
@@ -189,7 +205,7 @@ const dashboardConfig: DashboardConfig = {
       definition: {
         chart: {
           type: 'gauge',
-          metricDisplay: ChartMetricDisplay.Full,
+          metricDisplay: 'full',
           reverseDataset: true,
           numerator: 0,
         },
@@ -273,14 +289,31 @@ const dashboardConfig: DashboardConfig = {
         },
       },
     } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'doughnut',
+          chartTitle: 'Doughnut chart of mock data',
+        },
+        query: {
+          datasource: 'basic',
+        },
+      },
+      layout: {
+        position: {
+          col: 3,
+          row: 5,
+        },
+        size: {
+          cols: 2,
+          rows: 2,
+        },
+      },
+    } satisfies TileConfig,
   ],
-}
+})
 
 const isToggled = ref(false)
-
-const onEditTile = (tile: GridTile<TileDefinition>) => {
-  console.log('@edit-tile', tile)
-}
 
 const dashboardRendererRef = ref<InstanceType<typeof DashboardRenderer> | null>(null)
 

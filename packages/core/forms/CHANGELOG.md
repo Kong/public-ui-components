@@ -3,6 +3,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.9...@kong-ui-public/forms@4.10.10) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+## [4.10.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.8...@kong-ui-public/forms@4.10.9) (2025-02-18)
+
+
+### Bug Fixes
+
+* **plugins:** rta plugin schema ([#1962](https://github.com/Kong/public-ui-components/issues/1962)) ([a4ee43f](https://github.com/Kong/public-ui-components/commit/a4ee43f31e263bbf3d92333c01b80c330dcee11e))
+
+
+
+
+
+## [4.10.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.7...@kong-ui-public/forms@4.10.8) (2025-02-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#1961](https://github.com/Kong/public-ui-components/issues/1961)) ([7da943a](https://github.com/Kong/public-ui-components/commit/7da943a33a3c2325cbcd6bf213828ae9f4c22b60))
+
+
+
+
+
+## [4.10.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.6...@kong-ui-public/forms@4.10.7) (2025-01-28)
+
+
+### Bug Fixes
+
+* **plugins:** mocking spec max length ([#1917](https://github.com/Kong/public-ui-components/issues/1917)) ([1b3c028](https://github.com/Kong/public-ui-components/commit/1b3c028e4721ce6e267bcce2e2f2657c1d7b5dd7))
+
+
+
+
+
+## [4.10.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.5...@kong-ui-public/forms@4.10.6) (2025-01-23)
+
+
+### Bug Fixes
+
+* **stylelint:** add spacing rules ([#1910](https://github.com/Kong/public-ui-components/issues/1910)) ([e9cbce5](https://github.com/Kong/public-ui-components/commit/e9cbce528b1042482306d1ab5f3ef17ae77d9b2f))
+
+
+
+
+
+## [4.10.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.4...@kong-ui-public/forms@4.10.5) (2025-01-20)
+
+
+### Bug Fixes
+
+* kongponents version bump ([#1904](https://github.com/Kong/public-ui-components/issues/1904)) ([b6e8d8c](https://github.com/Kong/public-ui-components/commit/b6e8d8c035da30f2f29983ca117bcdc461a5f30c))
+
+
+
+
+
+## [4.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.3...@kong-ui-public/forms@4.10.4) (2025-01-20)
+
+
+### Bug Fixes
+
+* **vfg:** typescript clean up [khcp-11325] ([#1900](https://github.com/Kong/public-ui-components/issues/1900)) ([d6c9564](https://github.com/Kong/public-ui-components/commit/d6c9564eb3a742ad88ed7b209838128c8a187b3d))
+
+
+
+
+
 ## [4.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.2...@kong-ui-public/forms@4.10.3) (2025-01-16)
 
 
