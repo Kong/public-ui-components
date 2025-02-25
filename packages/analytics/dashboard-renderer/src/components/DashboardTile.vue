@@ -166,7 +166,10 @@ const exploreLink = computed(() => {
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
   // TODO: remove once portal has been added as option in Explore
-  if (filters.some(filter => filter === 'portal') || dimensions.some(dim => dim === 'portal' as QueryableExploreDimensions)) {
+  if (filters.some(filter => ('dimension' in filter && filter.dimension === 'portal') ||
+    ('field' in filter && filter.field === 'portal')) ||
+    dimensions.some(dim => dim === 'portal' as QueryableExploreDimensions)
+  ) {
     return ''
   }
 
