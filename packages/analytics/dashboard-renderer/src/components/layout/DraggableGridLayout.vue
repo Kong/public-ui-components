@@ -49,6 +49,7 @@ const emit = defineEmits<{
 
 const gridContainer = ref<HTMLDivElement | null>(null)
 
+
 const tilesRef = ref<Map<string, GridTile<any>>>(new Map(props.tiles.map(t => [`${t.id}`, t])))
 
 let grid: GridStack | null = null
@@ -82,6 +83,17 @@ const updateTiles = () => {
     updates.forEach((tile) => {
       tilesRef.value.set(`${tile.id}`, tile)
     })
+
+    const tiles = Array.from(tilesRef.value.entries())
+    tiles.sort((a, b) => {
+      const rowDiff = a[1].layout.position.row - b[1].layout.position.row
+      if (rowDiff !== 0) {
+        return rowDiff
+      }
+      return a[1].layout.position.col - b[1].layout.position.col
+    })
+    tilesRef.value = new Map(tiles)
+
     emit('update-tiles', Array.from(tilesRef.value.values()))
   }
 }
