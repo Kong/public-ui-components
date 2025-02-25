@@ -138,7 +138,7 @@
       "label": "Use shared configuration",
       "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins.",
       "title": "Shared Redis Configuration",
-      "tooltip": "Only applicable redis configurations will be shown here.",
+      "tooltip": "Only compatible {type} redis configurations will be listed here.",
       "configuration_selector_label": "Select stored Redis configuration",
       "configuration_selector_placeholder": "Pick Redis configuration",
       "create_new_configuration": "New {type} shared configuration",

@@ -4,7 +4,7 @@
     data-testid="redis-config-select"
   >
     <KLabel
-      :info="isCustomPlugin ? t('redis.custom_plugin.tooltip') : t('redis.shared_configuration.tooltip')"
+      :info="isCustomPlugin ? t('redis.custom_plugin.tooltip') : t('redis.shared_configuration.tooltip', { type: getPartialTypeDisplay(redisType as PartialType)})"
       :tooltip-attributes="{
         maxWidth: '300',
         placement: 'top',

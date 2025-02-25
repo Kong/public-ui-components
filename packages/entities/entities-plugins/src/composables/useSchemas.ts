@@ -281,8 +281,8 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       // Assume the fields are sorted, unless they have an `order` property
       if (metadata?.useLegacyForm) {
         for (const field of formSchema.fields!) {
-          // We group redis fields separately
-          if (options?.enableRedisPartial && isRedisField(field)) {
+          // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled
+          if (options?.enableRedisPartial && currentSchema._supported_redis_partial_type && isRedisField(field)) {
             redisFields.push(field)
             continue
           }
@@ -339,8 +339,8 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         }
       }
       for (const field of formSchema.fields!) {
-        // We group redis fields separately
-        if (options?.enableRedisPartial && isRedisField(field)) {
+        // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled
+        if (options?.enableRedisPartial && currentSchema._supported_redis_partial_type && isRedisField(field)) {
           redisFields.push(field)
           continue
         }
