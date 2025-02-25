@@ -55,7 +55,7 @@ jobs:
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'pZush' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ env.GH_TOKEN }}
@@ -416,7 +416,7 @@ jobs:
       #
       # we shall ignore lerna version error as pnpm publish will fail or not publish in case of such error
       - name: Update package versions
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'pZush' }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
