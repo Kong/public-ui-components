@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.8.3...@kong-ui-public/tracing@0.9.0) (2025-02-25)
+
+
+### Features
+
+* **tracing:** split upstream node into three nodes ([#1973](https://github.com/Kong/public-ui-components/issues/1973)) ([cf0c523](https://github.com/Kong/public-ui-components/commit/cf0c523998a53230c8c53d684db8daf33d3b31de))
+
+
+
+
+
 ## [0.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.8.2...@kong-ui-public/tracing@0.8.3) (2025-02-21)
 
 
