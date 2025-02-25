@@ -165,14 +165,10 @@ watch(() => props.definition, async () => {
 const exploreLink = computed(() => {
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
-
   // TODO: remove once portal has been added as option in Explore
-  const hasPortal = filters.some(filter => filter === 'portal') || dimensions.some(dim => dim === 'portal')
-
-  if (hasPortal) {
+  if (filters.some(filter => filter === 'portal') || dimensions.some(dim => dim === 'portal' as QueryableExploreDimensions)) {
     return ''
   }
-
 
   if (queryBridge && queryBridge.exploreBaseUrl) {
     const exploreQuery: ExploreQuery | AiExploreQuery = {
@@ -183,7 +179,6 @@ const exploreLink = computed(() => {
       granularity: props.definition.query.granularity || chartDataGranularity.value,
 
     } as ExploreQuery | AiExploreQuery
-
     // Explore only supports advanced or ai
     const datasource = ['advanced', 'ai'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'advanced'
     return `${queryBridge.exploreBaseUrl()}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
