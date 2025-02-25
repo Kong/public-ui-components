@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - feat/KHCP-14702_internal-repo
   pull_request:
     types:
       - opened
@@ -365,6 +366,10 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     timeout-minutes: 20
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read
+
     if: ${{ always() && needs.build.outputs.filter != '' }}
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -396,6 +401,12 @@ jobs:
           name: package-dist-artifacts
           path: packages/
 
+      - name: 'Authenticate to Google Cloud'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: '22045766606'
+          workload_identity_provider: 'projects/22045766606/locations/global/workloadIdentityPools/github/providers/github'
 
       # for lerna version we use:
       # --force-git-tag - if tag was already created it will be recreated instead of command failing and entire CI failing
@@ -414,10 +425,13 @@ jobs:
       - name: Publish packages to NPM
         if: ${{ github.event_name == 'push' }}
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
+          echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
+
+          npx google-artifactregistry-auth
           pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
+           GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
 
   notify-slack:
     name: Slack Notification
