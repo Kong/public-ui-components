@@ -28,6 +28,23 @@
           :config="filterConfig"
         />
       </template>
+      <!-- Toolbar for KM, Konnect uses external actions -->
+      <template
+        v-if="config.app === 'kongManager'"
+        #toolbar-button
+      >
+        <PermissionsWrapper :auth-function="() => canCreate()">
+          <KButton
+            appearance="primary"
+            data-testid="toolbar-add-consumer-group"
+            size="large"
+            @click="handleCreateClick"
+          >
+            <AddIcon />
+            {{ config.consumerId ? t('consumer_groups.actions.add_to_group') : t('consumer_groups.list.toolbar_actions.new_consumer_group') }}
+          </KButton>
+        </PermissionsWrapper>
+      </template>
 
       <template
         v-if="!filterQuery && enableV2EmptyStates && config.app === 'konnect'"
