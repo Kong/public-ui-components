@@ -13,7 +13,7 @@
   "command": {
     "version": {
       "message": "chore(release): publish [skip ci]",
-      "allowBranch": ["main", "feat/KHCP-14702_internal-repo"],
+      "allowBranch": "main",
       "conventionalCommits": true
     }
   },

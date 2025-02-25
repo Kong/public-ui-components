@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - feat/KHCP-14702_internal-repo
   pull_request:
     types:
       - opened
@@ -55,7 +54,7 @@ jobs:
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        if: ${{ github.event_name == 'pZush' }}
+        if: ${{ github.event_name == 'push' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ env.GH_TOKEN }}
@@ -366,10 +365,6 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     timeout-minutes: 20
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read
-
     if: ${{ always() && needs.build.outputs.filter != '' }}
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -416,7 +411,7 @@ jobs:
       #
       # we shall ignore lerna version error as pnpm publish will fail or not publish in case of such error
       - name: Update package versions
-        if: ${{ github.event_name == 'pZush' }}
+        if: ${{ github.event_name == 'push' }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
