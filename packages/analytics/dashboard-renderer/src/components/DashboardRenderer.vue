@@ -84,6 +84,9 @@ if (!queryBridge) {
   console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/README.md#requirements')
 }
 
+// Enable a request queue on the query bridge for all subcomponents.
+composables.useRequestQueue()
+
 const configStore = useAnalyticsConfigStore()
 
 const timeSpec = computed<TimeRangeV4>(() => {

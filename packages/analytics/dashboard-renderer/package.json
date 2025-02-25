@@ -82,6 +82,7 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "gridstack": "^11.3.0"
+    "gridstack": "^11.3.0",
+    "p-queue": "^8.1.0"
   }
 }
