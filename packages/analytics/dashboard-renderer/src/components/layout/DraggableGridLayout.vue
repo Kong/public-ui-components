@@ -99,7 +99,7 @@ const removeHandler = (_: Event, items: GridStackNode[]) => {
   items.forEach(item => {
     tilesRef.value.delete(`${item.el?.getAttribute('data-id')}`)
   })
-  emit('update-tiles', Array.from(tilesRef.value.values()))
+  emit('update-tiles', Array.from(tilesRef.value.values()).toSorted(tileSortFn))
 }
 
 onMounted(() => {
