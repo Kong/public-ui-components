@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.0.1...@kong-ui-public/dashboard-renderer@1.1.0) (2025-02-25)
+
+
+### Features
+
+* remove explore link when portal dimension is present ([#1984](https://github.com/Kong/public-ui-components/issues/1984)) ([477b0f5](https://github.com/Kong/public-ui-components/commit/477b0f53403bb379cae941f26843655d18392566))
+
+
+
+
+
 ## [1.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.36.1...@kong-ui-public/dashboard-renderer@1.0.1) (2025-02-24)
 
 
