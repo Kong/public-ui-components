@@ -233,10 +233,6 @@ jobs:
           tag="pr-${{ github.event.pull_request.number }}"
           echo "preid=${preid}"
 
-          git checkout ${{ github.head_ref }}
-
-          pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
-
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
           pnpmPublish=$(pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}")
