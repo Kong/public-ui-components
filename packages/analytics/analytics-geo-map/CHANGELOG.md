@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.81](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.80...@kong-ui-public/analytics-geo-map@0.2.81) (2025-02-26)
+
+
+### Bug Fixes
+
+* add fallback lookup for countries with overseas territories ([#1988](https://github.com/Kong/public-ui-components/issues/1988)) ([1a11a31](https://github.com/Kong/public-ui-components/commit/1a11a31f6c9a55a08840628c2fc9a1810300f3fe))
+
+
+
+
+
 ## [0.2.80](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.79...@kong-ui-public/analytics-geo-map@0.2.80) (2025-02-25)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-geo-map
