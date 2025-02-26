@@ -1,92 +1,120 @@
 <template>
   <div
     class="slideout-trigger"
-    @click="slideoutVisible = true"
   >
     <div>
-      Click anywhere to show the slideout<br>
+      Click
+      <KButton
+        appearance="primary"
+        size="large"
+        @click="slideoutVisible = !slideoutVisible"
+      >
+        HERE
+      </KButton>
+      to toggle the slideout<br>
       Slideout overlay is OFF (not a bug)<br>
       Click the close button to dismiss the slideout (not a bug)<br>
     </div>
-  </div>
 
-  <KSlideout
-    class="trace-viewer-slideout"
-    :close-on-blur="false"
-    :has-overlay="false"
-    max-width="min(100%, 1200px)"
-    :visible="slideoutVisible"
-    @close="slideoutVisible = false"
-  >
-    <template #title>
-      <template v-if="showSkeleton">
-        <KSkeletonBox
-          height="2"
-          width="50"
-        />
-      </template>
-      <template v-else>
-        <KBadge appearance="success">
-          200
-        </KBadge>
+    <KSelect
+      v-model="selectedTraceIndex"
+      class="trace-select"
+      :items="[
+        {
+          label: 'Normal',
+          value: 0,
+        },{
+          label: 'No matched routes',
+          value: 1,
+        }
+      ]"
+      label="Trace example"
+    />
 
-        <div class="trace-viewer-title-request-line">
-          GET /kong
-        </div>
-      </template>
-    </template>
 
-    <KTabs
-      v-model="tab"
-      class="tabs"
-      :data-active-panel="tabs.findIndex(({ hash }) => hash === tab)"
-      :tabs="tabs"
+    <KSlideout
+      :key="selectedTraceIndex"
+      class="trace-viewer-slideout"
+      :close-on-blur="false"
+      :has-overlay="false"
+      max-width="min(100%, 1200px)"
+      :visible="slideoutVisible"
+      @close="slideoutVisible = false"
     >
-      <template #summary>
-        <SummaryViewTab
-          :payloads="enablePayloads ? payloads : undefined"
-          :root-span="spanTrees.roots[0]"
-          :show-skeleton="showSkeleton"
-        />
-      </template>
-      <template #trace>
-        <TraceViewTab
-          :config="config"
-          :root-span="spanTrees.roots[0]"
-          :show-skeleton="showSkeleton"
-          :url="url"
-        />
-      </template>
-    </KTabs>
-  </KSlideout>
+      <template #title>
+        <template v-if="showSkeleton">
+          <KSkeletonBox
+            height="2"
+            width="50"
+          />
+        </template>
+        <template v-else>
+          <KBadge appearance="success">
+            200
+          </KBadge>
 
-  <KCard
-    class="controls"
-    title="Controls"
-  >
-    <KInputSwitch
-      v-model="showSkeleton"
-      label="Skeleton"
-    />
-    <br>
-    <KInputSwitch
-      v-model="enablePayloads"
-      label="Payloads"
-    />
-  </KCard>
+          <div class="trace-viewer-title-request-line">
+            GET /kong
+          </div>
+        </template>
+      </template>
+
+      <KTabs
+        v-model="tab"
+        class="tabs"
+        :data-active-panel="tabs.findIndex(({ hash }) => hash === tab)"
+        :tabs="tabs"
+      >
+        <template #summary>
+          <SummaryViewTab
+            :payloads="enablePayloads ? payloads : undefined"
+            :root-span="spanTrees.roots[0]"
+            :show-skeleton="showSkeleton"
+          />
+        </template>
+        <template #trace>
+          <TraceViewTab
+            :config="config"
+            :root-span="spanTrees.roots[0]"
+            :show-skeleton="showSkeleton"
+            :url="url"
+          />
+        </template>
+      </KTabs>
+    </KSlideout>
+
+    <KCard
+      class="controls"
+      title="Controls"
+    >
+      <KInputSwitch
+        v-model="showSkeleton"
+        label="Skeleton"
+      />
+      <br>
+      <KInputSwitch
+        v-model="enablePayloads"
+        label="Payloads"
+      />
+    </KCard>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { Body, Headers } from '../../src'
+import type { Body, Headers , TraceBatches } from '../../src'
 import { buildSpanTrees, mergeSpansInTraceBatches, SummaryViewTab, TraceViewTab, type TraceViewerConfig } from '../../src'
 // import rawSpans from '../fixtures/spans.json'
 import traceBatches from '../fixtures/trace-batches.json'
+import traceBatchesNoMatchRoutes from '../fixtures/trace-batches-no-match-routes.json'
+
+const selectableTraces = [traceBatches, traceBatchesNoMatchRoutes]
+const selectedTraceIndex = ref(0)
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 // const spanRoots = computed(() => buildSpanTrees(rawSpans))
-const spanTrees = computed(() => buildSpanTrees(mergeSpansInTraceBatches(traceBatches)))
+const spanTrees = computed(() => buildSpanTrees(mergeSpansInTraceBatches(selectableTraces[selectedTraceIndex.value])))
 const showSkeleton = ref(false)
 const enablePayloads = ref(true)
 const slideoutVisible = ref(false)
@@ -178,6 +206,11 @@ const payloads = {
   width: 100dvw;
   height: 100dvh;
   padding: 16px;
+
+  .trace-select {
+    margin-top: $kui-space-60;
+    max-width: 200px;
+  }
 }
 
 .trace-viewer-slideout {

@@ -150,7 +150,6 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
           data: {
             labelKey: 'lifecycle.client.label',
             type: LifecycleNodeType.CLIENT,
-            showSourceHandle: true,
           },
           zIndex: 2,
         },
@@ -184,7 +183,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
             type: LifecycleNodeType.REQUEST_GROUP,
             labelPlacement: 'top',
             emptyGroup: requestNodesData.length === 0,
-            emptyGroupMessageKey: 'lifecycle.none_were_executed',
+            emptyGroupMessageKey: 'lifecycle.no_plugins_executed',
           },
           zIndex: 1,
         },
@@ -196,36 +195,37 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
           zIndex: 1,
         })),
       },
-      upstream: {
-        node: {
-          id: LifecycleNodeType.UPSTREAM,
-          position: { x: 0, y: 0 },
-          data: {
-            labelKey: 'lifecycle.upstream.label',
-            type: LifecycleNodeType.UPSTREAM,
-            showSourceHandle: true,
+      ...(upstreamInSpans.length > 0 || upstreamOutSpans.length > 0) && {
+        upstream: {
+          node: {
+            id: LifecycleNodeType.UPSTREAM,
+            position: { x: 0, y: 0 },
+            data: {
+              labelKey: 'lifecycle.upstream.label',
+              type: LifecycleNodeType.UPSTREAM,
+            },
+            zIndex: 1,
           },
-          zIndex: 1,
-        },
-        in: {
-          id: LifecycleNodeType.UPSTREAM_IN,
-          position: { x: 0, y: 0 },
-          data: {
-            type: LifecycleNodeType.UPSTREAM_IN,
-            durationNano: upstreamInSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0),
-            durationTooltipKey: 'lifecycle.upstream_in.tooltip',
+          in: {
+            id: LifecycleNodeType.UPSTREAM_IN,
+            position: { x: 0, y: 0 },
+            data: {
+              type: LifecycleNodeType.UPSTREAM_IN,
+              durationNano: upstreamInSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0),
+              durationTooltipKey: 'lifecycle.upstream_in.tooltip',
+            },
+            zIndex: 10, // Because we may want to show tooltips on this node
           },
-          zIndex: 10, // Because we may want to show tooltips on this node
-        },
-        out: {
-          id: LifecycleNodeType.UPSTREAM_OUT,
-          position: { x: 0, y: 0 },
-          data: {
-            type: LifecycleNodeType.UPSTREAM_OUT,
-            durationNano: upstreamOutSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0),
-            durationTooltipKey: 'lifecycle.upstream_out.tooltip',
+          out: {
+            id: LifecycleNodeType.UPSTREAM_OUT,
+            position: { x: 0, y: 0 },
+            data: {
+              type: LifecycleNodeType.UPSTREAM_OUT,
+              durationNano: upstreamOutSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0),
+              durationTooltipKey: 'lifecycle.upstream_out.tooltip',
+            },
+            zIndex: 10, // Because we may want to show tooltips on this node
           },
-          zIndex: 10, // Because we may want to show tooltips on this node
         },
       },
       responses: {
@@ -237,7 +237,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
             type: LifecycleNodeType.RESPONSE_GROUP,
             labelPlacement: 'bottom',
             emptyGroup: responseNodesData.length === 0,
-            emptyGroupMessageKey: 'lifecycle.none_were_executed',
+            emptyGroupMessageKey: 'lifecycle.no_plugins_executed',
           },
           zIndex: 1,
         },
@@ -254,7 +254,6 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
   }
 
   const clientNodes = graph.nodeTree.client
-  const upstreamNodes = graph.nodeTree.upstream
 
   graph.edges.push({
     id: `${clientNodes.node.id}->${clientNodes.out.id}`,
@@ -263,18 +262,70 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
     type: 'seamless-smoothstep',
     zIndex: 1,
   })
+  let previousNode = graph.nodeTree.client.out
 
-  if (graph.nodeTree.requests && graph.nodeTree.requests.children.length > 0) {
+  if (graph.nodeTree.requests) {
     const children = graph.nodeTree.requests.children
 
+    for (let i = 0; i < children.length - 1; i++) {
+      graph.edges.push({
+        id: `${children[i].id}->${children[i + 1].id}`,
+        source: children[i].id,
+        target: children[i + 1].id,
+        type: 'smoothstep', // Using built-in edge type because handles are available on both side–we don't care about the gaps
+        zIndex: 2,
+      })
+    }
+
     graph.edges.push({
-      id: `${clientNodes.out.id}->${graph.nodeTree.requests.node.id}`,
-      source: clientNodes.out.id,
+      id: `${previousNode.id}->${graph.nodeTree.requests.node.id}`,
+      source: previousNode.id,
       target: graph.nodeTree.requests.node.id,
       type: 'seamless-smoothstep',
       markerEnd: MarkerType.ArrowClosed,
       zIndex: 2,
     })
+    previousNode = graph.nodeTree.requests.node
+  }
+
+  if (graph.nodeTree.upstream) {
+    if (graph.nodeTree.upstream.in) {
+      graph.edges.push({
+        id: `${previousNode.id}->${graph.nodeTree.upstream.in.id}`,
+        source: previousNode.id,
+        target: graph.nodeTree.upstream.in.id,
+        type: 'seamless-smoothstep',
+        markerEnd: MarkerType.ArrowClosed,
+        zIndex: 2,
+      })
+      previousNode = graph.nodeTree.upstream.in
+    }
+
+    graph.edges.push({
+      id: `${previousNode.id}->${graph.nodeTree.upstream.node.id}`,
+      source: previousNode.id,
+      target: graph.nodeTree.upstream.node.id,
+      type: 'seamless-smoothstep',
+      markerEnd: MarkerType.ArrowClosed,
+      zIndex: 2,
+    })
+    previousNode = graph.nodeTree.upstream.node
+
+    if (graph.nodeTree.upstream.out) {
+      graph.edges.push({
+        id: `${previousNode.id}->${graph.nodeTree.upstream.out.id}`,
+        source: previousNode.id,
+        target: graph.nodeTree.upstream.out.id,
+        type: 'seamless-smoothstep',
+        markerEnd: MarkerType.ArrowClosed,
+        zIndex: 2,
+      })
+      previousNode = graph.nodeTree.upstream.out
+    }
+  }
+
+  if (graph.nodeTree.responses) {
+    const children = graph.nodeTree.responses.children
 
     for (let i = 0; i < children.length - 1; i++) {
       graph.edges.push({
@@ -287,92 +338,34 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
     }
 
     graph.edges.push({
-      id: `${graph.nodeTree.requests.node.id}->${upstreamNodes.in.id}`,
-      source: graph.nodeTree.requests.node.id,
-      target: upstreamNodes.in.id,
-      type: 'seamless-smoothstep',
-      markerEnd: MarkerType.ArrowClosed,
-      zIndex: 2,
-    })
-  } else {
-    graph.edges.push(
-      {
-        id: `${clientNodes.out.id}->${upstreamNodes.in.id}`,
-        source: clientNodes.out.id,
-        target: upstreamNodes.in.id,
-        type: 'seamless-smoothstep',
-        markerEnd: MarkerType.ArrowClosed,
-        zIndex: 1,
-      },
-    )
-  }
-
-  graph.edges.push(
-    {
-      id: `${upstreamNodes.in.id}->${upstreamNodes.node.id}`,
-      source: upstreamNodes.in.id,
-      target: upstreamNodes.node.id,
-      type: 'seamless-smoothstep',
-      markerEnd: MarkerType.ArrowClosed,
-      zIndex: 1,
-    },
-    {
-      id: `${upstreamNodes.node.id}->${upstreamNodes.out.id}`,
-      source: upstreamNodes.node.id,
-      target: upstreamNodes.out.id,
-      type: 'seamless-smoothstep',
-      markerEnd: MarkerType.ArrowClosed,
-      zIndex: 1,
-    },
-  )
-
-  if (graph.nodeTree.responses) {
-    const children = graph.nodeTree.responses.children
-
-    graph.edges.push({
-      id: `${upstreamNodes.out.id}->${graph.nodeTree.responses.node.id}`,
-      source: upstreamNodes.out.id,
+      id: `${previousNode.id}->${graph.nodeTree.responses.node.id}`,
+      source: previousNode.id,
       target: graph.nodeTree.responses.node.id,
       type: 'seamless-smoothstep',
       markerEnd: MarkerType.ArrowClosed,
       zIndex: 2,
     })
-
-    for (let i = 0; i < children.length - 1; i++) {
-      graph.edges.push({
-        id: `${children[i].id}->${children[i + 1].id}`,
-        source: children[i].id,
-        target: children[i + 1].id,
-        type: 'smoothstep', // Using built-in edge type because handles are available on both side–we don't care about the gaps
-        zIndex: 2,
-      })
-    }
-
-    graph.edges.push({
-      id: `${graph.nodeTree.responses.node.id}->${clientNodes.in.id}`,
-      source: graph.nodeTree.responses.node.id,
-      target: clientNodes.in.id,
-      type: 'seamless-smoothstep',
-      zIndex: 2,
-    })
-  } else {
-    graph.edges.push({
-      id: `${upstreamNodes.out.id}->${clientNodes.in.id}`,
-      source: upstreamNodes.out.id,
-      target: clientNodes.in.id,
-      type: 'seamless-smoothstep',
-      zIndex: 1,
-    })
+    previousNode = graph.nodeTree.responses.node
   }
 
-  graph.edges.push({
-    id: `${clientNodes.in.id}->${clientNodes.node.id}`,
-    source: clientNodes.in.id,
-    target: clientNodes.node.id,
-    type: 'seamless-smoothstep',
-    markerEnd: MarkerType.ArrowClosed,
-    zIndex: 1,
-  })
+  graph.edges.push(
+    {
+      id: `${previousNode.id}->${clientNodes.in.id}`,
+      source: previousNode.id,
+      target: clientNodes.node.id,
+      type: 'seamless-smoothstep',
+      markerEnd: MarkerType.ArrowClosed,
+      zIndex: 1,
+    },
+    {
+      id: `${clientNodes.in.id}->${clientNodes.node.id}`,
+      source: clientNodes.in.id,
+      target: clientNodes.node.id,
+      type: 'seamless-smoothstep',
+      markerEnd: MarkerType.ArrowClosed,
+      zIndex: 1,
+    },
+  )
 
   return {
     ...graph,
@@ -383,9 +376,11 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
         graph.nodeTree.requests.node,
         ...graph.nodeTree.requests.children,
       ] : [],
-      upstreamNodes.in,
-      upstreamNodes.node,
-      upstreamNodes.out,
+      ...graph.nodeTree.upstream ? [
+        ...graph.nodeTree.upstream.in ? [graph.nodeTree.upstream.in] : [],
+        graph.nodeTree.upstream.node,
+        ...graph.nodeTree.upstream.out ? [graph.nodeTree.upstream.out] : [],
+      ] : [],
       ...graph.nodeTree.responses ? [
         graph.nodeTree.responses.node,
         ...graph.nodeTree.responses.children,

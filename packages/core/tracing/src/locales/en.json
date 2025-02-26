@@ -13,7 +13,7 @@
     "client_out": {
       "tooltip": "Time taken for the client to write the request to Kong. A high value here may be indicative of a slow network or connectivity issue."
     },
-    "none_were_executed": "None were executed",
+    "no_plugins_executed": "No plugins were executed",
     "request": {
       "label": "Request"
     },
