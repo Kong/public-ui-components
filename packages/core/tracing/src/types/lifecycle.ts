@@ -13,10 +13,10 @@ export interface LifecycleGraphNodeTree {
     node: LifecycleNode
     children: LifecycleNode[]
   }
-  upstream: {
+  upstream?: {
     node: LifecycleNode
-    in: LifecycleNode
-    out: LifecycleNode
+    in?: LifecycleNode
+    out?: LifecycleNode
   }
   responses?: {
     node: LifecycleNode
