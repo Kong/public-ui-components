@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.0...@kong-ui-public/tracing@0.9.1) (2025-02-26)
+
+
+### Bug Fixes
+
+* **tracing:** swap incorrect durations on client in/out nodes ([#1986](https://github.com/Kong/public-ui-components/issues/1986)) ([8fcf2e1](https://github.com/Kong/public-ui-components/commit/8fcf2e1fa0c819d12e8345266a51e78e7559fe45))
+
+
+
+
+
 # [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.8.3...@kong-ui-public/tracing@0.9.0) (2025-02-25)
 
 
