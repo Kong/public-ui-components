@@ -179,7 +179,12 @@ export default {
      *      }
      */
     transformMapModelValuesToObject(model, fields, field) {
-      const vals = {}
+      let vals = {}
+      try {
+        vals = JSON.parse(JSON.stringify(model ?? {}))[field] ?? {}
+      } catch {
+        // no-op
+      }
 
       Object.keys(model).map(config => {
         const keyStartIndex = config.indexOf(field + '-')

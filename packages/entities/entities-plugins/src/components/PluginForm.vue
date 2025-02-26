@@ -710,10 +710,10 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       initialFormSchema[field].elements = elements
 
       if (['string', 'integer', 'number'].includes(elements.type) && !elements.one_of) {
-        const { id, help, label, hint, values, referenceable } = initialFormSchema[field]
+        const { id, help, label, hint, values, referenceable, model } = initialFormSchema[field]
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
         inputAttributes.type = elements.type === 'string' ? 'text' : 'number'
-        initialFormSchema[field] = { id, help, label, hint, values, referenceable, inputAttributes, ...overrides }
+        initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, inputAttributes, ...overrides }
       }
     }
 
