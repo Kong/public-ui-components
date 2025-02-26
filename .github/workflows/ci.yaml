@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - feat/KHCP-14702_internal-repo
   pull_request:
     types:
       - opened
@@ -21,6 +22,9 @@ jobs:
     name: Build And Test
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
       unitTestFilter: ${{steps.changed_packages.outputs.unitTestFilter}}
@@ -51,7 +55,7 @@ jobs:
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'pZush' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ env.GH_TOKEN }}
@@ -223,11 +227,26 @@ jobs:
       - name: Check dist bundle size against max-limit
         uses: Kong/github-action-dist-size-checker@main
 
+      - name: 'Authenticate to Google Cloud'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: '22045766606'
+          workload_identity_provider: 'projects/22045766606/locations/global/workloadIdentityPools/github/providers/github'
+
+
       - name: Publish Previews
         if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
+        env:
+           GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
+
+          echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
+          echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
+
+          npx google-artifactregistry-auth
 
           preid="pr.${{ github.event.pull_request.number }}.$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
           tag="pr-${{ github.event.pull_request.number }}"
@@ -236,8 +255,6 @@ jobs:
           git checkout ${{ github.head_ref }}
 
           pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
-
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
           pnpmPublish=$(pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}")
 
@@ -264,8 +281,6 @@ jobs:
           echo "npm_instructions<<EOF" >> $GITHUB_ENV
           echo -e "$npm_instructions" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
 
       - name: Provide preview link info
         if: ${{ env.npm_instructions != '' && env.GH_TOKEN != '' }}
@@ -351,6 +366,10 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     timeout-minutes: 20
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read
+
     if: ${{ always() && needs.build.outputs.filter != '' }}
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -382,6 +401,12 @@ jobs:
           name: package-dist-artifacts
           path: packages/
 
+      - name: 'Authenticate to Google Cloud'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          project_id: '22045766606'
+          workload_identity_provider: 'projects/22045766606/locations/global/workloadIdentityPools/github/providers/github'
 
       # for lerna version we use:
       # --force-git-tag - if tag was already created it will be recreated instead of command failing and entire CI failing
@@ -391,7 +416,7 @@ jobs:
       #
       # we shall ignore lerna version error as pnpm publish will fail or not publish in case of such error
       - name: Update package versions
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'pZush' }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
@@ -400,10 +425,13 @@ jobs:
       - name: Publish packages to NPM
         if: ${{ github.event_name == 'push' }}
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
+          echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
+
+          npx google-artifactregistry-auth
           pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
+           GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
 
   notify-slack:
     name: Slack Notification
