@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.10.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.10...@kong-ui-public/forms@4.10.11) (2025-02-26)
+
+
+### Bug Fixes
+
+* nested fields issues ([#1982](https://github.com/Kong/public-ui-components/issues/1982)) ([007120e](https://github.com/Kong/public-ui-components/commit/007120e9cfa9a70927252e3e655ed526b51354e6))
+
+
+
+
+
 ## [4.10.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.9...@kong-ui-public/forms@4.10.10) (2025-02-21)
 
 

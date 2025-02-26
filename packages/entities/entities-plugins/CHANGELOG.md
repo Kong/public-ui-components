@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.3...@kong-ui-public/entities-plugins@9.12.4) (2025-02-26)
+
+
+### Bug Fixes
+
+* nested fields issues ([#1982](https://github.com/Kong/public-ui-components/issues/1982)) ([007120e](https://github.com/Kong/public-ui-components/commit/007120e9cfa9a70927252e3e655ed526b51354e6))
+
+
+
+
+
 ## [9.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.2...@kong-ui-public/entities-plugins@9.12.3) (2025-02-24)
 
 
