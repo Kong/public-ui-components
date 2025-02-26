@@ -1,0 +1,85 @@
+{
+  "name": "@kong-ui-public/entities-redis-configurations",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./dist/entities-redis-configurations.umd.js",
+  "module": "./dist/entities-redis-configurations.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/entities-redis-configurations.es.js",
+      "require": "./dist/entities-redis-configurations.umd.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "cross-env USE_SANDBOX=true vite",
+    "build": "run-s typecheck build:package build:types",
+    "build:package": "vite build -m production",
+    "build:analyzer": "BUILD_VISUALIZER='entities/entities-redis-configurations' vite build -m production",
+    "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
+    "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
+    "preview": "cross-env USE_SANDBOX=true vite preview",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
+    "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
+    "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+  },
+  "devDependencies": {
+    "@kong-ui-public/entities-plugins": "workspace:^",
+    "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong-ui-public/entities-vaults": "workspace:^",
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/design-tokens": "1.17.2",
+    "@kong/icons": "^1.20.0",
+    "@kong/kongponents": "9.14.8",
+    "@types/uuid": "^10.0.0",
+    "axios": "^1.7.7",
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kong/public-ui-components.git",
+    "directory": "packages/entities/entities-redis-configurations"
+  },
+  "homepage": "https://github.com/Kong/public-ui-components/tree/main/packages/entities/entities-redis-configurations",
+  "bugs": {
+    "url": "https://github.com/Kong/public-ui-components/issues"
+  },
+  "author": "Kong, Inc.",
+  "license": "Apache-2.0",
+  "volta": {
+    "extends": "../../../package.json"
+  },
+  "distSizeChecker": {
+    "errorLimit": "400KB"
+  },
+  "peerDependencies": {
+    "@kong-ui-public/entities-plugins": "workspace:^",
+    "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong-ui-public/entities-vaults": "workspace:^",
+    "@kong-ui-public/i18n": "workspace:^",
+    "@kong/icons": "^1.20.0",
+    "@kong/kongponents": "9.14.8",
+    "axios": "^1.7.7",
+    "vue": ">= 3.3.13 < 4",
+    "vue-router": "^4.4.5"
+  },
+  "dependencies": {
+    "uuid": "^10.0.0"
+  }
+}

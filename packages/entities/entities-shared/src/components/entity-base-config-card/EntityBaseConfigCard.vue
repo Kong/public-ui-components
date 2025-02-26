@@ -75,6 +75,7 @@
       class="config-card-details-section"
     >
       <ConfigCardDisplay
+        :code-block-record-formatter="codeBlockRecordFormatter"
         :config="config"
         :entity-type="entityType"
         :fetcher-url="fetcherUrl"
@@ -115,7 +116,7 @@ import type {
 } from '../../types'
 import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray } from '../../types'
 import composables from '../../composables'
-import ConfigCardDisplay from './ConfigCardDisplay.vue'
+import ConfigCardDisplay, { type CodeFormat, type Format } from './ConfigCardDisplay.vue'
 import { BookIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import type { HeaderTag } from '@kong/kongponents'
@@ -188,6 +189,23 @@ const props = defineProps({
     default: '',
   },
   /**
+   * Function to resolve the record from the fetched response.
+   * This prop only works if dataKey is not provided.
+   */
+  recordResolver: {
+    type: Function as PropType<(data: any) => any>,
+    required: false,
+    default: (data: any) => data,
+  },
+  /**
+   * A function to format the entity record before displaying it in the code block.
+   */
+  codeBlockRecordFormatter: {
+    type: Function as PropType<(entityRecord: Record<string, any>, format: CodeFormat) => Record<string, any>>,
+    required: false,
+    default: (entityRecord: Record<string, any>) => entityRecord,
+  },
+  /**
    * Boolean to control card title visibility.
    */
   hideTitle: {
@@ -249,7 +267,7 @@ if (props.config.app === 'konnect') {
   })
 }
 
-const configFormat = ref('structured')
+const configFormat = ref<Format>('structured')
 
 const handleChange = (payload: any): void => {
   configFormat.value = payload?.value
@@ -463,6 +481,8 @@ onBeforeMount(async () => {
       } else {
         throw new Error(t('errors.dataKeyUndefined', { dataKey: props.dataKey }))
       }
+    } else if (props.recordResolver) {
+      record.value = { ...props.recordResolver(data) }
     } else {
       record.value = { ...data }
     }
