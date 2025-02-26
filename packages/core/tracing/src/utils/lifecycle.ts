@@ -159,7 +159,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
           position: { x: 0, y: 0 },
           data: {
             type: LifecycleNodeType.CLIENT_OUT,
-            durationNano: clientInSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0),
+            durationNano: clientOutSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0),
             durationTooltipKey: 'lifecycle.client_out.tooltip',
           },
           zIndex: 10, // Because we may want to show tooltips on this node
@@ -169,7 +169,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
           position: { x: 0, y: 0 },
           data: {
             type: LifecycleNodeType.CLIENT_IN,
-            durationNano: clientOutSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0) + pluginDurationExcluded,
+            durationNano: clientInSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0) + pluginDurationExcluded,
             durationTooltipKey: 'lifecycle.client_in.tooltip',
           },
           zIndex: 10, // Because we may want to show tooltips on this node
