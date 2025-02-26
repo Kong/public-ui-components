@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.1...@kong-ui-public/dashboard-renderer@1.2.2) (2025-02-26)
+
+
+### Bug Fixes
+
+* keep tiles sorted by row/column order ([#1985](https://github.com/Kong/public-ui-components/issues/1985)) ([abded73](https://github.com/Kong/public-ui-components/commit/abded737b9259f82bb6d5e8c612b8fa40cc33c7b))
+
+
+
+
+
 ## [1.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.0...@kong-ui-public/dashboard-renderer@1.2.1) (2025-02-26)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
