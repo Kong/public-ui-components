@@ -6,7 +6,7 @@ export default function useRedisNonstandardFields(partialFields: [], redisFields
     const match = field.model.match(redisFieldPattern)
     return match && !Object.keys(partialFields).includes(match[0])
   })
-  return nonStandardConfigFields?.map((field) => {
+  return nonStandardConfigFields.map((field) => {
     const labelMatch = field.label.match(redisLabelPattern)
     return {
       label: labelMatch ? labelMatch[0] : field.label,

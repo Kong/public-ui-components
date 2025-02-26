@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref, watch } from 'vue'
+import { computed, onBeforeMount, ref, watch, type PropType } from 'vue'
 import formGroup from './FormGroup.vue'
 import RedisConfigSelect from './RedisConfigSelect.vue'
 
@@ -100,6 +100,7 @@ import isFunction from 'lodash-es/isFunction'
 import isNil from 'lodash-es/isNil'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
+import type { FormRedisFields } from '../types'
 
 const props = defineProps({
   tag: {
@@ -118,13 +119,16 @@ const props = defineProps({
     required: true,
   },
   field: {
-    type: Object,
+    type: Object as PropType<FormRedisFields>,
     required: true,
   },
   vfg: {
     type: Object,
     required: true,
   },
+  /**
+   * TODO: stronger type
+   */
   errors: {
     type: Array,
     default() {
@@ -143,8 +147,8 @@ const props = defineProps({
 })
 
 const emits = defineEmits<{
-  (e: 'modelUpdated', payload: any, schema: any): void,
-  (e: 'partialToggled', field: string, model: any): void,
+  (e: 'modelUpdated', payload: any, schema: string): void,
+  (e: 'partialToggled', field: string, model: Record<string, any>): void,
   (e: 'showNewPartialModal'): void,
   (e: 'refreshModel'): void,
   (e: 'validated', res: boolean, errors: any[], field: any): void,
@@ -157,8 +161,8 @@ const isCustomPlugin = computed(() => props.field.pluginType === 'custom')
 const usePartial = ref(!props.isEditing)
 const selectedRedisConfigItem = ref()
 
-const redisFieldsSaved = ref([] as { model: any; schema: any }[])
-const partialsSaved = ref()
+const redisFieldsSaved = ref<Record<string, any>>({})
+const partialsSaved = ref<Array<{ id: string | number, path: string | undefined }> | undefined>()
 
 const fieldVisible = (field: any) => {
   if (isFunction(field.visible)) return field.visible.call(this, props.model, field, this)
@@ -168,13 +172,13 @@ const fieldVisible = (field: any) => {
   return field.visible
 }
 
-const updateRedisModel = async (val: string | number | undefined) => {
+const updateRedisModel = async (val: string | number) => {
   emits('modelUpdated', [{ id: val, path: props.redisPath }], 'partials')
   partialsSaved.value = [{ id: val, path: props.redisPath }]
   selectedRedisConfigItem.value = val
 }
 
-const onModelUpdated = (model: any, schema: any) => {
+const onModelUpdated = (model: any, schema: string) => {
   redisFieldsSaved.value = { ...redisFieldsSaved.value, [schema]: model }
   emits('modelUpdated', model, schema)
 }
@@ -205,12 +209,14 @@ watch(() => usePartial.value, (usePartial) => {
 
 // fetch available redis configs under the control plane
 onBeforeMount(() => {
-  redisFieldsSaved.value = props.field.fields.reduce((acc: Record<string,any>, field: { model: string }) => {
-    if (Object.keys(props.model!).includes(field.model)) {
-      acc[field.model] = props.model![field.model]
-    }
-    return acc
-  }, {})
+  if (props.model) {
+    redisFieldsSaved.value = props.field.fields.reduce((acc: Record<string, any>, field: { model: string }) => {
+      if (Object.keys(props.model!).includes(field.model)) {
+        acc[field.model] = props.model![field.model]
+      }
+      return acc
+    }, {})
+  }
   if (props?.model?.partials?.[0]?.id) {
     const selectedPartialId = props.model.partials[0].id
     usePartial.value = true

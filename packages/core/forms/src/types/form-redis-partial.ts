@@ -43,3 +43,22 @@ export interface RedisConfigurationFields {
     username: string
   }
 }
+
+export interface Field {
+  label: string
+  model: string
+  type?: string
+  default?: any
+  disabled?: boolean
+  help?: string
+  inputType?: string
+  order?: number
+  required?: boolean
+  valueType?: string
+}
+
+export interface FormRedisFields {
+  redisType: string
+  pluginType: string
+  fields: Field[]
+}
