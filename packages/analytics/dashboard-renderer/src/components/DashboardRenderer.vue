@@ -110,6 +110,14 @@ const queryReady = computed<boolean>(() => {
   return !!props.context.timeSpec || !configStore.loading
 })
 
+const tileSortFn = (a: TileConfig, b: TileConfig) => {
+  const rowDiff = a.layout.position.row - b.layout.position.row
+  if (rowDiff !== 0) {
+    return rowDiff
+  }
+  return a.layout.position.col - b.layout.position.col
+}
+
 const gridTiles = computed(() => {
   return props.config.tiles.map((tile: TileConfig, i: number) => {
     let tileMeta = tile.definition
@@ -207,7 +215,7 @@ const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
       definition: tile.meta,
     } as TileConfig
   })
-  emit('update-tiles', updatedTiles)
+  emit('update-tiles', updatedTiles.sort(tileSortFn))
 }
 
 defineExpose({ refresh: refreshTiles })

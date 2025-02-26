@@ -4,7 +4,7 @@
     class="grid-stack"
   >
     <div
-      v-for="tile in tilesRef.values()"
+      v-for="tile in props.tiles"
       :key="tile.id"
       class="grid-stack-item"
       :data-id="`${tile.id}`"
@@ -27,7 +27,7 @@
 <script lang='ts' setup generic="T">
 import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
 import { GridStack } from 'gridstack'
-import type { GridItemHTMLElement, GridStackNode } from 'gridstack'
+import type { GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
@@ -57,28 +57,24 @@ const makeSelector = (id: number | string) => {
   return `[data-id="${id}"]`
 }
 
-const makeTilesFromGridItemHtmlElements = (items: GridItemHTMLElement[]) => {
-  return Array.from(tilesRef.value.values()).map((tile: GridTile<any>) => {
-    const item = items.find(item => {
-      return item.getAttribute('data-id') === `${tile.id}`
-    })
-    if (item) {
+const makeTilesFromGridItems = (items: GridStackNode[]) => {
+  return items.map(item => {
+    const tile = tilesRef.value.get(`${item.el?.getAttribute('data-id')}`)
+    if (tile) {
       return {
         ...tile,
         layout: {
-          position: { col: Number(item.gridstackNode?.x), row: Number(item.gridstackNode?.y) },
-          size: { cols: Number(item.gridstackNode?.w), rows: Number(item.gridstackNode?.h) },
+          position: { col: Number(item.x), row: Number(item.y) },
+          size: { cols: Number(item.w), rows: Number(item.h) },
         },
       } satisfies GridTile<T>
     }
-    return tile
-  })
+  }).filter(t => t !== undefined) as GridTile<T>[]
 }
 
-const updateTiles = () => {
+const updateTiles = (_: Event, items: GridStackNode[]) => {
   if (grid) {
-    const items = grid.getGridItems()
-    const updates = makeTilesFromGridItemHtmlElements(items)
+    const updates = makeTilesFromGridItems(items)
     updates.forEach((tile) => {
       tilesRef.value.set(`${tile.id}`, tile)
     })
@@ -137,22 +133,6 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
     }
   }
 })
-
-// Gridstack widgets are driven by a copy of props.tiles.
-// If the meta of a tile changes, we need to update the copy to keep it in sync.
-watch(() => props.tiles, (newTiles, oldTiles) => {
-  if (newTiles.length === oldTiles.length) {
-    newTiles.forEach(tile => {
-      const current = tilesRef.value.get(`${tile.id}`)
-      if (current) {
-        tilesRef.value.set(`${tile.id}`, {
-          ...current,
-          meta: tile.meta,
-        })
-      }
-    })
-  }
-}, { deep: true })
 
 defineExpose({ removeWidget })
 
