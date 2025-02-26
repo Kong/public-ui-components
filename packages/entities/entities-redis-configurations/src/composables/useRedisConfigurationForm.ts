@@ -139,8 +139,8 @@ export const useRedisConfigurationForm = (options: Options) => {
             read_timeout: s.int(form.fields.config.read_timeout),
             keepalive_pool_size: s.int(form.fields.config.keepalive_pool_size),
             keepalive_backlog: s.int(form.fields.config.keepalive_backlog),
-            connection_is_proxied: form.fields.config.connection_is_proxied,
             // reset other EE fields
+            connection_is_proxied: null,
             sentinel_master: null,
             sentinel_role: null,
             sentinel_nodes: null,
@@ -171,8 +171,8 @@ export const useRedisConfigurationForm = (options: Options) => {
             read_timeout: s.int(form.fields.config.read_timeout),
             keepalive_pool_size: s.int(form.fields.config.keepalive_pool_size),
             keepalive_backlog: s.int(form.fields.config.keepalive_backlog),
-            connection_is_proxied: form.fields.config.connection_is_proxied,
             // reset other EE fields
+            connection_is_proxied: null,
             cluster_nodes: null,
             cluster_max_redirections: null,
             host: null,
