@@ -41,6 +41,8 @@ const items = ref([
   { label: 'CA', value: 'CA' },
   { label: 'ES', value: 'ES' },
   { label: 'JP', value: 'JP' },
+  { label: 'SG', value: 'SG' },
+  { label: 'MY', value: 'MY' },
 ])
 
 const countryMetrics = computed(() => {

@@ -89,7 +89,12 @@ const { i18n } = composables.useI18n()
 const layerPaint = computed(() => ({
   'fill-color': [
     'match',
-    ['get', 'iso_a2'] as ExpressionSpecification,
+    [
+      'case',
+      ['==', ['get', 'iso_a2'], '-99'],
+      ['get', 'iso_a2_eh'],
+      ['get', 'iso_a2'],
+    ] as ExpressionSpecification,
     ...(Object.keys(props.countryMetrics).length
       ? Object.entries(props.countryMetrics).flatMap(([code, metric]) => [
         code,
@@ -195,7 +200,11 @@ const goToCountry = (countryCode: CountryISOA2) => {
     return
   }
 
-  const found: Feature<Geometry, GeoJsonProperties> | undefined = (props.geoJsonData).features.find((f: Feature) => f.properties?.iso_a2 === countryCode)
+  const found: Feature<Geometry, GeoJsonProperties> | undefined = (props.geoJsonData).features.find((f: Feature) => {
+    return f.properties?.iso_a2 === '-99' ?
+      f.properties?.iso_a2_eh === countryCode :
+      f.properties?.iso_a2 === countryCode
+  })
   if (found) {
     const coordinates = (found.geometry as MultiPolygon)?.coordinates
     if (!coordinates) return
@@ -272,8 +281,9 @@ onMounted(() => {
     map.value?.on('mousemove', 'countries-layer', (e) => {
       const feature = e.features?.[0]
       if (feature) {
-        const { iso_a2, admin } = feature.properties
-        const metric = props.countryMetrics[iso_a2]
+        const { iso_a2, iso_a2_eh, admin } = feature.properties
+        const lookup = iso_a2 === '-99' ? iso_a2_eh : iso_a2
+        const metric = props.countryMetrics[lookup]
         if (metric !== undefined) {
           // @ts-ignore - dynamic i18n key
           const popupHtml = props.showTooltipValue ? `<strong>${admin}</strong>: ${approxNum(metric, { capital: true })} ${i18n.t(`metricUnits.${props.metricUnit}`, { plural: metric > 1 ? 's' : '' })}` : `<strong>${admin}</strong>`
