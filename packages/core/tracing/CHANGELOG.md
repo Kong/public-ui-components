@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.1...@kong-ui-public/tracing@0.9.2) (2025-02-26)
+
+
+### Bug Fixes
+
+* **tracing:** hide upstream nodes when not available; update text ([#1987](https://github.com/Kong/public-ui-components/issues/1987)) ([9a629b3](https://github.com/Kong/public-ui-components/commit/9a629b306167251f61bedc9f8ee0f14389f7e2f2))
+
+
+
+
+
 ## [0.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.0...@kong-ui-public/tracing@0.9.1) (2025-02-26)
 
 
