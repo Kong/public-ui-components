@@ -340,7 +340,7 @@ const emptyStateOptions = ref<EmptyStateOptions>({
 const tableHeaders: BaseTableHeaders = {
   name: { label: t('list.table_headers.name'), searchable: true, hidable: false, sortable: true },
   type: { label: t('list.table_headers.type') },
-  plugins: { label: t('list.table_headers.plugin') },
+  plugins: { label: t('list.table_headers.plugins') },
 }
 
 const getViewDropdownItem = (id: string) => {

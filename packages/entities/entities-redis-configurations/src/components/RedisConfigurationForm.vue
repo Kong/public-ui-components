@@ -280,6 +280,10 @@
           :description="t('form.fields.ssl.description')"
           :disabled="form.readonly"
           :label="t('form.fields.ssl.label')"
+          :label-attributes="{
+            info: t('form.fields.ssl.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
         />
         <KCheckbox
           v-model="form.fields.config.ssl_verify"
@@ -287,6 +291,10 @@
           :description="t('form.fields.ssl_verify.description')"
           :disabled="form.readonly"
           :label="t('form.fields.ssl_verify.label')"
+          :label-attributes="{
+            info: t('form.fields.ssl_verify.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
         />
         <KInput
           v-model.trim="form.fields.config.server_name"
@@ -341,6 +349,10 @@
           v-model="form.fields.config.read_timeout"
           data-testid="redis-read-timeout-input"
           :label="t('form.fields.read_timeout.label')"
+          :label-attributes="{
+            info: t('form.fields.read_timeout.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :readonly="form.readonly"
           type="number"
         />
@@ -348,6 +360,10 @@
           v-model="form.fields.config.send_timeout"
           data-testid="redis-send-timeout-input"
           :label="t('form.fields.send_timeout.label')"
+          :label-attributes="{
+            info: t('form.fields.send_timeout.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :readonly="form.readonly"
           type="number"
         />
@@ -355,6 +371,10 @@
           v-model="form.fields.config.connect_timeout"
           data-testid="redis-connect-timeout-input"
           :label="t('form.fields.connect_timeout.label')"
+          :label-attributes="{
+            info: t('form.fields.connect_timeout.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
           :readonly="form.readonly"
           type="number"
         />

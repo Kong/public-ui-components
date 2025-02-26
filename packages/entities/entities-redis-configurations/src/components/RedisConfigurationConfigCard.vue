@@ -174,13 +174,14 @@ const schemaFieldConfigs: {
   cluster_nodes: {
     type: ConfigurationSchemaType.JsonArray,
     section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.cluster_nodes.tooltip'),
     label: t('form.fields.cluster_nodes.title'),
+    tooltip: t('form.fields.cluster_nodes.tooltip'),
   },
   connect_timeout: {
     type: ConfigurationSchemaType.Text,
     section: ConfigurationSchemaSection.Basic,
     label: t('form.fields.connect_timeout.label'),
+    tooltip: t('form.fields.connect_timeout.tooltip'),
   },
   connection_is_proxied: {
     type: ConfigurationSchemaType.Text,
@@ -228,11 +229,13 @@ const schemaFieldConfigs: {
     type: ConfigurationSchemaType.Text,
     section: ConfigurationSchemaSection.Basic,
     label: t('form.fields.read_timeout.label'),
+    tooltip: t('form.fields.read_timeout.tooltip'),
   },
   send_timeout: {
     type: ConfigurationSchemaType.Text,
     section: ConfigurationSchemaSection.Basic,
     label: t('form.fields.send_timeout.label'),
+    tooltip: t('form.fields.send_timeout.tooltip'),
   },
   sentinel_master: {
     type: ConfigurationSchemaType.Text,
@@ -273,11 +276,13 @@ const schemaFieldConfigs: {
     type: ConfigurationSchemaType.Text,
     section: ConfigurationSchemaSection.Basic,
     label: t('form.fields.ssl_verify.label'),
+    tooltip: t('form.fields.ssl_verify.tooltip'),
   },
   ssl: {
     type: ConfigurationSchemaType.Text,
     section: ConfigurationSchemaSection.Basic,
     label: t('form.fields.ssl.label'),
+    tooltip: t('form.fields.ssl.tooltip'),
   },
   timeout: {
     type: ConfigurationSchemaType.Text,

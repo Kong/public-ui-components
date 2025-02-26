@@ -81,7 +81,7 @@
       },
       "database": {
         "label": "Database",
-        "tooltip": "Database to use for the Redis connection when using the `redis` strategy"
+        "tooltip": "Database to use for the Redis connection."
       },
       "password": {
         "label": "Password",
@@ -93,11 +93,13 @@
       },
       "ssl": {
         "label": "SSL",
-        "description": "If set to true, uses SSL to connect to Redis."
+        "description": "If set to true, uses SSL to connect to Redis.",
+        "tooltip": "If set to true, uses SSL to connect to Redis."
       },
       "ssl_verify": {
         "label": "SSL Verify",
-        "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure lua_ssl_trusted_certificate in kong. conf to specify the CA (or server) certificate used by your Redis server. You may also need to configure lua_ss1_verify_depth accordingly."
+        "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure lua_ssl_trusted_certificate in kong. conf to specify the CA (or server) certificate used by your Redis server. You may also need to configure lua_ss1_verify_depth accordingly.",
+        "tooltip": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure lua_ssl_trusted_certificate in kong.conf to specify the CA (or server) certificate used by your Redis server. You may also need to configure lua_ssl_verify_depth accordingly."
       },
       "server_name": {
         "label": "Server name",
@@ -112,13 +114,16 @@
         "tooltip": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low."
       },
       "read_timeout": {
-        "label": "Read timeout"
+        "label": "Read timeout",
+        "tooltip": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
       },
       "send_timeout": {
-        "label": "Send timeout"
+        "label": "Send timeout",
+        "tooltip": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
       },
       "connect_timeout": {
-        "label": "Connect timeout"
+        "label": "Connect timeout",
+        "tooltip": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
       },
       "sentinel_master": {
         "label": "Sentinel master",
@@ -217,7 +222,7 @@
     "table_headers": {
       "name": "Name",
       "type": "Type",
-      "plugin": "Plugin"
+      "plugins": "Plugins"
     },
     "empty_state": {
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing.",
