@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.7.1...@kong-ui-public/entities-keys@3.8.0) (2025-02-26)
+
+
+### Features
+
+* **key-form:** add x5t field in key form ([#1976](https://github.com/Kong/public-ui-components/issues/1976)) ([0a73723](https://github.com/Kong/public-ui-components/commit/0a7372371968bb39494ea3471f2f9870b35c88e1))
+
+
+
+
+
 ## [3.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.7.0...@kong-ui-public/entities-keys@3.7.1) (2025-02-21)
 
 
