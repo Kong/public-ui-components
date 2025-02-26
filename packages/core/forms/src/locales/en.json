@@ -138,6 +138,7 @@
       "label": "Use shared configuration",
       "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins.",
       "title": "Shared Redis Configuration",
+      "error": "Fetching shared Redis configurations failed.",
       "tooltip": "Only compatible {type} redis configurations will be listed here.",
       "configuration_selector_label": "Select stored Redis configuration",
       "configuration_selector_placeholder": "Pick Redis configuration",

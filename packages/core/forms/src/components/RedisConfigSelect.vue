@@ -15,6 +15,7 @@
     <div class="shared-redis-config-title" />
     <KSelect
       v-model="selectedRedisConfigItem"
+      class="redis-config-select-trigger"
       data-testid="redis-config-select-trigger"
       enable-filtering
       :filter-function="() => true"
@@ -71,6 +72,13 @@
     :config-fields="selectedRedisConfig"
     :plugin-redis-fields="pluginRedisFields"
   />
+  <p
+    v-if="sharedRedisConfigFetchError"
+    class="redis-shared-config-error-message"
+    data-testid="redis-config-fetch-error"
+  >
+    {{ sharedRedisConfigFetchError || t('redis.shared_configuration.error') }}
+  </p>
 </template>
 
 <script setup lang="ts">
@@ -79,6 +87,7 @@ import { onBeforeMount, inject, computed, ref, watch, type Ref } from 'vue'
 import {
   useAxios,
   useDebouncedFilter,
+  useErrors,
   type KongManagerBaseFormConfig,
   type KongManagerBaseTableConfig,
   type KonnectBaseFormConfig,
@@ -139,18 +148,21 @@ const props = defineProps({
 
 const selectedRedisConfigItem = ref(props.defaultRedisConfigItem)
 const selectedRedisConfig = ref(null)
+const { getMessageFromError } = useErrors()
 
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig | KonnectBaseTableConfig | KongManagerBaseTableConfig = inject(FORMS_CONFIG)!
 const {
   debouncedQueryChange: debouncedRedisConfigsQuery,
   loading: loadingRedisConfigs,
-  // error: redisConfigsFetchError,
+  error: redisConfigsFetchError,
   loadItems: loadConfigs,
   results: redisConfigsResults,
 } = useDebouncedFilter(formConfig!, endpoints[formConfig!.app].getAll, undefined, {
   fetchedItemsKey: 'data',
   searchKeys: ['id', 'name'],
 })
+
+const sharedRedisConfigFetchError = computed(() => redisConfigsFetchError.value ? getMessageFromError(redisConfigsFetchError.value) : '')
 
 /**
  * Build URL of getting one partial
@@ -215,6 +227,10 @@ onBeforeMount(async () => {
 .redis-config-select {
   margin: $kui-space-60 0;
 
+  :deep(.k-label) {
+    margin-top: 0;
+  }
+
   .shared-redis-config-title {
     font-weight: $kui-font-weight-semibold;
     line-height: $kui-line-height-30;
@@ -254,5 +270,9 @@ onBeforeMount(async () => {
     font-weight: $kui-font-weight-bold;
     line-height: $kui-line-height-40;
   }
+}
+
+.redis-shared-config-error-message {
+  color: $kui-color-text-danger;
 }
 </style>

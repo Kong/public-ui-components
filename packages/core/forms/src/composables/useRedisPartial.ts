@@ -14,7 +14,7 @@ export interface Field {
 export default function useRedisPartial(formSchema: any) {
   const redisFields: Field[] = []
   const isRedisField = (field: Field): boolean => {
-    const excludePatterns = ['cluster-cache','cluster_cache']
+    const excludePatterns = ['cluster-cache', 'cluster_cache']
     for (const pattern of excludePatterns) {
       if (field.model.includes(pattern)) {
         return false

@@ -1244,7 +1244,7 @@ const saveFormData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, payload)
     } else if (formType.value === 'edit') {
-      response = props.config.app === 'konnect' || (pluginPartialType.value && getRequestBody.value.partials)
+      response = props.config.app === 'konnect' || pluginPartialType.value
         // Note 1: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //         If this changes, the `edit` form methods should be re-evaluated/updated accordingly
         // Note 2: Because Konnect uses PUT, we need to include dynamic ordering in the request body

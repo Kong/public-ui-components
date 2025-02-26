@@ -192,7 +192,12 @@ const onFieldValidated = (res: boolean, errors: any[], field: any) => {
 
 watch(() => usePartial.value, (usePartial) => {
   if (usePartial) {
-    emits('partialToggled', 'redis', { 'partials': partialsSaved.value })
+    // only pass partialToggled to parent if some partials are selected
+    // when no partials are selected, no change of form model will happen, form will keep redis fields as default until a partial is selected
+    // see getRequestBidy in PluginForm
+    if (partialsSaved.value) {
+      emits('partialToggled', 'redis', { 'partials': partialsSaved.value })
+    }
   } else {
     emits('partialToggled', 'partials', redisFieldsSaved.value)
   }
