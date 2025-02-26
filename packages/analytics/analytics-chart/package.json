@@ -82,7 +82,7 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "pretty-bytes": "^6.1.1",
-    "uuid": "^10.0.0",
+    "uuid": "^11.0.5",
     "vue-chartjs": "^5.3.1"
   },
   "distSizeChecker": {
