@@ -198,18 +198,23 @@
       @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
     />
 
-    <KCard
+    <component
+      :is="enableRedisPartial ? 'div' : 'KCard'"
       v-if="formModel['config-strategy'] === 'redis'"
       class="rla-form-redis-card"
       :title="t('rla.redis.title')"
     >
       <VueFormGenerator
+        :enable-redis-partial="enableRedisPartial"
+        :is-editing="props.isEditing"
         :model="formModel"
         :options="formOptions"
         :schema="advancedSchema.redis"
         @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
+        @partial-toggled="onPartialToggled"
+        @show-new-partial-modal="() => showNewPartialModal(props.formSchema._supported_redis_partial_type)"
       />
-    </KCard>
+    </component>
 
     <VueFormGenerator
       :class="{ 'rla-last-vfg': formModel['config-strategy'] !== 'redis' }"
@@ -227,6 +232,7 @@ import { AddIcon, RemoveIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents'
 import cloneDeep from 'lodash-es/cloneDeep'
 import { computed, nextTick, provide, ref, useSlots } from 'vue'
+import VueFormGenerator from '../FormGenerator.vue'
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import english from '../../locales/en.json'
 import type { AutofillSlot } from '../../types'
@@ -328,7 +334,10 @@ const props = defineProps<{
   formModel: Record<string, any>
   formOptions: any
   onModelUpdated: (value: any, model: string) => void
+  onPartialToggled: (field: string, model: any) => void
+  showNewPartialModal: (redisType: string) => void
   isEditing?: boolean
+  enableRedisPartial?: boolean
 }>()
 
 const globalFields = computed(() => {
@@ -375,7 +384,7 @@ const advancedSchema = computed(() => {
 
   return {
     endsWithStrategy: { fields: endsWithStrategy },
-    redis: { fields: redis },
+    redis: props.enableRedisPartial ? { fields: [{ fields: redis, id: '_redis', model: '__redis_partial', redisType: props.formSchema._supported_redis_partial_type }] } : { fields: redis },
     afterStrategy: { fields: afterStrategy },
   }
 })

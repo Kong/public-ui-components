@@ -219,3 +219,8 @@ export interface CustomSchemas {
   'upstream-oauth': UpstreamOauthSchema
   'injection-protection': InjectionProtectionSchema
 }
+
+export enum PluginPartialType {
+  REDIS_CE = 'redis-ce',
+  REDIS_EE = 'redis-ee',
+}
