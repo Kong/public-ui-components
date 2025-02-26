@@ -77,6 +77,8 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
   const meta: QueryResponseMeta = {
     start_ms: start,
     end_ms: end,
+    start: new Date(start).toISOString(),
+    end: new Date(end).toISOString(),
     query_id: '12345',
     metric_names: [metric.name] as ExploreAggregations[],
     metric_units: {
@@ -124,6 +126,8 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[]) => {
   const meta: QueryResponseMeta = {
     start_ms: start,
     end_ms: end,
+    start: new Date(start).toISOString(),
+    end: new Date(end).toISOString(),
     query_id: '12345',
     metric_names: metrics.map(metric => metric.name) as ExploreAggregations[],
     metric_units: metrics.reduce((units: MetricUnit, metric) => {
@@ -207,6 +211,8 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: Dime
   const meta: QueryResponseMeta = {
     start_ms: start,
     end_ms: end,
+    start: new Date(start).toISOString(),
+    end: new Date(end).toISOString(),
     query_id: '12345',
     metric_names: metrics.map(metric => metric.name) as ExploreAggregations[],
     metric_units: metrics.reduce((units: MetricUnit, metric) => {

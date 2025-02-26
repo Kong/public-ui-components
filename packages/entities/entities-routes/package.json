@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-routes",
-  "version": "3.10.1",
+  "version": "3.10.2",
   "type": "module",
   "main": "./dist/entities-routes.umd.js",
   "module": "./dist/entities-routes.es.js",
@@ -24,7 +24,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.21.1",
-    "@kong/kongponents": "^9.21.5",
+    "@kong/kongponents": "^9.21.6",
     "axios": "^1.7.7",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.4.5"
@@ -32,13 +32,13 @@
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.17.2",
+    "@kong/design-tokens": "1.17.3",
     "@kong/icons": "^1.21.1",
-    "@kong/kongponents": "9.21.5",
+    "@kong/kongponents": "9.21.6",
     "@types/lodash.isequal": "^4.5.8",
     "axios": "^1.7.7",
     "vite-plugin-monaco-editor": "^1.1.0",
-    "vue": "^3.5.12",
+    "vue": "^3.5.13",
     "vue-router": "^4.4.5"
   },
   "scripts": {

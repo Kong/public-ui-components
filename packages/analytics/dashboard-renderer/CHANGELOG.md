@@ -3,6 +3,96 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.1.0...@kong-ui-public/dashboard-renderer@1.2.0) (2025-02-25)
+
+
+### Features
+
+* **dashboard-renderer:** limit request concurrency [MA-3623] ([#1970](https://github.com/Kong/public-ui-components/issues/1970)) ([0c4b8f6](https://github.com/Kong/public-ui-components/commit/0c4b8f656e447a96a7c1c98216091cce329fc303))
+
+
+
+
+
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.0.1...@kong-ui-public/dashboard-renderer@1.1.0) (2025-02-25)
+
+
+### Features
+
+* remove explore link when portal dimension is present ([#1984](https://github.com/Kong/public-ui-components/issues/1984)) ([477b0f5](https://github.com/Kong/public-ui-components/commit/477b0f53403bb379cae941f26843655d18392566))
+
+
+
+
+
+## [1.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.36.1...@kong-ui-public/dashboard-renderer@1.0.1) (2025-02-24)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** fix spacing for slottable tiles ([#1981](https://github.com/Kong/public-ui-components/issues/1981)) ([33734dd](https://github.com/Kong/public-ui-components/commit/33734ddfddc01601bfa6848b28632057a9542e05))
+
+
+
+
+
+## [0.36.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.36.0...@kong-ui-public/dashboard-renderer@0.36.1) (2025-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [0.36.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.12...@kong-ui-public/dashboard-renderer@0.36.0) (2025-02-24)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** reduce required dependencies ([#1975](https://github.com/Kong/public-ui-components/issues/1975)) ([182f845](https://github.com/Kong/public-ui-components/commit/182f84557cb15314fc1b5985e810ed2923d780d1))
+
+
+### BREAKING CHANGES
+
+* **dashboard-renderer:** `EntityLink` must be provided from the analytics bridge if full functionality is needed.
+
+
+
+
+
+## [0.35.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.11...@kong-ui-public/dashboard-renderer@0.35.12) (2025-02-21)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** enable doughnut charts [MA-3650] ([#1972](https://github.com/Kong/public-ui-components/issues/1972)) ([fc2f3d7](https://github.com/Kong/public-ui-components/commit/fc2f3d7a10e812b06efe8cdf673c13aad3be84c9))
+
+
+
+
+
+## [0.35.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.10...@kong-ui-public/dashboard-renderer@0.35.11) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
+## [0.35.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.9...@kong-ui-public/dashboard-renderer@0.35.10) (2025-02-21)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** empty csv export dropdown [MA-3523] ([#1969](https://github.com/Kong/public-ui-components/issues/1969)) ([518b784](https://github.com/Kong/public-ui-components/commit/518b784a9fc8f46154d8c44e2775bf18d9894f94))
+
+
+
+
+
 ## [0.35.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@0.35.8...@kong-ui-public/dashboard-renderer@0.35.9) (2025-02-19)
 
 

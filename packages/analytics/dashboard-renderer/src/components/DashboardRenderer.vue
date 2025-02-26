@@ -18,7 +18,7 @@
       <template #tile="{ tile }">
         <div
           v-if="tile.meta.chart.type === 'slottable'"
-          class="tile-container"
+          class="tile-container slottable-tile"
         >
           <slot :name="tile.meta.chart.id" />
         </div>
@@ -83,6 +83,9 @@ if (!queryBridge) {
   console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
   console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/README.md#requirements')
 }
+
+// Enable a request queue on the query bridge for all subcomponents.
+composables.useRequestQueue()
 
 const configStore = useAnalyticsConfigStore()
 
@@ -218,6 +221,10 @@ defineExpose({ refresh: refreshTiles })
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     height: 100%;
+
+    &.slottable-tile {
+      padding: var(--kui-space-60, $kui-space-60);
+    }
   }
 }
 </style>

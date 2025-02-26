@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.10...@kong-ui-public/app-layout@4.3.11) (2025-02-21)
+
+
+### Bug Fixes
+
+* **app-layout:** fix subnav item badge condition [TDX-5119] ([#1971](https://github.com/Kong/public-ui-components/issues/1971)) ([bff5f4a](https://github.com/Kong/public-ui-components/commit/bff5f4a780233259461d2606ef5715aae0e4cabd))
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 ## [4.3.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.9...@kong-ui-public/app-layout@4.3.10) (2025-02-17)
 
 

@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.8.41...@kong-ui-public/analytics-config-store@0.9.0) (2025-02-25)
+
+
+### Features
+
+* **dashboard-renderer:** limit request concurrency [MA-3623] ([#1970](https://github.com/Kong/public-ui-components/issues/1970)) ([0c4b8f6](https://github.com/Kong/public-ui-components/commit/0c4b8f656e447a96a7c1c98216091cce329fc303))
+
+
+
+
+
+## [0.8.41](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.8.40...@kong-ui-public/analytics-config-store@0.8.41) (2025-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-config-store
+
+
+
+
+
+## [0.8.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.8.39...@kong-ui-public/analytics-config-store@0.8.40) (2025-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-config-store
+
+
+
+
+
+## [0.8.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.8.38...@kong-ui-public/analytics-config-store@0.8.39) (2025-02-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-config-store
+
+
+
+
+
+## [0.8.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.8.37...@kong-ui-public/analytics-config-store@0.8.38) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 ## [0.8.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@0.8.36...@kong-ui-public/analytics-config-store@0.8.37) (2025-02-13)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store

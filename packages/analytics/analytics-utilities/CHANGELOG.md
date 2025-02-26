@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@7.1.0...@kong-ui-public/analytics-utilities@7.2.0) (2025-02-25)
+
+
+### Features
+
+* **dashboard-renderer:** limit request concurrency [MA-3623] ([#1970](https://github.com/Kong/public-ui-components/issues/1970)) ([0c4b8f6](https://github.com/Kong/public-ui-components/commit/0c4b8f656e447a96a7c1c98216091cce329fc303))
+
+
+
+
+
+# [7.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@7.0.0...@kong-ui-public/analytics-utilities@7.1.0) (2025-02-24)
+
+
+### Features
+
+* **analytics-utilities:** add start/end string as required result set ([#1980](https://github.com/Kong/public-ui-components/issues/1980)) ([22c95eb](https://github.com/Kong/public-ui-components/commit/22c95ebfef24cb01432797e8f45304ecc0343f5e))
+
+
+
+
+
+# [7.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.3...@kong-ui-public/analytics-utilities@7.0.0) (2025-02-24)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** reduce required dependencies ([#1975](https://github.com/Kong/public-ui-components/issues/1975)) ([182f845](https://github.com/Kong/public-ui-components/commit/182f84557cb15314fc1b5985e810ed2923d780d1))
+
+
+### BREAKING CHANGES
+
+* **dashboard-renderer:** `EntityLink` must be provided from the analytics bridge if full functionality is needed.
+
+
+
+
+
+## [6.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.2...@kong-ui-public/analytics-utilities@6.3.3) (2025-02-21)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** enable doughnut charts [MA-3650] ([#1972](https://github.com/Kong/public-ui-components/issues/1972)) ([fc2f3d7](https://github.com/Kong/public-ui-components/commit/fc2f3d7a10e812b06efe8cdf673c13aad3be84c9))
+
+
+
+
+
+## [6.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.1...@kong-ui-public/analytics-utilities@6.3.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 ## [6.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@6.3.0...@kong-ui-public/analytics-utilities@6.3.1) (2025-02-13)
 
 

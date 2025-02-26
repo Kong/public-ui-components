@@ -43,6 +43,7 @@ export const SPAN_NAMES = {
    * - `kong.upstream.read_response`
    */
   KONG_READ_RESPONSE_FROM_UPSTREAM: 'kong.read_response_from_upstream',
+  KONG_SEND_REQUEST_TO_UPSTREAM: 'kong.send_request_to_upstream',
   KONG_UPSTREAM_SELECTION: 'kong.upstream.selection',
 
   /**

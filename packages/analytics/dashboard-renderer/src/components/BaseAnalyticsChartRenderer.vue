@@ -68,7 +68,6 @@ const exploreLink = computed(() => {
       metrics: props.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
       dimensions: props.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? [],
       time_range: props.query.time_range as TimeRangeV4 || props.context.timeSpec,
-
     } as ExploreQuery | AiExploreQuery
     // Explore only supports advanced or ai
     const datasource = ['advanced', 'ai'].includes(props.query.datasource) ? props.query.datasource : 'advanced'

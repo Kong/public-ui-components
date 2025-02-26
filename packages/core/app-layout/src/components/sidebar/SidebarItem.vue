@@ -123,7 +123,7 @@ const openInNewWindow = computed((): boolean => {
   return props.item.newWindow && (props.item.to.startsWith('http') || props.item.to.startsWith('/'))
 })
 
-const itemHasBadge = computed((): boolean => props.subnavItem && (props.item as SidebarSecondaryItem).badgeCount !== undefined)
+const itemHasBadge = computed((): boolean => props.subnavItem && (props.item as SidebarSecondaryItem).badgeCount !== undefined && (props.item as SidebarSecondaryItem).badgeCount !== 0)
 
 const itemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void => {
   emit('click', item)

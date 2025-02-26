@@ -23,6 +23,7 @@ export const dashboardTileTypes = [
   'horizontal_bar',
   'vertical_bar',
   'gauge',
+  'doughnut',
   'timeseries_line',
   'timeseries_bar',
   'golden_signals',
@@ -144,6 +145,22 @@ export const gaugeChartSchema = {
 } as const satisfies JSONSchema
 
 export type GaugeChartOptions = FromSchemaWithOptions<typeof gaugeChartSchema>
+
+export const doughnutChartSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['doughnut'],
+    },
+    syntheticsDataKey,
+    chartTitle,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type DoughnutChartOptions = FromSchemaWithOptions<typeof doughnutChartSchema>
 
 export const topNTableSchema = {
   type: 'object',
@@ -440,7 +457,15 @@ export const tileDefinitionSchema = {
   properties: {
     query: validDashboardQuery,
     chart: {
-      anyOf: [barChartSchema, gaugeChartSchema, timeseriesChartSchema, metricCardSchema, topNTableSchema, slottableSchema],
+      anyOf: [
+        barChartSchema,
+        gaugeChartSchema,
+        doughnutChartSchema,
+        timeseriesChartSchema,
+        metricCardSchema,
+        topNTableSchema,
+        slottableSchema,
+      ],
     },
   },
   required: ['query', 'chart'],
