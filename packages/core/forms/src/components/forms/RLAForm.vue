@@ -231,7 +231,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import { AddIcon, RemoveIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents'
 import cloneDeep from 'lodash-es/cloneDeep'
-import { computed, nextTick, provide, ref, useSlots } from 'vue'
+import { computed, nextTick, provide, ref, useSlots, watch } from 'vue'
 import VueFormGenerator from '../FormGenerator.vue'
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import english from '../../locales/en.json'
@@ -533,6 +533,13 @@ const removeRequestLimit = (index: number) => {
     props.onModelUpdated(windowSizes, 'config-window_size')
   }
 }
+
+watch(() => props.formModel['config-strategy'], (strategy: string) => {
+  // if a user pick another strategy other than redis, clear the redis partials if selected
+  if (strategy !== 'redis' && props.formModel['partials']) {
+    props.onModelUpdated(undefined, 'partials')
+  }
+})
 </script>
 
 <style lang="scss" scoped>
