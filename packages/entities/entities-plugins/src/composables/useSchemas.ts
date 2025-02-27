@@ -288,11 +288,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
        * - Rendering a form for a plugin credential
        */
 
-      // Assume the fields are sorted, unless they have an `order` property
-      if (metadata?.useLegacyForm) {
+      // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled
+      if (metadata?.useLegacyForm && options?.enableRedisPartial && currentSchema._supported_redis_partial_type) {
         for (const field of formSchema.fields!) {
-          // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled
-          if (options?.enableRedisPartial && currentSchema._supported_redis_partial_type && isRedisField(field)) {
+          if (isRedisField(field)) {
             redisFields.push(field)
             continue
           }
@@ -309,7 +308,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         })
       }
 
-
+      // Assume the fields are sorted, unless they have an `order` property
       formSchema.fields!.sort((a: Record<string, any>, b: Record<string, any>) => {
         a.order = a.order || 0
         b.order = b.order || 0
