@@ -13,9 +13,9 @@ interface ArrayItem {
     },
     [key: string]: any,
   },
-  removeElementButtonLabel: string,
+  removeElementButtonLabel?: string,
   styleClasses: string,
-  inputType: string,
+  inputType?: string,
   valueType: string,
   valueArrayType: string,
 }

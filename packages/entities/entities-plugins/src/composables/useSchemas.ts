@@ -24,6 +24,8 @@ import { statsDSchema } from '../definitions/schemas/StatsD'
 import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
 import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
 import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
+import { kafkaUpstreamSchema } from '../definitions/schemas/KafkaUpstream'
+import { confluentSchema } from '../definitions/schemas/Confluent'
 import ZipkinSchema from '../definitions/schemas/Zipkin'
 import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
@@ -205,6 +207,14 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     saml: {
       ...samlSchema,
+    },
+
+    'kafka-upstream': {
+      ...kafkaUpstreamSchema,
+    },
+
+    'confluent': {
+      ...confluentSchema,
     },
   }
 
