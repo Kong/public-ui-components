@@ -42,6 +42,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.0",
     "@kong/kongponents": "9.38.4",
+    "@types/geobuf": "^3.0.4",
     "@types/geojson": "^7946.0.16",
     "maplibre-gl": "^4.7.1",
     "vue": "^3.5.13"
@@ -61,7 +62,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "256KB"
+    "errorLimit": "600KB"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
@@ -71,6 +72,7 @@
   },
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "approximate-number": "^2.1.1"
+    "approximate-number": "^2.1.1",
+    "geobuf": "^3.0.2"
   }
 }
