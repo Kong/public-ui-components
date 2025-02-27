@@ -3,8 +3,8 @@
 
 // Cypress component test spec file
 
-import OIDCForm from '../OIDCForm.vue'
-import { OIDCFormSchema, OIDCModel } from './OIDCSchema'
+import RLAForm from '../RLAForm.vue'
+import { RLASchema, RLAModel } from './RLASchema'
 import { redisPartials, redisEEConfig } from '../../../../fixtures/mockData'
 
 const baseConfigKM = {
@@ -13,12 +13,15 @@ const baseConfigKM = {
   apiBaseUrl: '/kong-manager',
 }
 
-describe('<OIDCForm />', () => {
+describe('<RLAForm />', () => {
   it('should render redis fields as common fields when enableRedisPartial is not passed', () => {
-    cy.mount(OIDCForm, {
+    cy.mount(RLAForm, {
       props: {
-        formSchema: OIDCFormSchema,
-        formModel: OIDCModel,
+        formSchema: RLASchema,
+        formModel: RLAModel,
+        onModelUpdated: (value:any, model: Record<string, any>) => {
+          console.log(value, model)
+        },
       },
       global: {
         provide: {
@@ -26,13 +29,18 @@ describe('<OIDCForm />', () => {
         },
       },
     })
-    cy.get('.vue-form-generator').should('exist')
-    cy.get('#advanced-tab').click()
-    cy.getTestId('redis-config-card').should('not.exist')
+    cy.get('.rla-form-basic-fields').should('exist')
+    cy.getTestId('collapse-trigger-label').click()
+    cy.getTestId('config-strategy-items').click()
+    cy.getTestId('select-item-local').should('be.visible').click()
+    cy.getTestId('select-item-redis').click()
+
+    cy.getTestId('redis-config-radio-group').should('not.exist')
+    cy.get('.rla-form-redis-card').should('exist')
 
   })
 
-  it('should group redis fields into redis configuration card when enableRedisPartial is true', () => {
+  it('should show corresponding configuration when toggling shared/dedicated redis configuration', () => {
     cy.intercept(
       {
         method: 'GET',
@@ -56,11 +64,14 @@ describe('<OIDCForm />', () => {
         body: redisEEConfig,
       },
     ).as('getRedisEEPartial')
-    cy.mount(OIDCForm, {
+    cy.mount(RLAForm, {
       props: {
-        formSchema: OIDCFormSchema,
-        formModel: OIDCModel,
+        formSchema: RLASchema,
+        formModel: RLAModel,
         enableRedisPartial: true,
+        onModelUpdated: (value: any, model: Record<string, any>) => {
+          console.log(value, model)
+        },
       },
       global: {
         provide: {
@@ -68,15 +79,15 @@ describe('<OIDCForm />', () => {
         },
       },
     })
-    cy.get('.vue-form-generator').should('exist')
-    cy.get('#advanced-tab').click()
+    cy.get('.rla-form-basic-fields').should('exist')
+    cy.getTestId('collapse-trigger-label').click()
+    cy.getTestId('config-strategy-items').click()
+    cy.getTestId('select-item-redis').should('be.visible')
+    cy.get('[data-testid="select-item-redis"] button').click()
     cy.getTestId('redis-config-card').should('exist')
 
-    // assert radio group is present in the redis configuration card
-    cy.getTestId('redis-config-radio-group').should('exist')
 
-
-    cy.getTestId('shared-redis-config-radio').click()
+    // should default to shared redis configuration
     cy.getTestId('redis-config-select-trigger').click()
 
     const [redisCEConfigDetail, redisEEConfigDetail] = redisPartials

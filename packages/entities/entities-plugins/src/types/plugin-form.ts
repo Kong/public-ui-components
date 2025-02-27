@@ -223,3 +223,8 @@ export interface CustomSchemas {
   'kafka-upstream': KafkaUpstreamSchema
   'confluent': ConfluentSchema
 }
+
+export enum PluginPartialType {
+  REDIS_CE = 'redis-ce',
+  REDIS_EE = 'redis-ee',
+}
