@@ -498,6 +498,26 @@
       "redirect": {
         "name": "Redirect",
         "description": "Redirect incoming requests to a new URL"
+      },
+      "kafka-consume": {
+        "name": "Kafka Consume",
+        "description": "Consume messages from a Kafka topic and forward them to the client"
+      },
+      "confluent-consume": {
+        "name": "Confluent Consume",
+        "description": "Consume messages from a Confluent topic and forward them to the client"
+      },
+      "request-callout": {
+        "name": "Request Callout",
+        "description": "Call an external service before proxying the request"
+      },
+      "ai-sanitizer": {
+        "name": "AI Sanitizer",
+        "description": "Sanitize AI requests and responses to remove sensitive information"
+      },
+      "ai-rag-injector": {
+        "name": "AI RAG Injector",
+        "description": "Injects context from a remote source into an AI request"
       }
     },
     "fields": {
