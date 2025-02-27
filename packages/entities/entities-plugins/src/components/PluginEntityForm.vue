@@ -12,7 +12,7 @@
       <component
         :is="sharedFormName"
         v-if="sharedFormName && (formModel.id && editing || !editing)"
-        :enable-redis-partial="props.enableRedisPartial"
+        :enable-redis-partial="enableRedisPartial"
         :form-model="formModel"
         :form-options="formOptions"
         :form-schema="formSchema"
@@ -35,7 +35,7 @@
 
       <VueFormGenerator
         v-if="!sharedFormName && (formModel.id && editing || !editing)"
-        :enable-redis-partial="props.enableRedisPartial"
+        :enable-redis-partial="enableRedisPartial"
         :is-editing="editing"
         :model="formModel"
         :options="formOptions"

@@ -14,13 +14,13 @@
     </KLabel>
     <div class="shared-redis-config-title" />
     <KSelect
-      v-model="selectedRedisConfigItem"
       class="redis-config-select-trigger"
       data-testid="redis-config-select-trigger"
       enable-filtering
       :filter-function="() => true"
       :items="availableRedisConfigs"
       :loading="loadingRedisConfigs"
+      :model-value="defaultRedisConfigItem"
       :placeholder="t('redis.shared_configuration.selector.placeholder')"
       @change="(item) => redisConfigSelected(item?.value)"
       @query-change="debouncedRedisConfigsQuery"
@@ -83,7 +83,7 @@
 
 <script setup lang="ts">
 import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY } from '../const'
-import { onBeforeMount, inject, computed, ref, watch, type Ref } from 'vue'
+import { onBeforeMount, inject, computed, ref, watch, type Ref, type PropType } from 'vue'
 import {
   useAxios,
   useDebouncedFilter,
@@ -109,7 +109,7 @@ defineEmits<{
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const redisPartialFetcherKey: Ref<number,number> | undefined = inject(REDIS_PARTIAL_FETCHER_KEY)
+const redisPartialFetcherKey: Ref<number, number> | undefined = inject(REDIS_PARTIAL_FETCHER_KEY)
 
 const endpoints = {
   konnect: {
@@ -129,7 +129,7 @@ const props = defineProps({
     default: '',
   },
   updateRedisModel: {
-    type: Function,
+    type: Function as PropType<(val: string | number) => void>,
     required: true,
   },
   pluginRedisFields: {
@@ -146,7 +146,6 @@ const props = defineProps({
   },
 })
 
-const selectedRedisConfigItem = ref(props.defaultRedisConfigItem)
 const selectedRedisConfig = ref(null)
 const { getMessageFromError } = useErrors()
 

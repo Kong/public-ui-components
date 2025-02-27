@@ -165,10 +165,13 @@ const redisFieldsSaved = ref<Record<string, any>>({})
 const partialsSaved = ref<Array<{ id: string | number, path: string | undefined }> | undefined>()
 
 const fieldVisible = (field: any) => {
-  if (isFunction(field.visible)) return field.visible.call(this, props.model, field, this)
+  if (isFunction(field.visible)) {
+    return field.visible.call(this, props.model, field, this)
+  }
 
-  if (isNil(field.visible)) return true
-
+  if (isNil(field.visible)) {
+    return true
+  }
   return field.visible
 }
 

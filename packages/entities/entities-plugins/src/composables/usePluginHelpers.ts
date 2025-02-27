@@ -157,28 +157,6 @@ export default function useHelpers() {
   }
 
   /**
-  * Remove a part of object by path
-  * This is used to set redis path to null for a plugin when trying to override redis fields with partial config
-  * @param {string} path
-  * @param {Object} obj
-  * @returns {void}
-  */
-  const deleteValueByPath = (path: string, obj: Record<string, any>): void => {
-    const keys = path.split('.')
-    let current = obj
-
-    for (let i = 0; i < keys.length - 1; i++) {
-      current = current[keys[i]]
-      if (current === undefined || current === null) {
-        return
-      }
-    }
-
-    // current[keys[keys.length - 1]] = value
-    delete current[keys[keys.length - 1]]
-  }
-
-  /**
    * A method to easily check if an object is empty or not
    * @param {Object} obj object to check
    * @return {Boolean}
@@ -247,6 +225,5 @@ export default function useHelpers() {
     formatPluginFieldLabel,
     getTallestPluginCardHeight,
     getToggleVisibility,
-    deleteValueByPath,
   }
 }

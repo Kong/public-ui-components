@@ -206,13 +206,13 @@
     >
       <VueFormGenerator
         :enable-redis-partial="enableRedisPartial"
-        :is-editing="props.isEditing"
+        :is-editing="isEditing"
         :model="formModel"
         :options="formOptions"
         :schema="advancedSchema.redis"
         @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
         @partial-toggled="onPartialToggled"
-        @show-new-partial-modal="() => showNewPartialModal(props.formSchema._supported_redis_partial_type)"
+        @show-new-partial-modal="() => showNewPartialModal(formSchema._supported_redis_partial_type)"
       />
     </component>
 

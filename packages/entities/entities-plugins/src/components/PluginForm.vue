@@ -45,7 +45,7 @@
         :config="config"
         :credential="treatAsCredential"
         :editing="formType === EntityBaseFormType.Edit"
-        :enable-redis-partial="props.enableRedisPartial"
+        :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
         :record="record || undefined"
@@ -172,6 +172,7 @@ import {
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
+import unset from 'lodash-es/unset'
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -296,7 +297,7 @@ const props = defineProps({
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { customSchemas, typedefs } = composables.useSchemas({ app: props.config.app, credential: props.credential })
-const { formatPluginFieldLabel, deleteValueByPath } = composables.usePluginHelpers()
+const { formatPluginFieldLabel } = composables.usePluginHelpers()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
 const { objectsAreEqual } = useHelpers()
@@ -1111,8 +1112,12 @@ watch([entityMap, initialized], (newData, oldData) => {
     schemaLoading.value = true
 
     const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
-    if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
-    if (pluginPartialType.value) initialFormSchema._supported_redis_partial_type = pluginPartialType.value
+    if (isCustomPlugin.value) {
+      initialFormSchema._isCustomPlugin = true
+    }
+    if (pluginPartialType.value) {
+      initialFormSchema._supported_redis_partial_type = pluginPartialType.value
+    }
     loadedSchema.value = initialFormSchema
     schemaLoading.value = false
   }
@@ -1204,9 +1209,9 @@ const getRequestBody = computed((): Record<string, any> => {
     delete requestBody.created_at
   }
 
-  // if a partial value is passed, set the redis path of requestBody to null, in this way we
+  // if a partial value is passed, set the redis path of requestBody to null, in this way we override the redis fields
   if (submitPayload.value.partials && pluginRedisPath.value) {
-    deleteValueByPath(pluginRedisPath.value, requestBody)
+    unset(requestBody, pluginRedisPath.value)
   }
 
   return requestBody

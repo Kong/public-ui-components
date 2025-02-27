@@ -1,5 +1,6 @@
+import type { FlattendRedisConfigurationFields } from '../types'
 import type { Field } from './useRedisPartial'
-export default function useRedisNonstandardFields(partialFields: [], redisFields: Field[]) {
+export default function useRedisNonstandardFields(partialFields: FlattendRedisConfigurationFields, redisFields: Field[]) {
   const redisFieldPattern = /(?<=config-redis-).*/
   const redisLabelPattern = /Config\.Redis.*/
   const nonStandardConfigFields = redisFields.filter((field) => {

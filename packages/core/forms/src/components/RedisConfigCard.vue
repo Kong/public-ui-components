@@ -51,6 +51,7 @@ import { useStringHelpers } from '@kong-ui-public/entities-shared'
 import { computed } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
+import type { FlattendRedisConfigurationFields } from '../types'
 
 const { t, formatUnixTimeStamp } = createI18n<typeof english>('en-us', english)
 
@@ -80,17 +81,12 @@ const standardEntityfields: Record<string,any> = {
 
 const props = defineProps({
   configFields: {
-    type: Object as PropType<any>,
+    type: Object as PropType<FlattendRedisConfigurationFields>,
     required: true,
   },
   pluginRedisFields: {
     type: Array<Field>,
     required: true,
-  },
-  redisMeta: {
-    type: Object as PropType<any>,
-    required: false,
-    default: () => ({}),
   },
 })
 
