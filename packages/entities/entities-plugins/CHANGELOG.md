@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.13.0...@kong-ui-public/entities-plugins@9.14.0) (2025-02-27)
+
+
+### Features
+
+* **gm:** redis plugin adoption ([#1967](https://github.com/Kong/public-ui-components/issues/1967)) ([1a2c5e2](https://github.com/Kong/public-ui-components/commit/1a2c5e27442ee78d34c87bd9d4bea440f1c77a5d))
+
+
+
+
+
 # [9.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.5...@kong-ui-public/entities-plugins@9.13.0) (2025-02-27)
 
 
