@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.5...@kong-ui-public/entities-plugins@9.13.0) (2025-02-27)
+
+
+### Features
+
+* **entities-plugins:** use textarea for certain fields ([#1989](https://github.com/Kong/public-ui-components/issues/1989)) ([6eb2b00](https://github.com/Kong/public-ui-components/commit/6eb2b00f4d09cee864ec562a41d1537ff0efa357))
+
+
+
+
+
 ## [9.12.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.4...@kong-ui-public/entities-plugins@9.12.5) (2025-02-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
