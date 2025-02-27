@@ -53,21 +53,27 @@
       "sections": {
         "general": {
           "title": "General Information",
-          "description": "General information will help identify and manage this Gateway Service."
+          "description": "Provide a name and tags to help identify and manage this service."
         },
         "keys": {
           "title": "Service Endpoint",
-          "description": "Define the endpoint for this service by specifying the full URL or by its separate elements.",
+          "description": "Define where this service should send requests.",
           "checkedGroupLabel": "Choose how and where to send traffic",
-          "urlLabel": "Full URL",
-          "checkedGroupAltLabel": "Protocol, Host, Port and Path",
+          "url": {
+            "label": "Full URL",
+            "description": "Define the service using a single, complete API URL for simple setup."
+          },
+          "protocol": {
+            "label": "Protocol, host, port, and path",
+            "description": "Manually specify each component of the API’s URL for advanced configurations."
+          },
           "viewAdvancedFields": "View Advanced Fields"
         }
       },
       "fields": {
         "upstream_url": {
-          "label": "Upstream URL",
-          "placeholder": "Enter a URL",
+          "label": "Full URL",
+          "placeholder": "e.g. https://www.myapi.com/",
           "tooltip_for_konnect": "This is the URL of the API you will manage in Konnect.",
           "tooltip_for_km": "This is the URL of the API you will manage in Kong Gateway."
         },
@@ -157,7 +163,8 @@
           "label": "Tags",
           "tooltip": "An optional set of strings associated with the Service for grouping and filtering.",
           "placeholder": "Enter a list of tags separated by comma",
-          "help": "e.g. tag1, tag2, tag3"
+          "help": "e.g. tag1, tag2, tag3",
+          "collapse": "Add tags"
         },
         "enabled": {
           "label": "Enabled",

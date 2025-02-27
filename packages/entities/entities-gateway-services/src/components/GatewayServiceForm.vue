@@ -16,6 +16,325 @@
       @submit="saveFormData"
     >
       <EntityFormSection
+        :description="t('gateway_services.form.sections.keys.description')"
+        :hide-info-header="hideSectionsInfo"
+        :title="t('gateway_services.form.sections.keys.title')"
+      >
+        <div
+          v-if="!isEditing"
+          class="gateway-service-form-general-info"
+        >
+          <div class="gateway-service-form-group-selection-wrapper">
+            <KRadio
+              v-model="checkedGroup"
+              card
+              card-orientation="horizontal"
+              data-testid="gateway-service-url-radio"
+              :description="t('gateway_services.form.sections.keys.url.description')"
+              :label="t('gateway_services.form.sections.keys.url.label')"
+              :selected-value="whereToSendTraffic.url"
+              @change="changeCheckedGroup"
+            />
+            <KRadio
+              v-model="checkedGroup"
+              card
+              card-orientation="horizontal"
+              checked-group="protocol"
+              data-testid="gateway-service-protocol-radio"
+              :description="t('gateway_services.form.sections.keys.protocol.description')"
+              :label="t('gateway_services.form.sections.keys.protocol.label')"
+              :selected-value="whereToSendTraffic.protocol"
+              @change="changeCheckedGroup"
+            />
+          </div>
+          <Transition name="slide-fade">
+            <div
+              v-if="checkedGroup === 'url'"
+              class="gateway-service-form-group-fields"
+            >
+              <KInput
+                v-model.trim="form.fields.url"
+                class="gateway-service-url-input gateway-service-form-margin-bottom"
+                data-testid="gateway-service-url-input"
+                :label="t('gateway_services.form.fields.upstream_url.label')"
+                :label-attributes="{
+                  info: config.app === 'konnect'
+                    ? t('gateway_services.form.fields.upstream_url.tooltip_for_konnect')
+                    : t('gateway_services.form.fields.upstream_url.tooltip_for_km'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
+                name="url"
+                :placeholder="t('gateway_services.form.fields.upstream_url.placeholder')"
+                required
+                @input="handleChangeUrl"
+              >
+                <template #after>
+                  <KButton
+                    appearance="tertiary"
+                    size="small"
+                  >
+                    Try Sample API
+                  </KButton>
+                </template>
+              </KInput>
+            </div>
+          </Transition>
+        </div>
+        <Transition name="slide-fade">
+          <div
+            v-if="checkedGroup === 'protocol' || isEditing"
+            class="gateway-service-form-group-fields"
+          >
+            <KSelect
+              v-model="form.fields.protocol"
+              data-testid="gateway-service-protocol-select"
+              :items="gatewayServiceProtocolItems"
+              :label="t('gateway_services.form.fields.protocol.label')"
+              :label-attributes="{
+                info: t('gateway_services.form.fields.protocol.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+              required
+              width="100%"
+              @selected="(item: any) => handleItemSelect(form.fields.protocol, item)"
+            />
+
+            <KInput
+              v-model.trim="form.fields.host"
+              class="gateway-service-form-margin-top"
+              data-testid="gateway-service-host-input"
+              :label="t('gateway_services.form.fields.host.label')"
+              :label-attributes="{
+                info: t('gateway_services.form.fields.host.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              name="host"
+              :placeholder="t('gateway_services.form.fields.host.placeholder')"
+              required
+            />
+
+            <div v-if="setPathAllowed">
+              <KInput
+                v-model.trim="form.fields.path"
+                class="gateway-service-form-margin-top"
+                data-testid="gateway-service-path-input"
+                :label="t('gateway_services.form.fields.path.label')"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.path.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
+                name="path"
+                :placeholder="t('gateway_services.form.fields.path.placeholder')"
+              />
+            </div>
+
+            <KInput
+              v-model="form.fields.port"
+              class="gateway-service-form-margin-top"
+              data-testid="gateway-service-port-input"
+              :label="t('gateway_services.form.fields.port.label')"
+              :label-attributes="{
+                info: t('gateway_services.form.fields.port.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              name="port"
+              type="number"
+              @update:model-value="() => {
+                form.fields.port = handleFloatVal(form.fields.port + '')
+              }"
+            />
+          </div>
+        </Transition>
+
+        <!-- Advanced Fields -->
+        <KCollapse
+          v-model="isCollapsed"
+          data-testid="advanced-fields-collapse"
+          trigger-alignment="leading"
+          :trigger-label="t('gateway_services.form.sections.keys.viewAdvancedFields')"
+        >
+          <Transition name="slide-fade">
+            <div
+              v-if="!isCollapsed"
+              class="gateway-service-form-advanced-fields"
+            >
+              <div class="gateway-service-form-margin-bottom">
+                <KInput
+                  v-model="form.fields.retries"
+                  autocomplete="off"
+                  data-testid="gateway-service-retries-input"
+                  :label="t('gateway_services.form.fields.retries.label')"
+                  :label-attributes="{
+                    info: t('gateway_services.form.fields.retries.tooltip'),
+                    tooltipAttributes: { maxWidth: '400' },
+                  }"
+                  name="retries"
+                  :readonly="form.isReadonly"
+                  type="number"
+                  @update:model-value="() => {
+                    form.fields.retries = handleFloatVal(form.fields.retries + '')
+                  }"
+                />
+              </div>
+
+              <div class="gateway-service-form-margin-bottom">
+                <KInput
+                  v-model="form.fields.connect_timeout"
+                  autocomplete="off"
+                  data-testid="gateway-service-connTimeout-input"
+                  :label="t('gateway_services.form.fields.connect_timeout.label')"
+                  :label-attributes="{
+                    info: t('gateway_services.form.fields.connect_timeout.tooltip'),
+                    tooltipAttributes: { maxWidth: '400' },
+                  }"
+                  name="connTimeout"
+                  :readonly="form.isReadonly"
+                  type="number"
+                  @update:model-value="() => {
+                    form.fields.connect_timeout = handleFloatVal(form.fields.connect_timeout + '')
+                  }"
+                />
+              </div>
+
+              <div class="gateway-service-form-margin-bottom">
+                <KInput
+                  v-model="form.fields.write_timeout"
+                  autocomplete="off"
+                  data-testid="gateway-service-writeTimeout-input"
+                  :label="t('gateway_services.form.fields.write_timeout.label')"
+                  :label-attributes="{
+                    info: t('gateway_services.form.fields.write_timeout.tooltip'),
+                    tooltipAttributes: { maxWidth: '400' },
+                  }"
+                  name="writeTimeout"
+                  :readonly="form.isReadonly"
+                  type="number"
+                  @update:model-value="() => {
+                    form.fields.write_timeout = handleFloatVal(form.fields.write_timeout + '')
+                  }"
+                />
+              </div>
+
+              <div class="gateway-service-form-margin-bottom">
+                <KInput
+                  v-model="form.fields.read_timeout"
+                  autocomplete="off"
+                  data-testid="gateway-service-readTimeout-input"
+                  :label="t('gateway_services.form.fields.read_timeout.label')"
+                  :label-attributes="{
+                    info: t('gateway_services.form.fields.read_timeout.tooltip'),
+                    tooltipAttributes: { maxWidth: '400' },
+                  }"
+                  name="readTimeout"
+                  :readonly="form.isReadonly"
+                  type="number"
+                  @update:model-value="() => {
+                    form.fields.read_timeout = handleFloatVal(form.fields.read_timeout + '')
+                  }"
+                />
+              </div>
+
+              <div
+                v-if="showClientCert"
+                class="gateway-service-form-margin-bottom"
+              >
+                <KInput
+                  v-model.trim="form.fields.client_certificate"
+                  autocomplete="off"
+                  data-testid="gateway-service-clientCert-input"
+                  :label="t('gateway_services.form.fields.client_certificate.label')"
+                  :label-attributes="{
+                    info: t('gateway_services.form.fields.client_certificate.tooltip'),
+                    tooltipAttributes: { maxWidth: '400' },
+                  }"
+                  name="clientCert"
+                  :placeholder="t('gateway_services.form.fields.client_certificate.placeholder')"
+                  :readonly="form.isReadonly"
+                  type="text"
+                />
+              </div>
+
+              <div
+                v-if="showCaCert"
+                class="gateway-service-form-margin-bottom"
+              >
+                <KInput
+                  v-model.trim="form.fields.ca_certificates"
+                  autocomplete="off"
+                  data-testid="gateway-service-ca-certs-input"
+                  :label="t('gateway_services.form.fields.ca_certificates.label')"
+                  :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
+                  :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
+                  :readonly="form.isReadonly"
+                  type="text"
+                >
+                  <template #label-tooltip>
+                    <i18nT
+                      keypath="gateway_services.form.fields.ca_certificates.tooltip"
+                      scope="global"
+                    >
+                      <template #code1>
+                        <code>{{ t('gateway_services.form.fields.ca_certificates.code1') }}</code>
+                      </template>
+                      <template #code2>
+                        <code>{{ t('gateway_services.form.fields.ca_certificates.code2') }}</code>
+                      </template>
+                    </i18nT>
+                  </template>
+                </KInput>
+              </div>
+
+              <div
+                v-if="showTlsVerify"
+                class="gateway-service-form-margin-bottom"
+              >
+                <KCheckbox
+                  v-model="form.fields.tls_verify_enabled"
+                  data-testid="gateway-service-tls-verify-checkbox"
+                  :description="t('gateway_services.form.fields.tls_verify_enabled.help')"
+                  :label="t('gateway_services.form.fields.tls_verify_enabled.label')"
+                  :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
+                >
+                  <template #tooltip>
+                    <i18nT
+                      keypath="gateway_services.form.fields.tls_verify_enabled.tooltip"
+                      scope="global"
+                    >
+                      <template #code1>
+                        <code>{{ t('gateway_services.form.fields.tls_verify_enabled.code1') }}</code>
+                      </template>
+                    </i18nT>
+                  </template>
+                </KCheckbox>
+                <div
+                  v-if="form.fields.tls_verify_enabled"
+                  class="checkbox-aligned-radio"
+                >
+                  <KRadio
+                    v-model="form.fields.tls_verify_value"
+                    data-testid="gateway-service-tls-verify-true-option"
+                    :label="t('gateway_services.form.fields.tls_verify_option.true.label')"
+                    :selected-value="true"
+                  />
+                </div>
+                <div
+                  v-if="form.fields.tls_verify_enabled"
+                  class="checkbox-aligned-radio"
+                >
+                  <KRadio
+                    v-model="form.fields.tls_verify_value"
+                    data-testid="gateway-service-tls-verify-false-option"
+                    :label="t('gateway_services.form.fields.tls_verify_option.false.label')"
+                    :selected-value="false"
+                  />
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </KCollapse>
+      </EntityFormSection>
+      <EntityFormSection
         :description="t('gateway_services.form.sections.general.description')"
         :hide-info-header="hideSectionsInfo"
         :title="t('gateway_services.form.sections.general.title')"
@@ -37,323 +356,27 @@
           type="text"
           @input="validateName"
         />
-
-        <KInput
-          v-model.trim="form.fields.tags"
-          autocomplete="off"
-          data-testid="gateway-service-tags-input"
-          :help="t('gateway_services.form.fields.tags.help')"
-          :label="t('gateway_services.form.fields.tags.label')"
-          :label-attributes="{
-            info: t('gateway_services.form.fields.tags.tooltip'),
-            tooltipAttributes: { maxWidth: '400' }
-          }"
-          name="tags"
-          :placeholder="t('gateway_services.form.fields.tags.placeholder')"
-          :readonly="form.isReadonly"
-          type="text"
-        />
-      </EntityFormSection>
-
-      <EntityFormSection
-        :description="t('gateway_services.form.sections.keys.description')"
-        :hide-info-header="hideSectionsInfo"
-        :title="t('gateway_services.form.sections.keys.title')"
-      >
-        <div v-if="!isEditing">
-          <div class="gateway-service-form-traffic-label">
-            <KLabel required>
-              {{ t('gateway_services.form.sections.keys.checkedGroupLabel') }}
-            </KLabel>
-          </div>
-
-          <div class="gateway-service-form-margin-bottom">
-            <KRadio
-              v-model="checkedGroup"
-              data-testid="gateway-service-url-radio"
-              :selected-value="whereToSendTraffic.url"
-              @change="changeCheckedGroup"
-            >
-              {{ t('gateway_services.form.sections.keys.urlLabel') }}
-            </KRadio>
-          </div>
-
-          <div
-            v-if="checkedGroup === 'url'"
-            class="gateway-service-form-group-fields"
-          >
-            <KInput
-              v-model.trim="form.fields.url"
-              class="gateway-service-url-input gateway-service-form-margin-bottom"
-              data-testid="gateway-service-url-input"
-              :label="t('gateway_services.form.fields.upstream_url.label')"
-              :label-attributes="{
-                info: config.app === 'konnect'
-                  ? t('gateway_services.form.fields.upstream_url.tooltip_for_konnect')
-                  : t('gateway_services.form.fields.upstream_url.tooltip_for_km'),
-                tooltipAttributes: { maxWidth: '400' },
-              }"
-              name="url"
-              :placeholder="t('gateway_services.form.fields.upstream_url.placeholder')"
-              required
-            />
-          </div>
-
-          <KRadio
-            v-model="checkedGroup"
-            checked-group="protocol"
-            data-testid="gateway-service-protocol-radio"
-            :selected-value="whereToSendTraffic.protocol"
-            @change="changeCheckedGroup"
-          >
-            {{ t('gateway_services.form.sections.keys.checkedGroupAltLabel') }}
-          </KRadio>
-        </div>
-
-        <div
-          v-if="checkedGroup === 'protocol' || isEditing"
-          class="gateway-service-form-group-fields"
-        >
-          <KSelect
-            v-model="form.fields.protocol"
-            data-testid="gateway-service-protocol-select"
-            :items="gatewayServiceProtocolItems"
-            :label="t('gateway_services.form.fields.protocol.label')"
-            :label-attributes="{
-              info: t('gateway_services.form.fields.protocol.tooltip'),
-              tooltipAttributes: { maxWidth: '400' },
-            }"
-            :readonly="form.isReadonly"
-            required
-            width="100%"
-            @selected="(item: any) => handleItemSelect(form.fields.protocol, item)"
-          />
-
-          <KInput
-            v-model.trim="form.fields.host"
-            class="gateway-service-form-margin-top"
-            data-testid="gateway-service-host-input"
-            :label="t('gateway_services.form.fields.host.label')"
-            :label-attributes="{
-              info: t('gateway_services.form.fields.host.tooltip'),
-              tooltipAttributes: { maxWidth: '400' },
-            }"
-            name="host"
-            :placeholder="t('gateway_services.form.fields.host.placeholder')"
-            required
-          />
-
-          <div v-if="setPathAllowed">
-            <KInput
-              v-model.trim="form.fields.path"
-              class="gateway-service-form-margin-top"
-              data-testid="gateway-service-path-input"
-              :label="t('gateway_services.form.fields.path.label')"
-              :label-attributes="{
-                info: t('gateway_services.form.fields.path.tooltip'),
-                tooltipAttributes: { maxWidth: '400' },
-              }"
-              name="path"
-              :placeholder="t('gateway_services.form.fields.path.placeholder')"
-            />
-          </div>
-
-          <KInput
-            v-model="form.fields.port"
-            class="gateway-service-form-margin-top"
-            data-testid="gateway-service-port-input"
-            :label="t('gateway_services.form.fields.port.label')"
-            :label-attributes="{
-              info: t('gateway_services.form.fields.port.tooltip'),
-              tooltipAttributes: { maxWidth: '400' },
-            }"
-            name="port"
-            type="number"
-            @update:model-value="() => {
-              form.fields.port = handleFloatVal(form.fields.port + '')
-            }"
-          />
-        </div>
-
-        <!-- Advanced Fields -->
         <KCollapse
-          v-model="isCollapsed"
-          data-testid="advanced-fields-collapse"
+          data-testid="tags-collapse"
           trigger-alignment="leading"
-          :trigger-label="t('gateway_services.form.sections.keys.viewAdvancedFields')"
+          :trigger-label="t('gateway_services.form.fields.tags.collapse')"
         >
-          <div class="gateway-service-form-margin-top">
-            <div class="gateway-service-form-margin-bottom">
-              <KInput
-                v-model="form.fields.retries"
-                autocomplete="off"
-                data-testid="gateway-service-retries-input"
-                :label="t('gateway_services.form.fields.retries.label')"
-                :label-attributes="{
-                  info: t('gateway_services.form.fields.retries.tooltip'),
-                  tooltipAttributes: { maxWidth: '400' },
-                }"
-                name="retries"
-                :readonly="form.isReadonly"
-                type="number"
-                @update:model-value="() => {
-                  form.fields.retries = handleFloatVal(form.fields.retries + '')
-                }"
-              />
-            </div>
-
-            <div class="gateway-service-form-margin-bottom">
-              <KInput
-                v-model="form.fields.connect_timeout"
-                autocomplete="off"
-                data-testid="gateway-service-connTimeout-input"
-                :label="t('gateway_services.form.fields.connect_timeout.label')"
-                :label-attributes="{
-                  info: t('gateway_services.form.fields.connect_timeout.tooltip'),
-                  tooltipAttributes: { maxWidth: '400' },
-                }"
-                name="connTimeout"
-                :readonly="form.isReadonly"
-                type="number"
-                @update:model-value="() => {
-                  form.fields.connect_timeout = handleFloatVal(form.fields.connect_timeout + '')
-                }"
-              />
-            </div>
-
-            <div class="gateway-service-form-margin-bottom">
-              <KInput
-                v-model="form.fields.write_timeout"
-                autocomplete="off"
-                data-testid="gateway-service-writeTimeout-input"
-                :label="t('gateway_services.form.fields.write_timeout.label')"
-                :label-attributes="{
-                  info: t('gateway_services.form.fields.write_timeout.tooltip'),
-                  tooltipAttributes: { maxWidth: '400' },
-                }"
-                name="writeTimeout"
-                :readonly="form.isReadonly"
-                type="number"
-                @update:model-value="() => {
-                  form.fields.write_timeout = handleFloatVal(form.fields.write_timeout + '')
-                }"
-              />
-            </div>
-
-            <div class="gateway-service-form-margin-bottom">
-              <KInput
-                v-model="form.fields.read_timeout"
-                autocomplete="off"
-                data-testid="gateway-service-readTimeout-input"
-                :label="t('gateway_services.form.fields.read_timeout.label')"
-                :label-attributes="{
-                  info: t('gateway_services.form.fields.read_timeout.tooltip'),
-                  tooltipAttributes: { maxWidth: '400' },
-                }"
-                name="readTimeout"
-                :readonly="form.isReadonly"
-                type="number"
-                @update:model-value="() => {
-                  form.fields.read_timeout = handleFloatVal(form.fields.read_timeout + '')
-                }"
-              />
-            </div>
-
-            <div
-              v-if="showClientCert"
-              class="gateway-service-form-margin-bottom"
-            >
-              <KInput
-                v-model.trim="form.fields.client_certificate"
-                autocomplete="off"
-                data-testid="gateway-service-clientCert-input"
-                :label="t('gateway_services.form.fields.client_certificate.label')"
-                :label-attributes="{
-                  info: t('gateway_services.form.fields.client_certificate.tooltip'),
-                  tooltipAttributes: { maxWidth: '400' },
-                }"
-                name="clientCert"
-                :placeholder="t('gateway_services.form.fields.client_certificate.placeholder')"
-                :readonly="form.isReadonly"
-                type="text"
-              />
-            </div>
-
-            <div
-              v-if="showCaCert"
-              class="gateway-service-form-margin-bottom"
-            >
-              <KInput
-                v-model.trim="form.fields.ca_certificates"
-                autocomplete="off"
-                data-testid="gateway-service-ca-certs-input"
-                :label="t('gateway_services.form.fields.ca_certificates.label')"
-                :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
-                :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
-                :readonly="form.isReadonly"
-                type="text"
-              >
-                <template #label-tooltip>
-                  <i18nT
-                    keypath="gateway_services.form.fields.ca_certificates.tooltip"
-                    scope="global"
-                  >
-                    <template #code1>
-                      <code>{{ t('gateway_services.form.fields.ca_certificates.code1') }}</code>
-                    </template>
-                    <template #code2>
-                      <code>{{ t('gateway_services.form.fields.ca_certificates.code2') }}</code>
-                    </template>
-                  </i18nT>
-                </template>
-              </KInput>
-            </div>
-
-            <div
-              v-if="showTlsVerify"
-              class="gateway-service-form-margin-bottom"
-            >
-              <KCheckbox
-                v-model="form.fields.tls_verify_enabled"
-                data-testid="gateway-service-tls-verify-checkbox"
-                :description="t('gateway_services.form.fields.tls_verify_enabled.help')"
-                :label="t('gateway_services.form.fields.tls_verify_enabled.label')"
-                :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
-              >
-                <template #tooltip>
-                  <i18nT
-                    keypath="gateway_services.form.fields.tls_verify_enabled.tooltip"
-                    scope="global"
-                  >
-                    <template #code1>
-                      <code>{{ t('gateway_services.form.fields.tls_verify_enabled.code1') }}</code>
-                    </template>
-                  </i18nT>
-                </template>
-              </KCheckbox>
-              <div
-                v-if="form.fields.tls_verify_enabled"
-                class="checkbox-aligned-radio"
-              >
-                <KRadio
-                  v-model="form.fields.tls_verify_value"
-                  data-testid="gateway-service-tls-verify-true-option"
-                  :label="t('gateway_services.form.fields.tls_verify_option.true.label')"
-                  :selected-value="true"
-                />
-              </div>
-              <div
-                v-if="form.fields.tls_verify_enabled"
-                class="checkbox-aligned-radio"
-              >
-                <KRadio
-                  v-model="form.fields.tls_verify_value"
-                  data-testid="gateway-service-tls-verify-false-option"
-                  :label="t('gateway_services.form.fields.tls_verify_option.false.label')"
-                  :selected-value="false"
-                />
-              </div>
-            </div>
+          <div class="gateway-service-form-tags">
+            <KInput
+              v-model.trim="form.fields.tags"
+              autocomplete="off"
+              data-testid="gateway-service-tags-input"
+              :help="t('gateway_services.form.fields.tags.help')"
+              :label="t('gateway_services.form.fields.tags.label')"
+              :label-attributes="{
+                info: t('gateway_services.form.fields.tags.tooltip'),
+                tooltipAttributes: { maxWidth: '400' }
+              }"
+              name="tags"
+              :placeholder="t('gateway_services.form.fields.tags.placeholder')"
+              :readonly="form.isReadonly"
+              type="text"
+            />
           </div>
         </KCollapse>
       </EntityFormSection>
@@ -402,6 +425,7 @@ const emit = defineEmits<{
   (e: 'url-valid:error', error: string): void,
   (e: 'loading', isLoading: boolean): void,
   (e: 'model-updated', val: Record<string, any>): void,
+  (e: 'try-sample-api', val: Record<string, any>): void,
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -426,6 +450,12 @@ const props = defineProps({
   },
   /** Whether show or hide EntityFormSection info column */
   hideSectionsInfo: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  /** Whether show or hide Try sample API button */
+  hideTrySampleAPIButton: {
     type: Boolean,
     required: false,
     default: false,
@@ -587,6 +617,10 @@ const changeCheckedGroup = () => {
   form.fields.tls_verify_value = formFieldsOriginal.tls_verify_value
 }
 
+const handleChangeUrl = (): void => {
+  validateUrl()
+}
+
 const validateUrl = (): void => {
   if (form.fields.url && checkedGroup.value === 'url') {
     try {
@@ -615,6 +649,10 @@ const validateUrl = (): void => {
     emit('url-valid:success')
     form.errorMessage = ''
   }
+}
+
+const generateServiceName = (): string => {
+  return 'new-service'
 }
 
 const setPathAllowed = computed(() => {
@@ -850,6 +888,10 @@ watch(form.fields, (newValue) => {
 
 onMounted(() => {
   emit('model-updated', getPayload.value)
+  // generate name if new service
+  if (!isEditing.value) {
+    form.fields.name = generateServiceName()
+  }
 })
 
 defineExpose({
@@ -869,8 +911,23 @@ defineExpose({
     max-width: 300px;
   }
 
+  :deep(.form-section-wrapper) {
+    padding-bottom: $kui-space-110;
+  }
+
   .gateway-service-form-margin-top {
     margin-top: $kui-space-60;
+  }
+
+  .gateway-service-form-advanced-fields {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-60;
+    margin-left: $kui-space-50;
+  }
+
+  .gateway-service-form-tags {
+    margin-left: $kui-space-50;
   }
 
   .gateway-service-form-traffic-label {
@@ -885,17 +942,44 @@ defineExpose({
     }
   }
 
-  .gateway-service-form-group-fields {
-    margin-left: $kui-space-80;
+  .gateway-service-form-general-info {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-80;
   }
 
-  .gateway-service-form-margin-bottom {
-    margin-bottom: $kui-space-60;
+  .gateway-service-form-group-fields {
+    // margin-left: $kui-space-80;
+  }
+
+  .gateway-service-form-group-selection-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: $kui-space-60;
+
+    :deep(.radio-label-wrapper) {
+      height: auto;
+    }
   }
 
   .checkbox-aligned-radio {
     margin: $kui-space-20;
     padding-left: $kui-space-80;
   }
+}
+
+/* Transition styles */
+.slide-fade-enter-active {
+  transition: all 0.5s ease;
+}
+
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(5px);
 }
 </style>
