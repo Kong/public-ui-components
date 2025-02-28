@@ -25,7 +25,7 @@
 </template>
 
 <script lang='ts' setup generic="T">
-import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue'
+import { onMounted, onUnmounted, ref, watch, nextTick, watchEffect } from 'vue'
 import { GridStack } from 'gridstack'
 import type { GridStackNode } from 'gridstack'
 import type { GridSize, GridTile } from 'src/types'
@@ -132,6 +132,13 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
       })
     }
   }
+})
+
+// Keep tilesRef in sync with props.tiles
+watchEffect(() => {
+  props.tiles.forEach(tile => {
+    tilesRef.value.set(`${tile.id}`, tile)
+  })
 })
 
 defineExpose({ removeWidget })
