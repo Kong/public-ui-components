@@ -513,11 +513,11 @@
       },
       "ai-sanitizer": {
         "name": "AI Sanitizer",
-        "description": "Sanitize AI requests and responses to remove sensitive information"
+        "description": "Sanitize personal or sensitive information from prompts before sending to LLM."
       },
       "ai-rag-injector": {
         "name": "AI RAG Injector",
-        "description": "Injects context from a remote source into an AI request"
+        "description": "Attach contextual knowledge from vector databases with flexible template to LLM prompts."
       }
     },
     "fields": {
