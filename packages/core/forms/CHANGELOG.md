@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.2...@kong-ui-public/forms@4.11.3) (2025-02-28)
+
+
+### Bug Fixes
+
+* **forms:** use Number.isFinite ([#1996](https://github.com/Kong/public-ui-components/issues/1996)) ([92a7ec2](https://github.com/Kong/public-ui-components/commit/92a7ec26bbc5898e93191f0b214b9bbdd2e4a55d))
+
+
+
+
+
 ## [4.11.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.1...@kong-ui-public/forms@4.11.2) (2025-02-28)
 
 
