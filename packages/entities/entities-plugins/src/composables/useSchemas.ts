@@ -5,7 +5,6 @@ import { PLUGIN_METADATA } from '../definitions/metadata'
 import { aiPromptDecoratorSchema } from '../definitions/schemas/AIPromptDecorator'
 import { aiPromptTemplateSchema } from '../definitions/schemas/AIPromptTemplate'
 import { aiProxyAdvancedSchema } from '../definitions/schemas/AIProxyAdvanced'
-import { aiRateLimitingAdvancedSchema } from '../definitions/schemas/AIRateLimitingAdvanced'
 import { applicationRegistrationSchema } from '../definitions/schemas/ApplicationRegistration'
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
 import { dataDogSchema } from '../definitions/schemas/Datadog'
@@ -142,10 +141,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'ai-proxy-advanced': {
       ...aiProxyAdvancedSchema,
-    },
-
-    'ai-rate-limiting-advanced': {
-      ...aiRateLimitingAdvancedSchema,
     },
 
     'vault-auth': {
