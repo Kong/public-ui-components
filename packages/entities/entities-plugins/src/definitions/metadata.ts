@@ -701,12 +701,14 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.ai-sanitizer.description',
     isEnterprise: false,
     nameKey: 'plugins.meta.ai-sanitizer.name',
+    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-sanitizer'],
   },
   'ai-rag-injector': {
     descriptionKey: 'plugins.meta.ai-rag-injector.description',
     isEnterprise: false,
     nameKey: 'plugins.meta.ai-rag-injector.name',
+    useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-rag-injector'],
   },
 }
