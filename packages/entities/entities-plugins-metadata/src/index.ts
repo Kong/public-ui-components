@@ -398,15 +398,15 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP: Record<string, {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
   'kafka-consume': {
-    group: PluginGroup.SERVERLESS,
+    group: PluginGroup.TRANSFORMATIONS,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
   'confluent-consume': {
-    group: PluginGroup.SERVERLESS,
+    group: PluginGroup.TRANSFORMATIONS,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
   'request-callout': {
-    group: PluginGroup.SERVERLESS,
+    group: PluginGroup.TRANSFORMATIONS,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
   },
   'ai-sanitizer': {
