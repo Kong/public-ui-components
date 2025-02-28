@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.14.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.14.1...@kong-ui-public/entities-plugins@9.14.2) (2025-02-28)
+
+
+### Bug Fixes
+
+* ai-rate-limiting-advanced new schema ([#1995](https://github.com/Kong/public-ui-components/issues/1995)) ([855f976](https://github.com/Kong/public-ui-components/commit/855f9768750ffae1c175c30d3c7e74df5a3663e7))
+
+
+
+
+
 ## [9.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.14.0...@kong-ui-public/entities-plugins@9.14.1) (2025-02-28)
 
 
