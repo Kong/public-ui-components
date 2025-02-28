@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.0...@kong-ui-public/forms@4.11.1) (2025-02-28)
+
+
+### Bug Fixes
+
+* **plugin-form:** fix redis grouping of ai plugins ([#1993](https://github.com/Kong/public-ui-components/issues/1993)) ([737c474](https://github.com/Kong/public-ui-components/commit/737c474a4101cb768689afb8926def0b748e4f06))
+
+
+
+
+
 # [4.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.11...@kong-ui-public/forms@4.11.0) (2025-02-27)
 
 
