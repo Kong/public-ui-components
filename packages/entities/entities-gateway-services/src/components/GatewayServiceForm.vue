@@ -56,6 +56,8 @@
                 v-model.trim="form.fields.url"
                 class="gateway-service-url-input gateway-service-form-margin-bottom"
                 data-testid="gateway-service-url-input"
+                :error="form.formFieldErrors.url.length > 0"
+                :error-message="form.formFieldErrors.url"
                 :label="t('gateway_services.form.fields.upstream_url.label')"
                 :label-attributes="{
                   info: config.app === 'konnect'
@@ -104,6 +106,8 @@
               v-model.trim="form.fields.host"
               class="gateway-service-form-margin-top"
               data-testid="gateway-service-host-input"
+              :error="form.formFieldErrors.host.length > 0"
+              :error-message="form.formFieldErrors.host"
               :label="t('gateway_services.form.fields.host.label')"
               :label-attributes="{
                 info: t('gateway_services.form.fields.host.tooltip'),
@@ -112,6 +116,7 @@
               name="host"
               :placeholder="t('gateway_services.form.fields.host.placeholder')"
               required
+              @input="handleValidateCustomUrl"
             />
 
             <div v-if="setPathAllowed">
@@ -119,6 +124,8 @@
                 v-model.trim="form.fields.path"
                 class="gateway-service-form-margin-top"
                 data-testid="gateway-service-path-input"
+                :error="form.formFieldErrors.path.length > 0"
+                :error-message="form.formFieldErrors.path"
                 :label="t('gateway_services.form.fields.path.label')"
                 :label-attributes="{
                   info: t('gateway_services.form.fields.path.tooltip'),
@@ -126,6 +133,7 @@
                 }"
                 name="path"
                 :placeholder="t('gateway_services.form.fields.path.placeholder')"
+                @input="handleValidateCustomUrl"
               />
             </div>
 
@@ -133,6 +141,8 @@
               v-model="form.fields.port"
               class="gateway-service-form-margin-top"
               data-testid="gateway-service-port-input"
+              :error="form.formFieldErrors.port.length > 0"
+              :error-message="form.formFieldErrors.port"
               :label="t('gateway_services.form.fields.port.label')"
               :label-attributes="{
                 info: t('gateway_services.form.fields.port.tooltip'),
@@ -140,6 +150,7 @@
               }"
               name="port"
               type="number"
+              @input="handleValidateCustomUrl"
               @update:model-value="() => {
                 form.fields.port = handleFloatVal(form.fields.port + '')
               }"
@@ -498,6 +509,13 @@ const form = reactive<GatewayServiceFormState>({
   },
   isReadonly: false,
   errorMessage: '',
+  formFieldErrors: {
+    host: '',
+    port: '',
+    path: '',
+    url: '',
+    tags: '',
+  },
 })
 
 const formFieldsOriginal = reactive<GatewayServiceFormFields>({
@@ -601,6 +619,7 @@ const handleFloatVal = (oVal: string) => {
 
 const changeCheckedGroup = () => {
   isCollapsed.value = true
+  resetFormFieldErrors()
   form.errorMessage = ''
   form.fields.host = formFieldsOriginal.host
   form.fields.path = formFieldsOriginal.path
@@ -618,8 +637,150 @@ const changeCheckedGroup = () => {
 }
 
 const handleChangeUrl = (): void => {
-  validateUrl()
+  handleValidateFullUrl()
 }
+
+const validateHost = (host: string): string => {
+  // check if host is empty
+  if (!host || host.trim() === '') return 'host cannot be empty'
+
+  // check if a valid host (domain or ip address)
+  const hostnameRegex = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$|^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
+  if (!hostnameRegex.test(host)) return 'invalid host'
+  return ''
+}
+
+const validateProtocol = (protocol: string) => {
+  // check if protocol is empty
+  if (!protocol || protocol.trim() === '') return 'protocol cannot be empty'
+  // strip out the : from protocol
+  protocol = protocol.slice(0,-1)
+  // check if protocol is valid
+  const selectedProtocol = gatewayServiceProtocolItems.find((item)=>{
+    if (item.value === protocol) return item
+    else return undefined
+  })
+
+  if (selectedProtocol === undefined) return 'protocol - value must be one of "http", "https", "grpc", "grpcs", "tcp", "udp", "tls", "tls_passthrough", "ws", "wss"'
+
+  return ''
+}
+
+const validatePort = (port: number | null | undefined | string): string => {
+  // Port is not required, so return empty string if not provided
+  if (port === null || port === undefined || port === '') {
+    return ''
+  }
+
+  // Convert to number if it's a string
+  const portNum = typeof port === 'string' ? parseInt(port, 10) : port
+
+  // Check if port is a valid number
+  if (isNaN(portNum)) {
+    return 'Port must be a number'
+  }
+
+  // Check if port is in valid range (0-65535)
+  if (portNum < 0 || portNum > 65535) {
+    return 'Port must be between 0 and 65535'
+  }
+
+  // Valid port
+  return ''
+}
+
+const validatePath = (path: string | null | undefined): string => {
+  // Path is not required, so return empty string if not provided
+  if (!path || path === '') {
+    return ''
+  }
+
+  // If path exists, it should start with '/'
+  if (!path.startsWith('/')) {
+    return 'Path must begin with /'
+  }
+
+  // This regex matches any character that is NOT allowed by RFC 3986
+  const invalidCharsRegex = /[^A-Za-z0-9\-\._~:\/?#\[\]@!\$&'\(\)\*\+,;=%]/
+
+  if (invalidCharsRegex.test(path)) {
+    return 'Path should not include characters outside of the reserved list of RFC 3986'
+  }
+
+  // Valid path according to RFC 3986
+  return ''
+}
+
+const handleValidateFullUrl = (): void => {
+  // reset the errors
+  resetFormFieldErrors()
+
+  if (form.fields.url.length) {
+    try {
+      // try constructing a url
+      const parsedUrl = new URL(form.fields.url)
+      // url is valid
+
+      // validate protocol
+      const protocolError = validateProtocol(parsedUrl.protocol)
+      if (protocolError) throw new Error(protocolError)
+
+      // validate hostname
+      const hostError = validateHost(parsedUrl.hostname)
+      if (hostError) throw new Error(hostError)
+
+      // validate path
+      const pathError = validatePath(parsedUrl.pathname)
+      if (pathError) throw new Error(pathError)
+
+      // validate port
+      const portError = validatePort(parsedUrl.port)
+      if (portError) throw new Error(portError)
+
+    } catch (error: any) {
+      emit('url-valid:error', error.message || 'URL validation failed')
+      form.formFieldErrors.url = error.message || 'URL validation failed'
+    }
+  }
+}
+
+const handleValidateCustomUrl = (): void => {
+  // validate for the service type custom URL
+// reset the errors
+  resetFormFieldErrors()
+
+  // validate hostname
+  const hostError = validateHost(form.fields.host)
+  if (hostError) form.formFieldErrors.host = hostError
+
+  // validate path
+  const pathError = validatePath(form.fields.path)
+  if (pathError) form.formFieldErrors.path = pathError
+
+  // validate port
+  const portError = validatePort(form.fields.port)
+  if (portError) form.formFieldErrors.port = portError
+}
+
+// // TODO: Fix the error type
+// const handleApiErrorResponse = (error: any) => {
+
+// }
+
+const resetFormFieldErrors = (): void => {
+  form.formFieldErrors = {
+    host: '',
+    port: '',
+    url: '',
+    path: '',
+    tags: '',
+  }
+}
+
+const isFormValid = computed((): boolean => {
+  // check if no errors present
+  return Object.values(form.formFieldErrors).some(error => error !== null && error !== '') && !hasPreValidateError.value
+})
 
 const validateUrl = (): void => {
   if (form.fields.url && checkedGroup.value === 'url') {
@@ -627,7 +788,6 @@ const validateUrl = (): void => {
       const parsedUrl = new URL(form.fields.url)
       // if the URL is parsed successfully, clear error message
       form.errorMessage = ''
-
       // remove the trailing colon appended to parsedUrl.protocol
       form.fields.protocol = parsedUrl.protocol.slice(0, -1)
       form.fields.host = parsedUrl.hostname
@@ -652,7 +812,10 @@ const validateUrl = (): void => {
 }
 
 const generateServiceName = (): string => {
-  return 'new-service'
+  return `new-service-${ new Date()
+    .toISOString()
+    .replace(/\D/g, '')
+    .slice(0, 17)}`
 }
 
 const setPathAllowed = computed(() => {
@@ -698,8 +861,8 @@ const validateName = (input: string): void => {
  * If the form.fields and formFieldsOriginal are equal, always return false
  */
 const canSubmit = computed((): boolean =>
-  (isEditing.value && (JSON.stringify(form.fields) !== JSON.stringify(formFieldsOriginal))) || ((checkedGroup.value === 'url' && !!form.fields.url) ||
-  (checkedGroup.value === 'protocol' && !!form.fields.host)))
+  (isEditing.value && (JSON.stringify(form.fields) !== JSON.stringify(formFieldsOriginal))) || ((checkedGroup.value === 'url' && !!form.fields.url && !isFormValid.value) ||
+  (checkedGroup.value === 'protocol' && !!form.fields.host && !isFormValid.value)))
 
 const initForm = (data: Record<string, any>): void => {
   form.fields.name = data?.name || ''
