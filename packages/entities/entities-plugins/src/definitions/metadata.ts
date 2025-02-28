@@ -679,6 +679,38 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.redirect.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP.redirect,
   },
+  'kafka-consume': {
+    descriptionKey: 'plugins.meta.kafka-consume.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.kafka-consume.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['kafka-consume'],
+  },
+  'confluent-consume': {
+    descriptionKey: 'plugins.meta.confluent-consume.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.confluent-consume.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['confluent-consume'],
+  },
+  'request-callout': {
+    descriptionKey: 'plugins.meta.request-callout.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.request-callout.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['request-callout'],
+  },
+  'ai-sanitizer': {
+    descriptionKey: 'plugins.meta.ai-sanitizer.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-sanitizer.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-sanitizer'],
+  },
+  'ai-rag-injector': {
+    descriptionKey: 'plugins.meta.ai-rag-injector.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-rag-injector.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-rag-injector'],
+  },
 }
 
 /**

@@ -397,6 +397,26 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP: Record<string, {
     group: PluginGroup.TRAFFIC_CONTROL,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
+  'kafka-consume': {
+    group: PluginGroup.TRANSFORMATIONS,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+  },
+  'confluent-consume': {
+    group: PluginGroup.TRANSFORMATIONS,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+  },
+  'request-callout': {
+    group: PluginGroup.TRANSFORMATIONS,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
+  'ai-sanitizer': {
+    group: PluginGroup.AI,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+  },
+  'ai-rag-injector': {
+    group: PluginGroup.AI,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+  },
 }
 
 export * from './types'
