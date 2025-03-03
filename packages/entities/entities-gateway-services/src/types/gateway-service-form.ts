@@ -36,6 +36,14 @@ export interface FormFieldErrors {
   path: string,
   url: string,
   tags: string,
+  retries: string
+  connect_timeout: string
+  write_timeout: string
+  read_timeout: string
+  client_certificate: string
+  ca_certificates: string
+  tls_verify_enabled: string
+  tls_verify_value: string
 }
 
 export interface GatewayServiceFormState {

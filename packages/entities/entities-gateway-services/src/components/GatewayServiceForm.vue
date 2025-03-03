@@ -254,6 +254,7 @@
                   v-model.trim="form.fields.client_certificate"
                   autocomplete="off"
                   data-testid="gateway-service-clientCert-input"
+                  :error="form.formFieldErrors.client_certificate.length > 0"
                   :label="t('gateway_services.form.fields.client_certificate.label')"
                   :label-attributes="{
                     info: t('gateway_services.form.fields.client_certificate.tooltip'),
@@ -274,6 +275,7 @@
                   v-model.trim="form.fields.ca_certificates"
                   autocomplete="off"
                   data-testid="gateway-service-ca-certs-input"
+                  :error="form.formFieldErrors.ca_certificates.length > 0"
                   :label="t('gateway_services.form.fields.ca_certificates.label')"
                   :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
                   :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
@@ -428,6 +430,7 @@ import {
   SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
+import { useDebounceFn } from '@vueuse/core'
 
 const emit = defineEmits<{
   (e: 'update', data: Record<string, any>): void,
@@ -471,12 +474,17 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  sampleApiList: {
+    type: Array,
+    required: false,
+    default: ()=> [],
+  },
 })
 
 const isCollapsed = ref(true)
 const router = useRouter()
 const { i18nT, i18n: { t } } = composables.useI18n()
-const { getMessageFromError } = useErrors()
+const { getMessageFromError, getErrorFieldsFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const validators = useValidators()
 
@@ -515,6 +523,14 @@ const form = reactive<GatewayServiceFormState>({
     path: '',
     url: '',
     tags: '',
+    retries: '',
+    connect_timeout: '',
+    write_timeout: '',
+    read_timeout: '',
+    client_certificate: '',
+    ca_certificates: '',
+    tls_verify_enabled: '',
+    tls_verify_value: '',
   },
 })
 
@@ -711,7 +727,7 @@ const validatePath = (path: string | null | undefined): string => {
   return ''
 }
 
-const handleValidateFullUrl = (): void => {
+const handleValidateFullUrl = useDebounceFn((): void => {
   // reset the errors
   resetFormFieldErrors()
 
@@ -742,9 +758,9 @@ const handleValidateFullUrl = (): void => {
       form.formFieldErrors.url = error.message || 'URL validation failed'
     }
   }
-}
+}, 300)
 
-const handleValidateCustomUrl = (): void => {
+const handleValidateCustomUrl = useDebounceFn((): void => {
   // validate for the service type custom URL
 // reset the errors
   resetFormFieldErrors()
@@ -760,7 +776,7 @@ const handleValidateCustomUrl = (): void => {
   // validate port
   const portError = validatePort(form.fields.port)
   if (portError) form.formFieldErrors.port = portError
-}
+}, 300)
 
 // // TODO: Fix the error type
 // const handleApiErrorResponse = (error: any) => {
@@ -774,6 +790,14 @@ const resetFormFieldErrors = (): void => {
     url: '',
     path: '',
     tags: '',
+    retries: '',
+    connect_timeout: '',
+    write_timeout: '',
+    read_timeout: '',
+    client_certificate: '',
+    ca_certificates: '',
+    tls_verify_enabled: '',
+    tls_verify_value: '',
   }
 }
 
@@ -1032,6 +1056,18 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
     return response
   } catch (error: any) {
     form.errorMessage = getMessageFromError(error)
+    const { fields } = getErrorFieldsFromError(error)
+    if (fields.length) {
+      // display error for each of the fields
+      fields.forEach((errorField) => {
+        const field = errorField.field as string
+        if (field === 'client_certificate.id') {
+          form.formFieldErrors.client_certificate = errorField.message
+        } else if (field === 'ca_certificates[0]') {
+          form.formFieldErrors.ca_certificates = errorField.message
+        }
+      })
+    }
     // Emit the error for the host app
     emit('error', error)
   } finally {
