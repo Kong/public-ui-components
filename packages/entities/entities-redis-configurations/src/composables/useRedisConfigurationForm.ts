@@ -1,5 +1,5 @@
 import { computed, reactive, ref, watch } from 'vue'
-import { EntityBaseFormType, useAxios, useErrors } from '@kong-ui-public/entities-shared'
+import { EntityBaseFormType, useAxios, useErrors, AppType } from '@kong-ui-public/entities-shared'
 import { isEqual } from 'lodash-es'
 
 import { getRedisType, mapRedisTypeToPartialType, standardize as s } from '../helpers'

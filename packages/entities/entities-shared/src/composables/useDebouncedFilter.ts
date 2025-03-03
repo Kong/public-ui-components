@@ -7,6 +7,7 @@ import type {
   KonnectBaseFormConfig,
   MaybeRef, FilterKeys,
 } from '../types'
+import { AppType } from '../types'
 import useAxios from './useAxios'
 import useI18n from './useI18n'
 import useHelpers from './useHelpers'

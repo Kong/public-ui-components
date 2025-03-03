@@ -10,13 +10,13 @@
       <!-- this will only be shown if there are no existing Kong plugins -->
       <template #title>
         <span class="empty-state-title">
-          {{ t("plugins.select.tabs.kong.empty_title") }}
+          {{ t('plugins.select.tabs.kong.empty_title') }}
         </span>
       </template>
 
       <template #default>
         <span class="empty-state-description">
-          {{ t("plugins.select.tabs.kong.empty_description") }}
+          {{ t('plugins.select.tabs.kong.empty_description') }}
         </span>
       </template>
     </KEmptyState>
@@ -25,16 +25,17 @@
       v-if="!props.hideHighlightedPlugins && props.highlightedPlugins.length > 0"
       v-model="isHighlightedPluginsCollapsed"
       :config="config"
-      :name="
-        props.highlightedPluginsTitle || t('plugins.select.highlighted_plugins.title')
-      "
+      :name="props.highlightedPluginsTitle || t('plugins.select.highlighted_plugins.title')"
       :navigate-on-click="navigateOnClick"
       :plugins="props.highlightedPlugins"
       @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
     />
 
     <template v-for="group in PluginGroupArray">
-      <div v-if="displayedPlugins[group]" :key="group">
+      <div
+        v-if="displayedPlugins[group]"
+        :key="group"
+      >
         <PluginSelectGroup
           v-model="shouldCollapsed[group]"
           :config="config"

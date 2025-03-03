@@ -1,4 +1,4 @@
-import { useAxios, type KongManagerConfig, type KonnectConfig } from '@kong-ui-public/entities-shared'
+import { useAxios, AppType, type KongManagerConfig, type KonnectConfig } from '@kong-ui-public/entities-shared'
 import { ref, watch } from 'vue'
 import useSwrv from 'swrv'
 

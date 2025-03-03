@@ -271,6 +271,7 @@
 <script lang="ts" setup>
 import {
   EntityFormSection,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import type { PropType } from 'vue'

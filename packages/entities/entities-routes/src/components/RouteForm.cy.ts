@@ -1,10 +1,9 @@
 import type { KonnectRouteFormConfig, KongManagerRouteFormConfig, RouteFlavors } from '../types'
 import RouteForm from './RouteForm.vue'
 import { route, routeExpressions, services } from '../../fixtures/mockData'
-import { EntityBaseForm } from '@kong-ui-public/entities-shared'
+import { EntityBaseForm, AppType } from '@kong-ui-public/entities-shared'
 import type { RouteHandler } from 'cypress/types/net-stubbing'
 import { HTTP_BASED_PROTOCOLS, STREAM_BASED_PROTOCOLS } from '@kong-ui-public/expressions'
-import { AppType } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'route-list' }
 

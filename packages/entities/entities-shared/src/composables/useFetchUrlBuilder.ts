@@ -3,6 +3,7 @@ import type {
   KongManagerBaseTableConfig,
   KonnectBaseTableConfig,
 } from '../types'
+import { AppType } from '../types'
 import type { MaybeRef } from '../types/utils'
 import type { TableDataFetcherParams } from '@kong/kongponents'
 
