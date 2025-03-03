@@ -91,6 +91,7 @@ export const createI18n = <MessageSource extends Record<string, any>>
    * @returns {String} date formatted like 'Apr 6, 2022 10:50'
    */
   const formatIsoDate = (isoDate: string): string => {
+    console.log('???')
     const date = Date.parse(isoDate) / 1000
 
     // excludes milliseconds with trailing 0s
