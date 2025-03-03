@@ -1,6 +1,6 @@
 // Cypress component test spec file
 import SecretList from './SecretList.vue'
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import { AppType, type FetcherResponse } from '@kong-ui-public/entities-shared'
 import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
   paginate,
@@ -18,7 +18,7 @@ const vaultId = 'vault-id'
 const configStoreId = '123-qwerty-french-dj'
 
 const baseConfigKonnect: KonnectSecretListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   createRoute,

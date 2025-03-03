@@ -187,9 +187,9 @@ export const useRedisConfigurationForm = (options: Options) => {
   const submitUrl = computed<string>(() => {
     let url = `${config.apiBaseUrl}${endpoints.form[config.app][formType.value]}`
 
-    if (config.app === 'konnect') {
+    if (config.app === AppType.Konnect) {
       url = url.replace(/{controlPlaneId}/gi, config?.controlPlaneId || '')
-    } else if (config.app === 'kongManager') {
+    } else if (config.app === AppType.KongManager) {
       url = url.replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
     }
 

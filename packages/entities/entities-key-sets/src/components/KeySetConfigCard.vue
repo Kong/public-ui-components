@@ -18,7 +18,11 @@
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import { EntityBaseConfigCard, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import {
+  EntityBaseConfigCard,
+  SupportedEntityType,
+  AppType,
+} from '@kong-ui-public/entities-shared'
 import type {
   KongManagerKeySetEntityConfig,
   KonnectKeySetEntityConfig,
@@ -42,9 +46,9 @@ const props = defineProps({
     type: Object as PropType<KonnectKeySetEntityConfig | KongManagerKeySetEntityConfig>,
     required: true,
     validator: (config: KonnectKeySetEntityConfig | KongManagerKeySetEntityConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       if (!config.entityId) return false
       return true
     },

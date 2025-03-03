@@ -81,7 +81,7 @@
       />
     </template>
 
-    <div v-if="config?.app === 'kongManager'">
+    <div v-if="config?.app === AppType.KongManager">
       <KLabel
         :info="t('upstreams.form.fields.headers.tooltip_active')"
         :tooltip-attributes="{ maxWidth: '250px' }"

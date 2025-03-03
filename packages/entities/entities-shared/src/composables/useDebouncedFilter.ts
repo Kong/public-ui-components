@@ -44,9 +44,9 @@ export default function useDebouncedFilter(
   const url = computed(() => {
     const url = `${config.apiBaseUrl}${unref(baseUrl)}`
 
-    if (config.app === 'konnect') {
+    if (config.app === AppType.Konnect) {
       return url.replace(/{controlPlaneId}/gi, config?.controlPlaneId || '')
-    } else if (config.app === 'kongManager') {
+    } else if (config.app === AppType.KongManager) {
       return url.replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
     }
 
@@ -104,7 +104,7 @@ export default function useDebouncedFilter(
         error.value = ''
         validationError.value = ''
 
-        if (config.app === 'konnect') { // KoKo only supports exact match
+        if (config.app === AppType.Konnect) { // KoKo only supports exact match
           // If user has typed info in the query field
           const currUrl = `${url.value}/${query}`
           const { data }: Record<string, any> = await axiosInstance.get(`${currUrl}?size=${size}`)

@@ -28,6 +28,7 @@ import type {
 } from '../../src'
 
 import type { AxiosError } from 'axios'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const route = useRoute()
 const router = useRouter()
@@ -35,13 +36,13 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const partialId = computed((): string => route?.params?.id as string || '')
 
 const konnectConfig: KonnectRedisConfigurationFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
 }
 
 const kongManagerConfig: KongManagerRedisConfigurationFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   cancelRoute: { name: 'redis-configuration-list' },

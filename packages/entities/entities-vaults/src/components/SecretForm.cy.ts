@@ -2,13 +2,14 @@
 import type { KonnectSecretFormConfig } from '../types'
 import SecretForm from './SecretForm.vue'
 import { secret } from '../../fixtures/mockData'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'view-route' }
 const vaultId = 'vault-id'
 const configStoreId = '12345-qwerty'
 
 const baseConfigKonnect: KonnectSecretFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,

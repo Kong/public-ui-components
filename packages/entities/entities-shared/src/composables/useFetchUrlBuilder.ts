@@ -14,7 +14,7 @@ export default function useFetchUrlBuilder(
   const _baseUrl = ref(unref(baseUrl))
 
   const isExactMatch = computed(
-    (): boolean => !!(_config.value.app === 'konnect' || _config.value.isExactMatch),
+    (): boolean => !!(_config.value.app === AppType.Konnect || _config.value.isExactMatch),
   )
 
   // Construct a URL object, adding the current `window.location.origin` if the path begins with a slash

@@ -20,7 +20,7 @@ import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KongManagerConsumerGroupEntityConfig, KonnectConsumerGroupEntityConfig, ConsumerGroupConfigurationSchema } from '../types'
-import { EntityBaseConfigCard, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import { EntityBaseConfigCard, SupportedEntityType, AppType } from '@kong-ui-public/entities-shared'
 import endpoints from '../consumer-groups-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -38,9 +38,9 @@ const props = defineProps({
     type: Object as PropType<KonnectConsumerGroupEntityConfig | KongManagerConsumerGroupEntityConfig>,
     required: true,
     validator: (config: KonnectConsumerGroupEntityConfig | KongManagerConsumerGroupEntityConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       if (!config.entityId) return false
       return true
     },

@@ -1,4 +1,4 @@
-import { useStringHelpers } from '@kong-ui-public/entities-shared'
+import { useStringHelpers, AppType } from '@kong-ui-public/entities-shared'
 import type { FGCollapsibleOptions, FGSlots } from '@kong-ui-public/forms'
 import { customFields, getSharedFormName } from '@kong-ui-public/forms'
 import { PLUGIN_METADATA } from '../definitions/metadata'
@@ -52,7 +52,7 @@ export interface Schema {
 }
 
 export interface UseSchemasOptions {
-  app?: 'konnect' | 'kongManager'
+  app?: AppType
 
   /**
    * The id of the entity associated with the plugin.
@@ -159,7 +159,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       ...rateLimitingSchema,
     },
 
-    'rate-limiting-advanced': options?.app === 'kongManager'
+    'rate-limiting-advanced': options?.app === AppType.KongManager
       ? {
         'config-consumer_groups': rateLimitingSchema['config-consumer_groups'],
       }

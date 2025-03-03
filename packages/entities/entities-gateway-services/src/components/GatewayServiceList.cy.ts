@@ -1,5 +1,5 @@
-// Cypress component test spec file
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+
+import { type FetcherResponse, AppType } from '@kong-ui-public/entities-shared'
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import type { KongManagerGatewayServiceListConfig, KonnectGatewayServiceListConfig } from '../types'
@@ -18,7 +18,7 @@ describe('<GatewayServiceList />', () => {
   const createRoute = 'create-gateway-service'
 
   const baseConfigKM: KongManagerGatewayServiceListConfig = {
-    app: 'kongManager',
+    app: AppType.KongManager,
     workspace: 'default',
     apiBaseUrl: '/kong-manager',
     isExactMatch: false,
@@ -29,7 +29,7 @@ describe('<GatewayServiceList />', () => {
   }
 
   const baseConfigKonnect: KonnectGatewayServiceListConfig = {
-    app: 'konnect',
+    app: AppType.Konnect,
     controlPlaneId: '1234-abcd-ilove-cats',
     apiBaseUrl: '/us/kong-api',
     createRoute,
