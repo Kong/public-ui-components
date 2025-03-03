@@ -72,7 +72,7 @@ jobs:
       # See 'changed_packages' below
       - name: Check for config file changes
         id: config-files-changed
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@dcc7a0cba800f454d79fff4b993e8c3555bcc0a8 # v45.0.7
         with:
           files: |
             ./vite.config.shared.ts
