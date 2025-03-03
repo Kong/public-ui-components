@@ -24,6 +24,7 @@ import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectKeyFormConfig, KongManagerKeyFormConfig } from '../../src'
 import { KeyForm } from '../../src'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 defineProps({
   /** Grab the Key id from the route params */
@@ -46,7 +47,7 @@ const keySetId = computed(() => {
 })
 
 const konnectConfig = ref<KonnectKeyFormConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
@@ -54,7 +55,7 @@ const konnectConfig = ref<KonnectKeyFormConfig>({
 })
 
 const kongManagerConfig = ref<KongManagerKeyFormConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   cancelRoute: { name: 'key-list' },

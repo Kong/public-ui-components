@@ -1,8 +1,7 @@
 // Cypress component test spec file
 import ConsumerCredentialList from './ConsumerCredentialList.vue'
 import { v4 as uuidv4 } from 'uuid'
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
-
+import { AppType,type FetcherResponse } from '@kong-ui-public/entities-shared'
 import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
   paginate,
@@ -20,7 +19,7 @@ const editRoute = 'edit-route'
 const createRoute = 'create-route'
 
 const baseConfigKonnect: KonnectConsumerCredentialListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats-too',
   apiBaseUrl: '/us/kong-api',
   createRoute,
@@ -30,7 +29,7 @@ const baseConfigKonnect: KonnectConsumerCredentialListConfig = {
 }
 
 const baseConfigKM: KongManagerConsumerCredentialListConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   createRoute,

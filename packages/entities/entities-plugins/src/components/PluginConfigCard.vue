@@ -160,6 +160,7 @@ import {
   useErrors,
   useHelpers,
   SupportedEntityType,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import { useSchemaProvider } from '@kong-ui-public/entities-shared'
@@ -184,9 +185,9 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginEntityConfig | KongManagerPluginEntityConfig>,
     required: true,
     validator: (config: KonnectPluginEntityConfig | KongManagerPluginEntityConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       if (!config.entityId || !config.pluginType) return false
       return true
     },
@@ -333,9 +334,9 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const schemaUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].pluginSchema}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 

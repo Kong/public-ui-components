@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import useFetchUrlBuilder from '../useFetchUrlBuilder'
-
+import { AppType } from '@kong-ui-public/entities-shared'
 import type { KongManagerConfig, KonnectConfig } from 'src/types'
 import type { TableDataFetcherParams } from '@kong/kongponents'
 
@@ -8,7 +8,7 @@ describe('useFetchUrlBuilder()', () => {
   it('should apply correct query schema for kongManager when isExactMatch is not activated', () => {
     const config = {
       apiBaseUrl: '/',
-      app: 'kongManager',
+      app: AppType.KongManager,
       workspace: 'default',
       isExactMatch: false,
     } as KongManagerConfig
@@ -30,7 +30,7 @@ describe('useFetchUrlBuilder()', () => {
   it('should apply correct query schema for kongManager when isExactMatch activated', () => {
     const config = {
       apiBaseUrl: '/',
-      app: 'kongManager',
+      app: AppType.KongManager,
       workspace: 'default',
       isExactMatch: true,
     } as KongManagerConfig
@@ -52,7 +52,7 @@ describe('useFetchUrlBuilder()', () => {
   it('should apply correct query schema for konnect when isExactMatch is not activated', () => {
     const config = {
       apiBaseUrl: '/',
-      app: 'konnect',
+      app: AppType.Konnect,
       controlPlaneId: 'default',
     } as KonnectConfig
 
@@ -73,7 +73,7 @@ describe('useFetchUrlBuilder()', () => {
   it('should apply correct query schema for konnect when isExactMatch activated', () => {
     const config = {
       apiBaseUrl: '/',
-      app: 'konnect',
+      app: AppType.Konnect,
       controlPlaneId: 'default',
       isExactMatch: true,
     } as KonnectConfig

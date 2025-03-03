@@ -1,5 +1,5 @@
 // Cypress component test spec file
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import { AppType, type FetcherResponse } from '@kong-ui-public/entities-shared'
 import { v4 as uuidv4 } from 'uuid'
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
@@ -19,7 +19,7 @@ const editRoute = 'edit-route'
 const createRoute = 'create-route'
 
 const baseConfigKonnect: KonnectRouteListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   createRoute,
@@ -28,7 +28,7 @@ const baseConfigKonnect: KonnectRouteListConfig = {
 }
 
 const baseConfigKM: KongManagerRouteListConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   isExactMatch: false,

@@ -39,6 +39,7 @@ import { nextTick, ref, computed, onMounted, onUnmounted } from 'vue'
 import composables from '../../composables'
 import PluginSelectCard from './PluginSelectCard.vue'
 import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType } from '../../types'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const isCollapsed = defineModel<boolean>({ required: true })
 
@@ -48,7 +49,7 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
     required: true,
     validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.getCreateRoute) return false
       return true
     },

@@ -192,6 +192,7 @@ import {
   useFetcher,
   useDeleteUrlBuilder,
   TableTags,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import type {
   CredentialPlugins,
@@ -221,7 +222,7 @@ const props = defineProps({
     type: Object as PropType<KonnectConsumerCredentialListConfig | KongManagerConsumerCredentialListConfig>,
     required: true,
     validator: (config: KonnectConsumerCredentialListConfig | KongManagerConsumerCredentialListConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.createRoute || !config.getEditRoute) return false
       return true
     },
@@ -312,12 +313,12 @@ const tableHeaders = computed<BaseTableHeaders>(() => fields[props.config.plugin
 const fetcherBaseUrl = computed((): string => {
   let url: string = `${props.config.apiBaseUrl}${endpoints.list[props.config.app]}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url
       .replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
       .replace(/{consumerId}/gi, props.config.consumerId || '')
       .replace(/{plugin}/gi, props.config.plugin || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url
       .replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
       .replace(/{consumerId}/gi, props.config.consumerId || '')

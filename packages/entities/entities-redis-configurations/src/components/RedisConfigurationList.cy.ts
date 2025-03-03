@@ -3,9 +3,10 @@ import RedisConfigurationList from './RedisConfigurationList.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { partials, links } from '../../fixtures/mockData'
 import { v4 as uuidv4 } from 'uuid'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const baseConfigKM: KongManagerRedisConfigurationListConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   createRoute: { name: 'redis-configuration-create' },
@@ -14,7 +15,7 @@ const baseConfigKM: KongManagerRedisConfigurationListConfig = {
 }
 
 const baseConfigKonnect: KonnectRedisConfigurationListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: 'test-control-plane-id',
   apiBaseUrl: '/us/kong-api',
   createRoute: { name: 'redis-configuration-create' },
@@ -25,7 +26,7 @@ const baseConfigKonnect: KonnectRedisConfigurationListConfig = {
 describe('<RedisConfigurationList />', () => {
 
   function interceptList({
-    app = 'Kong Manager',
+    app = AppType.KongManager,
     status = 200,
     body = partials,
   }: {
@@ -33,7 +34,7 @@ describe('<RedisConfigurationList />', () => {
     status?: number
     body?: any
   } = {}) {
-    if (app === 'Kong Manager') {
+    if (app === AppType.KongManager) {
       cy.intercept({
         method: 'GET',
         url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/partials*`,
@@ -53,11 +54,11 @@ describe('<RedisConfigurationList />', () => {
   }
 
   function interceptLinkedPlugins({
-    app = 'Kong Manager',
+    app = AppType.KongManager,
   }: {
     app?: string
   } = {}) {
-    if (app === 'Kong Manager') {
+    if (app === AppType.KongManager) {
       cy.intercept({
         method: 'GET',
         url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/partials/*/links*`,
@@ -160,7 +161,7 @@ describe('<RedisConfigurationList />', () => {
     }
   })
 
-  for (const app of ['Kong Manager', 'Konnect']) {
+  for (const app of [AppType.KongManager, AppType.Konnect]) {
     describe(app, () => {
       it('should show empty state and create redis configuration cta', () => {
         interceptList({ app, body: [] })
@@ -168,7 +169,7 @@ describe('<RedisConfigurationList />', () => {
 
         cy.mount(RedisConfigurationList, {
           props: {
-            config: app === 'Kong Manager' ? baseConfigKM : baseConfigKonnect,
+            config: app === AppType.KongManager ? baseConfigKM : baseConfigKonnect,
             cacheIdentifier: uuidv4(),
           },
         })
@@ -184,7 +185,7 @@ describe('<RedisConfigurationList />', () => {
 
         cy.mount(RedisConfigurationList, {
           props: {
-            config: app === 'Kong Manager' ? baseConfigKM : baseConfigKonnect,
+            config: app === AppType.KongManager ? baseConfigKM : baseConfigKonnect,
             cacheIdentifier: uuidv4(),
             canCreate: () => false,
           },
@@ -200,7 +201,7 @@ describe('<RedisConfigurationList />', () => {
 
         cy.mount(RedisConfigurationList, {
           props: {
-            config: app === 'Kong Manager' ? baseConfigKM : baseConfigKonnect,
+            config: app === AppType.KongManager ? baseConfigKM : baseConfigKonnect,
             cacheIdentifier: uuidv4(),
           },
         })
@@ -217,7 +218,7 @@ describe('<RedisConfigurationList />', () => {
 
         cy.mount(RedisConfigurationList, {
           props: {
-            config: app === 'Kong Manager' ? baseConfigKM : baseConfigKonnect,
+            config: app === AppType.KongManager ? baseConfigKM : baseConfigKonnect,
             cacheIdentifier: uuidv4(),
           },
         })
@@ -232,7 +233,7 @@ describe('<RedisConfigurationList />', () => {
 
         cy.mount(RedisConfigurationList, {
           props: {
-            config: app === 'Kong Manager' ? baseConfigKM : baseConfigKonnect,
+            config: app === AppType.KongManager ? baseConfigKM : baseConfigKonnect,
             cacheIdentifier: uuidv4(),
           },
         })
@@ -255,7 +256,7 @@ describe('<RedisConfigurationList />', () => {
 
         cy.mount(RedisConfigurationList, {
           props: {
-            config: app === 'Kong Manager' ? baseConfigKM : baseConfigKonnect,
+            config: app === AppType.KongManager ? baseConfigKM : baseConfigKonnect,
             cacheIdentifier: uuidv4(),
           },
         })

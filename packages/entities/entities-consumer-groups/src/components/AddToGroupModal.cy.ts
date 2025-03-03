@@ -3,11 +3,12 @@ import type { KongManagerConsumerGroupListConfig, KonnectConsumerGroupListConfig
 import type { ConsumerGroup } from '../../fixtures/mockData'
 import { consumerGroups5 } from '../../fixtures/mockData'
 import { KPrompt } from '@kong/kongponents'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 describe('<AddToGroupModal/>', () => {
   describe('Konnect', () => {
     const configGroupKonnect: KonnectConsumerGroupListConfig = {
-      app: 'konnect',
+      app: AppType.Konnect,
       controlPlaneId: '1234-asdf-asdf-asdf',
       apiBaseUrl: '/us/kong-api',
       createRoute: 'create-consumer-group',
@@ -124,7 +125,7 @@ describe('<AddToGroupModal/>', () => {
 
   describe('Kong Manager', () => {
     const configGroupKM: KongManagerConsumerGroupListConfig = {
-      app: 'kongManager',
+      app: AppType.KongManager,
       workspace: 'default',
       apiBaseUrl: '/kong-manager',
       isExactMatch: false,

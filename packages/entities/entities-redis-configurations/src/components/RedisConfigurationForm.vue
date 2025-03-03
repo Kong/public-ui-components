@@ -413,7 +413,12 @@
 <script setup lang="ts">
 import '@kong-ui-public/entities-shared/dist/style.css'
 import '@kong-ui-public/entities-vaults/dist/style.css'
-import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import {
+  EntityBaseForm,
+  EntityFormSection,
+  SupportedEntityType,
+  AppType,
+} from '@kong-ui-public/entities-shared'
 import { ref, computed, onBeforeMount } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 import { useRouter } from 'vue-router'
@@ -439,9 +444,9 @@ const props = defineProps({
     type: Object as PropType<KonnectRedisConfigurationFormConfig | KongManagerRedisConfigurationFormConfig>,
     required: true,
     validator: (config: KonnectRedisConfigurationFormConfig | KongManagerRedisConfigurationFormConfig) => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config?.app === 'konnect' && !config?.controlPlaneId) return false
-      if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config?.app === AppType.Konnect && !config?.controlPlaneId) return false
+      if (config?.app === AppType.KongManager && typeof config?.workspace !== 'string') return false
       return true
     },
   },

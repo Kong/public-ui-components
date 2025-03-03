@@ -15,6 +15,7 @@ import { useRoute, useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectSecretFormConfig } from '../../src'
 import { SecretForm } from '../../src'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const route = useRoute()
 const router = useRouter()
@@ -24,7 +25,7 @@ const vaultId = computed((): string => route?.params?.vaultId as string || '')
 const secretId = computed((): string => route?.params?.secretId as string || '')
 
 const konnectConfig = ref<KonnectSecretFormConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,

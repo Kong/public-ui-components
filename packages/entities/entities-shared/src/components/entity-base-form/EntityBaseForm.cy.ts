@@ -4,11 +4,12 @@ import type { KonnectBaseFormConfig } from '../../types'
 import { SupportedEntityType } from '../../types'
 import EntityBaseForm from './EntityBaseForm.vue'
 import { route } from '../../../fixtures/mockData'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 describe('<EntityBaseForm />', () => {
   const controlPlaneId = '123abc-ilove-cats'
   const config: KonnectBaseFormConfig = {
-    app: 'konnect',
+    app: AppType.Konnect,
     apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
     // Set the root `.env.development.local` variable to a control plane your PAT can access
     controlPlaneId,

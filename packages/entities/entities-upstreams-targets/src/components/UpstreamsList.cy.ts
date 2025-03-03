@@ -10,7 +10,7 @@ import {
   upstreams,
   upstreams100,
 } from '../../fixtures/mockData'
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import { AppType, type FetcherResponse } from '@kong-ui-public/entities-shared'
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
@@ -20,7 +20,7 @@ const editRoute = 'edit-upstream'
 const createRoute = 'create-upstream'
 
 const baseConfigKM: KongManagerUpstreamsListConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   isExactMatch: false,
@@ -31,7 +31,7 @@ const baseConfigKM: KongManagerUpstreamsListConfig = {
 }
 
 const baseConfigKonnect: KonnectUpstreamsListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-upstreams',
   apiBaseUrl: '/us/kong-api',
   createRoute,

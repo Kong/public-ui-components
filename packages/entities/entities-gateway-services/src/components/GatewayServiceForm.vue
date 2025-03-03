@@ -88,7 +88,7 @@
               data-testid="gateway-service-url-input"
               :label="t('gateway_services.form.fields.upstream_url.label')"
               :label-attributes="{
-                info: config.app === 'konnect'
+                info: config.app === AppType.Konnect
                   ? t('gateway_services.form.fields.upstream_url.tooltip_for_konnect')
                   : t('gateway_services.form.fields.upstream_url.tooltip_for_km'),
                 tooltipAttributes: { maxWidth: '400' },
@@ -392,6 +392,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -411,9 +412,9 @@ const props = defineProps({
     type: Object as PropType<KonnectGatewayServiceFormConfig | KongManagerGatewayServiceFormConfig>,
     required: true,
     validator: (config: KonnectGatewayServiceFormConfig | KongManagerGatewayServiceFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       if (!config.cancelRoute) return false
       return true
     },
@@ -488,7 +489,7 @@ const formFieldsOriginal = reactive<GatewayServiceFormFields>({
   tags: '',
 })
 
-const isWsSupported = props.config.app === 'konnect' || useGatewayFeatureSupported({
+const isWsSupported = props.config.app === AppType.Konnect || useGatewayFeatureSupported({
   gatewayInfo: props.config.gatewayInfo,
   // 'ws' and 'wss' are not valid values for the protocol field in Gateway Community Edition or before Gateway Enterprise Edition 3.0
   supportedRange: {
@@ -694,9 +695,9 @@ const handleClickCancel = (): void => {
 const validateSubmitUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].validate}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
   // Always replace the id when editing
@@ -707,9 +708,9 @@ const validateSubmitUrl = computed<string>(() => {
 const submitUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value]}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
   // Always replace the id when editing
@@ -768,7 +769,7 @@ const getPayload = computed((): Record<string, any> => {
       delete requestBody.host
       delete requestBody.path
       // for validation call
-      if (props.config.app === 'konnect') {
+      if (props.config.app === AppType.Konnect) {
         delete requestBody.port
       }
     } else {
@@ -797,7 +798,7 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
       response = await axiosInstance.post(submitUrl.value, payload)
 
     } else if (formType.value === 'edit') {
-      response = props.config?.app === 'konnect'
+      response = props.config?.app === AppType.Konnect
         // Note: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //       If this changes, the `edit` form methods should be re-evaluated/updated accordingly
         ? await axiosInstance.put(submitUrl.value, payload)

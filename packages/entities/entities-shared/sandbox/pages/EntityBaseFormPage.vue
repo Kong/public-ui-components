@@ -47,14 +47,14 @@
 <script setup lang="ts">
 import { computed, ref, reactive } from 'vue'
 import type { KonnectBaseFormConfig } from '../../src'
-import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '../../src'
+import { EntityBaseForm, EntityFormSection, SupportedEntityType, AppType } from '../../src'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectFetchUrl = ref(`/v2/control-planes/${controlPlaneId}/core-entities/services`)
 const entityType = SupportedEntityType.GatewayService
 
 const konnectConfig = ref<KonnectBaseFormConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,

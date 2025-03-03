@@ -60,6 +60,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -84,7 +85,7 @@ const props = defineProps({
     type: Object as PropType<KonnectSecretFormConfig>,
     required: true,
     validator: (config: KonnectSecretFormConfig): boolean => {
-      if (!config || config.app !== 'konnect') return false
+      if (!config || config.app !== AppType.Konnect) return false
       if (!config.controlPlaneId || !config.cancelRoute) return false
       return true
     },

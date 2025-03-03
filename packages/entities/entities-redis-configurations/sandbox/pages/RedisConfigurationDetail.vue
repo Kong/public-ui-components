@@ -18,19 +18,19 @@ import type {
   KonnectRedisConfigurationEntityConfig,
   KongManagerRedisConfigurationEntityConfig,
 } from '../../src'
-
+import { AppType } from '@kong-ui-public/entities-shared'
 const route = useRoute()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig: KonnectRedisConfigurationEntityConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
   entityId: route.params.id as string,
 }
 
 const kongManagerConfig: KongManagerRedisConfigurationEntityConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   entityId: route.params.id as string,

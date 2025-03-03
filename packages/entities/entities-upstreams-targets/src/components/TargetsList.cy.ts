@@ -10,13 +10,13 @@ import {
   targets,
   targets100,
 } from '../../fixtures/mockData'
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import { AppType, type FetcherResponse } from '@kong-ui-public/entities-shared'
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
 
 const baseConfigKM: KongManagerTargetsListConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   isExactMatch: false,
@@ -26,7 +26,7 @@ const baseConfigKM: KongManagerTargetsListConfig = {
 }
 
 const baseConfigKonnect: KonnectTargetsListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-targets',
   upstreamId: '123-qwerty-french-dj',
   apiBaseUrl: '/us/kong-api',

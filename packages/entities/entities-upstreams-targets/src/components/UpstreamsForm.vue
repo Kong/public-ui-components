@@ -92,6 +92,7 @@ import {
   SupportedEntityType,
   useAxios,
   useErrors,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import UpstreamsFormGeneralInfo from './UpstreamsFormGeneralInfo.vue'
 import UpstreamsFormLoadBalancing from './UpstreamsFormLoadBalancing.vue'
@@ -122,9 +123,9 @@ const props = defineProps({
     type: Object as PropType<KonnectUpstreamsFormConfig | KongManagerUpstreamsFormConfig>,
     required: true,
     validator: (config: KonnectUpstreamsFormConfig | KongManagerUpstreamsFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config?.app === 'konnect' && !config?.controlPlaneId) return false
-      if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config?.app === AppType.Konnect && !config?.controlPlaneId) return false
+      if (config?.app === AppType.KongManager && typeof config?.workspace !== 'string') return false
       if (!config?.cancelRoute) return false
       return true
     },
@@ -310,7 +311,7 @@ const getPayload = computed((): UpstreamFormPayload => {
       result.healthchecks.active.http_path = state.fields.activeHealthCheck.httpPath
     }
 
-    if (props.config?.app === 'kongManager') {
+    if (props.config?.app === AppType.KongManager) {
       if (state.fields.activeHealthCheck.headers.length === 0) {
         result.healthchecks.active.headers = []
       } else {
@@ -371,7 +372,7 @@ const getPayload = computed((): UpstreamFormPayload => {
       result.healthchecks.active.unhealthy.tcp_failures = Number(state.fields.activeHealthCheck.tcpFailures)
     }
   } else {
-    if (props.config?.app === 'kongManager' && formType.value === EntityBaseFormType.Edit) {
+    if (props.config?.app === AppType.KongManager && formType.value === EntityBaseFormType.Edit) {
       result.healthchecks.active = {
         type: state.fields.activeHealthCheck.type,
         headers: {},
@@ -419,7 +420,7 @@ const getPayload = computed((): UpstreamFormPayload => {
       result.healthchecks.passive.unhealthy.tcp_failures = Number(state.fields.passiveHealthCheck.tcpFailures)
     }
   } else {
-    if (props.config?.app === 'kongManager' && formType.value === EntityBaseFormType.Edit) {
+    if (props.config?.app === AppType.KongManager && formType.value === EntityBaseFormType.Edit) {
       result.healthchecks.passive = {
         type: state.fields.passiveHealthCheck.type,
         healthy: {
@@ -440,9 +441,9 @@ const getPayload = computed((): UpstreamFormPayload => {
 const getUrl = (action: UpstreamsFormActions): string => {
   let url = `${props.config?.apiBaseUrl}${endpoints.form[props.config?.app][action]}`
 
-  if (props.config?.app === 'konnect') {
+  if (props.config?.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config?.app === 'kongManager') {
+  } else if (props.config?.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -462,7 +463,7 @@ const submitData = async (): Promise<void> => {
     if (formType.value === EntityBaseFormType.Create) {
       response = await axiosInstance.post(getUrl('create'), getPayload.value)
     } else if (formType.value === EntityBaseFormType.Edit) {
-      response = props.config?.app === 'konnect'
+      response = props.config?.app === AppType.Konnect
         ? await axiosInstance.put(getUrl('edit'), getPayload.value)
         : await axiosInstance.patch(getUrl('edit'), getPayload.value)
     }

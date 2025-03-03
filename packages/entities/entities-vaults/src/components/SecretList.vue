@@ -14,7 +14,7 @@
 import type { PropType } from 'vue'
 import { computed, ref, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
-import { useAxios } from '@kong-ui-public/entities-shared'
+import { useAxios, AppType } from '@kong-ui-public/entities-shared'
 import SecretListInner from './SecretListInner.vue'
 import endpoints from '../secrets-endpoints'
 
@@ -37,7 +37,7 @@ const props = defineProps({
     type: Object as PropType<KonnectSecretListConfig>,
     required: true,
     validator: (config: KonnectSecretListConfig): boolean => {
-      if (!config || config?.app !== 'konnect') return false
+      if (!config || config?.app !== AppType.Konnect) return false
       if (!config.createRoute || !config.getEditRoute) return false
       return true
     },

@@ -78,6 +78,7 @@ import {
   type PluginType,
   type PluginCardList,
 } from '../../types'
+import { AppType } from '@kong-ui-public/entities-shared'
 import composables from '../../composables'
 import PluginSelectCard from '../select/PluginSelectCard.vue'
 import DeleteCustomPluginSchemaModal from './DeleteCustomPluginSchemaModal.vue'
@@ -88,7 +89,7 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
     required: true,
     validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.getCreateRoute) return false
       return true
     },
@@ -147,7 +148,7 @@ const emitPluginData = (plugin: PluginType) => {
 }
 
 const modifiedCustomPlugins = computed((): PluginType[] => {
-  if (props.config.app === 'kongManager') {
+  if (props.config.app === AppType.KongManager) {
     return []
   }
 

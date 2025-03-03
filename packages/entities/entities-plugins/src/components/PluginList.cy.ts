@@ -1,6 +1,6 @@
 // Cypress component test spec file
 import PluginList from './PluginList.vue'
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import { type FetcherResponse, AppType } from '@kong-ui-public/entities-shared'
 import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
   paginate,
@@ -20,7 +20,7 @@ const scopedViewRoute = 'scoped-view-route'
 const configureDynamicOrderingRoute = 'configure-dynamic-ordering-route'
 
 const baseConfigKonnect: KonnectPluginListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-cat-loves-everyone',
   apiBaseUrl: '/us/kong-api',
   createRoute,
@@ -31,7 +31,7 @@ const baseConfigKonnect: KonnectPluginListConfig = {
 }
 
 const baseConfigKM: KongManagerPluginListConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   isExactMatch: false,

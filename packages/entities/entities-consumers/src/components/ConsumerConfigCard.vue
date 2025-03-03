@@ -40,8 +40,17 @@
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import type { AxiosError } from 'axios'
-import type { KongManagerConsumerEntityConfig, KonnectConsumerEntityConfig, ConsumerConfigurationSchema } from '../types'
-import { EntityBaseConfigCard, ConfigurationSchemaSection, SupportedEntityType } from '@kong-ui-public/entities-shared'
+import type {
+  KongManagerConsumerEntityConfig,
+  KonnectConsumerEntityConfig,
+  ConsumerConfigurationSchema,
+} from '../types'
+import {
+  EntityBaseConfigCard,
+  ConfigurationSchemaSection,
+  SupportedEntityType,
+  AppType,
+} from '@kong-ui-public/entities-shared'
 import endpoints from '../consumers-endpoints'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -59,9 +68,9 @@ const props = defineProps({
     type: Object as PropType<KonnectConsumerEntityConfig | KongManagerConsumerEntityConfig>,
     required: true,
     validator: (config: KonnectConsumerEntityConfig | KongManagerConsumerEntityConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       if (!config.entityId) return false
       return true
     },

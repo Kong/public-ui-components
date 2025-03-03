@@ -468,6 +468,7 @@ import {
   useDebouncedFilter,
   useErrors,
   useGatewayFeatureSupported,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import type { SelectItem } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
@@ -522,9 +523,9 @@ const props = defineProps({
     type: Object as PropType<KonnectRouteFormConfig | KongManagerRouteFormConfig>,
     required: true,
     validator: (config: KonnectRouteFormConfig | KongManagerRouteFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config?.app === 'konnect' && !config?.controlPlaneId) return false
-      if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config?.app === AppType.Konnect && !config?.controlPlaneId) return false
+      if (config?.app === AppType.KongManager && typeof config?.workspace !== 'string') return false
       if (!config?.cancelRoute) return false
       return true
     },
@@ -722,7 +723,7 @@ const initialRoutingRulesValues = {
   [RoutingRulesEntities.DESTINATIONS]: [{ ip: '', port: null }] as unknown as Destinations[],
 }
 
-const isWsSupported = props.config.app === 'konnect' || useGatewayFeatureSupported({
+const isWsSupported = props.config.app === AppType.Konnect || useGatewayFeatureSupported({
   gatewayInfo: props.config.gatewayInfo,
   // 'ws' and 'wss' are not valid values for the protocol field in Gateway Community Edition or before Gateway Enterprise Edition 3.0
   supportedRange: {
@@ -1160,11 +1161,11 @@ const changesExist = computed((): boolean => !isEqual(state.fields, originalFiel
 const submitUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value][props.serviceId ? 'forGatewayService' : 'all']}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url
       .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
       .replace(/{serviceId}/gi, props.serviceId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
       .replace(/{serviceId}/gi, props.serviceId || '')
@@ -1284,7 +1285,7 @@ const saveFormData = async (payload?: BaseRoutePayload): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, validPayload)
     } else if (formType.value === 'edit') {
-      response = props.config?.app === 'konnect'
+      response = props.config?.app === AppType.Konnect
         ? await axiosInstance.put(submitUrl.value, validPayload)
         : await axiosInstance.patch(submitUrl.value, validPayload)
     }

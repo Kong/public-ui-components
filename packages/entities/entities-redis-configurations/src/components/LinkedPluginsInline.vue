@@ -23,20 +23,22 @@
 
 <script setup lang="ts">
 import { PluginIcon } from '@kong-ui-public/entities-plugins'
-
 import { useLinkedPlugins } from '../composables/useLinkedPlugins'
-
 import type { PropType } from 'vue'
-import type { KongManagerConfig, KonnectConfig } from '@kong-ui-public/entities-shared'
+import {
+  type KongManagerConfig,
+  type KonnectConfig,
+  AppType,
+} from '@kong-ui-public/entities-shared'
 
 const props = defineProps({
   config: {
     type: Object as PropType<KonnectConfig | KongManagerConfig>,
     required: true,
     validator: (config: KonnectConfig | KongManagerConfig) => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       return true
     },
   },

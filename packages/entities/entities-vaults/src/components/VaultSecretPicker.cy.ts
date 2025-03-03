@@ -1,5 +1,9 @@
 // Cypress component test spec file
-import type { KongManagerConfig, KonnectConfig } from '@kong-ui-public/entities-shared'
+import {
+  AppType,
+  type KongManagerConfig,
+  type KonnectConfig,
+} from '@kong-ui-public/entities-shared'
 import {
   kongManagerVaultsResponse,
   konnectConfigStoreId,
@@ -9,13 +13,13 @@ import {
 import VaultSecretPicker from './VaultSecretPicker.vue'
 
 const baseConfigKonnect: KonnectConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   controlPlaneId: '00000000-0000-0000-0000-000000000000',
 }
 
 const baseConfigKM: KongManagerConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
 }

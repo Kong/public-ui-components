@@ -1,12 +1,12 @@
 import type { KonnectVaultFormConfig, KongManagerVaultFormConfig } from '../types'
 import VaultForm from './VaultForm.vue'
 import { vault } from '../../fixtures/mockData'
-import { EntityBaseForm } from '@kong-ui-public/entities-shared'
+import { EntityBaseForm, AppType } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'vaults-list' }
 
 const baseConfigKonnect: KonnectVaultFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-dogs',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
@@ -16,7 +16,7 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
 }
 
 const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-dogs',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
@@ -26,7 +26,7 @@ const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
 }
 
 const baseConfigKM: KongManagerVaultFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,
@@ -36,7 +36,7 @@ const baseConfigKM: KongManagerVaultFormConfig = {
 }
 
 const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,

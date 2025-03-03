@@ -64,6 +64,7 @@ import type {
 } from '../../src'
 
 import type { AxiosError } from 'axios'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const route = useRoute()
 const router = useRouter()
@@ -77,13 +78,13 @@ const konnectModalActionTeleportTarget = ref<string>()
 const kmModalActionTeleportTarget = ref<string>()
 
 const konnectConfig: KonnectRedisConfigurationFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
 }
 
 const kongManagerConfig: KongManagerRedisConfigurationFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
 }

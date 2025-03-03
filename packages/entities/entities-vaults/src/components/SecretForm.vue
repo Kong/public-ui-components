@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useAxios } from '@kong-ui-public/entities-shared'
+import { useAxios, AppType } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, ref } from 'vue'
@@ -30,7 +30,7 @@ const props = defineProps({
     type: Object as PropType<KonnectSecretFormConfig>,
     required: true,
     validator: (config: KonnectSecretFormConfig): boolean => {
-      if (!config || config.app !== 'konnect') return false
+      if (!config || config.app !== AppType.Konnect) return false
       if (!config.controlPlaneId || !config.cancelRoute) return false
       return true
     },

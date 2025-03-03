@@ -110,6 +110,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -133,9 +134,9 @@ const props = defineProps({
     type: Object as PropType<KonnectConsumerFormConfig | KongManagerConsumerFormConfig>,
     required: true,
     validator: (config: KonnectConsumerFormConfig | KongManagerConsumerFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config?.app === 'konnect' && !config?.controlPlaneId) return false
-      if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config?.app === AppType.Konnect && !config?.controlPlaneId) return false
+      if (config?.app === AppType.KongManager && typeof config?.workspace !== 'string') return false
       if (!config?.cancelRoute) return false
       return true
     },
@@ -207,9 +208,9 @@ const formType = computed((): EntityBaseFormType => props.consumerId
 const getUrl = (action: 'validate' | 'create' | 'edit'): string => {
   let url = `${props.config?.apiBaseUrl}${endpoints.form[props.config?.app][action]}`
 
-  if (props.config?.app === 'konnect') {
+  if (props.config?.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config?.app === 'kongManager') {
+  } else if (props.config?.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -241,7 +242,7 @@ const submitData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(getUrl('create'), payload.value)
     } else if (formType.value === 'edit') {
-      response = props.config?.app === 'konnect'
+      response = props.config?.app === AppType.Konnect
         ? await axiosInstance.put(getUrl('edit'), payload.value)
         : await axiosInstance.patch(getUrl('edit'), payload.value)
     }

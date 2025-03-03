@@ -15,16 +15,17 @@ import schemaCors from '../../fixtures/schemas/cors'
 import schemaMocking from '../../fixtures/schemas/mocking'
 import PluginForm from './PluginForm.vue'
 import { VueFormGenerator } from '../../src'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const baseConfigKonnect: KonnectPluginFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   controlPlaneId: 'abc-123-i-love-cats',
   cancelRoute: { name: 'home' },
 }
 
 const baseConfigKM:KongManagerPluginFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute: { name: 'home' },

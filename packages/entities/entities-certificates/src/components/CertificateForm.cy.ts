@@ -1,5 +1,4 @@
-// Cypress component test spec file
-import { EntityBaseForm } from '@kong-ui-public/entities-shared'
+import { AppType, EntityBaseForm } from '@kong-ui-public/entities-shared'
 import type { CyHttpMessages, RouteHandler } from 'cypress/types/net-stubbing'
 import { certificate1, secp384r1CertKeyPair } from '../../fixtures/mockData'
 import type { KongManagerCertificateFormConfig, KonnectCertificateFormConfig } from '../types'
@@ -9,7 +8,7 @@ const cancelRoute = { name: 'certificates-list' }
 const sniListRoute = { name: 'snis-list' }
 
 const baseConfigKonnect: KonnectCertificateFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
@@ -17,7 +16,7 @@ const baseConfigKonnect: KonnectCertificateFormConfig = {
 }
 
 const baseConfigKM: KongManagerCertificateFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,

@@ -4,6 +4,7 @@ import type {
   KonnectUpstreamsFormConfig,
   UpstreamResponse,
 } from '../src'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 export interface FetcherRawResponse {
   data: any[];
@@ -91,14 +92,14 @@ export const target = {
 export const cancelRoute = { name: 'upstreams-list' }
 
 export const konnectConfig: KonnectUpstreamsFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: 'f0acb165-ff05-4788-aa06-6909b8d1694e',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
 export const KMConfig: KongManagerUpstreamsFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,
@@ -478,7 +479,7 @@ export const upstreamsKMResponseDisableActive: UpstreamResponse = {
 }
 
 export const konnectCardConfig: KonnectUpstreamsEntityConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: 'f0acb165-ff05-4788-aa06-6909b8d1694e',
   apiBaseUrl: '/us/kong-api',
   entityId: '1234',

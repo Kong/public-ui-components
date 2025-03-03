@@ -159,6 +159,7 @@ import {
   EntityBaseConfigCard,
   InternalLinkItem,
   SupportedEntityType,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import endpoints from '../routes-endpoints'
 import composables from '../composables'
@@ -182,9 +183,9 @@ const props = defineProps({
     type: Object as PropType<KonnectRouteEntityConfig | KongManagerRouteEntityConfig>,
     required: true,
     validator: (config: KonnectRouteEntityConfig | KongManagerRouteEntityConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       if (!config.entityId) return false
       return true
     },
@@ -233,11 +234,11 @@ const handleSuccess = async (entity: any) => {
   }
 
   let url = `${props.config.apiBaseUrl}${fetchServiceName.value}`
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url
       .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
       .replace(/{serviceId}/gi, internalServiceId.value || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
       .replace(/{serviceId}/gi, internalServiceId.value || '')

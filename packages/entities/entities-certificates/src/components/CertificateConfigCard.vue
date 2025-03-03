@@ -147,6 +147,7 @@ import {
   SupportedEntityType,
   useStringHelpers,
   useHelpers,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import endpoints from '../certificates-endpoints'
 import composables from '../composables'
@@ -165,9 +166,9 @@ const props = defineProps({
     type: Object as PropType<KonnectCertificateEntityConfig | KongManagerCertificateEntityConfig>,
     required: true,
     validator: (config: KonnectCertificateEntityConfig | KongManagerCertificateEntityConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       if (!config.entityId) return false
       return true
     },
@@ -221,7 +222,7 @@ const configSchema = ref<CertificateConfigurationSchema>({
   tags: {
     tooltip: t('certificates.form.fields.tags.tooltip'),
   },
-  ...(props.config.app === 'kongManager' && {
+  ...(props.config.app === AppType.KongManager && {
     expiry: {
       section: ConfigurationSchemaSection.Basic,
       label: t('certificates.list.table_headers.expiry'),

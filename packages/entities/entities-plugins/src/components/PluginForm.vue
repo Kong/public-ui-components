@@ -145,6 +145,7 @@ import {
   useErrors,
   useHelpers,
   useStringHelpers,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
@@ -197,9 +198,9 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>,
     required: true,
     validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       return true
     },
   },
@@ -342,7 +343,7 @@ const tabs = ref<Tab[]>([
 ])
 
 // terraform only supported in konnect
-if (props.config.app === 'konnect') {
+if (props.config.app === AppType.Konnect) {
   // insert terraform as the second option
   tabs.value.splice(1, 0, {
     title: t('view_configuration.terraform'),
@@ -874,7 +875,7 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
     // Field type is an input, determine input type, such as 'text', or 'number'
     if (initialFormSchema[field].type === 'input') {
-      if (['string', 'number'].includes(typeof initialFormSchema[field].default) && props.config.app === 'konnect') {
+      if (['string', 'number'].includes(typeof initialFormSchema[field].default) && props.config.app === AppType.Konnect) {
         // Konnect API respects default values if the field is not set, so display them in the placeholder
         initialFormSchema[field].placeholder = `Default: ${
           initialFormSchema[field].default === '' ? '<empty string>' : initialFormSchema[field].default
@@ -1148,9 +1149,9 @@ const handleClickCancel = (): void => {
 const validateSubmitUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].validate}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -1172,9 +1173,9 @@ const submitUrl = computed((): string => {
 
   let url = `${props.config.apiBaseUrl}${submitEndpoint}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -1249,7 +1250,7 @@ const saveFormData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, payload)
     } else if (formType.value === 'edit') {
-      response = props.config.app === 'konnect' || pluginPartialType.value
+      response = props.config.app === AppType.Konnect || pluginPartialType.value
         // Note 1: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //         If this changes, the `edit` form methods should be re-evaluated/updated accordingly
         // Note 2: Because Konnect uses PUT, we need to include dynamic ordering in the request body
@@ -1279,9 +1280,9 @@ const schemaUrl = computed((): string => {
 
   let url = `${props.config.apiBaseUrl}${schemaEndpoint}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -1299,7 +1300,7 @@ onBeforeMount(async () => {
 
   try {
     // handling for plugin credentials (Konnect)
-    if (treatAsCredential.value && props.config.app === 'konnect') {
+    if (treatAsCredential.value && props.config.app === AppType.Konnect) {
       // credential schema endpoints don't exist for Konnect, so we use hard-coded schemas
       const pluginType = CREDENTIAL_METADATA[props.pluginType]?.schemaEndpoint
       const data = CREDENTIAL_SCHEMAS[pluginType]
@@ -1335,7 +1336,7 @@ onBeforeMount(async () => {
             defaultFormSchema.protocols.default = defaultValues
 
             // Konnect API respects default values if the field is not set, so display them in the placeholder
-            defaultFormSchema.protocols.placeholder = props.config.app === 'konnect'
+            defaultFormSchema.protocols.placeholder = props.config.app === AppType.Konnect
               ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
                 protocols: defaultValues.join(', '),
               })

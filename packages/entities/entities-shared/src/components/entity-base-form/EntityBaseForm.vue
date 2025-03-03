@@ -123,7 +123,7 @@ import { computed, ref, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
-import { SupportedEntityTypesArray, SupportedEntityType } from '../../types'
+import { SupportedEntityTypesArray, SupportedEntityType, AppType } from '../../types'
 import composables from '../../composables'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
@@ -145,9 +145,9 @@ const props = defineProps({
     type: Object as PropType<KonnectBaseFormConfig | KongManagerBaseFormConfig>,
     required: true,
     validator: (config: KonnectBaseFormConfig | KongManagerBaseFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       return true
     },
   },
@@ -249,9 +249,9 @@ const isToggled = ref(false)
 const fetcherUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${props.fetchUrl}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -305,7 +305,7 @@ const tabs = ref<Tab[]>([
 ])
 
 // terraform is only available for konnect entities and non-Other entity types
-if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.Other) {
+if (props.config.app === AppType.Konnect && props.entityType !== SupportedEntityType.Other) {
   // insert terraform as the third option
   tabs.value.splice(1, 0, {
     title: t('baseForm.configuration.terraform'),

@@ -143,6 +143,7 @@ import {
   useAxios,
   EntityTypes,
   TableTags,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, ref, watch } from 'vue'
@@ -184,9 +185,9 @@ const props = defineProps({
     type: Object as PropType<KonnectTargetsListConfig | KongManagerTargetsListConfig>,
     required: true,
     validator: (config: KonnectTargetsListConfig | KongManagerTargetsListConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.upstreamId) return false
-      if (config.app === 'kongManager' && (typeof config.canMarkHealthy === 'undefined' || typeof config.canMarkUnhealthy === 'undefined')) return false
+      if (config.app === AppType.KongManager && (typeof config.canMarkHealthy === 'undefined' || typeof config.canMarkUnhealthy === 'undefined')) return false
       return true
     },
   },
@@ -227,7 +228,7 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 /**
  * Table Headers
  */
-const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
+const disableSorting = computed((): boolean => props.config.app !== AppType.KongManager || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
   // the Target Address column is non-hidable
   target: { label: t('targets.list.table_headers.target_address'), sortable: true, hidable: false },
@@ -242,11 +243,11 @@ const tableHeaders: BaseTableHeaders = fields
 const fetcherBaseUrl = computed((): string => {
   let url: string = `${props.config.apiBaseUrl}${endpoints.list[props.config.app]}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url
       .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
       .replace(/{upstreamId}/gi, props.config?.upstreamId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
       .replace(/{upstreamId}/gi, props.config?.upstreamId || '')
@@ -338,14 +339,14 @@ const handleEditTarget = (id: string): void => {
  * Health actions - Kong Manager only
  */
 const canMarkHealthy = (target: EntityRow) => {
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     return false
   }
 
   return props.config.canMarkHealthy(target)
 }
 const canMarkUnhealthy = (target: EntityRow) => {
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     return false
   }
 
@@ -454,10 +455,10 @@ const formConfig = computed((): KonnectTargetFormConfig | KongManagerTargetFormC
     ...{
       // Depending on the app, we need to pass in the control plane ID or workspace
       // see KonnectTargetFormConfig and KongManagerTargetFormConfig types
-      ...(props.config.app === 'konnect' && {
+      ...(props.config.app === AppType.Konnect && {
         controlPlaneId: props.config.controlPlaneId,
       }),
-      ...(props.config.app === 'kongManager' && {
+      ...(props.config.app === AppType.KongManager && {
         workspace: props.config.workspace,
       }),
     },

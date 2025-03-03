@@ -72,7 +72,11 @@ import type {
   KongManagerConsumerListConfig,
   KonnectConsumerListConfig,
 } from '../types'
-import { useDebouncedFilter, useAxios } from '@kong-ui-public/entities-shared'
+import {
+  useDebouncedFilter,
+  useAxios,
+  AppType,
+} from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import endpoints from '../consumers-endpoints'
 import type { MultiselectItem } from '@kong/kongponents'
@@ -85,7 +89,7 @@ const props = defineProps({
     type: Object as PropType<KonnectConsumerListConfig | KongManagerConsumerListConfig>,
     required: true,
     validator: (config: KonnectConsumerListConfig | KongManagerConsumerListConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.consumerGroupId) return false
       return true
     },
@@ -222,11 +226,11 @@ const addConsumers = async (): Promise<void> => {
 
 const submitUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].forConsumerGroup}`
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url
       .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
       .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
       .replace(/{consumerGroupId}/gi, props.config?.consumerGroupId || '')

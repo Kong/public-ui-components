@@ -10,13 +10,13 @@
       <!-- this will only be shown if there are no existing Kong plugins -->
       <template #title>
         <span class="empty-state-title">
-          {{ t('plugins.select.tabs.kong.empty_title') }}
+          {{ t("plugins.select.tabs.kong.empty_title") }}
         </span>
       </template>
 
       <template #default>
         <span class="empty-state-description">
-          {{ t('plugins.select.tabs.kong.empty_description') }}
+          {{ t("plugins.select.tabs.kong.empty_description") }}
         </span>
       </template>
     </KEmptyState>
@@ -25,17 +25,16 @@
       v-if="!props.hideHighlightedPlugins && props.highlightedPlugins.length > 0"
       v-model="isHighlightedPluginsCollapsed"
       :config="config"
-      :name="props.highlightedPluginsTitle || t('plugins.select.highlighted_plugins.title')"
+      :name="
+        props.highlightedPluginsTitle || t('plugins.select.highlighted_plugins.title')
+      "
       :navigate-on-click="navigateOnClick"
       :plugins="props.highlightedPlugins"
       @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
     />
 
     <template v-for="group in PluginGroupArray">
-      <div
-        v-if="displayedPlugins[group]"
-        :key="group"
-      >
+      <div v-if="displayedPlugins[group]" :key="group">
         <PluginSelectGroup
           v-model="shouldCollapsed[group]"
           :config="config"
@@ -62,6 +61,7 @@ import {
   type PluginType,
 } from '../../types'
 import PluginSelectGroup from './PluginSelectGroup.vue'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -69,7 +69,7 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
     required: true,
     validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.getCreateRoute) return false
       return true
     },
@@ -128,7 +128,7 @@ const displayedPlugins = computed((): PluginCardList => {
   const kongPlugins = JSON.parse(JSON.stringify(props.pluginList))
 
   // remove custom plugin from original pluginList in Konnect
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     delete kongPlugins[PluginGroup.CUSTOM_PLUGINS]
   }
 

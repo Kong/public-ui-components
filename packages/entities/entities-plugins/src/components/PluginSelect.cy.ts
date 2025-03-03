@@ -12,9 +12,10 @@ import {
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import PluginSelect from './PluginSelect.vue'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const baseConfigKonnect: KonnectPluginSelectConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   controlPlaneId: 'abc-123-i-love-cats',
   getCreateRoute: (plugin: string) => ({
@@ -37,7 +38,7 @@ const baseConfigKonnect: KonnectPluginSelectConfig = {
 }
 
 const baseConfigKM: KongManagerPluginSelectConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   getCreateRoute: (plugin: string) => ({
