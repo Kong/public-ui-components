@@ -41,6 +41,7 @@ import { ConsumerCredentialList } from '../../src'
 import type { KonnectConsumerCredentialListConfig, KongManagerConsumerCredentialListConfig, EntityRow, CopyEventPayload, CredentialPlugins } from '../../src'
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectConsumerId = import.meta.env.VITE_KONNECT_CONSUMER_ID || ''
@@ -51,7 +52,7 @@ const kongManagerConsumerId = import.meta.env.VITE_KONG_MANAGER_CONSUMER_ID || '
 const activePlugin = ref<CredentialPlugins>('basic-auth')
 
 const konnectConfig = computed<KonnectConsumerCredentialListConfig>(() => ({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
@@ -63,7 +64,7 @@ const konnectConfig = computed<KonnectConsumerCredentialListConfig>(() => ({
 }))
 
 const kongManagerConfig = computed<KongManagerConsumerCredentialListConfig>(() => ({
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   // Set the root `.env.development.local` variable to a consumer your PAT can access

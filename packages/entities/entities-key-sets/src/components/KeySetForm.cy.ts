@@ -2,19 +2,19 @@
 import type { KongManagerKeySetFormConfig, KonnectKeySetFormConfig } from '../types'
 import { keySet1 } from '../../fixtures/mockData'
 import KeySetForm from './KeySetForm.vue'
-import { EntityBaseForm } from '@kong-ui-public/entities-shared'
+import { EntityBaseForm, AppType } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'keys-list' }
 
 const baseConfigKonnect: KonnectKeySetFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
 const baseConfigKM: KongManagerKeySetFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,

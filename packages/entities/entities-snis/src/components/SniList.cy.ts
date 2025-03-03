@@ -1,6 +1,6 @@
 // Cypress component test spec file
 import SniList from './SniList.vue'
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import { AppType, type FetcherResponse } from '@kong-ui-public/entities-shared'
 import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
   paginate,
@@ -15,7 +15,7 @@ const editRoute = 'edit-sni'
 const createRoute = 'create-sni'
 
 const baseConfigKonnect: KonnectSniListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   createRoute,
@@ -24,7 +24,7 @@ const baseConfigKonnect: KonnectSniListConfig = {
 }
 
 const baseConfigKM: KongManagerSniListConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   isExactMatch: false,

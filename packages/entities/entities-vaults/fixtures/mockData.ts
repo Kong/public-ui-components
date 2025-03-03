@@ -1,5 +1,6 @@
 // FetcherRawResponse is the raw format of the endpoint's response
 import type { KonnectVaultEntityConfig, EntityRow as VaultEntityRow, SecretEntityRow } from '../src'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 export interface FetcherRawResponse {
   data: any[];
@@ -65,7 +66,7 @@ export const vault = {
 }
 
 export const konnectCardConfig: KonnectVaultEntityConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: 'f0acb165-ff05-4788-aa06-6909b8d1694e',
   apiBaseUrl: '/us/kong-api',
   entityId: '1234',

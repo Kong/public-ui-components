@@ -26,6 +26,7 @@ import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import type { KongManagerConsumerGroupFormConfig, KonnectConsumerGroupFormConfig } from '../../src'
 import type { AxiosError } from 'axios'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const router = useRouter()
 
@@ -41,14 +42,14 @@ defineProps({
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectConsumerGroupFormConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
   cancelRoute: { name: 'consumer-group-list' },
 })
 
 const KMConfig = ref<KongManagerConsumerGroupFormConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   cancelRoute: { name: 'consumer-group-list' },

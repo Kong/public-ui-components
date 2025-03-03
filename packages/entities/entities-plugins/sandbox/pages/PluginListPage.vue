@@ -53,11 +53,12 @@ import { PluginList } from '../../src'
 import type { EntityRow, KongManagerPluginListConfig, KonnectPluginListConfig, CopyEventPayload, ViewRouteType } from '../../src'
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectPluginListConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
@@ -69,7 +70,7 @@ const konnectConfig = ref<KonnectPluginListConfig>({
 })
 
 const kongManagerConfig = ref<KongManagerPluginListConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   // Uncomment to test compatibility with different Gateway editions and versions
   // gatewayInfo: {
   //   edition: 'community',

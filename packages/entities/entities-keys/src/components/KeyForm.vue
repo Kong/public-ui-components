@@ -207,6 +207,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -223,9 +224,9 @@ const props = defineProps({
     type: Object as PropType<KonnectKeyFormConfig | KongManagerKeyFormConfig>,
     required: true,
     validator: (config: KonnectKeyFormConfig | KongManagerKeyFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       if (!config.cancelRoute) return false
       return true
     },
@@ -360,9 +361,9 @@ const handleClickCancel = (): void => {
 const submitUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value][props.keySetId ? 'forKeySet' : 'all']}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -394,7 +395,7 @@ const saveFormData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, requestBody.value)
     } else if (formType.value === 'edit') {
-      response = props.config?.app === 'konnect'
+      response = props.config?.app === AppType.Konnect
         // Note: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //       If this changes, the `edit` form methods should be re-evaluated/updated accordingly
         ? await axiosInstance.put(submitUrl.value, requestBody.value)
@@ -471,7 +472,7 @@ const keySetDropdownFooterText = computed(() => {
     return undefined
   }
 
-  return props.config.app === 'konnect' ? t('keys.form.fields.key_set.footer') : undefined
+  return props.config.app === AppType.Konnect ? t('keys.form.fields.key_set.footer') : undefined
 })
 
 // Create a ref to store valid key set ids

@@ -137,7 +137,12 @@ import {
   type PluginCardList,
   type StreamingCustomPluginSchema,
 } from '../types'
-import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useHelpers,
+  useErrors,
+  AppType,
+} from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
 import PluginCustomGrid from './custom-plugins/PluginCustomGrid.vue'
@@ -149,7 +154,7 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
     required: true,
     validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.getCreateRoute) return false
       return true
     },
@@ -308,7 +313,7 @@ const noSearchResults = computed((): boolean => {
 })
 
 const tabs = computed(() => {
-  return props.config.app === 'konnect'
+  return props.config.app === AppType.Konnect
     ? [{
       hash: '#kong',
       title: t('plugins.select.tabs.kong.title'),
@@ -420,9 +425,9 @@ const buildPluginList = (): PluginCardList => {
 const availablePluginsUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePlugins}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = props.config.gatewayInfo?.edition === 'community'
       ? `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePluginsForOss}`
       : url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
@@ -432,7 +437,7 @@ const availablePluginsUrl = computed((): string => {
 })
 
 const streamingPluginsUrl = computed<string | null>(() => {
-  if (props.config.app === 'konnect' && props.customPluginSupport === 'streaming') {
+  if (props.config.app === AppType.Konnect && props.customPluginSupport === 'streaming') {
     let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].streamingCustomPlugins}`
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
     return url
@@ -445,9 +450,9 @@ const fetchEntityPluginsUrl = computed((): string => {
   if (props.config.entityType && props.config.entityId) {
     let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].forEntity}`
 
-    if (props.config.app === 'konnect') {
+    if (props.config.app === AppType.Konnect) {
       url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-    } else if (props.config.app === 'kongManager') {
+    } else if (props.config.app === AppType.KongManager) {
       url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
     }
 
@@ -501,7 +506,7 @@ onMounted(async () => {
     const { data } = await axiosInstance.get(availablePluginsUrl.value)
 
     // TODO: endpoints temporarily return different formats
-    if (props.config.app === 'konnect') {
+    if (props.config.app === AppType.Konnect) {
       const { names: allAvailablePlugins } = data
       availablePlugins.value = allAvailablePlugins || []
       if (streamingPluginsUrl.value) {
@@ -509,7 +514,7 @@ onMounted(async () => {
         const { data: streamingCustomPluginsData } = await axiosInstance.get<{ data: StreamingCustomPluginSchema[] }>(streamingPluginsUrl.value)
         streamingCustomPlugins.value = streamingCustomPluginsData.data || []
       }
-    } else if (props.config.app === 'kongManager') {
+    } else if (props.config.app === AppType.KongManager) {
       const { plugins: { available_on_server: aPlugins } } = data
       availablePlugins.value = aPlugins ? Object.keys(aPlugins) : []
     }

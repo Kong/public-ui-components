@@ -88,6 +88,7 @@ import {
   useDebouncedFilter,
   useErrors,
   useValidators,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import composables from '../composables'
@@ -100,7 +101,8 @@ import type {
   ConsumerGroupState,
   Consumer,
   KongManagerConsumerGroupFormConfig,
-  KonnectConsumerGroupFormConfig, ConsumerGroupData,
+  KonnectConsumerGroupFormConfig,
+  ConsumerGroupData,
 } from '../types'
 import endpoints from '../consumer-groups-endpoints'
 import type { MultiselectItem } from '@kong/kongponents'
@@ -113,9 +115,9 @@ const props = defineProps({
     type: Object as PropType<KonnectConsumerGroupFormConfig | KongManagerConsumerGroupFormConfig>,
     required: true,
     validator: (config: KonnectConsumerGroupFormConfig | KongManagerConsumerGroupFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config?.app === 'konnect' && !config?.controlPlaneId) return false
-      if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config?.app === AppType.Konnect && !config?.controlPlaneId) return false
+      if (config?.app === AppType.KongManager && typeof config?.workspace !== 'string') return false
       if (!config?.cancelRoute) return false
       return true
     },
@@ -189,9 +191,9 @@ const changesExist = computed((): boolean => JSON.stringify(state.fields) !== JS
 const getUrl = (action: ConsumerGroupActions, groupId = '', consumerId = ''): string => {
   let url = `${props.config?.apiBaseUrl}${endpoints.form[props.config?.app][action]}`
 
-  if (props.config?.app === 'konnect') {
+  if (props.config?.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config?.app === 'kongManager') {
+  } else if (props.config?.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -307,7 +309,7 @@ const createGroup = async (): Promise<void> => {
 
 const updateGroup = async (): Promise<void> => {
   try {
-    if (props.config?.app === 'konnect') {
+    if (props.config?.app === AppType.Konnect) {
       await axiosInstance.put(getUrl('edit'), getPayload.value)
     } else {
       await axiosInstance.patch(getUrl('edit'), getPayload.value)

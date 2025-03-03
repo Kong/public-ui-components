@@ -2,19 +2,19 @@
 import type { KongManagerCertificateFormConfig, KonnectCertificateFormConfig } from '../types'
 import { caCertificate1 } from '../../fixtures/mockData'
 import CACertificateForm from './CACertificateForm.vue'
-import { EntityBaseForm } from '@kong-ui-public/entities-shared'
+import { EntityBaseForm, AppType } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'certificates-list' }
 
 const baseConfigKonnect:KonnectCertificateFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
 const baseConfigKM:KongManagerCertificateFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,

@@ -109,6 +109,7 @@ import {
   type KonnectPluginSelectConfig,
   type PluginType,
 } from '../../types'
+import { AppType } from '@kong-ui-public/entities-shared'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { MoreIcon } from '@kong/icons'
 import composables from '../../composables'
@@ -125,7 +126,7 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
     required: true,
     validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.getCreateRoute) return false
       return true
     },
@@ -156,7 +157,7 @@ const props = defineProps({
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
+const controlPlaneId = computed((): string => props.config.app === AppType.Konnect ? props.config.controlPlaneId : '')
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
 const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && props.navigateOnClick && controlPlaneId.value && (props.canDeleteCustomPlugin || props.canEditCustomPlugin)))
 
@@ -180,24 +181,24 @@ const emitPluginData = (): void => {
  * Custom Plugin logic
  */
 const isCreateCustomPlugin = computed((): boolean => props.plugin.id === 'custom-plugin-create')
-const isCustomPlugin = computed((): boolean => props.config.app === 'konnect' && props.plugin.group === PluginGroup.CUSTOM_PLUGINS)
+const isCustomPlugin = computed((): boolean => props.config.app === AppType.Konnect && props.plugin.group === PluginGroup.CUSTOM_PLUGINS)
 
 const handleCustomDelete = (): void => {
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     emit('custom-plugin-delete')
   }
 }
 
 const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
   const konnectConfig = props.config as KonnectPluginSelectConfig
-  if (props.config.app === 'konnect' && typeof konnectConfig.getCustomEditRoute === 'function' && konnectConfig.getCustomEditRoute) {
+  if (props.config.app === AppType.Konnect && typeof konnectConfig.getCustomEditRoute === 'function' && konnectConfig.getCustomEditRoute) {
     router.push(konnectConfig.getCustomEditRoute(pluginName, type))
   }
 }
 
 const handleCustomClick = (): void => {
   // handle custom plugin card click only
-  if (!isDisabled.value && props.config.app === 'konnect') {
+  if (!isDisabled.value && props.config.app === AppType.Konnect) {
     const konnectConfig = props.config as KonnectPluginSelectConfig
     if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
       router.push(konnectConfig.createCustomRoute)

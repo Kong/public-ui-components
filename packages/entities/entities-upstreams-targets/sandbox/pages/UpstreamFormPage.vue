@@ -26,6 +26,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 import type { KongManagerUpstreamsFormConfig, KonnectUpstreamsFormConfig } from '../../src'
 import type { AxiosError } from 'axios'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const route = useRoute()
 const router = useRouter()
@@ -35,14 +36,14 @@ const upstreamId = computed((): string => route?.params?.id as string || '')
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectUpstreamsFormConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
   cancelRoute: { name: 'upstreams-list' },
 })
 
 const KMConfig = ref<KongManagerUpstreamsFormConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   cancelRoute: { name: 'upstreams-list' },

@@ -2,19 +2,19 @@
 import type { KongManagerSniFormConfig, KonnectSniFormConfig } from '../types'
 import { sni1, certificates } from '../../fixtures/mockData'
 import SniForm from './SniForm.vue'
-import { EntityBaseForm } from '@kong-ui-public/entities-shared'
+import { EntityBaseForm, AppType } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'snis-list' }
 
 const baseConfigKonnect: KonnectSniFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
 const baseConfigKM: KongManagerSniFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,

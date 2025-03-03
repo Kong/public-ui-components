@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { EntityFilter } from '@kong-ui-public/entities-shared'
+import { EntityFilter, AppType } from '@kong-ui-public/entities-shared'
 
 import composables from '../composables'
 import PluginName from './PluginItem.vue'
@@ -55,9 +55,9 @@ const props = defineProps({
     type: Object as PropType<KonnectConfig | KongManagerConfig>,
     required: true,
     validator: (config: KonnectConfig | KongManagerConfig) => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       return true
     },
   },
@@ -118,7 +118,7 @@ const fetcher = async (param: TableDataFetcherParams): Promise<any> => {
 const filterQuery = ref<string>('')
 const filterConfig = computed<ExactMatchFilterConfig | FuzzyMatchFilterConfig>(() => {
   // todo(zehao): filter is not supported in BE yet
-  const isExactMatch = (props.config.app === 'konnect' || props.isExactMatch)
+  const isExactMatch = (props.config.app === AppType.Konnect || props.isExactMatch)
 
   if (isExactMatch) {
     return {

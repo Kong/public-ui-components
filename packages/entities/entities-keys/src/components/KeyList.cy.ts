@@ -1,6 +1,6 @@
 // Cypress component test spec file
 import KeyList from './KeyList.vue'
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import { type FetcherResponse, AppType } from '@kong-ui-public/entities-shared'
 import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
   paginate,
@@ -17,7 +17,7 @@ const editRoute = 'edit-key'
 const createRoute = 'create-key'
 
 const baseConfigKonnect: KonnectKeyListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   createRoute,
@@ -26,7 +26,7 @@ const baseConfigKonnect: KonnectKeyListConfig = {
 }
 
 const baseConfigKM: KongManagerKeyListConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   isExactMatch: false,

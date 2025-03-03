@@ -12,6 +12,7 @@ import type {
 import ConsumerList from './ConsumerList.vue'
 import AddConsumerModal from './AddConsumerModal.vue'
 import { v4 as uuidv4 } from 'uuid'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 describe('<ConsumerList />', () => {
   beforeEach(() => {
@@ -20,7 +21,7 @@ describe('<ConsumerList />', () => {
 
   describe('Kong Manager', () => {
     const baseConfigKM: KongManagerConsumerListConfig = {
-      app: 'kongManager',
+      app: AppType.KongManager,
       workspace: 'default',
       apiBaseUrl: '/kong-manager',
       isExactMatch: false,
@@ -30,7 +31,7 @@ describe('<ConsumerList />', () => {
       getEditRoute: () => 'edit-consumer',
     }
     const configGroupKM: KongManagerConsumerListConfig = {
-      app: 'kongManager',
+      app: AppType.KongManager,
       workspace: 'default',
       apiBaseUrl: '/kong-manager',
       isExactMatch: false,
@@ -647,7 +648,7 @@ describe('<ConsumerList />', () => {
 
   describe('Konnect', () => {
     const baseConfigKonnect: KonnectConsumerListConfig = {
-      app: 'konnect',
+      app: AppType.Konnect,
       controlPlaneId: '1234-abcd-ilove-cats',
       apiBaseUrl: '/us/kong-api',
       createRoute: 'create-consumer',
@@ -655,7 +656,7 @@ describe('<ConsumerList />', () => {
       getEditRoute: () => 'edit-consumer',
     }
     const configGroupKonnect: KonnectConsumerListConfig = {
-      app: 'konnect',
+      app: AppType.Konnect,
       controlPlaneId: '1234-abcd-ilove-cats',
       apiBaseUrl: '/us/kong-api',
       createRoute: 'create-consumer',

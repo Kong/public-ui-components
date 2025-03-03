@@ -69,17 +69,18 @@
 import type { KongManagerConfig, KonnectConfig } from '@kong-ui-public/entities-shared'
 import { ref } from 'vue'
 import VaultSecretPicker from '../../src/components/VaultSecretPicker.vue'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
 })
 
 const kongManagerConfig = ref<KongManagerConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
 })

@@ -507,6 +507,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -558,9 +559,9 @@ const props = defineProps({
     type: Object as PropType<KonnectVaultFormConfig | KongManagerVaultFormConfig>,
     required: true,
     validator: (config: KonnectVaultFormConfig | KongManagerVaultFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config?.app === 'konnect' && !config?.controlPlaneId) return false
-      if (config?.app === 'kongManager' && typeof config?.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config?.app === AppType.Konnect && !config?.controlPlaneId) return false
+      if (config?.app === AppType.KongManager && typeof config?.workspace !== 'string') return false
       if (!config?.cancelRoute) return false
       return true
     },
@@ -772,8 +773,8 @@ const formType = computed((): EntityBaseFormType => props.vaultId
 
 const fetchUrl = computed<string>(() => endpoints.form[props.config?.app]?.edit)
 
-const vaultProviderDisabled = computed<boolean>(() => formType.value === EntityBaseFormType.Edit && props.config.app === 'kongManager')
-const isOtherProvidersSupported = computed<boolean>(() => props.config.app === 'konnect' || useGatewayFeatureSupported({
+const vaultProviderDisabled = computed<boolean>(() => formType.value === EntityBaseFormType.Edit && props.config.app === AppType.KongManager)
+const isOtherProvidersSupported = computed<boolean>(() => props.config.app === AppType.Konnect || useGatewayFeatureSupported({
   gatewayInfo: props.config.gatewayInfo,
   // vault name can only be `env` in Gateway Community Edition
   supportedRange: {
@@ -934,9 +935,9 @@ const changesExist = computed((): boolean => (JSON.stringify(form.fields) !== JS
 const submitUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value]}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -1068,7 +1069,7 @@ const saveFormData = async (): Promise<void> => {
         configStoreId.value = await createConfigStore()
         response = await axiosInstance.put(submitUrl.value, payloadWithConfigStoreId.value)
       } else {
-        response = props.config?.app === 'konnect'
+        response = props.config?.app === AppType.Konnect
           ? await axiosInstance.put(submitUrl.value, payloadWithConfigStoreId.value)
           : await axiosInstance.patch(submitUrl.value, getPayload.value)
       }
