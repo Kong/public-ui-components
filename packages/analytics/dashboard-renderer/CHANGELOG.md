@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.3...@kong-ui-public/dashboard-renderer@1.2.4) (2025-03-03)
+
+
+### Bug Fixes
+
+* keep tiles prop and map synced ([#1997](https://github.com/Kong/public-ui-components/issues/1997)) ([05ee075](https://github.com/Kong/public-ui-components/commit/05ee075b81d585b8ea4e62d57d721ce1125719df))
+
+
+
+
+
 ## [1.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.2...@kong-ui-public/dashboard-renderer@1.2.3) (2025-02-27)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
