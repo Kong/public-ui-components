@@ -140,12 +140,13 @@ const onCopyUuid = async (copyToClipboard: (str: string) => Promise<boolean>): P
       // Match size of copy icon
       padding: $kui-space-10;
     }
+    flex: 1;
   }
 
   .entity-link-label {
     display: inline-block;
     font-weight: $kui-font-weight-regular;
-    max-width: 20ch;
+    max-width: 90%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
