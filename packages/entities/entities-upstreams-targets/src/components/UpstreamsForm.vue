@@ -86,6 +86,9 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, reactive, type PropType } from 'vue'
+import { useRouter } from 'vue-router'
+import type { AxiosError, AxiosResponse } from 'axios'
 import {
   EntityBaseForm,
   EntityBaseFormType,
@@ -99,22 +102,27 @@ import UpstreamsFormHealthChecks from './UpstreamsFormHealthChecks.vue'
 import UpstreamsFormActiveHealthCheck from './UpstreamsFormActiveHealthCheck.vue'
 import UpstreamsFormPassiveHealthCheck from './UpstreamsFormPassiveHealthCheck.vue'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import type { PropType } from 'vue'
-import { computed, reactive } from 'vue'
 import type {
   KongManagerUpstreamsFormConfig,
-  KonnectUpstreamsFormConfig, UpstreamFormFields,
+  KonnectUpstreamsFormConfig,
+  UpstreamFormFields,
   UpstreamFormPayload,
-  UpstreamFormState, UpstreamResponse, UpstreamsFormActions,
+  UpstreamActivePayload,
+  UpstreamPassivePayload,
+  UpstreamFormState,
+  UpstreamResponse,
+  UpstreamsFormActions,
 } from '../types'
 import useHelpers from '../composables/useHelpers'
 import endpoints from '../upstreams-endpoints'
 import {
+  ActiveHealthyHttpStatuses,
+  ActiveUnhealthyHttpStatuses,
+  PassiveHealthyHttpStatuses,
+  PassiveUnhealthyHttpStatuses,
   SlotsMaxNumber,
   SlotsMinNumber,
 } from '../constants'
-import type { AxiosError, AxiosResponse } from 'axios'
-import { useRouter } from 'vue-router'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -235,144 +243,59 @@ const fetchErrorHandler = (err: AxiosError): void => {
   emit('error', err)
 }
 
-const getPayload = computed((): UpstreamFormPayload => {
-  const result: UpstreamFormPayload = {
-    name: state.fields.name,
-    slots: Number(state.fields.slots),
-    algorithm: state.fields.algorithm,
-    hash_on: state.fields.hashOn,
-    hash_fallback: state.fields.hashFallback,
-    healthchecks: {},
-  }
+const getBasePayload = computed((): UpstreamFormPayload => ( {
+  name: state.fields.name,
+  slots: Number(state.fields.slots),
+  algorithm: state.fields.algorithm,
+  hash_on: state.fields.hashOn,
+  hash_fallback: state.fields.hashFallback,
+  healthchecks: {
+    threshold : Number(state.fields.healthchecksThreshold || '0'),
+  },
+  host_header : state.fields.hostHeader || null,
+  client_certificate : state.fields.clientCertificate ? { id: state.fields.clientCertificate } : null,
+}))
 
-  if (state.fields.hostHeader) {
-    result.host_header = state.fields.hostHeader
-  }
-
-  if (state.fields.clientCertificate) {
-    result.client_certificate = { id: state.fields.clientCertificate }
-  }
-
-  if (state.fields.healthchecksThreshold) {
-    result.healthchecks.threshold = Number(state.fields.healthchecksThreshold)
-  }
-
-  if (state.fields.tags) {
-    result.tags = state.fields.tags.split(',')?.map((tag: string) => String(tag || '')
-      .trim())?.filter((tag: string) => tag !== '')
-  }
+const getHashingConfig = computed((): Partial<UpstreamFormPayload> => {
+  const payload: Partial<UpstreamFormPayload> = {}
 
   if (state.fields.hashOn === 'header') {
-    result.hash_on_header = state.fields.hashOnHeader
+    payload.hash_on_header = state.fields.hashOnHeader
   }
 
   if (state.fields.hashOn === 'cookie' || state.fields.hashFallback === 'cookie') {
-    result.hash_on_cookie = state.fields.hashOnCookie
-    result.hash_on_cookie_path = state.fields.hashOnCookiePath
+    payload.hash_on_cookie = state.fields.hashOnCookie
+    payload.hash_on_cookie_path = state.fields.hashOnCookiePath
   }
 
   if (state.fields.hashOn === 'query_arg') {
-    result.hash_on_query_arg = state.fields.hashOnQueryArgument
+    payload.hash_on_query_arg = state.fields.hashOnQueryArgument
   }
 
   if (state.fields.hashOn === 'uri_capture') {
-    result.hash_on_uri_capture = state.fields.hashOnUriCapture
+    payload.hash_on_uri_capture = state.fields.hashOnUriCapture
   }
 
   if (state.fields.hashFallback === 'header') {
-    result.hash_fallback_header = state.fields.hashFallbackHeader
+    payload.hash_fallback_header = state.fields.hashFallbackHeader
   }
 
   if (state.fields.hashFallback === 'query_arg') {
-    result.hash_fallback_query_arg = state.fields.hashFallbackQueryArgument
+    payload.hash_fallback_query_arg = state.fields.hashFallbackQueryArgument
   }
 
   if (state.fields.hashFallback === 'uri_capture') {
-    result.hash_fallback_uri_capture = state.fields.hashFallbackUriCapture
+    payload.hash_fallback_uri_capture = state.fields.hashFallbackUriCapture
   }
 
-  if (state.fields.activeHealthSwitch) {
-    result.healthchecks.active = {
-      type: state.fields.activeHealthCheck.type,
-      healthy: {},
-      unhealthy: {},
-    }
+  return payload
+})
 
-    if (state.fields.activeHealthCheck.timeout) {
-      result.healthchecks.active.timeout = Number(state.fields.activeHealthCheck.timeout)
-    }
-
-    if (state.fields.activeHealthCheck.concurrency) {
-      result.healthchecks.active.concurrency = Number(state.fields.activeHealthCheck.concurrency)
-    }
-
-    if (state.fields.activeHealthCheck.type !== 'tcp' && state.fields.activeHealthCheck.httpPath) {
-      result.healthchecks.active.http_path = state.fields.activeHealthCheck.httpPath
-    }
-
-    if (props.config?.app === 'kongManager') {
-      if (state.fields.activeHealthCheck.headers.length === 0) {
-        result.healthchecks.active.headers = []
-      } else {
-        result.healthchecks.active.headers = state.fields.activeHealthCheck.headers.reduce((obj, item) => {
-          if (item.key) {
-            return {
-              ...obj,
-              [item.key]: item.values.split(',')?.map((val: string) => String(val || '')
-                .trim())?.filter((val: string) => val !== ''),
-            }
-          } else {
-            return {
-              ...obj,
-            }
-          }
-        }, {})
-      }
-    }
-
-    if ((state.fields.activeHealthCheck.type === 'https' || state.fields.activeHealthCheck.type === 'grpcs') &&
-      state.fields.activeHealthCheck.httpsSni) {
-      result.healthchecks.active.https_sni = state.fields.activeHealthCheck.httpsSni
-    }
-
-    if ((state.fields.activeHealthCheck.type === 'https' || state.fields.activeHealthCheck.type === 'grpcs')) {
-      result.healthchecks.active.https_verify_certificate = state.fields.activeHealthCheck.verifySsl
-    }
-
-    if (state.fields.activeHealthCheck.interval) {
-      result.healthchecks.active.healthy.interval = Number(state.fields.activeHealthCheck.interval)
-    }
-
-    if (state.fields.activeHealthCheck.successes) {
-      result.healthchecks.active.healthy.successes = Number(state.fields.activeHealthCheck.successes)
-    }
-
-    if (state.fields.activeHealthCheck.type !== 'tcp' && state.fields.activeHealthCheck.httpStatuses) {
-      result.healthchecks.active.healthy.http_statuses = stringToNumberArray(state.fields.activeHealthCheck.httpStatuses)
-    }
-
-    if (state.fields.activeHealthCheck.unhealthyInterval) {
-      result.healthchecks.active.unhealthy.interval = Number(state.fields.activeHealthCheck.unhealthyInterval)
-    }
-
-    if (state.fields.activeHealthCheck.unhealthyTimeouts) {
-      result.healthchecks.active.unhealthy.timeouts = Number(state.fields.activeHealthCheck.unhealthyTimeouts)
-    }
-
-    if (state.fields.activeHealthCheck.type !== 'tcp' && state.fields.activeHealthCheck.unhealthyHttpStatuses) {
-      result.healthchecks.active.unhealthy.http_statuses = stringToNumberArray(state.fields.activeHealthCheck.unhealthyHttpStatuses)
-    }
-
-    if (state.fields.activeHealthCheck.type !== 'tcp' && state.fields.activeHealthCheck.httpFailures) {
-      result.healthchecks.active.unhealthy.http_failures = Number(state.fields.activeHealthCheck.httpFailures)
-    }
-
-    if (state.fields.activeHealthCheck.tcpFailures) {
-      result.healthchecks.active.unhealthy.tcp_failures = Number(state.fields.activeHealthCheck.tcpFailures)
-    }
-  } else {
+const getActiveHealthChecks = computed((): UpstreamActivePayload | undefined => {
+  if (!state.fields.activeHealthSwitch) {
+    // Return early if active health checks are disabled
     if (props.config?.app === 'kongManager' && formType.value === EntityBaseFormType.Edit) {
-      result.healthchecks.active = {
+      return {
         type: state.fields.activeHealthCheck.type,
         headers: {},
         healthy: {
@@ -386,45 +309,70 @@ const getPayload = computed((): UpstreamFormPayload => {
         },
       }
     }
+    return undefined
   }
 
-  if (state.fields.passiveHealthSwitch) {
-    result.healthchecks.passive = {
-      type: state.fields.passiveHealthCheck.type,
-      healthy: {},
-      unhealthy: {},
-    }
+  const active: UpstreamActivePayload = {
+    type: state.fields.activeHealthCheck.type,
+    healthy: {
+      interval: Number(state.fields.activeHealthCheck.interval || '0'),
+      successes: Number(state.fields.activeHealthCheck.successes || '5'),
+    },
+    unhealthy: {
+      interval: Number(state.fields.activeHealthCheck.interval || '0'),
+      timeouts: Number(state.fields.activeHealthCheck.successes || '0'),
+      tcp_failures: Number(state.fields.activeHealthCheck.tcpFailures || '5'),
+    },
+    timeout: Number(state.fields.activeHealthCheck.timeout || '1'),
+    concurrency: Number(state.fields.activeHealthCheck.concurrency || '10'),
+  }
 
-    if (state.fields.passiveHealthCheck.successes) {
-      result.healthchecks.passive.healthy.successes = Number(state.fields.passiveHealthCheck.successes)
-    }
+  // Add HTTP-specific configurations
+  if (state.fields.activeHealthCheck.type !== 'tcp') {
+    active.http_path = state.fields.activeHealthCheck.httpPath || '/'
+    active.unhealthy.http_failures = Number(state.fields.activeHealthCheck.httpFailures || '5')
+    // Use default ActiveUnhealthyHttpStatuses if unhealthyHttpStatuses is null, empty, or undefined
+    const unHealthyStatuses = (!state.fields.activeHealthCheck.unhealthyHttpStatuses?.length)
+      ? ActiveUnhealthyHttpStatuses
+      : state.fields.activeHealthCheck.unhealthyHttpStatuses
+    active.unhealthy.http_statuses = stringToNumberArray(unHealthyStatuses)
 
-    if (state.fields.passiveHealthCheck.type !== 'tcp' && state.fields.passiveHealthCheck.httpStatuses) {
-      result.healthchecks.passive.healthy.http_statuses = stringToNumberArray(state.fields.passiveHealthCheck.httpStatuses)
-    }
+    // Use default ActiveHealthyHttpStatuses if httpStatuses is null, empty, or undefined
+    const healthyStatuses = (!state.fields.activeHealthCheck.httpStatuses?.length)
+      ? ActiveHealthyHttpStatuses
+      : state.fields.activeHealthCheck.httpStatuses
+    active.healthy.http_statuses = stringToNumberArray(healthyStatuses)
+  }
 
-    if (state.fields.passiveHealthCheck.timeouts) {
-      result.healthchecks.passive.unhealthy.timeouts = Number(state.fields.passiveHealthCheck.timeouts)
-    }
+  // Add HTTPS/GRPCS specific configurations
+  if (['https', 'grpcs'].includes(state.fields.activeHealthCheck.type)) {
+    active.https_sni = state.fields.activeHealthCheck.httpsSni || null
+    active.https_verify_certificate = state.fields.activeHealthCheck.verifySsl
+  }
 
-    if (state.fields.passiveHealthCheck.type !== 'tcp' && state.fields.passiveHealthCheck.unhealthyHttpStatuses) {
-      result.healthchecks.passive.unhealthy.http_statuses = stringToNumberArray(state.fields.passiveHealthCheck.unhealthyHttpStatuses)
-    }
+  // Add headers for Kong Manager
+  if (props.config?.app === 'kongManager') {
+    active.headers = state.fields.activeHealthCheck.headers.reduce((obj, item) => {
+      if (!item.key) return obj
+      return {
+        ...obj,
+        [item.key]: item.values.split(',')
+          ?.map((val: string) => val.trim())
+          ?.filter(Boolean),
+      }
+    }, {})
+  }
 
-    if (state.fields.passiveHealthCheck.type !== 'tcp' && state.fields.passiveHealthCheck.httpFailures) {
-      result.healthchecks.passive.unhealthy.http_failures = Number(state.fields.passiveHealthCheck.httpFailures)
-    }
+  return active
+})
 
-    if (state.fields.passiveHealthCheck.tcpFailures) {
-      result.healthchecks.passive.unhealthy.tcp_failures = Number(state.fields.passiveHealthCheck.tcpFailures)
-    }
-  } else {
+const getPassiveHealthChecks = computed((): UpstreamPassivePayload | undefined => {
+  if (!state.fields.passiveHealthSwitch) {
+    // Return early if passive health checks are disabled
     if (props.config?.app === 'kongManager' && formType.value === EntityBaseFormType.Edit) {
-      result.healthchecks.passive = {
+      return {
         type: state.fields.passiveHealthCheck.type,
-        healthy: {
-          successes: 0,
-        },
+        healthy: { successes: 0 },
         unhealthy: {
           timeouts: 0,
           tcp_failures: 0,
@@ -432,9 +380,63 @@ const getPayload = computed((): UpstreamFormPayload => {
         },
       }
     }
+    return undefined
   }
 
-  return result
+  const passive: UpstreamPassivePayload = {
+    type: state.fields.passiveHealthCheck.type,
+    healthy: {
+      successes: Number(state.fields.passiveHealthCheck.successes || '0'),
+    },
+    unhealthy: {
+      timeouts: Number(state.fields.passiveHealthCheck.timeouts || '0'),
+      tcp_failures: Number(state.fields.passiveHealthCheck.tcpFailures || '5'),
+    },
+  }
+
+  if (state.fields.passiveHealthCheck.type !== 'tcp') {
+    passive.unhealthy.http_failures = Number(state.fields.passiveHealthCheck.httpFailures || '5')
+    // Use default PassiveHealthyHttpStatuses if httpStatuses is null, empty, or undefined
+    const healthyStatuses = (!state.fields.passiveHealthCheck.httpStatuses?.length)
+      ? PassiveHealthyHttpStatuses
+      : state.fields.passiveHealthCheck.httpStatuses
+    passive.healthy.http_statuses = stringToNumberArray(healthyStatuses)
+
+    // Use default PassiveUnhealthyHttpStatuses if unhealthyHttpStatuses is null, empty, or undefined
+    const unHealthyStatuses = (!state.fields.passiveHealthCheck.unhealthyHttpStatuses?.length)
+      ? PassiveUnhealthyHttpStatuses
+      : state.fields.passiveHealthCheck.unhealthyHttpStatuses
+    passive.unhealthy.http_statuses = stringToNumberArray(unHealthyStatuses)
+  }
+
+  return passive
+})
+
+const getPayload = computed((): UpstreamFormPayload => {
+  const basePayload = getBasePayload.value
+  const active = getActiveHealthChecks.value
+  const passive = getPassiveHealthChecks.value
+
+  const payload: UpstreamFormPayload = {
+    ...basePayload,
+    healthchecks: {
+      ...basePayload.healthchecks,
+      active: active || undefined,
+      passive: passive || undefined,
+    },
+  }
+
+  payload.tags = state.fields.tags
+    ? state.fields.tags.split(',')
+      .map((tag: string) => String(tag || '')
+        .trim())
+      .filter((tag: string) => tag !== '')
+    : []
+
+  // Add hashing configuration
+  Object.assign(payload, getHashingConfig.value)
+
+  return payload
 })
 
 const getUrl = (action: UpstreamsFormActions): string => {

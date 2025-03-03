@@ -100,7 +100,7 @@ export interface UpstreamActivePayload {
   concurrency?: number
   http_path?: string
   headers?: Record<string, string[]> | []
-  https_sni?: string
+  https_sni?: string | null
   https_verify_certificate?: boolean
   healthy: {
     interval?: number
@@ -137,8 +137,8 @@ export interface UpstreamPassivePayload {
 export interface UpstreamFormPayload {
   name: string
   algorithm: UpstreamAlgorithm
-  host_header?: string
-  client_certificate?: { id: string }
+  host_header?: string | null
+  client_certificate?: { id: string } | null
   tags?: string[]
   slots: number
   hash_on: UpstreamHash
