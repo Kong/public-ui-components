@@ -673,7 +673,7 @@ const validateHost = (host: string): string => {
   if (!host || host.trim() === '') return 'host cannot be empty'
 
   // check if a valid host (domain or ip address)
-  const hostnameRegex = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$|^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
+  const hostnameRegex = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9])$|^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
   if (!hostnameRegex.test(host)) return 'invalid host'
   return ''
 }
@@ -729,7 +729,7 @@ const validatePath = (path: string | null | undefined): string => {
   }
 
   // This regex matches any character that is NOT allowed by RFC 3986
-  const invalidCharsRegex = /[^A-Za-z0-9\-\._~:\/?#\[\]@!\$&'\(\)\*\+,;=%]/
+  const invalidCharsRegex = /[^A-Za-z0-9\-._~:/?#[\]@!$&'()*+,;=%]/
 
   if (invalidCharsRegex.test(path)) {
     return 'Path should not include characters outside of the reserved list of RFC 3986'
