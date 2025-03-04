@@ -54,6 +54,7 @@ import type {
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
@@ -307,6 +308,36 @@ const dashboardConfig = ref <DashboardConfig>({
         size: {
           cols: 2,
           rows: 2,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'top_n',
+          chartTitle: 'Top N chart of mock data',
+          description: 'Description',
+          entityLink: 'https://cloud.konghq.tech/us/analytics/entities/{id}',
+        },
+        query: {
+          datasource: 'basic',
+          limit: 3,
+          dimensions: ['route'],
+          time_range: {
+            type: 'relative',
+            time_range: 'current_month',
+          },
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 7,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+          fitToContent: true,
         },
       },
     } satisfies TileConfig,
