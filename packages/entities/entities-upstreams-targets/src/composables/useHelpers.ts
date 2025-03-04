@@ -70,31 +70,39 @@ export default function useHelpers() {
           ? Object.entries(response.healthchecks.active.headers)
             .map(([key, val]) => ({ key, values: val?.join(', ') }))
           : [{ key: '', values: '' }],
-        interval: response?.healthchecks.active?.healthy?.interval?.toString() || '0',
-        successes: response?.healthchecks.active?.healthy?.successes?.toString() || '5',
-        httpStatuses: response?.healthchecks.active?.healthy?.http_statuses
-          ? numberToStringArray(response.healthchecks.active.healthy.http_statuses)
-          : ActiveHealthyHttpStatuses,
-        unhealthyInterval: response?.healthchecks.active?.unhealthy?.interval?.toString() || '0',
-        httpFailures: response?.healthchecks.active?.unhealthy?.http_failures?.toString() || '5',
-        tcpFailures: response?.healthchecks.active?.unhealthy?.tcp_failures?.toString() || '5',
-        unhealthyHttpStatuses: response?.healthchecks.active?.unhealthy?.http_statuses
-          ? numberToStringArray(response.healthchecks.active.unhealthy.http_statuses)
-          : ActiveUnhealthyHttpStatuses,
-        unhealthyTimeouts: response?.healthchecks.active?.unhealthy?.timeouts?.toString() || '0',
+        healthy: {
+          interval: response?.healthchecks.active?.healthy?.interval?.toString() || '0',
+          successes: response?.healthchecks.active?.healthy?.successes?.toString() || '5',
+          httpStatuses: response?.healthchecks.active?.healthy?.http_statuses
+            ? numberToStringArray(response.healthchecks.active.healthy.http_statuses)
+            : ActiveHealthyHttpStatuses,
+        },
+        unhealthy: {
+          interval: response?.healthchecks.active?.unhealthy?.interval?.toString() || '0',
+          httpFailures: response?.healthchecks.active?.unhealthy?.http_failures?.toString() || '5',
+          tcpFailures: response?.healthchecks.active?.unhealthy?.tcp_failures?.toString() || '5',
+          httpStatuses: response?.healthchecks.active?.unhealthy?.http_statuses
+            ? numberToStringArray(response.healthchecks.active.unhealthy.http_statuses)
+            : ActiveUnhealthyHttpStatuses,
+          timeouts: response?.healthchecks.active?.unhealthy?.timeouts?.toString() || '0',
+        },
       },
       passiveHealthCheck: {
         type: response?.healthchecks.passive?.type || 'http',
-        successes: response?.healthchecks.passive?.healthy?.successes?.toString() || '0',
-        httpStatuses: response?.healthchecks.passive?.healthy?.http_statuses
-          ? numberToStringArray(response.healthchecks.passive.healthy.http_statuses)
-          : PassiveHealthyHttpStatuses,
-        timeouts: response?.healthchecks.passive?.unhealthy?.timeouts?.toString() || '0',
-        httpFailures: response?.healthchecks.passive?.unhealthy?.http_failures?.toString() || '5',
-        tcpFailures: response?.healthchecks.passive?.unhealthy?.tcp_failures?.toString() || '5',
-        unhealthyHttpStatuses: response?.healthchecks.passive?.unhealthy?.http_statuses
-          ? numberToStringArray(response.healthchecks.passive.unhealthy.http_statuses)
-          : PassiveUnhealthyHttpStatuses,
+        healthy: {
+          successes: response?.healthchecks.passive?.healthy?.successes?.toString() || '5',
+          httpStatuses: response?.healthchecks.passive?.healthy?.http_statuses
+            ? numberToStringArray(response.healthchecks.passive.healthy.http_statuses)
+            : PassiveHealthyHttpStatuses,
+        },
+        unhealthy: {
+          timeouts: response?.healthchecks.passive?.unhealthy?.timeouts?.toString() || '0',
+          httpFailures: response?.healthchecks.passive?.unhealthy?.http_failures?.toString() || '5',
+          tcpFailures: response?.healthchecks.passive?.unhealthy?.tcp_failures?.toString() || '5',
+          httpStatuses: response?.healthchecks.passive?.unhealthy?.http_statuses
+            ? numberToStringArray(response.healthchecks.passive.unhealthy.http_statuses)
+            : PassiveUnhealthyHttpStatuses,
+        },
       },
     }
 
