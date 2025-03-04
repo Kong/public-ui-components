@@ -4,15 +4,32 @@
     "title": "Title of the header"
   },
   "lifecycle": {
+    "client": {
+      "label": "Client"
+    },
     "client_in": {
       "tooltip": "Time taken for client to read the response from Kong. A high value here may be indicative of a slow network or connectivity issue."
     },
     "client_out": {
       "tooltip": "Time taken for the client to write the request to Kong. A high value here may be indicative of a slow network or connectivity issue."
     },
-    "request": "Request",
-    "response": "Response",
-    "total": "Total"
+    "no_plugins_executed": "No plugins were executed",
+    "request": {
+      "label": "Request"
+    },
+    "response": {
+      "label": "Response"
+    },
+    "total": "Total",
+    "upstream": {
+      "label": "Upstream"
+    },
+    "upstream_in": {
+      "tooltip": "Time taken for the Kong to write the request to upstream. A high value here may be indicative of a slow network or connectivity issue."
+    },
+    "upstream_out": {
+      "tooltip": "Time taken for Kong to read the response from upstream. A high value here may be indicative of a slow network or connectivity issue."
+    }
   },
   "payload": {
     "request_body": "Request body",

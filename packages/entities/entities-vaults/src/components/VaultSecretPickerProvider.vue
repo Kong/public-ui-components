@@ -6,8 +6,8 @@
     >
       <template #cta>
         <span
-          class="vault-secret-picker-provider-action"
-          @click="() => emit('open', props.value, props.update)"
+          :class="{ 'vault-secret-picker-provider-action': true, 'disabled': props.disabled }"
+          @click="() => !props.disabled && emit('open', props.value, props.update)"
         >
           {{ t('vault_secret_picker.provider.cta') }}
         </span>
@@ -21,6 +21,7 @@ import composables from '../composables'
 
 type Props = {
   value: string
+  disabled?: boolean
   update: (value: string) => void
 }
 
@@ -41,6 +42,11 @@ const { i18n: { t }, i18nT } = composables.useI18n()
   &-action {
     color: $kui-color-text-primary;
     cursor: pointer;
+
+    &.disabled {
+      color: $kui-color-text-disabled;
+      cursor: not-allowed;
+    }
   }
 }
 </style>

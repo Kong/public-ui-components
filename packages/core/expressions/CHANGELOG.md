@@ -3,6 +3,65 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.11...@kong-ui-public/expressions@0.9.12) (2025-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.9.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.10...@kong-ui-public/expressions@0.9.11) (2025-02-28)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.9.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.9...@kong-ui-public/expressions@0.9.10) (2025-02-28)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.9.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.8...@kong-ui-public/expressions@0.9.9) (2025-02-28)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.9.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.7...@kong-ui-public/expressions@0.9.8) (2025-02-27)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.6...@kong-ui-public/expressions@0.9.7) (2025-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.9.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.5...@kong-ui-public/expressions@0.9.6) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 ## [0.9.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.4...@kong-ui-public/expressions@0.9.5) (2025-02-18)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

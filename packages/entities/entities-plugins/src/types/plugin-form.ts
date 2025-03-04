@@ -12,7 +12,6 @@ import type { RateLimitingSchema } from './plugins/rate-limiting'
 import type { RouteByHeaderSchema } from './plugins/route-by-header'
 import type { AIPromptDecoratorSchema } from './plugins/ai-prompt-decorator'
 import type { AIPromptTemplateSchema } from './plugins/ai-prompt-template'
-import type { AIRateLimitingAdvancedSchema } from './plugins/ai-rate-limiting-advanced'
 import type { ResponseTransformerSchema } from './plugins/response-transformer'
 import type { ResponseTransformerAdvancedSchema } from './plugins/response-transformer-advanced'
 import type { VaultAuthSchema } from './plugins/vault-auth'
@@ -21,6 +20,8 @@ import type { SAMLSchema } from './plugins/saml'
 import type { OasValidationSchema } from './plugins/oas-validation'
 import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
 import type { InjectionProtectionSchema } from './plugins/injection-protection'
+import type { KafkaUpstreamSchema } from './plugins/kafka-upstream'
+import type { ConfluentSchema } from './plugins/confluent'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -204,7 +205,6 @@ export interface CustomSchemas {
   'ai-prompt-decorator': AIPromptDecoratorSchema
   'ai-prompt-template': AIPromptTemplateSchema
   'ai-proxy-advanced': CommonSchemaFields
-  'ai-rate-limiting-advanced': AIRateLimitingAdvancedSchema
   'vault-auth': VaultAuthSchema
   'graphql-rate-limiting-advanced': GraphQLRateLimitingAdvancedSchema
   'response-ratelimiting': RateLimitingSchema
@@ -218,4 +218,11 @@ export interface CustomSchemas {
   'oas-validation': OasValidationSchema
   'upstream-oauth': UpstreamOauthSchema
   'injection-protection': InjectionProtectionSchema
+  'kafka-upstream': KafkaUpstreamSchema
+  'confluent': ConfluentSchema
+}
+
+export enum PluginPartialType {
+  REDIS_CE = 'redis-ce',
+  REDIS_EE = 'redis-ee',
 }

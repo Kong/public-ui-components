@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.16.1...@kong-ui-public/entities-vaults@3.16.2) (2025-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [3.16.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.16.0...@kong-ui-public/entities-vaults@3.16.1) (2025-02-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+# [3.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.15.1...@kong-ui-public/entities-vaults@3.16.0) (2025-02-26)
+
+
+### Features
+
+* **entities-*:** add redis configuration entity ([#1789](https://github.com/Kong/public-ui-components/issues/1789)) ([b464935](https://github.com/Kong/public-ui-components/commit/b464935aaeb25eba1e16e9a537f4278406c8c7ef))
+
+
+
+
+
+## [3.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.15.0...@kong-ui-public/entities-vaults@3.15.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 # [3.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.14.0...@kong-ui-public/entities-vaults@3.15.0) (2025-02-18)
 
 

@@ -3,6 +3,129 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.16.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.16.0...@kong-ui-public/entities-plugins@9.16.1) (2025-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.15.1...@kong-ui-public/entities-plugins@9.16.0) (2025-03-03)
+
+
+### Features
+
+* **entities-plugins:** add icons and update metadata for several plugins ([#1999](https://github.com/Kong/public-ui-components/issues/1999)) ([f1999a1](https://github.com/Kong/public-ui-components/commit/f1999a1d2cd84bd29cf4883de71de9be9bf3375b))
+
+
+
+
+
+## [9.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.15.0...@kong-ui-public/entities-plugins@9.15.1) (2025-02-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.14.2...@kong-ui-public/entities-plugins@9.15.0) (2025-02-28)
+
+
+### Features
+
+* **entities-plugins:** metadata for new plugins ([#1991](https://github.com/Kong/public-ui-components/issues/1991)) ([415a549](https://github.com/Kong/public-ui-components/commit/415a549d5214698f087e25304d0511200d7e0916))
+
+
+
+
+
+## [9.14.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.14.1...@kong-ui-public/entities-plugins@9.14.2) (2025-02-28)
+
+
+### Bug Fixes
+
+* ai-rate-limiting-advanced new schema ([#1995](https://github.com/Kong/public-ui-components/issues/1995)) ([855f976](https://github.com/Kong/public-ui-components/commit/855f9768750ffae1c175c30d3c7e74df5a3663e7))
+
+
+
+
+
+## [9.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.14.0...@kong-ui-public/entities-plugins@9.14.1) (2025-02-28)
+
+
+### Bug Fixes
+
+* **plugin-form:** fix redis grouping of ai plugins ([#1993](https://github.com/Kong/public-ui-components/issues/1993)) ([737c474](https://github.com/Kong/public-ui-components/commit/737c474a4101cb768689afb8926def0b748e4f06))
+
+
+
+
+
+# [9.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.13.0...@kong-ui-public/entities-plugins@9.14.0) (2025-02-27)
+
+
+### Features
+
+* **gm:** redis plugin adoption ([#1967](https://github.com/Kong/public-ui-components/issues/1967)) ([1a2c5e2](https://github.com/Kong/public-ui-components/commit/1a2c5e27442ee78d34c87bd9d4bea440f1c77a5d))
+
+
+
+
+
+# [9.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.5...@kong-ui-public/entities-plugins@9.13.0) (2025-02-27)
+
+
+### Features
+
+* **entities-plugins:** use textarea for certain fields ([#1989](https://github.com/Kong/public-ui-components/issues/1989)) ([6eb2b00](https://github.com/Kong/public-ui-components/commit/6eb2b00f4d09cee864ec562a41d1537ff0efa357))
+
+
+
+
+
+## [9.12.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.4...@kong-ui-public/entities-plugins@9.12.5) (2025-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.3...@kong-ui-public/entities-plugins@9.12.4) (2025-02-26)
+
+
+### Bug Fixes
+
+* nested fields issues ([#1982](https://github.com/Kong/public-ui-components/issues/1982)) ([007120e](https://github.com/Kong/public-ui-components/commit/007120e9cfa9a70927252e3e655ed526b51354e6))
+
+
+
+
+
+## [9.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.2...@kong-ui-public/entities-plugins@9.12.3) (2025-02-24)
+
+
+### Bug Fixes
+
+* **forms:** array elements are deleted ([#1977](https://github.com/Kong/public-ui-components/issues/1977)) ([f0f0e8d](https://github.com/Kong/public-ui-components/commit/f0f0e8deed61a6369794fea2cee69674b60ac51f))
+
+
+
+
+
+## [9.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.1...@kong-ui-public/entities-plugins@9.12.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 ## [9.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.12.0...@kong-ui-public/entities-plugins@9.12.1) (2025-02-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

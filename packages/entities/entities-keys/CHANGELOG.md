@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.2...@kong-ui-public/entities-keys@3.8.3) (2025-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.1...@kong-ui-public/entities-keys@3.8.2) (2025-02-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.0...@kong-ui-public/entities-keys@3.8.1) (2025-02-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+# [3.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.7.1...@kong-ui-public/entities-keys@3.8.0) (2025-02-26)
+
+
+### Features
+
+* **key-form:** add x5t field in key form ([#1976](https://github.com/Kong/public-ui-components/issues/1976)) ([0a73723](https://github.com/Kong/public-ui-components/commit/0a7372371968bb39494ea3471f2f9870b35c88e1))
+
+
+
+
+
+## [3.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.7.0...@kong-ui-public/entities-keys@3.7.1) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 # [3.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.6.0...@kong-ui-public/entities-keys@3.7.0) (2025-02-18)
 
 

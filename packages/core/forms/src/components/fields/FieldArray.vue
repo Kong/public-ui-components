@@ -229,7 +229,13 @@ export default {
       this.$emit('refreshModel')
     },
     handleInput(val, index) {
-      this.value = this.value.map((item, i) => i === index ? val : item)
+      let formattedVal = val
+      if (this.schema?.inputAttributes?.type === 'number') {
+        if (Number.isFinite(parseFloat(val))) {
+          formattedVal = parseFloat(val)
+        }
+      }
+      this.value = this.value.map((item, i) => i === index ? formattedVal : item)
     },
   },
 }

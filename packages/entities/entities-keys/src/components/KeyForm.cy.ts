@@ -1,6 +1,6 @@
 // Cypress component test spec file
 import type { KongManagerKeyFormConfig, KonnectKeyFormConfig } from '../types'
-import { key1, keySets, kid, jwkString } from '../../fixtures/mockData'
+import { key1, keySets, kid, jwkString, x5t } from '../../fixtures/mockData'
 import KeyForm from './KeyForm.vue'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 
@@ -105,6 +105,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-name').should('be.visible')
       cy.getTestId('key-form-tags').should('be.visible')
       cy.getTestId('key-form-key-set').should('be.visible')
+      cy.getTestId('key-form-x5t').should('not.exist')
       // key sets load in select
       cy.getTestId('key-form-key-set').click()
       cy.getTestId('key-form-key-set').closest('.k-select').find('.select-item').should('have.length', keySets.data.length)
@@ -475,6 +476,33 @@ describe('<KeyForm />', () => {
       cy.get('.kong-ui-entities-keys-form form').should('not.exist')
     })
 
+    it('should show x5t in form when showx5t is passed', () => {
+      interceptKMKeySets()
+      interceptKMCreateKey()
+
+      cy.mount(KeyForm, {
+        props: {
+          config: baseConfigKM,
+          showx5t: true,
+        },
+      })
+
+      cy.wait('@getKeySets')
+      cy.get('.kong-ui-entities-keys-form').should('be.visible')
+      // button state
+      cy.getTestId('key-create-form-cancel').should('be.visible')
+      cy.getTestId('key-create-form-submit').should('be.visible')
+      cy.getTestId('key-create-form-cancel').should('be.enabled')
+      cy.getTestId('key-create-form-submit').should('be.disabled')
+      // form fields
+      cy.getTestId('key-form-x5t').should('be.visible')
+      cy.getTestId('key-form-x5t').type(x5t)
+      cy.getTestId('key-form-id').type(kid)
+      cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
+      cy.getTestId('key-create-form-submit').click()
+      cy.wait('@createKey')
+    })
+
     it('should handle error state - failed to load key sets', () => {
       cy.intercept(
         {
@@ -626,6 +654,7 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-name').should('be.visible')
       cy.getTestId('key-form-tags').should('be.visible')
       cy.getTestId('key-form-key-set').should('be.visible')
+      cy.getTestId('key-form-x5t').should('not.exist')
       // key sets load in select
       cy.getTestId('key-form-key-set').click()
       cy.getTestId('key-form-key-set').closest('.k-select').find('.select-item').should('have.length', keySets.data.length)
@@ -962,6 +991,33 @@ describe('<KeyForm />', () => {
       cy.getTestId('key-form-name').clear()
       cy.getTestId('key-form-name').type(key1.name)
       cy.getTestId('key-edit-form-submit').should('be.disabled')
+    })
+
+    it('should show x5t in form when showx5t is passed', () => {
+      interceptKonnectKeySets()
+      interceptKonnectCreateKey()
+
+      cy.mount(KeyForm, {
+        props: {
+          config: baseConfigKonnect,
+          showx5t: true,
+        },
+      })
+
+      cy.wait('@getKeySets')
+      cy.get('.kong-ui-entities-keys-form').should('be.visible')
+      // button state
+      cy.getTestId('key-create-form-cancel').should('be.visible')
+      cy.getTestId('key-create-form-submit').should('be.visible')
+      cy.getTestId('key-create-form-cancel').should('be.enabled')
+      cy.getTestId('key-create-form-submit').should('be.disabled')
+      // form fields
+      cy.getTestId('key-form-x5t').should('be.visible')
+      cy.getTestId('key-form-x5t').type(x5t)
+      cy.getTestId('key-form-id').type(kid)
+      cy.getTestId('key-form-jwk').type(jwkString, { delay: 0 })
+      cy.getTestId('key-create-form-submit').click()
+      cy.wait('@createKey')
     })
 
     it('should handle error state - failed to load Key', () => {

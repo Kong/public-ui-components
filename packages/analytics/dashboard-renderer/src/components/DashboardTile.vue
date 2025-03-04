@@ -125,6 +125,7 @@ import { MoreIcon, EditIcon } from '@kong/icons'
 import { msToGranularity, type AiExploreAggregations, type AiExploreQuery, type AnalyticsBridge, type ExploreAggregations, type ExploreQuery, type ExploreResultV4, type QueryableAiExploreDimensions, type QueryableExploreDimensions, type TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
+import DoughnutChartRenderer from './DoughnutChartRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -162,11 +163,21 @@ watch(() => props.definition, async () => {
 }, { immediate: true, deep: true })
 
 const exploreLink = computed(() => {
+  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
+  const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
+  // TODO: remove once portal has been added as option in Explore
+  if (filters.some(filter => ('dimension' in filter && filter.dimension === 'portal') ||
+    ('field' in filter && filter.field === 'portal')) ||
+    dimensions.some(dim => dim === 'portal')
+  ) {
+    return ''
+  }
+
   if (queryBridge && queryBridge.exploreBaseUrl) {
     const exploreQuery: ExploreQuery | AiExploreQuery = {
-      filters: [...props.context.filters, ...props.definition.query.filters ?? []],
+      filters: filters,
       metrics: props.definition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
-      dimensions: props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? [],
+      dimensions: dimensions,
       time_range: props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
       granularity: props.definition.query.granularity || chartDataGranularity.value,
 
@@ -193,6 +204,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'horizontal_bar': BarChartRenderer,
   'vertical_bar': BarChartRenderer,
   'gauge': SimpleChartRenderer,
+  'doughnut': DoughnutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
   'slottable': undefined,

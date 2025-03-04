@@ -1,5 +1,6 @@
 import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4 } from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
+import type { Component } from 'vue'
 
 export interface BasicDatasourceQuery {
   datasource: 'basic'
@@ -31,4 +32,6 @@ export interface AnalyticsBridge {
   //  See note in DashboardRenderer tests.
   evaluateFeatureFlagFn: <T = boolean>(key: string, defaultValue: T) => T,
   exploreBaseUrl?: () => string,
+
+  fetchComponent?: (name: string) => Promise<Component>,
 }

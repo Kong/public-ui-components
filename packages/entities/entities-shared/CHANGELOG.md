@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.19.0...@kong-ui-public/entities-shared@3.19.1) (2025-03-04)
+
+
+### Bug Fixes
+
+* entity link truncate on max width 90% ([#2000](https://github.com/Kong/public-ui-components/issues/2000)) ([bba8c6f](https://github.com/Kong/public-ui-components/commit/bba8c6fb8385a4d5fecd03c9a09db7cdd096bce7))
+
+
+
+
+
+# [3.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.18.0...@kong-ui-public/entities-shared@3.19.0) (2025-02-27)
+
+
+### Features
+
+* **gm:** redis plugin adoption ([#1967](https://github.com/Kong/public-ui-components/issues/1967)) ([1a2c5e2](https://github.com/Kong/public-ui-components/commit/1a2c5e27442ee78d34c87bd9d4bea440f1c77a5d))
+
+
+
+
+
+# [3.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.17.2...@kong-ui-public/entities-shared@3.18.0) (2025-02-26)
+
+
+### Features
+
+* **entities-*:** add redis configuration entity ([#1789](https://github.com/Kong/public-ui-components/issues/1789)) ([b464935](https://github.com/Kong/public-ui-components/commit/b464935aaeb25eba1e16e9a537f4278406c8c7ef))
+
+
+
+
+
+## [3.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.17.1...@kong-ui-public/entities-shared@3.17.2) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 ## [3.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.17.0...@kong-ui-public/entities-shared@3.17.1) (2025-02-17)
 
 

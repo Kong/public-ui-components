@@ -14,7 +14,7 @@ const MAPPED_SPAN_NAMES: Record<string, string> = {
   [SPAN_NAMES.KONG_READ_RESPONSE_FROM_UPSTREAM]: SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM,
 }
 
-const compareSpanNode = (a: SpanNode, b: SpanNode) => {
+export const compareSpanNode = (a: SpanNode, b: SpanNode) => {
   if (a.span.startTimeUnixNano !== undefined && b.span.startTimeUnixNano !== undefined) {
     return Number(a.span.startTimeUnixNano - b.span.startTimeUnixNano)
   }

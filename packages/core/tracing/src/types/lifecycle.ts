@@ -13,7 +13,11 @@ export interface LifecycleGraphNodeTree {
     node: LifecycleNode
     children: LifecycleNode[]
   }
-  upstream: LifecycleNode
+  upstream?: {
+    node: LifecycleNode
+    in?: LifecycleNode
+    out?: LifecycleNode
+  }
   responses?: {
     node: LifecycleNode
     children: LifecycleNode[]
@@ -22,16 +26,19 @@ export interface LifecycleGraphNodeTree {
 
 export interface LifecycleNodeData<T extends LifecycleNodeType = LifecycleNodeType> {
   label?: string
+  labelKey?: TranslationKey
   type: T
   badge?: string
   durationNano?: number
   spans?: SpanNode[]
   tree?: LifecycleGraphNodeTree
-  labelPlacement?: `${'top' | 'bottom'} ${'left' | 'right'}`
+  labelPlacement?: 'top' | 'bottom'
   labelTooltipKey?: TranslationKey
   durationTooltipKey?: TranslationKey
   showTargetHandle?: boolean
   showSourceHandle?: boolean
+  emptyGroup?: boolean
+  emptyGroupMessageKey?: TranslationKey
 }
 
 export interface LifecycleNode extends Node<LifecycleNodeData, any, LifecycleNodeType> {

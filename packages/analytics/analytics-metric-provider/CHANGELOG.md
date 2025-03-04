@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.7.1...@kong-ui-public/analytics-metric-provider@8.7.2) (2025-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.7.0...@kong-ui-public/analytics-metric-provider@8.7.1) (2025-02-25)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+# [8.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.6.25...@kong-ui-public/analytics-metric-provider@8.7.0) (2025-02-24)
+
+
+### Features
+
+* **analytics-utilities:** add start/end string as required result set ([#1980](https://github.com/Kong/public-ui-components/issues/1980)) ([22c95eb](https://github.com/Kong/public-ui-components/commit/22c95ebfef24cb01432797e8f45304ecc0343f5e))
+
+
+
+
+
+## [8.6.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.6.24...@kong-ui-public/analytics-metric-provider@8.6.25) (2025-02-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.6.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.6.23...@kong-ui-public/analytics-metric-provider@8.6.24) (2025-02-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.6.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.6.22...@kong-ui-public/analytics-metric-provider@8.6.23) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 ## [8.6.22](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.6.21...@kong-ui-public/analytics-metric-provider@8.6.22) (2025-02-17)
 
 

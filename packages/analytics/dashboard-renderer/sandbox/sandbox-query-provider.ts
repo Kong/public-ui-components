@@ -1,8 +1,9 @@
-import type { Plugin } from 'vue'
+import type { Component, Plugin } from 'vue'
 import { nonTsExploreResponse, routeExploreResponse } from './mock-data'
 import { INJECT_QUERY_PROVIDER } from '../src'
 import { generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsBridge, AnalyticsConfigV2, DatasourceAwareQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import { EntityLink } from '@kong-ui-public/entities-shared'
 
 const delayedResponse = <T>(response: T): Promise<T> => {
   return new Promise((resolve) => {
@@ -57,9 +58,13 @@ const evaluateFeatureFlagFn = () => true
 
 const exploreBaseUrl = () => 'https://cloud.konghq.tech/us/analytics/explorer'
 
+const fetchComponent = async (name: string): Promise<Component> => {
+  return Promise.resolve(EntityLink)
+}
+
 const sandboxQueryProvider: Plugin = {
   install(app) {
-    app.provide(INJECT_QUERY_PROVIDER, { queryFn, configFn, evaluateFeatureFlagFn, exploreBaseUrl } as AnalyticsBridge)
+    app.provide(INJECT_QUERY_PROVIDER, { queryFn, configFn, evaluateFeatureFlagFn, exploreBaseUrl, fetchComponent } as AnalyticsBridge)
   },
 }
 

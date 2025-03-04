@@ -22,6 +22,7 @@ export interface KeyFormFields {
   jwk?: string
   private_key?: string
   public_key?: string
+  x5t?: string
 }
 
 export interface KeyFormState {

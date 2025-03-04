@@ -45,12 +45,14 @@
         :config="config"
         :credential="treatAsCredential"
         :editing="formType === EntityBaseFormType.Edit"
+        :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
         :record="record || undefined"
         :schema="loadedSchema || {}"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
+        @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
       />
 
       <template #form-actions>
@@ -157,6 +159,7 @@ import endpoints from '../plugins-endpoints'
 import {
   EntityTypeIdField,
   PluginScope,
+  PluginPartialType,
   type DefaultPluginsFormSchema,
   type DefaultPluginsSchemaRecord,
   type KongManagerPluginFormConfig,
@@ -169,20 +172,22 @@ import {
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
+import unset from 'lodash-es/unset'
 
 const emit = defineEmits<{
-  (e: 'cancel'): void,
-  (e: 'error:fetch-schema', error: AxiosError): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
-  (e: 'update', data: Record<string, any>): void,
+  (e: 'cancel'): void
+  (e: 'error:fetch-schema', error: AxiosError): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
+  (e: 'update', data: Record<string, any>): void
   (e: 'model-updated',
     payload: {
-      model: Record<string, any>,
-      data: Record<string, any>,
+      model: Record<string, any>
+      data: Record<string, any>
       resourceEndpoint: string
     }
   ): void
+  (e: 'showNewPartialModal', redisType: string): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -280,6 +285,13 @@ const props = defineProps({
     type: Object as PropType<Record<string, any>>,
     default: null,
   },
+  /**
+   * Control if the redis partial is enabled for plugins.
+   */
+  enableRedisPartial: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const router = useRouter()
@@ -299,6 +311,8 @@ const loadedSchema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
+const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
+const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
 const formLoading = ref(false)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
@@ -710,10 +724,10 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       initialFormSchema[field].elements = elements
 
       if (['string', 'integer', 'number'].includes(elements.type) && !elements.one_of) {
-        const { id, help, label, hint, values, referenceable } = initialFormSchema[field]
+        const { id, help, label, hint, values, referenceable, model } = initialFormSchema[field]
         const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
         inputAttributes.type = elements.type === 'string' ? 'text' : 'number'
-        initialFormSchema[field] = { id, help, label, hint, values, referenceable, inputAttributes, ...overrides }
+        initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, inputAttributes, ...overrides }
       }
     }
 
@@ -1097,7 +1111,14 @@ watch([entityMap, initialized], (newData, oldData) => {
   if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newEntityData || (newinitialized && newinitialized !== oldinitialized))) {
     schemaLoading.value = true
 
-    loadedSchema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
+    const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
+    if (isCustomPlugin.value) {
+      initialFormSchema._isCustomPlugin = true
+    }
+    if (pluginPartialType.value) {
+      initialFormSchema._supported_redis_partial_type = pluginPartialType.value
+    }
+    loadedSchema.value = initialFormSchema
     schemaLoading.value = false
   }
 }, { deep: true })
@@ -1187,6 +1208,12 @@ const getRequestBody = computed((): Record<string, any> => {
 
     delete requestBody.created_at
   }
+
+  // if a partial value is passed, set the redis path of requestBody to null, in this way we override the redis fields
+  if (submitPayload.value.partials && pluginRedisPath.value) {
+    unset(requestBody, pluginRedisPath.value)
+  }
+
   return requestBody
 })
 
@@ -1222,10 +1249,11 @@ const saveFormData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, payload)
     } else if (formType.value === 'edit') {
-      response = props.config.app === 'konnect'
+      response = props.config.app === 'konnect' || pluginPartialType.value
         // Note 1: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //         If this changes, the `edit` form methods should be re-evaluated/updated accordingly
         // Note 2: Because Konnect uses PUT, we need to include dynamic ordering in the request body
+        // Note 3: In Kong Manager, if a plugin supports redis partial, we need to use PUT to update the plugin to override redis fields
         ? await axiosInstance.put(submitUrl.value, Object.assign({ ordering: dynamicOrdering.value }, payload))
         : await axiosInstance.patch(submitUrl.value, payload)
     }
@@ -1291,6 +1319,10 @@ onBeforeMount(async () => {
           // start from the config part of the schema
           const configField = data.fields.find((field: Record<string, any>) => field.config)
           configResponse.value = configField ? configField.config : data
+          if (data.supported_partials) {
+            pluginPartialType.value = Object.keys(data.supported_partials).find(key => [PluginPartialType.REDIS_CE, PluginPartialType.REDIS_EE].includes(key as PluginPartialType)) as PluginPartialType
+            pluginRedisPath.value = data.supported_partials[pluginPartialType.value]?.[0]
+          }
 
           // scoping and global field setup
           initScopeFields()
@@ -1316,7 +1348,14 @@ onBeforeMount(async () => {
 
           // if editing, wait for record to load before building schema
           if (initialized.value || formType.value === EntityBaseFormType.Create) {
-            loadedSchema.value = buildFormSchema('config', configResponse.value, defaultFormSchema)
+            const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
+            // pass the redis partial type and redis path in plugin with the schema
+            if (pluginPartialType.value) {
+              initialFormSchema._supported_redis_partial_type = pluginPartialType.value
+            }
+            // pass whether the plugin is a custom plugin to the form schema
+            if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
+            loadedSchema.value = initialFormSchema
           }
         }
       }

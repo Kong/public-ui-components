@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.3...@kong-ui-public/tracing@0.9.4) (2025-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.2...@kong-ui-public/tracing@0.9.3) (2025-02-27)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.1...@kong-ui-public/tracing@0.9.2) (2025-02-26)
+
+
+### Bug Fixes
+
+* **tracing:** hide upstream nodes when not available; update text ([#1987](https://github.com/Kong/public-ui-components/issues/1987)) ([9a629b3](https://github.com/Kong/public-ui-components/commit/9a629b306167251f61bedc9f8ee0f14389f7e2f2))
+
+
+
+
+
+## [0.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.0...@kong-ui-public/tracing@0.9.1) (2025-02-26)
+
+
+### Bug Fixes
+
+* **tracing:** swap incorrect durations on client in/out nodes ([#1986](https://github.com/Kong/public-ui-components/issues/1986)) ([8fcf2e1](https://github.com/Kong/public-ui-components/commit/8fcf2e1fa0c819d12e8345266a51e78e7559fe45))
+
+
+
+
+
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.8.3...@kong-ui-public/tracing@0.9.0) (2025-02-25)
+
+
+### Features
+
+* **tracing:** split upstream node into three nodes ([#1973](https://github.com/Kong/public-ui-components/issues/1973)) ([cf0c523](https://github.com/Kong/public-ui-components/commit/cf0c523998a53230c8c53d684db8daf33d3b31de))
+
+
+
+
+
+## [0.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.8.2...@kong-ui-public/tracing@0.8.3) (2025-02-21)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (patch) ([#1960](https://github.com/Kong/public-ui-components/issues/1960)) ([9f510bb](https://github.com/Kong/public-ui-components/commit/9f510bbf1d8fdd3448214f683b997d775e0f6806))
+
+
+
+
+
 ## [0.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.8.1...@kong-ui-public/tracing@0.8.2) (2025-02-17)
 
 

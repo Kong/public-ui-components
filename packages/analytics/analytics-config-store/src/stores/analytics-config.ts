@@ -1,7 +1,12 @@
 import { defineStore } from 'pinia'
 import { computed, inject, ref } from 'vue'
 import type { AnalyticsBridge, AnalyticsConfigV2 } from '@kong-ui-public/analytics-utilities'
-import { THIRTY_DAYS_MS } from '../constants'
+import {
+  DEFAULT_MAX_PARALLEL_REQUESTS,
+  DEFAULT_REQUEST_INTERVAL,
+  DEFAULT_REQUEST_INTERVAL_CAP,
+  THIRTY_DAYS_MS,
+} from '../constants'
 
 const INJECT_QUERY_PROVIDER = 'analytics-query-provider'
 
@@ -45,6 +50,18 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
   const analytics = computed<boolean>(() => !!analyticsConfig.value?.analytics)
   const percentiles = computed<boolean>(() => !!analyticsConfig.value?.analytics?.percentiles)
 
+  const maxParallelRequests = computed<number>(() =>
+    analyticsConfig.value?.ui?.maxParallelRequests ?? DEFAULT_MAX_PARALLEL_REQUESTS,
+  )
+
+  const requestInterval = computed<number>(() =>
+    analyticsConfig.value?.ui?.requestInterval ?? DEFAULT_REQUEST_INTERVAL,
+  )
+
+  const requestIntervalCap = computed<number>(() =>
+    analyticsConfig.value?.ui?.requestIntervalCap ?? DEFAULT_REQUEST_INTERVAL_CAP,
+  )
+
   return {
     analyticsConfig,
     longRetention,
@@ -52,5 +69,8 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
     loading,
     analytics,
     percentiles,
+    maxParallelRequests,
+    requestInterval,
+    requestIntervalCap,
   }
 })

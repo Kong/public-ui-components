@@ -5,7 +5,6 @@ import { PLUGIN_METADATA } from '../definitions/metadata'
 import { aiPromptDecoratorSchema } from '../definitions/schemas/AIPromptDecorator'
 import { aiPromptTemplateSchema } from '../definitions/schemas/AIPromptTemplate'
 import { aiProxyAdvancedSchema } from '../definitions/schemas/AIProxyAdvanced'
-import { aiRateLimitingAdvancedSchema } from '../definitions/schemas/AIRateLimitingAdvanced'
 import { applicationRegistrationSchema } from '../definitions/schemas/ApplicationRegistration'
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
 import { dataDogSchema } from '../definitions/schemas/Datadog'
@@ -24,6 +23,8 @@ import { statsDSchema } from '../definitions/schemas/StatsD'
 import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
 import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
 import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
+import { kafkaUpstreamSchema } from '../definitions/schemas/KafkaUpstream'
+import { confluentSchema } from '../definitions/schemas/Confluent'
 import ZipkinSchema from '../definitions/schemas/Zipkin'
 import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
@@ -46,6 +47,8 @@ export interface Group {
 export interface Schema {
   fields?: Field[]
   groups?: Group[]
+  _supported_redis_partial_type?: string
+  _redis_partial_path?: string
 }
 
 export interface UseSchemasOptions {
@@ -62,6 +65,11 @@ export interface UseSchemasOptions {
    * @defaultValue false
    */
   credential?: boolean
+  /**
+   * Whether to enable the Redis partial in form.
+   * @defaultValue false
+   */
+  enableRedisPartial?: boolean
 }
 
 /** Sorts non-config fields and place them at the top */
@@ -135,10 +143,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       ...aiProxyAdvancedSchema,
     },
 
-    'ai-rate-limiting-advanced': {
-      ...aiRateLimitingAdvancedSchema,
-    },
-
     'vault-auth': {
       ...vaultAuthSchema,
     },
@@ -206,6 +210,14 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     saml: {
       ...samlSchema,
     },
+
+    'kafka-upstream': {
+      ...kafkaUpstreamSchema,
+    },
+
+    'confluent': {
+      ...confluentSchema,
+    },
   }
 
   /**
@@ -213,7 +225,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
    * @returns {Array} an array of form fields not to render across all entity forms
    */
   const getBlacklist = () => {
-    return ['created_at', 'updated_at', 'id']
+    return ['created_at', 'updated_at', 'id', '_isCustomPlugin', '_supported_redis_partial_type', '_redis_partial_path']
   }
 
   /**
@@ -248,6 +260,21 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     const pluginName = formModel.name
     const metadata = PLUGIN_METADATA[pluginName]
 
+
+    const redisFields = []
+    const isRedisField = (field: Field): boolean => {
+      const excludePatterns = ['cluster-cache']
+      for (const pattern of excludePatterns) {
+        if (field.model.includes(pattern)) {
+          return false
+        }
+      }
+      return /(?<=-redis-).*/.test(field.model)
+    }
+
+    formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
+    formSchema._redis_partial_path = currentSchema._redis_partial_path
+
     if (getSharedFormName(pluginName) || metadata?.useLegacyForm || options?.credential) {
       /**
        * Do not generate grouped schema when:
@@ -255,6 +282,26 @@ export const useSchemas = (options?: UseSchemasOptions) => {
        * - The plugin is explicitly marked to use legacy form
        * - Rendering a form for a plugin credential
        */
+
+      // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled
+      if (metadata?.useLegacyForm && options?.enableRedisPartial && currentSchema._supported_redis_partial_type) {
+        for (const field of formSchema.fields!) {
+          if (isRedisField(field)) {
+            redisFields.push(field)
+            continue
+          }
+        }
+        formSchema.fields = formSchema.fields!.filter((field) => !isRedisField(field))
+        // Add redis fields to advanced fields
+        if (redisFields.length) formSchema.fields!.push({
+          id: '_redis',
+          fields: redisFields,
+          model: '__redis_partial',
+          pluginType: currentSchema._isCustomPlugin ? 'custom' : 'bundled',
+          redisType: currentSchema._supported_redis_partial_type,
+          redisPath: currentSchema._redis_partial_path,
+        })
+      }
 
       // Assume the fields are sorted, unless they have an `order` property
       formSchema.fields!.sort((a: Record<string, any>, b: Record<string, any>) => {
@@ -269,6 +316,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       const pinnedFields = []
       const defaultVisibleFields = []
       const advancedFields = []
+      const redisFields = []
 
       // Transform the any of field sets into a flatten set for fast lookup
       // The boolean values help us to know if we have unknown fields in the plugin metadata
@@ -294,8 +342,12 @@ export const useSchemas = (options?: UseSchemasOptions) => {
           }
         }
       }
-
       for (const field of formSchema.fields!) {
+        // We group redis fields separately only when this plugin supports redis partial and redisPartial is enabled
+        if (options?.enableRedisPartial && currentSchema._supported_redis_partial_type && isRedisField(field)) {
+          redisFields.push(field)
+          continue
+        }
         // Fields that don't start with 'config-' are considered common fields
         if (field.pinned) {
           pinnedFields.push(field)
@@ -305,6 +357,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         // A field is hoisted if any of the following is true:
         // - It has a `required` property and it's set to true
         // - Is a field with one or more field rules
+        // set Redis fields as advanced fields
         if (field.required || ruledFields[field.model] !== undefined) {
           if (ruledFields[field.model] === false) {
             ruledFields[field.model] = true // Mark this as visited
@@ -316,6 +369,17 @@ export const useSchemas = (options?: UseSchemasOptions) => {
         // Otherwise, consider it an advanced field
         advancedFields.push(field)
       }
+
+      // Add redis fields to advanced fields
+      if (redisFields.length) advancedFields.push({
+        id: '_redis',
+        fields: redisFields,
+        model: '__redis_partial',
+        pluginType: currentSchema._isCustomPlugin ? 'custom' : 'bundled',
+        redisType: currentSchema._supported_redis_partial_type,
+        redisPath: currentSchema._redis_partial_path,
+        order: -1, // Place redis fields at the top of the advanced fields
+      })
 
       // For better dev: warn about unknown checked fields
       const unknownRuleFields = Object.entries(ruledFields)
