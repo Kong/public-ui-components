@@ -89,7 +89,7 @@
       </template>
 
       <template
-        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        v-if="enableV2EmptyStates && config.app === AppType.Konnect"
         #empty-state
       >
         <EntityEmptyState
@@ -108,7 +108,7 @@
               description: t('list.empty_state.feature_2.description')
             },
           ]"
-          :learn-more="config.app === 'konnect'"
+          :learn-more="config.app === AppType.Konnect"
           :title="t('redis.title')"
           @click:create="handleCreate"
           @click:learn-more="() => emit('click:learn-more')"
@@ -175,6 +175,7 @@ import {
   EntityDeleteModal,
   FetcherStatus,
   EntityEmptyState,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -218,7 +219,7 @@ const props = defineProps({
     type: Object as PropType<KonnectRedisConfigurationListConfig | KongManagerRedisConfigurationListConfig>,
     required: true,
     validator: (config: KonnectRedisConfigurationListConfig | KongManagerRedisConfigurationListConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.createRoute || !config.getViewRoute || !config.getEditRoute) return false
       return true
     },
@@ -268,10 +269,10 @@ const props = defineProps({
 const fetcherBaseUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app]}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url
       .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
@@ -296,7 +297,7 @@ const isRemoveLinksModalVisible = ref<boolean>(false)
 const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 
 const fetcherCacheKey = ref<number>(1)
-const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
+const disableSorting = computed((): boolean => props.config.app !== AppType.KongManager || !!props.config.disableSorting)
 
 const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
 const { i18n: { t } } = composables.useI18n()
@@ -305,7 +306,7 @@ const router = useRouter()
 
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
-  const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
+  const isExactMatch = (props.config.app === AppType.Konnect || props.config.isExactMatch)
 
   if (isExactMatch) {
     return {

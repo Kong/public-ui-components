@@ -20,6 +20,7 @@ import { ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KonnectPluginEntityConfig, KongManagerPluginEntityConfig } from '../../src'
 import { PluginConfigCard } from '../../src'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const props = defineProps({
   /** Grab the Plugin type & id from the route params */
@@ -37,7 +38,7 @@ const props = defineProps({
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectConfig = ref<KonnectPluginEntityConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
@@ -45,7 +46,7 @@ const konnectConfig = ref<KonnectPluginEntityConfig>({
   pluginType: props.plugin,
 })
 const kongManagerConfig = ref<KongManagerPluginEntityConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   entityId: props.id,

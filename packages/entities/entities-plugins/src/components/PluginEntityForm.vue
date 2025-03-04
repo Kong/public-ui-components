@@ -87,7 +87,11 @@ import {
   VaultSecretPickerProvider,
 } from '@kong-ui-public/entities-vaults'
 import '@kong-ui-public/entities-vaults/dist/style.css'
-import { useAxios, useHelpers } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useHelpers,
+  AppType,
+} from '@kong-ui-public/entities-shared'
 import {
   AUTOFILL_SLOT_NAME,
   FORMS_API_KEY,
@@ -136,9 +140,9 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>,
     required: true,
     validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       return true
     },
   },
@@ -209,9 +213,9 @@ const { i18n: { t } } = useI18n()
 const buildGetOneUrl = (entityType: string, entityId: string): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetOne}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -225,9 +229,9 @@ const buildGetOneUrl = (entityType: string, entityId: string): string => {
 const buildGetAllUrl = (entityType: string): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetAll}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -257,7 +261,7 @@ const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promi
 
   // Currently hardcoded to fetch 1000 records, and filter
   // client side. If more than 1000 records, this won't work
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     return axiosInstance.get(url).then(res => {
       const { data: { data } } = res
 

@@ -28,6 +28,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
 import { PluginForm } from '../../src'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 defineProps({
   /** Grab the plugin id and type from the route params */
@@ -45,7 +46,7 @@ const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
@@ -56,7 +57,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
 })
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   // force the scope

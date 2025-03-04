@@ -81,7 +81,7 @@
       </template>
 
       <template
-        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        v-if="enableV2EmptyStates && config.app === AppType.Konnect"
         #empty-state
       >
         <EntityEmptyState
@@ -90,7 +90,7 @@
           :can-create="() => canCreate()"
           :data-testid="config.entityId ? 'nested-plugins-entity-empty-state' : 'plugins-entity-empty-state'"
           :description="t('plugins.list.empty_state_v2.description')"
-          :learn-more="config.app === 'konnect'"
+          :learn-more="config.app === AppType.Konnect"
           :title="t('plugins.list.empty_state_v2.title')"
           @click:create="handleCreate"
           @click:learn-more="$emit('click:learn-more')"
@@ -286,6 +286,7 @@ import {
   useTableState,
   useGatewayFeatureSupported,
   TableTags,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -336,9 +337,9 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginListConfig | KongManagerPluginListConfig>,
     required: true,
     validator: (config: KonnectPluginListConfig | KongManagerPluginListConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.createRoute || !config.getViewRoute || !config.getEditRoute || !config.getConfigureDynamicOrderingRoute) return false
-      if (config.app === 'kongManager' && !config.isExactMatch && !config.filterSchema) return false
+      if (config.app === AppType.KongManager && !config.isExactMatch && !config.filterSchema) return false
       return true
     },
   },
@@ -420,8 +421,8 @@ const { hasRecords, handleStateChange } = useTableState(() => filterQuery.value)
 // Current empty state logic is only for Konnect, KM will pick up at GA.
 // If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
 // If new empty states are not enabled, show the learning hub button (for Konnect)
-const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
-const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
+const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === AppType.Konnect)
+const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === AppType.Konnect)
 
 // if the Plugin list in nested in the plguns tab on a entity detail page
 const isEntityPage = computed<boolean>(() => !!props.config.entityId)
@@ -429,7 +430,7 @@ const isEntityPage = computed<boolean>(() => !!props.config.entityId)
 const isConsumerPage = computed((): boolean => props.config?.entityType === 'consumers')
 const isConsumerGroupPage = computed((): boolean => props.config?.entityType === 'consumer_groups')
 
-const isOrderingSupported = props.config.app === 'konnect' || useGatewayFeatureSupported({
+const isOrderingSupported = props.config.app === AppType.Konnect || useGatewayFeatureSupported({
   gatewayInfo: props.config.gatewayInfo,
   // dynamic ordering is not supported in Gateway Community Edition or before Gateway Enterprise Edition 3.0
   supportedRange: {
@@ -440,7 +441,7 @@ const isOrderingSupported = props.config.app === 'konnect' || useGatewayFeatureS
 /**
  * Table Headers
  */
-const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
+const disableSorting = computed((): boolean => props.config.app !== AppType.KongManager || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
   // the Name column is non-hidable
   name: { label: t('plugins.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
@@ -468,9 +469,9 @@ const fetcherBaseUrl = computed<string>(() => {
     ? `${props.config.apiBaseUrl}${endpoints.list[props.config.app].forEntity}`
     : `${props.config.apiBaseUrl}${endpoints.list[props.config.app].all}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -481,7 +482,7 @@ const fetcherBaseUrl = computed<string>(() => {
 
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
-  const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
+  const isExactMatch = (props.config.app === AppType.Konnect || props.config.isExactMatch)
 
   if (isExactMatch) {
     return {
@@ -631,10 +632,10 @@ const confirmSwitchEnablement = async () => {
   }`
     .replace(/{id}/gi, switchEnablementTarget.value.id || '')
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url
       .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
@@ -642,7 +643,7 @@ const confirmSwitchEnablement = async () => {
   const enabled = !switchEnablementTarget.value.enabled
 
   try {
-    const { data } = props.config?.app === 'konnect'
+    const { data } = props.config?.app === AppType.Konnect
       // TODO: add timeout because when the plugin configuration is too big, the request can take very long.
       // Remove timeout when the request is optimized. KM-267
       ? await axiosInstance.put(url, { ...switchEnablementTarget.value, enabled }, { timeout: 120000 })

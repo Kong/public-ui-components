@@ -9,7 +9,7 @@
   <ConsumerList
     v-if="permissions"
     :key="key"
-    cache-identifier="konnect"
+    :cache-identifier="AppType.Konnect"
     :can-create="permissions.canCreate"
     :can-delete="permissions.canDelete"
     :can-edit="permissions.canEdit"
@@ -28,7 +28,7 @@
   <ConsumerList
     v-if="permissions"
     :key="key"
-    cache-identifier="kong-manager"
+    :cache-identifier="AppType.KongManager"
     :can-create="permissions.canCreate"
     :can-delete="permissions.canDelete"
     :can-edit="permissions.canEdit"
@@ -50,6 +50,7 @@ import { ConsumerList } from '../../src'
 import type { KonnectConsumerListConfig, KongManagerConsumerListConfig, EntityRow, CopyEventPayload } from '../../src'
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 // Uncomment to test Consumer Groups -> Consumers
@@ -57,7 +58,7 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 // const consumerGroupName = 'Group 1'
 
 const konnectConfig = ref<KonnectConsumerListConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
@@ -71,7 +72,7 @@ const konnectConfig = ref<KonnectConsumerListConfig>({
 })
 
 const kongManagerConfig = ref<KongManagerConsumerListConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   isExactMatch: false,

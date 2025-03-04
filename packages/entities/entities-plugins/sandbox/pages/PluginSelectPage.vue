@@ -22,11 +22,11 @@
 import { ref } from 'vue'
 import type { KonnectPluginSelectConfig, KongManagerPluginSelectConfig, CustomPluginType } from '../../src'
 import { PluginSelect } from '../../src'
-
+import { AppType } from '@kong-ui-public/entities-shared'
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectPluginSelectConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
@@ -53,7 +53,7 @@ const konnectConfig = ref<KonnectPluginSelectConfig>({
 })
 
 const kongManagerConfig = ref<KongManagerPluginSelectConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   // force the scope

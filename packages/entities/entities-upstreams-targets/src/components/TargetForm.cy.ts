@@ -2,12 +2,13 @@
 import type { KongManagerTargetFormConfig, KonnectTargetFormConfig } from '../types'
 import TargetForm from './TargetForm.vue'
 import { target } from '../../fixtures/mockData'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'view-upstream' }
 const upstreamId = '12345-qwerty'
 
 const baseConfigKonnect:KonnectTargetFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-cats',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
@@ -15,7 +16,7 @@ const baseConfigKonnect:KonnectTargetFormConfig = {
 }
 
 const baseConfigKM:KongManagerTargetFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,

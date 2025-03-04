@@ -14,7 +14,7 @@
   <UpstreamsList
     v-if="permissions"
     :key="key"
-    cache-identifier="konnect"
+    :cache-identifier="AppType.Konnect"
     :can-create="permissions.canCreate"
     :can-delete="permissions.canDelete"
     :can-edit="permissions.canEdit"
@@ -31,7 +31,7 @@
   <UpstreamsList
     v-if="permissions"
     :key="key"
-    cache-identifier="kong-manager"
+    :cache-identifier="AppType.KongManager"
     :can-create="permissions.canCreate"
     :can-delete="permissions.canDelete"
     :can-edit="permissions.canEdit"
@@ -51,11 +51,11 @@ import type { KonnectUpstreamsListConfig, KongManagerUpstreamsListConfig, Entity
 import type { AxiosError } from 'axios'
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
-
+import { AppType } from '@kong-ui-public/entities-shared'
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectUpstreamsListConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
@@ -66,7 +66,7 @@ const konnectConfig = ref<KonnectUpstreamsListConfig>({
 })
 
 const kongManagerConfig = ref<KongManagerUpstreamsListConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   isExactMatch: false,
@@ -85,10 +85,10 @@ const kongManagerConfig = ref<KongManagerUpstreamsListConfig>({
 })
 
 const patPermissions = {
-  create: { service: 'konnect', action: '#create', resourcePath: `runtimegroups/${controlPlaneId}/upstreams/*` },
-  delete: { service: 'konnect', action: '#delete', resourcePath: `runtimegroups/${controlPlaneId}/upstreams/*` },
-  edit: { service: 'konnect', action: '#edit', resourcePath: `runtimegroups/${controlPlaneId}/upstreams/*` },
-  retrieve: { service: 'konnect', action: '#retrieve', resourcePath: `runtimegroups/${controlPlaneId}/upstreams/*` },
+  create: { service: AppType.Konnect, action: '#create', resourcePath: `runtimegroups/${controlPlaneId}/upstreams/*` },
+  delete: { service: AppType.Konnect, action: '#delete', resourcePath: `runtimegroups/${controlPlaneId}/upstreams/*` },
+  edit: { service: AppType.Konnect, action: '#edit', resourcePath: `runtimegroups/${controlPlaneId}/upstreams/*` },
+  retrieve: { service: AppType.Konnect, action: '#retrieve', resourcePath: `runtimegroups/${controlPlaneId}/upstreams/*` },
 }
 // Remount the tables in the sandbox when the permission props change; not needed outside of a sandbox
 const key = ref(1)

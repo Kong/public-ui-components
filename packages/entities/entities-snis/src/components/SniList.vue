@@ -80,7 +80,7 @@
       </template>
 
       <template
-        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        v-if="enableV2EmptyStates && config.app === AppType.Konnect"
         #empty-state
       >
         <EntityEmptyState
@@ -89,7 +89,7 @@
           :can-create="() => canCreate()"
           data-testid="snis-entity-empty-state"
           :description="t('snis.list.empty_state_v2.description')"
-          :learn-more="config.app === 'konnect'"
+          :learn-more="config.app === AppType.Konnect"
           :title="t('snis.list.empty_state_v2.title')"
           @click:create="handleCreate"
           @click:learn-more="$emit('click:learn-more')"
@@ -195,6 +195,7 @@ import {
   useDeleteUrlBuilder,
   useTableState,
   TableTags,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import type {
   KongManagerSniListConfig,
@@ -229,9 +230,9 @@ const props = defineProps({
     type: Object as PropType<KonnectSniListConfig | KongManagerSniListConfig>,
     required: true,
     validator: (config: KonnectSniListConfig | KongManagerSniListConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.createRoute || !config.getViewRoute || !config.getEditRoute) return false
-      if (config.app === 'kongManager' && !config.isExactMatch && !config.filterSchema) return false
+      if (config.app === AppType.KongManager && !config.isExactMatch && !config.filterSchema) return false
       return true
     },
   },
@@ -288,14 +289,14 @@ const { hasRecords, handleStateChange } = useTableState(() => filterQuery.value)
 // Current empty state logic is only for Konnect, KM will pick up at GA.
 // If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
 // If new empty states are not enabled, show the learning hub button (for Konnect)
-const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
-const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
+const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === AppType.Konnect)
+const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === AppType.Konnect)
 
 
 /**
  * Table Headers
  */
-const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
+const disableSorting = computed((): boolean => props.config.app !== AppType.KongManager || !!props.config.disableSorting)
 const fields: BaseTableHeaders = {
   // the Name column is non-hidable
   name: { label: t('snis.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
@@ -323,10 +324,10 @@ const cellAttrsFn = (params: Record<string, any>) => {
 const fetcherBaseUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app].all}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url
       .replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url
       .replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
@@ -336,7 +337,7 @@ const fetcherBaseUrl = computed<string>(() => {
 
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
-  const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
+  const isExactMatch = (props.config.app === AppType.Konnect || props.config.isExactMatch)
 
   if (isExactMatch) {
     return {

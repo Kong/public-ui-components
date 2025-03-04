@@ -114,7 +114,13 @@
 </template>
 
 <script lang="ts">
-import { useAxios, useDebouncedFilter, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useDebouncedFilter,
+  type KongManagerBaseFormConfig,
+  type KonnectBaseFormConfig,
+  AppType,
+} from '@kong-ui-public/entities-shared'
 import type { SecretEntityRow as SecretEntity, EntityRow as VaultEntity } from '../types'
 import vaultsEndpoints from '../vaults-endpoints'
 import secretsEndpoints from '../secrets-endpoints'
@@ -136,9 +142,9 @@ const props = defineProps({
     type: Object as PropType<KonnectBaseFormConfig | KongManagerBaseFormConfig>,
     required: true,
     validator: (config: KonnectBaseFormConfig | KongManagerBaseFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       return true
     },
   },
@@ -171,7 +177,7 @@ const selectedVault = ref<VaultEntity | undefined>()
 // Endpoint to list secrets for a Konnect Vault
 // We don't care about other typed vaults
 const secretsEndpoint = computed(() => {
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     return secretsEndpoints.list[props.config.app].replace(/{id}/gi, selectedVault.value?.config?.config_store_id ?? '')
   }
 
@@ -260,7 +266,7 @@ const availableSecrets = computed<SelectItem[]>(() => {
   return items
 })
 
-const isKonnectVaultSelected = computed(() => selectedVault?.value?.name === 'konnect')
+const isKonnectVaultSelected = computed(() => selectedVault?.value?.name === AppType.Konnect)
 
 const canProceed = computed(() => Boolean(selectedVault.value) && Boolean(secretId.value))
 
@@ -271,9 +277,9 @@ const formatSelectedVault = (item: SelectVaultItem) => {
 const buildVaultFetchUrl = (vaultPrefix: string) => {
   let url = `${props.config.apiBaseUrl}${vaultsEndpoints.form[props.config.app].edit}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 
@@ -282,7 +288,7 @@ const buildVaultFetchUrl = (vaultPrefix: string) => {
 }
 
 const buildSecretFetchUrl = (secretId: string, configStoreId: string) => {
-  if (props.config.app !== 'konnect') {
+  if (props.config.app !== AppType.Konnect) {
     // We should never use this URL
     return '<not_applicable>'
   }
@@ -328,7 +334,7 @@ watch(() => props.setup, async (secretRef) => {
         verifiedVault = vault
         verifiedVaultPrefix = parsed.vaultPrefix
 
-        if (verifiedVault.name === 'konnect') {
+        if (verifiedVault.name === AppType.Konnect) {
           if (parsed.secretId) {
             // Check if the secret exists in the Konnect vault
             const { data: secret } = await axiosInstance.get<SecretEntity>(buildSecretFetchUrl(parsed.secretId, vault.config.config_store_id))

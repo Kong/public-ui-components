@@ -2,19 +2,19 @@
 import type { KongManagerGatewayServiceFormConfig, KonnectGatewayServiceFormConfig } from '../types'
 import { gatewayService1, gatewayService2 } from '../../fixtures/mockData'
 import GatewayServiceForm from './GatewayServiceForm.vue'
-import { EntityBaseForm } from '@kong-ui-public/entities-shared'
+import { EntityBaseForm, AppType } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'gateway-services-list' }
 
 const baseConfigKonnect: KonnectGatewayServiceFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-ilove-dogs',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
 const baseConfigKM: KongManagerGatewayServiceFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,

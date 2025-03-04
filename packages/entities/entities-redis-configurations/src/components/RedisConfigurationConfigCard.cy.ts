@@ -5,6 +5,7 @@ import {
   redisConfigurationCluster,
   redisConfigurationSentinel,
 } from '../../fixtures/mockData'
+import { AppType } from '@kong/kongponents'
 
 import type {
   KonnectRedisConfigurationEntityConfig,
@@ -13,14 +14,14 @@ import type {
 } from '../types'
 
 const kmConfig: KongManagerRedisConfigurationEntityConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   entityId: redisConfigurationCE.id,
 }
 
 const konnectConfig: KonnectRedisConfigurationEntityConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1',
   apiBaseUrl: '/us/kong-api',
   entityId: redisConfigurationCE.id,
@@ -38,7 +39,7 @@ describe('<RedisConfigurationConfigCard/>', {
       body?: RedisConfigurationResponse
       status?: number
     } = {}): void => {
-      if (app === 'Konnect') {
+      if (app === AppType.Konnect) {
         cy.intercept(
           {
             method: 'GET',
@@ -69,7 +70,7 @@ describe('<RedisConfigurationConfigCard/>', {
 
         cy.mount(RedisConfigurationConfigCard, {
           props: {
-            config: app === 'Konnect' ? konnectConfig : kmConfig,
+            config: app === AppType.Konnect ? konnectConfig : kmConfig,
             onLoading: cy.spy().as('onLoadingSpy'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -88,7 +89,7 @@ describe('<RedisConfigurationConfigCard/>', {
 
         cy.mount(RedisConfigurationConfigCard, {
           props: {
-            config: app === 'Konnect' ? konnectConfig : kmConfig,
+            config: app === AppType.Konnect ? konnectConfig : kmConfig,
             'onFetch:error': cy.spy().as('onError'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -107,7 +108,7 @@ describe('<RedisConfigurationConfigCard/>', {
 
         cy.mount(RedisConfigurationConfigCard, {
           props: {
-            config: app === 'Konnect' ? konnectConfig : kmConfig,
+            config: app === AppType.Konnect ? konnectConfig : kmConfig,
             'onFetch:success': cy.spy().as('onFetch'),
           },
         }).then(({ wrapper }) => wrapper)
@@ -127,7 +128,7 @@ describe('<RedisConfigurationConfigCard/>', {
 
           cy.mount(RedisConfigurationConfigCard, {
             props: {
-              config: app === 'Konnect' ? konnectConfig : kmConfig,
+              config: app === AppType.Konnect ? konnectConfig : kmConfig,
             },
           })
 
@@ -169,7 +170,7 @@ describe('<RedisConfigurationConfigCard/>', {
 
           cy.mount(RedisConfigurationConfigCard, {
             props: {
-              config: app === 'Konnect'
+              config: app === AppType.Konnect
                 ? { ...konnectConfig, entityId: redisConfigurationHostPortEE.id }
                 : { ...kmConfig, entityId: redisConfigurationHostPortEE.id },
             },
@@ -213,7 +214,7 @@ describe('<RedisConfigurationConfigCard/>', {
 
           cy.mount(RedisConfigurationConfigCard, {
             props: {
-              config: app === 'Konnect'
+              config: app === AppType.Konnect
                 ? { ...konnectConfig, entityId: redisConfigurationCluster.id }
                 : { ...kmConfig, entityId: redisConfigurationCluster.id },
             },
@@ -257,7 +258,7 @@ describe('<RedisConfigurationConfigCard/>', {
 
           cy.mount(RedisConfigurationConfigCard, {
             props: {
-              config: app === 'Konnect'
+              config: app === AppType.Konnect
                 ? { ...konnectConfig, entityId: redisConfigurationSentinel.id }
                 : { ...kmConfig, entityId: redisConfigurationSentinel.id },
             },

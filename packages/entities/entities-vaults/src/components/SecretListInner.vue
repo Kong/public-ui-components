@@ -97,6 +97,7 @@ import {
   useAxios,
   useFetcher,
   useDeleteUrlBuilder,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 
 import type {
@@ -132,7 +133,7 @@ const props = defineProps({
     type: Object as PropType<KonnectSecretListConfig>,
     required: true,
     validator: (config: KonnectSecretListConfig): boolean => {
-      if (!config || config?.app !== 'konnect') return false
+      if (!config || config?.app !== AppType.Konnect) return false
       if (!config.createRoute || !config.getEditRoute) return false
       return true
     },

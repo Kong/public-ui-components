@@ -6,20 +6,20 @@ import {
   CreateConsumerGroupKonnectResponse, KMGroup, KMGroup2,
   konnectGroup,
 } from '../../fixtures/mockData'
-import { EntityBaseForm } from '@kong-ui-public/entities-shared'
+import { EntityBaseForm, AppType } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
 
 const cancelRoute = { name: 'consumer-group-list' }
 
 const konnectConfig: KonnectConsumerGroupFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: 'f0acb165-ff05-4788-aa06-6909b8d1694e',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
 const KMConfig: KongManagerConsumerGroupFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,

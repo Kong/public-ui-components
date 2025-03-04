@@ -1,5 +1,5 @@
 import ConsumerForm from './ConsumerForm.vue'
-import { EntityBaseForm } from '@kong-ui-public/entities-shared'
+import { EntityBaseForm, AppType } from '@kong-ui-public/entities-shared'
 import type {
   ConsumerPayload,
   KongManagerConsumerFormConfig,
@@ -10,14 +10,14 @@ import type { AxiosError } from 'axios'
 const cancelRoute = { name: 'consumer-list' }
 
 const konnectConfig: KonnectConsumerFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: 'f0acb165-ff05-4788-aa06-6909b8d1694e',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
 }
 
 const KMConfig: KongManagerConsumerFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,
