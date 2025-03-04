@@ -30,14 +30,31 @@ export interface GatewayServiceFormFields {
   tls_verify_value: boolean
   tags: string
 }
+export interface FormFieldErrors {
+  host: string
+  port: string
+  path: string,
+  url: string,
+  tags: string,
+  retries: string
+  connect_timeout: string
+  write_timeout: string
+  read_timeout: string
+  client_certificate: string
+  ca_certificates: string
+  tls_verify_enabled: string
+  tls_verify_value: string
+}
 
 export interface GatewayServiceFormState {
   /** Form fields */
   fields: GatewayServiceFormFields
   /** Form readonly state (only used when saving entity details) */
   isReadonly: boolean
-  /** The error message to show on the form */
-  errorMessage: string
+  /** The Array of error messages to show  */
+  errorMessages: string[],
+  /** The error Object is to show error on each form field */
+  formFieldErrors: FormFieldErrors
 }
 
 // TODO: This should be exposed from Kongponents, but isn't
