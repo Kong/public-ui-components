@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.5...@kong-ui-public/dashboard-renderer@1.2.6) (2025-03-04)
+
+
+### Bug Fixes
+
+* entity link truncate on max width 90% ([#2000](https://github.com/Kong/public-ui-components/issues/2000)) ([bba8c6f](https://github.com/Kong/public-ui-components/commit/bba8c6fb8385a4d5fecd03c9a09db7cdd096bce7))
+
+
+
+
+
 ## [1.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.4...@kong-ui-public/dashboard-renderer@1.2.5) (2025-03-04)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
