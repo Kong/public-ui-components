@@ -5,7 +5,6 @@
       :config="config"
       :edit-id="gatewayServiceId"
       :entity-type="SupportedEntityType.GatewayService"
-      :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
       :is-readonly="form.isReadonly"
@@ -56,8 +55,8 @@
                 v-model.trim="form.fields.url"
                 class="gateway-service-url-input gateway-service-form-margin-bottom"
                 data-testid="gateway-service-url-input"
-                :error="form.formFieldErrors.url.length > 0"
-                :error-message="form.formFieldErrors.url"
+                :error="getFieldErrorById('url').length > 0"
+                :error-message="form.errorMessages.length <= 1 ? getFieldErrorById('url') : undefined"
                 :label="t('gateway_services.form.fields.upstream_url.label')"
                 :label-attributes="{
                   info: config.app === 'konnect'
@@ -393,7 +392,19 @@
           </div>
         </KCollapse>
       </EntityFormSection>
-
+      <KAlert
+        v-if="form.errorMessages.length > 1"
+        appearance="danger"
+      >
+        <ul class="form-error-list">
+          <li
+            v-for="errorMessage in form.errorMessages"
+            :key="errorMessage"
+          >
+            {{ errorMessage }}
+          </li>
+        </ul>
+      </KAlert>
       <template #form-actions>
         <slot
           :can-submit="canSubmit"
@@ -415,6 +426,7 @@ import type {
   KonnectGatewayServiceFormConfig,
   KongManagerGatewayServiceFormConfig,
   GatewayServiceFormState,
+  FormFieldErrors,
   GatewayServiceFormFields,
 } from '../types'
 import endpoints from '../gateway-services-endpoints'
@@ -516,7 +528,7 @@ const form = reactive<GatewayServiceFormState>({
     tags: '',
   },
   isReadonly: false,
-  errorMessage: '',
+  errorMessages: [],
   formFieldErrors: {
     host: '',
     port: '',
@@ -636,7 +648,7 @@ const handleFloatVal = (oVal: string) => {
 const changeCheckedGroup = () => {
   isCollapsed.value = true
   resetFormFieldErrors()
-  form.errorMessage = ''
+  form.errorMessages = []
   form.fields.host = formFieldsOriginal.host
   form.fields.path = formFieldsOriginal.path
   form.fields.port = formFieldsOriginal.port
@@ -760,6 +772,21 @@ const handleValidateFullUrl = useDebounceFn((): void => {
   }
 }, 300)
 
+const getFieldErrorById = computed(() => {
+  return (fieldId: keyof FormFieldErrors): string => {
+    const errorsMap = form.formFieldErrors
+
+    if (fieldId === 'url') {
+      if (errorsMap.host.length) return errorsMap.host
+      else if (errorsMap.path.length) return errorsMap.path
+      else return errorsMap.url
+    }
+
+    if (errorsMap[fieldId]) return errorsMap[fieldId]
+    return ''
+  }
+})
+
 const handleValidateCustomUrl = useDebounceFn((): void => {
   // validate for the service type custom URL
 // reset the errors
@@ -777,11 +804,6 @@ const handleValidateCustomUrl = useDebounceFn((): void => {
   const portError = validatePort(form.fields.port)
   if (portError) form.formFieldErrors.port = portError
 }, 300)
-
-// // TODO: Fix the error type
-// const handleApiErrorResponse = (error: any) => {
-
-// }
 
 const resetFormFieldErrors = (): void => {
   form.formFieldErrors = {
@@ -811,7 +833,7 @@ const validateUrl = (): void => {
     try {
       const parsedUrl = new URL(form.fields.url)
       // if the URL is parsed successfully, clear error message
-      form.errorMessage = ''
+      // form.errorMessage = ''
       // remove the trailing colon appended to parsedUrl.protocol
       form.fields.protocol = parsedUrl.protocol.slice(0, -1)
       form.fields.host = parsedUrl.hostname
@@ -823,15 +845,15 @@ const validateUrl = (): void => {
       hasExtractPortValue.value = !!portValue
       form.fields.port = portValue || getPort.getPortFromProtocol(form.fields.protocol)
 
-      form.errorMessage = ''
+      // form.errorMessage = ''
       emit('url-valid:success')
     } catch (error: any) {
-      form.errorMessage = t('errors.urlErrorMessage')
+      // form.errorMessage = t('errors.urlErrorMessage')
       emit('url-valid:error', getMessageFromError(error))
     }
   } else {
     emit('url-valid:success')
-    form.errorMessage = ''
+    // form.errorMessage = ''
   }
 }
 
@@ -1055,8 +1077,7 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
 
     return response
   } catch (error: any) {
-    form.errorMessage = getMessageFromError(error)
-    const { fields } = getErrorFieldsFromError(error)
+    const { fields, messages } = getErrorFieldsFromError(error)
     if (fields.length) {
       // display error for each of the fields
       fields.forEach((errorField) => {
@@ -1065,8 +1086,16 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
           form.formFieldErrors.client_certificate = errorField.message
         } else if (field === 'ca_certificates[0]') {
           form.formFieldErrors.ca_certificates = errorField.message
+        } else if (Object.keys(form.formFieldErrors).includes(field)) {
+          form.formFieldErrors = {
+            ...form.formFieldErrors,
+            [field]: errorField.message,
+          }
         }
       })
+      form.errorMessages = messages
+    } else {
+      // form.errorMessage = getMessageFromError(error)
     }
     // Emit the error for the host app
     emit('error', error)
@@ -1112,6 +1141,11 @@ defineExpose({
 
   :deep(.form-section-wrapper) {
     padding-bottom: $kui-space-110;
+  }
+
+  .form-error-list {
+    margin: $kui-space-0;
+    padding-left: $kui-space-60;
   }
 
   .gateway-service-form-margin-top {

@@ -75,120 +75,88 @@ export default function useErrors() {
  * @param {string|Error|object} error - error string
  * @returns {Object} Object containing message and fields
  */
-  const getErrorFieldsFromError = (error: any): { message: string; fields: Array<{ field: string; message: string }> } => {
+  const getErrorFieldsFromError = (error: any): { messages: string[]; fields: Array<{ field: string; message: string }> } => {
     if (!error) {
       return {
-        message: t('errors.unexpected'),
+        messages: [t('errors.unexpected')],
         fields: [],
       }
     }
 
-    // If the error.status is 401, the user's auth token is expired or missing. We will handle this in the host app by showing a toast notification, etc.
     if (error?.response?.status === 401) {
-      console.warn('getErrorFieldsFromError: User auth token is expired or missing, returning empty message.')
+      console.warn('getErrorFieldsFromError: User auth token is expired or missing, returning empty messages.')
       return {
-        message: '',
+        messages: [],
         fields: [],
       }
     }
 
-    let message = t('errors.unexpected')
+    let messages: string[] = [t('errors.unexpected')]
     const fields: Array<{ field: string; message: string }> = []
 
     if (error?.response?.data) {
-    // Handle detailed error with specific field information
       if (error.response.data.details?.length) {
-        message = ''
+        messages = []
         error.response.data.details.forEach((entry: Record<string, any>) => {
           let errorMessage = t('errors.unexpected')
 
-          if (entry.messages && typeof entry.messages === 'object' && entry.messages.length) {
+          if (entry.messages && Array.isArray(entry.messages) && entry.messages.length) {
             errorMessage = entry.messages.join(', ')
           }
 
           if (entry.field) {
             fields.push({ field: entry.field, message: errorMessage })
-          } else if (!message) {
-            message = errorMessage
+          }
+          messages.push(`${entry.field} ${errorMessage}`)
+        })
+        return { messages, fields }
+      }
+
+      if (error.response.data.message && Array.isArray(error.response.data.message)) {
+        messages = []
+        error.response.data.message.forEach((err: any) => {
+          if (err?.constraints) {
+            const errorMessage = Object.values(err.constraints).join(', ')
+            messages.push(errorMessage)
+            if (err.property) {
+              fields.push({ field: err.property, message: errorMessage })
+            }
+          } else if (err?.property && err?.message) {
+            fields.push({ field: err.property, message: err.message })
+            messages.push(err.message)
+          } else {
+            messages.push(err)
           }
         })
-
-        // If we have field errors but no general message, create a summary
-        if (!message && fields.length > 0) {
-          message = `Validation errors found in ${fields.length} field(s)`
-        }
-
-        return { message, fields }
+        return { messages, fields }
       }
 
-      // Handle API response with error constraints
-      if (error.response.data.message && Array.isArray(error.response.data.message)) {
-        const errorMessages = error.response.data.message
-
-        // Handle validation constraints style errors
-        if (errorMessages[0]?.constraints) {
-          message = Object.values(errorMessages[0].constraints)[0] as string
-
-          // If we have property information, add to fields
-          if (errorMessages[0].property) {
-            fields.push({
-              field: errorMessages[0].property,
-              message,
-            })
-          }
-        } else if (errorMessages[0]?.property && errorMessages[0]?.message) {
-        // Handle property/message style errors
-          errorMessages.forEach((err: any) => {
-            fields.push({
-              field: err.property,
-              message: err.message,
-            })
-          })
-          message = fields.length > 0 ? `Validation errors found in ${fields.length} field(s)` : errorMessages[0].message
-        } else {
-        // Simple array of error messages
-          message = errorMessages[0]
-        }
-
-        return { message, fields }
-      }
-
-      // Handle simple message object
-      if (error.response.data.message && typeof error.response.data.message === 'string') {
+      if (typeof error.response.data.message === 'string') {
         return {
-          message: error.response.data.message,
+          messages: [error.response.data.message],
           fields: [],
         }
       }
 
-      // Handle direct string response
       if (typeof error.response.data === 'string') {
         return {
-          message: error.response.data,
+          messages: [error.response.data],
           fields: [],
         }
       }
 
-      // Handle object with field-specific errors
       if (typeof error.response.data === 'object') {
+        messages = []
         Object.keys(error.response.data).forEach(key => {
-          fields.push({
-            field: key,
-            message: error.response.data[key],
-          })
+          fields.push({ field: key, message: error.response.data[key] })
+          messages.push(error.response.data[key])
         })
-
-        if (fields.length > 0) {
-          message = `Validation errors found in ${fields.length} field(s)`
-        }
-
-        return { message, fields }
+        return { messages, fields }
       }
     }
 
-    // Fallback to error message or default
     return {
-      message: error.message || t('errors.unexpected'),
+      messages: [error.message || t('errors.unexpected')],
       fields: [],
     }
   }

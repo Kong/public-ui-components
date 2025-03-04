@@ -51,8 +51,8 @@ export interface GatewayServiceFormState {
   fields: GatewayServiceFormFields
   /** Form readonly state (only used when saving entity details) */
   isReadonly: boolean
-  /** The error message to show on the form */
-  errorMessage: string,
+  /** The Array of error messages to show  */
+  errorMessages: string[],
   /** The error Object is to show error on each form field */
   formFieldErrors: FormFieldErrors
 }
