@@ -101,6 +101,15 @@
               />
             </div>
           </template>
+
+          <template
+            v-if="isControlPlaneGroup"
+            #message
+          >
+            <p class="control-group-message">
+              {{ t('vaults.list.empty_state_v2.group') }}
+            </p>
+          </template>
         </EntityEmptyState>
       </template>
 
@@ -276,6 +285,11 @@ const props = defineProps({
   },
   /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
   useActionOutside: {
+    type: Boolean,
+    default: false,
+  },
+  /** identifies if type control group or not */
+  isControlPlaneGroup: {
     type: Boolean,
     default: false,
   },
@@ -570,6 +584,11 @@ onBeforeMount(async () => {
   align-items: center;
   display: flex;
   gap: $kui-space-50;
+}
+
+.control-group-message {
+  color: $kui-color-text-neutral-strong;
+  margin: $kui-space-0;
 }
 
 .kong-ui-entities-vaults-list {
