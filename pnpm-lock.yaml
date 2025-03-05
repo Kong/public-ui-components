@@ -1231,7 +1231,7 @@ importers:
   packages/portal/spec-renderer:
     dependencies:
       '@kong-ui-public/swagger-ui-web-component':
-        specifier: workspace:^0.12.9
+        specifier: workspace:^0.12.10
         version: link:../swagger-ui-web-component
       '@kong/icons':
         specifier: ^1.21.1

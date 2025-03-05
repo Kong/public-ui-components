@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/error-boundary",
-  "version": "2.1.24-pr.1974.0fd2db008.0",
+  "version": "2.1.24-pr.1974.0fd2db008.1",
   "type": "module",
   "main": "./dist/error-boundary.umd.js",
   "module": "./dist/error-boundary.es.js",

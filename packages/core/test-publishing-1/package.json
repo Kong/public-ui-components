@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/test-publishing-1",
-  "version": "0.0.2-pr.1974.0fd2db008.0",
+  "version": "0.0.2-pr.1974.0fd2db008.1",
   "type": "module",
   "main": "./dist/test-publishing-1.umd.js",
   "module": "./dist/test-publishing-1.es.js",
