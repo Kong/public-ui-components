@@ -450,8 +450,6 @@ import {
 import '@kong-ui-public/entities-shared/dist/style.css'
 import { useDebounceFn } from '@vueuse/core'
 import {
-  demoStockRoute,
-  demoWeatherRoute,
   demoStockService,
   demoWeatherService,
 } from '../constants'
@@ -508,7 +506,7 @@ const props = defineProps({
 const isCollapsed = ref(true)
 const router = useRouter()
 const { i18nT, i18n: { t } } = composables.useI18n()
-const { getMessageFromError, getErrorFieldsFromError } = useErrors()
+const { getErrorFieldsFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const validators = useValidators()
 
