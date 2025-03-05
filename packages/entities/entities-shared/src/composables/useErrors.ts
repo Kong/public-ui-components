@@ -107,7 +107,7 @@ export default function useErrors() {
           if (entry.field) {
             fields.push({ field: entry.field, message: errorMessage })
           }
-          messages.push(`${entry.field} ${errorMessage}`)
+          messages.push(`${entry.field ?? ''} ${errorMessage}`)
         })
         return { messages, fields }
       }
