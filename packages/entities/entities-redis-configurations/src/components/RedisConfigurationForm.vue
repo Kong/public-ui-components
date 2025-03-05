@@ -130,6 +130,7 @@
             tooltipAttributes: { maxWidth: '400' },
           }"
           :readonly="form.readonly"
+          show-password-mask-toggle
           type="password"
         />
         <VaultSecretPickerProvider
@@ -257,6 +258,7 @@
             tooltipAttributes: { maxWidth: '400' },
           }"
           :readonly="form.readonly"
+          show-password-mask-toggle
           type="password"
         />
         <VaultSecretPickerProvider
