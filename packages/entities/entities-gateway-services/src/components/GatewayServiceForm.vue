@@ -56,7 +56,7 @@
                 class="gateway-service-url-input gateway-service-form-margin-bottom"
                 data-testid="gateway-service-url-input"
                 :error="getFieldErrorById('url').length > 0"
-                :error-message="form.errorMessages.length <= 1 ? getFieldErrorById('url') : undefined"
+                :error-message="form.errorMessages.length == 0 ? getFieldErrorById('url') : undefined"
                 :label="t('gateway_services.form.fields.upstream_url.label')"
                 :label-attributes="{
                   info: config.app === 'konnect'
@@ -67,12 +67,16 @@
                 name="url"
                 :placeholder="t('gateway_services.form.fields.upstream_url.placeholder')"
                 required
-                @input="handleChangeUrl"
+                @input="handleValidateFullUrl"
               >
-                <template #after>
+                <template
+                  v-if="!hideTrySampleApiButton"
+                  #after
+                >
                   <KButton
                     appearance="tertiary"
                     size="small"
+                    @click="handleTrySampleApi"
                   >
                     Try Sample API
                   </KButton>
@@ -115,7 +119,7 @@
               name="host"
               :placeholder="t('gateway_services.form.fields.host.placeholder')"
               required
-              @input="handleValidateCustomUrl"
+              @input="handleValidateCustomUrl('host')"
             />
 
             <div v-if="setPathAllowed">
@@ -132,7 +136,7 @@
                 }"
                 name="path"
                 :placeholder="t('gateway_services.form.fields.path.placeholder')"
-                @input="handleValidateCustomUrl"
+                @input="handleValidateCustomUrl('path')"
               />
             </div>
 
@@ -149,7 +153,7 @@
               }"
               name="port"
               type="number"
-              @input="handleValidateCustomUrl"
+              @input="handleValidateCustomUrl('port')"
               @update:model-value="() => {
                 form.fields.port = handleFloatVal(form.fields.port + '')
               }"
@@ -263,6 +267,7 @@
                   :placeholder="t('gateway_services.form.fields.client_certificate.placeholder')"
                   :readonly="form.isReadonly"
                   type="text"
+                  @input="handleValidateAdvancedFields('client_certificate')"
                 />
               </div>
 
@@ -280,6 +285,7 @@
                   :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
                   :readonly="form.isReadonly"
                   type="text"
+                  @input="handleValidateAdvancedFields('ca_certificates')"
                 >
                   <template #label-tooltip>
                     <i18nT
@@ -393,7 +399,7 @@
         </KCollapse>
       </EntityFormSection>
       <KAlert
-        v-if="form.errorMessages.length > 1"
+        v-if="form.errorMessages.length"
         appearance="danger"
       >
         <ul class="form-error-list">
@@ -443,6 +449,12 @@ import {
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import { useDebounceFn } from '@vueuse/core'
+import {
+  demoStockRoute,
+  demoWeatherRoute,
+  demoStockService,
+  demoWeatherService,
+} from '../constants'
 
 const emit = defineEmits<{
   (e: 'update', data: Record<string, any>): void,
@@ -481,7 +493,7 @@ const props = defineProps({
     default: false,
   },
   /** Whether show or hide Try sample API button */
-  hideTrySampleAPIButton: {
+  hideTrySampleApiButton: {
     type: Boolean,
     required: false,
     default: false,
@@ -507,6 +519,7 @@ const isEditing = computed(() => !!props.gatewayServiceId)
 const checkedGroup = ref(isEditing.value ? 'protocol' : 'url')
 const getPort = composables.usePortFromProtocol()
 const preValidateErrorMessage = ref('')
+const demoTryTimes = ref(0)
 const hasPreValidateError = computed((): boolean => !!preValidateErrorMessage.value)
 
 const form = reactive<GatewayServiceFormState>({
@@ -645,10 +658,7 @@ const handleFloatVal = (oVal: string) => {
   return 0
 }
 
-const changeCheckedGroup = () => {
-  isCollapsed.value = true
-  resetFormFieldErrors()
-  form.errorMessages = []
+const initFieldDefaultValues = () => {
   form.fields.host = formFieldsOriginal.host
   form.fields.path = formFieldsOriginal.path
   form.fields.port = formFieldsOriginal.port
@@ -664,8 +674,43 @@ const changeCheckedGroup = () => {
   form.fields.tls_verify_value = formFieldsOriginal.tls_verify_value
 }
 
-const handleChangeUrl = (): void => {
-  handleValidateFullUrl()
+const changeCheckedGroup = () => {
+  isCollapsed.value = true
+  resetFormFieldErrors()
+  form.errorMessages = []
+  initFieldDefaultValues()
+}
+
+const handleTrySampleApi = (): void => {
+  // Increment demo try counter
+  demoTryTimes.value += 1
+
+  // Determine which demo service to use based on even/odd counter
+  const isWeatherDemo = demoTryTimes.value % 2 === 0
+  const serviceRecord = isWeatherDemo ? { ...demoWeatherService } : { ...demoStockService }
+
+  // Reset form fields before populating
+  initFieldDefaultValues()
+
+  form.fields.name = serviceRecord.name
+
+  switch (checkedGroup.value) {
+    case 'url':
+      // Construct the full URL
+      form.fields.url = `${serviceRecord.protocol}://${serviceRecord.host}${serviceRecord.path}`
+      break
+
+    case 'protocol':
+      // Populate individual protocol-related fields
+      form.fields.host = serviceRecord.host
+      form.fields.path = serviceRecord.path
+      form.fields.protocol = serviceRecord.protocol
+      form.fields.port = serviceRecord.port
+      break
+
+    default:
+      console.warn('Invalid input group selected')
+  }
 }
 
 const validateHost = (host: string): string => {
@@ -752,24 +797,38 @@ const handleValidateFullUrl = useDebounceFn((): void => {
       // validate protocol
       const protocolError = validateProtocol(parsedUrl.protocol)
       if (protocolError) throw new Error(protocolError)
+      form.fields.protocol = parsedUrl.protocol.slice(0, -1)
 
       // validate hostname
       const hostError = validateHost(parsedUrl.hostname)
       if (hostError) throw new Error(hostError)
+      form.fields.host = parsedUrl.hostname
 
       // validate path
       const pathError = validatePath(parsedUrl.pathname)
       if (pathError) throw new Error(pathError)
+      form.fields.path = parsedUrl.pathname
 
       // validate port
       const portError = validatePort(parsedUrl.port)
       if (portError) throw new Error(portError)
+      // extract port value from url and convert to number
+      const portValue = Number(parsedUrl.port)
+      hasExtractPortValue.value = !!portValue
+      form.fields.port = portValue || getPort.getPortFromProtocol(form.fields.protocol)
 
+      emit('url-valid:success')
     } catch (error: any) {
       emit('url-valid:error', error.message || 'URL validation failed')
       form.formFieldErrors.url = error.message || 'URL validation failed'
     }
   }
+}, 300)
+
+const handleValidateAdvancedFields = useDebounceFn((fieldId?: keyof FormFieldErrors) => {
+  // reset the errors
+  resetFormFieldErrors(fieldId ?? undefined)
+
 }, 300)
 
 const getFieldErrorById = computed(() => {
@@ -787,10 +846,11 @@ const getFieldErrorById = computed(() => {
   }
 })
 
-const handleValidateCustomUrl = useDebounceFn((): void => {
-  // validate for the service type custom URL
-// reset the errors
-  resetFormFieldErrors()
+// validate for the service type custom URL
+const handleValidateCustomUrl = useDebounceFn((fieldId?: keyof FormFieldErrors): void => {
+
+  // reset the errors
+  resetFormFieldErrors(fieldId ?? undefined)
 
   // validate hostname
   const hostError = validateHost(form.fields.host)
@@ -803,24 +863,39 @@ const handleValidateCustomUrl = useDebounceFn((): void => {
   // validate port
   const portError = validatePort(form.fields.port)
   if (portError) form.formFieldErrors.port = portError
+
+  if (isFormValid.value) {
+    emit('url-valid:success')
+  } else {
+    emit('url-valid:error', form.errorMessages.join(',') || 'URL validation failed')
+  }
+
 }, 300)
 
-const resetFormFieldErrors = (): void => {
-  form.formFieldErrors = {
-    host: '',
-    port: '',
-    url: '',
-    path: '',
-    tags: '',
-    retries: '',
-    connect_timeout: '',
-    write_timeout: '',
-    read_timeout: '',
-    client_certificate: '',
-    ca_certificates: '',
-    tls_verify_enabled: '',
-    tls_verify_value: '',
+const resetFormFieldErrors = (fieldId?: keyof FormFieldErrors): void => {
+  // if field Id is present only reset the field error
+  if (fieldId) {
+    form.formFieldErrors[fieldId] = ''
+  } else {
+    // reset all field errors
+    form.formFieldErrors = {
+      host: '',
+      port: '',
+      url: '',
+      path: '',
+      tags: '',
+      retries: '',
+      connect_timeout: '',
+      write_timeout: '',
+      read_timeout: '',
+      client_certificate: '',
+      ca_certificates: '',
+      tls_verify_enabled: '',
+      tls_verify_value: '',
+    }
   }
+  // reset the form Error TODO: clear the errors based on the field sent
+  form.errorMessages = []
 }
 
 const isFormValid = computed((): boolean => {
@@ -830,30 +905,9 @@ const isFormValid = computed((): boolean => {
 
 const validateUrl = (): void => {
   if (form.fields.url && checkedGroup.value === 'url') {
-    try {
-      const parsedUrl = new URL(form.fields.url)
-      // if the URL is parsed successfully, clear error message
-      // form.errorMessage = ''
-      // remove the trailing colon appended to parsedUrl.protocol
-      form.fields.protocol = parsedUrl.protocol.slice(0, -1)
-      form.fields.host = parsedUrl.hostname
-      form.fields.path = parsedUrl.pathname
-
-      // extract port value from url and convert to number
-      const portValue = Number(parsedUrl.port)
-
-      hasExtractPortValue.value = !!portValue
-      form.fields.port = portValue || getPort.getPortFromProtocol(form.fields.protocol)
-
-      // form.errorMessage = ''
-      emit('url-valid:success')
-    } catch (error: any) {
-      // form.errorMessage = t('errors.urlErrorMessage')
-      emit('url-valid:error', getMessageFromError(error))
-    }
+    handleValidateFullUrl()
   } else {
-    emit('url-valid:success')
-    // form.errorMessage = ''
+    handleValidateCustomUrl()
   }
 }
 
@@ -1078,6 +1132,8 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
     return response
   } catch (error: any) {
     const { fields, messages } = getErrorFieldsFromError(error)
+    form.errorMessages = messages
+
     if (fields.length) {
       // display error for each of the fields
       fields.forEach((errorField) => {
@@ -1093,9 +1149,6 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
           }
         }
       })
-      form.errorMessages = messages
-    } else {
-      // form.errorMessage = getMessageFromError(error)
     }
     // Emit the error for the host app
     emit('error', error)
@@ -1139,11 +1192,16 @@ defineExpose({
     max-width: 300px;
   }
 
+  :deep(.k-radio) {
+    align-items: normal;
+  }
+
   :deep(.form-section-wrapper) {
     padding-bottom: $kui-space-110;
   }
 
   .form-error-list {
+    list-style-type: disc;
     margin: $kui-space-0;
     padding-left: $kui-space-60;
   }

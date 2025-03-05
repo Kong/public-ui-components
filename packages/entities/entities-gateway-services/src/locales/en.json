@@ -100,12 +100,12 @@
         },
         "host": {
           "label": "Host",
-          "placeholder": "Enter a host",
+          "placeholder": "e.g. www.myapi.com, 127.0.0.1",
           "tooltip": "The host of the upstream server. Note that the host value is case sensitive."
         },
         "path": {
           "label": "Path",
-          "placeholder": "Enter a path",
+          "placeholder": "e.g. /sample",
           "tooltip": "The path to be used in request to the upstream server."
         },
         "port": {
