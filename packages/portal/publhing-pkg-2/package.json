@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/publhing-pkg-2",
-  "version": "0.0.1",
+  "version": "0.0.2-pr.1974.0fd2db008.0",
   "type": "module",
   "main": "./dist/publhing-pkg-2.umd.js",
   "module": "./dist/publhing-pkg-2.es.js",

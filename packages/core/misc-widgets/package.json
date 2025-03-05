@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/misc-widgets",
-  "version": "2.1.55",
+  "version": "2.1.56-pr.1974.0fd2db008.0",
   "type": "module",
   "main": "./dist/misc-widgets.umd.js",
   "module": "./dist/misc-widgets.es.js",

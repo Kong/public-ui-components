@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.12-pr.1974.0fd2db008.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.11...@kong-ui-public/app-layout@4.3.12-pr.1974.0fd2db008.0) (2025-03-05)
+
+
+### Features
+
+* publish previews to internal repository [KHCP-14702] ([dac180e](https://github.com/Kong/public-ui-components/commit/dac180e5fbcd5b033b069f4db64810e0dc953fad))
+
+
+
+
+
 ## [4.3.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.10...@kong-ui-public/app-layout@4.3.11) (2025-02-21)
 
 

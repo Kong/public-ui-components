@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.11-pr.1974.0fd2db008.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.2.10...@kong-ui-public/i18n@2.2.11-pr.1974.0fd2db008.0) (2025-03-05)
+
+
+### Bug Fixes
+
+* modifying yet another package ([0437c41](https://github.com/Kong/public-ui-components/commit/0437c412072751846cb257ecab21daaf72db6218))
+
+
+
+
+
 ## [2.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.2.9...@kong-ui-public/i18n@2.2.10) (2024-11-27)
 
 
