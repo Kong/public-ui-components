@@ -23,6 +23,7 @@ import { ref } from 'vue'
 import type { KonnectPluginSelectConfig, KongManagerPluginSelectConfig, CustomPluginType } from '../../src'
 import { PluginSelect } from '../../src'
 import { AppType } from '@kong-ui-public/entities-shared'
+
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectPluginSelectConfig>({

@@ -19,6 +19,7 @@ import type {
   KongManagerRedisConfigurationEntityConfig,
 } from '../../src'
 import { AppType } from '@kong-ui-public/entities-shared'
+
 const route = useRoute()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 

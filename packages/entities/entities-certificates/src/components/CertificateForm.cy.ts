@@ -1,3 +1,4 @@
+// Cypress component test spec file
 import { AppType, EntityBaseForm } from '@kong-ui-public/entities-shared'
 import type { CyHttpMessages, RouteHandler } from 'cypress/types/net-stubbing'
 import { certificate1, secp384r1CertKeyPair } from '../../fixtures/mockData'

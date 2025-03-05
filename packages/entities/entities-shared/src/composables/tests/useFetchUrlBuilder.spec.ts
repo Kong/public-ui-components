@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import useFetchUrlBuilder from '../useFetchUrlBuilder'
-import { AppType } from '@kong-ui-public/entities-shared'
+import { AppType } from '../../types'
 import type { KongManagerConfig, KonnectConfig } from 'src/types'
 import type { TableDataFetcherParams } from '@kong/kongponents'
 

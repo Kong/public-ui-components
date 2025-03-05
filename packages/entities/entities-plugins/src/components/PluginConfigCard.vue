@@ -160,10 +160,10 @@ import {
   useErrors,
   useHelpers,
   SupportedEntityType,
+  useSchemaProvider,
   AppType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
-import { useSchemaProvider } from '@kong-ui-public/entities-shared'
 import endpoints from '../plugins-endpoints'
 import PluginIcon from './PluginIcon.vue'
 import '@kong-ui-public/entities-shared/dist/style.css'

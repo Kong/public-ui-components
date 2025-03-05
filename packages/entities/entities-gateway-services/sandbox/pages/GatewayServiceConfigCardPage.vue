@@ -20,6 +20,7 @@ import type { AxiosError } from 'axios'
 import type { KonnectGatewayServiceEntityConfig, KongManagerGatewayServiceEntityConfig } from '../../src'
 import { GatewayServiceConfigCard } from '../../src'
 import { AppType } from '@kong-ui-public/entities-shared'
+
 const props = defineProps({
   /** Grab the GatewayService id from the route params */
   id: {

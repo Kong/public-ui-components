@@ -20,6 +20,7 @@ import type { AxiosError } from 'axios'
 import type { KonnectConsumerEntityConfig, KongManagerConsumerEntityConfig } from '../../src'
 import { ConsumerConfigCard } from '../../src'
 import { AppType } from '@kong-ui-public/entities-shared'
+
 const props = defineProps({
   /** Grab the Consumer id from the route params */
   id: {

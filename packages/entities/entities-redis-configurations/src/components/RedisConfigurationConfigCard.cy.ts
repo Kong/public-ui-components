@@ -5,7 +5,7 @@ import {
   redisConfigurationCluster,
   redisConfigurationSentinel,
 } from '../../fixtures/mockData'
-import { AppType } from '@kong/kongponents'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 import type {
   KonnectRedisConfigurationEntityConfig,

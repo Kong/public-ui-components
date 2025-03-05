@@ -1,10 +1,9 @@
 // Cypress component test spec file
 import { h } from 'vue'
 import type { KonnectBaseFormConfig } from '../../types'
-import { SupportedEntityType } from '../../types'
+import { SupportedEntityType, AppType } from '../../types'
 import EntityBaseForm from './EntityBaseForm.vue'
 import { route } from '../../../fixtures/mockData'
-import { AppType } from '@kong-ui-public/entities-shared'
 
 describe('<EntityBaseForm />', () => {
   const controlPlaneId = '123abc-ilove-cats'

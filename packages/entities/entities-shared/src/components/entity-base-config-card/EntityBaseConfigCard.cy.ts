@@ -4,11 +4,10 @@ import type {
   ConfigurationSchema,
   PluginConfigurationSchema,
 } from '../../types'
-import { ConfigurationSchemaSection, SupportedEntityType } from '../../types'
+import { ConfigurationSchemaSection, SupportedEntityType, AppType } from '../../types'
 import { gatewayServiceRecord, pluginRecord, emptyKey, keyWithValue } from '../../../fixtures/mockData'
 import composables from '../../composables'
 import EntityBaseConfigCard from './EntityBaseConfigCard.vue'
-import { AppType } from '@kong-ui-public/entities-shared'
 
 const { convertKeyToTitle } = composables.useStringHelpers()
 

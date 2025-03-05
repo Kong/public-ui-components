@@ -1,7 +1,7 @@
 // Cypress component test spec file
 import ConsumerCredentialList from './ConsumerCredentialList.vue'
 import { v4 as uuidv4 } from 'uuid'
-import { AppType,type FetcherResponse } from '@kong-ui-public/entities-shared'
+import { AppType, type FetcherResponse } from '@kong-ui-public/entities-shared'
 import type { FetcherRawResponse } from '../../fixtures/mockData'
 import {
   paginate,

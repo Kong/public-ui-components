@@ -218,7 +218,6 @@
 import type { PropType } from 'vue'
 import { computed, ref, watch, onBeforeMount } from 'vue'
 import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
-import { EntityEmptyState } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
 import { AddIcon, BookIcon, ServiceDocumentIcon } from '@kong/icons'
@@ -227,6 +226,7 @@ import endpoints from '../certificates-endpoints'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 import {
+  EntityEmptyState,
   EntityBaseTable,
   EntityDeleteModal,
   EntityFilter,

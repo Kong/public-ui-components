@@ -52,6 +52,7 @@ import type { AxiosError } from 'axios'
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 import { AppType } from '@kong-ui-public/entities-shared'
+
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig = ref<KonnectUpstreamsListConfig>({

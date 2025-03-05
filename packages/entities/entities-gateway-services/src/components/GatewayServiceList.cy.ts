@@ -1,4 +1,4 @@
-
+// Cypress component test spec file
 import { type FetcherResponse, AppType } from '@kong-ui-public/entities-shared'
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
