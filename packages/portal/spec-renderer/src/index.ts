@@ -10,3 +10,4 @@ export {
 
 export * from './types'
 export * from './constants'
+console.log('spec-renderer')
