@@ -14,3 +14,4 @@ import TestPublishing1 from './components/TestPublishing1.vue'
 
 export { TestPublishing1 }
 
+console.log('here is the test')

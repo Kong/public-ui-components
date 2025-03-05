@@ -397,6 +397,7 @@ jobs:
           path: packages/
 
       - name: 'Authenticate to Google Cloud'
+        if: ${{ github.event_name == 'push' }}
         id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
