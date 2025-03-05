@@ -14,4 +14,3 @@ import TestPublishing1 from './components/TestPublishing1.vue'
 
 export { TestPublishing1 }
 
-export * from './types'

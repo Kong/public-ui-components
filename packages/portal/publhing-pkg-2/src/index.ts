@@ -13,5 +13,3 @@ import PublhingPkg2 from './components/PublhingPkg2.vue'
 // }
 
 export { PublhingPkg2 }
-
-export * from './types'
