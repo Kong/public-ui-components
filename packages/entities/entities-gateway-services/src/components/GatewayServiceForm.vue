@@ -5,6 +5,7 @@
       :config="config"
       :edit-id="gatewayServiceId"
       :entity-type="SupportedEntityType.GatewayService"
+      :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getPayload"
       :is-readonly="form.isReadonly"
@@ -14,344 +15,6 @@
       @loading="(val: boolean) => $emit('loading', val)"
       @submit="saveFormData"
     >
-      <EntityFormSection
-        :description="t('gateway_services.form.sections.keys.description')"
-        :hide-info-header="hideSectionsInfo"
-        :title="t('gateway_services.form.sections.keys.title')"
-      >
-        <div
-          v-if="!isEditing"
-          class="gateway-service-form-general-info"
-        >
-          <div class="gateway-service-form-group-selection-wrapper">
-            <KRadio
-              v-model="checkedGroup"
-              card
-              card-orientation="horizontal"
-              data-testid="gateway-service-url-radio"
-              :description="t('gateway_services.form.sections.keys.url.description')"
-              :label="t('gateway_services.form.sections.keys.url.label')"
-              :selected-value="whereToSendTraffic.url"
-              @change="changeCheckedGroup"
-            />
-            <KRadio
-              v-model="checkedGroup"
-              card
-              card-orientation="horizontal"
-              checked-group="protocol"
-              data-testid="gateway-service-protocol-radio"
-              :description="t('gateway_services.form.sections.keys.protocol.description')"
-              :label="t('gateway_services.form.sections.keys.protocol.label')"
-              :selected-value="whereToSendTraffic.protocol"
-              @change="changeCheckedGroup"
-            />
-          </div>
-          <Transition name="slide-fade">
-            <div
-              v-if="checkedGroup === 'url'"
-              class="gateway-service-form-group-fields"
-            >
-              <KInput
-                v-model.trim="form.fields.url"
-                class="gateway-service-url-input gateway-service-form-margin-bottom"
-                data-testid="gateway-service-url-input"
-                :error="getFieldErrorById('url').length > 0"
-                :error-message="form.errorMessages.length == 0 ? getFieldErrorById('url') : undefined"
-                :label="t('gateway_services.form.fields.upstream_url.label')"
-                :label-attributes="{
-                  info: config.app === 'konnect'
-                    ? t('gateway_services.form.fields.upstream_url.tooltip_for_konnect')
-                    : t('gateway_services.form.fields.upstream_url.tooltip_for_km'),
-                  tooltipAttributes: { maxWidth: '400' },
-                }"
-                name="url"
-                :placeholder="t('gateway_services.form.fields.upstream_url.placeholder')"
-                required
-                @input="handleValidateFullUrl"
-              >
-                <template
-                  v-if="!hideTrySampleApiButton"
-                  #after
-                >
-                  <KButton
-                    appearance="tertiary"
-                    size="small"
-                    @click="handleTrySampleApi"
-                  >
-                    Try Sample API
-                  </KButton>
-                </template>
-              </KInput>
-            </div>
-          </Transition>
-        </div>
-        <Transition name="slide-fade">
-          <div
-            v-if="checkedGroup === 'protocol' || isEditing"
-            class="gateway-service-form-group-fields"
-          >
-            <KSelect
-              v-model="form.fields.protocol"
-              data-testid="gateway-service-protocol-select"
-              :items="gatewayServiceProtocolItems"
-              :label="t('gateway_services.form.fields.protocol.label')"
-              :label-attributes="{
-                info: t('gateway_services.form.fields.protocol.tooltip'),
-                tooltipAttributes: { maxWidth: '400' },
-              }"
-              :readonly="form.isReadonly"
-              required
-              width="100%"
-              @selected="(item: any) => handleItemSelect(form.fields.protocol, item)"
-            />
-
-            <KInput
-              v-model.trim="form.fields.host"
-              class="gateway-service-form-margin-top"
-              data-testid="gateway-service-host-input"
-              :error="form.formFieldErrors.host.length > 0"
-              :error-message="form.formFieldErrors.host"
-              :label="t('gateway_services.form.fields.host.label')"
-              :label-attributes="{
-                info: t('gateway_services.form.fields.host.tooltip'),
-                tooltipAttributes: { maxWidth: '400' },
-              }"
-              name="host"
-              :placeholder="t('gateway_services.form.fields.host.placeholder')"
-              required
-              @input="handleValidateCustomUrl('host')"
-            />
-
-            <div v-if="setPathAllowed">
-              <KInput
-                v-model.trim="form.fields.path"
-                class="gateway-service-form-margin-top"
-                data-testid="gateway-service-path-input"
-                :error="form.formFieldErrors.path.length > 0"
-                :error-message="form.formFieldErrors.path"
-                :label="t('gateway_services.form.fields.path.label')"
-                :label-attributes="{
-                  info: t('gateway_services.form.fields.path.tooltip'),
-                  tooltipAttributes: { maxWidth: '400' },
-                }"
-                name="path"
-                :placeholder="t('gateway_services.form.fields.path.placeholder')"
-                @input="handleValidateCustomUrl('path')"
-              />
-            </div>
-
-            <KInput
-              v-model="form.fields.port"
-              class="gateway-service-form-margin-top"
-              data-testid="gateway-service-port-input"
-              :error="form.formFieldErrors.port.length > 0"
-              :error-message="form.formFieldErrors.port"
-              :label="t('gateway_services.form.fields.port.label')"
-              :label-attributes="{
-                info: t('gateway_services.form.fields.port.tooltip'),
-                tooltipAttributes: { maxWidth: '400' },
-              }"
-              name="port"
-              type="number"
-              @input="handleValidateCustomUrl('port')"
-              @update:model-value="() => {
-                form.fields.port = handleFloatVal(form.fields.port + '')
-              }"
-            />
-          </div>
-        </Transition>
-
-        <!-- Advanced Fields -->
-        <KCollapse
-          v-model="isCollapsed"
-          data-testid="advanced-fields-collapse"
-          trigger-alignment="leading"
-          :trigger-label="t('gateway_services.form.sections.keys.viewAdvancedFields')"
-        >
-          <Transition name="slide-fade">
-            <div
-              v-if="!isCollapsed"
-              class="gateway-service-form-advanced-fields"
-            >
-              <div class="gateway-service-form-margin-bottom">
-                <KInput
-                  v-model="form.fields.retries"
-                  autocomplete="off"
-                  data-testid="gateway-service-retries-input"
-                  :label="t('gateway_services.form.fields.retries.label')"
-                  :label-attributes="{
-                    info: t('gateway_services.form.fields.retries.tooltip'),
-                    tooltipAttributes: { maxWidth: '400' },
-                  }"
-                  name="retries"
-                  :readonly="form.isReadonly"
-                  type="number"
-                  @update:model-value="() => {
-                    form.fields.retries = handleFloatVal(form.fields.retries + '')
-                  }"
-                />
-              </div>
-
-              <div class="gateway-service-form-margin-bottom">
-                <KInput
-                  v-model="form.fields.connect_timeout"
-                  autocomplete="off"
-                  data-testid="gateway-service-connTimeout-input"
-                  :label="t('gateway_services.form.fields.connect_timeout.label')"
-                  :label-attributes="{
-                    info: t('gateway_services.form.fields.connect_timeout.tooltip'),
-                    tooltipAttributes: { maxWidth: '400' },
-                  }"
-                  name="connTimeout"
-                  :readonly="form.isReadonly"
-                  type="number"
-                  @update:model-value="() => {
-                    form.fields.connect_timeout = handleFloatVal(form.fields.connect_timeout + '')
-                  }"
-                />
-              </div>
-
-              <div class="gateway-service-form-margin-bottom">
-                <KInput
-                  v-model="form.fields.write_timeout"
-                  autocomplete="off"
-                  data-testid="gateway-service-writeTimeout-input"
-                  :label="t('gateway_services.form.fields.write_timeout.label')"
-                  :label-attributes="{
-                    info: t('gateway_services.form.fields.write_timeout.tooltip'),
-                    tooltipAttributes: { maxWidth: '400' },
-                  }"
-                  name="writeTimeout"
-                  :readonly="form.isReadonly"
-                  type="number"
-                  @update:model-value="() => {
-                    form.fields.write_timeout = handleFloatVal(form.fields.write_timeout + '')
-                  }"
-                />
-              </div>
-
-              <div class="gateway-service-form-margin-bottom">
-                <KInput
-                  v-model="form.fields.read_timeout"
-                  autocomplete="off"
-                  data-testid="gateway-service-readTimeout-input"
-                  :label="t('gateway_services.form.fields.read_timeout.label')"
-                  :label-attributes="{
-                    info: t('gateway_services.form.fields.read_timeout.tooltip'),
-                    tooltipAttributes: { maxWidth: '400' },
-                  }"
-                  name="readTimeout"
-                  :readonly="form.isReadonly"
-                  type="number"
-                  @update:model-value="() => {
-                    form.fields.read_timeout = handleFloatVal(form.fields.read_timeout + '')
-                  }"
-                />
-              </div>
-
-              <div
-                v-if="showClientCert"
-                class="gateway-service-form-margin-bottom"
-              >
-                <KInput
-                  v-model.trim="form.fields.client_certificate"
-                  autocomplete="off"
-                  data-testid="gateway-service-clientCert-input"
-                  :error="form.formFieldErrors.client_certificate.length > 0"
-                  :label="t('gateway_services.form.fields.client_certificate.label')"
-                  :label-attributes="{
-                    info: t('gateway_services.form.fields.client_certificate.tooltip'),
-                    tooltipAttributes: { maxWidth: '400' },
-                  }"
-                  name="clientCert"
-                  :placeholder="t('gateway_services.form.fields.client_certificate.placeholder')"
-                  :readonly="form.isReadonly"
-                  type="text"
-                  @input="handleValidateAdvancedFields('client_certificate')"
-                />
-              </div>
-
-              <div
-                v-if="showCaCert"
-                class="gateway-service-form-margin-bottom"
-              >
-                <KInput
-                  v-model.trim="form.fields.ca_certificates"
-                  autocomplete="off"
-                  data-testid="gateway-service-ca-certs-input"
-                  :error="form.formFieldErrors.ca_certificates.length > 0"
-                  :label="t('gateway_services.form.fields.ca_certificates.label')"
-                  :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
-                  :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
-                  :readonly="form.isReadonly"
-                  type="text"
-                  @input="handleValidateAdvancedFields('ca_certificates')"
-                >
-                  <template #label-tooltip>
-                    <i18nT
-                      keypath="gateway_services.form.fields.ca_certificates.tooltip"
-                      scope="global"
-                    >
-                      <template #code1>
-                        <code>{{ t('gateway_services.form.fields.ca_certificates.code1') }}</code>
-                      </template>
-                      <template #code2>
-                        <code>{{ t('gateway_services.form.fields.ca_certificates.code2') }}</code>
-                      </template>
-                    </i18nT>
-                  </template>
-                </KInput>
-              </div>
-
-              <div
-                v-if="showTlsVerify"
-                class="gateway-service-form-margin-bottom"
-              >
-                <KCheckbox
-                  v-model="form.fields.tls_verify_enabled"
-                  data-testid="gateway-service-tls-verify-checkbox"
-                  :description="t('gateway_services.form.fields.tls_verify_enabled.help')"
-                  :label="t('gateway_services.form.fields.tls_verify_enabled.label')"
-                  :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
-                >
-                  <template #tooltip>
-                    <i18nT
-                      keypath="gateway_services.form.fields.tls_verify_enabled.tooltip"
-                      scope="global"
-                    >
-                      <template #code1>
-                        <code>{{ t('gateway_services.form.fields.tls_verify_enabled.code1') }}</code>
-                      </template>
-                    </i18nT>
-                  </template>
-                </KCheckbox>
-                <div
-                  v-if="form.fields.tls_verify_enabled"
-                  class="checkbox-aligned-radio"
-                >
-                  <KRadio
-                    v-model="form.fields.tls_verify_value"
-                    data-testid="gateway-service-tls-verify-true-option"
-                    :label="t('gateway_services.form.fields.tls_verify_option.true.label')"
-                    :selected-value="true"
-                  />
-                </div>
-                <div
-                  v-if="form.fields.tls_verify_enabled"
-                  class="checkbox-aligned-radio"
-                >
-                  <KRadio
-                    v-model="form.fields.tls_verify_value"
-                    data-testid="gateway-service-tls-verify-false-option"
-                    :label="t('gateway_services.form.fields.tls_verify_option.false.label')"
-                    :selected-value="false"
-                  />
-                </div>
-              </div>
-            </div>
-          </Transition>
-        </KCollapse>
-      </EntityFormSection>
       <EntityFormSection
         :description="t('gateway_services.form.sections.general.description')"
         :hide-info-header="hideSectionsInfo"
@@ -374,43 +37,327 @@
           type="text"
           @input="validateName"
         />
-        <KCollapse
-          data-testid="tags-collapse"
-          trigger-alignment="leading"
-          :trigger-label="t('gateway_services.form.fields.tags.collapse')"
-        >
-          <div class="gateway-service-form-tags">
+
+        <KInput
+          v-model.trim="form.fields.tags"
+          autocomplete="off"
+          data-testid="gateway-service-tags-input"
+          :help="t('gateway_services.form.fields.tags.help')"
+          :label="t('gateway_services.form.fields.tags.label')"
+          :label-attributes="{
+            info: t('gateway_services.form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' }
+          }"
+          name="tags"
+          :placeholder="t('gateway_services.form.fields.tags.placeholder')"
+          :readonly="form.isReadonly"
+          type="text"
+        />
+      </EntityFormSection>
+
+      <EntityFormSection
+        :description="t('gateway_services.form.sections.keys.description')"
+        :hide-info-header="hideSectionsInfo"
+        :title="t('gateway_services.form.sections.keys.title')"
+      >
+        <div v-if="!isEditing">
+          <div class="gateway-service-form-traffic-label">
+            <KLabel required>
+              {{ t('gateway_services.form.sections.keys.checkedGroupLabel') }}
+            </KLabel>
+          </div>
+
+          <div class="gateway-service-form-margin-bottom">
+            <KRadio
+              v-model="checkedGroup"
+              data-testid="gateway-service-url-radio"
+              :selected-value="whereToSendTraffic.url"
+              @change="changeCheckedGroup"
+            >
+              {{ t('gateway_services.form.sections.keys.urlLabel') }}
+            </KRadio>
+          </div>
+
+          <div
+            v-if="checkedGroup === 'url'"
+            class="gateway-service-form-group-fields"
+          >
             <KInput
-              v-model.trim="form.fields.tags"
-              autocomplete="off"
-              data-testid="gateway-service-tags-input"
-              :help="t('gateway_services.form.fields.tags.help')"
-              :label="t('gateway_services.form.fields.tags.label')"
+              v-model.trim="form.fields.url"
+              class="gateway-service-url-input gateway-service-form-margin-bottom"
+              data-testid="gateway-service-url-input"
+              :label="t('gateway_services.form.fields.upstream_url.label')"
               :label-attributes="{
-                info: t('gateway_services.form.fields.tags.tooltip'),
-                tooltipAttributes: { maxWidth: '400' }
+                info: config.app === 'konnect'
+                  ? t('gateway_services.form.fields.upstream_url.tooltip_for_konnect')
+                  : t('gateway_services.form.fields.upstream_url.tooltip_for_km'),
+                tooltipAttributes: { maxWidth: '400' },
               }"
-              name="tags"
-              :placeholder="t('gateway_services.form.fields.tags.placeholder')"
-              :readonly="form.isReadonly"
-              type="text"
+              name="url"
+              :placeholder="t('gateway_services.form.fields.upstream_url.placeholder')"
+              required
             />
+          </div>
+
+          <KRadio
+            v-model="checkedGroup"
+            checked-group="protocol"
+            data-testid="gateway-service-protocol-radio"
+            :selected-value="whereToSendTraffic.protocol"
+            @change="changeCheckedGroup"
+          >
+            {{ t('gateway_services.form.sections.keys.checkedGroupAltLabel') }}
+          </KRadio>
+        </div>
+
+        <div
+          v-if="checkedGroup === 'protocol' || isEditing"
+          class="gateway-service-form-group-fields"
+        >
+          <KSelect
+            v-model="form.fields.protocol"
+            data-testid="gateway-service-protocol-select"
+            :items="gatewayServiceProtocolItems"
+            :label="t('gateway_services.form.fields.protocol.label')"
+            :label-attributes="{
+              info: t('gateway_services.form.fields.protocol.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            :readonly="form.isReadonly"
+            required
+            width="100%"
+            @selected="(item: any) => handleItemSelect(form.fields.protocol, item)"
+          />
+
+          <KInput
+            v-model.trim="form.fields.host"
+            class="gateway-service-form-margin-top"
+            data-testid="gateway-service-host-input"
+            :label="t('gateway_services.form.fields.host.label')"
+            :label-attributes="{
+              info: t('gateway_services.form.fields.host.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            name="host"
+            :placeholder="t('gateway_services.form.fields.host.placeholder')"
+            required
+          />
+
+          <div v-if="setPathAllowed">
+            <KInput
+              v-model.trim="form.fields.path"
+              class="gateway-service-form-margin-top"
+              data-testid="gateway-service-path-input"
+              :label="t('gateway_services.form.fields.path.label')"
+              :label-attributes="{
+                info: t('gateway_services.form.fields.path.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              name="path"
+              :placeholder="t('gateway_services.form.fields.path.placeholder')"
+            />
+          </div>
+
+          <KInput
+            v-model="form.fields.port"
+            class="gateway-service-form-margin-top"
+            data-testid="gateway-service-port-input"
+            :label="t('gateway_services.form.fields.port.label')"
+            :label-attributes="{
+              info: t('gateway_services.form.fields.port.tooltip'),
+              tooltipAttributes: { maxWidth: '400' },
+            }"
+            name="port"
+            type="number"
+            @update:model-value="() => {
+              form.fields.port = handleFloatVal(form.fields.port + '')
+            }"
+          />
+        </div>
+
+        <!-- Advanced Fields -->
+        <KCollapse
+          v-model="isCollapsed"
+          data-testid="advanced-fields-collapse"
+          trigger-alignment="leading"
+          :trigger-label="t('gateway_services.form.sections.keys.viewAdvancedFields')"
+        >
+          <div class="gateway-service-form-margin-top">
+            <div class="gateway-service-form-margin-bottom">
+              <KInput
+                v-model="form.fields.retries"
+                autocomplete="off"
+                data-testid="gateway-service-retries-input"
+                :label="t('gateway_services.form.fields.retries.label')"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.retries.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
+                name="retries"
+                :readonly="form.isReadonly"
+                type="number"
+                @update:model-value="() => {
+                  form.fields.retries = handleFloatVal(form.fields.retries + '')
+                }"
+              />
+            </div>
+
+            <div class="gateway-service-form-margin-bottom">
+              <KInput
+                v-model="form.fields.connect_timeout"
+                autocomplete="off"
+                data-testid="gateway-service-connTimeout-input"
+                :label="t('gateway_services.form.fields.connect_timeout.label')"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.connect_timeout.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
+                name="connTimeout"
+                :readonly="form.isReadonly"
+                type="number"
+                @update:model-value="() => {
+                  form.fields.connect_timeout = handleFloatVal(form.fields.connect_timeout + '')
+                }"
+              />
+            </div>
+
+            <div class="gateway-service-form-margin-bottom">
+              <KInput
+                v-model="form.fields.write_timeout"
+                autocomplete="off"
+                data-testid="gateway-service-writeTimeout-input"
+                :label="t('gateway_services.form.fields.write_timeout.label')"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.write_timeout.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
+                name="writeTimeout"
+                :readonly="form.isReadonly"
+                type="number"
+                @update:model-value="() => {
+                  form.fields.write_timeout = handleFloatVal(form.fields.write_timeout + '')
+                }"
+              />
+            </div>
+
+            <div class="gateway-service-form-margin-bottom">
+              <KInput
+                v-model="form.fields.read_timeout"
+                autocomplete="off"
+                data-testid="gateway-service-readTimeout-input"
+                :label="t('gateway_services.form.fields.read_timeout.label')"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.read_timeout.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
+                name="readTimeout"
+                :readonly="form.isReadonly"
+                type="number"
+                @update:model-value="() => {
+                  form.fields.read_timeout = handleFloatVal(form.fields.read_timeout + '')
+                }"
+              />
+            </div>
+
+            <div
+              v-if="showClientCert"
+              class="gateway-service-form-margin-bottom"
+            >
+              <KInput
+                v-model.trim="form.fields.client_certificate"
+                autocomplete="off"
+                data-testid="gateway-service-clientCert-input"
+                :label="t('gateway_services.form.fields.client_certificate.label')"
+                :label-attributes="{
+                  info: t('gateway_services.form.fields.client_certificate.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
+                name="clientCert"
+                :placeholder="t('gateway_services.form.fields.client_certificate.placeholder')"
+                :readonly="form.isReadonly"
+                type="text"
+              />
+            </div>
+
+            <div
+              v-if="showCaCert"
+              class="gateway-service-form-margin-bottom"
+            >
+              <KInput
+                v-model.trim="form.fields.ca_certificates"
+                autocomplete="off"
+                data-testid="gateway-service-ca-certs-input"
+                :label="t('gateway_services.form.fields.ca_certificates.label')"
+                :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
+                :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
+                :readonly="form.isReadonly"
+                type="text"
+              >
+                <template #label-tooltip>
+                  <i18nT
+                    keypath="gateway_services.form.fields.ca_certificates.tooltip"
+                    scope="global"
+                  >
+                    <template #code1>
+                      <code>{{ t('gateway_services.form.fields.ca_certificates.code1') }}</code>
+                    </template>
+                    <template #code2>
+                      <code>{{ t('gateway_services.form.fields.ca_certificates.code2') }}</code>
+                    </template>
+                  </i18nT>
+                </template>
+              </KInput>
+            </div>
+
+            <div
+              v-if="showTlsVerify"
+              class="gateway-service-form-margin-bottom"
+            >
+              <KCheckbox
+                v-model="form.fields.tls_verify_enabled"
+                data-testid="gateway-service-tls-verify-checkbox"
+                :description="t('gateway_services.form.fields.tls_verify_enabled.help')"
+                :label="t('gateway_services.form.fields.tls_verify_enabled.label')"
+                :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
+              >
+                <template #tooltip>
+                  <i18nT
+                    keypath="gateway_services.form.fields.tls_verify_enabled.tooltip"
+                    scope="global"
+                  >
+                    <template #code1>
+                      <code>{{ t('gateway_services.form.fields.tls_verify_enabled.code1') }}</code>
+                    </template>
+                  </i18nT>
+                </template>
+              </KCheckbox>
+              <div
+                v-if="form.fields.tls_verify_enabled"
+                class="checkbox-aligned-radio"
+              >
+                <KRadio
+                  v-model="form.fields.tls_verify_value"
+                  data-testid="gateway-service-tls-verify-true-option"
+                  :label="t('gateway_services.form.fields.tls_verify_option.true.label')"
+                  :selected-value="true"
+                />
+              </div>
+              <div
+                v-if="form.fields.tls_verify_enabled"
+                class="checkbox-aligned-radio"
+              >
+                <KRadio
+                  v-model="form.fields.tls_verify_value"
+                  data-testid="gateway-service-tls-verify-false-option"
+                  :label="t('gateway_services.form.fields.tls_verify_option.false.label')"
+                  :selected-value="false"
+                />
+              </div>
+            </div>
           </div>
         </KCollapse>
       </EntityFormSection>
-      <KAlert
-        v-if="form.errorMessages.length"
-        appearance="danger"
-      >
-        <ul class="form-error-list">
-          <li
-            v-for="errorMessage in form.errorMessages"
-            :key="errorMessage"
-          >
-            {{ errorMessage }}
-          </li>
-        </ul>
-      </KAlert>
+
       <template #form-actions>
         <slot
           :can-submit="canSubmit"
@@ -432,7 +379,6 @@ import type {
   KonnectGatewayServiceFormConfig,
   KongManagerGatewayServiceFormConfig,
   GatewayServiceFormState,
-  FormFieldErrors,
   GatewayServiceFormFields,
 } from '../types'
 import endpoints from '../gateway-services-endpoints'
@@ -448,11 +394,6 @@ import {
   SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import { useDebounceFn } from '@vueuse/core'
-import {
-  demoStockService,
-  demoWeatherService,
-} from '../constants'
 
 const emit = defineEmits<{
   (e: 'update', data: Record<string, any>): void,
@@ -461,7 +402,6 @@ const emit = defineEmits<{
   (e: 'url-valid:error', error: string): void,
   (e: 'loading', isLoading: boolean): void,
   (e: 'model-updated', val: Record<string, any>): void,
-  (e: 'try-sample-api', val: Record<string, any>): void,
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -490,23 +430,12 @@ const props = defineProps({
     required: false,
     default: false,
   },
-  /** Whether show or hide Try sample API button */
-  hideTrySampleApiButton: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  sampleApiList: {
-    type: Array,
-    required: false,
-    default: ()=> [],
-  },
 })
 
 const isCollapsed = ref(true)
 const router = useRouter()
 const { i18nT, i18n: { t } } = composables.useI18n()
-const { getErrorFieldsFromError } = useErrors()
+const { getMessageFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const validators = useValidators()
 
@@ -517,7 +446,6 @@ const isEditing = computed(() => !!props.gatewayServiceId)
 const checkedGroup = ref(isEditing.value ? 'protocol' : 'url')
 const getPort = composables.usePortFromProtocol()
 const preValidateErrorMessage = ref('')
-const demoTryTimes = ref(0)
 const hasPreValidateError = computed((): boolean => !!preValidateErrorMessage.value)
 
 const form = reactive<GatewayServiceFormState>({
@@ -539,22 +467,7 @@ const form = reactive<GatewayServiceFormState>({
     tags: '',
   },
   isReadonly: false,
-  errorMessages: [],
-  formFieldErrors: {
-    host: '',
-    port: '',
-    path: '',
-    url: '',
-    tags: '',
-    retries: '',
-    connect_timeout: '',
-    write_timeout: '',
-    read_timeout: '',
-    client_certificate: '',
-    ca_certificates: '',
-    tls_verify_enabled: '',
-    tls_verify_value: '',
-  },
+  errorMessage: '',
 })
 
 const formFieldsOriginal = reactive<GatewayServiceFormFields>({
@@ -656,7 +569,9 @@ const handleFloatVal = (oVal: string) => {
   return 0
 }
 
-const initFieldDefaultValues = () => {
+const changeCheckedGroup = () => {
+  isCollapsed.value = true
+  form.errorMessage = ''
   form.fields.host = formFieldsOriginal.host
   form.fields.path = formFieldsOriginal.path
   form.fields.port = formFieldsOriginal.port
@@ -672,248 +587,34 @@ const initFieldDefaultValues = () => {
   form.fields.tls_verify_value = formFieldsOriginal.tls_verify_value
 }
 
-const changeCheckedGroup = () => {
-  isCollapsed.value = true
-  resetFormFieldErrors()
-  form.errorMessages = []
-  initFieldDefaultValues()
-}
-
-const handleTrySampleApi = (): void => {
-  // Increment demo try counter
-  demoTryTimes.value += 1
-
-  // Determine which demo service to use based on even/odd counter
-  const isWeatherDemo = demoTryTimes.value % 2 === 0
-  const serviceRecord = isWeatherDemo ? { ...demoWeatherService } : { ...demoStockService }
-
-  // Reset form fields before populating
-  initFieldDefaultValues()
-
-  form.fields.name = serviceRecord.name
-
-  switch (checkedGroup.value) {
-    case 'url':
-      // Construct the full URL
-      form.fields.url = `${serviceRecord.protocol}://${serviceRecord.host}${serviceRecord.path}`
-      break
-
-    case 'protocol':
-      // Populate individual protocol-related fields
-      form.fields.host = serviceRecord.host
-      form.fields.path = serviceRecord.path
-      form.fields.protocol = serviceRecord.protocol
-      form.fields.port = serviceRecord.port
-      break
-
-    default:
-      console.warn('Invalid input group selected')
-  }
-}
-
-const validateHost = (host: string): string => {
-  // check if host is empty
-  if (!host || host.trim() === '') return 'host cannot be empty'
-
-  // check if a valid host (domain or ip address)
-  const hostnameRegex = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9])$|^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/
-  if (!hostnameRegex.test(host)) return 'invalid host'
-  return ''
-}
-
-const validateProtocol = (protocol: string) => {
-  // check if protocol is empty
-  if (!protocol || protocol.trim() === '') return 'protocol cannot be empty'
-  // strip out the : from protocol
-  protocol = protocol.slice(0,-1)
-  // check if protocol is valid
-  const selectedProtocol = gatewayServiceProtocolItems.find((item)=>{
-    if (item.value === protocol) return item
-    else return undefined
-  })
-
-  if (selectedProtocol === undefined) return 'protocol - value must be one of "http", "https", "grpc", "grpcs", "tcp", "udp", "tls", "tls_passthrough", "ws", "wss"'
-
-  return ''
-}
-
-const validatePort = (port: number | null | undefined | string): string => {
-  // Port is not required, so return empty string if not provided
-  if (port === null || port === undefined || port === '') {
-    return ''
-  }
-
-  // Convert to number if it's a string
-  const portNum = typeof port === 'string' ? parseInt(port, 10) : port
-
-  // Check if port is a valid number
-  if (isNaN(portNum)) {
-    return 'Port must be a number'
-  }
-
-  // Check if port is in valid range (0-65535)
-  if (portNum < 0 || portNum > 65535) {
-    return 'Port must be between 0 and 65535'
-  }
-
-  // Valid port
-  return ''
-}
-
-const validatePath = (path: string | null | undefined): string => {
-  // Path is not required, so return empty string if not provided
-  if (!path || path === '') {
-    return ''
-  }
-
-  // If path exists, it should start with '/'
-  if (!path.startsWith('/')) {
-    return 'Path must begin with /'
-  }
-
-  // This regex matches any character that is NOT allowed by RFC 3986
-  const invalidCharsRegex = /[^A-Za-z0-9\-._~:/?#[\]@!$&'()*+,;=%]/
-
-  if (invalidCharsRegex.test(path)) {
-    return 'Path should not include characters outside of the reserved list of RFC 3986'
-  }
-
-  // Valid path according to RFC 3986
-  return ''
-}
-
-const handleValidateFullUrl = useDebounceFn((): void => {
-  // reset the errors
-  resetFormFieldErrors()
-
-  if (form.fields.url.length) {
+const validateUrl = (): void => {
+  if (form.fields.url && checkedGroup.value === 'url') {
     try {
-      // try constructing a url
       const parsedUrl = new URL(form.fields.url)
-      // url is valid
+      // if the URL is parsed successfully, clear error message
+      form.errorMessage = ''
 
-      // validate protocol
-      const protocolError = validateProtocol(parsedUrl.protocol)
-      if (protocolError) throw new Error(protocolError)
+      // remove the trailing colon appended to parsedUrl.protocol
       form.fields.protocol = parsedUrl.protocol.slice(0, -1)
-
-      // validate hostname
-      const hostError = validateHost(parsedUrl.hostname)
-      if (hostError) throw new Error(hostError)
       form.fields.host = parsedUrl.hostname
-
-      // validate path
-      const pathError = validatePath(parsedUrl.pathname)
-      if (pathError) throw new Error(pathError)
       form.fields.path = parsedUrl.pathname
 
-      // validate port
-      const portError = validatePort(parsedUrl.port)
-      if (portError) throw new Error(portError)
       // extract port value from url and convert to number
       const portValue = Number(parsedUrl.port)
+
       hasExtractPortValue.value = !!portValue
       form.fields.port = portValue || getPort.getPortFromProtocol(form.fields.protocol)
 
+      form.errorMessage = ''
       emit('url-valid:success')
     } catch (error: any) {
-      emit('url-valid:error', error.message || 'URL validation failed')
-      form.formFieldErrors.url = error.message || 'URL validation failed'
+      form.errorMessage = t('errors.urlErrorMessage')
+      emit('url-valid:error', getMessageFromError(error))
     }
-  }
-}, 300)
-
-const handleValidateAdvancedFields = useDebounceFn((fieldId?: keyof FormFieldErrors) => {
-  // reset the errors
-  resetFormFieldErrors(fieldId ?? undefined)
-
-}, 300)
-
-const getFieldErrorById = computed(() => {
-  return (fieldId: keyof FormFieldErrors): string => {
-    const errorsMap = form.formFieldErrors
-
-    if (fieldId === 'url') {
-      if (errorsMap.host.length) return errorsMap.host
-      else if (errorsMap.path.length) return errorsMap.path
-      else return errorsMap.url
-    }
-
-    if (errorsMap[fieldId]) return errorsMap[fieldId]
-    return ''
-  }
-})
-
-// validate for the service type custom URL
-const handleValidateCustomUrl = useDebounceFn((fieldId?: keyof FormFieldErrors): void => {
-
-  // reset the errors
-  resetFormFieldErrors(fieldId ?? undefined)
-
-  // validate hostname
-  const hostError = validateHost(form.fields.host)
-  if (hostError) form.formFieldErrors.host = hostError
-
-  // validate path
-  const pathError = validatePath(form.fields.path)
-  if (pathError) form.formFieldErrors.path = pathError
-
-  // validate port
-  const portError = validatePort(form.fields.port)
-  if (portError) form.formFieldErrors.port = portError
-
-  if (isFormValid.value) {
+  } else {
     emit('url-valid:success')
-  } else {
-    emit('url-valid:error', form.errorMessages.join(',') || 'URL validation failed')
+    form.errorMessage = ''
   }
-
-}, 300)
-
-const resetFormFieldErrors = (fieldId?: keyof FormFieldErrors): void => {
-  // if field Id is present only reset the field error
-  if (fieldId) {
-    form.formFieldErrors[fieldId] = ''
-  } else {
-    // reset all field errors
-    form.formFieldErrors = {
-      host: '',
-      port: '',
-      url: '',
-      path: '',
-      tags: '',
-      retries: '',
-      connect_timeout: '',
-      write_timeout: '',
-      read_timeout: '',
-      client_certificate: '',
-      ca_certificates: '',
-      tls_verify_enabled: '',
-      tls_verify_value: '',
-    }
-  }
-  // reset the form Error TODO: clear the errors based on the field sent
-  form.errorMessages = []
-}
-
-const isFormValid = computed((): boolean => {
-  // check if no errors present
-  return Object.values(form.formFieldErrors).some(error => error !== null && error !== '') && !hasPreValidateError.value
-})
-
-const validateUrl = (): void => {
-  if (form.fields.url && checkedGroup.value === 'url') {
-    handleValidateFullUrl()
-  } else {
-    handleValidateCustomUrl()
-  }
-}
-
-const generateServiceName = (): string => {
-  return `new-service-${ new Date()
-    .toISOString()
-    .replace(/\D/g, '')
-    .slice(0, 17)}`
 }
 
 const setPathAllowed = computed(() => {
@@ -959,8 +660,8 @@ const validateName = (input: string): void => {
  * If the form.fields and formFieldsOriginal are equal, always return false
  */
 const canSubmit = computed((): boolean =>
-  (isEditing.value && (JSON.stringify(form.fields) !== JSON.stringify(formFieldsOriginal))) || ((checkedGroup.value === 'url' && !!form.fields.url && !isFormValid.value) ||
-  (checkedGroup.value === 'protocol' && !!form.fields.host && !isFormValid.value)))
+  (isEditing.value && (JSON.stringify(form.fields) !== JSON.stringify(formFieldsOriginal))) || ((checkedGroup.value === 'url' && !!form.fields.url) ||
+  (checkedGroup.value === 'protocol' && !!form.fields.host)))
 
 const initForm = (data: Record<string, any>): void => {
   form.fields.name = data?.name || ''
@@ -1129,25 +830,7 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
 
     return response
   } catch (error: any) {
-    const { fields, messages } = getErrorFieldsFromError(error)
-    form.errorMessages = messages
-
-    if (fields.length) {
-      // display error for each of the fields
-      fields.forEach((errorField) => {
-        const field = errorField.field as string
-        if (field === 'client_certificate.id') {
-          form.formFieldErrors.client_certificate = errorField.message
-        } else if (field === 'ca_certificates[0]') {
-          form.formFieldErrors.ca_certificates = errorField.message
-        } else if (Object.keys(form.formFieldErrors).includes(field)) {
-          form.formFieldErrors = {
-            ...form.formFieldErrors,
-            [field]: errorField.message,
-          }
-        }
-      })
-    }
+    form.errorMessage = getMessageFromError(error)
     // Emit the error for the host app
     emit('error', error)
   } finally {
@@ -1167,10 +850,6 @@ watch(form.fields, (newValue) => {
 
 onMounted(() => {
   emit('model-updated', getPayload.value)
-  // generate name if new service
-  if (!isEditing.value) {
-    form.fields.name = generateServiceName()
-  }
 })
 
 defineExpose({
@@ -1190,33 +869,8 @@ defineExpose({
     max-width: 300px;
   }
 
-  :deep(.k-radio) {
-    align-items: normal;
-  }
-
-  :deep(.form-section-wrapper) {
-    padding-bottom: $kui-space-110;
-  }
-
-  .form-error-list {
-    list-style-type: disc;
-    margin: $kui-space-0;
-    padding-left: $kui-space-60;
-  }
-
   .gateway-service-form-margin-top {
     margin-top: $kui-space-60;
-  }
-
-  .gateway-service-form-advanced-fields {
-    display: flex;
-    flex-direction: column;
-    gap: $kui-space-60;
-    margin-left: $kui-space-50;
-  }
-
-  .gateway-service-form-tags {
-    margin-left: $kui-space-50;
   }
 
   .gateway-service-form-traffic-label {
@@ -1231,44 +885,17 @@ defineExpose({
     }
   }
 
-  .gateway-service-form-general-info {
-    display: flex;
-    flex-direction: column;
-    gap: $kui-space-80;
-  }
-
   .gateway-service-form-group-fields {
-    // margin-left: $kui-space-80;
+    margin-left: $kui-space-80;
   }
 
-  .gateway-service-form-group-selection-wrapper {
-    display: flex;
-    flex-direction: row;
-    gap: $kui-space-60;
-
-    :deep(.radio-label-wrapper) {
-      height: auto;
-    }
+  .gateway-service-form-margin-bottom {
+    margin-bottom: $kui-space-60;
   }
 
   .checkbox-aligned-radio {
     margin: $kui-space-20;
     padding-left: $kui-space-80;
   }
-}
-
-/* Transition styles */
-.slide-fade-enter-active {
-  transition: all 0.5s ease;
-}
-
-.slide-fade-enter-from {
-  opacity: 0;
-  transform: translateY(-5px);
-}
-
-.slide-fade-leave-to {
-  opacity: 0;
-  transform: translateY(5px);
 }
 </style>

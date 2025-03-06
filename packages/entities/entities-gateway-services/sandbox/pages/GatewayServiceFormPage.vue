@@ -1,6 +1,6 @@
 <template>
   <h2>Konnect API</h2>
-  <GatewayServiceForm
+  <NewGatewayServiceForm
     :config="konnectConfig"
     :gateway-service-id="id"
     @error="onError"
@@ -21,7 +21,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectGatewayServiceFormConfig, KongManagerGatewayServiceFormConfig } from '../../src'
-import { GatewayServiceForm } from '../../src'
+import { GatewayServiceForm, NewGatewayServiceForm } from '../../src'
 
 defineProps({
   /** Grab the GatewayService id from the route params */
