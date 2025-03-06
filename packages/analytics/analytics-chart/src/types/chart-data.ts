@@ -135,7 +135,7 @@ export interface LegendValues {
   [label: string]: LegendValueEntry
 }
 
-export interface DoughnutChartData {
+export interface DonutChartData {
   labels: string[]
   backgroundColor: string[]
   borderColor: string[]

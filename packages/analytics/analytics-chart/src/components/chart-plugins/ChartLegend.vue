@@ -216,7 +216,7 @@ const handleLegendItemClick = (datasetIndex: number = 0, segmentIndex: number): 
   chart.update()
 }
 
-// Doughnut charts contain only a single dataset; it is safe to default datasetIndex `0`
+// Donut charts contain only a single dataset; it is safe to default datasetIndex `0`
 // since all other chart types will always have this filled defined.
 const isDatasetVisible = (datasetIndex: number = 0, segmentIndex: number): boolean => {
   if (props.chartInstance === null || props.chartInstance.chart === null) {

@@ -3,7 +3,7 @@ import useBarChartOptions from './useBarChartOptions'
 import useChartJSCommon from './useChartJSCommon'
 import useChartLegendValues from './useChartLegendValues'
 import useChartSelectedRange from './useChartSelectedRange'
-import useDoughnutChartOptions from './useDoughnutChartOptions'
+import useDonutChartOptions from './useDonutChartOptions'
 import useLinechartOptions from './useLineChartOptions'
 import useExploreResultToDatasets from './useExploreResultToDatasets'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
@@ -19,7 +19,7 @@ export default {
   useChartSelectedRange,
   useExploreResultToDatasets,
   useExploreResultToTimeDataset,
-  useDoughnutChartOptions,
+  useDonutChartOptions,
   useLinechartOptions,
   useI18n,
   useReportChartDataForSynthetics,

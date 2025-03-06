@@ -366,7 +366,7 @@ const exploreResult = computed<ExploreResultV4>(() => {
   }
 
   return {
-    // Gauge doughnut chart type should only receive 2 data points
+    // Gauge donut chart type should only receive 2 data points
     data: !isGaugeChart.value
       ? data
       : data.slice(0, 2),
@@ -495,7 +495,7 @@ watch(multiDimensionToggle, () => {
 })
 
 watch(isGaugeChart, () => {
-  // Truncate labels if Gauge (simplified doughnut) chart type
+  // Truncate labels if Gauge (simplified donut) chart type
   if (isGaugeChart.value) {
     statusCodeDimensionValues.value = new Set(statusCodeLabels.slice(0, 2))
   }
