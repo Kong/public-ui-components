@@ -105,6 +105,13 @@
               />
             </div>
           </template>
+
+          <template
+            v-if="config?.isControlPlaneGroup"
+            #message
+          >
+            {{ t('consumers.list.empty_state_v2.group') }}
+          </template>
         </EntityEmptyState>
       </template>
 
