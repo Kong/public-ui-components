@@ -58,7 +58,7 @@
           v-if="showCreateButton"
           appearance="primary"
           data-testid="entity-create-button"
-          size="large"
+          :size="appearance === 'secondary' ? 'medium' : 'large'"
           @click="$emit('click:create')"
         >
           <AddIcon />
@@ -69,7 +69,7 @@
           v-if="learnMore"
           appearance="secondary"
           data-testid="entity-learn-more-button"
-          size="large"
+          :size="appearance === 'secondary' ? 'medium' : 'large'"
           @click="$emit('click:learn-more')"
         >
           <BookIcon decorative />
