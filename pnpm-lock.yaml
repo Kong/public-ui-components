@@ -150,8 +150,8 @@ importers:
         specifier: ~5.6.3
         version: 5.6.3
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
       vite:
         specifier: ^5.4.10
         version: 5.4.10(@types/node@18.19.64)(sass-embedded@1.80.3)(sass@1.80.6)(terser@5.26.0)
@@ -219,8 +219,8 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
       vue-chartjs:
         specifier: ^5.3.1
         version: 5.3.1(chart.js@4.4.5)(vue@3.5.13(typescript@5.6.3))
@@ -573,8 +573,8 @@ importers:
         specifier: 0.52.2
         version: 0.52.2
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
     devDependencies:
       '@kong/atc-router':
         specifier: 1.6.0-rc.1
@@ -989,8 +989,8 @@ importers:
   packages/entities/entities-redis-configurations:
     dependencies:
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
     devDependencies:
       '@kong-ui-public/entities-plugins':
         specifier: workspace:^
@@ -1216,8 +1216,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -1877,6 +1877,7 @@ packages:
 
   '@evilmartians/lefthook@1.8.2':
     resolution: {integrity: sha512-SZdQk3W9q7tcJwnSwEMUubQqVIK7SHxv52hEAnV7o3nPI+xKcmd+rN0hZIJg07wjBaJRAjzdvoQySKQQYPW5Qw==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
