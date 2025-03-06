@@ -253,6 +253,10 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
     margin-top: $kui-space-60;
   }
 
+  .entity-empty-state-message {
+    color: $kui-color-text-neutral-strong;
+  }
+
   .entity-empty-state-action {
     align-items: center;
     display: flex;

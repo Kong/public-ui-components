@@ -103,12 +103,10 @@
           </template>
 
           <template
-            v-if="isControlPlaneGroup"
+            v-if="config?.isControlPlaneGroup"
             #message
           >
-            <p class="control-group-message">
-              {{ t('gateway_services.empty_state_v2.group') }}
-            </p>
+            {{ t('gateway_services.empty_state_v2.group') }}
           </template>
         </EntityEmptyState>
       </template>
@@ -322,11 +320,6 @@ const props = defineProps({
   },
   /** user is onboarding, use onboarding text */
   isServerless: {
-    type: Boolean,
-    default: false,
-  },
-  /** identifies if type control group or not */
-  isControlPlaneGroup: {
     type: Boolean,
     default: false,
   },
@@ -679,11 +672,6 @@ onBeforeMount(async () => {
   align-items: center;
   display: flex;
   gap: $kui-space-50;
-}
-
-.control-group-message {
-  color: $kui-color-text-neutral-strong;
-  margin: $kui-space-0;
 }
 
 .kong-ui-entities-gateway-services-list {
