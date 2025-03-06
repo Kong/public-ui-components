@@ -186,7 +186,7 @@ const limitToggle = ref(false)
 const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
-const chartType = ref<ChartType>('doughnut')
+const chartType = ref<ChartType>('donut')
 const legendPosition = ref(ChartLegendPosition.Right)
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,

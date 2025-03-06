@@ -162,41 +162,41 @@ describe('<AnalyticsChart />', () => {
     cy.get('.sub-label').eq(3).should('include.text', '367K requests')
   })
 
-  it('renders a doughnut chart with multi dimension data', () => {
+  it('renders a donut chart with multi dimension data', () => {
     cy.mount(AnalyticsChart, {
       props: {
         chartData: multiDimensionExploreResult,
         chartOptions: {
-          type: 'doughnut',
+          type: 'donut',
         },
-        chartTitle: 'Doughnut chart',
+        chartTitle: 'Donut chart',
         tooltipTitle: 'Tooltip Title',
       },
     })
 
     cy.get('.analytics-chart-parent').should('be.visible')
-    cy.get('[data-testid="doughnut-chart-parent"]').should('be.visible')
-    cy.get('.chart-header').should('contain.text', 'Doughnut chart')
+    cy.get('[data-testid="donut-chart-parent"]').should('be.visible')
+    cy.get('.chart-header').should('contain.text', 'Donut chart')
     cy.get('[data-testid="legend"]').children().should('have.length', 6)
     cy.get('.label').eq(0).should('include.text', 'GetMeAKongDefault')
     cy.get('.label').eq(1).should('include.text', 'GetMeASongRoute')
   })
 
-  it('renders a doughnut chart with sigle dimension data', () => {
+  it('renders a donut chart with sigle dimension data', () => {
     cy.mount(AnalyticsChart, {
       props: {
         chartData: exploreResult,
         chartOptions: {
-          type: 'doughnut',
+          type: 'donut',
         },
-        chartTitle: 'Doughnut chart',
+        chartTitle: 'Donut chart',
         tooltipTitle: 'Tooltip Title',
       },
     })
 
     cy.get('.analytics-chart-parent').should('be.visible')
-    cy.get('[data-testid="doughnut-chart-parent"]').should('be.visible')
-    cy.get('.chart-header').should('contain.text', 'Doughnut chart')
+    cy.get('[data-testid="donut-chart-parent"]').should('be.visible')
+    cy.get('.chart-header').should('contain.text', 'Donut chart')
     cy.get('[data-testid="legend"]').children().should('have.length', 5)
     cy.get('.label').eq(0).should('include.text', '200')
     cy.get('.sub-label').eq(0).should('include.text', '42K requests')
@@ -215,7 +215,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: emptyExploreResult,
         chartOptions: {
-          type: 'doughnut',
+          type: 'donut',
         },
       },
     })
@@ -232,7 +232,7 @@ describe('<AnalyticsChart />', () => {
       props: {
         chartData: emptyExploreResult,
         chartOptions: {
-          type: 'doughnut',
+          type: 'donut',
         },
         emptyStateTitle,
         emptyStateDescription,

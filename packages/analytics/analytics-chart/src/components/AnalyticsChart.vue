@@ -95,8 +95,8 @@
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-title="tooltipTitle"
       />
-      <DoughnutChart
-        v-else-if="isDoughnutChart"
+      <DonutChart
+        v-else-if="isDonutChart"
         :chart-data="computedChartData"
         :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColors"
         :legend-position="legendPosition"
@@ -114,7 +114,7 @@ import composables from '../composables'
 import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry } from '../types'
 import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
-import DoughnutChart from './chart-types/DoughnutChart.vue'
+import DonutChart from './chart-types/DonutChart.vue'
 import type { PropType } from 'vue'
 import { computed, provide, toRef } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
@@ -258,7 +258,7 @@ const isBarChart = computed<boolean>(() => [
 const isTimeSeriesChart = computed<boolean>(() => {
   return ['timeseries_bar', 'timeseries_line'].some(e => e === props.chartOptions.type)
 })
-const isDoughnutChart = computed<boolean>(() => props.chartOptions.type === 'doughnut')
+const isDonutChart = computed<boolean>(() => props.chartOptions.type === 'donut')
 
 const barChartOrientation = computed<'horizontal' | 'vertical'>(() => props.chartOptions.type.includes('vertical') ? 'vertical' : 'horizontal')
 
