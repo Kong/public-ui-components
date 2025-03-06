@@ -10,7 +10,6 @@ import AppSidebar from './components/sidebar/AppSidebar.vue'
 import SidebarToggle from './components/sidebar/SidebarToggle.vue'
 import AppPageInfoSection from './components/pageInfoSection/AppPageInfoSection.vue'
 
-
 // Export Vue plugin as the default
 export default {
   // Customize Vue plugin options as desired
