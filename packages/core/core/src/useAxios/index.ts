@@ -3,6 +3,7 @@ import { inject } from 'vue'
 import type { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios'
 
 export default function useAxios() {
+  console.log('Change #2')
   /**
    * A function to return the app-level provided base axios instance, if it exists. Otherwise, returns a fallback axios instance.
    * @param {AxiosRequestConfig} options The axios request config
