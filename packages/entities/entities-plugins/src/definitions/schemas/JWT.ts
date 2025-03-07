@@ -25,7 +25,7 @@ export const jwtSecretSchema: JwtSecretFieldSchema = {
         use to verify the token’s signature.`,
         rows: 10,
         visible: (model) => {
-          return model && model.algorithm && /(ES|RS)[\d]{3}/.test(model.algorithm)
+          return model && model.algorithm && /(ES|RS|PS|Ed)[\dA-Za-z]{3}/.test(model.algorithm)
         },
       },
     },
