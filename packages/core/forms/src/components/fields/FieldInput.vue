@@ -43,6 +43,7 @@ import { AUTOFILL_SLOT } from '../../const'
 import debounce from 'lodash-es/debounce'
 import objGet from 'lodash-es/get'
 import isFunction from 'lodash-es/isFunction'
+import isNumber from 'lodash-es/isNumber'
 import composables from '../../composables'
 
 const props = defineProps({
@@ -142,7 +143,7 @@ const formatDatetimeToModel = (newValue: string, oldValue: string): void => {
 }
 
 const formatNumberToModel = (newValue: any, oldValue: any): void => {
-  if (!Number.isFinite(newValue)) {
+  if (!isNumber(newValue)) {
     newValue = NaN
   }
 
@@ -156,7 +157,7 @@ const onInput = (val: string): void => {
   switch (inputType.value) {
     case 'number':
     case 'range':
-      if (Number.isFinite(parseFloat(val))) {
+      if (isNumber(parseFloat(val))) {
         formattedVal = parseFloat(val)
       }
       break
