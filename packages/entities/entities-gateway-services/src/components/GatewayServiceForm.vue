@@ -78,7 +78,7 @@
                     size="small"
                     @click="handleTrySampleApi"
                   >
-                    Try Sample API
+                    {{ t('gateway_services.form.buttons.try_sample') }}
                   </KButton>
                 </template>
               </KInput>
@@ -130,7 +130,7 @@
                   size="small"
                   @click="handleTrySampleApi"
                 >
-                  Try Sample API
+                  {{ t('gateway_services.form.buttons.try_sample') }}
                 </KButton>
               </template>
             </KInput>
@@ -697,7 +697,10 @@ const handleTrySampleApi = (): void => {
   // Reset form fields before populating
   initFieldDefaultValues()
 
-  form.fields.name = KongAirService.name
+  form.fields.name = `${KongAirService.name} + ${new Date()
+    .toISOString() // Convert date to ISO string format (e.g., "2025-03-07T12:30:45.789Z")
+    .replace(/\D/g, '') // Remove all non-digit characters
+    .slice(0, 17)}` // Take the first 17 digits
 
   switch (checkedGroup.value) {
     case 'url':
