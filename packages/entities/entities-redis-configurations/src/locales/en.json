@@ -1,6 +1,6 @@
 {
   "actions": {
-    "create": "New Redis Configuration",
+    "create": "New redis configuration",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
@@ -197,8 +197,8 @@
       }
     },
     "edit_warning_modal": {
-      "title": "Edit Redis configuration",
-      "description": "This Redis configuration is connected to {pluginCount}. Any updates will take effect across all associated instances.",
+      "title": "Edit redis configuration",
+      "description": "This redis configuration is connected to {pluginCount}. Any updates will take effect across all associated instances.",
       "plugin_count": "{count} plugin(s)",
       "confirm": "Confirm"
     }
@@ -211,9 +211,9 @@
     }
   },
   "redis": {
-    "title": "Redis Configurations",
+    "title": "Redis configurations",
     "empty_state": {
-      "title": "Configure a Redis Configuration",
+      "title": "Configure a redis configuration",
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing."
     }
   },
