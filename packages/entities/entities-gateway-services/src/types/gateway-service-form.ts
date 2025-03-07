@@ -72,3 +72,9 @@ export interface SelectItem {
   value: string | number
   selected?: boolean
 }
+
+export interface ProtocolItem {
+  label: string
+  value: string
+  group: string
+}

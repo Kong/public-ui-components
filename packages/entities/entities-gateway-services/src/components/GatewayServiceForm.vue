@@ -55,7 +55,7 @@
                 v-model.trim="form.fields.url"
                 class="gateway-service-url-input gateway-service-form-margin-bottom"
                 data-testid="gateway-service-url-input"
-                :error="getFieldErrorById('url').length > 0"
+                :error="!!getFieldErrorById('url')"
                 :error-message="form.errorMessages.length == 0 ? getFieldErrorById('url') : undefined"
                 :label="t('gateway_services.form.fields.upstream_url.label')"
                 :label-attributes="{
@@ -120,7 +120,20 @@
               :placeholder="t('gateway_services.form.fields.host.placeholder')"
               required
               @input="handleValidateCustomUrl('host')"
-            />
+            >
+              <template
+                v-if="!hideTrySampleApiButton"
+                #after
+              >
+                <KButton
+                  appearance="tertiary"
+                  size="small"
+                  @click="handleTrySampleApi"
+                >
+                  Try Sample API
+                </KButton>
+              </template>
+            </KInput>
 
             <div v-if="setPathAllowed">
               <KInput
@@ -434,6 +447,7 @@ import type {
   FormFieldErrors,
   GatewayServiceFormFields,
   NewGatewayServiceFormState,
+  ProtocolItem,
 } from '../types'
 import endpoints from '../gateway-services-endpoints'
 import composables from '../composables'
@@ -450,10 +464,8 @@ import {
 import '@kong-ui-public/entities-shared/dist/style.css'
 import { useDebounceFn } from '@vueuse/core'
 import {
-  demoStockService,
-  demoWeatherService,
+  KongAirService,
 } from '../constants'
-import useUrlValidators from 'src/composables/useUrlValidators'
 
 const emit = defineEmits<{
   (e: 'update', data: Record<string, any>): void,
@@ -510,7 +522,7 @@ const { i18nT, i18n: { t } } = composables.useI18n()
 const { getErrorFieldsFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const validators = useValidators()
-const { validateHost, validatePath, validatePort } = useUrlValidators()
+const { validateHost, validatePath, validatePort, validateProtocol } = composables.useUrlValidators()
 
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
 const formType = computed((): EntityBaseFormType => props.gatewayServiceId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
@@ -519,7 +531,6 @@ const isEditing = computed(() => !!props.gatewayServiceId)
 const checkedGroup = ref(isEditing.value ? 'protocol' : 'url')
 const getPort = composables.usePortFromProtocol()
 const preValidateErrorMessage = ref('')
-const demoTryTimes = ref(0)
 const hasPreValidateError = computed((): boolean => !!preValidateErrorMessage.value)
 
 const form = reactive<NewGatewayServiceFormState>({
@@ -585,7 +596,7 @@ const isWsSupported = props.config.app === 'konnect' || useGatewayFeatureSupport
   },
 })
 
-const gatewayServiceProtocolItems = [
+const gatewayServiceProtocolItems: ProtocolItem[] = [
   {
     label: t('gateway_services.form.fields.protocol.options.http'),
     value: 'http',
@@ -682,51 +693,28 @@ const changeCheckedGroup = () => {
 }
 
 const handleTrySampleApi = (): void => {
-  // Increment demo try counter
-  demoTryTimes.value += 1
-
-  // Determine which demo service to use based on even/odd counter
-  const isWeatherDemo = demoTryTimes.value % 2 === 0
-  const serviceRecord = isWeatherDemo ? { ...demoWeatherService } : { ...demoStockService }
-
   // Reset form fields before populating
   initFieldDefaultValues()
 
-  form.fields.name = serviceRecord.name
+  form.fields.name = KongAirService.name
 
   switch (checkedGroup.value) {
     case 'url':
       // Construct the full URL
-      form.fields.url = `${serviceRecord.protocol}://${serviceRecord.host}${serviceRecord.path}`
+      form.fields.url = `${KongAirService.protocol}://${KongAirService.host}${KongAirService.path}`
       break
 
     case 'protocol':
       // Populate individual protocol-related fields
-      form.fields.host = serviceRecord.host
-      form.fields.path = serviceRecord.path
-      form.fields.protocol = serviceRecord.protocol
-      form.fields.port = serviceRecord.port
+      form.fields.host = KongAirService.host
+      form.fields.path = KongAirService.path
+      form.fields.protocol = KongAirService.protocol
+      form.fields.port = KongAirService.port
       break
 
     default:
-      console.warn('Invalid input group selected')
+      form.fields.url = `${KongAirService.protocol}://${KongAirService.host}${KongAirService.path}`
   }
-}
-
-const validateProtocol = (protocol: string) => {
-  // check if protocol is empty
-  if (!protocol || protocol.trim() === '') return 'protocol cannot be empty'
-  // strip out the : from protocol
-  protocol = protocol.slice(0,-1)
-  // check if protocol is valid
-  const selectedProtocol = gatewayServiceProtocolItems.find((item)=>{
-    if (item.value === protocol) return item
-    else return undefined
-  })
-
-  if (selectedProtocol === undefined) return 'protocol - value must be one of "http", "https", "grpc", "grpcs", "tcp", "udp", "tls", "tls_passthrough", "ws", "wss"'
-
-  return ''
 }
 
 const handleValidateFullUrl = useDebounceFn((): void => {
@@ -740,7 +728,7 @@ const handleValidateFullUrl = useDebounceFn((): void => {
       // url is valid
 
       // validate protocol
-      const protocolError = validateProtocol(parsedUrl.protocol)
+      const protocolError = validateProtocol(parsedUrl.protocol, gatewayServiceProtocolItems)
       if (protocolError) throw new Error(protocolError)
       form.fields.protocol = parsedUrl.protocol.slice(0, -1)
 
@@ -776,20 +764,20 @@ const handleValidateAdvancedFields = useDebounceFn((fieldId?: keyof FormFieldErr
 
 }, 300)
 
-const getFieldErrorById = computed(() => {
-  return (fieldId: keyof FormFieldErrors): string => {
-    const errorsMap = form.formFieldErrors
+const getFieldErrorById = (fieldId: keyof FormFieldErrors): string => {
+  const errorsMap = form.formFieldErrors
 
-    if (fieldId === 'url') {
-      if (errorsMap.host.length) return errorsMap.host
-      else if (errorsMap.path.length) return errorsMap.path
-      else return errorsMap.url
-    }
-
-    if (errorsMap[fieldId]) return errorsMap[fieldId]
-    return ''
+  // if the field is URL, check if all parts of url
+  if (fieldId === 'url') {
+    if (errorsMap.host.length) return errorsMap.host
+    else if (errorsMap.path.length) return errorsMap.path
+    else return errorsMap.url
   }
-})
+
+  if (errorsMap[fieldId]) return errorsMap[fieldId]
+  return ''
+}
+
 
 // validate for the service type custom URL
 const handleValidateCustomUrl = useDebounceFn((fieldId?: keyof FormFieldErrors): void => {
@@ -844,11 +832,17 @@ const validateUrl = (): void => {
   }
 }
 
+/**
+ * Generates a unique service name using the current timestamp.
+ * The name format is "new-service-" followed by numbers from the ISO timestamp.
+ *
+ * Example output: "new-service-20250307123045789"
+ */
 const generateServiceName = (): string => {
-  return `new-service-${ new Date()
-    .toISOString()
-    .replace(/\D/g, '')
-    .slice(0, 17)}`
+  return `new-service-${new Date()
+    .toISOString() // Convert date to ISO string format (e.g., "2025-03-07T12:30:45.789Z")
+    .replace(/\D/g, '') // Remove all non-digit characters
+    .slice(0, 17)}` // Take the first 17 digits
 }
 
 const setPathAllowed = computed(() => {
@@ -889,13 +883,24 @@ const validateName = (input: string): void => {
   preValidateErrorMessage.value = validators.utf8Name(input)
 }
 
-/**
- * Is the form submit button enabled?
- * If the form.fields and formFieldsOriginal are equal, always return false
- */
-const canSubmit = computed((): boolean =>
-  (isEditing.value && (JSON.stringify(form.fields) !== JSON.stringify(formFieldsOriginal))) || ((checkedGroup.value === 'url' && !!form.fields.url && !isFormValid.value) ||
-  (checkedGroup.value === 'protocol' && !!form.fields.host && !isFormValid.value)))
+const canSubmit = computed((): boolean => {
+  // If in edit mode, can submit only if there are changes
+  if (isEditing.value) {
+    return JSON.stringify(form.fields) !== JSON.stringify(formFieldsOriginal)
+  }
+  // if full URL check if the url is filled and valid
+  const isUrlInputValid = checkedGroup.value === 'url' &&
+    !!form.fields.url &&
+    isFormValid.value
+
+  // if advanced mode (protocol) check if the host is filled and all fields are valid
+  const isProtocolInputValid = checkedGroup.value === 'protocol' &&
+    !!form.fields.host &&
+    isFormValid.value
+
+  // Can submit if editing with changes, or if relevant fields are filled and valid
+  return isUrlInputValid || isProtocolInputValid
+})
 
 const initForm = (data: Record<string, any>): void => {
   form.fields.name = data?.name || ''
@@ -1070,12 +1075,12 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
     if (fields.length) {
       // display error for each of the fields
       fields.forEach((errorField) => {
-        const field = errorField.field as string
+        const field = errorField.field
         if (field === 'client_certificate.id') {
           form.formFieldErrors.client_certificate = errorField.message
-        } else if (field === 'ca_certificates[0]') {
+        } else if (field.startsWith('ca_certificates')) {
           form.formFieldErrors.ca_certificates = errorField.message
-        } else if (Object.keys(form.formFieldErrors).includes(field)) {
+        } else if (form.formFieldErrors[field as keyof typeof form.formFieldErrors]) {
           form.formFieldErrors = {
             ...form.formFieldErrors,
             [field]: errorField.message,

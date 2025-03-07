@@ -50,6 +50,24 @@
       "description": "Services represent your upstream APIs, allowing for centralized configuration and streamlined management of backend endpoints."
     },
     "form": {
+      "errors": {
+        "host": {
+          "empty": "host cannot be empty",
+          "invalid": "invalid host"
+        },
+        "port": {
+          "type": "Port must be a number",
+          "invalid": "Port must be between 0 and 65535"
+        },
+        "path": {
+          "prefix": "Path must begin with /",
+          "invalid": "Path should not include characters outside of the reserved list of RFC 3986"
+        },
+        "protocol": {
+          "empty": "protocol cannot be empty",
+          "invalid": "protocol - value must be one of http, https, grpc, grpcs, tcp, udp, tls, tls_passthrough, ws, wss"
+        }
+      },
       "sections": {
         "general": {
           "title": "General Information",

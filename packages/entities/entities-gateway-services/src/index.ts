@@ -1,8 +1,8 @@
 import GatewayServiceList from './components/GatewayServiceList.vue'
-import GatewayServiceForm from './components/LegacyGatewayServiceForm.vue'
+import LegacyGatewayServiceForm from './components/LegacyGatewayServiceForm.vue'
 import GatewayServiceConfigCard from './components/GatewayServiceConfigCard.vue'
-import NewGatewayServiceForm from './components/NewGatewayServiceForm.vue'
+import GatewayServiceForm from './components/GatewayServiceForm.vue'
 
-export { GatewayServiceList, GatewayServiceForm, GatewayServiceConfigCard, NewGatewayServiceForm }
+export { GatewayServiceList, GatewayServiceForm, GatewayServiceConfigCard, LegacyGatewayServiceForm }
 
 export * from './types'

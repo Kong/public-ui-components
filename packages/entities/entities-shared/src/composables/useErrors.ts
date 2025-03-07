@@ -131,16 +131,9 @@ export default function useErrors() {
         return { messages, fields }
       }
 
-      if (typeof error.response.data.message === 'string') {
+      if (typeof error.response.data.message === 'string' || typeof error.response.data === 'string') {
         return {
           messages: [error.response.data.message],
-          fields: [],
-        }
-      }
-
-      if (typeof error.response.data === 'string') {
-        return {
-          messages: [error.response.data],
           fields: [],
         }
       }
