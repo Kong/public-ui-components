@@ -78,6 +78,8 @@
           "title": "Service Endpoint",
           "description": "Define where this service should send requests.",
           "checkedGroupLabel": "Choose how and where to send traffic",
+          "urlLabel": "Full URL",
+          "checkedGroupAltLabel": "Protocol, Host, Port and Path",
           "url": {
             "label": "Full URL",
             "description": "Define the service using a single, complete API URL for simple setup."
