@@ -5,10 +5,8 @@ on:
 
 jobs:
   unpublish:
-    name: Unpublish or Deprecate NPM previews for PR
+    name: remove previews comments for PR
     runs-on: ubuntu-latest
-    env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
