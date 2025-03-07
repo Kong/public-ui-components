@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.4...@kong-ui-public/forms@4.11.5) (2025-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.11.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.3...@kong-ui-public/forms@4.11.4) (2025-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.11.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.2...@kong-ui-public/forms@4.11.3) (2025-02-28)
+
+
+### Bug Fixes
+
+* **forms:** use Number.isFinite ([#1996](https://github.com/Kong/public-ui-components/issues/1996)) ([92a7ec2](https://github.com/Kong/public-ui-components/commit/92a7ec26bbc5898e93191f0b214b9bbdd2e4a55d))
+
+
+
+
+
+## [4.11.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.1...@kong-ui-public/forms@4.11.2) (2025-02-28)
+
+
+### Bug Fixes
+
+* ai-rate-limiting-advanced new schema ([#1995](https://github.com/Kong/public-ui-components/issues/1995)) ([855f976](https://github.com/Kong/public-ui-components/commit/855f9768750ffae1c175c30d3c7e74df5a3663e7))
+
+
+
+
+
+## [4.11.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.0...@kong-ui-public/forms@4.11.1) (2025-02-28)
+
+
+### Bug Fixes
+
+* **plugin-form:** fix redis grouping of ai plugins ([#1993](https://github.com/Kong/public-ui-components/issues/1993)) ([737c474](https://github.com/Kong/public-ui-components/commit/737c474a4101cb768689afb8926def0b748e4f06))
+
+
+
+
+
 # [4.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.10.11...@kong-ui-public/forms@4.11.0) (2025-02-27)
 
 

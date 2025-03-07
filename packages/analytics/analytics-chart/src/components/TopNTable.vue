@@ -284,6 +284,7 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     }
 
     .column-1 {
+      flex: 1;
       padding: $kui-space-0 $kui-space-80 $kui-space-50 $kui-space-0;
     }
 

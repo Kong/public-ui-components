@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@7.4.0...@kong-ui-public/analytics-utilities@8.0.0) (2025-03-06)
+
+
+### Bug Fixes
+
+* **analytics:** rename doughnut -> donut [MA-3729] ([#2007](https://github.com/Kong/public-ui-components/issues/2007)) ([5974b71](https://github.com/Kong/public-ui-components/commit/5974b713391256642b9a15c6a0336ce10090e2f8))
+
+
+### BREAKING CHANGES
+
+* **analytics:** rename doughnut to donut without a fallback.
+
+
+
+
+
+# [7.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@7.3.0...@kong-ui-public/analytics-utilities@7.4.0) (2025-03-06)
+
+
+### Features
+
+* **analytics-utilities:** add regional_consumer to dimensions ([#2006](https://github.com/Kong/public-ui-components/issues/2006)) ([cdb63df](https://github.com/Kong/public-ui-components/commit/cdb63df733ad1e147ec63a9a3e415e898b40dcd2))
+
+
+
+
+
+# [7.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@7.2.0...@kong-ui-public/analytics-utilities@7.3.0) (2025-03-04)
+
+
+### Features
+
+* add api dimension ([#2002](https://github.com/Kong/public-ui-components/issues/2002)) ([1ec9980](https://github.com/Kong/public-ui-components/commit/1ec998094410a525131b9ebbac814b1944be276d))
+
+
+
+
+
 # [7.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@7.1.0...@kong-ui-public/analytics-utilities@7.2.0) (2025-02-25)
 
 

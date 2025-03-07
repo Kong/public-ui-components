@@ -21,14 +21,14 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 
     const isBarChart = ['horizontal_bar', 'vertical_bar'].includes(tooltipData.chartType)
-    const isDoughnutChart = ['gauge', 'doughnut'].includes(tooltipData.chartType)
+    const isDonutChart = ['gauge', 'donut'].includes(tooltipData.chartType)
 
     tooltipData.tooltipContext = isBarChart
       ? tooltip.dataPoints.length > 1 ? tooltip.dataPoints[0].label : ''
       : tooltip.dataPoints[0].parsed.x
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
-      const rawValue = isDoughnutChart ? p.parsed : p.parsed[valueAxis]
+      const rawValue = isDonutChart ? p.parsed : p.parsed[valueAxis]
 
       let value
       if (tooltipData.units === 'bytes') {
@@ -43,8 +43,8 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
 
       if (isBarChart && p.dataset.label !== p.label) {
         tooltipLabel = p.dataset.label
-      } else if (isDoughnutChart) {
-        // @ts-ignore - doughnut chart contains a single dataset, with a `labels` (plural) array
+      } else if (isDonutChart) {
+        // @ts-ignore - donut chart contains a single dataset, with a `labels` (plural) array
         tooltipLabel = p.dataset.labels[p.dataIndex]
       } else {
         tooltipLabel = p.dataset.label

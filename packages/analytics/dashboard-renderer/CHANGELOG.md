@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.8...@kong-ui-public/dashboard-renderer@2.0.0) (2025-03-06)
+
+
+### Bug Fixes
+
+* **analytics:** rename doughnut -> donut [MA-3729] ([#2007](https://github.com/Kong/public-ui-components/issues/2007)) ([5974b71](https://github.com/Kong/public-ui-components/commit/5974b713391256642b9a15c6a0336ce10090e2f8))
+
+
+### BREAKING CHANGES
+
+* **analytics:** rename doughnut to donut without a fallback.
+
+
+
+
+
+## [1.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.7...@kong-ui-public/dashboard-renderer@1.2.8) (2025-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [1.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.6...@kong-ui-public/dashboard-renderer@1.2.7) (2025-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [1.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.5...@kong-ui-public/dashboard-renderer@1.2.6) (2025-03-04)
+
+
+### Bug Fixes
+
+* entity link truncate on max width 90% ([#2000](https://github.com/Kong/public-ui-components/issues/2000)) ([bba8c6f](https://github.com/Kong/public-ui-components/commit/bba8c6fb8385a4d5fecd03c9a09db7cdd096bce7))
+
+
+
+
+
+## [1.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.4...@kong-ui-public/dashboard-renderer@1.2.5) (2025-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [1.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.3...@kong-ui-public/dashboard-renderer@1.2.4) (2025-03-03)
+
+
+### Bug Fixes
+
+* keep tiles prop and map synced ([#1997](https://github.com/Kong/public-ui-components/issues/1997)) ([05ee075](https://github.com/Kong/public-ui-components/commit/05ee075b81d585b8ea4e62d57d721ce1125719df))
+
+
+
+
+
 ## [1.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.2...@kong-ui-public/dashboard-renderer@1.2.3) (2025-02-27)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

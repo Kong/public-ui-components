@@ -1,5 +1,5 @@
 export const chartTypes = [
-  'doughnut',
+  'donut',
   'horizontal_bar',
   'vertical_bar',
   'timeseries_line',

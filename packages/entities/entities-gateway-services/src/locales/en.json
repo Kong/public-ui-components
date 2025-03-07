@@ -47,7 +47,8 @@
     "empty_state_v2": {
       "create": "New gateway service",
       "title": "Configure your first gateway service",
-      "description": "Services represent your upstream APIs, allowing for centralized configuration and streamlined management of backend endpoints."
+      "group": "Services created in gateways within this group will automatically appear here.",
+      "description": "Gateway services represent backend APIs or microservices that receive traffic routed through the gateway."
     },
     "form": {
       "errors": {

@@ -125,7 +125,7 @@ import { MoreIcon, EditIcon } from '@kong/icons'
 import { msToGranularity, type AiExploreAggregations, type AiExploreQuery, type AnalyticsBridge, type ExploreAggregations, type ExploreQuery, type ExploreResultV4, type QueryableAiExploreDimensions, type QueryableExploreDimensions, type TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
-import DoughnutChartRenderer from './DoughnutChartRenderer.vue'
+import DonutChartRenderer from './DonutChartRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -204,7 +204,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'horizontal_bar': BarChartRenderer,
   'vertical_bar': BarChartRenderer,
   'gauge': SimpleChartRenderer,
-  'doughnut': DoughnutChartRenderer,
+  'donut': DonutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
   'slottable': undefined,
