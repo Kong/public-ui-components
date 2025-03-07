@@ -1,5 +1,5 @@
 import { computed, reactive, ref, watch } from 'vue'
-import { EntityBaseFormType, useAxios, useErrors } from '@kong-ui-public/entities-shared'
+import { EntityBaseFormType, useAxios, useErrors, AppType } from '@kong-ui-public/entities-shared'
 import { isEqual } from 'lodash-es'
 
 import { getRedisType, mapRedisTypeToPartialType, standardize as s } from '../helpers'
@@ -187,9 +187,9 @@ export const useRedisConfigurationForm = (options: Options) => {
   const submitUrl = computed<string>(() => {
     let url = `${config.apiBaseUrl}${endpoints.form[config.app][formType.value]}`
 
-    if (config.app === 'konnect') {
+    if (config.app === AppType.Konnect) {
       url = url.replace(/{controlPlaneId}/gi, config?.controlPlaneId || '')
-    } else if (config.app === 'kongManager') {
+    } else if (config.app === AppType.KongManager) {
       url = url.replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
     }
 

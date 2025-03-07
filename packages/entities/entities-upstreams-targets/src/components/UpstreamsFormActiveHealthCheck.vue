@@ -81,7 +81,7 @@
       />
     </template>
 
-    <div v-if="config?.app === 'kongManager'">
+    <div v-if="config?.app === AppType.KongManager">
       <KLabel
         :info="t('upstreams.form.fields.headers.tooltip_active')"
         :tooltip-attributes="{ maxWidth: '250px' }"
@@ -271,6 +271,7 @@
 <script lang="ts" setup>
 import {
   EntityFormSection,
+  AppType,
 } from '@kong-ui-public/entities-shared'
 import composables from '../composables'
 import type { PropType } from 'vue'

@@ -114,7 +114,12 @@ import type {
   DefaultCommonFieldsConfigurationSchema,
   SupportedEntityType,
 } from '../../types'
-import { ConfigurationSchemaType, ConfigurationSchemaSection, SupportedEntityTypesArray } from '../../types'
+import {
+  ConfigurationSchemaType,
+  ConfigurationSchemaSection,
+  SupportedEntityTypesArray,
+  AppType,
+} from '../../types'
 import composables from '../../composables'
 import ConfigCardDisplay, { type CodeFormat, type Format } from './ConfigCardDisplay.vue'
 import { BookIcon } from '@kong/icons'
@@ -134,9 +139,9 @@ const props = defineProps({
     type: Object as PropType<KonnectBaseEntityConfig | KongManagerBaseEntityConfig>,
     required: true,
     validator: (config: KonnectBaseEntityConfig | KongManagerBaseEntityConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
-      if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
+      if (config.app === AppType.Konnect && !config.controlPlaneId) return false
+      if (config.app === AppType.KongManager && typeof config.workspace !== 'string') return false
       if (!config.entityId) return false
       return true
     },
@@ -259,7 +264,7 @@ const configFormatItems = [
 ]
 
 // terraform only supported in konnect
-if (props.config.app === 'konnect') {
+if (props.config.app === AppType.Konnect) {
   // insert terraform as the third option
   configFormatItems.splice(2, 0, {
     label: t('baseForm.configuration.terraform'),
@@ -457,9 +462,9 @@ const propListTypes = computed((): string[] => {
 const fetcherUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${props.fetchUrl}`
 
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
+  } else if (props.config.app === AppType.KongManager) {
     url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
   }
 

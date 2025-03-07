@@ -88,6 +88,7 @@ import { useRoute, useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectRouteFormConfig, KongManagerRouteFormConfig, RouteFlavors } from '../../src'
 import { RouteForm } from '../../src'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const route = useRoute()
 const router = useRouter()
@@ -98,7 +99,7 @@ const routeFlavors = reactive<Required<RouteFlavors>>({ traditional: true, expre
 const routeId = computed((): string => route?.params?.id as string || '')
 
 const konnectConfig = ref<KonnectRouteFormConfig>({
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
@@ -106,7 +107,7 @@ const konnectConfig = ref<KonnectRouteFormConfig>({
 })
 
 const kongManagerConfig = ref<KongManagerRouteFormConfig>({
-  app: 'kongManager',
+  app: AppType.KongManager,
   // Uncomment to test compatibility with different Gateway editions and versions
   // gatewayInfo: {
   //   edition: 'community',

@@ -8,17 +8,18 @@ import {
   certificate100,
   certificateVaultRef,
 } from '../../fixtures/mockData'
-import type { FetcherResponse } from '@kong-ui-public/entities-shared'
+import { type FetcherResponse, AppType } from '@kong-ui-public/entities-shared'
 import type { Router } from 'vue-router'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { v4 as uuidv4 } from 'uuid'
+
 const viewRoute = 'view-certificate'
 const editRoute = 'edit-certificate'
 const createRoute = 'create-certificate'
 const createSniRoute = 'create-sni'
 
 const baseConfigKM: KongManagerCertificateListConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   isExactMatch: true,
@@ -29,7 +30,7 @@ const baseConfigKM: KongManagerCertificateListConfig = {
 }
 
 const baseConfigKonnect: KonnectCertificateListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: '1234-abcd-certificate',
   apiBaseUrl: '/us/kong-api',
   createRoute,

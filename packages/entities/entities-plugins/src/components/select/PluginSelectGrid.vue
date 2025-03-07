@@ -62,6 +62,7 @@ import {
   type PluginType,
 } from '../../types'
 import PluginSelectGroup from './PluginSelectGroup.vue'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -69,7 +70,7 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
     required: true,
     validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       if (!config.getCreateRoute) return false
       return true
     },
@@ -128,7 +129,7 @@ const displayedPlugins = computed((): PluginCardList => {
   const kongPlugins = JSON.parse(JSON.stringify(props.pluginList))
 
   // remove custom plugin from original pluginList in Konnect
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     delete kongPlugins[PluginGroup.CUSTOM_PLUGINS]
   }
 

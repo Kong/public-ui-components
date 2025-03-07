@@ -31,19 +31,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 
 import { RedisConfigurationList } from '../../src'
-
 import type {
   KonnectRedisConfigurationListConfig,
   KongManagerRedisConfigurationListConfig,
 } from '../../src'
-import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const konnectConfig: KonnectRedisConfigurationListConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
   createRoute: { name: 'create-redis-configuration' },
@@ -52,7 +52,7 @@ const konnectConfig: KonnectRedisConfigurationListConfig = {
 }
 
 const kongManagerConfig: KongManagerRedisConfigurationListConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   createRoute: { name: 'create-redis-configuration' },

@@ -7,18 +7,19 @@ import type {
   KonnectRedisConfigurationFormConfig,
 } from '../types/redis-configuration-form'
 import type { RouteHandler } from 'cypress/types/net-stubbing'
+import { AppType } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'redis-configuration-list' }
 
 const baseConfigKM: KongManagerRedisConfigurationFormConfig = {
-  app: 'kongManager',
+  app: AppType.KongManager,
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cancelRoute,
 }
 
 const baseConfigKonnect: KonnectRedisConfigurationFormConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   controlPlaneId: 'test-control-plane-id',
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
@@ -29,9 +30,9 @@ describe('<RedisConfigurationForm />', {
   viewportWidth: 700,
 }, () => {
 
-  for (const app of ['Kong Manager', 'Konnect']) {
+  for (const app of [AppType.KongManager, AppType.Konnect]) {
     describe(app, () => {
-      const config = app === 'Kong Manager' ? baseConfigKM : baseConfigKonnect
+      const config = app === AppType.KongManager ? baseConfigKM : baseConfigKonnect
 
       const stubCreateEdit = ({ status = 200 }: { status?: number } = {}) => {
         const handler: RouteHandler = req => {
@@ -47,7 +48,7 @@ describe('<RedisConfigurationForm />', {
           })
         }
 
-        if (app === 'Kong Manager') {
+        if (app === AppType.KongManager) {
           cy.intercept('POST', `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/partials`, handler)
             .as('createRedisConfiguration')
 
@@ -69,7 +70,7 @@ describe('<RedisConfigurationForm />', {
         body?: RedisConfigurationResponse
         status?: number
       } = {}) => {
-        if (app === 'Kong Manager') {
+        if (app === AppType.KongManager) {
           cy.intercept('GET', `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/partials/*`, {
             statusCode: status,
             body,
@@ -87,7 +88,7 @@ describe('<RedisConfigurationForm />', {
       }: {
         body?: typeof links,
       } = {}) {
-        if (app === 'Kong Manager') {
+        if (app === AppType.KongManager) {
           cy.intercept({
             method: 'GET',
             url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/partials/*/links*`,

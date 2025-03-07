@@ -1,4 +1,4 @@
-import { useAxios, type KongManagerConfig, type KonnectConfig } from '@kong-ui-public/entities-shared'
+import { useAxios, AppType, type KongManagerConfig, type KonnectConfig } from '@kong-ui-public/entities-shared'
 import { ref, watch } from 'vue'
 import useSwrv from 'swrv'
 
@@ -25,9 +25,9 @@ export const useLinkedPluginsFetcher = (config: KonnectConfig | KongManagerConfi
       const { partialId, size, offset, query } = params
       let url = `${config.apiBaseUrl}${endpoints.links[config.app]}`
 
-      if (config.app === 'konnect') {
+      if (config.app === AppType.Konnect) {
         url = url.replace(/{controlPlaneId}/gi, config?.controlPlaneId || '')
-      } else if (config.app === 'kongManager') {
+      } else if (config.app === AppType.KongManager) {
         url = url.replace(/\/{workspace}/gi, config?.workspace ? `/${config.workspace}` : '')
       }
 

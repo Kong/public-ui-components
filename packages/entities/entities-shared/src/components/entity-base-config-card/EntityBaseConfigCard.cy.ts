@@ -4,7 +4,7 @@ import type {
   ConfigurationSchema,
   PluginConfigurationSchema,
 } from '../../types'
-import { ConfigurationSchemaSection, SupportedEntityType } from '../../types'
+import { ConfigurationSchemaSection, SupportedEntityType, AppType } from '../../types'
 import { gatewayServiceRecord, pluginRecord, emptyKey, keyWithValue } from '../../../fixtures/mockData'
 import composables from '../../composables'
 import EntityBaseConfigCard from './EntityBaseConfigCard.vue'
@@ -14,7 +14,7 @@ const { convertKeyToTitle } = composables.useStringHelpers()
 const controlPlaneId = '1234-abcd-ilove-cats-too'
 const entityId = '1234-cats-rule'
 const config: KonnectBaseEntityConfig = {
-  app: 'konnect',
+  app: AppType.Konnect,
   apiBaseUrl: '/us/kong-api', // `/{geo}/kong-api`, with leading slash and no trailing slash; Consuming app would pass in something like `https://us.api.konghq.com`
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,

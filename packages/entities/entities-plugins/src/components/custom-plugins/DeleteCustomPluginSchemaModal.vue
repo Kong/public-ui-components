@@ -60,7 +60,13 @@ import {
 } from '../../types'
 import composables from '../../composables'
 import endpoints from '../../plugins-endpoints'
-import { useAxios, useErrors, EntityTypes, EntityDeleteModal } from '@kong-ui-public/entities-shared'
+import {
+  useAxios,
+  useErrors,
+  EntityTypes,
+  EntityDeleteModal,
+  AppType,
+} from '@kong-ui-public/entities-shared'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -68,7 +74,7 @@ const props = defineProps({
     type: Object as PropType<KonnectPluginSelectConfig | KongManagerPluginSelectConfig>,
     required: true,
     validator: (config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+      if (!config || ![AppType.Konnect, AppType.KongManager].includes(config?.app)) return false
       return true
     },
   },
@@ -96,7 +102,7 @@ const errorMessage = ref('')
 const isPluginSchemaInUse = ref(false)
 
 const requestUrl = computed(() => {
-  if (props.config.app === 'konnect') {
+  if (props.config.app === AppType.Konnect) {
     const partialPluginURL = props.plugin.customPluginType === 'streaming'
       ? endpoints.select[props.config.app].streamingCustomPluginItem
       : endpoints.select[props.config.app].schemaCustomPluginItem
@@ -113,7 +119,7 @@ const handleSubmit = async (): Promise<void> => {
   isLoading.value = true
   errorMessage.value = ''
 
-  if (!props.plugin?.name || props.config?.app !== 'konnect') {
+  if (!props.plugin?.name || props.config?.app !== AppType.Konnect) {
     return
   }
 
