@@ -55,8 +55,8 @@
                 v-model.trim="form.fields.url"
                 class="gateway-service-url-input gateway-service-form-margin-bottom"
                 data-testid="gateway-service-url-input"
-                :error="!!getFieldErrorById('url')"
-                :error-message="form.errorMessages.length == 0 ? getFieldErrorById('url') : undefined"
+                :error="getFullUrlError"
+                :error-message="getFieldErrorById('url')"
                 :label="t('gateway_services.form.fields.upstream_url.label')"
                 :label-attributes="{
                   info: config.app === 'konnect'
@@ -109,8 +109,8 @@
               v-model.trim="form.fields.host"
               class="gateway-service-form-margin-top"
               data-testid="gateway-service-host-input"
-              :error="form.formFieldErrors.host.length > 0"
-              :error-message="form.formFieldErrors.host"
+              :error="!!form.formFieldErrors.host"
+              :error-message="getFieldErrorById('host')"
               :label="t('gateway_services.form.fields.host.label')"
               :label-attributes="{
                 info: t('gateway_services.form.fields.host.tooltip'),
@@ -140,8 +140,8 @@
                 v-model.trim="form.fields.path"
                 class="gateway-service-form-margin-top"
                 data-testid="gateway-service-path-input"
-                :error="form.formFieldErrors.path.length > 0"
-                :error-message="form.formFieldErrors.path"
+                :error="!!form.formFieldErrors.path"
+                :error-message="getFieldErrorById('path')"
                 :label="t('gateway_services.form.fields.path.label')"
                 :label-attributes="{
                   info: t('gateway_services.form.fields.path.tooltip'),
@@ -157,8 +157,8 @@
               v-model="form.fields.port"
               class="gateway-service-form-margin-top"
               data-testid="gateway-service-port-input"
-              :error="form.formFieldErrors.port.length > 0"
-              :error-message="form.formFieldErrors.port"
+              :error="!!form.formFieldErrors.port"
+              :error-message="getFieldErrorById('port')"
               :label="t('gateway_services.form.fields.port.label')"
               :label-attributes="{
                 info: t('gateway_services.form.fields.port.tooltip'),
@@ -270,7 +270,7 @@
                   v-model.trim="form.fields.client_certificate"
                   autocomplete="off"
                   data-testid="gateway-service-clientCert-input"
-                  :error="form.formFieldErrors.client_certificate.length > 0"
+                  :error="!!form.formFieldErrors.client_certificate"
                   :label="t('gateway_services.form.fields.client_certificate.label')"
                   :label-attributes="{
                     info: t('gateway_services.form.fields.client_certificate.tooltip'),
@@ -292,7 +292,7 @@
                   v-model.trim="form.fields.ca_certificates"
                   autocomplete="off"
                   data-testid="gateway-service-ca-certs-input"
-                  :error="form.formFieldErrors.ca_certificates.length > 0"
+                  :error="!!form.formFieldErrors.ca_certificates"
                   :label="t('gateway_services.form.fields.ca_certificates.label')"
                   :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
                   :placeholder="t('gateway_services.form.fields.ca_certificates.placeholder')"
@@ -446,8 +446,8 @@ import type {
   KongManagerGatewayServiceFormConfig,
   FormFieldErrors,
   GatewayServiceFormFields,
-  NewGatewayServiceFormState,
   ProtocolItem,
+  GatewayServiceFormState,
 } from '../types'
 import endpoints from '../gateway-services-endpoints'
 import composables from '../composables'
@@ -531,9 +531,9 @@ const isEditing = computed(() => !!props.gatewayServiceId)
 const checkedGroup = ref(isEditing.value ? 'protocol' : 'url')
 const getPort = composables.usePortFromProtocol()
 const preValidateErrorMessage = ref('')
-const hasPreValidateError = computed((): boolean => !!preValidateErrorMessage.value)
+const hasPreValidateError = computed((): boolean => !!preValidateErrorMessage.value || !!getFieldErrorById('name'))
 
-const form = reactive<NewGatewayServiceFormState>({
+const form = reactive<GatewayServiceFormState>({
   fields: {
     name: '',
     protocol: 'http',
@@ -557,6 +557,7 @@ const form = reactive<NewGatewayServiceFormState>({
     host: '',
     port: '',
     path: '',
+    name: '',
     url: '',
     tags: '',
     retries: '',
@@ -764,16 +765,13 @@ const handleValidateAdvancedFields = useDebounceFn((fieldId?: keyof FormFieldErr
 
 }, 300)
 
+const getFullUrlError = computed(() : boolean => !!form.formFieldErrors.url || !!form.formFieldErrors.host || !!form.formFieldErrors.port)
+
 const getFieldErrorById = (fieldId: keyof FormFieldErrors): string => {
+  // if form error is present return empty
+  if (form.errorMessages.length) return ''
+
   const errorsMap = form.formFieldErrors
-
-  // if the field is URL, check if all parts of url
-  if (fieldId === 'url') {
-    if (errorsMap.host.length) return errorsMap.host
-    else if (errorsMap.path.length) return errorsMap.path
-    else return errorsMap.url
-  }
-
   if (errorsMap[fieldId]) return errorsMap[fieldId]
   return ''
 }
@@ -820,8 +818,16 @@ const resetFormFieldErrors = (fieldId?: keyof FormFieldErrors): void => {
 }
 
 const isFormValid = computed((): boolean => {
-  // check if no errors present
-  return Object.values(form.formFieldErrors).some(error => error !== null && error !== '') && !hasPreValidateError.value
+  let flag = true
+
+  for (let key in form.formFieldErrors) {
+    if (form.formFieldErrors[key as keyof typeof form.formFieldErrors].length) {
+      flag = false
+      break
+    }
+  }
+
+  return flag
 })
 
 const validateUrl = (): void => {
@@ -1071,7 +1077,6 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
   } catch (error: any) {
     const { fields, messages } = getErrorFieldsFromError(error)
     form.errorMessages = messages
-
     if (fields.length) {
       // display error for each of the fields
       fields.forEach((errorField) => {
@@ -1080,7 +1085,7 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
           form.formFieldErrors.client_certificate = errorField.message
         } else if (field.startsWith('ca_certificates')) {
           form.formFieldErrors.ca_certificates = errorField.message
-        } else if (form.formFieldErrors[field as keyof typeof form.formFieldErrors]) {
+        } else if (Object.keys(form.formFieldErrors).includes(field)) {
           form.formFieldErrors = {
             ...form.formFieldErrors,
             [field]: errorField.message,

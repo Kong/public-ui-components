@@ -44,9 +44,10 @@ export interface FormFieldErrors {
   ca_certificates: string
   tls_verify_enabled: string
   tls_verify_value: string
+  name:string
 }
 
-export interface GatewayServiceFormState {
+export interface LegacyGatewayServiceFormState {
   /** Form fields */
   fields: GatewayServiceFormFields
   /** Form readonly state (only used when saving entity details) */
@@ -55,7 +56,7 @@ export interface GatewayServiceFormState {
   errorMessage: string,
 }
 
-export interface NewGatewayServiceFormState {
+export interface GatewayServiceFormState {
   /** Form fields */
   fields: GatewayServiceFormFields
   /** Form readonly state (only used when saving entity details) */

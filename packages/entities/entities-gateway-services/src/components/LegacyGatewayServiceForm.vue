@@ -378,8 +378,8 @@ import type { AxiosResponse } from 'axios'
 import type {
   KonnectGatewayServiceFormConfig,
   KongManagerGatewayServiceFormConfig,
-  GatewayServiceFormState,
   GatewayServiceFormFields,
+  LegacyGatewayServiceFormState,
 } from '../types'
 import endpoints from '../gateway-services-endpoints'
 import composables from '../composables'
@@ -448,7 +448,7 @@ const getPort = composables.usePortFromProtocol()
 const preValidateErrorMessage = ref('')
 const hasPreValidateError = computed((): boolean => !!preValidateErrorMessage.value)
 
-const form = reactive<GatewayServiceFormState>({
+const form = reactive<LegacyGatewayServiceFormState>({
   fields: {
     name: '',
     protocol: 'http',
