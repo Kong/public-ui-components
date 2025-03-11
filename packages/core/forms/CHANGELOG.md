@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.11.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.5...@kong-ui-public/forms@4.11.6) (2025-03-07)
+
+
+### Reverts
+
+* Revert "fix(forms): use Number.isFinite (#1996)" (#2009) ([b1a3cd8](https://github.com/Kong/public-ui-components/commit/b1a3cd8f050ba878710ec455ef67d5c3c0caa6fd)), closes [#1996](https://github.com/Kong/public-ui-components/issues/1996) [#2009](https://github.com/Kong/public-ui-components/issues/2009)
+
+
+
+
+
+## [4.11.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.4...@kong-ui-public/forms@4.11.5) (2025-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.11.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.11.3...@kong-ui-public/forms@4.11.4) (2025-03-04)
 
 **Note:** Version bump only for package @kong-ui-public/forms

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@7.4.0...@kong-ui-public/analytics-utilities@8.0.0) (2025-03-06)
+
+
+### Bug Fixes
+
+* **analytics:** rename doughnut -> donut [MA-3729] ([#2007](https://github.com/Kong/public-ui-components/issues/2007)) ([5974b71](https://github.com/Kong/public-ui-components/commit/5974b713391256642b9a15c6a0336ce10090e2f8))
+
+
+### BREAKING CHANGES
+
+* **analytics:** rename doughnut to donut without a fallback.
+
+
+
+
+
 # [7.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@7.3.0...@kong-ui-public/analytics-utilities@7.4.0) (2025-03-06)
 
 

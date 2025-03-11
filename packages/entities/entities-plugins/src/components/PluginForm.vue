@@ -1249,11 +1249,12 @@ const saveFormData = async (): Promise<void> => {
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, payload)
     } else if (formType.value === 'edit') {
-      response = props.config.app === 'konnect' || pluginPartialType.value
+      response = props.config.app === 'konnect' || (pluginPartialType.value && payload.partials)
         // Note 1: Konnect currently uses PUT because PATCH is not fully supported in Koko
         //         If this changes, the `edit` form methods should be re-evaluated/updated accordingly
         // Note 2: Because Konnect uses PUT, we need to include dynamic ordering in the request body
-        // Note 3: In Kong Manager, if a plugin supports redis partial, we need to use PUT to update the plugin to override redis fields
+        // Note 3: In Kong Manager, if a plugin supports redis partial and partial value is defined,
+        // we need to use PUT to update the plugin to override redis fields
         ? await axiosInstance.put(submitUrl.value, Object.assign({ ordering: dynamicOrdering.value }, payload))
         : await axiosInstance.patch(submitUrl.value, payload)
     }

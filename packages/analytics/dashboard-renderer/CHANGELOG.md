@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.8...@kong-ui-public/dashboard-renderer@2.0.0) (2025-03-06)
+
+
+### Bug Fixes
+
+* **analytics:** rename doughnut -> donut [MA-3729] ([#2007](https://github.com/Kong/public-ui-components/issues/2007)) ([5974b71](https://github.com/Kong/public-ui-components/commit/5974b713391256642b9a15c6a0336ce10090e2f8))
+
+
+### BREAKING CHANGES
+
+* **analytics:** rename doughnut to donut without a fallback.
+
+
+
+
+
+## [1.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.7...@kong-ui-public/dashboard-renderer@1.2.8) (2025-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [1.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@1.2.6...@kong-ui-public/dashboard-renderer@1.2.7) (2025-03-06)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

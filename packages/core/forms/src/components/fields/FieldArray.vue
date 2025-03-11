@@ -122,6 +122,7 @@
 </template>
 
 <script>
+import isNumber from 'lodash-es/isNumber'
 import { AUTOFILL_SLOT } from '../../const'
 import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
 import FieldArrayItem from './FieldArrayItem.vue'
@@ -231,7 +232,7 @@ export default {
     handleInput(val, index) {
       let formattedVal = val
       if (this.schema?.inputAttributes?.type === 'number') {
-        if (Number.isFinite(parseFloat(val))) {
+        if (isNumber(parseFloat(val))) {
           formattedVal = parseFloat(val)
         }
       }

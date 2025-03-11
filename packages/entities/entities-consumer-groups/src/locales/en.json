@@ -14,7 +14,8 @@
       },
       "empty_state_v2": {
         "title": "Configure your first consumer group",
-        "description": "Consumer groups allow you to manage shared rate limiting and access control policies for multiple consumers."
+        "group": "Consumer groups created in gateways within this group will automatically appear here.",
+        "description": "Organize consumers into groups to easily apply policies like rate limiting and authentication across the entire group."
       },
       "toolbar_actions": {
         "new_consumer_group": "New consumer group"

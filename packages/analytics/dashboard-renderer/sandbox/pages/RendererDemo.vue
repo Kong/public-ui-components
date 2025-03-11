@@ -293,8 +293,8 @@ const dashboardConfig = ref <DashboardConfig>({
     {
       definition: {
         chart: {
-          type: 'doughnut',
-          chartTitle: 'Doughnut chart of mock data',
+          type: 'donut',
+          chartTitle: 'Donut chart of mock data',
         },
         query: {
           datasource: 'basic',
