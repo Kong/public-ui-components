@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.16.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.16.3...@kong-ui-public/entities-plugins@9.16.4) (2025-03-11)
+
+
+### Bug Fixes
+
+* **plugin-form:** only use put when partials field is passed for plugin ([#2010](https://github.com/Kong/public-ui-components/issues/2010)) ([c2e9b60](https://github.com/Kong/public-ui-components/commit/c2e9b6053bc8fb5e6bb373f0248b58af272ff444))
+
+
+
+
+
 ## [9.16.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.16.2...@kong-ui-public/entities-plugins@9.16.3) (2025-03-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
