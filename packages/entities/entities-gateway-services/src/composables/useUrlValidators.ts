@@ -1,11 +1,11 @@
-import type { ProtocolItem } from 'src/types'
 import composables from '.'
+import type { SelectItem } from '@kong/kongponents'
 
 export default function useUrlValidators() {
   const { i18n: { t } } = composables.useI18n()
 
   const validateHost = (host: string): string => {
-  // check if host is empty
+    // check if host is empty
     if (!host || host.trim() === '') return t('gateway_services.form.errors.host.empty')
 
     // check if a valid host (domain or ip address)
@@ -14,8 +14,8 @@ export default function useUrlValidators() {
     return ''
   }
 
-  const validatePort = (port: number | null | undefined | string): string => {
-  // Port is not required, so return empty string if not provided
+  const validatePort = (port: number | string | null | undefined): string => {
+    // Port is not required, so return empty string if not provided
     if (port === null || port === undefined || port === '') {
       return ''
     }
@@ -38,7 +38,7 @@ export default function useUrlValidators() {
   }
 
   const validatePath = (path: string | null | undefined): string => {
-  // Path is not required, so return empty string if not provided
+    // Path is not required, so return empty string if not provided
     if (!path || path === '') {
       return ''
     }
@@ -59,13 +59,13 @@ export default function useUrlValidators() {
     return ''
   }
 
-  const validateProtocol = (protocol: string, gatewayServiceProtocolItems: ProtocolItem[] ): string => {
-  // check if protocol is empty
+  const validateProtocol = (protocol: string, ProtocolItems: SelectItem[] ): string => {
+    // check if protocol is empty
     if (!protocol || protocol.trim() === '') return t('gateway_services.form.errors.protocol.empty')
     // strip out the : from protocol
     protocol = protocol.slice(0,-1)
     // check if protocol is valid
-    const selectedProtocol = gatewayServiceProtocolItems.find((item)=>{
+    const selectedProtocol = ProtocolItems.find((item)=>{
       if (item.value === protocol) return item
       else return undefined
     })

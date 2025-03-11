@@ -446,7 +446,6 @@ import type {
   KongManagerGatewayServiceFormConfig,
   FormFieldErrors,
   GatewayServiceFormFields,
-  ProtocolItem,
   GatewayServiceFormState,
 } from '../types'
 import endpoints from '../gateway-services-endpoints'
@@ -461,11 +460,10 @@ import {
   EntityBaseFormType,
   SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
+import type { SelectItem } from '@kong/kongponents'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import { useDebounceFn } from '@vueuse/core'
-import {
-  KongAirService,
-} from '../constants'
+import { KongAirService } from '../constants'
 
 const emit = defineEmits<{
   (e: 'update', data: Record<string, any>): void,
@@ -597,7 +595,7 @@ const isWsSupported = props.config.app === 'konnect' || useGatewayFeatureSupport
   },
 })
 
-const gatewayServiceProtocolItems: ProtocolItem[] = [
+const gatewayServiceProtocolItems: SelectItem[] = [
   {
     label: t('gateway_services.form.fields.protocol.options.http'),
     value: 'http',
@@ -670,7 +668,7 @@ const handleFloatVal = (oVal: string) => {
   return 0
 }
 
-const initFieldDefaultValues = () => {
+const initFieldDefaultValues = (): void => {
   form.fields.host = formFieldsOriginal.host
   form.fields.path = formFieldsOriginal.path
   form.fields.port = formFieldsOriginal.port
@@ -686,7 +684,7 @@ const initFieldDefaultValues = () => {
   form.fields.tls_verify_value = formFieldsOriginal.tls_verify_value
 }
 
-const changeCheckedGroup = () => {
+const changeCheckedGroup = (): void => {
   isCollapsed.value = true
   resetFormFieldErrors()
   form.errorMessages = []
@@ -756,16 +754,15 @@ const handleValidateFullUrl = useDebounceFn((): void => {
 
       emit('url-valid:success')
     } catch (error: any) {
-      emit('url-valid:error', error.message || 'URL validation failed')
-      form.formFieldErrors.url = error.message || 'URL validation failed'
+      emit('url-valid:error', error.message || t('gateway_services.form.errors.url.invalid'))
+      form.formFieldErrors.url = error.message || t('gateway_services.form.errors.url.invalid')
     }
   }
 }, 300)
 
 const handleValidateAdvancedFields = useDebounceFn((fieldId?: keyof FormFieldErrors) => {
   // reset the errors
-  resetFormFieldErrors(fieldId ?? undefined)
-
+  resetFormFieldErrors(fieldId)
 }, 300)
 
 const getFullUrlError = computed(() : boolean => !!form.formFieldErrors.url || !!form.formFieldErrors.host || !!form.formFieldErrors.port)
@@ -801,9 +798,8 @@ const handleValidateCustomUrl = useDebounceFn((fieldId?: keyof FormFieldErrors):
   if (isFormValid.value) {
     emit('url-valid:success')
   } else {
-    emit('url-valid:error', form.errorMessages.join(',') || 'URL validation failed')
+    emit('url-valid:error', form.errorMessages.join(',') || t('gateway_services.form.errors.url.invalid'))
   }
-
 }, 300)
 
 const resetFormFieldErrors = (fieldId?: keyof FormFieldErrors): void => {
@@ -816,21 +812,19 @@ const resetFormFieldErrors = (fieldId?: keyof FormFieldErrors): void => {
       form.formFieldErrors[key as keyof typeof form.formFieldErrors] = ''
     }
   }
-  // reset the form Error TODO: clear the errors based on the field sent
+
   form.errorMessages = []
 }
 
 const isFormValid = computed((): boolean => {
-  let flag = true
 
   for (let key in form.formFieldErrors) {
     if (form.formFieldErrors[key as keyof typeof form.formFieldErrors].length) {
-      flag = false
-      break
+      return false
     }
   }
 
-  return flag
+  return true
 })
 
 const validateUrl = (): void => {

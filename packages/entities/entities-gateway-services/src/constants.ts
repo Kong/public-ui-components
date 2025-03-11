@@ -1,6 +1,6 @@
-// WeatherApi Gateway Service
+// Kong-Air-Flights-API Gateway Service
 export const KongAirService = {
-  name: 'WeatherApi-quickstart-demo',
+  name: 'Kong-Air-Flights-API',
   tags: [],
   protocol: 'https',
   path: '/flights',

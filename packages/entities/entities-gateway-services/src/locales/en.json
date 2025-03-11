@@ -70,6 +70,9 @@
         "protocol": {
           "empty": "protocol cannot be empty",
           "invalid": "protocol - value must be one of http, https, grpc, grpcs, tcp, udp, tls, tls_passthrough, ws, wss"
+        },
+        "url": {
+          "invalid": "URL validation failed"
         }
       },
       "sections": {
