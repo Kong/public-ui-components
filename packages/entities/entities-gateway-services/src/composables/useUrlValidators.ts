@@ -9,9 +9,12 @@ export default function useUrlValidators() {
     if (!host || host.trim() === '') return t('gateway_services.form.errors.host.empty')
 
     // check if a valid host (domain or ip address)
-    const hostnameRegex = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9])$|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
-    if (!hostnameRegex.test(host)) return t('gateway_services.form.errors.host.invalid')
-    return ''
+    const domainRegex = /^(?!:\/\/)([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,63}$/
+    const ipRegex = /^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])$/
+
+    if (ipRegex.test(host) || domainRegex.test(host)) return ''
+
+    return t('gateway_services.form.errors.host.invalid')
   }
 
   const validatePort = (port: number | string | null | undefined): string => {

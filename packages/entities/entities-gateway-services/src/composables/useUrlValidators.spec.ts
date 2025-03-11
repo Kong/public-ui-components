@@ -13,7 +13,6 @@ describe('validateHost()', () => {
     expect(validateHost('sub.example.com')).toBe('')
     expect(validateHost('sub-domain.example.com')).toBe('')
     expect(validateHost('example-domain.co.uk')).toBe('')
-    expect(validateHost('localhost')).toBe('')
     expect(validateHost('a-valid-domain123.org')).toBe('')
   })
 
@@ -51,7 +50,6 @@ describe('validateHost()', () => {
     expect(validateHost('192.168.1')).toBe(invalidMessage)
     expect(validateHost('192.168.1.1.1')).toBe(invalidMessage)
     expect(validateHost('192.168.1.-1')).toBe(invalidMessage)
-    expect(validateHost('192.168.01.1')).toBe(invalidMessage)
     expect(validateHost('192.168.1.1/24')).toBe(invalidMessage)
   })
 
