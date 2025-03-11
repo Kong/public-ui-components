@@ -84,7 +84,6 @@ export default function useErrors() {
     }
 
     if (error?.response?.status === 401) {
-      console.warn('getErrorFieldsFromError: User auth token is expired or missing, returning empty messages.')
       return {
         messages: [],
         fields: [],

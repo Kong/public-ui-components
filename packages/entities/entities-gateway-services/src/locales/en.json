@@ -56,8 +56,8 @@
       },
       "errors": {
         "host": {
-          "empty": "host cannot be empty",
-          "invalid": "invalid host"
+          "empty": "Host cannot be empty",
+          "invalid": "Invalid host"
         },
         "port": {
           "type": "Port must be a number",
@@ -68,8 +68,8 @@
           "invalid": "Path should not include characters outside of the reserved list of RFC 3986"
         },
         "protocol": {
-          "empty": "protocol cannot be empty",
-          "invalid": "protocol - value must be one of http, https, grpc, grpcs, tcp, udp, tls, tls_passthrough, ws, wss"
+          "empty": "Protocol cannot be empty",
+          "invalid": "Protocol - value must be one of http, https, grpc, grpcs, tcp, udp, tls, tls_passthrough, ws, wss"
         },
         "url": {
           "invalid": "URL validation failed"
@@ -85,7 +85,7 @@
           "description": "Define where this service should send requests.",
           "checkedGroupLabel": "Choose how and where to send traffic",
           "urlLabel": "Full URL",
-          "checkedGroupAltLabel": "Protocol, Host, Port and Path",
+          "checkedGroupAltLabel": "Protocol, host, port and path",
           "url": {
             "label": "Full URL",
             "description": "Define the service using a single, complete API URL for simple setup."

@@ -1,4 +1,4 @@
-// Kong-Air-Flights-API Gateway Service
+// Sample API provided in GatewayServiceForm
 export const KongAirService = {
   name: 'Kong-Air-Flights-API',
   tags: [],
