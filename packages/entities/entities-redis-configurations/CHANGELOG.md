@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@0.1.12...@kong-ui-public/entities-redis-configurations@0.1.13) (2025-03-12)
+
+
+### Bug Fixes
+
+* **redis:** make redis partial name immutable ([#2011](https://github.com/Kong/public-ui-components/issues/2011)) ([4ffd971](https://github.com/Kong/public-ui-components/commit/4ffd9712839146087964b95b32a90a02d012839b))
+
+
+
+
+
 ## [0.1.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@0.1.11...@kong-ui-public/entities-redis-configurations@0.1.12) (2025-03-11)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
