@@ -265,6 +265,7 @@ jobs:
           npm_instructions=""
           for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
           do
+            echo "here:${pkg}"
             pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
             if [ "${npm_instructions}" != "" ]; then
               npm_instructions="${npm_instructions}\n"
