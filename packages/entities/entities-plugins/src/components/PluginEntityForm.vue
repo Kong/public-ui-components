@@ -153,7 +153,7 @@ export default defineComponent({
 
 <script setup lang="ts">
 const emit = defineEmits<{
-  (e: 'loading', isLoading: boolean): void;
+  (e: 'loading', isLoading: boolean): void,
   (e: 'model-updated',
     payload: {
       model: Record<string, any>,
@@ -264,9 +264,7 @@ const buildGetOneUrl = (entityType: string, entityId: string): string => {
 }
 // define endpoints for use by KFG
 const buildGetAllUrl = (entityType: string): string => {
-  let url = `${props.config.apiBaseUrl}${
-    endpoints.form[props.config.app].entityGetAll
-  }`
+  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetAll}`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
@@ -301,7 +299,7 @@ const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promi
   // Currently hardcoded to fetch 1000 records, and filter
   // client side. If more than 1000 records, this won't work
   if (props.config.app === 'konnect') {
-    return axiosInstance.get(url).then((res) => {
+    return axiosInstance.get(url).then(res => {
       const { data: { data } } = res
 
       delete params.size
@@ -490,7 +488,8 @@ const getModel = (): Record<string, any> => {
             // if the value is an object (not an array or null), recursively call this function
             if (o[key] && typeof o[key] === 'object' && !Array.isArray(o[key]) && o[key] !== null) {
               deepOmitNil(o[key])
-            } else if (o[key] === undefined || o[key] === null || (typeof o[key] === 'number' && isNaN(o[key])) || (typeof o[key] === 'string' && o[key].trim().length === 0)) {
+            } else if (o[key] === undefined || o[key] === null || (typeof o[key] === 'number' && isNaN(o[key]))
+              || (typeof o[key] === 'string' && o[key].trim().length === 0)) {
               delete o[key]
             }
           })
@@ -731,10 +730,7 @@ const initFormModel = (): void => {
     for (const entity in props.entityMap) {
       const id = props.entityMap[entity].id
       const idField = props.entityMap[entity].idField
-      const key =
-        idField === 'consumer_group_id'
-          ? 'consumer_group-id'
-          : JSON.parse(JSON.stringify(idField).replace('_', '-'))
+      const key = idField === 'consumer_group_id' ? 'consumer_group-id' : JSON.parse(JSON.stringify(idField).replace('_', '-'))
 
       // ex. set consumer-id: <entityId>
       if (Object.prototype.hasOwnProperty.call(formModel, key)) {
@@ -784,9 +780,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   sharedFormName.value = getSharedFormName(form.model.name)
 
   initFormModel()
-},
-{ immediate: true, deep: true },
-)
+}, { immediate: true, deep: true })
 
 onBeforeMount(() => {
   form.value = parseSchema(props.schema)
