@@ -10,7 +10,7 @@
       @update:model-value="request!.url = $event"
     />
 
-    <SelectField
+    <EnumField
       clearable
       :items="METHODS"
       label="Request › Method"
@@ -170,7 +170,7 @@
       :label-attributes="getLabelAttributes('callouts.*.request.error')"
       @update:added="setError"
     >
-      <SelectField
+      <EnumField
         :items="ERROR_STRATEGIES"
         label="Request › Error › On Error"
         :label-attributes="getLabelAttributes('callouts.*.request.error.on_error')"
@@ -239,7 +239,7 @@ import { useFormShared } from './composables'
 import { getDefaultCalloutRequestBody, getDefaultCalloutRequestError, getDefaultCalloutRequestHeaders, getDefaultCalloutRequestHttpOpts, getDefaultCalloutRequestHttpOptsProxy, getDefaultCalloutRequestHttpOptsTimeouts, getDefaultCalloutRequestQuery, toSelectItems } from './utils'
 import StringField from '../shared/StringField.vue'
 import BooleanField from '../shared/BooleanField.vue'
-import SelectField from '../shared/EnumField.vue'
+import EnumField from '../shared/EnumField.vue'
 import NumberField from '../shared/NumberField.vue'
 
 const METHODS = toSelectItems([

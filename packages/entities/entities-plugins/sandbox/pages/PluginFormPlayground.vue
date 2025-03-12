@@ -50,7 +50,7 @@
         @update="onUpdate"
       />
 
-      <!-- <h2>Kong Manager API</h2>
+      <h2>Kong Manager API</h2>
       <PluginForm
         :key="formKey"
         :config="kongManagerConfig"
@@ -59,7 +59,7 @@
         plugin-type=""
         :schema="schema"
         @update="onUpdate"
-      /> -->
+      />
     </section>
     <pre
       v-else
