@@ -16,24 +16,8 @@
       Click the close button to dismiss the slideout (not a bug)<br>
     </div>
 
-    <KSelect
-      v-model="selectedTraceIndex"
-      class="trace-select"
-      :items="[
-        {
-          label: 'Normal',
-          value: 0,
-        },{
-          label: 'No matched routes',
-          value: 1,
-        }
-      ]"
-      label="Trace example"
-    />
-
-
     <KSlideout
-      :key="selectedTraceIndex"
+      :key="renderKey"
       class="trace-viewer-slideout"
       :close-on-blur="false"
       :has-overlay="false"
@@ -88,10 +72,49 @@
       title="Controls"
     >
       <KInputSwitch
+        v-model="hasRequests"
+        label="Requests"
+      />
+
+      <KInputSwitch
+        v-model="hasResponses"
+        label="Responses"
+      />
+
+      <KInputSwitch
+        v-model="hasClientIn"
+        label="Client In"
+      />
+
+      <KInputSwitch
+        v-model="hasClientOut"
+        label="Client Out"
+      />
+
+      <KInputSwitch
+        v-model="hasUpstream"
+        label="Upstream"
+      />
+
+      <KInputSwitch
+        v-model="hasUpstreamIn"
+        :disabled="!hasUpstream"
+        label="Upstream In"
+      />
+
+      <KInputSwitch
+        v-model="hasUpstreamOut"
+        :disabled="!hasUpstream"
+        label="Upstream Out"
+      />
+
+      <hr>
+
+      <KInputSwitch
         v-model="showSkeleton"
         label="Skeleton"
       />
-      <br>
+
       <KInputSwitch
         v-model="enablePayloads"
         label="Payloads"
@@ -101,23 +124,77 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import type { Body, Headers , TraceBatches } from '../../src'
-import { buildSpanTrees, mergeSpansInTraceBatches, SummaryViewTab, TraceViewTab, type TraceViewerConfig } from '../../src'
-// import rawSpans from '../fixtures/spans.json'
+import { computed, ref, watch } from 'vue'
+import type { Body, Headers, SpanNode } from '../../src'
+import { buildSpanTrees, getPhaseAndPlugin, KONG_PHASES, mergeSpansInTraceBatches, SPAN_NAMES, SummaryViewTab, TraceViewTab, type TraceViewerConfig } from '../../src'
 import traceBatches from '../fixtures/trace-batches.json'
-import traceBatchesNoMatchRoutes from '../fixtures/trace-batches-no-match-routes.json'
 
-const selectableTraces = [traceBatches, traceBatchesNoMatchRoutes]
-const selectedTraceIndex = ref(0)
+const renderKey = ref(0)
+
+const hasRequests = ref(true)
+const hasResponses = ref(true)
+
+const hasClientIn = ref(true)
+const hasClientOut = ref(true)
+
+const hasUpstream = ref(true)
+const hasUpstreamIn = ref(true)
+const hasUpstreamOut = ref(true)
+
+const trimTree = (tree: SpanNode) => {
+  tree.children = tree.children.filter((node) => {
+    const pluginSpan = getPhaseAndPlugin(node.span.name)
+    if (pluginSpan) {
+      switch (pluginSpan.phase) {
+        case KONG_PHASES.CERTIFICATE:
+        case KONG_PHASES.REWRITE:
+        case KONG_PHASES.ACCESS:
+          return hasRequests.value
+        case KONG_PHASES.RESPONSE:
+        case KONG_PHASES.HEADER_FILTER:
+        case KONG_PHASES.BODY_FILTER:
+          return hasResponses.value
+        default:
+          return true
+      }
+    }
+
+    switch (node.span.name) {
+      case SPAN_NAMES.CLIENT_HEADERS:
+      case SPAN_NAMES.READ_BODY:
+        return hasClientOut.value
+      case SPAN_NAMES.FLUSH_TO_DOWNSTREAM:
+        return hasClientIn.value
+      case SPAN_NAMES.KONG_UPSTREAM_SELECTION:
+      case SPAN_NAMES.KONG_SEND_REQUEST_TO_UPSTREAM:
+        return hasUpstream.value && hasUpstreamIn.value
+      case SPAN_NAMES.KONG_READ_HEADERS_FROM_UPSTREAM:
+      case SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM:
+        return hasUpstream.value && hasUpstreamOut.value
+      case SPAN_NAMES.FIND_UPSTREAM:
+        return hasUpstream.value
+      default:
+        return true
+    }
+  })
+  tree.children.forEach(trimTree)
+}
+
+const spanTrees = computed(() => {
+  const trees = buildSpanTrees(mergeSpansInTraceBatches(traceBatches))
+  trimTree(trees.roots[0])
+  return trees
+})
+
+watch(spanTrees, () => {
+  renderKey.value += 1
+}, { deep:true })
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
-// const spanRoots = computed(() => buildSpanTrees(rawSpans))
-const spanTrees = computed(() => buildSpanTrees(mergeSpansInTraceBatches(selectableTraces[selectedTraceIndex.value])))
 const showSkeleton = ref(false)
 const enablePayloads = ref(true)
-const slideoutVisible = ref(false)
+const slideoutVisible = ref(true)
 const tabs = [
   { hash: '#summary', title: 'Summary' },
   { hash: '#trace', title: 'Trace' },
@@ -281,5 +358,13 @@ const payloads = {
   margin-bottom: 16px;
   position: fixed;
   width: auto;
+
+  :deep(.card-content) {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: flex-start;
+  }
 }
 </style>
