@@ -55,7 +55,6 @@
         :key="formKey"
         :config="kongManagerConfig"
         enable-vault-secret-picker
-        is-wizard-step
         plugin-type=""
         :schema="schema"
         @update="onUpdate"
