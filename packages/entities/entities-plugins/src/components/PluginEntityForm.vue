@@ -6,12 +6,35 @@
     />
 
     <div
-      v-else
+      v-else-if="(formModel.id && editing) || !editing"
       class="entity-form"
     >
       <component
+        :is="freeformName"
+        v-if="freeformName"
+        :form-model="formModel"
+        :form-options="formOptions"
+        :form-schema="formSchema"
+        :is-editing="editing"
+        :model="record"
+        :on-config-change="onConfigChange"
+        :on-model-updated="onModelUpdated"
+        :schema="rawSchema"
+      >
+        <template
+          v-if="enableVaultSecretPicker"
+          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
+        >
+          <VaultSecretPickerProvider
+            v-if="slotProps.schema.referenceable"
+            v-bind="slotProps"
+            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+          />
+        </template>
+      </component>
+      <component
         :is="sharedFormName"
-        v-if="sharedFormName && (formModel.id && editing || !editing)"
+        v-else-if="sharedFormName"
         :enable-redis-partial="enableRedisPartial"
         :form-model="formModel"
         :form-options="formOptions"
@@ -34,7 +57,7 @@
       </component>
 
       <VueFormGenerator
-        v-if="!sharedFormName && (formModel.id && editing || !editing)"
+        v-else
         :enable-redis-partial="enableRedisPartial"
         :is-editing="editing"
         :model="formModel"
@@ -47,16 +70,21 @@
       >
         <template #plugin-config-empty-state>
           <div class="plugin-config-empty-state">
-            {{ t('plugins.form.grouping.plugin_configuration.empty') }}
+            {{ t("plugins.form.grouping.plugin_configuration.empty") }}
           </div>
         </template>
 
         <!-- For the opentelemetry plugin, we only need to show rule alerts with its new schema -->
         <template
-          v-if="PLUGIN_METADATA[formModel.name]?.fieldRules && (props.config.isNewOtelSchema || formModel.name !== 'opentelemetry')"
+          v-if="
+            PLUGIN_METADATA[formModel.name]?.fieldRules &&
+              (props.config.isNewOtelSchema || formModel.name !== 'opentelemetry')
+          "
           #plugin-config-before-content
         >
-          <PluginFieldRuleAlerts :rules="PLUGIN_METADATA[formModel.name].fieldRules!" />
+          <PluginFieldRuleAlerts
+            :rules="PLUGIN_METADATA[formModel.name].fieldRules!"
+          />
         </template>
 
         <template
@@ -76,7 +104,7 @@
   <VaultSecretPicker
     :config="props.config"
     :setup="vaultSecretPickerSetup"
-    @cancel="() => vaultSecretPickerSetup = false"
+    @cancel="() => (vaultSecretPickerSetup = false)"
     @proceed="handleVaultSecretPickerAutofill"
   />
 </template>
@@ -99,32 +127,57 @@ import {
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, defineComponent, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  provide,
+  reactive,
+  ref,
+  watch,
+  type PropType,
+} from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
-import {
-  type KongManagerPluginFormConfig,
-  type KonnectPluginFormConfig,
-  type PluginEntityInfo,
+import type {
+  KongManagerPluginFormConfig,
+  KonnectPluginFormConfig,
+  PluginEntityInfo,
 } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
+import * as freeForm from './free-form'
+import { getFreeFormName } from '../utils/free-form'
+
+// Need to check for duplicates in sharedForms and freeForm
+// throw an error if there are any
+const sharedFormKeys = Object.keys(sharedForms)
+const freeFormKeys = Object.keys(freeForm)
+if (
+  new Set([...sharedFormKeys, ...freeFormKeys]).size !==
+  sharedFormKeys.length + freeFormKeys.length
+) {
+  throw new Error(
+    'Duplicate form component names found in `sharedForms` and `freeForm`',
+  )
+}
 
 // Must explicitly specify these as components since they are rendered dynamically
 export default defineComponent({
-  components: { ...sharedForms },
+  components: { ...sharedForms, ...freeForm },
 })
 </script>
 
 <script setup lang="ts">
 const emit = defineEmits<{
-  (e: 'loading', isLoading: boolean): void,
-  (e: 'model-updated',
+  (e: 'loading', isLoading: boolean): void;
+  (
+    e: 'model-updated',
     payload: {
-      model: Record<string, any>,
-      originalModel: Record<string, any>,
-      data: Record<string, any>
+      model: Record<string, any>;
+      originalModel: Record<string, any>;
+      data: Record<string, any>;
     }
   ): void,
   (e: 'showNewPartialModal', redisType: string): void,
@@ -133,12 +186,18 @@ const emit = defineEmits<{
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: {
-    type: Object as PropType<KonnectPluginFormConfig | KongManagerPluginFormConfig>,
+    type: Object as PropType<
+      KonnectPluginFormConfig | KongManagerPluginFormConfig
+    >,
     required: true,
-    validator: (config: KonnectPluginFormConfig | KongManagerPluginFormConfig): boolean => {
-      if (!config || !['konnect', 'kongManager'].includes(config?.app)) return false
+    validator: (
+      config: KonnectPluginFormConfig | KongManagerPluginFormConfig,
+    ): boolean => {
+      if (!config || !['konnect', 'kongManager'].includes(config?.app))
+        return false
       if (config.app === 'konnect' && !config.controlPlaneId) return false
-      if (config.app === 'kongManager' && typeof config.workspace !== 'string') return false
+      if (config.app === 'kongManager' && typeof config.workspace !== 'string')
+        return false
       return true
     },
   },
@@ -160,6 +219,13 @@ const props = defineProps({
    * Form schema
    */
   schema: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => ({}),
+  },
+  /**
+   * Raw schema
+   */
+  rawSchema: {
     type: Object as PropType<Record<string, any>>,
     default: () => ({}),
   },
@@ -203,16 +269,23 @@ const { parseSchema } = composables.useSchemas({
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
 const { objectsAreEqual } = useHelpers()
-const { i18n: { t } } = useI18n()
+const {
+  i18n: { t },
+} = useI18n()
 
 // define endpoints for use by KFG
 const buildGetOneUrl = (entityType: string, entityId: string): string => {
-  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetOne}`
+  let url = `${props.config.apiBaseUrl}${
+    endpoints.form[props.config.app].entityGetOne
+  }`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(
+      /\/{workspace}/gi,
+      props.config.workspace ? `/${props.config.workspace}` : '',
+    )
   }
 
   // replace the entity type and id
@@ -223,12 +296,17 @@ const buildGetOneUrl = (entityType: string, entityId: string): string => {
 }
 // define endpoints for use by KFG
 const buildGetAllUrl = (entityType: string): string => {
-  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetAll}`
+  let url = `${props.config.apiBaseUrl}${
+    endpoints.form[props.config.app].entityGetAll
+  }`
 
   if (props.config.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
   } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+    url = url.replace(
+      /\/{workspace}/gi,
+      props.config.workspace ? `/${props.config.workspace}` : '',
+    )
   }
 
   // replace the entity type
@@ -242,7 +320,10 @@ const buildGetAllUrl = (entityType: string): string => {
  * @param {entityId} string - the id of the entity to look up
  * @returns {Promise<import('axios').AxiosResponse<T>>}
  */
-const getOne = (entityType: string, entityId: string): Promise<AxiosResponse> => {
+const getOne = (
+  entityType: string,
+  entityId: string,
+): Promise<AxiosResponse> => {
   const url = buildGetOneUrl(entityType, entityId)
 
   return axiosInstance.get(url)
@@ -252,14 +333,19 @@ const getOne = (entityType: string, entityId: string): Promise<AxiosResponse> =>
  * @param {entityType} string - the entity query path WITHOUT leading/trailing slash (ex. 'routes')
  * @returns {Promise<import('axios').AxiosResponse<T>>}
  */
-const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promise<AxiosResponse> => {
+const getAll = (
+  entityType: string,
+  params: AxiosRequestConfig['params'],
+): Promise<AxiosResponse> => {
   const url = buildGetAllUrl(entityType)
 
   // Currently hardcoded to fetch 1000 records, and filter
   // client side. If more than 1000 records, this won't work
   if (props.config.app === 'konnect') {
-    return axiosInstance.get(url).then(res => {
-      const { data: { data } } = res
+    return axiosInstance.get(url).then((res) => {
+      const {
+        data: { data },
+      } = res
 
       delete params.size
       delete params.offset
@@ -268,7 +354,9 @@ const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promi
         const queryKey = Object.keys(params)[0]
         const filteredData = data.filter((instance: Record<string, any>) => {
           if (instance[queryKey]) {
-            return !!instance[queryKey].toLowerCase().includes(params[queryKey].toLowerCase())
+            return !!instance[queryKey]
+              .toLowerCase()
+              .includes(params[queryKey].toLowerCase())
           }
 
           return false
@@ -293,6 +381,7 @@ provide(FORMS_API_KEY, {
 provide(FORMS_CONFIG, props.config)
 
 const sharedFormName = ref('')
+const freeformName = ref('')
 const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
@@ -300,8 +389,12 @@ const formModel = reactive<Record<string, any>>({})
 const formOptions = computed(() => form.value?.options)
 
 const vaultSecretPickerSetup = ref<string | false>(false)
-const vaultSecretPickerAutofillAction = ref<(secretRef: string) => void | undefined>()
-const setUpVaultSecretPicker = (setupValue: string, autofillAction: (secretRef: string) => void) => {
+const vaultSecretPickerAutofillAction =
+  ref<(secretRef: string) => void | undefined>()
+const setUpVaultSecretPicker = (
+  setupValue: string,
+  autofillAction: (secretRef: string) => void,
+) => {
   vaultSecretPickerSetup.value = setupValue ?? ''
   vaultSecretPickerAutofillAction.value = autofillAction
 }
@@ -345,7 +438,7 @@ const getModel = (): Record<string, any> => {
 
   // Iterate over each field in the form, transform each field value to match the
   // Kong Admin APIs request expectations for submission
-  formModelFields.forEach(fieldName => {
+  formModelFields.forEach((fieldName) => {
     if (!schema[fieldName]) {
       // special handling for partials
       if (fieldName === 'partials') {
@@ -357,12 +450,20 @@ const getModel = (): Record<string, any> => {
     const fieldSchema = schema[fieldName]
     let fieldValue = inputModel[fieldName]
     const originalValue = origModel[fieldName]
-    const fieldValueType = Array.isArray(fieldValue) ? 'array' : typeof fieldValue
+    const fieldValueType = Array.isArray(fieldValue)
+      ? 'array'
+      : typeof fieldValue
     const fieldSchemaValueType = fieldSchema ? fieldSchema.valueType : null
-    const fieldSchemaArrayValueType = fieldSchema ? fieldSchema.valueArrayType : null
+    const fieldSchemaArrayValueType = fieldSchema
+      ? fieldSchema.valueArrayType
+      : null
     const transformer = fieldSchema ? fieldSchema.transform : null
 
-    if (fieldValue == null && originalValue == null && !fieldSchema.submitWhenNull) {
+    if (
+      fieldValue == null &&
+      originalValue == null &&
+      !fieldSchema.submitWhenNull
+    ) {
       return
     }
 
@@ -387,12 +488,12 @@ const getModel = (): Record<string, any> => {
                 if (fieldSchemaArrayValueType === 'boolean') {
                   // Convert string based boolean values ('true', 'false') to boolean type
                   if (typeof value === 'string') {
-                    return (value.toLowerCase() === 'true' || value === '1')
+                    return value.toLowerCase() === 'true' || value === '1'
                   }
 
                   // Handle a numerical value, just in-case someone fudged an input type.
                   if (typeof value === 'number') {
-                    return (value === 1)
+                    return value === 1
                   }
                 }
 
@@ -401,7 +502,7 @@ const getModel = (): Record<string, any> => {
             }
 
             // We only want to set array fields to empty if the field is empty
-            if ((!fieldValue || !fieldValue.length)) {
+            if (!fieldValue || !fieldValue.length) {
               fieldValue = fieldSchema.submitWhenNull ? null : []
             }
 
@@ -416,23 +517,24 @@ const getModel = (): Record<string, any> => {
           case 'boolean':
             // Convert string based boolean values ('true', 'false') to boolean type
             if (fieldValueType === 'string') {
-              fieldValue = (fieldValue.toLowerCase() === 'true' || fieldValue === '1')
+              fieldValue =
+                fieldValue.toLowerCase() === 'true' || fieldValue === '1'
             }
 
             // Handle a numerical value, just in-case someone fudged an input type.
             if (fieldValueType === 'number') {
-              fieldValue = (fieldValue === 1)
+              fieldValue = fieldValue === 1
             }
 
             break
 
           // Handle values that aren't strings but should be.
           case 'string':
-            fieldValue = (fieldValue == null) ? '' : String(fieldValue)
+            fieldValue = fieldValue == null ? '' : String(fieldValue)
             break
         }
       } else if (fieldSchemaValueType === 'array') {
-        if ((!fieldValue || !fieldValue.length)) {
+        if (!fieldValue || !fieldValue.length) {
           fieldValue = fieldSchema.submitWhenNull ? null : []
         } else if (fieldSchema.inputAttributes?.type === 'number') {
           fieldValue = fieldValue.map((value: string) => Number(value))
@@ -446,8 +548,12 @@ const getModel = (): Record<string, any> => {
             // if the value is an object (not an array or null), recursively call this function
             if (o[key] && typeof o[key] === 'object' && !Array.isArray(o[key]) && o[key] !== null) {
               deepOmitNil(o[key])
-            } else if (o[key] === undefined || o[key] === null || (typeof o[key] === 'number' && isNaN(o[key]))
-              || (typeof o[key] === 'string' && o[key].trim().length === 0)) {
+            } else if (
+              o[key] === undefined ||
+              o[key] === null ||
+              (typeof o[key] === 'number' && isNaN(o[key])) ||
+              (typeof o[key] === 'string' && o[key].trim().length === 0)
+            ) {
               delete o[key]
             }
           })
@@ -458,11 +564,15 @@ const getModel = (): Record<string, any> => {
       }
 
       // Format Advanced Object for submission
-      if (fieldSchema.type === 'object-advanced' && fieldSchema.fields && fieldValue !== null) {
+      if (
+        fieldSchema.type === 'object-advanced' &&
+        fieldSchema.fields &&
+        fieldValue !== null
+      ) {
         if (Object.entries(fieldValue).length === 0) {
           fieldValue = null
         } else {
-          Object.keys(fieldValue).forEach(key => {
+          Object.keys(fieldValue).forEach((key) => {
             if (Array.isArray(fieldValue[key])) return
 
             fieldValue[key] = fieldValue[key].split(',')
@@ -478,13 +588,17 @@ const getModel = (): Record<string, any> => {
     // If the field name originally has dashes, they were converted to underscores during initiation.
     // Now we need to convert them back to dashes because the Admin API expects dashes
     if (fieldSchema.fieldNameHasDashes) {
-      const [keyToBeConverted, ...rest] = fieldNameDotNotation.split('.').reverse()
+      const [keyToBeConverted, ...rest] = fieldNameDotNotation
+        .split('.')
+        .reverse()
 
-      fieldNameDotNotation = [keyToBeConverted.replace(/_/g, '-'), ...rest].reverse().join('.')
+      fieldNameDotNotation = [keyToBeConverted.replace(/_/g, '-'), ...rest]
+        .reverse()
+        .join('.')
     }
 
     if (fieldSchemaValueType === 'object-expand') {
-      let key
+      let key;
 
       [fieldNameDotNotation, key] = fieldNameDotNotation.split('.')
 
@@ -504,11 +618,16 @@ const getModel = (): Record<string, any> => {
     // or reset this value to it's default.
 
     // Include if field is empty & field has been modified from orginal value
-    if (originalValue !== undefined && fieldValue === '' && fieldValue !== originalValue) {
+    if (
+      originalValue !== undefined &&
+      fieldValue === '' &&
+      fieldValue !== originalValue
+    ) {
       // We need to determine what type of 'empty' value to set for modified nested inputs,
       // if we do not the model will not preserve its structure
       // (this change may be able to be removed when core updates its reset default handling)
-      outputModel[fieldNameDotNotation] = fieldSchemaValueType === 'object' ? {} : null
+      outputModel[fieldNameDotNotation] =
+        fieldSchemaValueType === 'object' ? {} : null
 
       // If empty & field is a checklist array, set as [] to prevent all options being selected
     } else if (fieldSchema.type === 'checklist' && fieldValue === '') {
@@ -558,7 +677,7 @@ const onModelUpdated = (model: any, schema: string) => {
 
 // special handling for problematic fields before we emit
 const updateModel = (data: Record<string, any>, parent?: string) => {
-  Object.keys(data).forEach(key => {
+  Object.keys(data).forEach((key) => {
     let modelKey = parent ? `${parent}-${key}` : key
     let scheme = props.schema[modelKey]
 
@@ -568,7 +687,9 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
     // 3. or `parent` is already a schema key and `key` is a nested key of its value object
     // For reasons 2 and 3, we need special logic to find the correct schema key
     if (!scheme) {
-      const underscoredModelKey = parent ? `${parent}-${key.replace(/-/g, '_')}` : key.replace(/-/g, '_')
+      const underscoredModelKey = parent
+        ? `${parent}-${key.replace(/-/g, '_')}`
+        : key.replace(/-/g, '_')
 
       // Here we check if the underscored key exists in the schema and the `fieldNameHasDashes` flag is true
       if (props.schema[underscoredModelKey]?.fieldNameHasDashes) {
@@ -626,13 +747,27 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
   })
 }
 
+const onConfigChange = (value: Record<string, any>) => {
+  const data = getModel()
+
+  data.config = value
+
+  emit('model-updated', {
+    model: formModel,
+    originalModel,
+    data,
+  })
+}
+
 const loading = ref(true)
 const initFormModel = (): void => {
   if (props.record && props.schema) {
     // global fields
     updateModel({
       enabled: props.record.enabled ?? true,
-      ...(props.record.instance_name && { instance_name: props.record.instance_name || '' }),
+      ...(props.record.instance_name && {
+        instance_name: props.record.instance_name || '',
+      }),
       ...(props.record.protocols && { protocols: props.record.protocols }),
       ...(props.record.tags && { tags: props.record.tags }),
     })
@@ -647,15 +782,25 @@ const initFormModel = (): void => {
       }
 
       updateModel(props.record)
-    } else if (props.record.config) { // typical plugins
+    } else if (props.record.config) {
+      // typical plugins
       // scope fields
-      if ((props.record.consumer_id || props.record.consumer) || (props.record.service_id || props.record.service) ||
-        (props.record.route_id || props.record.route) || (props.record.consumer_group_id || props.record.consumer_group)) {
+      if (
+        props.record.consumer_id ||
+        props.record.consumer ||
+        props.record.service_id ||
+        props.record.service ||
+        props.record.route_id ||
+        props.record.route ||
+        props.record.consumer_group_id ||
+        props.record.consumer_group
+      ) {
         updateModel({
           service_id: props.record.service_id || props.record.service,
           route_id: props.record.route_id || props.record.route,
           consumer_id: props.record.consumer_id || props.record.consumer,
-          consumer_group_id: props.record.consumer_group_id || props.record.consumer_group,
+          consumer_group_id:
+            props.record.consumer_group_id || props.record.consumer_group,
         })
       }
 
@@ -671,12 +816,19 @@ const initFormModel = (): void => {
 
   // scoping logic, convert _ to - for form model
   // Check if incoming field exists in current model and if so update
-  if (Object.keys(props.entityMap).length && !props.entityMap.global && props.schema) {
+  if (
+    Object.keys(props.entityMap).length &&
+    !props.entityMap.global &&
+    props.schema
+  ) {
     const updateFields: Record<string, any> = {}
     for (const entity in props.entityMap) {
       const id = props.entityMap[entity].id
       const idField = props.entityMap[entity].idField
-      const key = idField === 'consumer_group_id' ? 'consumer_group-id' : JSON.parse(JSON.stringify(idField).replace('_', '-'))
+      const key =
+        idField === 'consumer_group_id'
+          ? 'consumer_group-id'
+          : JSON.parse(JSON.stringify(idField).replace('_', '-'))
 
       // ex. set consumer-id: <entityId>
       if (Object.prototype.hasOwnProperty.call(formModel, key)) {
@@ -707,24 +859,30 @@ watch(loading, (newLoading) => {
 })
 
 // if the schema changed we've got to start over and completely rebuild the form model
-watch(() => props.schema, (newSchema, oldSchema) => {
-  if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
-    return
-  }
-  const form: Record<string, any> = parseSchema(newSchema)
+watch(
+  () => props.schema,
+  (newSchema, oldSchema) => {
+    if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
+      return
+    }
+    const form: Record<string, any> = parseSchema(newSchema)
 
-  Object.assign(formModel, form.model)
+    Object.assign(formModel, form.model)
 
-  formSchema.value = {
-    fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
-      return { ...r, disabled: r.disabled || false }
-    }),
-  }
-  Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
-  sharedFormName.value = getSharedFormName(form.model.name)
+    formSchema.value = {
+      fields: formSchema.value?.fields?.map((r: Record<string, any>) => {
+        return { ...r, disabled: r.disabled || false }
+      }),
+    }
+    Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
 
-  initFormModel()
-}, { immediate: true, deep: true })
+    freeformName.value = getFreeFormName(form.model.name)
+    sharedFormName.value = getSharedFormName(form.model.name)
+
+    initFormModel()
+  },
+  { immediate: true, deep: true },
+)
 
 onBeforeMount(() => {
   form.value = parseSchema(props.schema)
@@ -760,7 +918,7 @@ onBeforeMount(() => {
   }
 
   :deep(.vue-form-generator) {
-    >fieldset {
+    > fieldset {
       .form-group:last-child {
         margin-bottom: 0;
       }
@@ -774,6 +932,7 @@ onBeforeMount(() => {
 
     fieldset {
       border: none;
+      margin-left: $kui-space-0;
       padding: $kui-space-0;
     }
 
@@ -793,12 +952,12 @@ onBeforeMount(() => {
 
     .form-group hr.divider {
       border-color: $kui-color-border;
-      opacity: .3;
+      opacity: 0.3;
     }
 
     .form-group hr.wide-divider {
       border-color: $kui-color-border;
-      opacity: .6;
+      opacity: 0.6;
     }
 
     .form-group.field-textArea textarea {
@@ -823,7 +982,7 @@ onBeforeMount(() => {
       }
     }
 
-    .field-radios .radio-list label input[type=radio] {
+    .field-radios .radio-list label input[type="radio"] {
       margin-right: 10px;
     }
 

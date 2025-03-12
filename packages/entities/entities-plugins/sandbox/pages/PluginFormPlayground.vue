@@ -44,14 +44,13 @@
         :key="formKey"
         :config="konnectConfig"
         enable-vault-secret-picker
-        is-wizard-step
         :plugin-type="pluginType || ''"
         :schema="schema"
         use-custom-names-for-plugin
         @update="onUpdate"
       />
 
-      <h2>Kong Manager API</h2>
+      <!-- <h2>Kong Manager API</h2>
       <PluginForm
         :key="formKey"
         :config="kongManagerConfig"
@@ -60,7 +59,7 @@
         plugin-type=""
         :schema="schema"
         @update="onUpdate"
-      />
+      /> -->
     </section>
     <pre
       v-else
@@ -70,7 +69,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onErrorCaptured, ref, useTemplateRef, watch } from 'vue'
+import {
+  computed,
+  nextTick,
+  onErrorCaptured,
+  ref,
+  useTemplateRef,
+  watch,
+} from 'vue'
 import { useRouter } from 'vue-router'
 import type {
   KonnectPluginFormConfig,
@@ -89,15 +95,24 @@ const pluginTypes = [
     value: key,
   })),
 ].sort((a, b) => a.label.localeCompare(b.label))
-const pluginType = ref<string>()
+
+const storedPluginType =
+  localStorage.getItem('plugin-form-playground:pluginType') || ''
+const pluginType = ref<string>(
+  pluginTypes.find(({ value }) => value === storedPluginType)
+    ? storedPluginType
+    : '',
+)
 
 const defaultSchema = {
   fields: [],
 }
 const schemaOpen = ref(false)
-const schemaText = ref(JSON.stringify(defaultSchema, null, 2))
 
-watch(schemaOpen, async open => {
+const storedSchema = localStorage.getItem('plugin-form-playground:schema')
+const schemaText = ref(storedSchema || JSON.stringify(defaultSchema, null, 2))
+
+watch(schemaOpen, async (open) => {
   if (open) {
     await nextTick()
     text.value?.$el.querySelector('textarea').select()
@@ -155,8 +170,14 @@ const onUpdate = (payload: Record<string, any>) => {
   router.push({ name: 'home' })
 }
 
+watch(pluginType, () => {
+  localStorage.setItem('plugin-form-playground:pluginType', pluginType.value)
+})
+
 watch(schemaText, () => {
   renderError.value = ''
+
+  localStorage.setItem('plugin-form-playground:schema', schemaText.value)
 })
 
 onErrorCaptured((error) => {

@@ -510,7 +510,7 @@
       },
       "request-callout": {
         "name": "Request Callout",
-        "description": "Callout to third party apis as part of request processing."
+        "description": "Callout to third party APIs as part of request processing."
       },
       "ai-sanitizer": {
         "name": "AI Sanitizer",
