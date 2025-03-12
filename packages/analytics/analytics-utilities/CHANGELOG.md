@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@8.0.0...@kong-ui-public/analytics-utilities@8.1.0) (2025-03-12)
+
+
+### Features
+
+* add portal and api to request dimensions ([#2018](https://github.com/Kong/public-ui-components/issues/2018)) ([0f80f9e](https://github.com/Kong/public-ui-components/commit/0f80f9e00be558040f0dc63d81da1229a3b200f5))
+
+
+
+
+
 # [8.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@7.4.0...@kong-ui-public/analytics-utilities@8.0.0) (2025-03-06)
 
 
