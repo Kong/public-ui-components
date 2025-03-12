@@ -30,6 +30,7 @@ import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
+import { getFreeFormName } from '../utils/free-form'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -275,7 +276,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
     formSchema._redis_partial_path = currentSchema._redis_partial_path
 
-    if (getSharedFormName(pluginName) || metadata?.useLegacyForm || options?.credential) {
+    if (getSharedFormName(pluginName) || getFreeFormName(pluginName) || metadata?.useLegacyForm || options?.credential) {
       /**
        * Do not generate grouped schema when:
        * - The plugin has a custom layout
@@ -417,7 +418,6 @@ export const useSchemas = (options?: UseSchemasOptions) => {
           },
         })
       }
-
       formSchema = {
         groups: fieldGroups,
       }

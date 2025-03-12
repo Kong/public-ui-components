@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script setup lang="tsx">
+<script setup lang="ts">
 import composables from '../composables'
 
 type Props = {

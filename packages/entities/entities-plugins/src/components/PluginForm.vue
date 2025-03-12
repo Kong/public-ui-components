@@ -48,8 +48,9 @@
         :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
+        :raw-schema="loadedSchema || {}"
         :record="record || undefined"
-        :schema="loadedSchema || {}"
+        :schema="finalSchema || {}"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
         @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
@@ -308,6 +309,7 @@ const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const loadedSchema = ref<Record<string, any> | null>(null)
+const finalSchema = ref<Record<string, any> | null>(null)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
 const record = ref<Record<string, any> | null>(null)
 const configResponse = ref<Record<string, any>>({})
@@ -1109,8 +1111,6 @@ watch([entityMap, initialized], (newData, oldData) => {
 
   // rebuild schema if its not a credential and we either just determined a new entity id, or newly initialized the data
   if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newEntityData || (newinitialized && newinitialized !== oldinitialized))) {
-    schemaLoading.value = true
-
     const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
     if (isCustomPlugin.value) {
       initialFormSchema._isCustomPlugin = true
@@ -1118,8 +1118,7 @@ watch([entityMap, initialized], (newData, oldData) => {
     if (pluginPartialType.value) {
       initialFormSchema._supported_redis_partial_type = pluginPartialType.value
     }
-    loadedSchema.value = initialFormSchema
-    schemaLoading.value = false
+    finalSchema.value = initialFormSchema
   }
 }, { deep: true })
 
@@ -1236,7 +1235,7 @@ const saveFormData = async (): Promise<void> => {
         originalModel: formFieldsOriginal,
         model: form.fields,
         payload,
-        schema: loadedSchema.value,
+        schema: finalSchema.value,
       })
     }
 
@@ -1306,15 +1305,16 @@ onBeforeMount(async () => {
       const data = CREDENTIAL_SCHEMAS[pluginType]
       credentialType.value = pluginType
 
-      loadedSchema.value = buildFormSchema('', data, {})
+      finalSchema.value = buildFormSchema('', data, {})
       schemaLoading.value = false
     } else { // handling for standard plugins
       const data = props.schema ?? (await axiosInstance.get(schemaUrl.value)).data
+      loadedSchema.value = data
 
       if (data) {
         if (treatAsCredential.value) {
           // credential schema response is structured differently, no `config` object or default schema
-          loadedSchema.value = buildFormSchema('', data, {})
+          finalSchema.value = buildFormSchema('', data, {})
           schemaLoading.value = false
         } else {
           // start from the config part of the schema
@@ -1356,7 +1356,7 @@ onBeforeMount(async () => {
             }
             // pass whether the plugin is a custom plugin to the form schema
             if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
-            loadedSchema.value = initialFormSchema
+            finalSchema.value = initialFormSchema
           }
         }
       }
