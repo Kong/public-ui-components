@@ -609,7 +609,7 @@ describe('<RedisConfigurationForm />', {
 
         cy.getTestId('redis_configuration-edit-form-submit').should('be.disabled')
 
-        cy.getTestId('redis-name-input').type('test')
+        cy.getTestId('redis-host-input').type('1')
 
         cy.getTestId('redis_configuration-edit-form-submit')
           .should('be.enabled')
@@ -670,7 +670,7 @@ describe('<RedisConfigurationForm />', {
         })
 
         cy.wait('@getRedisConfiguration')
-        cy.getTestId('redis-name-input').type('test')
+        cy.getTestId('redis-host-input').type('1')
 
         cy.getTestId('redis_configuration-edit-form-submit').click()
 
@@ -696,7 +696,7 @@ describe('<RedisConfigurationForm />', {
 
         cy.getTestId('redis-update-warning-alert').should('be.visible')
 
-        cy.getTestId('redis-name-input').type('test')
+        cy.getTestId('redis-host-input').type('1')
         cy.getTestId('redis_configuration-edit-form-submit').click()
 
         cy.wait('@getLinkedPlugins')
@@ -1007,6 +1007,23 @@ describe('<RedisConfigurationForm />', {
             expect(config.sentinel_password).to.be.null
           })
         })
+      })
+
+      it('`name` is immutable', () => {
+        interceptDetail({ body: redisConfigurationCE })
+        interceptLinkedPlugins()
+        stubCreateEdit()
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            partialId: redisConfigurationCE.id,
+          },
+        })
+
+        cy.wait('@getRedisConfiguration')
+
+        cy.getTestId('redis-name-input').should('be.disabled')
       })
 
     })
