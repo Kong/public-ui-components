@@ -3,12 +3,9 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@2.0.1...@kong-ui-public/dashboard-renderer@2.1.0) (2025-03-13)
+## [2.0.2-pr-2022.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@2.0.1...@kong-ui-public/dashboard-renderer@2.0.2-pr-2022.0) (2025-03-13)
 
-
-### Features
-
-* disable jump to explore for api queries ([#2022](https://github.com/Kong/public-ui-components/issues/2022)) ([a601d67](https://github.com/Kong/public-ui-components/commit/a601d67d13eac853aaeb57b51e1261578c61b3a7))
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
 
 
 
