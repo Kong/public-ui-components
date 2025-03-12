@@ -6,9 +6,6 @@ import samplerAttributes from './sampler-attributes.json'
 export const SPAN_ZERO_ID = '0000000000000000'
 export const SPAN_ATTRIBUTE_VALUE_UNKNOWN = 'unknown'
 
-export const SPAN_SAMPLER_ATTRIBUTES: Record<keyof typeof samplerAttributes, SpanSamplerAttribute> =
-  samplerAttributes satisfies Record<string, SpanSamplerAttribute>
-
 export const SPAN_ATTR_KEY_KONG_PREFIX = 'proxy.kong.'
 export const SPAN_ATTR_KEY_KONG_LATENCY_PREFIX = `${SPAN_ATTR_KEY_KONG_PREFIX}latency.`
 export const SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX = `${SPAN_ATTR_KEY_KONG_LATENCY_PREFIX}3p.`
@@ -73,6 +70,7 @@ export const SPAN_ATTRIBUTE_KEYS = {
   KONG_LATENCY_CLIENT: `${SPAN_ATTR_KEY_KONG_LATENCY_PREFIX}client`,
   KONG_LATENCY_INTERNAL: `${SPAN_ATTR_KEY_KONG_LATENCY_PREFIX}internal`,
   KONG_LATENCY_TOTAL: `${SPAN_ATTR_KEY_KONG_LATENCY_PREFIX}total`,
+  KONG_LATENCY_TOTAL_MS_LEGACY: `${SPAN_ATTR_KEY_KONG_PREFIX}latency_total_ms`, // This super legacy for old 3.9 DPs
   KONG_LATENCY_UPSTREAM: `${SPAN_ATTR_KEY_KONG_LATENCY_PREFIX}upstream`,
   KONG_PLUGIN_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}plugin.id`,
   KONG_ROUTE_ID: `${SPAN_ATTR_KEY_KONG_PREFIX}route.id`,
@@ -92,6 +90,7 @@ export const SPAN_LATENCY_ATTR_LABEL_KEYS: Record<string, TranslationKey> = {
   [SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_CLIENT]: 'trace_viewer.latency.labels.client',
   [SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_INTERNAL]: 'trace_viewer.latency.labels.internal',
   [SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL]: 'trace_viewer.latency.labels.total',
+  [SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL_MS_LEGACY]: 'trace_viewer.latency.labels.total',
   [SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_UPSTREAM]: 'trace_viewer.latency.labels.upstream',
 }
 
@@ -103,3 +102,18 @@ export const SPAN_EVENT_ATTRIBUTE_KEYS = {
   MESSAGE: 'message',
   EXCEPTION_MESSAGE: 'exception.message',
 } satisfies Record<string, string>
+
+type SpanSamplerAttributes = Record<
+  | keyof typeof samplerAttributes
+  | typeof SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL_MS_LEGACY, // Legacy for old 3.9 DPs
+  SpanSamplerAttribute
+>
+
+export const SPAN_SAMPLER_ATTRIBUTES: SpanSamplerAttributes = {
+  ...samplerAttributes satisfies Record<string, SpanSamplerAttribute>,
+  // Legacy for old 3.9 DPs
+  [SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL_MS_LEGACY]: {
+    name: SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL_MS_LEGACY,
+    type: 'number',
+  },
+}
