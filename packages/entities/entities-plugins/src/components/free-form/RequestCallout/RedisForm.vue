@@ -85,7 +85,7 @@
       label="Cache › Redis › Sentinel Master"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_master')"
     />
-    <SelectField
+    <EnumField
       v-model="formData.cache.redis.sentinel_role"
       clearable
       :items="SENTINEL_ROLES"
@@ -180,7 +180,7 @@ import BooleanField from '../shared/BooleanField.vue'
 import StringField from '../shared/StringField.vue'
 import NumberField from '../shared/NumberField.vue'
 import ObjectField from '../shared/ObjectField.vue'
-import SelectField from '../shared/EnumField.vue'
+import EnumField from '../shared/EnumField.vue'
 import { useFormShared } from './composables'
 import { getDefaultRedisClusterNode, getDefaultRedisSentinelNode, toSelectItems } from './utils'
 

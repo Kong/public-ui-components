@@ -418,6 +418,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
           },
         })
       }
+
       formSchema = {
         groups: fieldGroups,
       }

@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <ObjectField
     appearance="card"
@@ -6,7 +5,7 @@
     :label-attributes="getLabelAttributes('cache')"
     required
   >
-    <SelectField
+    <EnumField
       v-model="formData.cache.strategy"
       clearable
       :items="CACHE_STRATEGIES"
@@ -44,7 +43,7 @@ import ObjectField from '../shared/ObjectField.vue'
 import RedisForm from './RedisForm.vue'
 import { toSelectItems } from './utils'
 import StringField from '../shared/StringField.vue'
-import SelectField from '../shared/EnumField.vue'
+import EnumField from '../shared/EnumField.vue'
 import NumberField from '../shared/NumberField.vue'
 
 const { formData, getLabelAttributes } = useFormShared()
