@@ -55,7 +55,7 @@
         :key="formKey"
         :config="kongManagerConfig"
         enable-vault-secret-picker
-        plugin-type=""
+        :plugin-type="pluginType || ''"
         :schema="schema"
         @update="onUpdate"
       />
