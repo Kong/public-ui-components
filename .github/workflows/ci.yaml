@@ -365,6 +365,9 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     timeout-minutes: 20
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read
     if: ${{ always() && needs.build.outputs.filter != '' }}
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
