@@ -64,6 +64,7 @@
         <KInput
           v-model.trim="form.fields.name"
           data-testid="redis-name-input"
+          :disabled="isEdit"
           :label="t('form.fields.name.label')"
           :placeholder="t('form.fields.name.placeholder')"
           :readonly="form.readonly"
