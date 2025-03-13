@@ -28,7 +28,7 @@
           <VaultSecretPickerProvider
             v-if="slotProps.schema.referenceable"
             v-bind="slotProps"
-            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+            @open="setUpVaultSecretPicker"
           />
         </template>
       </component>
@@ -51,7 +51,7 @@
           <VaultSecretPickerProvider
             v-if="slotProps.schema.referenceable"
             v-bind="slotProps"
-            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+            @open="setUpVaultSecretPicker"
           />
         </template>
       </component>
@@ -89,7 +89,7 @@
           <VaultSecretPickerProvider
             v-if="slotProps.schema.referenceable"
             v-bind="slotProps"
-            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+            @open="setUpVaultSecretPicker"
           />
         </template>
       </VueFormGenerator>

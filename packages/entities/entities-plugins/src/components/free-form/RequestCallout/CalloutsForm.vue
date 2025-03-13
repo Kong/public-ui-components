@@ -30,7 +30,6 @@ function addCallout() {
   if (!formData.callouts) {
     formData.callouts = []
   }
-  debugger
   formData.callouts.push(getDefault('callouts.*'))
 }
 
