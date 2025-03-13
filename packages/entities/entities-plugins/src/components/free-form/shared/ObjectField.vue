@@ -120,7 +120,7 @@ watch(realAdded, (value) => {
     flex-direction: column;
     gap: $kui-space-80;
     margin-top: $kui-space-20;
-    padding: $kui-space-60 $kui-space-40 $kui-space-20;
+    padding: $kui-space-60 $kui-space-40 $kui-space-20 $kui-space-60;
   }
 
   :deep(.k-tooltip p) {

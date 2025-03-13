@@ -17,7 +17,7 @@ import CacheForm from './CacheForm.vue'
 
 const props = defineProps<{
   schema: Record<string, any>
-  data: RequestCallout
+  data?: RequestCallout
 }>()
 
 const schemaHelpers = useSchemaHelpers(() => props.schema)
