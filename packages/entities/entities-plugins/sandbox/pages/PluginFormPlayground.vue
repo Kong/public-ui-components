@@ -84,6 +84,15 @@ import type {
 import { PluginForm } from '../../src'
 import { PLUGIN_METADATA } from '../../src/definitions/metadata'
 
+function save(type: 'pluginType' | 'schema', value: unknown) {
+  localStorage.setItem(`plugin-form-playground:${type}`, JSON.stringify(value))
+}
+
+function load(type: 'pluginType' | 'schema', defaultValue?: unknown) {
+  const stored = localStorage.getItem(`plugin-form-playground:${type}`)
+  return stored ? JSON.parse(stored) : defaultValue
+}
+
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
@@ -95,8 +104,7 @@ const pluginTypes = [
   })),
 ].sort((a, b) => a.label.localeCompare(b.label))
 
-const storedPluginType =
-  localStorage.getItem('plugin-form-playground:pluginType') || ''
+const storedPluginType = load('pluginType', '')
 const pluginType = ref<string>(
   pluginTypes.find(({ value }) => value === storedPluginType)
     ? storedPluginType
@@ -108,8 +116,8 @@ const defaultSchema = {
 }
 const schemaOpen = ref(false)
 
-const storedSchema = localStorage.getItem('plugin-form-playground:schema')
-const schemaText = ref(storedSchema || JSON.stringify(defaultSchema, null, 2))
+const storedSchema = load('schema', JSON.stringify(defaultSchema, null, 2))
+const schemaText = ref(storedSchema)
 
 watch(schemaOpen, async (open) => {
   if (open) {
@@ -170,13 +178,13 @@ const onUpdate = (payload: Record<string, any>) => {
 }
 
 watch(pluginType, () => {
-  localStorage.setItem('plugin-form-playground:pluginType', pluginType.value)
+  save('pluginType', pluginType.value)
 })
 
 watch(schemaText, () => {
   renderError.value = ''
 
-  localStorage.setItem('plugin-form-playground:schema', schemaText.value)
+  save('schema', schemaText.value)
 })
 
 onErrorCaptured((error) => {
