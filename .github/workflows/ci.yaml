@@ -442,6 +442,8 @@ jobs:
 
           pnpmPublish=$(pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public --report-summary)
 
+          echo "pnpmPublish: ${pnpmPublish}"
+
           if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
             echo "There are no new packages that should be published"
             exit 0
@@ -449,6 +451,7 @@ jobs:
 
           for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
           do
+            echo "pkg:${pkg}"
             # KHCP-14702 temp solution till pubsub in internal registry is not implemented
             name=$(echo ${pkg}|cut -d'@' -f2)
             version=$(echo ${pkg}|cut -d'@' -f3)
@@ -463,7 +466,7 @@ jobs:
 
   notify-slack:
     name: Slack Notification
-    if: ${{ always() && github.event_name == 'push' }}
+    if: ${{ always() && github.event_name == 'puZsh' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs:
