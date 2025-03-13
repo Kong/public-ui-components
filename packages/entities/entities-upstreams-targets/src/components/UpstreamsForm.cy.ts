@@ -284,27 +284,27 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('active-healthcheck-concurrency').should('have.value', '13')
       cy.getTestId('active-healthcheck-https-sni').should('have.value', 'test sni')
       cy.getTestId('active-healthcheck-verify-ssl').should('be.checked')
-      cy.getTestId('active-healthcheck-interval').should('have.value', '10')
-      cy.getTestId('active-healthcheck-successes').should('have.value', '5')
-      cy.get('.active-healthcheck-http-statuses .multiselect-list button.selected').should('have.length', 2)
-      cy.get('.active-healthcheck-http-statuses .multiselect-list button[value="200"]').should('have.class', 'selected')
-      cy.get('.active-healthcheck-http-statuses .multiselect-list button[value="302"]').should('have.class', 'selected')
+      cy.getTestId('active-healthcheck-healthy-interval').should('have.value', '10')
+      cy.getTestId('active-healthcheck-healthy-successes').should('have.value', '5')
+      cy.get('.active-healthcheck-healthy-http-statuses .multiselect-list button.selected').should('have.length', 2)
+      cy.get('.active-healthcheck-healthy-http-statuses .multiselect-list button[value="200"]').should('have.class', 'selected')
+      cy.get('.active-healthcheck-healthy-http-statuses .multiselect-list button[value="302"]').should('have.class', 'selected')
       cy.get('.active-healthcheck-unhealthy-http-statuses .multiselect-list button.selected').should('have.length', 2)
       cy.get('.active-healthcheck-unhealthy-http-statuses .multiselect-list button[value="429"]').should('have.class', 'selected')
       cy.get('.active-healthcheck-unhealthy-http-statuses .multiselect-list button[value="404"]').should('have.class', 'selected')
       cy.getTestId('active-healthcheck-unhealthy-interval').should('have.value', '5')
-      cy.getTestId('active-healthcheck-http-failures').should('have.value', '3')
-      cy.getTestId('active-healthcheck-tcp-failures').should('have.value', '3')
+      cy.getTestId('active-healthcheck-unhealthy-http-failures').should('have.value', '3')
+      cy.getTestId('active-healthcheck-unhealthy-tcp-failures').should('have.value', '3')
       cy.getTestId('active-healthcheck-unhealthy-timeouts').should('have.value', '0')
       cy.getTestId('passive-health-switch').should('be.checked')
       cy.get('.passive-healthcheck-type-select input').should('have.value', 'HTTP')
-      cy.getTestId('passive-healthcheck-successes').should('have.value', '4')
-      cy.get('.passive-healthcheck-http-statuses .multiselect-list button.selected').should('have.length', 2)
-      cy.get('.passive-healthcheck-http-statuses .multiselect-list button[value="200"]').should('have.class', 'selected')
-      cy.get('.passive-healthcheck-http-statuses .multiselect-list button[value="201"]').should('have.class', 'selected')
-      cy.getTestId('passive-healthcheck-timeouts').should('have.value', '10')
-      cy.getTestId('passive-healthcheck-http-failures').should('have.value', '2')
-      cy.getTestId('passive-healthcheck-tcp-failures').should('have.value', '2')
+      cy.getTestId('passive-healthcheck-healthy-successes').should('have.value', '4')
+      cy.get('.passive-healthcheck-healthy-http-statuses .multiselect-list button.selected').should('have.length', 2)
+      cy.get('.passive-healthcheck-healthy-http-statuses .multiselect-list button[value="200"]').should('have.class', 'selected')
+      cy.get('.passive-healthcheck-healthy-http-statuses .multiselect-list button[value="201"]').should('have.class', 'selected')
+      cy.getTestId('passive-healthcheck-unhealthy-timeouts').should('have.value', '10')
+      cy.getTestId('passive-healthcheck-unhealthy-http-failures').should('have.value', '2')
+      cy.getTestId('passive-healthcheck-unhealthy-tcp-failures').should('have.value', '2')
       cy.get('.passive-healthcheck-unhealthy-http-statuses .multiselect-list button.selected').should('have.length', 3)
       cy.get('.passive-healthcheck-unhealthy-http-statuses .multiselect-list button[value="500"]').should('have.class', 'selected')
       cy.get('.passive-healthcheck-unhealthy-http-statuses .multiselect-list button[value="503"]').should('have.class', 'selected')
@@ -355,16 +355,16 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('active-health-switch').check({ force: true })
       cy.getTestId('passive-health-switch').check({ force: true })
 
-      cy.getTestId('active-healthcheck-interval').should('have.value', '5')
-      cy.getTestId('active-healthcheck-successes').should('have.value', '5')
-      cy.getTestId('active-healthcheck-http-failures').should('have.value', '5')
+      cy.getTestId('active-healthcheck-healthy-interval').should('have.value', '5')
+      cy.getTestId('active-healthcheck-healthy-successes').should('have.value', '5')
+      cy.getTestId('active-healthcheck-unhealthy-http-failures').should('have.value', '5')
       cy.getTestId('active-healthcheck-unhealthy-interval').should('have.value', '5')
-      cy.getTestId('active-healthcheck-tcp-failures').should('have.value', '5')
+      cy.getTestId('active-healthcheck-unhealthy-tcp-failures').should('have.value', '5')
 
-      cy.getTestId('passive-healthcheck-timeouts').should('have.value', '5')
-      cy.getTestId('passive-healthcheck-successes').should('have.value', '80')
-      cy.getTestId('passive-healthcheck-tcp-failures').should('have.value', '5')
-      cy.getTestId('passive-healthcheck-http-failures').should('have.value', '5')
+      cy.getTestId('passive-healthcheck-unhealthy-timeouts').should('have.value', '5')
+      cy.getTestId('passive-healthcheck-healthy-successes').should('have.value', '80')
+      cy.getTestId('passive-healthcheck-unhealthy-tcp-failures').should('have.value', '5')
+      cy.getTestId('passive-healthcheck-unhealthy-http-failures').should('have.value', '5')
 
       cy.getTestId('upstream-create-form-submit').click()
 
@@ -413,6 +413,37 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       })
     })
 
+    it('Should set correct values for health checks when turned off, then turned on the active health checks again', () => {
+      interceptFetchServices()
+      interceptFetchCertificates()
+      interceptGetUpstream(200, upstreamsResponseFull)
+      interceptValidate()
+      interceptUpdate()
+
+      cy.mount(UpstreamsForm, {
+        props: {
+          config: konnectConfig,
+          upstreamId: 'c372844b-a78a-4317-a81f-0606ba317816',
+        },
+      })
+
+      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
+
+      cy.getTestId('active-health-switch').should('be.checked')
+      cy.getTestId('passive-health-switch').should('be.checked')
+
+      cy.getTestId('active-health-switch').uncheck({ force: true })
+      cy.getTestId('passive-health-switch').uncheck({ force: true })
+
+      cy.getTestId('active-health-switch').check({ force: true })
+
+      cy.getTestId('upstream-edit-form-submit').click()
+
+      cy.wait('@updateUpstream').then((interception) => {
+        const { body: { healthchecks } } = interception.request
+        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/"}}'))
+      })
+    })
   })
 
   describe('Kong Manager', () => {
@@ -694,27 +725,27 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('active-healthcheck-headers-value-1').should('have.value', 'v1, v2')
       cy.getTestId('active-healthcheck-https-sni').should('have.value', 'test sni')
       cy.getTestId('active-healthcheck-verify-ssl').should('be.checked')
-      cy.getTestId('active-healthcheck-interval').should('have.value', '10')
-      cy.getTestId('active-healthcheck-successes').should('have.value', '5')
-      cy.get('.active-healthcheck-http-statuses .multiselect-list button.selected').should('have.length', 2)
-      cy.get('.active-healthcheck-http-statuses .multiselect-list button[value="200"]').should('have.class', 'selected')
-      cy.get('.active-healthcheck-http-statuses .multiselect-list button[value="302"]').should('have.class', 'selected')
+      cy.getTestId('active-healthcheck-healthy-interval').should('have.value', '10')
+      cy.getTestId('active-healthcheck-healthy-successes').should('have.value', '5')
+      cy.get('.active-healthcheck-healthy-http-statuses .multiselect-list button.selected').should('have.length', 2)
+      cy.get('.active-healthcheck-healthy-http-statuses .multiselect-list button[value="200"]').should('have.class', 'selected')
+      cy.get('.active-healthcheck-healthy-http-statuses .multiselect-list button[value="302"]').should('have.class', 'selected')
       cy.get('.active-healthcheck-unhealthy-http-statuses .multiselect-list button.selected').should('have.length', 2)
       cy.get('.active-healthcheck-unhealthy-http-statuses .multiselect-list button[value="429"]').should('have.class', 'selected')
       cy.get('.active-healthcheck-unhealthy-http-statuses .multiselect-list button[value="404"]').should('have.class', 'selected')
       cy.getTestId('active-healthcheck-unhealthy-interval').should('have.value', '5')
-      cy.getTestId('active-healthcheck-http-failures').should('have.value', '3')
-      cy.getTestId('active-healthcheck-tcp-failures').should('have.value', '3')
+      cy.getTestId('active-healthcheck-unhealthy-http-failures').should('have.value', '3')
+      cy.getTestId('active-healthcheck-unhealthy-tcp-failures').should('have.value', '3')
       cy.getTestId('active-healthcheck-unhealthy-timeouts').should('have.value', '0')
       cy.getTestId('passive-health-switch').should('be.checked')
       cy.get('.passive-healthcheck-type-select input').should('have.value', 'HTTP')
-      cy.getTestId('passive-healthcheck-successes').should('have.value', '4')
-      cy.get('.passive-healthcheck-http-statuses .multiselect-list button.selected').should('have.length', 2)
-      cy.get('.passive-healthcheck-http-statuses .multiselect-list button[value="200"]').should('have.class', 'selected')
-      cy.get('.passive-healthcheck-http-statuses .multiselect-list button[value="201"]').should('have.class', 'selected')
-      cy.getTestId('passive-healthcheck-timeouts').should('have.value', '10')
-      cy.getTestId('passive-healthcheck-http-failures').should('have.value', '2')
-      cy.getTestId('passive-healthcheck-tcp-failures').should('have.value', '2')
+      cy.getTestId('passive-healthcheck-healthy-successes').should('have.value', '4')
+      cy.get('.passive-healthcheck-healthy-http-statuses .multiselect-list button.selected').should('have.length', 2)
+      cy.get('.passive-healthcheck-healthy-http-statuses .multiselect-list button[value="200"]').should('have.class', 'selected')
+      cy.get('.passive-healthcheck-healthy-http-statuses .multiselect-list button[value="201"]').should('have.class', 'selected')
+      cy.getTestId('passive-healthcheck-unhealthy-timeouts').should('have.value', '10')
+      cy.getTestId('passive-healthcheck-unhealthy-http-failures').should('have.value', '2')
+      cy.getTestId('passive-healthcheck-unhealthy-tcp-failures').should('have.value', '2')
       cy.get('.passive-healthcheck-unhealthy-http-statuses .multiselect-list button.selected').should('have.length', 3)
       cy.get('.passive-healthcheck-unhealthy-http-statuses .multiselect-list button[value="500"]').should('have.class', 'selected')
       cy.get('.passive-healthcheck-unhealthy-http-statuses .multiselect-list button[value="503"]').should('have.class', 'selected')
@@ -825,16 +856,16 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('active-health-switch').check({ force: true })
       cy.getTestId('passive-health-switch').check({ force: true })
 
-      cy.getTestId('active-healthcheck-interval').should('have.value', '5')
-      cy.getTestId('active-healthcheck-successes').should('have.value', '5')
-      cy.getTestId('active-healthcheck-http-failures').should('have.value', '5')
+      cy.getTestId('active-healthcheck-healthy-interval').should('have.value', '5')
+      cy.getTestId('active-healthcheck-healthy-successes').should('have.value', '5')
+      cy.getTestId('active-healthcheck-unhealthy-http-failures').should('have.value', '5')
       cy.getTestId('active-healthcheck-unhealthy-interval').should('have.value', '5')
-      cy.getTestId('active-healthcheck-tcp-failures').should('have.value', '5')
+      cy.getTestId('active-healthcheck-unhealthy-tcp-failures').should('have.value', '5')
 
-      cy.getTestId('passive-healthcheck-timeouts').should('have.value', '5')
-      cy.getTestId('passive-healthcheck-successes').should('have.value', '80')
-      cy.getTestId('passive-healthcheck-tcp-failures').should('have.value', '5')
-      cy.getTestId('passive-healthcheck-http-failures').should('have.value', '5')
+      cy.getTestId('passive-healthcheck-unhealthy-timeouts').should('have.value', '5')
+      cy.getTestId('passive-healthcheck-healthy-successes').should('have.value', '80')
+      cy.getTestId('passive-healthcheck-unhealthy-tcp-failures').should('have.value', '5')
+      cy.getTestId('passive-healthcheck-unhealthy-http-failures').should('have.value', '5')
 
       cy.getTestId('upstream-create-form-submit').click()
 
@@ -879,7 +910,39 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait('@updateUpstream').then((interception) => {
         const { body: { healthchecks } } = interception.request
-        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"https","headers":{},"healthy":{"interval":0,"successes":0},"unhealthy":{"interval":0,"http_failures":0,"tcp_failures":0}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
+        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","headers":{},"healthy":{"interval":0,"successes":0},"unhealthy":{"interval":0,"http_failures":0,"tcp_failures":0}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
+      })
+    })
+
+    it('Should set correct values for health checks when turned off, then turned on the active health checks again', () => {
+      interceptFetchServices()
+      interceptFetchCertificates()
+      interceptGetUpstream(200, upstreamsResponseFull)
+      interceptValidate()
+      interceptUpdate()
+
+      cy.mount(UpstreamsForm, {
+        props: {
+          config: KMConfig,
+          upstreamId: 'c372844b-a78a-4317-a81f-0606ba317816',
+        },
+      })
+
+      cy.wait(['@getUpstream', '@fetchServices', '@fetchCertificates'], { timeout: 10000 })
+
+      cy.getTestId('active-health-switch').should('be.checked')
+      cy.getTestId('passive-health-switch').should('be.checked')
+
+      cy.getTestId('active-health-switch').uncheck({ force: true })
+      cy.getTestId('passive-health-switch').uncheck({ force: true })
+
+      cy.getTestId('active-health-switch').check({ force: true })
+
+      cy.getTestId('upstream-edit-form-submit').click()
+
+      cy.wait('@updateUpstream').then((interception) => {
+        const { body: { healthchecks } } = interception.request
+        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/","headers":{}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
       })
     })
   })
