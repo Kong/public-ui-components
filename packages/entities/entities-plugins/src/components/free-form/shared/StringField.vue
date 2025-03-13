@@ -38,14 +38,14 @@ const attrs = useAttrs()
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
 // Other props are passed down to the `KInput` via attribute fallthrough.
-export interface InputProps {
+interface StringFieldProps {
   labelAttributes?: LabelAttributes
   modelValue?: string | null
   multiline?: boolean
   showVaultSecretPicker?: boolean
 }
 
-const { modelValue, showVaultSecretPicker, ...props } = defineProps<InputProps>()
+const { modelValue, showVaultSecretPicker, ...props } = defineProps<StringFieldProps>()
 const emit = defineEmits<{
   'update:modelValue': [value: string | null]
 }>()

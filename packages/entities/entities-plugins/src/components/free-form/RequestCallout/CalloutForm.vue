@@ -4,19 +4,19 @@
     data-autofocus
     label="Name"
     :label-attributes="getLabelAttributes('callouts.*.name')"
-    :model-value="formData.callouts?.[index]?.name"
+    :model-value="callout.name"
     required
-    @update:model-value="formData.callouts![index].name = $event"
+    @update:model-value="val => callout.name = val ?? ''"
   />
 
   <EnumField
     :items="definedCalloutNames"
     label="Depends On"
     :label-attributes="getLabelAttributes('callouts.*.depends_on')"
-    :model-value="formData.callouts?.[index]?.depends_on"
+    :model-value="callout.depends_on"
     multiple
-    placeholder="0 callouts selected"
-    @update:model-value="formData.callouts![index].depends_on = $event"
+    required
+    @update:model-value="val => callout.depends_on = val ?? []"
   />
 
   <CalloutRequestForm :callout-index="index" />
@@ -26,33 +26,33 @@
   <ObjectField
     label="Cache"
     :label-attributes="getLabelAttributes('callouts.*.cache')"
-    @update:added="setCache"
+    required
   >
     <BooleanField
       label="Cache › Bypass"
       :label-attributes="getLabelAttributes('callouts.*.cache.bypass')"
-      :model-value="formData.callouts?.[index].cache?.bypass || false"
-      @update:model-value="updateBypass"
+      :model-value="callout.cache.bypass || false"
+      @update:model-value="val => callout.cache.bypass = val"
     />
   </ObjectField>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useFormShared } from './composables'
+import { useFormShared } from '../shared/composables'
 import CalloutRequestForm from './CalloutRequestForm.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import CalloutResponseForm from './CalloutResponseForm.vue'
-import { getDefaultCalloutCache } from './utils'
 import StringField from '../shared/StringField.vue'
 import BooleanField from '../shared/BooleanField.vue'
 import EnumField from '../shared/EnumField.vue'
+import type { RequestCallout } from './types'
 
 const props = defineProps<{
   index: number;
 }>()
 
-const { formData, getLabelAttributes } = useFormShared()
+const { formData, getLabelAttributes } = useFormShared<RequestCallout>()
 
 const definedCalloutNames = computed(() => {
   const { callouts } = formData
@@ -65,24 +65,5 @@ const definedCalloutNames = computed(() => {
     .map(({ name }) => ({ label: name, value: name }))
 })
 
-function setCache(value: boolean) {
-  const callout = formData.callouts?.[props.index]
-
-  if (callout == null) {
-    return
-  }
-
-  if (value) {
-    callout.cache = getDefaultCalloutCache()
-  } else {
-    delete callout.cache
-  }
-}
-
-function updateBypass(value: boolean) {
-  const cache = formData.callouts?.[props.index].cache
-  if (cache) {
-    cache.bypass = value
-  }
-}
+const callout = computed(() => formData.callouts[props.index])
 </script>

@@ -5,96 +5,96 @@
     required
   >
     <StringField
-      v-model="formData.cache.redis.host"
+      v-model="redis.host"
       label="Cache › Redis › Host"
       :label-attributes="getLabelAttributes('cache.redis.host')"
     />
     <NumberField
-      v-model="formData.cache.redis.port"
+      v-model="redis.port"
       label="Cache › Redis › Port"
       :label-attributes="getLabelAttributes('cache.redis.port')"
       max="65535"
       min="0"
     />
     <NumberField
-      v-model="formData.cache.redis.connect_timeout"
+      v-model="redis.connect_timeout"
       label="Cache › Redis › Connect Timeout"
       :label-attributes="getLabelAttributes('cache.redis.connect_timeout')"
       max="2147473646"
       min="0"
     />
     <NumberField
-      v-model="formData.cache.redis.send_timeout"
+      v-model="redis.send_timeout"
       label="Cache › Redis › Send Timeout"
       :label-attributes="getLabelAttributes('cache.redis.send_timeout')"
       max="2147473646"
       min="0"
     />
     <NumberField
-      v-model="formData.cache.redis.read_timeout"
+      v-model="redis.read_timeout"
       label="Cache › Redis › Read Timeout"
       :label-attributes="getLabelAttributes('cache.redis.read_timeout')"
       max="2147473646"
       min="0"
     />
     <StringField
-      v-model="formData.cache.redis.username"
+      v-model="redis.username"
       label="Cache › Redis › Username"
       :label-attributes="getLabelAttributes('cache.redis.username')"
       show-vault-secret-picker
     />
     <StringField
-      v-model="formData.cache.redis.password"
+      v-model="redis.password"
       label="Cache › Redis › Password"
       :label-attributes="getLabelAttributes('cache.redis.password')"
       show-vault-secret-picker
     />
     <StringField
-      v-model="formData.cache.redis.sentinel_username"
+      v-model="redis.sentinel_username"
       label="Cache › Redis › Sentinel Username"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_username')"
       show-vault-secret-picker
     />
     <StringField
-      v-model="formData.cache.redis.sentinel_password"
+      v-model="redis.sentinel_password"
       label="Cache › Redis › Sentinel Password"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_password')"
       show-vault-secret-picker
     />
     <NumberField
-      v-model="formData.cache.redis.database"
+      v-model="redis.database"
       label="Cache › Redis › Database"
       :label-attributes="getLabelAttributes('cache.redis.database')"
     />
     <NumberField
-      v-model="formData.cache.redis.keepalive_pool_size"
+      v-model="redis.keepalive_pool_size"
       label="Cache › Redis › Keepalive Pool Size"
       :label-attributes="getLabelAttributes('cache.redis.keepalive_pool_size')"
       max="2147483646"
       min="1"
     />
     <NumberField
-      v-model="formData.cache.redis.keepalive_backlog"
+      v-model="redis.keepalive_backlog"
       label="Cache › Redis › Keepalive Backlog"
       :label-attributes="getLabelAttributes('cache.redis.keepalive_backlog')"
       max="2147483646"
       min="0"
     />
     <StringField
-      v-model="formData.cache.redis.sentinel_master"
+      v-model="redis.sentinel_master"
       label="Cache › Redis › Sentinel Master"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_master')"
     />
     <EnumField
-      v-model="formData.cache.redis.sentinel_role"
+      v-model="redis.sentinel_role"
       clearable
-      :items="SENTINEL_ROLES"
+      :items="getSelectItems('cache.redis.sentinel_role')"
       label="Cache › Redis › Sentinel Role"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_role')"
     />
     <ArrayField
       appearance="card"
-      :items="formData.cache.redis.sentinel_nodes"
+      :items="redis.sentinel_nodes"
       label="Cache › Redis › Sentinel Nodes"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_nodes')"
       @add="addSentinelNode"
@@ -118,7 +118,7 @@
     </ArrayField>
     <ArrayField
       appearance="card"
-      :items="formData.cache.redis.cluster_nodes"
+      :items="redis.cluster_nodes"
       label="Cache › Redis › Cluster Nodes"
       :label-attributes="getLabelAttributes('cache.redis.cluster_nodes')"
       @add="addClusterNode"
@@ -144,49 +144,49 @@
     <BooleanField
       label="Cache › Redis › SSL"
       :label-attributes="getLabelAttributes('cache.redis.ssl')"
-      :model-value="formData.cache.redis.ssl || false"
-      @update:model-value="formData.cache.redis.ssl = $event"
+      :model-value="redis.ssl || false"
+      @update:model-value="redis.ssl = $event"
     />
 
     <BooleanField
+      v-model-value="redis.ssl_verify"
       label="Cache › Redis › SSL Verify"
       :label-attributes="getLabelAttributes('cache.redis.ssl_verify')"
-      :model-value="formData.cache.redis.ssl_verify || false"
-      @update:model-value="formData.cache.redis.ssl_verify = $event"
     />
 
     <StringField
-      v-model="formData.cache.redis.server_name"
+      v-model="redis.server_name"
       label="Cache › Redis › Server Name"
       :label-attributes="getLabelAttributes('cache.redis.server_name')"
     />
     <NumberField
-      v-model="formData.cache.redis.cluster_max_redirections"
+      v-model="redis.cluster_max_redirections"
       label="Cache › Redis › Cluster Max Redirections"
       :label-attributes="getLabelAttributes('cache.redis.cluster_max_redirections')"
     />
     <BooleanField
+      v-model="redis.connection_is_proxied"
       label="Cache › Redis › Connection Is Proxied"
       :label-attributes="getLabelAttributes('cache.redis.connection_is_proxied')"
-      :model-value="formData.cache.redis.connection_is_proxied || false"
-      @update:model-value="formData.cache.redis.connection_is_proxied = $event"
     />
   </ObjectField>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import ArrayField from '../shared/ArrayField.vue'
 import BooleanField from '../shared/BooleanField.vue'
 import StringField from '../shared/StringField.vue'
 import NumberField from '../shared/NumberField.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import EnumField from '../shared/EnumField.vue'
-import { useFormShared } from './composables'
-import { getDefaultRedisClusterNode, getDefaultRedisSentinelNode, toSelectItems } from './utils'
+import { useFormShared } from '../shared/composables'
+import { getDefaultRedisClusterNode, getDefaultRedisSentinelNode } from './utils'
+import type { RequestCallout } from './types'
 
-const SENTINEL_ROLES = toSelectItems(['master', 'slave', 'any'])
+const { formData, getLabelAttributes, getSelectItems } = useFormShared<RequestCallout>()
 
-const { formData, getLabelAttributes } = useFormShared()
+const redis = computed(() => formData.cache.redis)
 
 function addSentinelNode() {
   if (!formData.cache.redis.sentinel_nodes) {
@@ -197,6 +197,11 @@ function addSentinelNode() {
 
 function removeSentinelNode(index: number) {
   formData.cache.redis.sentinel_nodes?.splice(index, 1)
+
+  // array fields with `len_min > 0` can't be an empty array
+  if (formData.cache.redis.sentinel_nodes?.length === 0) {
+    formData.cache.redis.sentinel_nodes = null
+  }
 }
 
 function addClusterNode() {
@@ -208,5 +213,10 @@ function addClusterNode() {
 
 function removeClusterNode(index: number) {
   formData.cache.redis.cluster_nodes?.splice(index, 1)
+
+  // array fields with `len_min > 0` can't be an empty array
+  if (formData.cache.redis.cluster_nodes?.length === 0) {
+    formData.cache.redis.cluster_nodes = null
+  }
 }
 </script>

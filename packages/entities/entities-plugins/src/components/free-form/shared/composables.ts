@@ -1,9 +1,9 @@
 import { computed, inject, toRaw, toValue, type MaybeRefOrGetter } from 'vue'
-import type { RequestCallout } from './types'
 import { marked } from 'marked'
+import { toSelectItems } from './utils'
 
-export const DATA_INJECTION_KEY = Symbol('request-callout-form')
-export const SCHEMA_INJECTION_KEY = Symbol('request-callout-schema')
+export const DATA_INJECTION_KEY = Symbol('free-form-data')
+export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
 
 const SHARED_LABEL_ATTRIBUTES = {
   tooltipAttributes: {
@@ -12,8 +12,8 @@ const SHARED_LABEL_ATTRIBUTES = {
   },
 } as const
 
-export function useFormShared() {
-  const formData = inject<RequestCallout>(DATA_INJECTION_KEY)
+export function useFormShared<T>() {
+  const formData = inject<T>(DATA_INJECTION_KEY)
   const getSchemaByPath = inject<(path: string) => any>(SCHEMA_INJECTION_KEY)
 
   if (!formData) {
@@ -33,7 +33,12 @@ export function useFormShared() {
     }
   }
 
-  return { formData, getSchemaByPath, getLabelAttributes }
+  function getSelectItems(fieldPath: string) {
+    const fieldSchema = getSchemaByPath!(fieldPath)
+    return toSelectItems((fieldSchema?.one_of || []))
+  }
+
+  return { formData, getSchemaByPath, getLabelAttributes, getSelectItems }
 }
 
 // Construct a map of all fields in a schema, with their full paths as keys

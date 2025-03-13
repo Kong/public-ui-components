@@ -19,14 +19,14 @@ import { KSelect, KMultiselect, type LabelAttributes } from '@kong/kongponents'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
-// Props other than `labelAttributes` here are passed down to the `KSelect` via
-// attribute fallthrough.
-interface InputProps {
+// Props other than `labelAttributes` here are passed down to the `KSelect` or
+// `KMultiselect` via attribute fallthrough.
+interface EnumFieldProps {
   labelAttributes?: LabelAttributes
   multiple?: boolean
 }
 
-const props = defineProps<InputProps>()
+const props = defineProps<EnumFieldProps>()
 
 const SelectComponent = computed(() => {
   return props.multiple ? KMultiselect : KSelect

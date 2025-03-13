@@ -16,7 +16,6 @@
 
 <script setup lang="ts">
 import { KCheckbox, type LabelAttributes } from '@kong/kongponents'
-import { watch } from 'vue'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
@@ -24,17 +23,13 @@ import { watch } from 'vue'
 // `KCheckbox` via attribute fallthrough.
 interface InputProps {
   labelAttributes?: LabelAttributes
-  modelValue: boolean
+  modelValue?: boolean
 }
 
 const props = defineProps<InputProps>()
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
-
-watch(() => props.modelValue, (newVal) => {
-  console.log(newVal)
-})
 </script>
 
 <style lang="scss" scoped>

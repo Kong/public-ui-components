@@ -23,6 +23,7 @@ import type {
 export function getDefaultRequestCallout(): RequestCallout {
   return {
     cache: getDefaultCache(),
+    callouts: [],
     upstream: getDefaultUpstream(),
   }
 }
@@ -201,10 +202,4 @@ export function getDefaultUpstream(): Upstream {
       decode: true,
     },
   }
-}
-
-export function toSelectItems<T extends string>(
-  items: T[],
-): { value: T; label: T }[] {
-  return items.map((item) => ({ value: item, label: item }))
 }
