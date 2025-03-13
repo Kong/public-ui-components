@@ -166,10 +166,12 @@ const exploreLink = computed(() => {
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
   // TODO: remove once portal and api are available in Explore
+  const excludedDimensions = new Set(['portal', 'api'])
+
   if (filters.some(filter =>
-    ('dimension' in filter && (filter.dimension === 'portal' || filter.dimension === 'api')) ||
-    ('field' in filter && (filter.field === 'portal' || filter.field === 'api'))) ||
-    dimensions.some(dim => dim === 'portal' || dim === 'api')
+    ('dimension' in filter && excludedDimensions.has(filter.dimension)) ||
+    ('field' in filter && excludedDimensions.has(filter.field))) ||
+    dimensions.some(dim => excludedDimensions.has(dim))
   ) {
     return ''
   }
