@@ -13,7 +13,7 @@
   "command": {
     "version": {
       "message": "chore(release): publish [skip ci]",
-      "allowBranch": "fix/KHCP-14702_pubsub-2",
+      "allowBranch": "main",
       "conventionalCommits": true
     }
   },
