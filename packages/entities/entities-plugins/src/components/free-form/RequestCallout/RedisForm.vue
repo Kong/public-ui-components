@@ -149,7 +149,7 @@
     />
 
     <BooleanField
-      v-model-value="redis.ssl_verify"
+      v-model="redis.ssl_verify"
       label="Cache › Redis › SSL Verify"
       :label-attributes="getLabelAttributes('cache.redis.ssl_verify')"
     />
@@ -181,10 +181,9 @@ import NumberField from '../shared/NumberField.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import EnumField from '../shared/EnumField.vue'
 import { useFormShared } from '../shared/composables'
-import { getDefaultRedisClusterNode, getDefaultRedisSentinelNode } from './utils'
 import type { RequestCallout } from './types'
 
-const { formData, getLabelAttributes, getSelectItems } = useFormShared<RequestCallout>()
+const { formData, getLabelAttributes, getSelectItems, getDefault } = useFormShared<RequestCallout>()
 
 const redis = computed(() => formData.cache.redis)
 
@@ -192,7 +191,7 @@ function addSentinelNode() {
   if (!formData.cache.redis.sentinel_nodes) {
     formData.cache.redis.sentinel_nodes = []
   }
-  formData.cache.redis.sentinel_nodes.push(getDefaultRedisSentinelNode())
+  formData.cache.redis.sentinel_nodes.push(getDefault('cache.redis.sentinel_nodes.*'))
 }
 
 function removeSentinelNode(index: number) {
@@ -208,7 +207,7 @@ function addClusterNode() {
   if (!formData.cache.redis.cluster_nodes) {
     formData.cache.redis.cluster_nodes = []
   }
-  formData.cache.redis.cluster_nodes.push(getDefaultRedisClusterNode())
+  formData.cache.redis.cluster_nodes.push(getDefault('cache.redis.cluster_nodes.*'))
 }
 
 function removeClusterNode(index: number) {

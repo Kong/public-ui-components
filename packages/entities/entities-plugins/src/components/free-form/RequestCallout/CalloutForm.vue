@@ -29,10 +29,9 @@
     required
   >
     <BooleanField
+      v-model="callout.cache.bypass"
       label="Cache › Bypass"
       :label-attributes="getLabelAttributes('callouts.*.cache.bypass')"
-      :model-value="callout.cache.bypass || false"
-      @update:model-value="val => callout.cache.bypass = val"
     />
   </ObjectField>
 </template>

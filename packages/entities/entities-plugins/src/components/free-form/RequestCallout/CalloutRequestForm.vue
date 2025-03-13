@@ -226,10 +226,6 @@ import ArrayField from '../shared/ArrayField.vue'
 import KeyValueField from '../shared/KeyValueField.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import { useFormShared } from '../shared/composables'
-import {
-  getDefaultCalloutRequestHttpOptsProxy,
-  getDefaultCalloutRequestHttpOptsTimeouts,
-} from './utils'
 import StringField from '../shared/StringField.vue'
 import BooleanField from '../shared/BooleanField.vue'
 import EnumField from '../shared/EnumField.vue'
@@ -254,7 +250,7 @@ const props = defineProps<{
   calloutIndex: number;
 }>()
 
-const { formData, getLabelAttributes, getSelectItems } = useFormShared<RequestCallout>()
+const { formData, getLabelAttributes, getSelectItems, getDefault } = useFormShared<RequestCallout>()
 
 const request = computed(() => formData.callouts[props.calloutIndex].request)
 
@@ -262,7 +258,7 @@ function setTimeouts(value: boolean) {
   const opts = request.value.http_opts
 
   if (value) {
-    opts.timeouts = getDefaultCalloutRequestHttpOptsTimeouts()
+    opts.timeouts = getDefault('callouts.*.request.http_opts.timeouts')
   } else {
     opts.timeouts = null
   }
@@ -272,7 +268,7 @@ function setProxy(value: boolean) {
   const opts = request.value.http_opts
 
   if (value) {
-    opts.proxy = getDefaultCalloutRequestHttpOptsProxy()
+    opts.proxy = getDefault('callouts.*.request.http_opts.proxy')
   } else {
     opts.proxy = null
   }

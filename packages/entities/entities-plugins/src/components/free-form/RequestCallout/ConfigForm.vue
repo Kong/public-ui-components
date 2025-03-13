@@ -12,8 +12,7 @@ import CalloutsForm from './CalloutsForm.vue'
 import UpstreamForm from './UpstreamForm.vue'
 
 import type { RequestCallout } from './types'
-import { DATA_INJECTION_KEY, SCHEMA_INJECTION_KEY, useSchemaMap } from '../shared/composables'
-import { getDefaultRequestCallout } from './utils'
+import { DATA_INJECTION_KEY, SCHEMA_INJECTION_KEY, useSchemaHelpers } from '../shared/composables'
 import CacheForm from './CacheForm.vue'
 
 const props = defineProps<{
@@ -21,11 +20,11 @@ const props = defineProps<{
   data: RequestCallout
 }>()
 
-const formData = reactive<RequestCallout>(props.data || getDefaultRequestCallout())
-provide(DATA_INJECTION_KEY, formData)
+const schemaHelpers = useSchemaHelpers(() => props.schema)
+provide(SCHEMA_INJECTION_KEY, schemaHelpers)
 
-const { getSchemaByPath } = useSchemaMap(() => props.schema)
-provide(SCHEMA_INJECTION_KEY, getSchemaByPath)
+const formData = reactive<RequestCallout>(props.data || schemaHelpers.getDefault())
+provide(DATA_INJECTION_KEY, formData)
 
 const emit = defineEmits<{
   change: [value: RequestCallout]
