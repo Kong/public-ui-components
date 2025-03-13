@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/test-publish-release@0.0.3...@kong-ui-public/test-publish-release@0.0.4) (2025-03-13)
+
+
+### Bug Fixes
+
+* force rebuild ([8ab3a95](https://github.com/Kong/public-ui-components/commit/8ab3a952223b3c1d0703eec44f7dc412e7570cd2))
+
+
+
+
+
 ## [0.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/test-publish-release@0.0.2...@kong-ui-public/test-publish-release@0.0.3) (2025-03-13)
 
 
