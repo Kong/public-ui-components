@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - fix/KHCP-14702_pubsub-2
   pull_request:
     types:
       - opened
@@ -10,7 +11,7 @@ on:
       - reopened
       - labeled
     branches:
-      - main
+      - maZin
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -54,7 +55,7 @@ jobs:
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'puZsh' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ env.GH_TOKEN }}
