@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@2.1.0...@kong-ui-public/dashboard-renderer@2.1.1) (2025-03-13)
+
+
+### Bug Fixes
+
+* add component tests for dashboard components ([#2020](https://github.com/Kong/public-ui-components/issues/2020)) ([934742f](https://github.com/Kong/public-ui-components/commit/934742fb65de787f9c68842fa1a54f8caed54e53))
+
+
+
+
+
 # [2.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@2.0.1...@kong-ui-public/dashboard-renderer@2.1.0) (2025-03-13)
 
 
