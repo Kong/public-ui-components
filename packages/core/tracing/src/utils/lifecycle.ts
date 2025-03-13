@@ -70,7 +70,11 @@ const buildPluginNodeData = (node: SpanNode): [LifecycleNodeData & { id: string 
   }, durationExcluded]
 }
 
-export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
+export interface BuildLifecycleGraphOptions {
+  idPrefix?: string
+}
+
+export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGraphOptions): LifecycleGraph => {
   const clientOutSpans: SpanNode[] = []
   const clientInSpans: SpanNode[] = []
   const requestNodesData: (LifecycleNodeData & { id: string })[] = []
@@ -145,7 +149,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
     nodeTree: {
       client: {
         node: {
-          id: LifecycleNodeType.CLIENT,
+          id: `${options?.idPrefix ?? ''}${LifecycleNodeType.CLIENT}`,
           position: { x: 0, y: 0 },
           data: {
             labelKey: 'lifecycle.client.label',
@@ -155,7 +159,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
         },
         ...clientOutSpans.length > 0 && {
           out:  {
-            id: LifecycleNodeType.CLIENT_OUT,
+            id: `${options?.idPrefix ?? ''}${LifecycleNodeType.CLIENT_OUT}`,
             position: { x: 0, y: 0 },
             data: {
               type: LifecycleNodeType.CLIENT_OUT,
@@ -167,7 +171,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
         },
         ...clientInSpans.length > 0 && {
           in: {
-            id: LifecycleNodeType.CLIENT_IN,
+            id: `${options?.idPrefix ?? ''}${LifecycleNodeType.CLIENT_IN}`,
             position: { x: 0, y: 0 },
             data: {
               type: LifecycleNodeType.CLIENT_IN,
@@ -180,7 +184,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
       },
       requests: {
         node: {
-          id: LifecycleNodeType.REQUEST_GROUP,
+          id: `${options?.idPrefix ?? ''}${LifecycleNodeType.REQUEST_GROUP}`,
           position: { x: 0, y: 0 },
           data: {
             labelKey: 'lifecycle.request.label',
@@ -192,9 +196,9 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
           zIndex: 1,
         },
         children: requestNodesData.map((nodeData) => ({
-          id: `${LifecycleNodeType.REQUEST}:${nodeData.id}`,
+          id: `${options?.idPrefix ?? ''}${LifecycleNodeType.REQUEST}:${nodeData.id}`,
           position: { x: 0, y: 0 },
-          parentNode: LifecycleNodeType.REQUEST_GROUP,
+          parentNode: `${options?.idPrefix ?? ''}${LifecycleNodeType.REQUEST_GROUP}`,
           data: nodeData,
           zIndex: 1,
         })),
@@ -202,7 +206,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
       ...(upstreamInSpans.length > 0 || upstreamOutSpans.length > 0) && {
         upstream: {
           node: {
-            id: LifecycleNodeType.UPSTREAM,
+            id: `${options?.idPrefix ?? ''}${LifecycleNodeType.UPSTREAM}`,
             position: { x: 0, y: 0 },
             data: {
               labelKey: 'lifecycle.upstream.label',
@@ -212,7 +216,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
           },
           ...upstreamInSpans.length > 0 && {
             in: {
-              id: LifecycleNodeType.UPSTREAM_IN,
+              id: `${options?.idPrefix ?? ''}${LifecycleNodeType.UPSTREAM_IN}`,
               position: { x: 0, y: 0 },
               data: {
                 type: LifecycleNodeType.UPSTREAM_IN,
@@ -224,7 +228,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
           },
           ...upstreamOutSpans.length > 0 && {
             out: {
-              id: LifecycleNodeType.UPSTREAM_OUT,
+              id: `${options?.idPrefix ?? ''}${LifecycleNodeType.UPSTREAM_OUT}`,
               position: { x: 0, y: 0 },
               data: {
                 type: LifecycleNodeType.UPSTREAM_OUT,
@@ -238,7 +242,7 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
       },
       responses: {
         node: {
-          id: LifecycleNodeType.RESPONSE_GROUP,
+          id: `${options?.idPrefix ?? ''}${LifecycleNodeType.RESPONSE_GROUP}`,
           position: { x: 0, y: 0 },
           data: {
             labelKey: 'lifecycle.response.label',
@@ -250,9 +254,9 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
           zIndex: 1,
         },
         children: responseNodesData.map((nodeData) => ({
-          id: `${LifecycleNodeType.RESPONSE}:${nodeData.id}`,
+          id: `${options?.idPrefix ?? ''}${LifecycleNodeType.RESPONSE}:${nodeData.id}`,
           position: { x: 0, y: 0 },
-          parentNode: LifecycleNodeType.RESPONSE_GROUP,
+          parentNode: `${options?.idPrefix ?? ''}${LifecycleNodeType.RESPONSE_GROUP}`,
           data: nodeData,
           zIndex: 1,
         })),

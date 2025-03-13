@@ -52,7 +52,7 @@ import {
   type NodeProps,
   type SmoothStepEdgeProps,
 } from '@vue-flow/core'
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue'
 import {
   CANVAS_COLUMN_GAP,
   CANVAS_PADDING,
@@ -63,6 +63,7 @@ import {
   NODE_GROUP_ROW_GAP,
   TOOLBAR_MARGIN,
 } from '../../constants'
+import type { LifecycleGraph } from '../../types'
 import { type LifecycleEdgeData, type LifecycleNode, type LifecycleNodeData, type SpanNode } from '../../types'
 import { buildLifecycleGraph } from '../../utils'
 import LifecycleEdgeSeamlessSmoothstep from './LifecycleEdgeSeamlessSmoothstep.vue'
@@ -364,7 +365,22 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   return nodes
 }
 
-const currentGraph = computed(() => buildLifecycleGraph(props.rootSpan))
+const currentGraph = ref<LifecycleGraph | undefined>()
+const graphCounter = ref(0)
+
+watch(() => props.rootSpan, (rootSpan) => {
+  const graph = buildLifecycleGraph(rootSpan, { idPrefix: `${graphCounter.value}#` })
+  graphCounter.value = graphCounter.value >= Number.MAX_SAFE_INTEGER ? 0 : graphCounter.value + 1
+  currentGraph.value = graph
+}, { immediate: true })
+
+watch(currentGraph, (newGraph, oldGraph) => {
+  removeNodes(oldGraph?.nodes ?? [])
+  removeEdges(oldGraph?.edges ?? [])
+
+  addNodes(newGraph?.nodes ?? [])
+  addEdges(newGraph?.edges ?? [])
+}, { immediate: true })
 
 /**
  * To fit the flow chart into the view, taking the toolbar and legend into account.
@@ -419,14 +435,6 @@ onNodesInitialized((nodes) => {
     fitFlow()
   })
 })
-
-watch(currentGraph, (newGraph, oldGraph) => {
-  removeNodes(oldGraph?.nodes ?? [])
-  removeEdges(oldGraph?.edges ?? [])
-
-  addNodes(newGraph?.nodes ?? [])
-  addEdges(newGraph?.edges ?? [])
-}, { immediate: true })
 
 let resizeObserver: ResizeObserver | undefined
 
