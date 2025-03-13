@@ -14,4 +14,4 @@ import TestPublishRelease from './components/TestPublishRelease.vue'
 
 export { TestPublishRelease }
 
-console.log(2)
+console.log(4)
