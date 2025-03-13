@@ -400,6 +400,9 @@ importers:
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
+      cypress-real-events:
+        specifier: ^1.14.0
+        version: 1.14.0(cypress@13.15.2)
       pinia:
         specifier: '>= 2.1.7 < 3'
         version: 2.1.7(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
@@ -1877,6 +1880,7 @@ packages:
 
   '@evilmartians/lefthook@1.8.2':
     resolution: {integrity: sha512-SZdQk3W9q7tcJwnSwEMUubQqVIK7SHxv52hEAnV7o3nPI+xKcmd+rN0hZIJg07wjBaJRAjzdvoQySKQQYPW5Qw==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -4501,6 +4505,11 @@ packages:
 
   curl-to-har@1.0.1:
     resolution: {integrity: sha512-LIMOZjMNQo60ciDbk+dDomeAYobCnmcLsuciEH3BDxit+X+Orz7MaqqM4y5m86t2ytu0Ut5+N3M93eyBKYM0kA==}
+
+  cypress-real-events@1.14.0:
+    resolution: {integrity: sha512-XmI8y3OZLh6cjRroPalzzS++iv+pGCaD9G9kfIbtspgv7GVsDt30dkZvSXfgZb4rAN+3pOkMVB7e0j4oXydW7Q==}
+    peerDependencies:
+      cypress: ^4.x || ^5.x || ^6.x || ^7.x || ^8.x || ^9.x || ^10.x || ^11.x || ^12.x || ^13.x || ^14.x
 
   cypress@13.15.2:
     resolution: {integrity: sha512-ARbnUorjcCM3XiPwgHKuqsyr5W9Qn+pIIBPaoilnoBkLdSC2oLQjV1BUpnmc7KR+b7Avah3Ly2RMFnfxr96E/A==}
@@ -14242,6 +14251,10 @@ snapshots:
       shell-quote: 1.8.1
       underscore: 1.13.6
       underscore.string: 3.3.6
+
+  cypress-real-events@1.14.0(cypress@13.15.2):
+    dependencies:
+      cypress: 13.15.2
 
   cypress@13.15.2:
     dependencies:

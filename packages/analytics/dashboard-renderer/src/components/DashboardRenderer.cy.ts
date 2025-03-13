@@ -23,9 +23,11 @@ import {
   routeExploreResponse,
   summaryDashboardConfig,
   simpleConfigNoFilters,
+  fourByFourDashboardConfigJustCharts,
 } from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
 import { EntityLink } from '@kong-ui-public/entities-shared'
+import { dragTile } from '../test-utils'
 
 interface MockOptions {
   failToResolveConfig?: boolean
@@ -835,5 +837,83 @@ describe('<DashboardRenderer />', () => {
         time_range: { type: 'relative', time_range: '7d' },
       },
     }))
+  })
+
+  it('editable dashboard', () => {
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '15m',
+        },
+        editable: true,
+      },
+      config: fourByFourDashboardConfigJustCharts,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    fourByFourDashboardConfigJustCharts.tiles.forEach((tile: TileConfig) => {
+      cy.getTestId(`edit-tile-${tile.id}`).should('exist')
+    })
+
+    cy.getTestId('tile-tile-1').trigger('mouseover')
+    cy.getTestId('tile-tile-1').get('.ui-resizable-sw').should('exist')
+    cy.getTestId('tile-tile-1').get('.ui-resizable-se').should('exist')
+  })
+
+  it('tiles maintain row-column order after reordering', () => {
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '15m',
+        },
+        editable: true,
+      },
+      config: fourByFourDashboardConfigJustCharts,
+    }
+
+    const updateTilesSpy = cy.spy().as('updateTilesSpy')
+
+    cy.mount(DashboardRenderer, {
+      props,
+      attrs: {
+        onUpdateTiles: updateTilesSpy,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    const source = 'tile-tile-3'
+    const destination = 'tile-tile-1'
+
+    const updatedTileIDOrder = [
+      'tile-3',
+      'tile-2',
+      'tile-1',
+      'tile-4',
+    ]
+
+    dragTile(source, destination)
+
+    cy.get('@updateTilesSpy').should('have.been.called')
+    cy.get('@updateTilesSpy')
+      .its('firstCall.args.0')
+      .then(tiles => {
+        expect(tiles.map((tile: TileConfig) => tile.id)).to.deep.equal(updatedTileIDOrder)
+      })
   })
 })
