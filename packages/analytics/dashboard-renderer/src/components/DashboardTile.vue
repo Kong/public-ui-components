@@ -165,10 +165,11 @@ watch(() => props.definition, async () => {
 const exploreLink = computed(() => {
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
-  // TODO: remove once portal has been added as option in Explore
-  if (filters.some(filter => ('dimension' in filter && filter.dimension === 'portal') ||
-    ('field' in filter && filter.field === 'portal')) ||
-    dimensions.some(dim => dim === 'portal')
+  // TODO: remove once portal and api are available in Explore
+  if (filters.some(filter =>
+    ('dimension' in filter && (filter.dimension === 'portal' || filter.dimension === 'api')) ||
+    ('field' in filter && (filter.field === 'portal' || filter.field === 'api'))) ||
+    dimensions.some(dim => dim === 'portal' || dim === 'api')
   ) {
     return ''
   }
