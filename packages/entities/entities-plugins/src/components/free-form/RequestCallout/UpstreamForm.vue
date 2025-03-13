@@ -11,17 +11,16 @@
       required
     >
       <BooleanField
+        v-model="upstream.headers.forward"
         label="Upstream › Headers › Forward"
         :label-attributes="getLabelAttributes('upstream.headers.forward')"
-        :model-value="formData.upstream.headers.forward ?? false"
-        @update:model-value="formData.upstream.headers.forward = $event"
       />
 
       <KeyValueField
-        :initial-value="formData.upstream.headers.custom"
+        :initial-value="upstream.headers.custom"
         label="Upstream › Headers › Custom"
         :label-attributes="getLabelAttributes('upstream.headers.custom')"
-        @change="handleCustomChange('headers', $event)"
+        @change="val => upstream.headers.custom = val"
       />
     </ObjectField>
 
@@ -31,17 +30,16 @@
       required
     >
       <BooleanField
+        v-model="upstream.query.forward"
         label="Upstream › Query › Forward"
         :label-attributes="getLabelAttributes('upstream.query.forward')"
-        :model-value="formData.upstream.query.forward ?? false"
-        @update:model-value="formData.upstream.query.forward = $event"
       />
 
       <KeyValueField
-        :initial-value="formData.upstream.query.custom"
+        :initial-value="upstream.query.custom"
         label="Upstream › Query › Custom"
         :label-attributes="getLabelAttributes('upstream.query.custom')"
-        @change="handleCustomChange('query', $event)"
+        @change="val => upstream.query.custom = val"
       />
     </ObjectField>
 
@@ -50,22 +48,21 @@
       required
     >
       <BooleanField
+        v-model="upstream.body.forward"
         label="Upstream › Body › Forward"
         :label-attributes="getLabelAttributes('upstream.body.forward')"
-        :model-value="formData.upstream.body.forward ?? false"
-        @update:model-value="formData.upstream.body.forward = $event"
       />
 
       <KeyValueField
-        :initial-value="formData.upstream.body.custom"
+        :initial-value="upstream.body.custom"
         label="Upstream › Body › Custom"
         :label-attributes="getLabelAttributes('upstream.body.custom')"
-        @change="handleCustomChange('body', $event)"
+        @change="val => upstream.body.custom = val"
       />
     </ObjectField>
 
     <StringField
-      v-model="formData.upstream.by_lua"
+      v-model="upstream.by_lua"
       autosize
       class="rc-code"
       label="Upstream › By Lua"
@@ -77,19 +74,15 @@
 </template>
 
 <script setup lang="ts">
-import { useFormShared } from './composables'
+import { computed } from 'vue'
+import { useFormShared } from '../shared/composables'
 import KeyValueField from '../shared/KeyValueField.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import BooleanField from '../shared/BooleanField.vue'
 import StringField from '../shared/StringField.vue'
+import type { RequestCallout } from './types'
 
-const { formData, getLabelAttributes } = useFormShared()
+const { formData, getLabelAttributes } = useFormShared<RequestCallout>()
 
-function handleCustomChange(type: 'headers' | 'query' | 'body', value: Record<string, string>) {
-  if (Object.keys(value).length === 0) {
-    delete formData.upstream[type].custom
-    return
-  }
-  formData.upstream[type].custom = value
-}
+const upstream = computed(() => formData.upstream)
 </script>

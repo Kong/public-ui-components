@@ -1,5 +1,5 @@
 export interface RequestCallout {
-  callouts?: Callout[]
+  callouts: Callout[]
   cache: Cache
   upstream: Upstream
 }
@@ -9,9 +9,9 @@ export interface RequestCallout {
  ************************************************/
 
 export interface Cache {
-  strategy?: 'memory' | 'redis' | null
+  strategy: 'memory' | 'redis' | 'off'
   memory: {
-    dictionary_name: string | null
+    dictionary_name: string
   }
   redis: Redis
   cache_ttl?: number | null
@@ -44,8 +44,8 @@ export interface Redis {
   keepalive_backlog?: number | null
   sentinel_master?: string | null
   sentinel_role?: 'master' | 'slave' | 'any' | null
-  sentinel_nodes?: RedisSentinelNode[]
-  cluster_nodes?: RedisClusterNode[]
+  sentinel_nodes?: RedisSentinelNode[] | null // `"len_min": 1`
+  cluster_nodes?: RedisClusterNode[] | null // `"len_min": 1`
   ssl?: boolean
   ssl_verify?: boolean
   server_name?: string | null
@@ -54,12 +54,12 @@ export interface Redis {
 }
 
 export interface RedisSentinelNode {
-  host: string | null
+  host: string
   port?: number | null
 }
 
 export interface RedisClusterNode {
-  ip: string | null
+  ip: string
   port?: number | null
 }
 
@@ -68,21 +68,21 @@ export interface RedisClusterNode {
  ************************************************/
 
 export interface Callout {
-  name: string | null
-  depends_on?: string[]
-  request?: CalloutRequest
+  name: string
+  depends_on: string[]
+  request: CalloutRequest
   response: CalloutResponse
-  cache?: CalloutCache
+  cache: CalloutCache
 }
 
 export interface CalloutRequest {
-  url: string | null
-  method?: string | null
-  headers?: CalloutRequestHeaders
-  query?: CalloutRequestQuery
-  body?: CalloutRequestBody
-  http_opts?: CalloutRequestHttpOpts
-  error?: CalloutRequestError
+  url: string
+  method: string
+  headers: CalloutRequestHeaders
+  query: CalloutRequestQuery
+  body: CalloutRequestBody
+  http_opts: CalloutRequestHttpOpts
+  error: CalloutRequestError
   by_lua?: string | null
 }
 
@@ -105,8 +105,8 @@ export interface CalloutRequestBody {
 export interface CalloutRequestHttpOpts {
   ssl_verify?: boolean
   ssl_server_name?: string | null
-  timeouts?: CalloutRequestTimeouts
-  proxy?: CalloutRequestProxy
+  timeouts?: CalloutRequestTimeouts | null
+  proxy?: CalloutRequestProxy | null
 }
 
 export interface CalloutRequestTimeouts {
@@ -116,8 +116,8 @@ export interface CalloutRequestTimeouts {
 }
 
 export interface CalloutRequestProxy {
-  http_proxy: string | null
-  https_proxy: string | null
+  http_proxy?: string | null
+  https_proxy?: string | null
   auth_username?: string | null
   auth_password?: string | null
 }
@@ -125,14 +125,14 @@ export interface CalloutRequestProxy {
 export interface CalloutRequestError {
   on_error?: 'retry' | 'fail' | 'continue' | null
   retries?: number | null
-  http_statuses?: (number | null)[]
+  http_statuses?: (number | null)[] | null
   error_response_code?: number | null
   error_response_msg?: string | null
 }
 
 export interface CalloutResponse {
-  headers?: CalloutResponseHeaders
-  body?: CalloutResponseBody
+  headers: CalloutResponseHeaders
+  body: CalloutResponseBody
   by_lua?: string | null
 }
 

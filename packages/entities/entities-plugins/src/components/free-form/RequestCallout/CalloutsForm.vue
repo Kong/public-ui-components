@@ -6,6 +6,7 @@
     :items="formData.callouts"
     label="Callouts"
     :label-attributes="getLabelAttributes('callouts')"
+    required
     sticky-tabs
     @add="addCallout"
     @remove="removeCallout"
@@ -17,13 +18,14 @@
 </template>
 
 <script setup lang="ts">
-import { useFormShared } from './composables'
+import { useFormShared } from '../shared/composables'
 import ArrayField from '../shared/ArrayField.vue'
 import CalloutForm from './CalloutForm.vue'
 import { getDefaultCallout } from './utils'
-import type { Callout } from './types'
+import type { RequestCallout } from './types'
+import { type Callout } from './types'
 
-const { formData, getLabelAttributes } = useFormShared()
+const { formData, getLabelAttributes } = useFormShared<RequestCallout>()
 
 function addCallout() {
   if (!formData.callouts) {
@@ -33,12 +35,6 @@ function addCallout() {
 }
 
 function removeCallout(index: number) {
-  if (formData.callouts == null) {
-    return
-  }
   formData.callouts.splice(index, 1)
-  if (formData.callouts.length === 0) {
-    delete formData.callouts
-  }
 }
 </script>

@@ -111,7 +111,7 @@ import { uniqueId } from 'lodash-es'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
 
 const props = defineProps<{
-  items?: T[]
+  items?: T[] | null
   label?: string
   labelAttributes?: LabelAttributes
   itemLabel?: string | ((item: T, index: number) => string)
@@ -148,16 +148,6 @@ function getTabTitle(item: T, index: number) {
     : props.itemLabel || `Item #${index}`
 }
 
-const tabs = computed(() => realItems.value.map((item, index) => {
-  const hash = `#${getKey(item, index)}`
-
-  return {
-    hash,
-    title: '',
-  }
-}))
-const activeTab = ref<string>(tabs.value[0]?.hash)
-
 watch(realItems, (newItems) => {
   newItems.forEach((item) => {
     if (!keyMap.has(item)) {
@@ -172,6 +162,16 @@ watch(realItems, (newItems) => {
     }
   })
 }, { immediate: true, deep: true })
+
+const tabs = computed(() => realItems.value.map((item, index) => {
+  const hash = `#${getKey(item, index)}`
+
+  return {
+    hash,
+    title: '',
+  }
+}))
+const activeTab = ref<string>(tabs.value[0]?.hash)
 
 const addItem = async () => {
   emit('add')

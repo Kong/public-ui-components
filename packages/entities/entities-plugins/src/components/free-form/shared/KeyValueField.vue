@@ -73,7 +73,7 @@ interface KVEntry {
 }
 
 const props = defineProps<{
-  initialValue?: Record<string, string>
+  initialValue?: Record<string, string> | null
   label?: string
   required?: boolean
   keyPlaceholder?: string

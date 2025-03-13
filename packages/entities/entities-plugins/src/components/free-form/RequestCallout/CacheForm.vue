@@ -7,10 +7,10 @@
   >
     <EnumField
       v-model="formData.cache.strategy"
-      clearable
-      :items="CACHE_STRATEGIES"
+      :items="getSelectItems('cache.strategy')"
       label="Cache › Strategy"
       :label-attributes="getLabelAttributes('cache.strategy')"
+      required
     />
 
     <ObjectField
@@ -38,18 +38,13 @@
 </template>
 
 <script setup lang="ts">
-import { useFormShared } from './composables'
+import { useFormShared } from '../shared/composables'
 import ObjectField from '../shared/ObjectField.vue'
 import RedisForm from './RedisForm.vue'
-import { toSelectItems } from './utils'
 import StringField from '../shared/StringField.vue'
 import EnumField from '../shared/EnumField.vue'
 import NumberField from '../shared/NumberField.vue'
+import type { RequestCallout } from './types'
 
-const { formData, getLabelAttributes } = useFormShared()
-
-const CACHE_STRATEGIES = toSelectItems([
-  'memory',
-  'disk',
-])
+const { formData, getLabelAttributes, getSelectItems } = useFormShared<RequestCallout>()
 </script>

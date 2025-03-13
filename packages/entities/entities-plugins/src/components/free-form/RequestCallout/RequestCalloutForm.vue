@@ -21,6 +21,7 @@
 
     <ConfigForm
       class="sc-form-config-form"
+      :data="model.config"
       :schema="schema"
       @change="handleChange"
     />
