@@ -92,19 +92,12 @@
       />
 
       <KInputSwitch
-        v-model="hasUpstream"
-        label="Upstream"
-      />
-
-      <KInputSwitch
         v-model="hasUpstreamIn"
-        :disabled="!hasUpstream"
         label="Upstream In"
       />
 
       <KInputSwitch
         v-model="hasUpstreamOut"
-        :disabled="!hasUpstream"
         label="Upstream Out"
       />
 
@@ -137,7 +130,6 @@ const hasResponses = ref(true)
 const hasClientIn = ref(true)
 const hasClientOut = ref(true)
 
-const hasUpstream = ref(true)
 const hasUpstreamIn = ref(true)
 const hasUpstreamOut = ref(true)
 
@@ -165,14 +157,13 @@ const trimTree = (tree: SpanNode) => {
         return hasClientOut.value
       case SPAN_NAMES.FLUSH_TO_DOWNSTREAM:
         return hasClientIn.value
+      case SPAN_NAMES.FIND_UPSTREAM:
       case SPAN_NAMES.KONG_UPSTREAM_SELECTION:
       case SPAN_NAMES.KONG_SEND_REQUEST_TO_UPSTREAM:
-        return hasUpstream.value && hasUpstreamIn.value
+        return hasUpstreamIn.value
       case SPAN_NAMES.KONG_READ_HEADERS_FROM_UPSTREAM:
       case SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM:
-        return hasUpstream.value && hasUpstreamOut.value
-      case SPAN_NAMES.FIND_UPSTREAM:
-        return hasUpstream.value
+        return hasUpstreamOut.value
       default:
         return true
     }
