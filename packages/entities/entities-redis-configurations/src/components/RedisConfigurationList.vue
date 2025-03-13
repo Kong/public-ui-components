@@ -45,6 +45,9 @@
       <template #type="{ row }">
         {{ renderRedisType(row) }}
       </template>
+      <template #tags="{ rowValue }">
+        <TableTags :tags="rowValue" />
+      </template>
       <template #plugins="{ row }">
         <LinkedPluginsInline
           :config="config"
@@ -175,6 +178,7 @@ import {
   EntityDeleteModal,
   FetcherStatus,
   EntityEmptyState,
+  TableTags,
 } from '@kong-ui-public/entities-shared'
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -340,6 +344,7 @@ const emptyStateOptions = ref<EmptyStateOptions>({
 const tableHeaders: BaseTableHeaders = {
   name: { label: t('list.table_headers.name'), searchable: true, hidable: false, sortable: true },
   type: { label: t('list.table_headers.type') },
+  tags: { label: t('list.table_headers.tags') },
   plugins: { label: t('list.table_headers.plugins') },
 }
 
