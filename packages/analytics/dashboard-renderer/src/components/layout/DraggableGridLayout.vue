@@ -8,6 +8,7 @@
       :key="tile.id"
       class="grid-stack-item"
       :data-id="`${tile.id}`"
+      :data-testid="`grid-stack-item-${tile.id}`"
       :gs-h="tile.layout.size.rows"
       :gs-lazy-load="true"
       :gs-w="tile.layout.size.cols"
@@ -32,8 +33,10 @@ import type { GridSize, GridTile } from 'src/types'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 
-export type DraggableGridLayoutExpose = {
-  removeWidget: (id: number | string) => void
+export type DraggableGridLayoutExpose<T> = {
+  removeWidget: (id: number | string) => void,
+  tiles: GridTile<T>[],
+  gridSize: GridSize,
 }
 
 const props = withDefaults(defineProps<{

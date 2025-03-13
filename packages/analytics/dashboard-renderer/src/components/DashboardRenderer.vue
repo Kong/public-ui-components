@@ -71,7 +71,7 @@ const emit = defineEmits<{
 
 const { i18n } = composables.useI18n()
 const refreshCounter = ref(0)
-const gridLayoutRef = ref<ComponentPublicInstance<DraggableGridLayoutExpose> | null>(null)
+const gridLayoutRef = ref<ComponentPublicInstance<DraggableGridLayoutExpose<TileDefinition>> | null>(null)
 
 // Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
