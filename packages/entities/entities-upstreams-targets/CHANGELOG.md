@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.7.5...@kong-ui-public/entities-upstreams-targets@3.7.6) (2025-03-13)
+
+
+### Bug Fixes
+
+* **upstreams-targets:** unable remove some fields' value [KM-970] ([#1978](https://github.com/Kong/public-ui-components/issues/1978)) ([fdd9ee9](https://github.com/Kong/public-ui-components/commit/fdd9ee91303174fc3e1b931301077dbc4a7ae4ab))
+
+
+
+
+
 ## [3.7.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.7.4...@kong-ui-public/entities-upstreams-targets@3.7.5) (2025-03-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
