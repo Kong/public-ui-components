@@ -695,7 +695,7 @@ const handleTrySampleApi = (): void => {
   // Reset form fields before populating
   initFieldDefaultValues()
 
-  form.fields.name = `${KongAirService.name} + ${new Date()
+  form.fields.name = `${KongAirService.name}-${new Date()
     .toISOString() // Convert date to ISO string format (e.g., "2025-03-07T12:30:45.789Z")
     .replace(/\D/g, '') // Remove all non-digit characters
     .slice(0, 17)}` // Take the first 17 digits
@@ -883,6 +883,8 @@ const showTlsVerify = computed((): boolean => {
 })
 
 const validateName = (input: string): void => {
+  // reset the errors
+  resetFormFieldErrors('name')
   preValidateErrorMessage.value = validators.utf8Name(input)
 }
 
