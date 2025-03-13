@@ -212,14 +212,6 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
 
   if (!clientNode) {
     throw new Error('Missing the client node')
-  } else if (!clientOutNode) {
-    throw new Error('Missing the client out node')
-  } else if (!clientInNode) {
-    throw new Error('Missing the client in node')
-  }
-
-  if ((upstreamInNode || upstreamOutNode) && !upstreamNode) {
-    throw new Error('Missing the upstream node while upstream in/out node(s) is/are present')
   }
 
   // >>> Layout - Request Group
@@ -272,9 +264,13 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   canvasX += clientNode.dimensions.width + CANVAS_COLUMN_GAP
 
   // Client In / Client Out (They are horizontally center-aligned)
-  const clientInOutMaxWidth = Math.max(clientOutNode.dimensions.width, clientInNode.dimensions.width)
-  clientOutNode.position.x = canvasX + (clientInOutMaxWidth - clientOutNode.dimensions.width) / 2
-  clientInNode.position.x = canvasX + (clientInOutMaxWidth - clientInNode.dimensions.width) / 2
+  const clientInOutMaxWidth = Math.max(clientOutNode?.dimensions.width ?? 0, clientInNode?.dimensions.width ?? 0)
+  if (clientOutNode) {
+    clientOutNode.position.x = canvasX + (clientInOutMaxWidth - clientOutNode.dimensions.width) / 2
+  }
+  if (clientInNode) {
+    clientInNode.position.x = canvasX + (clientInOutMaxWidth - clientInNode.dimensions.width) / 2
+  }
   canvasX += clientInOutMaxWidth + CANVAS_COLUMN_GAP
 
   // Request Group / Response Group (They are horizontally center-aligned)
@@ -287,17 +283,17 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   }
   canvasX += requestsResponsesMaxWidth + CANVAS_COLUMN_GAP
 
-  if (upstreamNode) {
-    const upstreamInOutMaxWidth = Math.max(upstreamInNode?.dimensions.width ?? 0, upstreamOutNode?.dimensions.width ?? 0)
-    if (upstreamInNode) {
-      upstreamInNode.position.x = canvasX + (upstreamInOutMaxWidth - upstreamInNode.dimensions.width) / 2
-    }
-    if (upstreamOutNode) {
-      upstreamOutNode.position.x = canvasX + (upstreamInOutMaxWidth - upstreamOutNode.dimensions.width) / 2
-    }
-    canvasX += upstreamInOutMaxWidth + CANVAS_COLUMN_GAP
+  const upstreamInOutMaxWidth = Math.max(upstreamInNode?.dimensions.width ?? 0, upstreamOutNode?.dimensions.width ?? 0)
+  if (upstreamInNode) {
+    upstreamInNode.position.x = canvasX + (upstreamInOutMaxWidth - upstreamInNode.dimensions.width) / 2
+  }
+  if (upstreamOutNode) {
+    upstreamOutNode.position.x = canvasX + (upstreamInOutMaxWidth - upstreamOutNode.dimensions.width) / 2
+  }
+  canvasX += upstreamInOutMaxWidth + CANVAS_COLUMN_GAP
 
-    // Upstream
+  // Upstream
+  if (upstreamNode) {
     upstreamNode.position.x = canvasX
   }
   // <<< Layout along X-axis
@@ -319,8 +315,10 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   //   upstreamInNode.position.y + upstreamInNode.dimensions.height,
   // ) + CANVAS_ROW_GAP
   // If align with the request group itself:
-  const upperInnerMaxHeight = Math.max(clientOutNode.dimensions.height, requestGroupMetrics.height, upstreamInNode?.dimensions.height ?? 0)
-  clientOutNode.position.y = layoutY + (upperInnerMaxHeight - clientOutNode.dimensions.height) / 2
+  const upperInnerMaxHeight = Math.max(clientOutNode?.dimensions.height ?? 0, requestGroupMetrics.height, upstreamInNode?.dimensions.height ?? 0)
+  if (clientOutNode) {
+    clientOutNode.position.y = layoutY + (upperInnerMaxHeight - clientOutNode.dimensions.height) / 2
+  }
   if (requestGroupNode) {
     requestGroupNode.position.y = layoutY + (upperInnerMaxHeight - requestGroupMetrics.height) / 2
   }
@@ -328,7 +326,8 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
     upstreamInNode.position.y = layoutY + (upperInnerMaxHeight - upstreamInNode.dimensions.height) / 2
   }
   layoutY = Math.max(
-    clientOutNode.position.y + clientOutNode.dimensions.height,
+    layoutY,
+    clientOutNode ? (clientOutNode.position.y + clientOutNode.dimensions.height) : 0,
     requestGroupNode ? requestGroupNode.position.y + requestGroupMetrics.height : 0,
     (upstreamInNode?.position.y ?? 0) + (upstreamInNode?.dimensions.height ?? 0),
   ) + CANVAS_ROW_GAP
@@ -350,8 +349,10 @@ const layout = (nodes: LifecycleNode[]): LifecycleNode[] => {
   // }
   // upstreamOutNode.position.y = layoutY + responseGroupMetrics.innerOffsetY + (lowerInnerMaxHeight - upstreamOutNode.dimensions.height) / 2
   // If align with the response group itself:
-  const lowerInnerMaxHeight = Math.max(clientInNode.dimensions.height, responseGroupMetrics.height, upstreamOutNode?.dimensions.height ?? 0)
-  clientInNode.position.y = layoutY + (lowerInnerMaxHeight - clientInNode.dimensions.height) / 2
+  const lowerInnerMaxHeight = Math.max(clientInNode?.dimensions.height ?? 0, responseGroupMetrics.height, upstreamOutNode?.dimensions.height ?? 0)
+  if (clientInNode) {
+    clientInNode.position.y = layoutY + (lowerInnerMaxHeight - clientInNode.dimensions.height) / 2
+  }
   if (responseGroupNode) {
     responseGroupNode.position.y = layoutY + (lowerInnerMaxHeight - responseGroupMetrics.height) / 2
   }
