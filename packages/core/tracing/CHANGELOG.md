@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.6...@kong-ui-public/tracing@0.9.7) (2025-03-13)
+
+
+### Bug Fixes
+
+* **tracing:** hide nodes for missing spans ([#2017](https://github.com/Kong/public-ui-components/issues/2017)) ([02e8fc9](https://github.com/Kong/public-ui-components/commit/02e8fc932fdc0ea48f08e2d4ac051e97caecb517))
+
+
+
+
+
 ## [0.9.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.5...@kong-ui-public/tracing@0.9.6) (2025-03-12)
 
 
