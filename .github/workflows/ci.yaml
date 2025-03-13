@@ -438,7 +438,6 @@ jobs:
           echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
 
           npx google-artifactregistry-auth
-          pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public
 
           pnpmPublish=$(pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public --report-summary)
 
