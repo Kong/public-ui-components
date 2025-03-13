@@ -120,6 +120,7 @@ const recordResolver = (data: RedisConfigurationResponse) => {
   return {
     id: data.id,
     name: data.name,
+    tags: data.tags,
     created_at: data.created_at,
     updated_at: data.updated_at,
     type: data.type,
@@ -131,9 +132,9 @@ const recordResolver = (data: RedisConfigurationResponse) => {
  * Put config details into `config` object to display in the code block tab
  */
 const codeBlockRecordFormatter = (record: Record<string, any>) => {
-  const { id, name, created_at, updated_at, type, ...config } = record
+  const { id, name, created_at, updated_at, type, tags, ...config } = record
   return {
-    id, name, created_at, updated_at, type, config,
+    id, name, tags, created_at, updated_at, type, config,
   }
 }
 
@@ -143,6 +144,7 @@ type BasicFields = {
   updated_at: string
   created_at: string
   type: string
+  tags: string[]
 }
 type Fields = RedisConfigurationConfigDTO & BasicFields
 
@@ -157,6 +159,12 @@ const schemaFieldConfigs: {
     type: ConfigurationSchemaType.Text,
     section: ConfigurationSchemaSection.Basic,
     label: t('form.fields.name.label'),
+  },
+  tags: {
+    type: ConfigurationSchemaType.BadgeTag,
+    section: ConfigurationSchemaSection.Basic,
+    label: t('form.fields.tags.label'),
+    tooltip: t('form.fields.tags.tooltip'),
   },
   updated_at: {},
   created_at: {},
@@ -324,7 +332,7 @@ const pickSchemaFields = (fields: Array<keyof Fields>): ConfigurationSchema => {
  * Pick fields to display in the configuration card based on the Redis type
  */
 const configSchema = computed<ConfigurationSchema>(() => {
-  const commonFields: Array<keyof Fields> = ['id', 'name', 'type', 'updated_at', 'created_at']
+  const commonFields: Array<keyof Fields> = ['id', 'name', 'tags', 'type', 'updated_at', 'created_at']
   switch (redisType.value) {
     case RedisType.HOST_PORT_CE:
       return pickSchemaFields([

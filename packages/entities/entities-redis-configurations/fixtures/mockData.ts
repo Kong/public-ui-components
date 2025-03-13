@@ -9,6 +9,7 @@ export const redisConfigurationCE: Readonly<RedisConfigurationResponse> = {
     return uuid()
   },
   name: 'redis-config-1',
+  tags: [],
   type: PartialType.REDIS_CE,
   config: {
     cluster_max_redirections: 0,
@@ -39,6 +40,7 @@ export const redisConfigurationCE: Readonly<RedisConfigurationResponse> = {
 export const redisConfigurationHostPortEE: Readonly<RedisConfigurationResponse> = {
   created_at: '2025-02-07T00:00:00Z',
   updated_at: '2025-02-07T00:00:00Z',
+  tags: [],
   // randomized ID to avoid swrv cache in tests, otherwise cy.wait() will not resolve
   get id() {
     return uuid()
@@ -74,6 +76,7 @@ export const redisConfigurationHostPortEE: Readonly<RedisConfigurationResponse> 
 export const redisConfigurationCluster: Readonly<RedisConfigurationResponse> = {
   created_at: '2025-02-07T00:00:00Z',
   updated_at: '2025-02-07T00:00:00Z',
+  tags: [],
   // randomized ID to avoid swrv cache in tests, otherwise cy.wait() will not resolve
   get id() {
     return uuid()
@@ -114,6 +117,7 @@ export const redisConfigurationCluster: Readonly<RedisConfigurationResponse> = {
 export const redisConfigurationSentinel: Readonly<RedisConfigurationResponse> = {
   created_at: '2025-02-07T00:00:00Z',
   updated_at: '2025-02-07T00:00:00Z',
+  tags: [],
   // randomized ID to avoid swrv cache in tests, otherwise cy.wait() will not resolve
   get id() {
     return uuid()
