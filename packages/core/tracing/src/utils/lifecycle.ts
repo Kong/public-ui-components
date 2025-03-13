@@ -75,7 +75,6 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
   const clientInSpans: SpanNode[] = []
   const requestNodesData: (LifecycleNodeData & { id: string })[] = []
   const responseNodesData: (LifecycleNodeData & { id: string })[] = []
-  // let upstreamSpan: SpanNode | undefined
   const upstreamInSpans: SpanNode[] = []
   const upstreamOutSpans: SpanNode[] = []
 
@@ -96,9 +95,6 @@ export const buildLifecycleGraph = (root: SpanNode): LifecycleGraph => {
           clientInSpans.push(n)
         }
         break
-      // case SPAN_NAMES.FIND_UPSTREAM:
-      //   upstreamSpan = n
-      //   break
       case SPAN_NAMES.KONG_UPSTREAM_SELECTION:
       case SPAN_NAMES.KONG_SEND_REQUEST_TO_UPSTREAM:
         upstreamInSpans.push(n)

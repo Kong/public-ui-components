@@ -157,7 +157,6 @@ const trimTree = (tree: SpanNode) => {
         return hasClientOut.value
       case SPAN_NAMES.FLUSH_TO_DOWNSTREAM:
         return hasClientIn.value
-      case SPAN_NAMES.FIND_UPSTREAM:
       case SPAN_NAMES.KONG_UPSTREAM_SELECTION:
       case SPAN_NAMES.KONG_SEND_REQUEST_TO_UPSTREAM:
         return hasUpstreamIn.value
