@@ -23,6 +23,7 @@ export type ClusterNode = {
 export type RedisConfigurationDTO = {
   name: string
   type: PartialType
+  tags: string[]
   config: RedisConfigurationConfigDTO
 }
 

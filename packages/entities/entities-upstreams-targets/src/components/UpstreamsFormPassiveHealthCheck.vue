@@ -35,28 +35,28 @@
 
       <KInput
         autocomplete="off"
-        data-testid="passive-healthcheck-successes"
+        data-testid="passive-healthcheck-healthy-successes"
         :label="t('upstreams.form.fields.successes.label')"
         :max="SuccessOrFailureMaxNumber"
         :min="SuccessOrFailureMinNumber"
-        :model-value="successes"
+        :model-value="healthySuccesses"
         :readonly="readonly"
         type="number"
-        @update:model-value="emit('update:successes', $event)"
+        @update:model-value="emit('update:healthy-successes', $event)"
       />
 
       <KMultiselect
         v-if="!isTcp"
-        class="margin-top-6 passive-healthcheck-http-statuses"
+        class="margin-top-6 passive-healthcheck-healthy-http-statuses"
         enable-item-creation
         :items="HTTPStatuses"
         :label="t('upstreams.form.fields.http_statuses.label')"
-        :model-value="httpStatuses"
+        :model-value="healthyHttpStatuses"
         :readonly="readonly"
         width="100%"
         @item-added="(item: MultiselectItem) => trackHealthyItem(item, true)"
         @item-removed="(item: MultiselectItem) => trackHealthyItem(item, false)"
-        @update:model-value="emit('update:http-statuses', $event)"
+        @update:model-value="emit('update:healthy-http-statuses', $event)"
       />
     </KCard>
 
@@ -70,47 +70,48 @@
 
       <KInput
         autocomplete="off"
-        data-testid="passive-healthcheck-timeouts"
+        data-testid="passive-healthcheck-unhealthy-timeouts"
         :label="t('upstreams.form.fields.timeouts.label')"
         :max="TimeoutsMaxNumber"
         :min="TimeoutsMinNumber"
-        :model-value="timeouts"
+        :model-value="unhealthyTimeouts"
         :readonly="readonly"
         type="number"
-        @update:model-value="emit('update:timeouts', $event)"
+        @update:model-value="emit('update:unhealthy-timeouts', $event)"
       />
 
       <KInput
         autocomplete="off"
         class="margin-top-6"
-        data-testid="passive-healthcheck-tcp-failures"
+        data-testid="passive-healthcheck-unhealthy-tcp-failures"
         :label="t('upstreams.form.fields.tcp_failures.label')"
         :max="SuccessOrFailureMaxNumber"
         :min="SuccessOrFailureMinNumber"
-        :model-value="tcpFailures"
+        :model-value="unhealthyTcpFailures"
         :readonly="readonly"
         type="number"
-        @update:model-value="emit('update:tcp-failures', $event)"
+        @update:model-value="emit('update:unhealthy-tcp-failures', $event)"
       />
 
       <KInput
         v-if="!isTcp"
         autocomplete="off"
         class="margin-top-6"
-        data-testid="passive-healthcheck-http-failures"
+        data-testid="passive-healthcheck-unhealthy-http-failures"
         :label="t('upstreams.form.fields.http_failures.label')"
         :max="SuccessOrFailureMaxNumber"
         :min="SuccessOrFailureMinNumber"
-        :model-value="httpFailures"
+        :model-value="unhealthyHttpFailures"
         :readonly="readonly"
         type="number"
-        @update:model-value="emit('update:http-failures', $event)"
+        @update:model-value="emit('update:unhealthy-http-failures', $event)"
       />
 
       <KMultiselect
         v-if="!isTcp"
         autocomplete="off"
         class="margin-top-6 passive-healthcheck-unhealthy-http-statuses"
+        data-testid="passive-healthcheck-unhealthy-http-statuses"
         enable-item-creation
         :items="HTTPStatuses"
         :label="t('upstreams.form.fields.http_statuses.label')"
@@ -154,19 +155,19 @@ const props = defineProps({
     type: String as PropType<HealthCheckType>,
     required: true,
   },
-  successes: {
+  healthySuccesses: {
     type: String,
     required: true,
   },
-  httpStatuses: {
+  healthyHttpStatuses: {
     type: Array as PropType<string[]>,
     required: true,
   },
-  timeouts: {
+  unhealthyTimeouts: {
     type: String,
     required: true,
   },
-  httpFailures: {
+  unhealthyHttpFailures: {
     type: String,
     required: true,
   },
@@ -174,7 +175,7 @@ const props = defineProps({
     type: Array as PropType<string[]>,
     required: true,
   },
-  tcpFailures: {
+  unhealthyTcpFailures: {
     type: String,
     required: true,
   },
@@ -187,12 +188,12 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'update:type', val: HealthCheckType): void
-  (e: 'update:successes', val: string): void
-  (e: 'update:http-statuses', val: string[]): void
-  (e: 'update:timeouts', val: string): void
-  (e: 'update:http-failures', val: string): void
+  (e: 'update:healthy-successes', val: string): void
+  (e: 'update:healthy-http-statuses', val: string[]): void
+  (e: 'update:unhealthy-timeouts', val: string): void
+  (e: 'update:unhealthy-http-failures', val: string): void
   (e: 'update:unhealthy-http-statuses', val: string[]): void
-  (e: 'update:tcp-failures', val: string): void
+  (e: 'update:unhealthy-tcp-failures', val: string): void
 }>()
 
 const typeItems = ref<HealthCheckTypeSelectItem[]>([
@@ -235,11 +236,11 @@ const {
 watch(() => props.type, (val, oldVal) => {
   // clear tcpFailures value if type !== 'tcp'
   if (oldVal === 'tcp' && val !== oldVal) {
-    emit('update:tcp-failures', '5')
+    emit('update:unhealthy-tcp-failures', '5')
   }
   // clear unhealthyHttpStatuses and httpStatuses values if type === 'tcp'
   if (oldVal !== 'tcp' && val === 'tcp') {
-    emit('update:http-statuses', PassiveHealthyHttpStatuses)
+    emit('update:healthy-http-statuses', PassiveHealthyHttpStatuses)
     emit('update:unhealthy-http-statuses', PassiveUnhealthyHttpStatuses)
   }
 })

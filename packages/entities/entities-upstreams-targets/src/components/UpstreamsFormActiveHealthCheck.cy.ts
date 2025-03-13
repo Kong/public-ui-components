@@ -17,11 +17,11 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
     cy.getTestId('active-healthcheck-http-path').should('be.visible')
     cy.getTestId('active-healthcheck-timeout').should('be.visible')
     cy.getTestId('active-healthcheck-concurrency').should('be.visible')
-    cy.getTestId('active-healthcheck-interval').should('be.visible')
-    cy.getTestId('active-healthcheck-successes').should('be.visible')
-    cy.get('.active-healthcheck-http-statuses').should('be.visible')
+    cy.getTestId('active-healthcheck-healthy-interval').should('be.visible')
+    cy.getTestId('active-healthcheck-healthy-successes').should('be.visible')
+    cy.getTestId('active-healthcheck-healthy-http-statuses').should('be.visible')
     cy.getTestId('active-healthcheck-unhealthy-interval').should('be.visible')
-    cy.getTestId('active-healthcheck-http-failures').should('be.visible')
+    cy.getTestId('active-healthcheck-unhealthy-http-failures').should('be.visible')
     cy.getTestId('active-healthcheck-unhealthy-timeouts').should('be.visible')
     cy.get('.active-healthcheck-unhealthy-http-statuses').should('be.visible')
   })
@@ -144,48 +144,48 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
     cy.get('@onUpdateSpy').should('have.been.calledWith', true)
   })
 
-  it('Should bind interval data correctly', () => {
+  it('Should bind healthyInterval data correctly', () => {
     cy.mount(UpstreamsFormActiveHealthCheck, {
       props: {
         type: 'https',
         headers: [{ key: '', values: '' }],
-        'onUpdate:interval': cy.spy().as('onUpdateSpy'),
+        'onUpdate:healthy-interval': cy.spy().as('onUpdateSpy'),
       },
     })
 
-    cy.getTestId('active-healthcheck-interval').type('4', { waitForAnimations: false })
+    cy.getTestId('active-healthcheck-healthy-interval').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
 
-  it('Should bind successes data correctly', () => {
+  it('Should bind healthySuccesses data correctly', () => {
     cy.mount(UpstreamsFormActiveHealthCheck, {
       props: {
         type: 'https',
         headers: [{ key: '', values: '' }],
-        'onUpdate:successes': cy.spy().as('onUpdateSpy'),
+        'onUpdate:healthy-successes': cy.spy().as('onUpdateSpy'),
       },
     })
 
-    cy.getTestId('active-healthcheck-successes').type('4', { waitForAnimations: false })
+    cy.getTestId('active-healthcheck-healthy-successes').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
 
-  it('Should bind httpStatuses data correctly', () => {
+  it('Should bind healthyHttpStatuses data correctly', () => {
     cy.mount(UpstreamsFormActiveHealthCheck, {
       props: {
         type: 'https',
         headers: [{ key: '', values: '' }],
-        'onUpdate:http-statuses': cy.spy().as('onUpdateSpy'),
+        'onUpdate:healthy-http-statuses': cy.spy().as('onUpdateSpy'),
       },
     })
 
-    cy.get('.active-healthcheck-http-statuses').click({ waitForAnimations: false })
+    cy.get('.active-healthcheck-healthy-http-statuses').click({ waitForAnimations: false })
 
-    cy.get('.active-healthcheck-http-statuses .multiselect-list .multiselect-item').should('have.length', 92)
-    cy.get('.active-healthcheck-http-statuses .multiselect-list [data-testid="multiselect-item-200"]').click({ waitForAnimations: false })
-    cy.get('.active-healthcheck-http-statuses .multiselect-list [data-testid="multiselect-item-201"]').click({ waitForAnimations: false })
+    cy.get('.active-healthcheck-healthy-http-statuses .multiselect-list .multiselect-item').should('have.length', 92)
+    cy.get('.active-healthcheck-healthy-http-statuses .multiselect-list [data-testid="multiselect-item-200"]').click({ waitForAnimations: false })
+    cy.get('.active-healthcheck-healthy-http-statuses .multiselect-list [data-testid="multiselect-item-201"]').click({ waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', ['200', '201'])
   })
@@ -204,16 +204,16 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
 
-  it('Should bind httpFailures data correctly', () => {
+  it('Should bind unhealthyHttpFailures data correctly', () => {
     cy.mount(UpstreamsFormActiveHealthCheck, {
       props: {
         type: 'http',
         headers: [{ key: '', values: '' }],
-        'onUpdate:http-failures': cy.spy().as('onUpdateSpy'),
+        'onUpdate:unhealthy-http-failures': cy.spy().as('onUpdateSpy'),
       },
     })
 
-    cy.getTestId('active-healthcheck-http-failures').type('4', { waitForAnimations: false })
+    cy.getTestId('active-healthcheck-unhealthy-http-failures').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
@@ -250,7 +250,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
 
-  it('httpPath, httpStatuses and unhealthyHttpStatuses should be hidden and if type === "tcp"', () => {
+  it('httpPath, healthyHttpStatuses and unhealthyHttpStatuses should be hidden and if type === "tcp"', () => {
     cy.mount(UpstreamsFormActiveHealthCheck, {
       props: {
         type: 'tcp',
@@ -259,22 +259,22 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
     })
 
     cy.getTestId('active-healthcheck-http-path').should('not.exist')
-    cy.getTestId('active-healthcheck-http-statuses').should('not.exist')
+    cy.getTestId('active-healthcheck-healthy-http-statuses').should('not.exist')
     cy.getTestId('active-healthcheck-unhealthy-http-statuses').should('not.exist')
   })
 
   PORTOCOLS.forEach((protocol) => {
-    it(`Should bind tcpFailures data correctly if type === "${protocol}"`, () => {
+    it(`Should bind unhealthyTcpFailures data correctly if type === "${protocol}"`, () => {
       cy.mount(UpstreamsFormActiveHealthCheck, {
         props: {
           type: protocol,
           headers: [{ key: '', values: '' }],
-          'onUpdate:tcp-failures': cy.spy().as('onUpdateSpy'),
+          'onUpdate:unhealthy-tcp-failures': cy.spy().as('onUpdateSpy'),
         },
       })
 
-      cy.getTestId('active-healthcheck-tcp-failures').should('be.visible')
-      cy.getTestId('active-healthcheck-tcp-failures').type('4', { waitForAnimations: false })
+      cy.getTestId('active-healthcheck-unhealthy-tcp-failures').should('be.visible')
+      cy.getTestId('active-healthcheck-unhealthy-tcp-failures').type('4', { waitForAnimations: false })
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
     })
@@ -319,11 +319,11 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
       props: {
         type: 'tcp',
         headers: [{ key: '', values: '' }],
-        'onUpdate:tcp-failures': cy.spy().as('onUpdateTcpFailuresSpy'),
+        'onUpdate:unhealthy-tcp-failures': cy.spy().as('onUpdateUnhealthyTcpFailuresSpy'),
         'onUpdate:https-sni': cy.spy().as('onUpdateHttpsSniSpy'),
         'onUpdate:verify-ssl': cy.spy().as('onUpdateVerifySslSpy'),
         'onUpdate:http-path': cy.spy().as('onUpdateHttpPathSpy'),
-        'onUpdate:http-statuses': cy.spy().as('onUpdateHttpStatusesSpy'),
+        'onUpdate:healthy-http-statuses': cy.spy().as('onUpdateHealthyHttpStatusesSpy'),
         'onUpdate:unhealthy-http-statuses': cy.spy().as('onUpdateUnhealthyHttpStatusesSpy'),
       },
     }).then(({ wrapper }) => wrapper)
@@ -331,13 +331,13 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
 
     cy.get('@vueWrapper').then(async wrapper => {
       await wrapper.setProps({ type: 'https' })
-      cy.get('@onUpdateTcpFailuresSpy').should('have.been.calledWith', '5')
+      cy.get('@onUpdateUnhealthyTcpFailuresSpy').should('have.been.calledWith', '5')
 
       await wrapper.setProps({ type: 'tcp' })
       cy.get('@onUpdateHttpsSniSpy').should('have.been.calledWith', '')
       cy.get('@onUpdateVerifySslSpy').should('have.been.calledWith', false)
       cy.get('@onUpdateHttpPathSpy').should('have.been.calledWith', '/')
-      cy.get('@onUpdateHttpStatusesSpy').should('have.been.calledWith', ActiveHealthyHttpStatuses)
+      cy.get('@onUpdateHealthyHttpStatusesSpy').should('have.been.calledWith', ActiveHealthyHttpStatuses)
       cy.get('@onUpdateUnhealthyHttpStatusesSpy').should('have.been.calledWith', ActiveUnhealthyHttpStatuses)
 
       await wrapper.setProps({ type: 'grpcs' })

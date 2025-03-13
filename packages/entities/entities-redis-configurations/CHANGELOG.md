@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@0.1.13...@kong-ui-public/entities-redis-configurations@0.2.0) (2025-03-13)
+
+
+### Features
+
+* **redis:** add tags field ([#2013](https://github.com/Kong/public-ui-components/issues/2013)) ([e97569c](https://github.com/Kong/public-ui-components/commit/e97569c3498aa3f037d8d531057a976055a8857d))
+
+
+
+
+
 ## [0.1.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@0.1.12...@kong-ui-public/entities-redis-configurations@0.1.13) (2025-03-12)
 
 

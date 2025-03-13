@@ -81,7 +81,7 @@ jobs:
             ./vite.config.shared.ts
             ./cypress.config.ts
             ./cypress/**
-            ./pnpm-lock.yaml
+            ./package.json
             ./eslintrc.cjs
             ./.stylelintrc.js
 

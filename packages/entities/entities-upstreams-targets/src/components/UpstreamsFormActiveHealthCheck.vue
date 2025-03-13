@@ -150,42 +150,43 @@
       <KInput
         autocomplete="off"
         class="margin-bottom-6"
-        data-testid="active-healthcheck-interval"
+        data-testid="active-healthcheck-healthy-interval"
         :help="t('upstreams.form.fields.interval.help')"
         :label="t('upstreams.form.fields.interval.label')"
         :max="IntervalMaxNumber"
         :min="IntervalMinNumber"
-        :model-value="interval"
+        :model-value="healthyInterval"
         :readonly="readonly"
         type="number"
-        @update:model-value="emit('update:interval', $event)"
+        @update:model-value="emit('update:healthy-interval', $event)"
       />
 
       <KInput
         autocomplete="off"
-        data-testid="active-healthcheck-successes"
+        data-testid="active-healthcheck-healthy-successes"
         :label="t('upstreams.form.fields.successes.label')"
         :max="SuccessOrFailureMaxNumber"
         :min="SuccessOrFailureMinNumber"
-        :model-value="successes"
+        :model-value="healthySuccesses"
         :readonly="readonly"
         type="number"
-        @update:model-value="emit('update:successes', $event)"
+        @update:model-value="emit('update:healthy-successes', $event)"
       />
 
       <KMultiselect
         v-if="!isTcp"
         autocomplete="off"
-        class="margin-top-6 active-healthcheck-http-statuses"
+        class="margin-top-6 active-healthcheck-healthy-http-statuses"
+        data-testid="active-healthcheck-healthy-http-statuses"
         enable-item-creation
         :items="HTTPStatuses"
         :label="t('upstreams.form.fields.http_statuses.label')"
-        :model-value="httpStatuses"
+        :model-value="healthyHttpStatuses"
         :readonly="readonly"
         width="100%"
         @item-added="(item: MultiselectItem) => trackHealthyItem(item, true)"
         @item-removed="(item: MultiselectItem) => trackHealthyItem(item, false)"
-        @update:model-value="emit('update:http-statuses', $event)"
+        @update:model-value="emit('update:healthy-http-statuses', $event)"
       />
     </KCard>
 
@@ -214,34 +215,35 @@
       <KInput
         autocomplete="off"
         class="margin-bottom-6"
-        data-testid="active-healthcheck-tcp-failures"
+        data-testid="active-healthcheck-unhealthy-tcp-failures"
         :label="t('upstreams.form.fields.tcp_failures.label')"
         :max="SuccessOrFailureMaxNumber"
         :min="SuccessOrFailureMinNumber"
-        :model-value="tcpFailures"
+        :model-value="unhealthyTcpFailures"
         :readonly="readonly"
         type="number"
-        @update:model-value="emit('update:tcp-failures', $event)"
+        @update:model-value="emit('update:unhealthy-tcp-failures', $event)"
       />
 
       <KInput
         v-if="!isTcp"
         autocomplete="off"
         class="margin-bottom-6"
-        data-testid="active-healthcheck-http-failures"
+        data-testid="active-healthcheck-unhealthy-http-failures"
         :label="t('upstreams.form.fields.http_failures.label')"
         :max="SuccessOrFailureMaxNumber"
         :min="SuccessOrFailureMinNumber"
-        :model-value="httpFailures"
+        :model-value="unhealthyHttpFailures"
         :readonly="readonly"
         type="number"
-        @update:model-value="emit('update:http-failures', $event)"
+        @update:model-value="emit('update:unhealthy-http-failures', $event)"
       />
 
       <KMultiselect
         v-if="!isTcp"
         autocomplete="off"
         class="margin-bottom-6 active-healthcheck-unhealthy-http-statuses"
+        data-testid="active-healthcheck-unhealthy-http-statuses"
         enable-item-creation
         :items="HTTPStatuses"
         :label="t('upstreams.form.fields.http_statuses.label')"
@@ -340,15 +342,15 @@ const props = defineProps({
     type: Array as PropType<ActiveHealthCheckHeader[]>,
     required: true,
   },
-  interval: {
+  healthyInterval: {
     type: String,
     required: true,
   },
-  successes: {
+  healthySuccesses: {
     type: String,
     required: true,
   },
-  httpStatuses: {
+  healthyHttpStatuses: {
     type: Array as PropType<string[]>,
     required: true,
   },
@@ -356,11 +358,11 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  httpFailures: {
+  unhealthyHttpFailures: {
     type: String,
     required: true,
   },
-  tcpFailures: {
+  unhealthyTcpFailures: {
     type: String,
     required: true,
   },
@@ -387,12 +389,12 @@ const emit = defineEmits<{
   (e: 'update:https-sni', val: string): void
   (e: 'update:verify-ssl', val: boolean): void
   (e: 'update:headers', val: ActiveHealthCheckHeader[]): void
-  (e: 'update:interval', val: string): void
-  (e: 'update:successes', val: string): void
-  (e: 'update:http-statuses', val: string[]): void
+  (e: 'update:healthy-interval', val: string): void
+  (e: 'update:healthy-successes', val: string): void
+  (e: 'update:healthy-http-statuses', val: string[]): void
   (e: 'update:unhealthy-interval', val: string): void
-  (e: 'update:http-failures', val: string): void
-  (e: 'update:tcp-failures', val: string): void
+  (e: 'update:unhealthy-http-failures', val: string): void
+  (e: 'update:unhealthy-tcp-failures', val: string): void
   (e: 'update:unhealthy-http-statuses', val: string[]): void
   (e: 'update:unhealthy-timeouts', val: string): void
 }>()
@@ -438,7 +440,7 @@ const {
 watch(() => props.type, (val, oldVal) => {
   // clear tcpFailures value if type !== 'tcp'
   if (oldVal === 'tcp' && val !== oldVal) {
-    emit('update:tcp-failures', '5')
+    emit('update:unhealthy-tcp-failures', '5')
   }
   // clear httpsSni and verifySsl values if type !== 'https' || 'grpcs'
   if ((oldVal === 'https' || oldVal === 'grpcs') && val !== oldVal) {
@@ -448,7 +450,7 @@ watch(() => props.type, (val, oldVal) => {
   // clear httpPath value if type === 'tcp'
   if (oldVal !== 'tcp' && val === 'tcp') {
     emit('update:http-path', '/')
-    emit('update:http-statuses', ActiveHealthyHttpStatuses)
+    emit('update:healthy-http-statuses', ActiveHealthyHttpStatuses)
     emit('update:unhealthy-http-statuses', ActiveUnhealthyHttpStatuses)
   }
 })

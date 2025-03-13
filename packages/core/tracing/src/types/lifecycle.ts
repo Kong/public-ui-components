@@ -6,8 +6,8 @@ import type { SpanNode } from './spans'
 export interface LifecycleGraphNodeTree {
   client: {
     node: LifecycleNode
-    in: LifecycleNode
-    out: LifecycleNode
+    in?: LifecycleNode
+    out?: LifecycleNode
   }
   requests?: {
     node: LifecycleNode

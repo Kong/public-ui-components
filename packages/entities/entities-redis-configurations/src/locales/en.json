@@ -71,6 +71,12 @@
         "label": "Name",
         "placeholder": "Enter unique name"
       },
+      "tags": {
+        "label": "Tags",
+        "placeholder": "Enter a list of tags separated by comma",
+        "help": "e.g. tag1, tag2, tag3",
+        "tooltip": "An optional set of strings associated with the Route for grouping and filtering."
+      },
       "host": {
         "label": "Host",
         "tooltip": "A string representing a host name, such as example.com."
@@ -222,7 +228,8 @@
     "table_headers": {
       "name": "Name",
       "type": "Type",
-      "plugins": "Plugins"
+      "plugins": "Plugins",
+      "tags": "Tags"
     },
     "empty_state": {
       "description": "Set up shared Redis configurations for your gateway plugins to store and retrieve data — like counters or other data — needed during request processing.",
