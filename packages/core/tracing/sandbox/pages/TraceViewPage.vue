@@ -17,7 +17,6 @@
     </div>
 
     <KSlideout
-      :key="renderKey"
       class="trace-viewer-slideout"
       :close-on-blur="false"
       :has-overlay="false"
@@ -51,6 +50,7 @@
       >
         <template #summary>
           <SummaryViewTab
+            :key="renderKey"
             :payloads="enablePayloads ? payloads : undefined"
             :root-span="spanTrees.roots[0]"
             :show-skeleton="showSkeleton"
