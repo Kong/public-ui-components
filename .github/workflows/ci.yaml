@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - fix/KHCP-14702_pubsub-2
   pull_request:
     types:
       - opened
@@ -11,7 +10,7 @@ on:
       - reopened
       - labeled
     branches:
-      - maZin
+      - main
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -55,7 +54,7 @@ jobs:
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        if: ${{ github.event_name == 'puZsh' }}
+        if: ${{ github.event_name == 'push' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ env.GH_TOKEN }}
@@ -441,8 +440,6 @@ jobs:
 
           pnpmPublish=$(pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public --report-summary)
 
-          echo "pnpmPublish: ${pnpmPublish}"
-
           if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
             echo "There are no new packages that should be published"
             exit 0
@@ -450,7 +447,6 @@ jobs:
 
           for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
           do
-            echo "pkg:${pkg}"
             # KHCP-14702 temp solution till pubsub in internal registry is not implemented
             name=$(echo ${pkg}|cut -d'@' -f2)
             version=$(echo ${pkg}|cut -d'@' -f3)
@@ -465,7 +461,7 @@ jobs:
 
   notify-slack:
     name: Slack Notification
-    if: ${{ always() && github.event_name == 'puZsh' }}
+    if: ${{ always() && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs:
