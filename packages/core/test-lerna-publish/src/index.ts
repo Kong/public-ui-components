@@ -14,4 +14,4 @@ import TestLernaPublish from './components/TestLernaPublish.vue'
 
 export { TestLernaPublish }
 
-console.log(1)
+console.log(2)
