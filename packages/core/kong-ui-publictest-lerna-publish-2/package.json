@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/kong-ui-publictest-lerna-publish-2",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "main": "./dist/kong-ui-publictest-lerna-publish-2.umd.js",
   "module": "./dist/kong-ui-publictest-lerna-publish-2.es.js",
