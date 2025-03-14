@@ -106,9 +106,8 @@ describe('<DashboardRenderer />', () => {
       return Promise.resolve(config)
     }
 
-    // @ts-ignore: TS doesn't infer things correctly.  NoInfer may help.
     const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = (key) => {
-      return true
+      return true as any
     }
 
     const fetchComponentFn = (name: string) => {

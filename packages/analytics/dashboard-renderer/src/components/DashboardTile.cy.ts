@@ -29,7 +29,7 @@ describe('<DashboardTile />', () => {
   }
 
   const mockQueryProvider = {
-    exploreBaseUrl: () => 'http://test.com/explore',
+    exploreBaseUrl: async () => 'http://test.com/explore',
     evaluateFeatureFlagFn: () => true,
     queryFn: () => Promise.resolve(
       generateSingleMetricTimeSeriesData(
@@ -146,5 +146,47 @@ describe('<DashboardTile />', () => {
     })
 
     cy.getTestId('edit-tile-1').should('not.exist')
+  })
+
+  it('should show jump to explore link if url and query definition are present', () => {
+    cy.mount(DashboardTile, {
+      props: {
+        definition: mockTileDefinition,
+        context: mockContext,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-explore-1').should('exist')
+  })
+
+  it('should not show jump to explore link if query definition is missing', () => {
+    cy.mount(DashboardTile, {
+      props: {
+        definition: {
+          chart: mockTileDefinition.chart,
+        },
+        context: mockContext,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-explore-1').should('not.exist')
   })
 })
