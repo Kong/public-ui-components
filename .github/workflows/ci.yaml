@@ -224,6 +224,7 @@ jobs:
         run: pnpm --stream --filter "...${{steps.changed_packages.outputs.filter}}..." run build
 
       - name: Check dist bundle size against max-limit
+        if: ${{ steps.changed_packages.outputs.filter != '' }}
         uses: Kong/github-action-dist-size-checker@main
 
       - name: 'Authenticate to Google Cloud'
@@ -254,7 +255,10 @@ jobs:
 
           git checkout ${{ github.head_ref }}
 
-          pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
+          pnpmPublish=$(pnpm --silent lerna publish  prerelease --canary --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json|| true)
+
+          echo "pnpmPublish: ${pnpmPublish}"
+          exit 0
 
           pnpmPublish=$(pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}")
 
