@@ -255,7 +255,7 @@ jobs:
 
           git update-index --assume-unchanged .npmrc
 
-          pnpm --silent lerna publish  prerelease --canary --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --no-git-tag-version --no-git-reset --no-push --yes --amend --summary-file --dist-tag "${tag}" || true
+          pnpm --silent lerna publish  prerelease --canary --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --no-git-tag-version --no-git-reset --no-push --yes --amend --summary-file --dist-tag "${tag}"
 
           echo "summary file:"
           cat lerna-publish-summary.json
