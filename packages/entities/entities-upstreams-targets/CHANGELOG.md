@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.7.6...@kong-ui-public/entities-upstreams-targets@3.7.7) (2025-03-14)
+
+
+### Bug Fixes
+
+* **upstreams-targets:** should returns timeouts disable activ [KM-1056] ([#2028](https://github.com/Kong/public-ui-components/issues/2028)) ([91bc436](https://github.com/Kong/public-ui-components/commit/91bc436e8ce1ed65dc766be3b47012fb025b4880))
+
+
+
+
+
 ## [3.7.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.7.5...@kong-ui-public/entities-upstreams-targets@3.7.6) (2025-03-13)
 
 
