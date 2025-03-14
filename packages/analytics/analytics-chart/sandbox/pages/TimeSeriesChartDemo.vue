@@ -203,7 +203,6 @@
         :allow-csv-export="true"
         :chart-data="(exploreResult)"
         :chart-options="analyticsChartOptions"
-        :go-to-explore="(exploreLink)"
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
@@ -336,7 +335,6 @@ const exportCsv = () => {
   setModalVisibility(true)
 }
 
-const exploreLink: string = 'https://cloud.konghq.tech/us/analytics/explorer'
 provide(INJECT_QUERY_PROVIDER, { evaluateFeatureFlagFn: () => true })
 
 const exploreResultText = ref('')
