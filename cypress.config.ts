@@ -1,7 +1,6 @@
 import { defineConfig } from 'cypress'
 import sharedViteConfig from './vite.config.shared'
 
-
 export default defineConfig({
   component: {
     devServer: {
