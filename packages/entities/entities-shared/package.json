@@ -33,6 +33,9 @@
     "@kong/design-tokens": "1.17.3",
     "@kong/icons": "^1.21.2",
     "@kong/kongponents": "9.24.3",
+    "@types/lodash.isequal": "^4.5.8",
+    "@types/lodash.isplainobject": "^4.0.0",
+    "@types/lodash.sortby": "^4.7.0",
     "axios": "^1.7.7",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"
@@ -71,6 +74,9 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "compare-versions": "^6.1.1"
+    "compare-versions": "^6.1.1",
+    "lodash.isequal": "^4.5.0",
+    "lodash.isplainobject": "^4.0.0",
+    "lodash.sortby": "^4.7.0"
   }
 }
