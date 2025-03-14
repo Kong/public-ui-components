@@ -50,7 +50,6 @@
       >
         <template #summary>
           <SummaryViewTab
-            :key="renderKey"
             :payloads="enablePayloads ? payloads : undefined"
             :root-span="spanTrees.roots[0]"
             :show-skeleton="showSkeleton"
@@ -117,12 +116,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import type { Body, Headers, SpanNode } from '../../src'
 import { buildSpanTrees, getPhaseAndPlugin, KONG_PHASES, mergeSpansInTraceBatches, SPAN_NAMES, SummaryViewTab, TraceViewTab, type TraceViewerConfig } from '../../src'
 import traceBatches from '../fixtures/trace-batches.json'
-
-const renderKey = ref(0)
 
 const hasRequests = ref(true)
 const hasResponses = ref(true)
@@ -175,10 +172,6 @@ const spanTrees = computed(() => {
   trimTree(trees.roots[0])
   return trees
 })
-
-watch(spanTrees, () => {
-  renderKey.value += 1
-}, { deep:true })
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
