@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.7...@kong-ui-public/tracing@0.9.8) (2025-03-14)
+
+
+### Bug Fixes
+
+* **tracing:** re-layout and re-render on tree change ([#2021](https://github.com/Kong/public-ui-components/issues/2021)) ([b94b19f](https://github.com/Kong/public-ui-components/commit/b94b19fe090f888c6f45aa7cf12f77feab6e2992))
+
+
+
+
+
 ## [0.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.6...@kong-ui-public/tracing@0.9.7) (2025-03-13)
 
 
