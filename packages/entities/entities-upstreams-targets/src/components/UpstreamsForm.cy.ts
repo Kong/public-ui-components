@@ -910,7 +910,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait('@updateUpstream').then((interception) => {
         const { body: { healthchecks } } = interception.request
-        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","headers":{},"healthy":{"interval":0,"successes":0},"unhealthy":{"interval":0,"http_failures":0,"tcp_failures":0}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
+        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","headers":{},"healthy":{"interval":0,"successes":0},"unhealthy":{"interval":0,"http_failures":0,"tcp_failures":0,"timeouts":0}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
       })
     })
 

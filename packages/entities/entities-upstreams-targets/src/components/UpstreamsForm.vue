@@ -304,6 +304,7 @@ const activeHealthChecks = computed((): UpstreamActivePayload | undefined => {
           interval: 0,
           http_failures: 0,
           tcp_failures: 0,
+          timeouts: 0,
         },
       }
     }
