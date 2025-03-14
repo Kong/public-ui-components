@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - fix/KHCP-15491_lerna-publish
+      - main
   pull_request:
     types:
       - opened
@@ -10,7 +10,7 @@ on:
       - reopened
       - labeled
     branches:
-      - maiZn
+      - main
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -54,7 +54,7 @@ jobs:
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        if: ${{ github.event_name == 'puZsh' }}
+        if: ${{ github.event_name == 'push' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ env.GH_TOKEN }}
@@ -463,33 +463,12 @@ jobs:
           done
           # end KHCP-14702
 
-          exit 0
-
-          pnpm --silent lerna publish --conventional-commits --yes --amend --summary-file
-          pnpmPublish=$(pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public --report-summary)
-
-          if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
-            echo "There are no new packages that should be published"
-            exit 0
-          fi
-
-          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
-          do
-            # KHCP-14702 temp solution till pubsub in internal registry is not implemented
-            name=$(echo ${pkg}|cut -d'@' -f2)
-            version=$(echo ${pkg}|cut -d'@' -f3)
-            curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
-              -H 'Accept: application/vnd.github.everest-preview+json' \
-              "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
-              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${name}\", \"version\":\"${version}\"}}"
-          done
-
         env:
            GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
 
   notify-slack:
     name: Slack Notification
-    if: ${{ always() && github.event_name == 'pusZh' }}
+    if: ${{ always() && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs:
