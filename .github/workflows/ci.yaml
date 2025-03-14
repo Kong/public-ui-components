@@ -256,34 +256,26 @@ jobs:
           git update-index --assume-unchanged .npmrc
 
           pnpm --silent lerna publish  prerelease --canary --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --no-git-tag-version --no-git-reset --no-push --yes --amend --summary-file --dist-tag "${tag}" || true
+
           echo "summary file:"
           cat lerna-publish-summary.json
 
-          exit 0
+          for pkg in $(cat lerna-publish-summary.json | jq -r '.[]|.packageName+"!"+.version')
+            pkgName=$(echo ${pkg}|cut -d'!' -f1)
 
-          pnpmPublish=$(pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}")
-
-          if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
-            echo "There are no new packages that should be published"
-            exit 0
-          fi
-
-          npm_instructions=""
-          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
-          do
             # KHCP-14702 temp solution till pubsub in internal registry is not implemented
-            name=$(echo ${pkg}|cut -d'@' -f2)
-            version=$(echo ${pkg}|cut -d'@' -f3)
+            pkgVersion=$(echo ${pkg}|cut -d'!' -f2)
+
             curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
               -H 'Accept: application/vnd.github.everest-preview+json' \
               "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
-              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${name}\", \"version\":\"${version}\"}}"
+              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${pkgName}\", \"version\":\"${pkgVersion}\"}}"
+            # eo-KHCP-14702
 
-            pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
             if [ "${npm_instructions}" != "" ]; then
               npm_instructions="${npm_instructions}\n"
             fi
-            npm_instructions="${npm_instructions}${pkg}"
+            npm_instructions="${npm_instructions}${pkgName}@${tag}"
           done
 
           if [[ -z "${npm_instructions}" ]]; then
