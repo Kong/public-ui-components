@@ -263,14 +263,14 @@ jobs:
           for pkg in $(cat lerna-publish-summary.json | jq -r '.[]|.packageName+"!"+.version')
             pkgName=$(echo ${pkg}|cut -d'!' -f1)
 
-            # KHCP-14702 temp solution till pubsub in internal registry is not implemented
+            # beg KHCP-14702 temp solution till pubsub in internal registry is not implemented
             pkgVersion=$(echo ${pkg}|cut -d'!' -f2)
 
             curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
               -H 'Accept: application/vnd.github.everest-preview+json' \
               "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
               -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${pkgName}\", \"version\":\"${pkgVersion}\"}}"
-            # eo-KHCP-14702
+            # end KHCP-14702
 
             if [ "${npm_instructions}" != "" ]; then
               npm_instructions="${npm_instructions}\n"
