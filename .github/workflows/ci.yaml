@@ -437,6 +437,8 @@ jobs:
 
           npx google-artifactregistry-auth
 
+          git update-index --assume-unchanged .npmrc
+
           pnpm --silent lerna publish --conventional-commits --create-release github --yes --force-git-tag
 
           if [[ ! -f "lerna-publish-summary.json" ]]; then
