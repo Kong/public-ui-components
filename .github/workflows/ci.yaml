@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - fix/KHCP-15491_lerna-publish
   pull_request:
     types:
       - opened
@@ -10,7 +10,7 @@ on:
       - reopened
       - labeled
     branches:
-      - main
+      - maiZn
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -54,7 +54,7 @@ jobs:
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'puZsh' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ env.GH_TOKEN }}
@@ -426,21 +426,44 @@ jobs:
       # --conventional-commits - so that package's version changed following semantic releases
       #
       # we shall ignore lerna version error as pnpm publish will fail or not publish in case of such error
-      - name: Update package versions
+      - name: Publish packages to NPM
         if: ${{ github.event_name == 'push' }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
-          pnpm --silent lerna version --conventional-commits --create-release github --yes --force-git-tag || true
 
-      - name: Publish packages to NPM
-        if: ${{ github.event_name == 'push' }}
-        run: |
           echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
           echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
 
           npx google-artifactregistry-auth
 
+          pnpm --silent lerna publish --conventional-commits --create-release github --yes --force-git-tag
+
+          if [[ ! -f "lerna-publish-summary.json" ]]; then
+            echo "No changed packages to publish"
+            exit 0
+          fi
+
+          # beg KHCP-14702 temp solution till pubsub in internal registry is not implemented
+          echo "summary file:"
+          cat lerna-publish-summary.json
+
+          for pkg in $(cat lerna-publish-summary.json | jq -r '.[]|.packageName+"!"+.version')
+          do
+            pkgName=$(echo ${pkg}|cut -d'!' -f1)
+            pkgVersion=$(echo ${pkg}|cut -d'!' -f2)
+
+            curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
+              -H 'Accept: application/vnd.github.everest-preview+json' \
+              "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
+              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"${pkgName}\", \"version\":\"${pkgVersion}\"}}"
+
+          done
+          # end KHCP-14702
+
+          exit 0
+
+          pnpm --silent lerna publish --conventional-commits --yes --amend --summary-file
           pnpmPublish=$(pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public --report-summary)
 
           if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
@@ -464,7 +487,7 @@ jobs:
 
   notify-slack:
     name: Slack Notification
-    if: ${{ always() && github.event_name == 'push' }}
+    if: ${{ always() && github.event_name == 'pusZh' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs:
