@@ -9,7 +9,7 @@ export default function useUrlValidators() {
     if (!host || host.trim() === '') return t('gateway_services.form.errors.host.empty')
 
     // check if a valid host (domain or ip address)
-    const domainRegex = /^(?!:\/\/)([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{1,63}$/
+    const domainRegex = /^(?!:\/\/)([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?))*)(\.[a-zA-Z]{1,63})?$/
     const ipRegex = /^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9]?[0-9])$/
 
     if (ipRegex.test(host) || domainRegex.test(host)) return ''

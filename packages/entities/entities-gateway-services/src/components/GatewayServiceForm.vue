@@ -754,8 +754,8 @@ const handleValidateFullUrl = useDebounceFn((): void => {
 
       emit('url-valid:success')
     } catch (error: any) {
-      emit('url-valid:error', error.message || t('gateway_services.form.errors.url.invalid'))
-      form.formFieldErrors.url = error.message || t('gateway_services.form.errors.url.invalid')
+      emit('url-valid:error', t('gateway_services.form.errors.url.invalid'))
+      form.formFieldErrors.url = t('gateway_services.form.errors.url.invalid')
     }
   }
 }, 300)

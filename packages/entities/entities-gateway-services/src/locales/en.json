@@ -72,7 +72,7 @@
           "invalid": "Protocol - value must be one of http, https, grpc, grpcs, tcp, udp, tls, tls_passthrough, ws, wss"
         },
         "url": {
-          "invalid": "URL validation failed"
+          "invalid": "The URL must follow a valid format. Example: https://api.kong-air.com/flights"
         }
       },
       "sections": {
