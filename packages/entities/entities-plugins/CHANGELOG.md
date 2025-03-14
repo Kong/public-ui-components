@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.16.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.16.4...@kong-ui-public/entities-plugins@9.16.5) (2025-03-14)
+
+
+### Bug Fixes
+
+* **consumer-credentials:** special algorithm missing pub key [KM-1007] ([#2004](https://github.com/Kong/public-ui-components/issues/2004)) ([7aa6a0e](https://github.com/Kong/public-ui-components/commit/7aa6a0eff68809e84f303a96e587cb30b523fb3b))
+
+
+
+
+
 ## [9.16.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.16.3...@kong-ui-public/entities-plugins@9.16.4) (2025-03-11)
 
 
