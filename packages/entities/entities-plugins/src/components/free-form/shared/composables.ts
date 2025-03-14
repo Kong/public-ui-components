@@ -56,17 +56,25 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
     return buildSchemaMap(toRaw(configSchema.value))
   })
 
+  /**
+   * Retrieves a schema object by path
+   * @param path Optional dot-notation path to a specific schema field
+   * @returns The schema for the specified path or the root schema if no path provided
+   */
   function getSchema(path?: string): any {
     return path == null ? configSchema.value : schemaMap.value?.[path]
   }
 
   /**
-   * Get the default value for a specific field by its path
+   * Creates a default value for a field, respecting its schema definition
+   * @param path Path to the field in dot notation (e.g., 'foo.bar')
+   * @param force When true, forces creation of structure even for optional fields
+   * @returns The default value for the field based on its schema
    */
-  function getFieldDefault(fieldPath: string): any {
-    const schema = getSchema(fieldPath)
+  function createFieldDefault(path: string, force: boolean = false): any {
+    const schema = getSchema(path)
     if (!schema) {
-      return undefined
+      return null
     }
 
     // Use explicit default if provided
@@ -74,71 +82,55 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
       return schema.default
     }
 
-    // Handle required fields without explicit defaults
-    if (schema.required || fieldPath.endsWith('.*')) {
+    // Create structures when forced or for required fields
+    if (force || schema.required) {
       if (schema.type === 'record') {
-        return buildRecordDefault(schema, fieldPath)
+        return createRecordDefault(schema, path)
       } else if (schema.type === 'array') {
         return []
       } else {
         return null
       }
     }
+
     // Non-required fields default to null
     return null
   }
 
   /**
-   * Build the default object for a record schema
+   * Creates a default object for a record schema
+   * @param schema The record schema definition
+   * @param path Current field path
    */
-  function buildRecordDefault(recordSchema: any, path: string): any {
-    const defaultObj: Record<string, any> = {}
-    if (Array.isArray(recordSchema.fields)) {
-      for (const fieldDef of recordSchema.fields) {
-        const fieldName = Object.keys(fieldDef)[0]
-        const fieldProps = fieldDef[fieldName]
-        const fieldPath = path ? `${path}.${fieldName}` : fieldName
-        const fieldDefault = getFieldDefaultForSchema(fieldProps, fieldPath)
-        if (fieldDefault !== undefined) {
-          defaultObj[fieldName] = fieldDefault
+  function createRecordDefault(schema: any, path: string): Record<string, any> {
+    const result: Record<string, any> = {}
+
+    if (Array.isArray(schema.fields)) {
+      for (const field of schema.fields) {
+        const key = Object.keys(field)[0]
+        const fieldPath = path ? `${path}.${key}` : key
+
+        const value = createFieldDefault(fieldPath, false)
+        if (value !== undefined) {
+          result[key] = value
         }
       }
     }
-    return defaultObj
+    return result
   }
 
   /**
-   * Get the default value for a field schema (helper for buildRecordDefault)
-   */
-  function getFieldDefaultForSchema(schema: any, path: string): any {
-    if (schema.default !== undefined) {
-      return schema.default
-    }
-
-    if (schema.required) {
-      if (schema.type === 'record') {
-        return buildRecordDefault(schema, path)
-      } else if (schema.type === 'array') {
-        return []
-      } else {
-        return null
-      }
-    }
-    return null
-  }
-
-  /**
-   * Get the default value for a field or the entire form
-   * @param path Optional path to a specific field
-   * @returns Default value for the field (if path provided) or entire form (if no path)
+   * Gets the default value for a field or the entire form
+   * @param path Optional path to a field
+   * @returns Default value for the field or entire form
    */
   function getDefault(path?: string): any {
     if (path) {
-      // Return default for specific field
-      return getFieldDefault(path)
+      // For any specific path access, force creation of that field
+      return createFieldDefault(path, true)
     } else {
-      // Return default for entire form using root schema
-      return buildRecordDefault(getSchema(), '')
+      // For the entire form, respect required flags without forcing
+      return createRecordDefault(getSchema(), '')
     }
   }
 
