@@ -14,4 +14,4 @@ import KongUiPublictestLernaPublish2 from './components/KongUiPublictestLernaPub
 
 export { KongUiPublictestLernaPublish2 }
 
-console.log(1)
+console.log(2)

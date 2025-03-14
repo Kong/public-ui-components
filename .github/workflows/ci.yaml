@@ -439,7 +439,7 @@ jobs:
 
           git update-index --assume-unchanged .npmrc
 
-          pnpm --silent lerna publish --conventional-commits --create-release github --yes --force-git-tag
+          pnpm --silent lerna publish --conventional-commits --create-release github --yes --force-git-tag --summary-file
 
           if [[ ! -f "lerna-publish-summary.json" ]]; then
             echo "No changed packages to publish"
