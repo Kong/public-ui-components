@@ -261,6 +261,7 @@ jobs:
           cat lerna-publish-summary.json
 
           for pkg in $(cat lerna-publish-summary.json | jq -r '.[]|.packageName+"!"+.version')
+          do
             pkgName=$(echo ${pkg}|cut -d'!' -f1)
 
             # beg KHCP-14702 temp solution till pubsub in internal registry is not implemented
