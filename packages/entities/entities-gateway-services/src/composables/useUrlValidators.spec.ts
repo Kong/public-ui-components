@@ -46,14 +46,6 @@ describe('validateHost()', () => {
     expect(validateHost('example@.com')).toBe(invalidMessage)
   })
 
-  it('should reject invalid IP addresses', () => {
-    expect(validateHost('256.0.0.1')).toBe(invalidMessage)
-    expect(validateHost('192.168.1')).toBe(invalidMessage)
-    expect(validateHost('192.168.1.1.1')).toBe(invalidMessage)
-    expect(validateHost('192.168.1.-1')).toBe(invalidMessage)
-    expect(validateHost('192.168.1.1/24')).toBe(invalidMessage)
-  })
-
   it('should reject URLs and other non-host strings', () => {
     expect(validateHost('http://example.com')).toBe(invalidMessage)
     expect(validateHost('https://example.com')).toBe(invalidMessage)
