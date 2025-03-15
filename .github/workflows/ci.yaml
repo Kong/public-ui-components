@@ -224,6 +224,7 @@ jobs:
         run: pnpm --stream --filter "...${{steps.changed_packages.outputs.filter}}..." run build
 
       - name: Check dist bundle size against max-limit
+        if: ${{ steps.changed_packages.outputs.filter != '' }}
         uses: Kong/github-action-dist-size-checker@main
 
       - name: 'Authenticate to Google Cloud'
@@ -252,33 +253,35 @@ jobs:
           tag="pr-${{ github.event.pull_request.number }}"
           echo "preid=${preid}"
 
-          git checkout ${{ github.head_ref }}
+          git update-index --assume-unchanged .npmrc
 
-          pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
+          pnpm --silent lerna publish  prerelease --canary --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --no-git-tag-version --no-git-reset --no-push --yes --amend --summary-file --dist-tag "${tag}"
 
-          pnpmPublish=$(pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}")
-
-          if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
-            echo "There are no new packages that should be published"
+          if [[ ! -f "lerna-publish-summary.json" ]]; then
+            echo "No changed packages to publish"
             exit 0
           fi
 
-          npm_instructions=""
-          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
+          echo "summary file:"
+          cat lerna-publish-summary.json
+
+          for pkg in $(cat lerna-publish-summary.json | jq -r '.[]|.packageName+"!"+.version')
           do
-            # KHCP-14702 temp solution till pubsub in internal registry is not implemented
-            name=$(echo ${pkg}|cut -d'@' -f2)
-            version=$(echo ${pkg}|cut -d'@' -f3)
+            pkgName=$(echo ${pkg}|cut -d'!' -f1)
+
+            # beg KHCP-14702 temp solution till pubsub in internal registry is not implemented
+            pkgVersion=$(echo ${pkg}|cut -d'!' -f2)
+
             curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
               -H 'Accept: application/vnd.github.everest-preview+json' \
               "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
-              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${name}\", \"version\":\"${version}\"}}"
+              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"${pkgName}\", \"version\":\"${pkgVersion}\"}}"
+            # end KHCP-14702
 
-            pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
             if [ "${npm_instructions}" != "" ]; then
               npm_instructions="${npm_instructions}\n"
             fi
-            npm_instructions="${npm_instructions}${pkg}"
+            npm_instructions="${npm_instructions}${pkgName}@${tag}"
           done
 
           if [[ -z "${npm_instructions}" ]]; then
@@ -423,38 +426,42 @@ jobs:
       # --conventional-commits - so that package's version changed following semantic releases
       #
       # we shall ignore lerna version error as pnpm publish will fail or not publish in case of such error
-      - name: Update package versions
+      - name: Publish packages to NPM
         if: ${{ github.event_name == 'push' }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
-          pnpm --silent lerna version --conventional-commits --create-release github --yes --force-git-tag || true
 
-      - name: Publish packages to NPM
-        if: ${{ github.event_name == 'push' }}
-        run: |
           echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
           echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
 
           npx google-artifactregistry-auth
 
-          pnpmPublish=$(pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public --report-summary)
+          git update-index --assume-unchanged .npmrc
 
-          if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
-            echo "There are no new packages that should be published"
+          pnpm --silent lerna publish --conventional-commits --create-release github --yes --force-git-tag --summary-file
+
+          if [[ ! -f "lerna-publish-summary.json" ]]; then
+            echo "No changed packages to publish"
             exit 0
           fi
 
-          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
+          # beg KHCP-14702 temp solution till pubsub in internal registry is not implemented
+          echo "summary file:"
+          cat lerna-publish-summary.json
+
+          for pkg in $(cat lerna-publish-summary.json | jq -r '.[]|.packageName+"!"+.version')
           do
-            # KHCP-14702 temp solution till pubsub in internal registry is not implemented
-            name=$(echo ${pkg}|cut -d'@' -f2)
-            version=$(echo ${pkg}|cut -d'@' -f3)
+            pkgName=$(echo ${pkg}|cut -d'!' -f1)
+            pkgVersion=$(echo ${pkg}|cut -d'!' -f2)
+
             curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
               -H 'Accept: application/vnd.github.everest-preview+json' \
               "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
-              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${name}\", \"version\":\"${version}\"}}"
+              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"${pkgName}\", \"version\":\"${pkgVersion}\"}}"
+
           done
+          # end KHCP-14702
 
         env:
            GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
