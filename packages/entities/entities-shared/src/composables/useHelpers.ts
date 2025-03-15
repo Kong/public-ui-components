@@ -1,3 +1,7 @@
+import isEqual from 'lodash.isequal'
+import isPlainObject from 'lodash.isplainobject'
+import sortBy from 'lodash.sortby'
+
 export default function useHelpers() {
   /**
    * propName could be 'rowValue' or 'row'
@@ -10,15 +14,24 @@ export default function useHelpers() {
     return slotProps?.[propName] ?? undefined
   }
 
-  const unsortedArraysAreEqual = (a: any[], b: any[]): boolean => {
-    if (a.length !== b.length) return false
-    const uniqueValues = new Set([...a, ...b])
-    for (const v of uniqueValues) {
-      const aCount = a.filter(e => e === v).length
-      const bCount = b.filter(e => e === v).length
-      if (aCount !== bCount) return false
+  const deepSort = (obj: Record<string, any>): Record<string, any> => {
+    if (Array.isArray(obj)) {
+      return sortBy(obj.map(deepSort), (item: any) => JSON.stringify(item))
+    } else if (isPlainObject(obj)) {
+      const sortedObj: Record<string, any> = {}
+      Object.keys(obj)
+        .sort()
+        .forEach((key) => {
+          sortedObj[key] = deepSort(obj[key])
+        })
+      return sortedObj
+    } else {
+      return obj
     }
-    return true
+  }
+
+  const deepEqualIgnoreOrder = (obj1: Record<string, any>, obj2: Record<string, any>) => {
+    return isEqual(deepSort(obj1), deepSort(obj2))
   }
 
   /**
@@ -30,25 +43,7 @@ export default function useHelpers() {
    */
   const objectsAreEqual = (a: Record<string, any>, b: Record<string, any>, ignoreOrder?: boolean): boolean => {
     if (ignoreOrder) {
-      if (Object.keys(a).length === Object.keys(b).length) {
-        for (const key in a) {
-          if (Array.isArray(a[key]) && Array.isArray(b[key])) {
-            if (unsortedArraysAreEqual(a[key], b[key])) {
-              continue
-            } else {
-              return false
-            }
-          } else if (a[key] === b[key]) {
-            continue
-          } else {
-            return false
-          }
-        }
-      } else {
-        return false
-      }
-
-      return true
+      return deepEqualIgnoreOrder(a, b)
     }
 
     try {
