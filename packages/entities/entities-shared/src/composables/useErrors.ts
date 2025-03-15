@@ -70,7 +70,91 @@ export default function useErrors() {
     return error.message || t('errors.unexpected')
   }
 
+  /**
+ * Receive an error and return the error fields from the payload
+ * @param {string|Error|object} error - error string
+ * @returns {Object} Object containing message and fields
+ */
+  const getErrorFieldsFromError = (error: any): { messages: string[]; fields: Array<{ field: string; message: string }> } => {
+    if (!error) {
+      return {
+        messages: [t('errors.unexpected')],
+        fields: [],
+      }
+    }
+
+    if (error?.response?.status === 401) {
+      return {
+        messages: [],
+        fields: [],
+      }
+    }
+
+    let messages: string[] = [t('errors.unexpected')]
+    const fields: Array<{ field: string; message: string }> = []
+
+    if (error?.response?.data) {
+      if (error.response.data.details?.length) {
+        messages = []
+        error.response.data.details.forEach((entry: Record<string, any>) => {
+          let errorMessage = t('errors.unexpected')
+
+          if (entry.messages && Array.isArray(entry.messages) && entry.messages.length) {
+            errorMessage = entry.messages.join(', ')
+          }
+
+          if (entry.field) {
+            fields.push({ field: entry.field, message: errorMessage })
+          }
+          messages.push(`${entry.field ?? ''} ${errorMessage}`)
+        })
+        return { messages, fields }
+      }
+
+      if (error.response.data.message && Array.isArray(error.response.data.message)) {
+        messages = []
+        error.response.data.message.forEach((err: any) => {
+          if (err?.constraints) {
+            const errorMessage = Object.values(err.constraints).join(', ')
+            messages.push(errorMessage)
+            if (err.property) {
+              fields.push({ field: err.property, message: errorMessage })
+            }
+          } else if (err?.property && err?.message) {
+            fields.push({ field: err.property, message: err.message })
+            messages.push(err.message)
+          } else {
+            messages.push(err)
+          }
+        })
+        return { messages, fields }
+      }
+
+      if (typeof error.response.data.message === 'string' || typeof error.response.data === 'string') {
+        return {
+          messages: [error.response.data.message],
+          fields: [],
+        }
+      }
+
+      if (typeof error.response.data === 'object') {
+        messages = []
+        Object.keys(error.response.data).forEach(key => {
+          fields.push({ field: key, message: error.response.data[key] })
+          messages.push(error.response.data[key])
+        })
+        return { messages, fields }
+      }
+    }
+
+    return {
+      messages: [error.message || t('errors.unexpected')],
+      fields: [],
+    }
+  }
+
   return {
+    getErrorFieldsFromError,
     getMessageFromError,
   }
 }
