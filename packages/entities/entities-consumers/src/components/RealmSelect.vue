@@ -10,6 +10,7 @@
       :id="selectId"
       :items="realms"
       :loading="loading"
+      :rey="selectKey"
       width="200"
     />
   </div>
@@ -43,6 +44,7 @@ const selectId = useId()
 const { axiosInstance } = useAxios(props?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
 
+const selectKey = ref<number>(0)
 const loading = ref<boolean>(false)
 const selectedRealm = ref<string | null>(null)
 const realms = ref<SelectItem[]>([])
@@ -54,7 +56,6 @@ const fetchRealms = async () => {
     const baseUrl = `/v1/realms?${encodeURIComponent('page[size]')}=100`
     const { data: { data } } = await axiosInstance.get(baseUrl)
 
-    console.log('data', data)
     if (data && data.length) {
       data.forEach((realm: any) => {
         realms.value.push({
@@ -63,8 +64,8 @@ const fetchRealms = async () => {
           key: realm.id,
         })
       })
-      console.log('realms', realms.value)
       selectedRealm.value = realms.value[0]?.value as string
+      selectKey.value ++
     }
   } catch (error) {
     console.error('Error fetching realms', error)
