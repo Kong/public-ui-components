@@ -459,6 +459,7 @@ import {
   EntityBaseForm,
   EntityBaseFormType,
   SupportedEntityType,
+  useHelpers,
 } from '@kong-ui-public/entities-shared'
 import type { SelectItem } from '@kong/kongponents'
 import '@kong-ui-public/entities-shared/dist/style.css'
@@ -507,11 +508,6 @@ const props = defineProps({
     required: false,
     default: false,
   },
-  sampleApiList: {
-    type: Array,
-    required: false,
-    default: ()=> [],
-  },
 })
 
 const isCollapsed = ref(true)
@@ -521,6 +517,8 @@ const { getErrorFieldsFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const validators = useValidators()
 const { validateHost, validatePath, validatePort, validateProtocol } = composables.useUrlValidators()
+const { objectsAreEqual } = useHelpers()
+
 
 const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit)
 const formType = computed((): EntityBaseFormType => props.gatewayServiceId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
@@ -817,7 +815,6 @@ const resetFormFieldErrors = (fieldId?: keyof FormFieldErrors): void => {
 }
 
 const isFormValid = computed((): boolean => {
-
   for (let key in form.formFieldErrors) {
     if (form.formFieldErrors[key as keyof typeof form.formFieldErrors].length) {
       return false
@@ -890,9 +887,8 @@ const validateName = (input: string): void => {
 
 const canSubmit = computed((): boolean => {
   // If in edit mode, can submit only if there are changes
-  if (isEditing.value) {
-    return JSON.stringify(form.fields) !== JSON.stringify(formFieldsOriginal)
-  }
+  const isEdited = !isEditing.value || !objectsAreEqual(form.fields, formFieldsOriginal)
+
   // if full URL check if the url is filled and valid
   const isUrlInputValid = checkedGroup.value === 'url' &&
     !!form.fields.url &&
@@ -904,7 +900,7 @@ const canSubmit = computed((): boolean => {
     isFormValid.value
 
   // Can submit if editing with changes, or if relevant fields are filled and valid
-  return isUrlInputValid || isProtocolInputValid
+  return isEdited && (isUrlInputValid || isProtocolInputValid)
 })
 
 const initForm = (data: Record<string, any>): void => {
