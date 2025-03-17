@@ -15,6 +15,7 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
+    regional-consumers-enabled
     use-action-outside
     @add:success="onAddSuccess"
     @copy:error="onCopyIdError"

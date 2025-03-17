@@ -22,10 +22,18 @@
     >
       <!-- Filter -->
       <template #toolbar-filter>
+        <ConsumerScopeFilter
+          v-if="config?.app === 'konnect' && regionalConsumersEnabled"
+          v-model="consumerScopeFilter"
+        />
         <EntityFilter
           v-if="!isConsumerGroupPage"
           v-model="filterQuery"
           :config="filterConfig"
+        />
+        <RealmSelect
+          v-if="config?.app === 'konnect' && regionalConsumersEnabled"
+          :axios-request-config="config?.axiosRequestConfig"
         />
       </template>
       <!-- Create action -->
@@ -258,6 +266,7 @@ import type {
   KonnectConsumerListConfig,
   EntityRow,
   CopyEventPayload,
+  ConsumerScopeFilterValue,
 } from '../types'
 import type {
   BaseTableHeaders,
@@ -268,6 +277,8 @@ import type {
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import AddConsumerModal from './AddConsumerModal.vue'
+import ConsumerScopeFilter from './ConsumerScopeFilter.vue'
+import RealmSelect from './RealmSelect.vue'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void,
@@ -331,6 +342,14 @@ const props = defineProps({
    * the khcp-14756-empty-states-m2 FF is removed.
    */
   enableV2EmptyStates: {
+    type: Boolean,
+    default: false,
+  },
+  /**
+   * Enables regional consumers feature.
+   * TODO: Remove this prop when regional-consumers-ui-khcp-15091 FF is removed.
+   */
+  regionalConsumersEnabled: {
     type: Boolean,
     default: false,
   },
@@ -405,6 +424,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
     schema: props.config.filterSchema,
   } as FuzzyMatchFilterConfig
 })
+const consumerScopeFilter = ref<ConsumerScopeFilterValue>('cp')
 
 const { hasRecords, handleStateChange } = useTableState(filterQuery)
 // Current empty state logic is only for Konnect, KM will pick up at GA.

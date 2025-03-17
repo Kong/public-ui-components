@@ -21,7 +21,7 @@ export interface BaseConsumerListConfig {
 }
 
 /** Konnect route list config */
-export interface KonnectConsumerListConfig extends KonnectBaseTableConfig, BaseConsumerListConfig {}
+export interface KonnectConsumerListConfig extends KonnectBaseTableConfig, BaseConsumerListConfig { }
 
 /** Kong Manager route list config */
 export interface KongManagerConsumerListConfig extends KongManagerBaseTableConfig, BaseConsumerListConfig {
@@ -44,3 +44,5 @@ export interface CopyEventPayload {
   /** The toaster message */
   message: string
 }
+
+export type ConsumerScopeFilterValue = 'cp' | 'real'

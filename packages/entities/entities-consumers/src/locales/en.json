@@ -19,6 +19,14 @@
       },
       "toolbar_actions": {
         "new_consumer": "New consumer"
+      },
+      "scope_filter": {
+        "label": "Scope",
+        "cp": "Control Plane",
+        "realm": "Realm"
+      },
+      "realm_select": {
+        "label": "Realm"
       }
     },
     "title": "Consumers",
