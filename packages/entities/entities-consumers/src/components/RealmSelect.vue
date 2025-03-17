@@ -55,19 +55,18 @@ const fetchRealms = async () => {
 
   try {
     const baseUrl = `/v1/realms?${encodeURIComponent('page[size]')}=100`
-    const { data: { data } } = await axiosInstance.get(baseUrl)
+    const { data: { data = [] } } = await axiosInstance.get(baseUrl)
 
-    if (data && data.length) {
-      data.forEach((realm: any) => {
-        realms.value.push({
-          value: realm.id,
-          label: realm.name,
-          key: realm.id,
-        })
+    data.forEach((realm: any) => {
+      realms.value.push({
+        value: realm.id,
+        label: realm.name,
+        key: realm.id,
       })
-      selectedRealm.value = realms.value[0]?.value as string
-      selectKey.value ++
-    }
+    })
+
+    selectedRealm.value = realms.value[0]?.value as string
+    selectKey.value ++
   } catch (error) {
     console.error('Error fetching realms', error)
     emit('error', getMessageFromError(error))
@@ -90,6 +89,7 @@ watch(selectedRealm, (newValue) => {
   align-items: center;
   display: flex;
   gap: $kui-space-50;
+  margin-right: $kui-space-70;
 
   .ream-select-label {
     margin-bottom: $kui-space-0;

@@ -25,17 +25,18 @@
         <ConsumerScopeFilter
           v-if="config?.app === 'konnect' && regionalConsumersEnabled"
           v-model="consumerScopeFilter"
-        />
-        <EntityFilter
-          v-if="!isConsumerGroupPage"
-          v-model="filterQuery"
-          :config="filterConfig"
+          :has-realm="!!realmId"
         />
         <RealmSelect
           v-if="config?.app === 'konnect' && regionalConsumersEnabled"
           :axios-request-config="config?.axiosRequestConfig"
           @error="onRealmSelectError"
           @realm-change="handleRealmChange"
+        />
+        <EntityFilter
+          v-if="!isConsumerGroupPage"
+          v-model="filterQuery"
+          :config="filterConfig"
         />
       </template>
       <!-- Create action -->
@@ -426,10 +427,12 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
     schema: props.config.filterSchema,
   } as FuzzyMatchFilterConfig
 })
-const consumerScopeFilter = ref<ConsumerScopeFilterValue>('cp')
 
-const handleRealmChange = (realmId: string): void => {
-  console.log('Selected realm:', realmId)
+const consumerScopeFilter = ref<ConsumerScopeFilterValue>('cp')
+const realmId = ref<string | null>(null)
+
+const handleRealmChange = (newRealmId: string): void => {
+  realmId.value = newRealmId
 }
 
 const onRealmSelectError = (message: string): void => {

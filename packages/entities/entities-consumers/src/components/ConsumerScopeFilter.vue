@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { PropType } from 'vue'
 import type { SegmentedControlOption } from '@kong/kongponents'
 import type { ConsumerScopeFilterValue } from '../types'
@@ -23,16 +23,20 @@ const props = defineProps({
     type: String as PropType<ConsumerScopeFilterValue>,
     required: true,
   },
+  hasRealm: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
-const filterOptions: SegmentedControlOption[] = [
+const filterOptions = computed((): SegmentedControlOption[] => [
   { label: t('consumers.list.scope_filter.cp'), value: 'cp' },
-  { label: t('consumers.list.scope_filter.realm'), value: 'realm' },
-]
+  { label: t('consumers.list.scope_filter.realm'), value: 'realm', disabled: !props.hasRealm },
+])
 
 const filterValue = ref<ConsumerScopeFilterValue>(props.modelValue)
 
@@ -46,7 +50,7 @@ watch(filterValue, (value) => {
   align-items: center;
   display: flex;
   gap: $kui-space-50;
-  margin-right: $kui-space-50;
+  margin-right: $kui-space-70;
 
   .scope-filter-label {
     color: $kui-color-text;
