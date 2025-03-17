@@ -2,6 +2,7 @@
   <div class="consumer-scope-filter">
     <span class="scope-filter-label">{{ t('consumers.list.scope_filter.label') }}:</span>
     <KSegmentedControl
+      :key="filterKey"
       v-model="filterValue"
       :options="filterOptions"
       size="large"
@@ -33,6 +34,8 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
+const filterKey = ref<number>(0)
+
 const filterOptions = computed((): SegmentedControlOption[] => [
   { label: t('consumers.list.scope_filter.cp'), value: 'cp' },
   { label: t('consumers.list.scope_filter.realm'), value: 'realm', disabled: !props.hasRealm },
@@ -42,6 +45,10 @@ const filterValue = ref<ConsumerScopeFilterValue>(props.modelValue)
 
 watch(filterValue, (value) => {
   emit('update:modelValue', value)
+})
+
+watch(() => props.hasRealm, () => {
+  filterKey.value ++
 })
 </script>
 
