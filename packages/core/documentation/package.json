@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/documentation",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "type": "module",
   "main": "./dist/documentation.umd.js",
   "module": "./dist/documentation.es.js",
@@ -40,8 +40,8 @@
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong/icons": "^1.21.1",
-    "@kong/markdown": "1.7.28"
+    "@kong/icons": "^1.21.2",
+    "@kong/markdown": "1.7.29"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",

@@ -180,8 +180,8 @@ importers:
         specifier: workspace:^
         version: link:../analytics-utilities
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@types/file-saver':
         specifier: ^2.0.7
         version: 2.0.7
@@ -305,8 +305,8 @@ importers:
         specifier: 1.1.0
         version: 1.1.0(axios@1.7.7)(swrv@1.0.4(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
@@ -416,8 +416,8 @@ importers:
   packages/analytics/metric-cards:
     dependencies:
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       approximate-number:
         specifier: ^2.1.1
         version: 2.1.1
@@ -450,8 +450,8 @@ importers:
   packages/core/app-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       focus-trap:
         specifier: ^7.6.0
         version: 7.6.0
@@ -524,11 +524,11 @@ importers:
         specifier: workspace:^
         version: link:../../entities/entities-shared
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/markdown':
-        specifier: 1.7.28
-        version: 1.7.28(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        specifier: 1.7.29
+        version: 1.7.29(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -552,8 +552,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.3)
@@ -570,8 +570,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       monaco-editor:
         specifier: 0.52.2
         version: 0.52.2
@@ -607,8 +607,8 @@ importers:
   packages/core/forms:
     dependencies:
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
@@ -668,8 +668,8 @@ importers:
   packages/core/sandbox-layout:
     dependencies:
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
     devDependencies:
       '@kong/design-tokens':
         specifier: 1.17.3
@@ -690,8 +690,8 @@ importers:
         specifier: workspace:^
         version: link:../../entities/entities-shared
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
     devDependencies:
       '@kong/design-tokens':
         specifier: 1.17.3
@@ -734,8 +734,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -761,8 +761,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -788,8 +788,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -815,8 +815,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -842,8 +842,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -869,8 +869,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -893,8 +893,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -920,8 +920,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -972,8 +972,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -1008,14 +1008,14 @@ importers:
         specifier: workspace:^
         version: link:../../core/i18n
       '@kong/design-tokens':
-        specifier: 1.17.2
-        version: 1.17.2
+        specifier: 1.17.3
+        version: 1.17.3
       '@kong/icons':
-        specifier: ^1.20.0
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
-        specifier: 9.14.8
-        version: 9.14.8(axios@1.7.7)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        specifier: 9.14.30
+        version: 9.14.30(axios@1.7.7)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -1048,8 +1048,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -1085,8 +1085,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -1112,8 +1112,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -1139,8 +1139,8 @@ importers:
         specifier: 1.17.3
         version: 1.17.3
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.21.6
         version: 9.21.6(axios@1.7.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -1157,8 +1157,8 @@ importers:
   packages/entities/entities-vaults:
     dependencies:
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
     devDependencies:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
@@ -1213,8 +1213,8 @@ importers:
         specifier: workspace:^0.12.9
         version: link:../swagger-ui-web-component
       '@kong/icons':
-        specifier: ^1.21.1
-        version: 1.21.1(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       lodash.clonedeep:
         specifier: ^4.5.0
         version: 4.5.0
@@ -2040,10 +2040,6 @@ packages:
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
 
-  '@kong/design-tokens@1.17.2':
-    resolution: {integrity: sha512-979FHvvqPkjdUmbUL7Q2+z04GiVLXqu+OgucD3krAczuTWGfbFG6mOzbO6QIZ7/YlFMbe/N7TH85yJ+YfA/uUg==}
-    engines: {node: '>=18.19.1', pnpm: '>=9.7.0'}
-
   '@kong/design-tokens@1.17.3':
     resolution: {integrity: sha512-se5r7q4Oam6mTQNRAIpZIuY4MGzIBRutGMVmjBe26UpXuQb/KwzkTZjhwDbBmavfKgU+HXHJka51cuH9D67oFw==}
     engines: {node: '>=20.18.2', pnpm: '>=9.15.2'}
@@ -2060,6 +2056,12 @@ packages:
     peerDependencies:
       vue: '>= 3.3.4 < 4'
 
+  '@kong/icons@1.21.2':
+    resolution: {integrity: sha512-gTqtvJ/G4KoR0WGctb7CChJTAOmDAwG2nG8Oz66Yyu6/GYlR25PDwVDanWcWmpbOl0zvjrIgEPunndYNK/QIeQ==}
+    engines: {node: '>=18.17.0', pnpm: '>=9.14.4 || >=10.1.0'}
+    peerDependencies:
+      vue: '>= 3.3.4 < 4'
+
   '@kong/kongponents@8.127.0':
     resolution: {integrity: sha512-C/MFT+OZtyul62ElgHEggqMYPbLjXiRJg5GE3il8MZpaep2D5QV+F5UQ7frbA98TkZCCVBD4LpR0OmiwXKs+tg==}
     engines: {node: '>=v16.20.2'}
@@ -2068,12 +2070,12 @@ packages:
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.4
 
-  '@kong/kongponents@9.14.8':
-    resolution: {integrity: sha512-rKOwzVG9kQJxLGk6cyedWyL5N0hgO5wDvHm/ir82Z+YGuEer8iF3wyGEh9EbcB6YukCNzBBcRASkR1PiyPS6Ag==}
+  '@kong/kongponents@9.14.30':
+    resolution: {integrity: sha512-4/NZtHN51uM6nUdIit1c+k+84OEuiM2IXoyy8lMjYbRHzHy7oBmlKhptSKi8p2w/ifK88GhA5VhasnwejuRYvg==}
     engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0'}
     peerDependencies:
       axios: ^1.7.7
-      vue: '>= 3.3.4 < 4'
+      vue: '>= 3.5.0 < 4'
       vue-router: ^4.4.5
 
   '@kong/kongponents@9.21.6':
@@ -2084,8 +2086,8 @@ packages:
       vue: '>= 3.5.0 < 4'
       vue-router: ^4.4.5
 
-  '@kong/markdown@1.7.28':
-    resolution: {integrity: sha512-LIl7tLrbTfhF+pb3DJeESFg4AQOWWtRp3MirKFsW3HrZPMAy+hZZyK4xFjbSzMOn8xIL0FtomVRpOCHpbKZEow==}
+  '@kong/markdown@1.7.29':
+    resolution: {integrity: sha512-I2gKRqzlPpiI5CrKYUtkDuF5SL0Dw5yYghf62AGssKaBgQyWg3c+/fV0CsDPfwHFsKzZh2EgfeunjIgQbMV74g==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.13 < 4'
@@ -4950,9 +4952,6 @@ packages:
 
   dompurify@3.0.5:
     resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
-
-  dompurify@3.1.4:
-    resolution: {integrity: sha512-2gnshi6OshmuKil8rMZuQCGiUF3cUxHY3NGDzUAdUx/NPEe5DVnO8BDoAQouvgwnx0R/+a6jUn36Z0FSdq8vww==}
 
   dompurify@3.2.4:
     resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
@@ -8557,9 +8556,6 @@ packages:
     resolution: {integrity: sha512-L0jRsrPpjdckP3oPug3/VxNKt2trR8TcabrM6FOAAlvC/9Phcmm+cuAgTlxBqdBR1WJx7Naj9WHw+aOmheSVbw==}
     engines: {node: '>= 12.13.0'}
 
-  scule@1.3.0:
-    resolution: {integrity: sha512-6FtHJEvt+pVMIB9IBY+IcCJ6Z5f1iQnytgyfKMhDKgmzYG+TeH/wx1y3l27rshSbLiSanrR9ffZDrEsmjlQF2g==}
-
   section-matter@1.0.0:
     resolution: {integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==}
     engines: {node: '>=4'}
@@ -9755,11 +9751,6 @@ packages:
 
   vt-pbf@3.1.3:
     resolution: {integrity: sha512-2LzDFzt0mZKZ9IpVF2r69G9bXaP2Q2sArJCmcCgvfTdCCZzSyz4aCLoQyUilu37Ll56tCblIZrXFIjNUpGIlmA==}
-
-  vue-bind-once@0.2.1:
-    resolution: {integrity: sha512-17toDsxK7hc8folglp6TYtybi/Q0FVJal6plFeMeofWd2nOl4axHg9ckR/5ORNCj+GyjMAWh/OD10MvT6AXbHA==}
-    peerDependencies:
-      vue: ^3
 
   vue-chartjs@5.3.1:
     resolution: {integrity: sha512-rZjqcHBxKiHrBl0CIvcOlVEBwRhpWAVf6rDU3vUfa7HuSRmGtCslc0Oc8m16oAVuk0erzc1FCtH1VCriHsrz+A==}
@@ -10987,8 +10978,6 @@ snapshots:
 
   '@kong/atc-router@1.6.0-rc.1': {}
 
-  '@kong/design-tokens@1.17.2': {}
-
   '@kong/design-tokens@1.17.3': {}
 
   '@kong/eslint-config-kong-ui@1.1.2(eslint@9.14.0(jiti@1.21.0))(typescript@5.6.3)':
@@ -11015,6 +11004,10 @@ snapshots:
     dependencies:
       vue: 3.5.13(typescript@5.6.3)
 
+  '@kong/icons@1.21.2(vue@3.5.13(typescript@5.6.3))':
+    dependencies:
+      vue: 3.5.13(typescript@5.6.3)
+
   '@kong/kongponents@8.127.0(axios@1.7.7)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
     dependencies:
       axios: 1.7.7
@@ -11031,10 +11024,10 @@ snapshots:
       vue-draggable-next: 2.2.1(sortablejs@1.15.6)(vue@3.5.13(typescript@5.6.3))
       vue-router: 4.4.5(vue@3.5.13(typescript@5.6.3))
 
-  '@kong/kongponents@9.14.8(axios@1.7.7)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
+  '@kong/kongponents@9.14.30(axios@1.7.7)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
     dependencies:
       '@floating-ui/vue': 1.1.6(vue@3.5.13(typescript@5.6.3))
-      '@kong/icons': 1.21.1(vue@3.5.13(typescript@5.6.3))
+      '@kong/icons': 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@popperjs/core': 2.11.8
       axios: 1.7.7
       date-fns: 2.30.0
@@ -11046,7 +11039,6 @@ snapshots:
       swrv: 1.1.0(vue@3.5.13(typescript@5.6.3))
       v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.5.13(typescript@5.6.3))
       vue: 3.5.13(typescript@5.6.3)
-      vue-bind-once: 0.2.1(vue@3.5.13(typescript@5.6.3))
       vue-draggable-next: 2.2.1(sortablejs@1.15.6)(vue@3.5.13(typescript@5.6.3))
       vue-router: 4.4.5(vue@3.5.13(typescript@5.6.3))
     transitivePeerDependencies:
@@ -11078,9 +11070,9 @@ snapshots:
       - solid-js
       - svelte
 
-  '@kong/markdown@1.7.28(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))':
+  '@kong/markdown@1.7.29(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))':
     dependencies:
-      '@kong/icons': 1.21.1(vue@3.5.13(typescript@5.6.3))
+      '@kong/icons': 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@mdit-vue/plugin-frontmatter': 2.1.3
       '@sindresorhus/slugify': 2.2.1
       '@vueuse/core': 12.7.0(typescript@5.6.3)
@@ -14734,8 +14726,6 @@ snapshots:
 
   dompurify@3.0.5: {}
 
-  dompurify@3.1.4: {}
-
   dompurify@3.2.4:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
@@ -17063,7 +17053,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.10
       dayjs: 1.11.13
-      dompurify: 3.1.4
+      dompurify: 3.2.4
       elkjs: 0.9.2
       katex: 0.16.10
       khroma: 2.1.0
@@ -18840,8 +18830,6 @@ snapshots:
       ajv-formats: 2.1.1(ajv@8.17.1)
       ajv-keywords: 5.1.0(ajv@8.17.1)
 
-  scule@1.3.0: {}
-
   section-matter@1.0.0:
     dependencies:
       extend-shallow: 2.0.1
@@ -20227,11 +20215,6 @@ snapshots:
       '@mapbox/point-geometry': 0.1.0
       '@mapbox/vector-tile': 1.3.1
       pbf: 3.3.0
-
-  vue-bind-once@0.2.1(vue@3.5.13(typescript@5.6.3)):
-    dependencies:
-      scule: 1.3.0
-      vue: 3.5.13(typescript@5.6.3)
 
   vue-chartjs@5.3.1(chart.js@4.4.5)(vue@3.5.13(typescript@5.6.3)):
     dependencies:

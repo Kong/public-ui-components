@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-vaults",
-  "version": "3.16.3",
+  "version": "3.16.4",
   "type": "module",
   "main": "./dist/entities-vaults.umd.js",
   "module": "./dist/entities-vaults.es.js",
@@ -23,7 +23,7 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.21.1",
+    "@kong/icons": "^1.21.2",
     "@kong/kongponents": "^9.21.6",
     "axios": "^1.7.7",
     "vue": ">= 3.3.13 < 4",
