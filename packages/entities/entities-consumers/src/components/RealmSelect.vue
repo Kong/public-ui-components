@@ -52,7 +52,7 @@ const fetchRealms = async () => {
 
   try {
     const baseUrl = `/v1/realms?${encodeURIComponent('page[size]')}=100`
-    const { data: { data } } = await axiosInstance.get(baseUrl)
+    const { data: { data = [] } } = await axiosInstance.get(baseUrl)
 
     data.forEach((realm: any) => {
       realms.value.push({
