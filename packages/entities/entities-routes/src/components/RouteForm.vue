@@ -7,7 +7,7 @@
       :entity-type="SupportedEntityType.Route"
       :error-message="state.errorMessage || fetchServicesErrorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="getPayload"
+      :form-fields="payload"
       :is-readonly="state.isReadonly"
       @cancel="cancelHandler"
       @fetch:error="fetchErrorHandler"
@@ -16,18 +16,17 @@
       @submit="saveFormData"
     >
       <EntityFormSection
-        v-if="showGeneralInfoSection"
-        :description="t('form.sections.general.description')"
+        :description="i18n.t('form.sections.general.description')"
         :hide-info-header="hideSectionsInfo"
-        :title="t('form.sections.general.title')"
+        :title="i18n.t('form.sections.general.title')"
       >
         <KInput
           v-if="!hideNameField"
           v-model.trim="state.fields.name"
           autocomplete="off"
           data-testid="route-form-name"
-          :label="t('form.fields.name.label')"
-          :placeholder="t('form.fields.name.placeholder')"
+          :label="i18n.t('form.fields.name.label')"
+          :placeholder="i18n.t('form.fields.name.placeholder')"
           :readonly="state.isReadonly"
           type="text"
         />
@@ -39,20 +38,20 @@
             enable-filtering
             :filter-function="() => true"
             :items="availableServices"
-            :label="t('form.fields.service_id.label')"
+            :label="i18n.t('form.fields.service_id.label')"
             :loading="loadingServices"
-            :placeholder="t('form.fields.service_id.placeholder')"
+            :placeholder="i18n.t('form.fields.service_id.placeholder')"
             :readonly="state.isReadonly"
             reuse-item-template
             width="100%"
             @query-change="debouncedServicesQuery"
           >
             <template #loading>
-              <div>{{ t('actions.loading') }}</div>
+              <div>{{ i18n.t('actions.loading') }}</div>
             </template>
             <template #empty>
               <div data-testid="no-search-results">
-                {{ t('search.no_results') }}
+                {{ i18n.t('search.no_results') }}
               </div>
             </template>
             <template #selected-item-template="{ item }">
@@ -67,30 +66,29 @@
           </KSelect>
         </div>
         <KInput
-          v-if="!showTagsFiledUnderAdvanced"
           v-model.trim="state.fields.tags"
           autocomplete="off"
           data-testid="route-form-tags"
-          :help="t('form.fields.tags.help')"
-          :label="t('form.fields.tags.label')"
-          :placeholder="t('form.fields.tags.placeholder')"
+          :help="i18n.t('form.fields.tags.help')"
+          :label="i18n.t('form.fields.tags.label')"
+          :placeholder="i18n.t('form.fields.tags.placeholder')"
           :readonly="state.isReadonly"
           type="text"
         />
       </EntityFormSection>
 
       <EntityFormSection
-        :description="t('form.sections.config.description')"
+        :description="i18n.t('form.sections.config.description')"
         :hide-info-header="hideSectionsInfo"
-        :title="t('form.sections.config.title')"
+        :title="i18n.t('form.sections.config.title')"
       >
         <KSelect
           v-model="state.fields.protocols"
           data-testid="route-form-protocols"
           :items="protocols"
-          :label="t('form.fields.protocols.label')"
+          :label="i18n.t('form.fields.protocols.label')"
           :label-attributes="{
-            info: t('form.fields.protocols.tooltip'),
+            info: i18n.t('form.fields.protocols.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
           :readonly="state.isReadonly"
@@ -98,352 +96,20 @@
           width="100%"
         />
 
-        <RouteFormConfigTabs
-          v-model="currentConfigHash"
+        <RouteRulesComposer
+          v-model:custom-methods="customMethods"
+          v-model:fields="state.fields"
+          v-model:hash="currentConfigHash"
+          v-model:tags="state.fields.tags"
+          :protocols="state.fields.protocols"
+          :readonly="state.isReadonly"
+          :record-flavor="recordFlavor"
           :route-flavors="routeFlavors"
+          :show-expressions-modal-entry="showExpressionsModalEntry"
           :tooltips="configTabTooltips"
-        >
-          <template
-            v-if="routeFlavors.traditional && routeFlavors.expressions && (!recordFlavor || recordFlavor !== currentConfigTab)"
-            #before-content
-          >
-            <KAlert
-              :appearance="!recordFlavor ? 'info' : 'warning'"
-              class="route-form-config-type-immutable-alert"
-              data-testid="route-config-type-immutable-alert"
-            >
-              <template #default>
-                <template v-if="!recordFlavor">
-                  {{ t('form.warning.cannotChangeFlavor.create') }}
-                </template>
-                <template v-else-if="recordFlavor !== currentConfigTab">
-                  {{ t('form.warning.cannotChangeFlavor.edit', { format: t(`form.flavors.${recordFlavor}`) }) }}
-                </template>
-              </template>
-            </KAlert>
-          </template>
-
-          <!-- Traditional Route -->
-          <template
-            v-if="stateHasTraditionalFlavor(state)"
-            #traditional
-          >
-            <template v-if="!recordFlavor || recordFlavor === RouteFlavor.TRADITIONAL">
-              <KCard v-if="state.fields.protocols">
-                <template #title>
-                  <div class="route-form-routing-rules-title-container">
-                    <span
-                      v-for="protocol in protocolsArr"
-                      :key="protocol"
-                      class="protocol-title"
-                    >
-                      {{ protocol.toUpperCase() }}
-                    </span>
-                    <span class="routing-rules-title">
-                      {{ t('form.sections.routingRules.title') }}
-                    </span>
-                  </div>
-                </template>
-
-                <template #default>
-                  <KAlert
-                    v-if="showRoutingRulesWarning"
-                    appearance="warning"
-                    data-testid="routing-rules-warning"
-                  >
-                    <template #default>
-                      <i18nT keypath="form.warning.rulesMessage">
-                        <template #protocol>
-                          <b>{{ protocolsLabels[state.fields.protocols] }}</b>
-                        </template>
-                        <template #routingRules>
-                          <i18nT
-                            :keypath="warningMessageRoutingRules[1] ? 'form.warning.multipleRules' : 'form.warning.singleRule'"
-                          >
-                            <template #routingRules>
-                              <b>{{ warningMessageRoutingRules[0] }}</b>
-                            </template>
-                            <template #lastRoutingRule>
-                              <b>{{ warningMessageRoutingRules[1] }}</b>
-                            </template>
-                          </i18nT>
-                        </template>
-                      </i18nT>
-                    </template>
-                  </KAlert>
-
-                  <!-- Routing Rules Fields -->
-                  <TransitionGroup name="appear">
-                    <!-- paths -->
-                    <RouteFormPathsFields
-                      v-if="state.fields.paths"
-                      key="paths-container"
-                      v-model="state.fields.paths"
-                      @add="handleAddRoutingRuleEntity(RoutingRulesEntities.PATHS)"
-                      @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.PATHS, index)"
-                    />
-
-                    <!-- snis -->
-                    <RouteFormSnisFields
-                      v-if="state.fields.snis"
-                      key="snis-container"
-                      v-model="state.fields.snis"
-                      @add="handleAddRoutingRuleEntity(RoutingRulesEntities.SNIS)"
-                      @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.SNIS, index)"
-                    />
-
-                    <!-- hosts -->
-                    <RouteFormHostsFields
-                      v-if="state.fields.hosts"
-                      key="hosts-container"
-                      v-model="state.fields.hosts"
-                      @add="handleAddRoutingRuleEntity(RoutingRulesEntities.HOSTS)"
-                      @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.HOSTS, index)"
-                    />
-
-                    <!-- methods -->
-                    <RouteFormMethodsFields
-                      v-if="state.fields.methods"
-                      key="methods-container"
-                      v-model="state.fields.methods"
-                      :custom-methods="customMethods"
-                      @remove="handleRemoveRoutingRuleEntity(RoutingRulesEntities.METHODS)"
-                      @update-custom-methods="(methods: string[]) => customMethods = methods"
-                    />
-
-                    <!-- headers -->
-                    <RouteFormHeadersFields
-                      v-if="state.fields.headers"
-                      key="headers-container"
-                      v-model="state.fields.headers"
-                      @add="handleAddRoutingRuleEntity(RoutingRulesEntities.HEADERS)"
-                      @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.HEADERS, index)"
-                    />
-
-                    <!-- sources -->
-                    <RouteFormSourcesFields
-                      v-if="state.fields.sources"
-                      key="sources-container"
-                      v-model="state.fields.sources"
-                      @add="handleAddRoutingRuleEntity(RoutingRulesEntities.SOURCES)"
-                      @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.SOURCES, index)"
-                    />
-
-                    <!-- destinations -->
-                    <RouteFormDestinationsFields
-                      v-if="state.fields.destinations"
-                      key="destinations-container"
-                      v-model="state.fields.destinations"
-                      @add="handleAddRoutingRuleEntity(RoutingRulesEntities.DESTINATIONS)"
-                      @remove="(index: number) => handleRemoveRoutingRuleEntity(RoutingRulesEntities.DESTINATIONS, index)"
-                    />
-                  </TransitionGroup>
-
-                  <!-- routing rules selector  -->
-                  <div
-                    v-if="displayRoutingRulesSelector"
-                    class="route-form-routing-rules-selector-container"
-                  >
-                    <hr>
-                    <div class="route-form-routing-rules-selector-options">
-                      <ul>
-                        <li
-                          v-for="entity in routingRulesPerProtocolMap[state.fields.protocols]"
-                          :key="entity"
-                        >
-                          <label
-                            :aria-disabled="!!state.fields[entity as RoutingRuleEntity]"
-                            class="option"
-                            :class="{ 'is-selected': state.fields[entity as RoutingRuleEntity] }"
-                            :data-testid="`routing-rule-${entity}`"
-                            role="button"
-                            @click="handleAddRoutingRuleEntity(entity)"
-                          >
-                            {{ getRoutingRuleLabel(entity) }}
-                          </label>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </template>
-              </KCard>
-
-              <!-- Traditional Route Advanced Fields -->
-              <KCollapse
-                v-model="isAdvancedFieldsCollapsed"
-                class="route-form-advanced-fields-collapse"
-                trigger-alignment="leading"
-                :trigger-label="t('form.viewAdvancedFields')"
-              >
-                <div class="route-form-fields-container route-form-advanced-fields-container">
-                  <KSelect
-                    v-if="state.fields.paths"
-                    v-model="state.fields.path_handling"
-                    data-testid="route-form-path-handling"
-                    :items="pathHandlingOptions"
-                    :label="t('form.fields.path_handling.label')"
-                    :label-attributes="{
-                      info: t('form.fields.path_handling.tooltip'),
-                      tooltipAttributes: { maxWidth: '400' },
-                    }"
-                    :readonly="state.isReadonly"
-                    width="100%"
-                  />
-                  <KSelect
-                    v-model="state.fields.https_redirect_status_code"
-                    data-testid="route-form-http-redirect-status-code"
-                    :items="httpsRedirectStatusCodes"
-                    :label="t('form.fields.https_redirect_status_code.label')"
-                    :readonly="state.isReadonly"
-                    width="100%"
-                  />
-                  <KInput
-                    v-model="state.fields.regex_priority"
-                    autocomplete="off"
-                    data-testid="route-form-regex-priority"
-                    :label="t('form.fields.regex_priority.label')"
-                    :readonly="state.isReadonly"
-                    type="number"
-                  />
-                  <KInput
-                    v-if="showTagsFiledUnderAdvanced"
-                    v-model.trim="state.fields.tags"
-                    autocomplete="off"
-                    data-testid="route-form-tags"
-                    :help="t('form.fields.tags.help')"
-                    :label="t('form.fields.tags.label')"
-                    :placeholder="t('form.fields.tags.placeholder')"
-                    :readonly="state.isReadonly"
-                    type="text"
-                  />
-                  <KCheckbox
-                    v-if="isProtocolSelected(['http', 'https', 'ws', 'wss', 'tls', 'tcp', 'udp', 'tls_passthrough'])"
-                    v-model="state.fields.strip_path"
-                    data-testid="route-form-strip-path"
-                    :label="t('form.fields.strip_path.label')"
-                  />
-                  <KCheckbox
-                    v-model="state.fields.preserve_host"
-                    data-testid="route-form-preserve-host"
-                    :label="t('form.fields.preserve_host.label')"
-                  />
-                  <KCheckbox
-                    v-model="state.fields.request_buffering"
-                    data-testid="route-form-request-buffering"
-                    :label="t('form.fields.request_buffering.label')"
-                  />
-                  <KCheckbox
-                    v-model="state.fields.response_buffering"
-                    data-testid="route-form-response-buffering"
-                    :label="t('form.fields.response_buffering.label')"
-                  />
-                </div>
-              </KCollapse>
-            </template>
-          </template>
-
-          <template
-            v-if="stateHasExpressionsFlavor(state)"
-            #expressions
-          >
-            <template v-if="!recordFlavor || recordFlavor === RouteFlavor.EXPRESSIONS">
-              <KCard v-if="state.fields.protocols">
-                <template #title>
-                  <div class="route-form-routing-rules-title-container">
-                    <span
-                      v-for="protocol in protocolsArr"
-                      :key="protocol"
-                      class="protocol-title"
-                    >
-                      {{ protocol.toUpperCase() }}
-                    </span>
-                    <span class="routing-rules-title">
-                      {{ t('form.sections.routingExpression.title') }}
-                    </span>
-                  </div>
-                </template>
-
-                <RouteFormExpressionsEditorLoader
-                  v-model="state.fields.expression"
-                  :protocol="exprEditorProtocol"
-                  :show-expressions-modal-entry="showExpressionsModalEntry"
-                  @notify="emit('notify', $event)"
-                >
-                  <template #after-editor="editor">
-                    <slot
-                      :expression="editor.expression"
-                      name="after-expressions-editor"
-                      :state="editor.state"
-                    />
-                  </template>
-                </RouteFormExpressionsEditorLoader>
-              </KCard>
-
-              <!-- Expressions Route Advanced Fields -->
-              <KCollapse
-                v-model="isAdvancedFieldsCollapsed"
-                class="route-form-advanced-fields-collapse"
-                trigger-alignment="leading"
-                :trigger-label="t('form.viewAdvancedFields')"
-              >
-                <div class="route-form-fields-container route-form-advanced-fields-container">
-                  <KSelect
-                    v-model="state.fields.https_redirect_status_code"
-                    data-testid="route-form-http-redirect-status-code"
-                    :items="httpsRedirectStatusCodes"
-                    :label="t('form.fields.https_redirect_status_code.label')"
-                    :readonly="state.isReadonly"
-                    width="100%"
-                  />
-                  <KInput
-                    v-model="state.fields.priority"
-                    autocomplete="off"
-                    data-testid="route-form-priority"
-                    :label="t('form.fields.priority.label')"
-                    :label-attributes="{
-                      info: t('form.fields.priority.tooltip'),
-                      tooltipAttributes: { maxWidth: '400' },
-                    }"
-                    :readonly="state.isReadonly"
-                    type="number"
-                  />
-                  <KInput
-                    v-if="showTagsFiledUnderAdvanced"
-                    v-model.trim="state.fields.tags"
-                    autocomplete="off"
-                    data-testid="route-form-tags"
-                    :help="t('form.fields.tags.help')"
-                    :label="t('form.fields.tags.label')"
-                    :placeholder="t('form.fields.tags.placeholder')"
-                    :readonly="state.isReadonly"
-                    type="text"
-                  />
-                  <KCheckbox
-                    v-if="isProtocolSelected(['http', 'https', 'ws', 'wss', 'tls', 'tcp', 'udp', 'tls_passthrough'])"
-                    v-model="state.fields.strip_path"
-                    data-testid="route-form-strip-path"
-                    :label="t('form.fields.strip_path.label')"
-                  />
-                  <KCheckbox
-                    v-model="state.fields.preserve_host"
-                    data-testid="route-form-preserve-host"
-                    :label="t('form.fields.preserve_host.label')"
-                  />
-                  <KCheckbox
-                    v-model="state.fields.request_buffering"
-                    data-testid="route-form-request-buffering"
-                    :label="t('form.fields.request_buffering.label')"
-                  />
-                  <KCheckbox
-                    v-model="state.fields.response_buffering"
-                    data-testid="route-form-response-buffering"
-                    :label="t('form.fields.response_buffering.label')"
-                  />
-                </div>
-              </KCollapse>
-            </template>
-          </template>
-        </RouteFormConfigTabs>
+          @notify="emit('notify', $event)"
+          @update:payload="rulesPayload = $event"
+        />
       </EntityFormSection>
 
       <template #form-actions>
@@ -473,29 +139,26 @@ import type { SelectItem } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import isEqual from 'lodash.isequal'
 import type { PropType } from 'vue'
-import { computed, nextTick, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
+import { INITIAL_SHARED_ROUTE_RULES_FIELDS, INITIAL_TRADITIONAL_ROUTE_RULES_VALUES } from '../constants'
 import endpoints from '../routes-endpoints'
 import type {
   BaseRoutePayload,
   BaseRouteStateFields,
-  Destinations,
-  ExpressionsRoutePayload,
-  ExpressionsRouteStateFields,
+  ExpressionsRouteRulesFields,
   HeaderFields,
   Headers,
   KongManagerRouteFormConfig,
   KonnectRouteFormConfig,
   Method,
-  MethodsFields,
   Protocol,
   RouteFlavors,
   RouteState,
-  RoutingRuleEntity,
-  Sources,
-  TraditionalRoutePayload,
-  TraditionalRouteStateFields,
+  SharedRouteRulesFields,
+  TraditionalRouteRulesFields,
+  TypedRouteRulesPayload,
 } from '../types'
 import {
   RouteFlavor,
@@ -503,17 +166,9 @@ import {
   stateHasExpressionsFlavor,
   stateHasTraditionalFlavor,
 } from '../types'
-import RouteFormDestinationsFields from './RouteFormDestinationsFields.vue'
-import RouteFormHeadersFields from './RouteFormHeadersFields.vue'
-import RouteFormHostsFields from './RouteFormHostsFields.vue'
-import RouteFormMethodsFields from './RouteFormMethodsFields.vue'
-import RouteFormPathsFields from './RouteFormPathsFields.vue'
-import RouteFormSnisFields from './RouteFormSnisFields.vue'
-import RouteFormSourcesFields from './RouteFormSourcesFields.vue'
+import RouteRulesComposer from './RouteFormRulesComposer.vue'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
-import RouteFormConfigTabs from './RouteFormConfigTabs.vue'
-import RouteFormExpressionsEditorLoader from './RouteFormExpressionsEditorLoader.vue'
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
@@ -555,12 +210,6 @@ const props = defineProps({
   },
   /** Whether show or hide Service Select field */
   hideServiceField: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  /** Show tags field under advance fields */
-  showTagsFiledUnderAdvanced: {
     type: Boolean,
     required: false,
     default: false,
@@ -614,7 +263,6 @@ const currentConfigTab = computed<RouteFlavor | undefined>(() => {
 })
 
 const recordFlavor = ref<RouteFlavor | undefined>(undefined)
-const isAdvancedFieldsCollapsed = ref<boolean>(true)
 
 const payloadFlavor = computed<RouteFlavor | undefined>(() => {
   if (recordFlavor.value) {
@@ -634,40 +282,33 @@ const payloadFlavor = computed<RouteFlavor | undefined>(() => {
   return undefined
 })
 
-const { i18nT, i18n, i18n: { t } } = composables.useI18n()
-const protocolsLabels = i18n.source.form.protocols as Record<string, string>
+const { i18n } = composables.useI18n()
 const router = useRouter()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
-
-const showGeneralInfoSection = computed<boolean>(() => !(props.hideNameField && (props.hideServiceField || !!props.serviceId) && props.showTagsFiledUnderAdvanced))
 
 const getSelectedService = (item: any) => {
   return item.name ? `${item.name} - ${item.value}` : item.value
 }
 
 /** Declare as BaseRouteStateFields but use type narrowing helper functions to allow accessing more fields */
-const state = reactive<RouteState<BaseRouteStateFields>>({
+const state = reactive<RouteState<BaseRouteStateFields & TraditionalRouteRulesFields & ExpressionsRouteRulesFields>>({
   routeFlavors: props.routeFlavors,
   fields: {
     name: '',
     protocols: 'http,https',
-    https_redirect_status_code: 426,
-    strip_path: true,
-    preserve_host: false,
-    request_buffering: true,
-    response_buffering: true,
     tags: '',
     service_id: '',
+    ...INITIAL_SHARED_ROUTE_RULES_FIELDS,
     ...{
       ...(!props.routeId && { paths: [''] }), // We don't expect this prop to be updated throughout the lifecycle of the component
       regex_priority: 0,
       path_handling: 'v0',
-    } as TraditionalRouteStateFields,
+    } as Omit<TraditionalRouteRulesFields, keyof SharedRouteRulesFields>,
     ...{
       expression: '',
       priority: 0,
-    } as ExpressionsRouteStateFields,
+    } as Omit<ExpressionsRouteRulesFields, keyof SharedRouteRulesFields>,
   },
   isReadonly: false,
   errorMessage: '',
@@ -677,50 +318,24 @@ watch(() => props.routeFlavors, (routeFlavors) => {
   state.routeFlavors = routeFlavors
 })
 
-const exprEditorProtocol = computed(() => state.fields.protocols.split(',')[0])
-
+const rulesPayload = ref<TypedRouteRulesPayload>()
 const customMethods = ref<string[]>([''])
 
-const originalFields = reactive<BaseRouteStateFields>({
+const originalFields = reactive<BaseRouteStateFields & TraditionalRouteRulesFields & ExpressionsRouteRulesFields>({
   name: '',
   protocols: 'http,https',
-  https_redirect_status_code: 426,
-  strip_path: true,
-  preserve_host: false,
-  request_buffering: true,
-  response_buffering: true,
   tags: '',
   service_id: '',
+  ...INITIAL_SHARED_ROUTE_RULES_FIELDS,
   ...{
     path_handling: 'v0',
     regex_priority: 0,
-  } as TraditionalRouteStateFields,
+  } as Omit<TraditionalRouteRulesFields, keyof SharedRouteRulesFields>,
   ...{
     expression: '',
     priority: 0,
-  } as ExpressionsRouteStateFields,
+  } as Omit<ExpressionsRouteRulesFields, keyof SharedRouteRulesFields>,
 })
-
-const initialRoutingRulesValues = {
-  [RoutingRulesEntities.PATHS]: [''] as string[],
-  [RoutingRulesEntities.SNIS]: [''] as string[],
-  [RoutingRulesEntities.HOSTS]: [''] as string[],
-  [RoutingRulesEntities.METHODS]: {
-    GET: false,
-    PUT: false,
-    POST: false,
-    PATCH: false,
-    DELETE: false,
-    OPTIONS: false,
-    HEAD: false,
-    CONNECT: false,
-    TRACE: false,
-    CUSTOM: false,
-  } as MethodsFields,
-  [RoutingRulesEntities.HEADERS]: [{ header: '', values: '' }] as HeaderFields[],
-  [RoutingRulesEntities.SOURCES]: [{ ip: '', port: null }] as unknown as Sources[],
-  [RoutingRulesEntities.DESTINATIONS]: [{ ip: '', port: null }] as unknown as Destinations[],
-}
 
 const isWsSupported = props.config.app === 'konnect' || useGatewayFeatureSupported({
   gatewayInfo: props.config.gatewayInfo,
@@ -731,71 +346,30 @@ const isWsSupported = props.config.app === 'konnect' || useGatewayFeatureSupport
 })
 
 const protocols = [
-  { label: t('form.protocols.grpc'), value: 'grpc' },
-  { label: t('form.protocols.grpcs'), value: 'grpcs' },
-  { label: t('form.protocols.grpc,grpcs'), value: 'grpc,grpcs' },
-  { label: t('form.protocols.http'), value: 'http' },
-  { label: t('form.protocols.https'), value: 'https' },
-  { label: t('form.protocols.http,https'), value: 'http,https' },
-  { label: t('form.protocols.tcp'), value: 'tcp' },
-  { label: t('form.protocols.tls'), value: 'tls' },
-  { label: t('form.protocols.tls,udp'), value: 'tls,udp' },
-  { label: t('form.protocols.tcp,udp'), value: 'tcp,udp' },
-  { label: t('form.protocols.tcp,tls'), value: 'tcp,tls' },
-  { label: t('form.protocols.tcp,tls,udp'), value: 'tcp,tls,udp' },
-  { label: t('form.protocols.tls_passthrough'), value: 'tls_passthrough' },
-  { label: t('form.protocols.udp'), value: 'udp' },
+  { label: i18n.t('form.protocols.grpc'), value: 'grpc' },
+  { label: i18n.t('form.protocols.grpcs'), value: 'grpcs' },
+  { label: i18n.t('form.protocols.grpc,grpcs'), value: 'grpc,grpcs' },
+  { label: i18n.t('form.protocols.http'), value: 'http' },
+  { label: i18n.t('form.protocols.https'), value: 'https' },
+  { label: i18n.t('form.protocols.http,https'), value: 'http,https' },
+  { label: i18n.t('form.protocols.tcp'), value: 'tcp' },
+  { label: i18n.t('form.protocols.tls'), value: 'tls' },
+  { label: i18n.t('form.protocols.tls,udp'), value: 'tls,udp' },
+  { label: i18n.t('form.protocols.tcp,udp'), value: 'tcp,udp' },
+  { label: i18n.t('form.protocols.tcp,tls'), value: 'tcp,tls' },
+  { label: i18n.t('form.protocols.tcp,tls,udp'), value: 'tcp,tls,udp' },
+  { label: i18n.t('form.protocols.tls_passthrough'), value: 'tls_passthrough' },
+  { label: i18n.t('form.protocols.udp'), value: 'udp' },
   ...(
     isWsSupported
       ? [
-        { label: t('form.protocols.ws'), value: 'ws' },
-        { label: t('form.protocols.wss'), value: 'wss' },
-        { label: t('form.protocols.ws,wss'), value: 'ws,wss' },
+        { label: i18n.t('form.protocols.ws'), value: 'ws' },
+        { label: i18n.t('form.protocols.wss'), value: 'wss' },
+        { label: i18n.t('form.protocols.ws,wss'), value: 'ws,wss' },
       ]
       : []
   ),
 ]
-
-const pathHandlingOptions = [
-  { label: 'v0', value: 'v0' },
-  { label: 'v1', value: 'v1' },
-]
-
-const httpsRedirectStatusCodes = [
-  { label: '426', value: 426 },
-  { label: '301', value: 301 },
-  { label: '302', value: 302 },
-  { label: '307', value: 307 },
-  { label: '308', value: 308 },
-]
-
-const routingRulesPerProtocolMap: Record<string, string[]> = {
-  http: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.METHODS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS],
-  https: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.METHODS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'http,https': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.METHODS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'https,http': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.METHODS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  grpc: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS],
-  grpcs: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'grpc,grpcs': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'grpcs,grpc': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  udp: [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS],
-  tls: [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
-  tcp: [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS],
-  'tls,udp': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
-  'udp,tls': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
-  'tcp,udp': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS],
-  'udp,tcp': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS],
-  'tcp,tls': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
-  'tls,tcp': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
-  'tcp,tls,udp': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
-  'tls,udp,tcp': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
-  'udp,tcp,tls': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
-  tls_passthrough: [RoutingRulesEntities.SNIS],
-  ws: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS],
-  wss: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'ws,wss': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'wss,ws': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-}
 
 const formType = computed((): EntityBaseFormType => props.routeId
   ? EntityBaseFormType.Edit
@@ -819,7 +393,7 @@ const setMethods = (methods: Method[]): void => {
   if (stateHasTraditionalFlavor(state)) {
     // traditional
 
-    state.fields.methods = initialRoutingRulesValues[RoutingRulesEntities.METHODS]
+    state.fields.methods = { ...INITIAL_TRADITIONAL_ROUTE_RULES_VALUES[RoutingRulesEntities.METHODS] }
     methods.forEach(method => {
       if (state.fields.methods) {
         state.fields.methods[method] = true
@@ -837,199 +411,6 @@ const formatHeaders = (items: Headers): HeaderFields[] => {
 const isProtocolSelected = (protocols: string[]): boolean => {
   return protocols.some(protocol => state.fields.protocols.includes(protocol))
 }
-
-// removes any empty values left behind by empty fields on the form
-const cleanDataArr = (entity: string, originalData: any) => {
-  if (entity === RoutingRulesEntities.PATHS || entity === RoutingRulesEntities.HOSTS || entity === RoutingRulesEntities.SNIS) {
-    return [...originalData].filter((item: string) => !!item)
-  } else if (entity === RoutingRulesEntities.SOURCES || entity === RoutingRulesEntities.DESTINATIONS) {
-    return [...originalData]
-      .filter((item: Sources | Destinations) => !!item.ip)
-      .map((item: Sources | Destinations) => ({
-        ...item,
-        port: !item.port && item.port !== 0 ? null : item.port,
-      }))
-  } else if (entity === RoutingRulesEntities.HEADERS) {
-    return [...originalData].filter((item: Headers) => !!item.header)
-  }
-}
-
-const getHeaders = (): Headers | null => {
-  if (stateHasTraditionalFlavor(state)) {
-    const headers: HeaderFields[] = cleanDataArr(RoutingRulesEntities.HEADERS, state.fields.headers || []) || initialRoutingRulesValues[RoutingRulesEntities.HEADERS]
-    if (headers.length === 0) {
-      return null
-    }
-    const headerObj = {} as Headers
-
-    headers.forEach(item => {
-      headerObj[item.header] = item.values.split(',')
-    })
-
-    return headerObj
-  }
-
-  return null
-}
-
-const handleAddRoutingRuleEntity = (entity: string): void => {
-  if (stateHasTraditionalFlavor(state)) {
-    if (entity) {
-      if (entity === RoutingRulesEntities.PATHS) {
-        if (!state.fields.paths) {
-          // spread objects and arrays to avoid mutating the original values
-          state.fields.paths = [...initialRoutingRulesValues[RoutingRulesEntities.PATHS]]
-        } else {
-          state.fields.paths.push([...initialRoutingRulesValues[RoutingRulesEntities.PATHS]][0])
-        }
-      }
-    }
-
-    if (entity === RoutingRulesEntities.SNIS) {
-      if (!state.fields.snis) {
-        state.fields.snis = [...initialRoutingRulesValues[RoutingRulesEntities.SNIS]]
-      } else {
-        state.fields.snis.push([...initialRoutingRulesValues[RoutingRulesEntities.SNIS]][0])
-      }
-    }
-
-    if (entity === RoutingRulesEntities.HOSTS) {
-      if (!state.fields.hosts) {
-        state.fields.hosts = [...initialRoutingRulesValues[RoutingRulesEntities.HOSTS]]
-      } else {
-        state.fields.hosts.push([...initialRoutingRulesValues[RoutingRulesEntities.HOSTS]][0])
-      }
-    }
-
-    if (entity === RoutingRulesEntities.METHODS) {
-      if (!state.fields.methods) {
-        state.fields.methods = { ...initialRoutingRulesValues[RoutingRulesEntities.METHODS] }
-      }
-    }
-
-    if (entity === RoutingRulesEntities.HEADERS) {
-      if (!state.fields.headers) {
-        state.fields.headers = [{ ...initialRoutingRulesValues[RoutingRulesEntities.HEADERS][0] }]
-      } else {
-        state.fields.headers.push({ ...initialRoutingRulesValues[RoutingRulesEntities.HEADERS][0] })
-      }
-    }
-
-    if (entity === RoutingRulesEntities.SOURCES) {
-      if (!state.fields.sources) {
-        state.fields.sources = [{ ...initialRoutingRulesValues[RoutingRulesEntities.SOURCES][0] }]
-      } else {
-        state.fields.sources.push({ ...initialRoutingRulesValues[RoutingRulesEntities.SOURCES][0] })
-      }
-    }
-
-    if (entity === RoutingRulesEntities.DESTINATIONS) {
-      if (!state.fields.destinations) {
-        state.fields.destinations = [{ ...initialRoutingRulesValues[RoutingRulesEntities.DESTINATIONS][0] }]
-      } else {
-        state.fields.destinations.push({ ...initialRoutingRulesValues[RoutingRulesEntities.DESTINATIONS][0] })
-      }
-    }
-  }
-}
-
-// display or hide routing rules selector
-const displayRoutingRulesSelector = computed(() => {
-  if (stateHasTraditionalFlavor(state)) {
-    return routingRulesPerProtocolMap[state.fields.protocols]?.filter(protocol => !state.fields[protocol as RoutingRuleEntity])
-  }
-
-  return false
-})
-
-// removes rule entity from the form
-// or particular entry from particular rule entity if index is provided
-const handleRemoveRoutingRuleEntity = async (entity: string, index?: number): Promise<void> => {
-  if (stateHasTraditionalFlavor(state)) {
-    if (typeof index !== 'undefined') {
-      let items: any = []
-
-      items = state.fields[entity as RoutingRuleEntity]
-
-      items.splice(index, 1)
-
-      if (items.length) {
-        state.fields[entity as RoutingRuleEntity] = items
-
-        // skip removing rule entity if it's not empty
-        return
-      }
-    }
-
-    await nextTick(() => {
-      delete state.fields[entity as RoutingRuleEntity]
-
-      if (entity === RoutingRulesEntities.METHODS) {
-        customMethods.value = ['']
-      }
-    })
-  }
-}
-
-const getRoutingRuleLabel = (entity: string): string => {
-  const formFields = i18n.source.form.fields as Record<string, any>
-
-  return formFields[entity]?.label || ''
-}
-
-watch(() => state.fields.protocols, () => {
-  sanitizeRoutingRulesEntities()
-})
-
-// removes objects for routing rules that are not configurable for the chosen protocols
-const sanitizeRoutingRulesEntities = () => {
-  const allRoutingRulesEntities = Object.keys(initialRoutingRulesValues)
-  const protocolEntities = routingRulesPerProtocolMap[state.fields.protocols]
-  const routingRulesEntities = Object.keys(state.fields).filter(element => allRoutingRulesEntities.includes(element))
-
-  routingRulesEntities.forEach(entity => {
-    if (!protocolEntities?.includes(entity)) {
-      handleRemoveRoutingRuleEntity(entity)
-    }
-  })
-}
-
-// returns methods formatted in the payload format, except for custom methods (those are handled separately)
-const selectedMethods = computed((): Method[] => {
-  if (stateHasTraditionalFlavor(state)) {
-    const methods: Method[] = []
-
-    if (state.fields.methods) {
-      Object.entries(state.fields.methods).forEach(([key, value]) => {
-        if (value) {
-          methods.push(key as Method)
-        }
-      })
-    }
-
-    return methods
-  }
-
-  return []
-})
-
-const protocolsArr = computed((): string[] => state.fields.protocols?.split(',') || [])
-
-const showRoutingRulesWarning = computed((): boolean => {
-  const allRoutingRulesEntities = Object.keys(initialRoutingRulesValues)
-  const routingRulesEntities = Object.keys(state.fields).filter(element => allRoutingRulesEntities.includes(element))
-
-  return !routingRulesEntities.length
-})
-
-const warningMessageRoutingRules = computed((): string[] => {
-  if (isProtocolSelected(['tls_passthrough'])) {
-    return [getRoutingRuleLabel(RoutingRulesEntities.SNIS)]
-  }
-
-  const protocolEntitiesLabels = routingRulesPerProtocolMap[state.fields.protocols].map(entity => getRoutingRuleLabel(entity))
-  return [[...protocolEntitiesLabels].splice(0, protocolEntitiesLabels.length - 1).join(', '), protocolEntitiesLabels[protocolEntitiesLabels.length - 1]]
-})
 
 const updateFormValues = (data: Record<string, any>): void => {
   if (props.routeId) {
@@ -1177,80 +558,16 @@ const submitUrl = computed<string>(() => {
 })
 
 watch(() => state.fields, () => {
-  emit('model-updated', getPayload.value)
+  emit('model-updated', payload.value)
 }, { deep: true })
 
-const getArrPayload = (arr?: any[]) => arr?.length ? arr : null
-
-const getTraditionalPayload = () => {
-  if (stateHasTraditionalFlavor(state)) {
-    const payload: TraditionalRoutePayload = {
-      methods: null,
-      hosts: getArrPayload(cleanDataArr(RoutingRulesEntities.HOSTS, state.fields.hosts || [])),
-      paths: getArrPayload(cleanDataArr(RoutingRulesEntities.PATHS, state.fields.paths || [])),
-      headers: getHeaders(),
-      regex_priority: Number(state.fields.regex_priority),
-      path_handling: state.fields.path_handling,
-      sources: getArrPayload(cleanDataArr(RoutingRulesEntities.SOURCES, state.fields.sources || [])),
-      destinations: getArrPayload(cleanDataArr(RoutingRulesEntities.DESTINATIONS, state.fields.destinations || [])),
-      snis: getArrPayload(cleanDataArr(RoutingRulesEntities.SNIS, state.fields.snis || [])),
-    }
-
-    if (selectedMethods.value?.length) {
-      payload.methods = [...selectedMethods.value]
-
-      // handle custom method input
-      // add any custom methods from input field, avoid duplicate
-
-      if (selectedMethods.value?.includes('CUSTOM')) {
-        const customMethodIndex = payload.methods.indexOf('CUSTOM')
-        if (customMethodIndex !== -1) {
-          payload.methods.splice(customMethodIndex, 1)
-        }
-
-        customMethods.value.forEach(method => {
-          if (method && payload.methods && !payload.methods?.includes(method)) {
-            payload.methods.push(method.toUpperCase())
-          }
-        })
-      }
-    }
-
-    return payload
-  }
-}
-
-const getExpressionsPayload = () => {
-  if (stateHasExpressionsFlavor(state)) {
-    return {
-      expression: state.fields.expression,
-      priority: Number(state.fields.priority),
-    } as ExpressionsRoutePayload
-  }
-}
-
-const getPayload = computed((): BaseRoutePayload => {
-  const base: BaseRoutePayload = {
+const payload = computed((): BaseRoutePayload => {
+  return {
     ...(!props.hideNameField && { name: state.fields.name || null }),
     protocols: state.fields.protocols.split(',') as Protocol[],
-    https_redirect_status_code: state.fields.https_redirect_status_code,
-    strip_path: isProtocolSelected(['grpc', 'gprcs']) ? false : state.fields.strip_path,
-    preserve_host: state.fields.preserve_host,
-    request_buffering: state.fields.request_buffering,
-    response_buffering: state.fields.response_buffering,
-    tags: state.fields.tags.split(',')?.map((tag: string) => String(tag || '')
-      .trim())?.filter((tag: string) => tag !== ''),
+    tags: state.fields.tags.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
     service: (state.fields.service_id) ? { id: state.fields.service_id } : null,
-  }
-
-  switch (payloadFlavor.value) {
-    case RouteFlavor.TRADITIONAL:
-      return { ...base, ...getTraditionalPayload() }
-    case RouteFlavor.EXPRESSIONS:
-      return { ...base, ...getExpressionsPayload() }
-    default:
-      // We shouldn't reach here. Let the BE respond with an error if we did.
-      return base
+    ...rulesPayload.value?.payload,
   }
 })
 
@@ -1273,8 +590,8 @@ const isRoutePayloadValid = (val: any): boolean => {
   return 'service' in val && 'tags' in val && 'protocols' in val
 }
 
-const saveFormData = async (payload?: BaseRoutePayload): Promise<void> => {
-  const validPayload: BaseRoutePayload = (payload && isRoutePayloadValid(payload)) ? payload : getPayload.value
+const saveFormData = async (uncheckedPayload?: BaseRoutePayload): Promise<void> => {
+  const validPayload: BaseRoutePayload = (uncheckedPayload && isRoutePayloadValid(uncheckedPayload)) ? uncheckedPayload : payload.value
 
   try {
     state.isReadonly = true
@@ -1315,7 +632,7 @@ const {
   searchKeys: ['id', 'name'],
 })
 
-const fetchServicesErrorMessage = computed((): string => servicesFetchError.value ? t('errors.services.fetch') : '')
+const fetchServicesErrorMessage = computed((): string => servicesFetchError.value ? i18n.t('errors.services.fetch') : '')
 
 const availableServices = computed((): SelectItem[] => servicesResults.value?.map(el => ({ label: el.id, name: el.name, value: el.id })))
 
@@ -1329,10 +646,10 @@ onBeforeMount(async () => {
 })
 
 onMounted(() => {
-  emit('model-updated', getPayload.value)
+  emit('model-updated', payload.value)
 })
 
-defineExpose({ saveFormData, getPayload })
+defineExpose({ saveFormData, payload })
 </script>
 
 <style lang="scss">
@@ -1368,10 +685,6 @@ defineExpose({ saveFormData, getPayload })
       }
     }
 
-    &-config-type-immutable-alert {
-      margin-bottom: $kui_space_60;
-    }
-
     &-routing-rules-title-container {
       display: flex;
       justify-content: center;
@@ -1403,6 +716,8 @@ defineExpose({ saveFormData, getPayload })
     }
 
     &-advanced-fields-container {
+      display: flex;
+      flex-direction: column;
       margin-top: $kui_space_80;
     }
 

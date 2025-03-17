@@ -33,7 +33,7 @@
 /**
  * This component assumes that @kong-ui-public/expressions has been initialized.
  */
-import { ExpressionsEditor, PROTOCOL_TO_SCHEMA, type Schema, RouterPlaygroundModal, HTTP_BASED_PROTOCOLS } from '@kong-ui-public/expressions'
+import { ExpressionsEditor, HTTP_BASED_PROTOCOLS, PROTOCOL_TO_SCHEMA, RouterPlaygroundModal, type Schema } from '@kong-ui-public/expressions'
 import { computed, ref } from 'vue'
 
 import '@kong-ui-public/expressions/dist/style.css'
@@ -63,7 +63,7 @@ const isHttpBasedProtocol = computed(() => {
 })
 
 const tooltipText = computed(() => {
-  return isHttpBasedProtocol.value ? undefined : `${props.hintText}${HTTP_BASED_PROTOCOLS}`
+  return (props.showExpressionsModalEntry && !isHttpBasedProtocol.value) ? `${props.hintText}${HTTP_BASED_PROTOCOLS}` : undefined
 })
 
 const handleCommit = (expr: string) => {
