@@ -8,6 +8,7 @@
       label="Request › URL"
       :label-attributes="getLabelAttributes('callouts.*.request.url')"
       :model-value="request.url"
+      :placeholder="getPlaceholder('callouts.*.request.url')"
       required
       @update:model-value="val => request.url = val ?? ''"
     />
@@ -17,6 +18,7 @@
       :items="METHODS"
       label="Request › Method"
       :label-attributes="getLabelAttributes('callouts.*.request.method')"
+      :placeholder="getPlaceholder('callouts.*.request.method')"
       required
     />
 
@@ -92,6 +94,7 @@
         v-model="request.http_opts.ssl_server_name"
         label="Request › HTTP Opts › SSL Server Name"
         :label-attributes="getLabelAttributes('callouts.*.request.http_opts.ssl_server_name')"
+        :placeholder="getPlaceholder('callouts.*.request.http_opts.ssl_server_name')"
       />
 
       <ObjectField
@@ -105,6 +108,7 @@
           max="2147473646"
           min="0"
           :model-value="request.http_opts.timeouts?.connect"
+          :placeholder="getPlaceholder('callouts.*.request.http_opts.timeouts.connect')"
           @update:model-value="val => request.http_opts.timeouts!.connect = val"
         />
         <NumberField
@@ -113,6 +117,7 @@
           max="2147473646"
           min="0"
           :model-value="request.http_opts.timeouts?.write"
+          :placeholder="getPlaceholder('callouts.*.request.http_opts.timeouts.write')"
           @update:model-value="val => request.http_opts.timeouts!.write = val"
         />
         <NumberField
@@ -121,6 +126,7 @@
           max="2147473646"
           min="0"
           :model-value="request.http_opts.timeouts?.read"
+          :placeholder="getPlaceholder('callouts.*.request.http_opts.timeouts.read')"
           @update:model-value="val => request.http_opts.timeouts!.read = val"
         />
       </ObjectField>
@@ -134,6 +140,7 @@
           label="Request › HTTP Opts › Proxy › Auth Username"
           :label-attributes="getLabelAttributes('callouts.*.request.http_opts.proxy.auth_username')"
           :model-value="request.http_opts.proxy?.auth_username"
+          :placeholder="getPlaceholder('callouts.*.request.http_opts.proxy.auth_username')"
           show-vault-secret-picker
           @update:model-value="val => request.http_opts.proxy!.auth_username = val"
         />
@@ -141,6 +148,7 @@
           label="Request › HTTP Opts › Proxy › Auth Password"
           :label-attributes="getLabelAttributes('callouts.*.request.http_opts.proxy.auth_password')"
           :model-value="request.http_opts.proxy?.auth_password"
+          :placeholder="getPlaceholder('callouts.*.request.http_opts.proxy.auth_password')"
           show-vault-secret-picker
           @update:model-value="val => request.http_opts.proxy!.auth_password = val"
         />
@@ -148,6 +156,7 @@
           label="Request › HTTP Opts › Proxy › Http Proxy"
           :label-attributes="getLabelAttributes('callouts.*.request.http_opts.proxy.http_proxy')"
           :model-value="request.http_opts.proxy?.http_proxy"
+          :placeholder="getPlaceholder('callouts.*.request.http_opts.proxy.http_proxy')"
           required
           @update:model-value="val => request.http_opts.proxy!.http_proxy = val"
         />
@@ -155,6 +164,7 @@
           label="Request › HTTP Opts › Proxy › Https Proxy"
           :label-attributes="getLabelAttributes('callouts.*.request.http_opts.proxy.https_proxy')"
           :model-value="request.http_opts.proxy?.https_proxy"
+          :placeholder="getPlaceholder('callouts.*.request.http_opts.proxy.https_proxy')"
           required
           @update:model-value="val => request.http_opts.proxy!.https_proxy = val"
         />
@@ -170,6 +180,7 @@
         :items="getSelectItems('callouts.*.request.error.on_error')"
         label="Request › Error › On Error"
         :label-attributes="getLabelAttributes('callouts.*.request.error.on_error')"
+        :placeholder="getPlaceholder('callouts.*.request.error.on_error')"
       />
 
       <NumberField
@@ -177,6 +188,7 @@
         label="Request › Error › Retries"
         :label-attributes="getLabelAttributes('callouts.*.request.error.retries')"
         min="0"
+        :placeholder="getPlaceholder('callouts.*.request.error.retries')"
       />
 
       <ArrayField
@@ -199,12 +211,14 @@
         v-model="request.error.error_response_code"
         label="Request › Error › Error Response Code"
         :label-attributes="getLabelAttributes('callouts.*.request.error.error_response_code')"
+        :placeholder="getPlaceholder('callouts.*.request.error.error_response_code')"
       />
 
       <StringField
         v-model="request.error.error_response_msg"
         label="Request › Error › Error Response Msg"
         :label-attributes="getLabelAttributes('callouts.*.request.error.error_response_msg')"
+        :placeholder="getPlaceholder('callouts.*.request.error.error_response_msg')"
       />
     </ObjectField>
 
@@ -250,7 +264,7 @@ const props = defineProps<{
   calloutIndex: number;
 }>()
 
-const { formData, getLabelAttributes, getSelectItems, getDefault } = useFormShared<RequestCallout>()
+const { formData, getLabelAttributes, getSelectItems, getDefault, getPlaceholder } = useFormShared<RequestCallout>()
 
 const request = computed(() => formData.callouts[props.calloutIndex].request)
 

@@ -22,6 +22,7 @@
         v-model="formData.cache.memory.dictionary_name"
         label="Cache › Memory › Dictionary Name"
         :label-attributes="getLabelAttributes('cache.memory.dictionary_name')"
+        :placeholder="getPlaceholder('cache.memory.dictionary_name')"
         required
       />
     </ObjectField>
@@ -33,6 +34,7 @@
       label="Cache › Cache TTL"
       :label-attributes="getLabelAttributes('cache.cache_ttl')"
       min="1"
+      :placeholder="getPlaceholder('cache.cache_ttl')"
     />
   </ObjectField>
 </template>
@@ -46,5 +48,5 @@ import EnumField from '../shared/EnumField.vue'
 import NumberField from '../shared/NumberField.vue'
 import type { RequestCallout } from './types'
 
-const { formData, getLabelAttributes, getSelectItems } = useFormShared<RequestCallout>()
+const { formData, getLabelAttributes, getSelectItems, getPlaceholder } = useFormShared<RequestCallout>()
 </script>

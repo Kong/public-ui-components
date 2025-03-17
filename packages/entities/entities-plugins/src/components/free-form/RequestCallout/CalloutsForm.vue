@@ -21,8 +21,8 @@
 import { useFormShared } from '../shared/composables'
 import ArrayField from '../shared/ArrayField.vue'
 import CalloutForm from './CalloutForm.vue'
-import type { RequestCallout } from './types'
-import { type Callout } from './types'
+import type { RequestCallout, Callout } from './types'
+import { getCalloutId } from './utils'
 
 const { formData, getLabelAttributes, getDefault } = useFormShared<RequestCallout>()
 
@@ -30,7 +30,10 @@ function addCallout() {
   if (!formData.callouts) {
     formData.callouts = []
   }
-  formData.callouts.push(getDefault('callouts.*'))
+  formData.callouts.push({
+    _id: getCalloutId(),
+    ...getDefault('callouts.*'),
+  })
 }
 
 function removeCallout(index: number) {

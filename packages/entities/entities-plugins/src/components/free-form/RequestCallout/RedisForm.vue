@@ -8,6 +8,7 @@
       v-model="redis.host"
       label="Cache › Redis › Host"
       :label-attributes="getLabelAttributes('cache.redis.host')"
+      :placeholder="getPlaceholder('cache.redis.host')"
     />
     <NumberField
       v-model="redis.port"
@@ -15,6 +16,7 @@
       :label-attributes="getLabelAttributes('cache.redis.port')"
       max="65535"
       min="0"
+      :placeholder="getPlaceholder('cache.redis.port')"
     />
     <NumberField
       v-model="redis.connect_timeout"
@@ -22,6 +24,7 @@
       :label-attributes="getLabelAttributes('cache.redis.connect_timeout')"
       max="2147473646"
       min="0"
+      :placeholder="getPlaceholder('cache.redis.connect_timeout')"
     />
     <NumberField
       v-model="redis.send_timeout"
@@ -29,6 +32,7 @@
       :label-attributes="getLabelAttributes('cache.redis.send_timeout')"
       max="2147473646"
       min="0"
+      :placeholder="getPlaceholder('cache.redis.send_timeout')"
     />
     <NumberField
       v-model="redis.read_timeout"
@@ -36,35 +40,41 @@
       :label-attributes="getLabelAttributes('cache.redis.read_timeout')"
       max="2147473646"
       min="0"
+      :placeholder="getPlaceholder('cache.redis.read_timeout')"
     />
     <StringField
       v-model="redis.username"
       label="Cache › Redis › Username"
       :label-attributes="getLabelAttributes('cache.redis.username')"
+      :placeholder="getPlaceholder('cache.redis.username')"
       show-vault-secret-picker
     />
     <StringField
       v-model="redis.password"
       label="Cache › Redis › Password"
       :label-attributes="getLabelAttributes('cache.redis.password')"
+      :placeholder="getPlaceholder('cache.redis.password')"
       show-vault-secret-picker
     />
     <StringField
       v-model="redis.sentinel_username"
       label="Cache › Redis › Sentinel Username"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_username')"
+      :placeholder="getPlaceholder('cache.redis.sentinel_username')"
       show-vault-secret-picker
     />
     <StringField
       v-model="redis.sentinel_password"
       label="Cache › Redis › Sentinel Password"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_password')"
+      :placeholder="getPlaceholder('cache.redis.sentinel_password')"
       show-vault-secret-picker
     />
     <NumberField
       v-model="redis.database"
       label="Cache › Redis › Database"
       :label-attributes="getLabelAttributes('cache.redis.database')"
+      :placeholder="getPlaceholder('cache.redis.database')"
     />
     <NumberField
       v-model="redis.keepalive_pool_size"
@@ -72,6 +82,7 @@
       :label-attributes="getLabelAttributes('cache.redis.keepalive_pool_size')"
       max="2147483646"
       min="1"
+      :placeholder="getPlaceholder('cache.redis.keepalive_pool_size')"
     />
     <NumberField
       v-model="redis.keepalive_backlog"
@@ -79,11 +90,13 @@
       :label-attributes="getLabelAttributes('cache.redis.keepalive_backlog')"
       max="2147483646"
       min="0"
+      :placeholder="getPlaceholder('cache.redis.keepalive_backlog')"
     />
     <StringField
       v-model="redis.sentinel_master"
       label="Cache › Redis › Sentinel Master"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_master')"
+      :placeholder="getPlaceholder('cache.redis.sentinel_master')"
     />
     <EnumField
       v-model="redis.sentinel_role"
@@ -91,6 +104,7 @@
       :items="getSelectItems('cache.redis.sentinel_role')"
       label="Cache › Redis › Sentinel Role"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_role')"
+      :placeholder="getPlaceholder('cache.redis.sentinel_role')"
     />
     <ArrayField
       appearance="card"
@@ -105,6 +119,7 @@
           v-model="item.host"
           label="Host"
           :label-attributes="getLabelAttributes('cache.redis.sentinel_nodes.*.host')"
+          :placeholder="getPlaceholder('cache.redis.sentinel_nodes.*.host')"
           required
         />
         <NumberField
@@ -113,6 +128,7 @@
           :label-attributes="getLabelAttributes('cache.redis.sentinel_nodes.*.port')"
           max="65535"
           min="0"
+          :placeholder="getPlaceholder('cache.redis.sentinel_nodes.*.port')"
         />
       </template>
     </ArrayField>
@@ -129,6 +145,7 @@
           v-model="item.ip"
           label="IP"
           :label-attributes="getLabelAttributes('cache.redis.cluster_nodes.*.ip')"
+          :placeholder="getPlaceholder('cache.redis.cluster_nodes.*.ip')"
           required
         />
         <NumberField
@@ -137,6 +154,7 @@
           :label-attributes="getLabelAttributes('cache.redis.cluster_nodes.*.port')"
           max="65535"
           min="0"
+          :placeholder="getPlaceholder('cache.redis.cluster_nodes.*.port')"
         />
       </template>
     </ArrayField>
@@ -158,11 +176,15 @@
       v-model="redis.server_name"
       label="Cache › Redis › Server Name"
       :label-attributes="getLabelAttributes('cache.redis.server_name')"
+      :placeholder="getPlaceholder('cache.redis.server_name')"
     />
     <NumberField
       v-model="redis.cluster_max_redirections"
       label="Cache › Redis › Cluster Max Redirections"
       :label-attributes="getLabelAttributes('cache.redis.cluster_max_redirections')"
+      max="100"
+      min="0"
+      :placeholder="getPlaceholder('cache.redis.cluster_max_redirections')"
     />
     <BooleanField
       v-model="redis.connection_is_proxied"
@@ -183,7 +205,7 @@ import EnumField from '../shared/EnumField.vue'
 import { useFormShared } from '../shared/composables'
 import type { RequestCallout } from './types'
 
-const { formData, getLabelAttributes, getSelectItems, getDefault } = useFormShared<RequestCallout>()
+const { formData, getLabelAttributes, getSelectItems, getDefault, getPlaceholder } = useFormShared<RequestCallout>()
 
 const redis = computed(() => formData.cache.redis)
 

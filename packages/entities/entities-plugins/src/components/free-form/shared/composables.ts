@@ -1,6 +1,7 @@
 import { computed, inject, toRaw, toValue, type MaybeRefOrGetter } from 'vue'
 import { marked } from 'marked'
 import { toSelectItems } from './utils'
+import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
 export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
@@ -134,18 +135,37 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
     }
   }
 
-  function getLabelAttributes(fieldPath: string) {
-    const fieldSchema = getSchema(fieldPath)
-    const info = fieldSchema?.description ? marked.parse(fieldSchema.description, { async: false }) : undefined
+  function getLabelAttributes(fieldPath: string): LabelAttributes {
+    const schema = getSchema(fieldPath)
+    const info = schema?.description ? marked.parse(schema.description, { async: false }) : undefined
     return {
       ...SHARED_LABEL_ATTRIBUTES,
       info,
     }
   }
 
-  function getSelectItems(fieldPath: string) {
-    const fieldSchema = getSchema(fieldPath)
-    return toSelectItems((fieldSchema?.one_of || []))
+  function getSelectItems(fieldPath: string): SelectItem[] {
+    const schema = getSchema(fieldPath)
+    return toSelectItems((schema?.one_of || []))
+  }
+
+  function getPlaceholder(fieldPath: string): string | null {
+    const defaultValue = getSchema(fieldPath)?.default
+
+    let stringified = null
+
+    if (defaultValue == null || typeof defaultValue === 'object' || defaultValue === '') {
+      return null
+    } else if (Array.isArray(defaultValue)) {
+      if (defaultValue.length === 0) {
+        return null
+      }
+      stringified = defaultValue.join(', ')
+    } else {
+      stringified = defaultValue.toString()
+    }
+
+    return `Default: ${stringified}`
   }
 
   return {
@@ -153,6 +173,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
     getDefault,
     getSelectItems,
     getLabelAttributes,
+    getPlaceholder,
   }
 }
 
