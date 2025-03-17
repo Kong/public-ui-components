@@ -79,7 +79,7 @@
         </Teleport>
       </template>
       <template
-        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        v-if="!filterQuery && enableV2EmptyStates && config.app === 'konnect'"
         #empty-state
       >
         <EntityEmptyState
