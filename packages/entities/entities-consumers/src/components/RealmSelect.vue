@@ -4,7 +4,7 @@
       class="ream-select-label"
       :for="selectId"
     >
-      {{ t('consumers.list.realm_select.label') }}
+      {{ t('consumers.list.realm_select.label') }}:
     </KLabel>
     <KSelect
       :id="selectId"
@@ -16,11 +16,13 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref, useId } from 'vue'
+import { onBeforeMount, ref, useId, watch } from 'vue'
 import type { PropType } from 'vue'
 import { useAxios } from '@kong-ui-public/entities-shared'
 import type { AxiosRequestConfig } from 'axios'
 import composables from '../composables'
+import type { SelectItem } from '@kong/kongponents'
+import { useErrors } from '@kong-ui-public/entities-shared'
 
 const { i18n: { t } } = composables.useI18n()
 
@@ -31,22 +33,38 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits<{
+  (e: 'error', errorMessage: string): void
+  (e: 'realm-change', realmId: string): void
+}>()
+
 const selectId = useId()
 
 const { axiosInstance } = useAxios(props?.axiosRequestConfig)
+const { getMessageFromError } = useErrors()
 
 const loading = ref<boolean>(false)
-const realms = ref<any[]>([])
+const selectedRealm = ref<string | null>(null)
+const realms = ref<SelectItem[]>([])
 
 const fetchRealms = async () => {
   loading.value = true
 
   try {
-    const baseUrl = '/v1/realms'
-    const res = await axiosInstance.get(baseUrl)
-    console.log(res)
+    const baseUrl = `/v1/realms?${encodeURIComponent('page[size]')}=100`
+    const { data: { data } } = await axiosInstance.get(baseUrl)
+
+    data.forEach((realm: any) => {
+      realms.value.push({
+        value: realm.id,
+        label: realm.name,
+        key: realm.id,
+      })
+    })
+    selectedRealm.value = realms.value[0]?.value as string
   } catch (error) {
     console.error('Error fetching realms', error)
+    emit('error', getMessageFromError(error))
   } finally {
     loading.value = false
   }
@@ -54,6 +72,10 @@ const fetchRealms = async () => {
 
 onBeforeMount(() => {
   fetchRealms()
+})
+
+watch(selectedRealm, (newValue) => {
+  emit('realm-change', newValue as string)
 })
 </script>
 

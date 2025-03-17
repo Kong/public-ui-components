@@ -34,6 +34,8 @@
         <RealmSelect
           v-if="config?.app === 'konnect' && regionalConsumersEnabled"
           :axios-request-config="config?.axiosRequestConfig"
+          @error="onRealmSelectError"
+          @realm-change="handleRealmChange"
         />
       </template>
       <!-- Create action -->
@@ -425,6 +427,17 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 const consumerScopeFilter = ref<ConsumerScopeFilterValue>('cp')
+
+const handleRealmChange = (realmId: string): void => {
+  console.log('Selected realm:', realmId)
+}
+
+const onRealmSelectError = (message: string): void => {
+  errorMessage.value = {
+    title: t('consumers.errors.general'),
+    message,
+  }
+}
 
 const { hasRecords, handleStateChange } = useTableState(filterQuery)
 // Current empty state logic is only for Konnect, KM will pick up at GA.
