@@ -9,6 +9,7 @@
     <KSelect
       :id="selectId"
       :key="selectKey"
+      v-model="selectedRealm"
       :items="realms"
       :loading="loading"
       width="200"
@@ -46,7 +47,7 @@ const { getMessageFromError } = useErrors()
 
 const selectKey = ref<number>(0)
 const loading = ref<boolean>(false)
-const selectedRealm = ref<string | null>(null)
+const selectedRealm = ref<string>()
 const realms = ref<SelectItem[]>([])
 
 const fetchRealms = async () => {
