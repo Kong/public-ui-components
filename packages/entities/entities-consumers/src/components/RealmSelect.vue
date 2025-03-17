@@ -52,16 +52,20 @@ const fetchRealms = async () => {
 
   try {
     const baseUrl = `/v1/realms?${encodeURIComponent('page[size]')}=100`
-    const { data: { data = [] } } = await axiosInstance.get(baseUrl)
+    const { data: { data } } = await axiosInstance.get(baseUrl)
 
-    data.forEach((realm: any) => {
-      realms.value.push({
-        value: realm.id,
-        label: realm.name,
-        key: realm.id,
+    console.log('data', data)
+    if (data && data.length) {
+      data.forEach((realm: any) => {
+        realms.value.push({
+          value: realm.id,
+          label: realm.name,
+          key: realm.id,
+        })
       })
-    })
-    selectedRealm.value = realms.value[0]?.value as string
+      console.log('realms', realms.value)
+      selectedRealm.value = realms.value[0]?.value as string
+    }
   } catch (error) {
     console.error('Error fetching realms', error)
     emit('error', getMessageFromError(error))
