@@ -8,9 +8,9 @@
     </KLabel>
     <KSelect
       :id="selectId"
+      :key="selectKey"
       :items="realms"
       :loading="loading"
-      :rey="selectKey"
       width="200"
     />
   </div>
