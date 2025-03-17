@@ -43,15 +43,15 @@ watch(filterValue, (value) => {
 
 <style lang="scss" scoped>
 .consumer-scope-filter {
-  margin-right: $kui-space-50;
-  display: flex;
   align-items: center;
+  display: flex;
   gap: $kui-space-50;
+  margin-right: $kui-space-50;
 
   .scope-filter-label {
+    color: $kui-color-text;
     font-size: $kui-font-size-30;
     font-weight: $kui-font-weight-regular;
-    color: $kui-color-text;
     line-height: $kui-line-height-30;
   }
 }

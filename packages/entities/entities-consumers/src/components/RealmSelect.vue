@@ -59,8 +59,8 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .consumer-realm-select {
-  display: flex;
   align-items: center;
+  display: flex;
   gap: $kui-space-50;
 
   .ream-select-label {
