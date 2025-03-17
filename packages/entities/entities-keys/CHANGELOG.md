@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.5...@kong-ui-public/entities-keys@3.8.6) (2025-03-17)
+
+
+### Bug Fixes
+
+* fixed wrong empty states for empty search results ([#2036](https://github.com/Kong/public-ui-components/issues/2036)) ([ed3779b](https://github.com/Kong/public-ui-components/commit/ed3779bc5c4ba4bcbc0d0da17740ade0e96e825f))
+
+
+
+
+
 ## [3.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.4...@kong-ui-public/entities-keys@3.8.5) (2025-03-17)
 
 
