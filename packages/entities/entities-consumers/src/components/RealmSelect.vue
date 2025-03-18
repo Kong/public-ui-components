@@ -24,9 +24,7 @@
 
 <script setup lang="ts">
 import { onBeforeMount, ref, useId, watch } from 'vue'
-import type { PropType } from 'vue'
 import { useAxios } from '@kong-ui-public/entities-shared'
-import type { AxiosRequestConfig } from 'axios'
 import composables from '../composables'
 import type { SelectItem } from '@kong/kongponents'
 import { useErrors } from '@kong-ui-public/entities-shared'
@@ -34,10 +32,6 @@ import { useErrors } from '@kong-ui-public/entities-shared'
 const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps({
-  axiosRequestConfig: {
-    type: Object as PropType<AxiosRequestConfig>,
-    default: () => {},
-  },
   controlPlaneId: {
     type: String,
     default: '',
@@ -55,7 +49,7 @@ const emit = defineEmits<{
 
 const selectId = useId()
 
-const { axiosInstance } = useAxios(props?.axiosRequestConfig)
+const { axiosInstance } = useAxios()
 const { getMessageFromError } = useErrors()
 
 const selectKey = ref<number>(0)

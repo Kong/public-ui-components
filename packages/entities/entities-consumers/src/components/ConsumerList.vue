@@ -30,7 +30,6 @@
         <RealmSelect
           v-if="config?.app === 'konnect' && regionalConsumersEnabled"
           v-show="showRealmConsumers"
-          :axios-request-config="config?.axiosRequestConfig"
           :consumer-group-id="config?.consumerGroupId"
           :control-plane-id="config?.controlPlaneId"
           @error="onRealmSelectError"
@@ -433,7 +432,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 })
 
 const consumerScopeFilter = ref<ConsumerScopeFilterValue>('cp')
-const realmId = ref<string | null>('0db35964-941f-4249-adfb-8ec6b20fcecf')
+const realmId = ref<string | null>(null)
 const showRealmConsumers = computed((): boolean => consumerScopeFilter.value === 'realm')
 
 const handleRealmChange = (newRealmId: string): void => {
