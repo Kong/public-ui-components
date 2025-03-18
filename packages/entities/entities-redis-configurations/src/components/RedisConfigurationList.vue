@@ -180,7 +180,7 @@ import {
   EntityEmptyState,
   TableTags,
 } from '@kong-ui-public/entities-shared'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, toRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
@@ -302,7 +302,7 @@ const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 const fetcherCacheKey = ref<number>(1)
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+const { fetcher, fetcherState } = useFetcher(toRef(props.config), fetcherBaseUrl)
 const { i18n: { t } } = composables.useI18n()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()

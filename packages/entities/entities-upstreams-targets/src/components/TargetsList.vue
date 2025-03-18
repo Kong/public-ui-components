@@ -145,7 +145,7 @@ import {
   TableTags,
 } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
-import { computed, onBeforeMount, ref, watch } from 'vue'
+import { computed, onBeforeMount, ref, toRef, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import { AddIcon } from '@kong/icons'
 import type {
@@ -259,7 +259,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
+} = useFetcher(toRef({ ...props.config, cacheIdentifier: props.cacheIdentifier }), fetcherBaseUrl)
 
 const resetPagination = (): void => {
   // Increment the cache key on sort

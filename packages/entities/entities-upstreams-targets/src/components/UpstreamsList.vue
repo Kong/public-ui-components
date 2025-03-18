@@ -197,7 +197,7 @@ import {
   TableTags,
 } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
-import { computed, onBeforeMount, ref, watch } from 'vue'
+import { computed, onBeforeMount, ref, toRef, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
 import { AddIcon, BookIcon, CloudUploadIcon } from '@kong/icons'
@@ -350,7 +350,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
+} = useFetcher(toRef({ ...props.config, cacheIdentifier: props.cacheIdentifier }), fetcherBaseUrl)
 
 const clearFilter = (): void => {
   filterQuery.value = ''

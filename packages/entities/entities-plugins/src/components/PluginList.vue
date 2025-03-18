@@ -274,7 +274,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, watch, onBeforeMount } from 'vue'
+import { computed, ref, watch, onBeforeMount, toRef } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 
@@ -519,7 +519,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
+} = useFetcher(toRef({ ...props.config, cacheIdentifier: props.cacheIdentifier }), fetcherBaseUrl)
 
 const clearFilter = (): void => {
   filterQuery.value = ''

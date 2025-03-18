@@ -223,7 +223,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, watch, onBeforeMount } from 'vue'
+import { computed, ref, watch, onBeforeMount, toRef } from 'vue'
 import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 import { EntityEmptyState } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
@@ -396,7 +396,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
+} = useFetcher(toRef({ ...props.config, cacheIdentifier: props.cacheIdentifier }), fetcherBaseUrl)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
