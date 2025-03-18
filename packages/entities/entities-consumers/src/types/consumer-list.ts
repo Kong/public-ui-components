@@ -45,4 +45,4 @@ export interface CopyEventPayload {
   message: string
 }
 
-export type ConsumerScopeFilterValue = 'cp' | 'real'
+export type ConsumerScopeFilterValue = 'cp' | 'realm'

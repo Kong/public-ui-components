@@ -12,8 +12,13 @@
       v-model="selectedRealm"
       :items="realms"
       :loading="loading"
+      :placeholder="t('consumers.list.realm_select.placeholder')"
       width="200"
-    />
+    >
+      <template #empty>
+        {{ t('consumers.list.realm_select.empty') }}
+      </template>
+    </KSelect>
   </div>
 </template>
 
@@ -32,6 +37,14 @@ const props = defineProps({
   axiosRequestConfig: {
     type: Object as PropType<AxiosRequestConfig>,
     default: () => {},
+  },
+  controlPlaneId: {
+    type: String,
+    default: '',
+  },
+  consumerGroupId: {
+    type: String,
+    default: '',
   },
 })
 
@@ -57,7 +70,14 @@ const fetchRealms = async () => {
     const baseUrl = `/v1/realms?${encodeURIComponent('page[size]')}=100`
     const { data: { data = [] } } = await axiosInstance.get(baseUrl)
 
-    data.forEach((realm: any) => {
+    let eligibleRealms = []
+    if (props.consumerGroupId) {
+      eligibleRealms = data.filter((realm: any) => realm.consumer_groups.includes(props.consumerGroupId))
+    } else if (props.controlPlaneId) {
+      eligibleRealms = data.filter((realm: any) => realm.allowed_control_planes.includes(props.controlPlaneId))
+    }
+
+    eligibleRealms.forEach((realm: any) => {
       realms.value.push({
         value: realm.id,
         label: realm.name,

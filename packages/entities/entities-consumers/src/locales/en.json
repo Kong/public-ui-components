@@ -26,7 +26,9 @@
         "realm": "Realm"
       },
       "realm_select": {
-        "label": "Realm"
+        "label": "Realm",
+        "placeholder": "Select a realm",
+        "empty": "No realms found."
       }
     },
     "title": "Consumers",

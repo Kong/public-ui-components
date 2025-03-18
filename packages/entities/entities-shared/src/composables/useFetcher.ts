@@ -1,11 +1,10 @@
-import { ref, toValue, unref } from 'vue'
+import { ref, toValue } from 'vue'
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import type {
   FetcherResponse,
   FetcherState,
   KongManagerBaseTableConfig,
   KonnectBaseTableConfig,
-  MaybeRef,
 } from '../types'
 import { FetcherStatus } from '../types'
 import useAxios from './useAxios'
@@ -16,8 +15,8 @@ import type { TableDataFetcherParams } from '@kong/kongponents'
 const cacheKeys = new Map<string, Ref<number>>()
 
 export default function useFetcher(
-  config: KonnectBaseTableConfig | KongManagerBaseTableConfig,
-  baseUrl: MaybeRef<string>,
+  config: Ref<KonnectBaseTableConfig | KongManagerBaseTableConfig>,
+  baseUrl: Ref<string>,
   /**
    * Special handling for a response structure with a different base key for the data array like
    * { consumers: [{ ... }] }
@@ -27,10 +26,8 @@ export default function useFetcher(
   dataKeyNameRef?: MaybeRefOrGetter<string | undefined>,
 ) {
   const initialLoad = ref<boolean>(true)
-  const _baseUrl = unref(baseUrl)
 
-  const { axiosInstance } = useAxios(config.axiosRequestConfig)
-  const buildFetchUrl = useFetchUrlBuilder(config, _baseUrl)
+  const { axiosInstance } = useAxios(config.value.axiosRequestConfig)
 
   const state = ref<FetcherState>({
     status: FetcherStatus.Idle,
@@ -42,7 +39,7 @@ export default function useFetcher(
       state.value = initialLoad.value ? { status: FetcherStatus.InitialLoad } : { status: FetcherStatus.Loading }
       initialLoad.value = false
 
-      let requestUrl = buildFetchUrl(fetcherParams)
+      let requestUrl = useFetchUrlBuilder(config.value, baseUrl.value)(fetcherParams)
 
       // support for new filtering
       if (requestUrl.includes('filter[name]')) {
@@ -124,7 +121,7 @@ export default function useFetcher(
     }
   }
 
-  const cacheId = config.cacheIdentifier
+  const cacheId = config.value.cacheIdentifier
   const fetcherCacheKey = useFetcherCacheKey(cacheId)
 
   return { fetcher, fetcherState: state, fetcherCacheKey }

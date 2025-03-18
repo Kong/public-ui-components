@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-entities-consumers-list">
     <EntityBaseTable
-      :cache-identifier="cacheIdentifier"
+      :cache-identifier="scopedCacheIdentifier"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
       enable-entity-actions
@@ -30,11 +30,13 @@
         <RealmSelect
           v-if="config?.app === 'konnect' && regionalConsumersEnabled"
           :axios-request-config="config?.axiosRequestConfig"
+          :consumer-group-id="config?.consumerGroupId"
+          :control-plane-id="config?.controlPlaneId"
           @error="onRealmSelectError"
           @realm-change="handleRealmChange"
         />
         <EntityFilter
-          v-if="!isConsumerGroupPage"
+          v-if="!isConsumerGroupPage && !showRealmConsumers"
           v-model="filterQuery"
           :config="filterConfig"
         />
@@ -391,6 +393,7 @@ const handleCreateClick = (): void => {
 /**
  * Fetcher & Filtering
  */
+const realmFetcherUrl = computed((): string => `${props.config.apiBaseUrl}${endpoints.list['konnect']['realm']}`.replace(/{realmId}/gi, realmId.value || ''))
 const fetcherBaseUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.list[props.config.app][isConsumerGroupPage.value ? 'forConsumerGroup' : 'all']}`
 
@@ -429,7 +432,8 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
 })
 
 const consumerScopeFilter = ref<ConsumerScopeFilterValue>('cp')
-const realmId = ref<string | null>(null)
+const realmId = ref<string | null>('0db35964-941f-4249-adfb-8ec6b20fcecf')
+const showRealmConsumers = computed((): boolean => consumerScopeFilter.value === 'realm')
 
 const handleRealmChange = (newRealmId: string): void => {
   realmId.value = newRealmId
@@ -454,11 +458,22 @@ const preferencesStorageKey = computed<string>(
   () => isConsumerGroupPage.value ? 'kong-ui-entities-consumers-list-in-group-page' : 'kong-ui-entities-consumers-list',
 )
 const dataKeyName = computed((): string | undefined => isConsumerGroupPage.value && !props.config.paginatedEndpoint ? 'consumers' : undefined)
+const scopedCacheIdentifier = computed((): string => {
+  if (showRealmConsumers.value) {
+    return `realm-${realmId.value}-consumers`
+  }
+
+  return props.cacheIdentifier
+})
+const scopedFetcherConfig = computed(() => {
+  return { ...props.config, cacheIdentifier: scopedCacheIdentifier.value }
+})
+const scopedFetcherUrl = computed((): string => showRealmConsumers.value ? realmFetcherUrl.value : fetcherBaseUrl.value)
 const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value, dataKeyName.value)
+} = useFetcher(scopedFetcherConfig, scopedFetcherUrl, dataKeyName.value)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -711,6 +726,10 @@ watch(fetcherState, (state) => {
   }
 
   errorMessage.value = null
+})
+
+watch(scopedCacheIdentifier, () => {
+  fetcherCacheKey.value++
 })
 
 // Initialize the empty state options assuming a user does not have create permissions

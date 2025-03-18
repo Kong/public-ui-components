@@ -8,6 +8,7 @@ export default {
       forConsumerGroup:
         `${konnectBaseApiUrl}/consumer_groups/{consumerGroupId}/consumers`,
       oneForConsumerGroup: `${konnectBaseApiUrl}/consumer_groups/{consumerGroupId}/consumers/{consumerId}`,
+      realm: '/v1/realms/{realmId}/consumers',
     },
     kongManager: {
       all: `${KMBaseApiUrl}/consumers`,
