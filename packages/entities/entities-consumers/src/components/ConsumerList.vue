@@ -29,6 +29,7 @@
         />
         <RealmSelect
           v-if="config?.app === 'konnect' && regionalConsumersEnabled"
+          v-show="showRealmConsumers"
           :axios-request-config="config?.axiosRequestConfig"
           :consumer-group-id="config?.consumerGroupId"
           :control-plane-id="config?.controlPlaneId"
