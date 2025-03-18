@@ -51,24 +51,56 @@
       "description": "Gateway services represent backend APIs or microservices that receive traffic routed through the gateway."
     },
     "form": {
+      "buttons": {
+        "try_sample": "Try sample API"
+      },
+      "errors": {
+        "host": {
+          "empty": "Host cannot be empty",
+          "invalid": "Invalid host"
+        },
+        "port": {
+          "type": "Port must be a number",
+          "invalid": "Port must be between 0 and 65535"
+        },
+        "path": {
+          "prefix": "Path must begin with /",
+          "invalid": "Path should not include characters outside of the reserved list of RFC 3986"
+        },
+        "protocol": {
+          "empty": "Protocol cannot be empty",
+          "invalid": "Protocol - value must be one of http, https, grpc, grpcs, tcp, udp, tls, tls_passthrough, ws, wss"
+        },
+        "url": {
+          "invalid": "The URL must follow a valid format. Example: https://api.kong-air.com/flights"
+        }
+      },
       "sections": {
         "general": {
           "title": "General Information",
-          "description": "General information will help identify and manage this Gateway Service."
+          "description": "Provide a name and tags to help identify and manage this service."
         },
         "keys": {
-          "title": "Service Endpoint",
-          "description": "Define the endpoint for this service by specifying the full URL or by its separate elements.",
+          "title": "Service endpoint",
+          "description": "Define where this service should send requests.",
           "checkedGroupLabel": "Choose how and where to send traffic",
           "urlLabel": "Full URL",
-          "checkedGroupAltLabel": "Protocol, Host, Port and Path",
-          "viewAdvancedFields": "View Advanced Fields"
+          "checkedGroupAltLabel": "Protocol, host, port and path",
+          "url": {
+            "label": "Full URL",
+            "description": "Define the service using a single, complete API URL for simple setup."
+          },
+          "protocol": {
+            "label": "Protocol, host, port, and path",
+            "description": "Manually specify each component of the API’s URL for advanced configurations."
+          },
+          "viewAdvancedFields": "View advanced fields"
         }
       },
       "fields": {
         "upstream_url": {
-          "label": "Upstream URL",
-          "placeholder": "Enter a URL",
+          "label": "Full URL",
+          "placeholder": "e.g. https://www.myapi.com/",
           "tooltip_for_konnect": "This is the URL of the API you will manage in Konnect.",
           "tooltip_for_km": "This is the URL of the API you will manage in Kong Gateway."
         },
@@ -95,12 +127,12 @@
         },
         "host": {
           "label": "Host",
-          "placeholder": "Enter a host",
+          "placeholder": "e.g. www.myapi.com, 127.0.0.1",
           "tooltip": "The host of the upstream server. Note that the host value is case sensitive."
         },
         "path": {
           "label": "Path",
-          "placeholder": "Enter a path",
+          "placeholder": "e.g. /sample",
           "tooltip": "The path to be used in request to the upstream server."
         },
         "port": {
@@ -112,31 +144,31 @@
           "tooltip": "The number of retries to execute upon failure to proxy."
         },
         "connect_timeout": {
-          "label": "Connection Timeout",
+          "label": "Connection timeout",
           "tooltip": "The timeout in milliseconds for establishing a connection to the upstream server."
         },
         "write_timeout": {
-          "label": "Write Timeout",
+          "label": "Write timeout",
           "tooltip": "The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server."
         },
         "read_timeout": {
-          "label": "Read Timeout",
+          "label": "Read timeout",
           "tooltip": "The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server."
         },
         "client_certificate": {
-          "label": "Client Certificate",
+          "label": "Client certificate",
           "placeholder": "Enter a Certificate ID",
           "tooltip": "Certificate to be used as client certificate while TLS handshaking to the upstream server."
         },
         "ca_certificates": {
-          "label": "CA Certificates",
+          "label": "CA certificates",
           "placeholder": "Enter a comma separated list of CA Certificate IDs",
           "tooltip": "Array of {code1} object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate. If set to {code2} when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted).",
           "code1": "CA Certificate",
           "code2": "null"
         },
         "tls_verify_enabled": {
-          "label": "TLS Verify",
+          "label": "TLS verify",
           "help": "If unchecked, use default system setting",
           "tooltip": "Whether to enable verification of upstream server TLS certificate. If set to {code1}, then the Nginx default is respected.",
           "code1": "null"
@@ -158,7 +190,8 @@
           "label": "Tags",
           "tooltip": "An optional set of strings associated with the Service for grouping and filtering.",
           "placeholder": "Enter a list of tags separated by comma",
-          "help": "e.g. tag1, tag2, tag3"
+          "help": "e.g. tag1, tag2, tag3",
+          "collapse": "Add tags"
         },
         "enabled": {
           "label": "Enabled",
