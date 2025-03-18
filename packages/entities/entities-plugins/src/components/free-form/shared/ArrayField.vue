@@ -226,7 +226,8 @@ const stickyTop = computed(() => {
   flex-direction: column;
   gap: $kui-space-40;
 
-  &-label {
+  // .k-label is required to override styles correctly in KM
+  &-label.k-label {
     margin: 0;
   }
 

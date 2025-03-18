@@ -85,7 +85,8 @@ watch(realAdded, (value) => {
 
 <style lang="scss" scoped>
 .ff-object-field {
-  &-label {
+  // .k-label is required to override styles correctly in KM
+  &-label.k-label {
     margin: 0;
   }
 
