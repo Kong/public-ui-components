@@ -68,7 +68,7 @@
             </div>
 
             <div
-              v-if="componentAttrsData.additionalComponent === 'KCopy'"
+              v-else-if="componentAttrsData.additionalComponent === 'KCopy'"
               class="copy-uuid-array"
               :data-testid="`${item.key}-copy-uuid-array`"
             >
@@ -98,7 +98,7 @@
             </div>
 
             <div
-              v-if="componentAttrsData.additionalComponent === 'JsonCardItem'"
+              v-else-if="componentAttrsData.additionalComponent === 'JsonCardItem'"
               :data-testid="`${props.item.key}-json-array-content`"
             >
               <JsonCardItem
@@ -131,7 +131,7 @@
 
 <script setup lang="ts">
 import type { PropType, Ref } from 'vue'
-import { computed, ref, useSlots } from 'vue'
+import { computed, ref, useId, useSlots } from 'vue'
 import type { RecordItem, ComponentAttrsData } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import composables from '../../composables'
@@ -161,6 +161,8 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'navigation-click', record: RecordItem): void,
 }>()
+
+const id = useId()
 
 const slots = useSlots()
 const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
@@ -305,6 +307,25 @@ const componentAttrsData = computed((): ComponentAttrsData => {
         },
       }
 
+    case ConfigurationSchemaType.Text: {
+      // If the schema type is `plain-text` but the value is an object, we want to display it as a JSON code block.
+      // Otherwise, we'll just fallthrough to the default case and display it as plain text.
+      if (props.item.value != null && typeof props.item.value === 'object') {
+        return {
+          tag: 'KCodeBlock',
+          attrs: {
+            'data-testid': `${props.item.key}-json-code`,
+            id: `json-code-${id}`,
+            language: 'json',
+            code: JSON.stringify(props.item.value, null, '  '),
+            theme: 'dark',
+            maxHeight: '480px',
+          },
+        }
+      }
+    }
+
+    // eslint-disable-next-line no-fallthrough
     default:
       return {
         tag: 'div',
