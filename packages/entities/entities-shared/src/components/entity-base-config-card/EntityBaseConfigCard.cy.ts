@@ -221,7 +221,7 @@ describe('<EntityBaseConfigCard />', () => {
       // no tooltip
       cy.getTestId(`${unconfiguredKey}-label-tooltip`).should('not.exist')
       // type defaults to plain text
-      cy.getTestId(`${unconfiguredKey}-plain-text`).should('be.visible')
+      cy.getTestId(`${unconfiguredKey}-json-code`).should('be.visible')
     })
 
     it('allows customizing label and label tooltip', () => {
