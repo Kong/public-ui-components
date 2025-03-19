@@ -624,6 +624,11 @@
         "mutually_required": "All of these parameters are required: {parameters}",
         "only_one_of_mutually_required": "Exactly one of the following parameter combinations is required (all parameters within a chosen combination are required):"
       }
+    },
+    "free-form": {
+      "request-callout": {
+        "by_lua_placeholder": "Enter Lua script here..."
+      }
     }
   },
   "glossary": {

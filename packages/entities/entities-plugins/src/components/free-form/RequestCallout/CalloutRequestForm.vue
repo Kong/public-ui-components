@@ -229,7 +229,7 @@
       label="Request › By Lua"
       :label-attributes="getLabelAttributes('callouts.*.request.by_lua')"
       multiline
-      placeholder="Enter Lua script here..."
+      :placeholder="t('plugins.free-form.request-callout.by_lua_placeholder')"
     />
   </ObjectField>
 </template>
@@ -246,6 +246,9 @@ import EnumField from '../shared/EnumField.vue'
 import NumberField from '../shared/NumberField.vue'
 import type { RequestCallout } from './types'
 import { toSelectItems } from '../shared/utils'
+import useI18n from '../../../composables/useI18n'
+
+const { i18n: { t } } = useI18n()
 
 const METHODS = toSelectItems([
   'GET',

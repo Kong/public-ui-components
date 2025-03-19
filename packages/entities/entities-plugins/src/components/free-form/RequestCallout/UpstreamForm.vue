@@ -68,7 +68,7 @@
       label="Upstream › By Lua"
       :label-attributes="getLabelAttributes('upstream.by_lua')"
       multiline
-      placeholder="Enter Lua script here..."
+      :placeholder="t('plugins.free-form.request-callout.by_lua_placeholder')"
     />
   </ObjectField>
 </template>
@@ -81,6 +81,9 @@ import ObjectField from '../shared/ObjectField.vue'
 import BooleanField from '../shared/BooleanField.vue'
 import StringField from '../shared/StringField.vue'
 import type { RequestCallout } from './types'
+import useI18n from '../../../composables/useI18n'
+
+const { i18n: { t } } = useI18n()
 
 const { formData, getLabelAttributes } = useFormShared<RequestCallout>()
 

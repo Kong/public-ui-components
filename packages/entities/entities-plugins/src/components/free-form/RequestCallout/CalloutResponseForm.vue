@@ -38,7 +38,7 @@
       label="Response › By Lua"
       :label-attributes="getLabelAttributes('callouts.*.response.by_lua')"
       multiline
-      placeholder="Enter Lua script here..."
+      :placeholder="t('plugins.free-form.request-callout.by_lua_placeholder')"
     />
   </ObjectField>
 </template>
@@ -50,6 +50,9 @@ import ObjectField from '../shared/ObjectField.vue'
 import StringField from '../shared/StringField.vue'
 import { useFormShared } from '../shared/composables'
 import type { RequestCallout } from './types'
+import useI18n from '../../../composables/useI18n'
+
+const { i18n: { t } } = useI18n()
 
 const props = defineProps<{
   calloutIndex: number;

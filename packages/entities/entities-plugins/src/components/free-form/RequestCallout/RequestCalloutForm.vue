@@ -4,7 +4,7 @@
       :model="formModel"
       :options="formOptions"
       :schema="pinnedSchema"
-      @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
+      @model-updated="onModelUpdated"
     />
   </div>
 
@@ -23,7 +23,7 @@
       class="sc-form-config-form"
       :data="model.config"
       :schema="schema"
-      @change="handleChange"
+      @change="onConfigChange"
     />
 
     <KCollapse
@@ -34,7 +34,7 @@
         :model="formModel"
         :options="formOptions"
         :schema="advancedSchema"
-        @model-updated="(value: any, model: string) => onModelUpdated(value, model)"
+        @model-updated="onModelUpdated"
       />
     </KCollapse>
   </KCollapse>
@@ -87,10 +87,6 @@ const advancedSchema = usePickedSchema(advancedFieldKeys)
 
 const configCollapse = ref(false)
 const advancedCollapsed = ref(true)
-
-function handleChange(value: RequestCallout) {
-  props.onConfigChange(value)
-}
 </script>
 
 <style lang="scss" scoped>
