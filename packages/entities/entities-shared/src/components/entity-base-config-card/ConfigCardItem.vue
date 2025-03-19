@@ -317,7 +317,6 @@ const componentAttrsData = computed((): ComponentAttrsData => {
             id: `json-code-${uniqueId}`,
             language: 'json',
             code: JSON.stringify(props.item.value, null, '  '),
-            theme: 'dark',
             maxHeight: '480px',
           },
         }
