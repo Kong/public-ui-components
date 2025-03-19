@@ -47,7 +47,17 @@
         :data-value-input="index"
         :placeholder="valuePlaceholder || 'Value'"
         @keydown.enter.prevent="handleValueEnter(index)"
-      />
+      >
+        <template #after>
+          <component
+            :is="autofillSlot"
+            v-if="autofillSlot && showVaultSecretPicker"
+            :schema="schema"
+            :update="value => handleAutofill(index, value)"
+            :value="entry.value"
+          />
+        </template>
+      </KInput>
 
       <KButton
         appearance="tertiary"
@@ -61,10 +71,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, useTemplateRef, nextTick } from 'vue'
+import { ref, watch, useTemplateRef, nextTick, inject, computed } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
 import type { LabelAttributes } from '@kong/kongponents'
+import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 
 interface KVEntry {
   id: string;
@@ -81,6 +92,7 @@ const props = defineProps<{
   defaultKey?: string
   defaultValue?: string
   labelAttributes?: LabelAttributes
+  showVaultSecretPicker?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -144,6 +156,13 @@ function handleValueEnter(index: number) {
   focus(index + 1)
 }
 
+const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
+const schema = computed(() => ({ referenceable: props.showVaultSecretPicker }))
+
+function handleAutofill(index: number, value: string) {
+  entries.value[index].value = value
+}
+
 defineExpose({
   reset: () => {
     entries.value = getEntries(props.initialValue || {})
@@ -162,7 +181,8 @@ defineExpose({
 
   // .k-label is required to override styles correctly in KM
   &-label.k-label {
-    margin: 0;
+    margin-bottom: 0;
+    margin-top: 0;
   }
 
   &-header {
@@ -176,6 +196,11 @@ defineExpose({
     align-items: center;
     display: flex;
     gap: $kui-space-40;
+
+    &-key,
+    &-value {
+      flex: 1 1 0;
+    }
   }
 
   :deep(.k-tooltip p) {

@@ -228,7 +228,8 @@ const stickyTop = computed(() => {
 
   // .k-label is required to override styles correctly in KM
   &-label.k-label {
-    margin: 0;
+    margin-bottom: 0;
+    margin-top: 0;
   }
 
   &-header {

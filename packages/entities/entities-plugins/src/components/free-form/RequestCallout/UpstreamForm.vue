@@ -20,6 +20,7 @@
         :initial-value="upstream.headers.custom"
         label="Upstream › Headers › Custom"
         :label-attributes="getLabelAttributes('upstream.headers.custom')"
+        show-vault-secret-picker
         @change="val => upstream.headers.custom = val"
       />
     </ObjectField>
@@ -39,6 +40,7 @@
         :initial-value="upstream.query.custom"
         label="Upstream › Query › Custom"
         :label-attributes="getLabelAttributes('upstream.query.custom')"
+        show-vault-secret-picker
         @change="val => upstream.query.custom = val"
       />
     </ObjectField>
@@ -57,6 +59,7 @@
         :initial-value="upstream.body.custom"
         label="Upstream › Body › Custom"
         :label-attributes="getLabelAttributes('upstream.body.custom')"
+        show-vault-secret-picker
         @change="val => upstream.body.custom = val"
       />
     </ObjectField>

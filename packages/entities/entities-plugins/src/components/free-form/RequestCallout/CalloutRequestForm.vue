@@ -10,6 +10,7 @@
       :model-value="request.url"
       :placeholder="getPlaceholder('callouts.*.request.url')"
       required
+      show-vault-secret-picker
       @update:model-value="val => request.url = val ?? ''"
     />
 
@@ -37,6 +38,7 @@
         :initial-value="request.headers.custom"
         label="Request › Headers › Custom"
         :label-attributes="getLabelAttributes('callouts.*.request.headers.custom')"
+        show-vault-secret-picker
         @change="val => request.headers.custom = val"
       />
     </ObjectField>
@@ -56,6 +58,7 @@
         :initial-value="request.query.custom"
         label="Request › Query › Custom"
         :label-attributes="getLabelAttributes('callouts.*.request.query.custom')"
+        show-vault-secret-picker
         @change="val => request.query.custom = val"
       />
     </ObjectField>
@@ -75,6 +78,7 @@
         :initial-value="request.body.custom"
         label="Request › Body › Custom"
         :label-attributes="getLabelAttributes('callouts.*.request.body.custom')"
+        show-vault-secret-picker
         @change="val => request.body.custom = val"
       />
     </ObjectField>
