@@ -48,9 +48,9 @@
         :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
-        :raw-schema="loadedSchema || {}"
-        :record="record || undefined"
-        :schema="finalSchema || {}"
+        :raw-schema="loadedSchema"
+        :record="record"
+        :schema="finalSchema"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
         @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
@@ -308,10 +308,10 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
-const loadedSchema = ref<Record<string, any> | null>(null)
-const finalSchema = ref<Record<string, any> | null>(null)
+const loadedSchema = ref<Record<string, any> | undefined>(undefined)
+const finalSchema = ref<Record<string, any> | undefined>(undefined)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
-const record = ref<Record<string, any> | null>(null)
+const record = ref<Record<string, any> | undefined>(undefined)
 const configResponse = ref<Record<string, any>>({})
 const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
 const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
