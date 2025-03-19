@@ -162,7 +162,7 @@ const emit = defineEmits<{
   (e: 'navigation-click', record: RecordItem): void,
 }>()
 
-const id = useId()
+const uniqueId = useId()
 
 const slots = useSlots()
 const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
@@ -307,15 +307,14 @@ const componentAttrsData = computed((): ComponentAttrsData => {
         },
       }
 
-    case ConfigurationSchemaType.Text: {
-      // If the schema type is `plain-text` but the value is an object, we want to display it as a JSON code block.
-      // Otherwise, we'll just fallthrough to the default case and display it as plain text.
+    default:
+      // Before fallback to plain text, check if the value is an object, if so, render it as a code block
       if (props.item.value != null && typeof props.item.value === 'object') {
         return {
           tag: 'KCodeBlock',
           attrs: {
             'data-testid': `${props.item.key}-json-code`,
-            id: `json-code-${id}`,
+            id: `json-code-${uniqueId}`,
             language: 'json',
             code: JSON.stringify(props.item.value, null, '  '),
             theme: 'dark',
@@ -323,10 +322,6 @@ const componentAttrsData = computed((): ComponentAttrsData => {
           },
         }
       }
-    }
-
-    // eslint-disable-next-line no-fallthrough
-    default:
       return {
         tag: 'div',
         attrs: {
