@@ -318,6 +318,7 @@ const componentAttrsData = computed((): ComponentAttrsData => {
             language: 'json',
             code: JSON.stringify(props.item.value, null, '  '),
             maxHeight: '480px',
+            showLineNumbers: false,
           },
         }
       }
