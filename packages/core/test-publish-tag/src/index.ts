@@ -14,4 +14,4 @@ import TestPublishTag from './components/TestPublishTag.vue'
 
 export { TestPublishTag }
 
-console.log('1')
+console.log('2')
