@@ -87,6 +87,11 @@ export function createTimeSeriesVegaSpec(
         value: chartType,
       },
     ],
+    config: {
+      legend: {
+        disable: true,
+      },
+    },
     encoding: {
       x: {
         field: 'time', type: 'temporal', title: 'Time',
@@ -99,6 +104,7 @@ export function createTimeSeriesVegaSpec(
       },
     },
     layer: [
+      // Dataset layer
       {
         mark: {
           type: chartType,
@@ -138,11 +144,13 @@ export function createTimeSeriesVegaSpec(
             value: 0,
           },
         ],
+        // Show points on hover
         layer: [
           { mark: chartType },
           { transform: [{ filter: { param: 'hover', empty: false } }], mark: 'point' },
         ],
       },
+      // Vertical line and tooltip layer
       {
         transform: hasDimensionField ? [{ pivot: dimension, value: metric, groupby: ['time'] }] : [],
         mark: 'rule',
@@ -151,13 +159,13 @@ export function createTimeSeriesVegaSpec(
             condition: { value: 0.3, param: 'hover', empty: false },
             value: 0,
           },
-          tooltip: hasDimensionField
-            ? Object.keys(dimensionLabels || {}).map((label: string) => {
-              return { field: label, type: 'quantitative' }
-            })
-            : metricNames.map((metric: string) => {
-              return { field: metric, type: 'quantitative' }
-            }),
+          // tooltip: hasDimensionField
+          //   ? Object.keys(dimensionLabels || {}).map((label: string) => {
+          //     return { field: label, type: 'quantitative' }
+          //   })
+          //   : metricNames.map((metric: string) => {
+          //     return { field: metric, type: 'quantitative' }
+          //   }),
         },
         params: [{
           name: 'hover',
