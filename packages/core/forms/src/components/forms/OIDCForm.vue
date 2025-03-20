@@ -304,49 +304,49 @@ export default {
         if (this.enableRedisPartial) this.advancedFieldsSchema.fields.unshift(redis)
 
         // Use checkboxes for auth methods
-        this.sessionManagement = this.isEditing ? this.formModel['config-auth_methods'].includes('session') : false
+        this.sessionManagement = this.formModel['config-auth_methods'].includes('session')
 
         this.authMethods = [{
           label: 'Authorization Code Flow',
           value: 'authorization_code',
           hint: 'authorization code flow',
-          prop: this.isEditing ? this.formModel['config-auth_methods'].includes('authorization_code') : false,
+          prop: this.formModel['config-auth_methods'].includes('authorization_code'),
         },
         {
           label: 'Bearer Access Token',
           value: 'bearer',
           hint: 'JWT access token verification',
-          prop: this.isEditing ? this.formModel['config-auth_methods'].includes('bearer') : false,
+          prop: this.formModel['config-auth_methods'].includes('bearer'),
         }, {
           label: 'Client Credentials Grant',
           value: 'client_credentials',
           hint: 'OAuth client credentials grant',
-          prop: this.isEditing ? this.formModel['config-auth_methods'].includes('client_credentials') : false,
+          prop: this.formModel['config-auth_methods'].includes('client_credentials'),
         }, {
           label: 'Passwords Grant',
           value: 'password',
           hint: 'OAuth legacy password grant',
-          prop: this.isEditing ? this.formModel['config-auth_methods'].includes('password') : false,
+          prop: this.formModel['config-auth_methods'].includes('password'),
         }, {
           label: 'Introspection',
           value: 'introspection',
           hint: 'OAuth introspection',
-          prop: this.isEditing ? this.formModel['config-auth_methods'].includes('introspection') : false,
+          prop: this.formModel['config-auth_methods'].includes('introspection'),
         }, {
           label: 'UserInfo',
           value: 'userinfo',
           hint: 'OpenID Connect user info endpoint authentication',
-          prop: this.isEditing ? this.formModel['config-auth_methods'].includes('userinfo') : false,
+          prop: this.formModel['config-auth_methods'].includes('userinfo'),
         }, {
           label: 'Kong OAuth',
           value: 'kong_oauth2',
           hint: 'Kong OAuth plugin issued tokens verification',
-          prop: this.isEditing ? this.formModel['config-auth_methods'].includes('kong_oauth2') : false,
+          prop: this.formModel['config-auth_methods'].includes('kong_oauth2'),
         }, {
           label: 'Refresh Token',
           value: 'refresh_token',
           hint: 'OAuth refresh token grant',
-          prop: this.isEditing ? this.formModel['config-auth_methods'].includes('refresh_token') : false,
+          prop: this.formModel['config-auth_methods'].includes('refresh_token'),
         }]
 
         for (const s of [this.commonFieldsSchema, this.authFieldsSchema, this.advancedFieldsSchema]) {
