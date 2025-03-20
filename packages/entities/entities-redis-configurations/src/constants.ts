@@ -11,7 +11,7 @@ export const DEFAULT_SENTINEL_NODE: Readonly<SentinelNode> = {
   port: 6379,
 }
 
-export const DEFAULT_REDIS_TYPE = RedisType.HOST_PORT_CE
+export const DEFAULT_REDIS_TYPE: RedisType = RedisType.HOST_PORT_EE
 
 export const DEFAULT_FIELDS: Readonly<RedisConfigurationFormState['fields']['config']> = {
   port: 6379,
