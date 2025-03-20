@@ -38,7 +38,7 @@ jobs:
       # this comment is removed in this step
       - name: Remove preview consumption comment
         if: ${{ env.GH_TOKEN != '' }}
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 #v2.9.1
         with:
           header: pr_preview_consumption
           delete: true
@@ -295,7 +295,7 @@ jobs:
 
       - name: Provide preview link info
         if: ${{ env.npm_instructions != '' && env.GH_TOKEN != '' }}
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 #v2.9.1
         with:
           header: pr_preview_consumption
           message: |
@@ -346,7 +346,7 @@ jobs:
           path: packages/
 
       - name: Run Component Tests
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@d79d2d530a66e641eb4a5f227e13bc985c60b964 #v4.2.2
         with:
           install: false
           command: pnpm run test:component:ci --spec ${{ matrix.container }}
@@ -478,7 +478,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Get aggregate Workflow status
-        uses: technote-space/workflow-conclusion-action@v3
+        uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
 
       - name: Post Slack notification
         uses: Kong/public-shared-actions/slack-actions/workflow-notification@v2
