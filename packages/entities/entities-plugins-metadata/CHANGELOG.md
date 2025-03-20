@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.3.0...@kong-ui-public/entities-plugins-metadata@1.3.1) (2025-03-19)
+
+
+### Bug Fixes
+
+* **plugins-metadata:** add consumer scope to request callout ([#2042](https://github.com/Kong/public-ui-components/issues/2042)) ([5d8d81c](https://github.com/Kong/public-ui-components/commit/5d8d81c0aa53317a3a5838d7dbdbe59f72f19aa9))
+
+
+
+
+
 # [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.2.0...@kong-ui-public/entities-plugins-metadata@1.3.0) (2025-03-03)
 
 
