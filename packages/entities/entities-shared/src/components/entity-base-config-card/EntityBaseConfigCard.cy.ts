@@ -29,6 +29,7 @@ const customizedKey = 'ca_certificates'
 const customTooltip = 'Custom tooltip'
 const customLabel = 'CA Certificates'
 const unconfiguredKey = 'client_certificate'
+const untypedKey = 'extra'
 const configSchema: ConfigurationSchema = {
   protocol: {
     section: ConfigurationSchemaSection.Basic,
@@ -67,6 +68,9 @@ const configSchema: ConfigurationSchema = {
     tooltip: customTooltip,
     order: 6,
     section: ConfigurationSchemaSection.Advanced,
+  },
+  [untypedKey]: {
+    order: 5,
   },
   [unconfiguredKey]: {
     // leave this object empty for tests!!
@@ -221,7 +225,16 @@ describe('<EntityBaseConfigCard />', () => {
       // no tooltip
       cy.getTestId(`${unconfiguredKey}-label-tooltip`).should('not.exist')
       // type defaults to plain text
-      cy.getTestId(`${unconfiguredKey}-plain-text`).should('be.visible')
+      cy.getTestId(`${unconfiguredKey}-json-code`).should('be.visible')
+
+      // section defaults to Advanced (and hidden defaults to false)
+      cy.get(`[data-testid="config-card-details-advanced-props"] [data-testid="${untypedKey}-label"]`).should('exist')
+      // title cases key for the label
+      cy.getTestId(`${untypedKey}-label`).should('contain.text', convertKeyToTitle(untypedKey))
+      // no tooltip
+      cy.getTestId(`${untypedKey}-label-tooltip`).should('not.exist')
+      // type defaults to plain text
+      cy.getTestId(`${untypedKey}-plain-text`).should('be.visible')
     })
 
     it('allows customizing label and label tooltip', () => {

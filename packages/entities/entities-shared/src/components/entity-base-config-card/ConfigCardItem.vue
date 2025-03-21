@@ -68,7 +68,7 @@
             </div>
 
             <div
-              v-if="componentAttrsData.additionalComponent === 'KCopy'"
+              v-else-if="componentAttrsData.additionalComponent === 'KCopy'"
               class="copy-uuid-array"
               :data-testid="`${item.key}-copy-uuid-array`"
             >
@@ -98,7 +98,7 @@
             </div>
 
             <div
-              v-if="componentAttrsData.additionalComponent === 'JsonCardItem'"
+              v-else-if="componentAttrsData.additionalComponent === 'JsonCardItem'"
               :data-testid="`${props.item.key}-json-array-content`"
             >
               <JsonCardItem
@@ -131,7 +131,7 @@
 
 <script setup lang="ts">
 import type { PropType, Ref } from 'vue'
-import { computed, ref, useSlots } from 'vue'
+import { computed, ref, useId, useSlots } from 'vue'
 import type { RecordItem, ComponentAttrsData } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import composables from '../../composables'
@@ -161,6 +161,8 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'navigation-click', record: RecordItem): void,
 }>()
+
+const uniqueId = useId()
 
 const slots = useSlots()
 const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
@@ -306,6 +308,20 @@ const componentAttrsData = computed((): ComponentAttrsData => {
       }
 
     default:
+      // Before fallback to plain text, check if the value is an object, if so, render it as a code block
+      if (props.item.value != null && typeof props.item.value === 'object') {
+        return {
+          tag: 'KCodeBlock',
+          attrs: {
+            'data-testid': `${props.item.key}-json-code`,
+            id: `json-code-${uniqueId}`,
+            language: 'json',
+            code: JSON.stringify(props.item.value, null, '  '),
+            maxHeight: '480px',
+            showLineNumbers: false,
+          },
+        }
+      }
       return {
         tag: 'div',
         attrs: {
