@@ -92,7 +92,7 @@
       </template>
 
       <template
-        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        v-if="enableV2EmptyStates"
         #empty-state
       >
         <EntityEmptyState
@@ -111,14 +111,12 @@
               description: t('list.empty_state.feature_2.description')
             },
           ]"
-          :learn-more="config.app === 'konnect'"
           :title="t('redis.title')"
           @click:create="handleCreate"
           @click:learn-more="() => emit('click:learn-more')"
         >
           <template #image>
             <div class="empty-state-icon-gateway">
-              <!-- todo(zehao): need a new icon -->
               <DeployIcon
                 :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
                 :size="KUI_ICON_SIZE_50"
@@ -127,11 +125,11 @@
           </template>
 
           <template #feature-0-icon>
-            <DeployIcon />
+            <ClipboardIcon />
           </template>
 
           <template #feature-1-icon>
-            <RuntimesIcon /> <!-- todo(zehao): need a new icon -->
+            <RefreshIcon />
           </template>
         </EntityEmptyState>
       </template>
@@ -184,7 +182,7 @@ import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
-import { RuntimesIcon, DeployIcon } from '@kong/icons'
+import { RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
 
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
