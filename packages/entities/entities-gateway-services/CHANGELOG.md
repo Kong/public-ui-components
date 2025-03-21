@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.1...@kong-ui-public/entities-gateway-services@3.11.2) (2025-03-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.11.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.0...@kong-ui-public/entities-gateway-services@3.11.1) (2025-03-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+# [3.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.10.7...@kong-ui-public/entities-gateway-services@3.11.0) (2025-03-18)
+
+
+### Features
+
+* gateway service create form revamp ([#2001](https://github.com/Kong/public-ui-components/issues/2001)) ([6aec5ae](https://github.com/Kong/public-ui-components/commit/6aec5aef0ec32a26c4dbae36dde9512992b3ee09))
+
+
+
+
+
 ## [3.10.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.10.6...@kong-ui-public/entities-gateway-services@3.10.7) (2025-03-17)
 
 

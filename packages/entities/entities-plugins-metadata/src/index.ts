@@ -407,7 +407,7 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP: Record<string, {
   },
   'request-callout': {
     group: PluginGroup.TRANSFORMATIONS,
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER_GROUP],
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
   'ai-sanitizer': {
     group: PluginGroup.AI,
