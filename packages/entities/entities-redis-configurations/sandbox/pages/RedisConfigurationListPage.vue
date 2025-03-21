@@ -12,6 +12,7 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="konnectConfig"
+    enable-v2-empty-states
     @view-plugin="id => console.log('View plugin', id)"
   />
 
@@ -24,6 +25,7 @@
     :can-edit="permissions.canEdit"
     :can-retrieve="permissions.canRetrieve"
     :config="kongManagerConfig"
+    enable-v2-empty-states
     @view-plugin="id => console.log('View plugin', id)"
   />
 </template>
