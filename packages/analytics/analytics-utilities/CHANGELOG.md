@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@8.1.0...@kong-ui-public/analytics-utilities@8.1.1) (2025-03-20)
+
+
+### Bug Fixes
+
+* **ext-consumers-are-consumers:** Adding realm instead of regional_consumer ([#2043](https://github.com/Kong/public-ui-components/issues/2043)) ([38c2fe5](https://github.com/Kong/public-ui-components/commit/38c2fe561b636611b5db6fa38ea997fb4a008db1))
+
+
+
+
+
 # [8.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@8.0.0...@kong-ui-public/analytics-utilities@8.1.0) (2025-03-12)
 
 

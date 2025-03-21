@@ -22,6 +22,8 @@
     >
       <!-- Filter -->
       <template #toolbar-filter>
+        <slot name="toolbar-filter" />
+
         <EntityFilter
           v-if="!isConsumerGroupPage"
           v-model="filterQuery"

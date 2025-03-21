@@ -37,7 +37,7 @@ runs:
         echo "pnpm-version=${voltaPnpmVersion}">> $GITHUB_OUTPUT
 
     - name: Setup Node
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4
       with:
         node-version: ${{ steps.node-version.outputs.node-version }}
 
@@ -50,7 +50,7 @@ runs:
 
     - name: Dependency Cache
       id: dependency-cache
-      uses: actions/cache@v4
+      uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: '**/node_modules'
         key: pnpm-${{ steps.node-version.outputs.pnpm-version }}-${{ steps.node-version.outputs.node-version }}-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}

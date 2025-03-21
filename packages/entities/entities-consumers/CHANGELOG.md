@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.9.10...@kong-ui-public/entities-consumers@3.9.11) (2025-03-20)
+
+
+### Bug Fixes
+
+* **entities-consumers:** add toolbar-folter slot ([#2039](https://github.com/Kong/public-ui-components/issues/2039)) ([449303d](https://github.com/Kong/public-ui-components/commit/449303dd1a11943b08dfb23f58ce01a284222ed1))
+
+
+
+
+
 ## [3.9.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.9.9...@kong-ui-public/entities-consumers@3.9.10) (2025-03-20)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumers
