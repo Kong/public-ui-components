@@ -253,6 +253,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.expression-editor .monaco-editor').should('be.visible')
 
           // base advanced fields
+          cy.getTestId('collapse-trigger-content').click()
           cy.getTestId('route-form-http-redirect-status-code').should('be.visible')
           cy.getTestId('route-form-preserve-host').should('be.visible')
           cy.getTestId('route-form-strip-path').should('be.visible')
@@ -746,7 +747,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
             serviceId: services[0].id,
             hideSectionsInfo: true,
             hideNameField: true,
-            showTagsFiledUnderAdvanced: true,
             routeFlavors,
           },
           slots: {
@@ -764,9 +764,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         // name field should be hidden when hideNameField is true
         cy.getTestId('route-form-name').should('not.exist')
 
-        // tags field should render under advanced fields
-        cy.getTestId('route-form-tags').should('not.be.visible')
-        cy.getTestId('collapse-trigger-content').click()
+        // tags field should always be visible
         cy.getTestId('route-form-tags').should('be.visible')
 
         // service id field should be hidden when serviceId is provided
@@ -1632,7 +1630,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
             serviceId: services[0].id,
             hideSectionsInfo: true,
             hideNameField: true,
-            showTagsFiledUnderAdvanced: true,
           },
           slots: {
             'form-actions': '<button data-testid="slotted-cancel-button">Cancel</button><button data-testid="slotted-submit-button">Submit</button>',
@@ -1645,9 +1642,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         // name field should be hidden when hideNameField is true
         cy.getTestId('route-form-name').should('not.exist')
 
-        // tags field should render under advanced fields
-        cy.getTestId('route-form-tags').should('not.be.visible')
-        cy.getTestId('collapse-trigger-content').click()
+        // tags field should always be visible
         cy.getTestId('route-form-tags').should('be.visible')
 
         // service id field should be hidden when serviceId is provided

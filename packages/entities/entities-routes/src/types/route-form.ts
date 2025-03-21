@@ -1,6 +1,7 @@
 import type { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RouteLocationRaw } from 'vue-router'
 import type { Method, Methods } from './method-badge'
+import type { PROTOCOLS_TO_ROUTE_RULES } from '../constants'
 
 export enum RouteFlavor {
   TRADITIONAL = 'traditional', // includes traditional_compatible
@@ -67,18 +68,21 @@ export interface Destinations extends SourcesDestinationsFields { }
 
 export interface BaseRouteStateFields {
   name: string
-  protocols: string
+  protocols: keyof typeof PROTOCOLS_TO_ROUTE_RULES
+  service_id: string
+  tags: string
+}
+
+export interface SharedRouteRulesFields {
   https_redirect_status_code: number
   strip_path: boolean
   preserve_host: boolean
   request_buffering: boolean
   response_buffering: boolean
-  tags: string
-  service_id: string
 }
 
 /** These are traditional-only fields */
-export interface TraditionalRouteStateFields {
+export interface TraditionalRouteRulesFields extends SharedRouteRulesFields {
   methods?: MethodsFields
   hosts?: string[]
   paths?: string[]
@@ -91,7 +95,7 @@ export interface TraditionalRouteStateFields {
 }
 
 /** These are expression-only fields */
-export interface ExpressionsRouteStateFields {
+export interface ExpressionsRouteRulesFields extends SharedRouteRulesFields {
   expression: string; // Not required now, as described in Kong/kong#12667
   priority: number
 }
@@ -104,11 +108,11 @@ export interface RouteState<Fields extends BaseRouteStateFields> {
 }
 
 /** Type narrowing down helper function */
-export const stateHasTraditionalFlavor = (state: RouteState<BaseRouteStateFields>): state is RouteState<BaseRouteStateFields & TraditionalRouteStateFields> =>
+export const stateHasTraditionalFlavor = (state: RouteState<BaseRouteStateFields>): state is RouteState<BaseRouteStateFields & TraditionalRouteRulesFields> =>
   state.routeFlavors.traditional === true
 
 /** Type narrowing down helper function */
-export const stateHasExpressionsFlavor = (state: RouteState<BaseRouteStateFields>): state is RouteState<BaseRouteStateFields & ExpressionsRouteStateFields> =>
+export const stateHasExpressionsFlavor = (state: RouteState<BaseRouteStateFields>): state is RouteState<BaseRouteStateFields & ExpressionsRouteRulesFields> =>
   state.routeFlavors.expressions === true
 
 export interface Headers {
@@ -119,17 +123,20 @@ export interface BaseRoutePayload {
   id?: string
   name?: string | null
   protocols: Protocol[]
-  https_redirect_status_code: number
-  strip_path?: boolean | null
-  preserve_host: boolean
-  request_buffering: boolean
-  response_buffering: boolean
   tags: string[]
   service: { id: string } | null
 }
 
+export interface SharedRouteRulesPayload {
+  https_redirect_status_code: number
+  strip_path?: boolean | null // `null` does not seems to be used but keeping it here just in case
+  preserve_host: boolean
+  request_buffering: boolean
+  response_buffering: boolean
+}
+
 /** Extra payload for traditional-flavored routes */
-export interface TraditionalRoutePayload {
+export interface TraditionalRouteRulesPayload extends SharedRouteRulesPayload {
   methods?: Array<Method | string> | null
   hosts?: string[] | null
   paths?: string[] | null
@@ -142,7 +149,15 @@ export interface TraditionalRoutePayload {
 }
 
 /** Extra payload for expressions-flavored routes */
-export interface ExpressionsRoutePayload {
+export interface ExpressionsRouteRulesPayload extends SharedRouteRulesPayload {
   expression?: string; // Not required now, as described in Kong/kong#12667
   priority: number
+}
+
+export type TypedRouteRulesPayload = {
+  type: RouteFlavor.TRADITIONAL
+  payload: TraditionalRouteRulesPayload
+} | {
+  type: RouteFlavor.EXPRESSIONS
+  payload: ExpressionsRouteRulesPayload
 }

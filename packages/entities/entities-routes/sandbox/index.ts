@@ -15,7 +15,7 @@ const init = async () => {
       {
         path: '/',
         name: 'home',
-        redirect: { name: 'route-list' },
+        component: () => import('./pages/HomePage.vue'),
       },
       {
         path: '/route-list',
@@ -37,6 +37,11 @@ const init = async () => {
         path: '/route/:id/edit',
         name: 'edit-route',
         component: () => import('./pages/RouteFormPage.vue'),
+      },
+      {
+        path: '/route-rules-composer',
+        name: 'route-rules-composer',
+        component: () => import('./pages/RouteRulesComposerPage.vue'),
       },
     ],
   })

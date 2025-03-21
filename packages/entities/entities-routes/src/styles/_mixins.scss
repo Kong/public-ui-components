@@ -6,6 +6,54 @@
   margin-bottom: $kui-space-60;
 }
 
+@mixin routing-rules() {
+  .route-form {
+    &-routing-rules-title-container {
+      display: flex;
+      justify-content: center;
+
+      .protocol-title {
+        font-size: $kui_font_size_40;
+
+        &:not(:first-child) {
+          &::before {
+            content: '/';
+            margin-right: $kui_space_40;
+            padding-left: $kui_space_40;
+          }
+        }
+      }
+
+      .routing-rules-title {
+        font-size: $kui_font_size_40;
+        margin-left: $kui_space_40;
+      }
+    }
+
+    &-routing-rules-selector {
+      @include routing-rules-selector;
+    }
+
+    &-advanced-fields-collapse {
+      margin-top: $kui_space_80;
+    }
+
+    &-advanced-fields-container {
+      display: flex;
+      flex-direction: column;
+      margin-top: $kui_space_80;
+    }
+
+    &-fields-container {
+      >* {
+        &:not(:first-child) {
+          margin-top: $kui_space_80;
+        }
+      }
+    }
+  }
+}
+
 @mixin routing-rule() {
   &-container {
     &:not(:first-of-type) {
