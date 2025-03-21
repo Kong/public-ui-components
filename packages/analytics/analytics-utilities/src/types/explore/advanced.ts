@@ -12,6 +12,7 @@ export const queryableExploreDimensions = [
   'upstream_status_code_grouped',
   'response_source',
   'data_plane_node_version',
+  'realm',
 ] as const
 
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]

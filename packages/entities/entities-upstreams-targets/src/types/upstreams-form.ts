@@ -28,24 +28,32 @@ export interface ActiveHealthCheck {
   httpsSni: string
   verifySsl: boolean
   headers: ActiveHealthCheckHeader[]
-  interval: string
-  successes: string
-  httpStatuses: string[]
-  unhealthyInterval: string
-  httpFailures: string
-  tcpFailures: string
-  unhealthyHttpStatuses: string[]
-  unhealthyTimeouts: string
+  healthy: {
+    interval: string
+    successes: string
+    httpStatuses: string[]
+  },
+  unhealthy: {
+    interval: string
+    timeouts: string
+    tcpFailures: string
+    httpFailures: string
+    httpStatuses: string[]
+  }
 }
 
 export interface PassiveHealthCheck {
   type: HealthCheckType
-  successes: string
-  httpStatuses: string[]
-  timeouts: string
-  httpFailures: string
-  unhealthyHttpStatuses: string[]
-  tcpFailures: string
+  healthy: {
+    successes: string
+    httpStatuses: string[]
+  },
+  unhealthy: {
+    timeouts: string
+    tcpFailures: string
+    httpFailures: string
+    httpStatuses: string[]
+  }
 }
 
 export interface UpstreamFormFields {
@@ -100,7 +108,7 @@ export interface UpstreamActivePayload {
   concurrency?: number
   http_path?: string
   headers?: Record<string, string[]> | []
-  https_sni?: string
+  https_sni?: string | null
   https_verify_certificate?: boolean
   healthy: {
     interval?: number
@@ -137,8 +145,8 @@ export interface UpstreamPassivePayload {
 export interface UpstreamFormPayload {
   name: string
   algorithm: UpstreamAlgorithm
-  host_header?: string
-  client_certificate?: { id: string }
+  host_header?: string | null
+  client_certificate?: { id: string } | null
   tags?: string[]
   slots: number
   hash_on: UpstreamHash

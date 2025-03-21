@@ -17,7 +17,8 @@
       },
       "empty_state_v2": {
         "title": "Configure your first key",
-        "description": "Keys store asymmetric cryptographic keys in various formats, enabling secure authentication and encryption.",
+        "group": "Keys created in gateways within this group will automatically appear here.",
+        "description": "Keys hold a representation of asymmetric keys that gateways and plugins can use for secure operations.",
         "create_cta": "New key"
       }
     },

@@ -83,4 +83,14 @@ export const standardize = {
     }
     return newObj
   },
+
+  stringToArray(value: string | null | undefined, separator = ','): string[] {
+    if (!value) return []
+    return value.split(separator).map((tag: string) => String(tag || '').trim()).filter((tag: string) => tag !== '')
+  },
+
+  arrayToString(value: string[] | null | undefined, separator = ', '): string {
+    if (!value) return ''
+    return value.join(separator)
+  },
 }

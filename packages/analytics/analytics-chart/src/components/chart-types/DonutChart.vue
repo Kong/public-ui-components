@@ -2,7 +2,7 @@
   <div
     class="chart-parent"
     :class="chartFlexClass(legendPosition)"
-    data-testid="doughnut-chart-parent"
+    data-testid="donut-chart-parent"
   >
     <div
       class="chart-container"
@@ -50,7 +50,7 @@ import composables from '../../composables'
 import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
 import type { Chart, ChartDataset, Plugin } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
-import type { DoughnutChartData } from '../../types/chart-data'
+import type { DonutChartData } from '../../types/chart-data'
 
 const props = defineProps({
   chartData: {
@@ -107,7 +107,7 @@ const tooltipData: TooltipState = reactive({
   offsetY: 0,
   width: 0,
   height: 0,
-  chartType: 'doughnut',
+  chartType: 'donut',
 })
 
 const htmlLegendPlugin: Plugin = {
@@ -122,8 +122,8 @@ const htmlLegendPlugin: Plugin = {
 const plugins: Ref<Plugin[]> = computed(() => [htmlLegendPlugin])
 
 // Flatten the datasets into a single element array, since we only want to
-// display a single dataset containing dimension totals in our Doughnut chart
-const formattedDataset = computed<DoughnutChartData[]>(() => {
+// display a single dataset containing dimension totals in our Donut chart
+const formattedDataset = computed<DonutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
     acc.labels.push(current.label)
     acc.backgroundColor.push(current.backgroundColor)
@@ -145,7 +145,7 @@ const mutableData = computed(() => {
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
 
-const { options } = composables.useDoughnutChartOptions({
+const { options } = composables.useDonutChartOptions({
   tooltipState: tooltipData,
   legendID: legendID.value,
 })

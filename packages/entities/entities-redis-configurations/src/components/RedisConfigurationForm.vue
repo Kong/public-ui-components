@@ -64,10 +64,23 @@
         <KInput
           v-model.trim="form.fields.name"
           data-testid="redis-name-input"
+          :disabled="isEdit"
           :label="t('form.fields.name.label')"
           :placeholder="t('form.fields.name.placeholder')"
           :readonly="form.readonly"
           required
+        />
+        <KInput
+          v-model.trim="form.fields.tags"
+          data-testid="redis-tags-input"
+          :help="t('form.fields.tags.help')"
+          :label="t('form.fields.tags.label')"
+          :label-attributes="{
+            info: t('form.fields.tags.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          :placeholder="t('form.fields.tags.placeholder')"
+          :readonly="form.readonly"
         />
       </EntityFormSection>
 
@@ -130,6 +143,7 @@
             tooltipAttributes: { maxWidth: '400' },
           }"
           :readonly="form.readonly"
+          show-password-mask-toggle
           type="password"
         />
         <VaultSecretPickerProvider
@@ -257,6 +271,7 @@
             tooltipAttributes: { maxWidth: '400' },
           }"
           :readonly="form.readonly"
+          show-password-mask-toggle
           type="password"
         />
         <VaultSecretPickerProvider
@@ -424,6 +439,8 @@ import ClusterNodes from './ClusterNodes.vue'
 import composables from '../composables'
 import SentinelNodes from './SentinelNodes.vue'
 import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
+import { DEFAULT_REDIS_TYPE } from '../constants'
+import { mapRedisTypeToPartialType } from '../helpers'
 
 import type { PropType } from 'vue'
 import type {
@@ -498,14 +515,6 @@ const typeOptions = computed<SelectItem[]>(() => {
   return [
     {
       label: t('form.options.type.host_port'),
-      group: ` ${t('form.options.type.open_source')}`, // the space before the group name is intentional, it makes the group to be the first one
-      value: RedisType.HOST_PORT_CE,
-      selected: redisType.value === RedisType.HOST_PORT_CE,
-      disabled: (isEdit && redisTypeIsEnterprise.value)
-        || (!isEdit && props.disabledPartialType === PartialType.REDIS_CE),
-    },
-    {
-      label: t('form.options.type.host_port'),
       group: t('form.options.type.enterprise'),
       value: RedisType.HOST_PORT_EE,
       selected: redisType.value === RedisType.HOST_PORT_EE,
@@ -525,6 +534,14 @@ const typeOptions = computed<SelectItem[]>(() => {
       selected: redisType.value === RedisType.SENTINEL,
       disabled: !isEdit && props.disabledPartialType === PartialType.REDIS_EE,
     },
+    {
+      label: t('form.options.type.host_port'),
+      group: t('form.options.type.open_source'),
+      value: RedisType.HOST_PORT_CE,
+      selected: redisType.value === RedisType.HOST_PORT_CE,
+      disabled: (isEdit && redisTypeIsEnterprise.value)
+        || (!isEdit && props.disabledPartialType === PartialType.REDIS_CE),
+    },
   ]
 })
 
@@ -541,6 +558,25 @@ const getSelectedText = (item: any) => {
   return `${item.label}${suffix}`
 }
 
+const getDefaultRedisType = (): RedisType => {
+  // If no disabled type, use default
+  if (!props.disabledPartialType) {
+    return DEFAULT_REDIS_TYPE
+  }
+
+  const defaultPartialType = mapRedisTypeToPartialType(DEFAULT_REDIS_TYPE)
+
+  // If default type is disabled, return an alternative
+  if (defaultPartialType === props.disabledPartialType) {
+    return props.disabledPartialType === PartialType.REDIS_CE
+      ? RedisType.HOST_PORT_EE
+      : RedisType.HOST_PORT_CE
+  }
+
+  // Default type is valid
+  return DEFAULT_REDIS_TYPE
+}
+
 const {
   form,
   canSubmit,
@@ -553,9 +589,7 @@ const {
   setInitialFormValues,
 } = useRedisConfigurationForm({
   partialId: props.partialId,
-  defaultRedisType: props.disabledPartialType === PartialType.REDIS_CE
-    ? RedisType.HOST_PORT_EE
-    : RedisType.HOST_PORT_CE,
+  defaultRedisType: getDefaultRedisType(),
   config: props.config,
 })
 

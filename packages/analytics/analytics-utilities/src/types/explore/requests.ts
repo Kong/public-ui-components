@@ -4,6 +4,7 @@ import { type ExploreFilter } from './advanced'
 
 // status_code and upstream_status_code are treated as metric filters
 export const queryableRequestDimensions = [
+  'api',
   'api_product',
   'api_product_version',
   'application',
@@ -21,6 +22,7 @@ export const queryableRequestDimensions = [
   'header_user_agent',
   'http_method',
   'iso_code',
+  'portal',
   'request_id',
   'request_uri',
   'response_header_content_type',

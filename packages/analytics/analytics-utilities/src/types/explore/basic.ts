@@ -2,6 +2,7 @@ import { makeFilterable } from './util'
 import type { ExploreFilterTypesV2, GranularityValues, RequestFilterTypeEmptyV2, TimeRangeV4 } from './common'
 
 export const queryableBasicExploreDimensions = [
+  'api',
   'api_product',
   'api_product_version',
   'control_plane',

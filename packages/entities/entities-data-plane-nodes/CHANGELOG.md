@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.82](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.81...@kong-ui-public/entities-data-plane-nodes@0.3.82) (2025-03-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.3.81](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.80...@kong-ui-public/entities-data-plane-nodes@0.3.81) (2025-03-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.3.80](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.79...@kong-ui-public/entities-data-plane-nodes@0.3.80) (2025-03-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.3.79](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.78...@kong-ui-public/entities-data-plane-nodes@0.3.79) (2025-03-17)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2033](https://github.com/Kong/public-ui-components/issues/2033)) ([8ae6d35](https://github.com/Kong/public-ui-components/commit/8ae6d354af60c52319ea092e22581b2e926ba3ca))
+
+
+
+
+
+## [0.3.78](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.77...@kong-ui-public/entities-data-plane-nodes@0.3.78) (2025-03-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
+## [0.3.77](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.76...@kong-ui-public/entities-data-plane-nodes@0.3.77) (2025-03-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
 ## [0.3.76](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.3.75...@kong-ui-public/entities-data-plane-nodes@0.3.76) (2025-02-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes

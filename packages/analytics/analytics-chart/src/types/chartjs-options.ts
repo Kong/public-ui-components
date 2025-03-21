@@ -50,7 +50,7 @@ export interface LineChartOptions extends BaseChartOptions {
   pointsWithoutHover?: ComputedRef<boolean | undefined>,
 }
 
-export interface DoughnutChartOptions {
+export interface DonutChartOptions {
   tooltipState: TooltipState,
   legendID: string,
 }

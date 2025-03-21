@@ -45,7 +45,8 @@
       },
       "empty_state_v2": {
         "title": "Configure your first vault",
-        "description": "Vaults securely store sensitive information, such as credentials and certificates, enhancing the security of your API infrastructure.",
+        "group": "Vaults created in gateways within this group will automatically appear here.",
+        "description": "Vaults securely and centrally store sensitive information, such as credentials, tokens, and keys, to simplify secrets management.",
         "create_cta": "New vault"
       }
     }

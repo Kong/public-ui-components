@@ -95,8 +95,9 @@
       },
       "empty_state_v2": {
         "title": "Configure your first plugin",
-        "description": "Plugins extend API functionalities, offering features like authentication, rate limiting, and request transformations to enhance security and performance.",
-        "create_cta": "New plugin"
+        "description": "Plugins extend gateways functionalities, offering features like authentication, rate limiting, and request transformations to enhance security and performance.",
+        "create_cta": "New plugin",
+        "group": "Plugins created in gateways within this group will automatically appear here."
       }
     },
     "meta": {
@@ -498,6 +499,26 @@
       "redirect": {
         "name": "Redirect",
         "description": "Redirect incoming requests to a new URL"
+      },
+      "kafka-consume": {
+        "name": "Kafka Consume",
+        "description": "Consume messages from Kafka topics over HTTP protocols."
+      },
+      "confluent-consume": {
+        "name": "Confluent Consume",
+        "description": "Consume messages from Confluent Kafka topics over HTTP protocols"
+      },
+      "request-callout": {
+        "name": "Request Callout",
+        "description": "Callout to third party apis as part of request processing."
+      },
+      "ai-sanitizer": {
+        "name": "AI Sanitizer",
+        "description": "Sanitize personal or sensitive information from prompts before sending to LLM."
+      },
+      "ai-rag-injector": {
+        "name": "AI RAG Injector",
+        "description": "Attach contextual knowledge from vector databases with flexible template to LLM prompts."
       }
     },
     "fields": {

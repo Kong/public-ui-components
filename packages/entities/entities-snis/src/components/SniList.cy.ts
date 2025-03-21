@@ -36,7 +36,11 @@ const baseConfigKM: KongManagerSniListConfig = {
 
 describe('<SniList />', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop limit exceeded'))
+    const resizeObserverErrors = [
+      'ResizeObserver loop limit exceeded',
+      'ResizeObserver loop completed with undelivered notifications',
+    ]
+    cy.on('uncaught:exception', err => !resizeObserverErrors.some(roe => err.message.includes(roe)))
   })
 
   describe('actions', () => {

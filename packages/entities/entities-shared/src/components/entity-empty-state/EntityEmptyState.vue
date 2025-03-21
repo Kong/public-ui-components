@@ -58,7 +58,7 @@
           v-if="showCreateButton"
           appearance="primary"
           data-testid="entity-create-button"
-          size="large"
+          :size="appearance === 'secondary' ? 'medium' : 'large'"
           @click="$emit('click:create')"
         >
           <AddIcon />
@@ -69,7 +69,7 @@
           v-if="learnMore"
           appearance="secondary"
           data-testid="entity-learn-more-button"
-          size="large"
+          :size="appearance === 'secondary' ? 'medium' : 'large'"
           @click="$emit('click:learn-more')"
         >
           <BookIcon decorative />
@@ -251,6 +251,10 @@ $entity-empty-state-max-width: calc(2 * #{$entity-empty-state-feature-card-width
 
   .entity-empty-state-pricing {
     margin-top: $kui-space-60;
+  }
+
+  .entity-empty-state-message {
+    color: $kui-color-text-neutral-strong;
   }
 
   .entity-empty-state-action {

@@ -15,20 +15,6 @@ const baseConfigKM = {
 }
 
 describe('<VueFormGenerator />', () => {
-  // it('should render redis fields as common fields when enableRedisPartial is not passed', () => {
-  //   cy.mount(VueFormGenerator, {
-  //     props: {
-  //       schema: RLSchema,
-  //       model: RLModel,
-  //       enableRedisPartial: true,
-  //     },
-  //   })
-  //   cy.get('.vue-form-generator').should('exist')
-
-  //   cy.getTestId('redis-config-card').should('not.exist')
-
-  // })
-
   it('should show shared config/grouped redis fields when toggling shared/dedicated redis configuration', () => {
     cy.intercept(
       {

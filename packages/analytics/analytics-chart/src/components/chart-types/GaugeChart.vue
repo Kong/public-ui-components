@@ -1,13 +1,13 @@
 <template>
   <div
     class="chart-parent"
-    data-testid="doughnut-chart-parent"
+    data-testid="donut-chart-parent"
   >
     <div class="chart-totals-flex">
       <div
         v-if="showMetricLarge"
         class="metric-large"
-        data-testid="doughnut-chart-metric"
+        data-testid="donut-chart-metric"
         :style="metricHighlightColor"
       >
         {{ metricHighlight }}
@@ -15,7 +15,7 @@
       <div
         v-if="showMetricSmall"
         class="metric-small"
-        data-testid="doughnut-chart-total"
+        data-testid="donut-chart-total"
       >
         {{ i18n.t('total') }}: {{ metricTotal }}
       </div>
@@ -47,7 +47,7 @@ import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
 import type { AnalyticsChartColors, KChartData, SimpleChartMetricDisplay } from '../../types'
 import type { Chart, ChartDataset } from 'chart.js'
-import type { DoughnutChartData } from '../../types/chart-data'
+import type { DonutChartData } from '../../types/chart-data'
 
 const props = defineProps({
   chartData: {
@@ -98,8 +98,8 @@ const { i18n } = composables.useI18n()
 const chartID = ref(uuidv4())
 
 // Flatten the datasets into a single element array, since we only want to
-// display a single dataset containing dimension totals in our Doughnut chart.
-const formattedDataset = computed<DoughnutChartData[]>(() => {
+// display a single dataset containing dimension totals in our Donut chart.
+const formattedDataset = computed<DonutChartData[]>(() => {
   const formatted = props.chartData.datasets.reduce((acc: any, current: ChartDataset) => {
     acc.labels.push(current.label)
     acc.borderColor.push(current.backgroundColor)

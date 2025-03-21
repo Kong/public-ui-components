@@ -485,3 +485,97 @@ export const routeExploreResponse: ExploreResultV4 = {
     },
   ],
 }
+
+export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
+  gridSize: {
+    cols: 8,
+    rows: 4,
+  },
+  tileHeight: 167,
+  tiles: [
+    {
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: {
+          cols: 4,
+          rows: 2,
+        },
+      },
+      id: 'tile-1',
+    },
+    {
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 4,
+          row: 0,
+        },
+        size: {
+          cols: 4,
+          rows: 2,
+        },
+      },
+      id: 'tile-2',
+    },
+    {
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 4,
+        },
+        size: {
+          cols: 4,
+          rows: 2,
+        },
+      },
+      id: 'tile-3',
+    },
+    {
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 4,
+          row: 4,
+        },
+        size: {
+          cols: 4,
+          rows: 2,
+        },
+      },
+      id: 'tile-4',
+    },
+  ],
+}

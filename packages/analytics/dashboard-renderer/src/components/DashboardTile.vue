@@ -125,7 +125,7 @@ import { MoreIcon, EditIcon } from '@kong/icons'
 import { msToGranularity, type AiExploreAggregations, type AiExploreQuery, type AnalyticsBridge, type ExploreAggregations, type ExploreQuery, type ExploreResultV4, type QueryableAiExploreDimensions, type QueryableExploreDimensions, type TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
-import DoughnutChartRenderer from './DoughnutChartRenderer.vue'
+import DonutChartRenderer from './DonutChartRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -165,10 +165,13 @@ watch(() => props.definition, async () => {
 const exploreLink = computed(() => {
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
-  // TODO: remove once portal has been added as option in Explore
-  if (filters.some(filter => ('dimension' in filter && filter.dimension === 'portal') ||
-    ('field' in filter && filter.field === 'portal')) ||
-    dimensions.some(dim => dim === 'portal')
+  // TODO: remove once portal and api are available in Explore
+  const excludedDimensions = new Set(['portal', 'api'])
+
+  if (filters.some(filter =>
+    ('dimension' in filter && excludedDimensions.has(filter.dimension)) ||
+    ('field' in filter && excludedDimensions.has(filter.field))) ||
+    dimensions.some(dim => excludedDimensions.has(dim))
   ) {
     return ''
   }
@@ -204,7 +207,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'horizontal_bar': BarChartRenderer,
   'vertical_bar': BarChartRenderer,
   'gauge': SimpleChartRenderer,
-  'doughnut': DoughnutChartRenderer,
+  'donut': DonutChartRenderer,
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
   'slottable': undefined,

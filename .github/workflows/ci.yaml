@@ -21,6 +21,9 @@ jobs:
     name: Build And Test
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read
     outputs:
       filter: ${{steps.changed_packages.outputs.filter}}
       unitTestFilter: ${{steps.changed_packages.outputs.unitTestFilter}}
@@ -35,14 +38,14 @@ jobs:
       # this comment is removed in this step
       - name: Remove preview consumption comment
         if: ${{ env.GH_TOKEN != '' }}
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 #v2.9.1
         with:
           header: pr_preview_consumption
           delete: true
           GITHUB_TOKEN: ${{ env.GH_TOKEN }}
 
       - name: Checkout Source Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
 
@@ -72,13 +75,13 @@ jobs:
       # See 'changed_packages' below
       - name: Check for config file changes
         id: config-files-changed
-        uses: tj-actions/changed-files@v44
+        uses: Kong/changed-files@4edd678ac3f81e2dc578756871e4d00c19191daf
         with:
           files: |
             ./vite.config.shared.ts
             ./cypress.config.ts
             ./cypress/**
-            ./pnpm-lock.yaml
+            ./package.json
             ./eslintrc.cjs
             ./.stylelintrc.js
 
@@ -221,39 +224,64 @@ jobs:
         run: pnpm --stream --filter "...${{steps.changed_packages.outputs.filter}}..." run build
 
       - name: Check dist bundle size against max-limit
+        if: ${{ steps.changed_packages.outputs.filter != '' }}
         uses: Kong/github-action-dist-size-checker@main
+
+      - name: 'Authenticate to Google Cloud'
+        if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
+        id: 'auth'
+        uses: 'google-github-actions/auth@6fc4af4b145ae7821d527454aa9bd537d1f2dc5f' # v2
+        with:
+          project_id: '22045766606'
+          workload_identity_provider: 'projects/22045766606/locations/global/workloadIdentityPools/github/providers/github'
+
 
       - name: Publish Previews
         if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
+        env:
+           GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
+
+          echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
+          echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
+
+          npx google-artifactregistry-auth
 
           preid="pr.${{ github.event.pull_request.number }}.$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
           tag="pr-${{ github.event.pull_request.number }}"
           echo "preid=${preid}"
 
-          git checkout ${{ github.head_ref }}
+          git update-index --assume-unchanged .npmrc
 
-          pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend || true
+          pnpm --silent lerna publish  prerelease --canary --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --no-git-tag-version --no-git-reset --no-push --yes --amend --summary-file --dist-tag "${tag}"
 
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
-
-          pnpmPublish=$(pnpm --stream --filter "${{steps.changed_packages.outputs.filter}}" publish  --no-git-checks --access public --report-summary --tag "${tag}")
-
-          if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
-            echo "There are no new packages that should be published"
+          if [[ ! -f "lerna-publish-summary.json" ]]; then
+            echo "No changed packages to publish"
             exit 0
           fi
 
-          npm_instructions=""
-          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
+          echo "summary file:"
+          cat lerna-publish-summary.json
+
+          for pkg in $(cat lerna-publish-summary.json | jq -r '.[]|.packageName+"!"+.version')
           do
-            pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
+            pkgName=$(echo ${pkg}|cut -d'!' -f1)
+
+            # beg KHCP-14702 temp solution till pubsub in internal registry is not implemented
+            pkgVersion=$(echo ${pkg}|cut -d'!' -f2)
+
+            curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
+              -H 'Accept: application/vnd.github.everest-preview+json' \
+              "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
+              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"${pkgName}\", \"version\":\"${pkgVersion}\"}}"
+            # end KHCP-14702
+
             if [ "${npm_instructions}" != "" ]; then
               npm_instructions="${npm_instructions}\n"
             fi
-            npm_instructions="${npm_instructions}${pkg}"
+            npm_instructions="${npm_instructions}${pkgName}@${tag}"
           done
 
           if [[ -z "${npm_instructions}" ]]; then
@@ -264,12 +292,10 @@ jobs:
           echo "npm_instructions<<EOF" >> $GITHUB_ENV
           echo -e "$npm_instructions" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
 
       - name: Provide preview link info
         if: ${{ env.npm_instructions != '' && env.GH_TOKEN != '' }}
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@52423e01640425a022ef5fd42c6fb5f633a02728 #v2.9.1
         with:
           header: pr_preview_consumption
           message: |
@@ -286,7 +312,7 @@ jobs:
 
       - name: Save Build Artifacts
         if: ${{ steps.changed_packages.outputs.filter != '' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: package-dist-artifacts
           path: packages/*/*/dist
@@ -305,7 +331,7 @@ jobs:
 
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
@@ -314,13 +340,13 @@ jobs:
         run: pnpm cypress install
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4
         with:
           name: package-dist-artifacts
           path: packages/
 
       - name: Run Component Tests
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@d79d2d530a66e641eb4a5f227e13bc985c60b964 #v4.2.2
         with:
           install: false
           command: pnpm run test:component:ci --spec ${{ matrix.container }}
@@ -335,7 +361,7 @@ jobs:
           echo "artifactName=component-test-failures-${packageName}" >> $GITHUB_OUTPUT
 
       - name: Upload Component Test Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         continue-on-error: true
         if: failure()
         with:
@@ -351,6 +377,9 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     timeout-minutes: 20
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read
     if: ${{ always() && needs.build.outputs.filter != '' }}
     env:
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -366,7 +395,7 @@ jobs:
 
       - name: Checkout Source Code
         if: ${{ github.event_name == 'push' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
           token: ${{ secrets.KONGPONENTS_BOT_PAT }}
@@ -377,11 +406,18 @@ jobs:
 
       - name: Download build artifacts
         if: ${{ github.event_name == 'push' }}
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4
         with:
           name: package-dist-artifacts
           path: packages/
 
+      - name: 'Authenticate to Google Cloud'
+        if: ${{ github.event_name == 'push' }}
+        id: 'auth'
+        uses: 'google-github-actions/auth@6fc4af4b145ae7821d527454aa9bd537d1f2dc5f' # v2
+        with:
+          project_id: '22045766606'
+          workload_identity_provider: 'projects/22045766606/locations/global/workloadIdentityPools/github/providers/github'
 
       # for lerna version we use:
       # --force-git-tag - if tag was already created it will be recreated instead of command failing and entire CI failing
@@ -390,20 +426,45 @@ jobs:
       # --conventional-commits - so that package's version changed following semantic releases
       #
       # we shall ignore lerna version error as pnpm publish will fail or not publish in case of such error
-      - name: Update package versions
+      - name: Publish packages to NPM
         if: ${{ github.event_name == 'push' }}
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
-          pnpm --silent lerna version --conventional-commits --create-release github --yes --force-git-tag || true
 
-      - name: Publish packages to NPM
-        if: ${{ github.event_name == 'push' }}
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
-          pnpm --stream --filter "${{needs.build.outputs.filter}}" publish  --no-git-checks --access public
+          echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
+          echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
+
+          npx google-artifactregistry-auth
+
+          git update-index --assume-unchanged .npmrc
+
+          pnpm --silent lerna publish --conventional-commits --create-release github --yes --force-git-tag --summary-file
+
+          if [[ ! -f "lerna-publish-summary.json" ]]; then
+            echo "No changed packages to publish"
+            exit 0
+          fi
+
+          # beg KHCP-14702 temp solution till pubsub in internal registry is not implemented
+          echo "summary file:"
+          cat lerna-publish-summary.json
+
+          for pkg in $(cat lerna-publish-summary.json | jq -r '.[]|.packageName+"!"+.version')
+          do
+            pkgName=$(echo ${pkg}|cut -d'!' -f1)
+            pkgVersion=$(echo ${pkg}|cut -d'!' -f2)
+
+            curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
+              -H 'Accept: application/vnd.github.everest-preview+json' \
+              "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
+              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"${pkgName}\", \"version\":\"${pkgVersion}\"}}"
+
+          done
+          # end KHCP-14702
+
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PUBLIC_PUBLISH }}
+           GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
 
   notify-slack:
     name: Slack Notification
@@ -414,10 +475,10 @@ jobs:
       - finish-test-and-publish
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Get aggregate Workflow status
-        uses: technote-space/workflow-conclusion-action@v3
+        uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
 
       - name: Post Slack notification
         uses: Kong/public-shared-actions/slack-actions/workflow-notification@v2

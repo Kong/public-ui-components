@@ -83,7 +83,7 @@
       </template>
 
       <template
-        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        v-if="!filterQuery && enableV2EmptyStates && config.app === 'konnect'"
         #empty-state
       >
         <EntityEmptyState
@@ -104,6 +104,13 @@
                 :size="KUI_ICON_SIZE_50"
               />
             </div>
+          </template>
+
+          <template
+            v-if="config?.isControlPlaneGroup"
+            #message
+          >
+            {{ t('consumer_groups.list.empty_state_v2.group') }}
           </template>
         </EntityEmptyState>
       </template>

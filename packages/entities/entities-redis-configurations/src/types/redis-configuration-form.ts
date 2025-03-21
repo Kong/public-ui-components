@@ -9,6 +9,7 @@ export interface KongManagerRedisConfigurationFormConfig extends KongManagerBase
 export interface RedisConfigurationFields {
   name: string
   type: PartialType
+  tags: string
   config: {
     cluster_max_redirections: number
     cluster_nodes: Identifiable<ClusterNode>[]

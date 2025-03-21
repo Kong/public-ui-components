@@ -27,6 +27,7 @@ export const useRedisConfigurationForm = (options: Options) => {
   const form = reactive<RedisConfigurationFormState>({
     fields: {
       name: '',
+      tags: '',
       type: mapRedisTypeToPartialType(defaultRedisType),
       config: JSON.parse(JSON.stringify(DEFAULT_FIELDS)),
     },
@@ -80,6 +81,7 @@ export const useRedisConfigurationForm = (options: Options) => {
         return {
           name: form.fields.name,
           type: form.fields.type,
+          tags: s.stringToArray(form.fields.tags),
           config: {
             host: form.fields.config.host,
             port: s.int(form.fields.config.port),
@@ -96,6 +98,7 @@ export const useRedisConfigurationForm = (options: Options) => {
         return {
           name: form.fields.name,
           type: form.fields.type,
+          tags: s.stringToArray(form.fields.tags),
           config: {
             connect_timeout: s.int(form.fields.config.connect_timeout),
             connection_is_proxied: form.fields.config.connection_is_proxied,
@@ -125,6 +128,7 @@ export const useRedisConfigurationForm = (options: Options) => {
         return {
           name: form.fields.name,
           type: form.fields.type,
+          tags: s.stringToArray(form.fields.tags),
           config: {
             cluster_nodes: s.removeIdClusterNodes(form.fields.config.cluster_nodes),
             cluster_max_redirections: s.int(form.fields.config.cluster_max_redirections),
@@ -154,6 +158,7 @@ export const useRedisConfigurationForm = (options: Options) => {
         return {
           name: form.fields.name,
           type: form.fields.type,
+          tags: s.stringToArray(form.fields.tags),
           config: {
             sentinel_master: s.str(form.fields.config.sentinel_master, null),
             sentinel_nodes: s.removeIdFromSentinelNodes(form.fields.config.sentinel_nodes),
@@ -230,6 +235,7 @@ export const useRedisConfigurationForm = (options: Options) => {
     form.fields.config.cluster_nodes = s.addIdToClusterNodes(data.config.cluster_nodes ?? [])
     form.fields.name = data.name
     form.fields.type = data.type
+    form.fields.tags = s.arrayToString(data.tags)
     redisType.value = getRedisType(data)
     initialPayload.value = JSON.parse(JSON.stringify(payload.value))
   }

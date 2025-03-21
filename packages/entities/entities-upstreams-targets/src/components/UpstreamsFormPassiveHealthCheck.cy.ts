@@ -12,11 +12,11 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
     })
 
     cy.get('.passive-healthcheck-type-select').should('be.visible')
-    cy.getTestId('passive-healthcheck-successes').should('be.visible')
-    cy.get('.passive-healthcheck-http-statuses').should('be.visible')
-    cy.getTestId('passive-healthcheck-timeouts').should('be.visible')
-    cy.getTestId('passive-healthcheck-http-failures').should('be.visible')
-    cy.get('.passive-healthcheck-unhealthy-http-statuses').should('be.visible')
+    cy.getTestId('passive-healthcheck-healthy-successes').should('be.visible')
+    cy.get('.passive-healthcheck-healthy-http-statuses').should('be.visible')
+    cy.getTestId('passive-healthcheck-unhealthy-timeouts').should('be.visible')
+    cy.getTestId('passive-healthcheck-unhealthy-http-failures').should('be.visible')
+    cy.getTestId('passive-healthcheck-unhealthy-http-statuses').should('be.visible')
   })
 
   it('Should bind type data correctly', () => {
@@ -34,58 +34,58 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
     cy.get('@onUpdateSpy').should('have.been.calledWith', 'tcp')
   })
 
-  it('Should bind successes data correctly', () => {
+  it('Should bind healthySuccesses data correctly', () => {
     cy.mount(UpstreamsFormPassiveHealthCheck, {
       props: {
         type: 'http',
-        'onUpdate:successes': cy.spy().as('onUpdateSpy'),
+        'onUpdate:healthy-successes': cy.spy().as('onUpdateSpy'),
       },
     })
 
-    cy.getTestId('passive-healthcheck-successes').type('10', { waitForAnimations: false })
+    cy.getTestId('passive-healthcheck-healthy-successes').type('10', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '10')
   })
 
-  it('Should bind httpStatuses data correctly', () => {
+  it('Should bind healthyHttpStatuses data correctly', () => {
     cy.mount(UpstreamsFormPassiveHealthCheck, {
       props: {
         type: 'http',
-        'onUpdate:http-statuses': cy.spy().as('onUpdateSpy'),
+        'onUpdate:healthy-http-statuses': cy.spy().as('onUpdateSpy'),
       },
     })
 
-    cy.get('.passive-healthcheck-http-statuses').click({ waitForAnimations: false })
+    cy.get('.passive-healthcheck-healthy-http-statuses').click({ waitForAnimations: false })
 
-    cy.get('.passive-healthcheck-http-statuses .multiselect-list .multiselect-item').should('have.length', 92)
-    cy.get('.passive-healthcheck-http-statuses .multiselect-list [data-testid="multiselect-item-200"]').click({ waitForAnimations: false })
-    cy.get('.passive-healthcheck-http-statuses .multiselect-list [data-testid="multiselect-item-201"]').click({ waitForAnimations: false })
+    cy.get('.passive-healthcheck-healthy-http-statuses .multiselect-list .multiselect-item').should('have.length', 92)
+    cy.get('.passive-healthcheck-healthy-http-statuses .multiselect-list [data-testid="multiselect-item-200"]').click({ waitForAnimations: false })
+    cy.get('.passive-healthcheck-healthy-http-statuses .multiselect-list [data-testid="multiselect-item-201"]').click({ waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', ['200', '201'])
   })
 
-  it('Should bind timeouts data correctly', () => {
+  it('Should bind healthyTimeouts data correctly', () => {
     cy.mount(UpstreamsFormPassiveHealthCheck, {
       props: {
         type: 'http',
-        'onUpdate:timeouts': cy.spy().as('onUpdateSpy'),
+        'onUpdate:unhealthy-timeouts': cy.spy().as('onUpdateSpy'),
       },
     })
 
-    cy.getTestId('passive-healthcheck-timeouts').type('4', { waitForAnimations: false })
+    cy.getTestId('passive-healthcheck-unhealthy-timeouts').type('4', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '4')
   })
 
-  it('Should bind httpFailures data correctly', () => {
+  it('Should bind unhealthyHttpFailures data correctly', () => {
     cy.mount(UpstreamsFormPassiveHealthCheck, {
       props: {
         type: 'http',
-        'onUpdate:http-failures': cy.spy().as('onUpdateSpy'),
+        'onUpdate:unhealthy-http-failures': cy.spy().as('onUpdateSpy'),
       },
     })
 
-    cy.getTestId('passive-healthcheck-http-failures').type('5', { waitForAnimations: false })
+    cy.getTestId('passive-healthcheck-unhealthy-http-failures').type('5', { waitForAnimations: false })
 
     cy.get('@onUpdateSpy').should('have.been.calledWith', '5')
   })
@@ -114,22 +114,22 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
       },
     })
 
-    cy.get('.passive-healthcheck-http-statuses').should('not.exist')
-    cy.getTestId('passive-healthcheck-http-failures').should('not.exist')
-    cy.get('.passive-healthcheck-unhealthy-http-statuses').should('not.exist')
+    cy.get('.passive-healthcheck-healthy-http-statuses').should('not.exist')
+    cy.getTestId('passive-healthcheck-unhealthy-http-failures').should('not.exist')
+    cy.getTestId('passive-healthcheck-unhealthy-http-statuses').should('not.exist')
   })
 
   PORTOCOLS.forEach((protocol) => {
-    it(`Should bind tcpFailures data correctly if type === "${protocol}"`, () => {
+    it(`Should bind unhealthyTcpFailures data correctly if type === "${protocol}"`, () => {
       cy.mount(UpstreamsFormPassiveHealthCheck, {
         props: {
           type: protocol,
-          'onUpdate:tcp-failures': cy.spy().as('onUpdateSpy'),
+          'onUpdate:unhealthy-tcp-failures': cy.spy().as('onUpdateSpy'),
         },
       })
 
-      cy.getTestId('passive-healthcheck-tcp-failures').should('be.visible')
-      cy.getTestId('passive-healthcheck-tcp-failures').type('10', { waitForAnimations: false })
+      cy.getTestId('passive-healthcheck-unhealthy-tcp-failures').should('be.visible')
+      cy.getTestId('passive-healthcheck-unhealthy-tcp-failures').type('10', { waitForAnimations: false })
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', '10')
     })
@@ -140,8 +140,8 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
     cy.mount(UpstreamsFormPassiveHealthCheck, {
       props: {
         type: 'tcp',
-        'onUpdate:tcp-failures': cy.spy().as('onUpdateTcpFailuresSpy'),
-        'onUpdate:http-statuses': cy.spy().as('onUpdateHttpStatusesSpy'),
+        'onUpdate:unhealthy-tcp-failures': cy.spy().as('onUpdateUnhealthyTcpFailuresSpy'),
+        'onUpdate:healthy-http-statuses': cy.spy().as('onUpdateHealthyHttpStatusesSpy'),
         'onUpdate:unhealthy-http-statuses': cy.spy().as('onUpdateUnhealthyHttpStatusesSpy'),
       },
     }).then(({ wrapper }) => wrapper)
@@ -149,10 +149,10 @@ describe('<UpstreamsFormPassiveHealthCheck/>', { viewportHeight: 700, viewportWi
 
     cy.get('@vueWrapper').then(async wrapper => {
       await wrapper.setProps({ type: 'https' })
-      cy.get('@onUpdateTcpFailuresSpy').should('have.been.calledWith', '5')
+      cy.get('@onUpdateUnhealthyTcpFailuresSpy').should('have.been.calledWith', '5')
 
       await wrapper.setProps({ type: 'tcp' })
-      cy.get('@onUpdateHttpStatusesSpy').should('have.been.calledWith', PassiveHealthyHttpStatuses)
+      cy.get('@onUpdateHealthyHttpStatusesSpy').should('have.been.calledWith', PassiveHealthyHttpStatuses)
       cy.get('@onUpdateUnhealthyHttpStatusesSpy').should('have.been.calledWith', PassiveUnhealthyHttpStatuses)
     })
   })
