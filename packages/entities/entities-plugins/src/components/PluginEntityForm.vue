@@ -6,12 +6,35 @@
     />
 
     <div
-      v-else
+      v-else-if="(formModel.id && editing) || !editing"
       class="entity-form"
     >
       <component
+        :is="freeformName"
+        v-if="freeformName"
+        :form-model="formModel"
+        :form-options="formOptions"
+        :form-schema="formSchema"
+        :is-editing="editing"
+        :model="record"
+        :on-config-change="onConfigChange"
+        :on-model-updated="onModelUpdated"
+        :schema="rawSchema"
+      >
+        <template
+          v-if="enableVaultSecretPicker"
+          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
+        >
+          <VaultSecretPickerProvider
+            v-if="slotProps.schema.referenceable"
+            v-bind="slotProps"
+            @open="setUpVaultSecretPicker"
+          />
+        </template>
+      </component>
+      <component
         :is="sharedFormName"
-        v-if="sharedFormName && (formModel.id && editing || !editing)"
+        v-else-if="sharedFormName"
         :enable-redis-partial="enableRedisPartial"
         :form-model="formModel"
         :form-options="formOptions"
@@ -28,13 +51,13 @@
           <VaultSecretPickerProvider
             v-if="slotProps.schema.referenceable"
             v-bind="slotProps"
-            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+            @open="setUpVaultSecretPicker"
           />
         </template>
       </component>
 
       <VueFormGenerator
-        v-if="!sharedFormName && (formModel.id && editing || !editing)"
+        v-else
         :enable-redis-partial="enableRedisPartial"
         :is-editing="editing"
         :model="formModel"
@@ -66,7 +89,7 @@
           <VaultSecretPickerProvider
             v-if="slotProps.schema.referenceable"
             v-bind="slotProps"
-            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+            @open="setUpVaultSecretPicker"
           />
         </template>
       </VueFormGenerator>
@@ -104,16 +127,27 @@ import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
-import {
-  type KongManagerPluginFormConfig,
-  type KonnectPluginFormConfig,
-  type PluginEntityInfo,
-} from '../types'
+import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
+import * as freeForm from './free-form'
+import { getFreeFormName } from '../utils/free-form'
+
+// Need to check for duplicates in sharedForms and freeForm
+// throw an error if there are any
+const sharedFormKeys = Object.keys(sharedForms)
+const freeFormKeys = Object.keys(freeForm)
+if (
+  new Set([...sharedFormKeys, ...freeFormKeys]).size !==
+  sharedFormKeys.length + freeFormKeys.length
+) {
+  throw new Error(
+    'Duplicate form component names found in `sharedForms` and `freeForm`',
+  )
+}
 
 // Must explicitly specify these as components since they are rendered dynamically
 export default defineComponent({
-  components: { ...sharedForms },
+  components: { ...sharedForms, ...freeForm },
 })
 </script>
 
@@ -160,6 +194,13 @@ const props = defineProps({
    * Form schema
    */
   schema: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => ({}),
+  },
+  /**
+   * Raw schema
+   */
+  rawSchema: {
     type: Object as PropType<Record<string, any>>,
     default: () => ({}),
   },
@@ -293,6 +334,7 @@ provide(FORMS_API_KEY, {
 provide(FORMS_CONFIG, props.config)
 
 const sharedFormName = ref('')
+const freeformName = ref('')
 const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
@@ -626,6 +668,18 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
   })
 }
 
+const onConfigChange = (value: Record<string, any>) => {
+  const data = getModel()
+
+  data.config = value
+
+  emit('model-updated', {
+    model: formModel,
+    originalModel,
+    data,
+  })
+}
+
 const loading = ref(true)
 const initFormModel = (): void => {
   if (props.record && props.schema) {
@@ -721,6 +775,8 @@ watch(() => props.schema, (newSchema, oldSchema) => {
     }),
   }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
+
+  freeformName.value = getFreeFormName(form.model.name)
   sharedFormName.value = getSharedFormName(form.model.name)
 
   initFormModel()
@@ -760,7 +816,7 @@ onBeforeMount(() => {
   }
 
   :deep(.vue-form-generator) {
-    >fieldset {
+    > fieldset {
       .form-group:last-child {
         margin-bottom: 0;
       }
@@ -774,6 +830,7 @@ onBeforeMount(() => {
 
     fieldset {
       border: none;
+      margin-left: $kui-space-0;
       padding: $kui-space-0;
     }
 
@@ -793,12 +850,12 @@ onBeforeMount(() => {
 
     .form-group hr.divider {
       border-color: $kui-color-border;
-      opacity: .3;
+      opacity: 0.3;
     }
 
     .form-group hr.wide-divider {
       border-color: $kui-color-border;
-      opacity: .6;
+      opacity: 0.6;
     }
 
     .form-group.field-textArea textarea {
@@ -823,7 +880,7 @@ onBeforeMount(() => {
       }
     }
 
-    .field-radios .radio-list label input[type=radio] {
+    .field-radios .radio-list label input[type="radio"] {
       margin-right: 10px;
     }
 
