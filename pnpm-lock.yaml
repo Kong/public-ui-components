@@ -527,8 +527,8 @@ importers:
         specifier: ^1.21.2
         version: 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@kong/markdown':
-        specifier: 1.7.29
-        version: 1.7.29(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        specifier: 1.7.30
+        version: 1.7.30(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -2072,8 +2072,8 @@ packages:
       vue: '>= 3.5.0 < 4'
       vue-router: ^4.4.5
 
-  '@kong/markdown@1.7.29':
-    resolution: {integrity: sha512-I2gKRqzlPpiI5CrKYUtkDuF5SL0Dw5yYghf62AGssKaBgQyWg3c+/fV0CsDPfwHFsKzZh2EgfeunjIgQbMV74g==}
+  '@kong/markdown@1.7.30':
+    resolution: {integrity: sha512-yCsWAB89y5+5m1pBmp9f6QwwUJVNI5VUHT0sYJqxfLTFcL2X/wt+HjurTZFy3cJQL/MJ6T9N/tTcpJHl05GfmQ==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.13 < 4'
@@ -11032,7 +11032,7 @@ snapshots:
       - solid-js
       - svelte
 
-  '@kong/markdown@1.7.29(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))':
+  '@kong/markdown@1.7.30(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))':
     dependencies:
       '@kong/icons': 1.21.2(vue@3.5.13(typescript@5.6.3))
       '@mdit-vue/plugin-frontmatter': 2.1.3
