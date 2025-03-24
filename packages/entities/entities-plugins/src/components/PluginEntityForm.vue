@@ -17,7 +17,7 @@
         :form-schema="formSchema"
         :is-editing="editing"
         :model="record"
-        :on-config-change="onConfigChange"
+        :on-config-change="updateConfig"
         :on-model-updated="onModelUpdated"
         :schema="rawSchema"
       >
@@ -668,7 +668,7 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
   })
 }
 
-const onConfigChange = (value: Record<string, any>) => {
+const updateConfig = (value: Record<string, any>) => {
   const data = getModel()
 
   data.config = value
@@ -719,7 +719,12 @@ const initFormModel = (): void => {
       }
 
       // main plugin configuration
-      updateModel(props.record.config, 'config')
+      if (freeformName.value) {
+        // keep original config from record for freeform plugins
+        updateConfig(props.record.config)
+      } else {
+        updateModel(props.record.config, 'config')
+      }
     }
   }
 
