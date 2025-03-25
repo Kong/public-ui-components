@@ -41,6 +41,7 @@
       />
 
       <Teleport
+        v-if="!hideActions"
         :disabled="!actionTeleportTarget"
         :to="actionTeleportTarget"
       >
@@ -220,6 +221,14 @@ const props = defineProps({
    */
   actionTeleportTarget: {
     type: String,
+    default: undefined,
+  },
+  /**
+   * Hide the actions
+   */
+  hideActions: {
+    type: Boolean,
+    default: false,
   },
   /**
    * Top offset for the slideout
@@ -339,6 +348,12 @@ onBeforeMount(async () => {
       isLoading.value = false
     }
   }
+})
+
+defineExpose({
+  viewConfig: toggle,
+  formCancel: handleClickCancel,
+  formSubmit: handleClickSave,
 })
 </script>
 
