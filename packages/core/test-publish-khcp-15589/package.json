@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/test-publish-khcp-15589",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "main": "./dist/test-publish-khcp-15589.umd.js",
   "module": "./dist/test-publish-khcp-15589.es.js",
