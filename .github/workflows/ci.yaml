@@ -259,7 +259,9 @@ jobs:
           git checkout ${{ github.head_ref }}
 
           versions=$(pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json --no-git-tag-version)
-          filterStr=$(echo $versions | jq -r 'try .[]|"--filter "+.name' | tr '\n' ' ')
+          echo "versions: ${versions}"
+          filterStr=$(echo ${versions} | jq -r 'try .[]|"--filter "+.name' | tr '\n' ' ')
+          echo "filterStr:${filterStr}"
 
           if [[ "${filterStr}" != "" ]]; then
             pnpmPublish=$(pnpm  $filterStr publish  --no-git-checks --access public --report-summary --tag "${tag}")
