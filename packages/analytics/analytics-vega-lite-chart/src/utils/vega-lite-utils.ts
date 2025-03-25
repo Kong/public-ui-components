@@ -18,14 +18,19 @@ export function prepareData(exploreResult: ExploreResultV4) {
     const timestamp = new Date(data.timestamp).toISOString()
     const event = data.event as { [label: string]: string | number }
 
-    return metricNames
-      .filter(metric => metric in event)
-      .map(metric => ({
-        time: timestamp,
-        metric,
-        value: event[metric],
-        ...event,
-      }))
+    return {
+      time: timestamp,
+      ...event,
+    }
+
+    // return metricNames
+    //   .filter(metric => metric in event)
+    //   .map(metric => ({
+    //     time: timestamp,
+    //     metric,
+    //     value: event[metric],
+    //     ...event,
+    //   }))
   })
 
   return flatData
@@ -51,24 +56,11 @@ export function createTimeSeriesVegaSpec(
 
   const metric = metricNames[0]
 
-  const yValues = transformedData
-    .map(d => typeof d.value === 'number' ? d.value : Number(d.value))
-    .filter(v => !isNaN(v) && isFinite(v))
-  const yMin = yValues.length > 0 ? Math.min(...yValues) : 0
-  const yMax = yValues.length > 0 ? Math.max(...yValues) : 1
-
-
-  const getYEncoding = (isLine: boolean) => {
+  const getYEncoding = () => {
     const baseEncoding = {
       field: hasDimensionField ? metric : 'value',
       type: 'quantitative' as const,
       title: hasDimensionField ? metric : 'Value',
-    }
-    if (isLine) {
-      return {
-        ...baseEncoding,
-        scale: { domain: [yMin, yMax] },
-      }
     }
     return baseEncoding
   }
@@ -82,10 +74,15 @@ export function createTimeSeriesVegaSpec(
     },
     data: { name: 'chartData' },
     params: [
+      { name: 'chartType' },
+    ],
+    transform: [
       {
-        name: 'chartType',
-        value: chartType,
+        fold: [...metricNames], as: ['metric', 'value'],
       },
+      // {
+      //   filter: 'isValid(datum.value) && isFinite(datum.value)',
+      // },
     ],
     config: {
       legend: {
@@ -113,9 +110,10 @@ export function createTimeSeriesVegaSpec(
         },
         encoding: hasDimensionField
           ? {
-            y: getYEncoding(chartType === 'line'),
+            y: getYEncoding(),
             color: {
               field: dimension, type: 'nominal', title: dimension,
+              scale: { domain: Object.keys(dimensionLabels || {}) },
               legend: {
                 orient: 'bottom',
                 direction: 'horizontal',
@@ -124,9 +122,10 @@ export function createTimeSeriesVegaSpec(
               },
             },
           } : {
-            y: getYEncoding(chartType === 'line'),
+            y: getYEncoding(),
             color: {
               field: 'metric', type: 'nominal', title: 'Metrics',
+              scale: { domain: [...metricNames] },
               legend: {
                 orient: 'bottom',
                 direction: 'horizontal',
@@ -137,7 +136,7 @@ export function createTimeSeriesVegaSpec(
           },
         transform: [
           {
-            impute: metric,
+            impute: 'value',
             key: 'time',
             ...(dimension ? { groupby: [dimension] } : {}),
             method: 'value',

@@ -61,13 +61,20 @@ function handleHover(event: any, item: any) {
   event.stopPropagation()
   tooltipData.value.show = true
   if (item?.datum) {
+
+    const currentTime = item.datum.datum.time
+
+    // Find all data points with this timestamp
+    const dataEntry = chartInstance.value?.view.data('chartData')
+      .filter(d => new Date(d.time).getTime() === currentTime)[0]
+
     tooltipData.value = {
       show: true,
       left: `${event.layerX + 50}px`,
       top: `${event.layerY + 50}px`,
       tooltipTitle: item.datum.category || 'Tooltip',
       context: format(new Date(item.datum.datum.time), 'MMM dd, yyyy HH:mm:ss'),
-      series: Object.entries(item.datum.datum).filter(([key]) => key !== 'time').map(([key, value]) => ({ label: key, value })),
+      series: Object.entries(dataEntry).filter(([key]) => key !== 'time').map(([key, value]) => ({ label: key, value })),
       locked: false,
     }
   }
