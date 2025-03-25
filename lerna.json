@@ -13,7 +13,7 @@
   "command": {
     "version": {
       "message": "chore(release): publish [skip ci]",
-      "allowBranch": "main",
+      "allowBranch": "fix/KHCP-15589_back-to-pnpm-publish",
       "conventionalCommits": true
     }
   },
