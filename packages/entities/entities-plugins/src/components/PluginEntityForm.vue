@@ -122,7 +122,7 @@ import {
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, defineComponent, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
+import { computed, defineComponent, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
@@ -570,7 +570,14 @@ const getModel = (): Record<string, any> => {
     unsetNullForeignKey(fieldNameDotNotation, outputModel)
   })
 
-  return unFlattenObject(outputModel)
+  const model: Record<string, any> = unFlattenObject(outputModel)
+
+  // Handle the special case of the freeform plugin
+  if (freeformName.value) {
+    model.config = freeformConfig.value
+  }
+
+  return model
 }
 
 const onPartialToggled = (dismissSchemaField: string | undefined, additionalModel: Record<string, any> = {}) => {
@@ -668,15 +675,14 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
   })
 }
 
+const freeformConfig = shallowRef<Record<string, any>>(props.record.config)
 const updateConfig = (value: Record<string, any>) => {
-  const data = getModel()
-
-  data.config = value
+  freeformConfig.value = value
 
   emit('model-updated', {
     model: formModel,
     originalModel,
-    data,
+    data: getModel(),
   })
 }
 
