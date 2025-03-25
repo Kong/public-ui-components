@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.20.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.20.4...@kong-ui-public/entities-shared@3.20.5) (2025-03-25)
+
+
+### Bug Fixes
+
+* **entities-shared:** expose entity base form actions [KHCP-15505] ([#2058](https://github.com/Kong/public-ui-components/issues/2058)) ([c8c2bbc](https://github.com/Kong/public-ui-components/commit/c8c2bbcd7dcc16d23193cfb5a304946eca57ad0d))
+
+
+
+
+
 ## [3.20.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.20.3...@kong-ui-public/entities-shared@3.20.4) (2025-03-25)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
