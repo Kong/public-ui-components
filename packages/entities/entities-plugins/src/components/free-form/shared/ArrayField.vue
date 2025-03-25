@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { useTemplateRef, nextTick, watch, computed, ref } from 'vue'
+import { useTemplateRef, nextTick, watch, computed, ref, reactive } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
@@ -125,7 +125,7 @@ const emit = defineEmits<{
   remove: [index: number];
 }>()
 
-const keyMap = new Map<T, string>()
+const keyMap = reactive(new Map<T, string>())
 const realItems = computed(() => props.items || [])
 
 const ListTag = computed(() => props.appearance === 'card' ? KCard : 'div')
@@ -135,7 +135,7 @@ function generateId() {
 }
 
 function getKey(item: T, index: number) {
-  if (typeof item === 'object') {
+  if (item != null && typeof item === 'object') {
     return keyMap.get(item)
   }
 
@@ -156,7 +156,7 @@ watch(realItems, (newItems) => {
   })
 
   const current = new Set(newItems)
-  keyMap.keys().forEach((key) => {
+  ;[...keyMap.keys()].forEach((key) => {
     if (!current.has(key)) {
       keyMap.delete(key)
     }
