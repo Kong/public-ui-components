@@ -259,6 +259,11 @@ jobs:
           git checkout ${{ github.head_ref }}
 
           versions=$(pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json --no-git-tag-version || true)
+          if [[ "${versions}" == "" ]]; then
+            echo "no packages to version"
+            exit 0
+          fi
+
           filterStr=$(echo ${versions} | jq -r 'try .[]|"--filter "+.name' | tr '\n' ' ')
 
           if [[ "${filterStr}" != "" ]]; then
@@ -446,6 +451,11 @@ jobs:
 
           git update-index --assume-unchanged .npmrc
           versions=$(pnpm --silent lerna version --conventional-commits --create-release github --yes --force-git-tag --json || true)
+          if [[ "${versions}" == "" ]]; then
+            echo "no packages to version"
+            exit 0
+          fi
+
           filterStr=$(echo ${versions} | jq -r 'try .[]|"--filter "+.name' | tr '\n' ' ')
 
           if [[ "${filterStr}" != "" ]]; then
