@@ -680,7 +680,9 @@ const updateConfig = (value: Record<string, any>) => {
   freeformConfig.value = value
 
   emit('model-updated', {
-    model: formModel,
+    // config change should also update the form model
+    // otherwise the submit button will be disabled
+    model: { ...formModel, config: value },
     originalModel,
     data: getModel(),
   })
