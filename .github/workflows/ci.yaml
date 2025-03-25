@@ -256,9 +256,10 @@ jobs:
           git update-index --assume-unchanged .npmrc
 
 
-          git checkout ${{ github.head_ref }}
+          #git checkout ${{ github.head_ref }}
 
-          pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --no-git-tag-version --no-git-reset || true
+          versions=$(pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json --no-git-tag-version)
+          echo "versions:${versions}"
 
           pnpmPublish=$(pnpm -r publish  --no-git-checks --access public --report-summary --tag "${tag}")
 
