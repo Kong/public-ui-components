@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - fix/KHCP-15589_back-to-pnpm-publish
+      - main
   pull_request:
     types:
       - opened
@@ -10,7 +10,7 @@ on:
       - reopened
       - labeled
     branches:
-      - mZain
+      - main
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -54,7 +54,7 @@ jobs:
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        if: ${{ github.event_name == 'pZush' }}
+        if: ${{ github.event_name == 'push' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ env.GH_TOKEN }}
@@ -473,7 +473,7 @@ jobs:
 
   notify-slack:
     name: Slack Notification
-    if: ${{ always() && github.event_name == 'pZush' }}
+    if: ${{ always() && github.event_name == 'push' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs:
