@@ -259,9 +259,11 @@ jobs:
           git checkout ${{ github.head_ref }}
 
           versions=$(pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json --no-git-tag-version)
-          echo "versions:${versions}"
+          filterStr=$(jq -r 'try .[]|"--filter "+.name' | tr '\n' ' ')
 
-          pnpmPublish=$(pnpm -r publish  --no-git-checks --access public --report-summary --tag "${tag}")
+          if [[ "${filterStr}" != "" ]]; then
+            pnpmPublish=$(pnpm  $filterStr publish  --no-git-checks --access public --report-summary --tag "${tag}")
+          fi
 
           if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
             echo "There are no new packages that should be published"
@@ -270,8 +272,6 @@ jobs:
 
           npm_instructions=""
           for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
-
-
           do
             # KHCP-14702 temp solution till pubsub in internal registry is not implemented
             name=$(echo ${pkg}|cut -d'@' -f2)
