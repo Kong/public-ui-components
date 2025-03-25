@@ -13,3 +13,4 @@ import TestPublishKhcp15589 from './components/TestPublishKhcp15589.vue'
 // }
 
 export { TestPublishKhcp15589 }
+console.log('1')
