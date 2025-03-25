@@ -159,7 +159,9 @@
           :label-attributes="getLabelAttributes('callouts.*.request.http_opts.proxy.auth_password')"
           :model-value="request.http_opts.proxy?.auth_password"
           :placeholder="getPlaceholder('callouts.*.request.http_opts.proxy.auth_password')"
+          show-password-mask-toggle
           show-vault-secret-picker
+          type="password"
           @update:model-value="val => request.http_opts.proxy!.auth_password = val"
         />
         <StringField

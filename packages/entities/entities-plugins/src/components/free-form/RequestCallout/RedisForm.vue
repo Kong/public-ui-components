@@ -54,7 +54,9 @@
       label="Cache › Redis › Password"
       :label-attributes="getLabelAttributes('cache.redis.password')"
       :placeholder="getPlaceholder('cache.redis.password')"
+      show-password-mask-toggle
       show-vault-secret-picker
+      type="password"
     />
     <StringField
       v-model="redis.sentinel_username"
@@ -68,7 +70,9 @@
       label="Cache › Redis › Sentinel Password"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_password')"
       :placeholder="getPlaceholder('cache.redis.sentinel_password')"
+      show-password-mask-toggle
       show-vault-secret-picker
+      type="password"
     />
     <NumberField
       v-model="redis.database"
