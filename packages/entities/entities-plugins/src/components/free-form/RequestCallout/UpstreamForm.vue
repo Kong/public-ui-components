@@ -55,6 +55,12 @@
         :label-attributes="getLabelAttributes('upstream.body.forward')"
       />
 
+      <BooleanField
+        v-model="upstream.body.decode"
+        label="Upstream › Body › Decode"
+        :label-attributes="getLabelAttributes('upstream.body.decode')"
+      />
+
       <KeyValueField
         :initial-value="upstream.body.custom"
         label="Upstream › Body › Custom"

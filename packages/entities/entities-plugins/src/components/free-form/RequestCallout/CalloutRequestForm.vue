@@ -69,6 +69,12 @@
       required
     >
       <BooleanField
+        v-model="request.body.decode"
+        label="Request › Body › Decode"
+        :label-attributes="getLabelAttributes('callouts.*.request.body.decode')"
+      />
+
+      <BooleanField
         v-model="request.body.forward"
         label="Request › Body › Forward"
         :label-attributes="getLabelAttributes('callouts.*.request.body.forward')"
