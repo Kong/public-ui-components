@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.13...@kong-ui-public/tracing@0.9.14) (2025-03-25)
+
+
+### Bug Fixes
+
+* **tracing:** incorrect type used in the legacy span sampler attribute ([#2053](https://github.com/Kong/public-ui-components/issues/2053)) ([826a637](https://github.com/Kong/public-ui-components/commit/826a637cfae50f6f9b65842c8b7bea1ef05cb9ef))
+
+
+
+
+
 ## [0.9.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.12...@kong-ui-public/tracing@0.9.13) (2025-03-25)
 
 **Note:** Version bump only for package @kong-ui-public/tracing
