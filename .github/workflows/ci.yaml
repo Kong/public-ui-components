@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - fix/KHCP-15589_back-to-pnpm-publish
   pull_request:
     types:
       - opened
@@ -10,7 +10,7 @@ on:
       - reopened
       - labeled
     branches:
-      - main
+      - mZain
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -54,7 +54,7 @@ jobs:
       # see 'run-test' step and variable bellow
       - name: Check if PR Up to Date
         id: 'up-to-date'
-        if: ${{ github.event_name == 'push' }}
+        if: ${{ github.event_name == 'pZush' }}
         uses: Kong/public-shared-actions/pr-previews/up-to-date@main
         with:
           github_token: ${{ env.GH_TOKEN }}
@@ -258,13 +258,11 @@ jobs:
 
           git checkout ${{ github.head_ref }}
 
-          versions=$(pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json --no-git-tag-version)
-          echo "versions: ${versions}"
+          versions=$(pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json --no-git-tag-version || true)
           filterStr=$(echo ${versions} | jq -r 'try .[]|"--filter "+.name' | tr '\n' ' ')
-          echo "filterStr:${filterStr}"
 
           if [[ "${filterStr}" != "" ]]; then
-            pnpmPublish=$(pnpm  $filterStr publish  --no-git-checks --access public --report-summary --tag "${tag}")
+            pnpmPublish=$(pnpm $filterStr publish  --no-git-checks --access public --report-summary --tag "${tag}")
           fi
 
           if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
@@ -447,37 +445,35 @@ jobs:
           npx google-artifactregistry-auth
 
           git update-index --assume-unchanged .npmrc
+          versions=$(pnpm --silent lerna version --conventional-commits --create-release github --yes --force-git-tag --json || true)
+          filterStr=$(echo ${versions} | jq -r 'try .[]|"--filter "+.name' | tr '\n' ' ')
 
-          pnpm --silent lerna publish --conventional-commits --create-release github --yes --force-git-tag --summary-file
+          if [[ "${filterStr}" != "" ]]; then
+            pnpmPublish=$(pnpm $filterStr publish  --no-git-checks --access public --report-summary)
+          fi
 
-          if [[ ! -f "lerna-publish-summary.json" ]]; then
-            echo "No changed packages to publish"
+          if [[ ! -z $(echo "${pnpmPublish}"|grep "There are no new packages that should be published") ]]; then
+            echo "There are no new packages that should be published"
             exit 0
           fi
 
-          # beg KHCP-14702 temp solution till pubsub in internal registry is not implemented
-          echo "summary file:"
-          cat lerna-publish-summary.json
-
-          for pkg in $(cat lerna-publish-summary.json | jq -r '.[]|.packageName+"!"+.version')
+          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
           do
-            pkgName=$(echo ${pkg}|cut -d'!' -f1)
-            pkgVersion=$(echo ${pkg}|cut -d'!' -f2)
-
+            # KHCP-14702 temp solution till pubsub in internal registry is not implemented
+            name=$(echo ${pkg}|cut -d'@' -f2)
+            version=$(echo ${pkg}|cut -d'@' -f3)
             curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
               -H 'Accept: application/vnd.github.everest-preview+json' \
               "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
-              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"${pkgName}\", \"version\":\"${pkgVersion}\"}}"
-
+              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${name}\", \"version\":\"${version}\"}}"          done
+            # end KHCP-14702
           done
-          # end KHCP-14702
-
         env:
            GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
 
   notify-slack:
     name: Slack Notification
-    if: ${{ always() && github.event_name == 'push' }}
+    if: ${{ always() && github.event_name == 'pZush' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs:
