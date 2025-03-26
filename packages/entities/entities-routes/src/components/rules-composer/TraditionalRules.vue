@@ -10,7 +10,7 @@
           {{ protocol.toUpperCase() }}
         </span>
         <span class="routing-rules-title">
-          {{ i18n.t('form.sections.routingRules.title') }}
+          {{ t('form.sections.routingRules.title') }}
         </span>
       </div>
     </template>
@@ -143,7 +143,7 @@
     v-model="isAdvancedFieldsCollapsed"
     class="route-form-advanced-fields-collapse"
     trigger-alignment="leading"
-    :trigger-label="i18n.t('form.viewAdvancedFields')"
+    :trigger-label="t('form.viewAdvancedFields')"
   >
     <div class="route-form-fields-container route-form-advanced-fields-container">
       <KSelect
@@ -151,9 +151,9 @@
         v-model="fields.path_handling"
         data-testid="route-form-path-handling"
         :items="PATH_HANDLING_OPTIONS"
-        :label="i18n.t('form.fields.path_handling.label')"
+        :label="t('form.fields.path_handling.label')"
         :label-attributes="{
-          info: i18n.t('form.fields.path_handling.tooltip'),
+          info: t('form.fields.path_handling.tooltip'),
           tooltipAttributes: { maxWidth: '400' },
         }"
         :readonly="readonly"
@@ -163,7 +163,7 @@
         v-model="fields.https_redirect_status_code"
         data-testid="route-form-http-redirect-status-code"
         :items="HTTP_REDIRECT_STATUS_CODES"
-        :label="i18n.t('form.fields.https_redirect_status_code.label')"
+        :label="t('form.fields.https_redirect_status_code.label')"
         :readonly="readonly"
         width="100%"
       />
@@ -171,7 +171,7 @@
         v-model="fields.regex_priority"
         autocomplete="off"
         data-testid="route-form-regex-priority"
-        :label="i18n.t('form.fields.regex_priority.label')"
+        :label="t('form.fields.regex_priority.label')"
         :readonly="readonly"
         type="number"
       />
@@ -179,22 +179,22 @@
         v-if="isProtocolSelected(['http', 'https', 'ws', 'wss', 'tls', 'tcp', 'udp', 'tls_passthrough'])"
         v-model="fields.strip_path"
         data-testid="route-form-strip-path"
-        :label="i18n.t('form.fields.strip_path.label')"
+        :label="t('form.fields.strip_path.label')"
       />
       <KCheckbox
         v-model="fields.preserve_host"
         data-testid="route-form-preserve-host"
-        :label="i18n.t('form.fields.preserve_host.label')"
+        :label="t('form.fields.preserve_host.label')"
       />
       <KCheckbox
         v-model="fields.request_buffering"
         data-testid="route-form-request-buffering"
-        :label="i18n.t('form.fields.request_buffering.label')"
+        :label="t('form.fields.request_buffering.label')"
       />
       <KCheckbox
         v-model="fields.response_buffering"
         data-testid="route-form-response-buffering"
-        :label="i18n.t('form.fields.response_buffering.label')"
+        :label="t('form.fields.response_buffering.label')"
       />
     </div>
   </KCollapse>
@@ -213,7 +213,7 @@ import PathRules from './rules/PathRules.vue'
 import SniRules from './rules/SniRules.vue'
 import SourceRules from './rules/SourceRules.vue'
 
-const { i18nT, i18n } = composables.useI18n()
+const { i18nT, i18n, i18n: { t } } = composables.useI18n()
 const protocolsLabels = i18n.source.form.protocols as Record<string, string>
 
 const props = defineProps<{

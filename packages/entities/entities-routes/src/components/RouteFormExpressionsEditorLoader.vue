@@ -12,13 +12,13 @@
   <RouteFormExpressionsEditor
     v-else
     v-model="expression"
-    :hint-text="i18n.t('form.expression_playground.supported_protocols_hint')"
+    :hint-text="t('form.expression_playground.supported_protocols_hint')"
     :protocol="props.protocol"
     :show-expressions-modal-entry="showExpressionsModalEntry"
     @notify="emit('notify', $event)"
   >
     <RocketIcon :size="KUI_ICON_SIZE_30" />
-    <span>{{ i18n.t('form.expression_playground.test_link') }}</span>
+    <span>{{ t('form.expression_playground.test_link') }}</span>
   </RouteFormExpressionsEditor>
   <slot
     :expression="{ value: expression, update: setExpression }"
@@ -39,14 +39,14 @@ import { defineAsyncComponent, h, onMounted, ref, type Component } from 'vue'
 import composables from '../composables'
 import { ExpressionsEditorState } from '../types'
 
-const { i18n } = composables.useI18n()
+const { i18n: { t } } = composables.useI18n()
 
 const loadingComponent: Component = {
-  render: () => h('div', i18n.t('form.expressions_editor.loading')),
+  render: () => h('div', t('form.expressions_editor.loading')),
 }
 
 const errorComponent: Component = {
-  render: () => h('div', i18n.t('form.expressions_editor.error')),
+  render: () => h('div', t('form.expressions_editor.error')),
 }
 
 const RouteFormExpressionsEditor = defineAsyncComponent({

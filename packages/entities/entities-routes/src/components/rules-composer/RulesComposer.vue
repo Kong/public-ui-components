@@ -12,7 +12,7 @@
       v-if="routeFlavors.traditional"
       #[`${RouteFlavor.TRADITIONAL}-anchor`]
     >
-      {{ i18n.t('form.flavors.traditional') }}
+      {{ t('form.flavors.traditional') }}
 
       <KTooltip
         v-if="tooltips && tooltips[RouteFlavor.TRADITIONAL]"
@@ -32,7 +32,7 @@
       v-if="routeFlavors.expressions"
       #[`${RouteFlavor.EXPRESSIONS}-anchor`]
     >
-      {{ i18n.t('form.flavors.expressions') }}
+      {{ t('form.flavors.expressions') }}
 
       <KTooltip
         v-if="tooltips && tooltips[RouteFlavor.EXPRESSIONS]"
@@ -95,7 +95,7 @@ import { computed } from 'vue'
 import composables from '../../composables'
 import { RouteFlavor, type RouteFlavors } from '../../types'
 
-const { i18n } = composables.useI18n()
+const { i18n: { t } } = composables.useI18n()
 
 const hash = defineModel<string | undefined>({ required: true })
 
@@ -111,13 +111,13 @@ const tabs = computed<Tab[]>(() => [
   ...props.routeFlavors.traditional
     ? [{
       hash: `#${RouteFlavor.TRADITIONAL}`,
-      title: i18n.t('form.flavors.traditional'),
+      title: t('form.flavors.traditional'),
     }]
     : [],
   ...props.routeFlavors.expressions
     ? [{
       hash: `#${RouteFlavor.EXPRESSIONS}`,
-      title: i18n.t('form.flavors.expressions'),
+      title: t('form.flavors.expressions'),
     }]
     : [],
 ])

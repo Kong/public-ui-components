@@ -16,17 +16,17 @@
       @submit="saveFormData"
     >
       <EntityFormSection
-        :description="i18n.t('form.sections.general.description')"
+        :description="t('form.sections.general.description')"
         :hide-info-header="hideSectionsInfo"
-        :title="i18n.t('form.sections.general.title')"
+        :title="t('form.sections.general.title')"
       >
         <KInput
           v-if="!hideNameField"
           v-model.trim="state.fields.name"
           autocomplete="off"
           data-testid="route-form-name"
-          :label="i18n.t('form.fields.name.label')"
-          :placeholder="i18n.t('form.fields.name.placeholder')"
+          :label="t('form.fields.name.label')"
+          :placeholder="t('form.fields.name.placeholder')"
           :readonly="state.isReadonly"
           type="text"
         />
@@ -38,20 +38,20 @@
             enable-filtering
             :filter-function="() => true"
             :items="availableServices"
-            :label="i18n.t('form.fields.service_id.label')"
+            :label="t('form.fields.service_id.label')"
             :loading="loadingServices"
-            :placeholder="i18n.t('form.fields.service_id.placeholder')"
+            :placeholder="t('form.fields.service_id.placeholder')"
             :readonly="state.isReadonly"
             reuse-item-template
             width="100%"
             @query-change="debouncedServicesQuery"
           >
             <template #loading>
-              <div>{{ i18n.t('actions.loading') }}</div>
+              <div>{{ t('actions.loading') }}</div>
             </template>
             <template #empty>
               <div data-testid="no-search-results">
-                {{ i18n.t('search.no_results') }}
+                {{ t('search.no_results') }}
               </div>
             </template>
             <template #selected-item-template="{ item }">
@@ -69,26 +69,26 @@
           v-model.trim="state.fields.tags"
           autocomplete="off"
           data-testid="route-form-tags"
-          :help="i18n.t('form.fields.tags.help')"
-          :label="i18n.t('form.fields.tags.label')"
-          :placeholder="i18n.t('form.fields.tags.placeholder')"
+          :help="t('form.fields.tags.help')"
+          :label="t('form.fields.tags.label')"
+          :placeholder="t('form.fields.tags.placeholder')"
           :readonly="state.isReadonly"
           type="text"
         />
       </EntityFormSection>
 
       <EntityFormSection
-        :description="i18n.t('form.sections.config.description')"
+        :description="t('form.sections.config.description')"
         :hide-info-header="hideSectionsInfo"
-        :title="i18n.t('form.sections.config.title')"
+        :title="t('form.sections.config.title')"
       >
         <KSelect
           v-model="state.fields.protocols"
           data-testid="route-form-protocols"
           :items="protocols"
-          :label="i18n.t('form.fields.protocols.label')"
+          :label="t('form.fields.protocols.label')"
           :label-attributes="{
-            info: i18n.t('form.fields.protocols.tooltip'),
+            info: t('form.fields.protocols.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
           :readonly="state.isReadonly"
@@ -282,7 +282,7 @@ const payloadFlavor = computed<RouteFlavor | undefined>(() => {
   return undefined
 })
 
-const { i18n } = composables.useI18n()
+const { i18n: { t } } = composables.useI18n()
 const router = useRouter()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const { getMessageFromError } = useErrors()
@@ -346,26 +346,26 @@ const isWsSupported = props.config.app === 'konnect' || useGatewayFeatureSupport
 })
 
 const protocols = [
-  { label: i18n.t('form.protocols.grpc'), value: 'grpc' },
-  { label: i18n.t('form.protocols.grpcs'), value: 'grpcs' },
-  { label: i18n.t('form.protocols.grpc,grpcs'), value: 'grpc,grpcs' },
-  { label: i18n.t('form.protocols.http'), value: 'http' },
-  { label: i18n.t('form.protocols.https'), value: 'https' },
-  { label: i18n.t('form.protocols.http,https'), value: 'http,https' },
-  { label: i18n.t('form.protocols.tcp'), value: 'tcp' },
-  { label: i18n.t('form.protocols.tls'), value: 'tls' },
-  { label: i18n.t('form.protocols.tls,udp'), value: 'tls,udp' },
-  { label: i18n.t('form.protocols.tcp,udp'), value: 'tcp,udp' },
-  { label: i18n.t('form.protocols.tcp,tls'), value: 'tcp,tls' },
-  { label: i18n.t('form.protocols.tcp,tls,udp'), value: 'tcp,tls,udp' },
-  { label: i18n.t('form.protocols.tls_passthrough'), value: 'tls_passthrough' },
-  { label: i18n.t('form.protocols.udp'), value: 'udp' },
+  { label: t('form.protocols.grpc'), value: 'grpc' },
+  { label: t('form.protocols.grpcs'), value: 'grpcs' },
+  { label: t('form.protocols.grpc,grpcs'), value: 'grpc,grpcs' },
+  { label: t('form.protocols.http'), value: 'http' },
+  { label: t('form.protocols.https'), value: 'https' },
+  { label: t('form.protocols.http,https'), value: 'http,https' },
+  { label: t('form.protocols.tcp'), value: 'tcp' },
+  { label: t('form.protocols.tls'), value: 'tls' },
+  { label: t('form.protocols.tls,udp'), value: 'tls,udp' },
+  { label: t('form.protocols.tcp,udp'), value: 'tcp,udp' },
+  { label: t('form.protocols.tcp,tls'), value: 'tcp,tls' },
+  { label: t('form.protocols.tcp,tls,udp'), value: 'tcp,tls,udp' },
+  { label: t('form.protocols.tls_passthrough'), value: 'tls_passthrough' },
+  { label: t('form.protocols.udp'), value: 'udp' },
   ...(
     isWsSupported
       ? [
-        { label: i18n.t('form.protocols.ws'), value: 'ws' },
-        { label: i18n.t('form.protocols.wss'), value: 'wss' },
-        { label: i18n.t('form.protocols.ws,wss'), value: 'ws,wss' },
+        { label: t('form.protocols.ws'), value: 'ws' },
+        { label: t('form.protocols.wss'), value: 'wss' },
+        { label: t('form.protocols.ws,wss'), value: 'ws,wss' },
       ]
       : []
   ),
@@ -632,7 +632,7 @@ const {
   searchKeys: ['id', 'name'],
 })
 
-const fetchServicesErrorMessage = computed((): string => servicesFetchError.value ? i18n.t('errors.services.fetch') : '')
+const fetchServicesErrorMessage = computed((): string => servicesFetchError.value ? t('errors.services.fetch') : '')
 
 const availableServices = computed((): SelectItem[] => servicesResults.value?.map(el => ({ label: el.id, name: el.name, value: el.id })))
 

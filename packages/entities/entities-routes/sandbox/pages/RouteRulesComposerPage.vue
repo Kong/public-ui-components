@@ -10,7 +10,7 @@
           v-model="protocols"
           data-testid="route-form-protocols"
           :items="protocolsItems"
-          :label="i18n.t('form.fields.protocols.label')"
+          :label="t('form.fields.protocols.label')"
           width="300"
         />
 
@@ -67,26 +67,26 @@ import RouteFormRulesComposer from '../../src/components/RouteFormRulesComposer.
 import composables from '../../src/composables'
 import { INITIAL_ROUTE_RULES_FIELDS, type PROTOCOLS_TO_ROUTE_RULES } from '../../src/constants'
 
-const { i18n } = composables.useI18n()
+const { i18n: { t } } = composables.useI18n()
 
 const protocolsItems = [
-  { label: i18n.t('form.protocols.grpc'), value: 'grpc' },
-  { label: i18n.t('form.protocols.grpcs'), value: 'grpcs' },
-  { label: i18n.t('form.protocols.grpc,grpcs'), value: 'grpc,grpcs' },
-  { label: i18n.t('form.protocols.http'), value: 'http' },
-  { label: i18n.t('form.protocols.https'), value: 'https' },
-  { label: i18n.t('form.protocols.http,https'), value: 'http,https' },
-  { label: i18n.t('form.protocols.tcp'), value: 'tcp' },
-  { label: i18n.t('form.protocols.tls'), value: 'tls' },
-  { label: i18n.t('form.protocols.tls,udp'), value: 'tls,udp' },
-  { label: i18n.t('form.protocols.tcp,udp'), value: 'tcp,udp' },
-  { label: i18n.t('form.protocols.tcp,tls'), value: 'tcp,tls' },
-  { label: i18n.t('form.protocols.tcp,tls,udp'), value: 'tcp,tls,udp' },
-  { label: i18n.t('form.protocols.tls_passthrough'), value: 'tls_passthrough' },
-  { label: i18n.t('form.protocols.udp'), value: 'udp' },
-  { label: i18n.t('form.protocols.ws'), value: 'ws' },
-  { label: i18n.t('form.protocols.wss'), value: 'wss' },
-  { label: i18n.t('form.protocols.ws,wss'), value: 'ws,wss' },
+  { label: t('form.protocols.grpc'), value: 'grpc' },
+  { label: t('form.protocols.grpcs'), value: 'grpcs' },
+  { label: t('form.protocols.grpc,grpcs'), value: 'grpc,grpcs' },
+  { label: t('form.protocols.http'), value: 'http' },
+  { label: t('form.protocols.https'), value: 'https' },
+  { label: t('form.protocols.http,https'), value: 'http,https' },
+  { label: t('form.protocols.tcp'), value: 'tcp' },
+  { label: t('form.protocols.tls'), value: 'tls' },
+  { label: t('form.protocols.tls,udp'), value: 'tls,udp' },
+  { label: t('form.protocols.tcp,udp'), value: 'tcp,udp' },
+  { label: t('form.protocols.tcp,tls'), value: 'tcp,tls' },
+  { label: t('form.protocols.tcp,tls,udp'), value: 'tcp,tls,udp' },
+  { label: t('form.protocols.tls_passthrough'), value: 'tls_passthrough' },
+  { label: t('form.protocols.udp'), value: 'udp' },
+  { label: t('form.protocols.ws'), value: 'ws' },
+  { label: t('form.protocols.wss'), value: 'wss' },
+  { label: t('form.protocols.ws,wss'), value: 'ws,wss' },
 ]
 
 const isControlsCollapsed = ref(false)

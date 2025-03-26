@@ -14,10 +14,10 @@
       >
         <template #default>
           <template v-if="!recordFlavor">
-            {{ i18n.t('form.warning.cannotChangeFlavor.create') }}
+            {{ t('form.warning.cannotChangeFlavor.create') }}
           </template>
           <template v-else-if="recordFlavor !== tabFlavor">
-            {{ i18n.t('form.warning.cannotChangeFlavor.edit', { format: i18n.t(`form.flavors.${recordFlavor}`) }) }}
+            {{ t('form.warning.cannotChangeFlavor.edit', { format: t(`form.flavors.${recordFlavor}`) }) }}
           </template>
         </template>
       </KAlert>
@@ -59,7 +59,7 @@ import ExpressionsRules from './rules-composer/ExpressionsRules.vue'
 import RulesComposer from './rules-composer/RulesComposer.vue'
 import TraditionalRules from './rules-composer/TraditionalRules.vue'
 
-const { i18n } = composables.useI18n()
+const { i18n: { t } } = composables.useI18n()
 
 const fields = defineModel<SharedRouteRulesFields>('fields', {
   default: () => reactive({
