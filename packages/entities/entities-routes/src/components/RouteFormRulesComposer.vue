@@ -157,6 +157,10 @@ const selectedMethods = computed((): Method[] => {
   }, [])
 })
 
+const isProtocolSelected = (protocols: string[]): boolean => {
+  return protocols.some(protocol => props.protocols.includes(protocol))
+}
+
 const getHeaders = (): Headers | null => {
   if (payloadFlavor.value !== RouteFlavor.TRADITIONAL) {
     return null
@@ -178,7 +182,7 @@ const getArrPayload = (arr?: any[]) => arr?.length ? arr : null
 
 const sharedPayload = computed(() => ({
   https_redirect_status_code: fields.value.https_redirect_status_code,
-  strip_path:  fields.value.strip_path,
+  strip_path: isProtocolSelected(['grpc', 'gprcs']) ? false : fields.value.strip_path,
   preserve_host:  fields.value.preserve_host,
   request_buffering:  fields.value.request_buffering,
   response_buffering:  fields.value.response_buffering,
