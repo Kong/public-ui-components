@@ -28,3 +28,5 @@ export const getSharedFormName = (modelName: string): string => {
 export * from './const'
 export * from './types'
 export * as abstractField from './components/fields/abstractField'
+
+export { default as composables } from './composables'
