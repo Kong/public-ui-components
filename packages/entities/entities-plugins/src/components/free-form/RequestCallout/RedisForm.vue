@@ -18,29 +18,16 @@
       min="0"
       :placeholder="getPlaceholder('cache.redis.port')"
     />
-    <NumberField
-      v-model="redis.connect_timeout"
-      label="Cache › Redis › Connect Timeout"
-      :label-attributes="getLabelAttributes('cache.redis.connect_timeout')"
-      max="2147473646"
-      min="0"
-      :placeholder="getPlaceholder('cache.redis.connect_timeout')"
+    <BooleanField
+      v-model="redis.connection_is_proxied"
+      label="Cache › Redis › Connection Is Proxied"
+      :label-attributes="getLabelAttributes('cache.redis.connection_is_proxied')"
     />
     <NumberField
-      v-model="redis.send_timeout"
-      label="Cache › Redis › Send Timeout"
-      :label-attributes="getLabelAttributes('cache.redis.send_timeout')"
-      max="2147473646"
-      min="0"
-      :placeholder="getPlaceholder('cache.redis.send_timeout')"
-    />
-    <NumberField
-      v-model="redis.read_timeout"
-      label="Cache › Redis › Read Timeout"
-      :label-attributes="getLabelAttributes('cache.redis.read_timeout')"
-      max="2147473646"
-      min="0"
-      :placeholder="getPlaceholder('cache.redis.read_timeout')"
+      v-model="redis.database"
+      label="Cache › Redis › Database"
+      :label-attributes="getLabelAttributes('cache.redis.database')"
+      :placeholder="getPlaceholder('cache.redis.database')"
     />
     <StringField
       v-model="redis.username"
@@ -57,44 +44,6 @@
       show-password-mask-toggle
       show-vault-secret-picker
       type="password"
-    />
-    <StringField
-      v-model="redis.sentinel_username"
-      label="Cache › Redis › Sentinel Username"
-      :label-attributes="getLabelAttributes('cache.redis.sentinel_username')"
-      :placeholder="getPlaceholder('cache.redis.sentinel_username')"
-      show-vault-secret-picker
-    />
-    <StringField
-      v-model="redis.sentinel_password"
-      label="Cache › Redis › Sentinel Password"
-      :label-attributes="getLabelAttributes('cache.redis.sentinel_password')"
-      :placeholder="getPlaceholder('cache.redis.sentinel_password')"
-      show-password-mask-toggle
-      show-vault-secret-picker
-      type="password"
-    />
-    <NumberField
-      v-model="redis.database"
-      label="Cache › Redis › Database"
-      :label-attributes="getLabelAttributes('cache.redis.database')"
-      :placeholder="getPlaceholder('cache.redis.database')"
-    />
-    <NumberField
-      v-model="redis.keepalive_pool_size"
-      label="Cache › Redis › Keepalive Pool Size"
-      :label-attributes="getLabelAttributes('cache.redis.keepalive_pool_size')"
-      max="2147483646"
-      min="1"
-      :placeholder="getPlaceholder('cache.redis.keepalive_pool_size')"
-    />
-    <NumberField
-      v-model="redis.keepalive_backlog"
-      label="Cache › Redis › Keepalive Backlog"
-      :label-attributes="getLabelAttributes('cache.redis.keepalive_backlog')"
-      max="2147483646"
-      min="0"
-      :placeholder="getPlaceholder('cache.redis.keepalive_backlog')"
     />
     <StringField
       v-model="redis.sentinel_master"
@@ -136,6 +85,22 @@
         />
       </template>
     </ArrayField>
+    <StringField
+      v-model="redis.sentinel_username"
+      label="Cache › Redis › Sentinel Username"
+      :label-attributes="getLabelAttributes('cache.redis.sentinel_username')"
+      :placeholder="getPlaceholder('cache.redis.sentinel_username')"
+      show-vault-secret-picker
+    />
+    <StringField
+      v-model="redis.sentinel_password"
+      label="Cache › Redis › Sentinel Password"
+      :label-attributes="getLabelAttributes('cache.redis.sentinel_password')"
+      :placeholder="getPlaceholder('cache.redis.sentinel_password')"
+      show-password-mask-toggle
+      show-vault-secret-picker
+      type="password"
+    />
     <ArrayField
       appearance="card"
       :items="redis.cluster_nodes"
@@ -162,26 +127,6 @@
         />
       </template>
     </ArrayField>
-
-    <BooleanField
-      label="Cache › Redis › SSL"
-      :label-attributes="getLabelAttributes('cache.redis.ssl')"
-      :model-value="redis.ssl || false"
-      @update:model-value="redis.ssl = $event"
-    />
-
-    <BooleanField
-      v-model="redis.ssl_verify"
-      label="Cache › Redis › SSL Verify"
-      :label-attributes="getLabelAttributes('cache.redis.ssl_verify')"
-    />
-
-    <StringField
-      v-model="redis.server_name"
-      label="Cache › Redis › Server Name"
-      :label-attributes="getLabelAttributes('cache.redis.server_name')"
-      :placeholder="getPlaceholder('cache.redis.server_name')"
-    />
     <NumberField
       v-model="redis.cluster_max_redirections"
       label="Cache › Redis › Cluster Max Redirections"
@@ -191,9 +136,61 @@
       :placeholder="getPlaceholder('cache.redis.cluster_max_redirections')"
     />
     <BooleanField
-      v-model="redis.connection_is_proxied"
-      label="Cache › Redis › Connection Is Proxied"
-      :label-attributes="getLabelAttributes('cache.redis.connection_is_proxied')"
+      label="Cache › Redis › SSL"
+      :label-attributes="getLabelAttributes('cache.redis.ssl')"
+      :model-value="redis.ssl || false"
+      @update:model-value="redis.ssl = $event"
+    />
+    <BooleanField
+      v-model="redis.ssl_verify"
+      label="Cache › Redis › SSL Verify"
+      :label-attributes="getLabelAttributes('cache.redis.ssl_verify')"
+    />
+    <StringField
+      v-model="redis.server_name"
+      label="Cache › Redis › Server Name"
+      :label-attributes="getLabelAttributes('cache.redis.server_name')"
+      :placeholder="getPlaceholder('cache.redis.server_name')"
+    />
+    <NumberField
+      v-model="redis.keepalive_backlog"
+      label="Cache › Redis › Keepalive Backlog"
+      :label-attributes="getLabelAttributes('cache.redis.keepalive_backlog')"
+      max="2147483646"
+      min="0"
+      :placeholder="getPlaceholder('cache.redis.keepalive_backlog')"
+    />
+    <NumberField
+      v-model="redis.keepalive_pool_size"
+      label="Cache › Redis › Keepalive Pool Size"
+      :label-attributes="getLabelAttributes('cache.redis.keepalive_pool_size')"
+      max="2147483646"
+      min="1"
+      :placeholder="getPlaceholder('cache.redis.keepalive_pool_size')"
+    />
+    <NumberField
+      v-model="redis.read_timeout"
+      label="Cache › Redis › Read Timeout"
+      :label-attributes="getLabelAttributes('cache.redis.read_timeout')"
+      max="2147473646"
+      min="0"
+      :placeholder="getPlaceholder('cache.redis.read_timeout')"
+    />
+    <NumberField
+      v-model="redis.send_timeout"
+      label="Cache › Redis › Send Timeout"
+      :label-attributes="getLabelAttributes('cache.redis.send_timeout')"
+      max="2147473646"
+      min="0"
+      :placeholder="getPlaceholder('cache.redis.send_timeout')"
+    />
+    <NumberField
+      v-model="redis.connect_timeout"
+      label="Cache › Redis › Connect Timeout"
+      :label-attributes="getLabelAttributes('cache.redis.connect_timeout')"
+      max="2147473646"
+      min="0"
+      :placeholder="getPlaceholder('cache.redis.connect_timeout')"
     />
   </ObjectField>
 </template>

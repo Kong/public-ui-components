@@ -130,6 +130,7 @@ import endpoints from '../plugins-endpoints'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import * as freeForm from './free-form'
+import {} from './free-form/shared/utils'
 import { getFreeFormName } from '../utils/free-form'
 
 // Need to check for duplicates in sharedForms and freeForm
@@ -236,7 +237,7 @@ const props = defineProps({
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
-const { parseSchema } = composables.useSchemas({
+const { parseSchema, pruneRecord } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,
   credential: props.credential,
   enableRedisPartial: props.enableRedisPartial,
@@ -574,7 +575,8 @@ const getModel = (): Record<string, any> => {
 
   // Handle the special case of the freeform plugin
   if (freeformName.value) {
-    model.config = freeformConfig.value
+    const configSchema = props.rawSchema?.fields?.find((field: any) => 'config' in field)?.config
+    model.config = pruneRecord(freeformConfig.value, configSchema)
   }
 
   return model
