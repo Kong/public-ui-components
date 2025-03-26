@@ -39,11 +39,11 @@
     <div class="field-wrap">
       <component
         v-bind="$attrs"
-        :is="getFieldType(field)"
+        :is="getFieldComponent(field)"
         ref="child"
         :disabled="fieldDisabled(field) || null"
         :form-options="options"
-        :hint="field.hint && getFieldType(field) === 'field-input' ? fieldHint(field) : undefined"
+        :hint="field.hint && field.type === 'input' ? fieldHint(field) : undefined"
         :model="model"
         :schema="schema"
         :vfg="vfg"
@@ -67,7 +67,7 @@
     </div>
 
     <div
-      v-if="field.hint && getFieldType(field) !== 'field-input'"
+      v-if="field.hint && field.type !== 'input'"
       class="hint"
       v-html="fieldHint(field)"
     />
@@ -185,8 +185,13 @@ export default {
     getTooltipId(schema) {
       return `${this.getFieldID(schema)}-tooltip`
     },
-    // Get type of field 'field-xxx'. It'll be the name of HTML element
-    getFieldType(fieldSchema) {
+    // Get type of field, it could be the name of a registered component or a Vue component
+    // a registered component should be named in 'field-{type}' format
+    getFieldComponent(fieldSchema) {
+      if (fieldSchema.component) {
+        return fieldSchema.component
+      }
+
       return 'field-' + fieldSchema.type
     },
     // Get type of button, default to 'button'

@@ -26,9 +26,10 @@ interface AbstractFieldParams {
     errors: any[]
     field: Record<string, any>
   }) => void
+  externalValidator?: (value: any, field: any, model: any) => string[] | Promise<string[]>
 }
 
-export default function useAbstractFields(formData: AbstractFieldParams) {
+export default function useAbstractFields<T = any>(formData: AbstractFieldParams) {
   const errors = ref<string[]>([])
   const debouncedValidateFunc = ref<DebouncedFunc<(calledParent?: any) => any[]> | null>(null)
 
@@ -55,7 +56,7 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
    * The value of the field with getter/setter defined.
    * Handles formatting to/from the model (used in PUT/POST) and field (actual input element) formatted values
    */
-  const value = computed({
+  const value = computed<T>({
     get() {
       let val
 
@@ -86,19 +87,25 @@ export default function useAbstractFields(formData: AbstractFieldParams) {
   const validate = (calledParent?: any) => {
     clearValidationErrors()
 
-    const schemaValidator = formData.schema?.validator
     const validateAsync = objGet(formData.formOptions, 'validateAsync', false)
     let results: any[] = []
 
-    if (schemaValidator && formData.schema.readonly !== true && formData.disabled !== true) {
+    if (formData.schema.readonly !== true && formData.disabled !== true) {
       const validators = []
 
-      if (!Array.isArray(schemaValidator)) {
-        validators.push(convertValidator(schemaValidator))
-      } else {
-        forEach(schemaValidator, validator => {
-          validators.push(convertValidator(validator))
-        })
+      const schemaValidator = formData.schema?.validator
+      if (schemaValidator) {
+        if (!Array.isArray(schemaValidator)) {
+          validators.push(convertValidator(schemaValidator))
+        } else {
+          forEach(schemaValidator, validator => {
+            validators.push(convertValidator(validator))
+          })
+        }
+      }
+
+      if (isFunction(formData.externalValidator)) {
+        validators.push(formData.externalValidator)
       }
 
       forEach(validators, validator => {
