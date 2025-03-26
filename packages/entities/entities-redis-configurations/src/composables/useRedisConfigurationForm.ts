@@ -211,14 +211,18 @@ export const useRedisConfigurationForm = (options: Options) => {
       form.readonly = true
       form.errorMessage = ''
 
-      let payloadData = payload.value
+      type Payload = Omit<typeof payload.value, 'config'> & {
+        config: Partial<typeof payload.value['config']>
+      }
+
+      let payloadData: Payload = payload.value
 
       // Konnect does not accept null values
       // And KoKo uses `put` for updating, so no need to reset values by giving null
       if (config.app === 'konnect') {
         payloadData = {
           ...payloadData,
-          config: s.removeNullValues(payloadData.config) as any,
+          config: s.removeNullValues(payloadData.config!),
         }
       }
 

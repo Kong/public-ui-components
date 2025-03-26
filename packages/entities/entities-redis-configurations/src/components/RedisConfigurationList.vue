@@ -29,7 +29,7 @@
           :disabled="!useActionOutside"
           to="#kong-ui-app-page-header-action-button"
         >
-          <PermissionsWrapper :auth-function="() => canCreate()">
+          <PermissionsWrapper :auth-function="canCreate">
             <KButton
               appearance="primary"
               data-testid="toolbar-add-redis-configuration"
@@ -322,7 +322,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   if (isExactMatch) {
     return {
       isExactMatch: true,
-      placeholder: t('search.placeholder'),
+      placeholder: t('search.placeholder_for_exact_match'),
     } as ExactMatchFilterConfig
   }
 
