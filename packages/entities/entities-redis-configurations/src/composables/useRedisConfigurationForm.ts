@@ -222,7 +222,7 @@ export const useRedisConfigurationForm = (options: Options) => {
       if (config.app === 'konnect') {
         payloadData = {
           ...payloadData,
-          config: s.removeNullValues(payloadData.config!),
+          config: s.removeNullValues(payloadData.config),
         }
       }
 
