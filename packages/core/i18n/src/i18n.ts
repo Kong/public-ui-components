@@ -132,3 +132,5 @@ export const createI18n = <MessageSource extends Record<string, any>>
 export default function useI18n<MessageSource extends Record<string, any>>(): IntlShapeEx<MessageSource> {
   return globIntl
 }
+
+export type { IntlMessageFormatOptions }

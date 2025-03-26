@@ -33,11 +33,11 @@
  * which depends on @kong-ui-public/expressions, to avoid loading the Expressions language support and the
  * editor until they are used.
  */
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { RocketIcon } from '@kong/icons'
 import { defineAsyncComponent, h, onMounted, ref, type Component } from 'vue'
 import composables from '../composables'
 import { ExpressionsEditorState } from '../types'
-import { RocketIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
 const { i18n: { t } } = composables.useI18n()
 

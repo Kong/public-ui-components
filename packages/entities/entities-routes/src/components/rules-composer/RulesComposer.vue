@@ -1,7 +1,10 @@
+<!-- This is a wrapper component to reuse the passed-in slots inside and outside a KTab -->
+<!-- PLEASE USE <RouteRuleComposer /> FOR EXTERNAL USAGES -->
+
 <template>
   <KTabs
     v-if="tabs.length > 1"
-    v-model="tab"
+    v-model="hash"
     data-testid="route-form-config-tabs"
     :tabs="tabs"
   >
@@ -24,14 +27,6 @@
         />
       </KTooltip>
     </template>
-    <template
-      v-if="routeFlavors.traditional"
-      #[RouteFlavor.TRADITIONAL]
-    >
-      <slot name="before-content" />
-
-      <slot :name="RouteFlavor.TRADITIONAL" />
-    </template>
 
     <template
       v-if="routeFlavors.expressions"
@@ -52,6 +47,16 @@
         />
       </KTooltip>
     </template>
+
+    <template
+      v-if="routeFlavors.traditional"
+      #[RouteFlavor.TRADITIONAL]
+    >
+      <slot name="before-content" />
+
+      <slot :name="RouteFlavor.TRADITIONAL" />
+    </template>
+
     <template
       v-if="routeFlavors.expressions"
       #[RouteFlavor.EXPRESSIONS]
@@ -78,24 +83,29 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * This is a wrapper component to reuse the passed-in slots inside and outside a KTab
+ *
+ * PLEASE USE <RouteFormRulesComposer /> FOR EXTERNAL USAGES
+ */
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { InfoIcon } from '@kong/icons'
 import { type Tab } from '@kong/kongponents'
 import { computed } from 'vue'
-import useI18n from '../composables/useI18n'
-import { RouteFlavor, type RouteFlavors } from '../types'
+import composables from '../../composables'
+import { RouteFlavor, type RouteFlavors } from '../../types'
 
-const tab = defineModel<string>({ required: true })
+const { i18n: { t } } = composables.useI18n()
+
+const hash = defineModel<string | undefined>({ required: true })
 
 const props = defineProps<{
-  routeFlavors: RouteFlavors,
+  routeFlavors: RouteFlavors
   tooltips?: {
-    [RouteFlavor.TRADITIONAL]?: string,
-    [RouteFlavor.EXPRESSIONS]?: string,
+    [RouteFlavor.TRADITIONAL]?: string
+    [RouteFlavor.EXPRESSIONS]?: string
   }
 }>()
-
-const { i18n: { t } } = useI18n()
 
 const tabs = computed<Tab[]>(() => [
   ...props.routeFlavors.traditional
