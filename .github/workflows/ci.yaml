@@ -475,7 +475,7 @@ jobs:
             curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
               -H 'Accept: application/vnd.github.everest-preview+json' \
               "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
-              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${name}\", \"version\":\"${version}\"}}"          done
+              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${name}\", \"version\":\"${version}\"}}"
             # end KHCP-14702
           done
         env:
