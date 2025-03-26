@@ -108,6 +108,7 @@
       />
 
       <ObjectField
+        :added="!!request.http_opts.timeouts"
         label="Request › HTTP Opts › Timeouts"
         :label-attributes="getLabelAttributes('callouts.*.request.http_opts.timeouts')"
         @update:added="setTimeouts"
@@ -142,6 +143,7 @@
       </ObjectField>
 
       <ObjectField
+        :added="!!request.http_opts.proxy"
         label="Request › HTTP Opts › Proxy"
         :label-attributes="getLabelAttributes('callouts.*.request.http_opts.proxy')"
         @update:added="setProxy"
