@@ -65,7 +65,7 @@ describe('<SimpleChart />', () => {
       },
     })
 
-    cy.get('[data-testid="donut-chart-metric"]').should('be.visible')
+    cy.get('[data-testid="gauge-chart-metric"]').should('be.visible')
     cy.get('[data-testid="donut-chart-total"]').should('be.visible')
   })
 
@@ -81,7 +81,7 @@ describe('<SimpleChart />', () => {
       },
     })
 
-    cy.get('[data-testid="donut-chart-metric"]').should('be.visible')
+    cy.get('[data-testid="gauge-chart-metric"]').should('be.visible')
     cy.get('[data-testid="donut-chart-total"]').should('not.exist')
   })
 
@@ -97,7 +97,7 @@ describe('<SimpleChart />', () => {
       },
     })
 
-    cy.get('[data-testid="donut-chart-metric"]').should('not.exist')
+    cy.get('[data-testid="gauge-chart-metric"]').should('not.exist')
     cy.get('[data-testid="donut-chart-total"]').should('not.exist')
   })
 })
