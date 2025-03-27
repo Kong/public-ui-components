@@ -73,8 +73,8 @@ const formattedValue = computed((): string => {
   .single-value {
     color: $kui-color-text;
     font-size: $kui-font-size-50;
-    line-height: $kui-line-height-50;
     font-weight: $kui-font-weight-bold;
+    line-height: $kui-line-height-50;
   }
 
   @container (min-width: 300px) {

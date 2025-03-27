@@ -28,9 +28,9 @@ const props = defineProps<RendererProps<GaugeChartOptions>>()
 
 <style scoped lang="scss">
 .analytics-chart {
-  height: v-bind('`${height}px`');
   display: flex;
   flex-direction: column;
+  height: v-bind('`${height}px`');
   justify-content: center;
 }
 </style>
