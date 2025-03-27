@@ -109,7 +109,7 @@
 <script setup lang="ts">
 import type { DashboardRendererContextInternal } from '../types'
 import { type DashboardTileType, formatTime, type TileDefinition, TimePeriods } from '@kong-ui-public/analytics-utilities'
-import { type Component, computed, inject, nextTick, ref, watch } from 'vue'
+import { type Component, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -154,6 +154,12 @@ const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
+const exploreBaseUrl = ref('')
+
+onMounted(async () => {
+  // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
+  exploreBaseUrl.value = await queryBridge?.exploreBaseUrl?.() ?? ''
+})
 
 watch(() => props.definition, async () => {
   await nextTick()
@@ -163,6 +169,12 @@ watch(() => props.definition, async () => {
 }, { immediate: true, deep: true })
 
 const exploreLink = computed(() => {
+  // There are various factors that mean we might not need to make a go-to-explore URL.
+  // For example, golden signal tiles don't show a kebab menu and often don't have a query definition.
+  if (!exploreBaseUrl.value || !props.definition.query || !canShowKebabMenu.value) {
+    return ''
+  }
+
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
   // TODO: remove once portal and api are available in Explore
@@ -176,21 +188,19 @@ const exploreLink = computed(() => {
     return ''
   }
 
-  if (queryBridge && queryBridge.exploreBaseUrl) {
-    const exploreQuery: ExploreQuery | AiExploreQuery = {
-      filters: filters,
-      metrics: props.definition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
-      dimensions: dimensions,
-      time_range: props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
-      granularity: props.definition.query.granularity || chartDataGranularity.value,
+  const exploreQuery: ExploreQuery | AiExploreQuery = {
+    filters: filters,
+    metrics: props.definition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
+    dimensions: dimensions,
+    time_range: props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
+    granularity: props.definition.query.granularity || chartDataGranularity.value,
 
-    } as ExploreQuery | AiExploreQuery
-    // Explore only supports advanced or ai
-    const datasource = ['advanced', 'ai'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'advanced'
-    return `${queryBridge.exploreBaseUrl()}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
-  }
+  } as ExploreQuery | AiExploreQuery
 
-  return ''
+  // Explore only supports advanced or ai
+  const datasource = ['advanced', 'ai'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'advanced'
+
+  return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
 })
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
