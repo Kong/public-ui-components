@@ -11,6 +11,7 @@ export type ChartType = typeof chartTypes[number]
 export const simpleChartTypes = [
   'gauge',
   'top_n',
+  'single_value',
 ] as const
 
 export type SimpleChartType = typeof simpleChartTypes[number]
