@@ -13,7 +13,7 @@
   },
   "search": {
     "placeholder": "Filter by name",
-    "placeholder_for_exact_match": "Filter by exact name or ID",
+    "placeholder_for_exact_match": "Filter by exact ID",
     "no_results": "No results found"
   },
   "delete": {
