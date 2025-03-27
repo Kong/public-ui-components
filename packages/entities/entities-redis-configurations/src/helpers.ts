@@ -74,7 +74,7 @@ export const standardize = {
     return nodes.map(shallowCopyWithId)
   },
 
-  removeNullValues(obj: Record<string, any>): Record<string, any> {
+  removeNullValues<T>(obj: T): Partial<T> {
     const newObj = { ...obj }
     for (const key in newObj) {
       if (newObj[key] === null) {
