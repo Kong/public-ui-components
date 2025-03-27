@@ -85,7 +85,7 @@
         label="Request › Body › Custom"
         :label-attributes="getLabelAttributes('callouts.*.request.body.custom')"
         show-vault-secret-picker
-        @change="val => request.body.custom = val"
+        @change="val => request.body.custom = val ?? {}"
       />
     </ObjectField>
 

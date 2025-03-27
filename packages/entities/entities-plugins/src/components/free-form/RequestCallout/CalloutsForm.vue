@@ -30,9 +30,13 @@ function addCallout() {
   if (!formData.callouts) {
     formData.callouts = []
   }
+
+  const callout = getDefault('callouts.*') as Callout
+  callout.request.body.custom = callout.request.body.custom ?? {}
+
   formData.callouts.push({
     _id: getCalloutId(),
-    ...getDefault('callouts.*'),
+    ...callout,
   })
 }
 

@@ -8,6 +8,7 @@
 
 <script setup lang="ts">
 import { reactive, watch, provide } from 'vue'
+import { cloneDeep } from 'lodash-es'
 import CalloutsForm from './CalloutsForm.vue'
 import UpstreamForm from './UpstreamForm.vue'
 
@@ -44,11 +45,13 @@ function getNameMap(callouts: Callout[], reverse: boolean = false) {
 
 // replace callout names in `depends_on` with freshly generated ids
 function prepareFormData(data: RequestCallout) {
-  const callouts = data.callouts.map((callout) => {
-    return {
-      ...callout,
-      _id: getCalloutId(),
-    }
+  const config = cloneDeep(data)
+  const { callouts } = config
+
+  callouts.forEach((callout) => {
+    // https://konghq.atlassian.net/browse/KAG-6676
+    callout.request.body.custom = callout.request.body.custom ?? {}
+    callout._id = getCalloutId()
   })
 
   const nameMap = getNameMap(callouts, true)
@@ -57,10 +60,7 @@ function prepareFormData(data: RequestCallout) {
     callout.depends_on = callout.depends_on.map((name) => nameMap[name])
   })
 
-  return {
-    ...data,
-    callouts,
-  }
+  return config
 }
 
 watch(formData, (newVal) => {
