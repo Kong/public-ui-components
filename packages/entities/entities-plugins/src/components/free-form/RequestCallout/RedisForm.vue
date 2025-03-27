@@ -5,7 +5,7 @@
     required
   >
     <StringField
-      v-model="redis.host"
+      v-model.trim="redis.host"
       label="Cache › Redis › Host"
       :label-attributes="getLabelAttributes('cache.redis.host')"
       :placeholder="getPlaceholder('cache.redis.host')"
@@ -30,14 +30,14 @@
       :placeholder="getPlaceholder('cache.redis.database')"
     />
     <StringField
-      v-model="redis.username"
+      v-model.trim="redis.username"
       label="Cache › Redis › Username"
       :label-attributes="getLabelAttributes('cache.redis.username')"
       :placeholder="getPlaceholder('cache.redis.username')"
       show-vault-secret-picker
     />
     <StringField
-      v-model="redis.password"
+      v-model.trim="redis.password"
       label="Cache › Redis › Password"
       :label-attributes="getLabelAttributes('cache.redis.password')"
       :placeholder="getPlaceholder('cache.redis.password')"
@@ -46,7 +46,7 @@
       type="password"
     />
     <StringField
-      v-model="redis.sentinel_master"
+      v-model.trim="redis.sentinel_master"
       label="Cache › Redis › Sentinel Master"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_master')"
       :placeholder="getPlaceholder('cache.redis.sentinel_master')"
@@ -69,7 +69,7 @@
     >
       <template #item="{ item }">
         <StringField
-          v-model="item.host"
+          v-model.trim="item.host"
           label="Host"
           :label-attributes="getLabelAttributes('cache.redis.sentinel_nodes.*.host')"
           :placeholder="getPlaceholder('cache.redis.sentinel_nodes.*.host')"
@@ -86,14 +86,14 @@
       </template>
     </ArrayField>
     <StringField
-      v-model="redis.sentinel_username"
+      v-model.trim="redis.sentinel_username"
       label="Cache › Redis › Sentinel Username"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_username')"
       :placeholder="getPlaceholder('cache.redis.sentinel_username')"
       show-vault-secret-picker
     />
     <StringField
-      v-model="redis.sentinel_password"
+      v-model.trim="redis.sentinel_password"
       label="Cache › Redis › Sentinel Password"
       :label-attributes="getLabelAttributes('cache.redis.sentinel_password')"
       :placeholder="getPlaceholder('cache.redis.sentinel_password')"
@@ -111,7 +111,7 @@
     >
       <template #item="{ item }">
         <StringField
-          v-model="item.ip"
+          v-model.trim="item.ip"
           label="IP"
           :label-attributes="getLabelAttributes('cache.redis.cluster_nodes.*.ip')"
           :placeholder="getPlaceholder('cache.redis.cluster_nodes.*.ip')"
@@ -147,7 +147,7 @@
       :label-attributes="getLabelAttributes('cache.redis.ssl_verify')"
     />
     <StringField
-      v-model="redis.server_name"
+      v-model.trim="redis.server_name"
       label="Cache › Redis › Server Name"
       :label-attributes="getLabelAttributes('cache.redis.server_name')"
       :placeholder="getPlaceholder('cache.redis.server_name')"

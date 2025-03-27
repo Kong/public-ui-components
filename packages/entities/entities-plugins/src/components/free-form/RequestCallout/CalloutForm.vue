@@ -7,7 +7,7 @@
     :model-value="callout.name"
     :placeholder="getPlaceholder('callouts.*.name')"
     required
-    @update:model-value="val => callout.name = val ?? ''"
+    @update:model-value="val => callout.name = (val ?? '').trim()"
   />
 
   <EnumField

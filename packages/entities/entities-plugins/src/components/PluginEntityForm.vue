@@ -130,7 +130,6 @@ import endpoints from '../plugins-endpoints'
 import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import * as freeForm from './free-form'
-import {} from './free-form/shared/utils'
 import { getFreeFormName } from '../utils/free-form'
 
 // Need to check for duplicates in sharedForms and freeForm

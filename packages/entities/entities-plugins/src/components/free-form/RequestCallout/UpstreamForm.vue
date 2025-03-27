@@ -71,7 +71,7 @@
     </ObjectField>
 
     <StringField
-      v-model="upstream.by_lua"
+      v-model.trim="upstream.by_lua"
       autosize
       class="rc-code"
       label="Upstream › By Lua"

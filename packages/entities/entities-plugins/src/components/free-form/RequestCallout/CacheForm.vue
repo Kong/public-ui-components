@@ -19,7 +19,7 @@
       required
     >
       <StringField
-        v-model="formData.cache.memory.dictionary_name"
+        v-model.trim="formData.cache.memory.dictionary_name"
         label="Cache › Memory › Dictionary Name"
         :label-attributes="getLabelAttributes('cache.memory.dictionary_name')"
         :placeholder="getPlaceholder('cache.memory.dictionary_name')"

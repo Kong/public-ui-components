@@ -11,7 +11,7 @@
       :placeholder="getPlaceholder('callouts.*.request.url')"
       required
       show-vault-secret-picker
-      @update:model-value="val => request.url = val ?? ''"
+      @update:model-value="val => request.url = (val ?? '').trim()"
     />
 
     <EnumField
@@ -101,7 +101,7 @@
       />
 
       <StringField
-        v-model="request.http_opts.ssl_server_name"
+        v-model.trim="request.http_opts.ssl_server_name"
         label="Request › HTTP Opts › SSL Server Name"
         :label-attributes="getLabelAttributes('callouts.*.request.http_opts.ssl_server_name')"
         :placeholder="getPlaceholder('callouts.*.request.http_opts.ssl_server_name')"
@@ -154,7 +154,7 @@
           :model-value="request.http_opts.proxy?.auth_username"
           :placeholder="getPlaceholder('callouts.*.request.http_opts.proxy.auth_username')"
           show-vault-secret-picker
-          @update:model-value="val => request.http_opts.proxy!.auth_username = val"
+          @update:model-value="val => request.http_opts.proxy!.auth_username = val ? val.trim() : null"
         />
         <StringField
           label="Request › HTTP Opts › Proxy › Auth Password"
@@ -164,7 +164,7 @@
           show-password-mask-toggle
           show-vault-secret-picker
           type="password"
-          @update:model-value="val => request.http_opts.proxy!.auth_password = val"
+          @update:model-value="val => request.http_opts.proxy!.auth_password = val ? val.trim() : null"
         />
         <StringField
           label="Request › HTTP Opts › Proxy › Http Proxy"
@@ -172,7 +172,7 @@
           :model-value="request.http_opts.proxy?.http_proxy"
           :placeholder="getPlaceholder('callouts.*.request.http_opts.proxy.http_proxy')"
           required
-          @update:model-value="val => request.http_opts.proxy!.http_proxy = val"
+          @update:model-value="val => request.http_opts.proxy!.http_proxy = val ? val.trim() : null"
         />
         <StringField
           label="Request › HTTP Opts › Proxy › Https Proxy"
@@ -180,7 +180,7 @@
           :model-value="request.http_opts.proxy?.https_proxy"
           :placeholder="getPlaceholder('callouts.*.request.http_opts.proxy.https_proxy')"
           required
-          @update:model-value="val => request.http_opts.proxy!.https_proxy = val"
+          @update:model-value="val => request.http_opts.proxy!.https_proxy = val ? val.trim() : null"
         />
       </ObjectField>
     </ObjectField>
@@ -229,7 +229,7 @@
       />
 
       <StringField
-        v-model="request.error.error_response_msg"
+        v-model.trim="request.error.error_response_msg"
         label="Request › Error › Error Response Msg"
         :label-attributes="getLabelAttributes('callouts.*.request.error.error_response_msg')"
         :placeholder="getPlaceholder('callouts.*.request.error.error_response_msg')"
@@ -237,7 +237,7 @@
     </ObjectField>
 
     <StringField
-      v-model="request.by_lua"
+      v-model.trim="request.by_lua"
       autosize
       class="rc-code"
       label="Request › By Lua"

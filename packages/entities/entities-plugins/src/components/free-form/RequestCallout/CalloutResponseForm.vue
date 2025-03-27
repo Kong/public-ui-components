@@ -32,7 +32,7 @@
       />
     </ObjectField>
     <StringField
-      v-model="response.by_lua"
+      v-model.trim="response.by_lua"
       autosize
       class="rc-code"
       label="Response › By Lua"
