@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@2.1.10...@kong-ui-public/dashboard-renderer@3.0.0) (2025-03-27)
+
+
+### Features
+
+* **analytics:** make explore URL determination async [MA-3590] ([#2050](https://github.com/Kong/public-ui-components/issues/2050)) ([06b6e41](https://github.com/Kong/public-ui-components/commit/06b6e412f09ff4c31bc45754322351281c36a306))
+
+
+### BREAKING CHANGES
+
+* **analytics:** change signature of analytics bridge
+
+
+
+
+
 ## [2.1.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@2.1.9...@kong-ui-public/dashboard-renderer@2.1.10) (2025-03-26)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
