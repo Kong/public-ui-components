@@ -214,8 +214,9 @@ watch(() => redisPartialFetcherKey?.value, async (key) => {
     await loadConfigs()
 })
 
-onBeforeMount(async () => {
-  await loadConfigs()
+onBeforeMount(() => {
+  // load config should not block selecting a default config
+  loadConfigs()
   if (props.defaultRedisConfigItem) {
     redisConfigSelected(props.defaultRedisConfigItem)
   }
