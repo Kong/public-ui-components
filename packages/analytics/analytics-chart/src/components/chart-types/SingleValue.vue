@@ -22,11 +22,19 @@
 import { computed } from 'vue'
 import type { PropType } from 'vue'
 import type { AnalyticsExploreRecord, ExploreResultV4, AllAggregations } from '@kong-ui-public/analytics-utilities'
+import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
 
 const props = defineProps({
   data: {
     type: Object as PropType<ExploreResultV4>,
     required: true,
+  },
+  /**
+   * Number of decimal points to display
+   */
+  decimalPoints: {
+    type: Number,
+    default: SINGLE_VALUE_DEFAULT_DECIMAL_POINTS,
   },
 })
 
@@ -42,16 +50,20 @@ const singleValue = computed((): number | null => {
 })
 
 const formattedValue = computed((): string => {
-  if (singleValue.value === null) {
+  const value = singleValue.value
+
+  if (value === null) {
     return ''
   }
 
   // if number is greater than 10M, display in millions
-  if (singleValue.value >= 10000000) {
-    return `${Math.floor(singleValue.value / 1000000)}M`
+  if (value >= 10_000_000) {
+    const formatted = (value / 1_000_000).toFixed(1)
+    return formatted.endsWith('.0') ? `${Math.floor(value / 1_000_000)}M` : `${formatted}M`
   }
 
-  return singleValue.value.toLocaleString('en-US')
+  const decimalPoints = props.decimalPoints && typeof props.decimalPoints === 'number' ? props.decimalPoints : SINGLE_VALUE_DEFAULT_DECIMAL_POINTS
+  return value.toLocaleString('en-US', { maximumFractionDigits: decimalPoints })
 })
 </script>
 

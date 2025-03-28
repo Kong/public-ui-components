@@ -216,6 +216,9 @@ export const singleValueSchema = {
       type: 'string',
       enum: ['single_value'],
     },
+    decimalPoints: {
+      type: 'number',
+    },
     syntheticsDataKey,
     chartTitle,
   },

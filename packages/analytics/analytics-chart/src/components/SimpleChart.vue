@@ -28,6 +28,7 @@
       <SingleValue
         v-if="isSingleValueChart"
         :data="chartData"
+        :decimal-points="chartOptions.decimalPoints"
       />
     </div>
   </div>
