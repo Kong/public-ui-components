@@ -5,6 +5,7 @@ export const reportChartTypes = [
   'choropleth_map',
   'timeseries_bar',
   'donut',
+  'single_value',
 ] as const
 
 export type ReportChartTypes = typeof reportChartTypes[number]
