@@ -43,7 +43,11 @@ const props = defineProps({
   },
 })
 
-const record = computed((): AnalyticsExploreRecord => props.data.data[0])
+const record = computed((): AnalyticsExploreRecord => {
+  console.log(props.data)
+
+  return props.data.data[0]
+})
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
 
 const singleValue = computed((): number | null => {
@@ -89,22 +93,43 @@ const formattedValue = computed((): string => {
 
   .single-value {
     color: $kui-color-text;
-    font-size: $kui-font-size-50;
+    font-size: $kui-font-size-70;
     font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-50;
+    line-height: $kui-line-height-70;
   }
 
   @container (min-width: 300px) {
     .single-value {
-      font-size: $kui-font-size-70;
-      line-height: $kui-line-height-70;
+      font-size: $kui-font-size-100;
+      line-height: $kui-line-height-100;
+    }
+  }
+
+  @container (min-width: 500px) {
+    .single-value {
+      font-size: 56px;
+      line-height: 64px;
     }
   }
 
   @container (min-width: 700px) {
     .single-value {
-      font-size: $kui-font-size-100;
-      line-height: $kui-line-height-100;
+      font-size: 64px;
+      line-height: 72px;
+    }
+  }
+
+  @container (min-width: 1000px) {
+    .single-value {
+      font-size: 80px;
+      line-height: 88px;
+    }
+  }
+
+  @container (min-width: 1000px) {
+    .single-value {
+      font-size: 96px;
+      line-height: 104px;
     }
   }
 }
