@@ -1,7 +1,12 @@
-import type { KeyAuthSFieldSchema } from '../../types/plugins/key-auth'
+import { markRaw } from 'vue'
 import { tags } from './typedefs'
 
-export const keyAuthSchema: KeyAuthSFieldSchema = {
+import KeyAuthIdentityRealms from '../../components/fields/KeyAuthIdentityRealms.vue'
+
+import type { UseSchemasOptions } from 'src/composables/useSchemas'
+import type { CommonSchemaFields } from 'src/types/plugins/shared'
+
+export const keyAuthCredentialSchema = {
   fields: [
     {
       key: {
@@ -14,4 +19,23 @@ export const keyAuthSchema: KeyAuthSFieldSchema = {
       tags,
     },
   ],
+}
+
+export type KeyAuthSchema = CommonSchemaFields & {
+  fieldsToDelete?: string[]
+  'config-identity_realms'?: Record<string, any>
+}
+
+export const genKeyAuthSchema = (options?: UseSchemasOptions): KeyAuthSchema => {
+  if (options?.app === 'kongManager') {
+    return {
+      fieldsToDelete: ['config-identity_realms'],
+    }
+  } else {
+    return {
+      'config-identity_realms': {
+        component: markRaw(KeyAuthIdentityRealms),
+      },
+    }
+  }
 }

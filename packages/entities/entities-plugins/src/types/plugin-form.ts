@@ -21,6 +21,7 @@ import type { OasValidationSchema } from './plugins/oas-validation'
 import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
 import type { InjectionProtectionSchema } from './plugins/injection-protection'
 import type { KafkaUpstreamSchema } from './plugins/kafka-upstream'
+import type { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import type { ConfluentSchema } from './plugins/confluent'
 
 export interface BasePluginSelectConfig {
@@ -219,6 +220,7 @@ export interface CustomSchemas {
   'upstream-oauth': UpstreamOauthSchema
   'injection-protection': InjectionProtectionSchema
   'kafka-upstream': KafkaUpstreamSchema
+  'key-auth': ReturnType<typeof genKeyAuthSchema>
   'confluent': ConfluentSchema
 }
 
