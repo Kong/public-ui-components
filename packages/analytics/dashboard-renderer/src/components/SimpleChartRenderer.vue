@@ -13,7 +13,7 @@
       <SimpleChart
         :chart-data="data"
         :chart-options="chartOptions"
-        :synthetics-data-key="isGaugeChart ? chartOptions.syntheticsDataKey : undefined"
+        :synthetics-data-key="isSingleValueChart ? undefined : (chartOptions as GaugeChartOptions).syntheticsDataKey"
       />
     </div>
   </QueryDataProvider>
@@ -28,7 +28,6 @@ import { computed } from 'vue'
 
 const props = defineProps<RendererProps<GaugeChartOptions | SingleValueOptions>>()
 
-const isGaugeChart = computed((): boolean => props.chartOptions.type === 'gauge')
 const isSingleValueChart = computed((): boolean => props.chartOptions.type === 'single_value')
 </script>
 
