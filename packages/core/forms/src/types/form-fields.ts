@@ -1,3 +1,5 @@
+import type { Component } from 'vue'
+
 export interface FormFieldSchema extends Record<string, any> {
   model: string
   type: string
@@ -16,6 +18,7 @@ export interface FormFieldSchema extends Record<string, any> {
   hint?: string
   submitWhenNull?: boolean
   selectOptions?: Record<string, any>
+  component?: Component | null
 }
 
 export interface FormSchema {

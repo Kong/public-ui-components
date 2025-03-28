@@ -21,3 +21,51 @@ Here are the steps
 
 That's it - next time the version of @kong-ui-public/forms is used - your `src/forms/PostFunction.vue` will be presented when user selects `Post Function` plugin to install or edit.
 
+## how to add a custom field component
+You can define custom field components to be used for specific fields.
+
+For example, the field schema should like this:
+```json
+{
+  type: 'array',
+  component: CatFoodField,  // <== the custom Vue component
+  model: 'eats',
+  id: 'eats',
+  label: 'Eats',
+}
+```
+
+Please take a look at `sandbox/CatFoodField.vue` for an example of a custom field component.
+
+You should have at least the following props, emits and function defined:
+```ts
+const props = defineProps<{
+  disabled?: boolean
+  formOptions?: Record<string, any>
+  model?: Record<string, any>
+  schema: Record<string, any>
+  vfg: Record<string, any>
+  errors?: Array<any>
+  hint?: string
+}>()
+
+const emit = defineEmits<{
+  (event: 'modelUpdated', value: any, model: Record<string, any>): void
+}>()
+
+const { clearValidationErrors } = composables.useAbstractFields({
+  model: propsRefs.model,
+  schema: props.schema,
+  formOptions: props.formOptions,
+  emitModelUpdated: (data: { value: any, model: Record<string, any> }): void => {
+    emit('modelUpdated', data.value, data.model)
+  },
+})
+
+defineExpose({
+  clearValidationErrors,
+})
+```
+
+`composables.useAbstractFields` is a useful helper that can be used to simplify the implementation of custom field components.
+
