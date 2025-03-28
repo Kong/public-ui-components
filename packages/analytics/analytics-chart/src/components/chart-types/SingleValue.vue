@@ -43,11 +43,7 @@ const props = defineProps({
   },
 })
 
-const record = computed((): AnalyticsExploreRecord => {
-  console.log(props.data)
-
-  return props.data.data[0]
-})
+const record = computed((): AnalyticsExploreRecord => props.data.data[0])
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
 
 const singleValue = computed((): number | null => {

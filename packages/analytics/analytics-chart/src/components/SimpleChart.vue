@@ -120,6 +120,7 @@ const hasValidChartData = computed(() => {
 @use "../styles/chart-shell";
 
 .simple-chart-shell {
+  width: 100%;
   margin: var(--kui-space-0, $kui-space-0);
   padding: var(--kui-space-0, $kui-space-0);
 
