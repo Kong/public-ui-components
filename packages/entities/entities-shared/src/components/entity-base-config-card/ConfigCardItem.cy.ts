@@ -246,6 +246,31 @@ describe('<ConfigCardItem />', () => {
       }
     })
 
+    it('renders JSON text field correctly', () => {
+      const obj: Record<string, string> = {
+        name: 'TK Meowstersmith',
+        species: 'Awesome cat',
+        color: 'All black',
+        awesome: 'true',
+      }
+      const item: RecordItem = {
+        type: ConfigurationSchemaType.Text,
+        key: 'cat_data',
+        label: 'Cat Data',
+        value: obj,
+      }
+
+      cy.mount(ConfigCardItem, {
+        props: {
+          item,
+        },
+      })
+
+      cy.get('.config-card-details-row').should('be.visible')
+      cy.getTestId(`${item.key}-json-code`).should('be.visible')
+      cy.getTestId(`${item.key}-json-code`).should('contain.text', JSON.stringify(obj, null, 2))
+    })
+
     it('renders a JSON Array field correctly', () => {
       const obj: Record<string, string>[] = [{
         name: 'TK Meowstersmith',
