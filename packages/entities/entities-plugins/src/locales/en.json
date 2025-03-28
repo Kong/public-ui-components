@@ -510,7 +510,7 @@
       },
       "request-callout": {
         "name": "Request Callout",
-        "description": "Callout to third party apis as part of request processing."
+        "description": "Callout to third party APIs as part of request processing."
       },
       "ai-sanitizer": {
         "name": "AI Sanitizer",
@@ -623,6 +623,11 @@
         "only_one_of": "Exactly one of these parameters is required: {parameters}",
         "mutually_required": "All of these parameters are required: {parameters}",
         "only_one_of_mutually_required": "Exactly one of the following parameter combinations is required (all parameters within a chosen combination are required):"
+      }
+    },
+    "free-form": {
+      "request-callout": {
+        "by_lua_placeholder": "Enter Lua script here..."
       }
     }
   },

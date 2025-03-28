@@ -30,6 +30,7 @@ import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
+import { getFreeFormName } from '../utils/free-form'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -275,7 +276,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
     formSchema._redis_partial_path = currentSchema._redis_partial_path
 
-    if (getSharedFormName(pluginName) || metadata?.useLegacyForm || options?.credential) {
+    if (getSharedFormName(pluginName) || getFreeFormName(pluginName) || metadata?.useLegacyForm || options?.credential) {
       /**
        * Do not generate grouped schema when:
        * - The plugin has a custom layout
@@ -686,10 +687,51 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     schema.label = formatFieldLabel(schema, schema.model)
   }
 
+  /**
+   * Prunes a record based on a schema
+   * @param {Object} config - the record to prune
+   * @param {Object} schema - the schema to prune the record against
+   * @returns {Object} the pruned record
+   */
+  function pruneRecord(config: Record<string, any>, schema: Record<string, any>): Record<string, any> {
+    if (
+      schema == null ||
+      (schema.type && schema.type !== 'record') ||
+      typeof config !== 'object' ||
+      config == null
+    ) {
+      return config
+    }
+
+    const result: Record<string, any> = {}
+    for (const fieldDef of schema.fields) {
+      const fieldName = Object.keys(fieldDef)[0]
+      const fieldSchema = fieldDef[fieldName]
+      if (fieldSchema.type === 'record') {
+        result[fieldName] = pruneRecord(config[fieldName], fieldSchema)
+      } else if (
+        fieldSchema.type === 'array' &&
+        Array.isArray(config[fieldName])
+      ) {
+        if (fieldSchema.elements.type === 'record') {
+          result[fieldName] = config[fieldName].map((item: any) =>
+            pruneRecord(item, fieldSchema.elements),
+          )
+        } else {
+          result[fieldName] = config[fieldName]
+        }
+      } else {
+        result[fieldName] = config[fieldName]
+      }
+    }
+    return result
+  }
+
   return {
     buildFormSchema,
     parseSchema,
     customSchemas,
     typedefs,
+    pruneRecord,
   }
 }
