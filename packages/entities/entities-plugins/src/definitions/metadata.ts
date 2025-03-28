@@ -6,7 +6,7 @@ import { aclSchema } from './schemas/ACL'
 import aclsCredentialsSchema from './schemas/credentials/mockedAclSchema.json'
 import { basicAuthSchema } from './schemas/BasicAuth'
 import basicAuthCredentialsSchema from './schemas/credentials/mockedBasicAuthSchema.json'
-import { keyAuthSchema } from './schemas/KeyAuth'
+import { keyAuthCredentialSchema } from './schemas/KeyAuth'
 import keyAuthCredentialsSchema from './schemas/credentials/mockedKeyAuthSchema.json'
 import { hmacAuthSchema } from './schemas/HMAC'
 import hmacAuthCredentialsSchema from './schemas/credentials/mockedHmacAuthSchema.json'
@@ -742,11 +742,11 @@ export const CREDENTIAL_METADATA: Record<string, any> = {
   'key-auth': {
     titleKey: 'plugins.meta.key-auth.name',
     plugin: 'key-auth',
-    schema: keyAuthSchema,
+    schema: keyAuthCredentialSchema,
     nameKey: 'plugins.meta.key-auth.credential_name',
     endpoint: '/key-auth',
     schemaEndpoint: 'keyauth_credentials',
-    fields: getColumnFields(keyAuthSchema),
+    fields: getColumnFields(keyAuthCredentialSchema),
   },
   'key-auth-enc': {
     titleKey: 'plugins.meta.key-auth-enc.name',

@@ -297,7 +297,11 @@ const props = defineProps({
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const { customSchemas, typedefs } = composables.useSchemas({ app: props.config.app, credential: props.credential })
+const { customSchemas, typedefs } = composables.useSchemas({
+  app: props.config.app,
+  credential: props.credential,
+  experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
+})
 const { formatPluginFieldLabel } = composables.usePluginHelpers()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
@@ -566,6 +570,12 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
+
+    // the field is marked for deletion in the frontend schema
+    if (pluginSchema?.fieldsToDelete?.includes(field)) {
+      unset(initialFormSchema, field)
+      return
+    }
 
     // Required, omit keys with overwrite and hidden attributes for Kong Cloud
     if (Object.prototype.hasOwnProperty.call(scheme, 'overwrite') || scheme.hidden) {
@@ -1362,6 +1372,7 @@ onBeforeMount(async () => {
       }
     }
   } catch (error: any) {
+    console.error(error)
     fetchSchemaError.value = getMessageFromError(error)
     // Emit the error for the host app
     emit('error:fetch-schema', error)

@@ -633,5 +633,12 @@
   },
   "glossary": {
     "plugin": "plugin"
+  },
+  "custom_field": {
+    "key_auth_identity_realms": {
+      "cp_label": "Current Control Plane",
+      "cp_group_label": "Control Plane",
+      "realm_group_label": "Realms (Can only select one)"
+    }
   }
 }

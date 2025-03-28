@@ -24,6 +24,7 @@ import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
 import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
 import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
 import { kafkaUpstreamSchema } from '../definitions/schemas/KafkaUpstream'
+import { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import { confluentSchema } from '../definitions/schemas/Confluent'
 import ZipkinSchema from '../definitions/schemas/Zipkin'
 import typedefs from '../definitions/schemas/typedefs'
@@ -71,6 +72,10 @@ export interface UseSchemasOptions {
    * @defaultValue false
    */
   enableRedisPartial?: boolean
+  /**
+   * Whether to enable the experimental renders.
+   */
+  experimentalRenders?: Record<string, boolean>
 }
 
 /** Sorts non-config fields and place them at the top */
@@ -215,6 +220,8 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     'kafka-upstream': {
       ...kafkaUpstreamSchema,
     },
+
+    'key-auth': genKeyAuthSchema(options),
 
     'confluent': {
       ...confluentSchema,
