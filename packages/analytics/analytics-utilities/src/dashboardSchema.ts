@@ -219,7 +219,6 @@ export const singleValueSchema = {
     decimalPoints: {
       type: 'number',
     },
-    syntheticsDataKey,
     chartTitle,
   },
   required: ['type'],
