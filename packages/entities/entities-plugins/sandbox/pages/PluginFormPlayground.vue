@@ -57,7 +57,7 @@
         :config="kongManagerConfig"
         enable-vault-secret-picker
         is-wizard-step
-        plugin-type=""
+        :plugin-type="pluginType || ''"
         :schema="schema"
         @update="onUpdate"
       />
