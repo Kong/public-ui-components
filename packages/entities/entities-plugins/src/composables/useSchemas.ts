@@ -24,6 +24,7 @@ import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
 import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
 import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
 import { kafkaUpstreamSchema } from '../definitions/schemas/KafkaUpstream'
+import { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import { confluentSchema } from '../definitions/schemas/Confluent'
 import ZipkinSchema from '../definitions/schemas/Zipkin'
 import typedefs from '../definitions/schemas/typedefs'
@@ -214,6 +215,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'kafka-upstream': {
       ...kafkaUpstreamSchema,
+    },
+
+    'key-auth': {
+      ...genKeyAuthSchema(options),
     },
 
     'confluent': {

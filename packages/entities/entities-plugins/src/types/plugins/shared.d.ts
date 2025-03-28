@@ -47,5 +47,6 @@ export interface CommonSchemaFields {
   id?: string
   overwriteDefault?: boolean
   formSchema?: Record<string, any>
+  fieldsToDelete?: string[] // the fields to remove from the form schema
   shamefullyTransformPayload?: (params: { payload: Record<string, any> } & Record<string, any>) => void
 }
