@@ -18,7 +18,7 @@
         @remove-item="removeElement(index)"
       >
         <component
-          :is="getFieldType(schema.items)"
+          :is="getFieldComponent(schema.items)"
           :form-options="formOptions"
           :model="item"
           :schema="generateSchema(value, schema.items, index)"
@@ -28,7 +28,7 @@
 
       <span v-else-if="schema.items">
         <component
-          :is="getFieldType(schema.items)"
+          :is="getFieldComponent(schema.items)"
           :form-options="formOptions"
           :model="item"
           :schema="generateSchema(value, schema.items, index)"
@@ -214,7 +214,11 @@ export default {
     removeElement(index) {
       this.value = this.value.filter((_, i) => i !== index)
     },
-    getFieldType(fieldSchema) {
+    getFieldComponent(fieldSchema) {
+      if (fieldSchema.component) {
+        return fieldSchema.component
+      }
+
       return 'field-' + fieldSchema.type
     },
     modelUpdated() {
