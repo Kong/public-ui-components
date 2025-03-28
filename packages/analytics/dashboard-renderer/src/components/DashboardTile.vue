@@ -221,6 +221,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
   'slottable': undefined,
+  'single_value': SimpleChartRenderer,
 }
 
 const componentData = computed(() => {

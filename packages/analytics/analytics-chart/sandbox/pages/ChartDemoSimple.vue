@@ -27,6 +27,15 @@
                 Top N Table
               </KRadio>
             </div>
+            <div>
+              <KRadio
+                v-model="chartType"
+                name="chartType"
+                :selected-value="'single_value'"
+              >
+                Single Value
+              </KRadio>
+            </div>
           </div>
         </div>
         <br>
@@ -117,7 +126,7 @@
       <br>
 
       <!-- Dataset options -->
-      <div v-if="!isTopNTable">
+      <div v-if="!isTopNTable && !isSingleValue">
         <KLabel>Dataset options</KLabel>
         <div class="dataset-options">
           <KButton
@@ -141,7 +150,7 @@
 
       <div class="option-toggles">
         <KLabel>Option toggles</KLabel>
-        <div v-if="isTopNTable">
+        <div v-if="isTopNTable || isSingleValue">
           <KInputSwitch
             v-model="showLoadingState"
             :label="showLoadingState ? 'Is Loading' : 'Data Loaded'"
@@ -158,7 +167,7 @@
 
       <div class="config-container">
         <div
-          v-if="!isTopNTable"
+          v-if="!isTopNTable && !isSingleValue"
           class="config-container-row"
         >
           <KLabel>Colors</KLabel>
@@ -178,11 +187,16 @@
       </div>
     </template>
 
-    <SimpleChart
+    <div
       v-if="!isTopNTable"
-      :chart-data="exploreResult"
-      :chart-options="simpleChartOptions"
-    />
+      class="simple-chart-sandbox"
+      :class="{ 'single-value-sandbox': isSingleValue }"
+    >
+      <SimpleChart
+        :chart-data="exploreResult"
+        :chart-options="simpleChartOptions"
+      />
+    </div>
     <TopNTable
       v-else
       class="top-n-sandbox"
@@ -366,10 +380,10 @@ const exploreResult = computed<ExploreResultV4>(() => {
   }
 
   return {
-    // Gauge donut chart type should only receive 2 data points
-    data: !isGaugeChart.value
-      ? data
-      : data.slice(0, 2),
+    // Gauge chart type should only receive 2 data points, single value should only receive 1 data point
+    data: isGaugeChart.value
+      ? data.slice(0, 2)
+      : data.slice(0, 1),
     meta,
   }
 })
@@ -487,6 +501,10 @@ const isTopNTable = computed<boolean>(() => {
   return ('top_n' === chartType.value)
 })
 
+const isSingleValue = computed<boolean>(() => {
+  return ('single_value' === chartType.value)
+})
+
 watch(multiDimensionToggle, () => {
   serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
   statusCodeDimensionValues.value = new Set(statusCodeLabels)
@@ -504,4 +522,12 @@ watch(isGaugeChart, () => {
 
 <style lang="scss" scoped>
 @use "../styles/charts-sandbox";
+
+.simple-chart-sandbox {
+  &.single-value-sandbox {
+    resize: horizontal;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+}
 </style>

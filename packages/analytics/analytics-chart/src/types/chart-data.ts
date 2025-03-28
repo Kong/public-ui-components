@@ -4,7 +4,8 @@ import type { ChartType, SimpleChartType } from './chart-types'
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 
 // Chart.js extended interfaces
-export type Dataset = ChartDataset & { rawDimension: string,
+export type Dataset = ChartDataset & {
+  rawDimension: string,
   rawMetric?: string,
   total?: number,
   lineTension?: number,
@@ -129,6 +130,10 @@ export interface SimpleChartOptions {
    * Determines which dataset value will be display as large text
    */
   numerator?: number,
+  /**
+   * Determines number of decimal points to display in SingleValue chart
+   */
+  decimalPoints?: number,
 }
 
 export interface LegendValues {

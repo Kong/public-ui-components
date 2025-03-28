@@ -25,6 +25,11 @@
         :synthetics-data-key="syntheticsDataKey"
         :width="width"
       />
+      <SingleValue
+        v-if="isSingleValueChart"
+        :data="chartData"
+        :decimal-points="chartOptions.decimalPoints"
+      />
     </div>
   </div>
 </template>
@@ -37,6 +42,7 @@ import type { PropType } from 'vue'
 import { computed, toRef } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette } from '../utils'
+import SingleValue from './chart-types/SingleValue.vue'
 
 const props = defineProps({
   chartData: {
@@ -101,6 +107,7 @@ const computedMetricUnit = computed<string>(() => {
 })
 
 const isGaugeChart = computed<boolean>(() => props.chartOptions.type === 'gauge')
+const isSingleValueChart = computed<boolean>(() => props.chartOptions.type === 'single_value')
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
 const hasValidChartData = computed(() => {
@@ -115,13 +122,12 @@ const hasValidChartData = computed(() => {
 .simple-chart-shell {
   margin: var(--kui-space-0, $kui-space-0);
   padding: var(--kui-space-0, $kui-space-0);
+  width: 100%;
 
   .chart-empty-state {
     display: flex;
     flex-direction: column;
-    height: 100px;
     justify-content: center;
-    width: 100px;
 
     &:deep(.empty-state-title) {
       font-size: var(--kui-font-size-20, $kui-font-size-20);

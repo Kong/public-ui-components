@@ -29,6 +29,7 @@ export const dashboardTileTypes = [
   'golden_signals',
   'top_n',
   'slottable',
+  'single_value',
 ] as const
 export type DashboardTileType = typeof dashboardTileTypes[number]
 
@@ -207,6 +208,24 @@ export const metricCardSchema = {
 } as const satisfies JSONSchema
 
 export type MetricCardOptions = FromSchemaWithOptions<typeof metricCardSchema>
+
+export const singleValueSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['single_value'],
+    },
+    decimalPoints: {
+      type: 'number',
+    },
+    chartTitle,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type SingleValueOptions = FromSchemaWithOptions<typeof singleValueSchema>
 
 const exploreV4RelativeTimeSchema = {
   type: 'object',
@@ -465,6 +484,7 @@ export const tileDefinitionSchema = {
         metricCardSchema,
         topNTableSchema,
         slottableSchema,
+        singleValueSchema,
       ],
     },
   },

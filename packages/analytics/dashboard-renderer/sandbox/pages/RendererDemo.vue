@@ -341,6 +341,29 @@ const dashboardConfig = ref <DashboardConfig>({
         },
       },
     } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'single_value',
+          chartTitle: 'Single Value chart of mock data',
+        },
+        query: {
+          datasource: 'basic',
+          limit: 1,
+        },
+      },
+      layout: {
+        position: {
+          col: 3,
+          row: 7,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+          fitToContent: true,
+        },
+      },
+    } satisfies TileConfig,
   ],
 })
 
