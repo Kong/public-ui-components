@@ -227,5 +227,8 @@
       "display": "Error: 'display' response incorrectly formatted (must have at least one key)",
       "metricNames": "Error: 'metricNames' response incorrectly formatted (must have at least one entry)"
     }
+  },
+  "singleValue": {
+    "valueError": "Invalid configuration"
   }
 }

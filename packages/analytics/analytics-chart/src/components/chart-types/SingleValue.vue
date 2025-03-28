@@ -6,12 +6,14 @@
     <KEmptyState
       v-if="singleValue === null"
       class="single-value-error"
+      data-testid="single-value-error"
       icon-variant="error"
-      title="Invalid configuration"
+      :title="t('singleValue.valueError')"
     />
     <span
       v-else
       class="single-value"
+      data-testid="single-value-chart"
     >
       {{ formattedValue }}
     </span>
@@ -23,6 +25,9 @@ import { computed } from 'vue'
 import type { PropType } from 'vue'
 import type { AnalyticsExploreRecord, ExploreResultV4, AllAggregations } from '@kong-ui-public/analytics-utilities'
 import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
+import composables from '../../composables'
+
+const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps({
   data: {
