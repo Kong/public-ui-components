@@ -101,8 +101,8 @@ const formattedValue = computed((): string => {
   }
 
   .single-value-wrapper {
-    display: inline-flex;
     align-items: baseline;
+    display: inline-flex;
     gap: $kui-space-20;
 
     .single-value {
@@ -150,8 +150,8 @@ const formattedValue = computed((): string => {
     .single-value-unit {
       color: $kui-color-text-primary;
       font-size: $kui-font-size-40;
-      line-height: $kui-line-height-40;
       font-weight: $kui-font-weight-semibold;
+      line-height: $kui-line-height-40;
     }
   }
 }
