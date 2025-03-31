@@ -132,7 +132,7 @@ describe('<DashboardRenderer />', () => {
           time_range: '15m',
         },
       },
-      config: {
+      modelValue: {
         gridSize: {
           cols: 2,
           rows: 4,
@@ -208,7 +208,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: oneDayTimeframe.v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -271,7 +271,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: customTimeframe.v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -316,7 +316,7 @@ describe('<DashboardRenderer />', () => {
         filters: [filter1],
         timeSpec: oneDayTimeframe.v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -377,7 +377,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: customTimeframe.v4Query(),
       },
-      config: {
+      modelValue: {
         gridSize: { cols: 3, rows: 2 },
         tiles: [
           {
@@ -431,7 +431,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: customTimeframe.v4Query(),
       },
-      config: {
+      modelValue: {
         gridSize: { cols: 3, rows: 2 },
         tiles: [
           {
@@ -479,7 +479,7 @@ describe('<DashboardRenderer />', () => {
         // Use default timeframe for the org: don't provide one here.
         filters: [],
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -507,7 +507,7 @@ describe('<DashboardRenderer />', () => {
         ],
         timeSpec: ((TimePeriods.get(TimeframeKeys.ONE_DAY)) as Timeframe).v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -541,7 +541,7 @@ describe('<DashboardRenderer />', () => {
           },
         ],
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -579,7 +579,7 @@ describe('<DashboardRenderer />', () => {
           },
         ],
       },
-      config: simpleConfigNoFilters,
+      modelValue: simpleConfigNoFilters,
     }
 
     cy.mount(DashboardRenderer, {
@@ -618,7 +618,7 @@ describe('<DashboardRenderer />', () => {
           },
         ],
       },
-      config: simpleConfigNoFilters,
+      modelValue: simpleConfigNoFilters,
     }
 
     cy.mount(DashboardRenderer, {
@@ -658,7 +658,7 @@ describe('<DashboardRenderer />', () => {
           time_range: '24h',
         },
       },
-      config: {
+      modelValue: {
         gridSize: {
           cols: 6,
           rows: 4,
@@ -848,7 +848,7 @@ describe('<DashboardRenderer />', () => {
         },
         editable: true,
       },
-      config: fourByFourDashboardConfigJustCharts,
+      modelValue: fourByFourDashboardConfigJustCharts,
     }
 
     cy.mount(DashboardRenderer, {
@@ -879,7 +879,7 @@ describe('<DashboardRenderer />', () => {
         },
         editable: true,
       },
-      config: fourByFourDashboardConfigJustCharts,
+      modelValue: fourByFourDashboardConfigJustCharts,
     }
 
     const updateTilesSpy = cy.spy().as('updateTilesSpy')

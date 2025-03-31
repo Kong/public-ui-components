@@ -14,15 +14,21 @@
           refresh
         </KButton>
         <KButton
+          :disabled="!editableSwitch"
           size="small"
           @click="addTile"
         >
           Add tile
         </KButton>
+        <KInputSwitch
+          v-model="editableSwitch"
+          label="Editable"
+          size="small"
+        />
       </div>
       <DashboardRenderer
         ref="dashboardRendererRef"
-        :config="dashboardConfig"
+        v-model="dashboardConfig"
         :context="context"
         @edit-tile="onEditTile"
         @update-tiles="onUpdateTiles"
@@ -47,7 +53,7 @@
 <script setup lang="ts">
 import type { DashboardRendererContext, GridTile } from '../../src'
 import { DashboardRenderer } from '../../src'
-import { inject, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import type {
   DashboardConfig,
   DashboardTileType,
@@ -60,12 +66,13 @@ import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
+const editableSwitch = ref(true)
 
-const context: DashboardRendererContext = {
+const context = computed<DashboardRendererContext>(() => ({
   filters: [],
   refreshInterval: 0,
-  editable: true,
-}
+  editable: editableSwitch.value,
+}))
 
 const dashboardConfig = ref <DashboardConfig>({
   gridSize: {
@@ -150,7 +157,7 @@ const dashboardConfig = ref <DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 3,
+          row: 2,
         },
         size: {
           cols: 3,
@@ -164,7 +171,7 @@ const dashboardConfig = ref <DashboardConfig>({
 const onEditTile = (tile: GridTile<TileDefinition>) => {
   console.log('@edit-tile', tile)
 
-  const chartTypeToggleMap = {
+  const chartTypeToggleMap: Record<DashboardTileType, DashboardTileType> = {
     timeseries_line: 'timeseries_bar',
     timeseries_bar: 'timeseries_line',
     horizontal_bar: 'vertical_bar',
@@ -173,6 +180,7 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
     golden_signals: 'golden_signals',
     slottable: 'slottable',
     top_n: 'top_n',
+    donut: 'donut',
   }
 
   dashboardConfig.value.tiles = dashboardConfig.value.tiles.map(t => {

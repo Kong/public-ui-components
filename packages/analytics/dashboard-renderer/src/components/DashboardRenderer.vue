@@ -10,8 +10,8 @@
       :is="context.editable ? DraggableGridLayout : GridLayout"
       v-else
       ref="gridLayoutRef"
-      :grid-size="config.gridSize"
-      :tile-height="config.tileHeight"
+      :grid-size="model.gridSize"
+      :tile-height="model.tileHeight"
       :tiles="gridTiles"
       @update-tiles="handleUpdateTiles"
     >
@@ -27,7 +27,7 @@
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
-          :height="tile.layout.size.rows * (config.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+          :height="tile.layout.size.rows * (model.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
           :query-ready="queryReady"
           :refresh-counter="refreshCounter"
           :tile-id="tile.id"
@@ -61,13 +61,14 @@ import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const props = defineProps<{
   context: DashboardRendererContext,
-  config: DashboardConfig,
 }>()
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
   (e: 'update-tiles', tiles: TileConfig[]): void
 }>()
+
+const model = defineModel<DashboardConfig>({ required: true })
 
 const { i18n } = composables.useI18n()
 const refreshCounter = ref(0)
@@ -119,7 +120,7 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 }
 
 const gridTiles = computed(() => {
-  return props.config.tiles.map((tile: TileConfig, i: number) => {
+  return model.value.tiles.map((tile: TileConfig, i: number) => {
     let tileMeta = tile.definition
 
     if ('description' in tileMeta.chart) {
@@ -215,6 +216,11 @@ const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
       definition: tile.meta,
     } as TileConfig
   })
+  const newGridSize = {
+    cols: Math.max(...updatedTiles.map(t => t.layout.position.col + t.layout.size.cols)),
+    rows: Math.max(...updatedTiles.map(t => t.layout.position.row + t.layout.size.rows)),
+  }
+  model.value.gridSize = newGridSize
   emit('update-tiles', updatedTiles.sort(tileSortFn))
 }
 

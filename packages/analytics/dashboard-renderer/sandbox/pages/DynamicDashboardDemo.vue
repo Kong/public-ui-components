@@ -16,7 +16,7 @@
     <div class="sandbox-container">
       <DashboardRenderer
         v-if="definition.type === ValidationResultType.Success"
-        :config="definition.data"
+        v-model="definition.data"
         :context="context"
         draggable
         @update-tiles="handleUpdateTiles"
