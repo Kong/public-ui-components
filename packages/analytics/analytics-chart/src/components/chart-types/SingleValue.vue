@@ -10,13 +10,23 @@
       icon-variant="error"
       :title="t('singleValue.valueError')"
     />
-    <span
+    <div
       v-else
-      class="single-value"
-      data-testid="single-value-chart"
+      class="single-value-wrapper"
     >
-      {{ formattedValue }}
-    </span>
+      <span
+        class="single-value"
+        data-testid="single-value-chart"
+      >
+        {{ formattedValue }}
+      </span>
+      <span
+        v-if="displayMetricUnit"
+        class="single-value-unit"
+      >
+        {{ metricUnit }}
+      </span>
+    </div>
   </div>
 </template>
 
@@ -45,6 +55,9 @@ const props = defineProps({
 
 const record = computed((): AnalyticsExploreRecord => props.data.data[0])
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
+const metricUnit = computed((): string | undefined => metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined)
+// by default, display metric units for requests per minute, latency and response/request size metrics
+const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute' || !!metricName.value?.includes('_latency_') || !!metricName.value?.includes('_size_'))
 
 const singleValue = computed((): number | null => {
   if (!record.value || !metricName.value || typeof record.value.event[metricName.value] !== 'number') {
@@ -87,45 +100,58 @@ const formattedValue = computed((): string => {
     }
   }
 
-  .single-value {
-    color: $kui-color-text;
-    font-size: $kui-font-size-70;
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-70;
-  }
+  .single-value-wrapper {
+    display: inline-flex;
+    align-items: baseline;
+    gap: $kui-space-20;
 
-  @container (min-width: 300px) {
     .single-value {
-      font-size: $kui-font-size-100;
-      line-height: $kui-line-height-100;
+      color: $kui-color-text;
+      font-size: $kui-font-size-70;
+      font-weight: $kui-font-weight-bold;
+      line-height: $kui-line-height-70;
     }
-  }
 
-  @container (min-width: 500px) {
-    .single-value {
-      font-size: 56px;
-      line-height: 64px;
+    @container (min-width: 300px) {
+      .single-value {
+        font-size: $kui-font-size-100;
+        line-height: $kui-line-height-100;
+      }
     }
-  }
 
-  @container (min-width: 700px) {
-    .single-value {
-      font-size: 64px;
-      line-height: 72px;
+    @container (min-width: 500px) {
+      .single-value {
+        font-size: 56px;
+        line-height: 64px;
+      }
     }
-  }
 
-  @container (min-width: 1000px) {
-    .single-value {
-      font-size: 80px;
-      line-height: 88px;
+    @container (min-width: 700px) {
+      .single-value {
+        font-size: 64px;
+        line-height: 72px;
+      }
     }
-  }
 
-  @container (min-width: 1000px) {
-    .single-value {
-      font-size: 96px;
-      line-height: 104px;
+    @container (min-width: 1000px) {
+      .single-value {
+        font-size: 80px;
+        line-height: 88px;
+      }
+    }
+
+    @container (min-width: 1000px) {
+      .single-value {
+        font-size: 96px;
+        line-height: 104px;
+      }
+    }
+
+    .single-value-unit {
+      color: $kui-color-text-primary;
+      font-size: $kui-font-size-40;
+      line-height: $kui-line-height-40;
+      font-weight: $kui-font-weight-semibold;
     }
   }
 }
