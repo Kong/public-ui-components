@@ -133,6 +133,21 @@
       }"
     />
 
+    <h2>JSON Text</h2>
+    <ConfigCardItem
+      :item="{
+        type: ConfigurationSchemaType.Text,
+        key: 'json-code',
+        label: 'Cat Data',
+        value: {
+          name: 'TK Meowstersmith',
+          species: 'Awesome cat',
+          color: 'All black',
+          awesome: 'true',
+        }
+      }"
+    />
+
     <h2>JSON Object Array</h2>
     <ConfigCardItem
       :item="{

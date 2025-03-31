@@ -119,6 +119,7 @@ export const gatewayServiceRecord = {
   tls_verify: true,
   updated_at: 1686157266,
   write_timeout: 60000,
+  extra: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
 }
 
 export const emptyKey = 'preferred_chain'
