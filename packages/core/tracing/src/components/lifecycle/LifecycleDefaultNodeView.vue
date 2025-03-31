@@ -2,7 +2,7 @@
   <div :class="rootClasses">
     <KBadge
       v-if="data.badge"
-      :appearance="data.type === LifecycleNodeType.REQUEST ? BadgeAppearances.info : BadgeAppearances.decorative"
+      :appearance="data.type === LifecycleDefaultNodeType.REQUEST ? BadgeAppearances.info : BadgeAppearances.decorative"
       class="badge"
     >
       {{ data.badge }}
@@ -85,8 +85,8 @@ import type { Position } from '@vue-flow/core'
 import { Handle } from '@vue-flow/core'
 import { computed } from 'vue'
 import composables from '../../composables'
-import { LifecycleNodeType, NODE_GROUP_PADDING } from '../../constants'
-import type { LifecycleNodeData } from '../../types'
+import { LifecycleDefaultNodeType, NODE_GROUP_PADDING } from '../../constants'
+import type { LifecycleDefaultNodeData } from '../../types'
 import { getDurationFormatter, getNodeStripeColor } from '../../utils'
 
 const fmt = getDurationFormatter()
@@ -95,32 +95,22 @@ const { i18n: { t } } = composables.useI18n()
 const props = defineProps<{
   sourcePosition?: Position
   targetPosition?: Position
-  data: LifecycleNodeData
+  data: LifecycleDefaultNodeData
 }>()
-
-const isGroupNode = computed(() =>
-  props.data.type === LifecycleNodeType.REQUEST_GROUP || props.data.type === LifecycleNodeType.RESPONSE_GROUP,
-)
 
 const rootClasses = computed(() => {
   const classes = ['lifecycle-view-node']
 
   switch (props.data.type) {
-    case LifecycleNodeType.REQUEST_GROUP:
+    case LifecycleDefaultNodeType.REQUEST_GROUP:
       classes.push('type-request-group')
       break
-    case LifecycleNodeType.RESPONSE_GROUP:
+    case LifecycleDefaultNodeType.RESPONSE_GROUP:
       classes.push('type-response-group')
       break
     default:
       classes.push(`type-${props.data.type}`)
       break
-  }
-
-  if (isGroupNode.value) {
-    props.data.labelPlacement?.split(' ').forEach((placement) =>
-      classes.push(`label-${placement}`),
-    )
   }
 
   if (props.data.emptyGroup) {
@@ -203,12 +193,8 @@ const nodeStripeColor = computed(() => getNodeStripeColor(props.data.durationNan
     }
   }
 
-  &.label-top:not(.empty-group) {
+  &:not(.empty-group) {
     justify-content: flex-start;
-  }
-
-  &.label-bottom:not(.empty-group) {
-    justify-content: flex-end;
   }
 
   .badge {
