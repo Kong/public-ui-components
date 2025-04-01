@@ -65,7 +65,6 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
-  (e: 'update-tiles', tiles: TileConfig[]): void
 }>()
 
 const model = defineModel<DashboardConfig>({ required: true })
@@ -222,7 +221,6 @@ const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
   }
   model.value.gridSize = newGridSize
   model.value.tiles = updatedTiles.sort(tileSortFn)
-  emit('update-tiles', model.value.tiles)
 }
 
 defineExpose({ refresh: refreshTiles })

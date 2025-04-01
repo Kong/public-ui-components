@@ -31,7 +31,6 @@
         v-model="dashboardConfig"
         :context="context"
         @edit-tile="onEditTile"
-        @update-tiles="onUpdateTiles"
       >
         <template #slot-1>
           <div class="slot-container">
@@ -64,6 +63,7 @@ import type {
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
+import { watchDebounced } from '@vueuse/core'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 const editableSwitch = ref(true)
@@ -246,8 +246,8 @@ const addTile = () => {
   })
 }
 
-const onUpdateTiles = (tiles: TileConfig[]) => {
-  console.log('@update-tiles', tiles)
-  dashboardConfig.value.tiles = tiles
-}
+watchDebounced(() => dashboardConfig.value.tiles, (newValue) => {
+  console.log('update tiles', newValue)
+}, { deep: true, debounce: 300 })
+
 </script>

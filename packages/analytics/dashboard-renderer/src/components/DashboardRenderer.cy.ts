@@ -3,6 +3,7 @@ import type {
   AdvancedDatasourceQuery,
   AnalyticsBridge,
   AnalyticsConfigV2,
+  DashboardConfig,
   DatasourceAwareQuery,
   ExploreFilter,
   ExploreResultV4,
@@ -28,6 +29,7 @@ import {
 import { createPinia, setActivePinia } from 'pinia'
 import { EntityLink } from '@kong-ui-public/entities-shared'
 import { dragTile } from '../test-utils'
+import { ref } from 'vue'
 
 interface MockOptions {
   failToResolveConfig?: boolean
@@ -870,6 +872,8 @@ describe('<DashboardRenderer />', () => {
   })
 
   it('tiles maintain row-column order after reordering', () => {
+
+    const configRef = ref<DashboardConfig>(fourByFourDashboardConfigJustCharts)
     const props = {
       context: {
         filters: [],
@@ -879,16 +883,11 @@ describe('<DashboardRenderer />', () => {
         },
         editable: true,
       },
-      modelValue: fourByFourDashboardConfigJustCharts,
+      modelValue: configRef.value,
     }
-
-    const updateTilesSpy = cy.spy().as('updateTilesSpy')
 
     cy.mount(DashboardRenderer, {
       props,
-      attrs: {
-        onUpdateTiles: updateTilesSpy,
-      },
       global: {
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
@@ -908,11 +907,9 @@ describe('<DashboardRenderer />', () => {
 
     dragTile(source, destination)
 
-    cy.get('@updateTilesSpy').should('have.been.called')
-    cy.get('@updateTilesSpy')
-      .its('firstCall.args.0')
-      .then(tiles => {
-        expect(tiles.map((tile: TileConfig) => tile.id)).to.deep.equal(updatedTileIDOrder)
-      })
+    cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
+      const currentOrder = ref.value.tiles.map((tile: TileConfig) => tile.id)
+      expect(currentOrder).to.deep.equal(updatedTileIDOrder)
+    })
   })
 })
