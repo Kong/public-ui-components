@@ -217,8 +217,8 @@ const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
     } as TileConfig
   })
   const newGridSize = {
-    cols: Math.max(...updatedTiles.map(t => t.layout.position.col + t.layout.size.cols)),
-    rows: Math.max(...updatedTiles.map(t => t.layout.position.row + t.layout.size.rows)),
+    cols: Math.max(2, ...updatedTiles.map(t => t.layout.position.col + t.layout.size.cols)),
+    rows: Math.max(1, ...updatedTiles.map(t => t.layout.position.row + t.layout.size.rows)),
   }
   model.value.gridSize = newGridSize
   model.value.tiles = updatedTiles.sort(tileSortFn)
