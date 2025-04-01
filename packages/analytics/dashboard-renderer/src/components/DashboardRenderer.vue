@@ -221,7 +221,8 @@ const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
     rows: Math.max(...updatedTiles.map(t => t.layout.position.row + t.layout.size.rows)),
   }
   model.value.gridSize = newGridSize
-  emit('update-tiles', updatedTiles.sort(tileSortFn))
+  model.value.tiles = updatedTiles.sort(tileSortFn)
+  emit('update-tiles', model.value.tiles)
 }
 
 defineExpose({ refresh: refreshTiles })
