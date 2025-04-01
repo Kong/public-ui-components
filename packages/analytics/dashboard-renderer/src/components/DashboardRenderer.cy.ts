@@ -29,7 +29,7 @@ import {
 import { createPinia, setActivePinia } from 'pinia'
 import { EntityLink } from '@kong-ui-public/entities-shared'
 import { dragTile } from '../test-utils'
-import { ref } from 'vue'
+import { ref, watch, type Ref } from 'vue'
 
 interface MockOptions {
   failToResolveConfig?: boolean
@@ -120,7 +120,6 @@ describe('<DashboardRenderer />', () => {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
       evaluateFeatureFlagFn,
-
       fetchComponent: opts?.renderEntityLink ? fetchComponentFn : undefined,
     }
   }
@@ -910,6 +909,64 @@ describe('<DashboardRenderer />', () => {
     cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
       const currentOrder = ref.value.tiles.map((tile: TileConfig) => tile.id)
       expect(currentOrder).to.deep.equal(updatedTileIDOrder)
+    })
+  })
+
+  it.only('Update gridsize when tile added', () => {
+
+    const configRef = ref<DashboardConfig>(fourByFourDashboardConfigJustCharts)
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '15m',
+        },
+        editable: true,
+      },
+      modelValue: configRef.value,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    expect(configRef.value.gridSize).to.deep.equal({ cols: 8, rows: 4 })
+
+    cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
+      ref.value.tiles.push({
+        id: crypto.randomUUID(),
+        definition: {
+          chart: {
+            type: 'timeseries_line',
+            chartTitle: 'New Tile',
+          },
+          query: {
+            metrics: ['request_count'],
+            dimensions: ['time'],
+            filters: [],
+          },
+        },
+        layout: {
+          position: {
+            col: 0,
+            row: 0,
+          },
+          size: {
+            cols: 4,
+            rows: 4,
+          },
+        },
+      })
+    })
+
+    cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
+      expect(ref.value.gridSize).to.deep.equal({ cols: 8, rows: 8 })
     })
   })
 })
