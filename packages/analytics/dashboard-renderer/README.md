@@ -42,8 +42,8 @@ Render Analytics charts on a page from a JSON definition.
 
 This component takes two properties:
 
+- [modelValue](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/dashboardSchema.ts): The dashboard configuration and layout are provided as a two-way binding using `v-model`. When in editable mode, changes to tiles or the layout will automatically update the reactive reference bound to `v-model`.
 - [context](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/renderer-types.ts): The time range that the dashboard should query, any additional filters that should be applied, and editing configuration.
-- [config](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/dashboardSchema.ts): The dashboard config and layout.
 
 #### Context Properties
 
@@ -60,10 +60,9 @@ This component takes two properties:
 
 ```html
 <DashboardRenderer
+  v-model="config"
   :context="context"
-  :config="config"
   @edit-tile="handleEditTile"
-  @update-tiles="handleUpdateTiles"
 />
 ```
 
@@ -150,8 +149,8 @@ const config: DashboardConfig = {
 
 ```html
 <DashboardRenderer
+  v-model="config"
   :context="context"
-  :config="config"
 >
   <!-- use the `id` set in the tile config for the slot name -->
   <template #slot-1>
@@ -319,7 +318,7 @@ const context: DashboardRendererContext = {
   editable: true, // Enable editing capabilities
 }
 
-const config: DashboardConfig = {
+const config = ref<DashboardConfig>({
   gridSize: {
     cols: 4,
     rows: 1,
@@ -348,15 +347,18 @@ const config: DashboardConfig = {
       }
     }
   ]
-}
+})
+
+watch(() => config.value.tiles, (tiles) => {
+  // Watch for changes to tiles.
+})
 ```
 
 ```html
 <DashboardRenderer
+  v-model="config"
   :context="context"
-  :config="config"
   @edit-tile="handleEditTile"
-  @update-tiles="handleUpdateTiles"
 />
 ```
 
@@ -377,16 +379,14 @@ The DashboardRenderer component emits the following events when in editable mode
 | Event | Payload | Description |
 |-------|---------|-------------|
 | `edit-tile` | `GridTile<TileDefinition>` | Emitted when the edit button is clicked on a tile. The payload includes the complete tile configuration including its layout and metadata. |
-| `update-tiles` | `TileConfig[]` | Emitted when tiles are moved, resized, or removed. The payload is an array of all tiles with their updated positions and sizes. |
 | `remove-tile` | `GridTile<TileDefinition>` | Emitted when a tile is removed via the kebab menu. The payload includes the configuration of the removed tile. |
 
 
 ```Html
 <DashboardRenderer
+  v-model="config"
   :context="context"
-  :config="config"
   @edit-tile="handleTileEdit"
-  @update-tiles="handleLayoutUpdate"
   @remove-tile="handleTileRemoval"
 />
 ```
@@ -397,15 +397,16 @@ const handleEditTile = (tile: GridTile<TileDefinition>) => {
   console.log('Editing tile:', tile.id)
 }
 
-const handleUpdateTiles = (tiles: TileConfig[]) => {
-  // Handle layout updates, e.g., save to backend
-  console.log('Updated tiles:', tiles)
-}
 
 const handleRemoveTile = (tile: GridTile<TileDefinition>) => {
   // Handle tile removal, e.g., update backend
   console.log('Removed tile:', tile.id)
 }
+
+watch(() => config.value.tiles, (tiles) => {
+  // Watch for changes to tiles.
+  console.log('Update tiles:', tiles)
+})
 ```
 
 Note: These events are only emitted when the dashboard is in editable mode (`context.editable = true`).

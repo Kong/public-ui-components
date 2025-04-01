@@ -21,8 +21,8 @@
       </div>
       <DashboardRenderer
         ref="dashboardRendererRef"
+        v-model="dashboardConfig"
         :class="{ 'custom-styling': isToggled}"
-        :config="dashboardConfig"
         :context="context"
       >
         <template #slot-1>

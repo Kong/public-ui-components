@@ -489,7 +489,7 @@ export const routeExploreResponse: ExploreResultV4 = {
 export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
   gridSize: {
     cols: 8,
-    rows: 4,
+    rows: 6,
   },
   tileHeight: 167,
   tiles: [
