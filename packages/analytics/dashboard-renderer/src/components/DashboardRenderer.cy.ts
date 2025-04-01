@@ -935,7 +935,7 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    expect(configRef.value.gridSize).to.deep.equal({ cols: 8, rows: 4 })
+    expect(configRef.value.gridSize).to.deep.equal({ cols: 8, rows: 6 })
 
     cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
       ref.value.tiles.push({
