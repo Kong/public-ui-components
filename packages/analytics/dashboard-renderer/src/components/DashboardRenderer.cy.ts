@@ -912,8 +912,7 @@ describe('<DashboardRenderer />', () => {
     })
   })
 
-  it.only('Update gridsize when tile added', () => {
-
+  it('Update gridsize when tile added', () => {
     const configRef = ref<DashboardConfig>(fourByFourDashboardConfigJustCharts)
     const props = {
       context: {
