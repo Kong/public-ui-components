@@ -1,11 +1,11 @@
 import { KUI_COLOR_BACKGROUND_DISABLED } from '@kong/design-tokens'
 import { MarkerType } from '@vue-flow/core'
-import { KONG_PHASES, LifecycleNodeType, NODE_STRIPE_COLOR_MAPPING, NODE_STRIPE_COLOR_MAPPING_START_EXP, SPAN_NAMES } from '../constants'
-import type { LifecycleGraph, LifecycleNodeData, SpanNode } from '../types'
+import { KONG_PHASES, LifecycleDefaultNodeType, NODE_FRAME_PADDING, NODE_STRIPE_COLOR_MAPPING, NODE_STRIPE_COLOR_MAPPING_START_EXP, SPAN_NAMES } from '../constants'
+import type { LifecycleGraph, LifecycleDefaultNodeData, SeamlessSmoothStepEdgeType, SpanNode } from '../types'
 import { compareSpanNode, getPhaseAndPlugin } from './spans'
 
 /**
- * Traverse a plugin span tree and build the {@link LifecycleNodeData} for the plugin and accumulate
+ * Traverse a plugin span tree and build the {@link LifecycleDefaultNodeData} for the plugin and accumulate
  * the duration that has been excluded from the returned result.
  *
  * Currently, nested duration of {@link SPAN_NAMES.CLIENT_HEADERS} and {@link SPAN_NAMES.READ_BODY}
@@ -14,7 +14,7 @@ import { compareSpanNode, getPhaseAndPlugin } from './spans'
  * @param node The root node of the plugin span tree
  * @returns the node data and the duration that has been excluded
  */
-const buildPluginNodeData = (node: SpanNode): [LifecycleNodeData & { id: string }, number] | undefined => {
+const buildPluginNodeData = (node: SpanNode): [LifecycleDefaultNodeData & { id: string }, number] | undefined => {
   // Try to parse the phase and plugin name from the span name
   const pluginSpan = getPhaseAndPlugin(node.span.name)
   if (!pluginSpan || pluginSpan.suffix) {
@@ -23,17 +23,17 @@ const buildPluginNodeData = (node: SpanNode): [LifecycleNodeData & { id: string 
     return undefined
   }
 
-  let nodeType = LifecycleNodeType.REQUEST // We will update this later
+  let nodeType = LifecycleDefaultNodeType.REQUEST // We will update this later
   switch (pluginSpan.phase) {
     case KONG_PHASES.CERTIFICATE:
     case KONG_PHASES.REWRITE:
     case KONG_PHASES.ACCESS:
-      nodeType = LifecycleNodeType.REQUEST
+      nodeType = LifecycleDefaultNodeType.REQUEST
       break
     case KONG_PHASES.RESPONSE:
     case KONG_PHASES.HEADER_FILTER:
     case KONG_PHASES.BODY_FILTER:
-      nodeType = LifecycleNodeType.RESPONSE
+      nodeType = LifecycleDefaultNodeType.RESPONSE
       break
     default:
       // Indicates that the phase is not recognized; we should skip it
@@ -78,8 +78,8 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
   const nodeIdPrefix = options?.idPrefix ?? ''
   const clientOutSpans: SpanNode[] = []
   const clientInSpans: SpanNode[] = []
-  const requestNodesData: (LifecycleNodeData & { id: string })[] = []
-  const responseNodesData: (LifecycleNodeData & { id: string })[] = []
+  const requestNodesData: (LifecycleDefaultNodeData & { id: string })[] = []
+  const responseNodesData: (LifecycleDefaultNodeData & { id: string })[] = []
   const upstreamInSpans: SpanNode[] = []
   const upstreamOutSpans: SpanNode[] = []
 
@@ -113,11 +113,11 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
         if (builtData) {
           const [nodeData, durationExcluded] = builtData
           switch (nodeData.type) {
-            case LifecycleNodeType.REQUEST:
+            case LifecycleDefaultNodeType.REQUEST:
               requestNodesData.push(nodeData)
               pluginDurationExcluded += durationExcluded
               break
-            case LifecycleNodeType.RESPONSE:
+            case LifecycleDefaultNodeType.RESPONSE:
               responseNodesData.push(nodeData)
               pluginDurationExcluded += durationExcluded
               break
@@ -131,7 +131,7 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
     }
   }
 
-  const sortPluginNodes = (a: LifecycleNodeData, b: LifecycleNodeData) => {
+  const sortPluginNodes = (a: LifecycleDefaultNodeData, b: LifecycleDefaultNodeData) => {
     const spanA = a.spans?.[0]
     const spanB = b.spans?.[0]
     if (spanA && spanB) {
@@ -150,20 +150,20 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
     nodeTree: {
       client: {
         node: {
-          id: `${nodeIdPrefix}${LifecycleNodeType.CLIENT}`,
+          id: `${nodeIdPrefix}${LifecycleDefaultNodeType.CLIENT}`,
           position: { x: 0, y: 0 },
           data: {
             labelKey: 'lifecycle.client.label',
-            type: LifecycleNodeType.CLIENT,
+            type: LifecycleDefaultNodeType.CLIENT,
           },
           zIndex: 2,
         },
         ...clientOutSpans.length > 0 && {
           out:  {
-            id: `${nodeIdPrefix}${LifecycleNodeType.CLIENT_OUT}`,
+            id: `${nodeIdPrefix}${LifecycleDefaultNodeType.CLIENT_OUT}`,
             position: { x: 0, y: 0 },
             data: {
-              type: LifecycleNodeType.CLIENT_OUT,
+              type: LifecycleDefaultNodeType.CLIENT_OUT,
               durationNano: clientOutSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0),
               durationTooltipKey: 'lifecycle.client_out.tooltip',
             },
@@ -172,10 +172,10 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
         },
         ...clientInSpans.length > 0 && {
           in: {
-            id: `${nodeIdPrefix}${LifecycleNodeType.CLIENT_IN}`,
+            id: `${nodeIdPrefix}${LifecycleDefaultNodeType.CLIENT_IN}`,
             position: { x: 0, y: 0 },
             data: {
-              type: LifecycleNodeType.CLIENT_IN,
+              type: LifecycleDefaultNodeType.CLIENT_IN,
               durationNano: clientInSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0) + pluginDurationExcluded,
               durationTooltipKey: 'lifecycle.client_in.tooltip',
             },
@@ -185,21 +185,20 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
       },
       requests: {
         node: {
-          id: `${nodeIdPrefix}${LifecycleNodeType.REQUEST_GROUP}`,
+          id: `${nodeIdPrefix}${LifecycleDefaultNodeType.REQUEST_GROUP}`,
           position: { x: 0, y: 0 },
           data: {
             labelKey: 'lifecycle.request.label',
-            type: LifecycleNodeType.REQUEST_GROUP,
-            labelPlacement: 'top',
+            type: LifecycleDefaultNodeType.REQUEST_GROUP,
             emptyGroup: requestNodesData.length === 0,
             emptyGroupMessageKey: 'lifecycle.no_plugins_executed',
           },
           zIndex: 1,
         },
         children: requestNodesData.map((nodeData) => ({
-          id: `${nodeIdPrefix}${LifecycleNodeType.REQUEST}:${nodeData.id}`,
+          id: `${nodeIdPrefix}${LifecycleDefaultNodeType.REQUEST}:${nodeData.id}`,
           position: { x: 0, y: 0 },
-          parentNode: `${nodeIdPrefix}${LifecycleNodeType.REQUEST_GROUP}`,
+          parentNode: `${nodeIdPrefix}${LifecycleDefaultNodeType.REQUEST_GROUP}`,
           data: nodeData,
           zIndex: 1,
         })),
@@ -207,20 +206,20 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
       ...(upstreamInSpans.length > 0 || upstreamOutSpans.length > 0) && {
         upstream: {
           node: {
-            id: `${nodeIdPrefix}${LifecycleNodeType.UPSTREAM}`,
+            id: `${nodeIdPrefix}${LifecycleDefaultNodeType.UPSTREAM}`,
             position: { x: 0, y: 0 },
             data: {
               labelKey: 'lifecycle.upstream.label',
-              type: LifecycleNodeType.UPSTREAM,
+              type: LifecycleDefaultNodeType.UPSTREAM,
             },
             zIndex: 1,
           },
           ...upstreamInSpans.length > 0 && {
             in: {
-              id: `${nodeIdPrefix}${LifecycleNodeType.UPSTREAM_IN}`,
+              id: `${nodeIdPrefix}${LifecycleDefaultNodeType.UPSTREAM_IN}`,
               position: { x: 0, y: 0 },
               data: {
-                type: LifecycleNodeType.UPSTREAM_IN,
+                type: LifecycleDefaultNodeType.UPSTREAM_IN,
                 durationNano: upstreamInSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0),
                 durationTooltipKey: 'lifecycle.upstream_in.tooltip',
               },
@@ -229,10 +228,10 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
           },
           ...upstreamOutSpans.length > 0 && {
             out: {
-              id: `${nodeIdPrefix}${LifecycleNodeType.UPSTREAM_OUT}`,
+              id: `${nodeIdPrefix}${LifecycleDefaultNodeType.UPSTREAM_OUT}`,
               position: { x: 0, y: 0 },
               data: {
-                type: LifecycleNodeType.UPSTREAM_OUT,
+                type: LifecycleDefaultNodeType.UPSTREAM_OUT,
                 durationNano: upstreamOutSpans.reduce((duration, span) => duration + (span.durationNano ?? 0), 0),
                 durationTooltipKey: 'lifecycle.upstream_out.tooltip',
               },
@@ -243,24 +242,28 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
       },
       responses: {
         node: {
-          id: `${nodeIdPrefix}${LifecycleNodeType.RESPONSE_GROUP}`,
+          id: `${nodeIdPrefix}${LifecycleDefaultNodeType.RESPONSE_GROUP}`,
           position: { x: 0, y: 0 },
           data: {
             labelKey: 'lifecycle.response.label',
-            type: LifecycleNodeType.RESPONSE_GROUP,
-            labelPlacement: 'bottom',
+            type: LifecycleDefaultNodeType.RESPONSE_GROUP,
             emptyGroup: responseNodesData.length === 0,
             emptyGroupMessageKey: 'lifecycle.no_plugins_executed',
           },
           zIndex: 1,
         },
         children: responseNodesData.map((nodeData) => ({
-          id: `${nodeIdPrefix}${LifecycleNodeType.RESPONSE}:${nodeData.id}`,
+          id: `${nodeIdPrefix}${LifecycleDefaultNodeType.RESPONSE}:${nodeData.id}`,
           position: { x: 0, y: 0 },
-          parentNode: `${nodeIdPrefix}${LifecycleNodeType.RESPONSE_GROUP}`,
+          parentNode: `${nodeIdPrefix}${LifecycleDefaultNodeType.RESPONSE_GROUP}`,
           data: nodeData,
           zIndex: 1,
         })),
+      },
+      frame: {
+        id: `${nodeIdPrefix}frame`,
+        type: 'frame',
+        position: { x: 0, y: 0 },
       },
     },
     edges: [],
@@ -297,8 +300,7 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
       source: previousNode.id,
       target: graph.nodeTree.requests.node.id,
       type: 'seamless-smoothstep',
-      markerEnd: MarkerType.ArrowClosed,
-      zIndex: 2,
+      zIndex: 0,
     })
     previousNode = graph.nodeTree.requests.node
   }
@@ -310,8 +312,7 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
         source: previousNode.id,
         target: graph.nodeTree.upstream.in.id,
         type: 'seamless-smoothstep',
-        markerEnd: MarkerType.ArrowClosed,
-        zIndex: 2,
+        zIndex: 0,
       })
       previousNode = graph.nodeTree.upstream.in
     }
@@ -323,7 +324,7 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
         target: graph.nodeTree.upstream.node.id,
         type: 'seamless-smoothstep',
         markerEnd: MarkerType.ArrowClosed,
-        zIndex: 2,
+        zIndex: 0,
       })
       previousNode = graph.nodeTree.upstream.node
     }
@@ -334,8 +335,7 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
         source: previousNode.id,
         target: graph.nodeTree.upstream.out.id,
         type: 'seamless-smoothstep',
-        markerEnd: MarkerType.ArrowClosed,
-        zIndex: 2,
+        zIndex: 0,
       })
       previousNode = graph.nodeTree.upstream.out
     }
@@ -359,9 +359,11 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
       source: previousNode.id,
       target: graph.nodeTree.responses.node.id,
       type: 'seamless-smoothstep',
-      markerEnd: MarkerType.ArrowClosed,
-      zIndex: 2,
-    })
+      zIndex: 0,
+      pathOptions: {
+        offset: NODE_FRAME_PADDING * 2, // To avoid the edge being too close to the frame
+      },
+    } as SeamlessSmoothStepEdgeType)
     previousNode = graph.nodeTree.responses.node
   }
 
@@ -371,8 +373,7 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
       source: previousNode.id,
       target: graph.nodeTree.client.in.id,
       type: 'seamless-smoothstep',
-      markerEnd: MarkerType.ArrowClosed,
-      zIndex: 1,
+      zIndex: 0,
     })
     previousNode = graph.nodeTree.client.in
   }
@@ -383,7 +384,7 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
     target: graph.nodeTree.client.node.id,
     type: 'seamless-smoothstep',
     markerEnd: MarkerType.ArrowClosed,
-    zIndex: 1,
+    zIndex: 0,
   })
 
   return {
@@ -405,6 +406,7 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
         ...graph.nodeTree.responses.children,
       ] : [],
       ...graph.nodeTree.client.in ? [graph.nodeTree.client.in] : [],
+      graph.nodeTree.frame,
     ],
   }
 }
