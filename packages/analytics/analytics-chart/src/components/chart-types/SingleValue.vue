@@ -112,10 +112,22 @@ const formattedValue = computed((): string => {
       line-height: $kui-line-height-70;
     }
 
+    .single-value-unit {
+      color: $kui-color-text;
+      font-size: $kui-font-size-60;
+      font-weight: $kui-font-weight-bold;
+      line-height: $kui-line-height-60;
+    }
+
     @container (min-width: 300px) {
       .single-value {
         font-size: $kui-font-size-100;
         line-height: $kui-line-height-100;
+      }
+
+      .single-value-unit {
+        font-size: $kui-font-size-90;
+        line-height: $kui-line-height-90;
       }
     }
 
@@ -124,12 +136,22 @@ const formattedValue = computed((): string => {
         font-size: 56px;
         line-height: 64px;
       }
+
+      .single-value-unit {
+        font-size: $kui-font-size-100;
+        line-height: $kui-line-height-100;
+      }
     }
 
     @container (min-width: 700px) {
       .single-value {
         font-size: 64px;
         line-height: 72px;
+      }
+
+      .single-value-unit {
+        font-size: 56px;
+        line-height: 64px;
       }
     }
 
@@ -138,20 +160,23 @@ const formattedValue = computed((): string => {
         font-size: 80px;
         line-height: 88px;
       }
+
+      .single-value-unit {
+        font-size: 64px;
+        line-height: 72px;
+      }
     }
 
-    @container (min-width: 1000px) {
+    @container (min-width: 1200px) {
       .single-value {
         font-size: 96px;
         line-height: 104px;
       }
-    }
 
-    .single-value-unit {
-      color: $kui-color-text-primary;
-      font-size: $kui-font-size-40;
-      font-weight: $kui-font-weight-semibold;
-      line-height: $kui-line-height-40;
+      .single-value-unit {
+        font-size: 80px;
+        line-height: 88px;
+      }
     }
   }
 }
