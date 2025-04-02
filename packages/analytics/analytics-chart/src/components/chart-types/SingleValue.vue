@@ -76,7 +76,7 @@ const singleValue = computed((): number | null => {
 })
 
 const formattedValue = computed((): string => {
-  const value = 94921 * 123123 // singleValue.value
+  const value = singleValue.value
 
   if (value === null) {
     return ''
