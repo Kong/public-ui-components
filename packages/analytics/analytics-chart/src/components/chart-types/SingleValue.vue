@@ -87,8 +87,8 @@ const formattedValue = computed((): string => {
     return prettyBytes(value)
   }
 
-  // if number is greater than 10B, display in billions
-  if (value >= 10_000_000_000) {
+  // if number is greater than 1B, display in billions
+  if (value >= 1_000_000_000) {
     const formatted = (value / 1_000_000_000).toFixed(1)
     return formatted.endsWith('.0') ? `${Math.floor(value / 1_000_000_000)}B` : `${formatted}B`
   }
