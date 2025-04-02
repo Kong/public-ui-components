@@ -57,11 +57,7 @@ const props = defineProps({
 const record = computed((): AnalyticsExploreRecord => props.data.data[0])
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
 const metricUnit = computed((): string | undefined => {
-  if (!metricName.value) {
-    return undefined
-  }
-
-  const unit = props.data.meta?.metric_units?.[metricName.value]
+  const unit = metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined
   if (unit) {
     return t(`chartUnits.${unit as 'count/minute' | 'ms'}`, { plural: '' })
   }
