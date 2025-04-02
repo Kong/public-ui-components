@@ -21,7 +21,7 @@
         {{ formattedValue }}
       </span>
       <span
-        v-if="displayMetricUnit"
+        v-if="displayMetricUnit || true"
         class="single-value-unit"
       >
         &nbsp;{{ metricUnit }}
@@ -56,7 +56,18 @@ const props = defineProps({
 
 const record = computed((): AnalyticsExploreRecord => props.data.data[0])
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
-const metricUnit = computed((): string | undefined => metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined)
+const metricUnit = computed((): string | undefined => {
+  if (!metricName.value) {
+    return undefined
+  }
+
+  const unit = props.data.meta?.metric_units?.[metricName.value]
+  if (unit) {
+    return t(`chartUnits.${unit as 'count/minute' | 'ms'}`, { plural: '' })
+  }
+
+  return undefined
+})
 // by default, display metric units for requests per minute, latency
 const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute' || !!metricName.value?.includes('_latency_'))
 
