@@ -69,7 +69,7 @@ const singleValue = computed((): number | null => {
 })
 
 const formattedValue = computed((): string => {
-  const value = 2386.08 // singleValue.value
+  const value = singleValue.value
 
   if (value === null) {
     return ''
