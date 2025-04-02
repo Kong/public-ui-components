@@ -76,7 +76,7 @@ const singleValue = computed((): number | null => {
 })
 
 const formattedValue = computed((): string => {
-  const value = singleValue.value
+  const value = 94921 * 123123 // singleValue.value
 
   if (value === null) {
     return ''
@@ -85,6 +85,12 @@ const formattedValue = computed((): string => {
   // for response/request size metrics, display in bytes
   if (metricName.value?.includes('_size_')) {
     return prettyBytes(value)
+  }
+
+  // if number is greater than 10B, display in billions
+  if (value >= 10_000_000_000) {
+    const formatted = (value / 1_000_000_000).toFixed(1)
+    return formatted.endsWith('.0') ? `${Math.floor(value / 1_000_000_000)}B` : `${formatted}B`
   }
 
   // if number is greater than 10M, display in millions
