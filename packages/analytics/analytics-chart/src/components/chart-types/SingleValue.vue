@@ -24,7 +24,7 @@
         v-if="displayMetricUnit"
         class="single-value-unit"
       >
-        {{ metricUnit }}
+        &nbsp;{{ metricUnit }}
       </span>
     </div>
   </div>
@@ -36,6 +36,7 @@ import type { PropType } from 'vue'
 import type { AnalyticsExploreRecord, ExploreResultV4, AllAggregations } from '@kong-ui-public/analytics-utilities'
 import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
 import composables from '../../composables'
+import prettyBytes from 'pretty-bytes'
 
 const { i18n: { t } } = composables.useI18n()
 
@@ -56,8 +57,8 @@ const props = defineProps({
 const record = computed((): AnalyticsExploreRecord => props.data.data[0])
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
 const metricUnit = computed((): string | undefined => metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined)
-// by default, display metric units for requests per minute, latency and response/request size metrics
-const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute' || !!metricName.value?.includes('_latency_') || !!metricName.value?.includes('_size_'))
+// by default, display metric units for requests per minute, latency
+const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute' || !!metricName.value?.includes('_latency_'))
 
 const singleValue = computed((): number | null => {
   if (!record.value || !metricName.value || typeof record.value.event[metricName.value] !== 'number') {
@@ -68,10 +69,15 @@ const singleValue = computed((): number | null => {
 })
 
 const formattedValue = computed((): string => {
-  const value = singleValue.value
+  const value = 2386.08 // singleValue.value
 
   if (value === null) {
     return ''
+  }
+
+  // for response/request size metrics, display in bytes
+  if (metricName.value?.includes('_size_')) {
+    return prettyBytes(value)
   }
 
   // if number is greater than 10M, display in millions
@@ -103,7 +109,6 @@ const formattedValue = computed((): string => {
   .single-value-wrapper {
     align-items: baseline;
     display: inline-flex;
-    gap: $kui-space-20;
 
     .single-value {
       color: $kui-color-text;
