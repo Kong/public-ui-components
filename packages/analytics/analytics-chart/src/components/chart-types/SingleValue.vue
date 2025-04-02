@@ -21,7 +21,7 @@
         {{ formattedValue }}
       </span>
       <span
-        v-if="displayMetricUnit || true"
+        v-if="displayMetricUnit"
         class="single-value-unit"
       >
         &nbsp;{{ metricUnit }}
