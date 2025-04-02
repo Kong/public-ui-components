@@ -14,6 +14,11 @@
       Test individual field configurations with the FieldTester component.
     </p>
 
+    <KCheckbox
+      v-model="fieldTesterUseCustomComponent"
+      label="Render 'eats' with custom field"
+    />
+
     <FieldTester
       :model="fieldModelDefault"
       :modified-model="fieldModelModified"
@@ -23,9 +28,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide } from 'vue'
+import { computed, provide, ref } from 'vue'
+import CatFoodField from './CatFoodField.vue'
 import FieldTester from './FieldTester.vue'
 import { FORMS_API_KEY, VueFormGenerator } from '../src'
+
+import type { FormSchema } from '../src'
 
 // dummy data
 import schema from './schema.json'
@@ -36,17 +44,12 @@ provide(FORMS_API_KEY, {
   getAll: async () => [{}],
 })
 
+const fieldTesterUseCustomComponent = ref<boolean>(true)
+
 const mutableModel = ref(model)
 
-const fieldSchema = {
+const fieldSchema = computed<FormSchema>(() => ({
   fields: [
-    // FieldCheckbox
-    {
-      type: 'checkbox',
-      model: 'is_friendly',
-      id: 'is_friendly',
-      label: 'Is Friendly',
-    },
     // FieldInput
     {
       type: 'input',
@@ -54,6 +57,13 @@ const fieldSchema = {
       id: 'cat_name',
       inputType: 'text',
       label: 'Cat Name',
+    },
+    // FieldCheckbox
+    {
+      type: 'checkbox',
+      model: 'is_friendly',
+      id: 'is_friendly',
+      label: 'Is Friendly',
     },
     // FieldRadio
     {
@@ -109,8 +119,20 @@ const fieldSchema = {
       placeholder: 'Describe your cat\'s personality',
       rows: 4,
     },
+    // Custom Field Demo
+    {
+      type: 'array',
+      component: fieldTesterUseCustomComponent.value ? CatFoodField : null,
+      itemContainerComponent: 'FieldArrayItem',
+      model: 'eats',
+      id: 'eats',
+      label: 'Eats',
+      inputType: 'text',
+      valueType: 'array',
+      valueArrayType: 'string',
+    },
   ],
-}
+}))
 
 const fieldModelDefault = ref({
   cat_name: 'TK Meowstersmith',
@@ -119,6 +141,7 @@ const fieldModelDefault = ref({
   gender: 'male',
   https_redirect_status_code: '',
   protocols: ['http', 'https'],
+  eats: [],
 })
 
 const fieldModelModified = ref({
@@ -129,6 +152,7 @@ const fieldModelModified = ref({
   personality: 'A little bit of a brat',
   https_redirect_status_code: 307,
   protocols: ['https', 'wss'],
+  eats: ['dairy-free diet', 'chicken'],
 })
 </script>
 

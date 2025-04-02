@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.17.1...@kong-ui-public/entities-plugins@9.17.2) (2025-04-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.17.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.17.0...@kong-ui-public/entities-plugins@9.17.1) (2025-03-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.16.19...@kong-ui-public/entities-plugins@9.17.0) (2025-03-28)
+
+
+### Features
+
+* **entities-plugins:** add free form support and request callout ([#2016](https://github.com/Kong/public-ui-components/issues/2016)) ([37417a8](https://github.com/Kong/public-ui-components/commit/37417a846a254c2543aaa6bcfcea348415b654b7))
+
+
+
+
+
 ## [9.16.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.16.18...@kong-ui-public/entities-plugins@9.16.19) (2025-03-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

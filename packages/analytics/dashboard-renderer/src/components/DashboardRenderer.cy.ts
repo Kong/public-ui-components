@@ -3,6 +3,7 @@ import type {
   AdvancedDatasourceQuery,
   AnalyticsBridge,
   AnalyticsConfigV2,
+  DashboardConfig,
   DatasourceAwareQuery,
   ExploreFilter,
   ExploreResultV4,
@@ -28,6 +29,7 @@ import {
 import { createPinia, setActivePinia } from 'pinia'
 import { EntityLink } from '@kong-ui-public/entities-shared'
 import { dragTile } from '../test-utils'
+import { ref, watch, type Ref } from 'vue'
 
 interface MockOptions {
   failToResolveConfig?: boolean
@@ -106,9 +108,8 @@ describe('<DashboardRenderer />', () => {
       return Promise.resolve(config)
     }
 
-    // @ts-ignore: TS doesn't infer things correctly.  NoInfer may help.
     const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = (key) => {
-      return true
+      return true as any
     }
 
     const fetchComponentFn = (name: string) => {
@@ -119,7 +120,6 @@ describe('<DashboardRenderer />', () => {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
       evaluateFeatureFlagFn,
-
       fetchComponent: opts?.renderEntityLink ? fetchComponentFn : undefined,
     }
   }
@@ -133,7 +133,7 @@ describe('<DashboardRenderer />', () => {
           time_range: '15m',
         },
       },
-      config: {
+      modelValue: {
         gridSize: {
           cols: 2,
           rows: 4,
@@ -209,7 +209,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: oneDayTimeframe.v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -272,7 +272,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: customTimeframe.v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -317,7 +317,7 @@ describe('<DashboardRenderer />', () => {
         filters: [filter1],
         timeSpec: oneDayTimeframe.v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -378,7 +378,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: customTimeframe.v4Query(),
       },
-      config: {
+      modelValue: {
         gridSize: { cols: 3, rows: 2 },
         tiles: [
           {
@@ -432,7 +432,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: customTimeframe.v4Query(),
       },
-      config: {
+      modelValue: {
         gridSize: { cols: 3, rows: 2 },
         tiles: [
           {
@@ -480,7 +480,7 @@ describe('<DashboardRenderer />', () => {
         // Use default timeframe for the org: don't provide one here.
         filters: [],
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -508,7 +508,7 @@ describe('<DashboardRenderer />', () => {
         ],
         timeSpec: ((TimePeriods.get(TimeframeKeys.ONE_DAY)) as Timeframe).v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -542,7 +542,7 @@ describe('<DashboardRenderer />', () => {
           },
         ],
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -580,7 +580,7 @@ describe('<DashboardRenderer />', () => {
           },
         ],
       },
-      config: simpleConfigNoFilters,
+      modelValue: simpleConfigNoFilters,
     }
 
     cy.mount(DashboardRenderer, {
@@ -619,7 +619,7 @@ describe('<DashboardRenderer />', () => {
           },
         ],
       },
-      config: simpleConfigNoFilters,
+      modelValue: simpleConfigNoFilters,
     }
 
     cy.mount(DashboardRenderer, {
@@ -659,7 +659,7 @@ describe('<DashboardRenderer />', () => {
           time_range: '24h',
         },
       },
-      config: {
+      modelValue: {
         gridSize: {
           cols: 6,
           rows: 4,
@@ -849,7 +849,7 @@ describe('<DashboardRenderer />', () => {
         },
         editable: true,
       },
-      config: fourByFourDashboardConfigJustCharts,
+      modelValue: fourByFourDashboardConfigJustCharts,
     }
 
     cy.mount(DashboardRenderer, {
@@ -871,6 +871,8 @@ describe('<DashboardRenderer />', () => {
   })
 
   it('tiles maintain row-column order after reordering', () => {
+
+    const configRef = ref<DashboardConfig>(fourByFourDashboardConfigJustCharts)
     const props = {
       context: {
         filters: [],
@@ -880,16 +882,11 @@ describe('<DashboardRenderer />', () => {
         },
         editable: true,
       },
-      config: fourByFourDashboardConfigJustCharts,
+      modelValue: configRef.value,
     }
-
-    const updateTilesSpy = cy.spy().as('updateTilesSpy')
 
     cy.mount(DashboardRenderer, {
       props,
-      attrs: {
-        onUpdateTiles: updateTilesSpy,
-      },
       global: {
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
@@ -909,11 +906,66 @@ describe('<DashboardRenderer />', () => {
 
     dragTile(source, destination)
 
-    cy.get('@updateTilesSpy').should('have.been.called')
-    cy.get('@updateTilesSpy')
-      .its('firstCall.args.0')
-      .then(tiles => {
-        expect(tiles.map((tile: TileConfig) => tile.id)).to.deep.equal(updatedTileIDOrder)
+    cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
+      const currentOrder = ref.value.tiles.map((tile: TileConfig) => tile.id)
+      expect(currentOrder).to.deep.equal(updatedTileIDOrder)
+    })
+  })
+
+  it('Update gridsize when tile added', () => {
+    const configRef = ref<DashboardConfig>(fourByFourDashboardConfigJustCharts)
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '15m',
+        },
+        editable: true,
+      },
+      modelValue: configRef.value,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    expect(configRef.value.gridSize).to.deep.equal({ cols: 8, rows: 6 })
+
+    cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
+      ref.value.tiles.push({
+        id: crypto.randomUUID(),
+        definition: {
+          chart: {
+            type: 'timeseries_line',
+            chartTitle: 'New Tile',
+          },
+          query: {
+            metrics: ['request_count'],
+            dimensions: ['time'],
+            filters: [],
+          },
+        },
+        layout: {
+          position: {
+            col: 0,
+            row: 0,
+          },
+          size: {
+            cols: 4,
+            rows: 4,
+          },
+        },
       })
+    })
+
+    cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
+      expect(ref.value.gridSize).to.deep.equal({ cols: 8, rows: 8 })
+    })
   })
 })

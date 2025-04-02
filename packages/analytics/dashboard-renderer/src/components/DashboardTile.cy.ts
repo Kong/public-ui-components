@@ -29,7 +29,7 @@ describe('<DashboardTile />', () => {
   }
 
   const mockQueryProvider = {
-    exploreBaseUrl: () => 'http://test.com/explore',
+    exploreBaseUrl: async () => 'http://test.com/explore',
     evaluateFeatureFlagFn: () => true,
     queryFn: () => Promise.resolve(
       generateSingleMetricTimeSeriesData(
@@ -146,5 +146,54 @@ describe('<DashboardTile />', () => {
     })
 
     cy.getTestId('edit-tile-1').should('not.exist')
+  })
+
+  it('jump to explore link should be reactive', () => {
+    // Force a different filter so that it actually re-issues the query.
+    cy.mount(DashboardTile, {
+      props: {
+        definition: mockTileDefinition,
+        context: {
+          ...mockContext,
+          filters: [{ field: 'status_code', operator: 'eq', value: 'test1' }],
+        },
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-explore-1').should('exist')
+
+    // Granularity comes from the query response, so make sure that it gets picked up in the link.
+    cy.getTestId('chart-jump-to-explore-1').invoke('attr', 'href').should('have.string', 'granularity')
+  })
+
+  it('should not show jump to explore link if query definition is missing', () => {
+    cy.mount(DashboardTile, {
+      props: {
+        definition: {
+          chart: mockTileDefinition.chart,
+        },
+        context: mockContext,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-explore-1').should('not.exist')
   })
 })

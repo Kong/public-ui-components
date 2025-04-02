@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@3.0.1...@kong-ui-public/dashboard-renderer@4.0.0) (2025-04-01)
+
+
+### Bug Fixes
+
+* **dashboards:** update grid size when tiles are updated [MA-3748] ([#2068](https://github.com/Kong/public-ui-components/issues/2068)) ([e942509](https://github.com/Kong/public-ui-components/commit/e9425097b88e1d36c723f345a56f5721a2618bad))
+
+
+### BREAKING CHANGES
+
+* **dashboards:** dashboard config is now passed as model value (v-model) rather than config prop
+
+* fix: update tiles internally when layout updates
+
+* fix: dont let gridsize ever be just 1 col
+
+* fix: remove update-tile event from dashboard renderer
+
+* fix: add test to check gridsize is updated when tile is added
+
+* fix: remove .only
+
+* fix: update mock data with correct initial grid size
+
+
+
+
+
+## [3.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@3.0.0...@kong-ui-public/dashboard-renderer@3.0.1) (2025-03-31)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [3.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@2.1.10...@kong-ui-public/dashboard-renderer@3.0.0) (2025-03-27)
+
+
+### Features
+
+* **analytics:** make explore URL determination async [MA-3590] ([#2050](https://github.com/Kong/public-ui-components/issues/2050)) ([06b6e41](https://github.com/Kong/public-ui-components/commit/06b6e412f09ff4c31bc45754322351281c36a306))
+
+
+### BREAKING CHANGES
+
+* **analytics:** change signature of analytics bridge
+
+
+
+
+
 ## [2.1.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@2.1.9...@kong-ui-public/dashboard-renderer@2.1.10) (2025-03-26)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

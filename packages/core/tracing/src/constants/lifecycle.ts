@@ -7,13 +7,15 @@ import {
   KUI_ICON_COLOR_DANGER,
   KUI_SPACE_100,
   KUI_SPACE_20,
+  KUI_SPACE_40,
   KUI_SPACE_50,
   KUI_SPACE_60,
   KUI_SPACE_80,
   KUI_STATUS_COLOR_501,
 } from '@kong/design-tokens'
 
-export enum LifecycleNodeType {
+/** `node.data.type` (prerequisite: `node.type === 'default'`) */
+export enum LifecycleDefaultNodeType {
   CLIENT = 'client',
   CLIENT_IN = 'clientIn',
   CLIENT_OUT = 'clientOut',
@@ -39,13 +41,16 @@ export const CANVAS_ROW_GAP = parseFloat(KUI_SPACE_60)
 export const CANVAS_COLUMN_GAP = parseFloat(KUI_SPACE_80)
 
 /** Padding to keep a clear zone inside a node group's inner edge */
-export const NODE_GROUP_PADDING = parseFloat(KUI_SPACE_50)
+export const NODE_GROUP_PADDING = parseFloat(KUI_SPACE_40)
 
 /** Row gap between nodes inside a node group */
 export const NODE_GROUP_ROW_GAP = parseFloat(KUI_SPACE_20)
 
 /** Column gap between nodes inside a node group */
 export const NODE_GROUP_COLUMN_GAP = parseFloat(KUI_SPACE_50)
+
+/** Padding to keep a clear zone inside a node frame's inner edge */
+export const NODE_FRAME_PADDING = parseFloat(KUI_SPACE_60)
 
 export const NODE_STRIPE_COLOR_MAPPING_START_EXP = 3
 

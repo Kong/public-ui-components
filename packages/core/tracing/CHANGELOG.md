@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.18...@kong-ui-public/tracing@0.10.0) (2025-04-01)
+
+
+### Features
+
+* **tracing:** show a Kong frame in lifecycle ([#2067](https://github.com/Kong/public-ui-components/issues/2067)) ([0d2e26a](https://github.com/Kong/public-ui-components/commit/0d2e26a68b72d15a7a82befedbdaa334087cacbe))
+
+
+
+
+
+## [0.9.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.17...@kong-ui-public/tracing@0.9.18) (2025-03-31)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
 ## [0.9.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.16...@kong-ui-public/tracing@0.9.17) (2025-03-26)
 
 **Note:** Version bump only for package @kong-ui-public/tracing
