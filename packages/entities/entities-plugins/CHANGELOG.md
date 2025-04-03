@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.17.2...@kong-ui-public/entities-plugins@9.18.0) (2025-04-03)
+
+
+### Features
+
+* **vfg:** introduce custom identity realms render for key-auth ([#2065](https://github.com/Kong/public-ui-components/issues/2065)) ([e383344](https://github.com/Kong/public-ui-components/commit/e383344afa567df65bec5612288c70669f1d8c04))
+
+
+
+
+
 ## [9.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.17.1...@kong-ui-public/entities-plugins@9.17.2) (2025-04-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
