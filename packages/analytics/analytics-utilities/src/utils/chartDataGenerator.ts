@@ -144,7 +144,7 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[]) => {
   } as ExploreResultV4
 }
 
-export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: DimensionMap) => {
+export const generateCrossSectionalData = (metrics: Metric[], dimensionMap?: DimensionMap) => {
   const seed = Math.floor(Math.random() * (10000 - 10 + 1)) + 10
   const rng = new SeededRandom(seed)
 
@@ -163,7 +163,7 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: Dime
       if (index === dimensions.length) {
         // All dimensions have been added to the event, add metrics and push the record
         metrics.forEach(metric => {
-          currentEvent[metric.name] = rng.next(50, 500)
+          currentEvent[metric.name] = rng.next(1000, 50000000)
         })
         data.push({
           version: '1.0',

@@ -126,7 +126,7 @@
       <br>
 
       <!-- Dataset options -->
-      <div v-if="!isTopNTable && !isSingleValue">
+      <div v-if="!isTopNTable">
         <KLabel>Dataset options</KLabel>
         <div class="dataset-options">
           <KButton
@@ -136,13 +136,6 @@
             @click="randomizeData()"
           >
             Randomize data
-          </KButton>
-          <KButton
-            appearance="secondary"
-            size="small"
-            @click="addDataset()"
-          >
-            Add dataset
           </KButton>
         </div>
       </div>
@@ -161,28 +154,6 @@
             v-model="emptyState"
             :label="emptyState ? 'Empty State' : 'Chart Has Data'"
           />
-        </div>
-      </div>
-      <br>
-
-      <div class="config-container">
-        <div
-          v-if="!isTopNTable && !isSingleValue"
-          class="config-container-row"
-        >
-          <KLabel>Colors</KLabel>
-          <div
-            v-for="([label, color], i) in Object.entries(colorPalette)"
-            :key="i"
-            class="color-palette-section flex-vertical"
-          >
-            <label>{{ label }}</label>
-            <input
-              type="color"
-              :value="color"
-              @blur="updateSelectedColor($event, label)"
-            >
-          </div>
         </div>
       </div>
     </template>
@@ -236,157 +207,46 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, inject } from 'vue'
+import { computed, ref, inject } from 'vue'
 import {
   SimpleChart,
   type SimpleChartType,
   TopNTable,
 } from '../../src'
-import { SeededRandom } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsExploreRecord, DisplayBlob, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
+import { generateCrossSectionalData } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, SimpleChartOptions } from '../../src/types'
-import { rand } from '../utils/utils'
-import { lookupDatavisColor } from '../../src/utils'
-import { lookupStatusCodeColor } from '../../src/utils/customColors'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import type { SimpleChartMetricDisplay } from '../../src'
 
-enum Metrics {
-  TotalRequests = 'TotalRequests',
-  LatencyP99 = 'LatencyP99',
-  ResponseSizeP99 = 'ResponseSizeP99',
-}
-
-interface MetricSelection {
-  name: Metrics,
-  unit: string,
-}
 
 // Inject the app-links from the entry file
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
-const seed = ref(rand(10, 10000))
-
-const multiMetricToggle = ref(false)
-const limitToggle = ref(false)
-const multiDimensionToggle = ref(false)
 const showLoadingState = ref(false)
 const emptyState = ref(false)
 const chartType = ref<SimpleChartType>('gauge')
 const metricDisplay = ref<SimpleChartMetricDisplay>('full')
 const reverseDataset = ref(true)
 const gaugeNumerator = ref(0)
-const selectedMetric = ref<MetricSelection>({
-  name: Metrics.TotalRequests,
-  unit: 'count',
-})
 
-// Short labels
-const statusCodeLabels = [
-  '200', '300',
-]
-
-const statusCodeDimensionValues = ref(new Set(statusCodeLabels))
-
-const serviceDimensionValues = ref(new Set([
-  'service1', 'service2', 'service3', 'service4', 'service5',
-]))
+const statusCodeDimensionValues = ref(new Set(['200', '300']))
 
 const exploreResult = computed<ExploreResultV4>(() => {
   if (emptyState.value) {
     return { data: [] as AnalyticsExploreRecord[], meta: {} as QueryResponseMeta }
   }
 
-  const statusCodeDimensionType = 'StatusCode'
-  const serviceDimensionType = 'Service'
-  const rng = new SeededRandom(seed.value)
-
-  const start = Date.now() - 6 * 60 * 60 * 1000 // 6 hours ago
-  const end = Date.now()
-
-  const data: AnalyticsExploreRecord[] = []
-
-  const dimensions = [...statusCodeDimensionValues.value]
-
-  dimensions.forEach(statusCodeDimensionValue => {
-    if (multiDimensionToggle.value) {
-      [...serviceDimensionValues.value].forEach(serviceDimensionValue => {
-        const timestamp = new Date().toISOString()
-        const version = 'v1'
-        const statusCount = rng.next(100000, 2000000)
-        const record = {
-          version,
-          timestamp,
-          event: {
-            [serviceDimensionType]: serviceDimensionValue,
-            [statusCodeDimensionType]: statusCodeDimensionValue,
-            [selectedMetric.value.name]: statusCount,
-            ...(multiMetricToggle.value && { secondaryMetric: rng.next(100000, 2000000) }),
-          },
-        }
-        data.push(record)
-      })
-    } else {
-      const timestamp = new Date().toISOString()
-      const version = 'v1'
-      const statusCount = rng.next(100000, 2000000)
-      const record = {
-        version,
-        timestamp,
-        event: {
-          [statusCodeDimensionType]: statusCodeDimensionValue,
-          [selectedMetric.value.name]: statusCount,
-          ...(multiMetricToggle.value && { secondaryMetric: rng.next(100000, 2000000) }),
-        },
-      }
-      data.push(record)
-    }
-  })
-
-  // V4 display blob
-  const displayBlob: DisplayBlob = {}
-  if (multiDimensionToggle.value) {
-    displayBlob[serviceDimensionType] = {}
-
-    serviceDimensionValues.value.forEach(val => {
-      displayBlob[serviceDimensionType][val] = {
-        name: val,
-        deleted: false,
-      }
-    })
-  }
-
-  displayBlob[statusCodeDimensionType] = {}
-  statusCodeDimensionValues.value.forEach(val => {
-    displayBlob[statusCodeDimensionType][val] = {
-      name: val,
-      deleted: false,
-    }
-  })
-
-  const meta: QueryResponseMeta = {
-    start_ms: start,
-    end_ms: end,
-    granularity_ms: 86400000,
-    query_id: '',
-    truncated: limitToggle.value,
-    limit: 50,
-    metric_names: [selectedMetric.value.name, ...(multiMetricToggle.value ? ['secondaryMetric'] : [])],
-    metric_units: {
-      [selectedMetric.value.name]: selectedMetric.value.unit,
-      ...(multiMetricToggle.value && { secondaryMetric: selectedMetric.value.unit }),
-    },
-    display: displayBlob,
-  }
-
-  return {
-    // Gauge chart type should only receive 2 data points, single value should only receive 1 data point
-    data: isGaugeChart.value
-      ? data.slice(0, 2)
-      : data.slice(0, 1),
-    meta,
-  }
+  return generateCrossSectionalData([{
+    name: 'request_count',
+    unit: 'count',
+  }], { 'status_code': Array.from(statusCodeDimensionValues.value) })
 })
+
+const randomizeData = () => {
+  // Randomize the data
+  statusCodeDimensionValues.value = new Set([Math.floor(Math.random() * 1000).toString(), Math.floor(Math.random() * 1000).toString()])
+}
 const topNTableData = computed<ExploreResultV4>(() => {
   if (emptyState.value) {
     return {
@@ -417,7 +277,7 @@ const topNTableData = computed<ExploreResultV4>(() => {
       },
       query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
       start_ms: 1692294953000,
-    } as QueryResponseMeta,
+    } as unknown as QueryResponseMeta,
     data: [
       {
         event: {
@@ -458,16 +318,12 @@ const topNTableData = computed<ExploreResultV4>(() => {
   } as ExploreResultV4
 })
 
-const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))
 
 const twoColorPalette = ref<AnalyticsChartColors>({
   200: '#008871',
   300: '#9edca6',
 })
 
-const updateSelectedColor = (event: Event, label: string) => {
-  colorPalette.value[label] = (event.target as HTMLInputElement).value
-}
 
 const simpleChartOptions = computed<SimpleChartOptions>(() => ({
   type: chartType.value,
@@ -476,19 +332,6 @@ const simpleChartOptions = computed<SimpleChartOptions>(() => ({
   reverseDataset: reverseDataset.value,
   numerator: gaugeNumerator.value,
 }))
-
-const randomizeData = () => {
-  seed.value = rand(10, 10000)
-}
-
-const addDataset = () => {
-  const statusCode = `${rand(100, 599)}`
-  statusCodeDimensionValues.value.add(statusCode)
-  colorPalette.value[statusCode] = lookupStatusCodeColor(statusCode)
-
-  const service = `Service${rand(1, 100)}`
-  serviceDimensionValues.value.add(service)
-}
 
 const dataCode = computed(() => JSON.stringify(exploreResult.value, null, 2))
 const optionsCode = computed(() => JSON.stringify(simpleChartOptions.value, null, 2))
@@ -505,19 +348,6 @@ const isSingleValue = computed<boolean>(() => {
   return ('single_value' === chartType.value)
 })
 
-watch(multiDimensionToggle, () => {
-  serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
-  statusCodeDimensionValues.value = new Set(statusCodeLabels)
-
-  colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {})
-})
-
-watch(isGaugeChart, () => {
-  // Truncate labels if Gauge (simplified donut) chart type
-  if (isGaugeChart.value) {
-    statusCodeDimensionValues.value = new Set(statusCodeLabels.slice(0, 2))
-  }
-})
 </script>
 
 <style lang="scss" scoped>
