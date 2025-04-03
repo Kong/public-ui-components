@@ -21,6 +21,7 @@ import type { OasValidationSchema } from './plugins/oas-validation'
 import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
 import type { InjectionProtectionSchema } from './plugins/injection-protection'
 import type { KafkaUpstreamSchema } from './plugins/kafka-upstream'
+import type { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import type { ConfluentSchema } from './plugins/confluent'
 
 export interface BasePluginSelectConfig {
@@ -39,6 +40,8 @@ export interface BasePluginFormConfig {
   disableConsumerGroupScope?: boolean
   /** Whether to use the new OpenTelemetry schema introduced in https://github.com/Kong/kong-ee/pull/9399/files#diff-8d295aaa72ee8a0a18dcb8010b0a73ac36a92e1e825b3202b1d1736d07d7e514 */
   isNewOtelSchema?: boolean
+  /** Whether to enable the experimental renders */
+  experimentalRenders?: Record<string, boolean>
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}
@@ -219,6 +222,7 @@ export interface CustomSchemas {
   'upstream-oauth': UpstreamOauthSchema
   'injection-protection': InjectionProtectionSchema
   'kafka-upstream': KafkaUpstreamSchema
+  'key-auth': ReturnType<typeof genKeyAuthSchema>
   'confluent': ConfluentSchema
 }
 
