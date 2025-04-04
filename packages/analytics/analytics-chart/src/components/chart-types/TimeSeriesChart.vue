@@ -62,9 +62,10 @@ import type { PropType } from 'vue'
 import { reactive, ref, computed, toRef, inject, watch, onUnmounted } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
-import { verticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
-import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
-import { dragSelectPlugin, type DragSelectEventDetail } from '../chart-plugins/DragSelectPlugin'
+import { createVerticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
+import { createHighlightPlugin } from '../chart-plugins/HighlightPlugin'
+import { createDragSelectPlugin } from '../chart-plugins/DragSelectPlugin'
+import type { DragSelectEventDetail } from '../chart-plugins/DragSelectPlugin'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import { v4 as uuidv4 } from 'uuid'
@@ -157,6 +158,7 @@ const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void,
 }>()
 
+const verticalLinePlugin = createVerticalLinePlugin()
 const { translateUnit } = composables.useTranslatedUnits()
 const chartInstance = ref<{ chart: Chart }>()
 const legendID = ref(uuidv4())
@@ -192,8 +194,8 @@ const htmlLegendPlugin = {
 
 const plugins = computed(() => [
   htmlLegendPlugin,
-  highlightPlugin,
-  ...(props.zoom ? [dragSelectPlugin] : []),
+  createHighlightPlugin(),
+  ...(props.zoom ? [createDragSelectPlugin()] : []),
   ...(props.type === 'timeseries_line' ? [verticalLinePlugin] : []),
 ])
 

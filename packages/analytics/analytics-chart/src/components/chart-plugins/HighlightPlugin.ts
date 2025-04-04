@@ -31,7 +31,7 @@ const drawHighlight = (chart: Chart, clickedElements: InteractionItem[]) => {
   ctx.restore()
 }
 
-export const highlightPlugin: HighlightPlugin = {
+export const createHighlightPlugin = (): HighlightPlugin => ({
   id: 'highlightPlugin',
   clicked: false,
   afterDatasetsDraw: function(chart: Chart) {
@@ -71,4 +71,4 @@ export const highlightPlugin: HighlightPlugin = {
     chart.options.hover = this.previousHoverOption || chart.options.hover
     this.clicked = false
   },
-}
+})

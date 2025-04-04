@@ -38,7 +38,7 @@ const dispatchEvent = (eventName: string, chart: Chart, pluginInstance: DragSele
 }
 
 
-export const dragSelectPlugin: DragSelectPlugin = {
+export const createDragSelectPlugin = (): DragSelectPlugin => ({
   id: 'dragSelectPlugin',
   isDragging: false,
   startX: 0,
@@ -99,4 +99,4 @@ export const dragSelectPlugin: DragSelectPlugin = {
       drawSelectionArea(chart, this.startX, this.endX)
     }
   },
-}
+})

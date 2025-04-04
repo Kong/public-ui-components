@@ -17,7 +17,7 @@ const drawLine = (ctx: CanvasRenderingContext2D, x: number, top: number, bottom:
   ctx.restore()
 }
 
-export const verticalLinePlugin: VerticalLinePlugin = {
+export const createVerticalLinePlugin = (): VerticalLinePlugin => ({
   id: 'linePlugin',
   afterDatasetsDraw: function(chartInstance: Chart) {
     if (!this.pause && chartInstance.tooltip && chartInstance.tooltip.getActiveElements() && chartInstance.tooltip.getActiveElements().length && !this.clickedSegment) {
@@ -35,4 +35,4 @@ export const verticalLinePlugin: VerticalLinePlugin = {
   beforeDestroy() {
     delete this.clickedSegment
   },
-}
+})
