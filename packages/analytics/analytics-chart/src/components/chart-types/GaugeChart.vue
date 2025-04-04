@@ -1,13 +1,13 @@
 <template>
   <div
     class="chart-parent"
-    data-testid="donut-chart-parent"
+    data-testid="gauge-chart-parent"
   >
     <div class="chart-totals-flex">
       <div
         v-if="showMetricLarge"
         class="metric-large"
-        data-testid="donut-chart-metric"
+        data-testid="gauge-chart-metric"
         :style="metricHighlightColor"
       >
         {{ metricHighlight }}
@@ -15,7 +15,7 @@
       <div
         v-if="showMetricSmall"
         class="metric-small"
-        data-testid="donut-chart-total"
+        data-testid="gauge-chart-total"
       >
         {{ i18n.t('total') }}: {{ metricTotal }}
       </div>
