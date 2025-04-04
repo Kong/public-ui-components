@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.0.0...@kong-ui-public/dashboard-renderer@4.1.0) (2025-04-04)
+
+
+### Features
+
+* **analytics:** add single value simple chart [MA-3730] ([#2064](https://github.com/Kong/public-ui-components/issues/2064)) ([2cc0bf3](https://github.com/Kong/public-ui-components/commit/2cc0bf39d9be17d25b453dc5ae37feffb81bf99e))
+
+
+
+
+
 # [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@3.0.1...@kong-ui-public/dashboard-renderer@4.0.0) (2025-04-01)
 
 
