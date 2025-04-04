@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import type { PropType } from 'vue'
 import type { AnalyticsExploreRecord, ExploreResultV4, AllAggregations } from '@kong-ui-public/analytics-utilities'
 import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
@@ -101,6 +101,12 @@ const formattedValue = computed((): string => {
 
   const decimalPoints = props.decimalPoints && typeof props.decimalPoints === 'number' ? props.decimalPoints : SINGLE_VALUE_DEFAULT_DECIMAL_POINTS
   return value.toLocaleString('en-US', { maximumFractionDigits: decimalPoints })
+})
+
+onMounted(() => {
+  if (props.data?.data?.length > 1) {
+    console.warn('SingleValue chart should only be used with a single data point. Data length:', props.data.data.length)
+  }
 })
 </script>
 
