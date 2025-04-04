@@ -1,6 +1,6 @@
 import type { Chart, ChartEvent, InteractionItem, Plugin } from 'chart.js'
 
-interface HighlightPlugin extends Plugin {
+interface IHighlightPlugin extends Plugin {
   clickedElements?: InteractionItem[]
   previousHoverOption?: Chart['options']['hover']
   clicked: boolean
@@ -31,15 +31,19 @@ const drawHighlight = (chart: Chart, clickedElements: InteractionItem[]) => {
   ctx.restore()
 }
 
-export const createHighlightPlugin = (): HighlightPlugin => ({
-  id: 'highlightPlugin',
-  clicked: false,
-  afterDatasetsDraw: function(chart: Chart) {
+export class HighlightPlugin implements IHighlightPlugin {
+  id = 'highlightPlugin'
+  clickedElements?: InteractionItem[]
+  previousHoverOption?: Chart['options']['hover']
+  clicked = false
+
+  afterDatasetsDraw(chart: Chart) {
     if (this.clickedElements && this.clickedElements.length) {
       drawHighlight(chart, this.clickedElements)
     }
-  },
-  afterEvent: function(chart: Chart, { event }: { event: ChartEvent }) {
+  }
+
+  afterEvent(chart: Chart, { event }: { event: ChartEvent }) {
     if (event.type !== 'click' || !event.native) {
       return
     }
@@ -65,10 +69,10 @@ export const createHighlightPlugin = (): HighlightPlugin => ({
       chart.options.hover = this.previousHoverOption || chart.options.hover
       this.clicked = false
     }
-  },
-  beforeDestroy(chart) {
+  }
+  beforeDestroy(chart: Chart) {
     delete this.clickedElements
     chart.options.hover = this.previousHoverOption || chart.options.hover
     this.clicked = false
-  },
-})
+  }
+}

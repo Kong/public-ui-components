@@ -68,7 +68,7 @@ import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition } from '../../enums'
 import type { AxesTooltipState, ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry, TooltipState } from '../../types'
-import { createHighlightPlugin } from '../chart-plugins/HighlightPlugin'
+import { HighlightPlugin } from '../chart-plugins/HighlightPlugin'
 
 const props = defineProps({
   chartData: {
@@ -138,6 +138,7 @@ const { i18n } = composables.useI18n()
 const { translateUnit } = composables.useTranslatedUnits()
 const axisCanvasId = crypto.randomUUID()
 const chartCanvasId = crypto.randomUUID()
+const highlighPlugin = new HighlightPlugin()
 
 // https://www.chartjs.org/chartjs-plugin-annotation/latest/guide/types/label.html#label-annotation-specific-options
 const LABEL_PADDING = 6
@@ -331,7 +332,7 @@ const plugins = [
   htmlLegendPlugin,
   axesTooltipPlugin,
   maxOverflowPlugin,
-  createHighlightPlugin(),
+  highlighPlugin,
   ...(props.annotations ? [reactiveAnnotationsPlugin] : []),
 ]
 

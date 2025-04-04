@@ -1,6 +1,6 @@
 import type { Chart, Plugin } from 'chart.js'
 
-interface DragSelectPlugin extends Plugin {
+interface IDragSelectPlugin extends Plugin {
   isDragging: boolean
   startX: number
   endX: number
@@ -25,7 +25,7 @@ const drawSelectionArea = (chart: Chart, startX: number, endX: number) => {
   ctx.restore()
 }
 
-const dispatchEvent = (eventName: string, chart: Chart, pluginInstance: DragSelectPlugin) => {
+const dispatchEvent = (eventName: string, chart: Chart, pluginInstance: IDragSelectPlugin) => {
   const xStartValue = chart.scales.x.getValueForPixel(pluginInstance.startX)
   const xEndValue = chart.scales.x.getValueForPixel(pluginInstance.endX)
 
@@ -37,14 +37,19 @@ const dispatchEvent = (eventName: string, chart: Chart, pluginInstance: DragSele
   }))
 }
 
+export class DragSelectPlugin implements IDragSelectPlugin {
+  id = 'dragSelectPlugin'
+  isDragging = false
+  startX = 0
+  endX = 0
+  dragTimeout?: number
+  dragSelectHandlers?: {
+    onMouseDown: (event: MouseEvent) => void
+    onMouseMove: (event: MouseEvent) => void
+    onMouseUp: (event: MouseEvent) => void
+  }
 
-export const createDragSelectPlugin = (): DragSelectPlugin => ({
-  id: 'dragSelectPlugin',
-  isDragging: false,
-  startX: 0,
-  endX: 0,
-
-  beforeInit: function(chart: Chart) {
+  beforeInit(chart: Chart) {
     const canvas = chart.canvas
     const rect = canvas.getBoundingClientRect()
     let dragInitiated = false
@@ -81,9 +86,9 @@ export const createDragSelectPlugin = (): DragSelectPlugin => ({
     canvas.addEventListener('mouseup', onMouseUp)
 
     this.dragSelectHandlers = { onMouseDown, onMouseMove, onMouseUp }
-  },
+  }
 
-  beforeDestroy(chart) {
+  beforeDestroy(chart: Chart): void {
     const canvas = chart.canvas
     if (this.dragSelectHandlers) {
       const { onMouseDown, onMouseMove, onMouseUp } = this.dragSelectHandlers
@@ -92,11 +97,10 @@ export const createDragSelectPlugin = (): DragSelectPlugin => ({
       canvas.removeEventListener('mouseup', onMouseUp)
     }
     this.isDragging = false
-  },
-
-  afterDatasetsDraw: function(chart: Chart) {
+  }
+  afterDatasetsDraw(chart: Chart): void {
     if (this.isDragging) {
       drawSelectionArea(chart, this.startX, this.endX)
     }
-  },
-})
+  }
+}
