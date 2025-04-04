@@ -1,10 +1,5 @@
 import type { Chart, ChartEvent, InteractionItem, Plugin } from 'chart.js'
 
-interface HighlightPlugin extends Plugin {
-  clickedElements?: InteractionItem[]
-  previousHoverOption?: Chart['options']['hover']
-  clicked: boolean
-}
 
 const drawHighlight = (chart: Chart, clickedElements: InteractionItem[]) => {
   const ctx = chart.ctx
@@ -31,44 +26,48 @@ const drawHighlight = (chart: Chart, clickedElements: InteractionItem[]) => {
   ctx.restore()
 }
 
-export const highlightPlugin: HighlightPlugin = {
-  id: 'highlightPlugin',
-  clicked: false,
-  afterDatasetsDraw: function(chart: Chart) {
-    if (this.clickedElements && this.clickedElements.length) {
-      drawHighlight(chart, this.clickedElements)
+export class HighlightPlugin implements Plugin {
+  id = 'highlightPlugin'
+  private _clickedElements?: InteractionItem[]
+  private _previousHoverOption?: Chart['options']['hover']
+  private _clicked = false
+
+  afterDatasetsDraw(chart: Chart) {
+    if (this._clickedElements && this._clickedElements.length) {
+      drawHighlight(chart, this._clickedElements)
     }
-  },
-  afterEvent: function(chart: Chart, { event }: { event: ChartEvent }) {
+  }
+
+  afterEvent(chart: Chart, { event }: { event: ChartEvent }) {
     if (event.type !== 'click' || !event.native) {
       return
     }
 
-    this.clicked = !this.clicked
+    this._clicked = !this._clicked
 
     const interactionMode = chart.options.interaction?.mode || 'index'
 
     const elementsAtEvent = chart.getElementsAtEventForMode(event.native, interactionMode, { intersect: false }, true)
 
-    if (elementsAtEvent.length && this.clicked) {
+    if (elementsAtEvent.length && this._clicked) {
       // When mode is "index" the last element is the top one.
       // We need the top one to get the correct "y" value for the highlight.
-      this.clickedElements = elementsAtEvent
+      this._clickedElements = elementsAtEvent
 
-      drawHighlight(chart, this.clickedElements)
+      drawHighlight(chart, this._clickedElements)
 
-      this.previousHoverOption = chart.options.hover
+      this._previousHoverOption = chart.options.hover
       // @ts-ignore - disable hovering actions while chart is "locked" need to set hover mode to null (which is invalid, but works)
       chart.options.hover = { mode: null }
     } else {
-      delete this.clickedElements
-      chart.options.hover = this.previousHoverOption || chart.options.hover
-      this.clicked = false
+      delete this._clickedElements
+      chart.options.hover = this._previousHoverOption || chart.options.hover
+      this._clicked = false
     }
-  },
-  beforeDestroy(chart) {
-    delete this.clickedElements
-    chart.options.hover = this.previousHoverOption || chart.options.hover
-    this.clicked = false
-  },
+  }
+  beforeDestroy(chart: Chart) {
+    delete this._clickedElements
+    chart.options.hover = this._previousHoverOption || chart.options.hover
+    this._clicked = false
+  }
 }

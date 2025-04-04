@@ -4,6 +4,7 @@
     :class="chartFlexClass[legendPosition]"
   >
     <canvas
+      :id="axisCanvasId"
       ref="axis"
       class="axis"
     />
@@ -18,6 +19,7 @@
         :style="{ width: chartWidth, height: chartHeight }"
       >
         <canvas
+          :id="chartCanvasId"
           ref="canvas"
           class="chart-canvas"
         />
@@ -66,7 +68,7 @@ import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition } from '../../enums'
 import type { AxesTooltipState, ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry, TooltipState } from '../../types'
-import { highlightPlugin } from '../chart-plugins/HighlightPlugin'
+import { HighlightPlugin } from '../chart-plugins/HighlightPlugin'
 
 const props = defineProps({
   chartData: {
@@ -134,6 +136,9 @@ const props = defineProps({
 
 const { i18n } = composables.useI18n()
 const { translateUnit } = composables.useTranslatedUnits()
+const axisCanvasId = crypto.randomUUID()
+const chartCanvasId = crypto.randomUUID()
+const highlightPlugin = new HighlightPlugin()
 
 // https://www.chartjs.org/chartjs-plugin-annotation/latest/guide/types/label.html#label-annotation-specific-options
 const LABEL_PADDING = 6
@@ -236,6 +241,7 @@ const tooltipData: TooltipState = reactive({
   height: 0,
   locked: false,
   chartType: isHorizontal.value ? 'horizontal_bar' : 'vertical_bar',
+  chartID: chartCanvasId,
   chartTooltipSortFn: props.chartTooltipSortFn,
 })
 const dependsOnChartUpdate = ref(0)

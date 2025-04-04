@@ -44,7 +44,6 @@ import {
   datavisPalette,
   darkenColor,
 } from '../../utils'
-import { v4 as uuidv4 } from 'uuid'
 import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
 import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
@@ -91,8 +90,8 @@ const props = defineProps({
 
 const { translateUnit } = composables.useTranslatedUnits()
 
-const legendID = ref(uuidv4())
-const chartID = ref(uuidv4())
+const legendID = crypto.randomUUID()
+const chartID = crypto.randomUUID()
 const legendItems = ref([])
 
 const tooltipData: TooltipState = reactive({
@@ -107,11 +106,12 @@ const tooltipData: TooltipState = reactive({
   offsetY: 0,
   width: 0,
   height: 0,
+  chartID,
   chartType: 'donut',
 })
 
 const htmlLegendPlugin: Plugin = {
-  id: legendID.value,
+  id: legendID,
   afterUpdate(chart: Chart) {
     // @ts-ignore - chart js options internally, are not well typed
     legendItems.value = chart.options.plugins.legend.labels.generateLabels(chart)
@@ -147,7 +147,7 @@ composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(pro
 
 const { options } = composables.useDonutChartOptions({
   tooltipState: tooltipData,
-  legendID: legendID.value,
+  legendID: legendID,
 })
 
 const chartInstance = ref<Chart>()
