@@ -68,7 +68,6 @@ import { DragSelectPlugin } from '../chart-plugins/DragSelectPlugin'
 import type { DragSelectEventDetail } from '../chart-plugins/DragSelectPlugin'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
-import { v4 as uuidv4 } from 'uuid'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
 import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry } from '../../types'
@@ -163,8 +162,8 @@ const highlightPlugin = new HighlightPlugin()
 const dragSelectPlugin = new DragSelectPlugin()
 const { translateUnit } = composables.useTranslatedUnits()
 const chartInstance = ref<{ chart: Chart }>()
-const legendID = ref(uuidv4())
-const chartID = ref(uuidv4())
+const legendID = crypto.randomUUID()
+const chartID = crypto.randomUUID()
 const legendItems = ref<EnhancedLegendItem[]>([])
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
@@ -184,11 +183,12 @@ const tooltipData = reactive({
   height: 0,
   chartType: props.type,
   locked: false,
+  chartID,
   chartTooltipSortFn: props.chartTooltipSortFn,
 })
 
 const htmlLegendPlugin = {
-  id: legendID.value,
+  id: legendID,
   afterUpdate(chart: Chart) {
     legendItems.value = generateLegendItems(chart, props.legendValues, props.chartLegendSortFn)
   },
@@ -210,7 +210,7 @@ const { options } = composables.useLinechartOptions({
   tooltipState: tooltipData,
   timeRangeMs: toRef(props, 'timeRangeMs'),
   granularity: toRef(props, 'granularity'),
-  legendID: legendID.value,
+  legendID: legendID,
   stacked: toRef(props, 'stacked'),
   metricAxesTitle: toRef(props, 'metricAxesTitle'),
   dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),

@@ -241,6 +241,7 @@ const tooltipData: TooltipState = reactive({
   height: 0,
   locked: false,
   chartType: isHorizontal.value ? 'horizontal_bar' : 'vertical_bar',
+  chartID: chartCanvasId,
   chartTooltipSortFn: props.chartTooltipSortFn,
 })
 const dependsOnChartUpdate = ref(0)

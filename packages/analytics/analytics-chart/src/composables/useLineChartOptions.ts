@@ -70,13 +70,15 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     stacked: chartOptions.stacked.value,
   }))
 
+  const chartID = chartOptions.tooltipState.chartID
+  const positionKey = `lineChartTooltipPosition-${chartID}`
+
   const tooltipOptions = {
     enabled: false,
-    position: 'lineChartTooltipPosition',
+    position: positionKey,
   }
 
-  Tooltip.positioners.lineChartTooltipPosition = function(elements, position) {
-    // Happens when nothing is found
+  Tooltip.positioners[positionKey] = function(elements, position) {
     if (!elements.length || chartOptions.tooltipState.locked) {
       return false
     }
@@ -168,6 +170,6 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
-    lineChartTooltipPosition: TooltipPositionerFunction<ChartType>;
+    [key: string]: TooltipPositionerFunction<ChartType>;
   }
 }

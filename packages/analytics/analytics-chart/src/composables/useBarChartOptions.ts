@@ -16,9 +16,12 @@ import { computed } from 'vue'
 
 export default function useBarChartOptions(chartOptions: BarChartOptions) {
 
+  const chartID = chartOptions.tooltipState.chartID
+  const positionKey = `barChartTooltipPosition-${chartID}`
+
   const tooltipOptions = {
     enabled: false,
-    position: 'barChartTooltipPosition',
+    position: positionKey,
     callbacks: {
       label: (context: TooltipItem<'bar'>) => {
         return {
@@ -29,8 +32,8 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
     },
   }
 
-  Tooltip.positioners.barChartTooltipPosition = function(elements, position) {
-    if (!elements.length) {
+  Tooltip.positioners[positionKey] = function(elements, position) {
+    if (!elements.length || chartOptions.tooltipState.locked) {
       return false
     }
 
@@ -194,7 +197,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
-    barChartTooltipPosition: TooltipPositionerFunction<ChartType>;
+    [key: string]: TooltipPositionerFunction<ChartType>;
   }
   interface InteractionModeMap {
     customInteractionMode: InteractionModeFunction;
