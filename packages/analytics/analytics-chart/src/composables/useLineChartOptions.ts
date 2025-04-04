@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, onUnmounted } from 'vue'
 import type {
   TooltipPositionerFunction,
   ChartType,
@@ -160,6 +160,12 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
         mode: 'index',
         intersect: false,
       },
+    }
+  })
+
+  onUnmounted(() => {
+    if (Tooltip.positioners[positionKey]) {
+      delete Tooltip.positioners[positionKey]
     }
   })
 

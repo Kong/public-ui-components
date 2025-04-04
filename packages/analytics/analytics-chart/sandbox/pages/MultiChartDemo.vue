@@ -21,7 +21,9 @@
           chart-title="Timeseries Line Chart - Requests Over Time"
           :legend-position="ChartLegendPosition.Right"
           :show-legend-values="true"
+          :timeseries-zoom="true"
           tooltip-title="Requests"
+          @zoom-time-range="console.log('Zoomed to time range:', $event)"
         />
       </div>
       <div class="chart-container">

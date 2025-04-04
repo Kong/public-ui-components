@@ -138,7 +138,7 @@ const { i18n } = composables.useI18n()
 const { translateUnit } = composables.useTranslatedUnits()
 const axisCanvasId = crypto.randomUUID()
 const chartCanvasId = crypto.randomUUID()
-const highlighPlugin = new HighlightPlugin()
+const highlightPlugin = new HighlightPlugin()
 
 // https://www.chartjs.org/chartjs-plugin-annotation/latest/guide/types/label.html#label-annotation-specific-options
 const LABEL_PADDING = 6
@@ -333,7 +333,7 @@ const plugins = [
   htmlLegendPlugin,
   axesTooltipPlugin,
   maxOverflowPlugin,
-  highlighPlugin,
+  highlightPlugin,
   ...(props.annotations ? [reactiveAnnotationsPlugin] : []),
 ]
 

@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, onUnmounted } from 'vue'
 import type { DonutChartOptions, ExternalTooltipContext } from '../types'
 import type {
   TooltipItem,
@@ -71,6 +71,12 @@ export default function useDonutChartOptions(chartOptions: DonutChartOptions) {
           },
         },
       },
+    }
+  })
+
+  onUnmounted(() => {
+    if (Tooltip.positioners[positionKey]) {
+      delete Tooltip.positioners[positionKey]
     }
   })
 

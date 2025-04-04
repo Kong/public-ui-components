@@ -245,16 +245,19 @@ const handleChartClick = () => {
   tooltipData.locked = !tooltipData.locked
 
   if (chartInstance.value && chartInstance.value.chart.tooltip?.dataPoints?.length) {
-    verticalLinePlugin.clickedSegment = tooltipData.locked
-      ? chartInstance.value.chart.tooltip?.dataPoints[0]
-      : undefined
+
+    if (tooltipData.locked) {
+      verticalLinePlugin.clickedSegment = chartInstance.value.chart.tooltip.dataPoints[0]
+    } else {
+      verticalLinePlugin.destroyClickedSegment()
+    }
   }
 }
 
 watch(() => props.type, () => {
   tooltipData.locked = false
   tooltipData.showTooltip = false
-  delete verticalLinePlugin.clickedSegment
+  verticalLinePlugin.destroyClickedSegment()
 })
 
 const handleDragSelect = (event: Event) => {
@@ -264,12 +267,12 @@ const handleDragSelect = (event: Event) => {
   }
   isDoingSelection.value = false
   handleChartClick()
-  verticalLinePlugin.pause = false
+  verticalLinePlugin.resume()
 }
 
 const handleDragMove = () => {
   isDoingSelection.value = true
-  verticalLinePlugin.pause = true
+  verticalLinePlugin.pause()
 }
 
 watch(() => chartInstance.value?.chart, () => {
@@ -286,6 +289,8 @@ onUnmounted(() => {
     chartInstance.value.chart.canvas.removeEventListener('dragSelect', handleDragSelect)
     chartInstance.value.chart.canvas.removeEventListener('dragSelectMove', handleDragMove)
   }
+
+  verticalLinePlugin
 })
 
 </script>
