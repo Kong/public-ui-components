@@ -32,6 +32,11 @@ const router = createRouter({
       name: 'simple',
       component: () => import('./pages/ChartDemoSimple.vue'),
     },
+    {
+      path: '/multichart',
+      name: 'multichart',
+      component: () => import('./pages/MultiChartDemo.vue'),
+    },
   ],
 })
 
@@ -52,6 +57,10 @@ const appLinks: SandboxNavigationItem[] = ([
   {
     name: 'Simple Charts',
     to: { name: 'simple' },
+  },
+  {
+    name: 'Multi Charts',
+    to: { name: 'multichart' },
   },
 ])
 

@@ -27,6 +27,7 @@ export interface TooltipState {
   width: number,
   height: number
   chartType: ChartType,
+  chartID: string,
   locked?: boolean,
   chartTooltipSortFn?: ChartTooltipSortFn
 }
