@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.0...@kong-ui-public/analytics-chart@8.1.1) (2025-04-07)
+
+
+### Bug Fixes
+
+* custom chart plugin states leaking across chart instances ([#2070](https://github.com/Kong/public-ui-components/issues/2070)) ([16d973d](https://github.com/Kong/public-ui-components/commit/16d973dcfa75c167fab53ea44787224f33d00a6e))
+
+
+
+
+
 # [8.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.0.0...@kong-ui-public/analytics-chart@8.1.0) (2025-04-04)
 
 
