@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.7.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.7.14...@kong-ui-public/analytics-metric-provider@8.7.15) (2025-04-08)
+
+
+### Bug Fixes
+
+* update additional filter to be ExploreFilterAll type ([#2072](https://github.com/Kong/public-ui-components/issues/2072)) ([3588059](https://github.com/Kong/public-ui-components/commit/358805976addd356d1272967e627b411b3876d03))
+
+
+
+
+
 ## [8.7.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.7.13...@kong-ui-public/analytics-metric-provider@8.7.14) (2025-04-04)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
