@@ -8,11 +8,11 @@
 import { inject, computed, provide, toRef } from 'vue'
 import {
   type AnalyticsBridge,
-  type ExploreFilter,
   queryableExploreDimensions,
   type FilterableExploreDimensions,
   type QueryDatasource,
   type Timeframe,
+  type ExploreFilterAll,
 } from '@kong-ui-public/analytics-utilities'
 import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
 import { METRICS_PROVIDER_KEY, defaultFetcherDefs } from './metricsProviderUtil'
@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<{
   tz?: string,
   dimension?: FilterableExploreDimensions,
   filterValue?: string,
-  additionalFilter?: ExploreFilter[],
+  additionalFilter?: ExploreFilterAll[],
   queryReady?: boolean,
   refreshInterval?: number,
   longCardTitles?: boolean,
