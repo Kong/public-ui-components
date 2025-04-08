@@ -34,6 +34,8 @@
       </KLabel>
       <KButton
         appearance="tertiary"
+        :aria-label="t('actions.add_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
+        :data-testid="`${uniqueId('ff-array-field')}-add-item-btn`"
         icon
         @click="addItem"
       >
@@ -53,6 +55,7 @@
           :key="getKey(item, index)"
           class="ff-array-field-item"
           :data-index="index"
+          :data-testid="`ff-array-field-item-${index}`"
         >
           <div class="ff-array-field-item-content">
             <slot
@@ -69,6 +72,7 @@
           </div>
           <KButton
             appearance="tertiary"
+            :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
             class="ff-array-field-item-remove"
             icon
             @click="removeItem(index)"
@@ -90,6 +94,7 @@
             <div
               class="ff-array-field-item"
               :data-index="index"
+              :data-testid="`ff-array-field-item-${index}`"
             >
               <slot
                 v-if="$slots.item"
@@ -111,6 +116,7 @@
             {{ getTabTitle(item, index) }}
             <KButton
               appearance="tertiary"
+              :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
               class="ff-array-field-item-remove"
               icon
               @click.stop="removeItem(index)"
@@ -130,6 +136,7 @@ import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
+import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
 
@@ -159,6 +166,7 @@ defineSlots<{
   tooltip(): any
 }>()
 
+const { i18n: { t } } = useI18n()
 const { getDefault } = useFormShared()
 const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, props)
