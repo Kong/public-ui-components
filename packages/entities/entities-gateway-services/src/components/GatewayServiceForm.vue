@@ -75,6 +75,7 @@
                 >
                   <KButton
                     appearance="tertiary"
+                    data-testid="try-sample-api"
                     size="small"
                     @click="handleTrySampleApi"
                   >
