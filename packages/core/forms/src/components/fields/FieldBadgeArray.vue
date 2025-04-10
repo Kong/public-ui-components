@@ -1,5 +1,9 @@
 <template>
-  <div class="badge-container">
+  <div
+    :id="schema.model"
+    class="badge-container"
+    data-testid="field-badge-array"
+  >
     <KBadge
       v-for="(item, index) in badgeArray"
       :key="index"
