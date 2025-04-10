@@ -35,8 +35,7 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
         value = !isNaN(rawValue) ? prettyBytes(rawValue) : rawValue
       } else {
         const translatedUnits = tooltipData.translateUnit(tooltipData.units, rawValue)
-        const prefix = tooltipData.units === 'usd' ? '$' : ''
-        value = `${prefix}${rawValue % 1 === 0 ? numberFormatter.format(rawValue) : numberFormatter.format(Number(rawValue.toFixed(DECIMAL_DISPLAY)))} ${translatedUnits}`
+        value = `${rawValue % 1 === 0 ? numberFormatter.format(rawValue) : numberFormatter.format(Number(rawValue.toFixed(DECIMAL_DISPLAY)))} ${translatedUnits}`
       }
 
       let tooltipLabel

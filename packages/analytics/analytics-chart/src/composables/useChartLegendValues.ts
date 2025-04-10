@@ -25,9 +25,9 @@ export default function useChartLegendValues(chartData: Ref<KChartData>, chartTy
         // @ts-ignore - dynamic i18n key
         const unitValue = translateUnit(metricUnit.value, raw)
         formatted = (i18n && i18n.t('legend.datapointValueDisplay', {
-          value: approxNum(raw, { capital: true, ...(metricUnit.value === 'usd' && { prefix: '$' }) }),
+          value: approxNum(raw, { capital: true }),
           unit: unitValue,
-        })) || `${approxNum(raw, { capital: true, ...(metricUnit.value === 'usd' && { prefix: '$' }) })} ${metricUnit.value}`
+        })) || `${approxNum(raw, { capital: true })} ${metricUnit.value}`
       }
 
       return {
