@@ -1,0 +1,61 @@
+{
+  "fields": [
+    {
+      "id": {
+        "description": "A string representing a UUID (universally unique identifier).",
+        "uuid": true,
+        "type": "string",
+        "auto": true
+      }
+    },
+    {
+      "created_at": {
+        "description": "An integer representing an automatic Unix timestamp in seconds.",
+        "timestamp": true,
+        "type": "integer",
+        "auto": true
+      }
+    },
+    {
+      "updated_at": {
+        "description": "An integer representing an automatic Unix timestamp in seconds.",
+        "timestamp": true,
+        "type": "integer",
+        "auto": true
+      }
+    },
+    {
+      "username": {
+        "description": "The unique username of the Consumer. You must send at least one of username or custom_id with the request.",
+        "indexed": true,
+        "type": "string",
+        "unique": true
+      }
+    },
+    {
+      "custom_id": {
+        "description": "Stores the existing unique ID of the consumer. You must send at least one of username or custom_id with the request.",
+        "indexed": true,
+        "type": "string",
+        "unique": true
+      }
+    },
+    { "type": { "indexed": true, "default": 0, "type": "integer", "required": true } },
+    {
+      "tags": {
+        "description": "A set of strings representing tags.",
+        "elements": { "description": "A string representing a tag.", "type": "string", "required": true },
+        "type": "set"
+      }
+    },
+    {
+      "username_lower": {
+        "db_export": false,
+        "description": "The lowercase representation of a username",
+        "type": "string",
+        "prefix_ws": true
+      }
+    }
+  ],
+  "entity_checks": [{ "at_least_one_of": ["custom_id", "username"] }]
+}
