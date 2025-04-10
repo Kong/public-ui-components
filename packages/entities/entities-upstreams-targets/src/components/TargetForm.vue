@@ -339,6 +339,7 @@ watch(() => props.targetId, () => {
   }
 
   :deep(.k-card.kong-ui-entity-base-form) {
+    background-color: transparent;
     border: none;
     padding: $kui-space-0;
   }
