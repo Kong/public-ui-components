@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.1...@kong-ui-public/analytics-chart@8.1.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* remove dollar sign prefix ([#2076](https://github.com/Kong/public-ui-components/issues/2076)) ([d96781b](https://github.com/Kong/public-ui-components/commit/d96781b40ddd74cdaaf4e32f6ef279ec99331a12))
+
+
+
+
+
 ## [8.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.0...@kong-ui-public/analytics-chart@8.1.1) (2025-04-07)
 
 
