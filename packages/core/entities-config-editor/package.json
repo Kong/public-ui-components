@@ -41,6 +41,9 @@
   "devDependencies": {
     "@kong/design-tokens": "1.17.3",
     "@kong/kongponents": "9.25.0",
+    "monaco-editor": "^0.52.2",
+    "uuid": "^10.0.0",
+    "vscode-json-languageservice": "^5.4.4",
     "vue": "^3.5.13"
   },
   "repository": {
