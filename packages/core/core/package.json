@@ -51,8 +51,8 @@
     "errorLimit": "246KB"
   },
   "peerDependencies": {
-    "axios": "^1.7.7",
-    "swrv": "^1.0.4",
+    "axios": "^1.8.4",
+    "swrv": "^1.1.0",
     "vue": "^3.5.12"
   },
   "dependencies": {
@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.17.3",
-    "axios": "^1.7.7",
-    "swrv": "^1.0.4"
+    "axios": "^1.8.4",
+    "swrv": "^1.1.0"
   }
 }
