@@ -23,6 +23,7 @@ export const queryableRequestDimensions = [
   'http_method',
   'iso_code',
   'portal',
+  'realm',
   'request_id',
   'request_uri',
   'response_header_content_type',
