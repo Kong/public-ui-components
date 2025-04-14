@@ -215,11 +215,10 @@ const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
       definition: tile.meta,
     } as TileConfig
   })
-  const newGridSize = {
-    cols: Math.max(2, ...updatedTiles.map(t => t.layout.position.col + t.layout.size.cols)),
-    rows: Math.max(1, ...updatedTiles.map(t => t.layout.position.row + t.layout.size.rows)),
-  }
-  model.value.gridSize = newGridSize
+
+  // Update `rows` to match the number of tiles we've placed.
+  // `columns` remains fixed; this is set by design requirements rather than the number of tiles.
+  model.value.gridSize.rows = Math.max(1, ...updatedTiles.map(t => t.layout.position.row + t.layout.size.rows))
   model.value.tiles = updatedTiles.sort(tileSortFn)
 }
 
