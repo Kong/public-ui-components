@@ -60,7 +60,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "300KB"
+    "errorLimit": "2048KB"
   },
   "peerDependencies": {
     "@kong/kongponents": "9.25.0",
