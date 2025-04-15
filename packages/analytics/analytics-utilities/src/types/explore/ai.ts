@@ -18,7 +18,7 @@ export const queryableAiExploreDimensions = [
   'realm',
   'status_code',
   'status_code_grouped',
-  'ai_plugin_id',
+  'ai_plugin',
 ] as const
 
 export type QueryableAiExploreDimensions = typeof queryableAiExploreDimensions[number]
