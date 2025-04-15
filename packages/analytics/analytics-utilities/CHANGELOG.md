@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.0...@kong-ui-public/analytics-utilities@9.3.1) (2025-04-15)
+
+
+### Bug Fixes
+
+* **ai_plugin:** remove the _id portion ([#2081](https://github.com/Kong/public-ui-components/issues/2081)) ([d58439c](https://github.com/Kong/public-ui-components/commit/d58439c2fb75c639623daaeed6a9ec14bdb58e6a))
+
+
+
+
+
 # [9.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.2.0...@kong-ui-public/analytics-utilities@9.3.0) (2025-04-15)
 
 
