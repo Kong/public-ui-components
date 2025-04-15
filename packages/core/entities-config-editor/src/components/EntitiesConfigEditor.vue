@@ -204,6 +204,11 @@ const assertPropertyValueNode = (node: ASTNode, keyPath: string[]) => {
 onMounted(async () => {
   editor = monaco.editor.create(editorRef.value as HTMLElement, {
     theme: 'vs',
+    quickSuggestions: {
+      other: true,
+      comments: false,
+      strings: true, // Enable suggestions inside strings
+    },
     automaticLayout: true,
     tabSize: 2,
   })
