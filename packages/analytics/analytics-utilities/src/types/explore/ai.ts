@@ -15,6 +15,10 @@ export const queryableAiExploreDimensions = [
   'llm_embeddings_provider',
   'llm_embeddings_model',
   'time',
+  'realm',
+  'status_code',
+  'status_code_grouped',
+  'ai_plugin_id',
 ] as const
 
 export type QueryableAiExploreDimensions = typeof queryableAiExploreDimensions[number]
