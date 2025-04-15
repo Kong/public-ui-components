@@ -1,7 +1,6 @@
 import {
   type AnalyticsBridge,
   type ExploreAggregations,
-  type ExploreFilter,
   type ExploreFilterAll,
   type FilterableExploreDimensions,
   type QueryDatasource, stripUnknownFilters,
@@ -66,20 +65,20 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
   const singleEntityQuery = !!(dimension && dimensionFilterValue)
   const multiEntityQuery = !!(dimension && !dimensionFilterValue)
 
-  const filter = computed<ExploreFilter[]>(() => {
-    const retval: ExploreFilter[] = []
+  const filter = computed<ExploreFilterAll[]>(() => {
+    const retval: ExploreFilterAll[] = []
 
     if (singleEntityQuery) {
       retval.push({
-        dimension,
-        type: 'in',
-        values: [dimensionFilterValue],
+        field: dimension,
+        operator: 'in',
+        value: [dimensionFilterValue],
       })
     }
 
     if (additionalFilter.value) {
       // TODO: Decide if it's worth making this generic on datasource.
-      retval.push(...stripUnknownFilters(datasource.value, additionalFilter.value) as ExploreFilter[])
+      retval.push(...stripUnknownFilters(datasource.value, additionalFilter.value) as ExploreFilterAll[])
     }
 
     return retval
