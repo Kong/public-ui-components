@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.2.0...@kong-ui-public/analytics-utilities@9.3.0) (2025-04-15)
+
+
+### Features
+
+* **ai:** adding realm, status_code/grouped, ai_plugin_id ([#2080](https://github.com/Kong/public-ui-components/issues/2080)) ([eb1c1d0](https://github.com/Kong/public-ui-components/commit/eb1c1d02c6ec6128597e58b0ea0b98c872d3d227))
+
+
+
+
+
 # [9.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.1.0...@kong-ui-public/analytics-utilities@9.2.0) (2025-04-14)
 
 
