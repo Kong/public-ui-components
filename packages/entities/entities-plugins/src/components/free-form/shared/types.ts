@@ -6,3 +6,9 @@ type ComponentPublicInstanceConstructor = {
 
 export type PropType<T extends ComponentPublicInstanceConstructor> =
   InstanceType<T>['$props'] & { [key: string]: unknown }
+
+
+export type FormConfig = {
+  prepareFormData?: (data: any) => any
+  transformLabel?: (label: string, fieldPath: string) => string
+}

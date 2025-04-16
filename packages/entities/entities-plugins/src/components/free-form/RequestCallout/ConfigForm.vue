@@ -1,36 +1,90 @@
 <template>
-  <div class="rc-config-form">
-    <CalloutsForm />
-    <UpstreamForm />
-    <CacheForm />
-  </div>
+  <Form
+    class="rc-config-form"
+    :config="formConfig"
+    :data="data"
+    :schema="schema"
+    tag="div"
+    @change="onChange"
+  >
+    <!-- global field templates -->
+    <template #[FIELD_RENDERERS]>
+      <!-- A render template for `by_lua` fields in any level -->
+      <FieldRenderer
+        v-slot="props"
+        :match="({ path }) => path.endsWith('by_lua')"
+      >
+        <StringField
+          v-bind="props"
+          autosize
+          class="rc-code"
+          multiline
+          :placeholder="t('plugins.free-form.request-callout.by_lua_placeholder')"
+        />
+      </FieldRenderer>
+
+      <!-- Set appearance to `cluster_nodes` and `sentinel_nodes` -->
+      <FieldRenderer
+        v-slot="props"
+        :match="({ path }) => ['cluster_nodes', 'sentinel_nodes']
+          .some(n => path.endsWith(n))"
+      >
+        <ArrayField
+          v-bind="props"
+          appearance="card"
+        />
+      </FieldRenderer>
+
+      <!-- Set appearance to `upstream` and `cache` -->
+      <FieldRenderer
+        v-slot="props"
+        :match="({ path }) => ['upstream', 'cache']
+          .some(n => path.endsWith(n))"
+      >
+        <ObjectField
+          appearance="card"
+          v-bind="props"
+        />
+      </FieldRenderer>
+    </template>
+
+    <!-- A custom renderer for `callouts` -->
+    <template #callouts="props">
+      <CalloutsForm v-bind="props" />
+    </template>
+  </Form>
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, provide } from 'vue'
 import { cloneDeep } from 'lodash-es'
+import { FIELD_RENDERERS } from '../shared/composables'
+import { getCalloutId } from './utils'
+import ArrayField from '../shared/ArrayField.vue'
 import CalloutsForm from './CalloutsForm.vue'
-import UpstreamForm from './UpstreamForm.vue'
+import FieldRenderer from '../shared/FieldRenderer.vue'
+import Form from '../shared/Form.vue'
+import ObjectField from '../shared/ObjectField.vue'
+import StringField from '../shared/StringField.vue'
+import useI18n from '../../../composables/useI18n'
 
 import type { Callout, RequestCallout } from './types'
-import { DATA_INJECTION_KEY, SCHEMA_INJECTION_KEY, useSchemaHelpers } from '../shared/composables'
-import CacheForm from './CacheForm.vue'
-import { getCalloutId } from './utils'
+import type { FormConfig } from '../shared/types'
+import type { FormSchema } from '../../../types/plugins/form-schema'
 
-const props = defineProps<{
-  schema: Record<string, any>
+defineProps<{
+  schema: FormSchema
   data?: RequestCallout
 }>()
-
-const schemaHelpers = useSchemaHelpers(() => props.schema)
-provide(SCHEMA_INJECTION_KEY, schemaHelpers)
-
-const formData = reactive<RequestCallout>(prepareFormData(props.data || schemaHelpers.getDefault()))
-provide(DATA_INJECTION_KEY, formData)
 
 const emit = defineEmits<{
   change: [value: RequestCallout]
 }>()
+
+const formConfig: FormConfig = {
+  prepareFormData,
+}
+
+const { i18n: { t } } = useI18n()
 
 function getNameMap(callouts: Callout[], reverse: boolean = false) {
   return callouts.reduce((acc, { _id, name }) => {
@@ -63,7 +117,7 @@ function prepareFormData(data: RequestCallout) {
   return config
 }
 
-watch(formData, (newVal) => {
+const onChange = (newVal: RequestCallout) => {
   // replace callout `depends_on` ids with actual callout names
   const data = JSON.parse(JSON.stringify(newVal)) as RequestCallout
   const nameMap = getNameMap(data.callouts)
@@ -78,7 +132,7 @@ watch(formData, (newVal) => {
   })
 
   emit('change', data)
-}, { deep: true })
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,10 +1,20 @@
-import { computed, inject, toRaw, toValue, type MaybeRefOrGetter } from 'vue'
+import { computed, inject, provide, toRaw, toValue, useSlots, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
 import { marked } from 'marked'
-import { toSelectItems } from './utils'
+import { path as pathUtils, toSelectItems } from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
+import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
+import { get, set } from 'lodash-es'
+import type { MatchMap } from './FieldRenderer.vue'
+import type { FormConfig } from './types'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
 export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
+export const FIELD_PATH_KEY = Symbol('free-form-field-path')
+export const FIELD_RENDERER_SLOTS = Symbol('free-form-field-renderer-slots')
+export const FIELD_RENDERER_MATCHERS_MAP = Symbol('free-form-field-renderer-matchers-map')
+export const FORM_CONFIG = Symbol('free-form-config')
+
+export const FIELD_RENDERERS = 'free-form-field-renderers-slot' as const
 
 const SHARED_LABEL_ATTRIBUTES = {
   tooltipAttributes: {
@@ -21,7 +31,7 @@ function buildSchemaMap(schema: any, pathPrefix: string = ''): Record<string, an
     for (const fieldDef of schema.fields) {
       const fieldName = Object.keys(fieldDef)[0]
       const fieldProps = fieldDef[fieldName]
-      const fieldPath = pathPrefix ? `${pathPrefix}.${fieldName}` : fieldName
+      const fieldPath = pathPrefix ? pathUtils.resolve(pathPrefix, fieldName) : fieldName
 
       schemaMap[fieldPath] = fieldProps
 
@@ -30,7 +40,7 @@ function buildSchemaMap(schema: any, pathPrefix: string = ''): Record<string, an
         Object.assign(schemaMap, subMap)
       } else if (fieldProps.type === 'array' && fieldProps.elements) {
         const elementProps = fieldProps.elements
-        const elementPath = `${fieldPath}.*`
+        const elementPath = pathUtils.resolve(fieldPath, pathUtils.arraySymbol)
         schemaMap[elementPath] = elementProps
         if (elementProps.type === 'record' && Array.isArray(elementProps.fields)) {
           const subMap = buildSchemaMap(elementProps, elementPath)
@@ -41,6 +51,16 @@ function buildSchemaMap(schema: any, pathPrefix: string = ''): Record<string, an
   }
 
   return schemaMap
+}
+
+/**
+ * 'a.0.b.1.c' => 'a.*.b.*.c'
+ */
+function generalizePath(p: string) {
+  const parts = pathUtils
+    .toArray(p)
+    .map(node => /^\d+$/.test(node) ? pathUtils.arraySymbol : node)
+  return pathUtils.resolve(...parts)
 }
 
 export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
@@ -62,8 +82,10 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
    * @param path Optional dot-notation path to a specific schema field
    * @returns The schema for the specified path or the root schema if no path provided
    */
-  function getSchema(path?: string): any {
-    return path == null ? configSchema.value : schemaMap.value?.[path]
+  function getSchema(): FormSchema
+  function getSchema(path: string): UnionFieldSchema | undefined
+  function getSchema(path?: string): FormSchema | UnionFieldSchema | undefined {
+    return path == null ? configSchema.value : schemaMap.value?.[generalizePath(path)]
   }
 
   /**
@@ -180,6 +202,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
 export function useFormShared<T>() {
   const formData = inject<T>(DATA_INJECTION_KEY)
   const schemaHelpers = inject<ReturnType<typeof useSchemaHelpers>>(SCHEMA_INJECTION_KEY)
+  const formConfig = inject<FormConfig>(FORM_CONFIG, {})
 
   if (!formData) {
     throw new Error('useFormShared() called without form data provider.')
@@ -189,5 +212,183 @@ export function useFormShared<T>() {
     throw new Error('useFormShared() called without schema provider.')
   }
 
-  return { formData, ...schemaHelpers }
+  return { formData, formConfig, ...schemaHelpers }
+}
+
+export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
+  const inheritedPath = inject<ComputedRef<string>>(FIELD_PATH_KEY, computed(() => ''))
+
+  const fieldPath = computed(() => {
+    const nameValue = toValue(name)
+    let res = nameValue
+
+    // concat relative path
+    if (!pathUtils.isAbsolute(nameValue) && inheritedPath.value) {
+      res = pathUtils.resolve(inheritedPath.value, nameValue)
+    }
+
+    // remove $. from name
+    if (pathUtils.isAbsolute(nameValue)) {
+      res = res.slice(pathUtils.resolve(pathUtils.rootSymbol, '').length)
+    }
+    return res
+  })
+
+  provide(FIELD_PATH_KEY, fieldPath)
+
+  return fieldPath
+}
+
+export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
+  const { getSchema } = useFormShared()
+  const { default: defaultSlot, ...slots } = useSlots()
+  const inheritSlots = inject<MaybeRefOrGetter<Record<string, Slot>>>(FIELD_RENDERER_SLOTS)
+
+  const matchMap = inject<MatchMap>(FIELD_RENDERER_MATCHERS_MAP)!
+
+  const mergedSlots = computed(() => {
+    const inheritSlotsValue = toValue(inheritSlots)
+    // Set relative path to each slot key
+    const childSlots: Record<string, Slot<any> | undefined> = Object.keys(slots)
+      .filter(k => k !== FIELD_RENDERERS && k !== 'item')
+      .reduce((res, key) => {
+        const newKey = generalizePath(pathUtils.resolve(toValue(path), key))
+        return { ...res, [newKey]: slots[key] }
+      }, {})
+    return inheritSlotsValue ? { ...inheritSlotsValue, ...childSlots } : childSlots
+  })
+
+  provide(FIELD_RENDERER_SLOTS, mergedSlots)
+
+  const pathValue = toValue(path)
+
+  return computed(() => {
+    if (defaultSlot) return
+    const matchedByPath = mergedSlots.value[generalizePath(toValue(path))]
+    if (matchedByPath) return matchedByPath
+
+    // todo(zehao): priority
+    for (const [matcher, slot] of matchMap) {
+      if (matcher({ path: pathValue, schema: getSchema(pathValue)! })) {
+        return slot
+      }
+    }
+    return undefined
+  })
+}
+
+const labelDictionary: Record<string, string> = {
+  ip: 'IP',
+  ssl: 'SSL',
+  ttl: 'TTL',
+  url: 'URL',
+  http: 'HTTP',
+}
+
+function replaceByDictionary(name: string) {
+  return labelDictionary[name.toLocaleLowerCase()] ?? name
+}
+
+export function useFieldLabel(fieldPath: MaybeRefOrGetter<string>) {
+  const { formConfig } = useFormShared()
+
+  return computed(() => {
+    const pathValue = toValue(fieldPath)
+
+    // split to array: callout.0.name => ['callout', '0', 'name']
+    const parts = pathUtils.toArray(pathValue)
+
+    // Discard the elements in the array before the last numeric element (which contains itself)
+    // ['callout', '0', 'name'] => ['name']
+    const lastNumIndex = parts.findLastIndex(part => /^\d+$/.test(part))
+    const relevantParts = lastNumIndex >= 0 ? parts.slice(lastNumIndex + 1) : parts
+
+    const res = relevantParts
+      .map(fieldName => fieldName
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .map(replaceByDictionary)
+        .join(' '))
+      .join(' › ')
+
+    return formConfig.transformLabel ? formConfig.transformLabel(res, pathValue) : res
+  })
+}
+
+export function useFieldAttrs(
+  fieldPath: MaybeRefOrGetter<string>,
+  props: MaybeRefOrGetter<{
+    label?: string
+    labelAttributes?: LabelAttributes
+    required?: boolean
+    placeholder?: string
+  }>,
+) {
+  const { getLabelAttributes, getPlaceholder, getSchema } = useFormShared()
+
+  const label = useFieldLabel(fieldPath)
+
+  const pathValue = toValue(fieldPath)
+  const propsValue = toValue(props)
+
+  return computed(() => ({
+    ...propsValue,
+    placeholder: propsValue.placeholder ?? getPlaceholder(pathValue) ?? undefined,
+    labelAttributes: propsValue.labelAttributes ?? getLabelAttributes(pathValue),
+    label: propsValue.label ?? label.value,
+    required: propsValue.required ?? getSchema(pathValue)?.required,
+  }))
+}
+
+export type Ancestor = {
+  path?: string
+  parent: Ancestor | null
+}
+
+/**
+ * a.b.c => { parent: { parent: { path: 'a.b', parent: { path: 'a', parent: null } } } }
+ */
+export function useFieldAncestors(fieldPath: MaybeRefOrGetter<string>) {
+  return computed<Ancestor>(() => {
+    const parts = pathUtils.toArray(toValue(fieldPath)) // [a, b, c]
+    let parent: Ancestor = { parent: null }
+
+    parts.pop()
+
+    while (parts.length) {
+      const n = parts.shift()!
+      parent.path = parent.parent?.path ? pathUtils.resolve(parent.parent.path, n) : n
+      parent = { parent }
+    }
+
+    return parent
+  })
+}
+
+export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
+  const { getSchema, formData } = useFormShared()
+  const fieldPath = useFieldPath(name)
+  const renderer = useFieldRenderer(fieldPath)
+  const value = computed<T>({
+    get: () => get(formData, pathUtils.toArray(fieldPath.value)),
+    set: v => set(formData, pathUtils.toArray(fieldPath.value), v),
+  })
+
+  const schema = computed(() => getSchema(fieldPath.value))
+
+  if (!schema.value) {
+    return {
+      error: new Error(`path '${fieldPath.value}' is not found in schema.`),
+    }
+  }
+
+  return {
+    schema,
+    path: fieldPath,
+    renderer,
+    value,
+    ancestors: useFieldAncestors(fieldPath),
+    error: null,
+  }
 }
