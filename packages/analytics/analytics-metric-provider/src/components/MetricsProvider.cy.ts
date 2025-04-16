@@ -335,9 +335,9 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query:
         {
           filters: [{
-            dimension: 'route',
-            type: 'in',
-            values: ['blah'],
+            field: 'route',
+            operator: 'in',
+            value: ['blah'],
           }],
         } }))
 

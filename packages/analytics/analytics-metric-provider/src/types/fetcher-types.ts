@@ -1,6 +1,7 @@
 import type {
   Timeframe,
-  ExploreAggregations, QueryableExploreDimensions, ExploreFilter, AnalyticsBridge, QueryDatasource,
+  ExploreAggregations, QueryableExploreDimensions, AnalyticsBridge, QueryDatasource,
+  ExploreFilterAll,
 } from '@kong-ui-public/analytics-utilities'
 import type { Ref } from 'vue'
 
@@ -8,7 +9,7 @@ export interface MetricFetcherOptions {
   datasource: Ref<QueryDatasource>
   metrics: Ref<ExploreAggregations[]>
   dimensions?: QueryableExploreDimensions[]
-  filter: Ref<ExploreFilter[] | undefined>
+  filter: Ref<ExploreFilterAll[] | undefined>
   timeframe: Ref<Timeframe>
   tz: Ref<string>
   refreshInterval: number
