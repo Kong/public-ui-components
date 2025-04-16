@@ -1,22 +1,28 @@
 <template>
+  <!-- missing schema alert -->
+  <KAlert
+    v-if="field.error"
+    appearance="danger"
+    :message="field.error.message"
+  />
+
   <div
+    v-else
     ref="root"
     class="ff-kv-field"
   >
     <header class="ff-kv-field-header">
       <KLabel
-        v-if="label"
         class="ff-kv-field-label"
-        v-bind="labelAttributes"
-        :required="required"
+        v-bind="fieldAttrs"
       >
-        {{ label }}
+        {{ fieldAttrs.label }}
         <template
-          v-if="labelAttributes?.info"
+          v-if="fieldAttrs.labelAttributes?.info"
           #tooltip
         >
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="labelAttributes?.info" />
+          <div v-html="fieldAttrs.labelAttributes.info" />
         </template>
       </KLabel>
       <KButton
@@ -71,19 +77,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, useTemplateRef, nextTick, inject, computed } from 'vue'
+import { ref, watch, useTemplateRef, nextTick, inject, computed, toRef } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
 import type { LabelAttributes } from '@kong/kongponents'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
+import { useField, useFieldAttrs } from './composables'
 
 interface KVEntry {
-  id: string;
-  key: string;
-  value: string;
+  id: string
+  key: string
+  value: string
 }
 
 const props = defineProps<{
+  name: string
   initialValue?: Record<string, string> | null
   label?: string
   required?: boolean
@@ -95,11 +103,18 @@ const props = defineProps<{
   showVaultSecretPicker?: boolean
 }>()
 
+const field = useField<Record<string, string>>(toRef(props, 'name'))
+const fieldAttrs = useFieldAttrs(field.path!, props)
+
 const emit = defineEmits<{
   change: [Record<string, string>]
 }>()
 
-const entries = ref<KVEntry[]>(getEntries(props.initialValue || {}))
+const entries = ref<KVEntry[]>(
+  getEntries(
+    props.initialValue ?? field.value?.value ?? {},
+  ),
+)
 
 function generateId() {
   return uniqueId('ff-kv-field-')
@@ -126,6 +141,7 @@ const removeEntry = (id: string) => {
 
 const updateValue = () => {
   const map = Object.fromEntries(entries.value.map(({ key, value }) => [key, value]).filter(([key]) => key))
+  field.value!.value = map
   emit('change', map)
 }
 
@@ -157,7 +173,11 @@ function handleValueEnter(index: number) {
 }
 
 const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
-const schema = computed(() => ({ referenceable: props.showVaultSecretPicker }))
+
+const realShowVaultSecretPicker = computed(() => {
+  return props.showVaultSecretPicker ?? !!field.schema!.value?.referenceable
+})
+const schema = computed(() => ({ referenceable: realShowVaultSecretPicker.value }))
 
 function handleAutofill(index: number, value: string) {
   entries.value[index].value = value

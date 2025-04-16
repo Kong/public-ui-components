@@ -1,32 +1,32 @@
 <template>
-  <div class="rc-config-form">
+  <Form
+    class="rc-config-form"
+    :data="data"
+    :prepare-form-data="prepareFormData"
+    :schema="schema"
+    @change="onChange"
+  >
     <CalloutsForm />
     <UpstreamForm />
     <CacheForm />
-  </div>
+  </Form>
 </template>
 
 <script setup lang="ts">
-import { reactive, watch, provide } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import CalloutsForm from './CalloutsForm.vue'
 import UpstreamForm from './UpstreamForm.vue'
+import Form from '../shared/Form.vue'
+import CacheForm from './CacheForm.vue'
 
 import type { Callout, RequestCallout } from './types'
-import { DATA_INJECTION_KEY, SCHEMA_INJECTION_KEY, useSchemaHelpers } from '../shared/composables'
-import CacheForm from './CacheForm.vue'
+import type { FormSchema } from '../../../types/plugins/form-schema'
 import { getCalloutId } from './utils'
 
-const props = defineProps<{
-  schema: Record<string, any>
+defineProps<{
+  schema: FormSchema
   data?: RequestCallout
 }>()
-
-const schemaHelpers = useSchemaHelpers(() => props.schema)
-provide(SCHEMA_INJECTION_KEY, schemaHelpers)
-
-const formData = reactive<RequestCallout>(prepareFormData(props.data || schemaHelpers.getDefault()))
-provide(DATA_INJECTION_KEY, formData)
 
 const emit = defineEmits<{
   change: [value: RequestCallout]
@@ -63,7 +63,7 @@ function prepareFormData(data: RequestCallout) {
   return config
 }
 
-watch(formData, (newVal) => {
+const onChange = (newVal: RequestCallout) => {
   // replace callout `depends_on` ids with actual callout names
   const data = JSON.parse(JSON.stringify(newVal)) as RequestCallout
   const nameMap = getNameMap(data.callouts)
@@ -78,7 +78,7 @@ watch(formData, (newVal) => {
   })
 
   emit('change', data)
-}, { deep: true })
+}
 </script>
 
 <style lang="scss" scoped>

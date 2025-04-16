@@ -1,20 +1,46 @@
 <template>
+  <!-- missing schema alert -->
+  <KAlert
+    v-if="field.error"
+    appearance="danger"
+    :message="field.error.message"
+  />
+
+  <!-- only render children, no wrapper -->
+  <template v-else-if="childOnly">
+    <!-- manually rendering -->
+    <slot v-if="$slots.default" />
+
+    <!-- auto rendering -->
+    <Field
+      v-for="field in childFields"
+      v-else
+      :key="Object.keys(field)[0]"
+      :name="Object.keys(field)[0]"
+    />
+  </template>
+
+  <!-- render children with wrapper -->
   <div
+    v-else
     class="ff-object-field"
     :class="{ 'ff-object-field-collapsed': !realExpanded }"
   >
     <header class="ff-object-field-header">
       <KLabel
         class="ff-object-field-label"
-        v-bind="labelAttributes"
+        v-bind="{
+          ...fieldAttrs,
+          required: hideRequiredAsterisk ? false : fieldAttrs.required
+        }"
       >
-        {{ label }}
+        {{ fieldAttrs.label }}
         <template
-          v-if="labelAttributes?.info"
+          v-if="fieldAttrs.labelAttributes?.info"
           #tooltip
         >
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="labelAttributes?.info" />
+          <div v-html="fieldAttrs.labelAttributes.info" />
         </template>
       </KLabel>
       <div class="ff-object-field-actions">
@@ -47,7 +73,16 @@
         v-if="realExpanded"
         class="ff-object-field-content"
       >
-        <slot />
+        <!-- manually rendering -->
+        <slot v-if="$slots.default" />
+
+        <!-- auto rendering -->
+        <Field
+          v-for="field in childFields"
+          v-else
+          :key="Object.keys(field)[0]"
+          :name="Object.keys(field)[0]"
+        />
       </div>
     </SlideTransition>
   </div>
@@ -56,24 +91,44 @@
 <script setup lang="ts">
 import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
 import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
-import { computed, watch } from 'vue'
+import { computed, toRef, watch } from 'vue'
 import SlideTransition from './SlideTransition.vue'
+import { useField, useFieldAttrs } from './composables'
+import Field from './Field.vue'
 
-const { defaultExpanded = true, defaultAdded, collapsible = true, required } = defineProps<{
-  label: string
+import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
+
+const { defaultExpanded = true, defaultAdded = true, collapsible = true, childOnly, omit, hideRequiredAsterisk, ...props } = defineProps<{
+  name: string
+  label?: string
   labelAttributes?: LabelAttributes
   required?: boolean
   defaultExpanded?: boolean
   defaultAdded?: boolean
   collapsible?: boolean
   appearance?: 'card' | 'default'
+  childOnly?: boolean
+  omit?: string[]
+  hideRequiredAsterisk?: boolean
 }>()
 
+const field = useField(toRef(props, 'name'))
+const fieldAttrs = useFieldAttrs(field.path!, props)
+
 const added = defineModel<boolean>('added', { default: undefined })
-const realAdded = computed(() => !required ? added.value ?? defaultAdded : true)
+const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
 
 const expanded = defineModel<boolean>('expanded', { default: undefined })
 const realExpanded = computed(() => realAdded.value && (collapsible ? expanded.value ?? defaultExpanded : false))
+
+const childFields = computed(() => {
+  const fields = (field.schema!.value as RecordFieldSchema).fields
+  if (omit) {
+    return fields.filter(f => !omit.includes(Object.keys(f)[0]))
+  } else {
+    return fields
+  }
+})
 
 watch(realAdded, (value) => {
   if (!collapsible) {
