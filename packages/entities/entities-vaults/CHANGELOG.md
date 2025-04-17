@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.16.14...@kong-ui-public/entities-vaults@3.17.0) (2025-04-17)
+
+
+### Features
+
+* **vault:** add conjur vault provider [KM-1191] ([#2084](https://github.com/Kong/public-ui-components/issues/2084)) ([a020bbd](https://github.com/Kong/public-ui-components/commit/a020bbd8ea4a2adf824e2f83037935d1fcbef07f))
+
+
+
+
+
 ## [3.16.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.16.13...@kong-ui-public/entities-vaults@3.16.14) (2025-04-04)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
