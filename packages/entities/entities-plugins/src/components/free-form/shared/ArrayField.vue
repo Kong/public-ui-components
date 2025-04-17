@@ -25,6 +25,7 @@
       </KLabel>
       <KButton
         appearance="tertiary"
+        :data-testid="`${uniqueId('ff-array-field')}-add-item-btn`"
         icon
         @click="addItem"
       >
@@ -44,6 +45,7 @@
           :key="getKey(item, index)"
           class="ff-array-field-item"
           :data-index="index"
+          :data-testid="`ff-array-field-item-${index}`"
         >
           <div class="ff-array-field-item-content">
             <slot
@@ -75,6 +77,7 @@
             <div
               class="ff-array-field-item"
               :data-index="index"
+              :data-testid="`ff-array-field-item-${index}`"
             >
               <slot
                 :index="index"
