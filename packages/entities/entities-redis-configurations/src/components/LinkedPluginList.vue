@@ -3,6 +3,7 @@
     :cache-identifier="buildLinksCacheKey(partialId)"
     :fetcher="fetcher"
     :headers="headers"
+    hide-pagination-when-optional
     :pagination-attributes="{ totalCount, disablePageJump: true }"
     :search-input="filterQuery"
   >
