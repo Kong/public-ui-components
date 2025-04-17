@@ -4,6 +4,7 @@
     :data="data"
     :prepare-form-data="prepareFormData"
     :schema="schema"
+    tag="div"
     @change="onChange"
   >
     <CalloutsForm />

@@ -8,10 +8,10 @@
     sticky-tabs
     @add="addCallout"
   >
-    <template #item="{ index }">
+    <template #item="{ index, fieldName }">
       <ObjectField
         child-only
-        :name="String(index)"
+        :name="fieldName"
       >
         <CalloutForm :index="index" />
       </ObjectField>

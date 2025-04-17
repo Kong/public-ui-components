@@ -40,8 +40,10 @@
     </ObjectField>
 
     <ObjectField
+      hide-required-asterisk
       label="Upstream › Body"
       name="body"
+      required
     >
       <BooleanField
         label="Upstream › Body › Forward"

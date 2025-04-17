@@ -49,7 +49,7 @@ const field = useField<number | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const between = computed(() => {
-  const [max, min] = (field.schema?.value as NumberLikeFieldSchema).between ?? []
+  const [min, max] = (field.schema?.value as NumberLikeFieldSchema).between ?? []
   return {
     min: props.min ?? min,
     max: props.max ?? max,

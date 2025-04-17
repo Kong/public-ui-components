@@ -54,6 +54,7 @@
           <div class="ff-array-field-item-content">
             <slot
               v-if="$slots.item"
+              :field-name="String(index)"
               :index="index"
               name="item"
             />
@@ -88,6 +89,7 @@
             >
               <slot
                 v-if="$slots.item"
+                :field-name="String(index)"
                 :index="index"
                 name="item"
               />
@@ -145,10 +147,9 @@ const emit = defineEmits<{
 
 defineSlots<{
   item: {
-    /**
-     * In array item slot props, use `path` instead of `name`
-     */
     index: number
+    /** for named slot, the field name use `fieldName` instead */
+    fieldName: string
   }
 }>()
 

@@ -156,11 +156,11 @@
         label="Request › Error › HTTP Statuses"
         name="http_statuses"
       >
-        <template #item="{ index }">
+        <template #item="{ fieldName }">
           <NumberField
             data-autofocus
             label=""
-            :name="String(index)"
+            :name="fieldName"
           />
         </template>
       </ArrayField>

@@ -43,14 +43,11 @@
       label="Cache › Redis › Sentinel Nodes"
       name="sentinel_nodes"
     >
-      <template #item="{ index }">
+      <template #item="{ fieldName }">
         <ObjectField
           child-only
-          :name="String(index)"
-        >
-          <StringField name="host" />
-          <NumberField name="port" />
-        </ObjectField>
+          :name="fieldName"
+        />
       </template>
     </ArrayField>
     <StringField
@@ -66,10 +63,10 @@
       label="Cache › Redis › Cluster Nodes"
       name="cluster_nodes"
     >
-      <template #item="{ index }">
+      <template #item="{ fieldName }">
         <ObjectField
           child-only
-          :name="String(index)"
+          :name="fieldName"
         >
           <StringField
             label="IP"

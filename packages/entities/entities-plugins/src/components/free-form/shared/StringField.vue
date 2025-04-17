@@ -72,7 +72,7 @@ const emit = defineEmits<{
 }>()
 
 const field = useField<string | null>(toRef(() => name))
-const fieldAttrs = useFieldAttrs(field.path!, { ...props, ...attrs })
+const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const initialValue = field.value?.value
 
 function handleUpdate(value: string) {
