@@ -46,13 +46,13 @@
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^9.25.0",
-    "vue": "^3.5.12"
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.3",
     "@kong/kongponents": "9.25.0",
-    "axios": "^1.7.7",
+    "axios": "^1.7.9",
     "vue": "^3.5.13"
   },
   "repository": {
