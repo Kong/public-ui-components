@@ -214,6 +214,7 @@ const addItem = async () => {
   }
 
   field.value!.value.push(defaultItemValue)
+  emit('add')
 
   if (props.appearance === 'tabs') {
     await nextTick()
@@ -222,18 +223,17 @@ const addItem = async () => {
 
   await nextTick()
   focus(realItems.value.length + 1)
-  emit('add')
 }
 
 const removeItem = async (index: number) => {
   if (Array.isArray(field.value!.value)) {
     field.value!.value.splice(index, 1)
   }
+  emit('remove', index)
 
   if (props.appearance === 'tabs') {
     activeTab.value = tabs.value[Math.max(0, index - 1)]?.hash
   }
-  emit('remove', index)
 }
 
 const root = useTemplateRef('root')
