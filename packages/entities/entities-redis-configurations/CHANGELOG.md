@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@0.4.9...@kong-ui-public/entities-redis-configurations@0.5.0) (2025-04-17)
+
+
+### Features
+
+* **redis:** hide pagination when optional for redis links [KM-1170] ([#2085](https://github.com/Kong/public-ui-components/issues/2085)) ([9cee860](https://github.com/Kong/public-ui-components/commit/9cee860d0fe695d16104f7aed621731c9fa11672))
+
+
+
+
+
 ## [0.4.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@0.4.8...@kong-ui-public/entities-redis-configurations@0.4.9) (2025-04-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
