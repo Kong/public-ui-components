@@ -409,7 +409,7 @@
             <KInput
               v-model.trim="configFields[VaultProviders.CONJUR].endpoint_url"
               autocomplete="off"
-              data-testid="vault-form-config-azure-location"
+              data-testid="vault-form-config-conjur-endpoint_url"
               :is-readonly="form.isReadonly"
               :label="t('form.config.conjur.fields.endpoint_url.label')"
               type="text"
@@ -417,7 +417,7 @@
             <KInput
               v-model.trim="configFields[VaultProviders.CONJUR].login"
               autocomplete="off"
-              data-testid="vault-form-config-azure-location"
+              data-testid="vault-form-config-conjur-login"
               :is-readonly="form.isReadonly"
               :label="t('form.config.conjur.fields.login.label')"
               type="text"
@@ -425,7 +425,7 @@
             <KInput
               v-model.trim="configFields[VaultProviders.CONJUR].api_token"
               autocomplete="off"
-              data-testid="vault-form-config-azure-location"
+              data-testid="vault-form-config-conjur-api_token"
               :is-readonly="form.isReadonly"
               :label="t('form.config.conjur.fields.api_token.label')"
               type="text"
