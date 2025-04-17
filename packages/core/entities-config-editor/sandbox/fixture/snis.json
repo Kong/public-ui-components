@@ -1,0 +1,54 @@
+{
+  "fields": [
+    {
+      "id": {
+        "description": "A string representing a UUID (universally unique identifier).",
+        "uuid": true,
+        "type": "string",
+        "auto": true
+      }
+    },
+    {
+      "name": {
+        "description": "A string representing a wildcard host name, such as *.example.com.",
+        "type": "string",
+        "unique": true,
+        "indexed": true,
+        "unique_across_ws": true,
+        "required": true
+      }
+    },
+    {
+      "created_at": {
+        "description": "An integer representing an automatic Unix timestamp in seconds.",
+        "timestamp": true,
+        "type": "integer",
+        "auto": true
+      }
+    },
+    {
+      "updated_at": {
+        "description": "An integer representing an automatic Unix timestamp in seconds.",
+        "timestamp": true,
+        "type": "integer",
+        "auto": true
+      }
+    },
+    {
+      "tags": {
+        "description": "A set of strings representing tags.",
+        "elements": { "description": "A string representing a tag.", "type": "string", "required": true },
+        "type": "set"
+      }
+    },
+    {
+      "certificate": {
+        "description": "The id (a UUID) of the certificate with which to associate the SNI hostname.",
+        "type": "foreign",
+        "required": true,
+        "reference": "certificates"
+      }
+    }
+  ],
+  "entity_checks": []
+}

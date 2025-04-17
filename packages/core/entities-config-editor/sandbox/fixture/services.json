@@ -1,0 +1,171 @@
+{
+  "fields": [
+    {
+      "id": {
+        "description": "A string representing a UUID (universally unique identifier).",
+        "type": "string",
+        "auto": true,
+        "len_min": 1,
+        "uuid": true
+      }
+    },
+    {
+      "created_at": {
+        "description": "An integer representing an automatic Unix timestamp in seconds.",
+        "timestamp": true,
+        "type": "integer",
+        "auto": true
+      }
+    },
+    {
+      "updated_at": {
+        "description": "An integer representing an automatic Unix timestamp in seconds.",
+        "timestamp": true,
+        "type": "integer",
+        "auto": true
+      }
+    },
+    {
+      "name": {
+        "description": "A unique string representing a UTF-8 encoded name.",
+        "indexed": true,
+        "type": "string",
+        "unique": true
+      }
+    },
+    {
+      "retries": {
+        "description": "The number of retries to execute upon failure to proxy.",
+        "default": 5,
+        "type": "integer",
+        "between": [0, 32767]
+      }
+    },
+    {
+      "protocol": {
+        "description": "A string representing a protocol, such as HTTP or HTTPS.",
+        "default": "http",
+        "type": "string",
+        "indexed": true,
+        "required": true,
+        "one_of": ["grpc", "grpcs", "http", "https", "tcp", "tls", "tls_passthrough", "udp", "ws", "wss"]
+      }
+    },
+    {
+      "host": {
+        "description": "A string representing a host name, such as example.com.",
+        "indexed": true,
+        "type": "string",
+        "required": true
+      }
+    },
+    {
+      "port": {
+        "description": "An integer representing a port number between 0 and 65535, inclusive.",
+        "default": 80,
+        "type": "integer",
+        "indexed": true,
+        "between": [0, 65535],
+        "required": true
+      }
+    },
+    {
+      "path": {
+        "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
+        "type": "string",
+        "match_none": [{ "err": "must not have empty segments", "pattern": "//" }],
+        "indexed": true,
+        "starts_with": "/"
+      }
+    },
+    { "connect_timeout": { "default": 60000, "type": "integer", "between": [1, 2147483646] } },
+    { "write_timeout": { "default": 60000, "type": "integer", "between": [1, 2147483646] } },
+    { "read_timeout": { "default": 60000, "type": "integer", "between": [1, 2147483646] } },
+    {
+      "tags": {
+        "description": "A set of strings representing tags.",
+        "elements": { "description": "A string representing a tag.", "type": "string", "required": true },
+        "type": "set"
+      }
+    },
+    {
+      "client_certificate": {
+        "description": "Certificate to be used as client certificate while TLS handshaking to the upstream server.",
+        "type": "foreign",
+        "reference": "certificates"
+      }
+    },
+    {
+      "tls_verify": {
+        "description": "Whether to enable verification of upstream server TLS certificate. If not set, the global level config `proxy_ssl_verify` will be used.",
+        "type": "boolean"
+      }
+    },
+    {
+      "tls_verify_depth": {
+        "description": "Maximum depth of chain while verifying Upstream server's TLS certificate.",
+        "default": null,
+        "type": "integer",
+        "between": [0, 64]
+      }
+    },
+    {
+      "ca_certificates": {
+        "description": "Array of CA Certificate object UUIDs that are used to build the trust store while verifying upstream server's TLS certificate.",
+        "elements": { "type": "string", "uuid": true },
+        "type": "array"
+      }
+    },
+    {
+      "enabled": {
+        "description": "Whether the Service is active. ",
+        "default": true,
+        "type": "boolean",
+        "indexed": true,
+        "required": true
+      }
+    }
+  ],
+  "entity_checks": [
+    {
+      "conditional": {
+        "if_match": { "one_of": ["tcp", "tls", "udp", "grpc", "grpcs"] },
+        "if_field": "protocol",
+        "then_match": { "eq": null },
+        "then_field": "path"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "not_one_of": ["https", "wss", "tls"] },
+        "if_field": "protocol",
+        "then_match": { "eq": null },
+        "then_field": "client_certificate"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "not_one_of": ["https", "wss", "tls"] },
+        "if_field": "protocol",
+        "then_match": { "eq": null },
+        "then_field": "tls_verify"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "not_one_of": ["https", "tls"] },
+        "if_field": "protocol",
+        "then_match": { "eq": null },
+        "then_field": "tls_verify_depth"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "not_one_of": ["https", "tls"] },
+        "if_field": "protocol",
+        "then_match": { "eq": null },
+        "then_field": "ca_certificates"
+      }
+    }
+  ]
+}

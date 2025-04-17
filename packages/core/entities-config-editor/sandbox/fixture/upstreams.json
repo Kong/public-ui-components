@@ -1,0 +1,424 @@
+{
+  "fields": [
+    {
+      "id": {
+        "description": "A string representing a UUID (universally unique identifier).",
+        "uuid": true,
+        "type": "string",
+        "auto": true
+      }
+    },
+    {
+      "created_at": {
+        "description": "An integer representing an automatic Unix timestamp in seconds.",
+        "timestamp": true,
+        "type": "integer",
+        "auto": true
+      }
+    },
+    {
+      "name": {
+        "description": "This is a hostname, which must be equal to the host of a Service.",
+        "type": "string",
+        "unique": true,
+        "indexed": true,
+        "required": true
+      }
+    },
+    {
+      "updated_at": {
+        "description": "An integer representing an automatic Unix timestamp in seconds.",
+        "timestamp": true,
+        "type": "integer",
+        "auto": true
+      }
+    },
+    {
+      "algorithm": {
+        "description": "Which load balancing algorithm to use.",
+        "default": "round-robin",
+        "type": "string",
+        "one_of": ["consistent-hashing", "least-connections", "round-robin", "latency"]
+      }
+    },
+    {
+      "hash_on": {
+        "default": "none",
+        "type": "string",
+        "one_of": ["none", "consumer", "ip", "header", "cookie", "path", "query_arg", "uri_capture"]
+      }
+    },
+    {
+      "hash_fallback": {
+        "default": "none",
+        "type": "string",
+        "one_of": ["none", "consumer", "ip", "header", "cookie", "path", "query_arg", "uri_capture"]
+      }
+    },
+    { "hash_on_header": { "type": "string", "description": "A string representing an HTTP header name." } },
+    { "hash_fallback_header": { "type": "string", "description": "A string representing an HTTP header name." } },
+    { "hash_on_cookie": { "description": "The cookie name to take the value from as hash input.", "type": "string" } },
+    {
+      "hash_on_cookie_path": {
+        "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
+        "default": "/",
+        "type": "string",
+        "match_none": [{ "err": "must not have empty segments", "pattern": "//" }],
+        "starts_with": "/"
+      }
+    },
+    { "hash_on_query_arg": { "type": "string", "len_min": 1 } },
+    { "hash_fallback_query_arg": { "type": "string", "len_min": 1 } },
+    { "hash_on_uri_capture": { "type": "string", "len_min": 1 } },
+    { "hash_fallback_uri_capture": { "type": "string", "len_min": 1 } },
+    {
+      "slots": {
+        "description": "The number of slots in the load balancer algorithm.",
+        "default": 10000,
+        "type": "integer",
+        "between": [10, 65536]
+      }
+    },
+    {
+      "healthchecks": {
+        "description": "The array of healthchecks.",
+        "default": {
+          "active": {
+            "unhealthy": {
+              "timeouts": 0,
+              "http_failures": 0,
+              "http_statuses": [429, 404, 500, 501, 502, 503, 504, 505],
+              "interval": 0,
+              "tcp_failures": 0
+            },
+            "timeout": 1,
+            "healthy": { "http_statuses": [200, 302], "interval": 0, "successes": 0 },
+            "type": "http",
+            "http_path": "/",
+            "concurrency": 10,
+            "https_verify_certificate": true
+          },
+          "passive": {
+            "type": "http",
+            "healthy": {
+              "http_statuses": [
+                200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308
+              ],
+              "successes": 0
+            },
+            "unhealthy": { "http_statuses": [429, 500, 503], "http_failures": 0, "timeouts": 0, "tcp_failures": 0 }
+          }
+        },
+        "type": "record",
+        "fields": [
+          {
+            "active": {
+              "fields": [
+                {
+                  "type": { "default": "http", "type": "string", "one_of": ["tcp", "http", "https", "grpc", "grpcs"] }
+                },
+                {
+                  "http_path": {
+                    "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
+                    "default": "/",
+                    "type": "string",
+                    "match_none": [{ "err": "must not have empty segments", "pattern": "//" }],
+                    "starts_with": "/"
+                  }
+                },
+                {
+                  "https_sni": {
+                    "description": "A string representing an SNI (server name indication) value for TLS.",
+                    "type": "string",
+                    "required": false
+                  }
+                },
+                { "https_verify_certificate": { "default": true, "type": "boolean", "required": true } },
+                {
+                  "headers": {
+                    "description": "A map of header names to arrays of header values.",
+                    "values": { "type": "array", "elements": { "type": "string" } },
+                    "type": "map",
+                    "required": false,
+                    "keys": { "type": "string", "description": "A string representing an HTTP header name." }
+                  }
+                },
+                { "timeout": { "default": 1, "type": "number", "between": [0, 65535] } },
+                { "concurrency": { "default": 10, "type": "integer", "between": [1, 2147483648] } },
+                {
+                  "healthy": {
+                    "fields": [
+                      {
+                        "http_statuses": {
+                          "default": [200, 302],
+                          "type": "array",
+                          "elements": { "type": "integer", "between": [100, 999] }
+                        }
+                      },
+                      { "interval": { "default": 0, "type": "number", "between": [0, 65535] } },
+                      { "successes": { "default": 0, "type": "integer", "between": [0, 255] } }
+                    ],
+                    "default": { "http_statuses": [200, 302], "interval": 0, "successes": 0 },
+                    "type": "record",
+                    "required": true
+                  }
+                },
+                {
+                  "unhealthy": {
+                    "fields": [
+                      { "timeouts": { "default": 0, "type": "integer", "between": [0, 255] } },
+                      { "http_failures": { "default": 0, "type": "integer", "between": [0, 255] } },
+                      {
+                        "http_statuses": {
+                          "default": [429, 404, 500, 501, 502, 503, 504, 505],
+                          "type": "array",
+                          "elements": { "type": "integer", "between": [100, 999] }
+                        }
+                      },
+                      { "interval": { "default": 0, "type": "number", "between": [0, 65535] } },
+                      { "tcp_failures": { "default": 0, "type": "integer", "between": [0, 255] } }
+                    ],
+                    "default": {
+                      "timeouts": 0,
+                      "http_failures": 0,
+                      "http_statuses": [429, 404, 500, 501, 502, 503, 504, 505],
+                      "interval": 0,
+                      "tcp_failures": 0
+                    },
+                    "type": "record",
+                    "required": true
+                  }
+                }
+              ],
+              "default": {
+                "unhealthy": {
+                  "timeouts": 0,
+                  "http_failures": 0,
+                  "http_statuses": [429, 404, 500, 501, 502, 503, 504, 505],
+                  "interval": 0,
+                  "tcp_failures": 0
+                },
+                "timeout": 1,
+                "healthy": { "http_statuses": [200, 302], "interval": 0, "successes": 0 },
+                "type": "http",
+                "http_path": "/",
+                "concurrency": 10,
+                "https_verify_certificate": true
+              },
+              "type": "record",
+              "required": true
+            }
+          },
+          {
+            "passive": {
+              "fields": [
+                {
+                  "healthy": {
+                    "fields": [
+                      {
+                        "http_statuses": {
+                          "default": [
+                            200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307,
+                            308
+                          ],
+                          "type": "array",
+                          "elements": { "type": "integer", "between": [100, 999] }
+                        }
+                      },
+                      { "successes": { "default": 0, "type": "integer", "between": [0, 255] } }
+                    ],
+                    "default": {
+                      "http_statuses": [
+                        200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308
+                      ],
+                      "successes": 0
+                    },
+                    "type": "record",
+                    "required": true
+                  }
+                },
+                {
+                  "type": { "default": "http", "type": "string", "one_of": ["tcp", "http", "https", "grpc", "grpcs"] }
+                },
+                {
+                  "unhealthy": {
+                    "fields": [
+                      {
+                        "http_statuses": {
+                          "default": [429, 500, 503],
+                          "type": "array",
+                          "elements": { "type": "integer", "between": [100, 999] }
+                        }
+                      },
+                      { "http_failures": { "default": 0, "type": "integer", "between": [0, 255] } },
+                      { "timeouts": { "default": 0, "type": "integer", "between": [0, 255] } },
+                      { "tcp_failures": { "default": 0, "type": "integer", "between": [0, 255] } }
+                    ],
+                    "default": {
+                      "http_statuses": [429, 500, 503],
+                      "http_failures": 0,
+                      "timeouts": 0,
+                      "tcp_failures": 0
+                    },
+                    "type": "record",
+                    "required": true
+                  }
+                }
+              ],
+              "default": {
+                "type": "http",
+                "healthy": {
+                  "http_statuses": [
+                    200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308
+                  ],
+                  "successes": 0
+                },
+                "unhealthy": { "http_statuses": [429, 500, 503], "http_failures": 0, "timeouts": 0, "tcp_failures": 0 }
+              },
+              "type": "record",
+              "required": true
+            }
+          },
+          { "threshold": { "default": 0, "type": "number", "between": [0, 100] } }
+        ],
+        "required": true
+      }
+    },
+    {
+      "tags": {
+        "description": "A set of strings representing tags.",
+        "elements": { "description": "A string representing a tag.", "type": "string", "required": true },
+        "type": "set"
+      }
+    },
+    {
+      "host_header": {
+        "type": "string",
+        "description": "A string representing a host name with an optional port number, such as example.com or example.com:8080."
+      }
+    },
+    {
+      "client_certificate": {
+        "description": "If set, the certificate to be used as client certificate while TLS handshaking to the upstream server.",
+        "type": "foreign",
+        "reference": "certificates"
+      }
+    },
+    {
+      "use_srv_name": {
+        "description": "If set, the balancer will use SRV hostname.",
+        "default": false,
+        "type": "boolean"
+      }
+    }
+  ],
+  "entity_checks": [
+    {
+      "conditional": {
+        "if_match": { "match": "^header$" },
+        "if_field": "hash_on",
+        "then_match": { "required": true },
+        "then_field": "hash_on_header"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "match": "^header$" },
+        "if_field": "hash_fallback",
+        "then_match": { "required": true },
+        "then_field": "hash_fallback_header"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "match": "^cookie$" },
+        "if_field": "hash_on",
+        "then_match": { "required": true },
+        "then_field": "hash_on_cookie"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "match": "^cookie$" },
+        "if_field": "hash_fallback",
+        "then_match": { "required": true },
+        "then_field": "hash_on_cookie"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "match": "^none$" },
+        "if_field": "hash_on",
+        "then_match": { "one_of": ["none"] },
+        "then_field": "hash_fallback"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "match": "^cookie$" },
+        "if_field": "hash_on",
+        "then_match": { "one_of": ["none"] },
+        "then_field": "hash_fallback"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "match": "^consumer$" },
+        "if_field": "hash_on",
+        "then_match": { "one_of": ["none", "ip", "header", "cookie", "path", "query_arg", "uri_capture"] },
+        "then_field": "hash_fallback"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "match": "^ip$" },
+        "if_field": "hash_on",
+        "then_match": { "one_of": ["none", "consumer", "header", "cookie", "path", "query_arg", "uri_capture"] },
+        "then_field": "hash_fallback"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "match": "^path$" },
+        "if_field": "hash_on",
+        "then_match": { "one_of": ["none", "consumer", "header", "cookie", "query_arg", "ip", "uri_capture"] },
+        "then_field": "hash_fallback"
+      }
+    },
+    { "distinct": ["hash_on_header", "hash_fallback_header"] },
+    {
+      "conditional": {
+        "if_match": { "match": "^query_arg$" },
+        "if_field": "hash_on",
+        "then_match": { "required": true },
+        "then_field": "hash_on_query_arg"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "match": "^query_arg$" },
+        "if_field": "hash_fallback",
+        "then_match": { "required": true },
+        "then_field": "hash_fallback_query_arg"
+      }
+    },
+    { "distinct": ["hash_on_query_arg", "hash_fallback_query_arg"] },
+    {
+      "conditional": {
+        "if_match": { "match": "^uri_capture$" },
+        "if_field": "hash_on",
+        "then_match": { "required": true },
+        "then_field": "hash_on_uri_capture"
+      }
+    },
+    {
+      "conditional": {
+        "if_match": { "match": "^uri_capture$" },
+        "if_field": "hash_fallback",
+        "then_match": { "required": true },
+        "then_field": "hash_fallback_uri_capture"
+      }
+    },
+    { "distinct": ["hash_on_uri_capture", "hash_fallback_uri_capture"] }
+  ]
+}
