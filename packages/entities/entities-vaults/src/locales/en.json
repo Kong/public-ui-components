@@ -329,6 +329,21 @@
           }
         }
       },
+      "conjur": {
+        "label": "Conjur Vault",
+        "description": "Access secrets stored in Conjur Key Vault for Kong Gateway configuration.",
+        "fields": {
+          "endpoint_url": {
+            "label": "Endpoint URL"
+          },
+          "login": {
+            "label": "Login"
+          },
+          "api_token": {
+            "label": "API Token"
+          }
+        }
+      },
       "advancedFields": {
         "title": "View Advanced Fields",
         "ttl": "Time-to-Live",

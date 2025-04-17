@@ -342,7 +342,7 @@
           <!-- Azure fields -->
           <div
             v-if="vaultProvider === VaultProviders.AZURE"
-            :key="`${VaultProviders.HCV}-vault-config-fields`"
+            :key="`${VaultProviders.AZURE}-vault-config-fields`"
             class="vault-form-config-fields-container"
           >
             <KInput
@@ -396,6 +396,38 @@
               data-testid="vault-form-config-azure-tenant-id"
               :is-readonly="form.isReadonly"
               :label="t('form.config.azure.fields.tenant_id.label')"
+              type="text"
+            />
+          </div>
+
+          <!-- Conjur fields -->
+          <div
+            v-if="vaultProvider === VaultProviders.CONJUR"
+            :key="`${VaultProviders.CONJUR}-vault-config-fields`"
+            class="vault-form-config-fields-container"
+          >
+            <KInput
+              v-model.trim="configFields[VaultProviders.CONJUR].endpoint_url"
+              autocomplete="off"
+              data-testid="vault-form-config-conjur-endpoint_url"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.conjur.fields.endpoint_url.label')"
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.CONJUR].login"
+              autocomplete="off"
+              data-testid="vault-form-config-conjur-login"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.conjur.fields.login.label')"
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.CONJUR].api_token"
+              autocomplete="off"
+              data-testid="vault-form-config-conjur-api_token"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.conjur.fields.api_token.label')"
               type="text"
             />
           </div>
@@ -524,6 +556,7 @@ import type {
   KongManagerVaultFormConfig,
   KonnectVaultFormConfig,
   VaultPayload,
+  ConjurVaultConfig,
 } from '../types'
 import {
   VaultProviders,
@@ -549,6 +582,7 @@ interface ConfigFields {
   [VaultProviders.HCV]: HCVVaultConfig
   [VaultProviders.AZURE]: AzureVaultConfig
   [VaultProviders.KONNECT]: ConfigStoreConfig
+  [VaultProviders.CONJUR]: ConjurVaultConfig
 }
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -605,7 +639,7 @@ const originalVaultProvider = ref<VaultProviders | null>(null)
 const configStoreId = ref<string>()
 
 const isAvailableTTLConfig = computed(() => {
-  return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE].includes(vaultProvider.value)
+  return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE, VaultProviders.CONJUR].includes(vaultProvider.value)
 })
 
 const providers = computed<Array<{ label: string, value: VaultProviders }>>(() => {
@@ -642,6 +676,15 @@ const providers = computed<Array<{ label: string, value: VaultProviders }>>(() =
         ? [{
           label: t('form.config.azure.label'),
           value: VaultProviders.AZURE,
+          disabled: !isOtherProvidersSupported.value,
+        }]
+        : []
+    ),
+    ...(
+      props.config.conjurVaultProviderAvailable
+        ? [{
+          label: t('form.config.conjur.label'),
+          value: VaultProviders.CONJUR,
           disabled: !isOtherProvidersSupported.value,
         }]
         : []
@@ -689,6 +732,7 @@ const configFields = reactive<ConfigFields>({
     client_id: '',
     tenant_id: '',
   } as AzureVaultConfig,
+  [VaultProviders.CONJUR]: {},
 })
 
 const originalConfigFields = reactive<ConfigFields>({
@@ -731,6 +775,7 @@ const originalConfigFields = reactive<ConfigFields>({
     client_id: '',
     tenant_id: '',
   } as AzureVaultConfig,
+  [VaultProviders.CONJUR]: {},
 })
 
 const awsRegions = [
@@ -807,6 +852,8 @@ const getProviderIcon = (providerName: VaultProviders) => {
       return HashicorpIcon
     case VaultProviders.AZURE:
       return AzureIcon
+    case VaultProviders.CONJUR:
+      return KongIcon // todo(zehao): waiting for new icon be added
   }
 }
 
@@ -824,6 +871,8 @@ const getProviderDescription = (providerName: VaultProviders) => {
       return t('form.config.hcv.description')
     case VaultProviders.AZURE:
       return t('form.config.azure.description')
+    case VaultProviders.CONJUR:
+      return t('form.config.conjur.description')
   }
 }
 
