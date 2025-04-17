@@ -39,6 +39,7 @@ const konnectConfig = ref<KonnectVaultFormConfig>({
   ttl: true,
   hcvAppRoleMethodAvailable: true,
   konnectConfigStoreAvailable: true,
+  conjurVaultProviderAvailable: true,
 })
 
 const kongManagerConfig = ref<KongManagerVaultFormConfig>({
@@ -55,6 +56,7 @@ const kongManagerConfig = ref<KongManagerVaultFormConfig>({
   ttl: true,
   hcvAppRoleMethodAvailable: true,
   awsStsEndpointUrlAvailable: true,
+  conjurVaultProviderAvailable: true,
 })
 
 const onError = (error: AxiosError) => {

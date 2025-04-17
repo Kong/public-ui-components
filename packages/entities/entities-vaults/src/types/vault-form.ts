@@ -27,6 +27,12 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
  * Show/hide AWS StsEndpointUrl field
  */
   awsStsEndpointUrlAvailable?: boolean
+
+  /**
+   * Show/hide Conjur option - mostly for Konnect to pass feature flag value
+   * TODO: remove when support for Conjur is added
+   */
+  conjurVaultProviderAvailable?: boolean
 }
 
 /** Konnect Vault form config */
@@ -42,6 +48,7 @@ export enum VaultProviders {
   ENV = 'env',
   AZURE = 'azure',
   KONNECT = 'konnect',
+  CONJUR = 'conjur',
 }
 
 export enum VaultAuthMethods {
@@ -103,6 +110,16 @@ export interface AzureVaultConfig {
   type: string
   client_id?: string
   tenant_id?: string
+  ttl?: number
+  neg_ttl?: number
+  resurrect_ttl?: number
+}
+
+export interface ConjurVaultConfig { // todo(zehao): which fields are required?
+  endpoint_url?: string
+  login?: string
+  account?: string
+  api_token?: string
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
