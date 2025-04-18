@@ -2,17 +2,13 @@
   <ArrayField
     appearance="tabs"
     :item-label="(callout: Callout) => callout.name || 'New callout'"
-    item-label-field="name"
     name="callouts"
     required
     sticky-tabs
     @add="addCallout"
   >
     <template #item="{ index, fieldName }">
-      <ObjectField
-        child-only
-        :name="fieldName"
-      >
+      <ObjectField :name="fieldName">
         <CalloutForm :index="index" />
       </ObjectField>
     </template>

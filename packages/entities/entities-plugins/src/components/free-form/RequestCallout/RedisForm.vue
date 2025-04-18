@@ -1,9 +1,7 @@
 <template>
   <ObjectField
-    hide-required-asterisk
     label="Cache › Redis"
     name="redis"
-    required
   >
     <StringField
       label="Cache › Redis › Host"
@@ -42,14 +40,7 @@
       appearance="card"
       label="Cache › Redis › Sentinel Nodes"
       name="sentinel_nodes"
-    >
-      <template #item="{ fieldName }">
-        <ObjectField
-          child-only
-          :name="fieldName"
-        />
-      </template>
-    </ArrayField>
+    />
     <StringField
       label="Cache › Redis › Sentinel Username"
       name="sentinel_username"
@@ -64,10 +55,7 @@
       name="cluster_nodes"
     >
       <template #item="{ fieldName }">
-        <ObjectField
-          child-only
-          :name="fieldName"
-        >
+        <ObjectField :name="fieldName">
           <StringField
             label="IP"
             name="ip"

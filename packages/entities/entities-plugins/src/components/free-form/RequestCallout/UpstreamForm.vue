@@ -1,15 +1,11 @@
 <template>
   <ObjectField
     appearance="card"
-    hide-required-asterisk
     name="upstream"
-    required
   >
     <ObjectField
-      hide-required-asterisk
       label="Upstream › Headers"
       name="headers"
-      required
     >
       <BooleanField
         label="Upstream › Headers › Forward"
@@ -23,10 +19,8 @@
     </ObjectField>
 
     <ObjectField
-      hide-required-asterisk
       label="Upstream › Query"
       name="query"
-      required
     >
       <BooleanField
         label="Upstream › Query › Forward"
@@ -40,10 +34,8 @@
     </ObjectField>
 
     <ObjectField
-      hide-required-asterisk
       label="Upstream › Body"
       name="body"
-      required
     >
       <BooleanField
         label="Upstream › Body › Forward"

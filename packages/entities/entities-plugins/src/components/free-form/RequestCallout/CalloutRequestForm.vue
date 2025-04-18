@@ -1,9 +1,5 @@
 <template>
-  <ObjectField
-    hide-required-asterisk
-    name="request"
-    required
-  >
+  <ObjectField name="request">
     <StringField
       label="Request › URL"
       name="url"
@@ -32,10 +28,8 @@
     </ObjectField>
 
     <ObjectField
-      hide-required-asterisk
       label="Request › Query"
       name="query"
-      required
     >
       <BooleanField
         label="Request › Query › Forward"
@@ -49,10 +43,8 @@
     </ObjectField>
 
     <ObjectField
-      hide-required-asterisk
       label="Request › Body"
       name="body"
-      required
     >
       <BooleanField
         label="Request › Body › Decode"
@@ -71,10 +63,8 @@
     </ObjectField>
 
     <ObjectField
-      hide-required-asterisk
       label="Request › HTTP Opts"
       name="http_opts"
-      required
     >
       <BooleanField
         label="Request › HTTP Opts › SSL Verify"
@@ -87,11 +77,8 @@
       />
 
       <ObjectField
-        :added="!!request.http_opts.timeouts"
-        hide-required-asterisk
         label="Request › HTTP Opts › Timeouts"
         name="timeouts"
-        required
       >
         <NumberField
           label="Request › HTTP Opts › Timeouts › Connect"
@@ -108,11 +95,8 @@
       </ObjectField>
 
       <ObjectField
-        :added="!!request.http_opts.proxy"
-        hide-required-asterisk
         label="Request › HTTP Opts › Proxy"
         name="proxy"
-        required
       >
         <StringField
           label="Request › HTTP Opts › Proxy › Auth Username"
@@ -135,10 +119,8 @@
       </ObjectField>
     </ObjectField>
     <ObjectField
-      hide-required-asterisk
       label="Request › Error"
       name="error"
-      required
     >
       <EnumField
         label="Request › Error › On Error"
@@ -152,7 +134,6 @@
       />
 
       <ArrayField
-        :items="request.error.http_statuses"
         label="Request › Error › HTTP Statuses"
         name="http_statuses"
       >
@@ -188,16 +169,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import ArrayField from '../shared/ArrayField.vue'
 import KeyValueField from '../shared/KeyValueField.vue'
 import ObjectField from '../shared/ObjectField.vue'
-import { useFormShared } from '../shared/composables'
 import StringField from '../shared/StringField.vue'
 import BooleanField from '../shared/BooleanField.vue'
 import EnumField from '../shared/EnumField.vue'
 import NumberField from '../shared/NumberField.vue'
-import type { RequestCallout } from './types'
 import { toSelectItems } from '../shared/utils'
 import useI18n from '../../../composables/useI18n'
 
@@ -213,12 +191,5 @@ const METHODS = toSelectItems([
   'TRACE',
 ])
 
-const props = defineProps<{
-  calloutIndex: number;
-}>()
-
-const { formData } = useFormShared<RequestCallout>()
-
-const request = computed(() => formData.callouts[props.calloutIndex].request)
 const { i18n: { t } } = useI18n()
 </script>

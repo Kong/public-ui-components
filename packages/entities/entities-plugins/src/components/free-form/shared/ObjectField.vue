@@ -7,17 +7,19 @@
   />
 
   <!-- only render children, no wrapper -->
-  <template v-else-if="childOnly">
-    <!-- manually rendering -->
-    <slot v-if="$slots.default" />
+  <template v-else-if="isChildOfArray">
+    <div class="ff-object-field ff-object-field-as-child">
+      <!-- manually rendering -->
+      <slot v-if="$slots.default" />
 
-    <!-- auto rendering -->
-    <Field
-      v-for="field in childFields"
-      v-else
-      :key="Object.keys(field)[0]"
-      :name="Object.keys(field)[0]"
-    />
+      <!-- auto rendering -->
+      <Field
+        v-for="field in childFields"
+        v-else
+        :key="Object.keys(field)[0]"
+        :name="Object.keys(field)[0]"
+      />
+    </div>
   </template>
 
   <!-- render children with wrapper -->
@@ -31,7 +33,7 @@
         class="ff-object-field-label"
         v-bind="{
           ...fieldAttrs,
-          required: hideRequiredAsterisk ? false : fieldAttrs.required
+          required: false
         }"
       >
         {{ fieldAttrs.label }}
@@ -57,7 +59,7 @@
           />
         </KButton>
         <KButton
-          v-if="!required"
+          v-if="!fieldAttrs.required"
           appearance="tertiary"
           :class="`ff-object-field-button-${realAdded ? 'remove' : 'add'}`"
           icon
@@ -91,14 +93,14 @@
 <script setup lang="ts">
 import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
 import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
-import { computed, toRef, watch } from 'vue'
+import { computed, onBeforeMount, toRef, watch } from 'vue'
 import SlideTransition from './SlideTransition.vue'
-import { useField, useFieldAttrs } from './composables'
+import { useField, useFieldAttrs, useFormShared } from './composables'
 import Field from './Field.vue'
 
 import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
 
-const { defaultExpanded = true, defaultAdded = true, collapsible = true, childOnly, omit, hideRequiredAsterisk, ...props } = defineProps<{
+const { defaultExpanded = true, defaultAdded = true, collapsible = true, omit, required = undefined, ...props } = defineProps<{
   name: string
   label?: string
   labelAttributes?: LabelAttributes
@@ -107,19 +109,29 @@ const { defaultExpanded = true, defaultAdded = true, collapsible = true, childOn
   defaultAdded?: boolean
   collapsible?: boolean
   appearance?: 'card' | 'default'
-  childOnly?: boolean
   omit?: string[]
-  hideRequiredAsterisk?: boolean
 }>()
 
 const field = useField(toRef(props, 'name'))
-const fieldAttrs = useFieldAttrs(field.path!, props)
+const fieldAttrs = useFieldAttrs(field.path!, { required, ...props })
+const { getSchema } = useFormShared()
 
 const added = defineModel<boolean>('added', { default: undefined })
 const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
 
 const expanded = defineModel<boolean>('expanded', { default: undefined })
 const realExpanded = computed(() => realAdded.value && (collapsible ? expanded.value ?? defaultExpanded : false))
+
+// Determines if the current field is a child element of an array field
+const isChildOfArray = computed(() => {
+  if (field.ancestors?.value) {
+    const parent = field.ancestors.value.parent
+    if (parent?.path) {
+      return getSchema(parent.path)?.type === 'array'
+    }
+  }
+  return false
+})
 
 const childFields = computed(() => {
   const fields = (field.schema!.value as RecordFieldSchema).fields
@@ -136,10 +148,20 @@ watch(realAdded, (value) => {
   }
   expanded.value = value
 })
+
+onBeforeMount(() => {
+  added.value = !!field.value?.value
+})
 </script>
 
 <style lang="scss" scoped>
 .ff-object-field {
+  &-as-child {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-80;
+  }
+
   // .k-label is required to override styles correctly in KM
   &-label.k-label {
     margin-bottom: 0;

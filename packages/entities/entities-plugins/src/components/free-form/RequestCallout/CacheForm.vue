@@ -1,9 +1,7 @@
 <template>
   <ObjectField
     appearance="card"
-    hide-required-asterisk
     name="cache"
-    required
   >
     <EnumField
       label="Cache › Strategy"
@@ -11,10 +9,8 @@
     />
 
     <ObjectField
-      hide-required-asterisk
       label="Cache › Memory"
       name="memory"
-      required
     >
       <StringField
         label="Cache › Memory › Dictionary Name"

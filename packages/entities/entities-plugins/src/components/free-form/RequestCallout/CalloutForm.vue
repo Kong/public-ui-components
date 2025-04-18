@@ -11,15 +11,11 @@
     name="depends_on"
   />
 
-  <CalloutRequestForm :callout-index="index" />
+  <CalloutRequestForm />
 
   <CalloutResponseForm />
 
-  <ObjectField
-    hide-required-asterisk
-    name="cache"
-    required
-  >
+  <ObjectField name="cache">
     <BooleanField
       label="Cache › Bypass"
       name="bypass"

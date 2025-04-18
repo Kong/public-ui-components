@@ -146,11 +146,11 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-  item: {
+  item(props: {
     index: number
     /** for named slot, the field name use `fieldName` instead */
     fieldName: string
-  }
+  }): any
 }>()
 
 const { getDefault } = useFormShared()

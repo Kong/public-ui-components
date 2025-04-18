@@ -306,6 +306,31 @@ export function useFieldAttrs(
   }))
 }
 
+export type Ancestor = {
+  path?: string
+  parent: Ancestor | null
+}
+
+/**
+ * a.b.c => { parent: { parent: { path: 'a.b', parent: { path: 'a', parent: null } } } }
+ */
+export function useFieldAncestors(fieldPath: MaybeRefOrGetter<string>) {
+  return computed<Ancestor>(() => {
+    const parts = pathUtils.toArray(toValue(fieldPath)) // [a, b, c]
+    let parent: Ancestor = { parent: null }
+
+    parts.pop()
+
+    while (parts.length) {
+      const n = parts.shift()!
+      parent.path = parent.parent?.path ? pathUtils.resolve(parent.parent.path, n) : n
+      parent = { parent }
+    }
+
+    return parent
+  })
+}
+
 export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
   const { getSchema, formData } = useFormShared()
   const fieldPath = useFieldPath(name)
@@ -328,6 +353,7 @@ export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
     path: fieldPath,
     renderer,
     value,
+    ancestors: useFieldAncestors(fieldPath),
     error: null,
   }
 }

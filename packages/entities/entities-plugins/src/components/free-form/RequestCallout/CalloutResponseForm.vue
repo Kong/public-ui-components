@@ -1,14 +1,8 @@
 <template>
-  <ObjectField
-    hide-required-asterisk
-    name="response"
-    required
-  >
+  <ObjectField name="response">
     <ObjectField
-      hide-required-asterisk
       label="Response › Headers"
       name="headers"
-      required
     >
       <BooleanField
         label="Response › Headers › Store"
@@ -16,10 +10,8 @@
       />
     </ObjectField>
     <ObjectField
-      hide-required-asterisk
       label="Response › Body"
       name="body"
-      required
     >
       <BooleanField
         label="Response › Body › Store"
