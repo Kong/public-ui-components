@@ -2,37 +2,24 @@
   <StringField
     data-1p-ignore
     data-autofocus
-    label="Name"
-    :label-attributes="getLabelAttributes('callouts.*.name')"
-    :model-value="callout.name"
-    :placeholder="getPlaceholder('callouts.*.name')"
-    required
-    @update:model-value="val => callout.name = (val ?? '').trim()"
+    name="name"
   />
 
   <EnumField
     :items="dependsOnItems"
-    label="Depends On"
-    :label-attributes="getLabelAttributes('callouts.*.depends_on')"
-    :model-value="callout.depends_on"
     multiple
-    :placeholder="getPlaceholder('callouts.*.depends_on')"
-    @update:model-value="val => callout.depends_on = val ?? []"
+    name="depends_on"
+    :required="false"
   />
 
-  <CalloutRequestForm :callout-index="index" />
+  <CalloutRequestForm />
 
-  <CalloutResponseForm :callout-index="index" />
+  <CalloutResponseForm />
 
-  <ObjectField
-    label="Cache"
-    :label-attributes="getLabelAttributes('callouts.*.cache')"
-    required
-  >
+  <ObjectField name="cache">
     <BooleanField
-      v-model="callout.cache.bypass"
       label="Cache › Bypass"
-      :label-attributes="getLabelAttributes('callouts.*.cache.bypass')"
+      name="bypass"
     />
   </ObjectField>
 </template>
@@ -44,16 +31,16 @@ import CalloutRequestForm from './CalloutRequestForm.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import CalloutResponseForm from './CalloutResponseForm.vue'
 import StringField from '../shared/StringField.vue'
-import BooleanField from '../shared/BooleanField.vue'
 import EnumField from '../shared/EnumField.vue'
 import type { RequestCallout } from './types'
 import type { SelectItem } from '@kong/kongponents'
+import BooleanField from '../shared/BooleanField.vue'
 
 const props = defineProps<{
   index: number;
 }>()
 
-const { formData, getLabelAttributes, getPlaceholder } = useFormShared<RequestCallout>()
+const { formData } = useFormShared<RequestCallout>()
 
 const dependableCallouts = computed(() => {
   const { callouts } = formData

@@ -2,45 +2,37 @@
   <ArrayField
     appearance="tabs"
     :item-label="(callout: Callout) => callout.name || 'New callout'"
-    item-label-field="name"
-    :items="formData.callouts"
-    label="Callouts"
-    :label-attributes="getLabelAttributes('callouts')"
+    name="callouts"
     required
     sticky-tabs
     @add="addCallout"
-    @remove="removeCallout"
   >
-    <template #item="{ index }">
-      <CalloutForm :index="index" />
+    <template #item="{ index, fieldName }">
+      <ObjectField :name="fieldName">
+        <CalloutForm :index="index" />
+      </ObjectField>
     </template>
   </ArrayField>
 </template>
 
 <script setup lang="ts">
-import { useFormShared } from '../shared/composables'
 import ArrayField from '../shared/ArrayField.vue'
+import { useFormShared } from '../shared/composables'
 import CalloutForm from './CalloutForm.vue'
 import type { RequestCallout, Callout } from './types'
 import { getCalloutId } from './utils'
+import ObjectField from '../shared/ObjectField.vue'
 
-const { formData, getLabelAttributes, getDefault } = useFormShared<RequestCallout>()
+const { formData, getDefault } = useFormShared<RequestCallout>()
 
 function addCallout() {
-  if (!formData.callouts) {
-    formData.callouts = []
-  }
-
   const callout = getDefault('callouts.*') as Callout
   callout.request.body.custom = callout.request.body.custom ?? {}
 
-  formData.callouts.push({
-    _id: getCalloutId(),
-    ...callout,
-  })
-}
+  const latest = formData.callouts[formData.callouts.length - 1]
 
-function removeCallout(index: number) {
-  formData.callouts.splice(index, 1)
+  if (latest) {
+    latest._id = getCalloutId()
+  }
 }
 </script>
