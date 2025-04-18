@@ -35,6 +35,7 @@
           ...fieldAttrs,
           required: false
         }"
+        :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
         {{ fieldAttrs.label }}
         <template

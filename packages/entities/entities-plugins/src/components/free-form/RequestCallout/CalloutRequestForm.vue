@@ -111,10 +111,12 @@
         <StringField
           label="Request › HTTP Opts › Proxy › Http Proxy"
           name="http_proxy"
+          required
         />
         <StringField
           label="Request › HTTP Opts › Proxy › Https Proxy"
           name="https_proxy"
+          required
         />
       </ObjectField>
     </ObjectField>

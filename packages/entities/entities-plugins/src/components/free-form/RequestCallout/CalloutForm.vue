@@ -9,6 +9,7 @@
     :items="dependsOnItems"
     multiple
     name="depends_on"
+    :required="false"
   />
 
   <CalloutRequestForm />

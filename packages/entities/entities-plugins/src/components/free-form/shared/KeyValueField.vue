@@ -15,6 +15,7 @@
       <KLabel
         class="ff-kv-field-label"
         v-bind="fieldAttrs"
+        :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
         {{ fieldAttrs.label }}
         <template
@@ -57,7 +58,7 @@
         <template #after>
           <component
             :is="autofillSlot"
-            v-if="autofillSlot && showVaultSecretPicker"
+            v-if="autofillSlot && realShowVaultSecretPicker"
             :schema="schema"
             :update="value => handleAutofill(index, value)"
             :value="entry.value"
@@ -83,6 +84,7 @@ import { uniqueId } from 'lodash-es'
 import type { LabelAttributes } from '@kong/kongponents'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { useField, useFieldAttrs } from './composables'
+import type { MapFieldSchema } from '../../../types/plugins/form-schema'
 
 interface KVEntry {
   id: string
@@ -90,7 +92,7 @@ interface KVEntry {
   value: string
 }
 
-const props = defineProps<{
+const { showVaultSecretPicker = undefined, ...props } = defineProps<{
   name: string
   initialValue?: Record<string, string> | null
   label?: string
@@ -175,7 +177,7 @@ function handleValueEnter(index: number) {
 const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
 
 const realShowVaultSecretPicker = computed(() => {
-  return props.showVaultSecretPicker ?? !!field.schema!.value?.referenceable
+  return showVaultSecretPicker ?? !!(field.schema!.value as MapFieldSchema)?.values?.referenceable
 })
 const schema = computed(() => ({ referenceable: realShowVaultSecretPicker.value }))
 

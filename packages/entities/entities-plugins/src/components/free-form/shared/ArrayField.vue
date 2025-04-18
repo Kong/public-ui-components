@@ -19,6 +19,7 @@
       <KLabel
         class="ff-array-field-label"
         v-bind="fieldAttrs"
+        :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
         {{ fieldAttrs.label }}
         <template

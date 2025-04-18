@@ -48,8 +48,6 @@ function buildSchemaMap(schema: any, pathPrefix: string = ''): Record<string, an
     }
   }
 
-  console.log('schemaMap', schemaMap)
-
   return schemaMap
 }
 
