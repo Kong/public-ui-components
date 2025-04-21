@@ -10,7 +10,7 @@
   <SelectComponent
     v-else
     v-bind="fieldAttrs"
-    v-model="field.value.value"
+    v-model="fieldValue"
     class="ff-enum-field"
     :items="realItems"
   >
@@ -42,7 +42,7 @@ interface EnumFieldProps {
 
 const { name, items, ...props } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
-const field = useField<number | string>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<number | string>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const realItems = computed<SelectItem[]>(() => {

@@ -155,11 +155,11 @@ defineSlots<{
 }>()
 
 const { getDefault } = useFormShared()
-const field = useField<T[] | null>(toRef(props, 'name'))
+const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const keyMap = reactive(new Map<T, string>())
-const realItems = computed(() => props.items ?? toValue(field.value) ?? [])
+const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
 
 const ListTag = computed(() => props.appearance === 'card' ? KCard : 'div')
 
@@ -210,11 +210,11 @@ const addItem = async () => {
 
   const defaultItemValue = getDefault(path.resolve(field.path!.value!, path.arraySymbol))
 
-  if (!Array.isArray(field.value!.value)) {
-    field.value!.value = []
+  if (!Array.isArray(fieldValue!.value)) {
+    fieldValue!.value = []
   }
 
-  field.value!.value.push(defaultItemValue)
+  fieldValue!.value.push(defaultItemValue)
   emit('add')
 
   if (props.appearance === 'tabs') {
@@ -227,8 +227,8 @@ const addItem = async () => {
 }
 
 const removeItem = async (index: number) => {
-  if (Array.isArray(field.value!.value)) {
-    field.value!.value.splice(index, 1)
+  if (Array.isArray(fieldValue!.value)) {
+    fieldValue!.value.splice(index, 1)
   }
   emit('remove', index)
 

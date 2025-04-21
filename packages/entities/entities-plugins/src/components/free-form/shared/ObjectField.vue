@@ -113,7 +113,7 @@ const { defaultExpanded = true, defaultAdded = true, collapsible = true, omit, r
   omit?: string[]
 }>()
 
-const field = useField(toRef(props, 'name'))
+const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, { required, ...props })
 const { getSchema } = useFormShared()
 
@@ -151,7 +151,7 @@ watch(realAdded, (value) => {
 })
 
 onBeforeMount(() => {
-  added.value = !!field.value?.value
+  added.value = !!fieldValue?.value
 })
 </script>
 

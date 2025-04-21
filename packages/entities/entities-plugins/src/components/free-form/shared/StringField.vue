@@ -14,7 +14,7 @@
         showPasswordMaskToggle: encrypted,
         type: encrypted ? 'password' : 'text',
       }"
-      :model-value="field.value.value ?? ''"
+      :model-value="fieldValue ?? ''"
       @update:model-value="handleUpdate"
     >
       <template
@@ -30,7 +30,7 @@
       v-if="autofillSlot && realShowVaultSecretPicker"
       :schema="schema"
       :update="handleUpdate"
-      :value="field.value.value ?? ''"
+      :value="fieldValue ?? ''"
     />
   </div>
 </template>
@@ -71,16 +71,16 @@ const emit = defineEmits<{
   'update:modelValue': [value: string | null]
 }>()
 
-const field = useField<string | null>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<string | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
-const initialValue = field.value?.value
+const initialValue = fieldValue?.value
 
 function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && value !== initialValue) {
-    field.value!.value = null
+    fieldValue!.value = null
     emit('update:modelValue', null)
   } else {
-    field.value!.value = value.trim()
+    fieldValue!.value = value.trim()
     emit('update:modelValue', value.trim())
   }
 }

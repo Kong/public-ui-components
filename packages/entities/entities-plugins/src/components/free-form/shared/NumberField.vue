@@ -14,7 +14,7 @@
       min: between.min,
       max: between.max,
     }"
-    :model-value="field.value.value ?? ''"
+    :model-value="fieldValue ?? ''"
     type="number"
     @update:model-value="handleUpdate"
   >
@@ -45,7 +45,7 @@ export interface InputProps {
 }
 
 const { name, ...props } = defineProps<InputProps>()
-const field = useField<number | null>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<number | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const between = computed(() => {
@@ -60,14 +60,14 @@ const emit = defineEmits<{
   'update:modelValue': [value: number | null]
 }>()
 
-const initialValue = field.value!.value
+const initialValue = fieldValue!.value
 
 function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && Number(value) !== initialValue) {
-    field.value!.value = null
+    fieldValue!.value = null
     emit('update:modelValue', null)
   } else {
-    field.value!.value = Number(value)
+    fieldValue!.value = Number(value)
     emit('update:modelValue', Number(value))
   }
 }

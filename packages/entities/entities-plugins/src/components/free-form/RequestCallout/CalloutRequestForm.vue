@@ -14,7 +14,6 @@
     <ObjectField
       label="Request › Headers"
       name="headers"
-      required
     >
       <BooleanField
         label="Request › Headers › Forward"

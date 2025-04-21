@@ -105,7 +105,7 @@ const { showVaultSecretPicker = undefined, ...props } = defineProps<{
   showVaultSecretPicker?: boolean
 }>()
 
-const field = useField<Record<string, string>>(toRef(props, 'name'))
+const { value: fieldValue, ...field } = useField<Record<string, string>>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const emit = defineEmits<{
@@ -114,7 +114,7 @@ const emit = defineEmits<{
 
 const entries = ref<KVEntry[]>(
   getEntries(
-    props.initialValue ?? field.value?.value ?? {},
+    props.initialValue ?? fieldValue?.value ?? {},
   ),
 )
 
@@ -143,7 +143,7 @@ const removeEntry = (id: string) => {
 
 const updateValue = () => {
   const map = Object.fromEntries(entries.value.map(({ key, value }) => [key, value]).filter(([key]) => key))
-  field.value!.value = map
+  fieldValue!.value = map
   emit('change', map)
 }
 

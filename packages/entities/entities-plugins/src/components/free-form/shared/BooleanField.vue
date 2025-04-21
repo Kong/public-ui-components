@@ -9,7 +9,7 @@
   <KCheckbox
     v-else
     v-bind="fieldAttrs"
-    v-model="field.value.value"
+    v-model="fieldValue!"
     class="ff-boolean-field"
     @update:model-value="handleUpdate"
   >
@@ -47,7 +47,7 @@ const handleUpdate = (v: boolean) => {
   emit('update:modelValue', v)
 }
 
-const field = useField<boolean>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<boolean>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 </script>
 
