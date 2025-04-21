@@ -1,43 +1,47 @@
 <template>
-  <StringField
-    data-1p-ignore
-    data-autofocus
-    name="name"
-  />
+  <ObjectField :name="name">
+    <template #depends_on="props">
+      <EnumField
+        v-bind="props"
+        :items="dependsOnItems"
+        multiple
+        :required="false"
+      />
+    </template>
 
-  <EnumField
-    :items="dependsOnItems"
-    multiple
-    name="depends_on"
-    :required="false"
-  />
-
-  <CalloutRequestForm />
-
-  <CalloutResponseForm />
-
-  <ObjectField name="cache">
-    <BooleanField
-      label="Cache › Bypass"
-      name="bypass"
-    />
+    <template #[`request.method`]="props">
+      <EnumField
+        v-bind="props"
+        :items="toSelectItems([
+          'GET',
+          'POST',
+          'PUT',
+          'DELETE',
+          'PATCH',
+          'HEAD',
+          'OPTIONS',
+          'CONNECT',
+          'TRACE',
+        ])"
+      />
+    </template>
   </ObjectField>
 </template>
 
 <script setup lang="ts">
 import { computed, watch } from 'vue'
+
+import { toSelectItems } from '../shared/utils'
 import { useFormShared } from '../shared/composables'
-import CalloutRequestForm from './CalloutRequestForm.vue'
-import ObjectField from '../shared/ObjectField.vue'
-import CalloutResponseForm from './CalloutResponseForm.vue'
-import StringField from '../shared/StringField.vue'
 import EnumField from '../shared/EnumField.vue'
+import ObjectField from '../shared/ObjectField.vue'
+
 import type { RequestCallout } from './types'
 import type { SelectItem } from '@kong/kongponents'
-import BooleanField from '../shared/BooleanField.vue'
 
 const props = defineProps<{
-  index: number;
+  index: number
+  name: string
 }>()
 
 const { formData } = useFormShared<RequestCallout>()

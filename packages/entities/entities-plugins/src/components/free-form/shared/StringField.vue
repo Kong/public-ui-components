@@ -14,6 +14,8 @@
         showPasswordMaskToggle: encrypted,
         type: encrypted ? 'password' : 'text',
       }"
+      :data-1p-ignore="is1pIgnore"
+      :data-autofocus="isAutoFocus"
       :model-value="fieldValue ?? ''"
       @update:model-value="handleUpdate"
     >
@@ -36,10 +38,13 @@
 </template>
 
 <script setup lang="ts">
+import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { computed, inject, toRef, useAttrs } from 'vue'
 import { KInput, KTextArea, type LabelAttributes } from '@kong/kongponents'
-import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
-import { useField, useFieldAttrs } from './composables'
+
+import { path } from '../shared/utils'
+import { useField, useFieldAttrs, useFormShared } from './composables'
+
 import type { StringFieldSchema } from 'src/types/plugins/form-schema'
 
 defineOptions({
@@ -71,6 +76,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string | null]
 }>()
 
+const { getSchema } = useFormShared()
 const { value: fieldValue, ...field } = useField<string | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const initialValue = fieldValue?.value
@@ -106,6 +112,24 @@ const realShowVaultSecretPicker = computed(() => {
 })
 
 const schema = computed(() => ({ referenceable: realShowVaultSecretPicker.value }))
+
+const isAutoFocus = computed(() => {
+  if (attrs['data-autofocus'] !== undefined) return attrs['data-autofocus']
+
+  // If is child of array then return true
+  const parent = field.ancestors?.value.parent
+  if (parent?.path) {
+    const parentType = getSchema(parent.path)?.type
+    return parentType === 'array'
+  }
+
+  return false
+})
+
+const is1pIgnore = computed(() => {
+  if (attrs['data-1p-ignore'] !== undefined) return attrs['data-1p-ignore']
+  return path.getName(name) === 'name'
+})
 </script>
 
 <style lang="scss" scoped>

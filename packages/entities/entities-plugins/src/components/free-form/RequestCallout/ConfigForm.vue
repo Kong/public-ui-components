@@ -1,28 +1,70 @@
 <template>
   <Form
     class="rc-config-form"
+    :config="formConfig"
     :data="data"
-    :prepare-form-data="prepareFormData"
     :schema="schema"
     tag="div"
     @change="onChange"
   >
+    <!-- global field templates -->
+    <template #[FIELD_RENDERERS]>
+      <!-- A render template for `by_lua` fields in any level -->
+      <FieldRenderer
+        v-slot="props"
+        :match="({ path }) => path.endsWith('by_lua')"
+      >
+        <StringField
+          v-bind="props"
+          autosize
+          class="rc-code"
+          multiline
+          :placeholder="t('plugins.free-form.request-callout.by_lua_placeholder')"
+        />
+      </FieldRenderer>
+
+      <!-- A renderer template for array fields which need appearance="card" prop -->
+      <FieldRenderer
+        v-slot="props"
+        :match="({ path }) => ['cluster_nodes', 'sentinel_nodes']
+          .some(n => path.endsWith(n))"
+      >
+        <ArrayField
+          v-bind="props"
+          appearance="card"
+        />
+      </FieldRenderer>
+    </template>
+
     <CalloutsForm />
-    <UpstreamForm />
-    <CacheForm />
+
+    <ObjectField
+      appearance="card"
+      name="upstream"
+    />
+
+    <ObjectField
+      appearance="card"
+      name="cache"
+    />
   </Form>
 </template>
 
 <script setup lang="ts">
 import { cloneDeep } from 'lodash-es'
+import { FIELD_RENDERERS } from '../shared/composables'
+import { getCalloutId } from './utils'
+import ArrayField from '../shared/ArrayField.vue'
 import CalloutsForm from './CalloutsForm.vue'
-import UpstreamForm from './UpstreamForm.vue'
+import FieldRenderer from '../shared/FieldRenderer.vue'
 import Form from '../shared/Form.vue'
-import CacheForm from './CacheForm.vue'
+import ObjectField from '../shared/ObjectField.vue'
+import StringField from '../shared/StringField.vue'
+import useI18n from '../../../composables/useI18n'
 
 import type { Callout, RequestCallout } from './types'
+import type { FormConfig } from '../shared/types'
 import type { FormSchema } from '../../../types/plugins/form-schema'
-import { getCalloutId } from './utils'
 
 defineProps<{
   schema: FormSchema
@@ -32,6 +74,12 @@ defineProps<{
 const emit = defineEmits<{
   change: [value: RequestCallout]
 }>()
+
+const formConfig: FormConfig = {
+  prepareFormData,
+}
+
+const { i18n: { t } } = useI18n()
 
 function getNameMap(callouts: Callout[], reverse: boolean = false) {
   return callouts.reduce((acc, { _id, name }) => {

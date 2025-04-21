@@ -5,12 +5,14 @@ import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
+import type { FormConfig } from './types'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
 export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
 export const FIELD_PATH_KEY = Symbol('free-form-field-path')
 export const FIELD_RENDERER_SLOTS = Symbol('free-form-field-renderer-slots')
 export const FIELD_RENDERER_MATCHERS_MAP = Symbol('free-form-field-renderer-matchers-map')
+export const FORM_CONFIG = Symbol('free-form-config')
 
 export const FIELD_RENDERERS = 'free-form-field-renderers-slot' as const
 
@@ -51,6 +53,16 @@ function buildSchemaMap(schema: any, pathPrefix: string = ''): Record<string, an
   return schemaMap
 }
 
+/**
+ * 'a.0.b.1.c' => 'a.*.b.*.c'
+ */
+function generalizePath(p: string) {
+  const parts = pathUtils
+    .toArray(p)
+    .map(node => /^\d+$/.test(node) ? pathUtils.arraySymbol : node)
+  return pathUtils.resolve(...parts)
+}
+
 export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
   const schemaValue = toValue(schema)
 
@@ -64,16 +76,6 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
     }
     return buildSchemaMap(toRaw(configSchema.value))
   })
-
-  /**
-   * 'a.0.b.1.c' => 'a.*.b.*.c'
-   */
-  function generalizePath(p: string) {
-    const parts = pathUtils
-      .toArray(p)
-      .map(node => /^\d+$/.test(node) ? pathUtils.arraySymbol : node)
-    return pathUtils.resolve(...parts)
-  }
 
   /**
    * Retrieves a schema object by path
@@ -200,6 +202,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
 export function useFormShared<T>() {
   const formData = inject<T>(DATA_INJECTION_KEY)
   const schemaHelpers = inject<ReturnType<typeof useSchemaHelpers>>(SCHEMA_INJECTION_KEY)
+  const formConfig = inject<FormConfig>(FORM_CONFIG, {})
 
   if (!formData) {
     throw new Error('useFormShared() called without form data provider.')
@@ -209,7 +212,7 @@ export function useFormShared<T>() {
     throw new Error('useFormShared() called without schema provider.')
   }
 
-  return { formData, ...schemaHelpers }
+  return { formData, formConfig, ...schemaHelpers }
 }
 
 export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
@@ -247,9 +250,10 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
     const inheritSlotsValue = toValue(inheritSlots)
     // Set relative path to each slot key
     const childSlots: Record<string, Slot<any> | undefined> = Object.keys(slots)
-      .filter(k => k !== FIELD_RENDERERS)
+      .filter(k => k !== FIELD_RENDERERS && k !== 'item')
       .reduce((res, key) => {
-        return { ...res, [pathUtils.resolve(toValue(path), key)]: slots[key] }
+        const newKey = generalizePath(pathUtils.resolve(toValue(path), key))
+        return { ...res, [newKey]: slots[key] }
       }, {})
     return inheritSlotsValue ? { ...inheritSlotsValue, ...childSlots } : childSlots
   })
@@ -260,7 +264,7 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
 
   return computed(() => {
     if (defaultSlot) return
-    const matchedByPath = mergedSlots.value[toValue(path)]
+    const matchedByPath = mergedSlots.value[generalizePath(toValue(path))]
     if (matchedByPath) return matchedByPath
 
     // todo(zehao): priority
@@ -270,6 +274,45 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
       }
     }
     return undefined
+  })
+}
+
+const labelDictionary: Record<string, string> = {
+  ip: 'IP',
+  ssl: 'SSL',
+  ttl: 'TTL',
+  url: 'URL',
+  http: 'HTTP',
+}
+
+function replaceByDictionary(name: string) {
+  return labelDictionary[name.toLocaleLowerCase()] ?? name
+}
+
+export function useFieldLabel(fieldPath: MaybeRefOrGetter<string>) {
+  const { formConfig } = useFormShared()
+
+  return computed(() => {
+    const pathValue = toValue(fieldPath)
+
+    // split to array: callout.0.name => ['callout', '0', 'name']
+    const parts = pathUtils.toArray(pathValue)
+
+    // Discard the elements in the array before the last numeric element (which contains itself)
+    // ['callout', '0', 'name'] => ['name']
+    const lastNumIndex = parts.findLastIndex(part => /^\d+$/.test(part))
+    const relevantParts = lastNumIndex >= 0 ? parts.slice(lastNumIndex + 1) : parts
+
+    const res = relevantParts
+      .map(fieldName => fieldName
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .map(replaceByDictionary)
+        .join(' '))
+      .join(' › ')
+
+    return formConfig.transformLabel ? formConfig.transformLabel(res, pathValue) : res
   })
 }
 
@@ -284,13 +327,7 @@ export function useFieldAttrs(
 ) {
   const { getLabelAttributes, getPlaceholder, getSchema } = useFormShared()
 
-  const capitalizeEachWord = (n: string): string => {
-    return n
-      .replaceAll('_', ' ')
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ')
-  }
+  const label = useFieldLabel(fieldPath)
 
   const pathValue = toValue(fieldPath)
   const propsValue = toValue(props)
@@ -299,7 +336,7 @@ export function useFieldAttrs(
     ...propsValue,
     placeholder: propsValue.placeholder ?? getPlaceholder(pathValue) ?? undefined,
     labelAttributes: propsValue.labelAttributes ?? getLabelAttributes(pathValue),
-    label: propsValue.label ?? capitalizeEachWord(pathUtils.getName(pathValue)),
+    label: propsValue.label ?? label.value,
     required: propsValue.required ?? getSchema(pathValue)?.required,
   }))
 }

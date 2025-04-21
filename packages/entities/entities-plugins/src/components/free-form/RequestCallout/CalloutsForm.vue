@@ -8,20 +8,21 @@
     @add="addCallout"
   >
     <template #item="{ index, fieldName }">
-      <ObjectField :name="fieldName">
-        <CalloutForm :index="index" />
-      </ObjectField>
+      <CalloutForm
+        :index="index"
+        :name="fieldName"
+      />
     </template>
   </ArrayField>
 </template>
 
 <script setup lang="ts">
-import ArrayField from '../shared/ArrayField.vue'
-import { useFormShared } from '../shared/composables'
-import CalloutForm from './CalloutForm.vue'
-import type { RequestCallout, Callout } from './types'
 import { getCalloutId } from './utils'
-import ObjectField from '../shared/ObjectField.vue'
+import { useFormShared } from '../shared/composables'
+import ArrayField from '../shared/ArrayField.vue'
+import CalloutForm from './CalloutForm.vue'
+
+import type { RequestCallout, Callout } from './types'
 
 const { formData, getDefault } = useFormShared<RequestCallout>()
 

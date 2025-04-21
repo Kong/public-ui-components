@@ -55,6 +55,7 @@
           <div class="ff-array-field-item-content">
             <slot
               v-if="$slots.item"
+              data-autofocus
               :field-name="String(index)"
               :index="index"
               name="item"
@@ -151,6 +152,7 @@ defineSlots<{
     index: number
     /** for named slot, the field name use `fieldName` instead */
     fieldName: string
+    'data-autofocus'?: boolean
   }): any
 }>()
 

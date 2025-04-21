@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRef } from 'vue'
+import { computed, toRef, type Slot } from 'vue'
 import { useField, FIELD_RENDERERS } from './composables'
 import { path } from './utils'
 
@@ -53,6 +53,13 @@ defineOptions({ name: 'AutoField' })
 const props = defineProps<{
   name: string
 }>()
+
+defineSlots<
+  {
+    default?: Slot
+    [FIELD_RENDERERS]?: Slot<{ name: string }>
+  } & Record<string, Slot<{ name: string }>>
+>()
 
 const field = useField(toRef(props, 'name'))
 
