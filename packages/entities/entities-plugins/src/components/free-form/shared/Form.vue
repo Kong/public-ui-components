@@ -66,5 +66,5 @@ provide(FIELD_RENDERER_MATCHERS_MAP, matchMap)
 
 watch(formData, (newVal) => {
   emit('change', toValue(newVal))
-}, { deep: true })
+}, { deep: true, immediate: true })
 </script>
