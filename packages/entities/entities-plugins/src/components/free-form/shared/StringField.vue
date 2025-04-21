@@ -99,8 +99,8 @@ const InputComponent = computed(() => {
 const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
 
 const realShowVaultSecretPicker = computed(() => {
-  if ('showVaultSecretPicker' in props) {
-    return props.showVaultSecretPicker
+  if (showVaultSecretPicker ! == undefined) {
+    return showVaultSecretPicker
   }
   return !!field.schema!.value?.referenceable
 })
