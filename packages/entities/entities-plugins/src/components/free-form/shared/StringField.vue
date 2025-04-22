@@ -69,6 +69,7 @@ const {
   // Props of type boolean cannot distinguish between `undefined` and `false` in vue.
   // so we need to show them declaring their default value as undefined
   showVaultSecretPicker = undefined,
+  showPasswordMaskToggle = undefined,
   name,
   ...props
 } = defineProps<StringFieldProps>()
@@ -92,9 +93,14 @@ function handleUpdate(value: string) {
 }
 
 const encrypted = computed(() => {
+  if (showPasswordMaskToggle !== undefined) {
+    return showPasswordMaskToggle
+  }
+
   if (props.type === 'password') {
     return true
   }
+
   return !!(field.schema?.value as StringFieldSchema).encrypted
 })
 
