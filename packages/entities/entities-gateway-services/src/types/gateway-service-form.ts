@@ -73,3 +73,10 @@ export interface SelectItem {
   value: string | number
   selected?: boolean
 }
+
+export interface useUrlValidators {
+  validateHost: (host: string) => string
+  validatePort: (port: number) => string
+  validateProtocol: (protocol: string) => string
+  validatePath: (path: string) => string
+}
