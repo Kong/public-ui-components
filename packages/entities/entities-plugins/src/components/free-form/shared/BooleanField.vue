@@ -9,8 +9,8 @@
   <KCheckbox
     v-else
     v-bind="fieldAttrs"
-    v-model="fieldValue!"
     class="ff-boolean-field"
+    :model-value="fieldValue ?? false"
     @update:model-value="handleUpdate"
   >
     <template
@@ -39,15 +39,16 @@ interface InputProps {
 }
 
 const { name, ...props } = defineProps<InputProps>()
+const { value: fieldValue, ...field } = useField<boolean>(toRef(() => name))
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
 
 const handleUpdate = (v: boolean) => {
+  fieldValue!.value = v
   emit('update:modelValue', v)
 }
 
-const { value: fieldValue, ...field } = useField<boolean>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 </script>
 
