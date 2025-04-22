@@ -23,7 +23,7 @@
         />
       </FieldRenderer>
 
-      <!-- A renderer template for array fields which need appearance="card" prop -->
+      <!-- Set appearance to `cluster_nodes` and `sentinel_nodes` -->
       <FieldRenderer
         v-slot="props"
         :match="({ path }) => ['cluster_nodes', 'sentinel_nodes']
@@ -34,19 +34,24 @@
           appearance="card"
         />
       </FieldRenderer>
+
+      <!-- Set appearance to `upstream` and `cache` -->
+      <FieldRenderer
+        v-slot="props"
+        :match="({ path }) => ['upstream', 'cache']
+          .some(n => path.endsWith(n))"
+      >
+        <ObjectField
+          appearance="card"
+          v-bind="props"
+        />
+      </FieldRenderer>
     </template>
 
-    <CalloutsForm />
-
-    <ObjectField
-      appearance="card"
-      name="upstream"
-    />
-
-    <ObjectField
-      appearance="card"
-      name="cache"
-    />
+    <!-- A custom renderer for `callouts` -->
+    <template #callouts="props">
+      <CalloutsForm v-bind="props" />
+    </template>
   </Form>
 </template>
 
