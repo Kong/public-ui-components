@@ -579,3 +579,34 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
     },
   ],
 }
+
+export const oneTileDashboardConfig: DashboardConfig = {
+  gridSize: {
+    cols: 6,
+    rows: 2,
+  },
+  tileHeight: 167,
+  tiles: [
+    {
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
+      },
+      id: 'tile-1',
+    },
+  ],
+}
