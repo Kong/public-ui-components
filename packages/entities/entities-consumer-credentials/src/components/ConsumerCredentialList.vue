@@ -346,7 +346,7 @@ const errorMessage = ref<TableErrorMessage>(null)
 /**
  * Copy action
  */
-const copy = async (entity: EntityRow, field: string | undefined, copyToClipboard: (val: string) => Promise<boolean>): void => {
+const copy = async (entity: EntityRow, field: string | undefined, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const val = field ? entity[field] : JSON.stringify(entity)
   if (!await copyToClipboard(val)) {
     onCopyError(entity, field)

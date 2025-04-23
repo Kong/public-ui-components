@@ -379,7 +379,7 @@ const errorMessage = ref<TableErrorMessage>(null)
 /**
  * Copy action
  */
-const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): void => {
+const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const id = row.id as string
 
   if (!await copyToClipboard(id)) {
@@ -390,7 +390,7 @@ const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<
   onCopySuccess(row, 'id')
 }
 
-const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): void => {
+const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void>=> {
   const val = JSON.stringify(row)
 
   if (!await copyToClipboard(val)) {

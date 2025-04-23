@@ -447,7 +447,7 @@ const errorMessage = ref<TableErrorMessage>(null)
 /**
  * Copy ID action
  */
-const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): void => {
+const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const id = row.id as string
 
   if (!await copyToClipboard(id)) {

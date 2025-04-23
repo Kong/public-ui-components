@@ -510,7 +510,7 @@ const handleControlPlaneClick = (id: string) => {
 /**
  * Copy ID action
  */
-const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): void => {
+const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const id = row.id as string
 
   if (!await copyToClipboard(id)) {
@@ -535,7 +535,7 @@ const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<
 /**
  * Copy JSON action
  */
-const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): void => {
+const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void>=> {
   const val = JSON.stringify(row)
 
   if (!await copyToClipboard(val)) {
