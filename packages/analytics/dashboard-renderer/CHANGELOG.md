@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.8...@kong-ui-public/dashboard-renderer@4.1.9) (2025-04-24)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#2088](https://github.com/Kong/public-ui-components/issues/2088)) ([81354c5](https://github.com/Kong/public-ui-components/commit/81354c5dc545cd9cc7fc830e5e34448c4f1ba7ae))
+
+
+
+
+
 ## [4.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.7...@kong-ui-public/dashboard-renderer@4.1.8) (2025-04-22)
 
 

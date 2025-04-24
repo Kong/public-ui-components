@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.7.20...@kong-ui-public/entities-upstreams-targets@3.7.21) (2025-04-24)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#2088](https://github.com/Kong/public-ui-components/issues/2088)) ([81354c5](https://github.com/Kong/public-ui-components/commit/81354c5dc545cd9cc7fc830e5e34448c4f1ba7ae))
+
+
+
+
+
 ## [3.7.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.7.19...@kong-ui-public/entities-upstreams-targets@3.7.20) (2025-04-23)
 
 
