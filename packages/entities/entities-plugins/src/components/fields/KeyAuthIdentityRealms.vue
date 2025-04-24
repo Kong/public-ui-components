@@ -58,6 +58,18 @@ const kCurrentCPSelectItem = {
 const formConfig = inject<KonnectBaseFormConfig | KongManagerBaseFormConfig | undefined>(FORMS_CONFIG)
 const { axiosInstance } = useAxios(formConfig?.axiosRequestConfig)
 
+// workaround for the fact that the DP does not support the region: null now
+// we should remove this line when the DP supports it
+const guessRegion = () => {
+  if (formConfig?.app === 'konnect') {
+    const regionMatch = /\b(us|eu|au|me|in)\b/.exec(formConfig?.apiBaseUrl || '')
+    if (regionMatch) {
+      return { region: regionMatch[1] }
+    }
+  }
+  return {}
+}
+
 const isLoadingRealms = ref<boolean>(true)
 const realms = ref<MultiselectItem[]>([kCurrentCPSelectItem])
 
@@ -111,7 +123,7 @@ const onRealmsUpdate = (currentSelected: string[]) => {
     ? currentKonnectRealmSelection.filter((realmId) => !prevKonnectRealmSelection.includes(realmId))
     : currentKonnectRealmSelection
 
-  const nextKonnectRealms = nextKonnectRealmId.map((id) => ({ scope: 'realm', id } as const))
+  const nextKonnectRealms = nextKonnectRealmId.map((id) => ({ ...guessRegion(), scope: 'realm', id } as const))
 
   fieldValue.value = [
     ...nextCPSlice,
