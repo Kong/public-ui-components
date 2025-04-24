@@ -359,16 +359,22 @@ const exploreResult = computed<ExploreResultV4>(() => {
     }
   }
 
+  const metaOverrides: Partial<QueryResponseMeta> = {
+    truncated: limitToggle.value,
+    limit: limitToggle.value ? 10 : 50,
+  }
+
   if (multiDimensionToggle.value) {
     return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit },
       {
         statusCode: [...statusCodeDimensionValues.value],
       },
+      metaOverrides,
     )
   } else if (multiMetricToggle.value) {
-    return generateMultipleMetricTimeSeriesData([{ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, ...secondaryMetrics.value])
+    return generateMultipleMetricTimeSeriesData([{ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, ...secondaryMetrics.value], metaOverrides)
   }
-  return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit })
+  return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, null, metaOverrides)
 })
 
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))

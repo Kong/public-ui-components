@@ -328,17 +328,22 @@ const exploreResult = computed<ExploreResultV4>(() => {
     }
   }, {})
 
+  const metaOverrides: Partial<QueryResponseMeta> = {
+    truncated: limitToggle.value,
+    limit: limitToggle.value ? 10 : 50,
+  }
+
   if (multiDimensionToggle.value) {
     return generateCrossSectionalData([{
       name: selectedMetric.value.name,
       unit: selectedMetric.value.unit,
-    }], dimensionMap)
+    }], dimensionMap, metaOverrides)
   } else {
     return generateCrossSectionalData([{
       name: selectedMetric.value.name,
       unit: selectedMetric.value.unit,
     }, ...(multiMetricToggle.value ? secondaryMetrics.value : [])],
-    dimensionMap)
+    dimensionMap, metaOverrides)
   }
 })
 
