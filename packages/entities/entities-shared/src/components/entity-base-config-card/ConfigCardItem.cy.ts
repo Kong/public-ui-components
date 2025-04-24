@@ -371,6 +371,9 @@ describe('<ConfigCardItem />', () => {
           label: 'ID',
           value: val,
         }
+        cy.window().then((win) => {
+          cy.stub(win.navigator.clipboard, 'writeText').resolves()
+        })
 
         cy.mount(ConfigCardItem, {
           props: {
@@ -383,7 +386,9 @@ describe('<ConfigCardItem />', () => {
         cy.get('.text-icon-wrapper [data-testid="copy-to-clipboard"]').should('exist')
         cy.get('.text-icon-wrapper .k-tooltip').should('exist')
         cy.get('.text-icon-wrapper [data-testid="copy-to-clipboard"]').click()
-        cy.get('.text-icon-wrapper .k-tooltip').should('contain.text', 'Copied!')
+        cy.window().then(() => {
+          cy.get('.text-icon-wrapper .k-tooltip').should('contain.text', 'Copied!')
+        })
       })
 
       it('renders a redacted ID correctly', () => {
