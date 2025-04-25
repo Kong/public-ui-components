@@ -510,10 +510,10 @@ const handleControlPlaneClick = (id: string) => {
 /**
  * Copy ID action
  */
-const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void => {
+const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const id = row.id as string
 
-  if (!copyToClipboard(id)) {
+  if (!await copyToClipboard(id)) {
     // Emit the error event for the host app
     emit('copy:error', {
       entity: row,
@@ -535,10 +535,10 @@ const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void
 /**
  * Copy JSON action
  */
-const copyJson = (row: EntityRow, copyToClipboard: (val: string) => boolean): void => {
+const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void>=> {
   const val = JSON.stringify(row)
 
-  if (!copyToClipboard(val)) {
+  if (!await copyToClipboard(val)) {
     // Emit the error event for the host app
     emit('copy:error', {
       entity: row,

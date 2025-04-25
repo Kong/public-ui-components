@@ -24,7 +24,7 @@ import {
   routeExploreResponse,
   summaryDashboardConfig,
   simpleConfigNoFilters,
-  fourByFourDashboardConfigJustCharts,
+  fourByFourDashboardConfigJustCharts, oneTileDashboardConfig,
 } from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
 import { EntityLink } from '@kong-ui-public/entities-shared'
@@ -966,6 +966,64 @@ describe('<DashboardRenderer />', () => {
 
     cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
       expect(ref.value.gridSize).to.deep.equal({ cols: 8, rows: 8 })
+    })
+  })
+
+  it('Preserve column counts', () => {
+    const configRef = ref<DashboardConfig>(oneTileDashboardConfig)
+
+    const props = {
+      context: {
+        filters: [],
+        timeSpec: {
+          type: 'relative',
+          time_range: '15m',
+        },
+        editable: true,
+      },
+      modelValue: configRef.value,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    })
+
+    expect(configRef.value.gridSize).to.deep.equal({ cols: 6, rows: 2 })
+
+    cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
+      ref.value.tiles.push({
+        id: crypto.randomUUID(),
+        definition: {
+          chart: {
+            type: 'timeseries_line',
+            chartTitle: 'New Tile',
+          },
+          query: {
+            metrics: ['request_count'],
+            dimensions: ['time'],
+            filters: [],
+          },
+        },
+        layout: {
+          position: {
+            col: 0,
+            row: 2,
+          },
+          size: {
+            cols: 4,
+            rows: 4,
+          },
+        },
+      })
+    })
+
+    cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
+      expect(ref.value.gridSize).to.deep.equal({ cols: 6, rows: 6 })
     })
   })
 })

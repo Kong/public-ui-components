@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.1...@kong-ui-public/analytics-utilities@9.3.2) (2025-04-24)
+
+
+### Bug Fixes
+
+* show tooltip on warning icon and limit size ma-3830 ma-1889 ([#2091](https://github.com/Kong/public-ui-components/issues/2091)) ([2352527](https://github.com/Kong/public-ui-components/commit/235252752c3e9cd11229a2043fba46e06ff24601))
+
+
+
+
+
 ## [9.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.0...@kong-ui-public/analytics-utilities@9.3.1) (2025-04-15)
 
 

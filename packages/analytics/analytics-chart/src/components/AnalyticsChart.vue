@@ -24,11 +24,12 @@
         >
           <WarningIcon
             :color="`var(--kui-color-text-warning, ${KUI_COLOR_TEXT_WARNING})`"
-            decorative
             :size="KUI_ICON_SIZE_40"
           />
           <template #content>
-            {{ notAllDataShownTooltipContent }}
+            <div class="tooltip-content">
+              {{ notAllDataShownTooltipContent }}
+            </div>
           </template>
         </KTooltip>
       </div>
@@ -432,6 +433,10 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     display: flex;
     margin-left: var(--kui-space-50, $kui-space-50);
     margin-top: var(--kui-space-10, $kui-space-10);
+
+    .tooltip-content {
+      max-width: 40vw;
+    }
   }
 }
 </style>
