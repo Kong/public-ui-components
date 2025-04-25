@@ -22,19 +22,19 @@ import { useFormShared } from '../shared/composables'
 import ArrayField from '../shared/ArrayField.vue'
 import CalloutForm from './CalloutForm.vue'
 
-import type { RequestCallout, Callout } from './types'
+import type { RequestCalloutPlugin, Callout } from './types'
 
 defineProps<{
   name: string
 }>()
 
-const { formData, getDefault } = useFormShared<RequestCallout>()
+const { formData, getDefault } = useFormShared<RequestCalloutPlugin>()
 
 function addCallout() {
-  const callout = getDefault('callouts.*') as Callout
+  const callout = getDefault('config.callouts.*') as Callout
   callout.request.body.custom = callout.request.body.custom ?? {}
 
-  const latest = formData.callouts[formData.callouts.length - 1]
+  const latest = formData.config!.callouts[formData.config!.callouts.length - 1]
 
   if (latest) {
     latest._id = getCalloutId()

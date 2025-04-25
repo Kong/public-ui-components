@@ -1,11 +1,11 @@
-import { computed, inject, provide, toRaw, toValue, useSlots, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, provide, ref, toRef, toValue, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
 import { marked } from 'marked'
 import { path as pathUtils, toSelectItems } from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
-import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
+import type { FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
-import type { FormConfig } from './types'
+import type { FormConfig, ResetLabelPathRule } from './types'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
 export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
@@ -13,6 +13,7 @@ export const FIELD_PATH_KEY = Symbol('free-form-field-path')
 export const FIELD_RENDERER_SLOTS = Symbol('free-form-field-renderer-slots')
 export const FIELD_RENDERER_MATCHERS_MAP = Symbol('free-form-field-renderer-matchers-map')
 export const FORM_CONFIG = Symbol('free-form-config')
+export const FIELD_RESET_LABEL_PATH_SETTING = Symbol('free-form-field-reset-label-path-setting')
 
 export const FIELD_RENDERERS = 'free-form-field-renderers-slot' as const
 
@@ -24,11 +25,11 @@ const SHARED_LABEL_ATTRIBUTES = {
 } as const
 
 // Construct a map of all fields in a schema, with their full paths as keys
-function buildSchemaMap(schema: any, pathPrefix: string = ''): Record<string, any> {
+function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''): Record<string, any> {
   const schemaMap: Record<string, any> = {}
-
-  if (schema.type === 'record' && Array.isArray(schema.fields)) {
-    for (const fieldDef of schema.fields) {
+  const recordSchema = (schema as RecordFieldSchema)
+  if (Array.isArray(recordSchema.fields)) {
+    for (const fieldDef of recordSchema.fields) {
       const fieldName = Object.keys(fieldDef)[0]
       const fieldProps = fieldDef[fieldName]
       const fieldPath = pathPrefix ? pathUtils.resolve(pathPrefix, fieldName) : fieldName
@@ -63,18 +64,18 @@ function generalizePath(p: string) {
   return pathUtils.resolve(...parts)
 }
 
-export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
+export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema>) {
   const schemaValue = toValue(schema)
 
-  const configSchema = computed(() => {
-    return schemaValue?.fields?.find((field: any) => 'config' in field)?.config
-  })
+  // const configSchema = computed(() => {
+  //   return schemaValue?.fields?.find((field: any) => 'config' in field)?.config
+  // })
 
   const schemaMap = computed(() => {
-    if (!configSchema.value) {
+    if (!schemaValue) {
       return {}
     }
-    return buildSchemaMap(toRaw(configSchema.value))
+    return buildSchemaMap(schemaValue)
   })
 
   /**
@@ -85,7 +86,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<any>) {
   function getSchema(): FormSchema
   function getSchema(path: string): UnionFieldSchema | undefined
   function getSchema(path?: string): FormSchema | UnionFieldSchema | undefined {
-    return path == null ? configSchema.value : schemaMap.value?.[generalizePath(path)]
+    return path == null ? schemaValue : schemaMap.value?.[generalizePath(path)]
   }
 
   /**
@@ -289,21 +290,85 @@ function replaceByDictionary(name: string) {
   return labelDictionary[name.toLocaleLowerCase()] ?? name
 }
 
-export function useFieldLabel(fieldPath: MaybeRefOrGetter<string>) {
+export function useLabelPath(fieldName: string, rule: MaybeRefOrGetter<ResetLabelPathRule | undefined>) {
+  type Setting = {
+    parentPath: string | null
+    isolate: boolean
+  }
+
+  const inheritedSetting = inject<MaybeRefOrGetter<Setting>>(FIELD_RESET_LABEL_PATH_SETTING, {
+    parentPath: null,
+    isolate: false,
+  })
+
+  const { parentPath, isolate } = toValue(inheritedSetting)
+
+  // default inherit from parent
+  const finalPath = ref(parentPath ? pathUtils.resolve(parentPath, fieldName) : fieldName)
+
+  const nextSetting = ref<Setting>({
+    parentPath: finalPath.value,
+    isolate,
+  })
+
+  watch([toRef(rule), toRef(inheritedSetting)], ([ruleValue, settingValue]) => {
+    const { parentPath, isolate } = settingValue
+    const inheritedPath = parentPath ? pathUtils.resolve(parentPath, fieldName) : fieldName
+
+    if (ruleValue) {
+      const ruleHandlers: Record<ResetLabelPathRule, () => void> = {
+        'isolate': () => {
+          finalPath.value = fieldName
+          nextSetting.value.isolate = true
+          nextSetting.value.parentPath = null
+        },
+        'isolate-children': () => {
+          nextSetting.value.isolate = true
+          nextSetting.value.parentPath = null
+        },
+        'reset': () => {
+          finalPath.value = fieldName
+          nextSetting.value.isolate = false
+          nextSetting.value.parentPath = null
+        },
+        'reset-children': () => {
+          nextSetting.value.isolate = false
+          nextSetting.value.parentPath = null
+        },
+        'inherit': () => {
+          finalPath.value = inheritedPath
+          nextSetting.value.isolate = false
+          nextSetting.value.parentPath = inheritedPath
+        },
+      }
+
+      ruleHandlers[ruleValue]?.()
+    } else if (isolate) {
+      finalPath.value = fieldName
+      nextSetting.value.isolate = true
+      nextSetting.value.parentPath = null
+    }
+  }, { deep: true, immediate: true })
+
+  provide(FIELD_RESET_LABEL_PATH_SETTING, nextSetting)
+
+  return finalPath
+}
+
+export function useFieldLabel(
+  fieldPath: MaybeRefOrGetter<string>,
+  resetLabelPathRule: MaybeRefOrGetter<ResetLabelPathRule | undefined>,
+) {
+  const pathValue = toValue(fieldPath)
+  const fieldName = pathUtils.getName(pathValue)
   const { formConfig } = useFormShared()
+  const parentLabelPath = useLabelPath(fieldName, resetLabelPathRule)
 
   return computed(() => {
-    const pathValue = toValue(fieldPath)
+    const realPath = parentLabelPath.value ?? fieldName
+    const parts = pathUtils.toArray(realPath)
 
-    // split to array: callout.0.name => ['callout', '0', 'name']
-    const parts = pathUtils.toArray(pathValue)
-
-    // Discard the elements in the array before the last numeric element (which contains itself)
-    // ['callout', '0', 'name'] => ['name']
-    const lastNumIndex = parts.findLastIndex(part => /^\d+$/.test(part))
-    const relevantParts = lastNumIndex >= 0 ? parts.slice(lastNumIndex + 1) : parts
-
-    const res = relevantParts
+    const res = parts
       .map(fieldName => fieldName
         .replaceAll('_', ' ')
         .split(' ')
@@ -323,14 +388,15 @@ export function useFieldAttrs(
     labelAttributes?: LabelAttributes
     required?: boolean
     placeholder?: string
+    resetLabelPath?: ResetLabelPathRule
   }>,
 ) {
   const { getLabelAttributes, getPlaceholder, getSchema } = useFormShared()
 
-  const label = useFieldLabel(fieldPath)
-
   const pathValue = toValue(fieldPath)
   const propsValue = toValue(props)
+
+  const label = useFieldLabel(fieldPath, toRef(() => toValue(props).resetLabelPath))
 
   return computed(() => ({
     ...propsValue,

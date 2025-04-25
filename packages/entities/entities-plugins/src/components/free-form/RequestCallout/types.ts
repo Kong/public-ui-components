@@ -1,3 +1,8 @@
+export interface RequestCalloutPlugin {
+  config?: RequestCallout
+  partials?: Array<{ id: string }>
+}
+
 export interface RequestCallout {
   callouts: Callout[]
   cache: Cache

@@ -21,9 +21,9 @@
 
     <ConfigForm
       class="sc-form-config-form"
-      :data="model.config"
-      :schema="schema"
-      @change="onConfigChange"
+      :data="model"
+      :schema="freeFormSchema"
+      @change="onFormChange"
     />
 
     <KCollapse
@@ -48,19 +48,20 @@ import { VueFormGenerator } from '@kong-ui-public/forms'
 import { KCollapse } from '@kong/kongponents'
 import english from '../../../locales/en.json'
 import ConfigForm from './ConfigForm.vue'
-import type { RequestCallout } from './types'
+import type { RequestCalloutPlugin } from './types'
+import type { FormSchema } from '../../../types/plugins/form-schema'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const props = defineProps<{
-  schema: any
+  schema: FormSchema
   formSchema: any
   model: Record<string, any>
   formModel: Record<string, any>
   formOptions: any
   isEditing: boolean
   onModelUpdated: (value: any, model: string) => void
-  onConfigChange: (value: RequestCallout) => void
+  onFormChange: (value: RequestCalloutPlugin) => void
 }>()
 
 const slots = defineSlots<{
@@ -84,6 +85,13 @@ const advancedFieldKeys = computed(() => topLevelFieldKeys.value.filter(key => !
 
 const pinnedSchema = usePickedSchema(PINNED_FIELD_KEYS)
 const advancedSchema = usePickedSchema(advancedFieldKeys)
+
+const FREE_FORM_SCHEMA_KEYS = ['config']
+const freeFormSchema = computed(() => {
+  const result = props.schema
+  result.fields = result.fields.filter(item => FREE_FORM_SCHEMA_KEYS.includes(Object.keys(item)[0]))
+  return result
+})
 
 const configCollapse = ref(false)
 const advancedCollapsed = ref(true)

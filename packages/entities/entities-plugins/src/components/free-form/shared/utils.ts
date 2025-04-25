@@ -22,7 +22,7 @@ export const path = {
   },
 
   toArray(p: string): string[] {
-    return p.split(path.separator)
+    return p.split(path.separator).filter(n => n !== '')
   },
 
   getName(p: string): string {
