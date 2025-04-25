@@ -160,7 +160,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   cancelRoute: { name: 'home' },
   experimentalRenders: {
-    useKeyAuthIdentityRealmsCustomRenderer: true,
+    keyAuthIdentityRealms: true,
   },
 })
 

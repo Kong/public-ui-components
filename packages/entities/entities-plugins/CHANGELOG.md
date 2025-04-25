@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.18.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.18.6...@kong-ui-public/entities-plugins@9.18.7) (2025-04-25)
+
+
+### Bug Fixes
+
+* **key-auth-plugin:** temporary add region info to the realm scope ([#2090](https://github.com/Kong/public-ui-components/issues/2090)) ([502cd6b](https://github.com/Kong/public-ui-components/commit/502cd6b7b6be26a47f761ba280d8ebdbe34646b6))
+
+
+
+
+
+## [9.18.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.18.5...@kong-ui-public/entities-plugins@9.18.6) (2025-04-24)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#2088](https://github.com/Kong/public-ui-components/issues/2088)) ([81354c5](https://github.com/Kong/public-ui-components/commit/81354c5dc545cd9cc7fc830e5e34448c4f1ba7ae))
+
+
+
+
+
+## [9.18.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.18.4...@kong-ui-public/entities-plugins@9.18.5) (2025-04-23)
+
+
+### Bug Fixes
+
+* **typing:** update k-clipboard-provider related typing changes ([#2089](https://github.com/Kong/public-ui-components/issues/2089)) ([b7b46b4](https://github.com/Kong/public-ui-components/commit/b7b46b4fde7d2ae54235bfa9ea2b464ae35505d6))
+
+
+
+
+
 ## [9.18.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.18.3...@kong-ui-public/entities-plugins@9.18.4) (2025-04-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
