@@ -17,7 +17,7 @@
         :form-schema="formSchema"
         :is-editing="editing"
         :model="record"
-        :on-config-change="updateConfig"
+        :on-form-change="handleFreeFormUpdate"
         :on-model-updated="onModelUpdated"
         :schema="rawSchema"
       >
@@ -576,7 +576,11 @@ const getModel = (): Record<string, any> => {
   // Handle the special case of the freeform plugin
   if (freeformName.value) {
     const configSchema = props.rawSchema?.fields?.find((field: any) => 'config' in field)?.config
-    model.config = pruneRecord(freeformConfig.value, configSchema)
+
+    Object.assign(model, {
+      ...freeformData.value,
+      config: pruneRecord(freeformData.value.config, configSchema),
+    })
   }
 
   return model
@@ -677,14 +681,14 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
   })
 }
 
-const freeformConfig = shallowRef<Record<string, any>>(props.record.config)
-const updateConfig = (value: Record<string, any>) => {
-  freeformConfig.value = value
+const freeformData = shallowRef<Record<string, any>>(props.record)
+const handleFreeFormUpdate = (value: Record<string, any>) => {
+  freeformData.value = value
 
   emit('model-updated', {
     // config change should also update the form model
     // otherwise the submit button will be disabled
-    model: { ...formModel, config: value },
+    model: { ...formModel, ...value },
     originalModel,
     data: getModel(),
   })
@@ -731,7 +735,7 @@ const initFormModel = (): void => {
       // main plugin configuration
       if (freeformName.value) {
         // keep original config from record for freeform plugins
-        updateConfig(props.record.config)
+        handleFreeFormUpdate(props.record)
       } else {
         updateModel(props.record.config, 'config')
       }

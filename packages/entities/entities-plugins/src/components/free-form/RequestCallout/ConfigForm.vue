@@ -48,15 +48,21 @@
       </FieldRenderer>
     </template>
 
-    <!-- A custom renderer for `callouts` -->
-    <template #callouts="props">
-      <CalloutsForm v-bind="props" />
-    </template>
+    <ObjectField
+      as-child
+      name="config"
+      reset-label-path="reset"
+    >
+      <!-- A custom renderer for `callouts` -->
+      <template #callouts="props">
+        <CalloutsForm v-bind="props" />
+      </template>
+    </ObjectField>
   </Form>
 </template>
 
 <script setup lang="ts">
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, pick } from 'lodash-es'
 import { FIELD_RENDERERS } from '../shared/composables'
 import { getCalloutId } from './utils'
 import ArrayField from '../shared/ArrayField.vue'
@@ -67,21 +73,22 @@ import ObjectField from '../shared/ObjectField.vue'
 import StringField from '../shared/StringField.vue'
 import useI18n from '../../../composables/useI18n'
 
-import type { Callout, RequestCallout } from './types'
+import type { Callout, RequestCalloutPlugin } from './types'
 import type { FormConfig } from '../shared/types'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 
 defineProps<{
   schema: FormSchema
-  data?: RequestCallout
+  data?: RequestCalloutPlugin
 }>()
 
 const emit = defineEmits<{
-  change: [value: RequestCallout]
+  change: [value: RequestCalloutPlugin]
 }>()
 
-const formConfig: FormConfig = {
+const formConfig: FormConfig<RequestCalloutPlugin> = {
   prepareFormData,
+  hasValue,
 }
 
 const { i18n: { t } } = useI18n()
@@ -98,9 +105,14 @@ function getNameMap(callouts: Callout[], reverse: boolean = false) {
 }
 
 // replace callout names in `depends_on` with freshly generated ids
-function prepareFormData(data: RequestCallout) {
-  const config = cloneDeep(data)
-  const { callouts } = config
+function prepareFormData(data: RequestCalloutPlugin) {
+  const pluginConfig = pick(cloneDeep(data), 'config', 'partials')
+
+  if (!pluginConfig.config?.callouts) {
+    return pluginConfig
+  }
+
+  const { callouts } = pluginConfig.config
 
   callouts.forEach((callout) => {
     // https://konghq.atlassian.net/browse/KAG-6676
@@ -114,15 +126,29 @@ function prepareFormData(data: RequestCallout) {
     callout.depends_on = callout.depends_on.map((name) => nameMap[name])
   })
 
-  return config
+  return pluginConfig
 }
 
-const onChange = (newVal: RequestCallout) => {
-  // replace callout `depends_on` ids with actual callout names
-  const data = JSON.parse(JSON.stringify(newVal)) as RequestCallout
-  const nameMap = getNameMap(data.callouts)
+/**
+ * Check if the initial data is empty
+ */
+function hasValue(data: RequestCalloutPlugin | undefined): boolean {
+  return !!data?.config
+}
 
-  data.callouts = data.callouts.map((callout) => {
+function onChange(newVal?: RequestCalloutPlugin) {
+  if (!newVal) return
+
+  // replace callout `depends_on` ids with actual callout names
+  const pluginConfig = JSON.parse(JSON.stringify(newVal)) as RequestCalloutPlugin
+
+  if (!pluginConfig.config?.callouts) {
+    throw new Error('data is not correct')
+  }
+
+  const nameMap = getNameMap(pluginConfig.config.callouts)
+
+  pluginConfig.config.callouts = pluginConfig.config.callouts.map((callout) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id, depends_on, ...rest } = callout
     return {
@@ -131,7 +157,7 @@ const onChange = (newVal: RequestCallout) => {
     }
   })
 
-  emit('change', data)
+  emit('change', pluginConfig)
 }
 </script>
 

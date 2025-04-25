@@ -1,4 +1,6 @@
 <template>
+  <component :is="$slots[FIELD_RENDERERS]" />
+
   <!-- missing schema alert -->
   <KAlert
     v-if="field.error"
@@ -7,7 +9,7 @@
   />
 
   <!-- only render children, no wrapper -->
-  <template v-else-if="isChildOfArray">
+  <template v-else-if="asChild">
     <div class="ff-object-field ff-object-field-as-child">
       <!-- manually rendering -->
       <slot v-if="$slots.default" />
@@ -94,14 +96,26 @@
 <script setup lang="ts">
 import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
 import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
-import { computed, onBeforeMount, toRef, watch } from 'vue'
+import { computed, onBeforeMount, toRef, watch, type Slot } from 'vue'
 import SlideTransition from './SlideTransition.vue'
-import { useField, useFieldAttrs, useFormShared } from './composables'
+import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
 import Field from './Field.vue'
 
 import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
+import type { ResetLabelPathRule } from './types'
 
-const { defaultExpanded = true, defaultAdded = true, collapsible = true, omit, required = undefined, ...props } = defineProps<{
+defineSlots<
+  {
+    default?: Slot
+    [FIELD_RENDERERS]?: Slot<{ name: string }>
+  } & Record<string, Slot<{ name: string }>>
+>()
+
+const {
+  defaultExpanded = true, defaultAdded = true, collapsible = true, omit,
+  required = undefined, asChild: defaultAsChild = undefined, resetLabelPath,
+  ...props
+} = defineProps<{
   name: string
   label?: string
   labelAttributes?: LabelAttributes
@@ -111,14 +125,14 @@ const { defaultExpanded = true, defaultAdded = true, collapsible = true, omit, r
   collapsible?: boolean
   appearance?: 'card' | 'default'
   omit?: string[]
+  asChild?: boolean
+  resetLabelPath?: ResetLabelPathRule
 }>()
 
 const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
-const fieldAttrs = useFieldAttrs(field.path!, { required, ...props })
 const { getSchema } = useFormShared()
 
 const added = defineModel<boolean>('added', { default: undefined })
-const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
 
 const expanded = defineModel<boolean>('expanded', { default: undefined })
 const realExpanded = computed(() => realAdded.value && (collapsible ? expanded.value ?? defaultExpanded : false))
@@ -132,6 +146,20 @@ const isChildOfArray = computed(() => {
     }
   }
   return false
+})
+
+const realResetLabelPath = computed(() => {
+  if (resetLabelPath !== undefined) return resetLabelPath
+  if (isChildOfArray.value) return 'reset'
+  return 'inherit'
+})
+
+const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ required, ...props, resetLabelPath: realResetLabelPath.value })))
+const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
+
+const asChild = computed(() => {
+  if (defaultAsChild !== undefined) return defaultAsChild
+  return isChildOfArray.value
 })
 
 const childFields = computed(() => {
