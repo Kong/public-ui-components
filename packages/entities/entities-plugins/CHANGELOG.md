@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.18.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.18.6...@kong-ui-public/entities-plugins@9.18.7) (2025-04-25)
+
+
+### Bug Fixes
+
+* **key-auth-plugin:** temporary add region info to the realm scope ([#2090](https://github.com/Kong/public-ui-components/issues/2090)) ([502cd6b](https://github.com/Kong/public-ui-components/commit/502cd6b7b6be26a47f761ba280d8ebdbe34646b6))
+
+
+
+
+
 ## [9.18.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.18.5...@kong-ui-public/entities-plugins@9.18.6) (2025-04-24)
 
 
