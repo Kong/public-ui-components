@@ -4,14 +4,16 @@
     title-tag="h2"
   >
     <template
-      v-if="title"
+      v-if="$slots.title || title"
       #title
     >
       <span
         class="about-section-title"
         data-testid="about-section-title"
       >
-        {{ title }}
+        <slot name="title">
+          {{ title }}
+        </slot>
       </span>
     </template>
 
@@ -101,35 +103,22 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = defineProps({
-  title: {
-    type: String,
-    default: '',
-  },
-  description: {
-    type: String,
-    default: '',
-  },
-  created: {
-    type: String,
-    default: '',
-  },
-  createdLabel: {
-    type: String,
-    default: 'Created',
-  },
-  modified: {
-    type: String,
-    default: '',
-  },
-  modifiedLabel: {
-    type: String,
-    default: 'Modified',
-  },
-  isLoading: {
-    type: Boolean,
-    default: false,
-  },
+const props = withDefaults(defineProps<{
+  title?: string,
+  description?: string,
+  created?: string,
+  createdLabel?: string,
+  modified?: string,
+  modifiedLabel?: string,
+  isLoading?: boolean,
+}>(), {
+  title: '',
+  description: '',
+  created: '',
+  createdLabel: 'Created',
+  modified: '',
+  modifiedLabel: 'Modified',
+  isLoading: false,
 })
 
 const displayModified = computed(() => {
