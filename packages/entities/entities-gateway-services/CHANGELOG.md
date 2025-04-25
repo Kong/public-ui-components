@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.13...@kong-ui-public/entities-gateway-services@3.11.14) (2025-04-25)
+
+
+### Bug Fixes
+
+* refactor composable export as util ([#2086](https://github.com/Kong/public-ui-components/issues/2086)) ([7e09c06](https://github.com/Kong/public-ui-components/commit/7e09c06f306c496f500e8a147e2b3dc9904b6dfd))
+
+
+
+
+
 ## [3.11.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.12...@kong-ui-public/entities-gateway-services@3.11.13) (2025-04-24)
 
 
