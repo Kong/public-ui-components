@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.17...@kong-ui-public/app-layout@4.4.0) (2025-04-25)
+
+
+### Features
+
+* **app-layout:** expose slot `title` for `<AppAboutSection />` ([#2093](https://github.com/Kong/public-ui-components/issues/2093)) ([e1ca524](https://github.com/Kong/public-ui-components/commit/e1ca524779af127e8d8fc48251f6767e23bdd236))
+
+
+
+
+
 ## [4.3.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.16...@kong-ui-public/app-layout@4.3.17) (2025-04-24)
 
 
