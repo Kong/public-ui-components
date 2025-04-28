@@ -31,7 +31,7 @@
               <component
                 :is="getProviderIcon(item!.value as VaultProviders)"
               />
-              {{ item?.label }}
+              <span>{{ item?.label }}</span>
             </template>
             <template #item-template="{ item }">
               <KTooltip
