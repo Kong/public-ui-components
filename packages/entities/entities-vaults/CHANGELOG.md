@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.17.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.17.2...@kong-ui-public/entities-vaults@3.17.3) (2025-04-28)
+
+
+### Bug Fixes
+
+* **vault:** browser translate error [KM-1213] ([#2094](https://github.com/Kong/public-ui-components/issues/2094)) ([f85f9cb](https://github.com/Kong/public-ui-components/commit/f85f9cb3a6d0f4c1061661743facea5bdeb269f0))
+
+
+
+
+
 ## [3.17.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.17.1...@kong-ui-public/entities-vaults@3.17.2) (2025-04-24)
 
 
