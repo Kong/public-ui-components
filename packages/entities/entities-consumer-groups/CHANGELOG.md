@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.7.18...@kong-ui-public/entities-consumer-groups@3.8.0) (2025-04-28)
+
+
+### Features
+
+* **consumer-groups:** add `hide-consumers` to consumer groups form ([#2095](https://github.com/Kong/public-ui-components/issues/2095)) ([9524994](https://github.com/Kong/public-ui-components/commit/952499483a4fdfef8e6eaac67bfe72c648faaa92))
+
+
+
+
+
 ## [3.7.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.7.17...@kong-ui-public/entities-consumer-groups@3.7.18) (2025-04-24)
 
 
