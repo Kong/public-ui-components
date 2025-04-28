@@ -44,6 +44,7 @@
       </EntityFormSection>
 
       <EntityFormSection
+        v-if="!hideConsumers"
         :description="t('consumer_groups.form.consumers.description')"
         has-divider
         :title="t('consumer_groups.form.consumers.title')"
@@ -125,6 +126,10 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  hideConsumers: {
+    type: Boolean,
+    default: false,
   },
 })
 
