@@ -3,7 +3,7 @@
   <BaseAnalyticsChartRenderer
     :chart-options="chartOptions"
     :context="context"
-    :extra-props="{ showAnnotations: false, timeseriesZoom: context.timeseriesZoom }"
+    :extra-props="{ showAnnotations: false }"
     :height="height"
     :query="query"
     :query-ready="queryReady"

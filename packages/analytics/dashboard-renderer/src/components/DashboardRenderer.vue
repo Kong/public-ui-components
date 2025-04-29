@@ -168,7 +168,7 @@ const gridTiles = computed(() => {
 })
 
 const mergedContext = computed<DashboardRendererContextInternal>(() => {
-  let { tz, refreshInterval, editable } = props.context
+  let { tz, refreshInterval, editable, timeseriesZoom } = props.context
 
   if (!tz) {
     tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
@@ -183,12 +183,17 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
     editable = false
   }
 
+  if (timeseriesZoom === undefined) {
+    timeseriesZoom = false
+  }
+
   return {
     ...props.context,
     tz,
     timeSpec: timeSpec.value,
     refreshInterval,
     editable,
+    timeseriesZoom,
   }
 })
 
