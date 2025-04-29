@@ -10,6 +10,7 @@ export interface DashboardRendererContext {
   tz?: string
   refreshInterval?: number
   editable?: boolean
+  timeseriesZoom?: boolean
 }
 
 // The DashboardRenderer component fills in optional values before passing them down to the tile renderers.
