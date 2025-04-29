@@ -10,7 +10,7 @@
     <!-- auto rendering -->
     <template v-else>
       <Field
-        v-for="field in schemaHelpers.getSchema().fields"
+        v-for="field in childFields"
         :key="Object.keys(field)[0]"
         :name="Object.keys(field)[0]"
       />
@@ -24,11 +24,12 @@ export type Props<T extends Record<string, any> = Record<string, any>> = {
   schema: FormSchema
   data?: T
   config?: FormConfig<T>
+  fieldsOrder?: string[]
 }
 </script>
 
 <script setup lang="ts" generic="T extends Record<string, any> = Record<string, any>">
-import { provide, reactive, useSlots, type Slot, watch, toValue } from 'vue'
+import { provide, reactive, useSlots, type Slot, watch, toValue, computed } from 'vue'
 import { DATA_INJECTION_KEY, FIELD_RENDERER_MATCHERS_MAP, FIELD_RENDERER_SLOTS, SCHEMA_INJECTION_KEY, useSchemaHelpers, FIELD_RENDERERS, FORM_CONFIG } from './composables'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 import Field from './Field.vue'
@@ -45,7 +46,7 @@ defineSlots<
   } & Record<string, Slot<{ name: string }>>
 >()
 
-const { tag = 'form', schema, data, config } = defineProps<Props<T>>()
+const { tag = 'form', schema, data, config, fieldsOrder } = defineProps<Props<T>>()
 
 const emit = defineEmits<{
   change: [value: T]
@@ -62,6 +63,26 @@ const hasValue = (data: T | undefined) => {
   }
   return !!data
 }
+
+const childFields = computed(() => {
+  let fields = schemaHelpers.getSchema().fields
+
+  if (!fieldsOrder) return fields
+
+  return fields.sort((a, b) => {
+    const aKey = Object.keys(a)[0]
+    const bKey = Object.keys(b)[0]
+
+    const aIndex = fieldsOrder.indexOf(aKey)
+    const bIndex = fieldsOrder.indexOf(bKey)
+
+    if (aIndex === -1 && bIndex === -1) return 0
+    if (aIndex === -1) return 1
+    if (bIndex === -1) return -1
+
+    return aIndex - bIndex
+  })
+})
 
 const formData = reactive<T>(
   config?.prepareFormData
