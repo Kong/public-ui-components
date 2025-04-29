@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.2...@kong-ui-public/tracing@0.10.3) (2025-04-29)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
 ## [0.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.1...@kong-ui-public/tracing@0.10.2) (2025-04-24)
 
 
