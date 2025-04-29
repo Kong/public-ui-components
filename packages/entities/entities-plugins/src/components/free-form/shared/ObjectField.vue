@@ -104,7 +104,7 @@ import Field from './Field.vue'
 import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
 import type { ResetLabelPathRule } from './types'
 
-defineSlots<
+const slots = defineSlots<
   {
     default?: Slot
     [FIELD_RENDERERS]?: Slot<{ name: string }>
@@ -114,6 +114,7 @@ defineSlots<
 const {
   defaultExpanded = true, defaultAdded = true, collapsible = true, omit,
   required = undefined, asChild: defaultAsChild = undefined, resetLabelPath,
+  fieldsOrder,
   ...props
 } = defineProps<{
   name: string
@@ -127,6 +128,7 @@ const {
   omit?: string[]
   asChild?: boolean
   resetLabelPath?: ResetLabelPathRule
+  fieldsOrder?: string[]
 }>()
 
 const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
@@ -163,12 +165,26 @@ const asChild = computed(() => {
 })
 
 const childFields = computed(() => {
-  const fields = (field.schema!.value as RecordFieldSchema).fields
+  let fields = (field.schema!.value as RecordFieldSchema).fields
   if (omit) {
-    return fields.filter(f => !omit.includes(Object.keys(f)[0]))
-  } else {
-    return fields
+    fields = fields.filter(f => !omit.includes(Object.keys(f)[0]))
   }
+
+  if (!fieldsOrder) return fields
+
+  return fields.sort((a, b) => {
+    const aKey = Object.keys(a)[0]
+    const bKey = Object.keys(b)[0]
+
+    const aIndex = fieldsOrder.indexOf(aKey)
+    const bIndex = fieldsOrder.indexOf(bKey)
+
+    if (aIndex === -1 && bIndex === -1) return 0
+    if (aIndex === -1) return 1
+    if (bIndex === -1) return -1
+
+    return aIndex - bIndex
+  })
 })
 
 watch(realAdded, (value) => {

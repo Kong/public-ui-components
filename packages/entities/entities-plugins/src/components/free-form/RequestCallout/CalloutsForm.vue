@@ -2,7 +2,7 @@
   <ArrayField
     appearance="tabs"
     :item-label="(callout: Callout) => callout.name || 'New callout'"
-    :name="name"
+    name="callouts"
     required
     sticky-tabs
     @add="addCallout"
@@ -23,10 +23,6 @@ import ArrayField from '../shared/ArrayField.vue'
 import CalloutForm from './CalloutForm.vue'
 
 import type { RequestCalloutPlugin, Callout } from './types'
-
-defineProps<{
-  name: string
-}>()
 
 const { formData, getDefault } = useFormShared<RequestCalloutPlugin>()
 
