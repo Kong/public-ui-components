@@ -1,5 +1,5 @@
 <template>
-  <ObjectField :name="name">
+  <ObjectField :name="fieldName">
     <template #depends_on="props">
       <EnumField
         v-bind="props"
@@ -48,7 +48,7 @@ import type { SelectItem } from '@kong/kongponents'
 
 const props = defineProps<{
   index: number
-  name: string
+  fieldName: string
 }>()
 
 const { formData } = useFormShared<RequestCalloutPlugin>()

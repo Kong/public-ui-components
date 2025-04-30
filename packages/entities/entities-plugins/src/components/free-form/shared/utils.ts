@@ -4,29 +4,28 @@ export function toSelectItems<T extends string>(
   return items.map((item) => ({ value: item, label: item }))
 }
 
-export const path = {
-  arraySymbol: '*',
-  rootSymbol: '$',
-  separator: '.',
 
-  resolve(...args: string[]): string {
-    return args.join(path.separator)
-  },
+export const arraySymbol = '*'
+export const rootSymbol = '$'
+export const separator = '.'
 
-  resolveRoot(...args: string[]): string {
-    return path.resolve(path.rootSymbol, ...args)
-  },
+export function resolve(...args: string[]): string {
+  return args.join(separator)
+}
 
-  isAbsolute(p: string): boolean {
-    return p.startsWith(path.resolve(path.rootSymbol, ''))
-  },
+export function resolveRoot(...args: string[]): string {
+  return resolve(rootSymbol, ...args)
+}
 
-  toArray(p: string): string[] {
-    return p.split(path.separator).filter(n => n !== '')
-  },
+export function isAbsolute(p: string): boolean {
+  return p.startsWith(resolve(rootSymbol, ''))
+}
 
-  getName(p: string): string {
-    const arr = path.toArray(p)
-    return arr[arr.length - 1]
-  },
+export function toArray(p: string): string[] {
+  return p.split(separator).filter(n => n !== '')
+}
+
+export function getName(p: string): string {
+  const arr = toArray(p)
+  return arr[arr.length - 1]
 }

@@ -2,19 +2,13 @@
   <component :is="tag">
     <component :is="slots[FIELD_RENDERERS]" />
 
-    <!-- custom rendering -->
-    <template v-if="slots.default">
-      <slot />
-    </template>
-
-    <!-- auto rendering -->
-    <template v-else>
+    <slot>
       <Field
         v-for="field in childFields"
         :key="Object.keys(field)[0]"
         :name="Object.keys(field)[0]"
       />
-    </template>
+    </slot>
   </component>
 </template>
 

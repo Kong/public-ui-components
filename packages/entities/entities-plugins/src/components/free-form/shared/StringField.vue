@@ -23,8 +23,10 @@
         v-if="fieldAttrs.labelAttributes?.info"
         #label-tooltip
       >
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-html="fieldAttrs.labelAttributes.info" />
+        <slot name="tooltip">
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <div v-html="fieldAttrs.labelAttributes.info" />
+        </slot>
       </template>
     </InputComponent>
     <component
@@ -42,8 +44,8 @@ import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { computed, inject, toRef, useAttrs } from 'vue'
 import { KInput, KTextArea, type LabelAttributes } from '@kong/kongponents'
 
-import { path } from '../shared/utils'
-import { useField, useFieldAttrs, useFormShared } from './composables'
+import * as utils from '../shared/utils'
+import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
 
 import type { StringFieldSchema } from 'src/types/plugins/form-schema'
 
@@ -77,7 +79,6 @@ const emit = defineEmits<{
   'update:modelValue': [value: string | null]
 }>()
 
-const { getSchema } = useFormShared()
 const { value: fieldValue, ...field } = useField<string | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const initialValue = fieldValue?.value
@@ -119,22 +120,11 @@ const realShowVaultSecretPicker = computed(() => {
 
 const schema = computed(() => ({ referenceable: realShowVaultSecretPicker.value }))
 
-const isAutoFocus = computed(() => {
-  if (attrs['data-autofocus'] !== undefined) return attrs['data-autofocus']
-
-  // If is child of array then return true
-  const parent = field.ancestors?.value.parent
-  if (parent?.path) {
-    const parentType = getSchema(parent.path)?.type
-    return parentType === 'array'
-  }
-
-  return false
-})
+const isAutoFocus = useIsAutoFocus(field.ancestors)
 
 const is1pIgnore = computed(() => {
   if (attrs['data-1p-ignore'] !== undefined) return attrs['data-1p-ignore']
-  return path.getName(name) === 'name'
+  return utils.getName(name) === 'name'
 })
 </script>
 

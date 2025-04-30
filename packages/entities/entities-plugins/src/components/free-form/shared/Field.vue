@@ -12,7 +12,7 @@
   <component
     :is="field.renderer.value"
     v-else-if="field.renderer.value"
-    :name="path.resolveRoot(field.path.value)"
+    :name="utils.resolveRoot(field.path.value)"
   />
 
   <template v-else>
@@ -20,7 +20,7 @@
     <component
       :is="fieldRenderer"
       v-if="fieldRenderer"
-      :name="path.resolveRoot(field.path.value)"
+      :name="utils.resolveRoot(field.path.value)"
     />
 
     <!-- renderer missing alert -->
@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import { computed, toRef, type Slot } from 'vue'
 import { useField, FIELD_RENDERERS } from './composables'
-import { path } from './utils'
+import * as utils from './utils'
 
 import StringField from './StringField.vue'
 import BooleanField from './BooleanField.vue'
@@ -63,7 +63,7 @@ defineSlots<
 
 const field = useField(toRef(props, 'name'))
 
-const fieldRenderer = computed<any>(() => {
+const fieldRenderer = computed(() => {
 
   switch (field.schema?.value?.type) {
     case 'string':

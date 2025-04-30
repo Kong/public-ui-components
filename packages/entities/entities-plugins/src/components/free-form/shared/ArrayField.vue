@@ -26,8 +26,10 @@
           v-if="fieldAttrs.labelAttributes?.info"
           #tooltip
         >
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="fieldAttrs.labelAttributes.info" />
+          <slot name="tooltip">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="fieldAttrs.labelAttributes.info" />
+          </slot>
         </template>
       </KLabel>
       <KButton
@@ -128,7 +130,7 @@ import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
-import { path } from './utils'
+import * as utils from './utils'
 import Field from './Field.vue'
 
 const props = defineProps<{
@@ -154,6 +156,7 @@ defineSlots<{
     fieldName: string
     'data-autofocus'?: boolean
   }): any
+  tooltip(): any
 }>()
 
 const { getDefault } = useFormShared()
@@ -210,7 +213,7 @@ const activeTab = ref<string>(tabs.value[0]?.hash)
 
 const addItem = async () => {
 
-  const defaultItemValue = getDefault(path.resolve(field.path!.value!, path.arraySymbol))
+  const defaultItemValue = getDefault(utils.resolve(field.path!.value, utils.arraySymbol))
 
   if (!Array.isArray(fieldValue!.value)) {
     fieldValue!.value = []

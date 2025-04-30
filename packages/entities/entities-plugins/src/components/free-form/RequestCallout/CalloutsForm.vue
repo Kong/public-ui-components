@@ -9,8 +9,8 @@
   >
     <template #item="{ index, fieldName }">
       <CalloutForm
+        :field-name="fieldName"
         :index="index"
-        :name="fieldName"
       />
     </template>
   </ArrayField>

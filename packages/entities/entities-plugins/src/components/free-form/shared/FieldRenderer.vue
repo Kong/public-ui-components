@@ -3,7 +3,7 @@
 <template></template>
 
 <script lang="ts" setup>
-import { inject, useSlots, type Slot } from 'vue'
+import { inject, type Slot } from 'vue'
 import type { UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { FIELD_RENDERER_MATCHERS_MAP } from './composables'
 
@@ -19,9 +19,7 @@ const props = defineProps<{
   priority?: number
 }>()
 
-defineSlots<Record<string, Slot<{ name: string }>>>()
-
-const { default: defaultSlot } = useSlots()
+const { default: defaultSlot } = defineSlots<Record<string, Slot<{ name: string }>>>()
 
 const inheritedMatchMap = inject<MatchMap>(FIELD_RENDERER_MATCHERS_MAP)
 

@@ -23,16 +23,18 @@
       v-if="fieldAttrs.labelAttributes?.info"
       #label-tooltip
     >
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <div v-html="fieldAttrs.labelAttributes.info" />
+      <slot name="tooltip">
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div v-html="fieldAttrs.labelAttributes.info" />
+      </slot>
     </template>
   </KInput>
 </template>
 
 <script setup lang="ts">
 import { KInput, type LabelAttributes } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared } from './composables'
-import { computed, toRef, useAttrs } from 'vue'
+import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
+import { computed, toRef } from 'vue'
 import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
@@ -47,9 +49,7 @@ export interface InputProps {
 
 const { name, ...props } = defineProps<InputProps>()
 const { value: fieldValue, ...field } = useField<number | null>(toRef(() => name))
-const attrs = useAttrs()
 const fieldAttrs = useFieldAttrs(field.path!, props)
-const { getSchema } = useFormShared()
 
 const between = computed(() => {
   const [min, max] = (field.schema?.value as NumberLikeFieldSchema).between ?? []
@@ -75,18 +75,7 @@ function handleUpdate(value: string) {
   }
 }
 
-const isAutoFocus = computed(() => {
-  if (attrs['data-autofocus'] !== undefined) return attrs['data-autofocus']
-
-  // If is child of array then return true
-  const parent = field.ancestors?.value.parent
-  if (parent?.path) {
-    const parentType = getSchema(parent.path)?.type
-    return parentType === 'array'
-  }
-
-  return false
-})
+const isAutoFocus = useIsAutoFocus(field.ancestors)
 </script>
 
 <style lang="scss" scoped>

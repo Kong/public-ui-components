@@ -11,16 +11,13 @@
   <!-- only render children, no wrapper -->
   <template v-else-if="asChild">
     <div class="ff-object-field ff-object-field-as-child">
-      <!-- manually rendering -->
-      <slot v-if="$slots.default" />
-
-      <!-- auto rendering -->
-      <Field
-        v-for="field in childFields"
-        v-else
-        :key="Object.keys(field)[0]"
-        :name="Object.keys(field)[0]"
-      />
+      <slot>
+        <Field
+          v-for="field in childFields"
+          :key="Object.keys(field)[0]"
+          :name="Object.keys(field)[0]"
+        />
+      </slot>
     </div>
   </template>
 
@@ -44,8 +41,10 @@
           v-if="fieldAttrs.labelAttributes?.info"
           #tooltip
         >
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="fieldAttrs.labelAttributes.info" />
+          <slot name="tooltip">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="fieldAttrs.labelAttributes.info" />
+          </slot>
         </template>
       </KLabel>
       <div class="ff-object-field-actions">
@@ -78,16 +77,13 @@
         v-if="realExpanded"
         class="ff-object-field-content"
       >
-        <!-- manually rendering -->
-        <slot v-if="$slots.default" />
-
-        <!-- auto rendering -->
-        <Field
-          v-for="field in childFields"
-          v-else
-          :key="Object.keys(field)[0]"
-          :name="Object.keys(field)[0]"
-        />
+        <slot>
+          <Field
+            v-for="field in childFields"
+            :key="Object.keys(field)[0]"
+            :name="Object.keys(field)[0]"
+          />
+        </slot>
       </div>
     </SlideTransition>
   </div>
@@ -108,6 +104,7 @@ const slots = defineSlots<
   {
     default?: Slot
     [FIELD_RENDERERS]?: Slot<{ name: string }>
+    tooltip?: Slot
   } & Record<string, Slot<{ name: string }>>
 >()
 

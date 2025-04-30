@@ -1,11 +1,12 @@
-import { computed, inject, provide, ref, toRef, toValue, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, provide, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
 import { marked } from 'marked'
-import { path as pathUtils, toSelectItems } from './utils'
+import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
 import type { FormConfig, ResetLabelPathRule } from './types'
+import { capitalize } from 'lodash-es'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
 export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
@@ -32,7 +33,7 @@ function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''): Reco
     for (const fieldDef of recordSchema.fields) {
       const fieldName = Object.keys(fieldDef)[0]
       const fieldProps = fieldDef[fieldName]
-      const fieldPath = pathPrefix ? pathUtils.resolve(pathPrefix, fieldName) : fieldName
+      const fieldPath = pathPrefix ? utils.resolve(pathPrefix, fieldName) : fieldName
 
       schemaMap[fieldPath] = fieldProps
 
@@ -41,7 +42,7 @@ function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''): Reco
         Object.assign(schemaMap, subMap)
       } else if (fieldProps.type === 'array' && fieldProps.elements) {
         const elementProps = fieldProps.elements
-        const elementPath = pathUtils.resolve(fieldPath, pathUtils.arraySymbol)
+        const elementPath = utils.resolve(fieldPath, utils.arraySymbol)
         schemaMap[elementPath] = elementProps
         if (elementProps.type === 'record' && Array.isArray(elementProps.fields)) {
           const subMap = buildSchemaMap(elementProps, elementPath)
@@ -58,10 +59,10 @@ function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''): Reco
  * 'a.0.b.1.c' => 'a.*.b.*.c'
  */
 function generalizePath(p: string) {
-  const parts = pathUtils
+  const parts = utils
     .toArray(p)
-    .map(node => /^\d+$/.test(node) ? pathUtils.arraySymbol : node)
-  return pathUtils.resolve(...parts)
+    .map(node => /^\d+$/.test(node) ? utils.arraySymbol : node)
+  return utils.resolve(...parts)
 }
 
 export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema>) {
@@ -169,7 +170,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema>) {
 
   function getSelectItems(fieldPath: string): SelectItem[] {
     const schema = getSchema(fieldPath)
-    return toSelectItems((schema?.one_of || []))
+    return utils.toSelectItems((schema?.one_of || []))
   }
 
   function getPlaceholder(fieldPath: string): string | null {
@@ -224,13 +225,13 @@ export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
     let res = nameValue
 
     // concat relative path
-    if (!pathUtils.isAbsolute(nameValue) && inheritedPath.value) {
-      res = pathUtils.resolve(inheritedPath.value, nameValue)
+    if (!utils.isAbsolute(nameValue) && inheritedPath.value) {
+      res = utils.resolve(inheritedPath.value, nameValue)
     }
 
     // remove $. from name
-    if (pathUtils.isAbsolute(nameValue)) {
-      res = res.slice(pathUtils.resolve(pathUtils.rootSymbol, '').length)
+    if (utils.isAbsolute(nameValue)) {
+      res = res.slice(utils.resolveRoot('').length)
     }
     return res
   })
@@ -253,7 +254,7 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
     const childSlots: Record<string, Slot<any> | undefined> = Object.keys(slots)
       .filter(k => k !== FIELD_RENDERERS && k !== 'item')
       .reduce((res, key) => {
-        const newKey = generalizePath(pathUtils.resolve(toValue(path), key))
+        const newKey = generalizePath(utils.resolve(toValue(path), key))
         return { ...res, [newKey]: slots[key] }
       }, {})
     return inheritSlotsValue ? { ...inheritSlotsValue, ...childSlots } : childSlots
@@ -304,7 +305,7 @@ export function useLabelPath(fieldName: string, rule: MaybeRefOrGetter<ResetLabe
   const { parentPath, isolate } = toValue(inheritedSetting)
 
   // default inherit from parent
-  const finalPath = ref(parentPath ? pathUtils.resolve(parentPath, fieldName) : fieldName)
+  const finalPath = ref(parentPath ? utils.resolve(parentPath, fieldName) : fieldName)
 
   const nextSetting = ref<Setting>({
     parentPath: finalPath.value,
@@ -313,7 +314,7 @@ export function useLabelPath(fieldName: string, rule: MaybeRefOrGetter<ResetLabe
 
   watch([toRef(rule), toRef(inheritedSetting)], ([ruleValue, settingValue]) => {
     const { parentPath, isolate } = settingValue
-    const inheritedPath = parentPath ? pathUtils.resolve(parentPath, fieldName) : fieldName
+    const inheritedPath = parentPath ? utils.resolve(parentPath, fieldName) : fieldName
 
     if (ruleValue) {
       const ruleHandlers: Record<ResetLabelPathRule, () => void> = {
@@ -360,19 +361,18 @@ export function useFieldLabel(
   resetLabelPathRule: MaybeRefOrGetter<ResetLabelPathRule | undefined>,
 ) {
   const pathValue = toValue(fieldPath)
-  const fieldName = pathUtils.getName(pathValue)
+  const fieldName = utils.getName(pathValue)
   const { formConfig } = useFormShared()
   const parentLabelPath = useLabelPath(fieldName, resetLabelPathRule)
 
   return computed(() => {
     const realPath = parentLabelPath.value ?? fieldName
-    const parts = pathUtils.toArray(realPath)
+    const parts = utils.toArray(realPath)
 
     const res = parts
       .map(fieldName => fieldName
-        .replaceAll('_', ' ')
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .split('_')
+        .map(capitalize)
         .map(replaceByDictionary)
         .join(' '))
       .join(' › ')
@@ -417,14 +417,14 @@ export type Ancestor = {
  */
 export function useFieldAncestors(fieldPath: MaybeRefOrGetter<string>) {
   return computed<Ancestor>(() => {
-    const parts = pathUtils.toArray(toValue(fieldPath)) // [a, b, c]
+    const parts = utils.toArray(toValue(fieldPath)) // [a, b, c]
     let parent: Ancestor = { parent: null }
 
     parts.pop()
 
     while (parts.length) {
       const n = parts.shift()!
-      parent.path = parent.parent?.path ? pathUtils.resolve(parent.parent.path, n) : n
+      parent.path = parent.parent?.path ? utils.resolve(parent.parent.path, n) : n
       parent = { parent }
     }
 
@@ -437,8 +437,8 @@ export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
   const value = computed<T>({
-    get: () => get(formData, pathUtils.toArray(fieldPath.value)),
-    set: v => set(formData, pathUtils.toArray(fieldPath.value), v),
+    get: () => get(formData, utils.toArray(fieldPath.value)),
+    set: v => set(formData, utils.toArray(fieldPath.value), v),
   })
 
   const schema = computed(() => getSchema(fieldPath.value))
@@ -457,4 +457,28 @@ export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
     ancestors: useFieldAncestors(fieldPath),
     error: null,
   }
+}
+
+export function useIsAutoFocus(fieldAncestors?: MaybeRefOrGetter<Ancestor>) {
+  const { getSchema } = useFormShared()
+  const attrs = useAttrs()
+
+  return computed(() => {
+    if (attrs['data-autofocus'] !== undefined) {
+      return true
+    }
+
+    if (!fieldAncestors) {
+      return false
+    }
+
+    // If is child of array then return true
+    const parent = toValue(fieldAncestors).parent
+    if (parent?.path) {
+      const parentType = getSchema(parent.path)?.type
+      return parentType === 'array'
+    }
+
+    return false
+  })
 }

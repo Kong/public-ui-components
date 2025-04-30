@@ -22,8 +22,10 @@
           v-if="fieldAttrs.labelAttributes?.info"
           #tooltip
         >
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="fieldAttrs.labelAttributes.info" />
+          <slot name="tooltip">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="fieldAttrs.labelAttributes.info" />
+          </slot>
         </template>
       </KLabel>
       <KButton
