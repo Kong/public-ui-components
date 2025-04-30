@@ -157,7 +157,6 @@ describe('<SimpleChart />', () => {
     const value = 255.0004
     const alteredExploreResult = { ...exploreResultTruncated }
     alteredExploreResult.data[0].event.TotalRequests = value
-    cy.log(alteredExploreResult)
 
     cy.mount(SimpleChart, {
       props: {
