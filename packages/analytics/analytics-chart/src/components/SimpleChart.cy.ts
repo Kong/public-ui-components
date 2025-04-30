@@ -117,6 +117,24 @@ describe('<SimpleChart />', () => {
     cy.getTestId('single-value-chart').contains(value)
   })
 
+  it('Single Value displays empty when value is `null`', () => {
+    const faultyExploreResult = { ...exploreResultTruncated }
+    // @ts-ignore - this is a test
+    faultyExploreResult.data[0].event.TotalRequests = null
+
+    cy.mount(SimpleChart, {
+      props: {
+        chartData: faultyExploreResult,
+        chartOptions: {
+          type: 'single_value',
+        },
+      },
+    })
+
+    cy.getTestId('single-value-chart').should('not.exist')
+    cy.getTestId('no-data-in-report').should('be.visible')
+  })
+
   it('Single Value displays error when value is not a number', () => {
     const faultyExploreResult = { ...exploreResultTruncated }
     // @ts-ignore - this is a test
@@ -139,6 +157,7 @@ describe('<SimpleChart />', () => {
     const value = 255.0004
     const alteredExploreResult = { ...exploreResultTruncated }
     alteredExploreResult.data[0].event.TotalRequests = value
+    cy.log(alteredExploreResult)
 
     cy.mount(SimpleChart, {
       props: {
@@ -152,5 +171,22 @@ describe('<SimpleChart />', () => {
 
     cy.getTestId('single-value-chart').should('be.visible')
     cy.getTestId('single-value-chart').contains(value)
+  })
+
+  it('Single Value displays error when metric name is not provided', () => {
+    const faultyExploreResult = { ...exploreResultTruncated }
+    faultyExploreResult.meta.metric_names = []
+
+    cy.mount(SimpleChart, {
+      props: {
+        chartData: faultyExploreResult,
+        chartOptions: {
+          type: 'single_value',
+        },
+      },
+    })
+
+    cy.getTestId('single-value-chart').should('not.exist')
+    cy.getTestId('single-value-error').should('be.visible')
   })
 })
