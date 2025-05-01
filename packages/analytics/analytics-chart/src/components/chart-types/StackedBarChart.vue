@@ -438,6 +438,7 @@ const chartInstance = composables.useChartJSCommon(
 const maxOverflow = computed(() => {
   // Need this reactive dependency to re-compute the max overflow when the chart updates.
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   dependsOnChartUpdate.value
 
   // ChartJS says that labels are optional, but we always provide them.

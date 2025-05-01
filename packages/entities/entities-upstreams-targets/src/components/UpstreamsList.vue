@@ -221,11 +221,11 @@ import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-t
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
-  (e: 'error', error: AxiosError): void,
-  (e: 'click:learn-more'): void,
-  (e: 'copy:success', payload: CopyEventPayload): void,
-  (e: 'copy:error', payload: CopyEventPayload): void,
-  (e: 'delete:success', upstream: EntityRow): void,
+  (e: 'error', error: AxiosError): void
+  (e: 'click:learn-more'): void
+  (e: 'copy:success', payload: CopyEventPayload): void
+  (e: 'copy:error', payload: CopyEventPayload): void
+  (e: 'delete:success', upstream: EntityRow): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

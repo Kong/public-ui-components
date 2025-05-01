@@ -104,7 +104,7 @@ import type { Field } from '../composables/useRedisPartial'
 import RedisConfigCard from './RedisConfigCard.vue'
 
 defineEmits<{
-  (e: 'showNewPartialModal'): void,
+  (e: 'showNewPartialModal'): void
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)

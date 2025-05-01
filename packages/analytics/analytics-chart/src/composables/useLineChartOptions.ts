@@ -176,6 +176,6 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
-    [key: string]: TooltipPositionerFunction<ChartType>;
+    [key: string]: TooltipPositionerFunction<ChartType>
   }
 }

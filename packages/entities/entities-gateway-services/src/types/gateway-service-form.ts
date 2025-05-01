@@ -33,9 +33,9 @@ export interface GatewayServiceFormFields {
 export interface FormFieldErrors {
   host: string
   port: string
-  path: string,
-  url: string,
-  tags: string,
+  path: string
+  url: string
+  tags: string
   retries: string
   connect_timeout: string
   write_timeout: string
@@ -53,7 +53,7 @@ export interface LegacyGatewayServiceFormState {
   /** Form readonly state (only used when saving entity details) */
   isReadonly: boolean
   /** The Array of error messages to show  */
-  errorMessage: string,
+  errorMessage: string
 }
 
 export interface GatewayServiceFormState {
@@ -62,7 +62,7 @@ export interface GatewayServiceFormState {
   /** Form readonly state (only used when saving entity details) */
   isReadonly: boolean
   /** The Array of error messages to show  */
-  errorMessages: string[],
+  errorMessages: string[]
   /** The error Object is to show error on each form field */
   formFieldErrors: FormFieldErrors
 }

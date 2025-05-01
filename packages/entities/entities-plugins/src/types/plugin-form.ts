@@ -145,7 +145,7 @@ export interface AppRegFormSchema {
     inputType: string
     styleClasses: string
     default: boolean
-  },
+  }
   name: {
     default: string
     type: string
@@ -154,7 +154,7 @@ export interface AppRegFormSchema {
   }
   'service-id': {
     type: string
-    label: string,
+    label: string
     styleClasses: string
     description: string
     model: string
@@ -162,9 +162,9 @@ export interface AppRegFormSchema {
     placeholder: string
     inputValues: {
       fields: string[]
-    },
+    }
     help: string
-  },
+  }
   tags: Tags
 }
 
@@ -185,7 +185,7 @@ interface ArrayItem {
       minWidth: string
     }
     [key: string]: any
-  },
+  }
   removeElementButtonLabel: string
   styleClasses: string
   inputType: string

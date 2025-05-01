@@ -96,7 +96,7 @@ export interface TraditionalRouteRulesFields extends SharedRouteRulesFields {
 
 /** These are expression-only fields */
 export interface ExpressionsRouteRulesFields extends SharedRouteRulesFields {
-  expression: string; // Not required now, as described in Kong/kong#12667
+  expression: string // Not required now, as described in Kong/kong#12667
   priority: number
 }
 
@@ -150,7 +150,7 @@ export interface TraditionalRouteRulesPayload extends SharedRouteRulesPayload {
 
 /** Extra payload for expressions-flavored routes */
 export interface ExpressionsRouteRulesPayload extends SharedRouteRulesPayload {
-  expression?: string; // Not required now, as described in Kong/kong#12667
+  expression?: string // Not required now, as described in Kong/kong#12667
   priority: number
 }
 

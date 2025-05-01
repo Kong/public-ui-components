@@ -34,20 +34,20 @@ import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 
 export type DraggableGridLayoutExpose<T> = {
-  removeWidget: (id: number | string) => void,
-  tiles: GridTile<T>[],
-  gridSize: GridSize,
+  removeWidget: (id: number | string) => void
+  tiles: GridTile<T>[]
+  gridSize: GridSize
 }
 
 const props = withDefaults(defineProps<{
-  tiles: GridTile<T>[],
-  gridSize: GridSize,
-  tileHeight?: number,
+  tiles: GridTile<T>[]
+  gridSize: GridSize
+  tileHeight?: number
 }>(), {
   tileHeight: 200,
 })
 const emit = defineEmits<{
-  (e: 'update-tiles', tiles: GridTile<T>[]): void,
+  (e: 'update-tiles', tiles: GridTile<T>[]): void
 }>()
 
 const gridContainer = ref<HTMLDivElement | null>(null)

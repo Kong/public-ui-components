@@ -468,13 +468,13 @@ import { useDebounceFn } from '@vueuse/core'
 import { KongAirService } from '../constants'
 
 const emit = defineEmits<{
-  (e: 'update', data: Record<string, any>): void,
-  (e: 'error', error: any): void,
-  (e: 'url-valid:success'): void,
-  (e: 'url-valid:error', error: string): void,
-  (e: 'loading', isLoading: boolean): void,
-  (e: 'model-updated', val: Record<string, any>): void,
-  (e: 'try-sample-api', val: Record<string, any>): void,
+  (e: 'update', data: Record<string, any>): void
+  (e: 'error', error: any): void
+  (e: 'url-valid:success'): void
+  (e: 'url-valid:error', error: string): void
+  (e: 'loading', isLoading: boolean): void
+  (e: 'model-updated', val: Record<string, any>): void
+  (e: 'try-sample-api', val: Record<string, any>): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

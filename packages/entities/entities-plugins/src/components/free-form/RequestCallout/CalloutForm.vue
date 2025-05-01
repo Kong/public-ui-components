@@ -50,7 +50,7 @@ import type { RequestCallout } from './types'
 import type { SelectItem } from '@kong/kongponents'
 
 const props = defineProps<{
-  index: number;
+  index: number
 }>()
 
 const { formData, getLabelAttributes, getPlaceholder } = useFormShared<RequestCallout>()

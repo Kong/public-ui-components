@@ -11,7 +11,7 @@ import { SeededRandom } from './SeedRandom'
 import { rand } from '../utils'
 
 export interface Metric {
-  name: string,
+  name: string
   unit: string
 }
 

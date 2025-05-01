@@ -6,17 +6,17 @@ interface ACLFieldSchema {
   fields: [
     {
       group: {
-        hint: string,
-      },
+        hint: string
+      }
     },
     {
-      tags: typeof tags,
+      tags: typeof tags
     },
   ]
 }
 
 export type ACLSchema = CommonSchemaFields & PluginBasicSchema & {
-  schema: ACLFieldSchema,
-  applyCredentialButtonText: string,
+  schema: ACLFieldSchema
+  applyCredentialButtonText: string
   fields: any
 }

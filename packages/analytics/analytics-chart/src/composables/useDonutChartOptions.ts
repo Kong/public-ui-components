@@ -87,6 +87,6 @@ export default function useDonutChartOptions(chartOptions: DonutChartOptions) {
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
-    [key: string]: TooltipPositionerFunction<ChartType>;
+    [key: string]: TooltipPositionerFunction<ChartType>
   }
 }

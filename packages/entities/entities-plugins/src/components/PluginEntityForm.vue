@@ -153,15 +153,15 @@ export default defineComponent({
 
 <script setup lang="ts">
 const emit = defineEmits<{
-  (e: 'loading', isLoading: boolean): void,
+  (e: 'loading', isLoading: boolean): void
   (e: 'model-updated',
     payload: {
-      model: Record<string, any>,
-      originalModel: Record<string, any>,
+      model: Record<string, any>
+      originalModel: Record<string, any>
       data: Record<string, any>
     }
-  ): void,
-  (e: 'showNewPartialModal', redisType: string): void,
+  ): void
+  (e: 'showNewPartialModal', redisType: string): void
 }>()
 
 const props = defineProps({

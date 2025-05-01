@@ -278,7 +278,7 @@ const METHODS = toSelectItems([
 
 
 const props = defineProps<{
-  calloutIndex: number;
+  calloutIndex: number
 }>()
 
 const { formData, getLabelAttributes, getSelectItems, getDefault, getPlaceholder } = useFormShared<RequestCallout>()

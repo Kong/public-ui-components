@@ -92,9 +92,9 @@ import type { CsvData, Header, TimeseriesColumn } from '../types'
 const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
-  filename: string,
-  modalDescription?: string,
-  chartData: ExploreResultV4,
+  filename: string
+  modalDescription?: string
+  chartData: ExploreResultV4
 }>(), {
   modalDescription: undefined,
 })
@@ -185,7 +185,7 @@ const tableData = computed(() => {
   ]
 
   interface AccumulatorRow {
-    [key: string]: string;
+    [key: string]: string
   }
 
   const csvHeaders: Record<string, string> = displayHeaders.reduce((accum: AccumulatorRow, h: TimeseriesColumn) => {

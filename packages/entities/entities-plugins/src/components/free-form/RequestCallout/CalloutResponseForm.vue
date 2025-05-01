@@ -55,7 +55,7 @@ import useI18n from '../../../composables/useI18n'
 const { i18n: { t } } = useI18n()
 
 const props = defineProps<{
-  calloutIndex: number;
+  calloutIndex: number
 }>()
 
 const { formData, getLabelAttributes } = useFormShared<RequestCallout>()

@@ -1,5 +1,5 @@
 export interface EntityLinkData {
-  id: string,
-  label?: string,
+  id: string
+  label?: string
   deleted?: boolean
 }

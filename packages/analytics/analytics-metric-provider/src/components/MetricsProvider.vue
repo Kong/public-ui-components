@@ -21,20 +21,20 @@ import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
 const props = withDefaults(defineProps<{
   datasource?: QueryDatasource
-  maxTimeframe?: TimeframeKeys,
-  overrideTimeframe?: Timeframe,
-  tz?: string,
-  dimension?: FilterableExploreDimensions,
-  filterValue?: string,
-  additionalFilter?: ExploreFilterAll[],
-  queryReady?: boolean,
-  refreshInterval?: number,
-  longCardTitles?: boolean,
-  containerTitle?: string,
-  description?: string,
-  percentileLatency?: boolean,
-  abortController?: AbortController,
-  refreshCounter?: number,
+  maxTimeframe?: TimeframeKeys
+  overrideTimeframe?: Timeframe
+  tz?: string
+  dimension?: FilterableExploreDimensions
+  filterValue?: string
+  additionalFilter?: ExploreFilterAll[]
+  queryReady?: boolean
+  refreshInterval?: number
+  longCardTitles?: boolean
+  containerTitle?: string
+  description?: string
+  percentileLatency?: boolean
+  abortController?: AbortController
+  refreshCounter?: number
 }>(), {
   datasource: undefined,
   maxTimeframe: TimeframeKeys.THIRTY_DAY,

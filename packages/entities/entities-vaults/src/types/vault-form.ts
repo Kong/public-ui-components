@@ -57,6 +57,7 @@ export enum VaultAuthMethods {
   APP_ROLE = 'approle',
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ConfigStoreConfig {}
 
 export interface KongVaultConfig {
@@ -150,7 +151,7 @@ export interface VaultPayload {
   name: VaultProviders
   prefix: string
   description: string | null
-  tags: string[],
+  tags: string[]
   config: ConfigStoreConfig | KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload
 }
 

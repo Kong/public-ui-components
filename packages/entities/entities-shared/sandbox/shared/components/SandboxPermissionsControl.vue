@@ -34,9 +34,9 @@
 
 <script lang="ts">
 export interface PermissionsActions {
-  canCreate: () => Promise<boolean>,
-  canDelete: (row: Record<string, any>) => Promise<boolean>,
-  canEdit: (row: Record<string, any>) => Promise<boolean>,
+  canCreate: () => Promise<boolean>
+  canDelete: (row: Record<string, any>) => Promise<boolean>
+  canEdit: (row: Record<string, any>) => Promise<boolean>
   canRetrieve: (row: Record<string, any>) => Promise<boolean>
 }
 </script>

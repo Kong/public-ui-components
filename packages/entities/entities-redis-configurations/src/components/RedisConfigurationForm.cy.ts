@@ -85,7 +85,7 @@ describe('<RedisConfigurationForm />', {
       function interceptLinkedPlugins({
         body = { data: [], next: null, count: 0 },
       }: {
-        body?: typeof links,
+        body?: typeof links
       } = {}) {
         if (app === 'Kong Manager') {
           cy.intercept({
@@ -827,7 +827,9 @@ describe('<RedisConfigurationForm />', {
 
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.host).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.port).to.not.exist
           })
         })
@@ -867,7 +869,9 @@ describe('<RedisConfigurationForm />', {
           cy.getTestId('redis_configuration-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.host).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.port).to.not.exist
           })
         })
@@ -897,7 +901,9 @@ describe('<RedisConfigurationForm />', {
           cy.getTestId('redis_configuration-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.cluster_nodes).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.cluster_max_redirections).to.not.exist
           })
         })
@@ -937,7 +943,9 @@ describe('<RedisConfigurationForm />', {
           cy.getTestId('redis_configuration-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.cluster_nodes).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.cluster_max_redirections).to.not.exist
           })
         })
@@ -967,10 +975,15 @@ describe('<RedisConfigurationForm />', {
           cy.getTestId('redis_configuration-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.sentinel_master).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.sentinel_role).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.sentinel_nodes).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.sentinel_username).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.sentinel_password).to.not.exist
           })
         })
@@ -1000,10 +1013,15 @@ describe('<RedisConfigurationForm />', {
 
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.sentinel_master).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.sentinel_role).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.sentinel_nodes).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.sentinel_username).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
             expect(config.sentinel_password).to.not.exist
           })
         })
