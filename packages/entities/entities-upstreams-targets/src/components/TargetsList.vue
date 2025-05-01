@@ -167,14 +167,14 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import TargetForm from './TargetForm.vue'
 
 const emit = defineEmits<{
-  (e: 'error', error: AxiosError): void,
-  (e: 'copy:success', payload: CopyEventPayload): void,
-  (e: 'copy:error', payload: CopyEventPayload): void,
-  (e: 'delete:success', target: EntityRow): void,
-  (e: 'health-actions:healthy', target: EntityRow): void,
-  (e: 'health-actions:unhealthy', target: EntityRow): void,
-  (e: 'create:target', data: EntityRow): void,
-  (e: 'update:target', data: EntityRow): void,
+  (e: 'error', error: AxiosError): void
+  (e: 'copy:success', payload: CopyEventPayload): void
+  (e: 'copy:error', payload: CopyEventPayload): void
+  (e: 'delete:success', target: EntityRow): void
+  (e: 'health-actions:healthy', target: EntityRow): void
+  (e: 'health-actions:unhealthy', target: EntityRow): void
+  (e: 'create:target', data: EntityRow): void
+  (e: 'update:target', data: EntityRow): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

@@ -54,7 +54,7 @@
       <KLabel>Dataset options</KLabel>
       <div class="dataset-options">
         <KButton
-          appearance="outline"
+          appearance="secondary"
           size="small"
           @click="addDataset()"
         >
@@ -175,8 +175,8 @@ enum Metrics {
 }
 
 interface MetricSelection {
-  name: Metrics,
-  unit: string,
+  name: Metrics
+  unit: string
 }
 
 // Inject the app-links from the entry file

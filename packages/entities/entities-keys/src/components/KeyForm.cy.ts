@@ -61,7 +61,7 @@ describe('<KeyForm />', () => {
     }
 
     const interceptKMOperateKey = (params: {
-      method: 'GET' | 'PATCH',
+      method: 'GET' | 'PATCH'
       mockData?: object
       alias?: string
       status?: number
@@ -610,7 +610,7 @@ describe('<KeyForm />', () => {
     }
 
     const interceptKonnectOperateKey = (params: {
-      method: 'GET' | 'PUT',
+      method: 'GET' | 'PUT'
       mockData?: object
       alias?: string
       status?: number

@@ -198,7 +198,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void,
+  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 
 const { i18n } = composables.useI18n()

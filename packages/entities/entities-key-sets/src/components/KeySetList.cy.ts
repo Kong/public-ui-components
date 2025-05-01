@@ -164,8 +164,8 @@ describe('<KeySetList />', () => {
 
   describe('Kong Manager', () => {
     const interceptKM = (params?: {
-      mockData?: FetcherRawResponse;
-      alias?: string;
+      mockData?: FetcherRawResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -183,8 +183,8 @@ describe('<KeySetList />', () => {
     }
 
     const interceptKMMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -464,8 +464,8 @@ describe('<KeySetList />', () => {
 
   describe('Konnect', () => {
     const interceptKonnect = (params?: {
-      mockData?: FetcherResponse;
-      alias?: string;
+      mockData?: FetcherResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -483,8 +483,8 @@ describe('<KeySetList />', () => {
     }
 
     const interceptKonnectMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {

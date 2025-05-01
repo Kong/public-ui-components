@@ -9,8 +9,8 @@ export interface KongManagerKeySetEntityConfig extends KongManagerBaseEntityConf
 export interface KeySetConfigurationSchema {
   // basic fields
   id: ConfigurationSchemaItem
-  name: ConfigurationSchemaItem,
-  last_updated: ConfigurationSchemaItem,
-  created: ConfigurationSchemaItem,
-  tags: ConfigurationSchemaItem,
+  name: ConfigurationSchemaItem
+  last_updated: ConfigurationSchemaItem
+  created: ConfigurationSchemaItem
+  tags: ConfigurationSchemaItem
 }

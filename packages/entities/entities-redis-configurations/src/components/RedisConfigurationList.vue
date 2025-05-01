@@ -210,12 +210,12 @@ import type { BaseTableHeaders, EmptyStateOptions, ExactMatchFilterConfig, Filte
 import type { AxiosError } from 'axios'
 
 const emit = defineEmits<{
-  (e: 'click:learn-more'): void,
-  (e: 'click:plugin', param: { id: string, plugin: string }): void,
-  (e: 'copy:error', payload: CopyEventPayload): void,
-  (e: 'copy:success', payload: CopyEventPayload): void,
-  (e: 'delete:success', key: EntityRow): void,
-  (e: 'error', error: AxiosError): void,
+  (e: 'click:learn-more'): void
+  (e: 'click:plugin', param: { id: string, plugin: string }): void
+  (e: 'copy:error', payload: CopyEventPayload): void
+  (e: 'copy:success', payload: CopyEventPayload): void
+  (e: 'delete:success', key: EntityRow): void
+  (e: 'error', error: AxiosError): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

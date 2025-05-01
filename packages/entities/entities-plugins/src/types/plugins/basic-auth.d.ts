@@ -12,12 +12,12 @@ interface BasicAuthFieldSchema {
       }
     },
     {
-      tags: typeof tags,
+      tags: typeof tags
     },
   ]
 }
 
 export type BasicAuthSchema = CommonSchemaFields & PluginBasicSchema & {
-  schema: BasicAuthFieldSchema,
+  schema: BasicAuthFieldSchema
   fields: any
 }

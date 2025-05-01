@@ -3,9 +3,9 @@ import type { ComputedRef, Ref } from 'vue'
 import type { ImportParams } from './types'
 
 export default function usePackage({ script, styles, onReady }: ImportParams): {
-  importPackage: () => Promise<any>,
-  loadingPackage: Ref<boolean>,
-  loadingStyles: Ref<boolean>,
+  importPackage: () => Promise<any>
+  loadingPackage: Ref<boolean>
+  loadingStyles: Ref<boolean>
 } {
   // Loading state
   const loadingPackage: Ref<boolean> = ref(true)

@@ -122,9 +122,9 @@ import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import type { HeaderTag } from '@kong/kongponents'
 
 const emit = defineEmits<{
-  (e: 'loading', isLoading: boolean): void,
-  (e: 'fetch:success', data: Record<string, any>): void,
-  (e: 'fetch:error', error: AxiosError): void,
+  (e: 'loading', isLoading: boolean): void
+  (e: 'fetch:success', data: Record<string, any>): void
+  (e: 'fetch:error', error: AxiosError): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props

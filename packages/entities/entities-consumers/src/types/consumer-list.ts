@@ -30,7 +30,7 @@ export interface KongManagerConsumerListConfig extends KongManagerBaseTableConfi
 }
 
 export interface EntityRow extends Record<string, any> {
-  id: string;
+  id: string
   username: string
   custom_id: string
 }

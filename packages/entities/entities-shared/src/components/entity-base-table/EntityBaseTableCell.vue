@@ -104,6 +104,7 @@ const stopWatch = watch(
           })
         })
         for (const _el of els) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
           _el && observer!.observe(_el)
         }
       }

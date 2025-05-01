@@ -255,6 +255,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     // Comparator function for comparing schema objects should not be added to fields
     const comparatorIdx = inputSchemaFields.indexOf('comparator')
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     comparatorIdx > -1 && inputSchemaFields.splice(comparatorIdx, 1)
 
     let formSchema: Schema = { fields: [] }
@@ -630,7 +631,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     const customFieldsSchema = buildCustomFields(schema)
 
-    customFields.forEach(field => {
+    customFields.forEach((field: any) => {
       Object.keys(customFieldsSchema).forEach(field => {
         const fieldHasDefaultValue = setFieldDefaultValue(customFieldsSchema[field])
 

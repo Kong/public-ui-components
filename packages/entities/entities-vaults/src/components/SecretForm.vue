@@ -49,9 +49,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'update', data: SecretStateFields): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
+  (e: 'update', data: SecretStateFields): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
 }>()
 
 const handleUpdate = (data: SecretStateFields): void => {

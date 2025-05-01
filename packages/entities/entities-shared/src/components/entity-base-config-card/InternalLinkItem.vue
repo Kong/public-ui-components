@@ -16,7 +16,7 @@ import type { RecordItem } from '../../types'
 import composables from '../../composables'
 
 defineEmits<{
-  (e: 'navigation-click', record: RecordItem): void,
+  (e: 'navigation-click', record: RecordItem): void
 }>()
 
 defineProps({

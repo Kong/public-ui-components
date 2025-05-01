@@ -154,7 +154,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void,
+  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 
 const verticalLinePlugin = new VerticalLinePlugin()
@@ -290,6 +290,7 @@ onUnmounted(() => {
     chartInstance.value.chart.canvas.removeEventListener('dragSelectMove', handleDragMove)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   verticalLinePlugin
 })
 

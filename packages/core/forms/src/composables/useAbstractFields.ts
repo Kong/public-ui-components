@@ -11,16 +11,16 @@ import { validators } from '../utils/validators'
 import { slugifyFormID } from '../utils/schema'
 
 interface AbstractFieldParams {
-  model?: Ref<Record<string, any> | undefined>,
-  schema: Record<string, any>,
-  formOptions?: Record<string, any>,
-  disabled?: boolean,
-  formatValueToField?: (value: any) => any,
-  formatValueToModel?: (value: any) => any,
+  model?: Ref<Record<string, any> | undefined>
+  schema: Record<string, any>
+  formOptions?: Record<string, any>
+  disabled?: boolean
+  formatValueToField?: (value: any) => any
+  formatValueToModel?: (value: any) => any
   emitModelUpdated?: (data: {
     value: any
     model: Record<string, any>
-  }) => void,
+  }) => void
   emitValidated?: (data: {
     isValid: any
     errors: any[]

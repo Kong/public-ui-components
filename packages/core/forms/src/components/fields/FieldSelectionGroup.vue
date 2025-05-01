@@ -97,7 +97,9 @@ export default {
         const newFields = this.schema.fields[newVal].fields
         const oldFields = this.schema.fields[oldVal].fields
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         oldFields && oldFields.forEach(field => this.updateModel('', field.model))
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         newFields && newFields.forEach(field => this.updateModel(this.fieldModel[field.model], field.model))
       },
     },
@@ -108,6 +110,7 @@ export default {
 
     // Set checkedGroup based on model
     this.schema.fields.forEach((field, i) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       field.fields && field.fields.forEach(subField => {
         if (this.model[subField.model]) {
           this.checkedGroup = i

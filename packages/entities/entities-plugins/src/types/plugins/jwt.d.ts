@@ -11,37 +11,37 @@ interface JwtSecretFieldSchema {
     },
     {
       algorithm: {
-        order: number,
+        order: number
         hint: string
       }
     },
     {
       rsa_public_key: {
-        order: number,
-        type: string,
-        label: string,
-        hint: string,
-        rows: number,
-        visible: (model: any) => any,
+        order: number
+        type: string
+        label: string
+        hint: string
+        rows: number
+        visible: (model: any) => any
       }
     },
     {
       secret: {
-        inputType: string,
+        inputType: string
         hint: string
       }
     },
     {
-      tags: typeof tags,
+      tags: typeof tags
     },
   ]
 }
 
 export type JwtSchema = PluginBasicSchema & CommonSchemaFields & {
-  schema: JwtSecretFieldSchema,
+  schema: JwtSecretFieldSchema
   fields: {
-    id: object,
-    key: object,
+    id: object
+    key: object
     algorithm: object
   }
 }

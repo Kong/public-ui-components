@@ -48,8 +48,8 @@ export default function useFetchUrlBuilder(
         }
 
         // Sort parameters
-        sortColumnKey &&
-          urlWithParams.searchParams.append('sort_by', sortColumnKey)
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        sortColumnKey && urlWithParams.searchParams.append('sort_by', sortColumnKey)
 
         if (sortColumnOrder === 'desc') {
           urlWithParams.searchParams.append('sort_desc', '1')
