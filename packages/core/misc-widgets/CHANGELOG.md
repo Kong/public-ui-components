@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.62](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.61...@kong-ui-public/misc-widgets@2.1.62) (2025-05-01)
+
+
+### Bug Fixes
+
+* **deps:** remove recursive kongponents dependency ([#2100](https://github.com/Kong/public-ui-components/issues/2100)) ([3006571](https://github.com/Kong/public-ui-components/commit/3006571fc6e0c522a622bfed81ca616b5e072555))
+
+
+
+
+
 ## [2.1.61](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/misc-widgets@2.1.60...@kong-ui-public/misc-widgets@2.1.61) (2025-04-24)
 
 

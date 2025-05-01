@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.7.19...@kong-ui-public/entities-key-sets@3.7.20) (2025-05-01)
+
+
+### Bug Fixes
+
+* **deps:** remove recursive kongponents dependency ([#2100](https://github.com/Kong/public-ui-components/issues/2100)) ([3006571](https://github.com/Kong/public-ui-components/commit/3006571fc6e0c522a622bfed81ca616b5e072555))
+
+
+
+
+
 ## [3.7.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.7.18...@kong-ui-public/entities-key-sets@3.7.19) (2025-04-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-key-sets

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.31...@kong-ui-public/spec-renderer@2.3.32) (2025-05-01)
+
+
+### Bug Fixes
+
+* **deps:** remove recursive kongponents dependency ([#2100](https://github.com/Kong/public-ui-components/issues/2100)) ([3006571](https://github.com/Kong/public-ui-components/commit/3006571fc6e0c522a622bfed81ca616b5e072555))
+
+
+
+
+
 ## [2.3.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.30...@kong-ui-public/spec-renderer@2.3.31) (2025-04-24)
 
 
