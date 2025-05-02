@@ -16,6 +16,7 @@
         legend-position="bottom"
         :show-menu="context.editable"
         :synthetics-data-key="chartOptions.syntheticsDataKey"
+        :timeseries-zoom="hasFinegrainedAbsoluteTimerangeAccess"
         tooltip-title=""
         v-bind="extraProps"
         @zoom-time-range="emit('zoom-time-range', $event)"
@@ -52,6 +53,7 @@ const { i18n } = composables.useI18n()
 const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
 
 const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
+const hasFinegrainedAbsoluteTimerangeAccess = evaluateFeatureFlag('explore-v4-fine-granularity', false)
 
 const options = computed((): AnalyticsChartOptions => ({
   type: props.chartOptions.type,
