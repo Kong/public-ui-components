@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.8...@kong-ui-public/analytics-chart@8.1.9) (2025-05-02)
+
+
+### Bug Fixes
+
+* **analytics:** single value chart show empty when null [KHCP-16024] ([#2099](https://github.com/Kong/public-ui-components/issues/2099)) ([1a6b41d](https://github.com/Kong/public-ui-components/commit/1a6b41d47a6d072de71cdf53af2cebf328669413))
+
+
+
+
+
 ## [8.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.7...@kong-ui-public/analytics-chart@8.1.8) (2025-05-01)
 
 
