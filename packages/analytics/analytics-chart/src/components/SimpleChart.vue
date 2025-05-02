@@ -111,7 +111,16 @@ const isSingleValueChart = computed<boolean>(() => props.chartOptions.type === '
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
 const hasValidChartData = computed(() => {
-  return props.chartData && props.chartData.meta && props.chartData.data.length
+  const hasChartData = props.chartData && props.chartData.meta && props.chartData.data.length
+
+  // for single value chart, show empty state if the metric value is null
+  if (isSingleValueChart.value) {
+    const metricName = props.chartData.meta?.metric_names?.[0]
+    // ignore the scenario where the metric name is undefined or metric value is not a number, the chart will handle it (display error message)
+    return hasChartData && props.chartData.data[0].event[metricName!] !== null
+  }
+
+  return hasChartData
 })
 </script>
 
