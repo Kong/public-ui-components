@@ -110,7 +110,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  'update:selectedSpan': [span?: SpanNode];
+  'update:selectedSpan': [span?: SpanNode]
 }>()
 
 const rootRef = useTemplateRef<HTMLElement>('root')

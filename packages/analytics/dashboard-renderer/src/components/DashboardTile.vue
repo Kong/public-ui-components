@@ -130,12 +130,12 @@ import DonutChartRenderer from './DonutChartRenderer.vue'
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
 const props = withDefaults(defineProps<{
-  definition: TileDefinition,
-  context: DashboardRendererContextInternal,
-  height?: number,
-  queryReady: boolean,
-  refreshCounter: number,
-  tileId: string | number,
+  definition: TileDefinition
+  context: DashboardRendererContextInternal
+  height?: number
+  queryReady: boolean
+  refreshCounter: number
+  tileId: string | number
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
 })

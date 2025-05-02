@@ -253,11 +253,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'click:row', row: BaseTableHeaders) : void,
-  (e: 'sort', sortParams: TableSortParams) : void,
-  (e: 'clear-search-input'): void,
-  (e: 'empty-state-cta-clicked'): void,
-  (e: 'state', state: TableStateParams): void,
+  (e: 'click:row', row: BaseTableHeaders) : void
+  (e: 'sort', sortParams: TableSortParams) : void
+  (e: 'clear-search-input'): void
+  (e: 'empty-state-cta-clicked'): void
+  (e: 'state', state: TableStateParams): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()

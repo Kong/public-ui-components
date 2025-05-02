@@ -170,9 +170,9 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
-  (e: 'fetch:error', error: AxiosError): void,
-  (e: 'fetch:success', data: Record<string, any>): void,
-  (e: 'navigation-click', id: string, entityType: string): void,
+  (e: 'fetch:error', error: AxiosError): void
+  (e: 'fetch:success', data: Record<string, any>): void
+  (e: 'navigation-click', id: string, entityType: string): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

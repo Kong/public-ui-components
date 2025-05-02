@@ -149,9 +149,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'update', data: ConsumerStateFields): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
+  (e: 'update', data: ConsumerStateFields): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
 }>()
 
 const { i18nT, i18n: { t } } = composables.useI18n()

@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 defineEmits<{
-  (e: 'remove-item'): void,
+  (e: 'remove-item'): void
 }>()
 
 provide('vfg-array-item-index', props.index)

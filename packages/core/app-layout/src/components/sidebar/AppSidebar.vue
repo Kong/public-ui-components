@@ -219,6 +219,7 @@ const toggleSidebar = (isOpen: boolean) => {
 
   // Add or remove a class from the `body` tag when the sidebar is opened/closed
   // This allows for the consuming app to add CSS to prevent overflow-y while the sidebar is open
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   isOpen ? document?.body?.classList.add('kong-ui-app-sidebar-open') : document?.body?.classList.remove('kong-ui-app-sidebar-open')
 
   // Always reset to false
@@ -334,6 +335,7 @@ const getScrollbarWidth = (): void => {
   const widthWithScroll = innerElement.offsetWidth
 
   // remove inner elements
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   outerElement.parentNode && outerElement.parentNode.removeChild(outerElement)
 
   const scrollbarWidth = widthNoScroll - widthWithScroll

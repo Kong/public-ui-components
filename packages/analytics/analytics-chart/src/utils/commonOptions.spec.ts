@@ -31,6 +31,7 @@ describe('commonOptions.hasTimeseriesData', () => {
     }
 
     const valid = hasTimeseriesData(lineChartData)
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(valid).true
   })
 
@@ -55,6 +56,7 @@ describe('commonOptions.hasTimeseriesData', () => {
     }
 
     const valid = hasTimeseriesData(lineChartData)
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(valid).false
   })
 
@@ -88,6 +90,7 @@ describe('commonOptions.hasTimeseriesData', () => {
 
     const valid = hasTimeseriesData(testChartData)
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     expect(valid).false
   })
 })

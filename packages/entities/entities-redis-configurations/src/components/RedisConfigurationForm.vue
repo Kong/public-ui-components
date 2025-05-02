@@ -492,9 +492,9 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'update', data: RedisConfigurationResponse): void
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
-  (e: 'cancel'): void,
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
+  (e: 'cancel'): void
 }>()
 
 const { i18n: { t }, i18nT } = composables.useI18n()

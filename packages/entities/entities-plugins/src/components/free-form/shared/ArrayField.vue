@@ -121,8 +121,8 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  add: [];
-  remove: [index: number];
+  add: []
+  remove: [index: number]
 }>()
 
 const keyMap = reactive(new Map<T, string>())

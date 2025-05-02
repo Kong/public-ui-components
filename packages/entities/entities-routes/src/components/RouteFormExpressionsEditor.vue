@@ -72,8 +72,8 @@ const handleCommit = (expr: string) => {
 }
 
 const handleNotify = (options: {
-  message: string;
-  type: string;
+  message: string
+  type: string
 }) => {
   emit('notify', options)
 }

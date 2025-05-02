@@ -240,8 +240,8 @@ describe('<ConsumerCredentialList />', () => {
 
   describe('Kong Manager', () => {
     const interceptKM = (params?: {
-      mockData?: FetcherRawResponse;
-      alias?: string;
+      mockData?: FetcherRawResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -259,8 +259,8 @@ describe('<ConsumerCredentialList />', () => {
     }
 
     const interceptKMMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -539,8 +539,8 @@ describe('<ConsumerCredentialList />', () => {
 
   describe('Konnect', () => {
     const interceptKonnect = (params?: {
-      mockData?: FetcherResponse;
-      alias?: string;
+      mockData?: FetcherResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -558,8 +558,8 @@ describe('<ConsumerCredentialList />', () => {
     }
 
     const interceptKonnectMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {

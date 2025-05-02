@@ -157,7 +157,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', query: string) : void,
+  (e: 'update:modelValue', query: string) : void
 }>()
 
 const showMenu = ref(false)
@@ -198,6 +198,7 @@ const toggleMenu = () => {
 }
 
 const toggleExpanded = (field: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   expandedFields.value.has(field) ? expandedFields.value.delete(field) : expandedFields.value.add(field)
 }
 

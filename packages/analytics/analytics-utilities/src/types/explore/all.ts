@@ -10,9 +10,9 @@ export const queryDatasources = ['basic', 'advanced', 'ai'] as const
 export type QueryDatasource = typeof queryDatasources[number]
 
 export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
-  basic: BasicExploreFilterAll,
-  advanced: ExploreFilterAll,
-  ai: AiExploreFilterAll,
+  basic: BasicExploreFilterAll
+  advanced: ExploreFilterAll
+  ai: AiExploreFilterAll
 }
 
 export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<string>> = {

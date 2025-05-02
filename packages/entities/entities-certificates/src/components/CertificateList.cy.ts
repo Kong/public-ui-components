@@ -205,8 +205,8 @@ describe('<CertificateList />', () => {
 
   describe('Kong Manager', () => {
     const interceptKM = (params?: {
-      mockData?: FetcherRawResponse;
-      alias?: string;
+      mockData?: FetcherRawResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -224,8 +224,8 @@ describe('<CertificateList />', () => {
     }
 
     const interceptKMMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -513,8 +513,8 @@ describe('<CertificateList />', () => {
 
   describe('Konnect', () => {
     const interceptKonnect = (params?: {
-      mockData?: FetcherResponse;
-      alias?: string;
+      mockData?: FetcherResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -532,8 +532,8 @@ describe('<CertificateList />', () => {
     }
 
     const interceptKonnectMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {

@@ -6,7 +6,7 @@ export interface StatsDAdvancedSchema extends CommonSchemaFields {
     showRemoveButton: boolean
     newElementButtonLabelClasses: string
     itemContainerComponent: string
-    fieldClasses: string,
+    fieldClasses: string
     items: ItemsSchema
   }
 }

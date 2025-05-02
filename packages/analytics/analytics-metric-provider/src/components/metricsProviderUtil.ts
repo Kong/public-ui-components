@@ -14,14 +14,14 @@ import type { FetcherResult } from '../composables/useMetricFetcher'
 
 interface ProviderData {
   data: {
-    traffic: FetcherResult,
-    latency: FetcherResult,
-  },
-  containerTitle: Ref<string | undefined>,
-  description: Ref<string | undefined>,
-  hasTrendAccess: Ref<boolean>,
-  longCardTitles: boolean,
-  averageLatencies: Ref<boolean>,
+    traffic: FetcherResult
+    latency: FetcherResult
+  }
+  containerTitle: Ref<string | undefined>
+  description: Ref<string | undefined>
+  hasTrendAccess: Ref<boolean>
+  longCardTitles: boolean
+  averageLatencies: Ref<boolean>
 }
 
 export const METRICS_PROVIDER_KEY = Symbol('METRICS_PROVIDER_KEY') as InjectionKey<ProviderData>
@@ -37,7 +37,7 @@ interface FetcherOptions {
   hasTrendAccess: Ref<boolean>
   refreshInterval: number
   queryFn: AnalyticsBridge['queryFn']
-  averageLatencies: Ref<boolean>,
+  averageLatencies: Ref<boolean>
   abortController?: AbortController
   refreshCounter: Ref<number>
 }

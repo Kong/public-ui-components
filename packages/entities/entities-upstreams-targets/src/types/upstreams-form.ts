@@ -17,7 +17,8 @@ export type UpstreamHash = 'none' | 'consumer' | 'ip' | 'header' | 'cookie' | 'p
 export type HealthCheckType = 'http' | 'https' | 'tcp' | 'grpc' | 'grpcs'
 
 export interface ActiveHealthCheckHeader {
-  key: string; values: string
+  key: string
+  values: string
 }
 
 export interface ActiveHealthCheck {
@@ -32,7 +33,7 @@ export interface ActiveHealthCheck {
     interval: string
     successes: string
     httpStatuses: string[]
-  },
+  }
   unhealthy: {
     interval: string
     timeouts: string
@@ -47,7 +48,7 @@ export interface PassiveHealthCheck {
   healthy: {
     successes: string
     httpStatuses: string[]
-  },
+  }
   unhealthy: {
     timeouts: string
     tcpFailures: string
@@ -167,7 +168,7 @@ export interface UpstreamFormPayload {
 }
 
 export interface UpstreamResponse extends Omit<UpstreamFormPayload, 'healthchecks'> {
-  id: string,
+  id: string
   healthchecks: {
     threshold?: number
     active?: UpstreamActiveResponse
