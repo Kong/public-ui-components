@@ -37,7 +37,6 @@ describe('<AnalyticsChart />', () => {
           fill: false,
           granularity: 'hourly',
         },
-        chartTitle: 'Time series line chart',
         tooltipTitle: 'Tooltip Title',
       },
     })
@@ -46,7 +45,6 @@ describe('<AnalyticsChart />', () => {
     cy.get('.debug-tooltip').should('not.exist')
 
     cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
-    cy.get('.chart-header').should('contain.text', 'Time series line chart')
     cy.get('[data-testid="legend"]').children().should('have.length', 5)
     cy.get('.label').eq(0).should('include.text', '200')
     cy.get('.sub-label').eq(0).should('include.text', '1.2M requests')
@@ -68,7 +66,6 @@ describe('<AnalyticsChart />', () => {
           fill: false,
           granularity: 'hourly',
         },
-        chartTitle: 'Title',
         tooltipTitle: 'Tooltip Title',
       },
     })
@@ -86,13 +83,11 @@ describe('<AnalyticsChart />', () => {
           granularity: 'daily',
           noLimit: true,
         },
-        chartTitle: 'Time series bar chart',
         tooltipTitle: 'Tooltip Title',
       },
     })
 
     cy.get('.analytics-chart-parent').should('be.visible')
-    cy.get('.chart-header').contains('Time series bar chart')
     cy.get('[data-testid="time-series-bar-chart"]').should('be.visible')
     cy.get('[data-testid="legend"]').should('have.length', 1)
     cy.get(':nth-child(1) > .label-container > .label').should('include.text', '200')
@@ -110,7 +105,6 @@ describe('<AnalyticsChart />', () => {
         chartOptions: {
           type: 'horizontal_bar',
         },
-        chartTitle: 'Horizontal bar chart',
         tooltipTitle: 'Tooltip Title',
         showLegendValues: false,
         showAnnotations: false,
@@ -119,7 +113,6 @@ describe('<AnalyticsChart />', () => {
 
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('[data-testid="bar-chart-container"]').should('be.visible')
-    cy.get('.chart-header').should('contain.text', 'Horizontal bar chart')
     cy.get('.square-marker').should('have.length', 5)
     cy.get('.label').eq(0).should('have.text', '200')
     cy.get('.sub-label').should('not.exist')
@@ -143,14 +136,12 @@ describe('<AnalyticsChart />', () => {
         chartOptions: {
           type: 'vertical_bar',
         },
-        chartTitle: 'Vertical bar chart',
         tooltipTitle: 'Tooltip Title',
       },
     })
 
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('[data-testid="bar-chart-container"]').should('be.visible')
-    cy.get('.chart-header').should('contain.text', 'Vertical bar chart')
     cy.get('[data-testid="legend"]').children().should('have.length', 20)
     cy.get('.label').eq(0).should('include.text', '200')
     cy.get('.sub-label').eq(0).should('include.text', '1.2M requests')
@@ -169,14 +160,12 @@ describe('<AnalyticsChart />', () => {
         chartOptions: {
           type: 'donut',
         },
-        chartTitle: 'Donut chart',
         tooltipTitle: 'Tooltip Title',
       },
     })
 
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('[data-testid="donut-chart-parent"]').should('be.visible')
-    cy.get('.chart-header').should('contain.text', 'Donut chart')
     cy.get('[data-testid="legend"]').children().should('have.length', 6)
     cy.get('.label').eq(0).should('include.text', 'GetMeAKongDefault')
     cy.get('.label').eq(1).should('include.text', 'GetMeASongRoute')
@@ -189,14 +178,12 @@ describe('<AnalyticsChart />', () => {
         chartOptions: {
           type: 'donut',
         },
-        chartTitle: 'Donut chart',
         tooltipTitle: 'Tooltip Title',
       },
     })
 
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('[data-testid="donut-chart-parent"]').should('be.visible')
-    cy.get('.chart-header').should('contain.text', 'Donut chart')
     cy.get('[data-testid="legend"]').children().should('have.length', 5)
     cy.get('.label').eq(0).should('include.text', '200')
     cy.get('.sub-label').eq(0).should('include.text', '42K requests')
@@ -243,37 +230,6 @@ describe('<AnalyticsChart />', () => {
     cy.get('[data-testid="no-data-in-report"] .empty-state-message').should('contain.text', emptyStateDescription)
   })
 
-  it('doest not render an "Export button" if the dataset is empty', () => {
-    cy.mount(AnalyticsChart, {
-      props: {
-        allowCsvExport: true,
-        chartData: emptyExploreResult,
-        chartOptions: {
-          type: 'timeseries_line',
-        },
-        chartTitle: 'Requests',
-      },
-    })
-  })
-
-  it('Renders an "Export" button, and tabulated data in the modal preview', () => {
-    cy.mount(AnalyticsChart, {
-      props: {
-        allowCsvExport: true,
-        chartData: exploreResult,
-        chartOptions: {
-          type: 'timeseries_line',
-        },
-        chartTitle: 'Requests',
-      },
-    })
-
-    cy.get('.chart-header').trigger('mouseenter')
-    cy.getTestId('csv-export-button').click()
-    cy.getTestId('csv-export-modal').should('exist')
-    cy.get('.modal-content .vitals-table').should('exist')
-  })
-
   it('multi dimension bar charts have "tooltipContext"', () => {
     cy.mount(AnalyticsChart, {
       props: {
@@ -281,7 +237,6 @@ describe('<AnalyticsChart />', () => {
         chartOptions: {
           type: 'horizontal_bar',
         },
-        chartTitle: 'Vertical bar chart',
         tooltipTitle: 'Tooltip Title',
       },
     })
@@ -309,7 +264,6 @@ describe('<AnalyticsChart />', () => {
         chartOptions: {
           type: 'horizontal_bar',
         },
-        chartTitle: 'Vertical bar chart',
         tooltipTitle: 'Tooltip Title',
       },
     })

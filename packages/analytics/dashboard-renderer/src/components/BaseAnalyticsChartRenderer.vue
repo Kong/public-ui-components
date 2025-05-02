@@ -12,7 +12,6 @@
         :allow-csv-export="chartOptions.allowCsvExport"
         :chart-data="data"
         :chart-options="options"
-        :chart-title="!hasKebabMenuAccess && chartOptions.chartTitle || ''"
         legend-position="bottom"
         :show-menu="context.editable"
         :synthetics-data-key="chartOptions.syntheticsDataKey"
@@ -47,9 +46,6 @@ const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
 }>()
 const { i18n } = composables.useI18n()
-const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-
-const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
 
 const options = computed((): AnalyticsChartOptions => ({
   type: props.chartOptions.type,

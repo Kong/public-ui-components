@@ -3,45 +3,24 @@
     class="analytics-chart-shell"
   >
     <div
-      v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown || (!hasKebabMenuAccess && (allowCsvExport || props.chartTitle))"
+      v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
       class="chart-header"
     >
-      <div
-        v-if="chartTitle"
-        class="chart-title"
-        :title="chartTitle"
+      <KTooltip
+        class="tooltip"
+        max-width="500"
+        placement="right"
       >
-        {{ chartTitle }}
-      </div>
-      <div
-        v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
-        class="chart-header-icons-wrapper"
-      >
-        <KTooltip
-          class="tooltip"
-          max-width="500"
-          placement="right"
-        >
-          <WarningIcon
-            :color="`var(--kui-color-text-warning, ${KUI_COLOR_TEXT_WARNING})`"
-            :size="KUI_ICON_SIZE_40"
-          />
-          <template #content>
-            <div class="tooltip-content">
-              {{ notAllDataShownTooltipContent }}
-            </div>
-          </template>
-        </KTooltip>
-      </div>
-      <div
-        v-if="!hasKebabMenuAccess && allowCsvExport && hasValidChartData"
-        class="chart-export-button"
-      >
-        <CsvExportButton
-          :data="rawChartData"
-          :filename-prefix="filenamePrefix"
+        <WarningIcon
+          :color="`var(--kui-color-text-warning, ${KUI_COLOR_TEXT_WARNING})`"
+          :size="KUI_ICON_SIZE_40"
         />
-      </div>
+        <template #content>
+          <div class="tooltip-content">
+            {{ notAllDataShownTooltipContent }}
+          </div>
+        </template>
+      </KTooltip>
     </div>
     <KEmptyState
       v-if="!hasValidChartData"
@@ -124,7 +103,6 @@ import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
-import CsvExportButton from './CsvExportButton.vue'
 
 const props = defineProps({
   allowCsvExport: {
@@ -151,16 +129,6 @@ const props = defineProps({
     default: '',
   },
   emptyStateDescription: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  chartTitle: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  filenamePrefix: {
     type: String,
     required: false,
     default: '',
@@ -202,11 +170,6 @@ const emit = defineEmits<{
 }>()
 
 const { i18n } = composables.useI18n()
-const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-
-const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
-
-const rawChartData = toRef(props, 'chartData')
 
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
@@ -403,30 +366,8 @@ provide('legendPosition', toRef(props, 'legendPosition'))
     align-items: center;
     display: flex;
     justify-content: flex-start;
-    right: 0;
     width: 100%;
     z-index: 999;
-
-    .chart-header-icons-wrapper {
-      display: flex;
-      justify-content: end;
-    }
-
-    .chart-export-button {
-      display: flex;
-      margin-left: var(--kui-space-auto, $kui-space-auto);
-      margin-right: var(--kui-space-0, $kui-space-0);
-    }
-  }
-
-  .chart-title {
-    cursor: default;
-    font-size: var(--kui-font-size-40, $kui-font-size-40);
-    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-    max-width: 32ch;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .tooltip {

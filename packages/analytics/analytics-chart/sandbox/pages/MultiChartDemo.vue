@@ -8,7 +8,6 @@
         <AnalyticsChart
           :chart-data="timeseriesBarChartData"
           :chart-options="timeSeriesBarChartOptions"
-          chart-title="Line Chart - Request count by Status Code"
           :legend-position="ChartLegendPosition.Bottom"
           :show-legend-values="true"
           tooltip-title="Requests"
@@ -18,7 +17,6 @@
         <AnalyticsChart
           :chart-data="timeSeriesLineChartData"
           :chart-options="timeSeriesLineChartOptions"
-          chart-title="Timeseries Line Chart - Requests Over Time"
           :legend-position="ChartLegendPosition.Right"
           :show-legend-values="true"
           :timeseries-zoom="true"
@@ -30,7 +28,6 @@
         <AnalyticsChart
           :chart-data="barChartData"
           :chart-options="barChartOptions"
-          chart-title="Horizontal Bar Chart - Requests by Service"
           :legend-position="ChartLegendPosition.Bottom"
           :show-annotations="false"
           :show-legend-values="true"
@@ -41,7 +38,6 @@
         <AnalyticsChart
           :chart-data="verticalBarChartData"
           :chart-options="verticalBarChartOptions"
-          chart-title="Vertical Bar Chart - Latency by Status Code"
           :legend-position="ChartLegendPosition.Right"
           :show-annotations="false"
           :show-legend-values="true"

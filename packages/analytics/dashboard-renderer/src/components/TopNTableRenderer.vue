@@ -8,9 +8,7 @@
   >
     <TopNTable
       :data="data"
-      :description="!hasKebabMenuAccess && chartOptions.description || ''"
       :synthetics-data-key="chartOptions.syntheticsDataKey"
-      :title="!hasKebabMenuAccess && chartOptions.chartTitle || ''"
     >
       <template
         v-if="props.chartOptions.entityLink"
@@ -36,13 +34,10 @@ import { CP_ID_TOKEN, ENTITY_ID_TOKEN, INJECT_QUERY_PROVIDER } from '../constant
 import { TopNTable } from '@kong-ui-public/analytics-chart'
 import type { TopNTableRecord } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'
-import composables from '../composables'
 import { inject, defineAsyncComponent } from 'vue'
 import FallbackEntityLink from './FallbackEntityLink.vue'
 
 const props = defineProps<RendererProps<TopNTableOptions>>()
-const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 

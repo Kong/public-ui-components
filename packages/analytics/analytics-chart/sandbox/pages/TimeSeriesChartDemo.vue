@@ -138,31 +138,6 @@
               filename="asdf.csv"
               @toggle-modal="setModalVisibility"
             />
-
-            <CsvExportButton
-              button-appearance="primary"
-              :data="(exploreResult)"
-              filename-prefix="asdf"
-              text="Primary export csv button"
-            />
-            <CsvExportButton
-              button-appearance="secondary"
-              :data="(exploreResult)"
-              filename-prefix="asdf"
-              text="Secondary export csv button"
-            />
-            <CsvExportButton
-              button-appearance="tertiary"
-              :data="(exploreResult)"
-              filename-prefix="asdf"
-              text="Tertiary export csv button"
-            />
-            <CsvExportButton
-              button-appearance="danger"
-              :data="(exploreResult)"
-              filename-prefix="asdf"
-              text="Danger export csv button"
-            />
           </div>
         </div>
 
@@ -255,7 +230,6 @@ import {
   AnalyticsChart,
   ChartLegendPosition,
   CsvExportModal,
-  CsvExportButton,
 } from '../../src'
 import type { AnalyticsExploreRecord, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType } from '../../src/types'
