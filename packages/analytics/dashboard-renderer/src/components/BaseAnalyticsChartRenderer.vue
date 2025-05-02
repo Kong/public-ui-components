@@ -16,7 +16,7 @@
         legend-position="bottom"
         :show-menu="context.editable"
         :synthetics-data-key="chartOptions.syntheticsDataKey"
-        :timeseries-zoom="hasFinegrainedAbsoluteTimerangeAccess"
+        :timeseries-zoom="hasFinegrainedAbsoluteTimerangeAccess && !query.time_range"
         tooltip-title=""
         v-bind="extraProps"
         @zoom-time-range="emit('zoom-time-range', $event)"
