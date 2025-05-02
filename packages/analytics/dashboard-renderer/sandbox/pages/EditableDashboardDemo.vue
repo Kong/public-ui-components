@@ -74,7 +74,6 @@ const context = computed<DashboardRendererContext>(() => ({
   filters: [],
   refreshInterval: 0,
   editable: editableSwitch.value,
-  timeseriesZoom: true,
 }))
 
 const dashboardConfig = ref <DashboardConfig>({
