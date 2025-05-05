@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.0.0...@kong-ui-public/dashboard-renderer@5.1.0) (2025-05-05)
+
+
+### Features
+
+* enable zooming in dashboard charts ([#2098](https://github.com/Kong/public-ui-components/issues/2098)) ([180077b](https://github.com/Kong/public-ui-components/commit/180077b48a0f1d65545a35d98e828345d96f94b6))
+
+
+
+
+
 # [5.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.15...@kong-ui-public/dashboard-renderer@5.0.0) (2025-05-05)
 
 
