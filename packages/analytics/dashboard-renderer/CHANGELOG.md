@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.15...@kong-ui-public/dashboard-renderer@5.0.0) (2025-05-05)
+
+
+### Bug Fixes
+
+* **analytics:** CSV export and FF removal [MA-3895, MA-3840] ([#2103](https://github.com/Kong/public-ui-components/issues/2103)) ([d0f792f](https://github.com/Kong/public-ui-components/commit/d0f792f663c3857690f4087d3d7d0f5a0ab52ccf))
+
+
+### BREAKING CHANGES
+
+* **analytics:** remove unused CsvExportButton component.
+
+
+
+
+
+## [4.1.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.14...@kong-ui-public/dashboard-renderer@4.1.15) (2025-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [4.1.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.13...@kong-ui-public/dashboard-renderer@4.1.14) (2025-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [4.1.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.12...@kong-ui-public/dashboard-renderer@4.1.13) (2025-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [4.1.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.11...@kong-ui-public/dashboard-renderer@4.1.12) (2025-05-01)
+
+
+### Bug Fixes
+
+* **deps:** remove recursive kongponents dependency ([#2100](https://github.com/Kong/public-ui-components/issues/2100)) ([3006571](https://github.com/Kong/public-ui-components/commit/3006571fc6e0c522a622bfed81ca616b5e072555))
+
+
+
+
+
 ## [4.1.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.10...@kong-ui-public/dashboard-renderer@4.1.11) (2025-04-29)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

@@ -106,38 +106,25 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { PropType } from 'vue'
 import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import composables from '../composables'
 import type { HeaderTag } from '@kong/kongponents'
 
-const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    default: '',
-  },
-  data: {
-    type: Object as PropType<ExploreResultV4>,
-    required: true,
-  },
-  emptyStateTitle: {
-    type: String,
-    default: '',
-  },
-  isLoading: {
-    type: Boolean,
-    default: false,
-  },
-  titleTag: {
-    type: String as PropType<HeaderTag>,
-    default: 'h2',
-  },
+const props = withDefaults(defineProps<{
+  title?: string
+  description?: string
+  data: ExploreResultV4
+  emptyStateTitle?: string
+  isLoading?: boolean
+  titleTag?: HeaderTag
+}>(), {
+  title: '',
+  description: '',
+  emptyStateTitle: '',
+  isLoading: false,
+  titleTag: 'h2',
 })
 
 const { i18n } = composables.useI18n()

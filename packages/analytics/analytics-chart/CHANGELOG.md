@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.11...@kong-ui-public/analytics-chart@9.0.0) (2025-05-05)
+
+
+### Bug Fixes
+
+* **analytics:** CSV export and FF removal [MA-3895, MA-3840] ([#2103](https://github.com/Kong/public-ui-components/issues/2103)) ([d0f792f](https://github.com/Kong/public-ui-components/commit/d0f792f663c3857690f4087d3d7d0f5a0ab52ccf))
+
+
+### BREAKING CHANGES
+
+* **analytics:** remove unused CsvExportButton component.
+
+
+
+
+
+## [8.1.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.10...@kong-ui-public/analytics-chart@8.1.11) (2025-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [8.1.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.9...@kong-ui-public/analytics-chart@8.1.10) (2025-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [8.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.8...@kong-ui-public/analytics-chart@8.1.9) (2025-05-02)
+
+
+### Bug Fixes
+
+* **analytics:** single value chart show empty when null [KHCP-16024] ([#2099](https://github.com/Kong/public-ui-components/issues/2099)) ([1a6b41d](https://github.com/Kong/public-ui-components/commit/1a6b41d47a6d072de71cdf53af2cebf328669413))
+
+
+
+
+
+## [8.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.7...@kong-ui-public/analytics-chart@8.1.8) (2025-05-01)
+
+
+### Bug Fixes
+
+* **deps:** remove recursive kongponents dependency ([#2100](https://github.com/Kong/public-ui-components/issues/2100)) ([3006571](https://github.com/Kong/public-ui-components/commit/3006571fc6e0c522a622bfed81ca616b5e072555))
+
+
+
+
+
 ## [8.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.6...@kong-ui-public/analytics-chart@8.1.7) (2025-04-24)
 
 

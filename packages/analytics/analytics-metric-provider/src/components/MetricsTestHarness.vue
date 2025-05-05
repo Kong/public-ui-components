@@ -51,15 +51,15 @@ import type { ExploreFilter, FilterableExploreDimensions, QueryDatasource } from
 import { computed } from 'vue'
 
 const props = withDefaults(defineProps<{
-  render: 'global' | 'single' | 'multi' | 'latencyCard',
-  datasource?: QueryDatasource,
-  queryReady?: boolean,
-  refreshInterval?: number,
-  additionalFilter?: ExploreFilter[],
-  longCardTitles?: boolean,
-  containerTitle?: string,
-  description?: string,
-  percentileLatency?: boolean,
+  render: 'global' | 'single' | 'multi' | 'latencyCard'
+  datasource?: QueryDatasource
+  queryReady?: boolean
+  refreshInterval?: number
+  additionalFilter?: ExploreFilter[]
+  longCardTitles?: boolean
+  containerTitle?: string
+  description?: string
+  percentileLatency?: boolean
 }>(), {
   refreshInterval: 60 * 1000,
   queryReady: true,

@@ -159,7 +159,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'navigation-click', record: RecordItem): void,
+  (e: 'navigation-click', record: RecordItem): void
 }>()
 
 const uniqueId = useId()

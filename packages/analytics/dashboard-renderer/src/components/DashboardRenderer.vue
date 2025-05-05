@@ -61,7 +61,7 @@ import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const props = defineProps<{
-  context: DashboardRendererContext,
+  context: DashboardRendererContext
 }>()
 
 const emit = defineEmits<{

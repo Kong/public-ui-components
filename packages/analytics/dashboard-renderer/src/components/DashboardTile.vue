@@ -5,7 +5,7 @@
     :data-testid="`tile-${tileId}`"
   >
     <div
-      v-if="hasKebabMenuAccess && definition.chart.type !== 'slottable'"
+      v-if="definition.chart.type !== 'slottable'"
       class="tile-header"
     >
       <KTooltip
@@ -56,7 +56,7 @@
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLink }"
             />
             <KDropdownItem
-              v-if="'allowCsvExport' in definition.chart && definition.chart.allowCsvExport"
+              v-if="!('allowCsvExport' in definition.chart) || definition.chart.allowCsvExport"
               class="chart-export-button"
               :data-testid="`chart-csv-export-${tileId}`"
               @click="exportCsv()"
@@ -132,12 +132,12 @@ import DonutChartRenderer from './DonutChartRenderer.vue'
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
 const props = withDefaults(defineProps<{
-  definition: TileDefinition,
-  context: DashboardRendererContextInternal,
-  height?: number,
-  queryReady: boolean,
-  refreshCounter: number,
-  tileId: string | number,
+  definition: TileDefinition
+  context: DashboardRendererContextInternal
+  height?: number
+  queryReady: boolean
+  refreshCounter: number
+  tileId: string | number
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
 })
@@ -149,9 +149,7 @@ const emit = defineEmits<{
 }>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
-const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
 const { i18n } = composables.useI18n()
-const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
 
 const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
@@ -210,7 +208,7 @@ const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
 const canShowTitleActions = computed((): boolean => (canShowKebabMenu.value && (kebabMenuHasItems.value || props.context.editable)) || !!badgeData.value)
 
-const canShowKebabMenu = computed(() => hasKebabMenuAccess && !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
+const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
 
 const kebabMenuHasItems = computed((): boolean => !!exploreLink.value || ('allowCsvExport' in props.definition.chart && props.definition.chart.allowCsvExport) || props.context.editable)
 

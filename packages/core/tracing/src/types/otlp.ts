@@ -3,67 +3,67 @@
 /** Properties of an InstrumentationScope. */
 export interface IInstrumentationScope {
   /** InstrumentationScope name */
-  name: string;
+  name: string
   /** InstrumentationScope version */
-  version?: string;
+  version?: string
   /** InstrumentationScope attributes */
-  attributes?: IKeyValue[];
+  attributes?: IKeyValue[]
   /** InstrumentationScope droppedAttributesCount */
-  droppedAttributesCount?: number;
+  droppedAttributesCount?: number
 }
 /** Properties of a KeyValue. */
 export interface IKeyValue {
   /** KeyValue key */
-  key: string;
+  key: string
   /** KeyValue value */
-  value: IAnyValue;
+  value: IAnyValue
 }
 /** Properties of an AnyValue. */
 export interface IAnyValue {
   /** AnyValue stringValue */
-  stringValue?: string | null;
+  stringValue?: string | null
   /** AnyValue boolValue */
-  boolValue?: boolean | null;
+  boolValue?: boolean | null
   /** AnyValue intValue */
-  intValue?: number | null;
+  intValue?: number | null
   /** AnyValue doubleValue */
-  doubleValue?: number | null;
+  doubleValue?: number | null
   /** AnyValue arrayValue */
-  arrayValue?: IArrayValue;
+  arrayValue?: IArrayValue
   /** AnyValue kvlistValue */
-  kvlistValue?: IKeyValueList;
+  kvlistValue?: IKeyValueList
   /** AnyValue bytesValue */
-  bytesValue?: Uint8Array;
+  bytesValue?: Uint8Array
 }
 /** Properties of an ArrayValue. */
 export interface IArrayValue {
   /** ArrayValue values */
-  values: IAnyValue[];
+  values: IAnyValue[]
 }
 /** Properties of a KeyValueList. */
 export interface IKeyValueList {
   /** KeyValueList values */
-  values: IKeyValue[];
+  values: IKeyValue[]
 }
 export interface LongBits {
-  low: number;
-  high: number;
+  low: number
+  high: number
 }
 export declare type Fixed64 = LongBits | string | number
 export interface OtlpEncodingOptions {
   /** Convert trace and span IDs to hex strings. */
-  useHex?: boolean;
+  useHex?: boolean
   /** Convert HrTime to 2 part 64 bit values. */
-  useLongBits?: boolean;
+  useLongBits?: boolean
 }
 /** Properties of an Event. */
 export interface IEvent {
   /** Event timeUnixNano */
-  timeUnixNano: Fixed64;
+  timeUnixNano: Fixed64
   /** Event name */
-  name: string;
+  name: string
   /** Event attributes */
-  attributes: IKeyValue[];
+  attributes: IKeyValue[]
   /** Event droppedAttributesCount */
-  droppedAttributesCount: number;
+  droppedAttributesCount: number
 }

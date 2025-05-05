@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "9.18.11",
+  "version": "9.18.14",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -28,7 +28,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.25.1",
-    "@kong/kongponents": "^9.29.3",
+    "@kong/kongponents": "^9.29.10",
     "axios": "^1.7.7",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.4.5"
@@ -37,9 +37,9 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.17.3",
+    "@kong/design-tokens": "1.17.4",
     "@kong/icons": "^1.25.1",
-    "@kong/kongponents": "9.29.3",
+    "@kong/kongponents": "9.29.10",
     "axios": "^1.7.7",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"

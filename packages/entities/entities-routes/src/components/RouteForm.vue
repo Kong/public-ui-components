@@ -225,8 +225,8 @@ const props = defineProps({
   /** Tooltips to show on config tabs */
   configTabTooltips: {
     type: Object as PropType<{
-      [RouteFlavor.TRADITIONAL]?: string,
-      [RouteFlavor.EXPRESSIONS]?: string,
+      [RouteFlavor.TRADITIONAL]?: string
+      [RouteFlavor.EXPRESSIONS]?: string
     } | undefined>,
     required: false,
     default: () => undefined,
@@ -240,11 +240,11 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'update', data: BaseRoutePayload): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
-  (e: 'model-updated', val: BaseRoutePayload): void,
-  (e: 'notify', options: { message: string, type: string }): void,
+  (e: 'update', data: BaseRoutePayload): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
+  (e: 'model-updated', val: BaseRoutePayload): void
+  (e: 'notify', options: { message: string, type: string }): void
 }>()
 
 const currentConfigHash = ref<string>(

@@ -134,9 +134,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'update', data: ConsumerGroupData): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
+  (e: 'update', data: ConsumerGroupData): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -357,6 +357,7 @@ const submitData = async (): Promise<void> => {
   try {
     state.readonly = true
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     formType.value === EntityBaseFormType.Create ? await createGroup() : await updateGroup()
   } finally {
     state.readonly = false

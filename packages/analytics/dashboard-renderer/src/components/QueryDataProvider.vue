@@ -58,7 +58,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'chart-data', chartData: ExploreResultV4): void,
+  (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'queryComplete'): void
 }>()
 

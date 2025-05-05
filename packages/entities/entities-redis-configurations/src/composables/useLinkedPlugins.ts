@@ -8,9 +8,9 @@ import type { RedisConfigurationLinkedPluginsResponse } from '../types'
 
 type RequestParams = {
   partialId: string
-  size?: number,
-  offset?: string | null,
-  query?: string,
+  size?: number
+  offset?: string | null
+  query?: string
 }
 
 export function buildLinksCacheKey(partialId: string) {
@@ -48,9 +48,9 @@ export const useLinkedPluginsFetcher = (config: KonnectConfig | KongManagerConfi
 }
 
 export const useLinkedPlugins = (param: {
-  partialId: string,
-  config: KonnectConfig | KongManagerConfig,
-  requestParams?: RequestParams,
+  partialId: string
+  config: KonnectConfig | KongManagerConfig
+  requestParams?: RequestParams
 }) => {
   const { partialId, config } = param
 

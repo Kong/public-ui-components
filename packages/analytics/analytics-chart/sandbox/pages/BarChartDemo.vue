@@ -182,7 +182,6 @@
         :allow-csv-export="true"
         :chart-data="(exploreResult)"
         :chart-options="analyticsChartOptions"
-        chart-title="Request count by Status Code"
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
@@ -238,8 +237,8 @@ enum Metrics {
 }
 
 interface MetricSelection {
-  name: Metrics,
-  unit: string,
+  name: Metrics
+  unit: string
 }
 
 // Inject the app-links from the entry file

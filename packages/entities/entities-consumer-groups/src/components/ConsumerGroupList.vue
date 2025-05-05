@@ -270,13 +270,13 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import AddToGroupModal from './AddToGroupModal.vue'
 
 const emit = defineEmits<{
-  (e: 'error', error: AxiosError): void,
-  (e: 'click:learn-more'): void,
-  (e: 'copy:success', payload: CopyEventPayload): void,
-  (e: 'copy:error', payload: CopyEventPayload): void,
-  (e: 'delete:success', consumerGroup: EntityRow): void,
-  (e: 'add:success', consumers: string[]): void,
-  (e: 'remove:success', consumer: EntityRow): void,
+  (e: 'error', error: AxiosError): void
+  (e: 'click:learn-more'): void
+  (e: 'copy:success', payload: CopyEventPayload): void
+  (e: 'copy:error', payload: CopyEventPayload): void
+  (e: 'delete:success', consumerGroup: EntityRow): void
+  (e: 'add:success', consumers: string[]): void
+  (e: 'remove:success', consumer: EntityRow): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

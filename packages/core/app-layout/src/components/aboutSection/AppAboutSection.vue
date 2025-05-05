@@ -104,13 +104,13 @@
 import { computed } from 'vue'
 
 const props = withDefaults(defineProps<{
-  title?: string,
-  description?: string,
-  created?: string,
-  createdLabel?: string,
-  modified?: string,
-  modifiedLabel?: string,
-  isLoading?: boolean,
+  title?: string
+  description?: string
+  created?: string
+  createdLabel?: string
+  modified?: string
+  modifiedLabel?: string
+  isLoading?: boolean
 }>(), {
   title: '',
   description: '',

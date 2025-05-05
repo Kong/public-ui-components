@@ -1,22 +1,22 @@
 // FetcherRawResponse is the raw format of the endpoint's response
 export type Consumer = (
   | {
-    username: string;
-    custom_id?: string;
+    username: string
+    custom_id?: string
   }
   | {
-    username?: string;
-    custom_id: string;
+    username?: string
+    custom_id: string
   }
 ) & {
-  id: string;
-  tags?: string[];
+  id: string
+  tags?: string[]
 }
 
 export interface FetcherRawResponse<T = any> {
-  data: T[];
-  total: number;
-  offset?: string;
+  data: T[]
+  total: number
+  offset?: string
 }
 
 export const consumers5: Consumer[] = Array(5)

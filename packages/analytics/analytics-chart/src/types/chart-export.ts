@@ -16,8 +16,8 @@ export interface Header {
 }
 
 export interface TimeseriesColumn {
-  label: string;
-  key: string;
+  label: string
+  key: string
 }
 
 export type CsvData = CsvKeyValuePair[]

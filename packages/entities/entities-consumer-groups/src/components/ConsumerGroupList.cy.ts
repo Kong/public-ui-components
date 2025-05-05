@@ -44,8 +44,8 @@ describe('<ConsumerGroupList />', () => {
     }
 
     const interceptKM = (params?: {
-      mockData?: ConsumerGroup[];
-      alias?: string;
+      mockData?: ConsumerGroup[]
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -63,8 +63,8 @@ describe('<ConsumerGroupList />', () => {
     }
 
     const interceptConsumerKM = (params?: {
-      mockData?: ConsumerGroup[];
-      alias?: string;
+      mockData?: ConsumerGroup[]
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -84,8 +84,8 @@ describe('<ConsumerGroupList />', () => {
     }
 
     const interceptExitGroupKM = (params?: {
-      status?: number;
-      alias?: string;
+      status?: number
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -100,8 +100,8 @@ describe('<ConsumerGroupList />', () => {
     }
 
     const interceptKMMultiPage = (params?: {
-      mockData?: ConsumerGroup[];
-      alias?: string;
+      mockData?: ConsumerGroup[]
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -650,8 +650,8 @@ describe('<ConsumerGroupList />', () => {
     }
 
     const interceptKonnect = (params?: {
-      mockData?: ConsumerGroup[];
-      alias?: string;
+      mockData?: ConsumerGroup[]
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -668,8 +668,8 @@ describe('<ConsumerGroupList />', () => {
       ).as(params?.alias ?? 'getConsumerGroups')
     }
     const interceptConsumerKonnect = (params?: {
-      mockData?: ConsumerGroup[];
-      alias?: string;
+      mockData?: ConsumerGroup[]
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -685,8 +685,8 @@ describe('<ConsumerGroupList />', () => {
       ).as(params?.alias ?? 'getGroups')
     }
     const interceptExitGroupKonnect = (params?: {
-      status?: number;
-      alias?: string;
+      status?: number
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -701,8 +701,8 @@ describe('<ConsumerGroupList />', () => {
     }
 
     const interceptKonnectMultiPage = (params?: {
-      mockData?: ConsumerGroup[];
-      alias?: string;
+      mockData?: ConsumerGroup[]
+      alias?: string
     }) => {
       cy.intercept(
         {

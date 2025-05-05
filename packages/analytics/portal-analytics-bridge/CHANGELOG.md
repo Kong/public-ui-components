@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.84](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/portal-analytics-bridge@0.2.83...@kong-ui-public/portal-analytics-bridge@0.2.84) (2025-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/portal-analytics-bridge
+
+
+
+
+
+## [0.2.83](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/portal-analytics-bridge@0.2.82...@kong-ui-public/portal-analytics-bridge@0.2.83) (2025-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/portal-analytics-bridge
+
+
+
+
+
 ## [0.2.82](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/portal-analytics-bridge@0.2.81...@kong-ui-public/portal-analytics-bridge@0.2.82) (2025-04-24)
 
 **Note:** Version bump only for package @kong-ui-public/portal-analytics-bridge

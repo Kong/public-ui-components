@@ -203,9 +203,9 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
-    [key: string]: TooltipPositionerFunction<ChartType>;
+    [key: string]: TooltipPositionerFunction<ChartType>
   }
   interface InteractionModeMap {
-    customInteractionMode: InteractionModeFunction;
+    customInteractionMode: InteractionModeFunction
   }
 }

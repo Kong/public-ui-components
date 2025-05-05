@@ -3,9 +3,9 @@ import type { EntityRow } from '../src/types/plugin-list'
 
 // FetcherRawResponse is the raw format of the endpoint's response
 export interface FetcherRawResponse {
-  data: EntityRow[];
-  total: number;
-  offset?: string;
+  data: EntityRow[]
+  total: number
+  offset?: string
 }
 
 export const plugins: FetcherRawResponse = {
@@ -758,13 +758,13 @@ export const scopedConsumer = {
 }
 
 export interface VaultsFetcherRawResponse {
-  data: VaultEntityRow[];
-  total: number;
-  offset?: string;
+  data: VaultEntityRow[]
+  total: number
+  offset?: string
 }
 
 export interface SecretsFetcherRawResponse {
-  data: SecretEntityRow[];
-  total: number;
-  offset?: string;
+  data: SecretEntityRow[]
+  total: number
+  offset?: string
 }

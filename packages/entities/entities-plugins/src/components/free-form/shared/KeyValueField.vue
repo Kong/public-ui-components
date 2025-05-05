@@ -78,9 +78,9 @@ import type { LabelAttributes } from '@kong/kongponents'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 
 interface KVEntry {
-  id: string;
-  key: string;
-  value: string;
+  id: string
+  key: string
+  value: string
 }
 
 const props = defineProps<{

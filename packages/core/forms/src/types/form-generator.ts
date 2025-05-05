@@ -4,7 +4,7 @@ export type FGCollapsibleOptions = boolean | {
   title?: string
   description?: string
   nestedCollapsible?: {
-    fields: any[],
+    fields: any[]
     triggerLabel: {
       expand: string
       collapse: string
