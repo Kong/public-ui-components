@@ -31,6 +31,7 @@
         v-model="dashboardConfig"
         :context="context"
         @edit-tile="onEditTile"
+        @zoom-time-range="handleZoom"
       >
         <template #slot-1>
           <div class="slot-container">
@@ -54,6 +55,7 @@ import type { DashboardRendererContext, GridTile } from '../../src'
 import { DashboardRenderer } from '../../src'
 import { computed, inject, ref } from 'vue'
 import type {
+  AbsoluteTimeRangeV4,
   DashboardConfig,
   DashboardTileType,
   ExploreAggregations,
@@ -249,5 +251,9 @@ const addTile = () => {
 watchDebounced(() => dashboardConfig.value.tiles, (newValue) => {
   console.log('update tiles', newValue)
 }, { deep: true, debounce: 300 })
+
+const handleZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
+  console.log('zoom-time-range', newTimeRange)
+}
 
 </script>

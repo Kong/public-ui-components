@@ -15,8 +15,10 @@
         legend-position="bottom"
         :show-menu="context.editable"
         :synthetics-data-key="chartOptions.syntheticsDataKey"
+        :timeseries-zoom="hasFinegrainedAbsoluteTimerangeAccess && !query.time_range"
         tooltip-title=""
         v-bind="extraProps"
+        @zoom-time-range="emit('zoom-time-range', $event)"
       >
         <template
           v-if="context.editable"
@@ -38,14 +40,17 @@ import { computed, defineProps } from 'vue'
 import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
 import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 import composables from '../composables'
-import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 
 const props = defineProps<RendererProps<any> & { extraProps?: Record<string, any> }>()
 const emit = defineEmits<{
   (e: 'edit-tile'): void
   (e: 'chart-data', chartData: ExploreResultV4): void
+  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 const { i18n } = composables.useI18n()
+const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+const hasFinegrainedAbsoluteTimerangeAccess = evaluateFeatureFlag('explore-v4-fine-granularity', false)
 
 const options = computed((): AnalyticsChartOptions => ({
   type: props.chartOptions.type,

@@ -33,6 +33,7 @@
           :tile-id="tile.id"
           @edit-tile="onEditTile(tile)"
           @remove-tile="onRemoveTile(tile)"
+          @zoom-time-range="emit('zoom-time-range', $event)"
         />
       </template>
     </component>
@@ -41,7 +42,7 @@
 
 <script setup lang="ts">
 import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
-import type { DashboardConfig, TileConfig, TileDefinition } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, DashboardConfig, TileConfig, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject, ref } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
@@ -65,6 +66,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
+  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 
 const model = defineModel<DashboardConfig>({ required: true })

@@ -5,6 +5,7 @@ Render Analytics charts on a page from a JSON definition.
 - [Requirements](#requirements)
 - [Usage](#usage)
   - [Props](#props)
+  - [Events](#events)
   - [Example](#example)
   - [Slotted content](#slotted-content)
   - [Auto-fit row content](#auto-fit-row-content)
@@ -55,6 +56,14 @@ This component takes two properties:
 | refreshInterval | number | No | DEFAULT_TILE_REFRESH_INTERVAL_MS | Interval for refreshing tiles |
 | editable | boolean | No | false | Enables dashboard editing capabilities |
 
+
+### Events
+
+The DashboardRenderer component emits the following events.
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `zoom-time-range` | [AbsoluteTimeRangeV4](https://github.com/Kong/public-ui-components/blob/1b4a96441f64539895432ae819140c3588ccc9a9/packages/analytics/analytics-utilities/src/types/explore/common.ts#L33) | Emitted when a timeseries chart tile is zoomed by selecting an area within the chart. |
 
 ### Example
 

@@ -102,6 +102,7 @@
         v-if="componentData"
         v-bind="componentData.rendererProps"
         @chart-data="onChartData"
+        @zoom-time-range="emit('zoom-time-range', $event)"
       />
     </div>
   </div>
@@ -122,7 +123,8 @@ import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon } from '@kong/icons'
-import { msToGranularity, type AiExploreAggregations, type AiExploreQuery, type AnalyticsBridge, type ExploreAggregations, type ExploreQuery, type ExploreResultV4, type QueryableAiExploreDimensions, type QueryableExploreDimensions, type TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import { msToGranularity } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
@@ -143,6 +145,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{
   (e: 'edit-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
+  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
