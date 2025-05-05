@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.15...@kong-ui-public/dashboard-renderer@5.0.0) (2025-05-05)
+
+
+### Bug Fixes
+
+* **analytics:** CSV export and FF removal [MA-3895, MA-3840] ([#2103](https://github.com/Kong/public-ui-components/issues/2103)) ([d0f792f](https://github.com/Kong/public-ui-components/commit/d0f792f663c3857690f4087d3d7d0f5a0ab52ccf))
+
+
+### BREAKING CHANGES
+
+* **analytics:** remove unused CsvExportButton component.
+
+
+
+
+
 ## [4.1.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@4.1.14...@kong-ui-public/dashboard-renderer@4.1.15) (2025-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
