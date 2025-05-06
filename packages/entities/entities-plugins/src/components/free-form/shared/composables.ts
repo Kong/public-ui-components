@@ -364,18 +364,28 @@ export function useFieldLabel(
   const fieldName = utils.getName(pathValue)
   const { formConfig } = useFormShared()
   const parentLabelPath = useLabelPath(fieldName, resetLabelPathRule)
+  const { getSchema } = useFormShared()
+  const ancestors = useFieldAncestors(fieldPath)
 
   return computed(() => {
     const realPath = parentLabelPath.value ?? fieldName
     const parts = utils.toArray(realPath)
 
-    const res = parts
-      .map(fieldName => fieldName
-        .split('_')
-        .map(capitalize)
-        .map(replaceByDictionary)
-        .join(' '))
-      .join(' › ')
+    const parentSchema = ancestors.value.parent?.path
+      ? getSchema(ancestors.value.parent.path)
+      : null
+
+    const parentIsArray = parentSchema?.type === 'array'
+
+    const res = parentIsArray
+      ? '' // hide the label when it is a child of Array
+      : parts
+        .map(fieldName => fieldName
+          .split('_')
+          .map(capitalize)
+          .map(replaceByDictionary)
+          .join(' '))
+        .join(' › ')
 
     return formConfig.transformLabel ? formConfig.transformLabel(res, pathValue) : res
   })
