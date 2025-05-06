@@ -71,6 +71,6 @@
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
-    "@kong/icons": "^1.25.1"
+    "@kong/icons": "^1.26.0"
   }
 }
