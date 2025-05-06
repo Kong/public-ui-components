@@ -2,6 +2,7 @@
   <StringField
     data-1p-ignore
     data-autofocus
+    :data-testid="`callouts-name-${index}`"
     label="Name"
     :label-attributes="getLabelAttributes('callouts.*.name')"
     :model-value="callout.name"

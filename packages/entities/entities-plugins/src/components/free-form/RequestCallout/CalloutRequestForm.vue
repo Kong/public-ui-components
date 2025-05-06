@@ -5,6 +5,7 @@
     required
   >
     <StringField
+      :data-testid="`callouts-request-url-${calloutIndex}`"
       label="Request › URL"
       :label-attributes="getLabelAttributes('callouts.*.request.url')"
       :model-value="request.url"
@@ -16,6 +17,7 @@
 
     <EnumField
       v-model="request.method"
+      :data-testid="`callouts-request-method-${calloutIndex}`"
       :items="METHODS"
       label="Request › Method"
       :label-attributes="getLabelAttributes('callouts.*.request.method')"
