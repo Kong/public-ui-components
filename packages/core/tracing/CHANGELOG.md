@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.7...@kong-ui-public/tracing@0.10.8) (2025-05-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.26.0 ([#2107](https://github.com/Kong/public-ui-components/issues/2107)) ([6ba84d3](https://github.com/Kong/public-ui-components/commit/6ba84d3eb5df7fa0880876455f78a75fbc69960a))
+
+
+
+
+
 ## [0.10.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.6...@kong-ui-public/tracing@0.10.7) (2025-05-06)
 
 **Note:** Version bump only for package @kong-ui-public/tracing
