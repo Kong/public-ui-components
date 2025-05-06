@@ -1,62 +1,60 @@
 <template>
-  <StringField
-    data-1p-ignore
-    data-autofocus
-    label="Name"
-    :label-attributes="getLabelAttributes('callouts.*.name')"
-    :model-value="callout.name"
-    :placeholder="getPlaceholder('callouts.*.name')"
-    required
-    @update:model-value="val => callout.name = (val ?? '').trim()"
-  />
+  <ObjectField :name="fieldName">
+    <template #depends_on="props">
+      <EnumField
+        v-bind="props"
+        :items="dependsOnItems"
+        multiple
+        :required="false"
+      />
+    </template>
 
-  <EnumField
-    :items="dependsOnItems"
-    label="Depends On"
-    :label-attributes="getLabelAttributes('callouts.*.depends_on')"
-    :model-value="callout.depends_on"
-    multiple
-    :placeholder="getPlaceholder('callouts.*.depends_on')"
-    @update:model-value="val => callout.depends_on = val ?? []"
-  />
-
-  <CalloutRequestForm :callout-index="index" />
-
-  <CalloutResponseForm :callout-index="index" />
-
-  <ObjectField
-    label="Cache"
-    :label-attributes="getLabelAttributes('callouts.*.cache')"
-    required
-  >
-    <BooleanField
-      v-model="callout.cache.bypass"
-      label="Cache › Bypass"
-      :label-attributes="getLabelAttributes('callouts.*.cache.bypass')"
-    />
+    <template #request="props">
+      <ObjectField
+        v-bind="props"
+        :fields-order="['url', 'method', 'headers', 'query', 'body', 'http_opts', 'error', 'by_lua']"
+      >
+        <template #method="props">
+          <EnumField
+            v-bind="props"
+            :items="toSelectItems([
+              'GET',
+              'POST',
+              'PUT',
+              'DELETE',
+              'PATCH',
+              'HEAD',
+              'OPTIONS',
+              'CONNECT',
+              'TRACE',
+            ])"
+          />
+        </template>
+      </ObjectField>
+    </template>
   </ObjectField>
 </template>
 
 <script setup lang="ts">
 import { computed, watch } from 'vue'
+
+import { toSelectItems } from '../shared/utils'
 import { useFormShared } from '../shared/composables'
-import CalloutRequestForm from './CalloutRequestForm.vue'
-import ObjectField from '../shared/ObjectField.vue'
-import CalloutResponseForm from './CalloutResponseForm.vue'
-import StringField from '../shared/StringField.vue'
-import BooleanField from '../shared/BooleanField.vue'
 import EnumField from '../shared/EnumField.vue'
-import type { RequestCallout } from './types'
+import ObjectField from '../shared/ObjectField.vue'
+
+import type { RequestCalloutPlugin } from './types'
 import type { SelectItem } from '@kong/kongponents'
 
 const props = defineProps<{
   index: number
+  fieldName: string
 }>()
 
-const { formData, getLabelAttributes, getPlaceholder } = useFormShared<RequestCallout>()
+const { formData } = useFormShared<RequestCalloutPlugin>()
 
 const dependableCallouts = computed(() => {
-  const { callouts } = formData
+  const { callouts } = formData.config!
   if (callouts == null) {
     return []
   }
@@ -69,7 +67,7 @@ const dependsOnItems = computed<SelectItem[]>(() => {
   return dependableCallouts.value.map(({ _id, name }) => ({ value: _id as string, label: name }))
 })
 
-const callout = computed(() => formData.callouts[props.index])
+const callout = computed(() => formData.config!.callouts[props.index])
 
 // remove depends_on values that are not in the dependsOnItems
 // try to mutate the array instead of replacing it

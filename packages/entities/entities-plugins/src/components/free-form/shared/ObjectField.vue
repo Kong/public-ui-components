@@ -1,20 +1,50 @@
 <template>
+  <component :is="$slots[FIELD_RENDERERS]" />
+
+  <!-- missing schema alert -->
+  <KAlert
+    v-if="field.error"
+    appearance="danger"
+    :message="field.error.message"
+  />
+
+  <!-- only render children, no wrapper -->
+  <template v-else-if="asChild">
+    <div class="ff-object-field ff-object-field-as-child">
+      <slot>
+        <Field
+          v-for="field in childFields"
+          :key="Object.keys(field)[0]"
+          :name="Object.keys(field)[0]"
+        />
+      </slot>
+    </div>
+  </template>
+
+  <!-- render children with wrapper -->
   <div
+    v-else
     class="ff-object-field"
     :class="{ 'ff-object-field-collapsed': !realExpanded }"
   >
     <header class="ff-object-field-header">
       <KLabel
         class="ff-object-field-label"
-        v-bind="labelAttributes"
+        v-bind="{
+          ...fieldAttrs,
+          required: false
+        }"
+        :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
-        {{ label }}
+        {{ fieldAttrs.label }}
         <template
-          v-if="labelAttributes?.info"
+          v-if="fieldAttrs.labelAttributes?.info"
           #tooltip
         >
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="labelAttributes?.info" />
+          <slot name="tooltip">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="fieldAttrs.labelAttributes.info" />
+          </slot>
         </template>
       </KLabel>
       <div class="ff-object-field-actions">
@@ -31,7 +61,7 @@
           />
         </KButton>
         <KButton
-          v-if="!required"
+          v-if="!fieldAttrs.required"
           appearance="tertiary"
           :class="`ff-object-field-button-${realAdded ? 'remove' : 'add'}`"
           icon
@@ -47,7 +77,13 @@
         v-if="realExpanded"
         class="ff-object-field-content"
       >
-        <slot />
+        <slot>
+          <Field
+            v-for="field in childFields"
+            :key="Object.keys(field)[0]"
+            :name="Object.keys(field)[0]"
+          />
+        </slot>
       </div>
     </SlideTransition>
   </div>
@@ -56,24 +92,97 @@
 <script setup lang="ts">
 import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
 import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
-import { computed, watch } from 'vue'
+import { computed, onBeforeMount, toRef, watch, type Slot } from 'vue'
 import SlideTransition from './SlideTransition.vue'
+import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
+import Field from './Field.vue'
 
-const { defaultExpanded = true, defaultAdded, collapsible = true, required } = defineProps<{
-  label: string
+import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
+import type { ResetLabelPathRule } from './types'
+
+const slots = defineSlots<
+  {
+    default?: Slot
+    [FIELD_RENDERERS]?: Slot<{ name: string }>
+    tooltip?: Slot
+  } & Record<string, Slot<{ name: string }>>
+>()
+
+const {
+  defaultExpanded = true, defaultAdded = true, collapsible = true, omit,
+  required = undefined, asChild: defaultAsChild = undefined, resetLabelPath,
+  fieldsOrder,
+  ...props
+} = defineProps<{
+  name: string
+  label?: string
   labelAttributes?: LabelAttributes
   required?: boolean
   defaultExpanded?: boolean
   defaultAdded?: boolean
   collapsible?: boolean
   appearance?: 'card' | 'default'
+  omit?: string[]
+  asChild?: boolean
+  resetLabelPath?: ResetLabelPathRule
+  fieldsOrder?: string[]
 }>()
 
+const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
+const { getSchema } = useFormShared()
+
 const added = defineModel<boolean>('added', { default: undefined })
-const realAdded = computed(() => !required ? added.value ?? defaultAdded : true)
 
 const expanded = defineModel<boolean>('expanded', { default: undefined })
 const realExpanded = computed(() => realAdded.value && (collapsible ? expanded.value ?? defaultExpanded : false))
+
+// Determines if the current field is a child element of an array field
+const isChildOfArray = computed(() => {
+  if (field.ancestors?.value) {
+    const parent = field.ancestors.value.parent
+    if (parent?.path) {
+      return getSchema(parent.path)?.type === 'array'
+    }
+  }
+  return false
+})
+
+const realResetLabelPath = computed(() => {
+  if (resetLabelPath !== undefined) return resetLabelPath
+  if (isChildOfArray.value) return 'reset'
+  return 'inherit'
+})
+
+const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ required, ...props, resetLabelPath: realResetLabelPath.value })))
+const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
+
+const asChild = computed(() => {
+  if (defaultAsChild !== undefined) return defaultAsChild
+  return isChildOfArray.value
+})
+
+const childFields = computed(() => {
+  let fields = (field.schema!.value as RecordFieldSchema).fields
+  if (omit) {
+    fields = fields.filter(f => !omit.includes(Object.keys(f)[0]))
+  }
+
+  if (!fieldsOrder) return fields
+
+  return fields.sort((a, b) => {
+    const aKey = Object.keys(a)[0]
+    const bKey = Object.keys(b)[0]
+
+    const aIndex = fieldsOrder.indexOf(aKey)
+    const bIndex = fieldsOrder.indexOf(bKey)
+
+    if (aIndex === -1 && bIndex === -1) return 0
+    if (aIndex === -1) return 1
+    if (bIndex === -1) return -1
+
+    return aIndex - bIndex
+  })
+})
 
 watch(realAdded, (value) => {
   if (!collapsible) {
@@ -81,10 +190,20 @@ watch(realAdded, (value) => {
   }
   expanded.value = value
 })
+
+onBeforeMount(() => {
+  added.value = !!fieldValue?.value
+})
 </script>
 
 <style lang="scss" scoped>
 .ff-object-field {
+  &-as-child {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-80;
+  }
+
   // .k-label is required to override styles correctly in KM
   &-label.k-label {
     margin-bottom: 0;

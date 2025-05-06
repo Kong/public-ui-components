@@ -32,6 +32,7 @@ import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
 import { getFreeFormName } from '../utils/free-form'
+import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -701,7 +702,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
    * @param {Object} schema - the schema to prune the record against
    * @returns {Object} the pruned record
    */
-  function pruneRecord(config: Record<string, any>, schema: Record<string, any>): Record<string, any> {
+  function pruneRecord(config: Record<string, any>, schema: UnionFieldSchema): Record<string, any> {
     if (
       schema == null ||
       (schema.type && schema.type !== 'record') ||

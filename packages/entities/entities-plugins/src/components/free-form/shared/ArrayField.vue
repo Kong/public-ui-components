@@ -1,5 +1,13 @@
 <template>
+  <!-- missing schema alert -->
+  <KAlert
+    v-if="field.error"
+    appearance="danger"
+    :message="field.error.message"
+  />
+
   <div
+    v-else
     ref="root"
     class="ff-array-field"
     :class="{
@@ -9,18 +17,19 @@
   >
     <header class="ff-array-field-header">
       <KLabel
-        v-if="label"
         class="ff-array-field-label"
-        v-bind="labelAttributes"
-        :required="required"
+        v-bind="fieldAttrs"
+        :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
-        {{ label }}
+        {{ fieldAttrs.label }}
         <template
-          v-if="labelAttributes?.info"
+          v-if="fieldAttrs.labelAttributes?.info"
           #tooltip
         >
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="labelAttributes?.info" />
+          <slot name="tooltip">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="fieldAttrs.labelAttributes.info" />
+          </slot>
         </template>
       </KLabel>
       <KButton
@@ -47,9 +56,15 @@
         >
           <div class="ff-array-field-item-content">
             <slot
+              v-if="$slots.item"
+              data-autofocus
+              :field-name="String(index)"
               :index="index"
-              :item="item"
               name="item"
+            />
+            <Field
+              v-else
+              :name="String(index)"
             />
           </div>
           <KButton
@@ -77,9 +92,14 @@
               :data-index="index"
             >
               <slot
+                v-if="$slots.item"
+                :field-name="String(index)"
                 :index="index"
-                :item="item"
                 name="item"
+              />
+              <Field
+                v-else
+                :name="String(index)"
               />
             </div>
           </template>
@@ -105,12 +125,16 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { useTemplateRef, nextTick, watch, computed, ref, reactive } from 'vue'
+import { useTemplateRef, nextTick, watch, computed, ref, reactive, toValue, toRef } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
+import { useField, useFieldAttrs, useFormShared } from './composables'
+import * as utils from './utils'
+import Field from './Field.vue'
 
 const props = defineProps<{
+  name: string
   items?: T[] | null
   label?: string
   labelAttributes?: LabelAttributes
@@ -125,8 +149,22 @@ const emit = defineEmits<{
   remove: [index: number]
 }>()
 
+defineSlots<{
+  item(props: {
+    index: number
+    /** for named slot, the field name use `fieldName` instead */
+    fieldName: string
+    'data-autofocus'?: boolean
+  }): any
+  tooltip(): any
+}>()
+
+const { getDefault } = useFormShared()
+const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
+const fieldAttrs = useFieldAttrs(field.path!, props)
+
 const keyMap = reactive(new Map<T, string>())
-const realItems = computed(() => props.items || [])
+const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
 
 const ListTag = computed(() => props.appearance === 'card' ? KCard : 'div')
 
@@ -145,7 +183,7 @@ function getKey(item: T, index: number) {
 function getTabTitle(item: T, index: number) {
   return typeof props.itemLabel === 'function'
     ? props.itemLabel(item, index)
-    : props.itemLabel || `Item #${index}`
+    : props.itemLabel || fieldAttrs.value.label || `Item #${index}`
 }
 
 watch(realItems, (newItems) => {
@@ -174,6 +212,14 @@ const tabs = computed(() => realItems.value.map((item, index) => {
 const activeTab = ref<string>(tabs.value[0]?.hash)
 
 const addItem = async () => {
+
+  const defaultItemValue = getDefault(utils.resolve(field.path!.value, utils.arraySymbol))
+
+  if (!Array.isArray(fieldValue!.value)) {
+    fieldValue!.value = []
+  }
+
+  fieldValue!.value.push(defaultItemValue)
   emit('add')
 
   if (props.appearance === 'tabs') {
@@ -186,6 +232,9 @@ const addItem = async () => {
 }
 
 const removeItem = async (index: number) => {
+  if (Array.isArray(fieldValue!.value)) {
+    fieldValue!.value.splice(index, 1)
+  }
   emit('remove', index)
 
   if (props.appearance === 'tabs') {
