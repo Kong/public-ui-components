@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.18.16...@kong-ui-public/entities-plugins@9.19.0) (2025-05-06)
+
+
+### Features
+
+* **entities-plugins:** poc of free-form improving ([#2083](https://github.com/Kong/public-ui-components/issues/2083)) ([e600989](https://github.com/Kong/public-ui-components/commit/e60098900e5aeef49ae4d46dfa50c2267941171b))
+
+
+
+
+
 ## [9.18.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.18.15...@kong-ui-public/entities-plugins@9.18.16) (2025-05-06)
 
 
