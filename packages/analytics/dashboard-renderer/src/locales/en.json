@@ -7,6 +7,7 @@
       "30d": "Last 30-Day Summary"
     },
     "edit": "Edit",
+    "duplicateTile": "Duplicate",
     "remove": "Remove"
   },
   "queryDataProvider": {

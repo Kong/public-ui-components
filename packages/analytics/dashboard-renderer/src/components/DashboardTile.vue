@@ -70,6 +70,13 @@
             </KDropdownItem>
             <KDropdownItem
               v-if="context.editable"
+              :data-testid="`duplicate-tile-${tileId}`"
+              @click="duplicateTile"
+            >
+              {{ i18n.t('renderer.duplicateTile') }}
+            </KDropdownItem>
+            <KDropdownItem
+              v-if="context.editable"
               :data-testid="`remove-tile-${tileId}`"
               @click="removeTile"
             >
@@ -144,6 +151,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: TileDefinition): void
+  (e: 'duplicate-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
@@ -271,6 +279,10 @@ const editTile = () => {
   emit('edit-tile', props.definition)
 }
 
+const duplicateTile = () => {
+  emit('duplicate-tile', props.definition)
+}
+
 const removeTile = () => {
   emit('remove-tile', props.definition)
 }
@@ -312,13 +324,13 @@ const exportCsv = () => {
     .title-tooltip {
       margin-right: $kui-space-20;
       overflow: hidden;
+    }
 
-      .title {
-        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
+    .title {
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .tile-actions {
