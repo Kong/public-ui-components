@@ -31,6 +31,7 @@
           :query-ready="queryReady"
           :refresh-counter="refreshCounter"
           :tile-id="tile.id"
+          @duplicate-tile="onDuplicateTile(tile)"
           @edit-tile="onEditTile(tile)"
           @remove-tile="onRemoveTile(tile)"
           @zoom-time-range="emit('zoom-time-range', $event)"
@@ -42,7 +43,7 @@
 
 <script setup lang="ts">
 import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
-import type { AbsoluteTimeRangeV4, DashboardConfig, TileConfig, TileDefinition } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, DashboardConfig, TileConfig, SlottableOptions, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject, ref } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
@@ -121,7 +122,7 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 }
 
 const gridTiles = computed(() => {
-  return model.value.tiles.map((tile: TileConfig, i: number) => {
+  return model.value.tiles.map((tile: TileConfig) => {
     let tileMeta = tile.definition
 
     if ('description' in tileMeta.chart) {
@@ -197,6 +198,36 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
 
 const onEditTile = (tile: GridTile<TileDefinition>) => {
   emit('edit-tile', tile)
+}
+
+const isSlottable = (chart: any): chart is SlottableOptions => {
+  return chart.type === 'slottable'
+}
+
+const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
+  const chart = isSlottable(tile.meta.chart)
+    ? { ...tile.meta.chart }
+    : {
+      ...tile.meta.chart,
+      chartTitle: tile.meta.chart.chartTitle ? `Copy of ${tile.meta.chart.chartTitle}` : '',
+    }
+
+  const newTile: TileConfig = {
+    id: crypto.randomUUID(),
+    definition: {
+      ...tile.meta,
+      chart,
+    },
+    layout: {
+      position: {
+        col: 0,
+        row: 0,
+      },
+      size: tile.layout.size,
+    },
+  }
+
+  model.value.tiles.push(newTile)
 }
 
 const onRemoveTile = (tile: GridTile<TileDefinition>) => {

@@ -69,7 +69,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "600KB"
+    "errorLimit": "700KB"
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
