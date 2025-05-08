@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.1.3...@kong-ui-public/dashboard-renderer@5.2.0) (2025-05-08)
+
+
+### Features
+
+* **analytics:** handle tile duplication [ma-3824] ([#2110](https://github.com/Kong/public-ui-components/issues/2110)) ([08081d8](https://github.com/Kong/public-ui-components/commit/08081d8ca7e0dfb5900dfe358e438a8387e538c7))
+
+
+
+
+
 ## [5.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.1.2...@kong-ui-public/dashboard-renderer@5.1.3) (2025-05-06)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
