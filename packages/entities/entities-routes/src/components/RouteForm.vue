@@ -82,25 +82,12 @@
         :hide-info-header="hideSectionsInfo"
         :title="t('form.sections.config.title')"
       >
-        <KSelect
-          v-model="state.fields.protocols"
-          data-testid="route-form-protocols"
-          :items="protocols"
-          :label="t('form.fields.protocols.label')"
-          :label-attributes="{
-            info: t('form.fields.protocols.tooltip'),
-            tooltipAttributes: { maxWidth: '400' },
-          }"
-          :readonly="state.isReadonly"
-          required
-          width="100%"
-        />
-
         <RouteRulesComposer
+          v-model:config-flavor="configFlavor"
+          v-model:config-type="configType"
           v-model:custom-methods="customMethods"
           v-model:fields="state.fields"
-          v-model:hash="currentConfigHash"
-          v-model:tags="state.fields.tags"
+          :is-ws-supported="isWsSupported"
           :protocols="state.fields.protocols"
           :readonly="state.isReadonly"
           :record-flavor="recordFlavor"
@@ -109,6 +96,7 @@
           :tooltips="configTabTooltips"
           @notify="emit('notify', $event)"
           @update:payload="rulesPayload = $event"
+          @update:protocols="state.fields.protocols = $event"
         />
       </EntityFormSection>
 
@@ -139,7 +127,7 @@ import type { SelectItem } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import isEqual from 'lodash.isequal'
 import type { PropType } from 'vue'
-import { computed, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onBeforeMount, onMounted, reactive, ref, watch, provide } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { INITIAL_SHARED_ROUTE_RULES_FIELDS, INITIAL_TRADITIONAL_ROUTE_RULES_VALUES } from '../constants'
@@ -147,6 +135,7 @@ import endpoints from '../routes-endpoints'
 import type {
   BaseRoutePayload,
   BaseRouteStateFields,
+  CustomMethod,
   ExpressionsRouteRulesFields,
   HeaderFields,
   Headers,
@@ -161,12 +150,14 @@ import type {
   TypedRouteRulesPayload,
 } from '../types'
 import {
+  Methods,
   RouteFlavor,
   RoutingRulesEntities,
   stateHasExpressionsFlavor,
   stateHasTraditionalFlavor,
 } from '../types'
 import RouteRulesComposer from './RouteFormRulesComposer.vue'
+import { isDefinedByBasic } from '../utilities/helpers'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -247,21 +238,14 @@ const emit = defineEmits<{
   (e: 'notify', options: { message: string, type: string }): void
 }>()
 
-const currentConfigHash = ref<string>(
+const configType = ref<'basic' | 'advanced'>('basic')
+const configFlavor = ref<RouteFlavor>(
   props.routeFlavors.traditional
-    ? `#${RouteFlavor.TRADITIONAL}`
+    ? RouteFlavor.TRADITIONAL
     : props.routeFlavors.expressions
-      ? `#${RouteFlavor.EXPRESSIONS}`
-      : '')
-
-const currentConfigTab = computed<RouteFlavor | undefined>(() => {
-  if (currentConfigHash.value) {
-    return currentConfigHash.value.substring(1) as RouteFlavor
-  }
-
-  return undefined
-})
-
+      ? RouteFlavor.EXPRESSIONS
+      : RouteFlavor.TRADITIONAL,
+)
 const recordFlavor = ref<RouteFlavor | undefined>(undefined)
 
 const payloadFlavor = computed<RouteFlavor | undefined>(() => {
@@ -269,8 +253,8 @@ const payloadFlavor = computed<RouteFlavor | undefined>(() => {
     return recordFlavor.value
   }
 
-  if (currentConfigTab.value) {
-    return currentConfigTab.value as RouteFlavor
+  if (configFlavor.value) {
+    return configFlavor.value as RouteFlavor
   }
 
   if (props.routeFlavors.traditional) {
@@ -301,7 +285,13 @@ const state = reactive<RouteState<BaseRouteStateFields & TraditionalRouteRulesFi
     service_id: '',
     ...INITIAL_SHARED_ROUTE_RULES_FIELDS,
     ...{
-      ...(!props.routeId && { paths: [''] }), // We don't expect this prop to be updated throughout the lifecycle of the component
+      paths: [''],
+      snis: [''],
+      hosts: [''],
+      methods: [],
+      headers: [{ ...INITIAL_TRADITIONAL_ROUTE_RULES_VALUES[RoutingRulesEntities.HEADERS][0] }],
+      sources: [{ ...INITIAL_TRADITIONAL_ROUTE_RULES_VALUES[RoutingRulesEntities.SOURCES][0] }],
+      destinations: [{ ...INITIAL_TRADITIONAL_ROUTE_RULES_VALUES[RoutingRulesEntities.DESTINATIONS][0] }],
       regex_priority: 0,
       path_handling: 'v0',
     } as Omit<TraditionalRouteRulesFields, keyof SharedRouteRulesFields>,
@@ -316,10 +306,15 @@ const state = reactive<RouteState<BaseRouteStateFields & TraditionalRouteRulesFi
 
 watch(() => props.routeFlavors, (routeFlavors) => {
   state.routeFlavors = routeFlavors
-})
+
+  if (!routeFlavors.traditional) {
+    configType.value = 'advanced'
+  }
+}, { immediate: true, deep: true })
 
 const rulesPayload = ref<TypedRouteRulesPayload>()
-const customMethods = ref<string[]>([''])
+const customMethods = ref<Array<{ label: string, value: string }>>([])
+const originalCustomMethods = ref<Array<{ label: string, value: string }>>([])
 
 const originalFields = reactive<BaseRouteStateFields & TraditionalRouteRulesFields & ExpressionsRouteRulesFields>({
   name: '',
@@ -345,32 +340,6 @@ const isWsSupported = props.config.app === 'konnect' || useGatewayFeatureSupport
   },
 })
 
-const protocols = [
-  { label: t('form.protocols.grpc'), value: 'grpc' },
-  { label: t('form.protocols.grpcs'), value: 'grpcs' },
-  { label: t('form.protocols.grpc,grpcs'), value: 'grpc,grpcs' },
-  { label: t('form.protocols.http'), value: 'http' },
-  { label: t('form.protocols.https'), value: 'https' },
-  { label: t('form.protocols.http,https'), value: 'http,https' },
-  { label: t('form.protocols.tcp'), value: 'tcp' },
-  { label: t('form.protocols.tls'), value: 'tls' },
-  { label: t('form.protocols.tls,udp'), value: 'tls,udp' },
-  { label: t('form.protocols.tcp,udp'), value: 'tcp,udp' },
-  { label: t('form.protocols.tcp,tls'), value: 'tcp,tls' },
-  { label: t('form.protocols.tcp,tls,udp'), value: 'tcp,tls,udp' },
-  { label: t('form.protocols.tls_passthrough'), value: 'tls_passthrough' },
-  { label: t('form.protocols.udp'), value: 'udp' },
-  ...(
-    isWsSupported
-      ? [
-        { label: t('form.protocols.ws'), value: 'ws' },
-        { label: t('form.protocols.wss'), value: 'wss' },
-        { label: t('form.protocols.ws,wss'), value: 'ws,wss' },
-      ]
-      : []
-  ),
-]
-
 const formType = computed((): EntityBaseFormType => props.routeId
   ? EntityBaseFormType.Edit
   : EntityBaseFormType.Create)
@@ -389,19 +358,6 @@ const fetchErrorHandler = (err: AxiosError): void => {
   emit('error', err)
 }
 
-const setMethods = (methods: Method[]): void => {
-  if (stateHasTraditionalFlavor(state)) {
-    // traditional
-
-    state.fields.methods = { ...INITIAL_TRADITIONAL_ROUTE_RULES_VALUES[RoutingRulesEntities.METHODS] }
-    methods.forEach(method => {
-      if (state.fields.methods) {
-        state.fields.methods[method] = true
-      }
-    })
-  }
-}
-
 const formatHeaders = (items: Headers): HeaderFields[] => {
   return Object.entries(items).map(item => {
     return { header: item[0], values: item[1]?.join() }
@@ -416,7 +372,9 @@ const updateFormValues = (data: Record<string, any>): void => {
   if (props.routeId) {
     const flavor = typeof data.expression === 'string' && data.expression.length > 0 ? RouteFlavor.EXPRESSIONS : RouteFlavor.TRADITIONAL
     recordFlavor.value = flavor
-    currentConfigHash.value = `#${flavor}`
+    if (!isDefinedByBasic(data)) {
+      configType.value = 'advanced'
+    }
   }
 
   if (data?.service?.id) {
@@ -461,7 +419,9 @@ const updateFormValues = (data: Record<string, any>): void => {
     }
 
     if (data?.methods) {
-      setMethods(data.methods)
+      state.fields.methods = data.methods.filter((method: Method) => Object.keys(Methods).includes(method))
+      customMethods.value = data.methods.filter((method: Method) => !Object.keys(Methods).includes(method)).map((method: CustomMethod) => ({ label: method, value: method }))
+      originalCustomMethods.value = [...customMethods.value]
     }
 
     if (data?.headers) {
@@ -499,8 +459,7 @@ const isFormValid = computed((): boolean => {
         const snis = state.fields.snis ? !!state.fields.snis.filter(Boolean).length : null
         const destinations = state.fields.destinations ? state.fields.destinations.some(({ ip }) => !!ip) : null
         const sources = state.fields.sources ? state.fields.sources.some(({ ip }) => !!ip) : null
-        const hasCustomMethod = state.fields.methods?.CUSTOM
-        const methods = hasCustomMethod ? customMethods.value.some(item => !!item) : Object.values(state.fields.methods || {}).includes(true)
+        const methods = state.fields.methods ? !!state.fields.methods.filter(Boolean).length : null
 
         return !!state.fields.protocols && ((isProtocolSelected(['http']) && !!(hosts || methods || paths || headers)) ||
           (isProtocolSelected(['https']) && !!(hosts || methods || paths || headers || snis)) ||
@@ -515,6 +474,7 @@ const isFormValid = computed((): boolean => {
       break
     }
     case RouteFlavor.EXPRESSIONS: {
+      console.log(state.fields)
       if (stateHasExpressionsFlavor(state)) {
         return state.fields.expression.length > 0
       }
@@ -528,7 +488,9 @@ const isFormValid = computed((): boolean => {
   return true
 })
 
-const changesExist = computed((): boolean => !isEqual(state.fields, originalFields))
+const changesExist = computed((): boolean => {
+  return !isEqual(state.fields, originalFields) || !isEqual(customMethods.value, originalCustomMethods.value)
+})
 
 /* ---------------
  * Saving
@@ -650,6 +612,8 @@ onMounted(() => {
 })
 
 defineExpose({ saveFormData, payload })
+
+provide('configType', configType)
 </script>
 
 <style lang="scss">
@@ -705,20 +669,6 @@ defineExpose({ saveFormData, payload })
         font-size: $kui_font_size_40;
         margin-left: $kui_space_40;
       }
-    }
-
-    &-routing-rules-selector {
-      @include routing-rules-selector;
-    }
-
-    &-advanced-fields-collapse {
-      margin-top: $kui_space_80;
-    }
-
-    &-advanced-fields-container {
-      display: flex;
-      flex-direction: column;
-      margin-top: $kui_space_80;
     }
 
     &-fields-container {
