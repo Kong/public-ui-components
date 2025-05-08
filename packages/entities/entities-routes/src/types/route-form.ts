@@ -1,6 +1,5 @@
 import type { BaseFormConfig, KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RouteLocationRaw } from 'vue-router'
-import type { Method, Methods } from './method-badge'
 import type { PROTOCOLS_TO_ROUTE_RULES } from '../constants'
 
 export enum RouteFlavor {
@@ -33,7 +32,6 @@ export enum RoutingRulesEntities {
   HEADERS = 'headers',
   SOURCES = 'sources',
   DESTINATIONS = 'destinations',
-  CUSTOM_METHOD = 'custom-method',
 }
 
 export enum ExpressionsEditorState {
@@ -41,8 +39,6 @@ export enum ExpressionsEditorState {
   ERROR = 'error',
   READY = 'ready',
 }
-
-export type RoutingRuleEntity = Exclude<`${RoutingRulesEntities}`, 'custom-method'>
 
 export type PathHandlingVersion = 'v0' | 'v1'
 
@@ -53,9 +49,22 @@ export interface HeaderFields {
   values: string
 }
 
-export type MethodsFields = {
-  [key in Methods | string]: boolean
+/** Route method values */
+export enum Methods {
+  GET = 'GET',
+  PUT = 'PUT',
+  POST = 'POST',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE',
+  OPTIONS = 'OPTIONS',
+  HEAD = 'HEAD',
+  CONNECT = 'CONNECT',
+  TRACE = 'TRACE',
 }
+
+export type Method = keyof typeof Methods
+
+export type CustomMethod = Exclude<string, Method>
 
 export interface SourcesDestinationsFields {
   ip: string
@@ -83,7 +92,7 @@ export interface SharedRouteRulesFields {
 
 /** These are traditional-only fields */
 export interface TraditionalRouteRulesFields extends SharedRouteRulesFields {
-  methods?: MethodsFields
+  methods?: Array<Method | CustomMethod>
   hosts?: string[]
   paths?: string[]
   headers?: HeaderFields[]

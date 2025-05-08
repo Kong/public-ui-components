@@ -102,11 +102,96 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept('PATCH', `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/routes/*`, handler).as('editRoute')
     }
 
+    it('should default to Basic config type with Path, Strip Path, Methods, and Host fields when creating a route', () => {
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKM,
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.getTestId('route-form-config-type-basic').should('be.checked')
+
+      // Verify fields are present
+      cy.getTestId('route-form-paths-input-1').should('be.visible')
+      cy.getTestId('route-form-strip-path').should('be.visible')
+      cy.getTestId('route-form-methods').should('be.visible')
+      cy.getTestId('route-form-hosts-input-1').should('be.visible')
+
+      cy.getTestId('add-paths').should('not.exist')
+      cy.getTestId('add-hosts').should('not.exist')
+    })
+
+    it('should preserve entered path when switching to Advanced config type and remove additional paths when switching back to Basic', () => {
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKM,
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.getTestId('route-form-paths-input-1').type('/example-path')
+      cy.getTestId('route-form-config-type-advanced').click()
+      cy.getTestId('route-form-paths-input-1').should('have.value', '/example-path')
+
+      // Add another path
+      cy.getTestId('add-paths').click()
+      cy.getTestId('route-form-paths-input-2').type('/another-path')
+
+      cy.getTestId('route-form-config-type-basic').click()
+      cy.getTestId('route-form-paths-input-2').should('not.exist')
+      cy.getTestId('route-form-paths-input-1').should('have.value', '/example-path')
+    })
+
+    it('should default to Advanced config type when editing a route with non-http/https protocol', () => {
+      const mockRoute = {
+        protocols: ['tcp'],
+      }
+
+      interceptKM({ mockData: mockRoute })
+
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKM,
+          routeId: '123',
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.wait('@getRoute')
+
+      cy.getTestId('route-form-config-type-advanced').should('be.checked')
+      // trad flavor should be active by default
+      cy.getTestId('traditional-option').should('have.class', 'selected')
+    })
+
+    it('should default to Advanced config type and Expression Editor segment when editing a route with expression', () => {
+      const mockRoute = {
+        expression: 'http.method == "GET"',
+      }
+
+      interceptKM({ mockData: mockRoute })
+
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKM,
+          routeId: '123',
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.wait('@getRoute')
+
+      cy.getTestId('route-form-config-type-advanced').should('be.checked')
+      // expr flavor should be active by default
+      cy.getTestId('expressions-option').should('have.class', 'selected')
+    })
+
     // Tests 4 possible RouteFlavors: <not-set>, <trad only>, <expr only>, <trad+expr>
     for (const routeFlavors of [undefined, TRADITIONAL_ONLY, EXPRESSIONS_ONLY, TRADITIONAL_EXPRESSIONS]) {
-      const configTabs = `tabs=${formatRouteFlavors(routeFlavors)}`
+      const configFlavor = `flavor=${formatRouteFlavors(routeFlavors)}`
 
-      it(`should show create form, ${configTabs}`, () => {
+      it(`should show create form, ${configFlavor}`, () => {
         cy.mount(RouteForm, {
           props: {
             config: baseConfigKM,
@@ -123,22 +208,24 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('route-create-form-cancel').should('be.enabled')
         cy.getTestId('route-create-form-submit').should('be.disabled')
 
-        // config tabs is hidden when there is only one tab
-        cy.getTestId('route-form-config-tabs')
+        if (!routeFlavors?.traditional && routeFlavors?.expressions) {
+          // only expr flavor
+          // basic config type is disabled and advanced is selected
+          cy.getTestId('route-form-config-type-basic').should('be.disabled')
+          cy.getTestId('route-form-config-type-advanced').should('be.checked')
+        }
+
+        // switch to the advanced config type
+        cy.getTestId('route-form-config-type-advanced').click()
+        // flavor control is hidden when there is only one flavor
+        cy.getTestId('route-form-config-flavor')
           .should(routeFlavors?.traditional && routeFlavors?.expressions ? 'be.visible' : 'not.exist')
 
         // base + base advanced fields
-        cy.getTestId('collapse-trigger-content').click()
         cy.getTestId('route-form-name').should('be.visible')
         cy.getTestId('route-form-service-id').should('be.visible')
         cy.getTestId('route-form-tags').should('be.visible')
         cy.getTestId('route-form-protocols').should('be.visible')
-
-        if (routeFlavors?.traditional && routeFlavors?.expressions) {
-          // trad + expr 2 tabs
-          // switch to trad tab
-          cy.get('#traditional-tab').click()
-        } // else: we will be on the trad tab by default
 
         if (routeFlavors?.traditional) {
           // base advanced fields
@@ -149,97 +236,87 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-response-buffering').should('be.visible')
 
           // other advanced fields
-          cy.getTestId('route-form-path-handling').should('be.visible')
+          cy.getTestId('route-form-path-handling').should('not.exist') // path-handling will only be shown when at least one path is added
           cy.getTestId('route-form-regex-priority').should('be.visible')
 
           // paths
           cy.getTestId('route-form-paths-input-1').should('be.visible')
-          cy.getTestId('add-paths').should('be.visible').click()
+          cy.getTestId('add-paths').click()
           cy.getTestId('route-form-paths-input-2').should('be.visible')
-          cy.getTestId('remove-paths').first().should('be.visible').click()
+          cy.getTestId('remove-paths').first().click()
           cy.getTestId('route-form-paths-input-2').should('not.exist')
 
           cy.getTestId('route-form-paths-input-1').should('be.visible')
-          cy.getTestId('remove-paths').first().should('be.visible').click()
-          cy.get('.route-form-routing-rules-selector-options').should('be.visible')
+          cy.getTestId('remove-paths').first().should('be.disabled')
 
           // snis
-          cy.getTestId('routing-rule-snis').should('be.visible').click()
           cy.getTestId('route-form-snis-input-1').should('be.visible')
-          cy.getTestId('add-snis').should('be.visible').click()
+          cy.getTestId('add-snis').click()
           cy.getTestId('route-form-snis-input-2').should('be.visible')
-          cy.getTestId('remove-snis').first().should('be.visible').click()
+          cy.getTestId('remove-snis').first().click()
           cy.getTestId('route-form-snis-input-2').should('not.exist')
 
           // hosts
-          cy.getTestId('routing-rule-hosts').should('be.visible').click()
           cy.getTestId('route-form-hosts-input-1').should('be.visible')
-          cy.getTestId('add-hosts').should('be.visible').click()
+          cy.getTestId('add-hosts').click()
           cy.getTestId('route-form-hosts-input-2').should('be.visible')
-          cy.getTestId('remove-hosts').first().should('be.visible').click()
+          cy.getTestId('remove-hosts').first().click()
           cy.getTestId('route-form-hosts-input-2').should('not.exist')
 
           // methods and custom methods
-          cy.getTestId('routing-rule-methods').should('be.visible').click()
-          cy.getTestId('routing-rule-methods').should('have.attr', 'aria-disabled').and('eq', 'true')
-          cy.getTestId('get-method-toggle').should('exist')
-          cy.getTestId('post-method-toggle').should('exist')
-          cy.getTestId('put-method-toggle').should('exist')
-          cy.getTestId('custom-method-toggle').should('exist').check({ force: true })
-          cy.getTestId('route-form-custom-method-input-1').should('be.visible')
-          cy.getTestId('add-custom-method').should('be.visible').click()
-          cy.getTestId('route-form-custom-method-input-2').should('be.visible')
-          cy.getTestId('remove-custom-method').first().should('be.visible').click()
-          cy.getTestId('route-form-custom-method-input-2').should('not.exist')
-          cy.getTestId('remove-methods').should('be.visible').click()
-          cy.getTestId('get-method-toggle').should('not.exist')
-          cy.getTestId('routing-rule-methods').should('have.attr', 'aria-disabled').and('eq', 'false')
+          cy.getTestId('route-form-methods').find('.multiselect-trigger').click()
+          cy.getTestId('route-form-methods').find('button[value="GET"]').should('be.visible')
+          cy.getTestId('route-form-methods').find('button[value="POST"]').should('be.visible')
+          cy.getTestId('route-form-methods').find('button[value="PUT"]').should('be.visible')
+          cy.getTestId('route-form-methods').findTestId('multiselect-dropdown-input').type('custom')
+          cy.getTestId('route-form-methods').find('button[value="add_item"]').click()
+          cy.getTestId('route-form-methods').find('.multiselect-selection-badge').should('contain.text', 'custom')
+          cy.getTestId('route-form-methods').find('.multiselect-selection-badge').findTestId('badge-dismiss-button').click()
+          cy.getTestId('route-form-methods').find('.multiselect-selection-badge').should('not.exist')
 
           // headers
-          cy.getTestId('routing-rule-headers').should('be.visible').click()
           cy.getTestId('route-form-headers-name-input-1').should('be.visible')
           cy.getTestId('route-form-headers-values-input-1').should('be.visible')
-          cy.getTestId('add-headers').should('be.visible').click()
+          cy.getTestId('add-headers').click()
           cy.getTestId('route-form-headers-name-input-2').should('be.visible')
           cy.getTestId('route-form-headers-values-input-2').should('be.visible')
-          cy.getTestId('remove-headers').first().should('be.visible').click()
+          cy.getTestId('remove-headers').first().click()
           cy.getTestId('route-form-headers-name-input-2').should('not.exist')
           cy.getTestId('route-form-headers-values-input-2').should('not.exist')
 
           cy.getTestId('route-form-protocols').click({ force: true })
           cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
-          cy.getTestId('routing-rule-paths').should('not.exist')
-          cy.getTestId('routing-rule-hosts').should('not.exist')
-          cy.getTestId('routing-rule-methods').should('not.exist')
-          cy.getTestId('routing-rule-headers').should('not.exist')
+          cy.getTestId('route-form-paths-input-1').should('not.exist')
+          cy.getTestId('route-form-hosts-input-1').should('not.exist')
+          cy.getTestId('route-form-methods').should('not.exist')
+          cy.getTestId('route-form-headers-name-input-1').should('not.exist')
 
           // sources
-          cy.getTestId('routing-rule-sources').should('be.visible').click()
           cy.getTestId('route-form-sources-ip-input-1').should('be.visible')
           cy.getTestId('route-form-sources-port-input-1').should('be.visible')
-          cy.getTestId('add-sources').should('be.visible').click()
+          cy.getTestId('add-sources').click()
           cy.getTestId('route-form-sources-ip-input-2').should('be.visible')
           cy.getTestId('route-form-sources-port-input-2').should('be.visible')
-          cy.getTestId('remove-sources').first().should('be.visible').click()
+          cy.getTestId('remove-sources').first().click()
           cy.getTestId('route-form-sources-ip-input-2').should('not.exist')
           cy.getTestId('route-form-sources-port-input-2').should('not.exist')
 
           // destinations
-          cy.getTestId('routing-rule-destinations').should('be.visible').click()
           cy.getTestId('route-form-destinations-ip-input-1').should('be.visible')
           cy.getTestId('route-form-destinations-port-input-1').should('be.visible')
-          cy.getTestId('add-destinations').should('be.visible').click()
+          cy.getTestId('add-destinations').click()
           cy.getTestId('route-form-destinations-ip-input-2').should('be.visible')
           cy.getTestId('route-form-destinations-port-input-2').should('be.visible')
-          cy.getTestId('remove-destinations').first().should('be.visible').click()
+          cy.getTestId('remove-destinations').first().click()
           cy.getTestId('route-form-destinations-ip-input-2').should('not.exist')
           cy.getTestId('route-form-destinations-port-input-2').should('not.exist')
         }
 
         if (routeFlavors?.traditional && routeFlavors?.expressions) {
-          // trad + expr 2 tabs
-          // switch to expr tab
-          cy.get('#expressions-tab').click()
+          // trad + expr 2 flavors
+          // switch to expr flavor
+          cy.getTestId('route-form-config-flavor').findTestId('expressions-option').click()
+          cy.getTestId('collapse-trigger-content').click()
         }
 
         if (routeFlavors?.expressions) {
@@ -247,7 +324,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-path-handling').should('not.exist')
           cy.getTestId('route-form-regex-priority').should('not.exist')
           cy.getTestId('route-form-paths-input-1').should('not.exist')
-          cy.get('.route-form-routing-rules-selector-options').should('not.exist')
 
           // expressions editor
           cy.get('.expression-editor .monaco-editor').should('be.visible')
@@ -279,14 +355,15 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get('.kong-ui-entities-route-form').should('be.visible')
           cy.get('.kong-ui-entities-route-form form').should('be.visible')
 
-          cy.get('#traditional-tab .route-form-config-tabs-tooltip').should('contain.text', 'For traditional routes')
-          cy.get('#expressions-tab .route-form-config-tabs-tooltip').should('contain.text', 'For expressions routes')
+          cy.getTestId('route-form-config-type-advanced').click()
+          cy.getTestId('route-form-config-flavor').findTestId('traditional-option').should('contain.text', 'For traditional routes')
+          cy.getTestId('route-form-config-flavor').findTestId('expressions-option').should('contain.text', 'For expressions routes')
         })
       }
 
       if (!routeFlavors || routeFlavors?.traditional) {
         // only test when there is trad tab
-        it(`should correctly handle button state - create traditional, ${configTabs}`, () => {
+        it(`should correctly handle button state - create traditional, ${configFlavor}`, () => {
           interceptKMServices()
           stubCreateEdit()
 
@@ -298,12 +375,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           })
 
           cy.get('.kong-ui-entities-route-form').should('be.visible')
-
-          if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // trad + expr 2 tabs
-            // switch to trad tab
-            cy.get('#traditional-tab').click()
-          } // else: we will be on the trad tab by default
+          cy.getTestId('route-form-config-type-advanced').click()
 
           // default button state
           cy.getTestId('route-create-form-cancel').should('be.visible')
@@ -311,8 +383,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-cancel').should('be.enabled')
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
-          // config tabs is hidden when there is only one tab
-          cy.getTestId('route-form-config-tabs')
+          // flavor control is hidden when there is only one flavor
+          cy.getTestId('route-form-config-flavor')
             .should(routeFlavors?.traditional && routeFlavors?.expressions ? 'be.visible' : 'not.exist')
 
           // enables save when required fields have values
@@ -328,7 +400,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // snis
-          cy.getTestId('routing-rule-snis').click()
           cy.getTestId('route-form-snis-input-1').type('sni')
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
@@ -337,7 +408,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // hosts
-          cy.getTestId('routing-rule-hosts').click()
           cy.getTestId('route-form-hosts-input-1').type('host')
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
@@ -346,24 +416,23 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // methods and custom methods
-          cy.getTestId('routing-rule-methods').click()
-          cy.getTestId('get-method-toggle').check({ force: true })
+          cy.getTestId('route-form-methods').find('.multiselect-trigger').click()
+          cy.getTestId('route-form-methods').find('button[value="GET"]').click()
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
-          cy.getTestId('get-method-toggle').uncheck({ force: true })
+          cy.getTestId('route-form-methods').find('.multiselect-selection-badge').findTestId('badge-dismiss-button').click()
           cy.getTestId('route-create-form-submit').should('be.disabled')
-          cy.getTestId('custom-method-toggle').check({ force: true })
-          cy.getTestId('route-create-form-submit').should('be.disabled')
-          cy.getTestId('route-form-custom-method-input-1').type('castom')
+          cy.getTestId('route-form-methods').find('.multiselect-trigger').click()
+          cy.getTestId('route-form-methods').findTestId('multiselect-dropdown-input').type('custom')
+          cy.getTestId('route-form-methods').find('button[value="add_item"]').click()
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
-          cy.getTestId('route-form-custom-method-input-1').clear()
+          cy.getTestId('route-form-methods').find('.multiselect-selection-badge').findTestId('badge-dismiss-button').click()
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // headers
-          cy.getTestId('routing-rule-headers').click()
           cy.getTestId('route-form-headers-name-input-1').type(Object.keys(route.headers)[0])
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
@@ -376,7 +445,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
 
           // sources
-          cy.getTestId('routing-rule-sources').click()
           cy.getTestId('route-form-sources-ip-input-1').type('127.0.0.1')
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
@@ -386,7 +454,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // destinations
-          cy.getTestId('routing-rule-destinations').click()
           cy.getTestId('route-form-destinations-ip-input-1').type('127.0.0.2')
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
@@ -399,7 +466,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       if (routeFlavors?.expressions) {
         // only test when there is expr tab
-        it(`should correctly handle button state - create expressions, ${configTabs}`, () => {
+        it(`should correctly handle button state - create expressions, ${configFlavor}`, () => {
           interceptKMServices()
           stubCreateEdit()
 
@@ -411,11 +478,12 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           })
 
           cy.get('.kong-ui-entities-route-form').should('be.visible')
+          cy.getTestId('route-form-config-type-advanced').click()
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // trad + expr 2 tabs
-            // switch to expr tab
-            cy.get('#expressions-tab').click()
+            // trad + expr 2 flavors
+            // switch to expr flavor
+            cy.getTestId('route-form-config-flavor').findTestId('expressions-option').click()
           } // else: we will be on expr tab by default
 
           // default button state
@@ -455,7 +523,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       if (!routeFlavors || routeFlavors?.traditional) {
         // only test when there is trad tab
-        it(`should show edit form, traditional ${configTabs}`, () => {
+        it(`should show edit form, traditional ${configFlavor}`, () => {
           interceptKM()
           interceptKMServices()
           stubCreateEdit()
@@ -477,10 +545,11 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-edit-form-submit').should('be.visible')
           cy.getTestId('route-edit-form-cancel').should('be.enabled')
           cy.getTestId('route-edit-form-submit').should('be.disabled')
+          cy.getTestId('route-form-config-type-advanced').click()
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // trad tab should be active by default
-            cy.get('#traditional-tab').should('have.class', 'active')
+            // trad flavor should be active by default
+            cy.getTestId('traditional-option').should('have.class', 'selected')
           }
 
           // form fields
@@ -488,7 +557,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-service-id').should('have.value', route.service.id)
           cy.getTestId('route-form-tags').should('have.value', route.tags.join(', '))
 
-          cy.getTestId('collapse-trigger-content').click()
           cy.getTestId('route-form-path-handling').should('have.value', route.path_handling)
           cy.getTestId('route-form-regex-priority').should('have.value', route.regex_priority)
           cy.getTestId('route-form-strip-path').should(`${route.strip_path ? '' : 'not.'}be.checked`)
@@ -496,14 +564,14 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           cy.getTestId('route-form-paths-input-1').should('have.value', route.paths[0])
           cy.getTestId('route-form-paths-input-2').should('have.value', route.paths[1])
-          cy.getTestId(`${route.methods[0].toLowerCase()}-method-toggle`).should('be.checked')
-          cy.getTestId(`${route.methods[1].toLowerCase()}-method-toggle`).should('be.checked')
+          cy.getTestId('route-form-methods').find('.selection-badges-container').should('contain.text', route.methods[0])
+          cy.getTestId('route-form-methods').find('.selection-badges-container').should('contain.text', route.methods[1])
           cy.getTestId('route-form-headers-name-input-1').should('have.value', Object.keys(route.headers)[0])
           cy.getTestId('route-form-headers-values-input-1').should('have.value', route.headers.Header1.join(','))
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // switch to expr tab
-            cy.get('#expressions-tab').click()
+            // switch to expr flavor
+            cy.getTestId('expressions-option').click()
             // should not see the expression editor
             cy.get('.expression-editor').should('not.exist')
             // should be reminded that the route type cannot be changed
@@ -511,7 +579,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           }
         })
 
-        it(`should correctly handle button state - edit traditional, ${configTabs}`, () => {
+        it(`should correctly handle button state - edit traditional, ${configFlavor}`, () => {
           interceptKM()
           interceptKMServices()
           stubCreateEdit()
@@ -534,32 +602,33 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-edit-form-submit').should('be.visible')
           cy.getTestId('route-edit-form-cancel').should('be.enabled')
           cy.getTestId('route-edit-form-submit').should('be.disabled')
+          cy.getTestId('route-form-config-type-advanced').click()
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // trad tab should be active by default
-            cy.get('#traditional-tab').should('have.class', 'active')
+            // trad flavor should be active by default
+            cy.getTestId('traditional-option').should('have.class', 'selected')
           }
-
-          cy.getTestId('routing-rules-warning').should('not.exist')
 
           // enables save when form has changes
           cy.getTestId('route-form-service-id').click({ force: true })
+          cy.get("[data-testid='select-item-2']").scrollIntoView()
           cy.get("[data-testid='select-item-2']").click()
           cy.getTestId('route-edit-form-submit').should('be.enabled').click()
           cy.wait('@editRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
-          cy.getTestId('remove-methods').click()
+          cy.getTestId('route-form-methods').find('.multiselect-trigger').click()
+          cy.getTestId('route-form-methods').findTestId('multiselect-clear-icon').click()
           cy.getTestId('remove-paths').first().click()
-          cy.getTestId('remove-paths').click()
-          cy.getTestId('remove-headers').click()
-          cy.getTestId('routing-rules-warning').should('be.visible')
+          cy.getTestId('route-form-paths-input-1').clear()
+          cy.getTestId('route-form-headers-name-input-1').clear()
+          cy.getTestId('route-form-headers-values-input-1').clear()
           cy.getTestId('route-edit-form-submit').should('be.disabled')
         })
       } // if !routeFlavors || routeFlavors?.traditional
 
       if (routeFlavors?.expressions) {
         // only test when there is trad tab
-        it(`should show edit form, expressions ${configTabs}`, () => {
+        it(`should show edit form, expressions ${configFlavor}`, () => {
           interceptKM({ mockData: routeExpressions })
           interceptKMServices()
           stubCreateEdit()
@@ -583,8 +652,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // expr tab should be active by default
-            cy.get('#expressions-tab').should('have.class', 'active')
+            // expr flavor should be active by default
+            cy.getTestId('expressions-option').should('have.class', 'selected')
           }
 
           // form fields
@@ -593,9 +662,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-tags').should('have.value', routeExpressions.tags.join(', '))
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            cy.getTestId('collapse-trigger-content').click()
             // switch to trad tab
-            cy.get('#traditional-tab').click()
+            cy.getTestId('traditional-option').click()
             // should not see trad fields
             cy.getTestId('route-form-path-handling').should('not.exist')
             cy.getTestId('route-form-regex-priority').should('not.exist')
@@ -604,7 +672,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           }
         })
 
-        it(`should correctly handle button state - edit expressions, ${configTabs}`, () => {
+        it(`should correctly handle button state - edit expressions, ${configFlavor}`, () => {
           interceptKM({ mockData: routeExpressions })
           interceptKMServices()
           stubCreateEdit()
@@ -629,13 +697,14 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // trad tab should be active by default
-            cy.get('#expressions-tab').should('have.class', 'active')
+            // trad flavor should be active by default
+            cy.getTestId('expressions-option').should('have.class', 'selected')
             cy.getTestId('route-form-expressions-editor-loader-loading').should('not.exist')
           }
 
           // enables save when form has changes
           cy.getTestId('route-form-service-id').click({ force: true })
+          cy.get("[data-testid='select-item-2']").scrollIntoView()
           cy.get("[data-testid='select-item-2']").click()
           cy.getTestId('route-edit-form-submit').should('be.enabled').click()
           cy.wait('@editRoute').then((res) => res.response?.body?.kind).should('eq', 'expr')
@@ -653,7 +722,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         })
       } // if routeFlavors?.expressions
 
-      it(`should handle error state - failed to load route, ${configTabs}`, () => {
+      it(`should handle error state - failed to load route, ${configFlavor}`, () => {
         interceptKMServices()
 
         cy.intercept(
@@ -689,7 +758,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.get('.kong-ui-entities-route-form form').should('not.exist')
       })
 
-      it(`should allow exact match filtering of services, ${configTabs}`, () => {
+      it(`should allow exact match filtering of services, ${configFlavor}`, () => {
         interceptKMServices()
 
         cy.mount(RouteForm, {
@@ -701,9 +770,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
         cy.wait('@getServices')
         cy.get('.kong-ui-entities-route-form').should('be.visible')
+        cy.getTestId('route-form-config-type-advanced').click()
 
-        // config tabs is hidden when there is only one tab
-        cy.getTestId('route-form-config-tabs')
+        // flavor control is hidden when there is only one flavor
+        cy.getTestId('route-form-config-flavor')
           .should(routeFlavors?.traditional && routeFlavors?.expressions ? 'be.visible' : 'not.exist')
 
         // search
@@ -716,7 +786,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('route-form-service-id').should('have.value', services[1].id)
       })
 
-      it(`should handle error state - failed to load services, ${configTabs}`, () => {
+      it(`should handle error state - failed to load services, ${configFlavor}`, () => {
         cy.intercept(
           {
             method: 'GET',
@@ -740,7 +810,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('form-error').should('be.visible')
       })
 
-      it(`should correctly render with all props and slot content, ${configTabs}`, () => {
+      it(`should correctly render with all props and slot content, ${configFlavor}`, () => {
         cy.mount(RouteForm, {
           props: {
             config: baseConfigKM,
@@ -756,9 +826,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
         cy.get('.kong-ui-entities-route-form').should('be.visible')
         cy.get('.kong-ui-entities-route-form form').should('be.visible')
+        cy.getTestId('route-form-config-type-advanced').click()
 
-        // config tabs is hidden when there is only one tab
-        cy.getTestId('route-form-config-tabs')
+        // flavor control is hidden when there is only one flavor
+        cy.getTestId('route-form-config-flavor')
           .should(routeFlavors?.traditional && routeFlavors?.expressions ? 'be.visible' : 'not.exist')
 
         // name field should be hidden when hideNameField is true
@@ -780,7 +851,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('slotted-submit-button').should('be.visible')
       })
 
-      it(`update event should be emitted when Route was edited, ${configTabs}`, () => {
+      it(`update event should be emitted when Route was edited, ${configFlavor}`, () => {
         interceptKM()
         interceptUpdate()
 
@@ -821,9 +892,10 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       })
 
       cy.get('.kong-ui-entities-route-form').should('be.visible')
+      cy.getTestId('route-form-config-type-advanced').click()
 
-      // config tabs is hidden when there is only one tab
-      cy.getTestId('route-form-config-tabs').should('not.exist')
+      // flavor control is hidden when there is only one flavor
+      cy.getTestId('route-form-config-flavor').should('not.exist')
 
       cy.getTestId('route-form-protocols').click({ force: true })
       cy.getTestId('select-item-http').should('exist')
@@ -845,7 +917,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           },
         })
 
-        cy.get('#expressions-tab').click()
+        cy.getTestId('route-form-config-type-advanced').click()
+        cy.getTestId('expressions-option').click()
 
         STREAM_BASED_PROTOCOLS.forEach((protocol) => {
           cy.getTestId('route-form-protocols').click({ force: true })
@@ -865,7 +938,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           },
         })
 
-        cy.get('#expressions-tab').click()
+        cy.getTestId('route-form-config-type-advanced').click()
+        cy.getTestId('expressions-option').click()
 
         HTTP_BASED_PROTOCOLS.forEach((protocol) => {
           cy.getTestId('route-form-protocols').click({ force: true })
@@ -883,7 +957,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           },
         })
 
-        cy.get('#expressions-tab').click()
+        cy.getTestId('route-form-config-type-advanced').click()
+        cy.getTestId('expressions-option').click()
         cy.get('.monaco-editor').first().as('monacoEditor').click()
         cy.get('@monacoEditor').type('http.path == "/kong"')
         cy.getTestId('open-router-playground').click()
@@ -898,7 +973,9 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
             showExpressionsModalEntry: true,
           },
         })
-        cy.get('#expressions-tab').click()
+
+        cy.getTestId('route-form-config-type-advanced').click()
+        cy.getTestId('expressions-option').click()
         cy.get('.monaco-editor').first().as('monacoEditor').click()
         cy.get('@monacoEditor').type('http.path == "/kong"')
         cy.getTestId('open-router-playground').click()
@@ -981,11 +1058,96 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.intercept('PUT', `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/routes/*`, handler).as('editRoute')
     }
 
-    // Tests 2 possible RouteFlavors: <not-set>, <trad only>
-    for (const routeFlavors of [undefined, TRADITIONAL_ONLY]) {
-      const configTabs = `tabs=${formatRouteFlavors(routeFlavors)}`
+    it('should default to Basic config type with Path, Strip Path, Methods, and Host fields when creating a route', () => {
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKonnect,
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
 
-      it(`should show create form, ${configTabs}`, () => {
+      cy.getTestId('route-form-config-type-basic').should('be.checked')
+
+      // Verify fields are present
+      cy.getTestId('route-form-paths-input-1').should('be.visible')
+      cy.getTestId('route-form-strip-path').should('be.visible')
+      cy.getTestId('route-form-methods').should('be.visible')
+      cy.getTestId('route-form-hosts-input-1').should('be.visible')
+
+      cy.getTestId('add-paths').should('not.exist')
+      cy.getTestId('add-hosts').should('not.exist')
+    })
+
+    it('should preserve entered path when switching to Advanced config type and remove additional paths when switching back to Basic', () => {
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKonnect,
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.getTestId('route-form-paths-input-1').type('/example-path')
+      cy.getTestId('route-form-config-type-advanced').click()
+      cy.getTestId('route-form-paths-input-1').should('have.value', '/example-path')
+
+      // Add another path
+      cy.getTestId('add-paths').click()
+      cy.getTestId('route-form-paths-input-2').type('/another-path')
+
+      cy.getTestId('route-form-config-type-basic').click()
+      cy.getTestId('route-form-paths-input-2').should('not.exist')
+      cy.getTestId('route-form-paths-input-1').should('have.value', '/example-path')
+    })
+
+    it('should default to Advanced config type when editing a route with non-http/https protocol', () => {
+      const mockRoute = {
+        protocols: ['tcp'],
+      }
+
+      interceptKonnect({ mockData: mockRoute })
+
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKonnect,
+          routeId: '123',
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.wait('@getRoute')
+
+      cy.getTestId('route-form-config-type-advanced').should('be.checked')
+      // trad flavor should be active by default
+      cy.getTestId('traditional-option').should('have.class', 'selected')
+    })
+
+    it('should default to Advanced config type and Expression Editor segment when editing a route with expression', () => {
+      const mockRoute = {
+        expression: 'http.method == "GET"',
+      }
+
+      interceptKonnect({ mockData: mockRoute })
+
+      cy.mount(RouteForm, {
+        props: {
+          config: baseConfigKonnect,
+          routeId: '123',
+          routeFlavors: TRADITIONAL_EXPRESSIONS,
+        },
+      })
+
+      cy.wait('@getRoute')
+
+      cy.getTestId('route-form-config-type-advanced').should('be.checked')
+      // expr flavor should be active by default
+      cy.getTestId('expressions-option').should('have.class', 'selected')
+    })
+
+    // Tests 4 possible RouteFlavors: <not-set>, <trad only>, <expr only>, <trad+expr>
+    for (const routeFlavors of [undefined, TRADITIONAL_ONLY, EXPRESSIONS_ONLY, TRADITIONAL_EXPRESSIONS]) {
+      const configFlavor = `flavor=${formatRouteFlavors(routeFlavors)}`
+
+      it(`should show create form, ${configFlavor}`, () => {
         cy.mount(RouteForm, {
           props: {
             config: baseConfigKonnect,
@@ -1002,22 +1164,24 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('route-create-form-cancel').should('be.enabled')
         cy.getTestId('route-create-form-submit').should('be.disabled')
 
-        // config tabs is hidden when there is only one tab
-        cy.getTestId('route-form-config-tabs')
+        if (!routeFlavors?.traditional && routeFlavors?.expressions) {
+          // only expr flavor
+          // basic config type is disabled and advanced is selected
+          cy.getTestId('route-form-config-type-basic').should('be.disabled')
+          cy.getTestId('route-form-config-type-advanced').should('be.checked')
+        }
+
+        // switch to the advanced config type
+        cy.getTestId('route-form-config-type-advanced').click()
+        // flavor control is hidden when there is only one flavor
+        cy.getTestId('route-form-config-flavor')
           .should(routeFlavors?.traditional && routeFlavors?.expressions ? 'be.visible' : 'not.exist')
 
         // base + base advanced fields
-        cy.getTestId('collapse-trigger-content').click()
         cy.getTestId('route-form-name').should('be.visible')
         cy.getTestId('route-form-service-id').should('be.visible')
         cy.getTestId('route-form-tags').should('be.visible')
         cy.getTestId('route-form-protocols').should('be.visible')
-
-        if (routeFlavors?.traditional && routeFlavors?.expressions) {
-          // trad + expr 2 tabs
-          // switch to trad tab
-          cy.get('#traditional-tab').click()
-        } // else: we will be on the trad tab by default
 
         if (routeFlavors?.traditional) {
           // base advanced fields
@@ -1028,97 +1192,87 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-response-buffering').should('be.visible')
 
           // other advanced fields
-          cy.getTestId('route-form-path-handling').should('be.visible')
+          cy.getTestId('route-form-path-handling').should('not.exist') // path-handling will only be shown when at least one path is added
           cy.getTestId('route-form-regex-priority').should('be.visible')
 
           // paths
           cy.getTestId('route-form-paths-input-1').should('be.visible')
-          cy.getTestId('add-paths').should('be.visible').click()
+          cy.getTestId('add-paths').click()
           cy.getTestId('route-form-paths-input-2').should('be.visible')
-          cy.getTestId('remove-paths').first().should('be.visible').click()
+          cy.getTestId('remove-paths').first().click()
           cy.getTestId('route-form-paths-input-2').should('not.exist')
 
           cy.getTestId('route-form-paths-input-1').should('be.visible')
-          cy.getTestId('remove-paths').first().should('be.visible').click()
-          cy.get('.route-form-routing-rules-selector-options').should('be.visible')
+          cy.getTestId('remove-paths').first().should('be.disabled')
 
           // snis
-          cy.getTestId('routing-rule-snis').should('be.visible').click()
           cy.getTestId('route-form-snis-input-1').should('be.visible')
-          cy.getTestId('add-snis').should('be.visible').click()
+          cy.getTestId('add-snis').click()
           cy.getTestId('route-form-snis-input-2').should('be.visible')
-          cy.getTestId('remove-snis').first().should('be.visible').click()
+          cy.getTestId('remove-snis').first().click()
           cy.getTestId('route-form-snis-input-2').should('not.exist')
 
           // hosts
-          cy.getTestId('routing-rule-hosts').should('be.visible').click()
           cy.getTestId('route-form-hosts-input-1').should('be.visible')
-          cy.getTestId('add-hosts').should('be.visible').click()
+          cy.getTestId('add-hosts').click()
           cy.getTestId('route-form-hosts-input-2').should('be.visible')
-          cy.getTestId('remove-hosts').first().should('be.visible').click()
+          cy.getTestId('remove-hosts').first().click()
           cy.getTestId('route-form-hosts-input-2').should('not.exist')
 
           // methods and custom methods
-          cy.getTestId('routing-rule-methods').should('be.visible').click()
-          cy.getTestId('routing-rule-methods').should('have.attr', 'aria-disabled').and('eq', 'true')
-          cy.getTestId('get-method-toggle').should('exist')
-          cy.getTestId('post-method-toggle').should('exist')
-          cy.getTestId('put-method-toggle').should('exist')
-          cy.getTestId('custom-method-toggle').should('exist').check({ force: true })
-          cy.getTestId('route-form-custom-method-input-1').should('be.visible')
-          cy.getTestId('add-custom-method').should('be.visible').click()
-          cy.getTestId('route-form-custom-method-input-2').should('be.visible')
-          cy.getTestId('remove-custom-method').first().should('be.visible').click()
-          cy.getTestId('route-form-custom-method-input-2').should('not.exist')
-          cy.getTestId('remove-methods').should('be.visible').click()
-          cy.getTestId('get-method-toggle').should('not.exist')
-          cy.getTestId('routing-rule-methods').should('have.attr', 'aria-disabled').and('eq', 'false')
+          cy.getTestId('route-form-methods').find('.multiselect-trigger').click()
+          cy.getTestId('route-form-methods').find('button[value="GET"]').should('be.visible')
+          cy.getTestId('route-form-methods').find('button[value="POST"]').should('be.visible')
+          cy.getTestId('route-form-methods').find('button[value="PUT"]').should('be.visible')
+          cy.getTestId('route-form-methods').findTestId('multiselect-dropdown-input').type('custom')
+          cy.getTestId('route-form-methods').find('button[value="add_item"]').click()
+          cy.getTestId('route-form-methods').find('.multiselect-selection-badge').should('contain.text', 'custom')
+          cy.getTestId('route-form-methods').find('.multiselect-selection-badge').findTestId('badge-dismiss-button').click()
+          cy.getTestId('route-form-methods').find('.multiselect-selection-badge').should('not.exist')
 
           // headers
-          cy.getTestId('routing-rule-headers').should('be.visible').click()
           cy.getTestId('route-form-headers-name-input-1').should('be.visible')
           cy.getTestId('route-form-headers-values-input-1').should('be.visible')
-          cy.getTestId('add-headers').should('be.visible').click()
+          cy.getTestId('add-headers').click()
           cy.getTestId('route-form-headers-name-input-2').should('be.visible')
           cy.getTestId('route-form-headers-values-input-2').should('be.visible')
-          cy.getTestId('remove-headers').first().should('be.visible').click()
+          cy.getTestId('remove-headers').first().click()
           cy.getTestId('route-form-headers-name-input-2').should('not.exist')
           cy.getTestId('route-form-headers-values-input-2').should('not.exist')
 
           cy.getTestId('route-form-protocols').click({ force: true })
           cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
-          cy.getTestId('routing-rule-paths').should('not.exist')
-          cy.getTestId('routing-rule-hosts').should('not.exist')
-          cy.getTestId('routing-rule-methods').should('not.exist')
-          cy.getTestId('routing-rule-headers').should('not.exist')
+          cy.getTestId('route-form-paths-input-1').should('not.exist')
+          cy.getTestId('route-form-hosts-input-1').should('not.exist')
+          cy.getTestId('route-form-methods').should('not.exist')
+          cy.getTestId('route-form-headers-name-input-1').should('not.exist')
 
           // sources
-          cy.getTestId('routing-rule-sources').should('be.visible').click()
           cy.getTestId('route-form-sources-ip-input-1').should('be.visible')
           cy.getTestId('route-form-sources-port-input-1').should('be.visible')
-          cy.getTestId('add-sources').should('be.visible').click()
+          cy.getTestId('add-sources').click()
           cy.getTestId('route-form-sources-ip-input-2').should('be.visible')
           cy.getTestId('route-form-sources-port-input-2').should('be.visible')
-          cy.getTestId('remove-sources').first().should('be.visible').click()
+          cy.getTestId('remove-sources').first().click()
           cy.getTestId('route-form-sources-ip-input-2').should('not.exist')
           cy.getTestId('route-form-sources-port-input-2').should('not.exist')
 
           // destinations
-          cy.getTestId('routing-rule-destinations').should('be.visible').click()
           cy.getTestId('route-form-destinations-ip-input-1').should('be.visible')
           cy.getTestId('route-form-destinations-port-input-1').should('be.visible')
-          cy.getTestId('add-destinations').should('be.visible').click()
+          cy.getTestId('add-destinations').click()
           cy.getTestId('route-form-destinations-ip-input-2').should('be.visible')
           cy.getTestId('route-form-destinations-port-input-2').should('be.visible')
-          cy.getTestId('remove-destinations').first().should('be.visible').click()
+          cy.getTestId('remove-destinations').first().click()
           cy.getTestId('route-form-destinations-ip-input-2').should('not.exist')
           cy.getTestId('route-form-destinations-port-input-2').should('not.exist')
         } // if routeFlavors?.traditional
 
         if (routeFlavors?.traditional && routeFlavors?.expressions) {
-          // trad + expr 2 tabs
-          // switch to expr tab
-          cy.get('#expressions-tab').click()
+          // trad + expr 2 flavors
+          // switch to expr flavor
+          cy.getTestId('route-form-config-flavor').findTestId('expressions-option').click()
+          cy.getTestId('collapse-trigger-content').click()
         }
 
         if (routeFlavors?.expressions) {
@@ -1126,12 +1280,12 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-path-handling').should('not.exist')
           cy.getTestId('route-form-regex-priority').should('not.exist')
           cy.getTestId('route-form-paths-input-1').should('not.exist')
-          cy.get('.route-form-routing-rules-selector-options').should('not.exist')
 
           // expressions editor
           cy.get('.expression-editor .monaco-editor').should('be.visible')
 
           // base advanced fields
+          cy.getTestId('collapse-trigger-content').click()
           cy.getTestId('route-form-http-redirect-status-code').should('be.visible')
           cy.getTestId('route-form-preserve-host').should('be.visible')
           cy.getTestId('route-form-strip-path').should('be.visible')
@@ -1140,9 +1294,32 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         } // if routeFlavors?.expressions
       })
 
+      if (routeFlavors?.traditional && routeFlavors?.expressions) {
+        // only test when both trad & expr tabs present
+        it('should show tooltips', () => {
+          cy.mount(RouteForm, {
+            props: {
+              config: baseConfigKM,
+              routeFlavors,
+              configTabTooltips: {
+                traditional: 'For traditional routes',
+                expressions: 'For expressions routes',
+              },
+            },
+          })
+
+          cy.get('.kong-ui-entities-route-form').should('be.visible')
+          cy.get('.kong-ui-entities-route-form form').should('be.visible')
+
+          cy.getTestId('route-form-config-type-advanced').click()
+          cy.getTestId('route-form-config-flavor').findTestId('traditional-option').should('contain.text', 'For traditional routes')
+          cy.getTestId('route-form-config-flavor').findTestId('expressions-option').should('contain.text', 'For expressions routes')
+        })
+      }
+
       if (!routeFlavors || routeFlavors?.traditional) {
         // only test when there is trad tab
-        it(`should correctly handle button state - create traditional, ${configTabs}`, () => {
+        it(`should correctly handle button state - create traditional, ${configFlavor}`, () => {
           interceptKonnectServices()
           stubCreateEdit()
 
@@ -1154,12 +1331,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           })
 
           cy.get('.kong-ui-entities-route-form').should('be.visible')
-
-          if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // trad + expr 2 tabs
-            // switch to trad tab
-            cy.get('#traditional-tab').click()
-          } // else: we will be on the trad tab by default
+          cy.getTestId('route-form-config-type-advanced').click()
 
           // default button state
           cy.getTestId('route-create-form-cancel').should('be.visible')
@@ -1167,8 +1339,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-cancel').should('be.enabled')
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
-          // config tabs is hidden when there is only one tab
-          cy.getTestId('route-form-config-tabs')
+          // flavor control is hidden when there is only one flavor
+          cy.getTestId('route-form-config-flavor')
             .should(routeFlavors?.traditional && routeFlavors?.expressions ? 'be.visible' : 'not.exist')
 
           // enables save when required fields have values
@@ -1184,7 +1356,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // snis
-          cy.getTestId('routing-rule-snis').click()
           cy.getTestId('route-form-snis-input-1').type('sni')
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
@@ -1193,7 +1364,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // hosts
-          cy.getTestId('routing-rule-hosts').click()
           cy.getTestId('route-form-hosts-input-1').type('host')
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
@@ -1202,24 +1372,23 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // methods and custom methods
-          cy.getTestId('routing-rule-methods').click()
-          cy.getTestId('get-method-toggle').check({ force: true })
+          cy.getTestId('route-form-methods').find('.multiselect-trigger').click()
+          cy.getTestId('route-form-methods').find('button[value="GET"]').click()
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
-          cy.getTestId('get-method-toggle').uncheck({ force: true })
+          cy.getTestId('route-form-methods').find('.multiselect-selection-badge').findTestId('badge-dismiss-button').click()
           cy.getTestId('route-create-form-submit').should('be.disabled')
-          cy.getTestId('custom-method-toggle').check({ force: true })
-          cy.getTestId('route-create-form-submit').should('be.disabled')
-          cy.getTestId('route-form-custom-method-input-1').type('castom')
+          cy.getTestId('route-form-methods').find('.multiselect-trigger').click()
+          cy.getTestId('route-form-methods').findTestId('multiselect-dropdown-input').type('custom')
+          cy.getTestId('route-form-methods').find('button[value="add_item"]').click()
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
-          cy.getTestId('route-form-custom-method-input-1').clear()
+          cy.getTestId('route-form-methods').find('.multiselect-selection-badge').findTestId('badge-dismiss-button').click()
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // headers
-          cy.getTestId('routing-rule-headers').click()
           cy.getTestId('route-form-headers-name-input-1').type(Object.keys(route.headers)[0])
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
@@ -1232,7 +1401,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.get("[data-testid='select-item-tcp,tls,udp'] button").click({ force: true })
 
           // sources
-          cy.getTestId('routing-rule-sources').click()
           cy.getTestId('route-form-sources-ip-input-1').type('127.0.0.1')
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
@@ -1242,7 +1410,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-create-form-submit').should('be.disabled')
 
           // destinations
-          cy.getTestId('routing-rule-destinations').click()
           cy.getTestId('route-form-destinations-ip-input-1').type('127.0.0.2')
           cy.getTestId('route-create-form-submit').should('be.enabled').click()
           cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
@@ -1255,7 +1422,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       if (routeFlavors?.expressions) {
         // only test when there is expr tab
-        it(`should correctly handle button state - create expressions, ${configTabs}`, () => {
+        it(`should correctly handle button state - create expressions, ${configFlavor}`, () => {
           interceptKonnectServices()
           stubCreateEdit()
 
@@ -1267,11 +1434,12 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           })
 
           cy.get('.kong-ui-entities-route-form').should('be.visible')
+          cy.getTestId('route-form-config-type-advanced').click()
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // trad + expr 2 tabs
-            // switch to expr tab
-            cy.get('#expressions-tab').click()
+            // trad + expr 2 flavors
+            // switch to expr flavor
+            cy.getTestId('route-form-config-flavor').findTestId('expressions-option').click()
           } // else: we will be on expr tab by default
 
           // default button state
@@ -1311,7 +1479,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
       if (!routeFlavors || routeFlavors?.traditional) {
         // only test when there is trad tab
-        it(`should show edit form, traditional ${configTabs}`, () => {
+        it(`should show edit form, traditional ${configFlavor}`, () => {
           interceptKonnect()
           interceptKonnectServices()
           stubCreateEdit()
@@ -1333,10 +1501,11 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-edit-form-submit').should('be.visible')
           cy.getTestId('route-edit-form-cancel').should('be.enabled')
           cy.getTestId('route-edit-form-submit').should('be.disabled')
+          cy.getTestId('route-form-config-type-advanced').click()
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // trad tab should be active by default
-            cy.get('#traditional-tab').should('have.class', 'active')
+            // trad flavor should be active by default
+            cy.getTestId('traditional-option').should('have.class', 'selected')
           }
 
           // form fields
@@ -1344,7 +1513,6 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-service-id').should('have.value', route.service.id)
           cy.getTestId('route-form-tags').should('have.value', route.tags.join(', '))
 
-          cy.getTestId('collapse-trigger-content').click()
           cy.getTestId('route-form-path-handling').should('have.value', route.path_handling)
           cy.getTestId('route-form-regex-priority').should('have.value', route.regex_priority)
           cy.getTestId('route-form-strip-path').should(`${route.strip_path ? '' : 'not.'}be.checked`)
@@ -1352,14 +1520,14 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           cy.getTestId('route-form-paths-input-1').should('have.value', route.paths[0])
           cy.getTestId('route-form-paths-input-2').should('have.value', route.paths[1])
-          cy.getTestId(`${route.methods[0].toLowerCase()}-method-toggle`).should('be.checked')
-          cy.getTestId(`${route.methods[1].toLowerCase()}-method-toggle`).should('be.checked')
+          cy.getTestId('route-form-methods').find('.selection-badges-container').should('contain.text', route.methods[0])
+          cy.getTestId('route-form-methods').find('.selection-badges-container').should('contain.text', route.methods[1])
           cy.getTestId('route-form-headers-name-input-1').should('have.value', Object.keys(route.headers)[0])
           cy.getTestId('route-form-headers-values-input-1').should('have.value', route.headers.Header1.join(','))
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // switch to expr tab
-            cy.get('#expressions-tab').click()
+            // switch to expr flavor
+            cy.getTestId('expressions-option').click()
             // should not see the expression editor
             cy.get('.expression-editor').should('not.exist')
             // should be reminded that the route type cannot be changed
@@ -1367,7 +1535,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           }
         })
 
-        it(`should correctly handle button state - edit traditional, ${configTabs}`, () => {
+        it(`should correctly handle button state - edit traditional, ${configFlavor}`, () => {
           interceptKonnect()
           interceptKonnectServices()
           stubCreateEdit()
@@ -1390,32 +1558,33 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-edit-form-submit').should('be.visible')
           cy.getTestId('route-edit-form-cancel').should('be.enabled')
           cy.getTestId('route-edit-form-submit').should('be.disabled')
+          cy.getTestId('route-form-config-type-advanced').click()
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // trad tab should be active by default
-            cy.get('#traditional-tab').should('have.class', 'active')
+            // trad flavor should be active by default
+            cy.getTestId('traditional-option').should('have.class', 'selected')
           }
-
-          cy.getTestId('routing-rules-warning').should('not.exist')
 
           // enables save when form has changes
           cy.getTestId('route-form-service-id').click({ force: true })
+          cy.get("[data-testid='select-item-2']").scrollIntoView()
           cy.get("[data-testid='select-item-2']").click()
           cy.getTestId('route-edit-form-submit').should('be.enabled').click()
           cy.wait('@editRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
-          cy.getTestId('remove-methods').click()
+          cy.getTestId('route-form-methods').find('.multiselect-trigger').click()
+          cy.getTestId('route-form-methods').findTestId('multiselect-clear-icon').click()
           cy.getTestId('remove-paths').first().click()
-          cy.getTestId('remove-paths').click()
-          cy.getTestId('remove-headers').click()
-          cy.getTestId('routing-rules-warning').should('be.visible')
+          cy.getTestId('route-form-paths-input-1').clear()
+          cy.getTestId('route-form-headers-name-input-1').clear()
+          cy.getTestId('route-form-headers-values-input-1').clear()
           cy.getTestId('route-edit-form-submit').should('be.disabled')
         })
       } // if !routeFlavors || routeFlavors?.traditional
 
       if (routeFlavors?.expressions) {
         // only test when there is trad tab
-        it(`should show edit form, expressions ${configTabs}`, () => {
+        it(`should show edit form, expressions ${configFlavor}`, () => {
           interceptKonnect({ mockData: routeExpressions })
           interceptKonnectServices()
           stubCreateEdit()
@@ -1439,8 +1608,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // expr tab should be active by default
-            cy.get('#expressions-tab').should('have.class', 'active')
+            // expr flavor should be active by default
+            cy.getTestId('expressions-option').should('have.class', 'selected')
           }
 
           // form fields
@@ -1449,9 +1618,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-form-tags').should('have.value', routeExpressions.tags.join(', '))
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            cy.getTestId('collapse-trigger-content').click()
             // switch to trad tab
-            cy.get('#traditional-tab').click()
+            cy.getTestId('traditional-option').click()
             // should not see trad fields
             cy.getTestId('route-form-path-handling').should('not.exist')
             cy.getTestId('route-form-regex-priority').should('not.exist')
@@ -1460,7 +1628,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           }
         })
 
-        it(`should correctly handle button state - edit expressions, ${configTabs}`, () => {
+        it(`should correctly handle button state - edit expressions, ${configFlavor}`, () => {
           interceptKonnect({ mockData: routeExpressions })
           interceptKonnectServices()
           stubCreateEdit()
@@ -1485,12 +1653,14 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           cy.getTestId('route-edit-form-submit').should('be.disabled')
 
           if (routeFlavors?.traditional && routeFlavors?.expressions) {
-            // trad tab should be active by default
-            cy.get('#expressions-tab').should('have.class', 'active')
+            // trad flavor should be active by default
+            cy.getTestId('expressions-option').should('have.class', 'selected')
+            cy.getTestId('route-form-expressions-editor-loader-loading').should('not.exist')
           }
 
           // enables save when form has changes
           cy.getTestId('route-form-service-id').click({ force: true })
+          cy.get("[data-testid='select-item-2']").scrollIntoView()
           cy.get("[data-testid='select-item-2']").click()
           cy.getTestId('route-edit-form-submit').should('be.enabled').click()
           cy.wait('@editRoute').then((res) => res.response?.body?.kind).should('eq', 'expr')
@@ -1508,42 +1678,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         })
       } // if routeFlavors?.expressions
 
-      it('should correctly handle button state - edit', () => {
-        interceptKonnect()
-        interceptKonnectServices()
-
-        cy.mount(RouteForm, {
-          props: {
-            config: baseConfigKonnect,
-            routeId: route.id,
-          },
-        })
-
-        cy.wait('@getRoute')
-        cy.wait('@getServices')
-
-        cy.get('.kong-ui-entities-route-form').should('be.visible')
-
-        // default button state
-        cy.getTestId('route-edit-form-cancel').should('be.visible')
-        cy.getTestId('route-edit-form-submit').should('be.visible')
-        cy.getTestId('route-edit-form-cancel').should('be.enabled')
-        cy.getTestId('route-edit-form-submit').should('be.disabled')
-        cy.getTestId('routing-rules-warning').should('not.exist')
-
-        // enables save when form has changes
-        cy.getTestId('route-form-service-id').click({ force: true })
-        cy.get("[data-testid='select-item-2']").click()
-        cy.getTestId('route-edit-form-submit').should('be.enabled')
-        cy.getTestId('remove-methods').click()
-        cy.getTestId('remove-paths').first().click()
-        cy.getTestId('remove-paths').click()
-        cy.getTestId('remove-headers').click()
-        cy.getTestId('routing-rules-warning').should('be.visible')
-        cy.getTestId('route-edit-form-submit').should('be.disabled')
-      })
-
-      it('should handle error state - failed to load route', () => {
+      it(`should handle error state - failed to load route, ${configFlavor}`, () => {
         interceptKonnectServices()
 
         cy.intercept(
@@ -1561,6 +1696,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
           props: {
             config: baseConfigKonnect,
             routeId: route.id,
+            routeFlavors,
           },
         })
 
@@ -1578,17 +1714,23 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.get('.kong-ui-entities-route-form form').should('not.exist')
       })
 
-      it('should allow exact match filtering of certs', () => {
+      it(`should allow exact match filtering of services, ${configFlavor}`, () => {
         interceptKonnectServices()
 
         cy.mount(RouteForm, {
           props: {
             config: baseConfigKonnect,
+            routeFlavors,
           },
         })
 
         cy.wait('@getServices')
         cy.get('.kong-ui-entities-route-form').should('be.visible')
+        cy.getTestId('route-form-config-type-advanced').click()
+
+        // flavor control is hidden when there is only one flavor
+        cy.getTestId('route-form-config-flavor')
+          .should(routeFlavors?.traditional && routeFlavors?.expressions ? 'be.visible' : 'not.exist')
 
         // search
         cy.getTestId('route-form-service-id').should('be.visible')
@@ -1623,13 +1765,14 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('form-error').should('be.visible')
       })
 
-      it('should correctly render with all props and slot content', () => {
+      it(`should correctly render with all props and slot content, ${configFlavor}`, () => {
         cy.mount(RouteForm, {
           props: {
             config: baseConfigKonnect,
             serviceId: services[0].id,
             hideSectionsInfo: true,
             hideNameField: true,
+            routeFlavors,
           },
           slots: {
             'form-actions': '<button data-testid="slotted-cancel-button">Cancel</button><button data-testid="slotted-submit-button">Submit</button>',
@@ -1638,6 +1781,11 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
         cy.get('.kong-ui-entities-route-form').should('be.visible')
         cy.get('.kong-ui-entities-route-form form').should('be.visible')
+        cy.getTestId('route-form-config-type-advanced').click()
+
+        // flavor control is hidden when there is only one flavor
+        cy.getTestId('route-form-config-flavor')
+          .should(routeFlavors?.traditional && routeFlavors?.expressions ? 'be.visible' : 'not.exist')
 
         // name field should be hidden when hideNameField is true
         cy.getTestId('route-form-name').should('not.exist')
@@ -1658,7 +1806,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
         cy.getTestId('slotted-submit-button').should('be.visible')
       })
 
-      it('update event should be emitted when Route was edited', () => {
+      it(`update event should be emitted when Route was edited, ${configFlavor}`, () => {
         interceptKonnect()
         interceptUpdate()
 
@@ -1667,6 +1815,7 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
             config: baseConfigKonnect,
             routeId: route.id,
             onUpdate: cy.spy().as('onUpdateSpy'),
+            routeFlavors,
           },
         }).then(({ wrapper }) => wrapper)
           .as('vueWrapper')
@@ -1682,83 +1831,88 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
         cy.get('@onUpdateSpy').should('have.been.calledOnce')
       })
+    } // for RouteFlavors[]
 
-      describe('RoutePlayground', () => {
-        beforeEach(() => {
-          cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop completed with undelivered notifications.'))
+    describe('RoutePlayground', () => {
+      beforeEach(() => {
+        cy.on('uncaught:exception', err => !err.message.includes('ResizeObserver loop completed with undelivered notifications.'))
+      })
+
+      it('route playground entry should hide if select stream-based protocols', () => {
+        cy.mount(RouteForm, {
+          props: {
+            config: baseConfigKonnect,
+            routeFlavors: TRADITIONAL_EXPRESSIONS,
+            showExpressionsModalEntry: true,
+          },
         })
 
-        it('route playground entry should hide if select stream-based protocols', () => {
-          cy.mount(RouteForm, {
-            props: {
-              config: baseConfigKonnect,
-              routeFlavors: TRADITIONAL_EXPRESSIONS,
-              showExpressionsModalEntry: true,
-            },
-          })
+        cy.getTestId('route-form-config-type-advanced').click()
+        cy.getTestId('expressions-option').click()
 
-          cy.get('#expressions-tab').click()
-
-          STREAM_BASED_PROTOCOLS.forEach((protocol) => {
-            cy.getTestId('route-form-protocols').click({ force: true })
-            cy.get(`[data-testid='select-item-${protocol}'] button`).click()
-            cy.getTestId('open-router-playground').should('have.class', 'disabled')
-            cy.getTestId('open-router-playground').click()
-            cy.get('.router-playground-wrapper').should('not.exist')
-          })
-        })
-
-        it('route playground entry should show if select http-based protocols', () => {
-          cy.mount(RouteForm, {
-            props: {
-              config: baseConfigKonnect,
-              routeFlavors: TRADITIONAL_EXPRESSIONS,
-              showExpressionsModalEntry: true,
-            },
-          })
-
-          cy.get('#expressions-tab').click()
-
-          HTTP_BASED_PROTOCOLS.forEach((protocol) => {
-            cy.getTestId('route-form-protocols').click({ force: true })
-            cy.get(`[data-testid='select-item-${protocol}'] button`).click()
-            cy.getTestId('open-router-playground').should('not.have.class', 'disabled')
-          })
-        })
-
-        it('route playground should have initial expression value', () => {
-          cy.mount(RouteForm, {
-            props: {
-              config: baseConfigKonnect,
-              routeFlavors: TRADITIONAL_EXPRESSIONS,
-              showExpressionsModalEntry: true,
-            },
-          })
-
-          cy.get('#expressions-tab').click()
-          cy.get('.monaco-editor').first().as('monacoEditor').click()
-          cy.get('@monacoEditor').type('http.path == "/kong"')
+        STREAM_BASED_PROTOCOLS.forEach((protocol) => {
+          cy.getTestId('route-form-protocols').click({ force: true })
+          cy.get(`[data-testid='select-item-${protocol}'] button`).click()
+          cy.getTestId('open-router-playground').should('have.class', 'disabled')
           cy.getTestId('open-router-playground').click()
-          cy.get('.router-playground > [data-testid="expressions-editor"]').contains('http.path == "/kong"')
-        })
-
-        it('should expression updated when save in route playground', () => {
-          cy.mount(RouteForm, {
-            props: {
-              config: baseConfigKonnect,
-              routeFlavors: TRADITIONAL_EXPRESSIONS,
-              showExpressionsModalEntry: true,
-            },
-          })
-          cy.get('#expressions-tab').click()
-          cy.get('.monaco-editor').first().as('monacoEditor').click()
-          cy.get('@monacoEditor').type('http.path == "/kong"')
-          cy.getTestId('open-router-playground').click()
-          cy.get('.router-playground > [data-testid="expressions-editor"]').type(' && http.method == "GET"')
-          cy.getTestId('modal-action-button').click()
-          cy.get('@monacoEditor').contains('http.path == "/kong" && http.method == "GET"')
+          cy.get('.router-playground-wrapper').should('not.exist')
         })
       })
-    } // for RouteFlavors[]
+
+      it('route playground entry should show if select http-based protocols', () => {
+        cy.mount(RouteForm, {
+          props: {
+            config: baseConfigKonnect,
+            routeFlavors: TRADITIONAL_EXPRESSIONS,
+            showExpressionsModalEntry: true,
+          },
+        })
+
+        cy.getTestId('route-form-config-type-advanced').click()
+        cy.getTestId('expressions-option').click()
+
+        HTTP_BASED_PROTOCOLS.forEach((protocol) => {
+          cy.getTestId('route-form-protocols').click({ force: true })
+          cy.get(`[data-testid='select-item-${protocol}'] button`).click()
+          cy.getTestId('open-router-playground').should('not.have.class', 'disabled')
+        })
+      })
+
+      it('route playground should have initial expression value', () => {
+        cy.mount(RouteForm, {
+          props: {
+            config: baseConfigKonnect,
+            routeFlavors: TRADITIONAL_EXPRESSIONS,
+            showExpressionsModalEntry: true,
+          },
+        })
+
+        cy.getTestId('route-form-config-type-advanced').click()
+        cy.getTestId('expressions-option').click()
+        cy.get('.monaco-editor').first().as('monacoEditor').click()
+        cy.get('@monacoEditor').type('http.path == "/kong"')
+        cy.getTestId('open-router-playground').click()
+        cy.get('.router-playground > [data-testid="expressions-editor"]').contains('http.path == "/kong"')
+      })
+
+      it('should expression updated when save in route playground', () => {
+        cy.mount(RouteForm, {
+          props: {
+            config: baseConfigKonnect,
+            routeFlavors: TRADITIONAL_EXPRESSIONS,
+            showExpressionsModalEntry: true,
+          },
+        })
+
+        cy.getTestId('route-form-config-type-advanced').click()
+        cy.getTestId('expressions-option').click()
+        cy.get('.monaco-editor').first().as('monacoEditor').click()
+        cy.get('@monacoEditor').type('http.path == "/kong"')
+        cy.getTestId('open-router-playground').click()
+        cy.get('.router-playground > [data-testid="expressions-editor"]').type(' && http.method == "GET"')
+        cy.getTestId('modal-action-button').click()
+        cy.get('@monacoEditor').contains('http.path == "/kong" && http.method == "GET"')
+      })
+    })
   })
 })
