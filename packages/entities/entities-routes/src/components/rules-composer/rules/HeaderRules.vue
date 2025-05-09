@@ -1,6 +1,5 @@
 <template>
   <div class="routing-rule-container">
-    <hr>
     <KLabel :info="t('form.fields.headers.tooltip')">
       {{ t('form.fields.headers.label') }}
     </KLabel>
@@ -20,14 +19,17 @@
           :data-testid="`route-form-headers-values-input-${index + 1}`"
           :placeholder="t('form.fields.headers.values.placeholder')"
         />
-        <RuleControls
-          :is-add-disabled="index !== headers.length - 1"
+        <RuleControlsRemove
+          :disabled="headers.length === 1"
           :routing-rules-entity="RoutingRulesEntities.HEADERS"
-          @add="emit('add')"
           @remove="emit('remove', index)"
         />
       </div>
     </TransitionGroup>
+    <RuleControlsAdd
+      :routing-rules-entity="RoutingRulesEntities.HEADERS"
+      @add="emit('add')"
+    />
   </div>
 </template>
 
@@ -35,7 +37,8 @@
 import composables from '../../../composables'
 import type { HeaderFields } from '../../../types'
 import { RoutingRulesEntities } from '../../../types'
-import RuleControls from './RuleControls.vue'
+import RuleControlsAdd from './RuleControlsAdd.vue'
+import RuleControlsRemove from './RuleControlsRemove.vue'
 
 const { i18n: { t } } = composables.useI18n()
 

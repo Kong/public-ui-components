@@ -1,7 +1,9 @@
 <template>
   <div class="routing-rule-container">
-    <hr>
-    <KLabel :info="t('form.fields.snis.tooltip')">
+    <KLabel
+      :info="t('form.fields.snis.tooltip')"
+      :tooltip-attributes="{ maxWidth: '320' }"
+    >
       {{ t('form.fields.snis.label') }}
     </KLabel>
     <TransitionGroup name="appear">
@@ -15,21 +17,25 @@
           :data-testid="`route-form-snis-input-${index + 1}`"
           :placeholder="t('form.fields.snis.placeholder')"
         />
-        <RuleControls
-          :is-add-disabled="index !== snis.length - 1"
+        <RuleControlsRemove
+          :disabled="snis.length === 1"
           :routing-rules-entity="RoutingRulesEntities.SNIS"
-          @add="emit('add')"
           @remove="emit('remove', index)"
         />
       </div>
     </TransitionGroup>
+    <RuleControlsAdd
+      :routing-rules-entity="RoutingRulesEntities.SNIS"
+      @add="emit('add')"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import composables from '../../../composables'
 import { RoutingRulesEntities } from '../../../types'
-import RuleControls from './RuleControls.vue'
+import RuleControlsAdd from './RuleControlsAdd.vue'
+import RuleControlsRemove from './RuleControlsRemove.vue'
 
 const { i18n: { t } } = composables.useI18n()
 

@@ -1,6 +1,5 @@
 <template>
   <div class="routing-rule-container">
-    <hr>
     <KLabel :info="t('form.fields.sources.tooltip')">
       {{ t('form.fields.sources.label') }}
     </KLabel>
@@ -23,14 +22,17 @@
           :placeholder="t('form.fields.sources.port.placeholder')"
           type="number"
         />
-        <RuleControls
-          :is-add-disabled="index !== sources.length - 1"
+        <RuleControlsRemove
+          :disabled="sources.length === 1"
           :routing-rules-entity="RoutingRulesEntities.SOURCES"
-          @add="emit('add')"
           @remove="emit('remove', index)"
         />
       </div>
     </TransitionGroup>
+    <RuleControlsAdd
+      :routing-rules-entity="RoutingRulesEntities.SOURCES"
+      @add="emit('add')"
+    />
   </div>
 </template>
 
@@ -38,7 +40,8 @@
 import composables from '../../../composables'
 import type { Sources } from '../../../types'
 import { RoutingRulesEntities } from '../../../types'
-import RuleControls from './RuleControls.vue'
+import RuleControlsAdd from './RuleControlsAdd.vue'
+import RuleControlsRemove from './RuleControlsRemove.vue'
 
 const { i18n: { t } } = composables.useI18n()
 
