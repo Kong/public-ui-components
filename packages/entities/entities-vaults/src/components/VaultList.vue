@@ -79,7 +79,7 @@
       </template>
 
       <template
-        v-if="!filterQuery && enableV2EmptyStates && config.app === 'konnect'"
+        v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
         <EntityEmptyState
@@ -286,14 +286,6 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  /**
-   * Enables the new empty state design, this prop can be removed when
-   * the khcp-14756-empty-states-m2 FF is removed.
-   */
-  enableV2EmptyStates: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const { i18n: { t } } = composables.useI18n()
@@ -305,8 +297,6 @@ const { hasRecords, handleStateChange } = useTableState(() => filterQuery.value)
 // If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
 // If new empty states are not enabled, show the learning hub button (for Konnect)
 const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
-const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
-
 
 /**
  * Table Headers
