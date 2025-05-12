@@ -343,6 +343,7 @@ watch([() => props.recordFlavor, () => props.routeFlavors], ([newRecordFlavor, n
 
 watch(configType, (newConfigType) => {
   if (newConfigType === 'basic') {
+    configFlavor.value = RouteFlavor.TRADITIONAL
     emit('update:protocols', 'http,https')
   }
 })
