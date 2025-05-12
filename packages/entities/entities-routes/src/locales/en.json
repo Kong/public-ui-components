@@ -181,14 +181,14 @@
         "add": "Add a path",
         "label": "Paths",
         "label_singular": "Path",
-        "placeholder": "Enter a path",
+        "placeholder": "e.g. /api/v1",
         "singular": "path",
         "tooltip": "Match specific URL paths, such as /api/v1. Prefix with ~ to enable regex-based matching."
       },
       "snis": {
         "add": "Add an SNI",
         "label": "SNIs",
-        "placeholder": "Enter an SNI",
+        "placeholder": "e.g. api.example.com",
         "singular": "SNI",
         "tooltip": "SNIs that match the route when using stream routing."
       },
@@ -196,7 +196,7 @@
         "add": "Add a host",
         "label": "Hosts",
         "label_singular": "Host",
-        "placeholder": "Enter a host",
+        "placeholder": "e.g. example.com",
         "singular": "host",
         "tooltip": "Match specific domain names (e.g., api.example.com). Prefix with ~ to enable regex-based matching.",
         "tooltipConfig": "A list of domain names that match this Route. Note that the hosts value is case sensitive."
@@ -219,10 +219,10 @@
         "singular": "header",
         "tooltip": "Match specific headers, such as x-api-version or x-region.",
         "name": {
-          "placeholder": "Enter a header name"
+          "placeholder": "e.g. x-api-version"
         },
         "values": {
-          "placeholder": "Enter a header value"
+          "placeholder": "e.g. v1"
         },
         "tooltipConfig": "One or more lists of values indexed by header name that will cause this Route to match if present in the request. The {code1} header cannot be used with this attribute: hosts should be specified using the {code2} attribute. When {code3} contains only one value and that value starts with the special prefix {code4}, the value is interpreted as a regular expression.",
         "code1": "Host",
@@ -275,8 +275,7 @@
       "traditional": "Traditional Form",
       "expressions": "Expressions Editor"
     },
-    "viewAdvancedFields": "View Advanced Fields",
-    "addNewRule": "Add New Rule",
+    "show_more": "Show more",
     "hint": {
       "rules_message": "Choose at least one {routingRules} option.",
       "single_rule": "{routingRules}",

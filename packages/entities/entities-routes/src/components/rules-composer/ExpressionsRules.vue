@@ -36,7 +36,7 @@
     v-model="isAdvancedFieldsCollapsed"
     class="route-form-advanced-fields-collapse"
     trigger-alignment="leading"
-    :trigger-label="t('form.viewAdvancedFields')"
+    :trigger-label="t('form.show_more')"
   >
     <KCard>
       <div class="route-form-fields-container route-form-advanced-fields-container">
