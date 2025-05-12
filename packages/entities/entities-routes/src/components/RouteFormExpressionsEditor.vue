@@ -35,13 +35,15 @@
  */
 import { ExpressionsEditor, HTTP_BASED_PROTOCOLS, PROTOCOL_TO_SCHEMA, RouterPlaygroundModal, type Schema } from '@kong-ui-public/expressions'
 import { computed, ref } from 'vue'
+import composables from '../composables'
 
 import '@kong-ui-public/expressions/dist/style.css'
+
+const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps<{
   protocol?: string
   showExpressionsModalEntry?: boolean
-  hintText: string
 }>()
 const expression = defineModel<string>({ required: true })
 const emit = defineEmits<{
@@ -63,7 +65,11 @@ const isHttpBasedProtocol = computed(() => {
 })
 
 const tooltipText = computed(() => {
-  return (props.showExpressionsModalEntry && !isHttpBasedProtocol.value) ? `${props.hintText}${HTTP_BASED_PROTOCOLS}` : undefined
+  if (!props.showExpressionsModalEntry || isHttpBasedProtocol.value) {
+    return undefined
+  }
+
+  return t('form.expression_playground.supported_protocols_hint', { protocols: HTTP_BASED_PROTOCOLS.join(', ') })
 })
 
 const handleCommit = (expr: string) => {
