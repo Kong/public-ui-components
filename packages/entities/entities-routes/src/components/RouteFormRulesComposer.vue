@@ -332,13 +332,10 @@ watch([() => props.recordFlavor, () => props.routeFlavors], ([newRecordFlavor, n
     configFlavor.value = newRecordFlavor
     return
   }
-  if (newRouteFlavors.traditional) {
-    configFlavor.value = RouteFlavor.TRADITIONAL
-  } else if (newRouteFlavors.expressions) {
-    configFlavor.value = RouteFlavor.EXPRESSIONS
-  } else {
-    configFlavor.value = RouteFlavor.TRADITIONAL
-  }
+
+  configFlavor.value = (!newRouteFlavors.traditional && newRouteFlavors.expressions)
+    ? RouteFlavor.EXPRESSIONS
+    : RouteFlavor.TRADITIONAL
 }, { immediate: true, deep: true })
 
 watch(configType, (newConfigType) => {

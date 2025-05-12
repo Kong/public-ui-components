@@ -240,11 +240,9 @@ const emit = defineEmits<{
 
 const configType = ref<'basic' | 'advanced'>('basic')
 const configFlavor = ref<RouteFlavor>(
-  props.routeFlavors.traditional
-    ? RouteFlavor.TRADITIONAL
-    : props.routeFlavors.expressions
-      ? RouteFlavor.EXPRESSIONS
-      : RouteFlavor.TRADITIONAL,
+  (!props.routeFlavors.traditional && props.routeFlavors.expressions)
+    ? RouteFlavor.EXPRESSIONS
+    : RouteFlavor.TRADITIONAL,
 )
 const recordFlavor = ref<RouteFlavor | undefined>(undefined)
 
