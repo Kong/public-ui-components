@@ -12,7 +12,6 @@
   <RouteFormExpressionsEditor
     v-else
     v-model="expression"
-    :hint-text="t('form.expression_playground.supported_protocols_hint')"
     :protocol="props.protocol"
     :show-expressions-modal-entry="showExpressionsModalEntry"
     @notify="emit('notify', $event)"
