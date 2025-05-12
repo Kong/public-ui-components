@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.11.13...@kong-ui-public/entities-routes@3.11.14) (2025-05-12)
+
+
+### Bug Fixes
+
+* **entities-routes:** expressions playground tooltip on entry ([#2113](https://github.com/Kong/public-ui-components/issues/2113)) ([b5a60fa](https://github.com/Kong/public-ui-components/commit/b5a60fa04ee267dfe6dd09a41d3827bbe4650a32))
+
+
+
+
+
 ## [3.11.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.11.12...@kong-ui-public/entities-routes@3.11.13) (2025-05-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
