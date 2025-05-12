@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.2.0...@kong-ui-public/dashboard-renderer@5.2.1) (2025-05-12)
+
+
+### Bug Fixes
+
+* enable jump to explore for portal dimensions ([#2115](https://github.com/Kong/public-ui-components/issues/2115)) ([99aac66](https://github.com/Kong/public-ui-components/commit/99aac660c3096f27efc06cd9e5403fe6c30d46ec))
+
+
+
+
+
 # [5.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.1.3...@kong-ui-public/dashboard-renderer@5.2.0) (2025-05-08)
 
 
