@@ -474,7 +474,6 @@ const isFormValid = computed((): boolean => {
       break
     }
     case RouteFlavor.EXPRESSIONS: {
-      console.log(state.fields)
       if (stateHasExpressionsFlavor(state)) {
         return state.fields.expression.length > 0
       }
