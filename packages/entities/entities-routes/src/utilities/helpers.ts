@@ -29,7 +29,6 @@ export const isDefinedByBasic = (data: Record<string, any>): boolean => {
     'path_handling',
     'regex_priority',
     'https_redirect_status_code',
-    'strip_path',
     'preserve_host',
     'request_buffering',
     'response_buffering',
