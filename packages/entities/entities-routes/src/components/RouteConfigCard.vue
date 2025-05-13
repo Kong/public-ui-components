@@ -13,7 +13,7 @@
     >
       <template #https_redirect_status_code-label-tooltip>
         <i18nT
-          keypath="form.fields.https_redirect_status_code.tooltip"
+          keypath="form.fields.https_redirect_status_code.tooltipConfig"
           scope="global"
         >
           <template #code1>
@@ -33,7 +33,7 @@
 
       <template #regex_priority-label-tooltip>
         <i18nT
-          keypath="form.fields.regex_priority.tooltip"
+          keypath="form.fields.regex_priority.tooltipConfig"
           scope="global"
         >
           <template #code1>
@@ -90,7 +90,7 @@
 
       <template #strip_path-label-tooltip>
         <i18nT
-          keypath="form.fields.strip_path.tooltip"
+          keypath="form.fields.strip_path.tooltipConfig"
           scope="global"
         >
           <template #code1>
@@ -101,7 +101,7 @@
 
       <template #preserve_host-label-tooltip>
         <i18nT
-          keypath="form.fields.preserve_host.tooltip"
+          keypath="form.fields.preserve_host.tooltipConfig"
           scope="global"
         >
           <template #code1>
@@ -322,7 +322,7 @@ const configSchema = ref<RouteConfigurationSchema>({
     order: 1,
   },
   regex_priority: {
-    tooltip: t('form.fields.regex_priority.tooltip'),
+    tooltip: t('form.fields.regex_priority.tooltipConfig'),
     order: 2,
   },
   strip_path: {
@@ -340,7 +340,7 @@ const configSchema = ref<RouteConfigurationSchema>({
     order: 6,
   },
   path_handling: {
-    tooltip: t('form.fields.path_handling.tooltipConfig'),
+    tooltip: t('form.fields.path_handling.tooltip'),
     order: 7,
   },
 })

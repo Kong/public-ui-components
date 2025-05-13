@@ -1,210 +1,184 @@
 <template>
   <KCard>
-    <template #title>
-      <div class="route-form-routing-rules-title-container">
-        <span
-          v-for="protocol in parsedProtocols"
-          :key="protocol"
-          class="protocol-title"
-        >
-          {{ protocol.toUpperCase() }}
-        </span>
-        <span class="routing-rules-title">
-          {{ t('form.sections.routingRules.title') }}
-        </span>
-      </div>
-    </template>
-
-    <template #default>
-      <KAlert
-        v-if="showRoutingRulesWarning"
-        appearance="warning"
-        data-testid="routing-rules-warning"
-      >
-        <template #default>
-          <i18nT keypath="form.warning.rulesMessage">
-            <template #protocol>
-              <b>{{ protocolsLabels[protocols] }}</b>
-            </template>
+    <span class="traditional-rules-hint">
+      <i18nT keypath="form.hint.rules_message">
+        <template #protocol>
+          <b>{{ protocolsLabels[protocols] }}</b>
+        </template>
+        <template #routingRules>
+          <i18nT
+            :keypath="hintMessageRoutingRules[1] ? 'form.hint.multiple_rules' : 'form.hint.single_rule'"
+          >
             <template #routingRules>
-              <i18nT
-                :keypath="warningMessageRoutingRules[1] ? 'form.warning.multipleRules' : 'form.warning.singleRule'"
-              >
-                <template #routingRules>
-                  <b>{{ warningMessageRoutingRules[0] }}</b>
-                </template>
-                <template #lastRoutingRule>
-                  <b>{{ warningMessageRoutingRules[1] }}</b>
-                </template>
-              </i18nT>
+              {{ hintMessageRoutingRules[0] }}
+            </template>
+            <template #lastRoutingRule>
+              {{ hintMessageRoutingRules[1] }}
             </template>
           </i18nT>
         </template>
-      </KAlert>
+      </i18nT>
+      <span v-if="configType === 'basic'">
+        {{ t('form.hint.advanced') }}
+      </span>
+    </span>
 
-      <!-- Routing Rules Fields -->
-      <TransitionGroup name="appear">
-        <!-- paths -->
-        <PathRules
-          v-if="fields.paths"
-          key="paths-container"
-          v-model="fields.paths"
-          @add="addRule(RoutingRulesEntities.PATHS)"
-          @remove="(index: number) => removeRule(RoutingRulesEntities.PATHS, index)"
+    <!-- Routing Rules Fields -->
+    <TransitionGroup name="appear">
+      <!-- paths -->
+      <PathRules
+        v-if="fields.paths && protocolRuleNames.has(RoutingRulesEntities.PATHS)"
+        key="paths-container"
+        v-model="fields.paths"
+        @add="addRule(RoutingRulesEntities.PATHS)"
+        @remove="(index: number) => removeRule(RoutingRulesEntities.PATHS, index)"
+      />
+
+      <KCheckbox
+        v-if="isProtocolSelected(['http', 'https', 'ws', 'wss'])"
+        v-model="fields.strip_path"
+        class="route-form-strip-path"
+        data-testid="route-form-strip-path"
+        :disabled="!fields.paths?.some(Boolean)"
+        :label="t('form.fields.strip_path.label')"
+        :label-attributes="{
+          info: t('form.fields.strip_path.tooltip'),
+          tooltipAttributes: { maxWidth: '320' },
+        }"
+      />
+
+      <!-- methods -->
+      <MethodRules
+        v-if="fields.methods && protocolRuleNames.has(RoutingRulesEntities.METHODS)"
+        key="methods-container"
+        v-model:custom-methods="customMethods"
+        v-model:methods="fields.methods"
+      />
+
+      <!-- hosts -->
+      <HostRules
+        v-if="fields.hosts && protocolRuleNames.has(RoutingRulesEntities.HOSTS)"
+        key="hosts-container"
+        v-model="fields.hosts"
+        @add="addRule(RoutingRulesEntities.HOSTS)"
+        @remove="(index: number) => removeRule(RoutingRulesEntities.HOSTS, index)"
+      />
+
+      <!-- headers -->
+      <HeaderRules
+        v-if="fields.headers && configType === 'advanced' && protocolRuleNames.has(RoutingRulesEntities.HEADERS)"
+        key="headers-container"
+        v-model="fields.headers"
+        @add="addRule(RoutingRulesEntities.HEADERS)"
+        @remove="(index: number) => removeRule(RoutingRulesEntities.HEADERS, index)"
+      />
+
+      <!-- sources -->
+      <SourceRules
+        v-if="fields.sources && protocolRuleNames.has(RoutingRulesEntities.SOURCES)"
+        key="sources-container"
+        v-model="fields.sources"
+        @add="addRule(RoutingRulesEntities.SOURCES)"
+        @remove="(index: number) => removeRule(RoutingRulesEntities.SOURCES, index)"
+      />
+
+      <!-- destinations -->
+      <DestinationRules
+        v-if="fields.destinations && protocolRuleNames.has(RoutingRulesEntities.DESTINATIONS)"
+        key="destinations-container"
+        v-model="fields.destinations"
+        @add="addRule(RoutingRulesEntities.DESTINATIONS)"
+        @remove="(index: number) => removeRule(RoutingRulesEntities.DESTINATIONS, index)"
+      />
+
+      <!-- snis -->
+      <SniRules
+        v-if="fields.snis && configType === 'advanced' && protocolRuleNames.has(RoutingRulesEntities.SNIS)"
+        key="snis-container"
+        v-model="fields.snis"
+        @add="addRule(RoutingRulesEntities.SNIS)"
+        @remove="(index: number) => removeRule(RoutingRulesEntities.SNIS, index)"
+      />
+    </TransitionGroup>
+
+    <template
+      v-if="!hideAdvanced"
+    >
+      <div class="route-form-fields-container route-form-advanced-fields-container">
+        <KSelect
+          v-if="fields.paths?.some(Boolean)"
+          v-model="fields.path_handling"
+          data-testid="route-form-path-handling"
+          :items="PATH_HANDLING_OPTIONS"
+          :label="t('form.fields.path_handling.label')"
+          :label-attributes="{
+            info: t('form.fields.path_handling.tooltip'),
+            tooltipAttributes: { maxWidth: '320' },
+          }"
+          :readonly="readonly"
+          width="100%"
         />
-
-        <!-- snis -->
-        <SniRules
-          v-if="fields.snis"
-          key="snis-container"
-          v-model="fields.snis"
-          @add="addRule(RoutingRulesEntities.SNIS)"
-          @remove="(index: number) => removeRule(RoutingRulesEntities.SNIS, index)"
+        <KSelect
+          v-model="fields.https_redirect_status_code"
+          data-testid="route-form-http-redirect-status-code"
+          :items="HTTP_REDIRECT_STATUS_CODES"
+          :label="t('form.fields.https_redirect_status_code.label')"
+          :label-attributes="{
+            info: t('form.fields.https_redirect_status_code.tooltip'),
+            tooltipAttributes: { maxWidth: '320' },
+          }"
+          :readonly="readonly"
+          width="100%"
         />
-
-        <!-- hosts -->
-        <HostRules
-          v-if="fields.hosts"
-          key="hosts-container"
-          v-model="fields.hosts"
-          @add="addRule(RoutingRulesEntities.HOSTS)"
-          @remove="(index: number) => removeRule(RoutingRulesEntities.HOSTS, index)"
+        <KInput
+          v-model="fields.regex_priority"
+          autocomplete="off"
+          data-testid="route-form-regex-priority"
+          :label="t('form.fields.regex_priority.label')"
+          :label-attributes="{
+            info: t('form.fields.regex_priority.tooltip'),
+            tooltipAttributes: { maxWidth: '320' },
+          }"
+          :readonly="readonly"
+          type="number"
         />
-
-        <!-- methods -->
-        <MethodRules
-          v-if="fields.methods"
-          key="methods-container"
-          v-model:custom-methods="customMethods"
-          v-model:methods="fields.methods"
-          @remove="removeRule(RoutingRulesEntities.METHODS)"
+        <KCheckbox
+          v-model="fields.preserve_host"
+          data-testid="route-form-preserve-host"
+          :label="t('form.fields.preserve_host.label')"
+          :label-attributes="{
+            info: t('form.fields.preserve_host.tooltip'),
+            tooltipAttributes: { maxWidth: '320' },
+          }"
         />
-
-        <!-- headers -->
-        <HeaderRules
-          v-if="fields.headers"
-          key="headers-container"
-          v-model="fields.headers"
-          @add="addRule(RoutingRulesEntities.HEADERS)"
-          @remove="(index: number) => removeRule(RoutingRulesEntities.HEADERS, index)"
+        <KCheckbox
+          v-model="fields.request_buffering"
+          data-testid="route-form-request-buffering"
+          :label="t('form.fields.request_buffering.label')"
+          :label-attributes="{
+            info: t('form.fields.request_buffering.tooltip'),
+            tooltipAttributes: { maxWidth: '320' },
+          }"
         />
-
-        <!-- sources -->
-        <SourceRules
-          v-if="fields.sources"
-          key="sources-container"
-          v-model="fields.sources"
-          @add="addRule(RoutingRulesEntities.SOURCES)"
-          @remove="(index: number) => removeRule(RoutingRulesEntities.SOURCES, index)"
+        <KCheckbox
+          v-model="fields.response_buffering"
+          data-testid="route-form-response-buffering"
+          :label="t('form.fields.response_buffering.label')"
+          :label-attributes="{
+            info: t('form.fields.response_buffering.tooltip'),
+            tooltipAttributes: { maxWidth: '320' },
+          }"
         />
-
-        <!-- destinations -->
-        <DestinationRules
-          v-if="fields.destinations"
-          key="destinations-container"
-          v-model="fields.destinations"
-          @add="addRule(RoutingRulesEntities.DESTINATIONS)"
-          @remove="(index: number) => removeRule(RoutingRulesEntities.DESTINATIONS, index)"
-        />
-      </TransitionGroup>
-
-      <!-- routing rules selector  -->
-      <div
-        v-if="showRuleSelector"
-        class="route-form-routing-rules-selector-container"
-      >
-        <hr>
-        <div class="route-form-routing-rules-selector-options">
-          <ul>
-            <li
-              v-for="entity in PROTOCOLS_TO_ROUTE_RULES[protocols]"
-              :key="entity"
-            >
-              <label
-                :aria-disabled="!!fields[entity as RoutingRuleEntity]"
-                class="option"
-                :class="{ 'is-selected': fields[entity as RoutingRuleEntity] }"
-                :data-testid="`routing-rule-${entity}`"
-                role="button"
-                @click="addRule(entity)"
-              >
-                {{ getRoutingRuleLabel(entity) }}
-              </label>
-            </li>
-          </ul>
-        </div>
       </div>
     </template>
   </KCard>
-
-  <!-- Traditional Route Advanced Fields -->
-  <KCollapse
-    v-if="!hideAdvanced"
-    v-model="isAdvancedFieldsCollapsed"
-    class="route-form-advanced-fields-collapse"
-    trigger-alignment="leading"
-    :trigger-label="t('form.viewAdvancedFields')"
-  >
-    <div class="route-form-fields-container route-form-advanced-fields-container">
-      <KSelect
-        v-if="fields.paths"
-        v-model="fields.path_handling"
-        data-testid="route-form-path-handling"
-        :items="PATH_HANDLING_OPTIONS"
-        :label="t('form.fields.path_handling.label')"
-        :label-attributes="{
-          info: t('form.fields.path_handling.tooltip'),
-          tooltipAttributes: { maxWidth: '400' },
-        }"
-        :readonly="readonly"
-        width="100%"
-      />
-      <KSelect
-        v-model="fields.https_redirect_status_code"
-        data-testid="route-form-http-redirect-status-code"
-        :items="HTTP_REDIRECT_STATUS_CODES"
-        :label="t('form.fields.https_redirect_status_code.label')"
-        :readonly="readonly"
-        width="100%"
-      />
-      <KInput
-        v-model="fields.regex_priority"
-        autocomplete="off"
-        data-testid="route-form-regex-priority"
-        :label="t('form.fields.regex_priority.label')"
-        :readonly="readonly"
-        type="number"
-      />
-      <KCheckbox
-        v-if="isProtocolSelected(['http', 'https', 'ws', 'wss', 'tls', 'tcp', 'udp', 'tls_passthrough'])"
-        v-model="fields.strip_path"
-        data-testid="route-form-strip-path"
-        :label="t('form.fields.strip_path.label')"
-      />
-      <KCheckbox
-        v-model="fields.preserve_host"
-        data-testid="route-form-preserve-host"
-        :label="t('form.fields.preserve_host.label')"
-      />
-      <KCheckbox
-        v-model="fields.request_buffering"
-        data-testid="route-form-request-buffering"
-        :label="t('form.fields.request_buffering.label')"
-      />
-      <KCheckbox
-        v-model="fields.response_buffering"
-        data-testid="route-form-response-buffering"
-        :label="t('form.fields.response_buffering.label')"
-      />
-    </div>
-  </KCollapse>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick } from 'vue'
 import composables from '../../composables'
 import { HTTP_REDIRECT_STATUS_CODES, INITIAL_TRADITIONAL_ROUTE_RULES_VALUES, PATH_HANDLING_OPTIONS, PROTOCOLS_TO_ROUTE_RULES } from '../../constants'
-import { RoutingRulesEntities, type RoutingRuleEntity, type SharedRouteRulesFields, type TraditionalRouteRulesFields } from '../../types'
+import { RoutingRulesEntities, type SharedRouteRulesFields, type TraditionalRouteRulesFields } from '../../types'
 import DestinationRules from './rules/DestinationRules.vue'
 import HeaderRules from './rules/HeaderRules.vue'
 import HostRules from './rules/HostRules.vue'
@@ -220,14 +194,11 @@ const props = defineProps<{
   protocols: keyof typeof PROTOCOLS_TO_ROUTE_RULES
   hideAdvanced?: boolean
   readonly?: boolean
+  configType: 'basic' | 'advanced'
 }>()
 
 const fields = defineModel<SharedRouteRulesFields & TraditionalRouteRulesFields>('fields', { required: true })
-const customMethods = defineModel<string[]>('customMethods', { required: true })
-
-const isAdvancedFieldsCollapsed = ref<boolean>(true)
-
-const parsedProtocols = computed((): string[] => props.protocols.split(',') || [])
+const customMethods = defineModel<Array<{ label: string, value: string }>>('customMethods', { required: true })
 
 const addRule = (ruleEntity: string): void => {
   switch (ruleEntity) {
@@ -287,7 +258,7 @@ const addRule = (ruleEntity: string): void => {
 // or particular entry from particular rule entity if index is provided
 const removeRule = async (entity: string, index?: number): Promise<void> => {
   if (typeof index !== 'undefined') {
-    const items = fields.value[entity as RoutingRuleEntity]
+    const items = fields.value[entity as RoutingRulesEntities]
     if (Array.isArray(items)) {
       items.splice(index, 1)
       if (items.length > 0) {
@@ -297,11 +268,7 @@ const removeRule = async (entity: string, index?: number): Promise<void> => {
   }
 
   await nextTick(() => {
-    delete fields.value[entity as RoutingRuleEntity]
-
-    if (entity === RoutingRulesEntities.METHODS) {
-      customMethods.value = ['']
-    }
+    delete fields.value[entity as RoutingRulesEntities]
   })
 }
 
@@ -309,48 +276,43 @@ const isProtocolSelected = (protocols: string[]): boolean => {
   return protocols.some(protocol => props.protocols.includes(protocol))
 }
 
-const showRoutingRulesWarning = computed((): boolean => {
-  const ruleKeys = Object.keys(INITIAL_TRADITIONAL_ROUTE_RULES_VALUES)
-  return !Object.keys(fields.value).some(ruleKey => ruleKeys.includes(ruleKey))
-})
+const protocolRuleNames = computed(() => new Set<string>(PROTOCOLS_TO_ROUTE_RULES[props.protocols]))
 
-const warningMessageRoutingRules = computed((): string[] => {
+const hintMessageRoutingRules = computed((): string[] => {
   if (isProtocolSelected(['tls_passthrough'])) {
     return [getRoutingRuleLabel(RoutingRulesEntities.SNIS)]
   }
 
-  const protocolEntitiesLabels = PROTOCOLS_TO_ROUTE_RULES[props.protocols].map(entity => getRoutingRuleLabel(entity))
+  const protocolEntitiesLabels = (
+    props.configType === 'basic'
+      ? [RoutingRulesEntities.PATHS, RoutingRulesEntities.METHODS, RoutingRulesEntities.HOSTS]
+      : PROTOCOLS_TO_ROUTE_RULES[props.protocols]
+  ).map(entity => getRoutingRuleLabel(entity))
   return [[...protocolEntitiesLabels].splice(0, protocolEntitiesLabels.length - 1).join(', '), protocolEntitiesLabels[protocolEntitiesLabels.length - 1]]
 })
-
-// display or hide routing rules selector
-const showRuleSelector = computed(() => PROTOCOLS_TO_ROUTE_RULES[props.protocols]?.filter(protocol => !fields.value[protocol as RoutingRuleEntity]))
 
 const getRoutingRuleLabel = (entity: string): string => {
   const formFields = i18n.source.form.fields as Record<string, any>
 
-  return formFields[entity]?.label || ''
+  return formFields[entity]?.singular || ''
 }
-
-// removes objects for routing rules that are not configurable for the chosen protocols
-const sanitizeRoutingRulesEntities = (protocols: keyof typeof PROTOCOLS_TO_ROUTE_RULES) => {
-  const allRuleNames = new Set(Object.keys(INITIAL_TRADITIONAL_ROUTE_RULES_VALUES))
-  const protocolRuleNames = new Set<string>(PROTOCOLS_TO_ROUTE_RULES[protocols])
-
-  for (const name of Object.keys(fields.value)) {
-    if (allRuleNames.has(name) && !protocolRuleNames.has(name)) {
-      removeRule(name)
-    }
-  }
-}
-
-watch(() => props.protocols, (protocols) => {
-  sanitizeRoutingRulesEntities(protocols)
-}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
 @use "../../styles/mixins" as *;
 
 @include routing-rules;
+
+.traditional-rules-hint {
+  color: $kui-color-text-neutral-strong;
+  margin-bottom: $kui-space-80;
+
+  span:not(:first-child) {
+    margin-left: $kui-space-20;
+  }
+}
+
+.route-form-strip-path {
+  margin-top: $kui-space-80;
+}
 </style>

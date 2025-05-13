@@ -1,45 +1,108 @@
 <template>
-  <RulesComposer
-    v-if="routeFlavors.traditional || routeFlavors.expressions"
-    v-model="hash"
-    :route-flavors="routeFlavors"
-    :tooltips="tooltips"
-  >
-    <template #before-content>
-      <KAlert
-        v-if="routeFlavors.traditional && routeFlavors.expressions && (!recordFlavor || recordFlavor !== tabFlavor)"
-        :appearance="!recordFlavor ? 'info' : 'warning'"
-        class="route-form-config-type-immutable-alert"
-        data-testid="route-config-type-immutable-alert"
-      >
-        <template #default>
-          <template v-if="!recordFlavor">
-            {{ t('form.warning.cannotChangeFlavor.create') }}
-          </template>
-          <template v-else-if="recordFlavor !== tabFlavor">
-            {{ t('form.warning.cannotChangeFlavor.edit', { format: t(`form.flavors.${recordFlavor}`) }) }}
-          </template>
-        </template>
-      </KAlert>
-    </template>
+  <div class="config-type-container">
+    <KRadio
+      v-model="configType"
+      card
+      card-orientation="horizontal"
+      data-testid="route-form-config-type-basic"
+      :description="t('form.config_types.basic.description')"
+      :disabled="!routeFlavors.traditional || recordFlavor === RouteFlavor.EXPRESSIONS"
+      :label="t('form.config_types.basic.label')"
+      selected-value="basic"
+    />
+    <KRadio
+      v-model="configType"
+      card
+      card-orientation="horizontal"
+      data-testid="route-form-config-type-advanced"
+      :description="t('form.config_types.advanced.description')"
+      :label="t('form.config_types.advanced.label')"
+      selected-value="advanced"
+    />
+  </div>
 
-    <template
-      v-if="!recordFlavor || recordFlavor === RouteFlavor.TRADITIONAL"
-      #[RouteFlavor.TRADITIONAL]
+  <template v-if="configType === 'basic'">
+    <TraditionalRules
+      v-model:custom-methods="customMethods"
+      v-model:fields="(fields as BaseRouteStateFields & SharedRouteRulesFields & TraditionalRouteRulesFields)"
+      config-type="basic"
+      hide-advanced
+      :protocols="protocols"
+      :readonly="readonly"
+    />
+  </template>
+
+  <template v-else>
+    <div
+      v-if="routeFlavors.traditional && routeFlavors.expressions"
+      class="config-flavor"
     >
+      <KLabel class="config-flavor-label">
+        {{ t('form.config_flavor.label') }}
+      </KLabel>
+      <KSegmentedControl
+        v-model="configFlavor"
+        class="config-flavor-control"
+        data-testid="route-form-config-flavor"
+        :options="configFlavorOptions"
+      >
+        <template #option-label="{ option }">
+          <span>{{ option.label }}</span>
+          <KTooltip
+            v-if="tooltips?.[option.value as RouteFlavor]"
+            class="route-form-config-tabs-tooltip"
+            :text="tooltips?.[option.value as RouteFlavor]"
+            :tooltip-id="`route-form-config-tabs-tooltip-${option.value}`"
+          >
+            <InfoIcon />
+          </KTooltip>
+        </template>
+      </KSegmentedControl>
+    </div>
+
+    <KAlert
+      v-if="routeFlavors.traditional && routeFlavors.expressions && (!recordFlavor || recordFlavor !== configFlavor)"
+      :appearance="!recordFlavor ? 'info' : 'warning'"
+      class="route-form-config-type-immutable-alert"
+      data-testid="route-config-type-immutable-alert"
+    >
+      <template #default>
+        <template v-if="!recordFlavor">
+          {{ t('form.warning.cannotChangeFlavor.create') }}
+        </template>
+        <template v-else-if="recordFlavor !== configFlavor">
+          {{ t('form.warning.cannotChangeFlavor.edit', { format: t(`form.flavors.${recordFlavor}`) }) }}
+        </template>
+      </template>
+    </KAlert>
+
+    <template v-if="!recordFlavor || !(routeFlavors.traditional && routeFlavors.expressions && recordFlavor !== configFlavor)">
+      <KSelect
+        data-testid="route-form-protocols"
+        :items="protocolOptions"
+        :label="t('form.fields.protocols.label')"
+        :label-attributes="{
+          info: t('form.fields.protocols.tooltip'),
+          tooltipAttributes: { maxWidth: '400' },
+        }"
+        :model-value="protocols"
+        :readonly="readonly"
+        required
+        width="100%"
+        @update:model-value="onProtocolUpdate"
+      />
+
       <TraditionalRules
+        v-if="configFlavor === RouteFlavor.TRADITIONAL"
         v-model:custom-methods="customMethods"
         v-model:fields="(fields as BaseRouteStateFields & SharedRouteRulesFields & TraditionalRouteRulesFields)"
+        config-type="advanced"
         :protocols="protocols"
         :readonly="readonly"
       />
-    </template>
 
-    <template
-      v-if="!recordFlavor || recordFlavor === RouteFlavor.EXPRESSIONS"
-      #[RouteFlavor.EXPRESSIONS]
-    >
       <ExpressionsRules
+        v-else
         v-model:fields="(fields as BaseRouteStateFields & SharedRouteRulesFields & ExpressionsRouteRulesFields)"
         :protocols="protocols"
         :readonly="readonly"
@@ -47,20 +110,48 @@
         @notify="emit('notify', $event)"
       />
     </template>
-  </RulesComposer>
+  </template>
 </template>
 
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue'
+import { InfoIcon } from '@kong/icons'
 import composables from '../composables'
-import { INITIAL_SHARED_ROUTE_RULES_FIELDS, INITIAL_TRADITIONAL_ROUTE_RULES_VALUES, type PROTOCOLS_TO_ROUTE_RULES } from '../constants'
-import { RouteFlavor, RoutingRulesEntities, type BaseRouteStateFields, type Destinations, type ExpressionsRouteRulesFields, type HeaderFields, type Headers, type Method, type RouteFlavors, type SharedRouteRulesFields, type Sources, type TraditionalRouteRulesFields, type TraditionalRouteRulesPayload, type TypedRouteRulesPayload } from '../types'
-import ExpressionsRules from './rules-composer/ExpressionsRules.vue'
-import RulesComposer from './rules-composer/RulesComposer.vue'
+import { INITIAL_SHARED_ROUTE_RULES_FIELDS, INITIAL_TRADITIONAL_ROUTE_RULES_VALUES, PROTOCOLS_TO_ROUTE_RULES } from '../constants'
+import {
+  RouteFlavor,
+  RoutingRulesEntities,
+  Methods,
+  type BaseRouteStateFields,
+  type Destinations,
+  type ExpressionsRouteRulesFields,
+  type HeaderFields,
+  type Headers,
+  type RouteFlavors,
+  type SharedRouteRulesFields,
+  type Sources,
+  type TraditionalRouteRulesFields,
+  type TraditionalRouteRulesPayload,
+  type TypedRouteRulesPayload,
+} from '../types'
 import TraditionalRules from './rules-composer/TraditionalRules.vue'
+import ExpressionsRules from './rules-composer/ExpressionsRules.vue'
 
-const { i18n: { t } } = composables.useI18n()
+const props = defineProps<{
+  protocols: keyof typeof PROTOCOLS_TO_ROUTE_RULES
+  routeFlavors: RouteFlavors
+  readonly?: boolean
+  recordFlavor?: RouteFlavor
+  showExpressionsModalEntry?: boolean
+  tooltips?: {
+    [RouteFlavor.TRADITIONAL]?: string
+    [RouteFlavor.EXPRESSIONS]?: string
+  }
+  isWsSupported?: boolean
+}>()
 
+const configType = defineModel<'basic' | 'advanced'>('configType', { required: true })
+const configFlavor = defineModel<RouteFlavor>('configFlavor', { required: true })
 const fields = defineModel<SharedRouteRulesFields>('fields', {
   default: () => reactive({
     ...INITIAL_SHARED_ROUTE_RULES_FIELDS,
@@ -75,56 +166,68 @@ const fields = defineModel<SharedRouteRulesFields>('fields', {
     } as Omit<ExpressionsRouteRulesFields, keyof SharedRouteRulesFields>,
   }),
 })
-const customMethods = defineModel<string[]>('customMethods', { default: () => reactive([]) })
-const hash = defineModel<string | undefined>('hash')
-
-const props = defineProps<{
-  protocols: keyof typeof PROTOCOLS_TO_ROUTE_RULES
-  routeFlavors: RouteFlavors
-  readonly?: boolean
-  recordFlavor?: RouteFlavor
-  showExpressionsModalEntry?: boolean
-  tooltips?: {
-    [RouteFlavor.TRADITIONAL]?: string
-    [RouteFlavor.EXPRESSIONS]?: string
-  }
-}>()
+const customMethods = defineModel<Array<{ label: string, value: string }>>('customMethods', { default: () => reactive([]) })
 
 const emit = defineEmits<{
   notify: [notification: { message: string, type: string }]
   'update:payload': [payload?: TypedRouteRulesPayload]
+  'update:protocols': [protocols: BaseRouteStateFields['protocols']]
 }>()
 
-const tabFlavor = computed<RouteFlavor | undefined>(() => {
-  const hashFlavor = hash.value?.substring(1)
-  switch (hashFlavor) {
-    case RouteFlavor.TRADITIONAL:
-    case RouteFlavor.EXPRESSIONS:
-      return hashFlavor
-    default:
-      break
-  }
+const { i18n: { t } } = composables.useI18n()
 
-  if (props.routeFlavors.traditional) {
-    return RouteFlavor.TRADITIONAL
-  } else if (props.routeFlavors.expressions) {
-    return RouteFlavor.EXPRESSIONS
-  }
+const configFlavorOptions = [
+  {
+    value: RouteFlavor.TRADITIONAL,
+    label: t('form.flavors.traditional'),
+  },
+  {
+    value: RouteFlavor.EXPRESSIONS,
+    label: t('form.flavors.expressions'),
+  },
+]
 
-  return undefined
-})
-
+const protocolOptions = computed(() => [
+  { label: t('form.protocols.grpc'), value: 'grpc' },
+  { label: t('form.protocols.grpcs'), value: 'grpcs' },
+  { label: t('form.protocols.grpc,grpcs'), value: 'grpc,grpcs' },
+  { label: t('form.protocols.http'), value: 'http' },
+  { label: t('form.protocols.https'), value: 'https' },
+  { label: t('form.protocols.http,https'), value: 'http,https' },
+  { label: t('form.protocols.tcp'), value: 'tcp' },
+  { label: t('form.protocols.tls'), value: 'tls' },
+  { label: t('form.protocols.tls,udp'), value: 'tls,udp' },
+  { label: t('form.protocols.tcp,udp'), value: 'tcp,udp' },
+  { label: t('form.protocols.tcp,tls'), value: 'tcp,tls' },
+  { label: t('form.protocols.tcp,tls,udp'), value: 'tcp,tls,udp' },
+  { label: t('form.protocols.tls_passthrough'), value: 'tls_passthrough' },
+  { label: t('form.protocols.udp'), value: 'udp' },
+  ...(
+    props.isWsSupported
+      ? [
+        { label: t('form.protocols.ws'), value: 'ws' },
+        { label: t('form.protocols.wss'), value: 'wss' },
+        { label: t('form.protocols.ws,wss'), value: 'ws,wss' },
+      ]
+      : []
+  ),
+])
 const payloadFlavor = computed<RouteFlavor | undefined>(() => {
   if (props.recordFlavor) {
     return props.recordFlavor
   }
 
-  return tabFlavor.value
+  return configFlavor.value
 })
 
 // removes any empty values left behind by empty fields on the form
-const cleanDataArr = (entity: string, originalData: any) => {
-  if (entity === RoutingRulesEntities.PATHS || entity === RoutingRulesEntities.HOSTS || entity === RoutingRulesEntities.SNIS) {
+const cleanDataArr = (entity: RoutingRulesEntities, originalData: any) => {
+  const protocolRuleNames = new Set<string>(PROTOCOLS_TO_ROUTE_RULES[props.protocols])
+  if (!protocolRuleNames.has(entity)) {
+    return []
+  }
+
+  if ([RoutingRulesEntities.PATHS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.METHODS, RoutingRulesEntities.SNIS].includes(entity)) {
     return [...originalData].filter((item: string) => !!item)
   } else if (entity === RoutingRulesEntities.SOURCES || entity === RoutingRulesEntities.DESTINATIONS) {
     return [...originalData]
@@ -138,25 +241,6 @@ const cleanDataArr = (entity: string, originalData: any) => {
   }
 }
 
-// returns methods formatted in the payload format, except for custom methods (those are handled separately)
-const selectedMethods = computed((): Method[] => {
-  if (payloadFlavor.value !== RouteFlavor.TRADITIONAL) {
-    return []
-  }
-
-  const traditionalFields = fields.value as TraditionalRouteRulesFields
-  if (!traditionalFields.methods) {
-    return []
-  }
-
-  return Object.entries(traditionalFields.methods).reduce<Method[]>((methods, [key, value]) => {
-    if (value) {
-      methods.push(key as Method)
-    }
-    return methods
-  }, [])
-})
-
 const isProtocolSelected = (protocols: string[]): boolean => {
   return protocols.some(protocol => props.protocols.includes(protocol))
 }
@@ -167,7 +251,8 @@ const getHeaders = (): Headers | null => {
   }
 
   const traditionalFields = fields.value as TraditionalRouteRulesFields
-  const compactHeaders: HeaderFields[] = cleanDataArr(RoutingRulesEntities.HEADERS, traditionalFields.headers || []) || INITIAL_TRADITIONAL_ROUTE_RULES_VALUES[RoutingRulesEntities.HEADERS]
+  const compactHeaders: HeaderFields[] = cleanDataArr(RoutingRulesEntities.HEADERS, traditionalFields.headers || []) ||
+    INITIAL_TRADITIONAL_ROUTE_RULES_VALUES[RoutingRulesEntities.HEADERS]
   if (compactHeaders.length === 0) {
     return null
   }
@@ -178,51 +263,40 @@ const getHeaders = (): Headers | null => {
   }, {})
 }
 
+const getMethodsPayload = computed(() => {
+  const traditionalFields = fields.value as TraditionalRouteRulesFields
+
+  const preDefinedMethods = (traditionalFields.methods || []).filter(method => Object.keys(Methods).includes(method))
+  return preDefinedMethods.concat(customMethods.value.map(el => el.label.toUpperCase()))
+})
+
 const getArrPayload = (arr?: any[]) => arr?.length ? arr : null
 
 const sharedPayload = computed(() => ({
   https_redirect_status_code: fields.value.https_redirect_status_code,
-  strip_path: isProtocolSelected(['grpc', 'gprcs']) ? false : fields.value.strip_path,
-  preserve_host:  fields.value.preserve_host,
-  request_buffering:  fields.value.request_buffering,
-  response_buffering:  fields.value.response_buffering,
+  strip_path: isProtocolSelected(['http', 'https', 'ws', 'wss']) ? fields.value.strip_path : false,
+  preserve_host: fields.value.preserve_host,
+  request_buffering: fields.value.request_buffering,
+  response_buffering: fields.value.response_buffering,
 }))
 
 const payload = computed<TypedRouteRulesPayload | undefined>(() => {
   switch (payloadFlavor.value) {
     case RouteFlavor.TRADITIONAL: {
       const traditionalFields = fields.value as TraditionalRouteRulesFields
+      const paths = getArrPayload(cleanDataArr(RoutingRulesEntities.PATHS, traditionalFields.paths || []))
+      const hosts = getArrPayload(cleanDataArr(RoutingRulesEntities.HOSTS, traditionalFields.hosts || []))
       const payload: TraditionalRouteRulesPayload = {
         ...sharedPayload.value,
-        methods: null,
-        hosts: getArrPayload(cleanDataArr(RoutingRulesEntities.HOSTS, traditionalFields.hosts || [])),
-        paths: getArrPayload(cleanDataArr(RoutingRulesEntities.PATHS, traditionalFields.paths || [])),
-        headers: getHeaders(),
+        methods: getArrPayload(cleanDataArr(RoutingRulesEntities.METHODS, getMethodsPayload.value)),
+        hosts: configType.value === 'basic' && hosts ? hosts.slice(0, 1) : hosts,
+        paths: configType.value === 'basic' && paths ? paths.slice(0, 1) : paths,
+        headers: configType.value === 'basic' ? null : getHeaders(),
         regex_priority: Number(traditionalFields.regex_priority),
         path_handling: traditionalFields.path_handling,
         sources: getArrPayload(cleanDataArr(RoutingRulesEntities.SOURCES, traditionalFields.sources || [])),
         destinations: getArrPayload(cleanDataArr(RoutingRulesEntities.DESTINATIONS, traditionalFields.destinations || [])),
-        snis: getArrPayload(cleanDataArr(RoutingRulesEntities.SNIS, traditionalFields.snis || [])),
-      }
-
-      if (selectedMethods.value?.length) {
-        payload.methods = [...selectedMethods.value]
-
-        // handle custom method input
-        // add any custom methods from input field, avoid duplicate
-
-        if (selectedMethods.value?.includes('CUSTOM')) {
-          const customMethodIndex = payload.methods.indexOf('CUSTOM')
-          if (customMethodIndex !== -1) {
-            payload.methods.splice(customMethodIndex, 1)
-          }
-
-          customMethods.value.forEach(method => {
-            if (method && payload.methods && !payload.methods?.includes(method)) {
-              payload.methods.push(method.toUpperCase())
-            }
-          })
-        }
+        snis: configType.value === 'basic' ? null : getArrPayload(cleanDataArr(RoutingRulesEntities.SNIS, traditionalFields.snis || [])),
       }
 
       return {
@@ -247,19 +321,53 @@ const payload = computed<TypedRouteRulesPayload | undefined>(() => {
   }
 })
 
+const onProtocolUpdate = (protocol: string | number | null) => {
+  if (protocol) {
+    emit('update:protocols', protocol as keyof typeof PROTOCOLS_TO_ROUTE_RULES)
+  }
+}
+
+watch([() => props.recordFlavor, () => props.routeFlavors], ([newRecordFlavor, newRouteFlavors]) => {
+  if (newRecordFlavor) {
+    configFlavor.value = newRecordFlavor
+    return
+  }
+
+  configFlavor.value = (!newRouteFlavors.traditional && newRouteFlavors.expressions)
+    ? RouteFlavor.EXPRESSIONS
+    : RouteFlavor.TRADITIONAL
+}, { immediate: true, deep: true })
+
+watch(configType, (newConfigType) => {
+  if (newConfigType === 'basic') {
+    configFlavor.value = RouteFlavor.TRADITIONAL
+    emit('update:protocols', 'http,https')
+  }
+})
+
 watch(payload, (newPayload) => {
   emit('update:payload', newPayload)
 }, { deep: true, immediate: true })
 </script>
 
 <style lang="scss" scoped>
-.route-form-config-tabs-tooltip {
-  display: inline-flex;
-  margin: $kui-space-auto $kui-space-0 $kui-space-auto $kui-space-20;
-  vertical-align: middle;
+.config-type-container {
+  display: flex;
+  gap: $kui-space-60;
+
+  :deep(.radio-card-wrapper) {
+    box-sizing: border-box;
+  }
 }
 
-.route-form-config-type-immutable-alert {
-  margin-bottom: $kui-space-60;
+.config-flavor {
+  .config-flavor-label {
+    display: flex;
+  }
+
+  .config-flavor-control {
+    display: inline-flex;
+    width: auto;
+  }
 }
 </style>
