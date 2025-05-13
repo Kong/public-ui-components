@@ -2,7 +2,7 @@ import { computed, inject, provide, ref, toRef, toValue, useAttrs, useSlots, wat
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
-import type { FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
+import type { ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
 import type { FormConfig, ResetLabelPathRule } from './types'
@@ -170,11 +170,17 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema>) {
 
   function getSelectItems(fieldPath: string): SelectItem[] {
     const schema = getSchema(fieldPath)
-    return utils.toSelectItems((schema?.one_of || []))
+    return utils.toSelectItems((schema?.one_of || (schema as ArrayLikeFieldSchema).elements?.one_of || []))
   }
 
   function getPlaceholder(fieldPath: string): string | null {
-    const defaultValue = getSchema(fieldPath)?.default
+    const schema = getSchema(fieldPath)
+
+    if (schema?.help) {
+      return schema.help
+    }
+
+    const defaultValue = schema?.default
 
     let stringified = null
 

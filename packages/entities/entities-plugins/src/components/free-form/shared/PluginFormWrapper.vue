@@ -26,18 +26,6 @@
         @change="onFormChange"
       />
     </div>
-
-    <KCollapse
-      v-model="advancedCollapsed"
-      :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
-    >
-      <VueFormGenerator
-        :model="formModel"
-        :options="formOptions"
-        :schema="advancedSchema"
-        @model-updated="onModelUpdated"
-      />
-    </KCollapse>
   </KCollapse>
 </template>
 
@@ -90,22 +78,43 @@ function usePickedSchema(keys: MaybeRefOrGetter<string[]>) {
 }
 
 const PINNED_FIELD_KEYS = ['enabled', 'selectionGroup']
-const topLevelFieldKeys = computed(() => ((props.formSchema?.fields || []) as any[]).map((field: { model: string }) => field.model))
-const configFieldKeys = computed(() => topLevelFieldKeys.value.filter(key => key.startsWith('config-')))
-const advancedFieldKeys = computed(() => topLevelFieldKeys.value.filter(key => !PINNED_FIELD_KEYS.includes(key) && !configFieldKeys.value.includes(key)))
 
 const pinnedSchema = usePickedSchema(PINNED_FIELD_KEYS)
-const advancedSchema = usePickedSchema(advancedFieldKeys)
 
-const FREE_FORM_SCHEMA_KEYS = ['config']
+const FREE_FORM_SCHEMA_KEYS = ['config', 'protocols']
 const freeFormSchema = computed(() => {
   const result = props.schema
   result.fields = result.fields.filter(item => FREE_FORM_SCHEMA_KEYS.includes(Object.keys(item)[0]))
+
+  result.fields.unshift({
+    instance_name: {
+      type: 'string',
+      description: t('plugins.form.fields.instance_name.help'),
+    },
+  }, {
+    tags: {
+      type: 'set',
+      description: t('plugins.form.fields.tags.help'),
+      help: t('plugins.form.fields.tags.placeholder'),
+      elements: {
+        type: 'string',
+      },
+    },
+  })
+
+  const protocolsField = result.fields.find(item => Object.keys(item)[0] === 'protocols')
+  if (protocolsField) {
+    protocolsField.protocols.help = protocolsField.protocols.default
+      ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
+        protocols: protocolsField.protocols.default.join(', '),
+      })
+      : t('plugins.form.fields.protocols.placeholder')
+    protocolsField.protocols.description = t('plugins.form.fields.protocols.help')
+  }
   return result
 })
 
 const configCollapse = ref(false)
-const advancedCollapsed = ref(true)
 </script>
 
 <style lang="scss" scoped>

@@ -76,6 +76,9 @@ const fieldRenderer = computed(() => {
     case 'array':
       return ArrayField
     case 'set':
+      if (utils.isStringSet(field.schema)) {
+        return StringField
+      }
       return EnumField
     case 'record':
       return ObjectField
