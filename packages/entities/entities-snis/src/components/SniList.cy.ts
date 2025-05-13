@@ -479,8 +479,8 @@ describe('<SniList />', () => {
 
       cy.wait('@getSnis')
       cy.get('.kong-ui-entities-snis-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('[data-testid="ca-certificates-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="entity-create-button"]').should('be.visible')
     })
 
     it('should hide empty state and create sni cta if user can not create', () => {

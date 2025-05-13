@@ -535,8 +535,8 @@ describe('<GatewayServiceList />', () => {
 
       cy.wait('@getGatewayServices')
       cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('[data-testid="ca-certificates-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="entity-create-button"]').should('be.visible')
     })
 
     it('should hide empty state and create gateway service cta if user can not create', () => {
