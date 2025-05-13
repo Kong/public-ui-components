@@ -7,13 +7,15 @@
     icon
     @click="emit('remove')"
   >
-    <CloseIcon :color="KUI_COLOR_TEXT_DISABLED" />
+    <CloseIcon
+      :color="disabled ? KUI_COLOR_TEXT_DISABLED : KUI_COLOR_TEXT_PRIMARY"
+    />
   </KButton>
 </template>
 
 <script setup lang="ts">
 import { inject } from 'vue'
-import { KUI_COLOR_TEXT_DISABLED } from '@kong/design-tokens'
+import { KUI_COLOR_TEXT_DISABLED, KUI_COLOR_TEXT_PRIMARY } from '@kong/design-tokens'
 import { CloseIcon } from '@kong/icons'
 
 defineProps<{

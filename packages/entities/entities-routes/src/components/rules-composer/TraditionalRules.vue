@@ -305,9 +305,11 @@ const getRoutingRuleLabel = (entity: string): string => {
 
 .traditional-rules-hint {
   color: $kui-color-text-neutral-strong;
-  display: flex;
-  gap: $kui-space-20;
   margin-bottom: $kui-space-80;
+
+  span:not(:first-child) {
+    margin-left: $kui-space-20;
+  }
 }
 
 .route-form-strip-path {

@@ -30,8 +30,7 @@ const addButtonText = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.routing-rules-entities-controls-container {
+.routing-rule-add-item-button {
   display: flex;
-  gap: $kui-space-20;
 }
 </style>

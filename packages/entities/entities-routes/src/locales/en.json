@@ -133,7 +133,7 @@
       },
       "protocols": {
         "label": "Protocols",
-        "tooltip": "Choose the protocols this route supports.",
+        "tooltip": "The protocols this route supports.",
         "tooltipConfig": "An array of the protocols this Route should allow. See the {code1} section for a list of accepted protocols. When set to only {code2}, HTTP requests are answered with an upgrade error. When it is set to only {code3}, this is essentially the same as {code4} in that both HTTP and HTTPS requests are allowed. Default: {code5}.",
         "code1": "Route Object",
         "code2": "https",
@@ -190,7 +190,7 @@
         "label": "SNIs",
         "placeholder": "e.g. api.example.com",
         "singular": "SNI",
-        "tooltip": "SNIs that match the route when using stream routing."
+        "tooltip": "SNIs(Server Name Indications) that match the route when using stream routing."
       },
       "hosts": {
         "add": "Add a host",
