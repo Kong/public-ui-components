@@ -459,7 +459,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl.value)
 
 const getCellAttrs = (params: Record<string, any>): Record<string, any> => {
   if (params.headerKey === 'expression') {
