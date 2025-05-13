@@ -24,10 +24,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { provide, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
+import { type KonnectPluginFormConfig, type KongManagerPluginFormConfig, FEATURE_FLAG_EVALUATOR_PROVIDER } from '../../src'
 import { PluginForm } from '../../src'
+
+// enable all FF in sandbox
+provide(FEATURE_FLAG_EVALUATOR_PROVIDER, (key: string, defaultValue: boolean) => {
+  if (key === 'KM-1265-enhanced-service-protection-ui') return false
+  return defaultValue
+})
 
 defineProps({
   /** Grab the plugin id and type from the route params */
