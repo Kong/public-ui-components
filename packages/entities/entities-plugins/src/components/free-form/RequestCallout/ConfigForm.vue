@@ -42,7 +42,6 @@
       >
         <RedisSelector
           v-bind="props"
-          use-redis-partial
         />
       </FieldRenderer> -->
     </template>

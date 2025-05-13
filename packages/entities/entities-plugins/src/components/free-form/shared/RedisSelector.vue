@@ -125,7 +125,7 @@
         v-else
         v-bind="props"
         as-child
-        name="$.config.cache.redis"
+        :name="redisPath"
         reset-label-path="reset"
       />
     </KCard>
@@ -141,7 +141,7 @@
     ]"
     hide-required-asterisk
     label="Cache › Redis"
-    name=""
+    :name="formRedisPath"
   />
 </template>
 
@@ -159,7 +159,6 @@ import { useAxios, useDebouncedFilter, useErrors, type KongManagerBaseFormConfig
 import type { RedisConfig, RedisPartialType, Redis } from '../RequestCallout/types'
 import { getRedisType, getPartialTypeDisplay } from '../RequestCallout/utils'
 import { useField, useFormData } from './composables'
-
 defineEmits<{
   (e: 'showNewPartialModal'): void
 }>()
@@ -176,28 +175,35 @@ const endpoints = {
     getAll: '/{workspace}/partials',
   },
 }
-
 interface RedisSelectorProps {
   name: string
-  useRedisPartial?: boolean
   isEditing?: boolean
   defaultRedisConfigItem?: string
   redisType?: RedisPartialType
+  redisPath?: string
 }
 
-type PartialArray = Array<{ id: string | number, path: string | undefined }>
+type PartialArray = Array<{ id: string | number, path?: string | undefined }>
 
-type partialInfo = {
-  redisType: RedisPartialType
-  redisPath: string
+type PartialInfo = {
+  redisType: Ref<RedisPartialType>
+  redisPath: Ref<string>
 }
 
 const props = defineProps<RedisSelectorProps>()
 
 const redisPartialFetcherKey: Ref<number, number> | undefined = inject(REDIS_PARTIAL_FETCHER_KEY)
-const redisPartialInfo: Ref<partialInfo> | undefined = inject(REDIS_PARTIAL_INFO)
-const redisType = redisPartialInfo?.value?.redisType || props.redisType || 'all'
-const redisPath = redisPartialInfo?.value?.redisPath || 'config.redis'
+const redisPartialInfo: PartialInfo | undefined = inject(REDIS_PARTIAL_INFO)
+const formRedisPath = computed(() => {
+  if (redisPartialInfo?.redisPath?.value) {
+    return '$.' + redisPartialInfo.redisPath.value
+  }
+  return '$.config.redis'
+})
+const redisType = props.redisType || redisPartialInfo?.redisType?.value || 'all'
+const redisPath = props.redisPath || formRedisPath
+// controls the visibility of the redis partial selector
+const useRedisPartial = computed(() => !!redisPartialInfo?.redisType?.value)
 const selectedRedisConfig = ref(null)
 const usePartial = ref(!props.isEditing)
 const { getMessageFromError } = useErrors()
@@ -247,7 +253,7 @@ const availableRedisConfigs = computed((): SelectItem[] => {
   const configs = redisConfigsResults.value?.map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: getRedisType(el as RedisConfig) })) || []
   if (redisType !== 'all') {
     // filter redis configs by redis type supported by the plugin
-    return configs.filter((el) => el.type === props.redisType)
+    return configs.filter((el) => el.type === redisType)
   }
   return configs
 })
@@ -288,8 +294,8 @@ const redisConfigSelected = async (val: string | number | undefined) => {
   if (!val) return
 
   selectedRedisConfigItem.value = val
-  partialValue!.value = [{ id: val, path: redisPath }]
-  partialsSaved.value = [{ id: val, path: redisPath }]
+  partialValue!.value = [{ id: val }]
+  partialsSaved.value = [{ id: val }]
 
   // unset redis fields in the form
   redisFieldsValue!.value = undefined
