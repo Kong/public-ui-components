@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.20.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.19.3...@kong-ui-public/entities-plugins@9.20.0) (2025-05-13)
+
+
+### Features
+
+* **free-form:** add experimental free form whitelist [KM-1265] ([#2118](https://github.com/Kong/public-ui-components/issues/2118)) ([6ba81f0](https://github.com/Kong/public-ui-components/commit/6ba81f059260edff33f734fce750c4b5085567a2))
+
+
+
+
+
 ## [9.19.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.19.2...@kong-ui-public/entities-plugins@9.19.3) (2025-05-13)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
