@@ -75,5 +75,8 @@ const onUpdate = (payload: Record<string, any>) => {
 <style lang="scss" scoped>
 .plugin-form-sandbox {
   padding: 20px;
+  * {
+    box-sizing: border-box;
+  }
 }
 </style>

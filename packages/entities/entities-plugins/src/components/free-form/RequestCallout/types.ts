@@ -58,6 +58,23 @@ export interface Redis {
   connection_is_proxied?: boolean
 }
 
+export type RedisPartialType = 'redis-ce' | 'redis-ee'
+
+export type RedisTypeDisplay = 'Host/Port' | 'Sentinel' | 'Cluster'
+
+export interface RedisConfig {
+  name: string
+  type: RedisPartialType
+  config: Redis
+}
+
+export interface FlattendRedisConfigurationFields extends Redis {
+  name: string
+  created_at: string
+  updated_at: string
+  type: RedisPartialType
+}
+
 export interface RedisSentinelNode {
   host: string
   port?: number | null

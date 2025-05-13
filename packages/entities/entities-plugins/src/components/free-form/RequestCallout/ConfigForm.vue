@@ -34,6 +34,17 @@
           appearance="card"
         />
       </FieldRenderer>
+
+      <!-- Example of using redis selector -->
+      <!-- <FieldRenderer
+        v-slot="props"
+        :match="({ path }) => path.endsWith('redis')"
+      >
+        <RedisSelector
+          v-bind="props"
+          use-redis-partial
+        />
+      </FieldRenderer> -->
     </template>
 
     <ObjectField
@@ -79,6 +90,7 @@ import FieldRenderer from '../shared/FieldRenderer.vue'
 import Form from '../shared/Form.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import StringField from '../shared/StringField.vue'
+// import RedisSelector from '../shared/RedisSelector.vue'
 import useI18n from '../../../composables/useI18n'
 
 import type { Callout, RequestCalloutPlugin } from './types'
