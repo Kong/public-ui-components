@@ -83,12 +83,9 @@ import useI18n from '../../../composables/useI18n'
 
 import type { Callout, RequestCalloutPlugin } from './types'
 import type { FormConfig } from '../shared/types'
-import type { FormSchema } from '../../../types/plugins/form-schema'
+import type { ConfigFormProps } from '../shared/PluginFormWrapper.vue'
 
-defineProps<{
-  schema: FormSchema
-  data?: RequestCalloutPlugin
-}>()
+defineProps<ConfigFormProps<RequestCalloutPlugin>>()
 
 const emit = defineEmits<{
   change: [value: RequestCalloutPlugin]
@@ -168,19 +165,3 @@ function onChange(newVal?: RequestCalloutPlugin) {
   emit('change', pluginConfig)
 }
 </script>
-
-<style lang="scss" scoped>
-:deep(.rc-code textarea) {
-  font-family: $kui-font-family-code !important;
-}
-
-:deep(.k-label) {
-  font-weight: $kui-font-weight-medium;
-}
-
-.rc-config-form {
-  display: flex;
-  flex-direction: column;
-  gap: $kui-space-100;
-}
-</style>
