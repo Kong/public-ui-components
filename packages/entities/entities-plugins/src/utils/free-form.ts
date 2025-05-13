@@ -1,7 +1,29 @@
-export function getFreeFormName(modelName: string): string {
-  const mapping: Record<string, string> = {
-    'request-callout': 'RequestCalloutForm',
+const mapping = {
+  'request-callout': 'RequestCalloutForm',
+  'service-protection': {
+    experimental: true,
+    component: 'ServiceProtectionForm',
+  },
+} as const
+
+export type FreeFormName = keyof typeof mapping
+export type ExperimentalFormName = ExtractExperimental<typeof mapping>
+
+type ExtractExperimental<T> = {
+  [K in keyof T]: T[K] extends { experimental: true } ? K : never
+}[keyof T]
+
+export function getFreeFormName(
+  modelName: FreeFormName,
+  experimentalWhitelist: ExperimentalFormName[],
+): string | undefined {
+  const res = mapping[modelName]
+
+  if (typeof res === 'string') {
+    return res
   }
 
-  return mapping[modelName]
+  if (experimentalWhitelist.includes(modelName as any)) {
+    return res.component
+  }
 }

@@ -33,6 +33,7 @@ import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
 import { getFreeFormName } from '../utils/free-form'
 import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
+import { useExperimentalFreeForms } from './useExperimentalFreeForms'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -104,6 +105,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
   const { capitalize } = useStringHelpers()
   const { convertToDotNotation } = usePluginHelpers()
   const { i18n: { t } } = useI18n()
+  const experimentalFreeForms = useExperimentalFreeForms()
 
   const customSchemas: CustomSchemas = {
     'application-registration': {
@@ -285,7 +287,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
     formSchema._redis_partial_path = currentSchema._redis_partial_path
 
-    if (getSharedFormName(pluginName) || getFreeFormName(pluginName) || metadata?.useLegacyForm || options?.credential) {
+    if (getSharedFormName(pluginName) || getFreeFormName(pluginName, experimentalFreeForms) || metadata?.useLegacyForm || options?.credential) {
       /**
        * Do not generate grouped schema when:
        * - The plugin has a custom layout

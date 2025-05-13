@@ -12,7 +12,7 @@ import pluginEndpoints from './plugins-endpoints'
 // expose VueFormGenerator so host app doesn't need @kong-ui-public/forms as a dependency
 export { VueFormGenerator } from '@kong-ui-public/forms'
 
-const { usePluginMetaData } = composables
+const { usePluginMetaData, useProvideExperimentalFreeForms } = composables
 
 export {
   PluginForm,
@@ -24,8 +24,11 @@ export {
   PluginConfigCard,
   getPluginIconURL,
   usePluginMetaData,
+  useProvideExperimentalFreeForms,
 }
 
 export * from './types'
 
 export { pluginEndpoints }
+
+export * from './constants'
