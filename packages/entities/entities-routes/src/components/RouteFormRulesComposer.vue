@@ -78,6 +78,7 @@
 
     <template v-if="!recordFlavor || !(routeFlavors.traditional && routeFlavors.expressions && recordFlavor !== configFlavor)">
       <KSelect
+        v-if="!hideProtocols"
         data-testid="route-form-protocols"
         :items="protocolOptions"
         :label="t('form.fields.protocols.label')"
@@ -148,6 +149,7 @@ const props = defineProps<{
     [RouteFlavor.EXPRESSIONS]?: string
   }
   isWsSupported?: boolean
+  hideProtocols?: boolean
 }>()
 
 const configType = defineModel<'basic' | 'advanced'>('configType', { required: true })
