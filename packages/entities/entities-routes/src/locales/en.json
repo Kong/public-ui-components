@@ -190,7 +190,7 @@
         "label": "SNIs",
         "placeholder": "e.g. api.example.com",
         "singular": "SNI",
-        "tooltip": "SNIs(Server Name Indications) that match the route when using stream routing."
+        "tooltip": "SNIs (Server Name Indications) that match the route when using stream routing."
       },
       "hosts": {
         "add": "Add a host",
