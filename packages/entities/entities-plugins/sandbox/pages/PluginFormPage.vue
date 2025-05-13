@@ -27,7 +27,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
-import { PluginForm } from '../../src'
+import { PluginForm, useProvideExperimentalFreeForms } from '../../src'
 
 defineProps({
   /** Grab the plugin id and type from the route params */
@@ -43,6 +43,10 @@ defineProps({
 
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+
+useProvideExperimentalFreeForms([
+  // 'service-protection'
+])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
   app: 'konnect',
