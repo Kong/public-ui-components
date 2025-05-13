@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.11.14...@kong-ui-public/entities-routes@3.12.0) (2025-05-13)
+
+
+### Features
+
+* **entities-routes:** route form redesign ([#2111](https://github.com/Kong/public-ui-components/issues/2111)) ([94b1748](https://github.com/Kong/public-ui-components/commit/94b17484cd8249cf687854b433d3d805e3945599))
+
+
+
+
+
 ## [3.11.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.11.13...@kong-ui-public/entities-routes@3.11.14) (2025-05-12)
 
 
