@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.12.0...@kong-ui-public/entities-routes@3.13.0) (2025-05-13)
+
+
+### Features
+
+* **entities-routes:** add prop to hide the protocols selector ([#2119](https://github.com/Kong/public-ui-components/issues/2119)) ([0cb11c1](https://github.com/Kong/public-ui-components/commit/0cb11c10030d187df64f52a66cd471cdc22328f3))
+
+
+
+
+
 # [3.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.11.14...@kong-ui-public/entities-routes@3.12.0) (2025-05-13)
 
 
