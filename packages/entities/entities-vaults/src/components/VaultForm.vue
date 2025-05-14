@@ -467,6 +467,7 @@
               data-testid="vault-form-config-conjur-endpoint_url"
               :is-readonly="form.isReadonly"
               :label="t('form.config.conjur.fields.endpoint_url.label')"
+              required
               type="text"
             />
             <KInput
@@ -475,15 +476,27 @@
               data-testid="vault-form-config-conjur-login"
               :is-readonly="form.isReadonly"
               :label="t('form.config.conjur.fields.login.label')"
+              required
               type="text"
             />
             <KInput
-              v-model.trim="configFields[VaultProviders.CONJUR].api_token"
+              v-model.trim="configFields[VaultProviders.CONJUR].account"
               autocomplete="off"
-              data-testid="vault-form-config-conjur-api_token"
+              data-testid="vault-form-config-conjur-account"
               :is-readonly="form.isReadonly"
-              :label="t('form.config.conjur.fields.api_token.label')"
+              :label="t('form.config.conjur.fields.account.label')"
+              required
               type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.CONJUR].api_key"
+              autocomplete="off"
+              data-testid="vault-form-config-conjur-api_key"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.conjur.fields.api_key.label')"
+              required
+              show-password-mask-toggle
+              type="password"
             />
           </div>
 
@@ -628,6 +641,7 @@ import {
   HashicorpIcon,
   GoogleCloudIcon,
   AzureIcon,
+  ConjourIcon,
 } from '@kong/icons'
 
 interface ConfigFields {
@@ -794,7 +808,10 @@ const configFields = reactive<ConfigFields>({
     tenant_id: '',
     ...base64FieldConfig,
   } as AzureVaultConfig,
-  [VaultProviders.CONJUR]: {},
+  [VaultProviders.CONJUR]: {
+    endpoint_url: '',
+    auth_method: 'default',
+  },
 })
 
 const originalConfigFields = reactive<ConfigFields>({
@@ -842,7 +859,10 @@ const originalConfigFields = reactive<ConfigFields>({
     tenant_id: '',
     ...base64FieldConfig,
   } as AzureVaultConfig,
-  [VaultProviders.CONJUR]: {},
+  [VaultProviders.CONJUR]: {
+    endpoint_url: '',
+    auth_method: 'default',
+  },
 })
 
 const awsRegions = [
@@ -920,7 +940,7 @@ const getProviderIcon = (providerName: VaultProviders) => {
     case VaultProviders.AZURE:
       return AzureIcon
     case VaultProviders.CONJUR:
-      return KongIcon // todo(zehao): waiting for new icon be added
+      return ConjourIcon
   }
 }
 
