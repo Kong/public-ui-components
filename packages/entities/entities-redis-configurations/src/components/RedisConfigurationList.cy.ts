@@ -174,13 +174,8 @@ describe('<RedisConfigurationList />', () => {
         })
 
         cy.wait('@getRedisConfigurations')
-        if (app === 'Konnect') {
-          cy.get('[data-testid="redis-entity-empty-state"]').should('be.visible')
-          cy.get('[data-testid="entity-create-button"]').should('be.visible')
-        } else {
-          cy.get('.table-empty-state').should('be.visible')
-          cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
-        }
+        cy.get('[data-testid="redis-entity-empty-state"]').should('be.visible')
+        cy.get('[data-testid="entity-create-button"]').should('be.visible')
       })
 
       it('should hide create redis configuration cta if user can not create', () => {

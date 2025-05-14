@@ -1015,7 +1015,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('empty-state-action').should('exist')
+      cy.get('[data-testid="entity-create-button"]').should('exist')
     })
 
     it('should render AddConsumerModal onclick Add Consumer button when consumerGroupId is provided', () => {
@@ -1034,7 +1034,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('empty-state-action').click()
+      cy.get('[data-testid="entity-create-button"]').click()
       cy.getTestId('add-consumer-modal').should('exist')
     })
 
@@ -1055,7 +1055,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('empty-state-action').click()
+      cy.get('[data-testid="entity-create-button"]').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal).vm.$emit('cancel'))
@@ -1082,7 +1082,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('empty-state-action').click()
+      cy.get('[data-testid="entity-create-button"]').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal).vm.$emit('add:success', expectedData))
@@ -1111,7 +1111,7 @@ describe('<ConsumerList />', () => {
 
         cy.wait('@getGroupConsumers')
 
-        cy.getTestId('empty-state-action').click()
+        cy.get('[data-testid="entity-create-button"]').click()
         cy.getTestId('add-consumer-modal').should('exist')
 
         cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal)
