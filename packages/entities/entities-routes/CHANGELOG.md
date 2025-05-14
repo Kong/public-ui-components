@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.13.0...@kong-ui-public/entities-routes@3.13.1) (2025-05-14)
+
+
+### Bug Fixes
+
+* **entities-routes:** update tooltip copy ([#2123](https://github.com/Kong/public-ui-components/issues/2123)) ([71a602e](https://github.com/Kong/public-ui-components/commit/71a602e2ecd834750bd4d5210387a3c08621de49))
+
+
+
+
+
 # [3.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.12.0...@kong-ui-public/entities-routes@3.13.0) (2025-05-13)
 
 
