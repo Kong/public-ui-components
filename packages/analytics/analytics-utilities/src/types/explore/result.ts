@@ -38,7 +38,7 @@ export interface ExploreResultV4 {
 }
 
 export interface RecordEvent {
-  [field: string]: string | number | null
+  [field: string]: string | number | null | Array<{ [field: string]: string | number | null }>
 }
 
 export interface AnalyticsExploreRecord {
