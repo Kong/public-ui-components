@@ -424,7 +424,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl, dataKeyName.value)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl, dataKeyName)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
