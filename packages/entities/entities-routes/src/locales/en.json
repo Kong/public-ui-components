@@ -141,7 +141,7 @@
       },
       "https_redirect_status_code": {
         "label": "HTTPS Redirect Status Code",
-        "tooltip": "Specifies the HTTP status code for redirecting requests from HTTP to HTTPS. Use 301 or 308 for permanent redirects, 302 or 307 for temporary redirects."
+        "tooltip": "Specifies the HTTP status code for redirecting requests from HTTP to HTTPS. Use `301` or `308` for permanent redirects, `302` or `307` for temporary redirects."
       },
       "regex_priority": {
         "label": "Regex Priority",
