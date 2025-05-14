@@ -515,7 +515,7 @@ describe('<VaultList />', () => {
 
       cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
-      cy.get('[data-testid="ca-certificates-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="vaults-entity-empty-state"]').should('be.visible')
       cy.get('[data-testid="entity-create-button"]').should('be.visible')
     })
 

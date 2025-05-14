@@ -522,7 +522,7 @@ describe('<UpstreamsList />', () => {
 
       cy.wait('@getUpstreams')
       cy.get('.kong-ui-entities-upstreams-list').should('be.visible')
-      cy.get('[data-testid="ca-certificates-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="upstreams-entity-empty-state"]').should('be.visible')
       cy.get('[data-testid="entity-create-button"]').should('be.visible')
     })
 

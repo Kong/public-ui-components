@@ -741,7 +741,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('[data-testid="ca-certificates-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="consumer-groups-entity-empty-state"]').should('be.visible')
       cy.get('[data-testid="entity-create-button"]').should('be.visible')
     })
 

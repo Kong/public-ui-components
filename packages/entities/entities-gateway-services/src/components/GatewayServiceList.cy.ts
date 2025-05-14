@@ -535,7 +535,7 @@ describe('<GatewayServiceList />', () => {
 
       cy.wait('@getGatewayServices')
       cy.get('.kong-ui-entities-gateway-services-list').should('be.visible')
-      cy.get('[data-testid="ca-certificates-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="gateway-services-entity-empty-state"]').should('be.visible')
       cy.get('[data-testid="entity-create-button"]').should('be.visible')
     })
 
