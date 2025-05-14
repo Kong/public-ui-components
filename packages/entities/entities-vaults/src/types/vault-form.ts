@@ -116,11 +116,12 @@ export interface AzureVaultConfig {
   resurrect_ttl?: number
 }
 
-export interface ConjurVaultConfig { // todo(zehao): which fields are required?
-  endpoint_url?: string
+export interface ConjurVaultConfig {
+  endpoint_url: string
+  auto_method: 'default'
   login?: string
   account?: string
-  api_token?: string
+  api_key?: string
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
