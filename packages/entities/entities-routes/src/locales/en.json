@@ -194,7 +194,7 @@
         "add": "Add a header",
         "label": "Headers",
         "singular": "header",
-        "tooltip": "Match specific headers, such as x-api-version or x-region. Doesn't accept the Host header. Provide only one entry and prefix with ~ to enable regex-based matching.",
+        "tooltip": "Match specific headers, such as `x-api-version` or `x-region`. Doesn't accept the `Host` header. Provide only one entry and prefix with `~` to enable regex-based matching.",
         "name": {
           "placeholder": "e.g. x-api-version"
         },
