@@ -149,7 +149,7 @@
       },
       "strip_path": {
         "label": "Strip Path",
-        "tooltip": "When enabled, Kong removes the portion of the request path that matches the route's path before forwarding the request to the upstream. If the request exactly matches the route, the result is /. Disable if that's not desired."
+        "tooltip": "When enabled, Kong removes the portion of the request path that matches the route's path before forwarding the request to the upstream. If the request exactly matches the route, the result is `/`. Disable if that's not desired."
       },
       "preserve_host": {
         "label": "Preserve Host",
