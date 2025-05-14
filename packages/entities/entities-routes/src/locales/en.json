@@ -153,7 +153,7 @@
       },
       "preserve_host": {
         "label": "Preserve Host",
-        "tooltip": "Keeps the original Host header when proxying requests. Enable this if the upstream service requires the client's Host value. Disable if the service expects its own hostname."
+        "tooltip": "Keeps the original `Host` header when proxying requests. Enable this if the upstream service requires the client's `Host` value. Disable if the service expects its own hostname."
       },
       "paths": {
         "add": "Add a path",
