@@ -174,13 +174,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema>) {
   }
 
   function getPlaceholder(fieldPath: string): string | null {
-    const schema = getSchema(fieldPath)
-
-    if (schema?.help) {
-      return schema.help
-    }
-
-    const defaultValue = schema?.default
+    const defaultValue = getSchema(fieldPath)?.default
 
     let stringified = null
 
