@@ -1,4 +1,4 @@
-import { ref, toValue, unref } from 'vue'
+import { ref, toValue } from 'vue'
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import type {
   FetcherResponse,
@@ -27,11 +27,10 @@ export default function useFetcher(
   dataKeyNameRef?: MaybeRefOrGetter<string | undefined>,
 ) {
   const initialLoad = ref<boolean>(true)
-  const _baseUrl = unref(baseUrl)
   const config = toValue(configRef)
 
   const { axiosInstance } = useAxios(config.axiosRequestConfig)
-  const buildFetchUrl = useFetchUrlBuilder(configRef, _baseUrl)
+  const buildFetchUrl = useFetchUrlBuilder(configRef, baseUrl)
 
   const state = ref<FetcherState>({
     status: FetcherStatus.Idle,

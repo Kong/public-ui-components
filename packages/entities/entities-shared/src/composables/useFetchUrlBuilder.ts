@@ -1,4 +1,4 @@
-import { computed, ref, unref, toValue, type MaybeRefOrGetter } from 'vue'
+import { computed, toValue, type MaybeRefOrGetter } from 'vue'
 import type {
   KongManagerBaseTableConfig,
   KonnectBaseTableConfig,
@@ -10,19 +10,18 @@ export default function useFetchUrlBuilder(
   config: MaybeRefOrGetter<KonnectBaseTableConfig | KongManagerBaseTableConfig>,
   baseUrl: MaybeRef<string>,
 ) {
-  const _baseUrl = ref(unref(baseUrl))
-
   const isExactMatch = computed((): boolean => {
     const configValue = toValue(config)
     return configValue.app === 'konnect' || !!configValue.isExactMatch
   })
 
   // Construct a URL object, adding the current `window.location.origin` if the path begins with a slash
-  const baseRequestUrl = computed((): URL =>
-    _baseUrl.value.startsWith('/')
-      ? new URL(`${window.location.origin}${_baseUrl.value}`)
-      : new URL(_baseUrl.value),
-  )
+  const baseRequestUrl = computed((): URL => {
+    const baseUrlValue = toValue(baseUrl)
+    return baseUrlValue.startsWith('/')
+      ? new URL(`${window.location.origin}${baseUrlValue}`)
+      : new URL(baseUrlValue)
+  })
 
   return (fetcherParams: TableDataFetcherParams) => {
     const { page, pageSize, offset, sortColumnKey, sortColumnOrder, query } = fetcherParams
@@ -67,7 +66,7 @@ export default function useFetchUrlBuilder(
       console.error('RouteList(fetcher)', err)
 
       // Fallback to returning the URL without the added params
-      return _baseUrl.value
+      return toValue(baseUrl)
     }
   }
 }
