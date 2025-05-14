@@ -145,7 +145,7 @@
       },
       "regex_priority": {
         "label": "Regex Priority",
-        "tooltip": "Regex priority is determined by length first (longer patterns win), and when lengths are the same, more specific regexes are preferred.  When two routes match the path and have the same regex_priority, the older one (lowest created_at) is used."
+        "tooltip": "Regex priority is determined by length first (longer patterns win), and when lengths are the same, more specific regexes are preferred.  When two routes match the path and have the same `regex_priority`, the older one (lowest `created_at`) is used."
       },
       "strip_path": {
         "label": "Strip Path",
