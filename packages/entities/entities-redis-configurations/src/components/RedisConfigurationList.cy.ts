@@ -175,7 +175,7 @@ describe('<RedisConfigurationList />', () => {
 
         cy.wait('@getRedisConfigurations')
         if (app === 'Konnect') {
-          cy.get('[data-testid="ca-certificates-entity-empty-state"]').should('be.visible')
+          cy.get('[data-testid="redis-entity-empty-state"]').should('be.visible')
           cy.get('[data-testid="entity-create-button"]').should('be.visible')
         } else {
           cy.get('.table-empty-state').should('be.visible')

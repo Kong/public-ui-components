@@ -609,8 +609,8 @@ describe('<RouteList />', () => {
 
       cy.wait('@getRoutes')
       cy.get('.kong-ui-entities-routes-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('[data-testid="routes-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="entity-create-button"]').should('be.visible')
     })
 
     it('should hide empty state and create route cta if user can not create', () => {
