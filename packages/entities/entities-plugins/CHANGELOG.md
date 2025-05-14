@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.20.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.20.2...@kong-ui-public/entities-plugins@9.20.3) (2025-05-14)
+
+
+### Bug Fixes
+
+* **entities:** fetcher url reactivity ([#2120](https://github.com/Kong/public-ui-components/issues/2120)) ([16cbc20](https://github.com/Kong/public-ui-components/commit/16cbc20058a3acda085ebc18b16fb034104126c9))
+
+
+
+
+
 ## [9.20.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.20.1...@kong-ui-public/entities-plugins@9.20.2) (2025-05-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@0.5.19...@kong-ui-public/entities-redis-configurations@0.5.20) (2025-05-14)
+
+
+### Bug Fixes
+
+* **entities:** fetcher url reactivity ([#2120](https://github.com/Kong/public-ui-components/issues/2120)) ([16cbc20](https://github.com/Kong/public-ui-components/commit/16cbc20058a3acda085ebc18b16fb034104126c9))
+
+
+
+
+
 ## [0.5.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@0.5.18...@kong-ui-public/entities-redis-configurations@0.5.19) (2025-05-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
