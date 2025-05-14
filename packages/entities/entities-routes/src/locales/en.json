@@ -176,7 +176,7 @@
         "label_singular": "Host",
         "placeholder": "e.g. example.com",
         "singular": "host",
-        "tooltip": "Match specific domain names, such as  api.example.com. Prefix with ~ to enable regex-based matching."
+        "tooltip": "Match specific domain names, such as `api.example.com`. Prefix with `~` to enable regex-based matching."
       },
       "methods": {
         "label": "Methods",
