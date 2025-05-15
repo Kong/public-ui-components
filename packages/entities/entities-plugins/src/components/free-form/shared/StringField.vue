@@ -16,7 +16,7 @@
       }"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
-      :model-value="value ?? ''"
+      :model-value="fieldValue ?? ''"
       @update:model-value="handleUpdate"
     >
       <template
@@ -76,10 +76,10 @@ const {
   ...props
 } = defineProps<StringFieldProps>()
 const emit = defineEmits<{
-  'update:modelValue': [value: string | null | string[]]
+  'update:modelValue': [value: string | null]
 }>()
 
-const { value: fieldValue, ...field } = useField<string | null | string[]>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<string | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const initialValue = fieldValue?.value
 
@@ -87,10 +87,6 @@ function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && value !== initialValue) {
     fieldValue!.value = null
     emit('update:modelValue', null)
-  } else if (isStringSet.value) {
-    const values = value.trim().split(',').map(item => item.trim()).filter(Boolean)
-    fieldValue!.value = values
-    emit('update:modelValue', values)
   } else {
     fieldValue!.value = value.trim()
     emit('update:modelValue', value.trim())
@@ -129,15 +125,6 @@ const isAutoFocus = useIsAutoFocus(field.ancestors)
 const is1pIgnore = computed(() => {
   if (attrs['data-1p-ignore'] !== undefined) return attrs['data-1p-ignore']
   return utils.getName(name) === 'name'
-})
-
-const isStringSet = computed(() => utils.isStringSet(field.schema))
-
-const value = computed(() => {
-  if (isStringSet.value && Array.isArray(fieldValue?.value)) {
-    return fieldValue.value.join(', ')
-  }
-  return fieldValue?.value as string
 })
 </script>
 

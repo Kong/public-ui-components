@@ -94,6 +94,7 @@ const freeFormSchema = computed(() => {
   }, {
     tags: {
       type: 'set',
+      default: [],
       description: t('plugins.form.fields.tags.help'),
       elements: {
         type: 'string',

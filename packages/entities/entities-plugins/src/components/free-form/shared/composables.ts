@@ -85,8 +85,8 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema>) {
    * @returns The schema for the specified path or the root schema if no path provided
    */
   function getSchema(): FormSchema
-  function getSchema(path: string): UnionFieldSchema | undefined
-  function getSchema(path?: string): FormSchema | UnionFieldSchema | undefined {
+  function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path: string): T | undefined
+  function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path?: string): T | UnionFieldSchema | undefined {
     return path == null ? schemaValue : schemaMap.value?.[generalizePath(path)]
   }
 
@@ -442,7 +442,7 @@ export function useFieldAncestors(fieldPath: MaybeRefOrGetter<string>) {
   })
 }
 
-export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
+export function useField<T = unknown, S extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
   const { getSchema, formData } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
@@ -451,7 +451,7 @@ export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
     set: v => set(formData, utils.toArray(fieldPath.value), v),
   })
 
-  const schema = computed(() => getSchema(fieldPath.value))
+  const schema = computed(() => getSchema<S>(fieldPath.value))
 
   if (!schema.value) {
     return {

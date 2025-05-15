@@ -32,7 +32,7 @@ export function getName(p: string): string {
   return arr[arr.length - 1]
 }
 
-export function isStringSet(schema: MaybeRefOrGetter<UnionFieldSchema | undefined>): boolean {
+export function isTagField(schema: MaybeRefOrGetter<UnionFieldSchema | undefined>): boolean {
   const schemaVal = toValue(schema)
   if (!schemaVal) return false
   return schemaVal.type === 'set'
