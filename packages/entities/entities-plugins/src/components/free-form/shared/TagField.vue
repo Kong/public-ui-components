@@ -79,7 +79,7 @@ const is1pIgnore = computed(() => {
 })
 
 const value = computed(() => {
-  if (fieldValue?.value === null) {
+  if (fieldValue?.value == null) {
     return undefined
   }
   return fieldValue?.value.join(', ')
