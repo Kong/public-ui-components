@@ -5,7 +5,7 @@ import type {
   AnalyticsBridge,
   AnalyticsConfigV2,
   DatasourceAwareQuery,
-  ExploreFilter,
+  ExploreFilterAll,
   ExploreResultV4,
 } from '@kong-ui-public/analytics-utilities'
 import type { MockOptions } from '../mockExploreResponse'
@@ -80,7 +80,7 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        additionalFilter: [{ type: 'in', dimension: 'api_product', values: ['renders an error if no query bridge is provided'] } as ExploreFilter],
+        additionalFilter: [{ operator: 'in', field: 'api_product', value: ['renders an error if no query bridge is provided'] } as ExploreFilterAll],
       },
     })
 
@@ -169,7 +169,7 @@ describe('<AnalyticsMetricProvider />', () => {
         render: 'global',
         longCardTitles: true,
         percentileLatency: true,
-        additionalFilter: [{ type: 'in', dimension: 'api_product', values: ['renders percentiles if the override is set'] } as ExploreFilter],
+        additionalFilter: [{ operator: 'in',field: 'api_product', value: ['renders percentiles if the override is set'] } as ExploreFilterAll],
       },
       global: {
         provide: {
@@ -262,9 +262,9 @@ describe('<AnalyticsMetricProvider />', () => {
     const queryBridge = makeQueryBridge()
 
     const additionalFilter = ref([{
-      dimension: 'application',
-      type: 'in',
-      values: ['app1'],
+      field: 'application',
+      operator: 'in',
+      value: ['app1'],
     }])
 
     cy.mount(MetricsTestHarness, {
@@ -284,9 +284,9 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
       query: {
         filters: [{
-          dimension: 'application',
-          type: 'in',
-          values: ['app1'],
+          field: 'application',
+          operator: 'in',
+          value: ['app1'],
         }],
       },
     }))
@@ -301,17 +301,17 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-trend-change > div').eq(1).should('have.text', '0.00%')
     cy.get('.metricscard-trend-change > div').eq(2).should('have.text', '49.98%').then(() => {
       additionalFilter.value = [{
-        dimension: 'api_product',
-        type: 'in',
-        values: ['product1'],
+        field: 'api_product',
+        operator: 'in',
+        value: ['product1'],
       }]
 
       cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({
         query: {
           filters: [{
-            dimension: 'api_product',
-            type: 'in',
-            values: ['product1'],
+            field: 'api_product',
+            operator: 'in',
+            value: ['product1'],
           }],
         } }))
     })
@@ -423,9 +423,9 @@ describe('<AnalyticsMetricProvider />', () => {
       props: {
         render: 'global',
         additionalFilter: ref([{
-          dimension: 'api_product',
-          type: 'in',
-          values: ['all-cards'], // SWRV cache busting
+          field: 'api_product',
+          operator: 'in',
+          value: ['all-cards'], // SWRV cache busting
         }]),
       },
       global: {
@@ -450,9 +450,9 @@ describe('<AnalyticsMetricProvider />', () => {
       props: {
         render: 'global',
         additionalFilter: ref([{
-          dimension: 'api_product',
-          type: 'in',
-          values: ['latency-cards'], // SWRV cache busting
+          field: 'api_product',
+          operator: 'in',
+          value: ['latency-cards'], // SWRV cache busting
         }]),
       },
       global: {
@@ -481,9 +481,9 @@ describe('<AnalyticsMetricProvider />', () => {
       props: {
         render: 'global',
         additionalFilter: ref([{
-          dimension: 'api_product',
-          type: 'in',
-          values: ['traffic-cards'], // SWRV cache busting
+          field: 'api_product',
+          operator: 'in',
+          value: ['traffic-cards'], // SWRV cache busting
         }]),
       },
       global: {
