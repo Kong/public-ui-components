@@ -25,7 +25,7 @@
       :hide-toolbar="hideToolbar ?? hideTableToolbar"
       :initial-fetcher-params="combinedInitialFetcherParams"
       :loading="isLoading"
-      :pagination-attributes="{ disablePageJump: disablePaginationPageJump, offset: paginationType === 'offset' }"
+      :pagination-attributes="paginationAttributes"
       resize-columns
       :row-attrs="rowAttrs"
       :row-key="rowKey"
@@ -113,7 +113,7 @@ import { computed, ref } from 'vue'
 import type { TableStateParams } from '../../types'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
-import type { HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams, TableDataProps } from '@kong/kongponents'
+import type { HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams, TableDataProps, TablePaginationAttributes } from '@kong/kongponents'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
 import type {
@@ -196,16 +196,12 @@ const props = defineProps({
     type: [String, Object] as PropType<string | TableErrorMessage>,
     default: null,
   },
-  disablePaginationPageJump: {
-    type: Boolean,
-    default: undefined,
+  paginationAttributes: {
+    type: Object as PropType<TablePaginationAttributes>,
+    default: () => ({}),
   },
   disableSorting: {
     type: Boolean,
-    default: undefined,
-  },
-  paginationType: {
-    type: String as PropType<'default' | 'offset'>,
     default: undefined,
   },
   // A function for applying attributes to cells
