@@ -17,7 +17,7 @@ export const isDefinedByBasic = (data: Record<string, any>): boolean => {
   if (
     data[RoutingRulesEntities.PATHS]?.length > 1 ||
     data[RoutingRulesEntities.HOSTS]?.length > 1 ||
-    data[RoutingRulesEntities.HEADERS]?.length > 0 ||
+    (data[RoutingRulesEntities.HEADERS] && typeof data[RoutingRulesEntities.HEADERS] === 'object') ||
     data[RoutingRulesEntities.SNIS]?.length > 0 ||
     data[RoutingRulesEntities.SOURCES]?.length > 0 ||
     data[RoutingRulesEntities.DESTINATIONS]?.length > 0
