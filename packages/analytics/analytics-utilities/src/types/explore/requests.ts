@@ -1,6 +1,5 @@
 import { makeFilterable } from './util'
 import type { AbsoluteTimeRangeV4, ExploreFilterTypesV2, RequestFilterTypeEmptyV2, RequestFilterTypeEqualsV2, RequestFilterTypeMetricV2, RequestFilterTypeWildcardV2 } from './common'
-import { type ExploreFilter } from './advanced'
 
 // status_code and upstream_status_code are treated as metric filters
 export const queryableRequestDimensions = [
@@ -113,8 +112,7 @@ export interface RequestWildcardFilter {
   value: string
 }
 
-export type RequestFilter = ExploreFilter |
-  RequestInFilter |
+export type RequestFilter = RequestInFilter |
   RequestEqualsFilter |
   RequestMetricFilter |
   RequestEmptyFilter |
