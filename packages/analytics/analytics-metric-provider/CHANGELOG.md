@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.7.27...@kong-ui-public/analytics-metric-provider@8.8.0) (2025-05-15)
+
+
+### Features
+
+* **analytics-utilities:** remove old style filters ([#2126](https://github.com/Kong/public-ui-components/issues/2126)) ([3b5d756](https://github.com/Kong/public-ui-components/commit/3b5d756a7888241dab6842665587ce734c3dab7b))
+
+
+
+
+
 ## [8.7.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.7.26...@kong-ui-public/analytics-metric-provider@8.7.27) (2025-05-06)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
