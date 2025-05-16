@@ -251,14 +251,14 @@ const props = defineProps({
     default: undefined,
   },
   /**
-   * @deprecated in favor of `paginationAttributes`
+   * @deprecated in favour of `paginationAttributes`
    */
   disablePaginationPageJump: {
     type: Boolean,
     default: undefined,
   },
   /**
-   * @deprecated in favor of `paginationAttributes`
+   * @deprecated in favour of `paginationAttributes`
    */
   paginationType: {
     type: String as PropType<'default' | 'offset'>,
