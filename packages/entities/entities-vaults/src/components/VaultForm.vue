@@ -965,6 +965,9 @@ const updateFormValues = (data: Record<string, any>): void => {
   }
 }
 
+// return true if the value is one of '', undefined or null
+const isEmpty = (v: unknown): boolean => v === '' || v == null
+
 /**
  * Is the form submit button enabled?
  */
@@ -1002,10 +1005,7 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE && key === 'approle_response_wrapping' && typeof (configFields[vaultProvider.value] as HCVVaultConfig)[key] === 'boolean') {
         return false
       }
-      const value = (configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig]
-      // `true` means the required value is empty
-      // so return true here if the value is one of '', 0, undefined or null
-      return value === '' || value === 0 || value == null
+      return isEmpty((configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig])
     }).length
   }
 
@@ -1016,10 +1016,7 @@ const isVaultConfigValid = computed((): boolean => {
       if (['client_id', 'tenant_id', 'ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
         return false
       }
-      const value = (configFields[vaultProvider.value] as AzureVaultConfig)[key as keyof AzureVaultConfig]
-      // `true` means the required value is empty
-      // so return true here if the value is one of '', 0, undefined or null
-      return value === '' || value === 0 || value == null
+      return isEmpty((configFields[vaultProvider.value] as AzureVaultConfig)[key as keyof AzureVaultConfig])
     }).length
   }
 
@@ -1030,10 +1027,7 @@ const isVaultConfigValid = computed((): boolean => {
       if (['endpoint_url', 'assume_role_arn', 'ttl', 'neg_ttl', 'resurrect_ttl', 'sts_endpoint_url'].includes(key)) {
         return false
       }
-      const value = (configFields[vaultProvider.value] as AWSVaultConfig)[key as keyof AWSVaultConfig]
-      // `true` means the required value is empty
-      // so return true here if the value is one of '', 0, undefined or null
-      return value === '' || value === 0 || value == null
+      return isEmpty((configFields[vaultProvider.value] as AWSVaultConfig)[key as keyof AWSVaultConfig])
     }).length
   }
 
@@ -1042,10 +1036,7 @@ const isVaultConfigValid = computed((): boolean => {
     if (['ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
       return false
     }
-    const value = (configFields[vaultProvider.value] as KongVaultConfig | GCPVaultConfig)[key as keyof (KongVaultConfig | GCPVaultConfig)] as unknown
-    // `true` means the required value is empty
-    // so return true here if the value is one of '', 0, undefined or null
-    return value === '' || value === 0 || value == null
+    return isEmpty((configFields[vaultProvider.value] as KongVaultConfig | GCPVaultConfig)[key as keyof (KongVaultConfig | GCPVaultConfig)])
   }).length
 })
 const isFormValid = computed((): boolean => !!form.fields.prefix && isVaultConfigValid.value)
