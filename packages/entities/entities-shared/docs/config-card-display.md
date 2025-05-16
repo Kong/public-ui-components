@@ -38,6 +38,14 @@ The base property configuration when format is structured.
 
 Format to be displayed in the Config Card. Can be `structured`, `json`, or `yaml`.
 
+#### `formatPreferenceKey`
+
+- type: `String`
+- required: `false`
+- default: `''`
+
+The localStorage key to use while persisting the format preference. If omitted, the format will not be persisted.
+
 #### `propListTypes`
 
 - type: `Array as PropType<String[]>`

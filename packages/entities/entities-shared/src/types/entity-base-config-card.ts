@@ -31,6 +31,13 @@ export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
 export interface BaseEntityConfig {
   /** the ID of the entity */
   entityId: string
+
+  /**
+   * The localStorage key to use while persisting the config format preference.
+   *
+   * If omitted, the preference will not be persisted.
+   */
+  formatPreferenceKey?: string
 }
 
 /** Konnect base form config */
