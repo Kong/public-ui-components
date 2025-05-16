@@ -747,22 +747,24 @@ const providers = computed<Array<{ label: string, value: VaultProviders }>>(() =
   ]
 })
 
+const base64FieldConfig = props.config.base64FieldAvailable ? { base64_decode: false } : {}
+
 const configFields = reactive<ConfigFields>({
   [VaultProviders.KONNECT]: {},
   [VaultProviders.ENV]: {
     prefix: '',
-    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
+    ...base64FieldConfig,
   } as KongVaultConfig,
   [VaultProviders.AWS]: {
     region: '',
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
-    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
+    ...base64FieldConfig,
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
-    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
+    ...base64FieldConfig,
   } as GCPVaultConfig,
   [VaultProviders.HCV]: {
     protocol: 'http',
@@ -781,7 +783,7 @@ const configFields = reactive<ConfigFields>({
     approle_secret_id: '',
     approle_secret_id_file: '',
     approle_response_wrapping: false,
-    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
+    ...base64FieldConfig,
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
     location: '',
@@ -790,7 +792,7 @@ const configFields = reactive<ConfigFields>({
     credentials_prefix: 'AZURE',
     client_id: '',
     tenant_id: '',
-    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
+    ...base64FieldConfig,
   } as AzureVaultConfig,
   [VaultProviders.CONJUR]: {},
 })
@@ -799,18 +801,18 @@ const originalConfigFields = reactive<ConfigFields>({
   [VaultProviders.KONNECT]: {},
   [VaultProviders.ENV]: {
     prefix: '',
-    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
+    ...base64FieldConfig,
   } as KongVaultConfig,
   [VaultProviders.AWS]: {
     region: '',
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
-    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
+    ...base64FieldConfig,
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
-    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
+    ...base64FieldConfig,
   } as GCPVaultConfig,
   [VaultProviders.HCV]: {
     protocol: 'http',
@@ -829,7 +831,7 @@ const originalConfigFields = reactive<ConfigFields>({
     approle_secret_id: '',
     approle_secret_id_file: '',
     approle_response_wrapping: false,
-    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
+    ...base64FieldConfig,
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
     location: '',
@@ -838,7 +840,7 @@ const originalConfigFields = reactive<ConfigFields>({
     credentials_prefix: 'AZURE',
     client_id: '',
     tenant_id: '',
-    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
+    ...base64FieldConfig,
   } as AzureVaultConfig,
   [VaultProviders.CONJUR]: {},
 })
