@@ -21,11 +21,11 @@
       :fetcher-cache-key="String(fetcherCacheKey)"
       :headers="headers"
       :hide-pagination="hidePagination"
-      hide-pagination-when-optional
+      :hide-pagination-when-optional="hidePaginationWhenOptional"
       :hide-toolbar="hideToolbar ?? hideTableToolbar"
       :initial-fetcher-params="combinedInitialFetcherParams"
       :loading="isLoading"
-      :pagination-attributes="paginationAttributes"
+      :pagination-attributes="tablePaginationAttributes"
       resize-columns
       :row-attrs="rowAttrs"
       :row-key="rowKey"
@@ -200,6 +200,10 @@ const props = defineProps({
     type: Object as PropType<TablePaginationAttributes>,
     default: () => ({}),
   },
+  hidePaginationWhenOptional: {
+    type: Boolean,
+    default: true,
+  },
   disableSorting: {
     type: Boolean,
     default: undefined,
@@ -244,6 +248,20 @@ const props = defineProps({
   },
   hideToolbar: {
     type: Boolean,
+    default: undefined,
+  },
+  /**
+   * @deprecated in favor of `paginationAttributes`
+   */
+  disablePaginationPageJump: {
+    type: Boolean,
+    default: undefined,
+  },
+  /**
+   * @deprecated in favor of `paginationAttributes`
+   */
+  paginationType: {
+    type: String as PropType<'default' | 'offset'>,
     default: undefined,
   },
 })
@@ -394,6 +412,12 @@ const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): vo
     setTablePreferences(cacheId.value, newTablePreferences)
   }
 }
+
+const tablePaginationAttributes = computed((): TablePaginationAttributes => ({
+  disablePageJump: props.disablePaginationPageJump,
+  offset: props.paginationType === 'offset',
+  ...props.paginationAttributes,
+}))
 </script>
 
 <style lang="scss" scoped>
