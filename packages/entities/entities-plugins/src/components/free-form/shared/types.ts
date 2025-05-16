@@ -23,3 +23,16 @@ export type ResetLabelPathRule =
   | 'reset-children' // Inherit paths on its own, but descendant paths start from current path.
   | 'isolate' // Isolate paths for both current and descendants.
   | 'isolate-children' // Inherit paths on its own, children do not inherit.
+// TODO: check lua_schema type
+export interface Field {
+  label: string
+  model: string
+  type?: string
+  default?: any
+  disabled?: boolean
+  help?: string
+  inputType?: string
+  order?: number
+  required?: boolean
+  valueType?: string
+}
