@@ -442,14 +442,24 @@ export function useFieldAncestors(fieldPath: MaybeRefOrGetter<string>) {
   })
 }
 
-export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
-  const { getSchema, formData } = useFormShared()
+export function useFormData<T>(name: MaybeRefOrGetter<string>) {
+  const { formData } = useFormShared()
   const fieldPath = useFieldPath(name)
-  const renderer = useFieldRenderer(fieldPath)
   const value = computed<T>({
     get: () => get(formData, utils.toArray(fieldPath.value)),
-    set: v => set(formData, utils.toArray(fieldPath.value), v),
+    set: (v) => set(formData, utils.toArray(fieldPath.value), v),
   })
+
+  return {
+    value,
+  }
+}
+
+export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
+  const { getSchema } = useFormShared()
+  const fieldPath = useFieldPath(name)
+  const renderer = useFieldRenderer(fieldPath)
+  const { value } = useFormData<T>(name)
 
   const schema = computed(() => getSchema(fieldPath.value))
 
@@ -469,17 +479,6 @@ export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
   }
 }
 
-export function useFormData<T>(name: MaybeRefOrGetter<string>) {
-  const { formData } = useFormShared()
-  const fieldPath = useFieldPath(name)
-  const value = computed<T>({
-    get: () => get(formData, utils.toArray(fieldPath.value)),
-    set: (v) => set(formData, utils.toArray(fieldPath.value), v),
-  })
-  return {
-    value,
-  }
-}
 
 export function useIsAutoFocus(fieldAncestors?: MaybeRefOrGetter<Ancestor>) {
   const { getSchema } = useFormShared()
