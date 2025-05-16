@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.17.11...@kong-ui-public/entities-vaults@3.18.0) (2025-05-16)
+
+
+### Features
+
+* **vault:** add base64_decode field [KM-1283] ([#2130](https://github.com/Kong/public-ui-components/issues/2130)) ([4c1c480](https://github.com/Kong/public-ui-components/commit/4c1c4804f0102b8dbc7fbd6536c381ab101c12cf))
+
+
+
+
+
 ## [3.17.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.17.10...@kong-ui-public/entities-vaults@3.17.11) (2025-05-14)
 
 
