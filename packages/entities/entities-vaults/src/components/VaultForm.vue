@@ -270,7 +270,7 @@
               type="text"
             />
             <KSelect
-              v-model="configFields[VaultProviders.HCV].auth_method"
+              v-model="configFields[VaultProviders.HCV].auth_method as any"
               data-testid="vault-form-config-hcv-auth_method"
               :items="[
                 { label: VaultAuthMethods.TOKEN, value: VaultAuthMethods.TOKEN },
