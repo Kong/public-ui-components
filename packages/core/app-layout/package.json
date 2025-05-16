@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.17.4",
-    "@kong/kongponents": "9.30.0",
+    "@kong/kongponents": "9.31.9-pr.2746.e6b9cb7a2.0",
     "@types/lodash.clonedeep": "^4.5.9",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"
