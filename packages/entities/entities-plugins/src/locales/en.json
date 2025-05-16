@@ -574,6 +574,10 @@
           "placeholder": "Select valid protocols for the plugin",
           "placeholderWithDefaultValues": "Select valid protocols for the plugin. Default protocols: {protocols}",
           "help": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type."
+        },
+        "tags": {
+          "help": "An optional set of strings for grouping and filtering, separated by commas.",
+          "placeholder": "Enter list of tags"
         }
       },
       "scoping": {

@@ -1,6 +1,9 @@
 export interface RequestCalloutPlugin {
   config?: RequestCallout
   partials?: Array<{ id: string }>
+  instance_name?: string
+  protocols?: string[]
+  tags?: string[]
 }
 
 export interface RequestCallout {
