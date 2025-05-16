@@ -39,6 +39,11 @@ const { traffic, latency } = providerData.data
 
 const { i18n } = composables.useI18n()
 
+const cardSize = computed<MetricCardSize>(() => {
+  // If the parent container has a title, we enforce a Medium card size; otherwise, pass down provided cardSize
+  return providerData.containerTitle.value ? MetricCardSize.Medium : props.cardSize
+})
+
 const trafficCard = composables.useMetricCardBuilder({
   cardType: MetricCardType.TRAFFIC,
   title: computed(() => providerData.longCardTitles
@@ -86,9 +91,16 @@ const latencyCard = composables.useMetricCardBuilder({
   title: computed(() => {
     const { longCardTitles, averageLatencies } = providerData
     const titleKey = averageLatencies.value ? 'averageLatency' : 'p99Latency'
-    return longCardTitles
-      ? i18n.t(`metricCard.long.${titleKey}`)
-      : i18n.t(`metricCard.short.${titleKey}`)
+
+    if (longCardTitles) {
+      return i18n.t(`metricCard.long.${titleKey}`)
+    }
+
+    if (cardSize.value === MetricCardSize.Small) {
+      return i18n.t(`metricCard.small.${titleKey}`)
+    }
+
+    return i18n.t(`metricCard.short.${titleKey}`)
   }),
   hasError: latency.hasError,
   record: latency.mapped,
@@ -128,8 +140,7 @@ const containerOpts = computed(() => ({
   loading: isLoading.value,
   hasTrendAccess: providerData.hasTrendAccess.value,
   fallbackDisplayText: i18n.t('general.notAvailable'),
-  // If the parent container has a title, we enforce a Medium card size; otherwise, pass down provided cardSize
-  cardSize: providerData.containerTitle.value ? MetricCardSize.Medium : props.cardSize,
+  cardSize: cardSize.value,
   hideTitle: true,
 }))
 
