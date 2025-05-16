@@ -41,7 +41,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.4",
-    "@kong/kongponents": "9.30.0",
+    "@kong/kongponents": "9.31.9-pr.2746.e6b9cb7a2.0",
     "@types/geojson": "^7946.0.14",
     "maplibre-gl": "^4.7.1",
     "vue": "^3.5.13"
