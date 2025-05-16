@@ -76,6 +76,17 @@
               required
               type="text"
             />
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.ENV].base64_decode!"
+              data-testid="vault-form-config-env-base64_decode"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+            />
           </div>
 
           <!-- AWS fields -->
@@ -145,6 +156,17 @@
               }"
               type="text"
             />
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.AWS].base64_decode!"
+              data-testid="vault-form-config-aws-base64_decode"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+            />
           </div>
 
           <!-- GCP fields -->
@@ -174,6 +196,17 @@
                 </i18nT>
               </template>
             </KInput>
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.GCP].base64_decode!"
+              data-testid="vault-form-config-gcp-base64_decode"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+            />
           </div>
 
           <!-- HashiCorp Vault fields -->
@@ -337,6 +370,17 @@
                 :label="t('form.config.hcv.fields.approle_response_wrapping.label')"
               />
             </div>
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.HCV].base64_decode!"
+              data-testid="vault-form-config-hcv-base64_decode"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+            />
           </div>
 
           <!-- Azure fields -->
@@ -397,6 +441,17 @@
               :is-readonly="form.isReadonly"
               :label="t('form.config.azure.fields.tenant_id.label')"
               type="text"
+            />
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.AZURE].base64_decode!"
+              data-testid="vault-form-config-azure-base64_decode"
+              :is-readonly="form.isReadonly"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
             />
           </div>
 
@@ -696,15 +751,18 @@ const configFields = reactive<ConfigFields>({
   [VaultProviders.KONNECT]: {},
   [VaultProviders.ENV]: {
     prefix: '',
+    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
   } as KongVaultConfig,
   [VaultProviders.AWS]: {
     region: '',
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
+    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
+    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
   } as GCPVaultConfig,
   [VaultProviders.HCV]: {
     protocol: 'http',
@@ -723,6 +781,7 @@ const configFields = reactive<ConfigFields>({
     approle_secret_id: '',
     approle_secret_id_file: '',
     approle_response_wrapping: false,
+    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
     location: '',
@@ -731,6 +790,7 @@ const configFields = reactive<ConfigFields>({
     credentials_prefix: 'AZURE',
     client_id: '',
     tenant_id: '',
+    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
   } as AzureVaultConfig,
   [VaultProviders.CONJUR]: {},
 })
@@ -739,15 +799,18 @@ const originalConfigFields = reactive<ConfigFields>({
   [VaultProviders.KONNECT]: {},
   [VaultProviders.ENV]: {
     prefix: '',
+    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
   } as KongVaultConfig,
   [VaultProviders.AWS]: {
     region: '',
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
+    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
+    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
   } as GCPVaultConfig,
   [VaultProviders.HCV]: {
     protocol: 'http',
@@ -766,6 +829,7 @@ const originalConfigFields = reactive<ConfigFields>({
     approle_secret_id: '',
     approle_secret_id_file: '',
     approle_response_wrapping: false,
+    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
     location: '',
@@ -774,6 +838,7 @@ const originalConfigFields = reactive<ConfigFields>({
     credentials_prefix: 'AZURE',
     client_id: '',
     tenant_id: '',
+    ...( props.config.base64FieldAvailable ? { base64_decode: false } : {} ),
   } as AzureVaultConfig,
   [VaultProviders.CONJUR]: {},
 })
@@ -935,7 +1000,10 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE && key === 'approle_response_wrapping' && typeof (configFields[vaultProvider.value] as HCVVaultConfig)[key] === 'boolean') {
         return false
       }
-      return !(configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig]
+      const value = (configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig]
+      // `true` means the required value is empty
+      // so return true here if the value is one of '', 0, undefined or null
+      return value === '' || value === 0 || value == null
     }).length
   }
 
@@ -946,7 +1014,10 @@ const isVaultConfigValid = computed((): boolean => {
       if (['client_id', 'tenant_id', 'ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
         return false
       }
-      return !(configFields[vaultProvider.value] as AzureVaultConfig)[key as keyof AzureVaultConfig]
+      const value = (configFields[vaultProvider.value] as AzureVaultConfig)[key as keyof AzureVaultConfig]
+      // `true` means the required value is empty
+      // so return true here if the value is one of '', 0, undefined or null
+      return value === '' || value === 0 || value == null
     }).length
   }
 
@@ -957,7 +1028,10 @@ const isVaultConfigValid = computed((): boolean => {
       if (['endpoint_url', 'assume_role_arn', 'ttl', 'neg_ttl', 'resurrect_ttl', 'sts_endpoint_url'].includes(key)) {
         return false
       }
-      return !(configFields[vaultProvider.value] as AWSVaultConfig)[key as keyof AWSVaultConfig]
+      const value = (configFields[vaultProvider.value] as AWSVaultConfig)[key as keyof AWSVaultConfig]
+      // `true` means the required value is empty
+      // so return true here if the value is one of '', 0, undefined or null
+      return value === '' || value === 0 || value == null
     }).length
   }
 
@@ -966,7 +1040,10 @@ const isVaultConfigValid = computed((): boolean => {
     if (['ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
       return false
     }
-    return !(configFields[vaultProvider.value] as KongVaultConfig | GCPVaultConfig)[key as keyof (KongVaultConfig | GCPVaultConfig)]
+    const value = (configFields[vaultProvider.value] as KongVaultConfig | GCPVaultConfig)[key as keyof (KongVaultConfig | GCPVaultConfig)] as unknown
+    // `true` means the required value is empty
+    // so return true here if the value is one of '', 0, undefined or null
+    return value === '' || value === 0 || value == null
   }).length
 })
 const isFormValid = computed((): boolean => !!form.fields.prefix && isVaultConfigValid.value)
