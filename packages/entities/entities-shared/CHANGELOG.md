@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.22.9...@kong-ui-public/entities-shared@3.23.0) (2025-05-19)
+
+
+### Features
+
+* **entities-shared:** add a prop to persist format preference ([#2131](https://github.com/Kong/public-ui-components/issues/2131)) ([52c1a6e](https://github.com/Kong/public-ui-components/commit/52c1a6e4d38cabd26faec69e8b606b87ad9f9f8d))
+
+
+
+
+
 ## [3.22.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.22.8...@kong-ui-public/entities-shared@3.22.9) (2025-05-14)
 
 
