@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.7.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.7.26...@kong-ui-public/entities-snis@3.7.27) (2025-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.7.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.7.25...@kong-ui-public/entities-snis@3.7.26) (2025-05-14)
+
+
+### Bug Fixes
+
+* **entities:** fetcher url reactivity ([#2120](https://github.com/Kong/public-ui-components/issues/2120)) ([16cbc20](https://github.com/Kong/public-ui-components/commit/16cbc20058a3acda085ebc18b16fb034104126c9))
+
+
+
+
+
 ## [3.7.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.7.24...@kong-ui-public/entities-snis@3.7.25) (2025-05-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-snis

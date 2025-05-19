@@ -285,9 +285,9 @@ export const summaryDashboardConfig: DashboardConfig = {
             'time',
           ],
           filters: [{
-            dimension: 'control_plane',
-            type: 'in',
-            values: ['default_uuid'],
+            field: 'control_plane',
+            operator: 'in',
+            value: ['default_uuid'],
           }],
         },
       },

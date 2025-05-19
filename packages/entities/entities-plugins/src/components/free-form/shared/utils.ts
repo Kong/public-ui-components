@@ -1,13 +1,14 @@
 
 import type { FlattendRedisConfigurationFields, RedisConfig, RedisPartialType, RedisTypeDisplay } from './types'
 import type { Field } from '../shared/types'
+import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
+import { toValue, type MaybeRefOrGetter } from 'vue'
 
 export function toSelectItems<T extends string>(
   items: T[],
 ): { value: T, label: T }[] {
   return items.map((item) => ({ value: item, label: item }))
 }
-
 
 export const arraySymbol = '*'
 export const rootSymbol = '$'
@@ -83,3 +84,10 @@ export function useRedisNonstandardFields(
   })
 }
 
+export function isTagField(schema: MaybeRefOrGetter<UnionFieldSchema | undefined>): boolean {
+  const schemaVal = toValue(schema)
+  if (!schemaVal) return false
+  return schemaVal.type === 'set'
+    && schemaVal.elements.type === 'string'
+    && !schemaVal.elements.one_of
+}

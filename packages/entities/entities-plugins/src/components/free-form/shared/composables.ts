@@ -2,7 +2,7 @@ import { computed, inject, provide, ref, toRef, toValue, useAttrs, useSlots, wat
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
-import type { FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
+import type { ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
 import type { FormConfig, ResetLabelPathRule } from './types'
@@ -85,8 +85,8 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema>) {
    * @returns The schema for the specified path or the root schema if no path provided
    */
   function getSchema(): FormSchema
-  function getSchema(path: string): UnionFieldSchema | undefined
-  function getSchema(path?: string): FormSchema | UnionFieldSchema | undefined {
+  function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path: string): T | undefined
+  function getSchema<T extends UnionFieldSchema = UnionFieldSchema>(path?: string): T | UnionFieldSchema | undefined {
     return path == null ? schemaValue : schemaMap.value?.[generalizePath(path)]
   }
 
@@ -170,7 +170,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema>) {
 
   function getSelectItems(fieldPath: string): SelectItem[] {
     const schema = getSchema(fieldPath)
-    return utils.toSelectItems((schema?.one_of || []))
+    return utils.toSelectItems((schema?.one_of || (schema as ArrayLikeFieldSchema).elements?.one_of || []))
   }
 
   function getPlaceholder(fieldPath: string): string | null {
@@ -455,13 +455,13 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
   }
 }
 
-export function useField<T = unknown>(name: MaybeRefOrGetter<string>) {
+export function useField<T = unknown, S extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
   const { getSchema } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
   const { value } = useFormData<T>(name)
 
-  const schema = computed(() => getSchema(fieldPath.value))
+  const schema = computed(() => getSchema<S>(fieldPath.value))
 
   if (!schema.value) {
     return {

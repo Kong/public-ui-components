@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.18.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.18.0...@kong-ui-public/entities-vaults@3.18.1) (2025-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+# [3.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.17.11...@kong-ui-public/entities-vaults@3.18.0) (2025-05-16)
+
+
+### Features
+
+* **vault:** add base64_decode field [KM-1283] ([#2130](https://github.com/Kong/public-ui-components/issues/2130)) ([4c1c480](https://github.com/Kong/public-ui-components/commit/4c1c4804f0102b8dbc7fbd6536c381ab101c12cf))
+
+
+
+
+
+## [3.17.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.17.10...@kong-ui-public/entities-vaults@3.17.11) (2025-05-14)
+
+
+### Bug Fixes
+
+* **entities:** fetcher url reactivity ([#2120](https://github.com/Kong/public-ui-components/issues/2120)) ([16cbc20](https://github.com/Kong/public-ui-components/commit/16cbc20058a3acda085ebc18b16fb034104126c9))
+
+
+
+
+
 ## [3.17.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.17.9...@kong-ui-public/entities-vaults@3.17.10) (2025-05-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

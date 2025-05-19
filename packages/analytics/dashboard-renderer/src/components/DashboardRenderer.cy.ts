@@ -5,7 +5,7 @@ import type {
   AnalyticsConfigV2,
   DashboardConfig,
   DatasourceAwareQuery,
-  ExploreFilter,
+  ExploreFilterAll,
   ExploreResultV4,
   TileConfig,
   Timeframe,
@@ -290,24 +290,24 @@ describe('<DashboardRenderer />', () => {
 
     cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({ query: {
       filters: [{
-        dimension: 'control_plane',
-        type: 'in',
-        values: ['default_uuid'],
+        field: 'control_plane',
+        operator: 'in',
+        value: ['default_uuid'],
       }],
     } }))
   })
 
   it('has reactive contextual filters', () => {
-    const filter1: ExploreFilter = {
-      type: 'in',
-      dimension: 'api_product',
-      values: ['blah'],
+    const filter1: ExploreFilterAll = {
+      operator: 'in',
+      field: 'api_product',
+      value: ['blah'],
     }
 
-    const filter2: ExploreFilter = {
-      type: 'in',
-      dimension: 'api_product',
-      values: ['arrgh'],
+    const filter2: ExploreFilterAll = {
+      operator: 'in',
+      field: 'api_product',
+      value: ['arrgh'],
     }
 
     const oneDayTimeframe = TimePeriods.get(TimeframeKeys.ONE_DAY)!
@@ -339,7 +339,7 @@ describe('<DashboardRenderer />', () => {
           filters: Cypress.sinon.match.some(Cypress.sinon.match(filter1)),
         } }))
         .should('have.been.calledWithMatch', Cypress.sinon.match({ query: {
-          filters: Cypress.sinon.match.some(Cypress.sinon.match({ values: ['default_uuid'] })),
+          filters: Cypress.sinon.match.some(Cypress.sinon.match({ value: ['default_uuid'] })),
         } }))
         .then(() => {
           cy.get('@fetcher').then((m) => m.resetHistory()).then(() => {
@@ -358,7 +358,7 @@ describe('<DashboardRenderer />', () => {
               cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query: {
                 filters: Cypress.sinon.match.some(Cypress.sinon.match(filter2)),
               } })).should('have.been.calledWithMatch', Cypress.sinon.match({ query:{
-                filters: Cypress.sinon.match.some(Cypress.sinon.match({ values: ['default_uuid'] })),
+                filters: Cypress.sinon.match.some(Cypress.sinon.match({ value: ['default_uuid'] })),
               } }))
             })
           })
@@ -501,9 +501,9 @@ describe('<DashboardRenderer />', () => {
         // Use default timeframe for the org: don't provide one here.
         filters: [
           {
-            dimension: 'api_product',
-            type: 'in',
-            values: ['lower retention'],
+            field: 'api_product',
+            operator: 'in',
+            value: ['lower retention'],
           },
         ],
         timeSpec: ((TimePeriods.get(TimeframeKeys.ONE_DAY)) as Timeframe).v4Query(),
@@ -536,9 +536,9 @@ describe('<DashboardRenderer />', () => {
         // Use default timeframe for the org: don't provide one here.
         filters: [
           {
-            dimension: 'api_product',
-            type: 'in',
-            values: ['basic'],
+            field: 'api_product',
+            operaator: 'in',
+            value: ['basic'],
           },
         ],
       },
@@ -574,9 +574,9 @@ describe('<DashboardRenderer />', () => {
         filters: [
           // Specify a filter to avoid caching.
           {
-            dimension: 'api_product',
-            type: 'in',
-            values: ['overriding datasource'],
+            field: 'api_product',
+            operator: 'in',
+            value: ['overriding datasource'],
           },
         ],
       },
@@ -607,15 +607,15 @@ describe('<DashboardRenderer />', () => {
         filters: [
           // Valid filter
           {
-            dimension: 'api_product',
-            type: 'in',
-            values: ['some product'],
+            field: 'api_product',
+            operator: 'in',
+            value: ['some product'],
           },
           // Invalid filter
           {
-            dimension: 'ai_provider',
-            type: 'in',
-            values: ['some provider'],
+            field: 'ai_provider',
+            operator: 'in',
+            value: ['some provider'],
           },
         ],
       },
@@ -637,9 +637,9 @@ describe('<DashboardRenderer />', () => {
         query: {
           filters: [
             {
-              dimension: 'api_product',
-              type: 'in',
-              values: ['some product'],
+              field: 'api_product',
+              operator: 'in',
+              value: ['some product'],
             },
           ],
         },
@@ -681,9 +681,9 @@ describe('<DashboardRenderer />', () => {
                   'time',
                 ],
                 filters: [{
-                  dimension: 'control_plane',
-                  type: 'in',
-                  values: ['default_uuid'],
+                  field: 'control_plane',
+                  operator: 'in',
+                  value: ['default_uuid'],
                 }],
                 time_range: {
                   // This should still render a badge even though it matches the global context.

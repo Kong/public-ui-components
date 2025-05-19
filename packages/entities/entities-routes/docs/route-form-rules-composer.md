@@ -62,6 +62,14 @@ Whether to show the entry to the router playground under the Expressions editor.
 
 Tooltips to show for tabs for each flavor. When there is only one flavor, the tab label and tooltip will not be shown.
 
+#### `hideProtocols`
+
+- type: `boolean`
+- required: `false`
+- default: `undefined`
+
+Whether to hide the protocols selector.
+
 ### Events
 
 #### `notify`

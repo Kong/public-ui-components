@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.4...@kong-ui-public/analytics-utilities@9.4.0) (2025-05-15)
+
+
+### Features
+
+* **analytics-utilities:** remove old style filters ([#2126](https://github.com/Kong/public-ui-components/issues/2126)) ([3b5d756](https://github.com/Kong/public-ui-components/commit/3b5d756a7888241dab6842665587ce734c3dab7b))
+
+
+
+
+
 ## [9.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.3...@kong-ui-public/analytics-utilities@9.3.4) (2025-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities

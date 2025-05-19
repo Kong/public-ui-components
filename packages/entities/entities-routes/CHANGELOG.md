@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.13.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.13.3...@kong-ui-public/entities-routes@3.13.4) (2025-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.13.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.13.2...@kong-ui-public/entities-routes@3.13.3) (2025-05-15)
+
+
+### Bug Fixes
+
+* **entities-routes:** wrong config type when editing ([#2125](https://github.com/Kong/public-ui-components/issues/2125)) ([7daf13c](https://github.com/Kong/public-ui-components/commit/7daf13cb73310738b4181a46fa1aa9e093e81b62))
+
+
+
+
+
+## [3.13.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.13.1...@kong-ui-public/entities-routes@3.13.2) (2025-05-14)
+
+
+### Bug Fixes
+
+* **entities:** fetcher url reactivity ([#2120](https://github.com/Kong/public-ui-components/issues/2120)) ([16cbc20](https://github.com/Kong/public-ui-components/commit/16cbc20058a3acda085ebc18b16fb034104126c9))
+
+
+
+
+
+## [3.13.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.13.0...@kong-ui-public/entities-routes@3.13.1) (2025-05-14)
+
+
+### Bug Fixes
+
+* **entities-routes:** update tooltip copy ([#2123](https://github.com/Kong/public-ui-components/issues/2123)) ([71a602e](https://github.com/Kong/public-ui-components/commit/71a602e2ecd834750bd4d5210387a3c08621de49))
+
+
+
+
+
+# [3.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.12.0...@kong-ui-public/entities-routes@3.13.0) (2025-05-13)
+
+
+### Features
+
+* **entities-routes:** add prop to hide the protocols selector ([#2119](https://github.com/Kong/public-ui-components/issues/2119)) ([0cb11c1](https://github.com/Kong/public-ui-components/commit/0cb11c10030d187df64f52a66cd471cdc22328f3))
+
+
+
+
+
+# [3.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.11.14...@kong-ui-public/entities-routes@3.12.0) (2025-05-13)
+
+
+### Features
+
+* **entities-routes:** route form redesign ([#2111](https://github.com/Kong/public-ui-components/issues/2111)) ([94b1748](https://github.com/Kong/public-ui-components/commit/94b17484cd8249cf687854b433d3d805e3945599))
+
+
+
+
+
 ## [3.11.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.11.13...@kong-ui-public/entities-routes@3.11.14) (2025-05-12)
 
 

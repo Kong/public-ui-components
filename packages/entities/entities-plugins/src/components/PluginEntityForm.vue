@@ -244,6 +244,8 @@ const { parseSchema, pruneRecord } = composables.useSchemas({
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
 
+const experimentalFreeForms = composables.useExperimentalFreeForms()
+
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
 
@@ -335,7 +337,7 @@ provide(FORMS_API_KEY, {
 provide(FORMS_CONFIG, props.config)
 
 const sharedFormName = ref('')
-const freeformName = ref('')
+const freeformName = ref<string | undefined>('')
 const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
@@ -795,7 +797,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
 
-  freeformName.value = getFreeFormName(form.model.name)
+  freeformName.value = getFreeFormName(form.model.name, experimentalFreeForms)
   sharedFormName.value = getSharedFormName(form.model.name)
 
   initFormModel()
