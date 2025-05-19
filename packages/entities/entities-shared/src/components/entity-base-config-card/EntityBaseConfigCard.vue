@@ -27,6 +27,7 @@
           {{ label }}
         </KLabel>
         <KSelect
+          v-model="configFormat"
           data-testid="select-config-format"
           :items="configFormatItems"
           @change="handleChange"
@@ -103,7 +104,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch } from 'vue'
+import { computed, ref, onBeforeMount, watch, onMounted } from 'vue'
 import type { AxiosError } from 'axios'
 import type {
   KonnectBaseEntityConfig,
@@ -267,11 +268,35 @@ if (props.config.app === 'konnect') {
   })
 }
 
-const configFormat = ref<Format>('structured')
+const DEFAULT_FORMAT = configFormatItems[0].value as Format
+
+const configFormat = ref<Format>(DEFAULT_FORMAT)
 
 const handleChange = (payload: any): void => {
   configFormat.value = payload?.value
 }
+
+const persistFormat = (localStorageKey: string, format: Format): void => {
+  localStorage.setItem(localStorageKey, format)
+}
+
+watch(configFormat, (format: Format) => {
+  if (props.config.formatPreferenceKey) {
+    persistFormat(props.config.formatPreferenceKey, format)
+  }
+})
+
+onMounted(() => {
+  if (props.config.formatPreferenceKey) {
+    const storedFormat = localStorage.getItem(props.config.formatPreferenceKey)
+    if (storedFormat && configFormatItems.some(item => item.value === storedFormat)) {
+      configFormat.value = storedFormat as Format
+    } else {
+      configFormat.value = DEFAULT_FORMAT
+    }
+    persistFormat(props.config.formatPreferenceKey, configFormat.value)
+  }
+})
 
 /**
  * default ordering for these common fields:
