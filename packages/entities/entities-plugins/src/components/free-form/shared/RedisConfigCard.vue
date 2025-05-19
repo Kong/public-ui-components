@@ -48,7 +48,7 @@ import type { Field } from './types'
 import { useStringHelpers } from '@kong-ui-public/entities-shared'
 import { computed } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
-import { useRedisNonstandardFields } from '../RequestCallout/utils'
+import { useRedisNonstandardFields } from './utils'
 import english from '../../../locales/en.json'
 import type { FlattendRedisConfigurationFields } from '../RequestCallout/types'
 

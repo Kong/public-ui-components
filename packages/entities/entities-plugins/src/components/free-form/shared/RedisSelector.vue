@@ -114,12 +114,7 @@
       v-else
       v-bind="props"
       as-child
-      :fields-order="[
-        'host', 'port', 'connection_is_proxied', 'database', 'username', 'password',
-        'sentinel_master', 'sentinel_role', 'sentinel_nodes', 'sentinel_username', 'sentinel_password',
-        'cluster_nodes', 'cluster_max_redirections', 'ssl', 'ssl_verify', 'server_name',
-        'keepalive_backlog', 'keepalive_pool_size', 'read_timeout', 'send_timeout', 'connect_timeout'
-      ]"
+      :fields-order="fieldsOrder"
       :name="formRedisPath"
       reset-label-path="reset"
     />
@@ -127,14 +122,8 @@
   <ObjectField
     v-else
     v-bind="props"
-    :fields-order="[
-      'host', 'port', 'connection_is_proxied', 'database', 'username', 'password',
-      'sentinel_master', 'sentinel_role', 'sentinel_nodes', 'sentinel_username', 'sentinel_password',
-      'cluster_nodes', 'cluster_max_redirections', 'ssl', 'ssl_verify', 'server_name',
-      'keepalive_backlog', 'keepalive_pool_size', 'read_timeout', 'send_timeout', 'connect_timeout'
-    ]"
+    :fields-order="fieldsOrder"
     hide-required-asterisk
-    label="Cache › Redis"
     :name="formRedisPath"
   />
 </template>
@@ -150,8 +139,8 @@ import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY, REDIS_PARTIAL_INFO } from '@ko
 import { AddIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents/dist/types'
 import { useAxios, useDebouncedFilter, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { RedisConfig, RedisPartialType, Redis } from '../RequestCallout/types'
-import { getRedisType, getPartialTypeDisplay } from '../RequestCallout/utils'
+import type { RedisConfig, RedisPartialType, Redis } from './types'
+import { getRedisType, getPartialTypeDisplay } from './utils'
 import { useField, useFormData } from './composables'
 defineEmits<{
   (e: 'showNewPartialModal'): void
@@ -159,6 +148,12 @@ defineEmits<{
 
 const { t } = createI18n<typeof english>('en-us', english)
 
+const fieldsOrder = [
+  'host', 'port', 'connection_is_proxied', 'database', 'username', 'password',
+  'sentinel_master', 'sentinel_role', 'sentinel_nodes', 'sentinel_username', 'sentinel_password',
+  'cluster_nodes', 'cluster_max_redirections', 'ssl', 'ssl_verify', 'server_name',
+  'keepalive_backlog', 'keepalive_pool_size', 'read_timeout', 'send_timeout', 'connect_timeout',
+]
 const endpoints = {
   konnect: {
     getOne: '/v2/control-planes/{controlPlaneId}/core-entities/partials/{id}',
