@@ -151,7 +151,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
-import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
+import { computed, inject, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
@@ -174,7 +174,7 @@ import {
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
-import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
+import { FORM_EDITING, REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -312,6 +312,7 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
+provide(FORM_EDITING, isEditing)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const loadedSchema = ref<Record<string, any> | undefined>(undefined)
 const finalSchema = ref<Record<string, any> | undefined>(undefined)
