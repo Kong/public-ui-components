@@ -256,6 +256,12 @@ const props = defineProps({
   disablePaginationPageJump: {
     type: Boolean,
     default: undefined,
+    validator: (value: boolean) => {
+      if (value) {
+        console.warn('EntityBaseTable: `disablePaginationPageJump` is deprecated in favour of `paginationAttributes`. Please update your code to use `paginationAttributes` instead.')
+      }
+      return typeof value === 'boolean'
+    },
   },
   /**
    * @deprecated in favour of `paginationAttributes`
@@ -263,6 +269,12 @@ const props = defineProps({
   paginationType: {
     type: String as PropType<'default' | 'offset'>,
     default: undefined,
+    validator: (value: string) => {
+      if (value) {
+        console.warn('EntityBaseTable: `paginationType` is deprecated in favour of `paginationAttributes`. Please update your code to use `paginationAttributes` instead.')
+      }
+      return ['default', 'offset'].includes(value)
+    },
   },
 })
 
