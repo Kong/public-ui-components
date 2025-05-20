@@ -198,8 +198,11 @@ const toggleMenu = () => {
 }
 
 const toggleExpanded = (field: string) => {
-
-  expandedFields.value.has(field) ? expandedFields.value.delete(field) : expandedFields.value.add(field)
+  if (expandedFields.value.has(field)) {
+    expandedFields.value.delete(field)
+  } else {
+    expandedFields.value.add(field)
+  }
 }
 
 const handleQueryUpdate = (query: string) => {
