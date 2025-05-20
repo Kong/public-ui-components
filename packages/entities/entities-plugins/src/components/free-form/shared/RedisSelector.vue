@@ -135,11 +135,12 @@ import { onBeforeMount, inject, computed, ref, watch, type Ref } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
-import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY, REDIS_PARTIAL_INFO } from '@kong-ui-public/forms'
+import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY } from '@kong-ui-public/forms'
 import { AddIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents/dist/types'
 import { useAxios, useDebouncedFilter, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RedisConfig, RedisPartialType, Redis } from './types'
+import { partialEndpoints, fieldsOrder, REDIS_PARTIAL_INFO } from './const'
 import { getRedisType, getPartialTypeDisplay } from './utils'
 import { useField, useFormData } from './composables'
 defineEmits<{
@@ -148,22 +149,6 @@ defineEmits<{
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const fieldsOrder = [
-  'host', 'port', 'connection_is_proxied', 'database', 'username', 'password',
-  'sentinel_master', 'sentinel_role', 'sentinel_nodes', 'sentinel_username', 'sentinel_password',
-  'cluster_nodes', 'cluster_max_redirections', 'ssl', 'ssl_verify', 'server_name',
-  'keepalive_backlog', 'keepalive_pool_size', 'read_timeout', 'send_timeout', 'connect_timeout',
-]
-const endpoints = {
-  konnect: {
-    getOne: '/v2/control-planes/{controlPlaneId}/core-entities/partials/{id}',
-    getAll: '/v2/control-planes/{controlPlaneId}/core-entities/partials',
-  },
-  kongManager: {
-    getOne: '/{workspace}/partials/{id}',
-    getAll: '/{workspace}/partials',
-  },
-}
 interface RedisSelectorProps {
   isEditing?: boolean
   defaultRedisConfigItem?: string
@@ -173,15 +158,10 @@ interface RedisSelectorProps {
 
 type PartialArray = Array<{ id: string | number, path?: string | undefined }>
 
-type PartialInfo = {
-  redisType: Ref<RedisPartialType>
-  redisPath: Ref<string>
-}
-
 const props = defineProps<RedisSelectorProps>()
 
 const redisPartialFetcherKey: Ref<number, number> | undefined = inject(REDIS_PARTIAL_FETCHER_KEY)
-const redisPartialInfo: PartialInfo | undefined = inject(REDIS_PARTIAL_INFO)
+const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 const formRedisPath = computed(() => {
   if (props.redisPath) {
     return props.redisPath
@@ -206,7 +186,7 @@ const partialsSaved = ref<PartialArray | undefined>()
 
 // initialize getter and setter for redis partial/redis fields
 const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.partials')
-// TODO: use redis path
+
 const { value: redisFieldsValue } = useField<Redis | undefined>(formRedisPath)
 
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
@@ -216,7 +196,7 @@ const {
   error: redisConfigsFetchError,
   loadItems: loadConfigs,
   results: redisConfigsResults,
-} = useDebouncedFilter(formConfig!, endpoints[formConfig!.app].getAll, undefined, {
+} = useDebouncedFilter(formConfig!, partialEndpoints[formConfig!.app].getAll, undefined, {
   fetchedItemsKey: 'data',
   searchKeys: ['id', 'name'],
 })
@@ -227,7 +207,7 @@ const sharedRedisConfigFetchError = computed(() => redisConfigsFetchError.value 
  * Build URL of getting one partial
  */
 const getOnePartialUrl = (partialId: string | number): string => {
-  let url = `${formConfig.apiBaseUrl}${endpoints[formConfig.app].getOne}`
+  let url = `${formConfig.apiBaseUrl}${partialEndpoints[formConfig.app].getOne}`
 
   if (formConfig.app === 'konnect') {
     url = url.replace(/{controlPlaneId}/gi, formConfig?.controlPlaneId || '')

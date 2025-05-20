@@ -174,7 +174,7 @@ import {
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
-import { REDIS_PARTIAL_INFO } from '@kong-ui-public/forms'
+import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
 
 const emit = defineEmits<{
   (e: 'cancel'): void

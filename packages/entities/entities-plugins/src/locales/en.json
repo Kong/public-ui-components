@@ -635,7 +635,7 @@
       }
     }
   },
-    "redis": {
+  "redis": {
     "title": "Redis Configuration",
     "shared_configuration": {
       "label": "Use shared configuration",
@@ -646,12 +646,19 @@
       "configuration_selector_label": "Select stored Redis configuration",
       "configuration_selector_placeholder": "Pick Redis configuration",
       "create_new_configuration": "New {type} shared configuration",
+      "open_source": "Open Source",
+      "enterprise": "Enterprise",
       "empty_state": "No shared configurations",
       "badge": "Recommended",
       "selector": {
         "title": "Select a Redis configuration",
         "placeholder": "Filter Configurations",
         "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins."
+      },
+      "type_label": {
+        "host_port": "Host/Port",
+        "sentinel": "Sentinel",
+        "cluster": "Cluster"
       }
     },
     "dedicated_configuration": {

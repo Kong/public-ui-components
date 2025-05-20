@@ -1,4 +1,4 @@
-import type { ComponentPublicInstance } from 'vue'
+import type { ComponentPublicInstance, Ref } from 'vue'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -97,4 +97,9 @@ export interface RedisSentinelNode {
 export interface RedisClusterNode {
   ip: string
   port?: number | null
+}
+
+export type PartialInfo = {
+  redisType: Ref<RedisPartialType | undefined>
+  redisPath: Ref<string | undefined>
 }
