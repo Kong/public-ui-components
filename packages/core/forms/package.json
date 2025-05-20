@@ -64,7 +64,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.4",
-    "@kong/kongponents": "9.31.9-pr.2746.e6b9cb7a2.0",
+    "@kong/kongponents": "9.32.2-pr.2746.3879fd545.0",
     "@types/lodash-es": "^4.17.12",
     "pug": "^3.0.3"
   },
