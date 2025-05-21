@@ -270,12 +270,12 @@
               type="text"
             />
             <KSelect
-              v-model="configFields[VaultProviders.HCV].auth_method as any"
+              v-model="configFields[VaultProviders.HCV].auth_method"
               data-testid="vault-form-config-hcv-auth_method"
               :items="[
-                { label: VaultAuthMethods.TOKEN, value: VaultAuthMethods.TOKEN },
-                { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S},
-                ...(config.hcvAppRoleMethodAvailable ? [{ label: VaultAuthMethods.APP_ROLE, value: VaultAuthMethods.APP_ROLE }] : []),
+                { label: VaultAuthMethods.TOKEN, value: VaultAuthMethods.TOKEN as string },
+                { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S as string },
+                ...(config.hcvAppRoleMethodAvailable ? [{ label: VaultAuthMethods.APP_ROLE, value: VaultAuthMethods.APP_ROLE as string }] : []),
               ]"
               :label="t('form.config.hcv.fields.auth_method.label')"
               :readonly="form.isReadonly"
