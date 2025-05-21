@@ -174,7 +174,7 @@ import {
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
-import { FORM_EDITING, REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
+import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -312,7 +312,6 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
 const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
-provide(FORM_EDITING, isEditing)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
 const loadedSchema = ref<Record<string, any> | undefined>(undefined)
 const finalSchema = ref<Record<string, any> | undefined>(undefined)
@@ -324,6 +323,7 @@ const pluginRedisPath = ref<string | undefined>() // specify the path to the red
 provide(REDIS_PARTIAL_INFO, {
   redisType: pluginPartialType,
   redisPath: pluginRedisPath,
+  isEditing: isEditing.value,
 })
 const formLoading = ref(false)
 const formFieldsOriginal = reactive<PluginFormFields>({

@@ -102,4 +102,5 @@ export interface RedisClusterNode {
 export type PartialInfo = {
   redisType: Ref<RedisPartialType | undefined>
   redisPath: Ref<string | undefined>
+  isEditing: boolean
 }

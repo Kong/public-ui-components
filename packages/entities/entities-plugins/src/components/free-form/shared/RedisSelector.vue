@@ -140,7 +140,7 @@ import { AddIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents/dist/types'
 import { useAxios, useDebouncedFilter, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RedisConfig, RedisPartialType, Redis } from './types'
-import { partialEndpoints, fieldsOrder, REDIS_PARTIAL_INFO, FORM_EDITING } from './const'
+import { partialEndpoints, fieldsOrder, REDIS_PARTIAL_INFO } from './const'
 import { getRedisType, getPartialTypeDisplay } from './utils'
 import { useField, useFormData } from './composables'
 defineEmits<{
@@ -160,8 +160,8 @@ type PartialArray = Array<{ id: string | number, path?: string | undefined }>
 const props = defineProps<RedisSelectorProps>()
 
 const redisPartialFetcherKey: Ref<number> = inject(REDIS_PARTIAL_FETCHER_KEY, ref(0))
-const isFormEditing = inject(FORM_EDITING, ref(false))
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
+const isFormEditing = redisPartialInfo?.isEditing || false
 const formRedisPath = computed(() => {
   if (props.redisPath) {
     return props.redisPath
@@ -175,7 +175,7 @@ const redisType = props.redisType || redisPartialInfo?.redisType?.value || 'all'
 // controls the visibility of the redis partial selector
 const useRedisPartial = computed(() => !!redisPartialInfo?.redisType?.value)
 const selectedRedisConfig = ref(null)
-const usePartial = ref(!isFormEditing.value)
+const usePartial = ref(!isFormEditing)
 const { getMessageFromError } = useErrors()
 
 const selectedRedisConfigItem = ref<string | number | undefined>(props.defaultRedisConfigItem)
@@ -255,7 +255,7 @@ const handleFormRedisPartialData = () => {
       partialsSaved.value = partialValue.value as PartialArray
     }
     // unset redis partial value in the form
-    partialValue!.value = isFormEditing.value ? null : undefined
+    partialValue!.value = isFormEditing ? null : undefined
   }
 }
 
