@@ -1,10 +1,6 @@
-export interface RequestCalloutPlugin {
-  config?: RequestCallout
-  partials?: Array<{ id: string }>
-  instance_name?: string
-  protocols?: string[]
-  tags?: string[]
-}
+import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+
+export type RequestCalloutPlugin = FreeFormPluginData<RequestCallout>
 
 export interface RequestCallout {
   callouts: Callout[]
