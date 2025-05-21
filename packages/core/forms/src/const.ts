@@ -4,6 +4,8 @@ export const FORMS_CONFIG = 'kong-ui-forms-config'
 
 export const REDIS_PARTIAL_FETCHER_KEY = 'redis-partial-list-fetcher-key'
 
+export const REDIS_PARTIAL_INFO = 'redis-partial-info'
+
 /** Used by `template` and `slot` */
 export const AUTOFILL_SLOT_NAME = 'autofill'
 
