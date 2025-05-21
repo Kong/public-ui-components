@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.21.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.21.0...@kong-ui-public/entities-plugins@9.21.1) (2025-05-21)
+
+
+### Bug Fixes
+
+* **free-form:** scope data overwritten by free form ([#2137](https://github.com/Kong/public-ui-components/issues/2137)) ([2172906](https://github.com/Kong/public-ui-components/commit/2172906091b261d608b3967a86dcce8d025e32b7))
+
+
+
+
+
 # [9.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.20.9...@kong-ui-public/entities-plugins@9.21.0) (2025-05-21)
 
 
