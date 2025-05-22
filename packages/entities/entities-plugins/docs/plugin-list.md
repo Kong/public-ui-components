@@ -206,12 +206,6 @@ The table is rendered inside a `KCard`. `title` text is displayed in the upper l
 
 HTML element you want title to be rendered as. Defaults to `h2`.
 
-#### `enableV2EmptyStates`
-- type: `boolean`
-- default: `false`
-
-Enables the new empty state design, this prop can be removed when the khcp-14756-empty-states-m2 FF is removed.
-
 ### Events
 
 #### error
