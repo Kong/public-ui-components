@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.5...@kong-ui-public/analytics-chart@9.0.6) (2025-05-22)
+
+
+### Bug Fixes
+
+* **analytics-chart:** horizontal chart legend margin [MA-3841] ([#2136](https://github.com/Kong/public-ui-components/issues/2136)) ([60c77e6](https://github.com/Kong/public-ui-components/commit/60c77e659d535791029009d93667463eab76b8bf))
+
+
+
+
+
 ## [9.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.4...@kong-ui-public/analytics-chart@9.0.5) (2025-05-22)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
