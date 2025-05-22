@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.18.2...@kong-ui-public/entities-vaults@3.19.0) (2025-05-22)
+
+
+### Features
+
+* **entities-vault:** adjustment fields of conjur [KM-1191] ([#2122](https://github.com/Kong/public-ui-components/issues/2122)) ([d291a5d](https://github.com/Kong/public-ui-components/commit/d291a5d60bbcf16051e57cff5b556dffcd825164))
+
+
+
+
+
 ## [3.18.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.18.1...@kong-ui-public/entities-vaults@3.18.2) (2025-05-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
