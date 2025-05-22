@@ -143,7 +143,7 @@ const props = defineProps({
     }),
   },
   initialFetcherParams: {
-    type: Object as PropType<Partial<Omit<TableDataFetcherParams, 'query'>>>,
+    type: Object as PropType<Partial<Omit<TableDataFetcherParams<string, string>, 'query'>>>,
     default: null,
   },
   rowKey: {
@@ -397,7 +397,7 @@ const { setTablePreferences, getTablePreferences } = useTablePreferences()
 
 const tablePreferences = ref<TablePreferences>(getTablePreferences(cacheId.value, props.defaultTablePreferences))
 
-const combinedInitialFetcherParams = computed((): Partial<TableDataFetcherParams> => {
+const combinedInitialFetcherParams = computed((): Partial<TableDataFetcherParams<string, string>> => {
   // Pass the preferencesStorageKey regardless; if no entry is found, it will return the default
   const userTablePreferences = getTablePreferences(cacheId.value)
   // Return the props.initialFetcherParams, appending any stored user preferences

@@ -86,17 +86,17 @@ const emit = defineEmits<{
 
 const { i18n: { t } } = composables.useI18n()
 
-const headers: TableViewHeader[] = [
+const headers = [
   { key: 'name', label: t('linked_plugins_modal.headers.plugin') },
   { key: 'instance_name', label: t('linked_plugins_modal.headers.instance_name') },
   { key: 'actions', hideLabel: true },
-]
+] as const satisfies TableViewHeader[]
 
 const { fetcher: linksFetcher } = useLinkedPluginsFetcher(props.config)
 
 const totalCount = ref(0)
 
-const fetcher = async (param: TableDataFetcherParams): Promise<any> => {
+const fetcher = async (param: TableDataFetcherParams<any, string>) => {
   const { data, count } = await linksFetcher({
     partialId: props.partialId,
     size: param.pageSize,

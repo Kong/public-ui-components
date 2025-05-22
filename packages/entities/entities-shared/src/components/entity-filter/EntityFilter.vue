@@ -161,7 +161,7 @@ const emit = defineEmits<{
 }>()
 
 const showMenu = ref(false)
-const searchParams = ref<{ [key: string]: string | number }>({})
+const searchParams = ref<{ [key: string]: string }>({})
 const expandedFields = ref<Set<string>>(new Set())
 
 const filteredFields = computed<string[]>(() => {
@@ -198,8 +198,11 @@ const toggleMenu = () => {
 }
 
 const toggleExpanded = (field: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  expandedFields.value.has(field) ? expandedFields.value.delete(field) : expandedFields.value.add(field)
+  if (expandedFields.value.has(field)) {
+    expandedFields.value.delete(field)
+  } else {
+    expandedFields.value.add(field)
+  }
 }
 
 const handleQueryUpdate = (query: string) => {
