@@ -1095,6 +1095,7 @@ const getPayload = computed((): Record<string, any> => {
     kv: configFields[VaultProviders.HCV].kv,
     namespace: configFields[VaultProviders.HCV].namespace || null,
     auth_method: configFields[VaultProviders.HCV].auth_method,
+    ...(props.config.base64FieldAvailable && { base64_decode: configFields[VaultProviders.HCV].base64_decode }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN && { token: configFields[VaultProviders.HCV].token }),
     // For Kong Admin API, when auth_method is kubernetes, token must be in the request body and its value has to be null
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S && {
