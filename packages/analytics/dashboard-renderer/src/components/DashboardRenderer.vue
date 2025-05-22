@@ -1,15 +1,18 @@
 <template>
-  <div class="kong-ui-public-dashboard-renderer">
+  <div
+    class="kong-ui-public-dashboard-renderer"
+    :class="{ editable: context.editable }"
+  >
     <KAlert
       v-if="!queryBridge"
       appearance="danger"
     >
       {{ i18n.t('renderer.noQueryBridge') }}
     </KAlert>
-    <component
-      :is="context.editable ? DraggableGridLayout : GridLayout"
+    <DraggableGridLayout
       v-else
       ref="gridLayoutRef"
+      :editable="context.editable"
       :grid-size="model.gridSize"
       :tile-height="model.tileHeight"
       :tiles="gridTiles"
@@ -30,14 +33,16 @@
           :height="tile.layout.size.rows * (model.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
           :query-ready="queryReady"
           :refresh-counter="refreshCounter"
+          :tile="tile"
           :tile-id="tile.id"
+          @chart-data="onChartData"
           @duplicate-tile="onDuplicateTile(tile)"
           @edit-tile="onEditTile(tile)"
           @remove-tile="onRemoveTile(tile)"
           @zoom-time-range="emit('zoom-time-range', $event)"
         />
       </template>
-    </component>
+    </DraggableGridLayout>
   </div>
 </template>
 
@@ -45,10 +50,9 @@
 import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
 import type { AbsoluteTimeRangeV4, DashboardConfig, TileConfig, SlottableOptions, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, nextTick } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import composables from '../composables'
-import GridLayout from './layout/GridLayout.vue'
 import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
 import type { AnalyticsBridge, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
@@ -236,6 +240,11 @@ const onRemoveTile = (tile: GridTile<TileDefinition>) => {
   }
 }
 
+const onChartData = async () => {
+  await nextTick()
+  gridLayoutRef.value.redraw()
+}
+
 const refreshTiles = () => {
   refreshCounter.value++
 }
@@ -265,11 +274,14 @@ defineExpose({ refresh: refreshTiles })
     background: var(--kui-color-background-transparent, $kui-color-background-transparent);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
-    height: 100%;
 
     &.slottable-tile {
       padding: var(--kui-space-60, $kui-space-60);
     }
+  }
+
+  &.editable .tile-container {
+    height: 100%;
   }
 }
 </style>

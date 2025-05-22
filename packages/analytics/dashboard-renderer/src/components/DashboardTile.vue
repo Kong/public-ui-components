@@ -116,7 +116,7 @@
 </template>
 <script setup lang="ts">
 import type { DashboardRendererContextInternal } from '../types'
-import { type DashboardTileType, formatTime, type TileDefinition, TimePeriods } from '@kong-ui-public/analytics-utilities'
+import { type DashboardTileType, formatTime, type TileDefinition, type TileConfig, TimePeriods } from '@kong-ui-public/analytics-utilities'
 import { type Component, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
@@ -144,6 +144,7 @@ const props = withDefaults(defineProps<{
   height?: number
   queryReady: boolean
   refreshCounter: number
+  tile: TileConfig
   tileId: string | number
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
@@ -154,6 +155,7 @@ const emit = defineEmits<{
   (e: 'duplicate-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
+  (e: 'chart-data', data: ExploreResultV4)
 }>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
@@ -289,6 +291,7 @@ const removeTile = () => {
 
 const onChartData = (data: ExploreResultV4) => {
   chartData.value = data
+  emit('chart-data', data)
 }
 
 const setExportModalVisibility = (val: boolean) => {
@@ -304,7 +307,6 @@ const exportCsv = () => {
 .tile-boundary {
   display: flex;
   flex-direction: column;
-  height: v-bind('`${height}px`');
   overflow: hidden;
 
   &.editable:hover {
