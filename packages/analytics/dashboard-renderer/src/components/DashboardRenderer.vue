@@ -10,7 +10,6 @@
       :is="context.editable ? DraggableGridLayout : GridLayout"
       v-else
       ref="gridLayoutRef"
-      :grid-size="model.gridSize"
       :tile-height="model.tileHeight"
       :tiles="gridTiles"
       @update-tiles="handleUpdateTiles"
@@ -249,9 +248,6 @@ const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
     } as TileConfig
   })
 
-  // Update `rows` to match the number of tiles we've placed.
-  // `columns` remains fixed; this is set by design requirements rather than the number of tiles.
-  model.value.gridSize.rows = Math.max(1, ...updatedTiles.map(t => t.layout.position.row + t.layout.size.rows))
   model.value.tiles = updatedTiles.sort(tileSortFn)
 }
 

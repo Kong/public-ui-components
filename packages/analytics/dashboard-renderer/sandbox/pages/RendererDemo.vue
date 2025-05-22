@@ -64,10 +64,6 @@ const context: DashboardRendererContext = {
 }
 
 const dashboardConfig = ref <DashboardConfig>({
-  gridSize: {
-    cols: 6,
-    rows: 7,
-  },
   tileHeight: 167,
   tiles: [
     {

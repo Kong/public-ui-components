@@ -58,7 +58,7 @@ const evaluateFeatureFlagFn = () => true
 
 const exploreBaseUrl = async () => 'https://cloud.konghq.tech/us/analytics/explorer'
 
-const fetchComponent = async (name: string): Promise<Component> => {
+const fetchComponent = async (): Promise<Component> => {
   return Promise.resolve(EntityLink)
 }
 

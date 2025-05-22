@@ -2,16 +2,12 @@ import { describe, it, expect } from 'vitest'
 import Ajv from 'ajv'
 import { dashboardConfigSchema } from '@kong-ui-public/analytics-utilities'
 
-const ajv = new Ajv()
+const ajv = new Ajv({ allowUnionTypes: true })
 const validate = ajv.compile(dashboardConfigSchema)
 
 describe('Dashboard schemas', () => {
   it('successfully validates bar chart schemas', () => {
     const definition: any = {
-      gridSize: {
-        cols: 2,
-        rows: 2,
-      },
       tiles: [
         {
           definition: {
@@ -41,10 +37,6 @@ describe('Dashboard schemas', () => {
 
   it('successfully validates gauge chart schemas', () => {
     const definition: any = {
-      gridSize: {
-        cols: 2,
-        rows: 2,
-      },
       tiles: [
         {
           definition: {
