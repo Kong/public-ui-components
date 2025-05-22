@@ -6,7 +6,7 @@
     :message="field.error.message"
   />
 
-  <div v-else>
+  <template v-else>
     <InputComponent
       class="ff-string-field"
       v-bind="{
@@ -36,7 +36,7 @@
       :update="handleUpdate"
       :value="fieldValue ?? ''"
     />
-  </div>
+  </template>
 </template>
 
 <script setup lang="ts">
