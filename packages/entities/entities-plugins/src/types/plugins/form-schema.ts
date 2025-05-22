@@ -31,6 +31,8 @@ export interface FieldSchema {
 export interface StringFieldSchema extends FieldSchema {
   type: 'string'
 
+  auto?: boolean
+
   encrypted?: boolean
 
   one_of?: string[]
