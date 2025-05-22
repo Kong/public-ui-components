@@ -40,7 +40,7 @@ import RedisField from './RedisField.vue'
 
 import type { FormConfig } from '../shared/types'
 import type { FormSchema } from '../../../types/plugins/form-schema'
-import type { FreeFormPluginData } from 'src/types/plugins/free-form'
+import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 
 defineProps<{
   schema: FormSchema
