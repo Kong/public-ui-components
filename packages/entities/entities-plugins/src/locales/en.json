@@ -753,5 +753,62 @@
       "cp_group_label": "Control Plane",
       "realm_group_label": "Realms (Can only select one)"
     }
+  },
+  "rla": {
+    "window_type": {
+      "label": "Rate Limit Window Type",
+      "help": "Sets the time window type to either <code>sliding</code> (default) or <code>fixed</code>.<br><ul><li>Sliding windows apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight.</li><li>Fixed windows consist of buckets that are statically assigned to a definitive time range, each request is mapped to only one fixed window based on its timestamp and will affect only that window&#39;s counters.</li></ul>",
+      "options": {
+        "fixed": "Fixed",
+        "sliding": "Sliding"
+      }
+    },
+    "request_limits": {
+      "title": "Request Limits",
+      "subtitle": "Set one or more limits on the number of API requests allowed within a defined timeframe.",
+      "label": "Limit",
+      "label_index": "Limit {index}",
+      "request_number": "Request number",
+      "time_interval": "Time interval",
+      "interval_determiner": "Every",
+      "seconds": "Seconds"
+    },
+    "error_message": {
+      "label": "Error Message",
+      "code_placeholder": "Code Message",
+      "message_placeholder": "Error Message",
+      "help": "Set a custom error code and message to be returned when the rate limit is exceeded."
+    },
+    "start_with_a_use_case": "Start with a use case:",
+    "use_cases": {
+      "fixed": {
+        "hourly_500": {
+          "label": "500 requests every hour",
+          "description": "A fixed limit of 500 requests per hour resetting sharply on the hour, ensuring no user can exceed this limit."
+        },
+        "half_hourly_200": {
+          "label": "200 requests every 30 minutes",
+          "description": "Users are allowed 200 requests per 30 minutes, resetting exactly on the 30 minute mark with no carryover of unused limits."
+        },
+        "daily_500": {
+          "label": "500 requests every day",
+          "description": "A strict limit of 5000 requests per day resetting promptly at midnight, preventing any burst traffic or inconsistent user experiences."
+        }
+      },
+      "sliding": {
+        "hourly_100": {
+          "label": "100 requests every hour",
+          "description": "Maximum of 100 requests every rolling hour, continuously adjusting the count over the course of the hour. No hard limit or known reset."
+        },
+        "half_hourly_300": {
+          "label": "300 requests every 30 minutes",
+          "description": "Each user can make up to 300 requests in any rolling 30 minute period, with older requests dropping off as new requests are made."
+        },
+        "hourly_500": {
+          "label": "500 requests every hour",
+          "description": "Each user is allowed 500 requests per hour. \nIf the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) \nwill extend the wait time by about 12 minutes, continuously adjusting as new requests are made."
+        }
+      }
+    }
   }
 }

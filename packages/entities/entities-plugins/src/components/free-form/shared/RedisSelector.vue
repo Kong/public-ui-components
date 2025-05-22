@@ -299,6 +299,7 @@ onBeforeMount(() => {
   if (props.defaultRedisConfigItem || partialValue?.value) {
     const defaultRedisConfigItem = props.defaultRedisConfigItem || partialValue?.value?.[0].id
     redisConfigSelected(defaultRedisConfigItem)
+    usePartial.value = true
   } else if (redisFieldsValue?.value) {
     redisFieldsSaved.value = redisFieldsValue.value
   }
