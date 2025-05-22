@@ -126,11 +126,12 @@ export interface AzureVaultConfig {
   base64_decode?: boolean
 }
 
-export interface ConjurVaultConfig { // todo(zehao): which fields are required?
-  endpoint_url?: string
+export interface ConjurVaultConfig {
+  endpoint_url: string
+  auth_method: 'default'
   login?: string
   account?: string
-  api_token?: string
+  api_key?: string
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
