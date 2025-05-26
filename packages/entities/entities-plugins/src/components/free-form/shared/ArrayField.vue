@@ -131,6 +131,7 @@
 </template>
 
 <script setup lang="ts" generic="T">
+import { uniqueId } from 'lodash-es'
 import { useTemplateRef, nextTick, computed, ref, toValue, toRef } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
