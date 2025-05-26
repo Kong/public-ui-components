@@ -191,7 +191,6 @@ const exploreLink = computed(() => {
   const excludedDimensions = new Set(hasPortalAnalyticsAccess ? [] : ['portal', 'api'])
 
   if (filters.some(filter =>
-    ('dimension' in filter && excludedDimensions.has(filter.dimension)) ||
     ('field' in filter && excludedDimensions.has(filter.field))) ||
     dimensions.some(dim => excludedDimensions.has(dim))
   ) {

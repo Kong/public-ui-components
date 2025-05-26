@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.0...@kong-ui-public/analytics-metric-provider@8.9.1) (2025-05-22)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+# [8.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.8.0...@kong-ui-public/analytics-metric-provider@8.9.0) (2025-05-20)
+
+
+### Features
+
+* **analytics:** update small metric card styling [MA-3932] ([#2127](https://github.com/Kong/public-ui-components/issues/2127)) ([ebb60e5](https://github.com/Kong/public-ui-components/commit/ebb60e5d274033ab27c102646bff3e10f9ddac09))
+
+
+
+
+
 # [8.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.7.27...@kong-ui-public/analytics-metric-provider@8.8.0) (2025-05-15)
 
 

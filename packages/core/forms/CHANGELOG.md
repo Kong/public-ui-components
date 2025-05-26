@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.12.12...@kong-ui-public/forms@4.13.0) (2025-05-21)
+
+
+### Features
+
+* **free-form:** unified redis selector ([#2117](https://github.com/Kong/public-ui-components/issues/2117)) ([05123c1](https://github.com/Kong/public-ui-components/commit/05123c19edeeeefe5b43b1c0f15da590b5309db7))
+
+
+
+
+
+## [4.12.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.12.11...@kong-ui-public/forms@4.12.12) (2025-05-21)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.12.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.12.10...@kong-ui-public/forms@4.12.11) (2025-05-19)
 
 **Note:** Version bump only for package @kong-ui-public/forms

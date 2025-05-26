@@ -21,11 +21,11 @@
       :fetcher-cache-key="String(fetcherCacheKey)"
       :headers="headers"
       :hide-pagination="hidePagination"
-      hide-pagination-when-optional
+      :hide-pagination-when-optional="hidePaginationWhenOptional"
       :hide-toolbar="hideToolbar ?? hideTableToolbar"
       :initial-fetcher-params="combinedInitialFetcherParams"
       :loading="isLoading"
-      :pagination-attributes="{ disablePageJump: disablePaginationPageJump, offset: paginationType === 'offset' }"
+      :pagination-attributes="tablePaginationAttributes"
       resize-columns
       :row-attrs="rowAttrs"
       :row-key="rowKey"
@@ -113,7 +113,7 @@ import { computed, ref } from 'vue'
 import type { TableStateParams } from '../../types'
 import composables from '../../composables'
 import { useTablePreferences } from '@kong-ui-public/core'
-import type { HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams, TableDataProps } from '@kong/kongponents'
+import type { HeaderTag, TablePreferences, SortHandlerFunctionParam, TableDataFetcherParams, TableDataProps, TablePaginationAttributes } from '@kong/kongponents'
 import EntityBaseTableCell from './EntityBaseTableCell.vue'
 
 import type {
@@ -196,16 +196,16 @@ const props = defineProps({
     type: [String, Object] as PropType<string | TableErrorMessage>,
     default: null,
   },
-  disablePaginationPageJump: {
+  paginationAttributes: {
+    type: Object as PropType<TablePaginationAttributes>,
+    default: () => ({}),
+  },
+  hidePaginationWhenOptional: {
     type: Boolean,
-    default: undefined,
+    default: true,
   },
   disableSorting: {
     type: Boolean,
-    default: undefined,
-  },
-  paginationType: {
-    type: String as PropType<'default' | 'offset'>,
     default: undefined,
   },
   // A function for applying attributes to cells
@@ -249,6 +249,32 @@ const props = defineProps({
   hideToolbar: {
     type: Boolean,
     default: undefined,
+  },
+  /**
+   * @deprecated in favour of `paginationAttributes`
+   */
+  disablePaginationPageJump: {
+    type: Boolean,
+    default: undefined,
+    validator: (value: boolean) => {
+      if (value) {
+        console.warn('EntityBaseTable: `disablePaginationPageJump` is deprecated in favour of `paginationAttributes`. Please update your code to use `paginationAttributes` instead.')
+      }
+      return typeof value === 'boolean'
+    },
+  },
+  /**
+   * @deprecated in favour of `paginationAttributes`
+   */
+  paginationType: {
+    type: String as PropType<'default' | 'offset'>,
+    default: undefined,
+    validator: (value: string) => {
+      if (value) {
+        console.warn('EntityBaseTable: `paginationType` is deprecated in favour of `paginationAttributes`. Please update your code to use `paginationAttributes` instead.')
+      }
+      return ['default', 'offset'].includes(value)
+    },
   },
 })
 
@@ -398,6 +424,12 @@ const handleUpdateTablePreferences = (newTablePreferences: TablePreferences): vo
     setTablePreferences(cacheId.value, newTablePreferences)
   }
 }
+
+const tablePaginationAttributes = computed((): TablePaginationAttributes => ({
+  disablePageJump: props.disablePaginationPageJump,
+  offset: props.paginationType === 'offset',
+  ...props.paginationAttributes,
+}))
 </script>
 
 <style lang="scss" scoped>

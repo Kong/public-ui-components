@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.21.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.21.2...@kong-ui-public/entities-plugins@9.21.3) (2025-05-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.21.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.21.1...@kong-ui-public/entities-plugins@9.21.2) (2025-05-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.21.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.21.0...@kong-ui-public/entities-plugins@9.21.1) (2025-05-21)
+
+
+### Bug Fixes
+
+* **free-form:** scope data overwritten by free form ([#2137](https://github.com/Kong/public-ui-components/issues/2137)) ([2172906](https://github.com/Kong/public-ui-components/commit/2172906091b261d608b3967a86dcce8d025e32b7))
+
+
+
+
+
+# [9.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.20.9...@kong-ui-public/entities-plugins@9.21.0) (2025-05-21)
+
+
+### Features
+
+* **free-form:** unified redis selector ([#2117](https://github.com/Kong/public-ui-components/issues/2117)) ([05123c1](https://github.com/Kong/public-ui-components/commit/05123c19edeeeefe5b43b1c0f15da590b5309db7))
+
+
+
+
+
+## [9.20.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.20.8...@kong-ui-public/entities-plugins@9.20.9) (2025-05-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.20.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.20.7...@kong-ui-public/entities-plugins@9.20.8) (2025-05-20)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

@@ -339,8 +339,11 @@
           "login": {
             "label": "Login"
           },
-          "api_token": {
-            "label": "API Token"
+          "api_key": {
+            "label": "API Key"
+          },
+          "account": {
+            "label": "Account"
           }
         }
       },

@@ -1,10 +1,6 @@
-export interface RequestCalloutPlugin {
-  config?: RequestCallout
-  partials?: Array<{ id: string }>
-  instance_name?: string
-  protocols?: string[]
-  tags?: string[]
-}
+import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+
+export type RequestCalloutPlugin = FreeFormPluginData<RequestCallout>
 
 export interface RequestCallout {
   callouts: Callout[]
@@ -59,6 +55,23 @@ export interface Redis {
   server_name?: string | null
   cluster_max_redirections?: number | null
   connection_is_proxied?: boolean
+}
+
+export type RedisPartialType = 'redis-ce' | 'redis-ee'
+
+export type RedisTypeDisplay = 'Host/Port' | 'Sentinel' | 'Cluster'
+
+export interface RedisConfig {
+  name: string
+  type: RedisPartialType
+  config: Redis
+}
+
+export interface FlattendRedisConfigurationFields extends Redis {
+  name: string
+  created_at: string
+  updated_at: string
+  type: RedisPartialType
 }
 
 export interface RedisSentinelNode {

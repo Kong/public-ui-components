@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { cloneDeep, omit } from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 import { FIELD_RENDERERS } from '../shared/composables'
 import { getCalloutId } from './utils'
 import ArrayField from '../shared/ArrayField.vue'
@@ -114,7 +114,7 @@ function getNameMap(callouts: Callout[], reverse: boolean = false) {
 
 // replace callout names in `depends_on` with freshly generated ids
 function prepareFormData(data: RequestCalloutPlugin) {
-  const pluginConfig = omit(cloneDeep(data), 'created_at', 'updated_at', 'id')
+  const pluginConfig = cloneDeep(data)
 
   if (!pluginConfig.config?.callouts) {
     return pluginConfig

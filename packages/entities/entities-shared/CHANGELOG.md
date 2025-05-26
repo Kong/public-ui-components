@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.23.0...@kong-ui-public/entities-shared@3.24.0) (2025-05-21)
+
+
+### Features
+
+* **entities-shared:** replace pagination props ([#2128](https://github.com/Kong/public-ui-components/issues/2128)) ([52abfd6](https://github.com/Kong/public-ui-components/commit/52abfd69c6ffa7f03dbcb187bc3a113c3fca78a3))
+
+
+
+
+
 # [3.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.22.9...@kong-ui-public/entities-shared@3.23.0) (2025-05-19)
 
 
