@@ -383,7 +383,6 @@
                 :label="t('form.config.hcv.fields.cert_auth_role_name.label')"
                 :readonly="form.isReadonly"
                 required
-                type="text"
               />
               <KTextArea
                 v-model.trim="configFields[VaultProviders.HCV].cert_auth_cert"
