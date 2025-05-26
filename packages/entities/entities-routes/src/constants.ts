@@ -1,35 +1,33 @@
-import { RoutingRulesEntities, type Destinations, type ExpressionsRouteRulesFields, type HeaderFields, type MethodsFields, type SharedRouteRulesFields, type Sources, type TraditionalRouteRulesFields } from './types'
+import {
+  RoutingRulesEntities,
+  type Destinations,
+  type ExpressionsRouteRulesFields,
+  type HeaderFields,
+  type Method,
+  type SharedRouteRulesFields,
+  type Sources,
+  type TraditionalRouteRulesFields,
+} from './types'
 
 export const INITIAL_TRADITIONAL_ROUTE_RULES_VALUES = {
   [RoutingRulesEntities.PATHS]: [''] as string[],
   [RoutingRulesEntities.SNIS]: [''] as string[],
   [RoutingRulesEntities.HOSTS]: [''] as string[],
-  [RoutingRulesEntities.METHODS]: {
-    GET: false,
-    PUT: false,
-    POST: false,
-    PATCH: false,
-    DELETE: false,
-    OPTIONS: false,
-    HEAD: false,
-    CONNECT: false,
-    TRACE: false,
-    CUSTOM: false,
-  } as MethodsFields,
+  [RoutingRulesEntities.METHODS]: [] as Method[],
   [RoutingRulesEntities.HEADERS]: [{ header: '', values: '' }] as HeaderFields[],
   [RoutingRulesEntities.SOURCES]: [{ ip: '', port: null }] as unknown as Sources[],
   [RoutingRulesEntities.DESTINATIONS]: [{ ip: '', port: null }] as unknown as Destinations[],
 }
 
 export const PROTOCOLS_TO_ROUTE_RULES = {
-  http: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.METHODS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS],
-  https: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.METHODS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'http,https': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.METHODS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'https,http': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.METHODS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  grpc: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS],
-  grpcs: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'grpc,grpcs': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'grpcs,grpc': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
+  http: [RoutingRulesEntities.PATHS, RoutingRulesEntities.METHODS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS],
+  https: [RoutingRulesEntities.PATHS, RoutingRulesEntities.METHODS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
+  'http,https': [RoutingRulesEntities.PATHS, RoutingRulesEntities.METHODS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
+  'https,http': [RoutingRulesEntities.PATHS, RoutingRulesEntities.METHODS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
+  grpc: [RoutingRulesEntities.PATHS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS],
+  grpcs: [RoutingRulesEntities.PATHS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
+  'grpc,grpcs': [RoutingRulesEntities.PATHS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
+  'grpcs,grpc': [RoutingRulesEntities.PATHS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
   udp: [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS],
   tls: [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
   tcp: [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS],
@@ -43,10 +41,10 @@ export const PROTOCOLS_TO_ROUTE_RULES = {
   'tls,udp,tcp': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
   'udp,tcp,tls': [RoutingRulesEntities.SOURCES, RoutingRulesEntities.DESTINATIONS, RoutingRulesEntities.SNIS],
   tls_passthrough: [RoutingRulesEntities.SNIS],
-  ws: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS],
-  wss: [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'ws,wss': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
-  'wss,ws': [RoutingRulesEntities.HOSTS, RoutingRulesEntities.PATHS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
+  ws: [RoutingRulesEntities.PATHS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS],
+  wss: [RoutingRulesEntities.PATHS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
+  'ws,wss': [RoutingRulesEntities.PATHS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
+  'wss,ws': [RoutingRulesEntities.PATHS, RoutingRulesEntities.HOSTS, RoutingRulesEntities.HEADERS, RoutingRulesEntities.SNIS],
 } satisfies Record<string, string[]>
 
 export const HTTP_REDIRECT_STATUS_CODES = [

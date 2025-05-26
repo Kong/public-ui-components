@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.9.0...@kong-ui-public/entities-consumer-groups@3.9.1) (2025-05-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+# [3.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.8.9...@kong-ui-public/entities-consumer-groups@3.9.0) (2025-05-20)
+
+
+### Features
+
+* **consumer-groups:** stop fetching the consumers when no need ([#2134](https://github.com/Kong/public-ui-components/issues/2134)) ([af99764](https://github.com/Kong/public-ui-components/commit/af9976473b041d565aa2250596c0a03985fb08d1))
+
+
+
+
+
+## [3.8.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.8.8...@kong-ui-public/entities-consumer-groups@3.8.9) (2025-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
+## [3.8.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.8.7...@kong-ui-public/entities-consumer-groups@3.8.8) (2025-05-14)
+
+
+### Bug Fixes
+
+* **entities:** fetcher url reactivity ([#2120](https://github.com/Kong/public-ui-components/issues/2120)) ([16cbc20](https://github.com/Kong/public-ui-components/commit/16cbc20058a3acda085ebc18b16fb034104126c9))
+
+
+
+
+
 ## [3.8.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@3.8.6...@kong-ui-public/entities-consumer-groups@3.8.7) (2025-05-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups

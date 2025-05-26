@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.23.0...@kong-ui-public/entities-shared@3.24.0) (2025-05-21)
+
+
+### Features
+
+* **entities-shared:** replace pagination props ([#2128](https://github.com/Kong/public-ui-components/issues/2128)) ([52abfd6](https://github.com/Kong/public-ui-components/commit/52abfd69c6ffa7f03dbcb187bc3a113c3fca78a3))
+
+
+
+
+
+# [3.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.22.9...@kong-ui-public/entities-shared@3.23.0) (2025-05-19)
+
+
+### Features
+
+* **entities-shared:** add a prop to persist format preference ([#2131](https://github.com/Kong/public-ui-components/issues/2131)) ([52c1a6e](https://github.com/Kong/public-ui-components/commit/52c1a6e4d38cabd26faec69e8b606b87ad9f9f8d))
+
+
+
+
+
+## [3.22.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.22.8...@kong-ui-public/entities-shared@3.22.9) (2025-05-14)
+
+
+### Bug Fixes
+
+* **entities:** fetcher url reactivity ([#2120](https://github.com/Kong/public-ui-components/issues/2120)) ([16cbc20](https://github.com/Kong/public-ui-components/commit/16cbc20058a3acda085ebc18b16fb034104126c9))
+
+
+
+
+
 ## [3.22.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.22.7...@kong-ui-public/entities-shared@3.22.8) (2025-05-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

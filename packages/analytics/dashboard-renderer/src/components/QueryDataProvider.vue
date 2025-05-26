@@ -38,7 +38,7 @@ import type {
   AllFilters,
   AnalyticsBridge,
   DatasourceAwareQuery,
-  ExploreFilter,
+  ExploreFilterAll,
   ExploreQuery,
   ExploreResultV4,
   FilterTypeMap,
@@ -134,7 +134,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
       query: {
         ...rest as ExploreQuery,
         time_range,
-        filters: mergedFilters as ExploreFilter[],
+        filters: mergedFilters as ExploreFilterAll[],
       },
     }
 

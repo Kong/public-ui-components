@@ -36,51 +36,53 @@
     v-model="isAdvancedFieldsCollapsed"
     class="route-form-advanced-fields-collapse"
     trigger-alignment="leading"
-    :trigger-label="t('form.viewAdvancedFields')"
+    :trigger-label="t('form.show_more')"
   >
-    <div class="route-form-fields-container route-form-advanced-fields-container">
-      <KSelect
-        v-model="fields.https_redirect_status_code"
-        data-testid="route-form-http-redirect-status-code"
-        :items="HTTP_REDIRECT_STATUS_CODES"
-        :label="t('form.fields.https_redirect_status_code.label')"
-        :readonly="readonly"
-        width="100%"
-      />
-      <KInput
-        v-model="fields.priority"
-        autocomplete="off"
-        data-testid="route-form-priority"
-        :label="t('form.fields.priority.label')"
-        :label-attributes="{
-          info: t('form.fields.priority.tooltip'),
-          tooltipAttributes: { maxWidth: '400' },
-        }"
-        :readonly="readonly"
-        type="number"
-      />
-      <KCheckbox
-        v-if="isProtocolSelected(['http', 'https', 'ws', 'wss', 'tls', 'tcp', 'udp', 'tls_passthrough'])"
-        v-model="fields.strip_path"
-        data-testid="route-form-strip-path"
-        :label="t('form.fields.strip_path.label')"
-      />
-      <KCheckbox
-        v-model="fields.preserve_host"
-        data-testid="route-form-preserve-host"
-        :label="t('form.fields.preserve_host.label')"
-      />
-      <KCheckbox
-        v-model="fields.request_buffering"
-        data-testid="route-form-request-buffering"
-        :label="t('form.fields.request_buffering.label')"
-      />
-      <KCheckbox
-        v-model="fields.response_buffering"
-        data-testid="route-form-response-buffering"
-        :label="t('form.fields.response_buffering.label')"
-      />
-    </div>
+    <KCard>
+      <div class="route-form-fields-container route-form-advanced-fields-container">
+        <KSelect
+          v-model="fields.https_redirect_status_code"
+          data-testid="route-form-http-redirect-status-code"
+          :items="HTTP_REDIRECT_STATUS_CODES"
+          :label="t('form.fields.https_redirect_status_code.label')"
+          :readonly="readonly"
+          width="100%"
+        />
+        <KInput
+          v-model="fields.priority"
+          autocomplete="off"
+          data-testid="route-form-priority"
+          :label="t('form.fields.priority.label')"
+          :label-attributes="{
+            info: t('form.fields.priority.tooltip'),
+            tooltipAttributes: { maxWidth: '400' },
+          }"
+          :readonly="readonly"
+          type="number"
+        />
+        <KCheckbox
+          v-if="isProtocolSelected(['http', 'https', 'ws', 'wss', 'tls', 'tcp', 'udp', 'tls_passthrough'])"
+          v-model="fields.strip_path"
+          data-testid="route-form-strip-path"
+          :label="t('form.fields.strip_path.label')"
+        />
+        <KCheckbox
+          v-model="fields.preserve_host"
+          data-testid="route-form-preserve-host"
+          :label="t('form.fields.preserve_host.label')"
+        />
+        <KCheckbox
+          v-model="fields.request_buffering"
+          data-testid="route-form-request-buffering"
+          :label="t('form.fields.request_buffering.label')"
+        />
+        <KCheckbox
+          v-model="fields.response_buffering"
+          data-testid="route-form-response-buffering"
+          :label="t('form.fields.response_buffering.label')"
+        />
+      </div>
+    </KCard>
   </KCollapse>
 </template>
 

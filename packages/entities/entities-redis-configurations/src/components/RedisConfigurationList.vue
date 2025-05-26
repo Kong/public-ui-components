@@ -301,7 +301,7 @@ const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 const fetcherCacheKey = ref<number>(1)
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl)
 const { i18n: { t } } = composables.useI18n()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()

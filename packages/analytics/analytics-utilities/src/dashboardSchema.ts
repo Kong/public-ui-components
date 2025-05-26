@@ -334,32 +334,6 @@ const filtersFn = <T extends readonly string[]>(filterableDimensions: T) => ({
     oneOf: [
       {
         type: 'object',
-        description: 'A filter that specifies which data to include in the query',
-        properties: {
-          dimension: {
-            type: 'string',
-            enum: filterableDimensions,
-          },
-          type: {
-            type: 'string',
-            enum: exploreFilterTypesV2,
-          },
-          values: {
-            type: 'array',
-            items: {
-              type: ['string', 'number', 'null'],
-            },
-          },
-        },
-        required: [
-          'dimension',
-          'type',
-          'values',
-        ],
-        additionalProperties: false,
-      },
-      {
-        type: 'object',
         description: 'In filter',
         properties: {
           field: {
@@ -577,6 +551,7 @@ export const dashboardConfigSchema = {
       required: ['cols', 'rows'],
       additionalProperties: false,
     },
+    global_filter: filtersFn([...new Set([...filterableExploreDimensions, ...filterableBasicExploreDimensions, ...filterableAiExploreDimensions])]),
   },
   required: ['tiles', 'gridSize'],
   additionalProperties: false,

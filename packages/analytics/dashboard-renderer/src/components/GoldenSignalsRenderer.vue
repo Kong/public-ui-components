@@ -10,7 +10,7 @@ import type { RendererProps } from '../types'
 import type { MetricCardOptions } from '@kong-ui-public/analytics-utilities'
 import { MetricsProvider, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
 import { computed, type Ref } from 'vue'
-import { type ExploreFilter, Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
+import { type ExploreFilterAll, Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
 
 // Unlike AnalyticsChart, the metric card package doesn't currently expose its options
 // in a convenient interface.
@@ -56,7 +56,7 @@ const options = computed<ProviderProps>(() => {
     datasource: props.query?.datasource,
     overrideTimeframe: overrideTimeframe.value,
     tz: props.context.tz,
-    additionalFilter: props.context.filters as ExploreFilter[], // TODO: Decide how to handle metric card filters.
+    additionalFilter: props.context.filters as ExploreFilterAll[], // TODO: Decide how to handle metric card filters.
     longCardTitles: props.chartOptions.longCardTitles,
     percentileLatency: props.chartOptions.percentileLatency,
     refreshInterval: props.context.refreshInterval,

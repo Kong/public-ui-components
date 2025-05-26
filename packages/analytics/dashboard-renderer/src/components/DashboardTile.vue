@@ -158,6 +158,8 @@ const emit = defineEmits<{
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const { i18n } = composables.useI18n()
+const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
+const hasPortalAnalyticsAccess = evaluateFeatureFlag('ma-3630-portal-v3', false)
 
 const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
@@ -186,11 +188,9 @@ const exploreLink = computed(() => {
 
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
-  // TODO: remove once portal and api are available in Explore
-  const excludedDimensions = new Set(['portal', 'api'])
+  const excludedDimensions = new Set(hasPortalAnalyticsAccess ? [] : ['portal', 'api'])
 
   if (filters.some(filter =>
-    ('dimension' in filter && excludedDimensions.has(filter.dimension)) ||
     ('field' in filter && excludedDimensions.has(filter.field))) ||
     dimensions.some(dim => excludedDimensions.has(dim))
   ) {

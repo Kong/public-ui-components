@@ -365,7 +365,10 @@ const submitData = async (): Promise<void> => {
 }
 
 onBeforeMount(async () => {
-  await loadItems()
+  // when we hides the consumers selection field, there were no need to load the data
+  if (!props.hideConsumers) {
+    await loadItems()
+  }
 })
 </script>
 

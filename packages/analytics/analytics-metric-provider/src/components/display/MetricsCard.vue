@@ -1,5 +1,8 @@
 <template>
-  <div class="metricscard">
+  <div
+    class="metricscard"
+    :class="cardSize"
+  >
     <div
       class="metricscard-title"
       :class="cardSize"
@@ -248,6 +251,10 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
   @media (min-width: $kui-breakpoint-phablet) {
     height: 100%;
     justify-content: space-evenly;
+
+    &.sm:not(:last-child) {
+      border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    }
   }
 
   &:hover {
@@ -267,7 +274,9 @@ const hideTitleIcon = [MetricCardSize.Small].includes(props.cardSize)
 
     // The metric card title is always 14px; the "small" variant is the exception
     &.sm {
+      color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
       font-size: var(--kui-font-size-20, $kui-font-size-20);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     }
 
     &.md {

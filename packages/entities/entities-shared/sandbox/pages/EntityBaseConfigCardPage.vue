@@ -82,12 +82,14 @@ const konnectConfig = ref<KonnectBaseEntityConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   entityId,
+  formatPreferenceKey: 'konnect-entities-base-config-card-format-sandbox',
 })
 const kongManagerConfig = ref<KongManagerBaseEntityConfig>({
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   entityId,
+  formatPreferenceKey: 'kong-manager-entities-base-config-card-format-sandbox',
 })
 
 const configSchema = ref<ConfigurationSchema>({

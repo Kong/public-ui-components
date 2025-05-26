@@ -1,9 +1,14 @@
 <template>
   <div class="routing-rule-container">
-    <KLabel>{{ t('form.fields.paths.label') }}</KLabel>
+    <KLabel
+      :info="t('form.fields.paths.tooltip')"
+      :tooltip-attributes="{ maxWidth: '320' }"
+    >
+      {{ configType === 'basic' ? t('form.fields.paths.label_singular') : t('form.fields.paths.label') }}
+    </KLabel>
     <TransitionGroup name="appear">
       <div
-        v-for="_, index in paths"
+        v-for="_, index in (configType === 'basic' ? paths.slice(0, 1) : paths)"
         :key="index"
         class="routing-rule-input"
       >
@@ -12,21 +17,26 @@
           :data-testid="`route-form-paths-input-${index + 1}`"
           :placeholder="t('form.fields.paths.placeholder')"
         />
-        <RuleControls
-          :is-add-disabled="index !== paths.length - 1"
+        <RuleControlsRemove
+          :disabled="paths.length === 1"
           :routing-rules-entity="RoutingRulesEntities.PATHS"
-          @add="emit('add')"
           @remove="emit('remove', index)"
         />
       </div>
     </TransitionGroup>
+    <RuleControlsAdd
+      :routing-rules-entity="RoutingRulesEntities.PATHS"
+      @add="emit('add')"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue'
 import composables from '../../../composables'
 import { RoutingRulesEntities } from '../../../types'
-import RuleControls from './RuleControls.vue'
+import RuleControlsAdd from './RuleControlsAdd.vue'
+import RuleControlsRemove from './RuleControlsRemove.vue'
 
 const { i18n: { t } } = composables.useI18n()
 
@@ -36,6 +46,8 @@ const emit = defineEmits<{
   add: []
   remove: [index: number]
 }>()
+
+const configType = inject('configType', 'basic')
 </script>
 
 <style lang="scss" scoped>

@@ -66,11 +66,13 @@
         </template>
       </ObjectField>
     </ObjectField>
+
+    <AdvancedFields />
   </Form>
 </template>
 
 <script setup lang="ts">
-import { cloneDeep, pick } from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 import { FIELD_RENDERERS } from '../shared/composables'
 import { getCalloutId } from './utils'
 import ArrayField from '../shared/ArrayField.vue'
@@ -80,15 +82,13 @@ import Form from '../shared/Form.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import StringField from '../shared/StringField.vue'
 import useI18n from '../../../composables/useI18n'
+import AdvancedFields from '../shared/AdvancedFields.vue'
 
 import type { Callout, RequestCalloutPlugin } from './types'
 import type { FormConfig } from '../shared/types'
-import type { FormSchema } from '../../../types/plugins/form-schema'
+import type { ConfigFormProps } from '../shared/PluginFormWrapper.vue'
 
-defineProps<{
-  schema: FormSchema
-  data?: RequestCalloutPlugin
-}>()
+defineProps<ConfigFormProps<RequestCalloutPlugin>>()
 
 const emit = defineEmits<{
   change: [value: RequestCalloutPlugin]
@@ -114,7 +114,7 @@ function getNameMap(callouts: Callout[], reverse: boolean = false) {
 
 // replace callout names in `depends_on` with freshly generated ids
 function prepareFormData(data: RequestCalloutPlugin) {
-  const pluginConfig = pick(cloneDeep(data), 'config', 'partials')
+  const pluginConfig = cloneDeep(data)
 
   if (!pluginConfig.config?.callouts) {
     return pluginConfig
@@ -168,19 +168,3 @@ function onChange(newVal?: RequestCalloutPlugin) {
   emit('change', pluginConfig)
 }
 </script>
-
-<style lang="scss" scoped>
-:deep(.rc-code textarea) {
-  font-family: $kui-font-family-code !important;
-}
-
-:deep(.k-label) {
-  font-weight: $kui-font-weight-medium;
-}
-
-.rc-config-form {
-  display: flex;
-  flex-direction: column;
-  gap: $kui-space-100;
-}
-</style>

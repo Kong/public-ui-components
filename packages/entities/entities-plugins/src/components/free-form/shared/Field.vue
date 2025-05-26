@@ -47,6 +47,7 @@ import ObjectField from './ObjectField.vue'
 import NumberField from './NumberField.vue'
 import EnumField from './EnumField.vue'
 import KeyValueField from './KeyValueField.vue'
+import TagField from './TagField.vue'
 
 defineOptions({ name: 'AutoField' })
 
@@ -76,6 +77,9 @@ const fieldRenderer = computed(() => {
     case 'array':
       return ArrayField
     case 'set':
+      if (utils.isTagField(field.schema)) {
+        return TagField
+      }
       return EnumField
     case 'record':
       return ObjectField
