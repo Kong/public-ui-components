@@ -34,7 +34,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.4",
     "@kong/icons": "^1.26.0",
-    "@kong/kongponents": "9.32.3-pr.2746.05e593949.0",
+    "@kong/kongponents": "9.32.5-pr.2746.5e46f6a91.0",
     "@types/lodash.isequal": "^4.5.8",
     "axios": "^1.7.7",
     "vite-plugin-monaco-editor": "^1.1.0",
