@@ -14,7 +14,9 @@
     "view": "View Details",
     "configure_dynamic_ordering": "Configure Dynamic Ordering",
     "go_to_plugins": "Go to Plugins",
-    "save": "Save"
+    "save": "Save",
+    "add_entity": "Add {entity}",
+    "remove_entity": "Remove {entity}"
   },
   "view_configuration": {
     "title": "Configuration",
@@ -631,6 +633,7 @@
     },
     "free-form": {
       "request-callout": {
+        "entity_name": "Request Callout",
         "by_lua_placeholder": "Enter Lua script here..."
       }
     }
