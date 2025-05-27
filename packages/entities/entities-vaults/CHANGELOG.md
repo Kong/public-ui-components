@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.20.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.19.1...@kong-ui-public/entities-vaults@3.20.0) (2025-05-27)
+
+
+### Features
+
+* **vault:** add base64 field to conjur [KM-1306] ([#2143](https://github.com/Kong/public-ui-components/issues/2143)) ([33f3554](https://github.com/Kong/public-ui-components/commit/33f35543ab1d110d0638450337f9691276106137))
+
+
+
+
+
 ## [3.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.19.0...@kong-ui-public/entities-vaults@3.19.1) (2025-05-22)
 
 
