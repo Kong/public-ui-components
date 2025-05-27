@@ -25,6 +25,7 @@ import {
   summaryDashboardConfig,
   simpleConfigNoFilters,
   fourByFourDashboardConfigJustCharts, oneTileDashboardConfig,
+  simpleConfigGlobalFilters,
 } from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
 import { EntityLink } from '@kong-ui-public/entities-shared'
@@ -640,6 +641,54 @@ describe('<DashboardRenderer />', () => {
               field: 'api_product',
               operator: 'in',
               value: ['some product'],
+            },
+          ],
+        },
+      }))
+
+      // Check that it replaces the description token.
+      cy.get('.header-description').should('have.text', 'Last 7-Day Summary')
+    })
+  })
+
+  it('merges global filters', () => {
+    const props = {
+      context: {
+        filters: [
+          // Valid filter
+          {
+            field: 'api_product',
+            operator: 'in',
+            value: ['some product'],
+          },
+        ],
+      },
+      modelValue: simpleConfigGlobalFilters,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    }).then(() => {
+      // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
+      cy.get('@fetcher').should('have.callCount', 3)
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+        datasource: 'advanced',
+        query: {
+          filters: [
+            {
+              field: 'api_product',
+              operator: 'in',
+              value: ['some product'],
+            },
+            {
+              field: 'control_plane',
+              operator: 'in',
+              value: ['default_uuid'],
             },
           ],
         },
