@@ -170,8 +170,7 @@ const gridTiles = computed(() => {
 
 const mergedContext = computed<DashboardRendererContextInternal>(() => {
   let { tz, refreshInterval, editable } = props.context
-  const context = props.context
-  context.filters = [...(context.filters ?? []), ...(model.value.global_filters ?? [])] as AllFilters[]
+  const filters = [...(props.context.filters ?? []), ...(model.value.global_filters ?? [])] as AllFilters[]
 
   if (!tz) {
     tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
@@ -187,7 +186,7 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
   }
 
   return {
-    ...context,
+    filters,
     tz,
     timeSpec: timeSpec.value,
     refreshInterval,
