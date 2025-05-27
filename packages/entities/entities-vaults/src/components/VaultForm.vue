@@ -499,6 +499,17 @@
               show-password-mask-toggle
               type="password"
             />
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.CONJUR].base64_decode!"
+              data-testid="vault-form-config-env-base64_decode"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+            />
           </div>
 
           <div v-if="config.ttl">
@@ -812,6 +823,7 @@ const configFields = reactive<ConfigFields>({
   [VaultProviders.CONJUR]: {
     endpoint_url: '',
     auth_method: 'default',
+    ...base64FieldConfig,
   },
 })
 
@@ -863,6 +875,7 @@ const originalConfigFields = reactive<ConfigFields>({
   [VaultProviders.CONJUR]: {
     endpoint_url: '',
     auth_method: 'default',
+    ...base64FieldConfig,
   },
 })
 

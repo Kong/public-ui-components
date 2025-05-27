@@ -135,6 +135,7 @@ export interface ConjurVaultConfig {
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  base64_decode?: boolean
 }
 
 // allow for nullish values in payload because Kong Admin API treats null as an empty value
