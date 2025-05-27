@@ -240,13 +240,9 @@ export const timeSeriesExploreResponse: ExploreResultV4 = {
 }
 
 export const summaryDashboardConfig: DashboardConfig = {
-  gridSize: {
-    cols: 6,
-    rows: 9,
-  },
   tileHeight: 167,
   tiles: [
-    // 3 x Metric cards
+    // one 6 x 1 Metric cards
     {
       definition: {
         chart: {
@@ -267,7 +263,7 @@ export const summaryDashboardConfig: DashboardConfig = {
       },
     } as TileConfig,
 
-    // 2 x Timeseries
+    // two 3 x 2 Timeseries
     {
       definition: {
         chart: {
@@ -336,7 +332,7 @@ export const summaryDashboardConfig: DashboardConfig = {
       },
     } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
 
-    // 1 x Timeseries
+    // one 6 x 2 Timeseries
     {
       definition: {
         chart: {
@@ -372,13 +368,9 @@ export const summaryDashboardConfig: DashboardConfig = {
 }
 
 export const simpleConfigNoFilters: DashboardConfig = {
-  gridSize: {
-    cols: 6,
-    rows: 2,
-  },
   tileHeight: 167,
   tiles: [
-    // 3 x Metric cards
+    // one 6 x 1 Metric cards
     {
       definition: {
         chart: {
@@ -401,6 +393,7 @@ export const simpleConfigNoFilters: DashboardConfig = {
         },
       },
     },
+    // one 6 x 1 timeseries
     {
       definition: {
         chart: {
@@ -487,10 +480,6 @@ export const routeExploreResponse: ExploreResultV4 = {
 }
 
 export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
-  gridSize: {
-    cols: 8,
-    rows: 6,
-  },
   tileHeight: 167,
   tiles: [
     {
@@ -508,7 +497,7 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
           row: 0,
         },
         size: {
-          cols: 4,
+          cols: 3,
           rows: 2,
         },
       },
@@ -525,11 +514,11 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
       },
       layout: {
         position: {
-          col: 4,
+          col: 3,
           row: 0,
         },
         size: {
-          cols: 4,
+          cols: 3,
           rows: 2,
         },
       },
@@ -550,7 +539,7 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
           row: 4,
         },
         size: {
-          cols: 4,
+          cols: 3,
           rows: 2,
         },
       },
@@ -567,11 +556,11 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
       },
       layout: {
         position: {
-          col: 4,
+          col: 3,
           row: 4,
         },
         size: {
-          cols: 4,
+          cols: 3,
           rows: 2,
         },
       },
@@ -581,10 +570,6 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
 }
 
 export const oneTileDashboardConfig: DashboardConfig = {
-  gridSize: {
-    cols: 6,
-    rows: 2,
-  },
   tileHeight: 167,
   tiles: [
     {

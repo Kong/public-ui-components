@@ -92,11 +92,6 @@ const context: DashboardRendererContext = {
 }
 
 const config: DashboardConfig = {
-  // 4 x 1 grid
-  gridSize: {
-    cols: 4,
-    rows: 1,
-  },
   tiles: [
     {
       id: 'unique-tile-id', // Required for editable dashboards
@@ -116,9 +111,9 @@ const config: DashboardConfig = {
           col: 0,
           row: 0,
         },
-        // Spans 2 columns and 1 rows
+        // Spans 3 columns and 1 rows
         size: {
-          cols: 2,
+          cols: 3,
           rows: 1,
         }
       }
@@ -138,14 +133,14 @@ const config: DashboardConfig = {
         },
       },
       layout: {
-        // Position at column 2, row 0
+        // Position at column 3, row 0
         position: {
-          col: 2,
+          col: 3,
           row: 0,
         },
-        // Spans 2 columns and 1 rows
+        // Spans 3 columns and 1 rows
         size: {
-          cols: 2,
+          cols: 3,
           rows: 1,
         }
       }
@@ -184,11 +179,6 @@ const context: DashboardRendererContext = {
 }
 
 const config: DashboardConfig = {
-  // 4 x 1 grid
-  gridSize: {
-    cols: 4,
-    rows: 1,
-  },
   tiles: [
     {
       // Line chart
@@ -208,9 +198,9 @@ const config: DashboardConfig = {
           col: 0,
           row: 0,
         },
-        // Spans 2 columns and 1 rows
+        // Spans 3 columns and 1 rows
         size: {
-          cols: 2,
+          cols: 3,
           rows: 1,
         }
       }
@@ -225,14 +215,14 @@ const config: DashboardConfig = {
         query: {},
       },
       layout: {
-        // Position at column 2, row 0
+        // Position at column 3, row 0
         position: {
-          col: 2,
+          col: 3,
           row: 0,
         },
-        // Spans 2 columns and 1 rows
+        // Spans 3 columns and 1 rows
         size: {
-          cols: 2,
+          cols: 3,
           rows: 1,
         }
       }
@@ -263,11 +253,6 @@ const context: DashboardRendererContext = {
 }
 
 const config: DashboardConfig = {
-  // 4 x 1 grid
-  gridSize: {
-    cols: 4,
-    rows: 1,
-  },
   tiles: [
     {
       definition: {
@@ -284,7 +269,7 @@ const config: DashboardConfig = {
           row: 0,
         },
         size: {
-          cols: 3,
+          cols: 4,
           rows: 1,
           fitToContent: true,
         },
@@ -305,7 +290,7 @@ const config: DashboardConfig = {
           row: 0,
         },
         size: {
-          cols: 3,
+          cols: 2,
           rows: 1,
           fitToContent: true,
         },
@@ -328,10 +313,6 @@ const context: DashboardRendererContext = {
 }
 
 const config = ref<DashboardConfig>({
-  gridSize: {
-    cols: 4,
-    rows: 1,
-  },
   tiles: [
     {
       id: 'unique-tile-id', // Required for editable dashboards
@@ -350,7 +331,7 @@ const config = ref<DashboardConfig>({
           row: 0,
         },
         size: {
-          cols: 2,
+          cols: 3,
           rows: 1,
         }
       }
@@ -433,10 +414,6 @@ The root configuration type for a dashboard.
 interface DashboardConfig {
   tiles: TileConfig[]         // Array of tile configurations
   tileHeight?: number         // Optional height of each tile in pixels
-  gridSize: {                 // Required grid layout configuration
-    cols: number              // Number of columns in the grid
-    rows: number              // Number of rows in the grid
-  }
 }
 ```
 
@@ -564,10 +541,6 @@ interface TileLayout {
 
 ```typescript
 const dashboardConfig: DashboardConfig = {
-  gridSize: {
-    cols: 4,
-    rows: 2
-  },
   tiles: [{
     id: 'requests-by-route',
     definition: {
@@ -583,7 +556,7 @@ const dashboardConfig: DashboardConfig = {
     },
     layout: {
       position: { col: 0, row: 0 },
-      size: { cols: 2, rows: 1 }
+      size: { cols: 3, rows: 1 }
     }
   }]
 }
