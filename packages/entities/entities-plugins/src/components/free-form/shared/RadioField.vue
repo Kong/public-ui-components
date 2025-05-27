@@ -54,7 +54,6 @@ const emit = defineEmits<{
 const { name, items, ...props } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
 const field = useField<number | string>(toRef(() => name))
-console.log('fieldValue', field.value)
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const realItems = computed<SelectItem[]>(() => {
