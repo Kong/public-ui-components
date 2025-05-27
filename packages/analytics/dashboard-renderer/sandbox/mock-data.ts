@@ -417,6 +417,64 @@ export const simpleConfigNoFilters: DashboardConfig = {
   ],
 }
 
+export const simpleConfigGlobalFilters: DashboardConfig = {
+  gridSize: {
+    cols: 6,
+    rows: 2,
+  },
+  tileHeight: 167,
+  tiles: [
+    // 3 x Metric cards
+    {
+      definition: {
+        chart: {
+          type: 'golden_signals',
+          chartTitle: 'Analytics',
+          description: '{timeframe}',
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: {
+          cols: 6,
+          rows: 1,
+        },
+      },
+    },
+    {
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 1,
+        },
+        size: {
+          cols: 6,
+          rows: 1,
+        },
+      },
+    },
+  ],
+  global_filters: [{
+    field: 'control_plane',
+    operator: 'in',
+    value: ['default_uuid'],
+  }],
+}
+
 export const routeExploreResponse: ExploreResultV4 = {
   meta: {
     display: {
