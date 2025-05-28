@@ -19,7 +19,7 @@
         :filter-function="() => true"
         :items="displayedHosts"
         :label="t('upstreams.form.fields.name.label')"
-        :label-attributes="{ tooltipAttributes: { 'max-width': '400' } }"
+        :label-attributes="{ tooltipAttributes: { maxWidth: '400' } }"
         :loading="hostLoading"
         :model-value="localNameId"
         :placeholder="t('upstreams.form.fields.name.placeholder')"
