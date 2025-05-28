@@ -1,5 +1,6 @@
 <template>
   <div class="kong-ui-public-dashboard-renderer">
+    <h1> HELLO WORLD </h1>
     <KAlert
       v-if="!queryBridge"
       appearance="danger"
