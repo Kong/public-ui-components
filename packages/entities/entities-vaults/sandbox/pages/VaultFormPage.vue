@@ -58,6 +58,7 @@ const kongManagerConfig = ref<KongManagerVaultFormConfig>({
   awsStsEndpointUrlAvailable: true,
   conjurVaultProviderAvailable: true,
   base64FieldAvailable: true,
+  hcvCertMethodAvailable: true,
 })
 
 const onError = (error: AxiosError) => {
