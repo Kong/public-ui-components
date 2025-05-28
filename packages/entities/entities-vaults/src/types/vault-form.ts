@@ -128,13 +128,14 @@ export interface AzureVaultConfig {
 
 export interface ConjurVaultConfig {
   endpoint_url: string
-  auth_method: 'default'
+  auth_method: 'api_key'
   login?: string
   account?: string
   api_key?: string
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  base64_decode?: boolean
 }
 
 // allow for nullish values in payload because Kong Admin API treats null as an empty value

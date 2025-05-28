@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.6.0...@kong-ui-public/analytics-utilities@9.7.0) (2025-05-27)
+
+
+### Features
+
+* combine context and global filters ([#2141](https://github.com/Kong/public-ui-components/issues/2141)) ([a3e6510](https://github.com/Kong/public-ui-components/commit/a3e651027fdb184cbb70d0fabb3a27cb7ffd4ba7))
+
+
+
+
+
+# [9.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.5.0...@kong-ui-public/analytics-utilities@9.6.0) (2025-05-27)
+
+
+### Features
+
+* **analytics:** make gridSize optional (and unused) calculate from tiles instead [ma-3916] ([#2135](https://github.com/Kong/public-ui-components/issues/2135)) ([e1b1fdd](https://github.com/Kong/public-ui-components/commit/e1b1fdd06b34ff53a041bea124ad799fdf91b265))
+
+
+
+
+
 # [9.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.4.0...@kong-ui-public/analytics-utilities@9.5.0) (2025-05-22)
 
 

@@ -10,7 +10,6 @@
       :is="context.editable ? DraggableGridLayout : GridLayout"
       v-else
       ref="gridLayoutRef"
-      :grid-size="model.gridSize"
       :tile-height="model.tileHeight"
       :tiles="gridTiles"
       @update-tiles="handleUpdateTiles"
@@ -43,7 +42,7 @@
 
 <script setup lang="ts">
 import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
-import type { AbsoluteTimeRangeV4, DashboardConfig, TileConfig, SlottableOptions, TileDefinition } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, DashboardConfig, TileConfig, SlottableOptions, TileDefinition, AllFilters } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject, ref } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
@@ -170,6 +169,7 @@ const gridTiles = computed(() => {
 
 const mergedContext = computed<DashboardRendererContextInternal>(() => {
   let { tz, refreshInterval, editable } = props.context
+  const filters = [...(props.context.filters ?? []), ...(model.value.global_filters ?? [])] as AllFilters[]
 
   if (!tz) {
     tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
@@ -185,7 +185,7 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
   }
 
   return {
-    ...props.context,
+    filters,
     tz,
     timeSpec: timeSpec.value,
     refreshInterval,
@@ -249,9 +249,6 @@ const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
     } as TileConfig
   })
 
-  // Update `rows` to match the number of tiles we've placed.
-  // `columns` remains fixed; this is set by design requirements rather than the number of tiles.
-  model.value.gridSize.rows = Math.max(1, ...updatedTiles.map(t => t.layout.position.row + t.layout.size.rows))
   model.value.tiles = updatedTiles.sort(tileSortFn)
 }
 

@@ -49,7 +49,7 @@ const AsyncEntityLink = defineAsyncComponent(async () => {
   if (queryBridge?.fetchComponent) {
     try {
       return await queryBridge.fetchComponent('EntityLink')
-    } catch (e) {
+    } catch {
       return FallbackEntityLink
     }
   }
