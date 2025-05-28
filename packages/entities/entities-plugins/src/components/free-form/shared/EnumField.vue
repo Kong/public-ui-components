@@ -43,6 +43,7 @@ interface EnumFieldProps {
   labelAttributes?: LabelAttributes
   multiple?: boolean
   items?: SelectItem[]
+  placeholder?: string
 }
 
 
@@ -56,9 +57,10 @@ const activate = async () => {
 }
 
 const SelectComponentRef = useTemplateRef('select-component')
-const { name, items, ...props } = defineProps<EnumFieldProps>()
+const { name, items, multiple = undefined, ...props } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
 const { value: fieldValue, ...field } = useField<number | string>(toRef(() => name), activate)
+
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const realItems = computed<SelectItem[]>(() => {
@@ -70,8 +72,8 @@ const realItems = computed<SelectItem[]>(() => {
 })
 
 const isMultiple = computed(() => {
-  if ('multiple' in props) {
-    return props.multiple
+  if (multiple !== undefined) {
+    return multiple
   }
 
   return field.schema!.value?.type === 'set'

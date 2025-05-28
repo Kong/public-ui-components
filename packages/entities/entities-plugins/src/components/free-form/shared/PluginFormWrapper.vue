@@ -21,31 +21,19 @@
 
     <div class="sc-form-config-form">
       <slot
-        :data="model"
+        :data="pruneData(model)"
         :schema="freeFormSchema"
         @change="onFormChange"
       />
     </div>
-
-    <KCollapse
-      v-model="advancedCollapsed"
-      :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
-    >
-      <VueFormGenerator
-        :model="formModel"
-        :options="formOptions"
-        :schema="advancedSchema"
-        @model-updated="onModelUpdated"
-      />
-    </KCollapse>
   </KCollapse>
 </template>
 
-<script lang="ts" generic="T">
-export type Props<T> = {
+<script lang="ts">
+export type Props<T extends FreeFormPluginData> = {
   schema: FormSchema
   formSchema: any
-  model: Record<string, any>
+  model: T
   formModel: Record<string, any>
   formOptions: any
   isEditing: boolean
@@ -60,7 +48,8 @@ export type ConfigFormProps<T> = {
 }
 </script>
 
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T extends FreeFormPluginData">
+import { pick } from 'lodash-es'
 import { computed, ref, toValue, provide, type MaybeRefOrGetter } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
@@ -68,6 +57,7 @@ import { VueFormGenerator } from '@kong-ui-public/forms'
 import { KCollapse } from '@kong/kongponents'
 import english from '../../../locales/en.json'
 import type { FormSchema } from '../../../types/plugins/form-schema'
+import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -90,22 +80,58 @@ function usePickedSchema(keys: MaybeRefOrGetter<string[]>) {
 }
 
 const PINNED_FIELD_KEYS = ['enabled', 'selectionGroup']
-const topLevelFieldKeys = computed(() => ((props.formSchema?.fields || []) as any[]).map((field: { model: string }) => field.model))
-const configFieldKeys = computed(() => topLevelFieldKeys.value.filter(key => key.startsWith('config-')))
-const advancedFieldKeys = computed(() => topLevelFieldKeys.value.filter(key => !PINNED_FIELD_KEYS.includes(key) && !configFieldKeys.value.includes(key)))
 
 const pinnedSchema = usePickedSchema(PINNED_FIELD_KEYS)
-const advancedSchema = usePickedSchema(advancedFieldKeys)
 
-const FREE_FORM_SCHEMA_KEYS = ['config']
+const FREE_FORM_SCHEMA_KEYS = ['config', 'protocols']
 const freeFormSchema = computed(() => {
   const result = props.schema
   result.fields = result.fields.filter(item => FREE_FORM_SCHEMA_KEYS.includes(Object.keys(item)[0]))
+
+  result.fields.unshift({
+    instance_name: {
+      type: 'string',
+      description: t('plugins.form.fields.instance_name.help'),
+    },
+  }, {
+    tags: {
+      type: 'set',
+      default: [],
+      description: t('plugins.form.fields.tags.help'),
+      elements: {
+        type: 'string',
+      },
+    },
+  })
+
+  const protocolsField = result.fields.find(item => Object.keys(item)[0] === 'protocols')
+  if (protocolsField) {
+    protocolsField.protocols.help = protocolsField.protocols.default
+      ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
+        protocols: protocolsField.protocols.default.join(', '),
+      })
+      : t('plugins.form.fields.protocols.placeholder')
+    protocolsField.protocols.description = t('plugins.form.fields.protocols.help')
+  }
   return result
 })
 
 const configCollapse = ref(false)
-const advancedCollapsed = ref(true)
+
+/**
+ * Avoid passing freeform data that it can't handle. e.g. `scope`, `update_time`
+ * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
+ */
+function pruneData(data: Props<T>['model']) {
+  const ffDataKeys: (keyof Props<T>['model'])[] = [
+    'config',
+    'instance_name',
+    'partials',
+    'protocols',
+    'tags',
+  ]
+  return pick(data, ffDataKeys)
+}
 </script>
 
 <style lang="scss" scoped>

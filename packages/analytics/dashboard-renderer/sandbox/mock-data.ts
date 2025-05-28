@@ -240,13 +240,9 @@ export const timeSeriesExploreResponse: ExploreResultV4 = {
 }
 
 export const summaryDashboardConfig: DashboardConfig = {
-  gridSize: {
-    cols: 6,
-    rows: 9,
-  },
   tileHeight: 167,
   tiles: [
-    // 3 x Metric cards
+    // one 6 x 1 Metric cards
     {
       definition: {
         chart: {
@@ -267,7 +263,7 @@ export const summaryDashboardConfig: DashboardConfig = {
       },
     } as TileConfig,
 
-    // 2 x Timeseries
+    // two 3 x 2 Timeseries
     {
       definition: {
         chart: {
@@ -285,9 +281,9 @@ export const summaryDashboardConfig: DashboardConfig = {
             'time',
           ],
           filters: [{
-            dimension: 'control_plane',
-            type: 'in',
-            values: ['default_uuid'],
+            field: 'control_plane',
+            operator: 'in',
+            value: ['default_uuid'],
           }],
         },
       },
@@ -336,7 +332,7 @@ export const summaryDashboardConfig: DashboardConfig = {
       },
     } as unknown as TileConfig, // TODO: MA-2987: Remove default datasource concept and associated tests.
 
-    // 1 x Timeseries
+    // one 6 x 2 Timeseries
     {
       definition: {
         chart: {
@@ -372,6 +368,56 @@ export const summaryDashboardConfig: DashboardConfig = {
 }
 
 export const simpleConfigNoFilters: DashboardConfig = {
+  tileHeight: 167,
+  tiles: [
+    // one 6 x 1 Metric cards
+    {
+      definition: {
+        chart: {
+          type: 'golden_signals',
+          chartTitle: 'Analytics',
+          description: '{timeframe}',
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 0,
+        },
+        size: {
+          cols: 6,
+          rows: 1,
+        },
+      },
+    },
+    // one 6 x 1 timeseries
+    {
+      definition: {
+        chart: {
+          type: 'timeseries_line',
+        },
+        query: {
+          datasource: 'advanced',
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 1,
+        },
+        size: {
+          cols: 6,
+          rows: 1,
+        },
+      },
+    },
+  ],
+}
+
+export const simpleConfigGlobalFilters: DashboardConfig = {
   gridSize: {
     cols: 6,
     rows: 2,
@@ -422,6 +468,11 @@ export const simpleConfigNoFilters: DashboardConfig = {
       },
     },
   ],
+  global_filters: [{
+    field: 'control_plane',
+    operator: 'in',
+    value: ['default_uuid'],
+  }],
 }
 
 export const routeExploreResponse: ExploreResultV4 = {
@@ -487,10 +538,6 @@ export const routeExploreResponse: ExploreResultV4 = {
 }
 
 export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
-  gridSize: {
-    cols: 8,
-    rows: 6,
-  },
   tileHeight: 167,
   tiles: [
     {
@@ -508,7 +555,7 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
           row: 0,
         },
         size: {
-          cols: 4,
+          cols: 3,
           rows: 2,
         },
       },
@@ -525,11 +572,11 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
       },
       layout: {
         position: {
-          col: 4,
+          col: 3,
           row: 0,
         },
         size: {
-          cols: 4,
+          cols: 3,
           rows: 2,
         },
       },
@@ -550,7 +597,7 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
           row: 4,
         },
         size: {
-          cols: 4,
+          cols: 3,
           rows: 2,
         },
       },
@@ -567,11 +614,11 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
       },
       layout: {
         position: {
-          col: 4,
+          col: 3,
           row: 4,
         },
         size: {
-          cols: 4,
+          cols: 3,
           rows: 2,
         },
       },
@@ -581,10 +628,6 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
 }
 
 export const oneTileDashboardConfig: DashboardConfig = {
-  gridSize: {
-    cols: 6,
-    rows: 2,
-  },
   tileHeight: 167,
   tiles: [
     {

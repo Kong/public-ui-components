@@ -15,7 +15,9 @@
     "configure_dynamic_ordering": "Configure Dynamic Ordering",
     "go_to_plugins": "Go to Plugins",
     "save": "Save",
-    "jump_to_error": "Jump to Error"
+    "jump_to_error": "Jump to Error",
+    "add_entity": "Add {entity}",
+    "remove_entity": "Remove {entity}"
   },
   "view_configuration": {
     "title": "Configuration",
@@ -575,6 +577,10 @@
           "placeholder": "Select valid protocols for the plugin",
           "placeholderWithDefaultValues": "Select valid protocols for the plugin. Default protocols: {protocols}",
           "help": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type."
+        },
+        "tags": {
+          "help": "An optional set of strings for grouping and filtering, separated by commas.",
+          "placeholder": "Enter list of tags"
         }
       },
       "scoping": {
@@ -628,8 +634,52 @@
     },
     "free-form": {
       "request-callout": {
+        "entity_name": "Request Callout",
         "by_lua_placeholder": "Enter Lua script here..."
       }
+    }
+  },
+  "redis": {
+    "title": "Redis Configuration",
+    "shared_configuration": {
+      "label": "Use shared configuration",
+      "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins.",
+      "title": "Shared Redis Configuration",
+      "error": "Fetching shared Redis configurations failed.",
+      "tooltip": "Only compatible {type} redis configurations will be listed here.",
+      "configuration_selector_label": "Select stored Redis configuration",
+      "configuration_selector_placeholder": "Pick Redis configuration",
+      "create_new_configuration": "New {type} shared configuration",
+      "open_source": "Open Source",
+      "enterprise": "Enterprise",
+      "empty_state": "No shared configurations",
+      "badge": "Recommended",
+      "selector": {
+        "title": "Select a Redis configuration",
+        "placeholder": "Filter Configurations",
+        "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins."
+      },
+      "type_label": {
+        "host_port": "Host/Port",
+        "sentinel": "Sentinel",
+        "cluster": "Cluster"
+      }
+    },
+    "dedicated_configuration": {
+      "label": "Use dedicated configuration",
+      "description": "Create a Redis configuration exclusively for this plugin, with settings that won’t impact other plugins.",
+      "title": "Connection Settings"
+    },
+    "config_card": {
+      "common_fields": {
+        "created_at_label": "Created at",
+        "updated_at_label": "Last Updated at",
+        "type_label": "Redis Type"
+      }
+    },
+    "custom_plugin": {
+      "alert": "Note: For custom plugins, we cannot determine the correct Redis configuration type. Please ensure you select the appropriate option manually.",
+      "tooltip": "To apply a shared redis configuration, the redis fields must defined as Kong plugins in plugin schema."
     }
   },
   "glossary": {

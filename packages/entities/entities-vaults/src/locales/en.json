@@ -339,8 +339,11 @@
           "login": {
             "label": "Login"
           },
-          "api_token": {
-            "label": "API Token"
+          "api_key": {
+            "label": "API Key"
+          },
+          "account": {
+            "label": "Account"
           }
         }
       },
@@ -352,6 +355,12 @@
         "negTtlTooltip": "Time-to-live (in seconds) of a vault miss (no secret)",
         "resurrectTtl": "Time-to-Live Resurrection",
         "resurrectTtlTooltip": "Time (in seconds) for which stale secrets from the vault are resurrected for when they cannot be refreshed"
+      },
+      "commonFields": {
+        "base64_decode": {
+          "label": "Base64 Decode",
+          "tooltip": "Decode all secrets in this vault as base64, useful for binary data. If some of the secrets are not base64 encoded, an error will occur when using them. It's recommended to create a separate vault for base64 secrets."
+        }
       }
     },
     "unavailable": "This vault provider is available on Enterprise."

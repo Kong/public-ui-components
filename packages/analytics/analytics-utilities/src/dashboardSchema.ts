@@ -334,32 +334,6 @@ const filtersFn = <T extends readonly string[]>(filterableDimensions: T) => ({
     oneOf: [
       {
         type: 'object',
-        description: 'A filter that specifies which data to include in the query',
-        properties: {
-          dimension: {
-            type: 'string',
-            enum: filterableDimensions,
-          },
-          type: {
-            type: 'string',
-            enum: exploreFilterTypesV2,
-          },
-          values: {
-            type: 'array',
-            items: {
-              type: ['string', 'number', 'null'],
-            },
-          },
-        },
-        required: [
-          'dimension',
-          'type',
-          'values',
-        ],
-        additionalProperties: false,
-      },
-      {
-        type: 'object',
         description: 'In filter',
         properties: {
           field: {
@@ -577,8 +551,9 @@ export const dashboardConfigSchema = {
       required: ['cols', 'rows'],
       additionalProperties: false,
     },
+    global_filters: filtersFn([...new Set([...filterableExploreDimensions, ...filterableBasicExploreDimensions, ...filterableAiExploreDimensions])]),
   },
-  required: ['tiles', 'gridSize'],
+  required: ['tiles'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 

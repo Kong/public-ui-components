@@ -33,6 +33,11 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
    * TODO: remove when support for Conjur is added
    */
   conjurVaultProviderAvailable?: boolean
+
+  /**
+   * Show/hide Base64 field (added since 3.11)
+   */
+  base64FieldAvailable?: boolean
 }
 
 /** Konnect Vault form config */
@@ -62,6 +67,7 @@ export interface ConfigStoreConfig {}
 
 export interface KongVaultConfig {
   prefix: string
+  base64_decode?: boolean
 }
 
 export interface AWSVaultConfig {
@@ -73,6 +79,7 @@ export interface AWSVaultConfig {
   neg_ttl?: number
   resurrect_ttl?: number
   sts_endpoint_url?: string
+  base64_decode?: boolean
 }
 
 export interface GCPVaultConfig {
@@ -80,6 +87,7 @@ export interface GCPVaultConfig {
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  base64_decode?: boolean
 }
 
 export interface HCVVaultConfig {
@@ -102,6 +110,7 @@ export interface HCVVaultConfig {
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  base64_decode?: boolean
 }
 
 export interface AzureVaultConfig {
@@ -114,16 +123,19 @@ export interface AzureVaultConfig {
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  base64_decode?: boolean
 }
 
-export interface ConjurVaultConfig { // todo(zehao): which fields are required?
-  endpoint_url?: string
+export interface ConjurVaultConfig {
+  endpoint_url: string
+  auth_method: 'api_key'
   login?: string
   account?: string
-  api_token?: string
+  api_key?: string
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  base64_decode?: boolean
 }
 
 // allow for nullish values in payload because Kong Admin API treats null as an empty value

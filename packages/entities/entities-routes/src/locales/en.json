@@ -133,13 +133,7 @@
       },
       "protocols": {
         "label": "Protocols",
-        "tooltip": "The protocols this route supports.",
-        "tooltipConfig": "An array of the protocols this Route should allow. See the {code1} section for a list of accepted protocols. When set to only {code2}, HTTP requests are answered with an upgrade error. When it is set to only {code3}, this is essentially the same as {code4} in that both HTTP and HTTPS requests are allowed. Default: {code5}.",
-        "code1": "Route Object",
-        "code2": "https",
-        "code3": "http",
-        "code4": "['http', 'https']",
-        "code5": "['http', 'https']"
+        "tooltip": "The protocols this route supports."
       },
       "path_handling": {
         "label": "Path Handling",
@@ -147,35 +141,19 @@
       },
       "https_redirect_status_code": {
         "label": "HTTPS Redirect Status Code",
-        "tooltip": "Specifies the HTTP status code for redirecting requests from HTTP to HTTPS. Use 301 or 308 for permanent redirects, 302 or 307 for temporary redirects.",
-        "tooltipConfig": "The status code Kong responds with when all properties of a Route match except the protocol i.e. if the protocol of the request is {code1} instead of {code2}. {code3}  header is injected by Kong if the field is set to 301, 302, 307 or 308. Note: This config applies only if the Route is configured to only accept the {code4} protocol.",
-        "code1": "HTTP",
-        "code2": "HTTPS",
-        "code3": "Location",
-        "code4": "https"
+        "tooltip": "Specifies the HTTP status code for redirecting requests from HTTP to HTTPS. Use `301` or `308` for permanent redirects, `302` or `307` for temporary redirects."
       },
       "regex_priority": {
         "label": "Regex Priority",
-        "tooltip": "Regex priority is determined by length first (longer patterns win), and when lengths are the same, more specific regexes are preferred. When two routes match the path and have the same regex_priority, the older one (lowest created_at) is used. Note that the priority for non-regex routes is different (longer non-regex routes are matched before shorter ones).",
-        "tooltipConfig": "A number used to choose which route resolves a given request when several routes match it using regexes simultaneously. When two routes match the path and have the same {code1}, the older one (lowest {code2}) is used. Note that the priority for non-regex routes is different (longer non-regex routes are matched before shorter ones).",
-        "code1": "regex_priority",
-        "code2": "created_at"
+        "tooltip": "Regex priority is determined by length first (longer patterns win), and when lengths are the same, more specific regexes are preferred.  When two routes match the path and have the same `regex_priority`, the older one (lowest `created_at`) is used."
       },
       "strip_path": {
         "label": "Strip Path",
-        "tooltip": "When enabled, Kong removes the portion of the request path that matches the route's path before forwarding the request to the upstream. If the request exactly matches the route, the result is /. Disable if that's not desired.",
-        "tooltipConfig": "When matching a Route via one of the {code1}, strip the matching prefix from the upstream request URL.",
-        "code1": "paths"
+        "tooltip": "When enabled, Kong removes the portion of the request path that matches the route's path before forwarding the request to the upstream. If the request exactly matches the route, the result is `/`. Disable if that's not desired."
       },
       "preserve_host": {
         "label": "Preserve Host",
-        "tooltip": "Keeps the original Host header when proxying requests. Enable this if the upstream service requires the client's Host value. Disable if the service expects its own hostname.",
-        "tooltipConfig": "When matching a Route via one of the {code1} domain names, use the request {code2} header in the upstream request headers. If set to {code3}, the upstream {code4} header will be that of the Service's {code5}.",
-        "code1": "hosts",
-        "code2": "Host",
-        "code3": "false",
-        "code4": "Host",
-        "code5": "host"
+        "tooltip": "Keeps the original `Host` header when proxying requests. Enable this if the upstream service requires the client's `Host` value. Disable if the service expects its own hostname."
       },
       "paths": {
         "add": "Add a path",
@@ -198,15 +176,14 @@
         "label_singular": "Host",
         "placeholder": "e.g. example.com",
         "singular": "host",
-        "tooltip": "Match specific domain names (e.g., api.example.com). Prefix with ~ to enable regex-based matching.",
-        "tooltipConfig": "A list of domain names that match this Route. Note that the hosts value is case sensitive."
+        "tooltip": "Match specific domain names, such as `api.example.com`. Prefix with `~` to enable regex-based matching."
       },
       "methods": {
         "label": "Methods",
         "placeholder": "Select methods",
         "search_placeholder": "Search for a method or enter a custom method",
         "singular": "method",
-        "tooltip": "Match certain HTTP methods, such as GET or POST. If no method is selected, all methods are included.",
+        "tooltip": "Match specific HTTP methods, such as GET or POST. If no method is selected, all methods are included.",
         "custom": {
           "label": "Custom",
           "placeholder": "Enter a custom method",
@@ -217,18 +194,13 @@
         "add": "Add a header",
         "label": "Headers",
         "singular": "header",
-        "tooltip": "Match specific headers, such as x-api-version or x-region.",
+        "tooltip": "Match specific headers, such as `x-api-version` or `x-region`. Doesn't accept the `Host` header. Provide only one entry and prefix with `~` to enable regex-based matching.",
         "name": {
           "placeholder": "e.g. x-api-version"
         },
         "values": {
           "placeholder": "e.g. v1"
-        },
-        "tooltipConfig": "One or more lists of values indexed by header name that will cause this Route to match if present in the request. The {code1} header cannot be used with this attribute: hosts should be specified using the {code2} attribute. When {code3} contains only one value and that value starts with the special prefix {code4}, the value is interpreted as a regular expression.",
-        "code1": "Host",
-        "code2": "hosts",
-        "code3": "headers",
-        "code4": "*"
+        }
       },
       "sources": {
         "add": "Add a source",

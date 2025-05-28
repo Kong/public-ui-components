@@ -66,11 +66,13 @@
         </template>
       </ObjectField>
     </ObjectField>
+
+    <AdvancedFields />
   </Form>
 </template>
 
 <script setup lang="ts">
-import { cloneDeep, pick } from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 import { FIELD_RENDERERS } from '../shared/composables'
 import { getCalloutId } from './utils'
 import ArrayField from '../shared/ArrayField.vue'
@@ -80,6 +82,7 @@ import Form from '../shared/Form.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import StringField from '../shared/StringField.vue'
 import useI18n from '../../../composables/useI18n'
+import AdvancedFields from '../shared/AdvancedFields.vue'
 
 import type { Callout, RequestCalloutPlugin } from './types'
 import type { FormConfig } from '../shared/types'
@@ -111,7 +114,7 @@ function getNameMap(callouts: Callout[], reverse: boolean = false) {
 
 // replace callout names in `depends_on` with freshly generated ids
 function prepareFormData(data: RequestCalloutPlugin) {
-  const pluginConfig = pick(cloneDeep(data), 'config', 'partials')
+  const pluginConfig = cloneDeep(data)
 
   if (!pluginConfig.config?.callouts) {
     return pluginConfig

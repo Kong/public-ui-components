@@ -216,6 +216,7 @@ import unset from 'lodash-es/unset'
 import { FIELD_ACTIVATION_HANLER_KEY, VALIDATION_ERROR_KEY } from './free-form/shared/composables'
 import { useFieldErrors, activateField } from '../composables/usePluginErrors'
 import { ArrowUpIcon } from '@kong/icons'
+import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -361,6 +362,11 @@ const record = ref<Record<string, any> | undefined>(undefined)
 const configResponse = ref<Record<string, any>>({})
 const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
 const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
+provide(REDIS_PARTIAL_INFO, {
+  redisType: pluginPartialType,
+  redisPath: pluginRedisPath,
+  isEditing: isEditing.value,
+})
 const formLoading = ref(false)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,

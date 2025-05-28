@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.6.0...@kong-ui-public/analytics-utilities@9.7.0) (2025-05-27)
+
+
+### Features
+
+* combine context and global filters ([#2141](https://github.com/Kong/public-ui-components/issues/2141)) ([a3e6510](https://github.com/Kong/public-ui-components/commit/a3e651027fdb184cbb70d0fabb3a27cb7ffd4ba7))
+
+
+
+
+
+# [9.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.5.0...@kong-ui-public/analytics-utilities@9.6.0) (2025-05-27)
+
+
+### Features
+
+* **analytics:** make gridSize optional (and unused) calculate from tiles instead [ma-3916] ([#2135](https://github.com/Kong/public-ui-components/issues/2135)) ([e1b1fdd](https://github.com/Kong/public-ui-components/commit/e1b1fdd06b34ff53a041bea124ad799fdf91b265))
+
+
+
+
+
+# [9.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.4.0...@kong-ui-public/analytics-utilities@9.5.0) (2025-05-22)
+
+
+### Features
+
+* add global filters ([#2140](https://github.com/Kong/public-ui-components/issues/2140)) ([0ddf722](https://github.com/Kong/public-ui-components/commit/0ddf7223ba2067024c4781b6cd53c906f89bf636))
+
+
+
+
+
+# [9.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.4...@kong-ui-public/analytics-utilities@9.4.0) (2025-05-15)
+
+
+### Features
+
+* **analytics-utilities:** remove old style filters ([#2126](https://github.com/Kong/public-ui-components/issues/2126)) ([3b5d756](https://github.com/Kong/public-ui-components/commit/3b5d756a7888241dab6842665587ce734c3dab7b))
+
+
+
+
+
 ## [9.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.3...@kong-ui-public/analytics-utilities@9.3.4) (2025-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
