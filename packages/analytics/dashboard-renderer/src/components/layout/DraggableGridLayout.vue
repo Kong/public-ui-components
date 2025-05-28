@@ -148,6 +148,10 @@ defineExpose({ removeWidget })
 </script>
 
 <style lang="scss" scoped>
+.grid-stack {
+  margin: -10px;
+}
+
 :deep(.tile-header) {
   cursor: move;
 }
