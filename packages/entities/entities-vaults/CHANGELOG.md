@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.20.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.20.0...@kong-ui-public/entities-vaults@3.20.1) (2025-05-28)
+
+
+### Bug Fixes
+
+* **vault:** set conjur auth_method vault to be api_key ([#2144](https://github.com/Kong/public-ui-components/issues/2144)) ([a593cd9](https://github.com/Kong/public-ui-components/commit/a593cd9f6ad9633d0e9328a319b3e04becf644a0))
+
+
+
+
+
 # [3.20.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.19.1...@kong-ui-public/entities-vaults@3.20.0) (2025-05-27)
 
 
