@@ -30,6 +30,11 @@ const router = createRouter({
       name: 'grid',
       component: () => import('./pages/GridDemo.vue'),
     },
+    {
+      path: '/dashboard-preview',
+      name: 'preview',
+      component: () => import('./pages/DashboardPreviewDemo.vue'),
+    },
   ],
 })
 
@@ -46,6 +51,10 @@ const appLinks: SandboxNavigationItem[] = ([
   {
     name: 'Grid Layout',
     to: { name: 'grid' },
+  },
+  {
+    name: 'Dashboard Preview',
+    to: { name: 'preview' },
   },
 ])
 

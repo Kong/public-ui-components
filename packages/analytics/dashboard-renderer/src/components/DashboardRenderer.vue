@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-public-dashboard-renderer">
     <KAlert
-      v-if="!queryBridge"
+      v-if="!queryBridge && !preview"
       appearance="danger"
     >
       {{ i18n.t('renderer.noQueryBridge') }}
@@ -15,26 +15,31 @@
       @update-tiles="handleUpdateTiles"
     >
       <template #tile="{ tile }">
-        <div
-          v-if="tile.meta.chart.type === 'slottable'"
-          class="tile-container slottable-tile"
+        <DashboardQueryWrapper
+          :key="`preview-${preview}`"
+          :use-generated-data="preview"
         >
-          <slot :name="tile.meta.chart.id" />
-        </div>
-        <DashboardTile
-          v-else
-          class="tile-container"
-          :context="mergedContext"
-          :definition="tile.meta"
-          :height="tile.layout.size.rows * (model.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
-          :query-ready="queryReady"
-          :refresh-counter="refreshCounter"
-          :tile-id="tile.id"
-          @duplicate-tile="onDuplicateTile(tile)"
-          @edit-tile="onEditTile(tile)"
-          @remove-tile="onRemoveTile(tile)"
-          @zoom-time-range="emit('zoom-time-range', $event)"
-        />
+          <div
+            v-if="tile.meta.chart.type === 'slottable'"
+            class="tile-container slottable-tile"
+          >
+            <slot :name="tile.meta.chart.id" />
+          </div>
+          <DashboardTile
+            v-else
+            class="tile-container"
+            :context="mergedContext"
+            :definition="tile.meta"
+            :height="tile.layout.size.rows * (model.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+            :query-ready="queryReady"
+            :refresh-counter="refreshCounter"
+            :tile-id="tile.id"
+            @duplicate-tile="onDuplicateTile(tile)"
+            @edit-tile="onEditTile(tile)"
+            @remove-tile="onRemoveTile(tile)"
+            @zoom-time-range="emit('zoom-time-range', $event)"
+          />
+        </DashboardQueryWrapper>
       </template>
     </component>
   </div>
@@ -44,7 +49,7 @@
 import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
 import type { AbsoluteTimeRangeV4, DashboardConfig, TileConfig, SlottableOptions, TileDefinition, AllFilters } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
-import { computed, inject, ref } from 'vue'
+import { computed, watch, inject, ref } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
@@ -59,10 +64,12 @@ import {
 } from '../constants'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
+import DashboardQueryWrapper from './DashboardQueryWrapper.vue'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   context: DashboardRendererContext
-}>()
+  preview?: boolean
+}>(), { preview: true })
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
@@ -79,15 +86,11 @@ const gridLayoutRef = ref<ComponentPublicInstance<DraggableGridLayoutExpose<Tile
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
 // programming errors early.
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
-
-if (!queryBridge) {
+if (!queryBridge && !props.preview) {
   console.warn('Analytics dashboards require a query bridge supplied via provide / inject.')
   console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
   console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/README.md#requirements')
 }
-
-// Enable a request queue on the query bridge for all subcomponents.
-composables.useRequestQueue()
 
 const configStore = useAnalyticsConfigStore()
 
@@ -239,6 +242,10 @@ const onRemoveTile = (tile: GridTile<TileDefinition>) => {
 const refreshTiles = () => {
   refreshCounter.value++
 }
+
+watch(() => props.preview, () => {
+  refreshTiles()
+})
 
 const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
   const updatedTiles = tiles.map(tile => {
