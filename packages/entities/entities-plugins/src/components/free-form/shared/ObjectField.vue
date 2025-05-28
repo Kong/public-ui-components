@@ -27,7 +27,10 @@
     class="ff-object-field"
     :class="{ 'ff-object-field-collapsed': !realExpanded }"
   >
-    <header class="ff-object-field-header">
+    <header
+      ref="ObjectHeaderRef"
+      class="ff-object-field-header"
+    >
       <KLabel
         class="ff-object-field-label"
         v-bind="{
@@ -92,7 +95,7 @@
 <script setup lang="ts">
 import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
 import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
-import { computed, onBeforeMount, toRef, watch, type Slot } from 'vue'
+import { computed, onBeforeMount, toRef, useTemplateRef, watch, type Slot } from 'vue'
 import SlideTransition from './SlideTransition.vue'
 import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
 import Field from './Field.vue'
@@ -128,7 +131,16 @@ const {
   fieldsOrder?: string[]
 }>()
 
-const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
+const ObjectHeaderRef = useTemplateRef('ObjectHeaderRef')
+const activate = () => {
+  ObjectHeaderRef.value?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'nearest',
+  })
+  expanded.value = true
+}
+
+const { value: fieldValue, ...field } = useField(toRef(props, 'name'), activate)
 const { getSchema } = useFormShared()
 
 const added = defineModel<boolean>('added', { default: undefined })

@@ -6,27 +6,31 @@
     :message="field.error.message"
   />
 
-  <SelectComponent
+  <div
     v-else
-    v-bind="fieldAttrs"
-    v-model="fieldValue"
-    class="ff-enum-field"
-    :items="realItems"
+    ref="select-component"
   >
-    <template
-      v-if="fieldAttrs.labelAttributes?.info"
-      #label-tooltip
+    <SelectComponent
+      v-bind="fieldAttrs"
+      v-model="fieldValue"
+      class="ff-enum-field"
+      :items="realItems"
     >
-      <slot name="tooltip">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-html="fieldAttrs.labelAttributes.info" />
-      </slot>
-    </template>
-  </SelectComponent>
+      <template
+        v-if="fieldAttrs.labelAttributes?.info"
+        #label-tooltip
+      >
+        <slot name="tooltip">
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <div v-html="fieldAttrs.labelAttributes.info" />
+        </slot>
+      </template>
+    </SelectComponent>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, toRef } from 'vue'
+import { computed, nextTick, toRef, useTemplateRef } from 'vue'
 import { KSelect, KMultiselect, type LabelAttributes, type SelectItem } from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
 
@@ -41,9 +45,20 @@ interface EnumFieldProps {
   items?: SelectItem[]
 }
 
+
+const activate = async () => {
+  SelectComponentRef.value?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+  })
+  await nextTick()
+  document.getElementById(field.path?.value || '')?.focus()
+}
+
+const SelectComponentRef = useTemplateRef('select-component')
 const { name, items, ...props } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
-const { value: fieldValue, ...field } = useField<number | string>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<number | string>(toRef(() => name), activate)
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const realItems = computed<SelectItem[]>(() => {

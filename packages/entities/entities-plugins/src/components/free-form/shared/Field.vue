@@ -12,6 +12,7 @@
   <component
     :is="field.renderer.value"
     v-else-if="field.renderer.value"
+    :id="utils.resolve(field.path.value)"
     :name="utils.resolveRoot(field.path.value)"
   />
 
@@ -20,8 +21,15 @@
     <component
       :is="fieldRenderer"
       v-if="fieldRenderer"
+      :id="utils.resolve(field.path.value)"
       :name="utils.resolveRoot(field.path.value)"
-    />
+    >
+      <KAlert
+        v-if="field.validationError.value"
+        appearance="danger"
+        :message="field.validationError.value"
+      />
+    </component>
 
     <!-- renderer missing alert -->
     <KAlert

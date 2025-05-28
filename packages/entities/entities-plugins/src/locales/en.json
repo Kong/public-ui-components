@@ -14,7 +14,8 @@
     "view": "View Details",
     "configure_dynamic_ordering": "Configure Dynamic Ordering",
     "go_to_plugins": "Go to Plugins",
-    "save": "Save"
+    "save": "Save",
+    "jump_to_error": "Jump to Error"
   },
   "view_configuration": {
     "title": "Configuration",

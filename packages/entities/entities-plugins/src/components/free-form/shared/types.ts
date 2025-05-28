@@ -1,4 +1,4 @@
-import type { ComponentPublicInstance } from 'vue'
+import type { ComponentPublicInstance, Ref } from 'vue'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -23,3 +23,16 @@ export type ResetLabelPathRule =
   | 'reset-children' // Inherit paths on its own, but descendant paths start from current path.
   | 'isolate' // Isolate paths for both current and descendants.
   | 'isolate-children' // Inherit paths on its own, children do not inherit.
+
+export type Ancestor = {
+  path?: string
+  parent: Ancestor | null
+}
+
+export type ValidationError = Map<string, {
+  message: string
+  handler?: () => void
+  domRef?: Ref<HTMLElement | null>
+  path?: string
+  ancestors?: Ref<Ancestor | null>
+}>

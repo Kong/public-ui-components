@@ -29,6 +29,7 @@
       :form-fields="getRequestBody"
       :is-readonly="form.isReadonly"
       no-validate
+      use-sticky-error-message
       :wrapper-component="noCardWrapper ? 'div' : undefined"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
@@ -55,6 +56,44 @@
         @model-updated="handleUpdate"
         @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
       />
+
+      <template
+        v-if="form.errorMessage"
+        #errorMessage
+      >
+        <KAlert
+          v-if="fieldValidationErrors?.size"
+          appearance="danger"
+          class="plugin-form-error-message"
+          :data-testid="`plugin-${isEditing ? 'edit' : 'create'}-form-error-message`"
+        >
+          <KCollapse
+            :model-value="false"
+            trigger-label="Form Errors"
+          >
+            <div
+              v-for="[key, value] in fieldValidationErrors"
+              :key="key"
+              class="plugin-form-error-message-item"
+            >
+              {{ key }}: {{ value.message }}
+              <KButton
+                appearance="tertiary"
+                @click="activateField(key)"
+              >
+                {{ t('actions.jump_to_error') }}
+                <ArrowUpIcon />
+              </KButton>
+            </div>
+          </KCollapse>
+        </KAlert>
+        <!-- <KAlert
+          v-else
+          appearance="danger"
+          data-testid="form-error"
+          :message="form.errorMessage"
+        /> -->
+      </template>
 
       <template #form-actions>
         <!-- if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included) -->
@@ -151,7 +190,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
-import { computed, onBeforeMount, reactive, ref, watch, type PropType } from 'vue'
+import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
@@ -174,6 +213,9 @@ import {
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
+import { FIELD_ACTIVATION_HANLER_KEY, VALIDATION_ERROR_KEY } from './free-form/shared/composables'
+import { useFieldErrors, activateField } from '../composables/usePluginErrors'
+import { ArrowUpIcon } from '@kong/icons'
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -335,6 +377,11 @@ const form = reactive<PluginFormState>({
   isReadonly: false,
   errorMessage: '',
 })
+
+const formErrorsRaw = ref()
+const { fieldValidationErrors, fieldActivationHandlers } = useFieldErrors(formErrorsRaw)
+provide(VALIDATION_ERROR_KEY, fieldValidationErrors)
+provide(FIELD_ACTIVATION_HANLER_KEY, fieldActivationHandlers)
 
 const tabs = ref<Tab[]>([
   {
@@ -1275,6 +1322,7 @@ const saveFormData = async (): Promise<void> => {
     emit('update', response?.data)
   } catch (error: any) {
     form.errorMessage = getMessageFromError(error)
+    formErrorsRaw.value = error
     // Emit the error for the host app
     emit('error', error)
   } finally {
@@ -1385,6 +1433,41 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .kong-ui-entities-plugin-form-container {
   width: 100%;
+
+  .plugin-form-error-message {
+    position: sticky;
+    bottom: 20px;
+    color: $kui-color-text-danger;
+    & :deep(.k-collapse .collapse-heading .collapse-trigger .collapse-trigger-content[data-v-3c78873f]) {
+      color: $kui-color-text-danger;
+    }
+
+    & :deep(.k-collapse .collapse-heading .collapse-trigger-label) {
+      color: $kui-color-text-danger;
+    }
+
+    & :deep(.k-collapse .collapse-hidden-content) {
+      max-height: 90px;
+      overflow-y: auto;
+    }
+    & :deep(.k-collapse .collapse-hidden-content) ::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background: linear-gradient($kui-color-background-transparent 0,rgba(255, 229, 229, 0.5) 90%,$kui-color-background-danger-weakest 100%);
+      pointer-events: none;
+    }
+
+    .plugin-form-error-message-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: $kui-color-text-danger;
+    }
+  }
 
   .form-action-button {
     margin-left: $kui-space-60;

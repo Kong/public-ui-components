@@ -33,12 +33,24 @@
       <slot />
 
       <!-- Form error -->
-      <KAlert
+      <div
         v-if="errorMessage"
-        appearance="danger"
-        data-testid="form-error"
-        :message="errorMessage"
-      />
+        :class="{'sticky-form-error': useStickyErrorMessage}"
+      >
+        <template v-if="slots.errorMessage">
+          <slot
+            :error-message="errorMessage"
+            name="errorMessage"
+          />
+        </template>
+        <KAlert
+          v-else
+          appearance="danger"
+          data-testid="form-error"
+          :message="errorMessage"
+        />
+      </div>
+
 
       <Teleport
         v-if="!hideActions"
@@ -120,7 +132,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch } from 'vue'
+import { computed, ref, onBeforeMount, watch, useSlots } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
@@ -237,11 +249,19 @@ const props = defineProps({
     type: Number,
     default: 60,
   },
+  /**
+   * Whether to show the error message in a sticky position
+   */
+  useStickyErrorMessage: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const { getMessageFromError } = composables.useErrors()
+const slots = useSlots()
 
 const { axiosInstance } = composables.useAxios(props.config?.axiosRequestConfig)
 
@@ -400,5 +420,12 @@ defineExpose({
       margin-left: $kui-space-60;
     }
   }
+}
+
+.sticky-form-error {
+  position: sticky;
+  bottom: $kui-space-0;
+  max-height: 180px;
+  overflow-y: auto;
 }
 </style>
