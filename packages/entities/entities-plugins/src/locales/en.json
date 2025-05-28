@@ -524,7 +524,7 @@
       },
       "datakit": {
         "name": "Datakit",
-        "description": "Datakit is a workflow engine for working with external apis."
+        "description": "Datakit is a workflow engine for working with external APIs."
       },
       "ai-prompt-compressor": {
         "name": "AI Prompt Compressor",

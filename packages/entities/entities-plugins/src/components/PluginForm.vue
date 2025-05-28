@@ -24,7 +24,7 @@
       :config="config"
       :edit-id="pluginId"
       :entity-type="SupportedEntityType.Plugin"
-      :error-message="form.errorMessage"
+      :error-message="errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getRequestBody"
       :is-readonly="form.isReadonly"
@@ -54,6 +54,7 @@
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
         @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
+        @validity-change="handleValidityChange"
       />
 
       <template #form-actions>
@@ -170,6 +171,7 @@ import {
   type PluginFormState,
   type PluginOrdering,
   type CustomSchemas,
+  type PluginValidityChangeEvent,
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
@@ -339,7 +341,8 @@ const form = reactive<PluginFormState>({
     tags: [],
   },
   isReadonly: false,
-  errorMessage: '',
+  clientErrorMessage: '',
+  serverErrorMessage: '',
 })
 
 const tabs = ref<Tab[]>([
@@ -1120,6 +1123,22 @@ const handleUpdate = (payload: Record<string, any>) => {
   }
 }
 
+const clientSideErrors = ref(new Map<string, Error | string>())
+const errorMessage = computed((): string => {
+  return [form.clientErrorMessage, form.serverErrorMessage].filter(Boolean).join('; ')
+})
+const handleValidityChange = (event: PluginValidityChangeEvent) => {
+  if (event.valid) {
+    clientSideErrors.value.delete(event.model)
+  } else {
+    clientSideErrors.value.set(event.model, event.error!)
+  }
+
+  form.clientErrorMessage = [...clientSideErrors.value.entries()]
+    .map(([model, error]) => `${model}: ${typeof error === 'string' ? error : getMessageFromError(error)}`)
+    .join('; ')
+}
+
 watch([entityMap, initialized], (newData, oldData) => {
   const newEntityData = newData[0] !== oldData[0]
   const newinitialized = newData[1]
@@ -1234,6 +1253,11 @@ const getRequestBody = computed((): Record<string, any> => {
 
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
+  if (form.clientErrorMessage) {
+    // if there are still client errors, don't submit the form
+    return
+  }
+
   // if save/cancel buttons are hidden, don't submit on hitting Enter
   if (props.isWizardStep) {
     return
@@ -1280,7 +1304,7 @@ const saveFormData = async (): Promise<void> => {
     // Emit an update event for the host app to respond to
     emit('update', response?.data)
   } catch (error: any) {
-    form.errorMessage = getMessageFromError(error)
+    form.serverErrorMessage = getMessageFromError(error)
     // Emit the error for the host app
     emit('error', error)
   } finally {
