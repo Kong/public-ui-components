@@ -88,7 +88,7 @@
           </KCollapse>
         </KAlert>
         <KAlert
-          v-else
+          v-else-if="!getFreeFormName(pluginType as any, experimentalFreeForms)"
           appearance="danger"
           data-testid="form-error"
           :message="form.errorMessage"
@@ -389,6 +389,7 @@ const form = reactive<PluginFormState>({
 
 const formErrorsRaw = ref()
 const { fieldValidationErrors, fieldActivationHandlers } = useFieldErrors(formErrorsRaw)
+console.log('fieldValidationErrors', fieldValidationErrors)
 provide(VALIDATION_ERROR_KEY, fieldValidationErrors)
 provide(FIELD_ACTIVATION_HANLER_KEY, fieldActivationHandlers)
 
