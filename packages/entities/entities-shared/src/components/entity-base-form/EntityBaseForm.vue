@@ -423,9 +423,9 @@ defineExpose({
 }
 
 .sticky-form-error {
-  position: sticky;
-  bottom: $kui-space-0;
+  bottom: 0;
   max-height: 180px;
   overflow-y: auto;
+  position: sticky;
 }
 </style>

@@ -1441,9 +1441,10 @@ onBeforeMount(async () => {
   width: 100%;
 
   .plugin-form-error-message {
-    position: sticky;
     bottom: 20px;
     color: $kui-color-text-danger;
+    position: sticky;
+
     & :deep(.k-collapse .collapse-heading .collapse-trigger .collapse-trigger-content[data-v-3c78873f]) {
       color: $kui-color-text-danger;
     }
@@ -1456,22 +1457,23 @@ onBeforeMount(async () => {
       max-height: 90px;
       overflow-y: auto;
     }
+
     & :deep(.k-collapse .collapse-hidden-content) ::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 20px;
       background: linear-gradient($kui-color-background-transparent 0,rgba(255, 229, 229, 0.5) 90%,$kui-color-background-danger-weakest 100%);
+      bottom: 0;
+      content: '';
+      height: 20px;
+      left: 0;
       pointer-events: none;
+      position: absolute;
+      right: 0;
     }
 
     .plugin-form-error-message-item {
-      display: flex;
       align-items: center;
-      justify-content: space-between;
       color: $kui-color-text-danger;
+      display: flex;
+      justify-content: space-between;
     }
   }
 
