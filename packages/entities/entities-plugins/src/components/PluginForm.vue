@@ -62,7 +62,7 @@
         #errorMessage
       >
         <KAlert
-          v-if="fieldValidationErrors?.size"
+          v-if="fieldValidationErrors?.size && getFreeFormName(pluginType as any, experimentalFreeForms)"
           appearance="danger"
           class="plugin-form-error-message"
           :data-testid="`plugin-${isEditing ? 'edit' : 'create'}-form-error-message`"
@@ -87,12 +87,12 @@
             </div>
           </KCollapse>
         </KAlert>
-        <!-- <KAlert
+        <KAlert
           v-else
           appearance="danger"
           data-testid="form-error"
           :message="form.errorMessage"
-        /> -->
+        />
       </template>
 
       <template #form-actions>
@@ -217,6 +217,8 @@ import { FIELD_ACTIVATION_HANLER_KEY, VALIDATION_ERROR_KEY } from './free-form/s
 import { useFieldErrors, activateField } from '../composables/usePluginErrors'
 import { ArrowUpIcon } from '@kong/icons'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
+import { getFreeFormName } from '../utils/free-form'
+import { useExperimentalFreeForms } from '../composables/useExperimentalFreeForms'
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -360,6 +362,7 @@ const finalSchema = ref<Record<string, any> | undefined>(undefined)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
 const record = ref<Record<string, any> | undefined>(undefined)
 const configResponse = ref<Record<string, any>>({})
+const experimentalFreeForms = useExperimentalFreeForms()
 const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
 const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
 provide(REDIS_PARTIAL_INFO, {

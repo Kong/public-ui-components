@@ -36,6 +36,7 @@
       <div
         v-if="errorMessage"
         :class="{'sticky-form-error': useStickyErrorMessage}"
+        data-testid="form-error"
       >
         <template v-if="slots.errorMessage">
           <slot
