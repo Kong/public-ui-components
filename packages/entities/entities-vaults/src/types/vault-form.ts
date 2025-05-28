@@ -128,7 +128,7 @@ export interface AzureVaultConfig {
 
 export interface ConjurVaultConfig {
   endpoint_url: string
-  auth_method: 'default'
+  auth_method: 'api_key'
   login?: string
   account?: string
   api_key?: string

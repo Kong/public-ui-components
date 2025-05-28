@@ -822,7 +822,7 @@ const configFields = reactive<ConfigFields>({
   } as AzureVaultConfig,
   [VaultProviders.CONJUR]: {
     endpoint_url: '',
-    auth_method: 'default',
+    auth_method: 'api_key',
     ...base64FieldConfig,
   },
 })
@@ -874,7 +874,7 @@ const originalConfigFields = reactive<ConfigFields>({
   } as AzureVaultConfig,
   [VaultProviders.CONJUR]: {
     endpoint_url: '',
-    auth_method: 'default',
+    auth_method: 'api_key',
     ...base64FieldConfig,
   },
 })
