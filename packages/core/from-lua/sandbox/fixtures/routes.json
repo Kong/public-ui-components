@@ -1,0 +1,317 @@
+{
+  "entity_checks": [
+    {
+      "conditional": {
+        "if_field": "protocols",
+        "if_match": {
+          "elements": {
+            "not_one_of": ["grpcs", "https", "tls", "tls_passthrough", "wss"],
+            "type": "string"
+          }
+        },
+        "then_err": "'snis' can only be set when 'protocols' is 'grpcs', 'https', 'tls', 'tls_passthrough', or 'wss'",
+        "then_field": "snis",
+        "then_match": {
+          "len_eq": 0
+        }
+      }
+    },
+    {
+      "custom_entity_check": {
+        "field_sources": ["path_handling"]
+      }
+    },
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "id",
+          "protocols",
+          "snis",
+          "sources",
+          "destinations",
+          "methods",
+          "hosts",
+          "paths",
+          "headers",
+          "expression",
+          "regex_priority",
+          "priority"
+        ],
+        "run_with_missing_fields": true
+      }
+    }
+  ],
+  "fields": [
+    {
+      "id": {
+        "auto": true,
+        "description": "A string representing a UUID (universally unique identifier).",
+        "type": "string",
+        "uuid": true
+      }
+    },
+    {
+      "created_at": {
+        "auto": true,
+        "description": "An integer representing an automatic Unix timestamp in seconds.",
+        "timestamp": true,
+        "type": "integer"
+      }
+    },
+    {
+      "updated_at": {
+        "auto": true,
+        "description": "An integer representing an automatic Unix timestamp in seconds.",
+        "timestamp": true,
+        "type": "integer"
+      }
+    },
+    {
+      "name": {
+        "description": "A unique string representing a UTF-8 encoded name.",
+        "indexed": true,
+        "type": "string",
+        "unique": true
+      }
+    },
+    {
+      "protocols": {
+        "default": ["http", "https"],
+        "description": "An array of the protocols this Route should allow.",
+        "elements": {
+          "description": "A string representing a protocol, such as HTTP or HTTPS.",
+          "one_of": ["grpc", "grpcs", "http", "https", "tcp", "tls", "tls_passthrough", "udp", "ws", "wss"],
+          "type": "string"
+        },
+        "indexed": true,
+        "len_min": 1,
+        "mutually_exclusive_subsets": [
+          ["http", "https"],
+          ["tcp", "tls", "udp"],
+          ["tls_passthrough"],
+          ["grpc", "grpcs"],
+          ["ws", "wss"]
+        ],
+        "required": true,
+        "type": "set"
+      }
+    },
+    {
+      "https_redirect_status_code": {
+        "default": 426,
+        "description": "The status code Kong responds with when all properties of a Route match except the protocol",
+        "one_of": [426, 301, 302, 307, 308],
+        "required": true,
+        "type": "integer"
+      }
+    },
+    {
+      "strip_path": {
+        "default": true,
+        "description": "When matching a Route via one of the paths, strip the matching prefix from the upstream request URL.",
+        "required": true,
+        "type": "boolean"
+      }
+    },
+    {
+      "preserve_host": {
+        "default": false,
+        "description": "When matching a Route via one of the hosts domain names, use the request Host header in the upstream request headers.",
+        "required": true,
+        "type": "boolean"
+      }
+    },
+    {
+      "request_buffering": {
+        "default": true,
+        "description": "Whether to enable request body buffering or not. With HTTP 1.1.",
+        "required": true,
+        "type": "boolean"
+      }
+    },
+    {
+      "response_buffering": {
+        "default": true,
+        "description": "Whether to enable response body buffering or not.",
+        "required": true,
+        "type": "boolean"
+      }
+    },
+    {
+      "tags": {
+        "description": "A set of strings representing tags.",
+        "elements": {
+          "description": "A string representing a tag.",
+          "required": true,
+          "type": "string"
+        },
+        "type": "set"
+      }
+    },
+    {
+      "service": {
+        "description": "The Service this Route is associated to. This is where the Route proxies traffic to.",
+        "reference": "services",
+        "type": "foreign"
+      }
+    },
+    {
+      "snis": {
+        "description": "A list of SNIs that match this Route.",
+        "elements": {
+          "description": "A string representing a wildcard host name, such as *.example.com.",
+          "type": "string"
+        },
+        "type": "set"
+      }
+    },
+    {
+      "sources": {
+        "description": "A set of sources, each of which is a record with at least one of 'ip' or 'port'.",
+        "elements": {
+          "entity_checks": [
+            {
+              "at_least_one_of": ["ip", "port"]
+            }
+          ],
+          "fields": [
+            {
+              "ip": {
+                "description": "A string representing an IP address or CIDR block, such as 192.168.1.1 or 192.168.0.0/16.",
+                "type": "string"
+              }
+            },
+            {
+              "port": {
+                "between": [0, 65535],
+                "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                "type": "integer"
+              }
+            }
+          ],
+          "type": "record"
+        },
+        "type": "set"
+      }
+    },
+    {
+      "destinations": {
+        "description": "A set of destinations, each of which is a record with at least one of 'ip' or 'port'.",
+        "elements": {
+          "entity_checks": [
+            {
+              "at_least_one_of": ["ip", "port"]
+            }
+          ],
+          "fields": [
+            {
+              "ip": {
+                "description": "A string representing an IP address or CIDR block, such as 192.168.1.1 or 192.168.0.0/16.",
+                "type": "string"
+              }
+            },
+            {
+              "port": {
+                "between": [0, 65535],
+                "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                "type": "integer"
+              }
+            }
+          ],
+          "type": "record"
+        },
+        "type": "set"
+      }
+    },
+    {
+      "methods": {
+        "description": "A set of strings representing HTTP methods. Each method must be a valid HTTP method.",
+        "elements": {
+          "description": "A string representing an HTTP method, such as GET, POST, PUT, or DELETE. The string must contain only uppercase letters.",
+          "match": "^%u+$",
+          "type": "string"
+        },
+        "indexed": true,
+        "type": "set"
+      }
+    },
+    {
+      "hosts": {
+        "description": "An array of strings representing hosts. A valid host is a string containing one or more labels separated by periods, with at most one wildcard label ('*')",
+        "elements": {
+          "match_all": [
+            {
+              "err": "invalid wildcard: must have at most one wildcard",
+              "pattern": "^[^*]*%*?[^*]*$"
+            }
+          ],
+          "match_any": {
+            "err": "invalid wildcard: must be placed at leftmost or rightmost label",
+            "patterns": ["^%*%.", "%.%*$", "^[^*]*$"]
+          },
+          "type": "string"
+        },
+        "indexed": true,
+        "type": "array"
+      }
+    },
+    {
+      "paths": {
+        "description": "An array of strings representing router paths.",
+        "elements": {
+          "description": "A string representing a router path. It must start with a forward slash ('/') for a fixed path, or the sequence '~/' for a regex path. It must not have empty segments.",
+          "match_any": {
+            "err": "should start with: / (fixed path) or ~/ (regex path)",
+            "patterns": ["^/", "^~/"]
+          },
+          "match_none": [
+            {
+              "err": "must not have empty segments",
+              "pattern": "//"
+            }
+          ],
+          "type": "string"
+        },
+        "indexed": true,
+        "type": "array"
+      }
+    },
+    {
+      "headers": {
+        "description": "A map of header names to arrays of header values.",
+        "keys": {
+          "description": "A string representing an HTTP header name.",
+          "match_none": [
+            {
+              "err": "cannot contain 'host' header, which must be specified in the 'hosts' attribute",
+              "pattern": "^[Hh][Oo][Ss][Tt]$"
+            }
+          ],
+          "type": "string"
+        },
+        "type": "map",
+        "values": {
+          "elements": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      }
+    },
+    {
+      "regex_priority": {
+        "default": 0,
+        "description": "A number used to choose which route resolves a given request when several routes match it using regexes simultaneously.",
+        "type": "integer"
+      }
+    },
+    {
+      "path_handling": {
+        "default": "v0",
+        "description": "Controls how the Service path, Route path and requested path are combined when sending a request to the upstream.",
+        "one_of": ["v0", "v1"],
+        "type": "string"
+      }
+    }
+  ]
+}
