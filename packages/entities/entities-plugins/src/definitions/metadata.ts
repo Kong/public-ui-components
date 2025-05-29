@@ -710,6 +710,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.ai-rag-injector.name',
     useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-rag-injector'],
+  },
   'datakit': {
     descriptionKey: 'plugins.meta.datakit.description',
     isEnterprise: false,
