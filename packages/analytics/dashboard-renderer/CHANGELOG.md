@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.6.1...@kong-ui-public/dashboard-renderer@5.6.2) (2025-05-29)
+
+
+### Bug Fixes
+
+* add negative margin to override gridstack gutters [MA-3955] ([#2147](https://github.com/Kong/public-ui-components/issues/2147)) ([e682350](https://github.com/Kong/public-ui-components/commit/e68235005556beac7dc284581b2a09abf46763c0))
+
+
+
+
+
 ## [5.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.6.0...@kong-ui-public/dashboard-renderer@5.6.1) (2025-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
