@@ -521,6 +521,14 @@
       "ai-rag-injector": {
         "name": "AI RAG Injector",
         "description": "Attach contextual knowledge from vector databases with flexible template to LLM prompts."
+      },
+      "datakit": {
+        "name": "Datakit",
+        "description": "Datakit is a workflow engine for working with external apis."
+      },
+      "ai-prompt-compressor": {
+        "name": "AI Prompt Compressor",
+        "description": "The AI Prompt Compressor reduces costs associated with LLMs by compressing prompts."
       }
     },
     "fields": {
