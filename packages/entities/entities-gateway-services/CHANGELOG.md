@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.26...@kong-ui-public/entities-gateway-services@3.11.27) (2025-05-30)
+
+
+### Bug Fixes
+
+* **entities-gateway-services:** remove debounce ([#2154](https://github.com/Kong/public-ui-components/issues/2154)) ([c9ad98d](https://github.com/Kong/public-ui-components/commit/c9ad98dd7662317b22f4f700d6fdb6caa3cce552))
+
+
+
+
+
 ## [3.11.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.25...@kong-ui-public/entities-gateway-services@3.11.26) (2025-05-30)
 
 
