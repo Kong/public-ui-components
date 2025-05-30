@@ -118,6 +118,7 @@ import {
   customFields,
   getSharedFormName,
   sharedForms,
+  VueFormGenerator,
   type AutofillSlotProps,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
@@ -147,7 +148,7 @@ if (
 
 // Must explicitly specify these as components since they are rendered dynamically
 export default defineComponent({
-  components: { ...sharedForms, ...freeForm },
+  components: { ...sharedForms, ...freeForm, VueFormGenerator },
 })
 </script>
 

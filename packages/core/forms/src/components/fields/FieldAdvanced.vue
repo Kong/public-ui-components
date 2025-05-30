@@ -15,7 +15,7 @@
       class="advanced-field-dropdown"
       :class="openClass"
     >
-      <vue-form-generator
+      <VueFormGenerator
         :model="model"
         :options="{ helpAsHtml: true }"
         :schema="schema"
@@ -25,11 +25,17 @@
   </div>
 </template>
 
+<script setup>
+import VueFormGenerator from '../FormGenerator.vue'
+</script>
+
 <script>
 import abstractField from './abstractField'
 
 export default {
   mixins: [abstractField],
+
+  expose: ['validate', 'clearValidationErrors', 'schema'],
 
   emits: ['model-updated'],
 

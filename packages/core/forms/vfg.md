@@ -14,7 +14,7 @@ To write a new custom field...
 import FieldAdvanced from '@/plugins/vfg/FieldAdvanced'
 vue.use('FieldAdvanced', FieldAdvanced)
 ```
-- Define your custom schema so the field renders within `<vue-form-generator>`. The field type is defined with the `type` key.
+- Define your custom schema so the field renders within `<VueFormGenerator>`. The field type is defined with the `type` key.
 ```js
 const schema = {
   'service-id': { label: 'Service ID', type: 'input', inputType: 'text', valueType: 'object-expand', placeholder: 'Enter a Service ID', required: true },
