@@ -1,9 +1,9 @@
 <template>
   <div class="ff-standard-layout">
     <FormSection
-      description="Configure the general information for this entity."
+      :description="t('plugins.form.sections.general_info.description')"
       :step="1"
-      title="General Information"
+      :title="t('plugins.form.sections.general_info.title')"
     >
       <div class="enabled">
         <VueFormGenerator
@@ -53,9 +53,9 @@
       </KCollapse>
     </FormSection>
     <FormSection
-      description="Configure the general information for this entity."
+      :description="pluginConfigDescription"
       :step="2"
-      title="General Information"
+      :title="t('plugins.form.sections.plugin_config.title')"
     >
       <slot
         :data="pruneData(model)"
@@ -100,9 +100,19 @@ import type { PluginValidityChangeEvent } from 'src/types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const props = defineProps<Props<T>>()
+const props = defineProps<Props<T> & {
+  editorType?: 'form' | 'yaml'
+}>()
 
-console.log(props.formModel)
+const pluginConfigDescription = computed(() => {
+  switch (props.editorType) {
+    case 'yaml':
+      return t('plugins.form.sections.plugin_config.description_yaml')
+    case 'form':
+    default:
+      return t('plugins.form.sections.plugin_config.description')
+  }
+})
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any
@@ -131,7 +141,7 @@ const scopeEntitiesSchema = computed(() => {
 })
 
 const moreFieldsSchema = computed(() => {
-  const fields = ['instance_name', 'tags']
+  const fields = ['instance_name', 'protocols', 'tags']
 
   return {
     fields: props.formSchema?.fields.filter((field: { model: string }) => fields.includes(field.model)),
