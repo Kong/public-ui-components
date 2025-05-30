@@ -465,7 +465,6 @@ import {
 } from '@kong-ui-public/entities-shared'
 import type { SelectItem } from '@kong/kongponents'
 import '@kong-ui-public/entities-shared/dist/style.css'
-import { useDebounceFn } from '@vueuse/core'
 import { KongAirService } from '../constants'
 
 const emit = defineEmits<{
@@ -719,7 +718,7 @@ const handleTrySampleApi = (): void => {
   }
 }
 
-const handleValidateFullUrl = useDebounceFn((): void => {
+const handleValidateFullUrl = (): void => {
   // reset the errors
   resetFormFieldErrors()
 
@@ -758,12 +757,12 @@ const handleValidateFullUrl = useDebounceFn((): void => {
       form.formFieldErrors.url = t('gateway_services.form.errors.url.invalid')
     }
   }
-}, 300)
+}
 
-const handleValidateAdvancedFields = useDebounceFn((fieldId?: keyof FormFieldErrors) => {
+const handleValidateAdvancedFields = (fieldId?: keyof FormFieldErrors) => {
   // reset the errors
   resetFormFieldErrors(fieldId)
-}, 300)
+}
 
 const getFullUrlError = computed(() : boolean => !!form.formFieldErrors.url || !!form.formFieldErrors.host || !!form.formFieldErrors.port)
 
@@ -778,7 +777,7 @@ const getFieldErrorById = (fieldId: keyof FormFieldErrors): string => {
 
 
 // validate for the service type custom URL
-const handleValidateCustomUrl = useDebounceFn((fieldId?: keyof FormFieldErrors): void => {
+const handleValidateCustomUrl = (fieldId?: keyof FormFieldErrors): void => {
 
   // reset the errors
   resetFormFieldErrors(fieldId ?? undefined)
@@ -800,7 +799,7 @@ const handleValidateCustomUrl = useDebounceFn((fieldId?: keyof FormFieldErrors):
   } else {
     emit('url-valid:error', form.errorMessages.join(',') || t('gateway_services.form.errors.url.invalid'))
   }
-}, 300)
+}
 
 const resetFormFieldErrors = (fieldId?: keyof FormFieldErrors): void => {
   // if field Id is present only reset the field error
