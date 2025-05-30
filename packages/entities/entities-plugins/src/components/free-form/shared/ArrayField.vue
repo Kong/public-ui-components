@@ -75,7 +75,7 @@
             appearance="tertiary"
             :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
             class="ff-array-field-item-remove"
-            :data-testid="`remove-item-btn-${field.path.value}`"
+            :data-testid="`remove-item-btn-${field.path.value}.${index}`"
             icon
             @click="removeItem(index)"
           >
