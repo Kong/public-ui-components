@@ -415,6 +415,7 @@
       <KAlert
         v-if="form.errorMessages.length"
         appearance="danger"
+        data-testid="form-error"
       >
         <ul class="form-error-list">
           <li
