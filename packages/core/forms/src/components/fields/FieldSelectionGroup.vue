@@ -46,7 +46,7 @@
         class="option-field"
       >
         <div class="option-field-container">
-          <vue-form-generator
+          <VueFormGenerator
             :model="model"
             :options="{ helpAsHtml: true }"
             :schema="{ fields: option.fields }"
@@ -58,22 +58,23 @@
   </div>
 </template>
 
-<script>
-import abstractField from './abstractField'
+<script setup>
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../locales/en.json'
+import VueFormGenerator from '../FormGenerator.vue'
+
+const { t } = createI18n('en-us', english)
+</script>
+
+<script>
+import abstractField from './abstractField'
 
 export default {
   mixins: [abstractField],
 
-  emits: ['model-updated'],
+  expose: ['validate', 'clearValidationErrors', 'schema'],
 
-  setup() {
-    const { t } = createI18n('en-us', english)
-    return {
-      t,
-    }
-  },
+  emits: ['model-updated'],
 
   data() {
     return {
