@@ -8,14 +8,16 @@
 
   <div v-else>
     <InputComponent
-      class="ff-string-field"
       v-bind="{
         ...fieldAttrs,
         showPasswordMaskToggle: encrypted,
         type: encrypted ? 'password' : 'text',
       }"
+      :id="field.path.value"
+      class="ff-string-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
+      :data-testid="field.path.value"
       :model-value="fieldValue ?? ''"
       @update:model-value="handleUpdate"
     >

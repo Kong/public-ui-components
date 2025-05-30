@@ -15,6 +15,8 @@
       <KLabel
         class="ff-kv-field-label"
         v-bind="fieldAttrs"
+        :data-testid="`label-${field.path.value}`"
+        :for="`${field.path.value}.key`"
         :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
         {{ fieldAttrs.label }}
@@ -43,16 +45,20 @@
       class="ff-kv-field-entry"
     >
       <KInput
+        :id="`${field.path.value}.key`"
         v-model.trim="entry.key"
         class="ff-kv-field-entry-key"
         :data-key-input="index"
+        :data-testid="`${field.path.value}.key`"
         :placeholder="keyPlaceholder || 'Key'"
         @keydown.enter.prevent="focus(index, 'value')"
       />
 
       <KInput
+        :id="`${field.path.value}.value`"
         v-model.trim="entry.value"
         class="ff-kv-field-entry-value"
+        :data-testid="`${field.path.value}.value`"
         :data-value-input="index"
         :placeholder="valuePlaceholder || 'Value'"
         @keydown.enter.prevent="handleValueEnter(index)"
