@@ -32,7 +32,11 @@ onMounted(() => {
     minimap: {
       enabled: false,
     },
+    scrollBeyondLastLine: false,
     tabSize: 2,
+    scrollbar: {
+      alwaysConsumeMouseWheel: false,
+    },
   })
 
   editor.value.setValue(yaml.dump(toRaw(props.model.config), {
@@ -94,7 +98,7 @@ onBeforeUnmount(() => {
 <style lang="scss" scoped>
 .dk-form {
   .editor {
-    height: 360px;
+    height: 684px;
     width: 100%;
   }
 }

@@ -1137,6 +1137,10 @@ const handleValidityChange = (event: PluginValidityChangeEvent) => {
   form.clientErrorMessage = [...clientSideErrors.value.entries()]
     .map(([model, error]) => `${model}: ${typeof error === 'string' ? error : getMessageFromError(error)}`)
     .join('; ')
+
+  if (form.clientErrorMessage) {
+    form.serverErrorMessage = ''
+  }
 }
 
 watch([entityMap, initialized], (newData, oldData) => {
