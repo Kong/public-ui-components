@@ -1026,7 +1026,6 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
   try {
     form.isReadonly = true
 
-    validateUrl()
     const payload = getPayload.value
     saveTlsVerify(payload)
 
