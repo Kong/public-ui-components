@@ -415,6 +415,7 @@
       <KAlert
         v-if="form.errorMessages.length"
         appearance="danger"
+        data-testid="form-error"
       >
         <ul class="form-error-list">
           <li
@@ -1026,7 +1027,6 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
   try {
     form.isReadonly = true
 
-    validateUrl()
     const payload = getPayload.value
     saveTlsVerify(payload)
 
