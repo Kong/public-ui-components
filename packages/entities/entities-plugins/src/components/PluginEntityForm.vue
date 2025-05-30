@@ -119,6 +119,7 @@ import {
   customFields,
   getSharedFormName,
   sharedForms,
+  VueFormGenerator,
   type AutofillSlotProps,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
