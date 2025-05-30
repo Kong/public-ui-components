@@ -8,6 +8,7 @@
 
   <KInput
     v-else
+    :id="field.path.value"
     class="ff-number-field"
     v-bind="{
       ...fieldAttrs,
@@ -15,6 +16,7 @@
       max: between.max,
     }"
     :data-autofocus="isAutoFocus"
+    :data-testid="field.path.value"
     :model-value="fieldValue ?? ''"
     type="number"
     @update:model-value="handleUpdate"

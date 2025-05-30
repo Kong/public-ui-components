@@ -9,7 +9,9 @@
   <KCheckbox
     v-else
     v-bind="fieldAttrs"
+    :id="field.path.value"
     class="ff-boolean-field"
+    :data-testid="field.path.value"
     :model-value="fieldValue ?? false"
     @update:model-value="handleUpdate"
   >

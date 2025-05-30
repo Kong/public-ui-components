@@ -8,10 +8,12 @@
 
   <div v-else>
     <KInput
-      class="ff-string-field"
       v-bind="fieldAttrs"
+      :id="field.path.value"
+      class="ff-string-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
+      :data-testid="field.path.value"
       :model-value="value ?? ''"
       @update:model-value="handleUpdate"
     >
