@@ -6,16 +6,21 @@
     :message="field.error.message"
   />
 
-  <div v-else>
+  <div
+    v-else
+    ref="input-component"
+  >
     <InputComponent
-      class="ff-string-field"
       v-bind="{
         ...fieldAttrs,
         showPasswordMaskToggle: encrypted,
         type: encrypted ? 'password' : 'text',
       }"
+      class="ff-string-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
+      :error="!!field.validationError.value"
+      :error-message="field.validationError.value"
       :model-value="fieldValue ?? ''"
       @update:model-value="handleUpdate"
     >
@@ -41,7 +46,7 @@
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
-import { computed, inject, toRef, useAttrs } from 'vue'
+import { computed, inject, toRef, useAttrs, useTemplateRef, nextTick } from 'vue'
 import { KInput, KTextArea, type LabelAttributes } from '@kong/kongponents'
 
 import * as utils from '../shared/utils'
@@ -79,10 +84,20 @@ const emit = defineEmits<{
   'update:modelValue': [value: string | null]
 }>()
 
-const { value: fieldValue, ...field } = useField<string | null>(toRef(() => name))
+const InputComponentRef = useTemplateRef('input-component')
+
+const activate = async () => {
+  InputComponentRef.value?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'center',
+  })
+  await nextTick()
+  // Try to focus the input element
+  document.getElementById(field.path?.value || '')?.focus()
+}
+const { value: fieldValue, clearValidationError, ...field } = useField<string | null>(toRef(() => name), activate)
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const initialValue = fieldValue?.value
-
 function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && value !== initialValue) {
     fieldValue!.value = null
@@ -91,6 +106,8 @@ function handleUpdate(value: string) {
     fieldValue!.value = value.trim()
     emit('update:modelValue', value.trim())
   }
+  // Clear validation error when the value is changed
+  clearValidationError?.()
 }
 
 const encrypted = computed(() => {

@@ -15,7 +15,10 @@
       'ff-array-field-sticky-tabs': stickyTabs,
     }"
   >
-    <header class="ff-array-field-header">
+    <header
+      ref="arrayHeader"
+      class="ff-array-field-header"
+    >
       <KLabel
         class="ff-array-field-label"
         v-bind="fieldAttrs"
@@ -42,6 +45,12 @@
         <AddIcon />
       </KButton>
     </header>
+    <div
+      v-if="validationError"
+      class="ff-array-field-validation-error"
+    >
+      {{ validationError }}
+    </div>
 
     <template
       v-if="realItems.length"
@@ -139,6 +148,7 @@ import { useField, useFieldAttrs, useFormShared } from './composables'
 import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
+import { removeFieldErrors } from '../../../composables/usePluginErrors'
 
 const props = defineProps<{
   name: string
@@ -166,9 +176,24 @@ defineSlots<{
   tooltip(): any
 }>()
 
+const { getDefault, fieldHandlers } = useFormShared()
+const arrayHeaderRef = useTemplateRef('arrayHeader')
+
+const { value: fieldValue, validationError, clearValidationError, ...field } = useField<T[] | null>(toRef(props, 'name') )
+const activate = (tabIndex?: number) => {
+  if (arrayHeaderRef.value) {
+    arrayHeaderRef.value.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
+  }
+  if (tabIndex !== null && tabIndex !== undefined) {
+    activeTab.value = tabs.value[tabIndex]?.hash
+  }
+}
+// register tab activation to global field handlers
+fieldHandlers?.set(field.path!.value, activate)
 const { i18n: { t } } = useI18n()
-const { getDefault } = useFormShared()
-const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const keyMap = reactive(new Map<T, string>())
@@ -229,6 +254,7 @@ const addItem = async () => {
 
   fieldValue!.value.push(defaultItemValue)
   emit('add')
+  clearValidationError?.()
 
   if (props.appearance === 'tabs') {
     await nextTick()
@@ -243,6 +269,8 @@ const removeItem = async (index: number) => {
   if (Array.isArray(fieldValue!.value)) {
     fieldValue!.value.splice(index, 1)
   }
+  // remove all validation errors within this array item
+  removeFieldErrors(field.path!.value, index)
   emit('remove', index)
 
   if (props.appearance === 'tabs') {
@@ -294,6 +322,11 @@ const stickyTop = computed(() => {
     display: flex;
     gap: $kui-space-40;
     height: 32px;
+  }
+
+  &-validation-error {
+    color: $kui-color-text-danger;
+    margin-top: $kui-space-40;
   }
 
   &-container {

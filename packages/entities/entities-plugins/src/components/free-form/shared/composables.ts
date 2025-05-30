@@ -1,14 +1,16 @@
-import { computed, inject, provide, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, provide, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Ref, type Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
-import type { FormConfig, ResetLabelPathRule } from './types'
+import type { FormConfig, ResetLabelPathRule, ValidationError, Ancestor } from './types'
 import { capitalize } from 'lodash-es'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
+export const VALIDATION_ERROR_KEY = Symbol('free-form-field-validation-errors')
+export const FIELD_ACTIVATION_HANLER_KEY = Symbol('free-form-field-activation-handler')
 export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
 export const FIELD_PATH_KEY = Symbol('free-form-field-path')
 export const FIELD_RENDERER_SLOTS = Symbol('free-form-field-renderer-slots')
@@ -205,6 +207,8 @@ export function useFormShared<T>() {
   const formData = inject<T>(DATA_INJECTION_KEY)
   const schemaHelpers = inject<ReturnType<typeof useSchemaHelpers>>(SCHEMA_INJECTION_KEY)
   const formConfig = inject<FormConfig>(FORM_CONFIG, {})
+  const fieldValidationErrors = inject<Ref<ValidationError>>(VALIDATION_ERROR_KEY)
+  const fieldHandlers = inject<Map<string, (...args: any[]) => void>>(FIELD_ACTIVATION_HANLER_KEY)
 
   if (!formData) {
     throw new Error('useFormShared() called without form data provider.')
@@ -214,7 +218,7 @@ export function useFormShared<T>() {
     throw new Error('useFormShared() called without schema provider.')
   }
 
-  return { formData, formConfig, ...schemaHelpers }
+  return { formData, formConfig, fieldValidationErrors, fieldHandlers, ...schemaHelpers }
 }
 
 export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
@@ -399,6 +403,7 @@ export function useFieldAttrs(
     required?: boolean
     placeholder?: string
     resetLabelPath?: ResetLabelPathRule
+    errorMessage?: string
   }>,
 ) {
   const { getLabelAttributes, getPlaceholder, getSchema } = useFormShared()
@@ -415,11 +420,6 @@ export function useFieldAttrs(
     label: propsValue.label ?? label.value,
     required: propsValue.required ?? getSchema(pathValue)?.required,
   }))
-}
-
-export type Ancestor = {
-  path?: string
-  parent: Ancestor | null
 }
 
 /**
@@ -455,8 +455,8 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
   }
 }
 
-export function useField<T = unknown, S extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
-  const { getSchema } = useFormShared()
+export function useField<T = unknown, S extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>, activate?: () => void) {
+  const { getSchema, fieldValidationErrors, fieldHandlers } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
   const { value } = useFormData<T>(name)
@@ -468,6 +468,29 @@ export function useField<T = unknown, S extends UnionFieldSchema = UnionFieldSch
       error: new Error(`path '${fieldPath.value}' is not found in schema.`),
     }
   }
+  if (activate) {
+    // register global field activation handler
+    fieldHandlers!.set(fieldPath.value, activate)
+  }
+
+  const validationError = computed(() => fieldValidationErrors!.value?.get(fieldPath.value)?.message)
+  watch(validationError, (val, oldVal) => {
+    if (val && val !== oldVal) {
+      // report error component to global error handler
+      fieldValidationErrors!.value.set(fieldPath.value, {
+        message: val,
+      })
+      // replace the key with fieldPath Ref
+      // fieldValidationErrors!.value.delete(fieldPath.value)
+    } else {
+      // remove error DOM from global error handler
+    }
+  })
+  const clearValidationError = () => {
+    if (fieldValidationErrors!.value) {
+      fieldValidationErrors!.value.delete(fieldPath.value)
+    }
+  }
 
   return {
     schema,
@@ -476,6 +499,8 @@ export function useField<T = unknown, S extends UnionFieldSchema = UnionFieldSch
     value,
     ancestors: useFieldAncestors(fieldPath),
     error: null,
+    validationError,
+    clearValidationError,
   }
 }
 
