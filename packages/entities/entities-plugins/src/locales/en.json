@@ -641,12 +641,11 @@
       "sections": {
         "general_info": {
           "title": "General information",
-          "description": "Define the scope, name, protocols and tags of the plugin."
+          "description": "Add details to help identify and manage your plugin."
         },
         "plugin_config": {
           "title": "Plugin configuration",
-          "description": "Configure the plugin parameters. The parameters available depend on the plugin type.",
-          "description_yaml": "Configure this plugin using a YAML file."
+          "description": "Configure parameters for this plugin by using a form or a YAML file."
         }
       }
     },

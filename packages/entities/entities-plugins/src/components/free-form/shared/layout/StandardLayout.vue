@@ -53,7 +53,7 @@
       </KCollapse>
     </FormSection>
     <FormSection
-      :description="pluginConfigDescription"
+      :description="t('plugins.form.sections.plugin_config.description')"
       :step="2"
       :title="t('plugins.form.sections.plugin_config.title')"
     >
@@ -100,19 +100,7 @@ import type { PluginValidityChangeEvent } from 'src/types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const props = defineProps<Props<T> & {
-  editorType?: 'form' | 'yaml'
-}>()
-
-const pluginConfigDescription = computed(() => {
-  switch (props.editorType) {
-    case 'yaml':
-      return t('plugins.form.sections.plugin_config.description_yaml')
-    case 'form':
-    default:
-      return t('plugins.form.sections.plugin_config.description')
-  }
-})
+const props = defineProps<Props<T>>()
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any
@@ -153,31 +141,6 @@ const freeFormSchema = computed(() => {
   const result = props.schema
   result.fields = result.fields.filter(item => FREE_FORM_SCHEMA_KEYS.includes(Object.keys(item)[0]))
 
-  result.fields.unshift({
-    instance_name: {
-      type: 'string',
-      description: t('plugins.form.fields.instance_name.help'),
-    },
-  }, {
-    tags: {
-      type: 'set',
-      default: [],
-      description: t('plugins.form.fields.tags.help'),
-      elements: {
-        type: 'string',
-      },
-    },
-  })
-
-  const protocolsField = result.fields.find(item => Object.keys(item)[0] === 'protocols')
-  if (protocolsField) {
-    protocolsField.protocols.help = protocolsField.protocols.default
-      ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
-        protocols: protocolsField.protocols.default.join(', '),
-      })
-      : t('plugins.form.fields.protocols.placeholder')
-    protocolsField.protocols.description = t('plugins.form.fields.protocols.help')
-  }
   return result
 })
 

@@ -2,7 +2,6 @@
   <StandardLayout
     v-bind="props"
     class="dk-form"
-    editor-type="yaml"
   >
     <div
       ref="editor-root"
