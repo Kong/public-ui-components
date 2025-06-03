@@ -15,6 +15,7 @@
       <KLabel
         class="ff-kv-field-label"
         v-bind="fieldAttrs"
+        :data-testid="`ff-label-${field.path.value}`"
         :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
         {{ fieldAttrs.label }}
@@ -46,6 +47,7 @@
         v-model.trim="entry.key"
         class="ff-kv-field-entry-key"
         :data-key-input="index"
+        :data-testid="`ff-key-${field.path.value}`"
         :placeholder="keyPlaceholder || 'Key'"
         @keydown.enter.prevent="focus(index, 'value')"
       />
@@ -53,6 +55,7 @@
       <KInput
         v-model.trim="entry.value"
         class="ff-kv-field-entry-value"
+        :data-testid="`ff-value-${field.path.value}`"
         :data-value-input="index"
         :placeholder="valuePlaceholder || 'Value'"
         @keydown.enter.prevent="handleValueEnter(index)"
