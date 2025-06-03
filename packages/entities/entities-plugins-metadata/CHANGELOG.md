@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.4.0...@kong-ui-public/entities-plugins-metadata@1.5.0) (2025-06-03)
+
+
+### Features
+
+* **entities-plugins:** add metadata for solace-upstream and ai-aws-guardrails ([#2156](https://github.com/Kong/public-ui-components/issues/2156)) ([d213a9d](https://github.com/Kong/public-ui-components/commit/d213a9de043b19fdde35b6caf8d958673b32d797))
+
+
+
+
+
 # [1.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.3.1...@kong-ui-public/entities-plugins-metadata@1.4.0) (2025-05-30)
 
 
