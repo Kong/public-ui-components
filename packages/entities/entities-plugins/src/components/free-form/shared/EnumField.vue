@@ -9,7 +9,6 @@
   <SelectComponent
     v-else
     v-bind="fieldAttrs"
-    :id="field.path.value"
     v-model="fieldValue"
     class="ff-enum-field"
     :data-testid="field.path.value"

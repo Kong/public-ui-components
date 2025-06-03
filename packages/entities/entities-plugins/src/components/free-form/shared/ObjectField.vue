@@ -30,7 +30,7 @@
     <header class="ff-object-field-header">
       <KLabel
         class="ff-object-field-label"
-        :data-testid="`label-${field.path.value}`"
+        :data-testid="`ff-label-${field.path.value}`"
         v-bind="{
           ...fieldAttrs,
           required: false
@@ -53,7 +53,7 @@
           v-if="collapsible && realAdded"
           appearance="tertiary"
           :class="`ff-object-field-button-${realExpanded ? 'collapse' : 'expand'}`"
-          :data-testid="`object-toggle-btn-${field.path.value}`"
+          :data-testid="`ff-object-toggle-btn-${field.path.value}`"
           icon
           @click="expanded = !realExpanded"
         >
@@ -66,7 +66,7 @@
           v-if="!fieldAttrs.required"
           appearance="tertiary"
           :class="`ff-object-field-button-${realAdded ? 'remove' : 'add'}`"
-          :data-testid="`object-remove-btn-${field.path.value}`"
+          :data-testid="`ff-object-remove-btn-${field.path.value}`"
           icon
           @click="added = !added"
         >

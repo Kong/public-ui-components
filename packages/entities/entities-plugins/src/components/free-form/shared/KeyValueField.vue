@@ -15,8 +15,7 @@
       <KLabel
         class="ff-kv-field-label"
         v-bind="fieldAttrs"
-        :data-testid="`label-${field.path.value}`"
-        :for="`${field.path.value}-key`"
+        :data-testid="`ff-label-${field.path.value}`"
         :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
         {{ fieldAttrs.label }}
@@ -45,20 +44,18 @@
       class="ff-kv-field-entry"
     >
       <KInput
-        :id="`${field.path.value}-key`"
         v-model.trim="entry.key"
         class="ff-kv-field-entry-key"
         :data-key-input="index"
-        :data-testid="`${field.path.value}-key`"
+        :data-testid="`ff-key-${field.path.value}`"
         :placeholder="keyPlaceholder || 'Key'"
         @keydown.enter.prevent="focus(index, 'value')"
       />
 
       <KInput
-        :id="`${field.path.value}-value`"
         v-model.trim="entry.value"
         class="ff-kv-field-entry-value"
-        :data-testid="`${field.path.value}-value`"
+        :data-testid="`ff-value-${field.path.value}`"
         :data-value-input="index"
         :placeholder="valuePlaceholder || 'Value'"
         @keydown.enter.prevent="handleValueEnter(index)"
@@ -86,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, useTemplateRef, nextTick, inject, computed, toRef } from 'vue'
+import { ref, watch, useTemplateRef, nextTick, inject, computed, toRef, useId } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
 import type { LabelAttributes } from '@kong/kongponents'

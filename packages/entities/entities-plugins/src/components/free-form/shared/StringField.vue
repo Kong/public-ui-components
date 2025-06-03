@@ -13,7 +13,6 @@
         showPasswordMaskToggle: encrypted,
         type: encrypted ? 'password' : 'text',
       }"
-      :id="field.path.value"
       class="ff-string-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"

@@ -8,7 +8,6 @@
 
   <KInput
     v-else
-    :id="field.path.value"
     class="ff-number-field"
     v-bind="{
       ...fieldAttrs,

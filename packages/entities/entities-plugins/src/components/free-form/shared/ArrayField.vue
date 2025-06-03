@@ -19,7 +19,7 @@
       <KLabel
         class="ff-array-field-label"
         v-bind="fieldAttrs"
-        :data-testid="`label-${field.path.value}`"
+        :data-testid="`ff-label-${field.path.value}`"
         :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
         {{ fieldAttrs.label }}
@@ -36,7 +36,7 @@
       <KButton
         appearance="tertiary"
         :aria-label="t('actions.add_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
-        :data-testid="`add-item-btn-${field.path.value}`"
+        :data-testid="`ff-add-item-btn-${field.path.value}`"
         icon
         @click="addItem"
       >
@@ -56,7 +56,7 @@
           :key="getKey(item, index)"
           class="ff-array-field-item"
           :data-index="index"
-          :data-testid="`array-item-${field.path.value}.${index}`"
+          :data-testid="`ff-array-item-${field.path.value}.${index}`"
         >
           <div class="ff-array-field-item-content">
             <slot
@@ -75,7 +75,7 @@
             appearance="tertiary"
             :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
             class="ff-array-field-item-remove"
-            :data-testid="`remove-item-btn-${field.path.value}.${index}`"
+            :data-testid="`ff-remove-item-btn-${field.path.value}.${index}`"
             icon
             @click="removeItem(index)"
           >
@@ -86,7 +86,7 @@
       <KCard v-else>
         <KTabs
           v-model="activeTab"
-          :data-testid="`tabs-${field.path.value}`"
+          :data-testid="`ff-tabs-${field.path.value}`"
           :tabs="tabs"
         >
           <template
@@ -97,7 +97,7 @@
             <div
               class="ff-array-field-item"
               :data-index="index"
-              :data-testid="`array-item-${field.path.value}.${index}`"
+              :data-testid="`ff-array-item-${field.path.value}.${index}`"
             >
               <slot
                 v-if="$slots.item"
@@ -121,7 +121,7 @@
               appearance="tertiary"
               :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
               class="ff-array-field-item-remove"
-              :data-testid="`remove-item-btn-${field.path.value}.${index}`"
+              :data-testid="`ff-remove-item-btn-${field.path.value}.${index}`"
               icon
               @click.stop="removeItem(index)"
             >
