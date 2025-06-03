@@ -317,7 +317,7 @@ import type {
   CopyEventPayload,
 } from '../types'
 
-import PluginIcon from './PluginIcon.vue'
+import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 
 import type { HeaderTag } from '@kong/kongponents'
 

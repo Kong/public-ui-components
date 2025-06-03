@@ -25,6 +25,7 @@
     "access": "public"
   },
   "peerDependencies": {
+    "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.26.0",
@@ -34,8 +35,9 @@
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
-    "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
+    "@kong-ui-public/entities-shared": "workspace:^",
+    "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.4",
     "@kong/icons": "^1.26.0",

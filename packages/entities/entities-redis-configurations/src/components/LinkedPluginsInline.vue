@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { PluginIcon } from '@kong-ui-public/entities-plugins'
+import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 
 import { useLinkedPlugins } from '../composables/useLinkedPlugins'
 

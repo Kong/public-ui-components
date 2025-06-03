@@ -9,14 +9,11 @@
 </template>
 
 <script setup lang="ts">
-import { PluginIcon } from '@kong-ui-public/entities-plugins'
+import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 
-defineProps({
-  pluginName: {
-    type: String,
-    required: true,
-  },
-})
+defineProps<{
+  pluginName: string
+}>()
 </script>
 
 <style lang="scss" scoped>
