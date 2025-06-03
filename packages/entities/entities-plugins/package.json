@@ -84,6 +84,7 @@
     "@kong-ui-public/entities-plugins-metadata": "workspace:^",
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
+    "monaco-editor": "0.52.2",
     "marked": "^14.1.3"
   }
 }

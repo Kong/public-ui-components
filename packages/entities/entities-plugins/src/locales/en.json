@@ -524,7 +524,7 @@
       },
       "datakit": {
         "name": "Datakit",
-        "description": "Datakit is a workflow engine for working with external apis."
+        "description": "Datakit is a workflow engine for working with external APIs."
       },
       "ai-prompt-compressor": {
         "name": "AI Prompt Compressor",
@@ -637,6 +637,16 @@
         "only_one_of": "Exactly one of these parameters is required: {parameters}",
         "mutually_required": "All of these parameters are required: {parameters}",
         "only_one_of_mutually_required": "Exactly one of the following parameter combinations is required (all parameters within a chosen combination are required):"
+      },
+      "sections": {
+        "general_info": {
+          "title": "General information",
+          "description": "Add details to help identify and manage your plugin."
+        },
+        "plugin_config": {
+          "title": "Plugin configuration",
+          "description": "Configure parameters for this plugin by using a form or a YAML file."
+        }
       }
     },
     "free-form": {
