@@ -91,12 +91,12 @@ import { computed, provide, ref, watch } from 'vue'
 import { pick } from 'lodash-es'
 import { KRadio } from '@kong/kongponents'
 import FormSection from '../FormSection.vue'
-import type { FormSchema } from '../../../../types/plugins/form-schema'
-import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import english from '../../../../locales/en.json'
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { createI18n } from '@kong-ui-public/i18n'
-import type { PluginValidityChangeEvent } from 'src/types'
+import type { FormSchema } from '../../../../types/plugins/form-schema'
+import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
+import type { PluginValidityChangeEvent } from '../../../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
