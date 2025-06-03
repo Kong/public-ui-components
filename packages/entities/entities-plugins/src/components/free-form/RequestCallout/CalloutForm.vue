@@ -1,22 +1,22 @@
 <template>
   <ObjectField :name="fieldName">
-    <template #depends_on="props">
+    <template #depends_on="dependsOnProps">
       <EnumField
-        v-bind="props"
+        v-bind="dependsOnProps"
         :items="dependsOnItems"
         multiple
         :required="false"
       />
     </template>
 
-    <template #request="props">
+    <template #request="requestProps">
       <ObjectField
-        v-bind="props"
+        v-bind="requestProps"
         :fields-order="['url', 'method', 'headers', 'query', 'body', 'http_opts', 'error', 'by_lua']"
       >
-        <template #method="props">
+        <template #method="methodProps">
           <EnumField
-            v-bind="props"
+            v-bind="methodProps"
             :items="toSelectItems([
               'GET',
               'POST',
@@ -43,7 +43,7 @@ import { useFormShared } from '../shared/composables'
 import EnumField from '../shared/EnumField.vue'
 import ObjectField from '../shared/ObjectField.vue'
 
-import type { RequestCalloutPlugin } from './types'
+import { CalloutId, type RequestCalloutPlugin } from './types'
 import type { SelectItem } from '@kong/kongponents'
 
 const props = defineProps<{
@@ -64,7 +64,7 @@ const dependableCallouts = computed(() => {
 })
 
 const dependsOnItems = computed<SelectItem[]>(() => {
-  return dependableCallouts.value.map(({ _id, name }) => ({ value: _id as string, label: name }))
+  return dependableCallouts.value.map(({ [CalloutId]: id, name }) => ({ value: id as string, label: name }))
 })
 
 const callout = computed(() => formData.config!.callouts[props.index])
