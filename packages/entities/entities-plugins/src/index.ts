@@ -8,6 +8,9 @@ import PluginConfigCard from './components/PluginConfigCard.vue'
 import composables from './composables'
 import { getPluginIconURL } from './definitions/metadata'
 import pluginEndpoints from './plugins-endpoints'
+import { RedisConfigurationForm } from '@kong-ui-public/entities-redis-configurations'
+
+console.log('RedisConfigurationForm', RedisConfigurationForm)
 
 // expose VueFormGenerator so host app doesn't need @kong-ui-public/forms as a dependency
 export { VueFormGenerator } from '@kong-ui-public/forms'
