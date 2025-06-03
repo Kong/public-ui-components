@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, useTemplateRef, nextTick, inject, computed, toRef, useId } from 'vue'
+import { ref, watch, useTemplateRef, nextTick, inject, computed, toRef } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
 import type { LabelAttributes } from '@kong/kongponents'
