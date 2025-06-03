@@ -15,6 +15,7 @@
       max: between.max,
     }"
     :data-autofocus="isAutoFocus"
+    :data-testid="field.path.value"
     :model-value="fieldValue ?? ''"
     type="number"
     @update:model-value="handleUpdate"

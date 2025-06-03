@@ -19,6 +19,7 @@
         :model="record"
         :on-form-change="handleFreeFormUpdate"
         :on-model-updated="onModelUpdated"
+        :on-validity-change="onValidityChange"
         :schema="rawSchema"
       >
         <template
@@ -127,7 +128,7 @@ import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
-import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo } from '../types'
+import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import * as freeForm from './free-form'
 import { getFreeFormName } from '../utils/free-form'
@@ -136,6 +137,7 @@ import { getFreeFormName } from '../utils/free-form'
 // throw an error if there are any
 const sharedFormKeys = Object.keys(sharedForms)
 const freeFormKeys = Object.keys(freeForm)
+
 if (
   new Set([...sharedFormKeys, ...freeFormKeys]).size !==
   sharedFormKeys.length + freeFormKeys.length
@@ -162,6 +164,7 @@ const emit = defineEmits<{
     }
   ): void
   (e: 'showNewPartialModal', redisType: string): void
+  (e: 'validity-change', payload: PluginValidityChangeEvent): void
 }>()
 
 const props = defineProps({
@@ -236,7 +239,7 @@ const props = defineProps({
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
-const { parseSchema, pruneRecord } = composables.useSchemas({
+const { parseSchema } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,
   credential: props.credential,
   enableRedisPartial: props.enableRedisPartial,
@@ -577,12 +580,7 @@ const getModel = (): Record<string, any> => {
 
   // Handle the special case of the freeform plugin
   if (freeformName.value) {
-    const configSchema = props.rawSchema?.fields?.find((field: any) => 'config' in field)?.config
-
-    Object.assign(model, {
-      ...freeformData.value,
-      config: pruneRecord(freeformData.value.config, configSchema),
-    })
+    Object.assign(model, freeformData.value)
   }
 
   return model
@@ -611,6 +609,10 @@ const onModelUpdated = (model: any, schema: string) => {
     originalModel,
     data: getModel(),
   })
+}
+
+const onValidityChange = (event: PluginValidityChangeEvent) => {
+  emit('validity-change', event)
 }
 
 // special handling for problematic fields before we emit

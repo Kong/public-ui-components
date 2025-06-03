@@ -10,6 +10,7 @@
     v-else
     v-bind="fieldAttrs"
     class="ff-boolean-field"
+    :data-testid="field.path.value"
     :model-value="fieldValue ?? false"
     @update:model-value="handleUpdate"
   >

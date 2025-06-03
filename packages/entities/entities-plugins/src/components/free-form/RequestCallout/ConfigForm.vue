@@ -84,7 +84,7 @@ import StringField from '../shared/StringField.vue'
 import useI18n from '../../../composables/useI18n'
 import AdvancedFields from '../shared/AdvancedFields.vue'
 
-import type { Callout, RequestCalloutPlugin } from './types'
+import { CalloutId, type Callout, type RequestCalloutPlugin } from './types'
 import type { FormConfig } from '../shared/types'
 import type { ConfigFormProps } from '../shared/PluginFormWrapper.vue'
 
@@ -102,11 +102,11 @@ const formConfig: FormConfig<RequestCalloutPlugin> = {
 const { i18n: { t } } = useI18n()
 
 function getNameMap(callouts: Callout[], reverse: boolean = false) {
-  return callouts.reduce((acc, { _id, name }) => {
+  return callouts.reduce((acc, { [CalloutId]: id, name }) => {
     if (reverse) {
-      acc[name] = _id as string
+      acc[name] = id as string
     } else {
-      acc[_id as string] = name
+      acc[id as string] = name
     }
     return acc
   }, {} as Record<string, string>)
@@ -125,7 +125,7 @@ function prepareFormData(data: RequestCalloutPlugin) {
   callouts.forEach((callout) => {
     // https://konghq.atlassian.net/browse/KAG-6676
     callout.request.body.custom = callout.request.body.custom ?? {}
-    callout._id = getCalloutId()
+    callout[CalloutId] = getCalloutId()
   })
 
   const nameMap = getNameMap(callouts, true)
@@ -148,7 +148,7 @@ function onChange(newVal?: RequestCalloutPlugin) {
   if (!newVal) return
 
   // replace callout `depends_on` ids with actual callout names
-  const pluginConfig = JSON.parse(JSON.stringify(newVal)) as RequestCalloutPlugin
+  const pluginConfig = cloneDeep(newVal) as RequestCalloutPlugin
 
   if (!pluginConfig.config?.callouts) {
     throw new Error('data is not correct')
@@ -158,7 +158,7 @@ function onChange(newVal?: RequestCalloutPlugin) {
 
   pluginConfig.config.callouts = pluginConfig.config.callouts.map((callout) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _id, depends_on, ...rest } = callout
+    const { [CalloutId]: id, depends_on, ...rest } = callout
     return {
       depends_on: depends_on.map((id) => nameMap[id]).filter(name => name != null),
       ...rest,
