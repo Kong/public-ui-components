@@ -148,7 +148,7 @@ function onChange(newVal?: RequestCalloutPlugin) {
   if (!newVal) return
 
   // replace callout `depends_on` ids with actual callout names
-  const pluginConfig = JSON.parse(JSON.stringify(newVal)) as RequestCalloutPlugin
+  const pluginConfig = cloneDeep(newVal) as RequestCalloutPlugin
 
   if (!pluginConfig.config?.callouts) {
     throw new Error('data is not correct')
