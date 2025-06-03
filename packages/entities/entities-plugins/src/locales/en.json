@@ -532,7 +532,7 @@
       },
       "solace-upstream": {
         "name": "Solace Upstream",
-        "description": "To Be Updated"
+        "description": "Transform requests into Solace messages in a Solace queue or topic."
       },
       "ai-aws-guardrails": {
         "name": "AI AWS GuardRails",
