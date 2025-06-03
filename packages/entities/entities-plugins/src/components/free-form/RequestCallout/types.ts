@@ -88,8 +88,10 @@ export interface RedisClusterNode {
  *                    Callout                   *
  ************************************************/
 
+export const CalloutId: unique symbol = Symbol()
+
 export interface Callout {
-  _id?: string // used as key, will be removed from final data
+  [CalloutId]?: string // used as key, will be removed from final data
   name: string
   depends_on: string[]
   request: CalloutRequest

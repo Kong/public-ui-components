@@ -239,7 +239,7 @@ const props = defineProps({
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
-const { parseSchema, pruneRecord } = composables.useSchemas({
+const { parseSchema } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,
   credential: props.credential,
   enableRedisPartial: props.enableRedisPartial,
@@ -580,12 +580,7 @@ const getModel = (): Record<string, any> => {
 
   // Handle the special case of the freeform plugin
   if (freeformName.value) {
-    const configSchema = props.rawSchema?.fields?.find((field: any) => 'config' in field)?.config
-
-    Object.assign(model, {
-      ...freeformData.value,
-      config: pruneRecord(freeformData.value.config, configSchema),
-    })
+    Object.assign(model, freeformData.value)
   }
 
   return model
