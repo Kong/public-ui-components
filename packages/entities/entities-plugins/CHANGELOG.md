@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.23.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.23.0...@kong-ui-public/entities-plugins@9.23.1) (2025-06-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** use symbol to prune private fields ([#2157](https://github.com/Kong/public-ui-components/issues/2157)) ([3261a3e](https://github.com/Kong/public-ui-components/commit/3261a3e6d268a4805c5021fc79aa68037021f2c7))
+
+
+
+
+
 # [9.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.22.2...@kong-ui-public/entities-plugins@9.23.0) (2025-06-03)
 
 
