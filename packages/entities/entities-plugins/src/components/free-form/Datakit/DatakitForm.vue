@@ -1,12 +1,18 @@
 <template>
   <StandardLayout
+    v-slot="formProps"
     v-bind="props"
     class="dk-form"
   >
-    <div
-      ref="editor-root"
-      class="editor"
-    />
+    <Form
+      v-bind="formProps"
+      tag="div"
+    >
+      <div
+        ref="editor-root"
+        class="editor"
+      />
+    </Form>
   </StandardLayout>
 </template>
 
@@ -16,7 +22,7 @@ import * as monaco from 'monaco-editor'
 import type { YAMLException } from 'js-yaml'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
-
+import Form from '../shared/Form.vue'
 import type { Props } from '../shared/layout/StandardLayout.vue'
 
 const props = defineProps<Props<any>>()
