@@ -64,7 +64,7 @@ onMounted(() => {
     scrollbar: {
       alwaysConsumeMouseWheel: false,
     },
-    autoIndent: 'advanced',
+    autoIndent: 'keep',
   })
 
   if (props.isEditing) {
