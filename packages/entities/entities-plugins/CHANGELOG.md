@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.25.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.0...@kong-ui-public/entities-plugins@9.25.1) (2025-06-04)
+
+
+### Bug Fixes
+
+* **plugins:** add freeform init for datakit ([#2161](https://github.com/Kong/public-ui-components/issues/2161)) ([077ebeb](https://github.com/Kong/public-ui-components/commit/077ebeb4cf85de06203b56e084d5c9d9f904d075))
+
+
+
+
+
 # [9.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.24.2...@kong-ui-public/entities-plugins@9.25.0) (2025-06-04)
 
 
