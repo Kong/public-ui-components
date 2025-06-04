@@ -26,6 +26,9 @@ import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
 import { kafkaUpstreamSchema } from '../definitions/schemas/KafkaUpstream'
 import { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import { confluentSchema } from '../definitions/schemas/Confluent'
+import { confluentConsumeSchema } from '../definitions/schemas/ConfluentConsume'
+import { kafkaConsumeSchema } from '../definitions/schemas/KafkaConsume'
+import { kafkaLogSchema } from '../definitions/schemas/KafkaLog'
 import ZipkinSchema from '../definitions/schemas/Zipkin'
 import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
@@ -225,6 +228,18 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'confluent': {
       ...confluentSchema,
+    },
+
+    'confluent-consume': {
+      ...confluentConsumeSchema,
+    },
+
+    'kafka-consume': {
+      ...kafkaConsumeSchema,
+    },
+
+    'kafka-log': {
+      ...kafkaLogSchema,
     },
   }
 

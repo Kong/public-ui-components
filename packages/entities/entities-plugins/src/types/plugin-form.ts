@@ -224,6 +224,9 @@ export interface CustomSchemas {
   'kafka-upstream': KafkaUpstreamSchema
   'key-auth': ReturnType<typeof genKeyAuthSchema>
   'confluent': ConfluentSchema
+  'confluent-consume': CommonSchemaFields
+  'kafka-consume': CommonSchemaFields
+  'kafka-log': CommonSchemaFields
 }
 
 export enum PluginPartialType {
