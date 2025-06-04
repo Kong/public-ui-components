@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.24.2...@kong-ui-public/entities-plugins@9.25.0) (2025-06-04)
+
+
+### Features
+
+* **plugins:** add code example for datakit yaml editor ([#2160](https://github.com/Kong/public-ui-components/issues/2160)) ([a70df2e](https://github.com/Kong/public-ui-components/commit/a70df2e1ff526febf2ab7955b2ca925c01e60a58))
+
+
+
+
+
 ## [9.24.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.24.1...@kong-ui-public/entities-plugins@9.24.2) (2025-06-04)
 
 
