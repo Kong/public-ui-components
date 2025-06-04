@@ -25,6 +25,33 @@ const editorRoot = useTemplateRef('editor-root')
 const editor = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const LINT_SOURCE = 'YAML Syntax'
 
+const CODE_EXAMPLE = `# Example YAML configuration
+
+# debug: true
+# nodes:
+# - name: API1
+#   type: call
+#   url: https://example.com/api1
+# - name: API2
+#   type: call
+#   url: https://example.com/api2
+# - name: JOIN
+#   inputs:
+#     api1: API1.body
+#     api2: API2.body
+#   jq: |
+#     {
+#         "api1_fact": .api1.fact,
+#         "api2_fact": .api2.fact,
+#     }
+#   type: jq
+# - name: EXIT
+#   type: exit
+#   inputs:
+#     body: JOIN
+#   status: 200
+`
+
 onMounted(() => {
   editor.value = monaco.editor.create(editorRoot.value!, {
     language: 'yaml',
@@ -37,11 +64,18 @@ onMounted(() => {
     scrollbar: {
       alwaysConsumeMouseWheel: false,
     },
+    autoIndent: 'keep',
   })
 
-  editor.value.setValue(yaml.dump(toRaw(props.model.config), {
-    schema: JSON_SCHEMA,
-  }))
+  if (props.isEditing) {
+    editor.value.setValue(yaml.dump(toRaw(props.model.config), {
+      schema: JSON_SCHEMA,
+      noArrayIndent: true,
+    }))
+  } else {
+    // If not editing, show an example configuration
+    editor.value.setValue(CODE_EXAMPLE)
+  }
 
   editor.value.onDidChangeModelContent(() => {
     const model = editor.value!.getModel()
