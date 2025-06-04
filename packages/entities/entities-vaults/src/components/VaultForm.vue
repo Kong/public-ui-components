@@ -1078,7 +1078,7 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE && key === 'approle_response_wrapping' && typeof (configFields[vaultProvider.value] as HCVVaultConfig)[key] === 'boolean') {
         return false
       }
-      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && (key === 'cert_auth_role_name' || key === 'cert_auth_cert' || key === 'cert_auth_cert_key' || key === 'cert_auth_cert_verify')) {
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && ['cert_auth_role_name', 'cert_auth_cert', 'cert_auth_cert_key', 'cert_auth_cert_verify'].includes(key)) {
         return false
       }
       return isEmpty((configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig])
