@@ -68,7 +68,7 @@
           :class="`ff-object-field-button-${realAdded ? 'remove' : 'add'}`"
           :data-testid="`ff-object-remove-btn-${field.path.value}`"
           icon
-          @click="added = !added"
+          @click="handleAddOrRemove"
         >
           <TrashIcon v-if="realAdded" />
           <AddIcon v-else />
@@ -132,7 +132,7 @@ const {
 }>()
 
 const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
-const { getSchema } = useFormShared()
+const { getSchema, getDefault } = useFormShared()
 
 const added = defineModel<boolean>('added', { default: undefined })
 
@@ -186,6 +186,15 @@ const childFields = computed(() => {
     return aIndex - bIndex
   })
 })
+
+function handleAddOrRemove() {
+  added.value = !added.value
+  if (added.value) {
+    fieldValue!.value = getDefault(field.path!.value)
+  } else {
+    fieldValue!.value = null
+  }
+}
 
 watch(realAdded, (value) => {
   if (!collapsible) {
