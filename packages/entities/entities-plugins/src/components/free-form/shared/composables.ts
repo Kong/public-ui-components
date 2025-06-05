@@ -10,6 +10,7 @@ import { capitalize } from 'lodash-es'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
 export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
+export const LOCAL_VALIDATION_ERROR_KEY = Symbol('free-form-local-validation-errors')
 export const FIELD_PATH_KEY = Symbol('free-form-field-path')
 export const FIELD_RENDERER_SLOTS = Symbol('free-form-field-renderer-slots')
 export const FIELD_RENDERER_MATCHERS_MAP = Symbol('free-form-field-renderer-matchers-map')
@@ -58,7 +59,7 @@ function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''): Reco
 /**
  * 'a.0.b.1.c' => 'a.*.b.*.c'
  */
-function generalizePath(p: string) {
+export function generalizePath(p: string) {
   const parts = utils
     .toArray(p)
     .map(node => /^\d+$/.test(node) ? utils.arraySymbol : node)

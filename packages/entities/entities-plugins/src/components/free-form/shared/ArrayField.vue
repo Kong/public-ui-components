@@ -42,6 +42,12 @@
         <AddIcon />
       </KButton>
     </header>
+    <div
+      v-if="arrayHeaderHelp"
+      class="ff-array-field-header-help"
+    >
+      {{ arrayHeaderHelp }}
+    </div>
 
     <template
       v-if="realItems.length"
@@ -137,6 +143,7 @@ import { uniqueId } from 'lodash-es'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
 import useI18n from '../../../composables/useI18n'
+import { useFormValidationHandler } from './formValidation'
 import * as utils from './utils'
 import Field from './Field.vue'
 
@@ -170,6 +177,7 @@ const { i18n: { t } } = useI18n()
 const { getDefault } = useFormShared()
 const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, props)
+const { validationHelp: arrayHeaderHelp } = useFormValidationHandler(field)
 
 const keyMap = reactive(new Map<T, string>())
 const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
@@ -294,6 +302,11 @@ const stickyTop = computed(() => {
     display: flex;
     gap: $kui-space-40;
     height: 32px;
+  }
+
+  &-header-help {
+    color:$kui-color-text-danger;
+    font-size: $kui-font-size-20;
   }
 
   &-container {

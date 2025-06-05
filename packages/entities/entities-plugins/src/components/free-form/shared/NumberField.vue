@@ -15,6 +15,8 @@
       max: between.max,
     }"
     :data-autofocus="isAutoFocus"
+    :error="!!inputHelp"
+    :help="inputHelp"
     :model-value="fieldValue ?? ''"
     type="number"
     @update:model-value="handleUpdate"
@@ -34,8 +36,9 @@
 <script setup lang="ts">
 import { KInput, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
-import { computed, toRef } from 'vue'
+import { computed, inject, ref, toRef, watch } from 'vue'
 import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
+import { INLINE_VALIDATION_HANDLER } from './formValidation'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
@@ -50,6 +53,9 @@ export interface InputProps {
 const { name, ...props } = defineProps<InputProps>()
 const { value: fieldValue, ...field } = useField<number | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
+const touched = ref(false)
+const inputHelp = ref('')
+const fieldValidationHandler = inject(INLINE_VALIDATION_HANDLER)
 
 const between = computed(() => {
   const [min, max] = (field.schema?.value as NumberLikeFieldSchema).between ?? []
@@ -66,6 +72,7 @@ const emit = defineEmits<{
 const initialValue = fieldValue!.value
 
 function handleUpdate(value: string) {
+  touched.value = true
   if (initialValue !== undefined && value === '' && Number(value) !== initialValue) {
     fieldValue!.value = null
     emit('update:modelValue', null)
@@ -74,6 +81,22 @@ function handleUpdate(value: string) {
     emit('update:modelValue', Number(value))
   }
 }
+
+const inputHelpHandler = (help: string | undefined) => {
+  if (help) {
+    //
+    inputHelp.value = help || ''
+  } else {
+    inputHelp.value = ''
+  }
+}
+
+watch(touched, (newVal, oldVal) => {
+  if (newVal && !oldVal) {
+    console.log('subscribe to field validation')
+    fieldValidationHandler?.subscriptField(field.path!.value, inputHelpHandler)
+  }
+})
 
 const isAutoFocus = useIsAutoFocus(field.ancestors)
 </script>

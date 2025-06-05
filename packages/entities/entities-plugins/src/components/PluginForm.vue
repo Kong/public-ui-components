@@ -175,6 +175,8 @@ import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
+import FormValidationHandler, { INLINE_VALIDATION_HANDLER } from './free-form/shared/formValidation'
+import type { FormSchema } from '../types/plugins/form-schema'
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -1232,6 +1234,9 @@ const getRequestBody = computed((): Record<string, any> => {
   return requestBody
 })
 
+const freeFormValidationHandler = new FormValidationHandler(getRequestBody)
+provide(INLINE_VALIDATION_HANDLER, freeFormValidationHandler)
+
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
   // if save/cancel buttons are hidden, don't submit on hitting Enter
@@ -1254,6 +1259,8 @@ const saveFormData = async (): Promise<void> => {
         schema: finalSchema.value,
       })
     }
+
+    // freeFormValidationHandler.validateForm(payload)
 
     // TODO: determine validate URL for credentials
     // don't validate custom plugins
@@ -1326,6 +1333,7 @@ onBeforeMount(async () => {
     } else { // handling for standard plugins
       const data = props.schema ?? (await axiosInstance.get(schemaUrl.value)).data
       loadedSchema.value = data
+      freeFormValidationHandler.setSchema(loadedSchema.value as FormSchema)
 
       if (data) {
         if (treatAsCredential.value) {

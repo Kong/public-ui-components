@@ -11,6 +11,8 @@
     v-bind="fieldAttrs"
     v-model="fieldValue"
     class="ff-enum-field"
+    :error="!!selectHelp"
+    :help="selectHelp"
     :items="realItems"
   >
     <template
@@ -29,6 +31,7 @@
 import { computed, toRef } from 'vue'
 import { KSelect, KMultiselect, type LabelAttributes, type SelectItem } from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
+import { useFormValidationHandler } from './formValidation'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
@@ -45,6 +48,7 @@ interface EnumFieldProps {
 const { name, items, multiple = undefined, ...props } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
 const { value: fieldValue, ...field } = useField<number | string>(toRef(() => name))
+const { validationHelp: selectHelp } = useFormValidationHandler(field)
 
 const fieldAttrs = useFieldAttrs(field.path!, props)
 

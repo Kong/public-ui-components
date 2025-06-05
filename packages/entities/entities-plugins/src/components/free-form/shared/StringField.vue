@@ -16,6 +16,8 @@
       }"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
+      :error="!!inputHelp"
+      :help="inputHelp"
       :model-value="fieldValue ?? ''"
       @update:model-value="handleUpdate"
     >
@@ -48,6 +50,7 @@ import * as utils from '../shared/utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
 
 import type { StringFieldSchema } from 'src/types/plugins/form-schema'
+import { useFormValidationHandler } from '../shared/formValidation'
 
 defineOptions({
   inheritAttrs: false,
@@ -82,8 +85,9 @@ const emit = defineEmits<{
 const { value: fieldValue, ...field } = useField<string | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const initialValue = fieldValue?.value
+const { validationHelp: inputHelp } = useFormValidationHandler(field)
 
-function handleUpdate(value: string) {
+async function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && value !== initialValue) {
     fieldValue!.value = null
     emit('update:modelValue', null)

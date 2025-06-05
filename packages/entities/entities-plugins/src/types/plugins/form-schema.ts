@@ -12,7 +12,21 @@ export type FieldSchemaType = 'string'
 
 export type AtLeastOneOfEntityCheck = { at_least_one_of: string[] }
 
-export type EntityCheck = AtLeastOneOfEntityCheck
+export type ConditionEntityCheck = {
+  conditional: {
+    if_field: string
+    if_match: Record<string, any>
+    then_field: string
+    then_match: Record<string, any>
+    then_err?: string
+  }
+}
+
+export type MutuallyRequiredEntityCheck = {
+  mutually_required: string[]
+}
+
+export type EntityCheck = AtLeastOneOfEntityCheck | ConditionEntityCheck | MutuallyRequiredEntityCheck
 
 export interface FieldSchema {
   type: FieldSchemaType
