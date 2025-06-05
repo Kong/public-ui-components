@@ -310,9 +310,6 @@
           },
           "cert_auth_role_name": {
             "label": "Role Name"
-          },
-          "cert_auth_cert_verify": {
-            "label": "Cert Verify"
           }
         }
       },
