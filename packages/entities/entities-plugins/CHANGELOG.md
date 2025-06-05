@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.25.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.1...@kong-ui-public/entities-plugins@9.25.2) (2025-06-05)
+
+
+### Bug Fixes
+
+* **free-form:** record cannot be removed [KAG-7153] ([#2165](https://github.com/Kong/public-ui-components/issues/2165)) ([929d889](https://github.com/Kong/public-ui-components/commit/929d88939c4bfe42c4e2685b4751b9d0b2c76d54))
+
+
+
+
+
 ## [9.25.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.0...@kong-ui-public/entities-plugins@9.25.1) (2025-06-04)
 
 
