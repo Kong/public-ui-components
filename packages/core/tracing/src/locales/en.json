@@ -174,8 +174,11 @@
       },
       "labels": {
         "description": "Description",
-        "name": "Name"
-      }
+        "name": "Name",
+        "view_span_logs": "View span logs",
+        "span_id":"Span ID"
+      },
+      "title": "About this span"
     },
     "span_events": {
       "exception_message": {
