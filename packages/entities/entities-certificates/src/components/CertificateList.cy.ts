@@ -569,7 +569,7 @@ describe('<CertificateList />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-list').should('be.visible')
       cy.get('.table-empty-state').should('be.visible')
-      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.get('[data-testid="entity-create-button"]').should('be.visible')
     })
 
     it('should hide empty state and create certificate cta if user can not create', () => {
