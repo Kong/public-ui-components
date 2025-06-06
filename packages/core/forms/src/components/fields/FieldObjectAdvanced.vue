@@ -27,7 +27,7 @@
           </div>
           <hr class="divider">
           <div v-if="subSchema">
-            <vue-form-generator
+            <VueFormGenerator
               :model="transformedModel[index]"
               :options="{ helpAsHtml: true }"
               :schema="subSchema"
@@ -92,15 +92,18 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { TrashIcon } from '@kong/icons'
+import VueFormGenerator from '../FormGenerator.vue'
+</script>
+
+<script>
 import { AUTOFILL_SLOT } from '../../const'
 import abstractField from './abstractField'
+
 export default {
-  components: {
-    TrashIcon,
-  },
   mixins: [abstractField],
+  expose: ['validate', 'clearValidationErrors', 'schema'],
   inject: {
     autofillSlot: {
       from: AUTOFILL_SLOT,

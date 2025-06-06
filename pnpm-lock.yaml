@@ -961,6 +961,9 @@ importers:
       '@kong-ui-public/entities-routes':
         specifier: workspace:^
         version: link:../entities-routes
+      '@kong-ui-public/entities-vaults':
+        specifier: workspace:^
+        version: link:../entities-vaults
       '@kong-ui-public/forms':
         specifier: workspace:^
         version: link:../../core/forms
@@ -974,9 +977,6 @@ importers:
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
-      '@kong-ui-public/entities-vaults':
-        specifier: workspace:^
-        version: link:../entities-vaults
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
