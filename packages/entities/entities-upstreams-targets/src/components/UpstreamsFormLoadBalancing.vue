@@ -25,6 +25,40 @@
       @update:model-value="emit('update:algorithm', $event as UpstreamAlgorithm)"
     />
 
+    <template
+      v-if="algorithm === 'sticky-sessions'"
+    >
+      <KInput
+        autocomplete="off"
+        data-testid="upstreams-form-sticky-sessions-cookie"
+        :label="t('upstreams.form.fields.sticky_sessions_cookie.label')"
+        :label-attributes="{
+          info: t('upstreams.form.fields.sticky_sessions_cookie.tooltip'),
+          tooltipAttributes: { maxWidth: '400' },
+        }"
+        :model-value="stickySessionsCookie"
+        :readonly="readonly"
+        required
+        type="text"
+        @update:model-value="emit('update:sticky-sessions-cookie', $event)"
+      />
+
+      <KInput
+        autocomplete="off"
+        data-testid="upstreams-form-sticky-sessions-cookie-path"
+        :label="t('upstreams.form.fields.sticky_sessions_cookie_path.label')"
+        :label-attributes="{
+          info: t('upstreams.form.fields.sticky_sessions_cookie_path.tooltip'),
+          tooltipAttributes: { maxWidth: '400' },
+        }"
+        :model-value="stickySessionsCookiePath"
+        :readonly="readonly"
+        required
+        type="text"
+        @update:model-value="emit('update:sticky-sessions-cookie-path', $event)"
+      />
+    </template>
+
     <KInput
       autocomplete="off"
       data-testid="upstreams-form-slots"
@@ -240,8 +274,21 @@ const { i18nT, i18n: { t } } = composables.useI18n()
 const { inRange } = useHelpers()
 
 const props = defineProps({
+  stickySessionsAvailable: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   algorithm: {
     type: String as PropType<UpstreamAlgorithm>,
+    required: true,
+  },
+  stickySessionsCookie: {
+    type: String,
+    required: true,
+  },
+  stickySessionsCookiePath: {
+    type: String,
     required: true,
   },
   slots: {
@@ -297,6 +344,8 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'update:algorithm', val: UpstreamAlgorithm): void
+  (e: 'update:sticky-sessions-cookie', val: string): void
+  (e: 'update:sticky-sessions-cookie-path', val: string): void
   (e: 'update:slots', val: string): void
   (e: 'update:hash-on', val: UpstreamHash): void
   (e: 'update:hash-fallback', val: UpstreamHash): void
@@ -331,6 +380,15 @@ const algorithmItems = ref<AlgorithmSelectItem[]>([
     value: 'latency',
     selected: false,
   },
+  ...(
+    props.stickySessionsAvailable
+      ? [{
+        label: t('upstreams.form.algorithms.sticky_sessions_label'),
+        value: 'sticky-sessions' as UpstreamAlgorithm,
+        selected: false,
+      }]
+      : []
+  ),
 ])
 
 const hashItems = ref<HashSelectItem[]>([
