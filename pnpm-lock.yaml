@@ -999,6 +999,12 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(vue@3.5.13(typescript@5.6.3))
 
+  packages/entities/entities-plugins-icon:
+    devDependencies:
+      vue:
+        specifier: ^3.5.13
+        version: 3.5.13(typescript@5.6.3)
+
   packages/entities/entities-plugins-metadata: {}
 
   packages/entities/entities-redis-configurations:
