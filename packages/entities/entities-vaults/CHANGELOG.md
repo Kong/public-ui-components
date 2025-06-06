@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.21.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.21.0...@kong-ui-public/entities-vaults@3.21.1) (2025-06-06)
+
+
+### Bug Fixes
+
+* **vault:** remove hcv cert auth verify flag [KM-1354] ([#2164](https://github.com/Kong/public-ui-components/issues/2164)) ([3dc8222](https://github.com/Kong/public-ui-components/commit/3dc82220696e27e1a2d5a06ce32acbe3c733291d))
+
+
+
+
+
 # [3.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.20.2...@kong-ui-public/entities-vaults@3.21.0) (2025-06-04)
 
 
