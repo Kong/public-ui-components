@@ -400,11 +400,6 @@
                 :readonly="form.isReadonly"
                 required
               />
-              <KCheckbox
-                v-model="configFields[VaultProviders.HCV].cert_auth_cert_verify as boolean"
-                data-testid="vault-form-config-hcv-cert_auth_cert_verify"
-                :label="t('form.config.hcv.fields.cert_auth_cert_verify.label')"
-              />
             </div>
             <KCheckbox
               v-if="config.base64FieldAvailable"
@@ -846,7 +841,6 @@ const configFields = reactive<ConfigFields>({
     approle_response_wrapping: false,
     cert_auth_cert: '',
     cert_auth_cert_key: '',
-    cert_auth_cert_verify: false,
     cert_auth_role_name: '',
     ...base64FieldConfig,
   } as HCVVaultConfig,
@@ -1078,7 +1072,7 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE && key === 'approle_response_wrapping' && typeof (configFields[vaultProvider.value] as HCVVaultConfig)[key] === 'boolean') {
         return false
       }
-      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && ['cert_auth_role_name', 'cert_auth_cert', 'cert_auth_cert_key', 'cert_auth_cert_verify'].includes(key)) {
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && ['cert_auth_role_name', 'cert_auth_cert', 'cert_auth_cert_key'].includes(key)) {
         return false
       }
       return isEmpty((configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig])
@@ -1170,7 +1164,6 @@ const getPayload = computed((): Record<string, any> => {
       cert_auth_role_name: configFields[VaultProviders.HCV].cert_auth_role_name,
       cert_auth_cert: configFields[VaultProviders.HCV].cert_auth_cert,
       cert_auth_cert_key: configFields[VaultProviders.HCV].cert_auth_cert_key,
-      cert_auth_cert_verify: configFields[VaultProviders.HCV].cert_auth_cert_verify ?? false,
     }),
   }
 
