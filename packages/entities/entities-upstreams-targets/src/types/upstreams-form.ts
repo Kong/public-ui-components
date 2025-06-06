@@ -3,6 +3,7 @@ import type { RouteLocationRaw } from 'vue-router'
 import type { SelectItem } from '@kong/kongponents'
 
 export interface BaseUpstreamsFormConfig extends Omit<BaseFormConfig, 'cancelRoute'> {
+  stickySessionsAvailable?: boolean
   cancelRoute: RouteLocationRaw
 }
 
@@ -10,7 +11,7 @@ export interface KonnectUpstreamsFormConfig extends Omit<KonnectBaseFormConfig, 
 
 export interface KongManagerUpstreamsFormConfig extends Omit<KongManagerBaseFormConfig, 'cancelRoute'>, BaseUpstreamsFormConfig {}
 
-export type UpstreamAlgorithm = 'round-robin' | 'least-connections' | 'consistent-hashing' | 'latency'
+export type UpstreamAlgorithm = 'round-robin' | 'least-connections' | 'consistent-hashing' | 'latency' | 'sticky-sessions'
 
 export type UpstreamHash = 'none' | 'consumer' | 'ip' | 'header' | 'cookie' | 'path' | 'query_arg' | 'uri_capture'
 
@@ -63,6 +64,8 @@ export interface UpstreamFormFields {
   clientCertificate: string
   tags: string
   algorithm: UpstreamAlgorithm
+  stickySessionsCookie: string
+  stickySessionsCookiePath: string
   slots: string
   hashOn: UpstreamHash
   hashFallback:UpstreamHash
@@ -146,6 +149,8 @@ export interface UpstreamPassivePayload {
 export interface UpstreamFormPayload {
   name: string
   algorithm: UpstreamAlgorithm
+  sticky_sessions_cookie?: string | null
+  sticky_sessions_cookie_path?: string | null
   host_header?: string | null
   client_certificate?: { id: string } | null
   tags?: string[]

@@ -51,6 +51,11 @@ A form component to create/edit Upstreams.
     - required: `true`
     - default: `undefined`
     - Route to return to when canceling creation of a Consumer.
+  - `stickySessionsAvailable`:
+    - type: `boolean`
+    - required: `false`
+    - default: `false`
+    - If `true`, the sticky sessions algorithm is supported.
 
   - `workspace`:
     - type: `string`
