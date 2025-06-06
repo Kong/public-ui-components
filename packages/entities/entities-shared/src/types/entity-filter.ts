@@ -44,3 +44,6 @@ export interface FuzzyMatchFilterConfig extends BaseFilterConfig {
   /** Fuzzy match filter schema */
   schema: FilterSchema
 }
+
+/** Structured filters for fuzzy matching */
+export type FuzzyMatchFilters<K extends string = string> = Record<K, string>
