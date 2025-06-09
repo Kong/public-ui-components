@@ -958,6 +958,9 @@ importers:
       '@kong-ui-public/entities-plugins-metadata':
         specifier: workspace:^
         version: link:../entities-plugins-metadata
+      '@kong-ui-public/entities-redis-configurations':
+        specifier: workspace:^
+        version: link:../entities-redis-configurations
       '@kong-ui-public/entities-routes':
         specifier: workspace:^
         version: link:../entities-routes
