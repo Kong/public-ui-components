@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="chartParentRef"
     class="chart-parent"
     :class="chartFlexClass[legendPosition]"
   >
@@ -35,16 +36,18 @@
         {{ axesTooltip.text }}
       </div>
     </div>
-    <ToolTip
-      :context="tooltipData.tooltipContext"
-      :left="tooltipData.left"
-      :locked="tooltipData.locked"
-      :series="tooltipData.tooltipSeries"
-      :show-tooltip="tooltipData.showTooltip"
-      :tooltip-title="tooltipTitle"
-      :top="tooltipData.top"
-      @dimensions="tooltipDimensions"
-    />
+    <Teleport to="body">
+      <ToolTip
+        :context="tooltipData.tooltipContext"
+        :left="tooltipAbsoluteLeft"
+        :locked="tooltipData.locked"
+        :series="tooltipData.tooltipSeries"
+        :show-tooltip="tooltipData.showTooltip"
+        :tooltip-title="tooltipTitle"
+        :top="tooltipAbsoluteTop"
+        @dimensions="tooltipDimensions"
+      />
+    </Teleport>
     <ChartLegend
       :id="legendID"
       :chart-instance="chartInstance"
@@ -58,7 +61,7 @@ import type { ChartDataset, ChartOptions } from 'chart.js'
 import { Chart } from 'chart.js'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
-import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount, onUnmounted } from 'vue'
+import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount, onUnmounted, useTemplateRef } from 'vue'
 import type { PropType, Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
@@ -155,6 +158,7 @@ const AXIS_BOTTOM_OFFSET = 10
 const AXIS_RIGHT_PADDING = 1
 
 const chartContainerRef = ref<HTMLDivElement | null>(null)
+const chartParentRef = useTemplateRef('chartParentRef')
 
 const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
   const chartData: BarChartData = chart.data as BarChartData
@@ -244,6 +248,12 @@ const tooltipData: TooltipState = reactive({
   chartID: chartCanvasId,
   chartTooltipSortFn: props.chartTooltipSortFn,
 })
+
+const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolutePosition(
+  chartParentRef,
+  tooltipData,
+)
+
 const dependsOnChartUpdate = ref(0)
 
 const configureAnnotations = () => props.annotations && props.chartData.labels?.reduce((acc, label) =>
