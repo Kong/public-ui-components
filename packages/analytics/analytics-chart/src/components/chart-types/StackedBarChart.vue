@@ -26,17 +26,17 @@
         />
       </div>
     </div>
-    <div
-      v-if="axesTooltip.show"
-      class="axis-tooltip"
-      :style="{ top: axesTooltip.top, left: axesTooltip.left}"
-      width="auto"
-    >
-      <div class="axis-tooltip-content">
-        {{ axesTooltip.text }}
-      </div>
-    </div>
     <Teleport to="body">
+      <div
+        v-if="axesTooltip.show"
+        class="axis-tooltip"
+        :style="{ top: axesTooltip.top, left: axesTooltip.left}"
+        width="auto"
+      >
+        <div class="axis-tooltip-content">
+          {{ axesTooltip.text }}
+        </div>
+      </div>
       <ToolTip
         :context="tooltipData.tooltipContext"
         :left="tooltipAbsoluteLeft"
@@ -322,7 +322,7 @@ const axesTooltipPlugin = {
         axesTooltip.value.left = indexAxis === 'x'
           ? `${(leftOfCursor > 0 ? leftOfCursor : rightOfCursor) - axesTooltip.value.offset}px`
           : `${(evt.x - textWidthPixels * 0.5) - axesTooltip.value.offset}px`
-        axesTooltip.value.top = `${evt.y - 50}px`
+        axesTooltip.value.top = `${evt.y + 50}px`
         if (label.length > MAX_LABEL_LENGTH) {
           axesTooltip.value.show = true
           axesTooltip.value.text = label
