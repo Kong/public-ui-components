@@ -138,7 +138,7 @@ import { KUI_COLOR_TEXT_NEUTRAL_WEAK } from '@kong/design-tokens'
 import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../types'
 import composables from '../../composables'
 import IconFilter from '../icons/IconFilter.vue'
-import type { SelectItem, SelectFilterFunctionParams } from '@kong/kongponents/dist/types'
+import type { SelectItem, SelectFilterFunctionParams } from '@kong/kongponents'
 
 const { i18n: { t } } = composables.useI18n()
 
@@ -220,14 +220,9 @@ const getFieldId = (field: string) => {
   return `filter-${field}`
 }
 
-const getFieldOptions = (field: string) => {
-  const values = (props.config as FuzzyMatchFilterConfig).schema?.[field]?.values ?? []
-  return (values as any[]).map(o =>
-    (typeof o === 'object' && o !== null && 'value' in o && 'label' in o)
-      ? o
-      : { value: o, label: o } as SelectItem,
-  )
-}
+const getFieldOptions = (field: string) =>
+  ((props.config as FuzzyMatchFilterConfig).schema?.[field]?.values ?? [])
+    .map(o => typeof o === 'string' ? { value: o, label: o } : o)
 
 const getFieldInputType = (field: string) => {
   return (props.config as FuzzyMatchFilterConfig).schema?.[field]?.type ?? 'text'
@@ -270,7 +265,12 @@ const handleFilter = (
   field: string,
   params: SelectFilterFunctionParams<string | number>,
 ): true | SelectItem<string | number>[] => {
-  return (props.config as FuzzyMatchFilterConfig).schema?.[field]?.filterFunction?.(params)
+  const fieldSchema = (props.config as FuzzyMatchFilterConfig).schema?.[field]
+
+  if (fieldSchema?.filterFunction === undefined) {
+    return true
+  }
+  return fieldSchema.filterFunction(params)
 }
 </script>
 
