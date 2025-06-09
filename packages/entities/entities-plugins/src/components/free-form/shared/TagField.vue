@@ -75,10 +75,6 @@ function strToArr(str: string) {
   return str.trim().split(',').map(item => item.trim()).filter(Boolean)
 }
 
-if (fieldValue?.value) {
-  rawInputValue.value = arrToStr(fieldValue.value)
-}
-
 function handleUpdate(value: string) {
   rawInputValue.value = value
   const values = strToArr(value)
@@ -101,7 +97,7 @@ watch(fieldValue!, newValue => {
   if (ov !== nv) {
     rawInputValue.value = nv
   }
-})
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
