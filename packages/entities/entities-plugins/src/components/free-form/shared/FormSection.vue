@@ -9,10 +9,14 @@
       </div>
       <div class="header-content">
         <h2 class="header-title">
-          {{ title }}
+          <slot name="title">
+            {{ title }}
+          </slot>
         </h2>
         <div class="header-description">
-          {{ description }}
+          <slot name="description">
+            {{ description }}
+          </slot>
         </div>
       </div>
     </header>
@@ -27,6 +31,12 @@ defineProps<{
   step?: number
   title?: string
   description?: string
+}>()
+
+defineSlots<{
+  default?: () => any
+  title?: () => any
+  description?: () => any
 }>()
 </script>
 

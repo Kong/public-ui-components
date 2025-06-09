@@ -1,18 +1,24 @@
 <template>
   <StandardLayout
-    v-slot="formProps"
     v-bind="props"
     class="dk-form"
   >
-    <Form
-      v-bind="formProps"
-      tag="div"
-    >
-      <div
-        ref="editor-root"
-        class="editor"
-      />
-    </Form>
+    <template #default="formProps">
+      <Form
+        v-bind="formProps"
+        tag="div"
+      >
+        <div
+          ref="editor-root"
+          class="editor"
+        />
+      </Form>
+    </template>
+
+    <template #plugin-config-description>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <span v-html="t('plugins.form.sections.plugin_config.description_yaml')" />
+    </template>
   </StandardLayout>
 </template>
 
@@ -21,9 +27,13 @@ import { onMounted, shallowRef, useTemplateRef, toRaw, onBeforeUnmount } from 'v
 import * as monaco from 'monaco-editor'
 import type { YAMLException } from 'js-yaml'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
+import english from '../../../locales/en.json'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import Form from '../shared/Form.vue'
 import type { Props } from '../shared/layout/StandardLayout.vue'
+import { createI18n } from '@kong-ui-public/i18n'
+
+const { t } = createI18n<typeof english>('en-us', english)
 
 const props = defineProps<Props<any>>()
 
@@ -43,12 +53,12 @@ const CODE_EXAMPLE = `# Example YAML configuration
 #   url: https://example.com/api2
 # - name: JOIN
 #   inputs:
-#     api1: API1.body
-#     api2: API2.body
+#     api1_content: API1.body
+#     api2_content: API2.body
 #   jq: |
 #     {
-#         "api1_fact": .api1.fact,
-#         "api2_fact": .api2.fact,
+#         "api1": .api1_content,
+#         "api2": .api2_content,
 #     }
 #   type: jq
 # - name: EXIT

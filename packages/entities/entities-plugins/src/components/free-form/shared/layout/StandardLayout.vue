@@ -51,6 +51,20 @@
           @model-updated="onModelUpdated"
         />
       </KCollapse>
+
+      <template
+        v-if="slots['general-info-title']"
+        #title
+      >
+        <slot name="general-info-title" />
+      </template>
+
+      <template
+        v-if="slots['general-info-description']"
+        #description
+      >
+        <slot name="general-info-description" />
+      </template>
     </FormSection>
     <FormSection
       :description="t('plugins.form.sections.plugin_config.description')"
@@ -62,12 +76,29 @@
         :schema="freeFormSchema"
         @change="onFormChange"
       />
+
+      <template
+        v-if="slots['plugin-config-title']"
+        #title
+      >
+        <slot name="plugin-config-title" />
+      </template>
+      <template
+        v-if="slots['plugin-config-description']"
+        #description
+      >
+        <slot name="plugin-config-description" />
+      </template>
     </FormSection>
   </div>
 </template>
 
 <script lang="ts">
 export type Props<T extends FreeFormPluginData> = {
+  generalInfoTitle?: string
+  generalInfoDescription?: string
+  pluginConfigTitle?: string
+  pluginConfigDescription?: string
   schema: FormSchema
   formSchema: any
   model: T
@@ -106,6 +137,10 @@ const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any
 } & {
   default: (props: ConfigFormProps<T>) => any
+  'general-info-title'?: () => any
+  'general-info-description'?: () => any
+  'plugin-config-title'?: () => any
+  'plugin-config-description'?: () => any
 }>()
 
 provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
