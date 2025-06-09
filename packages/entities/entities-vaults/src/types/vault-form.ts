@@ -120,7 +120,6 @@ export interface HCVVaultConfig {
   cert_auth_role_name?: string
   cert_auth_cert?: string
   cert_auth_cert_key?: string
-  cert_auth_cert_verify?: boolean
 }
 
 export interface AzureVaultConfig {

@@ -79,7 +79,8 @@
         "round_robin_label": "Round Robin",
         "least_connections_label": "Least Connections",
         "consistent_hashing_label": "Consistent Hashing",
-        "latency_label": "Latency"
+        "latency_label": "Latency",
+        "sticky_sessions_label": "Sticky Sessions"
       },
       "hash_labels": {
         "none": "None",
@@ -199,6 +200,14 @@
         "algorithm": {
           "label": "Algorithm",
           "tooltip": "Which load balancing algorithm to use."
+        },
+        "sticky_sessions_cookie": {
+          "label": "Sticky Sessions Cookie",
+          "tooltip": "The cookie name to keep sticky sessions."
+        },
+        "sticky_sessions_cookie_path": {
+          "label": "Sticky Sessions Cookie Path",
+          "tooltip": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes)."
         },
         "slots": {
           "label": "Slots",
