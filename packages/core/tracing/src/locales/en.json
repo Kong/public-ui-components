@@ -176,7 +176,7 @@
         "description": "Description",
         "name": "Name",
         "view_span_logs": "View span logs",
-        "span_id":"Span ID"
+        "span_id": "Span ID"
       },
       "title": "About this span"
     },
