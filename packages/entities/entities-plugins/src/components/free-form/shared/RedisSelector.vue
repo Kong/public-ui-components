@@ -90,7 +90,7 @@
             <div
               class="new-redis-config-area"
               data-testid="new-redis-config-area"
-              @click="$emit('showNewPartialModal')"
+              @click="() => redisPartialModalVisible = true"
             >
               <AddIcon :size="KUI_ICON_SIZE_20" />
               <span>{{ t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(redisType as RedisPartialType)}) }}</span>
@@ -118,6 +118,12 @@
       :name="formRedisPath"
       reset-label-path="reset"
     />
+    <NewRedisPartialModal
+      :partial-type="redisType"
+      :visible="redisPartialModalVisible"
+      @modal-close="redisPartialModalVisible = false"
+      @partial-updated="loadConfigs"
+    />
   </KCard>
   <ObjectField
     v-else
@@ -131,11 +137,12 @@
 <script setup lang="ts">
 import ObjectField from '../shared/ObjectField.vue'
 import RedisConfigCard from './RedisConfigCard.vue'
-import { onBeforeMount, inject, computed, ref, watch, type Ref } from 'vue'
+import NewRedisPartialModal from './NewRedisPartialModal.vue'
+import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
-import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { AddIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents/dist/types'
 import { useAxios, useDebouncedFilter, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
@@ -159,7 +166,6 @@ type PartialArray = Array<{ id: string | number, path?: string | undefined }>
 
 const props = defineProps<RedisSelectorProps>()
 
-const redisPartialFetcherKey: Ref<number> = inject(REDIS_PARTIAL_FETCHER_KEY, ref(0))
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 const isFormEditing = redisPartialInfo?.isEditing || false
 const formRedisPath = computed(() => {
@@ -174,6 +180,7 @@ const formRedisPath = computed(() => {
 const redisType = props.redisType || redisPartialInfo?.redisType?.value || 'all'
 // controls the visibility of the redis partial selector
 const useRedisPartial = computed(() => !!redisPartialInfo?.redisType?.value)
+const redisPartialModalVisible = ref(false)
 const selectedRedisConfig = ref(null)
 const usePartial = ref(!isFormEditing)
 const { getMessageFromError } = useErrors()
@@ -281,13 +288,6 @@ const redisConfigSelected = async (val: string | number | undefined) => {
     console.error(error)
   }
 }
-
-// if a new key is passed by the consuming app, reload the configs
-watch(() => redisPartialFetcherKey?.value, async (key) => {
-  if (key) {
-    await loadConfigs()
-  }
-})
 
 watch(() => usePartial.value, () => {
   handleFormRedisPartialData()
