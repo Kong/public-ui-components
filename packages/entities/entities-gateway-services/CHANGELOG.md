@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.26...@kong-ui-public/entities-gateway-services@3.11.27) (2025-05-30)
+
+
+### Bug Fixes
+
+* **entities-gateway-services:** remove debounce ([#2154](https://github.com/Kong/public-ui-components/issues/2154)) ([c9ad98d](https://github.com/Kong/public-ui-components/commit/c9ad98dd7662317b22f4f700d6fdb6caa3cce552))
+
+
+
+
+
+## [3.11.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.25...@kong-ui-public/entities-gateway-services@3.11.26) (2025-05-30)
+
+
+### Bug Fixes
+
+* **entities-gateway-services:** error message flicker ([#2151](https://github.com/Kong/public-ui-components/issues/2151)) ([dfcf3a1](https://github.com/Kong/public-ui-components/commit/dfcf3a136e1aca30fea05d22a1594ab3acf4f1e1))
+
+
+
+
+
+## [3.11.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.24...@kong-ui-public/entities-gateway-services@3.11.25) (2025-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
 ## [3.11.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.23...@kong-ui-public/entities-gateway-services@3.11.24) (2025-05-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

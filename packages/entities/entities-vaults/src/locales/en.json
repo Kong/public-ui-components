@@ -301,6 +301,15 @@
           },
           "approle_response_wrapping": {
             "label": "App Role Response Wrapping"
+          },
+          "cert_auth_cert": {
+            "label": "Cert"
+          },
+          "cert_auth_cert_key": {
+            "label": "Cert Key"
+          },
+          "cert_auth_role_name": {
+            "label": "Role Name"
           }
         }
       },

@@ -711,6 +711,32 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-rag-injector'],
   },
+  'datakit': {
+    descriptionKey: 'plugins.meta.datakit.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.datakit.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['datakit'],
+  },
+  'ai-prompt-compressor': {
+    descriptionKey: 'plugins.meta.ai-prompt-compressor.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-prompt-compressor.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-compressor'],
+  },
+  'solace-upstream': {
+    descriptionKey: 'plugins.meta.solace-upstream.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.solace-upstream.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['solace-upstream'],
+  },
+  'ai-aws-guardrails': {
+    descriptionKey: 'plugins.meta.ai-aws-guardrails.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-aws-guardrails.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-aws-guardrails'],
+  },
 }
 
 /**

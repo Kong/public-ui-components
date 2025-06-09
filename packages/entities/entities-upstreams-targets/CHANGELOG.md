@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.7.32...@kong-ui-public/entities-upstreams-targets@3.8.0) (2025-06-06)
+
+
+### Features
+
+* **entities-upstreams-targets:** support sticky sessions ([#2168](https://github.com/Kong/public-ui-components/issues/2168)) ([5c9043f](https://github.com/Kong/public-ui-components/commit/5c9043fba8a4a2cedf292382d4011c63b9220afb))
+
+
+
+
+
+## [3.7.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.7.31...@kong-ui-public/entities-upstreams-targets@3.7.32) (2025-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
 ## [3.7.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.7.30...@kong-ui-public/entities-upstreams-targets@3.7.31) (2025-05-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets

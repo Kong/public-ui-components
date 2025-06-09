@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.21.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.21.0...@kong-ui-public/entities-vaults@3.21.1) (2025-06-06)
+
+
+### Bug Fixes
+
+* **vault:** remove hcv cert auth verify flag [KM-1354] ([#2164](https://github.com/Kong/public-ui-components/issues/2164)) ([3dc8222](https://github.com/Kong/public-ui-components/commit/3dc82220696e27e1a2d5a06ce32acbe3c733291d))
+
+
+
+
+
+# [3.21.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.20.2...@kong-ui-public/entities-vaults@3.21.0) (2025-06-04)
+
+
+### Features
+
+* **entities-vaults:** add cert based authentication to hcv [KM-1303] ([#2142](https://github.com/Kong/public-ui-components/issues/2142)) ([8531048](https://github.com/Kong/public-ui-components/commit/85310482e121a062d108e897f0a0334c6a0a5311))
+
+
+
+
+
+## [3.20.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.20.1...@kong-ui-public/entities-vaults@3.20.2) (2025-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-vaults
+
+
+
+
+
+## [3.20.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.20.0...@kong-ui-public/entities-vaults@3.20.1) (2025-05-28)
+
+
+### Bug Fixes
+
+* **vault:** set conjur auth_method vault to be api_key ([#2144](https://github.com/Kong/public-ui-components/issues/2144)) ([a593cd9](https://github.com/Kong/public-ui-components/commit/a593cd9f6ad9633d0e9328a319b3e04becf644a0))
+
+
+
+
+
+# [3.20.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.19.1...@kong-ui-public/entities-vaults@3.20.0) (2025-05-27)
+
+
+### Features
+
+* **vault:** add base64 field to conjur [KM-1306] ([#2143](https://github.com/Kong/public-ui-components/issues/2143)) ([33f3554](https://github.com/Kong/public-ui-components/commit/33f35543ab1d110d0638450337f9691276106137))
+
+
+
+
+
 ## [3.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.19.0...@kong-ui-public/entities-vaults@3.19.1) (2025-05-22)
 
 

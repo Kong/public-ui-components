@@ -551,9 +551,9 @@ export const dashboardConfigSchema = {
       required: ['cols', 'rows'],
       additionalProperties: false,
     },
-    global_filter: filtersFn([...new Set([...filterableExploreDimensions, ...filterableBasicExploreDimensions, ...filterableAiExploreDimensions])]),
+    global_filters: filtersFn([...new Set([...filterableExploreDimensions, ...filterableBasicExploreDimensions, ...filterableAiExploreDimensions])]),
   },
-  required: ['tiles', 'gridSize'],
+  required: ['tiles'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 

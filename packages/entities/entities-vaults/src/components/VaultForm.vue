@@ -274,9 +274,10 @@
               v-model="configFields[VaultProviders.HCV].auth_method"
               data-testid="vault-form-config-hcv-auth_method"
               :items="[
-                { label: VaultAuthMethods.TOKEN, value: VaultAuthMethods.TOKEN },
-                { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S},
-                ...(config.hcvAppRoleMethodAvailable ? [{ label: VaultAuthMethods.APP_ROLE, value: VaultAuthMethods.APP_ROLE }] : []),
+                { label: VaultAuthMethods.TOKEN, value: VaultAuthMethods.TOKEN as string },
+                { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S as string },
+                ...(config.hcvAppRoleMethodAvailable ? [{ label: VaultAuthMethods.APP_ROLE, value: VaultAuthMethods.APP_ROLE as string }] : []),
+                ...(config.hcvCertMethodAvailable ? [{ label: VaultAuthMethods.CERT, value: VaultAuthMethods.CERT as string }] : []),
               ]"
               :label="t('form.config.hcv.fields.auth_method.label')"
               :readonly="form.isReadonly"
@@ -369,6 +370,35 @@
                 v-model="configFields[VaultProviders.HCV].approle_response_wrapping as boolean"
                 data-testid="vault-form-config-hcv-approle_response_wrapping"
                 :label="t('form.config.hcv.fields.approle_response_wrapping.label')"
+              />
+            </div>
+            <div
+              v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.CERT"
+              class="vault-form-config-auth-method-container"
+            >
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].cert_auth_role_name"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-cert_auth_role_name"
+                :label="t('form.config.hcv.fields.cert_auth_role_name.label')"
+                :readonly="form.isReadonly"
+                required
+              />
+              <KTextArea
+                v-model.trim="configFields[VaultProviders.HCV].cert_auth_cert"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-cert_auth_cert"
+                :label="t('form.config.hcv.fields.cert_auth_cert.label')"
+                :readonly="form.isReadonly"
+                required
+              />
+              <KTextArea
+                v-model.trim="configFields[VaultProviders.HCV].cert_auth_cert_key"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-cert_auth_cert_key"
+                :label="t('form.config.hcv.fields.cert_auth_cert_key.label')"
+                :readonly="form.isReadonly"
+                required
               />
             </div>
             <KCheckbox
@@ -498,6 +528,17 @@
               required
               show-password-mask-toggle
               type="password"
+            />
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.CONJUR].base64_decode!"
+              data-testid="vault-form-config-env-base64_decode"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
             />
           </div>
 
@@ -798,6 +839,9 @@ const configFields = reactive<ConfigFields>({
     approle_secret_id: '',
     approle_secret_id_file: '',
     approle_response_wrapping: false,
+    cert_auth_cert: '',
+    cert_auth_cert_key: '',
+    cert_auth_role_name: '',
     ...base64FieldConfig,
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
@@ -811,7 +855,8 @@ const configFields = reactive<ConfigFields>({
   } as AzureVaultConfig,
   [VaultProviders.CONJUR]: {
     endpoint_url: '',
-    auth_method: 'default',
+    auth_method: 'api_key',
+    ...base64FieldConfig,
   },
 })
 
@@ -862,7 +907,8 @@ const originalConfigFields = reactive<ConfigFields>({
   } as AzureVaultConfig,
   [VaultProviders.CONJUR]: {
     endpoint_url: '',
-    auth_method: 'default',
+    auth_method: 'api_key',
+    ...base64FieldConfig,
   },
 })
 
@@ -1026,6 +1072,9 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE && key === 'approle_response_wrapping' && typeof (configFields[vaultProvider.value] as HCVVaultConfig)[key] === 'boolean') {
         return false
       }
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && ['cert_auth_role_name', 'cert_auth_cert', 'cert_auth_cert_key'].includes(key)) {
+        return false
+      }
       return isEmpty((configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig])
     }).length
   }
@@ -1110,6 +1159,11 @@ const getPayload = computed((): Record<string, any> => {
       approle_secret_id: configFields[VaultProviders.HCV].approle_secret_id || undefined,
       approle_secret_id_file: configFields[VaultProviders.HCV].approle_secret_id_file || undefined,
       approle_response_wrapping: configFields[VaultProviders.HCV].approle_response_wrapping ?? false,
+    }),
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.CERT && {
+      cert_auth_role_name: configFields[VaultProviders.HCV].cert_auth_role_name,
+      cert_auth_cert: configFields[VaultProviders.HCV].cert_auth_cert,
+      cert_auth_cert_key: configFields[VaultProviders.HCV].cert_auth_cert_key,
     }),
   }
 

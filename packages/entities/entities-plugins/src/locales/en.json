@@ -521,6 +521,22 @@
       "ai-rag-injector": {
         "name": "AI RAG Injector",
         "description": "Attach contextual knowledge from vector databases with flexible template to LLM prompts."
+      },
+      "datakit": {
+        "name": "Datakit",
+        "description": "Datakit is a workflow engine for working with external APIs."
+      },
+      "ai-prompt-compressor": {
+        "name": "AI Prompt Compressor",
+        "description": "The AI Prompt Compressor reduces costs associated with LLMs by compressing prompts."
+      },
+      "solace-upstream": {
+        "name": "Solace Upstream",
+        "description": "Transform requests into Solace messages in a Solace queue or topic."
+      },
+      "ai-aws-guardrails": {
+        "name": "AI AWS GuardRails",
+        "description": "The AI AWS GuardRails enables enforcement of introspection with the AWS GuardRails service for all requests processed by the AI Proxy plugin."
       }
     },
     "fields": {
@@ -629,6 +645,17 @@
         "only_one_of": "Exactly one of these parameters is required: {parameters}",
         "mutually_required": "All of these parameters are required: {parameters}",
         "only_one_of_mutually_required": "Exactly one of the following parameter combinations is required (all parameters within a chosen combination are required):"
+      },
+      "sections": {
+        "general_info": {
+          "title": "General information",
+          "description": "Add details to help identify and manage your plugin."
+        },
+        "plugin_config": {
+          "title": "Plugin configuration",
+          "description": "Configure parameters for this plugin by using a form or a YAML file.",
+          "description_yaml": "Configure Datakit via YAML below. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block."
+        }
       }
     },
     "free-form": {

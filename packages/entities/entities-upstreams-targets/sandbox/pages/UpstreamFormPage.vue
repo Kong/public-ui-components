@@ -46,6 +46,7 @@ const KMConfig = ref<KongManagerUpstreamsFormConfig>({
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   cancelRoute: { name: 'upstreams-list' },
+  stickySessionsAvailable: true,
 })
 
 const onLoading = (val: boolean): void => {

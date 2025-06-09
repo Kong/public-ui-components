@@ -38,6 +38,8 @@ export default function useHelpers() {
       clientCertificate: response?.client_certificate?.id || '',
       tags: response?.tags?.join(', ') || '',
       algorithm: response?.algorithm || 'round-robin',
+      stickySessionsCookie: response?.sticky_sessions_cookie || '',
+      stickySessionsCookiePath: response?.sticky_sessions_cookie_path || '/',
       slots: response?.slots?.toString() || '10000',
       hashOn: response?.hash_on || 'none',
       hashFallback: response?.hash_fallback || 'none',
@@ -121,6 +123,7 @@ export default function useHelpers() {
   const objectsAreEqual = (a: Record<string, any>, b: Record<string, any>): boolean => {
     try {
       return JSON.stringify(a) === JSON.stringify(b)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return false
     }

@@ -16,10 +16,6 @@ export interface GridTile<T> {
   meta: T
 }
 
-export interface GridSize {
-  rows: number
-  cols: number
-}
 export interface Cell<T> {
   key: string
   tile: GridTile<T>

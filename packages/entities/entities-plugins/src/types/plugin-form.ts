@@ -73,8 +73,10 @@ export interface PluginFormState {
   fields: PluginFormFields
   /** Form readonly state (only used when saving entity details) */
   isReadonly: boolean
-  /** The error message to show on the form */
-  errorMessage: string
+  /** The error message collected from client-side validation */
+  clientErrorMessage: string
+  /** The error message extracted from server response */
+  serverErrorMessage: string
 }
 
 export type PluginFieldType = 'switch' | 'input' | 'foreign' | 'selectionGroup' | 'tag' | 'multiselect' | 'select'
@@ -224,9 +226,18 @@ export interface CustomSchemas {
   'kafka-upstream': KafkaUpstreamSchema
   'key-auth': ReturnType<typeof genKeyAuthSchema>
   'confluent': ConfluentSchema
+  'confluent-consume': CommonSchemaFields
+  'kafka-consume': CommonSchemaFields
+  'kafka-log': CommonSchemaFields
 }
 
 export enum PluginPartialType {
   REDIS_CE = 'redis-ce',
   REDIS_EE = 'redis-ee',
+}
+
+export interface PluginValidityChangeEvent {
+  model: string
+  valid: boolean
+  error?: Error | string
 }

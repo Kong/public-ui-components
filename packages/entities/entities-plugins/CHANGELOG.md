@@ -3,6 +3,169 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.25.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.4...@kong-ui-public/entities-plugins@9.25.5) (2025-06-09)
+
+
+### Bug Fixes
+
+* **entities-plugins:** improve datakit yaml description ([#2170](https://github.com/Kong/public-ui-components/issues/2170)) ([7d93f68](https://github.com/Kong/public-ui-components/commit/7d93f684c1f61b99fd0ee32b8d425fb5466a9597))
+
+
+
+
+
+## [9.25.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.3...@kong-ui-public/entities-plugins@9.25.4) (2025-06-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.25.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.2...@kong-ui-public/entities-plugins@9.25.3) (2025-06-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.25.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.1...@kong-ui-public/entities-plugins@9.25.2) (2025-06-05)
+
+
+### Bug Fixes
+
+* **free-form:** record cannot be removed [KAG-7153] ([#2165](https://github.com/Kong/public-ui-components/issues/2165)) ([929d889](https://github.com/Kong/public-ui-components/commit/929d88939c4bfe42c4e2685b4751b9d0b2c76d54))
+
+
+
+
+
+## [9.25.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.0...@kong-ui-public/entities-plugins@9.25.1) (2025-06-04)
+
+
+### Bug Fixes
+
+* **plugins:** add freeform init for datakit ([#2161](https://github.com/Kong/public-ui-components/issues/2161)) ([077ebeb](https://github.com/Kong/public-ui-components/commit/077ebeb4cf85de06203b56e084d5c9d9f904d075))
+
+
+
+
+
+# [9.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.24.2...@kong-ui-public/entities-plugins@9.25.0) (2025-06-04)
+
+
+### Features
+
+* **plugins:** add code example for datakit yaml editor ([#2160](https://github.com/Kong/public-ui-components/issues/2160)) ([a70df2e](https://github.com/Kong/public-ui-components/commit/a70df2e1ff526febf2ab7955b2ca925c01e60a58))
+
+
+
+
+
+## [9.24.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.24.1...@kong-ui-public/entities-plugins@9.24.2) (2025-06-04)
+
+
+### Bug Fixes
+
+* **entities-plugins:** delete empty `basic` before submitting ([#2159](https://github.com/Kong/public-ui-components/issues/2159)) ([4bfdcb1](https://github.com/Kong/public-ui-components/commit/4bfdcb1e0b6598166bbcebf43f218af6bb74400d))
+
+
+
+
+
+## [9.24.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.24.0...@kong-ui-public/entities-plugins@9.24.1) (2025-06-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.23.1...@kong-ui-public/entities-plugins@9.24.0) (2025-06-03)
+
+
+### Features
+
+* **entities-plugins:** add metadata for solace-upstream and ai-aws-guardrails ([#2156](https://github.com/Kong/public-ui-components/issues/2156)) ([d213a9d](https://github.com/Kong/public-ui-components/commit/d213a9de043b19fdde35b6caf8d958673b32d797))
+
+
+
+
+
+## [9.23.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.23.0...@kong-ui-public/entities-plugins@9.23.1) (2025-06-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** use symbol to prune private fields ([#2157](https://github.com/Kong/public-ui-components/issues/2157)) ([3261a3e](https://github.com/Kong/public-ui-components/commit/3261a3e6d268a4805c5021fc79aa68037021f2c7))
+
+
+
+
+
+# [9.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.22.2...@kong-ui-public/entities-plugins@9.23.0) (2025-06-03)
+
+
+### Features
+
+* **entities-plugins:** datakit yaml editor ([#2152](https://github.com/Kong/public-ui-components/issues/2152)) ([069c751](https://github.com/Kong/public-ui-components/commit/069c7514da8e29196d6adaafdde21ddbb44ea944))
+
+
+
+
+
+## [9.22.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.22.1...@kong-ui-public/entities-plugins@9.22.2) (2025-05-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.22.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.22.0...@kong-ui-public/entities-plugins@9.22.1) (2025-05-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.21.7...@kong-ui-public/entities-plugins@9.22.0) (2025-05-30)
+
+
+### Features
+
+* **entities-plugins:** metadata for 3.11 new plugins  ([#2149](https://github.com/Kong/public-ui-components/issues/2149)) ([a7f1790](https://github.com/Kong/public-ui-components/commit/a7f1790398a0cd549f8f2a1a86b5acd8fce5ff3a))
+
+
+
+
+
+## [9.21.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.21.6...@kong-ui-public/entities-plugins@9.21.7) (2025-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.21.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.21.5...@kong-ui-public/entities-plugins@9.21.6) (2025-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.21.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.21.4...@kong-ui-public/entities-plugins@9.21.5) (2025-05-27)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.21.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.21.3...@kong-ui-public/entities-plugins@9.21.4) (2025-05-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
