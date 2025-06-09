@@ -220,7 +220,7 @@ const reactiveAnnotationsID = uuidv4()
 const maxOverflowPluginID = uuidv4()
 const legendItems = ref<EnhancedLegendItem[]>([])
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
-const axesTooltip = ref<AxesTooltipState>({
+const axesTooltip = reactive<AxesTooltipState>({
   show: false,
   top: '0px',
   left: '0px',
@@ -293,7 +293,7 @@ const axesTooltipPlugin = {
   // args any because it is not typed by chartjs
   // https://www.chartjs.org/docs/latest/api/interfaces/Plugin.html#parameters
   afterEvent(chart: Chart, args: any) {
-    axesTooltip.value.show = false
+    axesTooltip.show = false
     if (args.event.type === 'mousemove') {
       const evt = args.event
       const indexAxis = chart.options.indexAxis as ('x' | 'y')
@@ -318,22 +318,23 @@ const axesTooltipPlugin = {
 
         const leftOfCursor = Math.abs(Math.round(evt.x - textWidthPixels * 0.5))
         const rightOfCursor = Math.round(evt.x + textWidthPixels * 0.5)
-
-        axesTooltip.value.left = indexAxis === 'x'
-          ? `${(leftOfCursor > 0 ? leftOfCursor : rightOfCursor) - axesTooltip.value.offset}px`
-          : `${(evt.x - textWidthPixels * 0.5) - axesTooltip.value.offset}px`
-        axesTooltip.value.top = `${evt.y + 50}px`
+        const rect = chart.canvas.getBoundingClientRect()
+        const PX_ABOVE_CURSOR = 40
+        axesTooltip.left = indexAxis === 'x'
+          ? `${(leftOfCursor > 0 ? leftOfCursor : rightOfCursor) - axesTooltip.offset + rect.left}px`
+          : `${(evt.x - textWidthPixels * 0.5) - axesTooltip.offset + rect.left}px`
+        axesTooltip.top = `${evt.y - PX_ABOVE_CURSOR + rect.top}px`
         if (label.length > MAX_LABEL_LENGTH) {
-          axesTooltip.value.show = true
-          axesTooltip.value.text = label
+          axesTooltip.show = true
+          axesTooltip.text = label
         } else if (isEmptyLabel) {
-          axesTooltip.value.text = i18n.t('emptyEntityInfo')
-          axesTooltip.value.show = true
+          axesTooltip.text = i18n.t('emptyEntityInfo')
+          axesTooltip.show = true
         } else {
-          axesTooltip.value.show = false
+          axesTooltip.show = false
         }
       } else {
-        axesTooltip.value.show = false
+        axesTooltip.show = false
       }
     }
   },
@@ -542,7 +543,7 @@ const onScrolling = (event: Event) => {
 
   tooltipData.offsetY = target.scrollTop
   tooltipData.offsetX = target.scrollLeft
-  axesTooltip.value.offset = target.scrollLeft
+  axesTooltip.offset = target.scrollLeft
 }
 
 const tooltipDimensions = ({ width, height }: { width: number, height: number }) => {
