@@ -38,7 +38,7 @@ import type { TranslationKey } from '../../composables/useI18n'
 import { SPAN_ATTRIBUTE_KEYS, WATERFALL_ROW_COLUMN_GAP } from '../../constants'
 import type { SpanNode } from '../../types'
 import { computed } from 'vue'
-import { formatLatency, formatNanoDateTimeString, unwrapAnyValue } from '../../utils'
+import { formatLatency, formatNanoDateTimeString } from '../../utils'
 
 const { i18n: { t, te } } = composables.useI18n()
 
@@ -52,26 +52,21 @@ const rows = computed(() => {
   let upstreamStatusCode: number | null = null
   let latencyMs: number | null = null
 
-  if (props.rootSpan.span.attributes) {
-    for (const attribute of props.rootSpan.span.attributes) {
-      switch (attribute.key) {
-        case SPAN_ATTRIBUTE_KEYS.HTTP_RESPONSE_STATUS_CODE:
-          statusCode = unwrapAnyValue<number>(attribute.value)
-          break
-        case SPAN_ATTRIBUTE_KEYS.KONG_UPSTREAM_STATUS_CODE:
-          upstreamStatusCode = unwrapAnyValue<number>(attribute.value)
-          break
-        case SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL:
-          latencyMs = unwrapAnyValue<number>(attribute.value)
-          break
-        default:
-          // No-op
-          break
-      }
+  const attrs = props.rootSpan.span.attributes as unknown as Record<string, unknown>
+
+  if (attrs) {
+    if (attrs[SPAN_ATTRIBUTE_KEYS.HTTP_RESPONSE_STATUS_CODE]) {
+      statusCode = attrs[SPAN_ATTRIBUTE_KEYS.HTTP_RESPONSE_STATUS_CODE] as number
+    }
+    if (attrs[SPAN_ATTRIBUTE_KEYS.KONG_UPSTREAM_STATUS_CODE]) {
+      upstreamStatusCode = attrs[SPAN_ATTRIBUTE_KEYS.KONG_UPSTREAM_STATUS_CODE] as number
+    }
+    if (attrs[SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL]) {
+      latencyMs = attrs[SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL] as number
     }
   }
 
-  const startTimeUnixNano = props.rootSpan.span.startTimeUnixNano
+  const startTimeUnixNano = props.rootSpan.span.start_time_unix_nano
 
   return [{
     key: 'latency',

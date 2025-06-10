@@ -1,14 +1,14 @@
-import type { IKeyValue, Span, TraceBatches } from '../types'
+import type { Trace, Span } from '@kong/sdk-konnect-js-internal'
 
 interface InternalSpan extends Span {
-  dedupedAttributes?: Map<string, IKeyValue> // internally used
+  dedupedAttributes?: Map<string, Span['attributes']> // internally used
 }
 
 export const mergeSpans = (spans: Span[]): Span[] => {
   const dedupedSpans = new Map<string, InternalSpan>() // [`${traceId}-${spanId}`: InternalSpan]
 
   for (const span of spans) {
-    const uniqId = `${span.traceId}-${span.spanId}`
+    const uniqId = `${span.trace_id}-${span.span_id}`
     let dds = dedupedSpans.get(uniqId)
     if (!dds) {
       dds = {
@@ -24,10 +24,9 @@ export const mergeSpans = (spans: Span[]): Span[] => {
       }
     }
 
-    if (Array.isArray(dds.attributes)) {
-      for (const attr of dds.attributes) {
-        dds.dedupedAttributes?.set(attr.key, attr)
-      }
+
+    for (const key in dds.attributes) {
+      dds.dedupedAttributes?.set(key, (dds.attributes as unknown as any)[key])
     }
   }
 
@@ -35,17 +34,26 @@ export const mergeSpans = (spans: Span[]): Span[] => {
     const { dedupedAttributes, ...span } = dds
     return {
       ...span,
-      attributes: dedupedAttributes ? Array.from(dedupedAttributes.values()) : span.attributes,
+      attributes: dedupedAttributes ? Object.fromEntries(dedupedAttributes) : span.attributes,
     }
   })
 }
 
-export const mergeSpansInTraceBatches = (traceBatches: TraceBatches): Span[] =>
-  mergeSpans(
-    traceBatches.batches.reduce<Span[]>((spans, batch) => {
-      for (const scopeSpan of batch.scopeSpans) {
-        spans.push(...scopeSpan.spans)
+export const mergeSpansInTrace = (trace: Trace): Span[] => {
+  if (!trace.resource_spans || trace.resource_spans.length === 0) {
+    return []
+  }
+
+  return mergeSpans(trace.resource_spans.reduce<Span[]>((spans, resourceSpan) => {
+    // Check if scope_spans is defined and has items
+    if (resourceSpan.scope_spans?.length) {
+      for (const scopeSpan of resourceSpan.scope_spans) {
+        // Check if spans is defined and has atleast one valid span
+        if (scopeSpan.spans?.length && scopeSpan.spans[0]?.span_id) {
+          spans.push(...scopeSpan.spans)
+        }
       }
-      return spans
-    }, []),
-  )
+    }
+    return spans
+  }, []))
+}

@@ -15,6 +15,11 @@ import { compareSpanNode, getPhaseAndPlugin } from './spans'
  * @returns the node data and the duration that has been excluded
  */
 const buildPluginNodeData = (node: SpanNode): [LifecycleDefaultNodeData & { id: string }, number] | undefined => {
+  // if span name is absent, we should skip it as there's no way to find out if it's a plugin span
+  if (!node.span.name) {
+    return undefined
+  }
+
   // Try to parse the phase and plugin name from the span name
   const pluginSpan = getPhaseAndPlugin(node.span.name)
   if (!pluginSpan || pluginSpan.suffix) {
@@ -91,12 +96,12 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
     switch (n.span.name) {
       case SPAN_NAMES.CLIENT_HEADERS:
       case SPAN_NAMES.READ_BODY:
-        if (n.span.parentSpanId === root.span.spanId) {
+        if (n.span.parent_span_id === root.span.span_id) {
           clientOutSpans.push(n)
         }
         break
       case SPAN_NAMES.FLUSH_TO_DOWNSTREAM:
-        if (n.span.parentSpanId === root.span.spanId) {
+        if (n.span.parent_span_id === root.span.span_id) {
           clientInSpans.push(n)
         }
         break

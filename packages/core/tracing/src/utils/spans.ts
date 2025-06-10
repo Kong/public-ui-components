@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash-es'
 import { SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX, SPAN_ATTRIBUTE_KEYS, SPAN_LATENCY_ATTR_LABEL_KEYS, SPAN_NAMES, SPAN_ZERO_ID } from '../constants'
-import { type IAnyValue, type IKeyValue, type Span, type SpanLatency, type SpanNode, type SpanTrees } from '../types'
+import { type IAnyValue, type IKeyValue, type SpanLatency, type SpanNode, type SpanTrees } from '../types'
+import type { Span } from '@kong/sdk-konnect-js-internal'
 
 /**
  * These are spans whose names are changed.
@@ -14,37 +15,37 @@ const MAPPED_SPAN_NAMES: Record<string, string> = {
   [SPAN_NAMES.KONG_READ_RESPONSE_FROM_UPSTREAM]: SPAN_NAMES.KONG_READ_BODY_FROM_UPSTREAM,
 }
 
-export const compareSpanNode = (a: SpanNode, b: SpanNode) => {
-  if (a.span.startTimeUnixNano !== undefined && b.span.startTimeUnixNano !== undefined) {
-    return Number(a.span.startTimeUnixNano - b.span.startTimeUnixNano)
+export const compareSpanNode = (a: SpanNode, b: SpanNode): number => {
+  if (a.span.start_time_unix_nano !== undefined && b.span.start_time_unix_nano !== undefined) {
+    return Number(BigInt(a.span.start_time_unix_nano) - BigInt(b.span.start_time_unix_nano))
   }
   // Hoist the spans without start time to the top
-  if (a.span.startTimeUnixNano === undefined && b.span.startTimeUnixNano === undefined) {
+  if (a.span.start_time_unix_nano === undefined && b.span.start_time_unix_nano === undefined) {
     return 0
   }
-  return a.span.startTimeUnixNano === undefined ? -1 : 1
+  return a.span.start_time_unix_nano === undefined ? -1 : 1
 }
 
-export const calculateSpanDuration = (span: Span<bigint>): number | undefined => {
-  let startTimeUnixNano: bigint | undefined
-  let endTimeUnixNano: bigint | undefined
+export const calculateSpanDuration = (span: Span): number | undefined => {
+  let start_time_unix_nano: bigint | undefined
+  let end_time_unix_nano: bigint | undefined
 
   try {
-    startTimeUnixNano = BigInt(span.startTimeUnixNano!)
+    start_time_unix_nano = BigInt(span.start_time_unix_nano!)
   } catch (e) {
-    console.warn(`Failed to convert the start time "${span.startTimeUnixNano}" to bigint:`, { error: e, span })
+    console.warn(`Failed to convert the start time "${span.start_time_unix_nano}" to bigint:`, { error: e, span })
     return undefined
   }
 
   try {
-    endTimeUnixNano = BigInt(span.endTimeUnixNano!)
+    end_time_unix_nano = BigInt(span.end_time_unix_nano!)
   } catch (e) {
-    console.warn(`Failed to convert the end time "${span.endTimeUnixNano}" to bigint:`, { error: e, span })
+    console.warn(`Failed to convert the end time "${span.end_time_unix_nano}" to bigint:`, { error: e, span })
     return undefined
   }
 
-  const durationNano = startTimeUnixNano !== undefined && endTimeUnixNano !== undefined
-    ? Number(endTimeUnixNano - startTimeUnixNano)
+  const durationNano = start_time_unix_nano !== undefined && end_time_unix_nano !== undefined
+    ? Number(end_time_unix_nano - start_time_unix_nano)
     : undefined
 
   if (durationNano !== undefined && durationNano < 0) {
@@ -66,31 +67,31 @@ export const buildSpanTrees = (spans: Span[]): SpanTrees => {
   for (const span of spans) {
     // Performance: Only pick the necessary fields
     const {
-      traceId,
-      spanId,
-      parentSpanId,
+      trace_id,
+      span_id,
+      parent_span_id,
       name,
       attributes,
       events,
     } = span
 
-    let startTimeUnixNano: bigint | undefined
-    let endTimeUnixNano: bigint | undefined
+    let start_time_unix_nano: bigint | undefined
+    let end_time_unix_nano: bigint | undefined
 
     try {
-      startTimeUnixNano = BigInt(span.startTimeUnixNano!)
+      start_time_unix_nano = BigInt(span.start_time_unix_nano!)
     } catch (e) {
-      console.warn(`Failed to convert the start time "${span.startTimeUnixNano}" to bigint:`, { error: e, span })
+      console.warn(`Failed to convert the start time "${span.start_time_unix_nano}" to bigint:`, { error: e, span })
     }
 
     try {
-      endTimeUnixNano = BigInt(span.endTimeUnixNano!)
+      end_time_unix_nano = BigInt(span.end_time_unix_nano!)
     } catch (e) {
-      console.warn(`Failed to convert the end time "${span.endTimeUnixNano}" to bigint:`, { error: e, span })
+      console.warn(`Failed to convert the end time "${span.end_time_unix_nano}" to bigint:`, { error: e, span })
     }
 
-    const durationNano = startTimeUnixNano !== undefined && endTimeUnixNano !== undefined
-      ? Number(endTimeUnixNano - startTimeUnixNano)
+    const durationNano = start_time_unix_nano !== undefined && end_time_unix_nano !== undefined
+      ? Number(end_time_unix_nano - start_time_unix_nano)
       : undefined
 
     if (durationNano !== undefined && durationNano < 0) {
@@ -99,32 +100,31 @@ export const buildSpanTrees = (spans: Span[]): SpanTrees => {
 
     const node: SpanNode = {
       span: {
-        traceId,
-        spanId,
-        parentSpanId,
-        name: MAPPED_SPAN_NAMES[name] || name,
-        startTimeUnixNano,
-        endTimeUnixNano,
+        trace_id,
+        span_id,
+        parent_span_id,
+        name: name ? MAPPED_SPAN_NAMES[name] || name : 'N/A',
+        start_time_unix_nano: String(start_time_unix_nano),
+        end_time_unix_nano: String(end_time_unix_nano),
         attributes: cloneDeep(attributes), // Avoid mutating the original attributes
         events: cloneDeep(events), // Avoid mutating the original events
       },
-      root: !span.parentSpanId || span.parentSpanId === SPAN_ZERO_ID,
+      root: !span.parent_span_id || span.parent_span_id === SPAN_ZERO_ID,
       durationNano, // undefined indicates either the start or end time is missing or invalid
       children: [],
       subtreeValues: {
-        startTimeUnixNano,
-        endTimeUnixNano,
+        startTimeUnixNano: String(start_time_unix_nano),
+        endTimeUnixNano: String(end_time_unix_nano),
       },
     }
-    node.span.attributes?.sort((a, b) => a.key.localeCompare(b.key))
-    nodes.set(`${span.traceId}~${span.spanId}`, node)
+    nodes.set(`${span.trace_id}~${span.span_id}`, node)
   }
 
   const roots: SpanNode[] = []
 
   for (const node of nodes.values()) {
     if (!node.root) {
-      const parent = nodes.get(`${node.span.traceId}~${node.span.parentSpanId!}`)!
+      const parent = nodes.get(`${node.span.trace_id}~${node.span.parent_span_id!}`)!
       parent.children.push(node)
       // Update subtree values when necessary
       if (node.subtreeValues.startTimeUnixNano !== undefined
@@ -171,7 +171,11 @@ export interface ParsedPluginSpan {
  * @param spanName the span name to parse
  * @returns the parsed phase and plugin or undefined if the span is not a plugin span
  */
-export const getPhaseAndPlugin = (spanName: string): ParsedPluginSpan | undefined => {
+export const getPhaseAndPlugin = (spanName?: string): ParsedPluginSpan | undefined => {
+  if (!spanName) {
+    return undefined
+  }
+
   const matches = /^kong\.([^.]+)\.plugin\.([^.]+)(?:$|(.*))/gi.exec(spanName)
   if (!matches) {
     return undefined
@@ -234,26 +238,27 @@ const LATENCY_ORDERING = [
 /**
  * IMPORTANT: Please pass the attributes of a root span.
  */
-export const toOverviewLatencies = (attributes?: IKeyValue[]): SpanLatency[] => {
+export const toOverviewLatencies = (attributes?: Span['attributes']): SpanLatency[] => {
   if (!attributes) {
     return []
   }
 
-  return attributes
-    .reduce((attrs, attr) => {
-      if (!Object.prototype.hasOwnProperty.call(LATENCY_ORDERING, attr.key)) {
-        return attrs
-      }
+  const spanLatencyList: SpanLatency[] = []
+  const attrs = attributes as Record<string, any> // Assert type to access properties dynamically
 
-      attrs.push({
-        key: attr.key,
-        labelKey: SPAN_LATENCY_ATTR_LABEL_KEYS[attr.key],
-        milliseconds: unwrapAnyValue(attr.value) as number,
-      })
+  for (const key in attrs) {
+    if (!Object.prototype.hasOwnProperty.call(LATENCY_ORDERING, key)) {
+      continue
+    }
 
-      return attrs
-    }, [] as SpanLatency[])
-    .sort((a, b) => LATENCY_ORDERING[a.key] - LATENCY_ORDERING[b.key])
+    spanLatencyList.push({
+      key: key,
+      labelKey: SPAN_LATENCY_ATTR_LABEL_KEYS[key],
+      milliseconds: attrs[key] as number,
+    })
+  }
+
+  return spanLatencyList.sort((a, b) => LATENCY_ORDERING[a.key] - LATENCY_ORDERING[b.key])
 }
 
 export const toSpanLatencies = (attributes?: IKeyValue[]): SpanLatency<SpanLatency[]>[] => {
