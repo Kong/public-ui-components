@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { onMounted, shallowRef, useTemplateRef, toRaw, onBeforeUnmount } from 'vue'
-import * as monaco from 'monaco-editor'
+import type * as monaco from 'monaco-editor'
 import type { YAMLException } from 'js-yaml'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 import english from '../../../locales/en.json'
@@ -68,7 +68,8 @@ const CODE_EXAMPLE = `# Example YAML configuration
 #   status: 200
 `
 
-onMounted(() => {
+onMounted(async () => {
+  const monaco = await import('monaco-editor')
   editor.value = monaco.editor.create(editorRoot.value!, {
     language: 'yaml',
     automaticLayout: true,
