@@ -85,7 +85,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import DocumentationDisplay from './DocumentationDisplay.vue'
-import DocumentationPageEmptyState from './DocumentationPageEmptyState.vue'
 import ProductDocumentModal from './ProductDocumentModal.vue'
 import type { PropType } from 'vue'
 import type { DocumentListItem, DocumentTree, FormData } from '../types'
@@ -175,14 +174,6 @@ const props = defineProps({
   selectedDocument: {
     type: Object as PropType<{ document: DocumentTree, ast: Record<string, any>, markdown?: string, status: 'published' | 'unpublished' }>,
     default: () => null,
-  },
-  /**
-   * Enables the new empty state design, this prop can be removed when
-   * the khcp-14756-empty-states-m2 FF is removed.
-   */
-  enableV2EmptyStates: {
-    type: Boolean,
-    default: false,
   },
 })
 
