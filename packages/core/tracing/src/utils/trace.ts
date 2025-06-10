@@ -1,20 +1,13 @@
 import type { Trace, Span } from '@kong/sdk-konnect-js-internal'
 
-interface InternalSpan extends Span {
-  dedupedAttributes?: Map<string, Span['attributes']> // internally used
-}
-
 export const mergeSpans = (spans: Span[]): Span[] => {
-  const dedupedSpans = new Map<string, InternalSpan>() // [`${traceId}-${spanId}`: InternalSpan]
+  const dedupedSpans = new Map<string, Span>() // [`${traceId}-${spanId}`: InternalSpan]
 
   for (const span of spans) {
     const uniqId = `${span.trace_id}-${span.span_id}`
     let dds = dedupedSpans.get(uniqId)
     if (!dds) {
-      dds = {
-        ...span,
-        dedupedAttributes: new Map(),
-      }
+      dds = { ...span }
       dedupedSpans.set(uniqId, dds)
     } else if (Array.isArray(span.events)) {
       if (!Array.isArray(dds.events)) {
@@ -23,20 +16,9 @@ export const mergeSpans = (spans: Span[]): Span[] => {
         dds.events.push(...span.events!)
       }
     }
-
-
-    for (const key in dds.attributes) {
-      dds.dedupedAttributes?.set(key, (dds.attributes as unknown as any)[key])
-    }
   }
 
-  return Array.from(dedupedSpans.values()).map((dds) => {
-    const { dedupedAttributes, ...span } = dds
-    return {
-      ...span,
-      attributes: dedupedAttributes ? Object.fromEntries(dedupedAttributes) : span.attributes,
-    }
-  })
+  return Array.from(dedupedSpans.values())
 }
 
 export const mergeSpansInTrace = (trace: Trace): Span[] => {

@@ -52,7 +52,7 @@ const rows = computed(() => {
   let upstreamStatusCode: number | null = null
   let latencyMs: number | null = null
 
-  const attrs = props.rootSpan.span.attributes as unknown as Record<string, unknown>
+  const attrs = props.rootSpan.span.attributes as Record<string, unknown>
 
   if (attrs) {
     if (attrs[SPAN_ATTRIBUTE_KEYS.HTTP_RESPONSE_STATUS_CODE]) {

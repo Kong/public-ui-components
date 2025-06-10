@@ -52,7 +52,7 @@
           class="payload-body"
         >
           <KCodeBlock
-            id="`payload-${title}`"
+            :id="`payload-${title}`"
             :code="payloadContent.formatted"
             :language="payloadContent.language"
           />

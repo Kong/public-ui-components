@@ -64,11 +64,11 @@
         class="span-details"
       >
         <SpanBasicInfo
-          v-if="selectedSpan && spanDescription"
+          v-if="selectedSpan.span.span_id && spanDescription"
           :description="spanDescription"
           :name="selectedSpan.span.name"
-          :span-id="selectedSpan.span.spanId"
-          @view-logs="$emit('view-logs', selectedSpan.span.spanId)"
+          :span-id="selectedSpan.span.span_id"
+          @view-logs="$emit('view-logs', selectedSpan.span.span_id)"
         />
 
         <KAlert

@@ -127,7 +127,7 @@ const config = reactive<MarkReactiveInputRefs<WaterfallConfig, 'ticks' | 'root' 
       return 0
     }
 
-    return Number(props.rootSpan.subtreeValues.endTimeUnixNano - props.rootSpan.subtreeValues.startTimeUnixNano)
+    return Number(BigInt(props.rootSpan.subtreeValues.endTimeUnixNano) - BigInt(props.rootSpan.subtreeValues.startTimeUnixNano))
   }),
   zoom: 1,
   viewport: { left: 0, right: 0 },

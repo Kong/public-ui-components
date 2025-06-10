@@ -1,12 +1,13 @@
 import type { TranslationKey } from '../composables/useI18n'
-import type { IKeyValue } from './otlp'
 import type { Span } from '@kong/sdk-konnect-js-internal'
 
-export interface Event {
-  name: string
-  timeUnixNano: string
-  attributes?: IKeyValue[]
-}
+/**
+ * - Span attributes are key-value pairs that provide additional information about the span.
+ * - They can include metadata such as HTTP method, status code, user ID, etc.
+ * - The values can be of any type, but are typically strings, numbers, or booleans.
+ * - The attributes are used for filtering, grouping, and aggregating spans in the tracing system.
+ */
+export type SpanAttributes = Record<string, unknown>
 
 export interface SpanNode {
   span: Span

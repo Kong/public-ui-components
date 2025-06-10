@@ -2,15 +2,15 @@
   <ConfigCardItem
     :item="{
       type: itemType,
-      key: keyValue.key,
-      label: label || keyValue.key,
+      key: attrKey,
+      label: label || attrKey,
       value: formattedValue,
     }"
   >
     <template
-      v-for="(_, attrKey) in ATTRIBUTE_KEY_TO_ENTITY"
-      :key="attrKey"
-      #[attrKey]
+      v-for="(_, entityKey) in ATTRIBUTE_KEY_TO_ENTITY"
+      :key="entityKey"
+      #[entityKey]
     >
       <EntityLink
         v-if="entityLink && entityLinkData"
@@ -31,8 +31,8 @@ import { ConfigCardItem, ConfigurationSchemaType, EntityLink, type EntityLinkDat
 import { computed, inject, onWatcherCleanup, shallowRef, watch } from 'vue'
 import composables from '../../composables'
 import { SPAN_ATTRIBUTE_KEYS, SPAN_ATTRIBUTE_VALUE_UNKNOWN, TRACE_VIEWER_CONFIG } from '../../constants'
-import type { EntityRequest, IKeyValue, SpanNode, TraceViewerConfig } from '../../types'
-import { getPhaseAndPlugin, unwrapAnyValue } from '../../utils'
+import type { EntityRequest, SpanAttributes, SpanNode, TraceViewerConfig } from '../../types'
+import { getPhaseAndPlugin } from '../../utils'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -40,7 +40,8 @@ const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps<{
   span: SpanNode['span']
-  keyValue: IKeyValue
+  attrKey: string // The key of the attribute
+  value: unknown // The attribute value can be of any type, so we use `unknown` here
   /**
    * Label to show for the attribute.
    * If omitted, the key will be used as the default label.
@@ -55,7 +56,7 @@ if (!config) {
 
 // TODO: This formatter is simply implemented for now
 const formattedValue = computed(() => {
-  const value = unwrapAnyValue(props.keyValue.value)
+  const value = props.value
 
   if (typeof value === 'string') {
     return value
@@ -85,7 +86,7 @@ const ATTRIBUTE_KEY_TO_ENTITY: Record<string, string> = {
 
 // Let's only make the attributes listed above copyable, for now.
 const itemType = computed(() => {
-  if (ATTRIBUTE_KEY_TO_ENTITY[props.keyValue.key]) {
+  if (ATTRIBUTE_KEY_TO_ENTITY[props.attrKey]) {
     return ConfigurationSchemaType.ID
   }
 
@@ -94,12 +95,13 @@ const itemType = computed(() => {
 
 // EntityRequest is used to ask for information about an entity from the host app
 const entityRequest = computed(() => {
-  const value = props.keyValue.value.stringValue
-  if (!value || value === SPAN_ATTRIBUTE_VALUE_UNKNOWN) {
+  const value = props.value
+
+  if (!value || typeof value !== 'string' || value === SPAN_ATTRIBUTE_VALUE_UNKNOWN) {
     return undefined
   }
 
-  const entity = ATTRIBUTE_KEY_TO_ENTITY[props.keyValue.key]
+  const entity = ATTRIBUTE_KEY_TO_ENTITY[props.attrKey]
   if (!entity) {
     return undefined
   }
@@ -109,7 +111,7 @@ const entityRequest = computed(() => {
     entityId: value,
   }
 
-  switch (props.keyValue.key) {
+  switch (props.attrKey) {
     case SPAN_ATTRIBUTE_KEYS.KONG_PLUGIN_ID: {
       // We will need to parse the plugin name from the span name
       request.plugin = getPhaseAndPlugin(props.span.name)?.plugin
@@ -121,9 +123,8 @@ const entityRequest = computed(() => {
       break
     }
     case SPAN_ATTRIBUTE_KEYS.KONG_TARGET_ID: {
-      const upstreamIdAttrValue = props.span.attributes?.find((attr) => attr.key === SPAN_ATTRIBUTE_KEYS.KONG_UPSTREAM_ID)?.value
-      const upstreamId = upstreamIdAttrValue && unwrapAnyValue<string>(upstreamIdAttrValue)
-      if (!upstreamId) {
+      const upstreamId = (props.span.attributes as SpanAttributes)?.[SPAN_ATTRIBUTE_KEYS.KONG_UPSTREAM_ID]
+      if (!upstreamId || typeof upstreamId !== 'string') {
         console.warn(`Failed to look up the upstream ID for the upstream target in the span "${props.span.name}"`)
         return undefined
       }

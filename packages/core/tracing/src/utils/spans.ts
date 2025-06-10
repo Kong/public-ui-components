@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash-es'
 import { SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX, SPAN_ATTRIBUTE_KEYS, SPAN_LATENCY_ATTR_LABEL_KEYS, SPAN_NAMES, SPAN_ZERO_ID } from '../constants'
-import { type IAnyValue, type IKeyValue, type SpanLatency, type SpanNode, type SpanTrees } from '../types'
+import type { SpanAttributes, SpanLatency, SpanNode, SpanTrees } from '../types'
 import type { Span } from '@kong/sdk-konnect-js-internal'
 
 /**
@@ -188,41 +188,6 @@ export const getPhaseAndPlugin = (spanName?: string): ParsedPluginSpan | undefin
   }
 }
 
-export const unwrapAnyValue = <T = any> (value: IAnyValue): T | null => {
-  if (value.stringValue !== undefined) {
-    return `${value.stringValue}` as T
-  }
-
-  if (value.boolValue !== undefined) {
-    return value.boolValue as T
-  }
-
-  if (value.intValue !== undefined) {
-    return value.intValue as T
-  }
-
-  if (value.doubleValue !== undefined) {
-    return value.doubleValue as T
-  }
-
-  if (value.bytesValue !== undefined) {
-    return value.bytesValue as T
-  }
-
-  if (value.arrayValue !== undefined) {
-    return value.arrayValue.values.map(unwrapAnyValue) as T
-  }
-
-  if (value.kvlistValue !== undefined) {
-    return value.kvlistValue.values.reduce<Record<string, any>>((map, value) => {
-      map[value.key] = unwrapAnyValue(value.value)
-      return map
-    }, {}) as T
-  }
-
-  return null
-}
-
 const LATENCY_ORDERING = [
   SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL,
   SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL_MS_LEGACY,
@@ -244,7 +209,7 @@ export const toOverviewLatencies = (attributes?: Span['attributes']): SpanLatenc
   }
 
   const spanLatencyList: SpanLatency[] = []
-  const attrs = attributes as Record<string, any> // Assert type to access properties dynamically
+  const attrs = attributes as SpanAttributes // Assert type to access properties dynamically
 
   for (const key in attrs) {
     if (!Object.prototype.hasOwnProperty.call(LATENCY_ORDERING, key)) {
@@ -261,7 +226,7 @@ export const toOverviewLatencies = (attributes?: Span['attributes']): SpanLatenc
   return spanLatencyList.sort((a, b) => LATENCY_ORDERING[a.key] - LATENCY_ORDERING[b.key])
 }
 
-export const toSpanLatencies = (attributes?: IKeyValue[]): SpanLatency<SpanLatency[]>[] => {
+export const toSpanLatencies = (attributes?: Span['attributes']): SpanLatency<SpanLatency[]>[] => {
   if (!attributes) {
     return []
   }
@@ -270,25 +235,27 @@ export const toSpanLatencies = (attributes?: IKeyValue[]): SpanLatency<SpanLaten
   let latency3rdParty: SpanLatency<SpanLatency[]> | undefined
   const latencies3rdParty: SpanLatency[] = []
 
-  for (const attr of attributes) {
-    if (Object.prototype.hasOwnProperty.call(LATENCY_ORDERING, attr.key)) {
+  const attrs = attributes as SpanAttributes // Assert type to access properties dynamically
+
+  for (const key in attrs) {
+    if (Object.prototype.hasOwnProperty.call(LATENCY_ORDERING, key)) {
       // Handle the major latencies
       const latency: SpanLatency<SpanLatency[]> = {
-        key: attr.key,
-        labelKey: SPAN_LATENCY_ATTR_LABEL_KEYS[attr.key],
-        milliseconds: unwrapAnyValue(attr.value) as number,
+        key,
+        labelKey: SPAN_LATENCY_ATTR_LABEL_KEYS[key],
+        milliseconds: attrs[key] as number,
         children: [],
       }
-      if (attr.key === SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_3P_TOTAL_IO) {
+      if (key === SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_3P_TOTAL_IO) {
         latency3rdParty = latency
       }
       latencies.push(latency)
-    } else if (attr.key.startsWith(SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX)) {
+    } else if (key.startsWith(SPAN_ATTR_KEY_KONG_LATENCY_3P_PREFIX)) {
       // Handle the NESTED 3rd-party latencies; we will later add them to the major 3rd-party latency
       latencies3rdParty.push({
-        key: attr.key,
-        labelKey:  SPAN_LATENCY_ATTR_LABEL_KEYS[attr.key],
-        milliseconds: unwrapAnyValue(attr.value) as number,
+        key,
+        labelKey: SPAN_LATENCY_ATTR_LABEL_KEYS[key],
+        milliseconds: attrs[key] as number,
       })
     }
   }
