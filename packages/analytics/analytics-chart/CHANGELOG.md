@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.9...@kong-ui-public/analytics-chart@9.0.10) (2025-06-10)
+
+
+### Bug Fixes
+
+* chart tooltip cutoff when dragged outside chart boundary ([#2173](https://github.com/Kong/public-ui-components/issues/2173)) ([8648d47](https://github.com/Kong/public-ui-components/commit/8648d474d1c60b55774c6922f34be75f81d80489))
+
+
+
+
+
 ## [9.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.8...@kong-ui-public/analytics-chart@9.0.9) (2025-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
