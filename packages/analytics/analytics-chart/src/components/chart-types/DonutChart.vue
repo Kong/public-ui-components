@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="chartParentRef"
     class="chart-parent"
     :class="chartFlexClass(legendPosition)"
     data-testid="donut-chart-parent"
@@ -14,15 +15,17 @@
         :options="(options as any)"
         :plugins="(plugins as any)"
       />
-      <ToolTip
-        :left="tooltipData.left"
-        :series="tooltipData.tooltipSeries"
-        :show-tooltip="tooltipData.showTooltip"
-        :tooltip-title="tooltipTitle"
-        :top="tooltipData.top"
-        :unit="metricUnit"
-        @dimensions="tooltipDimensions"
-      />
+      <Teleport to="body">
+        <ToolTip
+          :left="tooltipAbsoluteLeft"
+          :series="tooltipData.tooltipSeries"
+          :show-tooltip="tooltipData.showTooltip"
+          :tooltip-title="tooltipTitle"
+          :top="tooltipAbsoluteTop"
+          :unit="metricUnit"
+          @dimensions="tooltipDimensions"
+        />
+      </Teleport>
     </div>
     <HtmlLegend
       :id="legendID"
@@ -35,7 +38,7 @@
 
 <script setup lang="ts">
 import type { PropType, Ref } from 'vue'
-import { computed, reactive, ref, toRef } from 'vue'
+import { computed, reactive, ref, toRef, useTemplateRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
@@ -93,6 +96,7 @@ const { translateUnit } = composables.useTranslatedUnits()
 const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
 const legendItems = ref([])
+const chartParentRef = useTemplateRef('chartParentRef')
 
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
@@ -109,6 +113,11 @@ const tooltipData: TooltipState = reactive({
   chartID,
   chartType: 'donut',
 })
+
+const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolutePosition(
+  chartParentRef,
+  tooltipData,
+)
 
 const htmlLegendPlugin: Plugin = {
   id: legendID,
