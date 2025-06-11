@@ -743,7 +743,6 @@ describe('<ConsumerGroupList />', () => {
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
       cy.getTestId('consumer-groups-entity-empty-state').should('be.visible')
       cy.getTestId('entity-create-button').should('be.visible')
-
     })
 
     it('should hide empty state and create consumer group cta if user can not create', () => {
@@ -1080,7 +1079,7 @@ describe('<ConsumerGroupList />', () => {
 
         cy.wait('@getGroups')
 
-        cy.get('[data-testid="entity-create-button"]').click()
+        cy.getTestId('entity-create-button').click()
         cy.getTestId('add-to-group-modal').should('exist')
 
         cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal)
