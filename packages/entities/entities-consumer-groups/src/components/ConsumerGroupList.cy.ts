@@ -140,8 +140,8 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.getTestId('empty-state-action').should('be.visible')
+      cy.get('[data-testid="consumer-groups-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="entity-create-button"]').should('be.visible')
     })
 
     it('should hide empty state and create consumer group cta if user can not create', () => {
@@ -160,8 +160,8 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.getTestId('empty-state-action').should('not.exist')
+      cy.get('[data-testid="consumer-groups-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="entity-create-button"]').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -399,8 +399,8 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getGroups')
 
       // click empty state cta
-      cy.getTestId('empty-state-action').should('exist')
-      cy.getTestId('empty-state-action').click()
+      cy.get('[data-testid="entity-create-button"]').should('exist')
+      cy.get('[data-testid="entity-create-button"]').click()
       // add to group modal
       cy.getTestId('add-to-group-modal').should('exist')
     })
@@ -422,7 +422,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('empty-state-action').click()
+      cy.get('[data-testid="entity-create-button"]').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal).vm.$emit('cancel'))
@@ -449,7 +449,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('empty-state-action').click()
+      cy.get('[data-testid="entity-create-button"]').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal).vm.$emit('add:success', expectedData))
@@ -478,7 +478,7 @@ describe('<ConsumerGroupList />', () => {
 
         cy.wait('@getGroups')
 
-        cy.getTestId('empty-state-action').click()
+        cy.get('[data-testid="entity-create-button"]').click()
         cy.getTestId('add-to-group-modal').should('exist')
 
         cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal)
@@ -741,8 +741,9 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.getTestId('empty-state-action').should('be.visible')
+      cy.get('[data-testid="consumer-groups-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="entity-create-button"]').should('be.visible')
+
     })
 
     it('should hide empty state and create consumer group cta if user can not create', () => {
@@ -761,8 +762,8 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getConsumerGroups')
       cy.get('.kong-ui-entities-consumer-groups-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.getTestId('empty-state-action').should('not.exist')
+      cy.get('[data-testid="consumer-groups-entity-empty-state"]').should('be.visible')
+      cy.get('[data-testid="entity-create-button"]').should('not.exist')
     })
 
     it('should handle error state', () => {
@@ -1000,8 +1001,8 @@ describe('<ConsumerGroupList />', () => {
       cy.wait('@getGroups')
 
       // click empty state cta
-      cy.getTestId('empty-state-action').should('exist')
-      cy.getTestId('empty-state-action').click()
+      cy.get('[data-testid="entity-create-button"]').should('exist')
+      cy.get('[data-testid="entity-create-button"]').click()
       // add to group modal
       cy.getTestId('add-to-group-modal').should('exist')
     })
@@ -1023,7 +1024,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('empty-state-action').click()
+      cy.get('[data-testid="entity-create-button"]').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal).vm.$emit('cancel'))
@@ -1050,7 +1051,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.getTestId('empty-state-action').click()
+      cy.get('[data-testid="entity-create-button"]').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal).vm.$emit('add:success', expectedData))
@@ -1079,7 +1080,7 @@ describe('<ConsumerGroupList />', () => {
 
         cy.wait('@getGroups')
 
-        cy.getTestId('empty-state-action').click()
+        cy.get('[data-testid="entity-create-button"]').click()
         cy.getTestId('add-to-group-modal').should('exist')
 
         cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal)
