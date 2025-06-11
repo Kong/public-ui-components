@@ -10,7 +10,7 @@
       class="entity-form"
     >
       <component
-        :is="freeformName"
+        :is="(freeForm as any)[freeformName]"
         v-if="freeformName"
         :form-model="formModel"
         :form-options="formOptions"
@@ -34,7 +34,7 @@
         </template>
       </component>
       <component
-        :is="sharedFormName"
+        :is="(sharedForms as any)[sharedFormName]"
         v-else-if="sharedFormName"
         :enable-redis-partial="enableRedisPartial"
         :form-model="formModel"
@@ -105,7 +105,7 @@
   />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {
   VaultSecretPicker,
   VaultSecretPickerProvider,
@@ -123,7 +123,7 @@ import {
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, defineComponent, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
+import { computed, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
@@ -147,13 +147,6 @@ if (
   )
 }
 
-// Must explicitly specify these as components since they are rendered dynamically
-export default defineComponent({
-  components: { ...sharedForms, ...freeForm },
-})
-</script>
-
-<script setup lang="ts">
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'model-updated',
