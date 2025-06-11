@@ -21,6 +21,7 @@
         :on-model-updated="onModelUpdated"
         :on-validity-change="onValidityChange"
         :schema="rawSchema"
+        @global-action="(name: string, payload: any) => $emit('globalAction', name, payload)"
       >
         <template
           v-if="enableVaultSecretPicker"
@@ -164,6 +165,7 @@ const emit = defineEmits<{
     }
   ): void
   (e: 'showNewPartialModal', redisType: string): void
+  (e: 'globalAction', name: string, payload: any): void
   (e: 'validity-change', payload: PluginValidityChangeEvent): void
 }>()
 

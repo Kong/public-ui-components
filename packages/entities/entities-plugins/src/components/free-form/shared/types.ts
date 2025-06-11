@@ -104,3 +104,8 @@ export type PartialInfo = {
   redisPath: Ref<string | undefined>
   isEditing: boolean
 }
+
+export type PartialNotification = {
+  message: string
+  appearance: string
+}

@@ -664,7 +664,8 @@
         "by_lua_placeholder": "Enter Lua script here..."
       },
       "redis_partial": {
-        "redis_partial_modal_title": "New shared configuration"
+        "redis_partial_modal_title": "New shared configuration",
+        "partial_created_success_message": "Successfully created a new Redis configuration."
       }
     }
   },

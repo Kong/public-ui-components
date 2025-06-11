@@ -24,18 +24,16 @@
 
 <script setup lang="ts">
 import { PartialType, RedisConfigurationForm, type KongManagerRedisConfigurationFormConfig, type KonnectRedisConfigurationFormConfig } from '@kong-ui-public/entities-redis-configurations'
-// import {
-//   getMessageFromError,
-// } from '@/helpers/services'
 import { ref, nextTick, watch, computed, inject } from 'vue'
 import { useRoute } from 'vue-router'
-// import type { AxiosError } from 'axios'
+import type { AxiosError } from 'axios'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import '@kong-ui-public/entities-vaults/dist/style.css'
 import '@kong-ui-public/entities-redis-configurations/dist/style.css'
-import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
+import { useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import type { PartialNotification } from './types'
 
 const props = defineProps({
   visible: {
@@ -60,11 +58,12 @@ const redisFormConfig = ref<KonnectRedisConfigurationFormConfig | KongManagerRed
 )
 
 const emits = defineEmits<{
-  (e: 'partialUpdated'): void
+  (e: 'partialUpdated', payload: PartialNotification): void
+  (e: 'partialUpdateFailed', payload: PartialNotification): void
   (e: 'modalClose'): void
 }>()
 
-// const { notify } = composables.useToaster()
+const { getMessageFromError } = useErrors()
 
 const disabledPartialType = computed(() => {
   switch (props.partialType) {
@@ -79,22 +78,19 @@ const disabledPartialType = computed(() => {
 
 const modalVisible = ref(false)
 const modalActionTeleportTarget = ref<string>()
-const onError = () => {
-  // TODO: global notification in consuming app
-  // notify({
-  //   message: getMessageFromError(error),
-  //   appearance: 'danger',
-  // })
+const onError = (error: AxiosError) => {
+  emits('partialUpdateFailed', {
+    message: getMessageFromError(error),
+    appearance: 'danger',
+  })
 }
 
 const onUpdated = () => {
-  emits('partialUpdated')
+  emits('partialUpdated', {
+    message: t('plugins.free-form.redis_partial.partial_created_success_message'),
+    appearance: 'success',
+  })
   handleClose()
-  // TODO: global notification in consuming app
-  // notify({
-  //   message: i18n.t('plugins.redis_partial_create_success'),
-  //   appearance: 'success',
-  // })
 }
 
 const handleClose = () => {
