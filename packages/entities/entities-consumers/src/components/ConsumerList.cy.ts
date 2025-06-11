@@ -398,7 +398,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.get('[data-testid="entity-create-button"]').should('exist')
+      cy.getTestId('empty-state-action').should('exist')
     })
 
     it('should render AddConsumerModal onclick Add Consumer button when consumerGroupId is provided', () => {
