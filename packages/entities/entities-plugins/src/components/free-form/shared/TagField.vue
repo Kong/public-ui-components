@@ -13,7 +13,7 @@
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
       :data-testid="field.path.value"
-      :model-value="value ?? ''"
+      :model-value="rawInputValue ?? ''"
       @update:model-value="handleUpdate"
     >
       <template
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRef, useAttrs } from 'vue'
+import { computed, ref, toRef, useAttrs, watch } from 'vue'
 import { KInput, type LabelAttributes } from '@kong/kongponents'
 
 import * as utils from './utils'
@@ -65,8 +65,19 @@ const { value: fieldValue, ...field } = useField<string[] | null, ArrayLikeField
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const noEmptyArray = computed(() => field.schema?.value?.len_min && field.schema.value.len_min > 0)
 
+const rawInputValue = ref('')
+
+function arrToStr(arr: string[]) {
+  return arr.map(item => item.trim()).filter(Boolean).join(', ')
+}
+
+function strToArr(str: string) {
+  return str.trim().split(',').map(item => item.trim()).filter(Boolean)
+}
+
 function handleUpdate(value: string) {
-  const values = value.trim().split(',').map(item => item.trim()).filter(Boolean)
+  rawInputValue.value = value
+  const values = strToArr(value)
   const finalValue = (!values.length && noEmptyArray.value) ? null : values
   fieldValue!.value = finalValue
   emit('update:modelValue', finalValue)
@@ -79,12 +90,14 @@ const is1pIgnore = computed(() => {
   return utils.getName(name) === 'name'
 })
 
-const value = computed(() => {
-  if (fieldValue?.value == null) {
-    return undefined
+// sync fieldValue to rawInputValue ONLY when their formatted value are different.
+watch(fieldValue!, newValue => {
+  const nv = newValue ? arrToStr(newValue) : ''
+  const ov = arrToStr(strToArr(rawInputValue.value))
+  if (ov !== nv) {
+    rawInputValue.value = nv
   }
-  return fieldValue?.value.join(', ')
-})
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
