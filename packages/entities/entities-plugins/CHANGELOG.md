@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.25.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.5...@kong-ui-public/entities-plugins@9.25.6) (2025-06-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** remove side effects of free form ([#2178](https://github.com/Kong/public-ui-components/issues/2178)) ([4637047](https://github.com/Kong/public-ui-components/commit/463704720bf98e43d6e96f66cb65b401eb197122))
+
+
+
+
+
 ## [9.25.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.4...@kong-ui-public/entities-plugins@9.25.5) (2025-06-09)
 
 

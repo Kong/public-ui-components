@@ -10,6 +10,7 @@ import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 import useReportChartDataForSynthetics from './useReportChartDataForSynthetics'
 import useTranslatedUnits from './useTranslatedUnits'
 import useEvaluateFeatureFlag from './useEvauluateFeatureFlag'
+import useTooltipAbsolutePosition from './useTooltipAbsolutePosition'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -25,4 +26,5 @@ export default {
   useReportChartDataForSynthetics,
   useTranslatedUnits,
   useEvaluateFeatureFlag,
+  useTooltipAbsolutePosition,
 }

@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="chartParentRef"
     class="chart-parent"
     :class="chartFlexClass(legendPosition)"
     data-testid="line-chart-parent"
@@ -31,22 +32,24 @@
         :plugins="plugins"
       />
     </div>
-    <ToolTip
-      v-if="!isDoingSelection"
-      ref="tooltipElement"
-      :context="formatTimestamp(tooltipData.tooltipContext)"
-      data-testid="tooltip"
-      :left="tooltipData.left"
-      :locked="tooltipData.locked"
-      :series="tooltipData.tooltipSeries"
-      :show-tooltip="tooltipData.showTooltip"
-      :tooltip-title="tooltipTitle"
-      :top="tooltipData.top"
-      :unit="metricUnit"
-      @dimensions="tooltipDimensions"
-      @left="(left: string) => tooltipData.left = left"
-      @top="(top: string) => tooltipData.top = top"
-    />
+    <Teleport to="body">
+      <ToolTip
+        v-if="!isDoingSelection"
+        ref="tooltipElement"
+        :context="formatTimestamp(tooltipData.tooltipContext)"
+        data-testid="tooltip"
+        :left="tooltipAbsoluteLeft"
+        :locked="tooltipData.locked"
+        :series="tooltipData.tooltipSeries"
+        :show-tooltip="tooltipData.showTooltip"
+        :tooltip-title="tooltipTitle"
+        :top="tooltipAbsoluteTop"
+        :unit="metricUnit"
+        @dimensions="tooltipDimensions"
+        @left="(left: string) => tooltipData.left = left"
+        @top="(top: string) => tooltipData.top = top"
+      />
+    </Teleport>
     <ChartLegend
       :id="legendID"
       :chart-instance="chartInstance"
@@ -168,6 +171,7 @@ const legendItems = ref<EnhancedLegendItem[]>([])
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
 const isDoingSelection = ref(false)
+const chartParentRef = ref<HTMLElement | null>(null)
 
 const tooltipData = reactive({
   showTooltip: false,
@@ -186,6 +190,11 @@ const tooltipData = reactive({
   chartID,
   chartTooltipSortFn: props.chartTooltipSortFn,
 })
+
+const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolutePosition(
+  chartParentRef,
+  tooltipData,
+)
 
 const htmlLegendPlugin = {
   id: legendID,
