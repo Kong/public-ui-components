@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.25.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.6...@kong-ui-public/entities-plugins@9.25.7) (2025-06-11)
+
+
+### Bug Fixes
+
+* **free-form:** keep the original user input to tag field ([#2171](https://github.com/Kong/public-ui-components/issues/2171)) ([5d1a5d3](https://github.com/Kong/public-ui-components/commit/5d1a5d345f867e649a224093670b41aaf735c40e))
+
+
+
+
+
 ## [9.25.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.5...@kong-ui-public/entities-plugins@9.25.6) (2025-06-11)
 
 
