@@ -422,7 +422,7 @@ describe('<ConsumerGroupList />', () => {
 
       cy.wait('@getGroups')
 
-      cy.get('[data-testid="entity-create-button"]').click()
+      cy.getTestId('empty-state-action').click()
       cy.getTestId('add-to-group-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal).vm.$emit('cancel'))
@@ -478,7 +478,7 @@ describe('<ConsumerGroupList />', () => {
 
         cy.wait('@getGroups')
 
-        cy.get('[data-testid="entity-create-button"]').click()
+        cy.getTestId('empty-state-action').click()
         cy.getTestId('add-to-group-modal').should('exist')
 
         cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddToGroupModal)

@@ -465,7 +465,7 @@ describe('<ConsumerList />', () => {
 
       cy.wait('@getGroupConsumers')
 
-      cy.getTestId('empty-state-action').should('exist')
+      cy.getTestId('empty-state-action').click()
       cy.getTestId('add-consumer-modal').should('exist')
 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal).vm.$emit('add:success', expectedData))
@@ -494,7 +494,7 @@ describe('<ConsumerList />', () => {
 
         cy.wait('@getGroupConsumers')
 
-        cy.getTestId('empty-state-action').should('exist')
+        cy.getTestId('empty-state-action').click()
         cy.getTestId('add-consumer-modal').should('exist')
 
         cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(AddConsumerModal)
