@@ -3,7 +3,10 @@
     class="span-basic-info"
     :title="t('trace_viewer.span_basic_info.title')"
   >
-    <template #actions>
+    <template
+      v-if="showViewLogsButton"
+      #actions
+    >
       <KButton
         appearance="secondary"
         size="small"
@@ -54,6 +57,7 @@ defineProps<{
   name: string
   description: string
   spanId: string
+  showViewLogsButton?: boolean
 }>()
 
 defineEmits(['view-logs'])

@@ -67,6 +67,7 @@
           v-if="selectedSpan && spanDescription"
           :description="spanDescription"
           :name="selectedSpan.span.name"
+          :show-view-logs-button="showViewLogsButton"
           :span-id="selectedSpan.span.spanId"
           @view-logs="$emit('view-logs', selectedSpan.span.spanId)"
         />
@@ -137,6 +138,7 @@ const props = defineProps<{
   rootSpan?: SpanNode
   url?: string
   showSkeleton?: boolean
+  showViewLogsButton?: boolean
 }>()
 
 defineEmits<{
