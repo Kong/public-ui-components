@@ -708,6 +708,9 @@ importers:
       '@kong/kongponents':
         specifier: 9.32.6
         version: 9.32.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+      '@kong/sdk-konnect-js-internal':
+        specifier: ^0.6.0
+        version: 0.6.0(axios@1.7.7)
       '@kong/splitpanes':
         specifier: 3.1.6-patch.6
         version: 3.1.6-patch.6(vue@3.5.13(typescript@5.6.3))
@@ -1909,6 +1912,7 @@ packages:
 
   '@evilmartians/lefthook@1.8.2':
     resolution: {integrity: sha512-SZdQk3W9q7tcJwnSwEMUubQqVIK7SHxv52hEAnV7o3nPI+xKcmd+rN0hZIJg07wjBaJRAjzdvoQySKQQYPW5Qw==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -2113,6 +2117,11 @@ packages:
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.13 < 4'
+
+  '@kong/sdk-konnect-js-internal@0.6.0':
+    resolution: {integrity: sha512-W7PZOzpSjkQLjnWkklFLT7AErssyR09GoN2PKAoVVDuC0n5s3OFZq+lm20I6LTWRH6YjALCrABBvT0fZUbJEvw==}
+    peerDependencies:
+      axios: 0.28.x
 
   '@kong/sdk-portal-js@2.16.0':
     resolution: {integrity: sha512-+BGhyen5I9eB+HgQlavWa0H9+3vr/YMpPV3j9y49wTWExZfvOK6Dm3AH7R1o4wUIGu0ap7D8j92rAW1Tq5DgZA==}
@@ -8276,7 +8285,7 @@ packages:
   right-pad@1.0.1:
     resolution: {integrity: sha512-bYBjgxmkvTAfgIYy328fmkwhp39v8lwVgWhhrzxPV3yHtcSqyYKe9/XOhvW48UFjATg3VuJbpsp5822ACNvkmw==}
     engines: {node: '>= 0.10'}
-    deprecated: Use String.prototype.padEnd() instead
+    deprecated: Please use String.prototype.padEnd() over this package.
 
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
@@ -11039,6 +11048,10 @@ snapshots:
       - '@types/markdown-it'
       - supports-color
       - typescript
+
+  '@kong/sdk-konnect-js-internal@0.6.0(axios@1.7.7)':
+    dependencies:
+      axios: 1.7.7
 
   '@kong/sdk-portal-js@2.16.0':
     dependencies:

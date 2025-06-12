@@ -18,8 +18,8 @@ const props = defineProps<{
 }>()
 
 const barEdges = computed(() => {
-  const spanStart = props.spanNode.span.startTimeUnixNano
-  const spanEnd = props.spanNode.span.endTimeUnixNano
+  const spanStart = props.spanNode.span.start_time_unix_nano
+  const spanEnd = props.spanNode.span.end_time_unix_nano
 
   const traceStart = config.root?.subtreeValues.startTimeUnixNano
   const traceEnd = config.root?.subtreeValues.endTimeUnixNano
@@ -28,8 +28,8 @@ const barEdges = computed(() => {
     return { left: 0, right: 0 }
   }
 
-  const left = (Number(spanStart - traceStart) / config.totalDurationNano)
-  const right = (Number(traceEnd - spanEnd) / config.totalDurationNano)
+  const left = (Number(BigInt(spanStart) - BigInt(traceStart)) / config.totalDurationNano)
+  const right = (Number(BigInt(traceEnd) - BigInt(spanEnd)) / config.totalDurationNano)
 
   return { left, right }
 })

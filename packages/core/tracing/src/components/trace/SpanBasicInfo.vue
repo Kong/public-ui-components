@@ -18,6 +18,7 @@
       <div class="attribute">
         <span class="label">{{ t('trace_viewer.span_basic_info.labels.name') }}</span>
         <KCopy
+          v-if="name"
           badge
           :text="name"
         />
@@ -51,7 +52,7 @@ import composables from '../../composables'
 const { i18n: { t } } = composables.useI18n()
 
 defineProps<{
-  name: string
+  name?: string
   description: string
   spanId: string
 }>()

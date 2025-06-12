@@ -1,5 +1,5 @@
 import type { EntityLinkData } from '@kong-ui-public/entities-shared'
-import type { Span } from './spans'
+import type { Span } from '@kong/sdk-konnect-js-internal'
 
 export interface ScopeSpan {
   scope: any // don't care for now

@@ -63,7 +63,7 @@
   <template v-if="expanded && spanNode.children">
     <WaterfallSpanRow
       v-for="(child, i) in spanNode.children"
-      :key="`${spanNode.span.traceId}-${child.span.spanId}`"
+      :key="`${spanNode.span.trace_id}-${child.span.span_id}`"
       :depth="depth + 1"
       :index="i"
       :sibling-count="spanNode.children.length - 1"
@@ -123,8 +123,8 @@ const expanded = ref(rowsState.value === WaterfallRowsState.EXPANDED)
 
 const selected = computed(
   () =>
-    config.selectedSpan?.span.traceId === props.spanNode.span.traceId &&
-    config.selectedSpan?.span.spanId === props.spanNode.span.spanId,
+    config.selectedSpan?.span.trace_id === props.spanNode.span.trace_id &&
+    config.selectedSpan?.span.span_id === props.spanNode.span.span_id,
 )
 
 const hasChildren = computed(() =>
@@ -154,8 +154,8 @@ const hasException = computed(() => {
     if (!event.attributes) {
       continue
     }
-    for (const keyValue of event.attributes) {
-      if (keyValue.key === SPAN_EVENT_ATTRIBUTE_KEYS.EXCEPTION_MESSAGE) {
+    for (const key in event.attributes) {
+      if (key === SPAN_EVENT_ATTRIBUTE_KEYS.EXCEPTION_MESSAGE) {
         return true
       }
     }
@@ -183,7 +183,7 @@ const handleExpand = () => {
 }
 
 const handleSelect = () => {
-  if (config.selectedSpan?.span.traceId === props.spanNode.span.traceId && config.selectedSpan?.span.spanId === props.spanNode.span.spanId) {
+  if (config.selectedSpan?.span.trace_id === props.spanNode.span.trace_id && config.selectedSpan?.span.span_id === props.spanNode.span.span_id) {
     config.selectedSpan = undefined
   } else {
     config.selectedSpan = props.spanNode

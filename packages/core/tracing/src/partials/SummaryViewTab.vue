@@ -63,7 +63,8 @@ import LifecycleView from '../components/lifecycle/LifecycleView.vue'
 import PayloadDisplay from '../components/payload/PayloadDisplay.vue'
 import RequestInfo from '../components/payload/RequestInfo.vue'
 import composables from '../composables'
-import type { Body, Headers, SpanNode } from '../types'
+import type { SpanNode } from '../types'
+import type { TraceCaptures } from '@kong/sdk-konnect-js-internal'
 
 import '@kong/splitpanes/dist/splitpanes.css'
 
@@ -73,12 +74,12 @@ defineProps<{
   rootSpan?: SpanNode
   payloads?: {
     headers?: {
-      request: Headers
-      response: Headers
+      request: TraceCaptures['request_headers']
+      response: TraceCaptures['response_headers']
     }
     body?: {
-      request: Body
-      response: Body
+      request: TraceCaptures['request_body']
+      response: TraceCaptures['response_body']
     }
   }
   showSkeleton?: boolean

@@ -118,8 +118,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { Body, Headers, SpanNode } from '../../src'
-import { buildSpanTrees, getPhaseAndPlugin, KONG_PHASES, mergeSpansInTraceBatches, SPAN_NAMES, SummaryViewTab, TraceViewTab, type TraceViewerConfig } from '../../src'
-import traceBatches from '../fixtures/trace-batches.json'
+import { buildSpanTrees, getPhaseAndPlugin, KONG_PHASES, mergeSpansInTrace, SPAN_NAMES, SummaryViewTab, TraceViewTab, type TraceViewerConfig } from '../../src'
+import traceBatches from '../fixtures/trace.json'
+import type { Trace } from '@kong/sdk-konnect-js-internal'
 
 const hasRequests = ref(true)
 const hasResponses = ref(true)
@@ -168,7 +169,7 @@ const trimTree = (tree: SpanNode) => {
 }
 
 const spanTrees = computed(() => {
-  const trees = buildSpanTrees(mergeSpansInTraceBatches(traceBatches))
+  const trees = buildSpanTrees(mergeSpansInTrace(traceBatches as unknown as Trace))
   trimTree(trees.roots[0])
   return trees
 })
@@ -260,12 +261,12 @@ const payloads = {
 
 <style lang="scss" scoped>
 .slideout-trigger {
+  height: 100dvh;
+  left: 0;
+  padding: 16px;
   position: fixed;
   top: 0;
-  left: 0;
   width: 100dvw;
-  height: 100dvh;
-  padding: 16px;
 
   .trace-select {
     margin-top: $kui-space-60;
@@ -285,9 +286,9 @@ const payloads = {
 
     .slideout-title {
       flex-shrink: 1;
-      min-width: 0;
       height: 28px; // $kui-line-height-50
       line-height: $kui-line-height-50;
+      min-width: 0;
     }
 
     .slideout-content {
@@ -335,12 +336,12 @@ const payloads = {
 }
 
 .controls {
-  z-index: 10000;
   bottom: 16px;
   left: 16px;
   margin-bottom: 16px;
   position: fixed;
   width: auto;
+  z-index: 10000;
 
   :deep(.card-content) {
     align-items: flex-start;

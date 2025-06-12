@@ -55,9 +55,13 @@ export const formatLatency = (milliseconds?: number) => {
  * @param unixNano UNIX timestamp in nanoseconds
  * @returns an formatted date and time string with nanoseconds precision
  */
-export const formatNanoDateTimeString = (unixNano?: bigint) => {
+export const formatNanoDateTimeString = (unixNano?: bigint | string) => {
   if (unixNano === undefined) {
     return 'N/A'
+  }
+
+  if (typeof unixNano === 'string') {
+    unixNano = BigInt(unixNano)
   }
 
   const ms = unixNano / BigInt(1e6)
