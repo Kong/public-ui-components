@@ -117,7 +117,6 @@ export type PluginMetaData<I18nMessageSource = void> = {
   group: PluginGroup // Plugin categories meta.
   scope: PluginScope[] // The scope supported by the Plugin.
   isEnterprise: boolean // The value will be True if the Plugin is enterprise only.
-  imageName?: string // An optional tag to define plugin's icon image.
   useLegacyForm?: boolean // An optional field to use legacy form for the plugin. Default to false.
   fieldRules?: FieldRules
 }

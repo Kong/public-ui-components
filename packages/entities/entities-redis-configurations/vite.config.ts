@@ -20,12 +20,12 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       external: [
         '@kong-ui-public/entities-shared/dist/style.css',
         '@kong-ui-public/entities-vaults/dist/style.css',
-        '@kong-ui-public/entities-plugins',
+        '@kong-ui-public/entities-plugins-icon',
         '@kong-ui-public/entities-vaults',
       ],
       output: {
         globals: {
-          '@kong-ui-public/entities-plugins': 'kong-ui-public-entities-plugins',
+          '@kong-ui-public/entities-plugins-icon': 'kong-ui-public-entities-plugins-icon',
           '@kong-ui-public/entities-vaults': 'kong-ui-public-entities-vaults',
         },
       },

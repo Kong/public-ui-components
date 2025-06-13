@@ -186,14 +186,12 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.proxy-cache-advanced.description',
     isEnterprise: true,
     nameKey: 'plugins.meta.proxy-cache-advanced.name',
-    imageName: 'proxy-cache',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['proxy-cache-advanced'],
   },
   'graphql-proxy-cache-advanced': {
     descriptionKey: 'plugins.meta.graphql-proxy-cache-advanced.description',
     isEnterprise: true,
     nameKey: 'plugins.meta.graphql-proxy-cache-advanced.name',
-    imageName: 'graphql',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['graphql-proxy-cache-advanced'],
   },
   'rate-limiting-advanced': {
@@ -328,14 +326,12 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.pre-function.description',
     isEnterprise: true,
     nameKey: 'plugins.meta.pre-function.name',
-    imageName: 'kong-function',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['pre-function'],
   },
   'post-function': {
     descriptionKey: 'plugins.meta.post-function.description',
     isEnterprise: true,
     nameKey: 'plugins.meta.post-function.name',
-    imageName: 'kong-function',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['post-function'],
   },
   datadog: {
@@ -504,7 +500,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.konnect-application-auth.description',
     isEnterprise: false,
     nameKey: 'plugins.meta.konnect-application-auth.name',
-    imageName: 'application-registration',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['konnect-application-auth'],
   },
   acme: {
@@ -637,7 +632,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.header-cert-auth.description',
     isEnterprise: true,
     nameKey: 'plugins.meta.header-cert-auth.name',
-    imageName: 'tls-metadata-headers',
     fieldRules: {
       onlyOneOfMutuallyRequired: [
         [
@@ -652,7 +646,6 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.upstream-oauth.description',
     isEnterprise: true,
     nameKey: 'plugins.meta.upstream-oauth.name',
-    imageName: 'oauth2',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['upstream-oauth'],
   },
   'confluent': {
@@ -825,22 +818,4 @@ export const CREDENTIAL_SCHEMAS: Record<string, any> = {
   oauth2_credentials: oauthCredentialSchema,
   hmacauth_credentials: hmacAuthCredentialsSchema,
   jwt_secrets: jwtCredentialsSchema,
-}
-
-/**
- * Gets the URL for the plugin icon.
- * Plugins with optional `imageName` property will be handled automatically.
- *
- * @param name plugin name
- * @returns URL for the plugin icon
- */
-export const getPluginIconURL = (name: string) => {
-  const imageName = PLUGIN_METADATA[name]?.imageName || name || 'missing' // default icon is 'missing'
-  const iconURL = new URL(`../assets/images/plugin-icons/${imageName}.png`, import.meta.url).href
-
-  if (iconURL.includes('undefined')) {
-    // if URL ends with /undefined or /undefined.png, return default icon
-    return new URL('../assets/images/plugin-icons/missing.png', import.meta.url).href
-  }
-  return iconURL
 }
