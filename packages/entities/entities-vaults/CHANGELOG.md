@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.22.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.21.1...@kong-ui-public/entities-vaults@3.22.0) (2025-06-13)
+
+
+### Features
+
+* **vault:** rename labels and tooltips [KM-1379] ([#2182](https://github.com/Kong/public-ui-components/issues/2182)) ([d9977db](https://github.com/Kong/public-ui-components/commit/d9977db23a6170c3056a47b836588252ada9afc8))
+
+
+
+
+
 ## [3.21.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.21.0...@kong-ui-public/entities-vaults@3.21.1) (2025-06-06)
 
 
