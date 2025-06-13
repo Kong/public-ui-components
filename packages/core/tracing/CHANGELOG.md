@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.11.0...@kong-ui-public/tracing@0.12.0) (2025-06-13)
+
+
+### Features
+
+* **tracing:** add prop for view span logs button [KHCP-16669] ([#2180](https://github.com/Kong/public-ui-components/issues/2180)) ([7c28043](https://github.com/Kong/public-ui-components/commit/7c2804367c1aa868408f0b44c8bf9b5f57928583))
+
+
+
+
+
 # [0.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.13...@kong-ui-public/tracing@0.11.0) (2025-06-09)
 
 
