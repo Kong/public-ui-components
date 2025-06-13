@@ -11,8 +11,8 @@
 import ConfigForm from './ConfigForm.vue'
 import PluginFormWrapper from '../shared/PluginFormWrapper.vue'
 
-import type { Props } from '../shared/PluginFormWrapper.vue'
+import type { PluginFormWrapperProps } from '../shared/PluginFormWrapper.vue'
 import type { RequestCalloutPlugin } from './types'
 
-const props = defineProps<Props<RequestCalloutPlugin>>()
+const props = defineProps<PluginFormWrapperProps<RequestCalloutPlugin>>()
 </script>
