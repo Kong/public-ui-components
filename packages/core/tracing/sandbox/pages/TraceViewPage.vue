@@ -60,6 +60,7 @@
             :config="config"
             :root-span="spanTrees.roots[0]"
             :show-skeleton="showSkeleton"
+            :show-view-logs-button="enableViewSpanLogs"
             :url="url"
           />
         </template>
@@ -110,6 +111,11 @@
       <KInputSwitch
         v-model="enablePayloads"
         label="Payloads"
+      />
+
+      <KInputSwitch
+        v-model="enableViewSpanLogs"
+        label="Show 'View Span Logs' button"
       />
     </KCard>
   </div>
@@ -177,6 +183,7 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 const showSkeleton = ref(false)
 const enablePayloads = ref(true)
+const enableViewSpanLogs = ref(true)
 const slideoutVisible = ref(true)
 const tabs = [
   { hash: '#summary', title: 'Summary' },
