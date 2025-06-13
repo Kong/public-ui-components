@@ -8,7 +8,8 @@
     },
     "edit": "Edit",
     "duplicateTile": "Duplicate",
-    "remove": "Remove"
+    "remove": "Remove",
+    "delete": "Delete"
   },
   "queryDataProvider": {
     "timeRangeExceeded":  "The time range for this report is outside of your organization's data retention period"
