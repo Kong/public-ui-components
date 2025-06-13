@@ -305,7 +305,7 @@ const stickyTop = computed(() => {
   }
 
   &-header-help {
-    color:$kui-color-text-danger;
+    color: $kui-color-text-danger;
     font-size: $kui-font-size-20;
   }
 
