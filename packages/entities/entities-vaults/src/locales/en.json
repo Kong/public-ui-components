@@ -107,7 +107,7 @@
         "label": "Prefix",
         "placeholder": "Enter a unique prefix for this vault",
         "help": "e.g. my-vault",
-        "tooltip": "The reference prefix. You need this prefix to access secrets stored in this vault. For example, {vault://<your-prefix>/<some-secret>}"
+        "tooltip": "The reference prefix. You need this prefix to access secrets stored in this vault. For example, {vault://<your-prefix>/<some-secret>}."
       },
       "description": {
         "label": "Description",
@@ -352,11 +352,11 @@
           },
           "api_key": {
             "label": "API Key",
-            "tooltip": "The API key issued to the of the workload or host"
+            "tooltip": "The API key issued to the of the workload or host."
           },
           "account": {
             "label": "Conjur Account",
-            "tooltip": "The Conjur account for which the token will be issued. This is the identifier provided during conjur configuration"
+            "tooltip": "The Conjur account for which the token will be issued. This is the identifier provided during conjur configuration."
           }
         }
       },
