@@ -479,7 +479,7 @@ describe('<SniList />', () => {
 
       cy.wait('@getSnis')
       cy.get('.kong-ui-entities-snis-list').should('be.visible')
-      cy.getTestId('sni-list-empty-state').should('be.visible')
+      cy.getTestId('snis-entity-empty-state').should('be.visible')
       cy.getTestId('entity-create-button').should('be.visible')
     })
 
@@ -499,7 +499,7 @@ describe('<SniList />', () => {
 
       cy.wait('@getSnis')
       cy.get('.kong-ui-entities-snis-list').should('be.visible')
-      cy.getTestId('sni-list-empty-state').should('be.visible')
+      cy.getTestId('snis-entity-empty-state').should('be.visible')
       cy.getTestId('entity-create-button').should('not.exist')
     })
 

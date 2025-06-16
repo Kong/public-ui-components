@@ -515,7 +515,7 @@ describe('<VaultList />', () => {
 
       cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
-      cy.getTestId('vault-list-empty-state').should('be.visible')
+      cy.getTestId('vaults-entity-empty-state').should('be.visible')
       cy.getTestId('entity-create-button').should('be.visible')
     })
 
@@ -535,7 +535,7 @@ describe('<VaultList />', () => {
 
       cy.wait('@getVaults')
       cy.get('.kong-ui-entities-vaults-list').should('be.visible')
-      cy.getTestId('vault-list-empty-state').should('be.visible')
+      cy.getTestId('vaults-entity-empty-state').should('be.visible')
       cy.getTestId('entity-create-button').should('not.exist')
     })
 

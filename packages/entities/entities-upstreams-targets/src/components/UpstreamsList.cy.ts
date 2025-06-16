@@ -522,7 +522,7 @@ describe('<UpstreamsList />', () => {
 
       cy.wait('@getUpstreams')
       cy.get('.kong-ui-entities-upstreams-list').should('be.visible')
-      cy.getTestId('upstreams-list-empty-state').should('be.visible')
+      cy.getTestId('upstreams-entity-empty-state').should('be.visible')
       cy.getTestId('entity-create-button').should('be.visible')
     })
 
@@ -542,7 +542,7 @@ describe('<UpstreamsList />', () => {
 
       cy.wait('@getUpstreams')
       cy.get('.kong-ui-entities-upstreams-list').should('be.visible')
-      cy.getTestId('upstreams-list-empty-state').should('be.visible')
+      cy.getTestId('upstreams-entity-empty-state').should('be.visible')
       cy.getTestId('entity-create-button').should('not.exist')
     })
 
