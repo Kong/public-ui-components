@@ -235,7 +235,7 @@ const { setFieldType } = composables.usePluginHelpers()
 const { getPropValue } = useHelpers()
 // only expand partials if the schema supports it or if the expandPartial prop is set to true
 const supportPartials = computed(() => {
-  return schema.value?.support_partials?.length || props.expandPartial
+  return Object.keys(schema.value?.supported_partials || {}).some(key => key === 'redis-ce' || key === 'redis-ee') || props.expandPartial
 })
 const fetchUrl = computed<string>(
   () => endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
