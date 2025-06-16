@@ -1,13 +1,5 @@
-import type { App } from 'vue'
 import VueFormGenerator from './components/FormGenerator.vue'
 import * as sharedForms from './components/forms'
-
-// Export Vue plugin as the default
-export default {
-  install: (app: App): void => {
-    app.component('VueFormGenerator', VueFormGenerator)
-  },
-}
 
 export { customFields } from './components/fields/exports'
 export { VueFormGenerator, sharedForms }

@@ -18,6 +18,13 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     },
     rollupOptions: {
       external: [
+        '@kong-ui-public/entities-consumer-groups',
+        '@kong-ui-public/entities-consumers',
+        '@kong-ui-public/entities-gateway-services',
+        '@kong-ui-public/entities-plugins-metadata',
+        '@kong-ui-public/entities-routes',
+        '@kong-ui-public/forms',
+        'marked',
         'monaco-editor',
       ],
     },
