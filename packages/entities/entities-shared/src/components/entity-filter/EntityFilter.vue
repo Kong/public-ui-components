@@ -80,6 +80,8 @@
               v-if="config.schema?.[field.value]?.type === 'select'"
               :id="getFieldId(field.value)"
               v-model="searchParams[field.value]"
+              :enable-filtering="enableFiltering(field.value)"
+              :filter-function="(params: SelectFilterFunctionParams<string | number>) => handleFilter(field.value, params)"
               :items="getFieldOptions(field.value)"
               :placeholder="t('filter.selectPlaceholder')"
             />
@@ -136,6 +138,7 @@ import { KUI_COLOR_TEXT_NEUTRAL_WEAK } from '@kong/design-tokens'
 import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../types'
 import composables from '../../composables'
 import IconFilter from '../icons/IconFilter.vue'
+import type { SelectItem, SelectFilterFunctionParams } from '@kong/kongponents'
 
 const { i18n: { t } } = composables.useI18n()
 
@@ -217,12 +220,9 @@ const getFieldId = (field: string) => {
   return `filter-${field}`
 }
 
-const getFieldOptions = (field: string) => {
-  return ((props.config as FuzzyMatchFilterConfig).schema?.[field]?.values ?? []).map((o: string) => ({
-    value: o,
-    label: o,
-  }))
-}
+const getFieldOptions = (field: string) =>
+  ((props.config as FuzzyMatchFilterConfig).schema?.[field]?.values ?? [])
+    .map(o => typeof o === 'string' ? { value: o, label: o } : o)
 
 const getFieldInputType = (field: string) => {
   return (props.config as FuzzyMatchFilterConfig).schema?.[field]?.type ?? 'text'
@@ -256,6 +256,21 @@ const applyFields = (hideMenu = false) => {
   }
 
   emit('update:modelValue', new URLSearchParams(filteredParams).toString())
+}
+
+const enableFiltering = (field: string): boolean =>
+  !!(props.config as FuzzyMatchFilterConfig).schema?.[field]?.filterFunction
+
+const handleFilter = (
+  field: string,
+  params: SelectFilterFunctionParams<string | number>,
+): true | SelectItem<string | number>[] => {
+  const fieldSchema = (props.config as FuzzyMatchFilterConfig).schema?.[field]
+
+  if (fieldSchema?.filterFunction === undefined) {
+    return true
+  }
+  return fieldSchema.filterFunction(params)
 }
 </script>
 
