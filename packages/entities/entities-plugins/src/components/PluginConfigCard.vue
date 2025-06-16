@@ -225,7 +225,7 @@ const props = defineProps({
   /** Whether to expand partial in config */
   expandPartial: {
     type: Boolean,
-    default: true,
+    default: false,
   },
 })
 
@@ -233,12 +233,15 @@ const { i18n: { t } } = composables.useI18n()
 const pluginMetaData = composables.usePluginMetaData()
 const { setFieldType } = composables.usePluginHelpers()
 const { getPropValue } = useHelpers()
-
+// only expand partials if the schema supports it or if the expandPartial prop is set to true
+const supportPartials = computed(() => {
+  return schema.value?.support_partials?.length || props.expandPartial
+})
 const fetchUrl = computed<string>(
   () => endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
     .replace(/{entityType}/gi, props.scopedEntityType)
     .replace(/{entityId}/gi, props.scopedEntityId)
-    .concat(props.expandPartial ? '?expand_partials=true' : ''),
+    .concat(supportPartials.value ? '?expand_partials=true' : ''),
 )
 
 // schema for the basic properties
