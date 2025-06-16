@@ -180,6 +180,7 @@ const dashboardConfig = ref <DashboardConfig>({
         query: {
           datasource: 'basic',
           dimensions: ['time'],
+          metrics: ['request_count'],
           time_range: {
             type: 'absolute',
             start: '2024-01-01',

@@ -79,8 +79,10 @@
         v-else-if="isDonutChart"
         :chart-data="computedChartData"
         :dataset-colors="chartOptions.chartDatasetColors || defaultStatusCodeColors"
+        :dimension-axes-title="dimensionAxesTitle"
         :legend-position="legendPosition"
         :legend-values="legendValues"
+        :metric-axes-title="metricAxesTitle"
         :metric-unit="computedMetricUnit"
         :synthetics-data-key="syntheticsDataKey"
         :tooltip-title="tooltipTitle"
@@ -231,7 +233,6 @@ const metricAxesTitle = computed<string | undefined>(() => {
     return undefined
   }
 
-
   const metricName = props.chartData.meta.metric_names[0]
   const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
 
@@ -245,15 +246,32 @@ const metricAxesTitle = computed<string | undefined>(() => {
       return i18n.t('metricAxisTitles.size_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
     }
   }
+
+  if (props.chartOptions?.metricAxesTitle) {
+    return props.chartOptions.metricAxesTitle
+  }
+
   // @ts-ignore - dynamic i18n key
-  return props.chartOptions?.metricAxesTitle || (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`) &&
+  const metricTranslationExists = i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`)
+
+  // Metric units are always pluralized on the axis.
+  return metricTranslationExists
     // @ts-ignore - dynamic i18n key
-    // Metric units are always pluralized on the axis.
-    i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })) || undefined
+    ? i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+    : undefined
 })
 
+// console.log('is time: ', isTimeSeriesChart.value, 'prop chartdata: ', props.chartData.meta)
+// if (props.chartData?.meta?.display) {
+//   console.log('maybe it would be:', Object.keys(props.chartData.meta.display))
+//   console.log('maybe: ', Object.keys(props.chartData.meta.display).map((name) => i18n.t(`chartLabels.${name}`)))
+// }
+
 const dimensionAxesTitle = computed<string | undefined>(() => {
-  const dimension = isTimeSeriesChart.value ? 'Time' : Object.keys(props.chartData.meta.display || props.chartData.meta.metric_names as Record<string, any>)[0]
+  const dimension = isTimeSeriesChart.value
+    ? 'Time'
+    : Object.keys(props.chartData.meta.display || props.chartData.meta.metric_names as Record<string, any>)[0]
+
   // @ts-ignore - dynamic i18n key
   return props.chartOptions.dimensionAxesTitle || (i18n.te(`chartLabels.${dimension}`) &&
     // @ts-ignore - dynamic i18n key

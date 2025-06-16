@@ -18,7 +18,7 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
   if (query.query.dimensions && query.query.dimensions.includes('time')) {
     return await delayedResponse(
       generateSingleMetricTimeSeriesData(
-        { name: 'requests', unit: 'count' },
+        { name: 'request_count', unit: 'count' },
         { status_code: ['200', '400', '500'] },
       ),
     )

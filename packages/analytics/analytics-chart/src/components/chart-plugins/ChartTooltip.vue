@@ -23,6 +23,17 @@
         v-if="context"
         class="subtitle"
       >{{ context }}</span>
+      <div
+        v-if="dimensionAxesTitle || metricAxesTitle"
+        class="data-description"
+      >
+        <div v-if="dimensionAxesTitle">
+          {{ dimensionAxesTitle }}
+        </div>
+        <div v-if="metricAxesTitle">
+          {{ metricAxesTitle }}
+        </div>
+      </div>
     </div>
     <ul
       class="tooltip"
@@ -108,6 +119,18 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false,
+  },
+
+  metricAxesTitle: {
+    type: String,
+    required: false,
+    default: null,
+  },
+
+  dimensionAxesTitle: {
+    type: String,
+    required: false,
+    default: null,
   },
 })
 
@@ -245,6 +268,13 @@ function handleMouseUp() {
       position: absolute;
       right: 0;
       top: 0;
+    }
+
+    .data-description {
+      display: flex;
+      font-size: var(--kui-font-size-20, $kui-font-size-20);
+      justify-content: space-between;
+      margin-top: var(--kui-space-30, $kui-space-30);
     }
   }
 

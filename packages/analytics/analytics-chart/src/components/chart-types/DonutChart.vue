@@ -17,7 +17,10 @@
       />
       <Teleport to="body">
         <ToolTip
+          :context="tooltipData.tooltipContext"
+          :dimension-axes-title="dimensionAxesTitle"
           :left="tooltipAbsoluteLeft"
+          :metric-axes-title="metricAxesTitle"
           :series="tooltipData.tooltipSeries"
           :show-tooltip="tooltipData.showTooltip"
           :tooltip-title="tooltipTitle"
@@ -76,6 +79,16 @@ const props = defineProps({
   },
   legendValues: {
     type: Object,
+    required: false,
+    default: null,
+  },
+  metricAxesTitle: {
+    type: String,
+    required: false,
+    default: null,
+  },
+  dimensionAxesTitle: {
+    type: String,
     required: false,
     default: null,
   },

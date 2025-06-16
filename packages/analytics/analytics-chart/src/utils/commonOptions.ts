@@ -4,13 +4,23 @@ import { DECIMAL_DISPLAY, numberFormatter } from '../utils'
 import { isValid } from 'date-fns'
 import type { Chart, Point, ScatterDataPoint } from 'chart.js'
 
-// TODO: we should implement a separate tooltip behavior for each broad chart type
-// as the "tooltip behaviors" are beggining to diverge more across chart types.
+const getTooltipContext = (tooltipData: TooltipState, context: ExternalTooltipContext): string | number => {
+  const { tooltip } = context
+
+  switch (tooltipData.chartType) {
+    case 'donut':
+    case 'horizontal_bar':
+    case 'vertical_bar':
+      return tooltip.dataPoints.length > 1 ? tooltip.dataPoints[0].label : ''
+    default:
+      return tooltip.dataPoints[0].parsed.x
+  }
+}
+
 export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext) : void => {
   const { tooltip } = context
   if (tooltip.opacity === 0 && !tooltipData.locked) {
     tooltipData.showTooltip = false
-
     return
   }
 
@@ -23,9 +33,11 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
     const isBarChart = ['horizontal_bar', 'vertical_bar'].includes(tooltipData.chartType)
     const isDonutChart = ['gauge', 'donut'].includes(tooltipData.chartType)
 
-    tooltipData.tooltipContext = isBarChart
-      ? tooltip.dataPoints.length > 1 ? tooltip.dataPoints[0].label : ''
-      : tooltip.dataPoints[0].parsed.x
+    tooltipData.tooltipContext = getTooltipContext(tooltipData, context)
+
+    // tooltipData.tooltipContext = isBarChart
+    //   ? tooltip.dataPoints.length > 1 ? tooltip.dataPoints[0].label : ''
+    //   : tooltip.dataPoints[0].parsed.x
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
       const rawValue = isDonutChart ? p.parsed : p.parsed[valueAxis]
