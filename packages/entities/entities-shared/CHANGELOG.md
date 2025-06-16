@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.25.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.24.1...@kong-ui-public/entities-shared@3.25.0) (2025-06-16)
+
+
+### Features
+
+* **entity-shared:** enhance the filter of the select input ([#2162](https://github.com/Kong/public-ui-components/issues/2162)) ([da654e6](https://github.com/Kong/public-ui-components/commit/da654e60fe86d4ef26aa14722e6ce849bc656971))
+
+
+
+
+
 ## [3.24.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.24.0...@kong-ui-public/entities-shared@3.24.1) (2025-05-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

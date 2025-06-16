@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.0.0...@kong-ui-public/entities-consumers@4.0.1) (2025-06-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumers
+
+
+
+
+
 # [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@3.9.30...@kong-ui-public/entities-consumers@4.0.0) (2025-06-12)
 
 
