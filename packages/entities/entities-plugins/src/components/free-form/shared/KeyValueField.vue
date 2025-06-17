@@ -82,7 +82,72 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import type {
+  ComponentOptionsMixin,
+  CreateComponentPublicInstanceWithMixins,
+  EmitsOptions,
+  EmitsToProps,
+  PublicProps,
+  SlotsType,
+} from 'vue'
+import type { DeepKeys, DeepValue } from './types/util-types'
+import type { FieldCommonProps } from './types/types'
+
+export type KeyValueFieldProps<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+> = {
+  initialValue?: Record<string, string> | null
+  label?: string
+  required?: boolean
+  keyPlaceholder?: string
+  valuePlaceholder?: string
+  defaultKey?: string
+  defaultValue?: string
+  labelAttributes?: LabelAttributes
+  showVaultSecretPicker?: boolean
+} & FieldCommonProps<TParentData, TName>
+
+export type KeyValueFieldSlots = {
+  tooltip?: never
+}
+
+export type KeyValueFieldComponent<
+  TParentData,
+> = new <
+  TName extends DeepKeys<TParentData>,
+>(
+  props: KeyValueFieldProps<TParentData, TName> &
+    EmitsToProps<EmitsOptions> &
+    PublicProps,
+) => CreateComponentPublicInstanceWithMixins<
+  KeyValueFieldProps<TParentData, TName>,
+  object,
+  object,
+  Record<string, any>,
+  Record<string, any>,
+  ComponentOptionsMixin,
+  ComponentOptionsMixin,
+  EmitsOptions,
+  PublicProps,
+  object,
+  false,
+  Record<string, any>,
+  SlotsType<KeyValueFieldSlots>
+>
+
+</script>
+
+<script
+  setup
+  lang="ts"
+  generic="
+    TParentData,
+    TName extends DeepKeys<TParentData>,
+    TData extends DeepValue<TParentData, TName>,
+  "
+>
 import { ref, watch, useTemplateRef, nextTick, inject, computed, toRef } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
@@ -97,20 +162,12 @@ interface KVEntry {
   value: string
 }
 
-const { showVaultSecretPicker = undefined, ...props } = defineProps<{
-  name: string
-  initialValue?: Record<string, string> | null
-  label?: string
-  required?: boolean
-  keyPlaceholder?: string
-  valuePlaceholder?: string
-  defaultKey?: string
-  defaultValue?: string
-  labelAttributes?: LabelAttributes
-  showVaultSecretPicker?: boolean
-}>()
+const {
+  showVaultSecretPicker = undefined, ...props
+} = defineProps<KeyValueFieldProps<TParentData, TName>>()
+defineSlots<KeyValueFieldSlots>()
 
-const { value: fieldValue, ...field } = useField<Record<string, string>>(toRef(props, 'name'))
+const { value: fieldValue, ...field } = useField<Record<string, string>>(toRef(props, 'name'), props.ignoreRelativePath, props.scope)
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const emit = defineEmits<{

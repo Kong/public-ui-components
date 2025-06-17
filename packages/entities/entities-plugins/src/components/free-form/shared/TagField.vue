@@ -29,7 +29,73 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import type {
+  ComponentOptionsMixin,
+  CreateComponentPublicInstanceWithMixins,
+  EmitsOptions,
+  EmitsToProps,
+  PublicProps,
+  SlotsType,
+} from 'vue'
+import type { DeepKeys, DeepValue } from './types/util-types'
+import type { FieldCommonProps } from './types/types'
+
+// Vue doesn't support the built-in `InstanceType` utility type, so we have to
+// work around it a bit.
+// Other props are passed down to the `KInput` via attribute fallthrough.
+export type TagFieldProps<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+> = {
+  labelAttributes?: LabelAttributes
+  multiline?: boolean
+  type?: string
+} & FieldCommonProps<TParentData, TName>
+
+export type TagFieldSlots = {
+  tooltip?: never
+}
+
+export type TagFieldEmits = {
+  'update:modelValue': [value: string[] | null]
+}
+
+export type TagFieldComponent<
+  TParentData,
+> = new <
+  TName extends DeepKeys<TParentData>,
+>(
+  props: TagFieldProps<TParentData, TName> &
+    EmitsToProps<TagFieldEmits> &
+    PublicProps,
+) => CreateComponentPublicInstanceWithMixins<
+  TagFieldProps<TParentData, TName>,
+  object,
+  object,
+  Record<string, any>,
+  Record<string, any>,
+  ComponentOptionsMixin,
+  ComponentOptionsMixin,
+  EmitsOptions,
+  PublicProps,
+  object,
+  false,
+  Record<string, any>,
+  SlotsType<TagFieldSlots>
+>
+
+</script>
+
+<script
+  setup
+  lang="ts"
+  generic="
+    TParentData,
+    TName extends DeepKeys<TParentData>,
+    TData extends DeepValue<TParentData, TName>,
+  "
+>
 import { computed, ref, toRef, useAttrs, watch } from 'vue'
 import { KInput, type LabelAttributes } from '@kong/kongponents'
 
@@ -43,26 +109,14 @@ defineOptions({
 
 const attrs = useAttrs()
 
-// Vue doesn't support the built-in `InstanceType` utility type, so we have to
-// work around it a bit.
-// Other props are passed down to the `KInput` via attribute fallthrough.
-interface StringFieldProps {
-  name: string
-  labelAttributes?: LabelAttributes
-  multiline?: boolean
-  type?: string
-}
-
 const {
   name,
   ...props
-} = defineProps<StringFieldProps>()
-const emit = defineEmits<{
-  'update:modelValue': [value: string[] | null]
-}>()
+} = defineProps<TagFieldProps<TParentData, TName>>()
+const emit = defineEmits<TagFieldEmits>()
 
-const { value: fieldValue, ...field } = useField<string[] | null, ArrayLikeFieldSchema>(toRef(() => name))
-const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
+const { value: fieldValue, ...field } = useField<string[] | null, ArrayLikeFieldSchema>(toRef(() => name), props.ignoreRelativePath, props.scope)
+const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...(props as any), ...attrs }))
 const noEmptyArray = computed(() => field.schema?.value?.len_min && field.schema.value.len_min > 0)
 
 const rawInputValue = ref('')

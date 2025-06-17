@@ -62,7 +62,6 @@
             <slot
               v-if="$slots.item"
               data-autofocus
-              :field-name="String(index)"
               :index="index"
               name="item"
             />
@@ -101,7 +100,6 @@
             >
               <slot
                 v-if="$slots.item"
-                :field-name="String(index)"
                 :index="index"
                 name="item"
               />
@@ -134,7 +132,83 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="T">
+<script lang="ts">
+import type {
+  ComponentOptionsMixin,
+  CreateComponentPublicInstanceWithMixins,
+  EmitsOptions,
+  EmitsToProps,
+  PublicProps,
+  Slot,
+  SlotsType,
+} from 'vue'
+import type { DeepKeys, DeepValue } from './types/util-types'
+import type { FieldCommonProps, ContainerFieldCommonSlots } from './types/types'
+
+export type ArrayFieldProps<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+  TItem = any,
+> = {
+  items?: TItem[] | null
+  label?: string
+  labelAttributes?: LabelAttributes
+  itemLabel?: string | ((item: TItem, index: number) => string)
+  required?: boolean
+  appearance?: 'default' | 'card' | 'tabs'
+  stickyTabs?: boolean | string | number
+} & FieldCommonProps<TParentData, TName>
+
+export type ArrayFieldSlots<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+  TData extends DeepValue<TParentData, TName>,
+> = {
+  tooltip?: never
+  item?: Slot<{
+    index: number
+    'data-autofocus'?: boolean
+  }>
+} & ContainerFieldCommonSlots<TParentData, TName, TData>
+
+export type ArrayFieldComponent<
+  TParentData,
+> = new <
+  TName extends DeepKeys<TParentData>,
+  TData extends DeepValue<TParentData, TName>,
+  TItem = any,
+>(
+  props: ArrayFieldProps<TParentData, TName, TItem> &
+    EmitsToProps<EmitsOptions> &
+    PublicProps,
+) => CreateComponentPublicInstanceWithMixins<
+  ArrayFieldProps<TParentData, TName, TItem>,
+  object,
+  object,
+  Record<string, any>,
+  Record<string, any>,
+  ComponentOptionsMixin,
+  ComponentOptionsMixin,
+  EmitsOptions,
+  PublicProps,
+  object,
+  false,
+  Record<string, any>,
+  SlotsType<ArrayFieldSlots<TParentData, TName, TData>>
+>
+
+</script>
+
+<script
+  setup
+  lang="ts"
+  generic="
+    TParentData,
+    TName extends DeepKeys<TParentData>,
+    TData extends DeepValue<TParentData, TName>,
+    TItem = any
+  "
+>
 import { useTemplateRef, nextTick, watch, computed, ref, reactive, toValue, toRef } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
@@ -144,38 +218,21 @@ import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
 
-const props = defineProps<{
-  name: string
-  items?: T[] | null
-  label?: string
-  labelAttributes?: LabelAttributes
-  itemLabel?: string | ((item: T, index: number) => string)
-  required?: boolean
-  appearance?: 'default' | 'card' | 'tabs'
-  stickyTabs?: boolean | string | number
-}>()
+const props = defineProps<ArrayFieldProps<TParentData, TName, TItem>>()
 
 const emit = defineEmits<{
   add: []
   remove: [index: number]
 }>()
 
-defineSlots<{
-  item(props: {
-    index: number
-    /** for named slot, the field name use `fieldName` instead */
-    fieldName: string
-    'data-autofocus'?: boolean
-  }): any
-  tooltip(): any
-}>()
+defineSlots<ArrayFieldSlots<TParentData, TName, TData>>()
 
 const { i18n: { t } } = useI18n()
 const { getDefault } = useFormShared()
-const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
+const { value: fieldValue, ...field } = useField<TItem[] | null>(toRef(props, 'name'), props.ignoreRelativePath, props.scope)
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
-const keyMap = reactive(new Map<T, string>())
+const keyMap = reactive(new Map<TItem, string>())
 const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
 
 const ListTag = computed(() => props.appearance === 'card' ? KCard : 'div')
@@ -184,7 +241,7 @@ function generateId() {
   return uniqueId('ff-array-field-')
 }
 
-function getKey(item: T, index: number) {
+function getKey(item: TItem, index: number) {
   if (item != null && typeof item === 'object') {
     return keyMap.get(item)
   }
@@ -192,7 +249,7 @@ function getKey(item: T, index: number) {
   return `ff-array-field-${index}`
 }
 
-function getTabTitle(item: T, index: number) {
+function getTabTitle(item: TItem, index: number) {
   return typeof props.itemLabel === 'function'
     ? props.itemLabel(item, index)
     : props.itemLabel || fieldAttrs.value.label || `Item #${index}`

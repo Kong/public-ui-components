@@ -1,6 +1,6 @@
 
-import type { FlattendRedisConfigurationFields, RedisConfig, RedisPartialType, RedisTypeDisplay } from './types'
-import type { Field } from '../shared/types'
+import type { FlattendRedisConfigurationFields, RedisConfig, RedisPartialType, RedisTypeDisplay } from './types/types'
+import type { Field } from './types/types'
 import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
 import { toValue, type MaybeRefOrGetter } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'

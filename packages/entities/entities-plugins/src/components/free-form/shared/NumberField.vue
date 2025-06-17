@@ -32,24 +32,80 @@
   </KInput>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import type {
+  ComponentOptionsMixin,
+  CreateComponentPublicInstanceWithMixins,
+  EmitsOptions,
+  EmitsToProps,
+  PublicProps,
+  SlotsType,
+} from 'vue'
+import type { DeepKeys, DeepValue } from './types/util-types'
+import type { FieldCommonProps } from './types/types'
+
+// Vue doesn't support the built-in `InstanceType` utility type, so we have to
+// work around it a bit.
+// Other props are passed down to the `KInput` via attribute fallthrough.
+export type NumberFieldProps<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+> = {
+  labelAttributes?: LabelAttributes
+  max?: number | string
+  min?: number | string
+} & FieldCommonProps<TParentData, TName>
+
+export type NumberFieldSlots = {
+  tooltip?: never
+}
+
+export type NumberFieldEmits = {
+  'update:modelValue': [value: number | null]
+}
+
+export type NumberFieldComponent<
+  TParentData,
+> = new <
+  TName extends DeepKeys<TParentData>,
+>(
+  props: NumberFieldProps<TParentData, TName> &
+    EmitsToProps<NumberFieldEmits> &
+    PublicProps,
+) => CreateComponentPublicInstanceWithMixins<
+  NumberFieldProps<TParentData, TName>,
+  object,
+  object,
+  Record<string, any>,
+  Record<string, any>,
+  ComponentOptionsMixin,
+  ComponentOptionsMixin,
+  EmitsOptions,
+  PublicProps,
+  object,
+  false,
+  Record<string, any>,
+  SlotsType<NumberFieldSlots>
+>
+
+</script>
+
+<script
+  setup
+  lang="ts"
+  generic="
+    TParentData,
+    TName extends DeepKeys<TParentData>,
+    TData extends DeepValue<TParentData, TName>,
+  "
+>
 import { KInput, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
 import { computed, toRef } from 'vue'
 import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
 
-// Vue doesn't support the built-in `InstanceType` utility type, so we have to
-// work around it a bit.
-// Other props are passed down to the `KInput` via attribute fallthrough.
-export interface InputProps {
-  name: string
-  labelAttributes?: LabelAttributes
-  max?: number | string
-  min?: number | string
-}
-
-const { name, ...props } = defineProps<InputProps>()
-const { value: fieldValue, ...field } = useField<number | null>(toRef(() => name))
+const { name, ...props } = defineProps<NumberFieldProps<TParentData, TName>>()
+const { value: fieldValue, ...field } = useField<number | null>(toRef(() => name), props.ignoreRelativePath, props.scope)
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const between = computed(() => {

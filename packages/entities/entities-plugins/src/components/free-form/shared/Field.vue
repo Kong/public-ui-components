@@ -35,8 +35,66 @@
   </template>
 </template>
 
-<script setup lang="ts">
-import { computed, toRef, type Slot } from 'vue'
+<script lang="ts">
+import type {
+  ComponentOptionsMixin,
+  CreateComponentPublicInstanceWithMixins,
+  EmitsOptions,
+  EmitsToProps,
+  PublicProps,
+  SlotsType,
+} from 'vue'
+import type { DeepKeys, DeepValue } from './types/util-types'
+import type { FieldCommonProps, ContainerFieldCommonSlots } from './types/types'
+
+export type FieldProps<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+> = FieldCommonProps<TParentData, TName>
+
+export type FieldSlots<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+  TData extends DeepValue<TParentData, TName>,
+> = ContainerFieldCommonSlots<TParentData, TName, TData>
+
+export type FieldComponent<
+  TParentData,
+> = new <
+  TName extends DeepKeys<TParentData>,
+  TData extends DeepValue<TParentData, TName>,
+>(
+  props: FieldProps<TParentData, TName> &
+    EmitsToProps<EmitsOptions> &
+    PublicProps,
+) => CreateComponentPublicInstanceWithMixins<
+  FieldProps<TParentData, TName>,
+  object,
+  object,
+  Record<string, any>,
+  Record<string, any>,
+  ComponentOptionsMixin,
+  ComponentOptionsMixin,
+  EmitsOptions,
+  PublicProps,
+  object,
+  false,
+  Record<string, any>,
+  SlotsType<ContainerFieldCommonSlots<TParentData, TName, TData>>
+>
+
+</script>
+
+<script
+  setup
+  lang="ts"
+  generic="
+    TParentData,
+    TName extends DeepKeys<TParentData>,
+    TData extends DeepValue<TParentData, TName>,
+  "
+>
+import { computed, toRef } from 'vue'
 import { useField, FIELD_RENDERERS } from './composables'
 import * as utils from './utils'
 
@@ -51,18 +109,11 @@ import TagField from './TagField.vue'
 
 defineOptions({ name: 'AutoField' })
 
-const props = defineProps<{
-  name: string
-}>()
+const props = defineProps<FieldProps<TParentData, TName>>()
 
-defineSlots<
-  {
-    default?: Slot
-    [FIELD_RENDERERS]?: Slot<{ name: string }>
-  } & Record<string, Slot<{ name: string }>>
->()
+defineSlots<FieldSlots<TParentData, TName, TData>>()
 
-const field = useField(toRef(props, 'name'))
+const field = useField(toRef(props, 'name'), props.ignoreRelativePath, props.scope)
 
 const fieldRenderer = computed(() => {
 

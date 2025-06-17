@@ -5,7 +5,7 @@ import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
-import type { FormConfig, ResetLabelPathRule } from './types'
+import type { FormConfig, ResetLabelPathRule } from './types/types'
 import { capitalize } from 'lodash-es'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
@@ -217,7 +217,33 @@ export function useFormShared<T>() {
   return { formData, formConfig, ...schemaHelpers }
 }
 
-export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
+export const useFieldPath = (
+  name: MaybeRefOrGetter<string>,
+  ignoreRelativePath?: MaybeRefOrGetter<boolean>,
+  scope?: MaybeRefOrGetter<string>,
+) => {
+  // If not use related path, resolve the name against scope
+  if (ignoreRelativePath && toValue(ignoreRelativePath)) {
+    const fieldPath = computed(() => {
+      const nameValue = toValue(name)
+
+      let res = utils.isAbsolute(nameValue)
+        ? nameValue
+        : scope
+          ? utils.resolve(toValue(scope), nameValue)
+          : nameValue
+
+      // remove $. from name
+      if (utils.isAbsolute(res)) {
+        res = res.slice(utils.resolveRoot('').length)
+      }
+      return res
+    })
+    provide(FIELD_PATH_KEY, fieldPath)
+    return fieldPath
+  }
+
+  // Otherwise, resolve the name against the inherited path
   const inheritedPath = inject<ComputedRef<string>>(FIELD_PATH_KEY, computed(() => ''))
 
   const fieldPath = computed(() => {
@@ -442,12 +468,11 @@ export function useFieldAncestors(fieldPath: MaybeRefOrGetter<string>) {
   })
 }
 
-export function useFormData<T>(name: MaybeRefOrGetter<string>) {
+export function useFormData<T>(path: MaybeRefOrGetter<string>) {
   const { formData } = useFormShared()
-  const fieldPath = useFieldPath(name)
   const value = computed<T>({
-    get: () => get(formData, utils.toArray(fieldPath.value)),
-    set: (v) => set(formData, utils.toArray(fieldPath.value), v),
+    get: () => get(formData, utils.toArray(toValue(path))),
+    set: (v) => set(formData, utils.toArray(toValue(path)), v),
   })
 
   return {
@@ -455,11 +480,15 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
   }
 }
 
-export function useField<T = unknown, S extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
+export function useField<T = unknown, S extends UnionFieldSchema = UnionFieldSchema>(
+  name: MaybeRefOrGetter<string>,
+  ignoreRelativePath?: MaybeRefOrGetter<boolean>,
+  scope?: MaybeRefOrGetter<string>,
+) {
   const { getSchema } = useFormShared()
-  const fieldPath = useFieldPath(name)
+  const fieldPath = useFieldPath(name, ignoreRelativePath, scope)
   const renderer = useFieldRenderer(fieldPath)
-  const { value } = useFormData<T>(name)
+  const { value } = useFormData<T>(fieldPath)
 
   const schema = computed(() => getSchema<S>(fieldPath.value))
 

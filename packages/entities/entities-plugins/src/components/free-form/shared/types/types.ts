@@ -1,4 +1,5 @@
-import type { ComponentPublicInstance, Ref } from 'vue'
+import type { ComponentPublicInstance, Ref, Slot } from 'vue'
+import type { DeepKeys, DeepValue } from './util-types'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -103,4 +104,26 @@ export type PartialInfo = {
   redisType: Ref<RedisPartialType | undefined>
   redisPath: Ref<string | undefined>
   isEditing: boolean
+}
+
+export type FieldCommonProps<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+> = {
+  name: TName
+  scope?: string
+  ignoreRelativePath?: boolean
+}
+
+/**
+ * Strictly typed slots for a container field (Field / ObjectField / ArrayField) component.
+ */
+export type ContainerFieldCommonSlots<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+  TData extends DeepValue<TParentData, TName>,
+> = {
+  default?: never
+} & {
+  [K in keyof NonNullable<TData>]: Slot<{ name: K extends string ? `${TName}.${K}` : never }>
 }

@@ -26,26 +26,81 @@
   </KCheckbox>
 </template>
 
-<script setup lang="ts">
-import { KCheckbox, type LabelAttributes } from '@kong/kongponents'
-import { useField, useFieldAttrs } from './composables'
-import { toRef } from 'vue'
+<script lang="ts">
+import type {
+  ComponentOptionsMixin,
+  CreateComponentPublicInstanceWithMixins,
+  EmitsOptions,
+  EmitsToProps,
+  PublicProps,
+  SlotsType,
+} from 'vue'
+import type { DeepKeys, DeepValue } from './types/util-types'
+import type { FieldCommonProps } from './types/types'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
 // Props other than `labelAttributes` and `modelValue` here are passed down to the
 // `KCheckbox` via attribute fallthrough.
-interface InputProps {
-  name: string
+export type BooleanFieldProps<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+> = {
   labelAttributes?: LabelAttributes
   modelValue?: boolean
+} & FieldCommonProps<TParentData, TName>
+
+export type BooleanFieldEmitOptions = {
+  'update:modelValue': [value: boolean]
 }
 
-const { name, ...props } = defineProps<InputProps>()
-const { value: fieldValue, ...field } = useField<boolean>(toRef(() => name))
-const emit = defineEmits<{
-  'update:modelValue': [value: boolean]
-}>()
+export type BooleanFieldSlots = {
+  tooltip?: never
+}
+
+export type BooleanFieldComponent<
+  TParentData,
+> = new <
+  TName extends DeepKeys<TParentData>,
+>(
+  props: BooleanFieldProps<TParentData, TName> &
+    EmitsToProps<EmitsOptions> &
+    PublicProps,
+) => CreateComponentPublicInstanceWithMixins<
+  BooleanFieldProps<TParentData, TName>,
+  object,
+  object,
+  Record<string, any>,
+  Record<string, any>,
+  ComponentOptionsMixin,
+  ComponentOptionsMixin,
+  EmitsOptions,
+  PublicProps,
+  object,
+  false,
+  Record<string, any>,
+  SlotsType<BooleanFieldSlots>
+>
+
+</script>
+
+<script
+  setup
+  lang="ts"
+  generic="
+    TParentData,
+    TName extends DeepKeys<TParentData>,
+    TData extends DeepValue<TParentData, TName>,
+  "
+>
+import { KCheckbox, type LabelAttributes } from '@kong/kongponents'
+import { useField, useFieldAttrs } from './composables'
+import { toRef } from 'vue'
+
+const { name, ...props } = defineProps<BooleanFieldProps<TParentData, TName>>()
+const { value: fieldValue, ...field } = useField<boolean>(toRef(() => name), props.ignoreRelativePath, props.scope)
+const emit = defineEmits<BooleanFieldEmitOptions>()
+defineSlots<BooleanFieldSlots>()
 
 const handleUpdate = (v: boolean) => {
   fieldValue!.value = v

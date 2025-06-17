@@ -27,26 +27,75 @@
   </SelectComponent>
 </template>
 
-<script setup lang="ts">
-import { computed, toRef } from 'vue'
-import { KSelect, KMultiselect, type LabelAttributes, type SelectItem } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared } from './composables'
+<script lang="ts">
+import type { DeepKeys, DeepValue } from './types/util-types'
+import type { FieldCommonProps } from './types/types'
+import type {
+  ComponentOptionsMixin,
+  CreateComponentPublicInstanceWithMixins,
+  EmitsOptions,
+  EmitsToProps,
+  PublicProps,
+  SlotsType,
+} from 'vue'
 
-// Vue doesn't support the built-in `InstanceType` utility type, so we have to
-// work around it a bit.
-// Props other than `labelAttributes` here are passed down to the `KSelect` or
-// `KMultiselect` via attribute fallthrough.
-interface EnumFieldProps {
-  name: string
+export type EnumFieldProps<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+> = {
   labelAttributes?: LabelAttributes
   multiple?: boolean
   items?: SelectItem[]
   placeholder?: string
+} & FieldCommonProps<TParentData, TName>
+
+export type EnumFieldSlots = {
+  tooltip?: never
 }
 
-const { name, items, multiple = undefined, ...props } = defineProps<EnumFieldProps>()
+export type EnumFieldComponent<
+  TParentData,
+> = new <
+  TName extends DeepKeys<TParentData>,
+>(
+  props: EnumFieldProps<TParentData, TName> &
+    EmitsToProps<EmitsOptions> &
+    PublicProps,
+) => CreateComponentPublicInstanceWithMixins<
+  EnumFieldProps<TParentData, TName>,
+  object,
+  object,
+  Record<string, any>,
+  Record<string, any>,
+  ComponentOptionsMixin,
+  ComponentOptionsMixin,
+  EmitsOptions,
+  PublicProps,
+  object,
+  false,
+  Record<string, any>,
+  SlotsType<EnumFieldSlots>
+>
+
+</script>
+
+<script
+  setup
+  lang="ts"
+  generic="
+    TParentData,
+    TName extends DeepKeys<TParentData>,
+    TData extends DeepValue<TParentData, TName>,
+  "
+>
+import { computed, toRef } from 'vue'
+import { KSelect, KMultiselect, type LabelAttributes, type SelectItem } from '@kong/kongponents'
+import { useField, useFieldAttrs, useFormShared } from './composables'
+
+const { name, items, multiple = undefined, ...props } = defineProps<EnumFieldProps<TParentData, TName>>()
+defineSlots<EnumFieldSlots>()
 const { getSelectItems } = useFormShared()
-const { value: fieldValue, ...field } = useField<number | string>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<number | string>(toRef(() => name), props.ignoreRelativePath, props.scope)
 
 const fieldAttrs = useFieldAttrs(field.path!, props)
 

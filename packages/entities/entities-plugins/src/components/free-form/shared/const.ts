@@ -1,5 +1,5 @@
 import type { ComputedRef, InjectionKey } from 'vue'
-import type { PartialInfo } from './types'
+import type { PartialInfo } from './types/types'
 
 export const REDIS_PARTIAL_INFO: InjectionKey<PartialInfo> = Symbol('redis-partial-info')
 export const FORM_EDITING: InjectionKey<ComputedRef<boolean>> = Symbol('free-form-editing')

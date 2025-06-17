@@ -40,7 +40,59 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import type {
+  ComponentOptionsMixin,
+  CreateComponentPublicInstanceWithMixins,
+  EmitsOptions,
+  EmitsToProps,
+  PublicProps,
+  SlotsType,
+} from 'vue'
+import type { DeepKeys } from './types/util-types'
+import type { FieldCommonProps } from './types/types'
+
+// Vue doesn't support the built-in `InstanceType` utility type, so we have to
+// work around it a bit.
+// Other props are passed down to the `KInput` via attribute fallthrough.
+export type StringFieldProps<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+> = {
+  labelAttributes?: LabelAttributes
+  multiline?: boolean
+  showVaultSecretPicker?: boolean
+  showPasswordMaskToggle?: boolean
+  type?: string
+} & FieldCommonProps<TParentData, TName>
+
+export type StringFieldComponent<
+  TParentData,
+> = new <
+  TName extends DeepKeys<TParentData>,
+>(
+  props: StringFieldProps<TParentData, TName> &
+    EmitsToProps<EmitsOptions> &
+    PublicProps,
+) => CreateComponentPublicInstanceWithMixins<
+  StringFieldProps<TParentData, TName>,
+  object,
+  object,
+  Record<string, any>,
+  Record<string, any>,
+  ComponentOptionsMixin,
+  ComponentOptionsMixin,
+  EmitsOptions,
+  PublicProps,
+  object,
+  false,
+  Record<string, any>,
+  SlotsType
+>
+
+</script>
+
+<script setup lang="ts" generic="TParentData, TName extends DeepKeys<TParentData>">
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { computed, inject, toRef, useAttrs } from 'vue'
 import { KInput, KTextArea, type LabelAttributes } from '@kong/kongponents'
@@ -56,18 +108,6 @@ defineOptions({
 
 const attrs = useAttrs()
 
-// Vue doesn't support the built-in `InstanceType` utility type, so we have to
-// work around it a bit.
-// Other props are passed down to the `KInput` via attribute fallthrough.
-interface StringFieldProps {
-  name: string
-  labelAttributes?: LabelAttributes
-  multiline?: boolean
-  showVaultSecretPicker?: boolean
-  showPasswordMaskToggle?: boolean
-  type?: string
-}
-
 const {
   // Props of type boolean cannot distinguish between `undefined` and `false` in vue.
   // so we need to show them declaring their default value as undefined
@@ -75,13 +115,13 @@ const {
   showPasswordMaskToggle = undefined,
   name,
   ...props
-} = defineProps<StringFieldProps>()
+} = defineProps<StringFieldProps<TParentData, TName>>()
 const emit = defineEmits<{
   'update:modelValue': [value: string | null]
 }>()
 
-const { value: fieldValue, ...field } = useField<string | null>(toRef(() => name))
-const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
+const { value: fieldValue, ...field } = useField<string | null>(toRef(() => name), props.ignoreRelativePath, props.scope)
+const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...(props as any), ...attrs }))
 const initialValue = fieldValue?.value
 
 function handleUpdate(value: string) {

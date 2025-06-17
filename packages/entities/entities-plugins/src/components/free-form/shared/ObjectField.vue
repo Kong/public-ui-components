@@ -92,32 +92,23 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
-import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
-import { computed, onBeforeMount, toRef, watch, type Slot } from 'vue'
-import SlideTransition from './SlideTransition.vue'
-import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
-import Field from './Field.vue'
+<script lang="ts">
+import type { DeepKeys, DeepValue } from './types/util-types'
+import type { FieldCommonProps, ResetLabelPathRule, ContainerFieldCommonSlots } from './types/types'
+import type {
+  ComponentOptionsMixin,
+  CreateComponentPublicInstanceWithMixins,
+  EmitsOptions,
+  EmitsToProps,
+  PublicProps,
+  SlotsType,
+} from 'vue'
 
-import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
-import type { ResetLabelPathRule } from './types'
-
-const slots = defineSlots<
-  {
-    default?: Slot
-    [FIELD_RENDERERS]?: Slot<{ name: string }>
-    tooltip?: Slot
-  } & Record<string, Slot<{ name: string }>>
->()
-
-const {
-  defaultExpanded = true, defaultAdded = true, collapsible = true, omit,
-  required = undefined, asChild: defaultAsChild = undefined, resetLabelPath,
-  fieldsOrder,
-  ...props
-} = defineProps<{
-  name: string
+export type ObjectFieldProps<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+  TData extends DeepValue<TParentData, TName>,
+> = {
   label?: string
   labelAttributes?: LabelAttributes
   required?: boolean
@@ -125,13 +116,76 @@ const {
   defaultAdded?: boolean
   collapsible?: boolean
   appearance?: 'card' | 'default'
-  omit?: string[]
+  omit?: Array<keyof Required<NonNullable<TData>>>
   asChild?: boolean
   resetLabelPath?: ResetLabelPathRule
-  fieldsOrder?: string[]
-}>()
+  fieldsOrder?: Array<keyof Required<NonNullable<TData>>>
+} & FieldCommonProps<TParentData, TName>
 
-const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
+export type ObjectFieldSlots<
+  TParentData,
+  TName extends DeepKeys<TParentData>,
+  TData extends DeepValue<TParentData, TName>,
+> = {
+  tooltip?: never
+} & ContainerFieldCommonSlots<TParentData, TName, TData>
+
+export type ObjectFieldComponent<
+  TParentData,
+> = new <
+  TName extends DeepKeys<TParentData>,
+  TData extends DeepValue<TParentData, TName>,
+>(
+  props: ObjectFieldProps<TParentData, TName, TData> &
+    EmitsToProps<EmitsOptions> &
+    PublicProps,
+) => CreateComponentPublicInstanceWithMixins<
+  ObjectFieldProps<TParentData, TName, TData>,
+  object,
+  object,
+  Record<string, any>,
+  Record<string, any>,
+  ComponentOptionsMixin,
+  ComponentOptionsMixin,
+  EmitsOptions,
+  PublicProps,
+  object,
+  false,
+  Record<string, any>,
+  SlotsType<ObjectFieldSlots<TParentData, TName, TData>>
+>
+
+</script>
+
+<script
+  setup
+  lang="ts"
+  generic="
+    TParentData,
+    TName extends DeepKeys<TParentData>,
+    TData extends DeepValue<TParentData, TName>
+  "
+>
+
+import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
+import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
+import { computed, onBeforeMount, toRef, watch } from 'vue'
+import SlideTransition from './SlideTransition.vue'
+import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
+import Field from './Field.vue'
+
+import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
+
+const slots = defineSlots<ObjectFieldSlots<TParentData, TName, TData>>()
+
+const {
+  defaultExpanded = true, defaultAdded = true, collapsible = true, omit,
+  required = undefined, asChild: defaultAsChild = undefined, resetLabelPath,
+  fieldsOrder,
+  ...props
+} = defineProps<ObjectFieldProps<TParentData, TName, TData>>()
+
+const { value: fieldValue, ...field } = useField(toRef(props, 'name'), props.ignoreRelativePath, props.scope)
 const { getSchema, getDefault } = useFormShared()
 
 const added = defineModel<boolean>('added', { default: undefined })
@@ -167,7 +221,7 @@ const asChild = computed(() => {
 const childFields = computed(() => {
   let fields = (field.schema!.value as RecordFieldSchema).fields
   if (omit) {
-    fields = fields.filter(f => !omit.includes(Object.keys(f)[0]))
+    fields = fields.filter(f => !(omit as string[]).includes(Object.keys(f)[0]))
   }
 
   if (!fieldsOrder) return fields
@@ -176,8 +230,8 @@ const childFields = computed(() => {
     const aKey = Object.keys(a)[0]
     const bKey = Object.keys(b)[0]
 
-    const aIndex = fieldsOrder.indexOf(aKey)
-    const bIndex = fieldsOrder.indexOf(bKey)
+    const aIndex = (fieldsOrder as string[]).indexOf(aKey)
+    const bIndex = (fieldsOrder as string[]).indexOf(bKey)
 
     if (aIndex === -1 && bIndex === -1) return 0
     if (aIndex === -1) return 1
