@@ -1,10 +1,6 @@
 import { INITIAL_ROUTE_RULES_FIELDS } from '../constants'
 import { RoutingRulesEntities } from '../types'
 
-export const isRoutePayloadValid = (val: any): boolean => {
-  return 'service' in val && 'tags' in val && 'regex_priority' in val && 'path_handling' in val && 'protocols' in val
-}
-
 export const isDefinedByBasic = (data: Record<string, any>): boolean => {
   if (typeof data.expression === 'string' && data.expression.length > 0) {
     return false
