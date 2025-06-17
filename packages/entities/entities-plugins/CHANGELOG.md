@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.25.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.11...@kong-ui-public/entities-plugins@9.25.12) (2025-06-17)
+
+
+### Bug Fixes
+
+* **entities-plugins:** add missing `VueFormGenerator` import ([#2186](https://github.com/Kong/public-ui-components/issues/2186)) ([6ee70e7](https://github.com/Kong/public-ui-components/commit/6ee70e711530d2432940cbf0701be290ffa747c4))
+
+
+
+
+
 ## [9.25.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.25.10...@kong-ui-public/entities-plugins@9.25.11) (2025-06-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
