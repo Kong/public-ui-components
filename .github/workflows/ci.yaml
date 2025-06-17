@@ -358,7 +358,7 @@ jobs:
           path: packages/
 
       - name: Run Component Tests
-        uses: cypress-io/github-action@d79d2d530a66e641eb4a5f227e13bc985c60b964 #v4.2.2
+        uses: cypress-io/github-action@615dcf65299b63c35268d795f4dfb79532388f64 # v6.10.0
         with:
           install: false
           command: pnpm run test:component:ci --spec ${{ matrix.container }}
