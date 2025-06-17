@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.13.9...@kong-ui-public/entities-routes@3.14.0) (2025-06-17)
+
+
+### Features
+
+* **entities-routes:** export utils ([#2187](https://github.com/Kong/public-ui-components/issues/2187)) ([a3f0109](https://github.com/Kong/public-ui-components/commit/a3f01098b1c795a65382004de9468df0f282f605))
+
+
+
+
+
 ## [3.13.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.13.8...@kong-ui-public/entities-routes@3.13.9) (2025-06-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
