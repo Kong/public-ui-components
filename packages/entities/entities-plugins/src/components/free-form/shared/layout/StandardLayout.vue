@@ -119,6 +119,7 @@ export type ConfigFormProps<T> = {
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
 import { computed, provide, ref, watch } from 'vue'
+import { VueFormGenerator } from '@kong-ui-public/forms'
 import { pick } from 'lodash-es'
 import { KRadio } from '@kong/kongponents'
 import FormSection from '../FormSection.vue'
