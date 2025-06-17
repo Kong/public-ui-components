@@ -134,7 +134,7 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="T">
+<script setup lang="ts" generic="T, N extends string = string">
 import { useTemplateRef, nextTick, watch, computed, ref, reactive, toValue, toRef } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
@@ -145,7 +145,7 @@ import * as utils from './utils'
 import Field from './Field.vue'
 
 const props = defineProps<{
-  name: string
+  name: N
   items?: T[] | null
   label?: string
   labelAttributes?: LabelAttributes

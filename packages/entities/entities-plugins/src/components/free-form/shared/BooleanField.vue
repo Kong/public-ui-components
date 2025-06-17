@@ -26,7 +26,7 @@
   </KCheckbox>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="N extends string = string">
 import { KCheckbox, type LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs } from './composables'
 import { toRef } from 'vue'
@@ -35,8 +35,8 @@ import { toRef } from 'vue'
 // work around it a bit.
 // Props other than `labelAttributes` and `modelValue` here are passed down to the
 // `KCheckbox` via attribute fallthrough.
-interface InputProps {
-  name: string
+type InputProps = {
+  name: N
   labelAttributes?: LabelAttributes
   modelValue?: boolean
 }

@@ -82,7 +82,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="N extends string = string">
 import { ref, watch, useTemplateRef, nextTick, inject, computed, toRef } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
@@ -98,7 +98,7 @@ interface KVEntry {
 }
 
 const { showVaultSecretPicker = undefined, ...props } = defineProps<{
-  name: string
+  name: N
   initialValue?: Record<string, string> | null
   label?: string
   required?: boolean

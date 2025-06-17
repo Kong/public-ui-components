@@ -35,7 +35,7 @@
   </template>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="N extends string = string">
 import { computed, toRef, type Slot } from 'vue'
 import { useField, FIELD_RENDERERS } from './composables'
 import * as utils from './utils'
@@ -52,7 +52,7 @@ import TagField from './TagField.vue'
 defineOptions({ name: 'AutoField' })
 
 const props = defineProps<{
-  name: string
+  name: N
 }>()
 
 defineSlots<

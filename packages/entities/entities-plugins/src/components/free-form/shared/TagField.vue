@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="N extends string = string">
 import { computed, ref, toRef, useAttrs, watch } from 'vue'
 import { KInput, type LabelAttributes } from '@kong/kongponents'
 
@@ -46,8 +46,8 @@ const attrs = useAttrs()
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
 // Other props are passed down to the `KInput` via attribute fallthrough.
-interface StringFieldProps {
-  name: string
+type StringFieldProps = {
+  name: N
   labelAttributes?: LabelAttributes
   multiline?: boolean
   type?: string
@@ -62,7 +62,7 @@ const emit = defineEmits<{
 }>()
 
 const { value: fieldValue, ...field } = useField<string[] | null, ArrayLikeFieldSchema>(toRef(() => name))
-const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
+const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...(props as any), ...attrs }))
 const noEmptyArray = computed(() => field.schema?.value?.len_min && field.schema.value.len_min > 0)
 
 const rawInputValue = ref('')

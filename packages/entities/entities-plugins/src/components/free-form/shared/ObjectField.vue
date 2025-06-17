@@ -92,7 +92,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="N extends string = string">
 import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
 import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
 import { computed, onBeforeMount, toRef, watch, type Slot } from 'vue'
@@ -117,7 +117,7 @@ const {
   fieldsOrder,
   ...props
 } = defineProps<{
-  name: string
+  name: N
   label?: string
   labelAttributes?: LabelAttributes
   required?: boolean

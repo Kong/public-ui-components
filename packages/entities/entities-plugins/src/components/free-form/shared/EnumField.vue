@@ -27,7 +27,7 @@
   </SelectComponent>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="N extends string = string">
 import { computed, toRef } from 'vue'
 import { KSelect, KMultiselect, type LabelAttributes, type SelectItem } from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
@@ -36,8 +36,8 @@ import { useField, useFieldAttrs, useFormShared } from './composables'
 // work around it a bit.
 // Props other than `labelAttributes` here are passed down to the `KSelect` or
 // `KMultiselect` via attribute fallthrough.
-interface EnumFieldProps {
-  name: string
+type EnumFieldProps = {
+  name: N
   labelAttributes?: LabelAttributes
   multiple?: boolean
   items?: SelectItem[]
