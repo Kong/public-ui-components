@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import useLinechartOptions from './useLineChartOptions'
+import useLineChartOptions from './useLineChartOptions'
 import { ref, computed } from 'vue'
 
 const mockTooltipState = {
@@ -20,7 +20,7 @@ const mockTooltipState = {
 describe('useLineChartOptions', () => {
 
   it('has no radius without hover when pointsWithoutHover is false', () => {
-    const { options } = useLinechartOptions({
+    const { options } = useLineChartOptions({
       tooltipState: mockTooltipState,
       legendID: 'foo',
       stacked: ref(false),
@@ -33,7 +33,7 @@ describe('useLineChartOptions', () => {
   })
 
   it('has a radius without hover when pointsWithoutHover is true', () => {
-    const { options } = useLinechartOptions({
+    const { options } = useLineChartOptions({
       tooltipState: mockTooltipState,
       legendID: 'foo',
       stacked: ref(false),

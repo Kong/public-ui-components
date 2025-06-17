@@ -215,7 +215,7 @@ const remountBarKey = computed(() => `bar-${plugins.value.map(p => p.id).join('-
 
 const pointsWithoutHover = computed(() => hasExactlyOneDatapoint(props.chartData))
 
-const { options } = composables.useLinechartOptions({
+const { options } = composables.useLineChartOptions({
   tooltipState: tooltipData,
   timeRangeMs: toRef(props, 'timeRangeMs'),
   granularity: toRef(props, 'granularity'),
