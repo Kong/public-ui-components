@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.11...@kong-ui-public/analytics-chart@9.1.0) (2025-06-18)
+
+
+### Features
+
+* **analytics:** consistent formatting of value/units in tooltips [MA-4007] ([#2188](https://github.com/Kong/public-ui-components/issues/2188)) ([ca523a8](https://github.com/Kong/public-ui-components/commit/ca523a8efe84a20681e69c89aaae5c8219a849a7))
+
+
+
+
+
 ## [9.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.10...@kong-ui-public/analytics-chart@9.0.11) (2025-06-18)
 
 
