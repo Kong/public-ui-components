@@ -1,6 +1,12 @@
 <template>
   <div class="routing-rule-container">
-    <KLabel :info="t('form.fields.sources.tooltip')">
+    <KLabel
+      :tooltip-attributes="{ maxWidth: '320' }"
+    >
+      <template #tooltip>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="t('form.fields.sources.tooltip')" />
+      </template>
       {{ t('form.fields.sources.label') }}
     </KLabel>
     <TransitionGroup name="appear">

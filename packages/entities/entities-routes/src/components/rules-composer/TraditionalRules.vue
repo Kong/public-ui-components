@@ -42,10 +42,14 @@
         :disabled="!fields.paths?.some(Boolean)"
         :label="t('form.fields.strip_path.label')"
         :label-attributes="{
-          info: t('form.fields.strip_path.tooltip'),
           tooltipAttributes: { maxWidth: '320' },
         }"
-      />
+      >
+        <template #tooltip>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <span v-html="t('form.fields.strip_path.tooltip')" />
+        </template>
+      </KCheckbox>
 
       <!-- methods -->
       <MethodRules
@@ -112,63 +116,87 @@
           :items="PATH_HANDLING_OPTIONS"
           :label="t('form.fields.path_handling.label')"
           :label-attributes="{
-            info: t('form.fields.path_handling.tooltip'),
             tooltipAttributes: { maxWidth: '320' },
           }"
           :readonly="readonly"
           width="100%"
-        />
+        >
+          <template #label-tooltip>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="t('form.fields.path_handling.tooltip')" />
+          </template>
+        </KSelect>
         <KSelect
           v-model="fields.https_redirect_status_code"
           data-testid="route-form-http-redirect-status-code"
           :items="HTTP_REDIRECT_STATUS_CODES"
           :label="t('form.fields.https_redirect_status_code.label')"
           :label-attributes="{
-            info: t('form.fields.https_redirect_status_code.tooltip'),
             tooltipAttributes: { maxWidth: '320' },
           }"
           :readonly="readonly"
           width="100%"
-        />
+        >
+          <template #label-tooltip>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="t('form.fields.https_redirect_status_code.tooltip')" />
+          </template>
+        </KSelect>
         <KInput
           v-model="fields.regex_priority"
           autocomplete="off"
           data-testid="route-form-regex-priority"
           :label="t('form.fields.regex_priority.label')"
           :label-attributes="{
-            info: t('form.fields.regex_priority.tooltip'),
             tooltipAttributes: { maxWidth: '320' },
           }"
           :readonly="readonly"
           type="number"
-        />
+        >
+          <template #label-tooltip>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="t('form.fields.regex_priority.tooltip')" />
+          </template>
+        </KInput>
         <KCheckbox
           v-model="fields.preserve_host"
           data-testid="route-form-preserve-host"
           :label="t('form.fields.preserve_host.label')"
           :label-attributes="{
-            info: t('form.fields.preserve_host.tooltip'),
             tooltipAttributes: { maxWidth: '320' },
           }"
-        />
+        >
+          <template #tooltip>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="t('form.fields.preserve_host.tooltip')" />
+          </template>
+        </KCheckbox>
         <KCheckbox
           v-model="fields.request_buffering"
           data-testid="route-form-request-buffering"
           :label="t('form.fields.request_buffering.label')"
           :label-attributes="{
-            info: t('form.fields.request_buffering.tooltip'),
             tooltipAttributes: { maxWidth: '320' },
           }"
-        />
+        >
+          <template #tooltip>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="t('form.fields.request_buffering.tooltip')" />
+          </template>
+        </KCheckbox>
         <KCheckbox
           v-model="fields.response_buffering"
           data-testid="route-form-response-buffering"
           :label="t('form.fields.response_buffering.label')"
           :label-attributes="{
-            info: t('form.fields.response_buffering.tooltip'),
             tooltipAttributes: { maxWidth: '320' },
           }"
-        />
+        >
+          <template #tooltip>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="t('form.fields.response_buffering.tooltip')" />
+          </template>
+        </KCheckbox>
       </div>
     </template>
   </KCard>
