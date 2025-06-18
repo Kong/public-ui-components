@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.14.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.14.0...@kong-ui-public/entities-routes@3.14.1) (2025-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2189](https://github.com/Kong/public-ui-components/issues/2189)) ([23e5544](https://github.com/Kong/public-ui-components/commit/23e554427eb53279cad3368770661f86bea2c8d8))
+* **entities-routes:** update form tooltip content ([#2190](https://github.com/Kong/public-ui-components/issues/2190)) ([4b5d154](https://github.com/Kong/public-ui-components/commit/4b5d15420cd02acce3321a72895178d4de5c6ecf))
+
+
+
+
+
 # [3.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.13.9...@kong-ui-public/entities-routes@3.14.0) (2025-06-17)
 
 

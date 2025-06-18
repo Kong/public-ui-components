@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.10...@kong-ui-public/analytics-chart@9.0.11) (2025-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2189](https://github.com/Kong/public-ui-components/issues/2189)) ([23e5544](https://github.com/Kong/public-ui-components/commit/23e554427eb53279cad3368770661f86bea2c8d8))
+
+
+
+
+
 ## [9.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.9...@kong-ui-public/analytics-chart@9.0.10) (2025-06-10)
 
 

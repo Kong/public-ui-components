@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.57](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@0.5.56...@kong-ui-public/entities-redis-configurations@0.5.57) (2025-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2189](https://github.com/Kong/public-ui-components/issues/2189)) ([23e5544](https://github.com/Kong/public-ui-components/commit/23e554427eb53279cad3368770661f86bea2c8d8))
+
+
+
+
+
 ## [0.5.56](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@0.5.55...@kong-ui-public/entities-redis-configurations@0.5.56) (2025-06-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
