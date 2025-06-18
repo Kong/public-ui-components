@@ -1,5 +1,5 @@
+import type { DeclarativeConfig, FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
 import type { RouteLocationRaw } from 'vue-router'
-import type { FilterSchema, KongManagerBaseTableConfig, KonnectBaseTableConfig } from '@kong-ui-public/entities-shared'
 
 export interface BaseRouteListConfig {
   /** Current service id if the RouteList in nested in the routes tab on a service detail page */
@@ -10,10 +10,18 @@ export interface BaseRouteListConfig {
   getViewRoute: (id: string) => RouteLocationRaw
   /** A function that returns the route for editing a route */
   getEditRoute: (id: string) => RouteLocationRaw
+
+  declarative?: {
+    config: DeclarativeConfig
+    filterSchema?: FilterSchema
+    getViewRoute: (name: string) => RouteLocationRaw
+    getEditRoute: (name: string) => RouteLocationRaw
+  }
 }
 
 /** Konnect route list config */
-export interface KonnectRouteListConfig extends KonnectBaseTableConfig, BaseRouteListConfig {}
+export interface KonnectRouteListConfig extends KonnectBaseTableConfig, BaseRouteListConfig {
+}
 
 /** Kong Manager route list config */
 export interface KongManagerRouteListConfig extends KongManagerBaseTableConfig, BaseRouteListConfig {

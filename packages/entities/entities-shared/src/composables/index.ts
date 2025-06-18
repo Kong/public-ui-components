@@ -13,11 +13,13 @@ import useTruncationDetector from './useTruncationDetector'
 import useValidators from './useValidators'
 import { useSchemaProvider, useSubSchema } from './useSchema'
 import useTableState from './useTableState'
+import { useDeclarativeRoutesFetcher } from './useDeclarativeFetcher'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
   useAxios,
   useDebouncedFilter,
+  useDeclarativeRoutesFetcher,
   useDeleteUrlBuilder,
   useErrors,
   useExternalLinkCreator,
