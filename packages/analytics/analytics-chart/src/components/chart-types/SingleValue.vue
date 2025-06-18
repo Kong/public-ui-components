@@ -36,7 +36,7 @@ import type { PropType } from 'vue'
 import type { AnalyticsExploreRecord, ExploreResultV4, AllAggregations } from '@kong-ui-public/analytics-utilities'
 import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
 import composables from '../../composables'
-import prettyBytes from 'pretty-bytes'
+import { formatBytes } from '../../utils'
 
 const { i18n: { t } } = composables.useI18n()
 
@@ -84,7 +84,7 @@ const formattedValue = computed((): string => {
 
   // for response/request size metrics, display in bytes
   if (metricName.value?.includes('_size_')) {
-    return prettyBytes(value)
+    return formatBytes(value)
   }
 
   // if number is greater than 1B, display in billions

@@ -2,6 +2,10 @@ import composables from '../composables'
 import { numberFormatter } from './constants'
 
 export const formatBytes = (value: number, isBytes1024?: boolean): string => {
+  if (isNaN(value)) {
+    return '0 B'
+  }
+
   const { i18n } = composables.useI18n()
 
   const pb = isBytes1024 ? 1125899906842624 : 1000000000000000
@@ -49,6 +53,10 @@ export const formatBytes = (value: number, isBytes1024?: boolean): string => {
 }
 
 export const formatCost = (value: number, currency: string = 'USD'): string => {
+  if (isNaN(value)) {
+    return currency === 'USD' ? '$0.00' : `${value}`
+  }
+
   const { i18n } = composables.useI18n()
 
   if (value >= 0.01 || currency !== 'USD') {
@@ -79,10 +87,6 @@ export const formatUnit = (value: number, unit: string, {
   currency = 'USD',
   translateUnit = (unit: string) => unit,
 }: FormatNumberOptions = {}): string => {
-  if (isNaN(value)) {
-    return `${value}`
-  }
-
   const translatedUnit = translateUnit(unit, value)
 
   switch (unit) {
@@ -95,6 +99,9 @@ export const formatUnit = (value: number, unit: string, {
     case 'token count':
     case 'count':
     default:
+      if (isNaN(value)) {
+        return `${value}`
+      }
       return value >= 0.01
         ? `${numberFormatter.format(Number.parseFloat(value.toFixed(2)))} ${translatedUnit}`
         : `${Number.parseFloat(value.toPrecision(4))} ${translatedUnit}`

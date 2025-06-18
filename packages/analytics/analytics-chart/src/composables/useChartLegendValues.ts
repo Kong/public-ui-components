@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { computed } from 'vue'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
-import prettyBytes from 'pretty-bytes'
+import { formatBytes } from '../utils'
 import composables from '../composables'
 
 export default function useChartLegendValues(chartData: Ref<KChartData>, chartType: ChartType | SimpleChartType, metricUnit: Ref<string>) {
@@ -20,8 +20,10 @@ export default function useChartLegendValues(chartData: Ref<KChartData>, chartTy
       let formatted: string
 
       if (metricUnit.value === 'bytes') {
-        formatted = isNaN(raw) ? '0' : prettyBytes(raw)
+        formatted = formatBytes(raw)
       } else {
+        // TODO should we be using approxNum in legend values? Might be better
+        // to always use formatUnit whenever we're formatting a unit.
         // @ts-ignore - dynamic i18n key
         const unitValue = translateUnit(metricUnit.value, raw)
         formatted = (i18n && i18n.t('legend.datapointValueDisplay', {
