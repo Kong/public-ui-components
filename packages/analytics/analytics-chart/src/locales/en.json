@@ -20,7 +20,7 @@
     "noDataRange": "No data in selected range",
     "noDataRetry": "Please adjust the time period and try again",
     "timeRangeSelected": "selected",
-    "exportPreview": "Export Preview",
+    "exportPreview": "Export preview",
     "exportAsCsv": "Export as CSV",
     "exportTimeRange": "Time range",
     "exportDescription": "Exports a CSV of the data represented in the chart.",
