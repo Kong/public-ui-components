@@ -5,21 +5,21 @@
   "metricCard": {
     "small": {
       "traffic": "Requests",
-      "errorRate": "Error Rate",
-      "averageLatency": "Avg. Latency",
-      "p99Latency": "P99 Latency"
+      "errorRate": "Error rate",
+      "averageLatency": "Avg. latency",
+      "p99Latency": "P99 latency"
     },
     "short": {
       "traffic": "Requests",
-      "errorRate": "Error Rate",
-      "averageLatency": "Average Latency",
-      "p99Latency": "P99 Latency"
+      "errorRate": "Error rate",
+      "averageLatency": "Average latency",
+      "p99Latency": "P99 latency"
     },
     "long": {
-      "traffic": "Number of Requests",
-      "errorRate": "Average Error Rate",
-      "averageLatency": "Average Latency",
-      "p99Latency": "P99 Latency"
+      "traffic": "Number of requests",
+      "errorRate": "Average error rate",
+      "averageLatency": "Average latency",
+      "p99Latency": "P99 latency"
     }
   },
   "trendRange": {
