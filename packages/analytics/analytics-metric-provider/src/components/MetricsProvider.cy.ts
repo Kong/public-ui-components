@@ -121,8 +121,8 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard').should('exist')
 
     cy.get('.metricscard-title').eq(0).should('have.text', 'Requests')
-    cy.get('.metricscard-title').eq(1).should('have.text', 'Error Rate')
-    cy.get('.metricscard-title').eq(2).should('have.text', 'Average Latency')
+    cy.get('.metricscard-title').eq(1).should('have.text', 'Error rate')
+    cy.get('.metricscard-title').eq(2).should('have.text', 'Average latency')
 
     // 1001 req each for 1xx, 2xx, 3xx, 4xx, 5xx
     // 5005 total; 2002/5005 = .4 (error rate for 4xx and 5xx)
@@ -156,9 +156,9 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('@fetcher').should('have.been.calledTwice')
 
     cy.get('.metricscard').should('exist')
-    cy.get('.metricscard-title').eq(0).should('have.text', 'Number of Requests')
-    cy.get('.metricscard-title').eq(1).should('have.text', 'Average Error Rate')
-    cy.get('.metricscard-title').eq(2).should('have.text', 'Average Latency')
+    cy.get('.metricscard-title').eq(0).should('have.text', 'Number of requests')
+    cy.get('.metricscard-title').eq(1).should('have.text', 'Average error rate')
+    cy.get('.metricscard-title').eq(2).should('have.text', 'Average latency')
   })
 
   it('renders percentiles if the override is set', () => {
@@ -184,9 +184,9 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('@fetcher').should('always.have.not.been.calledWithMatch', Cypress.sinon.match({ query: { metrics: ['response_latency_average'] } }))
 
     cy.get('.metricscard').should('exist')
-    cy.get('.metricscard-title').eq(0).should('have.text', 'Number of Requests')
-    cy.get('.metricscard-title').eq(1).should('have.text', 'Average Error Rate')
-    cy.get('.metricscard-title').eq(2).should('have.text', 'P99 Latency')
+    cy.get('.metricscard-title').eq(0).should('have.text', 'Number of requests')
+    cy.get('.metricscard-title').eq(1).should('have.text', 'Average error rate')
+    cy.get('.metricscard-title').eq(2).should('have.text', 'P99 latency')
   })
 
   it('displays a container description if provided', () => {
