@@ -27,7 +27,7 @@
   </div>
 
   <h4>Global props, Small cards</h4>
-  <div>
+  <div style="width: 330px">
     <SandboxBridgeInjector :query-bridge="globalBridge">
       <MetricsProvider v-bind="globalProviderProps">
         <MetricsConsumer
@@ -200,7 +200,6 @@ const globalProviderProps = computed(() => ({
   overrideTimeframe: overrideTimeframe.value,
   longCardTitles: false,
   description: 'Generic Description',
-  containerTitle: 'Analytics',
 }))
 
 const globalBridge = makeQueryBridge()
@@ -214,6 +213,7 @@ const filteredProviderProps = computed(() => ({
     type: 'in',
     values: ['app1'],
   } as ExploreFilter],
+  containerTitle: 'Analytics',
 }))
 
 // Query stats for a single entity, no grouping.

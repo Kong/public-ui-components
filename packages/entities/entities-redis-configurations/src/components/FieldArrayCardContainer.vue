@@ -38,7 +38,7 @@ defineProps({
 })
 
 defineEmits<{
-  (e: 'remove-item'): void,
+  (e: 'remove-item'): void
 }>()
 
 </script>

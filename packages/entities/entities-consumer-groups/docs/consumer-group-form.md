@@ -71,6 +71,13 @@ A form component to create/edit Consumer Group.
 - default: `''`
 - If a valid consumerGroupId is provided, it will put the form in Edit mode instead of Create.
 
+#### `hideConsumers
+
+- type: `boolean`
+- require: `false`
+- default: `false`
+- If `true`, the consumers selector field will not be rendered.
+
 ### Events
 
 #### update

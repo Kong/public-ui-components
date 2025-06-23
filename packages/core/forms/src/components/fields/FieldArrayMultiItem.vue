@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 defineEmits<{
-  (event: 'remove-item'): void,
+  (event: 'remove-item'): void
 }>()
 </script>
 

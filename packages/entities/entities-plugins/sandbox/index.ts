@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
-import { VueFormGenerator } from '../src'
 import App from './App.vue'
 
 const app = createApp(App)
@@ -88,7 +87,6 @@ const init = async () => {
   })
 
   app.use(Kongponents)
-  app.component('VueFormGenerator', VueFormGenerator)
   app.use(router)
   app.mount('#app')
 }

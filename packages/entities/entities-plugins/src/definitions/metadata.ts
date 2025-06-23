@@ -6,7 +6,7 @@ import { aclSchema } from './schemas/ACL'
 import aclsCredentialsSchema from './schemas/credentials/mockedAclSchema.json'
 import { basicAuthSchema } from './schemas/BasicAuth'
 import basicAuthCredentialsSchema from './schemas/credentials/mockedBasicAuthSchema.json'
-import { keyAuthSchema } from './schemas/KeyAuth'
+import { keyAuthCredentialSchema } from './schemas/KeyAuth'
 import keyAuthCredentialsSchema from './schemas/credentials/mockedKeyAuthSchema.json'
 import { hmacAuthSchema } from './schemas/HMAC'
 import hmacAuthCredentialsSchema from './schemas/credentials/mockedHmacAuthSchema.json'
@@ -711,6 +711,32 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-rag-injector'],
   },
+  'datakit': {
+    descriptionKey: 'plugins.meta.datakit.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.datakit.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['datakit'],
+  },
+  'ai-prompt-compressor': {
+    descriptionKey: 'plugins.meta.ai-prompt-compressor.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-prompt-compressor.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-prompt-compressor'],
+  },
+  'solace-upstream': {
+    descriptionKey: 'plugins.meta.solace-upstream.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.solace-upstream.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['solace-upstream'],
+  },
+  'ai-aws-guardrails': {
+    descriptionKey: 'plugins.meta.ai-aws-guardrails.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-aws-guardrails.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-aws-guardrails'],
+  },
 }
 
 /**
@@ -742,11 +768,11 @@ export const CREDENTIAL_METADATA: Record<string, any> = {
   'key-auth': {
     titleKey: 'plugins.meta.key-auth.name',
     plugin: 'key-auth',
-    schema: keyAuthSchema,
+    schema: keyAuthCredentialSchema,
     nameKey: 'plugins.meta.key-auth.credential_name',
     endpoint: '/key-auth',
     schemaEndpoint: 'keyauth_credentials',
-    fields: getColumnFields(keyAuthSchema),
+    fields: getColumnFields(keyAuthCredentialSchema),
   },
   'key-auth-enc': {
     titleKey: 'plugins.meta.key-auth-enc.name',

@@ -91,6 +91,8 @@ describe('<AppAboutSection />', () => {
     })
 
     cy.get('.kong-ui-app-about-section').should('exist')
+    cy.getTestId('about-section-title').should('be.visible')
+    cy.getTestId('about-section-title').should('contain.text', title)
     cy.getTestId('about-section-actions').should('be.visible')
     cy.getTestId('about-section-actions').should('contain.text', actionsText)
     cy.getTestId('about-section-content').should('be.visible')
@@ -98,6 +100,52 @@ describe('<AppAboutSection />', () => {
     cy.getTestId('about-divider-section').should('be.visible')
     cy.getTestId('about-divider-section-separator').should('be.visible')
     cy.getTestId('about-divider-section').should('contain.text', dividerText)
+  })
+
+  it('should correctly render title in props', () => {
+    const title = 'Cats are Cool'
+
+    cy.mount(AppAboutSection, {
+      props: {
+        title,
+      },
+    })
+
+    cy.get('.kong-ui-app-about-section').should('exist')
+    cy.getTestId('about-section-title').should('be.visible')
+    cy.getTestId('about-section-title').should('contain.text', title)
+  })
+
+  it('should correctly render title in slots', () => {
+    const title = 'Cats are Cool'
+
+    cy.mount(AppAboutSection, {
+      slots: {
+        title,
+      },
+    })
+
+    cy.get('.kong-ui-app-about-section').should('exist')
+    cy.getTestId('about-section-title').should('be.visible')
+    cy.getTestId('about-section-title').should('contain.text', title)
+  })
+
+  it('should correctly render title in both props and slots', () => {
+    const titleProps = 'Cats are Cool'
+    const titleSlot = 'Cats are Awesome'
+
+    cy.mount(AppAboutSection, {
+      props: {
+        title: titleProps,
+      },
+      slots: {
+        title: titleSlot,
+      },
+    })
+
+    cy.get('.kong-ui-app-about-section').should('exist')
+    cy.getTestId('about-section-title').should('be.visible')
+    cy.getTestId('about-section-title').should('contain.text', titleSlot)
   })
 
   it('should not render empty props/slots', () => {

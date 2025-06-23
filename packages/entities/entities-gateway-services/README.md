@@ -4,6 +4,10 @@ Gateway Service entity components.
 
 - [Requirements](#requirements)
 - [Included components](#included-components)
+- [Package Exports](#package-exports)
+  - [Components](#components)
+  - [Utilities](#utilities)
+  - [Types](#types)
 - [Usage](#usage)
   - [Install](#install)
   - [Registration](#registration)
@@ -20,6 +24,26 @@ Check the [individual component docs](#individual-component-documentation) for m
 - `GatewayServiceConfigCard`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
+
+## Package Exports
+The package exports the following components, utilities, and types for use in your application:
+
+### Components
+
+- `GatewayServiceList` – Component for listing Gateway Services.
+- `GatewayServiceForm` – Component for creating or editing a Gateway Service (new version).
+- `GatewayServiceConfigCard` – Component displaying configuration details for a Gateway Service.
+- `LegacyGatewayServiceForm` – Deprecated or legacy form component for Gateway Services.
+
+### Utilities
+
+- All utility functions from the `./utils` directory are exported for use.
+  
+Reference the [individual component docs](#individual-component-documentation) for more info.
+
+### Types
+
+- All TypeScript types from the `./types` directory are exported
 
 ## Usage
 
@@ -45,3 +69,4 @@ import '@kong-ui-public/entities-gateway-services/dist/style.css'
 - [`<GatewayServiceList.vue />`](docs/gateway-service-list.md)
 - [`<GatewayServiceForm.vue />`](docs/gateway-service-form.md)
 - [`<GatewayServiceConfigCard.vue />`](docs/gateway-service-config-card.md)
+- [`urlValidator()`](docs/url-validator.md)

@@ -16,12 +16,12 @@ interface HmacAuthFieldSchema {
       }
     },
     {
-      tags: typeof tags,
+      tags: typeof tags
     },
   ]
 }
 
 export type HmacAuthSchema = CommonSchemaFields & PluginBasicSchema & {
-  schema: HmacAuthFieldSchema,
+  schema: HmacAuthFieldSchema
   fields: any
 }

@@ -232,11 +232,11 @@ import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-t
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
-  (e: 'error', error: AxiosError): void,
-  (e: 'click:learn-more'): void,
-  (e: 'copy:success', payload: CopyEventPayload): void,
-  (e: 'copy:error', payload: CopyEventPayload): void,
-  (e: 'delete:success', route: EntityRow): void,
+  (e: 'error', error: AxiosError): void
+  (e: 'click:learn-more'): void
+  (e: 'copy:success', payload: CopyEventPayload): void
+  (e: 'copy:error', payload: CopyEventPayload): void
+  (e: 'delete:success', route: EntityRow): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -364,7 +364,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -383,10 +383,10 @@ const errorMessage = ref<TableErrorMessage>(null)
 /**
  * Copy ID action
  */
-const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void => {
+const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const id = row.id as string
 
-  if (!copyToClipboard(id)) {
+  if (!await copyToClipboard(id)) {
     // Emit the error event for the host app
     emit('copy:error', {
       entity: row,
@@ -408,10 +408,10 @@ const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void
 /**
  * Copy JSON action
  */
-const copyJson = (row: EntityRow, copyToClipboard: (val: string) => boolean): void => {
+const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void>=> {
   const val = JSON.stringify(row)
 
-  if (!copyToClipboard(val)) {
+  if (!await copyToClipboard(val)) {
     // Emit the error event for the host app
     emit('copy:error', {
       entity: row,

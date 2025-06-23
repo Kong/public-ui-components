@@ -104,7 +104,7 @@ import type { Field } from '../composables/useRedisPartial'
 import RedisConfigCard from './RedisConfigCard.vue'
 
 defineEmits<{
-  (e: 'showNewPartialModal'): void,
+  (e: 'showNewPartialModal'): void
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -214,8 +214,9 @@ watch(() => redisPartialFetcherKey?.value, async (key) => {
     await loadConfigs()
 })
 
-onBeforeMount(async () => {
-  await loadConfigs()
+onBeforeMount(() => {
+  // load config should not block selecting a default config
+  loadConfigs()
   if (props.defaultRedisConfigItem) {
     redisConfigSelected(props.defaultRedisConfigItem)
   }

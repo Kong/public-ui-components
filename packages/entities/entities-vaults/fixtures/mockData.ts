@@ -2,9 +2,9 @@
 import type { KonnectVaultEntityConfig, EntityRow as VaultEntityRow, SecretEntityRow } from '../src'
 
 export interface FetcherRawResponse {
-  data: any[];
-  total: number;
-  offset?: string;
+  data: any[]
+  total: number
+  offset?: string
 }
 
 export const vaults: FetcherRawResponse = {

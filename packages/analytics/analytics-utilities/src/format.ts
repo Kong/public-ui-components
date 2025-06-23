@@ -35,7 +35,7 @@ export function formatTime(ts: number | string, options: TimeFormatOptions = {})
     // Otherwise, unit tests can fail depending on the tz of the dev's computer (or in CI), etc.
     // Even if we don't care about timezones, timezones care about us.  :/
     return formatInTimeZone(date, tz, timeFormat)
-  } catch (exc) {
+  } catch {
     console.error('Invalid value passed to formatTime', ts)
 
     return '(invalid date)'

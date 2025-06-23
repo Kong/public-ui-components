@@ -38,7 +38,7 @@ import type {
   AllFilters,
   AnalyticsBridge,
   DatasourceAwareQuery,
-  ExploreFilter,
+  ExploreFilterAll,
   ExploreQuery,
   ExploreResultV4,
   FilterTypeMap,
@@ -58,7 +58,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'chart-data', chartData: ExploreResultV4): void,
+  (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'queryComplete'): void
 }>()
 
@@ -134,7 +134,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
       query: {
         ...rest as ExploreQuery,
         time_range,
-        filters: mergedFilters as ExploreFilter[],
+        filters: mergedFilters as ExploreFilterAll[],
       },
     }
 

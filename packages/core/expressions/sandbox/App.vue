@@ -65,7 +65,7 @@ import { ref, watch } from 'vue'
 import type { RhsValueCompletion, SchemaDefinition } from '../src'
 import { ExpressionsEditor, HTTP_SCHEMA_DEFINITION, RouterPlaygroundModal, STREAM_SCHEMA_DEFINITION } from '../src'
 
-type NamedSchemaDefinition = { name: string; definition: SchemaDefinition }
+type NamedSchemaDefinition = { name: string, definition: SchemaDefinition }
 
 const schemaPresets: NamedSchemaDefinition[] = [
   {

@@ -208,10 +208,10 @@ import type {
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
-  (e: 'error', error: AxiosError): void,
-  (e: 'copy:success', payload: CopyEventPayload): void,
-  (e: 'copy:error', payload: CopyEventPayload): void,
-  (e: 'delete:success', credential: EntityRow): void,
+  (e: 'error', error: AxiosError): void
+  (e: 'copy:success', payload: CopyEventPayload): void
+  (e: 'copy:error', payload: CopyEventPayload): void
+  (e: 'delete:success', credential: EntityRow): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -331,7 +331,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
 
 const resetPagination = (): void => {
   // Increment the cache key on sort
@@ -346,9 +346,9 @@ const errorMessage = ref<TableErrorMessage>(null)
 /**
  * Copy action
  */
-const copy = (entity: EntityRow, field: string | undefined, copyToClipboard: (val: string) => boolean): void => {
+const copy = async (entity: EntityRow, field: string | undefined, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const val = field ? entity[field] : JSON.stringify(entity)
-  if (!copyToClipboard(val)) {
+  if (!await copyToClipboard(val)) {
     onCopyError(entity, field)
     return
   }

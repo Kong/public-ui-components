@@ -110,14 +110,6 @@ Show/hide Route name field. If `true`, `name` field is stripped from payload obj
 
 Show/hide Service Select field. Should be used in case of manually adding `service_id` in payload.
 
-#### `showTagsFiledUnderAdvanced`
-
-- type: `Boolean`
-- required: `false`
-- default: `false`
-
-Show tags field under *Advanced Fields* collapse or in it's default place (before protocols field).
-
 #### `routeFlavors` (controls Expressions features)
 
 - type: `RouteFlavors`
@@ -247,7 +239,8 @@ import type {
   PathHandlingVersion,
   Protocol,
   HeaderFields,
-  MethodsFields,
+  Methods,
+  Method,
   Sources,
   Destinations,
   BaseRouteStateFields,

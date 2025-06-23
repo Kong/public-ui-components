@@ -1,11 +1,11 @@
 import type { AnalyticsChartColors } from '../../src/types'
 
 interface StatusCodeColor {
-  background: string;
-  text: string;
+  background: string
+  text: string
 }
 interface StatusCodeColors {
-  [statusCode: number]: StatusCodeColor;
+  [statusCode: number]: StatusCodeColor
 }
 
 // Collection of colors matching existing Kong Manager Status Code chart

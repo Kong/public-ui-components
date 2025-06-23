@@ -211,11 +211,29 @@ export const useRedisConfigurationForm = (options: Options) => {
       form.readonly = true
       form.errorMessage = ''
 
+      type Payload = Omit<typeof payload.value, 'config'> & {
+        config: Partial<typeof payload.value['config']>
+      }
+
+      let payloadData: Payload = payload.value
+
+      // Konnect does not accept null values
+      // And KoKo uses `put` for updating, so no need to reset values by giving null
+      if (config.app === 'konnect') {
+        payloadData = {
+          ...payloadData,
+          config: s.removeNullValues(payloadData.config),
+        }
+      }
+
       if (formType.value === EntityBaseFormType.Create) {
-        return await axiosInstance.post<RedisConfigurationResponse>(submitUrl.value, payload.value)
+        return await axiosInstance.post<RedisConfigurationResponse>(submitUrl.value, payloadData)
       } else {
-        // todo(zehao): check is patch or put in Konnect
-        return await axiosInstance.patch<RedisConfigurationResponse>(submitUrl.value, payload.value)
+        if (config.app === 'konnect') {
+          return await axiosInstance.put<RedisConfigurationResponse>(submitUrl.value, payloadData)
+        } else {
+          return await axiosInstance.patch<RedisConfigurationResponse>(submitUrl.value, payloadData)
+        }
       }
     } catch (e: unknown) {
       form.errorMessage = getMessageFromError(e)

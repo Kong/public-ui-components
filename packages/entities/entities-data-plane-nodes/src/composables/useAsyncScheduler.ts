@@ -70,7 +70,7 @@ export class AsyncAbortException extends Error {
 }
 
 export type AsyncSchedulerOptions = {
-  maxConcurrentAsyncs: number,
+  maxConcurrentAsyncs: number
 }
 
 export class AsyncScheduler {

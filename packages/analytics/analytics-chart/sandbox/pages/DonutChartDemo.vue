@@ -54,7 +54,7 @@
       <KLabel>Dataset options</KLabel>
       <div class="dataset-options">
         <KButton
-          appearance="outline"
+          appearance="secondary"
           size="small"
           @click="addDataset()"
         >
@@ -117,7 +117,6 @@
         :allow-csv-export="true"
         :chart-data="(exploreResult as AnalyticsExploreV2Result)"
         :chart-options="analyticsChartOptions"
-        chart-title="Request count by Status Code"
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
@@ -175,8 +174,8 @@ enum Metrics {
 }
 
 interface MetricSelection {
-  name: Metrics,
-  unit: string,
+  name: Metrics
+  unit: string
 }
 
 // Inject the app-links from the entry file
@@ -237,10 +236,13 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
     }
   }
 
-  return generateCrossSectionalData([{
-    name: selectedMetric.value.name,
-    unit: selectedMetric.value.unit,
-  }], { statusCodes: [...statusCodeDimensionValues.value] })
+  return generateCrossSectionalData(
+    [{
+      name: selectedMetric.value.name,
+      unit: selectedMetric.value.unit,
+    }],
+    { statusCodes: [...statusCodeDimensionValues.value] },
+    { truncated: limitToggle.value, limit: limitToggle.value ? 10 : 50 })
 
 })
 

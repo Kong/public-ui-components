@@ -1,12 +1,12 @@
 export type Request = {
-  id: string;
-  protocol: string;
-  host: string;
-  port: number;
-  path: string;
-  method?: string;
-  headers?: { [k: string]: string | string[] };
-  sni?: string;
+  id: string
+  protocol: string
+  host: string
+  port: number
+  path: string
+  method?: string
+  headers?: { [k: string]: string | string[] }
+  sni?: string
 }
 
 export const DEFAULT_PROTOCOL_PORTS = {

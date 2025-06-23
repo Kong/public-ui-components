@@ -75,7 +75,7 @@ export default function useErrors() {
  * @param {string|Error|object} error - error string
  * @returns {Object} Object containing message and fields
  */
-  const getErrorFieldsFromError = (error: any): { messages: string[]; fields: Array<{ field: string; message: string }> } => {
+  const getErrorFieldsFromError = (error: any): { messages: string[], fields: Array<{ field: string, message: string }> } => {
     if (!error) {
       return {
         messages: [t('errors.unexpected')],
@@ -91,7 +91,7 @@ export default function useErrors() {
     }
 
     let messages: string[] = [t('errors.unexpected')]
-    const fields: Array<{ field: string; message: string }> = []
+    const fields: Array<{ field: string, message: string }> = []
 
     if (error?.response?.data) {
       if (error.response.data.details?.length) {

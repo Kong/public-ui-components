@@ -1,5 +1,5 @@
 export interface EmptyStateFeature {
-  title: string,
+  title: string
   description: string
 }
 

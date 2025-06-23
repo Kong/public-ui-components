@@ -25,6 +25,11 @@
         :synthetics-data-key="syntheticsDataKey"
         :width="width"
       />
+      <SingleValue
+        v-if="isSingleValueChart"
+        :data="chartData"
+        :decimal-points="chartOptions.decimalPoints"
+      />
     </div>
   </div>
 </template>
@@ -37,6 +42,7 @@ import type { PropType } from 'vue'
 import { computed, toRef } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { datavisPalette } from '../utils'
+import SingleValue from './chart-types/SingleValue.vue'
 
 const props = defineProps({
   chartData: {
@@ -101,10 +107,20 @@ const computedMetricUnit = computed<string>(() => {
 })
 
 const isGaugeChart = computed<boolean>(() => props.chartOptions.type === 'gauge')
+const isSingleValueChart = computed<boolean>(() => props.chartOptions.type === 'single_value')
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
 const hasValidChartData = computed(() => {
-  return props.chartData && props.chartData.meta && props.chartData.data.length
+  const hasChartData = props.chartData && props.chartData.meta && props.chartData.data.length
+
+  // for single value chart, show empty state if the metric value is null
+  if (isSingleValueChart.value) {
+    const metricName = props.chartData.meta?.metric_names?.[0]
+    // ignore the scenario where the metric name is undefined or metric value is not a number, the chart will handle it (display error message)
+    return hasChartData && props.chartData.data[0].event[metricName!] !== null
+  }
+
+  return hasChartData
 })
 </script>
 
@@ -115,13 +131,12 @@ const hasValidChartData = computed(() => {
 .simple-chart-shell {
   margin: var(--kui-space-0, $kui-space-0);
   padding: var(--kui-space-0, $kui-space-0);
+  width: 100%;
 
   .chart-empty-state {
     display: flex;
     flex-direction: column;
-    height: 100px;
     justify-content: center;
-    width: 100px;
 
     &:deep(.empty-state-title) {
       font-size: var(--kui-font-size-20, $kui-font-size-20);

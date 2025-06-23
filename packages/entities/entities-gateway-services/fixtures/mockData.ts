@@ -1,8 +1,8 @@
 // FetcherRawResponse is the raw format of the endpoint's response
 export interface FetcherRawResponse {
-  data: any[];
-  total: number;
-  offset?: string;
+  data: any[]
+  total: number
+  offset?: string
 }
 
 export const gatewayService1 = {

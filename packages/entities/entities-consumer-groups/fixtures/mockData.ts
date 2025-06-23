@@ -2,16 +2,16 @@
 import type { Consumer } from '../src'
 
 export type ConsumerGroup = {
-  name: string;
-  consumers_count?: number;
-  id: string;
-  tags?: string[];
+  name: string
+  consumers_count?: number
+  id: string
+  tags?: string[]
 }
 
 export interface FetcherRawResponse<T = any> {
-  data: T[];
-  total: number;
-  offset?: string;
+  data: T[]
+  total: number
+  offset?: string
 }
 
 export const consumerGroups5: ConsumerGroup[] = Array(5)

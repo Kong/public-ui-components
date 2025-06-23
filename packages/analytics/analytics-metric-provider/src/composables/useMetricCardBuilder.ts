@@ -6,16 +6,16 @@ import type { ChronologicalMappedMetrics } from './useMetricFetcher'
 import { DEFAULT_KEY } from './useMetricFetcher'
 
 export interface BuilderOptions {
-  cardType: MetricCardType,
-  title: Ref<string>,
-  description?: string,
-  record: Ref<ChronologicalMappedMetrics>,
-  hasError: Ref<boolean>,
-  lookupKey?: string,
-  sumGroupedValues?: string[],
-  increaseIsBad?: boolean,
-  formatValueFn?: (rawValue: number) => string,
-  trendRange?: Ref<string>,
+  cardType: MetricCardType
+  title: Ref<string>
+  description?: string
+  record: Ref<ChronologicalMappedMetrics>
+  hasError: Ref<boolean>
+  lookupKey?: string
+  sumGroupedValues?: string[]
+  increaseIsBad?: boolean
+  formatValueFn?: (rawValue: number) => string
+  trendRange?: Ref<string>
 }
 
 export const sumValues = (recordValue: ChronologicalMappedMetrics, period: 'current' | 'previous', dimensionLookupKey: string | typeof DEFAULT_KEY = DEFAULT_KEY, sumGroupedValues?: string[]) => {

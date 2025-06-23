@@ -11,10 +11,10 @@ export interface DocumentTree {
     file: {
       filename: string
       modified_at: string
-    },
+    }
     id: string
-    metadata: Record<string, any>,
-    raw_md_content: string,
+    metadata: Record<string, any>
+    raw_md_content: string
     title: string
   }
 }

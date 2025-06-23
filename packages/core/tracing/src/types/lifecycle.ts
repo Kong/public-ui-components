@@ -1,30 +1,34 @@
-import type { Edge, Node } from '@vue-flow/core'
+import type { Edge, Node, SmoothStepEdgeType } from '@vue-flow/core'
 import type { TranslationKey } from '../composables/useI18n'
-import type { LifecycleNodeType } from '../constants'
+import type { LifecycleDefaultNodeType } from '../constants'
 import type { SpanNode } from './spans'
 
 export interface LifecycleGraphNodeTree {
   client: {
-    node: LifecycleNode
-    in?: LifecycleNode
-    out?: LifecycleNode
+    node: LifecycleDefaultNode
+    in?: LifecycleDefaultNode
+    out?: LifecycleDefaultNode
   }
   requests?: {
-    node: LifecycleNode
-    children: LifecycleNode[]
+    node: LifecycleDefaultNode
+    children: LifecycleDefaultNode[]
   }
   upstream?: {
-    node: LifecycleNode
-    in?: LifecycleNode
-    out?: LifecycleNode
+    node: LifecycleDefaultNode
+    in?: LifecycleDefaultNode
+    out?: LifecycleDefaultNode
   }
   responses?: {
-    node: LifecycleNode
-    children: LifecycleNode[]
+    node: LifecycleDefaultNode
+    children: LifecycleDefaultNode[]
   }
+  frame: LifecycleFrameNode
 }
 
-export interface LifecycleNodeData<T extends LifecycleNodeType = LifecycleNodeType> {
+/** `node.type` */
+export type LifecycleNodeType = 'default' | 'frame'
+
+export interface LifecycleDefaultNodeData<T extends LifecycleDefaultNodeType = LifecycleDefaultNodeType> {
   label?: string
   labelKey?: TranslationKey
   type: T
@@ -32,7 +36,6 @@ export interface LifecycleNodeData<T extends LifecycleNodeType = LifecycleNodeTy
   durationNano?: number
   spans?: SpanNode[]
   tree?: LifecycleGraphNodeTree
-  labelPlacement?: 'top' | 'bottom'
   labelTooltipKey?: TranslationKey
   durationTooltipKey?: TranslationKey
   showTargetHandle?: boolean
@@ -41,10 +44,16 @@ export interface LifecycleNodeData<T extends LifecycleNodeType = LifecycleNodeTy
   emptyGroupMessageKey?: TranslationKey
 }
 
-export interface LifecycleNode extends Node<LifecycleNodeData, any, LifecycleNodeType> {
+export type LifecycleNodeData<T extends LifecycleNodeType = LifecycleNodeType> = T extends 'default' ? LifecycleDefaultNodeData : any
+
+export interface LifecycleDefaultNode extends Node<LifecycleNodeData, any, LifecycleDefaultNodeType> {
   // Overriding as we will always provide the node data
   data: LifecycleNodeData
 }
+
+export type LifecycleFrameNode = Node<LifecycleNodeData<'frame'>, any, 'frame'>
+
+export type LifecycleNode = LifecycleDefaultNode | LifecycleFrameNode
 
 export interface LifecycleEdgeData {
   tooltip?: string
@@ -52,6 +61,8 @@ export interface LifecycleEdgeData {
 
 export interface LifecycleGraph {
   nodeTree: LifecycleGraphNodeTree
-  nodes: LifecycleNode[]
+  nodes: Node[]
   edges: Edge[]
 }
+
+export type SeamlessSmoothStepEdgeType = Omit<SmoothStepEdgeType, 'type'> & { type: 'seamless-smoothstep' }

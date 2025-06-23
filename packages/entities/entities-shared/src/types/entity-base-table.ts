@@ -51,9 +51,9 @@ export enum FetcherStatus {
 }
 
 export interface FetcherState {
-  status: FetcherStatus;
-  response?: FetcherResponse;
-  error?: any;
+  status: FetcherStatus
+  response?: FetcherResponse
+  error?: any
 }
 
 interface InternalHeaderForFields {
@@ -76,10 +76,10 @@ export interface TableSortParams {
   sortColumnOrder: 'asc' | 'desc'
 }
 
-export type TableErrorMessage = { title?: string; message?: string } | null
+export type TableErrorMessage = { title?: string, message?: string } | null
 
 export interface TableStateParams {
-  state: TableState,
+  state: TableState
   hasData: boolean
 }
 

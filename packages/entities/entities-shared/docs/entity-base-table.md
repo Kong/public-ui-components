@@ -8,6 +8,8 @@ A base table component for entity list views.
   - [Props](#props)
   - [`hideToolbar`](#hidetoolbar)
   - [`hidePagination`](#hidepagination)
+  - [`paginationAttributes`](#paginationattributes)
+  - [`hidePaginationWhenOptional`](#hidepaginationwhenoptional)
   - [Slots](#slots)
   - [Events](#events)
   - [Usage example](#usage-example)
@@ -142,6 +144,14 @@ Boolean to hide table toolbar. Defaults to `false`.
 ### `hidePagination`
 
 Boolean to hide table pagination. Defaults to `false`.
+
+### `paginationAttributes`
+
+Object to be passed to underlying pagination component. See [KTableData props](https://kongponents.konghq.com/components/table-view.html#paginationattributes) for more details.
+
+### `hidePaginationWhenOptional`
+
+Hide pagination when the table record count is less than or equal to the page size. Defaults to `true`.
 
 ### Slots
 

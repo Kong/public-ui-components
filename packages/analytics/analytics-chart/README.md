@@ -9,8 +9,6 @@ Dynamic chart component for kong analytics.
   - [Usage Example](#usage-example-analyticschart)
 - [SimpleChart](#SimpleChart)
   - [Usage Example](#usage-example-simplechart)
-- [CsvExportButton](#CsvExportButton)
-  - [Usage Example](#usage-example-csvexportbutton)
 - [CsvExportModal](#CsvExportModal)
   - [Events](#CsvExportModal-events)
   - [Usage Example](#usage-example-csvexportmodal)
@@ -84,11 +82,6 @@ yarn add @kong-ui-public/analytics-chart
   - Exposed sorting fn for datasets as they appear in the tooltip
   - Sorts in descending order of raw value by default.
 
-#### `chartTitle`
-
-- type: `string`
-- required: `true`
-
 #### `emptyStateTitle`
 
 - type: `string`
@@ -135,7 +128,6 @@ yarn add @kong-ui-public/analytics-chart
     :chart-data="chartData"
     :chart-options="chartOptions"
     tooltip-title="Total Requests"
-    chart-title="Requests by Service"
     :legend-position="legendPosition"
   />
 </template>
@@ -316,97 +308,6 @@ export default defineComponent({
   },
 })
 </script>
-```
-
-## CsvExportButton
-
-### Props
-
-#### `data`
-
-Chart data to be exported
-
-- type: [ExploreResultV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore-v4.ts)
-- required: `true`
-
-#### `text`
-
-Text to appear in the button
-
-- type: `string`
-- required: `false`
-- default: `'Export'`
-
-#### `buttonAppearance`
-
-Text to appear in the button
-
-- type: `'primary' | 'secondary' | 'tertiary' | 'danger'`
-- required: `false`
-- default: `'tertiary'`
-
-#### `filenamePrefix`
-
-Resulting csv filename
-
-- type: `string`
-- required: `false`
-- default: `'Chart Export'`
-
-### Usage Example CsvExportButton
-
-```html
-
-<template>
-  <CsvExportButton
-    :data="(chartData as ExploreResultV4)"
-    :filename-prefix="filenamePrefix"
-  />
-</template>
-
-<script setup lang="ts">
-
-import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { CsvExportButton } from '@kong-ui-public/analytics-chart'
-
-const chartData = ref<ExploreResultV4>({
-  data: [
-    {
-      timestamp: '2023-04-24T10:27:22.798Z',
-      event: {
-        Service: 'service-a-id',
-        TotalRequests: 849,
-      },
-    },
-    {
-      timestamp: '2023-04-24T10:27:22.798Z',
-      event: {
-        Service: 'service-b-id',
-        TotalRequests: 5434,
-      },
-    },
-  ],
-  meta: {
-    start_ms: 1682332042798,
-    end_ms: 1682353642798,
-    granularity_ms: 3600000,
-    query_id: '12345',
-    display: {
-      Service: {
-        'service-a-id': { name: 'Service A' },
-        'service-b-id': { name: 'Service B' },
-    },
-    metric_names: ['TotalRequests'],
-    metric_units: {
-      TotalRequests: 'requests',
-    },
-  },
-})
-
-const fileName = ref('exportFilename')
-
-</script>
-
 ```
 
 ## CsvExportModal

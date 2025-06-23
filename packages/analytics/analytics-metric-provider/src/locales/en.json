@@ -3,6 +3,12 @@
     "notAvailable": "N/A"
   },
   "metricCard": {
+    "small": {
+      "traffic": "Requests",
+      "errorRate": "Error Rate",
+      "averageLatency": "Avg. Latency",
+      "p99Latency": "P99 Latency"
+    },
     "short": {
       "traffic": "Requests",
       "errorRate": "Error Rate",

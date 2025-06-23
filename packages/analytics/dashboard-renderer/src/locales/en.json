@@ -7,7 +7,9 @@
       "30d": "Last 30-Day Summary"
     },
     "edit": "Edit",
-    "remove": "Remove"
+    "duplicateTile": "Duplicate",
+    "remove": "Remove",
+    "delete": "Delete"
   },
   "queryDataProvider": {
     "timeRangeExceeded":  "The time range for this report is outside of your organization's data retention period"

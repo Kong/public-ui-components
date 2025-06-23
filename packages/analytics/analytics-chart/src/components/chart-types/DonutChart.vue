@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="chartParentRef"
     class="chart-parent"
     :class="chartFlexClass(legendPosition)"
     data-testid="donut-chart-parent"
@@ -14,15 +15,17 @@
         :options="(options as any)"
         :plugins="(plugins as any)"
       />
-      <ToolTip
-        :left="tooltipData.left"
-        :series="tooltipData.tooltipSeries"
-        :show-tooltip="tooltipData.showTooltip"
-        :tooltip-title="tooltipTitle"
-        :top="tooltipData.top"
-        :unit="metricUnit"
-        @dimensions="tooltipDimensions"
-      />
+      <Teleport to="body">
+        <ToolTip
+          :left="tooltipAbsoluteLeft"
+          :series="tooltipData.tooltipSeries"
+          :show-tooltip="tooltipData.showTooltip"
+          :tooltip-title="tooltipTitle"
+          :top="tooltipAbsoluteTop"
+          :unit="metricUnit"
+          @dimensions="tooltipDimensions"
+        />
+      </Teleport>
     </div>
     <HtmlLegend
       :id="legendID"
@@ -35,7 +38,7 @@
 
 <script setup lang="ts">
 import type { PropType, Ref } from 'vue'
-import { computed, reactive, ref, toRef } from 'vue'
+import { computed, reactive, ref, toRef, useTemplateRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
@@ -44,7 +47,6 @@ import {
   datavisPalette,
   darkenColor,
 } from '../../utils'
-import { v4 as uuidv4 } from 'uuid'
 import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
 import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
@@ -91,9 +93,10 @@ const props = defineProps({
 
 const { translateUnit } = composables.useTranslatedUnits()
 
-const legendID = ref(uuidv4())
-const chartID = ref(uuidv4())
+const legendID = crypto.randomUUID()
+const chartID = crypto.randomUUID()
 const legendItems = ref([])
+const chartParentRef = useTemplateRef('chartParentRef')
 
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
@@ -107,11 +110,17 @@ const tooltipData: TooltipState = reactive({
   offsetY: 0,
   width: 0,
   height: 0,
+  chartID,
   chartType: 'donut',
 })
 
+const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolutePosition(
+  chartParentRef,
+  tooltipData,
+)
+
 const htmlLegendPlugin: Plugin = {
-  id: legendID.value,
+  id: legendID,
   afterUpdate(chart: Chart) {
     // @ts-ignore - chart js options internally, are not well typed
     legendItems.value = chart.options.plugins.legend.labels.generateLabels(chart)
@@ -147,7 +156,7 @@ composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(pro
 
 const { options } = composables.useDonutChartOptions({
   tooltipState: tooltipData,
-  legendID: legendID.value,
+  legendID: legendID,
 })
 
 const chartInstance = ref<Chart>()

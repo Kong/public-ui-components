@@ -89,9 +89,9 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
-  (e: 'fetch:error', error: AxiosError): void,
-  (e: 'fetch:success', data: Record<string, any>): void,
-  (e: 'navigation-click', id: string, entityType: string): void,
+  (e: 'fetch:error', error: AxiosError): void
+  (e: 'fetch:success', data: Record<string, any>): void
+  (e: 'navigation-click', id: string, entityType: string): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -133,28 +133,28 @@ const props = defineProps({
 })
 
 interface KeySet {
-  id: string;
-  created_at: number;
-  updated_at: number;
-  name: string;
-  tags: string[];
+  id: string
+  created_at: number
+  updated_at: number
+  name: string
+  tags: string[]
 }
 
 interface PemKey {
-  private_key: string;
-  public_key: string;
+  private_key: string
+  public_key: string
 }
 
 interface Key {
-  id: string;
-  created_at: number;
-  updated_at: number;
-  tags: string[];
-  set: KeySet;
-  name: string;
-  kid: string;
-  jwk?: string;
-  pem?: PemKey;
+  id: string
+  created_at: number
+  updated_at: number
+  tags: string[]
+  set: KeySet
+  name: string
+  kid: string
+  jwk?: string
+  pem?: PemKey
 }
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)

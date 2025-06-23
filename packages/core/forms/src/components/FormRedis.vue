@@ -147,11 +147,11 @@ const props = defineProps({
 })
 
 const emits = defineEmits<{
-  (e: 'modelUpdated', payload: any, schema: string): void,
-  (e: 'partialToggled', field: string, model: Record<string, any>): void,
-  (e: 'showNewPartialModal'): void,
-  (e: 'refreshModel'): void,
-  (e: 'validated', res: boolean, errors: any[], field: any): void,
+  (e: 'modelUpdated', payload: any, schema: string): void
+  (e: 'partialToggled', field: string, model: Record<string, any>): void
+  (e: 'showNewPartialModal'): void
+  (e: 'refreshModel'): void
+  (e: 'validated', res: boolean, errors: any[], field: any): void
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)

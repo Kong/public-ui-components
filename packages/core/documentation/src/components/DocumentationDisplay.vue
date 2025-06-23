@@ -124,10 +124,10 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'add'): void,
-  (e: 'toggle-published', newValue: boolean): void,
-  (e: 'edit-markdown', isEditingMarkdown: boolean): void,
-  (e: 'save-markdown', content: string): void,
+  (e: 'add'): void
+  (e: 'toggle-published', newValue: boolean): void
+  (e: 'edit-markdown', isEditingMarkdown: boolean): void
+  (e: 'save-markdown', content: string): void
 }>()
 
 const markdownComponent = ref()

@@ -5,6 +5,7 @@ Render Analytics charts on a page from a JSON definition.
 - [Requirements](#requirements)
 - [Usage](#usage)
   - [Props](#props)
+  - [Events](#events)
   - [Example](#example)
   - [Slotted content](#slotted-content)
   - [Auto-fit row content](#auto-fit-row-content)
@@ -42,8 +43,8 @@ Render Analytics charts on a page from a JSON definition.
 
 This component takes two properties:
 
+- [modelValue](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/dashboardSchema.ts): The dashboard configuration and layout are provided as a two-way binding using `v-model`. When in editable mode, changes to tiles or the layout will automatically update the reactive reference bound to `v-model`.
 - [context](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/src/types/renderer-types.ts): The time range that the dashboard should query, any additional filters that should be applied, and editing configuration.
-- [config](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/dashboardSchema.ts): The dashboard config and layout.
 
 #### Context Properties
 
@@ -56,14 +57,21 @@ This component takes two properties:
 | editable | boolean | No | false | Enables dashboard editing capabilities |
 
 
+### Events
+
+The DashboardRenderer component emits the following events.
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `zoom-time-range` | [AbsoluteTimeRangeV4](https://github.com/Kong/public-ui-components/blob/1b4a96441f64539895432ae819140c3588ccc9a9/packages/analytics/analytics-utilities/src/types/explore/common.ts#L33) | Emitted when a timeseries chart tile is zoomed by selecting an area within the chart. |
+
 ### Example
 
 ```html
 <DashboardRenderer
+  v-model="config"
   :context="context"
-  :config="config"
   @edit-tile="handleEditTile"
-  @update-tiles="handleUpdateTiles"
 />
 ```
 
@@ -84,11 +92,6 @@ const context: DashboardRendererContext = {
 }
 
 const config: DashboardConfig = {
-  // 4 x 1 grid
-  gridSize: {
-    cols: 4,
-    rows: 1,
-  },
   tiles: [
     {
       id: 'unique-tile-id', // Required for editable dashboards
@@ -108,9 +111,9 @@ const config: DashboardConfig = {
           col: 0,
           row: 0,
         },
-        // Spans 2 columns and 1 rows
+        // Spans 3 columns and 1 rows
         size: {
-          cols: 2,
+          cols: 3,
           rows: 1,
         }
       }
@@ -130,14 +133,14 @@ const config: DashboardConfig = {
         },
       },
       layout: {
-        // Position at column 2, row 0
+        // Position at column 3, row 0
         position: {
-          col: 2,
+          col: 3,
           row: 0,
         },
-        // Spans 2 columns and 1 rows
+        // Spans 3 columns and 1 rows
         size: {
-          cols: 2,
+          cols: 3,
           rows: 1,
         }
       }
@@ -150,8 +153,8 @@ const config: DashboardConfig = {
 
 ```html
 <DashboardRenderer
+  v-model="config"
   :context="context"
-  :config="config"
 >
   <!-- use the `id` set in the tile config for the slot name -->
   <template #slot-1>
@@ -176,11 +179,6 @@ const context: DashboardRendererContext = {
 }
 
 const config: DashboardConfig = {
-  // 4 x 1 grid
-  gridSize: {
-    cols: 4,
-    rows: 1,
-  },
   tiles: [
     {
       // Line chart
@@ -200,9 +198,9 @@ const config: DashboardConfig = {
           col: 0,
           row: 0,
         },
-        // Spans 2 columns and 1 rows
+        // Spans 3 columns and 1 rows
         size: {
-          cols: 2,
+          cols: 3,
           rows: 1,
         }
       }
@@ -217,14 +215,14 @@ const config: DashboardConfig = {
         query: {},
       },
       layout: {
-        // Position at column 2, row 0
+        // Position at column 3, row 0
         position: {
-          col: 2,
+          col: 3,
           row: 0,
         },
-        // Spans 2 columns and 1 rows
+        // Spans 3 columns and 1 rows
         size: {
-          cols: 2,
+          cols: 3,
           rows: 1,
         }
       }
@@ -255,11 +253,6 @@ const context: DashboardRendererContext = {
 }
 
 const config: DashboardConfig = {
-  // 4 x 1 grid
-  gridSize: {
-    cols: 4,
-    rows: 1,
-  },
   tiles: [
     {
       definition: {
@@ -276,7 +269,7 @@ const config: DashboardConfig = {
           row: 0,
         },
         size: {
-          cols: 3,
+          cols: 4,
           rows: 1,
           fitToContent: true,
         },
@@ -297,7 +290,7 @@ const config: DashboardConfig = {
           row: 0,
         },
         size: {
-          cols: 3,
+          cols: 2,
           rows: 1,
           fitToContent: true,
         },
@@ -319,11 +312,7 @@ const context: DashboardRendererContext = {
   editable: true, // Enable editing capabilities
 }
 
-const config: DashboardConfig = {
-  gridSize: {
-    cols: 4,
-    rows: 1,
-  },
+const config = ref<DashboardConfig>({
   tiles: [
     {
       id: 'unique-tile-id', // Required for editable dashboards
@@ -342,21 +331,24 @@ const config: DashboardConfig = {
           row: 0,
         },
         size: {
-          cols: 2,
+          cols: 3,
           rows: 1,
         }
       }
     }
   ]
-}
+})
+
+watch(() => config.value.tiles, (tiles) => {
+  // Watch for changes to tiles.
+})
 ```
 
 ```html
 <DashboardRenderer
+  v-model="config"
   :context="context"
-  :config="config"
   @edit-tile="handleEditTile"
-  @update-tiles="handleUpdateTiles"
 />
 ```
 
@@ -377,16 +369,14 @@ The DashboardRenderer component emits the following events when in editable mode
 | Event | Payload | Description |
 |-------|---------|-------------|
 | `edit-tile` | `GridTile<TileDefinition>` | Emitted when the edit button is clicked on a tile. The payload includes the complete tile configuration including its layout and metadata. |
-| `update-tiles` | `TileConfig[]` | Emitted when tiles are moved, resized, or removed. The payload is an array of all tiles with their updated positions and sizes. |
 | `remove-tile` | `GridTile<TileDefinition>` | Emitted when a tile is removed via the kebab menu. The payload includes the configuration of the removed tile. |
 
 
 ```Html
 <DashboardRenderer
+  v-model="config"
   :context="context"
-  :config="config"
   @edit-tile="handleTileEdit"
-  @update-tiles="handleLayoutUpdate"
   @remove-tile="handleTileRemoval"
 />
 ```
@@ -397,15 +387,16 @@ const handleEditTile = (tile: GridTile<TileDefinition>) => {
   console.log('Editing tile:', tile.id)
 }
 
-const handleUpdateTiles = (tiles: TileConfig[]) => {
-  // Handle layout updates, e.g., save to backend
-  console.log('Updated tiles:', tiles)
-}
 
 const handleRemoveTile = (tile: GridTile<TileDefinition>) => {
   // Handle tile removal, e.g., update backend
   console.log('Removed tile:', tile.id)
 }
+
+watch(() => config.value.tiles, (tiles) => {
+  // Watch for changes to tiles.
+  console.log('Update tiles:', tiles)
+})
 ```
 
 Note: These events are only emitted when the dashboard is in editable mode (`context.editable = true`).
@@ -423,10 +414,6 @@ The root configuration type for a dashboard.
 interface DashboardConfig {
   tiles: TileConfig[]         // Array of tile configurations
   tileHeight?: number         // Optional height of each tile in pixels
-  gridSize: {                 // Required grid layout configuration
-    cols: number              // Number of columns in the grid
-    rows: number              // Number of rows in the grid
-  }
 }
 ```
 
@@ -554,10 +541,6 @@ interface TileLayout {
 
 ```typescript
 const dashboardConfig: DashboardConfig = {
-  gridSize: {
-    cols: 4,
-    rows: 2
-  },
   tiles: [{
     id: 'requests-by-route',
     definition: {
@@ -573,7 +556,7 @@ const dashboardConfig: DashboardConfig = {
     },
     layout: {
       position: { col: 0, row: 0 },
-      size: { cols: 2, rows: 1 }
+      size: { cols: 3, rows: 1 }
     }
   }]
 }

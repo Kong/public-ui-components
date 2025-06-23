@@ -100,7 +100,7 @@
       "fields": {
         "upstream_url": {
           "label": "Full URL",
-          "placeholder": "e.g. https://www.myapi.com/",
+          "placeholder": "e.g. https://api.kong-air.com/flights",
           "tooltip_for_konnect": "This is the URL of the API you will manage in Konnect.",
           "tooltip_for_km": "This is the URL of the API you will manage in Kong Gateway."
         },
@@ -127,7 +127,7 @@
         },
         "host": {
           "label": "Host",
-          "placeholder": "e.g. www.myapi.com, 127.0.0.1",
+          "placeholder": "e.g. api.kong-air.com",
           "tooltip": "The host of the upstream server. Note that the host value is case sensitive."
         },
         "path": {

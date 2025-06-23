@@ -148,6 +148,28 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     cy.get('@onUpdateSpy').should('have.been.calledWith', data)
   })
 
+  it('Should render sticky sessions fields and bind data correctly', () => {
+    const cookie = 'foo'
+    const cookiePath = '/bar'
+
+    cy.mount(UpstreamsFormLoadBalancing, {
+      props: {
+        algorithm: 'sticky-sessions',
+        stickySessionsAvailable: true,
+        'onUpdate:sticky-sessions-cookie': cy.spy().as('onUpdateCookieSpy'),
+        'onUpdate:sticky-sessions-cookie-path': cy.spy().as('onUpdateCookiePathSpy'),
+      },
+    })
+    cy.getTestId('upstreams-form-sticky-sessions-cookie').should('exist')
+    cy.getTestId('upstreams-form-sticky-sessions-cookie').type(cookie)
+
+    cy.getTestId('upstreams-form-sticky-sessions-cookie-path').should('exist')
+    cy.getTestId('upstreams-form-sticky-sessions-cookie-path').type(cookiePath)
+
+    cy.get('@onUpdateCookieSpy').should('have.been.calledWith', cookie)
+    cy.get('@onUpdateCookiePathSpy').should('have.been.calledWith', cookiePath)
+  })
+
   it('Should bind algorithm data correctly', () => {
     cy.mount(UpstreamsFormLoadBalancing, {
       props: {

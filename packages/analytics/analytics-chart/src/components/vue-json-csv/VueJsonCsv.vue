@@ -20,8 +20,8 @@ import { saveAs } from 'file-saver'
 import { unparse } from 'papaparse'
 
 const emit = defineEmits<{
-  (event: 'export-started', data: CsvData): void,
-  (event: 'export-finished', data: string): void,
+  (event: 'export-started', data: CsvData): void
+  (event: 'export-finished', data: string): void
 }>()
 
 const props = defineProps({
@@ -89,7 +89,7 @@ const exportableData: ComputedRef<CsvData | null> = computed(() => {
 })
 
 // Replaces the keys in the key/value pairs with more human-readable ones (if provided)
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const labelsFunctionGenerator = (): Function => {
   const labels: any = props.labels
 
@@ -98,7 +98,7 @@ const labelsFunctionGenerator = (): Function => {
   }
 
   if (typeof labels as ValidType === ValidType.Object) {
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return (item: Function) => {
       return mapKeys(item, (item, key) => {
         return labels[key] || key
@@ -111,7 +111,7 @@ const labelsFunctionGenerator = (): Function => {
 }
 
 // Trims each data row based, keeping only the columns (fields) passed in
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 const fieldsFunctionGenerator = (): Function => {
   const fields: any = props.fields
   if (typeof props.fields as ValidType !== ValidType.Object && !Array.isArray(fields)) {
@@ -120,7 +120,7 @@ const fieldsFunctionGenerator = (): Function => {
 
   if (Array.isArray(fields)) {
     // Keep only requested object properties
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     return (item: Function) => {
       return pick(item, fields)
     }

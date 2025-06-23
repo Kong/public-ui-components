@@ -6,9 +6,9 @@ import type {
 } from '../src'
 
 export interface FetcherRawResponse {
-  data: any[];
-  total: number;
-  offset?: string;
+  data: any[]
+  total: number
+  offset?: string
 }
 
 export const upstreams: FetcherRawResponse = {

@@ -167,8 +167,8 @@ describe('<UpstreamsList />', () => {
 
   describe('Kong Manager', () => {
     const interceptKM = (params?: {
-      mockData?: FetcherRawResponse;
-      alias?: string;
+      mockData?: FetcherRawResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -186,8 +186,8 @@ describe('<UpstreamsList />', () => {
     }
 
     const interceptKMMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -467,8 +467,8 @@ describe('<UpstreamsList />', () => {
 
   describe('Konnect', () => {
     const interceptKonnect = (params?: {
-      mockData?: FetcherResponse;
-      alias?: string;
+      mockData?: FetcherResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -486,8 +486,8 @@ describe('<UpstreamsList />', () => {
     }
 
     const interceptKonnectMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {

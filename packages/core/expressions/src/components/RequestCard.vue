@@ -79,14 +79,14 @@ import { BadgeMethodAppearances, type BadgeAppearance } from '@kong/kongponents'
 import composables from '../composables'
 
 const props = defineProps<{
-  active?: boolean;
-  protocol: string;
-  host: string;
-  port?: number;
-  path?: string;
-  method?: string;
-  headers?: { [k: string]: string | string[] };
-  sni?: string;
+  active?: boolean
+  protocol: string
+  host: string
+  port?: number
+  path?: string
+  method?: string
+  headers?: { [k: string]: string | string[] }
+  sni?: string
 }>()
 
 const emit = defineEmits<{

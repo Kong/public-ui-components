@@ -25,10 +25,10 @@
 import { defineProps } from 'vue'
 
 defineProps<{
-  title: string,
-  size: number,
-  hideTitle?: boolean,
-  noMargin?: boolean,
+  title: string
+  size: number
+  hideTitle?: boolean
+  noMargin?: boolean
 }>()
 
 </script>

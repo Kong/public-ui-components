@@ -1,6 +1,5 @@
-import prettyBytes from 'pretty-bytes'
 import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues, EnhancedLegendItem } from '../types'
-import { DECIMAL_DISPLAY, numberFormatter } from '../utils'
+import { formatUnit } from '../utils'
 import { isValid } from 'date-fns'
 import type { Chart, Point, ScatterDataPoint } from 'chart.js'
 
@@ -29,18 +28,9 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
       const rawValue = isDonutChart ? p.parsed : p.parsed[valueAxis]
-
-      let value
-      if (tooltipData.units === 'bytes') {
-        value = !isNaN(rawValue) ? prettyBytes(rawValue) : rawValue
-      } else {
-        const translatedUnits = tooltipData.translateUnit(tooltipData.units, rawValue)
-        const prefix = tooltipData.units === 'usd' ? '$' : ''
-        value = `${prefix}${rawValue % 1 === 0 ? numberFormatter.format(rawValue) : numberFormatter.format(Number(rawValue.toFixed(DECIMAL_DISPLAY)))} ${translatedUnits}`
-      }
+      const value = formatUnit(rawValue, tooltipData.units, { translateUnit: tooltipData.translateUnit })
 
       let tooltipLabel
-
       if (isBarChart && p.dataset.label !== p.label) {
         tooltipLabel = p.dataset.label
       } else if (isDonutChart) {

@@ -46,7 +46,7 @@
         class="option-field"
       >
         <div class="option-field-container">
-          <vue-form-generator
+          <VueFormGenerator
             :model="model"
             :options="{ helpAsHtml: true }"
             :schema="{ fields: option.fields }"
@@ -58,22 +58,23 @@
   </div>
 </template>
 
-<script>
-import abstractField from './abstractField'
+<script setup>
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../locales/en.json'
+import VueFormGenerator from '../FormGenerator.vue'
+
+const { t } = createI18n('en-us', english)
+</script>
+
+<script>
+import abstractField from './abstractField'
 
 export default {
   mixins: [abstractField],
 
-  emits: ['model-updated'],
+  expose: ['validate', 'clearValidationErrors', 'schema'],
 
-  setup() {
-    const { t } = createI18n('en-us', english)
-    return {
-      t,
-    }
-  },
+  emits: ['model-updated'],
 
   data() {
     return {
@@ -97,7 +98,9 @@ export default {
         const newFields = this.schema.fields[newVal].fields
         const oldFields = this.schema.fields[oldVal].fields
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         oldFields && oldFields.forEach(field => this.updateModel('', field.model))
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         newFields && newFields.forEach(field => this.updateModel(this.fieldModel[field.model], field.model))
       },
     },
@@ -108,6 +111,7 @@ export default {
 
     // Set checkedGroup based on model
     this.schema.fields.forEach((field, i) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       field.fields && field.fields.forEach(subField => {
         if (this.model[subField.model]) {
           this.checkedGroup = i

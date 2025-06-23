@@ -11,7 +11,7 @@ interface PackageScript {
 
 export interface ImportParams {
   /** Script import config object */
-  script: PackageScript,
+  script: PackageScript
   /** Style import config object */
   styles?: {
     /** Array of strings of CSS assets. */

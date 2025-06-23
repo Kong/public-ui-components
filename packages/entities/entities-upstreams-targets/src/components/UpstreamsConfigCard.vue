@@ -245,8 +245,8 @@ const props = defineProps({
 
 defineEmits<{
   (e: 'loading', isLoading: boolean): void
-  (e: 'fetch:error', error: AxiosError): void,
-  (e: 'fetch:success', data: Record<string, any>): void,
+  (e: 'fetch:error', error: AxiosError): void
+  (e: 'fetch:success', data: Record<string, any>): void
 }>()
 
 const { i18n: { t }, i18nT } = composables.useI18n()

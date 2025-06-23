@@ -20,9 +20,7 @@
     "noDataRange": "No data in selected range",
     "noDataRetry": "Please adjust the time period and try again",
     "timeRangeSelected": "selected",
-    "defaultFilename": "Chart Export",
     "exportPreview": "Export Preview",
-    "exportButton": "Export",
     "exportAsCsv": "Export as CSV",
     "exportTimeRange": "Time range",
     "exportDescription": "Exports a CSV of the data represented in the chart.",
@@ -227,5 +225,8 @@
       "display": "Error: 'display' response incorrectly formatted (must have at least one key)",
       "metricNames": "Error: 'metricNames' response incorrectly formatted (must have at least one entry)"
     }
+  },
+  "singleValue": {
+    "valueError": "Invalid configuration"
   }
 }

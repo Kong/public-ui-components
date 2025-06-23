@@ -15,7 +15,7 @@ export interface KongManagerKeyFormConfig extends KongManagerBaseFormConfig {
 
 export interface KeyFormFields {
   key_id: string
-  key_format: 'jwk' | 'pem',
+  key_format: 'jwk' | 'pem'
   name?: string
   key_set?: string
   tags?: string

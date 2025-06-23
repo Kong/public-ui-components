@@ -32,7 +32,8 @@ describe('formatUnixToDate()', () => {
   })
 
   it('should handle bogus number', () => {
-    // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
+
+    // eslint-disable-next-line no-loss-of-precision
     expect(helpers.formatUnixToDate(894750982347502987435908275)).toEqual('')
   })
 })

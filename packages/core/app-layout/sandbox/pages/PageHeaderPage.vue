@@ -42,8 +42,12 @@
       created="2023-02-17"
       description="Some cats are cool, some are not. This one is cool."
       modified="2023-02-17 15:23:34"
-      title="About this Cat"
     >
+      <template #title>
+        About this cat
+        <KBadge>Meow!</KBadge>
+      </template>
+
       <template #actions>
         <EditIcon
           color="#0044f4"

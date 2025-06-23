@@ -33,15 +33,17 @@
 /**
  * This component assumes that @kong-ui-public/expressions has been initialized.
  */
-import { ExpressionsEditor, PROTOCOL_TO_SCHEMA, type Schema, RouterPlaygroundModal, HTTP_BASED_PROTOCOLS } from '@kong-ui-public/expressions'
+import { ExpressionsEditor, HTTP_BASED_PROTOCOLS, PROTOCOL_TO_SCHEMA, RouterPlaygroundModal, type Schema } from '@kong-ui-public/expressions'
 import { computed, ref } from 'vue'
+import composables from '../composables'
 
 import '@kong-ui-public/expressions/dist/style.css'
+
+const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps<{
   protocol?: string
   showExpressionsModalEntry?: boolean
-  hintText: string
 }>()
 const expression = defineModel<string>({ required: true })
 const emit = defineEmits<{
@@ -63,7 +65,11 @@ const isHttpBasedProtocol = computed(() => {
 })
 
 const tooltipText = computed(() => {
-  return isHttpBasedProtocol.value ? undefined : `${props.hintText}${HTTP_BASED_PROTOCOLS}`
+  if (!props.showExpressionsModalEntry || isHttpBasedProtocol.value) {
+    return undefined
+  }
+
+  return t('form.expression_playground.supported_protocols_hint', { protocols: HTTP_BASED_PROTOCOLS.join(', ') })
 })
 
 const handleCommit = (expr: string) => {
@@ -72,8 +78,8 @@ const handleCommit = (expr: string) => {
 }
 
 const handleNotify = (options: {
-  message: string;
-  type: string;
+  message: string
+  type: string
 }) => {
   emit('notify', options)
 }

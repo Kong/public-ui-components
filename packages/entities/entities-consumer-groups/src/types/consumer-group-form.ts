@@ -13,8 +13,8 @@ export interface KonnectConsumerGroupFormConfig extends Omit<KonnectBaseFormConf
 export interface KongManagerConsumerGroupFormConfig extends Omit<KongManagerBaseFormConfig, 'cancelRoute'>, BaseConsumerGroupFormConfig {}
 
 export interface ConsumerGroupFields {
-  name: string,
-  tags: string,
+  name: string
+  tags: string
   consumers: string[]
 }
 

@@ -17,8 +17,8 @@ export const supportedLevels: LogLevel[] = [
 ]
 
 export const useLogLevelCandidateSelectItems = (opt?: {
-  initialSelected?: LogLevel,
-  disabled?: MaybeRefOrGetter<LogLevel[]>,
+  initialSelected?: LogLevel
+  disabled?: MaybeRefOrGetter<LogLevel[]>
 }): ComputedRef<SelectItem[]> => {
   const { i18n } = useI18n()
 
@@ -78,16 +78,16 @@ export const useFriendlyRevertTime = (revertTime: MaybeRefOrGetter<number>): Com
 }
 
 export type DataPlaneLogLevel = {
-  currentLogLevel: Ref<LogLevel | null>,
-  updateStatus: Ref<'pending' | 'success' | 'error' | 'loading'>,
-  updateErrorMessage: Ref<string | null>,
-  updateLogLevel: (level: LogLevel, revertAfter: number) => Promise<void>,
+  currentLogLevel: Ref<LogLevel | null>
+  updateStatus: Ref<'pending' | 'success' | 'error' | 'loading'>
+  updateErrorMessage: Ref<string | null>
+  updateLogLevel: (level: LogLevel, revertAfter: number) => Promise<void>
 }
 
 export const useDataPlaneLogLevelChecker = (opt: {
-  getDataPlaneLogLevel: (dataPlaneId: string) => Promise<LogLevel>,
-  setDataPlaneLogLevel: (dataPlaneId: string, level: LogLevel, revertAfter: number) => Promise<void>,
-  requestExecutor?: <T>(fn: () => Promise<T>) => Promise<T>,
+  getDataPlaneLogLevel: (dataPlaneId: string) => Promise<LogLevel>
+  setDataPlaneLogLevel: (dataPlaneId: string, level: LogLevel, revertAfter: number) => Promise<void>
+  requestExecutor?: <T>(fn: () => Promise<T>) => Promise<T>
 }) => {
   const requestExecutor = opt.requestExecutor ?? (fn => fn())
   const { getDataPlaneLogLevel, setDataPlaneLogLevel } = opt
@@ -95,7 +95,7 @@ export const useDataPlaneLogLevelChecker = (opt: {
   const { getMessageFromError } = useErrors()
 
   const checkDataPlaneLogLevel = (dataPlaneId: string, opt?: {
-    currentLogLevelHint?: MaybeRefOrGetter<LogLevel | null>,
+    currentLogLevelHint?: MaybeRefOrGetter<LogLevel | null>
   }): DataPlaneLogLevel => {
     const currentLogLevel = ref<LogLevel | null>(toValue(opt?.currentLogLevelHint) ?? null)
 

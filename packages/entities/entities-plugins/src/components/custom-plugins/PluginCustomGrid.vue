@@ -132,9 +132,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'plugin-clicked', plugin: PluginType): void,
-  (e: 'revalidate'): void, /** internal use only */
-  (e: 'delete:success', pluginName: string): void,
+  (e: 'plugin-clicked', plugin: PluginType): void
+  (e: 'revalidate'): void /** internal use only */
+  (e: 'delete:success', pluginName: string): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()

@@ -10,18 +10,13 @@ import type { RendererProps } from '../types'
 import type { MetricCardOptions } from '@kong-ui-public/analytics-utilities'
 import { MetricsProvider, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
 import { computed, type Ref } from 'vue'
-import { type ExploreFilter, Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
-import composables from '../composables'
+import { type ExploreFilterAll, Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
 
 // Unlike AnalyticsChart, the metric card package doesn't currently expose its options
 // in a convenient interface.
 type ProviderProps = InstanceType<typeof MetricsProvider>['$props']
 
 const props = defineProps<RendererProps<MetricCardOptions>>()
-
-const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
-
 
 const overrideTimeframe: Ref<Timeframe> = computed(() => {
   // Convert the timeframe to a v4 timespec.
@@ -61,10 +56,8 @@ const options = computed<ProviderProps>(() => {
     datasource: props.query?.datasource,
     overrideTimeframe: overrideTimeframe.value,
     tz: props.context.tz,
-    additionalFilter: props.context.filters as ExploreFilter[], // TODO: Decide how to handle metric card filters.
+    additionalFilter: props.context.filters as ExploreFilterAll[], // TODO: Decide how to handle metric card filters.
     longCardTitles: props.chartOptions.longCardTitles,
-    ... !hasKebabMenuAccess && { containerTitle: props.chartOptions.chartTitle },
-    ... !hasKebabMenuAccess && { description: props.chartOptions.description },
     percentileLatency: props.chartOptions.percentileLatency,
     refreshInterval: props.context.refreshInterval,
     queryReady: props.queryReady,
@@ -78,12 +71,12 @@ const options = computed<ProviderProps>(() => {
   @media (min-width: ($kui-breakpoint-phablet - 1px)) {
     align-items: center;
     display: flex;
-    height: v-bind('hasKebabMenuAccess ? "90%" : "100%"');;
+    height: 90%;
   }
 
   :deep(.kong-ui-public-metric-card-container) {
-    height: v-bind('hasKebabMenuAccess ? "auto" : "100%"');
-    max-height: v-bind('hasKebabMenuAccess ? "100%" : "none"');
+    height: auto;
+    max-height: 100%;
 
     .metricscard {
       @media (min-width: ($kui-breakpoint-phablet - 1px)) {

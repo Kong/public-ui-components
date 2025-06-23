@@ -1,7 +1,6 @@
 
 import type { TranslationKey } from '../composables/useI18n'
 import { type SpanSamplerAttribute } from '../types'
-import samplerAttributes from './sampler-attributes.json'
 
 export const SPAN_ZERO_ID = '0000000000000000'
 export const SPAN_ATTRIBUTE_VALUE_UNKNOWN = 'unknown'
@@ -103,17 +102,130 @@ export const SPAN_EVENT_ATTRIBUTE_KEYS = {
   EXCEPTION_MESSAGE: 'exception.message',
 } satisfies Record<string, string>
 
-type SpanSamplerAttributes = Record<
-  | keyof typeof samplerAttributes
-  | typeof SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL_MS_LEGACY, // Legacy for old 3.9 DPs
-  SpanSamplerAttribute
->
-
-export const SPAN_SAMPLER_ATTRIBUTES: SpanSamplerAttributes = {
-  ...samplerAttributes satisfies Record<string, SpanSamplerAttribute>,
+export const SPAN_SAMPLER_ATTRIBUTES: Record<string, SpanSamplerAttribute> = {
+  // Start of the span sampler attributes exported from the latest Gateway >>>
+  'proxy.kong.latency.3p.redis.total_io': {
+    name: 'proxy.kong.latency.3p.redis.total_io',
+    type: 'Int',
+  },
+  'proxy.kong.upstream.id': { name: 'proxy.kong.upstream.id', type: 'String' },
+  'network.protocol.name': {
+    type: 'String',
+    name: 'network.protocol.name',
+    aliases: [{ name: 'net.protocol' }],
+  },
+  'network.peer.address': { name: 'network.peer.address', type: 'IpAddr' },
+  'http.response.status_code': {
+    name: 'http.response.status_code',
+    type: 'Int',
+  },
+  'proxy.kong.upstream.status_code': {
+    name: 'proxy.kong.upstream.status_code',
+    type: 'Int',
+  },
+  'network.peer.name': { name: 'network.peer.name', type: 'String' },
+  'proxy.kong.target.id': { name: 'proxy.kong.target.id', type: 'String' },
+  'network.peer.port': { name: 'network.peer.port', type: 'Int' },
+  'proxy.kong.latency.upstream.read_response_duration': {
+    name: 'proxy.kong.latency.upstream.read_response_duration',
+    type: 'Int',
+  },
+  'proxy.kong.upstream.host': {
+    name: 'proxy.kong.upstream.host',
+    type: 'String',
+  },
+  'proxy.kong.latency.total': { name: 'proxy.kong.latency.total', type: 'Int' },
+  'proxy.kong.latency.upstream': {
+    name: 'proxy.kong.latency.upstream',
+    type: 'Int',
+  },
+  'client.port': {
+    type: 'Int',
+    name: 'client.port',
+    aliases: [{ name: 'net.src.port' }],
+  },
+  'http.route': {
+    type: 'String',
+    name: 'http.route',
+    aliases: [{ name: 'http.path' }],
+  },
+  'http.request.method': {
+    type: 'String',
+    name: 'http.request.method',
+    aliases: [{ name: 'http.method' }],
+  },
+  'network.protocol.version': {
+    name: 'network.protocol.version',
+    type: 'String',
+  },
+  'proxy.kong.latency.3p.total_io': {
+    name: 'proxy.kong.latency.3p.total_io',
+    type: 'Int',
+  },
+  'proxy.kong.upstream.addr': {
+    name: 'proxy.kong.upstream.addr',
+    type: 'IpAddr',
+  },
+  'server.port': {
+    type: 'Int',
+    name: 'server.port',
+    aliases: [{ name: 'net.dst.port' }],
+  },
+  'proxy.kong.latency.3p.tcpsock.total_io': {
+    name: 'proxy.kong.latency.3p.tcpsock.total_io',
+    type: 'Int',
+  },
+  'network.transport': { name: 'network.transport', type: 'String' },
+  'proxy.kong.latency.client': {
+    name: 'proxy.kong.latency.client',
+    type: 'Int',
+  },
+  'proxy.kong.latency.3p.dns.total_io': {
+    name: 'proxy.kong.latency.3p.dns.total_io',
+    type: 'Int',
+  },
+  'url.scheme': {
+    type: 'String',
+    name: 'url.scheme',
+    aliases: [{ name: 'net.protocol' }],
+  },
+  'server.address': {
+    type: 'String',
+    name: 'server.address',
+    aliases: [{ name: 'tls.sni' }, { name: 'net.dst.ip', type: 'IpAddr' }],
+  },
+  'proxy.kong.route.id': { name: 'proxy.kong.route.id', type: 'String' },
+  'proxy.kong.latency.3p.http_client.total_io': {
+    name: 'proxy.kong.latency.3p.http_client.total_io',
+    type: 'Int',
+  },
+  'http.request.size': { name: 'http.request.size', type: 'Int' },
+  'http.request.header.host': {
+    type: 'String',
+    name: 'http.request.header.host',
+    aliases: [{ name: 'http.host' }],
+  },
+  'proxy.kong.latency.upstream.ttfb': {
+    name: 'proxy.kong.latency.upstream.ttfb',
+    type: 'Int',
+  },
+  'client.address': {
+    type: 'IpAddr',
+    name: 'client.address',
+    aliases: [{ name: 'net.src.ip' }],
+  },
+  'proxy.kong.consumer.id': { name: 'proxy.kong.consumer.id', type: 'String' },
+  'destination.address': { name: 'destination.address', type: 'IpAddr' },
+  'proxy.kong.service.id': { name: 'proxy.kong.service.id', type: 'String' },
+  'proxy.kong.latency.internal': {
+    name: 'proxy.kong.latency.internal',
+    type: 'Int',
+  },
+  'url.full': { name: 'url.full', type: 'String' },
+  // <<< End of the span sampler attributes exported from the latest Gateway
   // Legacy for old 3.9 DPs
   [SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL_MS_LEGACY]: {
     name: SPAN_ATTRIBUTE_KEYS.KONG_LATENCY_TOTAL_MS_LEGACY,
-    type: 'number',
+    type: 'Int',
   },
 }

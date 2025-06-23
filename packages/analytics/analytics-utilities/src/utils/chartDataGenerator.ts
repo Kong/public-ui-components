@@ -11,11 +11,11 @@ import { SeededRandom } from './SeedRandom'
 import { rand } from '../utils'
 
 export interface Metric {
-  name: string,
+  name: string
   unit: string
 }
 
-export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?: DimensionMap) => {
+export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?: DimensionMap, metaOverrides?: Partial<QueryResponseMeta>) => {
   const seed = rand(10, 10000)
   const rng = new SeededRandom(seed)
 
@@ -86,6 +86,7 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
     },
     granularity_ms: 60 * 60 * 1000, // 1 hour in ms
     display: displayBlob,
+    ...(metaOverrides ?? {}),
   }
 
   return {
@@ -94,7 +95,7 @@ export const generateSingleMetricTimeSeriesData = (metric: Metric, dimensionMap?
   } as ExploreResultV4
 }
 
-export const generateMultipleMetricTimeSeriesData = (metrics: Metric[]) => {
+export const generateMultipleMetricTimeSeriesData = (metrics: Metric[], metaOverrides?: Partial<QueryResponseMeta>) => {
   const seed = rand(10, 10000)
   const rng = new SeededRandom(seed)
 
@@ -136,6 +137,7 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[]) => {
     }, {}),
     granularity_ms: 60 * 60 * 1000, // 1 hour in ms
     display: {},
+    ...(metaOverrides ?? {}),
   }
 
   return {
@@ -144,7 +146,7 @@ export const generateMultipleMetricTimeSeriesData = (metrics: Metric[]) => {
   } as ExploreResultV4
 }
 
-export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: DimensionMap) => {
+export const generateCrossSectionalData = (metrics: Metric[], dimensionMap?: DimensionMap, metaOverrides?: Partial<QueryResponseMeta>) => {
   const seed = Math.floor(Math.random() * (10000 - 10 + 1)) + 10
   const rng = new SeededRandom(seed)
 
@@ -163,7 +165,7 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: Dime
       if (index === dimensions.length) {
         // All dimensions have been added to the event, add metrics and push the record
         metrics.forEach(metric => {
-          currentEvent[metric.name] = rng.next(50, 500)
+          currentEvent[metric.name] = rng.next(1000, 50000000)
         })
         data.push({
           version: '1.0',
@@ -223,6 +225,7 @@ export const generateCrossSectionalData = (metrics: Metric[], dimensionMap: Dime
     limit: 50,
     display: displayBlob,
     granularity_ms: end - start,
+    ...(metaOverrides ?? {}),
   }
 
   return {

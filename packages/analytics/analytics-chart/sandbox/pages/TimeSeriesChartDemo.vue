@@ -138,31 +138,6 @@
               filename="asdf.csv"
               @toggle-modal="setModalVisibility"
             />
-
-            <CsvExportButton
-              button-appearance="primary"
-              :data="(exploreResult)"
-              filename-prefix="asdf"
-              text="Primary export csv button"
-            />
-            <CsvExportButton
-              button-appearance="secondary"
-              :data="(exploreResult)"
-              filename-prefix="asdf"
-              text="Secondary export csv button"
-            />
-            <CsvExportButton
-              button-appearance="tertiary"
-              :data="(exploreResult)"
-              filename-prefix="asdf"
-              text="Tertiary export csv button"
-            />
-            <CsvExportButton
-              button-appearance="danger"
-              :data="(exploreResult)"
-              filename-prefix="asdf"
-              text="Danger export csv button"
-            />
           </div>
         </div>
 
@@ -203,7 +178,6 @@
         :allow-csv-export="true"
         :chart-data="(exploreResult)"
         :chart-options="analyticsChartOptions"
-        :go-to-explore="(exploreLink)"
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
@@ -256,7 +230,6 @@ import {
   AnalyticsChart,
   ChartLegendPosition,
   CsvExportModal,
-  CsvExportButton,
 } from '../../src'
 import type { AnalyticsExploreRecord, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType } from '../../src/types'
@@ -275,8 +248,8 @@ enum Metrics {
 }
 
 interface MetricSelection {
-  name: Metrics,
-  unit: string,
+  name: Metrics
+  unit: string
 }
 
 // Inject the app-links from the entry file
@@ -336,7 +309,6 @@ const exportCsv = () => {
   setModalVisibility(true)
 }
 
-const exploreLink: string = 'https://cloud.konghq.tech/us/analytics/explorer'
 provide(INJECT_QUERY_PROVIDER, { evaluateFeatureFlagFn: () => true })
 
 const exploreResultText = ref('')
@@ -361,16 +333,22 @@ const exploreResult = computed<ExploreResultV4>(() => {
     }
   }
 
+  const metaOverrides: Partial<QueryResponseMeta> = {
+    truncated: limitToggle.value,
+    limit: limitToggle.value ? 10 : 50,
+  }
+
   if (multiDimensionToggle.value) {
     return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit },
       {
         statusCode: [...statusCodeDimensionValues.value],
       },
+      metaOverrides,
     )
   } else if (multiMetricToggle.value) {
-    return generateMultipleMetricTimeSeriesData([{ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, ...secondaryMetrics.value])
+    return generateMultipleMetricTimeSeriesData([{ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, ...secondaryMetrics.value], metaOverrides)
   }
-  return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit })
+  return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, null, metaOverrides)
 })
 
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))

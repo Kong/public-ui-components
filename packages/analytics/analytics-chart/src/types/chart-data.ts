@@ -4,13 +4,14 @@ import type { ChartType, SimpleChartType } from './chart-types'
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 
 // Chart.js extended interfaces
-export type Dataset = ChartDataset & { rawDimension: string,
-  rawMetric?: string,
-  total?: number,
-  lineTension?: number,
-  fill?: boolean,
-  isThreshold?: boolean,
-  isSegmentEmpty?: boolean,
+export type Dataset = ChartDataset & {
+  rawDimension: string
+  rawMetric?: string
+  total?: number
+  lineTension?: number
+  fill?: boolean
+  isThreshold?: boolean
+  isSegmentEmpty?: boolean
 }
 
 export interface KChartData extends ChartData {
@@ -20,8 +21,8 @@ export interface KChartData extends ChartData {
 }
 
 export interface AnalyticsDataPoint {
-  x: number,
-  y: number,
+  x: number
+  y: number
 }
 
 /**
@@ -37,9 +38,9 @@ export interface AnalyticsChartColors {
 }
 
 export interface LegendValueEntry {
-  raw: number,
-  formatted: string,
-  isThreshold?: boolean,
+  raw: number
+  formatted: string
+  isThreshold?: boolean
 }
 
 /**
@@ -69,33 +70,33 @@ export interface AnalyticsChartOptions {
    * If stacked, the datasets are stacked on top of each other.
    * Applies to timeseries charts as well as bar charts.
    */
-  stacked?: boolean,
+  stacked?: boolean
   /**
    * Title to display for the metric axis
    * If not provided, show nothing
    */
-  metricAxesTitle?: string,
+  metricAxesTitle?: string
   /**
    * Title to display for the dimension axis
    * If not provided, show nothing
    */
-  dimensionAxesTitle?: string,
+  dimensionAxesTitle?: string
   /**
    * Chart dataset color palette
    */
-  chartDatasetColors?: AnalyticsChartColors | string[],
+  chartDatasetColors?: AnalyticsChartColors | string[]
   /**
    * Sort the datasets as they are displayed in the legend and tooltip
    */
-  chartLegendSortFn?: ChartLegendSortFn,
+  chartLegendSortFn?: ChartLegendSortFn
   /**
    * Sort tooltip entries
    */
-  chartTooltipSortFn?: ChartTooltipSortFn,
+  chartTooltipSortFn?: ChartTooltipSortFn
   /**
    * A static or dynamic metric threshold to be displayed on a timeseries chart
    */
-  threshold?: Record<ExploreAggregations, number>,
+  threshold?: Record<ExploreAggregations, number>
 }
 
 /**
@@ -116,19 +117,23 @@ export interface SimpleChartOptions {
   /**
    * Chart dataset color palette
    */
-  chartDatasetColors?: AnalyticsChartColors | string[],
+  chartDatasetColors?: AnalyticsChartColors | string[]
   /**
    * Determines how much detail about the metric (eg: value, info text, etc) is to be shown in the center
    */
-  metricDisplay?: SimpleChartMetricDisplay,
+  metricDisplay?: SimpleChartMetricDisplay
   /**
    * Determines whether the dataset order will be reversed
    */
-  reverseDataset?: boolean,
+  reverseDataset?: boolean
   /**
    * Determines which dataset value will be display as large text
    */
-  numerator?: number,
+  numerator?: number
+  /**
+   * Determines number of decimal points to display in SingleValue chart
+   */
+  decimalPoints?: number
 }
 
 export interface LegendValues {
@@ -143,8 +148,8 @@ export interface DonutChartData {
 }
 
 export interface DatasetLabel {
-  name: string,
-  id: string,
+  name: string
+  id: string
 }
 
 export interface TopNTableRecord {

@@ -109,15 +109,15 @@ import { FileEmptyIcon } from '@kong/icons'
 
 
 const emit = defineEmits<{
-  (e: 'child-change', data: TreeListChildChangeEvent): void,
-  (e: 'click:learn-more'): void,
-  (e: 'delete'): void,
-  (e: 'document-selection', data: TreeListItem): void,
-  (e: 'modal-closed'): void,
-  (e: 'parent-change', data: TreeListChangeEvent): void,
-  (e: 'save', formData: FormData, selectedFile: any): void,
-  (e: 'save-markdown', content: string): void,
-  (e: 'toggle-published', data: boolean): void,
+  (e: 'child-change', data: TreeListChildChangeEvent): void
+  (e: 'click:learn-more'): void
+  (e: 'delete'): void
+  (e: 'document-selection', data: TreeListItem): void
+  (e: 'modal-closed'): void
+  (e: 'parent-change', data: TreeListChangeEvent): void
+  (e: 'save', formData: FormData, selectedFile: any): void
+  (e: 'save-markdown', content: string): void
+  (e: 'toggle-published', data: boolean): void
 }>()
 
 const displayModal = ref<boolean>(false)

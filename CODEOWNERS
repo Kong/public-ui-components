@@ -34,6 +34,7 @@
 /packages/core/forms/ @Kong/team-km @Kong/team-core-ui @LukeSwierlik @QueaT-kong
 /packages/core/documentation/ @Kong/team-core-ui @Kong/team-konnectx-platform-fe @Kong/team-devx
 /packages/core/tracing/ @Kong/team-km @Kong/team-core-ui
+/packages/core/entities-config-editor/ @Kong/team-km @Kong/team-core-ui
 
 # Portal packages
 /packages/portal/document-viewer/ @Kong/team-devx @Kong/team-core-ui

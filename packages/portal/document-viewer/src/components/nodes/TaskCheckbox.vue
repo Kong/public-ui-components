@@ -10,7 +10,7 @@
 import { ref } from 'vue'
 
 type TaskCheckboxProps = {
-  checked: boolean;
+  checked: boolean
 }
 
 const props = defineProps<TaskCheckboxProps>()

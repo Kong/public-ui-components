@@ -17,9 +17,9 @@ import type { CsvData } from '../types'
 import VueJsonCsv from './vue-json-csv/VueJsonCsv.vue'
 
 const props = defineProps<{
-  rows: CsvData,
-  headers: Record<string, string>,
-  filename: string,
+  rows: CsvData
+  headers: Record<string, string>
+  filename: string
 }>()
 
 const fields = computed(() => Object.keys(props.headers))

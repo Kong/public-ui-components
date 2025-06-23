@@ -9,7 +9,7 @@
 <script setup lang="ts">
 
 defineProps<{
-  entityLinkData: { label?: string },
+  entityLinkData: { label?: string }
 }>()
 
 </script>

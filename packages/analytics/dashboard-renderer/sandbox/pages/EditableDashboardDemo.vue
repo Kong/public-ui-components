@@ -14,18 +14,24 @@
           refresh
         </KButton>
         <KButton
+          :disabled="!editableSwitch"
           size="small"
           @click="addTile"
         >
           Add tile
         </KButton>
+        <KInputSwitch
+          v-model="editableSwitch"
+          label="Editable"
+          size="small"
+        />
       </div>
       <DashboardRenderer
         ref="dashboardRendererRef"
-        :config="dashboardConfig"
+        v-model="dashboardConfig"
         :context="context"
         @edit-tile="onEditTile"
-        @update-tiles="onUpdateTiles"
+        @zoom-time-range="handleZoom"
       >
         <template #slot-1>
           <div class="slot-container">
@@ -47,8 +53,9 @@
 <script setup lang="ts">
 import type { DashboardRendererContext, GridTile } from '../../src'
 import { DashboardRenderer } from '../../src'
-import { inject, ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import type {
+  AbsoluteTimeRangeV4,
   DashboardConfig,
   DashboardTileType,
   ExploreAggregations,
@@ -58,20 +65,18 @@ import type {
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
+import { watchDebounced } from '@vueuse/core'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
+const editableSwitch = ref(true)
 
-const context: DashboardRendererContext = {
+const context = computed<DashboardRendererContext>(() => ({
   filters: [],
   refreshInterval: 0,
-  editable: true,
-}
+  editable: editableSwitch.value,
+}))
 
 const dashboardConfig = ref <DashboardConfig>({
-  gridSize: {
-    cols: 6,
-    rows: 7,
-  },
   tileHeight: 167,
   tiles: [
     {
@@ -150,7 +155,7 @@ const dashboardConfig = ref <DashboardConfig>({
       layout: {
         position: {
           col: 0,
-          row: 3,
+          row: 2,
         },
         size: {
           cols: 3,
@@ -164,7 +169,7 @@ const dashboardConfig = ref <DashboardConfig>({
 const onEditTile = (tile: GridTile<TileDefinition>) => {
   console.log('@edit-tile', tile)
 
-  const chartTypeToggleMap = {
+  const chartTypeToggleMap: Record<DashboardTileType, DashboardTileType> = {
     timeseries_line: 'timeseries_bar',
     timeseries_bar: 'timeseries_line',
     horizontal_bar: 'vertical_bar',
@@ -173,6 +178,7 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
     golden_signals: 'golden_signals',
     slottable: 'slottable',
     top_n: 'top_n',
+    donut: 'donut',
   }
 
   dashboardConfig.value.tiles = dashboardConfig.value.tiles.map(t => {
@@ -238,8 +244,12 @@ const addTile = () => {
   })
 }
 
-const onUpdateTiles = (tiles: TileConfig[]) => {
-  console.log('@update-tiles', tiles)
-  dashboardConfig.value.tiles = tiles
+watchDebounced(() => dashboardConfig.value.tiles, (newValue) => {
+  console.log('update tiles', newValue)
+}, { deep: true, debounce: 300 })
+
+const handleZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
+  console.log('zoom-time-range', newTimeRange)
 }
+
 </script>

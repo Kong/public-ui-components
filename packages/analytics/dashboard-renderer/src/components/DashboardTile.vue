@@ -5,7 +5,7 @@
     :data-testid="`tile-${tileId}`"
   >
     <div
-      v-if="hasKebabMenuAccess && definition.chart.type !== 'slottable'"
+      v-if="definition.chart.type !== 'slottable'"
       class="tile-header"
     >
       <KTooltip
@@ -56,7 +56,7 @@
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLink }"
             />
             <KDropdownItem
-              v-if="'allowCsvExport' in definition.chart && definition.chart.allowCsvExport"
+              v-if="!('allowCsvExport' in definition.chart) || definition.chart.allowCsvExport"
               class="chart-export-button"
               :data-testid="`chart-csv-export-${tileId}`"
               @click="exportCsv()"
@@ -70,10 +70,17 @@
             </KDropdownItem>
             <KDropdownItem
               v-if="context.editable"
+              :data-testid="`duplicate-tile-${tileId}`"
+              @click="duplicateTile"
+            >
+              {{ i18n.t('renderer.duplicateTile') }}
+            </KDropdownItem>
+            <KDropdownItem
+              v-if="context.editable"
               :data-testid="`remove-tile-${tileId}`"
               @click="removeTile"
             >
-              {{ i18n.t('renderer.remove') }}
+              <span class="delete-option">{{ i18n.t('renderer.delete') }}</span>
             </KDropdownItem>
           </template>
         </KDropdown>
@@ -102,6 +109,7 @@
         v-if="componentData"
         v-bind="componentData.rendererProps"
         @chart-data="onChartData"
+        @zoom-time-range="emit('zoom-time-range', $event)"
       />
     </div>
   </div>
@@ -109,7 +117,7 @@
 <script setup lang="ts">
 import type { DashboardRendererContextInternal } from '../types'
 import { type DashboardTileType, formatTime, type TileDefinition, TimePeriods } from '@kong-ui-public/analytics-utilities'
-import { type Component, computed, inject, nextTick, ref, watch } from 'vue'
+import { type Component, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -122,7 +130,8 @@ import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon } from '@kong/icons'
-import { msToGranularity, type AiExploreAggregations, type AiExploreQuery, type AnalyticsBridge, type ExploreAggregations, type ExploreQuery, type ExploreResultV4, type QueryableAiExploreDimensions, type QueryableExploreDimensions, type TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import { msToGranularity } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
@@ -130,30 +139,35 @@ import DonutChartRenderer from './DonutChartRenderer.vue'
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
 const props = withDefaults(defineProps<{
-  definition: TileDefinition,
-  context: DashboardRendererContextInternal,
-  height?: number,
-  queryReady: boolean,
-  refreshCounter: number,
-  tileId: string | number,
+  definition: TileDefinition
+  context: DashboardRendererContextInternal
+  height?: number
+  queryReady: boolean
+  refreshCounter: number
+  tileId: string | number
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
 })
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: TileDefinition): void
+  (e: 'duplicate-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
+  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
-const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
 const { i18n } = composables.useI18n()
-const hasKebabMenuAccess = evaluateFeatureFlag('ma-3043-analytics-chart-kebab-menu', false)
-
 const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
+const exploreBaseUrl = ref('')
+
+onMounted(async () => {
+  // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
+  exploreBaseUrl.value = await queryBridge?.exploreBaseUrl?.() ?? ''
+})
 
 watch(() => props.definition, async () => {
   await nextTick()
@@ -163,41 +177,35 @@ watch(() => props.definition, async () => {
 }, { immediate: true, deep: true })
 
 const exploreLink = computed(() => {
-  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
-  const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
-  // TODO: remove once portal and api are available in Explore
-  const excludedDimensions = new Set(['portal', 'api'])
-
-  if (filters.some(filter =>
-    ('dimension' in filter && excludedDimensions.has(filter.dimension)) ||
-    ('field' in filter && excludedDimensions.has(filter.field))) ||
-    dimensions.some(dim => excludedDimensions.has(dim))
-  ) {
+  // There are various factors that mean we might not need to make a go-to-explore URL.
+  // For example, golden signal tiles don't show a kebab menu and often don't have a query definition.
+  if (!exploreBaseUrl.value || !props.definition.query || !canShowKebabMenu.value) {
     return ''
   }
 
-  if (queryBridge && queryBridge.exploreBaseUrl) {
-    const exploreQuery: ExploreQuery | AiExploreQuery = {
-      filters: filters,
-      metrics: props.definition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
-      dimensions: dimensions,
-      time_range: props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
-      granularity: props.definition.query.granularity || chartDataGranularity.value,
+  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
+  const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
 
-    } as ExploreQuery | AiExploreQuery
-    // Explore only supports advanced or ai
-    const datasource = ['advanced', 'ai'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'advanced'
-    return `${queryBridge.exploreBaseUrl()}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
-  }
+  const exploreQuery: ExploreQuery | AiExploreQuery = {
+    filters: filters,
+    metrics: props.definition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
+    dimensions: dimensions,
+    time_range: props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
+    granularity: props.definition.query.granularity || chartDataGranularity.value,
 
-  return ''
+  } as ExploreQuery | AiExploreQuery
+
+  // Explore only supports advanced or ai
+  const datasource = ['advanced', 'ai'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'advanced'
+
+  return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
 })
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
 const canShowTitleActions = computed((): boolean => (canShowKebabMenu.value && (kebabMenuHasItems.value || props.context.editable)) || !!badgeData.value)
 
-const canShowKebabMenu = computed(() => hasKebabMenuAccess && !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
+const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
 
 const kebabMenuHasItems = computed((): boolean => !!exploreLink.value || ('allowCsvExport' in props.definition.chart && props.definition.chart.allowCsvExport) || props.context.editable)
 
@@ -211,6 +219,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'golden_signals': GoldenSignalsRenderer,
   'top_n': TopNTableRenderer,
   'slottable': undefined,
+  'single_value': SimpleChartRenderer,
 }
 
 const componentData = computed(() => {
@@ -259,6 +268,10 @@ const editTile = () => {
   emit('edit-tile', props.definition)
 }
 
+const duplicateTile = () => {
+  emit('duplicate-tile', props.definition)
+}
+
 const removeTile = () => {
   emit('remove-tile', props.definition)
 }
@@ -293,20 +306,20 @@ const exportCsv = () => {
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60);
+    padding: var(--kui-space-50, $kui-space-50) var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
     right: 0;
     width: 100%;
 
     .title-tooltip {
       margin-right: $kui-space-20;
       overflow: hidden;
+    }
 
-      .title {
-        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
+    .title {
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .tile-actions {
@@ -331,6 +344,10 @@ const exportCsv = () => {
 
       .kebab-action-menu {
         cursor: pointer;
+      }
+
+      .delete-option {
+        color: $kui-color-text-danger;
       }
 
       li.k-dropdown-item {

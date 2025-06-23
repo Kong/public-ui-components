@@ -10,7 +10,7 @@ export interface WaterfallConfig {
   totalDurationNano: number
   /** Zoom level */
   zoom: number
-  viewport: { left: number; right: number }
+  viewport: { left: number, right: number }
   selectedSpan?: SpanNode
 }
 

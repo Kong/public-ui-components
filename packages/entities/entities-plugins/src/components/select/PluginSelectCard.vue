@@ -115,8 +115,8 @@ import composables from '../../composables'
 import PluginIcon from '../PluginIcon.vue'
 
 const emit = defineEmits<{
-  (e: 'plugin-clicked', plugin: PluginType) : void,
-  (e: 'custom-plugin-delete'): void, /** internal use only */
+  (e: 'plugin-clicked', plugin: PluginType) : void
+  (e: 'custom-plugin-delete'): void /** internal use only */
 }>()
 
 const props = defineProps({

@@ -19,6 +19,11 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
    * TODO: remove when support for approle option is added
    */
   hcvAppRoleMethodAvailable?: boolean
+
+  /**
+   * Show/hide cert option and corresponding fields
+   */
+  hcvCertMethodAvailable?: boolean
   /**
    * Show/hide Konnect Config Store option
    */
@@ -27,6 +32,17 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
  * Show/hide AWS StsEndpointUrl field
  */
   awsStsEndpointUrlAvailable?: boolean
+
+  /**
+   * Show/hide Conjur option - mostly for Konnect to pass feature flag value
+   * TODO: remove when support for Conjur is added
+   */
+  conjurVaultProviderAvailable?: boolean
+
+  /**
+   * Show/hide Base64 field (added since 3.11)
+   */
+  base64FieldAvailable?: boolean
 }
 
 /** Konnect Vault form config */
@@ -42,18 +58,22 @@ export enum VaultProviders {
   ENV = 'env',
   AZURE = 'azure',
   KONNECT = 'konnect',
+  CONJUR = 'conjur',
 }
 
 export enum VaultAuthMethods {
   TOKEN = 'token',
   K8S = 'kubernetes',
   APP_ROLE = 'approle',
+  CERT = 'cert',
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface ConfigStoreConfig {}
 
 export interface KongVaultConfig {
   prefix: string
+  base64_decode?: boolean
 }
 
 export interface AWSVaultConfig {
@@ -65,6 +85,7 @@ export interface AWSVaultConfig {
   neg_ttl?: number
   resurrect_ttl?: number
   sts_endpoint_url?: string
+  base64_decode?: boolean
 }
 
 export interface GCPVaultConfig {
@@ -72,6 +93,7 @@ export interface GCPVaultConfig {
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  base64_decode?: boolean
 }
 
 export interface HCVVaultConfig {
@@ -94,6 +116,10 @@ export interface HCVVaultConfig {
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  base64_decode?: boolean
+  cert_auth_role_name?: string
+  cert_auth_cert?: string
+  cert_auth_cert_key?: string
 }
 
 export interface AzureVaultConfig {
@@ -106,6 +132,19 @@ export interface AzureVaultConfig {
   ttl?: number
   neg_ttl?: number
   resurrect_ttl?: number
+  base64_decode?: boolean
+}
+
+export interface ConjurVaultConfig {
+  endpoint_url: string
+  auth_method: 'api_key'
+  login?: string
+  account?: string
+  api_key?: string
+  ttl?: number
+  neg_ttl?: number
+  resurrect_ttl?: number
+  base64_decode?: boolean
 }
 
 // allow for nullish values in payload because Kong Admin API treats null as an empty value
@@ -133,7 +172,7 @@ export interface VaultPayload {
   name: VaultProviders
   prefix: string
   description: string | null
-  tags: string[],
+  tags: string[]
   config: ConfigStoreConfig | KongVaultConfig | GCPVaultConfig | HCVVaultConfigPayload | AzureVaultConfigPayload | AWSVaultConfigPayload
 }
 

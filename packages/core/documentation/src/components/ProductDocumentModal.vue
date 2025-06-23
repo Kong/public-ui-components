@@ -193,10 +193,10 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'edit', formData: FormData, selectedFile: any): void,
-  (e: 'cancel'): void,
-  (e: 'save', formData: FormData, selectedFile: any): void,
-  (e: 'delete'): void,
+  (e: 'edit', formData: FormData, selectedFile: any): void
+  (e: 'cancel'): void
+  (e: 'save', formData: FormData, selectedFile: any): void
+  (e: 'delete'): void
 }>()
 
 const { i18n } = composables.useI18n()
@@ -307,10 +307,10 @@ const handleClickSave = (): void => {
     newEmptyFile.value = newFileContent
 
     // If creating Empty Document then emit the save event with new empty file
-    emit('save', Object.assign(formData, { fileName: formData.pageName }, { status: status.value }), newEmptyFile)
+    emit('save', Object.assign(formData, { fileName: formData.pageName }, { status: status.value }), newEmptyFile.value)
   } else {
     // Else emit the save event with uploaded file
-    emit('save', Object.assign(formData, { status: status.value }), selectedFile)
+    emit('save', Object.assign(formData, { status: status.value }), selectedFile.value)
   }
 }
 

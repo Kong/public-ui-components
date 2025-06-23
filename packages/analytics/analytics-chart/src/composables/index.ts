@@ -4,12 +4,13 @@ import useChartJSCommon from './useChartJSCommon'
 import useChartLegendValues from './useChartLegendValues'
 import useChartSelectedRange from './useChartSelectedRange'
 import useDonutChartOptions from './useDonutChartOptions'
-import useLinechartOptions from './useLineChartOptions'
+import useLineChartOptions from './useLineChartOptions'
 import useExploreResultToDatasets from './useExploreResultToDatasets'
 import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 import useReportChartDataForSynthetics from './useReportChartDataForSynthetics'
 import useTranslatedUnits from './useTranslatedUnits'
 import useEvaluateFeatureFlag from './useEvauluateFeatureFlag'
+import useTooltipAbsolutePosition from './useTooltipAbsolutePosition'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -20,9 +21,10 @@ export default {
   useExploreResultToDatasets,
   useExploreResultToTimeDataset,
   useDonutChartOptions,
-  useLinechartOptions,
+  useLineChartOptions,
   useI18n,
   useReportChartDataForSynthetics,
   useTranslatedUnits,
   useEvaluateFeatureFlag,
+  useTooltipAbsolutePosition,
 }
