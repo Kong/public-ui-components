@@ -8,6 +8,31 @@
         v-bind="formProps"
         tag="div"
       >
+        <KAlert class="examples">
+          <div class="examples-content">
+            {{ t('plugins.free-form.datakit.description_example') }}
+
+            <KButton
+              appearance="secondary"
+              size="small"
+              @click="setExampleCode('authenticate')"
+            >
+              Authenticate Kong Gateway to a third-party service
+            </KButton>
+            <KButton
+              appearance="secondary"
+              size="small"
+              @click="setExampleCode('combine')"
+            >
+              Combine two APIs into one response
+            </KButton>
+          </div>
+
+          <template #icon>
+            <SparklesIcon />
+          </template>
+        </KAlert>
+
         <div
           ref="editor-root"
           class="editor"
@@ -17,7 +42,7 @@
 
     <template #plugin-config-description>
       <!-- eslint-disable-next-line vue/no-v-html -->
-      <span v-html="t('plugins.form.sections.plugin_config.description_yaml')" />
+      <span v-html="t('plugins.free-form.datakit.description')" />
     </template>
   </StandardLayout>
 </template>
@@ -32,44 +57,87 @@ import StandardLayout from '../shared/layout/StandardLayout.vue'
 import Form from '../shared/Form.vue'
 import type { Props } from '../shared/layout/StandardLayout.vue'
 import { createI18n } from '@kong-ui-public/i18n'
+import { KAlert } from '@kong/kongponents'
+import { SparklesIcon } from '@kong/icons'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const props = defineProps<Props<any>>()
 
 const editorRoot = useTemplateRef('editor-root')
-const editor = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
+const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const LINT_SOURCE = 'YAML Syntax'
 
-const CODE_EXAMPLE = `# Example YAML configuration
+const CODE_EXAMPLES = {
+  // FIXME: Replace the `authenticate` example when it's ready
+  authenticate:
+`debug: true
+nodes:
+- name: AUTHENTICATE
+  type: call
+  url: https://example.com/authenticate
+- name: EXIT
+  type: exit
+  inputs:
+    body: AUTHENTICATE.body
+  status: 200
+`,
+  combine:
+`debug: true
+nodes:
+- name: API1
+  type: call
+  url: https://example.com/api1
+- name: API2
+  type: call
+  url: https://example.com/api2
+- name: JOIN
+  inputs:
+    api1_content: API1.body
+    api2_content: API2.body
+  jq: |
+    {
+        "api1": .api1_content,
+        "api2": .api2_content,
+    }
+  type: jq
+- name: EXIT
+  type: exit
+  inputs:
+    body: JOIN
+  status: 200
+`,
+}
 
-# debug: true
-# nodes:
-# - name: API1
-#   type: call
-#   url: https://example.com/api1
-# - name: API2
-#   type: call
-#   url: https://example.com/api2
-# - name: JOIN
-#   inputs:
-#     api1_content: API1.body
-#     api2_content: API2.body
-#   jq: |
-#     {
-#         "api1": .api1_content,
-#         "api2": .api2_content,
-#     }
-#   type: jq
-# - name: EXIT
-#   type: exit
-#   inputs:
-#     body: JOIN
-#   status: 200
-`
+function setExampleCode(example: 'authenticate' | 'combine') {
+  if (editorRef.value) {
+    replaceAll(CODE_EXAMPLES[example])
+  }
+}
+
+function replaceAll(newCode: string) {
+  const editor = editorRef.value
+  const model = editor?.getModel()
+  if (!editor || !model) {
+    return
+  }
+
+  if (editor.getValue() !== newCode) {
+    const fullRange = model.getFullModelRange()
+
+    editor.pushUndoStop()
+    editor.executeEdits(
+      'replace-all',
+      [{ range: fullRange, text: newCode }],
+    )
+    editor.pushUndoStop()
+  }
+
+  editor.focus()
+}
 
 onMounted(() => {
-  editor.value = monaco.editor.create(editorRoot.value!, {
+  const editor = monaco.editor.create(editorRoot.value!, {
     language: 'yaml',
     automaticLayout: true,
     minimap: {
@@ -82,20 +150,18 @@ onMounted(() => {
     },
     autoIndent: 'keep',
   })
+  editorRef.value = editor
 
   if (props.isEditing) {
-    editor.value.setValue(yaml.dump(toRaw(props.model.config), {
+    editor.setValue(yaml.dump(toRaw(props.model.config), {
       schema: JSON_SCHEMA,
       noArrayIndent: true,
     }))
-  } else {
-    // If not editing, show an example configuration
-    editor.value.setValue(CODE_EXAMPLE)
   }
 
-  editor.value.onDidChangeModelContent(() => {
-    const model = editor.value!.getModel()
-    const value = editor.value!.getValue() || ''
+  editor.onDidChangeModelContent(() => {
+    const model = editor.getModel()
+    const value = editor.getValue() || ''
     try {
       const config = yaml.load(value, {
         schema: JSON_SCHEMA,
@@ -141,7 +207,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  editor.value?.dispose()
+  editorRef.value?.dispose()
 })
 </script>
 
@@ -150,6 +216,15 @@ onBeforeUnmount(() => {
   .editor {
     height: 684px;
     width: 100%;
+  }
+
+  .examples {
+    margin-bottom: $kui-space-70;
+  }
+
+  .examples-content {
+    display: flex;
+    gap: $kui-space-40;
   }
 }
 </style>

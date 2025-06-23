@@ -653,8 +653,7 @@
         },
         "plugin_config": {
           "title": "Plugin configuration",
-          "description": "Configure parameters for this plugin by using a form or a YAML file.",
-          "description_yaml": "Configure Datakit via YAML below. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block."
+          "description": "Configure parameters for this plugin by using a form or a YAML file."
         }
       }
     },
@@ -662,6 +661,10 @@
       "request-callout": {
         "entity_name": "Request Callout",
         "by_lua_placeholder": "Enter Lua script here..."
+      },
+      "datakit": {
+        "description": "Configure Datakit via YAML below. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
+        "description_example": "Start with a use case:"
       }
     }
   },
