@@ -60,6 +60,9 @@ import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
 
+// TODO: Update the `authenticate` example with real code once it's ready
+import * as examples from './examples'
+
 const { t } = createI18n<typeof english>('en-us', english)
 
 const props = defineProps<Props<any>>()
@@ -68,66 +71,27 @@ const editorRoot = useTemplateRef('editor-root')
 const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const LINT_SOURCE = 'YAML Syntax'
 
-const CODE_EXAMPLES = {
-  // FIXME: Replace the `authenticate` example when it's ready
-  authenticate:
-`debug: true
-nodes:
-- name: AUTHENTICATE
-  type: call
-  url: https://example.com/authenticate
-- name: EXIT
-  type: exit
-  inputs:
-    body: AUTHENTICATE.body
-  status: 200
-`,
-  combine:
-`debug: true
-nodes:
-- name: API1
-  type: call
-  url: https://example.com/api1
-- name: API2
-  type: call
-  url: https://example.com/api2
-- name: JOIN
-  inputs:
-    api1_content: API1.body
-    api2_content: API2.body
-  jq: |
-    {
-        "api1": .api1_content,
-        "api2": .api2_content,
-    }
-  type: jq
-- name: EXIT
-  type: exit
-  inputs:
-    body: JOIN
-  status: 200
-`,
-}
+const EDIT_SOURCE = 'datakit.insert-example'
 
-function setExampleCode(example: 'authenticate' | 'combine') {
-  if (editorRef.value) {
-    replaceAll(CODE_EXAMPLES[example])
-  }
-}
-
-function replaceAll(newCode: string) {
+/**
+ * Sets the example code in the Monaco editor.
+ * We do not use `setValue` directly because it will clear the undo stack,
+ * which prevents the user from undoing changes after inserting an example.
+ */
+function setExampleCode(example: keyof typeof examples) {
   const editor = editorRef.value
   const model = editor?.getModel()
   if (!editor || !model) {
     return
   }
 
+  const newCode = examples[example]
   if (editor.getValue() !== newCode) {
     const fullRange = model.getFullModelRange()
 
     editor.pushUndoStop()
     editor.executeEdits(
-      'replace-all',
+      EDIT_SOURCE,
       [{ range: fullRange, text: newCode }],
     )
     editor.pushUndoStop()

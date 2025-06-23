@@ -1,0 +1,10 @@
+debug: true
+nodes:
+- name: AUTHENTICATE
+  type: call
+  url: https://example.com/authenticate
+- name: EXIT
+  type: exit
+  inputs:
+    body: AUTHENTICATE.body
+  status: 200
