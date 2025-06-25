@@ -17,14 +17,14 @@
               size="small"
               @click="setExampleCode('authenticate')"
             >
-              Authenticate Kong Gateway to a third-party service
+              {{ t('plugins.free-form.datakit.examples.authenticate') }}
             </KButton>
             <KButton
               appearance="secondary"
               size="small"
               @click="setExampleCode('combine')"
             >
-              Combine two APIs into one response
+              {{ t('plugins.free-form.datakit.examples.combine') }}
             </KButton>
           </div>
 
