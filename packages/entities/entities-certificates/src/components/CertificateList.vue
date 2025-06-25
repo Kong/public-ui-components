@@ -23,6 +23,17 @@
           v-model="filterQuery"
           :config="filterConfig"
         />
+        <PermissionsWrapper :auth-function="() => canCreate()">
+          <KButton
+            appearance="primary"
+            data-testid="toolbar-add-certificate"
+            size="medium"
+            :to="config.createRoute"
+          >
+            <AddIcon />
+            {{ t('certificates.list.toolbar_actions.new_certificate') }}
+          </KButton>
+        </PermissionsWrapper>
       </template>
       <!-- Create action -->
       <template #toolbar-button>
@@ -41,18 +52,6 @@
             >
               <BookIcon decorative />
             </KButton>
-            <PermissionsWrapper :auth-function="() => canCreate()">
-              <!-- Hide Create button if table is empty -->
-              <KButton
-                appearance="primary"
-                data-testid="toolbar-add-certificate"
-                :size="useActionOutside ? 'medium' : 'large'"
-                :to="config.createRoute"
-              >
-                <AddIcon />
-                {{ t('certificates.list.toolbar_actions.new_certificate') }}
-              </KButton>
-            </PermissionsWrapper>
           </div>
         </Teleport>
       </template>

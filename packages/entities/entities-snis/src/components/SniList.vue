@@ -24,6 +24,17 @@
           v-model="filterQuery"
           :config="filterConfig"
         />
+        <PermissionsWrapper :auth-function="() => canCreate()">
+          <KButton
+            appearance="primary"
+            data-testid="toolbar-add-sni"
+            size="medium"
+            :to="config.createRoute"
+          >
+            <AddIcon />
+            {{ t('actions.create') }}
+          </KButton>
+        </PermissionsWrapper>
       </template>
       <!-- Create action -->
       <template #toolbar-button>
@@ -42,18 +53,6 @@
             >
               <BookIcon decorative />
             </KButton>
-            <PermissionsWrapper :auth-function="() => canCreate()">
-              <!-- Hide Create button if table is empty -->
-              <KButton
-                appearance="primary"
-                data-testid="toolbar-add-sni"
-                :size="useActionOutside ? 'medium' : 'large'"
-                :to="config.createRoute"
-              >
-                <AddIcon />
-                {{ t('snis.list.toolbar_actions.new') }}
-              </KButton>
-            </PermissionsWrapper>
           </div>
         </Teleport>
       </template>
