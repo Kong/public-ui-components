@@ -1,0 +1,23 @@
+debug: true
+nodes:
+- name: API1
+  type: call
+  url: https://example.com/api1
+- name: API2
+  type: call
+  url: https://example.com/api2
+- name: JOIN
+  inputs:
+    api1_content: API1.body
+    api2_content: API2.body
+  jq: |
+    {
+        "api1": .api1_content,
+        "api2": .api2_content,
+    }
+  type: jq
+- name: EXIT
+  type: exit
+  inputs:
+    body: JOIN
+  status: 200

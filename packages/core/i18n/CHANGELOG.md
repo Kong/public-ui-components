@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.3.0...@kong-ui-public/i18n@2.3.1) (2025-06-26)
+
+**Note:** Version bump only for package @kong-ui-public/i18n
+
+
+
+
+
+# [2.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.2.10...@kong-ui-public/i18n@2.3.0) (2025-03-26)
+
+
+### Features
+
+* **entities-routes:** split route-rule-form from route-form ([#2037](https://github.com/Kong/public-ui-components/issues/2037)) ([def1957](https://github.com/Kong/public-ui-components/commit/def1957adb1ef5567883889c08a524aad92127b9))
+
+
+
+
+
 ## [2.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/i18n@2.2.9...@kong-ui-public/i18n@2.2.10) (2024-11-27)
 
 

@@ -1,6 +1,6 @@
 import type { Chart, ChartData, DefaultDataPoint } from 'chart.js'
 import { toFont } from 'chart.js/helpers'
-import prettyBytes from 'pretty-bytes'
+import { formatBytes } from '../utils'
 import { numberFormatter } from './constants'
 
 export type BarChartData = ChartData<'bar', DefaultDataPoint<'bar'>, string>
@@ -8,8 +8,9 @@ export type BarChartData = ChartData<'bar', DefaultDataPoint<'bar'>, string>
 const labelHeightCache = new Map()
 
 export const formatNumber = (value: number, unit: string) => {
+  // TODO use `formatUnit` for all number formatting
   if (unit === 'bytes') {
-    return prettyBytes(value)
+    return formatBytes(value)
   } else if (unit === 'count/minute') {
     return value.toFixed(2)
   } else {

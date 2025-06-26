@@ -63,29 +63,8 @@
         </Teleport>
       </template>
 
-      <!-- TODO: remove this slot when empty states M2 is cleaned up -->
       <template
-        v-if="!hasRecords && isLegacyLHButton"
-        #outside-actions
-      >
-        <Teleport
-          :disabled="!useActionOutside"
-          to="#kong-ui-app-page-header-action-button"
-        >
-          <KButton
-            appearance="secondary"
-            class="open-learning-hub"
-            data-testid="consumers-learn-more-button"
-            icon
-            @click="$emit('click:learn-more')"
-          >
-            <BookIcon decorative />
-          </KButton>
-        </Teleport>
-      </template>
-
-      <template
-        v-if="!filterQuery && enableV2EmptyStates && config.app === 'konnect'"
+        v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
         <EntityEmptyState
@@ -272,13 +251,13 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import AddConsumerModal from './AddConsumerModal.vue'
 
 const emit = defineEmits<{
-  (e: 'error', error: AxiosError): void,
-  (e: 'click:learn-more'): void,
-  (e: 'copy:success', payload: CopyEventPayload): void,
-  (e: 'copy:error', payload: CopyEventPayload): void,
-  (e: 'delete:success', consumer: EntityRow): void,
-  (e: 'add:success', consumers: string[]): void,
-  (e: 'remove:success', consumer: EntityRow): void,
+  (e: 'error', error: AxiosError): void
+  (e: 'click:learn-more'): void
+  (e: 'copy:success', payload: CopyEventPayload): void
+  (e: 'copy:error', payload: CopyEventPayload): void
+  (e: 'delete:success', consumer: EntityRow): void
+  (e: 'add:success', consumers: string[]): void
+  (e: 'remove:success', consumer: EntityRow): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -325,14 +304,6 @@ const props = defineProps({
   },
   /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
   useActionOutside: {
-    type: Boolean,
-    default: false,
-  },
-  /**
-   * Enables the new empty state design, this prop can be removed when
-   * the khcp-14756-empty-states-m2 FF is removed.
-   */
-  enableV2EmptyStates: {
     type: Boolean,
     default: false,
   },
@@ -413,7 +384,6 @@ const { hasRecords, handleStateChange } = useTableState(filterQuery)
 // If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
 // If new empty states are not enabled, show the learning hub button (for Konnect)
 const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
-const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
 
 const isConsumerGroupPage = computed<boolean>(() => !!props.config.consumerGroupId)
 const preferencesStorageKey = computed<string>(
@@ -424,7 +394,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value, dataKeyName.value)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl, dataKeyName)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -447,10 +417,10 @@ const errorMessage = ref<TableErrorMessage>(null)
 /**
  * Copy ID action
  */
-const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void => {
+const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const id = row.id as string
 
-  if (!copyToClipboard(id)) {
+  if (!await copyToClipboard(id)) {
     // Emit the error event for the host app
     emit('copy:error', {
       entity: row,
@@ -472,7 +442,7 @@ const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void
 /**
  * Copy JSON action
  */
-const copyJson = (row: EntityRow, copyToClipboard: (val: string) => boolean): void => {
+const copyJson = (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): void => {
   const val = JSON.stringify(row)
 
   if (!copyToClipboard(val)) {
@@ -586,7 +556,7 @@ const hideAddConsumerModal = (): void => {
   isAddModalVisible.value = false
 }
 
-const handleAddSuccess = (data: Array<string>, partialSuccess?: boolean) => {
+const handleAddSuccess = (data: string[], partialSuccess?: boolean) => {
   // if only partially successful leave the modal open
   if (!partialSuccess) {
     hideAddConsumerModal()

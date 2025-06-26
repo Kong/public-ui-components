@@ -328,12 +328,12 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 const pluginMetaData = composables.usePluginMetaData()
 
 const emit = defineEmits<{
-  (e: 'error', error: AxiosError): void,
-  (e: 'click:learn-more'): void,
-  (e: 'copy:success', payload: CopyEventPayload): void,
-  (e: 'copy:error', payload: CopyEventPayload): void,
-  (e: 'delete:success', plugin: EntityRow): void,
-  (e: 'toggle-enabled', isEnabled: boolean, plugin: EntityRow): void,
+  (e: 'error', error: AxiosError): void
+  (e: 'click:learn-more'): void
+  (e: 'copy:success', payload: CopyEventPayload): void
+  (e: 'copy:error', payload: CopyEventPayload): void
+  (e: 'delete:success', plugin: EntityRow): void
+  (e: 'toggle-enabled', isEnabled: boolean, plugin: EntityRow): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -519,7 +519,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
 
 const clearFilter = (): void => {
   filterQuery.value = ''
@@ -539,8 +539,8 @@ const errorMessage = ref<TableErrorMessage>(null)
  * Applied To ...
  */
 // transform the entity row to "Applied To" badges
-const aggregateAppliedTo = (row: EntityRow): ({ type: ViewRouteType | null, badgeText: string })[] => {
-  const badges = [] as ({ type: ViewRouteType | null, badgeText: string })[]
+const aggregateAppliedTo = (row: EntityRow): Array<{ type: ViewRouteType | null, badgeText: string }> => {
+  const badges = [] as Array<{ type: ViewRouteType | null, badgeText: string }>
   // compatible with different data structures in the List and Filter APIs, see KM-590 and KM-100
   if (row.route?.id || row.route_id) {
     badges.push({ type: 'route', badgeText: t('plugins.list.table_headers.applied_to_badges.route') })
@@ -666,10 +666,10 @@ const confirmSwitchEnablement = async () => {
 /**
  * Copy ID action
  */
-const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void => {
+const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const id = row.id as string
 
-  if (!copyToClipboard(id)) {
+  if (!await copyToClipboard(id)) {
     // Emit the error event for the host app
     emit('copy:error', {
       entity: row,
@@ -691,10 +691,10 @@ const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void
 /**
  * Copy JSON action
  */
-const copyJson = (row: EntityRow, copyToClipboard: (val: string) => boolean): void => {
+const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void>=> {
   const val = JSON.stringify(row)
 
-  if (!copyToClipboard(val)) {
+  if (!await copyToClipboard(val)) {
     // Emit the error event for the host app
     emit('copy:error', {
       entity: row,

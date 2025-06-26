@@ -6,6 +6,46 @@
   margin-bottom: $kui-space-60;
 }
 
+@mixin routing-rules() {
+  .route-form {
+    &-routing-rules-title-container {
+      display: flex;
+      justify-content: center;
+
+      .protocol-title {
+        font-size: $kui_font_size_40;
+
+        &:not(:first-child) {
+          &::before {
+            content: '/';
+            margin-right: $kui_space_40;
+            padding-left: $kui_space_40;
+          }
+        }
+      }
+
+      .routing-rules-title {
+        font-size: $kui_font_size_40;
+        margin-left: $kui_space_40;
+      }
+    }
+
+    &-advanced-fields-container {
+      display: flex;
+      flex-direction: column;
+      margin-top: $kui_space_80;
+    }
+
+    &-fields-container {
+      >* {
+        &:not(:first-child) {
+          margin-top: $kui_space_80;
+        }
+      }
+    }
+  }
+}
+
 @mixin routing-rule() {
   &-container {
     &:not(:first-of-type) {
@@ -19,7 +59,7 @@
 
   &-input {
     align-items: center;
-    column-gap: $kui-space-100;
+    column-gap: $kui-space-60;
     display: flex;
 
     .k-input {
@@ -51,64 +91,8 @@
       }
     }
   }
-}
 
-@mixin routing-rules-selector() {
-  &-container {
-    margin-top: $kui-space-80;
-
-    hr {
-      @include hr;
-    }
-  }
-
-  &-options {
-    align-items: center;
-    background-color: $kui-color-background-primary-weakest;
-    border: 1px solid $kui-color-border-primary-weak;
-    border-radius: 30px;
-    display: flex;
-    padding: 0 6px;
-    width: fit-content;
-
-    ul {
-      display: flex;
-      margin: 0;
-      padding: 0;
-
-      li {
-        display: inline-flex;
-        list-style: none;
-      }
-    }
-
-    .option {
-      border: 1px solid transparent;
-      border-radius: 19px;
-      box-shadow: none;
-      color: $kui-color-text-primary-strong;
-      cursor: pointer;
-      font-size: $kui-font-size-40;
-      font-weight: 600;
-      margin: 0;
-      margin-right: $kui-space-20;
-      padding: $kui-space-20 10px;
-      transition: box-shadow 0.2s ease;
-
-      &.is-selected {
-        color: $kui-color-text-primary-weak;
-        pointer-events: none;
-        text-decoration: line-through;
-      }
-
-      &:hover {
-        box-shadow: 0px 0px 12px -2px rgba(0, 0, 0, 0.3);
-        transition: box-shadow 0.2s ease;
-
-        &.is-selected {
-          box-shadow: none;
-        }
-      }
-    }
+  &-add-item-button {
+    margin-top: $kui-space-60;
   }
 }

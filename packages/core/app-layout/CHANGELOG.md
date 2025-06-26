@@ -3,6 +3,117 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.7...@kong-ui-public/app-layout@4.4.8) (2025-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2189](https://github.com/Kong/public-ui-components/issues/2189)) ([23e5544](https://github.com/Kong/public-ui-components/commit/23e554427eb53279cad3368770661f86bea2c8d8))
+
+
+
+
+
+## [4.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.6...@kong-ui-public/app-layout@4.4.7) (2025-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.5...@kong-ui-public/app-layout@4.4.6) (2025-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.4...@kong-ui-public/app-layout@4.4.5) (2025-05-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.26.0 ([#2107](https://github.com/Kong/public-ui-components/issues/2107)) ([6ba84d3](https://github.com/Kong/public-ui-components/commit/6ba84d3eb5df7fa0880876455f78a75fbc69960a))
+
+
+
+
+
+## [4.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.3...@kong-ui-public/app-layout@4.4.4) (2025-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.2...@kong-ui-public/app-layout@4.4.3) (2025-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.1...@kong-ui-public/app-layout@4.4.2) (2025-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.0...@kong-ui-public/app-layout@4.4.1) (2025-05-01)
+
+
+### Bug Fixes
+
+* **deps:** remove recursive kongponents dependency ([#2100](https://github.com/Kong/public-ui-components/issues/2100)) ([3006571](https://github.com/Kong/public-ui-components/commit/3006571fc6e0c522a622bfed81ca616b5e072555))
+
+
+
+
+
+# [4.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.17...@kong-ui-public/app-layout@4.4.0) (2025-04-25)
+
+
+### Features
+
+* **app-layout:** expose slot `title` for `<AppAboutSection />` ([#2093](https://github.com/Kong/public-ui-components/issues/2093)) ([e1ca524](https://github.com/Kong/public-ui-components/commit/e1ca524779af127e8d8fc48251f6767e23bdd236))
+
+
+
+
+
+## [4.3.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.16...@kong-ui-public/app-layout@4.3.17) (2025-04-24)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#2088](https://github.com/Kong/public-ui-components/issues/2088)) ([81354c5](https://github.com/Kong/public-ui-components/commit/81354c5dc545cd9cc7fc830e5e34448c4f1ba7ae))
+
+
+
+
+
+## [4.3.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.15...@kong-ui-public/app-layout@4.3.16) (2025-03-25)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.3.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.14...@kong-ui-public/app-layout@4.3.15) (2025-03-25)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
 ## [4.3.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.3.13...@kong-ui-public/app-layout@4.3.14) (2025-03-20)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout

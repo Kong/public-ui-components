@@ -121,8 +121,8 @@ defineOptions({
 })
 
 const emit = defineEmits<{
-  (e: 'error', error: AxiosError): void,
-  (e: 'delete:success', route: SecretEntityRow): void,
+  (e: 'error', error: AxiosError): void
+  (e: 'delete:success', route: SecretEntityRow): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -204,7 +204,7 @@ const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher({ ...props.config, cacheIdentifier: props.cacheIdentifier }, fetcherBaseUrl.value)
+} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
 
 const clearFilter = (): void => {
   filterQuery.value = ''

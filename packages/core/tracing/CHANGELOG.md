@@ -3,6 +3,230 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.12.2...@kong-ui-public/tracing@0.12.3) (2025-06-26)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.12.1...@kong-ui-public/tracing@0.12.2) (2025-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2189](https://github.com/Kong/public-ui-components/issues/2189)) ([23e5544](https://github.com/Kong/public-ui-components/commit/23e554427eb53279cad3368770661f86bea2c8d8))
+
+
+
+
+
+## [0.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.12.0...@kong-ui-public/tracing@0.12.1) (2025-06-16)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+# [0.12.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.11.0...@kong-ui-public/tracing@0.12.0) (2025-06-13)
+
+
+### Features
+
+* **tracing:** add prop for view span logs button [KHCP-16669] ([#2180](https://github.com/Kong/public-ui-components/issues/2180)) ([7c28043](https://github.com/Kong/public-ui-components/commit/7c2804367c1aa868408f0b44c8bf9b5f57928583))
+
+
+
+
+
+# [0.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.13...@kong-ui-public/tracing@0.11.0) (2025-06-09)
+
+
+### Features
+
+* **tracing:** add view span logs button [KHCP-16362] ([#2166](https://github.com/Kong/public-ui-components/issues/2166)) ([59d67e1](https://github.com/Kong/public-ui-components/commit/59d67e1449e615fe661442cdd187dec2cbfa59dd))
+
+
+
+
+
+## [0.10.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.12...@kong-ui-public/tracing@0.10.13) (2025-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.10.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.11...@kong-ui-public/tracing@0.10.12) (2025-05-21)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.10.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.10...@kong-ui-public/tracing@0.10.11) (2025-05-19)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.10.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.9...@kong-ui-public/tracing@0.10.10) (2025-05-14)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.10.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.8...@kong-ui-public/tracing@0.10.9) (2025-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.10.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.7...@kong-ui-public/tracing@0.10.8) (2025-05-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.26.0 ([#2107](https://github.com/Kong/public-ui-components/issues/2107)) ([6ba84d3](https://github.com/Kong/public-ui-components/commit/6ba84d3eb5df7fa0880876455f78a75fbc69960a))
+
+
+
+
+
+## [0.10.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.6...@kong-ui-public/tracing@0.10.7) (2025-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.10.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.5...@kong-ui-public/tracing@0.10.6) (2025-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.10.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.4...@kong-ui-public/tracing@0.10.5) (2025-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.3...@kong-ui-public/tracing@0.10.4) (2025-05-01)
+
+
+### Bug Fixes
+
+* **deps:** remove recursive kongponents dependency ([#2100](https://github.com/Kong/public-ui-components/issues/2100)) ([3006571](https://github.com/Kong/public-ui-components/commit/3006571fc6e0c522a622bfed81ca616b5e072555))
+
+
+
+
+
+## [0.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.2...@kong-ui-public/tracing@0.10.3) (2025-04-29)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.10.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.1...@kong-ui-public/tracing@0.10.2) (2025-04-24)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#2088](https://github.com/Kong/public-ui-components/issues/2088)) ([81354c5](https://github.com/Kong/public-ui-components/commit/81354c5dc545cd9cc7fc830e5e34448c4f1ba7ae))
+
+
+
+
+
+## [0.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.10.0...@kong-ui-public/tracing@0.10.1) (2025-04-04)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+# [0.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.18...@kong-ui-public/tracing@0.10.0) (2025-04-01)
+
+
+### Features
+
+* **tracing:** show a Kong frame in lifecycle ([#2067](https://github.com/Kong/public-ui-components/issues/2067)) ([0d2e26a](https://github.com/Kong/public-ui-components/commit/0d2e26a68b72d15a7a82befedbdaa334087cacbe))
+
+
+
+
+
+## [0.9.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.17...@kong-ui-public/tracing@0.9.18) (2025-03-31)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.9.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.16...@kong-ui-public/tracing@0.9.17) (2025-03-26)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.9.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.15...@kong-ui-public/tracing@0.9.16) (2025-03-25)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.9.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.14...@kong-ui-public/tracing@0.9.15) (2025-03-25)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
+## [0.9.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.13...@kong-ui-public/tracing@0.9.14) (2025-03-25)
+
+
+### Bug Fixes
+
+* **tracing:** incorrect type used in the legacy span sampler attribute ([#2053](https://github.com/Kong/public-ui-components/issues/2053)) ([826a637](https://github.com/Kong/public-ui-components/commit/826a637cfae50f6f9b65842c8b7bea1ef05cb9ef))
+
+
+
+
+
+## [0.9.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.12...@kong-ui-public/tracing@0.9.13) (2025-03-25)
+
+**Note:** Version bump only for package @kong-ui-public/tracing
+
+
+
+
+
 ## [0.9.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.9.11...@kong-ui-public/tracing@0.9.12) (2025-03-20)
 
 **Note:** Version bump only for package @kong-ui-public/tracing

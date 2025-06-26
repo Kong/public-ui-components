@@ -246,8 +246,33 @@ describe('<ConfigCardItem />', () => {
       }
     })
 
+    it('renders JSON text field correctly', () => {
+      const obj: Record<string, string> = {
+        name: 'TK Meowstersmith',
+        species: 'Awesome cat',
+        color: 'All black',
+        awesome: 'true',
+      }
+      const item: RecordItem = {
+        type: ConfigurationSchemaType.Text,
+        key: 'cat_data',
+        label: 'Cat Data',
+        value: obj,
+      }
+
+      cy.mount(ConfigCardItem, {
+        props: {
+          item,
+        },
+      })
+
+      cy.get('.config-card-details-row').should('be.visible')
+      cy.getTestId(`${item.key}-json-code`).should('be.visible')
+      cy.getTestId(`${item.key}-json-code`).should('contain.text', JSON.stringify(obj, null, 2))
+    })
+
     it('renders a JSON Array field correctly', () => {
-      const obj: Record<string, string>[] = [{
+      const obj: Array<Record<string, string>> = [{
         name: 'TK Meowstersmith',
         species: 'Awesome cat',
         color: 'All black',
@@ -346,6 +371,9 @@ describe('<ConfigCardItem />', () => {
           label: 'ID',
           value: val,
         }
+        cy.window().then((win) => {
+          cy.stub(win.navigator.clipboard, 'writeText').resolves()
+        })
 
         cy.mount(ConfigCardItem, {
           props: {
@@ -358,7 +386,9 @@ describe('<ConfigCardItem />', () => {
         cy.get('.text-icon-wrapper [data-testid="copy-to-clipboard"]').should('exist')
         cy.get('.text-icon-wrapper .k-tooltip').should('exist')
         cy.get('.text-icon-wrapper [data-testid="copy-to-clipboard"]').click()
-        cy.get('.text-icon-wrapper .k-tooltip').should('contain.text', 'Copied!')
+        cy.window().then(() => {
+          cy.get('.text-icon-wrapper .k-tooltip').should('contain.text', 'Copied!')
+        })
       })
 
       it('renders a redacted ID correctly', () => {

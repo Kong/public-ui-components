@@ -34,7 +34,7 @@ export interface BaseVegaLiteChartExpose {
 }
 
 const props = defineProps<{
-  spec: VisualizationSpec,
+  spec: VisualizationSpec
 }>()
 
 const tooltipData = ref<{

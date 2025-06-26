@@ -96,7 +96,7 @@ defineOptions({
 })
 
 const props = defineProps<{
-  instanceList: (Pick<DataPlaneNodeCommon, 'id' | 'hostname'> & { hasDLLCapability?: boolean })[]
+  instanceList: Array<Pick<DataPlaneNodeCommon, 'id' | 'hostname'> & { hasDLLCapability?: boolean }>
   instanceLogLevel: Map<string /* instanceId */, LogLevel>
   requests: {
     scheduler?: AsyncScheduler | AsyncSchedulerOptions | null // default to { maxConcurrentAsyncs: 10 }

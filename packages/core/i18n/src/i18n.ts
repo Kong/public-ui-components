@@ -106,7 +106,7 @@ export const createI18n = <MessageSource extends Record<string, any>>
     return !!intl.messages[translationKey]
   }
 
-  const tm = (translationKey: PathToDotNotation<MessageSource, string>): Array<string> => {
+  const tm = (translationKey: PathToDotNotation<MessageSource, string>): string[] => {
     // @ts-ignore: string is valid key
     return intl.messages[translationKey] || []
   }
@@ -132,3 +132,5 @@ export const createI18n = <MessageSource extends Record<string, any>>
 export default function useI18n<MessageSource extends Record<string, any>>(): IntlShapeEx<MessageSource> {
   return globIntl
 }
+
+export type { IntlMessageFormatOptions }

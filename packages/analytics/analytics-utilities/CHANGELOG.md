@@ -3,6 +3,145 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.7.0...@kong-ui-public/analytics-utilities@9.7.1) (2025-06-26)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+# [9.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.6.0...@kong-ui-public/analytics-utilities@9.7.0) (2025-05-27)
+
+
+### Features
+
+* combine context and global filters ([#2141](https://github.com/Kong/public-ui-components/issues/2141)) ([a3e6510](https://github.com/Kong/public-ui-components/commit/a3e651027fdb184cbb70d0fabb3a27cb7ffd4ba7))
+
+
+
+
+
+# [9.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.5.0...@kong-ui-public/analytics-utilities@9.6.0) (2025-05-27)
+
+
+### Features
+
+* **analytics:** make gridSize optional (and unused) calculate from tiles instead [ma-3916] ([#2135](https://github.com/Kong/public-ui-components/issues/2135)) ([e1b1fdd](https://github.com/Kong/public-ui-components/commit/e1b1fdd06b34ff53a041bea124ad799fdf91b265))
+
+
+
+
+
+# [9.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.4.0...@kong-ui-public/analytics-utilities@9.5.0) (2025-05-22)
+
+
+### Features
+
+* add global filters ([#2140](https://github.com/Kong/public-ui-components/issues/2140)) ([0ddf722](https://github.com/Kong/public-ui-components/commit/0ddf7223ba2067024c4781b6cd53c906f89bf636))
+
+
+
+
+
+# [9.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.4...@kong-ui-public/analytics-utilities@9.4.0) (2025-05-15)
+
+
+### Features
+
+* **analytics-utilities:** remove old style filters ([#2126](https://github.com/Kong/public-ui-components/issues/2126)) ([3b5d756](https://github.com/Kong/public-ui-components/commit/3b5d756a7888241dab6842665587ce734c3dab7b))
+
+
+
+
+
+## [9.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.3...@kong-ui-public/analytics-utilities@9.3.4) (2025-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [9.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.2...@kong-ui-public/analytics-utilities@9.3.3) (2025-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-utilities
+
+
+
+
+
+## [9.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.1...@kong-ui-public/analytics-utilities@9.3.2) (2025-04-24)
+
+
+### Bug Fixes
+
+* show tooltip on warning icon and limit size ma-3830 ma-1889 ([#2091](https://github.com/Kong/public-ui-components/issues/2091)) ([2352527](https://github.com/Kong/public-ui-components/commit/235252752c3e9cd11229a2043fba46e06ff24601))
+
+
+
+
+
+## [9.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.3.0...@kong-ui-public/analytics-utilities@9.3.1) (2025-04-15)
+
+
+### Bug Fixes
+
+* **ai_plugin:** remove the _id portion ([#2081](https://github.com/Kong/public-ui-components/issues/2081)) ([d58439c](https://github.com/Kong/public-ui-components/commit/d58439c2fb75c639623daaeed6a9ec14bdb58e6a))
+
+
+
+
+
+# [9.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.2.0...@kong-ui-public/analytics-utilities@9.3.0) (2025-04-15)
+
+
+### Features
+
+* **ai:** adding realm, status_code/grouped, ai_plugin_id ([#2080](https://github.com/Kong/public-ui-components/issues/2080)) ([eb1c1d0](https://github.com/Kong/public-ui-components/commit/eb1c1d02c6ec6128597e58b0ea0b98c872d3d227))
+
+
+
+
+
+# [9.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.1.0...@kong-ui-public/analytics-utilities@9.2.0) (2025-04-14)
+
+
+### Features
+
+* **realm:** adding in realm into api-requests responses ([#2079](https://github.com/Kong/public-ui-components/issues/2079)) ([ad99d0f](https://github.com/Kong/public-ui-components/commit/ad99d0f6d9b68214b03bf38ff8b18eb8cca0ab69))
+
+
+
+
+
+# [9.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.0.0...@kong-ui-public/analytics-utilities@9.1.0) (2025-04-04)
+
+
+### Features
+
+* **analytics:** add single value simple chart [MA-3730] ([#2064](https://github.com/Kong/public-ui-components/issues/2064)) ([2cc0bf3](https://github.com/Kong/public-ui-components/commit/2cc0bf39d9be17d25b453dc5ae37feffb81bf99e))
+
+
+
+
+
+# [9.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@8.1.1...@kong-ui-public/analytics-utilities@9.0.0) (2025-03-27)
+
+
+### Features
+
+* **analytics:** make explore URL determination async [MA-3590] ([#2050](https://github.com/Kong/public-ui-components/issues/2050)) ([06b6e41](https://github.com/Kong/public-ui-components/commit/06b6e412f09ff4c31bc45754322351281c36a306))
+
+
+### BREAKING CHANGES
+
+* **analytics:** change signature of analytics bridge
+
+
+
+
+
 ## [8.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@8.1.0...@kong-ui-public/analytics-utilities@8.1.1) (2025-03-20)
 
 

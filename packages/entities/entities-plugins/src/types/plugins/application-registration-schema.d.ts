@@ -11,7 +11,7 @@ export interface AppRegFormSchema {
     inputType: string
     styleClasses: string
     default: boolean
-  },
+  }
   name: {
     default: string
     type: string
@@ -28,23 +28,23 @@ export interface AppRegFormSchema {
     placeholder: string
     inputValues: {
       fields: string[]
-    },
+    }
     help: string
-  },
+  }
   tags: Tags
   protocols: {
     id: string
     default: []
     type: string
     label: string
-    values: {
+    values: Array<{
       label: string
       value: string
-    }[]
+    }>
     help: string
     placeholder: string
     styleClasses: string
-  },
+  }
 }
 
 export interface ApplicationRegistrationSchema extends CommonSchemaFields {

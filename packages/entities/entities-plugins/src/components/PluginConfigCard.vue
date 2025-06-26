@@ -171,9 +171,9 @@ const PLUGIN_CONFIG_KEY = 'config'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
-  (e: 'fetch:error', error: AxiosError): void,
-  (e: 'error:fetch-schema', error: AxiosError): void,
-  (e: 'fetch:success', data: Record<string, any>): void,
+  (e: 'fetch:error', error: AxiosError): void
+  (e: 'error:fetch-schema', error: AxiosError): void
+  (e: 'fetch:success', data: Record<string, any>): void
   (e: 'navigation-click', data: string, direction: 'route' | 'consumer' | 'consumer_group' | 'service' | 'partial'): void
 }>()
 
@@ -287,7 +287,7 @@ const configSchema = computed((): ConfigurationSchema => {
   }
 })
 
-const apiPluginSchema = computed((): Record<string, any>[] => {
+const apiPluginSchema = computed((): Array<Record<string, any>> => {
   if (!schema.value?.fields) {
     return []
   }

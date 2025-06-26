@@ -57,7 +57,7 @@ describe('<RedisConfigurationForm />', {
           cy.intercept('POST', `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials`, handler)
             .as('createRedisConfiguration')
 
-          cy.intercept('PATCH', `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials/*`, handler)
+          cy.intercept('PUT', `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/partials/*`, handler)
             .as('editRedisConfiguration')
         }
       }
@@ -85,7 +85,7 @@ describe('<RedisConfigurationForm />', {
       function interceptLinkedPlugins({
         body = { data: [], next: null, count: 0 },
       }: {
-        body?: typeof links,
+        body?: typeof links
       } = {}) {
         if (app === 'Kong Manager') {
           cy.intercept({
@@ -827,8 +827,10 @@ describe('<RedisConfigurationForm />', {
 
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
-            expect(config.host).to.be.null
-            expect(config.port).to.be.null
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.host).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.port).to.not.exist
           })
         })
 
@@ -867,8 +869,10 @@ describe('<RedisConfigurationForm />', {
           cy.getTestId('redis_configuration-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
-            expect(config.host).to.be.null
-            expect(config.port).to.be.null
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.host).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.port).to.not.exist
           })
         })
 
@@ -897,8 +901,10 @@ describe('<RedisConfigurationForm />', {
           cy.getTestId('redis_configuration-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
-            expect(config.cluster_nodes).to.be.null
-            expect(config.cluster_max_redirections).to.be.null
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.cluster_nodes).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.cluster_max_redirections).to.not.exist
           })
         })
 
@@ -937,8 +943,10 @@ describe('<RedisConfigurationForm />', {
           cy.getTestId('redis_configuration-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
-            expect(config.cluster_nodes).to.be.null
-            expect(config.cluster_max_redirections).to.be.null
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.cluster_nodes).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.cluster_max_redirections).to.not.exist
           })
         })
 
@@ -967,11 +975,16 @@ describe('<RedisConfigurationForm />', {
           cy.getTestId('redis_configuration-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
-            expect(config.sentinel_master).to.be.null
-            expect(config.sentinel_role).to.be.null
-            expect(config.sentinel_nodes).to.be.null
-            expect(config.sentinel_username).to.be.null
-            expect(config.sentinel_password).to.be.null
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.sentinel_master).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.sentinel_role).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.sentinel_nodes).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.sentinel_username).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.sentinel_password).to.not.exist
           })
         })
 
@@ -1000,11 +1013,16 @@ describe('<RedisConfigurationForm />', {
 
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
-            expect(config.sentinel_master).to.be.null
-            expect(config.sentinel_role).to.be.null
-            expect(config.sentinel_nodes).to.be.null
-            expect(config.sentinel_username).to.be.null
-            expect(config.sentinel_password).to.be.null
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.sentinel_master).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.sentinel_role).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.sentinel_nodes).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.sentinel_username).to.not.exist
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            expect(config.sentinel_password).to.not.exist
           })
         })
       })

@@ -29,25 +29,24 @@
 import { onMounted, onUnmounted, ref, watch, nextTick, watchEffect } from 'vue'
 import { GridStack } from 'gridstack'
 import type { GridStackNode } from 'gridstack'
-import type { GridSize, GridTile } from 'src/types'
+import type { GridTile } from 'src/types'
+import { DASHBOARD_COLS, DEFAULT_TILE_HEIGHT } from '../../constants'
 import 'gridstack/dist/gridstack.min.css'
 import 'gridstack/dist/gridstack-extra.min.css'
 
 export type DraggableGridLayoutExpose<T> = {
-  removeWidget: (id: number | string) => void,
-  tiles: GridTile<T>[],
-  gridSize: GridSize,
+  removeWidget: (id: number | string) => void
+  tiles: Array<GridTile<T>>
 }
 
 const props = withDefaults(defineProps<{
-  tiles: GridTile<T>[],
-  gridSize: GridSize,
-  tileHeight?: number,
+  tiles: Array<GridTile<T>>
+  tileHeight?: number
 }>(), {
-  tileHeight: 200,
+  tileHeight: DEFAULT_TILE_HEIGHT,
 })
 const emit = defineEmits<{
-  (e: 'update-tiles', tiles: GridTile<T>[]): void,
+  (e: 'update-tiles', tiles: Array<GridTile<T>>): void
 }>()
 
 const gridContainer = ref<HTMLDivElement | null>(null)
@@ -72,7 +71,7 @@ const makeTilesFromGridItems = (items: GridStackNode[]) => {
         },
       } satisfies GridTile<T>
     }
-  }).filter(t => t !== undefined) as GridTile<T>[]
+  }).filter(t => t !== undefined) as Array<GridTile<T>>
 }
 
 const updateTiles = (_: Event, items: GridStackNode[]) => {
@@ -95,11 +94,11 @@ const removeHandler = (_: Event, items: GridStackNode[]) => {
 onMounted(() => {
   if (gridContainer.value) {
     grid = GridStack.init({
-      column: props.gridSize.cols,
+      margin: 10,
+      column: DASHBOARD_COLS,
       cellHeight: props.tileHeight,
       resizable: { handles: 'se, sw' },
       handle: '.tile-header',
-
     }, gridContainer.value)
     grid.on('change', updateTiles)
     grid.on('added', updateTiles)
@@ -149,6 +148,10 @@ defineExpose({ removeWidget })
 </script>
 
 <style lang="scss" scoped>
+.grid-stack {
+  margin: 0 -10px;
+}
+
 :deep(.tile-header) {
   cursor: move;
 }

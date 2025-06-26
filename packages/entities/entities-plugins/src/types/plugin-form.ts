@@ -21,6 +21,7 @@ import type { OasValidationSchema } from './plugins/oas-validation'
 import type { UpstreamOauthSchema } from './plugins/upstream-oauth'
 import type { InjectionProtectionSchema } from './plugins/injection-protection'
 import type { KafkaUpstreamSchema } from './plugins/kafka-upstream'
+import type { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import type { ConfluentSchema } from './plugins/confluent'
 
 export interface BasePluginSelectConfig {
@@ -39,6 +40,8 @@ export interface BasePluginFormConfig {
   disableConsumerGroupScope?: boolean
   /** Whether to use the new OpenTelemetry schema introduced in https://github.com/Kong/kong-ee/pull/9399/files#diff-8d295aaa72ee8a0a18dcb8010b0a73ac36a92e1e825b3202b1d1736d07d7e514 */
   isNewOtelSchema?: boolean
+  /** Whether to enable the experimental renders */
+  experimentalRenders?: Record<string, boolean>
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}
@@ -70,8 +73,10 @@ export interface PluginFormState {
   fields: PluginFormFields
   /** Form readonly state (only used when saving entity details) */
   isReadonly: boolean
-  /** The error message to show on the form */
-  errorMessage: string
+  /** The error message collected from client-side validation */
+  clientErrorMessage: string
+  /** The error message extracted from server response */
+  serverErrorMessage: string
 }
 
 export type PluginFieldType = 'switch' | 'input' | 'foreign' | 'selectionGroup' | 'tag' | 'multiselect' | 'select'
@@ -142,7 +147,7 @@ export interface AppRegFormSchema {
     inputType: string
     styleClasses: string
     default: boolean
-  },
+  }
   name: {
     default: string
     type: string
@@ -151,7 +156,7 @@ export interface AppRegFormSchema {
   }
   'service-id': {
     type: string
-    label: string,
+    label: string
     styleClasses: string
     description: string
     model: string
@@ -159,9 +164,9 @@ export interface AppRegFormSchema {
     placeholder: string
     inputValues: {
       fields: string[]
-    },
+    }
     help: string
-  },
+  }
   tags: Tags
 }
 
@@ -182,7 +187,7 @@ interface ArrayItem {
       minWidth: string
     }
     [key: string]: any
-  },
+  }
   removeElementButtonLabel: string
   styleClasses: string
   inputType: string
@@ -219,10 +224,20 @@ export interface CustomSchemas {
   'upstream-oauth': UpstreamOauthSchema
   'injection-protection': InjectionProtectionSchema
   'kafka-upstream': KafkaUpstreamSchema
+  'key-auth': ReturnType<typeof genKeyAuthSchema>
   'confluent': ConfluentSchema
+  'confluent-consume': CommonSchemaFields
+  'kafka-consume': CommonSchemaFields
+  'kafka-log': CommonSchemaFields
 }
 
 export enum PluginPartialType {
   REDIS_CE = 'redis-ce',
   REDIS_EE = 'redis-ee',
+}
+
+export interface PluginValidityChangeEvent {
+  model: string
+  valid: boolean
+  error?: Error | string
 }

@@ -9,9 +9,9 @@ export interface StatsDSchema extends CommonSchemaFields {
     fieldClasses: string
 
     items: {
-      type: string,
-      // eslint-disable-next-line @typescript-eslint/ban-types
-      default: Function,
+      type: string
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      default: Function
       schema: {
         fields: Field[]
       }

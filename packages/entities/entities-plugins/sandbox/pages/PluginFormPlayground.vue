@@ -44,7 +44,6 @@
         :key="formKey"
         :config="konnectConfig"
         enable-vault-secret-picker
-        is-wizard-step
         :plugin-type="pluginType || ''"
         :schema="schema"
         use-custom-names-for-plugin
@@ -56,8 +55,7 @@
         :key="formKey"
         :config="kongManagerConfig"
         enable-vault-secret-picker
-        is-wizard-step
-        plugin-type=""
+        :plugin-type="pluginType || ''"
         :schema="schema"
         @update="onUpdate"
       />
@@ -70,7 +68,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onErrorCaptured, ref, useTemplateRef, watch } from 'vue'
+import {
+  computed,
+  nextTick,
+  onErrorCaptured,
+  ref,
+  useTemplateRef,
+  watch,
+} from 'vue'
 import { useRouter } from 'vue-router'
 import type {
   KonnectPluginFormConfig,
@@ -78,6 +83,15 @@ import type {
 } from '../../src'
 import { PluginForm } from '../../src'
 import { PLUGIN_METADATA } from '../../src/definitions/metadata'
+
+function save(type: 'pluginType' | 'schema', value: unknown) {
+  localStorage.setItem(`plugin-form-playground:${type}`, JSON.stringify(value))
+}
+
+function load(type: 'pluginType' | 'schema', defaultValue?: unknown) {
+  const stored = localStorage.getItem(`plugin-form-playground:${type}`)
+  return stored ? JSON.parse(stored) : defaultValue
+}
 
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
@@ -89,15 +103,23 @@ const pluginTypes = [
     value: key,
   })),
 ].sort((a, b) => a.label.localeCompare(b.label))
-const pluginType = ref<string>()
+
+const storedPluginType = load('pluginType', '')
+const pluginType = ref<string>(
+  pluginTypes.find(({ value }) => value === storedPluginType)
+    ? storedPluginType
+    : '',
+)
 
 const defaultSchema = {
   fields: [],
 }
 const schemaOpen = ref(false)
-const schemaText = ref(JSON.stringify(defaultSchema, null, 2))
 
-watch(schemaOpen, async open => {
+const storedSchema = load('schema', JSON.stringify(defaultSchema, null, 2))
+const schemaText = ref(storedSchema)
+
+watch(schemaOpen, async (open) => {
   if (open) {
     await nextTick()
     text.value?.$el.querySelector('textarea').select()
@@ -137,6 +159,9 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // entityType: 'services',
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   cancelRoute: { name: 'home' },
+  experimentalRenders: {
+    keyAuthIdentityRealms: true,
+  },
 })
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
@@ -155,8 +180,14 @@ const onUpdate = (payload: Record<string, any>) => {
   router.push({ name: 'home' })
 }
 
+watch(pluginType, () => {
+  save('pluginType', pluginType.value)
+})
+
 watch(schemaText, () => {
   renderError.value = ''
+
+  save('schema', schemaText.value)
 })
 
 onErrorCaptured((error) => {

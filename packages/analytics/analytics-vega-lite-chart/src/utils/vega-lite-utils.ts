@@ -2,8 +2,8 @@ import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { VisualizationSpec } from 'vega-embed'
 
 export interface DatasetLabel {
-  name: string,
-  id: string,
+  name: string
+  id: string
 }
 
 
@@ -14,7 +14,7 @@ export function prepareData(exploreResult: ExploreResultV4) {
   if (!metricNames) {
     throw new Error('Cannot build chart data from this explore result. Missing metric names.')
   }
-  const flatData: { [label: string]: string | number }[] = data.flatMap(data => {
+  const flatData: Array<{ [label: string]: string | number }> = data.flatMap(data => {
     const timestamp = new Date(data.timestamp).toISOString()
     const event = data.event as { [label: string]: string | number }
 

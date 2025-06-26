@@ -18,7 +18,7 @@ export type IntlShapeEx<MessageSource extends Record<string, any>> = Omit<IntlSh
   formatIsoDate: (isoDate: string) => string
   t: (translationKey: PathToDotNotation<MessageSource, string>, values?: Record<string, MessageFormatPrimitiveValue> | undefined, opts?: IntlMessageFormatOptions) => string
   te: (translationKey: PathToDotNotation<MessageSource, string>) => boolean
-  tm: (translationKey: PathToDotNotation<MessageSource, string>) => Array<string>
+  tm: (translationKey: PathToDotNotation<MessageSource, string>) => string[]
   source: MessageSource
 }
 

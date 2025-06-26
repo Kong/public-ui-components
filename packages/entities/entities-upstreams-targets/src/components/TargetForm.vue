@@ -98,10 +98,10 @@ import { useAxios, useErrors, EntityBaseForm, EntityBaseFormType, SupportedEntit
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
-  (e: 'update', target: EntityRow): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
-  (e: 'cancel'): void,
+  (e: 'update', target: EntityRow): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
+  (e: 'cancel'): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -339,6 +339,7 @@ watch(() => props.targetId, () => {
   }
 
   :deep(.k-card.kong-ui-entity-base-form) {
+    background-color: transparent;
     border: none;
     padding: $kui-space-0;
   }

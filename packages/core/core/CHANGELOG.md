@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.10.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.10.8...@kong-ui-public/core@1.10.9) (2025-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.10.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.10.7...@kong-ui-public/core@1.10.8) (2025-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.10.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.10.6...@kong-ui-public/core@1.10.7) (2025-04-29)
+
+
+### Bug Fixes
+
+* **deps:** removes swrv from @kong-ui-public/core ([#2097](https://github.com/Kong/public-ui-components/issues/2097)) ([d6a1877](https://github.com/Kong/public-ui-components/commit/d6a1877b71ab6a596668fb53e2bed44901825af9))
+
+
+
+
+
 ## [1.10.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.10.5...@kong-ui-public/core@1.10.6) (2025-02-21)
 
 

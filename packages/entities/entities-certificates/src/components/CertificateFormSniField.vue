@@ -71,7 +71,7 @@ import { KUI_COLOR_TEXT_DANGER } from '@kong/design-tokens'
 import { TrashIcon, AddIcon } from '@kong/icons'
 import composables from '../composables'
 
-type FieldsValue = Array<string>
+type FieldsValue = string[]
 
 const props = defineProps({
   isEditing: {
@@ -89,9 +89,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'add'): void,
-  (e: 'remove', index: number): void,
-  (e: 'update:modelValue', value: FieldsValue): void,
+  (e: 'add'): void
+  (e: 'remove', index: number): void
+  (e: 'update:modelValue', value: FieldsValue): void
 }>()
 
 const { i18nT, i18n: { t } } = composables.useI18n()

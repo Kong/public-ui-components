@@ -18,8 +18,8 @@ describe('<AddToGroupModal/>', () => {
     }
 
     const interceptFilters = (params?: {
-      mockData?: ConsumerGroup[];
-      alias?: string;
+      mockData?: ConsumerGroup[]
+      alias?: string
     }): void => {
       cy.intercept(
         {
@@ -137,8 +137,8 @@ describe('<AddToGroupModal/>', () => {
     }
 
     const interceptFilters = (params?: {
-      mockData?: ConsumerGroup[];
-      alias?: string;
+      mockData?: ConsumerGroup[]
+      alias?: string
     }): void => {
       cy.intercept(
         {

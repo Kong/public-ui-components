@@ -16,6 +16,18 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
+    rollupOptions: {
+      external: [
+        '@kong-ui-public/entities-consumer-groups',
+        '@kong-ui-public/entities-consumers',
+        '@kong-ui-public/entities-gateway-services',
+        '@kong-ui-public/entities-plugins-metadata',
+        '@kong-ui-public/entities-routes',
+        '@kong-ui-public/forms',
+        'marked',
+        'monaco-editor',
+      ],
+    },
   },
   server: {
     proxy: {

@@ -63,6 +63,19 @@
     "success_brief": "Successfully copied to clipboard"
   },
   "form": {
+    "config_flavor": {
+      "label": "Define by"
+    },
+    "config_types": {
+      "basic": {
+        "description": "Quickly set up a route with HTTP & HTTPS protocol with the essentials: path, method, and host.",
+        "label": "Basic"
+      },
+      "advanced": {
+        "description": "Define complex route logic with other protocols or additional paths or attributes such as headers.",
+        "label": "Advanced"
+      }
+    },
     "protocols": {
       "grpc": "GRPC",
       "grpcs": "GRPCS",
@@ -120,66 +133,57 @@
       },
       "protocols": {
         "label": "Protocols",
-        "tooltip": "Routes have a protocols property to restrict the client protocol they should listen for.",
-        "tooltipConfig": "An array of the protocols this Route should allow. See the {code1} section for a list of accepted protocols. When set to only {code2}, HTTP requests are answered with an upgrade error. When it is set to only {code3}, this is essentially the same as {code4} in that both HTTP and HTTPS requests are allowed. Default: {code5}.",
-        "code1": "Route Object",
-        "code2": "https",
-        "code3": "http",
-        "code4": "['http', 'https']",
-        "code5": "['http', 'https']"
+        "tooltip": "The protocols this route supports."
       },
       "path_handling": {
         "label": "Path Handling",
-        "tooltip": "This treats service.path, route.path and request path as segments of a URL.",
-        "tooltipConfig": "Controls how the Service path, Route path and requested path are combined when sending a request to the upstream. See above for a detailed description of each behavior."
+        "tooltip": "Controls how Kong modifies the request path before proxying to the upstream service. Use v1 for standardized, predictable path behavior. Use v0 for legacy compatibility."
       },
       "https_redirect_status_code": {
         "label": "HTTPS Redirect Status Code",
-        "tooltip": "The status code Kong responds with when all properties of a Route match except the protocol i.e. if the protocol of the request is {code1} instead of {code2}. {code3}  header is injected by Kong if the field is set to 301, 302, 307 or 308. Note: This config applies only if the Route is configured to only accept the {code4} protocol.",
-        "code1": "HTTP",
-        "code2": "HTTPS",
-        "code3": "Location",
-        "code4": "https"
+        "tooltip": "Specifies the HTTP status code for redirecting requests from HTTP to HTTPS. Use <code>301</code> or <code>308</code> for permanent redirects, <code>302</code> or <code>307</code> for temporary redirects."
       },
       "regex_priority": {
         "label": "Regex Priority",
-        "tooltip": "A number used to choose which route resolves a given request when several routes match it using regexes simultaneously. When two routes match the path and have the same {code1}, the older one (lowest {code2}) is used. Note that the priority for non-regex routes is different (longer non-regex routes are matched before shorter ones).",
-        "code1": "regex_priority",
-        "code2": "created_at"
+        "tooltip": "Regex priority is determined by length first (longer patterns win), and when lengths are the same, more specific regexes are preferred.  When two routes match the path and have the same <code>regex_priority</code>, the older one (lowest <code>created_at</code>) is used."
       },
       "strip_path": {
         "label": "Strip Path",
-        "tooltip": "When matching a Route via one of the {code1}, strip the matching prefix from the upstream request URL.",
-        "code1": "paths"
+        "tooltip": "When enabled, Kong removes the portion of the request path that matches the route's path before forwarding the request to the upstream. If the request exactly matches the route, the result is <code>/</code>. Disable if that's not desired."
       },
       "preserve_host": {
         "label": "Preserve Host",
-        "tooltip": "When matching a Route via one of the {code1} domain names, use the request {code2} header in the upstream request headers. If set to {code3}, the upstream {code4} header will be that of the Service's {code5}.",
-        "code1": "hosts",
-        "code2": "Host",
-        "code3": "false",
-        "code4": "Host",
-        "code5": "host"
+        "tooltip": "Keeps the original <code>Host</code> header when proxying requests. Enable this if the upstream service requires the client's <code>Host</code> value. Disable if the service expects its own hostname."
       },
       "paths": {
+        "add": "Add a path",
         "label": "Paths",
-        "placeholder": "Enter a path",
-        "tooltip": "A list of paths that match this Route."
+        "label_singular": "Path",
+        "placeholder": "e.g. /api/v1",
+        "singular": "path",
+        "tooltip": "Match specific URL paths, such as <code>/api/v1</code>. Prefix with <code>~</code> to enable regex-based matching."
       },
       "snis": {
+        "add": "Add an SNI",
         "label": "SNIs",
-        "placeholder": "Enter a SNI",
-        "tooltip": "A list of SNIs (Server Name Indications from a TLS ClientHello) that match this Route."
+        "placeholder": "e.g. api.example.com",
+        "singular": "SNI",
+        "tooltip": "SNIs (Server Name Indications) that match the route when using stream routing."
       },
       "hosts": {
+        "add": "Add a host",
         "label": "Hosts",
-        "placeholder": "Enter a host",
-        "tooltip": "A list of domain names that match this Route.",
-        "tooltipConfig": "A list of domain names that match this Route. Note that the hosts value is case sensitive."
+        "label_singular": "Host",
+        "placeholder": "e.g. example.com",
+        "singular": "host",
+        "tooltip": "Match specific domain names, such as <code>api.example.com</code>."
       },
       "methods": {
         "label": "Methods",
-        "tooltip": "A list of HTTP methods that match this Route.",
+        "placeholder": "Select methods",
+        "search_placeholder": "Search for a method or enter a custom method",
+        "singular": "method",
+        "tooltip": "Match specific HTTP methods, such as GET or POST. If no method is selected, all methods are included.",
         "custom": {
           "label": "Custom",
           "placeholder": "Enter a custom method",
@@ -187,22 +191,21 @@
         }
       },
       "headers": {
+        "add": "Add a header",
         "label": "Headers",
-        "tooltip": "Header values can be separated by commas (value1, value2, value3).",
+        "singular": "header",
+        "tooltip": "Match specific headers, such as <code>x-api-version</code> or <code>x-region</code>. Doesn't accept the <code>Host</code> header. Provide only one entry and prefix with <code>~</code> to enable regex-based matching.",
         "name": {
-          "placeholder": "Enter a header name"
+          "placeholder": "e.g. x-api-version"
         },
         "values": {
-          "placeholder": "Enter a header value"
-        },
-        "tooltipConfig": "One or more lists of values indexed by header name that will cause this Route to match if present in the request. The {code1} header cannot be used with this attribute: hosts should be specified using the {code2} attribute. When {code3} contains only one value and that value starts with the special prefix {code4], the value is interpreted as a regular expression.",
-        "code1": "Host",
-        "code2": "hosts",
-        "code3": "headers",
-        "code4": "*"
+          "placeholder": "e.g. v1"
+        }
       },
       "sources": {
+        "add": "Add a source",
         "label": "Sources",
+        "singular": "source",
         "tooltip": "A list of IP sources of incoming connections that match this Route when using stream routing.",
         "ip": {
           "placeholder": "Enter a source IP"
@@ -212,7 +215,9 @@
         }
       },
       "destinations": {
+        "add": "Add a destination",
         "label": "Destinations",
+        "singular": "destination",
         "tooltip": "A list of IP destinations of incoming connections that match this Route when using stream routing.",
         "ip": {
           "placeholder": "Enter a destination IP"
@@ -223,11 +228,11 @@
       },
       "response_buffering": {
         "label": "Response buffering",
-        "tooltip": "Whether to enable response body buffering or not. With HTTP 1.1, it may make sense to turn this off on services that send data with chunked transfer encoding."
+        "tooltip": "Reads and buffers the full response from the upstream service before sending it to the client. Enable buffering if the client expects the complete response at once. Disable for faster streaming of large or chunked responses."
       },
       "request_buffering": {
         "label": "Request buffering",
-        "tooltip": "Whether to enable request body buffering or not. With HTTP 1.1, it may make sense to turn this off on services that receive data with chunked transfer encoding."
+        "tooltip": "Reads and buffers the full request body before proxying. Enable buffering if the upstream service requires the complete request before processing. Disable for faster streaming of large or chunked requests."
       },
       "expression": {
         "label": "Expression",
@@ -239,15 +244,17 @@
       }
     },
     "flavors": {
-      "traditional": "Traditional",
-      "expressions": "Expressions"
+      "traditional": "Traditional Form",
+      "expressions": "Expressions Editor"
     },
-    "viewAdvancedFields": "View Advanced Fields",
-    "addNewRule": "Add New Rule",
+    "show_more": "Show more",
+    "hint": {
+      "rules_message": "Choose at least one {routingRules} option.",
+      "single_rule": "{routingRules}",
+      "multiple_rules": "{routingRules} or {lastRoutingRule}",
+      "advanced": "To add more than one, use the Advanced options."
+    },
     "warning": {
-      "rulesMessage": "For {protocol}, at least one of {routingRules} must be set.",
-      "singleRule": "{routingRules}",
-      "multipleRules": "{routingRules} or {lastRoutingRule}",
       "cannotChangeFlavor": {
         "create": "The format of the route cannot be changed once created.",
         "edit": "This route was configured in the {format} format, and cannot be changed after creation. You can switch to the {format} tab to edit, or create a new route in a different format instead."

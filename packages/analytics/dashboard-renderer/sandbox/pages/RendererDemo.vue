@@ -21,8 +21,8 @@
       </div>
       <DashboardRenderer
         ref="dashboardRendererRef"
+        v-model="dashboardConfig"
         :class="{ 'custom-styling': isToggled}"
-        :config="dashboardConfig"
         :context="context"
       >
         <template #slot-1>
@@ -64,10 +64,6 @@ const context: DashboardRendererContext = {
 }
 
 const dashboardConfig = ref <DashboardConfig>({
-  gridSize: {
-    cols: 6,
-    rows: 7,
-  },
   tileHeight: 167,
   tiles: [
     {
@@ -332,6 +328,29 @@ const dashboardConfig = ref <DashboardConfig>({
       layout: {
         position: {
           col: 0,
+          row: 7,
+        },
+        size: {
+          cols: 3,
+          rows: 1,
+          fitToContent: true,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      definition: {
+        chart: {
+          type: 'single_value',
+          chartTitle: 'Single Value chart of mock data',
+        },
+        query: {
+          datasource: 'basic',
+          limit: 1,
+        },
+      },
+      layout: {
+        position: {
+          col: 3,
           row: 7,
         },
         size: {

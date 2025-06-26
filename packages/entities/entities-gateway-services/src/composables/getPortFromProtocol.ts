@@ -1,6 +1,6 @@
 export default function usePortFromProtocol() {
   const getPortFromProtocol = (protocol: string, port?: string): number => {
-    const defaultPorts: Array<number> = [80, 443]
+    const defaultPorts: number[] = [80, 443]
     const portValue = Number(port)
 
     if ((portValue || portValue === 0) && !defaultPorts.includes(portValue)) {

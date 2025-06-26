@@ -43,7 +43,7 @@ import { formatLatency, formatNanoDateTimeString, unwrapAnyValue } from '../../u
 const { i18n: { t, te } } = composables.useI18n()
 
 const props = defineProps<{
-  rootSpan: SpanNode;
+  rootSpan: SpanNode
   showSkeleton?: boolean
 }>()
 

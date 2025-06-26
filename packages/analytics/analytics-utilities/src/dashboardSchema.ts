@@ -29,6 +29,7 @@ export const dashboardTileTypes = [
   'golden_signals',
   'top_n',
   'slottable',
+  'single_value',
 ] as const
 export type DashboardTileType = typeof dashboardTileTypes[number]
 
@@ -208,6 +209,24 @@ export const metricCardSchema = {
 
 export type MetricCardOptions = FromSchemaWithOptions<typeof metricCardSchema>
 
+export const singleValueSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['single_value'],
+    },
+    decimalPoints: {
+      type: 'number',
+    },
+    chartTitle,
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type SingleValueOptions = FromSchemaWithOptions<typeof singleValueSchema>
+
 const exploreV4RelativeTimeSchema = {
   type: 'object',
   properties: {
@@ -313,32 +332,6 @@ const filtersFn = <T extends readonly string[]>(filterableDimensions: T) => ({
   description: 'A list of filters to apply to the query',
   items: {
     oneOf: [
-      {
-        type: 'object',
-        description: 'A filter that specifies which data to include in the query',
-        properties: {
-          dimension: {
-            type: 'string',
-            enum: filterableDimensions,
-          },
-          type: {
-            type: 'string',
-            enum: exploreFilterTypesV2,
-          },
-          values: {
-            type: 'array',
-            items: {
-              type: ['string', 'number', 'null'],
-            },
-          },
-        },
-        required: [
-          'dimension',
-          'type',
-          'values',
-        ],
-        additionalProperties: false,
-      },
       {
         type: 'object',
         description: 'In filter',
@@ -465,6 +458,7 @@ export const tileDefinitionSchema = {
         metricCardSchema,
         topNTableSchema,
         slottableSchema,
+        singleValueSchema,
       ],
     },
   },
@@ -557,8 +551,9 @@ export const dashboardConfigSchema = {
       required: ['cols', 'rows'],
       additionalProperties: false,
     },
+    global_filters: filtersFn([...new Set([...filterableExploreDimensions, ...filterableBasicExploreDimensions, ...filterableAiExploreDimensions])]),
   },
-  required: ['tiles', 'gridSize'],
+  required: ['tiles'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 

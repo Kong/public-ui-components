@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, onUnmounted } from 'vue'
 import type {
   TooltipPositionerFunction,
   ChartType,
@@ -13,7 +13,7 @@ import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
 import { millisecondsToHours } from 'date-fns'
 
-export default function useLinechartOptions(chartOptions: LineChartOptions) {
+export default function useLineChartOptions(chartOptions: LineChartOptions) {
 
   const xAxesOptions = computed(() => ({
     type: 'timeseries',
@@ -70,13 +70,15 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     stacked: chartOptions.stacked.value,
   }))
 
+  const chartID = chartOptions.tooltipState.chartID
+  const positionKey = `lineChartTooltipPosition-${chartID}`
+
   const tooltipOptions = {
     enabled: false,
-    position: 'lineChartTooltipPosition',
+    position: positionKey,
   }
 
-  Tooltip.positioners.lineChartTooltipPosition = function(elements, position) {
-    // Happens when nothing is found
+  Tooltip.positioners[positionKey] = function(elements, position) {
     if (!elements.length || chartOptions.tooltipState.locked) {
       return false
     }
@@ -161,6 +163,12 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
     }
   })
 
+  onUnmounted(() => {
+    if (Tooltip.positioners[positionKey]) {
+      delete Tooltip.positioners[positionKey]
+    }
+  })
+
   return {
     options,
   }
@@ -168,6 +176,6 @@ export default function useLinechartOptions(chartOptions: LineChartOptions) {
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
-    lineChartTooltipPosition: TooltipPositionerFunction<ChartType>;
+    [key: string]: TooltipPositionerFunction<ChartType>
   }
 }

@@ -10,8 +10,7 @@
       :is="context.editable ? DraggableGridLayout : GridLayout"
       v-else
       ref="gridLayoutRef"
-      :grid-size="config.gridSize"
-      :tile-height="config.tileHeight"
+      :tile-height="model.tileHeight"
       :tiles="gridTiles"
       @update-tiles="handleUpdateTiles"
     >
@@ -27,12 +26,14 @@
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
-          :height="tile.layout.size.rows * (config.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+          :height="tile.layout.size.rows * (model.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
           :query-ready="queryReady"
           :refresh-counter="refreshCounter"
           :tile-id="tile.id"
+          @duplicate-tile="onDuplicateTile(tile)"
           @edit-tile="onEditTile(tile)"
           @remove-tile="onRemoveTile(tile)"
+          @zoom-time-range="emit('zoom-time-range', $event)"
         />
       </template>
     </component>
@@ -41,7 +42,7 @@
 
 <script setup lang="ts">
 import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
-import type { DashboardConfig, TileConfig, TileDefinition } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, DashboardConfig, TileConfig, SlottableOptions, TileDefinition, AllFilters } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import { computed, inject, ref } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
@@ -60,14 +61,15 @@ import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import { KUI_SPACE_70 } from '@kong/design-tokens'
 
 const props = defineProps<{
-  context: DashboardRendererContext,
-  config: DashboardConfig,
+  context: DashboardRendererContext
 }>()
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
-  (e: 'update-tiles', tiles: TileConfig[]): void
+  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
+
+const model = defineModel<DashboardConfig>({ required: true })
 
 const { i18n } = composables.useI18n()
 const refreshCounter = ref(0)
@@ -119,7 +121,7 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
 }
 
 const gridTiles = computed(() => {
-  return props.config.tiles.map((tile: TileConfig, i: number) => {
+  return model.value.tiles.map((tile: TileConfig) => {
     let tileMeta = tile.definition
 
     if ('description' in tileMeta.chart) {
@@ -167,6 +169,7 @@ const gridTiles = computed(() => {
 
 const mergedContext = computed<DashboardRendererContextInternal>(() => {
   let { tz, refreshInterval, editable } = props.context
+  const filters = [...(props.context.filters ?? []), ...(model.value.global_filters ?? [])] as AllFilters[]
 
   if (!tz) {
     tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
@@ -182,7 +185,7 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
   }
 
   return {
-    ...props.context,
+    filters,
     tz,
     timeSpec: timeSpec.value,
     refreshInterval,
@@ -197,6 +200,36 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
   emit('edit-tile', tile)
 }
 
+const isSlottable = (chart: any): chart is SlottableOptions => {
+  return chart.type === 'slottable'
+}
+
+const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
+  const chart = isSlottable(tile.meta.chart)
+    ? { ...tile.meta.chart }
+    : {
+      ...tile.meta.chart,
+      chartTitle: tile.meta.chart.chartTitle ? `Copy of ${tile.meta.chart.chartTitle}` : '',
+    }
+
+  const newTile: TileConfig = {
+    id: crypto.randomUUID(),
+    definition: {
+      ...tile.meta,
+      chart,
+    },
+    layout: {
+      position: {
+        col: 0,
+        row: 0,
+      },
+      size: tile.layout.size,
+    },
+  }
+
+  model.value.tiles.push(newTile)
+}
+
 const onRemoveTile = (tile: GridTile<TileDefinition>) => {
   if (gridLayoutRef.value) {
     gridLayoutRef.value.removeWidget(tile.id)
@@ -207,7 +240,7 @@ const refreshTiles = () => {
   refreshCounter.value++
 }
 
-const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
+const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
   const updatedTiles = tiles.map(tile => {
     return {
       id: tile.id,
@@ -215,7 +248,8 @@ const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
       definition: tile.meta,
     } as TileConfig
   })
-  emit('update-tiles', updatedTiles.sort(tileSortFn))
+
+  model.value.tiles = updatedTiles.sort(tileSortFn)
 }
 
 defineExpose({ refresh: refreshTiles })

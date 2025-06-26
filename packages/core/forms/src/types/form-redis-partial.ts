@@ -20,7 +20,7 @@ export interface RedisConfigurationFields {
   type: PartialType
   config: {
     cluster_max_redirections: number
-    cluster_nodes: Identifiable<ClusterNode>[]
+    cluster_nodes: Array<Identifiable<ClusterNode>>
     connect_timeout: number
     connection_is_proxied: boolean
     database: number
@@ -32,7 +32,7 @@ export interface RedisConfigurationFields {
     read_timeout: number
     send_timeout: number
     sentinel_master?: string
-    sentinel_nodes: Identifiable<SentinelNode>[]
+    sentinel_nodes: Array<Identifiable<SentinelNode>>
     sentinel_password: string
     sentinel_role?: 'master' | 'slave' | 'any'
     sentinel_username: string
@@ -48,7 +48,7 @@ export interface FlattendRedisConfigurationFields {
   name: string
   type: PartialType
   cluster_max_redirections: number
-  cluster_nodes: Identifiable<ClusterNode>[]
+  cluster_nodes: Array<Identifiable<ClusterNode>>
   connect_timeout: number
   connection_is_proxied: boolean
   database: number
@@ -60,7 +60,7 @@ export interface FlattendRedisConfigurationFields {
   read_timeout: number
   send_timeout: number
   sentinel_master?: string
-  sentinel_nodes: Identifiable<SentinelNode>[]
+  sentinel_nodes: Array<Identifiable<SentinelNode>>
   sentinel_password: string
   sentinel_role?: 'master' | 'slave' | 'any'
   sentinel_username: string

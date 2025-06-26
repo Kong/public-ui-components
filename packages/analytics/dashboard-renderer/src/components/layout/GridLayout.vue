@@ -23,22 +23,18 @@
 
 <script lang="ts" setup generic="T">
 import { computed, type PropType, ref, onMounted, onUnmounted } from 'vue'
-import type { GridSize, Cell, GridTile } from 'src/types'
-import { DEFAULT_TILE_HEIGHT } from '../../constants'
+import type { Cell, GridTile } from 'src/types'
+import { DASHBOARD_COLS, DEFAULT_TILE_HEIGHT } from '../../constants'
 import { calculateRowDefs } from './grid-utils'
 
 const props = defineProps({
-  gridSize: {
-    type: Object as PropType<GridSize>,
-    required: true,
-  },
   tileHeight: {
     type: Number,
     required: false,
     default: () => DEFAULT_TILE_HEIGHT,
   },
   tiles: {
-    type: Array as PropType<GridTile<T>[]>,
+    type: Array as PropType<Array<GridTile<T>>>,
     required: true,
   },
 })
@@ -72,12 +68,12 @@ onUnmounted(() => {
 })
 
 const rowDefinition = computed<string>(() => {
-  const rowDefs = calculateRowDefs(props.gridSize?.rows, props.tileHeight, props.tiles)
+  const rowDefs = calculateRowDefs(props.tileHeight, props.tiles)
 
   return rowDefs.join(' ')
 })
 
-const gridCells = computed<Cell<T>[]>(() => {
+const gridCells = computed<Array<Cell<T>>>(() => {
   return props.tiles.map((tile, i) => {
     return {
       key: `tile-${i}`,
@@ -98,7 +94,7 @@ const gridCells = computed<Cell<T>[]>(() => {
 .kong-ui-public-grid-layout {
   display: grid;
   gap: var(--kui-space-70, $kui-space-70);
-  grid-template-columns: repeat(v-bind('gridSize.cols'), 1fr);
+  grid-template-columns: repeat(v-bind('DASHBOARD_COLS'), 1fr);
   grid-template-rows: v-bind('rowDefinition');
   width: 100%;
 }

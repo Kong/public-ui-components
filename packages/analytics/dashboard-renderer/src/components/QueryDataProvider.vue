@@ -38,7 +38,7 @@ import type {
   AllFilters,
   AnalyticsBridge,
   DatasourceAwareQuery,
-  ExploreFilter,
+  ExploreFilterAll,
   ExploreQuery,
   ExploreResultV4,
   FilterTypeMap,
@@ -58,7 +58,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'chart-data', chartData: ExploreResultV4): void,
+  (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'queryComplete'): void
 }>()
 
@@ -82,8 +82,8 @@ onUnmounted(() => {
   abortController.abort()
 })
 
-const deriveFilters = <D extends QueryDatasource>(datasource: D, queryFilters: FilterTypeMap[D][] | undefined, contextFilters: AllFilters[]): FilterTypeMap[D][] => {
-  const mergedFilters: FilterTypeMap[D][] = []
+const deriveFilters = <D extends QueryDatasource>(datasource: D, queryFilters: Array<FilterTypeMap[D]> | undefined, contextFilters: AllFilters[]): Array<FilterTypeMap[D]> => {
+  const mergedFilters: Array<FilterTypeMap[D]> = []
 
   if (queryFilters) {
     // The filters from the query should be safe -- as in, validated to be compatible
@@ -108,7 +108,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
       datasource = 'basic'
     }
 
-    const mergedFilters = deriveFilters(datasource, props.query.filters as FilterTypeMap[typeof datasource][], props.context.filters)
+    const mergedFilters = deriveFilters(datasource, props.query.filters as Array<FilterTypeMap[typeof datasource]>, props.context.filters)
 
     // TODO: the cast is necessary because TimeRangeV4 specifies date objects for absolute time ranges.
     // If they're coming from a definition, they're strings; should clean this up as part of the dashboard type work.
@@ -134,7 +134,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
       query: {
         ...rest as ExploreQuery,
         time_range,
-        filters: mergedFilters as ExploreFilter[],
+        filters: mergedFilters as ExploreFilterAll[],
       },
     }
 

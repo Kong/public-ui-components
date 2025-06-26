@@ -275,9 +275,9 @@ describe('useVitalsExploreDatasets', () => {
 
     expect(result.value).toEqual(
       {
-        labels: ['Request Count'],
+        labels: ['Request count'],
         datasets: [
-          { label: 'Request Count', backgroundColor: '#a86cd5', data: [1], isSegmentEmpty: false },
+          { label: 'Request count', backgroundColor: '#a86cd5', data: [1], isSegmentEmpty: false },
         ],
         isLabelEmpty: [false],
       },

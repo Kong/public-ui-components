@@ -44,6 +44,7 @@
       </EntityFormSection>
 
       <EntityFormSection
+        v-if="!hideConsumers"
         :description="t('consumer_groups.form.consumers.description')"
         has-divider
         :title="t('consumer_groups.form.consumers.title')"
@@ -126,12 +127,16 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  hideConsumers: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
-  (e: 'update', data: ConsumerGroupData): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
+  (e: 'update', data: ConsumerGroupData): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -352,6 +357,7 @@ const submitData = async (): Promise<void> => {
   try {
     state.readonly = true
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     formType.value === EntityBaseFormType.Create ? await createGroup() : await updateGroup()
   } finally {
     state.readonly = false
@@ -359,7 +365,10 @@ const submitData = async (): Promise<void> => {
 }
 
 onBeforeMount(async () => {
-  await loadItems()
+  // when we hides the consumers selection field, there were no need to load the data
+  if (!props.hideConsumers) {
+    await loadItems()
+  }
 })
 </script>
 

@@ -3,7 +3,7 @@
     v-attributes="attributes"
     class="field-object-container"
   >
-    <vue-form-generator
+    <VueFormGenerator
       v-if="schema.schema"
       :model="value"
       :options="formOptions"
@@ -73,11 +73,17 @@
   </div>
 </template>
 
+<script setup>
+import VueFormGenerator from '../FormGenerator.vue'
+</script>
+
 <script>
 import abstractField from './abstractField'
 
 export default {
   mixins: [abstractField],
+
+  expose: ['validate', 'clearValidationErrors', 'schema'],
 
   emits: ['modelUpdated'],
 

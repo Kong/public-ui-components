@@ -182,7 +182,6 @@
         :allow-csv-export="true"
         :chart-data="(exploreResult)"
         :chart-options="analyticsChartOptions"
-        chart-title="Request count by Status Code"
         :legend-position="legendPosition"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
@@ -238,8 +237,8 @@ enum Metrics {
 }
 
 interface MetricSelection {
-  name: Metrics,
-  unit: string,
+  name: Metrics
+  unit: string
 }
 
 // Inject the app-links from the entry file
@@ -328,17 +327,22 @@ const exploreResult = computed<ExploreResultV4>(() => {
     }
   }, {})
 
+  const metaOverrides: Partial<QueryResponseMeta> = {
+    truncated: limitToggle.value,
+    limit: limitToggle.value ? 10 : 50,
+  }
+
   if (multiDimensionToggle.value) {
     return generateCrossSectionalData([{
       name: selectedMetric.value.name,
       unit: selectedMetric.value.unit,
-    }], dimensionMap)
+    }], dimensionMap, metaOverrides)
   } else {
     return generateCrossSectionalData([{
       name: selectedMetric.value.name,
       unit: selectedMetric.value.unit,
     }, ...(multiMetricToggle.value ? secondaryMetrics.value : [])],
-    dimensionMap)
+    dimensionMap, metaOverrides)
   }
 })
 

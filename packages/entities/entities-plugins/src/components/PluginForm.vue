@@ -24,7 +24,7 @@
       :config="config"
       :edit-id="pluginId"
       :entity-type="SupportedEntityType.Plugin"
-      :error-message="form.errorMessage"
+      :error-message="errorMessage"
       :fetch-url="fetchUrl"
       :form-fields="getRequestBody"
       :is-readonly="form.isReadonly"
@@ -48,11 +48,13 @@
         :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
         :entity-map="entityMap"
-        :record="record || undefined"
-        :schema="loadedSchema || {}"
+        :raw-schema="loadedSchema"
+        :record="record"
+        :schema="finalSchema"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
         @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
+        @validity-change="handleValidityChange"
       />
 
       <template #form-actions>
@@ -150,7 +152,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
-import { computed, onBeforeMount, reactive, ref, watch, type PropType } from 'vue'
+import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
@@ -169,10 +171,12 @@ import {
   type PluginFormState,
   type PluginOrdering,
   type CustomSchemas,
+  type PluginValidityChangeEvent,
 } from '../types'
 import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
+import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -296,7 +300,11 @@ const props = defineProps({
 
 const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
-const { customSchemas, typedefs } = composables.useSchemas({ app: props.config.app, credential: props.credential })
+const { customSchemas, typedefs } = composables.useSchemas({
+  app: props.config.app,
+  credential: props.credential,
+  experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
+})
 const { formatPluginFieldLabel } = composables.usePluginHelpers()
 const { getMessageFromError } = useErrors()
 const { capitalize } = useStringHelpers()
@@ -307,12 +315,18 @@ const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const isToggled = ref(false)
 const isEditing = computed(() => !!props.pluginId)
 const formType = computed((): EntityBaseFormType => props.pluginId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
-const loadedSchema = ref<Record<string, any> | null>(null)
+const loadedSchema = ref<Record<string, any> | undefined>(undefined)
+const finalSchema = ref<Record<string, any> | undefined>(undefined)
 const treatAsCredential = computed((): boolean => !!(props.credential && props.config.entityId))
-const record = ref<Record<string, any> | null>(null)
+const record = ref<Record<string, any> | undefined>(undefined)
 const configResponse = ref<Record<string, any>>({})
 const pluginPartialType = ref<PluginPartialType | undefined>() // specify whether the plugin is a CE/EE for applying partial
 const pluginRedisPath = ref<string | undefined>() // specify the path to the redis partial
+provide(REDIS_PARTIAL_INFO, {
+  redisType: pluginPartialType,
+  redisPath: pluginRedisPath,
+  isEditing: isEditing.value,
+})
 const formLoading = ref(false)
 const formFieldsOriginal = reactive<PluginFormFields>({
   enabled: true,
@@ -327,7 +341,8 @@ const form = reactive<PluginFormState>({
     tags: [],
   },
   isReadonly: false,
-  errorMessage: '',
+  clientErrorMessage: '',
+  serverErrorMessage: '',
 })
 
 const tabs = ref<Tab[]>([
@@ -564,6 +579,12 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
       scheme.type = 'array'
     }
     const field = parentKey ? `${parentKey}-${key}` : `${key}`
+
+    // the field is marked for deletion in the frontend schema
+    if (pluginSchema?.fieldsToDelete?.includes(field)) {
+      unset(initialFormSchema, field)
+      return
+    }
 
     // Required, omit keys with overwrite and hidden attributes for Kong Cloud
     if (Object.prototype.hasOwnProperty.call(scheme, 'overwrite') || scheme.hidden) {
@@ -1102,6 +1123,26 @@ const handleUpdate = (payload: Record<string, any>) => {
   }
 }
 
+const clientSideErrors = ref(new Map<string, Error | string>())
+const errorMessage = computed((): string => {
+  return [form.clientErrorMessage, form.serverErrorMessage].filter(Boolean).join('; ')
+})
+const handleValidityChange = (event: PluginValidityChangeEvent) => {
+  if (event.valid) {
+    clientSideErrors.value.delete(event.model)
+  } else {
+    clientSideErrors.value.set(event.model, event.error!)
+  }
+
+  form.clientErrorMessage = [...clientSideErrors.value.entries()]
+    .map(([model, error]) => `${model}: ${typeof error === 'string' ? error : getMessageFromError(error)}`)
+    .join('; ')
+
+  if (form.clientErrorMessage) {
+    form.serverErrorMessage = ''
+  }
+}
+
 watch([entityMap, initialized], (newData, oldData) => {
   const newEntityData = newData[0] !== oldData[0]
   const newinitialized = newData[1]
@@ -1109,8 +1150,6 @@ watch([entityMap, initialized], (newData, oldData) => {
 
   // rebuild schema if its not a credential and we either just determined a new entity id, or newly initialized the data
   if (!treatAsCredential.value && formType.value === EntityBaseFormType.Edit && (newEntityData || (newinitialized && newinitialized !== oldinitialized))) {
-    schemaLoading.value = true
-
     const initialFormSchema = buildFormSchema('config', configResponse.value, defaultFormSchema)
     if (isCustomPlugin.value) {
       initialFormSchema._isCustomPlugin = true
@@ -1118,8 +1157,7 @@ watch([entityMap, initialized], (newData, oldData) => {
     if (pluginPartialType.value) {
       initialFormSchema._supported_redis_partial_type = pluginPartialType.value
     }
-    loadedSchema.value = initialFormSchema
-    schemaLoading.value = false
+    finalSchema.value = initialFormSchema
   }
 }, { deep: true })
 
@@ -1219,6 +1257,11 @@ const getRequestBody = computed((): Record<string, any> => {
 
 // make the actual API request to save on create/edit
 const saveFormData = async (): Promise<void> => {
+  if (form.clientErrorMessage) {
+    // if there are still client errors, don't submit the form
+    return
+  }
+
   // if save/cancel buttons are hidden, don't submit on hitting Enter
   if (props.isWizardStep) {
     return
@@ -1236,7 +1279,7 @@ const saveFormData = async (): Promise<void> => {
         originalModel: formFieldsOriginal,
         model: form.fields,
         payload,
-        schema: loadedSchema.value,
+        schema: finalSchema.value,
       })
     }
 
@@ -1265,7 +1308,7 @@ const saveFormData = async (): Promise<void> => {
     // Emit an update event for the host app to respond to
     emit('update', response?.data)
   } catch (error: any) {
-    form.errorMessage = getMessageFromError(error)
+    form.serverErrorMessage = getMessageFromError(error)
     // Emit the error for the host app
     emit('error', error)
   } finally {
@@ -1306,15 +1349,16 @@ onBeforeMount(async () => {
       const data = CREDENTIAL_SCHEMAS[pluginType]
       credentialType.value = pluginType
 
-      loadedSchema.value = buildFormSchema('', data, {})
+      finalSchema.value = buildFormSchema('', data, {})
       schemaLoading.value = false
     } else { // handling for standard plugins
       const data = props.schema ?? (await axiosInstance.get(schemaUrl.value)).data
+      loadedSchema.value = data
 
       if (data) {
         if (treatAsCredential.value) {
           // credential schema response is structured differently, no `config` object or default schema
-          loadedSchema.value = buildFormSchema('', data, {})
+          finalSchema.value = buildFormSchema('', data, {})
           schemaLoading.value = false
         } else {
           // start from the config part of the schema
@@ -1356,12 +1400,13 @@ onBeforeMount(async () => {
             }
             // pass whether the plugin is a custom plugin to the form schema
             if (isCustomPlugin.value) initialFormSchema._isCustomPlugin = true
-            loadedSchema.value = initialFormSchema
+            finalSchema.value = initialFormSchema
           }
         }
       }
     }
   } catch (error: any) {
+    console.error(error)
     fetchSchemaError.value = getMessageFromError(error)
     // Emit the error for the host app
     emit('error:fetch-schema', error)

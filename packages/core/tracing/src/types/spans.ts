@@ -52,6 +52,11 @@ export interface SpanNode {
 }
 
 /**
+ * Types for values in the Expressions (ATC) language.
+ */
+export type ATCValueType = 'String' | 'IpCidr' | 'IpAddr' | 'Int' | 'Regex'
+
+/**
  * Presenting the definition of a field in the Expressions (ATC) language.
  */
 export interface ExpressionsField {
@@ -59,7 +64,7 @@ export interface ExpressionsField {
   /**
    * When this field is omitted, we will use the `type` of its residing attribute.
    */
-  type?: string
+  type?: ATCValueType
 }
 
 /**
@@ -70,7 +75,7 @@ export interface SpanSamplerAttribute {
   /**
    * Type under the context of the Expressions (ATC) language.
    */
-  type: string
+  type: ATCValueType
   /**
    * Aliases for the usage in Expressions (ATC).
    */
@@ -96,5 +101,5 @@ export interface SpanTrees {
   /**
    * All spans sorted by start time.
    */
-  spans: Span<bigint>[]
+  spans: Array<Span<bigint>>
 }

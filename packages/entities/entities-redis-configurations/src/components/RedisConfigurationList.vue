@@ -25,17 +25,22 @@
       </template>
       <!-- Create action -->
       <template #toolbar-button>
-        <PermissionsWrapper :auth-function="() => canCreate()">
-          <KButton
-            appearance="primary"
-            data-testid="toolbar-add-redis-configuration"
-            size="large"
-            :to="config.createRoute"
-          >
-            <AddIcon />
-            {{ t('actions.create') }}
-          </KButton>
-        </PermissionsWrapper>
+        <Teleport
+          :disabled="!useActionOutside"
+          to="#kong-ui-app-page-header-action-button"
+        >
+          <PermissionsWrapper :auth-function="canCreate">
+            <KButton
+              appearance="primary"
+              data-testid="toolbar-add-redis-configuration"
+              size="large"
+              :to="config.createRoute"
+            >
+              <AddIcon />
+              {{ t('actions.create') }}
+            </KButton>
+          </PermissionsWrapper>
+        </Teleport>
       </template>
 
       <!-- Column Formatting -->
@@ -92,7 +97,7 @@
       </template>
 
       <template
-        v-if="enableV2EmptyStates && config.app === 'konnect'"
+        v-if="enableV2EmptyStates"
         #empty-state
       >
         <EntityEmptyState
@@ -111,14 +116,12 @@
               description: t('list.empty_state.feature_2.description')
             },
           ]"
-          :learn-more="config.app === 'konnect'"
           :title="t('redis.title')"
           @click:create="handleCreate"
           @click:learn-more="() => emit('click:learn-more')"
         >
           <template #image>
             <div class="empty-state-icon-gateway">
-              <!-- todo(zehao): need a new icon -->
               <DeployIcon
                 :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
                 :size="KUI_ICON_SIZE_50"
@@ -127,11 +130,11 @@
           </template>
 
           <template #feature-0-icon>
-            <DeployIcon />
+            <ClipboardIcon />
           </template>
 
           <template #feature-1-icon>
-            <RuntimesIcon /> <!-- todo(zehao): need a new icon -->
+            <RefreshIcon />
           </template>
         </EntityEmptyState>
       </template>
@@ -184,7 +187,7 @@ import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
-import { RuntimesIcon, DeployIcon } from '@kong/icons'
+import { RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
 
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
@@ -207,12 +210,12 @@ import type { BaseTableHeaders, EmptyStateOptions, ExactMatchFilterConfig, Filte
 import type { AxiosError } from 'axios'
 
 const emit = defineEmits<{
-  (e: 'click:learn-more'): void,
-  (e: 'click:plugin', param: { id: string, plugin: string }): void,
-  (e: 'copy:error', payload: CopyEventPayload): void,
-  (e: 'copy:success', payload: CopyEventPayload): void,
-  (e: 'delete:success', key: EntityRow): void,
-  (e: 'error', error: AxiosError): void,
+  (e: 'click:learn-more'): void
+  (e: 'click:plugin', param: { id: string, plugin: string }): void
+  (e: 'copy:error', payload: CopyEventPayload): void
+  (e: 'copy:success', payload: CopyEventPayload): void
+  (e: 'delete:success', key: EntityRow): void
+  (e: 'error', error: AxiosError): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -255,6 +258,11 @@ const props = defineProps({
     type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
+  },
+  /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
+  useActionOutside: {
+    type: Boolean,
+    default: false,
   },
   /**
    * Enables the new empty state design, this prop can be removed when
@@ -302,7 +310,7 @@ const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 const fetcherCacheKey = ref<number>(1)
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl.value)
+const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl)
 const { i18n: { t } } = composables.useI18n()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()
@@ -314,7 +322,7 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   if (isExactMatch) {
     return {
       isExactMatch: true,
-      placeholder: t('search.placeholder'),
+      placeholder: t('search.placeholder_for_exact_match'),
     } as ExactMatchFilterConfig
   }
 
@@ -451,10 +459,10 @@ const handleCreate = (): void => {
 /**
  * Copy ID action
  */
-const copyId = (row: EntityRow, copyToClipboard: (val: string) => boolean): void => {
+const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const id = row.id as string
 
-  if (!copyToClipboard(id)) {
+  if (!await copyToClipboard(id)) {
     // Emit the error event for the host app
     emit('copy:error', {
       entity: row as any,

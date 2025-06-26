@@ -3,6 +3,306 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.1...@kong-ui-public/analytics-chart@9.1.2) (2025-06-26)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [9.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.0...@kong-ui-public/analytics-chart@9.1.1) (2025-06-23)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [9.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.11...@kong-ui-public/analytics-chart@9.1.0) (2025-06-18)
+
+
+### Features
+
+* **analytics:** consistent formatting of value/units in tooltips [MA-4007] ([#2188](https://github.com/Kong/public-ui-components/issues/2188)) ([ca523a8](https://github.com/Kong/public-ui-components/commit/ca523a8efe84a20681e69c89aaae5c8219a849a7))
+
+
+
+
+
+## [9.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.10...@kong-ui-public/analytics-chart@9.0.11) (2025-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2189](https://github.com/Kong/public-ui-components/issues/2189)) ([23e5544](https://github.com/Kong/public-ui-components/commit/23e554427eb53279cad3368770661f86bea2c8d8))
+
+
+
+
+
+## [9.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.9...@kong-ui-public/analytics-chart@9.0.10) (2025-06-10)
+
+
+### Bug Fixes
+
+* chart tooltip cutoff when dragged outside chart boundary ([#2173](https://github.com/Kong/public-ui-components/issues/2173)) ([8648d47](https://github.com/Kong/public-ui-components/commit/8648d474d1c60b55774c6922f34be75f81d80489))
+
+
+
+
+
+## [9.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.8...@kong-ui-public/analytics-chart@9.0.9) (2025-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [9.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.7...@kong-ui-public/analytics-chart@9.0.8) (2025-05-27)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [9.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.6...@kong-ui-public/analytics-chart@9.0.7) (2025-05-27)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [9.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.5...@kong-ui-public/analytics-chart@9.0.6) (2025-05-22)
+
+
+### Bug Fixes
+
+* **analytics-chart:** horizontal chart legend margin [MA-3841] ([#2136](https://github.com/Kong/public-ui-components/issues/2136)) ([60c77e6](https://github.com/Kong/public-ui-components/commit/60c77e659d535791029009d93667463eab76b8bf))
+
+
+
+
+
+## [9.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.4...@kong-ui-public/analytics-chart@9.0.5) (2025-05-22)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [9.0.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.3...@kong-ui-public/analytics-chart@9.0.4) (2025-05-15)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [9.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.2...@kong-ui-public/analytics-chart@9.0.3) (2025-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [9.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.1...@kong-ui-public/analytics-chart@9.0.2) (2025-05-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.26.0 ([#2107](https://github.com/Kong/public-ui-components/issues/2107)) ([6ba84d3](https://github.com/Kong/public-ui-components/commit/6ba84d3eb5df7fa0880876455f78a75fbc69960a))
+
+
+
+
+
+## [9.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.0.0...@kong-ui-public/analytics-chart@9.0.1) (2025-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [9.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.11...@kong-ui-public/analytics-chart@9.0.0) (2025-05-05)
+
+
+### Bug Fixes
+
+* **analytics:** CSV export and FF removal [MA-3895, MA-3840] ([#2103](https://github.com/Kong/public-ui-components/issues/2103)) ([d0f792f](https://github.com/Kong/public-ui-components/commit/d0f792f663c3857690f4087d3d7d0f5a0ab52ccf))
+
+
+### BREAKING CHANGES
+
+* **analytics:** remove unused CsvExportButton component.
+
+
+
+
+
+## [8.1.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.10...@kong-ui-public/analytics-chart@8.1.11) (2025-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [8.1.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.9...@kong-ui-public/analytics-chart@8.1.10) (2025-05-02)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [8.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.8...@kong-ui-public/analytics-chart@8.1.9) (2025-05-02)
+
+
+### Bug Fixes
+
+* **analytics:** single value chart show empty when null [KHCP-16024] ([#2099](https://github.com/Kong/public-ui-components/issues/2099)) ([1a6b41d](https://github.com/Kong/public-ui-components/commit/1a6b41d47a6d072de71cdf53af2cebf328669413))
+
+
+
+
+
+## [8.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.7...@kong-ui-public/analytics-chart@8.1.8) (2025-05-01)
+
+
+### Bug Fixes
+
+* **deps:** remove recursive kongponents dependency ([#2100](https://github.com/Kong/public-ui-components/issues/2100)) ([3006571](https://github.com/Kong/public-ui-components/commit/3006571fc6e0c522a622bfed81ca616b5e072555))
+
+
+
+
+
+## [8.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.6...@kong-ui-public/analytics-chart@8.1.7) (2025-04-24)
+
+
+### Bug Fixes
+
+* show tooltip on warning icon and limit size ma-3830 ma-1889 ([#2091](https://github.com/Kong/public-ui-components/issues/2091)) ([2352527](https://github.com/Kong/public-ui-components/commit/235252752c3e9cd11229a2043fba46e06ff24601))
+
+
+
+
+
+## [8.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.5...@kong-ui-public/analytics-chart@8.1.6) (2025-04-24)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#2088](https://github.com/Kong/public-ui-components/issues/2088)) ([81354c5](https://github.com/Kong/public-ui-components/commit/81354c5dc545cd9cc7fc830e5e34448c4f1ba7ae))
+
+
+
+
+
+## [8.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.4...@kong-ui-public/analytics-chart@8.1.5) (2025-04-15)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [8.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.3...@kong-ui-public/analytics-chart@8.1.4) (2025-04-15)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [8.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.2...@kong-ui-public/analytics-chart@8.1.3) (2025-04-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [8.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.1...@kong-ui-public/analytics-chart@8.1.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* remove dollar sign prefix ([#2076](https://github.com/Kong/public-ui-components/issues/2076)) ([d96781b](https://github.com/Kong/public-ui-components/commit/d96781b40ddd74cdaaf4e32f6ef279ec99331a12))
+
+
+
+
+
+## [8.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.1.0...@kong-ui-public/analytics-chart@8.1.1) (2025-04-07)
+
+
+### Bug Fixes
+
+* custom chart plugin states leaking across chart instances ([#2070](https://github.com/Kong/public-ui-components/issues/2070)) ([16d973d](https://github.com/Kong/public-ui-components/commit/16d973dcfa75c167fab53ea44787224f33d00a6e))
+
+
+
+
+
+# [8.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@8.0.0...@kong-ui-public/analytics-chart@8.1.0) (2025-04-04)
+
+
+### Features
+
+* **analytics:** add single value simple chart [MA-3730] ([#2064](https://github.com/Kong/public-ui-components/issues/2064)) ([2cc0bf3](https://github.com/Kong/public-ui-components/commit/2cc0bf39d9be17d25b453dc5ae37feffb81bf99e))
+
+
+
+
+
+# [8.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@7.0.8...@kong-ui-public/analytics-chart@8.0.0) (2025-03-27)
+
+
+### Features
+
+* **analytics:** make explore URL determination async [MA-3590] ([#2050](https://github.com/Kong/public-ui-components/issues/2050)) ([06b6e41](https://github.com/Kong/public-ui-components/commit/06b6e412f09ff4c31bc45754322351281c36a306))
+
+
+### BREAKING CHANGES
+
+* **analytics:** change signature of analytics bridge
+
+
+
+
+
+## [7.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@7.0.7...@kong-ui-public/analytics-chart@7.0.8) (2025-03-26)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [7.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@7.0.6...@kong-ui-public/analytics-chart@7.0.7) (2025-03-25)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [7.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@7.0.5...@kong-ui-public/analytics-chart@7.0.6) (2025-03-25)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [7.0.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@7.0.4...@kong-ui-public/analytics-chart@7.0.5) (2025-03-20)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

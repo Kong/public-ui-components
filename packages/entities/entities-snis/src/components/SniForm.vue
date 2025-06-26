@@ -124,9 +124,9 @@ import {
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
-  (e: 'update', data: Record<string, any>): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
+  (e: 'update', data: Record<string, any>): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -317,7 +317,7 @@ const availableCertificates = computed((): SelectItem[] => {
   }))
 })
 
-const setCertIds = (data: Record<string, any>[]) => {
+const setCertIds = (data: Array<Record<string, any>>) => {
   // Clear the set
   existingCertificates.value.clear()
 

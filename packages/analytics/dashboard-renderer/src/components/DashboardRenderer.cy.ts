@@ -3,8 +3,9 @@ import type {
   AdvancedDatasourceQuery,
   AnalyticsBridge,
   AnalyticsConfigV2,
+  DashboardConfig,
   DatasourceAwareQuery,
-  ExploreFilter,
+  ExploreFilterAll,
   ExploreResultV4,
   TileConfig,
   Timeframe,
@@ -23,11 +24,13 @@ import {
   routeExploreResponse,
   summaryDashboardConfig,
   simpleConfigNoFilters,
-  fourByFourDashboardConfigJustCharts,
+  fourByFourDashboardConfigJustCharts, oneTileDashboardConfig,
+  simpleConfigGlobalFilters,
 } from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
 import { EntityLink } from '@kong-ui-public/entities-shared'
 import { dragTile } from '../test-utils'
+import { ref, watch, type Ref } from 'vue'
 
 interface MockOptions {
   failToResolveConfig?: boolean
@@ -106,9 +109,8 @@ describe('<DashboardRenderer />', () => {
       return Promise.resolve(config)
     }
 
-    // @ts-ignore: TS doesn't infer things correctly.  NoInfer may help.
     const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = (key) => {
-      return true
+      return true as any
     }
 
     const fetchComponentFn = (name: string) => {
@@ -119,7 +121,6 @@ describe('<DashboardRenderer />', () => {
       queryFn: cy.spy(queryFn).as('fetcher'),
       configFn,
       evaluateFeatureFlagFn,
-
       fetchComponent: opts?.renderEntityLink ? fetchComponentFn : undefined,
     }
   }
@@ -133,11 +134,7 @@ describe('<DashboardRenderer />', () => {
           time_range: '15m',
         },
       },
-      config: {
-        gridSize: {
-          cols: 2,
-          rows: 4,
-        },
+      modelValue: {
         tiles: [
           {
             definition: {
@@ -209,7 +206,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: oneDayTimeframe.v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -272,7 +269,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: customTimeframe.v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -290,24 +287,24 @@ describe('<DashboardRenderer />', () => {
 
     cy.get('@fetcher').should('have.been.calledWithMatch', Cypress.sinon.match({ query: {
       filters: [{
-        dimension: 'control_plane',
-        type: 'in',
-        values: ['default_uuid'],
+        field: 'control_plane',
+        operator: 'in',
+        value: ['default_uuid'],
       }],
     } }))
   })
 
   it('has reactive contextual filters', () => {
-    const filter1: ExploreFilter = {
-      type: 'in',
-      dimension: 'api_product',
-      values: ['blah'],
+    const filter1: ExploreFilterAll = {
+      operator: 'in',
+      field: 'api_product',
+      value: ['blah'],
     }
 
-    const filter2: ExploreFilter = {
-      type: 'in',
-      dimension: 'api_product',
-      values: ['arrgh'],
+    const filter2: ExploreFilterAll = {
+      operator: 'in',
+      field: 'api_product',
+      value: ['arrgh'],
     }
 
     const oneDayTimeframe = TimePeriods.get(TimeframeKeys.ONE_DAY)!
@@ -317,7 +314,7 @@ describe('<DashboardRenderer />', () => {
         filters: [filter1],
         timeSpec: oneDayTimeframe.v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -339,7 +336,7 @@ describe('<DashboardRenderer />', () => {
           filters: Cypress.sinon.match.some(Cypress.sinon.match(filter1)),
         } }))
         .should('have.been.calledWithMatch', Cypress.sinon.match({ query: {
-          filters: Cypress.sinon.match.some(Cypress.sinon.match({ values: ['default_uuid'] })),
+          filters: Cypress.sinon.match.some(Cypress.sinon.match({ value: ['default_uuid'] })),
         } }))
         .then(() => {
           cy.get('@fetcher').then((m) => m.resetHistory()).then(() => {
@@ -358,7 +355,7 @@ describe('<DashboardRenderer />', () => {
               cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query: {
                 filters: Cypress.sinon.match.some(Cypress.sinon.match(filter2)),
               } })).should('have.been.calledWithMatch', Cypress.sinon.match({ query:{
-                filters: Cypress.sinon.match.some(Cypress.sinon.match({ values: ['default_uuid'] })),
+                filters: Cypress.sinon.match.some(Cypress.sinon.match({ value: ['default_uuid'] })),
               } }))
             })
           })
@@ -378,8 +375,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: customTimeframe.v4Query(),
       },
-      config: {
-        gridSize: { cols: 3, rows: 2 },
+      modelValue: {
         tiles: [
           {
             definition: {
@@ -432,8 +428,7 @@ describe('<DashboardRenderer />', () => {
         filters: [],
         timeSpec: customTimeframe.v4Query(),
       },
-      config: {
-        gridSize: { cols: 3, rows: 2 },
+      modelValue: {
         tiles: [
           {
             definition: {
@@ -480,7 +475,7 @@ describe('<DashboardRenderer />', () => {
         // Use default timeframe for the org: don't provide one here.
         filters: [],
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -501,14 +496,14 @@ describe('<DashboardRenderer />', () => {
         // Use default timeframe for the org: don't provide one here.
         filters: [
           {
-            dimension: 'api_product',
-            type: 'in',
-            values: ['lower retention'],
+            field: 'api_product',
+            operator: 'in',
+            value: ['lower retention'],
           },
         ],
         timeSpec: ((TimePeriods.get(TimeframeKeys.ONE_DAY)) as Timeframe).v4Query(),
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -526,7 +521,7 @@ describe('<DashboardRenderer />', () => {
       } }))
 
       // Check that it replaces the description token.
-      cy.get('.header-description').should('have.text', 'Last 24-Hour Summary')
+      cy.get('.header-description').should('have.text', 'Last 24-hour summary')
     })
   })
 
@@ -536,13 +531,13 @@ describe('<DashboardRenderer />', () => {
         // Use default timeframe for the org: don't provide one here.
         filters: [
           {
-            dimension: 'api_product',
-            type: 'in',
-            values: ['basic'],
+            field: 'api_product',
+            operaator: 'in',
+            value: ['basic'],
           },
         ],
       },
-      config: summaryDashboardConfig,
+      modelValue: summaryDashboardConfig,
     }
 
     cy.mount(DashboardRenderer, {
@@ -563,7 +558,7 @@ describe('<DashboardRenderer />', () => {
       }))
 
       // Check that it replaces the description token.
-      cy.get('.header-description').should('have.text', 'Last 7-Day Summary')
+      cy.get('.header-description').should('have.text', 'Last 7-day summary')
     })
   })
 
@@ -574,13 +569,13 @@ describe('<DashboardRenderer />', () => {
         filters: [
           // Specify a filter to avoid caching.
           {
-            dimension: 'api_product',
-            type: 'in',
-            values: ['overriding datasource'],
+            field: 'api_product',
+            operator: 'in',
+            value: ['overriding datasource'],
           },
         ],
       },
-      config: simpleConfigNoFilters,
+      modelValue: simpleConfigNoFilters,
     }
 
     cy.mount(DashboardRenderer, {
@@ -607,19 +602,19 @@ describe('<DashboardRenderer />', () => {
         filters: [
           // Valid filter
           {
-            dimension: 'api_product',
-            type: 'in',
-            values: ['some product'],
+            field: 'api_product',
+            operator: 'in',
+            value: ['some product'],
           },
           // Invalid filter
           {
-            dimension: 'ai_provider',
-            type: 'in',
-            values: ['some provider'],
+            field: 'ai_provider',
+            operator: 'in',
+            value: ['some provider'],
           },
         ],
       },
-      config: simpleConfigNoFilters,
+      modelValue: simpleConfigNoFilters,
     }
 
     cy.mount(DashboardRenderer, {
@@ -637,16 +632,64 @@ describe('<DashboardRenderer />', () => {
         query: {
           filters: [
             {
-              dimension: 'api_product',
-              type: 'in',
-              values: ['some product'],
+              field: 'api_product',
+              operator: 'in',
+              value: ['some product'],
             },
           ],
         },
       }))
 
       // Check that it replaces the description token.
-      cy.get('.header-description').should('have.text', 'Last 7-Day Summary')
+      cy.get('.header-description').should('have.text', 'Last 7-day summary')
+    })
+  })
+
+  it('merges global filters', () => {
+    const props = {
+      context: {
+        filters: [
+          // Valid filter
+          {
+            field: 'api_product',
+            operator: 'in',
+            value: ['some product'],
+          },
+        ],
+      },
+      modelValue: simpleConfigGlobalFilters,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    }).then(() => {
+      // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
+      cy.get('@fetcher').should('have.callCount', 3)
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
+        datasource: 'advanced',
+        query: {
+          filters: [
+            {
+              field: 'api_product',
+              operator: 'in',
+              value: ['some product'],
+            },
+            {
+              field: 'control_plane',
+              operator: 'in',
+              value: ['default_uuid'],
+            },
+          ],
+        },
+      }))
+
+      // Check that it replaces the description token.
+      cy.get('.header-description').should('have.text', 'Last 7-day summary')
     })
   })
 
@@ -659,11 +702,7 @@ describe('<DashboardRenderer />', () => {
           time_range: '24h',
         },
       },
-      config: {
-        gridSize: {
-          cols: 6,
-          rows: 4,
-        },
+      modelValue: {
         tileHeight: 167,
         tiles: [
           {
@@ -681,9 +720,9 @@ describe('<DashboardRenderer />', () => {
                   'time',
                 ],
                 filters: [{
-                  dimension: 'control_plane',
-                  type: 'in',
-                  values: ['default_uuid'],
+                  field: 'control_plane',
+                  operator: 'in',
+                  value: ['default_uuid'],
                 }],
                 time_range: {
                   // This should still render a badge even though it matches the global context.
@@ -849,7 +888,7 @@ describe('<DashboardRenderer />', () => {
         },
         editable: true,
       },
-      config: fourByFourDashboardConfigJustCharts,
+      modelValue: fourByFourDashboardConfigJustCharts,
     }
 
     cy.mount(DashboardRenderer, {
@@ -871,6 +910,7 @@ describe('<DashboardRenderer />', () => {
   })
 
   it('tiles maintain row-column order after reordering', () => {
+    const configRef = ref<DashboardConfig>(fourByFourDashboardConfigJustCharts)
     const props = {
       context: {
         filters: [],
@@ -880,16 +920,11 @@ describe('<DashboardRenderer />', () => {
         },
         editable: true,
       },
-      config: fourByFourDashboardConfigJustCharts,
+      modelValue: configRef.value,
     }
-
-    const updateTilesSpy = cy.spy().as('updateTilesSpy')
 
     cy.mount(DashboardRenderer, {
       props,
-      attrs: {
-        onUpdateTiles: updateTilesSpy,
-      },
       global: {
         provide: {
           [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
@@ -909,11 +944,9 @@ describe('<DashboardRenderer />', () => {
 
     dragTile(source, destination)
 
-    cy.get('@updateTilesSpy').should('have.been.called')
-    cy.get('@updateTilesSpy')
-      .its('firstCall.args.0')
-      .then(tiles => {
-        expect(tiles.map((tile: TileConfig) => tile.id)).to.deep.equal(updatedTileIDOrder)
-      })
+    cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
+      const currentOrder = ref.value.tiles.map((tile: TileConfig) => tile.id)
+      expect(currentOrder).to.deep.equal(updatedTileIDOrder)
+    })
   })
 })

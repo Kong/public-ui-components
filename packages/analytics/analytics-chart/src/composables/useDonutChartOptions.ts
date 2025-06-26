@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, onUnmounted } from 'vue'
 import type { DonutChartOptions, ExternalTooltipContext } from '../types'
 import type {
   TooltipItem,
@@ -12,9 +12,13 @@ import {
 import { horizontalTooltipPositioning, tooltipBehavior } from '../utils'
 
 export default function useDonutChartOptions(chartOptions: DonutChartOptions) {
+
+  const chartID = chartOptions.tooltipState.chartID
+  const positionKey = `donutChartTooltipPosition-${chartID}`
+
   const tooltipOptions = {
     enabled: false,
-    position: 'donutChartTooltipPosition',
+    position: positionKey,
     callbacks: {
       label: (context: TooltipItem<'doughnut'>) => {
         return {
@@ -25,7 +29,7 @@ export default function useDonutChartOptions(chartOptions: DonutChartOptions) {
     },
   }
 
-  Tooltip.positioners.donutChartTooltipPosition = function(elements, position) {
+  Tooltip.positioners[positionKey] = function(elements, position) {
     if (!elements.length) {
       return false
     }
@@ -70,6 +74,12 @@ export default function useDonutChartOptions(chartOptions: DonutChartOptions) {
     }
   })
 
+  onUnmounted(() => {
+    if (Tooltip.positioners[positionKey]) {
+      delete Tooltip.positioners[positionKey]
+    }
+  })
+
   return {
     options,
   }
@@ -77,6 +87,6 @@ export default function useDonutChartOptions(chartOptions: DonutChartOptions) {
 
 declare module 'chart.js' {
   interface TooltipPositionerMap {
-    donutChartTooltipPosition: TooltipPositionerFunction<ChartType>;
+    [key: string]: TooltipPositionerFunction<ChartType>
   }
 }

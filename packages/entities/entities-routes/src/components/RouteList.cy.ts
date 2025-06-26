@@ -254,8 +254,8 @@ describe('<RouteList />', () => {
 
   describe('Kong Manager', () => {
     const interceptKM = (params?: {
-      mockData?: FetcherRawResponse;
-      alias?: string;
+      mockData?: FetcherRawResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -273,8 +273,8 @@ describe('<RouteList />', () => {
     }
 
     const interceptKMMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -554,8 +554,8 @@ describe('<RouteList />', () => {
 
   describe('Konnect', () => {
     const interceptKonnect = (params?: {
-      mockData?: FetcherResponse;
-      alias?: string;
+      mockData?: FetcherResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -573,8 +573,8 @@ describe('<RouteList />', () => {
     }
 
     const interceptKonnectMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {

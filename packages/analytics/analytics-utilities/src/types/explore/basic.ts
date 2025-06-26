@@ -22,16 +22,10 @@ export const filterableBasicExploreDimensions = makeFilterable(queryableBasicExp
 
 export type FilterableBasicExploreDimensions = typeof filterableBasicExploreDimensions[number]
 
-export interface BasicExploreFilter {
-  type: ExploreFilterTypesV2
-  dimension: FilterableBasicExploreDimensions
-  values: (string | number | null)[]
-}
-
 export interface BasicExploreInFilterV2 {
   operator: ExploreFilterTypesV2
   field: FilterableBasicExploreDimensions
-  value: (string | number | null)[]
+  value: Array<string | number | null>
 }
 
 export interface BasicExploreEmptyFilterV2 {
@@ -47,7 +41,7 @@ export const basicExploreAggregations = [
 
 export type BasicExploreAggregations = typeof basicExploreAggregations[number]
 
-export type BasicExploreFilterAll = BasicExploreFilter | BasicExploreInFilterV2 | BasicExploreEmptyFilterV2
+export type BasicExploreFilterAll = BasicExploreInFilterV2 | BasicExploreEmptyFilterV2
 
 export interface BasicExploreQuery {
   metrics?: BasicExploreAggregations[]

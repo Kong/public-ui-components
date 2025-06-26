@@ -3,6 +3,114 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.39](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.38...@kong-ui-public/spec-renderer@2.3.39) (2025-06-26)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.3.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.37...@kong-ui-public/spec-renderer@2.3.38) (2025-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2189](https://github.com/Kong/public-ui-components/issues/2189)) ([23e5544](https://github.com/Kong/public-ui-components/commit/23e554427eb53279cad3368770661f86bea2c8d8))
+
+
+
+
+
+## [2.3.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.36...@kong-ui-public/spec-renderer@2.3.37) (2025-05-28)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.3.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.35...@kong-ui-public/spec-renderer@2.3.36) (2025-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.3.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.34...@kong-ui-public/spec-renderer@2.3.35) (2025-05-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.26.0 ([#2107](https://github.com/Kong/public-ui-components/issues/2107)) ([6ba84d3](https://github.com/Kong/public-ui-components/commit/6ba84d3eb5df7fa0880876455f78a75fbc69960a))
+
+
+
+
+
+## [2.3.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.33...@kong-ui-public/spec-renderer@2.3.34) (2025-05-06)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.3.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.32...@kong-ui-public/spec-renderer@2.3.33) (2025-05-05)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.3.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.31...@kong-ui-public/spec-renderer@2.3.32) (2025-05-01)
+
+
+### Bug Fixes
+
+* **deps:** remove recursive kongponents dependency ([#2100](https://github.com/Kong/public-ui-components/issues/2100)) ([3006571](https://github.com/Kong/public-ui-components/commit/3006571fc6e0c522a622bfed81ca616b5e072555))
+
+
+
+
+
+## [2.3.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.30...@kong-ui-public/spec-renderer@2.3.31) (2025-04-24)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies (minor) ([#2088](https://github.com/Kong/public-ui-components/issues/2088)) ([81354c5](https://github.com/Kong/public-ui-components/commit/81354c5dc545cd9cc7fc830e5e34448c4f1ba7ae))
+
+
+
+
+
+## [2.3.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.29...@kong-ui-public/spec-renderer@2.3.30) (2025-03-26)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.3.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.28...@kong-ui-public/spec-renderer@2.3.29) (2025-03-25)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.3.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.27...@kong-ui-public/spec-renderer@2.3.28) (2025-03-25)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
 ## [2.3.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.26...@kong-ui-public/spec-renderer@2.3.27) (2025-03-20)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

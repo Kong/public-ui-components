@@ -315,7 +315,7 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
 
     li {
       align-items: center;
-      margin-top: 0;
+      margin: $kui-space-0;
 
       .label {
         line-height: $kui-line-height-40;
@@ -335,7 +335,8 @@ const positionToClass = (position: `${ChartLegendPosition}`) => {
     // Color bar preceding label
     .square-marker {
       height: 8px;
-      margin: 0 $kui-space-30 0 0;
+      margin: $kui-space-0;
+      margin-right: $kui-space-30;
       width: 8px;
     }
 

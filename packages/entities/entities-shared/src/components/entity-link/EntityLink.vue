@@ -133,6 +133,7 @@ const onCopyUuid = async (copyToClipboard: (str: string) => Promise<boolean>): P
 
   .entity-link {
     display: flex;
+    flex: 1;
 
     :deep(.external-link-icon) {
       color: $kui-color-text-primary;
@@ -140,7 +141,6 @@ const onCopyUuid = async (copyToClipboard: (str: string) => Promise<boolean>): P
       // Match size of copy icon
       padding: $kui-space-10;
     }
-    flex: 1;
   }
 
   .entity-link-label {

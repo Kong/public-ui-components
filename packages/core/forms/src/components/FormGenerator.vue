@@ -191,7 +191,7 @@ import formRedis from './FormRedis.vue'
 import formMixin from './FormMixin.vue'
 
 export default {
-  name: 'FormGenerator',
+  name: 'VueFormGenerator',
   components: { formGroup, formRedis },
   mixins: [formMixin],
 

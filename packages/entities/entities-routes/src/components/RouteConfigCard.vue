@@ -11,117 +11,6 @@
       @fetch:success="handleSuccess"
       @loading="(val: boolean) => $emit('loading', val)"
     >
-      <template #https_redirect_status_code-label-tooltip>
-        <i18nT
-          keypath="form.fields.https_redirect_status_code.tooltip"
-          scope="global"
-        >
-          <template #code1>
-            <code>{{ t('form.fields.https_redirect_status_code.code1') }}</code>
-          </template>
-          <template #code2>
-            <code>{{ t('form.fields.https_redirect_status_code.code2') }}</code>
-          </template>
-          <template #code3>
-            <code>{{ t('form.fields.https_redirect_status_code.code3') }}</code>
-          </template>
-          <template #code4>
-            <code>{{ t('form.fields.https_redirect_status_code.code4') }}</code>
-          </template>
-        </i18nT>
-      </template>
-
-      <template #regex_priority-label-tooltip>
-        <i18nT
-          keypath="form.fields.regex_priority.tooltip"
-          scope="global"
-        >
-          <template #code1>
-            <code>{{ t('form.fields.regex_priority.code1') }}</code>
-          </template>
-          <template #code2>
-            <code>{{ t('form.fields.regex_priority.code2') }}</code>
-          </template>
-        </i18nT>
-      </template>
-
-      <template #protocols-label-tooltip>
-        <i18nT
-          keypath="form.fields.protocols.tooltipConfig"
-          scope="global"
-        >
-          <template #code1>
-            <code>{{ t('form.fields.protocols.code1') }}</code>
-          </template>
-          <template #code2>
-            <code>{{ t('form.fields.protocols.code2') }}</code>
-          </template>
-          <template #code3>
-            <code>{{ t('form.fields.protocols.code3') }}</code>
-          </template>
-          <template #code4>
-            <code>{{ t('form.fields.protocols.code4') }}</code>
-          </template>
-          <template #code5>
-            <code>{{ t('form.fields.protocols.code5') }}</code>
-          </template>
-        </i18nT>
-      </template>
-
-      <template #headers-label-tooltip>
-        <i18nT
-          keypath="form.fields.headers.tooltipConfig"
-          scope="global"
-        >
-          <template #code1>
-            <code>{{ t('form.fields.headers.code1') }}</code>
-          </template>
-          <template #code2>
-            <code>{{ t('form.fields.headers.code2') }}</code>
-          </template>
-          <template #code3>
-            <code>{{ t('form.fields.headers.code3') }}</code>
-          </template>
-          <template #code4>
-            <code>{{ t('form.fields.headers.code4') }}</code>
-          </template>
-        </i18nT>
-      </template>
-
-      <template #strip_path-label-tooltip>
-        <i18nT
-          keypath="form.fields.strip_path.tooltip"
-          scope="global"
-        >
-          <template #code1>
-            <code>{{ t('form.fields.headers.code1') }}</code>
-          </template>
-        </i18nT>
-      </template>
-
-      <template #preserve_host-label-tooltip>
-        <i18nT
-          keypath="form.fields.preserve_host.tooltip"
-          scope="global"
-        >
-          <template #code1>
-            <code>{{ t('form.fields.preserve_host.code1') }}</code>
-          </template>
-          <template #code2>
-            <code>{{ t('form.fields.preserve_host.code2') }}</code>
-          </template>
-          <template #code3>
-            <code>{{ t('form.fields.preserve_host.code3') }}</code>
-          </template>
-          <template #code4>
-            <code>{{ t('form.fields.preserve_host.code4') }}</code>
-          </template>
-          <template #code5>
-            <code>{{ t('form.fields.preserve_host.code5') }}</code>
-          </template>
-        </i18nT>
-      </template>
-
       <template #service="{ row }">
         <!-- Loading -->
         <KSkeleton
@@ -170,9 +59,9 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
-  (e: 'fetch:error', error: AxiosError): void,
-  (e: 'fetch:success', data: Record<string, any>): void,
-  (e: 'navigation-click', id: string, entityType: string): void,
+  (e: 'fetch:error', error: AxiosError): void
+  (e: 'fetch:success', data: Record<string, any>): void
+  (e: 'navigation-click', id: string, entityType: string): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -213,7 +102,7 @@ const props = defineProps({
 })
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
-const { i18n: { t }, i18nT } = composables.useI18n()
+const { i18n: { t } } = composables.useI18n()
 const internalServiceId = ref('')
 const serviceName = ref('')
 const isServiceNameLoading = ref(false)
@@ -275,6 +164,7 @@ const configSchema = ref<RouteConfigurationSchema>({
   },
   protocols: {
     section: ConfigurationSchemaSection.Basic,
+    tooltip: t('form.fields.protocols.tooltip'),
     type: ConfigurationSchemaType.BadgeTag,
     order: 7,
   },
@@ -286,7 +176,7 @@ const configSchema = ref<RouteConfigurationSchema>({
   },
   hosts: {
     section: ConfigurationSchemaSection.Basic,
-    tooltip: t('form.fields.hosts.tooltipConfig'),
+    tooltip: t('form.fields.hosts.tooltip'),
     type: ConfigurationSchemaType.CopyBadge,
     order: 9,
   },
@@ -297,6 +187,7 @@ const configSchema = ref<RouteConfigurationSchema>({
   },
   headers: {
     section: ConfigurationSchemaSection.Basic,
+    tooltip: t('form.fields.headers.tooltip'),
     order: 11,
   },
   methods: {
@@ -319,6 +210,7 @@ const configSchema = ref<RouteConfigurationSchema>({
   },
   // advanced fields
   https_redirect_status_code: {
+    tooltip: t('form.fields.https_redirect_status_code.tooltip'),
     order: 1,
   },
   regex_priority: {
@@ -326,9 +218,11 @@ const configSchema = ref<RouteConfigurationSchema>({
     order: 2,
   },
   strip_path: {
+    tooltip: t('form.fields.strip_path.tooltip'),
     order: 3,
   },
   preserve_host: {
+    tooltip: t('form.fields.preserve_host.tooltip'),
     order: 4,
   },
   request_buffering: {
@@ -340,7 +234,7 @@ const configSchema = ref<RouteConfigurationSchema>({
     order: 6,
   },
   path_handling: {
-    tooltip: t('form.fields.path_handling.tooltipConfig'),
+    tooltip: t('form.fields.path_handling.tooltip'),
     order: 7,
   },
 })

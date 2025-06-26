@@ -37,7 +37,10 @@
         v-model:hash-on-query-argument="state.fields.hashOnQueryArgument"
         v-model:hash-on-uri-capture="state.fields.hashOnUriCapture"
         v-model:slots="state.fields.slots"
+        v-model:sticky-sessions-cookie="state.fields.stickySessionsCookie"
+        v-model:sticky-sessions-cookie-path="state.fields.stickySessionsCookiePath"
         :readonly="state.readonly"
+        :sticky-sessions-available="config.stickySessionsAvailable"
       />
 
       <UpstreamsFormHealthChecks
@@ -146,9 +149,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'update', data: UpstreamResponse): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
+  (e: 'update', data: UpstreamResponse): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
 }>()
 
 const { inRange, stringToNumberArray, upstreamsResponseToFields, getDefaultUpstreamFields, objectsAreEqual, cloneDeep } =
@@ -195,6 +198,13 @@ const resetOnPassiveSwitch = (val: boolean): void => {
   state.fields.passiveHealthCheck.type = 'http'
 }
 
+const isStickySessionsValid = computed((): boolean => {
+  if (state.fields.algorithm !== 'sticky-sessions') {
+    return true
+  }
+  return !!state.fields.stickySessionsCookie && !!state.fields.stickySessionsCookiePath
+})
+
 const isSlotsValid = computed((): boolean => state.fields.slots
   ? inRange(state.fields.slots, SlotsMinNumber, SlotsMaxNumber)
   : true)
@@ -221,6 +231,7 @@ const isHashFallbackUriCaptureValid = computed((): boolean => state.fields.hashF
 
 const isFormValid = computed((): boolean =>
   !!state.fields.name &&
+  isStickySessionsValid.value &&
   isSlotsValid.value &&
   isHashOnHeaderValid.value &&
   isHashOnCookieValid.value &&
@@ -253,6 +264,22 @@ const loadingHandler = (val: boolean): void => {
 const fetchErrorHandler = (err: AxiosError): void => {
   emit('error', err)
 }
+
+const stickySessions = computed((): Partial<UpstreamFormPayload> => {
+  const payload: Partial<UpstreamFormPayload> = props.config.stickySessionsAvailable
+    ? {
+      sticky_sessions_cookie: null,
+      sticky_sessions_cookie_path: null,
+    }
+    : {}
+
+  if (state.fields.algorithm === 'sticky-sessions') {
+    payload.sticky_sessions_cookie = state.fields.stickySessionsCookie || null
+    payload.sticky_sessions_cookie_path = state.fields.stickySessionsCookiePath || null
+  }
+
+  return payload
+})
 
 const hashingConfig = computed((): Partial<UpstreamFormPayload> => {
   const payload: Partial<UpstreamFormPayload> = {}
@@ -429,6 +456,7 @@ const upstreamPayload = computed((): UpstreamFormPayload => {
 
   const payload: UpstreamFormPayload = {
     ...basePayload,
+    ...stickySessions.value,
     healthchecks: {
       ...basePayload.healthchecks,
       active: active || undefined,

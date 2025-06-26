@@ -5,16 +5,16 @@ export interface DocumentTree {
   slug: string
   metadata: Record<string, any>
   status?: 'published' | 'unpublished'
-  children: Array<DocumentTree>
+  children: DocumentTree[]
   revision?: {
     document_id: string
     file: {
       filename: string
       modified_at: string
-    },
+    }
     id: string
-    metadata: Record<string, any>,
-    raw_md_content: string,
+    metadata: Record<string, any>
+    raw_md_content: string
     title: string
   }
 }

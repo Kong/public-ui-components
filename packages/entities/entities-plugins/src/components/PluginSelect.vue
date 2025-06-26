@@ -228,9 +228,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'loading', isLoading: boolean): void,
-  (e: 'plugin-clicked', plugin: PluginType): void,
-  (e: 'delete-custom:success', pluginName: string): void,
+  (e: 'loading', isLoading: boolean): void
+  (e: 'plugin-clicked', plugin: PluginType): void
+  (e: 'delete-custom:success', pluginName: string): void
 }>()
 
 const route = useRoute()

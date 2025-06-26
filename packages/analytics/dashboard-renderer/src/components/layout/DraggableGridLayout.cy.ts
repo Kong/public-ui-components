@@ -1,10 +1,10 @@
 import { ref, type ComponentPublicInstance } from 'vue'
 import { dragTile } from '../../test-utils'
 import DraggableGridLayout, { type DraggableGridLayoutExpose } from './DraggableGridLayout.vue'
-import type { GridSize, GridTile } from 'src/types'
+import type { GridTile } from 'src/types'
 
 describe('<DraggableGridLayout />', () => {
-  const mockTiles: GridTile<string>[] = [
+  const mockTiles: Array<GridTile<string>> = [
     {
       id: '1',
       layout: {
@@ -23,16 +23,10 @@ describe('<DraggableGridLayout />', () => {
     },
   ]
 
-  const gridSize: GridSize = {
-    cols: 12,
-    rows: 12,
-  }
-
   it('should render grid container and tiles', () => {
     cy.mount(DraggableGridLayout, {
       props: {
         tiles: mockTiles,
-        gridSize,
       },
     })
 
@@ -44,7 +38,6 @@ describe('<DraggableGridLayout />', () => {
     cy.mount(DraggableGridLayout, {
       props: {
         tiles: mockTiles,
-        gridSize,
       },
     })
 
@@ -65,7 +58,6 @@ describe('<DraggableGridLayout />', () => {
     cy.mount(DraggableGridLayout, {
       props: {
         tiles: mockTiles,
-        gridSize,
       },
       attrs: {
         onUpdateTiles: cy.spy().as('updateTilesSpy'),
@@ -81,7 +73,6 @@ describe('<DraggableGridLayout />', () => {
     cy.mount(DraggableGridLayout, {
       props: {
         tiles: mockTiles,
-        gridSize,
       },
     }).then(({ component }) => {
       // Access the exposed method
@@ -100,7 +91,6 @@ describe('<DraggableGridLayout />', () => {
     cy.mount(DraggableGridLayout, {
       props: {
         tiles: tilesRef.value,
-        gridSize,
       },
     }).then(() => {
 

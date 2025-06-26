@@ -1,7 +1,6 @@
 import {
   type AnalyticsBridge,
   type ExploreAggregations,
-  type ExploreFilter,
   type ExploreFilterAll,
   type FilterableExploreDimensions,
   type QueryDatasource, stripUnknownFilters,
@@ -15,14 +14,14 @@ import type { FetcherResult } from '../composables/useMetricFetcher'
 
 interface ProviderData {
   data: {
-    traffic: FetcherResult,
-    latency: FetcherResult,
-  },
-  containerTitle: Ref<string | undefined>,
-  description: Ref<string | undefined>,
-  hasTrendAccess: Ref<boolean>,
-  longCardTitles: boolean,
-  averageLatencies: Ref<boolean>,
+    traffic: FetcherResult
+    latency: FetcherResult
+  }
+  containerTitle: Ref<string | undefined>
+  description: Ref<string | undefined>
+  hasTrendAccess: Ref<boolean>
+  longCardTitles: boolean
+  averageLatencies: Ref<boolean>
 }
 
 export const METRICS_PROVIDER_KEY = Symbol('METRICS_PROVIDER_KEY') as InjectionKey<ProviderData>
@@ -38,7 +37,7 @@ interface FetcherOptions {
   hasTrendAccess: Ref<boolean>
   refreshInterval: number
   queryFn: AnalyticsBridge['queryFn']
-  averageLatencies: Ref<boolean>,
+  averageLatencies: Ref<boolean>
   abortController?: AbortController
   refreshCounter: Ref<number>
 }
@@ -66,20 +65,20 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
   const singleEntityQuery = !!(dimension && dimensionFilterValue)
   const multiEntityQuery = !!(dimension && !dimensionFilterValue)
 
-  const filter = computed<ExploreFilter[]>(() => {
-    const retval: ExploreFilter[] = []
+  const filter = computed<ExploreFilterAll[]>(() => {
+    const retval: ExploreFilterAll[] = []
 
     if (singleEntityQuery) {
       retval.push({
-        dimension,
-        type: 'in',
-        values: [dimensionFilterValue],
+        field: dimension,
+        operator: 'in',
+        value: [dimensionFilterValue],
       })
     }
 
     if (additionalFilter.value) {
       // TODO: Decide if it's worth making this generic on datasource.
-      retval.push(...stripUnknownFilters(datasource.value, additionalFilter.value) as ExploreFilter[])
+      retval.push(...stripUnknownFilters(datasource.value, additionalFilter.value) as ExploreFilterAll[])
     }
 
     return retval

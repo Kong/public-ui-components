@@ -1,0 +1,24 @@
+debug: true
+nodes:
+- name: auth_request_inputs
+  type: static
+  values:
+    headers:
+      Authorization: "Basic my-auth-value"
+      Content-Type: "application/x-www-form-urlencoded"
+    body: >-
+      grant_type=client_credentials
+- name: auth_request
+  type: call
+  url: http://my-auth-server/oauth/token
+  method: POST
+  input: auth_request_inputs
+- name: BUILD_UPSTREAM_AUTH_HEADERS
+  type: jq
+  input: auth_request.body
+  output:
+    service_request.headers
+  jq: |
+    {
+    "Authorization": (.token_type + " " + .access_token)
+    }

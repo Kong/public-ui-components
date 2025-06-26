@@ -47,19 +47,19 @@
 import MetricsConsumer from './MetricsConsumer.vue'
 import MetricsProvider from './MetricsProvider.vue'
 import { MetricCardSize } from '../enums'
-import type { ExploreFilter, FilterableExploreDimensions, QueryDatasource } from '@kong-ui-public/analytics-utilities'
+import type { ExploreFilterAll, FilterableExploreDimensions, QueryDatasource } from '@kong-ui-public/analytics-utilities'
 import { computed } from 'vue'
 
 const props = withDefaults(defineProps<{
-  render: 'global' | 'single' | 'multi' | 'latencyCard',
-  datasource?: QueryDatasource,
-  queryReady?: boolean,
-  refreshInterval?: number,
-  additionalFilter?: ExploreFilter[],
-  longCardTitles?: boolean,
-  containerTitle?: string,
-  description?: string,
-  percentileLatency?: boolean,
+  render: 'global' | 'single' | 'multi' | 'latencyCard'
+  datasource?: QueryDatasource
+  queryReady?: boolean
+  refreshInterval?: number
+  additionalFilter?: ExploreFilterAll[]
+  longCardTitles?: boolean
+  containerTitle?: string
+  description?: string
+  percentileLatency?: boolean
 }>(), {
   refreshInterval: 60 * 1000,
   queryReady: true,

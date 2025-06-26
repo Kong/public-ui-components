@@ -99,8 +99,8 @@ describe('<SecretList />', () => {
 
   describe('Konnect', () => {
     const interceptKonnect = (params?: {
-      mockData?: FetcherResponse;
-      alias?: string;
+      mockData?: FetcherResponse
+      alias?: string
     }) => {
       cy.intercept(
         {
@@ -128,8 +128,8 @@ describe('<SecretList />', () => {
     }
 
     const interceptKonnectMultiPage = (params?: {
-      mockData?: FetcherRawResponse[];
-      alias?: string;
+      mockData?: FetcherRawResponse[]
+      alias?: string
     }) => {
       cy.intercept(
         {

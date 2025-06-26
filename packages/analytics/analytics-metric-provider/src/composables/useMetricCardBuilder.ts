@@ -6,20 +6,20 @@ import type { ChronologicalMappedMetrics } from './useMetricFetcher'
 import { DEFAULT_KEY } from './useMetricFetcher'
 
 export interface BuilderOptions {
-  cardType: MetricCardType,
-  title: Ref<string>,
-  description?: string,
-  record: Ref<ChronologicalMappedMetrics>,
-  hasError: Ref<boolean>,
-  lookupKey?: string,
-  sumGroupedValues?: string[],
-  increaseIsBad?: boolean,
-  formatValueFn?: (rawValue: number) => string,
-  trendRange?: Ref<string>,
+  cardType: MetricCardType
+  title: Ref<string>
+  description?: string
+  record: Ref<ChronologicalMappedMetrics>
+  hasError: Ref<boolean>
+  lookupKey?: string
+  sumGroupedValues?: string[]
+  increaseIsBad?: boolean
+  formatValueFn?: (rawValue: number) => string
+  trendRange?: Ref<string>
 }
 
 export const sumValues = (recordValue: ChronologicalMappedMetrics, period: 'current' | 'previous', dimensionLookupKey: string | typeof DEFAULT_KEY = DEFAULT_KEY, sumGroupedValues?: string[]) => {
-  const groupedValueKey: string[] | (typeof DEFAULT_KEY)[] = sumGroupedValues ?? [DEFAULT_KEY]
+  const groupedValueKey: string[] | Array<typeof DEFAULT_KEY> = sumGroupedValues ?? [DEFAULT_KEY]
 
   // @ts-ignore: TS can't seem to handle the fact that `groupedValueKey` has a union type.
   return groupedValueKey.reduce((acc: number, lookup: string | typeof DEFAULT_KEY) => {

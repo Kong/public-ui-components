@@ -1,3 +1,4 @@
+import type { SelectItem, SelectFilterFunctionParams } from '@kong/kongponents'
 import type { Field } from './index'
 
 /** Base filter configuration */
@@ -27,8 +28,10 @@ export interface FilterSchema {
   [key: string]: {
     /** Used in the filter dropdown to determine the type of input */
     type: 'select' | 'number' | 'text'
+    /** Support customizing the filter function of the select input. */
+    filterFunction?: (params: SelectFilterFunctionParams<string | number>) => SelectItem[]
     /** Options for the select input, only used if type is 'select' */
-    values?: string[]
+    values?: string[] | SelectItem[]
   }
 }
 

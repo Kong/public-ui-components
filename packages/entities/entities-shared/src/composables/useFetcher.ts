@@ -1,4 +1,4 @@
-import { ref, toValue, unref } from 'vue'
+import { ref, toValue } from 'vue'
 import type { MaybeRefOrGetter, Ref } from 'vue'
 import type {
   FetcherResponse,
@@ -16,7 +16,7 @@ import type { TableDataFetcherParams } from '@kong/kongponents'
 const cacheKeys = new Map<string, Ref<number>>()
 
 export default function useFetcher(
-  config: KonnectBaseTableConfig | KongManagerBaseTableConfig,
+  configRef: MaybeRefOrGetter<KonnectBaseTableConfig | KongManagerBaseTableConfig>,
   baseUrl: MaybeRef<string>,
   /**
    * Special handling for a response structure with a different base key for the data array like
@@ -27,10 +27,10 @@ export default function useFetcher(
   dataKeyNameRef?: MaybeRefOrGetter<string | undefined>,
 ) {
   const initialLoad = ref<boolean>(true)
-  const _baseUrl = unref(baseUrl)
+  const config = toValue(configRef)
 
   const { axiosInstance } = useAxios(config.axiosRequestConfig)
-  const buildFetchUrl = useFetchUrlBuilder(config, _baseUrl)
+  const buildFetchUrl = useFetchUrlBuilder(configRef, baseUrl)
 
   const state = ref<FetcherState>({
     status: FetcherStatus.Idle,

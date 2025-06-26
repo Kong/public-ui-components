@@ -6,12 +6,36 @@
     />
 
     <div
-      v-else
+      v-else-if="(formModel.id && editing) || !editing"
       class="entity-form"
     >
       <component
-        :is="sharedFormName"
-        v-if="sharedFormName && (formModel.id && editing || !editing)"
+        :is="(freeForm as any)[freeformName]"
+        v-if="freeformName"
+        :form-model="formModel"
+        :form-options="formOptions"
+        :form-schema="formSchema"
+        :is-editing="editing"
+        :model="record"
+        :on-form-change="handleFreeFormUpdate"
+        :on-model-updated="onModelUpdated"
+        :on-validity-change="onValidityChange"
+        :schema="rawSchema"
+      >
+        <template
+          v-if="enableVaultSecretPicker"
+          #[AUTOFILL_SLOT_NAME]="slotProps: AutofillSlotProps"
+        >
+          <VaultSecretPickerProvider
+            v-if="slotProps.schema.referenceable"
+            v-bind="slotProps"
+            @open="setUpVaultSecretPicker"
+          />
+        </template>
+      </component>
+      <component
+        :is="(sharedForms as any)[sharedFormName]"
+        v-else-if="sharedFormName"
         :enable-redis-partial="enableRedisPartial"
         :form-model="formModel"
         :form-options="formOptions"
@@ -28,13 +52,13 @@
           <VaultSecretPickerProvider
             v-if="slotProps.schema.referenceable"
             v-bind="slotProps"
-            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+            @open="setUpVaultSecretPicker"
           />
         </template>
       </component>
 
       <VueFormGenerator
-        v-if="!sharedFormName && (formModel.id && editing || !editing)"
+        v-else
         :enable-redis-partial="enableRedisPartial"
         :is-editing="editing"
         :model="formModel"
@@ -66,7 +90,7 @@
           <VaultSecretPickerProvider
             v-if="slotProps.schema.referenceable"
             v-bind="slotProps"
-            @open="(value, update) => setUpVaultSecretPicker(value, update)"
+            @open="setUpVaultSecretPicker"
           />
         </template>
       </VueFormGenerator>
@@ -81,7 +105,7 @@
   />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import {
   VaultSecretPicker,
   VaultSecretPickerProvider,
@@ -95,39 +119,46 @@ import {
   customFields,
   getSharedFormName,
   sharedForms,
+  VueFormGenerator,
   type AutofillSlotProps,
 } from '@kong-ui-public/forms'
 import '@kong-ui-public/forms/dist/style.css'
 import type { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { computed, defineComponent, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
+import { computed, onBeforeMount, provide, reactive, ref, shallowRef, watch, type PropType } from 'vue'
 import composables from '../composables'
 import useI18n from '../composables/useI18n'
 import { PLUGIN_METADATA } from '../definitions/metadata'
 import endpoints from '../plugins-endpoints'
-import {
-  type KongManagerPluginFormConfig,
-  type KonnectPluginFormConfig,
-  type PluginEntityInfo,
-} from '../types'
+import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntityInfo, PluginValidityChangeEvent } from '../types'
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
+import * as freeForm from './free-form'
+import { getFreeFormName } from '../utils/free-form'
 
-// Must explicitly specify these as components since they are rendered dynamically
-export default defineComponent({
-  components: { ...sharedForms },
-})
-</script>
+// Need to check for duplicates in sharedForms and freeForm
+// throw an error if there are any
+const sharedFormKeys = Object.keys(sharedForms)
+const freeFormKeys = Object.keys(freeForm)
 
-<script setup lang="ts">
+if (
+  new Set([...sharedFormKeys, ...freeFormKeys]).size !==
+  sharedFormKeys.length + freeFormKeys.length
+) {
+  throw new Error(
+    'Duplicate form component names found in `sharedForms` and `freeForm`',
+  )
+}
+
 const emit = defineEmits<{
-  (e: 'loading', isLoading: boolean): void,
+  (e: 'loading', isLoading: boolean): void
   (e: 'model-updated',
     payload: {
-      model: Record<string, any>,
-      originalModel: Record<string, any>,
+      model: Record<string, any>
+      originalModel: Record<string, any>
       data: Record<string, any>
     }
-  ): void,
-  (e: 'showNewPartialModal', redisType: string): void,
+  ): void
+  (e: 'showNewPartialModal', redisType: string): void
+  (e: 'validity-change', payload: PluginValidityChangeEvent): void
 }>()
 
 const props = defineProps({
@@ -160,6 +191,13 @@ const props = defineProps({
    * Form schema
    */
   schema: {
+    type: Object as PropType<Record<string, any>>,
+    default: () => ({}),
+  },
+  /**
+   * Raw schema
+   */
+  rawSchema: {
     type: Object as PropType<Record<string, any>>,
     default: () => ({}),
   },
@@ -199,8 +237,11 @@ const { parseSchema } = composables.useSchemas({
   entityId: props.entityMap.focusedEntity?.id || undefined,
   credential: props.credential,
   enableRedisPartial: props.enableRedisPartial,
+  experimentalRenders: props.config.app === 'konnect' ? props.config.experimentalRenders : undefined,
 })
 const { convertToDotNotation, unFlattenObject, dismissField, isObjectEmpty, unsetNullForeignKey } = composables.usePluginHelpers()
+
+const experimentalFreeForms = composables.useExperimentalFreeForms()
 
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
@@ -293,6 +334,7 @@ provide(FORMS_API_KEY, {
 provide(FORMS_CONFIG, props.config)
 
 const sharedFormName = ref('')
+const freeformName = ref<string | undefined>('')
 const form = ref<Record<string, any> | null>(null)
 const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
@@ -528,7 +570,14 @@ const getModel = (): Record<string, any> => {
     unsetNullForeignKey(fieldNameDotNotation, outputModel)
   })
 
-  return unFlattenObject(outputModel)
+  const model: Record<string, any> = unFlattenObject(outputModel)
+
+  // Handle the special case of the freeform plugin
+  if (freeformName.value) {
+    Object.assign(model, freeformData.value)
+  }
+
+  return model
 }
 
 const onPartialToggled = (dismissSchemaField: string | undefined, additionalModel: Record<string, any> = {}) => {
@@ -554,6 +603,10 @@ const onModelUpdated = (model: any, schema: string) => {
     originalModel,
     data: getModel(),
   })
+}
+
+const onValidityChange = (event: PluginValidityChangeEvent) => {
+  emit('validity-change', event)
 }
 
 // special handling for problematic fields before we emit
@@ -626,6 +679,19 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
   })
 }
 
+const freeformData = shallowRef<Record<string, any>>(props.record)
+const handleFreeFormUpdate = (value: Record<string, any>) => {
+  freeformData.value = value
+
+  emit('model-updated', {
+    // config change should also update the form model
+    // otherwise the submit button will be disabled
+    model: { ...formModel, ...value },
+    originalModel,
+    data: getModel(),
+  })
+}
+
 const loading = ref(true)
 const initFormModel = (): void => {
   if (props.record && props.schema) {
@@ -665,7 +731,12 @@ const initFormModel = (): void => {
       }
 
       // main plugin configuration
-      updateModel(props.record.config, 'config')
+      if (freeformName.value) {
+        // keep original config from record for freeform plugins
+        handleFreeFormUpdate(props.record)
+      } else {
+        updateModel(props.record.config, 'config')
+      }
     }
   }
 
@@ -721,6 +792,8 @@ watch(() => props.schema, (newSchema, oldSchema) => {
     }),
   }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
+
+  freeformName.value = getFreeFormName(form.model.name, experimentalFreeForms)
   sharedFormName.value = getSharedFormName(form.model.name)
 
   initFormModel()
@@ -760,7 +833,7 @@ onBeforeMount(() => {
   }
 
   :deep(.vue-form-generator) {
-    >fieldset {
+    > fieldset {
       .form-group:last-child {
         margin-bottom: 0;
       }
@@ -774,6 +847,7 @@ onBeforeMount(() => {
 
     fieldset {
       border: none;
+      margin-left: $kui-space-0;
       padding: $kui-space-0;
     }
 
@@ -793,12 +867,12 @@ onBeforeMount(() => {
 
     .form-group hr.divider {
       border-color: $kui-color-border;
-      opacity: .3;
+      opacity: 0.3;
     }
 
     .form-group hr.wide-divider {
       border-color: $kui-color-border;
-      opacity: .6;
+      opacity: 0.6;
     }
 
     .form-group.field-textArea textarea {
@@ -823,7 +897,7 @@ onBeforeMount(() => {
       }
     }
 
-    .field-radios .radio-list label input[type=radio] {
+    .field-radios .radio-list label input[type="radio"] {
       margin-right: 10px;
     }
 

@@ -26,12 +26,13 @@
             :disabled="vaultProviderDisabled"
             dropdown-max-height="500"
             :items="providers"
+            :readonly="form.isReadonly"
           >
             <template #selected-item-template="{ item }">
               <component
                 :is="getProviderIcon(item!.value as VaultProviders)"
               />
-              {{ item?.label }}
+              <span>{{ item?.label }}</span>
             </template>
             <template #item-template="{ item }">
               <KTooltip
@@ -66,15 +67,26 @@
               v-model.trim="configFields[VaultProviders.ENV].prefix"
               autocomplete="off"
               data-testid="vault-form-config-kong-prefix"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.env.fields.prefix.label')"
               :label-attributes="{
                 info: t('form.config.env.fields.prefix.tooltip'),
                 tooltipAttributes: { maxWidth: '400' },
               }"
               :placeholder="t('form.config.env.fields.prefix.placeholder')"
+              :readonly="form.isReadonly"
               required
               type="text"
+            />
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.ENV].base64_decode!"
+              data-testid="vault-form-config-env-base64_decode"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
             />
           </div>
 
@@ -99,36 +111,36 @@
               v-model.trim="configFields[VaultProviders.AWS].endpoint_url"
               autocomplete="off"
               data-testid="vault-form-config-aws-endpoint_url"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.aws.fields.endpoint_url.label')"
               :label-attributes="{
                 info: t('form.config.aws.fields.endpoint_url.tooltip'),
                 tooltipAttributes: { maxWidth: '400' },
               }"
+              :readonly="form.isReadonly"
               type="text"
             />
             <KInput
               v-model.trim="configFields[VaultProviders.AWS].assume_role_arn"
               autocomplete="off"
               data-testid="vault-form-config-aws-assume_role_arn"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.aws.fields.assume_role_arn.label')"
               :label-attributes="{
                 info: t('form.config.aws.fields.assume_role_arn.tooltip'),
                 tooltipAttributes: { maxWidth: '400' },
               }"
+              :readonly="form.isReadonly"
               type="text"
             />
             <KInput
               v-model.trim="configFields[VaultProviders.AWS].role_session_name"
               autocomplete="off"
               data-testid="vault-form-config-aws-role_session_name"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.aws.fields.role_session_name.label')"
               :label-attributes="{
                 info: t('form.config.aws.fields.role_session_name.tooltip'),
                 tooltipAttributes: { maxWidth: '400' },
               }"
+              :readonly="form.isReadonly"
               required
               type="text"
             />
@@ -137,13 +149,24 @@
               v-model.trim="configFields[VaultProviders.AWS].sts_endpoint_url"
               autocomplete="off"
               data-testid="vault-form-config-aws-sts_endpoint_url"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.aws.fields.sts_endpoint_url.label')"
               :label-attributes="{
                 info: t('form.config.aws.fields.sts_endpoint_url.tooltip'),
                 tooltipAttributes: { maxWidth: '400' },
               }"
+              :readonly="form.isReadonly"
               type="text"
+            />
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.AWS].base64_decode!"
+              data-testid="vault-form-config-aws-base64_decode"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
             />
           </div>
 
@@ -157,9 +180,9 @@
               v-model.trim="configFields[VaultProviders.GCP].project_id"
               autocomplete="off"
               data-testid="vault-form-config-gcp-project-id"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.gcp.fields.project_id.label')"
               :placeholder="t('form.config.gcp.fields.project_id.placeholder')"
+              :readonly="form.isReadonly"
               required
               type="text"
             >
@@ -174,6 +197,17 @@
                 </i18nT>
               </template>
             </KInput>
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.GCP].base64_decode!"
+              data-testid="vault-form-config-gcp-base64_decode"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+            />
           </div>
 
           <!-- HashiCorp Vault fields -->
@@ -195,8 +229,8 @@
               v-model.trim="configFields[VaultProviders.HCV].host"
               autocomplete="off"
               data-testid="vault-form-config-hcv-host"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.hcv.fields.host.label')"
+              :readonly="form.isReadonly"
               required
               type="text"
             />
@@ -204,9 +238,9 @@
               v-model="configFields[VaultProviders.HCV].port"
               autocomplete="off"
               data-testid="vault-form-config-hcv-port"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.hcv.fields.port.label')"
               min="0"
+              :readonly="form.isReadonly"
               required
               type="number"
             />
@@ -214,8 +248,8 @@
               v-model.trim="configFields[VaultProviders.HCV].mount"
               autocomplete="off"
               data-testid="vault-form-config-hcv-mount"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.hcv.fields.mount.label')"
+              :readonly="form.isReadonly"
               required
               type="text"
             />
@@ -232,17 +266,18 @@
               v-model.trim="configFields[VaultProviders.HCV].namespace"
               autocomplete="off"
               data-testid="vault-form-config-hcv-namespace"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.hcv.fields.namespace.label')"
+              :readonly="form.isReadonly"
               type="text"
             />
             <KSelect
               v-model="configFields[VaultProviders.HCV].auth_method"
               data-testid="vault-form-config-hcv-auth_method"
               :items="[
-                { label: VaultAuthMethods.TOKEN, value: VaultAuthMethods.TOKEN },
-                { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S},
-                ...(config.hcvAppRoleMethodAvailable ? [{ label: VaultAuthMethods.APP_ROLE, value: VaultAuthMethods.APP_ROLE }] : []),
+                { label: VaultAuthMethods.TOKEN, value: VaultAuthMethods.TOKEN as string },
+                { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S as string },
+                ...(config.hcvAppRoleMethodAvailable ? [{ label: VaultAuthMethods.APP_ROLE, value: VaultAuthMethods.APP_ROLE as string }] : []),
+                ...(config.hcvCertMethodAvailable ? [{ label: VaultAuthMethods.CERT, value: VaultAuthMethods.CERT as string }] : []),
               ]"
               :label="t('form.config.hcv.fields.auth_method.label')"
               :readonly="form.isReadonly"
@@ -257,8 +292,8 @@
                 v-model.trim="configFields[VaultProviders.HCV].token"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-token"
-                :is-readonly="form.isReadonly"
                 :label="t('form.config.hcv.fields.token.label')"
+                :readonly="form.isReadonly"
                 required
                 type="text"
               />
@@ -271,8 +306,8 @@
                 v-model.trim="configFields[VaultProviders.HCV].kube_role"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-kube_role"
-                :is-readonly="form.isReadonly"
                 :label="t('form.config.hcv.fields.kube_role.label')"
+                :readonly="form.isReadonly"
                 required
                 type="text"
               />
@@ -280,16 +315,16 @@
                 v-model.trim="configFields[VaultProviders.HCV].kube_auth_path"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-kube_auth_path"
-                :is-readonly="form.isReadonly"
                 :label="t('form.config.hcv.fields.kube_auth_path.label')"
+                :readonly="form.isReadonly"
                 type="text"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].kube_api_token_file"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-kube_api_token_file"
-                :is-readonly="form.isReadonly"
                 :label="t('form.config.hcv.fields.kube_api_token_file.label')"
+                :readonly="form.isReadonly"
                 required
                 type="text"
               />
@@ -302,16 +337,16 @@
                 v-model.trim="configFields[VaultProviders.HCV].approle_auth_path"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-approle_auth_path"
-                :is-readonly="form.isReadonly"
                 :label="t('form.config.hcv.fields.approle_auth_path.label')"
+                :readonly="form.isReadonly"
                 type="text"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].approle_role_id"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-approle_role_id"
-                :is-readonly="form.isReadonly"
                 :label="t('form.config.hcv.fields.approle_role_id.label')"
+                :readonly="form.isReadonly"
                 required
                 type="text"
               />
@@ -319,16 +354,16 @@
                 v-model.trim="configFields[VaultProviders.HCV].approle_secret_id"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-approle_secret_id"
-                :is-readonly="form.isReadonly"
                 :label="t('form.config.hcv.fields.approle_secret_id.label')"
+                :readonly="form.isReadonly"
                 type="text"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].approle_secret_id_file"
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-approle_secret_id_file"
-                :is-readonly="form.isReadonly"
                 :label="t('form.config.hcv.fields.approle_secret_id_file.label')"
+                :readonly="form.isReadonly"
                 type="text"
               />
               <KCheckbox
@@ -337,20 +372,60 @@
                 :label="t('form.config.hcv.fields.approle_response_wrapping.label')"
               />
             </div>
+            <div
+              v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.CERT"
+              class="vault-form-config-auth-method-container"
+            >
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].cert_auth_role_name"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-cert_auth_role_name"
+                :label="t('form.config.hcv.fields.cert_auth_role_name.label')"
+                :readonly="form.isReadonly"
+                required
+              />
+              <KTextArea
+                v-model.trim="configFields[VaultProviders.HCV].cert_auth_cert"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-cert_auth_cert"
+                :label="t('form.config.hcv.fields.cert_auth_cert.label')"
+                :readonly="form.isReadonly"
+                required
+              />
+              <KTextArea
+                v-model.trim="configFields[VaultProviders.HCV].cert_auth_cert_key"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-cert_auth_cert_key"
+                :label="t('form.config.hcv.fields.cert_auth_cert_key.label')"
+                :readonly="form.isReadonly"
+                required
+              />
+            </div>
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.HCV].base64_decode!"
+              data-testid="vault-form-config-hcv-base64_decode"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+            />
           </div>
 
           <!-- Azure fields -->
           <div
             v-if="vaultProvider === VaultProviders.AZURE"
-            :key="`${VaultProviders.HCV}-vault-config-fields`"
+            :key="`${VaultProviders.AZURE}-vault-config-fields`"
             class="vault-form-config-fields-container"
           >
             <KInput
               v-model.trim="configFields[VaultProviders.AZURE].location"
               autocomplete="off"
               data-testid="vault-form-config-azure-location"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.azure.fields.location.label')"
+              :readonly="form.isReadonly"
               required
               type="text"
             />
@@ -358,8 +433,8 @@
               v-model.trim="configFields[VaultProviders.AZURE].vault_uri"
               autocomplete="off"
               data-testid="vault-form-config-azure-uri"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.azure.fields.vault_uri.label')"
+              :readonly="form.isReadonly"
               required
               type="text"
             />
@@ -367,8 +442,8 @@
               v-model.trim="configFields[VaultProviders.AZURE].credentials_prefix"
               autocomplete="off"
               data-testid="vault-form-config-azure-prefix"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.azure.fields.credential_prefix.label')"
+              :readonly="form.isReadonly"
               required
               type="text"
             />
@@ -386,17 +461,100 @@
               v-model.trim="configFields[VaultProviders.AZURE].client_id"
               autocomplete="off"
               data-testid="vault-form-config-azure-client-id"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.azure.fields.client_id.label')"
+              :readonly="form.isReadonly"
               type="text"
             />
             <KInput
               v-model.trim="configFields[VaultProviders.AZURE].tenant_id"
               autocomplete="off"
               data-testid="vault-form-config-azure-tenant-id"
-              :is-readonly="form.isReadonly"
               :label="t('form.config.azure.fields.tenant_id.label')"
+              :readonly="form.isReadonly"
               type="text"
+            />
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.AZURE].base64_decode!"
+              data-testid="vault-form-config-azure-base64_decode"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+            />
+          </div>
+
+          <!-- Conjur fields -->
+          <div
+            v-if="vaultProvider === VaultProviders.CONJUR"
+            :key="`${VaultProviders.CONJUR}-vault-config-fields`"
+            class="vault-form-config-fields-container"
+          >
+            <KInput
+              v-model.trim="configFields[VaultProviders.CONJUR].endpoint_url"
+              autocomplete="off"
+              data-testid="vault-form-config-conjur-endpoint_url"
+              :label="t('form.config.conjur.fields.endpoint_url.label')"
+              :label-attributes="{
+                info: t('form.config.conjur.fields.endpoint_url.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+              required
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.CONJUR].login"
+              autocomplete="off"
+              data-testid="vault-form-config-conjur-login"
+              :label="t('form.config.conjur.fields.login.label')"
+              :label-attributes="{
+                info: t('form.config.conjur.fields.login.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+              required
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.CONJUR].account"
+              autocomplete="off"
+              data-testid="vault-form-config-conjur-account"
+              :label="t('form.config.conjur.fields.account.label')"
+              :label-attributes="{
+                info: t('form.config.conjur.fields.account.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+              required
+              type="text"
+            />
+            <KInput
+              v-model.trim="configFields[VaultProviders.CONJUR].api_key"
+              autocomplete="off"
+              data-testid="vault-form-config-conjur-api_key"
+              :label="t('form.config.conjur.fields.api_key.label')"
+              :label-attributes="{
+                info: t('form.config.conjur.fields.api_key.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
+              required
+              show-password-mask-toggle
+              type="password"
+            />
+            <KCheckbox
+              v-if="config.base64FieldAvailable"
+              v-model="configFields[VaultProviders.CONJUR].base64_decode!"
+              data-testid="vault-form-config-env-base64_decode"
+              :label="t('form.config.commonFields.base64_decode.label')"
+              :label-attributes="{
+                info: t('form.config.commonFields.base64_decode.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
+              :readonly="form.isReadonly"
             />
           </div>
 
@@ -464,13 +622,13 @@
           autocomplete="off"
           data-testid="vault-form-prefix"
           :help="t('form.fields.prefix.help')"
-          :is-readonly="form.isReadonly"
           :label="t('form.fields.prefix.label')"
           :label-attributes="{
             info: t('form.fields.prefix.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
           :placeholder="t('form.fields.prefix.placeholder')"
+          :readonly="form.isReadonly"
           required
           type="text"
         />
@@ -488,9 +646,9 @@
           autocomplete="off"
           data-testid="vault-form-tags"
           :help="t('form.fields.tags.help')"
-          :is-readonly="form.isReadonly"
           :label="t('form.fields.tags.label')"
           :placeholder="t('form.fields.tags.placeholder')"
+          :readonly="form.isReadonly"
           type="text"
         />
       </EntityFormSection>
@@ -524,6 +682,7 @@ import type {
   KongManagerVaultFormConfig,
   KonnectVaultFormConfig,
   VaultPayload,
+  ConjurVaultConfig,
 } from '../types'
 import {
   VaultProviders,
@@ -540,6 +699,7 @@ import {
   HashicorpIcon,
   GoogleCloudIcon,
   AzureIcon,
+  ConjourIcon,
 } from '@kong/icons'
 
 interface ConfigFields {
@@ -549,6 +709,7 @@ interface ConfigFields {
   [VaultProviders.HCV]: HCVVaultConfig
   [VaultProviders.AZURE]: AzureVaultConfig
   [VaultProviders.KONNECT]: ConfigStoreConfig
+  [VaultProviders.CONJUR]: ConjurVaultConfig
 }
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -574,9 +735,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'update', data: VaultStateFields): void,
-  (e: 'error', error: AxiosError): void,
-  (e: 'loading', isLoading: boolean): void,
+  (e: 'update', data: VaultStateFields): void
+  (e: 'error', error: AxiosError): void
+  (e: 'loading', isLoading: boolean): void
 }>()
 
 const { i18nT, i18n: { t } } = composables.useI18n()
@@ -605,7 +766,7 @@ const originalVaultProvider = ref<VaultProviders | null>(null)
 const configStoreId = ref<string>()
 
 const isAvailableTTLConfig = computed(() => {
-  return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE].includes(vaultProvider.value)
+  return [VaultProviders.AWS, VaultProviders.GCP, VaultProviders.HCV, VaultProviders.AZURE, VaultProviders.CONJUR].includes(vaultProvider.value)
 })
 
 const providers = computed<Array<{ label: string, value: VaultProviders }>>(() => {
@@ -646,22 +807,36 @@ const providers = computed<Array<{ label: string, value: VaultProviders }>>(() =
         }]
         : []
     ),
+    ...(
+      props.config.conjurVaultProviderAvailable
+        ? [{
+          label: t('form.config.conjur.label'),
+          value: VaultProviders.CONJUR,
+          disabled: !isOtherProvidersSupported.value,
+        }]
+        : []
+    ),
   ]
 })
+
+const base64FieldConfig = props.config.base64FieldAvailable ? { base64_decode: false } : {}
 
 const configFields = reactive<ConfigFields>({
   [VaultProviders.KONNECT]: {},
   [VaultProviders.ENV]: {
     prefix: '',
+    ...base64FieldConfig,
   } as KongVaultConfig,
   [VaultProviders.AWS]: {
     region: '',
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
+    ...base64FieldConfig,
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
+    ...base64FieldConfig,
   } as GCPVaultConfig,
   [VaultProviders.HCV]: {
     protocol: 'http',
@@ -680,6 +855,10 @@ const configFields = reactive<ConfigFields>({
     approle_secret_id: '',
     approle_secret_id_file: '',
     approle_response_wrapping: false,
+    cert_auth_cert: '',
+    cert_auth_cert_key: '',
+    cert_auth_role_name: '',
+    ...base64FieldConfig,
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
     location: '',
@@ -688,22 +867,31 @@ const configFields = reactive<ConfigFields>({
     credentials_prefix: 'AZURE',
     client_id: '',
     tenant_id: '',
+    ...base64FieldConfig,
   } as AzureVaultConfig,
+  [VaultProviders.CONJUR]: {
+    endpoint_url: '',
+    auth_method: 'api_key',
+    ...base64FieldConfig,
+  },
 })
 
 const originalConfigFields = reactive<ConfigFields>({
   [VaultProviders.KONNECT]: {},
   [VaultProviders.ENV]: {
     prefix: '',
+    ...base64FieldConfig,
   } as KongVaultConfig,
   [VaultProviders.AWS]: {
     region: '',
     endpoint_url: '',
     assume_role_arn: '',
     role_session_name: 'KongVault',
+    ...base64FieldConfig,
   } as AWSVaultConfig,
   [VaultProviders.GCP]: {
     project_id: '',
+    ...base64FieldConfig,
   } as GCPVaultConfig,
   [VaultProviders.HCV]: {
     protocol: 'http',
@@ -722,6 +910,7 @@ const originalConfigFields = reactive<ConfigFields>({
     approle_secret_id: '',
     approle_secret_id_file: '',
     approle_response_wrapping: false,
+    ...base64FieldConfig,
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
     location: '',
@@ -730,7 +919,13 @@ const originalConfigFields = reactive<ConfigFields>({
     credentials_prefix: 'AZURE',
     client_id: '',
     tenant_id: '',
+    ...base64FieldConfig,
   } as AzureVaultConfig,
+  [VaultProviders.CONJUR]: {
+    endpoint_url: '',
+    auth_method: 'api_key',
+    ...base64FieldConfig,
+  },
 })
 
 const awsRegions = [
@@ -807,6 +1002,8 @@ const getProviderIcon = (providerName: VaultProviders) => {
       return HashicorpIcon
     case VaultProviders.AZURE:
       return AzureIcon
+    case VaultProviders.CONJUR:
+      return ConjourIcon
   }
 }
 
@@ -824,6 +1021,8 @@ const getProviderDescription = (providerName: VaultProviders) => {
       return t('form.config.hcv.description')
     case VaultProviders.AZURE:
       return t('form.config.azure.description')
+    case VaultProviders.CONJUR:
+      return t('form.config.conjur.description')
   }
 }
 
@@ -848,6 +1047,9 @@ const updateFormValues = (data: Record<string, any>): void => {
     form.errorMessage = 'Error loading vault config'
   }
 }
+
+// return true if the value is one of '', undefined or null
+const isEmpty = (v: unknown): boolean => v === '' || v == null
 
 /**
  * Is the form submit button enabled?
@@ -886,7 +1088,10 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.APP_ROLE && key === 'approle_response_wrapping' && typeof (configFields[vaultProvider.value] as HCVVaultConfig)[key] === 'boolean') {
         return false
       }
-      return !(configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig]
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && ['cert_auth_role_name', 'cert_auth_cert', 'cert_auth_cert_key'].includes(key)) {
+        return false
+      }
+      return isEmpty((configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig])
     }).length
   }
 
@@ -897,7 +1102,7 @@ const isVaultConfigValid = computed((): boolean => {
       if (['client_id', 'tenant_id', 'ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
         return false
       }
-      return !(configFields[vaultProvider.value] as AzureVaultConfig)[key as keyof AzureVaultConfig]
+      return isEmpty((configFields[vaultProvider.value] as AzureVaultConfig)[key as keyof AzureVaultConfig])
     }).length
   }
 
@@ -908,7 +1113,7 @@ const isVaultConfigValid = computed((): boolean => {
       if (['endpoint_url', 'assume_role_arn', 'ttl', 'neg_ttl', 'resurrect_ttl', 'sts_endpoint_url'].includes(key)) {
         return false
       }
-      return !(configFields[vaultProvider.value] as AWSVaultConfig)[key as keyof AWSVaultConfig]
+      return isEmpty((configFields[vaultProvider.value] as AWSVaultConfig)[key as keyof AWSVaultConfig])
     }).length
   }
 
@@ -917,7 +1122,7 @@ const isVaultConfigValid = computed((): boolean => {
     if (['ttl', 'neg_ttl', 'resurrect_ttl'].includes(key)) {
       return false
     }
-    return !(configFields[vaultProvider.value] as KongVaultConfig | GCPVaultConfig)[key as keyof (KongVaultConfig | GCPVaultConfig)]
+    return isEmpty((configFields[vaultProvider.value] as KongVaultConfig | GCPVaultConfig)[key as keyof (KongVaultConfig | GCPVaultConfig)])
   }).length
 })
 const isFormValid = computed((): boolean => !!form.fields.prefix && isVaultConfigValid.value)
@@ -955,6 +1160,7 @@ const getPayload = computed((): Record<string, any> => {
     kv: configFields[VaultProviders.HCV].kv,
     namespace: configFields[VaultProviders.HCV].namespace || null,
     auth_method: configFields[VaultProviders.HCV].auth_method,
+    ...(props.config.base64FieldAvailable && { base64_decode: configFields[VaultProviders.HCV].base64_decode }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.TOKEN && { token: configFields[VaultProviders.HCV].token }),
     // For Kong Admin API, when auth_method is kubernetes, token must be in the request body and its value has to be null
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.K8S && {
@@ -969,6 +1175,11 @@ const getPayload = computed((): Record<string, any> => {
       approle_secret_id: configFields[VaultProviders.HCV].approle_secret_id || undefined,
       approle_secret_id_file: configFields[VaultProviders.HCV].approle_secret_id_file || undefined,
       approle_response_wrapping: configFields[VaultProviders.HCV].approle_response_wrapping ?? false,
+    }),
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.CERT && {
+      cert_auth_role_name: configFields[VaultProviders.HCV].cert_auth_role_name,
+      cert_auth_cert: configFields[VaultProviders.HCV].cert_auth_cert,
+      cert_auth_cert_key: configFields[VaultProviders.HCV].cert_auth_cert_key,
     }),
   }
 

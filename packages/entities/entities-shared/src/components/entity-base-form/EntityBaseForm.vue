@@ -41,6 +41,7 @@
       />
 
       <Teleport
+        v-if="!hideActions"
         :disabled="!actionTeleportTarget"
         :to="actionTeleportTarget"
       >
@@ -131,11 +132,11 @@ import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 
 const emit = defineEmits<{
-  (e: 'loading', isLoading: boolean): void,
-  (e: 'fetch:success', data: Record<string, any>): void,
-  (e: 'fetch:error', error: AxiosError): void,
-  (e: 'submit'): void,
-  (e: 'cancel'): void,
+  (e: 'loading', isLoading: boolean): void
+  (e: 'fetch:success', data: Record<string, any>): void
+  (e: 'fetch:error', error: AxiosError): void
+  (e: 'submit'): void
+  (e: 'cancel'): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -220,6 +221,14 @@ const props = defineProps({
    */
   actionTeleportTarget: {
     type: String,
+    default: undefined,
+  },
+  /**
+   * Hide the actions
+   */
+  hideActions: {
+    type: Boolean,
+    default: false,
   },
   /**
    * Top offset for the slideout
@@ -339,6 +348,12 @@ onBeforeMount(async () => {
       isLoading.value = false
     }
   }
+})
+
+defineExpose({
+  viewConfig: toggle,
+  formCancel: handleClickCancel,
+  formSubmit: handleClickSave,
 })
 </script>
 

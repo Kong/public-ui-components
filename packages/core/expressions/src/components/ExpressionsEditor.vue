@@ -64,9 +64,9 @@ interface Item {
   documentation?: string
 }
 
-const flattenProperties = (schema: Schema): Array<Item> => {
+const flattenProperties = (schema: Schema): Item[] => {
   const { definition, documentation } = schema
-  const properties: Array<Item> = []
+  const properties: Item[] = []
   Object.entries(definition).forEach(([kind, fields]) => {
     fields.forEach((field) => {
       properties.push({

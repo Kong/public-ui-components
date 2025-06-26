@@ -165,8 +165,8 @@ const props = defineProps({
 })
 
 defineEmits<{
-  (e: 'click:create'): void,
-  (e: 'click:learn-more'): void,
+  (e: 'click:create'): void
+  (e: 'click:learn-more'): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()

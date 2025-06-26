@@ -24,12 +24,19 @@ import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
 import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
 import { vaultAuthSchema } from '../definitions/schemas/VaultAuth'
 import { kafkaUpstreamSchema } from '../definitions/schemas/KafkaUpstream'
+import { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import { confluentSchema } from '../definitions/schemas/Confluent'
+import { confluentConsumeSchema } from '../definitions/schemas/ConfluentConsume'
+import { kafkaConsumeSchema } from '../definitions/schemas/KafkaConsume'
+import { kafkaLogSchema } from '../definitions/schemas/KafkaLog'
 import ZipkinSchema from '../definitions/schemas/Zipkin'
 import typedefs from '../definitions/schemas/typedefs'
 import { type CustomSchemas } from '../types'
 import useI18n from './useI18n'
 import usePluginHelpers from './usePluginHelpers'
+import { getFreeFormName } from '../utils/free-form'
+import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
+import { useExperimentalFreeForms } from './useExperimentalFreeForms'
 
 export interface Field extends Record<string, any> {
   model: string
@@ -70,6 +77,10 @@ export interface UseSchemasOptions {
    * @defaultValue false
    */
   enableRedisPartial?: boolean
+  /**
+   * Whether to enable the experimental renders.
+   */
+  experimentalRenders?: Record<string, boolean>
 }
 
 /** Sorts non-config fields and place them at the top */
@@ -97,6 +108,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
   const { capitalize } = useStringHelpers()
   const { convertToDotNotation } = usePluginHelpers()
   const { i18n: { t } } = useI18n()
+  const experimentalFreeForms = useExperimentalFreeForms()
 
   const customSchemas: CustomSchemas = {
     'application-registration': {
@@ -215,8 +227,22 @@ export const useSchemas = (options?: UseSchemasOptions) => {
       ...kafkaUpstreamSchema,
     },
 
+    'key-auth': genKeyAuthSchema(options),
+
     'confluent': {
       ...confluentSchema,
+    },
+
+    'confluent-consume': {
+      ...confluentConsumeSchema,
+    },
+
+    'kafka-consume': {
+      ...kafkaConsumeSchema,
+    },
+
+    'kafka-log': {
+      ...kafkaLogSchema,
     },
   }
 
@@ -247,6 +273,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     // Comparator function for comparing schema objects should not be added to fields
     const comparatorIdx = inputSchemaFields.indexOf('comparator')
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     comparatorIdx > -1 && inputSchemaFields.splice(comparatorIdx, 1)
 
     let formSchema: Schema = { fields: [] }
@@ -275,7 +302,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
     formSchema._redis_partial_path = currentSchema._redis_partial_path
 
-    if (getSharedFormName(pluginName) || metadata?.useLegacyForm || options?.credential) {
+    if (getSharedFormName(pluginName) || getFreeFormName(pluginName, experimentalFreeForms) || metadata?.useLegacyForm || options?.credential) {
       /**
        * Do not generate grouped schema when:
        * - The plugin has a custom layout
@@ -686,10 +713,51 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     schema.label = formatFieldLabel(schema, schema.model)
   }
 
+  /**
+   * Prunes a record based on a schema
+   * @param {Object} config - the record to prune
+   * @param {Object} schema - the schema to prune the record against
+   * @returns {Object} the pruned record
+   */
+  function pruneRecord(config: Record<string, any>, schema: UnionFieldSchema): Record<string, any> {
+    if (
+      schema == null ||
+      (schema.type && schema.type !== 'record') ||
+      typeof config !== 'object' ||
+      config == null
+    ) {
+      return config
+    }
+
+    const result: Record<string, any> = {}
+    for (const fieldDef of schema.fields) {
+      const fieldName = Object.keys(fieldDef)[0]
+      const fieldSchema = fieldDef[fieldName]
+      if (fieldSchema.type === 'record') {
+        result[fieldName] = pruneRecord(config[fieldName], fieldSchema)
+      } else if (
+        fieldSchema.type === 'array' &&
+        Array.isArray(config[fieldName])
+      ) {
+        if (fieldSchema.elements.type === 'record') {
+          result[fieldName] = config[fieldName].map((item: any) =>
+            pruneRecord(item, fieldSchema.elements),
+          )
+        } else {
+          result[fieldName] = config[fieldName]
+        }
+      } else {
+        result[fieldName] = config[fieldName]
+      }
+    }
+    return result
+  }
+
   return {
     buildFormSchema,
     parseSchema,
     customSchemas,
     typedefs,
+    pruneRecord,
   }
 }
