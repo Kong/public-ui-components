@@ -17,11 +17,10 @@
       />
       <Teleport to="body">
         <ToolTip
-          :left="tooltipAbsoluteLeft"
-          :series="tooltipData.tooltipSeries"
-          :show-tooltip="tooltipData.showTooltip"
+          v-model="tooltipData"
+          :absolute-left="tooltipAbsoluteLeft"
+          :absolute-top="tooltipAbsoluteTop"
           :tooltip-title="tooltipTitle"
-          :top="tooltipAbsoluteTop"
           :unit="metricUnit"
           @dimensions="tooltipDimensions"
         />
@@ -112,6 +111,7 @@ const tooltipData: TooltipState = reactive({
   height: 0,
   chartID,
   chartType: 'donut',
+  state: 'idle',
 })
 
 const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolutePosition(

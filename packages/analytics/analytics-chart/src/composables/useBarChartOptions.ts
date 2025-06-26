@@ -33,7 +33,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
   }
 
   Tooltip.positioners[positionKey] = function(elements, position) {
-    if (!elements.length || chartOptions.tooltipState.locked) {
+    if (!elements.length || chartOptions.tooltipState.state === 'interactive') {
       return false
     }
 

@@ -18,3 +18,22 @@
     border-radius: var(--kui-border-radius-50, $kui-border-radius-50);
   }
 }
+
+@mixin tooltipTitle() {
+  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  display: flex;
+  flex-direction: column;
+  margin: var(--kui-space-30, $kui-space-30);
+  min-height: 24px;
+  padding-bottom: var(--kui-space-30, $kui-space-30);
+
+  .title {
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+  }
+
+  .subtitle {
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin-top: var(--kui-space-30, $kui-space-30);
+  }
+}

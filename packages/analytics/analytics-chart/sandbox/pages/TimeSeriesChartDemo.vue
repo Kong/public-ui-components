@@ -184,6 +184,10 @@
         :threshold="threshold"
         :timeseries-zoom="timeSeriesZoomToggle"
         tooltip-title="tooltip title"
+        :zoom-options="[
+          { label: 'Zoom', action: (newTimeRange) => eventLog += 'Zoomed To ' + JSON.stringify(newTimeRange) + '\n' },
+          { label: 'View requests', action: (newTimeRange) => eventLog += 'View requests for time range ' + JSON.stringify(newTimeRange) + '\n' },
+        ]"
         @zoom-time-range="eventLog += 'Zoomed to ' + JSON.stringify($event) + '\n'"
       />
     </div>
@@ -348,7 +352,7 @@ const exploreResult = computed<ExploreResultV4>(() => {
   } else if (multiMetricToggle.value) {
     return generateMultipleMetricTimeSeriesData([{ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, ...secondaryMetrics.value], metaOverrides)
   }
-  return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, null, metaOverrides)
+  return generateSingleMetricTimeSeriesData({ name: selectedMetric.value.name, unit: selectedMetric.value.unit }, undefined, metaOverrides)
 })
 
 const colorPalette = ref<AnalyticsChartColors>([...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {}))

@@ -38,13 +38,10 @@
         </div>
       </div>
       <ToolTip
-        :context="tooltipData.tooltipContext"
-        :left="tooltipAbsoluteLeft"
-        :locked="tooltipData.locked"
-        :series="tooltipData.tooltipSeries"
-        :show-tooltip="tooltipData.showTooltip"
+        v-model="tooltipData"
+        :absolute-left="tooltipAbsoluteLeft"
+        :absolute-top="tooltipAbsoluteTop"
         :tooltip-title="tooltipTitle"
-        :top="tooltipAbsoluteTop"
         @dimensions="tooltipDimensions"
       />
     </Teleport>
@@ -231,19 +228,19 @@ const unitsRef = toRef(props, 'metricUnit')
 
 const isHorizontal = computed(() => toRef(props, 'orientation').value === 'horizontal')
 
-const tooltipData: TooltipState = reactive({
+const tooltipData = reactive<TooltipState>({
   showTooltip: false,
   tooltipContext: '',
   tooltipSeries: [],
   left: '',
   top: '',
-  units: unitsRef,
+  units: props.metricUnit,
   translateUnit,
   offsetX: 0,
   offsetY: 0,
   width: 0,
   height: 0,
-  locked: false,
+  state: 'idle',
   chartType: isHorizontal.value ? 'horizontal_bar' : 'vertical_bar',
   chartID: chartCanvasId,
   chartTooltipSortFn: props.chartTooltipSortFn,
@@ -310,7 +307,7 @@ const axesTooltipPlugin = {
 
       if (compareByIndexAxis(indexAxis)) {
         // Prevent hiding the tooltip if it's locked
-        if (!tooltipData.locked) {
+        if (tooltipData.state !== 'interactive') {
           tooltipData.showTooltip = false
         }
         const context = chart.canvas.getContext('2d') as CanvasRenderingContext2D
@@ -563,7 +560,7 @@ watch(() => props.orientation, () => {
   }
 
   tooltipData.showTooltip = false
-  tooltipData.locked = false
+  tooltipData.state = 'idle'
 })
 
 watch(() => props.annotations, (value: boolean) => {
@@ -580,7 +577,12 @@ watch(() => props.annotations, (value: boolean) => {
 
 const handleChartClick = () => {
   if (tooltipData.showTooltip) {
-    tooltipData.locked = !tooltipData.locked
+
+    if (tooltipData.state !== 'idle') {
+      tooltipData.state = 'idle'
+    } else {
+      tooltipData.state = 'interactive'
+    }
   }
 }
 </script>

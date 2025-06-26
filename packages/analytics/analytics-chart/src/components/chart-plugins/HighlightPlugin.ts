@@ -81,6 +81,10 @@ export class HighlightPlugin implements Plugin {
     this._pause = true
   }
 
+  get isPaused() {
+    return this._pause
+  }
+
   resume(suppressNextClick = false) {
     this._pause = false
     if (suppressNextClick) {

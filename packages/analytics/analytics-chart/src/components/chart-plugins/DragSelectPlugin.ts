@@ -17,12 +17,14 @@ const dispatchEvent = (eventName: string, chart: Chart, pluginInstance: DragSele
   const xStartValue = chart.scales.x.getValueForPixel(pluginInstance.startX)
   const xEndValue = chart.scales.x.getValueForPixel(pluginInstance.endX)
 
-  chart.canvas.dispatchEvent(new CustomEvent<DragSelectEventDetail>(eventName, {
-    detail: {
-      xStart: xStartValue,
-      xEnd: xEndValue,
-    },
-  }))
+  if (xStartValue && xEndValue) {
+    chart.canvas.dispatchEvent(new CustomEvent<DragSelectEventDetail>(eventName, {
+      detail: {
+        xStart: xStartValue < xEndValue ? xStartValue : xEndValue,
+        xEnd: xEndValue > xStartValue ? xEndValue : xStartValue,
+      },
+    }))
+  }
 }
 
 export class DragSelectPlugin implements Plugin {
@@ -31,6 +33,7 @@ export class DragSelectPlugin implements Plugin {
   private _startX = 0
   private _endX = 0
   private _dragTimeout?: number
+  private _clearSelectionArea = false
   private _dragSelectHandlers?: {
     onMouseDown: (event: MouseEvent) => void
     onMouseMove: (event: MouseEvent) => void
@@ -53,6 +56,7 @@ export class DragSelectPlugin implements Plugin {
     const onMouseDown = (event: MouseEvent) => {
       this._dragTimeout = window.setTimeout(() => {
         this._isDragging = true
+        this._clearSelectionArea = false
         dragInitiated = true
         this._startX = event.clientX - rect.left
       }, 150)
@@ -72,8 +76,8 @@ export class DragSelectPlugin implements Plugin {
         this._endX = event.clientX - rect.left
         dispatchEvent('dragSelect', chart, this)
         chart.update()
-        this._isDragging = false
         dragInitiated = false
+        this._isDragging = false
       }
     }
 
@@ -97,9 +101,15 @@ export class DragSelectPlugin implements Plugin {
       clearTimeout(this._dragTimeout)
     }
   }
+
   afterDatasetsDraw(chart: Chart): void {
-    if (this._isDragging) {
+    if (this._isDragging || !this._clearSelectionArea) {
       drawSelectionArea(chart, this._startX, this._endX)
+      chart.update()
     }
+  }
+
+  clearSelectionArea(): void {
+    this._clearSelectionArea = true
   }
 }
