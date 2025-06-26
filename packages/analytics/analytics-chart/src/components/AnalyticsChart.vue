@@ -52,11 +52,11 @@
         :metric-unit="computedMetricUnit"
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
-        :threshold="threshold"
         :time-range-ms="timeRangeMs"
         :tooltip-title="tooltipTitle"
         :type="(chartOptions.type as ('timeseries_line' | 'timeseries_bar'))"
         :zoom="timeseriesZoom"
+        :zoom-options="zoomOptions"
         @zoom-time-range="(newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange)"
       />
       <StackedBarChart
@@ -95,7 +95,6 @@ import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry } from '..
 import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
-import type { PropType } from 'vue'
 import { computed, provide, toRef } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
@@ -104,70 +103,41 @@ import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
 
-const props = defineProps({
-  allowCsvExport: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  chartData: {
-    type: Object as PropType<ExploreResultV4>,
-    required: true,
-  },
-  chartOptions: {
-    type: Object as PropType<AnalyticsChartOptions>,
-    required: true,
-  },
-  tooltipTitle: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  emptyStateTitle: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  emptyStateDescription: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  legendPosition: {
-    type: String as PropType<`${ChartLegendPosition}`>,
-    required: false,
-    default: ChartLegendPosition.Right,
-  },
-  syntheticsDataKey: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  showLegendValues: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  showAnnotations: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  threshold: {
-    type: Object as PropType<Record<ExploreAggregations, number>>,
-    required: false,
-    default: undefined,
-  },
-  timeseriesZoom: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-})
+export interface ZoomOptions {
+  label: string
+  action: (newTimeRange: AbsoluteTimeRangeV4) => void
+}
+
+interface ChartProps {
+  chartData: ExploreResultV4
+  chartOptions: AnalyticsChartOptions
+  tooltipTitle?: string
+  emptyStateTitle?: string
+  emptyStateDescription?: string
+  legendPosition?: `${ChartLegendPosition}`
+  syntheticsDataKey?: string
+  showLegendValues?: boolean
+  showAnnotations?: boolean
+  timeseriesZoom?: boolean
+  zoomOptions?: ZoomOptions[]
+}
 
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
+
+const props = withDefaults(defineProps<ChartProps>(), {
+  allowCsvExport: false,
+  tooltipTitle: '',
+  emptyStateTitle: '',
+  emptyStateDescription: '',
+  legendPosition: ChartLegendPosition.Right,
+  syntheticsDataKey: '',
+  showLegendValues: true,
+  showAnnotations: true,
+  timeseriesZoom: false,
+  zoomOptions: undefined,
+})
 
 const { i18n } = composables.useI18n()
 
