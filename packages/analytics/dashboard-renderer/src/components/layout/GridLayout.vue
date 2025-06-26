@@ -34,7 +34,7 @@ const props = defineProps({
     default: () => DEFAULT_TILE_HEIGHT,
   },
   tiles: {
-    type: Array as PropType<GridTile<T>[]>,
+    type: Array as PropType<Array<GridTile<T>>>,
     required: true,
   },
 })
@@ -73,7 +73,7 @@ const rowDefinition = computed<string>(() => {
   return rowDefs.join(' ')
 })
 
-const gridCells = computed<Cell<T>[]>(() => {
+const gridCells = computed<Array<Cell<T>>>(() => {
   return props.tiles.map((tile, i) => {
     return {
       key: `tile-${i}`,

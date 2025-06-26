@@ -43,7 +43,7 @@ const nodeTypeToComponentMap: Record<string, Component> = {
   text_block: TextBlock,
 }
 
-const nodeTypesNotified: Array<string> = []
+const nodeTypesNotified: string[] = []
 function notifyUnknownNodeType(type: string) {
   if (nodeTypesNotified.indexOf(type) !== -1) {
     return
@@ -53,7 +53,7 @@ function notifyUnknownNodeType(type: string) {
   console.warn(`[DocumentViewer] Unable to render an unknown node type "${type}"`)
 }
 
-export default function renderChildren<ChildTypes extends BaseNode>(children: Array<ChildTypes>, parent?: BaseNode): Component {
+export default function renderChildren<ChildTypes extends BaseNode>(children: ChildTypes[], parent?: BaseNode): Component {
   return children.map((child, index) => {
     if (!child) {
       return null

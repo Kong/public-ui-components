@@ -287,7 +287,7 @@ const configSchema = computed((): ConfigurationSchema => {
   }
 })
 
-const apiPluginSchema = computed((): Record<string, any>[] => {
+const apiPluginSchema = computed((): Array<Record<string, any>> => {
   if (!schema.value?.fields) {
     return []
   }

@@ -10,7 +10,7 @@ const { t } = createI18n<typeof english>('en-us', english)
 
 export function toSelectItems<T extends string>(
   items: T[],
-): { value: T, label: T }[] {
+): Array<{ value: T, label: T }> {
   return items.map((item) => ({ value: item, label: item }))
 }
 

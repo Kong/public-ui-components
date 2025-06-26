@@ -177,7 +177,7 @@ const filteredFields = computed<string[]>(() => {
   return fields
 })
 
-const searchableFields = computed<{ label: string, value: string, expanded: boolean }[]>(() => {
+const searchableFields = computed<Array<{ label: string, value: string, expanded: boolean }>>(() => {
   const fields = (props.config as FuzzyMatchFilterConfig).fields
   return Object
     .keys(fields)
@@ -186,7 +186,7 @@ const searchableFields = computed<{ label: string, value: string, expanded: bool
       label: fields[key].label || key,
       value: key,
       expanded: false,
-    })) as { label: string, value: string, expanded: boolean }[]
+    })) as Array<{ label: string, value: string, expanded: boolean }>
 })
 
 watch(() => props.modelValue, (val) => {
@@ -264,7 +264,7 @@ const enableFiltering = (field: string): boolean =>
 const handleFilter = (
   field: string,
   params: SelectFilterFunctionParams<string | number>,
-): true | SelectItem<string | number>[] => {
+): true | Array<SelectItem<string | number>> => {
   const fieldSchema = (props.config as FuzzyMatchFilterConfig).schema?.[field]
 
   if (fieldSchema?.filterFunction === undefined) {

@@ -1,7 +1,7 @@
 import type { HeadingNode } from '../types'
 import { isHeadingNode, isTextNode } from '../types'
 import { toSlug } from './toSlug'
-export function addUniqueHeadingSlugs<T = any>(children: Array<T>, slugMap = new Map<string, number>()): Array<T> {
+export function addUniqueHeadingSlugs<T = any>(children: T[], slugMap = new Map<string, number>()): T[] {
   if (!children) return children
 
   const slugs = slugMap || new Map<string, number>()

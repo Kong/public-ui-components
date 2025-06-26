@@ -101,5 +101,5 @@ export interface SpanTrees {
   /**
    * All spans sorted by start time.
    */
-  spans: Span<bigint>[]
+  spans: Array<Span<bigint>>
 }

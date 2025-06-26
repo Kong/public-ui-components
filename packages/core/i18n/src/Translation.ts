@@ -45,7 +45,7 @@ export const i18nTComponent = <MessageSource extends Record<string, any>>(i18n: 
       const keys = Object.keys(slots).filter(key => key !== '_')
       const sourceString = (i18n || props.i18n).messages[(props.keypath as string)]?.toString() || ''
 
-      let hArray: Array<any> = deconstructString(sourceString)
+      let hArray: any[] = deconstructString(sourceString)
 
       hArray = hArray.filter(a => a !== '')
 

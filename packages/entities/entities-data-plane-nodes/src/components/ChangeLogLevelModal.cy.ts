@@ -2,7 +2,7 @@ import { mockDataPlane } from '../fixtures/data-planes'
 import { LogLevel } from '../types'
 import ChangeLogLevelModal from './ChangeLogLevelModal.vue'
 
-type ArrayElement<A> = A extends readonly (infer T)[] ? T : never
+type ArrayElement<A> = A extends ReadonlyArray<infer T> ? T : never
 
 interface CLLModalInstanceWithLogLevel extends ArrayElement<InstanceType<typeof ChangeLogLevelModal>['$props']['instanceList']> {
   logLevel?: LogLevel

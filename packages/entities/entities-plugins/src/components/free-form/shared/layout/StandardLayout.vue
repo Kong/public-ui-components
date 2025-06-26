@@ -185,7 +185,7 @@ const freeFormSchema = computed(() => {
  * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
  */
 function pruneData(data: Props<T>['model']) {
-  const ffDataKeys: (keyof Props<T>['model'])[] = [
+  const ffDataKeys: Array<keyof Props<T>['model']> = [
     'config',
     'partials',
   ]

@@ -38,7 +38,7 @@ export class Timeframe implements ITimeframe {
 
   readonly timeframeLength: () => number
 
-  readonly allowedTiers: Array<string>
+  readonly allowedTiers: string[]
 
   // defaultResponseGranularity tracks which of the allowed granularities is picked for a given
   // timeframe if the user does not or cannot specify a granularity.

@@ -12,17 +12,17 @@ export interface KonnectRuntimeInstance extends DataPlaneNodeCommon {
   config_hash: string
   compatibility_status: {
     state: string
-    issues?: {
-      affected_resources: {
+    issues?: Array<{
+      affected_resources: Array<{
         id: string
         type: string
-      }[]
+      }>
       code: string
       description: string
       documentation_url: string
       resolution: string
       severity: string
-    }[]
+    }>
     config_hash?: string
   }
   data_plane_cert_id: string
@@ -36,22 +36,22 @@ export interface KonnectRuntimeInstance extends DataPlaneNodeCommon {
   connection_state: {
     is_connected: boolean
   }
-  errors?: {
+  errors?: Array<{
     name: string
     config_hash: string
-    flattened_errors: {
+    flattened_errors: Array<{
       entity_id: string
       entity_name: string
-      errors: {
+      errors: Array<{
         error_message: string
         type: string
         field: string
-      }[]
+      }>
       entity_type: string
-    }[]
+    }>
     code: number
     source: string
-  }[]
+  }>
   connected?: string
   total_traffic: number | null
   error_rate: number | null

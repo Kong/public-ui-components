@@ -25,7 +25,7 @@ export type FilterableBasicExploreDimensions = typeof filterableBasicExploreDime
 export interface BasicExploreInFilterV2 {
   operator: ExploreFilterTypesV2
   field: FilterableBasicExploreDimensions
-  value: (string | number | null)[]
+  value: Array<string | number | null>
 }
 
 export interface BasicExploreEmptyFilterV2 {

@@ -1,12 +1,12 @@
 
 export interface BaseNode<Type extends string = string> {
   type: Type
-  children?: Array<BaseNode>
+  children?: BaseNode[]
 }
 
 // TODO: Reach out to DevX for a proper interface
 export interface Document extends BaseNode<'document'> {
-  children: Array<BaseNode>
+  children: BaseNode[]
   version: number
 }
 
@@ -28,12 +28,12 @@ export interface TableCellNode extends BaseNode<'table_cell'> {
 
 export interface TableRowNode extends BaseNode<'table_row'> {
   section?: TableRowSection
-  children: Array<TableCellNode>
+  children: TableCellNode[]
 }
 
 export interface TableHeaderNode extends BaseNode<'table_header'> {
   section?: TableRowSection
-  children: Array<TableCellNode>
+  children: TableCellNode[]
 }
 
 export function isTableHeaderNode(o: any): o is TableHeaderNode {
@@ -62,7 +62,7 @@ export interface ListItemNode extends BaseNode<'list_item'> {}
 
 export interface ListNode extends BaseNode<'list'> {
   isOrdered?: boolean
-  children: Array<ListItemNode>
+  children: ListItemNode[]
 }
 
 export function isListNode(o: any): o is ListNode {

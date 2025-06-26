@@ -37,9 +37,9 @@ export default function useDebouncedFilter(
   const loading = ref(false)
   const error = ref('')
   const validationError = ref('')
-  const results = ref<Record<string, any>[]>([])
-  const resultsCache = ref<Record<string, any>[]>([])
-  const allRecords = ref<Record<string, any>[] | undefined>(undefined)
+  const results = ref<Array<Record<string, any>>>([])
+  const resultsCache = ref<Array<Record<string, any>>>([])
+  const allRecords = ref<Array<Record<string, any>> | undefined>(undefined)
 
   const url = computed(() => {
     const url = `${config.apiBaseUrl}${unref(baseUrl)}`

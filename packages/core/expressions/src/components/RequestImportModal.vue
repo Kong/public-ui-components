@@ -77,11 +77,11 @@ const options: Monaco.editor.IEditorOptions = {
   scrollBeyondLastLine: false,
 }
 
-const loadRequests = (importedRequests: Partial<Request>[]) => {
+const loadRequests = (importedRequests: Array<Partial<Request>>) => {
   const loadedRequests: Record<string, Request> = {}
 
   try {
-    const requests: Partial<Request>[] = importedRequests
+    const requests: Array<Partial<Request>> = importedRequests
 
     for (const [i, request] of requests.entries()) {
       const err = transformCheckRequest(request)

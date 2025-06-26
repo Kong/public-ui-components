@@ -317,7 +317,7 @@ const availableCertificates = computed((): SelectItem[] => {
   }))
 })
 
-const setCertIds = (data: Record<string, any>[]) => {
+const setCertIds = (data: Array<Record<string, any>>) => {
   // Clear the set
   existingCertificates.value.clear()
 

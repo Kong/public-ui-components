@@ -90,7 +90,7 @@ export type FilterableRequestMetrics = typeof filterableRequestMetrics[number]
 export interface RequestInFilter {
   operator: ExploreFilterTypesV2
   field: FilterableRequestDimensions | FilterableRequestWildcardDimensions | FilterableRequestMetrics
-  value: (string | number)[]
+  value: Array<string | number>
 }
 export interface RequestEqualsFilter {
   operator: RequestFilterTypeEqualsV2

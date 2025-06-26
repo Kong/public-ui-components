@@ -221,7 +221,7 @@ const slugError = computed((): boolean => {
   return formData.urlSlug !== '' && !formData.urlSlug?.match(slugRegex)
 })
 
-const availableParentDocuments = computed((): { label: string, value: string, selected: boolean }[] => {
+const availableParentDocuments = computed((): Array<{ label: string, value: string, selected: boolean }> => {
   // TODO: type document
   let docs = props.documents?.filter((document: any) => document.record.id !== props.record?.id && !document.record.parent_document_id)
     .map((document: any) => ({

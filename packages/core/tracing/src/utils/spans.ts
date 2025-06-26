@@ -256,12 +256,12 @@ export const toOverviewLatencies = (attributes?: IKeyValue[]): SpanLatency[] => 
     .sort((a, b) => LATENCY_ORDERING[a.key] - LATENCY_ORDERING[b.key])
 }
 
-export const toSpanLatencies = (attributes?: IKeyValue[]): SpanLatency<SpanLatency[]>[] => {
+export const toSpanLatencies = (attributes?: IKeyValue[]): Array<SpanLatency<SpanLatency[]>> => {
   if (!attributes) {
     return []
   }
 
-  const latencies: SpanLatency<SpanLatency[]>[] = []
+  const latencies: Array<SpanLatency<SpanLatency[]>> = []
   let latency3rdParty: SpanLatency<SpanLatency[]> | undefined
   const latencies3rdParty: SpanLatency[] = []
 

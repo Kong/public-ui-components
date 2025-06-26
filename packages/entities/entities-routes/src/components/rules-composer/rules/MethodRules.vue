@@ -63,7 +63,7 @@ const trackNewItems = (item: { label: string, value: string }, added: boolean) =
   }
 }
 
-const onSelect = (items: Array<string>) => {
+const onSelect = (items: string[]) => {
   methods.value = items
 }
 </script>

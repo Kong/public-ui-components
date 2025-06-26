@@ -41,15 +41,15 @@ export interface StringFieldSchema extends FieldSchema {
 
   match?: string
 
-  match_none?: {
+  match_none?: Array<{
     pattern: string
     err: string
-  }[]
+  }>
 
-  match_all?: {
+  match_all?: Array<{
     pattern: string
     err: string
-  }[]
+  }>
 
   match_any?: {
     patterns: string[]

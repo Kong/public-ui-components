@@ -8,7 +8,7 @@ export interface TimeframeOptions {
   dataGranularity: GranularityValues
   isRelative: boolean
   timeframeLength: () => number
-  allowedTiers: Array<string>
+  allowedTiers: string[]
   startCustom?: Date
   endCustom?: Date
   allowedGranularitiesOverride?: GranularityValues[]

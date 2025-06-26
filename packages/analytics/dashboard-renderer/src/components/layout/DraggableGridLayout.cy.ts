@@ -4,7 +4,7 @@ import DraggableGridLayout, { type DraggableGridLayoutExpose } from './Draggable
 import type { GridTile } from 'src/types'
 
 describe('<DraggableGridLayout />', () => {
-  const mockTiles: GridTile<string>[] = [
+  const mockTiles: Array<GridTile<string>> = [
     {
       id: '1',
       layout: {

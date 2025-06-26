@@ -149,7 +149,7 @@ export interface CalloutRequestProxy {
 export interface CalloutRequestError {
   on_error?: 'retry' | 'fail' | 'continue' | null
   retries?: number | null
-  http_statuses?: (number | null)[] | null
+  http_statuses?: Array<number | null> | null
   error_response_code?: number | null
   error_response_msg?: string | null
 }
