@@ -71,7 +71,7 @@ import { KUI_COLOR_TEXT_DANGER } from '@kong/design-tokens'
 import { TrashIcon, AddIcon } from '@kong/icons'
 import composables from '../composables'
 
-type FieldsValue = Array<string>
+type FieldsValue = string[]
 
 const props = defineProps({
   isEditing: {

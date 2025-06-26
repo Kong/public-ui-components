@@ -5,7 +5,7 @@ export interface ITimeframe {
   readonly key: string
   readonly display: string
   readonly timeframeLength: () => number
-  readonly allowedTiers: Array<string>
+  readonly allowedTiers: string[]
   readonly defaultResponseGranularity: GranularityValues
   readonly dataGranularity: GranularityValues
   readonly isRelative: boolean

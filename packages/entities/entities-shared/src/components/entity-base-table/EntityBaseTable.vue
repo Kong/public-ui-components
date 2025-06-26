@@ -176,7 +176,7 @@ const props = defineProps({
     default: false,
   },
   sortHandlerFunction: {
-    type: Function as PropType<(param: SortHandlerFunctionParam) => Record<string, any>[]>,
+    type: Function as PropType<(param: SortHandlerFunctionParam) => Array<Record<string, any>>>,
     default: null,
   },
   // whether to show the actions column
@@ -309,7 +309,7 @@ const cacheId = computed((): string => {
   return props.cacheIdentifier || props.preferencesStorageKey
 })
 
-const headers = computed<Array<InternalHeader>>(() => {
+const headers = computed<InternalHeader[]>(() => {
   const arr = []
   const fieldKeys = Object.keys(props.tableHeaders)
   fieldKeys.forEach(key => {

@@ -97,7 +97,7 @@ const items = computed((): SelectItem[] => {
   }
 })
 
-const getItemsFromValues = (values: Record<string, any>[] | string[] | number[]): SelectItem[] => {
+const getItemsFromValues = (values: Array<Record<string, any>> | string[] | number[]): SelectItem[] => {
   const itemArray: SelectItem[] = []
 
   values.forEach(item => {

@@ -36,17 +36,17 @@ import 'gridstack/dist/gridstack-extra.min.css'
 
 export type DraggableGridLayoutExpose<T> = {
   removeWidget: (id: number | string) => void
-  tiles: GridTile<T>[]
+  tiles: Array<GridTile<T>>
 }
 
 const props = withDefaults(defineProps<{
-  tiles: GridTile<T>[]
+  tiles: Array<GridTile<T>>
   tileHeight?: number
 }>(), {
   tileHeight: DEFAULT_TILE_HEIGHT,
 })
 const emit = defineEmits<{
-  (e: 'update-tiles', tiles: GridTile<T>[]): void
+  (e: 'update-tiles', tiles: Array<GridTile<T>>): void
 }>()
 
 const gridContainer = ref<HTMLDivElement | null>(null)
@@ -71,7 +71,7 @@ const makeTilesFromGridItems = (items: GridStackNode[]) => {
         },
       } satisfies GridTile<T>
     }
-  }).filter(t => t !== undefined) as GridTile<T>[]
+  }).filter(t => t !== undefined) as Array<GridTile<T>>
 }
 
 const updateTiles = (_: Event, items: GridStackNode[]) => {

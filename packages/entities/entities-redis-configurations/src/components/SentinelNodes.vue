@@ -65,7 +65,7 @@ defineProps<{
   readonly?: boolean
 }>()
 
-const nodes = defineModel<Identifiable<SentinelNode>[]>({ required: true })
+const nodes = defineModel<Array<Identifiable<SentinelNode>>>({ required: true })
 
 const { i18n: { t } } = composables.useI18n()
 

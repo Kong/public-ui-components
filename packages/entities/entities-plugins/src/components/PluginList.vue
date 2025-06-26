@@ -539,8 +539,8 @@ const errorMessage = ref<TableErrorMessage>(null)
  * Applied To ...
  */
 // transform the entity row to "Applied To" badges
-const aggregateAppliedTo = (row: EntityRow): ({ type: ViewRouteType | null, badgeText: string })[] => {
-  const badges = [] as ({ type: ViewRouteType | null, badgeText: string })[]
+const aggregateAppliedTo = (row: EntityRow): Array<{ type: ViewRouteType | null, badgeText: string }> => {
+  const badges = [] as Array<{ type: ViewRouteType | null, badgeText: string }>
   // compatible with different data structures in the List and Filter APIs, see KM-590 and KM-100
   if (row.route?.id || row.route_id) {
     badges.push({ type: 'route', badgeText: t('plugins.list.table_headers.applied_to_badges.route') })

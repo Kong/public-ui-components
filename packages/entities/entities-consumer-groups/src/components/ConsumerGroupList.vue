@@ -561,7 +561,7 @@ const handleAddToGroupClick = (): void => {
 const hideAddToGroupModal = (): void => {
   isAddModalVisible.value = false
 }
-const handleAddSuccess = (data: Array<string>, partialSuccess?: boolean) => {
+const handleAddSuccess = (data: string[], partialSuccess?: boolean) => {
   // if only partially successful leave the modal open
   if (!partialSuccess) {
     hideAddToGroupModal()

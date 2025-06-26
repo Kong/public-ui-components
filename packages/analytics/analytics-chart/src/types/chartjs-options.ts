@@ -17,7 +17,7 @@ export type ChartTooltipSortFn = (a: TooltipEntry, b: TooltipEntry) => number
 export interface TooltipState {
   showTooltip: boolean
   tooltipContext: string | number
-  tooltipSeries: Array<TooltipEntry>
+  tooltipSeries: TooltipEntry[]
   left: string
   top: string
   units: string // units are untranslated

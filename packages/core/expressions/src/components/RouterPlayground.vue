@@ -246,7 +246,7 @@ const loadRequests = () => {
   const loadedRequests: Request[] = []
 
   try {
-    const requests: Partial<Request>[] = JSON.parse(localStorage.getItem(localstorageKey.value) ?? '[]')
+    const requests: Array<Partial<Request>> = JSON.parse(localStorage.getItem(localstorageKey.value) ?? '[]')
 
     for (const [, request] of requests.entries()) {
       const err = transformCheckRequest(request)

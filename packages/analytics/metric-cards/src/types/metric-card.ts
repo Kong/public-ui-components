@@ -30,7 +30,7 @@ export interface MetricCardDisplayValue {
 }
 
 export interface MetricCardContainerOptions {
-  cards: Array<MetricCardDef>
+  cards: MetricCardDef[]
   fallbackDisplayText: string
   hasTrendAccess: boolean
   loading: boolean

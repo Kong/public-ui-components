@@ -1,6 +1,6 @@
 import type { GridTile } from '../../types'
 
-export const calculateRowDefs = (tileHeight: number, tiles: GridTile<unknown>[]): string[] => {
+export const calculateRowDefs = (tileHeight: number, tiles: Array<GridTile<unknown>>): string[] => {
   let rowCount = 0
   const rowMap = new Map<number, boolean>()
 

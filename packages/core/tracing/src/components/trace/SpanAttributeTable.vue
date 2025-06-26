@@ -37,7 +37,7 @@ const { i18n: { t } } = composables.useI18n()
 
 const props = defineProps<{ span: SpanNode['span'] }>()
 
-const internalAttributes = computed<(IKeyValue & { label?: string })[]>(() => {
+const internalAttributes = computed<Array<IKeyValue & { label?: string }>>(() => {
   return [
     {
       // Hardcoding the key here as it's not used elsewhere

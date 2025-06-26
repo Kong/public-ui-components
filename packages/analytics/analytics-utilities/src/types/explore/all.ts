@@ -22,10 +22,10 @@ export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<strin
 } as const
 
 // Utility for stripping unknown filters
-export const stripUnknownFilters = <K extends keyof typeof datasourceToFilterableDimensions>(datasource: K, filters: AllFilters[]): FilterTypeMap[K][] => {
+export const stripUnknownFilters = <K extends keyof typeof datasourceToFilterableDimensions>(datasource: K, filters: AllFilters[]): Array<FilterTypeMap[K]> => {
   // Note: once we extend API request filters, this may need to look at more than just dimensions.
   // Note the cast; we could potentially try to derive the type, but it doesn't seem worth it.
-  return filters.filter(f => datasourceToFilterableDimensions[datasource].has(f.field)) as FilterTypeMap[K][]
+  return filters.filter(f => datasourceToFilterableDimensions[datasource].has(f.field)) as Array<FilterTypeMap[K]>
 }
 
 // TODO: Add utility func for marking unknown filters (but not stripping them).

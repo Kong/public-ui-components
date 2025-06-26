@@ -37,10 +37,10 @@ export interface AppRegFormSchema {
     default: []
     type: string
     label: string
-    values: {
+    values: Array<{
       label: string
       value: string
-    }[]
+    }>
     help: string
     placeholder: string
     styleClasses: string

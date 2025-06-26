@@ -384,7 +384,7 @@ const orderedRecordArray = computed((): RecordItem[] => {
     return (a[1] as number) - (b[1] as number)
   })
 
-  return sortableKeys.map((sKey: (string | number)[]) => {
+  return sortableKeys.map((sKey: Array<string | number>) => {
     const key = sKey[0] as string
     const recordEntry = record.value?.[key]
     const configEntry = props.configSchema?.[key] || {}
@@ -433,7 +433,7 @@ const orderedPluginConfigArray = computed((): RecordItem[] => {
     return (a[1] as number) - (b[1] as number)
   })
 
-  return sortableKeys.map((sKey: (string | number)[]) => {
+  return sortableKeys.map((sKey: Array<string | number>) => {
     const key = sKey[0] as string
     const recordEntry = configRecord[key]
     const configEntry = props.pluginConfigSchema?.[key] || {}

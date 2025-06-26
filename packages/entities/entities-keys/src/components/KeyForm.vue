@@ -486,7 +486,7 @@ const availableKeySets = computed((): SelectItem[] => {
   }))
 })
 
-const setKeySets = (data: Record<string, any>[]) => {
+const setKeySets = (data: Array<Record<string, any>>) => {
   // Clear the set
   existingKeySets.value.clear()
 

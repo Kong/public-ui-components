@@ -22,7 +22,7 @@ export interface CertificateFormFields {
   key: string
   certAlt: string
   keyAlt: string
-  snis: Array<string>
+  snis: string[]
   tags: string
 }
 

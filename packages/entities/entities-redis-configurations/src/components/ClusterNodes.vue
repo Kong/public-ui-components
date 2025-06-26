@@ -65,7 +65,7 @@ defineProps<{
   readonly?: boolean
 }>()
 
-const nodes = defineModel<Identifiable<ClusterNode>[]>({ required: true })
+const nodes = defineModel<Array<Identifiable<ClusterNode>>>({ required: true })
 
 const { i18n: { t } } = composables.useI18n()
 

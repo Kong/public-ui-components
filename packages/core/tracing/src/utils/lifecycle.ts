@@ -78,8 +78,8 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
   const nodeIdPrefix = options?.idPrefix ?? ''
   const clientOutSpans: SpanNode[] = []
   const clientInSpans: SpanNode[] = []
-  const requestNodesData: (LifecycleDefaultNodeData & { id: string })[] = []
-  const responseNodesData: (LifecycleDefaultNodeData & { id: string })[] = []
+  const requestNodesData: Array<LifecycleDefaultNodeData & { id: string }> = []
+  const responseNodesData: Array<LifecycleDefaultNodeData & { id: string }> = []
   const upstreamInSpans: SpanNode[] = []
   const upstreamOutSpans: SpanNode[] = []
 

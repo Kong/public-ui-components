@@ -9,5 +9,5 @@ type ExcludeFromTuple<T extends readonly any[], E> =
 type ExceptTime<T extends readonly any[]> = ExcludeFromTuple<T, 'time'>
 
 // Utility for deriving filterable dimensions from queryable dimensions with correct types.
-export const makeFilterable = <T extends Readonly<unknown[]>>(queryable: T) =>
+export const makeFilterable = <T extends readonly unknown[]>(queryable: T) =>
   queryable.filter(d => d !== 'time') as ExceptTime<T>

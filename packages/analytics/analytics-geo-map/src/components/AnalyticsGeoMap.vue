@@ -162,7 +162,7 @@ const legendData = computed(() => {
 
 // Simplified coords may be 2 or 3 layers
 const flattenPositions = (position: any): number[][] => {
-  const flat: (number | number[])[] = position.flat(1)
+  const flat: Array<number | number[]> = position.flat(1)
 
   if (Array.isArray(flat[0]) && Array.isArray(flat[0][0])) {
     return flattenPositions(flat)
