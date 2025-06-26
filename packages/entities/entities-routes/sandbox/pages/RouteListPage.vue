@@ -27,6 +27,13 @@
   <h2>Konnect Actions Outside</h2>
   <div id="kong-ui-app-page-header-action-button" />
 
+  <h2>Declarative Config</h2>
+  <RouteList
+    :key="declarativeKey"
+    cache-identifier="declarative"
+    :config="declarativeKonnectConfig"
+  />
+
   <h2>Konnect API</h2>
   <RouteList
     v-if="permissions"
@@ -68,14 +75,65 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import type { AxiosError } from 'axios'
-import { RouteList } from '../../src'
-import type { KonnectRouteListConfig, KongManagerRouteListConfig, EntityRow, CopyEventPayload } from '../../src'
 import type { PermissionsActions } from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
 import SandboxPermissionsControl from '@entities-shared-sandbox/components/SandboxPermissionsControl.vue'
+import type { AxiosError } from 'axios'
+import { onMounted, reactive, ref, watch } from 'vue'
+import type { CopyEventPayload, EntityRow, KongManagerRouteListConfig, KonnectRouteListConfig } from '../../src'
+import { RouteList } from '../../src'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+
+const declarativeKonnectConfig = reactive<KonnectRouteListConfig>({
+  app: 'konnect',
+  apiBaseUrl: '/us/kong-api',
+  controlPlaneId,
+  createRoute: { name: 'create-route' },
+  getViewRoute: () => ({ }),
+  getEditRoute: () => ({ }),
+  declarative: {
+    config: {
+      routes: [],
+      services: [],
+      listeners: [],
+    },
+    filterSchema: {
+      name: {
+        type: 'text',
+      },
+      matchPath: {
+        type: 'text',
+      },
+    },
+    getViewRoute: (name: string) => {
+      console.log('getViewRoute called with name:', name)
+      return {}
+    },
+    getEditRoute: (name: string) => {
+      console.log('getEditRoute called with name:', name)
+      return {}
+    },
+  },
+})
+
+onMounted(() => {
+  setTimeout(() => {
+    declarativeKonnectConfig.declarative.config = {
+      routes: [
+        {
+          name: 'example-route-1',
+          match: {
+            path: '/example-1',
+          },
+          policies: [],
+        },
+      ],
+      services: [],
+      listeners: [],
+    }
+    declarativeKey.value++
+  }, 1000)
+})
 
 const konnectConfig = ref<KonnectRouteListConfig>({
   app: 'konnect',
@@ -116,6 +174,7 @@ const kongManagerConfig = ref<KongManagerRouteListConfig>({
 
 // Remount the tables in the sandbox when the permission props change; not needed outside of a sandbox
 const key = ref(1)
+const declarativeKey = ref(1)
 const permissions = ref<PermissionsActions | null>(null)
 
 const isRouteListControlCollapsed = ref<boolean>(true)
