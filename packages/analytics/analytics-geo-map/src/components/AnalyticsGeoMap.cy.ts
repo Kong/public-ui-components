@@ -1,7 +1,6 @@
 // Cypress component test spec file
 
 import AnalyticsGeoMap from './AnalyticsGeoMap.vue'
-import testGeoData from '../test-data/testGeoData.json'
 import type { MapFeatureCollection } from '../types'
 import { defineComponent, h, type PropType } from 'vue'
 
@@ -21,7 +20,6 @@ const WrapperComponent = defineComponent({
     return () => h('div', { style: 'height: 500px; width: 500px;' }, [
       h(AnalyticsGeoMap, {
         countryMetrics: props.countryMetrics,
-        geoJsonData: props.geoJsonData,
       }),
     ])
   },
@@ -38,7 +36,6 @@ describe('<AnalyticsGeoMap />', () => {
         countryMetrics: {
           AO: 1,
         },
-        geoJsonData: testGeoData,
       },
     })
 
