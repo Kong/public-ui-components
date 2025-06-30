@@ -1,7 +1,7 @@
 // Cypress component test spec file
 import type { KongManagerGatewayServiceFormConfig, KonnectGatewayServiceFormConfig } from '../types'
 import { gatewayService1, gatewayService2 } from '../../fixtures/mockData'
-import GatewayServiceForm from './LegacyGatewayServiceForm.vue'
+import GatewayServiceForm from './.vue'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'gateway-services-list' }
