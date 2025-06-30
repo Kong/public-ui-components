@@ -25,9 +25,10 @@
         />
         <PermissionsWrapper :auth-function="() => canCreate()">
           <KButton
+            v-if="useToolbarCreationButton"
             appearance="primary"
             data-testid="toolbar-add-certificate"
-            size="medium"
+            size="large"
             :to="config.createRoute"
           >
             <AddIcon />
@@ -52,6 +53,21 @@
             >
               <BookIcon decorative />
             </KButton>
+            <PermissionsWrapper
+              v-if="!useToolbarCreationButton"
+              :auth-function="() => canCreate()"
+            >
+              <!-- Hide Create button if table is empty -->
+              <KButton
+                appearance="primary"
+                data-testid="toolbar-add-certificate"
+                :size="useActionOutside ? 'medium' : 'large'"
+                :to="config.createRoute"
+              >
+                <AddIcon />
+                {{ t('certificates.list.toolbar_actions.new_certificate') }}
+              </KButton>
+            </PermissionsWrapper>
           </div>
         </Teleport>
       </template>
@@ -318,6 +334,11 @@ const props = defineProps({
   },
   /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
   useActionOutside: {
+    type: Boolean,
+    default: false,
+  },
+  /** default to false, setting to true will place create button on top right of list*/
+  useToolbarCreationButton: {
     type: Boolean,
     default: false,
   },
