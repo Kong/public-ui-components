@@ -56,7 +56,7 @@
       <template #authorization>
         <div class="general-settings">
           <div class="link-wrapper">
-            <KExternalLink href="https://docs.konghq.com/hub/kong-inc/openid-connect/#authorization">
+            <KExternalLink href="https://developer.konghq.com/plugins/openid-connect/#authorization">
               <span class="section-header">Authorization Configuration Settings</span>
             </KExternalLink>
           </div>
@@ -82,7 +82,7 @@
       <template #advanced>
         <div class="general-settings">
           <div class="link-wrapper">
-            <KExternalLink href="https://docs.konghq.com/hub/kong-inc/openid-connect/">
+            <KExternalLink href="https://developer.konghq.com/plugins/openid-connect/">
               <span class="section-header">Advanced Configuration Settings</span>
             </KExternalLink>
           </div>
@@ -276,6 +276,7 @@ export default {
 
                   fields.push({
                     ...field,
+                    // TODO: This link no longer exists in new doc site, shall we remove them?
                     link: 'https://docs.konghq.com/hub/kong-inc/openid-connect/#jwk-record',
                     newElementButtonLabel: '+ Add Client JWK',
                     ...Array.isArray(field.items?.schema?.fields)
@@ -286,6 +287,7 @@ export default {
                 case 'config-session_redis_cluster_nodes': {
                   fields.push({
                     ...field,
+                    // TODO: This link no longer exists in new doc site, shall we remove them?
                     link: 'https://docs.konghq.com/hub/kong-inc/openid-connect/#host-record',
                     newElementButtonLabel: '+ Add Cluster Node',
                   })
