@@ -42,7 +42,7 @@ import type {
   SlotsType,
 } from 'vue'
 import type { DeepKeys, DeepValue } from './types/util-types'
-import type { FieldCommonProps } from './types/types'
+import type { FieldCommonProps } from './types/field-types'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.

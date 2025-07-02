@@ -94,7 +94,7 @@
 
 <script lang="ts">
 import type { DeepKeys, DeepValue } from './types/util-types'
-import type { FieldCommonProps, ResetLabelPathRule, ContainerFieldCommonSlots } from './types/types'
+import type { FieldCommonProps, ResetLabelPathRule, ContainerFieldCommonSlots } from './types/field-types'
 import type {
   ComponentOptionsMixin,
   CreateComponentPublicInstanceWithMixins,

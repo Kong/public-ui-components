@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import type { DeepKeys, DeepValue } from './types/util-types'
-import type { FieldCommonProps } from './types/types'
+import type { FieldCommonProps } from './types/field-types'
 import type {
   ComponentOptionsMixin,
   CreateComponentPublicInstanceWithMixins,

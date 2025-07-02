@@ -29,7 +29,7 @@ import type { FormSchema } from '../../../types/plugins/form-schema'
 import Field from './Field.vue'
 import { isFunction, omit } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
-import type { FormConfig } from './types/types'
+import type { FormConfig } from './types/field-types'
 
 defineOptions({ name: 'SchemaForm' })
 

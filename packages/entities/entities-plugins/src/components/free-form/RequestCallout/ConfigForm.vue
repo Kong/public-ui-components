@@ -47,7 +47,6 @@
         appearance="card"
         :fields-order="['by_lua', 'headers', 'query', 'body', ]"
         name="config.upstream"
-        :omit="['body']"
       />
 
       <ObjectField
@@ -83,7 +82,7 @@ import AdvancedFields from '../shared/AdvancedFields.vue'
 import { fieldsBuilder } from '../shared/fields-builder'
 
 import { CalloutId, type Callout, type RequestCalloutPlugin } from './types'
-import type { FormConfig } from '../shared/types/types'
+import type { FormConfig } from '../shared/types/field-types'
 import type { ConfigFormProps } from '../shared/PluginFormWrapper.vue'
 
 const {

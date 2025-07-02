@@ -5,7 +5,7 @@ import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
-import type { FormConfig, ResetLabelPathRule } from './types/types'
+import type { FormConfig, ResetLabelPathRule } from './types/field-types'
 import { capitalize } from 'lodash-es'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')

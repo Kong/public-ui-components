@@ -11,7 +11,7 @@ import StringField from './StringField.vue'
 import TagField from './TagField.vue'
 import FieldRenderer from './FieldRenderer.vue'
 
-import type { FieldCommonProps } from './types/types'
+import type { FieldCommonProps } from './types/field-types'
 import type { DeepKeys, DeepValue } from './types/util-types'
 import type { ObjectFieldComponent } from './ObjectField.vue'
 import type { StringFieldComponent } from './StringField.vue'

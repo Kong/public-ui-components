@@ -45,7 +45,7 @@ import type {
   SlotsType,
 } from 'vue'
 import type { DeepKeys, DeepValue } from './types/util-types'
-import type { FieldCommonProps, ContainerFieldCommonSlots } from './types/types'
+import type { FieldCommonProps, ContainerFieldCommonSlots } from './types/field-types'
 
 export type FieldProps<
   TParentData,

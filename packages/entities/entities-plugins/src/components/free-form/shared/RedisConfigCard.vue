@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Field } from './types/types'
+import type { Field } from './types/field-types'
 import { useStringHelpers } from '@kong-ui-public/entities-shared'
 import { computed } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
