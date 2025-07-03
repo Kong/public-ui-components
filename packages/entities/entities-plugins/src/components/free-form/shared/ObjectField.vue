@@ -119,7 +119,7 @@ export type ObjectFieldProps<
   omit?: Array<keyof Required<NonNullable<TData>>>
   asChild?: boolean
   resetLabelPath?: ResetLabelPathRule
-  fieldsOrder?: Array<keyof Required<NonNullable<TData>>>
+  fieldsOrder?: Array<keyof Required<NonNullable<DeepValue<TParentData, TName>>>>
 } & FieldCommonProps<TParentData, TName>
 
 export type ObjectFieldSlots<

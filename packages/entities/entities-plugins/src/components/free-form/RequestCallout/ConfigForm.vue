@@ -45,7 +45,7 @@
 
       <ObjectField
         appearance="card"
-        :fields-order="['by_lua', 'headers', 'query', 'body', ]"
+        :fields-order="['headers', 'query', 'body', 'by_lua']"
         name="config.upstream"
       />
 

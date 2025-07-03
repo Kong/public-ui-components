@@ -23,6 +23,9 @@ import type { KeyValueFieldComponent } from './KeyValueField.vue'
 import type { NumberFieldComponent } from './NumberField.vue'
 import type { TagFieldComponent } from './TagField.vue'
 
+/**
+ * A builder function to create field components with strict type checking.
+ */
 export function fieldsBuilder<TData>() {
   function setScope<TScope extends DeepKeys<TData> | undefined = undefined>(scope?: TScope) {
 
