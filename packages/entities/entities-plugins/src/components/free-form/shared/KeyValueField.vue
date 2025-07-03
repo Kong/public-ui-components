@@ -10,8 +10,12 @@
     v-else
     ref="root"
     class="ff-kv-field"
+    :data-testid="`ff-kv-${field.path.value}`"
   >
-    <header class="ff-kv-field-header">
+    <header
+      class="ff-kv-field-header"
+      :data-testid="`ff-kv-header-${field.path.value}`"
+    >
       <KLabel
         class="ff-kv-field-label"
         v-bind="fieldAttrs"

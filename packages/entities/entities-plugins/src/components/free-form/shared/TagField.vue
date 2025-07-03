@@ -12,7 +12,7 @@
       class="ff-string-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
-      :data-testid="field.path.value"
+      :data-testid="`ff-${field.path.value}`"
       :model-value="rawInputValue ?? ''"
       @update:model-value="handleUpdate"
     >
