@@ -37,7 +37,7 @@ defineSlots<
   {
     default?: Slot
     [FIELD_RENDERERS]?: Slot<{ name: string }>
-  } & Record<string, Slot<{ name: string }>>
+  } & Partial<Record<string, Slot<{ name: string }>>>
 >()
 
 const { tag = 'form', schema, data, config, fieldsOrder } = defineProps<Props<T>>()
@@ -90,7 +90,7 @@ provide(FIELD_RENDERER_SLOTS, omit(slots, 'default', FIELD_RENDERERS))
 const matchMap: MatchMap = new Map()
 provide(FIELD_RENDERER_MATCHERS_MAP, matchMap)
 
-provide(FORM_CONFIG, config)
+provide(FORM_CONFIG, config ?? {})
 
 watch(formData, (newVal) => {
   emit('change', toValue(newVal))

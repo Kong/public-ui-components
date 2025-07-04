@@ -16,7 +16,7 @@
       class="ff-string-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
-      :data-testid="field.path.value"
+      :data-testid="`ff-${field.path.value}`"
       :model-value="fieldValue ?? ''"
       @update:model-value="handleUpdate"
     >
@@ -36,6 +36,12 @@
       :schema="schema"
       :update="handleUpdate"
       :value="fieldValue ?? ''"
+    />
+    <KAlert
+      v-if="realShowVaultSecretPicker && !autofillSlot"
+      appearance="warning"
+      :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+      message="The vault secret picker is not available"
     />
   </div>
 </template>
