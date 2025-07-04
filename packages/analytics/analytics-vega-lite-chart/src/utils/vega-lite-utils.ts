@@ -22,15 +22,6 @@ export function prepareData(exploreResult: ExploreResultV4) {
       time: timestamp,
       ...event,
     }
-
-    // return metricNames
-    //   .filter(metric => metric in event)
-    //   .map(metric => ({
-    //     time: timestamp,
-    //     metric,
-    //     value: event[metric],
-    //     ...event,
-    //   }))
   })
 
   return flatData
