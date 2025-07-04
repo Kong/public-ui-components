@@ -51,14 +51,14 @@
     "errorLimit": "246KB"
   },
   "peerDependencies": {
-    "axios": "^1.7.7",
-    "vue": "^3.5.12"
+    "axios": "^1.7.9",
+    "vue": "^3.5.17"
   },
   "dependencies": {
     "date-fns": "^4.1.0"
   },
   "devDependencies": {
     "@kong/design-tokens": "1.17.4",
-    "axios": "^1.7.7"
+    "axios": "^1.7.9"
   }
 }
