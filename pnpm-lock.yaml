@@ -971,6 +971,9 @@ importers:
         specifier: 0.52.2
         version: 0.52.2
     devDependencies:
+      '@kong-ui-public/entities-plugins-icon':
+        specifier: workspace:^
+        version: link:../entities-plugins-icon
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
@@ -998,6 +1001,9 @@ importers:
 
   packages/entities/entities-plugins-icon:
     devDependencies:
+      '@kong-ui-public/entities-plugins-metadata':
+        specifier: workspace:^
+        version: link:../entities-plugins-metadata
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.3)
@@ -1010,9 +1016,9 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
     devDependencies:
-      '@kong-ui-public/entities-plugins':
+      '@kong-ui-public/entities-plugins-icon':
         specifier: workspace:^
-        version: link:../entities-plugins
+        version: link:../entities-plugins-icon
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
