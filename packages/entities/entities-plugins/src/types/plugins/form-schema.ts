@@ -82,6 +82,14 @@ export interface ArrayLikeFieldSchema extends FieldSchema {
   len_max?: number
 }
 
+export interface ArrayFieldSchema extends ArrayLikeFieldSchema {
+  type: 'array'
+}
+
+export interface SetFieldSchema extends ArrayLikeFieldSchema {
+  type: 'set'
+}
+
 export interface MapFieldSchema extends FieldSchema {
   type: 'map'
 
@@ -94,7 +102,8 @@ export interface MapFieldSchema extends FieldSchema {
 export type UnionFieldSchema = StringFieldSchema
   | NumberLikeFieldSchema
   | BooleanFieldSchema
-  | ArrayLikeFieldSchema
+  | ArrayFieldSchema
+  | SetFieldSchema
   | MapFieldSchema
   | RecordFieldSchema
 

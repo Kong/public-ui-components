@@ -6,7 +6,10 @@
     :message="field.error.message"
   />
 
-  <div v-else>
+  <div
+    v-else
+    :data-testid="`ff-tag-${field.path.value}`"
+  >
     <KInput
       v-bind="fieldAttrs"
       class="ff-string-field"
@@ -35,7 +38,7 @@ import { KInput, type LabelAttributes } from '@kong/kongponents'
 
 import * as utils from './utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
-import type { ArrayLikeFieldSchema } from 'src/types/plugins/form-schema'
+import type { SetFieldSchema } from '../../../types/plugins/form-schema'
 
 defineOptions({
   inheritAttrs: false,
@@ -61,7 +64,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string[] | null]
 }>()
 
-const { value: fieldValue, ...field } = useField<string[] | null, ArrayLikeFieldSchema>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<string[] | null, SetFieldSchema>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const noEmptyArray = computed(() => field.schema?.value?.len_min && field.schema.value.len_min > 0)
 

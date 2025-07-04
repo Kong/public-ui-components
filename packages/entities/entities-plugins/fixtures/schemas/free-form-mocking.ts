@@ -26,6 +26,7 @@ export function buildStringFieldCases(): Array<{ [name: string]: StringFieldSche
     {
       string_referenceable: {
         type: 'string',
+        encrypted: true,
         referenceable: true,
       },
     },
@@ -119,6 +120,22 @@ export function buildRecordFieldCases(): Array<{ [name: string]: RecordFieldSche
                   },
                 },
               ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      record_default: {
+        type: 'record',
+        description: 'A record field with default values',
+        default: {
+          string_simple: 'default value',
+        },
+        fields: [
+          {
+            string_simple: {
+              type: 'string',
             },
           },
         ],
@@ -237,6 +254,7 @@ export function buildArrayFieldCases(): Array<{ [name: string]: ArrayLikeFieldSc
         elements: {
           type: 'number',
         },
+        default: [0],
       },
     },
   ]
