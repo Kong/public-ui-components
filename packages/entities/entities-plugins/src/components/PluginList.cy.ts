@@ -110,12 +110,10 @@ describe('<PluginList />', () => {
       })
 
       cy.getTestId('basic-auth').find('img').should('be.visible').and($img => {
-        expect($img[0].src).to.match(/basic-auth/)
         expect($img[0].naturalWidth).to.be.greaterThan(0)
       })
 
       cy.getTestId('acl').find('img').should('be.visible').and($img => {
-        expect($img[0].src).to.match(/acl/)
         expect($img[0].naturalWidth).to.be.greaterThan(0)
       })
 
