@@ -1,6 +1,7 @@
 <template>
   <BaseVegaLiteChart
     ref="baseChartRef"
+    :response-meta="data.meta"
     :spec="spec"
   />
 </template>
