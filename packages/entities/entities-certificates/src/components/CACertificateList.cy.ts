@@ -519,8 +519,8 @@ describe('<CACertificateList />', () => {
 
       cy.wait('@getCaCertificate')
       cy.get('.kong-ui-entities-ca-certificates-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.getTestId('ca-certificates-entity-empty-state').should('be.visible')
+      cy.getTestId('entity-create-button').should('be.visible')
     })
 
     it('should hide empty state and create ca certificate cta if user can not create', () => {
@@ -539,8 +539,8 @@ describe('<CACertificateList />', () => {
 
       cy.wait('@getCaCertificate')
       cy.get('.kong-ui-entities-ca-certificates-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.get('.table-empty-state .empty-state-action .k-button').should('not.exist')
+      cy.getTestId('ca-certificates-entity-empty-state').should('be.visible')
+      cy.getTestId('entity-create-button').should('not.exist')
     })
 
     it('should handle error state', () => {
