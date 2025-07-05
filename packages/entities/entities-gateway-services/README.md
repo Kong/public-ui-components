@@ -33,7 +33,6 @@ The package exports the following components, utilities, and types for use in yo
 - `GatewayServiceList` – Component for listing Gateway Services.
 - `GatewayServiceForm` – Component for creating or editing a Gateway Service (new version).
 - `GatewayServiceConfigCard` – Component displaying configuration details for a Gateway Service.
-- `LegacyGatewayServiceForm` – Deprecated or legacy form component for Gateway Services.
 
 ### Utilities
 
