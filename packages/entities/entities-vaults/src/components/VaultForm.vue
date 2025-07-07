@@ -497,6 +497,10 @@
               autocomplete="off"
               data-testid="vault-form-config-conjur-endpoint_url"
               :label="t('form.config.conjur.fields.endpoint_url.label')"
+              :label-attributes="{
+                info: t('form.config.conjur.fields.endpoint_url.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
               :readonly="form.isReadonly"
               required
               type="text"
@@ -506,6 +510,10 @@
               autocomplete="off"
               data-testid="vault-form-config-conjur-login"
               :label="t('form.config.conjur.fields.login.label')"
+              :label-attributes="{
+                info: t('form.config.conjur.fields.login.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
               :readonly="form.isReadonly"
               required
               type="text"
@@ -515,6 +523,10 @@
               autocomplete="off"
               data-testid="vault-form-config-conjur-account"
               :label="t('form.config.conjur.fields.account.label')"
+              :label-attributes="{
+                info: t('form.config.conjur.fields.account.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
               :readonly="form.isReadonly"
               required
               type="text"
@@ -524,6 +536,10 @@
               autocomplete="off"
               data-testid="vault-form-config-conjur-api_key"
               :label="t('form.config.conjur.fields.api_key.label')"
+              :label-attributes="{
+                info: t('form.config.conjur.fields.api_key.tooltip'),
+                tooltipAttributes: { maxWidth: '400' },
+              }"
               :readonly="form.isReadonly"
               required
               show-password-mask-toggle

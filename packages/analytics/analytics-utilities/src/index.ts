@@ -1,5 +1,6 @@
 export * from './constants'
 export * from './dashboardSchema'
+export * as dashboardSchemaV2 from './dashboardSchema.v2'
 export * from './types'
 export * from './format'
 export * from './granularity'

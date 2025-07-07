@@ -1,9 +1,6 @@
 import { PluginGroup, PluginScope } from './types'
 
-export const PLUGIN_GROUP_AND_SCOPE_MAP: Record<string, {
-  group: PluginGroup
-  scope: PluginScope[]
-}> = {
+export const PLUGIN_GROUP_AND_SCOPE_MAP = {
   'basic-auth': {
     group: PluginGroup.AUTHENTICATION,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
@@ -433,6 +430,11 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP: Record<string, {
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
-}
+} satisfies Record<string, {
+  group: PluginGroup
+  scope: PluginScope[]
+}>
+
+export type PluginName = keyof typeof PLUGIN_GROUP_AND_SCOPE_MAP
 
 export * from './types'

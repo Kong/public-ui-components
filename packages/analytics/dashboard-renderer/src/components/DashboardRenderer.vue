@@ -240,7 +240,7 @@ const refreshTiles = () => {
   refreshCounter.value++
 }
 
-const handleUpdateTiles = (tiles: GridTile<TileDefinition>[]) => {
+const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
   const updatedTiles = tiles.map(tile => {
     return {
       id: tile.id,

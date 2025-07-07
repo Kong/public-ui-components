@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.8.2...@kong-ui-public/entities-upstreams-targets@3.8.3) (2025-06-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.8.1...@kong-ui-public/entities-upstreams-targets@3.8.2) (2025-06-18)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2189](https://github.com/Kong/public-ui-components/issues/2189)) ([23e5544](https://github.com/Kong/public-ui-components/commit/23e554427eb53279cad3368770661f86bea2c8d8))
+
+
+
+
+
+## [3.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.8.0...@kong-ui-public/entities-upstreams-targets@3.8.1) (2025-06-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
 # [3.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.7.32...@kong-ui-public/entities-upstreams-targets@3.8.0) (2025-06-06)
 
 

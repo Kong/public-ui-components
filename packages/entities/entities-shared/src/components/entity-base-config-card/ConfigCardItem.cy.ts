@@ -272,7 +272,7 @@ describe('<ConfigCardItem />', () => {
     })
 
     it('renders a JSON Array field correctly', () => {
-      const obj: Record<string, string>[] = [{
+      const obj: Array<Record<string, string>> = [{
         name: 'TK Meowstersmith',
         species: 'Awesome cat',
         color: 'All black',

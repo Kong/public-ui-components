@@ -68,7 +68,7 @@
           <PluginIcon
             :alt="plugin.name"
             class="plugin-card-icon"
-            :name="plugin.imageName || plugin.id"
+            :name="plugin.id"
             :size="55"
           />
           <div
@@ -112,7 +112,7 @@ import {
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import { MoreIcon } from '@kong/icons'
 import composables from '../../composables'
-import PluginIcon from '../PluginIcon.vue'
+import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType) : void

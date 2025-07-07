@@ -119,6 +119,7 @@ export type ConfigFormProps<T> = {
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
 import { computed, provide, ref, watch } from 'vue'
+import { VueFormGenerator } from '@kong-ui-public/forms'
 import { pick } from 'lodash-es'
 import { KRadio } from '@kong/kongponents'
 import FormSection from '../FormSection.vue'
@@ -184,7 +185,7 @@ const freeFormSchema = computed(() => {
  * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
  */
 function pruneData(data: Props<T>['model']) {
-  const ffDataKeys: (keyof Props<T>['model'])[] = [
+  const ffDataKeys: Array<keyof Props<T>['model']> = [
     'config',
     'partials',
   ]

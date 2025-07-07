@@ -164,7 +164,7 @@ import {
 import composables from '../composables'
 import { useSchemaProvider } from '@kong-ui-public/entities-shared'
 import endpoints from '../plugins-endpoints'
-import PluginIcon from './PluginIcon.vue'
+import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const PLUGIN_CONFIG_KEY = 'config'
@@ -287,7 +287,7 @@ const configSchema = computed((): ConfigurationSchema => {
   }
 })
 
-const apiPluginSchema = computed((): Record<string, any>[] => {
+const apiPluginSchema = computed((): Array<Record<string, any>> => {
   if (!schema.value?.fields) {
     return []
   }

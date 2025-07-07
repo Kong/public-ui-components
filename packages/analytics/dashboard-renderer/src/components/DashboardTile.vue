@@ -80,7 +80,7 @@
               :data-testid="`remove-tile-${tileId}`"
               @click="removeTile"
             >
-              {{ i18n.t('renderer.remove') }}
+              <span class="delete-option">{{ i18n.t('renderer.delete') }}</span>
             </KDropdownItem>
           </template>
         </KDropdown>
@@ -158,9 +158,6 @@ const emit = defineEmits<{
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const { i18n } = composables.useI18n()
-const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-const hasPortalAnalyticsAccess = evaluateFeatureFlag('ma-3630-portal-v3', false)
-
 const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
@@ -188,14 +185,6 @@ const exploreLink = computed(() => {
 
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
-  const excludedDimensions = new Set(hasPortalAnalyticsAccess ? [] : ['portal', 'api'])
-
-  if (filters.some(filter =>
-    ('field' in filter && excludedDimensions.has(filter.field))) ||
-    dimensions.some(dim => excludedDimensions.has(dim))
-  ) {
-    return ''
-  }
 
   const exploreQuery: ExploreQuery | AiExploreQuery = {
     filters: filters,
@@ -317,7 +306,7 @@ const exportCsv = () => {
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding: var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60);
+    padding: var(--kui-space-50, $kui-space-50) var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
     right: 0;
     width: 100%;
 
@@ -355,6 +344,10 @@ const exportCsv = () => {
 
       .kebab-action-menu {
         cursor: pointer;
+      }
+
+      .delete-option {
+        color: $kui-color-text-danger;
       }
 
       li.k-dropdown-item {

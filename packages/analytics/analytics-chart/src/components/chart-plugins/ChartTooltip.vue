@@ -138,6 +138,7 @@ watch(() => props.locked, value => {
 function handleMouseDown(e: MouseEvent) {
   if (tooltipEl.value) {
     dragging.value = true
+    document.body.classList.add('no-select')
     // Get computed style and extract transform values
     const style = window.getComputedStyle(tooltipEl.value as HTMLElement)
     // @ts-ignore mozTransform is not in the types
@@ -193,6 +194,7 @@ function handleMouseMove(e: MouseEvent) {
 
 function handleMouseUp() {
   dragging.value = false
+  document.body.classList.remove('no-select')
   if (animationFrameId !== null) {
     window.cancelAnimationFrame(animationFrameId)
   }
@@ -293,5 +295,11 @@ function handleMouseUp() {
       width: 12px;
     }
   }
+}
+</style>
+
+<style lang="css">
+.no-select {
+  user-select: none;
 }
 </style>

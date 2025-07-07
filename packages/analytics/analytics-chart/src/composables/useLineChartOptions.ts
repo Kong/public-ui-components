@@ -13,7 +13,7 @@ import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
 import { millisecondsToHours } from 'date-fns'
 
-export default function useLinechartOptions(chartOptions: LineChartOptions) {
+export default function useLineChartOptions(chartOptions: LineChartOptions) {
 
   const xAxesOptions = computed(() => ({
     type: 'timeseries',

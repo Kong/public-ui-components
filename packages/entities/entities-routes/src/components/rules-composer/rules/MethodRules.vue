@@ -4,9 +4,12 @@
     data-testid="route-form-methods"
   >
     <KLabel
-      :info="t('form.fields.methods.tooltip')"
       :tooltip-attributes="{ maxWidth: '320' }"
     >
+      <template #tooltip>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="t('form.fields.methods.tooltip')" />
+      </template>
       {{ t('form.fields.methods.label') }}
     </KLabel>
     <div class="routing-rule-input">
@@ -60,7 +63,7 @@ const trackNewItems = (item: { label: string, value: string }, added: boolean) =
   }
 }
 
-const onSelect = (items: Array<string>) => {
+const onSelect = (items: string[]) => {
   methods.value = items
 }
 </script>

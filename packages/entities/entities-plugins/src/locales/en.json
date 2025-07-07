@@ -653,8 +653,7 @@
         },
         "plugin_config": {
           "title": "Plugin configuration",
-          "description": "Configure parameters for this plugin by using a form or a YAML file.",
-          "description_yaml": "Configure Datakit via YAML below. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block."
+          "description": "Configure parameters for this plugin by using a form or a YAML file."
         }
       }
     },
@@ -666,6 +665,14 @@
       "redis_partial": {
         "redis_partial_modal_title": "New shared configuration",
         "partial_created_success_message": "Successfully created a new Redis configuration."
+      },
+      "datakit": {
+        "description": "Configure Datakit via YAML below. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
+        "description_example": "Start with a use case:",
+        "examples": {
+          "authenticate": "Authenticate Kong Gateway to a third-party service",
+          "combine": "Combine two APIs into one response"
+        }
       }
     }
   },

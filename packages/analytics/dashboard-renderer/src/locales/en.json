@@ -2,19 +2,20 @@
   "renderer": {
     "noQueryBridge": "No query bridge provided.  Unable to render dashboard.",
     "trendRange": {
-      "24h": "Last 24-Hour Summary",
-      "7d": "Last 7-Day Summary",
-      "30d": "Last 30-Day Summary"
+      "24h": "Last 24-hour summary",
+      "7d": "Last 7-day summary",
+      "30d": "Last 30-day summary"
     },
     "edit": "Edit",
     "duplicateTile": "Duplicate",
-    "remove": "Remove"
+    "remove": "Remove",
+    "delete": "Delete"
   },
   "queryDataProvider": {
     "timeRangeExceeded":  "The time range for this report is outside of your organization's data retention period"
   },
   "csvExport": {
-    "defaultFilename": "Chart Export",
+    "defaultFilename": "Chart export",
     "exportAsCsv": "Export as CSV"
   },
   "jumpToExplore": "Explore"

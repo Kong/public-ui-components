@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="chartParentRef"
     class="chart-parent"
     :class="chartFlexClass[legendPosition]"
   >
@@ -25,26 +26,28 @@
         />
       </div>
     </div>
-    <div
-      v-if="axesTooltip.show"
-      class="axis-tooltip"
-      :style="{ top: axesTooltip.top, left: axesTooltip.left}"
-      width="auto"
-    >
-      <div class="axis-tooltip-content">
-        {{ axesTooltip.text }}
+    <Teleport to="body">
+      <div
+        v-if="axesTooltip.show"
+        class="axis-tooltip"
+        :style="{ top: axesTooltip.top, left: axesTooltip.left}"
+        width="auto"
+      >
+        <div class="axis-tooltip-content">
+          {{ axesTooltip.text }}
+        </div>
       </div>
-    </div>
-    <ToolTip
-      :context="tooltipData.tooltipContext"
-      :left="tooltipData.left"
-      :locked="tooltipData.locked"
-      :series="tooltipData.tooltipSeries"
-      :show-tooltip="tooltipData.showTooltip"
-      :tooltip-title="tooltipTitle"
-      :top="tooltipData.top"
-      @dimensions="tooltipDimensions"
-    />
+      <ToolTip
+        :context="tooltipData.tooltipContext"
+        :left="tooltipAbsoluteLeft"
+        :locked="tooltipData.locked"
+        :series="tooltipData.tooltipSeries"
+        :show-tooltip="tooltipData.showTooltip"
+        :tooltip-title="tooltipTitle"
+        :top="tooltipAbsoluteTop"
+        @dimensions="tooltipDimensions"
+      />
+    </Teleport>
     <ChartLegend
       :id="legendID"
       :chart-instance="chartInstance"
@@ -58,7 +61,7 @@ import type { ChartDataset, ChartOptions } from 'chart.js'
 import { Chart } from 'chart.js'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
-import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount, onUnmounted } from 'vue'
+import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount, onUnmounted, useTemplateRef } from 'vue'
 import type { PropType, Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
@@ -155,6 +158,7 @@ const AXIS_BOTTOM_OFFSET = 10
 const AXIS_RIGHT_PADDING = 1
 
 const chartContainerRef = ref<HTMLDivElement | null>(null)
+const chartParentRef = useTemplateRef('chartParentRef')
 
 const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
   const chartData: BarChartData = chart.data as BarChartData
@@ -216,7 +220,7 @@ const reactiveAnnotationsID = uuidv4()
 const maxOverflowPluginID = uuidv4()
 const legendItems = ref<EnhancedLegendItem[]>([])
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
-const axesTooltip = ref<AxesTooltipState>({
+const axesTooltip = reactive<AxesTooltipState>({
   show: false,
   top: '0px',
   left: '0px',
@@ -244,6 +248,12 @@ const tooltipData: TooltipState = reactive({
   chartID: chartCanvasId,
   chartTooltipSortFn: props.chartTooltipSortFn,
 })
+
+const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolutePosition(
+  chartParentRef,
+  tooltipData,
+)
+
 const dependsOnChartUpdate = ref(0)
 
 const configureAnnotations = () => props.annotations && props.chartData.labels?.reduce((acc, label) =>
@@ -283,7 +293,7 @@ const axesTooltipPlugin = {
   // args any because it is not typed by chartjs
   // https://www.chartjs.org/docs/latest/api/interfaces/Plugin.html#parameters
   afterEvent(chart: Chart, args: any) {
-    axesTooltip.value.show = false
+    axesTooltip.show = false
     if (args.event.type === 'mousemove') {
       const evt = args.event
       const indexAxis = chart.options.indexAxis as ('x' | 'y')
@@ -308,22 +318,23 @@ const axesTooltipPlugin = {
 
         const leftOfCursor = Math.abs(Math.round(evt.x - textWidthPixels * 0.5))
         const rightOfCursor = Math.round(evt.x + textWidthPixels * 0.5)
-
-        axesTooltip.value.left = indexAxis === 'x'
-          ? `${(leftOfCursor > 0 ? leftOfCursor : rightOfCursor) - axesTooltip.value.offset}px`
-          : `${(evt.x - textWidthPixels * 0.5) - axesTooltip.value.offset}px`
-        axesTooltip.value.top = `${evt.y - 50}px`
+        const rect = chart.canvas.getBoundingClientRect()
+        const PX_ABOVE_CURSOR = 40
+        axesTooltip.left = indexAxis === 'x'
+          ? `${(leftOfCursor > 0 ? leftOfCursor : rightOfCursor) - axesTooltip.offset + rect.left}px`
+          : `${(evt.x - textWidthPixels * 0.5) - axesTooltip.offset + rect.left}px`
+        axesTooltip.top = `${evt.y - PX_ABOVE_CURSOR + rect.top}px`
         if (label.length > MAX_LABEL_LENGTH) {
-          axesTooltip.value.show = true
-          axesTooltip.value.text = label
+          axesTooltip.show = true
+          axesTooltip.text = label
         } else if (isEmptyLabel) {
-          axesTooltip.value.text = i18n.t('emptyEntityInfo')
-          axesTooltip.value.show = true
+          axesTooltip.text = i18n.t('emptyEntityInfo')
+          axesTooltip.show = true
         } else {
-          axesTooltip.value.show = false
+          axesTooltip.show = false
         }
       } else {
-        axesTooltip.value.show = false
+        axesTooltip.show = false
       }
     }
   },
@@ -532,7 +543,7 @@ const onScrolling = (event: Event) => {
 
   tooltipData.offsetY = target.scrollTop
   tooltipData.offsetX = target.scrollLeft
-  axesTooltip.value.offset = target.scrollLeft
+  axesTooltip.offset = target.scrollLeft
 }
 
 const tooltipDimensions = ({ width, height }: { width: number, height: number }) => {

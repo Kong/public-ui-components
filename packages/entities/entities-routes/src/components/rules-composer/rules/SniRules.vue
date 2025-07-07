@@ -1,9 +1,12 @@
 <template>
   <div class="routing-rule-container">
     <KLabel
-      :info="t('form.fields.snis.tooltip')"
       :tooltip-attributes="{ maxWidth: '320' }"
     >
+      <template #tooltip>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="t('form.fields.snis.tooltip')" />
+      </template>
       {{ t('form.fields.snis.label') }}
     </KLabel>
     <TransitionGroup name="appear">

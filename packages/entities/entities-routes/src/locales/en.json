@@ -141,19 +141,19 @@
       },
       "https_redirect_status_code": {
         "label": "HTTPS Redirect Status Code",
-        "tooltip": "Specifies the HTTP status code for redirecting requests from HTTP to HTTPS. Use `301` or `308` for permanent redirects, `302` or `307` for temporary redirects."
+        "tooltip": "Specifies the HTTP status code for redirecting requests from HTTP to HTTPS. Use <code>301</code> or <code>308</code> for permanent redirects, <code>302</code> or <code>307</code> for temporary redirects."
       },
       "regex_priority": {
         "label": "Regex Priority",
-        "tooltip": "Regex priority is determined by length first (longer patterns win), and when lengths are the same, more specific regexes are preferred.  When two routes match the path and have the same `regex_priority`, the older one (lowest `created_at`) is used."
+        "tooltip": "Regex priority is determined by length first (longer patterns win), and when lengths are the same, more specific regexes are preferred.  When two routes match the path and have the same <code>regex_priority</code>, the older one (lowest <code>created_at</code>) is used."
       },
       "strip_path": {
         "label": "Strip Path",
-        "tooltip": "When enabled, Kong removes the portion of the request path that matches the route's path before forwarding the request to the upstream. If the request exactly matches the route, the result is `/`. Disable if that's not desired."
+        "tooltip": "When enabled, Kong removes the portion of the request path that matches the route's path before forwarding the request to the upstream. If the request exactly matches the route, the result is <code>/</code>. Disable if that's not desired."
       },
       "preserve_host": {
         "label": "Preserve Host",
-        "tooltip": "Keeps the original `Host` header when proxying requests. Enable this if the upstream service requires the client's `Host` value. Disable if the service expects its own hostname."
+        "tooltip": "Keeps the original <code>Host</code> header when proxying requests. Enable this if the upstream service requires the client's <code>Host</code> value. Disable if the service expects its own hostname."
       },
       "paths": {
         "add": "Add a path",
@@ -161,7 +161,7 @@
         "label_singular": "Path",
         "placeholder": "e.g. /api/v1",
         "singular": "path",
-        "tooltip": "Match specific URL paths, such as /api/v1. Prefix with ~ to enable regex-based matching."
+        "tooltip": "Match specific URL paths, such as <code>/api/v1</code>. Prefix with <code>~</code> to enable regex-based matching."
       },
       "snis": {
         "add": "Add an SNI",
@@ -176,7 +176,7 @@
         "label_singular": "Host",
         "placeholder": "e.g. example.com",
         "singular": "host",
-        "tooltip": "Match specific domain names, such as `api.example.com`. Prefix with `~` to enable regex-based matching."
+        "tooltip": "Match specific domain names, such as <code>api.example.com</code>."
       },
       "methods": {
         "label": "Methods",
@@ -194,7 +194,7 @@
         "add": "Add a header",
         "label": "Headers",
         "singular": "header",
-        "tooltip": "Match specific headers, such as `x-api-version` or `x-region`. Doesn't accept the `Host` header. Provide only one entry and prefix with `~` to enable regex-based matching.",
+        "tooltip": "Match specific headers, such as <code>x-api-version</code> or <code>x-region</code>. Doesn't accept the <code>Host</code> header. Provide only one entry and prefix with <code>~</code> to enable regex-based matching.",
         "name": {
           "placeholder": "e.g. x-api-version"
         },

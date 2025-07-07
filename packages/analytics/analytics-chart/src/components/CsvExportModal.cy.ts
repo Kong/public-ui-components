@@ -49,14 +49,14 @@ describe('<CsvExportModal />', () => {
     cy.getTestId('csv-export-modal').find('.k-table-data .table thead th').should(th => {
       const elements = Array.from(th, e => e.innerText)
 
-      expect(JSON.stringify(elements)).to.equal('["Timestamp","UTC Offset","Status Code","Request Count"]')
+      expect(JSON.stringify(elements)).to.equal('["Timestamp","UTC offset","Status code","Request count"]')
     })
 
     // Save to CSV and check actual contents
     cy.getTestId('csv-download-button').click()
 
     cy.readFile(`${DOWNLOADS_FOLDER}/total-requests-${new Date().toISOString().slice(0, 10)}.csv`).then(contents => {
-      expect(contents).contain('Timestamp,UTC Offset,Status Code,Request Count')
+      expect(contents).contain('Timestamp,UTC offset,Status code,Request count')
       expect(contents).contain('500,10022')
     })
   })

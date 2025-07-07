@@ -7,6 +7,7 @@ Plugin icon package that provides a set of icons for Kong Gateway plugins.
 - [Usage](#usage)
   - [Install](#install)
   - [Props](#props)
+  - [example](#example)
 
 ## Features
 
@@ -20,7 +21,6 @@ Plugin icon package that provides a set of icons for Kong Gateway plugins.
 
 ### Install
 
-
 Install the package in your host application:
 
 ```sh
@@ -28,5 +28,16 @@ pnpm install @kong-ui-public/entities-plugins-icon
 ```
 
 ### Props
+- name: `string` - The name of the plugin icon to display.
+- size: `number` - The size of the icon in pixels. Default is `32`.
+- alt: `string` - The alt text for the icon. Default is `''`.
 
-#### `example`
+### example
+```vue
+<template>
+  <PluginIcon
+    name="key-auth"
+    size="32"
+  />
+</template>
+```

@@ -140,7 +140,7 @@ export default function useExploreResultToTimeDataset(
             return acc
           }, {})
 
-        const dimensionsCrossMetrics: [string, string, boolean][] = metricNames.length === 1
+        const dimensionsCrossMetrics: Array<[string, string, boolean]> = metricNames.length === 1
           ? metricNames.flatMap<[string, string, boolean]>(metric => {
             return datasetLabels.map<[string, string, boolean]>(label => [metric, label.name, label.id === 'empty'])
           })

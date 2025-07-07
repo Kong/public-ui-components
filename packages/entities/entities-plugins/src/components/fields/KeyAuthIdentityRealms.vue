@@ -29,7 +29,7 @@ const props = defineProps<{
   model?: Record<string, any>
   schema: Record<string, any>
   vfg: Record<string, any>
-  errors?: Array<any>
+  errors?: any[]
   hint?: string
 }>()
 
