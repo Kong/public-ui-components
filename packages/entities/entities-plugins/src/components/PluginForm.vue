@@ -180,6 +180,11 @@ import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
 import type { GlobalAction } from './free-form/shared/types'
 
+type ScopedEntitiesType = 'consumer' | 'route' | 'service' | 'consumer_group'
+type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
+type ScopedEntityPermission = Partial<Record<Permissions, boolean>>
+type ScopedEntitiesPermissions = Partial<Record<ScopedEntitiesType, ScopedEntityPermission>>
+
 const emit = defineEmits<{
   (e: 'cancel'): void
   (e: 'error:fetch-schema', error: AxiosError): void
@@ -298,6 +303,10 @@ const props = defineProps({
   enableRedisPartial: {
     type: Boolean,
     default: false,
+  },
+  scopedEntitiesPermissions: {
+    type: Object as PropType<ScopedEntitiesPermissions>,
+    default: null,
   },
 })
 
@@ -967,70 +976,120 @@ const initScopeFields = (): void => {
 
   const scopeEntityArray = []
 
+  const getDisabledTooltip = (scopeSelectionDisabled: boolean, dataRetrieveDisabled: boolean, scope: string) => {
+    if (scopeSelectionDisabled) {
+      return t('plugins.form.disable_source_scope_change', { scope })
+    } else if (dataRetrieveDisabled) {
+      return t('plugins.form.disable_data_retrieving', { scope })
+    }
+    return ''
+  }
+
+  const dataRetrieveDisabled = (key: ScopedEntitiesType) => {
+    return props.scopedEntitiesPermissions?.[key]?.canRetrieve === false
+  }
+
+  /**
+   * type ScopedEntity {
+   *   id: string
+   *   model: string // used as the v-model
+   *   label: string
+   *   placeholder: string
+   *   type: string // which component to render
+   *   labelField: string // index key used for rendering dropdown item label
+   *   help: string // for Select help text
+   *   disabled: boolean // whether disable the field itself
+   *   disabledTooltip: string // the tooltip to show when field is disabled
+   *   entity: EntityType // which entity type we are rendering here
+   *   inputValues: {
+   *      fields: string[] // keys used for API requests and condition checks
+   *   }
+   * }
+   */
   // if the plugin is enabled for a specific type of entity, add it's scope field to the form
   if (supportServiceScope) {
+    const retrieveServiceDisabled = dataRetrieveDisabled('service')
+    const entity = 'services'
+    const scopeSelectionDisabled = (serviceScoped && props.disableScopeSelection)
     scopeEntityArray.push({
       id: 'service-id',
       model: 'service-id',
       label: t('plugins.form.scoping.gateway_service.label'),
-      placeholder: t('plugins.form.scoping.gateway_service.placeholder'),
-      type: 'AutoSuggest',
-      entity: 'services',
+      placeholder: t('plugins.form.scoping.placeholder'),
+      type: 'AutoSuggestV2',
+      labelField: 'name',
+      entity,
       inputValues: {
         fields: ['name', 'id'],
       },
       help: t('plugins.form.scoping.gateway_service.help'),
-      disabled: serviceScoped && props.disableScopeSelection, // disable service selection if the plugin is already scoped under service
+      disabled: scopeSelectionDisabled || retrieveServiceDisabled, // disable service selection if the plugin is already scoped under service
+      disabledTooltip: getDisabledTooltip(scopeSelectionDisabled, retrieveServiceDisabled, entity),
     })
   }
 
   if (supportRouteScope) {
+    const retrieveRouteDisabled = dataRetrieveDisabled('route')
+    const entity = 'routes'
+    const scopeSelectionDisabled = (routeScoped && props.disableScopeSelection)
     scopeEntityArray.push({
       id: 'route-id',
       model: 'route-id',
       label: t('plugins.form.scoping.route.label'),
-      placeholder: t('plugins.form.scoping.route.placeholder'),
-      type: 'AutoSuggest',
-      entity: 'routes',
+      placeholder: t('plugins.form.scoping.placeholder'),
+      type: 'AutoSuggestV2',
+      entity,
+      labelField: 'name', // for rendering dropdown item label
       inputValues: {
         fields: ['name', 'id'],
         primaryField: 'id',
       },
       help: t('plugins.form.scoping.route.help'),
-      disabled: routeScoped && props.disableScopeSelection,
+      disabled: scopeSelectionDisabled || retrieveRouteDisabled,
+      disabledTooltip: getDisabledTooltip(scopeSelectionDisabled, retrieveRouteDisabled, entity),
     })
   }
 
   if (supportConsumerScope) {
+    const retrieveConsumerDisabled = dataRetrieveDisabled('consumer')
+    const entity = 'consumers'
+    const scopeSelectionDisabled = (consumerScoped && props.disableScopeSelection)
     scopeEntityArray.push({
       model: 'consumer-id',
       label: t('plugins.form.scoping.consumer.label'),
-      placeholder: t('plugins.form.scoping.consumer.placeholder'),
-      type: 'AutoSuggest',
-      entity: 'consumers',
+      placeholder: t('plugins.form.scoping.placeholder'),
+      type: 'AutoSuggestV2',
+      entity,
+      labelField: 'username',
       inputValues: {
         fields: ['username', 'custom_id', 'id'],
         primaryField: 'username',
       },
       help: t('plugins.form.scoping.consumer.help'),
-      disabled: consumerScoped && props.disableScopeSelection,
+      disabled: scopeSelectionDisabled || retrieveConsumerDisabled,
+      disabledTooltip: getDisabledTooltip(scopeSelectionDisabled, retrieveConsumerDisabled, entity),
     })
   }
 
   if (supportConsumerGroupScope) {
+    const retrieveConsumerGroupDisabled = dataRetrieveDisabled('consumer_group')
+    const entity = 'consumer_groups'
+    const scopeSelectionDisabled = (consumerGroupScoped && props.disableScopeSelection)
     scopeEntityArray.push({
       model: 'consumer_group-id',
       label: t('plugins.form.scoping.consumer_group.label'),
-      placeholder: t('plugins.form.scoping.consumer_group.placeholder'),
-      type: 'AutoSuggest',
-      entity: 'consumer_groups',
+      placeholder: t('plugins.form.scoping.placeholder'),
+      type: 'AutoSuggestV2',
+      entity,
       entityDataKey: 'consumer_group',
+      labelField: 'name',
       inputValues: {
         fields: ['name', 'id'],
         primaryField: 'name',
       },
       help: t('plugins.form.scoping.consumer_group.help'),
-      disabled: consumerGroupScoped && props.disableScopeSelection,
+      disabled: scopeSelectionDisabled || retrieveConsumerGroupDisabled,
+      disabledTooltip: getDisabledTooltip(scopeSelectionDisabled, retrieveConsumerGroupDisabled, entity),
     })
   }
 

@@ -43,7 +43,8 @@ export default {
       validate: `${konnectBaseApiUrl}/v1/schemas/json/plugin/validate`,
       // VFG endpoints24
       entityGetOne: `${konnectBaseApiUrl}/{entity}/{id}`,
-      entityGetAll: `${konnectBaseApiUrl}/{entity}?size=1000`,
+      entityGetAll: `${konnectBaseApiUrl}/{entity}`,
+      entityPeek: `${konnectBaseApiUrl}/{entity}?size={amount}`,
     },
     kongManager: {
       create: {

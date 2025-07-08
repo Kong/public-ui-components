@@ -53,33 +53,10 @@ import debounce from 'lodash-es/debounce'
 import { isValidUuid } from '../../utils/isValidUuid'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../locales/en.json'
+import { getFieldState } from '../../utils/autoSuggest'
+import { FIELD_STATES } from '../../const'
 
 const requestResultsLimit = 50
-const fieldStates = {
-  CREATE_NOT_FROM_ENTITY: 'CREATE_NOT_FROM_ENTITY',
-  CREATE_FROM_ENTITY: 'CREATE_FROM_ENTITY',
-  UPDATE_ENTITY: 'UPDATE_ENTITY',
-  SET_REFERRAL_VALUE: 'SET_REFERRAL_VALUE',
-}
-
-/**
- * 1. Look up current state using current model and entity from router (if exists)
- * 2. If Updating, look up object from ID
- * 3. If Creating & from referral (ie. service -> route) set value with entity object from params
- *
- * @returns {Object} Object to set current search text
- */
-function getFieldState(model, associatedEntity, bypassSearch) {
-  if (bypassSearch) {
-    return fieldStates.SET_REFERRAL_VALUE
-  } else if ((model && !associatedEntity) || (!model && associatedEntity)) {
-    return fieldStates.UPDATE_ENTITY
-  } else if (model && associatedEntity) {
-    return fieldStates.CREATE_FROM_ENTITY
-  }
-
-  return fieldStates.CREATE_NOT_FROM_ENTITY
-}
 
 export default {
   mixins: [abstractField],
@@ -128,7 +105,7 @@ export default {
     let entityData
 
     switch (this.fieldState) {
-      case fieldStates.UPDATE_ENTITY:
+      case FIELD_STATES.UPDATE_ENTITY:
         if (!this[FORMS_API_KEY]) {
           console.warn('[@kong-ui-public/forms] No API service provided')
           break
@@ -141,10 +118,10 @@ export default {
         presetEntity = this.getItem(this.schema.entityDataKey ? entityData[this.schema.entityDataKey] : entityData)
         this.idValue = presetEntity.id
         break
-      case fieldStates.CREATE_FROM_ENTITY:
+      case FIELD_STATES.CREATE_FROM_ENTITY:
         this.idValue = this.associatedEntity.id
         break
-      case fieldStates.SET_REFERRAL_VALUE:
+      case FIELD_STATES.SET_REFERRAL_VALUE:
         this.idValue = this.value
     }
 
