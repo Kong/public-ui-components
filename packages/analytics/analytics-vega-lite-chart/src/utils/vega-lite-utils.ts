@@ -64,9 +64,6 @@ export function createTimeSeriesVegaSpec(
       chartData: transformedData,
     },
     data: { name: 'chartData' },
-    params: [
-      { name: 'chartType' },
-    ],
     transform: [
       {
         fold: [...metricNames], as: ['metric', 'value'],

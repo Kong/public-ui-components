@@ -6,6 +6,7 @@
     <div
       ref="chartRef"
       class="chart"
+      @click="handleChartClick()"
     />
     <ChartTooltip
       v-if="tooltipData.show"
@@ -65,10 +66,14 @@ const { width: tooltipWidth, height: tooltipHeight } = useElementSize(tooltipEl)
 const cachedTooltipWidth = ref(0)
 const cachedTooltipHeight = ref(0)
 
-function handleHover(event: ScenegraphEvent, item?: Item<any> | null) {
+const handleHover = (event: ScenegraphEvent, item?: Item<any> | null) => {
+  if (tooltipData.value.locked) {
+    return
+  }
   const ev = event as MouseEvent
   ev.preventDefault()
   ev.stopPropagation()
+
   if (item?.datum) {
     const chartRect = chartRef.value?.getBoundingClientRect()
     const chartWidth = chartRect?.width || 0
@@ -80,7 +85,8 @@ function handleHover(event: ScenegraphEvent, item?: Item<any> | null) {
 
     const offset = 40
 
-    // Hover event may fire before the tooltip is fully rendered,
+    // Hover event may fire before the tooltip is fully rendered
+    // In which case the tooltip height and width will be 0
     if (tooltipWidth.value > 0 && tooltipHeight.value > 0) {
       cachedTooltipWidth.value = tooltipWidth.value
       cachedTooltipHeight.value = tooltipHeight.value
@@ -136,6 +142,10 @@ function handleHover(event: ScenegraphEvent, item?: Item<any> | null) {
       locked: false,
     }
   }
+}
+
+const handleChartClick = () => {
+  tooltipData.value.locked = !tooltipData.value.locked
 }
 
 function hideTooltip() {
