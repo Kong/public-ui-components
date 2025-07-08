@@ -24,6 +24,7 @@
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types",
     "build:package": "vite build -m production",
+    "build:package:watch": "vite build -m development --watch",
     "build:analyzer": "BUILD_VISUALIZER='core/forms' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",

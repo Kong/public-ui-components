@@ -11,3 +11,10 @@ export const AUTOFILL_SLOT_NAME = 'autofill'
 
 /** Used by `provide` and `inject` */
 export const AUTOFILL_SLOT = 'autofillSlot'
+
+export const FIELD_STATES = {
+  CREATE_NOT_FROM_ENTITY: 'CREATE_NOT_FROM_ENTITY',
+  CREATE_FROM_ENTITY: 'CREATE_FROM_ENTITY',
+  UPDATE_ENTITY: 'UPDATE_ENTITY',
+  SET_REFERRAL_VALUE: 'SET_REFERRAL_VALUE',
+}
