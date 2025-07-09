@@ -1,12 +1,13 @@
 <template>
   <AutoSuggest
     :id="id"
+    :disabled="fieldDisabled"
     :dom-id="domId"
     :empty-message="message"
     :loading="loading"
     :placeholder="placeholder"
     :readonly="disabled"
-    :suggestions="suggestions"
+    :suggestions="dedupedSuggestions"
     @change="$emit('change', $event)"
     @query-change="onQueryChange"
   >
@@ -33,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { debounce } from 'lodash-es'
 import AutoSuggest from './AutoSuggest.vue'
 import { isValidUuid } from '../../utils/isValidUuid'
@@ -45,15 +46,16 @@ import type { EntityData, AutoSuggestInjection, AutoSuggestItemTransformer } fro
 const DEBOUNCE_DELAY = 500
 const PEEK_SIZE = 50
 
-const { getAll, getOne, getPartial, transformItem = defaultItemTransformer, fields = [], allowUuidSearch = false, id } = defineProps<{
+const { getAll, getOne, getPartial, transformItem = defaultItemTransformer, fields = [], allowUuidSearch = false, id, initialItem } = defineProps<{
   transformItem?: AutoSuggestItemTransformer
   allowUuidSearch?: boolean
   placeholder?: string
   fields: string[]
-  initialItem?: EntityData
+  initialItem?: SelectItem<string>
   domId: string
   id: string
   disabled?: boolean
+  fieldDisabled?: boolean
 } & AutoSuggestInjection>()
 
 defineEmits<{
@@ -80,7 +82,6 @@ const fetcher = async (executor: () => Promise<EntityData[]>) => {
   } catch (e) {
     suggestions.value = []
     message.value = (e as Error).message
-    console.error((e as Error).message)
   } finally {
     loading.value = false
   }
@@ -147,6 +148,15 @@ const inlineSearch = (pattern: string) => {
 const inlineSearchForUuid = (uuid: string) => {
   suggestions.value = rawData.value.filter((entity) => entity.id === uuid).map(transformItem)
 }
+
+const dedupedSuggestions = computed(() => {
+  if (!initialItem) return suggestions.value
+
+  if (suggestions.value.some((item) => item.id === initialItem.id)) {
+    return suggestions.value
+  }
+  return [initialItem, ...suggestions.value]
+})
 
 onMounted(async () => {
   await fetcher(peek)
