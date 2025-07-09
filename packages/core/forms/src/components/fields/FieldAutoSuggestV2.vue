@@ -8,13 +8,14 @@
     <FieldScopedEntitySelect
       :id="idValue"
       :allow-uuid-search="allowUuidSearch"
-      :disabled="loading "
+      :disabled="loading"
       :dom-id="schema.model"
+      :field-disabled="schema.disabled"
       :fields="inputFieldsWithoutId"
       :get-all="getAll"
       :get-one="getOne"
       :get-partial="getPartial"
-      :initial-item="initialItems[0]"
+      :initial-item="initialItem"
       :placeholder="loading ? t('fields.auto_suggest.loading') : schema.placeholder"
       :transform-item="transformItem"
       @change="onSelected"
@@ -64,7 +65,7 @@ export default {
       idValue: '',
       message: 'Type something to search',
       items: [],
-      initialItems: [],
+      initialItem: null,
       loading: false,
       dataDrained: false,
     }
@@ -72,7 +73,6 @@ export default {
 
   computed: {
     fieldState() {
-      console.log(this.model, this.schema.model)
       return getFieldState(this.model[this.schema.model], this.associatedEntity || this.entityId, this.bypassSearch)
     },
     associatedEntity() {
@@ -126,7 +126,7 @@ export default {
       }
 
       if (presetEntity) {
-        this.initialItems = [{ ...presetEntity, label: this.getSuggestionLabel(presetEntity), value: presetEntity.id }]
+        this.initialItem = this.transformItem(presetEntity)
       }
       // putting this here prevents the select value from being 'select' -> 'actual value' after the loading state gets flashed
       this.loading = false
