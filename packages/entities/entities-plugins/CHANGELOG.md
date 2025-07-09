@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.28.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.0...@kong-ui-public/entities-plugins@9.28.1) (2025-07-09)
+
+
+### Bug Fixes
+
+* **plugin-request-callout:** vault picker missing [KM-1470] ([#2205](https://github.com/Kong/public-ui-components/issues/2205)) ([8d67f09](https://github.com/Kong/public-ui-components/commit/8d67f09a28f4586340cd90b1f8e22017ffedd9a7))
+
+
+
+
+
 # [9.28.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.27.1...@kong-ui-public/entities-plugins@9.28.0) (2025-07-04)
 
 
