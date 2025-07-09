@@ -50,9 +50,8 @@ export type ConfigFormProps<T> = {
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
 import { pick } from 'lodash-es'
-import { computed, ref, toValue, provide, type MaybeRefOrGetter } from 'vue'
+import { computed, ref, toValue, type MaybeRefOrGetter } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { VueFormGenerator } from '@kong-ui-public/forms'
 import { KCollapse } from '@kong/kongponents'
 import english from '../../../locales/en.json'
@@ -64,12 +63,8 @@ const { t } = createI18n<typeof english>('en-us', english)
 const props = defineProps<Props<T>>()
 
 const slots = defineSlots<{
-  [K in typeof AUTOFILL_SLOT_NAME]: () => any
-} & {
   default: (props: ConfigFormProps<T>) => any
 }>()
-
-provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
 
 function usePickedSchema(keys: MaybeRefOrGetter<string[]>) {
   return computed(() => ({
