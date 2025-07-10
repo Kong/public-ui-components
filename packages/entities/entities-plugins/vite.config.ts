@@ -7,7 +7,7 @@ const packageName = 'entities-plugins'
 const sanitizedPackageName = sanitizePackageName(packageName)
 
 // Merge the shared Vite config with the local one defined below
-const config = mergeConfig(sharedViteConfig,defineConfig({
+const config = mergeConfig(sharedViteConfig, defineConfig({
   build: {
     lib: {
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
@@ -23,6 +23,10 @@ const config = mergeConfig(sharedViteConfig,defineConfig({
         '@kong-ui-public/entities-gateway-services',
         '@kong-ui-public/entities-plugins-metadata',
         '@kong-ui-public/entities-routes',
+        '@kong-ui-public/entities-vaults',
+        '@kong-ui-public/entities-vaults/dist/style.css',
+        '@kong-ui-public/entities-redis-configurations',
+        '@kong-ui-public/entities-redis-configurations/dist/style.css',
         '@kong-ui-public/forms',
         'marked',
         'monaco-editor',
