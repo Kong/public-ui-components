@@ -1,0 +1,22 @@
+nodes:
+- name: HEADERS
+  type: static
+  values:
+    X-API-Header-One: foo
+    X-API-Header-Two: bar
+- name: MERGE_HEADERS
+  type: jq
+  inputs:
+    static: HEADERS
+    request: request.headers
+  jq: '.static * (.request | with_entries(.key = "X-Request-" + .key))
+        '
+- name: API
+  type: call
+  url: https://example.com/
+  inputs:
+    headers: MERGE_HEADERS
+- name: EXIT
+  type: exit
+  input: API
+  status: 200

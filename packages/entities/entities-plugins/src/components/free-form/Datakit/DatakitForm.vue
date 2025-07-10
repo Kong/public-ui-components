@@ -26,6 +26,13 @@
             >
               {{ t('plugins.free-form.datakit.examples.combine') }}
             </KButton>
+            <KButton
+              appearance="secondary"
+              size="small"
+              @click="setExampleCode('manipulate')"
+            >
+              {{ t('plugins.free-form.datakit.examples.manipulate') }}
+            </KButton>
           </div>
 
           <template #icon>
