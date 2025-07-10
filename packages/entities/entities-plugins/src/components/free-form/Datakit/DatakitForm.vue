@@ -3,7 +3,10 @@
     v-bind="props"
     class="dk-form"
   >
-    <template #plugin-config-extra>
+    <template
+      v-if="enableVisualEditor"
+      #plugin-config-extra
+    >
       <KSegmentedControl
         v-model="editorMode"
         :options="editorModes"
@@ -16,7 +19,7 @@
     </template>
 
     <template #default="formProps">
-      <div v-if="editorMode === 'visual'">
+      <div v-if="finalEditorMode === 'visual'">
         <KButton
           appearance="secondary"
           @click="modalOpen = true"
@@ -27,7 +30,7 @@
       </div>
 
       <Form
-        v-else-if="editorMode === 'code'"
+        v-else-if="finalEditorMode === 'code'"
         v-bind="formProps"
         tag="div"
       >
@@ -70,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef, inject } from 'vue'
 import { KAlert, KSegmentedControl } from '@kong/kongponents'
 import { SparklesIcon, DesignIcon, CodeblockIcon } from '@kong/icons'
 import { createI18n } from '@kong-ui-public/i18n'
@@ -90,7 +93,17 @@ const { t } = createI18n<typeof english>('en-us', english)
 
 const props = defineProps<Props<any>>()
 
+// provided by consumer apps
+// TODO: make the default value to `false` to make it opt-in
+// It's currently set to `true` for testing purposes
+const enableVisualEditor = inject<boolean>('DATAKIT_ENABLE_VISUAL_EDITOR', true)
+
+// Editor mode selection
+
 const { editorMode } = usePreferences()
+const finalEditorMode = computed<EditorMode>(() => {
+  return enableVisualEditor ? editorMode.value : 'code'
+})
 
 const icons = {
   visual: DesignIcon,

@@ -1,7 +1,7 @@
 import { useLocalStorage } from '@vueuse/core'
 import type { EditorMode } from './types'
 
-const editorMode = useLocalStorage<EditorMode>('datakit-editor-mode', 'code', {
+const editorMode = useLocalStorage<EditorMode>('datakit-editor-mode', 'visual', {
   listenToStorageChanges: false,
 })
 
