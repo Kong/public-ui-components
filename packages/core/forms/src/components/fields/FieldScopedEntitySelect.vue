@@ -66,6 +66,7 @@ const message = ref('')
 
 const loading = ref(false)
 const dataDrainedFromPeeking = ref(false)
+const query = ref('')
 const suggestions = ref<Array<SelectItem<string>>>([])
 const rawData = ref<EntityData[]>([])
 const lastValidDataCache = ref<EntityData[]>([])
@@ -87,27 +88,28 @@ const fetcher = async (executor: () => Promise<EntityData[]>) => {
   }
 }
 
-const onQueryChange = debounce((query: string = '') => {
+const onQueryChange = debounce((searchTerm: string = '') => {
+  query.value = searchTerm
   if (dataDrainedFromPeeking.value) {
-    if (isValidUuid(query) && allowUuidSearch) {
-      inlineSearchForUuid(query)
+    if (isValidUuid(searchTerm) && allowUuidSearch) {
+      inlineSearchForUuid(searchTerm)
     } else {
-      inlineSearch(query)
+      inlineSearch(searchTerm)
     }
     return
   }
 
-  if (!query.trim()) {
+  if (!searchTerm.trim()) {
     if (lastValidDataCache.value.length && !rawData.value.length) {
       suggestions.value = lastValidDataCache.value.map(transformItem)
     }
     return
   }
 
-  if (isValidUuid(query) && allowUuidSearch) {
-    fetcher(async () => await fetchExact(query))
+  if (isValidUuid(searchTerm) && allowUuidSearch) {
+    fetcher(async () => await fetchExact(searchTerm))
   } else {
-    fetcher(async () => await exhaustiveSearch(query))
+    fetcher(async () => await exhaustiveSearch(searchTerm))
   }
 }, DEBOUNCE_DELAY)
 
@@ -155,6 +157,16 @@ const dedupedSuggestions = computed(() => {
   if (suggestions.value.some((item) => item.id === initialItem.id)) {
     return suggestions.value
   }
+
+  if (query.value) {
+    if (fields.some((field) => {
+      initialItem[field]?.includes(query.value)
+    })) {
+      return [initialItem, ...suggestions.value]
+    }
+    return suggestions.value
+  }
+
   return [initialItem, ...suggestions.value]
 })
 
