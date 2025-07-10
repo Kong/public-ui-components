@@ -77,7 +77,6 @@ const { sidebarExpanded } = usePreferences()
     .body {
       overflow: auto;
       padding-bottom: 36px + $kui-space-40 * 2; // Leave space for the toggle button in case it covers the content
-      scrollbar-width: thin;
     }
   }
 
