@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef, inject } from 'vue'
+import { computed, ref, useTemplateRef, inject, type Component } from 'vue'
 import { KAlert, KSegmentedControl } from '@kong/kongponents'
 import { SparklesIcon, DesignIcon, CodeblockIcon } from '@kong/icons'
 import { createI18n } from '@kong-ui-public/i18n'
@@ -105,7 +105,7 @@ const finalEditorMode = computed<EditorMode>(() => {
   return enableVisualEditor ? editorMode.value : 'code'
 })
 
-const icons = {
+const icons: Record<EditorMode, Component> = {
   visual: DesignIcon,
   code: CodeblockIcon,
 }
