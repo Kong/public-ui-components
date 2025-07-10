@@ -20,11 +20,6 @@
     >
       <slot name="before" />
     </template>
-    <template #dropdown-footer-text>
-      <span>
-        {{ t('fields.auto_suggest.items_count', { count: suggestions.length }) }}
-      </span>
-    </template>
     <template #item-template="{ item }">
       <slot
         :item="item"

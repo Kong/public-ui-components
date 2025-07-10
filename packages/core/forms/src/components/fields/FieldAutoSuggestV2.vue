@@ -26,6 +26,19 @@
       >
         <ProgressIcon :size="KUI_ICON_SIZE_30" />
       </template>
+      <template #item="{ item }">
+        <div class="entity-suggestion-item">
+          <span class="entity-label">
+            {{ item.label }}
+          </span><span class="entity-id">
+            {{ item.id }}
+          </span>
+        </div>
+      </template>
+
+      <template #selected-item="{ item }">
+        <span>{{ item.label }} - {{ item.id }}</span>
+      </template>
     </FieldScopedEntitySelect>
   </component>
 </template>
@@ -177,11 +190,7 @@ export default {
       items.forEach((item) => {
         if (!filteredIds.has(item.id)) {
           filteredIds.add(item.id)
-          dedupedItems.push({
-            ...item,
-            label: this.getSuggestionLabel(item),
-            value: item.id,
-          })
+          dedupedItems.push(item)
         }
       })
 
@@ -228,9 +237,9 @@ export default {
 
 
     getSuggestionLabel(item) {
-      const fields = this.inputFields
+      const labelKey = this.schema?.labelField || 'id'
 
-      return fields.length && item ? fields.map(field => item[field]).filter(Boolean).join(' - ') : ''
+      return labelKey && item ? item[labelKey] : ''
     },
 
     updateModel(value) {
@@ -281,5 +290,19 @@ export default {
   color: $kui-color-text-neutral;
   display: flex;
   justify-content: space-between;
+}
+
+.entity-suggestion-item {
+  display: flex;
+  flex-direction: column;
+
+  .entity-label {
+    font-weight: $kui-font-weight-bold;
+  }
+
+  .entity-id {
+    color: $kui-color-text-neutral;
+    font-size: $kui-font-size-20;
+  }
 }
 </style>
