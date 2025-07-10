@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="open"
+    ref="modal"
     class="dk-editor-modal"
   >
     <EditorNav
@@ -13,10 +14,13 @@
 
 <script setup lang="ts">
 import { useScrollLock } from '@vueuse/core'
-import { watch } from 'vue'
+import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
+import { nextTick, useTemplateRef, watch } from 'vue'
 
 import EditorNav from './EditorNav.vue'
 import EditorPanel from './EditorPanel.vue'
+
+const modal = useTemplateRef('modal')
 
 const open = defineModel<boolean>('open')
 
@@ -25,9 +29,20 @@ const emit = defineEmits<{
 }>()
 
 const isLocked = useScrollLock(document)
+const { activate, deactivate } = useFocusTrap(modal, {
+  returnFocusOnDeactivate: true,
+})
 
-watch(open, (value) => {
+watch(open, async (value) => {
   isLocked.value = !!value
+
+  await nextTick()
+
+  if (value) {
+    activate()
+  } else {
+    deactivate()
+  }
 }, { immediate: true })
 
 function handleBack() {
