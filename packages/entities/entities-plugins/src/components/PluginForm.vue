@@ -967,6 +967,22 @@ const initScopeFields = (): void => {
 
   const scopeEntityArray = []
 
+  /**
+   * type ScopedEntity {
+   *   id: string
+   *   model: string // used as the v-model
+   *   label: string
+   *   placeholder: string
+   *   type: string // which component to render
+   *   labelField: string // index key used for rendering dropdown item label
+   *   help: string // for Select help text
+   *   disabled: boolean // whether disable the field itself
+   *   entity: EntityType // which entity type we are rendering here
+   *   inputValues: {
+   *      fields: string[] // keys used for API requests and condition checks
+   *   }
+   * }
+   */
   // if the plugin is enabled for a specific type of entity, add it's scope field to the form
   if (supportServiceScope) {
     scopeEntityArray.push({
@@ -975,6 +991,7 @@ const initScopeFields = (): void => {
       label: t('plugins.form.scoping.gateway_service.label'),
       placeholder: t('plugins.form.scoping.gateway_service.placeholder'),
       type: 'AutoSuggestV2',
+      labelField: 'name',
       entity: 'services',
       inputValues: {
         fields: ['name', 'id'],
@@ -992,6 +1009,7 @@ const initScopeFields = (): void => {
       placeholder: t('plugins.form.scoping.route.placeholder'),
       type: 'AutoSuggestV2',
       entity: 'routes',
+      labelField: 'name', // for rendering dropdown item label
       inputValues: {
         fields: ['name', 'id'],
         primaryField: 'id',
@@ -1008,6 +1026,7 @@ const initScopeFields = (): void => {
       placeholder: t('plugins.form.scoping.consumer.placeholder'),
       type: 'AutoSuggestV2',
       entity: 'consumers',
+      labelField: 'username',
       inputValues: {
         fields: ['username', 'custom_id', 'id'],
         primaryField: 'username',
@@ -1025,6 +1044,7 @@ const initScopeFields = (): void => {
       type: 'AutoSuggestV2',
       entity: 'consumer_groups',
       entityDataKey: 'consumer_group',
+      labelField: 'name',
       inputValues: {
         fields: ['name', 'id'],
         primaryField: 'name',
