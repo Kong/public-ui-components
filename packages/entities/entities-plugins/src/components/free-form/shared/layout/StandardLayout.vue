@@ -65,6 +65,13 @@
       >
         <slot name="general-info-description" />
       </template>
+
+      <template
+        v-if="slots['general-info-extra']"
+        #extra
+      >
+        <slot name="general-info-extra" />
+      </template>
     </FormSection>
     <FormSection
       :description="t('plugins.form.sections.plugin_config.description')"
@@ -83,11 +90,19 @@
       >
         <slot name="plugin-config-title" />
       </template>
+
       <template
         v-if="slots['plugin-config-description']"
         #description
       >
         <slot name="plugin-config-description" />
+      </template>
+
+      <template
+        v-if="slots['plugin-config-extra']"
+        #extra
+      >
+        <slot name="plugin-config-extra" />
       </template>
     </FormSection>
   </div>
@@ -140,8 +155,10 @@ const slots = defineSlots<{
   default: (props: ConfigFormProps<T>) => any
   'general-info-title'?: () => any
   'general-info-description'?: () => any
+  'general-info-extra'?: () => any
   'plugin-config-title'?: () => any
   'plugin-config-description'?: () => any
+  'plugin-config-extra'?: () => any
 }>()
 
 provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
