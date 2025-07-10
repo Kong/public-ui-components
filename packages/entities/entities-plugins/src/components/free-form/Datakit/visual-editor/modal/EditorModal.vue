@@ -60,6 +60,7 @@ function handleBack() {
   left: 0;
   padding-top: $kui-space-40;
   position: fixed;
+  scrollbar-width: thin;
   top: 0;
   width: 100%;
   z-index: 1000;
