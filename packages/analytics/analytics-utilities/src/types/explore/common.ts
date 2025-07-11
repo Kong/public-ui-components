@@ -61,6 +61,12 @@ export interface RelativeTimeRangeV4 {
 
 export type TimeRangeV4 = AbsoluteTimeRangeV4 | RelativeTimeRangeV4
 
+export interface TimeRangeMetaResponse {
+  start: string
+  end: string
+  min_granularity_ms: number
+}
+
 export const granularityValues = [
   'secondly',
   'tenSecondly',
