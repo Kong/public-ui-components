@@ -270,6 +270,8 @@ watch(() => props.type, () => {
 })
 
 const handleDragSelect = (event: Event) => {
+  event.preventDefault()
+  event.stopPropagation()
   const { xStart, xEnd } = (event as CustomEvent<DragSelectEventDetail>).detail
   if (xStart && xEnd) {
     emit('zoom-time-range', { start: new Date(xStart), end: new Date(xEnd), type: 'absolute' })
@@ -277,11 +279,13 @@ const handleDragSelect = (event: Event) => {
   isDoingSelection.value = false
   handleChartClick()
   verticalLinePlugin.resume()
+  highlightPlugin.resume(true)
 }
 
 const handleDragMove = () => {
   isDoingSelection.value = true
   verticalLinePlugin.pause()
+  highlightPlugin.pause()
 }
 
 watch(() => chartInstance.value?.chart, () => {
