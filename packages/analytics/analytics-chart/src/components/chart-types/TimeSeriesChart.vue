@@ -34,20 +34,24 @@
     </div>
     <Teleport to="body">
       <ToolTip
-        v-if="!isDoingSelection"
         ref="tooltipElement"
-        :context="formatTimestamp(tooltipData.tooltipContext)"
+        :absolute-left="tooltipAbsoluteLeft"
+        :absolute-top="tooltipAbsoluteTop"
         data-testid="tooltip"
-        :left="tooltipAbsoluteLeft"
-        :locked="tooltipData.locked"
-        :series="tooltipData.tooltipSeries"
-        :show-tooltip="tooltipData.showTooltip"
+        :state="tooltipData"
         :tooltip-title="tooltipTitle"
-        :top="tooltipAbsoluteTop"
-        :unit="metricUnit"
+        :zoom-options="zoomOptions"
+        :zoom-time-range="zoomTimeRange"
         @dimensions="tooltipDimensions"
         @left="(left: string) => tooltipData.left = left"
         @top="(top: string) => tooltipData.top = top"
+      />
+      <ZoomActions
+        v-if="showZoomActions && zoomTimeRange"
+        :left="tooltipAbsoluteLeft"
+        :new-time-range="zoomTimeRange"
+        :top="tooltipAbsoluteTop"
+        :zoom-options="zoomOptions"
       />
     </Teleport>
     <ChartLegend
@@ -61,7 +65,6 @@
 
 <script setup lang="ts">
 
-import type { PropType } from 'vue'
 import { reactive, ref, computed, toRef, inject, watch, onUnmounted } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
@@ -73,88 +76,54 @@ import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
-import type { ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry } from '../../types'
+import type { TooltipState } from '../../types'
+import { type ChartLegendSortFn, type ChartTooltipSortFn, type EnhancedLegendItem, type KChartData, type LegendValues, type TooltipEntry } from '../../types'
 import type { GranularityValues, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { Chart } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
-import { formatByGranularity, generateLegendItems } from '../../utils'
+import { generateLegendItems } from '../../utils'
 import { hasExactlyOneDatapoint } from '../../utils/commonOptions'
+import type { ZoomOptions } from '../AnalyticsChart.vue'
+import ZoomActions from '../ZoomActions.vue'
 
-const props = defineProps({
-  chartData: {
-    type: Object as PropType<KChartData>,
-    required: false,
-    default: null,
+interface TimeSeriesChartProps {
+  chartData?: KChartData
+  type?: 'timeseries_bar' | 'timeseries_line'
+  fill?: boolean
+  tooltipTitle: string
+  metricUnit?: string
+  timeRangeMs?: number
+  granularity: GranularityValues
+  stacked?: boolean
+  legendValues?: LegendValues
+  metricAxesTitle?: string
+  dimensionAxesTitle?: string
+  syntheticsDataKey?: string
+  chartLegendSortFn?: ChartLegendSortFn
+  chartTooltipSortFn?: ChartTooltipSortFn
+  zoom?: boolean
+  zoomOptions?: ZoomOptions[]
+}
+
+const props = withDefaults(
+  defineProps<TimeSeriesChartProps>(),
+  {
+    chartData: undefined,
+    type: 'timeseries_line',
+    fill: false,
+    metricUnit: '',
+    timeRangeMs: undefined,
+    stacked: true,
+    legendValues: undefined,
+    metricAxesTitle: undefined,
+    dimensionAxesTitle: undefined,
+    syntheticsDataKey: '',
+    chartLegendSortFn: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
+    chartTooltipSortFn: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
+    zoom: false,
+    zoomOptions: undefined,
   },
-  type: {
-    type: String as PropType<'timeseries_bar' | 'timeseries_line'>,
-    required: false,
-    default: 'timeseries_line',
-  },
-  fill: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  tooltipTitle: {
-    type: String,
-    required: true,
-  },
-  metricUnit: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  timeRangeMs: {
-    type: Number,
-    required: false,
-    default: undefined,
-  },
-  granularity: {
-    type: String as PropType<GranularityValues>,
-    required: true,
-  },
-  stacked: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  legendValues: {
-    type: Object as PropType<LegendValues>,
-    required: false,
-    default: null,
-  },
-  metricAxesTitle: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  dimensionAxesTitle: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  syntheticsDataKey: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  chartLegendSortFn: {
-    type: Function as PropType<ChartLegendSortFn>,
-    required: false,
-    default: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
-  },
-  chartTooltipSortFn: {
-    type: Function as PropType<ChartTooltipSortFn>,
-    required: false,
-    default: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
-  },
-  zoom: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-})
+)
 
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
@@ -170,25 +139,26 @@ const chartID = crypto.randomUUID()
 const legendItems = ref<EnhancedLegendItem[]>([])
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
-const isDoingSelection = ref(false)
+const isDoneSelect = ref(false)
 const chartParentRef = ref<HTMLElement | null>(null)
+const zoomTimeRange = ref<AbsoluteTimeRangeV4 | undefined>(undefined)
 
-const tooltipData = reactive({
+const tooltipData = reactive<TooltipState>({
   showTooltip: false,
   tooltipContext: 0,
   tooltipSeries: [],
   left: '',
   top: '',
-  units: toRef(props, 'metricUnit'),
+  units: props.metricUnit,
   translateUnit,
   offsetX: 0,
   offsetY: 0,
   width: 0,
   height: 0,
   chartType: props.type,
-  locked: false,
   chartID,
   chartTooltipSortFn: props.chartTooltipSortFn,
+  state: 'idle',
 })
 
 const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolutePosition(
@@ -203,6 +173,13 @@ const htmlLegendPlugin = {
   },
 }
 
+const showZoomActions = computed(() => {
+  return props.zoom &&
+    props.zoomOptions &&
+    props.zoomOptions.length > 0 &&
+    isDoneSelect.value
+})
+
 const plugins = computed(() => [
   htmlLegendPlugin,
   highlightPlugin,
@@ -213,7 +190,7 @@ const plugins = computed(() => [
 const remountLineKey = computed(() => `line-${plugins.value.map(p => p.id).join('-')}`)
 const remountBarKey = computed(() => `bar-${plugins.value.map(p => p.id).join('-')}`)
 
-const pointsWithoutHover = computed(() => hasExactlyOneDatapoint(props.chartData))
+const pointsWithoutHover = computed(() => props.chartData && hasExactlyOneDatapoint(props.chartData))
 
 const { options } = composables.useLineChartOptions({
   tooltipState: tooltipData,
@@ -227,10 +204,6 @@ const { options } = composables.useLineChartOptions({
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))
-
-const formatTimestamp = (ts: number): string | number => {
-  return formatByGranularity(new Date(ts), props.granularity, true)
-}
 
 /**
      * When in Preview mode, Chart and Legend are vertically stacked, and the
@@ -251,20 +224,27 @@ const tooltipDimensions = ({ width, height }) => {
 }
 
 const handleChartClick = () => {
-  tooltipData.locked = !tooltipData.locked
-
-  if (chartInstance.value && chartInstance.value.chart.tooltip?.dataPoints?.length) {
-
-    if (tooltipData.locked) {
-      verticalLinePlugin.clickedSegment = chartInstance.value.chart.tooltip.dataPoints[0]
+  console.log('handleChartClick')
+  if (tooltipData.state !== 'zoom-interactive') {
+    if (tooltipData.state !== 'idle') {
+      tooltipData.state = 'idle'
     } else {
-      verticalLinePlugin.destroyClickedSegment()
+      tooltipData.state = 'interactive'
+    }
+
+    if (chartInstance.value && chartInstance.value.chart.tooltip?.dataPoints?.length) {
+
+      if (tooltipData.state === 'interactive') {
+        verticalLinePlugin.clickedSegment = chartInstance.value.chart.tooltip.dataPoints[0]
+      } else {
+        verticalLinePlugin.destroyClickedSegment()
+      }
     }
   }
 }
 
 watch(() => props.type, () => {
-  tooltipData.locked = false
+  tooltipData.state = 'idle'
   tooltipData.showTooltip = false
   verticalLinePlugin.destroyClickedSegment()
 })
@@ -274,16 +254,21 @@ const handleDragSelect = (event: Event) => {
   event.stopPropagation()
   const { xStart, xEnd } = (event as CustomEvent<DragSelectEventDetail>).detail
   if (xStart && xEnd) {
+    zoomTimeRange.value = {
+      start: new Date(xStart),
+      end: new Date(xEnd),
+      type: 'absolute',
+    }
+    tooltipData.state = 'zoom-interactive'
     emit('zoom-time-range', { start: new Date(xStart), end: new Date(xEnd), type: 'absolute' })
   }
-  isDoingSelection.value = false
-  handleChartClick()
+  isDoneSelect.value = true
   verticalLinePlugin.resume()
   highlightPlugin.resume(true)
 }
 
 const handleDragMove = () => {
-  isDoingSelection.value = true
+  tooltipData.state = 'selecting-chart-area'
   verticalLinePlugin.pause()
   highlightPlugin.pause()
 }
