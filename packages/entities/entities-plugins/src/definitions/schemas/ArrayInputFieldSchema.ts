@@ -11,3 +11,9 @@ export const ArrayInputFieldSchema = {
   newElementButtonLabel: '+ Add',
   newElementButtonLabelClasses: 'kong-form-new-element-button-label',
 }
+
+export const BadgeArrayInputFieldSchema = {
+  type: 'badge-array',
+  fieldClasses: 'kong-form-badge-array-field',
+  inputAttributes: { class: 'form-control', style: { minWidth: '200px' } },
+}
