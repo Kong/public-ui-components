@@ -46,14 +46,14 @@
       <ObjectField
         appearance="card"
         :fields-order="['headers', 'query', 'body', 'by_lua']"
-        name="upstream"
+        name="config.upstream"
       />
 
       <ObjectField
         appearance="card"
-        name="cache"
+        name="config.cache"
       >
-        <template #[`redis`]="props">
+        <template #redis="props">
           <ObjectField
             v-bind="props"
             :fields-order="[
@@ -75,18 +75,22 @@
 import { cloneDeep } from 'lodash-es'
 import { FIELD_RENDERERS } from '../shared/composables'
 import { getCalloutId } from './utils'
-import ArrayField from '../shared/ArrayField.vue'
 import CalloutsForm from './CalloutsForm.vue'
-import FieldRenderer from '../shared/FieldRenderer.vue'
 import Form from '../shared/Form.vue'
-import ObjectField from '../shared/ObjectField.vue'
-import StringField from '../shared/StringField.vue'
 import useI18n from '../../../composables/useI18n'
 import AdvancedFields from '../shared/AdvancedFields.vue'
+import { fieldsBuilder } from '../shared/fields-builder'
 
 import { CalloutId, type Callout, type RequestCalloutPlugin } from './types'
-import type { FormConfig } from '../shared/types'
+import type { FormConfig } from '../shared/types/field-types'
 import type { ConfigFormProps } from '../shared/PluginFormWrapper.vue'
+
+const {
+  ObjectField,
+  StringField,
+  FieldRenderer,
+  ArrayField,
+} = fieldsBuilder<RequestCalloutPlugin>()
 
 defineProps<ConfigFormProps<RequestCalloutPlugin>>()
 
