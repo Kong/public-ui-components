@@ -10,8 +10,12 @@
     v-else
     ref="root"
     class="ff-kv-field"
+    :data-testid="`ff-kv-${field.path.value}`"
   >
-    <header class="ff-kv-field-header">
+    <header
+      class="ff-kv-field-header"
+      :data-testid="`ff-kv-header-${field.path.value}`"
+    >
       <KLabel
         class="ff-kv-field-label"
         v-bind="fieldAttrs"
@@ -31,6 +35,7 @@
       </KLabel>
       <KButton
         appearance="tertiary"
+        :data-testid="`ff-kv-add-btn-${field.path.value}`"
         icon
         @click="handleAddClick"
       >
@@ -42,12 +47,13 @@
       v-for="(entry, index) of entries"
       :key="entry.id"
       class="ff-kv-field-entry"
+      :data-testid="`ff-kv-container-${field.path.value}.${index}`"
     >
       <KInput
         v-model.trim="entry.key"
         class="ff-kv-field-entry-key"
         :data-key-input="index"
-        :data-testid="`ff-key-${field.path.value}`"
+        :data-testid="`ff-key-${field.path.value}.${index}`"
         :placeholder="keyPlaceholder || 'Key'"
         @keydown.enter.prevent="focus(index, 'value')"
       />
@@ -55,7 +61,7 @@
       <KInput
         v-model.trim="entry.value"
         class="ff-kv-field-entry-value"
-        :data-testid="`ff-value-${field.path.value}`"
+        :data-testid="`ff-value-${field.path.value}.${index}`"
         :data-value-input="index"
         :placeholder="valuePlaceholder || 'Value'"
         @keydown.enter.prevent="handleValueEnter(index)"
@@ -68,11 +74,18 @@
             :update="value => handleAutofill(index, value)"
             :value="entry.value"
           />
+          <KAlert
+            v-if="realShowVaultSecretPicker && !autofillSlot"
+            appearance="warning"
+            :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+            message="The vault secret picker is not available"
+          />
         </template>
       </KInput>
 
       <KButton
         appearance="tertiary"
+        :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
         icon
         @click="removeEntry(entry.id)"
       >
@@ -83,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, useTemplateRef, nextTick, inject, computed, toRef } from 'vue'
+import { ref, watch, useTemplateRef, nextTick, inject, computed, toRef, useAttrs } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { uniqueId } from 'lodash-es'
 import type { LabelAttributes } from '@kong/kongponents'
@@ -101,7 +114,6 @@ const { showVaultSecretPicker = undefined, ...props } = defineProps<{
   name: string
   initialValue?: Record<string, string> | null
   label?: string
-  required?: boolean
   keyPlaceholder?: string
   valuePlaceholder?: string
   defaultKey?: string
@@ -111,7 +123,7 @@ const { showVaultSecretPicker = undefined, ...props } = defineProps<{
 }>()
 
 const { value: fieldValue, ...field } = useField<Record<string, string>>(toRef(props, 'name'))
-const fieldAttrs = useFieldAttrs(field.path!, props)
+const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 
 const emit = defineEmits<{
   change: [Record<string, string>]

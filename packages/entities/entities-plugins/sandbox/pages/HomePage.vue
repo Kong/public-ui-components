@@ -10,5 +10,10 @@
         PluginForm Playground
       </router-link>
     </li>
+    <li>
+      <router-link :to="{ name: 'free-form' }">
+        Free Form (Mocking Schema)
+      </router-link>
+    </li>
   </ul>
 </template>
