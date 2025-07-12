@@ -7,6 +7,7 @@
         v-for="field in childFields"
         :key="Object.keys(field)[0]"
         :name="Object.keys(field)[0]"
+        @global-action="(name: string, payload: any) => emit('globalAction', name, payload)"
       />
     </slot>
   </component>
@@ -44,6 +45,7 @@ const { tag = 'form', schema, data, config, fieldsOrder } = defineProps<Props<T>
 
 const emit = defineEmits<{
   change: [value: T]
+  'globalAction': [name: string, payload: any]
 }>()
 
 const slots = useSlots()

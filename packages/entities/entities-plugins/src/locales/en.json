@@ -662,6 +662,10 @@
         "entity_name": "Request Callout",
         "by_lua_placeholder": "Enter Lua script here..."
       },
+      "redis_partial": {
+        "redis_partial_modal_title": "New shared configuration",
+        "partial_created_success_message": "Successfully created a new Redis configuration."
+      },
       "datakit": {
         "description": "Configure Datakit via YAML below. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
         "description_example": "Start with a use case:",
@@ -684,8 +688,8 @@
       "configuration_selector_label": "Select stored Redis configuration",
       "configuration_selector_placeholder": "Pick Redis configuration",
       "create_new_configuration": "New {type} shared configuration",
-      "open_source": "Open Source",
-      "enterprise": "Enterprise",
+      "open_source": "open source",
+      "enterprise": "enterprise",
       "empty_state": "No shared configurations",
       "badge": "Recommended",
       "selector": {
