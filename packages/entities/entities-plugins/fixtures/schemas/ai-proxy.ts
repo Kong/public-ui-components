@@ -341,7 +341,7 @@ export default {
                 'model.name',
               ],
               if_match: [],
-              then_err: 'Must set a model name. Refer to https://docs.konghq.com/hub/kong-inc/ai-proxy/ for supported models.',
+              then_err: 'Must set a model name. Refer to https://developer.konghq.com/plugins/ai-proxy/ for supported models.',
             },
           },
           {

@@ -24,7 +24,7 @@
   >
     <template #form-info>
       A target is an ip address/hostname with a port that identifies an instance of a backend service.
-      <KExternalLink href="https://docs.konghq.com/enterprise/latest/admin-api/#target-object">
+      <KExternalLink href="https://developer.konghq.com/gateway/entities/target/">
         Learn More
       </KExternalLink>
     </template>
@@ -51,7 +51,7 @@
   >
     <template #form-info>
       A target is an ip address/hostname with a port that identifies an instance of a backend service.
-      <KExternalLink href="https://docs.konghq.com/enterprise/latest/admin-api/#target-object">
+      <KExternalLink href="https://developer.konghq.com/gateway/entities/target/">
         Learn More
       </KExternalLink>
     </template>
