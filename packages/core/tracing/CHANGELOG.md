@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.12.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.12.3...@kong-ui-public/tracing@0.12.4) (2025-07-14)
+
+
+### Bug Fixes
+
+* move `moduleResolution` to `bundler` ([#2213](https://github.com/Kong/public-ui-components/issues/2213)) ([a72a0ce](https://github.com/Kong/public-ui-components/commit/a72a0ce0f5d326382c7fc5b9db47288cfbaaeb5b))
+
+
+
+
+
 ## [0.12.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.12.2...@kong-ui-public/tracing@0.12.3) (2025-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/tracing

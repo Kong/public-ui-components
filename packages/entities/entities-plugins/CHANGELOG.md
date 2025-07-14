@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.28.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.4...@kong-ui-public/entities-plugins@9.28.5) (2025-07-14)
+
+
+### Bug Fixes
+
+* move `moduleResolution` to `bundler` ([#2213](https://github.com/Kong/public-ui-components/issues/2213)) ([a72a0ce](https://github.com/Kong/public-ui-components/commit/a72a0ce0f5d326382c7fc5b9db47288cfbaaeb5b))
+
+
+
+
+
 ## [9.28.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.3...@kong-ui-public/entities-plugins@9.28.4) (2025-07-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
