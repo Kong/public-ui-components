@@ -46,11 +46,12 @@
                 :id="`level-primary-group-${getPrimaryGroupId(groupName)}`"
                 class="level-primary-group-name"
                 data-testid="level-primary-group-name"
+                role="presentation"
               >
                 {{ groupName }}
               </div>
               <ul
-                :aria-labelledby="`level-primary-group-${getPrimaryGroupId(groupName)}`"
+                :aria-labelledby="groupName !== UNGROUPED_NAME ? `level-primary-group-${getPrimaryGroupId(groupName)}` : undefined"
                 class="level-primary top-items"
               >
                 <SidebarItem
