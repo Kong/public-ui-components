@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.7.32...@kong-ui-public/entities-snis@3.8.0) (2025-07-14)
+
+
+### Features
+
+* **certificates:** KM-1405-remove-SNIs ([#2193](https://github.com/Kong/public-ui-components/issues/2193)) ([488ec8c](https://github.com/Kong/public-ui-components/commit/488ec8c19fd8b4d75356c05e8f82d43d98296d27))
+
+
+
+
+
 ## [3.7.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.7.31...@kong-ui-public/entities-snis@3.7.32) (2025-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-snis
