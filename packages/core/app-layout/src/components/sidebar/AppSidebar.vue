@@ -211,15 +211,16 @@ const bottomNavItems = computed(() => props.bottomItems.length ? prepareNavItems
 
 const topNavGroups = computed((): Map<string, SidebarPrimaryItem[]> => {
   // Create a Map to store grouped items, ensuring insertion order is preserved.
-  const groups = new Map<string | '_ungrouped', SidebarPrimaryItem[]>()
+  const groups = new Map<string, SidebarPrimaryItem[]>()
+  const UNGROUPED_KEY = '_ungrouped'
 
   // Initialize the "_ungrouped" group first to ensure it appears first when iterating through the groups.
   // (Meaning ungrouped L1 navigation items will appear first in the sidebar).
-  groups.set('_ungrouped', [])
+  groups.set(UNGROUPED_KEY, [])
 
   // Loop through all top nav items and organize them by group
   for (const item of topNavItems.value) {
-    const groupKey = item.group || '_ungrouped'
+    const groupKey = item.group || UNGROUPED_KEY
 
     // Initialize the group array if it doesn't exist
     if (!groups.has(groupKey)) {
