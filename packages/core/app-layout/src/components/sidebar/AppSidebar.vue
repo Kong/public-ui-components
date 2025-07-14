@@ -114,11 +114,11 @@ type BottomPrimaryItem = Omit<SidebarPrimaryItem, 'group'>
 
 const props = defineProps({
   topItems: {
-    type: Array as PropType<SidebarPrimaryItem[]>,
+    type: Array as PropType<Array<SidebarPrimaryItem>>,
     default: () => ([]),
   },
   bottomItems: {
-    type: Array as PropType<BottomPrimaryItem[]>,
+    type: Array as PropType<Array<BottomPrimaryItem>>,
     default: () => ([]),
   },
   headerHeight: {
