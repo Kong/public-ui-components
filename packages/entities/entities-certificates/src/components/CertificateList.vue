@@ -23,6 +23,18 @@
           v-model="filterQuery"
           :config="filterConfig"
         />
+        <PermissionsWrapper :auth-function="canCreate">
+          <KButton
+            v-if="useToolbarCreationButton"
+            appearance="primary"
+            data-testid="toolbar-add-certificate"
+            size="large"
+            :to="config.createRoute"
+          >
+            <AddIcon />
+            {{ t('certificates.list.toolbar_actions.new_certificate') }}
+          </KButton>
+        </PermissionsWrapper>
       </template>
       <!-- Create action -->
       <template #toolbar-button>
@@ -41,8 +53,10 @@
             >
               <BookIcon decorative />
             </KButton>
-            <PermissionsWrapper :auth-function="() => canCreate()">
-              <!-- Hide Create button if table is empty -->
+            <PermissionsWrapper
+              v-if="!useToolbarCreationButton"
+              :auth-function="canCreate"
+            >
               <KButton
                 appearance="primary"
                 data-testid="toolbar-add-certificate"
@@ -319,6 +333,11 @@ const props = defineProps({
   },
   /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
   useActionOutside: {
+    type: Boolean,
+    default: false,
+  },
+  /** default to false, setting to true will place create button on top right of list*/
+  useToolbarCreationButton: {
     type: Boolean,
     default: false,
   },
