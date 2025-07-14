@@ -18,13 +18,65 @@ import TableTags from './components/common/TableTags.vue'
 import composables from './composables'
 
 // Extract specific composables to export
-const { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider, useTableState } = composables
+const {
+  useAxios,
+  useDebouncedFilter,
+  useDeclarativeRoutesFetcher,
+  useDeleteUrlBuilder,
+  useErrors,
+  useExternalLinkCreator,
+  useFetcher,
+  useFetcherCacheKey,
+  useFetchUrlBuilder,
+  useGatewayFeatureSupported,
+  useHelpers,
+  useSchemaProvider,
+  useStringHelpers,
+  useTableState,
+  useTruncationDetector,
+  useValidators,
+} = composables
 
 // Components
-export { EntityBaseConfigCard, ConfigCardItem, ConfigCardDisplay, InternalLinkItem, EntityBaseForm, EntityBaseTable, EntityDeleteModal, EntityFilter, EntityToggleModal, PermissionsWrapper, EntityFormSection, EntityLink, EntityEmptyState, JsonCodeBlock, TerraformCodeBlock, YamlCodeBlock, TableTags }
+export {
+  ConfigCardDisplay,
+  ConfigCardItem,
+  EntityBaseConfigCard,
+  EntityBaseForm,
+  EntityBaseTable,
+  EntityDeleteModal,
+  EntityEmptyState,
+  EntityFilter,
+  EntityFormSection,
+  EntityLink,
+  EntityToggleModal,
+  InternalLinkItem,
+  JsonCodeBlock,
+  PermissionsWrapper,
+  TableTags,
+  TerraformCodeBlock,
+  YamlCodeBlock,
+}
 
 // Composables
-export { useAxios, useDeleteUrlBuilder, useErrors, useExternalLinkCreator, useFetchUrlBuilder, useFetcher, useFetcherCacheKey, useDebouncedFilter, useStringHelpers, useHelpers, useGatewayFeatureSupported, useTruncationDetector, useValidators, useSchemaProvider, useTableState }
+export {
+  useAxios,
+  useDebouncedFilter,
+  useDeclarativeRoutesFetcher,
+  useDeleteUrlBuilder,
+  useErrors,
+  useExternalLinkCreator,
+  useFetcher,
+  useFetcherCacheKey,
+  useFetchUrlBuilder,
+  useGatewayFeatureSupported,
+  useHelpers,
+  useSchemaProvider,
+  useStringHelpers,
+  useTableState,
+  useTruncationDetector,
+  useValidators,
+}
 
 // Types
 export * from './types'

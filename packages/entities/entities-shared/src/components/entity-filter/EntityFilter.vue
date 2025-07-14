@@ -6,7 +6,7 @@
       data-testid="search-input"
       :model-value="modelValue"
       :placeholder="config.placeholder"
-      @update:model-value="handleQueryUpdate"
+      @update:model-value="handleExactMatchQueryUpdate"
     >
       <template #before>
         <IconFilter />
@@ -135,7 +135,7 @@ import type { PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
 import { CloseIcon, ChevronDownIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL_WEAK } from '@kong/design-tokens'
-import type { ExactMatchFilterConfig, FuzzyMatchFilterConfig } from '../../types'
+import type { ExactMatchFilterConfig, FuzzyMatchFilters, FuzzyMatchFilterConfig } from '../../types'
 import composables from '../../composables'
 import IconFilter from '../icons/IconFilter.vue'
 import type { SelectItem, SelectFilterFunctionParams } from '@kong/kongponents'
@@ -160,7 +160,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', query: string) : void
+  'update:modelValue': [query: string]
+  'update:fuzzyFilters': [filters: FuzzyMatchFilters]
 }>()
 
 const showMenu = ref(false)
@@ -208,12 +209,12 @@ const toggleExpanded = (field: string) => {
   }
 }
 
-const handleQueryUpdate = (query: string) => {
+const handleExactMatchQueryUpdate = (query: string) => {
   emit('update:modelValue', query)
 }
 
 const handleQueryClear = () => {
-  handleQueryUpdate('')
+  handleExactMatchQueryUpdate('')
 }
 
 const getFieldId = (field: string) => {
@@ -255,6 +256,7 @@ const applyFields = (hideMenu = false) => {
     showMenu.value = false
   }
 
+  emit('update:fuzzyFilters', filteredParams)
   emit('update:modelValue', new URLSearchParams(filteredParams).toString())
 }
 

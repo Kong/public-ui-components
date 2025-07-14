@@ -1,6 +1,6 @@
+import type { TableState } from '@kong/kongponents/dist/types'
 import type { RouteLocationRaw } from 'vue-router'
 import type { Field, KongManagerConfig, KonnectConfig } from './index'
-import type { TableState } from '@kong/kongponents/dist/types'
 
 export interface KonnectBaseTableConfig extends KonnectConfig {
   /** Additional message to show when there are no records */

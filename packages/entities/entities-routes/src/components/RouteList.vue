@@ -26,6 +26,7 @@
         <EntityFilter
           v-model="filterQuery"
           :config="filterConfig"
+          @update:fuzzy-filters="fuzzyFilters = $event"
         />
       </template>
       <!-- Create action -->
@@ -189,9 +190,23 @@
         {{ formatUnixTimeStamp(rowValue ?? row.created_at) }}
       </template>
 
+      <!-- Declarative columns -->
+      <template #matchPath="{ row }">
+        <span class="route-list-cell-match-path">
+          {{ row.match.path }}
+        </span>
+      </template>
+
+      <template #policies="{ row }">
+        {{ row.policies.length }}
+      </template>
+
       <!-- Row actions -->
       <template #actions="{ row }">
-        <KClipboardProvider v-slot="{ copyToClipboard }">
+        <KClipboardProvider
+          v-if="!props.config.declarative"
+          v-slot="{ copyToClipboard }"
+        >
           <KDropdownItem
             data-testid="action-entity-copy-id"
             @click="copyId(row, copyToClipboard)"
@@ -207,20 +222,29 @@
             {{ t('actions.copy_json') }}
           </KDropdownItem>
         </KClipboardProvider>
-        <PermissionsWrapper :auth-function="() => canRetrieve(row)">
+        <PermissionsWrapper
+          v-if="!props.config.declarative"
+          :auth-function="() => canRetrieve(row)"
+        >
           <KDropdownItem
             data-testid="action-entity-view"
             has-divider
             :item="getViewDropdownItem(row.id)"
           />
         </PermissionsWrapper>
-        <PermissionsWrapper :auth-function="() => canEdit(row)">
+        <PermissionsWrapper
+          v-if="!props.config.declarative"
+          :auth-function="() => canEdit(row)"
+        >
           <KDropdownItem
             data-testid="action-entity-edit"
             :item="getEditDropdownItem(row.id)"
           />
         </PermissionsWrapper>
-        <PermissionsWrapper :auth-function="() => canDelete(row)">
+        <PermissionsWrapper
+          v-if="!props.config.declarative"
+          :auth-function="() => canDelete(row)"
+        >
           <KDropdownItem
             danger
             data-testid="action-entity-delete"
@@ -248,47 +272,49 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
-import { computed, ref, watch, onBeforeMount } from 'vue'
-import type { AxiosError } from 'axios'
-import { useRouter } from 'vue-router'
-
-import { BadgeMethodAppearances } from '@kong/kongponents'
-import type { BadgeMethodAppearance, HeaderTag } from '@kong/kongponents'
-import { AddIcon, ForwardIcon, BookIcon } from '@kong/icons'
-import {
-  EntityBaseTable,
-  EntityDeleteModal,
-  EntityFilter,
-  EntityTypes,
-  FetcherStatus,
-  EntityEmptyState,
-  PermissionsWrapper,
-  useAxios,
-  useFetcher,
-  useTableState,
-  useDeleteUrlBuilder,
-  TableTags,
-} from '@kong-ui-public/entities-shared'
-import type {
-  KongManagerRouteListConfig,
-  KonnectRouteListConfig,
-  EntityRow,
-  CopyEventPayload,
-} from '../types'
 import type {
   BaseTableHeaders,
+  DeclarativeRoute,
   EmptyStateOptions,
   ExactMatchFilterConfig,
   FilterFields,
   FuzzyMatchFilterConfig,
+  FuzzyMatchFilters,
   TableErrorMessage,
 } from '@kong-ui-public/entities-shared'
-import '@kong-ui-public/entities-shared/dist/style.css'
-
+import {
+  EntityBaseTable,
+  EntityDeleteModal,
+  EntityEmptyState,
+  EntityFilter,
+  EntityTypes,
+  FetcherStatus,
+  PermissionsWrapper,
+  TableTags,
+  useAxios,
+  useDeclarativeRoutesFetcher,
+  useDeleteUrlBuilder,
+  useFetcher,
+  useTableState,
+} from '@kong-ui-public/entities-shared'
+import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
+import { AddIcon, BookIcon, ForwardIcon } from '@kong/icons'
+import type { BadgeMethodAppearance, HeaderTag } from '@kong/kongponents'
+import { BadgeMethodAppearances } from '@kong/kongponents'
+import type { AxiosError } from 'axios'
+import type { PropType } from 'vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import composables from '../composables'
 import endpoints from '../routes-endpoints'
-import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
+import type {
+  CopyEventPayload,
+  EntityRow,
+  KongManagerRouteListConfig,
+  KonnectRouteListConfig,
+} from '../types'
+
+import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void
@@ -392,18 +418,23 @@ const disableSorting = computed((): boolean => props.config.app !== 'kongManager
 const fields: BaseTableHeaders = {
   // the Name column is non-hidable
   name: { label: t('routes.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
-  protocols: { label: t('routes.list.table_headers.protocols'), searchable: true },
-  ...!props.hideTraditionalColumns && {
-    hosts: { label: t('routes.list.table_headers.hosts'), searchable: true },
-    methods: { label: t('routes.list.table_headers.methods'), searchable: true },
-    paths: { label: t('routes.list.table_headers.paths'), searchable: true },
+  ...props.config.declarative ? {
+    matchPath: { label: 'Match Path', searchable: true },
+    policies: { label: 'Policies', searchable: false, sortable: true },
+  } : {
+    protocols: { label: t('routes.list.table_headers.protocols'), searchable: true },
+    ...!props.hideTraditionalColumns && {
+      hosts: { label: t('routes.list.table_headers.hosts'), searchable: true },
+      methods: { label: t('routes.list.table_headers.methods'), searchable: true },
+      paths: { label: t('routes.list.table_headers.paths'), searchable: true },
+    },
+    ...props.hasExpressionColumn && {
+      expression: { label: t('routes.list.table_headers.expression'), tooltip: true },
+    },
+    tags: { label: t('routes.list.table_headers.tags'), sortable: false },
+    updated_at: { label: t('routes.list.table_headers.updated_at'), sortable: true },
+    created_at: { label: t('routes.list.table_headers.created_at'), sortable: true },
   },
-  ...props.hasExpressionColumn && {
-    expression: { label: t('routes.list.table_headers.expression'), tooltip: true },
-  },
-  tags: { label: t('routes.list.table_headers.tags'), sortable: false },
-  updated_at: { label: t('routes.list.table_headers.updated_at'), sortable: true },
-  created_at: { label: t('routes.list.table_headers.created_at'), sortable: true },
 }
 const defaultTablePreferences = {
   columnVisibility: {
@@ -433,7 +464,17 @@ const fetcherBaseUrl = computed<string>(() => {
 
 const filterQuery = ref<string>('')
 const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['config']>(() => {
-  const isExactMatch = (props.config.app === 'konnect' || props.config.isExactMatch)
+  if (props.config.declarative) {
+    const { name, matchPath } = fields
+
+    return {
+      isExactMatch: false,
+      fields: { name, matchPath },
+      schema: props.config.declarative.filterSchema,
+    } as FuzzyMatchFilterConfig
+  }
+
+  const isExactMatch = props.config.app === 'konnect' || props.config.isExactMatch
 
   if (isExactMatch) {
     return {
@@ -455,11 +496,34 @@ const filterConfig = computed<InstanceType<typeof EntityFilter>['$props']['confi
   } as FuzzyMatchFilterConfig
 })
 
+// This is only used by the Declarative PoC
+// FIXME: This is not optimal as the filterSchema is passed in from the host app
+// This might lead to troublesome type mismatches
+const fuzzyFilters = ref<FuzzyMatchFilters<'name' | 'matchPath'>>()
+
+const declarativeFilterFn = (route: DeclarativeRoute): boolean => {
+  if (!fuzzyFilters.value) {
+    return true
+  }
+
+  const { name, matchPath } = fuzzyFilters.value
+  if (name && !route.name.toLowerCase().includes(name.toLowerCase())) {
+    return false
+  }
+  if (matchPath && !route.match.path.toLowerCase().includes(matchPath.toLowerCase())) {
+    return false
+  }
+
+  return true
+}
+
 const {
   fetcher,
   fetcherState,
   fetcherCacheKey,
-} = useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
+} = props.config.declarative
+  ? useDeclarativeRoutesFetcher(() => props.config.declarative?.config, props.cacheIdentifier, declarativeFilterFn)
+  : useFetcher(computed(() => ({ ...props.config, cacheIdentifier: props.cacheIdentifier })), fetcherBaseUrl)
 
 const getCellAttrs = (params: Record<string, any>): Record<string, any> => {
   if (params.headerKey === 'expression') {
@@ -544,6 +608,12 @@ const rowClick = async (row: EntityRow): Promise<void> => {
   const isAllowed = await props.canRetrieve?.(row)
 
   if (!isAllowed) {
+    return
+  }
+
+  if (props.config.declarative) {
+    const route = row as unknown as DeclarativeRoute
+    router.push(props.config.declarative.getViewRoute(route.name))
     return
   }
 
@@ -679,6 +749,10 @@ onBeforeMount(async () => {
   }
 
   .route-list-cell-expression {
+    font-family: $kui-font-family-code;
+  }
+
+  .route-list-cell-match-path {
     font-family: $kui-font-family-code;
   }
 }
