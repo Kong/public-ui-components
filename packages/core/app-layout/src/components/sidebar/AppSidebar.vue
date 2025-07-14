@@ -86,7 +86,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { ref, computed, watch, useSlots, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import type { SidebarPrimaryItem, SidebarPrimaryItemGroup } from '../../types'
+import type { SidebarPrimaryItem } from '../../types'
 import SidebarItem from '../sidebar/SidebarItem.vue'
 import { FocusTrap } from 'focus-trap-vue'
 import { useDebounce } from '../../composables'
@@ -211,7 +211,7 @@ const bottomNavItems = computed(() => props.bottomItems.length ? prepareNavItems
 
 const topNavGroups = computed((): Map<string, SidebarPrimaryItem[]> => {
   // Create a Map to store grouped items, ensuring insertion order is preserved.
-  const groups = new Map<SidebarPrimaryItemGroup | '_ungrouped', SidebarPrimaryItem[]>()
+  const groups = new Map<string | '_ungrouped', SidebarPrimaryItem[]>()
 
   // Initialize the "_ungrouped" group first to ensure it appears first when iterating through the groups.
   // (Meaning ungrouped L1 navigation items will appear first in the sidebar).
