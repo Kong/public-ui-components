@@ -254,8 +254,6 @@ const topNavGroups = computed((): Map<string, SidebarPrimaryItem[]> => {
   return groups
 })
 
-console.log('topNavGroups', topNavGroups.value)
-
 // Do not manually set the value of `mobileSidebarOpen`; always call `toggleSidebar(true/false)`
 const mobileSidebarOpen = ref<boolean>(props.open)
 const toggleSidebar = (isOpen: boolean) => {
