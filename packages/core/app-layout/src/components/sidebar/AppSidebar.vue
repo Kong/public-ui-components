@@ -36,22 +36,21 @@
           <slot name="top" />
         </div>
         <nav aria-label="Main menu">
-          <template v-if="topNavItems.length">
-            <!-- Loop through each group in topNavGroups -->
+          <template v-if="topNavGroups.size > 0">
             <template
               v-for="[groupName, groupItems] in topNavGroups"
               :key="groupName"
             >
               <div
                 v-if="groupName !== UNGROUPED_NAME"
-                :id="`level-primary-group-${groupName}`"
+                :id="`level-primary-group-${getPrimaryGroupId(groupName)}`"
                 class="level-primary-group-name"
                 data-testid="level-primary-group-name"
               >
                 {{ groupName }}
               </div>
               <ul
-                :aria-labelledby="`level-primary-group-${groupName}`"
+                :aria-labelledby="`level-primary-group-${getPrimaryGroupId(groupName)}`"
                 class="level-primary top-items"
               >
                 <SidebarItem
@@ -69,7 +68,7 @@
           </template>
 
           <div
-            v-if="topNavItems.length && bottomNavItems.length"
+            v-if="topNavGroups.size > 0 && bottomNavItems.length"
             class="sidebar-level-divider"
             role="separator"
           />
@@ -226,6 +225,7 @@ const topNavItems = computed(() => props.topItems.length ? prepareNavItems(props
 const bottomNavItems = computed(() => props.bottomItems.length ? prepareNavItems(props.bottomItems) : [])
 
 const UNGROUPED_NAME = '_ungrouped'
+const getPrimaryGroupId = (group: string = '') => group.trim().replace(' ', '').replace(/[^a-z0-9]+/gi, '-').toLowerCase()
 const topNavGroups = computed((): Map<string, SidebarPrimaryItem[]> => {
   // Create a Map to store grouped items, ensuring insertion order is preserved.
   const groups = new Map<string, SidebarPrimaryItem[]>()
