@@ -110,7 +110,7 @@
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import composables from '../../composables'
 import VueFormGenerator from '../FormGenerator.vue'
-import externalLinks from '../../externalLinks'
+import externalLinks from '../../external-links'
 
 const COMMON_FIELD_MODELS = new Set([
   'config-client_id',
