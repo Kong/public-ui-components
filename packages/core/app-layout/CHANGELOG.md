@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.8...@kong-ui-public/app-layout@4.5.0) (2025-07-14)
+
+
+### Features
+
+* **app-layout:** grouped sidebar l1 items [KHCP-16758] ([#2215](https://github.com/Kong/public-ui-components/issues/2215)) ([2bfc742](https://github.com/Kong/public-ui-components/commit/2bfc742063fd5756212d670319835ec3ee1158d5))
+
+
+
+
+
 ## [4.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.7...@kong-ui-public/app-layout@4.4.8) (2025-06-18)
 
 
