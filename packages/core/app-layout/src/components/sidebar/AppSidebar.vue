@@ -665,6 +665,7 @@ onBeforeUnmount(() => {
     line-height: $kui-line-height-40;
     opacity: 70%; // TODO: We should change this before merge
     padding: $kui-space-0 calc($kui-space-50 + $kui-space-40);
+    user-select: none;
   }
 }
 
