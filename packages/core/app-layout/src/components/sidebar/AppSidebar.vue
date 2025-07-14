@@ -114,11 +114,11 @@ type BottomPrimaryItem = Omit<SidebarPrimaryItem, 'group'>
 
 const props = defineProps({
   topItems: {
-    type: Array as PropType<Array<SidebarPrimaryItem>>,
+    type: Array as PropType<SidebarPrimaryItem[]>,
     default: () => ([]),
   },
   bottomItems: {
-    type: Array as PropType<Array<BottomPrimaryItem>>,
+    type: Array as PropType<BottomPrimaryItem[]>,
     default: () => ([]),
   },
   headerHeight: {
@@ -266,7 +266,11 @@ const toggleSidebar = (isOpen: boolean) => {
   // Add or remove a class from the `body` tag when the sidebar is opened/closed
   // This allows for the consuming app to add CSS to prevent overflow-y while the sidebar is open
 
-  isOpen ? document?.body?.classList.add('kong-ui-app-sidebar-open') : document?.body?.classList.remove('kong-ui-app-sidebar-open')
+  if (isOpen) {
+    document?.body?.classList.add('kong-ui-app-sidebar-open')
+  } else {
+    document?.body?.classList.remove('kong-ui-app-sidebar-open')
+  }
 
   // Always reset to false
   sidebarTogglePending.value = false
@@ -382,7 +386,9 @@ const getScrollbarWidth = (): void => {
 
   // remove inner elements
 
-  outerElement.parentNode && outerElement.parentNode.removeChild(outerElement)
+  if (outerElement.parentNode) {
+    outerElement.parentNode.removeChild(outerElement)
+  }
 
   const scrollbarWidth = widthNoScroll - widthWithScroll
 
