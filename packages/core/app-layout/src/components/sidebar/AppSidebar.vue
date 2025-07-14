@@ -109,13 +109,16 @@ import clonedeep from 'lodash.clonedeep'
 
 const emit = defineEmits(['click', 'toggle'])
 
+/** Prevent adding the `group` property to bottom sidebar items. */
+type BottomPrimaryItem = Omit<SidebarPrimaryItem, 'group'>
+
 const props = defineProps({
   topItems: {
     type: Array as PropType<SidebarPrimaryItem[]>,
     default: () => ([]),
   },
   bottomItems: {
-    type: Array as PropType<Omit<SidebarPrimaryItem, 'group'>[]>,
+    type: Array as PropType<BottomPrimaryItem[]>,
     default: () => ([]),
   },
   headerHeight: {
