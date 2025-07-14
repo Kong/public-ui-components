@@ -8,7 +8,11 @@
       class="nav"
       @back="handleBack"
     />
-    <EditorPanel class="panel" />
+    <EditorPanel
+      ref="panel"
+      class="panel"
+      tabindex="0"
+    />
   </div>
 </template>
 
@@ -28,9 +32,11 @@ const emit = defineEmits<{
   close: []
 }>()
 
+const panel = useTemplateRef('panel')
 const isLocked = useScrollLock(document)
 const { activate, deactivate } = useFocusTrap(modal, {
   returnFocusOnDeactivate: true,
+  initialFocus: () => panel.value?.$el,
 })
 
 watch(open, async (value) => {
@@ -76,6 +82,7 @@ function handleBack() {
 
   .panel {
     flex-grow: 1;
+    outline: none;
   }
 
   :deep(*) {
