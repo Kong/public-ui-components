@@ -29,6 +29,7 @@ export interface GatewayServiceFormFields {
   tls_verify_enabled: boolean
   tls_verify_value: boolean
   tags: string
+  enabled: boolean
 }
 export interface FormFieldErrors {
   host: string

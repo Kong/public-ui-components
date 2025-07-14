@@ -465,6 +465,7 @@ const form = reactive<LegacyGatewayServiceFormState>({
     tls_verify_enabled: false,
     tls_verify_value: false,
     tags: '',
+    enabled: true,
   },
   isReadonly: false,
   errorMessage: '',
@@ -486,6 +487,7 @@ const formFieldsOriginal = reactive<GatewayServiceFormFields>({
   tls_verify_enabled: false,
   tls_verify_value: false,
   tags: '',
+  enabled: true,
 })
 
 const isWsSupported = props.config.app === 'konnect' || useGatewayFeatureSupported({
@@ -585,6 +587,7 @@ const changeCheckedGroup = () => {
   form.fields.ca_certificates = formFieldsOriginal.ca_certificates
   form.fields.tls_verify_enabled = formFieldsOriginal.tls_verify_enabled
   form.fields.tls_verify_value = formFieldsOriginal.tls_verify_value
+  form.fields.enabled = formFieldsOriginal.enabled
 }
 
 const validateUrl = (): void => {
@@ -678,6 +681,7 @@ const initForm = (data: Record<string, any>): void => {
   form.fields.client_certificate = data?.client_certificate?.id || ''
   form.fields.write_timeout = (data?.write_timeout || data?.write_timeout === 0) ? data?.write_timeout : 60000
   form.fields.port = (data?.port || data?.port === 0) ? data?.port : 80
+  form.fields.enabled = data?.enabled ?? true
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
   Object.assign(formFieldsOriginal, form.fields)
 }
@@ -747,6 +751,7 @@ const getPayload = computed((): Record<string, any> => {
     write_timeout: form.fields.write_timeout,
     port: form.fields.port,
     url: form.fields.url,
+    enabled: form.fields.enabled,
   }
 
   if (form.fields.client_certificate && ['https', 'wss', 'tls'].includes(form.fields.protocol)) {
@@ -822,6 +827,7 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
       form.fields.tls_verify_enabled = data?.tls_verify !== '' && data?.tls_verify !== null && data?.tls_verify !== undefined
       form.fields.tls_verify_value = form.fields.tls_verify_enabled && data?.tls_verify
       form.fields.tags = data?.tags?.length ? data.tags.join(', ') : ''
+      form.fields.enabled = data?.enabled ?? true
       // Set initial state of `formFieldsOriginal` to these values in order to detect changes
       Object.assign(formFieldsOriginal, form.fields)
       // Emit an update event for the host app to respond to
