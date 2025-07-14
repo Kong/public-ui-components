@@ -36,21 +36,37 @@
           <slot name="top" />
         </div>
         <nav aria-label="Main menu">
-          <ul
-            v-if="topNavItems.length"
-            class="level-primary top-items"
-          >
-            <SidebarItem
-              v-for="item in topNavItems"
-              :key="item.name"
-              :item="item"
-              @click="itemClick"
+          <template v-if="topNavItems.length">
+            <!-- Loop through each group in topNavGroups -->
+            <template
+              v-for="[groupName, groupItems] in topNavGroups"
+              :key="groupName"
             >
-              <template #[`sidebar-icon-${item.key}`]>
-                <slot :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`" />
-              </template>
-            </SidebarItem>
-          </ul>
+              <div
+                v-if="groupName !== UNGROUPED_NAME"
+                :id="`level-primary-group-${groupName}`"
+                class="level-primary-group-name"
+                data-testid="level-primary-group-name"
+              >
+                {{ groupName }}
+              </div>
+              <ul
+                :aria-labelledby="`level-primary-group-${groupName}`"
+                class="level-primary top-items"
+              >
+                <SidebarItem
+                  v-for="item in groupItems"
+                  :key="item.name"
+                  :item="item"
+                  @click="itemClick"
+                >
+                  <template #[`sidebar-icon-${item.key}`]>
+                    <slot :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`" />
+                  </template>
+                </SidebarItem>
+              </ul>
+            </template>
+          </template>
 
           <div
             v-if="topNavItems.length && bottomNavItems.length"
@@ -209,26 +225,26 @@ const prepareNavItems = (items: SidebarPrimaryItem[]): SidebarPrimaryItem[] => {
 const topNavItems = computed(() => props.topItems.length ? prepareNavItems(props.topItems) : [])
 const bottomNavItems = computed(() => props.bottomItems.length ? prepareNavItems(props.bottomItems) : [])
 
+const UNGROUPED_NAME = '_ungrouped'
 const topNavGroups = computed((): Map<string, SidebarPrimaryItem[]> => {
   // Create a Map to store grouped items, ensuring insertion order is preserved.
   const groups = new Map<string, SidebarPrimaryItem[]>()
-  const UNGROUPED_KEY = '_ungrouped'
 
   // Initialize the "_ungrouped" group first to ensure it appears first when iterating through the groups.
   // (Meaning ungrouped L1 navigation items will appear first in the sidebar).
-  groups.set(UNGROUPED_KEY, [])
+  groups.set(UNGROUPED_NAME, [])
 
   // Loop through all top nav items and organize them by group
   for (const item of topNavItems.value) {
-    const groupKey = item.group || UNGROUPED_KEY
+    const groupName = item.group || UNGROUPED_NAME
 
     // Initialize the group array if it doesn't exist
-    if (!groups.has(groupKey)) {
-      groups.set(groupKey, [])
+    if (!groups.has(groupName)) {
+      groups.set(groupName, [])
     }
 
     // Add the item to its group
-    groups.get(groupKey)?.push(item)
+    groups.get(groupName)?.push(item)
   }
 
   return groups
@@ -619,6 +635,7 @@ onBeforeUnmount(() => {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    margin-bottom: $kui-space-40;
     padding: $kui-space-0 $kui-space-10 $kui-space-0 $kui-space-50; // if changed, ensure you test in ALL browsers
     width: 100%;
     // Adjust padding for Safari-only
@@ -629,6 +646,15 @@ onBeforeUnmount(() => {
     &:last-of-type {
       margin-bottom: $sidebar-header-spacing * 4;
     }
+  }
+
+  .level-primary-group-name {
+    color: $kui-navigation-color-text;
+    font-size: $kui-font-size-20;
+    font-weight: $kui-font-weight-bold;
+    line-height: $kui-line-height-40;
+    opacity: 70%; // TODO: We should change this before merge
+    padding: $kui-space-0 calc($kui-space-50 + $kui-space-40);
   }
 }
 
