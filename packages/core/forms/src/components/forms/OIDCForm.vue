@@ -14,7 +14,7 @@
         <div class="general-settings">
           <div class="link-wrapper">
             <KExternalLink
-              href="https://docs.konghq.com/hub/kong-inc/openid-connect/#important-configuration-parameters"
+              :href="openIdConfigurationDocs"
             >
               <span class="section-header">Common Configuration Settings</span>
             </KExternalLink>
@@ -56,7 +56,7 @@
       <template #authorization>
         <div class="general-settings">
           <div class="link-wrapper">
-            <KExternalLink href="https://docs.konghq.com/hub/kong-inc/openid-connect/#authorization">
+            <KExternalLink :href="openIdAuthorizationDocs">
               <span class="section-header">Authorization Configuration Settings</span>
             </KExternalLink>
           </div>
@@ -82,7 +82,7 @@
       <template #advanced>
         <div class="general-settings">
           <div class="link-wrapper">
-            <KExternalLink href="https://docs.konghq.com/hub/kong-inc/openid-connect/">
+            <KExternalLink :href="openIdConnectLink">
               <span class="section-header">Advanced Configuration Settings</span>
             </KExternalLink>
           </div>
@@ -110,6 +110,7 @@
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '../../const'
 import composables from '../../composables'
 import VueFormGenerator from '../FormGenerator.vue'
+import externalLinks from '../../externalLinks'
 
 const COMMON_FIELD_MODELS = new Set([
   'config-client_id',
@@ -180,6 +181,9 @@ export default {
       globalFields: null,
       commonFieldsSchema: null,
       authFieldsSchema: null,
+      openIdConnectLink: externalLinks.openIdConnectDocs,
+      openIdConfigurationDocs: externalLinks.openIdConfigurationDocs,
+      openIdAuthorizationDocs: externalLinks.openIdAuthorizationDocs,
       advancedFieldsSchema: {
         fields: [],
       },
@@ -276,7 +280,7 @@ export default {
 
                   fields.push({
                     ...field,
-                    link: 'https://docs.konghq.com/hub/kong-inc/openid-connect/#jwk-record',
+                    link: this.openIdConnectLink,
                     newElementButtonLabel: '+ Add Client JWK',
                     ...Array.isArray(field.items?.schema?.fields)
                     && field.items.schema.fields.map(itemField => ({ ...itemField, label: itemField.model })),
@@ -286,7 +290,7 @@ export default {
                 case 'config-session_redis_cluster_nodes': {
                   fields.push({
                     ...field,
-                    link: 'https://docs.konghq.com/hub/kong-inc/openid-connect/#host-record',
+                    link: this.openIdConnectLink,
                     newElementButtonLabel: '+ Add Cluster Node',
                   })
                   break
