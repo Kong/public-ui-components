@@ -23,7 +23,7 @@
           v-model="filterQuery"
           :config="filterConfig"
         />
-        <PermissionsWrapper :auth-function="() => canCreate()">
+        <PermissionsWrapper :auth-function="canCreate">
           <KButton
             v-if="useToolbarCreationButton"
             appearance="primary"
@@ -55,9 +55,8 @@
             </KButton>
             <PermissionsWrapper
               v-if="!useToolbarCreationButton"
-              :auth-function="() => canCreate()"
+              :auth-function="canCreate"
             >
-              <!-- Hide Create button if table is empty -->
               <KButton
                 appearance="primary"
                 data-testid="toolbar-add-certificate"

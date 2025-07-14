@@ -25,9 +25,8 @@
         />
         <PermissionsWrapper
           v-if="useToolbarCreationButton"
-          :auth-function="() => canCreate()"
+          :auth-function="canCreate"
         >
-          <!-- Hide Create button if table is empty -->
           <KButton
             appearance="primary"
             data-testid="toolbar-add-ca-certificate"
@@ -58,9 +57,8 @@
             </KButton>
             <PermissionsWrapper
               v-if="!useToolbarCreationButton"
-              :auth-function="() => canCreate()"
+              :auth-function="canCreate"
             >
-              <!-- Hide Create button if table is empty -->
               <KButton
                 appearance="primary"
                 data-testid="toolbar-add-ca-certificate"
