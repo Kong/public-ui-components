@@ -86,7 +86,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { ref, computed, watch, useSlots, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import type { SidebarPrimaryItem } from '../../types'
+import type { SidebarPrimaryItem, SidebarPrimaryItemGroup } from '../../types'
 import SidebarItem from '../sidebar/SidebarItem.vue'
 import { FocusTrap } from 'focus-trap-vue'
 import { useDebounce } from '../../composables'
@@ -100,7 +100,7 @@ const props = defineProps({
     default: () => ([]),
   },
   bottomItems: {
-    type: Array as PropType<SidebarPrimaryItem[]>,
+    type: Array as PropType<Omit<SidebarPrimaryItem, 'group'>[]>,
     default: () => ([]),
   },
   headerHeight: {
@@ -209,6 +209,32 @@ const prepareNavItems = (items: SidebarPrimaryItem[]): SidebarPrimaryItem[] => {
 const topNavItems = computed(() => props.topItems.length ? prepareNavItems(props.topItems) : [])
 const bottomNavItems = computed(() => props.bottomItems.length ? prepareNavItems(props.bottomItems) : [])
 
+const topNavGroups = computed((): Map<string, SidebarPrimaryItem[]> => {
+  // Create a Map to store grouped items, ensuring insertion order is preserved.
+  const groups = new Map<SidebarPrimaryItemGroup | '_ungrouped', SidebarPrimaryItem[]>()
+
+  // Initialize the "_ungrouped" group first to ensure it appears first when iterating through the groups.
+  // (Meaning ungrouped L1 navigation items will appear first in the sidebar).
+  groups.set('_ungrouped', [])
+
+  // Loop through all top nav items and organize them by group
+  for (const item of topNavItems.value) {
+    const groupKey = item.group || '_ungrouped'
+
+    // Initialize the group array if it doesn't exist
+    if (!groups.has(groupKey)) {
+      groups.set(groupKey, [])
+    }
+
+    // Add the item to its group
+    groups.get(groupKey)?.push(item)
+  }
+
+  return groups
+})
+
+console.log('topNavGroups', topNavGroups.value)
+
 // Do not manually set the value of `mobileSidebarOpen`; always call `toggleSidebar(true/false)`
 const mobileSidebarOpen = ref<boolean>(props.open)
 const toggleSidebar = (isOpen: boolean) => {
@@ -219,7 +245,7 @@ const toggleSidebar = (isOpen: boolean) => {
 
   // Add or remove a class from the `body` tag when the sidebar is opened/closed
   // This allows for the consuming app to add CSS to prevent overflow-y while the sidebar is open
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+
   isOpen ? document?.body?.classList.add('kong-ui-app-sidebar-open') : document?.body?.classList.remove('kong-ui-app-sidebar-open')
 
   // Always reset to false
@@ -335,7 +361,7 @@ const getScrollbarWidth = (): void => {
   const widthWithScroll = innerElement.offsetWidth
 
   // remove inner elements
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+
   outerElement.parentNode && outerElement.parentNode.removeChild(outerElement)
 
   const scrollbarWidth = widthNoScroll - widthWithScroll
