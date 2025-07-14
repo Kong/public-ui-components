@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import useUrlValidators from './useUrlValidators'
 import composables from '.'
-import type { SelectItem } from '@kong/kongponents/dist/types'
+import type { SelectItem } from '@kong/kongponents'
 
 describe('validateHost()', () => {
   const { i18n: { t } } = composables.useI18n()

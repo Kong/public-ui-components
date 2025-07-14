@@ -99,7 +99,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import english from '../locales/en.json'
 import { getRedisType, getPartialTypeDisplay } from '../utils/redisPartial'
 import type { PartialType, RedisConfigurationFields } from '../types'
-import type { SelectItem } from '@kong/kongponents/dist/types'
+import type { SelectItem } from '@kong/kongponents'
 import type { Field } from '../composables/useRedisPartial'
 import RedisConfigCard from './RedisConfigCard.vue'
 
