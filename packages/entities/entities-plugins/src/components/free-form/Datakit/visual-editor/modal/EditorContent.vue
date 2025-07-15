@@ -1,8 +1,8 @@
 <template>
-  <div class="dk-editor-panel">
+  <div class="dk-editor-content">
     <aside
-      class="sidebar"
-      :class="{ expanded: sidebarExpanded }"
+      class="side-panel"
+      :class="{ expanded: sidePanelExpanded }"
     >
       <header class="header">
         <h2 class="title">
@@ -29,26 +29,26 @@ import EditorMain from './EditorMain.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { sidebarExpanded } = usePreferences()
+const { sidePanelExpanded } = usePreferences()
 </script>
 
 <style lang="scss" scoped>
-.dk-editor-panel {
+.dk-editor-content {
   background-color: $kui-color-background-neutral-weakest;
   border-top-left-radius: $kui-border-radius-30;
   display: flex;
   overflow: hidden;
   position: relative;
 
-  .sidebar {
+  .side-panel {
     border-right: 1px solid $kui-color-border;
     display: flex;
     flex-direction: column;
     /* stylelint-disable-next-line custom-property-pattern */
-    margin-left: calc(var(--dk-sidebar-width) * -1);
+    margin-left: calc(var(--dk-side-panel-width) * -1);
     transition: margin-left 0.2s ease-in-out;
     /* stylelint-disable-next-line custom-property-pattern */
-    width: var(--dk-sidebar-width);
+    width: var(--dk-side-panel-width);
 
     &.expanded {
       margin-left: 0;

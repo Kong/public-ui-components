@@ -5,13 +5,13 @@ const editorMode = useLocalStorage<EditorMode>('datakit-editor-mode', 'visual', 
   listenToStorageChanges: false,
 })
 
-const sidebarExpanded = useLocalStorage<boolean>('datakit-visual-editor-sidebar-expanded', true, {
+const sidePanelExpanded = useLocalStorage<boolean>('datakit-visual-editor-sidebar-expanded', true, {
   listenToStorageChanges: false,
 })
 
 export function usePreferences() {
   return {
     editorMode,
-    sidebarExpanded,
+    sidePanelExpanded,
   }
 }

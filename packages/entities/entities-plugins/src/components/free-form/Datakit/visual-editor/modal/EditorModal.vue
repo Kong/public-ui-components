@@ -6,11 +6,11 @@
   >
     <EditorNav
       class="nav"
-      @back="handleBack"
+      @back="close"
     />
     <EditorPanel
-      ref="panel"
-      class="panel"
+      ref="content"
+      class="content"
       tabindex="0"
     />
   </div>
@@ -22,7 +22,7 @@ import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 import { nextTick, useTemplateRef, watch } from 'vue'
 
 import EditorNav from './EditorNav.vue'
-import EditorPanel from './EditorPanel.vue'
+import EditorPanel from './EditorContent.vue'
 
 const modal = useTemplateRef('modal')
 
@@ -32,11 +32,11 @@ const emit = defineEmits<{
   close: []
 }>()
 
-const panel = useTemplateRef('panel')
+const content = useTemplateRef('content')
 const isLocked = useScrollLock(document)
 const { activate, deactivate } = useFocusTrap(modal, {
   returnFocusOnDeactivate: true,
-  initialFocus: () => panel.value?.$el,
+  initialFocus: () => content.value?.$el,
 })
 
 watch(open, async (value) => {
@@ -51,11 +51,10 @@ watch(open, async (value) => {
   }
 }, { immediate: true })
 
-function handleBack() {
+function close() {
   open.value = false
   emit('close')
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -72,7 +71,7 @@ function handleBack() {
   z-index: 1000;
 
   /* stylelint-disable custom-property-pattern */
-  --dk-sidebar-width: 220px;
+  --dk-side-panel-width: 220px;
   --dk-header-height: 44px;
   /* stylelint-enable custom-property-pattern */
 
@@ -80,7 +79,7 @@ function handleBack() {
     flex-grow: 0;
   }
 
-  .panel {
+  .content {
     flex-grow: 1;
     outline: none;
   }

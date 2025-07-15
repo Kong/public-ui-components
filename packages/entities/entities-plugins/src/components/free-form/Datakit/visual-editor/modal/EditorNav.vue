@@ -26,24 +26,24 @@
     </div>
     <div class="bottom">
       <div
-        class="sidebar-toggle"
-        :class="{ expanded: sidebarExpanded }"
-        @transitionend.self="sidebarToggling = false"
-        @transitionstart.self="sidebarToggling = true"
+        class="side-panel-toggle"
+        :class="{ expanded: sidePanelExpanded }"
+        @transitionend.self="sidePanelToggling = false"
+        @transitionstart.self="sidePanelToggling = true"
       >
         <KTooltip
-          :label="sidebarToggling ? undefined : toggleLabel"
-          :placement="sidebarExpanded ? 'left' : 'right'"
+          :label="sidePanelToggling ? undefined : toggleLabel"
+          :placement="sidePanelExpanded ? 'left' : 'right'"
         >
           <KButton
             appearance="none"
             class="nav-item nav-item-toggle"
             icon
             size="large"
-            @click="handleSidebarToggle"
+            @click="handlePanelToggle"
           >
             <ChevronDoubleLeftIcon
-              v-if="sidebarExpanded"
+              v-if="sidePanelExpanded"
               decorative
               :size="KUI_ICON_SIZE_40"
             />
@@ -78,30 +78,28 @@ const emit = defineEmits<{
 
 const navItems: EditorModalNavItem[] = [
   {
-    label: t('plugins.free-form.datakit.visual_editor.mode'),
+    label: t('plugins.free-form.datakit.visual_editor.return_to_config'),
     icon: ArrowLeftIcon,
     onClick: () => emit('back'),
   },
 ]
 
-const { sidebarExpanded } = usePreferences()
+const { sidePanelExpanded } = usePreferences()
 
 const toggleLabel = computed(() => {
-  return sidebarExpanded.value
-    ? t('plugins.free-form.datakit.visual_editor.collapse_sidebar')
-    : t('plugins.free-form.datakit.visual_editor.expand_sidebar')
+  return sidePanelExpanded.value
+    ? t('plugins.free-form.datakit.visual_editor.collapse_panel')
+    : t('plugins.free-form.datakit.visual_editor.expand_panel')
 })
 
-const sidebarToggling = ref(false)
+const sidePanelToggling = ref(false)
 
-function handleSidebarToggle() {
-  sidebarExpanded.value = !sidebarExpanded.value
+function handlePanelToggle() {
+  sidePanelExpanded.value = !sidePanelExpanded.value
 }
 </script>
 
 <style lang="scss" scoped>
-$sidebar-width: 220px;
-
 .dk-editor-nav {
   align-items: center;
   display: flex;
@@ -178,7 +176,7 @@ $sidebar-width: 220px;
     }
   }
 
-  .sidebar-toggle {
+  .side-panel-toggle {
     left: 0;
     position: absolute;
     transition: left 0.2s ease-out;
@@ -186,7 +184,7 @@ $sidebar-width: 220px;
 
     &.expanded {
       /* stylelint-disable-next-line custom-property-pattern */
-      left: calc(var(--dk-sidebar-width) - 8px); // Leave space for the scrollbar
+      left: calc(var(--dk-side-panel-width) - 8px); // Leave space for the scrollbar
     }
   }
 }

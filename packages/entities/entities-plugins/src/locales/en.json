@@ -676,8 +676,10 @@
           "name": "Datakit Visual Editor",
           "cta": "Go to visual editor",
           "save": "Save",
-          "expand_sidebar": "Expand sidebar",
-          "collapse_sidebar": "Collapse sidebar"
+          "view_docs": "View Docs",
+          "expand_panel": "Expand panel",
+          "collapse_panel": "Collapse panel",
+          "return_to_config": "Return to Plugin configuration"
         },
         "code_editor": {
           "mode": "Code Editor"
