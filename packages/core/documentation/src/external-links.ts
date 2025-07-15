@@ -1,3 +1,3 @@
 export default {
-  serviceDocumentationDocs: 'https://developer.konghq.com/dev-portal/#main',
+  serviceDocumentationDocs: 'https://developer.konghq.com/service-catalog/',
 }

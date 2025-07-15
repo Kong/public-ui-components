@@ -181,7 +181,8 @@ export default {
       globalFields: null,
       commonFieldsSchema: null,
       authFieldsSchema: null,
-      openIdConnectLink: externalLinks.openIdConnectDocs,
+      openIdConnectJWKLink: externalLinks.openIdConnectJWKDocs,
+      openIdConnectClusterNodesLink: externalLinks.openIdConnectClusterNodesDocs,
       openIdConfigurationDocs: externalLinks.openIdConfigurationDocs,
       openIdAuthorizationDocs: externalLinks.openIdAuthorizationDocs,
       advancedFieldsSchema: {
@@ -280,7 +281,7 @@ export default {
 
                   fields.push({
                     ...field,
-                    link: this.openIdConnectLink,
+                    link: this.openIdConnectJWKLink,
                     newElementButtonLabel: '+ Add Client JWK',
                     ...Array.isArray(field.items?.schema?.fields)
                     && field.items.schema.fields.map(itemField => ({ ...itemField, label: itemField.model })),
@@ -290,7 +291,7 @@ export default {
                 case 'config-session_redis_cluster_nodes': {
                   fields.push({
                     ...field,
-                    link: this.openIdConnectLink,
+                    link: this.openIdConnectClusterNodesLink,
                     newElementButtonLabel: '+ Add Cluster Node',
                   })
                   break
