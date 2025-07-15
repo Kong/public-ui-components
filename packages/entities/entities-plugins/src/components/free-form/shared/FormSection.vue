@@ -22,7 +22,10 @@
           </slot>
         </div>
       </div>
-      <div class="header-extra">
+      <div
+        v-if="slots.extra"
+        class="header-extra"
+      >
         <slot name="extra" />
       </div>
     </header>
