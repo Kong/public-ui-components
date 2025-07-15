@@ -181,6 +181,7 @@ export default {
       globalFields: null,
       commonFieldsSchema: null,
       authFieldsSchema: null,
+      openIdConnectLink: externalLinks.openIdConnectDocs,
       openIdConnectJWKLink: externalLinks.openIdConnectJWKDocs,
       openIdConnectClusterNodesLink: externalLinks.openIdConnectClusterNodesDocs,
       openIdConfigurationDocs: externalLinks.openIdConfigurationDocs,
