@@ -643,7 +643,7 @@ onBeforeUnmount(() => {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    margin-bottom: $kui-space-40;
+    margin-bottom: $kui-space-80;
     padding: $kui-space-0 $kui-space-10 $kui-space-0 $kui-space-50; // if changed, ensure you test in ALL browsers
     width: 100%;
     // Adjust padding for Safari-only
@@ -661,6 +661,7 @@ onBeforeUnmount(() => {
     font-size: $kui-font-size-20;
     font-weight: $kui-font-weight-medium;
     line-height: $kui-line-height-40;
+    margin-bottom: $kui-space-40;
     padding: $kui-space-0 calc($kui-space-50 + $kui-space-40);
     text-transform: uppercase;
     user-select: none;
