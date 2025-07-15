@@ -663,8 +663,8 @@
         "by_lua_placeholder": "Enter Lua script here..."
       },
       "datakit": {
-        "description_code": "Configuration this plugin by using YAML configuration. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
-        "description_visual": "Configuration this plugin by using the visual editor.",
+        "description_code": "Configure this plugin by using YAML configuration. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
+        "description_visual": "Configure this plugin by using the visual editor.",
         "description_example": "Start with a use case:",
         "examples": {
           "authenticate": "Authenticate Kong to a third-party service",
