@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.5.0...@kong-ui-public/app-layout@4.5.1) (2025-07-15)
+
+
+### Bug Fixes
+
+* **app-layout:** group name styles ([#2216](https://github.com/Kong/public-ui-components/issues/2216)) ([bbb8252](https://github.com/Kong/public-ui-components/commit/bbb8252b07401e23e28fe09bb3220c3b1076417f))
+
+
+
+
+
 # [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.8...@kong-ui-public/app-layout@4.5.0) (2025-07-14)
 
 
