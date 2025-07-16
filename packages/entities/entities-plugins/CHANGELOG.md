@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.29.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.5...@kong-ui-public/entities-plugins@9.29.0) (2025-07-16)
+
+
+### Features
+
+* **entities-plugins:** datakit visual editor modal ([#2208](https://github.com/Kong/public-ui-components/issues/2208)) ([67fd162](https://github.com/Kong/public-ui-components/commit/67fd162844df52ae05b47dbb1154537918c5743f))
+
+
+
+
+
 ## [9.28.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.4...@kong-ui-public/entities-plugins@9.28.5) (2025-07-14)
 
 
