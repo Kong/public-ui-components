@@ -12,13 +12,13 @@
         class="title-tooltip"
         :disabled="!isTitleTruncated"
         max-width="500"
-        :text="definition.chart.chartTitle"
+        :text="definition.chart.chart_title"
       >
         <div
           ref="titleRef"
           class="title"
         >
-          {{ definition.chart.chartTitle }}
+          {{ definition.chart.chart_title }}
         </div>
       </KTooltip>
       <div
@@ -129,7 +129,12 @@
 </template>
 <script setup lang="ts">
 import type { DashboardRendererContextInternal } from '../types'
-import { type DashboardTileType, formatTime, type TileDefinition, TimePeriods } from '@kong-ui-public/analytics-utilities'
+import {
+  type DashboardTileType,
+  formatTime,
+  type TileDefinition,
+  TimePeriods,
+} from '@kong-ui-public/analytics-utilities'
 import { type Component, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
@@ -208,8 +213,8 @@ const exploreLink = computed(() => {
 
   } as ExploreQuery | AiExploreQuery
 
-  // Explore only supports advanced or ai
-  const datasource = ['advanced', 'ai'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'advanced'
+  // Explore only supports API usage and LLM usage.
+  const datasource = ['api_usage', 'llm_usage'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'api_usage'
 
   return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
 })
@@ -220,7 +225,7 @@ const canShowTitleActions = computed((): boolean => (canShowKebabMenu.value && (
 
 const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
 
-const kebabMenuHasItems = computed((): boolean => !!exploreLink.value || ('allowCsvExport' in props.definition.chart && props.definition.chart.allowCsvExport) || props.context.editable)
+const kebabMenuHasItems = computed((): boolean => !!exploreLink.value || ('allow_csv_export' in props.definition.chart && props.definition.chart.allow_csv_export) || props.context.editable)
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,

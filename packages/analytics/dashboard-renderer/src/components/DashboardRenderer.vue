@@ -10,7 +10,7 @@
       :is="context.editable ? DraggableGridLayout : GridLayout"
       v-else
       ref="gridLayoutRef"
-      :tile-height="model.tileHeight"
+      :tile-height="model.tile_height"
       :tiles="gridTiles"
       @update-tiles="handleUpdateTiles"
     >
@@ -26,7 +26,7 @@
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
-          :height="tile.layout.size.rows * (model.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+          :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
           :query-ready="queryReady"
           :refresh-counter="refreshCounter"
           :tile-id="tile.id"
@@ -169,7 +169,7 @@ const gridTiles = computed(() => {
 
 const mergedContext = computed<DashboardRendererContextInternal>(() => {
   let { tz, refreshInterval, editable } = props.context
-  const filters = [...(props.context.filters ?? []), ...(model.value.global_filters ?? [])] as AllFilters[]
+  const filters = [...(props.context.filters ?? []), ...(model.value.preset_filters ?? [])] as AllFilters[]
 
   if (!tz) {
     tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
@@ -209,11 +209,12 @@ const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
     ? { ...tile.meta.chart }
     : {
       ...tile.meta.chart,
-      chartTitle: tile.meta.chart.chartTitle ? `Copy of ${tile.meta.chart.chartTitle}` : '',
+      chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
     }
 
   const newTile: TileConfig = {
     id: crypto.randomUUID(),
+    type: 'chart',
     definition: {
       ...tile.meta,
       chart,
