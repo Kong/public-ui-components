@@ -39,7 +39,9 @@
                 :size="KUI_ICON_SIZE_20"
               />
             </KTooltip>
-            {{ badgeData }}
+            <span class="badge-text">
+              {{ badgeData }}
+            </span>
           </div>
         </KBadge>
         <EditIcon
