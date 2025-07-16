@@ -29,15 +29,19 @@
       <template #item="{ item }">
         <div class="entity-suggestion-item">
           <span class="entity-label">
-            {{ item.label }}
-          </span><span class="entity-id">
+            {{ item.label || '–' }}
+          </span>
+          <span class="entity-id">
             {{ item.id }}
           </span>
         </div>
       </template>
 
       <template #selected-item="{ item }">
-        <span>{{ item.label }} - {{ item.id }}</span>
+        <span class="selected-entity-item">
+          <span class="selected-entity-label">{{ item.label || '–' }}</span>
+          <span class="selected-entity-id">({{ item.id }})</span>
+        </span>
       </template>
     </FieldScopedEntitySelect>
   </component>
@@ -301,6 +305,18 @@ export default {
   }
 
   .entity-id {
+    color: $kui-color-text-neutral;
+    font-size: $kui-font-size-20;
+  }
+}
+
+.selected-entity-item {
+  .selected-entity-label {
+    font-weight: $kui-font-weight-bold;
+    margin-right: $kui-space-30;
+  }
+
+  .selected-entity-id {
     color: $kui-color-text-neutral;
     font-size: $kui-font-size-20;
   }

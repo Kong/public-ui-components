@@ -142,7 +142,7 @@ const inlineSearch = (pattern: string) => {
 
   suggestions.value = rawData.value.filter((entity) => {
     return fields.some((field) => {
-      return (entity[field] || '').contains(pattern)
+      return (entity[field] || '').includes(pattern)
     })
   }).map(transformItem)
 }
