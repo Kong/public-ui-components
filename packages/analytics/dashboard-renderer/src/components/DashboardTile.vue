@@ -26,7 +26,10 @@
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
-        <KBadge v-if="badgeData">
+        <KBadge
+          v-if="badgeData"
+          data-testid="time-range-badge"
+        >
           <div class="badge-content">
             <KTooltip
               v-if="isAgedOutQuery"
