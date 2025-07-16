@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.7.12...@kong-ui-public/dashboard-renderer@5.7.13) (2025-07-16)
+
+
+### Bug Fixes
+
+* aged out data warning on dashboard tiles ([#2218](https://github.com/Kong/public-ui-components/issues/2218)) ([694763d](https://github.com/Kong/public-ui-components/commit/694763d45ceac77581bebc0a6204d926a80cdb33))
+
+
+
+
+
 ## [5.7.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.7.11...@kong-ui-public/dashboard-renderer@5.7.12) (2025-07-16)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
