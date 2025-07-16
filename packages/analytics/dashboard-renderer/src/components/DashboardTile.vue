@@ -26,8 +26,20 @@
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
-        <KBadge v-if="badgeData">
-          {{ badgeData }}
+        <KBadge
+          v-if="badgeData"
+          data-testid="time-range-badge"
+          :tooltip="isAgedOutQuery ? agedOutWarning : undefined"
+        >
+          <template
+            v-if="isAgedOutQuery"
+            #icon
+          >
+            <WarningIcon :size="KUI_ICON_SIZE_20" />
+          </template>
+          <span class="badge-text">
+            {{ badgeData }}
+          </span>
         </KBadge>
         <EditIcon
           v-if="canShowKebabMenu && context.editable"
@@ -125,11 +137,11 @@ import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
-import { KUI_SPACE_70 } from '@kong/design-tokens'
+import { KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { MoreIcon, EditIcon } from '@kong/icons'
+import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
@@ -262,6 +274,20 @@ const badgeData = computed<string | null>(() => {
 
 const chartDataGranularity = computed(() => {
   return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
+})
+
+const isTimeSeriesChart = computed(() => {
+  return ['timeseries_line', 'timeseries_bar'].includes(props.definition.chart.type)
+})
+
+const isAgedOutQuery = computed(() => {
+  const savedGranularity = props.definition.query.granularity
+  const queryGranularity = msToGranularity(chartData.value?.meta.granularity_ms || 0)
+  return isTimeSeriesChart.value && savedGranularity !== queryGranularity
+})
+
+const agedOutWarning = computed(() => {
+  return i18n.t('query_aged_out_warning', { granularity: i18n.t(`granularities.${props.definition.query.granularity}` as any) })
 })
 
 const editTile = () => {
