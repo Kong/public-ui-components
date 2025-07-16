@@ -22,7 +22,7 @@
             <h2>
               Get started with the CLI
             </h2>
-            <KExternalLink href="https://docs.konghq.com/">
+            <KExternalLink href="https://developer.konghq.com/">
               Read the docs
             </KExternalLink>
           </div>
