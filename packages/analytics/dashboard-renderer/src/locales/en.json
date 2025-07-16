@@ -22,15 +22,15 @@
   "query_aged_out_warning": "The saved query's granularity of \"{granularity}\" is no longer available because the data has aged out. Update with new granularity to ensure accurate reporting.",
   "granularities": {
     "daily": "1 day",
-    "five_minutely": "5 minutes",
+    "fiveMinutely": "5 minutes",
     "hourly": "1 hour",
     "minutely": "1 minute",
-    "ten_minutely": "10 minutes",
-    "ten_secondly": "10 seconds",
-    "thirty_minutely": "30 minutes",
-    "thirty_secondly": "30 seconds",
-    "twelve_hourly": "12 hours",
-    "two_hourly": "2 hours",
+    "tenMinutely": "10 minutes",
+    "tensecondly": "10 seconds",
+    "thirtyMinutely": "30 minutes",
+    "thirtySecondly": "30 seconds",
+    "twelveHourly": "12 hours",
+    "twoHourly": "2 hours",
     "weekly": "1 week"
   }
 }
