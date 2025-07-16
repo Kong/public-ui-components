@@ -7,7 +7,7 @@ export const calculateRowDefs = (tileHeight: number, tiles: Array<GridTile<unkno
   tiles.forEach(t => {
     const row = t.layout.position.row
     const existingVal = rowMap.get(row)
-    const eligibleForAutofit = t.layout.size.rows === 1 && !!t.layout.size.fitToContent
+    const eligibleForAutofit = t.layout.size.rows === 1 && !!t.layout.size.fit_to_content
 
     rowCount = Math.max(rowCount, row + t.layout.size.rows)
 

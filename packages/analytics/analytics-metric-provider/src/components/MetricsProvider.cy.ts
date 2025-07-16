@@ -270,7 +270,7 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        datasource: 'advanced',
+        datasource: 'api_usage',
         additionalFilter,
       },
       global: {
