@@ -24,6 +24,8 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/entities-plugins-metadata',
         '@kong-ui-public/entities-routes',
         '@kong-ui-public/forms',
+        '@vueuse/core',
+        '@vueuse/integrations',
         'marked',
         'monaco-editor',
       ],

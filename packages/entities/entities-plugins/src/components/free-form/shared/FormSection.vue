@@ -13,11 +13,20 @@
             {{ title }}
           </slot>
         </h2>
-        <div class="header-description">
+        <div
+          v-if="description || slots.description"
+          class="header-description"
+        >
           <slot name="description">
             {{ description }}
           </slot>
         </div>
+      </div>
+      <div
+        v-if="slots.extra"
+        class="header-extra"
+      >
+        <slot name="extra" />
       </div>
     </header>
     <div class="content">
@@ -29,20 +38,22 @@
 <script setup lang="ts">
 defineProps<{
   step?: number
-  title?: string
+  title: string
   description?: string
 }>()
 
-defineSlots<{
+const slots = defineSlots<{
   default?: () => any
   title?: () => any
   description?: () => any
+  extra?: () => any
 }>()
 </script>
 
 <style lang="scss" scoped>
 .ff-form-section {
   .header {
+    align-items: flex-start;
     display: flex;
     gap: $kui-space-40;
   }
@@ -62,7 +73,7 @@ defineSlots<{
   .header-content {
     align-items: flex-start;
     display: flex;
-    flex: 1 0 0;
+    flex: 1 1 auto;
     flex-direction: column;
     gap: $kui-space-40;
     padding-top: $kui-space-20;
@@ -81,6 +92,14 @@ defineSlots<{
     font-size: $kui-font-size-30;
     line-height: $kui-line-height-30;
     margin: 0;
+  }
+
+  .header-extra {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    gap: $kui-space-40;
+    justify-content: flex-end;
   }
 
   .content {

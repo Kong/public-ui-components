@@ -663,12 +663,26 @@
         "by_lua_placeholder": "Enter Lua script here..."
       },
       "datakit": {
-        "description": "Configure Datakit via YAML below. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
+        "description_code": "Configure this plugin by using YAML configuration. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
+        "description_visual": "Configure this plugin by using the visual editor.",
         "description_example": "Start with a use case:",
         "examples": {
           "authenticate": "Authenticate Kong to a third-party service",
           "combine": "Combine multiple API responses",
           "manipulate": "Manipulate request headers"
+        },
+        "visual_editor": {
+          "mode": "Visual Editor",
+          "name": "Datakit Visual Editor",
+          "cta": "Go to visual editor",
+          "save": "Save",
+          "view_docs": "View Docs",
+          "expand_panel": "Expand panel",
+          "collapse_panel": "Collapse panel",
+          "return_to_config": "Return to Plugin configuration"
+        },
+        "code_editor": {
+          "mode": "Code Editor"
         }
       }
     }
