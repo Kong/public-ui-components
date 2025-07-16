@@ -29,20 +29,17 @@
         <KBadge
           v-if="badgeData"
           data-testid="time-range-badge"
+          :tooltip="isAgedOutQuery ? agedOutWarning : undefined"
         >
-          <div class="badge-content">
-            <KTooltip
-              v-if="isAgedOutQuery"
-              :text="agedOutWarning"
-            >
-              <WarningIcon
-                :size="KUI_ICON_SIZE_20"
-              />
-            </KTooltip>
-            <span class="badge-text">
-              {{ badgeData }}
-            </span>
-          </div>
+          <template
+            v-if="isAgedOutQuery"
+            #icon
+          >
+            <WarningIcon :size="KUI_ICON_SIZE_20" />
+          </template>
+          <span class="badge-text">
+            {{ badgeData }}
+          </span>
         </KBadge>
         <EditIcon
           v-if="canShowKebabMenu && context.editable"
@@ -397,12 +394,6 @@ const exportCsv = () => {
       &:hover {
         cursor: pointer;
       }
-    }
-
-    .badge-content {
-      align-items: center;
-      display: flex;
-      gap: var(--kui-space-20, $kui-space-20);
     }
   }
 
