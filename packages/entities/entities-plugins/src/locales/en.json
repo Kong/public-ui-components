@@ -679,7 +679,18 @@
           "view_docs": "View Docs",
           "expand_panel": "Expand panel",
           "collapse_panel": "Collapse panel",
-          "return_to_config": "Return to Plugin configuration"
+          "return_to_config": "Return to Plugin configuration",
+          "node_panel": {
+            "title": "Node types",
+            "description": "Drag a node onto the canvas to add it to your data flow."
+          },
+          "node_description": {
+            "call": "Call a third-party API",
+            "jq": "Transform data and cast variables with jq",
+            "exit": "Return a response directly to the client",
+            "property": "Get and set Kong Gateway configuration data",
+            "static": "Define static values to use for call nodes"
+          }
         },
         "code_editor": {
           "mode": "Code Editor"

@@ -82,12 +82,12 @@ import StandardLayout from '../shared/layout/StandardLayout.vue'
 import Form from '../shared/Form.vue'
 import EditorModal from './visual-editor/modal/EditorModal.vue'
 import CodeEditor from './CodeEditor.vue'
-import { usePreferences } from './visual-editor/composables'
+import { usePreferences } from './composables'
 import * as examples from './examples'
 
 import type { SegmentedControlOption } from '@kong/kongponents'
 import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { EditorMode } from './visual-editor/types'
+import type { EditorMode } from './types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 

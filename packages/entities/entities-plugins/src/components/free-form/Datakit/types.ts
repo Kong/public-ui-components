@@ -16,3 +16,10 @@ interface EditorModalNavItemBase {
 
 export type EditorModalNavItem = RequireAtLeastOne<EditorModalNavItemBase, 'to' | 'onClick'>
 
+export type NodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
+
+export interface NodeMeta {
+  type: NodeType
+  description: string
+  icon: Component
+}

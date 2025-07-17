@@ -1,0 +1,93 @@
+<template>
+  <div
+    class="dk-node-panel-item"
+    :class="{
+      [`node-type-${type}`]: true,
+    }"
+  >
+    <div class="icon">
+      <Icon :size="16" />
+    </div>
+    <div class="content">
+      <div class="title">
+        {{ type }}
+      </div>
+      <div class="description">
+        {{ description }}
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { NODE_META_MAP } from './node-meta'
+
+import type { NodeType } from '../../types'
+
+const { type } = defineProps<{ type: NodeType }>()
+const {
+  description,
+  icon: Icon,
+} = NODE_META_MAP[type]
+</script>
+
+<style lang="scss" scoped>
+.dk-node-panel-item {
+  align-items: flex-start;
+  align-self: stretch;
+  background: $kui-color-background;
+  border: 1px solid $kui-color-border;
+  border-radius: $kui-border-radius-20;
+  display: flex;
+  gap: $kui-space-40;
+  padding: $kui-space-40;
+
+  .icon {
+    align-items: center;
+    background: $kui-color-background-warning-weakest;
+    border-radius: $kui-border-radius-10;
+    display: flex;
+    padding: $kui-space-30;
+  }
+
+  &.node-type-call .icon {
+    background: $kui-color-background-warning-weakest;
+    color: $kui-color-text-warning;
+  }
+
+  &.node-type-jq .icon {
+    background: $kui-color-background-decorative-purple-weakest;
+    color: $kui-color-text-decorative-purple;
+  }
+
+  &.node-type-exit .icon {
+    background: $kui-color-background-danger-weakest;
+    color: $kui-color-text-danger;
+  }
+
+  &.node-type-property .icon {
+    background: $kui-color-background-success-weakest;
+    color: $kui-color-text-success;
+  }
+
+  &.node-type-static .icon {
+    background: $kui-color-background-primary-weakest;
+    color: $kui-color-text-primary;
+  }
+
+  .content {
+    font-size: $kui-font-size-20;
+    line-height: $kui-line-height-20;
+  }
+
+  .title {
+    color: $kui-color-text-neutral-strongest;
+    font-weight: $kui-font-weight-semibold;
+  }
+
+  .description {
+    color: $kui-color-text-neutral;
+    margin-top: $kui-space-10;
+  }
+}
+</style>
