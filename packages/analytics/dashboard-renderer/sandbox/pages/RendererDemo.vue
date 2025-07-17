@@ -185,6 +185,7 @@ const dashboardConfig = ref <DashboardConfig>({
             start: '2024-01-01',
             end: '2024-02-01',
           },
+          granularity: 'minutely',
         },
       },
       layout: {

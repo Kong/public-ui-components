@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.46...@kong-ui-public/expressions@1.1.0) (2025-07-17)
+
+
+### Features
+
+* release version 1.0.0 for expressions and redis config ([#2225](https://github.com/Kong/public-ui-components/issues/2225)) ([d922f5b](https://github.com/Kong/public-ui-components/commit/d922f5b6949e1ac1e25d7bbf47c072d183cc4d83))
+
+
+
+
+
+## [0.9.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.45...@kong-ui-public/expressions@0.9.46) (2025-07-16)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
 ## [0.9.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.44...@kong-ui-public/expressions@0.9.45) (2025-07-14)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

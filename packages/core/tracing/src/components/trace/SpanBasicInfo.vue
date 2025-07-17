@@ -39,7 +39,7 @@
       <KExternalLink
         class="docs-link"
         hide-icon
-        href="https://docs.konghq.com/"
+        href="https://developer.konghq.com/"
       >
         {{ t('trace_viewer.view_documentation') }}
       </KExternalLink>

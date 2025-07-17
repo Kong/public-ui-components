@@ -1,6 +1,6 @@
 # @kong-ui-public/expressions
 
-Reusable components to support [Kong's expressions language](https://docs.konghq.com/gateway/latest/reference/expressions-language/).
+Reusable components to support [Kong's expressions language](https://developer.konghq.com/gateway/routing/expressions/).
 
 - [Features](#features)
 - [Requirements](#requirements)

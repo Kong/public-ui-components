@@ -18,5 +18,19 @@
     "defaultFilename": "Chart export",
     "exportAsCsv": "Export as CSV"
   },
-  "jumpToExplore": "Explore"
+  "jumpToExplore": "Explore",
+  "query_aged_out_warning": "The saved query's granularity of \"{granularity}\" is no longer available because the data has aged out. Update with new granularity to ensure accurate reporting.",
+  "granularities": {
+    "daily": "1 day",
+    "fiveMinutely": "5 minutes",
+    "hourly": "1 hour",
+    "minutely": "1 minute",
+    "tenMinutely": "10 minutes",
+    "tensecondly": "10 seconds",
+    "thirtyMinutely": "30 minutes",
+    "thirtySecondly": "30 seconds",
+    "twelveHourly": "12 hours",
+    "twoHourly": "2 hours",
+    "weekly": "1 week"
+  }
 }
