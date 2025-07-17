@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@0.1.0...@kong-ui-public/entities-plugins-icon@1.1.0) (2025-07-17)
+
+
+### Features
+
+* **entities-plugins-icon:** release version 1.0.0 ([#2222](https://github.com/Kong/public-ui-components/issues/2222)) ([2c9553a](https://github.com/Kong/public-ui-components/commit/2c9553a73aa1db69abb6986eddfe621b1dd11343))
+
+
+
+
+
 # [0.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@0.0.2...@kong-ui-public/entities-plugins-icon@0.1.0) (2025-07-04)
 
 
