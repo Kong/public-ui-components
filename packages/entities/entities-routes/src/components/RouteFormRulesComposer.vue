@@ -235,7 +235,7 @@ const cleanDataArr = (entity: RoutingRulesEntities, originalData: any) => {
     return [...originalData]
       .filter((item: Sources | Destinations) => !!item.ip || !!item.port)
       .map((item: Sources | Destinations) => ({
-        ...item,
+        ip: item.ip || undefined,
         port: !item.port && item.port !== 0 ? undefined : item.port,
       }))
   } else if (entity === RoutingRulesEntities.HEADERS) {
