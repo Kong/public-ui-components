@@ -451,7 +451,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           cy.getTestId('route-form-sources-ip-input-1').clear()
           cy.getTestId('route-form-sources-port-input-1').type('8080')
-          cy.getTestId('route-create-form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
+          cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           // destinations
           cy.getTestId('route-form-destinations-ip-input-1').type('127.0.0.2')
@@ -460,7 +461,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           cy.getTestId('route-form-destinations-ip-input-1').clear()
           cy.getTestId('route-form-destinations-port-input-1').type('8000')
-          cy.getTestId('route-create-form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
+          cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
         })
       } // if !routeFlavors || routeFlavors?.traditional
 
@@ -1407,7 +1409,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           cy.getTestId('route-form-sources-ip-input-1').clear()
           cy.getTestId('route-form-sources-port-input-1').type('8080')
-          cy.getTestId('route-create-form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
+          cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
 
           // destinations
           cy.getTestId('route-form-destinations-ip-input-1').type('127.0.0.2')
@@ -1416,7 +1419,8 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
 
           cy.getTestId('route-form-destinations-ip-input-1').clear()
           cy.getTestId('route-form-destinations-port-input-1').type('8000')
-          cy.getTestId('route-create-form-submit').should('be.disabled')
+          cy.getTestId('route-create-form-submit').should('be.enabled').click()
+          cy.wait('@createRoute').then((res) => res.response?.body?.kind).should('eq', 'trad')
         })
       } // if !routeFlavors || routeFlavors?.traditional
 
