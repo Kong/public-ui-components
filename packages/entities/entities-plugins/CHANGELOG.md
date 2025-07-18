@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.30.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.29.4...@kong-ui-public/entities-plugins@9.30.0) (2025-07-18)
+
+
+### Features
+
+* **entities-plugins:** datakit visual editor node panel ([#2226](https://github.com/Kong/public-ui-components/issues/2226)) ([0c5bea4](https://github.com/Kong/public-ui-components/commit/0c5bea4ae3787c668af90edb1ebce44631be84ec))
+
+
+
+
+
 ## [9.29.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.29.3...@kong-ui-public/entities-plugins@9.29.4) (2025-07-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
