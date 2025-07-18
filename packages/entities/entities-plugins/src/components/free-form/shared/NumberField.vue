@@ -15,7 +15,7 @@
       max: between.max,
     }"
     :data-autofocus="isAutoFocus"
-    :data-testid="field.path.value"
+    :data-testid="`ff-${field.path.value}`"
     :model-value="fieldValue ?? ''"
     type="number"
     @update:model-value="handleUpdate"
@@ -53,7 +53,11 @@ const { value: fieldValue, ...field } = useField<number | null>(toRef(() => name
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const between = computed(() => {
-  const [min, max] = (field.schema?.value as NumberLikeFieldSchema).between ?? []
+  const schema = (field.schema?.value as NumberLikeFieldSchema)
+  if (schema.gt) {
+    return { min: schema.gt }
+  }
+  const [min, max] = schema.between ?? []
   return {
     min: props.min ?? min,
     max: props.max ?? max,
