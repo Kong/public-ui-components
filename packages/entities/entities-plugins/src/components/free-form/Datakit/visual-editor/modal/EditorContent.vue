@@ -11,7 +11,7 @@
       </header>
       <div class="body">
         <div class="node-selection-panel">
-          TBD: Node selection panel
+          <NodePanel />
         </div>
       </div>
     </aside>
@@ -24,8 +24,9 @@
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
-import { usePreferences } from '../composables'
+import { usePreferences } from '../../composables'
 import EditorMain from './EditorMain.vue'
+import NodePanel from '../node/NodePanel.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 

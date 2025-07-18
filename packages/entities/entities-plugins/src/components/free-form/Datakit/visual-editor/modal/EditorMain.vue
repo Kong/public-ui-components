@@ -16,7 +16,7 @@
       </div>
     </header>
     <div class="body">
-      Flow content goes here
+      <slot />
     </div>
   </div>
 </template>
@@ -28,6 +28,10 @@ import { ExternalLinkIcon } from '@kong/icons'
 import english from '../../../../../locales/en.json'
 
 const { t } = createI18n<typeof english>('en-us', english)
+
+defineSlots<{
+  default(): any
+}>()
 </script>
 
 <style lang="scss" scoped>

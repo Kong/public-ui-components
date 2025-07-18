@@ -8,7 +8,7 @@
       class="nav"
       @back="close"
     />
-    <EditorPanel
+    <EditorContent
       ref="content"
       class="content"
       tabindex="0"
@@ -22,7 +22,7 @@ import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 import { nextTick, useTemplateRef, watch } from 'vue'
 
 import EditorNav from './EditorNav.vue'
-import EditorPanel from './EditorContent.vue'
+import EditorContent from './EditorContent.vue'
 
 const modal = useTemplateRef('modal')
 
@@ -86,6 +86,7 @@ function close() {
 
   :deep(*) {
     box-sizing: border-box;
+    scrollbar-width: inherit;
   }
 }
 </style>

@@ -65,9 +65,9 @@ import { ArrowLeftIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@k
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
-import { usePreferences } from '../composables'
+import { usePreferences } from '../../composables'
 
-import type { EditorModalNavItem } from '../types'
+import type { EditorModalNavItem } from '../../types'
 import { computed, ref } from 'vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
