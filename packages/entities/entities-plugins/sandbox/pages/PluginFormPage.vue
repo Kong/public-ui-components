@@ -30,7 +30,7 @@ import { FEATURE_FLAGS, PluginForm, useProvideExperimentalFreeForms } from '../.
 
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
 
-// provide(FEATURE_FLAGS.DATAKIT_ENABLE_VISUAL_EDITOR, true)
+provide(FEATURE_FLAGS.DATAKIT_ENABLE_VISUAL_EDITOR, true)
 
 defineProps({
   /** Grab the plugin id and type from the route params */
