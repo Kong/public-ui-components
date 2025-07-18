@@ -3,7 +3,7 @@ import type { GridTile } from '../../types'
 import { describe, it, expect } from 'vitest'
 
 describe('calculateRowDefs', () => {
-  const getMockTile = (col: number, row: number, cols: number, rows: number, fitToContent?: boolean):GridTile<unknown> => ({
+  const getMockTile = (col: number, row: number, cols: number, rows: number, fit_to_content?: boolean): GridTile<unknown> => ({
     layout: {
       position: {
         col,
@@ -12,10 +12,10 @@ describe('calculateRowDefs', () => {
       size: {
         cols,
         rows,
-        ...(fitToContent !== undefined ? { fitToContent } : {}),
+        ...(fit_to_content !== undefined ? { fit_to_content } : {}),
       },
     },
-    id: `test-tile-${col}-${row}-${cols}-${rows}-${fitToContent}`,
+    id: `test-tile-${col}-${row}-${cols}-${rows}-${fit_to_content}`,
     meta: {},
   })
 

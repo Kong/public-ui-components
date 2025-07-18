@@ -24,13 +24,13 @@ import {
   routeExploreResponse,
   summaryDashboardConfig,
   simpleConfigNoFilters,
-  fourByFourDashboardConfigJustCharts, oneTileDashboardConfig,
+  fourByFourDashboardConfigJustCharts,
   simpleConfigGlobalFilters,
 } from '../../sandbox/mock-data'
 import { createPinia, setActivePinia } from 'pinia'
 import { EntityLink } from '@kong-ui-public/entities-shared'
 import { dragTile } from '../test-utils'
-import { ref, watch, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 
 interface MockOptions {
   failToResolveConfig?: boolean
@@ -381,7 +381,7 @@ describe('<DashboardRenderer />', () => {
             definition: {
               chart: {
                 type: 'top_n',
-                entityLink: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
+                entity_link: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
               },
               query: {
                 datasource: 'basic',
@@ -434,7 +434,7 @@ describe('<DashboardRenderer />', () => {
             definition: {
               chart: {
                 type: 'top_n',
-                entityLink: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
+                entity_link: `https://test.com/cp/${CP_ID_TOKEN}/entity/${ENTITY_ID_TOKEN}`,
               },
               query: {
                 datasource: 'basic',
@@ -588,7 +588,7 @@ describe('<DashboardRenderer />', () => {
     }).then(() => {
       cy.get('@fetcher').should('have.callCount', 3)
       cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-        datasource: 'advanced',
+        datasource: 'api_usage',
         query: {
           time_range: { time_range: '7d' },
         },
@@ -628,7 +628,7 @@ describe('<DashboardRenderer />', () => {
       // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
       cy.get('@fetcher').should('have.callCount', 3)
       cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-        datasource: 'advanced',
+        datasource: 'api_usage',
         query: {
           filters: [
             {
@@ -671,7 +671,7 @@ describe('<DashboardRenderer />', () => {
       // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
       cy.get('@fetcher').should('have.callCount', 3)
       cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({
-        datasource: 'advanced',
+        datasource: 'api_usage',
         query: {
           filters: [
             {
@@ -710,7 +710,7 @@ describe('<DashboardRenderer />', () => {
             definition: {
               chart: {
                 type: 'timeseries_line',
-                chartTitle: 'Total Traffic over Time',
+                chart_title: 'Total Traffic over Time',
               },
               query: {
                 metrics: [
@@ -747,7 +747,7 @@ describe('<DashboardRenderer />', () => {
             definition: {
               chart: {
                 type: 'timeseries_line',
-                chartTitle: 'Latency Breakdown over Time',
+                chart_title: 'Latency Breakdown over Time',
               },
               query: {
                 metrics: [
@@ -781,7 +781,7 @@ describe('<DashboardRenderer />', () => {
             definition: {
               chart: {
                 type: 'timeseries_line',
-                chartTitle: 'Total Traffic over Time Global Timeframe',
+                chart_title: 'Total Traffic over Time Global Timeframe',
               },
               query: {
                 metrics: [
@@ -809,7 +809,7 @@ describe('<DashboardRenderer />', () => {
             definition: {
               chart: {
                 type: 'top_n',
-                chartTitle: 'TopN',
+                chart_title: 'TopN',
               },
               query: {
                 metrics: [

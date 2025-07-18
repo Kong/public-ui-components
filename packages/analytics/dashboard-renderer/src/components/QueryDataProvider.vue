@@ -130,7 +130,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
     // matches the datasource.  Currently, this block effectively pretends all queries
     // are advanced in order to make the types work out.
     const mergedQuery: DatasourceAwareQuery = {
-      datasource: datasource as 'advanced',
+      datasource: datasource as 'api_usage',
       query: {
         ...rest as ExploreQuery,
         time_range,

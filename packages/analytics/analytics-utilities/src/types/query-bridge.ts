@@ -8,12 +8,12 @@ export interface BasicDatasourceQuery {
 }
 
 export interface AdvancedDatasourceQuery {
-  datasource: 'advanced'
+  datasource: 'api_usage'
   query: ExploreQuery
 }
 
 export interface AiDatasourceQuery {
-  datasource: 'ai'
+  datasource: 'llm_usage'
   query: AiExploreQuery
 }
 

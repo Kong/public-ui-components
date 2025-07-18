@@ -7,11 +7,11 @@ describe('<DashboardTile />', () => {
   const mockTileDefinition: TileDefinition = {
     chart: {
       type: 'timeseries_line',
-      chartTitle: 'Test Chart',
-      allowCsvExport: true,
+      chart_title: 'Test Chart',
+      allow_csv_export: true,
     },
     query: {
-      datasource: 'advanced',
+      datasource: 'api_usage',
       metrics: [],
       filters: [],
     },

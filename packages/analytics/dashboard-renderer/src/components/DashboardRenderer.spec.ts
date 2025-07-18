@@ -10,6 +10,7 @@ describe('Dashboard schemas', () => {
     const definition: any = {
       tiles: [
         {
+          type: 'chart',
           definition: {
             chart: {
               type: 'horizontal_bar',
@@ -39,11 +40,12 @@ describe('Dashboard schemas', () => {
     const definition: any = {
       tiles: [
         {
+          type: 'chart',
           definition: {
             chart: {
               type: 'gauge',
-              metricDisplay: 'full',
-              reverseDataset: true,
+              metric_display: 'full',
+              reverse_dataset: true,
               numerator: 0,
             },
             query: {
@@ -71,6 +73,7 @@ describe('Dashboard schemas', () => {
     const definition1: any = {
       tiles: [
         {
+          type: 'chart',
           chart: {
             type: 'gauge',
             blah: 'arrgh',
