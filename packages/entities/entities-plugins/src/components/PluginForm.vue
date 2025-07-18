@@ -51,6 +51,7 @@
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
+        @global-action="(name: string, payload: any) => $emit('globalAction', name, payload)"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
         @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
@@ -192,6 +193,7 @@ const emit = defineEmits<{
     }
   ): void
   (e: 'showNewPartialModal', redisType: string): void
+  (e: 'globalAction', name: string, payload: any): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
