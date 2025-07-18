@@ -88,6 +88,7 @@ import * as examples from './examples'
 import type { SegmentedControlOption } from '@kong/kongponents'
 import type { Props } from '../shared/layout/StandardLayout.vue'
 import type { EditorMode } from './types'
+import { FEATURE_FLAGS } from '../../../constants'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -96,7 +97,7 @@ const props = defineProps<Props<any>>()
 // provided by consumer apps
 // TODO: make the default value to `false` to make it opt-in
 // It's currently set to `true` for testing purposes
-const enableVisualEditor = inject<boolean>('DATAKIT_ENABLE_VISUAL_EDITOR', true)
+const enableVisualEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_VISUAL_EDITOR, false)
 
 // Editor mode selection
 

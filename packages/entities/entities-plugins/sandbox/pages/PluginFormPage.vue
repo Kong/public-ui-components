@@ -24,10 +24,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { provide, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { FEATURE_FLAGS, PluginForm, useProvideExperimentalFreeForms } from '../../src'
+
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
-import { PluginForm, useProvideExperimentalFreeForms } from '../../src'
+
+// provide(FEATURE_FLAGS.DATAKIT_ENABLE_VISUAL_EDITOR, true)
 
 defineProps({
   /** Grab the plugin id and type from the route params */
