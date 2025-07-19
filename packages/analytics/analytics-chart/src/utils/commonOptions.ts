@@ -2,12 +2,17 @@ import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Da
 import { formatUnit } from '../utils'
 import { isValid } from 'date-fns'
 import type { Chart, Point, ScatterDataPoint } from 'chart.js'
+import type { TooltipInteractionState } from '../types'
+
+export const isTooltipInteractive = (state: TooltipInteractionState) => {
+  return ['interactive', 'zoom-interactive'].includes(state)
+}
 
 // TODO: we should implement a separate tooltip behavior for each broad chart type
 // as the "tooltip behaviors" are beggining to diverge more across chart types.
 export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext) : void => {
   const { tooltip } = context
-  if (tooltip.opacity === 0 && !tooltipData.locked) {
+  if (tooltip.opacity === 0 && !isTooltipInteractive(tooltipData.state)) {
     tooltipData.showTooltip = false
 
     return
@@ -15,7 +20,7 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
 
   const sortFn = tooltipData.chartTooltipSortFn || ((a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue)
 
-  if (tooltip.body && !tooltipData.locked) {
+  if (tooltip.body && !isTooltipInteractive(tooltipData.state)) {
     const colors = tooltip.labelColors
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 
@@ -132,7 +137,7 @@ export function debounce(fn: (...args: any) => any, delay: number) {
   }
 }
 
-export const generateLegendItems = (chart: Chart, legendValues: LegendValues | null, chartLegendSortFn: ChartLegendSortFn): EnhancedLegendItem[] => {
+export const generateLegendItems = (chart: Chart, legendValues?: LegendValues, chartLegendSortFn?: ChartLegendSortFn): EnhancedLegendItem[] => {
   const data = chart.data as KChartData
 
   // @ts-ignore: ChartJS has incomplete types
