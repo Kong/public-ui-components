@@ -30,6 +30,7 @@
           v-if="badgeData"
           data-testid="time-range-badge"
           :tooltip="isAgedOutQuery ? agedOutWarning : undefined"
+          :tooltip-attributes="{ maxWidth: '320px' }"
         >
           <template
             v-if="isAgedOutQuery"
