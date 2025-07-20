@@ -17,12 +17,14 @@ const dispatchEvent = (eventName: string, chart: Chart, pluginInstance: DragSele
   const xStartValue = chart.scales.x.getValueForPixel(pluginInstance.startX)
   const xEndValue = chart.scales.x.getValueForPixel(pluginInstance.endX)
 
-  chart.canvas.dispatchEvent(new CustomEvent<DragSelectEventDetail>(eventName, {
-    detail: {
-      xStart: xStartValue,
-      xEnd: xEndValue,
-    },
-  }))
+  if (xStartValue && xEndValue) {
+    chart.canvas.dispatchEvent(new CustomEvent<DragSelectEventDetail>(eventName, {
+      detail: {
+        xStart: xStartValue < xEndValue ? xStartValue : xEndValue,
+        xEnd: xEndValue > xStartValue ? xEndValue : xStartValue,
+      },
+    }))
+  }
 }
 
 export class DragSelectPlugin implements Plugin {
