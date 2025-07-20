@@ -10,9 +10,9 @@
     </h3>
     <div class="node-list">
       <NodePanelItem
-        v-for="nodeType in Object.keys(NODE_META_MAP)"
+        v-for="nodeType in (Object.keys(NODE_META_MAP) as Array<NodeType>)"
         :key="nodeType"
-        :type="nodeType as NodeType"
+        :type="nodeType"
       />
     </div>
   </div>

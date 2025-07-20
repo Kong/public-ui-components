@@ -30,6 +30,7 @@
       <VueFlow
         class="flow"
         :nodes="nodes"
+        @nodes-initialized="fitView"
       >
         <Background />
         <Controls />
@@ -51,7 +52,7 @@ import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import { VueFlow, type Node } from '@vue-flow/core'
+import { useVueFlow, VueFlow, type Node } from '@vue-flow/core'
 import { ref } from 'vue'
 import english from '../../../../../locales/en.json'
 import RequestNode from '../node/nodes/RequestNode.vue'
@@ -81,9 +82,11 @@ const nodes = ref<Node[]>([
   {
     id: 'implicit:service-request',
     type: 'response',
-    position: { x: 300, y: 0 },
+    position: { x: 500, y: 0 },
   },
 ])
+
+const { fitView } = useVueFlow()
 </script>
 
 <style lang="scss" scoped>
