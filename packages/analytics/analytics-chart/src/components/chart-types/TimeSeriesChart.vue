@@ -319,9 +319,6 @@ onUnmounted(() => {
     chartInstance.value.chart.canvas.removeEventListener('dragSelect', handleDragSelect)
     chartInstance.value.chart.canvas.removeEventListener('dragSelectMove', handleDragMove)
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  verticalLinePlugin
 })
 
 </script>
