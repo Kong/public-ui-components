@@ -28,6 +28,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@vueuse/integrations',
         'marked',
         'monaco-editor',
+        '@kong-ui-public/entities-plugins-icon',
       ],
     },
   },
