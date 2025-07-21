@@ -269,6 +269,8 @@ watch(() => props.type, () => {
 })
 
 const handleDragSelect = (event: Event) => {
+  event.preventDefault()
+  event.stopPropagation()
   const { xStart, xEnd } = (event as CustomEvent<DragSelectEventDetail>).detail
   if (xStart && xEnd) {
     zoomTimeRange.value = {
