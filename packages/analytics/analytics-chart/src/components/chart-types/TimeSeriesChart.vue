@@ -42,7 +42,7 @@
         :drag-select-plugin="dragSelectPlugin"
         :state="tooltipData"
         :tooltip-title="tooltipTitle"
-        :zoom-options="zoomOptions"
+        :zoom-action-items="zoomActionItems"
         :zoom-time-range="zoomTimeRange"
         @dimensions="tooltipDimensions"
         @left="(left: string) => tooltipData.left = left"
@@ -72,14 +72,13 @@ import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
-import type { TooltipState } from '../../types'
+import type { TooltipState, ZoomActionItem } from '../../types'
 import { type ChartLegendSortFn, type ChartTooltipSortFn, type EnhancedLegendItem, type KChartData, type LegendValues, type TooltipEntry } from '../../types'
 import type { GranularityValues, AbsoluteTimeRangeV4, AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
 import type { Chart } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import { generateLegendItems } from '../../utils'
 import { hasExactlyOneDatapoint } from '../../utils/commonOptions'
-import type { ZoomOptions } from '../AnalyticsChart.vue'
 import { INJECT_QUERY_PROVIDER } from '../../constants'
 
 interface TimeSeriesChartProps {
@@ -98,7 +97,7 @@ interface TimeSeriesChartProps {
   chartLegendSortFn?: ChartLegendSortFn
   chartTooltipSortFn?: ChartTooltipSortFn
   zoom?: boolean
-  zoomOptions?: ZoomOptions[]
+  zoomActionItems?: ZoomActionItem[]
 }
 
 const props = withDefaults(
@@ -117,7 +116,7 @@ const props = withDefaults(
     chartLegendSortFn: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
     chartTooltipSortFn: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
     zoom: false,
-    zoomOptions: undefined,
+    zoomActionItems: undefined,
   },
 )
 
@@ -156,7 +155,7 @@ const tooltipData = reactive<TooltipState>({
   chartType: props.type,
   chartID,
   chartTooltipSortFn: props.chartTooltipSortFn,
-  state: 'idle',
+  interactionMode: 'idle',
 })
 
 const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolutePosition(
@@ -222,7 +221,7 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number })
 }
 
 const resetTooltipState = (supressNextClickForHighlight: boolean = true) => {
-  tooltipData.state = 'idle'
+  tooltipData.interactionMode = 'idle'
   dragSelectPlugin.clearSelectionArea()
   if (highlightPlugin.isPaused) {
     highlightPlugin.resume(supressNextClickForHighlight)
@@ -233,7 +232,7 @@ const resetTooltipState = (supressNextClickForHighlight: boolean = true) => {
 }
 
 const activateInteractiveTooltip = () => {
-  tooltipData.state = 'interactive'
+  tooltipData.interactionMode = 'interactive'
 }
 
 const updateVerticalLinePlugin = () => {
@@ -241,7 +240,7 @@ const updateVerticalLinePlugin = () => {
     return
   }
 
-  if (tooltipData.state === 'interactive') {
+  if (tooltipData.interactionMode === 'interactive') {
     verticalLinePlugin.clickedSegment = chartInstance.value.chart.tooltip.dataPoints[0]
   } else {
     verticalLinePlugin.destroyClickedSegment()
@@ -254,7 +253,7 @@ const handleChartClick = () => {
     return
   }
 
-  if (tooltipData.state !== 'idle') {
+  if (tooltipData.interactionMode !== 'idle') {
     resetTooltipState()
   } else {
     activateInteractiveTooltip()
@@ -263,7 +262,7 @@ const handleChartClick = () => {
   updateVerticalLinePlugin()
 }
 watch(() => props.type, () => {
-  tooltipData.state = 'idle'
+  tooltipData.interactionMode = 'idle'
   tooltipData.showTooltip = false
   verticalLinePlugin.destroyClickedSegment()
 })
@@ -280,7 +279,7 @@ const handleDragSelect = (event: Event) => {
     }
 
     if (hasZoomActions) {
-      tooltipData.state = 'zoom-interactive'
+      tooltipData.interactionMode = 'zoom-interactive'
     } else {
       emit('zoom-time-range', { start: new Date(xStart), end: new Date(xEnd), type: 'absolute' })
       resetTooltipState()
@@ -290,7 +289,7 @@ const handleDragSelect = (event: Event) => {
 
 const handleDragMove = (event: Event) => {
   if (hasZoomActions) {
-    tooltipData.state = 'selecting-chart-area'
+    tooltipData.interactionMode = 'selecting-chart-area'
   }
   isDoingSelection.value = true
   verticalLinePlugin.pause()

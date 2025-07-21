@@ -3,7 +3,7 @@
     v-if="state.showTooltip"
     ref="tooltipEl"
     class="tooltip-container"
-    :class="{ 'locked': state.state === 'interactive' }"
+    :class="{ 'locked': state.interactionMode === 'interactive' }"
     :style="{
       transform: isInteractive ? `translate(${dragPosition.left}, ${dragPosition.top})` : `translate(${absoluteLeft}, ${absoluteTop})`,
       left: '0',
@@ -13,14 +13,14 @@
     @mousedown="handleMouseDown"
   >
     <ZoomTimerange
-      v-if="state.state === 'selecting-chart-area'"
+      v-if="state.interactionMode === 'selecting-chart-area'"
       :end="zoomTimeRange?.end"
       :start="zoomTimeRange?.start"
     />
     <ZoomActions
-      v-else-if="state.state === 'zoom-interactive' && zoomTimeRange && zoomOptions"
+      v-else-if="state.interactionMode === 'zoom-interactive' && zoomTimeRange && zoomActionItems"
       :new-time-range="zoomTimeRange"
-      :zoom-options="zoomOptions"
+      :zoom-action-items="zoomActionItems"
       @on-action="emit('onAction')"
     />
     <div v-else>
@@ -64,10 +64,9 @@
 import { computed, ref, watch } from 'vue'
 import { DragIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
-import type { TooltipState } from 'src/types'
+import type { TooltipState, ZoomActionItem } from 'src/types'
 import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import ZoomActions from '../ZoomActions.vue'
-import type { ZoomOptions } from '../ZoomActions.vue'
 import ZoomTimerange from '../ZoomTimerange.vue'
 
 const emit = defineEmits<{
@@ -83,13 +82,13 @@ const props = withDefaults(defineProps<{
   absoluteLeft?: string
   absoluteTop?: string
   zoomTimeRange?: AbsoluteTimeRangeV4
-  zoomOptions?: ZoomOptions[]
+  zoomActionItems?: ZoomActionItem[]
 }>(), {
   tooltipTitle: '',
   absoluteLeft: '0px',
   absoluteTop: '0px',
   zoomTimeRange: undefined,
-  zoomOptions: undefined,
+  zoomActionItems: undefined,
   dragSelectPlugin: undefined,
 })
 
@@ -104,7 +103,7 @@ const context = computed(() => {
 })
 
 const isInteractive = computed(() => {
-  return ['interactive', 'zoom-interactive'].includes(props.state.state)
+  return ['interactive', 'zoom-interactive'].includes(props.state.interactionMode)
 })
 
 watch(tooltipEl, value => {
@@ -115,7 +114,7 @@ watch(tooltipEl, value => {
   }
 })
 
-watch(() => props.state.state, value => {
+watch(() => props.state.interactionMode, value => {
   if (['interactive', 'zoom-interactive'].includes(value)) {
     dragPosition.value.left = props.absoluteLeft
     dragPosition.value.top = props.absoluteTop

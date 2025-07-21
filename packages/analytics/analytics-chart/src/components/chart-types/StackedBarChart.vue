@@ -240,7 +240,7 @@ const tooltipData = reactive<TooltipState>({
   offsetY: 0,
   width: 0,
   height: 0,
-  state: 'idle',
+  interactionMode: 'idle',
   chartType: isHorizontal.value ? 'horizontal_bar' : 'vertical_bar',
   chartID: chartCanvasId,
   chartTooltipSortFn: props.chartTooltipSortFn,
@@ -307,7 +307,7 @@ const axesTooltipPlugin = {
 
       if (compareByIndexAxis(indexAxis)) {
         // Prevent hiding the tooltip if it's locked
-        if (tooltipData.state !== 'interactive') {
+        if (tooltipData.interactionMode !== 'interactive') {
           tooltipData.showTooltip = false
         }
         const context = chart.canvas.getContext('2d') as CanvasRenderingContext2D
@@ -560,7 +560,7 @@ watch(() => props.orientation, () => {
   }
 
   tooltipData.showTooltip = false
-  tooltipData.state = 'idle'
+  tooltipData.interactionMode = 'idle'
 })
 
 watch(() => props.annotations, (value: boolean) => {
@@ -578,10 +578,10 @@ watch(() => props.annotations, (value: boolean) => {
 const handleChartClick = () => {
   if (tooltipData.showTooltip) {
 
-    if (tooltipData.state !== 'idle') {
-      tooltipData.state = 'idle'
+    if (tooltipData.interactionMode !== 'idle') {
+      tooltipData.interactionMode = 'idle'
     } else {
-      tooltipData.state = 'interactive'
+      tooltipData.interactionMode = 'interactive'
     }
   }
 }

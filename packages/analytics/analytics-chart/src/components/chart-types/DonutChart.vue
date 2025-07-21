@@ -111,7 +111,7 @@ const tooltipData: TooltipState = reactive({
   height: 0,
   chartID,
   chartType: 'donut',
-  state: 'idle',
+  interactionMode: 'idle',
 })
 
 const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolutePosition(

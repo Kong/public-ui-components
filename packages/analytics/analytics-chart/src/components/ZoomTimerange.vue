@@ -11,14 +11,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { formatTime, type AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import { formatTime } from '@kong-ui-public/analytics-utilities'
 import { KBadge } from '@kong/kongponents'
 import composables from '../composables'
-
-export interface ZoomOptions {
-  label: string
-  action: (newTimeRange: AbsoluteTimeRangeV4) => void
-}
 
 const props = defineProps<{
   start: Date

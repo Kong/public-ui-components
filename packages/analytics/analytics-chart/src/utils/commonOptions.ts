@@ -1,11 +1,10 @@
-import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues, EnhancedLegendItem } from '../types'
+import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues, EnhancedLegendItem, TooltipInteractionMode } from '../types'
 import { formatUnit } from '../utils'
 import { isValid } from 'date-fns'
 import type { Chart, Point, ScatterDataPoint } from 'chart.js'
-import type { TooltipInteractionState } from '../types'
 import { formatTime } from '@kong-ui-public/analytics-utilities'
 
-export const isTooltipInteractive = (state: TooltipInteractionState) => {
+export const isTooltipInteractive = (state: TooltipInteractionMode) => {
   return ['interactive', 'zoom-interactive'].includes(state)
 }
 
@@ -13,7 +12,7 @@ export const isTooltipInteractive = (state: TooltipInteractionState) => {
 // as the "tooltip behaviors" are beggining to diverge more across chart types.
 export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext) : void => {
   const { tooltip } = context
-  if (tooltip.opacity === 0 && !isTooltipInteractive(tooltipData.state)) {
+  if (tooltip.opacity === 0 && !isTooltipInteractive(tooltipData.interactionMode)) {
     tooltipData.showTooltip = false
 
     return
@@ -21,7 +20,7 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
 
   const sortFn = tooltipData.chartTooltipSortFn || ((a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue)
 
-  if (tooltip.body && !isTooltipInteractive(tooltipData.state)) {
+  if (tooltip.body && !isTooltipInteractive(tooltipData.interactionMode)) {
     const colors = tooltip.labelColors
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 

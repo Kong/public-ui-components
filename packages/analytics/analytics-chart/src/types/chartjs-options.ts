@@ -13,7 +13,7 @@ export interface TooltipEntry {
 }
 
 export type ChartTooltipSortFn = (a: TooltipEntry, b: TooltipEntry) => number
-export type TooltipInteractionState = 'idle' | 'interactive' | 'zoom-interactive' | 'selecting-chart-area'
+export type TooltipInteractionMode = 'idle' | 'interactive' | 'zoom-interactive' | 'selecting-chart-area'
 
 export interface TooltipState {
   showTooltip: boolean
@@ -30,7 +30,7 @@ export interface TooltipState {
   chartType: ChartType
   chartID: string
   chartTooltipSortFn?: ChartTooltipSortFn
-  state: TooltipInteractionState
+  interactionMode: TooltipInteractionMode
 }
 
 interface BaseChartOptions {

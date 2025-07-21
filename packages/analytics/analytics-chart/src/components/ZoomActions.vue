@@ -1,9 +1,9 @@
 <template>
-  <div class="zoom-options-container">
+  <div class="zoom-actions-container">
     <div
-      v-for="option in zoomOptions"
+      v-for="option in zoomActionItems"
       :key="option.label"
-      class="zoom-option"
+      class="zoom-action-item"
       @click="handleAction(option)"
     >
       {{ option.label }}
@@ -12,14 +12,10 @@
 </template>
 <script setup lang="ts">
 import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
-
-export interface ZoomOptions {
-  label: string
-  action: (newTimeRange: AbsoluteTimeRangeV4) => void
-}
+import type { ZoomActionItem } from '../types'
 
 const props = defineProps<{
-  zoomOptions: ZoomOptions[]
+  zoomActionItems: ZoomActionItem[]
   newTimeRange: AbsoluteTimeRangeV4
 }>()
 
@@ -27,20 +23,20 @@ const emit = defineEmits < {
   (e: 'onAction'): void
 }>()
 
-const handleAction = (option: ZoomOptions) => {
+const handleAction = (option: ZoomActionItem) => {
   option.action(props.newTimeRange)
   emit('onAction')
 }
 </script>
 
 <style scoped lang="scss">
-.zoom-options-container {
+.zoom-actions-container {
   background-color: var(--kui-color-background, $kui-color-background);
   display: flex;
   flex-direction: column;
   gap: var(--kui-space-40, $kui-space-40);
 
-  .zoom-option {
+  .zoom-action-item {
     cursor: pointer;
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
     transition: background-color 0.2s;

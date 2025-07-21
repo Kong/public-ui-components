@@ -56,7 +56,7 @@
         :tooltip-title="tooltipTitle"
         :type="(chartOptions.type as ('timeseries_line' | 'timeseries_bar'))"
         :zoom="timeseriesZoom"
-        :zoom-options="zoomOptions"
+        :zoom-action-items="zoomActionItems"
         @zoom-time-range="(newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange)"
       />
       <StackedBarChart
@@ -91,7 +91,7 @@
 
 <script setup lang="ts">
 import composables from '../composables'
-import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry } from '../types'
+import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry, ZoomActionItem } from '../types'
 import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
@@ -102,11 +102,6 @@ import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
-
-export interface ZoomOptions {
-  label: string
-  action: (newTimeRange: AbsoluteTimeRangeV4) => void
-}
 
 interface ChartProps {
   chartData: ExploreResultV4
@@ -305,7 +300,7 @@ const chartTooltipSortFn = computed(() => {
   }
 })
 
-const zoomOptions = computed<ZoomOptions[]>(() => {
+const zoomActionItems = computed<ZoomActionItem[]>(() => {
   return [
     { label: 'Zoom', action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange) },
     { label: 'View requests', action: (newTimeRange: AbsoluteTimeRangeV4) => emit('view-requests', newTimeRange) },
