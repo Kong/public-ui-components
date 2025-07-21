@@ -449,7 +449,7 @@ import type {
   RedisConfigurationResponse,
 } from '../types'
 import type { AxiosError } from 'axios'
-import type { SelectItem } from '@kong/kongponents/dist/types'
+import type { SelectItem } from '@kong/kongponents'
 
 const props = defineProps({
   config: {

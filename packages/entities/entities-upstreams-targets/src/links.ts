@@ -1,4 +1,4 @@
 export default {
-  upstreamObject: 'https://docs.konghq.com/gateway/latest/admin-api/#upstream-object',
-  loadBalancing: 'https://docs.konghq.com/gateway/latest/how-kong-works/load-balancing/#main',
+  upstreamObject: 'https://developer.konghq.com/gateway/entities/upstream/',
+  loadBalancing: 'https://developer.konghq.com/gateway/traffic-control/load-balancing-reference/',
 }

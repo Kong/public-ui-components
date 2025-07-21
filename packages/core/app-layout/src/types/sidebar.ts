@@ -24,6 +24,8 @@ export interface SidebarPrimaryItem extends Omit<SidebarSecondaryItem, 'parentKe
   label?: string
   /** Is the top-level sidebar item expanded */
   expanded?: boolean
+  /** The top-level navigation group to place the navigation item inside. If not provided, the sidebar item will be rendered standalone, above the L1 navigation groups (e.g. "Overview"). */
+  group?: string
   /** Nested sidebar items (children) without icons */
   items?: SidebarSecondaryItem[]
 }

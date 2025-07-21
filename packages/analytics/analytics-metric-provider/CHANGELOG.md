@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.9.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.10...@kong-ui-public/analytics-metric-provider@8.9.11) (2025-07-16)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.9.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.9...@kong-ui-public/analytics-metric-provider@8.9.10) (2025-07-14)
+
+
+### Bug Fixes
+
+* move `moduleResolution` to `bundler` ([#2213](https://github.com/Kong/public-ui-components/issues/2213)) ([a72a0ce](https://github.com/Kong/public-ui-components/commit/a72a0ce0f5d326382c7fc5b9db47288cfbaaeb5b))
+
+
+
+
+
+## [8.9.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.8...@kong-ui-public/analytics-metric-provider@8.9.9) (2025-07-11)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.9.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.7...@kong-ui-public/analytics-metric-provider@8.9.8) (2025-07-03)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
 ## [8.9.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.6...@kong-ui-public/analytics-metric-provider@8.9.7) (2025-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider

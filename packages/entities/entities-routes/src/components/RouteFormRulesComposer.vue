@@ -233,10 +233,10 @@ const cleanDataArr = (entity: RoutingRulesEntities, originalData: any) => {
     return [...originalData].filter((item: string) => !!item)
   } else if (entity === RoutingRulesEntities.SOURCES || entity === RoutingRulesEntities.DESTINATIONS) {
     return [...originalData]
-      .filter((item: Sources | Destinations) => !!item.ip)
+      .filter((item: Sources | Destinations) => !!item.ip || !!item.port)
       .map((item: Sources | Destinations) => ({
-        ...item,
-        port: !item.port && item.port !== 0 ? null : item.port,
+        ip: item.ip || undefined,
+        port: !item.port && item.port !== 0 ? undefined : item.port,
       }))
   } else if (entity === RoutingRulesEntities.HEADERS) {
     return [...originalData].filter((item: Headers) => !!item.header)

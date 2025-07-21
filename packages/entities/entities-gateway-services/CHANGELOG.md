@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.32...@kong-ui-public/entities-gateway-services@3.11.33) (2025-07-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.11.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.31...@kong-ui-public/entities-gateway-services@3.11.32) (2025-07-14)
+
+
+### Bug Fixes
+
+* move `moduleResolution` to `bundler` ([#2213](https://github.com/Kong/public-ui-components/issues/2213)) ([a72a0ce](https://github.com/Kong/public-ui-components/commit/a72a0ce0f5d326382c7fc5b9db47288cfbaaeb5b))
+
+
+
+
+
+## [3.11.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.30...@kong-ui-public/entities-gateway-services@3.11.31) (2025-07-14)
+
+
+### Bug Fixes
+
+* **entities-gateway-services:** edit disabled service ([#2212](https://github.com/Kong/public-ui-components/issues/2212)) ([c96a55d](https://github.com/Kong/public-ui-components/commit/c96a55db37cb9b4201872c5eedfb85f6aa308e2f))
+
+
+
+
+
 ## [3.11.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.29...@kong-ui-public/entities-gateway-services@3.11.30) (2025-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services

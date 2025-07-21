@@ -3,6 +3,131 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.30.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.30.0...@kong-ui-public/entities-plugins@9.30.1) (2025-07-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.30.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.29.4...@kong-ui-public/entities-plugins@9.30.0) (2025-07-18)
+
+
+### Features
+
+* **entities-plugins:** datakit visual editor node panel ([#2226](https://github.com/Kong/public-ui-components/issues/2226)) ([0c5bea4](https://github.com/Kong/public-ui-components/commit/0c5bea4ae3787c668af90edb1ebce44631be84ec))
+
+
+
+
+
+## [9.29.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.29.3...@kong-ui-public/entities-plugins@9.29.4) (2025-07-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.29.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.29.2...@kong-ui-public/entities-plugins@9.29.3) (2025-07-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.29.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.29.1...@kong-ui-public/entities-plugins@9.29.2) (2025-07-17)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.29.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.29.0...@kong-ui-public/entities-plugins@9.29.1) (2025-07-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.29.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.5...@kong-ui-public/entities-plugins@9.29.0) (2025-07-16)
+
+
+### Features
+
+* **entities-plugins:** datakit visual editor modal ([#2208](https://github.com/Kong/public-ui-components/issues/2208)) ([67fd162](https://github.com/Kong/public-ui-components/commit/67fd162844df52ae05b47dbb1154537918c5743f))
+
+
+
+
+
+## [9.28.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.4...@kong-ui-public/entities-plugins@9.28.5) (2025-07-14)
+
+
+### Bug Fixes
+
+* move `moduleResolution` to `bundler` ([#2213](https://github.com/Kong/public-ui-components/issues/2213)) ([a72a0ce](https://github.com/Kong/public-ui-components/commit/a72a0ce0f5d326382c7fc5b9db47288cfbaaeb5b))
+
+
+
+
+
+## [9.28.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.3...@kong-ui-public/entities-plugins@9.28.4) (2025-07-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.28.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.2...@kong-ui-public/entities-plugins@9.28.3) (2025-07-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix datakit code example code ([#2207](https://github.com/Kong/public-ui-components/issues/2207)) ([ec85dbd](https://github.com/Kong/public-ui-components/commit/ec85dbda5d288c8fef1231f1d4ab871c58c0a176))
+
+
+
+
+
+## [9.28.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.1...@kong-ui-public/entities-plugins@9.28.2) (2025-07-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** improve datakit examples ([#2206](https://github.com/Kong/public-ui-components/issues/2206)) ([296b206](https://github.com/Kong/public-ui-components/commit/296b2060106a4bd14a8b9719626820a334c5582a))
+
+
+
+
+
+## [9.28.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.28.0...@kong-ui-public/entities-plugins@9.28.1) (2025-07-09)
+
+
+### Bug Fixes
+
+* **plugin-request-callout:** vault picker missing [KM-1470] ([#2205](https://github.com/Kong/public-ui-components/issues/2205)) ([8d67f09](https://github.com/Kong/public-ui-components/commit/8d67f09a28f4586340cd90b1f8e22017ffedd9a7))
+
+
+
+
+
+# [9.28.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.27.1...@kong-ui-public/entities-plugins@9.28.0) (2025-07-04)
+
+
+### Features
+
+* **entities-*:** migrate plugin icon to a standalone repo [KM-1318] ([#2158](https://github.com/Kong/public-ui-components/issues/2158)) ([6157ecb](https://github.com/Kong/public-ui-components/commit/6157ecb1bb7e779193f43fe1265ba466d601e034))
+
+
+
+
+
 ## [9.27.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.27.0...@kong-ui-public/entities-plugins@9.27.1) (2025-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

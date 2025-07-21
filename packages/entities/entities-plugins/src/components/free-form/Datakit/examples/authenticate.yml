@@ -1,24 +1,31 @@
-debug: true
 nodes:
-- name: auth_request_inputs
+- name: STATIC_INPUTS
   type: static
   values:
     headers:
-      Authorization: "Basic my-auth-value"
-      Content-Type: "application/x-www-form-urlencoded"
-    body: >-
-      grant_type=client_credentials
-- name: auth_request
-  type: call
-  url: http://my-auth-server/oauth/token
-  method: POST
-  input: auth_request_inputs
-- name: BUILD_UPSTREAM_AUTH_HEADERS
+      Content-Type: application/x-www-form-urlencoded
+    body: grant_type=client_credentials
+- name: BUILD_HEADERS
   type: jq
-  input: auth_request.body
-  output:
-    service_request.headers
+  inputs:
+    headers: STATIC_INPUTS.headers
+    query: request.query
+  jq: |
+    .headers * {
+      "X-Api-Key": (.query.api_key // "none")
+    }
+- name: AUTH_REQUEST
+  type: call
+  inputs:
+    headers: BUILD_HEADERS
+    body: STATIC_INPUTS.body
+  url: https://my-token-service/auth-token
+  method: POST
+- name: UPSTREAM_AUTH_HEADER
+  type: jq
+  input: AUTH_REQUEST.body
+  output: service_request.headers
   jq: |
     {
-    "Authorization": (.token_type + " " + .access_token)
+      Authorization: (.token_type + " " + .access_token)
     }

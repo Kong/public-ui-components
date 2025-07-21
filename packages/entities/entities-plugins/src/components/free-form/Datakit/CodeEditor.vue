@@ -1,0 +1,134 @@
+<template>
+  <div
+    ref="editor-root"
+    class="dk-editor"
+  />
+</template>
+
+<script setup lang="ts">
+import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, toRaw } from 'vue'
+import * as monaco from 'monaco-editor'
+import type { YAMLException } from 'js-yaml'
+import yaml, { JSON_SCHEMA } from 'js-yaml'
+import * as examples from './examples'
+
+const {
+  editing,
+  config,
+} = defineProps<{
+  editing: boolean
+  config: any
+}>()
+
+const emit = defineEmits<{
+  change: [config: any]
+  error: [msg: string]
+}>()
+
+const editorRoot = useTemplateRef('editor-root')
+const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
+const LINT_SOURCE = 'YAML Syntax'
+
+const EDIT_SOURCE = 'datakit.insert-example'
+
+/**
+ * Sets the example code in the Monaco editor.
+ * We do not use `setValue` directly because it will clear the undo stack,
+ * which prevents the user from undoing changes after inserting an example.
+ */
+function setExampleCode(example: keyof typeof examples) {
+  const editor = editorRef.value
+  const model = editor?.getModel()
+  if (!editor || !model) {
+    return
+  }
+
+  const newCode = examples[example]
+  if (editor.getValue() !== newCode) {
+    const fullRange = model.getFullModelRange()
+
+    editor.pushUndoStop()
+    editor.executeEdits(EDIT_SOURCE, [{ range: fullRange, text: newCode }])
+    editor.pushUndoStop()
+  }
+
+  editor.focus()
+}
+
+onMounted(() => {
+  const editor = monaco.editor.create(editorRoot.value!, {
+    language: 'yaml',
+    automaticLayout: true,
+    minimap: {
+      enabled: false,
+    },
+    scrollBeyondLastLine: false,
+    tabSize: 2,
+    scrollbar: {
+      alwaysConsumeMouseWheel: false,
+    },
+    autoIndent: 'keep',
+  })
+  editorRef.value = editor
+
+  if (editing) {
+    editor.setValue(
+      yaml.dump(toRaw(config), {
+        schema: JSON_SCHEMA,
+        noArrayIndent: true,
+      }),
+    )
+  }
+
+  editor.onDidChangeModelContent(() => {
+    const model = editor.getModel()
+    const value = editor.getValue() || ''
+    try {
+      const config = yaml.load(value, {
+        schema: JSON_SCHEMA,
+        json: true,
+      })
+
+      monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
+
+      emit('change', config)
+    } catch (error: unknown) {
+      const { message, mark } = error as YAMLException
+      const { line, column } = mark || { line: 0, column: 0 }
+
+      const simpleMessage = message.split('\n')[0] // Take the first line of the error message
+
+      const markers: monaco.editor.IMarkerData[] = [
+        {
+          startLineNumber: line + 1,
+          startColumn: column + 1,
+          endLineNumber: line + 1,
+          endColumn: column + 2,
+          message: simpleMessage,
+          severity: monaco.MarkerSeverity.Error,
+          source: LINT_SOURCE,
+        },
+      ]
+
+      monaco.editor.setModelMarkers(model!, LINT_SOURCE, markers)
+
+      emit('error', simpleMessage)
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  editorRef.value?.dispose()
+})
+
+defineExpose({
+  setExampleCode,
+})
+</script>
+
+<style lang="scss" scoped>
+.dk-editor {
+  height: 320px;
+  width: 100%;
+}
+</style>

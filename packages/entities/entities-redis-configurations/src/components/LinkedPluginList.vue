@@ -41,7 +41,7 @@ import PluginName from './PluginItem.vue'
 import { useLinkedPluginsFetcher, buildLinksCacheKey } from '../composables/useLinkedPlugins'
 
 import type { TableDataFetcherParams } from '@kong/kongponents'
-import type { TableViewHeader } from '@kong/kongponents/dist/types'
+import type { TableViewHeader } from '@kong/kongponents'
 import type {
   KonnectConfig,
   KongManagerConfig,

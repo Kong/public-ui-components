@@ -455,8 +455,8 @@ const isFormValid = computed((): boolean => {
         const paths = state.fields.paths ? !!state.fields.paths.filter(Boolean).length : null
         const headers = state.fields.headers ? state.fields.headers.some(({ header }) => !!header) : null
         const snis = state.fields.snis ? !!state.fields.snis.filter(Boolean).length : null
-        const destinations = state.fields.destinations ? state.fields.destinations.some(({ ip }) => !!ip) : null
-        const sources = state.fields.sources ? state.fields.sources.some(({ ip }) => !!ip) : null
+        const destinations = state.fields.destinations ? state.fields.destinations.some(({ ip, port }) => !!ip || !!port) : null
+        const sources = state.fields.sources ? state.fields.sources.some(({ ip, port }) => !!ip || !!port) : null
         const methods = state.fields.methods ? !!state.fields.methods.filter(Boolean).length : null
 
         return !!state.fields.protocols && ((isProtocolSelected(['http']) && !!(hosts || methods || paths || headers)) ||

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.8.0...@kong-ui-public/analytics-utilities@9.9.0) (2025-07-11)
+
+
+### Features
+
+* **fine-granularity:** add response type for getting back information about available granularity ([#2210](https://github.com/Kong/public-ui-components/issues/2210)) ([e481a72](https://github.com/Kong/public-ui-components/commit/e481a724a168841069ff2f93d94b0b885199e14b))
+
+
+
+
+
+# [9.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.7.1...@kong-ui-public/analytics-utilities@9.8.0) (2025-07-03)
+
+
+### Features
+
+* **analytics:** dashboard schema v2 [MA-4017] ([#2203](https://github.com/Kong/public-ui-components/issues/2203)) ([14790f1](https://github.com/Kong/public-ui-components/commit/14790f16978c4d4e4eba5e78b76340f8baf9d3d2))
+
+
+
+
+
 ## [9.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.7.0...@kong-ui-public/analytics-utilities@9.7.1) (2025-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities

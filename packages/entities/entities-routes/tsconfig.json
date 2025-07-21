@@ -2,6 +2,10 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "paths": {
+      // https://github.com/cypress-io/cypress/issues/27973
+      "cypress/types/*": ["../../../node_modules/cypress/types/*"]
+    },
     "outDir": "dist",
     "declarationDir": "dist/types",
     "types": [

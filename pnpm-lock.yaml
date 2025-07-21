@@ -299,8 +299,8 @@ importers:
   packages/analytics/analytics-metric-provider:
     dependencies:
       '@kong-ui-public/core':
-        specifier: 1.1.0
-        version: 1.1.0(axios@1.7.7)(swrv@1.0.4(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        specifier: workspace:^
+        version: link:../../core/core
       '@kong/icons':
         specifier: ^1.31.0
         version: 1.31.0(vue@3.5.13(typescript@5.6.3))
@@ -521,8 +521,8 @@ importers:
         specifier: ^1.31.0
         version: 1.31.0(vue@3.5.13(typescript@5.6.3))
       '@kong/markdown':
-        specifier: 1.7.30
-        version: 1.7.30(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
+        specifier: 1.7.32
+        version: 1.7.32(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -706,8 +706,8 @@ importers:
         specifier: 9.34.2
         version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@kong/splitpanes':
-        specifier: 3.1.6-patch.6
-        version: 3.1.6-patch.6(vue@3.5.13(typescript@5.6.3))
+        specifier: 3.1.6-patch.7
+        version: 3.1.6-patch.7(vue@3.5.13(typescript@5.6.3))
       '@vue-flow/background':
         specifier: ^1.3.2
         version: 1.3.2(@vue-flow/core@1.41.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -964,6 +964,9 @@ importers:
       '@kong-ui-public/forms':
         specifier: workspace:^
         version: link:../../core/forms
+      focus-trap:
+        specifier: ^7.6.0
+        version: 7.6.5
       marked:
         specifier: ^14.1.3
         version: 14.1.3
@@ -971,6 +974,9 @@ importers:
         specifier: 0.52.2
         version: 0.52.2
     devDependencies:
+      '@kong-ui-public/entities-plugins-icon':
+        specifier: workspace:^
+        version: link:../entities-plugins-icon
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
@@ -986,6 +992,12 @@ importers:
       '@kong/kongponents':
         specifier: 9.34.2
         version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+      '@vueuse/core':
+        specifier: ^13.5.0
+        version: 13.5.0(vue@3.5.13(typescript@5.6.3))
+      '@vueuse/integrations':
+        specifier: ^13.5.0
+        version: 13.5.0(axios@1.7.7)(focus-trap@7.6.5)(sortablejs@1.15.6)(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: ^1.7.7
         version: 1.7.7
@@ -998,6 +1010,9 @@ importers:
 
   packages/entities/entities-plugins-icon:
     devDependencies:
+      '@kong-ui-public/entities-plugins-metadata':
+        specifier: workspace:^
+        version: link:../entities-plugins-metadata
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.3)
@@ -1010,9 +1025,9 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
     devDependencies:
-      '@kong-ui-public/entities-plugins':
+      '@kong-ui-public/entities-plugins-icon':
         specifier: workspace:^
-        version: link:../entities-plugins
+        version: link:../entities-plugins-icon
       '@kong-ui-public/entities-shared':
         specifier: workspace:^
         version: link:../entities-shared
@@ -2062,13 +2077,6 @@ packages:
     peerDependencies:
       tslib: '2'
 
-  '@kong-ui-public/core@1.1.0':
-    resolution: {integrity: sha512-j1kK07/zDyxwePi1EX1rZ+3iL955VdhZiodzeT5ift7iVQTiPt9VNUFu9+IXJ/AxHfuYu/gaL+gily9TsJTX3w==}
-    peerDependencies:
-      axios: ^1.4.0
-      swrv: ^1.0.4
-      vue: ^3.2.47
-
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
 
@@ -2103,8 +2111,8 @@ packages:
       vue: '>= 3.5.0 < 4'
       vue-router: ^4.4.5
 
-  '@kong/markdown@1.7.30':
-    resolution: {integrity: sha512-yCsWAB89y5+5m1pBmp9f6QwwUJVNI5VUHT0sYJqxfLTFcL2X/wt+HjurTZFy3cJQL/MJ6T9N/tTcpJHl05GfmQ==}
+  '@kong/markdown@1.7.32':
+    resolution: {integrity: sha512-MSIunqXCgbLExzi44WiGaFkhk4My5BOjNFpzaTiYDqd6M4KhpVygVjJjPcp1+LcqP0zqr81FRY2bvi7lLSktnQ==}
     engines: {node: '>=18.17.0'}
     peerDependencies:
       vue: '>= 3.3.13 < 4'
@@ -2112,8 +2120,8 @@ packages:
   '@kong/sdk-portal-js@2.16.0':
     resolution: {integrity: sha512-+BGhyen5I9eB+HgQlavWa0H9+3vr/YMpPV3j9y49wTWExZfvOK6Dm3AH7R1o4wUIGu0ap7D8j92rAW1Tq5DgZA==}
 
-  '@kong/splitpanes@3.1.6-patch.6':
-    resolution: {integrity: sha512-tPyEXSK86PWGRrLKjDmMQQVwNRjC9T4SbXpwRXHRmy7FdSZ/vDRxK/siUc2Lb4mL+ox+kjkHRU5lSce7WjCr1A==}
+  '@kong/splitpanes@3.1.6-patch.7':
+    resolution: {integrity: sha512-HTAXlLKpa6Aoqq9KuJyXaLgoKjlIprcvfjM3qp/z74fURTKX38CqrI23yojbBXPchTj8vK/a1x8lFCISGxWCRQ==}
     peerDependencies:
       vue: ^3.2.0
 
@@ -3182,6 +3190,9 @@ packages:
   '@types/web-bluetooth@0.0.20':
     resolution: {integrity: sha512-g9gZnnXVq7gM7v3tJCWV/qw7w+KeOlSHAhgF9RytFyifW6AF61hdT2ucrYhPq9hLs5JIryeupHV3qGk95dH9ow==}
 
+  '@types/web-bluetooth@0.0.21':
+    resolution: {integrity: sha512-oIQLCGWtcFZy2JW77j9k8nHzAOpqMHLQejDA48XXMWH6tjCQHz5RCFz1bzsmROyL6PUm+LLnUiI4BCn221inxA==}
+
   '@types/ws@8.5.12':
     resolution: {integrity: sha512-3tPRkv1EtkDpzlgyKyI8pGsGZAGPEaXeu0DOj5DI25Ja91bdAYddYHbADRYVrZMRbfW+1l5YwXVDKohDJNQxkQ==}
 
@@ -3451,17 +3462,72 @@ packages:
   '@vueuse/core@12.7.0':
     resolution: {integrity: sha512-jtK5B7YjZXmkGNHjviyGO4s3ZtEhbzSgrbX+s5o+Lr8i2nYqNyHuPVOeTdM1/hZ5Tkxg/KktAuAVDDiHMraMVA==}
 
+  '@vueuse/core@13.5.0':
+    resolution: {integrity: sha512-wV7z0eUpifKmvmN78UBZX8T7lMW53Nrk6JP5+6hbzrB9+cJ3jr//hUlhl9TZO/03bUkMK6gGkQpqOPWoabr72g==}
+    peerDependencies:
+      vue: ^3.5.0
+
+  '@vueuse/integrations@13.5.0':
+    resolution: {integrity: sha512-7RACJySnlpl0MkSzxbtadioNGSX4TL5/Wl2cUy4nDq/XkeHwPYvVM880HJUSiap/FXhVEup9VKTM9y/n5UspAw==}
+    peerDependencies:
+      async-validator: ^4
+      axios: ^1
+      change-case: ^5
+      drauu: ^0.4
+      focus-trap: ^7
+      fuse.js: ^7
+      idb-keyval: ^6
+      jwt-decode: ^4
+      nprogress: ^0.2
+      qrcode: ^1.5
+      sortablejs: ^1
+      universal-cookie: ^7 || ^8
+      vue: ^3.5.0
+    peerDependenciesMeta:
+      async-validator:
+        optional: true
+      axios:
+        optional: true
+      change-case:
+        optional: true
+      drauu:
+        optional: true
+      focus-trap:
+        optional: true
+      fuse.js:
+        optional: true
+      idb-keyval:
+        optional: true
+      jwt-decode:
+        optional: true
+      nprogress:
+        optional: true
+      qrcode:
+        optional: true
+      sortablejs:
+        optional: true
+      universal-cookie:
+        optional: true
+
   '@vueuse/metadata@10.11.1':
     resolution: {integrity: sha512-IGa5FXd003Ug1qAZmyE8wF3sJ81xGLSqTqtQ6jaVfkeZ4i5kS2mwQF61yhVqojRnenVew5PldLyRgvdl4YYuSw==}
 
   '@vueuse/metadata@12.7.0':
     resolution: {integrity: sha512-4VvTH9mrjXqFN5LYa5YfqHVRI6j7R00Vy4995Rw7PQxyCL3z0Lli86iN4UemWqixxEvYfRjG+hF9wL8oLOn+3g==}
 
+  '@vueuse/metadata@13.5.0':
+    resolution: {integrity: sha512-euhItU3b0SqXxSy8u1XHxUCdQ8M++bsRs+TYhOLDU/OykS7KvJnyIFfep0XM5WjIFry9uAPlVSjmVHiqeshmkw==}
+
   '@vueuse/shared@10.11.1':
     resolution: {integrity: sha512-LHpC8711VFZlDaYUXEBbFBCQ7GS3dVU9mjOhhMhXP6txTV4EhYQg/KGnQuvt/sPAtoUKq7VVUnL6mVtFoL42sA==}
 
   '@vueuse/shared@12.7.0':
     resolution: {integrity: sha512-coLlUw2HHKsm7rPN6WqHJQr18WymN4wkA/3ThFaJ4v4gWGWAQQGK+MJxLuJTBs4mojQiazlVWAKNJNpUWGRkNw==}
+
+  '@vueuse/shared@13.5.0':
+    resolution: {integrity: sha512-K7GrQIxJ/ANtucxIXbQlUHdB0TPA8c+q5i+zbrjxuhJCnJ9GtBg75sBSnvmLSxHKPg2Yo8w62PWksl9kwH0Q8g==}
+    peerDependencies:
+      vue: ^3.5.0
 
   '@webassemblyjs/ast@1.12.1':
     resolution: {integrity: sha512-EKfMUOPRRUTy5UII4qJDGPpqfwjOmZ5jeGFwid9mnoqIFK+e0vqoi1qH56JpmZSzEL53jKnNzScdmftJyG5xWg==}
@@ -8294,7 +8360,7 @@ packages:
   right-pad@1.0.1:
     resolution: {integrity: sha512-bYBjgxmkvTAfgIYy328fmkwhp39v8lwVgWhhrzxPV3yHtcSqyYKe9/XOhvW48UFjATg3VuJbpsp5822ACNvkmw==}
     engines: {node: '>= 0.10'}
-    deprecated: Use String.prototype.padEnd() instead
+    deprecated: Please use String.prototype.padEnd() over this package.
 
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
@@ -10880,7 +10946,7 @@ snapshots:
       '@antfu/install-pkg': 0.4.1
       '@antfu/utils': 0.7.10
       '@iconify/types': 2.0.0
-      debug: 4.4.0
+      debug: 4.4.1
       kolorist: 1.8.0
       local-pkg: 0.5.0
       mlly: 1.7.1
@@ -10964,13 +11030,6 @@ snapshots:
     dependencies:
       tslib: 2.8.0
 
-  '@kong-ui-public/core@1.1.0(axios@1.7.7)(swrv@1.0.4(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
-    dependencies:
-      axios: 1.7.7
-      date-fns: 2.30.0
-      swrv: 1.0.4(vue@3.5.13(typescript@5.6.3))
-      vue: 3.5.13(typescript@5.6.3)
-
   '@kong/atc-router@1.6.0-rc.1': {}
 
   '@kong/design-tokens@1.17.4': {}
@@ -11041,7 +11100,7 @@ snapshots:
       - solid-js
       - svelte
 
-  '@kong/markdown@1.7.30(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))':
+  '@kong/markdown@1.7.32(@types/markdown-it@14.1.1)(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))':
     dependencies:
       '@kong/icons': 1.31.0(vue@3.5.13(typescript@5.6.3))
       '@mdit-vue/plugin-frontmatter': 2.1.3
@@ -11076,7 +11135,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@kong/splitpanes@3.1.6-patch.6(vue@3.5.13(typescript@5.6.3))':
+  '@kong/splitpanes@3.1.6-patch.7(vue@3.5.13(typescript@5.6.3))':
     dependencies:
       vue: 3.5.13(typescript@5.6.3)
 
@@ -12618,6 +12677,8 @@ snapshots:
 
   '@types/web-bluetooth@0.0.20': {}
 
+  '@types/web-bluetooth@0.0.21': {}
+
   '@types/ws@8.5.12':
     dependencies:
       '@types/node': 18.19.64
@@ -13068,9 +13129,28 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
+  '@vueuse/core@13.5.0(vue@3.5.13(typescript@5.6.3))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.21
+      '@vueuse/metadata': 13.5.0
+      '@vueuse/shared': 13.5.0(vue@3.5.13(typescript@5.6.3))
+      vue: 3.5.13(typescript@5.6.3)
+
+  '@vueuse/integrations@13.5.0(axios@1.7.7)(focus-trap@7.6.5)(sortablejs@1.15.6)(vue@3.5.13(typescript@5.6.3))':
+    dependencies:
+      '@vueuse/core': 13.5.0(vue@3.5.13(typescript@5.6.3))
+      '@vueuse/shared': 13.5.0(vue@3.5.13(typescript@5.6.3))
+      vue: 3.5.13(typescript@5.6.3)
+    optionalDependencies:
+      axios: 1.7.7
+      focus-trap: 7.6.5
+      sortablejs: 1.15.6
+
   '@vueuse/metadata@10.11.1': {}
 
   '@vueuse/metadata@12.7.0': {}
+
+  '@vueuse/metadata@13.5.0': {}
 
   '@vueuse/shared@10.11.1(vue@3.5.13(typescript@5.6.3))':
     dependencies:
@@ -13084,6 +13164,10 @@ snapshots:
       vue: 3.5.13(typescript@5.6.3)
     transitivePeerDependencies:
       - typescript
+
+  '@vueuse/shared@13.5.0(vue@3.5.13(typescript@5.6.3))':
+    dependencies:
+      vue: 3.5.13(typescript@5.6.3)
 
   '@webassemblyjs/ast@1.12.1':
     dependencies:
@@ -17142,7 +17226,7 @@ snapshots:
   micromark@3.2.0:
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.4.0
+      debug: 4.4.1
       decode-named-character-reference: 1.0.2
       micromark-core-commonmark: 1.1.0
       micromark-factory-space: 1.1.0
@@ -17289,7 +17373,7 @@ snapshots:
 
   mlly@1.7.1:
     dependencies:
-      acorn: 8.14.0
+      acorn: 8.15.0
       pathe: 1.1.2
       pkg-types: 1.2.0
       ufo: 1.5.4
