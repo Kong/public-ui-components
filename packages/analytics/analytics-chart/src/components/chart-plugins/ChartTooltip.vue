@@ -78,6 +78,7 @@ const emit = defineEmits<{
 }>()
 
 const props = withDefaults(defineProps<{
+  state: TooltipState
   tooltipTitle?: string
   absoluteLeft?: string
   absoluteTop?: string
@@ -92,8 +93,6 @@ const props = withDefaults(defineProps<{
   dragSelectPlugin: undefined,
 })
 
-const state = defineModel<TooltipState>({ required: true })
-
 const tooltipEl = ref<HTMLElement | null>(null)
 const dragging = ref(false)
 const dragStartPosition = ref({ x: 0, y: 0 })
@@ -101,11 +100,11 @@ const dragMouseStartPosition = ref({ x: 0, y: 0 })
 const dragPosition = ref({ left: props.absoluteLeft, top: props.absoluteTop })
 
 const context = computed(() => {
-  return state.value.tooltipContext
+  return props.state.tooltipContext
 })
 
 const isInteractive = computed(() => {
-  return ['interactive', 'zoom-interactive'].includes(state.value.state)
+  return ['interactive', 'zoom-interactive'].includes(props.state.state)
 })
 
 watch(tooltipEl, value => {
@@ -116,7 +115,7 @@ watch(tooltipEl, value => {
   }
 })
 
-watch(() => state.value.state, value => {
+watch(() => props.state.state, value => {
   // TODO: Remove
   console.log(value)
   if (['interactive', 'zoom-interactive'].includes(value)) {

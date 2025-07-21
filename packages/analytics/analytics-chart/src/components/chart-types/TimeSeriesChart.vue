@@ -36,11 +36,11 @@
       <ToolTip
         v-if="!hideTooltipWhenDragging"
         ref="tooltipElement"
-        v-model="tooltipData"
         :absolute-left="tooltipAbsoluteLeft"
         :absolute-top="tooltipAbsoluteTop"
         data-testid="tooltip"
         :drag-select-plugin="dragSelectPlugin"
+        :state="tooltipData"
         :tooltip-title="tooltipTitle"
         :zoom-options="zoomOptions"
         :zoom-time-range="zoomTimeRange"

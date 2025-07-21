@@ -17,9 +17,9 @@
       />
       <Teleport to="body">
         <ToolTip
-          v-model="tooltipData"
           :absolute-left="tooltipAbsoluteLeft"
           :absolute-top="tooltipAbsoluteTop"
+          :state="tooltipData"
           :tooltip-title="tooltipTitle"
           :unit="metricUnit"
           @dimensions="tooltipDimensions"

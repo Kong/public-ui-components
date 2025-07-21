@@ -38,9 +38,9 @@
         </div>
       </div>
       <ToolTip
-        v-model="tooltipData"
         :absolute-left="tooltipAbsoluteLeft"
         :absolute-top="tooltipAbsoluteTop"
+        :state="tooltipData"
         :tooltip-title="tooltipTitle"
         @dimensions="tooltipDimensions"
       />
