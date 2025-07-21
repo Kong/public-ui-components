@@ -547,7 +547,7 @@ export const dashboardConfigSchema = {
     },
     preset_filters: filtersFn([...new Set([...filterableExploreDimensions, ...filterableBasicExploreDimensions, ...filterableAiExploreDimensions])]),
   },
-  required: ['version', 'tiles'],
+  required: ['tiles'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 
