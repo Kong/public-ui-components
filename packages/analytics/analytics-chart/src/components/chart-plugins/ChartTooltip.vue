@@ -116,8 +116,6 @@ watch(tooltipEl, value => {
 })
 
 watch(() => props.state.state, value => {
-  // TODO: Remove
-  console.log(value)
   if (['interactive', 'zoom-interactive'].includes(value)) {
     dragPosition.value.left = props.absoluteLeft
     dragPosition.value.top = props.absoluteTop
