@@ -7,11 +7,8 @@
     sticky-tabs
     @add="addCallout"
   >
-    <template #item="{ index, fieldName }">
-      <CalloutForm
-        :field-name="fieldName"
-        :index="index"
-      />
+    <template #item="{ index }">
+      <CalloutForm :index="index" />
     </template>
   </ArrayField>
 </template>
@@ -19,10 +16,12 @@
 <script setup lang="ts">
 import { getCalloutId } from './utils'
 import { useFormShared } from '../shared/composables'
-import ArrayField from '../shared/ArrayField.vue'
 import CalloutForm from './CalloutForm.vue'
+import { fieldsBuilder } from '../shared/fields-builder'
 
 import { type RequestCalloutPlugin, type Callout, CalloutId } from './types'
+
+const { ArrayField } = fieldsBuilder<RequestCalloutPlugin>().setScope('config')
 
 const { formData, getDefault } = useFormShared<RequestCalloutPlugin>()
 

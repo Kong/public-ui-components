@@ -1,5 +1,5 @@
 <template>
-  <ObjectField :name="fieldName">
+  <ObjectField :name="`${props.index}`">
     <template #depends_on="dependsOnProps">
       <EnumField
         v-bind="dependsOnProps"
@@ -40,16 +40,19 @@ import { computed, watch } from 'vue'
 
 import { toSelectItems } from '../shared/utils'
 import { useFormShared } from '../shared/composables'
-import EnumField from '../shared/EnumField.vue'
-import ObjectField from '../shared/ObjectField.vue'
+import { fieldsBuilder } from '../shared/fields-builder'
 
 import { CalloutId, type RequestCalloutPlugin } from './types'
 import type { SelectItem } from '@kong/kongponents'
 
 const props = defineProps<{
   index: number
-  fieldName: string
 }>()
+
+const {
+  ObjectField,
+  EnumField,
+} = fieldsBuilder<RequestCalloutPlugin>().setScope('config.callouts')
 
 const { formData } = useFormShared<RequestCalloutPlugin>()
 
