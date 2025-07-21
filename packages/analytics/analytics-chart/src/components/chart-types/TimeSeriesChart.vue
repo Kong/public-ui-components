@@ -34,6 +34,7 @@
     </div>
     <Teleport to="body">
       <ToolTip
+        v-if="!hideTooltipWhenDragging"
         ref="tooltipElement"
         v-model="tooltipData"
         :absolute-left="tooltipAbsoluteLeft"
@@ -182,6 +183,14 @@ const remountBarKey = computed(() => `bar-${plugins.value.map(p => p.id).join('-
 
 const pointsWithoutHover = computed(() => props.chartData && hasExactlyOneDatapoint(props.chartData))
 
+const hideTooltipWhenDragging = computed(() => {
+  if (!hasZoomActions) {
+    return isDoingSelection.value
+  } else {
+    return false
+  }
+})
+
 const { options } = composables.useLineChartOptions({
   tooltipState: tooltipData,
   timeRangeMs: toRef(props, 'timeRangeMs'),
@@ -278,10 +287,12 @@ const handleDragSelect = (event: Event) => {
 }
 
 const handleDragMove = (event: Event) => {
-  tooltipData.state = 'selecting-chart-area'
+  if (hasZoomActions) {
+    tooltipData.state = 'selecting-chart-area'
+  }
+  isDoingSelection.value = true
   verticalLinePlugin.pause()
   highlightPlugin.pause()
-  isDoingSelection.value = true
 
   const { xStart, xEnd } = (event as CustomEvent<DragSelectEventDetail>).detail
 
