@@ -1,7 +1,7 @@
 <template>
   <div class="zoom-timerange-container">
     <div class="zoom-timerange-heading">
-      <span class="title">Selecting area</span>
+      <span class="title">{{ i18n.t('new_timerange_label') }}</span>
     </div>
     <div class="zoom-timerange-details">
       <KBadge> {{ formatTime(props.start.getTime()) }} </KBadge>
@@ -13,6 +13,7 @@
 <script setup lang="ts">
 import { formatTime, type AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { KBadge } from '@kong/kongponents'
+import composables from '../composables'
 
 export interface ZoomOptions {
   label: string
@@ -23,6 +24,9 @@ const props = defineProps<{
   start: Date
   end: Date
 }>()
+
+const { i18n } = composables.useI18n()
+
 </script>
 
 <style scoped lang="scss">

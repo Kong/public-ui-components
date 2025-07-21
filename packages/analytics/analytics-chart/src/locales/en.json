@@ -228,5 +228,6 @@
   },
   "singleValue": {
     "valueError": "Invalid configuration"
-  }
+  },
+  "new_timerange_label": "New time range"
 }
