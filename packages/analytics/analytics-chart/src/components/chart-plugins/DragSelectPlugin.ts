@@ -105,7 +105,6 @@ export class DragSelectPlugin implements Plugin {
   afterDatasetsDraw(chart: Chart): void {
     if (this._isDragging || !this._clearSelectionArea) {
       drawSelectionArea(chart, this._startX, this._endX)
-      chart.update()
     }
   }
 
