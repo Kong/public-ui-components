@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.9.0...@kong-ui-public/analytics-utilities@9.10.0) (2025-07-21)
+
+
+### Features
+
+* **dashboard-schema:** make 'version' optional [MA-3935] ([#2234](https://github.com/Kong/public-ui-components/issues/2234)) ([06d3dc3](https://github.com/Kong/public-ui-components/commit/06d3dc3e5b3fb8d393e7fd64a41d3f4b0c9e6af3))
+
+
+
+
+
 # [9.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.8.0...@kong-ui-public/analytics-utilities@9.9.0) (2025-07-11)
 
 
