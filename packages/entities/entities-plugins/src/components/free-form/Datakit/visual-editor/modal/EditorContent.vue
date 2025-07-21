@@ -16,8 +16,17 @@
       </div>
     </aside>
     <div class="main">
-      <EditorMain />
+      <EditorMain
+        @click:backdrop="handleBackdropClick"
+        @click:node="handleNodeClick"
+      />
     </div>
+
+    <NodePropertiesPanel
+      :node="selectedNode"
+      :visible="propertiesPanelVisible"
+      @close="propertiesPanelVisible = false"
+    />
   </div>
 </template>
 
@@ -27,10 +36,25 @@ import english from '../../../../../locales/en.json'
 import { usePreferences } from '../../composables'
 import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
+import NodePropertiesPanel from '../node/nodePropertiesPanel.vue'
+import { ref } from 'vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
+
+const propertiesPanelVisible = ref(false)
+const selectedNode = ref(null)
+
+const handleNodeClick = (node: any) => {
+  propertiesPanelVisible.value = true
+  selectedNode.value = node
+}
+
+const handleBackdropClick = () => {
+  propertiesPanelVisible.value = false
+  selectedNode.value = null
+}
 </script>
 
 <style lang="scss" scoped>

@@ -15,7 +15,16 @@
         </KButton>
       </div>
     </header>
-    <div class="body">
+    <div
+      class="body"
+      @click="emit('click:backdrop')"
+    >
+      <button @click.stop="emit('click:node', { id: 'node-a', name: 'Node A' })">
+        Mock Node A
+      </button>
+      <button @click.stop="emit('click:node', { id: 'node-b', name: 'Node b' })">
+        Mock Node B
+      </button>
       <slot />
     </div>
   </div>
@@ -32,12 +41,18 @@ const { t } = createI18n<typeof english>('en-us', english)
 defineSlots<{
   default(): any
 }>()
+
+const emit = defineEmits<{
+  'click:node': [node: any]
+  'click:backdrop': []
+}>()
 </script>
 
 <style lang="scss" scoped>
 .dk-editor-main {
   display: flex;
   flex-direction: column;
+  height: 100%;
 
   .header {
     align-items: center;
@@ -53,6 +68,10 @@ defineSlots<{
   .actions {
     display: flex;
     gap: $kui-space-30;
+  }
+
+  .body {
+    height: 100%;
   }
 }
 </style>
