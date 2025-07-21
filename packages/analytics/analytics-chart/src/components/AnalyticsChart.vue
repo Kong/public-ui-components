@@ -119,11 +119,11 @@ interface ChartProps {
   showLegendValues?: boolean
   showAnnotations?: boolean
   timeseriesZoom?: boolean
-  zoomOptions?: ZoomOptions[]
 }
 
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
+  (e: 'view-requests', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 
 const props = withDefaults(defineProps<ChartProps>(), {
@@ -136,7 +136,6 @@ const props = withDefaults(defineProps<ChartProps>(), {
   showLegendValues: true,
   showAnnotations: true,
   timeseriesZoom: false,
-  zoomOptions: undefined,
 })
 
 const { i18n } = composables.useI18n()
@@ -304,6 +303,13 @@ const chartTooltipSortFn = computed(() => {
     // Fallback sort on value (number of Requests)
     return a.value && b.value ? b.rawValue - a.rawValue : 0
   }
+})
+
+const zoomOptions = computed<ZoomOptions[]>(() => {
+  return [
+    { label: 'Zoom', action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange) },
+    { label: 'View requests', action: (newTimeRange: AbsoluteTimeRangeV4) => emit('view-requests', newTimeRange) },
+  ]
 })
 
 provide('showLegendValues', showLegendValues)

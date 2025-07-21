@@ -184,10 +184,7 @@
         :threshold="threshold"
         :timeseries-zoom="timeSeriesZoomToggle"
         tooltip-title="tooltip title"
-        :zoom-options="[
-          { label: 'Zoom', action: (newTimeRange) => eventLog += 'Zoomed To ' + JSON.stringify(newTimeRange) + '\n' },
-          { label: 'View requests', action: (newTimeRange) => eventLog += 'View requests for time range ' + JSON.stringify(newTimeRange) + '\n' },
-        ]"
+        @view-requests="eventLog += 'View requests for time range ' + JSON.stringify($event) + '\n'"
         @zoom-time-range="eventLog += 'Zoomed to ' + JSON.stringify($event) + '\n'"
       />
     </div>
