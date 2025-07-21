@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.7.15...@kong-ui-public/dashboard-renderer@5.7.16) (2025-07-21)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** max-width 320px for aged data warning tooltip ([#2227](https://github.com/Kong/public-ui-components/issues/2227)) ([0536adf](https://github.com/Kong/public-ui-components/commit/0536adf1f32ad1bd8b66abfb668e6ff13cb9ec88))
+
+
+
+
+
 ## [5.7.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.7.14...@kong-ui-public/dashboard-renderer@5.7.15) (2025-07-16)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
