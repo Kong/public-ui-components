@@ -20,8 +20,8 @@ const dispatchEvent = (eventName: string, chart: Chart, pluginInstance: DragSele
   if (xStartValue && xEndValue) {
     chart.canvas.dispatchEvent(new CustomEvent<DragSelectEventDetail>(eventName, {
       detail: {
-        xStart: xStartValue < xEndValue ? xStartValue : xEndValue,
-        xEnd: xEndValue > xStartValue ? xEndValue : xStartValue,
+        xStart: Math.min(xStartValue, xEndValue),
+        xEnd: Math.max(xStartValue, xEndValue),
       },
     }))
   }
