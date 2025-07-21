@@ -9,7 +9,7 @@
   >
     <RedisConfigurationForm
       :action-teleport-target="modalActionTeleportTarget"
-      :config="redisFormConfig"
+      :config="formConfig"
       :disabled-partial-type="disabledPartialType"
       :slidout-top-offset="0"
       @cancel="handleClose"
@@ -23,9 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { PartialType, RedisConfigurationForm, type KongManagerRedisConfigurationFormConfig, type KonnectRedisConfigurationFormConfig } from '@kong-ui-public/entities-redis-configurations'
+import { PartialType, RedisConfigurationForm } from '@kong-ui-public/entities-redis-configurations'
 import { ref, nextTick, watch, computed, inject } from 'vue'
-import { useRoute } from 'vue-router'
 import type { AxiosError } from 'axios'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
@@ -47,15 +46,7 @@ const props = defineProps({
 })
 
 const { t } = createI18n<typeof english>('en-us', english)
-const $route = useRoute()
-const controlPlaneId = computed((): string => String($route.params.control_plane_id || ''))
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
-
-const redisFormConfig = ref<KonnectRedisConfigurationFormConfig | KongManagerRedisConfigurationFormConfig>(
-  formConfig.app === 'konnect'
-    ? { ...formConfig, controlPlaneId: controlPlaneId.value }
-    : { ...formConfig },
-)
 
 const emits = defineEmits<{
   (e: 'partialUpdated', payload: PartialNotification): void
