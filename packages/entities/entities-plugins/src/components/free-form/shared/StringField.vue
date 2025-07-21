@@ -41,7 +41,7 @@
       v-if="realShowVaultSecretPicker && !autofillSlot"
       appearance="warning"
       :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-      message="The vault secret picker is not available"
+      :message="i18n.t('plugins.free-form.vault_picker.component_error')"
     />
   </div>
 </template>
@@ -50,6 +50,7 @@
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { computed, inject, toRef, useAttrs } from 'vue'
 import { KInput, KTextArea, type LabelAttributes } from '@kong/kongponents'
+import useI18n from '../../../composables/useI18n'
 
 import * as utils from '../shared/utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
@@ -61,6 +62,7 @@ defineOptions({
 })
 
 const attrs = useAttrs()
+const { i18n } = useI18n()
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.

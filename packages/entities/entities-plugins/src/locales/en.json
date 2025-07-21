@@ -669,6 +669,9 @@
           "authenticate": "Authenticate Kong Gateway to a third-party service",
           "combine": "Combine two APIs into one response"
         }
+      },
+      "vault_picker": {
+        "component_error": "The vault secret picker is not available"
       }
     }
   },

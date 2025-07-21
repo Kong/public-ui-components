@@ -78,7 +78,7 @@
             v-if="realShowVaultSecretPicker && !autofillSlot"
             appearance="warning"
             :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
-            message="The vault secret picker is not available"
+            :message="i18n.t('plugins.free-form.vault_picker.component_error')"
           />
         </template>
       </KInput>
@@ -103,6 +103,7 @@ import type { LabelAttributes } from '@kong/kongponents'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { useField, useFieldAttrs } from './composables'
 import type { MapFieldSchema } from '../../../types/plugins/form-schema'
+import useI18n from '../../../composables/useI18n'
 
 interface KVEntry {
   id: string
@@ -124,6 +125,7 @@ const { showVaultSecretPicker = undefined, ...props } = defineProps<{
 
 const { value: fieldValue, ...field } = useField<Record<string, string>>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
+const { i18n } = useI18n()
 
 const emit = defineEmits<{
   change: [Record<string, string>]
