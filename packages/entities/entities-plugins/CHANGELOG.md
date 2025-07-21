@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.31.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.30.1...@kong-ui-public/entities-plugins@9.31.0) (2025-07-21)
+
+
+### Features
+
+* **entities-plugins:** use proper ff default value ([#2229](https://github.com/Kong/public-ui-components/issues/2229)) ([36b9279](https://github.com/Kong/public-ui-components/commit/36b92792c48c6c514fe065df10dabd7e4bc1abd7))
+
+
+
+
+
 ## [9.30.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.30.0...@kong-ui-public/entities-plugins@9.30.1) (2025-07-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
