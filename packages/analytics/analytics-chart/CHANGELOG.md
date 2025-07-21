@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.6...@kong-ui-public/analytics-chart@9.1.7) (2025-07-21)
+
+
+### Bug Fixes
+
+* handle zooming right to left ensure end > start ([#2230](https://github.com/Kong/public-ui-components/issues/2230)) ([e38dba8](https://github.com/Kong/public-ui-components/commit/e38dba87c6a73116e33b370b06bf0be6d9323c65))
+
+
+
+
+
 ## [9.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.5...@kong-ui-public/analytics-chart@9.1.6) (2025-07-14)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
