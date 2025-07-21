@@ -26,8 +26,8 @@ const SHARED_LABEL_ATTRIBUTES = {
 } as const
 
 // Construct a map of all fields in a schema, with their full paths as keys
-function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''): Record<string, any> {
-  const schemaMap: Record<string, any> = {}
+export function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
+  const schemaMap: Record<string, UnionFieldSchema> = {}
   const recordSchema = (schema as RecordFieldSchema)
   if (Array.isArray(recordSchema.fields)) {
     for (const fieldDef of recordSchema.fields) {
@@ -58,7 +58,7 @@ function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''): Reco
 /**
  * 'a.0.b.1.c' => 'a.*.b.*.c'
  */
-function generalizePath(p: string) {
+export function generalizePath(p: string) {
   const parts = utils
     .toArray(p)
     .map(node => /^\d+$/.test(node) ? utils.arraySymbol : node)
@@ -164,6 +164,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema>) {
     const info = schema?.description ? marked.parse(schema.description, { async: false }) : undefined
     return {
       ...SHARED_LABEL_ATTRIBUTES,
+      'data-testid': `ff-label-${fieldPath}`,
       info,
     }
   }
@@ -356,6 +357,17 @@ export function useLabelPath(fieldName: string, rule: MaybeRefOrGetter<ResetLabe
   return finalPath
 }
 
+export function defaultLabelFormatter(fieldPath: string): string {
+  const parts = utils.toArray(fieldPath)
+  return parts
+    .map(fieldName => fieldName
+      .split('_')
+      .map(capitalize)
+      .map(replaceByDictionary)
+      .join(' '))
+    .join(' › ')
+}
+
 export function useFieldLabel(
   fieldPath: MaybeRefOrGetter<string>,
   resetLabelPathRule: MaybeRefOrGetter<ResetLabelPathRule | undefined>,
@@ -369,7 +381,6 @@ export function useFieldLabel(
 
   return computed(() => {
     const realPath = parentLabelPath.value ?? fieldName
-    const parts = utils.toArray(realPath)
 
     const parentSchema = ancestors.value.parent?.path
       ? getSchema(ancestors.value.parent.path)
@@ -379,13 +390,7 @@ export function useFieldLabel(
 
     const res = parentIsArray
       ? '' // hide the label when it is a child of Array
-      : parts
-        .map(fieldName => fieldName
-          .split('_')
-          .map(capitalize)
-          .map(replaceByDictionary)
-          .join(' '))
-        .join(' › ')
+      : defaultLabelFormatter(realPath)
 
     return formConfig.transformLabel ? formConfig.transformLabel(res, pathValue) : res
   })
@@ -422,23 +427,27 @@ export type Ancestor = {
   parent: Ancestor | null
 }
 
+export function buildAncestor(path: string): Ancestor {
+  const parts = utils.toArray(path) // [a, b, c]
+  let parent: Ancestor = { parent: null }
+
+  parts.pop()
+
+  while (parts.length) {
+    const n = parts.shift()!
+    parent.path = parent.parent?.path ? utils.resolve(parent.parent.path, n) : n
+    parent = { parent }
+  }
+
+  return parent
+}
+
 /**
  * a.b.c => { parent: { parent: { path: 'a.b', parent: { path: 'a', parent: null } } } }
  */
 export function useFieldAncestors(fieldPath: MaybeRefOrGetter<string>) {
   return computed<Ancestor>(() => {
-    const parts = utils.toArray(toValue(fieldPath)) // [a, b, c]
-    let parent: Ancestor = { parent: null }
-
-    parts.pop()
-
-    while (parts.length) {
-      const n = parts.shift()!
-      parent.path = parent.parent?.path ? utils.resolve(parent.parent.path, n) : n
-      parent = { parent }
-    }
-
-    return parent
+    return buildAncestor(toValue(fieldPath))
   })
 }
 

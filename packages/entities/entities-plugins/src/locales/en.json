@@ -695,6 +695,9 @@
         "code_editor": {
           "mode": "Code Editor"
         }
+      },
+      "vault_picker": {
+        "component_error": "The vault secret picker is not available"
       }
     }
   },
