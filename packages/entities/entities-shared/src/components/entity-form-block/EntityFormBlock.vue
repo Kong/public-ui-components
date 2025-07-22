@@ -36,9 +36,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+const { step, title = '', description = '' } = defineProps<{
   step?: number
-  title: string
+  title?: string
   description?: string
 }>()
 
