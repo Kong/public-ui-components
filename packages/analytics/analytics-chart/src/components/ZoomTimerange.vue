@@ -26,11 +26,15 @@ const { i18n } = composables.useI18n()
 const throttledStartTime = ref(formatTime(props.start.getTime()))
 const throttledEndTime = ref(formatTime(props.end.getTime()))
 
-watch(() => [props.start, props.end], ([newStart, newEnd]) => {
+const updateTimeRangeDebounced = (start: Date, end: Date) => {
   debounce(() => {
-    throttledStartTime.value = formatTime(newStart.getTime())
-    throttledEndTime.value = formatTime(newEnd.getTime())
+    throttledStartTime.value = formatTime(start.getTime())
+    throttledEndTime.value = formatTime(end.getTime())
   }, 100)()
+}
+
+watch(() => [props.start, props.end], ([newStart, newEnd]) => {
+  updateTimeRangeDebounced(newStart, newEnd)
 }, { immediate: true })
 
 </script>
