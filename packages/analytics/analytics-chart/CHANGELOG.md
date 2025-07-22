@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.2.0...@kong-ui-public/analytics-chart@9.2.1) (2025-07-22)
+
+
+### Bug Fixes
+
+* wrong ff evaluated for zoom actions ([#2240](https://github.com/Kong/public-ui-components/issues/2240)) ([a0f0914](https://github.com/Kong/public-ui-components/commit/a0f0914696c4043d70e794d3575497b33c4bef40))
+
+
+
+
+
 # [9.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.8...@kong-ui-public/analytics-chart@9.2.0) (2025-07-22)
 
 
