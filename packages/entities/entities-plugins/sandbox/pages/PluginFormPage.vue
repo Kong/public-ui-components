@@ -48,7 +48,7 @@ const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 useProvideExperimentalFreeForms([
-  // 'service-protection'
+  'service-protection',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
