@@ -1,121 +1,110 @@
 <template>
   <div
-    v-if="showTooltip"
+    v-if="state.showTooltip"
     ref="tooltipEl"
     class="tooltip-container"
-    :class="{ 'locked': locked }"
+    :class="{ 'locked': state.interactionMode === 'interactive' }"
     :style="{
-      transform: locked ? `translate(${dragPosition.left}, ${dragPosition.top})` : `translate(${left}, ${top})`,
+      transform: isInteractive ? `translate(${dragPosition.left}, ${dragPosition.top})` : `translate(${absoluteLeft}, ${absoluteTop})`,
       left: '0',
       top: '0',
-      pointerEvents: locked ? 'all' : 'none'
+      pointerEvents: isInteractive ? 'all' : 'none'
     }"
     @mousedown="handleMouseDown"
   >
-    <div class="tooltip-title">
-      <span class="title font-bold">{{ tooltipTitle }}</span>
-      <DragIcon
-        v-if="locked"
-        class="drag-icon"
-        :color="KUI_COLOR_TEXT_NEUTRAL"
-      />
-      <span
-        v-if="context"
-        class="subtitle"
-      >{{ context }}</span>
-    </div>
-    <ul
-      class="tooltip"
-    >
-      <template
-        v-for="{ backgroundColor, borderColor, label, value, isSegmentEmpty } in (series as any)"
-        :key="label"
+    <ZoomTimerange
+      v-if="state.interactionMode === 'selecting-chart-area'"
+      :end="zoomTimeRange?.end"
+      :start="zoomTimeRange?.start"
+    />
+    <ZoomActions
+      v-else-if="state.interactionMode === 'zoom-interactive' && zoomTimeRange && zoomActionItems"
+      :new-time-range="zoomTimeRange"
+      :zoom-action-items="zoomActionItems"
+      @on-action="emit('onAction')"
+    />
+    <div v-else>
+      <div class="tooltip-title">
+        <span class="title">{{ tooltipTitle }}</span>
+        <DragIcon
+          v-if="isInteractive"
+          class="drag-icon"
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+        />
+        <span
+          v-if="context"
+          class="subtitle"
+        >{{ context }}</span>
+      </div>
+      <ul
+        class="tooltip"
       >
-        <li v-if="series.length">
-          <div
-            class="square-marker"
-            :style="{ background: backgroundColor, 'border-color': borderColor }"
-          />
-          <span
-            class="display-label"
-            :class="{ empty: isSegmentEmpty }"
-          >{{ label }}</span>
-          <span class="display-value">{{ value }}</span>
-        </li>
-      </template>
-    </ul>
+        <template
+          v-for="{ backgroundColor, borderColor, label, value, isSegmentEmpty } in (state.tooltipSeries as any)"
+          :key="label"
+        >
+          <li v-if="state.tooltipSeries.length">
+            <div
+              class="square-marker"
+              :style="{ background: backgroundColor, 'border-color': borderColor }"
+            />
+            <span
+              class="display-label"
+              :class="{ empty: isSegmentEmpty }"
+            >{{ label }}</span>
+            <span class="display-value">{{ value }}</span>
+          </li>
+        </template>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { DragIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
+import type { TooltipState, ZoomActionItem } from 'src/types'
+import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import ZoomActions from '../ZoomActions.vue'
+import ZoomTimerange from '../ZoomTimerange.vue'
 
-const emit = defineEmits(['dimensions', 'top', 'left'])
+const emit = defineEmits<{
+  (e: 'dimensions', dimensions: { width: number, height: number }): void
+  (e: 'top', top: string): void
+  (e: 'left', left: string): void
+  (e: 'onAction'): void
+}>()
 
-const props = defineProps({
-  showTooltip: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
-  /**
-   * The left position relative to the chart
-   * eg. '10px'
-   */
-  left: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  /**
-   * The top position relative to the chart
-   */
-  top: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  /**
-   * Tooltip title
-   */
-  tooltipTitle: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  /**
-   * X axes value under cursor
-   */
-  context: {
-    type: [String, Number],
-    required: false,
-    default: '',
-  },
-  /**
-   * Array of all dataset series labels and colors under cursor
-   */
-  series: {
-    type: Array,
-    required: true,
-    default: () => [],
-  },
-  /**
-   * Is the tooltip locked
-   */
-  locked: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
+const props = withDefaults(defineProps<{
+  state: TooltipState
+  tooltipTitle?: string
+  absoluteLeft?: string
+  absoluteTop?: string
+  zoomTimeRange?: AbsoluteTimeRangeV4
+  zoomActionItems?: ZoomActionItem[]
+}>(), {
+  tooltipTitle: '',
+  absoluteLeft: '0px',
+  absoluteTop: '0px',
+  zoomTimeRange: undefined,
+  zoomActionItems: undefined,
+  dragSelectPlugin: undefined,
 })
 
 const tooltipEl = ref<HTMLElement | null>(null)
 const dragging = ref(false)
 const dragStartPosition = ref({ x: 0, y: 0 })
 const dragMouseStartPosition = ref({ x: 0, y: 0 })
-const dragPosition = ref({ left: props.left, top: props.top })
+const dragPosition = ref({ left: props.absoluteLeft, top: props.absoluteTop })
+
+const context = computed(() => {
+  return props.state.tooltipContext
+})
+
+const isInteractive = computed(() => {
+  return ['interactive', 'zoom-interactive'].includes(props.state.interactionMode)
+})
 
 watch(tooltipEl, value => {
   if (value) {
@@ -125,13 +114,10 @@ watch(tooltipEl, value => {
   }
 })
 
-watch(() => props.locked, value => {
-  if (value) {
-    dragPosition.value.left = props.left
-    dragPosition.value.top = props.top
-  } else if (value === false) {
-    emit('top', dragPosition.value.top)
-    emit('left', dragPosition.value.left)
+watch(() => props.state.interactionMode, value => {
+  if (['interactive', 'zoom-interactive'].includes(value)) {
+    dragPosition.value.left = props.absoluteLeft
+    dragPosition.value.top = props.absoluteTop
   }
 })
 
@@ -223,22 +209,7 @@ function handleMouseUp() {
   z-index: 999;
 
   .tooltip-title {
-    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-    display: flex;
-    flex-direction: column;
-    margin: var(--kui-space-30, $kui-space-30);
-    min-height: 24px;
-    padding-bottom: var(--kui-space-30, $kui-space-30);
-
-    .title {
-      font-size: var(--kui-font-size-30, $kui-font-size-30);
-      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
-    }
-
-    .subtitle {
-      font-size: var(--kui-font-size-20, $kui-font-size-20);
-      margin-top: var(--kui-space-30, $kui-space-30);
-    }
+    @include tooltipTitle;
 
     .drag-icon {
       margin-top: var(--kui-space-30, $kui-space-30);

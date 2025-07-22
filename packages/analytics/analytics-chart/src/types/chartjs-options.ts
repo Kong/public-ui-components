@@ -13,6 +13,7 @@ export interface TooltipEntry {
 }
 
 export type ChartTooltipSortFn = (a: TooltipEntry, b: TooltipEntry) => number
+export type TooltipInteractionMode = 'idle' | 'interactive' | 'zoom-interactive' | 'selecting-chart-area'
 
 export interface TooltipState {
   showTooltip: boolean
@@ -28,16 +29,16 @@ export interface TooltipState {
   height: number
   chartType: ChartType
   chartID: string
-  locked?: boolean
   chartTooltipSortFn?: ChartTooltipSortFn
+  interactionMode: TooltipInteractionMode
 }
 
 interface BaseChartOptions {
   tooltipState: TooltipState
   legendID: string
   stacked: Ref<boolean> // stacked true or false
-  metricAxesTitle?: Ref<string> // metric axes title to display
-  dimensionAxesTitle?: Ref<string> // dimension axes title to display
+  metricAxesTitle?: Ref<string | undefined> // metric axes title to display
+  dimensionAxesTitle?: Ref<string | undefined> // dimension axes title to display
 }
 
 export interface BarChartOptions extends BaseChartOptions {

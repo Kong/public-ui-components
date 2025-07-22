@@ -121,7 +121,7 @@ describe('<AnalyticsChart />', () => {
   it('renders a tooltip with the title', () => {
     cy.mount(ChartTooltip, {
       props: {
-        showTooltip: true,
+        state: { showTooltip: true },
         tooltipTitle: 'Requests count',
       },
     })

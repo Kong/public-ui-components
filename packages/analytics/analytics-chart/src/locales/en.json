@@ -228,5 +228,11 @@
   },
   "singleValue": {
     "valueError": "Invalid configuration"
+  },
+  "new_timerange_label": "New time range",
+  "zoom_action_items": {
+    "zoom": "Zoom",
+    "view_requests": "View requests",
+    "cancel": "Cancel"
   }
 }
