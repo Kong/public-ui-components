@@ -1,5 +1,8 @@
 <template>
-  <div class="dk-node">
+  <div
+    class="dk-node"
+    :class="{ reverse: ioDirection === 'rl' }"
+  >
     <div class="body">
       <div class="title">
         <slot name="title" />
@@ -8,10 +11,7 @@
       <slot />
     </div>
 
-    <div
-      class="input-handles"
-      :class="{ reverse: ioDirection === 'rl' }"
-    >
+    <div class="input-handles">
       <div
         v-for="handle in inputHandles"
         :key="`input-${handle.id}`"
@@ -30,10 +30,7 @@
       </div>
     </div>
 
-    <div
-      class="output-handles"
-      :class="{ reverse: ioDirection === 'rl' }"
-    >
+    <div class="output-handles">
       <div
         v-for="handle in outputHandles"
         :key="`output-${handle.id}`"
@@ -146,7 +143,7 @@ withDefaults(defineProps<{
     transform: translateX(1px);
   }
 
-  &.handle {
+  &.reverse {
     .input-handles,
     .output-handles {
       .handle {
