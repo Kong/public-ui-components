@@ -134,7 +134,7 @@ const name = computed(() => {
       border: none;
       border-radius: $kui-border-radius-round;
       bottom: unset;
-      height: 12px;
+      height: 10px;
       left: unset;
       position: relative;
       right: unset;
