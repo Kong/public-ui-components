@@ -17,6 +17,7 @@
     </ObjectField>
 
     <AdvancedFields>
+      <Field name="config.dictionary_name" />
       <Field name="config.lock_dictionary_name" />
       <Field name="config.strategy" />
       <RedisField />
