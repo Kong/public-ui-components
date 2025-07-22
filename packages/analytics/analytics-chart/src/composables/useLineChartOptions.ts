@@ -8,7 +8,7 @@ import type {
 import {
   Tooltip,
 } from 'chart.js'
-import { formatByGranularity, horizontalTooltipPositioning, tooltipBehavior, verticalTooltipPositioning } from '../utils'
+import { formatByGranularity, horizontalTooltipPositioning, lineChartTooltipBehaviour, verticalTooltipPositioning } from '../utils'
 import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
 import { millisecondsToHours } from 'date-fns'
@@ -152,7 +152,7 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
         tooltip: {
           ...tooltipOptions,
           external: (context: ExternalTooltipContext) => {
-            tooltipBehavior(chartOptions.tooltipState, context)
+            lineChartTooltipBehaviour(chartOptions.tooltipState, context, chartOptions.granularity.value)
           },
         },
       },
