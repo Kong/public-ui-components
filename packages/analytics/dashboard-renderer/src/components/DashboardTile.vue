@@ -288,7 +288,12 @@ const isAgedOutQuery = computed(() => {
 })
 
 const agedOutWarning = computed(() => {
-  return i18n.t('query_aged_out_warning', { granularity: i18n.t(`granularities.${props.definition.query.granularity}` as any) })
+  const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms || 0)
+  const savedGranularity = props.definition.query.granularity
+  return i18n.t('query_aged_out_warning', {
+    currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
+    savedGranularity: i18n.t(`granularities.${savedGranularity}` as any),
+  })
 })
 
 const editTile = () => {

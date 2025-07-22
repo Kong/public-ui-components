@@ -19,7 +19,7 @@
     "exportAsCsv": "Export as CSV"
   },
   "jumpToExplore": "Explore",
-  "query_aged_out_warning": "The saved query's granularity of \"{granularity}\" is no longer available because the data has aged out. Update with new granularity to ensure accurate reporting.",
+  "query_aged_out_warning": "This tile was configured with {savedGranularity} granularity, which is no longer available. It now shows {currentGranularity} data, the closest available granularity.",
   "granularities": {
     "daily": "1 day",
     "fiveMinutely": "5 minutes",
