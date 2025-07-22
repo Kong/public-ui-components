@@ -8,7 +8,7 @@ export const isTooltipInteractive = (state: TooltipInteractionMode) => {
   return ['interactive', 'zoom-interactive'].includes(state)
 }
 
-export const lineChartTooltipBehaviour = (tooltipData: TooltipState, context: ExternalTooltipContext, granularity: GranularityValues) : void => {
+export const lineChartTooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext, granularity: GranularityValues) : void => {
   const { tooltip } = context
   if (tooltip.opacity === 0 && !isTooltipInteractive(tooltipData.interactionMode)) {
     tooltipData.showTooltip = false
