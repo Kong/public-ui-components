@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.21](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.7.20...@kong-ui-public/dashboard-renderer@5.7.21) (2025-07-22)
+
+
+### Bug Fixes
+
+* **dashboard:** update wording for aged out data warning ([#2235](https://github.com/Kong/public-ui-components/issues/2235)) ([4d1f19f](https://github.com/Kong/public-ui-components/commit/4d1f19f13adcbaa6abbcebf6aebc4c443dff563c))
+
+
+
+
+
 ## [5.7.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.7.19...@kong-ui-public/dashboard-renderer@5.7.20) (2025-07-22)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
