@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.2.1...@kong-ui-public/analytics-chart@9.2.2) (2025-07-22)
+
+
+### Bug Fixes
+
+* split the tooltip behaviour functions ([#2241](https://github.com/Kong/public-ui-components/issues/2241)) ([b84357c](https://github.com/Kong/public-ui-components/commit/b84357cfa77dfb51b59454dfe6e4299a50dec9bc))
+
+
+
+
+
 ## [9.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.2.0...@kong-ui-public/analytics-chart@9.2.1) (2025-07-22)
 
 
