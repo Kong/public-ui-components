@@ -1,56 +1,56 @@
 <template>
-  <KCard class="rla-form-request-limits">
+  <KCard class="sp-form-request-limits">
     <template #title>
       <KLabel
-        class="rla-form-request-limits-title"
-        for="rla-form-request-limits-legend"
+        class="sp-form-request-limits-title"
+        for="sp-form-request-limits-legend"
         required
       >
-        {{ t('rla.request_limits.title') }}
+        {{ t('sp.request_limits.title') }}
       </KLabel>
 
-      <div class="rla-form-request-limits-subtitle">
-        {{ t('rla.request_limits.subtitle') }}
+      <div class="sp-form-request-limits-subtitle">
+        {{ t('sp.request_limits.subtitle') }}
       </div>
     </template>
 
-    <div class="rla-form-request-limits-content">
-      <div class="rla-form-window-type">
+    <div class="sp-form-request-limits-content">
+      <div class="sp-form-window-type">
         <RadioField
           :items="availableWindowTypes"
-          :label="t('rla.window_type.label')"
+          :label="t('sp.window_type.label')"
           name="window_type"
           @update:model-value="selectedUseCase = undefined"
         />
       </div>
 
-      <div class="rla-form-request-limits-items">
+      <div class="sp-form-request-limits-items">
         <div
           v-for="(requestLimit, index) in requestLimits"
           :key="getKey(requestLimit, index)"
         >
-          <KLabel :for="`rla-form-request-limits-item-${index}-legend`">
-            {{ t('rla.request_limits.label_index', { index: index + 1 }) }}
+          <KLabel :for="`sp-form-request-limits-item-${index}-legend`">
+            {{ t('sp.request_limits.label_index', { index: index + 1 }) }}
           </KLabel>
 
-          <div class="rla-form-request-limits-row">
+          <div class="sp-form-request-limits-row">
             <legend
-              :id="`rla-form-request-limits-item-${index}-legend`"
-              class="rla-form-request-limits-inputs"
+              :id="`sp-form-request-limits-item-${index}-legend`"
+              class="sp-form-request-limits-inputs"
             >
               <NumberField
                 :name="`$.config.limit.${index}`"
-                :placeholder="t('rla.request_limits.request_number')"
+                :placeholder="t('sp.request_limits.request_number')"
               />
-              <div>{{ t('rla.request_limits.interval_determiner') }}</div>
+              <div>{{ t('sp.request_limits.interval_determiner') }}</div>
               <NumberField
                 :name="`$.config.window_size.${index}`"
-                :placeholder="t('rla.request_limits.time_interval')"
+                :placeholder="t('sp.request_limits.time_interval')"
               />
-              <div>{{ t('rla.request_limits.seconds') }}</div>
+              <div>{{ t('sp.request_limits.seconds') }}</div>
             </legend>
 
-            <div class="rla-form-request-limits-actions">
+            <div class="sp-form-request-limits-actions">
               <KButton
                 appearance="tertiary"
                 :disabled="requestLimits.length <= 1"
@@ -72,10 +72,10 @@
 
       <div
         v-if="filteredUseCases.length > 0"
-        class="rla-form-request-limits-examples"
+        class="sp-form-request-limits-examples"
       >
-        <div>{{ t('rla.start_with_a_use_case') }}</div>
-        <div class="rla-form-request-limits-examples-badges">
+        <div>{{ t('sp.start_with_a_use_case') }}</div>
+        <div class="sp-form-request-limits-examples-badges">
           <KTooltip
             v-for="(useCase, i) in filteredUseCases"
             :key="`use-case-${i}`"
@@ -83,7 +83,7 @@
           >
             <KBadge
               :appearance="selectedUseCase === `${windowType}-${i}` ? 'info' : 'decorative'"
-              class="rla-form-request-limits-examples-badge"
+              class="sp-form-request-limits-examples-badge"
               @click="() => toggleUseCase(useCase, `${windowType}-${i}`)"
             >
               {{ useCase.label }}
@@ -92,8 +92,8 @@
             <template #content>
               <div>{{ useCase.description }}</div>
               <br>
-              <div>{{ t('rla.request_limits.label') }}: {{ useCase.config.limit }}</div>
-              <div>{{ t('rla.request_limits.time_interval') }}: {{ useCase.config.window_size }}</div>
+              <div>{{ t('sp.request_limits.label') }}: {{ useCase.config.limit }}</div>
+              <div>{{ t('sp.request_limits.time_interval') }}: {{ useCase.config.window_size }}</div>
             </template>
           </KTooltip>
         </div>
@@ -192,24 +192,24 @@ const selectedUseCase = ref<string | undefined>()
 const USE_CASES: Record<string, UseCase[]> = {
   fixed: [
     {
-      label: t('rla.use_cases.fixed.hourly_500.label'),
-      description: t('rla.use_cases.fixed.hourly_500.description'),
+      label: t('sp.use_cases.fixed.hourly_500.label'),
+      description: t('sp.use_cases.fixed.hourly_500.description'),
       config: {
         limit: 500,
         window_size: 3600,
       },
     },
     {
-      label: t('rla.use_cases.fixed.half_hourly_200.label'),
-      description: t('rla.use_cases.fixed.half_hourly_200.description'),
+      label: t('sp.use_cases.fixed.half_hourly_200.label'),
+      description: t('sp.use_cases.fixed.half_hourly_200.description'),
       config: {
         limit: 200,
         window_size: 1800,
       },
     },
     {
-      label: t('rla.use_cases.fixed.daily_500.label'),
-      description: t('rla.use_cases.fixed.daily_500.description'),
+      label: t('sp.use_cases.fixed.daily_500.label'),
+      description: t('sp.use_cases.fixed.daily_500.description'),
       config: {
         limit: 500,
         window_size: 86400,
@@ -218,24 +218,24 @@ const USE_CASES: Record<string, UseCase[]> = {
   ],
   sliding: [
     {
-      label: t('rla.use_cases.sliding.hourly_100.label'),
-      description: t('rla.use_cases.sliding.hourly_100.description'),
+      label: t('sp.use_cases.sliding.hourly_100.label'),
+      description: t('sp.use_cases.sliding.hourly_100.description'),
       config: {
         limit: 100,
         window_size: 3600,
       },
     },
     {
-      label: t('rla.use_cases.sliding.half_hourly_300.label'),
-      description: t('rla.use_cases.sliding.half_hourly_300.description'),
+      label: t('sp.use_cases.sliding.half_hourly_300.label'),
+      description: t('sp.use_cases.sliding.half_hourly_300.description'),
       config: {
         limit: 300,
         window_size: 1800,
       },
     },
     {
-      label: t('rla.use_cases.sliding.hourly_500.label'),
-      description: t('rla.use_cases.sliding.hourly_500.description'),
+      label: t('sp.use_cases.sliding.hourly_500.label'),
+      description: t('sp.use_cases.sliding.hourly_500.description'),
       config: {
         limit: 500,
         window_size: 3600,
@@ -271,14 +271,14 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
 </script>
 
 <style lang="scss" scoped>
-.rla-form-request-limits {
-  .rla-form-request-limits-content {
+.sp-form-request-limits {
+  .sp-form-request-limits-content {
     display: flex;
     flex-direction: column;
     gap: $kui-space-50;
   }
 
-  .rla-form-window-type {
+  .sp-form-window-type {
     &-radios {
       display: flex;
       flex-direction: row;
@@ -341,7 +341,7 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
       flex-direction: row;
       gap: $kui-space-40;
 
-      :deep(.rla-form-request-limits-examples-badge) {
+      :deep(.sp-form-request-limits-examples-badge) {
         cursor: pointer;
       }
     }

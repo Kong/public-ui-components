@@ -1,33 +1,33 @@
 <template>
   <div>
     <KLabel
-      for="rla-form-error-legend"
-      :info="t('rla.error_message.help')"
+      for="sp-form-error-legend"
+      :info="t('sp.error_message.help')"
       required
       :tooltip-attributes="{
         maxWidth: '300',
         placement: 'top',
       }"
     >
-      {{ t('rla.error_message.label') }}
+      {{ t('sp.error_message.label') }}
     </KLabel>
 
     <legend
-      id="rla-form-error-legend"
-      class="rla-form-error-inputs"
+      id="sp-form-error-legend"
+      class="sp-form-error-inputs"
     >
       <NumberField
         class="input-error-code"
         label=""
         name="error_code"
-        :placeholder="t('rla.error_message.code_placeholder')"
+        :placeholder="t('sp.error_message.code_placeholder')"
       />
       <div>:</div>
       <StringField
         class="input-error-message"
         label=""
         name="error_message"
-        :placeholder="t('rla.error_message.message_placeholder')"
+        :placeholder="t('sp.error_message.message_placeholder')"
       />
     </legend>
   </div>
@@ -43,7 +43,7 @@ const { t } = createI18n<typeof english>('en-us', english)
 </script>
 
 <style lang="scss" scoped>
-.rla-form-error-inputs {
+.sp-form-error-inputs {
   align-items: center;
   display: flex;
   flex-direction: row;
