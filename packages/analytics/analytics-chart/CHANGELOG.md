@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.8...@kong-ui-public/analytics-chart@9.2.0) (2025-07-22)
+
+
+### Features
+
+* zoom actions spike ([#2197](https://github.com/Kong/public-ui-components/issues/2197)) ([76a883e](https://github.com/Kong/public-ui-components/commit/76a883e75cabeeed08b6a0968b69bbd17466dd5a))
+
+
+
+
+
 ## [9.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.7...@kong-ui-public/analytics-chart@9.1.8) (2025-07-21)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
