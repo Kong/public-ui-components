@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.35.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.34.0...@kong-ui-public/entities-plugins@9.35.0) (2025-07-22)
+
+
+### Features
+
+* **entities-plugins:** rewrite service protection form [KM-1265] ([#2132](https://github.com/Kong/public-ui-components/issues/2132)) ([2fe65d5](https://github.com/Kong/public-ui-components/commit/2fe65d5a0647a3d2a613de860e952d352c501724))
+
+
+
+
+
 # [9.34.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.33.0...@kong-ui-public/entities-plugins@9.34.0) (2025-07-22)
 
 
