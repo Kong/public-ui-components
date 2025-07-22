@@ -688,6 +688,8 @@ onBeforeMount(async () => {
     display: flex;
     flex-direction: column;
     gap: $kui-space-20;
+    padding: $kui-space-20;
+    padding-bottom: $kui-space-0;
   }
 
   .message {
