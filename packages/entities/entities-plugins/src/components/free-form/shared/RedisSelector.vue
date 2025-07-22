@@ -147,13 +147,13 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { AddIcon } from '@kong/icons'
 import type { SelectItem } from '@kong/kongponents/dist/types'
 import { useAxios, useDebouncedFilter, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { RedisConfig, RedisPartialType, Redis, PartialNotification } from './types'
+import type { RedisConfig, RedisPartialType, Redis, PartialNotification, GlobalAction } from './types'
 import { partialEndpoints, fieldsOrder, REDIS_PARTIAL_INFO } from './const'
 import { getRedisType, getPartialTypeDisplay } from './utils'
 import { useField, useFormData } from './composables'
 const emit = defineEmits<{
   (e: 'showNewPartialModal'): void
-  (e: 'globalAction', action: string, payload?: PartialNotification): void
+  (e: 'globalAction', action: GlobalAction, payload?: PartialNotification): void
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)

@@ -7,7 +7,7 @@
         v-for="field in childFields"
         :key="Object.keys(field)[0]"
         :name="Object.keys(field)[0]"
-        @global-action="(name: string, payload: any) => emit('globalAction', name, payload)"
+        @global-action="(name: GlobalAction, payload: any) => emit('globalAction', name, payload)"
       />
     </slot>
   </component>
@@ -30,7 +30,7 @@ import type { FormSchema } from '../../../types/plugins/form-schema'
 import Field from './Field.vue'
 import { isFunction, omit } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
-import type { FormConfig } from './types'
+import type { FormConfig, GlobalAction } from './types'
 
 defineOptions({ name: 'SchemaForm' })
 
@@ -45,7 +45,7 @@ const { tag = 'form', schema, data, config, fieldsOrder } = defineProps<Props<T>
 
 const emit = defineEmits<{
   change: [value: T]
-  'globalAction': [name: string, payload: any]
+  'globalAction': [name: GlobalAction, payload: any]
 }>()
 
 const slots = useSlots()

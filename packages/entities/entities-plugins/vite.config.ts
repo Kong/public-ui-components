@@ -1,4 +1,4 @@
-import sharedViteConfig, { getApiProxies,sanitizePackageName } from '../../../vite.config.shared'
+import sharedViteConfig, { getApiProxies, sanitizePackageName } from '../../../vite.config.shared'
 import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
 
