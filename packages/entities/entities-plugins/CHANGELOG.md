@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.34.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.33.0...@kong-ui-public/entities-plugins@9.34.0) (2025-07-22)
+
+
+### Features
+
+* **shared:** move freeform form section into shared components ([#2236](https://github.com/Kong/public-ui-components/issues/2236)) ([0997cb9](https://github.com/Kong/public-ui-components/commit/0997cb9d49dbfffc727ed6974c2de8f438879b16))
+
+
+
+
+
 # [9.33.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.32.1...@kong-ui-public/entities-plugins@9.33.0) (2025-07-22)
 
 
