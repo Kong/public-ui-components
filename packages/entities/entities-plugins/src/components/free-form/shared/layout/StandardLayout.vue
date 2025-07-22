@@ -1,6 +1,6 @@
 <template>
   <div class="ff-standard-layout">
-    <FormSectionBlock
+    <EntityFormBlock
       :description="t('plugins.form.sections.general_info.description')"
       :step="1"
       :title="t('plugins.form.sections.general_info.title')"
@@ -72,8 +72,8 @@
       >
         <slot name="general-info-extra" />
       </template>
-    </FormSectionBlock>
-    <FormSectionBlock
+    </EntityFormBlock>
+    <EntityFormBlock
       :description="t('plugins.form.sections.plugin_config.description')"
       :step="2"
       :title="t('plugins.form.sections.plugin_config.title')"
@@ -104,7 +104,7 @@
       >
         <slot name="plugin-config-extra" />
       </template>
-    </FormSectionBlock>
+    </EntityFormBlock>
   </div>
 </template>
 
@@ -135,7 +135,7 @@ export type ConfigFormProps<T> = {
 <script setup lang="ts" generic="T extends FreeFormPluginData">
 import { computed, provide, ref, watch } from 'vue'
 import { VueFormGenerator } from '@kong-ui-public/forms'
-import { FormSectionBlock } from '@kong-ui-public/entities-shared'
+import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { pick } from 'lodash-es'
 import { KRadio } from '@kong/kongponents'
 import english from '../../../../locales/en.json'
