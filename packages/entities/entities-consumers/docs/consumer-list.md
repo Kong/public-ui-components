@@ -6,6 +6,7 @@ A table component for consumers.
 - [Usage](#usage)
   - [Install](#install)
   - [Props](#props)
+  - [Slots](#slots)
   - [Events](#events)
   - [Usage example](#usage-example)
 - [TypeScript interfaces](#typescript-interfaces)
@@ -165,6 +166,17 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 - default: `async () => true`
 
 A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can retrieve (view details) a given entity.
+
+### Slots
+
+#### `toolbar-filter`
+
+This slot displays content left-aligned directly above the table. Typically a Search input is placed here.
+Note: This slot is automatically hidden while the table is loading for the first time.
+
+#### `empty-state-toolbar`
+
+This slot renders directly above the empty state view when table has no data. Since consumers is an entity that can be control plane-scoped or global, often a switch control is used to toggle the view between scoped and global consumers -- which is what this slot is useful for.
 
 ### Events
 
