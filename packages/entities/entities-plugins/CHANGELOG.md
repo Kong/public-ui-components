@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.33.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.32.1...@kong-ui-public/entities-plugins@9.33.0) (2025-07-22)
+
+
+### Features
+
+* inline partial creator ([#2172](https://github.com/Kong/public-ui-components/issues/2172)) ([b7f0beb](https://github.com/Kong/public-ui-components/commit/b7f0beb1d43479ac23065f2570ac1effe6940d88))
+
+
+
+
+
 ## [9.32.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.32.0...@kong-ui-public/entities-plugins@9.32.1) (2025-07-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
