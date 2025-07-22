@@ -138,7 +138,7 @@ const chartParentRef = ref<HTMLElement | null>(null)
 const zoomTimeRange = ref<AbsoluteTimeRangeV4 | undefined>(undefined)
 const isDoingSelection = ref(false)
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
-const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('explore-v4-zoom-actions', false)
+const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
 
 const tooltipData = reactive<TooltipState>({
   showTooltip: false,
