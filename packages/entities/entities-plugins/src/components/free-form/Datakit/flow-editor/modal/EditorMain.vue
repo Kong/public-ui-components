@@ -26,17 +26,9 @@
         <Background @click="emit('click:backdrop')" />
         <Controls />
 
-        <template #node-request>
-          <RequestNode />
-        </template>
-        <template #node-service-request>
-          <ServiceRequestNode />
-        </template>
-        <template #node-service-response>
-          <ServiceResponseNode />
-        </template>
-        <template #node-response>
-          <ResponseNode />
+        <!-- To not use the default node style -->
+        <template #node-flow="node">
+          <FlowNode :meta="node.data" />
         </template>
       </VueFlow>
     </div>
@@ -52,10 +44,8 @@ import { Controls } from '@vue-flow/controls'
 import { useVueFlow, VueFlow, type Node } from '@vue-flow/core'
 import { ref } from 'vue'
 import english from '../../../../../locales/en.json'
-import RequestNode from '../node/nodes/RequestNode.vue'
-import ResponseNode from '../node/nodes/ResponseNode.vue'
-import ServiceRequestNode from '../node/nodes/ServiceRequestNode.vue'
-import ServiceResponseNode from '../node/nodes/ServiceResponseNode.vue'
+import FlowNode from '../node/FlowNode.vue'
+import { IMPLICIT_NODE_META_MAP } from '../node/node-meta'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -75,23 +65,27 @@ const emit = defineEmits<{
 const nodes = ref<Node[]>([
   {
     id: 'implicit:request',
-    type: 'request',
+    type: 'flow', // To not use the default node style
     position: { x: 0, y: 0 },
+    data: IMPLICIT_NODE_META_MAP.request,
   },
   {
     id: 'implicit:service-request',
-    type: 'service-request',
+    type: 'flow', // To not use the default node style
     position: { x: 500, y: 0 },
+    data: IMPLICIT_NODE_META_MAP.service_request,
   },
   {
     id: 'implicit:service-response',
-    type: 'service-response',
+    type: 'flow', // To not use the default node style
     position: { x: 500, y: 300 },
+    data: IMPLICIT_NODE_META_MAP.service_response,
   },
   {
     id: 'implicit:response',
-    type: 'response',
+    type: 'flow', // To not use the default node style
     position: { x: 0, y: 300 },
+    data: IMPLICIT_NODE_META_MAP.response,
   },
 ])
 

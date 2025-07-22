@@ -1,47 +1,59 @@
 <template>
   <div
-    class="dk-node"
-    :class="{ reverse: ioDirection === 'rl' }"
+    class="flow-node"
+    :class="{
+      reverse: meta.ioDirection === 'rl',
+      implicit: isImplicit(meta)
+    }"
   >
     <div class="body">
-      <div class="title">
-        <slot name="title" />
+      <div class="name">
+        {{ name }}
       </div>
 
       <slot />
     </div>
 
-    <div class="input-handles">
+    <div
+      v-if="meta.handles?.input && meta.handles.input.length > 0"
+      class="input-handles"
+    >
       <div
-        v-for="handle in inputHandles"
+        v-for="handle in meta.handles.input"
         :key="`input-${handle.id}`"
       >
         <div class="handle">
           <Handle
             :id="`input-${handle.id}`"
-            :position="ioDirection === 'lr' ? Position.Left : Position.Right"
+            :position="meta.ioDirection === 'rl' ? Position.Right : Position.Left"
             type="target"
           />
 
           <div class="handle-label">
-            {{ handle.label }}
+            <div>{{ handle.label }}  </div>
+            <UnfoldMoreIcon :size="KUI_ICON_SIZE_30" />
           </div>
         </div>
       </div>
     </div>
 
-    <div class="output-handles">
+    <div
+      v-if="meta.handles?.output && meta.handles.output.length > 0"
+      class="output-handles"
+    >
       <div
-        v-for="handle in outputHandles"
+        v-for="handle in meta.handles.output"
         :key="`output-${handle.id}`"
       >
         <div class="handle">
           <div class="handle-label">
-            {{ handle.label }}
+            <div>{{ handle.label }}  </div>
+            <UnfoldMoreIcon :size="KUI_ICON_SIZE_30" />
           </div>
+
           <Handle
             :id="`output-${handle.id}`"
-            :position="ioDirection === 'lr' ? Position.Right : Position.Left"
+            :position="meta.ioDirection === 'rl' ? Position.Left : Position.Right"
             type="source"
           />
         </div>
@@ -51,36 +63,30 @@
 </template>
 
 <script setup lang="ts">
+import { createI18n } from '@kong-ui-public/i18n'
+import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { UnfoldMoreIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
-import type { DKNodeHandle } from './types'
+import { computed } from 'vue'
+import english from '../../../../../locales/en.json'
+import { isImplicit, type NodeMeta } from '../../types'
 
-withDefaults(defineProps<{
-  /**
-   * Input handles for the node. By default, these handles are displayed on the left side of the node.
-   */
-  inputHandles?: DKNodeHandle[]
+const props = defineProps<{
+  meta: NodeMeta
+}>()
 
-  /**
-   * Output handles for the node. By default, these handles are displayed on the right side of the node.
-   */
-  outputHandles?: DKNodeHandle[]
+const { t } = createI18n<typeof english>('en-us', english)
 
-  /**
-   * Specify the direction of the input/output. This affects the position of the input/output handles.
-   *
-   * @default 'lr' (left to right)
-   */
-  ioDirection?: 'lr' | 'rl'
-}>(), {
-  inputHandles: undefined,
-  outputHandles: undefined,
-  ioDirection: 'lr',
+const name = computed(() => {
+  if (isImplicit(props.meta)) {
+    return t(`plugins.free-form.datakit.visual_editor.node_names.${props.meta.type}`)
+  }
+  return '' // TBD for user nodes
 })
 </script>
 
 <style lang="scss" scoped>
-.dk-node {
-  background-color: $kui-color-background-disabled;
+.flow-node {
   border-radius: $kui-border-radius-20;
   min-width: 120px;
   padding: $kui-space-40 0;
@@ -88,7 +94,7 @@ withDefaults(defineProps<{
   .body {
     padding: 0 $kui-space-40;
 
-    .title {
+    .name {
       font-weight: $kui-font-weight-semibold;
       margin-bottom: $kui-space-40;
     }
@@ -109,12 +115,17 @@ withDefaults(defineProps<{
       justify-self: start;
 
       .handle-label {
+        align-items: center;
         background-color: $kui-color-background-neutral-strong;
         border-radius: $kui-border-radius-20;
         color: $kui-color-text-inverse;
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
         font-size: $kui-font-size-20;
         font-weight: $kui-font-weight-semibold;
-        padding: $kui-space-10;
+        gap: $kui-space-20;
+        padding: 0 $kui-space-10 0 $kui-space-20;
       }
     }
 
@@ -123,7 +134,7 @@ withDefaults(defineProps<{
       border: none;
       border-radius: $kui-border-radius-round;
       bottom: unset;
-      height: 10px;
+      height: 12px;
       left: unset;
       position: relative;
       right: unset;
@@ -160,6 +171,10 @@ withDefaults(defineProps<{
       align-items: flex-start;
       transform: translateX(-1px);
     }
+  }
+
+  &.implicit {
+    background-color: $kui-color-background-disabled;
   }
 }
 </style>
