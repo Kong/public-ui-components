@@ -93,6 +93,10 @@
           >
             {{ t('consumers.list.empty_state_v2.group') }}
           </template>
+
+          <template #bottom>
+            <slot name="empty-state-bottom" />
+          </template>
         </EntityEmptyState>
       </template>
 
