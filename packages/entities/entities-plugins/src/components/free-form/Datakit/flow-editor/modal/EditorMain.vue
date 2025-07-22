@@ -72,13 +72,13 @@ const nodes = ref<Node[]>([
   {
     id: 'implicit:service-request',
     type: 'flow', // To not use the default node style
-    position: { x: 500, y: 0 },
+    position: { x: 400, y: 0 },
     data: IMPLICIT_NODE_META_MAP.service_request,
   },
   {
     id: 'implicit:service-response',
     type: 'flow', // To not use the default node style
-    position: { x: 500, y: 300 },
+    position: { x: 400, y: 300 },
     data: IMPLICIT_NODE_META_MAP.service_response,
   },
   {
