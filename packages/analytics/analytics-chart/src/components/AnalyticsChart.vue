@@ -302,8 +302,8 @@ const chartTooltipSortFn = computed(() => {
 
 const zoomActionItems = computed<ZoomActionItem[]>(() => {
   return [
-    { label: 'Zoom', action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange) },
-    { label: 'View requests', action: (newTimeRange: AbsoluteTimeRangeV4) => emit('view-requests', newTimeRange) },
+    { label: i18n.t('zoom_action_items.zoom'), action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange) },
+    { label: i18n.t('zoom_action_items.view_requests'), action: (newTimeRange: AbsoluteTimeRangeV4) => emit('view-requests', newTimeRange) },
   ]
 })
 

@@ -8,20 +8,29 @@
     >
       {{ option.label }}
     </div>
+    <div
+      class="zoom-action-item"
+      @click="$emit('onAction')"
+    >
+      {{ i18n.t('zoom_action_items.cancel') }}
+    </div>
   </div>
 </template>
 <script setup lang="ts">
 import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { ZoomActionItem } from '../types'
+import composables from '../composables'
 
 const props = defineProps<{
   zoomActionItems: ZoomActionItem[]
   newTimeRange: AbsoluteTimeRangeV4
 }>()
 
-const emit = defineEmits < {
+const emit = defineEmits<{
   (e: 'onAction'): void
 }>()
+
+const { i18n } = composables.useI18n()
 
 const handleAction = (option: ZoomActionItem) => {
   option.action(props.newTimeRange)
