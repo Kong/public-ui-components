@@ -16,27 +16,24 @@
       </div>
     </header>
 
-    <div
-      class="body"
-      @click="emit('click:backdrop')"
-    >
-      <button @click.stop="emit('click:node', { id: 'node-a', name: 'Node A' })">
-        Mock Node A
-      </button>
-      <button @click.stop="emit('click:node', { id: 'node-b', name: 'Node b' })">
-        Mock Node B
-      </button>
-
+    <div class="body">
       <VueFlow
         class="flow"
         :nodes="nodes"
+        @click="emit('click:backdrop')"
         @nodes-initialized="fitView"
       >
-        <Background />
+        <Background @click="emit('click:backdrop')" />
         <Controls />
 
         <template #node-request>
           <RequestNode />
+        </template>
+        <template #node-service-request>
+          <ServiceRequestNode />
+        </template>
+        <template #node-service-response>
+          <ServiceResponseNode />
         </template>
         <template #node-response>
           <ResponseNode />
@@ -57,6 +54,8 @@ import { ref } from 'vue'
 import english from '../../../../../locales/en.json'
 import RequestNode from '../node/nodes/RequestNode.vue'
 import ResponseNode from '../node/nodes/ResponseNode.vue'
+import ServiceRequestNode from '../node/nodes/ServiceRequestNode.vue'
+import ServiceResponseNode from '../node/nodes/ServiceResponseNode.vue'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -81,12 +80,27 @@ const nodes = ref<Node[]>([
   },
   {
     id: 'implicit:service-request',
-    type: 'response',
+    type: 'service-request',
     position: { x: 500, y: 0 },
+  },
+  {
+    id: 'implicit:service-response',
+    type: 'service-response',
+    position: { x: 500, y: 300 },
+  },
+  {
+    id: 'implicit:response',
+    type: 'response',
+    position: { x: 0, y: 300 },
   },
 ])
 
-const { fitView } = useVueFlow()
+const { fitView, onNodeClick } = useVueFlow()
+
+onNodeClick(({ event, node }) => {
+  event.stopPropagation()
+  emit('click:node', node)
+})
 </script>
 
 <style lang="scss" scoped>

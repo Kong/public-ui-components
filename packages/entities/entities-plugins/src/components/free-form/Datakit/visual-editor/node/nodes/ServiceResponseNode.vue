@@ -1,11 +1,11 @@
 <template>
   <DKNode
-    class="response-node"
-    :input-handles="inputHandles"
+    class="service-response-node"
     io-direction="rl"
+    :output-handles="outputHandles"
   >
     <template #title>
-      response
+      service response
     </template>
   </DKNode>
 </template>
@@ -14,7 +14,7 @@
 import DKNode from './DKNode.vue'
 import type { DKNodeHandle } from './types'
 
-const inputHandles: DKNodeHandle[] = [
+const outputHandles: DKNodeHandle[] = [
   {
     id: 'headers',
     label: 'headers',
@@ -27,7 +27,7 @@ const inputHandles: DKNodeHandle[] = [
 </script>
 
 <style lang="scss" scoped>
-.response-node {
+.service-response-node {
   background-color: $kui-color-background-disabled;
 }
 </style>

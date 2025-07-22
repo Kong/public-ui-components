@@ -1,19 +1,19 @@
 <template>
-  <ImplicitNode
+  <DKNode
     class="request-node"
     :output-handles="outputHandles"
   >
     <template #title>
       request
     </template>
-  </ImplicitNode>
+  </DKNode>
 </template>
 
 <script setup lang="ts">
-import ImplicitNode from './ImplicitNode.vue'
-import type { IOHandle } from './types'
+import DKNode from './DKNode.vue'
+import type { DKNodeHandle } from './types'
 
-const outputHandles: IOHandle[] = [
+const outputHandles: DKNodeHandle[] = [
   {
     id: 'headers',
     label: 'headers',
@@ -28,3 +28,9 @@ const outputHandles: IOHandle[] = [
   },
 ]
 </script>
+
+<style lang="scss" scoped>
+.request-node {
+  background-color: $kui-color-background-disabled;
+}
+</style>

@@ -1,4 +1,4 @@
-export interface IOHandle {
+export interface DKNodeHandle {
   id: string
   label: string
 }

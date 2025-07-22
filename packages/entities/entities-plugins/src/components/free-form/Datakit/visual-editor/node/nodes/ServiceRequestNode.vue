@@ -1,11 +1,10 @@
 <template>
   <DKNode
-    class="response-node"
+    class="service-request-node"
     :input-handles="inputHandles"
-    io-direction="rl"
   >
     <template #title>
-      response
+      service request
     </template>
   </DKNode>
 </template>
@@ -23,11 +22,15 @@ const inputHandles: DKNodeHandle[] = [
     id: 'body',
     label: 'body',
   },
+  {
+    id: 'query',
+    label: 'query',
+  },
 ]
 </script>
 
 <style lang="scss" scoped>
-.response-node {
+.service-request-node {
   background-color: $kui-color-background-disabled;
 }
 </style>

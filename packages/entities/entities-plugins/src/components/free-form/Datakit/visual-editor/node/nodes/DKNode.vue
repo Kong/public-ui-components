@@ -1,8 +1,17 @@
 <template>
-  <div class="io-node">
-    <slot />
+  <div class="dk-node">
+    <div class="body">
+      <div class="title">
+        <slot name="title" />
+      </div>
 
-    <div class="input-handles">
+      <slot />
+    </div>
+
+    <div
+      class="input-handles"
+      :class="{ reverse: ioDirection === 'rl' }"
+    >
       <div
         v-for="handle in inputHandles"
         :key="`input-${handle.id}`"
@@ -10,7 +19,7 @@
         <div class="handle">
           <Handle
             :id="`input-${handle.id}`"
-            :position="Position.Left"
+            :position="ioDirection === 'lr' ? Position.Left : Position.Right"
             type="target"
           />
 
@@ -21,7 +30,10 @@
       </div>
     </div>
 
-    <div class="output-handles">
+    <div
+      class="output-handles"
+      :class="{ reverse: ioDirection === 'rl' }"
+    >
       <div
         v-for="handle in outputHandles"
         :key="`output-${handle.id}`"
@@ -32,7 +44,7 @@
           </div>
           <Handle
             :id="`output-${handle.id}`"
-            :position="Position.Right"
+            :position="ioDirection === 'lr' ? Position.Right : Position.Left"
             type="source"
           />
         </div>
@@ -41,23 +53,47 @@
   </div>
 </template>
 
-<script lang="ts">
-export interface IONodeComponentProps {
-  inputHandles?: IOHandle[]
-  outputHandles?: IOHandle[]
-}
-</script>
-
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core'
-import type { IOHandle } from './types'
+import type { DKNodeHandle } from './types'
 
-defineProps<IONodeComponentProps>()
+withDefaults(defineProps<{
+  /**
+   * Input handles for the node. By default, these handles are displayed on the left side of the node.
+   */
+  inputHandles?: DKNodeHandle[]
+
+  /**
+   * Output handles for the node. By default, these handles are displayed on the right side of the node.
+   */
+  outputHandles?: DKNodeHandle[]
+
+  /**
+   * Specify the direction of the input/output. This affects the position of the input/output handles.
+   */
+  ioDirection?: 'lr' | 'rl'
+}>(), {
+  inputHandles: undefined,
+  outputHandles: undefined,
+  ioDirection: 'lr',
+})
 </script>
 
 <style lang="scss" scoped>
-.io-node {
+.dk-node {
+  background-color: $kui-color-background-disabled;
+  border-radius: $kui-border-radius-20;
+  min-width: 120px;
   padding: $kui-space-40 0;
+
+  .body {
+    padding: 0 $kui-space-40;
+
+    .title {
+      font-weight: $kui-font-weight-semibold;
+      margin-bottom: $kui-space-40;
+    }
+  }
 
   .input-handles,
   .output-handles {
@@ -71,7 +107,7 @@ defineProps<IONodeComponentProps>()
       display: flex;
       flex-direction: row;
       gap: $kui-space-30;
-      justify-content: flex-end;
+      justify-self: start;
 
       .handle-label {
         background-color: $kui-color-background-neutral-strong;
@@ -101,18 +137,29 @@ defineProps<IONodeComponentProps>()
   .input-handles {
     align-items: flex-start;
     transform: translateX(-1px);
-
-    .handle {
-      justify-content: flex-start;
-    }
   }
 
   .output-handles {
     align-items: flex-end;
     transform: translateX(1px);
+  }
 
-    .handle {
-      justify-content: flex-end;
+  &.handle {
+    .input-handles,
+    .output-handles {
+      .handle {
+        flex-direction: row-reverse;
+      }
+    }
+
+    .input-handles {
+      align-items: flex-end;
+      transform: translateX(1px);
+    }
+
+    .output-handles {
+      align-items: flex-start;
+      transform: translateX(-1px);
     }
   }
 }
