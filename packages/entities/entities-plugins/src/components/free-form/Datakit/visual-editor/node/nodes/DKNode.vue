@@ -70,6 +70,8 @@ withDefaults(defineProps<{
 
   /**
    * Specify the direction of the input/output. This affects the position of the input/output handles.
+   *
+   * @default 'lr' (left to right)
    */
   ioDirection?: 'lr' | 'rl'
 }>(), {
