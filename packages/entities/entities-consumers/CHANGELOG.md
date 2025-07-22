@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.0.6...@kong-ui-public/entities-consumers@4.0.7) (2025-07-22)
+
+
+### Bug Fixes
+
+* **entities-consumers:** consumers list empty state toolbar slot ([#2239](https://github.com/Kong/public-ui-components/issues/2239)) ([b27ffdb](https://github.com/Kong/public-ui-components/commit/b27ffdb4278f5a052364c8da81dba13724975793))
+
+
+
+
+
 ## [4.0.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.0.5...@kong-ui-public/entities-consumers@4.0.6) (2025-07-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumers
