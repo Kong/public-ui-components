@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.33.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.32.1...@kong-ui-public/entities-plugins@9.33.0) (2025-07-22)
+
+
+### Features
+
+* inline partial creator ([#2172](https://github.com/Kong/public-ui-components/issues/2172)) ([b7f0beb](https://github.com/Kong/public-ui-components/commit/b7f0beb1d43479ac23065f2570ac1effe6940d88))
+
+
+
+
+
+## [9.32.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.32.0...@kong-ui-public/entities-plugins@9.32.1) (2025-07-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.32.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.31.0...@kong-ui-public/entities-plugins@9.32.0) (2025-07-21)
+
+
+### Features
+
+* **datakit:** node properties panel [KM-1460] ([#2231](https://github.com/Kong/public-ui-components/issues/2231)) ([8c1142d](https://github.com/Kong/public-ui-components/commit/8c1142d38e96e8e8cdc59febe7e4ce32c099c218))
+
+
+
+
+
+# [9.31.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.30.1...@kong-ui-public/entities-plugins@9.31.0) (2025-07-21)
+
+
+### Features
+
+* **entities-plugins:** use proper ff default value ([#2229](https://github.com/Kong/public-ui-components/issues/2229)) ([36b9279](https://github.com/Kong/public-ui-components/commit/36b92792c48c6c514fe065df10dabd7e4bc1abd7))
+
+
+
+
+
 ## [9.30.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.30.0...@kong-ui-public/entities-plugins@9.30.1) (2025-07-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

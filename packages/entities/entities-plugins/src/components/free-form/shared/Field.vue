@@ -13,6 +13,7 @@
     :is="field.renderer.value"
     v-else-if="field.renderer.value"
     :name="utils.resolveRoot(field.path.value)"
+    @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
   />
 
   <template v-else>
@@ -48,8 +49,13 @@ import NumberField from './NumberField.vue'
 import EnumField from './EnumField.vue'
 import KeyValueField from './KeyValueField.vue'
 import TagField from './TagField.vue'
+import type { GlobalAction } from './types'
 
 defineOptions({ name: 'AutoField' })
+
+defineEmits<{
+  (e: 'globalAction', name: GlobalAction, payload: any): void
+}>()
 
 const props = defineProps<{
   name: string

@@ -104,3 +104,11 @@ export type PartialInfo = {
   redisPath: Ref<string | undefined>
   isEditing: boolean
 }
+
+export type PartialNotification = {
+  message: string
+  appearance: string
+}
+
+// Global action that any field can trigger
+export type GlobalAction = 'notify'
