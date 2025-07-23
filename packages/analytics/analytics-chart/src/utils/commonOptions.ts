@@ -62,7 +62,13 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
     const isDonutChart = ['gauge', 'donut'].includes(tooltipData.chartType)
 
-    tooltipData.tooltipContext = tooltip.dataPoints.length > 1 ? tooltip.dataPoints[0].label : tooltipData.dimensionDisplay || ''
+    if (isDonutChart) {
+      tooltipData.tooltipContext = tooltipData.dimensionDisplay || tooltip.dataPoints[0].label
+    } else if (tooltip.dataPoints.length > 1 || tooltip.chart.data.datasets.length === 1) {
+      tooltipData.tooltipContext = tooltip.dataPoints[0].label
+    } else {
+      tooltipData.tooltipContext = tooltipData.dimensionDisplay || ''
+    }
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
       const rawValue = isDonutChart ? p.parsed : p.parsed[valueAxis]
