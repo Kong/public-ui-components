@@ -8,20 +8,50 @@
     :visible="visible"
     @close="$emit('close')"
   >
-    {{ node?.id }}
+    <div class="dk-node-properties-panel-content">
+      <NodeBadge :type="nodeType" />
+
+      {{ NODE_META_MAP[nodeType].description }}
+
+      <template v-if="schema">
+        <NodeForm
+          class="dk-node-properties-panel-form"
+          :schema="schema"
+        />
+
+        <div>
+          <KButton>
+            {{ i18n.t('plugins.free-form.datakit.flow_editor.save') }}
+          </KButton>
+        </div>
+      </template>
+    </div>
   </KSlideout>
 </template>
 
 <script setup lang="ts">
+import NodeBadge from './NodeBadge.vue'
+import { CallNodeSchema } from './mock'
+
 import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../constants'
+import NodeForm from './NodeForm.vue'
 
 import { KSlideout } from '@kong/kongponents'
+import { NODE_META_MAP } from './node-meta'
+import type { NodeType } from '../../types'
+import useI18n from '../../../../../composables/useI18n'
+import type { FormSchema } from 'src/types/plugins/form-schema'
+
+const nodeType: NodeType = 'call' // This should be dynamically set based on the node type
+const schema: FormSchema | undefined = CallNodeSchema // This should be dynamically set based on the node schema
+
+const { i18n } = useI18n()
 
 const {
   maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,
   offsetTop = '52px',
   visible,
-  node,
+  // node,
 } = defineProps<{
   maxWidth?: string
   offsetTop?: string
@@ -38,6 +68,26 @@ defineEmits<{
 .dk-node-properties-panel {
   :deep(.slideout-container) {
     box-shadow: none;
+  }
+
+  :deep(.slideout-content) {
+    margin-top: -$kui-space-100;
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-60;
+  }
+
+  &-form {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-60;
+
+    > label {
+      margin-bottom: $kui-space-0;
+    }
   }
 }
 </style>

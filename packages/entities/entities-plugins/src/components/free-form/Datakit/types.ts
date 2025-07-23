@@ -1,5 +1,6 @@
 import type { Component } from 'vue'
 import type { ButtonProps } from '@kong/kongponents'
+import type { RecordFieldSchema } from '../../../types/plugins/form-schema'
 
 export type EditorMode = 'code' | 'flow'
 
@@ -16,10 +17,20 @@ interface EditorModalNavItemBase {
 
 export type EditorModalNavItem = RequireAtLeastOne<EditorModalNavItemBase, 'to' | 'onClick'>
 
-export type NodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
+export type ExplicitNodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
 
-export interface NodeMeta {
-  type: NodeType
+export type ImplicitNodeType = 'request' | 'response' | 'service-request' | 'service-response'
+
+export type NodeType = ExplicitNodeType | ImplicitNodeType
+
+export type NodeMeta = {
+  type: ExplicitNodeType
   description: string
   icon: Component
+  label: string
+} | {
+  type: ImplicitNodeType
+  description: string
+  label: string
+  schema?: RecordFieldSchema
 }

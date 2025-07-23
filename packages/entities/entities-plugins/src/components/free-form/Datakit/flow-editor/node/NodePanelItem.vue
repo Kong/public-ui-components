@@ -22,9 +22,9 @@
 <script setup lang="ts">
 import { NODE_META_MAP } from './node-meta'
 
-import type { NodeType } from '../../types'
+import type { ExplicitNodeType } from '../../types'
 
-const { type } = defineProps<{ type: NodeType }>()
+const { type } = defineProps<{ type: ExplicitNodeType }>()
 const {
   description,
   icon: Icon,

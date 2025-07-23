@@ -1,6 +1,6 @@
 import { createGlobalState, createInjectionState, useLocalStorage } from '@vueuse/core'
 
-import type { EditorMode } from './types'
+import type { EditorMode, NodeType } from './types'
 
 export const usePreferences = createGlobalState(() => {
   const editorMode = useLocalStorage<EditorMode>(
@@ -24,3 +24,11 @@ export const [provideEditorState, useEditorState] = createInjectionState(() => {
     // pluginConfig,
   }
 })
+
+export const useSchemaHelper = () => {
+  return {
+    getNodeSchema: (type: NodeType) => {
+
+    },
+  }
+}

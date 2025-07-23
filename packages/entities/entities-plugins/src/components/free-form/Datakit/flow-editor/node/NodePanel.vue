@@ -12,7 +12,7 @@
       <NodePanelItem
         v-for="nodeType in Object.keys(NODE_META_MAP)"
         :key="nodeType"
-        :type="nodeType as NodeType"
+        :type="nodeType as ExplicitNodeType"
       />
     </div>
   </div>
@@ -24,7 +24,7 @@ import english from '../../../../../locales/en.json'
 import { NODE_META_MAP } from './node-meta'
 import NodePanelItem from './NodePanelItem.vue'
 
-import type { NodeType } from '../../types'
+import type { ExplicitNodeType } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 </script>

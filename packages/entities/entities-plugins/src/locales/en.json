@@ -688,12 +688,43 @@
             "title": "Node types",
             "description": "Drag a node onto the canvas to add it to your data flow."
           },
-          "node_description": {
-            "call": "Call a third-party API",
-            "jq": "Transform data and cast variables with jq",
-            "exit": "Return a response directly to the client",
-            "property": "Get and set Kong Gateway configuration data",
-            "static": "Define static values to use for call nodes"
+          "node": {
+            "call": {
+              "label": "Call",
+              "description": "Call a third-party API"
+            },
+            "jq": {
+              "label": "Jq",
+              "description": "Transform data and cast variables with jq"
+            },
+            "exit": {
+              "label": "Exit",
+              "description": "Return a response directly to the client"
+            },
+            "property": {
+              "label": "Property",
+              "description": "Get and set Kong Gateway configuration data"
+            },
+            "static": {
+              "label": "Static",
+              "description": "Define static values to use for call nodes"
+            },
+            "request": {
+              "label": "Request",
+              "description": "Reads incoming client request properties. You cannot specify request node input."
+            },
+            "response": {
+              "label": "Response",
+              "description": "Updates properties of the outgoing client response."
+            },
+            "service-request": {
+              "label": "Service Request",
+              "description": "Updates properties of the request sent to the service being proxied to."
+            },
+            "service-response": {
+              "label": "Service Response",
+              "description": "Reads response properties from the service being proxied to."
+            }
           }
         },
         "code_editor": {
