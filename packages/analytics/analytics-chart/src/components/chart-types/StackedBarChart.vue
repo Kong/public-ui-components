@@ -230,7 +230,9 @@ const isHorizontal = computed(() => toRef(props, 'orientation').value === 'horiz
 
 const tooltipData = reactive<TooltipState>({
   showTooltip: false,
-  tooltipContext: '',
+  tooltipContext: '', // set in tooltipBehaviour
+  metricDisplay: props.metricAxesTitle,
+  dimensionDisplay: props.dimensionAxesTitle,
   tooltipSeries: [],
   left: '',
   top: '',

@@ -31,14 +31,19 @@
           class="drag-icon"
           :color="KUI_COLOR_TEXT_NEUTRAL"
         />
-        <span
-          v-if="context"
+        <div
+          v-if="context || metric"
           class="subtitle"
-        >{{ context }}</span>
+        >
+          <div class="context">
+            {{ context }}
+          </div>
+          <div class="metric">
+            {{ metric }}
+          </div>
+        </div>
       </div>
-      <ul
-        class="tooltip"
-      >
+      <ul class="tooltip">
         <template
           v-for="{ backgroundColor, borderColor, label, value, isSegmentEmpty } in (state.tooltipSeries as any)"
           :key="label"
@@ -100,6 +105,10 @@ const dragPosition = ref({ left: props.absoluteLeft, top: props.absoluteTop })
 
 const context = computed(() => {
   return props.state.tooltipContext
+})
+
+const metric = computed(() => {
+  return props.state.metricDisplay
 })
 
 const isInteractive = computed(() => {
