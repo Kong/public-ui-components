@@ -142,7 +142,7 @@ const outputHandlesExpanded = ref(false)
 
 const name = computed(() => {
   if (isImplicit(props.meta)) {
-    return t(`plugins.free-form.datakit.visual_editor.node_names.${props.meta.type}`)
+    return t(`plugins.free-form.datakit.flow_editor.node_names.${props.meta.type}`)
   }
   return '' // TBD for user nodes
 })
