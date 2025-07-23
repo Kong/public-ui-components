@@ -170,6 +170,19 @@ describe('<UpstreamsFormLoadBalancing/>', () => {
     cy.get('@onUpdateCookiePathSpy').should('have.been.calledWith', cookiePath)
   })
 
+  it('Should hide slots, hash_on, and hash_fallback when algorithm is sticky sessions', () => {
+    cy.mount(UpstreamsFormLoadBalancing, {
+      props: {
+        algorithm: 'sticky-sessions',
+        stickySessionsAvailable: true,
+      },
+    })
+
+    cy.getTestId('upstreams-form-slots').should('not.exist')
+    cy.get('.hash-on-select').should('not.exist')
+    cy.get('.hash-fallback-select').should('not.exist')
+  })
+
   it('Should bind algorithm data correctly', () => {
     cy.mount(UpstreamsFormLoadBalancing, {
       props: {
