@@ -7,11 +7,11 @@
           target="_blank"
           to="https://developer.konghq.com/plugins/datakit/"
         >
-          {{ t('plugins.free-form.datakit.visual_editor.view_docs') }}
+          {{ t('plugins.free-form.datakit.flow_editor.view_docs') }}
           <ExternalLinkIcon />
         </KButton>
         <KButton>
-          {{ t('plugins.free-form.datakit.visual_editor.save') }}
+          {{ t('plugins.free-form.datakit.flow_editor.save') }}
         </KButton>
       </div>
     </header>

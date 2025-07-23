@@ -3,9 +3,9 @@
     <h3 class="title">
       <KLabel
         class="label"
-        :info="t('plugins.free-form.datakit.visual_editor.node_panel.description')"
+        :info="t('plugins.free-form.datakit.flow_editor.node_panel.description')"
       >
-        {{ t('plugins.free-form.datakit.visual_editor.node_panel.title') }}
+        {{ t('plugins.free-form.datakit.flow_editor.node_panel.title') }}
       </KLabel>
     </h3>
     <div class="node-list">

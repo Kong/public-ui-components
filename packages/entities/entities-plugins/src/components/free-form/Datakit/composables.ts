@@ -5,7 +5,7 @@ import type { EditorMode } from './types'
 export const usePreferences = createGlobalState(() => {
   const editorMode = useLocalStorage<EditorMode>(
     'datakit-editor-mode',
-    'visual',
+    'flow',
   )
   const sidePanelExpanded = useLocalStorage<boolean>(
     'datakit-editor-sidebar-expanded',

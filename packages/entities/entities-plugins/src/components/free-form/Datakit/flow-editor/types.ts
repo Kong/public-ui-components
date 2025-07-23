@@ -1,7 +1,7 @@
 import type { Component } from 'vue'
 import type { ButtonProps } from '@kong/kongponents'
 
-export type EditorMode = 'code' | 'visual'
+export type EditorMode = 'code' | 'flow'
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
   ? Omit<T, Keys> & { [K in Keys]-?: T[K] }

@@ -4,7 +4,7 @@
     class="dk-form"
   >
     <template
-      v-if="enableVisualEditor"
+      v-if="enableFlowEditor"
       #plugin-config-extra
     >
       <KSegmentedControl
@@ -19,12 +19,12 @@
     </template>
 
     <template #default="formProps">
-      <div v-if="finalEditorMode === 'visual'">
+      <div v-if="finalEditorMode === 'flow'">
         <KButton
           appearance="secondary"
           @click="modalOpen = true"
         >
-          {{ t('plugins.free-form.datakit.visual_editor.cta') }}
+          {{ t('plugins.free-form.datakit.flow_editor.cta') }}
         </KButton>
         <EditorModal v-model:open="modalOpen" />
       </div>
@@ -80,7 +80,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../locales/en.json'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import Form from '../shared/Form.vue'
-import EditorModal from './visual-editor/modal/EditorModal.vue'
+import EditorModal from './flow-editor/modal/EditorModal.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import * as examples from './examples'
@@ -97,24 +97,24 @@ const props = defineProps<Props<any>>()
 // provided by consumer apps
 // TODO: make the default value to `false` to make it opt-in
 // It's currently set to `true` for testing purposes
-const enableVisualEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_VISUAL_EDITOR, false)
+const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, false)
 
 // Editor mode selection
 
 const { editorMode } = usePreferences()
 const finalEditorMode = computed<EditorMode>(() => {
-  return enableVisualEditor ? editorMode.value : 'code'
+  return enableFlowEditor ? editorMode.value : 'code'
 })
 
 const icons: Record<EditorMode, Component> = {
-  visual: DesignIcon,
+  flow: DesignIcon,
   code: CodeblockIcon,
 }
 
 const editorModes = [
   {
-    label: t('plugins.free-form.datakit.visual_editor.mode'),
-    value: 'visual',
+    label: t('plugins.free-form.datakit.flow_editor.mode'),
+    value: 'flow',
   },
   {
     label: t('plugins.free-form.datakit.code_editor.mode'),
@@ -126,14 +126,14 @@ const description = computed(() => {
   switch (editorMode.value) {
     case 'code':
       return t('plugins.free-form.datakit.description_code')
-    case 'visual':
-      return t('plugins.free-form.datakit.description_visual')
+    case 'flow':
+      return t('plugins.free-form.datakit.description_flow')
     default:
       return ''
   }
 })
 
-// Visual editor
+// Flow editor
 
 const modalOpen = ref(false)
 
