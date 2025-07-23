@@ -59,7 +59,7 @@ import { Chart } from 'chart.js'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
 import { ref, toRef, onMounted, computed, reactive, watch, inject, onBeforeUnmount, onUnmounted, useTemplateRef } from 'vue'
-import type { PropType, Ref } from 'vue'
+import type { Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import { type BarChartData, generateLegendItems } from '../../utils'
@@ -70,68 +70,34 @@ import { ChartLegendPosition } from '../../enums'
 import type { AxesTooltipState, ChartLegendSortFn, ChartTooltipSortFn, EnhancedLegendItem, KChartData, LegendValues, TooltipEntry, TooltipState } from '../../types'
 import { HighlightPlugin } from '../chart-plugins/HighlightPlugin'
 
-const props = defineProps({
-  chartData: {
-    type: Object as PropType<KChartData>,
-    required: false,
-    default: () => ({ labels: [], datasets: [] }),
-  },
-  tooltipTitle: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  legendValues: {
-    type: Object as PropType<LegendValues>,
-    required: false,
-    default: null,
-  },
-  metricUnit: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  orientation: {
-    type: String,
-    required: false,
-    default: 'horizontal',
-    validator: (val: string) => ['horizontal', 'vertical'].includes(val),
-  },
-  annotations: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  metricAxesTitle: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  dimensionAxesTitle: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  stacked: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  syntheticsDataKey: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  chartLegendSortFn: {
-    type: Function as PropType<ChartLegendSortFn>,
-    required: false,
-    default: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
-  },
-  chartTooltipSortFn: {
-    type: Function as PropType<ChartTooltipSortFn>,
-    required: false,
-    default: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
-  },
+
+const props = withDefaults(defineProps<{
+  chartData: KChartData
+  tooltipTitle?: string
+  legendValues?: LegendValues
+  metricUnit?: string
+  orientation?: 'horizontal' | 'vertical'
+  annotations?: boolean
+  metricAxesTitle?: string
+  dimensionAxesTitle?: string
+  stacked?: boolean
+  syntheticsDataKey?: string
+  chartLegendSortFn?: ChartLegendSortFn
+  chartTooltipSortFn?: ChartTooltipSortFn
+  tooltipMetricDisplay?: string
+}>(), {
+  tooltipTitle: '',
+  legendValues: undefined,
+  metricUnit: '',
+  orientation: 'horizontal',
+  annotations: true,
+  metricAxesTitle: undefined,
+  dimensionAxesTitle: undefined,
+  stacked: true,
+  syntheticsDataKey: '',
+  chartLegendSortFn: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
+  chartTooltipSortFn: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
+  tooltipMetricDisplay: '',
 })
 
 const { i18n } = composables.useI18n()
@@ -231,7 +197,7 @@ const isHorizontal = computed(() => toRef(props, 'orientation').value === 'horiz
 const tooltipData = reactive<TooltipState>({
   showTooltip: false,
   tooltipContext: '', // set in tooltipBehaviour
-  metricDisplay: props.metricAxesTitle,
+  metricDisplay: props.tooltipMetricDisplay,
   dimensionDisplay: props.dimensionAxesTitle,
   tooltipSeries: [],
   left: '',

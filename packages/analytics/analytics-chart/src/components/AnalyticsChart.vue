@@ -85,6 +85,8 @@
         :legend-values="legendValues"
         :metric-unit="computedMetricUnit"
         :synthetics-data-key="syntheticsDataKey"
+        :tooltip-dimension-display="dimensionAxesTitle"
+        :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
       />
     </div>
