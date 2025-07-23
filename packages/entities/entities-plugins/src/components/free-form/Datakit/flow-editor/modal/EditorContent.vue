@@ -6,7 +6,7 @@
     >
       <header class="header">
         <h2 class="title">
-          {{ t('plugins.free-form.datakit.visual_editor.name') }}
+          {{ t('plugins.free-form.datakit.flow_editor.name') }}
         </h2>
       </header>
       <div class="body">

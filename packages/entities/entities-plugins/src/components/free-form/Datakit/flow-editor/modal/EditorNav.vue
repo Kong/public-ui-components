@@ -78,7 +78,7 @@ const emit = defineEmits<{
 
 const navItems: EditorModalNavItem[] = [
   {
-    label: t('plugins.free-form.datakit.visual_editor.return_to_config'),
+    label: t('plugins.free-form.datakit.flow_editor.return_to_config'),
     icon: ArrowLeftIcon,
     onClick: () => emit('back'),
   },
@@ -88,8 +88,8 @@ const { sidePanelExpanded } = usePreferences()
 
 const toggleLabel = computed(() => {
   return sidePanelExpanded.value
-    ? t('plugins.free-form.datakit.visual_editor.collapse_panel')
-    : t('plugins.free-form.datakit.visual_editor.expand_panel')
+    ? t('plugins.free-form.datakit.flow_editor.collapse_panel')
+    : t('plugins.free-form.datakit.flow_editor.expand_panel')
 })
 
 const sidePanelToggling = ref(false)
