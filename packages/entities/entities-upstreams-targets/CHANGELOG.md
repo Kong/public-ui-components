@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.8.6...@kong-ui-public/entities-upstreams-targets@3.9.0) (2025-07-23)
+
+
+### Features
+
+* **entities-upstreams-targets:** hide some fields when algorithm is sticky sessions ([#2237](https://github.com/Kong/public-ui-components/issues/2237)) ([3acb84f](https://github.com/Kong/public-ui-components/commit/3acb84f23bbd0338b6466548bd50669c1dab6eb4))
+
+
+
+
+
 ## [3.8.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.8.5...@kong-ui-public/entities-upstreams-targets@3.8.6) (2025-07-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
