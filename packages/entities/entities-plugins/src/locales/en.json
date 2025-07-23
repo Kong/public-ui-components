@@ -688,6 +688,12 @@
             "title": "Node types",
             "description": "Drag a node onto the canvas to add it to your data flow."
           },
+          "node_names": {
+            "request": "request",
+            "response": "response",
+            "service_request": "service request",
+            "service_response": "service response"
+          },
           "node_description": {
             "call": "Call a third-party API",
             "jq": "Transform data and cast variables with jq",

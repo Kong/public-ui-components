@@ -1,15 +1,15 @@
-import type { NodeMeta, NodeType } from '../../types'
-import { NetworkIcon, CodeblockIcon, GatewayIcon, StackIcon, VitalsIcon } from '@kong/icons'
 import { createI18n } from '@kong-ui-public/i18n'
+import { CodeblockIcon, GatewayIcon, NetworkIcon, StackIcon, VitalsIcon } from '@kong/icons'
 import english from '../../../../../locales/en.json'
+import type { ImplicitNodeMeta, ImplicitNodeType, UserNodeMeta, UserNodeType } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-function getNodeDescription(type: NodeType): string {
+function getNodeDescription(type: UserNodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_description.${type}`)
 }
 
-export const NODE_META_MAP = {
+export const USER_NODE_META_MAP = {
   call: {
     type: 'call',
     description: getNodeDescription('call'),
@@ -35,4 +35,47 @@ export const NODE_META_MAP = {
     description: getNodeDescription('static'),
     icon: VitalsIcon,
   },
-} as const satisfies Record<NodeType, NodeMeta>
+} as const satisfies Record<UserNodeType, UserNodeMeta>
+
+export const IMPLICIT_NODE_META_MAP = {
+  request: {
+    type: 'request',
+    handles: {
+      output: [
+        { id: 'headers', label: 'headers' },
+        { id: 'body', label: 'body' },
+        { id: 'query', label: 'query' },
+      ],
+    },
+  },
+  service_request: {
+    type: 'service_request',
+    handles: {
+      input: [
+        { id: 'headers', label: 'headers' },
+        { id: 'body', label: 'body' },
+        { id: 'query', label: 'query' },
+      ],
+    },
+  },
+  service_response: {
+    type: 'service_response',
+    handles: {
+      output: [
+        { id: 'headers', label: 'headers' },
+        { id: 'body', label: 'body' },
+      ],
+    },
+    ioDirection: 'rl',
+  },
+  response: {
+    type: 'response',
+    handles: {
+      input: [
+        { id: 'headers', label: 'headers' },
+        { id: 'body', label: 'body' },
+      ],
+    },
+    ioDirection: 'rl',
+  },
+} as const satisfies Record<ImplicitNodeType, ImplicitNodeMeta>

@@ -10,9 +10,9 @@
     </h3>
     <div class="node-list">
       <NodePanelItem
-        v-for="nodeType in Object.keys(NODE_META_MAP)"
+        v-for="nodeType in (Object.keys(USER_NODE_META_MAP) as Array<UserNodeType>)"
         :key="nodeType"
-        :type="nodeType as NodeType"
+        :type="nodeType"
       />
     </div>
   </div>
@@ -21,10 +21,10 @@
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
-import { NODE_META_MAP } from './node-meta'
+import { USER_NODE_META_MAP } from './node-meta'
 import NodePanelItem from './NodePanelItem.vue'
 
-import type { NodeType } from '../../types'
+import type { UserNodeType } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 </script>

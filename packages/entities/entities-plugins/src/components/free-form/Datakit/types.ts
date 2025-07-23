@@ -16,10 +16,53 @@ interface EditorModalNavItemBase {
 
 export type EditorModalNavItem = RequireAtLeastOne<EditorModalNavItemBase, 'to' | 'onClick'>
 
-export type NodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
+const IMPLICIT_NODE_TYPES = ['request', 'response', 'service_request', 'service_response'] as const
 
-export interface NodeMeta {
-  type: NodeType
+export type UserNodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
+export type ImplicitNodeType = typeof IMPLICIT_NODE_TYPES[number]
+
+export interface NodeHandle {
+  id: string
+  label: string
+}
+
+export type NodeIODirection = 'lr' | 'rl'
+
+interface BaseNodeMeta {
+  /**
+   * Handles for the node.
+   */
+  handles?: {
+    input?: NodeHandle[]
+    output?: NodeHandle[]
+  }
+
+  /**
+   * Direction of input/output handles.
+   * This affects the position of the input/output handles on the node.
+   *
+   * If omitted, `'lr'` (left to right) will be used.
+   */
+  ioDirection?: NodeIODirection
+}
+
+/**
+ * Metadata for nodes that can be defined by users.
+ */
+export interface UserNodeMeta extends BaseNodeMeta {
+  type: UserNodeType
   description: string
   icon: Component
 }
+
+/**
+ * Metadata for nodes that are implicitly provided by Datakit.
+ */
+export interface ImplicitNodeMeta extends BaseNodeMeta {
+  type: ImplicitNodeType
+}
+
+export const isImplicit = (meta: NodeMeta): meta is ImplicitNodeMeta =>
+  IMPLICIT_NODE_TYPES.includes(meta.type as ImplicitNodeType)
+
+export type NodeMeta = UserNodeMeta | ImplicitNodeMeta
