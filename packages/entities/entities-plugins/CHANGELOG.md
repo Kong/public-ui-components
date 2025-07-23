@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.37.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.36.0...@kong-ui-public/entities-plugins@9.37.0) (2025-07-23)
+
+
+### Features
+
+* **entities-plugins:** datakit VueFlow setup and node handles impl ([#2228](https://github.com/Kong/public-ui-components/issues/2228)) ([83d079f](https://github.com/Kong/public-ui-components/commit/83d079f4c81979ac99d5f393d1ddb7b073dc243b))
+
+
+
+
+
 # [9.36.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.35.2...@kong-ui-public/entities-plugins@9.36.0) (2025-07-23)
 
 
