@@ -1,9 +1,9 @@
-import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, provide, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
-import { get, set, uniqueId } from 'lodash-es'
+import { get, set } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
 import type { FormConfig, ResetLabelPathRule } from './types'
 import { capitalize } from 'lodash-es'
@@ -511,38 +511,4 @@ export function useIsAutoFocus(fieldAncestors?: MaybeRefOrGetter<Ancestor>) {
 
     return false
   })
-}
-
-export function useItemKeys<T>(ns: string, items: MaybeRefOrGetter<T[]>) {
-  const keyMap = reactive(new Map<T, string>())
-
-  function generateId() {
-    return uniqueId(`${ns}-`)
-  }
-
-  function getKey(item: T, index: number) {
-    if (item != null && typeof item === 'object') {
-      return keyMap.get(item)
-    }
-
-    return `${ns}-${index}`
-  }
-
-  watch(items, (newItems) => {
-    const itemVal = toValue(newItems)
-    itemVal.forEach((item) => {
-      if (!keyMap.has(item)) {
-        keyMap.set(item, generateId())
-      }
-    })
-
-    const current = new Set(itemVal)
-      ;[...keyMap.keys()].forEach((key) => {
-      if (!current.has(key)) {
-        keyMap.delete(key)
-      }
-    })
-  }, { immediate: true, deep: true })
-
-  return { getKey }
 }

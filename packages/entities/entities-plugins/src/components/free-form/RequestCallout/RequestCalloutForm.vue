@@ -13,10 +13,10 @@ import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
 import PluginFormWrapper from '../shared/PluginFormWrapper.vue'
 
-import type { PluginFormWrapperProps } from '../shared/PluginFormWrapper.vue'
+import type { Props } from '../shared/PluginFormWrapper.vue'
 import type { RequestCalloutPlugin } from './types'
 
-const props = defineProps<PluginFormWrapperProps<RequestCalloutPlugin>>()
+const props = defineProps<Props<RequestCalloutPlugin>>()
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any

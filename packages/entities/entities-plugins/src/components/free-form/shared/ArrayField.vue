@@ -143,10 +143,11 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs } from 'vue'
+import { useTemplateRef, nextTick, watch, computed, ref, reactive, toValue, toRef, useAttrs } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
+import { uniqueId } from 'lodash-es'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared, useItemKeys } from './composables'
+import { useField, useFieldAttrs, useFormShared } from './composables'
 import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
@@ -181,17 +182,43 @@ const { getDefault } = useFormShared()
 const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 
+const keyMap = reactive(new Map<T, string>())
 const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
 
-const { getKey } = useItemKeys('ff-array-field', realItems)
-
 const ListTag = computed(() => props.appearance === 'card' ? KCard : 'div')
+
+function generateId() {
+  return uniqueId('ff-array-field-')
+}
+
+function getKey(item: T, index: number) {
+  if (item != null && typeof item === 'object') {
+    return keyMap.get(item)
+  }
+
+  return `ff-array-field-${index}`
+}
 
 function getTabTitle(item: T, index: number) {
   return typeof props.itemLabel === 'function'
     ? props.itemLabel(item, index)
     : props.itemLabel || fieldAttrs.value.label || `Item #${index}`
 }
+
+watch(realItems, (newItems) => {
+  newItems.forEach((item) => {
+    if (!keyMap.has(item)) {
+      keyMap.set(item, generateId())
+    }
+  })
+
+  const current = new Set(newItems)
+  ;[...keyMap.keys()].forEach((key) => {
+    if (!current.has(key)) {
+      keyMap.delete(key)
+    }
+  })
+}, { immediate: true, deep: true })
 
 const tabs = computed(() => realItems.value.map((item, index) => {
   const hash = `#${getKey(item, index)}`

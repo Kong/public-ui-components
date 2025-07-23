@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-export type PluginFormWrapperProps<T extends FreeFormPluginData = FreeFormPluginData> = {
+export type Props<T extends FreeFormPluginData> = {
   schema: FormSchema
   formSchema: any
   model: T
@@ -41,14 +41,14 @@ export type PluginFormWrapperProps<T extends FreeFormPluginData = FreeFormPlugin
   onFormChange: (value: T) => void
 }
 
-export type ConfigFormProps<T extends FreeFormPluginData = FreeFormPluginData> = {
+export type ConfigFormProps<T> = {
   schema: FormSchema
   data: Record<string, any>
   onChange: (value: T) => void
 }
 </script>
 
-<script setup lang="ts" generic="T extends FreeFormPluginData = FreeFormPluginData">
+<script setup lang="ts" generic="T extends FreeFormPluginData">
 import { pick } from 'lodash-es'
 import { computed, ref, toValue, type MaybeRefOrGetter } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
@@ -60,7 +60,7 @@ import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const props = defineProps<PluginFormWrapperProps<T>>()
+const props = defineProps<Props<T>>()
 
 const slots = defineSlots<{
   default: (props: ConfigFormProps<T>) => any
@@ -117,8 +117,8 @@ const configCollapse = ref(false)
  * Avoid passing freeform data that it can't handle. e.g. `scope`, `update_time`
  * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
  */
-function pruneData(data: PluginFormWrapperProps<T>['model']) {
-  const ffDataKeys: Array<keyof PluginFormWrapperProps<T>['model']> = [
+function pruneData(data: Props<T>['model']) {
+  const ffDataKeys: Array<keyof Props<T>['model']> = [
     'config',
     'instance_name',
     'partials',

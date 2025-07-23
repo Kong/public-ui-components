@@ -6,7 +6,7 @@
     :message="field.error.message"
   />
 
-  <template v-else>
+  <div v-else>
     <InputComponent
       v-bind="{
         ...fieldAttrs,
@@ -43,7 +43,7 @@
       :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
       :message="i18n.t('plugins.free-form.vault_picker.component_error')"
     />
-  </template>
+  </div>
 </template>
 
 <script setup lang="ts">

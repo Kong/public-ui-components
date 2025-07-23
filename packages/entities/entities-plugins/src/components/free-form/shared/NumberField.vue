@@ -75,8 +75,8 @@ function handleUpdate(value: string) {
     fieldValue!.value = null
     emit('update:modelValue', null)
   } else {
-    fieldValue!.value = value === '' ? null : Number(value)
-    emit('update:modelValue', value === '' ? null : Number(value))
+    fieldValue!.value = Number(value)
+    emit('update:modelValue', Number(value))
   }
 }
 
