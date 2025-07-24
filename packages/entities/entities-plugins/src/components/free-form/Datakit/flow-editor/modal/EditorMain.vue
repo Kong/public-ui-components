@@ -44,8 +44,9 @@ import { Controls } from '@vue-flow/controls'
 import { useVueFlow, VueFlow, type Node } from '@vue-flow/core'
 import { ref } from 'vue'
 import english from '../../../../../locales/en.json'
+import type { NodeData } from '../../types'
 import FlowNode from '../node/FlowNode.vue'
-import { IMPLICIT_NODE_META_MAP } from '../node/node'
+import { createImplicitNode } from '../node/node'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -62,31 +63,19 @@ const emit = defineEmits<{
   'click:backdrop': []
 }>()
 
-const nodes = ref<Node[]>([
-  {
-    id: 'implicit:request',
-    type: 'flow', // To not use the default node style
+const nodes = ref<Array<Node<NodeData>>>([
+  createImplicitNode('request', {
     position: { x: 0, y: 0 },
-    data: IMPLICIT_NODE_META_MAP.request,
-  },
-  {
-    id: 'implicit:service-request',
-    type: 'flow', // To not use the default node style
-    position: { x: 400, y: 0 },
-    data: IMPLICIT_NODE_META_MAP.service_request,
-  },
-  {
-    id: 'implicit:service-response',
-    type: 'flow', // To not use the default node style
-    position: { x: 400, y: 300 },
-    data: IMPLICIT_NODE_META_MAP.service_response,
-  },
-  {
-    id: 'implicit:response',
-    type: 'flow', // To not use the default node style
-    position: { x: 0, y: 300 },
-    data: IMPLICIT_NODE_META_MAP.response,
-  },
+  }),
+  createImplicitNode('service_request', {
+    position: { x: 300, y: 0 },
+  }),
+  createImplicitNode('service_response', {
+    position: { x: 300, y: 200 },
+  }),
+  createImplicitNode('response', {
+    position: { x: 0, y: 200 },
+  }),
 ])
 
 const { fitView, onNodeClick } = useVueFlow()
