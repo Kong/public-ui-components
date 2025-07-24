@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.39.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.39.0...@kong-ui-public/entities-plugins@9.39.1) (2025-07-24)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit handles, adopt types, add helpers ([#2248](https://github.com/Kong/public-ui-components/issues/2248)) ([554f070](https://github.com/Kong/public-ui-components/commit/554f0705ae922f34c8a29160028ad4b78f00f512))
+
+
+
+
+
 # [9.39.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.38.1...@kong-ui-public/entities-plugins@9.39.0) (2025-07-24)
 
 
