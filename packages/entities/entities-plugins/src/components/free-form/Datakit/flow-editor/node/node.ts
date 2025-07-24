@@ -6,13 +6,14 @@ import {
   StackIcon,
   VitalsIcon,
 } from '@kong/icons'
+import type { Node } from '@vue-flow/core'
 import english from '../../../../../locales/en.json'
 import type {
-  NodeMeta,
   ImplicitNodeType,
-  UserNodeType,
   NodeData,
+  NodeMeta,
   NodeType,
+  UserNodeType,
 } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -108,4 +109,22 @@ export const isImplicitNodeType = (type: NodeType): type is ImplicitNodeType =>
 export const isImplicitNode = (
   node: NodeMeta | NodeData,
 ): node is (NodeMeta | NodeData) & { type: ImplicitNodeType } =>
-  isImplicitNodeType(node.type)
+  (IMPLICIT_NODE_TYPES as readonly string[]).includes(node.type)
+
+export const createNode = (data: NodeData): Node<NodeData> => ({
+  id: isImplicitNode(data) ? `implicit:${data.type}` : `user:${data.type}:${data.name}`,
+  type: 'flow', // Hardcoded
+  position: data.position,
+  data,
+})
+
+export const createImplicitNode = (type: ImplicitNodeType, dataOverrides?: Partial<NodeData>): Node<NodeData> => {
+  return createNode({
+    ...IMPLICIT_NODE_META_MAP[type],
+    name: type,
+    phase: type === 'request' || type === 'service_request' ? 'request' : 'response',
+    expanded: {},
+    position: { x: 0, y: 0 },
+    ...dataOverrides,
+  })
+}
