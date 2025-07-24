@@ -1,19 +1,19 @@
-import type { NodeMeta, NodeType } from '../../types'
-import { NetworkIcon, CodeblockIcon, GatewayIcon, StackIcon, VitalsIcon } from '@kong/icons'
 import { createI18n } from '@kong-ui-public/i18n'
+import { CodeblockIcon, GatewayIcon, NetworkIcon, StackIcon, VitalsIcon } from '@kong/icons'
 import english from '../../../../../locales/en.json'
+import type { ImplicitNodeMeta, ImplicitNodeType, NodeMeta, UserNodeMeta, UserNodeType } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-function getNodeDescription(type: NodeType): string {
-  return t(`plugins.free-form.datakit.flow_editor.node.${type}.description`)
-}
-
-function getNodeLabel(type: NodeType): string {
+function getNodeLabel(type: UserNodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node.${type}.label`)
 }
 
-export const NODE_META_MAP = {
+function getNodeDescription(type: UserNodeType): string {
+  return t(`plugins.free-form.datakit.flow_editor.node.${type}.description`)
+}
+
+export const USER_NODE_META_MAP = {
   call: {
     type: 'call',
     description: getNodeDescription('call'),
@@ -44,24 +44,58 @@ export const NODE_META_MAP = {
     icon: VitalsIcon,
     label: getNodeLabel('static'),
   },
+} as const satisfies Record<UserNodeType, UserNodeMeta>
+
+export const IMPLICIT_NODE_META_MAP = {
   request: {
     type: 'request',
-    description: getNodeDescription('request'),
-    label: getNodeLabel('request'),
+    handles: {
+      output: [
+        { id: 'headers', label: 'headers' },
+        { id: 'body', label: 'body' },
+        { id: 'query', label: 'query' },
+      ],
+    },
+  },
+  service_request: {
+    type: 'service_request',
+    handles: {
+      input: [
+        { id: 'headers', label: 'headers' },
+        { id: 'body', label: 'body' },
+        { id: 'query', label: 'query' },
+      ],
+    },
+  },
+  service_response: {
+    type: 'service_response',
+    handles: {
+      output: [
+        { id: 'headers', label: 'headers' },
+        { id: 'body', label: 'body' },
+      ],
+    },
+    ioDirection: 'rl',
   },
   response: {
     type: 'response',
-    description: getNodeDescription('response'),
-    label: getNodeLabel('response'),
+    handles: {
+      input: [
+        { id: 'headers', label: 'headers' },
+        { id: 'body', label: 'body' },
+      ],
+    },
+    ioDirection: 'rl',
   },
-  'service-request': {
-    type: 'service-request',
-    description: getNodeDescription('service-request'),
-    label: getNodeLabel('service-request'),
-  },
-  'service-response': {
-    type: 'service-response',
-    description: getNodeDescription('service-response'),
-    label: getNodeLabel('service-response'),
-  },
-} as const satisfies Record<NodeType, NodeMeta>
+} as const satisfies Record<ImplicitNodeType, ImplicitNodeMeta>
+
+const IMPLICIT_NODE_TYPES = [
+  'request',
+  'response',
+  'service_request',
+  'service_response',
+] as const satisfies ImplicitNodeType[]
+
+export const isImplicit = (meta: NodeMeta): meta is ImplicitNodeMeta =>
+  IMPLICIT_NODE_TYPES.includes(meta.type as ImplicitNodeType)
+

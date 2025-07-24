@@ -15,26 +15,41 @@
         </KButton>
       </div>
     </header>
-    <div
-      class="body"
-      @click="emit('click:backdrop')"
-    >
-      <button @click.stop="emit('click:node', { id: 'node-a', name: 'Node A' })">
-        Mock Node A
-      </button>
-      <button @click.stop="emit('click:node', { id: 'node-b', name: 'Node b' })">
-        Mock Node B
-      </button>
-      <slot />
+
+    <div class="body">
+      <VueFlow
+        class="flow"
+        :nodes="nodes"
+        @click="emit('click:backdrop')"
+        @nodes-initialized="fitView"
+      >
+        <Background @click="emit('click:backdrop')" />
+        <Controls />
+
+        <!-- To not use the default node style -->
+        <template #node-flow="node">
+          <FlowNode :meta="node.data" />
+        </template>
+      </VueFlow>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
-import { KButton } from '@kong/kongponents'
 import { ExternalLinkIcon } from '@kong/icons'
+import { KButton } from '@kong/kongponents'
+import { Background } from '@vue-flow/background'
+import { Controls } from '@vue-flow/controls'
+import { useVueFlow, VueFlow, type Node } from '@vue-flow/core'
+import { ref } from 'vue'
 import english from '../../../../../locales/en.json'
+import FlowNode from '../node/FlowNode.vue'
+import { IMPLICIT_NODE_META_MAP } from '../node/node-meta'
+
+import '@vue-flow/controls/dist/style.css'
+import '@vue-flow/core/dist/style.css'
+import '@vue-flow/core/dist/theme-default.css'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -46,6 +61,45 @@ const emit = defineEmits<{
   'click:node': [node: any]
   'click:backdrop': []
 }>()
+
+const nodes = ref<Node[]>([
+  {
+    id: 'implicit:request',
+    type: 'flow', // To not use the default node style
+    position: { x: 0, y: 0 },
+    data: IMPLICIT_NODE_META_MAP.request,
+  },
+  {
+    id: 'implicit:service-request',
+    type: 'flow', // To not use the default node style
+    position: { x: 400, y: 0 },
+    data: IMPLICIT_NODE_META_MAP.service_request,
+  },
+  {
+    id: 'implicit:service-response',
+    type: 'flow', // To not use the default node style
+    position: { x: 400, y: 300 },
+    data: IMPLICIT_NODE_META_MAP.service_response,
+  },
+  {
+    id: 'implicit:response',
+    type: 'flow', // To not use the default node style
+    position: { x: 0, y: 300 },
+    data: IMPLICIT_NODE_META_MAP.response,
+  },
+])
+
+setTimeout(() => {
+  nodes.value[0].position.x = 100
+}, 3000)
+;(window as any).nodes = nodes // For debugging purposes
+
+const { fitView, onNodeClick } = useVueFlow()
+
+onNodeClick(({ event, node }) => {
+  event.stopPropagation()
+  emit('click:node', node)
+})
 </script>
 
 <style lang="scss" scoped>
@@ -72,6 +126,20 @@ const emit = defineEmits<{
 
   .body {
     height: 100%;
+    width: 100%;
+  }
+
+  .flow {
+    :deep(.vue-flow__controls) {
+      bottom: 0;
+      left: unset;
+      right: 0;
+    }
+
+    :deep(.vue-flow__controls-button) {
+      // Ensure it works in both the sandbox and host apps
+      box-sizing: content-box;
+    }
   }
 }
 </style>

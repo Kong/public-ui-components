@@ -20,15 +20,15 @@
 </template>
 
 <script setup lang="ts">
-import { NODE_META_MAP } from './node-meta'
+import { USER_NODE_META_MAP } from './node-meta'
 
-import type { ExplicitNodeType } from '../../types'
+import type { UserNodeType } from '../../types'
 
-const { type } = defineProps<{ type: ExplicitNodeType }>()
+const { type } = defineProps<{ type: UserNodeType }>()
 const {
   description,
   icon: Icon,
-} = NODE_META_MAP[type]
+} = USER_NODE_META_MAP[type]
 </script>
 
 <style lang="scss" scoped>

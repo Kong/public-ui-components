@@ -9,8 +9,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { NodeType, ExplicitNodeType } from '../../types'
-import { NODE_META_MAP } from './node-meta'
+import type { NodeType } from '../../types'
+// import { NODE_META_MAP } from './node-meta'
 import type { BadgeAppearance } from '@kong/kongponents'
 
 const { type } = defineProps<{
@@ -18,10 +18,11 @@ const { type } = defineProps<{
 }>()
 
 const icon = computed(() => {
-  return NODE_META_MAP[type as ExplicitNodeType]?.icon ?? undefined
+  // return NODE_META_MAP[type as ExplicitNodeType]?.icon ?? undefined
+  return undefined
 })
 
-const typeName = computed(() => NODE_META_MAP[type].label)
+const typeName = computed(() => '')
 
 const appearance = computed<BadgeAppearance>(() => {
   switch (type) {

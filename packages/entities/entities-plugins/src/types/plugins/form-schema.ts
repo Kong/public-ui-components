@@ -101,6 +101,11 @@ export interface MapFieldSchema extends FieldSchema {
   len_max?: number
 }
 
+export interface JsonFieldSchema extends FieldSchema {
+  type: 'json'
+  json_schema: any // Todo: Define a more specific type for JSON schema
+}
+
 export type UnionFieldSchema = StringFieldSchema
   | NumberLikeFieldSchema
   | BooleanFieldSchema
@@ -108,6 +113,7 @@ export type UnionFieldSchema = StringFieldSchema
   | SetFieldSchema
   | MapFieldSchema
   | RecordFieldSchema
+  | JsonFieldSchema
 
 export type NamedFieldSchema = { [name: string]: UnionFieldSchema }
 

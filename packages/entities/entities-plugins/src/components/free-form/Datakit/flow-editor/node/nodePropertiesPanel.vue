@@ -11,19 +11,10 @@
     <div class="dk-node-properties-panel-content">
       <NodeBadge :type="nodeType" />
 
-      {{ NODE_META_MAP[nodeType].description }}
+      <!-- {{ NODE_META_MAP[nodeType].description }} -->
 
       <template v-if="schema">
-        <NodeForm
-          class="dk-node-properties-panel-form"
-          :schema="schema"
-        />
-
-        <div>
-          <KButton>
-            {{ i18n.t('plugins.free-form.datakit.flow_editor.save') }}
-          </KButton>
-        </div>
+        <NodeFormCall class="dk-node-properties-panel-form" />
       </template>
     </div>
   </KSlideout>
@@ -34,18 +25,15 @@ import NodeBadge from './NodeBadge.vue'
 import { CallNodeSchema } from './mock'
 
 import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../constants'
-import NodeForm from './NodeForm.vue'
+import NodeFormCall from './NodeFormCall.vue'
 
 import { KSlideout } from '@kong/kongponents'
-import { NODE_META_MAP } from './node-meta'
+// import { NODE_META_MAP } from './node-meta'
 import type { NodeType } from '../../types'
-import useI18n from '../../../../../composables/useI18n'
 import type { FormSchema } from 'src/types/plugins/form-schema'
 
 const nodeType: NodeType = 'call' // This should be dynamically set based on the node type
 const schema: FormSchema | undefined = CallNodeSchema // This should be dynamically set based on the node schema
-
-const { i18n } = useI18n()
 
 const {
   maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,

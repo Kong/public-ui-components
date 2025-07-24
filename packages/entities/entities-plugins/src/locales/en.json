@@ -717,11 +717,11 @@
               "label": "Response",
               "description": "Updates properties of the outgoing client response."
             },
-            "service-request": {
+            "service_request": {
               "label": "Service Request",
               "description": "Updates properties of the request sent to the service being proxied to."
             },
-            "service-response": {
+            "service_response": {
               "label": "Service Response",
               "description": "Reads response properties from the service being proxied to."
             }
