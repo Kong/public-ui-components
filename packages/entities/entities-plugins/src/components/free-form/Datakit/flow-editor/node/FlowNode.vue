@@ -3,7 +3,7 @@
     class="flow-node"
     :class="{
       reverse: ioDirection === 'rl',
-      implicit: isImplicit(data)
+      implicit: isImplicitNode(data)
     }"
   >
     <div class="body">
@@ -128,7 +128,7 @@ import { UnfoldMoreIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
 import { computed, ref } from 'vue'
 import english from '../../../../../locales/en.json'
-import { isImplicit } from './node'
+import { isImplicitNode } from './node'
 import HandleTwig from './HandleTwig.vue'
 
 import type { NodeData } from '../../types'
@@ -144,7 +144,7 @@ const inputHandlesExpanded = ref(false)
 const outputHandlesExpanded = ref(false)
 
 const name = computed(() => {
-  if (isImplicit(data)) {
+  if (isImplicitNode(data)) {
     return t(`plugins.free-form.datakit.flow_editor.node_types.${data.type}.name`)
   }
   return '' // TBD for user nodes

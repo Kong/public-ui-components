@@ -89,11 +89,6 @@ const nodes = ref<Node[]>([
   },
 ])
 
-setTimeout(() => {
-  nodes.value[0].position.x = 100
-}, 3000)
-;(window as any).nodes = nodes // For debugging purposes
-
 const { fitView, onNodeClick } = useVueFlow()
 
 onNodeClick(({ event, node }) => {

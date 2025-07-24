@@ -7,9 +7,7 @@
     placeholder="Select output(s)"
   />
 
-  <InputRecordField
-    v-if="inputsSchema && inputsSchema.type === 'record'"
-  />
+  <InputRecordField v-if="inputsSchema && inputsSchema.type === 'record'" />
 </template>
 
 <script setup lang="ts">

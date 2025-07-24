@@ -17,8 +17,6 @@ import Form from '../../../shared/Form.vue'
 import Field from '../../../shared/Field.vue'
 import HttpMethodField from '../fields/HttpMethodField.vue'
 import InputsField from '../fields/InputsField.vue'
-
 import { CallNodeSchema } from './mock'
-
 </script>
 

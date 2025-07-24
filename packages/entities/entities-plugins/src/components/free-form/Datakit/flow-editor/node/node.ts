@@ -17,12 +17,16 @@ import type {
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-function getNodeDescription(type: NodeType): string {
+export function getNodeDescription(type: NodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.description`)
 }
 
 function getNodeSummary(type: UserNodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.summary`)
+}
+
+export function getNodeName(type: NodeType): string {
+  return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.name`)
 }
 
 export const USER_NODE_META_MAP = {
@@ -98,7 +102,10 @@ export const IMPLICIT_NODE_META_MAP = {
 
 const IMPLICIT_NODE_TYPES = Object.keys(IMPLICIT_NODE_META_MAP) as readonly ImplicitNodeType[]
 
-export const isImplicit = (
+export const isImplicitNodeType = (type: NodeType): type is ImplicitNodeType =>
+  (IMPLICIT_NODE_TYPES as readonly string[]).includes(type)
+
+export const isImplicitNode = (
   node: NodeMeta | NodeData,
 ): node is (NodeMeta | NodeData) & { type: ImplicitNodeType } =>
-  (IMPLICIT_NODE_TYPES as readonly string[]).includes(node.type)
+  isImplicitNodeType(node.type)

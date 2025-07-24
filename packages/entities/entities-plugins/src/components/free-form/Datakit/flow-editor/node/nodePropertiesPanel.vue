@@ -8,32 +8,30 @@
     :visible="visible"
     @close="$emit('close')"
   >
-    <div class="dk-node-properties-panel-content">
-      <NodeBadge :type="nodeType" />
+    <template #title>
+      <div class="dk-node-properties-panel-title">
+        <NodeBadge :type="nodeType" />
+        <span class="dk-node-properties-panel-desc">
+          {{ getNodeDescription(nodeType) }}
+        </span>
+      </div>
+    </template>
 
-      <!-- {{ NODE_META_MAP[nodeType].description }} -->
-
-      <template v-if="schema">
-        <NodeFormCall class="dk-node-properties-panel-form" />
-      </template>
-    </div>
+    <NodeFormCall class="dk-node-properties-panel-form" />
   </KSlideout>
 </template>
 
 <script setup lang="ts">
 import NodeBadge from './NodeBadge.vue'
-import { CallNodeSchema } from './mock'
 
 import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../constants'
 import NodeFormCall from './NodeFormCall.vue'
 
 import { KSlideout } from '@kong/kongponents'
-// import { NODE_META_MAP } from './node-meta'
+import { getNodeDescription } from './node'
 import type { NodeType } from '../../types'
-import type { FormSchema } from 'src/types/plugins/form-schema'
 
-const nodeType: NodeType = 'call' // This should be dynamically set based on the node type
-const schema: FormSchema | undefined = CallNodeSchema // This should be dynamically set based on the node schema
+const nodeType: NodeType = 'call' // Fixme: hardcoded
 
 const {
   maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,
@@ -56,16 +54,24 @@ defineEmits<{
 .dk-node-properties-panel {
   :deep(.slideout-container) {
     box-shadow: none;
+    gap: $kui-space-60;
   }
 
-  :deep(.slideout-content) {
-    margin-top: -$kui-space-100;
+  :deep(.slideout-header) {
+    align-items: start;
   }
 
-  &-content {
+  &-title {
     display: flex;
     flex-direction: column;
     gap: $kui-space-60;
+  }
+
+  &-desc {
+    color: $kui-color-text;
+    font-size: $kui-font-size-30;
+    font-weight: normal;
+    line-height: $kui-line-height-30;
   }
 
   &-form {
@@ -75,6 +81,10 @@ defineEmits<{
 
     > label {
       margin-bottom: $kui-space-0;
+    }
+
+    :deep(.ff-object-field-as-child) {
+      gap: $kui-space-60
     }
   }
 }

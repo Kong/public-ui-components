@@ -7,7 +7,7 @@
     <EnumField
       v-for="name in childFieldNames"
       :key="name"
-      class="dk-inputs-indent"
+      class="dk-inputs-field-indent"
       :items="[]"
       :name="name"
       placeholder="Select output(s)"
@@ -35,7 +35,7 @@ const childFieldNames = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.dk-inputs-indent {
+.dk-inputs-field-indent {
   padding-left: $kui-space-70;
   position: relative;
 
@@ -45,7 +45,7 @@ const childFieldNames = computed(() => {
     border-left-width: $kui-border-width-10;
     content: '';
     display: block;
-    height: 92px;
+    height: 84px;
     left: 8px;
     position: absolute;
     top: -16px;

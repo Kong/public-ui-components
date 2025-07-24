@@ -12,6 +12,7 @@
   <template v-else-if="asChild">
     <div
       class="ff-object-field ff-object-field-as-child"
+      :class="$attrs.class"
       :data-testid="`ff-object-${field.path.value}`"
     >
       <slot>
