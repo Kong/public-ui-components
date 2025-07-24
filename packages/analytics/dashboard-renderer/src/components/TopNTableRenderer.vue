@@ -8,10 +8,10 @@
   >
     <TopNTable
       :data="data"
-      :synthetics-data-key="chartOptions.syntheticsDataKey"
+      :synthetics-data-key="chartOptions.synthetics_data_key"
     >
       <template
-        v-if="props.chartOptions.entityLink"
+        v-if="props.chartOptions.entity_link"
         #name="{ record }"
       >
         <AsyncEntityLink
@@ -58,13 +58,13 @@ const AsyncEntityLink = defineAsyncComponent(async () => {
 })
 
 const parseLink = (record: TopNTableRecord) => {
-  if (props.chartOptions?.entityLink) {
+  if (props.chartOptions?.entity_link) {
     if (record.id.includes(':')) {
       const [cpId, entityId] = record.id.split(':')
 
-      return props.chartOptions.entityLink.replace(CP_ID_TOKEN, cpId).replace(ENTITY_ID_TOKEN, entityId)
+      return props.chartOptions.entity_link.replace(CP_ID_TOKEN, cpId).replace(ENTITY_ID_TOKEN, entityId)
     } else {
-      return props.chartOptions.entityLink.replace(ENTITY_ID_TOKEN, record.id)
+      return props.chartOptions.entity_link.replace(ENTITY_ID_TOKEN, record.id)
     }
   }
   return ''

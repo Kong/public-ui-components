@@ -9,12 +9,12 @@
   >
     <div class="analytics-chart">
       <AnalyticsChart
-        :allow-csv-export="chartOptions.allowCsvExport"
+        :allow-csv-export="chartOptions.allow_csv_export"
         :chart-data="data"
         :chart-options="options"
         legend-position="bottom"
         :show-menu="context.editable"
-        :synthetics-data-key="chartOptions.syntheticsDataKey"
+        :synthetics-data-key="chartOptions.synthetics_data_key"
         :timeseries-zoom="hasFinegrainedAbsoluteTimerangeAccess && !query.time_range"
         tooltip-title=""
         v-bind="extraProps"
@@ -55,7 +55,7 @@ const hasFinegrainedAbsoluteTimerangeAccess = evaluateFeatureFlag('explore-v4-fi
 const options = computed((): AnalyticsChartOptions => ({
   type: props.chartOptions.type,
   stacked: props.chartOptions.stacked ?? false,
-  chartDatasetColors: props.chartOptions.chartDatasetColors,
+  chartDatasetColors: props.chartOptions.chart_dataset_colors,
   threshold: props.chartOptions.threshold,
 }))
 

@@ -533,10 +533,6 @@ export type TileConfig = FromSchemaWithOptions<typeof tileConfigSchema>
 export const dashboardConfigSchema = {
   type: 'object',
   properties: {
-    version: {
-      type: 'string',
-      enum: ['v2'],
-    },
     tiles: {
       type: 'array',
       items: tileConfigSchema,
