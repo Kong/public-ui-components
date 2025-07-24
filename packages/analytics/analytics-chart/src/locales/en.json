@@ -141,7 +141,8 @@
     "llm_cache_embeddings_latency_average": "Embeddings latency (avg)",
     "llm_cache_fetch_latency_average": "Fetch latency (avg)",
     "llm_latency_average": "Llm latency (avg)",
-    "threshold": "Alert threshold"
+    "threshold": "Alert threshold",
+    "api": "API"
   },
   "metricAxisTitles": {
     "request_count": "Request count",
@@ -201,7 +202,8 @@
     "cost": "Costs",
     "llm_cache_embeddings_latency_average": "Embeddings latency (avg)",
     "llm_cache_fetch_latency_average": "Fetch latency (avg)",
-    "llm_latency_average": "Llm latency (avg)"
+    "llm_latency_average": "Llm latency (avg)",
+    "api": "API"
   },
   "granularityAxisTitles": {
     "tenSecondly": "@timestamp per 10 seconds",
