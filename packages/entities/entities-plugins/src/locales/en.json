@@ -688,18 +688,48 @@
             "title": "Node types",
             "description": "Drag a node onto the canvas to add it to your data flow."
           },
-          "node_names": {
-            "request": "request",
-            "response": "response",
-            "service_request": "service request",
-            "service_response": "service response"
-          },
-          "node_description": {
-            "call": "Call a third-party API",
-            "jq": "Transform data and cast variables with jq",
-            "exit": "Return a response directly to the client",
-            "property": "Get and set Kong Gateway configuration data",
-            "static": "Define static values to use for call nodes"
+          "node_types": {
+            "call": {
+              "name": "call",
+              "summary": "Call a third-party API",
+              "description": "Send an HTTP request and retrieve the response."
+            },
+            "jq": {
+              "name": "jq",
+              "summary": "Transform data and cast variables with jq",
+              "description": "The jq node executes a jq script for processing JSON. See the official <a href=\"https://jqlang.org\" target=\"_blank\">jq docs</a> for more details."
+            },
+            "exit": {
+              "name": "exit",
+              "summary": "Return a response directly to the client",
+              "description": "Trigger an early exit that produces a direct response, rather than forwarding a proxied response."
+            },
+            "property": {
+              "name": "property",
+              "summary": "Get and set Kong Gateway configuration data",
+              "description": "Get and set Kong Gateway host and request properties."
+            },
+            "static": {
+              "name": "static",
+              "summary": "Define static values to use for call nodes",
+              "description": "Emits static values to be used as inputs for other nodes. The static node can help you with hardcoding some known value for an input."
+            },
+            "request": {
+              "name": "request",
+              "description": "Reads incoming client request properties. You cannot specify request node input."
+            },
+            "response": {
+              "name": "response",
+              "description": "Updates properties of the outgoing client response."
+            },
+            "service_request": {
+              "name": "service request",
+              "description": "Updates properties of the request sent to the service being proxied to."
+            },
+            "service_response": {
+              "name": "service response",
+              "description": "Reads response properties from the service being proxied to."
+            }
           }
         },
         "code_editor": {

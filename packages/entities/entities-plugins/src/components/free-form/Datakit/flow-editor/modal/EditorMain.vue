@@ -28,7 +28,7 @@
 
         <!-- To not use the default node style -->
         <template #node-flow="node">
-          <FlowNode :meta="node.data" />
+          <FlowNode :data="node.data" />
         </template>
       </VueFlow>
     </div>
@@ -45,7 +45,7 @@ import { useVueFlow, VueFlow, type Node } from '@vue-flow/core'
 import { ref } from 'vue'
 import english from '../../../../../locales/en.json'
 import FlowNode from '../node/FlowNode.vue'
-import { IMPLICIT_NODE_META_MAP } from '../node/node-meta'
+import { IMPLICIT_NODE_META_MAP } from '../node/node'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'

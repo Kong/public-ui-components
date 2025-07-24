@@ -2,8 +2,8 @@
   <div
     class="flow-node"
     :class="{
-      reverse: meta.ioDirection === 'rl',
-      implicit: isImplicit(meta)
+      reverse: ioDirection === 'rl',
+      implicit: isImplicit(data)
     }"
   >
     <div class="body">
@@ -15,13 +15,13 @@
     </div>
 
     <div
-      v-if="meta.handles?.input && meta.handles.input.length > 0"
+      v-if="data.fields?.input && data.fields.input.length > 0"
       class="input-handles"
     >
       <div class="handle">
         <Handle
           id="inputs"
-          :position="meta.ioDirection === 'rl' ? Position.Right : Position.Left"
+          :position="ioDirection === 'rl' ? Position.Right : Position.Left"
           type="target"
         />
 
@@ -36,7 +36,7 @@
           <HandleTwig
             v-if="inputHandlesExpanded"
             :color="KUI_COLOR_BACKGROUND_NEUTRAL_STRONG"
-            :direction="meta.ioDirection === 'rl' ? 'right' : 'left'"
+            :direction="ioDirection === 'rl' ? 'right' : 'left'"
             type="bar"
           />
         </div>
@@ -44,23 +44,23 @@
 
       <template v-if="inputHandlesExpanded">
         <div
-          v-for="(handle, i) in meta.handles.input"
-          :key="`input-${handle.id}`"
+          v-for="(fieldName, i) in data.fields.input"
+          :key="`input-${fieldName}`"
           class="handle indented"
         >
           <Handle
-            :id="`input-${handle.id}`"
-            :position="meta.ioDirection === 'rl' ? Position.Right : Position.Left"
+            :id="`input-${fieldName}`"
+            :position="ioDirection === 'rl' ? Position.Right : Position.Left"
             type="target"
           />
           <div class="handle-label-wrapper">
             <div class="handle-label">
-              {{ handle.label }}
+              {{ fieldName }}
             </div>
             <HandleTwig
               :color="KUI_COLOR_BACKGROUND_NEUTRAL_STRONG"
-              :direction="meta.ioDirection === 'rl' ? 'right' : 'left'"
-              :type="i < meta.handles.input.length - 1 ? 'trident' : 'corner'"
+              :direction="ioDirection === 'rl' ? 'right' : 'left'"
+              :type="i < data.fields.input.length - 1 ? 'trident' : 'corner'"
             />
           </div>
         </div>
@@ -68,7 +68,7 @@
     </div>
 
     <div
-      v-if="meta.handles?.output && meta.handles.output.length > 0"
+      v-if="data.fields?.output && data.fields.output.length > 0"
       class="output-handles"
     >
       <div class="handle">
@@ -83,36 +83,36 @@
           <HandleTwig
             v-if="outputHandlesExpanded"
             :color="KUI_COLOR_BACKGROUND_NEUTRAL_STRONG"
-            :direction="meta.ioDirection === 'rl' ? 'left' : 'right'"
+            :direction="ioDirection === 'rl' ? 'left' : 'right'"
             type="bar"
           />
         </div>
         <Handle
           id="outputs"
-          :position="meta.ioDirection === 'rl' ? Position.Left : Position.Right"
+          :position="ioDirection === 'rl' ? Position.Left : Position.Right"
           type="target"
         />
       </div>
 
       <template v-if="outputHandlesExpanded">
         <div
-          v-for="(handle, i) in meta.handles.output"
-          :key="`output-${handle.id}`"
+          v-for="(fieldName, i) in data.fields.output"
+          :key="`output-${fieldName}`"
           class="handle indented"
         >
           <div class="handle-label-wrapper">
             <div class="handle-label">
-              {{ handle.label }}
+              {{ fieldName }}
             </div>
             <HandleTwig
               :color="KUI_COLOR_BACKGROUND_NEUTRAL_STRONG"
-              :direction="meta.ioDirection === 'rl' ? 'left' : 'right'"
-              :type="i < meta.handles.output.length - 1 ? 'trident' : 'corner'"
+              :direction="ioDirection === 'rl' ? 'left' : 'right'"
+              :type="i < data.fields.output.length - 1 ? 'trident' : 'corner'"
             />
           </div>
           <Handle
-            :id="`output-${handle.id}`"
-            :position="meta.ioDirection === 'rl' ? Position.Left : Position.Right"
+            :id="`output-${fieldName}`"
+            :position="ioDirection === 'rl' ? Position.Left : Position.Right"
             type="source"
           />
         </div>
@@ -128,13 +128,14 @@ import { UnfoldMoreIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
 import { computed, ref } from 'vue'
 import english from '../../../../../locales/en.json'
+import { isImplicit } from './node'
 import HandleTwig from './HandleTwig.vue'
 
-import type { NodeMeta } from '../../types'
-import { isImplicit } from './node-meta'
+import type { NodeData } from '../../types'
 
-const props = defineProps<{
-  meta: NodeMeta
+const { data, ioDirection = 'lr' } = defineProps<{
+  data: NodeData
+  ioDirection?: 'lr' | 'rl'
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -143,14 +144,16 @@ const inputHandlesExpanded = ref(false)
 const outputHandlesExpanded = ref(false)
 
 const name = computed(() => {
-  if (isImplicit(props.meta)) {
-    return t(`plugins.free-form.datakit.flow_editor.node_names.${props.meta.type}`)
+  if (isImplicit(data)) {
+    return t(`plugins.free-form.datakit.flow_editor.node_types.${data.type}.name`)
   }
   return '' // TBD for user nodes
 })
 </script>
 
 <style lang="scss" scoped>
+@use "sass:math";
+
 $handle-width: 3px;
 $handle-height: 10px;
 
@@ -226,7 +229,7 @@ $handle-height: 10px;
 
   .input-handles {
     align-items: flex-start;
-    transform: translateX(-$handle-width / 2);
+    transform: translateX(math.div($handle-width, -2));
 
     .handle.indented .handle-label {
       margin-left: $kui-space-40;
@@ -235,7 +238,7 @@ $handle-height: 10px;
 
   .output-handles {
     align-items: flex-end;
-    transform: translateX($handle-width / 2);
+    transform: translateX(math.div($handle-width, 2));
 
     .handle.indented .handle-label {
       margin-right: $kui-space-40;
@@ -252,7 +255,7 @@ $handle-height: 10px;
 
     .input-handles {
       align-items: flex-end;
-      transform: translateX($handle-width / 2);
+      transform: translateX(math.div($handle-width, 2));
 
       .handle.indented .handle-label {
         margin-left: unset;
@@ -262,7 +265,7 @@ $handle-height: 10px;
 
     .output-handles {
       align-items: flex-start;
-      transform: translateX(-$handle-width / 2);
+      transform: translateX(math.div($handle-width, -2));
 
       .handle.indented .handle-label {
         margin-left: $kui-space-40;
