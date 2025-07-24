@@ -64,7 +64,7 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
 
     if (isDonutChart) {
       tooltipData.tooltipContext = tooltipData.dimensionDisplay || tooltip.dataPoints[0].label
-    } else if (tooltip.dataPoints.length > 1 || tooltip.chart.data.datasets.length === 1) {
+    } else if ((tooltip.chart.data as KChartData).isMultiDimension) {
       tooltipData.tooltipContext = tooltip.dataPoints[0].label
     } else {
       tooltipData.tooltipContext = tooltipData.dimensionDisplay || ''
