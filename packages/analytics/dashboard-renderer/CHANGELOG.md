@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.7.23...@kong-ui-public/dashboard-renderer@6.0.0) (2025-07-24)
+
+
+### Features
+
+* **analytics:** move dashboards to version 2 [MA-3935] ([#2221](https://github.com/Kong/public-ui-components/issues/2221)) ([2a7250b](https://github.com/Kong/public-ui-components/commit/2a7250bbf4a803446e372a78bbbe415e80c44b94))
+
+
+### BREAKING CHANGES
+
+* **analytics:** dashboards only support v2 schemas; analytics-utilities exports v2 schema by default.
+
+
+
+
+
 ## [5.7.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.7.22...@kong-ui-public/dashboard-renderer@5.7.23) (2025-07-22)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
