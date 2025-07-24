@@ -13,20 +13,20 @@
         {{ type }}
       </div>
       <div class="description">
-        {{ description }}
+        {{ summary }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { USER_NODE_META_MAP } from './node-meta'
+import { USER_NODE_META_MAP } from './node'
 
 import type { UserNodeType } from '../../types'
 
 const { type } = defineProps<{ type: UserNodeType }>()
 const {
-  description,
+  summary,
   icon: Icon,
 } = USER_NODE_META_MAP[type]
 </script>
