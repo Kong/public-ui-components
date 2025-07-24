@@ -1,6 +1,5 @@
 import type { Component } from 'vue'
 import type { ButtonProps } from '@kong/kongponents'
-import type { RecordFieldSchema } from '../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 
 export type EditorMode = 'code' | 'flow'
@@ -22,52 +21,29 @@ export type EditorModalNavItem = RequireAtLeastOne<EditorModalNavItemBase, 'to' 
  *               Node meta types                *
  ************************************************/
 
-
+/**
+ * All explicit node types recognised by Datakit.
+ */
 export type UserNodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
 export type ImplicitNodeType = 'request' | 'service_request' | 'service_response' | 'response'
-
-export interface NodeHandle {
-  id: string
-  label: string
-}
+export type NodeType = UserNodeType | ImplicitNodeType
 
 export type NodeIODirection = 'lr' | 'rl'
 
-interface BaseNodeMeta {
+export interface NodeMeta {
+  type: NodeType
+  summary?: string
+  description?: string
+  icon?: Component
+
   /**
-   * Handles for the node.
+   * Well-known fields for the node.
    */
-  handles?: {
-    input?: NodeHandle[]
-    output?: NodeHandle[]
+  fields?: {
+    input?: string[]
+    output?: string[]
   }
-
-  /**
-   * Direction of input/output handles.
-   * This affects the position of the input/output handles on the node.
-   *
-   * If omitted, `'lr'` (left to right) will be used.
-   */
-  ioDirection?: NodeIODirection
 }
-
-/**
- * Metadata for nodes that can be defined by users.
- */
-export interface UserNodeMeta extends BaseNodeMeta {
-  type: UserNodeType
-  description: string
-  icon: Component
-  label: string
-}
-/**
- * Metadata for nodes that are implicitly provided by Datakit.
- */
-export interface ImplicitNodeMeta extends BaseNodeMeta {
-  type: ImplicitNodeType
-}
-
-export type NodeMeta = UserNodeMeta | ImplicitNodeMeta
 
 /************************************************
  *             Plugin config types              *
@@ -124,9 +100,6 @@ export type ImplicitNodeName =
  * @example 'filter_02'
  */
 export type NodeName = string & {} // for autocompletion of implicit node names
-
-/** All explicit node types recognised by Datakit. */
-export type NodeType = 'call' | 'exit' | 'jq' | 'property' | 'static'
 
 /**
  * Base shape shared by every concrete node type.
@@ -348,3 +321,31 @@ export type UserNode =
   | JqNode
   | PropertyNode
   | StaticNode
+
+/************************************************
+ *             Editor global store              *
+ ************************************************/
+
+export interface NodeData {
+  type: NodeType
+  name: NodeName
+  phase: 'request' | 'response'
+  position: {
+    x: number
+    y: number
+  }
+  fields: {
+    input?: string[]
+    output?: string[]
+  }
+  expanded: {
+    input?: boolean
+    output?: boolean
+  }
+  inputs?: string | Record<string, string>
+  config?: Record<string, unknown>
+}
+
+export interface EditorState {
+  nodes: NodeData[]
+}
