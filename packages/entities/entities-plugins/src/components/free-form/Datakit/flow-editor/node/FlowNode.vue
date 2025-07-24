@@ -2,7 +2,7 @@
   <div
     class="flow-node"
     :class="{
-      reverse: ioDirection === 'rl',
+      reversed: isReversed,
       implicit: isImplicit(data)
     }"
   >
@@ -21,7 +21,7 @@
       <div class="handle">
         <Handle
           id="inputs"
-          :position="ioDirection === 'rl' ? Position.Right : Position.Left"
+          :position="inputPosition"
           type="target"
         />
 
@@ -36,7 +36,7 @@
           <HandleTwig
             v-if="inputHandlesExpanded"
             :color="KUI_COLOR_BACKGROUND_NEUTRAL_STRONG"
-            :direction="ioDirection === 'rl' ? 'right' : 'left'"
+            :position="inputPosition"
             type="bar"
           />
         </div>
@@ -50,7 +50,7 @@
         >
           <Handle
             :id="`input-${fieldName}`"
-            :position="ioDirection === 'rl' ? Position.Right : Position.Left"
+            :position="inputPosition"
             type="target"
           />
           <div class="handle-label-wrapper">
@@ -59,7 +59,7 @@
             </div>
             <HandleTwig
               :color="KUI_COLOR_BACKGROUND_NEUTRAL_STRONG"
-              :direction="ioDirection === 'rl' ? 'right' : 'left'"
+              :position="inputPosition"
               :type="i < data.fields.input.length - 1 ? 'trident' : 'corner'"
             />
           </div>
@@ -83,13 +83,13 @@
           <HandleTwig
             v-if="outputHandlesExpanded"
             :color="KUI_COLOR_BACKGROUND_NEUTRAL_STRONG"
-            :direction="ioDirection === 'rl' ? 'left' : 'right'"
+            :position="outputPosition"
             type="bar"
           />
         </div>
         <Handle
           id="outputs"
-          :position="ioDirection === 'rl' ? Position.Left : Position.Right"
+          :position="outputPosition"
           type="target"
         />
       </div>
@@ -106,13 +106,13 @@
             </div>
             <HandleTwig
               :color="KUI_COLOR_BACKGROUND_NEUTRAL_STRONG"
-              :direction="ioDirection === 'rl' ? 'left' : 'right'"
+              :position="outputPosition"
               :type="i < data.fields.output.length - 1 ? 'trident' : 'corner'"
             />
           </div>
           <Handle
             :id="`output-${fieldName}`"
-            :position="ioDirection === 'rl' ? Position.Left : Position.Right"
+            :position="outputPosition"
             type="source"
           />
         </div>
@@ -133,15 +133,26 @@ import HandleTwig from './HandleTwig.vue'
 
 import type { NodeData } from '../../types'
 
-const { data, ioDirection = 'lr' } = defineProps<{
+const { data } = defineProps<{
   data: NodeData
-  ioDirection?: 'lr' | 'rl'
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const inputHandlesExpanded = ref(false)
 const outputHandlesExpanded = ref(false)
+
+const isReversed = computed(() => {
+  return data.phase === 'response'
+})
+
+const inputPosition = computed(() => {
+  return data.phase === 'request' ? Position.Left : Position.Right
+})
+
+const outputPosition = computed(() => {
+  return data.phase === 'request' ? Position.Right : Position.Left
+})
 
 const name = computed(() => {
   if (isImplicit(data)) {
@@ -245,7 +256,7 @@ $handle-height: 10px;
     }
   }
 
-  &.reverse {
+  &.reversed {
     .input-handles,
     .output-handles {
       .handle {

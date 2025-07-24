@@ -1,23 +1,24 @@
 <template>
   <div
     class="handle-twig"
-    :class="[type, direction]"
+    :class="[type, position === Position.Left ? 'left' : 'right']"
     :style="twigStyle"
   />
 </template>
 
 <script setup lang="ts">
 import { KUI_SPACE_40 } from '@kong/design-tokens'
+import { Position } from '@vue-flow/core'
 import { computed } from 'vue'
 
 const {
   color,
-  direction = 'left',
+  position = Position.Left,
   size = Number.parseFloat(KUI_SPACE_40),
   type,
 } = defineProps<{
   color?: string
-  direction?: 'left' | 'right'
+  position?: Position.Left | Position.Right
   size?: number
   type: 'bar' | 'trident' | 'corner'
 }>()
