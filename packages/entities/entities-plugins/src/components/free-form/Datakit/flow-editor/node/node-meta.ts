@@ -1,7 +1,7 @@
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, GatewayIcon, NetworkIcon, StackIcon, VitalsIcon } from '@kong/icons'
 import english from '../../../../../locales/en.json'
-import type { ImplicitNodeMeta, ImplicitNodeType, UserNodeMeta, UserNodeType } from '../../types'
+import type { ImplicitNodeMeta, ImplicitNodeType, NodeMeta, UserNodeMeta, UserNodeType } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -79,3 +79,14 @@ export const IMPLICIT_NODE_META_MAP = {
     ioDirection: 'rl',
   },
 } as const satisfies Record<ImplicitNodeType, ImplicitNodeMeta>
+
+const IMPLICIT_NODE_TYPES = [
+  'request',
+  'response',
+  'service_request',
+  'service_response',
+] as const satisfies ImplicitNodeType[]
+
+export const isImplicit = (meta: NodeMeta): meta is ImplicitNodeMeta =>
+  IMPLICIT_NODE_TYPES.includes(meta.type as ImplicitNodeType)
+

@@ -128,8 +128,10 @@ import { UnfoldMoreIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
 import { computed, ref } from 'vue'
 import english from '../../../../../locales/en.json'
-import { isImplicit, type NodeMeta } from '../../types'
 import HandleTwig from './HandleTwig.vue'
+
+import type { NodeMeta } from '../../types'
+import { isImplicit } from './node-meta'
 
 const props = defineProps<{
   meta: NodeMeta
@@ -149,6 +151,9 @@ const name = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+$handle-width: 3px;
+$handle-height: 10px;
+
 .flow-node {
   border-radius: $kui-border-radius-20;
   min-width: 120px;
@@ -159,6 +164,7 @@ const name = computed(() => {
 
     .name {
       font-weight: $kui-font-weight-semibold;
+      line-height: $kui-line-height-20;
       margin-bottom: $kui-space-40;
     }
   }
@@ -207,19 +213,20 @@ const name = computed(() => {
       border: none;
       border-radius: $kui-border-radius-round;
       bottom: unset;
-      height: 10px;
+      height: $handle-height;
       left: unset;
+      min-width: 0;
       position: relative;
       right: unset;
       top: unset;
       transform: unset;
-      width: 3px;
+      width: $handle-width;
     }
   }
 
   .input-handles {
     align-items: flex-start;
-    transform: translateX(-1px);
+    transform: translateX(-$handle-width / 2);
 
     .handle.indented .handle-label {
       margin-left: $kui-space-40;
@@ -228,7 +235,7 @@ const name = computed(() => {
 
   .output-handles {
     align-items: flex-end;
-    transform: translateX(1px);
+    transform: translateX($handle-width / 2);
 
     .handle.indented .handle-label {
       margin-right: $kui-space-40;
@@ -245,7 +252,7 @@ const name = computed(() => {
 
     .input-handles {
       align-items: flex-end;
-      transform: translateX(1px);
+      transform: translateX($handle-width / 2);
 
       .handle.indented .handle-label {
         margin-left: unset;
@@ -255,7 +262,7 @@ const name = computed(() => {
 
     .output-handles {
       align-items: flex-start;
-      transform: translateX(-1px);
+      transform: translateX(-$handle-width / 2);
 
       .handle.indented .handle-label {
         margin-left: $kui-space-40;
