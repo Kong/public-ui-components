@@ -42,9 +42,7 @@ const childFieldNames = computed(() => {
   position: relative;
 
   &::before {
-    border-left-color: $kui-color-border;
-    border-left-style: solid;
-    border-left-width: $kui-border-width-10;
+    border-left: $kui-border-width-10 solid $kui-color-border;
     content: '';
     display: block;
     height: 84px;
@@ -55,9 +53,7 @@ const childFieldNames = computed(() => {
   }
 
   &::after {
-    border-top-color: $kui-color-border;
-    border-top-style: solid;
-    border-top-width: $kui-border-width-10;
+    border-top: $kui-border-width-10 solid $kui-color-border;
     content: '';
     display: block;
     height: 0;

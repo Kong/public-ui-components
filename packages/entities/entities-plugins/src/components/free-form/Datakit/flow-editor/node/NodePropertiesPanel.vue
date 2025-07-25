@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import NodeBadge from './NodeBadge.vue'
 
-import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
+import { DK_NODE_PROPERTIES_PANEL_OFFSET_TOP, DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
 import NodeFormCall from './NodeFormCall.vue'
 
 import { KSlideout } from '@kong/kongponents'
@@ -35,7 +35,7 @@ const nodeType: NodeType = 'call' // Fixme: hardcoded
 
 const {
   maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,
-  offsetTop = '52px',
+  offsetTop = DK_NODE_PROPERTIES_PANEL_OFFSET_TOP,
   visible,
   // node,
 } = defineProps<{

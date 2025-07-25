@@ -3,7 +3,7 @@
     <template #icon>
       <component :is="icon" />
     </template>
-    {{ typeName }}
+    {{ nodeName }}
   </KBadge>
 </template>
 
@@ -24,7 +24,7 @@ const icon = computed(() => {
   return undefined
 })
 
-const typeName = computed(() => getNodeName(type))
+const nodeName = computed(() => getNodeName(type))
 
 const appearance = computed<BadgeAppearance>(() => {
   switch (type) {
