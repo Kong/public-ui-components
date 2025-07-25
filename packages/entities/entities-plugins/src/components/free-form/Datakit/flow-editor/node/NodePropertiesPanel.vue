@@ -10,14 +10,18 @@
   >
     <template #title>
       <div class="dk-node-properties-panel-title">
-        <NodeBadge :type="nodeType" />
+        <NodeBadge :type="node.type" />
         <span class="dk-node-properties-panel-desc">
-          {{ getNodeTypeDescription(nodeType) }}
+          {{ getNodeTypeDescription(node.type) }}
         </span>
       </div>
     </template>
 
-    <NodeFormCall class="dk-node-properties-panel-form" />
+    <component
+      :is="form"
+      v-if="form"
+      class="dk-node-properties-panel-form"
+    />
   </KSlideout>
 </template>
 
@@ -26,28 +30,42 @@ import NodeBadge from './NodeBadge.vue'
 
 import { DK_NODE_PROPERTIES_PANEL_OFFSET_TOP, DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
 import NodeFormCall from './NodeFormCall.vue'
+import NodeFormServiceRequest from './NodeFormServiceRequest.vue'
+import NodeFormResponse from './NodeFormResponse.vue'
 
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
-import type { NodeType } from '../../types'
-
-const nodeType: NodeType = 'call' // Fixme: hardcoded
+import type { NodeData } from '../../types'
+import { computed } from 'vue'
 
 const {
   maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,
   offsetTop = DK_NODE_PROPERTIES_PANEL_OFFSET_TOP,
   visible,
-  // node,
+  node,
 } = defineProps<{
   maxWidth?: string
   offsetTop?: string
   visible?: boolean
-  node?: any
+  node: NodeData
 }>()
 
 defineEmits<{
   close: []
 }>()
+
+const form = computed(() => {
+  switch (node.type) {
+    case 'call':
+      return NodeFormCall
+    case 'service_request':
+      return NodeFormServiceRequest
+    case 'response':
+      return NodeFormResponse
+    default:
+      return null
+  }
+})
 </script>
 
 <style lang="scss" scoped>
