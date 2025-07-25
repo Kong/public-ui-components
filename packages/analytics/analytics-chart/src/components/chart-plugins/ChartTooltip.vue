@@ -25,12 +25,15 @@
     />
     <div v-else>
       <div class="tooltip-title">
-        <span class="title">{{ tooltipTitle }}</span>
-        <DragIcon
-          v-if="isInteractive"
-          class="drag-icon"
-          :color="KUI_COLOR_TEXT_NEUTRAL"
-        />
+        <div class="title">
+          <div>{{ tooltipTitle }}</div>
+          <DragIcon
+            v-if="isInteractive"
+            class="drag-icon"
+            :color="KUI_COLOR_TEXT_NEUTRAL"
+            :size="KUI_ICON_SIZE_30"
+          />
+        </div>
         <div
           v-if="context || metric"
           class="subtitle"
@@ -68,7 +71,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { DragIcon } from '@kong/icons'
-import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import type { TooltipState, ZoomActionItem } from 'src/types'
 import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import ZoomActions from '../ZoomActions.vue'
@@ -218,13 +221,6 @@ function handleMouseUp() {
 
   .tooltip-title {
     @include tooltipTitle;
-
-    .drag-icon {
-      margin-top: var(--kui-space-30, $kui-space-30);
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
   }
 
   .tooltip {
