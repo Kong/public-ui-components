@@ -94,7 +94,6 @@ const props = withDefaults(defineProps<{
   absoluteTop: '0px',
   zoomTimeRange: undefined,
   zoomActionItems: undefined,
-  dragSelectPlugin: undefined,
 })
 
 const tooltipEl = ref<HTMLElement | null>(null)
