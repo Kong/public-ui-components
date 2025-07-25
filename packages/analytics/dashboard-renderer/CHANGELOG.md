@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.0.0...@kong-ui-public/dashboard-renderer@6.0.1) (2025-07-25)
+
+
+### Bug Fixes
+
+* **dashboards:** preserve tile type field ([#2253](https://github.com/Kong/public-ui-components/issues/2253)) ([766ab71](https://github.com/Kong/public-ui-components/commit/766ab71c623776edb77c96a0d4a21aaf3bacd781))
+
+
+
+
+
 # [6.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@5.7.23...@kong-ui-public/dashboard-renderer@6.0.0) (2025-07-24)
 
 
