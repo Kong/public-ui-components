@@ -18,23 +18,23 @@ import type {
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-export function getNodeDescription(type: NodeType): string {
+export function getNodeTypeDescription(type: NodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.description`)
 }
 
-function getNodeSummary(type: UserNodeType): string {
+function getNodeTypeSummary(type: UserNodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.summary`)
 }
 
-export function getNodeName(type: NodeType): string {
+export function getNodeTypeName(type: NodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.name`)
 }
 
 export const USER_NODE_META_MAP = {
   call: {
     type: 'call',
-    summary: getNodeSummary('call'),
-    description: getNodeDescription('call'),
+    summary: getNodeTypeSummary('call'),
+    description: getNodeTypeDescription('call'),
     icon: NetworkIcon,
     fields: {
       input: ['headers', 'body', 'query'],
@@ -43,14 +43,14 @@ export const USER_NODE_META_MAP = {
   },
   jq: {
     type: 'jq',
-    summary: getNodeSummary('jq'),
-    description: getNodeDescription('jq'),
+    summary: getNodeTypeSummary('jq'),
+    description: getNodeTypeDescription('jq'),
     icon: CodeblockIcon,
   },
   exit: {
     type: 'exit',
-    summary: getNodeSummary('exit'),
-    description: getNodeDescription('exit'),
+    summary: getNodeTypeSummary('exit'),
+    description: getNodeTypeDescription('exit'),
     icon: GatewayIcon,
     fields: {
       output: ['headers', 'body'],
@@ -58,14 +58,14 @@ export const USER_NODE_META_MAP = {
   },
   property: {
     type: 'property',
-    summary: getNodeSummary('property'),
-    description: getNodeDescription('property'),
+    summary: getNodeTypeSummary('property'),
+    description: getNodeTypeDescription('property'),
     icon: StackIcon,
   },
   static: {
     type: 'static',
-    summary: getNodeSummary('static'),
-    description: getNodeDescription('static'),
+    summary: getNodeTypeSummary('static'),
+    description: getNodeTypeDescription('static'),
     icon: VitalsIcon,
   },
 } as const satisfies Record<UserNodeType, NodeMeta>
@@ -73,28 +73,28 @@ export const USER_NODE_META_MAP = {
 export const IMPLICIT_NODE_META_MAP = {
   request: {
     type: 'request',
-    description: getNodeDescription('request'),
+    description: getNodeTypeDescription('request'),
     fields: {
       output: ['headers', 'body', 'query'],
     },
   },
   service_request: {
     type: 'service_request',
-    description: getNodeDescription('service_request'),
+    description: getNodeTypeDescription('service_request'),
     fields: {
       input: ['headers', 'body', 'query'],
     },
   },
   service_response: {
     type: 'service_response',
-    description: getNodeDescription('service_response'),
+    description: getNodeTypeDescription('service_response'),
     fields: {
       output: ['headers', 'body'],
     },
   },
   response: {
     type: 'response',
-    description: getNodeDescription('response'),
+    description: getNodeTypeDescription('response'),
     fields: {
       input: ['headers', 'body'],
     },

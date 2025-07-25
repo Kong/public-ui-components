@@ -12,7 +12,7 @@
       <div class="dk-node-properties-panel-title">
         <NodeBadge :type="nodeType" />
         <span class="dk-node-properties-panel-desc">
-          {{ getNodeDescription(nodeType) }}
+          {{ getNodeTypeDescription(nodeType) }}
         </span>
       </div>
     </template>
@@ -28,7 +28,7 @@ import { DK_NODE_PROPERTIES_PANEL_OFFSET_TOP, DK_NODE_PROPERTIES_PANEL_WIDTH } f
 import NodeFormCall from './NodeFormCall.vue'
 
 import { KSlideout } from '@kong/kongponents'
-import { getNodeDescription } from './node'
+import { getNodeTypeDescription } from './node'
 import type { NodeType } from '../../types'
 
 const nodeType: NodeType = 'call' // Fixme: hardcoded

@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { NodeType } from '../../types'
-import { USER_NODE_META_MAP, getNodeName, isImplicitNodeType } from './node'
+import { USER_NODE_META_MAP, getNodeTypeName, isImplicitNodeType } from './node'
 import type { BadgeAppearance } from '@kong/kongponents'
 
 const { type } = defineProps<{
@@ -24,7 +24,7 @@ const icon = computed(() => {
   return undefined
 })
 
-const nodeName = computed(() => getNodeName(type))
+const nodeName = computed(() => getNodeTypeName(type))
 
 const appearance = computed<BadgeAppearance>(() => {
   switch (type) {
