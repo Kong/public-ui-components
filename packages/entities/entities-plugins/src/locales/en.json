@@ -730,6 +730,11 @@
               "name": "service response",
               "description": "Reads response properties from the service being proxied to."
             }
+          },
+          "node_properties": {
+            "input": {
+              "placeholder": "Select output(s)"
+            }
           }
         },
         "code_editor": {

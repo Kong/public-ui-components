@@ -20,7 +20,7 @@
 import { useScrollLock } from '@vueuse/core'
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 import { nextTick, useTemplateRef, watch } from 'vue'
-import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../constants'
+import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../../constants'
 
 import EditorNav from './EditorNav.vue'
 import EditorContent from './EditorContent.vue'
