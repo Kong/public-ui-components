@@ -12,7 +12,7 @@
   <template v-else-if="asChild">
     <div
       class="ff-object-field ff-object-field-as-child"
-      :class="$attrs.class"
+      v-bind="$attrs"
       :data-testid="`ff-object-${field.path.value}`"
     >
       <slot>
@@ -31,6 +31,7 @@
     class="ff-object-field"
     :class="{ 'ff-object-field-collapsed': !realExpanded }"
     :data-testid="`ff-object-${field.path.value}`"
+    v-bind="$attrs"
   >
     <header
       class="ff-object-field-header"
@@ -111,6 +112,10 @@ import Field from './Field.vue'
 
 import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
 import type { ResetLabelPathRule } from './types'
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 const slots = defineSlots<
   {

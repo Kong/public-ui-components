@@ -36,7 +36,7 @@ import english from '../../../../../locales/en.json'
 import { usePreferences } from '../../composables'
 import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
-import NodePropertiesPanel from '../node/nodePropertiesPanel.vue'
+import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
 import { ref } from 'vue'
 
 const { t } = createI18n<typeof english>('en-us', english)

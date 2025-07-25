@@ -10,7 +10,7 @@
       class="dk-inputs-field-indent"
       :items="[]"
       :name="name"
-      placeholder="Select output(s)"
+      :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
     />
   </ObjectField>
 </template>
@@ -21,8 +21,10 @@ import { useFormShared } from '../../../shared/composables'
 import ObjectField from '../../../shared/ObjectField.vue'
 import type { RecordFieldSchema } from '../../../../../types/plugins/form-schema'
 import EnumField from '../../../shared/EnumField.vue'
+import useI18n from '../../../../../composables/useI18n'
 
 const { getSchema } = useFormShared()
+const { i18n } = useI18n()
 
 const childFieldNames = computed(() => {
   const schema = getSchema<RecordFieldSchema>('inputs')
