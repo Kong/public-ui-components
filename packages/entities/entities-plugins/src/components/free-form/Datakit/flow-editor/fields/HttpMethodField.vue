@@ -1,6 +1,6 @@
 <template>
   <EnumField
-    :items="toSelectItems(HTTP_METHODS)"
+    :items="toSelectItems([...HTTP_METHODS])"
     multiple
     :name="name"
   />
