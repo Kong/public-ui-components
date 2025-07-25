@@ -23,6 +23,7 @@
     </div>
 
     <NodePropertiesPanel
+      v-if="selectedNode"
       :node="selectedNode"
       :visible="propertiesPanelVisible"
       @close="propertiesPanelVisible = false"
@@ -38,15 +39,16 @@ import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
 import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
 import { ref } from 'vue'
+import type { NodeData } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
 
 const propertiesPanelVisible = ref(false)
-const selectedNode = ref(null)
+const selectedNode = ref<NodeData | null>(null)
 
-const handleNodeClick = (node: any) => {
+const handleNodeClick = (node: NodeData) => {
   propertiesPanelVisible.value = true
   selectedNode.value = node
 }

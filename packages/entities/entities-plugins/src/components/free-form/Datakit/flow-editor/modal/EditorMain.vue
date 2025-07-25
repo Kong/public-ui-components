@@ -59,7 +59,7 @@ defineSlots<{
 }>()
 
 const emit = defineEmits<{
-  'click:node': [node: any]
+  'click:node': [nodeData: NodeData]
   'click:backdrop': []
 }>()
 
@@ -82,7 +82,7 @@ const { fitView, onNodeClick } = useVueFlow()
 
 onNodeClick(({ event, node }) => {
   event.stopPropagation()
-  emit('click:node', node)
+  emit('click:node', node.data)
 })
 </script>
 
