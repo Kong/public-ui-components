@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.41.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.40.0...@kong-ui-public/entities-plugins@9.41.0) (2025-07-25)
+
+
+### Features
+
+* **entities-plugins:** datakit implicit node forms ([#2250](https://github.com/Kong/public-ui-components/issues/2250)) ([58f614c](https://github.com/Kong/public-ui-components/commit/58f614cfa9b85310dced03198dae3e4ebd96a326))
+
+
+
+
+
 # [9.40.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.39.1...@kong-ui-public/entities-plugins@9.40.0) (2025-07-25)
 
 
