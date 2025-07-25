@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import NodeBadge from './NodeBadge.vue'
 
-import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../constants'
+import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
 import NodeFormCall from './NodeFormCall.vue'
 
 import { KSlideout } from '@kong/kongponents'

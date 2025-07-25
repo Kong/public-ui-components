@@ -1,7 +1,9 @@
 import type { Component } from 'vue'
 import type { ButtonProps } from '@kong/kongponents'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+import type { HttpMethod } from './constants'
 
+export type { HttpMethod }
 export type EditorMode = 'code' | 'flow'
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
@@ -115,23 +117,6 @@ interface BaseNode {
    */
   type: NodeType
 }
-
-/**
- * Standard HTTP/1.1 verbs accepted by the `call` node.
- * The string must contain only uppercase letters.
- *
- * @default 'GET'
- */
-export type HttpMethod =
-  | 'GET'
-  | 'HEAD'
-  | 'POST'
-  | 'PUT'
-  | 'PATCH'
-  | 'DELETE'
-  | 'OPTIONS'
-  | 'TRACE'
-  | 'CONNECT'
 
 /**
  * Make an external HTTP request.
