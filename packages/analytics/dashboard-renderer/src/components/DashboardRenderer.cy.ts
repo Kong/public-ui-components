@@ -947,6 +947,9 @@ describe('<DashboardRenderer />', () => {
     cy.wrap(configRef).should((ref: Ref<DashboardConfig>) => {
       const currentOrder = ref.value.tiles.map((tile: TileConfig) => tile.id)
       expect(currentOrder).to.deep.equal(updatedTileIDOrder)
+
+      const tileTypes = ref.value.tiles.map((tile) => tile.type)
+      expect(tileTypes).to.deep.equal(Array(4).fill('chart'))
     })
   })
 })

@@ -541,6 +541,7 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
   tileHeight: 167,
   tiles: [
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_line',
@@ -562,6 +563,7 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
       id: 'tile-1',
     },
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_line',
@@ -583,6 +585,7 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
       id: 'tile-2',
     },
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_line',
@@ -604,6 +607,7 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
       id: 'tile-3',
     },
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_line',
