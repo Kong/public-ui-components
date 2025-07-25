@@ -120,7 +120,7 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
   return a.layout.position.col - b.layout.position.col
 }
 
-const gridTiles = computed(() => {
+const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
   return model.value.tiles.map((tile: TileConfig) => {
     let tileMeta = tile.definition
 
@@ -161,9 +161,10 @@ const gridTiles = computed(() => {
     return {
       layout: tile.layout,
       meta: tileMeta,
+      type: tile.type,
       // Add a unique key to each tile internally.
       id: tile.id ?? crypto.randomUUID(),
-    } as GridTile<TileDefinition>
+    }
   })
 })
 
@@ -245,6 +246,7 @@ const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
   const updatedTiles = tiles.map(tile => {
     return {
       id: tile.id,
+      type: tile.type,
       layout: tile.layout,
       definition: tile.meta,
     } as TileConfig
