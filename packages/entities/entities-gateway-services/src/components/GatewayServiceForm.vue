@@ -408,6 +408,7 @@
               :placeholder="t('gateway_services.form.fields.tags.placeholder')"
               :readonly="form.isReadonly"
               type="text"
+              @input="resetFormFieldErrors('tags')"
             />
           </div>
         </KCollapse>
