@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.0.1...@kong-ui-public/dashboard-renderer@6.1.0) (2025-07-28)
+
+
+### Features
+
+* **dashboards:** restore dynamic dashboard demo ([#2256](https://github.com/Kong/public-ui-components/issues/2256)) ([52f9403](https://github.com/Kong/public-ui-components/commit/52f94033ab96818bfaa782868649c19de6874af5))
+
+
+
+
+
 ## [6.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.0.0...@kong-ui-public/dashboard-renderer@6.0.1) (2025-07-25)
 
 
