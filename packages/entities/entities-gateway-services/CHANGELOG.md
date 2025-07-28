@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.35...@kong-ui-public/entities-gateway-services@3.11.36) (2025-07-28)
+
+
+### Bug Fixes
+
+* **service-form:** clear tag error when tag input changes ([#2255](https://github.com/Kong/public-ui-components/issues/2255)) ([a76e4a2](https://github.com/Kong/public-ui-components/commit/a76e4a28ba0ce8eee8d4c0ce0dda7b1ab6b8f06c))
+
+
+
+
+
 ## [3.11.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.11.34...@kong-ui-public/entities-gateway-services@3.11.35) (2025-07-22)
 
 
