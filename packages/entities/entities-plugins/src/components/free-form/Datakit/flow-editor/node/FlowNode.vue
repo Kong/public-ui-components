@@ -15,6 +15,7 @@
         <!-- TODO: Use small variant when available -->
         <NodeBadge
           v-if="!isImplicit"
+          condensed
           :type="data.type"
         />
       </div>
@@ -225,18 +226,6 @@ $handle-height: 10px;
         font-size: $kui-font-size-20;
         font-weight: $kui-font-weight-semibold;
         line-height: $kui-line-height-20;
-      }
-
-      .type {
-        align-items: center;
-        border-radius: $kui-border-radius-20;
-        color: $kui-color-text-neutral-weak;
-        display: flex;
-        flex-direction: row;
-        font-size: $kui-font-size-20;
-        gap: $kui-space-20;
-        line-height: $kui-line-height-20;
-        padding: $kui-space-10;
       }
     }
   }
