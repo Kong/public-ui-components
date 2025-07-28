@@ -1,17 +1,5 @@
 import { createI18n } from '@kong-ui-public/i18n'
 import {
-  KUI_COLOR_BACKGROUND_DANGER_WEAKEST,
-  KUI_COLOR_BACKGROUND_DECORATIVE_PURPLE_WEAKEST,
-  KUI_COLOR_BACKGROUND_PRIMARY_WEAKEST,
-  KUI_COLOR_BACKGROUND_SUCCESS_WEAKEST,
-  KUI_COLOR_BACKGROUND_WARNING_WEAKEST,
-  KUI_COLOR_TEXT_DANGER,
-  KUI_COLOR_TEXT_DECORATIVE_PURPLE,
-  KUI_COLOR_TEXT_PRIMARY,
-  KUI_COLOR_TEXT_SUCCESS,
-  KUI_COLOR_TEXT_WARNING,
-} from '@kong/design-tokens'
-import {
   CodeblockIcon,
   GatewayIcon,
   NetworkIcon,
@@ -47,13 +35,7 @@ export const USER_NODE_META_MAP = {
     type: 'call',
     summary: getNodeTypeSummary('call'),
     description: getNodeTypeDescription('call'),
-    icon: {
-      component: NetworkIcon,
-      colors: {
-        background: KUI_COLOR_BACKGROUND_WARNING_WEAKEST,
-        foreground: KUI_COLOR_TEXT_WARNING,
-      },
-    },
+    icon: NetworkIcon,
     fields: {
       input: ['headers', 'body', 'query'],
       output: ['headers', 'body', 'status'],
@@ -63,25 +45,13 @@ export const USER_NODE_META_MAP = {
     type: 'jq',
     summary: getNodeTypeSummary('jq'),
     description: getNodeTypeDescription('jq'),
-    icon: {
-      component: CodeblockIcon,
-      colors: {
-        background: KUI_COLOR_BACKGROUND_DECORATIVE_PURPLE_WEAKEST,
-        foreground: KUI_COLOR_TEXT_DECORATIVE_PURPLE,
-      },
-    },
+    icon: CodeblockIcon,
   },
   exit: {
     type: 'exit',
     summary: getNodeTypeSummary('exit'),
     description: getNodeTypeDescription('exit'),
-    icon: {
-      component: GatewayIcon,
-      colors: {
-        background: KUI_COLOR_BACKGROUND_DANGER_WEAKEST,
-        foreground: KUI_COLOR_TEXT_DANGER,
-      },
-    },
+    icon: GatewayIcon,
     fields: {
       input: ['headers', 'body'],
     },
@@ -90,25 +60,13 @@ export const USER_NODE_META_MAP = {
     type: 'property',
     summary: getNodeTypeSummary('property'),
     description: getNodeTypeDescription('property'),
-    icon: {
-      component: StackIcon,
-      colors: {
-        background: KUI_COLOR_BACKGROUND_SUCCESS_WEAKEST,
-        foreground: KUI_COLOR_TEXT_SUCCESS,
-      },
-    },
+    icon: StackIcon,
   },
   static: {
     type: 'static',
     summary: getNodeTypeSummary('static'),
     description: getNodeTypeDescription('static'),
-    icon: {
-      component: VitalsIcon,
-      colors: {
-        background: KUI_COLOR_BACKGROUND_PRIMARY_WEAKEST,
-        foreground: KUI_COLOR_TEXT_PRIMARY,
-      },
-    },
+    icon: VitalsIcon,
   },
 } as const satisfies Record<UserNodeType, NodeMeta>
 

@@ -12,27 +12,11 @@
           {{ name }}
         </div>
 
-        <div
+        <!-- TODO: Use small variant when available -->
+        <NodeBadge
           v-if="!isImplicit"
-          class="type"
-          :style="{ backgroundColor: iconColors?.background }"
-        >
-          <div
-            v-if="Icon"
-            class="icon"
-          >
-            <Icon
-              :color="iconColors?.foreground"
-              :size="12"
-            />
-          </div>
-          <div
-            class="type-label"
-            :style="{ color: iconColors?.foreground }"
-          >
-            {{ data.type }}
-          </div>
-        </div>
+          :type="data.type"
+        />
       </div>
 
       <slot />
@@ -169,14 +153,15 @@ import {
   KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER,
   KUI_ICON_SIZE_30,
 } from '@kong/design-tokens'
-import { UnfoldMoreIcon, UnfoldLessIcon } from '@kong/icons'
+import { UnfoldLessIcon, UnfoldMoreIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
 import { computed, ref } from 'vue'
 import english from '../../../../../locales/en.json'
 import HandleTwig from './HandleTwig.vue'
-import { isImplicitNode, USER_NODE_META_MAP } from './node'
+import { isImplicitNode } from './node'
 
-import type { NodeData, UserNodeType } from '../../types'
+import type { NodeData } from '../../types'
+import NodeBadge from './NodeBadge.vue'
 
 const { data } = defineProps<{
   data: NodeData
@@ -191,14 +176,6 @@ const isImplicit = computed(() => isImplicitNode(data))
 
 const isReversed = computed(() => {
   return data.phase === 'response'
-})
-
-const Icon = computed(() => {
-  return isImplicit.value ? undefined : USER_NODE_META_MAP[data.type as UserNodeType].icon?.component
-})
-
-const iconColors = computed(() => {
-  return isImplicit.value ? undefined : USER_NODE_META_MAP[data.type as UserNodeType].icon?.colors
 })
 
 const inputPosition = computed(() => {

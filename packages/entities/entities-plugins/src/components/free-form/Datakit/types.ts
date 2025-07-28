@@ -29,19 +29,12 @@ export type EditorModalNavItem = RequireAtLeastOne<EditorModalNavItemBase, 'to' 
 export type UserNodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
 export type ImplicitNodeType = 'request' | 'service_request' | 'service_response' | 'response'
 export type NodeType = UserNodeType | ImplicitNodeType
-export type NodeIcon = {
-  component: Component
-  colors: {
-    background: string
-    foreground: string
-  }
-}
 
 export interface NodeMeta {
   type: NodeType
   summary?: string
   description?: string
-  icon?: NodeIcon
+  icon?: Component
 
   /**
    * Well-known fields for the node.

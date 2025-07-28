@@ -1,13 +1,12 @@
 <template>
-  <div class="dk-node-panel-item">
-    <div
-      class="icon"
-      :style="{ backgroundColor: colors.background }"
-    >
-      <Icon
-        :color="colors.foreground"
-        :size="16"
-      />
+  <div
+    class="dk-node-panel-item"
+    :class="{
+      [`node-type-${type}`]: true,
+    }"
+  >
+    <div class="icon">
+      <Icon :size="16" />
     </div>
     <div class="content">
       <div class="title">
@@ -28,7 +27,7 @@ import type { UserNodeType } from '../../types'
 const { type } = defineProps<{ type: UserNodeType }>()
 const {
   summary,
-  icon: { component: Icon, colors },
+  icon: Icon,
 } = USER_NODE_META_MAP[type]
 </script>
 
@@ -45,9 +44,35 @@ const {
 
   .icon {
     align-items: center;
+    background: $kui-color-background-warning-weakest;
     border-radius: $kui-border-radius-10;
     display: flex;
     padding: $kui-space-30;
+  }
+
+  &.node-type-call .icon {
+    background: $kui-color-background-warning-weakest;
+    color: $kui-color-text-warning;
+  }
+
+  &.node-type-jq .icon {
+    background: $kui-color-background-decorative-purple-weakest;
+    color: $kui-color-text-decorative-purple;
+  }
+
+  &.node-type-exit .icon {
+    background: $kui-color-background-danger-weakest;
+    color: $kui-color-text-danger;
+  }
+
+  &.node-type-property .icon {
+    background: $kui-color-background-success-weakest;
+    color: $kui-color-text-success;
+  }
+
+  &.node-type-static .icon {
+    background: $kui-color-background-primary-weakest;
+    color: $kui-color-text-primary;
   }
 
   .content {
