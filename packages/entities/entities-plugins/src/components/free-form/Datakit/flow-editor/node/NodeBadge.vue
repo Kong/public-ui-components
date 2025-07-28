@@ -1,5 +1,8 @@
 <template>
-  <KBadge :appearance="appearance">
+  <KBadge
+    :appearance="appearance"
+    :class="{ 'condensed': condensed }"
+  >
     <template #icon>
       <component :is="icon" />
     </template>
@@ -15,6 +18,7 @@ import type { BadgeAppearance } from '@kong/kongponents'
 
 const { type } = defineProps<{
   type: NodeType
+  condensed?: boolean
 }>()
 
 const icon = computed(() => {
@@ -43,3 +47,9 @@ const appearance = computed<BadgeAppearance>(() => {
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.condensed {
+  padding: $kui-space-10;
+}
+</style>

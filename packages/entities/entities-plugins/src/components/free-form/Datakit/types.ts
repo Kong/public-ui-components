@@ -30,8 +30,6 @@ export type UserNodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
 export type ImplicitNodeType = 'request' | 'service_request' | 'service_response' | 'response'
 export type NodeType = UserNodeType | ImplicitNodeType
 
-export type NodeIODirection = 'lr' | 'rl'
-
 export interface NodeMeta {
   type: NodeType
   summary?: string
@@ -102,6 +100,13 @@ export type ImplicitNodeName =
  * @example 'filter_02'
  */
 export type NodeName = string & {} // for autocompletion of implicit node names
+
+/**
+ * The phase of the node in the request/response cycle.
+ *
+ * Note: Phases of implicit nodes are hardcoded and cannot be changed.
+ */
+export type NodePhase = 'request' | 'response'
 
 /**
  * Base shape shared by every concrete node type.
@@ -314,7 +319,7 @@ export type UserNode =
 export interface NodeData {
   type: NodeType
   name: NodeName
-  phase: 'request' | 'response'
+  phase: NodePhase
   position: {
     x: number
     y: number

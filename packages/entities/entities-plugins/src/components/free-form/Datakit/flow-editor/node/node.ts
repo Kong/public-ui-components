@@ -53,7 +53,7 @@ export const USER_NODE_META_MAP = {
     description: getNodeTypeDescription('exit'),
     icon: GatewayIcon,
     fields: {
-      output: ['headers', 'body'],
+      input: ['headers', 'body'],
     },
   },
   property: {
@@ -112,19 +112,38 @@ export const isImplicitNode = (
   (IMPLICIT_NODE_TYPES as readonly string[]).includes(node.type)
 
 export const createNode = (data: NodeData): Node<NodeData> => ({
-  id: isImplicitNode(data) ? `implicit:${data.type}` : `user:${data.type}:${data.name}`,
+  id: isImplicitNode(data) ? `implicit:${data.type}` : `user:${data.type}:${data.name}`, // TODO: Replace this with an edit-agnostic ID
   type: 'flow', // Hardcoded
   position: data.position,
   data,
 })
 
-export const createImplicitNode = (type: ImplicitNodeType, dataOverrides?: Partial<NodeData>): Node<NodeData> => {
+export const createImplicitNode = (type: ImplicitNodeType, init?: Partial<Omit<NodeData, 'name' | 'phase'>>): Node<NodeData> => {
   return createNode({
-    ...IMPLICIT_NODE_META_MAP[type],
-    name: type,
-    phase: type === 'request' || type === 'service_request' ? 'request' : 'response',
+    // Defaults
     expanded: {},
     position: { x: 0, y: 0 },
-    ...dataOverrides,
+
+    ...IMPLICIT_NODE_META_MAP[type],
+
+    // Preserved
+    name: type,
+    phase: type === 'request' || type === 'service_request' ? 'request' : 'response',
+
+    ...init,
+  })
+}
+
+export type PartiallyRequired<T, K extends keyof T> = Partial<Omit<T, K>> & Required<Pick<T, K>>
+
+export const createUserNode = (type: UserNodeType, init: PartiallyRequired<NodeData, 'name' | 'phase'>): Node<NodeData> => {
+  return createNode({
+    // Defaults
+    expanded: {},
+    fields: {},
+    position: { x: 0, y: 0 },
+
+    ...USER_NODE_META_MAP[type],
+    ...init,
   })
 }

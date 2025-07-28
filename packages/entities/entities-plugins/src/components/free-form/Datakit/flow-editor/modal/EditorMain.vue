@@ -46,7 +46,7 @@ import { ref } from 'vue'
 import english from '../../../../../locales/en.json'
 import type { NodeData } from '../../types'
 import FlowNode from '../node/FlowNode.vue'
-import { createImplicitNode } from '../node/node'
+import { createImplicitNode, createUserNode } from '../node/node'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -68,14 +68,50 @@ const nodes = ref<Array<Node<NodeData>>>([
     position: { x: 0, y: 0 },
   }),
   createImplicitNode('service_request', {
-    position: { x: 300, y: 0 },
+    position: { x: 800, y: 0 },
   }),
   createImplicitNode('service_response', {
-    position: { x: 300, y: 200 },
+    position: { x: 800, y: 200 },
   }),
   createImplicitNode('response', {
     position: { x: 0, y: 200 },
   }),
+  createUserNode('call', {
+    name: 'fetch_data',
+    phase: 'request',
+    position: { x: 200, y: 0 },
+  }),
+  createUserNode('jq', {
+    name: 'process_data',
+    phase: 'request',
+    position: { x: 400, y: 0 },
+    fields: {
+      input: ['foo', 'bar'],
+      output: ['baz'],
+    },
+  }),
+  createUserNode('exit', {
+    name: 'exit',
+    phase: 'request',
+    position: { x: 200, y: 200 },
+  }),
+  createUserNode('property', {
+    name: 'get_properties',
+    phase: 'request',
+    position: { x: 400, y: 200 },
+    fields: {
+      output: ['authenticated_user'],
+    },
+  }),
+  createUserNode('static', {
+    name: 'predefined_data',
+    phase: 'request',
+    position: { x: 200, y: 400 },
+    fields: {
+      output: ['foo', 'bar'],
+    },
+  }),
+
 ])
 
 const { fitView, onNodeClick } = useVueFlow()
