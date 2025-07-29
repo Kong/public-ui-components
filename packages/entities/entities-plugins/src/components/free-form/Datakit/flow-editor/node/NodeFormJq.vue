@@ -1,6 +1,6 @@
 <template>
   <Form
-    :schema="CallNodeSchema"
+    :schema="JqNodeSchema"
     @change="console.log"
   >
     <Field name="name" />
@@ -9,26 +9,26 @@
       {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.Configuration') }}
     </KLabel>
 
-    <Field name="url" />
-    <HttpMethodField name="method" />
-    <NumberField
-      :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.timeout.label')"
-      name="timeout"
+    <StringField
+      :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.jq.label')"
+      multiline
+      name="jq"
+      resizable
+      rows="2"
     />
-    <Field name="ssl_server_name" />
     <InputsField />
+
+    <!-- Todo(zehao): outputs definition fields -->
   </Form>
 </template>
 
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import Field from '../../../shared/Field.vue'
-import HttpMethodField from '../fields/HttpMethodField.vue'
 import InputsField from '../fields/InputsField.vue'
-import { CallNodeSchema } from './mock'
+import { JqNodeSchema } from './mock'
 import useI18n from '../../../../../composables/useI18n'
-import NumberField from '../../../shared/NumberField.vue'
+import StringField from '../../../shared/StringField.vue'
 
 const { i18n } = useI18n()
 </script>
-

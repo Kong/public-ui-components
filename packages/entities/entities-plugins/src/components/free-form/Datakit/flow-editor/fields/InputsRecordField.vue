@@ -1,7 +1,7 @@
 <template>
   <ObjectField
     as-child
-    name="inputs"
+    :name="name"
     reset-label-path="isolate"
   >
     <EnumField
@@ -23,6 +23,10 @@ import type { RecordFieldSchema } from '../../../../../types/plugins/form-schema
 import EnumField from '../../../shared/EnumField.vue'
 import useI18n from '../../../../../composables/useI18n'
 
+defineProps<{
+  name: string
+}>()
+
 const { getSchema } = useFormShared()
 const { i18n } = useI18n()
 
@@ -37,41 +41,11 @@ const childFieldNames = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/tree-indent' as mixins;
+
 .dk-inputs-field-indent {
-  padding-left: $kui-space-70;
-  position: relative;
-
-  &::before {
-    border-left: $kui-border-width-10 solid $kui-color-border;
-    content: '';
-    display: block;
-    height: 84px;
-    left: 8px;
-    position: absolute;
-    top: -16px;
-    width: 0;
-  }
-
-  &::after {
-    border-top: $kui-border-width-10 solid $kui-color-border;
-    content: '';
-    display: block;
-    height: 0;
-    left: 9px;
-    position: absolute;
-    top: 9px;
-    width: 8px;
-  }
-
-  &:last-child::before {
-    border-bottom: 1px solid $kui-color-border;
-    border-bottom-left-radius: 2px;
-    height: 25px;
-    width: 8px;
-  }
-
-  &:last-child::after {
-    display: none;
-  }
+  @include mixins.tree-indent(
+    $line-height: 84px,
+  );
 }
 </style>
