@@ -1,3 +1,4 @@
+import type { AxiosRequestConfig } from 'axios'
 import type { BasicExploreQuery, ExploreQuery, AiExploreQuery, ExploreResultV4 } from './explore'
 import type { AnalyticsConfigV2 } from './analytics-config'
 import type { Component } from 'vue'
@@ -21,7 +22,7 @@ export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuer
 
 export interface AnalyticsBridge {
   // Issue queries to the KAnalytics API
-  queryFn: (query: DatasourceAwareQuery, abortController: AbortController) => Promise<ExploreResultV4>
+  queryFn: (query: DatasourceAwareQuery, abortController: AbortController, config?: AxiosRequestConfig<any>) => Promise<ExploreResultV4>
 
   // Determine the current org's analytics config
   configFn: () => Promise<AnalyticsConfigV2>
