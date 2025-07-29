@@ -735,7 +735,7 @@
             "Configuration": "Configuration",
             "input": {
               "placeholder": "Select output(s)",
-              "add_button": "Add another input"
+              "add_button": "Add an input"
             },
             "input_name": {
               "label": "Input Name",
