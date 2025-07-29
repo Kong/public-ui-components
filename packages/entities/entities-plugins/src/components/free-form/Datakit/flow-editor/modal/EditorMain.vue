@@ -58,7 +58,7 @@ defineSlots<{
 }>()
 
 const emit = defineEmits<{
-  'click:node': [nodeData: NodeInstance]
+  'click:node': [node: NodeInstance]
   'click:backdrop': []
 }>()
 

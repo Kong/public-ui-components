@@ -38,16 +38,16 @@ import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
 import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
 import { ref } from 'vue'
-import type { NodeData } from '../../types'
+import type { NodeInstance } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
 
 const propertiesPanelVisible = ref(false)
-const selectedNode = ref<NodeData | null>(null)
+const selectedNode = ref<NodeInstance | null>(null)
 
-const handleNodeClick = (node: NodeData) => {
+const handleNodeClick = (node: NodeInstance) => {
   propertiesPanelVisible.value = true
   selectedNode.value = node
 }
