@@ -139,7 +139,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
     }
 
     // Note that queryBridge is guaranteed to be set here because SWRV won't execute the query if the key is null.
-    return queryBridge?.queryFn(mergedQuery, abortController)
+    return await queryBridge?.queryFn(mergedQuery, abortController)
   } catch (e: any) {
     // Note: The error object will contain a response status property at the root when the analytics bridge
     // detects a 403 or 408 status code. This allows us to provide proper error messages for impacted tiles.
@@ -153,6 +153,8 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
     } else {
       errorMessage.value = e?.response?.data?.message || e?.message
     }
+
+    return errorMessage.value
   } finally {
     emit('queryComplete')
   }
