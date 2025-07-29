@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.26.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.26.0...@kong-ui-public/entities-shared@3.26.1) (2025-07-29)
+
+
+### Bug Fixes
+
+* **entity-form-block:** fix layout for step badge ([#2258](https://github.com/Kong/public-ui-components/issues/2258)) ([7c03da1](https://github.com/Kong/public-ui-components/commit/7c03da161dba0f3f3f6a0d608c8c70531db65fe5))
+
+
+
+
+
 # [3.26.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.25.4...@kong-ui-public/entities-shared@3.26.0) (2025-07-22)
 
 
