@@ -1,7 +1,9 @@
-import type { LabelAttributes } from '@kong/kongponents'
 import { uniqueId } from 'lodash-es'
-import { type EmitFn, toRef, ref, watch, useAttrs } from 'vue'
+import { toRef, ref, watch, useAttrs } from 'vue'
 import { useField, useFieldAttrs } from '../composables'
+
+import type { LabelAttributes } from '@kong/kongponents'
+import type { EmitFn } from 'vue'
 
 export interface KeyValueFieldProps {
   name: string

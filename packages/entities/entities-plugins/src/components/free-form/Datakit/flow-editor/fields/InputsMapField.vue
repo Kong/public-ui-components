@@ -103,6 +103,8 @@ function handleAddClick() {
 </script>
 
 <style lang="scss" scoped>
+@use '../styles/tree-indent' as mixins;
+
 .dk-inputs-map-field {
   align-items: flex-start;
   display: flex;
@@ -126,41 +128,7 @@ function handleAddClick() {
   }
 
   &-indent {
-    padding-left: $kui-space-70;
-    position: relative;
-
-    &::before {
-      border-left: $kui-border-width-10 solid $kui-color-border;
-      content: '';
-      display: block;
-      height: 132px;
-      left: 8px;
-      position: absolute;
-      top: -16px;
-      width: 0;
-    }
-
-    &::after {
-      border-top: $kui-border-width-10 solid $kui-color-border;
-      content: '';
-      display: block;
-      height: 0;
-      left: 9px;
-      position: absolute;
-      top: 9px;
-      width: 8px;
-    }
-
-    &:last-child::before {
-      border-bottom: 1px solid $kui-color-border;
-      border-bottom-left-radius: 2px;
-      height: 25px;
-      width: 8px;
-    }
-
-    &:last-child::after {
-      display: none;
-    }
+    @include mixins.tree-indent;
   }
 }
 </style>
