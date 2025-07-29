@@ -6,14 +6,18 @@ import {
   StackIcon,
   VitalsIcon,
 } from '@kong/icons'
-import type { Node } from '@vue-flow/core'
 import english from '../../../../../locales/en.json'
 import type {
+  FieldId,
+  ImplicitNodeName,
   ImplicitNodeType,
-  NodeData,
+  NodeInstance,
+  NodeId,
   NodeMeta,
+  NodeName,
   NodeType,
-  UserNodeType,
+  ConfigNodeType,
+  FieldName,
 } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -22,7 +26,7 @@ export function getNodeTypeDescription(type: NodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.description`)
 }
 
-function getNodeTypeSummary(type: UserNodeType): string {
+function getNodeTypeSummary(type: ConfigNodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.summary`)
 }
 
@@ -30,15 +34,15 @@ export function getNodeTypeName(type: NodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.name`)
 }
 
-export const USER_NODE_META_MAP = {
+export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
   call: {
     type: 'call',
     summary: getNodeTypeSummary('call'),
     description: getNodeTypeDescription('call'),
     icon: NetworkIcon,
     fields: {
-      input: ['headers', 'body', 'query'],
-      output: ['headers', 'body', 'status'],
+      input: ['headers', 'body', 'query'] as FieldName[],
+      output: ['headers', 'body', 'status'] as FieldName[],
     },
   },
   jq: {
@@ -53,7 +57,7 @@ export const USER_NODE_META_MAP = {
     description: getNodeTypeDescription('exit'),
     icon: GatewayIcon,
     fields: {
-      input: ['headers', 'body'],
+      input: ['headers', 'body'] as FieldName[],
     },
   },
   property: {
@@ -68,82 +72,54 @@ export const USER_NODE_META_MAP = {
     description: getNodeTypeDescription('static'),
     icon: VitalsIcon,
   },
-} as const satisfies Record<UserNodeType, NodeMeta>
+}
 
-export const IMPLICIT_NODE_META_MAP = {
+export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   request: {
     type: 'request',
     description: getNodeTypeDescription('request'),
     fields: {
-      output: ['headers', 'body', 'query'],
+      output: ['headers', 'body', 'query'] as FieldName[],
     },
   },
   service_request: {
     type: 'service_request',
     description: getNodeTypeDescription('service_request'),
     fields: {
-      input: ['headers', 'body', 'query'],
+      input: ['headers', 'body', 'query'] as FieldName[],
     },
   },
   service_response: {
     type: 'service_response',
     description: getNodeTypeDescription('service_response'),
     fields: {
-      output: ['headers', 'body'],
+      output: ['headers', 'body'] as FieldName[],
     },
   },
   response: {
     type: 'response',
     description: getNodeTypeDescription('response'),
     fields: {
-      input: ['headers', 'body'],
+      input: ['headers', 'body'] as FieldName[],
     },
   },
-} as const satisfies Record<ImplicitNodeType, NodeMeta>
+}
 
 const IMPLICIT_NODE_TYPES = Object.keys(IMPLICIT_NODE_META_MAP) as readonly ImplicitNodeType[]
 
-export const isImplicitNodeType = (type: NodeType): type is ImplicitNodeType =>
+export const isImplicitName = (name: NodeName): name is ImplicitNodeName =>
+  (IMPLICIT_NODE_TYPES as readonly string[]).includes(name)
+
+export const isImplicitType = (type: NodeType): type is ImplicitNodeType =>
   (IMPLICIT_NODE_TYPES as readonly string[]).includes(type)
 
 export const isImplicitNode = (
-  node: NodeMeta | NodeData,
-): node is (NodeMeta | NodeData) & { type: ImplicitNodeType } =>
-  (IMPLICIT_NODE_TYPES as readonly string[]).includes(node.type)
+  node: NodeMeta | NodeInstance,
+): node is (NodeMeta | NodeInstance) & { type: ImplicitNodeType } =>
+  isImplicitType(node.type)
 
-export const createNode = (data: NodeData): Node<NodeData> => ({
-  id: isImplicitNode(data) ? `implicit:${data.type}` : `user:${data.type}:${data.name}`, // TODO: Replace this with an edit-agnostic ID
-  type: 'flow', // Hardcoded
-  position: data.position,
-  data,
-})
+export const isNodeId = (id: string): id is NodeId =>
+  id.startsWith('node:')
 
-export const createImplicitNode = (type: ImplicitNodeType, init?: Partial<Omit<NodeData, 'name' | 'phase'>>): Node<NodeData> => {
-  return createNode({
-    // Defaults
-    expanded: {},
-    position: { x: 0, y: 0 },
-
-    ...IMPLICIT_NODE_META_MAP[type],
-
-    // Preserved
-    name: type,
-    phase: type === 'request' || type === 'service_request' ? 'request' : 'response',
-
-    ...init,
-  })
-}
-
-export type PartiallyRequired<T, K extends keyof T> = Partial<Omit<T, K>> & Required<Pick<T, K>>
-
-export const createUserNode = (type: UserNodeType, init: PartiallyRequired<NodeData, 'name' | 'phase'>): Node<NodeData> => {
-  return createNode({
-    // Defaults
-    expanded: {},
-    fields: {},
-    position: { x: 0, y: 0 },
-
-    ...USER_NODE_META_MAP[type],
-    ...init,
-  })
-}
+export const isFieldId = (id: string): id is FieldId =>
+  id.startsWith('field:')

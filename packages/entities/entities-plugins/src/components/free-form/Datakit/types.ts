@@ -4,11 +4,16 @@ import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 import type { HttpMethod } from './constants'
 
 export type { HttpMethod }
-export type EditorMode = 'code' | 'flow'
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
   ? Omit<T, Keys> & { [K in Keys]-?: T[K] }
   : never
+
+declare const brand: unique symbol
+
+type Brand<T, Brand extends string> = T & { [brand]: Brand }
+
+export type EditorMode = 'code' | 'flow'
 
 interface EditorModalNavItemBase {
   label: string
@@ -26,9 +31,9 @@ export type EditorModalNavItem = RequireAtLeastOne<EditorModalNavItemBase, 'to' 
 /**
  * All explicit node types recognised by Datakit.
  */
-export type UserNodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
+export type ConfigNodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
 export type ImplicitNodeType = 'request' | 'service_request' | 'service_response' | 'response'
-export type NodeType = UserNodeType | ImplicitNodeType
+export type NodeType = ConfigNodeType | ImplicitNodeType
 
 export interface NodeMeta {
   type: NodeType
@@ -40,8 +45,8 @@ export interface NodeMeta {
    * Well-known fields for the node.
    */
   fields?: {
-    input?: string[]
-    output?: string[]
+    input?: FieldName[]
+    output?: FieldName[]
   }
 }
 
@@ -60,7 +65,7 @@ export interface DatakitConfig {
    *
    * * Must contain at least one element.
    */
-  nodes: UserNode[]
+  nodes: ConfigNode[]
 
   /**
    * Enable verbose debug logging.
@@ -73,11 +78,7 @@ export interface DatakitConfig {
 /**
  * Runtime-reserved implicit node names that must not be reused.
  */
-export type ImplicitNodeName =
-  | 'request'
-  | 'service_request'
-  | 'service_response'
-  | 'response'
+export type ImplicitNodeName = 'request' | 'service_request' | 'service_response' | 'response'
 
 /**
  * A label that uniquely identifies the node within the plugin
@@ -99,7 +100,8 @@ export type ImplicitNodeName =
  * @example 'filter_01'
  * @example 'filter_02'
  */
-export type NodeName = string & {} // for autocompletion of implicit node names
+export type ConfigNodeName = Brand<string, 'ConfigNodeName'>
+export type NodeName = ConfigNodeName | ImplicitNodeName
 
 /**
  * The phase of the node in the request/response cycle.
@@ -111,22 +113,41 @@ export type NodePhase = 'request' | 'response'
 /**
  * Base shape shared by every concrete node type.
  */
-interface BaseNode {
+interface BaseConfigNode {
   /**
    * Unique label for referencing the node in connections.
    */
-  name: NodeName | ImplicitNodeName
+  name: NodeName
 
   /**
    * The type of the node.
    */
   type: NodeType
+
+  /**
+   * node input (`NODE` or `NODE.FIELD`)
+   */
+  input?: string
+
+  /**
+   * node inputs
+   */
+  inputs?: Record<FieldName, string>
+  /**
+   * node output (`NODE` or `NODE.FIELD`)
+   */
+  output?: string
+
+  /**
+   * node inputs
+   */
+  outputs?: Record<FieldName, string>
 }
 
 /**
  * Make an external HTTP request.
  */
-export interface CallNode extends BaseNode {
+export interface CallNode extends BaseConfigNode {
   type: 'call'
 
   /**
@@ -188,7 +209,7 @@ export interface CallNode extends BaseNode {
 /**
  * Terminate the request and send a response to the client.
  */
-export interface ExitNode extends BaseNode {
+export interface ExitNode extends BaseConfigNode {
   type: 'exit'
 
   /**
@@ -221,7 +242,7 @@ export interface ExitNode extends BaseNode {
 /**
  * Process data using `jq` syntax.
  */
-export interface JqNode extends BaseNode {
+export interface JqNode extends BaseConfigNode {
   type: 'jq'
 
   /**
@@ -238,7 +259,7 @@ export interface JqNode extends BaseNode {
   /**
    * filter input(s)
    */
-  inputs?: Record<string, string>
+  inputs?: Record<FieldName, string>
 
   /** filter output (`NODE` or `NODE.FIELD`) */
   output?: string
@@ -247,7 +268,7 @@ export interface JqNode extends BaseNode {
 /**
  * Get or set a property.
  */
-export interface PropertyNode extends BaseNode {
+export interface PropertyNode extends BaseConfigNode {
   type: 'property'
 
   /**
@@ -283,7 +304,7 @@ export interface PropertyNode extends BaseNode {
 /**
  * Produce reusable outputs from statically-configured values.
  */
-export interface StaticNode extends BaseNode {
+export interface StaticNode extends BaseConfigNode {
   type: 'static'
 
   /**
@@ -299,13 +320,13 @@ export interface StaticNode extends BaseNode {
   /**
    * Individual items from `.values`, referenced by key.
    */
-  outputs?: Record<string, string>
+  outputs?: Record<FieldName, string>
 }
 
 /**
  * Discriminated union of all node types.
  */
-export type UserNode =
+export type ConfigNode =
   | CallNode
   | ExitNode
   | JqNode
@@ -316,8 +337,19 @@ export type UserNode =
  *             Editor global store              *
  ************************************************/
 
-export interface NodeData {
-  type: NodeType
+export type NodeId = `node:${number}`
+export type EdgeId = `edge:${number}`
+export type FieldId = `field:${number}`
+
+export type FieldName = Brand<string, 'FieldName'>
+
+export interface NodeField {
+  // unique identifier that only exists during the editing session
+  id: FieldId
+  name: FieldName
+}
+
+export type UINode = {
   name: NodeName
   phase: NodePhase
   position: {
@@ -325,17 +357,55 @@ export interface NodeData {
     y: number
   }
   fields: {
-    input?: string[]
-    output?: string[]
+    input?: FieldName[]
+    output?: FieldName[]
   }
   expanded: {
     input?: boolean
     output?: boolean
   }
-  inputs?: string | Record<string, string>
+}
+
+export interface NodeInstance {
+  // unique identifier that only exists during the editing session
+  id: NodeId
+  type: NodeType
+  name: NodeName
+  phase: NodePhase
+  position: {
+    x: number
+    y: number
+  }
+  expanded: {
+    input?: boolean
+    output?: boolean
+  }
+  fields: {
+    input: NodeField[]
+    output: NodeField[]
+  }
   config?: Record<string, unknown>
 }
 
+export interface ConfigEdge {
+  source: NodeName
+  sourceField?: FieldName
+  target: NodeName
+  targetField?: FieldName
+}
+
+export interface EdgeData {
+  source: NodeId
+  sourceField?: FieldId
+  target: NodeId
+  targetField?: FieldId
+}
+
+export interface EdgeInstance extends EdgeData {
+  id: EdgeId
+}
+
 export interface EditorState {
-  nodes: NodeData[]
+  nodes: NodeInstance[]
+  edges: EdgeInstance[]
 }

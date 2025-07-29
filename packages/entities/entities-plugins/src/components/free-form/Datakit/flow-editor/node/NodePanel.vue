@@ -10,7 +10,7 @@
     </h3>
     <div class="node-list">
       <NodePanelItem
-        v-for="nodeType in (Object.keys(USER_NODE_META_MAP) as Array<UserNodeType>)"
+        v-for="nodeType in (Object.keys(CONFIG_NODE_META_MAP) as Array<ConfigNodeType>)"
         :key="nodeType"
         :type="nodeType"
       />
@@ -21,10 +21,10 @@
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
-import { USER_NODE_META_MAP } from './node'
+import { CONFIG_NODE_META_MAP } from './node'
 import NodePanelItem from './NodePanelItem.vue'
 
-import type { UserNodeType } from '../../types'
+import type { ConfigNodeType } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 </script>

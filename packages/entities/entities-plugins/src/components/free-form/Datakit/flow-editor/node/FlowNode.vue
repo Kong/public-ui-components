@@ -3,7 +3,7 @@
     class="flow-node"
     :class="{
       reversed: isReversed,
-      implicit: isImplicit,
+      implicit: isImplicitNode,
     }"
   >
     <div class="body">
@@ -14,7 +14,7 @@
 
         <!-- TODO: Use small variant when available -->
         <NodeBadge
-          v-if="!isImplicit"
+          v-if="!isImplicitNode"
           condensed
           :type="data.type"
         />
@@ -161,11 +161,11 @@ import english from '../../../../../locales/en.json'
 import HandleTwig from './HandleTwig.vue'
 import { isImplicitNode } from './node'
 
-import type { NodeData } from '../../types'
 import NodeBadge from './NodeBadge.vue'
+import type { NodeInstance } from '../../types'
 
 const { data } = defineProps<{
-  data: NodeData
+  data: NodeInstance
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
