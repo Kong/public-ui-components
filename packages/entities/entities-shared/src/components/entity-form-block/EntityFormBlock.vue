@@ -64,6 +64,7 @@ const slots = defineSlots<{
     border: 1px solid $kui-color-border-neutral-weak;
     border-radius: $kui-border-radius-round;
     display: flex;
+    flex: 0 0 auto;
     height: 32px;
     justify-content: center;
     padding: $kui-space-20;
