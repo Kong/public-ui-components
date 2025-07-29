@@ -141,10 +141,18 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
     // Note that queryBridge is guaranteed to be set here because SWRV won't execute the query if the key is null.
     return queryBridge?.queryFn(mergedQuery, abortController)
   } catch (e: any) {
-    // Note: 'Range not allowed' is defined by the API, therefore cannot be stored as string translation
-    errorMessage.value = e?.response?.data?.message === 'Range not allowed for this tier'
-      ? i18n.t('queryDataProvider.timeRangeExceeded')
-      : e?.response?.data?.message || e?.message
+    // Note: The error object will contain a response status property at the root when the analytics bridge
+    // detects a 403 or 408 status code. This allows us to provide proper error messages for impacted tiles.
+    if (e?.status === 403) {
+      errorMessage.value = i18n.t('queryDataProvider.forbidden')
+    } else if (e?.status === 408) {
+      errorMessage.value = i18n.t('queryDataProvider.timeout')
+    } else if (e?.response?.data?.message === 'Range not allowed for this tier') {
+      // Note: 'Range not allowed' is defined by the API, therefore cannot be stored as string translation
+      errorMessage.value = i18n.t('queryDataProvider.timeRangeExceeded')
+    } else {
+      errorMessage.value = e?.response?.data?.message || e?.message
+    }
   } finally {
     emit('queryComplete')
   }
