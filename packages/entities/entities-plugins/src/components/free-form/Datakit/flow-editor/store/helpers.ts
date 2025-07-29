@@ -2,7 +2,7 @@ import type {
   EdgeId,
   FieldId,
   FieldName,
-  FlowPhase,
+  NodePhase,
   ImplicitNodeName,
   NodeInstance,
   NodeField,
@@ -103,7 +103,7 @@ export const IMPLICIT_NODE_NAMES: ImplicitNodeName[] = [
 
 /** Default UI blob for an implicit node. */
 export function makeDefaultImplicitUINode(name: ImplicitNodeName): UINode {
-  const phase: FlowPhase =
+  const phase: NodePhase =
     name === 'request' || name === 'service_request' ? 'request' : 'response'
   const meta = IMPLICIT_NODE_META_MAP[name]
   return {

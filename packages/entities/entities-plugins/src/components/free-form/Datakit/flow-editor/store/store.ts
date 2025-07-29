@@ -9,7 +9,7 @@ import type {
   EditorState,
   FieldId,
   FieldName,
-  FlowPhase,
+  NodePhase,
   NodeInstance,
   NodeId,
   NodeName,
@@ -83,7 +83,7 @@ export const [provideEditorState, useEditorState] = createInjectionState(
       payload: {
         type: ConfigNodeType
         name?: NodeName
-        phase?: FlowPhase
+        phase?: NodePhase
         position?: { x: number, y: number }
         fields?: { input?: FieldName[], output?: FieldName[] }
         config?: Record<string, unknown>
@@ -424,7 +424,7 @@ export const [provideEditorState, useEditorState] = createInjectionState(
 
     /* ---------- Vue Flow adapters ---------- */
 
-    function edgeInPhase(edge: EdgeInstance, phase: FlowPhase) {
+    function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
       const sourceNode = getNodeById(edge.source)
       const targetNode = getNodeById(edge.target)
       return !!(

@@ -118,8 +118,8 @@ export const isImplicitNode = (
 ): node is (NodeMeta | NodeInstance) & { type: ImplicitNodeType } =>
   isImplicitType(node.type)
 
-export const isNodeId = (id: string): id is NodeId =>
-  id.startsWith('node:')
+export const isNodeId = (id?: string): id is NodeId =>
+  !!id?.startsWith('node:')
 
-export const isFieldId = (id: string): id is FieldId =>
-  id.startsWith('field:')
+export const isFieldId = (id?: string): id is FieldId =>
+  !!id?.startsWith('field:')

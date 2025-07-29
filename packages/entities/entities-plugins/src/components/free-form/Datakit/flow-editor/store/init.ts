@@ -2,7 +2,7 @@ import type {
   ConfigNode,
   EditorState,
   EdgeInstance,
-  FlowPhase,
+  NodePhase,
   ImplicitNodeName,
   NodeInstance,
   NodeName,
@@ -90,7 +90,7 @@ export function initEditorState(
 export function makeNodeInstance(params: {
   type: NodeType
   name?: NodeName
-  phase?: FlowPhase
+  phase?: NodePhase
   position?: { x: number, y: number }
   uiFieldNames?: { input?: FieldName[], output?: FieldName[] }
   config?: Record<string, unknown>
