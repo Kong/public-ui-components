@@ -3,7 +3,7 @@
     class="flow-node"
     :class="{
       reversed: isReversed,
-      implicit: isImplicitNode,
+      implicit: isImplicit,
     }"
   >
     <div class="body">
@@ -14,7 +14,7 @@
 
         <!-- TODO: Use small variant when available -->
         <NodeBadge
-          v-if="!isImplicitNode"
+          v-if="!isImplicit"
           condensed
           :type="data.type"
         />
