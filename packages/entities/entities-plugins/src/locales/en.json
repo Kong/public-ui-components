@@ -732,8 +732,20 @@
             }
           },
           "node_properties": {
+            "Configuration": "Configuration",
             "input": {
-              "placeholder": "Select output(s)"
+              "placeholder": "Select output(s)",
+              "add_button": "Add another input"
+            },
+            "input_name": {
+              "label": "Input Name",
+              "placeholder": "Input Name"
+            },
+            "timeout": {
+              "label": "Timeout(s)"
+            },
+            "jq": {
+              "label": "jq script"
             }
           }
         },

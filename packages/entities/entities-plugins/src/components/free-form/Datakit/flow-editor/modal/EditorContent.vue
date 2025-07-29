@@ -23,7 +23,6 @@
     </div>
 
     <NodePropertiesPanel
-      v-if="selectedNode"
       :node="selectedNode"
       :visible="propertiesPanelVisible"
       @close="propertiesPanelVisible = false"

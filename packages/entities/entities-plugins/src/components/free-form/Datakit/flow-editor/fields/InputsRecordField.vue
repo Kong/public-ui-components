@@ -1,7 +1,7 @@
 <template>
   <ObjectField
     as-child
-    name="inputs"
+    :name="name"
     reset-label-path="isolate"
   >
     <EnumField
@@ -22,6 +22,10 @@ import ObjectField from '../../../shared/ObjectField.vue'
 import type { RecordFieldSchema } from '../../../../../types/plugins/form-schema'
 import EnumField from '../../../shared/EnumField.vue'
 import useI18n from '../../../../../composables/useI18n'
+
+defineProps<{
+  name: string
+}>()
 
 const { getSchema } = useFormShared()
 const { i18n } = useI18n()

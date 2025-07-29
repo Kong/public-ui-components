@@ -7,7 +7,7 @@
     :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
   />
 
-  <InputRecordField v-if="inputsSchema?.type === 'record'" />
+  <InputsField name="inputs" />
 </template>
 
 <script setup lang="ts">
@@ -15,11 +15,17 @@ import { computed } from 'vue'
 
 import { useFormShared } from '../../../shared/composables'
 import EnumField from '../../../shared/EnumField.vue'
-import InputRecordField from './InputsRecordField.vue'
+import InputsRecordField from './InputsRecordField.vue'
+import InputsMapField from './InputsMapField.vue'
 import useI18n from '../../../../../composables/useI18n'
 
 const { getSchema } = useFormShared()
 const { i18n } = useI18n()
 
 const inputsSchema = computed(() => getSchema('inputs'))
+
+const InputsField = computed(() => {
+  if (!inputsSchema.value) return null
+  return inputsSchema.value.type === 'record' ? InputsRecordField : InputsMapField
+})
 </script>

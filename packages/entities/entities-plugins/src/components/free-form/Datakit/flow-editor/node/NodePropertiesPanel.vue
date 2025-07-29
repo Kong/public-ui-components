@@ -8,14 +8,18 @@
     :visible="visible"
     @close="$emit('close')"
   >
-    <template #title>
-      <div class="dk-node-properties-panel-title">
-        <NodeBadge :type="node.type" />
-        <span class="dk-node-properties-panel-desc">
-          {{ getNodeTypeDescription(node.type) }}
-        </span>
-      </div>
+    <template
+      v-if="node"
+      #title
+    >
+      <NodeBadge :type="node.type" />
     </template>
+
+    <div
+      v-if="node"
+      class="dk-node-properties-panel-desc"
+      v-html="getNodeTypeDescription(node.type)"
+    />
 
     <component
       :is="form"
@@ -32,6 +36,7 @@ import { DK_NODE_PROPERTIES_PANEL_OFFSET_TOP, DK_NODE_PROPERTIES_PANEL_WIDTH } f
 import NodeFormCall from './NodeFormCall.vue'
 import NodeFormServiceRequest from './NodeFormServiceRequest.vue'
 import NodeFormResponse from './NodeFormResponse.vue'
+import NodeFormJq from './NodeFormJq.vue'
 
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
@@ -47,7 +52,7 @@ const {
   maxWidth?: string
   offsetTop?: string
   visible?: boolean
-  node: NodeData
+  node?: NodeData | null
 }>()
 
 defineEmits<{
@@ -55,13 +60,15 @@ defineEmits<{
 }>()
 
 const form = computed(() => {
-  switch (node.type) {
+  switch (node?.type) {
     case 'call':
       return NodeFormCall
     case 'service_request':
       return NodeFormServiceRequest
     case 'response':
       return NodeFormResponse
+    case 'jq':
+      return NodeFormJq
     default:
       return null
   }
@@ -79,17 +86,12 @@ const form = computed(() => {
     align-items: start;
   }
 
-  &-title {
-    display: flex;
-    flex-direction: column;
-    gap: $kui-space-60;
-  }
-
   &-desc {
     color: $kui-color-text;
     font-size: $kui-font-size-30;
     font-weight: normal;
     line-height: $kui-line-height-30;
+    margin-bottom: $kui-space-60;
   }
 
   &-form {
@@ -104,6 +106,10 @@ const form = computed(() => {
     :deep(.ff-object-field-as-child) {
       gap: $kui-space-60
     }
+  }
+
+  :deep(.dk-node-configuration-label) {
+    margin: 0;
   }
 }
 </style>
