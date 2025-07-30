@@ -87,7 +87,7 @@ export function initEditorState(
   return { nodes, edges }
 }
 
-export function makeNodeInstance(params: {
+export function makeNodeInstance(payload: {
   type: NodeType
   name?: NodeName
   phase?: NodePhase
@@ -95,7 +95,7 @@ export function makeNodeInstance(params: {
   uiFieldNames?: { input?: FieldName[], output?: FieldName[] }
   config?: Record<string, unknown>
 }): NodeInstance {
-  const { type, name, phase, position, uiFieldNames, config } = params
+  const { type, name, phase, position, uiFieldNames, config } = payload
   const defaults = getFieldsFromMeta(type)
 
   return {

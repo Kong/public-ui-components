@@ -10,6 +10,8 @@ import type {
   NodeName,
   NodeType,
   UINode,
+  ConfigNodeType,
+  ConfigNodeName,
 } from '../../types'
 import {
   CONFIG_NODE_META_MAP,
@@ -21,7 +23,8 @@ let idCounter = 0
 
 /** Deep clone for snapshots and immutable returns. */
 export function deepClone<T>(value: T): T {
-  return structuredClone(value)
+  // TODO: move to lodash or similar utility library
+  return JSON.parse(JSON.stringify(value))
 }
 
 /** Generate a unique runtime id. */
@@ -116,4 +119,20 @@ export function makeDefaultImplicitUINode(name: ImplicitNodeName): UINode {
     },
     expanded: {},
   }
+}
+
+/** Generate a unique node name when user doesn’t supply one. */
+export function generateNodeName(
+  type: ConfigNodeType,
+  nodeNames: Set<NodeName>,
+): ConfigNodeName {
+  const prefix = type.toUpperCase()
+
+  let next = 1
+  while (true) {
+    if (!nodeNames.has(`${prefix}_${next}` as ConfigNodeName)) break
+    next++
+  }
+
+  return `${prefix}_${next}` as ConfigNodeName
 }

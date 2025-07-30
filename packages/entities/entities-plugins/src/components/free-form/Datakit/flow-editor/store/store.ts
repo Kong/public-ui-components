@@ -15,14 +15,19 @@ import type {
   NodeName,
   UINode,
 } from '../../types'
-import { createId, deepClone, findFieldById } from './helpers'
+import {
+  createId,
+  deepClone,
+  findFieldById,
+  generateNodeName,
+} from './helpers'
 import { isImplicitName, isImplicitType } from '../node/node'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
 import { useTaggedHistory } from './history'
 
 export const [provideEditorState, useEditorState] = createInjectionState(
-  function(configNodes: ConfigNode[], uiNodes: UINode[]) {
+  function createState(configNodes: ConfigNode[], uiNodes: UINode[]) {
     const state = ref<EditorState>(initEditorState(configNodes, uiNodes))
     const selection = ref<NodeId>()
     const history = useTaggedHistory(state, {
@@ -48,6 +53,11 @@ export const [provideEditorState, useEditorState] = createInjectionState(
         new Map<EdgeId, EdgeInstance>(
           state.value.edges.map((edge) => [edge.id, edge]),
         ),
+    )
+
+    // sets
+    const nodeNames = computed(
+      () => new Set(state.value.nodes.map((node) => node.name)),
     )
 
     // validators bound to current maps
@@ -96,7 +106,12 @@ export const [provideEditorState, useEditorState] = createInjectionState(
       }
       const node = makeNodeInstance({
         type: payload.type,
-        name: payload.name,
+        name:
+          payload.name ||
+          (!isImplicitType(payload.type)
+            ? generateNodeName(payload.type, nodeNames.value)
+            : undefined),
+        // default to 'request' phase for request nodes
         phase: payload.phase,
         position: payload.position,
         uiFieldNames: payload.fields,
@@ -272,34 +287,11 @@ export const [provideEditorState, useEditorState] = createInjectionState(
 
     function replaceConnection(
       edgeId: EdgeId,
-      patch: Partial<Omit<EdgeInstance, 'id'>>,
+      next: EdgeData,
       commitNow = true,
     ) {
-      const edge = getEdgeById(edgeId)
-      if (!edge) return
-      const candidate = canonicalizeConnection({ ...edge, ...patch })
-
-      const local = validateConnection(candidate)
-      if (!local.ok) {
-        console.warn(
-          '[replaceConnection] invalid connection:',
-          local.errors.join('; '),
-        )
-        return
-      }
-
-      const backup = { ...edge }
-      Object.assign(edge, candidate)
-
-      const topo = validateGraph()
-      if (!topo.ok) {
-        Object.assign(edge, backup)
-        console.warn(
-          '[replaceConnection] topology invalid:',
-          topo.errors.join('; '),
-        )
-        return
-      }
+      disconnectEdge(edgeId, false)
+      connectEdge(next, false)
       if (commitNow) history.commit()
     }
 
