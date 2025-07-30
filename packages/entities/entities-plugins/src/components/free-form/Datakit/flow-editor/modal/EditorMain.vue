@@ -31,7 +31,7 @@
             @node-click="onNodeClick"
           >
             <Background @click="emit('click:backdrop')" />
-            <Controls />
+            <Controls position="bottom-left" />
 
             <!-- To not use the default node style -->
             <template #node-flow="node">
@@ -50,7 +50,7 @@
             @node-click="onNodeClick"
           >
             <Background @click="emit('click:backdrop')" />
-            <Controls />
+            <Controls position="bottom-left" />
 
             <!-- To not use the default node style -->
             <template #node-flow="node">
@@ -138,12 +138,6 @@ const onNodeClick = ({ event, node }: NodeMouseEvent) => {
   }
 
   .flow {
-    :deep(.vue-flow__controls) {
-      bottom: 0;
-      left: unset;
-      right: 0;
-    }
-
     :deep(.vue-flow__controls-button) {
       // Ensure it works in both the sandbox and host apps
       box-sizing: content-box;
