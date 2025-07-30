@@ -154,7 +154,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
       errorMessage.value = e?.response?.data?.message || e?.message
     }
 
-    return errorMessage.value
+    throw e
   } finally {
     emit('queryComplete')
   }
@@ -170,7 +170,7 @@ const hasError = computed(() => state.value === STATE.ERROR || !!errorMessage.va
 const isLoading = computed(() => !props.queryReady || state.value === STATE.PENDING)
 
 watch(v4Data, (data) => {
-  if (data && typeof data !== 'string') {
+  if (data) {
     emit('chart-data', data)
   }
 })
