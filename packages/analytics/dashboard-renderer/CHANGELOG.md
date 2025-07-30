@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.1.3...@kong-ui-public/dashboard-renderer@6.1.4) (2025-07-30)
+
+
+### Bug Fixes
+
+* **querydataprovider:** handle 403 and 408 errors manually [MA-4096] ([#2261](https://github.com/Kong/public-ui-components/issues/2261)) ([26a2ee5](https://github.com/Kong/public-ui-components/commit/26a2ee5d8d9fb12584c085d6e1dcf3f43337229a))
+
+
+
+
+
 ## [6.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.1.2...@kong-ui-public/dashboard-renderer@6.1.3) (2025-07-30)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
