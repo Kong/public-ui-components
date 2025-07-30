@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.44.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.43.1...@kong-ui-public/entities-plugins@9.44.0) (2025-07-30)
+
+
+### Features
+
+* **entities-plugins:** datakit - static node form [KM-1460] ([#2260](https://github.com/Kong/public-ui-components/issues/2260)) ([4abe829](https://github.com/Kong/public-ui-components/commit/4abe829f6a8c6b953e7e8ee3cfa5096ce700cd7e))
+
+
+
+
+
 ## [9.43.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.43.0...@kong-ui-public/entities-plugins@9.43.1) (2025-07-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
