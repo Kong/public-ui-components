@@ -21,7 +21,7 @@ export interface KeyValueFieldEmits {
   change: [Record<string, string>]
 }
 
-interface KVEntry {
+export interface KVEntry {
   id: string
   key: string
   value: string

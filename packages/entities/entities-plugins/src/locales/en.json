@@ -746,6 +746,12 @@
             },
             "jq": {
               "label": "jq script"
+            },
+            "output_value": {
+              "label": "Output value",
+              "value_name": "Value name",
+              "value": "Value",
+              "add_button": "Add a value"
             }
           }
         },
