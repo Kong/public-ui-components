@@ -58,18 +58,21 @@ import { ChevronDownIcon } from '@kong/icons'
 import { useDraggable, useElementBounding } from '@vueuse/core'
 import { computed, ref, useTemplateRef } from 'vue'
 
+const editorCanvas = useTemplateRef('editorCanvas')
 const requestLabel = useTemplateRef('requestLabel')
 const requestCanvas = useTemplateRef('requestCanvas')
 const resizeHandle = useTemplateRef('resizeHandle')
 const responseCanvas = useTemplateRef('responseCanvas')
 
+const editorCanvasRect = useElementBounding(editorCanvas)
 const requestLabelRect = useElementBounding(requestLabel)
 const requestCanvasRect = useElementBounding(requestCanvas)
 const resizeHandleRect = useElementBounding(resizeHandle)
 const responseCanvasRect = useElementBounding(responseCanvas)
 
-const isRequestCollapsed = computed(() => requestCanvasRect.height.value < 20)
-const isResponseCollapsed = computed(() => responseCanvasRect.height.value < 20)
+const snappingHeight = computed(() => Math.max(30, editorCanvasRect.height.value * 0.03))
+const isRequestCollapsed = computed(() => requestCanvasRect.height.value < snappingHeight.value)
+const isResponseCollapsed = computed(() => responseCanvasRect.height.value < snappingHeight.value)
 
 const requestHeight = ref('50%')
 
@@ -92,13 +95,22 @@ const onResponseLabelClick = () => {
 const { isDragging } = useDraggable(resizeHandle, {
   onMove(position) {
     const handleCenterToTop = position.y + resizeHandleRect.height.value / 2
-    const toTop = (handleCenterToTop - requestLabelRect.bottom.value)
+    const toTop = handleCenterToTop - requestLabelRect.bottom.value
     requestHeight.value = `max(0%, min(100%, ${toTop}px))`
+  },
+  onEnd() {
+    if (requestCanvasRect.height.value < snappingHeight.value) {
+      requestHeight.value = '0'
+    } else if (responseCanvasRect.height.value < snappingHeight.value) {
+      requestHeight.value = '100%'
+    }
   },
 })
 </script>
 
 <style lang="scss" scoped>
+@use 'sass:math';
+
 .editor-canvas {
   display: flex;
   flex-direction: column;
@@ -148,8 +160,8 @@ const { isDragging } = useDraggable(resizeHandle, {
     cursor: row-resize;
     flex-shrink: 0;
     height: $interactive-height;
-    margin-bottom: -($interactive-height - $visual-height) / 2;
-    margin-top: -($interactive-height - $visual-height) / 2;
+    margin-bottom: math.div(-($interactive-height - $visual-height), 2);
+    margin-top: math.div(-($interactive-height - $visual-height), 2);
     position: relative;
     width: 100%;
 
@@ -162,7 +174,7 @@ const { isDragging } = useDraggable(resizeHandle, {
       height: $height;
       left: 0;
       position: absolute;
-      top: calc(50% - $height / 2);
+      top: calc(50% - math.div($height, 2));
       width: 100%;
     }
 
@@ -175,7 +187,7 @@ const { isDragging } = useDraggable(resizeHandle, {
       height: $height;
       left: 0;
       position: absolute;
-      top: calc(50% - $height / 2);
+      top: calc(50% - math.div($height, 2));
       transform: scaleY(0);
       transition: transform $kui-animation-duration-20 ease-out;
       width: 100%;
