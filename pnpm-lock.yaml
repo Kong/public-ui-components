@@ -1228,7 +1228,7 @@ importers:
     dependencies:
       prismjs:
         specifier: ^1.29.0
-        version: 1.29.0
+        version: 1.30.0
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
@@ -1546,8 +1546,8 @@ packages:
   '@braintree/sanitize-url@7.1.0':
     resolution: {integrity: sha512-o+UlMLt49RvtCASlOMW0AkHnabN9wR9rwCCherxO0yG4Npy34GkvrAqdXQvrhNs+jh+gkK8gB8Lf05qL/O7KWg==}
 
-  '@bufbuild/protobuf@2.5.2':
-    resolution: {integrity: sha512-foZ7qr0IsUBjzWIq+SuBLfdQCpJ1j8cTuNNT4owngTHoN5KsJb8L9t65fzz7SCeSWzescoOil/0ldqiL041ABg==}
+  '@bufbuild/protobuf@2.6.2':
+    resolution: {integrity: sha512-vLu7SRY84CV/Dd+NUdgtidn2hS5hSMUC1vDBY0VcviTdgRYkU43vIz3vIFbmx14cX1r+mM7WjzE5Fl1fGEM0RQ==}
 
   '@chevrotain/cst-dts-gen@11.0.3':
     resolution: {integrity: sha512-BvIKpRLeS/8UbfxXxgC33xOumsacaeCKAjAeLyOn7Pcp95HiRbrpl14S+9vaZLolnbssPIUuiUd8IvgkRyt6NQ==}
@@ -7950,8 +7950,8 @@ packages:
     resolution: {integrity: sha512-t13BGPUlFDR7wRB5kQDG4jjl7XeuH6jbJGt11JHPL96qwsEHNX2+68tFXqc1/k+/jALsbSWJKUOT/hcYAZ5LkA==}
     engines: {node: '>=6'}
 
-  prismjs@1.29.0:
-    resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
+  prismjs@1.30.0:
+    resolution: {integrity: sha512-DEvV2ZF2r2/63V+tK8hQvrR2ZGn10srHbXviTlcv7Kpzw8jWiNTqbVgjO3IY8RxrrOUF8VPMQQFysYYYv0YZxw==}
     engines: {node: '>=6'}
 
   proc-log@4.2.0:
@@ -8379,7 +8379,7 @@ packages:
   right-pad@1.0.1:
     resolution: {integrity: sha512-bYBjgxmkvTAfgIYy328fmkwhp39v8lwVgWhhrzxPV3yHtcSqyYKe9/XOhvW48UFjATg3VuJbpsp5822ACNvkmw==}
     engines: {node: '>= 0.10'}
-    deprecated: Please use String.prototype.padEnd() over this package.
+    deprecated: Use String.prototype.padEnd() instead
 
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
@@ -10464,7 +10464,7 @@ snapshots:
 
   '@braintree/sanitize-url@7.1.0': {}
 
-  '@bufbuild/protobuf@2.5.2':
+  '@bufbuild/protobuf@2.6.2':
     optional: true
 
   '@chevrotain/cst-dts-gen@11.0.3':
@@ -13546,9 +13546,9 @@ snapshots:
     dependencies:
       babel-runtime: 6.26.0
 
-  babel-plugin-prismjs@2.1.0(prismjs@1.29.0):
+  babel-plugin-prismjs@2.1.0(prismjs@1.30.0):
     dependencies:
-      prismjs: 1.29.0
+      prismjs: 1.30.0
 
   babel-plugin-syntax-class-properties@6.13.0: {}
 
@@ -18144,7 +18144,7 @@ snapshots:
 
   prismjs@1.27.0: {}
 
-  prismjs@1.29.0: {}
+  prismjs@1.30.0: {}
 
   proc-log@4.2.0: {}
 
@@ -18338,10 +18338,10 @@ snapshots:
 
   react-apiembed@0.1.9(mkdirp@1.0.4):
     dependencies:
-      babel-plugin-prismjs: 2.1.0(prismjs@1.29.0)
+      babel-plugin-prismjs: 2.1.0(prismjs@1.30.0)
       babel-plugin-transform-class-properties: 6.24.1
       httpsnippet: 2.0.0(mkdirp@1.0.4)
-      prismjs: 1.29.0
+      prismjs: 1.30.0
       prop-types: 15.8.1
       react: 16.14.0
       react-dom: 16.14.0(react@16.14.0)
@@ -18426,7 +18426,7 @@ snapshots:
       '@babel/runtime': 7.27.1
       highlight.js: 10.7.3
       lowlight: 1.20.0
-      prismjs: 1.29.0
+      prismjs: 1.30.0
       react: 17.0.2
       refractor: 3.6.0
 
@@ -18780,7 +18780,7 @@ snapshots:
 
   sass-embedded@1.80.3:
     dependencies:
-      '@bufbuild/protobuf': 2.5.2
+      '@bufbuild/protobuf': 2.6.2
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
       immutable: 4.3.7
