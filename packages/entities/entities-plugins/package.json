@@ -28,7 +28,7 @@
     "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.31.0",
+    "@kong/icons": "^1.33.2",
     "@kong/kongponents": "^9.34.2",
     "@vueuse/core": "^13.5.0",
     "@vueuse/integrations": "^13.5.0",
