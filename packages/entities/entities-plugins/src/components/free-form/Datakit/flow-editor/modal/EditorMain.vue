@@ -64,13 +64,13 @@ const emit = defineEmits<{
   'click:backdrop': []
 }>()
 
-const editorState = useEditorStore()
+const editorStore = useEditorStore()
 
-if (!editorState) {
+if (!editorStore) {
   throw new Error('Editor state is not provided. Ensure you are using provideEditorStore in a parent component.')
 }
 
-const { requestNodes } = editorState
+const { requestNodes } = editorStore
 
 const { fitView, onNodeClick } = useVueFlow()
 
