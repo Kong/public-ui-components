@@ -27,10 +27,10 @@
             class="flow"
             fit-view-on-init
             :nodes="requestNodes"
-            @click="emit('click:backdrop')"
+            @click="onMaybeBackdropClick"
             @node-click="onNodeClick"
           >
-            <Background @click="emit('click:backdrop')" />
+            <Background />
             <Controls position="bottom-left" />
 
             <!-- To not use the default node style -->
@@ -46,10 +46,10 @@
             class="flow"
             fit-view-on-init
             :nodes="responseNodes"
-            @click="emit('click:backdrop')"
+            @click="onMaybeBackdropClick"
             @node-click="onNodeClick"
           >
-            <Background @click="emit('click:backdrop')" />
+            <Background />
             <Controls position="bottom-left" />
 
             <!-- To not use the default node style -->
@@ -101,6 +101,16 @@ if (!editorStore) {
 }
 
 const { requestNodes, responseNodes } = editorStore
+
+const onMaybeBackdropClick = (event: MouseEvent) => {
+  if (event.target instanceof Element) {
+    // Ignore clicks on controls
+    if (event.target.closest('.vue-flow__controls')) {
+      return
+    }
+  }
+  emit('click:backdrop')
+}
 
 const onNodeClick = ({ event, node }: NodeMouseEvent) => {
   event.stopPropagation()
