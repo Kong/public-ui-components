@@ -163,6 +163,7 @@ const { isDragging } = useDraggable(resizeHandle, {
     margin-bottom: math.div(-($interactive-height - $visual-height), 2);
     margin-top: math.div(-($interactive-height - $visual-height), 2);
     position: relative;
+    user-select: none;
     width: 100%;
 
     &:before {
