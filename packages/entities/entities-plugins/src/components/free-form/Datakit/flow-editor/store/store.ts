@@ -26,7 +26,7 @@ import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
 import { useTaggedHistory } from './history'
 
-export const [provideEditorState, useEditorState] = createInjectionState(
+export const [provideEditorStore, useEditorStore] = createInjectionState(
   function createState(configNodes: ConfigNode[], uiNodes: UINode[]) {
     const state = ref<EditorState>(initEditorState(configNodes, uiNodes))
     const selection = ref<NodeId>()
@@ -432,7 +432,7 @@ export const [provideEditorState, useEditorState] = createInjectionState(
         .filter((node) => node.phase === 'request')
         .map((node) => ({
           id: node.id,
-          type: node.type,
+          type: 'flow',
           position: node.position,
           data: node,
         })),
@@ -456,7 +456,7 @@ export const [provideEditorState, useEditorState] = createInjectionState(
         .filter((node) => node.phase === 'response')
         .map((node) => ({
           id: node.id,
-          type: node.type,
+          type: 'flow',
           position: node.position,
           data: node,
         })),
