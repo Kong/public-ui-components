@@ -65,6 +65,6 @@
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
-    "@kong/icons": "^1.31.0"
+    "@kong/icons": "catalog:"
   }
 }

@@ -1,2 +1,4 @@
 packages:
   - 'packages/*/*'
+catalog:
+  '@kong/icons': ^1.33.2
