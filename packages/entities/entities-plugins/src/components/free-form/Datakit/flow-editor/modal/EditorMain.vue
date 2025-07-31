@@ -19,7 +19,7 @@
     <div class="body">
       <VueFlow
         class="flow"
-        :nodes="nodes"
+        :nodes="requestNodes"
         @click="emit('click:backdrop')"
         @nodes-initialized="fitView"
       >
@@ -41,15 +41,17 @@ import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import { useVueFlow, VueFlow, type Node } from '@vue-flow/core'
-import { ref } from 'vue'
+import { useVueFlow, VueFlow } from '@vue-flow/core'
 import english from '../../../../../locales/en.json'
-import type { NodeInstance } from '../../types'
 import FlowNode from '../node/FlowNode.vue'
+import { useEditorStore } from '../store/store'
+
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
+
+import type { NodeInstance } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -62,7 +64,13 @@ const emit = defineEmits<{
   'click:backdrop': []
 }>()
 
-const nodes = ref<Array<Node<NodeInstance>>>([])
+const editorStore = useEditorStore()
+
+if (!editorStore) {
+  throw new Error('Editor state is not provided. Ensure you are using provideEditorStore in a parent component.')
+}
+
+const { requestNodes } = editorStore
 
 const { fitView, onNodeClick } = useVueFlow()
 
