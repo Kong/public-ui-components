@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.45.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.45.0...@kong-ui-public/entities-plugins@9.45.1) (2025-07-31)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - editorstate->editorstore, fix node type ([#2272](https://github.com/Kong/public-ui-components/issues/2272)) ([d73ffc8](https://github.com/Kong/public-ui-components/commit/d73ffc80c4e540093cfc43c4e30b224d3d477c45))
+
+
+
+
+
 # [9.45.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.44.2...@kong-ui-public/entities-plugins@9.45.0) (2025-07-31)
 
 
