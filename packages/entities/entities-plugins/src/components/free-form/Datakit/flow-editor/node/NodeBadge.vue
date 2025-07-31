@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { NodeType } from '../../types'
-import { USER_NODE_META_MAP, getNodeTypeName, isImplicitNodeType } from './node'
+import { CONFIG_NODE_META_MAP, getNodeTypeName, isImplicitType } from './node'
 import type { BadgeAppearance } from '@kong/kongponents'
 
 const { type } = defineProps<{
@@ -22,8 +22,8 @@ const { type } = defineProps<{
 }>()
 
 const icon = computed(() => {
-  if (!isImplicitNodeType(type)) {
-    return USER_NODE_META_MAP[type]?.icon ?? undefined
+  if (!isImplicitType(type)) {
+    return CONFIG_NODE_META_MAP[type]?.icon ?? undefined
   }
   return undefined
 })
@@ -50,6 +50,7 @@ const appearance = computed<BadgeAppearance>(() => {
 
 <style lang="scss" scoped>
 .condensed {
+  font-size: $kui-font-size-20;
   padding: $kui-space-10;
 }
 </style>

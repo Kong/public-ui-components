@@ -20,15 +20,15 @@
 </template>
 
 <script setup lang="ts">
-import { USER_NODE_META_MAP } from './node'
+import { CONFIG_NODE_META_MAP } from './node'
 
-import type { UserNodeType } from '../../types'
+import type { ConfigNodeType } from '../../types'
 
-const { type } = defineProps<{ type: UserNodeType }>()
+const { type } = defineProps<{ type: ConfigNodeType }>()
 const {
   summary,
   icon: Icon,
-} = USER_NODE_META_MAP[type]
+} = CONFIG_NODE_META_MAP[type]
 </script>
 
 <style lang="scss" scoped>

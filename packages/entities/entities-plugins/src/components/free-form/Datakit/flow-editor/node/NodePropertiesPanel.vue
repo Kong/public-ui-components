@@ -41,7 +41,7 @@ import NodeFormStatic from './NodeFormStatic.vue'
 
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
-import type { NodeData } from '../../types'
+import type { NodeInstance } from '../../types'
 import { computed } from 'vue'
 
 const {
@@ -53,7 +53,7 @@ const {
   maxWidth?: string
   offsetTop?: string
   visible?: boolean
-  node?: NodeData | null
+  node?: NodeInstance | null
 }>()
 
 defineEmits<{

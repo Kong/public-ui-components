@@ -20,13 +20,10 @@
 
     <template #default="formProps">
       <div v-if="finalEditorMode === 'flow'">
-        <KButton
-          appearance="secondary"
-          @click="modalOpen = true"
-        >
-          {{ t('plugins.free-form.datakit.flow_editor.cta') }}
-        </KButton>
-        <EditorModal v-model:open="modalOpen" />
+        <FlowEditor
+          :config="props.model.config"
+          :editing="props.isEditing"
+        />
       </div>
 
       <Form
@@ -56,7 +53,7 @@
 
         <CodeEditor
           ref="code-editor"
-          class="editor"
+          class="code-editor"
           :config="props.model.config"
           :editing="props.isEditing"
           @change="handleCodeChange"
@@ -73,22 +70,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef, inject, type Component } from 'vue'
+import { computed, useTemplateRef, inject } from 'vue'
 import { KAlert, KSegmentedControl } from '@kong/kongponents'
 import { SparklesIcon, DesignIcon, CodeblockIcon } from '@kong/icons'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../locales/en.json'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import Form from '../shared/Form.vue'
-import EditorModal from './flow-editor/modal/EditorModal.vue'
+import FlowEditor from './flow-editor/FlowEditor.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import * as examples from './examples'
+import { FEATURE_FLAGS } from '../../../constants'
 
+import type { Component } from 'vue'
 import type { SegmentedControlOption } from '@kong/kongponents'
 import type { Props } from '../shared/layout/StandardLayout.vue'
 import type { EditorMode } from './types'
-import { FEATURE_FLAGS } from '../../../constants'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -133,10 +131,6 @@ const description = computed(() => {
   }
 })
 
-// Flow editor
-
-const modalOpen = ref(false)
-
 // Code editor
 
 const codeEditor = useTemplateRef('code-editor')
@@ -166,7 +160,7 @@ function handleCodeError(msg: string) {
 
 <style lang="scss" scoped>
 .dk-form {
-  .editor {
+  .code-editor {
     height: 684px;
   }
 
