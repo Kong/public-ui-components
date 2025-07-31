@@ -329,18 +329,18 @@ const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promi
   return axiosInstance.get(url, { params })
 }
 
-const getAllV2 = (entityType: string, params: AxiosRequestConfig['params']): Promise<AxiosResponse> => {
+const getAllV2 = (entityType: string, params: AxiosRequestConfig['params'], signal: AbortSignal): Promise<AxiosResponse> => {
   const url = buildGetAllUrl(entityType)
   // Currently hardcoded to fetch 1000 records, and filter
   // client side. If more than 1000 records, this won't work
   if (props.config.app === 'konnect') {
-
     const { size, offset, ...others } = params
     if (entityType === 'consumer_groups') {
       return axiosInstance.get(url, {
         params: {
           size: 1000,
         },
+        signal,
       }).then(res => {
         const { data: { data: instances } } = res
 
@@ -376,10 +376,11 @@ const getAllV2 = (entityType: string, params: AxiosRequestConfig['params']): Pro
 
     return axiosInstance.get(url, {
       params: transformedParams,
+      signal,
     })
   }
 
-  return axiosInstance.get(url, { params })
+  return axiosInstance.get(url, { params, signal })
 }
 
 const peek = (entityType: string, size: number = 50): Promise<AxiosResponse> => {

@@ -173,6 +173,7 @@
       "error": {
         "load_entity": "There was an error loading {entity}"
       },
+      "recently_created": "Recently created {entity}",
       "items_count": "Currently showing {count} {count, plural, =1 {item} other {items}}, type to search",
       "no_results": "No results",
       "loading": "Loading..."

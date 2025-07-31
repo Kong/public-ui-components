@@ -600,30 +600,31 @@
       },
       "scoping": {
         "label": "Scoped",
+        "placeholder": "Search",
         "global": {
           "label": "Global",
           "help": "All services, routes, and consumers"
         },
         "gateway_service": {
-          "label": "Gateway Service",
+          "label": "Select a gateway service",
           "help": "The Gateway Service to which this plugin configuration will apply",
           "placeholder": "Select a Gateway Service",
           "plural": "Gateway Services"
         },
         "route": {
-          "label": "Route",
+          "label": "Select a route",
           "help": "The Route that this Plugin configuration will target",
           "placeholder": "Select a Route",
           "plural": "Routes"
         },
         "consumer": {
-          "label": "Consumer",
+          "label": "Select a consumer",
           "help": "The Consumer that this plugin configuration will target",
           "placeholder": "Select a Consumer",
           "plural": "Consumers"
         },
         "consumer_group": {
-          "label": "Consumer Group",
+          "label": "Select a consumer group",
           "help": "The Consumer Group that this plugin configuration will target",
           "placeholder": "Select a Consumer Group",
           "plural": "Consumer Groups"
