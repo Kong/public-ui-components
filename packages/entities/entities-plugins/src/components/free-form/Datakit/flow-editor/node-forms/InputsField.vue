@@ -13,11 +13,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { useFormShared } from '../../../shared/composables'
-import EnumField from '../../../shared/EnumField.vue'
+import { useFormShared } from '@freeform/composables'
+import EnumField from '@freeform/EnumField.vue'
 import InputsRecordField from './InputsRecordField.vue'
 import InputsMapField from './InputsMapField.vue'
-import useI18n from '../../../../../composables/useI18n'
+import useI18n from '@/composables/useI18n'
 
 const { getSchema } = useFormShared()
 const { i18n } = useI18n()

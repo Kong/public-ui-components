@@ -1,4 +1,3 @@
-import { createI18n } from '@kong-ui-public/i18n'
 import {
   CodeblockIcon,
   GatewayIcon,
@@ -7,7 +6,6 @@ import {
   VitalsIcon,
 } from '@kong/icons'
 import type { Node } from '@vue-flow/core'
-import english from '../../../../../locales/en.json'
 import type {
   ImplicitNodeType,
   NodeData,
@@ -15,8 +13,9 @@ import type {
   NodeType,
   UserNodeType,
 } from '../../types'
+import useI18n from '@/composables/useI18n'
 
-const { t } = createI18n<typeof english>('en-us', english)
+const { i18n: { t } } = useI18n()
 
 export function getNodeTypeDescription(type: NodeType): string {
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.description`)

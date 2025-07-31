@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import Form from '../../../shared/Form.vue'
-import Field from '../../../shared/Field.vue'
-import OutputValueField from '../fields/OutputValueField.vue'
-import { StaticNodeSchema } from './mock'
+import Form from '@freeform/Form.vue'
+import Field from '@freeform/Field.vue'
+import OutputValueField from './OutputValueField.vue'
+import { StaticNodeSchema } from './schemas'
 </script>

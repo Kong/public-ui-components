@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import Form from '../../../shared/Form.vue'
-import InputsField from '../fields/InputsField.vue'
-import { ServiceRequestSchema } from './mock'
+import Form from '@freeform/Form.vue'
+import InputsField from './InputsField.vue'
+import { ServiceRequestSchema } from './schemas'
 </script>
 

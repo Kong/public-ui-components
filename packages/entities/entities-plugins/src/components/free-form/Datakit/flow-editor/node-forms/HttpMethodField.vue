@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import EnumField from '../../../shared/EnumField.vue'
-import { toSelectItems } from '../../../shared/utils'
+import EnumField from '@freeform/EnumField.vue'
+import { toSelectItems } from '@freeform/utils'
 import { HTTP_METHODS } from '../../constants'
 
 defineProps<{

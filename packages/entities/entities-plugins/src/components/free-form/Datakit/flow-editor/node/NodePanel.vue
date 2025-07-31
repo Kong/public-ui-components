@@ -19,14 +19,13 @@
 </template>
 
 <script setup lang="ts">
-import { createI18n } from '@kong-ui-public/i18n'
-import english from '../../../../../locales/en.json'
 import { USER_NODE_META_MAP } from './node'
 import NodePanelItem from './NodePanelItem.vue'
 
 import type { UserNodeType } from '../../types'
+import useI18n from '@/composables/useI18n'
 
-const { t } = createI18n<typeof english>('en-us', english)
+const { i18n: { t } } = useI18n()
 </script>
 
 <style lang="scss" scoped>

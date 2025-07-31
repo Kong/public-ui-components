@@ -17,11 +17,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useFormShared } from '../../../shared/composables'
-import ObjectField from '../../../shared/ObjectField.vue'
-import type { RecordFieldSchema } from '../../../../../types/plugins/form-schema'
-import EnumField from '../../../shared/EnumField.vue'
-import useI18n from '../../../../../composables/useI18n'
+import { useFormShared } from '@freeform/composables'
+import ObjectField from '@freeform/ObjectField.vue'
+import type { RecordFieldSchema } from '@/types/plugins/form-schema'
+import EnumField from '@freeform/EnumField.vue'
+import useI18n from '@/composables/useI18n'
 
 defineProps<{
   name: string

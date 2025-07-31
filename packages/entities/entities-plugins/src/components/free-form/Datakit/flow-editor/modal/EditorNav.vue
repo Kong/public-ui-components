@@ -63,14 +63,13 @@
 import { KButton, KTooltip } from '@kong/kongponents'
 import { ArrowLeftIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { createI18n } from '@kong-ui-public/i18n'
-import english from '../../../../../locales/en.json'
 import { usePreferences } from '../../composables'
 
 import type { EditorModalNavItem } from '../../types'
 import { computed, ref } from 'vue'
+import useI18n from '@/composables/useI18n'
 
-const { t } = createI18n<typeof english>('en-us', english)
+const { i18n: { t } } = useI18n()
 
 const emit = defineEmits<{
   back: []

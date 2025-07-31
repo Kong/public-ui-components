@@ -21,13 +21,13 @@
 </template>
 
 <script setup lang="ts">
-import Form from '../../../shared/Form.vue'
-import Field from '../../../shared/Field.vue'
-import HttpMethodField from '../fields/HttpMethodField.vue'
-import InputsField from '../fields/InputsField.vue'
-import { CallNodeSchema } from './mock'
-import useI18n from '../../../../../composables/useI18n'
-import NumberField from '../../../shared/NumberField.vue'
+import Form from '@freeform/Form.vue'
+import Field from '@freeform/Field.vue'
+import HttpMethodField from './HttpMethodField.vue'
+import InputsField from './InputsField.vue'
+import { CallNodeSchema } from './schemas'
+import useI18n from '@/composables/useI18n'
+import NumberField from '@freeform/NumberField.vue'
 
 const { i18n } = useI18n()
 </script>

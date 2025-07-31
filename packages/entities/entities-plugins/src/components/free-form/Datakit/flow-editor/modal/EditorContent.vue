@@ -31,16 +31,15 @@
 </template>
 
 <script setup lang="ts">
-import { createI18n } from '@kong-ui-public/i18n'
-import english from '../../../../../locales/en.json'
 import { usePreferences } from '../../composables'
 import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
 import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
 import { ref } from 'vue'
 import type { NodeData } from '../../types'
+import useI18n from '@/composables/useI18n'
 
-const { t } = createI18n<typeof english>('en-us', english)
+const { i18n: { t } } = useI18n()
 
 const { sidePanelExpanded } = usePreferences()
 

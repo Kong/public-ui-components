@@ -36,14 +36,12 @@
 </template>
 
 <script setup lang="ts">
-import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { useVueFlow, VueFlow, type Node } from '@vue-flow/core'
 import { ref } from 'vue'
-import english from '../../../../../locales/en.json'
 import type { NodeData } from '../../types'
 import FlowNode from '../node/FlowNode.vue'
 import { createImplicitNode, createUserNode } from '../node/node'
@@ -51,8 +49,9 @@ import { createImplicitNode, createUserNode } from '../node/node'
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
+import useI18n from '@/composables/useI18n'
 
-const { t } = createI18n<typeof english>('en-us', english)
+const { i18n: { t } } = useI18n()
 
 defineSlots<{
   default(): any

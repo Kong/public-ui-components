@@ -10,7 +10,15 @@
       "cypress",
       "cypress/vue",
       "../../../cypress/support"
-    ]
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@freeform/*": [
+        "src/components/free-form/shared/*"
+      ],
+    }
   },
   "include": [
     "src/**/*",

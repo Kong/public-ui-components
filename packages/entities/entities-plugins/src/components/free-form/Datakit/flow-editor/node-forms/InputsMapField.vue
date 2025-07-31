@@ -65,12 +65,12 @@
 <script setup lang="ts">
 import { useTemplateRef, nextTick } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
-import useI18n from '../../../../../composables/useI18n'
-import { useKeyValueField } from '../../../shared/headless/useKeyValueField'
+import useI18n from '@/composables/useI18n'
+import { useKeyValueField } from '@freeform/headless/useKeyValueField'
 import type {
   KeyValueFieldProps,
   KeyValueFieldEmits,
-} from '../../../shared/headless/useKeyValueField'
+} from '@freeform/headless/useKeyValueField'
 
 const props = defineProps<KeyValueFieldProps>()
 const emit = defineEmits<KeyValueFieldEmits>()

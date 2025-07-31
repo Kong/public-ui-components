@@ -148,7 +148,6 @@
 </template>
 
 <script setup lang="ts">
-import { createI18n } from '@kong-ui-public/i18n'
 import {
   KUI_COLOR_BACKGROUND_NEUTRAL_STRONG,
   KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER,
@@ -157,18 +156,18 @@ import {
 import { UnfoldLessIcon, UnfoldMoreIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
 import { computed, ref } from 'vue'
-import english from '../../../../../locales/en.json'
 import HandleTwig from './HandleTwig.vue'
 import { isImplicitNode } from './node'
 
 import type { NodeData } from '../../types'
 import NodeBadge from './NodeBadge.vue'
+import useI18n from '@/composables/useI18n'
 
 const { data } = defineProps<{
   data: NodeData
 }>()
 
-const { t } = createI18n<typeof english>('en-us', english)
+const { i18n: { t } } = useI18n()
 
 const inputHandlesExpanded = ref(false)
 const outputHandlesExpanded = ref(false)
