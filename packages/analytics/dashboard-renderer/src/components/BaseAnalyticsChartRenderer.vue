@@ -15,7 +15,7 @@
         legend-position="bottom"
         :show-menu="context.editable"
         :synthetics-data-key="chartOptions.synthetics_data_key"
-        :timeseries-zoom="hasFinegrainedAbsoluteTimerangeAccess && !query.time_range"
+        :timeseries-zoom="timeseriesZoom"
         tooltip-title=""
         v-bind="extraProps"
         @zoom-time-range="emit('zoom-time-range', $event)"
@@ -58,6 +58,8 @@ const options = computed((): AnalyticsChartOptions => ({
   chartDatasetColors: props.chartOptions.chart_dataset_colors,
   threshold: props.chartOptions.threshold,
 }))
+
+const timeseriesZoom = computed(() => hasFinegrainedAbsoluteTimerangeAccess && props.context.zoomable && !props.query.time_range)
 
 const editTile = () => {
   emit('edit-tile')
