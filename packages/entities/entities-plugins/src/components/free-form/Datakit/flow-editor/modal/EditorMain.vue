@@ -27,7 +27,7 @@
             class="flow"
             fit-view-on-init
             :nodes="requestNodes"
-            @click="onMaybeBackdropClick"
+            @click.capture="onMaybeBackdropClick"
             @node-click="onNodeClick"
           >
             <Background />
@@ -46,7 +46,7 @@
             class="flow"
             fit-view-on-init
             :nodes="responseNodes"
-            @click="onMaybeBackdropClick"
+            @click.capture="onMaybeBackdropClick"
             @node-click="onNodeClick"
           >
             <Background />
