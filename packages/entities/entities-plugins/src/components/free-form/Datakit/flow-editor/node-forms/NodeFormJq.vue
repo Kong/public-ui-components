@@ -25,8 +25,8 @@
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import Field from '../../../shared/Field.vue'
-import InputsField from '../fields/InputsField.vue'
-import { JqNodeSchema } from './mock'
+import InputsField from './InputsField.vue'
+import { JqNodeSchema } from '../node/mock'
 import useI18n from '../../../../../composables/useI18n'
 import StringField from '../../../shared/StringField.vue'
 

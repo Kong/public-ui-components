@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
-import InputsField from '../fields/InputsField.vue'
-import { ResponseSchema } from './mock'
+import InputsField from './InputsField.vue'
+import { ResponseSchema } from '../node/mock'
 </script>
 

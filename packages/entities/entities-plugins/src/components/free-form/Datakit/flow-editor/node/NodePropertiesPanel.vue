@@ -33,11 +33,11 @@
 import NodeBadge from './NodeBadge.vue'
 
 import { DK_NODE_PROPERTIES_PANEL_OFFSET_TOP, DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
-import NodeFormCall from './NodeFormCall.vue'
-import NodeFormServiceRequest from './NodeFormServiceRequest.vue'
-import NodeFormResponse from './NodeFormResponse.vue'
-import NodeFormJq from './NodeFormJq.vue'
-import NodeFormStatic from './NodeFormStatic.vue'
+import NodeFormCall from '../node-forms/NodeFormCall.vue'
+import NodeFormServiceRequest from '../node-forms/NodeFormServiceRequest.vue'
+import NodeFormResponse from '../node-forms/NodeFormResponse.vue'
+import NodeFormJq from '../node-forms/NodeFormJq.vue'
+import NodeFormStatic from '../node-forms/NodeFormStatic.vue'
 
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
