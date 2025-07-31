@@ -10,21 +10,23 @@
       :allow-uuid-search="allowUuidSearch"
       :disabled="loading"
       :dom-id="schema.model"
+      :entity="entity"
       :field-disabled="schema.disabled"
       :fields="inputFieldsWithoutId"
       :get-all="getAll"
       :get-one="getOne"
       :get-partial="getPartial"
       :initial-item="initialItem"
+      :initial-item-selected="initialValueSelected"
       :placeholder="loading ? t('fields.auto_suggest.loading') : schema.placeholder"
       :transform-item="transformItem"
       @change="onSelected"
     >
-      <template
-        v-if="loading"
-        #before
-      >
-        <ProgressIcon :size="KUI_ICON_SIZE_30" />
+      <template #before>
+        <SearchIcon
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :size="KUI_ICON_SIZE_40"
+        />
       </template>
       <template #item="{ item }">
         <div class="entity-suggestion-item">
@@ -40,7 +42,6 @@
       <template #selected-item="{ item }">
         <span class="selected-entity-item">
           <span class="selected-entity-label">{{ item.label || '–' }}</span>
-          <span class="selected-entity-id">({{ item.id }})</span>
         </span>
       </template>
     </FieldScopedEntitySelect>
@@ -50,19 +51,19 @@
 <script>
 import abstractField from './abstractField'
 import { createI18n } from '@kong-ui-public/i18n'
-import { ProgressIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { SearchIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_40, KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import FieldScopedEntitySelect from './FieldScopedEntitySelect.vue'
 import { getFieldState } from '../../utils/autoSuggest'
 import { FORMS_API_KEY, FIELD_STATES } from '../../const'
 import english from '../../locales/en.json'
 
-const requestResultsLimit = 50
+const requestResultsLimit = 1000
 
 export default {
   components: {
     FieldScopedEntitySelect,
-    ProgressIcon,
+    SearchIcon,
   },
   mixins: [abstractField],
   inject: [FORMS_API_KEY],
@@ -72,7 +73,8 @@ export default {
     const { t } = createI18n('en-us', english)
     return {
       t,
-      KUI_ICON_SIZE_30,
+      KUI_ICON_SIZE_40,
+      KUI_COLOR_TEXT_NEUTRAL,
     }
   },
 
@@ -112,6 +114,9 @@ export default {
     },
     inputFieldsWithoutId() {
       return this.inputFields.filter(field => field !== 'id')
+    },
+    initialValueSelected() {
+      return this.idValue === this.initialItem?.id
     },
   },
 
@@ -157,13 +162,13 @@ export default {
     getPartial(size) {
       return this[FORMS_API_KEY].peek(this.entity, size)
     },
-    async getAll(query) {
+    async getAll(query, signal) {
       const items = []
       const promises = []
       const filteredIds = new Set()
       // Search on fields with backend filtering support
       promises.push(...this.inputFieldsWithoutId.map(async (field) => {
-        const result = await this.fetchSuggestions(query, field)
+        const result = await this.fetchSuggestions(query, field, signal)
         items.push(...this.dedupeSuggestions(result, filteredIds))
       }))
 
@@ -209,10 +214,7 @@ export default {
       return data
     },
 
-    async fetchUntilLimit(params) {
-      const data = []
-      let offset = null
-
+    async fetchUntilLimit(params, signal) {
       if (!this[FORMS_API_KEY]) {
         console.warn('[@kong-ui-public/forms] No API service provided')
         return []
@@ -220,23 +222,16 @@ export default {
 
       const fetcher = this.entity === 'consumer_group' ? this[FORMS_API_KEY].getAll : this[FORMS_API_KEY].getAllV2
 
-      while (data.length < requestResultsLimit) {
-        const res = await fetcher(this.entity, {
-          size: requestResultsLimit > 1000 ? 1000 : requestResultsLimit,
-          offset,
-          ...params,
-        })
+      const { data } = await fetcher(this.entity, {
+        size: requestResultsLimit,
+        ...params,
+      }, signal)
 
-        data.push(...res.data.data)
-        offset = res.data.offset
-        if (!offset) break
-      }
-
-      return data.slice(0, requestResultsLimit)
+      return data.data
     },
 
-    async fetchSuggestions(query, field) {
-      return this.fetchUntilLimit({ [field]: query })
+    async fetchSuggestions(query, field, signal) {
+      return this.fetchUntilLimit({ [field]: query }, signal)
     },
 
 
@@ -285,6 +280,10 @@ export default {
     opacity: 0.7;
   }
 
+  :deep(.select-item > .select-item-container > button:hover > span) {
+    background-color: $kui-color-background-neutral-weaker;
+  }
+
   :deep(.dropdown-footer) {
     margin-bottom: -$kui-space-20;
   }
@@ -299,26 +298,28 @@ export default {
 .entity-suggestion-item {
   display: flex;
   flex-direction: column;
+  font-family: 'Inter', sans-serif;
 
   .entity-label {
-    font-weight: $kui-font-weight-bold;
+    color: $kui-color-text-neutral-stronger;
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-medium;
   }
 
   .entity-id {
     color: $kui-color-text-neutral;
-    font-size: $kui-font-size-20;
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-medium;
   }
 }
 
 .selected-entity-item {
-  .selected-entity-label {
-    font-weight: $kui-font-weight-bold;
-    margin-right: $kui-space-30;
-  }
+  font-family: 'Iter', sans-serif;
+  padding-left: 28px;
 
-  .selected-entity-id {
-    color: $kui-color-text-neutral;
-    font-size: $kui-font-size-20;
+  .selected-entity-label {
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-regular;
   }
 }
 </style>

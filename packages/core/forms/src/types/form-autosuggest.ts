@@ -13,7 +13,7 @@ export interface EntityResponse {
 }
 
 export interface AutoSuggestInjection {
-  getAll: (query: string) => Promise<EntityData[]>
+  getAll: (query: string, signal?: AbortSignal) => Promise<EntityData[]>
   getPartial: (size: number) => Promise<AxiosResponse<EntityResponse>>
   getOne: (id: string) => Promise<AxiosResponse<EntityData>>
 }

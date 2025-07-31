@@ -989,7 +989,7 @@ const initScopeFields = (): void => {
       id: 'service-id',
       model: 'service-id',
       label: t('plugins.form.scoping.gateway_service.label'),
-      placeholder: t('plugins.form.scoping.gateway_service.placeholder'),
+      placeholder: t('plugins.form.scoping.placeholder'),
       type: 'AutoSuggestV2',
       labelField: 'name',
       entity: 'services',
@@ -1006,7 +1006,7 @@ const initScopeFields = (): void => {
       id: 'route-id',
       model: 'route-id',
       label: t('plugins.form.scoping.route.label'),
-      placeholder: t('plugins.form.scoping.route.placeholder'),
+      placeholder: t('plugins.form.scoping.placeholder'),
       type: 'AutoSuggestV2',
       entity: 'routes',
       labelField: 'name', // for rendering dropdown item label
@@ -1023,7 +1023,7 @@ const initScopeFields = (): void => {
     scopeEntityArray.push({
       model: 'consumer-id',
       label: t('plugins.form.scoping.consumer.label'),
-      placeholder: t('plugins.form.scoping.consumer.placeholder'),
+      placeholder: t('plugins.form.scoping.placeholder'),
       type: 'AutoSuggestV2',
       entity: 'consumers',
       labelField: 'username',
@@ -1040,7 +1040,7 @@ const initScopeFields = (): void => {
     scopeEntityArray.push({
       model: 'consumer_group-id',
       label: t('plugins.form.scoping.consumer_group.label'),
-      placeholder: t('plugins.form.scoping.consumer_group.placeholder'),
+      placeholder: t('plugins.form.scoping.placeholder'),
       type: 'AutoSuggestV2',
       entity: 'consumer_groups',
       entityDataKey: 'consumer_group',

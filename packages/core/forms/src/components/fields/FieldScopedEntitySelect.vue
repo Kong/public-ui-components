@@ -7,7 +7,7 @@
     :loading="loading"
     :placeholder="placeholder"
     :readonly="disabled"
-    :suggestions="dedupedSuggestions"
+    :suggestions="query ? dedupedSuggestions : peekDataCache"
     @change="$emit('change', $event)"
     @query-change="onQueryChange"
   >
@@ -39,6 +39,8 @@ import { debounce } from 'lodash-es'
 import AutoSuggest from './AutoSuggest.vue'
 import { isValidUuid } from '../../utils/isValidUuid'
 import { defaultItemTransformer } from '../../utils/autoSuggest'
+import english from '../../locales/en.json'
+import { createI18n } from '@kong-ui-public/i18n'
 
 import type { SelectItem } from '@kong/kongponents'
 import type { EntityData, AutoSuggestInjection, AutoSuggestItemTransformer } from '../../types/form-autosuggest'
@@ -46,14 +48,16 @@ import type { EntityData, AutoSuggestInjection, AutoSuggestItemTransformer } fro
 const DEBOUNCE_DELAY = 500
 const PEEK_SIZE = 50
 
-const { getAll, getOne, getPartial, transformItem = defaultItemTransformer, fields = [], allowUuidSearch = false, id, initialItem } = defineProps<{
+const { getAll, getOne, getPartial, transformItem = defaultItemTransformer, fields = [], allowUuidSearch = false, id, initialItem, entity, initialItemSelected } = defineProps<{
   transformItem?: AutoSuggestItemTransformer
   allowUuidSearch?: boolean
   placeholder?: string
   fields: string[]
   initialItem?: SelectItem<string>
+  initialItemSelected?: boolean
   domId: string
   id: string
+  entity: string
   disabled?: boolean
   fieldDisabled?: boolean
 } & AutoSuggestInjection>()
@@ -69,27 +73,49 @@ const dataDrainedFromPeeking = ref(false)
 const query = ref('')
 const suggestions = ref<Array<SelectItem<string>>>([])
 const rawData = ref<EntityData[]>([])
-const lastValidDataCache = ref<EntityData[]>([])
+const peekDataCache = ref<Array<SelectItem<string>>>([])
+const { t } = createI18n('en-us', english)
 
-const fetcher = async (executor: () => Promise<EntityData[]>) => {
-  try {
+const axiosAbortController = ref<AbortController | null>(null)
+
+let timeoutHandle: ReturnType<typeof setTimeout> | null = null
+
+const fetcher = async (executor: () => Promise<EntityData[]>, signal?: AbortSignal) => {
+  clearTimeout(timeoutHandle!)
+  timeoutHandle = setTimeout(() => {
     loading.value = true
+  }, 1500)
+  try {
     const data = await executor()
-    if (data.length) {
-      lastValidDataCache.value = data
-    }
     rawData.value = data
     suggestions.value = rawData.value.map(transformItem)
   } catch (e) {
+    if (signal?.aborted) {
+      return
+    }
     suggestions.value = []
     message.value = (e as Error).message
   } finally {
+    clearTimeout(timeoutHandle!)
     loading.value = false
   }
 }
 
 const onQueryChange = debounce((searchTerm: string = '') => {
   query.value = searchTerm
+
+  if (!searchTerm.trim()) {
+    return
+  }
+
+  // Abort previous request if any
+  if (axiosAbortController.value) {
+    axiosAbortController.value.abort()
+  }
+
+  const newAbortController = new AbortController()
+  axiosAbortController.value = newAbortController
+
   if (dataDrainedFromPeeking.value) {
     if (isValidUuid(searchTerm) && allowUuidSearch) {
       inlineSearchForUuid(searchTerm)
@@ -99,22 +125,15 @@ const onQueryChange = debounce((searchTerm: string = '') => {
     return
   }
 
-  if (!searchTerm.trim()) {
-    if (lastValidDataCache.value.length && !rawData.value.length) {
-      suggestions.value = lastValidDataCache.value.map(transformItem)
-    }
-    return
-  }
-
   if (isValidUuid(searchTerm) && allowUuidSearch) {
     fetcher(async () => await fetchExact(searchTerm))
   } else {
-    fetcher(async () => await exhaustiveSearch(searchTerm))
+    fetcher(async () => await exhaustiveSearch(searchTerm, newAbortController.signal), newAbortController.signal)
   }
-}, DEBOUNCE_DELAY)
+}, DEBOUNCE_DELAY, { leading: true })
 
-const exhaustiveSearch = async (query: string) => {
-  const data = await getAll(query)
+const exhaustiveSearch = async (query: string, signal?: AbortSignal) => {
+  const data = await getAll(query, signal)
   return data
 }
 
@@ -126,6 +145,12 @@ const peek = async () => {
   }
 
   rawData.value = data
+  peekDataCache.value = data.map((item) => {
+    return {
+      ...transformItem(item),
+      group: t('fields.auto_suggest.recently_created', { entity }),
+    }
+  })
 
   return data
 }
@@ -152,22 +177,17 @@ const inlineSearchForUuid = (uuid: string) => {
 }
 
 const dedupedSuggestions = computed(() => {
-  if (!initialItem) return suggestions.value
-
-  if (suggestions.value.some((item) => item.id === initialItem.id)) {
-    return suggestions.value
-  }
-
-  if (query.value) {
-    if (fields.some((field) => {
-      initialItem[field]?.includes(query.value)
-    })) {
-      return [initialItem, ...suggestions.value]
+  if (initialItemSelected) {
+    if (suggestions.value.some((item) => item.value === initialItem?.value)) {
+      return suggestions.value
     }
-    return suggestions.value
+
+    if (fields.some((field) => initialItem?.[field]?.includes?.(query.value))) {
+      return [initialItem!, ...suggestions.value]
+    }
   }
 
-  return [initialItem, ...suggestions.value]
+  return suggestions.value
 })
 
 onMounted(async () => {
