@@ -157,7 +157,7 @@ import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType }
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
-import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
+import { ArrayInputFieldSchema, BadgeArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
 import endpoints from '../plugins-endpoints'
 import {
   EntityTypeIdField,
@@ -747,11 +747,11 @@ const buildFormSchema = (parentKey: string, response: Record<string, any>, initi
 
       initialFormSchema[field].elements = elements
 
-      if (['string', 'integer', 'number'].includes(elements.type) && !elements.one_of) {
-        const { id, help, label, hint, values, referenceable, model } = initialFormSchema[field]
-        const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(ArrayInputFieldSchema))
+      if (['string', 'integer', 'number'].includes(elements.type)) {
+        const { id, help, label, hint, values, referenceable, model, elements } = initialFormSchema[field]
+        const { inputAttributes, ...overrides } = JSON.parse(JSON.stringify(elements.one_of ? BadgeArrayInputFieldSchema : ArrayInputFieldSchema))
         inputAttributes.type = elements.type === 'string' ? 'text' : 'number'
-        initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, inputAttributes, ...overrides }
+        initialFormSchema[field] = { id, help, label, hint, values, referenceable, model, inputAttributes, elements, ...overrides }
       }
     }
 
