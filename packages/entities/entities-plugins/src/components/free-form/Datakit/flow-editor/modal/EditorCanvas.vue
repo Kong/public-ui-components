@@ -120,7 +120,7 @@ const { isDragging } = useDraggable(resizeHandle, {
   .label {
     align-items: center;
     background-color: $kui-color-background;
-    border-bottom: 1px solid $kui-color-border;
+    border-bottom: $kui-border-width-10 solid $kui-color-border;
     box-sizing: border-box;
     cursor: pointer;
     display: flex;
