@@ -113,7 +113,7 @@ export type NodePhase = 'request' | 'response'
 /**
  * Base shape shared by every concrete node type.
  */
-interface BaseConfigNode {
+export interface BaseConfigNode {
   /**
    * Unique label for referencing the node in connections.
    */

@@ -8,9 +8,10 @@
       v-for="name in childFieldNames"
       :key="name"
       class="dk-inputs-field-indent"
-      :items="[]"
+      :items="items"
       :name="name"
       :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
+      @update:model-value="$emit('update')"
     />
   </ObjectField>
 </template>
@@ -22,9 +23,15 @@ import ObjectField from '../../../shared/ObjectField.vue'
 import type { RecordFieldSchema } from '../../../../../types/plugins/form-schema'
 import EnumField from '../../../shared/EnumField.vue'
 import useI18n from '../../../../../composables/useI18n'
+import type { InputOption } from './composables'
 
 defineProps<{
   name: string
+  items: InputOption[]
+}>()
+
+defineEmits<{
+  (event: 'update'): void
 }>()
 
 const { getSchema } = useFormShared()

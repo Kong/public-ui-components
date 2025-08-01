@@ -10,7 +10,7 @@
     v-else
     :data-testid="`ff-tag-${field.path.value}`"
   >
-    <KInput
+    <EnhancedInput
       v-bind="fieldAttrs"
       class="ff-tag-field"
       :data-1p-ignore="is1pIgnore"
@@ -28,13 +28,14 @@
           <div v-html="fieldAttrs.labelAttributes.info" />
         </slot>
       </template>
-    </KInput>
+    </EnhancedInput>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, toRef, useAttrs, watch } from 'vue'
-import { KInput, type LabelAttributes } from '@kong/kongponents'
+import type { LabelAttributes } from '@kong/kongponents'
+import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from './utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'

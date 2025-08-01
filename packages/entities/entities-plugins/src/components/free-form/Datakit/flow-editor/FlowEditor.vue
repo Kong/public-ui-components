@@ -27,5 +27,21 @@ defineProps<{
 
 const modalOpen = ref(false)
 
-provideEditorState([], [])
+provideEditorState([
+  // todo(zehao): mock data, remove me
+  {
+    type: 'call',
+    name: 'MY_CALL' as any,
+    url: 'https://example.com',
+    method: 'POST',
+    timeout: 5000,
+    ssl_server_name: 'example.com',
+    inputs: {
+      headers: 'request.headers',
+      body: 'request.body',
+      query: 'request.query',
+    },
+    // input: 'request',
+  },
+], [])
 </script>

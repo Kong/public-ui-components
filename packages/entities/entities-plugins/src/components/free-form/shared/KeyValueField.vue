@@ -49,7 +49,7 @@
       class="ff-kv-field-entry"
       :data-testid="`ff-kv-container-${field.path.value}.${index}`"
     >
-      <KInput
+      <EnhancedInput
         v-model.trim="entry.key"
         class="ff-kv-field-entry-key"
         :data-key-input="index"
@@ -58,7 +58,7 @@
         @keydown.enter.prevent="focus(index, 'value')"
       />
 
-      <KInput
+      <EnhancedInput
         v-model.trim="entry.value"
         class="ff-kv-field-entry-value"
         :data-testid="`ff-value-${field.path.value}.${index}`"
@@ -81,7 +81,7 @@
             :message="i18n.t('plugins.free-form.vault_picker.component_error')"
           />
         </template>
-      </KInput>
+      </EnhancedInput>
 
       <KButton
         appearance="tertiary"
@@ -102,6 +102,7 @@ import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import type { MapFieldSchema } from '../../../types/plugins/form-schema'
 import useI18n from '../../../composables/useI18n'
 import { useKeyValueField, type KeyValueFieldEmits, type KeyValueFieldProps } from '../shared/headless/useKeyValueField'
+import EnhancedInput from './EnhancedInput.vue'
 
 const { showVaultSecretPicker = undefined, ...props } = defineProps<KeyValueFieldProps>()
 

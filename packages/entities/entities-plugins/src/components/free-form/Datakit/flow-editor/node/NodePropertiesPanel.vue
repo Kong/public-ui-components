@@ -41,19 +41,20 @@ import NodeFormStatic from '../node-forms/NodeFormStatic.vue'
 
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
-import type { NodeInstance } from '../../types'
 import { computed } from 'vue'
+import { useEditorState } from '../store/store'
+
+const state = useEditorState()!
+const node = computed(() => state.selectedNode.value)
 
 const {
   maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,
   offsetTop = DK_NODE_PROPERTIES_PANEL_OFFSET_TOP,
   visible,
-  node,
 } = defineProps<{
   maxWidth?: string
   offsetTop?: string
   visible?: boolean
-  node?: NodeInstance | null
 }>()
 
 defineEmits<{
@@ -61,7 +62,7 @@ defineEmits<{
 }>()
 
 const form = computed(() => {
-  switch (node?.type) {
+  switch (node.value?.type) {
     case 'call':
       return NodeFormCall
     case 'service_request':

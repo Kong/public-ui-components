@@ -12,6 +12,10 @@ export type FormConfig<T extends Record<string, any> = Record<string, any>> = {
   prepareFormData?: (data: any) => any
   transformLabel?: (label: string, fieldPath: string) => string
   hasValue?: (data: T | undefined) => boolean
+  /**
+   * Sync value after `change` event for every text-liked input.
+   */
+  updateOnChange?: boolean
 }
 
 /**
