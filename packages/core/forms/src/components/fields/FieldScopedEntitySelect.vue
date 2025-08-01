@@ -7,7 +7,7 @@
     :loading="loading"
     :placeholder="placeholder"
     :readonly="disabled"
-    :suggestions="query ? dedupedSuggestions : peekDataCache"
+    :suggestions="dedupedSuggestions"
     @change="$emit('change', $event)"
     @query-change="onQueryChange"
   >
@@ -177,17 +177,15 @@ const inlineSearchForUuid = (uuid: string) => {
 }
 
 const dedupedSuggestions = computed(() => {
-  if (initialItemSelected) {
-    if (suggestions.value.some((item) => item.value === initialItem?.value)) {
-      return suggestions.value
-    }
+  const suggestionsCandidate = query.value.trim() ? suggestions.value : peekDataCache.value
 
-    if (fields.some((field) => initialItem?.[field]?.includes?.(query.value))) {
-      return [initialItem!, ...suggestions.value]
-    }
+  if (initialItemSelected) {
+    return suggestionsCandidate.some((item) => item.value !== initialItem?.value)
+      ? suggestionsCandidate
+      : [initialItem!, ...suggestionsCandidate]
   }
 
-  return suggestions.value
+  return suggestionsCandidate
 })
 
 onMounted(async () => {
