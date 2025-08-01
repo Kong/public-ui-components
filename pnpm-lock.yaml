@@ -576,8 +576,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/icons':
-        specifier: ^1.31.0
-        version: 1.31.0(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.33.2
+        version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       monaco-editor:
         specifier: 0.52.2
         version: 0.52.2
@@ -613,8 +613,8 @@ importers:
   packages/core/forms:
     dependencies:
       '@kong/icons':
-        specifier: ^1.31.0
-        version: 1.31.0(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.33.2
+        version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
@@ -1090,8 +1090,8 @@ importers:
         specifier: 1.17.4
         version: 1.17.4
       '@kong/icons':
-        specifier: ^1.31.0
-        version: 1.31.0(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.33.2
+        version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 9.34.2
         version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
@@ -1937,7 +1937,6 @@ packages:
 
   '@evilmartians/lefthook@1.8.2':
     resolution: {integrity: sha512-SZdQk3W9q7tcJwnSwEMUubQqVIK7SHxv52hEAnV7o3nPI+xKcmd+rN0hZIJg07wjBaJRAjzdvoQySKQQYPW5Qw==}
-    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
