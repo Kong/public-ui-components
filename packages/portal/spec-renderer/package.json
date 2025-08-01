@@ -47,11 +47,11 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.17.4",
     "@kong/kongponents": "9.34.2",
-    "@modyfi/vite-plugin-yaml": "^1.1.0",
+    "@modyfi/vite-plugin-yaml": "^1.1.1",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/uuid": "^10.0.0",
     "openapi-types": "^12.1.3",
-    "vue": "^3.5.13"
+    "vue": "^3.5.17"
   },
   "dependencies": {
     "@kong-ui-public/swagger-ui-web-component": "workspace:^0.12.9",
