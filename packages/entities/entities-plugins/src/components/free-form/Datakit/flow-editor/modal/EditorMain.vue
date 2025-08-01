@@ -16,21 +16,47 @@
       </div>
     </header>
 
-    <div class="body">
-      <VueFlow
-        class="flow"
-        :nodes="requestNodes"
-        @click="emit('click:backdrop')"
-        @nodes-initialized="fitView"
-      >
-        <Background @click="emit('click:backdrop')" />
-        <Controls />
+    <div
+      ref="canvasContainer"
+      class="body"
+    >
+      <EditorCanvas>
+        <template #request>
+          <VueFlow
+            class="flow"
+            fit-view-on-init
+            :nodes="requestNodes"
+            @click.capture="onMaybeBackdropClick"
+            @node-click="onNodeClick"
+          >
+            <Background />
+            <Controls position="bottom-left" />
 
-        <!-- To not use the default node style -->
-        <template #node-flow="node">
-          <FlowNode :data="node.data" />
+            <!-- To not use the default node style -->
+            <template #node-flow="node">
+              <FlowNode :data="node.data" />
+            </template>
+          </VueFlow>
         </template>
-      </VueFlow>
+
+        <template #response>
+          <VueFlow
+            class="flow"
+            fit-view-on-init
+            :nodes="responseNodes"
+            @click.capture="onMaybeBackdropClick"
+            @node-click="onNodeClick"
+          >
+            <Background />
+            <Controls position="bottom-left" />
+
+            <!-- To not use the default node style -->
+            <template #node-flow="node">
+              <FlowNode :data="node.data" />
+            </template>
+          </VueFlow>
+        </template>
+      </EditorCanvas>
     </div>
   </div>
 </template>
@@ -41,17 +67,19 @@ import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import { useVueFlow, VueFlow } from '@vue-flow/core'
+import { VueFlow, type NodeMouseEvent } from '@vue-flow/core'
+
 import english from '../../../../../locales/en.json'
 import FlowNode from '../node/FlowNode.vue'
 import { useEditorStore } from '../store/store'
 
+import EditorCanvas from './EditorCanvas.vue'
+
+import type { NodeInstance } from '../../types'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
-
-import type { NodeInstance } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -70,14 +98,22 @@ if (!editorStore) {
   throw new Error('Editor state is not provided. Ensure you are using provideEditorStore in a parent component.')
 }
 
-const { requestNodes } = editorStore
+const { requestNodes, responseNodes } = editorStore
 
-const { fitView, onNodeClick } = useVueFlow()
+const onMaybeBackdropClick = (event: MouseEvent) => {
+  if (event.target instanceof Element) {
+    // Ignore clicks on controls
+    if (event.target.closest('.vue-flow__controls')) {
+      return
+    }
+  }
+  emit('click:backdrop')
+}
 
-onNodeClick(({ event, node }) => {
+const onNodeClick = ({ event, node }: NodeMouseEvent) => {
   event.stopPropagation()
   emit('click:node', node.data)
-})
+}
 </script>
 
 <style lang="scss" scoped>
@@ -103,17 +139,13 @@ onNodeClick(({ event, node }) => {
   }
 
   .body {
+    display: flex;
+    flex-direction: column;
     height: 100%;
     width: 100%;
   }
 
   .flow {
-    :deep(.vue-flow__controls) {
-      bottom: 0;
-      left: unset;
-      right: 0;
-    }
-
     :deep(.vue-flow__controls-button) {
       // Ensure it works in both the sandbox and host apps
       box-sizing: content-box;
