@@ -35,6 +35,25 @@ export type ConfigNodeType = 'call' | 'jq' | 'exit' | 'property' | 'static'
 export type ImplicitNodeType = 'request' | 'service_request' | 'service_response' | 'response'
 export type NodeType = ConfigNodeType | ImplicitNodeType
 
+export interface FieldMeta {
+  name: FieldName
+
+  // preserved for future use
+  // type: 'any' | 'string' | 'number' | 'map' | 'object'
+}
+
+export interface IOMeta {
+  /**
+   * Well-known I/O fields for the node.
+   */
+  fields: FieldMeta[]
+
+  /**
+   * Wether users can configure the I/O fields.
+   */
+  configurable?: boolean
+}
+
 export interface NodeMeta {
   type: NodeType
   summary?: string
@@ -42,11 +61,14 @@ export interface NodeMeta {
   icon?: Component
 
   /**
-   * Well-known fields for the node.
+   * I/O fields configuration for the node type.
+   * * If not provided, the node type has no corresponding I/O fields.
+   * * If provided empty array as fields, the node type only offers `inputs` or `outputs` as a whole.
+   * * If provided with `input` and/or `output` fields, the node type has individual I/O fields.
    */
-  fields?: {
-    input?: FieldName[]
-    output?: FieldName[]
+  io?: {
+    input?: IOMeta
+    output?: IOMeta
   }
 }
 
