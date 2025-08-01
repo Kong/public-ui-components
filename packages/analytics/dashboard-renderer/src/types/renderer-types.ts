@@ -13,7 +13,9 @@ export interface DashboardRendererContext {
 }
 
 // The DashboardRenderer component fills in optional values before passing them down to the tile renderers.
-export type DashboardRendererContextInternal = Required<DashboardRendererContext>
+export interface DashboardRendererContextInternal extends Required<DashboardRendererContext> {
+  zoomable: boolean
+}
 
 export interface RendererProps<T> {
   query: ValidDashboardQuery

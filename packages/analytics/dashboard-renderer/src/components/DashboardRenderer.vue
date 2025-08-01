@@ -42,15 +42,23 @@
 
 <script setup lang="ts">
 import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
-import type { AbsoluteTimeRangeV4, DashboardConfig, TileConfig, SlottableOptions, TileDefinition, AllFilters } from '@kong-ui-public/analytics-utilities'
+import type {
+  AbsoluteTimeRangeV4,
+  AllFilters,
+  AnalyticsBridge,
+  DashboardConfig,
+  SlottableOptions,
+  TileConfig,
+  TileDefinition,
+  TimeRangeV4,
+} from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
-import { computed, inject, ref } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
+import { computed, getCurrentInstance, inject, ref } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
-import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
-import type { AnalyticsBridge, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import {
   DEFAULT_TILE_HEIGHT,
   DEFAULT_TILE_REFRESH_INTERVAL_MS,
@@ -185,12 +193,17 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
     editable = false
   }
 
+  // Check if the host app has provided an event handler for zooming.
+  // If there's no handler, disable zooming -- it won't do anything.
+  const zoomable = !!getCurrentInstance()?.vnode?.props?.onZoomTimeRange
+
   return {
     filters,
     tz,
     timeSpec: timeSpec.value,
     refreshInterval,
     editable,
+    zoomable,
   }
 })
 
