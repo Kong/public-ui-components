@@ -67,7 +67,7 @@
   },
   "peerDependencies": {
     "@kong/kongponents": "catalog:",
-    "vue": "^3.5.4"
+    "vue": "catalog:"
   },
   "dependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
