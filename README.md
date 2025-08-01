@@ -6,6 +6,7 @@ Monorepo for **open-source** Kong UI components and utilities.
 
 - [What goes here](#what-goes-here)
 - [Creating a package](#creating-a-package)
+- [Introducing dependencies](#introducing-dependencies)
 - [Package Publishing](#package-publishing)
 - [Development](#development)
   - [Requirements](#requirements)
@@ -35,6 +36,10 @@ Here are some criteria to help figure out if your code belongs to this mono-repo
 
 [View the guide on creating a new package within the monorepo here](./docs/creating-a-package.md)
 
+## Introducing dependencies
+
+[View the guide on introducing dependencies within the monorepo here](./docs/introducing-dependencies.md)
+
 ## Package Publishing
 
 [View the reference on how packages are versioned and published independently within the monorepo here](./docs/package-publishing.md)
@@ -48,6 +53,7 @@ Be sure to familiarize yourself with the [Component Requirements](./docs/creatin
 If you need to bump a version of a dependency for ALL consuming packages in this repo, use this command:
 
 ```sh
+# Note that with pnpm catalog this command will bump version in `pnpm-workspace.yaml` catalog 
 pnpm --recursive update {package-name}@{version}
 ```
 

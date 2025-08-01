@@ -39,9 +39,9 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "peerDependencies": {
-    "@kong/kongponents": "^9.34.2",
-    "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.4.5"
+    "@kong/kongponents": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
   },
   "dependencies": {
     "@kong/icons": "catalog:",
@@ -50,11 +50,11 @@
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
-    "@kong/design-tokens": "1.17.4",
-    "@kong/kongponents": "9.34.2",
+    "@kong/design-tokens": "catalog:",
+    "@kong/kongponents": "catalog:",
     "@types/lodash.clonedeep": "^4.5.9",
-    "vue": "^3.5.13",
-    "vue-router": "^4.4.5"
+    "vue": "catalog:",
+    "vue-router": "catalog:"
   },
   "repository": {
     "type": "git",

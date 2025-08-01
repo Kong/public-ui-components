@@ -40,18 +40,18 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.34.2",
-    "vue": ">= 3.3.13 < 4"
+    "@kong/kongponents": "catalog:",
+    "vue": "catalog:"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.17.4",
-    "@kong/kongponents": "9.34.2",
+    "@kong/design-tokens": "catalog:",
+    "@kong/kongponents": "catalog:",
     "@modyfi/vite-plugin-yaml": "^1.1.0",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/uuid": "^10.0.0",
     "openapi-types": "^12.1.3",
-    "vue": "^3.5.13"
+    "vue": "catalog:"
   },
   "dependencies": {
     "@kong-ui-public/swagger-ui-web-component": "workspace:^0.12.9",

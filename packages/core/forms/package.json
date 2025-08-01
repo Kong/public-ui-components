@@ -57,14 +57,14 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.34.2",
-    "vue": "^3.5.12"
+    "@kong/kongponents": "catalog:",
+    "vue": "catalog:"
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.17.4",
-    "@kong/kongponents": "9.34.2",
+    "@kong/design-tokens": "catalog:",
+    "@kong/kongponents": "catalog:",
     "@types/lodash-es": "^4.17.12",
     "pug": "^3.0.3"
   },

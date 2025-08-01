@@ -40,11 +40,11 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.17.4",
-    "@kong/kongponents": "9.34.2",
+    "@kong/design-tokens": "catalog:",
+    "@kong/kongponents": "catalog:",
     "@types/geojson": "^7946.0.14",
     "maplibre-gl": "^4.7.1",
-    "vue": "^3.5.13"
+    "vue": "catalog:"
   },
   "repository": {
     "type": "git",
@@ -65,9 +65,9 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "9.34.2",
+    "@kong/kongponents": "catalog:",
     "maplibre-gl": "workspace:^",
-    "vue": "^3.5.12"
+    "vue": "catalog:"
   },
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",

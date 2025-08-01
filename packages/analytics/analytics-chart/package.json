@@ -22,21 +22,21 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.34.2",
-    "vue": ">= 3.3.13 < 4"
+    "@kong/kongponents": "catalog:",
+    "vue": "catalog:"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "1.17.4",
-    "@kong/kongponents": "9.34.2",
+    "@kong/design-tokens": "catalog:",
+    "@kong/kongponents": "catalog:",
     "@types/uuid": "^10.0.0",
     "file-saver": "^2.0.5",
     "lodash.mapkeys": "^4.6.0",
     "lodash.pick": "^4.4.0",
     "lodash.pickby": "^4.6.0",
     "papaparse": "^5.4.1",
-    "vue": "^3.5.13"
+    "vue": "catalog:"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
