@@ -57,7 +57,7 @@
         <KButton
           v-if="showCreateButton"
           appearance="primary"
-          data-testid="entity-create-button"
+          :data-testid="id.length ? `${id}-create-button`: `entity-create-button`"
           :size="appearance === 'secondary' ? 'medium' : 'large'"
           @click="$emit('click:create')"
         >
@@ -161,6 +161,10 @@ const props = defineProps({
   features: {
     type: Array as PropType<EmptyStateFeature[]>,
     default: () => [],
+  },
+  id: {
+    type: String,
+    default: '',
   },
 })
 
