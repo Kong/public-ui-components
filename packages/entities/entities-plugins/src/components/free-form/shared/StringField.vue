@@ -10,7 +10,7 @@
     v-else
     v-bind="$attrs"
   >
-    <InputComponent
+    <EnhancedInput
       v-bind="{
         ...fieldAttrs,
         showPasswordMaskToggle: encrypted,
@@ -21,6 +21,7 @@
       :data-autofocus="isAutoFocus"
       :data-testid="`ff-${field.path.value}`"
       :model-value="fieldValue ?? ''"
+      :multiline="multiline"
       @update:model-value="handleUpdate"
     >
       <template
@@ -32,7 +33,7 @@
           <div v-html="fieldAttrs.labelAttributes.info" />
         </slot>
       </template>
-    </InputComponent>
+    </EnhancedInput>
     <component
       :is="autofillSlot"
       v-if="autofillSlot && realShowVaultSecretPicker"
@@ -52,8 +53,9 @@
 <script setup lang="ts">
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { computed, inject, toRef, useAttrs } from 'vue'
-import { KInput, KTextArea, type LabelAttributes } from '@kong/kongponents'
+import type { LabelAttributes } from '@kong/kongponents'
 import useI18n from '../../../composables/useI18n'
+import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from '../shared/utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
@@ -115,10 +117,6 @@ const encrypted = computed(() => {
   }
 
   return !!(field.schema?.value as StringFieldSchema).encrypted
-})
-
-const InputComponent = computed(() => {
-  return props.multiline ? KTextArea : KInput
 })
 
 const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
