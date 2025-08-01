@@ -39,7 +39,6 @@
         :absolute-left="tooltipAbsoluteLeft"
         :absolute-top="tooltipAbsoluteTop"
         data-testid="tooltip"
-        :drag-select-plugin="dragSelectPlugin"
         :state="tooltipData"
         :tooltip-title="tooltipTitle"
         :zoom-action-items="zoomActionItems"
@@ -98,6 +97,7 @@ interface TimeSeriesChartProps {
   chartTooltipSortFn?: ChartTooltipSortFn
   zoom?: boolean
   zoomActionItems?: ZoomActionItem[]
+  tooltipMetricDisplay?: string
 }
 
 const props = withDefaults(
@@ -117,6 +117,7 @@ const props = withDefaults(
     chartTooltipSortFn: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
     zoom: false,
     zoomActionItems: undefined,
+    tooltipMetricDisplay: '',
   },
 )
 
@@ -142,7 +143,8 @@ const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-
 
 const tooltipData = reactive<TooltipState>({
   showTooltip: false,
-  tooltipContext: 0,
+  tooltipContext: 0, // Set in lineChartTooltipBehavior
+  metricDisplay: props.tooltipMetricDisplay,
   tooltipSeries: [],
   left: '',
   top: '',

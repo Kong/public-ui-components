@@ -241,7 +241,7 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
       name: selectedMetric.value.name,
       unit: selectedMetric.value.unit,
     }],
-    { statusCodes: [...statusCodeDimensionValues.value] },
+    { StatusCode: [...statusCodeDimensionValues.value] },
     { truncated: limitToggle.value, limit: limitToggle.value ? 10 : 50 })
 
 })

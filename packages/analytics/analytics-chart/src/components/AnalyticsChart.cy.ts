@@ -257,7 +257,7 @@ describe('<AnalyticsChart />', () => {
       .should('exist')
   })
 
-  it('single dimension bar charts should not have "tooltipContext"', () => {
+  it('single dimension bar charts have "tooltipContext"', () => {
     cy.mount(AnalyticsChart, {
       props: {
         chartData: exploreResult,
@@ -279,6 +279,10 @@ describe('<AnalyticsChart />', () => {
     cy.get('.tooltip-container')
       .should('be.visible')
       .find('.subtitle')
-      .should('not.exist')
+      .should('exist')
+
+    cy.get('.tooltip-container')
+      .find('.metric')
+      .should('exist')
   })
 })

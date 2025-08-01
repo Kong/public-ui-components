@@ -10,7 +10,6 @@
           :chart-options="timeSeriesBarChartOptions"
           :legend-position="ChartLegendPosition.Bottom"
           :show-legend-values="true"
-          tooltip-title="Requests"
         />
       </div>
       <div class="chart-container">

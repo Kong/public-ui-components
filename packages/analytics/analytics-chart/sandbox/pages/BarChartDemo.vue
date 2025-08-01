@@ -388,7 +388,7 @@ const onMetricSelected = (item: any) => {
 }
 
 watch(multiDimensionToggle, () => {
-  serviceDimensionValues.value = new Set(Array(5).fill(0).map(() => `Service${rand(1, 100)}`))
+  serviceDimensionValues.value = new Set(Array(1).fill(0).map(() => `Service${rand(1, 100)}`))
   statusCodeDimensionValues.value = new Set(statusCodeLabels)
 
   colorPalette.value = [...statusCodeDimensionValues.value].reduce((obj, dimension) => ({ ...obj, [dimension]: lookupStatusCodeColor(dimension) || lookupDatavisColor(rand(0, 5)) }), {})
