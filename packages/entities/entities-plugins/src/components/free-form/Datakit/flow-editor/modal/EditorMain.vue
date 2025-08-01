@@ -23,7 +23,6 @@
       <EditorCanvas>
         <template #request>
           <VueFlow
-            id="request-flow"
             class="flow"
             fit-view-on-init
             :nodes="requestNodes"
@@ -42,7 +41,6 @@
 
         <template #response>
           <VueFlow
-            id="response-flow"
             class="flow"
             fit-view-on-init
             :nodes="responseNodes"
