@@ -58,7 +58,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^9.34.2",
-    "vue": "^3.5.12"
+    "vue": "^3.5.17"
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
