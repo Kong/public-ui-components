@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.47.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.46.0...@kong-ui-public/entities-plugins@9.47.0) (2025-08-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - improve io meta ([#2278](https://github.com/Kong/public-ui-components/issues/2278)) ([7a04961](https://github.com/Kong/public-ui-components/commit/7a0496185115ccc2bef1d9cbe27380e33451e36b))
+
+
+### Features
+
+* **entities-plugins:** freeform - suport lazy update input ([#2277](https://github.com/Kong/public-ui-components/issues/2277)) ([e3c8fc0](https://github.com/Kong/public-ui-components/commit/e3c8fc0b2985e39fb558e076a96ae20bcb79cd57))
+* **entities-plugins:** freeform - support one-way data sync ([#2276](https://github.com/Kong/public-ui-components/issues/2276)) ([d3a16ea](https://github.com/Kong/public-ui-components/commit/d3a16ea9be898ed8b9d12b445f43d87c6a3d34ff))
+
+
+
+
+
 # [9.46.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.45.1...@kong-ui-public/entities-plugins@9.46.0) (2025-08-01)
 
 
