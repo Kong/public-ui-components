@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.46.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.45.1...@kong-ui-public/entities-plugins@9.46.0) (2025-08-01)
+
+
+### Features
+
+* **entities-plugins:** datakit split canvas into two resizable panels ([#2273](https://github.com/Kong/public-ui-components/issues/2273)) ([a3810fc](https://github.com/Kong/public-ui-components/commit/a3810fcd05a3f973aee6644a06f9f994c4cfd798))
+
+
+
+
+
 ## [9.45.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.45.0...@kong-ui-public/entities-plugins@9.45.1) (2025-07-31)
 
 
