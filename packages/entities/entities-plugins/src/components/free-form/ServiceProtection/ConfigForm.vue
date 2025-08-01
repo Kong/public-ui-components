@@ -5,7 +5,7 @@
     :data="data"
     :schema="schema"
     tag="div"
-    @change="v => $emit('change', v)"
+    @change="handleChange"
   >
     <ObjectField
       as-child
@@ -43,6 +43,10 @@ import type { FormConfig } from '../shared/types'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 
+const emit = defineEmits<{
+  (event: 'change', value: FreeFormPluginData): void
+}>()
+
 defineProps<{
   schema: FormSchema
   data?: FreeFormPluginData
@@ -50,5 +54,16 @@ defineProps<{
 
 const formConfig: FormConfig = {
   hasValue: (data?: FreeFormPluginData): boolean => !!data?.config,
+}
+
+function handleChange(value: FreeFormPluginData) {
+  /**
+   * `namespace` can be undefined, but can't be null.
+   * If it is null, we should delete it from the config object.
+   */
+  if (value.config?.namespace === null) {
+    delete value.config.namespace
+  }
+  emit('change', value)
 }
 </script>
