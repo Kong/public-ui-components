@@ -62,7 +62,7 @@ pnpm --recursive update {package-name}@{version}
 ### Requirements
 
 - [NodeJS >= 18.x](https://nodejs.org/en/download/)
-- [pnpm 8.x](https://pnpm.io/installation) ([_Why pnpm?_](./docs/why-pnpm.md)). We recommend installing via the command shown here, substituting `8.6.12` with the version listed in the [`package.json > volta.pnpm` field](https://github.com/Kong/public-ui-components/blob/main/package.json). For example, for version `8.6.12` you would use the command `curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=8.8.0 sh -`
+- [pnpm 10.12.x](https://pnpm.io/installation) ([_Why pnpm?_](./docs/why-pnpm.md)). We recommend installing via the command shown here, substituting `8.6.12` with the version listed in the [`package.json > volta.pnpm` field](https://github.com/Kong/public-ui-components/blob/main/package.json). For example, for version `8.6.12` you would use the command `curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=8.8.0 sh -`
 
 It is recommended to also _globally_ install [`lerna`](https://lerna.js.org/) with `pnpm` (though not absolutely required)
 

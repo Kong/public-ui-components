@@ -77,7 +77,15 @@
   "pnpm": {
     "overrides": {
       "string-width": "4.2.3"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@evilmartians/lefthook",
+      "@swc/core",
+      "cypress",
+      "esbuild",
+      "nx",
+      "vue-demi"
+    ]
   },
   "workspaces": [
     "packages/*/*"
@@ -102,7 +110,7 @@
   },
   "volta": {
     "node": "18.20.4",
-    "pnpm": "9.12.2"
+    "pnpm": "10.12.1"
   },
-  "packageManager": "pnpm@9.12.2"
+  "packageManager": "pnpm@10.12.1"
 }
