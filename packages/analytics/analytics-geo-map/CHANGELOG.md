@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.116](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.115...@kong-ui-public/analytics-geo-map@0.2.116) (2025-08-04)
+
+
+### Bug Fixes
+
+* **analyticsgeomap:** add missing translations and fix casing [MA-4080] ([#2281](https://github.com/Kong/public-ui-components/issues/2281)) ([aee888f](https://github.com/Kong/public-ui-components/commit/aee888f507d0e92fd0fa6897fedce19a63797c33))
+
+
+
+
+
 ## [0.2.115](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.2.114...@kong-ui-public/analytics-geo-map@0.2.115) (2025-07-24)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-geo-map
