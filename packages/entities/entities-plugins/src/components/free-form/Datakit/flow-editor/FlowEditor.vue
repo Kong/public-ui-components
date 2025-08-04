@@ -17,7 +17,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../locales/en.json'
 import EditorModal from './modal/EditorModal.vue'
 import { provideEditorStore } from '../composables'
-import type { CallNode } from '../types'
+import { MockData } from './node/mock'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -28,21 +28,6 @@ defineProps<{
 
 const modalOpen = ref(false)
 
-provideEditorStore([
-  // todo(zehao): mock data, remove me
-  {
-    type: 'call',
-    name: 'MY_CALL',
-    url: 'https://example.com',
-    method: 'POST',
-    timeout: 5000,
-    ssl_server_name: 'example.com',
-    inputs: {
-      headers: 'request.headers',
-      body: 'request.body',
-      query: 'request.query',
-    },
-    // input: 'request',
-  } as CallNode,
-], [])
+// todo(zehao): mock data, remove later
+provideEditorStore(MockData.configNodes, MockData.uiNodes)
 </script>

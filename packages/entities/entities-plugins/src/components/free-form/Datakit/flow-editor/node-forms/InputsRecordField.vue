@@ -12,7 +12,7 @@
       :items="items"
       :name="name"
       :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
-      @update:model-value="$emit('update:inputs', name as FieldName)"
+      @change="(value: InputOption | null) => $emit('change:inputs', name, value ? value.value : null)"
     />
   </ObjectField>
 </template>
@@ -25,7 +25,7 @@ import type { RecordFieldSchema } from '../../../../../types/plugins/form-schema
 import EnumField from '../../../shared/EnumField.vue'
 import useI18n from '../../../../../composables/useI18n'
 import type { InputOption } from './composables'
-import type { FieldName } from '../../types'
+import type { FieldName, IdConnection } from '../../types'
 
 defineProps<{
   name: string
@@ -33,7 +33,11 @@ defineProps<{
 }>()
 
 defineEmits<{
-  (event: 'update:inputs', fieldName: FieldName): void
+  (
+    event: 'change:inputs',
+    fieldName: FieldName,
+    fieldValue: IdConnection | null,
+  ): void
 }>()
 
 const { getSchema } = useFormShared()
@@ -45,7 +49,7 @@ const childFieldNames = computed(() => {
     return []
   }
 
-  return schema.fields.map(fieldObj => Object.keys(fieldObj)[0])
+  return schema.fields.map(fieldObj => Object.keys(fieldObj)[0]) as FieldName[]
 })
 </script>
 

@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
-import { useEditorState, usePreferences } from '../../composables'
+import { useEditorStore, usePreferences } from '../../composables'
 import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
 import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
@@ -42,7 +42,7 @@ import type { NodeInstance } from '../../types'
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
-const { selectNode, selectedNode, state } = useEditorState()!
+const { selectNode, selectedNode } = useEditorStore()!
 
 const propertiesPanelVisible = ref(false)
 
@@ -50,9 +50,6 @@ const selectNodeAndOpenProperties = (node: NodeInstance) => {
   selectNode(node.id)
   propertiesPanelVisible.value = true
 }
-
-// todo(zehao): delete me
-selectNodeAndOpenProperties(state.value.nodes[0])
 
 const closeProperties = () => {
   propertiesPanelVisible.value = false

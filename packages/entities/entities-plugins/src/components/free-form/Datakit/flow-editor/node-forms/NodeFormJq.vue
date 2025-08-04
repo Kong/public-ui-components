@@ -16,7 +16,7 @@
       resizable
       rows="2"
     />
-    <InputsField />
+    <InputsField :items="[]" />
 
     <!-- Todo(zehao): outputs definition fields -->
   </Form>

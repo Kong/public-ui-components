@@ -4,11 +4,10 @@
     :config="{ updateOnChange: true }"
     :data="formData"
     :schema="CallNodeSchema"
-    @change="console.log"
   >
     <StringField
       name="name"
-      @update:model-value="updateName"
+      @update:model-value="setName"
     />
 
     <KLabel class="dk-node-configuration-label">
@@ -17,29 +16,29 @@
 
     <StringField
       name="url"
-      @update:model-value="updateConfiguration"
+      @update:model-value="setConfig"
     />
 
     <HttpMethodField
       name="method"
-      @update:model-value="updateConfiguration"
+      @update:model-value="setConfig"
     />
 
     <NumberField
       :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.timeout.label')"
       name="timeout"
-      @update:model-value="updateConfiguration"
+      @update:model-value="setConfig"
     />
 
     <StringField
       name="ssl_server_name"
-      @update:model-value="updateConfiguration"
+      @update:model-value="setConfig"
     />
 
     <InputsField
       :items="inputOptions"
-      @update:input="updateInput"
-      @update:inputs="updateInputs"
+      @change:input="setInput"
+      @change:inputs="setInputs"
     />
   </Form>
 </template>
@@ -61,11 +60,11 @@ const formRef = useTemplateRef('form')
 
 const {
   formData,
-  updateName,
-  updateConfiguration,
+  setName,
+  setConfig,
   inputOptions,
-  updateInputs,
-  updateInput,
+  setInputs,
+  setInput,
 } = useNodeFormState(() => formRef.value!.getInnerData())
 </script>
 

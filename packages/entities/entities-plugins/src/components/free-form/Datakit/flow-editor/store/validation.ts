@@ -50,39 +50,6 @@ export function useValidators(stateRef: Ref<EditorState>) {
       : edge
   }
 
-  function buildAdjacency(extra?: { source: NodeId, target: NodeId } | null) {
-    const map = new Map<NodeId, NodeId[]>()
-    for (const e of edges.value) {
-      if (!map.has(e.source)) map.set(e.source, [])
-      map.get(e.source)!.push(e.target)
-      if (!map.has(e.target)) map.set(e.target, [])
-    }
-    if (extra) {
-      if (!map.has(extra.source)) map.set(extra.source, [])
-      map.get(extra.source)!.push(extra.target)
-      if (!map.has(extra.target)) map.set(extra.target, [])
-    }
-    return map
-  }
-
-  function hasCycle(graph: ReadonlyMap<NodeId, readonly NodeId[]>): boolean {
-    const seen = new Set<NodeId>()
-    const stack = new Set<NodeId>()
-
-    function dfs(n: NodeId): boolean {
-      if (stack.has(n)) return true
-      if (seen.has(n)) return false
-      seen.add(n)
-      stack.add(n)
-      for (const next of graph.get(n) ?? []) if (dfs(next)) return true
-      stack.delete(n)
-      return false
-    }
-
-    for (const id of graph.keys()) if (dfs(id)) return true
-    return false
-  }
-
   /* ---------- edge-level validation ---------- */
 
   function validateConnection(raw: EdgeData): ValidationResult {
@@ -147,7 +114,8 @@ export function useValidators(stateRef: Ref<EditorState>) {
 
     if (edge.source === edge.target) errors.push('self-loop not allowed')
 
-    if (hasCycle(buildAdjacency({ source: edge.source, target: edge.target })))
+    const adjacency = buildAdjacency(edges.value, edge)
+    if (hasCycle(adjacency))
       errors.push('connection introduces a cycle')
 
     return errors.length ? { ok: false, errors } : { ok: true }
@@ -179,7 +147,7 @@ export function useValidators(stateRef: Ref<EditorState>) {
         errors.push(`edge "${e.id}" violates response-phase rule`)
     }
 
-    if (hasCycle(buildAdjacency())) errors.push('graph contains cycle')
+    if (hasCycle(buildAdjacency(edges.value))) errors.push('graph contains cycle')
     return errors.length ? { ok: false, errors } : { ok: true }
   }
 
@@ -210,5 +178,42 @@ export function useValidators(stateRef: Ref<EditorState>) {
     validateGraph,
     isValidConnection,
     isValidVueFlowConnection,
+    buildAdjacency,
   }
+}
+
+export function hasCycle(graph: ReadonlyMap<NodeId, readonly NodeId[]>): boolean {
+  const seen = new Set<NodeId>()
+  const stack = new Set<NodeId>()
+
+  function dfs(n: NodeId): boolean {
+    if (stack.has(n)) return true
+    if (seen.has(n)) return false
+    seen.add(n)
+    stack.add(n)
+    for (const next of graph.get(n) ?? []) if (dfs(next)) return true
+    stack.delete(n)
+    return false
+  }
+
+  for (const id of graph.keys()) if (dfs(id)) return true
+  return false
+}
+
+export function buildAdjacency(
+  edges: ReadonlyArray<{ source: NodeId, target: NodeId }>,
+  extra?: { source: NodeId, target: NodeId } | null,
+) {
+  const map = new Map<NodeId, NodeId[]>()
+  for (const e of edges) {
+    if (!map.has(e.source)) map.set(e.source, [])
+    map.get(e.source)!.push(e.target)
+    if (!map.has(e.target)) map.set(e.target, [])
+  }
+  if (extra) {
+    if (!map.has(extra.source)) map.set(extra.source, [])
+    map.get(extra.source)!.push(extra.target)
+    if (!map.has(extra.target)) map.set(extra.target, [])
+  }
+  return map
 }

@@ -3,7 +3,7 @@
     :schema="ResponseSchema"
     @change="console.log"
   >
-    <InputsField />
+    <InputsField :items="[]" />
   </Form>
 </template>
 

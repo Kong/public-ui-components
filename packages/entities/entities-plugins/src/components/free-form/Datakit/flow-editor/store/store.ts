@@ -14,6 +14,7 @@ import type {
   NodeId,
   NodeName,
   UINode,
+  NameConnection,
 } from '../../types'
 import {
   createId,
@@ -322,8 +323,8 @@ export const [provideEditorStore, useEditorStore] = createInjectionState(
       for (const node of state.value.nodes) {
         if (isImplicitType(node.type)) continue
 
-        const inputs: Record<string, string> = {}
-        const outputs: Record<string, string> = {}
+        const inputs: Record<string, NameConnection> = {}
+        const outputs: Record<string, NameConnection> = {}
 
         // incoming -> inputs
         for (const edge of state.value.edges.filter(
@@ -336,7 +337,7 @@ export const [provideEditorStore, useEditorStore] = createInjectionState(
             'output',
             edge.sourceField,
           )?.name
-          const value = sourceFieldName
+          const value: NameConnection = sourceFieldName
             ? `${sourceNode.name}.${sourceFieldName}`
             : sourceNode.name
           const targetFieldName = findFieldById(
@@ -359,7 +360,7 @@ export const [provideEditorStore, useEditorStore] = createInjectionState(
             'input',
             edge.targetField,
           )?.name
-          const value = targetFieldName
+          const value: NameConnection = targetFieldName
             ? `${targetNode.name}.${targetFieldName}`
             : targetNode.name
           const sourceFieldName = findFieldById(

@@ -63,14 +63,18 @@ export function parseIdConnection(idConnection: IdConnection): {
   return { nodeId, fieldId }
 }
 
+export function getNodeMeta(type: NodeType) {
+  return isImplicitType(type)
+    ? IMPLICIT_NODE_META_MAP[type]
+    : CONFIG_NODE_META_MAP[type]
+}
+
 /** Default field names from node meta. */
 export function getFieldsFromMeta(type: NodeType): {
   input: FieldName[]
   output: FieldName[]
 } {
-  const meta = isImplicitType(type)
-    ? IMPLICIT_NODE_META_MAP[type]
-    : CONFIG_NODE_META_MAP[type]
+  const meta = getNodeMeta(type)
 
   const input = meta.io?.input?.fields?.map(({ name }) => name) ?? []
   const output = meta.io?.output?.fields?.map(({ name }) => name) ?? []
