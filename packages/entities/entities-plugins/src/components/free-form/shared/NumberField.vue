@@ -71,7 +71,7 @@ const emit = defineEmits<{
 
 const initialValue = fieldValue!.value
 const modelValue = computed(() => {
-  if (fieldValue?.value != null && !isNaN(fieldValue.value)) {
+  if (fieldValue?.value != null && Number.isFinite(fieldValue.value)) {
     return `${fieldValue.value}`
   } else {
     return ''

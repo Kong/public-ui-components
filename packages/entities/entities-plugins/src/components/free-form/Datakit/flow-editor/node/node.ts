@@ -17,7 +17,7 @@ import type {
   NodeName,
   NodeType,
   ConfigNodeType,
-  FieldName,
+  IOMeta,
 } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -40,9 +40,21 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     summary: getNodeTypeSummary('call'),
     description: getNodeTypeDescription('call'),
     icon: NetworkIcon,
-    fields: {
-      input: ['headers', 'body', 'query'] as FieldName[],
-      output: ['headers', 'body', 'status'] as FieldName[],
+    io: {
+      input: {
+        fields: [
+          { name: 'headers' },
+          { name: 'body' },
+          { name: 'query' },
+        ],
+      } as IOMeta,
+      output: {
+        fields: [
+          { name: 'headers' },
+          { name: 'body' },
+          { name: 'status' },
+        ],
+      } as IOMeta,
     },
   },
   jq: {
@@ -50,14 +62,28 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     summary: getNodeTypeSummary('jq'),
     description: getNodeTypeDescription('jq'),
     icon: CodeblockIcon,
+    io: {
+      input: {
+        fields: [],
+        configurable: true,
+      },
+      output: {
+        fields: [],
+      },
+    },
   },
   exit: {
     type: 'exit',
     summary: getNodeTypeSummary('exit'),
     description: getNodeTypeDescription('exit'),
     icon: GatewayIcon,
-    fields: {
-      input: ['headers', 'body'] as FieldName[],
+    io: {
+      input:{
+        fields: [
+          { name: 'headers' },
+          { name: 'body' },
+        ],
+      } as IOMeta,
     },
   },
   property: {
@@ -65,12 +91,27 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     summary: getNodeTypeSummary('property'),
     description: getNodeTypeDescription('property'),
     icon: StackIcon,
+    io: {
+      input: {
+        fields: [],
+        configurable: true,
+      },
+      output: {
+        fields: [],
+      },
+    },
   },
   static: {
     type: 'static',
     summary: getNodeTypeSummary('static'),
     description: getNodeTypeDescription('static'),
     icon: VitalsIcon,
+    io: {
+      output: {
+        fields: [],
+        configurable: true,
+      },
+    },
   },
 }
 
@@ -78,29 +119,51 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   request: {
     type: 'request',
     description: getNodeTypeDescription('request'),
-    fields: {
-      output: ['headers', 'body', 'query'] as FieldName[],
+    io: {
+      output: {
+        fields: [
+          { name: 'headers' },
+          { name: 'body' },
+          { name: 'query' },
+        ],
+      } as IOMeta,
     },
   },
   service_request: {
     type: 'service_request',
     description: getNodeTypeDescription('service_request'),
-    fields: {
-      input: ['headers', 'body', 'query'] as FieldName[],
+    io: {
+      input: {
+        fields: [
+          { name: 'headers' },
+          { name: 'body' },
+          { name: 'query' },
+        ],
+      } as IOMeta,
     },
   },
   service_response: {
     type: 'service_response',
     description: getNodeTypeDescription('service_response'),
-    fields: {
-      output: ['headers', 'body'] as FieldName[],
+    io: {
+      output: {
+        fields: [
+          { name: 'headers' },
+          { name: 'body' },
+        ],
+      } as IOMeta,
     },
   },
   response: {
     type: 'response',
     description: getNodeTypeDescription('response'),
-    fields: {
-      input: ['headers', 'body'] as FieldName[],
+    io: {
+      input: {
+        fields: [
+          { name: 'headers' },
+          { name: 'body' },
+        ],
+      } as IOMeta,
     },
   },
 }

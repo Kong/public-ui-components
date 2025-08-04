@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.47.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.46.0...@kong-ui-public/entities-plugins@9.47.0) (2025-08-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - improve io meta ([#2278](https://github.com/Kong/public-ui-components/issues/2278)) ([7a04961](https://github.com/Kong/public-ui-components/commit/7a0496185115ccc2bef1d9cbe27380e33451e36b))
+
+
+### Features
+
+* **entities-plugins:** freeform - suport lazy update input ([#2277](https://github.com/Kong/public-ui-components/issues/2277)) ([e3c8fc0](https://github.com/Kong/public-ui-components/commit/e3c8fc0b2985e39fb558e076a96ae20bcb79cd57))
+* **entities-plugins:** freeform - support one-way data sync ([#2276](https://github.com/Kong/public-ui-components/issues/2276)) ([d3a16ea](https://github.com/Kong/public-ui-components/commit/d3a16ea9be898ed8b9d12b445f43d87c6a3d34ff))
+
+
+
+
+
+# [9.46.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.45.1...@kong-ui-public/entities-plugins@9.46.0) (2025-08-01)
+
+
+### Features
+
+* **entities-plugins:** datakit split canvas into two resizable panels ([#2273](https://github.com/Kong/public-ui-components/issues/2273)) ([a3810fc](https://github.com/Kong/public-ui-components/commit/a3810fcd05a3f973aee6644a06f9f994c4cfd798))
+
+
+
+
+
+## [9.45.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.45.0...@kong-ui-public/entities-plugins@9.45.1) (2025-07-31)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - editorstate->editorstore, fix node type ([#2272](https://github.com/Kong/public-ui-components/issues/2272)) ([d73ffc8](https://github.com/Kong/public-ui-components/commit/d73ffc80c4e540093cfc43c4e30b224d3d477c45))
+
+
+
+
+
+# [9.45.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.44.2...@kong-ui-public/entities-plugins@9.45.0) (2025-07-31)
+
+
+### Features
+
+* **entities-plugins:** datakit store, improve types ([#2259](https://github.com/Kong/public-ui-components/issues/2259)) ([55b9198](https://github.com/Kong/public-ui-components/commit/55b91981f282a15e933918d21efecf64c1569382))
+
+
+
+
+
 ## [9.44.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.44.1...@kong-ui-public/entities-plugins@9.44.2) (2025-07-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

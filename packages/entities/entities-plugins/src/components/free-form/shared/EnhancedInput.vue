@@ -1,6 +1,5 @@
 <template>
   <InputComponent
-    v-if="!multiline"
     v-bind="$attrs"
     :model-value="modelValue"
     @change="handleChange"

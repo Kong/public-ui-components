@@ -62,18 +62,18 @@
 
           <template v-if="inputHandlesExpanded">
             <div
-              v-for="(fieldName, i) in data.fields.input"
-              :key="`input-${fieldName}`"
+              v-for="(field, i) in data.fields.input"
+              :key="`input-${field.id}`"
               class="handle indented"
             >
               <Handle
-                :id="`input-${fieldName}`"
+                :id="`input-${field.id}`"
                 :position="inputPosition"
                 type="target"
               />
               <div class="handle-label-wrapper">
                 <div class="handle-label">
-                  {{ fieldName }}
+                  {{ field.name }}
                 </div>
                 <HandleTwig
                   :color="handleTwigColor"
@@ -120,13 +120,13 @@
 
           <template v-if="outputHandlesExpanded">
             <div
-              v-for="(fieldName, i) in data.fields.output"
-              :key="`output-${fieldName}`"
+              v-for="(field, i) in data.fields.output"
+              :key="`output-${field.id}`"
               class="handle indented"
             >
               <div class="handle-label-wrapper">
                 <div class="handle-label">
-                  {{ fieldName }}
+                  {{ field.name }}
                 </div>
                 <HandleTwig
                   :color="handleTwigColor"
@@ -135,7 +135,7 @@
                 />
               </div>
               <Handle
-                :id="`output-${fieldName}`"
+                :id="`output-${field.id}`"
                 :position="outputPosition"
                 type="source"
               />

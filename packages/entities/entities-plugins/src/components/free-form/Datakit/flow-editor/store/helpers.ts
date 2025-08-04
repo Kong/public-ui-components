@@ -71,7 +71,10 @@ export function getFieldsFromMeta(type: NodeType): {
   const meta = isImplicitType(type)
     ? IMPLICIT_NODE_META_MAP[type]
     : CONFIG_NODE_META_MAP[type]
-  return { input: meta.fields?.input ?? [], output: meta.fields?.output ?? [] }
+
+  const input = meta.io?.input?.fields?.map(({ name }) => name) ?? []
+  const output = meta.io?.output?.fields?.map(({ name }) => name) ?? []
+  return { input, output }
 }
 
 /** Build NodeField array from names. */
@@ -126,10 +129,7 @@ export function makeDefaultImplicitUINode(name: ImplicitNodeName): UINode {
     name,
     phase,
     position: { x: 0, y: 0 },
-    fields: {
-      input: meta.fields?.input ?? [],
-      output: meta.fields?.output ?? [],
-    },
+    fields: getFieldsFromMeta(meta.type),
     expanded: {},
   }
 }
