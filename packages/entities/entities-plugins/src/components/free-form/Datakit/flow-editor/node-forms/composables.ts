@@ -1,36 +1,22 @@
 import { computed } from 'vue'
 import { useEditorState } from '../store/store'
-import type { BaseConfigNode, FieldId, FieldName, NodeId, NodeName } from '../../types'
-import { findFieldById } from '../store/helpers'
+import type { BaseConfigNode, EdgeData, FieldId, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
+import { findFieldById, findFieldByName, parseIdConnection, parseNameConnection } from '../store/helpers'
 
 export type InputOption = {
-  value: NodeId | `${NodeId}.${FieldId}`
-  label: NodeName | `${NodeName}.${FieldName}`
+  value: IdConnection
+  label: NameConnection
+}
+
+export type BaseFormData = {
+  name: NodeName
+  input?: IdConnection
+  inputs?: Record<FieldName, IdConnection>
 }
 
 export function useNodeFormState(
-  getFormInnerData: () => Record<string, unknown>,
+  getFormInnerData: () => BaseFormData,
 ) {
-  /**
-   * formData
-
-   * updateName
-   * updateConfiguration
-
-   * addField
-   * removeField
-   * renameField
-   * updateInputs
-   * 1. 新增 input -> connectEdge
-      2. 新增 input 并清空 inputs -> replaceConnection
-      3. 新增 inputs -> connectEdge
-      4. 新增 inputs 并清空 input -> replaceConnection
-      5. 变更 input -> replaceConnection
-      6. 变更 inputs -> replaceConnection
-      7. 删除 input -> disconnectEdge
-      8. 删除 inputs -> disconnectEdge
-   */
-
   const {
     selectedNode,
     state,
@@ -40,6 +26,9 @@ export function useNodeFormState(
     renameField: renameFieldRaw,
     removeField: removeFieldRaw,
     replaceConfig,
+    disconnectEdge,
+    connectEdge,
+    replaceConnection,
   } = useEditorState()!
 
   const selectedNodeId = computed(() => selectedNode.value!.id)
@@ -51,11 +40,11 @@ export function useNodeFormState(
   const formData = computed(() => {
     const edges = state.value.edges.filter(e => e.target === selectedNodeId.value)
 
-    const inputsAndInput = edges.reduce<Pick<BaseConfigNode, 'input' | 'inputs'>>((acc, e) => {
+    const inputsAndInput = edges.reduce<Pick<BaseFormData, 'input' | 'inputs'>>((acc, e) => {
       const sourceNode = getNodeById(e.source)!
       const sourceFieldId = findFieldById(sourceNode, 'output', e.sourceField)?.id
       const targetFieldName = findFieldById(selectedNode.value!, 'input', e.targetField)?.name
-      const inputValue = sourceNode.id + (sourceFieldId ? `.${sourceFieldId}` : '')
+      const inputValue = sourceNode.id + (sourceFieldId ? `.${sourceFieldId}` : '') as IdConnection
 
       if (!targetFieldName) {
         acc.input = inputValue
@@ -98,9 +87,62 @@ export function useNodeFormState(
     removeFieldRaw(selectedNodeId.value, fieldId)
   }
 
-  const updateInputs = () => {
+  const updateInputs = (fieldName: FieldName) => {
     const { input, inputs } = getFormInnerData()
     console.log('updateInputs', { input, inputs })
+    console.log('fieldName', fieldName)
+
+    const clearing = inputs![fieldName] == null
+
+    // clear the input anyway
+    if (input) {
+      const {
+        nodeId: sourceNodeId,
+        fieldId: sourceFieldId,
+      } = parseIdConnection(input)
+
+      const inputEdge = state.value.edges.find(e =>
+        e.target === selectedNodeId.value &&
+        e.source === sourceNodeId &&
+        e.sourceField === sourceFieldId,
+      )
+
+      if (inputEdge) {
+        disconnectEdge(inputEdge.id, false)
+      }
+    }
+
+    if (clearing) {
+      const targetFieldId = findFieldByName(selectedNode.value!, 'input', fieldName)!.id
+      // todo
+    }
+  }
+
+  const updateInput = () => {
+    const { input: nextInput } = getFormInnerData()
+    const edges = state.value.edges.filter(e => e.target === selectedNodeId.value)
+    const clearing = nextInput == null
+
+    // clear existing edges
+    edges.forEach(edge => {
+      // if user is clearing the input, commit the change
+      disconnectEdge(edge.id, clearing)
+    })
+
+    // connect the new input
+    if (nextInput) {
+      const [sourceNodeId, sourceFieldId] = nextInput.split('.')
+
+      // prepare new edge data
+      const edgeData: EdgeData = {
+        source: sourceNodeId as NodeId,
+        sourceField: sourceFieldId as FieldId | undefined,
+        target: selectedNodeId.value,
+        targetField: undefined,
+      }
+
+      connectEdge(edgeData)
+    }
   }
 
   /**
@@ -138,5 +180,6 @@ export function useNodeFormState(
     removeField,
 
     updateInputs,
+    updateInput,
   }
 }

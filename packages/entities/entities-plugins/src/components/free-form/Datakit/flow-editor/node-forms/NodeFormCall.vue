@@ -38,7 +38,8 @@
 
     <InputsField
       :items="inputOptions"
-      @update="updateInputs"
+      @update:input="updateInput"
+      @update:inputs="updateInputs"
     />
   </Form>
 </template>
@@ -64,6 +65,7 @@ const {
   updateConfiguration,
   inputOptions,
   updateInputs,
+  updateInput,
 } = useNodeFormState(() => formRef.value!.getInnerData())
 </script>
 

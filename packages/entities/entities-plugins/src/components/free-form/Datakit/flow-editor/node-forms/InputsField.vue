@@ -1,17 +1,18 @@
 <template>
   <EnumField
     v-if="getSchema('input')"
+    clearable
     :items="items"
     label="Inputs"
     name="input"
     :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
-    @update:model-value="$emit('update')"
+    @update:model-value="$emit('update:input')"
   />
 
   <InputsField
     :items="items"
     name="inputs"
-    @update="$emit('update')"
+    @update:inputs="$emit('update:inputs', $event)"
   />
 </template>
 
@@ -24,16 +25,18 @@ import InputsRecordField from './InputsRecordField.vue'
 import InputsMapField from './InputsMapField.vue'
 import useI18n from '../../../../../composables/useI18n'
 import type { InputOption } from './composables'
+import type { FieldName } from '../../types'
 
 defineProps<{
   items: InputOption[]
 }>()
 
 defineEmits<{
-  (event: 'update'): void
-  (event: 'addField'): void
-  (event: 'removeField'): void
-  (event: 'renameField'): void
+  (event: 'update:input'): void
+  (event: 'update:inputs', fieldName: FieldName): void
+  (event: 'addField', fieldName: string): void
+  (event: 'removeField', fieldName: string): void
+  (event: 'renameField', fieldName: string): void
 }>()
 
 const { getSchema } = useFormShared()
