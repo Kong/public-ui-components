@@ -20,6 +20,10 @@ export enum SupportedEntityType {
   Target = 'target',
   Vault = 'vault',
   RedisConfiguration = 'redis_configuration',
+  BackendCluster = 'backend_cluster',
+  VirtualCluster = 'virtual_cluster',
+  Listener = 'listener',
+  Policy = 'policy',
   // Use this for any entity type that is not supported by terraform
   // If entityType is 'other' terraform scripts will not be available
   // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!
