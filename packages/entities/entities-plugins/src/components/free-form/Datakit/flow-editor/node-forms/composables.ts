@@ -1,6 +1,6 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import { useEditorStore } from '../store/store'
-import { buildAdjacency, hasCycle, useValidators } from '../store/validation'
+import { buildAdjacency, hasCycle } from '../store/validation'
 import type { FieldId, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
 
