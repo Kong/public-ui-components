@@ -1,31 +1,31 @@
-import { computed, ref } from 'vue'
 import { createInjectionState } from '@vueuse/core'
+import { computed, ref } from 'vue'
 import type {
   ConfigNode,
   EdgeData,
-  EdgeInstance,
   EdgeId,
+  EdgeInstance,
   EditorState,
   FieldId,
   FieldName,
-  NodePhase,
-  NodeInstance,
   NodeId,
+  NodeInstance,
   NodeName,
+  NodePhase,
   UINode,
   NameConnection,
   CreateNodePayload,
 } from '../../types'
+import { isImplicitName, isImplicitType } from '../node/node'
 import {
   createId,
   deepClone,
   findFieldById,
   generateNodeName,
 } from './helpers'
-import { isImplicitName, isImplicitType } from '../node/node'
+import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
-import { useTaggedHistory } from './history'
 import type { Edge, Node } from '@vue-flow/core'
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
@@ -50,12 +50,33 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           state.value.nodes.map((node) => [node.name, node]),
         ),
     )
-    const edgeMapById = computed(
-      () =>
-        new Map<EdgeId, EdgeInstance>(
-          state.value.edges.map((edge) => [edge.id, edge]),
-        ),
+    const edgeMaps = computed(
+      () => {
+        const edgeMapById = new Map<EdgeId, EdgeInstance>()
+        const edgeIdMapByNodeId = new Map<NodeId, Set<EdgeId>>()
+
+        state.value.edges.map((edge) => {
+          edgeMapById.set(edge.id, edge)
+
+          if (!edgeIdMapByNodeId.has(edge.source)) {
+            edgeIdMapByNodeId.set(edge.source, new Set())
+          }
+          edgeIdMapByNodeId.get(edge.source)!.add(edge.id)
+
+          if (!edgeIdMapByNodeId.has(edge.target)) {
+            edgeIdMapByNodeId.set(edge.target, new Set())
+          }
+          edgeIdMapByNodeId.get(edge.target)!.add(edge.id)
+        })
+
+        return {
+          edgeMapById,
+          edgeIdMapByNodeId,
+        }
+      },
     )
+    const edgeMapById = computed(() => edgeMaps.value.edgeMapById)
+    const edgeIdMapByNodeId = computed(() => edgeMaps.value.edgeIdMapByNodeId)
 
     // sets
     const nodeNames = computed(
@@ -80,6 +101,27 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     }
     function getEdgeById(id: EdgeId) {
       return edgeMapById.value.get(id)
+    }
+
+    // O(n) getters (n = edges)
+    function getEdgesByNodeId(nodeId: NodeId) {
+      if (!edgeIdMapByNodeId.value.has(nodeId)) {
+        return []
+      }
+      const edges: EdgeInstance[] = []
+      edgeIdMapByNodeId.value.get(nodeId)!.forEach(edgeId => {
+        const edge = getEdgeById(edgeId)
+        if (edge) {
+          edges.push(edge)
+        }
+      })
+      return edges
+    }
+    function getInEdgesByNodeId(nodeId: NodeId) {
+      return getEdgesByNodeId(nodeId).filter((edge => edge.target === nodeId))
+    }
+    function getOutEdgesByNodeId(nodeId: NodeId) {
+      return getEdgesByNodeId(nodeId).filter((edge => edge.source === nodeId))
     }
 
     const selectedNode = computed(() =>
@@ -415,69 +457,6 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       history.reset()
     }
 
-    /* ---------- Vue Flow adapters ---------- */
-
-    function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
-      const sourceNode = getNodeById(edge.source)
-      const targetNode = getNodeById(edge.target)
-      return !!(
-        sourceNode &&
-        targetNode &&
-        sourceNode.phase === phase &&
-        targetNode.phase === phase
-      )
-    }
-
-    const requestNodes = computed<Array<Node<NodeInstance>>>(() =>
-      state.value.nodes
-        .filter((node) => node.phase === 'request')
-        .map((node) => ({
-          id: node.id,
-          type: 'flow',
-          position: node.position,
-          data: node,
-          deletable: !isImplicitType(node.type),
-        } satisfies Node<NodeInstance>)),
-    )
-
-    const requestEdges = computed<Array<Edge<EdgeInstance>>>(() =>
-      state.value.edges
-        .filter((edge) => edgeInPhase(edge, 'request'))
-        .map((edge) => ({
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-          sourceHandle: edge.sourceField,
-          targetHandle: edge.targetField,
-          data: edge,
-        })),
-    )
-
-    const responseNodes = computed<Array<Node<NodeInstance>>>(() =>
-      state.value.nodes
-        .filter((node) => node.phase === 'response')
-        .map((node) => ({
-          id: node.id,
-          type: 'flow',
-          position: node.position,
-          data: node,
-          deletable: !isImplicitType(node.type),
-        })),
-    )
-
-    const responseEdges = computed<Array<Edge<EdgeInstance>>>(() =>
-      state.value.edges
-        .filter((edge) => edgeInPhase(edge, 'response'))
-        .map((edge) => ({
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-          sourceHandle: edge.sourceField,
-          targetHandle: edge.targetField,
-          data: edge,
-        })),
-    )
-
     return {
       // state
       state,
@@ -487,9 +466,13 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       nodeMapById,
       nodeMapByName,
       edgeMapById,
+      edgeIdMapByNodeId,
       getNodeById,
       getNodeByName,
       getEdgeById,
+      getEdgesByNodeId,
+      getInEdgesByNodeId,
+      getOutEdgesByNodeId,
       selectedNode,
       selectNode,
 
@@ -525,12 +508,6 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       canRedo: history.canRedo,
       clear: history.clear,
       reset: history.reset,
-
-      // Vue Flow views
-      requestNodes,
-      requestEdges,
-      responseNodes,
-      responseEdges,
 
       // validation helpers for UI
       isValidConnection,
