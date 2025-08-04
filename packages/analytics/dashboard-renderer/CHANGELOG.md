@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.1.5...@kong-ui-public/dashboard-renderer@6.2.0) (2025-08-04)
+
+
+### Features
+
+* **dashboards:** disable zoom if event handler not present [MA-4159] ([#2275](https://github.com/Kong/public-ui-components/issues/2275)) ([a05092c](https://github.com/Kong/public-ui-components/commit/a05092c35b69b4e68b8ddc29b4bcd1dd0375ed80))
+
+
+
+
+
 ## [6.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.1.4...@kong-ui-public/dashboard-renderer@6.1.5) (2025-08-04)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
