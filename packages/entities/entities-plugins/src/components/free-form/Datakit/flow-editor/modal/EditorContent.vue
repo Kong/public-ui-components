@@ -36,7 +36,7 @@ import { usePreferences, useEditorStoreOrThrow } from '../../composables'
 import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
 import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
-import { nextTick, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import type { NodeInstance } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -61,6 +61,7 @@ const selectNodeAndOpenProperties = (node: NodeInstance) => {
 }
 
 const closeProperties = () => {
+  // When user switching between nodes, we don't want to close the properties panel
   setTimeout(() => {
     if (locking) return
     setVisibility(false)
