@@ -129,7 +129,8 @@ defineProps({
         background-color: $kui-color-background-neutral-weakest;
       }
 
-      td {
+      td,
+      th {
         &.sticky-column,
         &.actions-column {
           background-color: $kui-color-background-neutral-weakest !important;
