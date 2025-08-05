@@ -12,6 +12,6 @@
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import Field from '../../../shared/Field.vue'
-import OutputValueField from '../fields/OutputValueField.vue'
-import { StaticNodeSchema } from './mock'
+import OutputValueField from './OutputValueField.vue'
+import { StaticNodeSchema } from '../node/mock'
 </script>

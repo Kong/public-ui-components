@@ -12,6 +12,8 @@ import type {
   UINode,
   ConfigNodeType,
   ConfigNodeName,
+  NameConnection,
+  IdConnection,
 } from '../../types'
 import {
   CONFIG_NODE_META_MAP,
@@ -39,15 +41,32 @@ export function createId<T extends 'node' | 'edge' | 'field'>(
 }
 
 /** Parse "NODE" or "NODE.FIELD". */
-export function parseConnection(connection: string): {
+export function parseNameConnection(nameConnection: NameConnection): {
   nodeName: NodeName
   fieldName?: FieldName
 } {
-  const [nodeName, fieldName] = connection.split('.') as [
+  const [nodeName, fieldName] = nameConnection.split('.') as [
     NodeName,
     FieldName | undefined,
   ]
   return { nodeName, fieldName }
+}
+
+export function parseIdConnection(idConnection: IdConnection): {
+  nodeId: NodeId
+  fieldId?: FieldId
+} {
+  const [nodeId, fieldId] = idConnection.split('.') as [
+    NodeId,
+    FieldId | undefined,
+  ]
+  return { nodeId, fieldId }
+}
+
+export function getNodeMeta(type: NodeType) {
+  return isImplicitType(type)
+    ? IMPLICIT_NODE_META_MAP[type]
+    : CONFIG_NODE_META_MAP[type]
 }
 
 /** Default field names from node meta. */
@@ -55,9 +74,7 @@ export function getFieldsFromMeta(type: NodeType): {
   input: FieldName[]
   output: FieldName[]
 } {
-  const meta = isImplicitType(type)
-    ? IMPLICIT_NODE_META_MAP[type]
-    : CONFIG_NODE_META_MAP[type]
+  const meta = getNodeMeta(type)
 
   const input = meta.io?.input?.fields?.map(({ name }) => name) ?? []
   const output = meta.io?.output?.fields?.map(({ name }) => name) ?? []

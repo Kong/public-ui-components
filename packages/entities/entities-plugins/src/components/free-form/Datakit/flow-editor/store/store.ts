@@ -14,6 +14,7 @@ import type {
   NodeId,
   NodeName,
   UINode,
+  NameConnection,
 } from '../../types'
 import {
   createId,
@@ -26,7 +27,7 @@ import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
 import { useTaggedHistory } from './history'
 
-export const [provideEditorStore, useEditorStore] = createInjectionState(
+const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
   function createState(configNodes: ConfigNode[], uiNodes: UINode[]) {
     const state = ref<EditorState>(initEditorState(configNodes, uiNodes))
     const selection = ref<NodeId>()
@@ -322,8 +323,8 @@ export const [provideEditorStore, useEditorStore] = createInjectionState(
       for (const node of state.value.nodes) {
         if (isImplicitType(node.type)) continue
 
-        const inputs: Record<string, string> = {}
-        const outputs: Record<string, string> = {}
+        const inputs: Record<string, NameConnection> = {}
+        const outputs: Record<string, NameConnection> = {}
 
         // incoming -> inputs
         for (const edge of state.value.edges.filter(
@@ -336,7 +337,7 @@ export const [provideEditorStore, useEditorStore] = createInjectionState(
             'output',
             edge.sourceField,
           )?.name
-          const value = sourceFieldName
+          const value: NameConnection = sourceFieldName
             ? `${sourceNode.name}.${sourceFieldName}`
             : sourceNode.name
           const targetFieldName = findFieldById(
@@ -359,7 +360,7 @@ export const [provideEditorStore, useEditorStore] = createInjectionState(
             'input',
             edge.targetField,
           )?.name
-          const value = targetFieldName
+          const value: NameConnection = targetFieldName
             ? `${targetNode.name}.${targetFieldName}`
             : targetNode.name
           const sourceFieldName = findFieldById(
@@ -535,3 +536,13 @@ export const [provideEditorStore, useEditorStore] = createInjectionState(
     }
   },
 )
+
+export { provideEditorStore }
+
+export function useEditorStore() {
+  const store = useOptionalEditorStore()
+  if (!store) {
+    throw new Error('Editor state is not provided. Ensure you are using provideEditorStore in a parent component.')
+  }
+  return store
+}

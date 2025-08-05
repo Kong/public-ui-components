@@ -17,6 +17,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../locales/en.json'
 import EditorModal from './modal/EditorModal.vue'
 import { provideEditorStore } from '../composables'
+import { MockData } from './node/mock'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -27,5 +28,6 @@ defineProps<{
 
 const modalOpen = ref(false)
 
-provideEditorStore([], [])
+// todo(zehao): mock data, remove later
+provideEditorStore(MockData.configNodes, MockData.uiNodes)
 </script>

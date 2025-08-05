@@ -18,7 +18,7 @@ import {
   getFieldsFromMeta,
   IMPLICIT_NODE_NAMES,
   makeDefaultImplicitUINode,
-  parseConnection,
+  parseNameConnection,
   toFieldArray,
 } from './helpers'
 
@@ -150,14 +150,14 @@ export function collectConnectionsFromConfigNode(
   const self = configNode.name
 
   if (configNode.input) {
-    const { nodeName, fieldName } = parseConnection(configNode.input)
+    const { nodeName, fieldName } = parseNameConnection(configNode.input)
     if (nodeName)
       out.push({ source: nodeName, sourceField: fieldName, target: self })
   }
 
   if (configNode.inputs) {
     for (const [toFieldName, connection] of Object.entries(configNode.inputs)) {
-      const { nodeName, fieldName } = parseConnection(connection)
+      const { nodeName, fieldName } = parseNameConnection(connection)
       if (nodeName) {
         out.push({
           source: nodeName,
@@ -170,7 +170,7 @@ export function collectConnectionsFromConfigNode(
   }
 
   if (configNode.output) {
-    const { nodeName, fieldName } = parseConnection(configNode.output)
+    const { nodeName, fieldName } = parseNameConnection(configNode.output)
     if (nodeName)
       out.push({ source: self, target: nodeName, targetField: fieldName })
   }
@@ -179,7 +179,7 @@ export function collectConnectionsFromConfigNode(
     for (const [fromFieldName, connection] of Object.entries(
       configNode.outputs,
     )) {
-      const { nodeName, fieldName } = parseConnection(connection)
+      const { nodeName, fieldName } = parseNameConnection(connection)
       if (nodeName) {
         out.push({
           source: self,

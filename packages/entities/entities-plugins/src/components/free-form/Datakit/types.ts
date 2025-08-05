@@ -135,7 +135,7 @@ export type NodePhase = 'request' | 'response'
 /**
  * Base shape shared by every concrete node type.
  */
-interface BaseConfigNode {
+export interface BaseConfigNode {
   /**
    * Unique label for referencing the node in connections.
    */
@@ -149,21 +149,21 @@ interface BaseConfigNode {
   /**
    * node input (`NODE` or `NODE.FIELD`)
    */
-  input?: string
+  input?: NameConnection
 
   /**
    * node inputs
    */
-  inputs?: Record<FieldName, string>
+  inputs?: Record<FieldName, NameConnection>
   /**
    * node output (`NODE` or `NODE.FIELD`)
    */
-  output?: string
+  output?: NameConnection
 
   /**
    * node inputs
    */
-  outputs?: Record<FieldName, string>
+  outputs?: Record<FieldName, NameConnection>
 }
 
 /**
@@ -198,33 +198,33 @@ export interface CallNode extends BaseConfigNode {
   url: string
 
   /** call node input (`NODE` or `NODE.FIELD`) */
-  input?: string
+  input?: NameConnection
 
   /**
    * call node inputs
    */
   inputs?: {
     /** HTTP request body (`NODE` or `NODE.FIELD`) */
-    body?: string
+    body?: NameConnection
     /** HTTP request headers (`NODE` or `NODE.FIELD`) */
-    headers?: string
+    headers?: NameConnection
     /** HTTP request query (`NODE` or `NODE.FIELD`) */
-    query?: string
+    query?: NameConnection
   }
 
   /** call node output (`NODE` or `NODE.FIELD`) */
-  output?: string
+  output?: NameConnection
 
   /**
    * call node outputs
    */
   outputs?: {
     /** HTTP response body (`NODE` or `NODE.FIELD`) */
-    body?: string
+    body?: NameConnection
     /** HTTP response headers (`NODE` or `NODE.FIELD`) */
-    headers?: string
+    headers?: NameConnection
     /** HTTP response status code (`NODE` or `NODE.FIELD`) */
-    status?: string
+    status?: NameConnection
   }
 }
 
@@ -248,16 +248,16 @@ export interface ExitNode extends BaseConfigNode {
   warn_headers_sent?: boolean
 
   /** exit node input (`NODE` or `NODE.FIELD`) */
-  input?: string
+  input?: NameConnection
 
   /**
    * exit node inputs
    */
   inputs?: {
     /** HTTP response body (`NODE` or `NODE.FIELD`) */
-    body?: string
+    body?: NameConnection
     /** HTTP response headers (`NODE` or `NODE.FIELD`) */
-    headers?: string
+    headers?: NameConnection
   }
 }
 
@@ -276,15 +276,15 @@ export interface JqNode extends BaseConfigNode {
   jq: string
 
   /** filter input (`NODE` or `NODE.FIELD`) */
-  input?: string
+  input?: NameConnection
 
   /**
    * filter input(s)
    */
-  inputs?: Record<FieldName, string>
+  inputs?: Record<FieldName, NameConnection>
 
   /** filter output (`NODE` or `NODE.FIELD`) */
-  output?: string
+  output?: NameConnection
 }
 
 /**
@@ -314,13 +314,13 @@ export interface PropertyNode extends BaseConfigNode {
    * mode and writes input data to the property. Otherwise, the node
    * operates in GET mode and reads the property.
    */
-  input?: string
+  input?: NameConnection
 
   /**
    * Property output. This can be connected regardless of whether the
    * node is operating in GET mode or SET mode.
    */
-  output?: string
+  output?: NameConnection
 }
 
 /**
@@ -337,12 +337,12 @@ export interface StaticNode extends BaseConfigNode {
   /**
    * The entire `.values` map (`NODE` or `NODE.FIELD`).
    */
-  output?: string
+  output?: NameConnection
 
   /**
    * Individual items from `.values`, referenced by key.
    */
-  outputs?: Record<FieldName, string>
+  outputs?: Record<FieldName, NameConnection>
 }
 
 /**
@@ -362,6 +362,9 @@ export type ConfigNode =
 export type NodeId = `node:${number}`
 export type EdgeId = `edge:${number}`
 export type FieldId = `field:${number}`
+
+export type IdConnection = NodeId | `${NodeId}.${FieldId}`
+export type NameConnection = NodeName | `${NodeName}.${FieldName}`
 
 export type FieldName = Brand<string, 'FieldName'>
 

@@ -17,15 +17,14 @@
     </aside>
     <div class="main">
       <EditorMain
-        @click:backdrop="handleBackdropClick"
-        @click:node="handleNodeClick"
+        @click:backdrop="closeProperties"
+        @click:node="selectNodeAndOpenProperties"
       />
     </div>
 
     <NodePropertiesPanel
-      :node="selectedNode"
       :visible="propertiesPanelVisible"
-      @close="propertiesPanelVisible = false"
+      @close="closeProperties"
     />
   </div>
 </template>
@@ -33,29 +32,48 @@
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
-import { usePreferences } from '../../composables'
+import { usePreferences, useEditorStore } from '../../composables'
 import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
 import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import type { NodeInstance } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
+const { selectNode, selectedNode } = useEditorStore()
 
 const propertiesPanelVisible = ref(false)
-const selectedNode = ref<NodeInstance | null>(null)
+let locking = false
 
-const handleNodeClick = (node: NodeInstance) => {
-  propertiesPanelVisible.value = true
-  selectedNode.value = node
+const setVisibility = (visible: boolean) => {
+  propertiesPanelVisible.value = visible
 }
 
-const handleBackdropClick = () => {
-  propertiesPanelVisible.value = false
-  selectedNode.value = null
+const selectNodeAndOpenProperties = (node: NodeInstance) => {
+  locking = true
+  setTimeout(() => {
+    locking = false
+  }, 10)
+  selectNode(node.id)
+  setVisibility(true)
 }
+
+const closeProperties = () => {
+  // When user switching between nodes, we don't want to close the properties panel
+  setTimeout(() => {
+    if (locking) return
+    setVisibility(false)
+  }, 0)
+}
+
+watch(selectedNode, node => {
+  if (!node) {
+    setVisibility(false)
+  }
+})
+
 </script>
 
 <style lang="scss" scoped>

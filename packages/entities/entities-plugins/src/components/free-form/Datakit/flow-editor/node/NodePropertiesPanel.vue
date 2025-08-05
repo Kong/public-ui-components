@@ -9,16 +9,16 @@
     @close="$emit('close')"
   >
     <template
-      v-if="node"
+      v-if="selectedNode"
       #title
     >
-      <NodeBadge :type="node.type" />
+      <NodeBadge :type="selectedNode.type" />
     </template>
 
     <div
-      v-if="node"
+      v-if="selectedNode"
       class="dk-node-properties-panel-desc"
-      v-html="getNodeTypeDescription(node.type)"
+      v-html="getNodeTypeDescription(selectedNode.type)"
     />
 
     <component
@@ -33,27 +33,27 @@
 import NodeBadge from './NodeBadge.vue'
 
 import { DK_NODE_PROPERTIES_PANEL_OFFSET_TOP, DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
-import NodeFormCall from './NodeFormCall.vue'
-import NodeFormServiceRequest from './NodeFormServiceRequest.vue'
-import NodeFormResponse from './NodeFormResponse.vue'
-import NodeFormJq from './NodeFormJq.vue'
-import NodeFormStatic from './NodeFormStatic.vue'
+import NodeFormCall from '../node-forms/NodeFormCall.vue'
+import NodeFormServiceRequest from '../node-forms/NodeFormServiceRequest.vue'
+import NodeFormResponse from '../node-forms/NodeFormResponse.vue'
+import NodeFormJq from '../node-forms/NodeFormJq.vue'
+import NodeFormStatic from '../node-forms/NodeFormStatic.vue'
 
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
-import type { NodeInstance } from '../../types'
 import { computed } from 'vue'
+import { useEditorStore } from '../../composables'
+
+const { selectedNode } = useEditorStore()
 
 const {
   maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,
   offsetTop = DK_NODE_PROPERTIES_PANEL_OFFSET_TOP,
   visible,
-  node,
 } = defineProps<{
   maxWidth?: string
   offsetTop?: string
   visible?: boolean
-  node?: NodeInstance | null
 }>()
 
 defineEmits<{
@@ -61,7 +61,7 @@ defineEmits<{
 }>()
 
 const form = computed(() => {
-  switch (node?.type) {
+  switch (selectedNode.value?.type) {
     case 'call':
       return NodeFormCall
     case 'service_request':
