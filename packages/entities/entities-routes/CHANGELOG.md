@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.14.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.14.11...@kong-ui-public/entities-routes@3.14.12) (2025-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
 ## [3.14.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.14.10...@kong-ui-public/entities-routes@3.14.11) (2025-08-04)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes

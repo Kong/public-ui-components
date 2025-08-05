@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.49.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.48.0...@kong-ui-public/entities-plugins@9.49.0) (2025-08-05)
+
+
+### Features
+
+* filter out non-redis partials in redis partials [KM-1546] ([#2283](https://github.com/Kong/public-ui-components/issues/2283)) ([f86bf65](https://github.com/Kong/public-ui-components/commit/f86bf65dac561ec4a91834a3ba21428bfa055c3d))
+
+
+
+
+
 # [9.48.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.47.1...@kong-ui-public/entities-plugins@9.48.0) (2025-08-05)
 
 
