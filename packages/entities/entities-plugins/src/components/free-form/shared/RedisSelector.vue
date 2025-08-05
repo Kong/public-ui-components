@@ -199,13 +199,14 @@ const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.
 const { value: redisFieldsValue } = useField<Redis | undefined>(formRedisPath)
 
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
+const pageSize = '1000' // the API returns all partials, so we have to set a high page size to filter them on the frontend
 const {
   debouncedQueryChange: debouncedRedisConfigsQuery,
   loading: loadingRedisConfigs,
   error: redisConfigsFetchError,
   loadItems: loadConfigs,
   results: redisConfigsResults,
-} = useDebouncedFilter(formConfig!, partialEndpoints[formConfig!.app].getAll, undefined, {
+} = useDebouncedFilter(formConfig!, partialEndpoints[formConfig!.app].getAll, pageSize, {
   fetchedItemsKey: 'data',
   searchKeys: ['id', 'name'],
 })
@@ -229,7 +230,12 @@ const getOnePartialUrl = (partialId: string | number): string => {
 }
 
 const availableRedisConfigs = computed((): SelectItem[] => {
-  const configs = redisConfigsResults.value?.map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: getRedisType(el as RedisConfig) })) || []
+  let configs = redisConfigsResults.value?.map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: getRedisType(el as RedisConfig) })) || []
+
+  // filter out non-redis configs
+  // this is needed because the API returns all partials, not just redis configurations.
+  configs = configs.filter(partial => partial.type === 'redis-ce' || partial.type === 'redis-ee')
+
   if (redisType !== 'all') {
     // filter redis configs by redis type supported by the plugin
     return configs.filter((el) => el.type === redisType)
