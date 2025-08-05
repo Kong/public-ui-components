@@ -42,10 +42,10 @@ import NodeFormStatic from '../node-forms/NodeFormStatic.vue'
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
 import { computed } from 'vue'
-import { useEditorStore } from '../store/store'
+import { useEditorStoreOrThrow } from '../../composables'
 
-const store = useEditorStore()!
-const node = computed(() => store.selectedNode.value)
+const { selectedNode } = useEditorStoreOrThrow()
+const node = computed(() => selectedNode.value)
 
 const {
   maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,

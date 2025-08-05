@@ -27,7 +27,7 @@ import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
 import { useTaggedHistory } from './history'
 
-export const [provideEditorStore, useEditorStore] = createInjectionState(
+const [provideEditorStore, useEditorStore] = createInjectionState(
   function createState(configNodes: ConfigNode[], uiNodes: UINode[]) {
     const state = ref<EditorState>(initEditorState(configNodes, uiNodes))
     const selection = ref<NodeId>()
@@ -536,3 +536,13 @@ export const [provideEditorStore, useEditorStore] = createInjectionState(
     }
   },
 )
+
+export { provideEditorStore }
+
+export function useEditorStoreOrThrow() {
+  const store = useEditorStore()
+  if (!store) {
+    throw new Error('Editor state is not provided. Ensure you are using provideEditorStore in a parent component.')
+  }
+  return store
+}

@@ -1,5 +1,5 @@
 import { computed, nextTick, ref, watch } from 'vue'
-import { useEditorStore } from '../store/store'
+import { useEditorStoreOrThrow } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
 import type { FieldId, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
@@ -29,7 +29,7 @@ export function useNodeFormState(
     replaceConfig,
     disconnectEdge,
     connectEdge,
-  } = useEditorStore()!
+  } = useEditorStoreOrThrow()
 
   const selectedNodeId = computed(() => selectedNode.value!.id)
   const isGlobalStateUpdating = ref(false)
@@ -42,7 +42,7 @@ export function useNodeFormState(
 
   // todo(zehao): debugging store api, remove later
   console.log('state', state.value)
-  ; (window as any).store = useEditorStore()
+  ;(window as any).store = useEditorStoreOrThrow()
 
   const formData = computed(() => {
     const edges = state.value.edges.filter(e => e.target === selectedNodeId.value)
