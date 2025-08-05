@@ -230,11 +230,11 @@ const getOnePartialUrl = (partialId: string | number): string => {
 }
 
 const availableRedisConfigs = computed((): SelectItem[] => {
-  let configs = redisConfigsResults.value?.map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: getRedisType(el as RedisConfig) })) || []
-
-  // filter out non-redis configs
-  // this is needed because the API returns all partials, not just redis configurations.
-  configs = configs.filter(partial => partial.type === 'redis-ce' || partial.type === 'redis-ee')
+  const configs = (redisConfigsResults.value || [])
+    .map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: getRedisType(el as RedisConfig) }))
+    // filter out non-redis configs
+    // this is needed because the API returns all partials, not just redis configurations.
+    .filter(partial => partial.type === 'redis-ce' || partial.type === 'redis-ee')
 
   if (redisType !== 'all') {
     // filter redis configs by redis type supported by the plugin
