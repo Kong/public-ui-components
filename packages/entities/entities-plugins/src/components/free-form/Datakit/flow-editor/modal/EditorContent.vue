@@ -36,29 +36,35 @@ import { usePreferences, useEditorStoreOrThrow } from '../../composables'
 import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
 import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
-import { ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import type { NodeInstance } from '../../types'
-import { useDebounce } from '@kong-ui-public/core'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
 const { selectNode, selectedNode } = useEditorStoreOrThrow()
-const { debounce } = useDebounce()
 
 const propertiesPanelVisible = ref(false)
+let locking = false
 
-const setVisibility = debounce((visible: boolean) => {
+const setVisibility = (visible: boolean) => {
   propertiesPanelVisible.value = visible
-}, 0)
+}
 
 const selectNodeAndOpenProperties = (node: NodeInstance) => {
+  locking = true
+  setTimeout(() => {
+    locking = false
+  }, 10)
   selectNode(node.id)
   setVisibility(true)
 }
 
 const closeProperties = () => {
-  setVisibility(false)
+  setTimeout(() => {
+    if (locking) return
+    setVisibility(false)
+  }, 0)
 }
 
 watch(selectedNode, node => {
