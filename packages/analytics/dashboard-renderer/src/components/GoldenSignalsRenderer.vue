@@ -73,18 +73,5 @@ const options = computed<ProviderProps>(() => {
     display: flex;
     height: 90%;
   }
-
-  :deep(.kong-ui-public-metric-card-container) {
-    height: auto;
-    max-height: 100%;
-
-    .metricscard {
-      @media (min-width: ($kui-breakpoint-phablet - 1px)) {
-        &:not(:last-of-type) {
-          border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-        }
-      }
-    }
-  }
 }
 </style>

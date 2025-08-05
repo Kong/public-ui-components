@@ -32,11 +32,13 @@
       class="cards-wrapper"
     >
       <template v-for="(card, index) in cards">
-        <MetricCardLoadingSkeleton
+        <div
           v-if="loading"
           :key="`skeleton-${index}`"
-          :class="cardSize === MetricCardSize.Small ? 'loading-tabs-small' : 'loading-tabs-large'"
-        />
+          class="loading-tab"
+        >
+          <MetricCardLoadingSkeleton :class="cardSize === MetricCardSize.Small ? 'loading-tabs-small' : 'loading-tabs-large'" />
+        </div>
         <MetricsCard
           v-else
           :key="index"
@@ -136,6 +138,7 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
   background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
   display: flex;
   flex-direction: column;
+  height: 100%;
   justify-content: space-between;
   width: 100%;
 
@@ -160,9 +163,22 @@ const formatCardValues = (card: MetricCardDef): MetricCardDisplayValue => {
     flex-grow: 1;
     @include flex-gap(24px, 16px);
 
+    .loading-tab {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: center;
+    }
+
     @media (max-width: ($kui-breakpoint-phablet - 1px)) {
       @include flex-gap(16px, 16px);
       flex-direction: column;
+    }
+
+    @media (min-width: ($kui-breakpoint-phablet - 1px)) {
+      > :not(:last-of-type) {
+        border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+      }
     }
   }
 
