@@ -132,7 +132,7 @@ defineProps({
       td {
         &.sticky-column,
         &.actions-column {
-          background-color: $kui-color-background-neutral-weakest;
+          background-color: $kui-color-background-neutral-weakest !important;
         }
       }
     }
