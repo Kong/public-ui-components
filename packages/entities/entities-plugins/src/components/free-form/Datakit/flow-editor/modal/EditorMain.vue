@@ -71,7 +71,7 @@ import { VueFlow, type NodeMouseEvent } from '@vue-flow/core'
 
 import english from '../../../../../locales/en.json'
 import FlowNode from '../node/FlowNode.vue'
-import { useEditorStoreOrThrow } from '../../composables'
+import { useEditorStore } from '../../composables'
 
 import EditorCanvas from './EditorCanvas.vue'
 
@@ -92,7 +92,7 @@ const emit = defineEmits<{
   'click:backdrop': []
 }>()
 
-const { requestNodes, responseNodes } = useEditorStoreOrThrow()
+const { requestNodes, responseNodes } = useEditorStore()
 
 const onMaybeBackdropClick = (event: MouseEvent) => {
   if (event.target instanceof Element) {

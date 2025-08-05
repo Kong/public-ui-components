@@ -9,16 +9,16 @@
     @close="$emit('close')"
   >
     <template
-      v-if="node"
+      v-if="selectedNode"
       #title
     >
-      <NodeBadge :type="node.type" />
+      <NodeBadge :type="selectedNode.type" />
     </template>
 
     <div
-      v-if="node"
+      v-if="selectedNode"
       class="dk-node-properties-panel-desc"
-      v-html="getNodeTypeDescription(node.type)"
+      v-html="getNodeTypeDescription(selectedNode.type)"
     />
 
     <component
@@ -42,10 +42,9 @@ import NodeFormStatic from '../node-forms/NodeFormStatic.vue'
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
 import { computed } from 'vue'
-import { useEditorStoreOrThrow } from '../../composables'
+import { useEditorStore } from '../../composables'
 
-const { selectedNode } = useEditorStoreOrThrow()
-const node = computed(() => selectedNode.value)
+const { selectedNode } = useEditorStore()
 
 const {
   maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,
@@ -62,7 +61,7 @@ defineEmits<{
 }>()
 
 const form = computed(() => {
-  switch (node.value?.type) {
+  switch (selectedNode.value?.type) {
     case 'call':
       return NodeFormCall
     case 'service_request':

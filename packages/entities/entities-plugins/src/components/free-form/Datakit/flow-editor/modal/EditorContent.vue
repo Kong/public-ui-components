@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
-import { usePreferences, useEditorStoreOrThrow } from '../../composables'
+import { usePreferences, useEditorStore } from '../../composables'
 import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
 import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
@@ -42,7 +42,7 @@ import type { NodeInstance } from '../../types'
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
-const { selectNode, selectedNode } = useEditorStoreOrThrow()
+const { selectNode, selectedNode } = useEditorStore()
 
 const propertiesPanelVisible = ref(false)
 let locking = false

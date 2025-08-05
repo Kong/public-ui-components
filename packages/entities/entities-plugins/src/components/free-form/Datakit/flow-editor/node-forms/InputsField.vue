@@ -32,15 +32,11 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (event: 'change:input', value: IdConnection | null): void
-  (
-    event: 'change:inputs',
-    fieldName: FieldName,
-    fieldValue: IdConnection | null,
-  ): void
-  (event: 'addField', fieldName: string): void
-  (event: 'removeField', fieldName: string): void
-  (event: 'renameField', fieldName: string): void
+  'change:input': [value: IdConnection | null]
+  'change:inputs': [fieldName: FieldName, fieldValue: IdConnection | null]
+  addField: [fieldName: string]
+  removeField: [fieldName: string]
+  renameField: [fieldName: string]
 }>()
 
 const { getSchema } = useFormShared()
