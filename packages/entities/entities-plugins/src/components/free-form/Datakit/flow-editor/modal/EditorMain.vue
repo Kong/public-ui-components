@@ -105,7 +105,8 @@ const emit = defineEmits<{
   'click:backdrop': []
 }>()
 
-const { requestNodes, responseNodes, addNode, moveNode, removeNode } = useEditorStore()
+const { requestNodes, responseNodes, addNode, moveNode, removeNode } =
+  useEditorStore()
 
 const onMaybeBackdropClick = (event: MouseEvent) => {
   if (event.target instanceof Element) {
@@ -146,10 +147,19 @@ const onDrop = (e: DragEvent, phase: NodePhase) => {
   const vueFlowRef = phase === 'request' ? requestRef : responseRef
   const { top = 0, left = 0 } = vueFlowRef.value?.getBoundingClientRect() || {}
 
+  const projected = project({
+    x: e.clientX - left,
+    y: e.clientY - top,
+  })
+
+  const { type, anchor } = payload.data
   const newNode = {
-    type: payload.data.type,
+    type,
     phase,
-    position: project({ x: e.clientX - left, y: e.clientY - top }),
+    position: {
+      x: projected.x - anchor.offsetX,
+      y: projected.y - anchor.offsetY,
+    },
   }
 
   addNode(newNode)

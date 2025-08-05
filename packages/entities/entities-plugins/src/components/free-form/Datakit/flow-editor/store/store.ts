@@ -2,7 +2,6 @@ import { computed, ref } from 'vue'
 import { createInjectionState } from '@vueuse/core'
 import type {
   ConfigNode,
-  ConfigNodeType,
   EdgeData,
   EdgeInstance,
   EdgeId,
@@ -15,6 +14,7 @@ import type {
   NodeName,
   UINode,
   NameConnection,
+  CreateNodePayload,
 } from '../../types'
 import {
   createId,
@@ -91,22 +91,12 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
 
     /* ---------- node ops ---------- */
 
-    function addNode(
-      payload: {
-        type: ConfigNodeType
-        name?: NodeName
-        phase?: NodePhase
-        position?: { x: number, y: number }
-        fields?: { input?: FieldName[], output?: FieldName[] }
-        config?: Record<string, unknown>
-      },
-      commitNow = true,
-    ) {
+    function createNode(payload: CreateNodePayload): NodeInstance {
       if (isImplicitType(payload.type)) {
-        console.warn('[addNode] implicit nodes are fixed.')
-        return
+        throw new Error('[createNode] implicit nodes are fixed.')
       }
-      const node = makeNodeInstance({
+
+      return makeNodeInstance({
         type: payload.type,
         name:
           payload.name ||
@@ -116,9 +106,15 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         // default to 'request' phase for request nodes
         phase: payload.phase,
         position: payload.position,
-        uiFieldNames: payload.fields,
+        fields: payload.fields,
         config: payload.config,
       })
+    }
+
+    function addNode(payload: CreateNodePayload, commitNow = true) {
+      const node = createNode(payload)
+      if (!node) return
+
       state.value.nodes.push(node)
       if (commitNow) history.commit()
       return node.id
@@ -498,6 +494,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       selectNode,
 
       // node ops
+      createNode,
       addNode,
       removeNode,
       renameNode,

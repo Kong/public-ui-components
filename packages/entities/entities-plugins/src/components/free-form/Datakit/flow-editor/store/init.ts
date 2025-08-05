@@ -2,7 +2,6 @@ import type {
   ConfigNode,
   EditorState,
   EdgeInstance,
-  NodePhase,
   ImplicitNodeName,
   NodeInstance,
   NodeName,
@@ -10,6 +9,7 @@ import type {
   UINode,
   FieldName,
   ConfigEdge,
+  MakeNodeInstancePayload,
 } from '../../types'
 import {
   createId,
@@ -87,15 +87,8 @@ export function initEditorState(
   return { nodes, edges }
 }
 
-export function makeNodeInstance(payload: {
-  type: NodeType
-  name?: NodeName
-  phase?: NodePhase
-  position?: { x: number, y: number }
-  uiFieldNames?: { input?: FieldName[], output?: FieldName[] }
-  config?: Record<string, unknown>
-}): NodeInstance {
-  const { type, name, phase, position, uiFieldNames, config } = payload
+export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance {
+  const { type, name, phase, position, fields, config } = payload
   const defaults = getFieldsFromMeta(type)
 
   return {
@@ -110,8 +103,8 @@ export function makeNodeInstance(payload: {
     position: position ?? { x: 0, y: 0 },
     expanded: {},
     fields: {
-      input: toFieldArray(uiFieldNames?.input ?? defaults.input),
-      output: toFieldArray(uiFieldNames?.output ?? defaults.output),
+      input: toFieldArray(fields?.input ?? defaults.input),
+      output: toFieldArray(fields?.output ?? defaults.output),
     },
     config: config ? deepClone(config) : {},
   }
@@ -131,7 +124,7 @@ export function buildNodeInstance(
         ? 'request'
         : 'response'),
     position: uiNode?.position,
-    uiFieldNames: uiNode?.fields,
+    fields: uiNode?.fields,
     config: configNode ? extractConfig(configNode) : undefined,
   })
 }
