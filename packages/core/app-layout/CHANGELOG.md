@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.5.2...@kong-ui-public/app-layout@4.5.3) (2025-08-05)
+
+
+### Bug Fixes
+
+* **app-layout:** app page info section slotted table sticky columns ([#2286](https://github.com/Kong/public-ui-components/issues/2286)) ([0e99971](https://github.com/Kong/public-ui-components/commit/0e999719f4a580de0673741833dbc45b313c30b1))
+
+
+
+
+
 ## [4.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.5.1...@kong-ui-public/app-layout@4.5.2) (2025-07-15)
 
 
