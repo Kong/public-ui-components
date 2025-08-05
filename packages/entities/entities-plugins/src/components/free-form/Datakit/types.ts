@@ -434,3 +434,12 @@ export interface EditorState {
   nodes: NodeInstance[]
   edges: EdgeInstance[]
 }
+
+export type DragAction = 'create-node'
+
+export interface DragPayload {
+  action: DragAction
+  data: {
+    type: ConfigNodeType
+  }
+}
