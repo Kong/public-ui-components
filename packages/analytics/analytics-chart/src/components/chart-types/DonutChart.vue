@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType, Ref } from 'vue'
+import type { Ref } from 'vue'
 import { computed, reactive, ref, toRef, useTemplateRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
@@ -51,43 +51,26 @@ import composables from '../../composables'
 import type { AnalyticsChartColors, KChartData, TooltipState } from '../../types'
 import type { Chart, ChartDataset, Plugin } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
-import type { DonutChartData } from '../../types/chart-data'
+import type { DonutChartData, LegendValues } from '../../types/chart-data'
 
-const props = defineProps({
-  chartData: {
-    type: Object as PropType<KChartData>,
-    required: false,
-    default: null,
-  },
-  tooltipTitle: {
-    type: String,
-    required: true,
-  },
-  metricUnit: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  legendPosition: {
-    type: String as PropType<`${ChartLegendPosition}`>,
-    required: false,
-    default: ChartLegendPosition.Right,
-  },
-  legendValues: {
-    type: Object,
-    required: false,
-    default: null,
-  },
-  syntheticsDataKey: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  datasetColors: {
-    type: Object as PropType<AnalyticsChartColors | string[]>,
-    required: false,
-    default: datavisPalette,
-  },
+const props = withDefaults(defineProps<{
+  chartData: KChartData
+  tooltipTitle: string
+  metricUnit?: string
+  legendPosition?: `${ChartLegendPosition}`
+  legendValues?: LegendValues
+  syntheticsDataKey?: string
+  datasetColors?: AnalyticsChartColors | string[]
+  tooltipDimensionDisplay?: string
+  tooltipMetricDisplay?: string
+}>(), {
+  metricUnit: '',
+  legendPosition: ChartLegendPosition.Right,
+  legendValues: undefined,
+  syntheticsDataKey: '',
+  datasetColors: () => datavisPalette,
+  tooltipDimensionDisplay: '',
+  tooltipMetricDisplay: '',
 })
 
 const { translateUnit } = composables.useTranslatedUnits()
@@ -100,6 +83,8 @@ const chartParentRef = useTemplateRef('chartParentRef')
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
   tooltipContext: '',
+  metricDisplay: props.tooltipMetricDisplay,
+  dimensionDisplay: props.tooltipDimensionDisplay,
   tooltipSeries: [],
   left: '',
   top: '',

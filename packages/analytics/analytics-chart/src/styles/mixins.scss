@@ -28,12 +28,24 @@
   padding-bottom: var(--kui-space-30, $kui-space-30);
 
   .title {
+    display: flex;
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    justify-content: space-between;
+    max-height: 16px;
+
+    .drag-icon {
+      margin-top: var(--kui-space-30, $kui-space-30);
+      right: 0;
+      top: 0;
+    }
   }
 
   .subtitle {
+    display: flex;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
+    gap: var(--kui-space-40, $kui-space-40);
+    justify-content: space-between;
     margin-top: var(--kui-space-30, $kui-space-30);
   }
 }

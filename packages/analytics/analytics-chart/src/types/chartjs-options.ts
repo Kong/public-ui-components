@@ -31,6 +31,8 @@ export interface TooltipState {
   chartID: string
   chartTooltipSortFn?: ChartTooltipSortFn
   interactionMode: TooltipInteractionMode
+  metricDisplay: string
+  dimensionDisplay?: string
 }
 
 interface BaseChartOptions {

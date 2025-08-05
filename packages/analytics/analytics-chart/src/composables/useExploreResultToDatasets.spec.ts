@@ -64,6 +64,7 @@ describe('useVitalsExploreDatasets', () => {
       labels: [
         'dimension',
       ],
+      isMultiDimension: false,
       isLabelEmpty: [false],
     })
   })
@@ -110,6 +111,7 @@ describe('useVitalsExploreDatasets', () => {
         datasets: [
           { label: 'dimension1', backgroundColor: '#a86cd5', data: [1], isSegmentEmpty: false },
         ],
+        isMultiDimension: false,
         isLabelEmpty: [false],
       },
     )
@@ -178,6 +180,7 @@ describe('useVitalsExploreDatasets', () => {
           { label: 'ThenBy4', backgroundColor: '#00c4b0', data: [250, null], isSegmentEmpty: false },
         ],
         isLabelEmpty: [false, false],
+        isMultiDimension: true,
       },
     )
   })
@@ -245,6 +248,7 @@ describe('useVitalsExploreDatasets', () => {
           { label: 'ThenBy2', backgroundColor: '#afb7c5', data: [null, 150], isSegmentEmpty: true },
         ],
         isLabelEmpty: [false, true],
+        isMultiDimension: true,
       },
     )
   })
@@ -280,6 +284,7 @@ describe('useVitalsExploreDatasets', () => {
           { label: 'Request count', backgroundColor: '#a86cd5', data: [1], isSegmentEmpty: false },
         ],
         isLabelEmpty: [false],
+        isMultiDimension: false,
       },
     )
   })
@@ -320,6 +325,7 @@ describe('useVitalsExploreDatasets', () => {
           { label: 'metric2', backgroundColor: '#6a86d2', data: [null, 2] },
         ],
         isLabelEmpty: [false, false],
+        isMultiDimension: false,
       },
     )
   })
@@ -374,6 +380,7 @@ describe('useVitalsExploreDatasets', () => {
           { label: 'metric2', backgroundColor: '#6a86d2', data: [4, 2] },
         ],
         isLabelEmpty: [false, false],
+        isMultiDimension: false,
       },
     )
   })

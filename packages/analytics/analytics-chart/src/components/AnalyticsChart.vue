@@ -53,6 +53,7 @@
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
         :time-range-ms="timeRangeMs"
+        :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
         :type="(chartOptions.type as ('timeseries_line' | 'timeseries_bar'))"
         :zoom="timeseriesZoom"
@@ -73,6 +74,7 @@
         :orientation="barChartOrientation"
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
+        :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
       />
       <DonutChart
@@ -83,6 +85,8 @@
         :legend-values="legendValues"
         :metric-unit="computedMetricUnit"
         :synthetics-data-key="syntheticsDataKey"
+        :tooltip-dimension-display="dimensionAxesTitle"
+        :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
       />
     </div>
@@ -190,11 +194,34 @@ const isDonutChart = computed<boolean>(() => props.chartOptions.type === 'donut'
 
 const barChartOrientation = computed<'horizontal' | 'vertical'>(() => props.chartOptions.type.includes('vertical') ? 'vertical' : 'horizontal')
 
-const metricAxesTitle = computed<string | undefined>(() => {
+const tooltipMetricDisplay = computed<string | undefined>(() => {
   if (!props.chartData?.meta.metric_names || !props.chartData?.meta.metric_units) {
     return undefined
   }
 
+  const metricName = props.chartData.meta.metric_names[0]
+  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
+
+  if (props.chartData.meta.metric_names.length > 1) {
+    if (metricName.includes('latency')) {
+      // @ts-ignore - dynamic i18n key
+      return i18n.t('metricAxisTitles.latency_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+    }
+    if (metricName.includes('size')) {
+      // @ts-ignore - dynamic i18n key
+      return i18n.t('metricAxisTitles.size_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+    }
+  }
+
+  // @ts-ignore - dynamic i18n key
+  return i18n.t(`chartLabels.${metricName}`)
+
+})
+
+const metricAxesTitle = computed<string | undefined>(() => {
+  if (!props.chartData?.meta.metric_names || !props.chartData?.meta.metric_units) {
+    return undefined
+  }
 
   const metricName = props.chartData.meta.metric_names[0]
   const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]

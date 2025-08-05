@@ -18,6 +18,7 @@ export interface KChartData extends ChartData {
   datasets: Dataset[]
   labels?: string[]
   isLabelEmpty?: boolean[]
+  isMultiDimension?: boolean
 }
 
 export interface AnalyticsDataPoint {
