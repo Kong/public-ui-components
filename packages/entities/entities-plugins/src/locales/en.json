@@ -752,6 +752,10 @@
               "value_name": "Value name",
               "value": "Value",
               "add_button": "Add a value"
+            },
+            "property": {
+              "get": "get",
+              "set": "set"
             }
           }
         },

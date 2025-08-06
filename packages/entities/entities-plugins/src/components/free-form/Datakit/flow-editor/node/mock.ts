@@ -7,7 +7,7 @@ export const ExitNodeSchema: FormSchema = { 'fields': [{ 'status': { 'between': 
 
 export const JqNodeSchema: FormSchema = { 'fields': [{ 'name': { 'type': 'string', 'required': true } }, { 'jq': { 'description': 'The jq filter text. Refer to https://jqlang.org/manual/ for full documentation.', 'len_max': 10240, 'len_min': 1, 'required': true, 'type': 'string' } }, { 'input': { 'description': 'filter input(s)', 'len_max': 255, 'len_min': 1, 'match_any': { 'err': 'must be one of NODE_NAME or NODE_NAME.FIELD', 'patterns': ['^[A-Za-z_][A-Za-z0-9_-]*$', '^[A-Za-z_][A-Za-z0-9_-]*%..+$'] }, 'required': false, 'type': 'string' } }, { 'inputs': { 'description': 'filter input(s)', 'keys': { 'len_max': 255, 'len_min': 1, 'type': 'string' }, 'required': false, 'type': 'map', 'values': { 'len_max': 255, 'len_min': 1, 'match_any': { 'err': 'must be one of NODE_NAME or NODE_NAME.FIELD', 'patterns': ['^[A-Za-z_][A-Za-z0-9_-]*$', '^[A-Za-z_][A-Za-z0-9_-]*%..+$'] }, 'type': 'string' } } }, { 'output': { 'description': 'filter output(s)', 'len_max': 255, 'len_min': 1, 'match_any': { 'err': 'must be one of NODE_NAME or NODE_NAME.FIELD', 'patterns': ['^[A-Za-z_][A-Za-z0-9_-]*$', '^[A-Za-z_][A-Za-z0-9_-]*%..+$'] }, 'required': false, 'type': 'string' } }], 'type': 'record' }
 
-export const PropertyNodeSchema: FormSchema = { 'fields': [{ 'content_type': { 'description': 'The expected mime type of the property value. When set to `application/json`, SET operations will JSON-encode input data before writing it, and GET operations will JSON-decode output data after reading it. Otherwise, this setting has no effect.', 'one_of': ['application/json', 'text/plain', 'application/octet-stream'], 'required': false, 'type': 'string' } }, { 'property': { 'description': 'The property name to get/set', 'len_max': 255, 'len_min': 1, 'required': true, 'type': 'string' } }, { 'input': { 'description': 'Property input source. When connected, this node operates in SET mode and writes input data to the property. Otherwise, the node operates in GET mode and reads the property.', 'len_max': 255, 'len_min': 1, 'match_any': { 'err': 'must be one of NODE_NAME or NODE_NAME.FIELD', 'patterns': ['^[A-Za-z_][A-Za-z0-9_-]*$', '^[A-Za-z_][A-Za-z0-9_-]*%..+$'] }, 'required': false, 'type': 'string' } }, { 'output': { 'description': 'Property output. This can be connected regardless of whether the node is operating in GET mode or SET mode.', 'len_max': 255, 'len_min': 1, 'match_any': { 'err': 'must be one of NODE_NAME or NODE_NAME.FIELD', 'patterns': ['^[A-Za-z_][A-Za-z0-9_-]*$', '^[A-Za-z_][A-Za-z0-9_-]*%..+$'] }, 'required': false, 'type': 'string' } }], 'type': 'record' }
+export const PropertyNodeSchema: FormSchema = { 'fields': [{ 'name': { 'type': 'string', 'required': true } }, { 'content_type': { 'description': 'The expected mime type of the property value. When set to `application/json`, SET operations will JSON-encode input data before writing it, and GET operations will JSON-decode output data after reading it. Otherwise, this setting has no effect.', 'one_of': ['application/json', 'text/plain', 'application/octet-stream'], 'required': false, 'type': 'string' } }, { 'property': { 'description': 'The property name to get/set', 'len_max': 255, 'len_min': 1, 'required': true, 'type': 'string' } }, { 'input': { 'description': 'Property input source. When connected, this node operates in SET mode and writes input data to the property. Otherwise, the node operates in GET mode and reads the property.', 'len_max': 255, 'len_min': 1, 'match_any': { 'err': 'must be one of NODE_NAME or NODE_NAME.FIELD', 'patterns': ['^[A-Za-z_][A-Za-z0-9_-]*$', '^[A-Za-z_][A-Za-z0-9_-]*%..+$'] }, 'required': false, 'type': 'string' } }, { 'output': { 'description': 'Property output. This can be connected regardless of whether the node is operating in GET mode or SET mode.', 'len_max': 255, 'len_min': 1, 'match_any': { 'err': 'must be one of NODE_NAME or NODE_NAME.FIELD', 'patterns': ['^[A-Za-z_][A-Za-z0-9_-]*$', '^[A-Za-z_][A-Za-z0-9_-]*%..+$'] }, 'required': false, 'type': 'string' } }], 'type': 'record' }
 
 export const StaticNodeSchema: FormSchema = { 'fields': [{ 'name': { 'type': 'string', 'required': true } }, { 'values': { 'description': 'An object with string keys and freeform values', 'json_schema': { 'inline': { 'type': 'object' } }, 'required': true, 'type': 'json' } }, { 'output': { 'description': 'The entire `.values` map', 'len_max': 255, 'len_min': 1, 'match_any': { 'err': 'must be one of NODE_NAME or NODE_NAME.FIELD', 'patterns': ['^[A-Za-z_][A-Za-z0-9_-]*$', '^[A-Za-z_][A-Za-z0-9_-]*%..+$'] }, 'required': false, 'type': 'string' } }, { 'outputs': { 'description': 'Individual items from `.values`, referenced by key', 'keys': { 'len_max': 255, 'len_min': 1, 'type': 'string' }, 'required': false, 'type': 'map', 'values': { 'len_max': 255, 'len_min': 1, 'match_any': { 'err': 'must be one of NODE_NAME or NODE_NAME.FIELD', 'patterns': ['^[A-Za-z_][A-Za-z0-9_-]*$', '^[A-Za-z_][A-Za-z0-9_-]*%..+$'] }, 'type': 'string' } } }], 'type': 'record' }
 
@@ -54,6 +54,11 @@ export const MockData: {
       ssl_server_name: 'example.com',
       input: 'MY_CALL',
     },
+    {
+      type: 'property',
+      name: 'PROP',
+      property: 'kong.ctx.plugin.foo',
+    },
   ] as ConfigNode[],
   uiNodes: [
     {
@@ -81,6 +86,11 @@ export const MockData: {
         input: true,
         output: true,
       },
+    },
+    {
+      name: 'PROP',
+      phase: 'request',
+      position: { x: 500, y: 100 },
     },
   ] as UINode[],
 }

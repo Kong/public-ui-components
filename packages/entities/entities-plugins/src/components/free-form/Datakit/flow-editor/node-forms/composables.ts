@@ -1,7 +1,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
-import type { FieldId, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
+import type { EdgeInstance, FieldId, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
 
 export type InputOption = {
@@ -15,8 +15,9 @@ export type BaseFormData = {
   inputs?: Record<FieldName, IdConnection>
 }
 
-export function useNodeFormState(
-  getFormInnerData: () => BaseFormData,
+export function useNodeForm<T extends BaseFormData = BaseFormData>(
+  // It should return `T`, but we use any to avoid circular dependency issues
+  getFormInnerData: () => any,
 ) {
   const {
     selectedNode,
@@ -47,7 +48,7 @@ export function useNodeFormState(
   const formData = computed(() => {
     const edges = state.value.edges.filter(e => e.target === selectedNodeId.value)
 
-    const inputsAndInput = edges.reduce<Pick<BaseFormData, 'input' | 'inputs'>>((acc, e) => {
+    const inputsAndInput = edges.reduce<Pick<T, 'input' | 'inputs'>>((acc, e) => {
       const sourceNode = getNodeById(e.source)!
       const sourceFieldId = findFieldById(sourceNode, 'output', e.sourceField)?.id
       const targetFieldName = findFieldById(selectedNode.value!, 'input', e.targetField)?.name
@@ -65,7 +66,7 @@ export function useNodeFormState(
       ...selectedNode.value!.config,
       ...inputsAndInput,
       name: selectedNode.value!.name,
-    }
+    } as T
   })
 
   const setName = (name: string | null) => {
@@ -73,10 +74,10 @@ export function useNodeFormState(
     renameNode(selectedNodeId.value, name as NodeName ?? '')
   }
 
-  const setConfig = () => {
+  const setConfig = (commitNow: boolean = true) => {
     if (isGlobalStateUpdating.value) return
-    const { name, input, inputs, ...config } = getFormInnerData()
-    replaceConfig(selectedNodeId.value, config)
+    const { name, input, inputs, ...config } = getFormInnerData() as T
+    replaceConfig(selectedNodeId.value, config, commitNow)
   }
 
   const addField = (
@@ -94,7 +95,7 @@ export function useNodeFormState(
     removeFieldRaw(selectedNodeId.value, fieldId)
   }
 
-  const inputEdge = computed(() => {
+  const inputEdge = computed<EdgeInstance | undefined>(() => {
     return state.value.edges.filter(e => e.target === selectedNodeId.value && !e.targetField)[0]
   })
 
@@ -154,13 +155,13 @@ export function useNodeFormState(
    * - If user clears the input, remove the edge of the input.
    * - If user sets a new input, disconnect existing edges and add new edge for the input.
    */
-  const setInput = (value: IdConnection | null) => {
+  const setInput = (value: IdConnection | null, commitNow: boolean = true) => {
     if (isGlobalStateUpdating.value) return
     const clearing = value == null
 
     // remove existing edges
     for (const edge of [...inputsEdges.value, inputEdge.value].filter(Boolean)) {
-      disconnectEdge(edge.id, clearing)
+      disconnectEdge(edge!.id, commitNow && clearing)
     }
 
     if (clearing) return
@@ -172,7 +173,7 @@ export function useNodeFormState(
       sourceField: fieldId,
       target: selectedNodeId.value,
       targetField: undefined, // input does not have a field
-    })
+    }, commitNow)
   }
 
   const willCreateCycle = (sourceNode: NodeId): boolean => {

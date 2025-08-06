@@ -10,6 +10,7 @@
   />
 
   <InputsField
+    v-if="InputsField"
     :items="items"
     name="inputs"
     @change:inputs="handleInputsChange"

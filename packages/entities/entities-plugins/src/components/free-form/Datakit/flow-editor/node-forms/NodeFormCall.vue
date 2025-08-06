@@ -16,23 +16,23 @@
 
     <StringField
       name="url"
-      @update:model-value="setConfig"
+      @update:model-value="setConfig()"
     />
 
     <HttpMethodField
       name="method"
-      @update:model-value="setConfig"
+      @update:model-value="setConfig()"
     />
 
     <NumberField
       :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.timeout.label')"
       name="timeout"
-      @update:model-value="setConfig"
+      @update:model-value="setConfig()"
     />
 
     <StringField
       name="ssl_server_name"
-      @update:model-value="setConfig"
+      @update:model-value="setConfig()"
     />
 
     <InputsField
@@ -50,7 +50,7 @@ import InputsField from './InputsField.vue'
 import { CallNodeSchema } from '../node/mock'
 import useI18n from '../../../../../composables/useI18n'
 import NumberField from '../../../shared/NumberField.vue'
-import { useNodeFormState } from './composables'
+import { useNodeForm } from './composables'
 import StringField from '../../../shared/StringField.vue'
 import { useTemplateRef } from 'vue'
 
@@ -65,6 +65,6 @@ const {
   inputOptions,
   setInputs,
   setInput,
-} = useNodeFormState(() => formRef.value!.getInnerData())
+} = useNodeForm(() => formRef.value!.getInnerData())
 </script>
 
