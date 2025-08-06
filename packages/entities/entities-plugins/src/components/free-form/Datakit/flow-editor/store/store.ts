@@ -2,19 +2,18 @@ import { createInjectionState } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import type {
   ConfigNode,
+  CreateNodePayload,
   EdgeData,
   EdgeId,
   EdgeInstance,
   EditorState,
   FieldId,
   FieldName,
+  NameConnection,
   NodeId,
   NodeInstance,
   NodeName,
-  NodePhase,
   UINode,
-  NameConnection,
-  CreateNodePayload,
 } from '../../types'
 import { isImplicitName, isImplicitType } from '../node/node'
 import {
@@ -26,7 +25,6 @@ import {
 import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
-import type { Edge, Node } from '@vue-flow/core'
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
   function createState(configNodes: ConfigNode[], uiNodes: UINode[]) {
