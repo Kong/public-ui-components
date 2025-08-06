@@ -23,20 +23,20 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.31.0",
-    "@kong/kongponents": "^9.34.2",
-    "axios": "^1.11.0",
-    "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.4.5"
+    "@kong/icons": "catalog:",
+    "@kong/kongponents": "catalog:",
+    "axios": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.17.4",
-    "@kong/kongponents": "9.34.2",
-    "axios": "^1.7.7",
-    "vue": "^3.5.13",
-    "vue-router": "^4.4.5"
+    "@kong/design-tokens": "catalog:",
+    "@kong/kongponents": "catalog:",
+    "axios": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",

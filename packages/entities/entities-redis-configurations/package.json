@@ -43,13 +43,13 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.17.4",
-    "@kong/icons": "^1.31.0",
-    "@kong/kongponents": "9.34.2",
+    "@kong/design-tokens": "catalog:",
+    "@kong/icons": "catalog:",
+    "@kong/kongponents": "catalog:",
     "@types/uuid": "^10.0.0",
-    "axios": "^1.7.7",
-    "vue": "^3.5.12",
-    "vue-router": "^4.4.5"
+    "axios": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
   },
   "repository": {
     "type": "git",
@@ -73,11 +73,11 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.31.0",
-    "@kong/kongponents": "9.34.2",
-    "axios": "^1.11.0",
-    "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.4.5"
+    "@kong/icons": "catalog:",
+    "@kong/kongponents": "catalog:",
+    "axios": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
   },
   "dependencies": {
     "uuid": "^10.0.0"
