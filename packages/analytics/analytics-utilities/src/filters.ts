@@ -8,7 +8,7 @@ import {
 } from './types'
 
 
-export const getFieldDataSources = (dimension: AllFilterableDimensionsAndMetrics) => {
+export const getFieldDataSources = (dimension: AllFilterableDimensionsAndMetrics): FilterDatasource[] => {
   const datasources = new Set<FilterDatasource>()
 
   if ((filterableBasicExploreDimensions as string[]).includes(dimension)) {

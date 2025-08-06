@@ -156,7 +156,7 @@ import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4, AllFilters } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, FilterDatasource, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4, AllFilters } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
@@ -335,7 +335,7 @@ const datasourceScopedFilters = computed(() => {
   return filters.filter(f => {
     const possibleSources = getFieldDataSources(f.field)
 
-    return possibleSources.some((ds: string) => props.definition?.query?.datasource === ds)
+    return possibleSources.some((ds: FilterDatasource) => props.definition?.query?.datasource === ds)
   })
 })
 
