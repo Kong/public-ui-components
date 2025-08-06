@@ -332,10 +332,13 @@ const agedOutWarning = computed(() => {
 const datasourceScopedFilters = computed(() => {
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
 
+  // TODO: default to api_usage until datasource is made required
+  const datasource = props.definition?.query?.datasource ?? 'api_usage'
+
   return filters.filter(f => {
     const possibleSources = getFieldDataSources(f.field)
 
-    return possibleSources.some((ds: FilterDatasource) => props.definition?.query?.datasource === ds)
+    return possibleSources.some((ds: FilterDatasource) => datasource === ds)
   })
 })
 
