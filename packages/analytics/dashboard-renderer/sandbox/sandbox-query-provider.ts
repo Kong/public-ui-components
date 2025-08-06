@@ -58,13 +58,15 @@ const evaluateFeatureFlagFn = () => true
 
 const exploreBaseUrl = async () => 'https://cloud.konghq.tech/us/analytics/explorer'
 
+const requestsBaseUrl = async () => 'https://cloud.konghq.tech/us/analytics/api-requests'
+
 const fetchComponent = async (): Promise<Component> => {
   return Promise.resolve(EntityLink)
 }
 
 const sandboxQueryProvider: Plugin = {
   install(app) {
-    app.provide(INJECT_QUERY_PROVIDER, { queryFn, configFn, evaluateFeatureFlagFn, exploreBaseUrl, fetchComponent } as AnalyticsBridge)
+    app.provide(INJECT_QUERY_PROVIDER, { queryFn, configFn, evaluateFeatureFlagFn, exploreBaseUrl, requestsBaseUrl, fetchComponent } as AnalyticsBridge)
   },
 }
 
