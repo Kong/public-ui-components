@@ -588,7 +588,7 @@ describe('<CertificateList />', () => {
       cy.wait('@getCertificate')
       cy.get('.kong-ui-entities-certificates-list').should('be.visible')
       cy.getTestId('certificates-entity-empty-state').should('be.visible')
-      cy.getTestId('entity-create-button').should('be.visible')
+      cy.getTestId('entity-create-button').should('not.exist')
     })
 
     it('should handle error state', () => {
