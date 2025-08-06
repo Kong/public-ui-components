@@ -174,18 +174,23 @@ const onNodesChange = (changes: NodeChange[]) => {
       }
     }
 
-    // TODO(Makito): Make markers have the same color as paths
-    // :deep(.vue-flow__edge) {
-    //   &:hover .vue-flow__edge-path {
-    //     marker: $kui-color-border-primary-weak;
-    //     stroke: $kui-color-border-primary-weak;
-    //   }
 
-    //   &.selected .vue-flow__edge-path {
-    //     marker: $kui-color-border-primary;
-    //     stroke: $kui-color-border-primary;
-    //   }
-    // }
+    :deep(.vue-flow__edge) {
+      .vue-flow__edge-path {
+        stroke-dasharray: 5;
+      }
+
+      // TODO(Makito): Make markers have the same color as paths
+      // &:hover .vue-flow__edge-path {
+      //   marker: $kui-color-border-primary-weak;
+      //   stroke: $kui-color-border-primary-weak;
+      // }
+
+      // &.selected .vue-flow__edge-path {
+      //   marker: $kui-color-border-primary;
+      //   stroke: $kui-color-border-primary;
+      // }
+    }
   }
 }
 
