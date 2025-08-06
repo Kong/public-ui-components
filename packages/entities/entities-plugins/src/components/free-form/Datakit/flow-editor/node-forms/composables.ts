@@ -74,7 +74,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     renameNode(selectedNodeId.value, name as NodeName ?? '')
   }
 
-  const setConfig = (commitNow: boolean = true) => {
+  const setConfig = (commitNow = true) => {
     if (isGlobalStateUpdating.value) return
     const { name, input, inputs, ...config } = getFormInnerData() as T
     replaceConfig(selectedNodeId.value, config, commitNow)
@@ -155,7 +155,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
    * - If user clears the input, remove the edge of the input.
    * - If user sets a new input, disconnect existing edges and add new edge for the input.
    */
-  const setInput = (value: IdConnection | null, commitNow: boolean = true) => {
+  const setInput = (value: IdConnection | null, commitNow = true) => {
     if (isGlobalStateUpdating.value) return
     const clearing = value == null
 
