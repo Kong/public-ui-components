@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.52.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.51.0...@kong-ui-public/entities-plugins@9.52.0) (2025-08-06)
+
+
+### Features
+
+* **entities-plugins:** datakit - property node form [KM-1460] ([#2287](https://github.com/Kong/public-ui-components/issues/2287)) ([e5a2d69](https://github.com/Kong/public-ui-components/commit/e5a2d697e0261e8f2c4f410fd8cefc618a740c7e))
+
+
+
+
+
 # [9.51.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.50.0...@kong-ui-public/entities-plugins@9.51.0) (2025-08-06)
 
 
