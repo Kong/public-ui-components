@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.53.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.52.0...@kong-ui-public/entities-plugins@9.53.0) (2025-08-06)
+
+
+### Features
+
+* **entities-plugins:** datakit - exit node form [KM-1460] ([#2288](https://github.com/Kong/public-ui-components/issues/2288)) ([5916198](https://github.com/Kong/public-ui-components/commit/5916198352f7ea2182d296195e0b8cb172382d1b))
+* **entities-plugins:** datakit auto-layout and store improvements ([#2285](https://github.com/Kong/public-ui-components/issues/2285)) ([8e4eb78](https://github.com/Kong/public-ui-components/commit/8e4eb78aa17ac39e50bf10467312877859abc62f))
+
+
+
+
+
 # [9.52.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.51.0...@kong-ui-public/entities-plugins@9.52.0) (2025-08-06)
 
 
