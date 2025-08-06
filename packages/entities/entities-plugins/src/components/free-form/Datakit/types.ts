@@ -434,3 +434,31 @@ export interface EditorState {
   nodes: NodeInstance[]
   edges: EdgeInstance[]
 }
+
+export interface MakeNodeInstancePayload {
+  type: NodeType
+  name?: NodeName
+  phase?: NodePhase
+  position?: { x: number, y: number }
+  fields?: { input?: FieldName[], output?: FieldName[] }
+  config?: Record<string, unknown>
+}
+
+export interface CreateNodePayload extends MakeNodeInstancePayload {
+  type: ConfigNodeType
+}
+
+export type DragAction = 'create-node'
+
+export interface DragPayload {
+  action: DragAction
+  data: {
+    type: ConfigNodeType
+    anchor: {
+      ratioX: number
+      ratioY: number
+      offsetX: number
+      offsetY: number
+    }
+  }
+}

@@ -26,3 +26,5 @@ export const HTTP_METHODS = [
  * @default 'GET'
  */
 export type HttpMethod = (typeof HTTP_METHODS)[number]
+
+export const DK_DATA_TRANSFER_MIME_TYPE = 'application/x-datakit+json'

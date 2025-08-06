@@ -2,7 +2,6 @@ import { computed, ref } from 'vue'
 import { createInjectionState } from '@vueuse/core'
 import type {
   ConfigNode,
-  ConfigNodeType,
   EdgeData,
   EdgeInstance,
   EdgeId,
@@ -15,6 +14,7 @@ import type {
   NodeName,
   UINode,
   NameConnection,
+  CreateNodePayload,
 } from '../../types'
 import {
   createId,
@@ -26,6 +26,7 @@ import { isImplicitName, isImplicitType } from '../node/node'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
 import { useTaggedHistory } from './history'
+import type { Edge, Node } from '@vue-flow/core'
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
   function createState(configNodes: ConfigNode[], uiNodes: UINode[]) {
@@ -90,22 +91,12 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
 
     /* ---------- node ops ---------- */
 
-    function addNode(
-      payload: {
-        type: ConfigNodeType
-        name?: NodeName
-        phase?: NodePhase
-        position?: { x: number, y: number }
-        fields?: { input?: FieldName[], output?: FieldName[] }
-        config?: Record<string, unknown>
-      },
-      commitNow = true,
-    ) {
+    function createNode(payload: CreateNodePayload): NodeInstance {
       if (isImplicitType(payload.type)) {
-        console.warn('[addNode] implicit nodes are fixed.')
-        return
+        throw new Error('[createNode] implicit nodes are fixed.')
       }
-      const node = makeNodeInstance({
+
+      return makeNodeInstance({
         type: payload.type,
         name:
           payload.name ||
@@ -115,9 +106,15 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         // default to 'request' phase for request nodes
         phase: payload.phase,
         position: payload.position,
-        uiFieldNames: payload.fields,
+        fields: payload.fields,
         config: payload.config,
       })
+    }
+
+    function addNode(payload: CreateNodePayload, commitNow = true) {
+      const node = createNode(payload)
+      if (!node) return
+
       state.value.nodes.push(node)
       if (commitNow) history.commit()
       return node.id
@@ -151,6 +148,9 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       if (commitNow) history.commit()
     }
 
+    // Move node to a new position
+    // This should be called only once after a consecutive drag operation
+    // to avoid multiple commits for each drag event.
     function moveNode(
       nodeId: NodeId,
       position: { x: number, y: number },
@@ -159,7 +159,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       const node = getNodeById(nodeId)
       if (!node) return
       node.position = { ...position }
-      if (commitNow) history.commit(`move:${nodeId}`, { replace: true })
+      if (commitNow) history.commit()
     }
 
     function toggleExpanded(
@@ -428,7 +428,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       )
     }
 
-    const requestNodes = computed(() =>
+    const requestNodes = computed<Array<Node<NodeInstance>>>(() =>
       state.value.nodes
         .filter((node) => node.phase === 'request')
         .map((node) => ({
@@ -436,10 +436,11 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           type: 'flow',
           position: node.position,
           data: node,
-        })),
+          deletable: !isImplicitType(node.type),
+        } satisfies Node<NodeInstance>)),
     )
 
-    const requestEdges = computed(() =>
+    const requestEdges = computed<Array<Edge<EdgeInstance>>>(() =>
       state.value.edges
         .filter((edge) => edgeInPhase(edge, 'request'))
         .map((edge) => ({
@@ -452,7 +453,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         })),
     )
 
-    const responseNodes = computed(() =>
+    const responseNodes = computed<Array<Node<NodeInstance>>>(() =>
       state.value.nodes
         .filter((node) => node.phase === 'response')
         .map((node) => ({
@@ -460,10 +461,11 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           type: 'flow',
           position: node.position,
           data: node,
+          deletable: !isImplicitType(node.type),
         })),
     )
 
-    const responseEdges = computed(() =>
+    const responseEdges = computed<Array<Edge<EdgeInstance>>>(() =>
       state.value.edges
         .filter((edge) => edgeInPhase(edge, 'response'))
         .map((edge) => ({
@@ -492,6 +494,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       selectNode,
 
       // node ops
+      createNode,
       addNode,
       removeNode,
       renameNode,
