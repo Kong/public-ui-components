@@ -38,6 +38,7 @@ import NodeFormServiceRequest from '../node-forms/NodeFormServiceRequest.vue'
 import NodeFormResponse from '../node-forms/NodeFormResponse.vue'
 import NodeFormJq from '../node-forms/NodeFormJq.vue'
 import NodeFormStatic from '../node-forms/NodeFormStatic.vue'
+import NodeFormProperty from '../node-forms/NodeFormProperty.vue'
 
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
@@ -72,6 +73,10 @@ const form = computed(() => {
       return NodeFormJq
     case 'static':
       return NodeFormStatic
+    case 'property':
+      return NodeFormProperty
+    case 'exit':
+      return null // No form for exit nodes
     default:
       return null
   }

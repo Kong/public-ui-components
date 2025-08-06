@@ -51,16 +51,16 @@ const { createNode } = useEditorStore()
 
 const previewId = `dk-drag-preview-${useId()}`
 
-const prevoewNode = shallowRef<NodeInstance>()
+const previewNode = shallowRef<NodeInstance>()
 const previewNodes = computed(() => {
-  if (!prevoewNode.value) {
+  if (!previewNode.value) {
     return []
   }
   return [
     {
       id: 'preview',
       type: 'flow',
-      data: prevoewNode.value,
+      data: previewNode.value,
       position: { x: 0, y: 0 },
     },
   ]
@@ -74,7 +74,7 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
   const offsetY = e.clientY - top
 
   // Create preview node and wait for DOM update
-  prevoewNode.value = createNode({ type })
+  previewNode.value = createNode({ type })
   await nextTick()
 
   // Get the rendered preview element or fallback to original item
@@ -118,7 +118,7 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
   // Clean up temporary elements
   requestAnimationFrame(() => {
     clone.remove()
-    prevoewNode.value = undefined
+    previewNode.value = undefined
   })
 }
 </script>
