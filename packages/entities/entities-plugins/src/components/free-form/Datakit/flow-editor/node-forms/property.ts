@@ -172,8 +172,7 @@ export const PROPERTY_PREFIXES = Object.keys(KONG_CLIENT_SUPPORTED_PROPERTIES)
  * kong.service.target -> undefined
  */
 export function extractKeyFromProperty(property?: string | null): string | undefined {
-  if (!property) return undefined
-  if (!identifyPropertyHasKey(property)) return undefined
+  if (!property || !identifyPropertyHasKey(property)) return undefined
   const prefix = PROPERTY_PREFIXES.find(prefix => property.startsWith(prefix))
   if (!prefix) return undefined
   return property.slice(prefix.length).replace(PROPERTY_KEY_PATTERN, '')
