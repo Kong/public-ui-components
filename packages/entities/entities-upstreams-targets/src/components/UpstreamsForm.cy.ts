@@ -443,7 +443,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait('@updateUpstream').then((interception) => {
         const { body: { healthchecks } } = interception.request
-        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/","headers":{}}}'))
+        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/","headers":{"header1":["v1","v2"]}}}'))
       })
     })
   })
@@ -944,7 +944,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait('@updateUpstream').then((interception) => {
         const { body: { healthchecks } } = interception.request
-        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/","headers":{}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
+        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/","headers":{"header1":["v1","v2"]}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
       })
     })
   })
