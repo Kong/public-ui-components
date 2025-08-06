@@ -1,8 +1,12 @@
 import type { Node as DagreNode } from '@dagrejs/dagre'
+
+import type { EdgeData, EdgeInstance, NodeInstance, NodePhase } from '../../types'
+
 import dagre from '@dagrejs/dagre'
 import { MarkerType, useVueFlow, type Edge, type Node } from '@vue-flow/core'
 import { computed, nextTick, toRaw } from 'vue'
-import type { EdgeData, EdgeInstance, NodeInstance, NodePhase } from '../../types'
+
+import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
 import { useEditorStore } from '../store/store'
 
 export interface AutoLayoutOptions {
@@ -79,11 +83,12 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
   function autoLayout(options: AutoLayoutOptions) {
     const {
       boundingRect,
-      padding = 80,
-      nodeGap = 80,
-      edgeGap = 80,
-      rankGap = 80,
+      padding = AUTO_LAYOUT_DEFAULT_OPTIONS.padding,
+      nodeGap = AUTO_LAYOUT_DEFAULT_OPTIONS.nodeGap,
+      edgeGap = AUTO_LAYOUT_DEFAULT_OPTIONS.edgeGap,
+      rankGap = AUTO_LAYOUT_DEFAULT_OPTIONS.rankGap,
     } = options
+
     let leftNode: Node<NodeInstance> | undefined
     let rightNode: Node<NodeInstance> | undefined
     const configNodes: Array<Node<NodeInstance>> = []

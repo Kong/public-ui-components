@@ -15,7 +15,7 @@
       @node-click="onNodeClick"
       @node-drag-stop="onNodeDragStop"
       @nodes-change="onNodesChange"
-      @nodes-initialized="onNodeInitialized"
+      @nodes-initialized="handleAutoLayout"
     >
       <Background />
       <Controls position="bottom-left">
@@ -114,12 +114,6 @@ function onMaybeBackdropClick(event: MouseEvent) {
     }
   }
   emit('click:backdrop')
-}
-
-function onNodeInitialized() {
-  autoLayout({
-    boundingRect: flowWrapper.value!.getBoundingClientRect(),
-  })
 }
 
 function handleAutoLayout() {
