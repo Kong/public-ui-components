@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.1.0...@kong-ui-public/analytics-utilities@10.1.1) (2025-08-06)
+
+
+### Bug Fixes
+
+* add requestBaseUrl to query bridge ([#2293](https://github.com/Kong/public-ui-components/issues/2293)) ([abb3a0f](https://github.com/Kong/public-ui-components/commit/abb3a0fb5e096840692f2f22acc58138324d380d))
+
+
+
+
+
 # [10.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.0.0...@kong-ui-public/analytics-utilities@10.1.0) (2025-08-06)
 
 

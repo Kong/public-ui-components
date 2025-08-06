@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.3.0...@kong-ui-public/dashboard-renderer@6.3.1) (2025-08-06)
+
+
+### Bug Fixes
+
+* add requestBaseUrl to query bridge ([#2293](https://github.com/Kong/public-ui-components/issues/2293)) ([abb3a0f](https://github.com/Kong/public-ui-components/commit/abb3a0fb5e096840692f2f22acc58138324d380d))
+
+
+
+
+
 # [6.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.2.1...@kong-ui-public/dashboard-renderer@6.3.0) (2025-08-06)
 
 
