@@ -1,6 +1,7 @@
 <template>
   <Form
     ref="form"
+    :config="{ updateOnChange: true }"
     :data="formData"
     :schema="PropertyNodeSchema"
   >
