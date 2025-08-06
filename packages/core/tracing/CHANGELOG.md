@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.13.0...@kong-ui-public/tracing@0.14.0) (2025-08-06)
+
+
+### Features
+
+* **entities-plugins:** datakit create/move/remove node ([#2284](https://github.com/Kong/public-ui-components/issues/2284)) ([bedab7c](https://github.com/Kong/public-ui-components/commit/bedab7ce79b2483821c61607451c748c177e83a7))
+
+
+
+
+
 # [0.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/tracing@0.12.10...@kong-ui-public/tracing@0.13.0) (2025-08-06)
 
 
