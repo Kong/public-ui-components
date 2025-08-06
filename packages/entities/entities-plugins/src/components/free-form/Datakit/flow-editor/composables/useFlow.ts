@@ -37,7 +37,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
   const editorStore = useEditorStore()
 
   const { findNode, fitView, onNodeClick, onEdgeClick, onEdgeDoubleClick, onConnect } = vueFlowStore
-  const { state, moveNode, getNodeById, connectEdge,disconnectEdge } = editorStore
+  const { state, moveNode, getNodeById, connectEdge, disconnectEdge } = editorStore
 
   function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
     const sourceNode = getNodeById(edge.source)
