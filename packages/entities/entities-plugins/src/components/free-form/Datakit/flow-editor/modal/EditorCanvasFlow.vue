@@ -4,7 +4,7 @@
     class="flow-wrapper"
   >
     <VueFlow
-      :id="phase"
+      :id="flowId"
       class="flow"
       :edges="edges"
       fit-view-on-init
@@ -15,7 +15,7 @@
       @node-click="onNodeClick"
       @node-drag-stop="onNodeDragStop"
       @nodes-change="onNodesChange"
-      @nodes-initialized="handleAutoLayout"
+      @nodes-initialized="onNodesInitializes"
     >
       <Background />
       <Controls position="bottom-left">
@@ -42,9 +42,9 @@ import { SparklesIcon } from '@kong/icons'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { VueFlow, type NodeChange, type NodeMouseEvent } from '@vue-flow/core'
-import { useId, useTemplateRef } from 'vue'
-import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
+import { ref, useId, useTemplateRef } from 'vue'
 
+import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
 import useFlow from '../composables/useFlow'
 import FlowNode from '../node/FlowNode.vue'
 
@@ -57,6 +57,7 @@ const props = defineProps<{
 }>()
 
 const flowWrapper = useTemplateRef('flow-wrapper')
+const initialLayoutTriggered = ref(false)
 
 const uniqueId = useId()
 const flowId = `${uniqueId}-${props.phase}`
@@ -114,6 +115,15 @@ function onMaybeBackdropClick(event: MouseEvent) {
     }
   }
   emit('click:backdrop')
+}
+
+function onNodesInitializes() {
+  if (!initialLayoutTriggered.value) {
+    initialLayoutTriggered.value = true
+    handleAutoLayout()
+  }
+
+  // Reserved for future steps
 }
 
 function handleAutoLayout() {
