@@ -1,13 +1,22 @@
-import { type BasicExploreAggregations, type BasicExploreFilterAll, filterableBasicExploreDimensions } from './basic'
-import { type AiExploreAggregations, type AiExploreFilterAll, filterableAiExploreDimensions } from './ai'
-import { type ExploreAggregations, type ExploreFilterAll, filterableExploreDimensions } from './advanced'
+import { type BasicExploreAggregations, type BasicExploreFilterAll, type FilterableBasicExploreDimensions, filterableBasicExploreDimensions } from './basic'
+import { type AiExploreAggregations, type AiExploreFilterAll, type FilterableAiExploreDimensions, filterableAiExploreDimensions } from './ai'
+import { type ExploreAggregations, type ExploreFilterAll, type FilterableExploreDimensions, filterableExploreDimensions } from './advanced'
+import { type FilterableRequestDimensions, type FilterableRequestMetrics, type FilterableRequestWildcardDimensions } from './requests'
 
 export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations
 export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll
+export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
+  | FilterableAiExploreDimensions
+  | FilterableBasicExploreDimensions
+  | FilterableRequestDimensions
+  | FilterableRequestMetrics
+  | FilterableRequestWildcardDimensions
 
 export const queryDatasources = ['basic', 'api_usage', 'llm_usage'] as const
 
 export type QueryDatasource = typeof queryDatasources[number]
+
+export type FilterDatasource = QueryDatasource | 'requests'
 
 export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
   basic: BasicExploreFilterAll

@@ -140,6 +140,7 @@ import {
   formatTime,
   type TileDefinition,
   TimePeriods,
+  getFieldDataSources,
 } from '@kong-ui-public/analytics-utilities'
 import { type Component, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
@@ -210,9 +211,8 @@ const exploreLink = computed(() => {
     return ''
   }
 
-  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
+  const filters = datasourceScopedFilters.value
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
-
   const exploreQuery: ExploreQuery | AiExploreQuery = {
     filters: filters,
     metrics: props.definition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
@@ -321,6 +321,21 @@ const agedOutWarning = computed(() => {
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
     savedGranularity: i18n.t(`granularities.${savedGranularity}` as any),
+  })
+})
+
+/**
+ * Derives the subset of context and tile query filters that is relevant for the tile's datasource.
+ *
+ * @returns Array of scoped filter objects to a datasource
+ */
+const datasourceScopedFilters = computed(() => {
+  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
+
+  return filters.filter(f => {
+    const possibleSources = getFieldDataSources(f.field)
+
+    return possibleSources.some((ds: string) => props.definition?.query?.datasource === ds)
   })
 })
 
