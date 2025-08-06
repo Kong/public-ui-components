@@ -55,7 +55,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         const edgeMapById = new Map<EdgeId, EdgeInstance>()
         const edgeIdMapByNodeId = new Map<NodeId, Set<EdgeId>>()
 
-        state.value.edges.map((edge) => {
+        for (const edge of state.value.edges) {
           edgeMapById.set(edge.id, edge)
 
           if (!edgeIdMapByNodeId.has(edge.source)) {
@@ -67,7 +67,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
             edgeIdMapByNodeId.set(edge.target, new Set())
           }
           edgeIdMapByNodeId.get(edge.target)!.add(edge.id)
-        })
+        }
 
         return {
           edgeMapById,
