@@ -22,49 +22,19 @@
     >
       <EditorCanvas>
         <template #request>
-          <VueFlow
-            :id="requestId"
-            class="flow"
-            fit-view-on-init
-            :nodes="requestNodes"
-            @click.capture="onMaybeBackdropClick"
-            @dragover.prevent
-            @drop="(e: DragEvent) => onDrop(e, 'request')"
-            @node-click="onNodeClick"
-            @node-drag-stop="onNodeDragStop"
-            @nodes-change="onNodesChange"
-          >
-            <Background />
-            <Controls position="bottom-left" />
-
-            <!-- To not use the default node style -->
-            <template #node-flow="node">
-              <FlowNode :data="node.data" />
-            </template>
-          </VueFlow>
+          <EditorCanvasFlow
+            phase="request"
+            @click:backdrop="emit('click:backdrop')"
+            @click:node="emit('click:node', $event)"
+          />
         </template>
 
         <template #response>
-          <VueFlow
-            :id="responseId"
-            class="flow"
-            fit-view-on-init
-            :nodes="responseNodes"
-            @click.capture="onMaybeBackdropClick"
-            @dragover.prevent
-            @drop="(e: DragEvent) => onDrop(e, 'response')"
-            @node-click="onNodeClick"
-            @node-drag-stop="onNodeDragStop"
-            @nodes-change="onNodesChange"
-          >
-            <Background />
-            <Controls position="bottom-left" />
-
-            <!-- To not use the default node style -->
-            <template #node-flow="node">
-              <FlowNode :data="node.data" />
-            </template>
-          </VueFlow>
+          <EditorCanvasFlow
+            phase="response"
+            @click:backdrop="emit('click:backdrop')"
+            @click:node="emit('click:node', $event)"
+          />
         </template>
       </EditorCanvas>
     </div>
@@ -72,23 +42,15 @@
 </template>
 
 <script setup lang="ts">
+import type { NodeInstance } from '../../types'
+
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
-import { Background } from '@vue-flow/background'
-import { Controls } from '@vue-flow/controls'
-import { useVueFlow, VueFlow } from '@vue-flow/core'
 
 import english from '../../../../../locales/en.json'
-import FlowNode from '../node/FlowNode.vue'
-import { useEditorStore } from '../../composables'
-import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
-import { useId } from 'vue'
-
 import EditorCanvas from './EditorCanvas.vue'
-
-import type { NodeChange, NodeMouseEvent } from '@vue-flow/core'
-import type { DragPayload, NodeId, NodeInstance, NodePhase } from '../../types'
+import EditorCanvasFlow from './EditorCanvasFlow.vue'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -104,82 +66,6 @@ const emit = defineEmits<{
   'click:node': [node: NodeInstance]
   'click:backdrop': []
 }>()
-
-const { requestNodes, responseNodes, addNode, moveNode, removeNode } =
-  useEditorStore()
-
-const onMaybeBackdropClick = (event: MouseEvent) => {
-  if (event.target instanceof Element) {
-    // Ignore clicks on controls
-    if (event.target.closest('.vue-flow__controls')) {
-      return
-    }
-  }
-  emit('click:backdrop')
-}
-
-const onNodeClick = ({ event, node }: NodeMouseEvent) => {
-  event.stopPropagation()
-  emit('click:node', node.data)
-}
-
-const uniqueId = useId()
-const requestId = `${uniqueId}-request`
-const responseId = `${uniqueId}-response`
-
-const { project: requestProject, vueFlowRef: requestRef } =
-  useVueFlow(requestId)
-const { project: responseProject, vueFlowRef: responseRef } =
-  useVueFlow(responseId)
-
-const onDrop = (e: DragEvent, phase: NodePhase) => {
-  const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
-  if (!data) return
-
-  e.preventDefault()
-
-  const payload = JSON.parse(data) as DragPayload
-  if (payload.action !== 'create-node') return
-
-  const project = phase === 'request' ? requestProject : responseProject
-  // VueFlow has a bug where it fails to take the top/left offset of the flow canvas into account
-  // when projecting the coordinates from mouse event to viewport coordinates.
-  const vueFlowRef = phase === 'request' ? requestRef : responseRef
-  const { top = 0, left = 0 } = vueFlowRef.value?.getBoundingClientRect() || {}
-
-  const projected = project({
-    x: e.clientX - left,
-    y: e.clientY - top,
-  })
-
-  const { type, anchor } = payload.data
-  const newNode = {
-    type,
-    phase,
-    position: {
-      x: projected.x - anchor.offsetX,
-      y: projected.y - anchor.offsetY,
-    },
-  }
-
-  addNode(newNode)
-}
-
-const onNodeDragStop = (event: NodeMouseEvent) => {
-  const { node } = event
-  if (!node) return
-
-  // Update the node position in the store
-  moveNode(node.id as NodeId, node.position)
-}
-
-const onNodesChange = (changes: NodeChange[]) => {
-  changes.forEach((change) => {
-    if (change.type === 'remove') {
-      removeNode(change.id as NodeId)
-    }
-  })
-}
 </script>
 
 <style lang="scss" scoped>
@@ -209,13 +95,6 @@ const onNodesChange = (changes: NodeChange[]) => {
     flex-direction: column;
     height: 100%;
     width: 100%;
-  }
-
-  .flow {
-    :deep(.vue-flow__controls-button) {
-      // Ensure it works in both the sandbox and host apps
-      box-sizing: content-box;
-    }
   }
 }
 </style>
