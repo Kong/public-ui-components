@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.40...@kong-ui-public/spec-renderer@2.4.0) (2025-08-06)
+
+
+### Features
+
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
 ## [2.3.40](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.3.39...@kong-ui-public/spec-renderer@2.3.40) (2025-07-14)
 
 **Note:** Version bump only for package @kong-ui-public/spec-renderer

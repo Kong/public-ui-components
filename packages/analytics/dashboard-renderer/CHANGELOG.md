@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.2.1...@kong-ui-public/dashboard-renderer@6.3.0) (2025-08-06)
+
+
+### Features
+
+* better MetricCardContainer loading rendering ma-4120 ([#2282](https://github.com/Kong/public-ui-components/issues/2282)) ([31a161e](https://github.com/Kong/public-ui-components/commit/31a161ee1ff8270efcdbcd9cb52bf4489fffcad2))
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
 ## [6.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.2.0...@kong-ui-public/dashboard-renderer@6.2.1) (2025-08-05)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

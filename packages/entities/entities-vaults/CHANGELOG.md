@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.23.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.22.10...@kong-ui-public/entities-vaults@3.23.0) (2025-08-06)
+
+
+### Features
+
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
 ## [3.22.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.22.9...@kong-ui-public/entities-vaults@3.22.10) (2025-08-04)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
