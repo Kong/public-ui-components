@@ -1,6 +1,6 @@
 import type { Node as DagreNode } from '@dagrejs/dagre'
 
-import type { EdgeData, EdgeInstance, NodeInstance, NodePhase } from '../../types'
+import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
 
 import dagre from '@dagrejs/dagre'
 import { MarkerType, useVueFlow, type Edge, type Node } from '@vue-flow/core'
@@ -8,6 +8,21 @@ import { computed, nextTick, toRaw } from 'vue'
 
 import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
 import { useEditorStore } from '../store/store'
+
+
+/**
+ * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
+ * This function is placed here because it is only used in this file.
+ */
+const parseHandle = (handle: string): { io: 'input' | 'output', field: FieldId } | undefined => {
+  const parsed = handle.match(/^(input|output)s@(.*)$/)
+  if (!parsed) return undefined
+
+  return {
+    io: parsed[1] as 'input' | 'output',
+    field: parsed[2] as FieldId,
+  }
+}
 
 export interface AutoLayoutOptions {
   boundingRect: DOMRect
@@ -21,18 +36,8 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
   const vueFlowStore = useVueFlow({ id: flowId })
   const editorStore = useEditorStore()
 
-  const { findNode, fitView, onNodeClick, onEdgeClick } = vueFlowStore
-  const { state, moveNode, getNodeById } = editorStore
-
-  // TODO(Makito): Remove these in the future
-  onNodeClick(({ node }) => {
-    console.debug('[useFlow] onNodeClick', toRaw(node))
-  })
-
-  // TODO(Makito): Remove these in the future
-  onEdgeClick(({ edge }) => {
-    console.debug('[useFlow] onEdgeClick', toRaw(edge))
-  })
+  const { findNode, fitView, onNodeClick, onEdgeClick, onEdgeDoubleClick, onConnect } = vueFlowStore
+  const { state, moveNode, getNodeById, connectEdge,disconnectEdge } = editorStore
 
   function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
     const sourceNode = getNodeById(edge.source)
@@ -72,13 +77,47 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
           id: edge.id,
           source: edge.source,
           target: edge.target,
-          sourceHandle: edge.sourceField ? `outputs:${edge.sourceField}` : 'output',
-          targetHandle: edge.targetField ? `inputs:${edge.targetField}` : 'input',
+          sourceHandle: edge.sourceField ? `outputs@${edge.sourceField}` : 'output',
+          targetHandle: edge.targetField ? `inputs@${edge.targetField}` : 'input',
           markerEnd: MarkerType.ArrowClosed,
           data: edge,
         }
       }),
   )
+
+  // TODO(Makito): Remove these in the future
+  onNodeClick(({ node }) => {
+    console.debug('[useFlow] onNodeClick', toRaw(node))
+  })
+
+  // TODO(Makito): Remove these in the future
+  onEdgeClick(({ edge }) => {
+    console.debug('[useFlow] onEdgeClick', toRaw(edge))
+  })
+
+  // TODO(Makito): Double click on edge to disconnect. This is for Dev demo only.
+  onEdgeDoubleClick(({ edge }) => {
+    console.debug('[useFlow] onEdgeDoubleClick', toRaw(edge))
+    disconnectEdge(edge.id as EdgeId)
+  })
+
+  onConnect(({ source, sourceHandle, target, targetHandle }) => {
+    console.debug('[useFlow] onConnect', { source, sourceHandle, target, targetHandle })
+    if (!sourceHandle || !targetHandle) return
+
+    const parsedSource = parseHandle(sourceHandle)
+    const parsedTarget = parseHandle(targetHandle)
+
+    if (parsedSource?.io === 'input' || parsedTarget?.io === 'output')
+      return // Only connect output to input
+
+    connectEdge({
+      source: source as NodeId,
+      sourceField: parsedSource?.field,
+      target: target as NodeId,
+      targetField: parsedTarget?.field,
+    })
+  })
 
   function autoLayout(options: AutoLayoutOptions) {
     const {

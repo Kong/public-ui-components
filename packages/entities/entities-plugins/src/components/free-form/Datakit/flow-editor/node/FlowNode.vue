@@ -76,7 +76,7 @@
               class="handle indented"
             >
               <Handle
-                :id="`inputs:${field.id}`"
+                :id="`inputs@${field.id}`"
                 :position="inputPosition"
                 type="target"
               />
@@ -132,7 +132,7 @@
             <Handle
               id="output"
               :position="outputPosition"
-              type="target"
+              type="source"
             />
           </div>
 
@@ -153,7 +153,7 @@
                 />
               </div>
               <Handle
-                :id="`outputs:${field.id}`"
+                :id="`outputs@${field.id}`"
                 :position="outputPosition"
                 type="source"
               />

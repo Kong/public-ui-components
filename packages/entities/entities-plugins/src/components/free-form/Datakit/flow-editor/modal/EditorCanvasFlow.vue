@@ -195,6 +195,10 @@ const onNodesChange = (changes: NodeChange[]) => {
       //   stroke: $kui-color-border-primary;
       // }
     }
+
+    :deep(.vue-flow__connection) {
+      stroke-dasharray: 5;
+    }
   }
 }
 
