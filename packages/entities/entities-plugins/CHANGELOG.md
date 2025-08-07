@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.56.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.55.0...@kong-ui-public/entities-plugins@9.56.0) (2025-08-07)
+
+
+### Features
+
+* **entities-plugins:** datakit - jq form data binding [KM-1460] ([#2297](https://github.com/Kong/public-ui-components/issues/2297)) ([944c401](https://github.com/Kong/public-ui-components/commit/944c4016435b17a4fbff3349d9d5ba2076b7e2e9))
+
+
+
+
+
 # [9.55.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.54.1...@kong-ui-public/entities-plugins@9.55.0) (2025-08-07)
 
 
