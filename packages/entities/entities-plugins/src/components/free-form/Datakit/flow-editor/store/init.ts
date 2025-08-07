@@ -171,7 +171,7 @@ export function buildNodeInstance(
         ? 'request'
         : 'response'),
     position: uiNode?.position,
-    fields: uiNode?.fields,
+    fields: mergeFieldsFromConfigAndUI(configNode, uiNode),
     config: configNode ? extractConfig(configNode) : undefined,
   })
 }
@@ -230,4 +230,39 @@ export function collectConnectionsFromConfigNode(
       }
     }
   }
+}
+
+function mergeFieldsFromConfigAndUI(
+  configNode?: ConfigNode,
+  uiNode?: UINode,
+): MakeNodeInstancePayload['fields'] | undefined {
+  if (!configNode && !uiNode) return undefined
+
+  const inputsFields = new Set<string>()
+  const outputsFields = new Set<string>()
+
+  // Add fields from configNode
+  if (configNode?.inputs) {
+    Object.keys(configNode.inputs).forEach(fieldName => inputsFields.add(fieldName))
+  }
+
+  if (configNode?.outputs) {
+    Object.keys(configNode.outputs).forEach(fieldName => outputsFields.add(fieldName))
+  }
+
+  // Add fields from uiNode
+  if (uiNode?.fields?.input) {
+    uiNode.fields.input.forEach(fieldName => inputsFields.add(fieldName))
+  }
+
+  if (uiNode?.fields?.output) {
+    uiNode.fields.output.forEach(fieldName => outputsFields.add(fieldName))
+  }
+
+  const result: MakeNodeInstancePayload['fields'] = {}
+
+  if (inputsFields.size) result.input = Array.from(inputsFields) as FieldName[]
+  if (outputsFields.size) result.output = Array.from(outputsFields) as FieldName[]
+
+  return Object.keys(result).length ? result : undefined
 }

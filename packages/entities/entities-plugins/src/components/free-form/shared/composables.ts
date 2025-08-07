@@ -464,13 +464,13 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
   }
 }
 
-export function useField<T = unknown, S extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
+export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
   const { getSchema } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
-  const { value } = useFormData<T>(name)
+  const { value } = useFormData<TData>(name)
 
-  const schema = computed(() => getSchema<S>(fieldPath.value))
+  const schema = computed(() => getSchema<TSchema>(fieldPath.value))
 
   if (!schema.value) {
     return {
