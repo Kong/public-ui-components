@@ -35,7 +35,8 @@ import { computed, useTemplateRef } from 'vue'
 import StringField from '../../../shared/StringField.vue'
 import EnumField from '../../../shared/EnumField.vue'
 import InputsField from './InputsField.vue'
-import { isWritableProperty } from './property'
+import { isReadableProperty, isWritableProperty } from './property'
+import { useEditorStore } from '../store/store'
 
 interface PropertyFormData extends BaseFormData {
   property: string | null
@@ -43,6 +44,7 @@ interface PropertyFormData extends BaseFormData {
 }
 
 const formRef = useTemplateRef('form')
+const { selectedNode, disconnectInEdges, disconnectOutEdges } = useEditorStore()
 
 const {
   formData,
@@ -56,11 +58,22 @@ const {
 const writable = computed(() => isWritableProperty(formData.value.property))
 
 function handlePropertiesChange(value: string | null) {
-  const writable = isWritableProperty(value)
+  const nodeId = selectedNode.value?.id
+  if (!nodeId) {
+    // Assertion
+    throw new Error('Expected selectedNode to be defined')
+  }
 
-  if (!writable) {
-    // If the property is not writable, we clear the input
-    setInput(null, false)
+  // If the property is not readable, disconnect all out-edges
+  // associated with the node
+  if (!isReadableProperty(value)) {
+    disconnectOutEdges(nodeId, false)
+  }
+
+  // If the property is not writable, disconnect all in-edges
+  // associated with the node
+  if (!isWritableProperty(value)) {
+    disconnectInEdges(nodeId, false)
   }
 
   setConfig()

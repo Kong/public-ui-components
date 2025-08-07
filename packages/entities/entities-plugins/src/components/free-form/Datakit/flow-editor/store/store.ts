@@ -355,6 +355,22 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       if (commitNow) history.commit()
     }
 
+    function disconnectInEdges(nodeId: NodeId, commitNow = true) {
+      const edges = getInEdgesByNodeId(nodeId)
+      for (const edge of edges) {
+        disconnectEdge(edge.id, false)
+      }
+      if (commitNow) history.commit()
+    }
+
+    function disconnectOutEdges(nodeId: NodeId, commitNow = true) {
+      const edges = getOutEdgesByNodeId(nodeId)
+      for (const edge of edges) {
+        disconnectEdge(edge.id, false)
+      }
+      if (commitNow) history.commit()
+    }
+
     /* ---------- serialization ---------- */
 
     function toConfigNodes(): ConfigNode[] {
@@ -492,6 +508,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       connectEdge,
       replaceConnection,
       disconnectEdge,
+      disconnectInEdges,
+      disconnectOutEdges,
 
       // serialization
       toConfigNodes,

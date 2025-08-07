@@ -28,7 +28,7 @@
       :class="{ reversed: isReversed }"
     >
       <div class="input-handles">
-        <template v-if="meta.io?.input">
+        <template v-if="showInputHandles">
           <div class="handle">
             <Handle
               id="input"
@@ -96,7 +96,7 @@
       </div>
 
       <div class="output-handles">
-        <template v-if="meta.io?.output">
+        <template v-if="showOutputHandles">
           <div class="handle">
             <div class="handle-label-wrapper">
               <div
@@ -180,9 +180,10 @@ import HandleTwig from './HandleTwig.vue'
 import { isImplicitNode } from './node'
 
 import type { NodeInstance } from '../../types'
+import { isReadableProperty, isWritableProperty } from '../node-forms/property'
+import { getNodeMeta } from '../store/helpers'
 import { useEditorStore } from '../store/store'
 import NodeBadge from './NodeBadge.vue'
-import { getNodeMeta } from '../store/helpers'
 
 const { data } = defineProps<{
   data: NodeInstance
@@ -203,6 +204,26 @@ const outputsNotCollapsible = computed(() =>
 
 const inputsExpanded = computed(() => data.expanded.input ?? false)
 const outputsExpanded = computed(() => data.expanded.output ?? false)
+
+const showInputHandles = computed(() => {
+  if (data.type === 'property') {
+    // TODO: Should have a specific type for config in property nodes
+    const property = data.config?.['property'] as string | undefined
+    return isWritableProperty(property)
+  }
+
+  return meta.value.io?.input
+})
+
+const showOutputHandles = computed(() => {
+  if (data.type === 'property') {
+    // TODO: Should have a specific type for config in property nodes
+    const property = data.config?.['property'] as string | undefined
+    return isReadableProperty(property)
+  }
+
+  return meta.value.io?.output
+})
 
 const isImplicit = computed(() => isImplicitNode(data))
 
