@@ -1,7 +1,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
-import type { EdgeInstance, FieldId, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
+import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
 
 export type InputOption = {
@@ -12,7 +12,7 @@ export type InputOption = {
 export type BaseFormData = {
   name: NodeName
   input?: IdConnection
-  inputs?: Record<FieldName, IdConnection>
+  inputs?: Record<FieldName, IdConnection | undefined | null>
 }
 
 export function useNodeForm<T extends BaseFormData = BaseFormData>(
@@ -24,9 +24,9 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     state,
     renameNode,
     getNodeById,
-    addField: addFieldRaw,
-    renameField: renameFieldRaw,
-    removeField: removeFieldRaw,
+    addField: storeAddField,
+    renameField: storeRenameField,
+    removeField: storeRemoveField,
     replaceConfig,
     disconnectEdge,
     connectEdge,
@@ -62,6 +62,14 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       return acc
     }, {})
 
+    // append user defined fields to inputs
+    selectedNode.value?.fields.input.forEach(field => {
+      if (!inputsAndInput.inputs) inputsAndInput.inputs = {}
+      if (!inputsAndInput.inputs[field.name]) {
+        inputsAndInput.inputs[field.name] = null
+      }
+    })
+
     return {
       ...selectedNode.value!.config,
       ...inputsAndInput,
@@ -80,19 +88,46 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     replaceConfig(selectedNodeId.value, config, commitNow)
   }
 
+  const findFieldByNameOrThrow = (
+    io: 'input' | 'output',
+    name: FieldName,
+  ) => {
+    const field = findFieldByName(selectedNode.value!, io, name)
+    if (!field) {
+      throw new Error(`Field with name "${name}" not found in node "${selectedNode.value!.name}"`)
+    }
+    return field
+  }
+
   const addField = (
     io: 'input' | 'output',
-    name: string,
+    name: FieldName,
+    value?: IdConnection | null,
   ) => {
-    addFieldRaw(selectedNodeId.value, io, name as FieldName)
+    const hasValue = !!value
+    storeAddField(selectedNodeId.value, io, name, !hasValue)
+    if (hasValue) {
+      setInputs(name, value)
+    }
   }
 
-  const renameField = (fieldId: FieldId, newName: string) => {
-    renameFieldRaw(selectedNodeId.value, fieldId, newName as FieldName)
+  const renameFieldByName = (
+    io: 'input' | 'output',
+    oldFieldName: FieldName,
+    newFieldName: FieldName,
+  ) => {
+    if (isGlobalStateUpdating.value) return
+    const fieldId = findFieldByNameOrThrow(io, oldFieldName).id
+    storeRenameField(selectedNodeId.value, fieldId, newFieldName)
   }
 
-  const removeField = (fieldId: FieldId) => {
-    removeFieldRaw(selectedNodeId.value, fieldId)
+  const removeFieldByName = (
+    io: 'input' | 'output',
+    fieldName: FieldName,
+  ) => {
+    if (isGlobalStateUpdating.value) return
+    const fieldId = findFieldByNameOrThrow(io, fieldName).id
+    storeRemoveField(selectedNodeId.value, fieldId)
   }
 
   const inputEdge = computed<EdgeInstance | undefined>(() => {
@@ -113,7 +148,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     if (isGlobalStateUpdating.value) return
     const clearing = fieldValue == null
 
-    const fieldId = findFieldByName(selectedNode.value!, 'input', fieldName)?.id
+    const fieldId = findFieldByNameOrThrow('input', fieldName).id
 
     if (clearing) {
       // remove the edge of the input field
@@ -141,7 +176,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       fieldId: sourceField,
     } = parseIdConnection(fieldValue)
 
-    const targetFieldId = findFieldByName(selectedNode.value!, 'input', fieldName)!.id
+    const targetFieldId = findFieldByNameOrThrow('input', fieldName).id
     connectEdge({
       source,
       sourceField,
@@ -227,8 +262,8 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
 
     // field ops
     addField,
-    renameField,
-    removeField,
+    renameFieldByName,
+    removeFieldByName,
 
     // input(s) ops
     setInputs,
