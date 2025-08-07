@@ -229,7 +229,7 @@ const exploreLink = computed(() => {
 })
 
 const requestsLink = computed(() => {
-  if (!requestsBaseUrl.value || !props.definition.query || !props.definition.query.time_range) {
+  if (!requestsBaseUrl.value || !props.definition.query || !canShowKebabMenu.value) {
     return ''
   }
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
