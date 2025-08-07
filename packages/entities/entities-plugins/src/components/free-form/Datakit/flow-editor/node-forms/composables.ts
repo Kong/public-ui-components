@@ -33,12 +33,12 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   } = useEditorStore()
 
   const selectedNodeId = computed(() => selectedNode.value!.id)
-  const isGlobalStateUpdating = ref(false)
+  let isGlobalStateUpdating = false
 
   watch(state, async () => {
-    isGlobalStateUpdating.value = true
+    isGlobalStateUpdating = true
     await nextTick()
-    isGlobalStateUpdating.value = false
+    isGlobalStateUpdating = false
   }, { immediate: true, deep: true })
 
   // todo(zehao): debugging store api, remove later
@@ -78,12 +78,12 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   })
 
   const setName = (name: string | null) => {
-    if (isGlobalStateUpdating.value) return
+    if (isGlobalStateUpdating) return
     renameNode(selectedNodeId.value, name as NodeName ?? '')
   }
 
   const setConfig = (commitNow = true) => {
-    if (isGlobalStateUpdating.value) return
+    if (isGlobalStateUpdating) return
     const { name, input, inputs, ...config } = getFormInnerData() as T
     replaceConfig(selectedNodeId.value, config, commitNow)
   }
@@ -116,7 +116,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     oldFieldName: FieldName,
     newFieldName: FieldName,
   ) => {
-    if (isGlobalStateUpdating.value) return
+    if (isGlobalStateUpdating) return
     const fieldId = findFieldByNameOrThrow(io, oldFieldName).id
     storeRenameField(selectedNodeId.value, fieldId, newFieldName)
   }
@@ -125,7 +125,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     io: 'input' | 'output',
     fieldName: FieldName,
   ) => {
-    if (isGlobalStateUpdating.value) return
     const fieldId = findFieldByNameOrThrow(io, fieldName).id
     storeRemoveField(selectedNodeId.value, fieldId)
   }
@@ -145,7 +144,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
    *   and add new edges for the input fields.
    */
   const setInputs = (fieldName: FieldName, fieldValue: IdConnection | null) => {
-    if (isGlobalStateUpdating.value) return
+    if (isGlobalStateUpdating) return
     const clearing = fieldValue == null
 
     const fieldId = findFieldByNameOrThrow('input', fieldName).id
@@ -191,7 +190,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
    * - If user sets a new input, disconnect existing edges and add new edge for the input.
    */
   const setInput = (value: IdConnection | null, commitNow = true) => {
-    if (isGlobalStateUpdating.value) return
+    if (isGlobalStateUpdating) return
     const clearing = value == null
 
     // remove existing edges
