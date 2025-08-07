@@ -217,6 +217,13 @@ export function resetPropertyIfHasKey(property?: string | null): string | null {
   return getPropertyWithoutKey(property) + PROPERTY_KEY_PATTERN
 }
 
+export function isReadableProperty(property?: string | null): boolean {
+  if (!property) return false
+  const rawProperty = resetPropertyIfHasKey(property)
+  if (!rawProperty) return false
+  return KONG_CLIENT_SUPPORTED_PROPERTIES[rawProperty]?.readable ?? false
+}
+
 export function isWritableProperty(property?: string | null): boolean {
   if (!property) return false
   const rawProperty = resetPropertyIfHasKey(property)
