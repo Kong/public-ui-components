@@ -47,7 +47,7 @@
       >
         <!-- Form actions -->
         <div
-          :class="['form-actions', { 'form-actions-reverted': revertActionButton }]"
+          :class="['form-actions', { 'form-actions-reverted': alignActionButtonToLeft }]"
           data-testid="form-actions"
         >
           <slot name="form-actions">
@@ -238,9 +238,9 @@ const props = defineProps({
     default: 60,
   },
   /**
-   * Controls the direction of the action buttons
+   * Controls whether to align action buttons to left
    */
-  revertActionButton: {
+  alignActionButtonToLeft: {
     type: Boolean,
     default: false,
   },
