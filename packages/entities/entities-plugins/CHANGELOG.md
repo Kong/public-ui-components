@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.55.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.54.1...@kong-ui-public/entities-plugins@9.55.0) (2025-08-07)
+
+
+### Features
+
+* **entities-plugins:** datakit show valid handles in property nodes and update edges ([#2298](https://github.com/Kong/public-ui-components/issues/2298)) ([b4e5d66](https://github.com/Kong/public-ui-components/commit/b4e5d66e942e46f5ca0ca9fa8464b171f5ee5816))
+
+
+
+
+
 ## [9.54.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.54.0...@kong-ui-public/entities-plugins@9.54.1) (2025-08-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
