@@ -47,7 +47,7 @@
       >
         <!-- Form actions -->
         <div
-          class="form-actions"
+          :class="['form-actions', { 'form-actions-reverted': revertActionButton }]"
           data-testid="form-actions"
         >
           <slot name="form-actions">
@@ -237,6 +237,13 @@ const props = defineProps({
     type: Number,
     default: 60,
   },
+  /**
+   * Controls the direction of the action buttons
+   */
+  revertActionButton: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const router = useRouter()
@@ -400,5 +407,9 @@ defineExpose({
       margin-left: $kui-space-60;
     }
   }
+}
+
+.form-actions-reverted {
+  direction: rtl;
 }
 </style>
