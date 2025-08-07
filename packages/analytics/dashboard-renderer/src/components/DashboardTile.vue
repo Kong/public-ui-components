@@ -367,7 +367,7 @@ const onViewRequests = (timeRange: AbsoluteTimeRangeV4) => {
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const requestsQuery = buildRequestsQuery(timeRange, filters)
 
-  window.location.replace(`${requestsBaseUrl.value}?q=${JSON.stringify(requestsQuery)}`)
+  window.location.assign(`${requestsBaseUrl.value}?q=${JSON.stringify(requestsQuery)}`)
 }
 </script>
 
