@@ -36,8 +36,25 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
   const vueFlowStore = useVueFlow({ id: flowId })
   const editorStore = useEditorStore()
 
-  const { findNode, fitView, onNodeClick, onEdgeClick, onEdgeDoubleClick, onConnect } = vueFlowStore
-  const { state, moveNode, getNodeById, connectEdge, disconnectEdge } = editorStore
+  const {
+    findNode,
+    fitView,
+    onNodeClick,
+    onNodeDrag,
+    onEdgeClick,
+    onConnect,
+    onNodesChange,
+    onEdgesChange,
+  } = vueFlowStore
+
+  const {
+    state,
+    moveNode,
+    removeNode,
+    getNodeById,
+    connectEdge,
+    disconnectEdge,
+  } = editorStore
 
   function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
     const sourceNode = getNodeById(edge.source)
@@ -85,20 +102,14 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
       }),
   )
 
-  // TODO(Makito): Remove these in the future
   onNodeClick(({ node }) => {
+    // TODO(Makito): Remove these in the future
     console.debug('[useFlow] onNodeClick', toRaw(node))
   })
 
-  // TODO(Makito): Remove these in the future
   onEdgeClick(({ edge }) => {
+    // TODO(Makito): Remove these in the future
     console.debug('[useFlow] onEdgeClick', toRaw(edge))
-  })
-
-  // TODO(Makito): Double click on edge to disconnect. This is for Dev demo only.
-  onEdgeDoubleClick(({ edge }) => {
-    console.debug('[useFlow] onEdgeDoubleClick', toRaw(edge))
-    disconnectEdge(edge.id as EdgeId)
   })
 
   onConnect(({ source, sourceHandle, target, targetHandle }) => {
@@ -117,6 +128,34 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
       target: target as NodeId,
       targetField: parsedTarget?.field,
     })
+  })
+
+  onNodesChange((changes)=> {
+    for (const change of changes) {
+      switch (change.type) {
+        case 'remove':
+          removeNode(change.id as NodeId, true)
+          break
+      }
+    }
+  })
+
+  onNodeDrag(({ node }) => {
+    if (!node) return
+
+    // Update the node position in the store
+    moveNode(node.id as NodeId, node.position)
+  })
+
+  // Only triggered by canvas-originated changes
+  onEdgesChange((changes) => {
+    for (const change of changes) {
+      switch (change.type) {
+        case 'remove':
+          disconnectEdge(change.id as EdgeId, true)
+          break
+      }
+    }
   })
 
   function autoLayout(options: AutoLayoutOptions) {
