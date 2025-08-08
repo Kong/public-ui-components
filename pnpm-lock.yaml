@@ -639,6 +639,9 @@ importers:
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
+      dompurify:
+        specifier: ^3.2.6
+        version: 3.2.6
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
@@ -1895,6 +1898,7 @@ packages:
 
   '@evilmartians/lefthook@1.8.2':
     resolution: {integrity: sha512-SZdQk3W9q7tcJwnSwEMUubQqVIK7SHxv52hEAnV7o3nPI+xKcmd+rN0hZIJg07wjBaJRAjzdvoQySKQQYPW5Qw==}
+    cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
 
@@ -4852,6 +4856,9 @@ packages:
 
   dompurify@3.2.4:
     resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
+
+  dompurify@3.2.6:
+    resolution: {integrity: sha512-/2GogDQlohXPZe6D6NOgQvXLPSYBqIWMnZ8zzOhn09REE4eyAzb+Hed3jhoM9OkuaJ8P6ZGTTVWQKAi8ieIzfQ==}
 
   domutils@3.1.0:
     resolution: {integrity: sha512-H78uMmQtI2AhgDJjWeQmHwJJ2bLPD3GMmO7Zja/ZZh84wkm+4ut+IUnUdRa8uCGX88DiVx1j6FRe1XfxEgjEZA==}
@@ -14217,6 +14224,10 @@ snapshots:
   dompurify@3.0.5: {}
 
   dompurify@3.2.4:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
+
+  dompurify@3.2.6:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
