@@ -97,7 +97,6 @@
       </template>
 
       <template
-        v-if="enableV2EmptyStates"
         #empty-state
       >
         <EntityEmptyState
@@ -263,14 +262,6 @@ const props = defineProps({
   },
   /** default to false, setting to true will teleport the toolbar button to the destination in the consuming app */
   useActionOutside: {
-    type: Boolean,
-    default: false,
-  },
-  /**
-   * Enables the new empty state design, this prop can be removed when
-   * the khcp-14756-empty-states-m2 FF is removed.
-   */
-  enableV2EmptyStates: {
     type: Boolean,
     default: false,
   },

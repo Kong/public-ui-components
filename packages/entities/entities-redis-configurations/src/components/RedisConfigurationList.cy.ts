@@ -174,8 +174,8 @@ describe('<RedisConfigurationList />', () => {
         })
 
         cy.wait('@getRedisConfigurations')
-        cy.get('.table-empty-state').should('be.visible')
-        cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
+        cy.getTestId('redis-entity-empty-state').should('be.visible')
+        cy.getTestId('entity-create-button').should('be.visible')
       })
 
       it('should hide create redis configuration cta if user can not create', () => {
@@ -191,7 +191,7 @@ describe('<RedisConfigurationList />', () => {
         })
 
         cy.wait('@getRedisConfigurations')
-        cy.get('.table-empty-state .empty-state-action .k-button').should('not.exist')
+        cy.getTestId('entity-create-button').should('not.exist')
       })
 
       it('should show redis configuration items', () => {
