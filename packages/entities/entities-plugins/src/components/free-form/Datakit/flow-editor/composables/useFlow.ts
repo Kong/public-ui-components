@@ -40,7 +40,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     findNode,
     fitView,
     onNodeClick,
-    onNodeDrag,
+    onNodeDragStop,
     onEdgeClick,
     onConnect,
     onNodesChange,
@@ -140,7 +140,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     }
   })
 
-  onNodeDrag(({ node }) => {
+  onNodeDragStop(({ node }) => {
     if (!node) return
 
     // Update the node position in the store
