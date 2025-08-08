@@ -1,9 +1,15 @@
 <template>
   <Form
+    ref="form"
+    :config="{ updateOnChange: true }"
+    :data="formData"
     :schema="ResponseSchema"
-    @change="console.log"
   >
-    <InputsField :items="[]" />
+    <InputsField
+      :items="inputOptions"
+      @change:input="setInput"
+      @change:inputs="setInputs"
+    />
   </Form>
 </template>
 
@@ -11,5 +17,16 @@
 import Form from '../../../shared/Form.vue'
 import InputsField from './InputsField.vue'
 import { ResponseSchema } from '../node/mock'
+import { useTemplateRef } from 'vue'
+import { useNodeForm } from './composables'
+
+const formRef = useTemplateRef('form')
+
+const {
+  formData,
+  inputOptions,
+  setInputs,
+  setInput,
+} = useNodeForm(() => formRef.value!.getInnerData())
 </script>
 
