@@ -111,7 +111,7 @@ function handleRenameField(oldName: FieldName, newName: FieldName) {
 function handleRemoveField(name: FieldName) {
   if (!selectedNode.value) throw new Error('No selected node')
   const field = findFieldByName(selectedNode.value, 'output', name)
-  if (!field) throw new Error('No field found to rename')
+  if (!field) throw new Error('No field found to delete')
   removeField(selectedNode.value?.id, field.id, true, false)
   const next = {
     values: fieldValueToStoreValue({ ...formData.value.values }),

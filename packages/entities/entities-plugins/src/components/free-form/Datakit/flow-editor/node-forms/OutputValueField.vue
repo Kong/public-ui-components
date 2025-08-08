@@ -122,7 +122,9 @@ function handleRemoveEntry(entry: Entry) {
     addingEntryId.value = null
   }
   removeEntry(entry.id)
-  emit('remove:field', entry.key as FieldName)
+  if (entry.key.trim() !== '') { // only emit remove if the field has a name
+    emit('remove:field', entry.key as FieldName)
+  }
 }
 
 function handleBeforeInputsNameChange(entry: Entry) {
@@ -131,8 +133,9 @@ function handleBeforeInputsNameChange(entry: Entry) {
 
 function handleInputsNameChange(entry: Entry) {
   if (entry.id === addingEntryId.value) {
-    addingEntryId.value = null
     // add field
+    if (entry.key.trim() === '') return // skip if the field name is empty
+    addingEntryId.value = null
     emit('add:field', entry.key, entry.value)
   } else {
     // rename field

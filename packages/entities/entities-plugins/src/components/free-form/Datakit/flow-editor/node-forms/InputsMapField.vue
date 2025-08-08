@@ -130,7 +130,9 @@ function handleRemoveEntry(entry: KVEntry<FieldName, IdConnection>) {
   if (entry.id === addingEntryId.value) {
     addingEntryId.value = null
   }
-  emit('remove:field', entry.key)
+  if (entry.key.trim() !== '') { // only emit remove if the field has a name
+    emit('remove:field', entry.key)
+  }
 }
 
 function handleBeforeInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
@@ -140,6 +142,7 @@ function handleBeforeInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
 function handleInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
   if (entry.id === addingEntryId.value) {
     // add field
+    if (entry.key.trim() === '') return // skip if the field name is empty
     emit('add:field', entry.key, entry.value)
     addingEntryId.value = null
   } else {
