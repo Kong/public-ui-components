@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.1.2...@kong-ui-public/analytics-utilities@10.1.3) (2025-08-08)
+
+
+### Bug Fixes
+
+* **analytics:** add template_id optional field on dashboard schema ([#2311](https://github.com/Kong/public-ui-components/issues/2311)) ([452142e](https://github.com/Kong/public-ui-components/commit/452142e5c0c932f4031d3dbe30db4c0b9e8af972))
+
+
+
+
+
 ## [10.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.1.1...@kong-ui-public/analytics-utilities@10.1.2) (2025-08-08)
 
 
