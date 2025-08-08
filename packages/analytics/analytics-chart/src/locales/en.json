@@ -231,9 +231,9 @@
   "singleValue": {
     "valueError": "Invalid configuration"
   },
-  "new_timerange_label": "New time range",
+  "new_timerange_label": "Time range",
   "zoom_action_items": {
-    "zoom": "Zoom",
+    "zoom": "Zoom in",
     "view_requests": "View requests",
     "cancel": "Cancel"
   }

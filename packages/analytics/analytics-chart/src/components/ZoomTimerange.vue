@@ -1,18 +1,17 @@
 <template>
   <div class="zoom-timerange-container">
     <div class="zoom-timerange-heading">
-      <span class="title">{{ i18n.t('new_timerange_label') }}</span>
+      <div class="title">
+        {{ i18n.t('new_timerange_label') }}
+      </div>
     </div>
     <div class="zoom-timerange-details">
-      <KBadge> {{ throttledStartTime }} </KBadge>
-      -
-      <KBadge> {{ throttledEndTime }} </KBadge>
+      {{ throttledStartTime }} - {{ throttledEndTime }}
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { formatTime } from '@kong-ui-public/analytics-utilities'
-import { KBadge } from '@kong/kongponents'
 import composables from '../composables'
 import { ref, watch } from 'vue'
 import { debounce } from '../utils'
@@ -48,6 +47,7 @@ watch(() => [props.start, props.end], ([newStart, newEnd]) => {
   }
 
   .zoom-timerange-details {
+    font-size: var(--kui-font-size-20, $kui-font-size-20);
     margin: var(--kui-space-30, $kui-space-30);
   }
 }

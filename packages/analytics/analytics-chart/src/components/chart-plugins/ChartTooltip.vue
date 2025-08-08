@@ -221,6 +221,7 @@ function handleMouseUp() {
 
   .tooltip-title {
     @include tooltipTitle;
+    padding-bottom: var(--kui-space-20, $kui-space-20);
   }
 
   .tooltip {
