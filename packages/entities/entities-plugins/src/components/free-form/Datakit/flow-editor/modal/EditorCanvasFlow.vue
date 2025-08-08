@@ -13,8 +13,6 @@
       @dragover.prevent
       @drop="(e: DragEvent) => onDrop(e)"
       @node-click="onNodeClick"
-      @node-drag-stop="onNodeDragStop"
-      @nodes-change="onNodesChange"
       @nodes-initialized="onNodesInitializes"
     >
       <Background />
@@ -36,12 +34,12 @@
 </template>
 
 <script setup lang="ts">
-import type { DragPayload, NodeId, NodeInstance, NodePhase } from '../../types'
+import type { DragPayload, NodeInstance, NodePhase } from '../../types'
 
 import { SparklesIcon } from '@kong/icons'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import { VueFlow, type NodeChange, type NodeMouseEvent } from '@vue-flow/core'
+import { VueFlow, type NodeMouseEvent } from '@vue-flow/core'
 import { ref, useId, useTemplateRef } from 'vue'
 
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
@@ -63,7 +61,7 @@ const uniqueId = useId()
 const flowId = `${uniqueId}-${props.phase}`
 
 const { vueFlowStore, editorStore, nodes, edges, autoLayout } = useFlow(props.phase, flowId)
-const { addNode, moveNode, removeNode } = editorStore
+const { addNode } = editorStore
 const { project, vueFlowRef } = vueFlowStore
 
 const emit = defineEmits<{
@@ -129,22 +127,6 @@ function onNodesInitializes() {
 function handleAutoLayout() {
   autoLayout({
     boundingRect: flowWrapper.value!.getBoundingClientRect(),
-  })
-}
-
-const onNodeDragStop = (event: NodeMouseEvent) => {
-  const { node } = event
-  if (!node) return
-
-  // Update the node position in the store
-  moveNode(node.id as NodeId, node.position)
-}
-
-const onNodesChange = (changes: NodeChange[]) => {
-  changes.forEach((change) => {
-    if (change.type === 'remove') {
-      removeNode(change.id as NodeId)
-    }
   })
 }
 </script>
