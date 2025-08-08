@@ -29,13 +29,13 @@
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import PropertiesField from './PropertiesField.vue'
-import { PropertyNodeSchema } from '../node/mock'
+import { PropertyNodeSchema } from '../node/schemas'
 import { useNodeForm, type BaseFormData } from './composables'
 import { computed, useTemplateRef } from 'vue'
 import StringField from '../../../shared/StringField.vue'
 import EnumField from '../../../shared/EnumField.vue'
 import InputsField from './InputsField.vue'
-import { isReadableProperty, isWritableProperty } from './property'
+import { isReadableProperty, isWritableProperty } from '../node/property'
 import { useEditorStore } from '../store/store'
 
 interface PropertyFormData extends BaseFormData {

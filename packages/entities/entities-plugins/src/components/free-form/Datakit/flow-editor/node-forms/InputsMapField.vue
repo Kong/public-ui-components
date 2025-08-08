@@ -24,7 +24,7 @@
         <div class="dk-inputs-map-field-entry-content">
           <KInput
             :id="`ff-kv-entry-key-${field.path.value}.${index}`"
-            v-model.trim.lazy="entry.key"
+            v-model.trim="entry.key"
             class="ff-kv-field-entry-key"
             :data-key-input="index"
             :data-testid="`ff-key-${field.path.value}.${index}`"
@@ -104,7 +104,8 @@ const {
 const { i18n } = useI18n()
 const root = useTemplateRef('root')
 const addingEntryId = ref<string | null>(null)
-const fieldNameBeforeChange = ref<FieldName | undefined>()
+
+let fieldNameBeforeChange: FieldName
 
 async function focus(index: number, type: 'key' | 'value' = 'key') {
   if (!root.value) {
@@ -129,21 +130,24 @@ function handleRemoveEntry(entry: KVEntry<FieldName, IdConnection>) {
   if (entry.id === addingEntryId.value) {
     addingEntryId.value = null
   }
-  emit('remove:field', entry.key)
+  if (entry.key.trim() !== '') { // only emit remove if the field has a name
+    emit('remove:field', entry.key)
+  }
 }
 
 function handleBeforeInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
-  fieldNameBeforeChange.value = entry.key
+  fieldNameBeforeChange = entry.key
 }
 
 function handleInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
   if (entry.id === addingEntryId.value) {
     // add field
+    if (entry.key.trim() === '') return // skip if the field name is empty
     emit('add:field', entry.key, entry.value)
     addingEntryId.value = null
   } else {
     // rename field
-    emit('rename:field', fieldNameBeforeChange.value!, entry.key)
+    emit('rename:field', fieldNameBeforeChange, entry.key)
   }
 }
 

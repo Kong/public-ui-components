@@ -180,7 +180,7 @@ import HandleTwig from './HandleTwig.vue'
 import { isImplicitNode } from './node'
 
 import type { NodeInstance } from '../../types'
-import { isReadableProperty, isWritableProperty } from '../node-forms/property'
+import { isReadableProperty, isWritableProperty } from '../node/property'
 import { getNodeMeta } from '../store/helpers'
 import { useEditorStore } from '../store/store'
 import NodeBadge from './NodeBadge.vue'

@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import InputsField from './InputsField.vue'
-import { ServiceRequestSchema } from '../node/mock'
+import { ServiceRequestSchema } from '../node/schemas'
 import { useTemplateRef } from 'vue'
 import { useNodeForm } from './composables'
 
