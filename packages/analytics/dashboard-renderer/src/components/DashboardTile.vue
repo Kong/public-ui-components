@@ -140,6 +140,7 @@ import {
   formatTime,
   type TileDefinition,
   TimePeriods,
+  getFieldDataSources,
 } from '@kong-ui-public/analytics-utilities'
 import { type Component, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
@@ -155,7 +156,7 @@ import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4, AllFilters } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, FilterDatasource, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4, AllFilters } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
@@ -210,9 +211,8 @@ const exploreLink = computed(() => {
     return ''
   }
 
-  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
+  const filters = datasourceScopedFilters.value
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
-
   const exploreQuery: ExploreQuery | AiExploreQuery = {
     filters: filters,
     metrics: props.definition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
@@ -321,6 +321,24 @@ const agedOutWarning = computed(() => {
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
     savedGranularity: i18n.t(`granularities.${savedGranularity}` as any),
+  })
+})
+
+/**
+ * Derives the subset of context and tile query filters that is relevant for the tile's datasource.
+ *
+ * @returns Array of scoped filter objects to a datasource
+ */
+const datasourceScopedFilters = computed(() => {
+  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
+
+  // TODO: default to api_usage until datasource is made required
+  const datasource = props.definition?.query?.datasource ?? 'api_usage'
+
+  return filters.filter(f => {
+    const possibleSources = getFieldDataSources(f.field)
+
+    return possibleSources.some((ds: FilterDatasource) => datasource === ds)
   })
 })
 
