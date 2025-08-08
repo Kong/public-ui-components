@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.58.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.57.0...@kong-ui-public/entities-plugins@9.58.0) (2025-08-08)
+
+
+### Features
+
+* **entities-plugins:** datakit remove nodes and edges upon deletion from canvas ([#2302](https://github.com/Kong/public-ui-components/issues/2302)) ([0e717df](https://github.com/Kong/public-ui-components/commit/0e717dfe72cecd51c3bb402468cdd785efb1325c))
+
+
+
+
+
 # [9.57.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.56.1...@kong-ui-public/entities-plugins@9.57.0) (2025-08-08)
 
 
