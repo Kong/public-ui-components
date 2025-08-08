@@ -21,6 +21,7 @@
     "exportAsCsv": "Export as CSV"
   },
   "jumpToExplore": "Explore",
+  "jumpToRequests": "View requests",
   "query_aged_out_warning": "This tile was configured with {savedGranularity} granularity, which is no longer available. It now shows {currentGranularity} data, the closest available granularity.",
   "granularities": {
     "daily": "1 day",
