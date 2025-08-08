@@ -60,11 +60,37 @@ const tooltipData = ref<{
   locked: false,
 })
 
-const tooltipRef = useTemplateRef('tooltipRef')
-const tooltipEl = computed(() => tooltipRef.value?.$el as HTMLElement | undefined)
-const { width: tooltipWidth, height: tooltipHeight } = useElementSize(tooltipEl)
 const cachedTooltipWidth = ref(0)
 const cachedTooltipHeight = ref(0)
+
+const tooltipRef = useTemplateRef('tooltipRef')
+const tooltipEl = computed(() => tooltipRef.value?.$el as HTMLElement | undefined)
+const chartRef = useTemplateRef<HTMLDivElement>('chartRef')
+const chartContainerRef = useTemplateRef<HTMLDivElement>('chartContainerRef')
+const { height } = useElementSize(chartContainerRef)
+const { width: tooltipWidth, height: tooltipHeight } = useElementSize(tooltipEl)
+const { chartInstance } = composables.useVegaLite(chartRef, toRef(props, 'spec'))
+
+watch(height, () => {
+  chartInstance.value?.view.height(height.value).run()
+})
+
+watch(chartInstance, (instance) => {
+  if (instance) {
+    registerTooltipEvents()
+  }
+})
+
+onMounted(() => {
+  registerTooltipEvents()
+})
+
+onUnmounted(() => {
+  if (chartInstance.value) {
+    chartInstance.value.view.removeEventListener('mouseover', handleHover)
+    chartInstance.value.view.removeEventListener('mouseout', hideTooltip)
+  }
+})
 
 const handleHover = (event: ScenegraphEvent, item?: Item<any> | null) => {
   if (tooltipData.value.locked) {
@@ -148,44 +174,18 @@ const handleChartClick = () => {
   tooltipData.value.locked = !tooltipData.value.locked
 }
 
-function hideTooltip() {
+const hideTooltip = () => {
   if (!tooltipData.value.locked) {
     tooltipData.value.show = false
   }
 }
 
-function registerTooltipEvents() {
+const registerTooltipEvents = () => {
   if (chartInstance.value) {
     chartInstance.value.view.addEventListener('mouseout', hideTooltip)
     chartInstance.value.view.addEventListener('mousemove', handleHover)
   }
 }
-
-const chartRef = useTemplateRef<HTMLDivElement>('chartRef')
-const chartContainerRef = useTemplateRef<HTMLDivElement>('chartContainerRef')
-const { height } = useElementSize(chartContainerRef)
-const { chartInstance } = composables.useVegaLite(chartRef, toRef(props, 'spec'))
-
-watch(height, () => {
-  chartInstance.value?.view.height(height.value).run()
-})
-
-watch(chartInstance, (instance) => {
-  if (instance) {
-    registerTooltipEvents()
-  }
-})
-
-onMounted(() => {
-  registerTooltipEvents()
-})
-
-onUnmounted(() => {
-  if (chartInstance.value) {
-    chartInstance.value.view.removeEventListener('mouseover', handleHover)
-    chartInstance.value.view.removeEventListener('mouseout', hideTooltip)
-  }
-})
 
 </script>
 
