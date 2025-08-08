@@ -23,16 +23,14 @@
   border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   display: flex;
   flex-direction: column;
-  margin: var(--kui-space-30, $kui-space-30);
+  margin: var(--kui-space-30, $kui-space-30) var(--kui-space-30, $kui-space-30) 0 var(--kui-space-30, $kui-space-30) ;
   min-height: 24px;
-  padding-bottom: var(--kui-space-30, $kui-space-30);
 
   .title {
     display: flex;
     font-size: var(--kui-font-size-30, $kui-font-size-30);
     font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
     justify-content: space-between;
-    max-height: 16px;
 
     .drag-icon {
       margin-top: var(--kui-space-30, $kui-space-30);
