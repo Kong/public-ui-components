@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.3.4...@kong-ui-public/dashboard-renderer@6.4.0) (2025-08-08)
+
+
+### Features
+
+* wire up view requests in dashboards ([#2296](https://github.com/Kong/public-ui-components/issues/2296)) ([58381a5](https://github.com/Kong/public-ui-components/commit/58381a5903b3b4cf5ae3f8edf831481c96d2cc0f))
+
+
+
+
+
 ## [6.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.3.3...@kong-ui-public/dashboard-renderer@6.3.4) (2025-08-07)
 
 
