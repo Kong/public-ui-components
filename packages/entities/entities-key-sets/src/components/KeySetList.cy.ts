@@ -519,8 +519,8 @@ describe('<KeySetList />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.get('.table-empty-state .empty-state-action .k-button').should('be.visible')
+      cy.getTestId('key-sets-entity-empty-state').should('be.visible')
+      cy.getTestId('entity-create-button').should('be.visible')
     })
 
     it('should hide empty state and create key set cta if user can not create', () => {
@@ -539,8 +539,8 @@ describe('<KeySetList />', () => {
 
       cy.wait('@getKeySets')
       cy.get('.kong-ui-entities-key-sets-list').should('be.visible')
-      cy.get('.table-empty-state').should('be.visible')
-      cy.get('.table-empty-state .empty-state-action .k-button').should('not.exist')
+      cy.getTestId('key-sets-entity-empty-state').should('be.visible')
+      cy.getTestId('entity-create-button').should('not.exist')
     })
 
     it('should handle error state', () => {

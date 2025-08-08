@@ -1,62 +1,72 @@
 import { uniqueId } from 'lodash-es'
-import { toRef, ref, watch, useAttrs } from 'vue'
+import { toRef, ref, watch, useAttrs, toValue } from 'vue'
 import { useField, useFieldAttrs } from '../composables'
+import { isEqual } from 'lodash-es'
 
 import type { LabelAttributes } from '@kong/kongponents'
-import type { EmitFn } from 'vue'
+import type { EmitFn, Ref } from 'vue'
 
-export interface KeyValueFieldProps {
+export interface KeyValueFieldProps<TKey extends string = string, TValue extends string = string> {
   name: string
-  initialValue?: Record<string, string> | null
+  initialValue?: Record<TKey, TValue> | null
   label?: string
   keyPlaceholder?: string
   valuePlaceholder?: string
-  defaultKey?: string
-  defaultValue?: string
+  defaultKey?: TKey
+  defaultValue?: TValue
   labelAttributes?: LabelAttributes
   showVaultSecretPicker?: boolean
 }
 
-export interface KeyValueFieldEmits {
-  change: [Record<string, string>]
+export interface KeyValueFieldEmits<TKey extends string = string, TValue extends string = string> {
+  change: [Record<TKey, TValue>]
 }
 
-export interface KVEntry {
+export interface KVEntry<TKey extends string = string, TValue extends string = string> {
   id: string
-  key: string
-  value: string
+  key: TKey
+  value: TValue
 }
 
 /**
  * Headless composable for implementing a key-value field.
  */
-export function useKeyValueField(
-  props: KeyValueFieldProps,
+export function useKeyValueField<
+  TKey extends string = string,
+  TValue extends string = string,
+>(
+  props: KeyValueFieldProps<TKey, TValue>,
   emit: EmitFn<KeyValueFieldEmits>,
 ) {
-  const { value: fieldValue, ...field } = useField<Record<string, string>>(toRef(props, 'name'))
+  const { value: fieldValue, ...field } = useField<Record<TKey, TValue>>(toRef(props, 'name'))
   const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 
-  const entries = ref<KVEntry[]>(
-    getEntries(
-      props.initialValue ?? fieldValue?.value ?? {},
-    ),
-  )
+  const entries = ref(getEntries(
+    props.initialValue ?? toValue(fieldValue) ?? ({} as Record<TKey, TValue>)),
+  ) as Ref<Array<KVEntry<TKey, TValue>>>
+  // the return type of ref(..) is not expected, it includes `UnwrapRef<TKey>` and `UnwrapRef<TValue>`
+  // fix it by using `as`
 
   function generateId() {
     return uniqueId('ff-kv-field-')
   }
 
-  function getEntries(value: Record<string, string>): KVEntry[] {
+  function getEntries(value: Record<TKey, TValue>): Array<KVEntry<TKey, TValue>> {
     return Object.entries(value).map(([key, value]) => ({
       id: generateId(),
-      key,
-      value,
+      key: key as TKey,
+      value: value as TValue,
     }))
   }
 
-  function addEntry() {
-    entries.value.push({ id: generateId(), key: props.defaultKey || '', value: props.defaultValue || '' })
+  function addEntry(): KVEntry<TKey, TValue> {
+    const entry = {
+      id: generateId(),
+      key: props.defaultKey || ('' as TKey),
+      value: props.defaultValue || ('' as TValue),
+    }
+    entries.value.push(entry)
+    return entry
   }
 
   function removeEntry(id: string) {
@@ -66,21 +76,31 @@ export function useKeyValueField(
     }
   }
 
-  function updateValue() {
-    const map = Object.fromEntries(entries.value.map(({ key, value }) => [key, value]).filter(([key]) => key))
-    fieldValue!.value = map
-    emit('change', map)
-  }
-
   function reset() {
-    entries.value = getEntries(props.initialValue || {})
+    entries.value = getEntries(props.initialValue || {} as Record<TKey, TValue>)
   }
 
-  function setValue(value: Record<string, string>) {
+  function setValue(value: Record<TKey, TValue>) {
     entries.value = getEntries(value)
   }
 
-  watch(entries, updateValue, { deep: true })
+  let lastUpdatedValue: Record<TKey, TValue> | null = null
+
+  // Sync entries to fieldValue
+  watch(entries, (newEntries) => {
+    const newValue = Object.fromEntries(newEntries.map(({ key, value }) => [key, value]).filter(([key]) => key))
+    fieldValue!.value = newValue
+    lastUpdatedValue = newValue
+    emit('change', newValue)
+  }, { deep: true, immediate: true })
+
+  // Sync fieldValue to entries
+  watch(() => fieldValue?.value, newValue => {
+    if (!newValue) return
+    // avoid infinite sync loop
+    if (isEqual(toValue(newValue), lastUpdatedValue)) return
+    entries.value = getEntries(toValue(newValue))
+  }, { deep: true })
 
   return {
     /**

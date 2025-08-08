@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.3.3...@kong-ui-public/dashboard-renderer@6.3.4) (2025-08-07)
+
+
+### Bug Fixes
+
+* **dashboardrenderer:** clear error message value after await [MA-4181] ([#2306](https://github.com/Kong/public-ui-components/issues/2306)) ([bbccc16](https://github.com/Kong/public-ui-components/commit/bbccc166816f6572d62e932f1005c51fcd1afeb3))
+
+
+
+
+
+## [6.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.3.2...@kong-ui-public/dashboard-renderer@6.3.3) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [6.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.3.1...@kong-ui-public/dashboard-renderer@6.3.2) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [6.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.3.0...@kong-ui-public/dashboard-renderer@6.3.1) (2025-08-06)
 
 

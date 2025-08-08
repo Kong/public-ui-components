@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.3.1...@kong-ui-public/analytics-chart@9.3.2) (2025-08-07)
+
+
+### Bug Fixes
+
+* conditionally show view requests in url is defined in query bridge ([#2295](https://github.com/Kong/public-ui-components/issues/2295)) ([6c239a0](https://github.com/Kong/public-ui-components/commit/6c239a025d111c137021b618dc6abd421fde498f))
+
+
+
+
+
 ## [9.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.3.0...@kong-ui-public/analytics-chart@9.3.1) (2025-08-06)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
