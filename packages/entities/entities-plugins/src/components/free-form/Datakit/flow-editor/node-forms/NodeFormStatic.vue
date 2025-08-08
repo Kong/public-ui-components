@@ -29,7 +29,7 @@ import type { FieldName, NodeName } from '../../types'
 import { useEditorStore } from '../../composables'
 import StringField from '../../../shared/StringField.vue'
 import { findFieldById, findFieldByName } from '../store/helpers'
-import { renameKeyAndKeepOrder, storeValueToFieldValue, type StoreValue } from '../node/static'
+import { fieldValueToStoreValue, renameKeyAndKeepOrder, storeValueToFieldValue, type StoreValue } from '../node/static'
 
 const {
   renameNode,
@@ -52,6 +52,7 @@ const formData = computed(() => {
   }
 
   const values = (selectedNode.value.config?.values ?? {}) as StoreValue
+  const nextValues = {} as StoreValue
 
   // gather fieldNames from edges
   const outputsFieldNamesFromEdges = getOutEdgesByNodeId(selectedNode.value.id)
@@ -73,25 +74,25 @@ const formData = computed(() => {
   // append key for `values`
   outputsFieldNames.forEach(name => {
     if (name in values) {
+      nextValues[name] = values[name]
       return
     }
-    values[name] = ''
+    nextValues[name] = ''
   })
 
   return {
     name: selectedNode.value.name,
-    values: storeValueToFieldValue(values),
+    values: storeValueToFieldValue(nextValues),
   }
 })
-
-;(window as any).formData = formData
 
 function handleAddField(name: FieldName, value?: string) {
   if (!selectedNode.value) throw new Error('No selected node')
   addField(selectedNode.value.id, 'output', name, !value)
   if (value) {
-    // todo(zehao): parse error handing
-    const next = { values: { ...formData.value.values, [name]: JSON.parse(value) } }
+    const next = {
+      values: fieldValueToStoreValue({ ...formData.value.values, [name]: value }),
+    }
     replaceConfig(selectedNode.value.id, next)
   }
 }
@@ -101,7 +102,7 @@ function handleRenameField(oldName: FieldName, newName: FieldName) {
   const field = findFieldByName(selectedNode.value, 'output', oldName)
   if (!field) throw new Error('No field found to rename')
   const next = {
-    values: renameKeyAndKeepOrder(formData.value.values ?? {}, oldName, newName),
+    values: fieldValueToStoreValue(renameKeyAndKeepOrder(formData.value.values ?? {}, oldName, newName)),
   }
   replaceConfig(selectedNode.value.id, next, false)
   renameField(selectedNode.value.id, field.id, newName)
@@ -112,15 +113,20 @@ function handleRemoveField(name: FieldName) {
   const field = findFieldByName(selectedNode.value, 'output', name)
   if (!field) throw new Error('No field found to rename')
   removeField(selectedNode.value?.id, field.id, true, false)
-  const next = { values: { ...formData.value.values } }
+  const next = {
+    values: fieldValueToStoreValue({ ...formData.value.values }),
+  }
   delete next.values[name]
   replaceConfig(selectedNode.value.id, next)
 }
 
 function handleChangeValue(name: FieldName, value: string) {
   if (!selectedNode.value) throw new Error('No selected node')
-  const next = { values: { ...formData.value.values } }
-  next.values[name] = value
+  const nextValues = { ...formData.value.values }
+  nextValues[name] = value
+  const next = {
+    values: fieldValueToStoreValue(nextValues),
+  }
   replaceConfig(selectedNode.value.id, next)
 }
 </script>
