@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import InputsField from './InputsField.vue'
-import { JqNodeSchema } from '../node/mock'
+import { JqNodeSchema } from '../node/schemas'
 import useI18n from '../../../../../composables/useI18n'
 import StringField from '../../../shared/StringField.vue'
 import { useTemplateRef } from 'vue'

@@ -47,7 +47,7 @@
 import Form from '../../../shared/Form.vue'
 import HttpMethodField from './HttpMethodField.vue'
 import InputsField from './InputsField.vue'
-import { CallNodeSchema } from '../node/mock'
+import { CallNodeSchema } from '../node/schemas'
 import useI18n from '../../../../../composables/useI18n'
 import NumberField from '../../../shared/NumberField.vue'
 import { useNodeForm } from './composables'

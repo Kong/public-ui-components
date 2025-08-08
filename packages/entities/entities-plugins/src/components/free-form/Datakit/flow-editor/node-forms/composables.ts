@@ -78,7 +78,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   })
 
   const setName = (name: string | null) => {
-    if (isGlobalStateUpdating) return
     renameNode(selectedNodeId.value, name as NodeName ?? '')
   }
 

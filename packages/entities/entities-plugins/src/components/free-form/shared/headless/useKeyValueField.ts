@@ -1,7 +1,6 @@
-import { uniqueId } from 'lodash-es'
+import { uniqueId, isEqual } from 'lodash-es'
 import { toRef, ref, watch, useAttrs, toValue } from 'vue'
 import { useField, useFieldAttrs } from '../composables'
-import { isEqual } from 'lodash-es'
 
 import type { LabelAttributes } from '@kong/kongponents'
 import type { EmitFn, Ref } from 'vue'
@@ -37,6 +36,7 @@ export function useKeyValueField<
 >(
   props: KeyValueFieldProps<TKey, TValue>,
   emit: EmitFn<KeyValueFieldEmits>,
+  syncToFieldValue = true,
 ) {
   const { value: fieldValue, ...field } = useField<Record<TKey, TValue>>(toRef(props, 'name'))
   const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
@@ -88,6 +88,7 @@ export function useKeyValueField<
 
   // Sync entries to fieldValue
   watch(entries, (newEntries) => {
+    if (!syncToFieldValue) return
     const newValue = Object.fromEntries(newEntries.map(({ key, value }) => [key, value]).filter(([key]) => key))
     fieldValue!.value = newValue
     lastUpdatedValue = newValue
@@ -96,10 +97,9 @@ export function useKeyValueField<
 
   // Sync fieldValue to entries
   watch(() => fieldValue?.value, newValue => {
-    if (!newValue) return
     // avoid infinite sync loop
-    if (isEqual(toValue(newValue), lastUpdatedValue)) return
-    entries.value = getEntries(toValue(newValue))
+    if (isEqual(newValue, lastUpdatedValue)) return
+    entries.value = getEntries(newValue ?? {} as Record<TKey, TValue>)
   }, { deep: true })
 
   return {

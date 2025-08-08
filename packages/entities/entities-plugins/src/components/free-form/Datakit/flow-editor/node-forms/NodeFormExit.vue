@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
-import { ExitNodeSchema } from '../node/mock'
+import { ExitNodeSchema } from '../node/schemas'
 import { useNodeForm } from './composables'
 import { useTemplateRef } from 'vue'
 import StringField from '../../../shared/StringField.vue'

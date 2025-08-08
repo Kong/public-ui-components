@@ -59,7 +59,7 @@ import {
   KONG_CLIENT_SUPPORTED_PROPERTIES,
   PROPERTY_KEY_PATTERN,
   PROPERTY_PREFIXES,
-} from './property'
+} from '../node/property'
 
 const { i18n: { t } } = useI18n()
 
