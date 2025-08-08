@@ -61,7 +61,7 @@ const uniqueId = useId()
 const flowId = `${uniqueId}-${props.phase}`
 
 const { vueFlowStore, editorStore, nodes, edges, autoLayout } = useFlow(props.phase, flowId)
-const { addNode } = editorStore
+const { addNode, clear: historyClear } = editorStore
 const { project, vueFlowRef } = vueFlowStore
 
 const emit = defineEmits<{
@@ -119,6 +119,9 @@ function onNodesInitializes() {
   if (!initialLayoutTriggered.value) {
     initialLayoutTriggered.value = true
     handleAutoLayout()
+    // Clear all history post-initialization, as the state
+    // should be the 'origin' by this point.
+    historyClear()
   }
 
   // Reserved for future steps
