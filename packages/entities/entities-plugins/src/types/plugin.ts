@@ -1,4 +1,4 @@
-import type { PathToDotNotation } from '@kong-ui-public/i18n/dist/types/types'
+import type { PathToDotNotation } from '@kong-ui-public/i18n'
 import { PluginGroup, PluginScope } from '@kong-ui-public/entities-plugins-metadata'
 
 export const PluginGroupArray = [

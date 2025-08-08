@@ -1,21 +1,20 @@
-debug: true
 nodes:
-- name: API1
+- name: CAT_FACT
   type: call
-  url: https://example.com/api1
-- name: API2
+  url: https://catfact.ninja/fact
+- name: DOG_FACT
   type: call
-  url: https://example.com/api2
+  url: https://dogapi.dog/api/v1/facts
 - name: JOIN
+  type: jq
   inputs:
-    api1_content: API1.body
-    api2_content: API2.body
+    cat: CAT_FACT.body
+    dog: DOG_FACT.body
   jq: |
     {
-        "api1": .api1_content,
-        "api2": .api2_content,
+      cat_fact: .cat.fact,
+      dog_fact: .dog.facts[0],
     }
-  type: jq
 - name: EXIT
   type: exit
   inputs:

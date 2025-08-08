@@ -90,7 +90,7 @@
             <div
               class="new-redis-config-area"
               data-testid="new-redis-config-area"
-              @click="$emit('showNewPartialModal')"
+              @click="() => redisPartialModalVisible = true"
             >
               <AddIcon :size="KUI_ICON_SIZE_20" />
               <span>{{ t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(redisType as RedisPartialType)}) }}</span>
@@ -118,6 +118,13 @@
       :name="formRedisPath"
       reset-label-path="reset"
     />
+    <NewRedisPartialModal
+      :partial-type="redisType"
+      :visible="redisPartialModalVisible"
+      @modal-close="redisPartialModalVisible = false"
+      @partial-update-failed="onPartialUpdateFailed"
+      @partial-updated="onPartialUpdated"
+    />
   </KCard>
   <ObjectField
     v-else
@@ -131,20 +138,22 @@
 <script setup lang="ts">
 import ObjectField from '../shared/ObjectField.vue'
 import RedisConfigCard from './RedisConfigCard.vue'
-import { onBeforeMount, inject, computed, ref, watch, type Ref } from 'vue'
+import NewRedisPartialModal from './NewRedisPartialModal.vue'
+import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
-import { FORMS_CONFIG, REDIS_PARTIAL_FETCHER_KEY } from '@kong-ui-public/forms'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { AddIcon } from '@kong/icons'
-import type { SelectItem } from '@kong/kongponents/dist/types'
+import type { SelectItem } from '@kong/kongponents'
 import { useAxios, useDebouncedFilter, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { RedisConfig, RedisPartialType, Redis } from './types'
+import type { RedisConfig, RedisPartialType, Redis, PartialNotification, GlobalAction } from './types'
 import { partialEndpoints, fieldsOrder, REDIS_PARTIAL_INFO } from './const'
 import { getRedisType, getPartialTypeDisplay } from './utils'
 import { useField, useFormData } from './composables'
-defineEmits<{
+const emit = defineEmits<{
   (e: 'showNewPartialModal'): void
+  (e: 'globalAction', action: GlobalAction, payload?: PartialNotification): void
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -159,7 +168,6 @@ type PartialArray = Array<{ id: string | number, path?: string | undefined }>
 
 const props = defineProps<RedisSelectorProps>()
 
-const redisPartialFetcherKey: Ref<number> = inject(REDIS_PARTIAL_FETCHER_KEY, ref(0))
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 const isFormEditing = redisPartialInfo?.isEditing || false
 const formRedisPath = computed(() => {
@@ -174,6 +182,7 @@ const formRedisPath = computed(() => {
 const redisType = props.redisType || redisPartialInfo?.redisType?.value || 'all'
 // controls the visibility of the redis partial selector
 const useRedisPartial = computed(() => !!redisPartialInfo?.redisType?.value)
+const redisPartialModalVisible = ref(false)
 const selectedRedisConfig = ref(null)
 const usePartial = ref(!isFormEditing)
 const { getMessageFromError } = useErrors()
@@ -190,13 +199,14 @@ const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.
 const { value: redisFieldsValue } = useField<Redis | undefined>(formRedisPath)
 
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
+const pageSize = '1000' // the API returns all partials, so we have to set a high page size to filter them on the frontend
 const {
   debouncedQueryChange: debouncedRedisConfigsQuery,
   loading: loadingRedisConfigs,
   error: redisConfigsFetchError,
   loadItems: loadConfigs,
   results: redisConfigsResults,
-} = useDebouncedFilter(formConfig!, partialEndpoints[formConfig!.app].getAll, undefined, {
+} = useDebouncedFilter(formConfig!, partialEndpoints[formConfig!.app].getAll, pageSize, {
   fetchedItemsKey: 'data',
   searchKeys: ['id', 'name'],
 })
@@ -220,7 +230,12 @@ const getOnePartialUrl = (partialId: string | number): string => {
 }
 
 const availableRedisConfigs = computed((): SelectItem[] => {
-  const configs = redisConfigsResults.value?.map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: getRedisType(el as RedisConfig) })) || []
+  const configs = (redisConfigsResults.value || [])
+    .map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: getRedisType(el as RedisConfig) }))
+    // filter out non-redis configs
+    // this is needed because the API returns all partials, not just redis configurations.
+    .filter(partial => partial.type === 'redis-ce' || partial.type === 'redis-ee')
+
   if (redisType !== 'all') {
     // filter redis configs by redis type supported by the plugin
     return configs.filter((el) => el.type === redisType)
@@ -259,6 +274,16 @@ const handleFormRedisPartialData = () => {
   }
 }
 
+const onPartialUpdated = (payload: PartialNotification) => {
+  // reload configs after partial is created
+  loadConfigs()
+  emit('globalAction', 'notify', payload)
+}
+
+const onPartialUpdateFailed = (payload: PartialNotification) => {
+  emit('globalAction', 'notify', payload)
+}
+
 const redisConfigSelected = async (val: string | number | undefined) => {
   // when selector is cleared, do nothing
   if (!val) return
@@ -282,13 +307,6 @@ const redisConfigSelected = async (val: string | number | undefined) => {
   }
 }
 
-// if a new key is passed by the consuming app, reload the configs
-watch(() => redisPartialFetcherKey?.value, async (key) => {
-  if (key) {
-    await loadConfigs()
-  }
-})
-
 watch(() => usePartial.value, () => {
   handleFormRedisPartialData()
 })
@@ -299,6 +317,7 @@ onBeforeMount(() => {
   if (props.defaultRedisConfigItem || partialValue?.value) {
     const defaultRedisConfigItem = props.defaultRedisConfigItem || partialValue?.value?.[0].id
     redisConfigSelected(defaultRedisConfigItem)
+    usePartial.value = true
   } else if (redisFieldsValue?.value) {
     redisFieldsSaved.value = redisFieldsValue.value
   }

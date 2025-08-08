@@ -10,27 +10,32 @@
     v-else
     ref="root"
     class="ff-kv-field"
+    :data-testid="`ff-kv-${field.path.value}`"
   >
-    <header class="ff-kv-field-header">
+    <header
+      class="ff-kv-field-header"
+      :data-testid="`ff-kv-header-${field.path.value}`"
+    >
       <KLabel
         class="ff-kv-field-label"
-        v-bind="fieldAttrs"
+        v-bind="labelAttrs"
         :data-testid="`ff-label-${field.path.value}`"
-        :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
+        :tooltip-attributes="labelAttrs.labelAttributes.tooltipAttributes"
       >
-        {{ fieldAttrs.label }}
+        {{ labelAttrs.label }}
         <template
-          v-if="fieldAttrs.labelAttributes?.info"
+          v-if="labelAttrs.labelAttributes?.info"
           #tooltip
         >
           <slot name="tooltip">
             <!-- eslint-disable-next-line vue/no-v-html -->
-            <div v-html="fieldAttrs.labelAttributes.info" />
+            <div v-html="labelAttrs.labelAttributes.info" />
           </slot>
         </template>
       </KLabel>
       <KButton
         appearance="tertiary"
+        :data-testid="`ff-kv-add-btn-${field.path.value}`"
         icon
         @click="handleAddClick"
       >
@@ -42,20 +47,21 @@
       v-for="(entry, index) of entries"
       :key="entry.id"
       class="ff-kv-field-entry"
+      :data-testid="`ff-kv-container-${field.path.value}.${index}`"
     >
-      <KInput
+      <EnhancedInput
         v-model.trim="entry.key"
         class="ff-kv-field-entry-key"
         :data-key-input="index"
-        :data-testid="`ff-key-${field.path.value}`"
+        :data-testid="`ff-key-${field.path.value}.${index}`"
         :placeholder="keyPlaceholder || 'Key'"
         @keydown.enter.prevent="focus(index, 'value')"
       />
 
-      <KInput
+      <EnhancedInput
         v-model.trim="entry.value"
         class="ff-kv-field-entry-value"
-        :data-testid="`ff-value-${field.path.value}`"
+        :data-testid="`ff-value-${field.path.value}.${index}`"
         :data-value-input="index"
         :placeholder="valuePlaceholder || 'Value'"
         @keydown.enter.prevent="handleValueEnter(index)"
@@ -68,11 +74,18 @@
             :update="value => handleAutofill(index, value)"
             :value="entry.value"
           />
+          <KAlert
+            v-if="realShowVaultSecretPicker && !autofillSlot"
+            appearance="warning"
+            :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+            :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+          />
         </template>
-      </KInput>
+      </EnhancedInput>
 
       <KButton
         appearance="tertiary"
+        :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
         icon
         @click="removeEntry(entry.id)"
       >
@@ -83,74 +96,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, useTemplateRef, nextTick, inject, computed, toRef } from 'vue'
+import { useTemplateRef, nextTick, inject, computed } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
-import { uniqueId } from 'lodash-es'
-import type { LabelAttributes } from '@kong/kongponents'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
-import { useField, useFieldAttrs } from './composables'
 import type { MapFieldSchema } from '../../../types/plugins/form-schema'
+import useI18n from '../../../composables/useI18n'
+import { useKeyValueField, type KeyValueFieldEmits, type KeyValueFieldProps } from '../shared/headless/useKeyValueField'
+import EnhancedInput from './EnhancedInput.vue'
 
-interface KVEntry {
-  id: string
-  key: string
-  value: string
-}
+const { showVaultSecretPicker = undefined, ...props } = defineProps<KeyValueFieldProps>()
 
-const { showVaultSecretPicker = undefined, ...props } = defineProps<{
-  name: string
-  initialValue?: Record<string, string> | null
-  label?: string
-  required?: boolean
-  keyPlaceholder?: string
-  valuePlaceholder?: string
-  defaultKey?: string
-  defaultValue?: string
-  labelAttributes?: LabelAttributes
-  showVaultSecretPicker?: boolean
-}>()
+const { i18n } = useI18n()
 
-const { value: fieldValue, ...field } = useField<Record<string, string>>(toRef(props, 'name'))
-const fieldAttrs = useFieldAttrs(field.path!, props)
+const emit = defineEmits<KeyValueFieldEmits>()
 
-const emit = defineEmits<{
-  change: [Record<string, string>]
-}>()
-
-const entries = ref<KVEntry[]>(
-  getEntries(
-    props.initialValue ?? fieldValue?.value ?? {},
-  ),
-)
-
-function generateId() {
-  return uniqueId('ff-kv-field-')
-}
-
-function getEntries(value: Record<string, string>): KVEntry[] {
-  return Object.entries(value).map(([key, value]) => ({
-    id: generateId(),
-    key,
-    value,
-  }))
-}
-
-const addEntry = () => {
-  entries.value.push({ id: generateId(), key: props.defaultKey || '', value: props.defaultValue || '' })
-}
-
-const removeEntry = (id: string) => {
-  const index = entries.value.findIndex((entry) => entry.id === id)
-  if (index !== -1) {
-    entries.value.splice(index, 1)
-  }
-}
-
-const updateValue = () => {
-  const map = Object.fromEntries(entries.value.map(({ key, value }) => [key, value]).filter(([key]) => key))
-  fieldValue!.value = map
-  emit('change', map)
-}
+const {
+  entries,
+  addEntry,
+  removeEntry,
+  reset,
+  setValue,
+  labelAttrs,
+  field,
+} = useKeyValueField(props, emit)
 
 const root = useTemplateRef('root')
 
@@ -162,8 +130,6 @@ async function focus(index: number, type: 'key' | 'value' = 'key') {
   await nextTick()
   root.value.querySelector<HTMLInputElement>(`[data-${type}-input="${index}"]`)?.focus()
 }
-
-watch(entries, updateValue, { deep: true })
 
 function handleAddClick() {
   addEntry()
@@ -191,12 +157,8 @@ function handleAutofill(index: number, value: string) {
 }
 
 defineExpose({
-  reset: () => {
-    entries.value = getEntries(props.initialValue || {})
-  },
-  setValue: (value: Record<string, string>) => {
-    entries.value = getEntries(value)
-  },
+  reset,
+  setValue,
 })
 </script>
 

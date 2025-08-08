@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@9.1.0...@kong-ui-public/analytics-metric-provider@9.1.1) (2025-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+# [9.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@9.0.2...@kong-ui-public/analytics-metric-provider@9.1.0) (2025-08-06)
+
+
+### Features
+
+* better MetricCardContainer loading rendering ma-4120 ([#2282](https://github.com/Kong/public-ui-components/issues/2282)) ([31a161e](https://github.com/Kong/public-ui-components/commit/31a161ee1ff8270efcdbcd9cb52bf4489fffcad2))
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
+## [9.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@9.0.1...@kong-ui-public/analytics-metric-provider@9.0.2) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [9.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@9.0.0...@kong-ui-public/analytics-metric-provider@9.0.1) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+# [9.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.12...@kong-ui-public/analytics-metric-provider@9.0.0) (2025-07-24)
+
+
+### Features
+
+* **analytics:** move dashboards to version 2 [MA-3935] ([#2221](https://github.com/Kong/public-ui-components/issues/2221)) ([2a7250b](https://github.com/Kong/public-ui-components/commit/2a7250bbf4a803446e372a78bbbe415e80c44b94))
+
+
+### BREAKING CHANGES
+
+* **analytics:** dashboards only support v2 schemas; analytics-utilities exports v2 schema by default.
+
+
+
+
+
+## [8.9.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.11...@kong-ui-public/analytics-metric-provider@8.9.12) (2025-07-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.9.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.10...@kong-ui-public/analytics-metric-provider@8.9.11) (2025-07-16)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+## [8.9.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.9...@kong-ui-public/analytics-metric-provider@8.9.10) (2025-07-14)
+
+
+### Bug Fixes
+
+* move `moduleResolution` to `bundler` ([#2213](https://github.com/Kong/public-ui-components/issues/2213)) ([a72a0ce](https://github.com/Kong/public-ui-components/commit/a72a0ce0f5d326382c7fc5b9db47288cfbaaeb5b))
+
+
+
+
+
+## [8.9.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.8...@kong-ui-public/analytics-metric-provider@8.9.9) (2025-07-11)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
 ## [8.9.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@8.9.7...@kong-ui-public/analytics-metric-provider@8.9.8) (2025-07-03)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider

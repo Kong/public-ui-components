@@ -1,7 +1,7 @@
 // Cypress component test spec file
 import type { KongManagerGatewayServiceFormConfig, KonnectGatewayServiceFormConfig } from '../types'
 import { gatewayService1, gatewayService2 } from '../../fixtures/mockData'
-import GatewayServiceForm from './LegacyGatewayServiceForm.vue'
+import GatewayServiceForm from './GatewayServiceForm.vue'
 import { EntityBaseForm } from '@kong-ui-public/entities-shared'
 
 const cancelRoute = { name: 'gateway-services-list' }
@@ -73,7 +73,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.get('.kong-ui-entities-gateway-service-form form').should('be.visible')
 
       cy.getTestId('gateway-service-name-input').should('be.visible')
-      cy.getTestId('gateway-service-tags-input').should('be.visible')
+      cy.getTestId('tags-collapse').click()
       cy.getTestId('gateway-service-url-input').should('be.visible')
       cy.getTestId('collapse-trigger-content').should('be.visible')
 
@@ -136,8 +136,8 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       cy.getTestId('gateway-service-url-input').type('abcd')
-      cy.getTestId('service-create-form-submit').should('be.enabled').click()
-      cy.getTestId('form-error').should('be.visible')
+      cy.get('.gateway-service-url-input').find('.help-text').should('have.length', 1)
+      cy.getTestId('service-create-form-submit').should('be.disabled')
     })
 
     it('should enable Save button if Protocol, Host, Port and Path option is selected and Host field is filled in', () => {
@@ -222,6 +222,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       cy.getTestId('gateway-service-name-input').type('Service-1')
+      cy.getTestId('tags-collapse').find('.collapse-trigger-content').click()
       cy.getTestId('gateway-service-tags-input').type('a,b')
       cy.getTestId('gateway-service-url-input').type(gatewayService1.url)
       cy.getTestId('gateway-service-protocol-radio').click()
@@ -241,7 +242,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       cy.getTestId('gateway-service-protocol-radio').click()
-      cy.getTestId('collapse-trigger-content').click()
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
 
       // hide clineCert, caCert and tlsVerify fields when protocol is http (default)
       cy.getTestId('gateway-service-clientCert-input').should('not.exist')
@@ -369,6 +370,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
 
       // form fields
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
       cy.getTestId('gateway-service-readTimeout-input').should('have.value', 0)
       cy.getTestId('gateway-service-retries-input').should('have.value', 0)
       cy.getTestId('gateway-service-connTimeout-input').should('have.value', 0)
@@ -390,6 +392,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         .as('vueWrapper')
 
       cy.wait('@getGatewayService')
+      cy.getTestId('tags-collapse').find('.collapse-trigger-content').click()
       cy.getTestId('gateway-service-tags-input').clear()
       cy.getTestId('gateway-service-tags-input').type('tag1,tag2')
 
@@ -455,7 +458,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.get('.kong-ui-entities-gateway-service-form form').should('be.visible')
 
       cy.getTestId('gateway-service-name-input').should('be.visible')
-      cy.getTestId('gateway-service-tags-input').should('be.visible')
+      cy.getTestId('tags-collapse').click()
       cy.getTestId('gateway-service-url-input').should('be.visible')
       cy.getTestId('collapse-trigger-content').should('be.visible')
 
@@ -518,8 +521,8 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       cy.getTestId('gateway-service-url-input').type('abcd')
-      cy.getTestId('service-create-form-submit').should('be.enabled').click()
-      cy.getTestId('form-error').should('be.visible')
+      cy.get('.gateway-service-url-input').find('.help-text').should('have.length', 1)
+      cy.getTestId('service-create-form-submit').should('be.disabled')
     })
 
     it('should enable Save button if Protocol, Host, Port and Path option is selected and Host field is filled in', () => {
@@ -604,6 +607,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       cy.getTestId('gateway-service-name-input').type('Service-1')
+      cy.getTestId('tags-collapse').find('.collapse-trigger-content').click()
       cy.getTestId('gateway-service-tags-input').type('a,b')
       cy.getTestId('gateway-service-url-input').type(gatewayService1.url)
       cy.getTestId('gateway-service-protocol-radio').click()
@@ -623,7 +627,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
       cy.getTestId('gateway-service-protocol-radio').click()
-      cy.getTestId('collapse-trigger-content').click()
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
 
       // hide clineCert, caCert and tlsVerify fields when protocol is http (default)
       cy.getTestId('gateway-service-clientCert-input').should('not.exist')
@@ -732,6 +736,7 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
 
       // form fields
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
       cy.getTestId('gateway-service-readTimeout-input').should('have.value', 0)
       cy.getTestId('gateway-service-retries-input').should('have.value', 0)
       cy.getTestId('gateway-service-connTimeout-input').should('have.value', 0)
@@ -753,6 +758,8 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
         .as('vueWrapper')
 
       cy.wait('@getGatewayService')
+      // open tags fields
+      cy.getTestId('tags-collapse').find('.collapse-trigger-content').click()
       cy.getTestId('gateway-service-tags-input').clear()
       cy.getTestId('gateway-service-tags-input').type('tag1,tag2')
 

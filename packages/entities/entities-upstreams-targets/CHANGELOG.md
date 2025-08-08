@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.10.0...@kong-ui-public/entities-upstreams-targets@3.10.1) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+# [3.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.9.4...@kong-ui-public/entities-upstreams-targets@3.10.0) (2025-08-06)
+
+
+### Features
+
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
+## [3.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.9.3...@kong-ui-public/entities-upstreams-targets@3.9.4) (2025-08-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.9.2...@kong-ui-public/entities-upstreams-targets@3.9.3) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.9.1...@kong-ui-public/entities-upstreams-targets@3.9.2) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.9.0...@kong-ui-public/entities-upstreams-targets@3.9.1) (2025-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+# [3.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.8.6...@kong-ui-public/entities-upstreams-targets@3.9.0) (2025-07-23)
+
+
+### Features
+
+* **entities-upstreams-targets:** hide some fields when algorithm is sticky sessions ([#2237](https://github.com/Kong/public-ui-components/issues/2237)) ([3acb84f](https://github.com/Kong/public-ui-components/commit/3acb84f23bbd0338b6466548bd50669c1dab6eb4))
+
+
+
+
+
+## [3.8.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.8.5...@kong-ui-public/entities-upstreams-targets@3.8.6) (2025-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.8.4...@kong-ui-public/entities-upstreams-targets@3.8.5) (2025-07-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.8.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.8.3...@kong-ui-public/entities-upstreams-targets@3.8.4) (2025-07-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
 ## [3.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.8.2...@kong-ui-public/entities-upstreams-targets@3.8.3) (2025-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets

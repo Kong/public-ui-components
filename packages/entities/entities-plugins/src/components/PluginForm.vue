@@ -51,6 +51,7 @@
         :raw-schema="loadedSchema"
         :record="record"
         :schema="finalSchema"
+        @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
         @loading="(val: boolean) => formLoading = val"
         @model-updated="handleUpdate"
         @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
@@ -177,6 +178,7 @@ import PluginEntityForm from './PluginEntityForm.vue'
 import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
+import type { GlobalAction } from './free-form/shared/types'
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -192,6 +194,7 @@ const emit = defineEmits<{
     }
   ): void
   (e: 'showNewPartialModal', redisType: string): void
+  (e: 'globalAction', name: GlobalAction, payload: any): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)

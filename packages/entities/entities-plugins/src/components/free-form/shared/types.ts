@@ -12,6 +12,10 @@ export type FormConfig<T extends Record<string, any> = Record<string, any>> = {
   prepareFormData?: (data: any) => any
   transformLabel?: (label: string, fieldPath: string) => string
   hasValue?: (data: T | undefined) => boolean
+  /**
+   * Sync value after `change` event for every text-like input.
+   */
+  updateOnChange?: boolean
 }
 
 /**
@@ -104,3 +108,11 @@ export type PartialInfo = {
   redisPath: Ref<string | undefined>
   isEditing: boolean
 }
+
+export type PartialNotification = {
+  message: string
+  appearance: string
+}
+
+// Global action that any field can trigger
+export type GlobalAction = 'notify'

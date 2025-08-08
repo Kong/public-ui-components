@@ -3,8 +3,31 @@
     v-bind="props"
     class="dk-form"
   >
+    <template
+      v-if="enableFlowEditor"
+      #plugin-config-extra
+    >
+      <KSegmentedControl
+        v-model="editorMode"
+        :options="editorModes"
+      >
+        <template #option-label="{ option }">
+          <component :is="icons[option.value]" />
+          {{ option.label }}
+        </template>
+      </KSegmentedControl>
+    </template>
+
     <template #default="formProps">
+      <div v-if="finalEditorMode === 'flow'">
+        <FlowEditor
+          :config="props.model.config"
+          :editing="props.isEditing"
+        />
+      </div>
+
       <Form
+        v-else-if="finalEditorMode === 'code'"
         v-bind="formProps"
         tag="div"
       >
@@ -13,18 +36,13 @@
             {{ t('plugins.free-form.datakit.description_example') }}
 
             <KButton
+              v-for="(_, key) in examples"
+              :key="key"
               appearance="secondary"
               size="small"
-              @click="setExampleCode('authenticate')"
+              @click="handleExampleClick(key)"
             >
-              {{ t('plugins.free-form.datakit.examples.authenticate') }}
-            </KButton>
-            <KButton
-              appearance="secondary"
-              size="small"
-              @click="setExampleCode('combine')"
-            >
-              {{ t('plugins.free-form.datakit.examples.combine') }}
+              {{ t(`plugins.free-form.datakit.examples.${key}`) }}
             </KButton>
           </div>
 
@@ -33,153 +51,117 @@
           </template>
         </KAlert>
 
-        <div
-          ref="editor-root"
-          class="editor"
+        <CodeEditor
+          ref="code-editor"
+          class="code-editor"
+          :config="props.model.config"
+          :editing="props.isEditing"
+          @change="handleCodeChange"
+          @error="handleCodeError"
         />
       </Form>
     </template>
 
     <template #plugin-config-description>
       <!-- eslint-disable-next-line vue/no-v-html -->
-      <span v-html="t('plugins.free-form.datakit.description')" />
+      <span v-html="description" />
     </template>
   </StandardLayout>
 </template>
 
 <script setup lang="ts">
-import { onMounted, shallowRef, useTemplateRef, toRaw, onBeforeUnmount } from 'vue'
-import * as monaco from 'monaco-editor'
-import type { YAMLException } from 'js-yaml'
-import yaml, { JSON_SCHEMA } from 'js-yaml'
+import { computed, useTemplateRef, inject } from 'vue'
+import { KAlert, KSegmentedControl } from '@kong/kongponents'
+import { SparklesIcon, DesignIcon, CodeblockIcon } from '@kong/icons'
+import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../locales/en.json'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import Form from '../shared/Form.vue'
-import type { Props } from '../shared/layout/StandardLayout.vue'
-import { createI18n } from '@kong-ui-public/i18n'
-import { KAlert } from '@kong/kongponents'
-import { SparklesIcon } from '@kong/icons'
-
-// TODO: Update the `authenticate` example with real code once it's ready
+import FlowEditor from './flow-editor/FlowEditor.vue'
+import CodeEditor from './CodeEditor.vue'
+import { usePreferences } from './composables'
 import * as examples from './examples'
+import { FEATURE_FLAGS } from '../../../constants'
+
+import type { Component } from 'vue'
+import type { SegmentedControlOption } from '@kong/kongponents'
+import type { Props } from '../shared/layout/StandardLayout.vue'
+import type { EditorMode } from './types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const props = defineProps<Props<any>>()
 
-const editorRoot = useTemplateRef('editor-root')
-const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
-const LINT_SOURCE = 'YAML Syntax'
+// provided by consumer apps
+// TODO: make the default value to `false` to make it opt-in
+// It's currently set to `true` for testing purposes
+const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, false)
 
-const EDIT_SOURCE = 'datakit.insert-example'
+// Editor mode selection
 
-/**
- * Sets the example code in the Monaco editor.
- * We do not use `setValue` directly because it will clear the undo stack,
- * which prevents the user from undoing changes after inserting an example.
- */
-function setExampleCode(example: keyof typeof examples) {
-  const editor = editorRef.value
-  const model = editor?.getModel()
-  if (!editor || !model) {
-    return
-  }
+const { editorMode } = usePreferences()
+const finalEditorMode = computed<EditorMode>(() => {
+  return enableFlowEditor ? editorMode.value : 'code'
+})
 
-  const newCode = examples[example]
-  if (editor.getValue() !== newCode) {
-    const fullRange = model.getFullModelRange()
-
-    editor.pushUndoStop()
-    editor.executeEdits(
-      EDIT_SOURCE,
-      [{ range: fullRange, text: newCode }],
-    )
-    editor.pushUndoStop()
-  }
-
-  editor.focus()
+const icons: Record<EditorMode, Component> = {
+  flow: DesignIcon,
+  code: CodeblockIcon,
 }
 
-onMounted(() => {
-  const editor = monaco.editor.create(editorRoot.value!, {
-    language: 'yaml',
-    automaticLayout: true,
-    minimap: {
-      enabled: false,
-    },
-    scrollBeyondLastLine: false,
-    tabSize: 2,
-    scrollbar: {
-      alwaysConsumeMouseWheel: false,
-    },
-    autoIndent: 'keep',
-  })
-  editorRef.value = editor
+const editorModes = [
+  {
+    label: t('plugins.free-form.datakit.flow_editor.mode'),
+    value: 'flow',
+  },
+  {
+    label: t('plugins.free-form.datakit.code_editor.mode'),
+    value: 'code',
+  },
+] as const satisfies Array<SegmentedControlOption<EditorMode>>
 
-  if (props.isEditing) {
-    editor.setValue(yaml.dump(toRaw(props.model.config), {
-      schema: JSON_SCHEMA,
-      noArrayIndent: true,
-    }))
+const description = computed(() => {
+  switch (editorMode.value) {
+    case 'code':
+      return t('plugins.free-form.datakit.description_code')
+    case 'flow':
+      return t('plugins.free-form.datakit.description_flow')
+    default:
+      return ''
   }
+})
 
-  editor.onDidChangeModelContent(() => {
-    const model = editor.getModel()
-    const value = editor.getValue() || ''
-    try {
-      const config = yaml.load(value, {
-        schema: JSON_SCHEMA,
-        json: true,
-      })
+// Code editor
 
-      monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
+const codeEditor = useTemplateRef('code-editor')
 
-      props.onFormChange({
-        config,
-      })
-      props.onValidityChange?.({
-        model: 'config',
-        valid: true,
-      })
-    } catch (error: unknown) {
-      const { message, mark } = error as YAMLException
-      const { line, column } = mark || { line: 0, column: 0 }
+function handleExampleClick(example: keyof typeof examples) {
+  codeEditor.value?.setExampleCode(example)
+}
 
-      const simpleMessage = message.split('\n')[0] // Take the first line of the error message
-
-      const markers: monaco.editor.IMarkerData[] = [
-        {
-          startLineNumber: line + 1,
-          startColumn: column + 1,
-          endLineNumber: line + 1,
-          endColumn: column + 2,
-          message: simpleMessage,
-          severity: monaco.MarkerSeverity.Error,
-          source: LINT_SOURCE,
-        },
-      ]
-
-      monaco.editor.setModelMarkers(model!, LINT_SOURCE, markers)
-
-      props.onValidityChange?.({
-        model: 'config',
-        valid: false,
-        error: simpleMessage,
-      })
-    }
+function handleCodeChange(config: any) {
+  props.onFormChange({
+    config,
   })
-})
+  props.onValidityChange?.({
+    model: 'config',
+    valid: true,
+  })
+}
 
-onBeforeUnmount(() => {
-  editorRef.value?.dispose()
-})
+function handleCodeError(msg: string) {
+  props.onValidityChange?.({
+    model: 'config',
+    valid: false,
+    error: msg,
+  })
+}
 </script>
 
 <style lang="scss" scoped>
 .dk-form {
-  .editor {
+  .code-editor {
     height: 684px;
-    width: 100%;
   }
 
   .examples {

@@ -69,11 +69,11 @@
         </router-link>
       </div>
     </template>
-    <template #sidebar-top>
+    <!-- <template #sidebar-top>
       <div class="sidebar-top-slot-content">
         <div>Top Slot Content</div>
       </div>
-    </template>
+    </template> -->
     <template #sidebar-icon-overview>
       <OverviewIcon :size="KUI_ICON_SIZE_40" />
     </template>
@@ -194,6 +194,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       to: '/?runtime-manager',
       label: 'retail-sandbox-rg', // runtime group name
       key: 'gateway-manager',
+      group: 'Connectivity',
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'gateway-manager',
       // TODO: actually when you click on Runtime Manager it would not expand until the user picks a runtime group
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'gateway-manager' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'gateway-manager',
@@ -245,6 +246,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       key: 'servicehub',
       to: '/?servicehub',
       label: 'Deloreans',
+      group: 'Applications',
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'servicehub',
       // TODO: actually when you click on Service Hub it would not expand until the user picks a service
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'servicehub' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'servicehub',
@@ -265,6 +267,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       name: 'Mesh Manager',
       to: '/?mesh-manager',
       key: 'mesh-manager',
+      group: 'Connectivity',
       // TODO: using this item as a default when `activeItem` is undefined
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'mesh-manager',
     },
@@ -272,6 +275,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       name: 'Dev Portal',
       key: 'dev-portal',
       to: '/?dev-portal',
+      group: 'Applications',
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'dev-portal',
       // This item can always show the subnav
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'dev-portal' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'dev-portal',
@@ -313,6 +317,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       name: 'Analytics',
       key: 'analytics',
       to: '/?analytics',
+      group: 'Applications',
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'analytics',
       // This item can always show the subnav
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'analytics' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'analytics',

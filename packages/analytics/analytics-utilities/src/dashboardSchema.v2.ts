@@ -533,10 +533,6 @@ export type TileConfig = FromSchemaWithOptions<typeof tileConfigSchema>
 export const dashboardConfigSchema = {
   type: 'object',
   properties: {
-    version: {
-      type: 'string',
-      enum: ['v2'],
-    },
     tiles: {
       type: 'array',
       items: tileConfigSchema,
@@ -547,7 +543,7 @@ export const dashboardConfigSchema = {
     },
     preset_filters: filtersFn([...new Set([...filterableExploreDimensions, ...filterableBasicExploreDimensions, ...filterableAiExploreDimensions])]),
   },
-  required: ['version', 'tiles'],
+  required: ['tiles'],
   additionalProperties: false,
 } as const satisfies JSONSchema
 

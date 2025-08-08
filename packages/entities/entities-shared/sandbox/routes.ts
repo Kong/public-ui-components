@@ -67,6 +67,12 @@ export const routes: Array<RouteRecordRaw & { label?: string }> = [
     component: () => import('./pages/EntityFormSectionPage.vue'),
   },
   {
+    path: '/entity-form-block',
+    name: 'entity-form-block',
+    label: 'EntityFormBlock',
+    component: () => import('./pages/EntityFormBlockPage.vue'),
+  },
+  {
     path: '/entity-toggle-modal',
     name: 'entity-toggle-modal',
     label: 'EntityToggleModal',

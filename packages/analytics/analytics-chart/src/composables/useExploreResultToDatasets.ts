@@ -69,6 +69,7 @@ export default function useExploreResultToDatasets(
         const dimensionKeys = display && Object.keys(display)
         const isMultiMetric = metricNames && metricNames.length > 1
         const hasDimensions = display && dimensionKeys && dimensionKeys.length > 0
+        const isMultiDimension = hasDimensions && dimensionKeys.length > 1
 
         if (!records.length || !metricNames) {
           return { datasets: [], labels: [] }
@@ -146,6 +147,7 @@ export default function useExploreResultToDatasets(
           labels,
           datasets,
           isLabelEmpty,
+          isMultiDimension,
         }
 
         return data

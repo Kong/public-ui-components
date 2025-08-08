@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.1.0...@kong-ui-public/analytics-utilities@10.1.1) (2025-08-06)
+
+
+### Bug Fixes
+
+* add requestBaseUrl to query bridge ([#2293](https://github.com/Kong/public-ui-components/issues/2293)) ([abb3a0f](https://github.com/Kong/public-ui-components/commit/abb3a0fb5e096840692f2f22acc58138324d380d))
+
+
+
+
+
+# [10.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.0.0...@kong-ui-public/analytics-utilities@10.1.0) (2025-08-06)
+
+
+### Features
+
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
+# [10.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.10.0...@kong-ui-public/analytics-utilities@10.0.0) (2025-07-24)
+
+
+### Features
+
+* **analytics:** move dashboards to version 2 [MA-3935] ([#2221](https://github.com/Kong/public-ui-components/issues/2221)) ([2a7250b](https://github.com/Kong/public-ui-components/commit/2a7250bbf4a803446e372a78bbbe415e80c44b94))
+
+
+### BREAKING CHANGES
+
+* **analytics:** dashboards only support v2 schemas; analytics-utilities exports v2 schema by default.
+
+
+
+
+
+# [9.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.9.0...@kong-ui-public/analytics-utilities@9.10.0) (2025-07-21)
+
+
+### Features
+
+* **dashboard-schema:** make 'version' optional [MA-3935] ([#2234](https://github.com/Kong/public-ui-components/issues/2234)) ([06d3dc3](https://github.com/Kong/public-ui-components/commit/06d3dc3e5b3fb8d393e7fd64a41d3f4b0c9e6af3))
+
+
+
+
+
+# [9.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.8.0...@kong-ui-public/analytics-utilities@9.9.0) (2025-07-11)
+
+
+### Features
+
+* **fine-granularity:** add response type for getting back information about available granularity ([#2210](https://github.com/Kong/public-ui-components/issues/2210)) ([e481a72](https://github.com/Kong/public-ui-components/commit/e481a724a168841069ff2f93d94b0b885199e14b))
+
+
+
+
+
 # [9.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@9.7.1...@kong-ui-public/analytics-utilities@9.8.0) (2025-07-03)
 
 

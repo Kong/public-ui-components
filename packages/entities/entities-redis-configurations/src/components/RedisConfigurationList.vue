@@ -192,7 +192,7 @@ import { RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
 import endpoints from '../partials-endpoints'
 import composables from '../composables'
 import { getRedisType } from '../helpers'
-import { RedisType } from '../types'
+import { PartialType, RedisType } from '../types'
 import LinkedPluginsInline from './LinkedPluginsInline.vue'
 import LinkedPluginListModal from './LinkedPluginListModal.vue'
 import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
@@ -205,9 +205,11 @@ import type {
   EntityRow,
   RedisConfigurationFields,
   CopyEventPayload,
+  RedisConfigurationResponse,
 } from '../types'
 import type { BaseTableHeaders, EmptyStateOptions, ExactMatchFilterConfig, FilterFields, FuzzyMatchFilterConfig, TableErrorMessage } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
+import type { TableDataFetcherParams } from '@kong/kongponents'
 
 const emit = defineEmits<{
   (e: 'click:learn-more'): void
@@ -310,7 +312,21 @@ const buildDeleteUrl = useDeleteUrlBuilder(props.config, fetcherBaseUrl.value)
 const fetcherCacheKey = ref<number>(1)
 const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
 
-const { fetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl)
+const { fetcher: rawFetcher, fetcherState } = useFetcher(props.config, fetcherBaseUrl)
+
+const pageSize = 1000 // the API returns all partials, so we have to set a high page size to filter them on the frontend
+/**
+ * a hack to filter out non-redis configurations from the list,
+ * this is needed because the API returns all partials, not just redis configurations.
+ */
+async function fetcher(params: TableDataFetcherParams): ReturnType<typeof rawFetcher> {
+  const res = await rawFetcher({ ...params, pageSize })
+  res.data = res.data.filter((item: RedisConfigurationResponse) => {
+    return item.type === PartialType.REDIS_CE || item.type === PartialType.REDIS_EE
+  })
+  return res
+}
+
 const { i18n: { t } } = composables.useI18n()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 const router = useRouter()

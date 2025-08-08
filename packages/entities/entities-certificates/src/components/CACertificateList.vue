@@ -23,6 +23,20 @@
           v-model="filterQuery"
           :config="filterConfig"
         />
+        <PermissionsWrapper
+          v-if="useToolbarCreationButton"
+          :auth-function="canCreate"
+        >
+          <KButton
+            appearance="primary"
+            data-testid="toolbar-add-ca-certificate"
+            size="large"
+            :to="config.createRoute"
+          >
+            <AddIcon />
+            {{ t('ca-certificates.list.toolbar_actions.new_ca_certificate') }}
+          </KButton>
+        </PermissionsWrapper>
       </template>
       <!-- Create action -->
       <template #toolbar-button>
@@ -41,8 +55,10 @@
             >
               <BookIcon decorative />
             </KButton>
-            <PermissionsWrapper :auth-function="() => canCreate()">
-              <!-- Hide Create button if table is empty -->
+            <PermissionsWrapper
+              v-if="!useToolbarCreationButton"
+              :auth-function="canCreate"
+            >
               <KButton
                 appearance="primary"
                 data-testid="toolbar-add-ca-certificate"
@@ -57,29 +73,8 @@
         </Teleport>
       </template>
 
-      <!-- TODO: remove this slot when empty states M2 is cleaned up -->
       <template
-        v-if="!hasRecords && isLegacyLHButton"
-        #outside-actions
-      >
-        <Teleport
-          :disabled="!useActionOutside"
-          to="#kong-ui-app-page-header-action-button"
-        >
-          <KButton
-            appearance="secondary"
-            class="open-learning-hub"
-            data-testid="ca-certificates-learn-more-button"
-            icon
-            @click="$emit('click:learn-more')"
-          >
-            <BookIcon decorative />
-          </KButton>
-        </Teleport>
-      </template>
-
-      <template
-        v-if="!filterQuery && enableV2EmptyStates && config.app === 'konnect'"
+        v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
         <EntityEmptyState
@@ -291,11 +286,8 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  /**
-   * Enables the new empty state design, this prop can be removed when
-   * the khcp-14756-empty-states-m2 FF is removed.
-   */
-  enableV2EmptyStates: {
+  /** default to false, setting to true will place create button on top right of list*/
+  useToolbarCreationButton: {
     type: Boolean,
     default: false,
   },
@@ -310,8 +302,6 @@ const { hasRecords, handleStateChange } = useTableState(() => filterQuery.value)
 // If new empty states are enabled, show the learning hub button when the empty state is hidden (for Konnect)
 // If new empty states are not enabled, show the learning hub button (for Konnect)
 const showHeaderLHButton = computed((): boolean => hasRecords.value && props.config.app === 'konnect')
-const isLegacyLHButton = computed((): boolean => !props.enableV2EmptyStates && props.config.app === 'konnect')
-
 
 /**
  * Table Headers

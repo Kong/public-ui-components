@@ -52,11 +52,12 @@
         :metric-unit="computedMetricUnit"
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
-        :threshold="threshold"
         :time-range-ms="timeRangeMs"
+        :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
         :type="(chartOptions.type as ('timeseries_line' | 'timeseries_bar'))"
         :zoom="timeseriesZoom"
+        :zoom-action-items="zoomActionItems"
         @zoom-time-range="(newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange)"
       />
       <StackedBarChart
@@ -73,6 +74,7 @@
         :orientation="barChartOrientation"
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
+        :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
       />
       <DonutChart
@@ -83,6 +85,8 @@
         :legend-values="legendValues"
         :metric-unit="computedMetricUnit"
         :synthetics-data-key="syntheticsDataKey"
+        :tooltip-dimension-display="dimensionAxesTitle"
+        :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
       />
     </div>
@@ -91,85 +95,57 @@
 
 <script setup lang="ts">
 import composables from '../composables'
-import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry } from '../types'
+import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry, ZoomActionItem } from '../types'
 import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
-import type { PropType } from 'vue'
-import { computed, provide, toRef } from 'vue'
+import { computed, inject, onMounted, provide, ref, toRef } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, AnalyticsBridge, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
+import { INJECT_QUERY_PROVIDER } from '../constants'
 
-const props = defineProps({
-  allowCsvExport: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  chartData: {
-    type: Object as PropType<ExploreResultV4>,
-    required: true,
-  },
-  chartOptions: {
-    type: Object as PropType<AnalyticsChartOptions>,
-    required: true,
-  },
-  tooltipTitle: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  emptyStateTitle: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  emptyStateDescription: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  legendPosition: {
-    type: String as PropType<`${ChartLegendPosition}`>,
-    required: false,
-    default: ChartLegendPosition.Right,
-  },
-  syntheticsDataKey: {
-    type: String,
-    required: false,
-    default: '',
-  },
-  showLegendValues: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  showAnnotations: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  threshold: {
-    type: Object as PropType<Record<ExploreAggregations, number>>,
-    required: false,
-    default: undefined,
-  },
-  timeseriesZoom: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-})
+interface ChartProps {
+  chartData: ExploreResultV4
+  chartOptions: AnalyticsChartOptions
+  tooltipTitle?: string
+  emptyStateTitle?: string
+  emptyStateDescription?: string
+  legendPosition?: `${ChartLegendPosition}`
+  syntheticsDataKey?: string
+  showLegendValues?: boolean
+  showAnnotations?: boolean
+  timeseriesZoom?: boolean
+}
 
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
+  (e: 'view-requests', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 
+const props = withDefaults(defineProps<ChartProps>(), {
+  allowCsvExport: false,
+  tooltipTitle: '',
+  emptyStateTitle: '',
+  emptyStateDescription: '',
+  legendPosition: ChartLegendPosition.Right,
+  syntheticsDataKey: '',
+  showLegendValues: true,
+  showAnnotations: true,
+  timeseriesZoom: false,
+})
+
 const { i18n } = composables.useI18n()
+const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
+const requestsBaseUrl = ref('')
+
+onMounted(async () => {
+  // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
+  requestsBaseUrl.value = await queryBridge?.requestsBaseUrl?.() ?? ''
+})
 
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
@@ -226,11 +202,34 @@ const isDonutChart = computed<boolean>(() => props.chartOptions.type === 'donut'
 
 const barChartOrientation = computed<'horizontal' | 'vertical'>(() => props.chartOptions.type.includes('vertical') ? 'vertical' : 'horizontal')
 
-const metricAxesTitle = computed<string | undefined>(() => {
+const tooltipMetricDisplay = computed<string | undefined>(() => {
   if (!props.chartData?.meta.metric_names || !props.chartData?.meta.metric_units) {
     return undefined
   }
 
+  const metricName = props.chartData.meta.metric_names[0]
+  const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
+
+  if (props.chartData.meta.metric_names.length > 1) {
+    if (metricName.includes('latency')) {
+      // @ts-ignore - dynamic i18n key
+      return i18n.t('metricAxisTitles.latency_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+    }
+    if (metricName.includes('size')) {
+      // @ts-ignore - dynamic i18n key
+      return i18n.t('metricAxisTitles.size_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
+    }
+  }
+
+  // @ts-ignore - dynamic i18n key
+  return i18n.t(`chartLabels.${metricName}`)
+
+})
+
+const metricAxesTitle = computed<string | undefined>(() => {
+  if (!props.chartData?.meta.metric_names || !props.chartData?.meta.metric_units) {
+    return undefined
+  }
 
   const metricName = props.chartData.meta.metric_names[0]
   const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
@@ -334,6 +333,16 @@ const chartTooltipSortFn = computed(() => {
     // Fallback sort on value (number of Requests)
     return a.value && b.value ? b.rawValue - a.rawValue : 0
   }
+})
+
+const zoomActionItems = computed<ZoomActionItem[]>(() => {
+  return [
+    { label: i18n.t('zoom_action_items.zoom'), action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange) },
+    ...(requestsBaseUrl.value ? [{
+      label: i18n.t('zoom_action_items.view_requests'),
+      action: (newTimeRange: AbsoluteTimeRangeV4) => emit('view-requests', newTimeRange),
+    }] : []),
+  ]
 })
 
 provide('showLegendValues', showLegendValues)

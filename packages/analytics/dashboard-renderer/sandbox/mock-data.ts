@@ -379,7 +379,7 @@ export const simpleConfigNoFilters: DashboardConfig = {
           description: '{timeframe}',
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
         },
       },
       layout: {
@@ -400,7 +400,7 @@ export const simpleConfigNoFilters: DashboardConfig = {
           type: 'timeseries_line',
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
         },
       },
       layout: {
@@ -433,7 +433,7 @@ export const simpleConfigGlobalFilters: DashboardConfig = {
           description: '{timeframe}',
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
         },
       },
       layout: {
@@ -453,7 +453,7 @@ export const simpleConfigGlobalFilters: DashboardConfig = {
           type: 'timeseries_line',
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
         },
       },
       layout: {
@@ -468,7 +468,7 @@ export const simpleConfigGlobalFilters: DashboardConfig = {
       },
     },
   ],
-  global_filters: [{
+  preset_filters: [{
     field: 'control_plane',
     operator: 'in',
     value: ['default_uuid'],
@@ -541,12 +541,13 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
   tileHeight: 167,
   tiles: [
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_line',
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
         },
       },
       layout: {
@@ -562,12 +563,13 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
       id: 'tile-1',
     },
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_line',
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
         },
       },
       layout: {
@@ -583,12 +585,13 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
       id: 'tile-2',
     },
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_line',
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
         },
       },
       layout: {
@@ -604,12 +607,13 @@ export const fourByFourDashboardConfigJustCharts: DashboardConfig = {
       id: 'tile-3',
     },
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_line',
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
         },
       },
       layout: {
@@ -636,7 +640,7 @@ export const oneTileDashboardConfig: DashboardConfig = {
           type: 'timeseries_line',
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
         },
       },
       layout: {

@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-export type Props<T extends FreeFormPluginData> = {
+export type PluginFormWrapperProps<T extends FreeFormPluginData = FreeFormPluginData> = {
   schema: FormSchema
   formSchema: any
   model: T
@@ -41,18 +41,17 @@ export type Props<T extends FreeFormPluginData> = {
   onFormChange: (value: T) => void
 }
 
-export type ConfigFormProps<T> = {
+export type ConfigFormProps<T extends FreeFormPluginData = FreeFormPluginData> = {
   schema: FormSchema
   data: Record<string, any>
   onChange: (value: T) => void
 }
 </script>
 
-<script setup lang="ts" generic="T extends FreeFormPluginData">
+<script setup lang="ts" generic="T extends FreeFormPluginData = FreeFormPluginData">
 import { pick } from 'lodash-es'
-import { computed, ref, toValue, provide, type MaybeRefOrGetter } from 'vue'
+import { computed, ref, toValue, type MaybeRefOrGetter } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { VueFormGenerator } from '@kong-ui-public/forms'
 import { KCollapse } from '@kong/kongponents'
 import english from '../../../locales/en.json'
@@ -61,15 +60,11 @@ import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const props = defineProps<Props<T>>()
+const props = defineProps<PluginFormWrapperProps<T>>()
 
 const slots = defineSlots<{
-  [K in typeof AUTOFILL_SLOT_NAME]: () => any
-} & {
   default: (props: ConfigFormProps<T>) => any
 }>()
-
-provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
 
 function usePickedSchema(keys: MaybeRefOrGetter<string[]>) {
   return computed(() => ({
@@ -122,8 +117,8 @@ const configCollapse = ref(false)
  * Avoid passing freeform data that it can't handle. e.g. `scope`, `update_time`
  * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
  */
-function pruneData(data: Props<T>['model']) {
-  const ffDataKeys: Array<keyof Props<T>['model']> = [
+function pruneData(data: PluginFormWrapperProps<T>['model']) {
+  const ffDataKeys: Array<keyof PluginFormWrapperProps<T>['model']> = [
     'config',
     'instance_name',
     'partials',

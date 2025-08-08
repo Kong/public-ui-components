@@ -7,13 +7,25 @@ describe('<DashboardTile />', () => {
   const mockTileDefinition: TileDefinition = {
     chart: {
       type: 'timeseries_line',
-      chartTitle: 'Test Chart',
-      allowCsvExport: true,
+      chart_title: 'Test Chart',
+      allow_csv_export: true,
     },
     query: {
-      datasource: 'advanced',
+      datasource: 'api_usage',
       metrics: [],
       filters: [],
+    },
+  }
+
+  const mockTileDefinitionWithTimerange: TileDefinition = {
+    ...mockTileDefinition,
+    query: {
+      ...mockTileDefinition.query,
+      time_range: {
+        type: 'absolute',
+        start: '2024-01-01',
+        end: '2024-02-01',
+      },
     },
   }
 
@@ -142,5 +154,35 @@ describe('<DashboardTile />', () => {
 
     cy.getTestId('kebab-action-menu-1').click()
     cy.getTestId('chart-jump-to-explore-1').should('not.exist')
+  })
+
+  it('should show aged out warning when query granularity does not match saved granularity', () => {
+    mount({
+      definition: {
+        ...mockTileDefinitionWithTimerange,
+        query: {
+          ...mockTileDefinitionWithTimerange.query,
+          granularity: 'minutely',
+        },
+      },
+    })
+
+    cy.getTestId('time-range-badge').should('exist')
+    cy.getTestId('kui-icon-svg-warning-icon').should('exist')
+  })
+
+  it('should not show aged out warning when query granularity matches granularity', () => {
+    mount({
+      definition: {
+        ...mockTileDefinitionWithTimerange,
+        query: {
+          ...mockTileDefinitionWithTimerange.query,
+          granularity: 'hourly',
+        },
+      },
+    })
+
+    cy.getTestId('time-range-badge').should('exist')
+    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
   })
 })

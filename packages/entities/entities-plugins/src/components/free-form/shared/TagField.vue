@@ -6,13 +6,16 @@
     :message="field.error.message"
   />
 
-  <div v-else>
-    <KInput
+  <div
+    v-else
+    :data-testid="`ff-tag-${field.path.value}`"
+  >
+    <EnhancedInput
       v-bind="fieldAttrs"
-      class="ff-string-field"
+      class="ff-tag-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
-      :data-testid="field.path.value"
+      :data-testid="`ff-${field.path.value}`"
       :model-value="rawInputValue ?? ''"
       @update:model-value="handleUpdate"
     >
@@ -25,17 +28,18 @@
           <div v-html="fieldAttrs.labelAttributes.info" />
         </slot>
       </template>
-    </KInput>
+    </EnhancedInput>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, toRef, useAttrs, watch } from 'vue'
-import { KInput, type LabelAttributes } from '@kong/kongponents'
+import type { LabelAttributes } from '@kong/kongponents'
+import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from './utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
-import type { ArrayLikeFieldSchema } from 'src/types/plugins/form-schema'
+import type { SetFieldSchema } from '../../../types/plugins/form-schema'
 
 defineOptions({
   inheritAttrs: false,
@@ -61,7 +65,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string[] | null]
 }>()
 
-const { value: fieldValue, ...field } = useField<string[] | null, ArrayLikeFieldSchema>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<string[] | null, SetFieldSchema>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const noEmptyArray = computed(() => field.schema?.value?.len_min && field.schema.value.len_min > 0)
 
@@ -101,7 +105,7 @@ watch(fieldValue!, newValue => {
 </script>
 
 <style lang="scss" scoped>
-.ff-string-field {
+.ff-tag-field {
   :deep(.k-tooltip p) {
     margin: 0;
   }

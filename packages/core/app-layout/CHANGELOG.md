@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.5.3...@kong-ui-public/app-layout@4.6.0) (2025-08-06)
+
+
+### Features
+
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
+## [4.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.5.2...@kong-ui-public/app-layout@4.5.3) (2025-08-05)
+
+
+### Bug Fixes
+
+* **app-layout:** app page info section slotted table sticky columns ([#2286](https://github.com/Kong/public-ui-components/issues/2286)) ([0e99971](https://github.com/Kong/public-ui-components/commit/0e999719f4a580de0673741833dbc45b313c30b1))
+
+
+
+
+
+## [4.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.5.1...@kong-ui-public/app-layout@4.5.2) (2025-07-15)
+
+
+### Bug Fixes
+
+* **app-layout:** group name styles ([#2217](https://github.com/Kong/public-ui-components/issues/2217)) ([b921375](https://github.com/Kong/public-ui-components/commit/b92137544d0098e1eb99a3d8916c988ecab7915b))
+
+
+
+
+
+## [4.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.5.0...@kong-ui-public/app-layout@4.5.1) (2025-07-15)
+
+
+### Bug Fixes
+
+* **app-layout:** group name styles ([#2216](https://github.com/Kong/public-ui-components/issues/2216)) ([bbb8252](https://github.com/Kong/public-ui-components/commit/bbb8252b07401e23e28fe09bb3220c3b1076417f))
+
+
+
+
+
+# [4.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.8...@kong-ui-public/app-layout@4.5.0) (2025-07-14)
+
+
+### Features
+
+* **app-layout:** grouped sidebar l1 items [KHCP-16758] ([#2215](https://github.com/Kong/public-ui-components/issues/2215)) ([2bfc742](https://github.com/Kong/public-ui-components/commit/2bfc742063fd5756212d670319835ec3ee1158d5))
+
+
+
+
+
 ## [4.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.4.7...@kong-ui-public/app-layout@4.4.8) (2025-06-18)
 
 

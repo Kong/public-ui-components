@@ -49,7 +49,7 @@ const overrideTimeframe: Ref<Timeframe> = computed(() => {
 
 const options = computed<ProviderProps>(() => {
   const datasource = props.query?.datasource
-  if (datasource && datasource !== 'advanced' && datasource !== 'basic') {
+  if (datasource && datasource !== 'api_usage' && datasource !== 'basic') {
     throw new Error(`Invalid datasource value: ${datasource}`)
   }
   return {
@@ -57,8 +57,8 @@ const options = computed<ProviderProps>(() => {
     overrideTimeframe: overrideTimeframe.value,
     tz: props.context.tz,
     additionalFilter: props.context.filters as ExploreFilterAll[], // TODO: Decide how to handle metric card filters.
-    longCardTitles: props.chartOptions.longCardTitles,
-    percentileLatency: props.chartOptions.percentileLatency,
+    longCardTitles: props.chartOptions.long_card_titles,
+    percentileLatency: props.chartOptions.percentile_latency,
     refreshInterval: props.context.refreshInterval,
     queryReady: props.queryReady,
     refreshCounter: props.refreshCounter,
@@ -72,19 +72,6 @@ const options = computed<ProviderProps>(() => {
     align-items: center;
     display: flex;
     height: 90%;
-  }
-
-  :deep(.kong-ui-public-metric-card-container) {
-    height: auto;
-    max-height: 100%;
-
-    .metricscard {
-      @media (min-width: ($kui-breakpoint-phablet - 1px)) {
-        &:not(:last-of-type) {
-          border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
-        }
-      }
-    }
   }
 }
 </style>

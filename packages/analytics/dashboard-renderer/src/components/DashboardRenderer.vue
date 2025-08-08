@@ -10,7 +10,7 @@
       :is="context.editable ? DraggableGridLayout : GridLayout"
       v-else
       ref="gridLayoutRef"
-      :tile-height="model.tileHeight"
+      :tile-height="model.tile_height"
       :tiles="gridTiles"
       @update-tiles="handleUpdateTiles"
     >
@@ -26,7 +26,7 @@
           class="tile-container"
           :context="mergedContext"
           :definition="tile.meta"
-          :height="tile.layout.size.rows * (model.tileHeight || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+          :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
           :query-ready="queryReady"
           :refresh-counter="refreshCounter"
           :tile-id="tile.id"
@@ -42,15 +42,23 @@
 
 <script setup lang="ts">
 import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
-import type { AbsoluteTimeRangeV4, DashboardConfig, TileConfig, SlottableOptions, TileDefinition, AllFilters } from '@kong-ui-public/analytics-utilities'
+import type {
+  AbsoluteTimeRangeV4,
+  AllFilters,
+  AnalyticsBridge,
+  DashboardConfig,
+  SlottableOptions,
+  TileConfig,
+  TileDefinition,
+  TimeRangeV4,
+} from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
-import { computed, inject, ref } from 'vue'
 import type { ComponentPublicInstance } from 'vue'
+import { computed, getCurrentInstance, inject, ref } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
-import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
-import type { AnalyticsBridge, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import {
   DEFAULT_TILE_HEIGHT,
   DEFAULT_TILE_REFRESH_INTERVAL_MS,
@@ -120,7 +128,7 @@ const tileSortFn = (a: TileConfig, b: TileConfig) => {
   return a.layout.position.col - b.layout.position.col
 }
 
-const gridTiles = computed(() => {
+const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
   return model.value.tiles.map((tile: TileConfig) => {
     let tileMeta = tile.definition
 
@@ -161,15 +169,16 @@ const gridTiles = computed(() => {
     return {
       layout: tile.layout,
       meta: tileMeta,
+      type: tile.type,
       // Add a unique key to each tile internally.
       id: tile.id ?? crypto.randomUUID(),
-    } as GridTile<TileDefinition>
+    }
   })
 })
 
 const mergedContext = computed<DashboardRendererContextInternal>(() => {
   let { tz, refreshInterval, editable } = props.context
-  const filters = [...(props.context.filters ?? []), ...(model.value.global_filters ?? [])] as AllFilters[]
+  const filters = [...(props.context.filters ?? []), ...(model.value.preset_filters ?? [])] as AllFilters[]
 
   if (!tz) {
     tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
@@ -184,12 +193,17 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
     editable = false
   }
 
+  // Check if the host app has provided an event handler for zooming.
+  // If there's no handler, disable zooming -- it won't do anything.
+  const zoomable = !!getCurrentInstance()?.vnode?.props?.onZoomTimeRange
+
   return {
     filters,
     tz,
     timeSpec: timeSpec.value,
     refreshInterval,
     editable,
+    zoomable,
   }
 })
 
@@ -209,11 +223,12 @@ const onDuplicateTile = (tile: GridTile<TileDefinition>) => {
     ? { ...tile.meta.chart }
     : {
       ...tile.meta.chart,
-      chartTitle: tile.meta.chart.chartTitle ? `Copy of ${tile.meta.chart.chartTitle}` : '',
+      chart_title: tile.meta.chart.chart_title ? `Copy of ${tile.meta.chart.chart_title}` : '',
     }
 
   const newTile: TileConfig = {
     id: crypto.randomUUID(),
+    type: 'chart',
     definition: {
       ...tile.meta,
       chart,
@@ -244,6 +259,7 @@ const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
   const updatedTiles = tiles.map(tile => {
     return {
       id: tile.id,
+      type: tile.type,
       layout: tile.layout,
       definition: tile.meta,
     } as TileConfig

@@ -67,33 +67,37 @@
         v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
-        <EntityEmptyState
-          :action-button-text="t('consumers.list.toolbar_actions.new_consumer')"
-          appearance="secondary"
-          :can-create="() => canCreate()"
-          :data-testid="config.consumerGroupId ? 'nested-consumers-entity-empty-state' : 'consumers-entity-empty-state'"
-          :description="t('consumers.list.empty_state_v2.description')"
-          :learn-more="config.app === 'konnect'"
-          :title="t('consumers.list.empty_state_v2.title')"
-          @click:create="handleCreateClick"
-          @click:learn-more="$emit('click:learn-more')"
-        >
-          <template #image>
-            <div class="empty-state-icon-gateway">
-              <TeamIcon
-                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
-                :size="KUI_ICON_SIZE_50"
-              />
-            </div>
-          </template>
+        <div class="empty-state-wrapper">
+          <slot name="empty-state-toolbar" />
 
-          <template
-            v-if="config?.isControlPlaneGroup"
-            #message
+          <EntityEmptyState
+            :action-button-text="t('consumers.list.toolbar_actions.new_consumer')"
+            appearance="secondary"
+            :can-create="() => canCreate()"
+            :data-testid="config.consumerGroupId ? 'nested-consumers-entity-empty-state' : 'consumers-entity-empty-state'"
+            :description="t('consumers.list.empty_state_v2.description')"
+            :learn-more="config.app === 'konnect'"
+            :title="t('consumers.list.empty_state_v2.title')"
+            @click:create="handleCreateClick"
+            @click:learn-more="$emit('click:learn-more')"
           >
-            {{ t('consumers.list.empty_state_v2.group') }}
-          </template>
-        </EntityEmptyState>
+            <template #image>
+              <div class="empty-state-icon-gateway">
+                <TeamIcon
+                  :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
+                  :size="KUI_ICON_SIZE_50"
+                />
+              </div>
+            </template>
+
+            <template
+              v-if="config?.isControlPlaneGroup"
+              #message
+            >
+              {{ t('consumers.list.empty_state_v2.group') }}
+            </template>
+          </EntityEmptyState>
+        </div>
       </template>
 
       <!-- Column Formatting -->
@@ -679,6 +683,14 @@ onBeforeMount(async () => {
 
 .kong-ui-entities-consumers-list {
   width: 100%;
+
+  .empty-state-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-20;
+    padding: $kui-space-20;
+    padding-bottom: $kui-space-0;
+  }
 
   .message {
     margin-top: 0;

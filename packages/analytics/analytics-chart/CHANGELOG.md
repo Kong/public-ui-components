@@ -3,6 +3,134 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.3.1...@kong-ui-public/analytics-chart@9.3.2) (2025-08-07)
+
+
+### Bug Fixes
+
+* conditionally show view requests in url is defined in query bridge ([#2295](https://github.com/Kong/public-ui-components/issues/2295)) ([6c239a0](https://github.com/Kong/public-ui-components/commit/6c239a025d111c137021b618dc6abd421fde498f))
+
+
+
+
+
+## [9.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.3.0...@kong-ui-public/analytics-chart@9.3.1) (2025-08-06)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+# [9.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.2.4...@kong-ui-public/analytics-chart@9.3.0) (2025-08-06)
+
+
+### Features
+
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
+## [9.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.2.3...@kong-ui-public/analytics-chart@9.2.4) (2025-08-05)
+
+
+### Bug Fixes
+
+* **analytics-chart:** improve tooltip context ([#2245](https://github.com/Kong/public-ui-components/issues/2245)) ([5e83711](https://github.com/Kong/public-ui-components/commit/5e837118ae909f627c04117f070293c5d3552287))
+
+
+
+
+
+## [9.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.2.2...@kong-ui-public/analytics-chart@9.2.3) (2025-07-24)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [9.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.2.1...@kong-ui-public/analytics-chart@9.2.2) (2025-07-22)
+
+
+### Bug Fixes
+
+* split the tooltip behaviour functions ([#2241](https://github.com/Kong/public-ui-components/issues/2241)) ([b84357c](https://github.com/Kong/public-ui-components/commit/b84357cfa77dfb51b59454dfe6e4299a50dec9bc))
+
+
+
+
+
+## [9.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.2.0...@kong-ui-public/analytics-chart@9.2.1) (2025-07-22)
+
+
+### Bug Fixes
+
+* wrong ff evaluated for zoom actions ([#2240](https://github.com/Kong/public-ui-components/issues/2240)) ([a0f0914](https://github.com/Kong/public-ui-components/commit/a0f0914696c4043d70e794d3575497b33c4bef40))
+
+
+
+
+
+# [9.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.8...@kong-ui-public/analytics-chart@9.2.0) (2025-07-22)
+
+
+### Features
+
+* zoom actions spike ([#2197](https://github.com/Kong/public-ui-components/issues/2197)) ([76a883e](https://github.com/Kong/public-ui-components/commit/76a883e75cabeeed08b6a0968b69bbd17466dd5a))
+
+
+
+
+
+## [9.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.7...@kong-ui-public/analytics-chart@9.1.8) (2025-07-21)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [9.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.6...@kong-ui-public/analytics-chart@9.1.7) (2025-07-21)
+
+
+### Bug Fixes
+
+* handle zooming right to left ensure end > start ([#2230](https://github.com/Kong/public-ui-components/issues/2230)) ([e38dba8](https://github.com/Kong/public-ui-components/commit/e38dba87c6a73116e33b370b06bf0be6d9323c65))
+
+
+
+
+
+## [9.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.5...@kong-ui-public/analytics-chart@9.1.6) (2025-07-14)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [9.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.4...@kong-ui-public/analytics-chart@9.1.5) (2025-07-11)
+
+
+### Bug Fixes
+
+* pause highlight plugin while zooming/selecting chart area ([#2211](https://github.com/Kong/public-ui-components/issues/2211)) ([8e971ef](https://github.com/Kong/public-ui-components/commit/8e971effcdcf8db86bc82553a6c35be00aacceb9))
+
+
+
+
+
+## [9.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.3...@kong-ui-public/analytics-chart@9.1.4) (2025-07-11)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
 ## [9.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.1.2...@kong-ui-public/analytics-chart@9.1.3) (2025-07-03)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart

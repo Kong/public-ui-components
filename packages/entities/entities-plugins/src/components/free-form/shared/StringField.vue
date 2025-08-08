@@ -6,8 +6,11 @@
     :message="field.error.message"
   />
 
-  <div v-else>
-    <InputComponent
+  <div
+    v-else
+    v-bind="$attrs"
+  >
+    <EnhancedInput
       v-bind="{
         ...fieldAttrs,
         showPasswordMaskToggle: encrypted,
@@ -16,8 +19,9 @@
       class="ff-string-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
-      :data-testid="field.path.value"
+      :data-testid="`ff-${field.path.value}`"
       :model-value="fieldValue ?? ''"
+      :multiline="multiline"
       @update:model-value="handleUpdate"
     >
       <template
@@ -29,7 +33,7 @@
           <div v-html="fieldAttrs.labelAttributes.info" />
         </slot>
       </template>
-    </InputComponent>
+    </EnhancedInput>
     <component
       :is="autofillSlot"
       v-if="autofillSlot && realShowVaultSecretPicker"
@@ -37,13 +41,21 @@
       :update="handleUpdate"
       :value="fieldValue ?? ''"
     />
+    <KAlert
+      v-if="realShowVaultSecretPicker && !autofillSlot"
+      appearance="warning"
+      :data-testid="`ff-vault-secret-picker-warning-${field.path.value}`"
+      :message="i18n.t('plugins.free-form.vault_picker.component_error')"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { computed, inject, toRef, useAttrs } from 'vue'
-import { KInput, KTextArea, type LabelAttributes } from '@kong/kongponents'
+import type { LabelAttributes } from '@kong/kongponents'
+import useI18n from '../../../composables/useI18n'
+import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from '../shared/utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
@@ -55,6 +67,7 @@ defineOptions({
 })
 
 const attrs = useAttrs()
+const { i18n } = useI18n()
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
@@ -104,10 +117,6 @@ const encrypted = computed(() => {
   }
 
   return !!(field.schema?.value as StringFieldSchema).encrypted
-})
-
-const InputComponent = computed(() => {
-  return props.multiline ? KTextArea : KInput
 })
 
 const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)

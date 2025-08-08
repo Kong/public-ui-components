@@ -662,13 +662,109 @@
         "entity_name": "Request Callout",
         "by_lua_placeholder": "Enter Lua script here..."
       },
+      "redis_partial": {
+        "redis_partial_modal_title": "New shared configuration",
+        "partial_created_success_message": "Successfully created a new Redis configuration."
+      },
       "datakit": {
-        "description": "Configure Datakit via YAML below. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
+        "description_code": "Configure this plugin by using YAML configuration. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
+        "description_flow": "Configure this plugin by using the flow editor.",
         "description_example": "Start with a use case:",
         "examples": {
-          "authenticate": "Authenticate Kong Gateway to a third-party service",
-          "combine": "Combine two APIs into one response"
+          "authenticate": "Authenticate Kong to a third-party service",
+          "combine": "Combine multiple API responses",
+          "manipulate": "Manipulate request headers"
+        },
+        "flow_editor": {
+          "mode": "Flow Editor",
+          "name": "Datakit Flow Editor",
+          "cta": "Go to flow editor",
+          "save": "Save",
+          "view_docs": "View Docs",
+          "expand_panel": "Expand panel",
+          "collapse_panel": "Collapse panel",
+          "return_to_config": "Return to Plugin configuration",
+          "node_panel": {
+            "title": "Node types",
+            "description": "Drag a node onto the canvas to add it to your data flow."
+          },
+          "node_types": {
+            "call": {
+              "name": "call",
+              "summary": "Call a third-party API",
+              "description": "Send an HTTP request and retrieve the response."
+            },
+            "jq": {
+              "name": "jq",
+              "summary": "Transform data and cast variables with jq",
+              "description": "The jq node executes a jq script for processing JSON. See the official <a href=\"https://jqlang.org\" target=\"_blank\">jq docs</a> for more details."
+            },
+            "exit": {
+              "name": "exit",
+              "summary": "Return a response directly to the client",
+              "description": "Trigger an early exit that produces a direct response, rather than forwarding a proxied response."
+            },
+            "property": {
+              "name": "property",
+              "summary": "Get and set Kong Gateway configuration data",
+              "description": "Get and set Kong Gateway host and request properties."
+            },
+            "static": {
+              "name": "static",
+              "summary": "Define static values to use for call nodes",
+              "description": "Emits static values to be used as inputs for other nodes. The static node can help you with hardcoding some known value for an input."
+            },
+            "request": {
+              "name": "request",
+              "description": "Reads incoming client request properties. You cannot specify request node input."
+            },
+            "response": {
+              "name": "response",
+              "description": "Updates properties of the outgoing client response."
+            },
+            "service_request": {
+              "name": "service request",
+              "description": "Updates properties of the request sent to the service being proxied to."
+            },
+            "service_response": {
+              "name": "service response",
+              "description": "Reads response properties from the service being proxied to."
+            }
+          },
+          "node_properties": {
+            "Configuration": "Configuration",
+            "input": {
+              "placeholder": "Select output(s)",
+              "add_button": "Add an input"
+            },
+            "input_name": {
+              "label": "Input Name",
+              "placeholder": "Input Name"
+            },
+            "timeout": {
+              "label": "Timeout(s)"
+            },
+            "jq": {
+              "label": "jq script"
+            },
+            "output_value": {
+              "label": "Output value",
+              "value_name": "Value name",
+              "value": "Value",
+              "add_button": "Add a value"
+            },
+            "property": {
+              "get": "get",
+              "set": "set"
+            }
+          }
+        },
+        "code_editor": {
+          "mode": "Code Editor"
         }
+      },
+      "vault_picker": {
+        "component_error": "The vault secret picker is not available"
       }
     }
   },
@@ -683,8 +779,8 @@
       "configuration_selector_label": "Select stored Redis configuration",
       "configuration_selector_placeholder": "Pick Redis configuration",
       "create_new_configuration": "New {type} shared configuration",
-      "open_source": "Open Source",
-      "enterprise": "Enterprise",
+      "open_source": "open source",
+      "enterprise": "enterprise",
       "empty_state": "No shared configurations",
       "badge": "Recommended",
       "selector": {
@@ -723,6 +819,63 @@
       "cp_label": "Current Control Plane",
       "cp_group_label": "Control Plane",
       "realm_group_label": "Realms (Can only select one)"
+    }
+  },
+  "sp": {
+    "window_type": {
+      "label": "Rate Limit Window Type",
+      "help": "Sets the time window type to either <code>sliding</code> (default) or <code>fixed</code>.<br><ul><li>Sliding windows apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight.</li><li>Fixed windows consist of buckets that are statically assigned to a definitive time range, each request is mapped to only one fixed window based on its timestamp and will affect only that window&#39;s counters.</li></ul>",
+      "options": {
+        "fixed": "Fixed",
+        "sliding": "Sliding"
+      }
+    },
+    "request_limits": {
+      "title": "Request Limits",
+      "subtitle": "Set one or more limits on the number of API requests allowed within a defined timeframe.",
+      "label": "Limit",
+      "label_index": "Limit {index}",
+      "request_number": "Request number",
+      "time_interval": "Time interval",
+      "interval_determiner": "Every",
+      "seconds": "Seconds"
+    },
+    "error_message": {
+      "label": "Error Message",
+      "code_placeholder": "Code Message",
+      "message_placeholder": "Error Message",
+      "help": "Set a custom error code and message to be returned when the rate limit is exceeded."
+    },
+    "start_with_a_use_case": "Start with a use case:",
+    "use_cases": {
+      "fixed": {
+        "hourly_500": {
+          "label": "500 requests every hour",
+          "description": "A fixed limit of 500 requests per hour resetting sharply on the hour, ensuring no user can exceed this limit."
+        },
+        "half_hourly_200": {
+          "label": "200 requests every 30 minutes",
+          "description": "Users are allowed 200 requests per 30 minutes, resetting exactly on the 30 minute mark with no carryover of unused limits."
+        },
+        "daily_500": {
+          "label": "500 requests every day",
+          "description": "A strict limit of 5000 requests per day resetting promptly at midnight, preventing any burst traffic or inconsistent user experiences."
+        }
+      },
+      "sliding": {
+        "hourly_100": {
+          "label": "100 requests every hour",
+          "description": "Maximum of 100 requests every rolling hour, continuously adjusting the count over the course of the hour. No hard limit or known reset."
+        },
+        "half_hourly_300": {
+          "label": "300 requests every 30 minutes",
+          "description": "Each user can make up to 300 requests in any rolling 30 minute period, with older requests dropping off as new requests are made."
+        },
+        "hourly_500": {
+          "label": "500 requests every hour",
+          "description": "Each user is allowed 500 requests per hour. \nIf the limit is exceeded and the user receives a 429 error, each additional request within the sliding window (hour) \nwill extend the wait time by about 12 minutes, continuously adjusting as new requests are made."
+        }
+      }
     }
   }
 }

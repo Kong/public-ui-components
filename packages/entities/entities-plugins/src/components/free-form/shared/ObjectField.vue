@@ -10,7 +10,11 @@
 
   <!-- only render children, no wrapper -->
   <template v-else-if="asChild">
-    <div class="ff-object-field ff-object-field-as-child">
+    <div
+      class="ff-object-field ff-object-field-as-child"
+      v-bind="$attrs"
+      :data-testid="`ff-object-${field.path.value}`"
+    >
       <slot>
         <Field
           v-for="field in childFields"
@@ -26,8 +30,13 @@
     v-else
     class="ff-object-field"
     :class="{ 'ff-object-field-collapsed': !realExpanded }"
+    :data-testid="`ff-object-${field.path.value}`"
+    v-bind="$attrs"
   >
-    <header class="ff-object-field-header">
+    <header
+      class="ff-object-field-header"
+      :data-testid="`ff-object-header-${field.path.value}`"
+    >
       <KLabel
         class="ff-object-field-label"
         :data-testid="`ff-label-${field.path.value}`"
@@ -66,7 +75,7 @@
           v-if="!fieldAttrs.required"
           appearance="tertiary"
           :class="`ff-object-field-button-${realAdded ? 'remove' : 'add'}`"
-          :data-testid="`ff-object-remove-btn-${field.path.value}`"
+          :data-testid="`ff-object-${realAdded ? 'remove' : 'add'}-btn-${field.path.value}`"
           icon
           @click="handleAddOrRemove"
         >
@@ -79,6 +88,7 @@
       <div
         v-if="realExpanded"
         class="ff-object-field-content"
+        :data-testid="`ff-object-content-${field.path.value}`"
       >
         <slot>
           <Field
@@ -102,6 +112,10 @@ import Field from './Field.vue'
 
 import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
 import type { ResetLabelPathRule } from './types'
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 const slots = defineSlots<
   {

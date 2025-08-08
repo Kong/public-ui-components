@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.9.1...@kong-ui-public/entities-snis@3.9.2) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.9.0...@kong-ui-public/entities-snis@3.9.1) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+# [3.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.8.7...@kong-ui-public/entities-snis@3.9.0) (2025-08-06)
+
+
+### Features
+
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
+## [3.8.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.8.6...@kong-ui-public/entities-snis@3.8.7) (2025-08-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.8.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.8.5...@kong-ui-public/entities-snis@3.8.6) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.8.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.8.4...@kong-ui-public/entities-snis@3.8.5) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.8.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.8.3...@kong-ui-public/entities-snis@3.8.4) (2025-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.8.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.8.2...@kong-ui-public/entities-snis@3.8.3) (2025-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.8.1...@kong-ui-public/entities-snis@3.8.2) (2025-07-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+## [3.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.8.0...@kong-ui-public/entities-snis@3.8.1) (2025-07-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-snis
+
+
+
+
+
+# [3.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.7.32...@kong-ui-public/entities-snis@3.8.0) (2025-07-14)
+
+
+### Features
+
+* **certificates:** KM-1405-remove-SNIs ([#2193](https://github.com/Kong/public-ui-components/issues/2193)) ([488ec8c](https://github.com/Kong/public-ui-components/commit/488ec8c19fd8b4d75356c05e8f82d43d98296d27))
+
+
+
+
+
 ## [3.7.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.7.31...@kong-ui-public/entities-snis@3.7.32) (2025-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-snis

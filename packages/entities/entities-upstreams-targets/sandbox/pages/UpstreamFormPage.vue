@@ -39,6 +39,7 @@ const konnectConfig = ref<KonnectUpstreamsFormConfig>({
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
   cancelRoute: { name: 'upstreams-list' },
+  stickySessionsAvailable: true,
 })
 
 const KMConfig = ref<KongManagerUpstreamsFormConfig>({

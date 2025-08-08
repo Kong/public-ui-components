@@ -24,9 +24,9 @@
     "@commitlint/config-conventional": "^19.5.0",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
     "@evilmartians/lefthook": "^1.8.1",
-    "@kong/design-tokens": "1.17.4",
+    "@kong/design-tokens": "catalog:",
     "@kong/eslint-config-kong-ui": "^1.4.0",
-    "@kong/kongponents": "9.34.2",
+    "@kong/kongponents": "catalog:",
     "@stylistic/stylelint-plugin": "^3.1.1",
     "@types/flat": "^5.0.5",
     "@types/js-yaml": "^4.0.9",
@@ -70,14 +70,22 @@
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-vue-devtools": "^7.5.4",
     "vitest": "^3.0.5",
-    "vue": "^3.5.13",
-    "vue-router": "^4.4.5",
+    "vue": "catalog:",
+    "vue-router": "catalog:",
     "vue-tsc": "^2.1.6"
   },
   "pnpm": {
     "overrides": {
       "string-width": "4.2.3"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@evilmartians/lefthook",
+      "@swc/core",
+      "cypress",
+      "esbuild",
+      "nx",
+      "vue-demi"
+    ]
   },
   "workspaces": [
     "packages/*/*"
@@ -102,7 +110,7 @@
   },
   "volta": {
     "node": "18.20.4",
-    "pnpm": "9.12.2"
+    "pnpm": "10.12.1"
   },
-  "packageManager": "pnpm@9.12.2"
+  "packageManager": "pnpm@10.12.1"
 }

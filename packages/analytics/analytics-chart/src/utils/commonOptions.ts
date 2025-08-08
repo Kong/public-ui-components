@@ -1,13 +1,16 @@
-import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues, EnhancedLegendItem } from '../types'
-import { formatUnit } from '../utils'
+import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues, EnhancedLegendItem, TooltipInteractionMode } from '../types'
+import { formatByGranularity, formatUnit } from '../utils'
 import { isValid } from 'date-fns'
 import type { Chart, Point, ScatterDataPoint } from 'chart.js'
+import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
 
-// TODO: we should implement a separate tooltip behavior for each broad chart type
-// as the "tooltip behaviors" are beggining to diverge more across chart types.
-export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext) : void => {
+export const isTooltipInteractive = (state: TooltipInteractionMode) => {
+  return ['interactive', 'zoom-interactive'].includes(state)
+}
+
+export const lineChartTooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext, granularity: GranularityValues) : void => {
   const { tooltip } = context
-  if (tooltip.opacity === 0 && !tooltipData.locked) {
+  if (tooltip.opacity === 0 && !isTooltipInteractive(tooltipData.interactionMode)) {
     tooltipData.showTooltip = false
 
     return
@@ -15,25 +18,64 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
 
   const sortFn = tooltipData.chartTooltipSortFn || ((a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue)
 
-  if (tooltip.body && !tooltipData.locked) {
+  if (tooltip.body && !isTooltipInteractive(tooltipData.interactionMode)) {
     const colors = tooltip.labelColors
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 
-    const isBarChart = ['horizontal_bar', 'vertical_bar'].includes(tooltipData.chartType)
+    tooltipData.tooltipContext = formatByGranularity(new Date(tooltip.dataPoints[0].parsed.x), granularity, true)
+
+    tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
+      const rawValue = p.parsed[valueAxis]
+      const value = formatUnit(rawValue, tooltipData.units, { translateUnit: tooltipData.translateUnit })
+
+      const tooltipLabel = p.dataset.label
+
+      return {
+        backgroundColor: colors[i].backgroundColor,
+        borderColor: colors[i].borderColor,
+        label: tooltipLabel,
+        value,
+        rawValue,
+        isSegmentEmpty: (p.dataset as Dataset).isSegmentEmpty,
+      } as TooltipEntry
+    }).sort(sortFn)
+
+    tooltipData.left = `${tooltip.x}px`
+    tooltipData.top = `${tooltip.y}px`
+
+    tooltipData.showTooltip = true
+  }
+}
+
+export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext) : void => {
+  const { tooltip } = context
+  if (tooltip.opacity === 0 && !isTooltipInteractive(tooltipData.interactionMode)) {
+    tooltipData.showTooltip = false
+
+    return
+  }
+
+  const sortFn = tooltipData.chartTooltipSortFn || ((a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue)
+
+  if (tooltip.body && !isTooltipInteractive(tooltipData.interactionMode)) {
+    const colors = tooltip.labelColors
+    const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
     const isDonutChart = ['gauge', 'donut'].includes(tooltipData.chartType)
 
-    tooltipData.tooltipContext = isBarChart
-      ? tooltip.dataPoints.length > 1 ? tooltip.dataPoints[0].label : ''
-      : tooltip.dataPoints[0].parsed.x
+    if (isDonutChart) {
+      tooltipData.tooltipContext = tooltipData.dimensionDisplay || tooltip.dataPoints[0].label
+    } else if ((tooltip.chart.data as KChartData).isMultiDimension) {
+      tooltipData.tooltipContext = tooltip.dataPoints[0].label
+    } else {
+      tooltipData.tooltipContext = tooltipData.dimensionDisplay || ''
+    }
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
       const rawValue = isDonutChart ? p.parsed : p.parsed[valueAxis]
       const value = formatUnit(rawValue, tooltipData.units, { translateUnit: tooltipData.translateUnit })
 
       let tooltipLabel
-      if (isBarChart && p.dataset.label !== p.label) {
-        tooltipLabel = p.dataset.label
-      } else if (isDonutChart) {
+      if (isDonutChart) {
         // @ts-ignore - donut chart contains a single dataset, with a `labels` (plural) array
         tooltipLabel = p.dataset.labels[p.dataIndex]
       } else {
@@ -132,7 +174,7 @@ export function debounce(fn: (...args: any) => any, delay: number) {
   }
 }
 
-export const generateLegendItems = (chart: Chart, legendValues: LegendValues | null, chartLegendSortFn: ChartLegendSortFn): EnhancedLegendItem[] => {
+export const generateLegendItems = (chart: Chart, legendValues?: LegendValues, chartLegendSortFn?: ChartLegendSortFn): EnhancedLegendItem[] => {
   const data = chart.data as KChartData
 
   // @ts-ignore: ChartJS has incomplete types

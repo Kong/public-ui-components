@@ -31,15 +31,21 @@ export class HighlightPlugin implements Plugin {
   private _clickedElements?: InteractionItem[]
   private _previousHoverOption?: Chart['options']['hover']
   private _clicked = false
+  private _pause = false
+  private _suppressNextClick = false
 
   afterDatasetsDraw(chart: Chart) {
-    if (this._clickedElements && this._clickedElements.length) {
+    if (this._clickedElements && this._clickedElements.length && !this._pause) {
       drawHighlight(chart, this._clickedElements)
     }
   }
 
   afterEvent(chart: Chart, { event }: { event: ChartEvent }) {
-    if (event.type !== 'click' || !event.native) {
+    if (event.type === 'click' && this._suppressNextClick) {
+      this._suppressNextClick = false
+      return
+    }
+    if (event.type !== 'click' || !event.native || this._pause) {
       return
     }
 
@@ -69,5 +75,20 @@ export class HighlightPlugin implements Plugin {
     delete this._clickedElements
     chart.options.hover = this._previousHoverOption || chart.options.hover
     this._clicked = false
+  }
+
+  pause() {
+    this._pause = true
+  }
+
+  get isPaused() {
+    return this._pause
+  }
+
+  resume(suppressNextClick = false) {
+    this._pause = false
+    if (suppressNextClick) {
+      this._suppressNextClick = true
+    }
   }
 }

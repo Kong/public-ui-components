@@ -6,7 +6,7 @@
     :message="field.error.message"
   />
 
-  <KInput
+  <EnhancedInput
     v-else
     class="ff-number-field"
     v-bind="{
@@ -15,8 +15,8 @@
       max: between.max,
     }"
     :data-autofocus="isAutoFocus"
-    :data-testid="field.path.value"
-    :model-value="fieldValue ?? ''"
+    :data-testid="`ff-${field.path.value}`"
+    :model-value="modelValue"
     type="number"
     @update:model-value="handleUpdate"
   >
@@ -29,14 +29,15 @@
         <div v-html="fieldAttrs.labelAttributes.info" />
       </slot>
     </template>
-  </KInput>
+  </EnhancedInput>
 </template>
 
 <script setup lang="ts">
-import { KInput, type LabelAttributes } from '@kong/kongponents'
+import type { LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
 import { computed, toRef } from 'vue'
 import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
+import EnhancedInput from './EnhancedInput.vue'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
@@ -53,7 +54,11 @@ const { value: fieldValue, ...field } = useField<number | null>(toRef(() => name
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const between = computed(() => {
-  const [min, max] = (field.schema?.value as NumberLikeFieldSchema).between ?? []
+  const schema = (field.schema?.value as NumberLikeFieldSchema)
+  if (schema.gt) {
+    return { min: schema.gt }
+  }
+  const [min, max] = schema.between ?? []
   return {
     min: props.min ?? min,
     max: props.max ?? max,
@@ -65,14 +70,21 @@ const emit = defineEmits<{
 }>()
 
 const initialValue = fieldValue!.value
+const modelValue = computed(() => {
+  if (fieldValue?.value != null && Number.isFinite(fieldValue.value)) {
+    return `${fieldValue.value}`
+  } else {
+    return ''
+  }
+})
 
 function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && Number(value) !== initialValue) {
     fieldValue!.value = null
     emit('update:modelValue', null)
   } else {
-    fieldValue!.value = Number(value)
-    emit('update:modelValue', Number(value))
+    fieldValue!.value = value === '' ? null : Number(value)
+    emit('update:modelValue', value === '' ? null : Number(value))
   }
 }
 

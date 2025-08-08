@@ -21,6 +21,7 @@
         :on-model-updated="onModelUpdated"
         :on-validity-change="onValidityChange"
         :schema="rawSchema"
+        @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
       >
         <template
           v-if="enableVaultSecretPicker"
@@ -133,6 +134,7 @@ import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginEntity
 import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import * as freeForm from './free-form'
 import { getFreeFormName } from '../utils/free-form'
+import type { GlobalAction } from './free-form/shared/types'
 
 // Need to check for duplicates in sharedForms and freeForm
 // throw an error if there are any
@@ -158,6 +160,7 @@ const emit = defineEmits<{
     }
   ): void
   (e: 'showNewPartialModal', redisType: string): void
+  (e: 'globalAction', name: GlobalAction, payload: any): void
   (e: 'validity-change', payload: PluginValidityChangeEvent): void
 }>()
 

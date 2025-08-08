@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-metric-provider",
-  "version": "8.9.8",
+  "version": "9.1.1",
   "type": "module",
   "main": "./dist/vitals-metric-provider.umd.js",
   "module": "./dist/vitals-metric-provider.es.js",
@@ -50,24 +50,24 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong-ui-public/core": "1.1.0",
-    "@kong/icons": "^1.31.0",
+    "@kong-ui-public/core": "workspace:^",
+    "@kong/icons": "catalog:",
     "approximate-number": "^2.1.1",
-    "axios": "^1.7.7",
+    "axios": "catalog:",
     "swrv": "^1.0.4"
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.34.2"
+    "@kong/kongponents": "catalog:"
   },
   "devDependencies": {
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.17.4",
-    "@kong/kongponents": "9.34.2",
-    "pinia": ">= 2.1.7 < 3"
+    "@kong/design-tokens": "catalog:",
+    "@kong/kongponents": "catalog:",
+    "pinia": "catalog:"
   }
 }

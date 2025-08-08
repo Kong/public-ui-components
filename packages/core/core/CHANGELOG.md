@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.10.11...@kong-ui-public/core@1.11.0) (2025-08-06)
+
+
+### Features
+
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
+## [1.10.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.10.10...@kong-ui-public/core@1.10.11) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
+## [1.10.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.10.9...@kong-ui-public/core@1.10.10) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/core
+
+
+
+
+
 ## [1.10.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/core@1.10.8...@kong-ui-public/core@1.10.9) (2025-05-05)
 
 **Note:** Version bump only for package @kong-ui-public/core

@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.2.0...@kong-ui-public/expressions@1.2.1) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+# [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.1.6...@kong-ui-public/expressions@1.2.0) (2025-08-06)
+
+
+### Features
+
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
+## [1.1.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.1.5...@kong-ui-public/expressions@1.1.6) (2025-08-05)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [1.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.1.4...@kong-ui-public/expressions@1.1.5) (2025-08-04)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [1.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.1.3...@kong-ui-public/expressions@1.1.4) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [1.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.1.2...@kong-ui-public/expressions@1.1.3) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [1.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.1.1...@kong-ui-public/expressions@1.1.2) (2025-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [1.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.1.0...@kong-ui-public/expressions@1.1.1) (2025-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.46...@kong-ui-public/expressions@1.1.0) (2025-07-17)
+
+
+### Features
+
+* release version 1.0.0 for expressions and redis config ([#2225](https://github.com/Kong/public-ui-components/issues/2225)) ([d922f5b](https://github.com/Kong/public-ui-components/commit/d922f5b6949e1ac1e25d7bbf47c072d183cc4d83))
+
+
+
+
+
+## [0.9.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.45...@kong-ui-public/expressions@0.9.46) (2025-07-16)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
+## [0.9.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.44...@kong-ui-public/expressions@0.9.45) (2025-07-14)
+
+**Note:** Version bump only for package @kong-ui-public/expressions
+
+
+
+
+
 ## [0.9.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@0.9.43...@kong-ui-public/expressions@0.9.44) (2025-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/expressions

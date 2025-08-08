@@ -14,8 +14,12 @@
       [`ff-array-field-${appearance ?? 'default'}`]: true,
       'ff-array-field-sticky-tabs': stickyTabs,
     }"
+    :data-testid="`ff-array-${field.path.value}`"
   >
-    <header class="ff-array-field-header">
+    <header
+      class="ff-array-field-header"
+      :data-testid="`ff-array-header-${field.path.value}`"
+    >
       <KLabel
         class="ff-array-field-label"
         v-bind="fieldAttrs"
@@ -50,6 +54,7 @@
       <div
         v-if="appearance !== 'tabs'"
         class="ff-array-field-container"
+        :data-testid="`ff-array-basic-container-${field.path.value}`"
       >
         <ListTag
           v-for="(item, index) of realItems"
@@ -75,7 +80,7 @@
             appearance="tertiary"
             :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
             class="ff-array-field-item-remove"
-            :data-testid="`ff-remove-item-btn-${field.path.value}.${index}`"
+            :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
             icon
             @click="removeItem(index)"
           >
@@ -83,10 +88,13 @@
           </KButton>
         </ListTag>
       </div>
-      <KCard v-else>
+      <KCard
+        v-else
+        :data-testid="`ff-array-tab-container-${field.path.value}`"
+      >
         <KTabs
           v-model="activeTab"
-          :data-testid="`ff-tabs-${field.path.value}`"
+          :data-testid="`ff-array-tabs-${field.path.value}`"
           :tabs="tabs"
         >
           <template
@@ -121,7 +129,7 @@
               appearance="tertiary"
               :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
               class="ff-array-field-item-remove"
-              :data-testid="`ff-remove-item-btn-${field.path.value}.${index}`"
+              :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
               icon
               @click.stop="removeItem(index)"
             >
@@ -135,11 +143,10 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { useTemplateRef, nextTick, watch, computed, ref, reactive, toValue, toRef } from 'vue'
+import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
-import { uniqueId } from 'lodash-es'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared } from './composables'
+import { useField, useFieldAttrs, useFormShared, useItemKeys } from './composables'
 import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
@@ -150,7 +157,6 @@ const props = defineProps<{
   label?: string
   labelAttributes?: LabelAttributes
   itemLabel?: string | ((item: T, index: number) => string)
-  required?: boolean
   appearance?: 'default' | 'card' | 'tabs'
   stickyTabs?: boolean | string | number
 }>()
@@ -173,45 +179,19 @@ defineSlots<{
 const { i18n: { t } } = useI18n()
 const { getDefault } = useFormShared()
 const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
-const fieldAttrs = useFieldAttrs(field.path!, props)
+const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 
-const keyMap = reactive(new Map<T, string>())
 const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
 
+const { getKey } = useItemKeys('ff-array-field', realItems)
+
 const ListTag = computed(() => props.appearance === 'card' ? KCard : 'div')
-
-function generateId() {
-  return uniqueId('ff-array-field-')
-}
-
-function getKey(item: T, index: number) {
-  if (item != null && typeof item === 'object') {
-    return keyMap.get(item)
-  }
-
-  return `ff-array-field-${index}`
-}
 
 function getTabTitle(item: T, index: number) {
   return typeof props.itemLabel === 'function'
     ? props.itemLabel(item, index)
     : props.itemLabel || fieldAttrs.value.label || `Item #${index}`
 }
-
-watch(realItems, (newItems) => {
-  newItems.forEach((item) => {
-    if (!keyMap.has(item)) {
-      keyMap.set(item, generateId())
-    }
-  })
-
-  const current = new Set(newItems)
-  ;[...keyMap.keys()].forEach((key) => {
-    if (!current.has(key)) {
-      keyMap.delete(key)
-    }
-  })
-}, { immediate: true, deep: true })
 
 const tabs = computed(() => realItems.value.map((item, index) => {
   const hash = `#${getKey(item, index)}`

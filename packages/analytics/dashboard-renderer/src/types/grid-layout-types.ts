@@ -12,6 +12,7 @@ export interface TileSize {
 
 export interface GridTile<T> {
   id: string | number
+  type: 'chart' // Right now we only support one type of tile.
   layout: TileLayout
   meta: T
 }

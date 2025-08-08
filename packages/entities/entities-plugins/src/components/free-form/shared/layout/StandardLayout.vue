@@ -1,6 +1,6 @@
 <template>
   <div class="ff-standard-layout">
-    <FormSection
+    <EntityFormBlock
       :description="t('plugins.form.sections.general_info.description')"
       :step="1"
       :title="t('plugins.form.sections.general_info.title')"
@@ -65,8 +65,15 @@
       >
         <slot name="general-info-description" />
       </template>
-    </FormSection>
-    <FormSection
+
+      <template
+        v-if="slots['general-info-extra']"
+        #extra
+      >
+        <slot name="general-info-extra" />
+      </template>
+    </EntityFormBlock>
+    <EntityFormBlock
       :description="t('plugins.form.sections.plugin_config.description')"
       :step="2"
       :title="t('plugins.form.sections.plugin_config.title')"
@@ -83,13 +90,21 @@
       >
         <slot name="plugin-config-title" />
       </template>
+
       <template
         v-if="slots['plugin-config-description']"
         #description
       >
         <slot name="plugin-config-description" />
       </template>
-    </FormSection>
+
+      <template
+        v-if="slots['plugin-config-extra']"
+        #extra
+      >
+        <slot name="plugin-config-extra" />
+      </template>
+    </EntityFormBlock>
   </div>
 </template>
 
@@ -120,9 +135,9 @@ export type ConfigFormProps<T> = {
 <script setup lang="ts" generic="T extends FreeFormPluginData">
 import { computed, provide, ref, watch } from 'vue'
 import { VueFormGenerator } from '@kong-ui-public/forms'
+import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { pick } from 'lodash-es'
 import { KRadio } from '@kong/kongponents'
-import FormSection from '../FormSection.vue'
 import english from '../../../../locales/en.json'
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { createI18n } from '@kong-ui-public/i18n'
@@ -140,8 +155,10 @@ const slots = defineSlots<{
   default: (props: ConfigFormProps<T>) => any
   'general-info-title'?: () => any
   'general-info-description'?: () => any
+  'general-info-extra'?: () => any
   'plugin-config-title'?: () => any
   'plugin-config-description'?: () => any
+  'plugin-config-extra'?: () => any
 }>()
 
 provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])

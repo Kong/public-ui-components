@@ -29,6 +29,7 @@ export interface GatewayServiceFormFields {
   tls_verify_enabled: boolean
   tls_verify_value: boolean
   tags: string
+  enabled: boolean
 }
 export interface FormFieldErrors {
   host: string
@@ -45,15 +46,6 @@ export interface FormFieldErrors {
   tls_verify_enabled: string
   tls_verify_value: string
   name:string
-}
-
-export interface LegacyGatewayServiceFormState {
-  /** Form fields */
-  fields: GatewayServiceFormFields
-  /** Form readonly state (only used when saving entity details) */
-  isReadonly: boolean
-  /** The Array of error messages to show  */
-  errorMessage: string
 }
 
 export interface GatewayServiceFormState {

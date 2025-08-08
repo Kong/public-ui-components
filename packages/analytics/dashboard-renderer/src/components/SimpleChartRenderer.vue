@@ -13,7 +13,7 @@
       <SimpleChart
         :chart-data="data"
         :chart-options="chartOptions"
-        :synthetics-data-key="isSingleValueChart ? undefined : (chartOptions as GaugeChartOptions).syntheticsDataKey"
+        :synthetics-data-key="isSingleValueChart ? undefined : (chartOptions as GaugeChartOptions).synthetics_data_key"
       />
     </div>
   </QueryDataProvider>

@@ -38,6 +38,10 @@ export class VerticalLinePlugin implements Plugin {
     this._pause = false
   }
 
+  get isPaused() {
+    return this._pause
+  }
+
   set clickedSegment(segment: TooltipItem<ChartType> | undefined) {
     this._clickedSegment = segment
   }

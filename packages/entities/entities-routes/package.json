@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-routes",
-  "version": "3.14.2",
+  "version": "3.15.1",
   "type": "module",
   "main": "./dist/entities-routes.umd.js",
   "module": "./dist/entities-routes.es.js",
@@ -23,23 +23,23 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.31.0",
-    "@kong/kongponents": "^9.34.2",
-    "axios": "^1.7.7",
-    "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.4.5"
+    "@kong/icons": "catalog:",
+    "@kong/kongponents": "catalog:",
+    "axios": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.17.4",
-    "@kong/icons": "^1.31.0",
-    "@kong/kongponents": "9.34.2",
+    "@kong/design-tokens": "catalog:",
+    "@kong/icons": "catalog:",
+    "@kong/kongponents": "catalog:",
     "@types/lodash.isequal": "^4.5.8",
-    "axios": "^1.7.7",
+    "axios": "catalog:",
     "vite-plugin-monaco-editor": "^1.1.0",
-    "vue": "^3.5.13",
-    "vue-router": "^4.4.5"
+    "vue": "catalog:",
+    "vue-router": "catalog:"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",

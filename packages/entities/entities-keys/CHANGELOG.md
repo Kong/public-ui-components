@@ -3,6 +3,89 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.9.1...@kong-ui-public/entities-keys@3.9.2) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.9.0...@kong-ui-public/entities-keys@3.9.1) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+# [3.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.38...@kong-ui-public/entities-keys@3.9.0) (2025-08-06)
+
+
+### Features
+
+* introduce pnpm catalog ([#2274](https://github.com/Kong/public-ui-components/issues/2274)) ([92dee7e](https://github.com/Kong/public-ui-components/commit/92dee7ea52444752de54950ae4fb65bcc3276fd6))
+
+
+
+
+
+## [3.8.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.37...@kong-ui-public/entities-keys@3.8.38) (2025-08-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.8.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.36...@kong-ui-public/entities-keys@3.8.37) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.8.36](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.35...@kong-ui-public/entities-keys@3.8.36) (2025-07-30)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.8.35](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.34...@kong-ui-public/entities-keys@3.8.35) (2025-07-29)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.8.34](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.33...@kong-ui-public/entities-keys@3.8.34) (2025-07-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.8.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.32...@kong-ui-public/entities-keys@3.8.33) (2025-07-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
+## [3.8.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.31...@kong-ui-public/entities-keys@3.8.32) (2025-07-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-keys
+
+
+
+
+
 ## [3.8.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.8.30...@kong-ui-public/entities-keys@3.8.31) (2025-06-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys

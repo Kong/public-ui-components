@@ -12,13 +12,13 @@
         class="title-tooltip"
         :disabled="!isTitleTruncated"
         max-width="500"
-        :text="definition.chart.chartTitle"
+        :text="definition.chart.chart_title"
       >
         <div
           ref="titleRef"
           class="title"
         >
-          {{ definition.chart.chartTitle }}
+          {{ definition.chart.chart_title }}
         </div>
       </KTooltip>
       <div
@@ -26,8 +26,21 @@
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
-        <KBadge v-if="badgeData">
-          {{ badgeData }}
+        <KBadge
+          v-if="badgeData"
+          data-testid="time-range-badge"
+          :tooltip="isAgedOutQuery ? agedOutWarning : undefined"
+          :tooltip-attributes="{ maxWidth: '320px' }"
+        >
+          <template
+            v-if="isAgedOutQuery"
+            #icon
+          >
+            <WarningIcon :size="KUI_ICON_SIZE_20" />
+          </template>
+          <span class="badge-text">
+            {{ badgeData }}
+          </span>
         </KBadge>
         <EditIcon
           v-if="canShowKebabMenu && context.editable"
@@ -116,7 +129,12 @@
 </template>
 <script setup lang="ts">
 import type { DashboardRendererContextInternal } from '../types'
-import { type DashboardTileType, formatTime, type TileDefinition, TimePeriods } from '@kong-ui-public/analytics-utilities'
+import {
+  type DashboardTileType,
+  formatTime,
+  type TileDefinition,
+  TimePeriods,
+} from '@kong-ui-public/analytics-utilities'
 import { type Component, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
@@ -125,11 +143,11 @@ import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
-import { KUI_SPACE_70 } from '@kong/design-tokens'
+import { KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { MoreIcon, EditIcon } from '@kong/icons'
+import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
 import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
@@ -195,8 +213,8 @@ const exploreLink = computed(() => {
 
   } as ExploreQuery | AiExploreQuery
 
-  // Explore only supports advanced or ai
-  const datasource = ['advanced', 'ai'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'advanced'
+  // Explore only supports API usage and LLM usage.
+  const datasource = ['api_usage', 'llm_usage'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'api_usage'
 
   return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
 })
@@ -207,7 +225,7 @@ const canShowTitleActions = computed((): boolean => (canShowKebabMenu.value && (
 
 const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
 
-const kebabMenuHasItems = computed((): boolean => !!exploreLink.value || ('allowCsvExport' in props.definition.chart && props.definition.chart.allowCsvExport) || props.context.editable)
+const kebabMenuHasItems = computed((): boolean => !!exploreLink.value || ('allow_csv_export' in props.definition.chart && props.definition.chart.allow_csv_export) || props.context.editable)
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
@@ -262,6 +280,25 @@ const badgeData = computed<string | null>(() => {
 
 const chartDataGranularity = computed(() => {
   return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
+})
+
+const isTimeSeriesChart = computed(() => {
+  return ['timeseries_line', 'timeseries_bar'].includes(props.definition.chart.type)
+})
+
+const isAgedOutQuery = computed(() => {
+  const savedGranularity = props.definition.query.granularity
+  const queryGranularity = msToGranularity(chartData.value?.meta.granularity_ms || 0)
+  return isTimeSeriesChart.value && savedGranularity !== queryGranularity
+})
+
+const agedOutWarning = computed(() => {
+  const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms || 0)
+  const savedGranularity = props.definition.query.granularity
+  return i18n.t('query_aged_out_warning', {
+    currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
+    savedGranularity: i18n.t(`granularities.${savedGranularity}` as any),
+  })
 })
 
 const editTile = () => {

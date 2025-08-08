@@ -60,6 +60,7 @@
     </template>
 
     <KInput
+      v-if="algorithm !== 'sticky-sessions'"
       autocomplete="off"
       data-testid="upstreams-form-slots"
       :error="!!slotsError"
@@ -74,7 +75,7 @@
       @update:model-value="emit('update:slots', $event)"
     />
 
-    <KCard>
+    <KCard v-if="algorithm !== 'sticky-sessions'">
       <h5 class="fields-group-title">
         {{ t('upstreams.form.fields.hash_on.label') }}
       </h5>
@@ -157,7 +158,7 @@
       />
     </KCard>
 
-    <KCard>
+    <KCard v-if="algorithm !== 'sticky-sessions'">
       <h5 class="fields-group-title">
         {{ t('upstreams.form.fields.hash_fallback.label') }}
       </h5>
@@ -480,6 +481,22 @@ watch(() => props.hashFallback, (val, oldVal) => {
     emit('update:hash-fallback-uri-capture', '')
   }
 })
+
+watch(() => props.algorithm, (val) => {
+  if (val === 'sticky-sessions') {
+    emit('update:slots', '10000') // Default value for slots
+    emit('update:hash-on', 'none')
+    emit('update:hash-fallback', 'none')
+    emit('update:hash-on-header', '')
+    emit('update:hash-on-cookie', '')
+    emit('update:hash-on-cookie-path', '/')
+    emit('update:hash-on-query-argument', '')
+    emit('update:hash-on-uri-capture', '')
+    emit('update:hash-fallback-header', '')
+    emit('update:hash-fallback-query-argument', '')
+    emit('update:hash-fallback-uri-capture', '')
+  }
+}, { immediate: true })
 
 const disableFallbackSelect = computed((): boolean => props.hashOn === 'cookie' || props.hashOn === 'none')
 

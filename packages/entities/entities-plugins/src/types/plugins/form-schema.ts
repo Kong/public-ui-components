@@ -31,6 +31,8 @@ export interface FieldSchema {
 export interface StringFieldSchema extends FieldSchema {
   type: 'string'
 
+  auto?: boolean
+
   encrypted?: boolean
 
   one_of?: string[]
@@ -82,6 +84,14 @@ export interface ArrayLikeFieldSchema extends FieldSchema {
   len_max?: number
 }
 
+export interface ArrayFieldSchema extends ArrayLikeFieldSchema {
+  type: 'array'
+}
+
+export interface SetFieldSchema extends ArrayLikeFieldSchema {
+  type: 'set'
+}
+
 export interface MapFieldSchema extends FieldSchema {
   type: 'map'
 
@@ -91,12 +101,19 @@ export interface MapFieldSchema extends FieldSchema {
   len_max?: number
 }
 
+export interface JsonFieldSchema extends FieldSchema {
+  type: 'json'
+  json_schema: any // Todo: Define a more specific type for JSON schema
+}
+
 export type UnionFieldSchema = StringFieldSchema
   | NumberLikeFieldSchema
   | BooleanFieldSchema
-  | ArrayLikeFieldSchema
+  | ArrayFieldSchema
+  | SetFieldSchema
   | MapFieldSchema
   | RecordFieldSchema
+  | JsonFieldSchema
 
 export type NamedFieldSchema = { [name: string]: UnionFieldSchema }
 

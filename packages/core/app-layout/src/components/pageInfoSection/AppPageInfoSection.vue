@@ -123,13 +123,18 @@ defineProps({
     padding: $kui-space-70;
 
     :slotted(.k-table-view) {
-      background-color: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+      background-color: $kui-color-background-neutral-weakest;
 
       tr.is-scrolled {
-        background-color: var(
-          --kui-color-background-neutral-weakest,
-          $kui-color-background-neutral-weakest
-        );
+        background-color: $kui-color-background-neutral-weakest;
+      }
+
+      td,
+      th {
+        &.sticky-column,
+        &.actions-column {
+          background-color: $kui-color-background-neutral-weakest !important;
+        }
       }
     }
 

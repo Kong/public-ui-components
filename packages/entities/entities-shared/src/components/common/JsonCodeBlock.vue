@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
-import type { BadgeAppearance } from '@kong/kongponents/dist/types'
+import type { BadgeAppearance } from '@kong/kongponents'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
 
 const props = defineProps({
