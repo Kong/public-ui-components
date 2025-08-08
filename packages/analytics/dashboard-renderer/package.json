@@ -51,7 +51,7 @@
     "ajv": "^8.17.1",
     "cypress-real-events": "^1.14.0",
     "pinia": "catalog:",
-    "swrv": "^1.0.4",
+    "swrv": "^1.1.0",
     "vue": "catalog:"
   },
   "repository": {
