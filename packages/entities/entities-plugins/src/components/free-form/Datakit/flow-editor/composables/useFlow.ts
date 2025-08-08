@@ -49,6 +49,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
 
   const {
     state,
+    commit: historyCommit,
     moveNode,
     removeNode,
     getNodeById,
@@ -269,12 +270,12 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
       moveNode(leftNode.data!.id, {
         x: padding,
         y: centerY - leftGraphNode.dimensions.height / 2,
-      })
+      }, false)
 
       moveNode(rightNode.data!.id, {
         x: boundingRect.width - padding - rightGraphNode.dimensions.width,
         y: centerY - rightGraphNode.dimensions.height / 2,
-      })
+      }, false)
 
       // No need to call dagre.layout()
     } else {
@@ -315,7 +316,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
         const dagreNode = dagreGraph.node(node.id)
         const normalizedPosition = normalizePosition(dagreNode)
         updateConfigBoundingRect(normalizedPosition)
-        moveNode(node.data!.id, { x: normalizedPosition.x, y: normalizedPosition.y })
+        moveNode(node.data!.id, { x: normalizedPosition.x, y: normalizedPosition.y }, false)
       }
 
       const leftGraphNode = findNode(leftNode.id)
@@ -331,13 +332,15 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
       moveNode(leftNode.data!.id, {
         x: configBoundingRect.x1 - (leftGraphNode.dimensions.width + nodeGap),
         y: centerY - leftGraphNode.dimensions.height / 2,
-      })
+      }, false)
 
       moveNode(rightNode.data!.id, {
         x: configBoundingRect.x2 + nodeGap,
         y: centerY - rightGraphNode.dimensions.height / 2,
-      })
+      }, false)
     }
+
+    historyCommit()
 
     nextTick(() => {
       fitView()
