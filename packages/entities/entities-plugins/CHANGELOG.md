@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.59.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.58.1...@kong-ui-public/entities-plugins@9.59.0) (2025-08-08)
+
+
+### Features
+
+* **entities-plugins:** datakit - static form data binding [KM-1460] ([#2307](https://github.com/Kong/public-ui-components/issues/2307)) ([1646f28](https://github.com/Kong/public-ui-components/commit/1646f284d21b0a68058a1e5dcb73df67a48e833c))
+
+
+
+
+
 ## [9.58.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.58.0...@kong-ui-public/entities-plugins@9.58.1) (2025-08-08)
 
 
