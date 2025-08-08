@@ -32,7 +32,7 @@ export function fieldValueToStoreValue(values: FieldValue): StoreValue {
   const storeValues: StoreValue = {}
 
   for (const [key, value] of Object.entries(values)) {
-    if (!value && value !== '') {
+    if (value == null) {
       // Ignore undefined and null values
       continue
     }

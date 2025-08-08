@@ -94,7 +94,6 @@ const {
 const { i18n } = useI18n()
 const root = useTemplateRef('root')
 const addingEntryId = ref<string | null>(null)
-// const errorIds = ref(new Set<string>())
 
 let fieldNameBeforeChange: FieldName
 
@@ -147,7 +146,6 @@ function handleInputsValueChange(e: InputEvent, entry: Entry) {
   // skip if the field hasn't been created
   if (entry.id === addingEntryId.value) return
   const value = (e.target as HTMLInputElement).value.trim()
-  // errorIds.value.add(entry.id)
   emit('change:value', entry.key, value)
 }
 </script>
