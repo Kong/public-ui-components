@@ -542,6 +542,10 @@ export const dashboardConfigSchema = {
       description: 'Height of each tile in pixels.',
     },
     preset_filters: filtersFn([...new Set([...filterableExploreDimensions, ...filterableBasicExploreDimensions, ...filterableAiExploreDimensions])]),
+    template_id: {
+      type: ['string', 'null'],
+      description: 'Template id which was used to instantiate this dashboard.',
+    },
   },
   required: ['tiles'],
   additionalProperties: false,
