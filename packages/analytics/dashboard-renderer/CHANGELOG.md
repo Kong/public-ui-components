@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.4.0...@kong-ui-public/dashboard-renderer@6.4.1) (2025-08-08)
+
+
+### Bug Fixes
+
+* **analytics:** scope tile explore filters to datasource [MA-4174] ([#2292](https://github.com/Kong/public-ui-components/issues/2292)) ([fd32833](https://github.com/Kong/public-ui-components/commit/fd32833db0e72a4f63e63269e0a6d27b12e2009e))
+
+
+
+
+
 # [6.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.3.4...@kong-ui-public/dashboard-renderer@6.4.0) (2025-08-08)
 
 
