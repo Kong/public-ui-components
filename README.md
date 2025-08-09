@@ -53,7 +53,7 @@ Be sure to familiarize yourself with the [Component Requirements](./docs/creatin
 If you need to bump a version of a dependency for ALL consuming packages in this repo, use this command:
 
 ```sh
-# Note that with pnpm catalog this command will bump version in `pnpm-workspace.yaml` catalog 
+# Note that with pnpm catalog this command will bump version in `pnpm-workspace.yaml` catalog
 pnpm --recursive update {package-name}@{version}
 ```
 
@@ -84,7 +84,7 @@ You can also run `pnpm install-completion` to integrate `pnpm` autocompletion in
 
 ### Dev Server
 
-Run the dev server in your `packages/{workspace}/{package-name}/sandbox/` directory with hot-module reload
+Create .env.development.local with the required backend environment variables, run the dev server in your `packages/{workspace}/{package-name}/sandbox/` directory with hot-module reload
 
 ```sh
 pnpm --filter "@kong-ui-public/{package-name}" run dev
