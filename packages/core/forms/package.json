@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "@kong/icons": "catalog:",
+    "dompurify": "^3.2.6",
     "fecha": "^4.2.3",
     "lodash-es": "^4.17.21"
   },
