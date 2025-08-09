@@ -128,6 +128,7 @@ export const upstreamsResponse: UpstreamResponse = {
   hash_on_cookie_path: '/',
   healthchecks: {
     active: {
+      headers: {},
       concurrency: 10,
       healthy: {
         http_statuses: [
@@ -217,6 +218,7 @@ export const upstreamsResponseFull: UpstreamResponse = {
   hash_on_cookie_path: '/',
   healthchecks: {
     active: {
+      headers: { header1: ['v1', 'v2'] },
       concurrency: 13,
       healthy: {
         http_statuses: [

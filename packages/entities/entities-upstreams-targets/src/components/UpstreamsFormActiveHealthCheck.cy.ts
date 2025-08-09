@@ -280,7 +280,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
     })
   })
 
-  // TODO: remove when api will support `headers` property
+  // Konnect supports `headers` property now
   it('headers-row should be hidden for "konnect" config', () => {
     cy.mount(UpstreamsFormActiveHealthCheck, {
       props: {
@@ -290,7 +290,7 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
       },
     })
 
-    cy.get('.headers-row').should('not.exist')
+    cy.get('.headers-row').should('be.visible')
   })
 
   it('Should bind headers data correctly for "kongManager" config', () => {

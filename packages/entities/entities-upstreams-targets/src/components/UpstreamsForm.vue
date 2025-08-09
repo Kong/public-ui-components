@@ -376,18 +376,16 @@ const activeHealthChecks = computed((): UpstreamActivePayload | undefined => {
     active.https_verify_certificate = state.fields.activeHealthCheck.verifySsl
   }
 
-  // Add headers for Kong Manager
-  if (props.config?.app === 'kongManager') {
-    active.headers = state.fields.activeHealthCheck.headers.reduce((obj, item) => {
-      if (!item.key) return obj
-      return {
-        ...obj,
-        [item.key]: item.values.split(',')
-          ?.map((val: string) => val.trim())
-          ?.filter(Boolean),
-      }
-    }, {})
-  }
+  // Add headers for both Konnect and Kong Manager
+  active.headers = state.fields.activeHealthCheck.headers.reduce((obj, item) => {
+    if (!item.key) return obj
+    return {
+      ...obj,
+      [item.key]: item.values.split(',')
+        ?.map((val: string) => val.trim())
+        ?.filter(Boolean),
+    }
+  }, {})
 
   return active
 })
