@@ -19,7 +19,11 @@
         @dragstart="(e: DragEvent) => handleDragStart(e, nodeType)"
       />
     </div>
-    <div class="preview">
+    <div
+      aria-hidden="true"
+      class="preview"
+      inert
+    >
       <VueFlow :nodes="previewNodes">
         <template #node-flow="node">
           <FlowNode
@@ -146,6 +150,13 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
     flex-direction: column;
     gap: $kui-space-40;
     margin-top: $kui-space-40;
+  }
+
+  .preview {height: 1px;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    width: 1px;
   }
 }
 </style>
