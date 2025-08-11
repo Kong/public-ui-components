@@ -49,7 +49,7 @@
           appearance="info"
           class="upstream-failover"
         >
-          {{ rowValue ? 'Yes' : 'No' }}
+          {{ rowValue ? t('targets.form.fields.failover.failover_target') : t('targets.form.fields.failover.load_balance_target') }}
         </KBadge>
       </template>
 
@@ -130,6 +130,7 @@
 
     <TargetForm
       :config="formConfig"
+      :failover-enabled="failoverEnabled"
       :is-visible="isFormModalVisible"
       :target-id="editedTargetId"
       @cancel="handleCloseFormModal"
@@ -180,7 +181,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import TargetForm from './TargetForm.vue'
 import { FAILOVER_INJECTION_KEY } from '../constants'
 
-const failoverEnabled = inject(FAILOVER_INJECTION_KEY, true)
+const failoverEnabled = inject(FAILOVER_INJECTION_KEY, false)
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void
@@ -248,7 +249,7 @@ const fields: BaseTableHeaders = {
   // the Target Address column is non-hidable
   target: { label: t('targets.list.table_headers.target_address'), sortable: true, hidable: false },
   weight: { label: t('targets.list.table_headers.weight'), sortable: true },
-  ...(failoverEnabled ? { failover: { label: t('targets.list.table_headers.failover'), sortable: false } } : {}),
+  ...(failoverEnabled ? { failover: { label: t('targets.list.table_headers.target_type'), sortable: false } } : {}),
   tags: { label: t('targets.list.table_headers.tags'), sortable: false },
 }
 const tableHeaders: BaseTableHeaders = fields
