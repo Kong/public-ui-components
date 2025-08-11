@@ -122,13 +122,13 @@ export function useKeyValueField<
   watch(() => fieldValue?.value, newValue => {
     // avoid infinite sync loop
     if (isEqual(newValue, lastUpdatedValue)) return
-    applyChangeToEntities(newValue)
+    applyChangeToEntries(newValue)
   }, { deep: true })
 
   /**
-   * Apply change to entities but keep the id as stable as possible.
+   * Apply change to entries but keep the id as stable as possible.
    */
-  function applyChangeToEntities(newValue?: Record<TKey, TValue>) {
+  function applyChangeToEntries(newValue?: Record<TKey, TValue>) {
     if (!newValue) {
       entries.value = []
       return
