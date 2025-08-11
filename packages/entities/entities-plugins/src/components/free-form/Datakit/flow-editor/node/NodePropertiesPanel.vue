@@ -21,9 +21,8 @@
       v-html="getNodeTypeDescription(selectedNode.type)"
     />
 
-    <component
-      :is="form"
-      v-if="form"
+    <Form
+      v-if="Form"
       class="dk-node-properties-panel-form"
     />
   </KSlideout>
@@ -62,7 +61,7 @@ defineEmits<{
   close: []
 }>()
 
-const form = computed(() => {
+const Form = computed(() => {
   switch (selectedNode.value?.type) {
     case 'call':
       return NodeFormCall
@@ -89,10 +88,12 @@ const form = computed(() => {
   :deep(.slideout-container) {
     box-shadow: none;
     gap: $kui-space-60;
+    padding-left: 0;
   }
 
-  :deep(.slideout-header) {
-    align-items: start;
+  :deep(.slideout-header),
+  :deep(.slideout-content) {
+    padding-left: var(--kui-space-70, $kui-space-70);
   }
 
   &-desc {
