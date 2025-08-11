@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.3.4...@kong-ui-public/analytics-chart@9.3.5) (2025-08-11)
+
+
+### Bug Fixes
+
+* align analytics chart zoom ux with design ([#2312](https://github.com/Kong/public-ui-components/issues/2312)) ([a4900a4](https://github.com/Kong/public-ui-components/commit/a4900a4f42dce82133dc2da52a02dd177cebb54d))
+
+
+
+
+
 ## [9.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.3.3...@kong-ui-public/analytics-chart@9.3.4) (2025-08-08)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
