@@ -15,6 +15,9 @@ export interface KeyValueFieldProps<TKey extends string = string, TValue extends
   defaultValue?: TValue
   labelAttributes?: LabelAttributes
   showVaultSecretPicker?: boolean
+  // Specify the order of keys in the field.
+  // If not provided, the order will be based on the order of object keys (which is not guaranteed).
+  keyOrder?: TKey[]
 }
 
 export interface KeyValueFieldEmits<TKey extends string = string, TValue extends string = string> {
@@ -42,8 +45,9 @@ export function useKeyValueField<
   const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 
   const entries = ref(getEntries(
-    props.initialValue ?? toValue(fieldValue) ?? ({} as Record<TKey, TValue>)),
-  ) as Ref<Array<KVEntry<TKey, TValue>>>
+    props.initialValue ?? toValue(fieldValue) ?? ({} as Record<TKey, TValue>),
+    props.keyOrder,
+  )) as Ref<Array<KVEntry<TKey, TValue>>>
   // the return type of ref(..) is not expected, it includes `UnwrapRef<TKey>` and `UnwrapRef<TValue>`
   // fix it by using `as`
 
@@ -51,12 +55,24 @@ export function useKeyValueField<
     return uniqueId('ff-kv-field-')
   }
 
-  function getEntries(value: Record<TKey, TValue>): Array<KVEntry<TKey, TValue>> {
-    return Object.entries(value).map(([key, value]) => ({
+  function getEntries(value: Record<TKey, TValue>, keyOrder?: TKey[]): Array<KVEntry<TKey, TValue>> {
+    const entries = Object.entries(value).map(([key, value]) => ({
       id: generateId(),
       key: key as TKey,
       value: value as TValue,
     }))
+    if (keyOrder) {
+      // If keyOrder is specified, sort the entries based on it
+      entries.sort((a, b) => {
+        const indexA = keyOrder.indexOf(a.key)
+        const indexB = keyOrder.indexOf(b.key)
+        if (indexA === -1 && indexB === -1) return 0 // both keys not in order
+        if (indexA === -1) return 1 // a comes after b
+        if (indexB === -1) return -1 // b comes after a
+        return indexA - indexB // sort by order in keyOrder
+      })
+    }
+    return entries
   }
 
   function addEntry(): KVEntry<TKey, TValue> {
@@ -77,11 +93,11 @@ export function useKeyValueField<
   }
 
   function reset() {
-    entries.value = getEntries(props.initialValue || {} as Record<TKey, TValue>)
+    entries.value = getEntries(props.initialValue || {} as Record<TKey, TValue>, props.keyOrder)
   }
 
   function setValue(value: Record<TKey, TValue>) {
-    entries.value = getEntries(value)
+    entries.value = getEntries(value, props.keyOrder)
   }
 
   let lastUpdatedValue: Record<TKey, TValue> | null = null
@@ -99,7 +115,7 @@ export function useKeyValueField<
   watch(() => fieldValue?.value, newValue => {
     // avoid infinite sync loop
     if (isEqual(newValue, lastUpdatedValue)) return
-    entries.value = getEntries(newValue ?? {} as Record<TKey, TValue>)
+    entries.value = getEntries(newValue ?? {} as Record<TKey, TValue>, props.keyOrder)
   }, { deep: true })
 
   return {

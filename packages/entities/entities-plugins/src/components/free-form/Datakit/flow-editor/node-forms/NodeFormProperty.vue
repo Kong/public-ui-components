@@ -19,6 +19,7 @@
 
     <InputsField
       v-if="writable"
+      :field-names="inputsFieldNames"
       :items="inputOptions"
       @change:input="setInput"
       @change:inputs="setInputs"
@@ -53,6 +54,7 @@ const {
   inputOptions,
   setInputs,
   setInput,
+  inputsFieldNames,
 } = useNodeForm<PropertyFormData>(() => formRef.value!.getInnerData())
 
 const writable = computed(() => isWritableProperty(formData.value.property))

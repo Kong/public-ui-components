@@ -12,6 +12,7 @@
   <InputsField
     v-if="InputsField"
     :items="items"
+    :key-order="fieldNames"
     name="inputs"
     @add:field="handleAddField"
     @change:inputs="handleChangeInputs"
@@ -33,6 +34,7 @@ import type { FieldName, IdConnection } from '../../types'
 
 defineProps<{
   items: InputOption[]
+  fieldNames: FieldName[]
 }>()
 
 const emit = defineEmits<{

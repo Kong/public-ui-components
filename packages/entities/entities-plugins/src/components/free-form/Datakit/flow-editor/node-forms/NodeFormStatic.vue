@@ -11,6 +11,7 @@
     />
 
     <OutputValueField
+      :key-order="outputsFieldNames"
       name="values"
       @add:field="handleAddField"
       @change:value="handleChangeValue"
@@ -40,6 +41,10 @@ const {
   removeField,
   replaceConfig,
 } = useEditorStore()
+
+const outputsFieldNames = computed<FieldName[]>(() => {
+  return selectedNode.value?.fields.output.map(f => f.name) || []
+})
 
 function setName(name: string | null) {
   if (!selectedNode.value) throw new Error('No selected node')

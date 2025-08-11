@@ -251,12 +251,17 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     return options
   })
 
+  const inputsFieldNames = computed<FieldName[]>(() => {
+    return selectedNode.value?.fields.input.map(f => f.name) || []
+  })
+
   return {
     // states
     formData,
     inputOptions,
     inputEdge,
     inputsEdges,
+    inputsFieldNames,
 
     // form ops
     setName,
