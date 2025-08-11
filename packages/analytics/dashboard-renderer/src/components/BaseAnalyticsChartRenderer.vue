@@ -13,11 +13,13 @@
         :chart-data="data"
         :chart-options="options"
         legend-position="bottom"
+        :requests-link="requestsLink"
         :show-menu="context.editable"
         :synthetics-data-key="chartOptions.synthetics_data_key"
         :timeseries-zoom="timeseriesZoom"
         tooltip-title=""
         v-bind="extraProps"
+        @select-chart-range="emit('select-chart-range', $event)"
         @view-requests="emit('view-requests', $event)"
         @zoom-time-range="emit('zoom-time-range', $event)"
       >
@@ -49,6 +51,7 @@ const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
   (e: 'view-requests', timeRange: AbsoluteTimeRangeV4): void
+  (e: 'select-chart-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 const { i18n } = composables.useI18n()
 const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()

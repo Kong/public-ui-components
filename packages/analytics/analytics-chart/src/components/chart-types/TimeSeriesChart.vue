@@ -123,6 +123,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
+  (e: 'select-chart-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 
 const verticalLinePlugin = new VerticalLinePlugin()
@@ -286,6 +287,8 @@ const handleDragSelect = (event: Event) => {
       emit('zoom-time-range', { start: new Date(xStart), end: new Date(xEnd), type: 'absolute' })
       resetTooltipState()
     }
+
+    emit('select-chart-range', zoomTimeRange.value)
   }
 }
 

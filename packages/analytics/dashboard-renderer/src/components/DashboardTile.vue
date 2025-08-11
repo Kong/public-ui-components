@@ -127,7 +127,7 @@
         v-if="componentData"
         v-bind="componentData.rendererProps"
         @chart-data="onChartData"
-        @view-requests="onViewRequests"
+        @select-chart-range="onSelectChartRange"
         @zoom-time-range="emit('zoom-time-range', $event)"
       />
     </div>
@@ -160,6 +160,7 @@ import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAgg
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
+import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -182,6 +183,7 @@ const emit = defineEmits<{
 }>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
+const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
@@ -189,7 +191,7 @@ const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const exploreBaseUrl = ref('')
 const requestsBaseUrl = ref('')
-const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
+const requestsLinkZoomActions = ref<ExternalLink | undefined>(undefined)
 
 onMounted(async () => {
   // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
@@ -276,6 +278,7 @@ const componentData = computed(() => {
       chartOptions: props.definition.chart,
       height: props.height - PADDING_SIZE * 2,
       refreshCounter: props.refreshCounter,
+      requestsLink: requestsLinkZoomActions.value,
     },
   }
 })
@@ -377,15 +380,14 @@ const buildRequestsQuery = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
   }
 }
 
-const onViewRequests = (timeRange: AbsoluteTimeRangeV4) => {
-  if (!requestsBaseUrl.value || !props.definition.query) {
-    return
-  }
+const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
 
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
-  const requestsQuery = buildRequestsQuery(timeRange, filters)
+  const query = buildRequestsQuery(newTimeRange, filters)
 
-  window.location.assign(`${requestsBaseUrl.value}?q=${JSON.stringify(requestsQuery)}`)
+  requestsLinkZoomActions.value = {
+    href: requestsBaseUrl.value ? `${requestsBaseUrl.value}?q=${JSON.stringify(query)}` : '',
+  }
 }
 </script>
 

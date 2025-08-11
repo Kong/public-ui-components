@@ -7,6 +7,8 @@
     :query="query"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
+    :requests-link="requestsLink"
+    @select-chart-range="emit('select-chart-range', $event)"
     @zoom-time-range="emit('zoom-time-range', $event)"
   />
 </template>
@@ -19,5 +21,6 @@ import type { AbsoluteTimeRangeV4, TimeseriesChartOptions } from '@kong-ui-publi
 defineProps<RendererProps<TimeseriesChartOptions>>()
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
+  (e: 'select-chart-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 </script>

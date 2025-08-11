@@ -9,9 +9,22 @@
       v-for="option in zoomActionItems"
       :key="option.label"
       class="zoom-action-item"
-      @click="handleAction(option)"
+      :class="{ 'disabled': option.disabled }"
     >
-      {{ option.label }}
+      <a
+        v-if="option.href"
+        :aria-disabled="option.disabled"
+        class="zoom-action-link"
+        :href="option.href"
+      >
+        {{ option.label }}
+      </a>
+      <div
+        v-else
+        @click="handleAction(option)"
+      >
+        {{ option.label }}
+      </div>
     </div>
     <div
       class="zoom-action-item"
@@ -41,8 +54,10 @@ const start = computed(() => formatTime(props.newTimeRange.start.getTime()))
 const end = computed(() => formatTime(props.newTimeRange.end.getTime()))
 
 const handleAction = (option: ZoomActionItem) => {
-  option.action(props.newTimeRange)
-  emit('onAction')
+  if (option.action) {
+    option.action(props.newTimeRange)
+    emit('onAction')
+  }
 }
 </script>
 
@@ -65,6 +80,21 @@ const handleAction = (option: ZoomActionItem) => {
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
     transition: background-color 0.2s;
+
+    .zoom-action-link {
+      color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+      display: block;
+      text-decoration: none;
+    }
+
+    &.disabled {
+      color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+      pointer-events: none;
+
+      a {
+        color: var(--kui-color-text-disabled, $kui-color-text-disabled);
+      }
+    }
 
     &:hover {
       background-color: var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak);
