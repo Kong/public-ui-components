@@ -41,13 +41,15 @@ export function useKeyValueField<
   emit: EmitFn<KeyValueFieldEmits>,
   syncToFieldValue = true,
 ) {
+  type KVEntries = Array<KVEntry<TKey, TValue>>
+
   const { value: fieldValue, ...field } = useField<Record<TKey, TValue>>(toRef(props, 'name'))
   const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 
   const entries = ref(getEntries(
     props.initialValue ?? toValue(fieldValue) ?? ({} as Record<TKey, TValue>),
     props.keyOrder,
-  )) as Ref<Array<KVEntry<TKey, TValue>>>
+  )) as Ref<KVEntries>
   // the return type of ref(..) is not expected, it includes `UnwrapRef<TKey>` and `UnwrapRef<TValue>`
   // fix it by using `as`
 
@@ -67,7 +69,7 @@ export function useKeyValueField<
     return indexA - indexB // sort by order in keyOrder
   }
 
-  function getEntries(value: Record<TKey, TValue>, keyOrder?: TKey[]): Array<KVEntry<TKey, TValue>> {
+  function getEntries(value: Record<TKey, TValue>, keyOrder?: TKey[]): KVEntries {
     const entries = Object.entries(value).map(([key, value]) => ({
       id: generateId(),
       key: key as TKey,
@@ -139,7 +141,7 @@ export function useKeyValueField<
       }
     })
 
-    const newEntries: Array<KVEntry<TKey, TValue>> = []
+    const newEntries: KVEntries = []
     const newKeys = Object.keys(newValue) as TKey[]
 
     const orderedKeys = props.keyOrder
