@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.59.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.4...@kong-ui-public/entities-plugins@9.59.5) (2025-08-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit use cloneDeep from lodash, use nanoid ([#2319](https://github.com/Kong/public-ui-components/issues/2319)) ([14a6bf2](https://github.com/Kong/public-ui-components/commit/14a6bf291817b7c1837c85252875b02232773716))
+
+
+
+
+
 ## [9.59.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.3...@kong-ui-public/entities-plugins@9.59.4) (2025-08-11)
 
 
