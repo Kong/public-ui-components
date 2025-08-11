@@ -107,7 +107,6 @@ import type {
 } from '../types'
 import endpoints from '../targets-endpoints'
 import composables from '../composables'
-import { FAILOVER_INJECTION_KEY } from '../constants'
 import { useAxios, useErrors, EntityBaseForm, EntityBaseFormType, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -117,8 +116,6 @@ const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'cancel'): void
 }>()
-
-const failoverEnabled = inject(FAILOVER_INJECTION_KEY, true)
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
@@ -145,6 +142,11 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  failoverEnabled: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 })
 
@@ -262,7 +264,7 @@ const requestBody = computed((): Record<string, any> => {
     weight: parseInt(form.fields.weight as unknown as string),
     tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
     upstream: { id: props.config.upstreamId },
-    ...(failoverEnabled ? { failover: isFailover.value } : {}),
+    ...(props.failoverEnabled ? { failover: isFailover.value } : {}),
   }
 })
 
