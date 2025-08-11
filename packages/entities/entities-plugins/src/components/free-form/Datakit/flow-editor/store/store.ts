@@ -18,7 +18,7 @@ import type {
 import { isImplicitName, isImplicitType } from '../node/node'
 import {
   createId,
-  deepClone,
+  clone,
   findFieldById,
   generateNodeName,
 } from './helpers'
@@ -32,7 +32,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     const selection = ref<NodeId>()
     const history = useTaggedHistory(state, {
       capacity: 200,
-      clone: deepClone,
+      clone,
     })
 
     // maps
@@ -222,7 +222,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     ) {
       const node = getNodeById(nodeId)
       if (!node) return
-      node.config = deepClone(next)
+      node.config = clone(next)
       if (commitNow) history.commit()
     }
 
@@ -429,7 +429,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         }
 
         const configNode: ConfigNode = {
-          ...deepClone(node.config),
+          ...clone(node.config),
           name: node.name,
           type: node.type,
         } as ConfigNode
@@ -453,7 +453,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
 
     function toUINodes(): UINode[] {
       return state.value.nodes.map((node) =>
-        deepClone({
+        clone({
           name: node.name,
           phase: node.phase,
           position: { ...node.position },

@@ -14,7 +14,7 @@ import type {
 import { isImplicitName } from '../node/node'
 import {
   createId,
-  deepClone,
+  clone,
   findFieldByName,
   getFieldsFromMeta,
   IMPLICIT_NODE_NAMES,
@@ -153,7 +153,7 @@ export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance
       input: toFieldArray(fields?.input ?? defaults.input),
       output: toFieldArray(fields?.output ?? defaults.output),
     },
-    config: config ? deepClone(config) : {},
+    config: config ? clone(config) : {},
   }
 }
 
@@ -180,7 +180,7 @@ export function buildNodeInstance(
 export function extractConfig(configNode: ConfigNode): Record<string, unknown> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { type, name, input, inputs, output, outputs, ...rest } = configNode
-  return deepClone(rest)
+  return clone(rest)
 }
 
 export function collectConnectionsFromConfigNode(
