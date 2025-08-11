@@ -63,6 +63,19 @@
               required
               type="number"
             />
+
+            <template v-if="failoverEnabled">
+              <div class="failover-target">
+                <KCheckbox
+                  v-model="isFailover"
+                  :label="t('targets.form.fields.failover.label')"
+                  :label-attributes="{
+                    info: t('targets.form.fields.failover.help'),
+                  }"
+                />
+              </div>
+            </template>
+
             <KInput
               v-model.trim="form.fields.tags"
               autocomplete="off"
@@ -83,7 +96,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, watch, inject, ref } from 'vue'
 import type { AxiosError, AxiosResponse } from 'axios'
 import type {
   KonnectTargetFormConfig,
@@ -94,6 +107,7 @@ import type {
 } from '../types'
 import endpoints from '../targets-endpoints'
 import composables from '../composables'
+import { FAILOVER_INJECTION_KEY } from '../constants'
 import { useAxios, useErrors, EntityBaseForm, EntityBaseFormType, SupportedEntityType } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -103,6 +117,8 @@ const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'cancel'): void
 }>()
+
+const failoverEnabled = inject(FAILOVER_INJECTION_KEY, true)
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
@@ -137,9 +153,9 @@ const { getMessageFromError } = useErrors()
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
-const fetchUrl = computed<string>(() => endpoints.form[props.config.app].edit.replace(/{upstreamId}/gi, props.config?.upstreamId || ''))
-const formType = computed((): EntityBaseFormType => props.targetId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
-const formTitle = computed((): string => formType.value === EntityBaseFormType.Edit ? t('targets.form.edit.title') : t('targets.form.create.title'))
+const fetchUrl = computed(() => endpoints.form[props.config.app].edit.replace(/{upstreamId}/gi, props.config?.upstreamId || ''))
+const formType = computed(() => props.targetId ? EntityBaseFormType.Edit : EntityBaseFormType.Create)
+const formTitle = computed(() => formType.value === EntityBaseFormType.Edit ? t('targets.form.edit.title') : t('targets.form.create.title'))
 
 const form = reactive<TargetFormState>({
   fields: {
@@ -150,6 +166,8 @@ const form = reactive<TargetFormState>({
   isReadonly: false,
   errorMessage: '',
 })
+
+const isFailover = ref(false)
 
 const formFieldsOriginal = reactive<TargetFormFields>({
   target: '',
@@ -244,6 +262,7 @@ const requestBody = computed((): Record<string, any> => {
     weight: parseInt(form.fields.weight as unknown as string),
     tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
     upstream: { id: props.config.upstreamId },
+    ...(failoverEnabled ? { failover: isFailover.value } : {}),
   }
 })
 
@@ -325,6 +344,18 @@ watch(() => props.targetId, () => {
 
       &:last-of-type {
         margin-bottom: $kui-space-0;
+      }
+    }
+
+    .failover-target {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: $kui-space-90;
+
+      .failover-target-options {
+        align-items: center;
+        display: flex;
+        gap: $kui-space-50;
       }
     }
   }
