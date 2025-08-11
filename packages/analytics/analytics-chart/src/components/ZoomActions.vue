@@ -60,6 +60,7 @@ const handleAction = (option: ZoomActionItem) => {
   }
 
   .zoom-action-item {
+    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
     cursor: pointer;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
