@@ -227,7 +227,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       // skip no output nodes
       if (!meta.io?.output) continue
 
-      // skip nodes that are not output
+      // skip nodes that do not have output
       if (!node.fields.output) continue
 
       // skip the selected node itself

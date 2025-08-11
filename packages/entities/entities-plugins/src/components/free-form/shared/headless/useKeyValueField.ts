@@ -16,7 +16,7 @@ export interface KeyValueFieldProps<TKey extends string = string, TValue extends
   labelAttributes?: LabelAttributes
   showVaultSecretPicker?: boolean
   // Specify the order of keys in the field.
-  // If not provided, the order will be based on the order of object keys (which is not guaranteed).
+  // If not provided, the order will be based on the order of object keys (which is not guaranteed when having numeric keys).
   keyOrder?: TKey[]
 }
 
