@@ -8,7 +8,7 @@ export interface DragSelectEventDetail {
 const drawSelectionArea = (chart: Chart, startX: number, endX: number) => {
   const ctx = chart.ctx
   ctx.save()
-  ctx.fillStyle = 'rgba(200, 200, 200, 0.5)'
+  ctx.fillStyle = 'rgba(143, 193, 255, 0.3)'
   ctx.fillRect(startX, chart.chartArea.top, endX - startX, chart.chartArea.bottom - chart.chartArea.top)
   ctx.restore()
 }
