@@ -126,7 +126,13 @@ export function useKeyValueField<
   }, { deep: true })
 
   /**
-   * Apply change to entries but keep the id as stable as possible.
+   * Apply changes to entries when the underlying data model changes.
+   * This function intelligently updates the entries array while:
+   * - Preserving existing entry IDs for stable component state/rendering
+   * - Applying the specified key ordering if provided
+   * - Adding new entries for keys that didn't exist before
+   * - Updating values for existing keys
+   * - Removing entries that no longer exist in the new value
    */
   function applyChangeToEntries(newValue?: Record<TKey, TValue>) {
     if (!newValue) {
@@ -134,6 +140,7 @@ export function useKeyValueField<
       return
     }
 
+    // Create a map of existing entries by their keys for quick lookup
     const currentEntriesMap = new Map<TKey, KVEntry<TKey, TValue>>()
     entries.value.forEach(entry => {
       if (entry.key) {
@@ -141,20 +148,26 @@ export function useKeyValueField<
       }
     })
 
+    // Prepare array for the updated entries
     const newEntries: KVEntries = []
     const newKeys = Object.keys(newValue) as TKey[]
 
+    // Apply key ordering if specified, otherwise use the original key order
     const orderedKeys = props.keyOrder
       ? [...newKeys].sort((a, b) => compareByKeyOrder(a, b, props.keyOrder!))
       : newKeys
 
+    // Process each key in order
     orderedKeys.forEach(key => {
       const value = newValue[key]
       if (currentEntriesMap.has(key)) {
+        // For existing keys: preserve the entry object (including its ID) and just update its value
+        // This helps maintain component state and prevents unnecessary re-renders
         const existingEntry = currentEntriesMap.get(key)!
         existingEntry.value = value
         newEntries.push(existingEntry)
       } else {
+        // For new keys: create a new entry with a fresh ID
         newEntries.push({
           id: generateId(),
           key,
