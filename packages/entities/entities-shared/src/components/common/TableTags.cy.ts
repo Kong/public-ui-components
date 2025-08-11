@@ -75,6 +75,6 @@ describe('<TableTags />', () => {
     })
 
     cy.get('.k-truncate').should('exist')
-    cy.get('.badge-content-wrapper').should('have.css', 'max-width', '100px')
+    cy.get('.badge-content').should('have.css', 'max-width', '100px')
   })
 })

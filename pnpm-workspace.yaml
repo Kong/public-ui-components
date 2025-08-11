@@ -6,5 +6,5 @@ catalog:
   axios: ^1.11.0
   pinia: ">= 2.1.7 < 3"
   '@kong/icons': ^1.33.2
-  '@kong/design-tokens': ^1.17.4
-  '@kong/kongponents': ^9.34.2
+  '@kong/design-tokens': ^1.18.0
+  '@kong/kongponents': ^9.37.2

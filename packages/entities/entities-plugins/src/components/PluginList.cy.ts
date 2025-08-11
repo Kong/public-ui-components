@@ -208,16 +208,9 @@ describe('<PluginList />', () => {
         },
       })
 
-      // eslint-disable-next-line cypress/unsafe-to-chain-command
-      cy.getTestId('basic-auth')
-        .find('[data-testid="enabled"]')
-        .find('.switch-control')
-        .trigger('mouseenter')
-        .parent()
-        .parent()
-        .find('.k-tooltip')
-        .should('be.visible')
-        .should('contain.text', kTooltipText)
+      cy.getTestId('basic-auth').find('[data-testid="enabled"]').find('.switch-control').scrollIntoView()
+      cy.getTestId('basic-auth').find('[data-testid="enabled"]').find('.switch-control').trigger('mouseenter')
+      cy.getTestId('basic-auth').find('.k-tooltip').should('be.visible').should('contain.text', kTooltipText)
     })
 
     for (const expected of [false, true]) {
@@ -357,6 +350,7 @@ describe('<PluginList />', () => {
 
           const { getDisplayName } = composables.usePluginMetaData()
 
+          cy.get('[data-testid="basic-auth"] .k-input-switch').eq(0).scrollIntoView()
           // eslint-disable-next-line cypress/unsafe-to-chain-command
           cy.get('[data-testid="basic-auth"] .k-input-switch').eq(0).click().then(() => {
             if (expected) {
@@ -371,6 +365,7 @@ describe('<PluginList />', () => {
             }
           })
 
+          cy.get('[data-testid="acl"] .k-input-switch').eq(0).scrollIntoView()
           // eslint-disable-next-line cypress/unsafe-to-chain-command
           cy.get('[data-testid="acl"] .k-input-switch')
             .eq(0)
