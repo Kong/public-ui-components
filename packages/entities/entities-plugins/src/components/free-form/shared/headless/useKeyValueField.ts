@@ -115,8 +115,56 @@ export function useKeyValueField<
   watch(() => fieldValue?.value, newValue => {
     // avoid infinite sync loop
     if (isEqual(newValue, lastUpdatedValue)) return
-    entries.value = getEntries(newValue ?? {} as Record<TKey, TValue>, props.keyOrder)
+    applyChangeToEntities(newValue)
   }, { deep: true })
+
+  /**
+   * Apply change to entities but keep the id as stable as possible.
+   */
+  function applyChangeToEntities(newValue?: Record<TKey, TValue>) {
+    if (!newValue) {
+      entries.value = []
+      return
+    }
+
+    const currentEntriesMap = new Map<TKey, KVEntry<TKey, TValue>>()
+    entries.value.forEach(entry => {
+      if (entry.key) {
+        currentEntriesMap.set(entry.key, entry)
+      }
+    })
+
+    const newEntries: Array<KVEntry<TKey, TValue>> = []
+    const newKeys = Object.keys(newValue) as TKey[]
+
+    const orderedKeys = props.keyOrder
+      ? [...newKeys].sort((a, b) => {
+        const indexA = props.keyOrder!.indexOf(a)
+        const indexB = props.keyOrder!.indexOf(b)
+        if (indexA === -1 && indexB === -1) return 0
+        if (indexA === -1) return 1
+        if (indexB === -1) return -1
+        return indexA - indexB
+      })
+      : newKeys
+
+    orderedKeys.forEach(key => {
+      const value = newValue[key]
+      if (currentEntriesMap.has(key)) {
+        const existingEntry = currentEntriesMap.get(key)!
+        existingEntry.value = value
+        newEntries.push(existingEntry)
+      } else {
+        newEntries.push({
+          id: generateId(),
+          key,
+          value,
+        })
+      }
+    })
+
+    entries.value = newEntries
+  }
 
   return {
     /**
