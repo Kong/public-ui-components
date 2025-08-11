@@ -25,6 +25,7 @@
     />
 
     <InputsField
+      :field-names="inputsFieldNames"
       :items="inputOptions"
       @add:field="handleAddField"
       @change:input="setInput"
@@ -32,8 +33,6 @@
       @remove:field="handleRemoveField"
       @rename:field="handleRenameField"
     />
-
-    <!-- todo(zehao): outputs definition fields -->
   </Form>
 </template>
 
@@ -61,6 +60,7 @@ const {
   addField,
   removeFieldByName,
   renameFieldByName,
+  inputsFieldNames,
 } = useNodeForm(() => formRef.value!.getInnerData())
 
 function handleAddField(name: FieldName, value?: IdConnection | null) {

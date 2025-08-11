@@ -6,6 +6,7 @@
     :schema="ResponseSchema"
   >
     <InputsField
+      :field-names="inputsFieldNames"
       :items="inputOptions"
       @change:input="setInput"
       @change:inputs="setInputs"
@@ -27,6 +28,7 @@ const {
   inputOptions,
   setInputs,
   setInput,
+  inputsFieldNames,
 } = useNodeForm(() => formRef.value!.getInnerData())
 </script>
 

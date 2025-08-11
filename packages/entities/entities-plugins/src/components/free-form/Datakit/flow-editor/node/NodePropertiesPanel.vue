@@ -23,6 +23,7 @@
 
     <Form
       v-if="Form"
+      :key="selectedNode?.id"
       class="dk-node-properties-panel-form"
     />
   </KSlideout>
