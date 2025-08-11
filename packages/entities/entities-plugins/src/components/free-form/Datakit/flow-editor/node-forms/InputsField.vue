@@ -2,6 +2,7 @@
   <EnumField
     v-if="getSchema('input')"
     clearable
+    enable-filtering
     :items="items"
     label="Inputs"
     name="input"

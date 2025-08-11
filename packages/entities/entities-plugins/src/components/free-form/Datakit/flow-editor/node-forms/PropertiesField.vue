@@ -1,5 +1,6 @@
 <template>
   <KSelect
+    enable-filtering
     :items="selectItems"
     label="Property"
     :label-attributes="({
