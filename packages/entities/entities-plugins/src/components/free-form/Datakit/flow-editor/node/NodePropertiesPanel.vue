@@ -93,7 +93,7 @@ const Form = computed(() => {
 
   :deep(.slideout-header),
   :deep(.slideout-content) {
-    padding-left: var(--kui-space-70, 20px);
+    padding-left: var(--kui-space-70, $kui-space-70);
   }
 
   &-desc {
