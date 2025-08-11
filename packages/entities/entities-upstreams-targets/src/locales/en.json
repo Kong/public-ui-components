@@ -307,7 +307,8 @@
         "id": "ID",
         "target_address": "Target Address",
         "weight": "Weight",
-        "tags": "Tags"
+        "tags": "Tags",
+        "failover": "Failover Target"
       },
       "empty_state": {
         "title": "Configure a New Target",
@@ -366,6 +367,10 @@
           "label": "Tags",
           "placeholder": "Enter a list of tags separated by comma",
           "help": "e.g. tag1, tag2, tag3"
+        },
+        "failover": {
+          "label": "Failover Target",
+          "help": "Whether to use this target only as backup or not."
         }
       }
     }
