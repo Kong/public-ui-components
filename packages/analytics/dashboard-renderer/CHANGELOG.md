@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.4.3...@kong-ui-public/dashboard-renderer@6.4.4) (2025-08-11)
+
+
+### Bug Fixes
+
+* **dashboardrenderer:** switch swrv to not retry on errors [MA-4180] ([#2320](https://github.com/Kong/public-ui-components/issues/2320)) ([8563a04](https://github.com/Kong/public-ui-components/commit/8563a047f4033fd1efe5dca881374b9a960d29b5))
+
+
+
+
+
 ## [6.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.4.2...@kong-ui-public/dashboard-renderer@6.4.3) (2025-08-11)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
