@@ -19,6 +19,12 @@ export interface AiDatasourceQuery {
 
 export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery
 
+export interface AppOptions {
+  // How many days of api requests can be queried.
+  // Needed to know when to disable "Jump to Requests" links.
+  requestsRetentionDays: number
+}
+
 export interface AnalyticsBridge {
   // Issue queries to the KAnalytics API
   queryFn: (query: DatasourceAwareQuery, abortController: AbortController) => Promise<ExploreResultV4>
@@ -39,4 +45,7 @@ export interface AnalyticsBridge {
 
   // Dynamically provide certain components that aren't available in all environments
   fetchComponent?: (name: string) => Promise<Component>
+
+  // Define any static options
+  options?: AppOptions
 }
