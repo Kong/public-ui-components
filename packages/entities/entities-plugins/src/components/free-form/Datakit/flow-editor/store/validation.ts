@@ -93,13 +93,6 @@ export function useValidators(stateRef: Ref<EditorState>) {
       )
 
     if (
-      edge.sourceField &&
-      edges.value.some(
-        (e) => e.source === edge.source && e.sourceField === edge.sourceField,
-      )
-    )
-      errors.push('source field already connected')
-    if (
       edge.targetField &&
       edges.value.some(
         (e) => e.target === edge.target && e.targetField === edge.targetField,
