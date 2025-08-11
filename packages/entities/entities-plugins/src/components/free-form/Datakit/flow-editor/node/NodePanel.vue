@@ -152,7 +152,8 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
     margin-top: $kui-space-40;
   }
 
-  .preview {height: 1px;
+  .preview {
+    height: 1px;
     opacity: 0;
     pointer-events: none;
     position: absolute;
