@@ -164,6 +164,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
 }, {
   refreshInterval: props.context.refreshInterval,
   revalidateOnFocus: false,
+  shouldRetryOnError: false,
 })
 
 const { state, swrvState: STATE } = useSwrvState(v4Data, error, isValidating)
