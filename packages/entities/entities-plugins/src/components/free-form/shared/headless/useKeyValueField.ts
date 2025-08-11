@@ -55,6 +55,18 @@ export function useKeyValueField<
     return uniqueId('ff-kv-field-')
   }
 
+  /**
+   * Compare function for sorting items based on a keyOrder array
+   */
+  function compareByKeyOrder<T extends string>(a: T, b: T, keyOrder: T[]): number {
+    const indexA = keyOrder.indexOf(a)
+    const indexB = keyOrder.indexOf(b)
+    if (indexA === -1 && indexB === -1) return 0 // both keys not in order
+    if (indexA === -1) return 1 // a comes after b
+    if (indexB === -1) return -1 // b comes after a
+    return indexA - indexB // sort by order in keyOrder
+  }
+
   function getEntries(value: Record<TKey, TValue>, keyOrder?: TKey[]): Array<KVEntry<TKey, TValue>> {
     const entries = Object.entries(value).map(([key, value]) => ({
       id: generateId(),
@@ -63,14 +75,7 @@ export function useKeyValueField<
     }))
     if (keyOrder) {
       // If keyOrder is specified, sort the entries based on it
-      entries.sort((a, b) => {
-        const indexA = keyOrder.indexOf(a.key)
-        const indexB = keyOrder.indexOf(b.key)
-        if (indexA === -1 && indexB === -1) return 0 // both keys not in order
-        if (indexA === -1) return 1 // a comes after b
-        if (indexB === -1) return -1 // b comes after a
-        return indexA - indexB // sort by order in keyOrder
-      })
+      entries.sort((a, b) => compareByKeyOrder(a.key, b.key, keyOrder))
     }
     return entries
   }
@@ -138,14 +143,7 @@ export function useKeyValueField<
     const newKeys = Object.keys(newValue) as TKey[]
 
     const orderedKeys = props.keyOrder
-      ? [...newKeys].sort((a, b) => {
-        const indexA = props.keyOrder!.indexOf(a)
-        const indexB = props.keyOrder!.indexOf(b)
-        if (indexA === -1 && indexB === -1) return 0
-        if (indexA === -1) return 1
-        if (indexB === -1) return -1
-        return indexA - indexB
-      })
+      ? [...newKeys].sort((a, b) => compareByKeyOrder(a, b, props.keyOrder!))
       : newKeys
 
     orderedKeys.forEach(key => {
