@@ -8,3 +8,4 @@ catalog:
   '@kong/icons': ^1.33.2
   '@kong/design-tokens': ^1.18.0
   '@kong/kongponents': ^9.37.2
+  dompurify: ^3.2.6
