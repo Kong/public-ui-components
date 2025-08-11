@@ -24,6 +24,7 @@
     <component
       :is="form"
       v-if="form"
+      :key="selectedNode?.id"
       class="dk-node-properties-panel-form"
     />
   </KSlideout>

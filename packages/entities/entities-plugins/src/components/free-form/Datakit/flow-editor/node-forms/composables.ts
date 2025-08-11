@@ -3,6 +3,7 @@ import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
+import { isReadableProperty } from '../node/property'
 
 export type InputOption = {
   value: IdConnection
@@ -226,11 +227,14 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       // skip no output nodes
       if (!meta.io?.output) continue
 
-      // skip the node that no output fields and can't be configured
-      if (!node.fields.output.length && !meta.io?.output?.configurable) continue
+      // skip nodes that are not output
+      if (!node.fields.output) continue
 
       // skip the selected node itself
       if (node.id === selectedNodeId.value) continue
+
+      // skip property nodes that are not readable
+      if (node.type === 'property' && !isReadableProperty(node.config?.property as string)) continue
 
       // skip the node that will create a cycle
       if (willCreateCycle(node.id)) continue
