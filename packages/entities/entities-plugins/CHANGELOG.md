@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.59.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.2...@kong-ui-public/entities-plugins@9.59.3) (2025-08-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.59.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.1...@kong-ui-public/entities-plugins@9.59.2) (2025-08-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** improve datakit flow node styles, reduce warnings ([#2314](https://github.com/Kong/public-ui-components/issues/2314)) ([380f06f](https://github.com/Kong/public-ui-components/commit/380f06f74148c26795da5302d3a24f58a8897186))
+
+
+
+
+
+## [9.59.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.0...@kong-ui-public/entities-plugins@9.59.1) (2025-08-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 # [9.59.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.58.1...@kong-ui-public/entities-plugins@9.59.0) (2025-08-08)
 
 

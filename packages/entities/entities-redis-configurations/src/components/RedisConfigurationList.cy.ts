@@ -243,6 +243,7 @@ describe('<RedisConfigurationList />', () => {
         cy.getTestId('linked-plugins-inline').should('be.visible')
 
         // open linked plugins modal
+        cy.get('[data-testid="linked-plugins-inline"]:first').scrollIntoView()
         cy.get('[data-testid="linked-plugins-inline"]:first').click()
         cy.wait('@getLinkedPlugins')
 

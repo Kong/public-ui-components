@@ -33,7 +33,7 @@ export interface AutoLayoutOptions {
 }
 
 export default function useFlow(phase: NodePhase, flowId?: string) {
-  const vueFlowStore = useVueFlow({ id: flowId })
+  const vueFlowStore = useVueFlow(flowId)
   const editorStore = useEditorStore()
 
   const {

@@ -41,22 +41,25 @@
                 class="handle-label"
                 :class="{
                   'has-fields': data.fields.input.length > 0,
-                  'not-collapsible': inputsNotCollapsible
+                  collapsible: inputsCollapsible
                 }"
               >
-                <div>inputs</div>
+                <div class="text">
+                  inputs
+                </div>
                 <div
                   v-if="data.fields.input.length > 0"
                   class="icon"
-                  @click.stop="inputsNotCollapsible || toggleExpanded('input')"
+                  @click.stop="!inputsCollapsible || toggleExpanded('input')"
                 >
                   <UnfoldMoreIcon
                     v-if="!inputsExpanded"
-                    :size="KUI_ICON_SIZE_30"
+                    :size="KUI_ICON_SIZE_20"
                   />
                   <UnfoldLessIcon
                     v-if="inputsExpanded"
-                    :size="KUI_ICON_SIZE_30"
+                    :color="inputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
+                    :size="KUI_ICON_SIZE_20"
                   />
                 </div>
               </div>
@@ -81,7 +84,7 @@
                 type="target"
               />
               <div class="handle-label-wrapper">
-                <div class="handle-label">
+                <div class="handle-label text">
                   {{ field.name }}
                 </div>
                 <HandleTwig
@@ -100,25 +103,28 @@
           <div class="handle">
             <div class="handle-label-wrapper">
               <div
-                class="handle-label"
+                class="handle-label text"
                 :class="{
                   'has-fields': data.fields.output.length > 0,
-                  'not-collapsible': outputsNotCollapsible
+                  collapsible: outputsCollapsible
                 }"
               >
-                <div>outputs</div>
+                <div class="text">
+                  outputs
+                </div>
                 <div
                   v-if="data.fields.output.length > 0"
                   class="icon"
-                  @click.stop="outputsNotCollapsible || toggleExpanded('output')"
+                  @click.stop="!outputsCollapsible || toggleExpanded('output')"
                 >
                   <UnfoldMoreIcon
                     v-if="!outputsExpanded"
-                    :size="KUI_ICON_SIZE_30"
+                    :size="KUI_ICON_SIZE_20"
                   />
                   <UnfoldLessIcon
                     v-if="outputsExpanded"
-                    :size="KUI_ICON_SIZE_30"
+                    :color="outputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
+                    :size="KUI_ICON_SIZE_20"
                   />
                 </div>
               </div>
@@ -170,7 +176,8 @@ import { createI18n } from '@kong-ui-public/i18n'
 import {
   KUI_COLOR_BACKGROUND_NEUTRAL_STRONG,
   KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER,
-  KUI_ICON_SIZE_30,
+  KUI_COLOR_TEXT_DISABLED,
+  KUI_ICON_SIZE_20,
 } from '@kong/design-tokens'
 import { UnfoldLessIcon, UnfoldMoreIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
@@ -195,11 +202,11 @@ const { getInEdgesByNodeId, getOutEdgesByNodeId, toggleExpanded: storeToggleExpa
 
 const meta = computed(() => getNodeMeta(data.type))
 
-const inputsNotCollapsible = computed(() =>
-  getInEdgesByNodeId(data.id).some(edge => edge.targetField !== undefined),
+const inputsCollapsible = computed(() =>
+  getInEdgesByNodeId(data.id).every(edge => edge.targetField === undefined),
 )
-const outputsNotCollapsible = computed(() =>
-  getOutEdgesByNodeId(data.id).some(edge => edge.sourceField !== undefined),
+const outputsCollapsible = computed(() =>
+  getOutEdgesByNodeId(data.id).every(edge => edge.sourceField === undefined),
 )
 
 const inputsExpanded = computed(() => data.expanded.input ?? false)
@@ -251,14 +258,14 @@ function toggleExpanded(io: 'input' | 'output') {
   storeToggleExpanded(data.id, io)
 }
 
-watch(inputsNotCollapsible, (collapsible) => {
-  if (collapsible) {
+watch(inputsCollapsible, (collapsible) => {
+  if (!collapsible) {
     storeToggleExpanded(data.id, 'input', true)
   }
 }, { immediate: true })
 
-watch(outputsNotCollapsible, (collapsible) => {
-  if (collapsible) {
+watch(outputsCollapsible, (collapsible) => {
+  if (!collapsible) {
     storeToggleExpanded(data.id, 'output', true)
   }
 }, { immediate: true })
@@ -338,18 +345,20 @@ $handle-height: 10px;
           flex-direction: row;
           font-size: $kui-font-size-20;
           font-weight: $kui-font-weight-semibold;
-          gap: $kui-space-20;
-          padding: 0 $kui-space-10;
+          gap: $kui-space-40;
+          line-height: $kui-line-height-10;
+          padding: $kui-space-10;
 
-          &.has-fields {
-            padding: 0 $kui-space-10 0 $kui-space-20;
+          .text {
+            /* improve visual valign for our use case */
+            transform: translateY(-0.5px);
           }
 
           &.has-fields .icon {
             cursor: pointer;
           }
 
-          &.not-collapsible .icon {
+          &:not(.collapsible) .icon {
             cursor: not-allowed;
           }
         }
