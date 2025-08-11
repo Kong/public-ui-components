@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.3.5...@kong-ui-public/analytics-chart@9.3.6) (2025-08-11)
+
+
+### Bug Fixes
+
+* **analytics-chart:** add missing translation strings [MA-4190] ([#2321](https://github.com/Kong/public-ui-components/issues/2321)) ([9d05531](https://github.com/Kong/public-ui-components/commit/9d05531e7fee2ba38a555efbd6883111361be914))
+
+
+
+
+
 ## [9.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@9.3.4...@kong-ui-public/analytics-chart@9.3.5) (2025-08-11)
 
 
