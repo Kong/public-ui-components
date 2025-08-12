@@ -131,6 +131,7 @@
     <TargetForm
       :config="formConfig"
       :failover-enabled="failoverEnabled"
+      :failover-unsupported="failoverEnabled && !ALGORITHMS_WITH_FAILOVER_SUPPORT.includes(algorithm)"
       :is-visible="isFormModalVisible"
       :target-id="editedTargetId"
       @cancel="handleCloseFormModal"
@@ -159,7 +160,7 @@ import {
   TableTags,
 } from '@kong-ui-public/entities-shared'
 import type { PropType } from 'vue'
-import { computed, onBeforeMount, ref, watch, inject } from 'vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
 import type { AxiosError } from 'axios'
 import { AddIcon } from '@kong/icons'
 import type {
@@ -171,6 +172,7 @@ import type {
   KongManagerTargetFormConfig,
 } from '../types'
 import composables from '../composables'
+import { ALGORITHMS_WITH_FAILOVER_SUPPORT } from '../constants'
 import type {
   BaseTableHeaders,
   EmptyStateOptions,
@@ -179,9 +181,6 @@ import type {
 import endpoints from '../targets-endpoints'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import TargetForm from './TargetForm.vue'
-import { FAILOVER_INJECTION_KEY } from '../constants'
-
-const failoverEnabled = inject(FAILOVER_INJECTION_KEY, false)
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void
@@ -235,6 +234,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  failoverEnabled: {
+    type: Boolean,
+    default: false,
+  },
+  algorithm: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
 
 const { i18n: { t } } = composables.useI18n()
@@ -249,7 +257,7 @@ const fields: BaseTableHeaders = {
   // the Target Address column is non-hidable
   target: { label: t('targets.list.table_headers.target_address'), sortable: true, hidable: false },
   weight: { label: t('targets.list.table_headers.weight'), sortable: true },
-  ...(failoverEnabled ? { failover: { label: t('targets.list.table_headers.target_type'), sortable: false } } : {}),
+  ...(props.failoverEnabled ? { failover: { label: t('targets.list.table_headers.target_type'), sortable: false } } : {}),
   tags: { label: t('targets.list.table_headers.tags'), sortable: false },
 }
 const tableHeaders: BaseTableHeaders = fields

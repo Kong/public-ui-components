@@ -65,12 +65,17 @@
             />
 
             <template v-if="failoverEnabled">
-              <div class="failover-target">
+              <div
+                class="failover-target"
+              >
                 <KCheckbox
                   v-model="isFailover"
+                  :disabled="failoverUnsupported"
                   :label="t('targets.form.fields.failover.label')"
                   :label-attributes="{
-                    info: t('targets.form.fields.failover.help'),
+                    info: failoverUnsupported
+                      ? t('targets.form.fields.failover.unsupported')
+                      : t('targets.form.fields.failover.help'),
                   }"
                 />
               </div>
@@ -96,7 +101,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, reactive, watch, inject, ref } from 'vue'
+import { computed, reactive, watch, ref } from 'vue'
 import type { AxiosError, AxiosResponse } from 'axios'
 import type {
   KonnectTargetFormConfig,
@@ -144,6 +149,11 @@ const props = defineProps({
     default: '',
   },
   failoverEnabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
+  failoverUnsupported: {
     type: Boolean,
     required: false,
     default: false,
