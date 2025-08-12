@@ -5,7 +5,6 @@
   >
     <VueFlow
       :id="flowId"
-      :apply-default="false"
       class="flow"
       :edges="edges"
       fit-view-on-init
@@ -47,11 +46,11 @@ import { ref, useId, useTemplateRef } from 'vue'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
 import useFlow from '../composables/useFlow'
 import FlowNode from '../node/FlowNode.vue'
+import { useEditorStore } from '../store/store'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
-import { useEditorStore } from '../store/store'
 
 const props = defineProps<{
   phase: NodePhase
