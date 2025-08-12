@@ -7,8 +7,8 @@ import { MarkerType, useVueFlow, type Edge, type Node } from '@vue-flow/core'
 import { computed, nextTick, toRaw } from 'vue'
 
 import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
+import { isImplicitNode } from '../node/node'
 import { useEditorStore } from '../store/store'
-
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -76,6 +76,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
         type: 'flow',
         position: node.position,
         data: node,
+        deletable: !isImplicitNode(node),
       })),
   )
 
@@ -131,14 +132,13 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     })
   })
 
+  // Only triggered by canvas-originated changes
   onNodesChange((changes)=> {
-    for (const change of changes) {
-      switch (change.type) {
-        case 'remove':
-          removeNode(change.id as NodeId, true)
-          break
+    changes.forEach((change) => {
+      if (change.type === 'remove') {
+        removeNode(change.id as NodeId, true)
       }
-    }
+    })
   })
 
   onNodeDragStop(({ node }) => {
@@ -150,13 +150,11 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
 
   // Only triggered by canvas-originated changes
   onEdgesChange((changes) => {
-    for (const change of changes) {
-      switch (change.type) {
-        case 'remove':
-          disconnectEdge(change.id as EdgeId, true)
-          break
+    changes.forEach((change) => {
+      if (change.type === 'remove') {
+        disconnectEdge(change.id as EdgeId, true)
       }
-    }
+    })
   })
 
   function autoLayout(options: AutoLayoutOptions) {
