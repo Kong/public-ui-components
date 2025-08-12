@@ -16,6 +16,7 @@
         :aria-disabled="option.disabled"
         class="zoom-action-link"
         :href="option.href"
+        @click="$emit('onAction')"
       >
         {{ option.label }}
       </a>

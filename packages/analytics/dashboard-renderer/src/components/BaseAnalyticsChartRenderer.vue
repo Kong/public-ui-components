@@ -20,7 +20,6 @@
         tooltip-title=""
         v-bind="extraProps"
         @select-chart-range="emit('select-chart-range', $event)"
-        @view-requests="emit('view-requests', $event)"
         @zoom-time-range="emit('zoom-time-range', $event)"
       >
         <template

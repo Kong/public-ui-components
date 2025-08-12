@@ -180,7 +180,7 @@
         :chart-options="analyticsChartOptions"
         :legend-position="legendPosition"
         :requests-link="{
-          href: 'https://example.com/requests',
+          href: '#requests',
         }"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
