@@ -3,7 +3,7 @@
     v-model:model-value="nameValue"
     data-1p-ignore
     :error="!!errorMessage"
-    :help="errorMessage"
+    :error-message="errorMessage"
     :label="t('plugins.free-form.datakit.flow_editor.node_properties.name')"
     required
     @change="handleNameChange"
