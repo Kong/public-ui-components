@@ -5,9 +5,10 @@
     :data="formData"
     :schema="CallNodeSchema"
   >
-    <StringField
-      name="name"
-      @update:model-value="setName"
+    <NameField
+      :name="formData.name"
+      :validate="nameValidator"
+      @update="setName"
     />
 
     <KLabel class="dk-node-configuration-label">
@@ -51,9 +52,10 @@ import InputsField from './InputsField.vue'
 import { CallNodeSchema } from '../node/schemas'
 import useI18n from '../../../../../composables/useI18n'
 import NumberField from '../../../shared/NumberField.vue'
-import { useNodeForm } from './composables'
+import { useNodeForm } from '../composables/useNodeForm'
 import StringField from '../../../shared/StringField.vue'
 import { useTemplateRef } from 'vue'
+import NameField from './NameField.vue'
 
 const { i18n } = useI18n()
 
@@ -67,6 +69,7 @@ const {
   setInputs,
   setInput,
   inputsFieldNames,
+  nameValidator,
 } = useNodeForm(() => formRef.value!.getInnerData())
 </script>
 

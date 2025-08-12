@@ -78,7 +78,7 @@ import type {
   KVEntry,
 } from '../../../shared/headless/useKeyValueField'
 import type { FieldName, IdConnection } from '../../types'
-import type { InputOption } from './composables'
+import type { InputOption } from '../composables/useNodeForm'
 
 interface Props extends KeyValueFieldProps<FieldName, IdConnection> {
   items: InputOption[]

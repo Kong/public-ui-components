@@ -5,9 +5,10 @@
     :data="formData"
     :schema="StaticNodeSchema"
   >
-    <StringField
-      name="name"
-      @update:model-value="setName"
+    <NameField
+      :name="selectedNode?.name ?? ''"
+      :validate="nameValidator"
+      @update="setName"
     />
 
     <OutputValueField
@@ -28,9 +29,9 @@ import { StaticNodeSchema } from '../node/schemas'
 import { computed } from 'vue'
 import type { FieldName, NodeName } from '../../types'
 import { useEditorStore } from '../../composables'
-import StringField from '../../../shared/StringField.vue'
 import { findFieldById, findFieldByName } from '../store/helpers'
 import { fieldValueToStoreValue, renameKeyAndKeepOrder, storeValueToFieldValue, type StoreValue } from '../node/static'
+import { useNameValidator } from '../composables/useNameValidator'
 
 const {
   renameNode,
@@ -41,6 +42,8 @@ const {
   removeField,
   replaceConfig,
 } = useEditorStore()
+
+const nameValidator = useNameValidator()
 
 const outputsFieldNames = computed<FieldName[]>(() => {
   return selectedNode.value?.fields.output.map(f => f.name) || []

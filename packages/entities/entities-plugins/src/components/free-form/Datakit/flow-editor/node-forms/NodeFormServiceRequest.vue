@@ -19,7 +19,7 @@ import Form from '../../../shared/Form.vue'
 import InputsField from './InputsField.vue'
 import { ServiceRequestSchema } from '../node/schemas'
 import { useTemplateRef } from 'vue'
-import { useNodeForm } from './composables'
+import { useNodeForm } from '../composables/useNodeForm'
 
 const formRef = useTemplateRef('form')
 

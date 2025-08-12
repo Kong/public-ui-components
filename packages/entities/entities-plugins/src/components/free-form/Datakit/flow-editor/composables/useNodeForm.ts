@@ -4,6 +4,7 @@ import { buildAdjacency, hasCycle } from '../store/validation'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
 import { isReadableProperty } from '../node/property'
+import { useNameValidator } from './useNameValidator'
 
 export type InputOption = {
   value: IdConnection
@@ -275,5 +276,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     // input(s) ops
     setInputs,
     setInput,
+
+    nameValidator: useNameValidator(),
   }
 }
