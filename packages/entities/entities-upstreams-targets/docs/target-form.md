@@ -94,6 +94,15 @@ ID of the edited target. If present, the form is `Edit` [type](../../entities-sh
 
 Controls whether the failover feature is enabled for the target.
 
+#### `failoverUnsupported`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Differs from `failoverEnabled`, when `failover` is `enabled`, this indicates whether the
+current upstream load balancing target supports `failover` or not.
+
 ### Slots
 
 #### info

@@ -135,6 +135,14 @@ A synchronous or asynchronous function, that returns a boolean, that evaluates i
 
 A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can edit a given entity.
 
+#### `failoverEnabled`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Whether failover feature is enabled.
+
 ### Slots
 
 #### form-info

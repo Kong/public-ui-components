@@ -369,10 +369,11 @@
           "help": "e.g. tag1, tag2, tag3"
         },
         "failover": {
-          "label": "Target Type",
+          "label": "Failover Target",
           "load_balance_target": "Load balance",
           "failover_target": "Failover",
-          "help": "Whether to use this target only as backup or not."
+          "help": "Whether to use this target only as backup or not.",
+          "unsupported": "The current load balance algorithm does not support failover."
         }
       }
     }

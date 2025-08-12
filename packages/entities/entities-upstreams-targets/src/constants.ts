@@ -1,4 +1,3 @@
-import type { InjectionKey } from 'vue'
 import type { MultiselectItem } from '@kong/kongponents'
 
 export const HTTPStatuses: MultiselectItem[] = [
@@ -398,4 +397,4 @@ export const PassiveHealthyHttpStatuses = ['200', '201', '202', '203', '204', '2
 export const ActiveUnhealthyHttpStatuses = ['429', '404', '500', '501', '502', '503', '504', '505']
 export const PassiveUnhealthyHttpStatuses = ['429', '500', '503']
 
-export const FAILOVER_INJECTION_KEY: InjectionKey<boolean> = Symbol('FAILOVER_INJECTION_KEY')
+export const ALGORITHMS_WITH_FAILOVER_SUPPORT = ['latency', 'least-connections', 'round-robin']
