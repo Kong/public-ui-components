@@ -600,7 +600,7 @@
       },
       "scoping": {
         "label": "Scoped",
-        "placeholder": "Search",
+        "placeholder": "Search by name or UUID",
         "global": {
           "label": "Global",
           "help": "All services, routes, and consumers"

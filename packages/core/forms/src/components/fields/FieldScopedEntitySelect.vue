@@ -177,12 +177,19 @@ const inlineSearchForUuid = (uuid: string) => {
 }
 
 const dedupedSuggestions = computed(() => {
-  const suggestionsCandidate = query.value.trim() ? suggestions.value : peekDataCache.value
+  const searchString = query.value.trim()
+  const suggestionsCandidate = searchString ? suggestions.value : peekDataCache.value
 
   if (initialItemSelected) {
-    return suggestionsCandidate.some((item) => item.value !== initialItem?.value)
-      ? suggestionsCandidate
-      : [initialItem!, ...suggestionsCandidate]
+    if (suggestionsCandidate.some((item) => item.value !== initialItem?.value)) {
+      return suggestionsCandidate
+    } else {
+      if (initialItem?.value.includes(searchString)) {
+        return [initialItem!, ...suggestionsCandidate]
+      }
+
+      return suggestionsCandidate
+    }
   }
 
   return suggestionsCandidate
