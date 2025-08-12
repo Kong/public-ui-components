@@ -42,7 +42,7 @@
     >
       <!-- Selected Field -->
       <div
-        v-show="option.fields && checkedGroup === i"
+        v-if="option.fields && checkedGroup === i"
         class="option-field"
       >
         <div class="option-field-container">
