@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.61.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.60.2...@kong-ui-public/entities-plugins@9.61.0) (2025-08-12)
+
+
+### Features
+
+* **entities-plugins:** datakit node select on create ([#2325](https://github.com/Kong/public-ui-components/issues/2325)) ([2c86d76](https://github.com/Kong/public-ui-components/commit/2c86d767993abf12aef035a8ab136618f0030209))
+* **entities-plugins:** done button for datakit modal ([#2324](https://github.com/Kong/public-ui-components/issues/2324)) ([dfdc536](https://github.com/Kong/public-ui-components/commit/dfdc536d8bb71fc0dcc7a9799c670de6c8220036))
+
+
+
+
+
 ## [9.60.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.60.1...@kong-ui-public/entities-plugins@9.60.2) (2025-08-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
