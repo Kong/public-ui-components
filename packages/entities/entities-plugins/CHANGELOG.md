@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.61.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.61.0...@kong-ui-public/entities-plugins@9.61.1) (2025-08-12)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit several canvas issues ([#2326](https://github.com/Kong/public-ui-components/issues/2326)) ([2744104](https://github.com/Kong/public-ui-components/commit/27441048b32c310222f4685ae12b12b14f76dbf0))
+
+
+
+
+
 # [9.61.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.60.2...@kong-ui-public/entities-plugins@9.61.0) (2025-08-12)
 
 
