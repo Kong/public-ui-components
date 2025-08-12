@@ -3,7 +3,7 @@
     ref="form"
     :config="{ updateOnChange: true }"
     :data="formData"
-    :schema="JqNodeSchema"
+    :schema="schema"
   >
     <NameField
       :name="formData.name"
@@ -40,17 +40,18 @@
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import InputsField from './InputsField.vue'
-import { JqNodeSchema } from '../node/schemas'
 import useI18n from '../../../../../composables/useI18n'
 import StringField from '../../../shared/StringField.vue'
 import { useTemplateRef } from 'vue'
-import { useNodeForm } from '../composables/useNodeForm'
+import { useNodeForm, useSubSchema } from '../composables/useNodeForm'
 import type { FieldName, IdConnection } from '../../types'
 import NameField from './NameField.vue'
 
 const { i18n } = useI18n()
 
 const formRef = useTemplateRef('form')
+
+const schema = useSubSchema('jq')
 
 const {
   formData,

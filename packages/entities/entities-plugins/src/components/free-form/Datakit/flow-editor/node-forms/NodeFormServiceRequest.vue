@@ -3,7 +3,7 @@
     ref="form"
     :config="{ updateOnChange: true }"
     :data="formData"
-    :schema="ServiceRequestSchema"
+    :schema="schema"
   >
     <InputsField
       :field-names="inputsFieldNames"
@@ -17,11 +17,12 @@
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import InputsField from './InputsField.vue'
-import { ServiceRequestSchema } from '../node/schemas'
 import { useTemplateRef } from 'vue'
-import { useNodeForm } from '../composables/useNodeForm'
+import { useNodeForm, useSubSchema } from '../composables/useNodeForm'
 
 const formRef = useTemplateRef('form')
+
+const schema = useSubSchema('service_request')
 
 const {
   formData,

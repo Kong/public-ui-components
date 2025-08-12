@@ -3,7 +3,7 @@
     ref="form"
     :config="{ updateOnChange: true }"
     :data="formData"
-    :schema="CallNodeSchema"
+    :schema="schema"
   >
     <NameField
       :name="formData.name"
@@ -49,10 +49,9 @@
 import Form from '../../../shared/Form.vue'
 import HttpMethodField from './HttpMethodField.vue'
 import InputsField from './InputsField.vue'
-import { CallNodeSchema } from '../node/schemas'
 import useI18n from '../../../../../composables/useI18n'
 import NumberField from '../../../shared/NumberField.vue'
-import { useNodeForm } from '../composables/useNodeForm'
+import { useNodeForm, useSubSchema } from '../composables/useNodeForm'
 import StringField from '../../../shared/StringField.vue'
 import { useTemplateRef } from 'vue'
 import NameField from './NameField.vue'
@@ -60,6 +59,8 @@ import NameField from './NameField.vue'
 const { i18n } = useI18n()
 
 const formRef = useTemplateRef('form')
+
+const schema = useSubSchema('call')
 
 const {
   formData,

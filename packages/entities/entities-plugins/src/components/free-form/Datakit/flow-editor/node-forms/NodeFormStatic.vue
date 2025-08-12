@@ -3,7 +3,7 @@
     ref="form"
     :config="{ updateOnChange: true }"
     :data="formData"
-    :schema="StaticNodeSchema"
+    :schema="schema"
   >
     <NameField
       :name="selectedNode?.name ?? ''"
@@ -25,12 +25,12 @@
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import OutputValueField from './OutputValueField.vue'
-import { StaticNodeSchema } from '../node/schemas'
 import { computed } from 'vue'
 import type { FieldName, NodeName } from '../../types'
 import { useEditorStore } from '../../composables'
 import { findFieldById, findFieldByName } from '../store/helpers'
 import { fieldValueToStoreValue, renameKeyAndKeepOrder, storeValueToFieldValue, type StoreValue } from '../node/static'
+import { useSubSchema } from '../composables/useNodeForm'
 import { useNameValidator } from '../composables/useNameValidator'
 
 const {
@@ -43,6 +43,7 @@ const {
   replaceConfig,
 } = useEditorStore()
 
+const schema = useSubSchema('static')
 const nameValidator = useNameValidator()
 
 const outputsFieldNames = computed<FieldName[]>(() => {

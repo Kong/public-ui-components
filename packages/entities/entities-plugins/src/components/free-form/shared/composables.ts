@@ -65,7 +65,7 @@ export function generalizePath(p: string) {
   return utils.resolve(...parts)
 }
 
-export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema>) {
+export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFieldSchema>) {
   const schemaValue = toValue(schema)
 
   // const configSchema = computed(() => {
