@@ -679,7 +679,7 @@
           "mode": "Flow Editor",
           "name": "Datakit Flow Editor",
           "cta": "Go to flow editor",
-          "save": "Save",
+          "done": "Done",
           "view_docs": "View Docs",
           "expand_panel": "Expand panel",
           "collapse_panel": "Collapse panel",

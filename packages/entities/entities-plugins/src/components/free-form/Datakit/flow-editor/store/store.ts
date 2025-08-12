@@ -30,6 +30,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
   function createState(configNodes: ConfigNode[], uiNodes: UINode[]) {
     const state = ref<EditorState>(initEditorState(configNodes, uiNodes))
     const selection = ref<NodeId>()
+    const modalOpen = ref(false)
     const history = useTaggedHistory(state, {
       capacity: 200,
       clone,
@@ -475,6 +476,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       // state
       state,
       selection,
+      modalOpen,
 
       // maps & getters
       nodeMapById,

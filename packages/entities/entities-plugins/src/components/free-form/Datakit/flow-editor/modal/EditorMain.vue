@@ -10,8 +10,8 @@
           {{ t('plugins.free-form.datakit.flow_editor.view_docs') }}
           <ExternalLinkIcon />
         </KButton>
-        <KButton>
-          {{ t('plugins.free-form.datakit.flow_editor.save') }}
+        <KButton @click="close">
+          {{ t('plugins.free-form.datakit.flow_editor.done') }}
         </KButton>
       </div>
     </header>
@@ -47,8 +47,8 @@ import type { NodeInstance } from '../../types'
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
-
 import english from '../../../../../locales/en.json'
+import { useEditorStore } from '../store/store'
 import EditorCanvas from './EditorCanvas.vue'
 import EditorCanvasFlow from './EditorCanvasFlow.vue'
 
@@ -66,6 +66,12 @@ const emit = defineEmits<{
   'click:node': [node: NodeInstance]
   'click:backdrop': []
 }>()
+
+const { modalOpen } = useEditorStore()
+
+function close() {
+  modalOpen.value = false
+}
 </script>
 
 <style lang="scss" scoped>

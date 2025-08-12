@@ -13,7 +13,6 @@
 
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
-import { ref } from 'vue'
 import english from '../../../../locales/en.json'
 import { provideEditorStore } from '../composables'
 import type { ConfigNodeName, FieldName, NameConnection, NodeName } from '../types'
@@ -26,12 +25,10 @@ defineProps<{
   config: any
 }>()
 
-const modalOpen = ref(false)
-
 // todo(zehao): mock data, remove later
 // provideEditorStore(MockData.configNodes, MockData.uiNodes)
 
-provideEditorStore([
+const { modalOpen } = provideEditorStore([
   {
     name: 'CAT_FACT' as ConfigNodeName ,
     type: 'call',
