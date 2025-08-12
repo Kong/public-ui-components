@@ -37,7 +37,6 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
   const editorStore = useEditorStore()
 
   const {
-    getSelectedNodes,
     findNode,
     fitView,
     onNodeClick,
@@ -46,8 +45,6 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     onConnect,
     onNodesChange,
     onEdgesChange,
-    applyNodeChanges,
-    applyEdgeChanges,
   } = vueFlowStore
 
   const {
