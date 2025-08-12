@@ -385,9 +385,9 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const query = buildRequestsQuery(newTimeRange, filters)
 
-  requestsLinkZoomActions.value = {
-    href: requestsBaseUrl.value ? `${requestsBaseUrl.value}?q=${JSON.stringify(query)}` : '',
-  }
+  requestsLinkZoomActions.value = requestsBaseUrl.value ? {
+    href: `${requestsBaseUrl.value}?q=${JSON.stringify(query)}`,
+  } : undefined
 }
 </script>
 
