@@ -50,7 +50,7 @@
                 <div
                   v-if="data.fields.input.length > 0"
                   class="icon"
-                  @click.stop="!inputsCollapsible || toggleExpanded('input')"
+                  @click.stop="toggleExpanded('input')"
                 >
                   <UnfoldMoreIcon
                     v-if="!inputsExpanded"
@@ -115,7 +115,7 @@
                 <div
                   v-if="data.fields.output.length > 0"
                   class="icon"
-                  @click.stop="!outputsCollapsible || toggleExpanded('output')"
+                  @click.stop="toggleExpanded('output')"
                 >
                   <UnfoldMoreIcon
                     v-if="!outputsExpanded"
@@ -255,6 +255,9 @@ const handleTwigColor = computed(() => {
 })
 
 function toggleExpanded(io: 'input' | 'output') {
+  if (io === 'input' && !inputsCollapsible.value) return
+  if (io === 'output' && !outputsCollapsible.value) return
+
   storeToggleExpanded(data.id, io)
 }
 

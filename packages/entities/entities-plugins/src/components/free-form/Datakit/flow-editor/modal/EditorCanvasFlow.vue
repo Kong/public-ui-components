@@ -5,11 +5,13 @@
   >
     <VueFlow
       :id="flowId"
+      :apply-default="false"
       class="flow"
       :edges="edges"
       fit-view-on-init
+      :multi-selection-key-code="null"
       :nodes="nodes"
-      @click.capture="onMaybeBackdropClick"
+      @click="onMaybeBackdropClick"
       @dragover.prevent
       @drop="(e: DragEvent) => onDrop(e)"
       @node-click="onNodeClick"

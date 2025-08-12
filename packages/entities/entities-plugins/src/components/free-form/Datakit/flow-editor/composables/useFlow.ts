@@ -7,8 +7,8 @@ import { MarkerType, useVueFlow, type Edge, type Node } from '@vue-flow/core'
 import { computed, nextTick, toRaw } from 'vue'
 
 import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
+import { isImplicitNode } from '../node/node'
 import { useEditorStore } from '../store/store'
-
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -37,6 +37,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
   const editorStore = useEditorStore()
 
   const {
+    getSelectedNodes,
     findNode,
     fitView,
     onNodeClick,
@@ -45,6 +46,8 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     onConnect,
     onNodesChange,
     onEdgesChange,
+    applyNodeChanges,
+    applyEdgeChanges,
   } = vueFlowStore
 
   const {
@@ -131,14 +134,21 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     })
   })
 
+  // Only triggered by canvas-originated changes
   onNodesChange((changes)=> {
-    for (const change of changes) {
-      switch (change.type) {
-        case 'remove':
-          removeNode(change.id as NodeId, true)
-          break
-      }
-    }
+    applyNodeChanges(
+      changes.filter((change) => {
+        // Let the default handler handle the change if it is not a removal
+        if (change.type !== 'remove') return true
+
+        const nodeId = change.id as NodeId
+        const node = getNodeById(nodeId)
+        if (node && !isImplicitNode(node)) {
+          removeNode(nodeId, true)
+        }
+        return false
+      }),
+    )
   })
 
   onNodeDragStop(({ node }) => {
@@ -150,13 +160,32 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
 
   // Only triggered by canvas-originated changes
   onEdgesChange((changes) => {
-    for (const change of changes) {
-      switch (change.type) {
-        case 'remove':
-          disconnectEdge(change.id as EdgeId, true)
-          break
+    // See if an implicit node is selected
+    // We disabled multi-selection, thus we will only check the first selected node
+    let selectedImplicitNodeId: NodeId | undefined
+    const selectedNodes = getSelectedNodes.value
+    if (selectedNodes.length > 0) {
+      const nodeId = selectedNodes[0].id as NodeId
+      const node = getNodeById(nodeId)
+      if (node && isImplicitNode(node)) {
+        selectedImplicitNodeId = node.id
       }
     }
+
+    applyEdgeChanges(
+      changes.filter((changes) => {
+        // Let the default handler handle the change if it is not a removal
+        if (changes.type !== 'remove') return true
+
+        // If an implicit node is selected, skip removing the edge
+        if (selectedImplicitNodeId && (changes.source === selectedImplicitNodeId || changes.target === selectedImplicitNodeId)) {
+          return false
+        }
+
+        disconnectEdge(changes.id as EdgeId, true)
+        return false
+      }),
+    )
   })
 
   function autoLayout(options: AutoLayoutOptions) {
