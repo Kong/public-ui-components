@@ -49,6 +49,7 @@ import FlowNode from '../node/FlowNode.vue'
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
+import { useEditorStore } from '../store/store'
 
 const props = defineProps<{
   phase: NodePhase
@@ -68,6 +69,8 @@ const emit = defineEmits<{
   'click:node': [node: NodeInstance]
   'click:backdrop': []
 }>()
+
+const { selectNode } = useEditorStore()
 
 const onDrop = (e: DragEvent) => {
   const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
@@ -97,7 +100,8 @@ const onDrop = (e: DragEvent) => {
     },
   }
 
-  addNode(newNode)
+  const nodeId = addNode(newNode)
+  selectNode(nodeId)
 }
 
 function onNodeClick({ event, node }: NodeMouseEvent) {
