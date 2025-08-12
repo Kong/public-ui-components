@@ -68,8 +68,10 @@ const closeProperties = () => {
   }, 0)
 }
 
-watch(selectedNode, node => {
-  if (!node) {
+watch(selectedNode, (newNode, oldNode) => {
+  if (!oldNode && newNode) {
+    setVisibility(true)
+  } else if (!newNode) {
     setVisibility(false)
   }
 })
