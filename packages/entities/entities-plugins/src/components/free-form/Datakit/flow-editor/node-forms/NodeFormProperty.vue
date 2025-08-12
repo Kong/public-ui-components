@@ -5,9 +5,10 @@
     :data="formData"
     :schema="PropertyNodeSchema"
   >
-    <StringField
-      name="name"
-      @update:model-value="setName"
+    <NameField
+      :name="formData.name"
+      :validate="nameValidator"
+      @update="setName"
     />
 
     <EnumField
@@ -31,13 +32,13 @@
 import Form from '../../../shared/Form.vue'
 import PropertiesField from './PropertiesField.vue'
 import { PropertyNodeSchema } from '../node/schemas'
-import { useNodeForm, type BaseFormData } from './composables'
+import { useNodeForm, type BaseFormData } from '../composables/useNodeForm'
 import { computed, useTemplateRef } from 'vue'
-import StringField from '../../../shared/StringField.vue'
 import EnumField from '../../../shared/EnumField.vue'
 import InputsField from './InputsField.vue'
 import { isReadableProperty, isWritableProperty } from '../node/property'
 import { useEditorStore } from '../store/store'
+import NameField from './NameField.vue'
 
 interface PropertyFormData extends BaseFormData {
   property: string | null
@@ -55,6 +56,7 @@ const {
   setInputs,
   setInput,
   inputsFieldNames,
+  nameValidator,
 } = useNodeForm<PropertyFormData>(() => formRef.value!.getInnerData())
 
 const writable = computed(() => isWritableProperty(formData.value.property))

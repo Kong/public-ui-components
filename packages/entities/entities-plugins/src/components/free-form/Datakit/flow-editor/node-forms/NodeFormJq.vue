@@ -5,9 +5,10 @@
     :data="formData"
     :schema="JqNodeSchema"
   >
-    <StringField
-      name="name"
-      @update:model-value="setName"
+    <NameField
+      :name="formData.name"
+      :validate="nameValidator"
+      @update="setName"
     />
 
     <KLabel class="dk-node-configuration-label">
@@ -43,8 +44,9 @@ import { JqNodeSchema } from '../node/schemas'
 import useI18n from '../../../../../composables/useI18n'
 import StringField from '../../../shared/StringField.vue'
 import { useTemplateRef } from 'vue'
-import { useNodeForm } from './composables'
+import { useNodeForm } from '../composables/useNodeForm'
 import type { FieldName, IdConnection } from '../../types'
+import NameField from './NameField.vue'
 
 const { i18n } = useI18n()
 
@@ -61,6 +63,7 @@ const {
   removeFieldByName,
   renameFieldByName,
   inputsFieldNames,
+  nameValidator,
 } = useNodeForm(() => formRef.value!.getInnerData())
 
 function handleAddField(name: FieldName, value?: IdConnection | null) {

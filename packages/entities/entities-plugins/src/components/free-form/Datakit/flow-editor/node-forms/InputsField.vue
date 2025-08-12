@@ -30,7 +30,7 @@ import EnumField from '../../../shared/EnumField.vue'
 import InputsRecordField from './InputsRecordField.vue'
 import InputsMapField from './InputsMapField.vue'
 import useI18n from '../../../../../composables/useI18n'
-import type { InputOption } from './composables'
+import type { InputOption } from '../composables/useNodeForm'
 import type { FieldName, IdConnection } from '../../types'
 
 defineProps<{
