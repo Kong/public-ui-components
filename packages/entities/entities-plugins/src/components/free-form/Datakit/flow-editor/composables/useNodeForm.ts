@@ -1,9 +1,13 @@
 import { computed, nextTick, watch } from 'vue'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
-import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
+import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
 import { isReadableProperty } from '../node/property'
+import { useFormShared } from '../../../shared/composables'
+import type { ArrayLikeFieldSchema, RecordFieldSchema } from '../../../../../types/plugins/form-schema'
+import { isImplicitType } from '../node/node'
+import { ResponseSchema, ServiceRequestSchema } from '../node/schemas'
 import { useNameValidator } from './useNameValidator'
 
 export type InputOption = {
@@ -279,4 +283,32 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
 
     nameValidator: useNameValidator(),
   }
+}
+
+export function useSubSchema(subSchemaName: Exclude<NodeType, 'request' | 'service_response'>) {
+  const { getSchema } = useFormShared()
+  return computed(() => {
+
+    // Implicit nodes do not have schema, we hardcoded schemas for them
+    if (isImplicitType(subSchemaName)) {
+      switch (subSchemaName) {
+        case 'response':
+          return ResponseSchema
+        case 'service_request':
+          return ServiceRequestSchema
+      }
+    }
+
+    try {
+      const schema = getSchema()
+      const configSchema = schema.fields[0].config as RecordFieldSchema
+      const configFields = configSchema.fields[0].nodes as ArrayLikeFieldSchema
+      const elements = configFields.elements as RecordFieldSchema
+      const subSchema = elements.subschema_definitions![subSchemaName]
+      if (!subSchema) throw new Error(`Subschema "${subSchemaName}" not found in the schema.`)
+      return subSchema
+    } catch (e) {
+      throw new Error(`Failed to get subschema "${subSchemaName}": ${(e as Error).message}`)
+    }
+  })
 }

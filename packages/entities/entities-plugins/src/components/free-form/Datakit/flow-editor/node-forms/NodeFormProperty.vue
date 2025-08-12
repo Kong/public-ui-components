@@ -3,7 +3,7 @@
     ref="form"
     :config="{ updateOnChange: true }"
     :data="formData"
-    :schema="PropertyNodeSchema"
+    :schema="schema"
   >
     <NameField
       :name="formData.name"
@@ -31,8 +31,7 @@
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
 import PropertiesField from './PropertiesField.vue'
-import { PropertyNodeSchema } from '../node/schemas'
-import { useNodeForm, type BaseFormData } from '../composables/useNodeForm'
+import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { computed, useTemplateRef } from 'vue'
 import EnumField from '../../../shared/EnumField.vue'
 import InputsField from './InputsField.vue'
@@ -47,6 +46,8 @@ interface PropertyFormData extends BaseFormData {
 
 const formRef = useTemplateRef('form')
 const { selectedNode, disconnectInEdges, disconnectOutEdges } = useEditorStore()
+
+const schema = useSubSchema('property')
 
 const {
   formData,

@@ -12,7 +12,9 @@ export type FieldSchemaType = 'string'
 
 export type AtLeastOneOfEntityCheck = { at_least_one_of: string[] }
 
-export type EntityCheck = AtLeastOneOfEntityCheck
+export type MutuallyExclusiveEntityCheck = { mutually_exclusive: string[] }
+
+export type EntityCheck = AtLeastOneOfEntityCheck | MutuallyExclusiveEntityCheck
 
 export interface FieldSchema {
   type: FieldSchemaType
@@ -121,6 +123,11 @@ export interface RecordFieldSchema extends FieldSchema {
   type: 'record'
 
   fields: NamedFieldSchema[]
+
+  subschema_definitions?: NamedFieldSchema
+  subschema_error?: string
+  subschema_key?: string
+  subschema_override_parent?: boolean
 }
 
 export interface FormSchema {
