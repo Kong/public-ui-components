@@ -40,15 +40,17 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     const history = useTaggedHistory(state, {
       capacity: 200,
       clone,
-      onHistoryChange: (action) => {
+      onHistoryChange: (action, _, flag) => {
         // clear only affects the history, not the state
         if (action === 'clear') {
           return
         }
 
-        options.onChange?.({
-          nodes: toConfigNodes(),
-        })
+        if (flag?.skipEmittingChange !== true) {
+          options.onChange?.({
+            nodes: toConfigNodes(),
+          })
+        }
       },
     })
 

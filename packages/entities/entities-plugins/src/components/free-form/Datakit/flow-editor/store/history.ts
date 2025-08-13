@@ -3,13 +3,17 @@ import type { Ref } from 'vue'
 
 type HistoryAction = 'commit' | 'undo' | 'redo' | 'clear' | 'reset'
 
+export interface HistoryFlag {
+  skipEmittingChange?: boolean
+}
+
 /** Minimal tagged history. Same tag + replace drops previous snapshot. */
 export function useTaggedHistory<T>(
   stateRef: Ref<T>,
   options?: {
     capacity?: number
     clone?: (v: T) => T
-    onHistoryChange?: (action: HistoryAction, snapshot: T) => void
+    onHistoryChange?: (action: HistoryAction, snapshot: T, flag?: HistoryFlag) => void
   },
 ) {
   const {
@@ -28,18 +32,18 @@ export function useTaggedHistory<T>(
 
   let lastTag: string | undefined
 
-  function notify(action: HistoryAction) {
-    options?.onHistoryChange?.(action, stateRef.value)
+  function notify(action: HistoryAction, flag?: HistoryFlag) {
+    options?.onHistoryChange?.(action, stateRef.value, flag)
   }
 
-  function commit(tag?: string, opts?: { replace?: boolean }) {
+  function commit(tag?: string, opts?: { replace?: boolean, flag?: HistoryFlag }) {
     const replace = !!opts?.replace
     if (replace && tag && lastTag === tag && undoStack.value.length > 0) {
       undoStack.value.pop()
     }
     baseCommit()
     lastTag = tag
-    notify('commit')
+    notify('commit', opts?.flag)
   }
 
   function undo() {

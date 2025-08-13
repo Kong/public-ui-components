@@ -1,9 +1,12 @@
 import type { Node as DagreNode } from '@dagrejs/dagre'
+import type { Edge, Node } from '@vue-flow/core'
 import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
 
 import dagre from '@dagrejs/dagre'
-import { MarkerType, useVueFlow, type Edge, type Node } from '@vue-flow/core'
+import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { computed, nextTick, toRaw } from 'vue'
+
+import type { HistoryFlag } from '../store/history'
 
 import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
 import { isImplicitNode } from '../node/node'
@@ -29,9 +32,17 @@ export interface AutoLayoutOptions {
   nodeGap?: number
   edgeGap?: number
   rankGap?: number
+  historyFlag?: HistoryFlag
 }
 
-export default function useFlow(phase: NodePhase, flowId?: string) {
+export interface UseFlowOptions {
+  phase: NodePhase
+  flowId?: string
+  editing?: boolean
+}
+
+export default function useFlow(options: UseFlowOptions) {
+  const { phase, flowId } = options // TODO(Makito): Should we use different stores for view/edit modes?
   const vueFlowStore = useVueFlow(flowId)
   const editorStore = useEditorStore()
 
@@ -165,13 +176,14 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     })
   })
 
-  function autoLayout(options: AutoLayoutOptions) {
+  async function autoLayout(options: AutoLayoutOptions) {
     const {
       boundingRect,
       padding = AUTO_LAYOUT_DEFAULT_OPTIONS.padding,
       nodeGap = AUTO_LAYOUT_DEFAULT_OPTIONS.nodeGap,
       edgeGap = AUTO_LAYOUT_DEFAULT_OPTIONS.edgeGap,
       rankGap = AUTO_LAYOUT_DEFAULT_OPTIONS.rankGap,
+      historyFlag,
     } = options
 
     let leftNode: Node<NodeInstance> | undefined
@@ -346,11 +358,10 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
       }, false)
     }
 
-    historyCommit()
+    historyCommit(undefined, { flag: historyFlag })
 
-    nextTick(() => {
-      fitView()
-    })
+    await nextTick()
+    fitView()
   }
 
   return {

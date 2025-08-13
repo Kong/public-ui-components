@@ -1,11 +1,17 @@
 <template>
   <div class="dk-flow-editor">
+    <div class="flow-panels-container">
+      <FlowPanels :editing="false" />
+    </div>
+
     <KButton
       appearance="secondary"
+      class="button-open-editor"
       @click="modalOpen = true"
     >
       {{ t('plugins.free-form.datakit.flow_editor.cta') }}
     </KButton>
+
     <EditorModal v-model:open="modalOpen" />
     <div class="field">
       <BooleanField
@@ -16,11 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
+import { watch } from 'vue'
+
 import english from '../../../../locales/en.json'
-import { provideEditorStore } from '../composables'
 import BooleanField from '../../shared/BooleanField.vue'
+import { provideEditorStore } from '../composables'
+import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
 
 import type { DatakitConfig } from '../types'
@@ -60,5 +68,17 @@ watch(() => config?.nodes, (newNodes) => {
   .field {
     margin-top: $kui-space-80;
   }
+}
+
+.flow-panels-container {
+  border: $kui-border-width-10 solid $kui-color-border;
+  border-radius: $kui-border-radius-30;
+  height: 560px;
+  overflow: hidden;
+  position: relative;
+}
+
+.button-open-editor {
+  margin-top: $kui-space-70;
 }
 </style>
