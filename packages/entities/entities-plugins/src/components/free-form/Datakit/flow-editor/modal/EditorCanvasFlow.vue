@@ -28,7 +28,10 @@
 
       <!-- To not use the default node style -->
       <template #node-flow="node">
-        <FlowNode :data="node.data" />
+        <FlowNode
+          :data="node.data"
+          :error="invalidConfigNodeIds.has(node.data.id)"
+        />
       </template>
     </VueFlow>
   </div>
@@ -71,7 +74,7 @@ const emit = defineEmits<{
   'click:backdrop': []
 }>()
 
-const { selectNode } = useEditorStore()
+const { selectNode, newCreatedNodeId, invalidConfigNodeIds } = useEditorStore()
 
 const onDrop = (e: DragEvent) => {
   const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
@@ -103,6 +106,10 @@ const onDrop = (e: DragEvent) => {
 
   const nodeId = addNode(newNode)
   selectNode(nodeId)
+
+  if (nodeId) {
+    newCreatedNodeId.value = nodeId
+  }
 }
 
 function onNodeClick({ event, node }: NodeMouseEvent) {

@@ -1,7 +1,6 @@
 <template>
   <Form
     ref="form"
-    :config="{ updateOnChange: true }"
     :data="formData"
     :schema="schema"
   >
@@ -12,12 +11,15 @@
     />
 
     <KLabel class="dk-node-configuration-label">
-      {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.Configuration') }}
+      {{ t('plugins.free-form.datakit.flow_editor.node_properties.Configuration') }}
     </KLabel>
 
     <StringField
+      :error="urlHandler.error.value"
+      :error-message="urlHandler.errorMessage.value"
       name="url"
-      @update:model-value="setConfig()"
+      @blur="urlHandler.onBlur"
+      @update:model-value="urlHandler.onUpdate"
     />
 
     <HttpMethodField
@@ -26,17 +28,21 @@
     />
 
     <NumberField
-      :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.timeout.label')"
+      :error="timeoutHandler.error.value"
+      :error-message="timeoutHandler.errorMessage.value"
+      :label="t('plugins.free-form.datakit.flow_editor.node_properties.timeout.label')"
       name="timeout"
-      @update:model-value="setConfig()"
+      @blur="timeoutHandler.onBlur"
+      @update:model-value="timeoutHandler.onUpdate"
     />
 
     <StringField
       name="ssl_server_name"
-      @update:model-value="setConfig()"
+      @update:model-value="setConfig('ssl_server_name')"
     />
 
     <InputsField
+      :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
       @change:input="setInput"
@@ -51,16 +57,30 @@ import HttpMethodField from './HttpMethodField.vue'
 import InputsField from './InputsField.vue'
 import useI18n from '../../../../../composables/useI18n'
 import NumberField from '../../../shared/NumberField.vue'
-import { useNodeForm, useSubSchema } from '../composables/useNodeForm'
+import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import StringField from '../../../shared/StringField.vue'
 import { useTemplateRef } from 'vue'
 import NameField from './NameField.vue'
+import type { NodeId } from '../../types'
+import { useFormValidation } from '../composables/validation'
+import { notEmpty, compose, stringFormat, numberRange, numberFormat } from '../composables/validation'
 
-const { i18n } = useI18n()
+const { nodeId } = defineProps<{
+  nodeId: NodeId
+}>()
+
+const { i18n: { t } } = useI18n()
 
 const formRef = useTemplateRef('form')
 
 const schema = useSubSchema('call')
+
+interface CallFormData extends BaseFormData {
+  url: string
+  method?: string
+  timeout?: number
+  ssl_server_name?: string
+}
 
 const {
   formData,
@@ -71,6 +91,34 @@ const {
   setInput,
   inputsFieldNames,
   nameValidator,
-} = useNodeForm(() => formRef.value!.getInnerData())
+  skipValidationOnMount,
+  toggleNodeValid,
+  fieldNameValidator,
+} = useNodeForm<CallFormData>(nodeId, () => formRef.value!.getInnerData())
+
+const {
+  createFieldHandler,
+} = useFormValidation({
+  validationConfig: {
+    url: compose(
+      notEmpty({ fieldName: 'URL' }),
+      stringFormat('url', { fieldName: 'URL' }),
+    ),
+    timeout: compose(
+      numberFormat('integer', { fieldName: t('plugins.free-form.datakit.flow_editor.node_properties.timeout.label') }),
+      numberRange(0, 2147483646, { fieldName: t('plugins.free-form.datakit.flow_editor.node_properties.timeout.label') }),
+    ),
+  },
+  getValidationData: () => ({
+    url: formData.value.url,
+    timeout: formData.value.timeout,
+  }),
+  skipValidationOnMount,
+  toggleNodeValid,
+})
+
+// Create field handlers
+const urlHandler = createFieldHandler('url', () => setConfig('url'))
+const timeoutHandler = createFieldHandler('timeout', () => setConfig('timeout'))
 </script>
 

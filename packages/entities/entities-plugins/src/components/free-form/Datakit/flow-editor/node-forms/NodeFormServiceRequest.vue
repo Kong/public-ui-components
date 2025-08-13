@@ -1,11 +1,11 @@
 <template>
   <Form
     ref="form"
-    :config="{ updateOnChange: true }"
     :data="formData"
     :schema="schema"
   >
     <InputsField
+      :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
       @change:input="setInput"
@@ -18,7 +18,12 @@
 import Form from '../../../shared/Form.vue'
 import InputsField from './InputsField.vue'
 import { useTemplateRef } from 'vue'
-import { useNodeForm, useSubSchema } from '../composables/useNodeForm'
+import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
+import type { NodeId } from '../../types'
+
+const { nodeId } = defineProps<{
+  nodeId: NodeId
+}>()
 
 const formRef = useTemplateRef('form')
 
@@ -30,6 +35,7 @@ const {
   setInputs,
   setInput,
   inputsFieldNames,
-} = useNodeForm(() => formRef.value!.getInnerData())
+  fieldNameValidator,
+} = useNodeForm<BaseFormData>(nodeId, () => formRef.value!.getInnerData())
 </script>
 

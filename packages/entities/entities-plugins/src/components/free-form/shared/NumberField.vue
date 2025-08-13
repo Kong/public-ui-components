@@ -33,23 +33,20 @@
 </template>
 
 <script setup lang="ts">
-import type { LabelAttributes } from '@kong/kongponents'
+import type { InputProps, LabelAttributes } from '@kong/kongponents'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
 import { computed, toRef } from 'vue'
 import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
 import EnhancedInput from './EnhancedInput.vue'
 
-// Vue doesn't support the built-in `InstanceType` utility type, so we have to
-// work around it a bit.
-// Other props are passed down to the `KInput` via attribute fallthrough.
-export interface InputProps {
+export interface NumberFieldProps extends InputProps {
   name: string
   labelAttributes?: LabelAttributes
   max?: number | string
   min?: number | string
 }
 
-const { name, ...props } = defineProps<InputProps>()
+const { name, ...props } = defineProps<NumberFieldProps>()
 const { value: fieldValue, ...field } = useField<number | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 

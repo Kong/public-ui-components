@@ -759,9 +759,15 @@
               "set": "set"
             },
             "errors": {
-              "name_empty": "Name cannot be empty",
-              "name_format": "Name must start with a letter or underscore and contain only letters, numbers, underscores, or hyphens",
-              "name_duplicate": "Node with name \"{name}\" already exists"
+              "invalid_identifier_format": "{fieldName} must start with a letter or underscore and contain only letters, numbers, underscores, or hyphens",
+              "invalid_url_format": "Not a valid URL format",
+              "not_empty": "{fieldName} is required",
+              "not_float": "{fieldName} must be a float",
+              "not_integer": "{fieldName} must be an integer",
+              "not_number": "{fieldName} must be a number",
+              "not_unique": "{fieldName} must be unique",
+              "number_range": "{fieldName} must be between {min} and {max}",
+              "string_len_range": "{fieldName} must be between {min} and {max} characters"
             }
           }
         },

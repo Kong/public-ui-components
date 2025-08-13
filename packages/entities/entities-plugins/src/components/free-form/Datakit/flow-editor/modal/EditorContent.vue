@@ -23,6 +23,7 @@
     </div>
 
     <NodePropertiesPanel
+      :node-id="selectedNode?.id"
       :visible="propertiesPanelVisible"
       @close="closeProperties"
     />
@@ -42,7 +43,7 @@ import type { NodeInstance } from '../../types'
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
-const { selectNode, selectedNode } = useEditorStore()
+const { selectNode, selectedNode, newCreatedNodeId } = useEditorStore()
 
 const propertiesPanelVisible = ref(false)
 let locking = false
@@ -61,6 +62,7 @@ const selectNodeAndOpenProperties = (node: NodeInstance) => {
 }
 
 const closeProperties = () => {
+  newCreatedNodeId.value = null
   // When user switching between nodes, we don't want to close the properties panel
   setTimeout(() => {
     if (locking) return

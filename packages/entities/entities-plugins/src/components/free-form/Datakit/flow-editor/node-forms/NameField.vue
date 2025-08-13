@@ -14,10 +14,11 @@
 <script setup lang="ts">
 import { computed, defineProps, ref, watch } from 'vue'
 import useI18n from '../../../../../composables/useI18n'
+import type { ValidatorFn } from '../composables/validation'
 
 const props = defineProps<{
   name: string
-  validate: (value: string) => true | string
+  validate: ValidatorFn<string>
 }>()
 
 const emit = defineEmits<{
@@ -29,7 +30,7 @@ const { i18n: { t } } = useI18n()
 const nameValue = ref(props.name)
 const errorMessage = computed(() => {
   const validationResult = props.validate(nameValue.value.trim())
-  return validationResult === true ? '' : validationResult
+  return validationResult === undefined ? '' : validationResult
 })
 let lastValidName = nameValue.value.trim()
 

@@ -35,6 +35,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       capacity: 200,
       clone,
     })
+    const newCreatedNodeId = ref<NodeId | null>(null)
+    const invalidConfigNodeIds = ref<Set<NodeId>>(new Set())
 
     // maps
     const nodeMapById = computed(
@@ -178,7 +180,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       if (commitNow) history.commit()
     }
 
-    function renameNode(nodeId: NodeId, newName: NodeName, commitNow = true) {
+    function renameNode(nodeId: NodeId, newName: NodeName, commitNow = true, tag?: string) {
       const node = getNodeById(nodeId)
       if (!node) return
       if (isImplicitName(node.name)) {
@@ -186,7 +188,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         return
       }
       node.name = newName
-      if (commitNow) history.commit()
+      if (commitNow) history.commit(tag)
     }
 
     // Move node to a new position
@@ -212,19 +214,19 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       const node = getNodeById(nodeId)
       if (!node) return
       node.expanded[io] = value ?? !node.expanded[io]
-      if (commitNow)
-        history.commit(`toggle:${nodeId}:${io}`, { replace: true })
+      if (commitNow) history.commit(`toggle:${nodeId}:${io}`)
     }
 
     function replaceConfig(
       nodeId: NodeId,
       next: Record<string, unknown>,
       commitNow = true,
+      tag?: string,
     ) {
       const node = getNodeById(nodeId)
       if (!node) return
       node.config = clone(next)
-      if (commitNow) history.commit()
+      if (commitNow) history.commit(tag)
     }
 
     /* ---------- field ops ---------- */
@@ -477,6 +479,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       state,
       selection,
       modalOpen,
+      newCreatedNodeId,
+      invalidConfigNodeIds,
 
       // maps & getters
       nodeMapById,

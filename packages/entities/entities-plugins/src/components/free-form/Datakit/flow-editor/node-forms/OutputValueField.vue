@@ -37,16 +37,19 @@
         class="ff-kv-field-entry-key"
         :data-key-input="index"
         :data-testid="`ff-key-${field.path.value}.${index}`"
+        :error="!!errorMap[entry.id]"
+        :error-message="errorMap[entry.id]"
         :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.output_value.value_name')"
-        @change="handleInputsNameChange(entry)"
-        @focus="handleBeforeInputsNameChange(entry)"
+        @change="handleOutputsNameChange(entry)"
+        @focus="handleBeforeOutputsNameChange(entry)"
+        @update:model-value="validateFieldName(entry)"
       />
       <KInput
         v-model.trim="entry.value"
         class="ff-kv-field-entry-value"
         :data-testid="`ff-value-${field.path.value}.${index}`"
         :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.output_value.value')"
-        @change="handleInputsValueChange($event, entry)"
+        @change="handleOutputsValueChange($event, entry)"
       />
     </KCard>
 
@@ -68,8 +71,10 @@ import { AddIcon, CloseIcon } from '@kong/icons'
 import useI18n from '../../../../../composables/useI18n'
 import type { FieldName } from '../../types'
 import { useKeyValueField, type KeyValueFieldEmits, type KeyValueFieldProps, type KVEntry } from '../../../shared/headless/useKeyValueField'
+import type { useNodeForm } from '../composables/useNodeForm'
 
 interface Props extends KeyValueFieldProps<FieldName, string> {
+  fieldNameValidator: ReturnType<typeof useNodeForm>['fieldNameValidator']
 }
 
 interface Emits extends KeyValueFieldEmits {
@@ -83,6 +88,7 @@ type Entry = KVEntry<FieldName, string>
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
+const errorMap = ref<Record<string, string>>({})
 
 const {
   entries,
@@ -126,11 +132,18 @@ function handleRemoveEntry(entry: Entry) {
   }
 }
 
-function handleBeforeInputsNameChange(entry: Entry) {
+function handleBeforeOutputsNameChange(entry: Entry) {
   fieldNameBeforeChange = entry.key
 }
 
-function handleInputsNameChange(entry: Entry) {
+function handleOutputsNameChange(entry: Entry) {
+  // Reset the value if the field name is invalid
+  if (validateFieldName(entry)) {
+    entry.key = fieldNameBeforeChange
+    delete errorMap.value[entry.id]
+    return
+  }
+
   if (entry.id === addingEntryId.value) {
     // add field
     if (entry.key.trim() === '') return // skip if the field name is empty
@@ -142,12 +155,26 @@ function handleInputsNameChange(entry: Entry) {
   }
 }
 
-function handleInputsValueChange(e: InputEvent, entry: Entry) {
+function handleOutputsValueChange(e: InputEvent, entry: Entry) {
   // skip if the field hasn't been created
   if (entry.id === addingEntryId.value) return
   const value = (e.target as HTMLInputElement).value.trim()
   emit('change:value', entry.key, value)
 }
+
+function validateFieldName(entry: Entry) {
+  delete errorMap.value[entry.id]
+  const err = props.fieldNameValidator(
+    'output',
+    fieldNameBeforeChange,
+    entry.key,
+  )
+  if (err) {
+    errorMap.value[entry.id] = err
+    return err
+  }
+}
+
 </script>
 
 <style lang="scss" scoped>
