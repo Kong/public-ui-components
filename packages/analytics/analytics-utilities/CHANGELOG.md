@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.1.2...@kong-ui-public/analytics-utilities@10.1.3) (2025-08-08)
+
+
+### Bug Fixes
+
+* **analytics:** add template_id optional field on dashboard schema ([#2311](https://github.com/Kong/public-ui-components/issues/2311)) ([452142e](https://github.com/Kong/public-ui-components/commit/452142e5c0c932f4031d3dbe30db4c0b9e8af972))
+
+
+
+
+
+## [10.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.1.1...@kong-ui-public/analytics-utilities@10.1.2) (2025-08-08)
+
+
+### Bug Fixes
+
+* **analytics:** scope tile explore filters to datasource [MA-4174] ([#2292](https://github.com/Kong/public-ui-components/issues/2292)) ([fd32833](https://github.com/Kong/public-ui-components/commit/fd32833db0e72a4f63e63269e0a6d27b12e2009e))
+
+
+
+
+
+## [10.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.1.0...@kong-ui-public/analytics-utilities@10.1.1) (2025-08-06)
+
+
+### Bug Fixes
+
+* add requestBaseUrl to query bridge ([#2293](https://github.com/Kong/public-ui-components/issues/2293)) ([abb3a0f](https://github.com/Kong/public-ui-components/commit/abb3a0fb5e096840692f2f22acc58138324d380d))
+
+
+
+
+
 # [10.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.0.0...@kong-ui-public/analytics-utilities@10.1.0) (2025-08-06)
 
 

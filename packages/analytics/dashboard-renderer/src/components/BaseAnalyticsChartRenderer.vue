@@ -18,6 +18,7 @@
         :timeseries-zoom="timeseriesZoom"
         tooltip-title=""
         v-bind="extraProps"
+        @view-requests="emit('view-requests', $event)"
         @zoom-time-range="emit('zoom-time-range', $event)"
       >
         <template
@@ -47,6 +48,7 @@ const emit = defineEmits<{
   (e: 'edit-tile'): void
   (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
+  (e: 'view-requests', timeRange: AbsoluteTimeRangeV4): void
 }>()
 const { i18n } = composables.useI18n()
 const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()

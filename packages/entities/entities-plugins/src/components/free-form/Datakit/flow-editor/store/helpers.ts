@@ -15,25 +15,24 @@ import type {
   NameConnection,
   IdConnection,
 } from '../../types'
+import { cloneDeep } from 'lodash-es'
+import { nanoid } from 'nanoid'
 import {
   CONFIG_NODE_META_MAP,
   IMPLICIT_NODE_META_MAP,
   isImplicitType,
 } from '../node/node'
 
-let idCounter = 0
-
 /** Deep clone for snapshots and immutable returns. */
-export function deepClone<T>(value: T): T {
-  // TODO: move to lodash or similar utility library
-  return JSON.parse(JSON.stringify(value))
+export function clone<T>(value: T): T {
+  return cloneDeep(value)
 }
 
 /** Generate a unique runtime id. */
 export function createId<T extends 'node' | 'edge' | 'field'>(
   type: T,
 ): T extends 'node' ? NodeId : T extends 'edge' ? EdgeId : FieldId {
-  return `${type}:${idCounter++}` as unknown as T extends 'node'
+  return `${type}:${nanoid()}` as unknown as T extends 'node'
     ? NodeId
     : T extends 'edge'
       ? EdgeId

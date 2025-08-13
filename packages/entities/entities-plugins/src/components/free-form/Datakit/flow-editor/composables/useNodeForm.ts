@@ -1,8 +1,14 @@
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, watch } from 'vue'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
-import type { FieldId, FieldName, IdConnection, NameConnection, NodeId, NodeName } from '../../types'
+import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
+import { isReadableProperty } from '../node/property'
+import { useFormShared } from '../../../shared/composables'
+import type { ArrayLikeFieldSchema, RecordFieldSchema } from '../../../../../types/plugins/form-schema'
+import { isImplicitType } from '../node/node'
+import { ResponseSchema, ServiceRequestSchema } from '../node/schemas'
+import { useNameValidator } from './useNameValidator'
 
 export type InputOption = {
   value: IdConnection
@@ -12,32 +18,33 @@ export type InputOption = {
 export type BaseFormData = {
   name: NodeName
   input?: IdConnection
-  inputs?: Record<FieldName, IdConnection>
+  inputs?: Record<FieldName, IdConnection | undefined | null>
 }
 
-export function useNodeFormState(
-  getFormInnerData: () => BaseFormData,
+export function useNodeForm<T extends BaseFormData = BaseFormData>(
+  // It should return `T`, but we use any to avoid circular dependency issues
+  getFormInnerData: () => any,
 ) {
   const {
     selectedNode,
     state,
     renameNode,
     getNodeById,
-    addField: addFieldRaw,
-    renameField: renameFieldRaw,
-    removeField: removeFieldRaw,
+    addField: storeAddField,
+    renameField: storeRenameField,
+    removeField: storeRemoveField,
     replaceConfig,
     disconnectEdge,
     connectEdge,
   } = useEditorStore()
 
   const selectedNodeId = computed(() => selectedNode.value!.id)
-  const isGlobalStateUpdating = ref(false)
+  let isGlobalStateUpdating = false
 
   watch(state, async () => {
-    isGlobalStateUpdating.value = true
+    isGlobalStateUpdating = true
     await nextTick()
-    isGlobalStateUpdating.value = false
+    isGlobalStateUpdating = false
   }, { immediate: true, deep: true })
 
   // todo(zehao): debugging store api, remove later
@@ -47,7 +54,7 @@ export function useNodeFormState(
   const formData = computed(() => {
     const edges = state.value.edges.filter(e => e.target === selectedNodeId.value)
 
-    const inputsAndInput = edges.reduce<Pick<BaseFormData, 'input' | 'inputs'>>((acc, e) => {
+    const inputsAndInput = edges.reduce<Pick<T, 'input' | 'inputs'>>((acc, e) => {
       const sourceNode = getNodeById(e.source)!
       const sourceFieldId = findFieldById(sourceNode, 'output', e.sourceField)?.id
       const targetFieldName = findFieldById(selectedNode.value!, 'input', e.targetField)?.name
@@ -61,40 +68,73 @@ export function useNodeFormState(
       return acc
     }, {})
 
+    // append user defined fields to inputs
+    selectedNode.value?.fields.input.forEach(field => {
+      if (!inputsAndInput.inputs) inputsAndInput.inputs = {}
+      if (!inputsAndInput.inputs[field.name]) {
+        inputsAndInput.inputs[field.name] = null
+      }
+    })
+
     return {
       ...selectedNode.value!.config,
       ...inputsAndInput,
       name: selectedNode.value!.name,
-    }
+    } as T
   })
 
   const setName = (name: string | null) => {
-    if (isGlobalStateUpdating.value) return
     renameNode(selectedNodeId.value, name as NodeName ?? '')
   }
 
-  const setConfig = () => {
-    if (isGlobalStateUpdating.value) return
-    const { name, input, inputs, ...config } = getFormInnerData()
-    replaceConfig(selectedNodeId.value, config)
+  const setConfig = (commitNow = true) => {
+    if (isGlobalStateUpdating) return
+    const { name, input, inputs, ...config } = getFormInnerData() as T
+    replaceConfig(selectedNodeId.value, config, commitNow)
+  }
+
+  const findFieldByNameOrThrow = (
+    io: 'input' | 'output',
+    name: FieldName,
+  ) => {
+    const field = findFieldByName(selectedNode.value!, io, name)
+    if (!field) {
+      throw new Error(`Field with name "${name}" not found in node "${selectedNode.value!.name}"`)
+    }
+    return field
   }
 
   const addField = (
     io: 'input' | 'output',
-    name: string,
+    name: FieldName,
+    value?: IdConnection | null,
   ) => {
-    addFieldRaw(selectedNodeId.value, io, name as FieldName)
+    const hasValue = !!value
+    storeAddField(selectedNodeId.value, io, name, !hasValue)
+    if (hasValue) {
+      setInputs(name, value)
+    }
   }
 
-  const renameField = (fieldId: FieldId, newName: string) => {
-    renameFieldRaw(selectedNodeId.value, fieldId, newName as FieldName)
+  const renameFieldByName = (
+    io: 'input' | 'output',
+    oldFieldName: FieldName,
+    newFieldName: FieldName,
+  ) => {
+    if (isGlobalStateUpdating) return
+    const fieldId = findFieldByNameOrThrow(io, oldFieldName).id
+    storeRenameField(selectedNodeId.value, fieldId, newFieldName)
   }
 
-  const removeField = (fieldId: FieldId) => {
-    removeFieldRaw(selectedNodeId.value, fieldId)
+  const removeFieldByName = (
+    io: 'input' | 'output',
+    fieldName: FieldName,
+  ) => {
+    const fieldId = findFieldByNameOrThrow(io, fieldName).id
+    storeRemoveField(selectedNodeId.value, fieldId)
   }
 
-  const inputEdge = computed(() => {
+  const inputEdge = computed<EdgeInstance | undefined>(() => {
     return state.value.edges.filter(e => e.target === selectedNodeId.value && !e.targetField)[0]
   })
 
@@ -109,10 +149,10 @@ export function useNodeFormState(
    *   and add new edges for the input fields.
    */
   const setInputs = (fieldName: FieldName, fieldValue: IdConnection | null) => {
-    if (isGlobalStateUpdating.value) return
+    if (isGlobalStateUpdating) return
     const clearing = fieldValue == null
 
-    const fieldId = findFieldByName(selectedNode.value!, 'input', fieldName)?.id
+    const fieldId = findFieldByNameOrThrow('input', fieldName).id
 
     if (clearing) {
       // remove the edge of the input field
@@ -140,7 +180,7 @@ export function useNodeFormState(
       fieldId: sourceField,
     } = parseIdConnection(fieldValue)
 
-    const targetFieldId = findFieldByName(selectedNode.value!, 'input', fieldName)!.id
+    const targetFieldId = findFieldByNameOrThrow('input', fieldName).id
     connectEdge({
       source,
       sourceField,
@@ -154,13 +194,13 @@ export function useNodeFormState(
    * - If user clears the input, remove the edge of the input.
    * - If user sets a new input, disconnect existing edges and add new edge for the input.
    */
-  const setInput = (value: IdConnection | null) => {
-    if (isGlobalStateUpdating.value) return
+  const setInput = (value: IdConnection | null, commitNow = true) => {
+    if (isGlobalStateUpdating) return
     const clearing = value == null
 
     // remove existing edges
     for (const edge of [...inputsEdges.value, inputEdge.value].filter(Boolean)) {
-      disconnectEdge(edge.id, clearing)
+      disconnectEdge(edge!.id, commitNow && clearing)
     }
 
     if (clearing) return
@@ -172,7 +212,7 @@ export function useNodeFormState(
       sourceField: fieldId,
       target: selectedNodeId.value,
       targetField: undefined, // input does not have a field
-    })
+    }, commitNow)
   }
 
   const willCreateCycle = (sourceNode: NodeId): boolean => {
@@ -192,11 +232,14 @@ export function useNodeFormState(
       // skip no output nodes
       if (!meta.io?.output) continue
 
-      // skip the node that no output fields and can't be configured
-      if (!node.fields.output.length && !meta.io?.output?.configurable) continue
+      // skip nodes that do not have output
+      if (!node.fields.output) continue
 
       // skip the selected node itself
       if (node.id === selectedNodeId.value) continue
+
+      // skip property nodes that are not readable
+      if (node.type === 'property' && !isReadableProperty(node.config?.property as string)) continue
 
       // skip the node that will create a cycle
       if (willCreateCycle(node.id)) continue
@@ -213,12 +256,17 @@ export function useNodeFormState(
     return options
   })
 
+  const inputsFieldNames = computed<FieldName[]>(() => {
+    return selectedNode.value?.fields.input.map(f => f.name) || []
+  })
+
   return {
     // states
     formData,
     inputOptions,
     inputEdge,
     inputsEdges,
+    inputsFieldNames,
 
     // form ops
     setName,
@@ -226,11 +274,41 @@ export function useNodeFormState(
 
     // field ops
     addField,
-    renameField,
-    removeField,
+    renameFieldByName,
+    removeFieldByName,
 
     // input(s) ops
     setInputs,
     setInput,
+
+    nameValidator: useNameValidator(),
   }
+}
+
+export function useSubSchema(subSchemaName: Exclude<NodeType, 'request' | 'service_response'>) {
+  const { getSchema } = useFormShared()
+  return computed(() => {
+
+    // Implicit nodes do not have schema, we hardcoded schemas for them
+    if (isImplicitType(subSchemaName)) {
+      switch (subSchemaName) {
+        case 'response':
+          return ResponseSchema
+        case 'service_request':
+          return ServiceRequestSchema
+      }
+    }
+
+    try {
+      const schema = getSchema()
+      const configSchema = schema.fields[0].config as RecordFieldSchema
+      const configFields = configSchema.fields[0].nodes as ArrayLikeFieldSchema
+      const elements = configFields.elements as RecordFieldSchema
+      const subSchema = elements.subschema_definitions![subSchemaName]
+      if (!subSchema) throw new Error(`Subschema "${subSchemaName}" not found in the schema.`)
+      return subSchema
+    } catch (e) {
+      throw new Error(`Failed to get subschema "${subSchemaName}": ${(e as Error).message}`)
+    }
+  })
 }

@@ -1,7 +1,7 @@
 <template>
   <KBadge
     :appearance="appearance"
-    :class="{ 'condensed': condensed }"
+    size="small"
   >
     <template #icon>
       <component :is="icon" />
@@ -47,10 +47,3 @@ const appearance = computed<BadgeAppearance>(() => {
   }
 })
 </script>
-
-<style lang="scss" scoped>
-.condensed {
-  font-size: $kui-font-size-20;
-  padding: $kui-space-10;
-}
-</style>

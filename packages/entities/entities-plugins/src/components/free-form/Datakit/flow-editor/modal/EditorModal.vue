@@ -29,10 +29,6 @@ const modal = useTemplateRef('modal')
 
 const open = defineModel<boolean>('open')
 
-const emit = defineEmits<{
-  close: []
-}>()
-
 const content = useTemplateRef('content')
 const isLocked = useScrollLock(document)
 const { activate, deactivate } = useFocusTrap(modal, {
@@ -54,7 +50,6 @@ watch(open, async (value) => {
 
 function close() {
   open.value = false
-  emit('close')
 }
 </script>
 

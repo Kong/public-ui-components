@@ -99,13 +99,14 @@ import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry, ZoomActio
 import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
-import { computed, provide, toRef } from 'vue'
+import { computed, inject, onMounted, provide, ref, toRef } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, AnalyticsBridge, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
+import { INJECT_QUERY_PROVIDER } from '../constants'
 
 interface ChartProps {
   chartData: ExploreResultV4
@@ -138,6 +139,13 @@ const props = withDefaults(defineProps<ChartProps>(), {
 })
 
 const { i18n } = composables.useI18n()
+const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
+const requestsBaseUrl = ref('')
+
+onMounted(async () => {
+  // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
+  requestsBaseUrl.value = await queryBridge?.requestsBaseUrl?.() ?? ''
+})
 
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
@@ -330,7 +338,10 @@ const chartTooltipSortFn = computed(() => {
 const zoomActionItems = computed<ZoomActionItem[]>(() => {
   return [
     { label: i18n.t('zoom_action_items.zoom'), action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange) },
-    { label: i18n.t('zoom_action_items.view_requests'), action: (newTimeRange: AbsoluteTimeRangeV4) => emit('view-requests', newTimeRange) },
+    ...(requestsBaseUrl.value ? [{
+      label: i18n.t('zoom_action_items.view_requests'),
+      action: (newTimeRange: AbsoluteTimeRangeV4) => emit('view-requests', newTimeRange),
+    }] : []),
   ]
 })
 

@@ -16,7 +16,7 @@
 <script lang="ts">
 export type Props<T extends Record<string, any> = Record<string, any>> = {
   tag?: string
-  schema: FormSchema
+  schema: FormSchema | UnionFieldSchema
   data?: T
   config?: FormConfig<T>
   fieldsOrder?: string[]
@@ -26,7 +26,7 @@ export type Props<T extends Record<string, any> = Record<string, any>> = {
 <script setup lang="ts" generic="T extends Record<string, any> = Record<string, any>">
 import { provide, reactive, useSlots, type Slot, watch, toValue, computed, onBeforeMount, toRaw } from 'vue'
 import { DATA_INJECTION_KEY, FIELD_RENDERER_MATCHERS_MAP, FIELD_RENDERER_SLOTS, SCHEMA_INJECTION_KEY, useSchemaHelpers, FIELD_RENDERERS, FORM_CONFIG } from './composables'
-import type { FormSchema } from '../../../types/plugins/form-schema'
+import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import Field from './Field.vue'
 import { isFunction, omit } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'

@@ -1,19 +1,20 @@
 import type {
+  ConfigEdge,
   ConfigNode,
-  EditorState,
   EdgeInstance,
-  NodePhase,
+  EditorState,
+  FieldName,
   ImplicitNodeName,
+  MakeNodeInstancePayload,
   NodeInstance,
   NodeName,
   NodeType,
   UINode,
-  FieldName,
-  ConfigEdge,
 } from '../../types'
+import { isImplicitName } from '../node/node'
 import {
   createId,
-  deepClone,
+  clone,
   findFieldByName,
   getFieldsFromMeta,
   IMPLICIT_NODE_NAMES,
@@ -33,6 +34,38 @@ export function initEditorState(
   const edges: EdgeInstance[] = []
   const nodesMap = new Map<NodeName, NodeInstance>()
   const connections: ConfigEdge[] = []
+  const adjacencies = new Map<NodeName, Set<NodeName>>() // Undirected adjacency list
+
+  /**
+   * [SIDE EFFECT]
+   *
+   * Walk the graph with the undirected adjacency list to find all nodes that are
+   * ultimately connected to the start nodes.
+   *
+   * Time complexity (upper): O(n) (n = nodes + edges)
+   *
+   * @param starts - The starting nodes to begin the search from
+   */
+  const markRequestNodes = (starts: NodeName[]) => {
+    const visited = new Set<NodeName>()
+    const queue = [...starts]
+
+    while (queue.length > 0) {
+      const current = queue.shift()!
+      if (visited.has(current)) continue
+      visited.add(current)
+
+      if (!isImplicitName(current)) {
+        nodesMap.get(current)!.phase = 'request'
+      }
+
+      if (!adjacencies.has(current)) continue
+      for (const next of adjacencies.get(current)!) {
+        if (visited.has(next)) continue
+        queue.push(next)
+      }
+    }
+  }
 
   // config nodes
   for (const configNode of configNodes) {
@@ -73,6 +106,17 @@ export function initEditorState(
         )
       continue
     }
+
+    if (!adjacencies.has(connection.source)) {
+      adjacencies.set(connection.source, new Set())
+    }
+    adjacencies.get(connection.source)!.add(connection.target)
+
+    if (!adjacencies.has(connection.target)) {
+      adjacencies.set(connection.target, new Set())
+    }
+    adjacencies.get(connection.target)!.add(connection.source)
+
     edges.push({
       id: createId('edge'),
       source: sourceNode.id,
@@ -84,18 +128,14 @@ export function initEditorState(
     })
   }
 
+  // Mark all nodes that should be in 'request' phase
+  markRequestNodes(['request', 'service_request'])
+
   return { nodes, edges }
 }
 
-export function makeNodeInstance(payload: {
-  type: NodeType
-  name?: NodeName
-  phase?: NodePhase
-  position?: { x: number, y: number }
-  uiFieldNames?: { input?: FieldName[], output?: FieldName[] }
-  config?: Record<string, unknown>
-}): NodeInstance {
-  const { type, name, phase, position, uiFieldNames, config } = payload
+export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance {
+  const { type, name, phase, position, fields, config } = payload
   const defaults = getFieldsFromMeta(type)
 
   return {
@@ -110,10 +150,10 @@ export function makeNodeInstance(payload: {
     position: position ?? { x: 0, y: 0 },
     expanded: {},
     fields: {
-      input: toFieldArray(uiFieldNames?.input ?? defaults.input),
-      output: toFieldArray(uiFieldNames?.output ?? defaults.output),
+      input: toFieldArray(fields?.input ?? defaults.input),
+      output: toFieldArray(fields?.output ?? defaults.output),
     },
-    config: config ? deepClone(config) : {},
+    config: config ? clone(config) : {},
   }
 }
 
@@ -131,7 +171,7 @@ export function buildNodeInstance(
         ? 'request'
         : 'response'),
     position: uiNode?.position,
-    uiFieldNames: uiNode?.fields,
+    fields: mergeFieldsFromConfigAndUI(configNode, uiNode),
     config: configNode ? extractConfig(configNode) : undefined,
   })
 }
@@ -140,7 +180,7 @@ export function buildNodeInstance(
 export function extractConfig(configNode: ConfigNode): Record<string, unknown> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { type, name, input, inputs, output, outputs, ...rest } = configNode
-  return deepClone(rest)
+  return clone(rest)
 }
 
 export function collectConnectionsFromConfigNode(
@@ -190,4 +230,39 @@ export function collectConnectionsFromConfigNode(
       }
     }
   }
+}
+
+function mergeFieldsFromConfigAndUI(
+  configNode?: ConfigNode,
+  uiNode?: UINode,
+): MakeNodeInstancePayload['fields'] | undefined {
+  if (!configNode && !uiNode) return undefined
+
+  const inputsFields = new Set<string>()
+  const outputsFields = new Set<string>()
+
+  // Add fields from configNode
+  if (configNode?.inputs) {
+    Object.keys(configNode.inputs).forEach(fieldName => inputsFields.add(fieldName))
+  }
+
+  if (configNode?.outputs) {
+    Object.keys(configNode.outputs).forEach(fieldName => outputsFields.add(fieldName))
+  }
+
+  // Add fields from uiNode
+  if (uiNode?.fields?.input) {
+    uiNode.fields.input.forEach(fieldName => inputsFields.add(fieldName))
+  }
+
+  if (uiNode?.fields?.output) {
+    uiNode.fields.output.forEach(fieldName => outputsFields.add(fieldName))
+  }
+
+  const result: MakeNodeInstancePayload['fields'] = {}
+
+  if (inputsFields.size) result.input = Array.from(inputsFields) as FieldName[]
+  if (outputsFields.size) result.output = Array.from(outputsFields) as FieldName[]
+
+  return Object.keys(result).length ? result : undefined
 }

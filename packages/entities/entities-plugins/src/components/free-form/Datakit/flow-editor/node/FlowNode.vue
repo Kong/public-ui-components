@@ -28,31 +28,43 @@
       :class="{ reversed: isReversed }"
     >
       <div class="input-handles">
-        <template v-if="data.fields?.input && data.fields.input.length > 0">
+        <template v-if="showInputHandles">
           <div class="handle">
             <Handle
-              id="inputs"
+              id="input"
               :position="inputPosition"
               type="target"
             />
 
             <div class="handle-label-wrapper">
               <div
-                class="handle-label with-icon"
-                @click.stop="inputHandlesExpanded = !inputHandlesExpanded"
+                class="handle-label"
+                :class="{
+                  'has-fields': data.fields.input.length > 0,
+                  collapsible: inputsCollapsible
+                }"
               >
-                <div>inputs</div>
-                <UnfoldMoreIcon
-                  v-if="!inputHandlesExpanded"
-                  :size="KUI_ICON_SIZE_30"
-                />
-                <UnfoldLessIcon
-                  v-if="inputHandlesExpanded"
-                  :size="KUI_ICON_SIZE_30"
-                />
+                <div class="text">
+                  inputs
+                </div>
+                <div
+                  v-if="data.fields.input.length > 0"
+                  class="icon"
+                  @click.stop="toggleExpanded('input')"
+                >
+                  <UnfoldMoreIcon
+                    v-if="!inputsExpanded"
+                    :size="KUI_ICON_SIZE_20"
+                  />
+                  <UnfoldLessIcon
+                    v-if="inputsExpanded"
+                    :color="inputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
+                    :size="KUI_ICON_SIZE_20"
+                  />
+                </div>
               </div>
               <HandleTwig
-                v-if="inputHandlesExpanded"
+                v-if="inputsExpanded"
                 :color="handleTwigColor"
                 :position="inputPosition"
                 type="bar"
@@ -60,19 +72,19 @@
             </div>
           </div>
 
-          <template v-if="inputHandlesExpanded">
+          <template v-if="inputsExpanded">
             <div
               v-for="(field, i) in data.fields.input"
-              :key="`input-${field.id}`"
+              :key="`inputs-${field.id}`"
               class="handle indented"
             >
               <Handle
-                :id="`input-${field.id}`"
+                :id="`inputs@${field.id}`"
                 :position="inputPosition"
                 type="target"
               />
               <div class="handle-label-wrapper">
-                <div class="handle-label">
+                <div class="handle-label text">
                   {{ field.name }}
                 </div>
                 <HandleTwig
@@ -87,41 +99,53 @@
       </div>
 
       <div class="output-handles">
-        <template v-if="data.fields?.output && data.fields.output.length > 0">
+        <template v-if="showOutputHandles">
           <div class="handle">
             <div class="handle-label-wrapper">
               <div
-                class="handle-label with-icon"
-                @click.stop="outputHandlesExpanded = !outputHandlesExpanded"
+                class="handle-label text"
+                :class="{
+                  'has-fields': data.fields.output.length > 0,
+                  collapsible: outputsCollapsible
+                }"
               >
-                <div>outputs</div>
-                <UnfoldMoreIcon
-                  v-if="!outputHandlesExpanded"
-                  :size="KUI_ICON_SIZE_30"
-                />
-                <UnfoldLessIcon
-                  v-if="outputHandlesExpanded"
-                  :size="KUI_ICON_SIZE_30"
-                />
+                <div class="text">
+                  outputs
+                </div>
+                <div
+                  v-if="data.fields.output.length > 0"
+                  class="icon"
+                  @click.stop="toggleExpanded('output')"
+                >
+                  <UnfoldMoreIcon
+                    v-if="!outputsExpanded"
+                    :size="KUI_ICON_SIZE_20"
+                  />
+                  <UnfoldLessIcon
+                    v-if="outputsExpanded"
+                    :color="outputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
+                    :size="KUI_ICON_SIZE_20"
+                  />
+                </div>
               </div>
               <HandleTwig
-                v-if="outputHandlesExpanded"
+                v-if="outputsExpanded"
                 :color="handleTwigColor"
                 :position="outputPosition"
                 type="bar"
               />
             </div>
             <Handle
-              id="outputs"
+              id="output"
               :position="outputPosition"
-              type="target"
+              type="source"
             />
           </div>
 
-          <template v-if="outputHandlesExpanded">
+          <template v-if="outputsExpanded">
             <div
               v-for="(field, i) in data.fields.output"
-              :key="`output-${field.id}`"
+              :key="`outputs-${field.id}`"
               class="handle indented"
             >
               <div class="handle-label-wrapper">
@@ -135,7 +159,7 @@
                 />
               </div>
               <Handle
-                :id="`output-${field.id}`"
+                :id="`outputs@${field.id}`"
                 :position="outputPosition"
                 type="source"
               />
@@ -152,17 +176,21 @@ import { createI18n } from '@kong-ui-public/i18n'
 import {
   KUI_COLOR_BACKGROUND_NEUTRAL_STRONG,
   KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER,
-  KUI_ICON_SIZE_30,
+  KUI_COLOR_TEXT_DISABLED,
+  KUI_ICON_SIZE_20,
 } from '@kong/design-tokens'
 import { UnfoldLessIcon, UnfoldMoreIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
-import { computed, ref } from 'vue'
+import { computed, watch } from 'vue'
 import english from '../../../../../locales/en.json'
 import HandleTwig from './HandleTwig.vue'
 import { isImplicitNode } from './node'
 
-import NodeBadge from './NodeBadge.vue'
 import type { NodeInstance } from '../../types'
+import { isReadableProperty, isWritableProperty } from '../node/property'
+import { getNodeMeta } from '../store/helpers'
+import { useEditorStore } from '../store/store'
+import NodeBadge from './NodeBadge.vue'
 
 const { data } = defineProps<{
   data: NodeInstance
@@ -170,8 +198,39 @@ const { data } = defineProps<{
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const inputHandlesExpanded = ref(false)
-const outputHandlesExpanded = ref(false)
+const { getInEdgesByNodeId, getOutEdgesByNodeId, toggleExpanded: storeToggleExpanded } = useEditorStore()
+
+const meta = computed(() => getNodeMeta(data.type))
+
+const inputsCollapsible = computed(() =>
+  getInEdgesByNodeId(data.id).every(edge => edge.targetField === undefined),
+)
+const outputsCollapsible = computed(() =>
+  getOutEdgesByNodeId(data.id).every(edge => edge.sourceField === undefined),
+)
+
+const inputsExpanded = computed(() => data.expanded.input ?? false)
+const outputsExpanded = computed(() => data.expanded.output ?? false)
+
+const showInputHandles = computed(() => {
+  if (data.type === 'property') {
+    // TODO: Should have a specific type for config in property nodes
+    const property = data.config?.['property'] as string | undefined
+    return isWritableProperty(property)
+  }
+
+  return meta.value.io?.input
+})
+
+const showOutputHandles = computed(() => {
+  if (data.type === 'property') {
+    // TODO: Should have a specific type for config in property nodes
+    const property = data.config?.['property'] as string | undefined
+    return isReadableProperty(property)
+  }
+
+  return meta.value.io?.output
+})
 
 const isImplicit = computed(() => isImplicitNode(data))
 
@@ -194,6 +253,25 @@ const name = computed(() => {
 const handleTwigColor = computed(() => {
   return isImplicit.value ? KUI_COLOR_BACKGROUND_NEUTRAL_STRONG : KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
 })
+
+function toggleExpanded(io: 'input' | 'output') {
+  if (io === 'input' && !inputsCollapsible.value) return
+  if (io === 'output' && !outputsCollapsible.value) return
+
+  storeToggleExpanded(data.id, io)
+}
+
+watch(inputsCollapsible, (collapsible) => {
+  if (!collapsible) {
+    storeToggleExpanded(data.id, 'input', true)
+  }
+}, { immediate: true })
+
+watch(outputsCollapsible, (collapsible) => {
+  if (!collapsible) {
+    storeToggleExpanded(data.id, 'output', true)
+  }
+}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
@@ -266,16 +344,25 @@ $handle-height: 10px;
           background-color: $kui-color-background-neutral-weaker;
           border-radius: $kui-border-radius-20;
           color: $kui-color-text-neutral-strong;
-          cursor: pointer;
           display: flex;
           flex-direction: row;
           font-size: $kui-font-size-20;
           font-weight: $kui-font-weight-semibold;
-          gap: $kui-space-20;
-          padding: 0 $kui-space-10;
+          gap: $kui-space-40;
+          line-height: $kui-line-height-10;
+          padding: $kui-space-10;
 
-          &.with-icon {
-            padding: 0 $kui-space-10 0 $kui-space-20;
+          .text {
+            /* improve visual valign for our use case */
+            transform: translateY(-0.5px);
+          }
+
+          &.has-fields .icon {
+            cursor: pointer;
+          }
+
+          &:not(.collapsible) .icon {
+            cursor: not-allowed;
           }
         }
       }

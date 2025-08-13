@@ -7,17 +7,20 @@ settings:
 catalogs:
   default:
     '@kong/design-tokens':
-      specifier: ^1.17.4
-      version: 1.17.4
+      specifier: ^1.18.0
+      version: 1.18.0
     '@kong/icons':
       specifier: ^1.33.2
       version: 1.33.2
     '@kong/kongponents':
-      specifier: ^9.34.2
-      version: 9.34.2
+      specifier: ^9.37.2
+      version: 9.37.2
     axios:
       specifier: ^1.11.0
       version: 1.11.0
+    dompurify:
+      specifier: ^3.2.6
+      version: 3.2.6
     pinia:
       specifier: '>= 2.1.7 < 3'
       version: 2.1.7
@@ -52,13 +55,13 @@ importers:
         version: 1.8.2
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/eslint-config-kong-ui':
         specifier: ^1.4.0
         version: 1.4.0(eslint@9.25.1(jiti@1.21.0))(typescript@5.6.3)
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@stylistic/stylelint-plugin':
         specifier: ^3.1.1
         version: 3.1.1(stylelint@16.10.0(typescript@5.6.3))
@@ -254,10 +257,10 @@ importers:
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -306,10 +309,10 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@types/geojson':
         specifier: ^7946.0.14
         version: 7946.0.14
@@ -349,10 +352,10 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       pinia:
         specifier: 'catalog:'
         version: 2.1.7(typescript@5.6.3)(vue@3.5.13(typescript@5.6.3))
@@ -371,7 +374,7 @@ importers:
     devDependencies:
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       json-schema-to-ts:
         specifier: ^3.1.1
         version: 3.1.1
@@ -414,10 +417,10 @@ importers:
         version: link:../../core/sandbox-layout
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
@@ -445,10 +448,10 @@ importers:
     devDependencies:
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       vue:
         specifier: 'catalog:'
         version: 3.5.13(typescript@5.6.3)
@@ -485,10 +488,10 @@ importers:
     devDependencies:
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -531,7 +534,7 @@ importers:
     devDependencies:
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -553,10 +556,10 @@ importers:
         version: link:../i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -568,10 +571,10 @@ importers:
     devDependencies:
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       vue:
         specifier: 'catalog:'
         version: 3.5.13(typescript@5.6.3)
@@ -580,7 +583,7 @@ importers:
     devDependencies:
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
@@ -614,10 +617,10 @@ importers:
         version: 1.6.0-rc.1
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -639,6 +642,9 @@ importers:
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
+      dompurify:
+        specifier: 'catalog:'
+        version: 3.2.6
       fecha:
         specifier: ^4.2.3
         version: 4.2.3
@@ -657,10 +663,10 @@ importers:
         version: link:../i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -690,7 +696,7 @@ importers:
         version: link:../i18n
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       vue:
         specifier: 'catalog:'
         version: 3.5.13(typescript@5.6.3)
@@ -703,10 +709,10 @@ importers:
     devDependencies:
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       vue:
         specifier: 'catalog:'
         version: 3.5.13(typescript@5.6.3)
@@ -725,22 +731,22 @@ importers:
     devDependencies:
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@kong/splitpanes':
         specifier: 3.1.6-patch.7
         version: 3.1.6-patch.7(vue@3.5.13(typescript@5.6.3))
       '@vue-flow/background':
         specifier: ^1.3.2
-        version: 1.3.2(@vue-flow/core@1.41.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 1.3.2(@vue-flow/core@1.45.0(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@vue-flow/controls':
         specifier: ^1.1.2
-        version: 1.1.2(@vue-flow/core@1.41.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 1.1.2(@vue-flow/core@1.45.0(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@vue-flow/core':
-        specifier: ^1.41.5
-        version: 1.41.5(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.45.0
+        version: 1.45.0(vue@3.5.13(typescript@5.6.3))
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -762,13 +768,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -789,13 +795,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -816,13 +822,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -843,13 +849,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -870,13 +876,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -897,13 +903,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -927,7 +933,7 @@ importers:
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -948,13 +954,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -994,13 +1000,22 @@ importers:
       focus-trap:
         specifier: ^7.6.0
         version: 7.6.5
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
       marked:
         specifier: ^14.1.3
         version: 14.1.3
       monaco-editor:
         specifier: 0.52.2
         version: 0.52.2
+      nanoid:
+        specifier: ^5.1.5
+        version: 5.1.5
     devDependencies:
+      '@dagrejs/dagre':
+        specifier: ^1.1.5
+        version: 1.1.5
       '@kong-ui-public/entities-plugins-icon':
         specifier: workspace:^
         version: link:../entities-plugins-icon
@@ -1012,22 +1027,22 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@vue-flow/background':
         specifier: ^1.3.2
-        version: 1.3.2(@vue-flow/core@1.41.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 1.3.2(@vue-flow/core@1.45.0(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@vue-flow/controls':
         specifier: ^1.1.2
-        version: 1.1.2(@vue-flow/core@1.41.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 1.1.2(@vue-flow/core@1.45.0(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@vue-flow/core':
-        specifier: ^1.41.5
-        version: 1.41.5(vue@3.5.13(typescript@5.6.3))
+        specifier: ^1.45.0
+        version: 1.45.0(vue@3.5.13(typescript@5.6.3))
       '@vueuse/core':
         specifier: ^13.5.0
         version: 13.5.0(vue@3.5.13(typescript@5.6.3))
@@ -1075,13 +1090,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -1112,13 +1127,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
@@ -1149,13 +1164,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -1176,13 +1191,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -1203,13 +1218,13 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/icons':
         specifier: 'catalog:'
         version: 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -1234,10 +1249,10 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       axios:
         specifier: 'catalog:'
         version: 1.11.0
@@ -1259,10 +1274,10 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@types/prismjs':
         specifier: ^1.26.5
         version: 1.26.5
@@ -1293,10 +1308,10 @@ importers:
         version: link:../../core/i18n
       '@kong/design-tokens':
         specifier: 'catalog:'
-        version: 1.17.4
+        version: 1.18.0
       '@kong/kongponents':
         specifier: 'catalog:'
-        version: 9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
+        version: 9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.0
         version: 1.1.0(rollup@4.46.2)(vite@5.4.19(@types/node@24.1.0)(sass-embedded@1.80.3)(sass@1.80.6)(terser@5.26.0))
@@ -1536,8 +1551,8 @@ packages:
   '@braintree/sanitize-url@7.1.0':
     resolution: {integrity: sha512-o+UlMLt49RvtCASlOMW0AkHnabN9wR9rwCCherxO0yG4Npy34GkvrAqdXQvrhNs+jh+gkK8gB8Lf05qL/O7KWg==}
 
-  '@bufbuild/protobuf@2.6.2':
-    resolution: {integrity: sha512-vLu7SRY84CV/Dd+NUdgtidn2hS5hSMUC1vDBY0VcviTdgRYkU43vIz3vIFbmx14cX1r+mM7WjzE5Fl1fGEM0RQ==}
+  '@bufbuild/protobuf@2.6.3':
+    resolution: {integrity: sha512-w/gJKME9mYN7ZoUAmSMAWXk4hkVpxRKvEJCb3dV5g9wwWdxTJJ0ayOJAVcNxtdqaxDyFuC0uz4RSGVacJ030PQ==}
 
   '@chevrotain/cst-dts-gen@11.0.3':
     resolution: {integrity: sha512-BvIKpRLeS/8UbfxXxgC33xOumsacaeCKAjAeLyOn7Pcp95HiRbrpl14S+9vaZLolnbssPIUuiUd8IvgkRyt6NQ==}
@@ -1673,6 +1688,13 @@ packages:
 
   '@cypress/xvfb@1.2.4':
     resolution: {integrity: sha512-skbBzPggOVYCbnGgV+0dmBdW/s77ZkAOXIC1knS8NagwDjBrNC1LuXtQJeiN6l+m7lzmHtaoUw/ctJKdqkG57Q==}
+
+  '@dagrejs/dagre@1.1.5':
+    resolution: {integrity: sha512-Ghgrh08s12DCL5SeiR6AoyE80mQELTWhJBRmXfFoqDiFkR458vPEdgTbbjA0T+9ETNxUblnD0QW55tfdvi5pjQ==}
+
+  '@dagrejs/graphlib@2.2.4':
+    resolution: {integrity: sha512-mepCf/e9+SKYy1d02/UkvSy6+6MoyXhVxP8lLDfA7BPE1X1d4dR0sZznmbM8/XVJ1GPM+Svnx7Xj6ZweByWUkw==}
+    engines: {node: '>17.0.0'}
 
   '@digitalroute/cz-conventional-changelog-for-jira@8.0.1':
     resolution: {integrity: sha512-I7uNQ2R5LnDYVhQ01sfNvaxqe1PutXyDl8Kltj4L8uDa1LTYqQgWWp3yEj3XYDNjhUjsAheHW0lsmF1oiAjWVg==}
@@ -1889,17 +1911,17 @@ packages:
     os: [darwin, linux, win32]
     hasBin: true
 
-  '@floating-ui/core@1.7.0':
-    resolution: {integrity: sha512-FRdBLykrPPA6P76GGGqlex/e7fbe0F1ykgxHYNXQsH/iTEtjMj/f9bpY5oQqbjt5VgZvgz/uKXbGuROijh3VLA==}
+  '@floating-ui/core@1.7.3':
+    resolution: {integrity: sha512-sGnvb5dmrJaKEZ+LDIpguvdX3bDlEllmv4/ClQ9awcmCZrlx5jQyyMWFM5kBI+EyNOCDDiKk8il0zeuX3Zlg/w==}
 
-  '@floating-ui/dom@1.7.0':
-    resolution: {integrity: sha512-lGTor4VlXcesUMh1cupTUTDoCxMb0V6bm3CnxHzQcw8Eaf1jQbgQX4i02fYgT0vJ82tb5MZ4CZk1LRGkktJCzg==}
+  '@floating-ui/dom@1.7.3':
+    resolution: {integrity: sha512-uZA413QEpNuhtb3/iIKoYMSK07keHPYeXF02Zhd6e213j+d1NamLix/mCLxBUDW/Gx52sPH2m+chlUsyaBs/Ag==}
 
-  '@floating-ui/utils@0.2.9':
-    resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
+  '@floating-ui/utils@0.2.10':
+    resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
 
-  '@floating-ui/vue@1.1.6':
-    resolution: {integrity: sha512-XFlUzGHGv12zbgHNk5FN2mUB7ROul3oG2ENdTpWdE+qMFxyNxWSRmsoyhiEnpmabNm6WnUvR1OvJfUfN4ojC1A==}
+  '@floating-ui/vue@1.1.8':
+    resolution: {integrity: sha512-SNJAa1jbT8Gh1LvWw2uIIViLL0saV2bCY59ISCvJzhbut5DSb2H3LKUK49Xkd7SixTNHKX4LFu59nbwIXt9jjQ==}
 
   '@formatjs/ecma402-abstract@2.2.3':
     resolution: {integrity: sha512-aElGmleuReGnk2wtYOzYFmNWYoiWWmf1pPPCYg0oiIQSJj0mjc4eUfzUXaSOJ4S8WzI/cLqnCTWjqz904FT2OQ==}
@@ -2027,9 +2049,9 @@ packages:
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
 
-  '@kong/design-tokens@1.17.4':
-    resolution: {integrity: sha512-3BrKJvwlQ27jrVQIE+cJ9baTVz6cvxO5f7vw0UWOiXz/E23z5ZOGDpUMiyK7q3Jks9t3x8OsMx3BKPRu87TPnw==}
-    engines: {node: '>=20.18.3', pnpm: '>=9.14.4 || >=10.1.0'}
+  '@kong/design-tokens@1.18.0':
+    resolution: {integrity: sha512-U7QCUu2P0ihDrIg3v8JslhsV+CK/+GWolVEPfmp59cASmliFLTXz9ApbpIqEWuyFFMu3eNlSZ/xei6ImKaklQw==}
+    engines: {node: '>=20.19.4', pnpm: '>=9.14.4 || >=10.1.0'}
 
   '@kong/eslint-config-kong-ui@1.4.0':
     resolution: {integrity: sha512-sD2VlqqI+GmtN3xX9ss4fz5vn/adLhY+glOdaaB3H9y5R3flIkZZ7z1/JRo9bisW/1cyl1X7/WQMY2ZU6dYQjw==}
@@ -2051,8 +2073,8 @@ packages:
       vue: '>= 3.3.4 < 4'
       vue-router: ^4.2.4
 
-  '@kong/kongponents@9.34.2':
-    resolution: {integrity: sha512-/D+TpsgdJPFzYzpBMr9Zm14mq9TxUPl+UOcQd3cvcDhCrM8myvKEZ5XYD9dFkYH1b3BBH0QmdtpSkri6Ay+hNw==}
+  '@kong/kongponents@9.37.2':
+    resolution: {integrity: sha512-WyyWlZnQ68ofsfvrIybAtO6pkG+sPjQlBu97HZ3mBHs7OcxsEzegr4V6gxmegCdzTX7sKc2HWXIJt2EknkixRA==}
     engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0 || >=22.14.0', pnpm: '>=9.11.0 || >=10.10.0'}
     peerDependencies:
       vue: '>= 3.5.0 < 4'
@@ -3282,8 +3304,8 @@ packages:
       '@vue-flow/core': ^1.23.0
       vue: ^3.3.0
 
-  '@vue-flow/core@1.41.5':
-    resolution: {integrity: sha512-dH9senihkrRD0HxnDkEJXi4yxQD08QGp50yF85d8+JsKEcdhGrK3Unbt4x3cZiLY2BpGZhZsnRvlC6xEZklOQg==}
+  '@vue-flow/core@1.45.0':
+    resolution: {integrity: sha512-+Qd4fTnCfrhfYQzlHyf5Jt7rNE4PlDnEJEJZH9v6hDZoTOeOy1RhS85cSxKYxdsJ31Ttj2v3yabhoVfBf+bmJA==}
     peerDependencies:
       vue: ^3.3.0
 
@@ -4841,8 +4863,8 @@ packages:
   dompurify@3.0.5:
     resolution: {integrity: sha512-F9e6wPGtY+8KNMRAVfxeCOHU0/NPWMSENNq4pQctuXRqqdEPW7q3CrLbR5Nse044WwacyjHGOMlvNsBe1y6z9A==}
 
-  dompurify@3.2.4:
-    resolution: {integrity: sha512-ysFSFEDVduQpyhzAob/kkuJjf5zWkZD8/A9ywSp1byueyuCfHamrCBa14/Oc2iiB0e51B+NpxSl5gmzn+Ms/mg==}
+  dompurify@3.2.6:
+    resolution: {integrity: sha512-/2GogDQlohXPZe6D6NOgQvXLPSYBqIWMnZ8zzOhn09REE4eyAzb+Hed3jhoM9OkuaJ8P6ZGTTVWQKAi8ieIzfQ==}
 
   domutils@3.1.0:
     resolution: {integrity: sha512-H78uMmQtI2AhgDJjWeQmHwJJ2bLPD3GMmO7Zja/ZZh84wkm+4ut+IUnUdRa8uCGX88DiVx1j6FRe1XfxEgjEZA==}
@@ -8144,7 +8166,7 @@ packages:
   right-pad@1.0.1:
     resolution: {integrity: sha512-bYBjgxmkvTAfgIYy328fmkwhp39v8lwVgWhhrzxPV3yHtcSqyYKe9/XOhvW48UFjATg3VuJbpsp5822ACNvkmw==}
     engines: {node: '>= 0.10'}
-    deprecated: Use String.prototype.padEnd() instead
+    deprecated: Please use String.prototype.padEnd() over this package.
 
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
@@ -9368,8 +9390,8 @@ packages:
     resolution: {integrity: sha512-ZZKSmDAEFOijERBLkmYfJ+vmk3w+7hOLYDNkRCuRuMJGEmqYNCNLyBBFwWKVMhfwaEF3WOd0Zlw86U/WC/+nYw==}
     engines: {'0': node >=0.6.0}
 
-  virtua@0.41.2:
-    resolution: {integrity: sha512-48jgdeXKagXEVxalTFf1bJe/5JZq41QG9LcwDweFJwOZgOvIgoHhBR+IMZPOVd0AjtwvLOaS3O7MYNdti9c4VQ==}
+  virtua@0.41.5:
+    resolution: {integrity: sha512-x1vsA9qIQNBFcCs1rzCjyYdMvDu/kT6o6zwwQnyqFOFdOyIzqyzU3WfR/hJC8WxUZXSCo2LkuoqapL8VDDMQPg==}
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
@@ -10122,7 +10144,7 @@ snapshots:
 
   '@braintree/sanitize-url@7.1.0': {}
 
-  '@bufbuild/protobuf@2.6.2':
+  '@bufbuild/protobuf@2.6.3':
     optional: true
 
   '@chevrotain/cst-dts-gen@11.0.3':
@@ -10311,6 +10333,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@dagrejs/dagre@1.1.5':
+    dependencies:
+      '@dagrejs/graphlib': 2.2.4
+
+  '@dagrejs/graphlib@2.2.4': {}
+
   '@digitalroute/cz-conventional-changelog-for-jira@8.0.1(@types/node@18.19.64)(typescript@5.6.3)':
     dependencies:
       boxen: 5.1.2
@@ -10466,21 +10494,21 @@ snapshots:
 
   '@evilmartians/lefthook@1.8.2': {}
 
-  '@floating-ui/core@1.7.0':
+  '@floating-ui/core@1.7.3':
     dependencies:
-      '@floating-ui/utils': 0.2.9
+      '@floating-ui/utils': 0.2.10
 
-  '@floating-ui/dom@1.7.0':
+  '@floating-ui/dom@1.7.3':
     dependencies:
-      '@floating-ui/core': 1.7.0
-      '@floating-ui/utils': 0.2.9
+      '@floating-ui/core': 1.7.3
+      '@floating-ui/utils': 0.2.10
 
-  '@floating-ui/utils@0.2.9': {}
+  '@floating-ui/utils@0.2.10': {}
 
-  '@floating-ui/vue@1.1.6(vue@3.5.13(typescript@5.6.3))':
+  '@floating-ui/vue@1.1.8(vue@3.5.13(typescript@5.6.3))':
     dependencies:
-      '@floating-ui/dom': 1.7.0
-      '@floating-ui/utils': 0.2.9
+      '@floating-ui/dom': 1.7.3
+      '@floating-ui/utils': 0.2.10
       vue-demi: 0.14.10(vue@3.5.13(typescript@5.6.3))
     transitivePeerDependencies:
       - '@vue/composition-api'
@@ -10636,7 +10664,7 @@ snapshots:
 
   '@kong/atc-router@1.6.0-rc.1': {}
 
-  '@kong/design-tokens@1.17.4': {}
+  '@kong/design-tokens@1.18.0': {}
 
   '@kong/eslint-config-kong-ui@1.4.0(eslint@9.25.1(jiti@1.21.0))(typescript@5.6.3)':
     dependencies:
@@ -10679,9 +10707,9 @@ snapshots:
       vue-draggable-next: 2.2.1(sortablejs@1.15.6)(vue@3.5.13(typescript@5.6.3))
       vue-router: 4.4.5(vue@3.5.13(typescript@5.6.3))
 
-  '@kong/kongponents@9.34.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
+  '@kong/kongponents@9.37.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.4.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
     dependencies:
-      '@floating-ui/vue': 1.1.6(vue@3.5.13(typescript@5.6.3))
+      '@floating-ui/vue': 1.1.8(vue@3.5.13(typescript@5.6.3))
       '@kong/icons': 1.33.2(vue@3.5.13(typescript@5.6.3))
       '@popperjs/core': 2.11.8
       date-fns: 2.30.0
@@ -10693,7 +10721,7 @@ snapshots:
       sortablejs: 1.15.6
       swrv: 1.1.0(vue@3.5.13(typescript@5.6.3))
       v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.5.13(typescript@5.6.3))
-      virtua: 0.41.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.13(typescript@5.6.3))
+      virtua: 0.41.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.13(typescript@5.6.3))
       vue: 3.5.13(typescript@5.6.3)
       vue-draggable-next: 2.2.1(sortablejs@1.15.6)(vue@3.5.13(typescript@5.6.3))
       vue-router: 4.4.5(vue@3.5.13(typescript@5.6.3))
@@ -12476,20 +12504,21 @@ snapshots:
       path-browserify: 1.0.1
       vscode-uri: 3.0.8
 
-  '@vue-flow/background@1.3.2(@vue-flow/core@1.41.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
+  '@vue-flow/background@1.3.2(@vue-flow/core@1.45.0(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
     dependencies:
-      '@vue-flow/core': 1.41.5(vue@3.5.13(typescript@5.6.3))
+      '@vue-flow/core': 1.45.0(vue@3.5.13(typescript@5.6.3))
       vue: 3.5.13(typescript@5.6.3)
 
-  '@vue-flow/controls@1.1.2(@vue-flow/core@1.41.5(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
+  '@vue-flow/controls@1.1.2(@vue-flow/core@1.45.0(vue@3.5.13(typescript@5.6.3)))(vue@3.5.13(typescript@5.6.3))':
     dependencies:
-      '@vue-flow/core': 1.41.5(vue@3.5.13(typescript@5.6.3))
+      '@vue-flow/core': 1.45.0(vue@3.5.13(typescript@5.6.3))
       vue: 3.5.13(typescript@5.6.3)
 
-  '@vue-flow/core@1.41.5(vue@3.5.13(typescript@5.6.3))':
+  '@vue-flow/core@1.45.0(vue@3.5.13(typescript@5.6.3))':
     dependencies:
       '@vueuse/core': 10.11.1(vue@3.5.13(typescript@5.6.3))
       d3-drag: 3.0.0
+      d3-interpolate: 3.0.1
       d3-selection: 3.0.0
       d3-zoom: 3.0.0
       vue: 3.5.13(typescript@5.6.3)
@@ -14200,7 +14229,7 @@ snapshots:
 
   dompurify@3.0.5: {}
 
-  dompurify@3.2.4:
+  dompurify@3.2.6:
     optionalDependencies:
       '@types/trusted-types': 2.0.7
 
@@ -16496,7 +16525,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.10
       dayjs: 1.11.13
-      dompurify: 3.2.4
+      dompurify: 3.2.6
       elkjs: 0.9.2
       katex: 0.16.10
       khroma: 2.1.0
@@ -16523,7 +16552,7 @@ snapshots:
       d3-sankey: 0.12.3
       dagre-d3-es: 7.0.11
       dayjs: 1.11.13
-      dompurify: 3.2.4
+      dompurify: 3.2.6
       katex: 0.16.10
       khroma: 2.1.0
       lodash-es: 4.17.21
@@ -18171,7 +18200,7 @@ snapshots:
 
   sass-embedded@1.80.3:
     dependencies:
-      '@bufbuild/protobuf': 2.6.2
+      '@bufbuild/protobuf': 2.6.3
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
       immutable: 4.3.7
@@ -19364,7 +19393,7 @@ snapshots:
       core-util-is: 1.0.2
       extsprintf: 1.3.0
 
-  virtua@0.41.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.13(typescript@5.6.3)):
+  virtua@0.41.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.13(typescript@5.6.3)):
     optionalDependencies:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)

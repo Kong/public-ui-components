@@ -21,9 +21,9 @@
       v-html="getNodeTypeDescription(selectedNode.type)"
     />
 
-    <component
-      :is="form"
-      v-if="form"
+    <Form
+      v-if="Form"
+      :key="selectedNode?.id"
       class="dk-node-properties-panel-form"
     />
   </KSlideout>
@@ -38,6 +38,8 @@ import NodeFormServiceRequest from '../node-forms/NodeFormServiceRequest.vue'
 import NodeFormResponse from '../node-forms/NodeFormResponse.vue'
 import NodeFormJq from '../node-forms/NodeFormJq.vue'
 import NodeFormStatic from '../node-forms/NodeFormStatic.vue'
+import NodeFormProperty from '../node-forms/NodeFormProperty.vue'
+import NodeFormExit from '../node-forms/NodeFormExit.vue'
 
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
@@ -60,7 +62,7 @@ defineEmits<{
   close: []
 }>()
 
-const form = computed(() => {
+const Form = computed(() => {
   switch (selectedNode.value?.type) {
     case 'call':
       return NodeFormCall
@@ -72,6 +74,10 @@ const form = computed(() => {
       return NodeFormJq
     case 'static':
       return NodeFormStatic
+    case 'property':
+      return NodeFormProperty
+    case 'exit':
+      return NodeFormExit
     default:
       return null
   }
@@ -83,10 +89,12 @@ const form = computed(() => {
   :deep(.slideout-container) {
     box-shadow: none;
     gap: $kui-space-60;
+    padding-left: 0;
   }
 
-  :deep(.slideout-header) {
-    align-items: start;
+  :deep(.slideout-header),
+  :deep(.slideout-content) {
+    padding-left: var(--kui-space-70, $kui-space-70);
   }
 
   &-desc {

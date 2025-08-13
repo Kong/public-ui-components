@@ -42,6 +42,7 @@ describe('<DashboardTile />', () => {
 
   const mockQueryProvider = {
     exploreBaseUrl: async () => 'http://test.com/explore',
+    requestsBaseUrl: async () => 'http://test.com/requests',
     evaluateFeatureFlagFn: () => true,
     queryFn: () => Promise.resolve(
       generateSingleMetricTimeSeriesData(
@@ -156,6 +157,23 @@ describe('<DashboardTile />', () => {
     cy.getTestId('chart-jump-to-explore-1').should('not.exist')
   })
 
+  it('excludes irrelevant context filters from the jump to explore URL', () => {
+    // Passes an llm_usage filter into an api_usage tile
+    const context = {
+      ...mockContext,
+      filters: [{ field: 'response_model', operator: 'in', value: 'my-model' }],
+    }
+
+    mount({ context })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-explore-1').should('exist')
+
+    cy.getTestId('chart-jump-to-explore-1')
+      .invoke('attr', 'href')
+      .should('not.have.string', 'response_model')
+  })
+
   it('should show aged out warning when query granularity does not match saved granularity', () => {
     mount({
       definition: {
@@ -184,5 +202,32 @@ describe('<DashboardTile />', () => {
 
     cy.getTestId('time-range-badge').should('exist')
     cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+  })
+
+  it('jump to requests link should be reactive', () => {
+    // Force a different filter so that it actually re-issues the query.
+    const context = {
+      ...mockContext,
+      filters: [{ field: 'status_code', operator: 'eq', value: 'test1' }],
+    }
+    mount({ context })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-requests-1').should('exist')
+
+    // "status_code" is in the filter, so make sure that it gets picked up in the link.
+    cy.getTestId('chart-jump-to-requests-1').invoke('attr', 'href').should('have.string', 'status_code')
+  })
+
+  it('should not show jump to requests link if query definition is missing', () => {
+    mount({
+      // @ts-ignore we're intentionally not including a query in this definition
+      definition: {
+        chart: mockTileDefinition.chart,
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-requests-1').should('not.exist')
   })
 })

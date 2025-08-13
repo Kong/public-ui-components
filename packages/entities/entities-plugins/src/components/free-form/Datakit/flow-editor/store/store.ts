@@ -1,39 +1,39 @@
-import { computed, ref } from 'vue'
 import { createInjectionState } from '@vueuse/core'
+import { computed, ref } from 'vue'
 import type {
   ConfigNode,
-  ConfigNodeType,
+  CreateNodePayload,
   EdgeData,
-  EdgeInstance,
   EdgeId,
+  EdgeInstance,
   EditorState,
   FieldId,
   FieldName,
-  NodePhase,
-  NodeInstance,
+  NameConnection,
   NodeId,
+  NodeInstance,
   NodeName,
   UINode,
-  NameConnection,
 } from '../../types'
+import { isImplicitName, isImplicitType } from '../node/node'
 import {
   createId,
-  deepClone,
+  clone,
   findFieldById,
   generateNodeName,
 } from './helpers'
-import { isImplicitName, isImplicitType } from '../node/node'
+import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
-import { useTaggedHistory } from './history'
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
   function createState(configNodes: ConfigNode[], uiNodes: UINode[]) {
     const state = ref<EditorState>(initEditorState(configNodes, uiNodes))
     const selection = ref<NodeId>()
+    const modalOpen = ref(false)
     const history = useTaggedHistory(state, {
       capacity: 200,
-      clone: deepClone,
+      clone,
     })
 
     // maps
@@ -49,12 +49,33 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           state.value.nodes.map((node) => [node.name, node]),
         ),
     )
-    const edgeMapById = computed(
-      () =>
-        new Map<EdgeId, EdgeInstance>(
-          state.value.edges.map((edge) => [edge.id, edge]),
-        ),
+    const edgeMaps = computed(
+      () => {
+        const edgeMapById = new Map<EdgeId, EdgeInstance>()
+        const edgeIdMapByNodeId = new Map<NodeId, Set<EdgeId>>()
+
+        for (const edge of state.value.edges) {
+          edgeMapById.set(edge.id, edge)
+
+          if (!edgeIdMapByNodeId.has(edge.source)) {
+            edgeIdMapByNodeId.set(edge.source, new Set())
+          }
+          edgeIdMapByNodeId.get(edge.source)!.add(edge.id)
+
+          if (!edgeIdMapByNodeId.has(edge.target)) {
+            edgeIdMapByNodeId.set(edge.target, new Set())
+          }
+          edgeIdMapByNodeId.get(edge.target)!.add(edge.id)
+        }
+
+        return {
+          edgeMapById,
+          edgeIdMapByNodeId,
+        }
+      },
     )
+    const edgeMapById = computed(() => edgeMaps.value.edgeMapById)
+    const edgeIdMapByNodeId = computed(() => edgeMaps.value.edgeIdMapByNodeId)
 
     // sets
     const nodeNames = computed(
@@ -81,6 +102,27 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       return edgeMapById.value.get(id)
     }
 
+    // O(n) getters (n = edges)
+    function getEdgesByNodeId(nodeId: NodeId) {
+      if (!edgeIdMapByNodeId.value.has(nodeId)) {
+        return []
+      }
+      const edges: EdgeInstance[] = []
+      edgeIdMapByNodeId.value.get(nodeId)!.forEach(edgeId => {
+        const edge = getEdgeById(edgeId)
+        if (edge) {
+          edges.push(edge)
+        }
+      })
+      return edges
+    }
+    function getInEdgesByNodeId(nodeId: NodeId) {
+      return getEdgesByNodeId(nodeId).filter((edge => edge.target === nodeId))
+    }
+    function getOutEdgesByNodeId(nodeId: NodeId) {
+      return getEdgesByNodeId(nodeId).filter((edge => edge.source === nodeId))
+    }
+
     const selectedNode = computed(() =>
       selection.value ? getNodeById(selection.value) : undefined,
     )
@@ -90,22 +132,12 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
 
     /* ---------- node ops ---------- */
 
-    function addNode(
-      payload: {
-        type: ConfigNodeType
-        name?: NodeName
-        phase?: NodePhase
-        position?: { x: number, y: number }
-        fields?: { input?: FieldName[], output?: FieldName[] }
-        config?: Record<string, unknown>
-      },
-      commitNow = true,
-    ) {
+    function createNode(payload: CreateNodePayload): NodeInstance {
       if (isImplicitType(payload.type)) {
-        console.warn('[addNode] implicit nodes are fixed.')
-        return
+        throw new Error('[createNode] implicit nodes are fixed.')
       }
-      const node = makeNodeInstance({
+
+      return makeNodeInstance({
         type: payload.type,
         name:
           payload.name ||
@@ -115,9 +147,15 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         // default to 'request' phase for request nodes
         phase: payload.phase,
         position: payload.position,
-        uiFieldNames: payload.fields,
+        fields: payload.fields,
         config: payload.config,
       })
+    }
+
+    function addNode(payload: CreateNodePayload, commitNow = true) {
+      const node = createNode(payload)
+      if (!node) return
+
       state.value.nodes.push(node)
       if (commitNow) history.commit()
       return node.id
@@ -151,6 +189,9 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       if (commitNow) history.commit()
     }
 
+    // Move node to a new position
+    // This should be called only once after a consecutive drag operation
+    // to avoid multiple commits for each drag event.
     function moveNode(
       nodeId: NodeId,
       position: { x: number, y: number },
@@ -159,7 +200,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       const node = getNodeById(nodeId)
       if (!node) return
       node.position = { ...position }
-      if (commitNow) history.commit(`move:${nodeId}`, { replace: true })
+      if (commitNow) history.commit()
     }
 
     function toggleExpanded(
@@ -182,7 +223,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     ) {
       const node = getNodeById(nodeId)
       if (!node) return
-      node.config = deepClone(next)
+      node.config = clone(next)
       if (commitNow) history.commit()
     }
 
@@ -315,6 +356,22 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       if (commitNow) history.commit()
     }
 
+    function disconnectInEdges(nodeId: NodeId, commitNow = true) {
+      const edges = getInEdgesByNodeId(nodeId)
+      for (const edge of edges) {
+        disconnectEdge(edge.id, false)
+      }
+      if (commitNow) history.commit()
+    }
+
+    function disconnectOutEdges(nodeId: NodeId, commitNow = true) {
+      const edges = getOutEdgesByNodeId(nodeId)
+      for (const edge of edges) {
+        disconnectEdge(edge.id, false)
+      }
+      if (commitNow) history.commit()
+    }
+
     /* ---------- serialization ---------- */
 
     function toConfigNodes(): ConfigNode[] {
@@ -373,7 +430,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         }
 
         const configNode: ConfigNode = {
-          ...deepClone(node.config),
+          ...clone(node.config),
           name: node.name,
           type: node.type,
         } as ConfigNode
@@ -397,7 +454,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
 
     function toUINodes(): UINode[] {
       return state.value.nodes.map((node) =>
-        deepClone({
+        clone({
           name: node.name,
           phase: node.phase,
           position: { ...node.position },
@@ -415,83 +472,28 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       history.reset()
     }
 
-    /* ---------- Vue Flow adapters ---------- */
-
-    function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
-      const sourceNode = getNodeById(edge.source)
-      const targetNode = getNodeById(edge.target)
-      return !!(
-        sourceNode &&
-        targetNode &&
-        sourceNode.phase === phase &&
-        targetNode.phase === phase
-      )
-    }
-
-    const requestNodes = computed(() =>
-      state.value.nodes
-        .filter((node) => node.phase === 'request')
-        .map((node) => ({
-          id: node.id,
-          type: 'flow',
-          position: node.position,
-          data: node,
-        })),
-    )
-
-    const requestEdges = computed(() =>
-      state.value.edges
-        .filter((edge) => edgeInPhase(edge, 'request'))
-        .map((edge) => ({
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-          sourceHandle: edge.sourceField,
-          targetHandle: edge.targetField,
-          data: edge,
-        })),
-    )
-
-    const responseNodes = computed(() =>
-      state.value.nodes
-        .filter((node) => node.phase === 'response')
-        .map((node) => ({
-          id: node.id,
-          type: 'flow',
-          position: node.position,
-          data: node,
-        })),
-    )
-
-    const responseEdges = computed(() =>
-      state.value.edges
-        .filter((edge) => edgeInPhase(edge, 'response'))
-        .map((edge) => ({
-          id: edge.id,
-          source: edge.source,
-          target: edge.target,
-          sourceHandle: edge.sourceField,
-          targetHandle: edge.targetField,
-          data: edge,
-        })),
-    )
-
     return {
       // state
       state,
       selection,
+      modalOpen,
 
       // maps & getters
       nodeMapById,
       nodeMapByName,
       edgeMapById,
+      edgeIdMapByNodeId,
       getNodeById,
       getNodeByName,
       getEdgeById,
+      getEdgesByNodeId,
+      getInEdgesByNodeId,
+      getOutEdgesByNodeId,
       selectedNode,
       selectNode,
 
       // node ops
+      createNode,
       addNode,
       removeNode,
       renameNode,
@@ -508,6 +510,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       connectEdge,
       replaceConnection,
       disconnectEdge,
+      disconnectInEdges,
+      disconnectOutEdges,
 
       // serialization
       toConfigNodes,
@@ -522,12 +526,6 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       canRedo: history.canRedo,
       clear: history.clear,
       reset: history.reset,
-
-      // Vue Flow views
-      requestNodes,
-      requestEdges,
-      responseNodes,
-      responseEdges,
 
       // validation helpers for UI
       isValidConnection,

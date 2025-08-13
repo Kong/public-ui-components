@@ -3,6 +3,251 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.62.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.61.1...@kong-ui-public/entities-plugins@9.62.0) (2025-08-13)
+
+
+### Features
+
+* **entities-plugins:** freeform - make non-required enum field clearable ([#2330](https://github.com/Kong/public-ui-components/issues/2330)) ([00545a6](https://github.com/Kong/public-ui-components/commit/00545a6eb05f5121eacc3beeb9d0d70679861272))
+
+
+
+
+
+## [9.61.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.61.0...@kong-ui-public/entities-plugins@9.61.1) (2025-08-12)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit several canvas issues ([#2326](https://github.com/Kong/public-ui-components/issues/2326)) ([2744104](https://github.com/Kong/public-ui-components/commit/27441048b32c310222f4685ae12b12b14f76dbf0))
+
+
+
+
+
+# [9.61.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.60.2...@kong-ui-public/entities-plugins@9.61.0) (2025-08-12)
+
+
+### Features
+
+* **entities-plugins:** datakit node select on create ([#2325](https://github.com/Kong/public-ui-components/issues/2325)) ([2c86d76](https://github.com/Kong/public-ui-components/commit/2c86d767993abf12aef035a8ab136618f0030209))
+* **entities-plugins:** done button for datakit modal ([#2324](https://github.com/Kong/public-ui-components/issues/2324)) ([dfdc536](https://github.com/Kong/public-ui-components/commit/dfdc536d8bb71fc0dcc7a9799c670de6c8220036))
+
+
+
+
+
+## [9.60.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.60.1...@kong-ui-public/entities-plugins@9.60.2) (2025-08-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.60.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.60.0...@kong-ui-public/entities-plugins@9.60.1) (2025-08-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.60.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.6...@kong-ui-public/entities-plugins@9.60.0) (2025-08-12)
+
+
+### Features
+
+* **entities-plugins:** datakit - name field validation ([#2317](https://github.com/Kong/public-ui-components/issues/2317)) ([c8906fd](https://github.com/Kong/public-ui-components/commit/c8906fd6a93463511a76b8efbd57d156d755c0c9))
+
+
+
+
+
+## [9.59.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.5...@kong-ui-public/entities-plugins@9.59.6) (2025-08-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.59.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.4...@kong-ui-public/entities-plugins@9.59.5) (2025-08-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit use cloneDeep from lodash, use nanoid ([#2319](https://github.com/Kong/public-ui-components/issues/2319)) ([14a6bf2](https://github.com/Kong/public-ui-components/commit/14a6bf291817b7c1837c85252875b02232773716))
+
+
+
+
+
+## [9.59.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.3...@kong-ui-public/entities-plugins@9.59.4) (2025-08-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - form ui bugs ([#2315](https://github.com/Kong/public-ui-components/issues/2315)) ([e995877](https://github.com/Kong/public-ui-components/commit/e9958777e28ff2c8d664f90ef7f74b17fe705ed0))
+
+
+
+
+
+## [9.59.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.2...@kong-ui-public/entities-plugins@9.59.3) (2025-08-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.59.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.1...@kong-ui-public/entities-plugins@9.59.2) (2025-08-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** improve datakit flow node styles, reduce warnings ([#2314](https://github.com/Kong/public-ui-components/issues/2314)) ([380f06f](https://github.com/Kong/public-ui-components/commit/380f06f74148c26795da5302d3a24f58a8897186))
+
+
+
+
+
+## [9.59.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.59.0...@kong-ui-public/entities-plugins@9.59.1) (2025-08-11)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.59.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.58.1...@kong-ui-public/entities-plugins@9.59.0) (2025-08-08)
+
+
+### Features
+
+* **entities-plugins:** datakit - static form data binding [KM-1460] ([#2307](https://github.com/Kong/public-ui-components/issues/2307)) ([1646f28](https://github.com/Kong/public-ui-components/commit/1646f284d21b0a68058a1e5dcb73df67a48e833c))
+
+
+
+
+
+## [9.58.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.58.0...@kong-ui-public/entities-plugins@9.58.1) (2025-08-08)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit clear all history after init ([#2308](https://github.com/Kong/public-ui-components/issues/2308)) ([27f2dd3](https://github.com/Kong/public-ui-components/commit/27f2dd3453d3a37986cfbaa3369e61eb63d69d82))
+
+
+
+
+
+# [9.58.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.57.0...@kong-ui-public/entities-plugins@9.58.0) (2025-08-08)
+
+
+### Features
+
+* **entities-plugins:** datakit remove nodes and edges upon deletion from canvas ([#2302](https://github.com/Kong/public-ui-components/issues/2302)) ([0e717df](https://github.com/Kong/public-ui-components/commit/0e717dfe72cecd51c3bb402468cdd785efb1325c))
+
+
+
+
+
+# [9.57.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.56.1...@kong-ui-public/entities-plugins@9.57.0) (2025-08-08)
+
+
+### Features
+
+* **entities-plugins:** datakit - data binding for 2 forms [KM-1460] ([#2303](https://github.com/Kong/public-ui-components/issues/2303)) ([fcff933](https://github.com/Kong/public-ui-components/commit/fcff9331895e450aca0ba872cda3cebbc6e229f4))
+
+
+
+
+
+## [9.56.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.56.0...@kong-ui-public/entities-plugins@9.56.1) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.56.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.55.0...@kong-ui-public/entities-plugins@9.56.0) (2025-08-07)
+
+
+### Features
+
+* **entities-plugins:** datakit - jq form data binding [KM-1460] ([#2297](https://github.com/Kong/public-ui-components/issues/2297)) ([944c401](https://github.com/Kong/public-ui-components/commit/944c4016435b17a4fbff3349d9d5ba2076b7e2e9))
+
+
+
+
+
+# [9.55.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.54.1...@kong-ui-public/entities-plugins@9.55.0) (2025-08-07)
+
+
+### Features
+
+* **entities-plugins:** datakit show valid handles in property nodes and update edges ([#2298](https://github.com/Kong/public-ui-components/issues/2298)) ([b4e5d66](https://github.com/Kong/public-ui-components/commit/b4e5d66e942e46f5ca0ca9fa8464b171f5ee5816))
+
+
+
+
+
+## [9.54.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.54.0...@kong-ui-public/entities-plugins@9.54.1) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.54.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.53.0...@kong-ui-public/entities-plugins@9.54.0) (2025-08-06)
+
+
+### Features
+
+* **entities-plugins:** datakit connect/disconnect edges ([#2290](https://github.com/Kong/public-ui-components/issues/2290)) ([0128659](https://github.com/Kong/public-ui-components/commit/01286594605c5356cff6253da4f4064b2afef676))
+
+
+
+
+
+# [9.53.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.52.0...@kong-ui-public/entities-plugins@9.53.0) (2025-08-06)
+
+
+### Features
+
+* **entities-plugins:** datakit - exit node form [KM-1460] ([#2288](https://github.com/Kong/public-ui-components/issues/2288)) ([5916198](https://github.com/Kong/public-ui-components/commit/5916198352f7ea2182d296195e0b8cb172382d1b))
+* **entities-plugins:** datakit auto-layout and store improvements ([#2285](https://github.com/Kong/public-ui-components/issues/2285)) ([8e4eb78](https://github.com/Kong/public-ui-components/commit/8e4eb78aa17ac39e50bf10467312877859abc62f))
+
+
+
+
+
+# [9.52.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.51.0...@kong-ui-public/entities-plugins@9.52.0) (2025-08-06)
+
+
+### Features
+
+* **entities-plugins:** datakit - property node form [KM-1460] ([#2287](https://github.com/Kong/public-ui-components/issues/2287)) ([e5a2d69](https://github.com/Kong/public-ui-components/commit/e5a2d697e0261e8f2c4f410fd8cefc618a740c7e))
+
+
+
+
+
+# [9.51.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.50.0...@kong-ui-public/entities-plugins@9.51.0) (2025-08-06)
+
+
+### Features
+
+* **entities-plugins:** datakit create/move/remove node ([#2284](https://github.com/Kong/public-ui-components/issues/2284)) ([bedab7c](https://github.com/Kong/public-ui-components/commit/bedab7ce79b2483821c61607451c748c177e83a7))
+
+
+
+
+
 # [9.50.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.49.0...@kong-ui-public/entities-plugins@9.50.0) (2025-08-06)
 
 

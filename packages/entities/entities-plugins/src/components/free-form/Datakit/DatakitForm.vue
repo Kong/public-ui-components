@@ -19,46 +19,47 @@
     </template>
 
     <template #default="formProps">
-      <div v-if="finalEditorMode === 'flow'">
-        <FlowEditor
-          :config="props.model.config"
-          :editing="props.isEditing"
-        />
-      </div>
-
       <Form
-        v-else-if="finalEditorMode === 'code'"
         v-bind="formProps"
         tag="div"
       >
-        <KAlert class="examples">
-          <div class="examples-content">
-            {{ t('plugins.free-form.datakit.description_example') }}
+        <div v-if="finalEditorMode === 'flow'">
+          <FlowEditor
+            :config="props.model.config"
+            :editing="props.isEditing"
+          />
+        </div>
 
-            <KButton
-              v-for="(_, key) in examples"
-              :key="key"
-              appearance="secondary"
-              size="small"
-              @click="handleExampleClick(key)"
-            >
-              {{ t(`plugins.free-form.datakit.examples.${key}`) }}
-            </KButton>
-          </div>
+        <div v-else-if="finalEditorMode === 'code'">
+          <KAlert class="examples">
+            <div class="examples-content">
+              {{ t('plugins.free-form.datakit.description_example') }}
 
-          <template #icon>
-            <SparklesIcon />
-          </template>
-        </KAlert>
+              <KButton
+                v-for="(_, key) in examples"
+                :key="key"
+                appearance="secondary"
+                size="small"
+                @click="handleExampleClick(key)"
+              >
+                {{ t(`plugins.free-form.datakit.examples.${key}`) }}
+              </KButton>
+            </div>
 
-        <CodeEditor
-          ref="code-editor"
-          class="code-editor"
-          :config="props.model.config"
-          :editing="props.isEditing"
-          @change="handleCodeChange"
-          @error="handleCodeError"
-        />
+            <template #icon>
+              <SparklesIcon />
+            </template>
+          </KAlert>
+
+          <CodeEditor
+            ref="code-editor"
+            class="code-editor"
+            :config="props.model.config"
+            :editing="props.isEditing"
+            @change="handleCodeChange"
+            @error="handleCodeError"
+          />
+        </div>
       </Form>
     </template>
 

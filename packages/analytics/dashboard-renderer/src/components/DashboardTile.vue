@@ -69,6 +69,11 @@
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLink }"
             />
             <KDropdownItem
+              v-if="hasZoomActions && !!requestsLink"
+              :data-testid="`chart-jump-to-requests-${tileId}`"
+              :item="{ label: i18n.t('jumpToRequests'), to: requestsLink }"
+            />
+            <KDropdownItem
               v-if="!('allowCsvExport' in definition.chart) || definition.chart.allowCsvExport"
               class="chart-export-button"
               :data-testid="`chart-csv-export-${tileId}`"
@@ -122,6 +127,7 @@
         v-if="componentData"
         v-bind="componentData.rendererProps"
         @chart-data="onChartData"
+        @view-requests="onViewRequests"
         @zoom-time-range="emit('zoom-time-range', $event)"
       />
     </div>
@@ -134,6 +140,7 @@ import {
   formatTime,
   type TileDefinition,
   TimePeriods,
+  getFieldDataSources,
 } from '@kong-ui-public/analytics-utilities'
 import { type Component, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
@@ -149,7 +156,7 @@ import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, FilterDatasource, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4, AllFilters } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
@@ -181,10 +188,13 @@ const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const exploreBaseUrl = ref('')
+const requestsBaseUrl = ref('')
+const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
 
 onMounted(async () => {
   // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
   exploreBaseUrl.value = await queryBridge?.exploreBaseUrl?.() ?? ''
+  requestsBaseUrl.value = await queryBridge?.requestsBaseUrl?.() ?? ''
 })
 
 watch(() => props.definition, async () => {
@@ -201,9 +211,8 @@ const exploreLink = computed(() => {
     return ''
   }
 
-  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
+  const filters = datasourceScopedFilters.value
   const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
-
   const exploreQuery: ExploreQuery | AiExploreQuery = {
     filters: filters,
     metrics: props.definition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
@@ -217,6 +226,20 @@ const exploreLink = computed(() => {
   const datasource = ['api_usage', 'llm_usage'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'api_usage'
 
   return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
+})
+
+const requestsLink = computed(() => {
+  if (!requestsBaseUrl.value || !props.definition.query || !canShowKebabMenu.value) {
+    return ''
+  }
+  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
+
+  const requestsQuery = buildRequestsQuery(
+    props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
+    filters,
+  )
+
+  return `${requestsBaseUrl.value}?q=${JSON.stringify(requestsQuery)}`
 })
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
@@ -301,6 +324,24 @@ const agedOutWarning = computed(() => {
   })
 })
 
+/**
+ * Derives the subset of context and tile query filters that is relevant for the tile's datasource.
+ *
+ * @returns Array of scoped filter objects to a datasource
+ */
+const datasourceScopedFilters = computed(() => {
+  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
+
+  // TODO: default to api_usage until datasource is made required
+  const datasource = props.definition?.query?.datasource ?? 'api_usage'
+
+  return filters.filter(f => {
+    const possibleSources = getFieldDataSources(f.field)
+
+    return possibleSources.some((ds: FilterDatasource) => datasource === ds)
+  })
+})
+
 const editTile = () => {
   emit('edit-tile', props.definition)
 }
@@ -323,6 +364,28 @@ const setExportModalVisibility = (val: boolean) => {
 
 const exportCsv = () => {
   setExportModalVisibility(true)
+}
+
+const buildRequestsQuery = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
+  return {
+    filter: filters,
+    timeframe: {
+      timePeriodsKey: timeRange.type === 'relative' ? timeRange.time_range : 'custom',
+      start: timeRange.type === 'absolute' ? timeRange.start : undefined,
+      end: timeRange.type === 'absolute' ? timeRange.end : undefined,
+    },
+  }
+}
+
+const onViewRequests = (timeRange: AbsoluteTimeRangeV4) => {
+  if (!requestsBaseUrl.value || !props.definition.query) {
+    return
+  }
+
+  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
+  const requestsQuery = buildRequestsQuery(timeRange, filters)
+
+  window.location.assign(`${requestsBaseUrl.value}?q=${JSON.stringify(requestsQuery)}`)
 }
 </script>
 

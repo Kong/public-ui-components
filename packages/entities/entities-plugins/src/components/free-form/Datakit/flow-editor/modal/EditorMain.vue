@@ -10,8 +10,8 @@
           {{ t('plugins.free-form.datakit.flow_editor.view_docs') }}
           <ExternalLinkIcon />
         </KButton>
-        <KButton>
-          {{ t('plugins.free-form.datakit.flow_editor.save') }}
+        <KButton @click="close">
+          {{ t('plugins.free-form.datakit.flow_editor.done') }}
         </KButton>
       </div>
     </header>
@@ -22,39 +22,19 @@
     >
       <EditorCanvas>
         <template #request>
-          <VueFlow
-            class="flow"
-            fit-view-on-init
-            :nodes="requestNodes"
-            @click.capture="onMaybeBackdropClick"
-            @node-click="onNodeClick"
-          >
-            <Background />
-            <Controls position="bottom-left" />
-
-            <!-- To not use the default node style -->
-            <template #node-flow="node">
-              <FlowNode :data="node.data" />
-            </template>
-          </VueFlow>
+          <EditorCanvasFlow
+            phase="request"
+            @click:backdrop="emit('click:backdrop')"
+            @click:node="emit('click:node', $event)"
+          />
         </template>
 
         <template #response>
-          <VueFlow
-            class="flow"
-            fit-view-on-init
-            :nodes="responseNodes"
-            @click.capture="onMaybeBackdropClick"
-            @node-click="onNodeClick"
-          >
-            <Background />
-            <Controls position="bottom-left" />
-
-            <!-- To not use the default node style -->
-            <template #node-flow="node">
-              <FlowNode :data="node.data" />
-            </template>
-          </VueFlow>
+          <EditorCanvasFlow
+            phase="response"
+            @click:backdrop="emit('click:backdrop')"
+            @click:node="emit('click:node', $event)"
+          />
         </template>
       </EditorCanvas>
     </div>
@@ -62,20 +42,15 @@
 </template>
 
 <script setup lang="ts">
+import type { NodeInstance } from '../../types'
+
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
-import { Background } from '@vue-flow/background'
-import { Controls } from '@vue-flow/controls'
-import { VueFlow, type NodeMouseEvent } from '@vue-flow/core'
-
 import english from '../../../../../locales/en.json'
-import FlowNode from '../node/FlowNode.vue'
-import { useEditorStore } from '../../composables'
-
+import { useEditorStore } from '../store/store'
 import EditorCanvas from './EditorCanvas.vue'
-
-import type { NodeInstance } from '../../types'
+import EditorCanvasFlow from './EditorCanvasFlow.vue'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -92,21 +67,10 @@ const emit = defineEmits<{
   'click:backdrop': []
 }>()
 
-const { requestNodes, responseNodes } = useEditorStore()
+const { modalOpen } = useEditorStore()
 
-const onMaybeBackdropClick = (event: MouseEvent) => {
-  if (event.target instanceof Element) {
-    // Ignore clicks on controls
-    if (event.target.closest('.vue-flow__controls')) {
-      return
-    }
-  }
-  emit('click:backdrop')
-}
-
-const onNodeClick = ({ event, node }: NodeMouseEvent) => {
-  event.stopPropagation()
-  emit('click:node', node.data)
+function close() {
+  modalOpen.value = false
 }
 </script>
 
@@ -137,13 +101,6 @@ const onNodeClick = ({ event, node }: NodeMouseEvent) => {
     flex-direction: column;
     height: 100%;
     width: 100%;
-  }
-
-  .flow {
-    :deep(.vue-flow__controls-button) {
-      // Ensure it works in both the sandbox and host apps
-      box-sizing: content-box;
-    }
   }
 }
 </style>

@@ -679,7 +679,7 @@
           "mode": "Flow Editor",
           "name": "Datakit Flow Editor",
           "cta": "Go to flow editor",
-          "save": "Save",
+          "done": "Done",
           "view_docs": "View Docs",
           "expand_panel": "Expand panel",
           "collapse_panel": "Collapse panel",
@@ -732,6 +732,7 @@
             }
           },
           "node_properties": {
+            "name": "Name",
             "Configuration": "Configuration",
             "input": {
               "placeholder": "Select output(s)",
@@ -752,6 +753,15 @@
               "value_name": "Value name",
               "value": "Value",
               "add_button": "Add a value"
+            },
+            "property": {
+              "get": "get",
+              "set": "set"
+            },
+            "errors": {
+              "name_empty": "Name cannot be empty",
+              "name_format": "Name must start with a letter or underscore and contain only letters, numbers, underscores, or hyphens",
+              "name_duplicate": "Node with name \"{name}\" already exists"
             }
           }
         },

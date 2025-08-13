@@ -11,6 +11,7 @@
     v-bind="fieldAttrs"
     v-model="fieldValue"
     class="ff-enum-field"
+    :clearable="!fieldAttrs.required"
     :data-testid="`ff-${field.path.value}`"
     :items="realItems"
     :kpop-attributes="{ 'data-testid': `${field.path.value}-items` }"

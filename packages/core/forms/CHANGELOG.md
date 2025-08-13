@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.15.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.15.2...@kong-ui-public/forms@4.15.3) (2025-08-11)
+
+
+### Bug Fixes
+
+* **forms:** xss vulnerability in plugin schema ([#2309](https://github.com/Kong/public-ui-components/issues/2309)) ([6cf93be](https://github.com/Kong/public-ui-components/commit/6cf93bef1b0557ce07850d56ed6296277e1505c2))
+
+
+
+
+
+## [4.15.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.15.1...@kong-ui-public/forms@4.15.2) (2025-08-11)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.15.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.15.0...@kong-ui-public/forms@4.15.1) (2025-08-07)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 # [4.15.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.14.0...@kong-ui-public/forms@4.15.0) (2025-08-06)
 
 

@@ -33,6 +33,10 @@ export interface AnalyticsBridge {
   // Async because there might need to be permissions checks.
   exploreBaseUrl?: () => Promise<string>
 
+  // Define the location of requests to enable jump-to-requests.
+  // Async because there might need to be permissions checks.
+  requestsBaseUrl?: () => Promise<string>
+
   // Dynamically provide certain components that aren't available in all environments
   fetchComponent?: (name: string) => Promise<Component>
 }

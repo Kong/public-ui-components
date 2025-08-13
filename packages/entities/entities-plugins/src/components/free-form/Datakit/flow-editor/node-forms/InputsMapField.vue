@@ -29,20 +29,24 @@
             :data-key-input="index"
             :data-testid="`ff-key-${field.path.value}.${index}`"
             :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input_name.placeholder')"
+            @change="handleInputsNameChange(entry)"
+            @focus="handleBeforeInputsNameChange(entry)"
           />
           <KSelect
             v-model="entry.value"
             class="ff-kv-field-entry-value"
+            clearable
             :data-testid="`ff-value-${field.path.value}.${index}`"
-            :items="[]"
+            :items="items"
             :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
+            @change="selectItem => handleInputsValueChange(entry, selectItem?.value ?? null)"
           />
         </div>
         <KButton
           appearance="none"
           :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
           icon
-          @click="removeEntry(entry.id)"
+          @click="handleRemoveEntry(entry)"
         >
           <CloseIcon />
         </KButton>
@@ -53,6 +57,7 @@
       <KButton
         appearance="tertiary"
         :data-testid="`ff-kv-add-btn-${field.path.value}`"
+        :disabled="!!addingEntryId"
         @click="handleAddClick"
       >
         <AddIcon />
@@ -63,27 +68,44 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, nextTick } from 'vue'
+import { useTemplateRef, nextTick, ref } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import useI18n from '../../../../../composables/useI18n'
 import { useKeyValueField } from '../../../shared/headless/useKeyValueField'
 import type {
   KeyValueFieldProps,
   KeyValueFieldEmits,
+  KVEntry,
 } from '../../../shared/headless/useKeyValueField'
+import type { FieldName, IdConnection } from '../../types'
+import type { InputOption } from '../composables/useNodeForm'
 
-const props = defineProps<KeyValueFieldProps>()
-const emit = defineEmits<KeyValueFieldEmits>()
+interface Props extends KeyValueFieldProps<FieldName, IdConnection> {
+  items: InputOption[]
+}
+
+interface Emits extends KeyValueFieldEmits {
+  'change:inputs': [name: FieldName, value: IdConnection | null]
+  'add:field': [name: FieldName, value?: IdConnection | null]
+  'remove:field': [name: FieldName]
+  'rename:field': [oldName: FieldName, newName: FieldName]
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
 
 const {
   entries,
   addEntry,
   removeEntry,
   field,
-} = useKeyValueField(props, emit)
+} = useKeyValueField<FieldName, IdConnection>(props, emit)
 
 const { i18n } = useI18n()
 const root = useTemplateRef('root')
+const addingEntryId = ref<string | null>(null)
+
+let fieldNameBeforeChange: FieldName
 
 async function focus(index: number, type: 'key' | 'value' = 'key') {
   if (!root.value) {
@@ -95,10 +117,44 @@ async function focus(index: number, type: 'key' | 'value' = 'key') {
 }
 
 function handleAddClick() {
-  addEntry()
+  const { id } = addEntry()
 
   const index = entries.value.findIndex(({ key }) => !key)
   focus(index === -1 ? entries.value.length - 1 : index)
+
+  addingEntryId.value = id
+}
+
+function handleRemoveEntry(entry: KVEntry<FieldName, IdConnection>) {
+  removeEntry(entry.id)
+  if (entry.id === addingEntryId.value) {
+    addingEntryId.value = null
+  }
+  if (entry.key.trim() !== '') { // only emit remove if the field has a name
+    emit('remove:field', entry.key)
+  }
+}
+
+function handleBeforeInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
+  fieldNameBeforeChange = entry.key
+}
+
+function handleInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
+  if (entry.id === addingEntryId.value) {
+    // add field
+    if (entry.key.trim() === '') return // skip if the field name is empty
+    emit('add:field', entry.key, entry.value)
+    addingEntryId.value = null
+  } else {
+    // rename field
+    emit('rename:field', fieldNameBeforeChange, entry.key)
+  }
+}
+
+function handleInputsValueChange(entry: KVEntry<FieldName, IdConnection>, value: IdConnection | null) {
+  // skip if the field hasn't been created
+  if (entry.id === addingEntryId.value) return
+  emit('change:inputs', entry.key, value)
 }
 </script>
 

@@ -2,6 +2,7 @@
   <EnumField
     v-if="getSchema('input')"
     clearable
+    enable-filtering
     :items="items"
     label="Inputs"
     name="input"
@@ -10,9 +11,14 @@
   />
 
   <InputsField
+    v-if="InputsField"
     :items="items"
+    :key-order="fieldNames"
     name="inputs"
-    @change:inputs="handleInputsChange"
+    @add:field="handleAddField"
+    @change:inputs="handleChangeInputs"
+    @remove:field="handleRemoveField"
+    @rename:field="handleRenameField"
   />
 </template>
 
@@ -24,19 +30,20 @@ import EnumField from '../../../shared/EnumField.vue'
 import InputsRecordField from './InputsRecordField.vue'
 import InputsMapField from './InputsMapField.vue'
 import useI18n from '../../../../../composables/useI18n'
-import type { InputOption } from './composables'
+import type { InputOption } from '../composables/useNodeForm'
 import type { FieldName, IdConnection } from '../../types'
 
 defineProps<{
   items: InputOption[]
+  fieldNames: FieldName[]
 }>()
 
 const emit = defineEmits<{
   'change:input': [value: IdConnection | null]
-  'change:inputs': [fieldName: FieldName, fieldValue: IdConnection | null]
-  addField: [fieldName: string]
-  removeField: [fieldName: string]
-  renameField: [fieldName: string]
+  'change:inputs': [name: FieldName, value: IdConnection | null]
+  'add:field': [name: FieldName, value?: IdConnection | null]
+  'remove:field': [name: FieldName]
+  'rename:field': [oldName: FieldName, newName: FieldName]
 }>()
 
 const { getSchema } = useFormShared()
@@ -53,7 +60,20 @@ function handleInputChange(value: null | InputOption) {
   emit('change:input', value ? value.value : null)
 }
 
-function handleInputsChange(fieldName: FieldName, fieldValue: IdConnection | null) {
-  emit('change:inputs', fieldName, fieldValue)
+function handleAddField(name: FieldName, value?: IdConnection | null) {
+  emit('add:field', name, value)
 }
+
+function handleChangeInputs(name: FieldName, value: IdConnection | null) {
+  emit('change:inputs', name, value)
+}
+
+function handleRemoveField(name: FieldName) {
+  emit('remove:field', name)
+}
+
+function handleRenameField(oldName: FieldName, newName: FieldName) {
+  emit('rename:field', oldName, newName)
+}
+
 </script>
