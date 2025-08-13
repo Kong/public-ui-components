@@ -20,8 +20,12 @@
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
       :data-testid="`ff-${field.path.value}`"
+      :error="!meta.isValid"
+      :error-message="meta.errors?.join(', ')"
       :model-value="fieldValue ?? ''"
       :multiline="multiline"
+      @blur="handleBlur"
+      @focus="handleFocus"
       @update:model-value="handleUpdate"
     >
       <template
@@ -52,13 +56,13 @@
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
-import { computed, inject, toRef, useAttrs } from 'vue'
+import { computed, inject, onMounted, toRef, useAttrs } from 'vue'
 import type { LabelAttributes } from '@kong/kongponents'
 import useI18n from '../../../composables/useI18n'
 import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from '../shared/utils'
-import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
+import { useField, useFieldAttrs, useFieldValidator, useIsAutoFocus, type ValidatorFns } from './composables'
 
 import type { StringFieldSchema } from 'src/types/plugins/form-schema'
 
@@ -79,6 +83,7 @@ interface StringFieldProps {
   showVaultSecretPicker?: boolean
   showPasswordMaskToggle?: boolean
   type?: string
+  validator?: ValidatorFns<string | null>
 }
 
 const {
@@ -97,13 +102,24 @@ const { value: fieldValue, ...field } = useField<string | null>(toRef(() => name
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const initialValue = fieldValue?.value
 
+const {
+  meta,
+  handleMount,
+  handleFocus,
+  handleChange,
+  handleBlur,
+} = useFieldValidator(field.path!, toRef(() => props.validator))
+
 function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && value !== initialValue) {
     fieldValue!.value = null
+    handleChange(null)
     emit('update:modelValue', null)
   } else {
-    fieldValue!.value = value.trim()
-    emit('update:modelValue', value.trim())
+    const normalizedValue = value.trim()
+    fieldValue!.value = normalizedValue
+    handleChange(normalizedValue)
+    emit('update:modelValue', normalizedValue)
   }
 }
 
@@ -135,6 +151,12 @@ const isAutoFocus = useIsAutoFocus(field.ancestors)
 const is1pIgnore = computed(() => {
   if (attrs['data-1p-ignore'] !== undefined) return attrs['data-1p-ignore']
   return utils.getName(name) === 'name'
+})
+
+onMounted(() => {
+  if (!field.error) {
+    handleMount(initialValue!)
+  }
 })
 </script>
 

@@ -16,7 +16,11 @@
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
       :data-testid="`ff-${field.path.value}`"
+      :error="!meta.isValid"
+      :error-message="meta.errors?.join(', ')"
       :model-value="rawInputValue ?? ''"
+      @blur="handleBlur"
+      @focus="handleFocus"
       @update:model-value="handleUpdate"
     >
       <template
@@ -33,12 +37,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef, useAttrs, watch } from 'vue'
+import { computed, onMounted, ref, toRef, useAttrs, watch } from 'vue'
 import type { LabelAttributes } from '@kong/kongponents'
 import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from './utils'
-import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
+import { useField, useFieldAttrs, useFieldValidator, useIsAutoFocus, type ValidatorFns } from './composables'
 import type { SetFieldSchema } from '../../../types/plugins/form-schema'
 
 defineOptions({
@@ -55,6 +59,7 @@ interface StringFieldProps {
   labelAttributes?: LabelAttributes
   multiline?: boolean
   type?: string
+  validator?: ValidatorFns<string[] | null>
 }
 
 const {
@@ -71,6 +76,14 @@ const noEmptyArray = computed(() => field.schema?.value?.len_min && field.schema
 
 const rawInputValue = ref('')
 
+const {
+  meta,
+  handleMount,
+  handleFocus,
+  handleChange,
+  handleBlur,
+} = useFieldValidator(field.path!, toRef(() => props.validator))
+
 function arrToStr(arr: string[]) {
   return arr.map(item => item.trim()).filter(Boolean).join(', ')
 }
@@ -84,6 +97,7 @@ function handleUpdate(value: string) {
   const values = strToArr(value)
   const finalValue = (!values.length && noEmptyArray.value) ? null : values
   fieldValue!.value = finalValue
+  handleChange(finalValue)
   emit('update:modelValue', finalValue)
 }
 
@@ -102,6 +116,12 @@ watch(fieldValue!, newValue => {
     rawInputValue.value = nv
   }
 }, { immediate: true })
+
+onMounted(() => {
+  if (!field.error) {
+    handleMount(fieldValue!.value)
+  }
+})
 </script>
 
 <style lang="scss" scoped>

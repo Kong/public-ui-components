@@ -546,3 +546,112 @@ export function useItemKeys<T>(ns: string, items: MaybeRefOrGetter<T[]>) {
 
   return { getKey }
 }
+
+type ValidatorEvent = 'onMount' | 'onChange' | 'onBlur'
+
+type FieldMetaState = {
+  /** after the user changes the field or blurs the field */
+  isTouched: boolean
+  /** after the field's value has been changed, even if it's been reverted to the default */
+  isDirty: boolean
+  /** after the field has been blurred */
+  isBlurred: boolean
+  /** whether the field's current value is the default value */
+  isDefaultValue: boolean
+  /** A boolean indicating if the field is valid */
+  isValid: boolean
+  /** An array of errors associated with the field */
+  errors: string[]
+  /** A map of errors associated with each validation event */
+  errorMap: Partial<Record<ValidatorEvent, string>>
+}
+
+type ValidationFnParam<TData> = {
+  value: TData
+  schema: UnionFieldSchema
+  path: string
+  meta: FieldMetaState
+}
+
+type ValidationFn<TData> = (param: ValidationFnParam<TData>) => string | undefined
+
+export type ValidatorFns<TData> = Partial<Record<ValidatorEvent, ValidationFn<TData>>>
+
+export function useFieldValidator<TData>(
+  fieldPath: MaybeRefOrGetter<string>,
+  validator?: MaybeRefOrGetter<ValidatorFns<TData> | undefined>,
+) {
+  const { getSchema } = useFormShared()
+  const schema = computed(() => getSchema(toValue(fieldPath)))
+  const errorMap = ref<Partial<Record<ValidatorEvent, string>>>({})
+
+  const currentValue = ref<TData | undefined>()
+  const defaultValue = ref<TData | undefined>()
+
+  const states = ref({
+    isTouched: false,
+    isDirty: false,
+    isBlurred: false,
+  })
+
+  const meta = computed<FieldMetaState>(() => {
+    const errors = Object.values(errorMap.value).filter(Boolean)
+    return {
+      isTouched: states.value.isTouched,
+      isDirty: states.value.isDirty,
+      isBlurred: states.value.isBlurred,
+      isDefaultValue: defaultValue.value === currentValue.value,
+      isValid: errors.length === 0,
+      errors,
+      errorMap: errorMap.value,
+    }
+  })
+
+  function validate(event: ValidatorEvent) {
+    if (!validator) return
+    const validationFn = toValue(validator)?.[event]
+    if (!validationFn) return
+
+    const error = validationFn({
+      value: currentValue.value!,
+      schema: toValue(schema)!,
+      path: toValue(fieldPath),
+      meta: toValue(meta),
+    })
+
+    if (error === undefined) {
+      errorMap.value[event] = undefined
+    } else {
+      errorMap.value[event] = error
+    }
+  }
+
+  function handleMount(value: TData) {
+    defaultValue.value = value
+    currentValue.value = value
+    validate('onMount')
+  }
+
+  function handleFocus() {
+    states.value.isTouched = true
+  }
+
+  function handleChange(value: TData) {
+    states.value.isDirty = true
+    currentValue.value = value
+    validate('onChange')
+  }
+
+  function handleBlur() {
+    states.value.isBlurred = true
+    validate('onBlur')
+  }
+
+  return {
+    meta,
+    handleMount,
+    handleFocus,
+    handleChange,
+    handleBlur,
+  }
+}

@@ -24,8 +24,11 @@
         :key="item.value"
         v-model:model-value="field.value.value"
         card-orientation="horizontal"
+        :error="!meta.isValid"
         :label="item.label"
         :selected-value="item.value"
+        @blur="handleBlur"
+        @focus="handleFocus"
         @update:model-value="onChange"
       />
     </div>
@@ -33,9 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRef } from 'vue'
+import { computed, onMounted, toRef } from 'vue'
 import { KRadio, type LabelAttributes, type SelectItem } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared } from './composables'
+import { useField, useFieldAttrs, useFieldValidator, useFormShared, type ValidatorFns } from './composables'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
@@ -45,6 +48,7 @@ interface EnumFieldProps {
   multiple?: boolean
   items?: SelectItem[]
   label?: string
+  validator?: ValidatorFns<number | string>
 }
 
 const emit = defineEmits<{
@@ -55,6 +59,15 @@ const { name, items, ...props } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
 const field = useField<number | string>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
+
+const {
+  meta,
+  handleMount,
+  handleFocus,
+  handleChange,
+  handleBlur,
+} = useFieldValidator(field.path!, toRef(() => props.validator))
+
 
 const realItems = computed<SelectItem[]>(() => {
   if (items) return items
@@ -68,8 +81,15 @@ const onChange = (v: any) => {
   if (field.value) {
     field.value.value = v
   }
+  handleChange(v)
   emit('update:modelValue', v)
 }
+
+onMounted(() => {
+  if (!field.error) {
+    handleMount(field.value.value)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
