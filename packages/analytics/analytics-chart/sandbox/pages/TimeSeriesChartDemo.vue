@@ -179,12 +179,15 @@
         :chart-data="(exploreResult)"
         :chart-options="analyticsChartOptions"
         :legend-position="legendPosition"
+        :requests-link="{
+          href: '#requests',
+        }"
         :show-annotations="showAnnotationsToggle"
         :show-legend-values="showLegendValuesToggle"
         :threshold="threshold"
         :timeseries-zoom="timeSeriesZoomToggle"
         tooltip-title="tooltip title"
-        @view-requests="eventLog += 'View requests for time range ' + JSON.stringify($event) + '\n'"
+        @select-chart-range="eventLog += 'Select chart range ' + JSON.stringify($event) + '\n'"
         @zoom-time-range="eventLog += 'Zoomed to ' + JSON.stringify($event) + '\n'"
       />
     </div>

@@ -58,6 +58,7 @@
         :type="(chartOptions.type as ('timeseries_line' | 'timeseries_bar'))"
         :zoom="timeseriesZoom"
         :zoom-action-items="zoomActionItems"
+        @select-chart-range="emit('select-chart-range', $event)"
         @zoom-time-range="(newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange)"
       />
       <StackedBarChart
@@ -95,18 +96,17 @@
 
 <script setup lang="ts">
 import composables from '../composables'
-import type { AnalyticsChartOptions, EnhancedLegendItem, TooltipEntry, ZoomActionItem } from '../types'
+import type { AnalyticsChartOptions, EnhancedLegendItem, ExternalLink, TooltipEntry, ZoomActionItem } from '../types'
 import { ChartLegendPosition } from '../enums'
 import StackedBarChart from './chart-types/StackedBarChart.vue'
 import DonutChart from './chart-types/DonutChart.vue'
-import { computed, inject, onMounted, provide, ref, toRef } from 'vue'
+import { computed, provide, toRef } from 'vue'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AbsoluteTimeRangeV4, AnalyticsBridge, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, ExploreAggregations, ExploreResultV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import { hasMillisecondTimestamps, defaultStatusCodeColors } from '../utils'
 import TimeSeriesChart from './chart-types/TimeSeriesChart.vue'
 import { KUI_COLOR_TEXT_WARNING, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { WarningIcon } from '@kong/icons'
-import { INJECT_QUERY_PROVIDER } from '../constants'
 
 interface ChartProps {
   chartData: ExploreResultV4
@@ -119,11 +119,12 @@ interface ChartProps {
   showLegendValues?: boolean
   showAnnotations?: boolean
   timeseriesZoom?: boolean
+  requestsLink?: ExternalLink
 }
 
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
-  (e: 'view-requests', newTimeRange: AbsoluteTimeRangeV4): void
+  (e: 'select-chart-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 
 const props = withDefaults(defineProps<ChartProps>(), {
@@ -136,16 +137,10 @@ const props = withDefaults(defineProps<ChartProps>(), {
   showLegendValues: true,
   showAnnotations: true,
   timeseriesZoom: false,
+  requestsLink: undefined,
 })
 
 const { i18n } = composables.useI18n()
-const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
-const requestsBaseUrl = ref('')
-
-onMounted(async () => {
-  // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
-  requestsBaseUrl.value = await queryBridge?.requestsBaseUrl?.() ?? ''
-})
 
 const computedChartData = computed(() => {
   return isTimeSeriesChart.value
@@ -338,9 +333,9 @@ const chartTooltipSortFn = computed(() => {
 const zoomActionItems = computed<ZoomActionItem[]>(() => {
   return [
     { label: i18n.t('zoom_action_items.zoom'), action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange) },
-    ...(requestsBaseUrl.value ? [{
+    ...(props.requestsLink ? [{
       label: i18n.t('zoom_action_items.view_requests'),
-      action: (newTimeRange: AbsoluteTimeRangeV4) => emit('view-requests', newTimeRange),
+      href: props.requestsLink.href,
     }] : []),
   ]
 })

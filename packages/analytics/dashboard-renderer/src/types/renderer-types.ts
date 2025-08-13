@@ -3,6 +3,7 @@ import type {
   TimeRangeV4,
   ValidDashboardQuery,
 } from '@kong-ui-public/analytics-utilities'
+import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
 export interface DashboardRendererContext {
   filters: AllFilters[]
@@ -24,4 +25,5 @@ export interface RendererProps<T> {
   chartOptions: T
   height: number
   refreshCounter: number
+  requestsLink?: ExternalLink
 }
