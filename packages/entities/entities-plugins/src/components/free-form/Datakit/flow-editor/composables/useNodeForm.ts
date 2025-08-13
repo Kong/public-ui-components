@@ -89,7 +89,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
 
   const setConfig = (commitNow = true) => {
     if (isGlobalStateUpdating) return
-    const { name, input, inputs, ...config } = getFormInnerData() as T
+    const { ...config } = getFormInnerData() as T
     replaceConfig(selectedNodeId.value, config, commitNow)
   }
 

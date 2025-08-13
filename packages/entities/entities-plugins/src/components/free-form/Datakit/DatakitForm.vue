@@ -25,38 +25,18 @@
       >
         <div v-if="finalEditorMode === 'flow'">
           <FlowEditor
-            :config="props.model.config"
+            :config="config"
             :editing="props.isEditing"
+            @change="handleConfigChange"
           />
         </div>
 
         <div v-else-if="finalEditorMode === 'code'">
-          <KAlert class="examples">
-            <div class="examples-content">
-              {{ t('plugins.free-form.datakit.description_example') }}
-
-              <KButton
-                v-for="(_, key) in examples"
-                :key="key"
-                appearance="secondary"
-                size="small"
-                @click="handleExampleClick(key)"
-              >
-                {{ t(`plugins.free-form.datakit.examples.${key}`) }}
-              </KButton>
-            </div>
-
-            <template #icon>
-              <SparklesIcon />
-            </template>
-          </KAlert>
-
           <CodeEditor
-            ref="code-editor"
             class="code-editor"
-            :config="props.model.config"
+            :config="config"
             :editing="props.isEditing"
-            @change="handleCodeChange"
+            @change="handleConfigChange"
             @error="handleCodeError"
           />
         </div>
@@ -71,9 +51,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef, inject } from 'vue'
-import { KAlert, KSegmentedControl } from '@kong/kongponents'
-import { SparklesIcon, DesignIcon, CodeblockIcon } from '@kong/icons'
+import { computed, inject, ref } from 'vue'
+import { KSegmentedControl } from '@kong/kongponents'
+import { DesignIcon, CodeblockIcon } from '@kong/icons'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../locales/en.json'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
@@ -81,7 +61,6 @@ import Form from '../shared/Form.vue'
 import FlowEditor from './flow-editor/FlowEditor.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
-import * as examples from './examples'
 import { FEATURE_FLAGS } from '../../../constants'
 
 import type { Component } from 'vue'
@@ -132,23 +111,23 @@ const description = computed(() => {
   }
 })
 
-// Code editor
+// Shared
 
-const codeEditor = useTemplateRef('code-editor')
+const config = ref(props.model.config)
 
-function handleExampleClick(example: keyof typeof examples) {
-  codeEditor.value?.setExampleCode(example)
-}
+function handleConfigChange(newConfig: unknown) {
+  config.value = newConfig
 
-function handleCodeChange(config: any) {
   props.onFormChange({
-    config,
+    config: newConfig,
   })
   props.onValidityChange?.({
     model: 'config',
     valid: true,
   })
 }
+
+// Code editor
 
 function handleCodeError(msg: string) {
   props.onValidityChange?.({
@@ -158,20 +137,3 @@ function handleCodeError(msg: string) {
   })
 }
 </script>
-
-<style lang="scss" scoped>
-.dk-form {
-  .code-editor {
-    height: 684px;
-  }
-
-  .examples {
-    margin-bottom: $kui-space-70;
-  }
-
-  .examples-content {
-    display: flex;
-    gap: $kui-space-40;
-  }
-}
-</style>

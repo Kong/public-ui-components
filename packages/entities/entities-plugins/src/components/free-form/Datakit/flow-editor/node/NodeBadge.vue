@@ -1,7 +1,7 @@
 <template>
   <KBadge
     :appearance="appearance"
-    size="small"
+    :size="size"
   >
     <template #icon>
       <component :is="icon" />
@@ -14,11 +14,11 @@
 import { computed } from 'vue'
 import type { NodeType } from '../../types'
 import { CONFIG_NODE_META_MAP, getNodeTypeName, isImplicitType } from './node'
-import type { BadgeAppearance } from '@kong/kongponents'
+import type { BadgeAppearance, BadgeSize } from '@kong/kongponents'
 
 const { type } = defineProps<{
   type: NodeType
-  condensed?: boolean
+  size?: BadgeSize
 }>()
 
 const icon = computed(() => {
