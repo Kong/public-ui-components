@@ -52,11 +52,11 @@ export class DragSelectPlugin implements Plugin {
   beforeInit(chart: Chart) {
     this._chart = chart
     const canvas = chart.canvas
-    const rect = canvas.getBoundingClientRect()
     let dragInitiated = false
 
     const onMouseDown = (event: MouseEvent) => {
       this._dragTimeout = window.setTimeout(() => {
+        const rect = canvas.getBoundingClientRect()
         this._isDragging = true
         this._clearSelectionArea = false
         dragInitiated = true
@@ -65,6 +65,7 @@ export class DragSelectPlugin implements Plugin {
     }
 
     const onMouseMove = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect()
       if (dragInitiated && this._isDragging) {
         this._endX = event.clientX - rect.left
         dispatchEvent('dragSelectMove', chart, this)
@@ -73,6 +74,7 @@ export class DragSelectPlugin implements Plugin {
     }
 
     const onMouseUp = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect()
       clearTimeout(this._dragTimeout)
       if (dragInitiated && this._isDragging) {
         this._endX = event.clientX - rect.left

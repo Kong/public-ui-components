@@ -33,7 +33,7 @@
           @duplicate-tile="onDuplicateTile(tile)"
           @edit-tile="onEditTile(tile)"
           @remove-tile="onRemoveTile(tile)"
-          @zoom-time-range="emit('zoom-time-range', $event)"
+          @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
         />
       </template>
     </component>
@@ -41,9 +41,8 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
+import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile, TileZoomEvent } from '../types'
 import type {
-  AbsoluteTimeRangeV4,
   AllFilters,
   AnalyticsBridge,
   DashboardConfig,
@@ -74,7 +73,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
-  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
+  (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
 }>()
 
 const model = defineModel<DashboardConfig>({ required: true })
@@ -195,7 +194,7 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
 
   // Check if the host app has provided an event handler for zooming.
   // If there's no handler, disable zooming -- it won't do anything.
-  const zoomable = !!getCurrentInstance()?.vnode?.props?.onZoomTimeRange
+  const zoomable = !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
 
   return {
     filters,

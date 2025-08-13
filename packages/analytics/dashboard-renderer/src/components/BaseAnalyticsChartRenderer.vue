@@ -54,7 +54,7 @@ const emit = defineEmits<{
 }>()
 const { i18n } = composables.useI18n()
 const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-const hasFinegrainedAbsoluteTimerangeAccess = evaluateFeatureFlag('explore-v4-fine-granularity', false)
+const hasZoomOnAllTiles = evaluateFeatureFlag('ma-4135-allow-zooming-all-dashboard-tiles', false)
 
 const options = computed((): AnalyticsChartOptions => ({
   type: props.chartOptions.type,
@@ -63,7 +63,12 @@ const options = computed((): AnalyticsChartOptions => ({
   threshold: props.chartOptions.threshold,
 }))
 
-const timeseriesZoom = computed(() => hasFinegrainedAbsoluteTimerangeAccess && props.context.zoomable && !props.query.time_range)
+const timeseriesZoom = computed(() => {
+  if (hasZoomOnAllTiles) {
+    return props.context.zoomable
+  }
+  return props.context.zoomable && !props.query.time_range
+})
 
 const editTile = () => {
   emit('edit-tile')
