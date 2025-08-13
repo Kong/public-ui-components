@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.10.3...@kong-ui-public/entities-certificates@3.10.4) (2025-08-13)
+
+
+### Bug Fixes
+
+* **@babel/types:** v7.28.2 ([#2331](https://github.com/Kong/public-ui-components/issues/2331)) ([f06a38f](https://github.com/Kong/public-ui-components/commit/f06a38fe235f29147eb5895725e6be7cd7565943))
+
+
+
+
+
 ## [3.10.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.10.2...@kong-ui-public/entities-certificates@3.10.3) (2025-08-11)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.2.0...@kong-ui-public/document-viewer@2.2.1) (2025-08-13)
+
+
+### Bug Fixes
+
+* **@babel/types:** v7.28.2 ([#2331](https://github.com/Kong/public-ui-components/issues/2331)) ([f06a38f](https://github.com/Kong/public-ui-components/commit/f06a38fe235f29147eb5895725e6be7cd7565943))
+
+
+
+
+
 # [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/document-viewer@2.1.74...@kong-ui-public/document-viewer@2.2.0) (2025-08-06)
 
 
