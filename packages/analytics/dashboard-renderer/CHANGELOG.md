@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.4.7...@kong-ui-public/dashboard-renderer@7.0.0) (2025-08-13)
+
+
+### Bug Fixes
+
+* **ma-4135:** allow zooming on all tiles behind FF ([#2328](https://github.com/Kong/public-ui-components/issues/2328)) ([15d1aae](https://github.com/Kong/public-ui-components/commit/15d1aae35681511b130652ff0acd9ec025ebea34))
+
+
+### BREAKING CHANGES
+
+* **ma-4135:** zoome-time-range event signature changed
+
+* fix: bug where zoom area no longer highlights after chart is moved in the dom
+
+* fix: rename emit to tile-timerange-zoom
+
+
+
+
+
 ## [6.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.4.6...@kong-ui-public/dashboard-renderer@6.4.7) (2025-08-13)
 
 
