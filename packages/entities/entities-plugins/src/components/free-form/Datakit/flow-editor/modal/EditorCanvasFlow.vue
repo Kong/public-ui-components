@@ -1,7 +1,7 @@
 <template>
   <div
     ref="flow-wrapper"
-    class="flow-wrapper"
+    class="dk-flow-wrapper"
   >
     <VueFlow
       :id="flowId"
@@ -10,10 +10,8 @@
       fit-view-on-init
       :multi-selection-key-code="null"
       :nodes="nodes"
-      @click="onMaybeBackdropClick"
       @dragover.prevent
       @drop="(e: DragEvent) => onDrop(e)"
-      @node-click="onNodeClick"
       @nodes-initialized="onNodesInitializes"
     >
       <Background />
@@ -35,13 +33,13 @@
 </template>
 
 <script setup lang="ts">
-import type { DragPayload, NodeInstance, NodePhase } from '../../types'
+import type { DragPayload, NodeId, NodePhase } from '../../types'
 
 import { SparklesIcon } from '@kong/icons'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import { VueFlow, type NodeMouseEvent } from '@vue-flow/core'
-import { ref, useId, useTemplateRef } from 'vue'
+import { VueFlow } from '@vue-flow/core'
+import { nextTick, ref, useId, useTemplateRef } from 'vue'
 
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
 import useFlow from '../composables/useFlow'
@@ -64,16 +62,17 @@ const flowId = `${uniqueId}-${props.phase}`
 
 const { vueFlowStore, editorStore, nodes, edges, autoLayout } = useFlow(props.phase, flowId)
 const { addNode, clear: historyClear } = editorStore
-const { project, vueFlowRef } = vueFlowStore
+const { project, vueFlowRef, addSelectedNodes, getNodes } = vueFlowStore
 
-const emit = defineEmits<{
-  'click:node': [node: NodeInstance]
-  'click:backdrop': []
-}>()
+const { selectNode: selectStoreNode } = useEditorStore()
 
-const { selectNode } = useEditorStore()
+async function selectNode(nodeId?: NodeId) {
+  selectStoreNode(nodeId)
+  await nextTick()
+  addSelectedNodes(getNodes.value.filter((n) => n.data.id === nodeId))
+}
 
-const onDrop = (e: DragEvent) => {
+async function onDrop(e: DragEvent) {
   const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
   if (!data) return
 
@@ -105,21 +104,6 @@ const onDrop = (e: DragEvent) => {
   selectNode(nodeId)
 }
 
-function onNodeClick({ event, node }: NodeMouseEvent) {
-  event.stopPropagation()
-  emit('click:node', node.data)
-}
-
-function onMaybeBackdropClick(event: MouseEvent) {
-  if (event.target instanceof Element) {
-    // Ignore clicks on controls
-    if (event.target.closest('.vue-flow__controls')) {
-      return
-    }
-  }
-  emit('click:backdrop')
-}
-
 function onNodesInitializes() {
   if (!initialLayoutTriggered.value) {
     initialLayoutTriggered.value = true
@@ -140,7 +124,7 @@ function handleAutoLayout() {
 </script>
 
 <style lang="scss" scoped>
-.flow-wrapper {
+.dk-flow-wrapper {
   height: 100%;
   width: 100%;
 

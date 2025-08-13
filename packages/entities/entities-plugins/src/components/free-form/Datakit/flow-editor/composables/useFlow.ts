@@ -1,5 +1,4 @@
 import type { Node as DagreNode } from '@dagrejs/dagre'
-
 import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
 
 import dagre from '@dagrejs/dagre'
@@ -51,6 +50,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     state,
     commit: historyCommit,
     moveNode,
+    selectNode,
     removeNode,
     getNodeById,
     connectEdge,
@@ -134,6 +134,14 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
 
   // Only triggered by canvas-originated changes
   onNodesChange((changes) => {
+    changes
+      .filter((change) => change.type === 'select')
+      // deselected changes come first
+      .sort((a, b) => (a.selected === b.selected ? 0 : a.selected ? 1 : -1))
+      .forEach((change) => {
+        selectNode(change.selected ? (change.id as NodeId) : undefined)
+      })
+
     changes.forEach((change) => {
       if (change.type === 'remove') {
         removeNode(change.id as NodeId, true)

@@ -8,10 +8,11 @@ import type {
   MakeNodeInstancePayload,
   NodeInstance,
   NodeName,
+  NodePhase,
   NodeType,
   UINode,
 } from '../../types'
-import { isImplicitName } from '../node/node'
+import { isImplicitName, isImplicitType } from '../node/node'
 import {
   createId,
   clone,
@@ -142,11 +143,7 @@ export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance
     id: createId('node'),
     type,
     name: name ?? (type as ImplicitNodeName),
-    phase:
-      phase ??
-      (type === 'request' || type === 'service_request'
-        ? 'request'
-        : 'response'),
+    phase: phase ?? 'request',
     position: position ?? { x: 0, y: 0 },
     expanded: {},
     fields: {
@@ -155,6 +152,13 @@ export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance
     },
     config: config ? clone(config) : {},
   }
+}
+
+function getDefaultPhase(type: NodeType): NodePhase {
+  if (isImplicitType(type)) {
+    return type === 'request' || type === 'service_request' ? 'request' : 'response'
+  }
+  return 'request'
 }
 
 export function buildNodeInstance(
@@ -166,10 +170,7 @@ export function buildNodeInstance(
     type,
     name: configNode?.name,
     phase:
-      uiNode?.phase ??
-      (type === 'request' || type === 'service_request'
-        ? 'request'
-        : 'response'),
+      uiNode?.phase ?? getDefaultPhase(type),
     position: uiNode?.position,
     fields: mergeFieldsFromConfigAndUI(configNode, uiNode),
     config: configNode ? extractConfig(configNode) : undefined,
@@ -197,6 +198,8 @@ export function collectConnectionsFromConfigNode(
 
   if (configNode.inputs) {
     for (const [toFieldName, connection] of Object.entries(configNode.inputs)) {
+      if (!connection) continue
+
       const { nodeName, fieldName } = parseNameConnection(connection)
       if (nodeName) {
         out.push({
@@ -219,6 +222,8 @@ export function collectConnectionsFromConfigNode(
     for (const [fromFieldName, connection] of Object.entries(
       configNode.outputs,
     )) {
+      if (!connection) continue
+
       const { nodeName, fieldName } = parseNameConnection(connection)
       if (nodeName) {
         out.push({
