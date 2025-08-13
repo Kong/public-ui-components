@@ -51,8 +51,8 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1(@types/node@18.19.64)(typescript@5.6.3)
       '@evilmartians/lefthook':
-        specifier: ^1.8.1
-        version: 1.8.2
+        specifier: ^1.12.2
+        version: 1.12.2
       '@kong/design-tokens':
         specifier: 'catalog:'
         version: 1.18.0
@@ -1925,8 +1925,8 @@ packages:
     resolution: {integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@evilmartians/lefthook@1.8.2':
-    resolution: {integrity: sha512-SZdQk3W9q7tcJwnSwEMUubQqVIK7SHxv52hEAnV7o3nPI+xKcmd+rN0hZIJg07wjBaJRAjzdvoQySKQQYPW5Qw==}
+  '@evilmartians/lefthook@1.12.2':
+    resolution: {integrity: sha512-PQ7ZE08JiRNWydJpDeVijg8GjoTFiXQTy5/mVXf5U7epNZWYUEfnwjfXFa+HvsegodQcTenl05twrRxB/vOR8Q==}
     cpu: [x64, arm64, ia32]
     os: [darwin, linux, win32]
     hasBin: true
@@ -10579,7 +10579,7 @@ snapshots:
       '@eslint/core': 0.13.0
       levn: 0.4.1
 
-  '@evilmartians/lefthook@1.8.2': {}
+  '@evilmartians/lefthook@1.12.2': {}
 
   '@floating-ui/core@1.7.3':
     dependencies:
