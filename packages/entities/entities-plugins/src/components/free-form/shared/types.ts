@@ -1,4 +1,5 @@
-import type { ComponentPublicInstance, Ref } from 'vue'
+import type { UnionFieldSchema } from '../../../types/plugins/form-schema'
+import type { ComponentPublicInstance, DeepReadonly, Ref } from 'vue'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -116,3 +117,34 @@ export type PartialNotification = {
 
 // Global action that any field can trigger
 export type GlobalAction = 'notify'
+
+export type ValidatorEvent = 'onMount' | 'onChange' | 'onBlur'
+
+export type FieldMetaState = {
+  /** after the user changes the field or blurs the field */
+  isTouched: boolean
+  /** after the field's value has been changed, even if it's been reverted to the default */
+  isDirty: boolean
+  /** after the field has been blurred */
+  isBlurred: boolean
+  /** whether the field's current value is the default value */
+  isDefaultValue: boolean
+  /** A boolean indicating if the field is valid */
+  isValid: boolean
+  /** An array of errors associated with the field */
+  errors: string[]
+  /** A map of errors associated with each validation event */
+  errorMap: Partial<Record<ValidatorEvent, string>>
+}
+
+export type ValidationFnParam<TData> = {
+  value: TData
+  schema: UnionFieldSchema
+  path: string
+  name: string
+  meta: DeepReadonly<FieldMetaState>
+}
+
+export type ValidationFn<TData> = (param: ValidationFnParam<TData>) => string | undefined
+
+export type ValidatorFns<TData> = Partial<Record<ValidatorEvent, ValidationFn<TData>>>

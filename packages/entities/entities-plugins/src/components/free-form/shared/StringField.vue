@@ -62,9 +62,10 @@ import useI18n from '../../../composables/useI18n'
 import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from '../shared/utils'
-import { useField, useFieldAttrs, useFieldValidator, useIsAutoFocus, type ValidatorFns } from './composables'
+import { useField, useFieldAttrs, useFieldValidator, useIsAutoFocus } from './composables'
 
 import type { StringFieldSchema } from 'src/types/plugins/form-schema'
+import type { ValidatorFns } from './types'
 
 defineOptions({
   inheritAttrs: false,
@@ -113,12 +114,12 @@ const {
 function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && value !== initialValue) {
     fieldValue!.value = null
-    handleChange(null)
+    handleChange()
     emit('update:modelValue', null)
   } else {
     const normalizedValue = value.trim()
     fieldValue!.value = normalizedValue
-    handleChange(normalizedValue)
+    handleChange()
     emit('update:modelValue', normalizedValue)
   }
 }
@@ -153,11 +154,7 @@ const is1pIgnore = computed(() => {
   return utils.getName(name) === 'name'
 })
 
-onMounted(() => {
-  if (!field.error) {
-    handleMount(initialValue!)
-  }
-})
+onMounted(() => handleMount())
 </script>
 
 <style lang="scss" scoped>

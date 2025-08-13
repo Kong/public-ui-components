@@ -1,11 +1,11 @@
-import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type DeepReadonly, type MaybeRefOrGetter, type Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set, uniqueId } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
-import type { FormConfig, ResetLabelPathRule } from './types'
+import type { FieldMetaState, FormConfig, ResetLabelPathRule, ValidatorEvent, ValidatorFns } from './types'
 import { capitalize } from 'lodash-es'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
@@ -547,36 +547,6 @@ export function useItemKeys<T>(ns: string, items: MaybeRefOrGetter<T[]>) {
   return { getKey }
 }
 
-type ValidatorEvent = 'onMount' | 'onChange' | 'onBlur'
-
-type FieldMetaState = {
-  /** after the user changes the field or blurs the field */
-  isTouched: boolean
-  /** after the field's value has been changed, even if it's been reverted to the default */
-  isDirty: boolean
-  /** after the field has been blurred */
-  isBlurred: boolean
-  /** whether the field's current value is the default value */
-  isDefaultValue: boolean
-  /** A boolean indicating if the field is valid */
-  isValid: boolean
-  /** An array of errors associated with the field */
-  errors: string[]
-  /** A map of errors associated with each validation event */
-  errorMap: Partial<Record<ValidatorEvent, string>>
-}
-
-type ValidationFnParam<TData> = {
-  value: TData
-  schema: UnionFieldSchema
-  path: string
-  meta: FieldMetaState
-}
-
-type ValidationFn<TData> = (param: ValidationFnParam<TData>) => string | undefined
-
-export type ValidatorFns<TData> = Partial<Record<ValidatorEvent, ValidationFn<TData>>>
-
 export function useFieldValidator<TData>(
   fieldPath: MaybeRefOrGetter<string>,
   validator?: MaybeRefOrGetter<ValidatorFns<TData> | undefined>,
@@ -584,9 +554,10 @@ export function useFieldValidator<TData>(
   const { getSchema } = useFormShared()
   const schema = computed(() => getSchema(toValue(fieldPath)))
   const errorMap = ref<Partial<Record<ValidatorEvent, string>>>({})
+  const { value } = useFormData<TData>(fieldPath)
 
-  const currentValue = ref<TData | undefined>()
-  const defaultValue = ref<TData | undefined>()
+  const currentValue = computed<TData | undefined>(() => value.value)
+  const defaultValue = ref<TData | undefined>(value.value)
 
   const states = ref({
     isTouched: false,
@@ -611,12 +582,14 @@ export function useFieldValidator<TData>(
     if (!validator) return
     const validationFn = toValue(validator)?.[event]
     if (!validationFn) return
+    clearErrors()
 
     const error = validationFn({
       value: currentValue.value!,
       schema: toValue(schema)!,
       path: toValue(fieldPath),
       meta: toValue(meta),
+      name: utils.getName(toValue(fieldPath)),
     })
 
     if (error === undefined) {
@@ -626,9 +599,8 @@ export function useFieldValidator<TData>(
     }
   }
 
-  function handleMount(value: TData) {
+  function handleMount() {
     defaultValue.value = value
-    currentValue.value = value
     validate('onMount')
   }
 
@@ -636,9 +608,8 @@ export function useFieldValidator<TData>(
     states.value.isTouched = true
   }
 
-  function handleChange(value: TData) {
+  function handleChange() {
     states.value.isDirty = true
-    currentValue.value = value
     validate('onChange')
   }
 
@@ -647,11 +618,16 @@ export function useFieldValidator<TData>(
     validate('onBlur')
   }
 
+  function clearErrors() {
+    errorMap.value = {}
+  }
+
   return {
     meta,
     handleMount,
     handleFocus,
     handleChange,
     handleBlur,
+    clearErrors,
   }
 }
