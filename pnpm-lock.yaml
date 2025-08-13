@@ -514,8 +514,8 @@ importers:
         specifier: ^9.2.23
         version: 9.2.23
       nanospinner:
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: ^1.2.2
+        version: 1.2.2
       node-emoji:
         specifier: ^2.2.0
         version: 2.2.0
@@ -7372,8 +7372,8 @@ packages:
     engines: {node: ^18 || >=20}
     hasBin: true
 
-  nanospinner@1.1.0:
-    resolution: {integrity: sha512-yFvNYMig4AthKYfHFl1sLj7B2nkHL4lzdig4osvl9/LdGbXwrdFRoqBS98gsEsOakr0yH+r5NZ/1Y9gdVB8trA==}
+  nanospinner@1.2.2:
+    resolution: {integrity: sha512-Zt/AmG6qRU3e+WnzGGLuMCEAO/dAu45stNbHY223tUxldaDAeE+FxSPsd9Q+j+paejmm0ZbrNVs5Sraqy3dRxA==}
 
   napi-build-utils@1.0.2:
     resolution: {integrity: sha512-ONmRUqK7zj7DWX0D9ADe03wbwOBZxNAfF20PlGfCWQcD3+/MakShIHrMqx9YwPTfxDdF1zLeL+RGZiR9kGMLdg==}
@@ -17575,7 +17575,7 @@ snapshots:
 
   nanoid@5.1.5: {}
 
-  nanospinner@1.1.0:
+  nanospinner@1.2.2:
     dependencies:
       picocolors: 1.1.1
 
