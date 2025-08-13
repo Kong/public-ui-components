@@ -10,7 +10,7 @@ export default {
     konnect: {
       getServices: `${konnectBaseApiUrl}/services`,
       getCertificates: `${konnectBaseApiUrl}/certificates`,
-      validate: `${konnectBaseApiUrl}/v1/schemas/json/upstream/validate`,
+      validate: `${konnectBaseApiUrl}/schemas/upstreams/validate`,
       create: `${konnectBaseApiUrl}/upstreams`,
       edit: `${konnectBaseApiUrl}/upstreams/{id}`,
     },
