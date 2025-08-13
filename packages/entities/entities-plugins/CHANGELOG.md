@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.62.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.61.1...@kong-ui-public/entities-plugins@9.62.0) (2025-08-13)
+
+
+### Features
+
+* **entities-plugins:** freeform - make non-required enum field clearable ([#2330](https://github.com/Kong/public-ui-components/issues/2330)) ([00545a6](https://github.com/Kong/public-ui-components/commit/00545a6eb05f5121eacc3beeb9d0d70679861272))
+
+
+
+
+
 ## [9.61.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.61.0...@kong-ui-public/entities-plugins@9.61.1) (2025-08-12)
 
 
