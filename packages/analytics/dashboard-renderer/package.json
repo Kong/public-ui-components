@@ -78,12 +78,12 @@
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "catalog:",
-    "swrv": "^1.0.4",
+    "swrv": "^1.1.0",
     "vue": "catalog:"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "gridstack": "^11.3.0",
+    "gridstack": "^11.5.1",
     "p-queue": "^8.1.0"
   }
 }
