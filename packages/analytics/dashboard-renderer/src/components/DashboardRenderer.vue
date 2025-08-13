@@ -41,9 +41,8 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile } from '../types'
+import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile, TileZoomEvent } from '../types'
 import type {
-  AbsoluteTimeRangeV4,
   AllFilters,
   AnalyticsBridge,
   DashboardConfig,
@@ -74,7 +73,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: GridTile<TileDefinition>): void
-  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
+  (e: 'zoom-time-range', newTimeRange: TileZoomEvent): void
 }>()
 
 const model = defineModel<DashboardConfig>({ required: true })

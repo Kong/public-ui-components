@@ -128,13 +128,13 @@
         v-bind="componentData.rendererProps"
         @chart-data="onChartData"
         @select-chart-range="onSelectChartRange"
-        @zoom-time-range="emit('zoom-time-range', $event)"
+        @zoom-time-range="onZoom"
       />
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import type { DashboardRendererContextInternal } from '../types'
+import type { DashboardRendererContextInternal, TileZoomEvent } from '../types'
 import {
   type DashboardTileType,
   formatTime,
@@ -179,7 +179,7 @@ const emit = defineEmits<{
   (e: 'edit-tile', tile: TileDefinition): void
   (e: 'duplicate-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
-  (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
+  (e: 'zoom-time-range', newTimeRange: TileZoomEvent): void
 }>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
@@ -367,6 +367,14 @@ const setExportModalVisibility = (val: boolean) => {
 
 const exportCsv = () => {
   setExportModalVisibility(true)
+}
+
+const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
+  const zoomEvent: TileZoomEvent = {
+    tileId: props.tileId.toString(),
+    timeRange: newTimeRange,
+  }
+  emit('zoom-time-range', zoomEvent)
 }
 
 const buildRequestsQuery = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
