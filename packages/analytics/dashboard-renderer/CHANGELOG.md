@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.4.6...@kong-ui-public/dashboard-renderer@6.4.7) (2025-08-13)
+
+
+### Bug Fixes
+
+* make view requests a link in zoom actions ([#2327](https://github.com/Kong/public-ui-components/issues/2327)) ([c4af38c](https://github.com/Kong/public-ui-components/commit/c4af38cbcd5661d9771fe52fea2c01039c68126a))
+
+
+
+
+
 ## [6.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@6.4.5...@kong-ui-public/dashboard-renderer@6.4.6) (2025-08-11)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
