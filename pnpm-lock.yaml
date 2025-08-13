@@ -277,8 +277,8 @@ importers:
         specifier: ^4.6.0
         version: 4.6.0
       papaparse:
-        specifier: ^5.4.1
-        version: 5.4.1
+        specifier: ^5.5.3
+        version: 5.5.3
       vue:
         specifier: 'catalog:'
         version: 3.5.13(typescript@5.9.2)
@@ -7707,8 +7707,8 @@ packages:
     engines: {node: ^16.14.0 || >=18.0.0}
     hasBin: true
 
-  papaparse@5.4.1:
-    resolution: {integrity: sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==}
+  papaparse@5.5.3:
+    resolution: {integrity: sha512-5QvjGxYVjxO59MGU2lHVYpRWBBtKHnlIAcSe1uNFCkkptUh63NFRj0FJQm7nR67puEruUci/ZkjmEFrjCAyP4A==}
 
   parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
@@ -17988,7 +17988,7 @@ snapshots:
       - bluebird
       - supports-color
 
-  papaparse@5.4.1: {}
+  papaparse@5.5.3: {}
 
   parent-module@1.0.1:
     dependencies:
