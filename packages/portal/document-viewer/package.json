@@ -46,7 +46,7 @@
     "@kong/design-tokens": "catalog:",
     "@kong/kongponents": "catalog:",
     "@types/prismjs": "^1.26.5",
-    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "@vitejs/plugin-vue-jsx": "^4.2.0",
     "vue": "catalog:"
   },
   "dependencies": {
