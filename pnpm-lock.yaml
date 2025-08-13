@@ -388,8 +388,8 @@ importers:
         specifier: workspace:^
         version: link:../../core/core
       gridstack:
-        specifier: ^11.3.0
-        version: 11.3.0
+        specifier: ^11.5.1
+        version: 11.5.1
       p-queue:
         specifier: ^8.1.0
         version: 8.1.0
@@ -5926,8 +5926,8 @@ packages:
     resolution: {integrity: sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==}
     engines: {node: '>=6.0'}
 
-  gridstack@11.3.0:
-    resolution: {integrity: sha512-Z0eRovKcZTRTs3zetJwjO6CNwrgIy845WfOeZGk8ybpeMCE8fMA8tScyKU72Y2M6uGHkjgwnjflglvPiv+RcBQ==}
+  gridstack@11.5.1:
+    resolution: {integrity: sha512-qgbH65F6TtyKyi9t6fCkrxLhiobgYR3RBjnK0AzZl+YO7hreMVlsZ1MFbkPV0+7ZhjXdvcaRSZp3UA1yAJqYBQ==}
 
   gzip-size@6.0.0:
     resolution: {integrity: sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==}
@@ -15892,7 +15892,7 @@ snapshots:
       section-matter: 1.0.0
       strip-bom-string: 1.0.0
 
-  gridstack@11.3.0: {}
+  gridstack@11.5.1: {}
 
   gzip-size@6.0.0:
     dependencies:
