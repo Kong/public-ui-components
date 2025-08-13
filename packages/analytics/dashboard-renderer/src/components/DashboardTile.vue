@@ -179,7 +179,7 @@ const emit = defineEmits<{
   (e: 'edit-tile', tile: TileDefinition): void
   (e: 'duplicate-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
-  (e: 'zoom-time-range', newTimeRange: TileZoomEvent): void
+  (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
 }>()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
@@ -374,7 +374,7 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
     tileId: props.tileId.toString(),
     timeRange: newTimeRange,
   }
-  emit('zoom-time-range', zoomEvent)
+  emit('tile-time-range-zoom', zoomEvent)
 }
 
 const buildRequestsQuery = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
