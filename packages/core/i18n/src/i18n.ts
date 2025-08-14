@@ -80,7 +80,7 @@ export const createI18n = <MessageSource extends Record<string, any>>
       const date = new Date(shamefullyNormalizeTimeStamp(timestamp) * 1000)
 
       return intl.formatDate(date, datetimeFormat)
-    } catch (err) {
+    } catch {
       return invalidDate
     }
   }
