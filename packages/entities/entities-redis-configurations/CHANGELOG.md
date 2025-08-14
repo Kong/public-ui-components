@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.3.5...@kong-ui-public/entities-redis-configurations@1.3.6) (2025-08-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uuid to v11 ([#1778](https://github.com/Kong/public-ui-components/issues/1778)) ([ecf39b5](https://github.com/Kong/public-ui-components/commit/ecf39b5991763580992200b538682c1159323c4a))
+
+
+
+
+
 ## [1.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.3.4...@kong-ui-public/entities-redis-configurations@1.3.5) (2025-08-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations

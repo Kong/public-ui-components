@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.2...@kong-ui-public/analytics-chart@10.0.3) (2025-08-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency uuid to v11 ([#1778](https://github.com/Kong/public-ui-components/issues/1778)) ([ecf39b5](https://github.com/Kong/public-ui-components/commit/ecf39b5991763580992200b538682c1159323c4a))
+
+
+
+
+
 ## [10.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.1...@kong-ui-public/analytics-chart@10.0.2) (2025-08-14)
 
 
