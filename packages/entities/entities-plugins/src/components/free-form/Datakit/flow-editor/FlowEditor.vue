@@ -30,7 +30,7 @@ defineProps<{
 
 const { modalOpen } = provideEditorStore([
   {
-    name: 'CAT_FACT' as ConfigNodeName ,
+    name: 'CAT_FACT' as ConfigNodeName,
     type: 'call',
     url: 'https://catfact.ninja/fact',
     input: 'request.body' as NameConnection,

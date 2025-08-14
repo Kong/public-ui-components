@@ -1,7 +1,7 @@
 <template>
   <div class="partial-config-card">
     <div
-      v-for="{key, label, value, type} in allConfigDetails"
+      v-for="{ key, label, value, type } in allConfigDetails"
       :key="key"
       class="partial-config-card-row"
     >
@@ -54,7 +54,7 @@ import type { FlattendRedisConfigurationFields } from '../RequestCallout/types'
 
 const { t, formatUnixTimeStamp } = createI18n<typeof english>('en-us', english)
 
-const standardEntityfields: Record<string,any> = {
+const standardEntityfields: Record<string, any> = {
   id: {
     order: 1,
   },
@@ -98,7 +98,7 @@ const fieldEncrptyed = (key: string, val: any) => {
 
 const { convertKeyToTitle } = useStringHelpers()
 
-const configDetails = computed(()=>{
+const configDetails = computed(() => {
   return Object.entries(props.configFields).map(([key, value]) => {
     return {
       key,

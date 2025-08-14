@@ -298,7 +298,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
       .should('exist')
       .click()
 
-    // eslint-disable-next-line promise/catch-or-return
+
     cy.getTestId(`ff-kv-${fieldKey}`)
       .find('.ff-kv-field-entry')
       .its('length')
@@ -344,7 +344,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
       .click()
     cy.getTestId(`ff-array-basic-container-${fieldKey}`).should('exist')
 
-    // eslint-disable-next-line promise/catch-or-return
+
     cy.getTestId(`ff-array-basic-container-${fieldKey}`)
       .find('.ff-array-field-item')
       .its('length')

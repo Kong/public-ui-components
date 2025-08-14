@@ -5,14 +5,14 @@
     reset-label-path="isolate"
   >
     <EnumField
-      v-for="name in childFieldNames"
-      :key="name"
+      v-for="cname in childFieldNames"
+      :key="cname"
       class="dk-inputs-field-indent"
       clearable
       :items="items"
-      :name="name"
+      :name="cname"
       :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
-      @change="(value: InputOption | null) => $emit('change:inputs', name, value ? value.value : null)"
+      @change="(value: InputOption | null) => $emit('change:inputs', cname, value ? value.value : null)"
     />
   </ObjectField>
 </template>

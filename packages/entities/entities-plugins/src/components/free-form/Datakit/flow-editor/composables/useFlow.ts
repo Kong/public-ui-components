@@ -133,7 +133,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
   })
 
   // Only triggered by canvas-originated changes
-  onNodesChange((changes)=> {
+  onNodesChange((changes) => {
     changes.forEach((change) => {
       if (change.type === 'remove') {
         removeNode(change.id as NodeId, true)
