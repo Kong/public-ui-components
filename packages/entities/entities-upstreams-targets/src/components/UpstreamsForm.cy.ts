@@ -75,7 +75,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.intercept(
         {
           method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/v1/schemas/json/upstream/validate`,
+          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/schemas/upstreams/validate`,
         },
         {
           statusCode: status,
@@ -282,6 +282,8 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.getTestId('active-healthcheck-http-path').should('have.value', '/abc')
       cy.getTestId('active-healthcheck-timeout').should('have.value', '4')
       cy.getTestId('active-healthcheck-concurrency').should('have.value', '13')
+      cy.getTestId('active-healthcheck-headers-header-1').should('have.value', 'header1')
+      cy.getTestId('active-healthcheck-headers-value-1').should('have.value', 'v1, v2')
       cy.getTestId('active-healthcheck-https-sni').should('have.value', 'test sni')
       cy.getTestId('active-healthcheck-verify-ssl').should('be.checked')
       cy.getTestId('active-healthcheck-healthy-interval').should('have.value', '10')
@@ -441,7 +443,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait('@updateUpstream').then((interception) => {
         const { body: { healthchecks } } = interception.request
-        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/"}}'))
+        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/","headers":{"header1":["v1","v2"]}}}'))
       })
     })
   })
@@ -942,7 +944,7 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
 
       cy.wait('@updateUpstream').then((interception) => {
         const { body: { healthchecks } } = interception.request
-        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/","headers":{}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
+        expect(healthchecks).to.deep.equal(JSON.parse('{"threshold":2,"active":{"type":"http","healthy":{"interval":5,"successes":5,"http_statuses":[200,302]},"unhealthy":{"interval":5,"timeouts":5,"tcp_failures":5,"http_failures":5,"http_statuses":[429,404,500,501,502,503,504,505]},"timeout":1,"concurrency":10,"http_path":"/","headers":{"header1":["v1","v2"]}},"passive":{"type":"http","healthy":{"successes":0},"unhealthy":{"timeouts":0,"tcp_failures":0,"http_failures":0}}}'))
       })
     })
   })

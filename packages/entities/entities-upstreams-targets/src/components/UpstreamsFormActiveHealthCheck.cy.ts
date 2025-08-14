@@ -1,5 +1,4 @@
 import UpstreamsFormActiveHealthCheck from './UpstreamsFormActiveHealthCheck.vue'
-import { KMConfig, konnectConfig } from '../../fixtures/mockData'
 import { ActiveHealthyHttpStatuses, ActiveUnhealthyHttpStatuses } from '../constants'
 
 const PORTOCOLS = ['http', 'https', 'tcp', 'grpc', 'grpcs']
@@ -280,25 +279,11 @@ describe('<UpstreamsFormActiveHealthCheck/>', { viewportHeight: 700, viewportWid
     })
   })
 
-  // TODO: remove when api will support `headers` property
-  it('headers-row should be hidden for "konnect" config', () => {
+  it('Should bind headers data correctly', () => {
     cy.mount(UpstreamsFormActiveHealthCheck, {
       props: {
         type: 'http',
         headers: [{ key: '', values: '' }],
-        config: konnectConfig,
-      },
-    })
-
-    cy.get('.headers-row').should('not.exist')
-  })
-
-  it('Should bind headers data correctly for "kongManager" config', () => {
-    cy.mount(UpstreamsFormActiveHealthCheck, {
-      props: {
-        type: 'http',
-        headers: [{ key: '', values: '' }],
-        config: KMConfig,
         'onUpdate:headers': cy.spy().as('onUpdateSpy'),
       },
     })
