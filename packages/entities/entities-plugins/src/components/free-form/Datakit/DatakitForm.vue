@@ -21,7 +21,9 @@
     <template #default="formProps">
       <Form
         v-bind="formProps"
+        :data="{ config }"
         tag="div"
+        @change="handleFormChange"
       >
         <div v-if="finalEditorMode === 'flow'">
           <FlowEditor
@@ -73,8 +75,6 @@ const { t } = createI18n<typeof english>('en-us', english)
 const props = defineProps<Props<any>>()
 
 // provided by consumer apps
-// TODO: make the default value to `false` to make it opt-in
-// It's currently set to `true` for testing purposes
 const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, false)
 
 // Editor mode selection
@@ -113,11 +113,20 @@ const description = computed(() => {
 
 // Shared
 
-const config = ref(props.model.config)
+const config = ref({ ...props.model.config })
+
+// This change comes from freeform fields
+function handleFormChange(data: any) {
+  for (const key in data.config) {
+    // updating nodes can lead to re`load`ing the flow editor state
+    if (key !== 'nodes') {
+      config.value[key] = data.config[key]
+    }
+  }
+}
 
 function handleConfigChange(newConfig: unknown) {
-  config.value = newConfig
-
+  // update the external form state
   props.onFormChange({
     config: newConfig,
   })
@@ -125,6 +134,10 @@ function handleConfigChange(newConfig: unknown) {
     model: 'config',
     valid: true,
   })
+
+  // update the local config as the external form state isn't
+  // flowing back down to the component
+  config.value = newConfig
 }
 
 // Code editor
