@@ -177,8 +177,8 @@ importers:
         specifier: ~5.9.2
         version: 5.9.2
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
       vite:
         specifier: ^5.4.19
         version: 5.4.19(@types/node@18.19.122)(sass-embedded@1.80.3)(sass@1.89.2)(terser@5.43.1)
@@ -243,8 +243,8 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(date-fns@4.1.0)
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
       vue-chartjs:
         specifier: ^5.3.2
         version: 5.3.2(chart.js@4.5.0)(vue@3.5.13(typescript@5.9.2))
@@ -609,8 +609,8 @@ importers:
         specifier: 0.52.2
         version: 0.52.2
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
     devDependencies:
       '@kong/atc-router':
         specifier: 1.6.0-rc.1
@@ -1073,8 +1073,8 @@ importers:
   packages/entities/entities-redis-configurations:
     dependencies:
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
     devDependencies:
       '@kong-ui-public/entities-plugins-icon':
         specifier: workspace:^
@@ -1300,8 +1300,8 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
       uuid:
-        specifier: ^10.0.0
-        version: 10.0.0
+        specifier: ^11.1.0
+        version: 11.1.0
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^
