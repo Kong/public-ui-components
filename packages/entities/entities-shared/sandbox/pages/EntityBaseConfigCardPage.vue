@@ -27,14 +27,14 @@
               name: propKey,
               ...rowValue[propKey],
             }],
-            type: ConfigurationSchemaType.JsonArray
+            type: ConfigurationSchemaType.JsonArray,
           }"
         />
         <ConfigCardItem
           :item="{
             key: 'threshold',
             value: rowValue.threshold,
-            label: convertKeyToTitle('threshold')
+            label: convertKeyToTitle('threshold'),
           }"
         />
       </template>
