@@ -42,7 +42,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "catalog:",
     "@kong/kongponents": "catalog:",
-    "@types/geojson": "^7946.0.14",
+    "@types/geojson": "^7946.0.16",
     "maplibre-gl": "^4.7.1",
     "vue": "catalog:"
   },
