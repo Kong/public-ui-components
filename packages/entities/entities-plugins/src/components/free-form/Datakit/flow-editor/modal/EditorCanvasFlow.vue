@@ -12,6 +12,7 @@
       :nodes="nodes"
       @dragover.prevent
       @drop="(e: DragEvent) => onDrop(e)"
+      @node-click="propertiesPanelOpen = true"
       @nodes-initialized="onNodesInitializes"
     >
       <Background />
@@ -64,7 +65,7 @@ const { vueFlowStore, editorStore, nodes, edges, autoLayout } = useFlow(props.ph
 const { addNode, clear: historyClear } = editorStore
 const { project, vueFlowRef, addSelectedNodes, getNodes } = vueFlowStore
 
-const { selectNode: selectStoreNode } = useEditorStore()
+const { selectNode: selectStoreNode, propertiesPanelOpen } = useEditorStore()
 
 async function selectNode(nodeId?: NodeId) {
   selectStoreNode(nodeId)

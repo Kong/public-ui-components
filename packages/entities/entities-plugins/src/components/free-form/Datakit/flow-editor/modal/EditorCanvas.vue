@@ -39,9 +39,7 @@
         class="icon"
         :class="{ collapsed: isResponseCollapsed }"
       />
-      <div>
-        Response
-      </div>
+      <div>Response</div>
     </div>
 
     <div
