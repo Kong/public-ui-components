@@ -69,14 +69,14 @@
           :is="tag"
         >
           <template
-            v-for="field in field.fields"
-            :key="field.model"
+            v-for="subfield in field.fields"
+            :key="subfield.model"
           >
             <form-group
-              v-if="fieldVisible(field)"
+              v-if="fieldVisible(subfield)"
               ref="children"
               :errors="errors"
-              :field="field"
+              :field="subfield"
               :model="model"
               :options="options"
               :vfg="vfg"

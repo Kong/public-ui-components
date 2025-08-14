@@ -88,7 +88,7 @@ const fieldSchema = computed<FormSchema>(() => ({
     {
       type: 'multiselect',
       model: 'protocols',
-      label:'Protocols',
+      label: 'Protocols',
       values: [
         { label: 'GRPC', value: 'grpc' },
         { label: 'GRPCS', value: 'grpcs' },

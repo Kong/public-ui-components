@@ -1,6 +1,6 @@
 <template>
   <component
-    :is="schema.disabled ? 'k-tooltip': 'div'"
+    :is="schema.disabled ? 'k-tooltip' : 'div'"
     class="field-wrap autosuggest"
     max-width="300"
     :text="t('general.disable_source_scope_change', { scope })"
@@ -20,7 +20,7 @@
       @change="onSelected"
       @query-change="onQueryChange"
     >
-      <template #item-template="{item}">
+      <template #item-template="{ item }">
         <span
           class="first-part"
           :data-testid="item.id && `${item.id}-0`"
