@@ -56,7 +56,7 @@
             key: propKey,
             value: getPropItemValue(propKey, slotProps),
             label: getMetadataLabel(propKey),
-            type: (propKey === 'key_usages' || propKey === 'snis' || propKey === 'dns_names') ? ConfigurationSchemaType.BadgeTag : ConfigurationSchemaType.Text
+            type: (propKey === 'key_usages' || propKey === 'snis' || propKey === 'dns_names') ? ConfigurationSchemaType.BadgeTag : ConfigurationSchemaType.Text,
           }"
         />
       </template>
