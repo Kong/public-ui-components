@@ -58,7 +58,6 @@ describe('validateHost()', () => {
 describe('validatePort()', () => {
   const { i18n: { t } } = composables.useI18n()
   const { validatePort } = useUrlValidators()
-  const typeMessage = t('gateway_services.form.errors.port.type')
   const invalidMessage = t('gateway_services.form.errors.port.invalid')
 
   it('should accept valid ports', () => {

@@ -402,7 +402,7 @@
               :label="t('gateway_services.form.fields.tags.label')"
               :label-attributes="{
                 info: t('gateway_services.form.fields.tags.tooltip'),
-                tooltipAttributes: { maxWidth: '400' }
+                tooltipAttributes: { maxWidth: '400' },
               }"
               name="tags"
               :placeholder="t('gateway_services.form.fields.tags.placeholder')"
@@ -756,7 +756,7 @@ const handleValidateFullUrl = (): void => {
       form.fields.port = portValue || getPort.getPortFromProtocol(form.fields.protocol)
 
       emit('url-valid:success')
-    } catch (error: any) {
+    } catch {
       emit('url-valid:error', t('gateway_services.form.errors.url.invalid'))
       form.formFieldErrors.url = t('gateway_services.form.errors.url.invalid')
     }
