@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="chartParentRef"
+    ref="chartParent"
     class="chart-parent"
     :class="chartFlexClass(legendPosition)"
     data-testid="line-chart-parent"
@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 
-import { reactive, ref, computed, toRef, inject, watch, onUnmounted } from 'vue'
+import { reactive, ref, computed, toRef, inject, watch, onUnmounted, useTemplateRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import { VerticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
@@ -136,7 +136,7 @@ const chartID = crypto.randomUUID()
 const legendItems = ref<EnhancedLegendItem[]>([])
 const tooltipElement = ref()
 const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
-const chartParentRef = ref<HTMLElement | null>(null)
+const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 const zoomTimeRange = ref<AbsoluteTimeRangeV4 | undefined>(undefined)
 const isDoingSelection = ref(false)
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)

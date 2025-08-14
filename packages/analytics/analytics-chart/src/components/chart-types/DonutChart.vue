@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="chartParentRef"
+    ref="chartParent"
     class="chart-parent"
     :class="chartFlexClass(legendPosition)"
     data-testid="donut-chart-parent"
@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { computed, reactive, ref, toRef } from 'vue'
+import { computed, reactive, ref, toRef, useTemplateRef } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
@@ -78,7 +78,7 @@ const { translateUnit } = composables.useTranslatedUnits()
 const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
 const legendItems = ref([])
-const chartParentRef = ref<HTMLDivElement | null>(null)
+const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
