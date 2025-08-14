@@ -406,7 +406,7 @@ const options = computed<ChartOptions>(() => {
 const chartInstance = composables.useChartJSCommon(
   'bar',
   canvas as Ref<HTMLCanvasElement | null>,
-  toRef(props, 'chartData') as Readonly<Ref<BarChartData>>,
+  toRef(props, 'chartData'),
   plugins,
   options,
 ) as Ref<Chart | undefined>
