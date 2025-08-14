@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import type { Operation, Tag } from '../../src/types'
-// @ts-ignore
+// @ts-ignore - explicit import of yaml content for spec renderer
 import yamlContent from '../test.yaml'
 import jsonContent from '../test.json'
 import { SpecRenderer } from '../../src'
