@@ -195,7 +195,7 @@ const addToConsumerGroups = async (): Promise<void> => {
       selectedConsumerGroups.value = []
       handleBulkError(results)
     }
-  } catch (_err: any) {
+  } catch {
     error.value = t('consumer_groups.errors.add')
 
     // Emit the error event for the host app
