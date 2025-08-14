@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.63.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.62.0...@kong-ui-public/entities-plugins@9.63.0) (2025-08-14)
+
+
+### Features
+
+* **entities-plugins:** support ttl field in credentials ([#2323](https://github.com/Kong/public-ui-components/issues/2323)) ([417da2b](https://github.com/Kong/public-ui-components/commit/417da2bdacf07832335929e5ce53bb3097cd5754))
+
+
+
+
+
 # [9.62.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.61.1...@kong-ui-public/entities-plugins@9.62.0) (2025-08-13)
 
 
