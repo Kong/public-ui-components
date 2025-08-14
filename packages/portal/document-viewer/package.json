@@ -50,7 +50,7 @@
     "vue": "catalog:"
   },
   "dependencies": {
-    "prismjs": "^1.29.0"
+    "prismjs": "^1.30.0"
   },
   "repository": {
     "type": "git",

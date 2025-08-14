@@ -74,7 +74,7 @@
     "@types/lodash.mapkeys": "^4.6.9",
     "@types/lodash.pick": "^4.4.9",
     "@types/lodash.pickby": "^4.6.9",
-    "@types/papaparse": "^5.3.15",
+    "@types/papaparse": "^5.3.16",
     "approximate-number": "^2.1.1",
     "chart.js": "^4.5.0",
     "chartjs-adapter-date-fns": "^3.0.0",
@@ -82,7 +82,7 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "uuid": "^10.0.0",
-    "vue-chartjs": "^5.3.1"
+    "vue-chartjs": "^5.3.2"
   },
   "distSizeChecker": {
     "warningLimit": "1.35MB",

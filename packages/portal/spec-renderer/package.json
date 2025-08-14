@@ -47,7 +47,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "catalog:",
     "@kong/kongponents": "catalog:",
-    "@modyfi/vite-plugin-yaml": "^1.1.0",
+    "@modyfi/vite-plugin-yaml": "^1.1.1",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/uuid": "^10.0.0",
     "openapi-types": "^12.1.3",
