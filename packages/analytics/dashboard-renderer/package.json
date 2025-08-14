@@ -78,7 +78,7 @@
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "catalog:",
-    "swrv": "^1.0.4",
+    "swrv": "^1.1.0",
     "vue": "catalog:"
   },
   "dependencies": {
