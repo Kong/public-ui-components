@@ -22,7 +22,7 @@
               type: ConfigurationSchemaType.Text,
               key: row.key,
               label: te(`request_info.attributes.${row.key}` as TranslationKey) ? t(`request_info.attributes.${row.key}` as TranslationKey) : row.key,
-              value: row.value
+              value: row.value,
             }"
           />
         </template>
@@ -76,7 +76,7 @@ const rows = computed(() => {
   return [{
     key: 'latency',
     value: latencyMs ? formatLatency(latencyMs) : t('request_info.not_available'),
-  },{
+  }, {
     key: 'status_code',
     value: statusCode ?? t('request_info.not_available'),
   }, {

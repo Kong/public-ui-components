@@ -39,7 +39,7 @@ const barLeft = computed(() => {
   return `min(calc(100% + ${WATERFALL_SPAN_BAR_FADING_WIDTH} / 2), max(calc(-${WATERFALL_SPAN_BAR_FADING_WIDTH} - ${KUI_BORDER_RADIUS_20}), ${unclampedLeft}))`
 })
 
-const barRight = computed(() =>{
+const barRight = computed(() => {
   const unclampedRight = `calc((100% * ${config.zoom}) * (${barEdges.value.right} - ${config.viewport.right}))`
   return `min(calc(100% + ${WATERFALL_SPAN_BAR_FADING_WIDTH} / 2), max(calc(-${WATERFALL_SPAN_BAR_FADING_WIDTH} - ${KUI_BORDER_RADIUS_20}), ${unclampedRight}))`
 })

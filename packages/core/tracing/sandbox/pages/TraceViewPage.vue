@@ -234,7 +234,7 @@ const payloads = {
       'x-kong-upstream-latency': '410',
     } as Headers,
   },
-  body:{
+  body: {
     request: JSON.stringify({
       order_id: '5d396641-480b-46c9-9687-7d5e73c18732',
     }) as Body,
