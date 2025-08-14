@@ -332,7 +332,7 @@ const exploreResult = computed<ExploreResultV4>(() => {
       const result = JSON.parse(exploreResultText.value)
 
       return result as ExploreResultV4
-    } catch (e) {
+    } catch {
       return { data: [] as AnalyticsExploreRecord[], meta: {} as QueryResponseMeta } as ExploreResultV4
     }
   }

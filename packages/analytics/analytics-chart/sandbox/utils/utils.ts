@@ -22,7 +22,7 @@ export function isValidJson(str: string): boolean {
 
   try {
     JSON.parse(str)
-  } catch (e) {
+  } catch {
     return false
   }
 
@@ -34,7 +34,7 @@ export function parseJson(exploreResultText: AnalyticsExploreV2Result) {
     const result = JSON.parse(exploreResultText as any)
 
     return result as AnalyticsExploreV2Result
-  } catch (e) {
+  } catch {
     return null
   }
 }
