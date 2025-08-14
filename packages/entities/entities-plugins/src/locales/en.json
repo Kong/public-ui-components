@@ -576,6 +576,8 @@
       }
     },
     "form": {
+      "disable_data_retrieving": "You do not have permission to select {scope}",
+      "disable_source_scope_change": "Changing the {scope} is not allowed when configuring a plugin under it",
       "no_selection": "No selection...",
       "fields": {
         "enabled": {

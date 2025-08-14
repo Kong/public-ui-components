@@ -97,16 +97,25 @@ describe('<PluginForm />', () => {
       ).as(params?.alias ?? 'validatePlugin')
     }
 
+    /**
+     * Intercepts requests for a specific scoped entity and prefetched data
+     *   For instance, if some `service` was selected, thus we are in edit mode, this intercepts the given `entityType=service`.
+     *   In the `interceptScopedEntitiesData` function it intercepts basically all entities, the `disabledFields` is used for prevent
+     *   unnecessary fetches since some fields might be disabled thus such request will not be performed, awaiting such requests will result in
+     *   timeout and cause the test to fail.
+     */
     const interceptKMScopedEntity = (params: {
       entityType: string
       mockData?: object
       alias?: string
+      disabledFields?: string[]
     }, pluginType: string) => {
       // @getScopedEntity was never awaited in KM suites
       cy.intercept(
         {
           method: 'GET',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/${params.entityType}/*`,
+          // This intercepts request with glob URL: /kong-manager/default/service{s,}/*
+          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/${params.entityType}{s,}/*`,
         },
         {
           statusCode: 200,
@@ -114,16 +123,20 @@ describe('<PluginForm />', () => {
         },
       ).as(params?.alias ?? 'getScopedEntity')
 
-      return interceptScopedEntitiesExpectServices(pluginType)
+      return interceptScopedEntitiesData(pluginType, params.disabledFields)
     }
 
-    const interceptScopedEntitiesExpectServices = (pluginType: string) => {
+    /**
+     * This function intercepts all entities' list requests, and returns `@getEntity-[entityType]` for the caller to await to.
+     */
+    const interceptScopedEntitiesData = (pluginType: string, disabledFields: string[] = []) => {
       // slice out `global` scope since we have them in every definition
-      const alias = PLUGIN_METADATA[pluginType].scope.slice(1).map((entityType) => {
+      const alias = PLUGIN_METADATA[pluginType].scope.slice(1).filter(scope => !disabledFields.includes(scope)).map((entityType) => {
         cy.intercept(
           {
             method: 'GET',
-            url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/${entityType}?*`,
+            // This intercepts request with glob URL: /kong-manager/default/service{s,}*
+            url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/${entityType}{s,}*`,
           },
           {
             statusCode: 200,
@@ -426,7 +439,7 @@ describe('<PluginForm />', () => {
       const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
       interceptKMSchema()
       const pluginType = 'cors'
-      const stubbedAliases = interceptKMScopedEntity({ entityType: config.entityType! }, pluginType)
+      const stubbedAliases = interceptKMScopedEntity({ entityType: config.entityType!, disabledFields: ['service'] }, pluginType)
 
       cy.mount(PluginForm, {
         props: {
@@ -442,6 +455,36 @@ describe('<PluginForm />', () => {
 
         cy.get('.Global-check input').should('be.disabled')
         cy.get('.Scoped-check input').should('be.visible').and('be.disabled')
+        cy.get('.Scoped-check input').should('have.value', '1')
+        cy.get('.field-selectionGroup .field-AutoSuggestV2').should('be.visible')
+        cy.get('#service-id').should('be.visible').and('be.disabled')
+        cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
+      })
+    })
+
+    it('should disable scope selection when permission is not granted', () => {
+      // provide serviceId
+      const config: KongManagerPluginFormConfig = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
+      interceptKMSchema()
+      const pluginType = 'cors'
+      const stubbedAliases = interceptKMScopedEntity({ entityType: config.entityType!, disabledFields: ['service'] }, pluginType)
+
+      cy.mount(PluginForm, {
+        props: {
+          config,
+          pluginType,
+          scopedEntitiesPermissions: {
+            service: {
+              canRetrieve: false,
+            },
+          },
+        },
+        router,
+      })
+
+      cy.wait(stubbedAliases).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
         cy.get('.Scoped-check input').should('have.value', '1')
         cy.get('.field-selectionGroup .field-AutoSuggestV2').should('be.visible')
         cy.get('#service-id').should('be.visible').and('be.disabled')
@@ -1006,13 +1049,16 @@ describe('<PluginForm />', () => {
       return interceptKonnectOtherScopedEntities(pluginType)
     }
 
+    /**
+     * This function intercepts all entities' list requests, and returns `@getEntity-[entityType]` for the caller to await to.
+     */
     const interceptKonnectOtherScopedEntities = (pluginType: string) => {
 
       const alias = PLUGIN_METADATA[pluginType].scope.slice(1).map((entityType) => {
         cy.intercept(
           {
             method: 'GET',
-            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/${entityType}?*`,
+            url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/${entityType}{s,}?*`,
           },
           {
             statusCode: 200,
@@ -1331,6 +1377,36 @@ describe('<PluginForm />', () => {
 
         cy.get('.Global-check input').should('be.disabled')
         cy.get('.Scoped-check input').should('be.visible').and('be.disabled')
+        cy.get('.Scoped-check input').should('have.value', '1')
+        cy.get('.field-selectionGroup .field-AutoSuggestV2').should('be.visible')
+        cy.get('#service-id').should('be.visible').and('be.disabled')
+        cy.getTestId(`select-item-${scopedService.id}`).find('.selected').should('exist')
+      })
+    })
+
+    it('should disable scope selection when permission is not granted', () => {
+      // provide serviceId
+      const config: KonnectPluginFormConfig = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
+      const pluginType = 'cors'
+      interceptKonnectSchema()
+      interceptKonnectScopedEntity({ entityType: config.entityType! }, pluginType)
+
+      cy.mount(PluginForm, {
+        props: {
+          config,
+          pluginType,
+          scopedEntitiesPermissions: {
+            service: {
+              canRetrieve: false,
+            },
+          },
+        },
+        router,
+      })
+
+      cy.wait(['@getPluginSchema', '@getScopedEntity']).then(() => {
+        cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
+
         cy.get('.Scoped-check input').should('have.value', '1')
         cy.get('.field-selectionGroup .field-AutoSuggestV2').should('be.visible')
         cy.get('#service-id').should('be.visible').and('be.disabled')

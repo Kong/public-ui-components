@@ -48,7 +48,22 @@ import type { EntityData, AutoSuggestInjection, AutoSuggestItemTransformer } fro
 const DEBOUNCE_DELAY = 500
 const PEEK_SIZE = 50
 
-const { getAll, getOne, getPartial, transformItem = defaultItemTransformer, fields = [], allowUuidSearch = false, id, initialItem, entity, initialItemSelected } = defineProps<{
+const {
+  getAll,
+  getOne,
+  getPartial,
+  transformItem = defaultItemTransformer,
+  fields = [],
+  allowUuidSearch = false,
+  id,
+  initialItem,
+  entity,
+  initialItemSelected,
+  placeholder,
+  domId,
+  disabled,
+  fieldDisabled,
+} = defineProps<{
   transformItem?: AutoSuggestItemTransformer
   allowUuidSearch?: boolean
   placeholder?: string
@@ -60,7 +75,7 @@ const { getAll, getOne, getPartial, transformItem = defaultItemTransformer, fiel
   entity: string
   disabled?: boolean
   fieldDisabled?: boolean
-} & AutoSuggestInjection>()
+} & AutoSuggestInjection >()
 
 defineEmits<{
   change: [item: SelectItem<string> | null]
@@ -81,6 +96,9 @@ const axiosAbortController = ref<AbortController | null>(null)
 let timeoutHandle: ReturnType<typeof setTimeout> | null = null
 
 const fetcher = async (executor: () => Promise<EntityData[]>, signal?: AbortSignal) => {
+  if (fieldDisabled) {
+    return
+  }
   clearTimeout(timeoutHandle!)
   timeoutHandle = setTimeout(() => {
     loading.value = true

@@ -3,7 +3,7 @@
     :is="schema.disabled ? 'k-tooltip' : 'div'"
     class="field-wrap autosuggest"
     max-width="300"
-    :text="t('general.disable_source_scope_change', { scope })"
+    :text="schema.disabledTooltip"
   >
     <FieldScopedEntitySelect
       :id="idValue"

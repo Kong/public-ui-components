@@ -96,7 +96,7 @@ export default {
   watch: {
     checkedGroup: {
       handler(newVal, oldVal) {
-        this.renderedTrack[newVal] = 1
+        this.renderedTrack[newVal] = true
         // First time trigger shouldn't need to update the form model
         if (oldVal === null) {
           this.fieldModel = { ...this.model }
@@ -120,7 +120,7 @@ export default {
 
     // Set checkedGroup based on model
     this.schema.fields.forEach((field, i) => {
-      this.renderedTrack.push(0)
+      this.renderedTrack.push(false)
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       field.fields && field.fields.forEach(subField => {
         if (this.model[subField.model]) {
