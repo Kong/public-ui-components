@@ -31,3 +31,5 @@ export * from './constants'
  * Please import PluginIcon and getPluginIconURL from '@kong-ui-public/entities-plugins-icon' directly.
  */
 export { getPluginIconURL, PluginIcon } from '@kong-ui-public/entities-plugins-icon'
+
+export * as FreeForm from './components/free-form/export'
