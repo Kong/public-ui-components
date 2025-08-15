@@ -19,9 +19,7 @@
   <div>
     <SandboxBridgeInjector :query-bridge="globalBridge">
       <MetricsProvider v-bind="globalProviderProps">
-        <MetricsConsumer
-          :card-size="MetricCardSize.Large"
-        />
+        <MetricsConsumer :card-size="MetricCardSize.Large" />
       </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
@@ -30,9 +28,7 @@
   <div style="width: 330px">
     <SandboxBridgeInjector :query-bridge="globalBridge">
       <MetricsProvider v-bind="globalProviderProps">
-        <MetricsConsumer
-          :card-size="MetricCardSize.Small"
-        />
+        <MetricsConsumer :card-size="MetricCardSize.Small" />
       </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
@@ -41,9 +37,7 @@
   <div v-if="!USE_REAL_DATA">
     <SandboxBridgeInjector :query-bridge="globalBridge">
       <MetricsProvider v-bind="filteredProviderProps">
-        <MetricsConsumer
-          :card-size="MetricCardSize.Medium"
-        />
+        <MetricsConsumer :card-size="MetricCardSize.Medium" />
       </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
@@ -123,6 +117,15 @@
       </MetricsProvider>
     </SandboxBridgeInjector>
   </div>
+
+  <h4>Custom timeframe</h4>
+  <div>
+    <SandboxBridgeInjector :query-bridge="oneHourBridge">
+      <MetricsProvider v-bind="globalProviderPropsCustomTimeframe">
+        <MetricsConsumer :card-size="MetricCardSize.Large" />
+      </MetricsProvider>
+    </SandboxBridgeInjector>
+  </div>
 </template>
 <script setup lang="ts">
 import { ref, computed } from 'vue'
@@ -137,7 +140,7 @@ import type {
   ExploreFilter,
   ExploreQuery,
 } from '@kong-ui-public/analytics-utilities'
-import { TimePeriods } from '@kong-ui-public/analytics-utilities'
+import { Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
 import { MetricCardSize } from '../src/enums'
 import SandboxBridgeInjector from './SandboxBridgeInjector.vue'
 
@@ -147,6 +150,18 @@ const refreshInterval = 60 * 1000
 const USE_REAL_DATA = false
 
 const timeframeSelection = ref('15m')
+const custom1hourTimeframe = new Timeframe({
+  key: 'custom',
+  timeframeText: 'Custom Timeframe',
+  display: 'Custom Timeframe',
+  startCustom: new Date('2023-01-01T00:00:00Z'),
+  endCustom: new Date('2023-01-01T01:00:00Z'),
+  isRelative: false,
+  timeframeLength: () => 3600000, // 1 hour in milliseconds,
+  defaultResponseGranularity: 'minutely',
+  dataGranularity: 'minutely',
+  allowedTiers: ['free', 'pro', 'enterprise'],
+})
 
 const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
 
@@ -203,6 +218,17 @@ const globalProviderProps = computed(() => ({
 }))
 
 const globalBridge = makeQueryBridge()
+
+
+const globalProviderPropsCustomTimeframe = computed(() => ({
+  ...globalProviderProps.value,
+  // 1 hour timeframe
+  overrideTimeframe: custom1hourTimeframe,
+}))
+
+const oneHourBridge = makeQueryBridge({
+  timeFrame: custom1hourTimeframe,
+})
 
 // Query stats for an entire org, but also apply a filter.
 const filteredProviderProps = computed(() => ({
