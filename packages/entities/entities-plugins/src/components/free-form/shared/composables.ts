@@ -1,11 +1,11 @@
-import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type DeepReadonly, type MaybeRefOrGetter, type Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set, uniqueId } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
-import type { FormConfig, ResetLabelPathRule } from './types'
+import type { FieldMetaState, FormConfig, ResetLabelPathRule, ValidatorEvent, ValidatorFns } from './types'
 import { capitalize } from 'lodash-es'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
@@ -545,4 +545,89 @@ export function useItemKeys<T>(ns: string, items: MaybeRefOrGetter<T[]>) {
   }, { immediate: true, deep: true })
 
   return { getKey }
+}
+
+export function useFieldValidator<TData>(
+  fieldPath: MaybeRefOrGetter<string>,
+  validator?: MaybeRefOrGetter<ValidatorFns<TData> | undefined>,
+) {
+  const { getSchema } = useFormShared()
+  const schema = computed(() => getSchema(toValue(fieldPath)))
+  const errorMap = ref<Partial<Record<ValidatorEvent, string>>>({})
+  const { value } = useFormData<TData>(fieldPath)
+
+  const currentValue = computed<TData | undefined>(() => value.value)
+  const defaultValue = ref<TData | undefined>(value.value)
+
+  const states = ref({
+    isTouched: false,
+    isDirty: false,
+    isBlurred: false,
+  })
+
+  const meta = computed<FieldMetaState>(() => {
+    const errors = Object.values(errorMap.value).filter(Boolean)
+    return {
+      isTouched: states.value.isTouched,
+      isDirty: states.value.isDirty,
+      isBlurred: states.value.isBlurred,
+      isDefaultValue: defaultValue.value === currentValue.value,
+      isValid: errors.length === 0,
+      errors,
+      errorMap: errorMap.value,
+    }
+  })
+
+  function validate(event: ValidatorEvent) {
+    if (!validator) return
+    const validationFn = toValue(validator)?.[event]
+    if (!validationFn) return
+    clearErrors()
+
+    const error = validationFn({
+      value: currentValue.value!,
+      schema: toValue(schema)!,
+      path: toValue(fieldPath),
+      meta: toValue(meta),
+      name: utils.getName(toValue(fieldPath)),
+    })
+
+    if (error === undefined) {
+      errorMap.value[event] = undefined
+    } else {
+      errorMap.value[event] = error
+    }
+  }
+
+  function handleMount() {
+    defaultValue.value = value
+    validate('onMount')
+  }
+
+  function handleFocus() {
+    states.value.isTouched = true
+  }
+
+  function handleChange() {
+    states.value.isDirty = true
+    validate('onChange')
+  }
+
+  function handleBlur() {
+    states.value.isBlurred = true
+    validate('onBlur')
+  }
+
+  function clearErrors() {
+    errorMap.value = {}
+  }
+
+  return {
+    meta,
+    handleMount,
+    handleFocus,
+    handleChange,
+    handleBlur,
+    clearErrors,
+  }
 }
