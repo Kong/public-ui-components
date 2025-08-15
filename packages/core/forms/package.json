@@ -50,22 +50,22 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong/icons": "catalog:",
-    "dompurify": "catalog:",
+    "@kong/icons": "^1.33.2",
+    "dompurify": "^3.2.6",
     "fecha": "^4.2.3",
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "catalog:",
-    "vue": "catalog:"
+    "@kong/kongponents": "^9.34.2",
+    "vue": "^3.5.12"
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "catalog:",
-    "@kong/kongponents": "catalog:",
+    "@kong/design-tokens": "1.18.0",
+    "@kong/kongponents": "9.38.3",
     "@types/lodash-es": "^4.17.12",
     "pug": "^3.0.3"
   },
