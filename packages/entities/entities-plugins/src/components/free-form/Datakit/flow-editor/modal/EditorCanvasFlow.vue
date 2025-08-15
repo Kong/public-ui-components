@@ -70,10 +70,11 @@ const { selectNode: selectStoreNode, propertiesPanelOpen } = useEditorStore()
 async function selectNode(nodeId?: NodeId) {
   selectStoreNode(nodeId)
   await nextTick()
-  addSelectedNodes(getNodes.value.filter((n) => n.data.id === nodeId))
+  const selectedNode = getNodes.value.find((n) => n.id === nodeId)
+  addSelectedNodes(selectedNode ? [selectedNode] : [])
 }
 
-async function onDrop(e: DragEvent) {
+function onDrop(e: DragEvent) {
   const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
   if (!data) return
 
