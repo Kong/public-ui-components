@@ -473,6 +473,7 @@ const props = defineProps({
    */
   actionTeleportTarget: {
     type: String,
+    default: null,
   },
   /**
    * Top offset for the slideout

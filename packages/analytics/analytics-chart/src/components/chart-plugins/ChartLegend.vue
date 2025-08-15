@@ -23,7 +23,7 @@
         >
           <div
             class="label"
-            :class="{ 'truncate-label' : shouldTruncate, empty: isSegmentEmpty }"
+            :class="{ 'truncate-label': shouldTruncate, empty: isSegmentEmpty }"
           >
             {{ text }}
           </div>

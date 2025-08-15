@@ -78,7 +78,7 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     description: getNodeTypeDescription('exit'),
     icon: GatewayIcon,
     io: {
-      input:{
+      input: {
         fields: [
           { name: 'headers' },
           { name: 'body' },

@@ -534,7 +534,7 @@ onMounted(async () => {
 
         existingEntityPlugins.value = existingEntityPlugins.value.concat(eplugins)
       }
-    } catch (error: any) {
+    } catch {
       // no op if it fails, backend will catch if they try to create
       // duplicate plugins
     }

@@ -71,7 +71,7 @@ export default function useDebouncedFilter(
 
       resultsCache.value = (keys.fetchedItemsKey in data) ? data[keys.fetchedItemsKey] : []
       results.value = resultsCache.value
-    } catch (_error: any) {
+    } catch {
       results.value = []
       error.value = t('debouncedFilter.errors.fetch')
     } finally {

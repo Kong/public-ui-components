@@ -6,7 +6,7 @@
     :label-attributes="({
       maxWidth: '300px',
       placement: 'top',
-      info: 'The property name to get/set'
+      info: 'The property name to get/set',
     } as any)"
     required
     @change="handleSelectChange"

@@ -559,14 +559,14 @@ runUtcTest('UTC: fine granularity', () => {
   })
 
   it('handles fine granularity in rounding - timeseries, 5 minutely', () => {
-    const tsQuery = new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY), 'fiveMinutely', undefined, undefined,true)
+    const tsQuery = new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.ONE_DAY), 'fiveMinutely', undefined, undefined, true)
 
     expect(tsQuery.endDate()).toEqual(new Date('2023-11-09T01:20:00Z'))
     expect(tsQuery.startDate()).toEqual(new Date('2023-11-08T01:20:00Z'))
   })
 
   it('handles fine granularity in rounding - timeseries, hourly', () => {
-    const tsQuery = new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY), 'hourly', undefined, undefined,true)
+    const tsQuery = new TimeseriesQueryTime(getTimePeriod(TimeframeKeys.THIRTY_DAY), 'hourly', undefined, undefined, true)
 
     expect(tsQuery.endDate()).toEqual(new Date('2023-11-09T02:00:00Z'))
     expect(tsQuery.startDate()).toEqual(new Date('2023-10-10T02:00:00Z'))

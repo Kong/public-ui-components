@@ -144,7 +144,7 @@
           species: 'Awesome cat',
           color: 'All black',
           awesome: 'true',
-        }
+        },
       }"
     />
 
@@ -172,7 +172,7 @@
             species: 'Happy yappy cat',
             color: 'Tuxedo - Black & White',
             awesome: 'true',
-          }
+          },
         ],
       }"
     />

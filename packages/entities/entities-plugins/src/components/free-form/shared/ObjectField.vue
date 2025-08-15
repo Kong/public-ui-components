@@ -17,9 +17,9 @@
     >
       <slot>
         <Field
-          v-for="field in childFields"
-          :key="Object.keys(field)[0]"
-          :name="Object.keys(field)[0]"
+          v-for="cfield in childFields"
+          :key="Object.keys(cfield)[0]"
+          :name="Object.keys(cfield)[0]"
         />
       </slot>
     </div>
@@ -42,7 +42,7 @@
         :data-testid="`ff-label-${field.path.value}`"
         v-bind="{
           ...fieldAttrs,
-          required: false
+          required: false,
         }"
         :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
       >
@@ -92,9 +92,9 @@
       >
         <slot>
           <Field
-            v-for="field in childFields"
-            :key="Object.keys(field)[0]"
-            :name="Object.keys(field)[0]"
+            v-for="cfield in childFields"
+            :key="Object.keys(cfield)[0]"
+            :name="Object.keys(cfield)[0]"
           />
         </slot>
       </div>
@@ -105,7 +105,7 @@
 <script setup lang="ts">
 import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
 import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
-import { computed, onBeforeMount, toRef, watch, type Slot } from 'vue'
+import { computed, onBeforeMount, toRef, watch } from 'vue'
 import SlideTransition from './SlideTransition.vue'
 import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
 import Field from './Field.vue'
@@ -116,14 +116,6 @@ import type { ResetLabelPathRule } from './types'
 defineOptions({
   inheritAttrs: false,
 })
-
-const slots = defineSlots<
-  {
-    default?: Slot
-    [FIELD_RENDERERS]?: Slot<{ name: string }>
-    tooltip?: Slot
-  } & Record<string, Slot<{ name: string }>>
->()
 
 const {
   defaultExpanded = true, defaultAdded = true, collapsible = true, omit,

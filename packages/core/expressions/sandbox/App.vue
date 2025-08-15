@@ -111,7 +111,7 @@ const rhsValueCompletion: RhsValueCompletion = {
           label: text,
           kind: monaco.languages.CompletionItemKind.Value,
           detail: `lhs = ${lhsValue}`,
-          insertText:text,
+          insertText: text,
           range: rhsValueRange,
         }
       }),

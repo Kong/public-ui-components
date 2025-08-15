@@ -42,7 +42,7 @@
                 type: ConfigurationSchemaType.Text,
                 key: key,
                 label: key,
-                value: value
+                value: value,
               }"
             />
           </template>

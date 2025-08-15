@@ -1,7 +1,7 @@
 <template>
   <component
     :is="tag"
-    :class="{ 'has-task-items': hasTaskItems}"
+    :class="{ 'has-task-items': hasTaskItems }"
   >
     <slot />
   </component>

@@ -54,7 +54,7 @@
           :item="{
             key: getPropValue('rowValue', slotProps).id,
             value: getPropValue('rowValue', slotProps).id,
-            type: ConfigurationSchemaType.LinkInternal
+            type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer')"
         />
@@ -73,7 +73,7 @@
           :item="{
             key: getPropValue('rowValue', slotProps).id,
             value: getPropValue('rowValue', slotProps).id,
-            type: ConfigurationSchemaType.LinkInternal
+            type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'route')"
         />
@@ -91,7 +91,7 @@
           :item="{
             key: getPropValue('rowValue', slotProps).id,
             value: getPropValue('rowValue', slotProps).id,
-            type: ConfigurationSchemaType.LinkInternal
+            type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'service')"
         />
@@ -109,7 +109,7 @@
           :item="{
             key: getPropValue('rowValue', slotProps).id,
             value: getPropValue('rowValue', slotProps).id,
-            type: ConfigurationSchemaType.LinkInternal
+            type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps).id, 'consumer_group')"
         />
@@ -127,7 +127,7 @@
           :item="{
             key: getPropValue('rowValue', slotProps)?.[0]?.id,
             value: getPropValue('rowValue', slotProps)?.[0]?.id + (getPropValue('rowValue', slotProps)?.[0]?.name ? '/' + getPropValue('rowValue', slotProps)?.[0]?.name : ''),
-            type: ConfigurationSchemaType.LinkInternal
+            type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', getPropValue('rowValue', slotProps)?.[0]?.id, 'partial')"
         />

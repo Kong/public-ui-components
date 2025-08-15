@@ -169,7 +169,7 @@ describe('<AnalyticsMetricProvider />', () => {
         render: 'global',
         longCardTitles: true,
         percentileLatency: true,
-        additionalFilter: [{ operator: 'in',field: 'api_product', value: ['renders percentiles if the override is set'] } as ExploreFilterAll],
+        additionalFilter: [{ operator: 'in', field: 'api_product', value: ['renders percentiles if the override is set'] } as ExploreFilterAll],
       },
       global: {
         provide: {
