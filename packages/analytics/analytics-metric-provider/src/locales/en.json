@@ -23,7 +23,9 @@
     }
   },
   "trendRange": {
-    "custom": "vs previous {numDays, plural, =1 {day} other {# days}}",
+    "custom_days": "vs previous {numDays, plural, =1 {day} other {# days}}",
+    "custom_hours": "vs previous {numHours, plural, =1 {hour} other {# hours}}",
+    "custom_minutes": "vs previous {numMinutes, plural, =1 {minute} other {# minutes}}",
     "15m": "vs previous 15 minutes",
     "1h": "vs previous hour",
     "6h": "vs previous 6 hours",
