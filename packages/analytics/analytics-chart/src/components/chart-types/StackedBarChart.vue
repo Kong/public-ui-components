@@ -182,7 +182,7 @@ const legendID = ref(uuidv4())
 const reactiveAnnotationsID = uuidv4()
 const maxOverflowPluginID = uuidv4()
 const legendItems = ref<EnhancedLegendItem[]>([])
-const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
+const legendPosition = inject('legendPosition', ChartLegendPosition.Right)
 const axesTooltip = reactive<AxesTooltipState>({
   show: false,
   top: '0px',
