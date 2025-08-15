@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-v-html -->
 <template>
   <div
     class="form-group"
@@ -20,10 +19,11 @@
         v-if="options.helpAsHtml && field.help"
         #tooltip
       >
-        <div v-html="field.help" />
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div v-html="sanitize(field.help)" />
       </template>
       <div class="icon-wrapper">
-        <span v-html="formattedLabel(field.label)" />
+        <span>{{ formattedLabel(field.label) }}</span>
       </div>
 
       <div
@@ -69,8 +69,9 @@
     <div
       v-if="field.hint && getFieldType(field) !== 'field-input'"
       class="hint"
-      v-html="fieldHint(field)"
-    />
+    >
+      {{ fieldHint(field) }}
+    </div>
 
     <div
       v-if="fieldErrors(field).length > 0"
@@ -79,13 +80,15 @@
       <span
         v-for="(error, index) in fieldErrors(field)"
         :key="index"
-        v-html="error"
-      />
+      >
+        {{ error }}
+      </span>
     </div>
   </div>
 </template>
 
 <script>
+import DOMPurify from 'dompurify'
 import objGet from 'lodash-es/get'
 import isFunction from 'lodash-es/isFunction'
 import isNil from 'lodash-es/isNil'
@@ -158,6 +161,9 @@ export default {
     },
   },
   methods: {
+    sanitize(str) {
+      return DOMPurify.sanitize(str)
+    },
     // Should field type have a label?
     fieldTypeHasLabel(field) {
       if (isNil(field.label)) return false
