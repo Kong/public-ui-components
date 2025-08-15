@@ -1,26 +1,32 @@
+
 <template>
   <div
-    ref="flow-wrapper"
-    class="flow-wrapper"
+    ref="flowCanvas"
+    class="dk-flow-canvas"
   >
     <VueFlow
       :id="flowId"
       class="flow"
       :edges="edges"
-      fit-view-on-init
+      :elements-selectable="editing"
       :multi-selection-key-code="null"
       :nodes="nodes"
-      @click="onMaybeBackdropClick"
+      :nodes-connectable="editing"
+      :nodes-draggable="editing"
       @dragover.prevent
       @drop="(e: DragEvent) => onDrop(e)"
-      @node-click="onNodeClick"
+      @node-click="propertiesPanelOpen = true"
       @nodes-initialized="onNodesInitializes"
     >
       <Background />
-      <Controls position="bottom-left">
+      <Controls
+        position="bottom-left"
+        :show-interactive="false"
+      >
         <button
+          v-if="editing"
           class="vue-flow__controls-button vue-flow__controls-interactive custom"
-          @click="handleAutoLayout"
+          @click="() => requestAutoLayout()"
         >
           <SparklesIcon :size="18" /> <!-- TODO: Replace with a better icon for "auto layout" -->
         </button>
@@ -35,45 +41,55 @@
 </template>
 
 <script setup lang="ts">
-import type { DragPayload, NodeInstance, NodePhase } from '../../types'
+import type { DragPayload, NodeId, NodePhase } from '../types'
 
 import { SparklesIcon } from '@kong/icons'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
-import { VueFlow, type NodeMouseEvent } from '@vue-flow/core'
-import { ref, useId, useTemplateRef } from 'vue'
+import { VueFlow } from '@vue-flow/core'
+import { nextTick, ref, useId, useTemplateRef } from 'vue'
 
-import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
-import useFlow from '../composables/useFlow'
-import FlowNode from '../node/FlowNode.vue'
-import { useEditorStore } from '../store/store'
+import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
+import useFlow from './composables/useFlow'
+import FlowNode from './node/FlowNode.vue'
+import { useEditorStore } from './store/store'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
+import type { HistoryFlag } from './store/history'
 
 const props = defineProps<{
   phase: NodePhase
+  editing?: boolean
 }>()
 
-const flowWrapper = useTemplateRef('flow-wrapper')
+const flowCanvas = useTemplateRef('flowCanvas')
+
 const initialLayoutTriggered = ref(false)
 
 const uniqueId = useId()
 const flowId = `${uniqueId}-${props.phase}`
 
-const { vueFlowStore, editorStore, nodes, edges, autoLayout } = useFlow(props.phase, flowId)
+const { vueFlowStore, editorStore, nodes, edges, autoLayout } = useFlow({
+  phase: props.phase,
+  flowId,
+  editing: props.editing,
+})
 const { addNode, clear: historyClear } = editorStore
-const { project, vueFlowRef } = vueFlowStore
+const { project, vueFlowRef, addSelectedNodes, getNodes } = vueFlowStore
 
-const emit = defineEmits<{
-  'click:node': [node: NodeInstance]
-  'click:backdrop': []
-}>()
+const { selectNode: selectStoreNode, propertiesPanelOpen } = useEditorStore()
 
-const { selectNode } = useEditorStore()
+async function selectNode(nodeId?: NodeId) {
+  selectStoreNode(nodeId)
+  await nextTick()
+  addSelectedNodes(getNodes.value.filter((n) => n.data.id === nodeId))
+}
 
-const onDrop = (e: DragEvent) => {
+async function onDrop(e: DragEvent) {
+  if (!props.editing) return
+
   const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
   if (!data) return
 
@@ -105,42 +121,28 @@ const onDrop = (e: DragEvent) => {
   selectNode(nodeId)
 }
 
-function onNodeClick({ event, node }: NodeMouseEvent) {
-  event.stopPropagation()
-  emit('click:node', node.data)
-}
-
-function onMaybeBackdropClick(event: MouseEvent) {
-  if (event.target instanceof Element) {
-    // Ignore clicks on controls
-    if (event.target.closest('.vue-flow__controls')) {
-      return
-    }
-  }
-  emit('click:backdrop')
-}
-
-function onNodesInitializes() {
+const onNodesInitializes = async () => {
   if (!initialLayoutTriggered.value) {
     initialLayoutTriggered.value = true
-    handleAutoLayout()
-    // Clear all history post-initialization, as the state
-    // should be the 'origin' by this point.
+    // Clear all history, as the state should be the 'origin' by this point.
+    // FIXME: We should find a better way to handle history on init
     historyClear()
+    await requestAutoLayout({ skipEmittingChange: true })
   }
 
   // Reserved for future steps
 }
 
-function handleAutoLayout() {
-  autoLayout({
-    boundingRect: flowWrapper.value!.getBoundingClientRect(),
-  })
-}
+const requestAutoLayout = async (historyFlag?: HistoryFlag) => autoLayout({
+  boundingRect: flowCanvas.value!.getBoundingClientRect(),
+  historyFlag,
+})
+
+defineExpose({ requestAutoLayout })
 </script>
 
 <style lang="scss" scoped>
-.flow-wrapper {
+.dk-flow-canvas {
   height: 100%;
   width: 100%;
 

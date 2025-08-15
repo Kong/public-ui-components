@@ -20,37 +20,19 @@
       ref="canvasContainer"
       class="body"
     >
-      <EditorCanvas>
-        <template #request>
-          <EditorCanvasFlow
-            phase="request"
-            @click:backdrop="emit('click:backdrop')"
-            @click:node="emit('click:node', $event)"
-          />
-        </template>
-
-        <template #response>
-          <EditorCanvasFlow
-            phase="response"
-            @click:backdrop="emit('click:backdrop')"
-            @click:node="emit('click:node', $event)"
-          />
-        </template>
-      </EditorCanvas>
+      <FlowPanels editing />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { NodeInstance } from '../../types'
-
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
+
 import english from '../../../../../locales/en.json'
+import FlowPanels from '../FlowPanels.vue'
 import { useEditorStore } from '../store/store'
-import EditorCanvas from './EditorCanvas.vue'
-import EditorCanvasFlow from './EditorCanvasFlow.vue'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -60,11 +42,6 @@ const { t } = createI18n<typeof english>('en-us', english)
 
 defineSlots<{
   default(): any
-}>()
-
-const emit = defineEmits<{
-  'click:node': [node: NodeInstance]
-  'click:backdrop': []
 }>()
 
 const { modalOpen } = useEditorStore()
