@@ -1,7 +1,6 @@
 <template>
   <Form
     ref="form"
-    :config="{ updateOnChange: true }"
     :data="formData"
     :schema="schema"
   >
@@ -16,10 +15,15 @@
       @update:model-value="setConfig"
     />
 
-    <PropertiesField @update:model-value="handlePropertiesChange" />
+    <PropertiesField
+      :validators="fields"
+      @update:model-value="handlePropertiesChange"
+      @update:property-key="setConfig('property-key')"
+    />
 
     <InputsField
       v-if="writable"
+      :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
       @change:input="setInput"
@@ -35,9 +39,16 @@ import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/use
 import { computed, useTemplateRef } from 'vue'
 import EnumField from '../../../shared/EnumField.vue'
 import InputsField from './InputsField.vue'
-import { isReadableProperty, isWritableProperty } from '../node/property'
+import { extractKeyFromProperty, identifyPropertyHasKey, isReadableProperty, isWritableProperty } from '../node/property'
 import { useEditorStore } from '../store/store'
 import NameField from './NameField.vue'
+import type { NodeId } from '../../types'
+import { useFormValidation } from '../composables/validation'
+import { notEmpty } from '../composables/validation'
+
+const { nodeId } = defineProps<{
+  nodeId: NodeId
+}>()
 
 interface PropertyFormData extends BaseFormData {
   property: string | null
@@ -58,7 +69,10 @@ const {
   setInput,
   inputsFieldNames,
   nameValidator,
-} = useNodeForm<PropertyFormData>(() => formRef.value!.getInnerData())
+  toggleNodeValid,
+  skipValidationOnMount,
+  fieldNameValidator,
+} = useNodeForm<PropertyFormData>(nodeId, () => formRef.value!.getInnerData())
 
 const writable = computed(() => isWritableProperty(formData.value.property))
 
@@ -83,4 +97,23 @@ function handlePropertiesChange(value: string | null) {
 
   setConfig()
 }
+
+const {
+  fields,
+} = useFormValidation({
+  // Dynamic validation configuration - use function form
+  validationConfig: () => ({
+    property: notEmpty({ fieldName: 'Property' }),
+    // Conditionally add key validation when property has key
+    key: identifyPropertyHasKey(formData.value.property)
+      ? notEmpty({ fieldName: 'Key' })
+      : () => undefined, // No validation when not needed
+  }),
+  getValidationData: () => ({
+    property: formData.value.property,
+    key: extractKeyFromProperty(formData.value.property),
+  }),
+  skipValidationOnMount,
+  toggleNodeValid,
+})
 </script>

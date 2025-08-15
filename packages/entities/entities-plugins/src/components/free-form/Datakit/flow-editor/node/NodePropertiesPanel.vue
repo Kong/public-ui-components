@@ -9,22 +9,23 @@
     @close="$emit('close')"
   >
     <template
-      v-if="selectedNode"
+      v-if="currentNode"
       #title
     >
-      <NodeBadge :type="selectedNode.type" />
+      <NodeBadge :type="currentNode.type" />
     </template>
 
     <div
-      v-if="selectedNode"
+      v-if="currentNode"
       class="dk-node-properties-panel-desc"
-      v-html="getNodeTypeDescription(selectedNode.type)"
+      v-html="getNodeTypeDescription(currentNode.type)"
     />
 
     <Form
       v-if="Form"
-      :key="selectedNode?.id"
+      :key="nodeId"
       class="dk-node-properties-panel-form"
+      :node-id="nodeId!"
     />
   </KSlideout>
 </template>
@@ -45,17 +46,21 @@ import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
 import { computed } from 'vue'
 import { useEditorStore } from '../../composables'
+import type { NodeId } from '../../types'
 
-const { selectedNode } = useEditorStore()
+const { getNodeById } = useEditorStore()
+const currentNode = computed(() => nodeId && getNodeById(nodeId))
 
 const {
   maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,
   offsetTop = DK_NODE_PROPERTIES_PANEL_OFFSET_TOP,
   visible,
+  nodeId,
 } = defineProps<{
   maxWidth?: string
   offsetTop?: string
   visible?: boolean
+  nodeId?: NodeId
 }>()
 
 defineEmits<{
@@ -63,7 +68,7 @@ defineEmits<{
 }>()
 
 const Form = computed(() => {
-  switch (selectedNode.value?.type) {
+  switch (currentNode.value?.type) {
     case 'call':
       return NodeFormCall
     case 'service_request':

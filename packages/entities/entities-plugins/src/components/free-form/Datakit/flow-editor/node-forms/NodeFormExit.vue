@@ -1,7 +1,6 @@
 <template>
   <Form
     ref="form"
-    :config="{ updateOnChange: true }"
     :data="formData"
     :schema="schema"
   >
@@ -12,8 +11,11 @@
     />
 
     <NumberField
+      :error="statusHandler.error.value"
+      :error-message="statusHandler.errorMessage.value"
       name="status"
-      @update:model-value="setConfig()"
+      @blur="statusHandler.onBlur"
+      @update:model-value="statusHandler.onUpdate"
     />
 
     <BooleanField
@@ -22,6 +24,7 @@
     />
 
     <InputsField
+      :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
       @change:input="setInput"
@@ -32,12 +35,24 @@
 
 <script setup lang="ts">
 import Form from '../../../shared/Form.vue'
-import { useNodeForm, useSubSchema } from '../composables/useNodeForm'
+import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { useTemplateRef } from 'vue'
 import NumberField from '../../../shared/NumberField.vue'
 import BooleanField from '../../../shared/BooleanField.vue'
 import InputsField from './InputsField.vue'
 import NameField from './NameField.vue'
+import type { NodeId } from '../../types'
+import { useFormValidation } from '../composables/validation'
+import { compose, numberFormat, numberRange } from '../composables/validation'
+
+interface ExitFormData extends BaseFormData {
+  status?: number
+  warn_headers_sent?: boolean
+}
+
+const { nodeId } = defineProps<{
+  nodeId: NodeId
+}>()
 
 const formRef = useTemplateRef('form')
 
@@ -52,5 +67,27 @@ const {
   setInput,
   inputsFieldNames,
   nameValidator,
-} = useNodeForm(() => formRef.value!.getInnerData())
+  toggleNodeValid,
+  skipValidationOnMount,
+  fieldNameValidator,
+} = useNodeForm<ExitFormData>(nodeId, () => formRef.value!.getInnerData())
+
+const {
+  createFieldHandler,
+} = useFormValidation({
+  validationConfig: {
+    status: compose(
+      numberFormat('integer', { fieldName: 'Status' }),
+      numberRange(200, 255, { fieldName: 'Status' }),
+    ),
+  },
+  getValidationData: () => ({
+    status: formData.value.status,
+  }),
+  skipValidationOnMount,
+  toggleNodeValid,
+})
+
+// Create field handlers
+const statusHandler = createFieldHandler('status', () => setConfig('status'))
 </script>

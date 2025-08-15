@@ -1,7 +1,6 @@
 <template>
   <Form
     ref="form"
-    :config="{ updateOnChange: true }"
     :data="formData"
     :schema="schema"
   >
@@ -12,20 +11,24 @@
     />
 
     <KLabel class="dk-node-configuration-label">
-      {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.Configuration') }}
+      {{ t('plugins.free-form.datakit.flow_editor.node_properties.Configuration') }}
     </KLabel>
 
     <!-- todo(zehao): replace to monaco editor -->
     <StringField
-      :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.jq.label')"
+      :error="jqHandler.error.value"
+      :help="jqHandler.errorMessage.value"
+      :label="jqFieldName"
       multiline
       name="jq"
       resizable
       rows="2"
-      @update:model-value="setConfig()"
+      @blur="jqHandler.onBlur"
+      @update:model-value="jqHandler.onUpdate"
     />
 
     <InputsField
+      :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
       @add:field="handleAddField"
@@ -43,11 +46,22 @@ import InputsField from './InputsField.vue'
 import useI18n from '../../../../../composables/useI18n'
 import StringField from '../../../shared/StringField.vue'
 import { useTemplateRef } from 'vue'
-import { useNodeForm, useSubSchema } from '../composables/useNodeForm'
+import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import type { FieldName, IdConnection } from '../../types'
 import NameField from './NameField.vue'
+import type { NodeId } from '../../types'
+import { useFormValidation } from '../composables/validation'
+import { compose, notEmpty, stringLenRange } from '../composables/validation'
 
-const { i18n } = useI18n()
+interface JqFormData extends BaseFormData {
+  jq: string
+}
+
+const { nodeId } = defineProps<{
+  nodeId: NodeId
+}>()
+
+const { i18n: { t } } = useI18n()
 
 const formRef = useTemplateRef('form')
 
@@ -65,7 +79,10 @@ const {
   renameFieldByName,
   inputsFieldNames,
   nameValidator,
-} = useNodeForm(() => formRef.value!.getInnerData())
+  skipValidationOnMount,
+  toggleNodeValid,
+  fieldNameValidator,
+} = useNodeForm<JqFormData>(nodeId, () => formRef.value!.getInnerData())
 
 function handleAddField(name: FieldName, value?: IdConnection | null) {
   addField('input', name, value)
@@ -78,4 +95,25 @@ function handleRemoveField(name: FieldName) {
 function handleRenameField(oldName: FieldName, newName: FieldName) {
   renameFieldByName('input', oldName, newName)
 }
+
+const jqFieldName = t('plugins.free-form.datakit.flow_editor.node_properties.jq.label')
+
+const {
+  createFieldHandler,
+} = useFormValidation({
+  validationConfig: {
+    jq: compose(
+      notEmpty({ fieldName: jqFieldName }),
+      stringLenRange(1, 10240, { fieldName: jqFieldName }),
+    ),
+  },
+  getValidationData: () => ({
+    jq: formData.value.jq,
+  }),
+  skipValidationOnMount,
+  toggleNodeValid,
+})
+
+// Create field handlers
+const jqHandler = createFieldHandler('jq', () => setConfig('jq'))
 </script>

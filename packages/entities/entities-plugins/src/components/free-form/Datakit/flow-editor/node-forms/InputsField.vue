@@ -12,6 +12,7 @@
 
   <InputsField
     v-if="InputsField"
+    :field-name-validator="fieldNameValidator"
     :items="items"
     :key-order="fieldNames"
     name="inputs"
@@ -30,12 +31,13 @@ import EnumField from '../../../shared/EnumField.vue'
 import InputsRecordField from './InputsRecordField.vue'
 import InputsMapField from './InputsMapField.vue'
 import useI18n from '../../../../../composables/useI18n'
-import type { InputOption } from '../composables/useNodeForm'
+import type { InputOption, useNodeForm } from '../composables/useNodeForm'
 import type { FieldName, IdConnection } from '../../types'
 
 defineProps<{
   items: InputOption[]
   fieldNames: FieldName[]
+  fieldNameValidator: ReturnType<typeof useNodeForm>['fieldNameValidator']
 }>()
 
 const emit = defineEmits<{

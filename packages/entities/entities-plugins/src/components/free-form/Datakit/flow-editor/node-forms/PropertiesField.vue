@@ -1,6 +1,9 @@
 <template>
   <KSelect
+    :key="selectKey"
     enable-filtering
+    :error="!validators.property.isValid.value"
+    :help="validators.property.error.value"
     :items="selectItems"
     label="Property"
     :label-attributes="({
@@ -9,6 +12,7 @@
       info: 'The property name to get/set'
     } as any)"
     required
+    @blur="validators.property.handleBlur(() => formData.property)"
     @change="handleSelectChange"
   >
     <template #item-template="{ item }">
@@ -41,10 +45,13 @@
 
   <KInput
     v-if="isCurrentPropertyHasKey"
-    v-model="key"
+    v-model:model-value="key"
+    :error="!validators.key.isValid.value"
+    :error-message="validators.key.error.value"
     label="key"
     required
-    @change="handleKeyChange"
+    @blur="validators.key.handleBlur(() => formData.property)"
+    @update:model-value="handleKeyChange"
   />
 </template>
 
@@ -61,11 +68,20 @@ import {
   PROPERTY_KEY_PATTERN,
   PROPERTY_PREFIXES,
 } from '../node/property'
+import type { FieldValidationMethods, ValidatorFn } from '../composables/validation'
 
 const { i18n: { t } } = useI18n()
 
+const props = defineProps<{
+  validators: {
+    readonly property: FieldValidationMethods<ValidatorFn<any>>
+    readonly key: FieldValidationMethods<() => string | undefined>
+  }
+}>()
+
 const emit = defineEmits<{
   (e: 'update:model-value', value: string | null): void
+  (e: 'update:property-key', value: string): void
 }>()
 
 const { formData } = useFormShared<{ property: string | null }>()
@@ -75,6 +91,9 @@ const lastPropertyValueWithoutKey = ref<string | null>(getPropertyWithoutKey(for
 const isCurrentPropertyHasKey = computed(() => identifyPropertyHasKey(formData.property))
 
 const key = ref<string | undefined>(extractKeyFromProperty(formData.property))
+
+// KSelect has a bug where it doesn't refresh the selected item when the items has been updated.
+const selectKey = computed(() => formData.property ?? '')
 
 const selectItems = computed<Array<SelectItem<string>>>(() => {
   return Object.entries(KONG_CLIENT_SUPPORTED_PROPERTIES).map(([prop]) => {
@@ -93,14 +112,14 @@ const selectItems = computed<Array<SelectItem<string>>>(() => {
   })
 })
 
-function handleKeyChange(e: InputEvent) {
+function handleKeyChange(value: string | undefined) {
   const prefix = PROPERTY_PREFIXES.find(prefix => formData.property?.startsWith(prefix))
 
   if (!prefix) return
 
-  const val = (e.target as HTMLInputElement).value
-  formData.property = prefix + val
-  emit('update:model-value', formData.property)
+  formData.property = prefix + value
+  props.validators.key.handleChange(formData.property)
+  emit('update:property-key', formData.property)
 }
 
 function handleSelectChange(item: SelectItem<string> | null) {
@@ -111,6 +130,7 @@ function handleSelectChange(item: SelectItem<string> | null) {
   }
   formData.property = item?.value || null
   lastPropertyValueWithoutKey.value = getPropertyWithoutKey(formData.property)
+  props.validators.property.handleBlur(() => formData.property)
   emit('update:model-value', formData.property)
 }
 
