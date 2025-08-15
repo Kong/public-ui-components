@@ -1,5 +1,6 @@
 import MetricsTestHarness from './MetricsTestHarness.vue'
 import { ref } from 'vue'
+import { Timeframe } from '@kong-ui-public/analytics-utilities'
 import type {
   AdvancedDatasourceQuery,
   AnalyticsBridge,
@@ -12,6 +13,45 @@ import type { MockOptions } from '../mockExploreResponse'
 import { mockExploreResponse } from '../mockExploreResponse'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import { createPinia, setActivePinia } from 'pinia'
+
+
+const custom1DayTimeframe = new Timeframe({
+  key: 'custom',
+  timeframeText: 'Custom Timeframe',
+  display: 'Custom Timeframe',
+  startCustom: new Date('2023-01-01T00:00:00Z'),
+  endCustom: new Date('2023-01-02T00:00:00Z'),
+  isRelative: false,
+  timeframeLength: () => 86400000, // 1 day in milliseconds
+  defaultResponseGranularity: 'minutely',
+  dataGranularity: 'minutely',
+  allowedTiers: ['free', 'pro', 'enterprise'],
+})
+const custom10Minuteframe = new Timeframe({
+  key: 'custom',
+  timeframeText: 'Custom Timeframe',
+  display: 'Custom Timeframe',
+  startCustom: new Date('2023-01-01T00:00:00Z'),
+  endCustom: new Date('2023-01-01T00:10:00Z'),
+  isRelative: false,
+  timeframeLength: () => 600000, // 10 minutes in milliseconds
+  defaultResponseGranularity: 'minutely',
+  dataGranularity: 'minutely',
+  allowedTiers: ['free', 'pro', 'enterprise'],
+})
+const custom1hourTimeframe = new Timeframe({
+  key: 'custom',
+  timeframeText: 'Custom Timeframe',
+  display: 'Custom Timeframe',
+  startCustom: new Date('2023-01-01T00:00:00Z'),
+  endCustom: new Date('2023-01-01T01:00:00Z'),
+  isRelative: false,
+  timeframeLength: () => 3600000, // 1 hour in milliseconds,
+  defaultResponseGranularity: 'minutely',
+  dataGranularity: 'minutely',
+  allowedTiers: ['free', 'pro', 'enterprise'],
+})
+
 
 describe('<AnalyticsMetricProvider />', () => {
 
@@ -503,5 +543,66 @@ describe('<AnalyticsMetricProvider />', () => {
       cy.get('.metricscard').eq(1).get('.metricscard-error').should('exist')
       cy.getTestId('metric-value').eq(0).should('have.text', '1001ms')
     })
+  })
+
+  it('1 day custom time frame', () => {
+    const queryBridge = makeQueryBridge({
+      timeFrame: custom1DayTimeframe,
+    })
+
+    cy.mount(MetricsTestHarness, {
+      props: {
+        render: 'global',
+        overrideTimeframe: custom1DayTimeframe,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: queryBridge,
+        },
+      },
+    })
+
+    cy.get('.metricscard-trend-range').first().should('contain', 'vs previous day')
+  })
+
+
+  it('1 hour custom time frame', () => {
+    const queryBridge = makeQueryBridge({
+      timeFrame: custom1hourTimeframe,
+    })
+
+    cy.mount(MetricsTestHarness, {
+      props: {
+        render: 'global',
+        overrideTimeframe: custom1hourTimeframe,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: queryBridge,
+        },
+      },
+    })
+
+    cy.get('.metricscard-trend-range').first().should('contain', 'vs previous hour')
+  })
+
+  it('10 min custom time frame', () => {
+    const queryBridge = makeQueryBridge({
+      timeFrame: custom10Minuteframe,
+    })
+
+    cy.mount(MetricsTestHarness, {
+      props: {
+        render: 'global',
+        overrideTimeframe: custom10Minuteframe,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: queryBridge,
+        },
+      },
+    })
+
+    cy.get('.metricscard-trend-range').first().should('contain', 'vs previous 10 minutes')
   })
 })
