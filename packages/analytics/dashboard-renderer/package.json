@@ -46,13 +46,13 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "catalog:",
-    "@kong/kongponents": "catalog:",
+    "@kong/design-tokens": "1.17.4",
+    "@kong/kongponents": "9.34.2",
     "ajv": "^8.17.1",
     "cypress-real-events": "^1.14.0",
-    "pinia": "catalog:",
+    "pinia": ">= 2.1.7 < 3",
     "swrv": "^1.1.0",
-    "vue": "catalog:"
+    "vue": "^3.5.13"
   },
   "repository": {
     "type": "git",
@@ -77,9 +77,9 @@
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "catalog:",
+    "@kong/kongponents": "^9.34.2",
     "swrv": "^1.1.0",
-    "vue": "catalog:"
+    "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
