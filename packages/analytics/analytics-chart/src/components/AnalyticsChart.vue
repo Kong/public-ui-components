@@ -125,7 +125,6 @@ interface ChartProps {
 const emit = defineEmits<{
   (e: 'zoom-time-range', newTimeRange: AbsoluteTimeRangeV4): void
   (e: 'select-chart-range', newTimeRange: AbsoluteTimeRangeV4): void
-  (e: 'update:legendPosition', newLegendPosition: `${ChartLegendPosition}`): void
 }>()
 
 const props = withDefaults(defineProps<ChartProps>(), {
@@ -342,12 +341,7 @@ const zoomActionItems = computed<ZoomActionItem[]>(() => {
 })
 
 provide('showLegendValues', showLegendValues)
-
-const legendPositionModel = computed({
-  get: () => props.legendPosition,
-  set: v => emit('update:legendPosition', v),
-})
-provide('legendPosition', legendPositionModel)
+provide('legendPosition', toRef(props, 'legendPosition'))
 
 </script>
 
