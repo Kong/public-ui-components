@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.2.0...@kong-ui-public/error-boundary@2.2.1) (2025-08-15)
+
+
+### Reverts
+
+* pnpm catalog ([#2344](https://github.com/Kong/public-ui-components/issues/2344)) ([68ebf45](https://github.com/Kong/public-ui-components/commit/68ebf452b5825000b3a528aedbb4233b11cb0c72)), closes [#2274](https://github.com/Kong/public-ui-components/issues/2274)
+
+
+
+
+
 # [2.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/error-boundary@2.1.28...@kong-ui-public/error-boundary@2.2.0) (2025-08-06)
 
 
