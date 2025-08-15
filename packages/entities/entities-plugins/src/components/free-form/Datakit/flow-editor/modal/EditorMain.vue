@@ -22,19 +22,11 @@
     >
       <EditorCanvas>
         <template #request>
-          <EditorCanvasFlow
-            phase="request"
-            @click:backdrop="emit('click:backdrop')"
-            @click:node="emit('click:node', $event)"
-          />
+          <EditorCanvasFlow phase="request" />
         </template>
 
         <template #response>
-          <EditorCanvasFlow
-            phase="response"
-            @click:backdrop="emit('click:backdrop')"
-            @click:node="emit('click:node', $event)"
-          />
+          <EditorCanvasFlow phase="response" />
         </template>
       </EditorCanvas>
     </div>
@@ -42,8 +34,6 @@
 </template>
 
 <script setup lang="ts">
-import type { NodeInstance } from '../../types'
-
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
@@ -60,11 +50,6 @@ const { t } = createI18n<typeof english>('en-us', english)
 
 defineSlots<{
   default(): any
-}>()
-
-const emit = defineEmits<{
-  'click:node': [node: NodeInstance]
-  'click:backdrop': []
 }>()
 
 const { modalOpen } = useEditorStore()
