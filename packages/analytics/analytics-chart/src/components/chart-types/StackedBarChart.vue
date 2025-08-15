@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="chartParentRef"
+    ref="chartParent"
     class="chart-parent"
     :class="chartFlexClass[legendPosition]"
   >
@@ -10,10 +10,10 @@
       class="axis"
     />
     <div
-      ref="chartContainerRef"
+      ref="chartContainer"
       class="chart-container"
-      @:scroll="onScrolling"
       @click="handleChartClick()"
+      @scroll="onScrolling"
     >
       <div
         class="chart-body"
@@ -120,8 +120,8 @@ const SCROLL_MAX = 10
 const AXIS_BOTTOM_OFFSET = 10
 const AXIS_RIGHT_PADDING = 1
 
-const chartContainerRef = ref<HTMLDivElement | null>(null)
-const chartParentRef = useTemplateRef('chartParentRef')
+const chartContainerRef = useTemplateRef<HTMLDivElement>('chartContainer')
+const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 
 const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
   const chartData: BarChartData = chart.data as BarChartData
@@ -182,7 +182,7 @@ const legendID = ref(uuidv4())
 const reactiveAnnotationsID = uuidv4()
 const maxOverflowPluginID = uuidv4()
 const legendItems = ref<EnhancedLegendItem[]>([])
-const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
+const legendPosition = inject('legendPosition', ChartLegendPosition.Right)
 const axesTooltip = reactive<AxesTooltipState>({
   show: false,
   top: '0px',
@@ -362,15 +362,15 @@ onMounted(() => {
 
   if (chartContainerRef.value) {
     // Initialize base dimensions since resize observer is debounced.
-    baseWidth.value = (chartContainerRef.value as HTMLDivElement).offsetWidth
-    baseHeight.value = (chartContainerRef.value as HTMLDivElement).offsetHeight
-    resizeObserver.observe(chartContainerRef.value as HTMLDivElement)
+    baseWidth.value = chartContainerRef.value.offsetWidth
+    baseHeight.value = chartContainerRef.value.offsetHeight
+    resizeObserver.observe(chartContainerRef.value)
   }
 })
 
 onUnmounted(() => {
   if (chartContainerRef.value) {
-    resizeObserver.unobserve(chartContainerRef.value as HTMLDivElement)
+    resizeObserver.unobserve(chartContainerRef.value)
   }
 })
 
@@ -405,8 +405,8 @@ const options = computed<ChartOptions>(() => {
 
 const chartInstance = composables.useChartJSCommon(
   'bar',
-  canvas as Ref<HTMLCanvasElement | null>,
-  toRef(props, 'chartData') as Ref<BarChartData>,
+  canvas,
+  toRef(props, 'chartData'),
   plugins,
   options,
 ) as Ref<Chart | undefined>

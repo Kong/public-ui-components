@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="chartParentRef"
+    ref="chartParent"
     class="chart-parent"
     :class="chartFlexClass(legendPosition)"
     data-testid="donut-chart-parent"
@@ -78,7 +78,7 @@ const { translateUnit } = composables.useTranslatedUnits()
 const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
 const legendItems = ref([])
-const chartParentRef = useTemplateRef('chartParentRef')
+const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 
 const tooltipData: TooltipState = reactive({
   showTooltip: false,
