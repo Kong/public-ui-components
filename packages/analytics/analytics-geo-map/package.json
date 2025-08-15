@@ -44,7 +44,7 @@
     "@kong/kongponents": "9.38.3",
     "@types/geojson": "^7946.0.16",
     "maplibre-gl": "^4.7.1",
-    "vue": "^3.5.18"
+    "vue": "^3.5.13"
   },
   "repository": {
     "type": "git",

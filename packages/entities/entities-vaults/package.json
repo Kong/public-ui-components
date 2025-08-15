@@ -35,8 +35,8 @@
     "@kong/design-tokens": "1.18.0",
     "@kong/kongponents": "9.38.3",
     "axios": "^1.7.7",
-    "vue": "^3.5.18",
-    "vue-router": "^4.5.1"
+    "vue": "^3.5.13",
+    "vue-router": "^4.4.5"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
