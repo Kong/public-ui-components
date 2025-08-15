@@ -77,7 +77,23 @@
   "pnpm": {
     "overrides": {
       "string-width": "4.2.3"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@evilmartians/lefthook",
+      "@parcel/watcher",
+      "@swc/core",
+      "core-js",
+      "core-js-pure",
+      "cypress",
+      "es5-ext",
+      "esbuild",
+      "nx",
+      "swagger-ui",
+      "tree-sitter",
+      "tree-sitter-json",
+      "tree-sitter-yaml",
+      "vue-demi"
+    ]
   },
   "workspaces": [
     "packages/*/*"
