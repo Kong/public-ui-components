@@ -1,5 +1,6 @@
 import { computed, onBeforeUnmount, onMounted, watch, type ComputedRef } from 'vue'
-import { useValidationManager, type ValidatorFn } from '.'
+import type { ValidatorFn } from './basic'
+import { useValidationManager } from './manager'
 
 /**
  * Configuration for node form validation
