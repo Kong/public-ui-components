@@ -19,7 +19,7 @@
         <component
           :is="autofillSlot"
           :schema="schema"
-          :update="(value) => onInput({ target: { value }}, index, 'key')"
+          :update="(value) => onInput({ target: { value } }, index, 'key')"
           :value="pair.key"
         />
       </div>
@@ -38,7 +38,7 @@
         <component
           :is="autofillSlot"
           :schema="schema"
-          :update="(value) => onInput({ target: { value }}, index, 'value')"
+          :update="(value) => onInput({ target: { value } }, index, 'value')"
           :value="pair.value"
         />
       </div>

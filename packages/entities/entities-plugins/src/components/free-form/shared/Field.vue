@@ -28,7 +28,7 @@
     <KAlert
       v-else
       appearance="warning"
-      :message="`${field.path.value } ${ field.schema.value!.type } (no renderer yet)`"
+      :message="`${field.path.value} ${field.schema.value!.type} (no renderer yet)`"
     />
 
     <!-- child elements -->

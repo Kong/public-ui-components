@@ -22,7 +22,7 @@
       <DashboardRenderer
         ref="dashboardRendererRef"
         v-model="dashboardConfig"
-        :class="{ 'custom-styling': isToggled}"
+        :class="{ 'custom-styling': isToggled }"
         :context="context"
       >
         <template #slot-1>

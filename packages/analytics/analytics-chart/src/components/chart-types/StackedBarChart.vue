@@ -30,7 +30,7 @@
       <div
         v-if="axesTooltip.show"
         class="axis-tooltip"
-        :style="{ top: axesTooltip.top, left: axesTooltip.left}"
+        :style="{ top: axesTooltip.top, left: axesTooltip.left }"
         width="auto"
       >
         <div class="axis-tooltip-content">

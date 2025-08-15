@@ -113,7 +113,7 @@ watch(() => props.lang, async () => {
       import('prismjs/components/prism-yaml.min.js'),
       import('prismjs/components/prism-xml-doc.min.js'),
     ])
-  } catch (e) {
+  } catch {
     console.warn('Could not import PrismJS language file.')
   }
   Prism.highlightAll()

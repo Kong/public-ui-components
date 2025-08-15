@@ -66,9 +66,9 @@ export default function useUrlValidators() {
     // check if protocol is empty
     if (!protocol || protocol.trim() === '') return t('gateway_services.form.errors.protocol.empty')
     // strip out the : from protocol
-    protocol = protocol.slice(0,-1)
+    protocol = protocol.slice(0, -1)
     // check if protocol is valid
-    const selectedProtocol = ProtocolItems.find((item)=>{
+    const selectedProtocol = ProtocolItems.find((item) => {
       if (item.value === protocol) return item
       else return undefined
     })

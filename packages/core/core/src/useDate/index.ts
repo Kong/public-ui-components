@@ -26,7 +26,7 @@ export default function useDate() {
         hour12: false,
         ...options,
       })
-    } catch (err) {
+    } catch {
       return null
     }
   }
@@ -47,7 +47,7 @@ export default function useDate() {
       const date = new Date(timestamp * 1000)
 
       return format(date, dateFormatString)
-    } catch (err) {
+    } catch {
       return ''
     }
   }

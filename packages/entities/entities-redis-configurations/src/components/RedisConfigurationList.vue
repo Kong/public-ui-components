@@ -108,11 +108,11 @@
           :features="[
             {
               title: t('list.empty_state.feature_1.title'),
-              description: t('list.empty_state.feature_1.description')
+              description: t('list.empty_state.feature_1.description'),
             },
             {
               title: t('list.empty_state.feature_2.title'),
-              description: t('list.empty_state.feature_2.description')
+              description: t('list.empty_state.feature_2.description'),
             },
           ]"
           :title="t('redis.title')"

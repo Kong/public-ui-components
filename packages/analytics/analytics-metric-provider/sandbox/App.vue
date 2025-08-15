@@ -244,7 +244,7 @@ const timeframeProviderProps = computed(() => ({
   refreshInterval,
   dimension: 'route',
   overrideTimeframe: overrideTimeframe.value,
-  additionalFilter: [{ dimension: 'control_plane', operator: '=', value:  '' + filterCounter.value }],
+  additionalFilter: [{ dimension: 'control_plane', operator: '=', value: '' + filterCounter.value }],
 }))
 
 const timeframeProviderBridge = makeQueryBridge({ dimensionNames: ['blah😀😀', 'arrgh'], deterministic: false })

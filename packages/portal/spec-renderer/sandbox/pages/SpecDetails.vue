@@ -50,18 +50,18 @@
               {
                 prismLanguage: 'bash',
                 target: 'shell',
-                client: 'curl'
+                client: 'curl',
               },
               {
                 prismLanguage: 'javascript',
                 target: 'javascript',
-                client: 'xhr'
+                client: 'xhr',
               },
               {
                 prismLanguage: 'java',
-                target: 'java'
+                target: 'java',
               },
-            ]
+            ],
           }"
         />
       </div>
@@ -71,7 +71,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-// @ts-ignore
+// @ts-ignore - explicit import of yaml content for spec renderer
 import yamlContent from '../test.yaml'
 import type { OperationListItem } from '../../src/types'
 import { SpecDetails } from '../../src'

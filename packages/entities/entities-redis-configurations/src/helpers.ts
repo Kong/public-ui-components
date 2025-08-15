@@ -9,6 +9,7 @@ export const shallowCopyWithId = <T extends Record<any, any>>(node: T): Identifi
 }
 
 export const shallowCopyWithoutId = <T extends { id: string }>(node: T): Omit<T, 'id'> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id, ...rest } = node
   return rest
 }

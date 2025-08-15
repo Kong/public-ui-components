@@ -2,7 +2,7 @@
   <div class="radio-selection-group">
     <KRadio
       v-for="(option, i) in schema.values"
-      :id="schema.name+'-'+i"
+      :id="schema.name + '-' + i"
       :key="option.value"
       v-model="inputValue"
       :label="option.name"

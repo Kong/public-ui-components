@@ -35,7 +35,7 @@
             key: propKey,
             label: convertKeyToTitle(propKey),
             value: getPropItemValue(propKey, slotProps),
-            type: propKey === 'key_usages' ? ConfigurationSchemaType.BadgeTag : ConfigurationSchemaType.Text
+            type: propKey === 'key_usages' ? ConfigurationSchemaType.BadgeTag : ConfigurationSchemaType.Text,
           }"
         />
       </template>
@@ -75,7 +75,7 @@ import {
   ConfigurationSchemaSection,
   useStringHelpers,
   useHelpers,
-  ConfigCardItem ,
+  ConfigCardItem,
   SupportedEntityType,
 } from '@kong-ui-public/entities-shared'
 import endpoints from '../ca-certificates-endpoints'

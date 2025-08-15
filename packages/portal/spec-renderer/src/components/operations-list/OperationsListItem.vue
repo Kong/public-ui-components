@@ -4,7 +4,7 @@
     :class="{
       'item--selected': isSelected,
       [`item--method-${item.method}`]: true,
-      'disabled': disableSelection
+      'disabled': disableSelection,
     }"
     :data-testid="testId"
     type="button"

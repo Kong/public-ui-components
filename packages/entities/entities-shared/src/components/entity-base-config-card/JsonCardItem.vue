@@ -15,7 +15,7 @@
       :item="{
         key: property,
         label: convertKeyToTitle(property),
-        value: displayValue[property]
+        value: displayValue[property],
       }"
     />
   </component>

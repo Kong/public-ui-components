@@ -377,7 +377,7 @@ const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<
 /**
  * Copy JSON action
  */
-const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void>=> {
+const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const val = JSON.stringify(row)
 
   if (!await copyToClipboard(val)) {
@@ -455,7 +455,7 @@ const deleteAssociatedConfigStore = async (configStoreId: string): Promise<void>
     .replace(/{id}/gi, configStoreId)
   try {
     await axiosInstance.delete(url)
-  } catch (error: any) {
+  } catch {
     // There is a rare case where more than 1 vaults are linked to the config store (i.e. created via API).
     // In this case, the deletion will fail but the UI can safely ignore the error.
   }

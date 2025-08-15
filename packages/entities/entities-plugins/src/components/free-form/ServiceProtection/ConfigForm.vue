@@ -43,6 +43,10 @@ import type { FormConfig } from '../shared/types'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 
+defineEmits<{
+  (e: 'change', value: FreeFormPluginData): void
+}>()
+
 defineProps<{
   schema: FormSchema
   data?: FreeFormPluginData

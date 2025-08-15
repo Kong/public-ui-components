@@ -44,7 +44,7 @@ const tags = computed(() => {
         return parsedTags
       }
       return []
-    } catch (e) {
+    } catch {
       return []
     }
   }

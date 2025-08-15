@@ -53,7 +53,7 @@ export default function useHelpers() {
 
     try {
       return JSON.stringify(a) === JSON.stringify(b)
-    } catch (e) {
+    } catch {
       return false
     }
   }

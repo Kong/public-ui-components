@@ -68,7 +68,7 @@ export interface UpstreamFormFields {
   stickySessionsCookiePath: string
   slots: string
   hashOn: UpstreamHash
-  hashFallback:UpstreamHash
+  hashFallback: UpstreamHash
   hashOnHeader: string
   hashOnCookie: string
   hashOnCookiePath: string
@@ -156,7 +156,7 @@ export interface UpstreamFormPayload {
   tags?: string[]
   slots: number
   hash_on: UpstreamHash
-  hash_fallback:UpstreamHash
+  hash_fallback: UpstreamHash
   hash_on_header?: string
   hash_on_cookie?: string
   hash_on_cookie_path?: string

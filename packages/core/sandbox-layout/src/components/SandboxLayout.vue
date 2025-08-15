@@ -28,7 +28,7 @@
           >
             <router-link
               class="home-link"
-              :to="{ name: 'home'}"
+              :to="{ name: 'home' }"
             >
               {{ title }}
             </router-link>

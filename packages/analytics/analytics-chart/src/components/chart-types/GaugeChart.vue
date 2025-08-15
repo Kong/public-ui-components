@@ -22,7 +22,7 @@
     </div>
     <div
       class="chart-container"
-      :style="{height, width}"
+      :style="{ height, width }"
     >
       <Doughnut
         ref="chartInstance"
