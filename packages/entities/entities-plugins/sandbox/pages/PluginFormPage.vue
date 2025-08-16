@@ -18,6 +18,9 @@
       enable-vault-secret-picker
       :plugin-id="id"
       :plugin-type="plugin"
+      :scoped-entities-permissions="{
+        'consumer': { canRetrieve: false },
+      }"
       @update="onUpdate"
     />
   </div>

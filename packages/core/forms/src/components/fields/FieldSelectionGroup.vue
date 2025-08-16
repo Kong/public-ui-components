@@ -42,6 +42,7 @@
     >
       <!-- Selected Field -->
       <div
+        v-if="renderedTrack[i]"
         v-show="option.fields && checkedGroup === i"
         class="option-field"
       >
@@ -80,6 +81,13 @@ export default {
     return {
       checkedGroup: null,
       fieldModel: { ...this.model }, // keep local copy of original model
+      /**
+       * renderedTrack tracks makes lazy rendering possible by tracking each index pointed component's render state
+       * all unrendered components are set to 0, when the corresponding group got picked it will be set to 1 for good,
+       * this retains the local state for each subgroup without initializing early to send unpermitted requests which
+       * triggers testing failures
+       */
+      renderedTrack: [],
       fieldSchema: [],
       scope: 'scope',
     }
@@ -88,6 +96,7 @@ export default {
   watch: {
     checkedGroup: {
       handler(newVal, oldVal) {
+        this.renderedTrack[newVal] = true
         // First time trigger shouldn't need to update the form model
         if (oldVal === null) {
           this.fieldModel = { ...this.model }
@@ -111,6 +120,7 @@ export default {
 
     // Set checkedGroup based on model
     this.schema.fields.forEach((field, i) => {
+      this.renderedTrack.push(false)
       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       field.fields && field.fields.forEach(subField => {
         if (this.model[subField.model]) {
