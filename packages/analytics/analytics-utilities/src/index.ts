@@ -1,6 +1,6 @@
 export * from './constants'
 export * as dashboardsSchemaV1 from './dashboardSchema'
-export * from './dashboardSchema.v2'
+export * from './dashboardSchemaZod.v2'
 export * from './types'
 export * from './filters'
 export * from './format'
