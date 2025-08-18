@@ -75,7 +75,7 @@ jobs:
       # See 'changed_packages' below
       - name: Check for config file changes
         id: config-files-changed
-        uses: Kong/changed-files@4edd678ac3f81e2dc578756871e4d00c19191daf
+        uses: Kong/changed-files@1f31e0a3b1acd04d48dff8801048bb314c8a9e0d
         with:
           files: |
             ./vite.config.shared.ts
