@@ -56,7 +56,7 @@
     <KButton
       appearance="tertiary"
       :data-testid="`ff-kv-add-btn-${field.path.value}`"
-      :disabled="!!addingEntryId"
+      :disabled="!!addingEntry"
       @click="handleAddEntry"
     >
       <AddIcon />
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, nextTick, ref } from 'vue'
+import { useTemplateRef, nextTick, ref, watchEffect } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import useI18n from '../../../../../composables/useI18n'
 import type { FieldName } from '../../types'
@@ -99,7 +99,7 @@ const {
 
 const { i18n } = useI18n()
 const root = useTemplateRef('root')
-const addingEntryId = ref<string | null>(null)
+const addingEntry = ref<Entry | null>(null)
 
 let fieldNameBeforeChange: FieldName
 
@@ -113,18 +113,18 @@ async function focus(index: number, type: 'key' | 'value' = 'key') {
 }
 
 function handleAddEntry() {
-  const { id } = addEntry()
+  const newEntry = addEntry()
 
   const index = entries.value.findIndex(({ key }) => !key)
   focus(index === -1 ? entries.value.length - 1 : index)
 
-  addingEntryId.value = id
+  addingEntry.value = newEntry
 }
 
 
 function handleRemoveEntry(entry: Entry) {
-  if (entry.id === addingEntryId.value) {
-    addingEntryId.value = null
+  if (entry.id === addingEntry.value?.id) {
+    addingEntry.value = null
   }
   removeEntry(entry.id)
   if (entry.key.trim() !== '') { // only emit remove if the field has a name
@@ -144,10 +144,10 @@ function handleOutputsNameChange(entry: Entry) {
     return
   }
 
-  if (entry.id === addingEntryId.value) {
+  if (entry.id === addingEntry.value?.id) {
     // add field
     if (entry.key.trim() === '') return // skip if the field name is empty
-    addingEntryId.value = null
+    addingEntry.value = null
     emit('add:field', entry.key, entry.value)
   } else {
     // rename field
@@ -157,7 +157,7 @@ function handleOutputsNameChange(entry: Entry) {
 
 function handleOutputsValueChange(e: InputEvent, entry: Entry) {
   // skip if the field hasn't been created
-  if (entry.id === addingEntryId.value) return
+  if (entry.id === addingEntry.value?.id) return
   const value = (e.target as HTMLInputElement).value.trim()
   emit('change:value', entry.key, value)
 }
@@ -174,6 +174,12 @@ function validateFieldName(entry: Entry) {
     return err
   }
 }
+
+watchEffect(() => {
+  if (addingEntry.value && !entries.value.some(entry => entry.id === addingEntry.value!.id)) {
+    entries.value.push(addingEntry.value!)
+  }
+})
 
 </script>
 
