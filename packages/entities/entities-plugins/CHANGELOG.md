@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.64.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.63.5...@kong-ui-public/entities-plugins@9.64.0) (2025-08-18)
+
+
+### Features
+
+* **entities-plugins:** datakit load data, simplify node select ([#2332](https://github.com/Kong/public-ui-components/issues/2332)) ([e08ec5d](https://github.com/Kong/public-ui-components/commit/e08ec5d30bb91e430364ac2fd25b59b73665ffaa))
+
+
+
+
+
+## [9.63.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.63.4...@kong-ui-public/entities-plugins@9.63.5) (2025-08-18)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.63.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.63.3...@kong-ui-public/entities-plugins@9.63.4) (2025-08-15)
 
 

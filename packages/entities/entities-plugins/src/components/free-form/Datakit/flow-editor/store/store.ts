@@ -26,14 +26,30 @@ import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
 
+type CreateEditorStoreOptions = {
+  onChange?: (config: { nodes: ConfigNode[] }) => void
+}
+
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
-  function createState(configNodes: ConfigNode[], uiNodes: UINode[]) {
+  function createState(configNodes: ConfigNode[], uiNodes: UINode[], options: CreateEditorStoreOptions = {}) {
     const state = ref<EditorState>(initEditorState(configNodes, uiNodes))
     const selection = ref<NodeId>()
     const modalOpen = ref(false)
+    const propertiesPanelOpen = ref(false)
+
     const history = useTaggedHistory(state, {
       capacity: 200,
       clone,
+      onHistoryChange: (action) => {
+        // clear only affects the history, not the state
+        if (action === 'clear') {
+          return
+        }
+
+        options.onChange?.({
+          nodes: toConfigNodes(),
+        })
+      },
     })
     const newCreatedNodeId = ref<NodeId | null>(null)
     const invalidConfigNodeIds = ref<Set<NodeId>>(new Set())
@@ -481,6 +497,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       modalOpen,
       newCreatedNodeId,
       invalidConfigNodeIds,
+      propertiesPanelOpen,
 
       // maps & getters
       nodeMapById,

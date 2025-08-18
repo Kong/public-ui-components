@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/tracing",
-  "version": "0.14.5",
+  "version": "0.14.6",
   "type": "module",
   "main": "./dist/tracing.umd.js",
   "module": "./dist/tracing.es.js",

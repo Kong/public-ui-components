@@ -1,27 +1,56 @@
 <template>
-  <div
-    ref="editor-root"
-    class="dk-editor"
-  />
+  <div class="dk-code-editor">
+    <KAlert class="examples">
+      <div class="examples-content">
+        {{ t('plugins.free-form.datakit.description_example') }}
+
+        <KButton
+          v-for="(_, key) in examples"
+          :key="key"
+          appearance="secondary"
+          size="small"
+          @click="setExampleCode(key)"
+        >
+          {{ t(`plugins.free-form.datakit.examples.${key}`) }}
+        </KButton>
+      </div>
+
+      <template #icon>
+        <SparklesIcon />
+      </template>
+    </KAlert>
+    <div
+      ref="editor-root"
+      class="editor"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
 import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, toRaw } from 'vue'
 import * as monaco from 'monaco-editor'
-import type { YAMLException } from 'js-yaml'
+import { createI18n } from '@kong-ui-public/i18n'
+import { KAlert, KButton } from '@kong/kongponents'
+import { SparklesIcon } from '@kong/icons'
+import english from '../../../locales/en.json'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 import * as examples from './examples'
+
+import type { YAMLException } from 'js-yaml'
+import type { DatakitConfig } from './types'
+
+const { t } = createI18n<typeof english>('en-us', english)
 
 const {
   editing,
   config,
 } = defineProps<{
   editing: boolean
-  config: any
+  config?: DatakitConfig
 }>()
 
 const emit = defineEmits<{
-  change: [config: any]
+  change: [config: unknown]
   error: [msg: string]
 }>()
 
@@ -127,8 +156,19 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.dk-editor {
-  height: 320px;
-  width: 100%;
+.dk-code-editor {
+  .examples {
+    margin-bottom: $kui-space-70;
+  }
+
+  .examples-content {
+    display: flex;
+    gap: $kui-space-40;
+  }
+
+  .editor {
+    height: 684px;
+    width: 100%;
+  }
 }
 </style>

@@ -20,10 +20,9 @@
           </div>
         </div>
 
-        <!-- TODO: Use small variant when available -->
         <NodeBadge
           v-if="!isImplicit"
-          condensed
+          size="small"
           :type="data.type"
         />
       </div>

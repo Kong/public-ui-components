@@ -16,68 +16,41 @@
       </div>
     </aside>
     <div class="main">
-      <EditorMain
-        @click:backdrop="closeProperties"
-        @click:node="selectNodeAndOpenProperties"
-      />
+      <EditorMain />
     </div>
 
     <NodePropertiesPanel
       :node-id="selectedNode?.id"
-      :visible="propertiesPanelVisible"
-      @close="closeProperties"
+      :visible="propertiesPanelOpen"
+      @close="handleClose"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import { watch } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
 import { usePreferences, useEditorStore } from '../../composables'
 import EditorMain from './EditorMain.vue'
 import NodePanel from '../node/NodePanel.vue'
 import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
-import { ref, watch } from 'vue'
-import type { NodeInstance } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
-const { selectNode, selectedNode, newCreatedNodeId } = useEditorStore()
+const { propertiesPanelOpen, selectedNode, newCreatedNodeId } = useEditorStore()
 
-const propertiesPanelVisible = ref(false)
-let locking = false
-
-const setVisibility = (visible: boolean) => {
-  propertiesPanelVisible.value = visible
-}
-
-const selectNodeAndOpenProperties = (node: NodeInstance) => {
-  locking = true
-  setTimeout(() => {
-    locking = false
-  }, 10)
-  selectNode(node.id)
-  setVisibility(true)
-}
-
-const closeProperties = () => {
+function handleClose() {
+  propertiesPanelOpen.value = false
   newCreatedNodeId.value = null
-  // When user switching between nodes, we don't want to close the properties panel
-  setTimeout(() => {
-    if (locking) return
-    setVisibility(false)
-  }, 0)
 }
 
-watch(selectedNode, (newNode, oldNode) => {
-  if (!oldNode && newNode) {
-    setVisibility(true)
-  } else if (!newNode) {
-    setVisibility(false)
+watch(selectedNode, (node) => {
+  if (!node) {
+    handleClose()
   }
 })
-
 </script>
 
 <style lang="scss" scoped>
