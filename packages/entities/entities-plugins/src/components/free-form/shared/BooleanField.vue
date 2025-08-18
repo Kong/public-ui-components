@@ -11,7 +11,10 @@
     v-bind="fieldAttrs"
     class="ff-boolean-field"
     :data-testid="`ff-${field.path.value}`"
+    :error="!meta.isValid"
     :model-value="fieldValue ?? false"
+    @blur="handleBlur"
+    @focus="handleFocus"
     @update:model-value="handleUpdate"
   >
     <template
@@ -28,8 +31,8 @@
 
 <script setup lang="ts">
 import { KCheckbox, type LabelAttributes } from '@kong/kongponents'
-import { useField, useFieldAttrs } from './composables'
-import { toRef } from 'vue'
+import { useField, useFieldAttrs, useFieldValidator, type ValidatorFns } from './composables'
+import { onMounted, toRef } from 'vue'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
@@ -39,6 +42,7 @@ interface InputProps {
   name: string
   labelAttributes?: LabelAttributes
   modelValue?: boolean
+  validator?: ValidatorFns<boolean>
 }
 
 const { name, ...props } = defineProps<InputProps>()
@@ -47,12 +51,27 @@ const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
 
+const {
+  meta,
+  handleMount,
+  handleFocus,
+  handleChange,
+  handleBlur,
+} = useFieldValidator(field.path!, toRef(() => props.validator))
+
 const handleUpdate = (v: boolean) => {
   fieldValue!.value = v
+  handleChange(v)
   emit('update:modelValue', v)
 }
 
 const fieldAttrs = useFieldAttrs(field.path!, props)
+
+onMounted(() => {
+  if (!field.error) {
+    handleMount(fieldValue!.value)
+  }
+})
 </script>
 
 <style lang="scss" scoped>

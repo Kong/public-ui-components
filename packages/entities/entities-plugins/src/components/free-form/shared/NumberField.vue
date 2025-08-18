@@ -16,8 +16,12 @@
     }"
     :data-autofocus="isAutoFocus"
     :data-testid="`ff-${field.path.value}`"
+    :error="!meta.isValid"
+    :error-message="meta.errors?.join(', ')"
     :model-value="modelValue"
     type="number"
+    @blur="handleBlur"
+    @focus="handleFocus"
     @update:model-value="handleUpdate"
   >
     <template
@@ -34,8 +38,8 @@
 
 <script setup lang="ts">
 import type { LabelAttributes } from '@kong/kongponents'
-import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
-import { computed, toRef } from 'vue'
+import { useField, useFieldAttrs, useFieldValidator, useIsAutoFocus, type ValidatorFns } from './composables'
+import { computed, onMounted, toRef } from 'vue'
 import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
 import EnhancedInput from './EnhancedInput.vue'
 
@@ -47,11 +51,20 @@ export interface InputProps {
   labelAttributes?: LabelAttributes
   max?: number | string
   min?: number | string
+  validator?: ValidatorFns<number | null>
 }
 
 const { name, ...props } = defineProps<InputProps>()
 const { value: fieldValue, ...field } = useField<number | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
+
+const {
+  meta,
+  handleMount,
+  handleFocus,
+  handleChange,
+  handleBlur,
+} = useFieldValidator(field.path!, toRef(() => props.validator))
 
 const between = computed(() => {
   const schema = (field.schema?.value as NumberLikeFieldSchema)
@@ -81,14 +94,23 @@ const modelValue = computed(() => {
 function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && Number(value) !== initialValue) {
     fieldValue!.value = null
+    handleChange(null)
     emit('update:modelValue', null)
   } else {
-    fieldValue!.value = value === '' ? null : Number(value)
-    emit('update:modelValue', value === '' ? null : Number(value))
+    const normalizedValue = value === '' ? null : Number(value)
+    fieldValue!.value = normalizedValue
+    handleChange(normalizedValue)
+    emit('update:modelValue', normalizedValue)
   }
 }
 
 const isAutoFocus = useIsAutoFocus(field.ancestors)
+
+onMounted(() => {
+  if (!field.error) {
+    handleMount(initialValue)
+  }
+})
 </script>
 
 <style lang="scss" scoped>

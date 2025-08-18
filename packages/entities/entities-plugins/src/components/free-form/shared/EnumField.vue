@@ -13,8 +13,13 @@
     class="ff-enum-field"
     :clearable="!fieldAttrs.required"
     :data-testid="`ff-${field.path.value}`"
+    :error="!meta.isValid"
+    :error-message="meta.errors?.join(', ')"
     :items="realItems"
     :kpop-attributes="{ 'data-testid': `${field.path.value}-items` }"
+    :update:model-value="handleChange"
+    @blur="handleBlur"
+    @focus="handleFocus"
   >
     <template
       v-if="fieldAttrs.labelAttributes?.info"
@@ -29,9 +34,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, toRef } from 'vue'
+import { computed, onMounted, toRef, toValue } from 'vue'
 import { KSelect, KMultiselect, type LabelAttributes, type SelectItem } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared } from './composables'
+import { useField, useFieldAttrs, useFieldValidator, useFormShared, type ValidatorFns } from './composables'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
@@ -43,11 +48,20 @@ interface EnumFieldProps {
   multiple?: boolean
   items?: SelectItem[]
   placeholder?: string
+  validator?: ValidatorFns<number | string | undefined>
 }
 
 const { name, items, multiple = undefined, ...props } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
-const { value: fieldValue, ...field } = useField<number | string>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<number | string | undefined>(toRef(() => name))
+
+const {
+  meta,
+  handleMount,
+  handleFocus,
+  handleChange,
+  handleBlur,
+} = useFieldValidator(field.path!, toRef(() => props.validator))
 
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
@@ -70,6 +84,8 @@ const isMultiple = computed(() => {
 const SelectComponent = computed(() => {
   return isMultiple.value ? KMultiselect : KSelect
 })
+
+onMounted(() => handleMount(toValue(fieldValue!)))
 </script>
 
 <style lang="scss" scoped>
