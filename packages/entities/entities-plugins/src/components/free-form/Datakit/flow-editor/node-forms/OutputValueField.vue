@@ -40,6 +40,8 @@
         :error="!!errorMap[entry.id]"
         :error-message="errorMap[entry.id]"
         :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.output_value.value_name')"
+        required
+        @blur="handleOutputsNameBlur(entry)"
         @change="handleOutputsNameChange(entry)"
         @focus="handleBeforeOutputsNameChange(entry)"
         @update:model-value="validateFieldName(entry)"
@@ -153,6 +155,7 @@ function handleOutputsNameChange(entry: Entry) {
     // rename field
     emit('rename:field', fieldNameBeforeChange, entry.key)
   }
+  fieldNameBeforeChange = entry.key
 }
 
 function handleOutputsValueChange(e: InputEvent, entry: Entry) {
@@ -173,6 +176,10 @@ function validateFieldName(entry: Entry) {
     errorMap.value[entry.id] = err
     return err
   }
+}
+
+function handleOutputsNameBlur(entry: Entry) {
+  validateFieldName(entry)
 }
 
 watchEffect(() => {

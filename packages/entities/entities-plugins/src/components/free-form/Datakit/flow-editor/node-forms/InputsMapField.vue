@@ -31,6 +31,7 @@
             :error="!!errorMap[entry.id]"
             :error-message="errorMap[entry.id]"
             :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input_name.placeholder')"
+            @blur="handleInputsNameBlur(entry)"
             @change="handleInputsNameChange(entry)"
             @focus="handleBeforeInputsNameChange(entry)"
             @update:model-value="validateFieldName(entry)"
@@ -161,6 +162,7 @@ function handleInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
     // rename field
     emit('rename:field', fieldNameBeforeChange, entry.key)
   }
+  fieldNameBeforeChange = entry.key
 }
 
 function validateFieldName(entry: KVEntry<FieldName, IdConnection>) {
@@ -174,6 +176,10 @@ function validateFieldName(entry: KVEntry<FieldName, IdConnection>) {
     errorMap.value[entry.id] = err
     return err
   }
+}
+
+function handleInputsNameBlur(entry: KVEntry<FieldName, IdConnection>) {
+  validateFieldName(entry)
 }
 
 function handleInputsValueChange(entry: KVEntry<FieldName, IdConnection>, value: IdConnection | null) {
