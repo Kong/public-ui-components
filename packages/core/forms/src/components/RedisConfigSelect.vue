@@ -4,7 +4,7 @@
     data-testid="redis-config-select"
   >
     <KLabel
-      :info="isCustomPlugin ? t('redis.custom_plugin.tooltip') : t('redis.shared_configuration.tooltip', { type: getPartialTypeDisplay(redisType as PartialType)})"
+      :info="isCustomPlugin ? t('redis.custom_plugin.tooltip') : t('redis.shared_configuration.tooltip', { type: getPartialTypeDisplay(redisType as PartialType) })"
       :tooltip-attributes="{
         maxWidth: '300',
         placement: 'top',
@@ -62,7 +62,7 @@
           @click="$emit('showNewPartialModal')"
         >
           <AddIcon :size="KUI_ICON_SIZE_20" />
-          <span>{{ t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(redisType as PartialType)}) }}</span>
+          <span>{{ t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(redisType as PartialType) }) }}</span>
         </div>
       </template>
     </KSelect>

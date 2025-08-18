@@ -23,7 +23,7 @@
           :item="{
             key: row.value.id,
             value: keySetName,
-            type: ConfigurationSchemaType.LinkInternal
+            type: ConfigurationSchemaType.LinkInternal,
           }"
           @click="$emit('navigation-click', row.value.id, 'key-sets')"
         />

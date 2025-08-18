@@ -45,7 +45,7 @@ export interface FormFieldErrors {
   ca_certificates: string
   tls_verify_enabled: string
   tls_verify_value: string
-  name:string
+  name: string
 }
 
 export interface GatewayServiceFormState {

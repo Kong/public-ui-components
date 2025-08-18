@@ -104,7 +104,7 @@ export interface DefaultPluginsFormSchema {
   styleClasses?: string
   inputType?: 'hidden' | 'text'
   // Will be fixed in KHCP-6469
-  fields? : any
+  fields?: any
   help?: string
   tags?: PluginTags
   values?: Array<Record<string, string | number | boolean>>

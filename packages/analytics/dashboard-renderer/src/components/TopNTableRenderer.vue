@@ -18,7 +18,7 @@
           :entity-link-data="{
             id: record.id,
             label: record.name,
-            deleted: record.deleted
+            deleted: record.deleted,
           }"
           :external-link="parseLink(record)"
         />

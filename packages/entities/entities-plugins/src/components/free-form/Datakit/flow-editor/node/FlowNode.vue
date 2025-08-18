@@ -49,7 +49,7 @@
                 class="handle-label"
                 :class="{
                   'has-fields': data.fields.input.length > 0,
-                  collapsible: inputsCollapsible
+                  collapsible: inputsCollapsible,
                 }"
               >
                 <div class="text">
@@ -114,7 +114,7 @@
                 class="handle-label text"
                 :class="{
                   'has-fields': data.fields.output.length > 0,
-                  collapsible: outputsCollapsible
+                  collapsible: outputsCollapsible,
                 }"
               >
                 <div class="text">

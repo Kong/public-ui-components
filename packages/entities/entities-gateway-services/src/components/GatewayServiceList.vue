@@ -506,7 +506,7 @@ const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<
 /**
  * Copy JSON action
  */
-const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void>=> {
+const copyJson = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
   const val = JSON.stringify(row)
 
   if (!await copyToClipboard(val)) {

@@ -159,7 +159,7 @@ export const buildLifecycleGraph = (root: SpanNode, options?: BuildLifecycleGrap
           zIndex: 2,
         },
         ...clientOutSpans.length > 0 && {
-          out:  {
+          out: {
             id: `${nodeIdPrefix}${LifecycleDefaultNodeType.CLIENT_OUT}`,
             position: { x: 0, y: 0 },
             data: {

@@ -332,7 +332,7 @@ describe('<DashboardRenderer />', () => {
       cy.get('.tile-boundary').should('have.length', 4)
 
       cy.get('@fetcher')
-        .should('always.have.been.calledWithMatch', Cypress.sinon.match({ query:{
+        .should('always.have.been.calledWithMatch', Cypress.sinon.match({ query: {
           filters: Cypress.sinon.match.some(Cypress.sinon.match(filter1)),
         } }))
         .should('have.been.calledWithMatch', Cypress.sinon.match({ query: {
@@ -354,7 +354,7 @@ describe('<DashboardRenderer />', () => {
 
               cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query: {
                 filters: Cypress.sinon.match.some(Cypress.sinon.match(filter2)),
-              } })).should('have.been.calledWithMatch', Cypress.sinon.match({ query:{
+              } })).should('have.been.calledWithMatch', Cypress.sinon.match({ query: {
                 filters: Cypress.sinon.match.some(Cypress.sinon.match({ value: ['default_uuid'] })),
               } }))
             })
@@ -516,7 +516,7 @@ describe('<DashboardRenderer />', () => {
     }).then(() => {
       // Extra calls may mean we mistakenly issued queries before knowing the timeSpec.
       cy.get('@fetcher').should('have.callCount', 5)
-      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query:{
+      cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query: {
         time_range: { time_range: '24h' },
       } }))
 

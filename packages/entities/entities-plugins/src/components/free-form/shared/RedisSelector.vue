@@ -93,7 +93,7 @@
               @click="() => redisPartialModalVisible = true"
             >
               <AddIcon :size="KUI_ICON_SIZE_20" />
-              <span>{{ t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(redisType as RedisPartialType)}) }}</span>
+              <span>{{ t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(redisType as RedisPartialType) }) }}</span>
             </div>
           </template>
         </KSelect>

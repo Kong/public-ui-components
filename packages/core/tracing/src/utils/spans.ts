@@ -282,7 +282,7 @@ export const toSpanLatencies = (attributes?: IKeyValue[]): Array<SpanLatency<Spa
       // Handle the NESTED 3rd-party latencies; we will later add them to the major 3rd-party latency
       latencies3rdParty.push({
         key: attr.key,
-        labelKey:  SPAN_LATENCY_ATTR_LABEL_KEYS[attr.key],
+        labelKey: SPAN_LATENCY_ATTR_LABEL_KEYS[attr.key],
         milliseconds: unwrapAnyValue(attr.value) as number,
       })
     }

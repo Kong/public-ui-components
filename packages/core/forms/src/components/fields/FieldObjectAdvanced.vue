@@ -63,7 +63,7 @@
     </div>
     <div
       class="input-wrapper"
-      :class="{'indent': hasObjectKeys}"
+      :class="{ 'indent': hasObjectKeys }"
     >
       <div class="input-item">
         <input

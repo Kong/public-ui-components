@@ -83,7 +83,7 @@ export default function usePackage({ script, styles, onReady }: ImportParams): {
       if (stylesParent && shadowRootElement) {
         try {
           shadowRootElement.appendChild(styleLink)
-        } catch (err) {
+        } catch {
           document.head.appendChild(styleLink)
         }
       } else {

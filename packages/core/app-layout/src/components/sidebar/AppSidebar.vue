@@ -17,7 +17,7 @@
         'no-sidebar-header': !hasHeader,
         'mobile-header-hidden': mobileEnabled && (!hasHeader || !mobileHeaderVisible),
         'mobile-disabled': !mobileEnabled,
-        'disable-transitions': transitionsDisabled
+        'disable-transitions': transitionsDisabled,
       }"
       tabindex="-1"
     >

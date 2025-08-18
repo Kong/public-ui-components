@@ -12,7 +12,7 @@
       :tooltip-attributes="field.help ? {
         maxWidth: '300',
         placement: 'top',
-        tooltipId: getTooltipId(field)
+        tooltipId: getTooltipId(field),
       } : undefined"
     >
       <template

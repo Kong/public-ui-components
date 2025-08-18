@@ -7,7 +7,7 @@
     v-model:visible="visible"
     :instance-list="instanceList"
     :instance-log-level="instanceLogLevel"
-    :requests="{ getDataPlaneLogLevel, setDataPlaneLogLevel, scheduler: { maxConcurrentAsyncs: 3 }}"
+    :requests="{ getDataPlaneLogLevel, setDataPlaneLogLevel, scheduler: { maxConcurrentAsyncs: 3 } }"
   />
 </template>
 

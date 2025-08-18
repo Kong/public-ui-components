@@ -8,7 +8,7 @@
       transform: isInteractive ? `translate(${dragPosition.left}, ${dragPosition.top})` : `translate(${absoluteLeft}, ${absoluteTop})`,
       left: '0',
       top: '0',
-      pointerEvents: isInteractive ? 'all' : 'none'
+      pointerEvents: isInteractive ? 'all' : 'none',
     }"
     @mousedown="handleMouseDown"
   >

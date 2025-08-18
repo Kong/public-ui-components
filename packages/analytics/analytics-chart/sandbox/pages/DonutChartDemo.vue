@@ -231,7 +231,7 @@ const exploreResult = computed<AnalyticsExploreV2Result | null>(() => {
       const result = JSON.parse(exploreResultText.value)
 
       return result as AnalyticsExploreV2Result
-    } catch (e) {
+    } catch {
       return null
     }
   }

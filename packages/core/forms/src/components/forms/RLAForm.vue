@@ -242,7 +242,7 @@ interface UseCase {
   description: string
   config: {
     limit: number
-    window_size:number
+    window_size: number
   }
 }
 

@@ -23,7 +23,7 @@
           :item="{
             key: row.value.id,
             value: serviceName,
-            type: ConfigurationSchemaType.LinkInternal
+            type: ConfigurationSchemaType.LinkInternal,
           }"
           @navigation-click="() => $emit('navigation-click', row.value.id, 'services')"
         />
