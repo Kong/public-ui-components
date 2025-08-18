@@ -248,10 +248,10 @@ const metricAxesTitle = computed<string | undefined>(() => {
 
 const dimensionAxesTitle = computed<string | undefined>(() => {
   const dimension = isTimeSeriesChart.value ? 'Time' : Object.keys(props.chartData.meta.display || props.chartData.meta.metric_names as Record<string, any>)[0]
+  const key = `chartLabels.${dimension}`
+
   // @ts-ignore - dynamic i18n key
-  return props.chartOptions.dimensionAxesTitle || (i18n.te(`chartLabels.${dimension}`) &&
-    // @ts-ignore - dynamic i18n key
-    i18n.t(`chartLabels.${dimension}`)) || undefined
+  return props.chartOptions.dimensionAxesTitle || (i18n.te(key) && i18n.t(key)) || undefined
 })
 
 const timestampAxisTitle = computed(() => {
