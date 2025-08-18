@@ -20,6 +20,7 @@
     </div>
 
     <NodePropertiesPanel
+      :node-id="selectedNode?.id"
       :visible="propertiesPanelOpen"
       @close="handleClose"
     />
@@ -38,15 +39,20 @@ import NodePropertiesPanel from '../node/NodePropertiesPanel.vue'
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
-const { propertiesPanelOpen, selectedNode } = useEditorStore()
+const { propertiesPanelOpen, selectedNode, newCreatedNodeId } = useEditorStore()
 
 function handleClose() {
   propertiesPanelOpen.value = false
+  newCreatedNodeId.value = null
 }
 
 watch(selectedNode, (node) => {
   if (!node) {
-    propertiesPanelOpen.value = false
+    handleClose()
+  }
+
+  if (!node || node.id !== newCreatedNodeId.value) {
+    newCreatedNodeId.value = null
   }
 })
 </script>

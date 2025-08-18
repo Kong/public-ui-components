@@ -18,7 +18,7 @@
       :data-testid="`ff-kv-container-${field.path.value}.${index}`"
     >
       <KLabel :for="`ff-kv-entry-key-${field.path.value}.${index}`">
-        {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input_name.label') }}
+        {{ t('plugins.free-form.datakit.flow_editor.node_properties.input_name.label') }}
       </KLabel>
       <div class="dk-inputs-map-field-entry-body">
         <div class="dk-inputs-map-field-entry-content">
@@ -28,9 +28,13 @@
             class="ff-kv-field-entry-key"
             :data-key-input="index"
             :data-testid="`ff-key-${field.path.value}.${index}`"
-            :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input_name.placeholder')"
+            :error="!!errorMap[entry.id]"
+            :error-message="errorMap[entry.id]"
+            :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input_name.placeholder')"
+            @blur="handleInputsNameBlur(entry)"
             @change="handleInputsNameChange(entry)"
             @focus="handleBeforeInputsNameChange(entry)"
+            @update:model-value="validateFieldName(entry)"
           />
           <KSelect
             v-model="entry.value"
@@ -38,7 +42,7 @@
             clearable
             :data-testid="`ff-value-${field.path.value}.${index}`"
             :items="items"
-            :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
+            :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
             @change="selectItem => handleInputsValueChange(entry, selectItem?.value ?? null)"
           />
         </div>
@@ -61,7 +65,7 @@
         @click="handleAddClick"
       >
         <AddIcon />
-        {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.add_button') }}
+        {{ t('plugins.free-form.datakit.flow_editor.node_properties.input.add_button') }}
       </KButton>
     </div>
   </div>
@@ -78,10 +82,11 @@ import type {
   KVEntry,
 } from '../../../shared/headless/useKeyValueField'
 import type { FieldName, IdConnection } from '../../types'
-import type { InputOption } from '../composables/useNodeForm'
+import type { InputOption, useNodeForm } from '../composables/useNodeForm'
 
 interface Props extends KeyValueFieldProps<FieldName, IdConnection> {
   items: InputOption[]
+  fieldNameValidator: ReturnType<typeof useNodeForm>['fieldNameValidator']
 }
 
 interface Emits extends KeyValueFieldEmits {
@@ -101,9 +106,10 @@ const {
   field,
 } = useKeyValueField<FieldName, IdConnection>(props, emit)
 
-const { i18n } = useI18n()
+const { i18n: { t } } = useI18n()
 const root = useTemplateRef('root')
 const addingEntryId = ref<string | null>(null)
+const errorMap = ref<Record<string, string>>({})
 
 let fieldNameBeforeChange: FieldName
 
@@ -140,6 +146,13 @@ function handleBeforeInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
 }
 
 function handleInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
+  // Reset the value if the field name is invalid
+  if (validateFieldName(entry)) {
+    entry.key = fieldNameBeforeChange
+    delete errorMap.value[entry.id]
+    return
+  }
+
   if (entry.id === addingEntryId.value) {
     // add field
     if (entry.key.trim() === '') return // skip if the field name is empty
@@ -149,6 +162,24 @@ function handleInputsNameChange(entry: KVEntry<FieldName, IdConnection>) {
     // rename field
     emit('rename:field', fieldNameBeforeChange, entry.key)
   }
+  fieldNameBeforeChange = entry.key
+}
+
+function validateFieldName(entry: KVEntry<FieldName, IdConnection>) {
+  delete errorMap.value[entry.id]
+  const err = props.fieldNameValidator(
+    'input',
+    fieldNameBeforeChange,
+    entry.key,
+  )
+  if (err) {
+    errorMap.value[entry.id] = err
+    return err
+  }
+}
+
+function handleInputsNameBlur(entry: KVEntry<FieldName, IdConnection>) {
+  validateFieldName(entry)
 }
 
 function handleInputsValueChange(entry: KVEntry<FieldName, IdConnection>, value: IdConnection | null) {

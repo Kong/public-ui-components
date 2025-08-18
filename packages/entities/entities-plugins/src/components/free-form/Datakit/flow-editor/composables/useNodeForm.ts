@@ -8,7 +8,8 @@ import { useFormShared } from '../../../shared/composables'
 import type { ArrayLikeFieldSchema, RecordFieldSchema } from '../../../../../types/plugins/form-schema'
 import { isImplicitType } from '../node/node'
 import { ResponseSchema, ServiceRequestSchema } from '../node/schemas'
-import { useNameValidator } from './useNameValidator'
+import { useFieldNameValidator, useNodeNameValidator } from './validation'
+import { omit } from 'lodash-es'
 
 export type InputOption = {
   value: IdConnection
@@ -22,11 +23,11 @@ export type BaseFormData = {
 }
 
 export function useNodeForm<T extends BaseFormData = BaseFormData>(
+  nodeId: NodeId,
   // It should return `T`, but we use any to avoid circular dependency issues
-  getFormInnerData: () => any,
+  getFormInnerData?: () => any,
 ) {
   const {
-    selectedNode,
     state,
     renameNode,
     getNodeById,
@@ -36,9 +37,10 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     replaceConfig,
     disconnectEdge,
     connectEdge,
+    newCreatedNodeId,
+    invalidConfigNodeIds,
   } = useEditorStore()
 
-  const selectedNodeId = computed(() => selectedNode.value!.id)
   let isGlobalStateUpdating = false
 
   watch(state, async () => {
@@ -51,13 +53,19 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   console.log('state', state.value)
   ;(window as any).store = useEditorStore()
 
+  const currentNode = computed(() => {
+    const node = getNodeById(nodeId)
+    if (!node) throw new Error('Node not existed')
+    return node
+  })
+
   const formData = computed(() => {
-    const edges = state.value.edges.filter(e => e.target === selectedNodeId.value)
+    const edges = state.value.edges.filter(e => e.target === nodeId)
 
     const inputsAndInput = edges.reduce<Pick<T, 'input' | 'inputs'>>((acc, e) => {
       const sourceNode = getNodeById(e.source)!
       const sourceFieldId = findFieldById(sourceNode, 'output', e.sourceField)?.id
-      const targetFieldName = findFieldById(selectedNode.value!, 'input', e.targetField)?.name
+      const targetFieldName = findFieldById(currentNode.value, 'input', e.targetField)?.name
       const inputValue = sourceNode.id + (sourceFieldId ? `.${sourceFieldId}` : '') as IdConnection
 
       if (!targetFieldName) {
@@ -69,7 +77,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     }, {})
 
     // append user defined fields to inputs
-    selectedNode.value?.fields.input.forEach(field => {
+    currentNode.value.fields.input.forEach(field => {
       if (!inputsAndInput.inputs) inputsAndInput.inputs = {}
       if (!inputsAndInput.inputs[field.name]) {
         inputsAndInput.inputs[field.name] = null
@@ -77,30 +85,37 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     })
 
     return {
-      ...selectedNode.value!.config,
+      ...currentNode.value.config,
       ...inputsAndInput,
-      name: selectedNode.value!.name,
+      name: currentNode.value.name,
     } as T
   })
 
   const setName = (name: string | null) => {
-    renameNode(selectedNodeId.value, name as NodeName ?? '')
+    renameNode(nodeId, name as NodeName ?? '', true, `${nodeId}:rename`)
   }
 
-  const setConfig = (commitNow = true) => {
+  /**
+   * Set the configuration.
+   * @param tag Set a tag to collapse the history. Using it in the input
+   * prevents the user from generating too much history during typing.
+   * @param commitNow Whether to commit the change immediately.
+   */
+  const setConfig = (tag?: string, commitNow = true) => {
     if (isGlobalStateUpdating) return
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { name, input, inputs, ...config } = getFormInnerData() as T
-    replaceConfig(selectedNodeId.value, config, commitNow)
+    if (!getFormInnerData) throw new Error('getFormInnerData is not defined')
+    const config = omit(getFormInnerData(), ['name', 'input', 'inputs'])
+    const finalTag = tag ? `update:${nodeId}:${tag}` : undefined
+    replaceConfig(nodeId, config, commitNow, finalTag)
   }
 
   const findFieldByNameOrThrow = (
     io: 'input' | 'output',
     name: FieldName,
   ) => {
-    const field = findFieldByName(selectedNode.value!, io, name)
+    const field = findFieldByName(currentNode.value, io, name)
     if (!field) {
-      throw new Error(`Field with name "${name}" not found in node "${selectedNode.value!.name}"`)
+      throw new Error(`Field with name "${name}" not found in node "${currentNode.value.name}"`)
     }
     return field
   }
@@ -111,7 +126,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     value?: IdConnection | null,
   ) => {
     const hasValue = !!value
-    storeAddField(selectedNodeId.value, io, name, !hasValue)
+    storeAddField(nodeId, io, name, !hasValue)
     if (hasValue) {
       setInputs(name, value)
     }
@@ -124,7 +139,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   ) => {
     if (isGlobalStateUpdating) return
     const fieldId = findFieldByNameOrThrow(io, oldFieldName).id
-    storeRenameField(selectedNodeId.value, fieldId, newFieldName)
+    storeRenameField(nodeId, fieldId, newFieldName)
   }
 
   const removeFieldByName = (
@@ -132,15 +147,15 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     fieldName: FieldName,
   ) => {
     const fieldId = findFieldByNameOrThrow(io, fieldName).id
-    storeRemoveField(selectedNodeId.value, fieldId)
+    storeRemoveField(nodeId, fieldId)
   }
 
   const inputEdge = computed<EdgeInstance | undefined>(() => {
-    return state.value.edges.filter(e => e.target === selectedNodeId.value && !e.targetField)[0]
+    return state.value.edges.filter(e => e.target === nodeId && !e.targetField)[0]
   })
 
   const inputsEdges = computed(() => {
-    return state.value.edges.filter(e => e.target === selectedNodeId.value && e.targetField)
+    return state.value.edges.filter(e => e.target === nodeId && e.targetField)
   })
 
   /**
@@ -185,7 +200,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     connectEdge({
       source,
       sourceField,
-      target: selectedNodeId.value,
+      target: nodeId,
       targetField: targetFieldId,
     })
   }
@@ -207,11 +222,11 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     if (clearing) return
 
     // add new edge
-    const { nodeId, fieldId } = parseIdConnection(value)
+    const { nodeId: source, fieldId } = parseIdConnection(value)
     connectEdge({
-      source: nodeId,
+      source,
       sourceField: fieldId,
-      target: selectedNodeId.value,
+      target: nodeId,
       targetField: undefined, // input does not have a field
     }, commitNow)
   }
@@ -219,7 +234,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   const willCreateCycle = (sourceNode: NodeId): boolean => {
     const nextEdges: Array<{ source: NodeId, target: NodeId }> = [
       ...state.value.edges,
-      { source: sourceNode, target: selectedNodeId.value },
+      { source: sourceNode, target: nodeId },
     ]
 
     return hasCycle(buildAdjacency(nextEdges))
@@ -237,7 +252,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       if (!node.fields.output) continue
 
       // skip the selected node itself
-      if (node.id === selectedNodeId.value) continue
+      if (node.id === nodeId) continue
 
       // skip property nodes that are not readable
       if (node.type === 'property' && !isReadableProperty(node.config?.property as string)) continue
@@ -258,8 +273,30 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   })
 
   const inputsFieldNames = computed<FieldName[]>(() => {
-    return selectedNode.value?.fields.input.map(f => f.name) || []
+    return currentNode.value.fields.input.map(f => f.name) || []
   })
+
+  const skipValidationOnMount = computed(() => newCreatedNodeId.value === nodeId)
+
+  function toggleNodeValid(isValid: boolean) {
+    invalidConfigNodeIds.value.delete(nodeId)
+    if (!isValid) {
+      invalidConfigNodeIds.value.add(nodeId)
+    }
+  }
+
+  const validateFieldName = useFieldNameValidator(nodeId)
+
+  function fieldNameValidator(
+    io: 'input' | 'output',
+    oldFieldName: FieldName,
+    newFieldName: FieldName,
+  ) {
+    const node = getNodeById(nodeId)
+    if (!node) throw new Error('Node not found when validating field name')
+    const field = findFieldByName(node, io, oldFieldName)
+    return validateFieldName(io, newFieldName, field?.id)
+  }
 
   return {
     // states
@@ -268,6 +305,8 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     inputEdge,
     inputsEdges,
     inputsFieldNames,
+    skipValidationOnMount,
+    currentNode,
 
     // form ops
     setName,
@@ -282,7 +321,9 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     setInputs,
     setInput,
 
-    nameValidator: useNameValidator(),
+    nameValidator: useNodeNameValidator(nodeId),
+    fieldNameValidator,
+    toggleNodeValid,
   }
 }
 

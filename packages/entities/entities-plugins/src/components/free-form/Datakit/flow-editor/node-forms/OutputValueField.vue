@@ -37,23 +37,28 @@
         class="ff-kv-field-entry-key"
         :data-key-input="index"
         :data-testid="`ff-key-${field.path.value}.${index}`"
+        :error="!!errorMap[entry.id]"
+        :error-message="errorMap[entry.id]"
         :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.output_value.value_name')"
-        @change="handleInputsNameChange(entry)"
-        @focus="handleBeforeInputsNameChange(entry)"
+        required
+        @blur="handleOutputsNameBlur(entry)"
+        @change="handleOutputsNameChange(entry)"
+        @focus="handleBeforeOutputsNameChange(entry)"
+        @update:model-value="validateFieldName(entry)"
       />
       <KInput
         v-model.trim="entry.value"
         class="ff-kv-field-entry-value"
         :data-testid="`ff-value-${field.path.value}.${index}`"
         :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.output_value.value')"
-        @change="handleInputsValueChange($event, entry)"
+        @change="handleOutputsValueChange($event, entry)"
       />
     </KCard>
 
     <KButton
       appearance="tertiary"
       :data-testid="`ff-kv-add-btn-${field.path.value}`"
-      :disabled="!!addingEntryId"
+      :disabled="!!addingEntry"
       @click="handleAddEntry"
     >
       <AddIcon />
@@ -63,13 +68,15 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, nextTick, ref } from 'vue'
+import { useTemplateRef, nextTick, ref, watchEffect } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import useI18n from '../../../../../composables/useI18n'
 import type { FieldName } from '../../types'
 import { useKeyValueField, type KeyValueFieldEmits, type KeyValueFieldProps, type KVEntry } from '../../../shared/headless/useKeyValueField'
+import type { useNodeForm } from '../composables/useNodeForm'
 
 interface Props extends KeyValueFieldProps<FieldName, string> {
+  fieldNameValidator: ReturnType<typeof useNodeForm>['fieldNameValidator']
 }
 
 interface Emits extends KeyValueFieldEmits {
@@ -83,6 +90,7 @@ type Entry = KVEntry<FieldName, string>
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
+const errorMap = ref<Record<string, string>>({})
 
 const {
   entries,
@@ -93,7 +101,7 @@ const {
 
 const { i18n } = useI18n()
 const root = useTemplateRef('root')
-const addingEntryId = ref<string | null>(null)
+const addingEntry = ref<Entry | null>(null)
 
 let fieldNameBeforeChange: FieldName
 
@@ -107,18 +115,18 @@ async function focus(index: number, type: 'key' | 'value' = 'key') {
 }
 
 function handleAddEntry() {
-  const { id } = addEntry()
+  const newEntry = addEntry()
 
   const index = entries.value.findIndex(({ key }) => !key)
   focus(index === -1 ? entries.value.length - 1 : index)
 
-  addingEntryId.value = id
+  addingEntry.value = newEntry
 }
 
 
 function handleRemoveEntry(entry: Entry) {
-  if (entry.id === addingEntryId.value) {
-    addingEntryId.value = null
+  if (entry.id === addingEntry.value?.id) {
+    addingEntry.value = null
   }
   removeEntry(entry.id)
   if (entry.key.trim() !== '') { // only emit remove if the field has a name
@@ -126,28 +134,60 @@ function handleRemoveEntry(entry: Entry) {
   }
 }
 
-function handleBeforeInputsNameChange(entry: Entry) {
+function handleBeforeOutputsNameChange(entry: Entry) {
   fieldNameBeforeChange = entry.key
 }
 
-function handleInputsNameChange(entry: Entry) {
-  if (entry.id === addingEntryId.value) {
+function handleOutputsNameChange(entry: Entry) {
+  // Reset the value if the field name is invalid
+  if (validateFieldName(entry)) {
+    entry.key = fieldNameBeforeChange
+    delete errorMap.value[entry.id]
+    return
+  }
+
+  if (entry.id === addingEntry.value?.id) {
     // add field
     if (entry.key.trim() === '') return // skip if the field name is empty
-    addingEntryId.value = null
+    addingEntry.value = null
     emit('add:field', entry.key, entry.value)
   } else {
     // rename field
     emit('rename:field', fieldNameBeforeChange, entry.key)
   }
+  fieldNameBeforeChange = entry.key
 }
 
-function handleInputsValueChange(e: InputEvent, entry: Entry) {
+function handleOutputsValueChange(e: InputEvent, entry: Entry) {
   // skip if the field hasn't been created
-  if (entry.id === addingEntryId.value) return
+  if (entry.id === addingEntry.value?.id) return
   const value = (e.target as HTMLInputElement).value.trim()
   emit('change:value', entry.key, value)
 }
+
+function validateFieldName(entry: Entry) {
+  delete errorMap.value[entry.id]
+  const err = props.fieldNameValidator(
+    'output',
+    fieldNameBeforeChange,
+    entry.key,
+  )
+  if (err) {
+    errorMap.value[entry.id] = err
+    return err
+  }
+}
+
+function handleOutputsNameBlur(entry: Entry) {
+  validateFieldName(entry)
+}
+
+watchEffect(() => {
+  if (addingEntry.value && !entries.value.some(entry => entry.id === addingEntry.value!.id)) {
+    entries.value.push(addingEntry.value!)
+  }
+})
+
 </script>
 
 <style lang="scss" scoped>

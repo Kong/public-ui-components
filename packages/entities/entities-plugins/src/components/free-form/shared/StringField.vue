@@ -20,6 +20,9 @@
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
       :data-testid="`ff-${field.path.value}`"
+      :error="error"
+      :error-message="errorMessage"
+      :help="help"
       :model-value="fieldValue ?? ''"
       :multiline="multiline"
       @update:model-value="handleUpdate"
@@ -53,7 +56,7 @@
 <script setup lang="ts">
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import { computed, inject, toRef, useAttrs } from 'vue'
-import type { LabelAttributes } from '@kong/kongponents'
+import type { InputProps, LabelAttributes } from '@kong/kongponents'
 import useI18n from '../../../composables/useI18n'
 import EnhancedInput from './EnhancedInput.vue'
 
@@ -69,10 +72,7 @@ defineOptions({
 const attrs = useAttrs()
 const { i18n } = useI18n()
 
-// Vue doesn't support the built-in `InstanceType` utility type, so we have to
-// work around it a bit.
-// Other props are passed down to the `KInput` via attribute fallthrough.
-interface StringFieldProps {
+interface StringFieldProps extends InputProps {
   name: string
   labelAttributes?: LabelAttributes
   multiline?: boolean

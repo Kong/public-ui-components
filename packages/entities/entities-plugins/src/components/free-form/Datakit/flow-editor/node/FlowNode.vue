@@ -8,8 +8,16 @@
   >
     <div class="body">
       <div class="info-line">
-        <div class="name">
-          {{ name }}
+        <div class="name-and-error">
+          <WarningIcon
+            v-if="error"
+            class="error-icon"
+            :color="KUI_COLOR_TEXT_DANGER"
+            :size="16"
+          />
+          <div class="name">
+            {{ name }}
+          </div>
         </div>
 
         <NodeBadge
@@ -184,6 +192,8 @@ import { computed, watch } from 'vue'
 import english from '../../../../../locales/en.json'
 import HandleTwig from './HandleTwig.vue'
 import { isImplicitNode } from './node'
+import { WarningIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_DANGER } from '@kong/design-tokens'
 
 import type { NodeInstance } from '../../types'
 import { isReadableProperty, isWritableProperty } from '../node/property'
@@ -193,6 +203,7 @@ import NodeBadge from './NodeBadge.vue'
 
 const { data } = defineProps<{
   data: NodeInstance
+  error?: boolean
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -262,13 +273,13 @@ function toggleExpanded(io: 'input' | 'output') {
 
 watch(inputsCollapsible, (collapsible) => {
   if (!collapsible) {
-    storeToggleExpanded(data.id, 'input', true)
+    storeToggleExpanded(data.id, 'input', true, false)
   }
 }, { immediate: true })
 
 watch(outputsCollapsible, (collapsible) => {
   if (!collapsible) {
-    storeToggleExpanded(data.id, 'output', true)
+    storeToggleExpanded(data.id, 'output', true, false)
   }
 }, { immediate: true })
 </script>
@@ -298,6 +309,12 @@ $handle-height: 10px;
       justify-content: space-between;
       margin-bottom: $kui-space-40;
       width: 100%;
+
+      .name-and-error {
+        align-items: center;
+        display: flex;
+        gap: $kui-space-10;
+      }
 
       .name {
         font-size: $kui-font-size-20;

@@ -27,7 +27,10 @@
 
       <!-- To not use the default node style -->
       <template #node-flow="node">
-        <FlowNode :data="node.data" />
+        <FlowNode
+          :data="node.data"
+          :error="invalidConfigNodeIds.has(node.data.id)"
+        />
       </template>
     </VueFlow>
   </div>
@@ -65,7 +68,7 @@ const { vueFlowStore, editorStore, nodes, edges, autoLayout } = useFlow(props.ph
 const { addNode, clear: historyClear } = editorStore
 const { project, vueFlowRef, addSelectedNodes, getNodes } = vueFlowStore
 
-const { selectNode: selectStoreNode, propertiesPanelOpen } = useEditorStore()
+const { selectNode: selectStoreNode, propertiesPanelOpen, newCreatedNodeId, invalidConfigNodeIds } = useEditorStore()
 
 async function selectNode(nodeId?: NodeId) {
   selectStoreNode(nodeId)
@@ -104,6 +107,11 @@ function onDrop(e: DragEvent) {
 
   const nodeId = addNode(newNode)
   selectNode(nodeId)
+
+  if (nodeId) {
+    newCreatedNodeId.value = nodeId
+    propertiesPanelOpen.value = true
+  }
 }
 
 function onNodesInitializes() {
