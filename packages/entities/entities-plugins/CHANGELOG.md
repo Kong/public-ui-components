@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.65.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.64.0...@kong-ui-public/entities-plugins@9.65.0) (2025-08-18)
+
+
+### Features
+
+* **entities-plugins:** datakit - form validation ([#2342](https://github.com/Kong/public-ui-components/issues/2342)) ([7443ffd](https://github.com/Kong/public-ui-components/commit/7443ffd3a9123d95eccefb268836b00721c14ac0))
+
+
+
+
+
 # [9.64.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.63.5...@kong-ui-public/entities-plugins@9.64.0) (2025-08-18)
 
 
