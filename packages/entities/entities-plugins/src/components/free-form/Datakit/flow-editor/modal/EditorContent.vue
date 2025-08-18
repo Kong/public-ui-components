@@ -50,6 +50,10 @@ watch(selectedNode, (node) => {
   if (!node) {
     handleClose()
   }
+
+  if (!node || node.id !== newCreatedNodeId.value) {
+    newCreatedNodeId.value = null
+  }
 })
 </script>
 
