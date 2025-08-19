@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.67.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.0...@kong-ui-public/entities-plugins@9.67.1) (2025-08-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** require-callout - KV default null [KM-1580] ([#2354](https://github.com/Kong/public-ui-components/issues/2354)) ([9f82b69](https://github.com/Kong/public-ui-components/commit/9f82b69858f50629bde052268c0f24ab1cff1aeb))
+
+
+
+
+
 # [9.67.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.66.0...@kong-ui-public/entities-plugins@9.67.0) (2025-08-19)
 
 
