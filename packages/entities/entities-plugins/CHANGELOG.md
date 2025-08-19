@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.67.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.1...@kong-ui-public/entities-plugins@9.67.2) (2025-08-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** service protection - delete namespace when it is null ([#2251](https://github.com/Kong/public-ui-components/issues/2251)) ([76f7d47](https://github.com/Kong/public-ui-components/commit/76f7d4709d1c71cdbbb311026431e3773e9b67b0))
+
+
+
+
+
 ## [9.67.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.0...@kong-ui-public/entities-plugins@9.67.1) (2025-08-19)
 
 
