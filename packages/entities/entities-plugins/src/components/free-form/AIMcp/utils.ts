@@ -1,4 +1,4 @@
-//Splits comma-separated string values in an object into arrays, mutating the object in place.
+// Splits comma-separated string values in an object into arrays, mutating the object in place.
 export const splitMapValues = (input?: Record<string, any> | null) => {
   if (!input || typeof input !== 'object') {
     return

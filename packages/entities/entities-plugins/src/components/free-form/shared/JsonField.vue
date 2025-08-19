@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef, useAttrs } from 'vue'
-import { watchOnce } from '@vueuse/core'
+import { computed, ref, toRef, useAttrs, watch } from 'vue'
+import { isEqual } from 'lodash-es'
 import type { LabelAttributes } from '@kong/kongponents'
 import EnhancedInput from './EnhancedInput.vue'
 
@@ -76,7 +76,10 @@ function handleUpdate(value: string) {
   rawInputValue.value = value
   let finalValue: ValueType = value || null
   try {
-    finalValue = JSON.parse(value)
+    const parsedValue = JSON.parse(value)
+    if (parsedValue && typeof parsedValue === 'object') {
+      finalValue = parsedValue
+    }
   } catch {
     // noop
   }
@@ -91,10 +94,21 @@ const is1pIgnore = computed(() => {
   return utils.getName(name) === 'name'
 })
 
-watchOnce(fieldValue!, (newValue, oldValue) => {
-  if (newValue && !oldValue) {
-    rawInputValue.value = JSON.stringify(newValue, null, 2)
+watch(fieldValue!, (newValue) => {
+  if (newValue && typeof newValue === 'object') {
+    try {
+      const parsedRawInputValue = JSON.parse(rawInputValue.value)
+      if (!isEqual(parsedRawInputValue, newValue)) {
+        // sync fieldValue to rawInputValue when they are different
+        rawInputValue.value = JSON.stringify(newValue, null, 2)
+      }
+    } catch {
+      // sync fieldValue to rawInputValue when rawInputValue is not valid JSON
+      rawInputValue.value = JSON.stringify(newValue, null, 2)
+    }
+    return
   }
+  rawInputValue.value = newValue || ''
 }, { immediate: true })
 </script>
 
