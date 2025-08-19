@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.67.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.2...@kong-ui-public/entities-plugins@9.67.3) (2025-08-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit allow delete nodes with delete key ([#2356](https://github.com/Kong/public-ui-components/issues/2356)) ([e0eaffe](https://github.com/Kong/public-ui-components/commit/e0eaffe611d0a9e98d9e1fb0d05997c410afccc5))
+* **entities-plugins:** datakit improve modal background color ([#2357](https://github.com/Kong/public-ui-components/issues/2357)) ([ef6481f](https://github.com/Kong/public-ui-components/commit/ef6481fa842baa36f514c8850a692af37bbf97ca))
+
+
+
+
+
 ## [9.67.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.1...@kong-ui-public/entities-plugins@9.67.2) (2025-08-19)
 
 
