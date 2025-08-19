@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../locales/en.json'
 import { provideEditorStore } from '../composables'
@@ -44,15 +43,7 @@ function onChange(newConfig: DatakitConfig) {
   })
 }
 
-const { modalOpen, load } = provideEditorStore(config?.nodes ?? [], [], { onChange })
-
-watch(() => config?.nodes, (newNodes) => {
-  // Only load if the modal is not open
-  if (modalOpen.value) {
-    return
-  }
-  load(newNodes ?? [], [])
-})
+const { modalOpen } = provideEditorStore(config?.nodes ?? [], [], { onChange })
 </script>
 
 <style lang="scss" scoped>
