@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.67.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.66.0...@kong-ui-public/entities-plugins@9.67.0) (2025-08-19)
+
+
+### Features
+
+* **entities-plugins:** support ai-mcp ([#2350](https://github.com/Kong/public-ui-components/issues/2350)) ([e4097a3](https://github.com/Kong/public-ui-components/commit/e4097a3491532c97173de79bd2d555f805155d9c))
+
+
+
+
+
 # [9.66.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.65.0...@kong-ui-public/entities-plugins@9.66.0) (2025-08-19)
 
 
