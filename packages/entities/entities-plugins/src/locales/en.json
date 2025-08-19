@@ -658,6 +658,9 @@
       }
     },
     "free-form": {
+      "ai-mcp": {
+        "tool_item_label": "Tool #{index}"
+      },
       "request-callout": {
         "entity_name": "Request Callout",
         "by_lua_placeholder": "Enter Lua script here..."

@@ -8,15 +8,16 @@
 
   <div
     v-else
-    :data-testid="`ff-tag-${field.path.value}`"
+    :data-testid="`ff-json-${field.path.value}`"
   >
     <EnhancedInput
       v-bind="fieldAttrs"
-      class="ff-tag-field"
+      class="ff-json-field"
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
       :data-testid="`ff-${field.path.value}`"
       :model-value="rawInputValue ?? ''"
+      multiline
       @update:model-value="handleUpdate"
     >
       <template
@@ -33,13 +34,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef, useAttrs, watch } from 'vue'
+import { computed, ref, toRef, useAttrs } from 'vue'
+import { watchOnce } from '@vueuse/core'
 import type { LabelAttributes } from '@kong/kongponents'
 import EnhancedInput from './EnhancedInput.vue'
 
 import * as utils from './utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
-import type { SetFieldSchema } from '../../../types/plugins/form-schema'
+import type { JsonFieldSchema } from '../../../types/plugins/form-schema'
 
 defineOptions({
   inheritAttrs: false,
@@ -53,35 +55,31 @@ const attrs = useAttrs()
 interface StringFieldProps {
   name: string
   labelAttributes?: LabelAttributes
-  multiline?: boolean
 }
+
+type ValueType = Record<string, any> | string | null
 
 const {
   name,
   ...props
 } = defineProps<StringFieldProps>()
 const emit = defineEmits<{
-  'update:modelValue': [value: string[] | null]
+  'update:modelValue': [value: ValueType]
 }>()
 
-const { value: fieldValue, ...field } = useField<string[] | null, SetFieldSchema>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<ValueType, JsonFieldSchema>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
-const noEmptyArray = computed(() => field.schema?.value?.len_min && field.schema.value.len_min > 0)
 
 const rawInputValue = ref('')
 
-function arrToStr(arr: string[]) {
-  return arr.map(item => item.trim()).filter(Boolean).join(', ')
-}
-
-function strToArr(str: string) {
-  return str.trim().split(',').map(item => item.trim()).filter(Boolean)
-}
-
 function handleUpdate(value: string) {
   rawInputValue.value = value
-  const values = strToArr(value)
-  const finalValue = (!values.length && noEmptyArray.value) ? null : values
+  let finalValue: ValueType = value || null
+  try {
+    finalValue = JSON.parse(value)
+  } catch {
+    // noop
+  }
   fieldValue!.value = finalValue
   emit('update:modelValue', finalValue)
 }
@@ -93,18 +91,15 @@ const is1pIgnore = computed(() => {
   return utils.getName(name) === 'name'
 })
 
-// sync fieldValue to rawInputValue ONLY when their formatted value are different.
-watch(fieldValue!, newValue => {
-  const nv = newValue ? arrToStr(newValue) : ''
-  const ov = arrToStr(strToArr(rawInputValue.value))
-  if (ov !== nv) {
-    rawInputValue.value = nv
+watchOnce(fieldValue!, (newValue, oldValue) => {
+  if (newValue && !oldValue) {
+    rawInputValue.value = JSON.stringify(newValue, null, 2)
   }
 }, { immediate: true })
 </script>
 
 <style lang="scss" scoped>
-.ff-tag-field {
+.ff-json-field {
   :deep(.k-tooltip p) {
     margin: 0;
   }
