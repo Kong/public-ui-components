@@ -135,6 +135,7 @@ function handleAutoLayout() {
 
 <style lang="scss" scoped>
 .dk-flow-wrapper {
+  background-color: $kui-color-background-neutral-weakest;
   height: 100%;
   width: 100%;
 
