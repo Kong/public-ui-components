@@ -3,7 +3,7 @@ import type { AILLMAsJudgeSchema } from '../../types/plugins/ai-llm-as-judge'
 export const aiLlmAsJudgeSchema: AILLMAsJudgeSchema = {
   'config-prompt': {
     label: 'Prompt',
-    placeholder: 'Enter an API spec',
+    placeholder: 'Enter your prompt',
     type: 'textArea',
     rows: 4,
     max: false,

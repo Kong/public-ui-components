@@ -1,10 +1,4 @@
-import type { Field, ItemsSchema, CommonSchemaFields } from './shared'
-
-type ItemsSchemaForKeyValuePairs = Omit<ItemsSchema, 'schema'> & {
-  schema: {
-    fields: Field[]
-  }
-}
+import type { CommonSchemaFields } from './shared'
 
 export interface AILLMAsJudgeSchema extends CommonSchemaFields {
   'config-prompt': {
