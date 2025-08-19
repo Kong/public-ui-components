@@ -42,7 +42,7 @@ import type { DatakitConfig } from './types'
 const { t } = createI18n<typeof english>('en-us', english)
 
 const {
-  editing,
+  // editing,
   config,
 } = defineProps<{
   editing: boolean
@@ -100,7 +100,7 @@ onMounted(() => {
   })
   editorRef.value = editor
 
-  if (editing) {
+  if (config && Object.keys(config).length > 0) {
     editor.setValue(
       yaml.dump(toRaw(config), {
         schema: JSON_SCHEMA,
