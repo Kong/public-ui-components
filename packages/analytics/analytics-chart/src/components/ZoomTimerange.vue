@@ -1,12 +1,16 @@
 <template>
   <div class="zoom-timerange-container">
-    <div class="zoom-timerange-heading">
-      <div class="title">
-        {{ i18n.t('new_timerange_label') }}
-      </div>
-    </div>
     <div class="zoom-timerange-details">
-      {{ throttledStartTime }} - {{ throttledEndTime }}
+      <div class="label">
+        {{ i18n.t('zoom_time_range.from') }}
+      </div>
+      <div> {{ throttledStartTime }} </div>
+      <div class="label">
+        {{ i18n.t('zoom_time_range.to') }}
+      </div>
+      <div>
+        {{ throttledEndTime }}
+      </div>
     </div>
   </div>
 </template>
@@ -39,16 +43,20 @@ watch(() => [props.start, props.end], ([newStart, newEnd]) => {
 </script>
 
 <style scoped lang="scss">
-@use "../styles/globals.scss" as *;
-
 .zoom-timerange-container {
-  .zoom-timerange-heading {
-    @include tooltipTitle;
-  }
+  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+  margin: 0 var(--kui-space-20, $kui-space-20);
 
   .zoom-timerange-details {
+    display: grid;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
+    gap: var(--kui-space-10, $kui-space-10);
+    grid-template-columns: 35px 1fr;
     margin: var(--kui-space-30, $kui-space-30);
+
+    .label {
+      color: var(--kui-color-text-netural-strong, $kui-color-text-neutral-strong);
+    }
   }
 }
 </style>
