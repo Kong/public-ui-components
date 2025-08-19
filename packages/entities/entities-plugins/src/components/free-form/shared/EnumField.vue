@@ -25,15 +25,6 @@
         <div v-html="fieldAttrs.labelAttributes.info" />
       </slot>
     </template>
-
-    <template #selected-item-template="{ item }">
-      <slot
-        :item
-        name="selected-item-template"
-      >
-        {{ item?.label }}
-      </slot>
-    </template>
   </SelectComponent>
 </template>
 
