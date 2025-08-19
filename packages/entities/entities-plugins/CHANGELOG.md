@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.66.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.65.0...@kong-ui-public/entities-plugins@9.66.0) (2025-08-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit toConfigNodes ([#2352](https://github.com/Kong/public-ui-components/issues/2352)) ([359a88d](https://github.com/Kong/public-ui-components/commit/359a88d5877291e47372a56540500d39103adba4))
+
+
+### Features
+
+* **entities-plugins:** add support for ai-llm-as-judge ([#2353](https://github.com/Kong/public-ui-components/issues/2353)) ([df4822a](https://github.com/Kong/public-ui-components/commit/df4822a7da5d28eaa8ad95403efa5e671fa974f9))
+
+
+
+
+
 # [9.65.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.64.0...@kong-ui-public/entities-plugins@9.65.0) (2025-08-18)
 
 
