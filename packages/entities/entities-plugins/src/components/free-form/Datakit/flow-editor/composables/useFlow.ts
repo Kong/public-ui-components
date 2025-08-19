@@ -8,6 +8,7 @@ import { computed, nextTick, toRaw } from 'vue'
 import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
 import { isImplicitNode } from '../node/node'
 import { useEditorStore } from '../store/store'
+import { useConfirm } from './useConfirm'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -34,6 +35,7 @@ export interface AutoLayoutOptions {
 export default function useFlow(phase: NodePhase, flowId?: string) {
   const vueFlowStore = useVueFlow(flowId)
   const editorStore = useEditorStore()
+  const confirm = useConfirm()
 
   const {
     findNode,
@@ -55,6 +57,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     getNodeById,
     connectEdge,
     disconnectEdge,
+    getInEdgesByNodeId,
   } = editorStore
 
   function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
@@ -114,7 +117,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     console.debug('[useFlow] onEdgeClick', toRaw(edge))
   })
 
-  onConnect(({ source, sourceHandle, target, targetHandle }) => {
+  onConnect(async ({ source, sourceHandle, target, targetHandle }) => {
     console.debug('[useFlow] onConnect', { source, sourceHandle, target, targetHandle })
     if (!sourceHandle || !targetHandle) return
 
@@ -123,6 +126,20 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
 
     if (parsedSource?.io === 'input' || parsedTarget?.io === 'output')
       return // Only connect output to input
+
+    const targetInEdges = getInEdgesByNodeId(target as NodeId)
+
+    // Check for conflicting edges and confirm override if needed
+    const conflictingEdges = parsedTarget?.io === 'input'
+      ? targetInEdges.filter(edge => !edge.targetField)
+      : targetInEdges.filter(edge => !!edge.targetField)
+
+    if (conflictingEdges.length > 0) {
+      const confirmed = await confirm('overrideEdges')
+      if (confirmed) {
+        conflictingEdges.forEach(edge => disconnectEdge(edge.id, false))
+      }
+    }
 
     connectEdge({
       source: source as NodeId,

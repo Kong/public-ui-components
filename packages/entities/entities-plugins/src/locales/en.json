@@ -769,6 +769,11 @@
               "number_range": "{fieldName} must be between {min} and {max}",
               "string_len_range": "{fieldName} must be between {min} and {max} characters"
             }
+          },
+          "confirm": {
+            "overrideEdges": {
+              "message": "Are you sure you want to override the edges?"
+            }
           }
         },
         "code_editor": {

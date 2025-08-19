@@ -1,4 +1,4 @@
-import { computed, nextTick, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
@@ -10,6 +10,7 @@ import { isImplicitType } from '../node/node'
 import { ResponseSchema, ServiceRequestSchema } from '../node/schemas'
 import { useFieldNameValidator, useNodeNameValidator } from './validation'
 import { omit } from 'lodash-es'
+import { useConfirm } from './useConfirm'
 
 export type InputOption = {
   value: IdConnection
@@ -40,6 +41,9 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     newCreatedNodeId,
     invalidConfigNodeIds,
   } = useEditorStore()
+
+  const confirm = useConfirm()
+  const formRefreshKey = ref(0)
 
   let isGlobalStateUpdating = false
 
@@ -164,7 +168,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
    * - If user sets a new input field, disconnect the input edge and the old input field edge,
    *   and add new edges for the input fields.
    */
-  const setInputs = (fieldName: FieldName, fieldValue: IdConnection | null) => {
+  const setInputs = async (fieldName: FieldName, fieldValue: IdConnection | null) => {
     if (isGlobalStateUpdating) return
     const clearing = fieldValue == null
 
@@ -181,6 +185,14 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
 
     // remove the input edge
     if (inputEdge.value) {
+      // confirm if user wants to disconnect the input edge
+      const confirmed = await confirm('overrideEdges')
+      if (!confirmed) {
+        // the value of KSelect will be reset to the current input edge value
+        // so we need to force re-render the form
+        formRefreshKey.value += 1
+        return
+      }
       disconnectEdge(inputEdge.value.id, false)
     }
 
@@ -210,9 +222,19 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
    * - If user clears the input, remove the edge of the input.
    * - If user sets a new input, disconnect existing edges and add new edge for the input.
    */
-  const setInput = (value: IdConnection | null, commitNow = true) => {
+  const setInput = async (value: IdConnection | null, commitNow = true) => {
     if (isGlobalStateUpdating) return
     const clearing = value == null
+
+    if (!clearing && inputsEdges.value.length > 0) {
+      const confirmed = await confirm('overrideEdges')
+      if (!confirmed) {
+        // the value of KSelect will be reset to the current input edge value
+        // so we need to force re-render the form
+        formRefreshKey.value += 1
+        return
+      }
+    }
 
     // remove existing edges
     for (const edge of [...inputsEdges.value, inputEdge.value].filter(Boolean)) {
@@ -307,6 +329,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     inputsFieldNames,
     skipValidationOnMount,
     currentNode,
+    formRefreshKey,
 
     // form ops
     setName,

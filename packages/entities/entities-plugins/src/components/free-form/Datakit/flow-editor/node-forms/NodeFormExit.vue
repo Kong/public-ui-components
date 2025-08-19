@@ -1,5 +1,6 @@
 <template>
   <Form
+    :key="`${formRefreshKey}`"
     ref="form"
     :data="formData"
     :schema="schema"
@@ -70,6 +71,7 @@ const {
   toggleNodeValid,
   skipValidationOnMount,
   fieldNameValidator,
+  formRefreshKey,
 } = useNodeForm<ExitFormData>(nodeId, () => formRef.value!.getInnerData())
 
 const {

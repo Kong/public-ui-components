@@ -6,3 +6,5 @@ export const AUTO_LAYOUT_DEFAULT_OPTIONS = {
   edgeGap: 80,
   rankGap: 80,
 } as const satisfies Pick<AutoLayoutOptions, 'padding' | 'nodeGap' | 'edgeGap' | 'rankGap'>
+
+export const CONFIRM_MODAL_PROVIDE_KEY = Symbol('confirm-modal')
