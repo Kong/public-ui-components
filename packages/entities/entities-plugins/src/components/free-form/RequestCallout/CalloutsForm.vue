@@ -24,12 +24,9 @@ import CalloutForm from './CalloutForm.vue'
 
 import { type RequestCalloutPlugin, type Callout, CalloutId } from './types'
 
-const { formData, getDefault } = useFormShared<RequestCalloutPlugin>()
+const { formData } = useFormShared<RequestCalloutPlugin>()
 
 function addCallout() {
-  const callout = getDefault('config.callouts.*') as Callout
-  callout.request.body.custom = callout.request.body.custom ?? {}
-
   const latest = formData.config!.callouts[formData.config!.callouts.length - 1]
 
   if (latest) {
