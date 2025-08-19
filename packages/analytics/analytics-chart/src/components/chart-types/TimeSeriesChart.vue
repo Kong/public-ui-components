@@ -197,7 +197,7 @@ const { options } = composables.useLineChartOptions({
   tooltipState: tooltipData,
   timeRangeMs: toRef(props, 'timeRangeMs'),
   granularity: toRef(props, 'granularity'),
-  legendID: legendID,
+  legendID,
   stacked: toRef(props, 'stacked'),
   metricAxesTitle: toRef(props, 'metricAxesTitle'),
   dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
