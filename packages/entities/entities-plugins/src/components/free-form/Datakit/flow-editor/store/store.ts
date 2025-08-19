@@ -15,7 +15,7 @@ import type {
   NodeName,
   UINode,
 } from '../../types'
-import { isImplicitName, isImplicitType } from '../node/node'
+import { IMPLICIT_NODE_META_MAP, isImplicitName, isImplicitType } from '../node/node'
 import {
   createId,
   clone,
@@ -393,58 +393,67 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     /* ---------- serialization ---------- */
 
     function toConfigNodes(): ConfigNode[] {
-      const output: ConfigNode[] = []
+      const result: ConfigNode[] = []
 
       for (const node of state.value.nodes) {
-        if (isImplicitType(node.type)) continue
-
-        const inputs: Record<string, NameConnection> = {}
-        const outputs: Record<string, NameConnection> = {}
-
-        // incoming -> inputs
-        for (const edge of state.value.edges.filter(
-          (edge) => edge.target === node.id,
-        )) {
-          const sourceNode = getNodeById(edge.source)
-          if (!sourceNode) continue
-          const sourceFieldName = findFieldById(
-            sourceNode,
-            'output',
-            edge.sourceField,
-          )?.name
-          const value: NameConnection = sourceFieldName
-            ? `${sourceNode.name}.${sourceFieldName}`
-            : sourceNode.name
-          const targetFieldName = findFieldById(
-            node,
-            'input',
-            edge.targetField,
-          )?.name
-          if (targetFieldName) inputs[targetFieldName] = value
-          else if (!('input' in inputs)) inputs.input = value
+        if (isImplicitType(node.type)) {
+          continue
         }
 
-        // outgoing -> outputs
-        for (const edge of state.value.edges.filter(
-          (edge) => edge.source === node.id,
-        )) {
+        // Prefer inputs-only by default
+        let nodeInput: NameConnection | undefined
+        const fieldInputs: Record<FieldName, NameConnection> = {}
+
+        // Only record outputs when the target is an implicit node that accepts inputs
+        let nodeOutput: NameConnection | undefined
+        const fieldOutputs: Record<FieldName, NameConnection> = {}
+
+        // incoming -> inputs
+        for (const edge of state.value.edges.filter((edge) => edge.target === node.id)) {
+          const sourceNode = getNodeById(edge.source)
+          if (!sourceNode) {
+            continue
+          }
+
+          const sourceFieldName = findFieldById(sourceNode, 'output', edge.sourceField)?.name
+          const input: NameConnection = sourceFieldName
+            ? `${sourceNode.name}.${sourceFieldName}`
+            : sourceNode.name
+
+          const targetFieldName = findFieldById(node, 'input', edge.targetField)?.name
+          if (targetFieldName) {
+            fieldInputs[targetFieldName] = input
+          } else if (nodeInput === undefined) {
+            nodeInput = input
+          }
+        }
+
+        // outgoing -> outputs only if target is implicit & accepts input
+        for (const edge of state.value.edges.filter((edge) => edge.source === node.id)) {
           const targetNode = getNodeById(edge.target)
-          if (!targetNode) continue
-          const targetFieldName = findFieldById(
-            targetNode,
-            'input',
-            edge.targetField,
-          )?.name
-          const value: NameConnection = targetFieldName
+          if (!targetNode) {
+            continue
+          }
+
+          const type = targetNode.type
+          if (!isImplicitType(type)) {
+            continue
+          }
+          if (!IMPLICIT_NODE_META_MAP[type].io?.input) {
+            continue // only connect to implicit nodes that accept inputs
+          }
+
+          const targetFieldName = findFieldById(targetNode, 'input', edge.targetField)?.name
+          const output: NameConnection = targetFieldName
             ? `${targetNode.name}.${targetFieldName}`
             : targetNode.name
-          const sourceFieldName = findFieldById(
-            node,
-            'output',
-            edge.sourceField,
-          )?.name
-          if (sourceFieldName) outputs[sourceFieldName] = value
-          else if (!('output' in outputs)) outputs.output = value
+
+          const sourceFieldName = findFieldById(node, 'output', edge.sourceField)?.name
+          if (sourceFieldName) {
+            fieldOutputs[sourceFieldName] = output
+          } else if (nodeOutput === undefined) {
+            nodeOutput = output
+          }
         }
 
         const configNode: ConfigNode = {
@@ -453,21 +462,26 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           type: node.type,
         } as ConfigNode
 
-        const inputKeys = Object.keys(inputs)
-        const outputKeys = Object.keys(outputs)
+        const hasNamedInputs = Object.keys(fieldInputs).length > 0
+        // inputs and input should be mutually exclusive
+        if (hasNamedInputs) {
+          configNode.inputs = fieldInputs
+        } else if (nodeInput !== undefined) {
+          configNode.input = nodeInput
+        }
 
-        if (inputKeys.length === 1 && inputKeys[0] === 'input')
-          configNode.input = inputs.input
-        else if (inputKeys.length) configNode.inputs = inputs
+        const hasNamedOutputs = Object.keys(fieldOutputs).length > 0
+        // outputs and output should be mutually exclusive
+        if (hasNamedOutputs) {
+          configNode.outputs = fieldOutputs
+        } else if (nodeOutput !== undefined) {
+          configNode.output = nodeOutput
+        }
 
-        if (outputKeys.length === 1 && outputKeys[0] === 'output')
-          configNode.output = outputs.output
-        else if (outputKeys.length) configNode.outputs = outputs
-
-        output.push(configNode)
+        result.push(configNode)
       }
 
-      return output
+      return result
     }
 
     function toUINodes(): UINode[] {
