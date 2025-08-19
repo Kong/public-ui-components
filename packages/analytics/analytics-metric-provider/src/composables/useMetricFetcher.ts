@@ -155,14 +155,26 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
       const { start_ms: startMs, end_ms: endMs } = raw.value.meta
 
       let numDays = (endMs - startMs) / (1000 * 60 * 60 * 24)
+      let numHours = (endMs - startMs) / (1000 * 60 * 60)
+      let numMinutes = (endMs - startMs) / (1000 * 60)
 
       if (opts.withTrend.value) {
         // If we're querying a trend, then the time range queried is doubled.
         numDays /= 2
+        numHours /= 2
+        numMinutes /= 2
+      }
+
+      if (numDays >= 1) {
+        return i18n.t('trendRange.custom_days', { numDays: Math.round(numDays) })
+      } else if (numHours >= 1) {
+        return i18n.t('trendRange.custom_hours', { numHours: Math.round(numHours) })
+      } else if (numMinutes >= 1) {
+        return i18n.t('trendRange.custom_minutes', { numMinutes: Math.round(numMinutes) })
       }
 
       // Avoid weirdness around daylight savings time by rounding up or down to the nearest day.
-      return i18n.t('trendRange.custom', { numDays: Math.round(numDays) })
+      return i18n.t('trendRange.custom_days', { numDays: Math.round(numDays) })
     } else {
       return opts.withTrend.value
         // @ts-ignore - dynamic i18n key
