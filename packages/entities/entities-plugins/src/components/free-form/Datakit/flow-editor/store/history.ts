@@ -33,29 +33,23 @@ export function useTaggedHistory<T>(
   }
 
 
-  function commit(tag?: string, opts?: { replace?: boolean }) {
-    const replace = !!opts?.replace
-    if (replace && tag && lastTag === tag && undoStack.value.length > 0) {
-      undoStack.value.pop()
+  function commit(tag?: string) {
+    if (!tag) {
+      lastTag = undefined
+      baseCommit()
+      return
     }
 
-    // first time or switch tag: create a new undo boundary
     if (lastTag !== tag) {
       lastTag = tag
       baseCommit()
-      notify('commit')
       return
     }
 
     const keep = undoStack.value[0] ?? null
-
-    // same tag: collapse. Commit first, then remove the last boundary
     baseCommit()
     undoStack.value.shift()
-
-    // put old boundary back, compatible with capacity=1
     if (keep) undoStack.value.unshift(keep)
-    notify('commit')
   }
 
   function undo() {

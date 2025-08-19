@@ -770,6 +770,9 @@
               "string_len_range": "{fieldName} must be between {min} and {max} characters"
             }
           },
+          "error": {
+            "invalid_connection": "Not a valid connection"
+          },
           "confirm": {
             "overrideEdges": {
               "message": "Are you sure you want to override the edges?"

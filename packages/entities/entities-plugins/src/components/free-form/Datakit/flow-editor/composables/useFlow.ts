@@ -1,3 +1,4 @@
+import { ToastManager } from '@kong/kongponents'
 import type { Node as DagreNode } from '@dagrejs/dagre'
 import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
 
@@ -9,6 +10,7 @@ import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
 import { isImplicitNode } from '../node/node'
 import { useEditorStore } from '../store/store'
 import { useConfirm } from './useConfirm'
+import useI18n from '../../../../../composables/useI18n'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -36,6 +38,8 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
   const vueFlowStore = useVueFlow(flowId)
   const editorStore = useEditorStore()
   const confirm = useConfirm()
+  const toaster = new ToastManager()
+  const { i18n: { t } } = useI18n()
 
   const {
     findNode,
@@ -58,6 +62,8 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     connectEdge,
     disconnectEdge,
     getInEdgesByNodeId,
+    commit,
+    undo,
   } = editorStore
 
   function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
@@ -127,26 +133,64 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     if (parsedSource?.io === 'input' || parsedTarget?.io === 'output')
       return // Only connect output to input
 
-    const targetInEdges = getInEdgesByNodeId(target as NodeId)
+    // Get all incoming edges for the target node
+    const targetIncomingEdges = getInEdgesByNodeId(target as NodeId)
+    let requiresUserConfirmation = false
 
-    // Check for conflicting edges and confirm override if needed
-    const conflictingEdges = parsedTarget?.io === 'input'
-      ? targetInEdges.filter(edge => !edge.targetField)
-      : targetInEdges.filter(edge => !!edge.targetField)
+    // Determine which edges need to be removed based on connection type
+    // For `input` connections, we need to disconnect the input`s` edges
+    // For input`s` connections, we need to disconnect the `input` edges
+    const edgesToDisconnect = parsedTarget?.io === 'input'
+      ? targetIncomingEdges.filter(edge => !edge.targetField)
+      : targetIncomingEdges.filter(edge => !!edge.targetField)
 
-    if (conflictingEdges.length > 0) {
-      const confirmed = await confirm('overrideEdges')
-      if (confirmed) {
-        conflictingEdges.forEach(edge => disconnectEdge(edge.id, false))
-      }
+    // Disconnect conflicting edges if any exist
+    if (edgesToDisconnect.length > 0) {
+      requiresUserConfirmation = true
+      edgesToDisconnect.forEach(edge => disconnectEdge(edge.id, false))
     }
 
-    connectEdge({
+    // Handle conflict edge conflicts based on the opposite connection type
+    // This ensures we clean up all incompatible connections
+    const conflictEdgesToDisconnect = parsedTarget?.io === 'input'
+      ? targetIncomingEdges.filter(edge => !!edge.targetField)
+      : targetIncomingEdges.filter(edge => !edge.targetField)
+
+    if (conflictEdgesToDisconnect.length > 0) {
+      const hasConnected = conflictEdgesToDisconnect.some(edge => {
+        return edge.source === source
+          && edge.target === target
+          && edge.targetField === parsedTarget?.field
+          && edge.sourceField === parsedSource?.field
+      })
+
+      if (hasConnected) {
+        return // Do nothing
+      }
+
+      requiresUserConfirmation = true
+      conflictEdgesToDisconnect.forEach(edge => disconnectEdge(edge.id, false))
+    }
+
+    // Attempt to create the new connection
+    const connectionSuccess = connectEdge({
       source: source as NodeId,
       sourceField: parsedSource?.field,
       target: target as NodeId,
       targetField: parsedTarget?.field,
-    })
+    }, false)
+
+    if (connectionSuccess) {
+      commit()
+      if (requiresUserConfirmation && !(await confirm('overrideEdges'))) {
+        undo()
+      }
+    } else {
+      toaster.open({
+        message: t('plugins.free-form.datakit.flow_editor.error.invalid_connection'),
+        appearance: 'danger',
+      })
+    }
   })
 
   // Only triggered by canvas-originated changes
