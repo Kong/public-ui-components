@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.67.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.3...@kong-ui-public/entities-plugins@9.67.4) (2025-08-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit fix flow-code toggle ([#2358](https://github.com/Kong/public-ui-components/issues/2358)) ([0ffed83](https://github.com/Kong/public-ui-components/commit/0ffed832056eb6fa37c3669b1357338e2d7b3557))
+
+
+
+
+
 ## [9.67.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.2...@kong-ui-public/entities-plugins@9.67.3) (2025-08-19)
 
 
