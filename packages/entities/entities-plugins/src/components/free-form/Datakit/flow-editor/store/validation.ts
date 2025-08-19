@@ -69,13 +69,9 @@ export function useValidators(stateRef: Ref<EditorState>) {
       errors.push('target handle is not an input field')
 
     // phase / implicit rules
-    if (sourceNode.phase === 'response' && targetNode.phase === 'request')
-      errors.push('cannot connect from response phase to request phase')
     if (targetNode.name === 'request') errors.push('cannot target "request"')
     if (sourceNode.name === 'response')
       errors.push('cannot source from "response"')
-    if (sourceNode.phase === 'response' && targetNode.phase !== 'response')
-      errors.push('response-phase output must go to response-phase nodes')
 
     // fan-in rules
     const hasWholeOnTarget = edges.value.some(
