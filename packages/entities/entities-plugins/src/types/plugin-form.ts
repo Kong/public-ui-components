@@ -12,6 +12,7 @@ import type { RateLimitingSchema } from './plugins/rate-limiting'
 import type { RouteByHeaderSchema } from './plugins/route-by-header'
 import type { AIPromptDecoratorSchema } from './plugins/ai-prompt-decorator'
 import type { AIPromptTemplateSchema } from './plugins/ai-prompt-template'
+import type { AILLMAsJudgeSchema } from './plugins/ai-llm-as-judge'
 import type { ResponseTransformerSchema } from './plugins/response-transformer'
 import type { ResponseTransformerAdvancedSchema } from './plugins/response-transformer-advanced'
 import type { VaultAuthSchema } from './plugins/vault-auth'
@@ -211,6 +212,7 @@ export interface CustomSchemas {
   'ai-prompt-decorator': AIPromptDecoratorSchema
   'ai-prompt-template': AIPromptTemplateSchema
   'ai-proxy-advanced': CommonSchemaFields
+  'ai-llm-as-judge': AILLMAsJudgeSchema
   'vault-auth': VaultAuthSchema
   'graphql-rate-limiting-advanced': GraphQLRateLimitingAdvancedSchema
   'response-ratelimiting': RateLimitingSchema
