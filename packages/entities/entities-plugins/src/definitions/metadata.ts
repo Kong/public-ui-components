@@ -628,6 +628,13 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-prompt-guard'],
   },
+  'ai-semantic-response-guard': {
+    descriptionKey: 'plugins.meta.ai-semantic-response-guard.description',
+    isEnterprise: true,
+    nameKey: 'plugins.meta.ai-semantic-response-guard.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-response-guard'],
+  },
   'header-cert-auth': {
     descriptionKey: 'plugins.meta.header-cert-auth.description',
     isEnterprise: true,
