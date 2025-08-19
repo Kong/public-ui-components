@@ -5,6 +5,7 @@ const mapping = {
     component: 'ServiceProtectionForm',
   },
   'datakit': 'DatakitForm',
+  'ai-mcp': 'AIMcpForm',
 } as const
 
 export type FreeFormName = keyof typeof mapping
