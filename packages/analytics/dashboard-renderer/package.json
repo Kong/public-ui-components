@@ -47,7 +47,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.18.0",
-    "@kong/kongponents": "9.38.3",
+    "@kong/kongponents": "9.38.4",
     "ajv": "^8.17.1",
     "cypress-real-events": "^1.14.0",
     "pinia": ">= 2.1.7 < 3",
