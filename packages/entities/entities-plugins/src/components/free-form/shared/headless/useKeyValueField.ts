@@ -21,7 +21,7 @@ export interface KeyValueFieldProps<TKey extends string = string, TValue extends
 }
 
 export interface KeyValueFieldEmits<TKey extends string = string, TValue extends string = string> {
-  change: [Record<TKey, TValue>]
+  change: [Record<TKey, TValue> | null]
 }
 
 export interface KVEntry<TKey extends string = string, TValue extends string = string> {
@@ -43,7 +43,7 @@ export function useKeyValueField<
 ) {
   type KVEntries = Array<KVEntry<TKey, TValue>>
 
-  const { value: fieldValue, ...field } = useField<Record<TKey, TValue>>(toRef(props, 'name'))
+  const { value: fieldValue, ...field } = useField<Record<TKey, TValue> | null>(toRef(props, 'name'))
   const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 
   const entries = ref(getEntries(
@@ -112,7 +112,9 @@ export function useKeyValueField<
   // Sync entries to fieldValue
   watch(entries, (newEntries) => {
     if (!syncToFieldValue) return
-    const newValue = Object.fromEntries(newEntries.map(({ key, value }) => [key, value]).filter(([key]) => key))
+    const newValue: Record<TKey, TValue> | null = newEntries.length
+      ? Object.fromEntries(newEntries.map(({ key, value }) => [key, value]).filter(([key]) => key))
+      : null
     fieldValue!.value = newValue
     lastUpdatedValue = newValue
     emit('change', newValue)
@@ -134,7 +136,7 @@ export function useKeyValueField<
    * - Updating values for existing keys
    * - Removing entries that no longer exist in the new value
    */
-  function applyChangeToEntries(newValue?: Record<TKey, TValue>) {
+  function applyChangeToEntries(newValue?: Record<TKey, TValue> | null) {
     if (!newValue) {
       entries.value = []
       return
