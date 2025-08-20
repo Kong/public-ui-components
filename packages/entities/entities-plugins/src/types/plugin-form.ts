@@ -25,6 +25,7 @@ import type { KafkaUpstreamSchema } from './plugins/kafka-upstream'
 import type { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import type { genKeyAuthEncSchema } from '../definitions/schemas/KeyAuthEnc'
 import type { ConfluentSchema } from './plugins/confluent'
+import type { SolaceConsumeSchema } from './plugins/solace-consume'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -221,6 +222,7 @@ export interface CustomSchemas {
   'request-transformer-advanced': CommonSchemaFields & Record<string, any>
   'response-transformer': ResponseTransformerSchema
   'response-transformer-advanced': ResponseTransformerAdvancedSchema
+  'solace-consume': SolaceConsumeSchema
   zipkin: CommonSchemaFields & Record<string, any>
   saml: SAMLSchema
   'oas-validation': OasValidationSchema
