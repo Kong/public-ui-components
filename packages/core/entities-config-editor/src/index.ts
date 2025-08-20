@@ -15,4 +15,3 @@ import EntitiesConfigEditor from './components/EntitiesConfigEditor.vue'
 export { EntitiesConfigEditor }
 
 export * from './types'
-

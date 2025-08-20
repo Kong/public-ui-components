@@ -438,4 +438,3 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
 export type PluginName = keyof typeof PLUGIN_GROUP_AND_SCOPE_MAP
 
 export * from './types'
-

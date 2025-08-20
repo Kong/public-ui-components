@@ -31,4 +31,3 @@ export const composables = {
   useLinkedPlugins,
   useLinkedPluginsFetcher,
 }
-

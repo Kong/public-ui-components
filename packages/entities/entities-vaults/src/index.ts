@@ -15,4 +15,3 @@ export { VaultSecretPickerProvider, VaultSecretPicker }
 export { vaultsEndpoints, secretsEndpoints }
 
 export * from './types'
-

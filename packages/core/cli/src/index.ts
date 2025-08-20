@@ -2,4 +2,3 @@
 import { createPackage } from './core/index.js'
 
 createPackage()
-

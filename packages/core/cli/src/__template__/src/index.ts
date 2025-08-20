@@ -15,4 +15,3 @@ import {%%COMPONENT_NAME%%} from './components/{%%COMPONENT_NAME%%}.vue'
 export { {%%COMPONENT_NAME%%} }
 
 export * from './types'
-
