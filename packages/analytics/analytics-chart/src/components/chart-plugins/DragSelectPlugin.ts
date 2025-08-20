@@ -47,7 +47,7 @@ export class DragSelectPlugin implements Plugin {
   private _startX = 0
   private _endX = 0
   private _dragTimeout?: number
-  private _clearSelectionArea = false
+  private _clearSelectionArea = true
   private _chart: Chart | null = null
   private _dragSelectHandlers?: {
     onMouseDown: (event: MouseEvent) => void
