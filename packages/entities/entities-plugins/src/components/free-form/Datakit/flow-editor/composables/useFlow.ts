@@ -4,7 +4,7 @@ import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, Nod
 
 import dagre from '@dagrejs/dagre'
 import { MarkerType, useVueFlow, type Edge, type Node } from '@vue-flow/core'
-import { computed, nextTick, toRaw } from 'vue'
+import { computed, nextTick, onUnmounted, toRaw } from 'vue'
 
 import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
 import { isImplicitNode } from '../node/node'
@@ -173,7 +173,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
       })
 
       if (hasConnected) {
-        return // Do nothing
+        return // The connection already exists, do nothing
       }
 
       confirmToOverride = true
@@ -204,6 +204,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
 
     if (connectionSuccess) {
       commit()
+      // Confirm the changes, undo if users not confirmed
       if (confirmToSwitch || confirmToOverride) {
         const isConfirmed = await confirm(
           confirmToSwitch
@@ -444,6 +445,10 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
       fitView()
     })
   }
+
+  onUnmounted(() => {
+    toaster.destroy()
+  })
 
   return {
     vueFlowStore,

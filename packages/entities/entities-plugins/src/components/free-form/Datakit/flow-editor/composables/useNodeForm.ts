@@ -227,8 +227,17 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
 
     commit()
 
-    const isReplace = removedConnections[0]?.[1] === addedConnection[1]
-    if (!isReplace && removedConnections.length > 0) {
+
+    // Check if the removed connection and the added connection refer to the same target field.
+    // Here, [1] represents the target field name or identifier in the connection string tuple.
+    const isReplace = removedConnections[0] && addedConnection
+      ? removedConnections[0][1] === addedConnection[1]
+      : false
+
+    if (isReplace) return // The connection has been replaced, do nothing
+
+    // Confirm the changes, undo if users not confirmed
+    if (removedConnections.length > 0) {
       const confirmed = await confirm(
         t('plugins.free-form.datakit.flow_editor.confirm.message.switch'),
         [addedConnection],
