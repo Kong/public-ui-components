@@ -40,6 +40,7 @@ runs:
       uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4
       with:
         node-version: ${{ steps.node-version.outputs.node-version }}
+        registry-url: https://registry.npmjs.org
 
     - name: Install PNPM
       shell: bash

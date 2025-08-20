@@ -238,23 +238,14 @@ jobs:
 
       - name: Publish Previews
         if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
-        env:
-           GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
+
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
 
-          echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
-          echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
-
-          npx google-artifactregistry-auth
-
           preid="pr.${{ github.event.pull_request.number }}.$(git rev-parse --short ${{ github.event.pull_request.head.sha }})"
           tag="pr-${{ github.event.pull_request.number }}"
           echo "preid=${preid}"
-
-          git update-index --assume-unchanged .npmrc
-
 
           git checkout ${{ github.head_ref }}
 
@@ -281,13 +272,6 @@ jobs:
             # KHCP-14702 temp solution till pubsub in internal registry is not implemented
             name=$(echo ${pkg}|cut -d'@' -f2)
             version=$(echo ${pkg}|cut -d'@' -f3)
-
-
-            curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
-              -H 'Accept: application/vnd.github.everest-preview+json' \
-              "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
-              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${name}\", \"version\":\"${version}\"}}"
-
 
             pkg="@$(echo ${pkg}|cut -d'@' -f2)@${tag}"
             if [ "${npm_instructions}" != "" ]; then
@@ -394,7 +378,6 @@ jobs:
       contents: read
     if: ${{ always() && needs.build.outputs.filter != '' }}
     env:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
     steps:
@@ -423,14 +406,6 @@ jobs:
           name: package-dist-artifacts
           path: packages/
 
-      - name: 'Authenticate to Google Cloud'
-        if: ${{ github.event_name == 'push' }}
-        id: 'auth'
-        uses: 'google-github-actions/auth@6fc4af4b145ae7821d527454aa9bd537d1f2dc5f' # v2
-        with:
-          project_id: '22045766606'
-          workload_identity_provider: 'projects/22045766606/locations/global/workloadIdentityPools/github/providers/github'
-
       # for lerna version we use:
       # --force-git-tag - if tag was already created it will be recreated instead of command failing and entire CI failing
       # --yes - so CI doesn't wait for the confirmation keyboard import
@@ -444,12 +419,6 @@ jobs:
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
           git config user.name "Kong UI Bot"
 
-          echo "@kong-ui-public:registry=https://us-central1-npm.pkg.dev/artifacts-storage/internal/" > .npmrc
-          echo "//us-central1-npm.pkg.dev/artifacts-storage/internal/:always-auth=true" >> .npmrc
-
-          npx google-artifactregistry-auth
-
-          git update-index --assume-unchanged .npmrc
           versions=$(pnpm --silent lerna version --conventional-commits --create-release github --yes --force-git-tag --json || true)
           if [[ "${versions}" == "" ]]; then
             echo "no packages to version"
@@ -466,20 +435,6 @@ jobs:
             echo "There are no new packages that should be published"
             exit 0
           fi
-
-          for pkg in $(echo "${pnpmPublish}" | grep "+ "| sed 's/+ //')
-          do
-            # KHCP-14702 temp solution till pubsub in internal registry is not implemented
-            name=$(echo ${pkg}|cut -d'@' -f2)
-            version=$(echo ${pkg}|cut -d'@' -f3)
-            curl -H "Authorization: token  ${{ secrets.KONGPONENTS_BOT_PAT }}" \
-              -H 'Accept: application/vnd.github.everest-preview+json' \
-              "https://api.github.com/repos/kong/npm-package-promoter/dispatches" \
-              -d "{\"event_type\": \"promote\", \"client_payload\": {\"package\": \"@${name}\", \"version\":\"${version}\"}}"
-            # end KHCP-14702
-          done
-        env:
-           GOOGLE_APPLICATION_CREDENTIALS: ${{steps.auth.outputs.credentials_file_path}}
 
   notify-slack:
     name: Slack Notification
