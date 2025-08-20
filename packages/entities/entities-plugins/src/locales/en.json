@@ -774,6 +774,13 @@
             "invalid_connection": "Not a valid connection"
           },
           "confirm": {
+            "title": "Connection conflict",
+            "message": {
+              "confirm": "Are you sure you want to make this change?",
+              "switch": "You can either connect all outputs from another node or select individual ones.",
+              "override": "Each input can connect to only one output, but one output can connect to many inputs."
+            },
+            "proceed": "Yes, update",
             "overrideEdges": {
               "message": "Are you sure you want to override the edges?"
             }

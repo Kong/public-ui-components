@@ -1,6 +1,5 @@
 <template>
   <Form
-    :key="`${formRefreshKey}`"
     ref="form"
     :data="formData"
     :schema="schema"
@@ -83,7 +82,6 @@ const {
   skipValidationOnMount,
   toggleNodeValid,
   fieldNameValidator,
-  formRefreshKey,
 } = useNodeForm<JqFormData>(nodeId, () => formRef.value!.getInnerData())
 
 function handleAddField(name: FieldName, value?: IdConnection | null) {

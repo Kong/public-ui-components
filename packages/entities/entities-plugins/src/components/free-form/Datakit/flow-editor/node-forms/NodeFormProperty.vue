@@ -1,6 +1,5 @@
 <template>
   <Form
-    :key="`${formRefreshKey}`"
     ref="form"
     :data="formData"
     :schema="schema"
@@ -73,7 +72,6 @@ const {
   toggleNodeValid,
   skipValidationOnMount,
   fieldNameValidator,
-  formRefreshKey,
 } = useNodeForm<PropertyFormData>(nodeId, () => formRef.value!.getInnerData())
 
 const writable = computed(() => isWritableProperty(formData.value.property))

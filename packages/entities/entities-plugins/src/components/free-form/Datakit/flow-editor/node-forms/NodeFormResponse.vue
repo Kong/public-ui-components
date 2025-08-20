@@ -1,6 +1,5 @@
 <template>
   <Form
-    :key="`${formRefreshKey}`"
     ref="form"
     :data="formData"
     :schema="schema"
@@ -37,7 +36,6 @@ const {
   setInput,
   inputsFieldNames,
   fieldNameValidator,
-  formRefreshKey,
 } = useNodeForm<BaseFormData>(nodeId, () => formRef.value!.getInnerData())
 </script>
 

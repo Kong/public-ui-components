@@ -11,6 +11,9 @@ import { ResponseSchema, ServiceRequestSchema } from '../node/schemas'
 import { useFieldNameValidator, useNodeNameValidator } from './validation'
 import { omit } from 'lodash-es'
 import { useConfirm } from './useConfirm'
+import useI18n from '../../../../../composables/useI18n'
+import type { ConnectionString } from '../modal/ConfirmModal.vue'
+import { createEdgeConnectionString, createNewConnectionString } from './helpers'
 
 export type InputOption = {
   value: IdConnection
@@ -40,10 +43,12 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     connectEdge,
     newCreatedNodeId,
     invalidConfigNodeIds,
+    undo,
+    commit,
   } = useEditorStore()
 
+  const { i18n: { t } } = useI18n()
   const confirm = useConfirm()
-  const formRefreshKey = ref(0)
 
   let isGlobalStateUpdating = false
 
@@ -178,43 +183,60 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       // remove the edge of the input field
       const edge = inputsEdges.value.find(e => e.targetField === fieldId)
       if (edge) {
-        disconnectEdge(edge.id, true)
+        disconnectEdge(edge.id)
       }
       return
     }
 
-    // remove the input edge
-    if (inputEdge.value) {
-      // confirm if user wants to disconnect the input edge
-      const confirmed = await confirm('overrideEdges')
-      if (!confirmed) {
-        // the value of KSelect will be reset to the current input edge value
-        // so we need to force re-render the form
-        formRefreshKey.value += 1
-        return
-      }
-      disconnectEdge(inputEdge.value.id, false)
-    }
-
-    // remove the old input field edge
-    const oldEdge = inputsEdges.value.find(e => e.targetField === fieldId)
-    if (oldEdge) {
-      disconnectEdge(oldEdge.id, false)
-    }
-
-    // add new edge for the input field
     const {
       nodeId: source,
       fieldId: sourceField,
     } = parseIdConnection(fieldValue)
 
     const targetFieldId = findFieldByNameOrThrow('input', fieldName).id
+    const removedConnections: ConnectionString[] = []
+
+    // remove the input edge
+    if (inputEdge.value) {
+      removedConnections.push(createEdgeConnectionString(inputEdge.value, getNodeById))
+      disconnectEdge(inputEdge.value.id, false)
+    }
+
+    // remove the old input field edge
+    const oldEdge = inputsEdges.value.find(e => e.targetField === fieldId)
+    if (oldEdge) {
+      removedConnections.push(createEdgeConnectionString(oldEdge, getNodeById))
+      disconnectEdge(oldEdge.id, false)
+    }
+
+    // add new edge for the input field
     connectEdge({
       source,
       sourceField,
       target: nodeId,
       targetField: targetFieldId,
-    })
+    }, false)
+
+    const addedConnection = createNewConnectionString(
+      source,
+      sourceField,
+      nodeId,
+      targetFieldId,
+      getNodeById,
+    )
+
+    commit()
+    if (removedConnections.length > 0) {
+      const confirmed = await confirm(
+        t('plugins.free-form.datakit.flow_editor.confirm.message.switch'),
+        [addedConnection],
+        removedConnections,
+      )
+
+      if (!confirmed) {
+        undo()
+      }
+    }
   }
 
   /**
@@ -222,26 +244,24 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
    * - If user clears the input, remove the edge of the input.
    * - If user sets a new input, disconnect existing edges and add new edge for the input.
    */
-  const setInput = async (value: IdConnection | null, commitNow = true) => {
+  const setInput = async (value: IdConnection | null) => {
     if (isGlobalStateUpdating) return
     const clearing = value == null
 
-    if (!clearing && inputsEdges.value.length > 0) {
-      const confirmed = await confirm('overrideEdges')
-      if (!confirmed) {
-        // the value of KSelect will be reset to the current input edge value
-        // so we need to force re-render the form
-        formRefreshKey.value += 1
-        return
+    if (clearing) {
+      if (inputEdge.value) {
+        disconnectEdge(inputEdge.value.id)
       }
+      return
     }
+
+    const removedConnections: ConnectionString[] = []
 
     // remove existing edges
-    for (const edge of [...inputsEdges.value, inputEdge.value].filter(Boolean)) {
-      disconnectEdge(edge!.id, commitNow && clearing)
+    for (const edge of inputsEdges.value) {
+      removedConnections.push(createEdgeConnectionString(edge, getNodeById))
+      disconnectEdge(edge!.id, false)
     }
-
-    if (clearing) return
 
     // add new edge
     const { nodeId: source, fieldId } = parseIdConnection(value)
@@ -250,7 +270,28 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       sourceField: fieldId,
       target: nodeId,
       targetField: undefined, // input does not have a field
-    }, commitNow)
+    }, false)
+
+    const addedConnection = createNewConnectionString(
+      source,
+      fieldId,
+      nodeId,
+      undefined,
+      getNodeById,
+    )
+
+    commit()
+    if (removedConnections.length > 0) {
+      const confirmed = await confirm(
+        t('plugins.free-form.datakit.flow_editor.confirm.message.switch'),
+        [addedConnection],
+        removedConnections,
+      )
+
+      if (!confirmed) {
+        undo()
+      }
+    }
   }
 
   const willCreateCycle = (sourceNode: NodeId): boolean => {
@@ -329,7 +370,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     inputsFieldNames,
     skipValidationOnMount,
     currentNode,
-    formRefreshKey,
 
     // form ops
     setName,

@@ -11,6 +11,8 @@ import { isImplicitNode } from '../node/node'
 import { useEditorStore } from '../store/store'
 import { useConfirm } from './useConfirm'
 import useI18n from '../../../../../composables/useI18n'
+import type { ConnectionString } from '../modal/ConfirmModal.vue'
+import { createEdgeConnectionString, createNewConnectionString } from './helpers'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -135,7 +137,10 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
 
     // Get all incoming edges for the target node
     const targetIncomingEdges = getInEdgesByNodeId(target as NodeId)
-    let requiresUserConfirmation = false
+    let confirmToSwitch = false
+    let confirmToOverride = false
+    const addedConnections: ConnectionString[] = []
+    const removedConnections: ConnectionString[] = []
 
     // Determine which edges need to be removed based on connection type
     // For `input` connections, we need to disconnect the input`s` edges
@@ -146,14 +151,17 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
 
     // Disconnect conflicting edges if any exist
     if (edgesToDisconnect.length > 0) {
-      requiresUserConfirmation = true
-      edgesToDisconnect.forEach(edge => disconnectEdge(edge.id, false))
+      confirmToSwitch = true
+      edgesToDisconnect.forEach(edge => {
+        removedConnections.push(createEdgeConnectionString(edge, getNodeById))
+        disconnectEdge(edge.id, false)
+      })
     }
 
     // Handle conflict edge conflicts based on the opposite connection type
     // This ensures we clean up all incompatible connections
     const conflictEdgesToDisconnect = parsedTarget?.io === 'input'
-      ? targetIncomingEdges.filter(edge => !!edge.targetField)
+      ? targetIncomingEdges.filter(edge => edge.targetField === parsedTarget.field)
       : targetIncomingEdges.filter(edge => !edge.targetField)
 
     if (conflictEdgesToDisconnect.length > 0) {
@@ -168,8 +176,11 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
         return // Do nothing
       }
 
-      requiresUserConfirmation = true
-      conflictEdgesToDisconnect.forEach(edge => disconnectEdge(edge.id, false))
+      confirmToOverride = true
+      conflictEdgesToDisconnect.forEach(edge => {
+        removedConnections.push(createEdgeConnectionString(edge, getNodeById))
+        disconnectEdge(edge.id, false)
+      })
     }
 
     // Attempt to create the new connection
@@ -180,10 +191,30 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
       targetField: parsedTarget?.field,
     }, false)
 
+    // Add the new connection to the display list
+    addedConnections.push(
+      createNewConnectionString(
+        source as NodeId,
+        parsedSource?.field,
+        target as NodeId,
+        parsedTarget?.field,
+        getNodeById,
+      ),
+    )
+
     if (connectionSuccess) {
       commit()
-      if (requiresUserConfirmation && !(await confirm('overrideEdges'))) {
-        undo()
+      if (confirmToSwitch || confirmToOverride) {
+        const isConfirmed = await confirm(
+          confirmToSwitch
+            ? t('plugins.free-form.datakit.flow_editor.confirm.message.switch')
+            : t('plugins.free-form.datakit.flow_editor.confirm.message.override'),
+          addedConnections,
+          removedConnections,
+        )
+        if (!isConfirmed) {
+          undo()
+        }
       }
     } else {
       toaster.open({

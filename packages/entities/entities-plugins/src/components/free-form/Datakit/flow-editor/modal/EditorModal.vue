@@ -22,7 +22,7 @@ import { useScrollLock } from '@vueuse/core'
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 import { nextTick, ref, useTemplateRef, watch } from 'vue'
 import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../../constants'
-import ConfirmModal from '../modal/ConfirmModal.vue'
+import ConfirmModal, { type OpenConfirm } from '../modal/ConfirmModal.vue'
 
 import EditorNav from './EditorNav.vue'
 import EditorContent from './EditorContent.vue'
@@ -34,9 +34,9 @@ const open = defineModel<boolean>('open')
 const showConfirm = ref(false)
 const confirmModalRef = useTemplateRef('confirm-modal')
 
-provideConfirmModal(async msg => {
+provideConfirmModal(async (...args: Parameters<OpenConfirm>) => {
   showConfirm.value = true
-  const isConfirmed = await confirmModalRef.value!.open(msg)
+  const isConfirmed = await confirmModalRef.value!.open(...args)
   showConfirm.value = false
   return isConfirmed
 })
