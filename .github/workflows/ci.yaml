@@ -227,15 +227,6 @@ jobs:
         if: ${{ steps.changed_packages.outputs.filter != '' }}
         uses: Kong/github-action-dist-size-checker@main
 
-      - name: 'Authenticate to Google Cloud'
-        if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
-        id: 'auth'
-        uses: 'google-github-actions/auth@6fc4af4b145ae7821d527454aa9bd537d1f2dc5f' # v2
-        with:
-          project_id: '22045766606'
-          workload_identity_provider: 'projects/22045766606/locations/global/workloadIdentityPools/github/providers/github'
-
-
       - name: Publish Previews
         if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
 
