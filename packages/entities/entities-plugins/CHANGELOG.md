@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.67.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.5...@kong-ui-public/entities-plugins@9.67.6) (2025-08-20)
+
+
+### Bug Fixes
+
+* **analytics:** remove extraneous vue warnings [MA-4148] ([#2337](https://github.com/Kong/public-ui-components/issues/2337)) ([2b9a9ba](https://github.com/Kong/public-ui-components/commit/2b9a9ba8a6427ac617795f811a9f5351947ce64c))
+
+
+
+
+
 ## [9.67.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.4...@kong-ui-public/entities-plugins@9.67.5) (2025-08-20)
 
 

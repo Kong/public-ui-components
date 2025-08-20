@@ -8,8 +8,8 @@ declare global {
 }
 
 const useReportChartDataForSynthetics = (
-  chartData: Ref<any>,
-  syntheticsDataKey: Ref<string>,
+  chartData: Readonly<Ref<any>>,
+  syntheticsDataKey: Readonly<Ref<string>>,
 ) => {
   watch(
     [chartData, syntheticsDataKey],

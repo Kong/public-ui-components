@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.7...@kong-ui-public/analytics-chart@10.0.8) (2025-08-20)
+
+
+### Bug Fixes
+
+* **analytics:** remove extraneous vue warnings [MA-4148] ([#2337](https://github.com/Kong/public-ui-components/issues/2337)) ([2b9a9ba](https://github.com/Kong/public-ui-components/commit/2b9a9ba8a6427ac617795f811a9f5351947ce64c))
+
+
+
+
+
 ## [10.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.6...@kong-ui-public/analytics-chart@10.0.7) (2025-08-19)
 
 

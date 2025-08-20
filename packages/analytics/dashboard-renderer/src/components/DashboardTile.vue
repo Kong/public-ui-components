@@ -126,13 +126,13 @@
         :is="componentData.component"
         v-if="componentData"
         v-bind="componentData.rendererProps"
+        v-on="componentEventHandlers"
         @chart-data="onChartData"
-        @select-chart-range="onSelectChartRange"
-        @zoom-time-range="onZoom"
       />
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import type { DashboardRendererContextInternal, TileZoomEvent } from '../types'
 import {
@@ -265,10 +265,19 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'single_value': SimpleChartRenderer,
 }
 
+const componentEventHandlers = computed(() => ({
+  ...(componentData.value?.rendererEvents.supportsRequests ? { 'select-chart-range': onSelectChartRange } : {}),
+  ...(componentData.value?.rendererEvents.supportsZoom ? { 'zoom-time-range': onZoom } : {}),
+}))
+
 const componentData = computed(() => {
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
   const component = rendererLookup[props.definition.chart.type]
+
+  const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
+  const supportsZoom = !!(component as any)?.emits?.includes('zoom-time-range')
+
   return component && {
     component,
     rendererProps: {
@@ -279,6 +288,10 @@ const componentData = computed(() => {
       height: props.height - PADDING_SIZE * 2,
       refreshCounter: props.refreshCounter,
       requestsLink: requestsLinkZoomActions.value,
+    },
+    rendererEvents: {
+      supportsRequests,
+      supportsZoom,
     },
   }
 })
@@ -319,8 +332,9 @@ const isAgedOutQuery = computed(() => {
 })
 
 const agedOutWarning = computed(() => {
-  const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms || 0)
-  const savedGranularity = props.definition.query.granularity
+  const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
+  const savedGranularity = props.definition?.query?.granularity ?? 'unknown'
+
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
     savedGranularity: i18n.t(`granularities.${savedGranularity}` as any),
@@ -389,7 +403,6 @@ const buildRequestsQuery = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
 }
 
 const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
-
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const query = buildRequestsQuery(newTimeRange, filters)
 

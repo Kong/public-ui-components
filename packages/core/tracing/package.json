@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/tracing",
-  "version": "0.14.6",
+  "version": "0.14.7",
   "type": "module",
   "main": "./dist/tracing.umd.js",
   "module": "./dist/tracing.es.js",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.18.0",
-    "@kong/kongponents": "9.38.3",
+    "@kong/kongponents": "9.38.4",
     "@kong/splitpanes": "3.1.6-patch.7",
     "@vue-flow/background": "^1.3.2",
     "@vue-flow/controls": "^1.1.2",

@@ -34,6 +34,7 @@
     "thirtySecondly": "30 seconds",
     "twelveHourly": "12 hours",
     "twoHourly": "2 hours",
-    "weekly": "1 week"
+    "weekly": "1 week",
+    "unknown": "Unknown"
   }
 }

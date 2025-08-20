@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import type { RendererProps } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
-import { computed, defineProps } from 'vue'
+import { computed } from 'vue'
 import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
 import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 import composables from '../composables'

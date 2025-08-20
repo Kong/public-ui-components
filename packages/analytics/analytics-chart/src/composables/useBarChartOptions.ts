@@ -12,7 +12,7 @@ import type {
 } from 'chart.js'
 import { isNullOrUndef, getRelativePosition } from 'chart.js/helpers'
 import { FONT_SIZE_SMALL, FONT_SIZE_REGULAR, MAX_LABEL_LENGTH, horizontalTooltipPositioning, tooltipBehavior } from '../utils'
-import { computed, onUnmounted } from 'vue'
+import { computed, onUnmounted, getCurrentInstance } from 'vue'
 
 export default function useBarChartOptions(chartOptions: BarChartOptions) {
 
@@ -192,11 +192,14 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
     }
   })
 
-  onUnmounted(() => {
-    if (Tooltip.positioners[positionKey]) {
-      delete Tooltip.positioners[positionKey]
-    }
-  })
+  if (getCurrentInstance()) {
+    onUnmounted(() => {
+      if (Tooltip.positioners[positionKey]) {
+        delete Tooltip.positioners[positionKey]
+      }
+    })
+  }
+
 
   return options
 }
