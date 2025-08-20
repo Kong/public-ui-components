@@ -20,7 +20,9 @@
       <Field name="config.dictionary_name" />
       <Field name="config.lock_dictionary_name" />
       <Field name="config.strategy" />
-      <RedisField />
+      <RedisField
+        @global-action="(...args) => $emit('globalAction', ...args)"
+      />
       <Field name="config.namespace" />
       <Field name="config.hide_client_headers" />
       <Field name="config.disable_penalty" />
@@ -39,12 +41,13 @@ import ErrorMessageForm from './ErrorMessageForm.vue'
 import AdvancedFields from '../shared/AdvancedFields.vue'
 import RedisField from './RedisField.vue'
 
-import type { FormConfig } from '../shared/types'
+import type { FormConfig, GlobalAction } from '../shared/types'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 
 const emit = defineEmits<{
-  (e: 'change', value: FreeFormPluginData): void
+  change: [value: FreeFormPluginData]
+  globalAction: [name: GlobalAction, payload: any]
 }>()
 
 defineProps<{
