@@ -8,6 +8,7 @@
       :plugin-id="id"
       :plugin-type="plugin"
       use-custom-names-for-plugin
+      @global-action="handleGlobalAction"
       @update="onUpdate"
     />
 
@@ -18,6 +19,7 @@
       enable-vault-secret-picker
       :plugin-id="id"
       :plugin-type="plugin"
+      @global-action="handleGlobalAction"
       @update="onUpdate"
     />
   </div>
@@ -29,6 +31,8 @@ import { useRouter } from 'vue-router'
 import { FEATURE_FLAGS, PluginForm, useProvideExperimentalFreeForms } from '../../src'
 
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
+import type { GlobalAction } from '../../src/components/free-form/shared/types'
+import { ToastManager } from '@kong/kongponents'
 
 provide(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, true)
 
@@ -44,6 +48,7 @@ defineProps({
   },
 })
 
+const toaster = new ToastManager()
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
@@ -76,6 +81,12 @@ const onUpdate = (payload: Record<string, any>) => {
   console.log('update', payload)
 
   router.push({ name: 'list-plugin' })
+}
+
+const handleGlobalAction = (action: GlobalAction, payload: any) => {
+  if (action === 'notify') {
+    toaster.open(payload)
+  }
 }
 </script>
 
