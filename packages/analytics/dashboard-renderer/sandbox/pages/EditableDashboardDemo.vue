@@ -26,26 +26,28 @@
           size="small"
         />
       </div>
-      <DashboardRenderer
-        ref="dashboardRendererRef"
-        v-model="dashboardConfig"
-        :context="context"
-        @edit-tile="onEditTile"
-        @tile-time-range-zoom="handleZoom"
-      >
-        <template #slot-1>
-          <div class="slot-container">
-            <h3>Custom Slot</h3>
-            <p>This is a slotted tile</p>
-          </div>
-        </template>
-        <template #slot-2>
-          <div class="slot-container">
-            <h3>Custom Slot 2</h3>
-            <p>This is another slotted tile</p>
-          </div>
-        </template>
-      </DashboardRenderer>
+      <div style="max-height: 800px; overflow-y: auto;">
+        <DashboardRenderer
+          ref="dashboardRendererRef"
+          v-model="dashboardConfig"
+          :context="context"
+          @edit-tile="onEditTile"
+          @tile-time-range-zoom="handleZoom"
+        >
+          <template #slot-1>
+            <div class="slot-container">
+              <h3>Custom Slot</h3>
+              <p>This is a slotted tile</p>
+            </div>
+          </template>
+          <template #slot-2>
+            <div class="slot-container">
+              <h3>Custom Slot 2</h3>
+              <p>This is another slotted tile</p>
+            </div>
+          </template>
+        </DashboardRenderer>
+      </div>
     </div>
   </SandboxLayout>
 </template>
