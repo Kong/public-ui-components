@@ -5,6 +5,20 @@ export interface DragSelectEventDetail {
   xEnd: number | undefined
 }
 
+const drawSelectionBorder = (chart: Chart, startX: number, endX: number) => {
+  const ctx = chart.ctx
+  ctx.save()
+  ctx.strokeStyle = 'rgba(95, 154, 255, 1)'
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.moveTo(startX, chart.chartArea.top)
+  ctx.lineTo(startX, chart.chartArea.bottom)
+  ctx.moveTo(endX, chart.chartArea.top)
+  ctx.lineTo(endX, chart.chartArea.bottom)
+  ctx.stroke()
+  ctx.restore()
+}
+
 const drawSelectionArea = (chart: Chart, startX: number, endX: number) => {
   const ctx = chart.ctx
   ctx.save()
@@ -109,6 +123,7 @@ export class DragSelectPlugin implements Plugin {
   afterDatasetsDraw(chart: Chart): void {
     if (this._isDragging || !this._clearSelectionArea) {
       drawSelectionArea(chart, this._startX, this._endX)
+      drawSelectionBorder(chart, this._startX, this._endX)
     }
   }
 
