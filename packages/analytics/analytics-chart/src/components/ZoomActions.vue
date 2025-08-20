@@ -5,7 +5,14 @@
         :end="newTimeRange.end"
         :start="newTimeRange.start"
       />
+      <CloseIcon
+        class="zoom-actions-close-icon"
+        :color="KUI_COLOR_TEXT_NEUTRAL"
+        :size="KUI_ICON_SIZE_30"
+        @click="$emit('onAction')"
+      />
     </div>
+    <div class="zoom-actions-heading-divider" />
     <div
       v-for="option in zoomActionItems"
       :key="option.label"
@@ -28,19 +35,14 @@
         {{ option.label }}
       </div>
     </div>
-    <div
-      class="zoom-action-item"
-      @click="$emit('onAction')"
-    >
-      {{ i18n.t('zoom_action_items.cancel') }}
-    </div>
   </div>
 </template>
 <script setup lang="ts">
 import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { ZoomActionItem } from '../types'
-import composables from '../composables'
 import ZoomTimerange from './ZoomTimerange.vue'
+import { CloseIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
 const props = defineProps<{
   zoomActionItems: ZoomActionItem[]
@@ -50,8 +52,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'onAction'): void
 }>()
-
-const { i18n } = composables.useI18n()
 
 const handleAction = (option: ZoomActionItem) => {
   if (option.action) {
@@ -68,6 +68,22 @@ const handleAction = (option: ZoomActionItem) => {
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   display: flex;
   flex-direction: column;
+
+  .zoom-actions-heading {
+    align-items: top;
+    display: flex;
+
+    .zoom-actions-close-icon {
+      cursor: pointer;
+      margin-right: var(--kui-space-20, $kui-space-20);
+      margin-top: var(--kui-space-20, $kui-space-20);
+    }
+  }
+
+  .zoom-actions-heading-divider {
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    margin: 0 var(--kui-space-20, $kui-space-20);
+  }
 
   .zoom-action-item {
     color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);

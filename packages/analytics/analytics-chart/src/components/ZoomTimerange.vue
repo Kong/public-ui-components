@@ -4,7 +4,9 @@
       <div class="label">
         {{ i18n.t('zoom_time_range.from') }}
       </div>
-      <div> {{ throttledStartTime }} </div>
+      <div>
+        {{ throttledStartTime }}
+      </div>
       <div class="label">
         {{ i18n.t('zoom_time_range.to') }}
       </div>
@@ -44,7 +46,6 @@ watch(() => [props.start, props.end], ([newStart, newEnd]) => {
 
 <style scoped lang="scss">
 .zoom-timerange-container {
-  border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
   margin: 0 var(--kui-space-20, $kui-space-20);
 
   .zoom-timerange-details {
