@@ -15,3 +15,4 @@ export default {
 export { ErrorBoundary }
 
 export * from './types'
+

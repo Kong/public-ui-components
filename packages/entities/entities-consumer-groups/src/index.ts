@@ -5,3 +5,4 @@ import ConsumerGroupConfigCard from './components/ConsumerGroupConfigCard.vue'
 export { ConsumerGroupList, ConsumerGroupForm, ConsumerGroupConfigCard }
 
 export * from './types'
+
