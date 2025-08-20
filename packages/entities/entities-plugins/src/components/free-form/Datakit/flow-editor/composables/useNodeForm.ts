@@ -226,7 +226,9 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     )
 
     commit()
-    if (removedConnections.length > 0) {
+
+    const isReplace = removedConnections[0]?.[1] === addedConnection[1]
+    if (!isReplace && removedConnections.length > 0) {
       const confirmed = await confirm(
         t('plugins.free-form.datakit.flow_editor.confirm.message.switch'),
         [addedConnection],
