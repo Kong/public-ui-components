@@ -1,4 +1,4 @@
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, watch } from 'vue'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
