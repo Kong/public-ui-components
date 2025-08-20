@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.67.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.4...@kong-ui-public/entities-plugins@9.67.5) (2025-08-20)
+
+
+### Bug Fixes
+
+* **entities-plugins:** service-protection - pass globalAction [KM-1506] ([#2360](https://github.com/Kong/public-ui-components/issues/2360)) ([52c5a1e](https://github.com/Kong/public-ui-components/commit/52c5a1ea64625b8dbf1fbe5af827f6752338789c))
+
+
+
+
+
 ## [9.67.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.3...@kong-ui-public/entities-plugins@9.67.4) (2025-08-19)
 
 
