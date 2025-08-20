@@ -780,10 +780,7 @@
               "switch": "You can either connect all outputs from another node or select individual ones.",
               "override": "Each input can connect to only one output, but one output can connect to many inputs."
             },
-            "proceed": "Yes, update",
-            "overrideEdges": {
-              "message": "Are you sure you want to override the edges?"
-            }
+            "proceed": "Yes, update"
           }
         },
         "code_editor": {
