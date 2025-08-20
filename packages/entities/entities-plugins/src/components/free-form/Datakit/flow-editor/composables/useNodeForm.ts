@@ -10,9 +10,9 @@ import { isImplicitType } from '../node/node'
 import { ResponseSchema, ServiceRequestSchema } from '../node/schemas'
 import { useFieldNameValidator, useNodeNameValidator } from './validation'
 import { omit } from 'lodash-es'
-import { useConfirm } from './useConfirm'
+import { useConflictConnectionConfirm } from './useConflictConnectionConfirm'
 import useI18n from '../../../../../composables/useI18n'
-import type { ConnectionString } from '../modal/ConfirmModal.vue'
+import type { ConnectionString } from '../modal/ConflictConnectionConfirmModal.vue'
 import { createEdgeConnectionString, createNewConnectionString } from './helpers'
 
 export type InputOption = {
@@ -48,7 +48,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   } = useEditorStore()
 
   const { i18n: { t } } = useI18n()
-  const confirm = useConfirm()
+  const confirm = useConflictConnectionConfirm()
 
   let isGlobalStateUpdating = false
 

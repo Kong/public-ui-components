@@ -13,7 +13,7 @@
       class="content"
       tabindex="0"
     />
-    <ConfirmModal ref="confirm-modal" />
+    <ConflictConnectionConfirmModal ref="confirm-modal" />
   </div>
 </template>
 
@@ -22,11 +22,11 @@ import { useScrollLock } from '@vueuse/core'
 import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
 import { nextTick, ref, useTemplateRef, watch } from 'vue'
 import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../../constants'
-import ConfirmModal, { type OpenConfirm } from '../modal/ConfirmModal.vue'
+import ConflictConnectionConfirmModal, { type OpenConfirm } from './ConflictConnectionConfirmModal.vue'
 
 import EditorNav from './EditorNav.vue'
 import EditorContent from './EditorContent.vue'
-import { provideConfirmModal } from '../composables/useConfirm'
+import { provideConflictConnectionConfirmModal } from '../composables/useConflictConnectionConfirm'
 
 const modal = useTemplateRef('modal')
 
@@ -34,7 +34,7 @@ const open = defineModel<boolean>('open')
 const showConfirm = ref(false)
 const confirmModalRef = useTemplateRef('confirm-modal')
 
-provideConfirmModal(async (...args: Parameters<OpenConfirm>) => {
+provideConflictConnectionConfirmModal(async (...args: Parameters<OpenConfirm>) => {
   showConfirm.value = true
   const isConfirmed = await confirmModalRef.value!.open(...args)
   showConfirm.value = false

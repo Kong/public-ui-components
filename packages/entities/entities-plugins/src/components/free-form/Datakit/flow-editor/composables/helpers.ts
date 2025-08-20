@@ -1,5 +1,5 @@
 import type { NodeInstance, FieldId, EdgeInstance, NodeId } from '../../types'
-import type { ConnectionString } from '../modal/ConfirmModal.vue'
+import type { ConnectionString } from '../modal/ConflictConnectionConfirmModal.vue'
 import { findFieldById } from '../store/helpers'
 
 /**

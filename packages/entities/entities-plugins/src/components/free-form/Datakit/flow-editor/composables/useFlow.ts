@@ -1,18 +1,18 @@
-import { ToastManager } from '@kong/kongponents'
 import type { Node as DagreNode } from '@dagrejs/dagre'
 import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
 
 import dagre from '@dagrejs/dagre'
 import { MarkerType, useVueFlow, type Edge, type Node } from '@vue-flow/core'
-import { computed, nextTick, onUnmounted, toRaw } from 'vue'
+import { computed, nextTick, toRaw } from 'vue'
 
 import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
 import { isImplicitNode } from '../node/node'
 import { useEditorStore } from '../store/store'
-import { useConfirm } from './useConfirm'
+import { useConflictConnectionConfirm } from './useConflictConnectionConfirm'
 import useI18n from '../../../../../composables/useI18n'
-import type { ConnectionString } from '../modal/ConfirmModal.vue'
+import type { ConnectionString } from '../modal/ConflictConnectionConfirmModal.vue'
 import { createEdgeConnectionString, createNewConnectionString } from './helpers'
+import { useToaster } from '../../../../../composables/useToaster'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -39,8 +39,8 @@ export interface AutoLayoutOptions {
 export default function useFlow(phase: NodePhase, flowId?: string) {
   const vueFlowStore = useVueFlow(flowId)
   const editorStore = useEditorStore()
-  const confirm = useConfirm()
-  const toaster = new ToastManager()
+  const confirm = useConflictConnectionConfirm()
+  const toaster = useToaster()
   const { i18n: { t } } = useI18n()
 
   const {
@@ -218,7 +218,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
         }
       }
     } else {
-      toaster.open({
+      toaster({
         message: t('plugins.free-form.datakit.flow_editor.error.invalid_connection'),
         appearance: 'danger',
       })
@@ -445,10 +445,6 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
       fitView()
     })
   }
-
-  onUnmounted(() => {
-    toaster.destroy()
-  })
 
   return {
     vueFlowStore,

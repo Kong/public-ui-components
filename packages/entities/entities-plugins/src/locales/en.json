@@ -771,7 +771,7 @@
             }
           },
           "error": {
-            "invalid_connection": "Not a valid connection"
+            "invalid_connection": "Invalid connection"
           },
           "confirm": {
             "title": "Connection conflict",

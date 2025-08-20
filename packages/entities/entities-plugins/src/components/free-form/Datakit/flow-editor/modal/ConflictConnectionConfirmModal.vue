@@ -20,7 +20,7 @@
         >
           <AddIcon :color="KUI_COLOR_BACKGROUND_SUCCESS" />
           <span>{{ source }}</span>
-          =>
+          →
           <span>{{ target }}</span>
         </div>
         <div
@@ -29,7 +29,7 @@
         >
           <RemoveIcon :color="KUI_COLOR_TEXT_DANGER" />
           <span>{{ source }}</span>
-          =>
+          →
           <span>{{ target }}</span>
         </div>
       </div>
@@ -67,8 +67,8 @@ const {
 } = defineProps<ConfirmModalProps>()
 
 const emit = defineEmits<{
-  (e: 'cancel'): void
-  (e: 'confirm'): void
+  cancel: []
+  confirm: []
 }>()
 
 const visible = ref(false)
