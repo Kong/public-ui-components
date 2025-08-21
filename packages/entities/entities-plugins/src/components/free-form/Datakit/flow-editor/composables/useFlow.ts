@@ -8,6 +8,11 @@ import { computed, nextTick, toRaw } from 'vue'
 import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
 import { isImplicitNode } from '../node/node'
 import { useEditorStore } from '../store/store'
+import { useConfirm } from './useConflictConnectionConfirm'
+import useI18n from '../../../../../composables/useI18n'
+import type { ConnectionString } from '../modal/ConflictConnectionConfirmModal.vue'
+import { createEdgeConnectionString, createNewConnectionString } from './helpers'
+import { useToaster } from '../../../../../composables/useToaster'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -34,6 +39,9 @@ export interface AutoLayoutOptions {
 export default function useFlow(phase: NodePhase, flowId?: string) {
   const vueFlowStore = useVueFlow(flowId)
   const editorStore = useEditorStore()
+  const confirm = useConfirm()
+  const toaster = useToaster()
+  const { i18n: { t } } = useI18n()
 
   const {
     findNode,
@@ -60,6 +68,9 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     getNodeById,
     connectEdge,
     disconnectEdge,
+    getInEdgesByNodeId,
+    commit,
+    undo,
   } = editorStore
 
   function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
@@ -119,7 +130,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     console.debug('[useFlow] onEdgeClick', toRaw(edge))
   })
 
-  onConnect(({ source, sourceHandle, target, targetHandle }) => {
+  onConnect(async ({ source, sourceHandle, target, targetHandle }) => {
     console.debug('[useFlow] onConnect', { source, sourceHandle, target, targetHandle })
     if (!sourceHandle || !targetHandle) return
 
@@ -129,12 +140,95 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     if (parsedSource?.io === 'input' || parsedTarget?.io === 'output')
       return // Only connect output to input
 
-    connectEdge({
+    // Get all incoming edges for the target node
+    const targetIncomingEdges = getInEdgesByNodeId(target as NodeId)
+    let confirmToSwitch = false
+    let confirmToOverride = false
+    const addedConnections: ConnectionString[] = []
+    const removedConnections: ConnectionString[] = []
+
+    // Determine which edges need to be removed based on connection type
+    // For `input` connections, we need to disconnect the input`s` edges
+    // For input`s` connections, we need to disconnect the `input` edges
+    const edgesToDisconnect = parsedTarget?.io === 'input'
+      ? targetIncomingEdges.filter(edge => !edge.targetField)
+      : targetIncomingEdges.filter(edge => !!edge.targetField)
+
+    // Disconnect conflicting edges if any exist
+    if (edgesToDisconnect.length > 0) {
+      confirmToSwitch = true
+      edgesToDisconnect.forEach(edge => {
+        removedConnections.push(createEdgeConnectionString(edge, getNodeById))
+        disconnectEdge(edge.id, false)
+      })
+    }
+
+    // Handle conflict edge conflicts based on the opposite connection type
+    // This ensures we clean up all incompatible connections
+    const conflictEdgesToDisconnect = parsedTarget?.io === 'input'
+      ? targetIncomingEdges.filter(edge => edge.targetField === parsedTarget.field)
+      : targetIncomingEdges.filter(edge => !edge.targetField)
+
+    if (conflictEdgesToDisconnect.length > 0) {
+      const hasConnected = conflictEdgesToDisconnect.some(edge => {
+        return edge.source === source
+          && edge.target === target
+          && edge.targetField === parsedTarget?.field
+          && edge.sourceField === parsedSource?.field
+      })
+
+      if (hasConnected) {
+        return // The connection already exists, do nothing
+      }
+
+      confirmToOverride = true
+      conflictEdgesToDisconnect.forEach(edge => {
+        removedConnections.push(createEdgeConnectionString(edge, getNodeById))
+        disconnectEdge(edge.id, false)
+      })
+    }
+
+    // Attempt to create the new connection
+    const connectionSuccess = connectEdge({
       source: source as NodeId,
       sourceField: parsedSource?.field,
       target: target as NodeId,
       targetField: parsedTarget?.field,
-    })
+    }, false)
+
+    // Add the new connection to the display list
+    addedConnections.push(
+      createNewConnectionString(
+        source as NodeId,
+        parsedSource?.field,
+        target as NodeId,
+        parsedTarget?.field,
+        getNodeById,
+      ),
+    )
+
+    commit()
+    if (connectionSuccess) {
+      // Confirm the changes, undo if users not confirmed
+      if (confirmToSwitch || confirmToOverride) {
+        const isConfirmed = await confirm(
+          confirmToSwitch
+            ? t('plugins.free-form.datakit.flow_editor.confirm.message.switch')
+            : t('plugins.free-form.datakit.flow_editor.confirm.message.override'),
+          addedConnections,
+          removedConnections,
+        )
+        if (!isConfirmed) {
+          undo()
+        }
+      }
+    } else {
+      undo()
+      toaster({
+        message: t('plugins.free-form.datakit.flow_editor.error.invalid_connection'),
+        appearance: 'danger',
+      })
+    }
   })
 
   // Only triggered by canvas-originated changes

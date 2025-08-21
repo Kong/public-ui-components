@@ -773,6 +773,18 @@
               "string_len_range": "{fieldName} must be between {min} and {max} characters",
               "reserved_node_name": "\"{nodeName}\" is a reserved node name"
             }
+          },
+          "error": {
+            "invalid_connection": "Invalid connection"
+          },
+          "confirm": {
+            "title": "Connection conflict",
+            "message": {
+              "confirm": "Are you sure you want to make this change?",
+              "switch": "You can either connect all outputs from another node or select individual ones.",
+              "override": "Each input can connect to only one output, but one output can connect to many inputs."
+            },
+            "proceed": "Yes, update"
           }
         },
         "code_editor": {

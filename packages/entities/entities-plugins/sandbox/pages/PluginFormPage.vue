@@ -28,13 +28,17 @@
 <script setup lang="ts">
 import { provide, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { FEATURE_FLAGS, PluginForm, useProvideExperimentalFreeForms } from '../../src'
+import { FEATURE_FLAGS, PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
 
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
-import type { GlobalAction } from '../../src/components/free-form/shared/types'
 import { ToastManager } from '@kong/kongponents'
 
+import type { GlobalAction } from '../../src/components/free-form/shared/types'
+
+const toaster = new ToastManager()
 provide(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, true)
+
+provide(TOASTER_PROVIDER, toaster.open.bind(toaster))
 
 defineProps({
   /** Grab the plugin id and type from the route params */
@@ -48,7 +52,6 @@ defineProps({
   },
 })
 
-const toaster = new ToastManager()
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 

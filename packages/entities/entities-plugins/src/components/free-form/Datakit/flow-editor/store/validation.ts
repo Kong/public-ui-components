@@ -69,13 +69,9 @@ export function useValidators(stateRef: Ref<EditorState>) {
       errors.push('target handle is not an input field')
 
     // phase / implicit rules
-    if (sourceNode.phase === 'response' && targetNode.phase === 'request')
-      errors.push('cannot connect from response phase to request phase')
     if (targetNode.name === 'request') errors.push('cannot target "request"')
     if (sourceNode.name === 'response')
       errors.push('cannot source from "response"')
-    if (sourceNode.phase === 'response' && targetNode.phase !== 'response')
-      errors.push('response-phase output must go to response-phase nodes')
 
     // fan-in rules
     const hasWholeOnTarget = edges.value.some(
@@ -131,13 +127,9 @@ export function useValidators(stateRef: Ref<EditorState>) {
     for (const e of edges.value) {
       const s = nodesById.value.get(e.source)!
       const t = nodesById.value.get(e.target)!
-      if (s.phase === 'response' && t.phase === 'request')
-        errors.push(`edge "${e.id}" crosses phases (response → request)`)
       if (t.name === 'request') errors.push(`edge "${e.id}" targets "request"`)
       if (s.name === 'response')
         errors.push(`edge "${e.id}" sources from "response"`)
-      if (s.phase === 'response' && t.phase !== 'response')
-        errors.push(`edge "${e.id}" violates response-phase rule`)
     }
 
     if (hasCycle(buildAdjacency(edges.value))) errors.push('graph contains cycle')
