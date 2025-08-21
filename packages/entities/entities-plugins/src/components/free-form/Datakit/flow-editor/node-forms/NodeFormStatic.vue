@@ -33,6 +33,7 @@ import { fieldValueToStoreValue, renameKeyAndKeepOrder, storeValueToFieldValue, 
 import { useNodeForm, useSubSchema } from '../composables/useNodeForm'
 import { useNodeNameValidator } from '../composables/validation'
 import type { NodeId } from '../../types'
+import NameField from './NameField.vue'
 
 const { nodeId } = defineProps<{
   nodeId: NodeId
