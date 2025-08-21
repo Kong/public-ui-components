@@ -17,7 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue'
+import { useScrollLock } from '@vueuse/core'
+import { ref, useTemplateRef, watch } from 'vue'
 import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../../constants'
 import ConflictConnectionConfirmModal, { type OpenConfirm } from './ConflictConnectionConfirmModal.vue'
 
@@ -35,6 +36,12 @@ provideConfirmModal(async (...args: Parameters<OpenConfirm>) => {
   showConfirm.value = false
   return isConfirmed
 })
+
+const isLocked = useScrollLock(document)
+
+watch(open, (open) => {
+  isLocked.value = !!open
+}, { immediate: true })
 
 function close() {
   open.value = false
