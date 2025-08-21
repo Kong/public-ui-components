@@ -99,6 +99,7 @@
     "focus-trap": "^7.6.5",
     "lodash-es": "^4.17.21",
     "marked": "^14.1.4",
-    "monaco-editor": "0.52.2"
+    "monaco-editor": "0.52.2",
+    "zod": "^4.0.17"
   }
 }

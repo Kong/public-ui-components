@@ -19,12 +19,4 @@ export const HTTP_METHODS = [
   'CONNECT',
 ] as const
 
-/**
- * The type of HTTP method accepted by the `call` node.
- * The string must contain only uppercase letters.
- *
- * @default 'GET'
- */
-export type HttpMethod = (typeof HTTP_METHODS)[number]
-
 export const DK_DATA_TRANSFER_MIME_TYPE = 'application/x-datakit+json'
