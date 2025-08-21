@@ -207,8 +207,8 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
       ),
     )
 
+    commit()
     if (connectionSuccess) {
-      commit()
       // Confirm the changes, undo if users not confirmed
       if (confirmToSwitch || confirmToOverride) {
         const isConfirmed = await confirm(
@@ -223,6 +223,7 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
         }
       }
     } else {
+      undo()
       toaster({
         message: t('plugins.free-form.datakit.flow_editor.error.invalid_connection'),
         appearance: 'danger',
