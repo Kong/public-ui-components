@@ -14,8 +14,8 @@ import type {
 } from '../../types'
 import { isImplicitName, isImplicitType } from '../node/node'
 import {
-  createId,
   clone,
+  createId,
   findFieldByName,
   getFieldsFromMeta,
   IMPLICIT_NODE_NAMES,
@@ -24,9 +24,18 @@ import {
   toFieldArray,
 } from './helpers'
 
+/**
+ * Create an initial editor state
+ *
+ * @param configNodes The config nodes for the functionality
+ * @param uiNodes The UI nodes for the layout
+ * @param isEditing Whether the editor is in editing mode (versus the creation mode)
+ * @returns The initial editor state
+ */
 export function initEditorState(
   configNodes: ConfigNode[],
   uiNodes: UINode[],
+  isEditing?: boolean,
 ): EditorState {
   const uiNodesMap = new Map<NodeName, UINode>(
     uiNodes.map((uiNode) => [uiNode.name, uiNode]),
@@ -132,7 +141,7 @@ export function initEditorState(
   // Mark all nodes that should be in 'request' phase
   markRequestNodes(['request', 'service_request'])
 
-  return { nodes, edges }
+  return { nodes, edges, isEditing }
 }
 
 export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance {

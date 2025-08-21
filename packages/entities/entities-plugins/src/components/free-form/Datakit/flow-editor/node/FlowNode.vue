@@ -179,26 +179,27 @@
 </template>
 
 <script setup lang="ts">
+import type { NodeInstance } from '../../types'
+
 import { createI18n } from '@kong-ui-public/i18n'
 import {
   KUI_COLOR_BACKGROUND_NEUTRAL_STRONG,
   KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER,
+  KUI_COLOR_TEXT_DANGER,
   KUI_COLOR_TEXT_DISABLED,
   KUI_ICON_SIZE_20,
 } from '@kong/design-tokens'
-import { UnfoldLessIcon, UnfoldMoreIcon } from '@kong/icons'
+import { UnfoldLessIcon, UnfoldMoreIcon, WarningIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
 import { computed, watch } from 'vue'
-import english from '../../../../../locales/en.json'
-import HandleTwig from './HandleTwig.vue'
-import { isImplicitNode } from './node'
-import { WarningIcon } from '@kong/icons'
-import { KUI_COLOR_TEXT_DANGER } from '@kong/design-tokens'
 
-import type { NodeInstance } from '../../types'
+import english from '../../../../../locales/en.json'
 import { isReadableProperty, isWritableProperty } from '../node/property'
+import { useOptionalFlowStore } from '../composables/useFlow'
 import { getNodeMeta } from '../store/helpers'
 import { useEditorStore } from '../store/store'
+import HandleTwig from './HandleTwig.vue'
+import { isImplicitNode } from './node'
 import NodeBadge from './NodeBadge.vue'
 
 const { data } = defineProps<{
@@ -208,6 +209,9 @@ const { data } = defineProps<{
 
 const { t } = createI18n<typeof english>('en-us', english)
 
+// FlowNode can be used in some tree that does not provide a flow store
+// e.g., as a DND preview
+const flowStore = useOptionalFlowStore()
 const { getInEdgesByNodeId, getOutEdgesByNodeId, toggleExpanded: storeToggleExpanded } = useEditorStore()
 
 const meta = computed(() => getNodeMeta(data.type))
@@ -265,6 +269,8 @@ const handleTwigColor = computed(() => {
 })
 
 function toggleExpanded(io: 'input' | 'output') {
+  if (flowStore?.readonly) return
+
   if (io === 'input' && !inputsCollapsible.value) return
   if (io === 'output' && !outputsCollapsible.value) return
 
