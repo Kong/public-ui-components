@@ -32,23 +32,19 @@
         :plugins="plugins"
       />
     </div>
-    <Teleport to="body">
-      <ToolTip
-        v-if="!hideTooltipWhenDragging"
-        ref="tooltipElement"
-        :absolute-left="tooltipAbsoluteLeft"
-        :absolute-top="tooltipAbsoluteTop"
-        data-testid="tooltip"
-        :state="tooltipData"
-        :tooltip-title="tooltipTitle"
-        :zoom-action-items="zoomActionItems"
-        :zoom-time-range="zoomTimeRange"
-        @dimensions="tooltipDimensions"
-        @left="(left: string) => tooltipData.left = left"
-        @on-action="() => resetTooltipState(false)"
-        @top="(top: string) => tooltipData.top = top"
-      />
-    </Teleport>
+    <ToolTip
+      v-if="!hideTooltipWhenDragging"
+      ref="tooltipElement"
+      :absolute-left="tooltipAbsoluteLeft"
+      :absolute-top="tooltipAbsoluteTop"
+      data-testid="tooltip"
+      :state="tooltipData"
+      :tooltip-title="tooltipTitle"
+      :zoom-action-items="zoomActionItems"
+      :zoom-time-range="zoomTimeRange"
+      @dimensions="tooltipDimensions"
+      @on-action="() => resetTooltipState(false)"
+    />
     <ChartLegend
       :id="legendID"
       :chart-instance="chartInstance"

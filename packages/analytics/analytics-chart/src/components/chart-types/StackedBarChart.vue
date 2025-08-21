@@ -40,6 +40,7 @@
       <ToolTip
         :absolute-left="tooltipAbsoluteLeft"
         :absolute-top="tooltipAbsoluteTop"
+        :chart-parent-ref="chartParentRef"
         :state="tooltipData"
         :tooltip-title="tooltipTitle"
         @dimensions="tooltipDimensions"

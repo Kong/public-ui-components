@@ -5,12 +5,11 @@
     class="tooltip-container"
     :class="{ 'locked': state.interactionMode === 'interactive' }"
     :style="{
-      transform: isInteractive ? `translate(${dragPosition.left}, ${dragPosition.top})` : `translate(${absoluteLeft}, ${absoluteTop})`,
+      transform: isInteractive ? `translate(${dragLeft}, ${dragTop})` : `translate(${absoluteLeft}, ${absoluteTop})`,
       left: '0',
       top: '0',
       pointerEvents: isInteractive ? 'all' : 'none',
     }"
-    @mousedown="handleMouseDown"
   >
     <ZoomTimerange
       v-if="state.interactionMode === 'selecting-chart-area'"
@@ -76,11 +75,10 @@ import type { TooltipState, ZoomActionItem } from 'src/types'
 import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import ZoomActions from '../ZoomActions.vue'
 import ZoomTimerange from '../ZoomTimerange.vue'
+import { useDraggable } from '@vueuse/core'
 
 const emit = defineEmits<{
   (e: 'dimensions', dimensions: { width: number, height: number }): void
-  (e: 'top', top: string): void
-  (e: 'left', left: string): void
   (e: 'onAction'): void
 }>()
 
@@ -100,10 +98,15 @@ const props = withDefaults(defineProps<{
 })
 
 const tooltipEl = ref<HTMLElement | null>(null)
-const dragging = ref(false)
-const dragStartPosition = ref({ x: 0, y: 0 })
-const dragMouseStartPosition = ref({ x: 0, y: 0 })
-const dragPosition = ref({ left: props.absoluteLeft, top: props.absoluteTop })
+const { x: dragX, y: dragY, isDragging } = useDraggable(tooltipEl, {
+  initialValue: {
+    x: parseFloat(props.absoluteLeft),
+    y: parseFloat(props.absoluteTop),
+  },
+})
+
+const dragTop = computed(() => `${dragY.value}px`)
+const dragLeft = computed(() => `${dragX.value}px`)
 
 const context = computed(() => {
   return props.state.tooltipContext
@@ -117,6 +120,14 @@ const isInteractive = computed(() => {
   return ['interactive', 'zoom-interactive'].includes(props.state.interactionMode)
 })
 
+// Keep dragX and dragY in sync with absoluteLeft and absoluteTop when not dragging
+watch(() => [props.absoluteLeft, props.absoluteTop], ([left, top]) => {
+  if (!isDragging.value) {
+    dragX.value = parseFloat(left)
+    dragY.value = parseFloat(top)
+  }
+})
+
 watch(tooltipEl, value => {
   if (value) {
     const { width, height } = value.getBoundingClientRect()
@@ -124,81 +135,6 @@ watch(tooltipEl, value => {
     emit('dimensions', { width, height })
   }
 })
-
-watch(() => props.state.interactionMode, value => {
-  if (['interactive', 'zoom-interactive'].includes(value)) {
-    dragPosition.value.left = props.absoluteLeft
-    dragPosition.value.top = props.absoluteTop
-  }
-})
-
-function handleMouseDown(e: MouseEvent) {
-  if (tooltipEl.value) {
-    dragging.value = true
-    document.body.classList.add('no-select')
-    // Get computed style and extract transform values
-    const style = window.getComputedStyle(tooltipEl.value as HTMLElement)
-    // @ts-ignore mozTransform is not in the types
-    const transform = style.transform || style.webkitTransform || style.mozTransform
-
-    // Generate the transform matrix for the tooltip element
-    const matrix = new DOMMatrix(transform)
-    // 4th column in the matrix represents the translations
-    // m41 and m42 are the x and y translations respectively
-    // https://developer.mozilla.org/en-US/docs/Web/API/DOMMatrix
-    const translateX = matrix.m41
-    const translateY = matrix.m42
-
-    // Set initial drag positions
-    dragStartPosition.value = { x: translateX, y: translateY }
-    dragMouseStartPosition.value = { x: e.clientX, y: e.clientY }
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseup', handleMouseUp)
-  }
-}
-
-let animationFrameId: number | null = null
-
-/**
- * Mousemove events fire at a high rate which cause performance issues with Vue.js reactivity system,
- * leading to slow/choppy animation when dragging.
- *
- * In order to ensure that the tooltip position is updated only once per frame, use the requestAnimationFrame method
- * to schedule the update. The requestAnimationFrame method tells the browser to perform an animation
- * and requests that the browser call a specified function to update an animation before the next repaint.
- *
- * If the function is called multiple times before the next repaint (which could happen with mousemove events),
- * the previous frame is cancelled and the latest frame is requested.
- */
-function handleMouseMove(e: MouseEvent) {
-  e.preventDefault()
-  e.stopPropagation()
-  if (dragging.value) {
-
-    if (animationFrameId !== null) {
-      window.cancelAnimationFrame(animationFrameId)
-    }
-
-    animationFrameId = window.requestAnimationFrame(() => {
-      const dx = e.clientX - dragMouseStartPosition.value.x
-      const dy = e.clientY - dragMouseStartPosition.value.y
-
-      dragPosition.value.left = `${dragStartPosition.value.x + dx}px`
-      dragPosition.value.top = `${dragStartPosition.value.y + dy}px`
-    })
-  }
-}
-
-function handleMouseUp() {
-  dragging.value = false
-  document.body.classList.remove('no-select')
-  if (animationFrameId !== null) {
-    window.cancelAnimationFrame(animationFrameId)
-  }
-
-  window.removeEventListener('mousemove', handleMouseMove)
-  window.removeEventListener('mouseup', handleMouseUp)
-}
 
 </script>
 
@@ -214,9 +150,9 @@ function handleMouseUp() {
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);
   max-width: 425px;
-  position: absolute;
+  position: fixed;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-  z-index: 999;
+  z-index: 1;
 
   .tooltip-title {
     @include tooltipTitle;
