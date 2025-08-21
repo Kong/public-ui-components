@@ -8,7 +8,7 @@ import { computed, nextTick, toRaw } from 'vue'
 import { AUTO_LAYOUT_DEFAULT_OPTIONS } from '../constants'
 import { isImplicitNode } from '../node/node'
 import { useEditorStore } from '../store/store'
-import { useConflictConnectionConfirm } from './useConflictConnectionConfirm'
+import { useConfirm } from './useConflictConnectionConfirm'
 import useI18n from '../../../../../composables/useI18n'
 import type { ConnectionString } from '../modal/ConflictConnectionConfirmModal.vue'
 import { createEdgeConnectionString, createNewConnectionString } from './helpers'
@@ -39,7 +39,7 @@ export interface AutoLayoutOptions {
 export default function useFlow(phase: NodePhase, flowId?: string) {
   const vueFlowStore = useVueFlow(flowId)
   const editorStore = useEditorStore()
-  const confirm = useConflictConnectionConfirm()
+  const confirm = useConfirm()
   const toaster = useToaster()
   const { i18n: { t } } = useI18n()
 

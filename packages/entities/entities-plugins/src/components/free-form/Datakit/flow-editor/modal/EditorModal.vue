@@ -26,7 +26,7 @@ import ConflictConnectionConfirmModal, { type OpenConfirm } from './ConflictConn
 
 import EditorNav from './EditorNav.vue'
 import EditorContent from './EditorContent.vue'
-import { provideConflictConnectionConfirmModal } from '../composables/useConflictConnectionConfirm'
+import { provideConfirmModal } from '../composables/useConflictConnectionConfirm'
 
 const modal = useTemplateRef('modal')
 
@@ -34,7 +34,7 @@ const open = defineModel<boolean>('open')
 const showConfirm = ref(false)
 const confirmModalRef = useTemplateRef('confirm-modal')
 
-provideConflictConnectionConfirmModal(async (...args: Parameters<OpenConfirm>) => {
+provideConfirmModal(async (...args: Parameters<OpenConfirm>) => {
   showConfirm.value = true
   const isConfirmed = await confirmModalRef.value!.open(...args)
   showConfirm.value = false
