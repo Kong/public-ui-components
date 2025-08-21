@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.68.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.6...@kong-ui-public/entities-plugins@9.68.0) (2025-08-21)
+
+
+### Features
+
+* **entities-plugins:** datakit - reserved node name check [KM-1617] ([#2366](https://github.com/Kong/public-ui-components/issues/2366)) ([223a1cb](https://github.com/Kong/public-ui-components/commit/223a1cbd8ed53c65114e65dc5c7fe54403884949))
+
+
+
+
+
 ## [9.67.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.5...@kong-ui-public/entities-plugins@9.67.6) (2025-08-20)
 
 
