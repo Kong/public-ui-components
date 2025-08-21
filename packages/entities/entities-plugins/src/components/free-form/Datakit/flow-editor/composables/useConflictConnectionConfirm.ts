@@ -8,7 +8,7 @@ export function provideConfirmModal(open: OpenConfirm) {
 
 // For scenarios where the confirm modal is not needed
 export function useOptionalConfirm() {
-  return inject<OpenConfirm>(CONFIRM_MODAL_PROVIDE_KEY)
+  return inject<OpenConfirm | undefined>(CONFIRM_MODAL_PROVIDE_KEY, undefined)
 }
 
 export function useConfirm() {
