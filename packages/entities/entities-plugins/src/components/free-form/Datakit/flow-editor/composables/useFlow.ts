@@ -298,8 +298,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       if (connectionSuccess) {
         // Confirm the changes, undo if users not confirmed
         if (confirmToSwitch || confirmToOverride) {
-          // Note: using `confirm!` because the code here should not be reachable in a readonly flow
-          const isConfirmed = await confirm!(
+          if (!confirm) {
+            // The code here should not be reachable in a readonly flow
+            throw new Error('Expected confirm modal to be provided here when reachable')
+          }
+          const isConfirmed = await confirm(
             confirmToSwitch
               ? t('plugins.free-form.datakit.flow_editor.confirm.message.switch')
               : t('plugins.free-form.datakit.flow_editor.confirm.message.override'),
