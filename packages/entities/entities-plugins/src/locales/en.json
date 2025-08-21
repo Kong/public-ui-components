@@ -770,7 +770,8 @@
               "not_number": "{fieldName} must be a number",
               "not_unique": "{fieldName} must be unique",
               "number_range": "{fieldName} must be between {min} and {max}",
-              "string_len_range": "{fieldName} must be between {min} and {max} characters"
+              "string_len_range": "{fieldName} must be between {min} and {max} characters",
+              "reserved_node_name": "\"{nodeName}\" is a reserved node name"
             }
           }
         },

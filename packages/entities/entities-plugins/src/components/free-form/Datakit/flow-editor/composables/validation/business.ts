@@ -1,6 +1,7 @@
 import useI18n from '../../../../../../composables/useI18n'
 import { useEditorStore } from '../../../composables'
-import type { FieldId, FieldName, NodeId, NodeInstance } from '../../../types'
+import type { FieldId, FieldName, NodeId, NodeInstance, NodeName } from '../../../types'
+import { isImplicitName } from '../../node/node'
 import type { ValidatorFn } from './basic'
 import { compose, notEmpty, stringFormat } from './basic'
 
@@ -51,12 +52,24 @@ export function isUniqueFieldName(
   }
 }
 
+function conflictWithImplicitNodes(): ValidatorFn<string> {
+  const { i18n: { t } } = useI18n()
+
+  return function validateConflictWithImplicitNodes(nodeName): undefined | string {
+    if (isImplicitName(nodeName as NodeName)) {
+      return t('plugins.free-form.datakit.flow_editor.node_properties.errors.reserved_node_name', { nodeName })
+    }
+    return undefined
+  }
+}
+
 export function useNodeNameValidator(nodeId: NodeId): ValidatorFn<string> {
   const { i18n: { t } } = useI18n()
   const errTempVars = { fieldName: t('plugins.free-form.datakit.flow_editor.node_properties.name') }
   return compose(
     notEmpty(errTempVars),
     stringFormat('identifier', errTempVars),
+    conflictWithImplicitNodes(),
     isUniqueNodeName(nodeId, errTempVars),
   )
 }
