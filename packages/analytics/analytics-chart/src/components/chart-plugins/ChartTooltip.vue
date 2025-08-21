@@ -152,7 +152,7 @@ watch(tooltipEl, value => {
   max-width: 425px;
   position: fixed;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-  z-index: 999;
+  z-index: 1;
 
   .tooltip-title {
     @include tooltipTitle;
