@@ -441,7 +441,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             throw new Error(`Node ${node.id} is missing from the graph in ${phase} phase`)
           }
 
-          dagreGraph!.setNode(node.id, {
+          dagreGraph.setNode(node.id, {
             width: graphNode.dimensions.width,
             height: graphNode.dimensions.height,
           })
@@ -459,15 +459,19 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
 
       if (configNodes.length > 0) {
+        if (!dagreGraph) {
+          throw new Error('dagreGraph should be defined here if reachable')
+        }
+
         const implicitIds = new Set([leftNode.id, rightNode.id])
         for (const edge of edges.value) {
           if (!implicitIds.has(edge.source) && !implicitIds.has(edge.target)) {
-            dagreGraph!.setEdge(edge.source, edge.target, { points: [] })
+            dagreGraph.setEdge(edge.source, edge.target, { points: [] })
           }
         }
 
         // Layout
-        dagre.layout(dagreGraph!)
+        dagre.layout(dagreGraph)
       }
 
       const [wrapBounding, copyBounding] = createWrapper()
@@ -482,11 +486,17 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         }
       }
 
-      for (const node of configNodes) {
-        const dagreNode = dagreGraph!.node(node.id)
-        const position = normalizePosition(dagreNode)
-        wrapBounding(position)
-        moveNode(node.data!.id, { x: position.x, y: position.y }, false)
+      if (configNodes.length > 0) {
+        if (!dagreGraph) {
+          throw new Error('dagreGraph should be defined here if reachable')
+        }
+
+        for (const node of configNodes) {
+          const dagreNode = dagreGraph.node(node.id)
+          const position = normalizePosition(dagreNode)
+          wrapBounding(position)
+          moveNode(node.data!.id, { x: position.x, y: position.y }, false)
+        }
       }
 
       const centralBounding = copyBounding()
