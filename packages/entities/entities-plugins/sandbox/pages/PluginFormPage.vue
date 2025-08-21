@@ -8,6 +8,7 @@
       :plugin-id="id"
       :plugin-type="plugin"
       use-custom-names-for-plugin
+      @global-action="handleGlobalAction"
       @update="onUpdate"
     />
 
@@ -18,6 +19,7 @@
       enable-vault-secret-picker
       :plugin-id="id"
       :plugin-type="plugin"
+      @global-action="handleGlobalAction"
       @update="onUpdate"
     />
   </div>
@@ -31,8 +33,9 @@ import { FEATURE_FLAGS, PluginForm, TOASTER_PROVIDER, useProvideExperimentalFree
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../src'
 import { ToastManager } from '@kong/kongponents'
 
-const toaster = new ToastManager()
+import type { GlobalAction } from '../../src/components/free-form/shared/types'
 
+const toaster = new ToastManager()
 provide(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, true)
 
 provide(TOASTER_PROVIDER, toaster.open.bind(toaster))
@@ -81,6 +84,12 @@ const onUpdate = (payload: Record<string, any>) => {
   console.log('update', payload)
 
   router.push({ name: 'list-plugin' })
+}
+
+const handleGlobalAction = (action: GlobalAction, payload: any) => {
+  if (action === 'notify') {
+    toaster.open(payload)
+  }
 }
 </script>
 

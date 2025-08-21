@@ -59,7 +59,7 @@ watch(selectedNode, (node) => {
 
 <style lang="scss" scoped>
 .dk-editor-content {
-  background-color: $kui-color-background-neutral-weakest;
+  background-color: $kui-color-background;
   border-top-left-radius: $kui-border-radius-30;
   display: flex;
   overflow: hidden;

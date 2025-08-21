@@ -6,7 +6,11 @@ import approxNum from 'approximate-number'
 import { formatBytes } from '../utils'
 import composables from '../composables'
 
-export default function useChartLegendValues(chartData: Ref<KChartData>, chartType: ChartType | SimpleChartType, metricUnit: Ref<string>) {
+export default function useChartLegendValues(
+  chartData: Readonly<Ref<KChartData>>,
+  chartType: ChartType | SimpleChartType,
+  metricUnit: Readonly<Ref<string>>,
+) {
   const { i18n } = composables.useI18n()
   const { translateUnit } = composables.useTranslatedUnits()
   const legendValues = computed<LegendValues>(() => {

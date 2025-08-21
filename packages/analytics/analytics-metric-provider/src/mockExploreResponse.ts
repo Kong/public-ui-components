@@ -6,6 +6,7 @@ import type {
   ExploreResultV4,
   GroupByResult,
   QueryResponseMeta,
+  Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import { DeltaQueryTime, TimeframeKeys, TimePeriods, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
 
@@ -16,6 +17,7 @@ export interface MockOptions {
   dimensionNames?: string[]
   injectErrors?: 'latency' | 'traffic' | 'all'
   deterministic?: boolean
+  timeFrame?: Timeframe
 }
 
 export const mockExploreResponseFromCypress = (
@@ -40,7 +42,7 @@ export const mockExploreResponse = (
   body: ExploreQuery,
   opts?: MockOptions,
 ) => {
-  const timeframe = TimePeriods.get(TimeframeKeys.ONE_DAY)!
+  const timeframe = opts?.timeFrame || TimePeriods.get(TimeframeKeys.ONE_DAY)!
   const defaultQueryTime = body.granularity === 'trend' ? new DeltaQueryTime(timeframe) : new UnaryQueryTime(timeframe)
   const end = defaultQueryTime.endMs()
   const start = defaultQueryTime.startMs()

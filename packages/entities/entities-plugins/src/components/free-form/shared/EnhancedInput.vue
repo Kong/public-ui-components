@@ -2,6 +2,7 @@
   <InputComponent
     v-bind="$attrs"
     :model-value="modelValue"
+    :resizable="multiline ? true : undefined"
     @change="handleChange"
     @update:model-value="handleInput"
   >

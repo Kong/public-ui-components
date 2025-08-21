@@ -47,7 +47,7 @@
 import MetricsConsumer from './MetricsConsumer.vue'
 import MetricsProvider from './MetricsProvider.vue'
 import { MetricCardSize } from '../enums'
-import type { ExploreFilterAll, FilterableExploreDimensions, QueryDatasource } from '@kong-ui-public/analytics-utilities'
+import type { ExploreFilterAll, FilterableExploreDimensions, QueryDatasource, Timeframe } from '@kong-ui-public/analytics-utilities'
 import { computed } from 'vue'
 
 const props = withDefaults(defineProps<{
@@ -60,6 +60,7 @@ const props = withDefaults(defineProps<{
   containerTitle?: string
   description?: string
   percentileLatency?: boolean
+  overrideTimeframe?: Timeframe
 }>(), {
   refreshInterval: 60 * 1000,
   queryReady: true,
@@ -69,6 +70,7 @@ const props = withDefaults(defineProps<{
   containerTitle: undefined,
   description: undefined,
   percentileLatency: undefined,
+  overrideTimeframe: undefined,
 })
 
 // Query stats for an entire org, no grouping or filtering.

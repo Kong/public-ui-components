@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-consumer-groups",
-  "version": "4.1.6",
+  "version": "4.1.7",
   "type": "module",
   "main": "./dist/entities-consumer-groups.umd.js",
   "module": "./dist/entities-consumer-groups.es.js",
@@ -34,7 +34,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.0",
     "@kong/icons": "^1.33.2",
-    "@kong/kongponents": "9.38.3",
+    "@kong/kongponents": "9.38.4",
     "axios": "^1.7.7",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"

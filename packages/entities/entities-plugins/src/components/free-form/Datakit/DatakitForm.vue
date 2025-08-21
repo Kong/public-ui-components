@@ -25,23 +25,20 @@
         tag="div"
         @change="handleFormChange"
       >
-        <div v-if="finalEditorMode === 'flow'">
-          <FlowEditor
-            :config="config"
-            :editing="props.isEditing"
-            @change="handleConfigChange"
-          />
-        </div>
-
-        <div v-else-if="finalEditorMode === 'code'">
-          <CodeEditor
-            class="code-editor"
-            :config="config"
-            :editing="props.isEditing"
-            @change="handleConfigChange"
-            @error="handleCodeError"
-          />
-        </div>
+        <FlowEditor
+          v-if="finalEditorMode === 'flow'"
+          :config="config"
+          :editing="props.isEditing"
+          @change="handleConfigChange"
+        />
+        <CodeEditor
+          v-else-if="finalEditorMode === 'code'"
+          class="code-editor"
+          :config="config"
+          :editing="props.isEditing"
+          @change="handleConfigChange"
+          @error="handleCodeError"
+        />
       </Form>
     </template>
 

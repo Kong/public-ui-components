@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.67.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.5...@kong-ui-public/entities-plugins@9.67.6) (2025-08-20)
+
+
+### Bug Fixes
+
+* **analytics:** remove extraneous vue warnings [MA-4148] ([#2337](https://github.com/Kong/public-ui-components/issues/2337)) ([2b9a9ba](https://github.com/Kong/public-ui-components/commit/2b9a9ba8a6427ac617795f811a9f5351947ce64c))
+
+
+
+
+
+## [9.67.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.4...@kong-ui-public/entities-plugins@9.67.5) (2025-08-20)
+
+
+### Bug Fixes
+
+* **entities-plugins:** service-protection - pass globalAction [KM-1506] ([#2360](https://github.com/Kong/public-ui-components/issues/2360)) ([52c5a1e](https://github.com/Kong/public-ui-components/commit/52c5a1ea64625b8dbf1fbe5af827f6752338789c))
+
+
+
+
+
+## [9.67.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.3...@kong-ui-public/entities-plugins@9.67.4) (2025-08-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit fix flow-code toggle ([#2358](https://github.com/Kong/public-ui-components/issues/2358)) ([0ffed83](https://github.com/Kong/public-ui-components/commit/0ffed832056eb6fa37c3669b1357338e2d7b3557))
+
+
+
+
+
+## [9.67.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.2...@kong-ui-public/entities-plugins@9.67.3) (2025-08-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit allow delete nodes with delete key ([#2356](https://github.com/Kong/public-ui-components/issues/2356)) ([e0eaffe](https://github.com/Kong/public-ui-components/commit/e0eaffe611d0a9e98d9e1fb0d05997c410afccc5))
+* **entities-plugins:** datakit improve modal background color ([#2357](https://github.com/Kong/public-ui-components/issues/2357)) ([ef6481f](https://github.com/Kong/public-ui-components/commit/ef6481fa842baa36f514c8850a692af37bbf97ca))
+
+
+
+
+
+## [9.67.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.1...@kong-ui-public/entities-plugins@9.67.2) (2025-08-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** service protection - delete namespace when it is null ([#2251](https://github.com/Kong/public-ui-components/issues/2251)) ([76f7d47](https://github.com/Kong/public-ui-components/commit/76f7d4709d1c71cdbbb311026431e3773e9b67b0))
+
+
+
+
+
+## [9.67.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.0...@kong-ui-public/entities-plugins@9.67.1) (2025-08-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** require-callout - KV default null [KM-1580] ([#2354](https://github.com/Kong/public-ui-components/issues/2354)) ([9f82b69](https://github.com/Kong/public-ui-components/commit/9f82b69858f50629bde052268c0f24ab1cff1aeb))
+
+
+
+
+
+# [9.67.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.66.0...@kong-ui-public/entities-plugins@9.67.0) (2025-08-19)
+
+
+### Features
+
+* **entities-plugins:** support ai-mcp ([#2350](https://github.com/Kong/public-ui-components/issues/2350)) ([e4097a3](https://github.com/Kong/public-ui-components/commit/e4097a3491532c97173de79bd2d555f805155d9c))
+
+
+
+
+
+# [9.66.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.65.0...@kong-ui-public/entities-plugins@9.66.0) (2025-08-19)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit toConfigNodes ([#2352](https://github.com/Kong/public-ui-components/issues/2352)) ([359a88d](https://github.com/Kong/public-ui-components/commit/359a88d5877291e47372a56540500d39103adba4))
+
+
+### Features
+
+* **entities-plugins:** add support for ai-llm-as-judge ([#2353](https://github.com/Kong/public-ui-components/issues/2353)) ([df4822a](https://github.com/Kong/public-ui-components/commit/df4822a7da5d28eaa8ad95403efa5e671fa974f9))
+
+
+
+
+
 # [9.65.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.64.0...@kong-ui-public/entities-plugins@9.65.0) (2025-08-18)
 
 

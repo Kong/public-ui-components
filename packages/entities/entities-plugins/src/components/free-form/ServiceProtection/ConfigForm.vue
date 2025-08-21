@@ -5,7 +5,7 @@
     :data="data"
     :schema="schema"
     tag="div"
-    @change="v => $emit('change', v)"
+    @change="handleChange"
   >
     <ObjectField
       as-child
@@ -20,7 +20,9 @@
       <Field name="config.dictionary_name" />
       <Field name="config.lock_dictionary_name" />
       <Field name="config.strategy" />
-      <RedisField />
+      <RedisField
+        @global-action="(...args) => $emit('globalAction', ...args)"
+      />
       <Field name="config.namespace" />
       <Field name="config.hide_client_headers" />
       <Field name="config.disable_penalty" />
@@ -39,12 +41,13 @@ import ErrorMessageForm from './ErrorMessageForm.vue'
 import AdvancedFields from '../shared/AdvancedFields.vue'
 import RedisField from './RedisField.vue'
 
-import type { FormConfig } from '../shared/types'
+import type { FormConfig, GlobalAction } from '../shared/types'
 import type { FormSchema } from '../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 
-defineEmits<{
-  (e: 'change', value: FreeFormPluginData): void
+const emit = defineEmits<{
+  change: [value: FreeFormPluginData]
+  globalAction: [name: GlobalAction, payload: any]
 }>()
 
 defineProps<{
@@ -54,5 +57,16 @@ defineProps<{
 
 const formConfig: FormConfig = {
   hasValue: (data?: FreeFormPluginData): boolean => !!data?.config,
+}
+
+function handleChange(value: FreeFormPluginData) {
+  /**
+   * `namespace` can be undefined, but can't be null.
+   * If it is null, we should delete it from the config object.
+   */
+  if (value.config?.namespace === null) {
+    delete value.config.namespace
+  }
+  emit('change', value)
 }
 </script>

@@ -52,7 +52,12 @@ export default function useFlow(phase: NodePhase, flowId?: string) {
     onConnect,
     onNodesChange,
     onEdgesChange,
+    deleteKeyCode,
   } = vueFlowStore
+
+  // VueFlow has a default delete key code of 'Backspace',
+  // but we want to also support 'Delete'.
+  deleteKeyCode.value = ['Delete', 'Backspace']
 
   const {
     state,

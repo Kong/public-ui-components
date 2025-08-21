@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@9.1.8...@kong-ui-public/analytics-metric-provider@9.1.9) (2025-08-20)
+
+
+### Bug Fixes
+
+* **analytics:** remove extraneous vue warnings [MA-4148] ([#2337](https://github.com/Kong/public-ui-components/issues/2337)) ([2b9a9ba](https://github.com/Kong/public-ui-components/commit/2b9a9ba8a6427ac617795f811a9f5351947ce64c))
+
+
+
+
+
+## [9.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@9.1.7...@kong-ui-public/analytics-metric-provider@9.1.8) (2025-08-19)
+
+
+### Bug Fixes
+
+* update golden signals trend text for fine grain absolute time ([#2345](https://github.com/Kong/public-ui-components/issues/2345)) ([d100484](https://github.com/Kong/public-ui-components/commit/d1004840441e0d95cc60975bd7b7f53c60c85c8f))
+
+
+
+
+
 ## [9.1.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@9.1.6...@kong-ui-public/analytics-metric-provider@9.1.7) (2025-08-18)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
