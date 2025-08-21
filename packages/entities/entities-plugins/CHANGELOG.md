@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.69.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.68.0...@kong-ui-public/entities-plugins@9.69.0) (2025-08-21)
+
+
+### Bug Fixes
+
+* **entities-plugins:** kafka-* set confluent to null if is default value [KM-1616] ([#2365](https://github.com/Kong/public-ui-components/issues/2365)) ([e78c6d0](https://github.com/Kong/public-ui-components/commit/e78c6d0f6313014f5df90fff3086d60b0a116351))
+
+
+### Features
+
+* **entities-plugins:** datakit - confirmation modal for edge overriding ([#2351](https://github.com/Kong/public-ui-components/issues/2351)) ([55a1594](https://github.com/Kong/public-ui-components/commit/55a1594949b4d28c7974d61c36ea7ac44e46e737))
+
+
+
+
+
 # [9.68.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.67.6...@kong-ui-public/entities-plugins@9.68.0) (2025-08-21)
 
 
