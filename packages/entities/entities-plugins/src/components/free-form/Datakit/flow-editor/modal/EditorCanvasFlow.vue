@@ -1,25 +1,40 @@
 <template>
   <div
-    ref="flow-wrapper"
-    class="dk-flow-wrapper"
+    ref="flowCanvas"
+    class="dk-flow-canvas"
   >
     <VueFlow
       :id="flowId"
       class="flow"
+      :class="{ readonly }"
       :edges="edges"
-      fit-view-on-init
+      :elements-selectable="!readonly"
+      :max-zoom="MAX_ZOOM_LEVEL"
+      :min-zoom="MIN_ZOOM_LEVEL"
       :multi-selection-key-code="null"
       :nodes="nodes"
+      :nodes-connectable="!readonly"
+      :nodes-draggable="!readonly"
+      :pan-on-drag="readonly ? false : undefined"
+      :pan-on-scroll="readonly ? false : undefined"
+      :zoom-on-double-click="readonly ? false : undefined"
+      :zoom-on-pinch="readonly ? false : undefined"
+      :zoom-on-scroll="readonly ? false : undefined"
       @dragover.prevent
       @drop="(e: DragEvent) => onDrop(e)"
-      @node-click="propertiesPanelOpen = true"
-      @nodes-initialized="onNodesInitializes"
+      @node-click="onNodeClick"
+      @nodes-initialized="emit('initialized')"
     >
       <Background />
-      <Controls position="bottom-left">
+      <Controls
+        v-if="!readonly"
+        :fit-view-params="fitViewParams"
+        position="bottom-left"
+        :show-interactive="false"
+      >
         <button
           class="vue-flow__controls-button vue-flow__controls-interactive custom"
-          @click="handleAutoLayout"
+          @click="onClickAutoLayout"
         >
           <SparklesIcon :size="18" /> <!-- TODO: Replace with a better icon for "auto layout" -->
         </button>
@@ -43,32 +58,52 @@ import { SparklesIcon } from '@kong/icons'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
-import { nextTick, ref, useId, useTemplateRef } from 'vue'
+import { useElementBounding } from '@vueuse/core'
+import { nextTick, useTemplateRef } from 'vue'
 
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
-import useFlow from '../composables/useFlow'
+import { provideFlowStore } from '../composables/useFlow'
+import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from '../constants'
 import FlowNode from '../node/FlowNode.vue'
-import { useEditorStore } from '../store/store'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
 
-const props = defineProps<{
+const { flowId, phase, readonly } = defineProps<{
+  flowId: string
   phase: NodePhase
+  readonly?: boolean
 }>()
 
-const flowWrapper = useTemplateRef('flow-wrapper')
-const initialLayoutTriggered = ref(false)
+const emit = defineEmits<{
+  initialized: []
+}>()
 
-const uniqueId = useId()
-const flowId = `${uniqueId}-${props.phase}`
+const flowCanvas = useTemplateRef('flowCanvas')
+const flowCanvasRect = useElementBounding(flowCanvas)
 
-const { vueFlowStore, editorStore, nodes, edges, autoLayout } = useFlow(props.phase, flowId)
-const { addNode, clear: historyClear } = editorStore
+const {
+  vueFlowStore,
+  editorStore,
+  nodes,
+  edges,
+  autoLayout,
+  fitViewParams,
+  fitView,
+} = provideFlowStore({
+  phase,
+  flowId,
+  layoutOptions: {
+    viewport: {
+      width: flowCanvasRect.width,
+      height: flowCanvasRect.height,
+    },
+  },
+  readonly,
+})
+const { addNode, selectNode: selectStoreNode, propertiesPanelOpen, newCreatedNodeId, invalidConfigNodeIds } = editorStore
 const { project, vueFlowRef, addSelectedNodes, getNodes } = vueFlowStore
-
-const { selectNode: selectStoreNode, propertiesPanelOpen, newCreatedNodeId, invalidConfigNodeIds } = useEditorStore()
 
 async function selectNode(nodeId?: NodeId) {
   selectStoreNode(nodeId)
@@ -77,7 +112,14 @@ async function selectNode(nodeId?: NodeId) {
   addSelectedNodes(selectedNode ? [selectedNode] : [])
 }
 
+function onNodeClick() {
+  if (readonly) return
+  propertiesPanelOpen.value = true
+}
+
 function onDrop(e: DragEvent) {
+  if (readonly) return
+
   const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
   if (!data) return
 
@@ -98,7 +140,7 @@ function onDrop(e: DragEvent) {
   const { type, anchor } = payload.data
   const newNode = {
     type,
-    phase: props.phase,
+    phase,
     position: {
       x: projected.x - anchor.offsetX,
       y: projected.y - anchor.offsetY,
@@ -114,27 +156,16 @@ function onDrop(e: DragEvent) {
   }
 }
 
-function onNodesInitializes() {
-  if (!initialLayoutTriggered.value) {
-    initialLayoutTriggered.value = true
-    handleAutoLayout()
-    // Clear all history post-initialization, as the state
-    // should be the 'origin' by this point.
-    historyClear()
-  }
-
-  // Reserved for future steps
+const onClickAutoLayout = () => {
+  autoLayout()
+  nextTick(() => fitView())
 }
 
-function handleAutoLayout() {
-  autoLayout({
-    boundingRect: flowWrapper.value!.getBoundingClientRect(),
-  })
-}
+defineExpose({ autoLayout, fitView })
 </script>
 
 <style lang="scss" scoped>
-.dk-flow-wrapper {
+.dk-flow-canvas {
   background-color: $kui-color-background-neutral-weakest;
   height: 100%;
   width: 100%;
@@ -153,32 +184,26 @@ function handleAutoLayout() {
       }
     }
 
-    :deep(.vue-flow__node) {
-      &:hover .flow-node {
-        border-color: $kui-color-border-primary-weak;
-      }
+    &:not(.readonly) {
+      :deep(.vue-flow__node) {
+        &:hover .flow-node {
+          border-color: $kui-color-border-primary-weak;
+        }
 
-      &.selected .flow-node {
-        border-color: $kui-color-border-primary;
+        &.selected .flow-node {
+          border-color: $kui-color-border-primary;
+        }
       }
     }
 
+    &.readonly * {
+      cursor: default;
+    }
 
     :deep(.vue-flow__edge) {
       .vue-flow__edge-path {
         stroke-dasharray: 5;
       }
-
-      // TODO(Makito): Make markers have the same color as paths
-      // &:hover .vue-flow__edge-path {
-      //   marker: $kui-color-border-primary-weak;
-      //   stroke: $kui-color-border-primary-weak;
-      // }
-
-      // &.selected .vue-flow__edge-path {
-      //   marker: $kui-color-border-primary;
-      //   stroke: $kui-color-border-primary;
-      // }
     }
 
     :deep(.vue-flow__connection) {
@@ -186,5 +211,4 @@ function handleAutoLayout() {
     }
   }
 }
-
 </style>

@@ -1,52 +1,74 @@
 <template>
   <div
-    ref="editorCanvas"
-    class="editor-canvas"
+    ref="flowPanels"
+    class="flow-panels"
   >
     <div
       ref="requestLabel"
-      class="label"
+      class="label request"
+      :class="{ resizable }"
       @click="onRequestLabelClick"
     >
       <ChevronDownIcon
+        v-if="resizable"
         class="icon"
         :class="{ collapsed: isRequestCollapsed }"
       />
-      <div>Request</div>
+      <div class="label-content">
+        Request
+      </div>
     </div>
 
     <div
-      ref="requestCanvas"
+      ref="requestCanvasContainer"
       class="canvas"
       :class="{ dragging: isDragging }"
-      :style="{ height: requestHeight }"
+      :style="{ flexBasis: requestHeight }"
     >
-      <slot name="request" />
+      <FlowCanvas
+        ref="requestFlow"
+        :flow-id="requestFlowId"
+        phase="request"
+        :readonly="readonly"
+        @initialized="initialized[0] = true"
+      />
     </div>
 
     <div
       ref="resizeHandle"
       class="resize-handle"
+      :class="{ resizable }"
     />
 
     <div
       ref="responseLabel"
-      class="label"
-      :class="{ dragging: isDragging }"
+      class="label response"
+      :class="{ dragging: isDragging, resizable }"
       @click="onResponseLabelClick"
     >
       <ChevronDownIcon
+        v-if="resizable"
         class="icon"
         :class="{ collapsed: isResponseCollapsed }"
       />
-      <div>Response</div>
+      <div class="label-content">
+        Response
+      </div>
     </div>
 
     <div
-      ref="responseCanvas"
+      ref="responseCanvasContainer"
       class="canvas response"
+      :class="{ dragging: isDragging }"
+      :style="{ flexBasis: responseHeight }"
     >
-      <slot name="response" />
+      <FlowCanvas
+        ref="responseFlow"
+        :flow-id="responseFlowId"
+        phase="response"
+        :readonly="readonly"
+        @initialized="initialized[1] = true"
+      />
     </div>
   </div>
 </template>
@@ -54,62 +76,127 @@
 <script setup lang="ts">
 import { ChevronDownIcon } from '@kong/icons'
 import { useDraggable, useElementBounding } from '@vueuse/core'
-import { computed, ref, useTemplateRef } from 'vue'
+import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
 
-const editorCanvas = useTemplateRef('editorCanvas')
+import { useEditorStore } from '../../composables'
+import FlowCanvas from './EditorCanvasFlow.vue'
+
+const { readonly, resizable } = defineProps<{
+  readonly?: boolean
+  resizable?: boolean
+}>()
+
+const initialized = ref<[request: boolean, response: boolean]>([false, false])
+const { state } = useEditorStore()
+
+const uniqueId = useId()
+const requestFlowId = `${uniqueId}-request`
+const responseFlowId = `${uniqueId}-response`
+
+const flowPanels = useTemplateRef('flowPanels')
 const requestLabel = useTemplateRef('requestLabel')
-const requestCanvas = useTemplateRef('requestCanvas')
+const requestCanvasContainer = useTemplateRef('requestCanvasContainer')
+const requestFlow = useTemplateRef('requestFlow')
 const resizeHandle = useTemplateRef('resizeHandle')
-const responseCanvas = useTemplateRef('responseCanvas')
+const responseLabel = useTemplateRef('responseLabel')
+const responseCanvasContainer = useTemplateRef('responseCanvasContainer')
+const responseFlow = useTemplateRef('responseFlow')
 
-const editorCanvasRect = useElementBounding(editorCanvas)
+const flowPanelsRect = useElementBounding(flowPanels)
 const requestLabelRect = useElementBounding(requestLabel)
-const requestCanvasRect = useElementBounding(requestCanvas)
+const requestCanvasContainerRect = useElementBounding(requestCanvasContainer)
 const resizeHandleRect = useElementBounding(resizeHandle)
-const responseCanvasRect = useElementBounding(responseCanvas)
+const responseLabelRect = useElementBounding(responseLabel)
+const responseCanvasContainerRect = useElementBounding(responseCanvasContainer)
 
-const snappingHeight = computed(() => Math.max(30, editorCanvasRect.height.value * 0.03))
-const isRequestCollapsed = computed(() => requestCanvasRect.height.value < snappingHeight.value)
-const isResponseCollapsed = computed(() => responseCanvasRect.height.value < snappingHeight.value)
+const snappingHeight = computed(() => Math.max(30, flowPanelsRect.height.value * 0.03))
+const isRequestCollapsed = computed(() => requestCanvasContainerRect.height.value < snappingHeight.value)
+const isResponseCollapsed = computed(() => responseCanvasContainerRect.height.value < snappingHeight.value)
 
 const requestHeight = ref('50%')
+const responseHeight = ref('50%')
 
 const onRequestLabelClick = () => {
+  if (!resizable) return
+
   if (isRequestCollapsed.value) {
     requestHeight.value = '50%'
+    responseHeight.value = '50%'
   } else {
     requestHeight.value = '0'
+    responseHeight.value = '100%'
   }
 }
 
 const onResponseLabelClick = () => {
+  if (!resizable) return
+
   if (isResponseCollapsed.value) {
     requestHeight.value = '50%'
+    responseHeight.value = '50%'
   } else {
     requestHeight.value = '100%'
+    responseHeight.value = '0'
   }
 }
 
+const requestResizableHeight = computed(() =>
+  flowPanelsRect.height.value - requestLabelRect.height.value - resizeHandleRect.height.value - responseLabelRect.height.value,
+)
+
 const { isDragging } = useDraggable(resizeHandle, {
   onMove(position) {
-    const handleCenterToTop = position.y + resizeHandleRect.height.value / 2
-    const toTop = handleCenterToTop - requestLabelRect.bottom.value
-    requestHeight.value = `max(0%, min(100%, ${toTop}px))`
+    if (!resizable) return
+
+    const handleCenterToRequestCanvasTop = Math.max(0, position.y - requestCanvasContainerRect.top.value)
+    const requestProportion = Math.min(1,
+      Math.max(0,
+        handleCenterToRequestCanvasTop / requestResizableHeight.value,
+      ),
+    )
+    requestHeight.value = `${requestProportion * 100}%`
+    responseHeight.value = `${(1 - requestProportion) * 100}%`
   },
   onEnd() {
-    if (requestCanvasRect.height.value < snappingHeight.value) {
+    if (!resizable) return
+
+    if (requestCanvasContainerRect.height.value < snappingHeight.value) {
       requestHeight.value = '0'
-    } else if (responseCanvasRect.height.value < snappingHeight.value) {
+      responseHeight.value = '100%'
+    } else if (responseCanvasContainerRect.height.value < snappingHeight.value) {
       requestHeight.value = '100%'
+      responseHeight.value = '0'
     }
   },
 })
+
+const fitView = () => {
+  nextTick(() => {
+    requestFlow.value?.fitView()
+    responseFlow.value?.fitView()
+  })
+}
+
+const initWatcher = watch(initialized, ([request, response]) => {
+  // Only perform once upon both flow are initialized
+  if (request && response) {
+    // Only perform auto layout once in creation mode
+    if (!state.value.isEditing) {
+      requestFlow.value?.autoLayout()
+      responseFlow.value?.autoLayout()
+    }
+    fitView()
+    initWatcher.stop()
+  }
+}, { deep: true })
+
+defineExpose({ fitView })
 </script>
 
 <style lang="scss" scoped>
 @use 'sass:math';
 
-.editor-canvas {
+.flow-panels {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -118,9 +205,7 @@ const { isDragging } = useDraggable(resizeHandle, {
   .label {
     align-items: center;
     background-color: $kui-color-background;
-    border-bottom: $kui-border-width-10 solid $kui-color-border;
     box-sizing: border-box;
-    cursor: pointer;
     display: flex;
     flex-direction: row;
     flex-shrink: 0;
@@ -128,6 +213,7 @@ const { isDragging } = useDraggable(resizeHandle, {
     gap: $kui-space-20;
     justify-content: flex-start;
     padding: $kui-space-20 $kui-space-40;
+    position: relative;
     width: 100%;
 
     .icon {
@@ -137,25 +223,42 @@ const { isDragging } = useDraggable(resizeHandle, {
         transform: rotate(-90deg);
       }
     }
+
+    &.resizable {
+      cursor: pointer;
+    }
+
+    &:not(.resizable) .label-content {
+      padding: 0 $kui-space-40;
+    }
+
+    &.request:before, &.response:before {
+      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      background-color: $kui-color-border;
+      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      bottom: -$kui-border-width-10;
+      content: '';
+      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      height: $kui-border-width-10;
+      left: 0;
+      position: absolute;
+      width: 100%;
+      z-index: 10;
+    }
   }
 
   .canvas {
+    flex-basis: 50%;
     width: 100%;
 
     &:not(.dragging) {
-      transition: height $kui-animation-duration-20 ease-out;
-    }
-
-    &.response {
-      flex-basis: 0;
-      flex-grow: 1;
+      transition: all $kui-animation-duration-20 ease-out;
     }
   }
 
   .resize-handle {
     $interactive-height: 5px;
     $visual-height: 1px;
-    cursor: row-resize;
     flex-shrink: 0;
     height: $interactive-height;
     margin-bottom: math.div(-($interactive-height - $visual-height), 2);
@@ -163,6 +266,30 @@ const { isDragging } = useDraggable(resizeHandle, {
     position: relative;
     user-select: none;
     width: 100%;
+
+    &.resizable {
+      cursor: row-resize;
+
+      &:after {
+        $height: 5px;
+        /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+        background-color: $kui-color-border;
+        content: '';
+        display: block;
+        height: $height;
+        left: 0;
+        position: absolute;
+        top: calc(50% - math.div($height, 2));
+        transform: scaleY(0);
+        transition: transform $kui-animation-duration-20 ease-out;
+        width: 100%;
+        z-index: 100;
+      }
+
+      &:hover:after {
+        transform: scaleY(1);
+      }
+    }
 
     &:before {
       $height: 1px;
@@ -175,25 +302,7 @@ const { isDragging } = useDraggable(resizeHandle, {
       position: absolute;
       top: calc(50% - math.div($height, 2));
       width: 100%;
-    }
-
-    &:after {
-      $height: 5px;
-      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-      background-color: $kui-color-border;
-      content: '';
-      display: block;
-      height: $height;
-      left: 0;
-      position: absolute;
-      top: calc(50% - math.div($height, 2));
-      transform: scaleY(0);
-      transition: transform $kui-animation-duration-20 ease-out;
-      width: 100%;
-    }
-
-    &:hover:after {
-      transform: scaleY(1);
+      z-index: 90;
     }
   }
 }

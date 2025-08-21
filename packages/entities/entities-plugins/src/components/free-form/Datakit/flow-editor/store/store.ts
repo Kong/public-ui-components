@@ -17,8 +17,8 @@ import type {
 } from '../../types'
 import { IMPLICIT_NODE_META_MAP, isImplicitName, isImplicitType } from '../node/node'
 import {
-  createId,
   clone,
+  createId,
   findFieldById,
   generateNodeName,
 } from './helpers'
@@ -27,12 +27,16 @@ import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
 
 type CreateEditorStoreOptions = {
-  onChange?: (config: { nodes: ConfigNode[] }) => void
+  /**
+   * Whether the editor is in editing mode (versus the creation mode)
+   */
+  isEditing?: boolean
+  onChange?: (configNodes: ConfigNode[], uiNodes: UINode[]) => void
 }
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
   function createState(configNodes: ConfigNode[], uiNodes: UINode[], options: CreateEditorStoreOptions = {}) {
-    const state = ref<EditorState>(initEditorState(configNodes, uiNodes))
+    const state = ref<EditorState>(initEditorState(configNodes, uiNodes, options.isEditing))
     const selection = ref<NodeId>()
     const modalOpen = ref(false)
     const propertiesPanelOpen = ref(false)
@@ -46,9 +50,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           return
         }
 
-        options.onChange?.({
-          nodes: toConfigNodes(),
-        })
+        options.onChange?.(toConfigNodes(), toUINodes())
       },
     })
     const newCreatedNodeId = ref<NodeId | null>(null)
@@ -499,8 +501,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       )
     }
 
-    function load(nextConfig: ConfigNode[], nextUI: UINode[]) {
-      state.value = initEditorState(nextConfig, nextUI)
+    function load(nextConfig: ConfigNode[], nextUI: UINode[], isEditing?: boolean) {
+      state.value = initEditorState(nextConfig, nextUI, isEditing)
       history.reset()
     }
 

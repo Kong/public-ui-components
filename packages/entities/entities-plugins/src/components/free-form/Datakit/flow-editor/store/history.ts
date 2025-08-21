@@ -32,7 +32,6 @@ export function useTaggedHistory<T>(
     options?.onHistoryChange?.(action, stateRef.value)
   }
 
-
   function commit(tag?: string) {
     if (!tag) {
       lastTag = undefined

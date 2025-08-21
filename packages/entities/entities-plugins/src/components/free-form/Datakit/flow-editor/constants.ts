@@ -1,10 +1,16 @@
-import type { AutoLayoutOptions } from './composables/useFlow'
+import type { LayoutOptions } from './composables/useFlow'
 
-export const AUTO_LAYOUT_DEFAULT_OPTIONS = {
+export const DEFAULT_LAYOUT_OPTIONS = {
   padding: 80,
-  nodeGap: 40,
-  edgeGap: 80,
-  rankGap: 80,
-} as const satisfies Pick<AutoLayoutOptions, 'padding' | 'nodeGap' | 'edgeGap' | 'rankGap'>
+  gaps: {
+    nodes: 40,
+    edges: 80,
+    ranks: 40,
+  },
+} as const satisfies Pick<LayoutOptions, 'padding' | 'gaps'>
+
+export const DEFAULT_VIEWPORT_WIDTH = 1600
+export const MAX_ZOOM_LEVEL = 1.2
+export const MIN_ZOOM_LEVEL = 0
 
 export const CONFIRM_MODAL_PROVIDE_KEY = Symbol('confirm-modal')

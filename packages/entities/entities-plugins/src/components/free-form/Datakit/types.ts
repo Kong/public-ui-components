@@ -98,6 +98,18 @@ export interface DatakitConfig {
 }
 
 /**
+ * UI data that stores layout data for Datakit nodes.
+ *
+ * This struct will be stored separately from the {@link DatakitConfig}.
+ */
+export interface DatakitUIData {
+  /**
+   * UI nodes that store data like input/output fields, positions, and other metadata.
+   */
+  nodes: UINode[]
+}
+
+/**
  * Runtime-reserved implicit node names that must not be reused.
  */
 export type ImplicitNodeName = 'request' | 'service_request' | 'service_response' | 'response'
@@ -433,6 +445,10 @@ export interface EdgeInstance extends EdgeData {
 export interface EditorState {
   nodes: NodeInstance[]
   edges: EdgeInstance[]
+  /**
+   * Whether the editor is in editing mode (versus the creation mode)
+   */
+  isEditing?: boolean
 }
 
 export interface MakeNodeInstancePayload {

@@ -28,14 +28,15 @@
         <FlowEditor
           v-if="finalEditorMode === 'flow'"
           :config="config"
-          :editing="props.isEditing"
-          @change="handleConfigChange"
+          :is-editing="isEditing"
+          :ui-data="uiData"
+          @change="handleFlowConfigChange"
         />
         <CodeEditor
           v-else-if="finalEditorMode === 'code'"
           class="code-editor"
           :config="config"
-          :editing="props.isEditing"
+          :editing="isEditing"
           @change="handleConfigChange"
           @error="handleCodeError"
         />
@@ -50,22 +51,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, ref } from 'vue'
-import { KSegmentedControl } from '@kong/kongponents'
-import { DesignIcon, CodeblockIcon } from '@kong/icons'
+import type { SegmentedControlOption } from '@kong/kongponents'
+import type { Component } from 'vue'
+
+import type { Props } from '../shared/layout/StandardLayout.vue'
+import type { DatakitConfig, DatakitUIData, EditorMode } from './types'
+
 import { createI18n } from '@kong-ui-public/i18n'
+import { CodeblockIcon, DesignIcon } from '@kong/icons'
+import { KSegmentedControl } from '@kong/kongponents'
+import { computed, inject, ref } from 'vue'
+
+import { FEATURE_FLAGS } from '../../../constants'
 import english from '../../../locales/en.json'
-import StandardLayout from '../shared/layout/StandardLayout.vue'
 import Form from '../shared/Form.vue'
-import FlowEditor from './flow-editor/FlowEditor.vue'
+import StandardLayout from '../shared/layout/StandardLayout.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
-import { FEATURE_FLAGS } from '../../../constants'
-
-import type { Component } from 'vue'
-import type { SegmentedControlOption } from '@kong/kongponents'
-import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { EditorMode } from './types'
+import FlowEditor from './flow-editor/FlowEditor.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -111,6 +114,7 @@ const description = computed(() => {
 // Shared
 
 const config = ref({ ...props.model.config })
+const uiData = ref<DatakitUIData>()
 
 // This change comes from freeform fields
 function handleFormChange(data: any) {
@@ -135,6 +139,11 @@ function handleConfigChange(newConfig: unknown) {
   // update the local config as the external form state isn't
   // flowing back down to the component
   config.value = newConfig
+}
+
+function handleFlowConfigChange(newConfig: DatakitConfig, newUIData?: DatakitUIData) {
+  handleConfigChange(newConfig)
+  uiData.value = newUIData
 }
 
 // Code editor
