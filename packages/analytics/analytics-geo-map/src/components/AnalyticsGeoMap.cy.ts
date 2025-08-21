@@ -1,18 +1,13 @@
 // Cypress component test spec file
 
 import AnalyticsGeoMap from './AnalyticsGeoMap.vue'
-import type { MapFeatureCollection } from '../types'
-import { defineComponent, h, type PropType } from 'vue'
+import { defineComponent, h } from 'vue'
 
 // Needs to be contained in an element that gives it height.
 const WrapperComponent = defineComponent({
   props: {
     countryMetrics: {
       type: Object,
-      required: true,
-    },
-    geoJsonData: {
-      type: Object as PropType<MapFeatureCollection>,
       required: true,
     },
   },
@@ -34,7 +29,8 @@ describe('<AnalyticsGeoMap />', () => {
     cy.mount(WrapperComponent, {
       props: {
         countryMetrics: {
-          AO: 1,
+          US: 1,
+          CA: 2,
         },
       },
     })

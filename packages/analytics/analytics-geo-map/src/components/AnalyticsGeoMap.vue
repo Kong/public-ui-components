@@ -33,7 +33,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
-import type { PropType } from 'vue'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
 import type { CountryISOA2, MapFeatureCollection, MetricUnits } from '../types'
 import type { Feature, MultiPolygon, Geometry, GeoJsonProperties, FeatureCollection } from 'geojson'
@@ -46,40 +45,24 @@ import lakes from '../ne_110m_lakes.json'
 import * as geobuf from 'geobuf'
 import Pbf from 'pbf'
 
-const props = defineProps({
-  countryMetrics: {
-    type: Object as PropType<Record<string, number>>,
-    required: true,
-  },
-  metricUnit: {
-    type: String as PropType<MetricUnits>,
-    required: true,
-  },
-  metric: {
-    type: String as PropType<ExploreAggregations>,
-    required: true,
-  },
-  withLegend: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  showTooltipValue: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  fitToCountry: {
-    type: String as PropType<CountryISOA2 | null>,
-    required: false,
-    default: null,
-  },
-  bounds: {
-    type: Object as PropType<LngLatBoundsLike>,
-    required: false,
-    default: () => null,
-  },
-})
+const {
+  countryMetrics,
+  metricUnit,
+  metric,
+  withLegend = true,
+  showTooltipValue = true,
+  fitToCountry = undefined,
+  bounds = undefined,
+} = defineProps<{
+  countryMetrics: Record<string, number>
+  metricUnit: MetricUnits
+  metric: ExploreAggregations
+  withLegend?: boolean
+  showTooltipValue?: boolean
+  fitToCountry?: CountryISOA2 | undefined
+  bounds?: LngLatBoundsLike | undefined
+}>()
+
 const map = ref<Map>()
 
 const { i18n } = composables.useI18n()
@@ -94,8 +77,8 @@ const layerPaint = computed(() => ({
       ['get', 'iso_a2_eh'],
       ['get', 'iso_a2'],
     ] as ExpressionSpecification,
-    ...(Object.keys(props.countryMetrics).length
-      ? Object.entries(props.countryMetrics).flatMap(([code, metric]) => [
+    ...(Object.keys(countryMetrics).length
+      ? Object.entries(countryMetrics).flatMap(([code, metric]) => [
         code,
         getColor(metric),
       ])
@@ -106,11 +89,11 @@ const layerPaint = computed(() => ({
 }))
 
 const showLegend = computed(() => {
-  return props.withLegend && Object.keys(props.countryMetrics).length > 0
+  return withLegend && Object.keys(countryMetrics).length > 0
 })
 
-const logMinMetric = computed(() => Math.log(Math.min(...Object.values(props.countryMetrics))))
-const logMaxMetric = computed(() => Math.log(Math.max(...Object.values(props.countryMetrics))))
+const logMinMetric = computed(() => Math.log(Math.min(...Object.values(countryMetrics))))
+const logMaxMetric = computed(() => Math.log(Math.max(...Object.values(countryMetrics))))
 
 
 const getColor = (metric: number) => {
@@ -127,7 +110,7 @@ const getColor = (metric: number) => {
 
 const legendTitle = computed(() => {
   // @ts-ignore - dynamic i18n key
-  return props.metric && i18n.t(`metrics.${props.metric}`) || ''
+  return metric && i18n.t(`metrics.${metric}`) || ''
 })
 
 const legendData = computed(() => {
@@ -235,8 +218,8 @@ const mapOptions = computed(() => {
     ],
   }
 
-  if (props.bounds) {
-    options.bounds = props.bounds
+  if (bounds) {
+    options.bounds = bounds
   }
 
   return options
@@ -288,10 +271,10 @@ onMounted(async () => {
         if (feature) {
           const { iso_a2, iso_a2_eh, admin } = feature.properties
           const lookup = iso_a2 === '-99' ? iso_a2_eh : iso_a2
-          const metric = props.countryMetrics[lookup]
+          const metric = countryMetrics[lookup]
           if (metric !== undefined) {
           // @ts-ignore - dynamic i18n key
-            const popupHtml = props.showTooltipValue ? `<strong>${admin}</strong>: ${approxNum(metric, { capital: true })} ${i18n.t(`metricUnits.${props.metricUnit}`, { plural: metric > 1 ? 's' : '' })}` : `<strong>${admin}</strong>`
+            const popupHtml = showTooltipValue ? `<strong>${admin}</strong>: ${approxNum(metric, { capital: true })} ${i18n.t(`metricUnits.${metricUnit}`, { plural: metric > 1 ? 's' : '' })}` : `<strong>${admin}</strong>`
             popup.setLngLat(e.lngLat).setHTML(popupHtml).addTo(map.value as Map)
           } else {
             popup.remove()
@@ -303,8 +286,8 @@ onMounted(async () => {
         popup.remove()
       })
 
-      if (props.fitToCountry) {
-        goToCountry(props.fitToCountry)
+      if (fitToCountry) {
+        goToCountry(fitToCountry)
       }
 
     })
@@ -321,7 +304,7 @@ onMounted(async () => {
   }
 })
 
-watch(() => props.countryMetrics, () => {
+watch(() => countryMetrics, () => {
   if (map.value && map.value.isStyleLoaded()) {
     if (map.value.getLayer('countries-layer')) {
       map.value.removeLayer('countries-layer')
@@ -344,7 +327,7 @@ watch(() => props.countryMetrics, () => {
   }
 })
 
-watch(() => props.fitToCountry, (newVal) => {
+watch(() => fitToCountry, (newVal) => {
   if (map.value && newVal) {
     goToCountry(newVal)
   } else {
