@@ -214,7 +214,6 @@ function handleMouseUp() {
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.24);
   max-width: 425px;
-  min-width: 250px;
   position: absolute;
   transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
   z-index: 999;

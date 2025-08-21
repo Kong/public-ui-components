@@ -1,10 +1,18 @@
 <template>
   <div class="zoom-actions-container">
     <div class="zoom-actions-heading">
-      <div class="subtitle">
-        {{ start }} - {{ end }}
-      </div>
+      <ZoomTimerange
+        :end="newTimeRange.end"
+        :start="newTimeRange.start"
+      />
+      <CloseIcon
+        class="zoom-actions-close-icon"
+        :color="KUI_COLOR_TEXT_NEUTRAL"
+        :size="KUI_ICON_SIZE_30"
+        @click="$emit('onAction')"
+      />
     </div>
+    <div class="zoom-actions-heading-divider" />
     <div
       v-for="option in zoomActionItems"
       :key="option.label"
@@ -27,19 +35,14 @@
         {{ option.label }}
       </div>
     </div>
-    <div
-      class="zoom-action-item"
-      @click="$emit('onAction')"
-    >
-      {{ i18n.t('zoom_action_items.cancel') }}
-    </div>
   </div>
 </template>
 <script setup lang="ts">
-import { formatTime, type AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { ZoomActionItem } from '../types'
-import composables from '../composables'
-import { computed } from 'vue'
+import ZoomTimerange from './ZoomTimerange.vue'
+import { CloseIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 
 const props = defineProps<{
   zoomActionItems: ZoomActionItem[]
@@ -50,10 +53,6 @@ const emit = defineEmits<{
   (e: 'onAction'): void
 }>()
 
-const { i18n } = composables.useI18n()
-const start = computed(() => formatTime(props.newTimeRange.start.getTime()))
-const end = computed(() => formatTime(props.newTimeRange.end.getTime()))
-
 const handleAction = (option: ZoomActionItem) => {
   if (option.action) {
     option.action(props.newTimeRange)
@@ -63,7 +62,6 @@ const handleAction = (option: ZoomActionItem) => {
 </script>
 
 <style scoped lang="scss">
-@use "../styles/globals.scss" as *;
 
 .zoom-actions-container {
   background-color: var(--kui-color-background, $kui-color-background);
@@ -72,13 +70,26 @@ const handleAction = (option: ZoomActionItem) => {
   flex-direction: column;
 
   .zoom-actions-heading {
-    @include tooltipTitle;
+    align-items: top;
+    display: flex;
+
+    .zoom-actions-close-icon {
+      cursor: pointer;
+      margin-right: var(--kui-space-20, $kui-space-20);
+      margin-top: var(--kui-space-20, $kui-space-20);
+    }
+  }
+
+  .zoom-actions-heading-divider {
+    border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    margin: 0 var(--kui-space-20, $kui-space-20);
   }
 
   .zoom-action-item {
     color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
     cursor: pointer;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
+    margin: 0 var(--kui-space-20, $kui-space-20);
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
     transition: background-color 0.2s;
 
