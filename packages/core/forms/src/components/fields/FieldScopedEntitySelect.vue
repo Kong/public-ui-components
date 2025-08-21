@@ -4,10 +4,10 @@
     :disabled="fieldDisabled"
     :dom-id="domId"
     :empty-message="message"
-    :loading="loading"
+    :loading="selectedItemLoading || loading"
     :placeholder="placeholder"
     :readonly="disabled"
-    :suggestions="dedupedSuggestions"
+    :suggestions="suggestions"
     @change="$emit('change', $event)"
     @query-change="onQueryChange"
   >
@@ -34,19 +34,38 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { debounce } from 'lodash-es'
 import AutoSuggest from './AutoSuggest.vue'
 import { isValidUuid } from '../../utils/isValidUuid'
 import { defaultItemTransformer } from '../../utils/autoSuggest'
 import english from '../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
+import { isAxiosError } from 'axios'
 
 import type { SelectItem } from '@kong/kongponents'
 import type { EntityData, AutoSuggestInjection, AutoSuggestItemTransformer } from '../../types/form-autosuggest'
 
 const DEBOUNCE_DELAY = 500
 const PEEK_SIZE = 50
+
+/**
+ * How this component works
+ *   This component utilizes `KSelect` with prefetch suggestions to improve user experience
+ *   With `fieldDisabled` as a flag for controlling whether requests should be dispatched this was controlled by the upstream host apps,
+ *     most likely permissions to list entities.
+ *   By default when mounting the component, it will prefetch 50 records against the entity type `route/consumer/service/consumer_group`
+ *     where `consumer_group` cannot be fuzzy queried with keywords which can only perform a client filtering with keywords.
+ *   After data was fetched, the suggestions will be constructed using the `transformItem` function. When `selectedItem` is passed, in order to
+ *     allow the option to be selected, it must be appended to the suggestions if the current suggestions list does not contain `selectedItem`
+ *   When querying, if the data was exhausted when prefetching, the flag `dataDrainedFromPeeking` will be marked as `true` which indicates the
+ *     upcoming querying will be delegated to inline search, otherwise, it performs a `fuzzy` search with `1000` items size capacity.
+ *
+ *  A noticeable fact about the component KSelect, when the component has a selected item, then user opens the select dropdown, the component
+ *   will set `query` to `''` where triggers a `query-change` event, thus the handler in our component `onQueryChange` will be triggered, when
+ *   this happens, we tend to show the `prefetched` data when this happens, when user types, we introduces `debounce` for
+ *   the query input to avoid excessive API calls.
+ */
 
 const {
   getAll,
@@ -56,9 +75,8 @@ const {
   fields = [],
   allowUuidSearch = false,
   id,
-  initialItem,
+  selectedItem,
   entity,
-  initialItemSelected,
   placeholder,
   domId,
   disabled,
@@ -68,7 +86,8 @@ const {
   allowUuidSearch?: boolean
   placeholder?: string
   fields: string[]
-  initialItem?: SelectItem<string>
+  selectedItem?: SelectItem<string>
+  selectedItemLoading?: boolean
   initialItemSelected?: boolean
   domId: string
   id: string
@@ -88,7 +107,7 @@ const dataDrainedFromPeeking = ref(false)
 const query = ref('')
 const suggestions = ref<Array<SelectItem<string>>>([])
 const rawData = ref<EntityData[]>([])
-const peekDataCache = ref<Array<SelectItem<string>>>([])
+const recentCreatedSuggestions = ref<Array<SelectItem<string>>>([])
 const { t } = createI18n('en-us', english)
 
 const axiosAbortController = ref<AbortController | null>(null)
@@ -112,6 +131,12 @@ const fetcher = async (executor: () => Promise<EntityData[]>, signal?: AbortSign
       return
     }
     suggestions.value = []
+    // When user use exact search with missed hit, we should be returning an empty list
+    // rather than reporting `status code: 404, not found`
+    if (isAxiosError(e) && e.status === 404) {
+      console.warn('unable to search with UUID', query.value, 'for entity type', entity)
+      return
+    }
     message.value = (e as Error).message
   } finally {
     clearTimeout(timeoutHandle!)
@@ -119,10 +144,12 @@ const fetcher = async (executor: () => Promise<EntityData[]>, signal?: AbortSign
   }
 }
 
-const onQueryChange = debounce((searchTerm: string = '') => {
+const onQueryChange = debounce((searchTerm: string) => {
+  searchTerm = searchTerm || ''
   query.value = searchTerm
 
-  if (!searchTerm.trim()) {
+  if (!searchTerm.trim() && !dataDrainedFromPeeking.value) {
+    suggestions.value = buildSuggestions(recentCreatedSuggestions.value)
     return
   }
 
@@ -134,20 +161,13 @@ const onQueryChange = debounce((searchTerm: string = '') => {
   const newAbortController = new AbortController()
   axiosAbortController.value = newAbortController
 
+  // Perform inline search
   if (dataDrainedFromPeeking.value) {
-    if (isValidUuid(searchTerm) && allowUuidSearch) {
-      inlineSearchForUuid(searchTerm)
-    } else {
-      inlineSearch(searchTerm)
-    }
+    inlineSearch(searchTerm)
     return
   }
 
-  if (isValidUuid(searchTerm) && allowUuidSearch) {
-    fetcher(async () => await fetchExact(searchTerm))
-  } else {
-    fetcher(async () => await exhaustiveSearch(searchTerm, newAbortController.signal), newAbortController.signal)
-  }
+  asyncSearch(searchTerm, newAbortController)
 }, DEBOUNCE_DELAY, { leading: true })
 
 const exhaustiveSearch = async (query: string, signal?: AbortSignal) => {
@@ -163,7 +183,7 @@ const peek = async () => {
   }
 
   rawData.value = data
-  peekDataCache.value = data.map((item) => {
+  recentCreatedSuggestions.value = data.map((item) => {
     return {
       ...transformItem(item),
       group: t('fields.auto_suggest.recently_created', { entity }),
@@ -174,46 +194,67 @@ const peek = async () => {
 }
 
 const fetchExact = async (id: string) => {
-  const { data } = await getOne(id)
+  const data = await getOne(id)
   return [data]
 }
 
-const inlineSearch = (pattern: string) => {
-  if (!pattern.trim()) {
-    suggestions.value = rawData.value.map(transformItem)
+const asyncSearch = (searchTerm: string, newAbortController: AbortController) => {
+  if (isValidUuid(searchTerm) && allowUuidSearch) {
+    fetcher(async () => await fetchExact(searchTerm))
+  } else {
+    fetcher(async () => await exhaustiveSearch(searchTerm, newAbortController.signal), newAbortController.signal)
   }
+}
 
-  suggestions.value = rawData.value.filter((entity) => {
-    return fields.some((field) => {
-      return (entity[field] || '').includes(pattern)
+const inlineSearchWithPattern = (pattern: string) => {
+  let options: Array<SelectItem<string>> = []
+
+  options = buildSuggestions(recentCreatedSuggestions.value)
+
+  if (!pattern?.trim()) {
+    suggestions.value = options
+  } else {
+    suggestions.value = options.filter((option) => {
+      return fields.some((field) => (option[field] || '').includes(pattern))
     })
-  }).map(transformItem)
+  }
+}
+
+const buildSuggestions = (suggestions: Array<SelectItem<string>>) => {
+  if (selectedItem) {
+    // If cached suggestions include the selected item, dedupe the list
+    return suggestions.some((suggestion) => {
+      return suggestion.value === selectedItem.value
+    })
+      ? suggestions
+      : [selectedItem, ...suggestions] // prepending the item into the list to maintain selected state
+  } else {
+    return suggestions
+  }
 }
 
 const inlineSearchForUuid = (uuid: string) => {
-  suggestions.value = rawData.value.filter((entity) => entity.id === uuid).map(transformItem)
+  suggestions.value = recentCreatedSuggestions.value.filter((entity) => entity.id === uuid)
 }
 
-const dedupedSuggestions = computed(() => {
-  const searchString = query.value.trim()
-  const suggestionsCandidate = searchString ? suggestions.value : peekDataCache.value
-
-  if (initialItemSelected) {
-    if (suggestionsCandidate.some((item) => item.value === initialItem?.value)) {
-      return suggestionsCandidate
-    } else {
-      if (initialItem?.value.includes(searchString)) {
-        return [initialItem!, ...suggestionsCandidate]
-      }
-
-      return suggestionsCandidate
-    }
+const inlineSearch = (searchTerm: string) => {
+  if (isValidUuid(searchTerm) && allowUuidSearch) {
+    inlineSearchForUuid(searchTerm)
+  } else {
+    inlineSearchWithPattern(searchTerm)
   }
-
-  return suggestionsCandidate
-})
+}
 
 onMounted(async () => {
   await fetcher(peek)
+  // Watch for selectedItem change if there were any selected.
+  const unwatch = watch(() => selectedItem, (val) => {
+    if (val) {
+      suggestions.value = buildSuggestions(recentCreatedSuggestions.value)
+    }
+    unwatch()
+  })
+
+  suggestions.value = buildSuggestions(recentCreatedSuggestions.value)
 })
 </script>

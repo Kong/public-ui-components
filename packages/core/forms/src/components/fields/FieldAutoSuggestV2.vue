@@ -16,9 +16,10 @@
       :get-all="getAll"
       :get-one="getOne"
       :get-partial="getPartial"
-      :initial-item="initialItem"
       :initial-item-selected="initialValueSelected"
       :placeholder="loading ? t('fields.auto_suggest.loading') : schema.placeholder"
+      :selected-item="selectedItem"
+      :selected-item-loading="loading"
       :transform-item="transformItem"
       @change="onSelected"
     >
@@ -85,6 +86,7 @@ export default {
       message: 'Type something to search',
       items: [],
       initialItem: null,
+      selectedItem: null,
       loading: false,
       dataDrained: false,
     }
@@ -149,6 +151,7 @@ export default {
 
       if (presetEntity) {
         this.initialItem = this.transformItem(presetEntity)
+        this.selectedItem = this.initialItem
       }
       // putting this here prevents the select value from being 'select' -> 'actual value' after the loading state gets flashed
       this.loading = false
@@ -163,18 +166,9 @@ export default {
       return this[FORMS_API_KEY].peek(this.entity, size)
     },
     async getAll(query, signal) {
-      const items = []
-      const promises = []
-      const filteredIds = new Set()
-      // Search on fields with backend filtering support
-      promises.push(...this.inputFieldsWithoutId.map(async (field) => {
-        const result = await this.fetchSuggestions(query, field, signal)
-        items.push(...this.dedupeSuggestions(result, filteredIds))
-      }))
+      const result = await this.fetchSuggestions(query, 'name', signal)
 
-      await Promise.all(promises)
-
-      return items
+      return result
     },
     async getOne(id) {
       if (!this[FORMS_API_KEY]) {
@@ -220,7 +214,7 @@ export default {
         return []
       }
 
-      const fetcher = this.entity === 'consumer_group' ? this[FORMS_API_KEY].getAll : this[FORMS_API_KEY].getAllV2
+      const fetcher = this[FORMS_API_KEY].getAllV2
 
       const { data } = await fetcher(this.entity, {
         size: requestResultsLimit,
@@ -234,11 +228,10 @@ export default {
       return this.fetchUntilLimit({ [field]: query }, signal)
     },
 
-
     getSuggestionLabel(item) {
       const labelKey = this.schema?.labelField || 'id'
 
-      return labelKey && item ? item[labelKey] : ''
+      return (labelKey && item ? item[labelKey] : '') || '–'
     },
 
     updateModel(value) {
@@ -248,6 +241,7 @@ export default {
 
     onSelected(item) {
       this.idValue = item && item.id
+      this.selectedItem = item // This is used for matching value not in the list
       this.updateModel(this.getReturnValue(item || {}))
     },
 
@@ -271,8 +265,8 @@ export default {
 
   .autosuggest__results_message {
     color: rgba(0, 0, 0, 0.7);
-    font-size: 14px;
-    padding: 8px 0;
+    font-size: $kui-font-size-30;;
+    padding: $kui-space-40 0;
     text-align: center;
   }
 

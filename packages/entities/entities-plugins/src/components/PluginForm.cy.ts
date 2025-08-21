@@ -1654,7 +1654,6 @@ describe('<PluginForm />', () => {
       const pluginType = 'acl'
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
       interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', credential: true, entityId: scopedConsumer.item.id, id: aclCredential1.id })
-      // const stubbedAliases = interceptKonnectOtherScopedEntities(pluginType)
 
       cy.mount(PluginForm, {
         props: {

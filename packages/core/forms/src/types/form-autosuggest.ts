@@ -15,7 +15,7 @@ export interface EntityResponse {
 export interface AutoSuggestInjection {
   getAll: (query: string, signal?: AbortSignal) => Promise<EntityData[]>
   getPartial: (size: number) => Promise<AxiosResponse<EntityResponse>>
-  getOne: (id: string) => Promise<AxiosResponse<EntityData>>
+  getOne: (id: string) => Promise<EntityData>
 }
 
 export type AutoSuggestItemTransformer = (item: EntityData) => SelectItem<string>
