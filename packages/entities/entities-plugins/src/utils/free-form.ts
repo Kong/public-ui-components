@@ -6,6 +6,10 @@ const mapping = {
   },
   'datakit': 'DatakitForm',
   'ai-mcp': 'AIMcpForm',
+  'jwt-signer': {
+    experimental: true,
+    component: 'JwtSignerForm',
+  },
 } as const
 
 export type FreeFormName = keyof typeof mapping
