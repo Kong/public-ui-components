@@ -94,6 +94,8 @@ const fieldRenderer = computed(() => {
       return KeyValueField
     case 'json':
       return JsonField
+    case 'foreign':
+      return StringField // todo: implement ForeignField
     default:
       return undefined
   }

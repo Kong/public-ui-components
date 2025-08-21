@@ -108,6 +108,11 @@ export interface JsonFieldSchema extends FieldSchema {
   json_schema: any // Todo: Define a more specific type for JSON schema
 }
 
+export interface ForeignFieldSchema extends FieldSchema {
+  type: 'foreign'
+  reference: string
+}
+
 export type UnionFieldSchema = StringFieldSchema
   | NumberLikeFieldSchema
   | BooleanFieldSchema
@@ -116,6 +121,7 @@ export type UnionFieldSchema = StringFieldSchema
   | MapFieldSchema
   | RecordFieldSchema
   | JsonFieldSchema
+  | ForeignFieldSchema
 
 export type NamedFieldSchema = { [name: string]: UnionFieldSchema }
 
