@@ -328,9 +328,18 @@ const isTimeSeriesChart = computed(() => {
 })
 
 const isAgedOutQuery = computed(() => {
-  const savedGranularity = props.definition.query.granularity
-  const queryGranularity = msToGranularity(chartData.value?.meta.granularity_ms || 0)
-  return isTimeSeriesChart.value && savedGranularity !== queryGranularity
+  if (!isTimeSeriesChart.value || !props.queryReady) {
+    return false
+  }
+
+  const savedGranularity = props.definition?.query?.granularity
+  const queryGranularity = msToGranularity(chartData.value?.meta.granularity_ms || undefined)
+
+  if (!savedGranularity || !queryGranularity) {
+    return false
+  }
+
+  return savedGranularity !== queryGranularity
 })
 
 const agedOutWarning = computed(() => {
