@@ -71,7 +71,7 @@
               :index="index"
               name="item"
             />
-            <TagField
+            <StringArrayField
               v-if="subSchema.type === 'array' && subSchema.elements.type === 'string'"
               :help="t('plugins.free-form.tag_helper')"
               :name="String(index)"
@@ -156,7 +156,7 @@ import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
 import type { ArrayLikeFieldSchema } from '../../../types/plugins/form-schema'
-import TagField from './TagField.vue'
+import StringArrayField from './StringArrayField.vue'
 
 const props = defineProps<{
   name: string
