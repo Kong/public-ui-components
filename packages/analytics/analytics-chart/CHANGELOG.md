@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.10...@kong-ui-public/analytics-chart@10.0.11) (2025-08-22)
+
+
+### Bug Fixes
+
+* add back no-select css when dragging ([#2377](https://github.com/Kong/public-ui-components/issues/2377)) ([bea4779](https://github.com/Kong/public-ui-components/commit/bea477970000f8e6e6cc67fd73eefb38baf068bd))
+
+
+
+
+
 ## [10.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.9...@kong-ui-public/analytics-chart@10.0.10) (2025-08-21)
 
 
