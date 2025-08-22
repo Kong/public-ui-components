@@ -320,6 +320,27 @@ export function assertFormRendering(schema: FormSchema, options?: {
       })
   }
 
+  const assertStringArrayOfArrayField = ({
+    fieldKey,
+  }: AssertFieldOption<ArrayFieldSchema>) => {
+    debugger
+    cy.getTestId(`ff-array-basic-container-${fieldKey}`)
+      .find('.ff-array-field-item')
+      .its('length')
+      .then((itemCount) => {
+        const latestIndex = itemCount - 1
+        // ff-tag-array_of_array.0
+        cy.getTestId(`ff-tag-${fieldKey}.${latestIndex}`).should('exist')
+
+        // Check the 'delete' button
+        cy.getTestId(`ff-array-remove-item-btn-${fieldKey}.${latestIndex}`)
+          .should('exist')
+          .click()
+
+        cy.getTestId(`ff-tag-${fieldKey}.${latestIndex}`).should('not.exist')
+      })
+  }
+
   const assertArrayField = ({
     fieldKey,
     fieldSchema,
@@ -344,28 +365,35 @@ export function assertFormRendering(schema: FormSchema, options?: {
       .click()
     cy.getTestId(`ff-array-basic-container-${fieldKey}`).should('exist')
 
-
-    cy.getTestId(`ff-array-basic-container-${fieldKey}`)
-      .find('.ff-array-field-item')
-      .its('length')
-      .then((itemCount) => {
-        const latestIndex = itemCount - 1
-        cy.getTestId(`ff-array-item-${fieldKey}.${latestIndex}`).should('exist')
-
-        // Assert child fields
-        assertField({
-          fieldSchema: fieldSchema.elements,
-          fieldKey: `${fieldKey}.${latestIndex}`,
-          labelOption: { hide: true }, // Child fields of array do not need labels
-        })
-
-        // Check the 'delete' button
-        cy.getTestId(`ff-array-remove-item-btn-${fieldKey}.${latestIndex}`)
-          .should('exist')
-          .click()
-
-        cy.getTestId(`ff-array-item-${fieldKey}.${latestIndex}`).should('not.exist')
+    if (isStringArrayOfArray(fieldSchema)) {
+      assertStringArrayOfArrayField({
+        fieldKey,
+        fieldSchema,
+        labelOption,
       })
+    } else {
+      cy.getTestId(`ff-array-basic-container-${fieldKey}`)
+        .find('.ff-array-field-item')
+        .its('length')
+        .then((itemCount) => {
+          const latestIndex = itemCount - 1
+          cy.getTestId(`ff-array-item-${fieldKey}.${latestIndex}`).should('exist')
+
+          // Assert child fields
+          assertField({
+            fieldSchema: fieldSchema.elements,
+            fieldKey: `${fieldKey}.${latestIndex}`,
+            labelOption: { hide: true }, // Child fields of array do not need labels
+          })
+
+          // Check the 'delete' button
+          cy.getTestId(`ff-array-remove-item-btn-${fieldKey}.${latestIndex}`)
+            .should('exist')
+            .click()
+
+          cy.getTestId(`ff-array-item-${fieldKey}.${latestIndex}`).should('not.exist')
+        })
+    }
   }
 
   const assertTagField: AssertFieldFn<SetFieldSchema> = ({
@@ -435,4 +463,10 @@ export function assertFormRendering(schema: FormSchema, options?: {
   }
 
   assertFields(schema.fields)
+}
+
+function isStringArrayOfArray(fieldSchema: UnionFieldSchema) {
+  return fieldSchema.type === 'array'
+    && fieldSchema.elements.type === 'array'
+    && fieldSchema.elements.elements.type === 'string'
 }

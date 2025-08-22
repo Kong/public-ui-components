@@ -288,6 +288,18 @@ export function buildArrayFieldCases(): Array<{ [name: string]: ArrayLikeFieldSc
     //     description: 'An array of records',
     //   },
     // },
+    {
+      array_of_array: {
+        type: 'array',
+        elements: {
+          type: 'array',
+          elements: {
+            type: 'string',
+          },
+        },
+        default: [['foo']],
+      },
+    },
   ]
 }
 
