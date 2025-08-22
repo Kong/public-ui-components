@@ -179,7 +179,6 @@
     <div class="chart-container">
       <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
       <AnalyticsChart
-        :allow-csv-export="true"
         :chart-data="(exploreResult)"
         :chart-options="analyticsChartOptions"
         :legend-position="legendPosition"
