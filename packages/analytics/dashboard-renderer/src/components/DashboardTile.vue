@@ -192,6 +192,7 @@ const isTitleTruncated = ref(false)
 const exploreBaseUrl = ref('')
 const requestsBaseUrl = ref('')
 const requestsLinkZoomActions = ref<ExternalLink | undefined>(undefined)
+const loadingChartData = ref(true)
 
 onMounted(async () => {
   // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
@@ -201,9 +202,12 @@ onMounted(async () => {
 
 watch(() => props.definition, async () => {
   await nextTick()
+
   if (titleRef.value) {
     isTitleTruncated.value = titleRef.value.scrollWidth > titleRef.value.clientWidth
   }
+
+  loadingChartData.value = true
 }, { immediate: true, deep: true })
 
 const exploreLink = computed(() => {
@@ -328,18 +332,17 @@ const isTimeSeriesChart = computed(() => {
 })
 
 const isAgedOutQuery = computed(() => {
-  if (!isTimeSeriesChart.value || !props.queryReady) {
+  if (!isTimeSeriesChart.value || !props.queryReady || loadingChartData.value) {
     return false
   }
 
   const savedGranularity = props.definition?.query?.granularity
-  const queryGranularity = msToGranularity(chartData.value?.meta.granularity_ms || undefined)
 
-  if (!savedGranularity || !queryGranularity) {
+  if (!savedGranularity || !chartDataGranularity.value) {
     return false
   }
 
-  return savedGranularity !== queryGranularity
+  return savedGranularity !== chartDataGranularity.value
 })
 
 const agedOutWarning = computed(() => {
@@ -384,6 +387,7 @@ const removeTile = () => {
 
 const onChartData = (data: ExploreResultV4) => {
   chartData.value = data
+  loadingChartData.value = false
 }
 
 const setExportModalVisibility = (val: boolean) => {
