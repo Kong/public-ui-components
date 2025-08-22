@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.17...@kong-ui-public/dashboard-renderer@7.0.18) (2025-08-22)
+
+
+### Bug Fixes
+
+* **analytics:** fix uses of `allow_csv_export` ([#2379](https://github.com/Kong/public-ui-components/issues/2379)) ([44ab8e7](https://github.com/Kong/public-ui-components/commit/44ab8e79bcf0d92624cbb9c603d6562026b83fa9))
+
+
+
+
+
 ## [7.0.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.16...@kong-ui-public/dashboard-renderer@7.0.17) (2025-08-22)
 
 
