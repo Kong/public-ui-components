@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.3.8...@kong-ui-public/analytics-geo-map@0.4.0) (2025-08-22)
+
+
+### Features
+
+* **analyticsgeomap:** local geo data compressed ([#1994](https://github.com/Kong/public-ui-components/issues/1994)) ([f495ff8](https://github.com/Kong/public-ui-components/commit/f495ff8033558dbf230a25e25764b7aec9650e79))
+
+
+### BREAKING CHANGES
+
+* **analyticsgeomap:** geometry data prop removed
+
+* fix: refactor props
+
+* fix: also use ISO_A2 as a lookup key for country codes
+
+
+
+
+
 ## [0.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.3.7...@kong-ui-public/analytics-geo-map@0.3.8) (2025-08-20)
 
 
