@@ -72,10 +72,14 @@ const layerPaint = computed(() => ({
   'fill-color': [
     'match',
     [
-      'case',
-      ['==', ['get', 'iso_a2'], '-99'],
-      ['get', 'iso_a2_eh'],
-      ['get', 'iso_a2'],
+      'coalesce',
+      [
+        'case',
+        ['==', ['get', 'iso_a2'], '-99'],
+        ['get', 'iso_a2_eh'],
+        ['get', 'iso_a2'],
+      ] as ExpressionSpecification,
+      ['get', 'ISO_A2'],
     ] as ExpressionSpecification,
     ...(Object.keys(countryMetrics).length
       ? Object.entries(countryMetrics).flatMap(([code, metric]) => [
@@ -183,6 +187,9 @@ const goToCountry = (countryCode: CountryISOA2) => {
   }
 
   const found: Feature<Geometry, GeoJsonProperties> | undefined = geoJsonData.value?.features.find((f: Feature) => {
+    if (f.properties?.ISO_A2) {
+      return f.properties?.ISO_A2 === countryCode
+    }
     return f.properties?.iso_a2 === '-99' ?
       f.properties?.iso_a2_eh === countryCode :
       f.properties?.iso_a2 === countryCode
@@ -269,8 +276,8 @@ onMounted(async () => {
       map.value?.on('mousemove', 'countries-layer', (e) => {
         const feature = e.features?.[0]
         if (feature) {
-          const { iso_a2, iso_a2_eh, admin } = feature.properties
-          const lookup = iso_a2 === '-99' ? iso_a2_eh : iso_a2
+          const { iso_a2, iso_a2_eh, ISO_A2, admin } = feature.properties
+          const lookup = ISO_A2 ?? iso_a2 === '-99' ? iso_a2_eh : iso_a2
           const metric = countryMetrics[lookup]
           if (metric !== undefined) {
           // @ts-ignore - dynamic i18n key
