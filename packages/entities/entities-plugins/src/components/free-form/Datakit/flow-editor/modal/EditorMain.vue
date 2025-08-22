@@ -31,7 +31,7 @@ import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
 
 import english from '../../../../../locales/en.json'
-import FlowPanels from './EditorCanvas.vue'
+import FlowPanels from '../FlowPanels.vue'
 import { useEditorStore } from '../store/store'
 
 import '@vue-flow/controls/dist/style.css'
