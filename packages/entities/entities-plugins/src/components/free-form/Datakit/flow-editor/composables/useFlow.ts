@@ -1,5 +1,5 @@
 import type { Node as DagreNode } from '@dagrejs/dagre'
-import type { Edge, FitViewParams, Node } from '@vue-flow/core'
+import type { Connection, Edge, FitViewParams, Node } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
 import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
@@ -131,6 +131,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       onConnect,
       onNodesChange,
       onEdgesChange,
+      onEdgeUpdate,
       deleteKeyCode,
     } = vueFlowStore
 
@@ -195,6 +196,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             targetHandle: edge.targetField ? `inputs@${edge.targetField}` : 'input',
             markerEnd: MarkerType.ArrowClosed,
             data: edge,
+            updatable: !readonly,
           }
         }),
     )
@@ -217,7 +219,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       console.debug('[useFlow] onEdgeClick', toRaw(edge))
     })
 
-    onConnect(async ({ source, sourceHandle, target, targetHandle }) => {
+    async function handleConnect({ source, sourceHandle, target, targetHandle }: Connection) {
       console.debug('[useFlow] onConnect', { source, sourceHandle, target, targetHandle })
       if (!sourceHandle || !targetHandle) return
 
@@ -320,7 +322,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           appearance: 'danger',
         })
       }
-    })
+    }
+
+    onConnect(handleConnect)
 
     // Only triggered by canvas-originated changes
     onNodesChange((changes) => {
@@ -354,6 +358,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         }
       })
     })
+
+    onEdgeUpdate(({ connection }) => handleConnect(connection))
 
     function autoLayout() {
       let leftNode: Node<NodeInstance> | undefined
