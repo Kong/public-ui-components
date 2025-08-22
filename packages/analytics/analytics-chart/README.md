@@ -35,11 +35,6 @@ yarn add @kong-ui-public/analytics-chart
 
 ### `Props`
 
-#### `allowCsvExport`
-
-- type: boolean
-- required: `false`
-
 #### `chartData`
 
 - type: [AnalyticsExploreResult](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/analytics-data.ts#L77)
