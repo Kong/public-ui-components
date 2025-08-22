@@ -163,6 +163,7 @@ defineExpose({
 
   .examples-content {
     display: flex;
+    flex-wrap: wrap;
     gap: $kui-space-40;
   }
 
