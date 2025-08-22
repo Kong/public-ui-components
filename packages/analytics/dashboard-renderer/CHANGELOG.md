@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.12...@kong-ui-public/dashboard-renderer@7.0.13) (2025-08-22)
+
+
+### Bug Fixes
+
+* **dashboardrenderer:** disable jump to request for llm datasource [MA-4246] ([#2368](https://github.com/Kong/public-ui-components/issues/2368)) ([76e1954](https://github.com/Kong/public-ui-components/commit/76e19545c44e6691a4013da41d12f23caf499444))
+
+
+
+
+
 ## [7.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.11...@kong-ui-public/dashboard-renderer@7.0.12) (2025-08-21)
 
 
