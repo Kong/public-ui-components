@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.12...@kong-ui-public/analytics-chart@10.0.13) (2025-08-22)
+
+
+### Bug Fixes
+
+* **analytics:** fix uses of `allow_csv_export` ([#2379](https://github.com/Kong/public-ui-components/issues/2379)) ([44ab8e7](https://github.com/Kong/public-ui-components/commit/44ab8e79bcf0d92624cbb9c603d6562026b83fa9))
+
+
+
+
+
 ## [10.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.11...@kong-ui-public/analytics-chart@10.0.12) (2025-08-22)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
