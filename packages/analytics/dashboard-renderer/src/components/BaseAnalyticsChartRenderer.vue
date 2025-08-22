@@ -9,12 +9,10 @@
   >
     <div class="analytics-chart">
       <AnalyticsChart
-        :allow-csv-export="chartOptions.allow_csv_export"
         :chart-data="data"
         :chart-options="options"
         legend-position="bottom"
         :requests-link="requestsLink"
-        :show-menu="context.editable"
         :synthetics-data-key="chartOptions.synthetics_data_key"
         :timeseries-zoom="timeseriesZoom"
         tooltip-title=""

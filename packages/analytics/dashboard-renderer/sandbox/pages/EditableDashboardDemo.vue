@@ -78,18 +78,18 @@ const context = computed<DashboardRendererContext>(() => ({
 }))
 
 const dashboardConfig = ref <DashboardConfig>({
-  tileHeight: 167,
+  tile_height: 167,
   tiles: [
     {
+      type: 'chart',
       id: crypto.randomUUID(),
       definition: {
         chart: {
           type: 'horizontal_bar',
-          chartTitle: 'This is a really long title lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-          allowCsvExport: true,
+          chart_title: 'This is a really long title lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
           dimensions: ['route'],
           metrics: ['request_count'],
           time_range: {
@@ -110,11 +110,12 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       id: crypto.randomUUID(),
       definition: {
         chart: {
           type: 'timeseries_line',
-          chartTitle: 'Timeseries line chart of mock data',
+          chart_title: 'Timeseries line chart of mock data',
           threshold: {
             'request_count': 3200,
           } as Record<ExploreAggregations, number>,
@@ -141,11 +142,12 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       id: crypto.randomUUID(),
       definition: {
         chart: {
           type: 'timeseries_bar',
-          chartTitle: 'Timeseries bar chart of mock data',
+          chart_title: 'Timeseries bar chart of mock data',
           stacked: true,
         },
         query: {
@@ -177,6 +179,7 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
     vertical_bar: 'horizontal_bar',
     gauge: 'gauge',
     golden_signals: 'golden_signals',
+    single_value: 'single_value',
     slottable: 'slottable',
     top_n: 'top_n',
     donut: 'donut',
@@ -194,7 +197,7 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
           chart: {
             ...t.definition.chart,
             type: newType as DashboardTileType,
-            chartTitle: `This is a ${newType} chart`,
+            chart_title: `This is a ${newType} chart`,
           } as any,
         },
       }
@@ -213,11 +216,12 @@ let last = 0
 const addTile = () => {
   last = (last + 1) % 2
   dashboardConfig.value.tiles.push({
+    type: 'chart',
     id: crypto.randomUUID(),
     definition: {
       chart: {
         type: ['timeseries_line', 'timeseries_bar'][last] as any,
-        chartTitle: 'Timeseries line chart of mock data',
+        chart_title: 'Timeseries line chart of mock data',
         threshold: {
           'request_count': 3200,
         } as Record<ExploreAggregations, number>,

@@ -74,7 +74,7 @@
               :item="{ label: i18n.t('jumpToRequests'), to: requestsLink }"
             />
             <KDropdownItem
-              v-if="!('allowCsvExport' in definition.chart) || definition.chart.allowCsvExport"
+              v-if="!('allow_csv_export' in definition.chart) || definition.chart.allow_csv_export"
               class="chart-export-button"
               :data-testid="`chart-csv-export-${tileId}`"
               @click="exportCsv()"

@@ -128,7 +128,6 @@ const emit = defineEmits<{
 }>()
 
 const props = withDefaults(defineProps<ChartProps>(), {
-  allowCsvExport: false,
   tooltipTitle: '',
   emptyStateTitle: '',
   emptyStateDescription: '',
