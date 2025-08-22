@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.70.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.69.1...@kong-ui-public/entities-plugins@9.70.0) (2025-08-22)
+
+
+### Features
+
+* **entities-plugins:** datakit readonly mode for flow canvas ([#2341](https://github.com/Kong/public-ui-components/issues/2341)) ([8ac7725](https://github.com/Kong/public-ui-components/commit/8ac7725a1e35f8d1597b455562ff43aebe131fd6))
+
+
+
+
+
 ## [9.69.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.69.0...@kong-ui-public/entities-plugins@9.69.1) (2025-08-21)
 
 
