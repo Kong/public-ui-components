@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.1.5...@kong-ui-public/analytics-utilities@11.0.0) (2025-08-22)
+
+
+### chore
+
+* **analytics:** remove v1 dashboard schema ([#2380](https://github.com/Kong/public-ui-components/issues/2380)) ([af21caf](https://github.com/Kong/public-ui-components/commit/af21cafcbd7dd9baa874044956fe2cef03856ee5))
+
+
+### BREAKING CHANGES
+
+* **analytics:** remove v1 dashboard schema.
+
+
+
+
+
 ## [10.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@10.1.4...@kong-ui-public/analytics-utilities@10.1.5) (2025-08-15)
 
 
