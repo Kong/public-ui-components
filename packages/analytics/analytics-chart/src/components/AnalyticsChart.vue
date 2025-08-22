@@ -120,7 +120,6 @@ interface ChartProps {
   showAnnotations?: boolean
   timeseriesZoom?: boolean
   requestsLink?: ExternalLink
-  queryDatasource?: string
 }
 
 const emit = defineEmits<{
@@ -139,7 +138,6 @@ const props = withDefaults(defineProps<ChartProps>(), {
   showAnnotations: true,
   timeseriesZoom: false,
   requestsLink: undefined,
-  queryDatasource: undefined,
 })
 
 const { i18n } = composables.useI18n()
@@ -335,7 +333,7 @@ const chartTooltipSortFn = computed(() => {
 const zoomActionItems = computed<ZoomActionItem[]>(() => {
   return [
     { label: i18n.t('zoom_action_items.zoom'), action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange) },
-    ...(props.queryDatasource !== 'llm_usage' && props.requestsLink ? [{
+    ...(props.requestsLink ? [{
       label: i18n.t('zoom_action_items.view_requests'),
       href: props.requestsLink.href,
     }] : []),
