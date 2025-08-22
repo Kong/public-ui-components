@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import Ajv from 'ajv'
-import { dashboardConfigSchema } from '@kong-ui-public/analytics-utilities'
+import { zDashboardConfig } from '@kong-ui-public/analytics-utilities'
 
-const ajv = new Ajv({ allowUnionTypes: true })
-const validate = ajv.compile(dashboardConfigSchema)
+const validate = (data: unknown) => {
+  const result = zDashboardConfig.safeParse(data)
+  return result
+}
 
 describe('Dashboard schemas', () => {
   it('successfully validates bar chart schemas', () => {
@@ -32,8 +33,7 @@ describe('Dashboard schemas', () => {
         },
       ],
     }
-
-    expect(validate(definition)).toBe(true)
+    expect(validate(definition).success).toBe(true)
   })
 
   it('successfully validates gauge chart schemas', () => {
@@ -66,7 +66,7 @@ describe('Dashboard schemas', () => {
       ],
     }
 
-    expect(validate(definition)).toBe(true)
+    expect(validate(definition).success).toBe(true)
   })
 
   it('rejects bad gauge chart schemas', () => {
@@ -83,7 +83,7 @@ describe('Dashboard schemas', () => {
       ],
     }
 
-    expect(validate(definition1)).toBe(false)
+    expect(validate(definition1).success).toBe(false)
 
     const definition2: any = {
       tiles: [
@@ -97,9 +97,6 @@ describe('Dashboard schemas', () => {
       ],
     }
 
-    expect(validate(definition2)).toBe(false)
-
-    // Note: Error messages aren't great right now because FromSchema doesn't understand
-    // the `discriminator` field, and AJV has limited support for it.
+    expect(validate(definition2).success).toBe(false)
   })
 })

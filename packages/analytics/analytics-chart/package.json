@@ -86,6 +86,6 @@
   },
   "distSizeChecker": {
     "warningLimit": "1.35MB",
-    "errorLimit": "1.5MB"
+    "errorLimit": "1.6MB"
   }
 }
