@@ -230,8 +230,10 @@ const exploreLink = computed(() => {
   return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
 })
 
+const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && props.definition.query && props.definition.query?.datasource !== 'llm_usage')
+
 const requestsLink = computed(() => {
-  if (!requestsBaseUrl.value || !props.definition.query || !canShowKebabMenu.value) {
+  if (!canGenerateRequestsLink.value || !canShowKebabMenu.value) {
     return ''
   }
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
@@ -403,12 +405,16 @@ const buildRequestsQuery = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
 }
 
 const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
+  if (!canGenerateRequestsLink.value) {
+    requestsLinkZoomActions.value = undefined
+
+    return
+  }
+
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
   const query = buildRequestsQuery(newTimeRange, filters)
 
-  requestsLinkZoomActions.value = requestsBaseUrl.value ? {
-    href: `${requestsBaseUrl.value}?q=${JSON.stringify(query)}`,
-  } : undefined
+  requestsLinkZoomActions.value = { href: `${requestsBaseUrl.value}?q=${JSON.stringify(query)}` }
 }
 </script>
 
