@@ -149,6 +149,7 @@ const dashboardConfig = ref<DashboardConfig>({
         chart: {
           type: 'horizontal_bar',
           chart_title: 'This is a really long title lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+          allow_csv_export: false,
         },
         query: {
           datasource: 'api_usage',

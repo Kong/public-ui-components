@@ -8,7 +8,6 @@ describe('<DashboardTile />', () => {
     chart: {
       type: 'timeseries_line',
       chart_title: 'Test Chart',
-      allow_csv_export: true,
     },
     query: {
       datasource: 'api_usage',
@@ -125,6 +124,21 @@ describe('<DashboardTile />', () => {
     cy.getTestId('kebab-action-menu-1').click()
     cy.getTestId('chart-csv-export-1').click()
     cy.getTestId('csv-export-modal').should('exist')
+  })
+
+  it('should not show CSV export if disabled for chart', () => {
+    mount({
+      definition: {
+        query: mockTileDefinition.query,
+        chart: {
+          type: 'vertical_bar',
+          allow_csv_export: false,
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-csv-export-1').should('not.exist')
   })
 
   it('should not show edit button when context is not editable', () => {
