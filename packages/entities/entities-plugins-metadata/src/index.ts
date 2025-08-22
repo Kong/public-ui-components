@@ -396,7 +396,7 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
   },
   'kafka-consume': {
     group: PluginGroup.TRANSFORMATIONS,
-    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
+    scope: [PluginScope.GLOBAL, PluginScope.ROUTE, PluginScope.CONSUMER],
   },
   'confluent-consume': {
     group: PluginGroup.TRANSFORMATIONS,
