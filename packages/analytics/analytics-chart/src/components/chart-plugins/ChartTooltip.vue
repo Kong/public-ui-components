@@ -128,6 +128,14 @@ watch(() => [props.absoluteLeft, props.absoluteTop], ([left, top]) => {
   }
 })
 
+watch(isDragging, (dragging) => {
+  if (dragging) {
+    document.body.classList.add('no-select')
+  } else {
+    document.body.classList.remove('no-select')
+  }
+})
+
 watch(tooltipEl, value => {
   if (value) {
     const { width, height } = value.getBoundingClientRect()
