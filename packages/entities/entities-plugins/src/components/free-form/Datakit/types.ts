@@ -19,7 +19,7 @@ import type {
   JqNode,
   PropertyNode,
   StaticNode,
-} from './schema'
+} from './schema/strict'
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
   ? Omit<T, Keys> & { [K in Keys]-?: T[K] }

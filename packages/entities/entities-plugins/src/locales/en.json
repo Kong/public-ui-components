@@ -689,6 +689,7 @@
           "mode": "Flow editor",
           "name": "Datakit flow editor",
           "cta": "Go to flow editor",
+          "disabled_tooltip": "Flow editor unavailable: your config is malformed or includes unsupported features.",
           "done": "Done",
           "view_docs": "View docs",
           "expand_panel": "Expand panel",
