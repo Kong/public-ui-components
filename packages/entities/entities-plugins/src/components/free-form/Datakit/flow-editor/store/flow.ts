@@ -10,14 +10,14 @@ import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
 import { computed, toRaw, toValue } from 'vue'
 
+import { KUI_COLOR_BORDER_NEUTRAL_WEAK, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
+import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
+import { useOptionalConfirm } from '../composables/useConflictConnectionConfirm'
 import { DEFAULT_LAYOUT_OPTIONS, DEFAULT_VIEWPORT_WIDTH } from '../constants'
 import { isImplicitNode } from '../node/node'
-import { useEditorStore } from '../store/store'
-import { createEdgeConnectionString, createNewConnectionString } from './helpers'
-import { useOptionalConfirm } from './useConflictConnectionConfirm'
-import { KUI_COLOR_BORDER_NEUTRAL_WEAK, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
+import { useEditorStore } from './store'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".

@@ -195,7 +195,7 @@ import { computed, watch } from 'vue'
 
 import english from '../../../../../locales/en.json'
 import { isReadableProperty, isWritableProperty } from '../node/property'
-import { useOptionalFlowStore } from '../composables/useFlow'
+import { useOptionalFlowStore } from '../store/flow'
 import { getNodeMeta } from '../store/helpers'
 import { useEditorStore } from '../store/store'
 import HandleTwig from './HandleTwig.vue'
