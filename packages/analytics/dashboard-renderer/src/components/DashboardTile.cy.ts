@@ -58,6 +58,7 @@ describe('<DashboardTile />', () => {
     onDuplicateTile?: sinon.SinonSpy
     definition?: TileDefinition
     context?: DashboardRendererContextInternal
+    extraProps?: Record<string, any>
   }
 
   const mount = ({
@@ -66,6 +67,7 @@ describe('<DashboardTile />', () => {
     onDuplicateTile = cy.spy(),
     definition = mockTileDefinition,
     context = mockContext,
+    extraProps = {},
   }: MountOptions = {}) => {
     const attrs = {
       onEditTile,
@@ -75,6 +77,7 @@ describe('<DashboardTile />', () => {
 
     return cy.mount(DashboardTile, {
       props: {
+        ...extraProps,
         definition,
         context,
         queryReady: true,
@@ -197,6 +200,43 @@ describe('<DashboardTile />', () => {
           ...mockTileDefinitionWithTimerange.query,
           granularity: 'hourly',
         },
+      },
+    })
+
+    cy.getTestId('time-range-badge').should('exist')
+    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+  })
+
+  it('should not show aged out warning when query is not ready', () => {
+    mount({
+      definition: {
+        ...mockTileDefinitionWithTimerange,
+        query: {
+          ...mockTileDefinitionWithTimerange.query,
+          granularity: 'hourly',
+        },
+      },
+      extraProps: {
+        queryReady: false,
+      },
+    })
+
+    cy.getTestId('time-range-badge').should('exist')
+    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+  })
+
+  it('should not show aged out warning when saved granularity is missing', () => {
+    // No saved granularity; even with a real query granularity there should be no warning
+    mount({
+      definition: {
+        ...mockTileDefinitionWithTimerange,
+        query: {
+          ...mockTileDefinitionWithTimerange.query,
+          granularity: undefined,
+        },
+      },
+      extraProps: {
+        queryReady: false,
       },
     })
 
