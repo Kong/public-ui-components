@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.6.0...@kong-ui-public/entities-plugins-metadata@1.7.0) (2025-08-22)
+
+
+### Features
+
+* **plugins-metadata:** update kafka-consume scope ([#2369](https://github.com/Kong/public-ui-components/issues/2369)) ([3110bf0](https://github.com/Kong/public-ui-components/commit/3110bf005481be1001ff1d2e0993e7e9458f91e8))
+
+
+
+
+
 # [1.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.5.0...@kong-ui-public/entities-plugins-metadata@1.6.0) (2025-07-04)
 
 
