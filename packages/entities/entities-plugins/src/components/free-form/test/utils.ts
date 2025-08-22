@@ -323,7 +323,6 @@ export function assertFormRendering(schema: FormSchema, options?: {
   const assertStringArrayOfArrayField = ({
     fieldKey,
   }: AssertFieldOption<ArrayFieldSchema>) => {
-    debugger
     cy.getTestId(`ff-array-basic-container-${fieldKey}`)
       .find('.ff-array-field-item')
       .its('length')
