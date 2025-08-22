@@ -111,9 +111,9 @@ const formData = computed(() => {
 
 function handleAddField(name: FieldName, value?: string) {
   if (!currentNode.value) throw new Error('No selected node')
-  const hasValue = value !== undefined
-  addField(nodeId, 'output', name, !hasValue)
-  if (hasValue) {
+  const isDefined = value !== undefined
+  addField(nodeId, 'output', name, !isDefined)
+  if (isDefined) {
     const next = {
       values: fieldValueToStoreValue({ ...formData.value.values, [name]: value }),
     }
