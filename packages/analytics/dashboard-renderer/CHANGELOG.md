@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.13...@kong-ui-public/dashboard-renderer@7.0.14) (2025-08-22)
+
+
+### Bug Fixes
+
+* **analytics:** improve permission denied error [MA-4249] ([#2375](https://github.com/Kong/public-ui-components/issues/2375)) ([3f0cf93](https://github.com/Kong/public-ui-components/commit/3f0cf932390c4745dc8448e849c24e63fb872d13))
+
+
+
+
+
 ## [7.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.12...@kong-ui-public/dashboard-renderer@7.0.13) (2025-08-22)
 
 
