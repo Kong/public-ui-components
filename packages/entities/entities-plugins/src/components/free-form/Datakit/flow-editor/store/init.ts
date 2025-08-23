@@ -264,6 +264,13 @@ function mergeFieldsFromConfigAndUI(
     Object.keys(configNode.outputs).forEach(fieldName => outputsFields.add(fieldName))
   }
 
+  // For static node, the output fields are determined by the config values
+  if (configNode?.type === 'static') {
+    if (configNode.values) {
+      Object.keys(configNode.values).forEach(fieldName => outputsFields.add(fieldName))
+    }
+  }
+
   // Add fields from uiNode
   if (uiNode?.fields?.input) {
     uiNode.fields.input.forEach(fieldName => inputsFields.add(fieldName))
