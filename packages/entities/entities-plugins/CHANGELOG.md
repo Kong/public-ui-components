@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.72.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.72.0...@kong-ui-public/entities-plugins@9.72.1) (2025-08-23)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - allow static node to save an empty field value ([#2371](https://github.com/Kong/public-ui-components/issues/2371)) ([2862e8a](https://github.com/Kong/public-ui-components/commit/2862e8a325011128c6a20266b8d7eb10523d3b2a))
+
+
+
+
+
 # [9.72.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.71.0...@kong-ui-public/entities-plugins@9.72.0) (2025-08-23)
 
 
