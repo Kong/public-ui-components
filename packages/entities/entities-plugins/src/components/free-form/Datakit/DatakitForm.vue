@@ -78,8 +78,8 @@ import StandardLayout from '../shared/layout/StandardLayout.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import FlowEditor from './flow-editor/FlowEditor.vue'
-import { DatakitConfigSchema } from './schema/compat'
-
+import { DatakitConfigSchema } from './schema/strict'
+import { DatakitConfigSchema as DatakitConfigCompatSchema } from './schema/compat'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -195,7 +195,9 @@ function handleCodeChange(newConfig: unknown) {
   handleConfigChange(newConfig)
 
   const { success, error } = DatakitConfigSchema.safeParse(newConfig)
-  flowAvailable.value = success
+
+  const { success: compatSuccess } = DatakitConfigCompatSchema.safeParse(newConfig)
+  flowAvailable.value = compatSuccess
 
   props.onValidityChange?.({
     model: 'config',
