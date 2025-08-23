@@ -15,8 +15,7 @@ import type {
   NameConnection,
   IdConnection,
 } from '../../types'
-import { cloneDeep } from 'lodash-es'
-import { nanoid } from 'nanoid'
+import { cloneDeep, uniqueId } from 'lodash-es'
 import {
   CONFIG_NODE_META_MAP,
   IMPLICIT_NODE_META_MAP,
@@ -32,7 +31,7 @@ export function clone<T>(value: T): T {
 export function createId<T extends 'node' | 'edge' | 'field'>(
   type: T,
 ): T extends 'node' ? NodeId : T extends 'edge' ? EdgeId : FieldId {
-  return `${type}:${nanoid()}` as unknown as T extends 'node'
+  return `${type}:${uniqueId()}` as unknown as T extends 'node'
     ? NodeId
     : T extends 'edge'
       ? EdgeId
