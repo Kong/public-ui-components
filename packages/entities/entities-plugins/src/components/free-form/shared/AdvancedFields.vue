@@ -12,7 +12,7 @@
         v-if="getSchema('protocols')"
         name="protocols"
       />
-      <TagField
+      <StringArrayField
         v-if="getSchema('tags')"
         help="e.g. tag1, tag2, tag3"
         name="tags"
@@ -30,7 +30,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import { KCollapse } from '@kong/kongponents'
 import english from '../../../locales/en.json'
 import { useFormShared } from './composables'
-import TagField from './TagField.vue'
+import StringArrayField from './StringArrayField.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
