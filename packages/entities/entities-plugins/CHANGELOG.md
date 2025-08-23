@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.70.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.70.1...@kong-ui-public/entities-plugins@9.70.2) (2025-08-23)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - remove format check of field name ([#2372](https://github.com/Kong/public-ui-components/issues/2372)) ([f583734](https://github.com/Kong/public-ui-components/commit/f583734890bb26dee930428acf0ea63f273b9b78))
+
+
+
+
+
 ## [9.70.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.70.0...@kong-ui-public/entities-plugins@9.70.1) (2025-08-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
