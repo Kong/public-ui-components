@@ -86,7 +86,6 @@ export function useFieldNameValidator(nodeId: NodeId) {
     }
     return compose(
       notEmpty(errTempVars),
-      stringFormat('identifier', errTempVars),
       isUniqueFieldName(io, getNodeById(nodeId), fieldId),
     )(fieldName)
   }
