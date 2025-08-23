@@ -694,7 +694,7 @@
         "tool_item_label": "Tool #{index}"
       },
       "request-callout": {
-        "entity_name": "Request Callout",
+        "entity_name": "Request callout",
         "by_lua_placeholder": "Enter Lua script here..."
       },
       "redis_partial": {
@@ -711,14 +711,14 @@
           "manipulate": "Manipulate request headers"
         },
         "flow_editor": {
-          "mode": "Flow Editor",
-          "name": "Datakit Flow Editor",
+          "mode": "Flow editor",
+          "name": "Datakit flow editor",
           "cta": "Go to flow editor",
           "done": "Done",
-          "view_docs": "View Docs",
+          "view_docs": "View docs",
           "expand_panel": "Expand panel",
           "collapse_panel": "Collapse panel",
-          "return_to_config": "Return to Plugin configuration",
+          "return_to_config": "Return to plugin configuration",
           "node_panel": {
             "title": "Node types",
             "description": "Drag a node onto the canvas to add it to your data flow."
@@ -774,8 +774,8 @@
               "add_button": "Add an input"
             },
             "input_name": {
-              "label": "Input Name",
-              "placeholder": "Input Name"
+              "label": "Input name",
+              "placeholder": "Input name"
             },
             "timeout": {
               "label": "Timeout(s)"
@@ -820,7 +820,7 @@
           }
         },
         "code_editor": {
-          "mode": "Code Editor"
+          "mode": "Code editor"
         }
       },
       "vault_picker": {
