@@ -71,6 +71,11 @@
               :index="index"
               name="item"
             />
+            <StringArrayField
+              v-if="subSchema.type === 'array' && subSchema.elements.type === 'string'"
+              :help="t('plugins.free-form.tag_helper')"
+              :name="String(index)"
+            />
             <Field
               v-else
               :name="String(index)"
@@ -150,6 +155,8 @@ import { useField, useFieldAttrs, useFormShared, useItemKeys } from './composabl
 import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
+import type { ArrayLikeFieldSchema } from '../../../types/plugins/form-schema'
+import StringArrayField from './StringArrayField.vue'
 
 const props = defineProps<{
   name: string
@@ -177,9 +184,15 @@ defineSlots<{
 }>()
 
 const { i18n: { t } } = useI18n()
-const { getDefault } = useFormShared()
+const { getDefault, getSchema } = useFormShared()
 const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
+const subSchema = computed(() => {
+  if (!field.path) throw new Error('Field path is required for sub-schema retrieval')
+  const schema = getSchema<ArrayLikeFieldSchema>(field.path.value)
+  if (!schema) throw new Error(`Schema not found for path: ${field.path.value}`)
+  return schema.elements
+})
 
 const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
 
@@ -303,12 +316,30 @@ const stickyTop = computed(() => {
     flex-direction: row;
     gap: $kui-space-40;
     padding: 0;
+
+    // Align delete button to top when using TagField
+    &:has(.ff-tag-field) {
+      align-items: flex-start;
+
+      .ff-array-field-item-remove {
+        margin-top: $kui-space-20;
+      }
+    }
   }
 
   &-card > &-container > &-item :deep(.card-content) {
     align-items: center;
     flex-direction: row;
     gap: $kui-space-40;
+
+    // Align delete button to top when using TagField
+    &:has(.ff-tag-field) {
+      align-items: flex-start;
+
+      .ff-array-field-item-remove {
+        margin-top: $kui-space-20;
+      }
+    }
   }
 
   &-tabs &-item {
