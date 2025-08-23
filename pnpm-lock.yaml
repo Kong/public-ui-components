@@ -991,9 +991,6 @@ importers:
       monaco-editor:
         specifier: 0.52.2
         version: 0.52.2
-      nanoid:
-        specifier: ^5.1.5
-        version: 5.1.5
     devDependencies:
       '@dagrejs/dagre':
         specifier: ^1.1.5
