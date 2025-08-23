@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.72.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.71.0...@kong-ui-public/entities-plugins@9.72.0) (2025-08-23)
+
+
+### Features
+
+* **entities-plugins:** datakit allow update edges just in the canvas ([#2374](https://github.com/Kong/public-ui-components/issues/2374)) ([72e3638](https://github.com/Kong/public-ui-components/commit/72e363814356469f2e2585086eca64bc5bbdd272))
+
+
+
+
+
 # [9.71.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.70.2...@kong-ui-public/entities-plugins@9.71.0) (2025-08-23)
 
 
