@@ -1,11 +1,13 @@
 import { z } from 'zod'
 import {
-  ConfigNodeBaseGuard,
   HttpMethodSchema,
-  IMPLICIT_NODE_TYPES,
   isImplicitName,
+  ConfigNodeTypeSchema,
 } from './strict'
 import { validateNamesAndConnections } from './shared'
+import { IMPLICIT_NODE_NAMES } from '../constants'
+
+const KNOWN_NODE_TYPES = ConfigNodeTypeSchema.options
 
 const LooseNodeNameSchema = z
   .string()
@@ -15,7 +17,7 @@ const LooseNodeNameSchema = z
     (s) => !isImplicitName(s),
     'Node name conflicts with reserved implicit node',
   )
-const LooseFieldNameSchema = z.string().min(1)
+
 const LooseConnectionSchema = z.string().refine((s) => {
   if (!s || /\s/.test(s)) return false
   const i = s.indexOf('.')
@@ -25,87 +27,94 @@ const LooseConnectionSchema = z.string().refine((s) => {
   return left.length > 0 && right.length > 0
 }, 'Invalid connection')
 
-const CallNodeSchema = z
+export const ConfigNodeBaseSchema = z
   .object({
-    type: z.literal('call'),
+    type: z.string(),
     name: LooseNodeNameSchema,
-    method: HttpMethodSchema.nullish().default('GET'),
-    ssl_server_name: z.string().nullish(),
-    timeout: z.union([z.number(), z.string()]).nullish(),
-    url: z.string().nullish(),
     input: LooseConnectionSchema.nullish(),
-    inputs: z
-      .object({
-        body: LooseConnectionSchema.nullish(),
-        headers: LooseConnectionSchema.nullish(),
-        query: LooseConnectionSchema.nullish(),
+    inputs: z.record(z.string(), LooseConnectionSchema.nullish()).nullish(),
+    output: LooseConnectionSchema.nullish(),
+    outputs: z.record(z.string(), LooseConnectionSchema.nullish()).nullish(),
+  })
+  .loose()
+
+const ConfigNodeBaseGuard = z
+  .object({ type: z.string(), name: z.string() })
+  .loose()
+  .superRefine((obj, ctx) => {
+    const t = obj.type
+    const nm = obj.name
+    if (typeof nm !== 'string' || nm.length === 0 || nm.includes('.')) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['name'],
+        message: 'Invalid node name',
+        fatal: false,
       })
-      .partial()
-      .nullish(),
-    output: LooseConnectionSchema.nullish(),
-    outputs: z
-      .object({
-        body: LooseConnectionSchema.nullish(),
-        headers: LooseConnectionSchema.nullish(),
-        status: LooseConnectionSchema.nullish(),
+    }
+    if (!KNOWN_NODE_TYPES.includes(t as any)) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['type'],
+        message: `unknown node type "${t}", expected one of: ${KNOWN_NODE_TYPES.join(
+          ', ',
+        )}`,
       })
-      .partial()
-      .nullish(),
+    }
   })
-  .strict()
 
-const ExitNodeSchema = z
-  .object({
-    type: z.literal('exit'),
-    name: LooseNodeNameSchema,
-    status: z.number().nullish(),
-    warn_headers_sent: z.boolean().nullish(),
-    input: LooseConnectionSchema.nullish(),
-    inputs: z
-      .object({
-        body: LooseConnectionSchema.nullish(),
-        headers: LooseConnectionSchema.nullish(),
-      })
-      .partial()
-      .nullish(),
-  })
-  .strict()
+const CallNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('call'),
+  method: HttpMethodSchema.nullish(),
+  ssl_server_name: z.string().nullish(),
+  timeout: z.union([z.number(), z.string()]).nullish(),
+  url: z.string().nullish(),
+  inputs: z
+    .object({
+      body: LooseConnectionSchema.nullish(),
+      headers: LooseConnectionSchema.nullish(),
+      query: LooseConnectionSchema.nullish(),
+    })
+    .partial()
+    .nullish(),
+  outputs: z
+    .object({
+      body: LooseConnectionSchema.nullish(),
+      headers: LooseConnectionSchema.nullish(),
+      status: LooseConnectionSchema.nullish(),
+    })
+    .partial()
+    .nullish(),
+}).strict()
 
-const JqNodeSchema = z
-  .object({
-    type: z.literal('jq'),
-    name: LooseNodeNameSchema,
-    jq: z.string().nullish(),
-    input: LooseConnectionSchema.nullish(),
-    inputs: z
-      .record(LooseFieldNameSchema, LooseConnectionSchema.nullish())
-      .nullish(),
-    output: LooseConnectionSchema.nullish(),
-  })
-  .strict()
+const ExitNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('exit'),
+  status: z.union([z.number(), z.string()]).nullish(),
+  warn_headers_sent: z.boolean().nullish(),
+  output: z.never().optional(),
+  outputs: z.never().optional(),
+}).strict()
 
-const PropertyNodeSchema = z
-  .object({
-    type: z.literal('property'),
-    name: LooseNodeNameSchema,
-    content_type: z.string().nullish(),
-    property: z.string().nullish(),
-    input: LooseConnectionSchema.nullish(),
-    output: LooseConnectionSchema.nullish(),
-  })
-  .strict()
+const JqNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('jq'),
+  jq: z.string().nullish(),
+  outputs: z.never().optional(),
+}).strict()
 
-const StaticNodeSchema = z
-  .object({
-    type: z.literal('static'),
-    name: LooseNodeNameSchema,
-    values: z.record(z.string(), z.unknown()).nullish(),
-    output: LooseConnectionSchema.nullish(),
-    outputs: z
-      .record(LooseFieldNameSchema, LooseConnectionSchema.nullish())
-      .nullish(),
-  })
-  .strict()
+const PropertyNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('property'),
+  content_type: z.string().nullish(),
+  property: z.string().nullish(),
+  inputs: z.never().optional(),
+  outputs: z.never().optional(),
+}).strict()
+
+const StaticNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('static'),
+  values: z.record(z.string(), z.unknown()).nullish(),
+  input: z.never().optional(),
+  inputs: z.never().optional(),
+}).strict()
 
 const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
   z.discriminatedUnion('type', [
@@ -124,6 +133,7 @@ export const DatakitConfigSchema = z
   })
   .strict()
   .superRefine((config, ctx) => {
-    validateNamesAndConnections(config, IMPLICIT_NODE_TYPES, ctx)
+    if (!config || !Array.isArray((config as any).nodes)) return
+    validateNamesAndConnections(config as any, IMPLICIT_NODE_NAMES, ctx)
   })
   .nullish()

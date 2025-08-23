@@ -9,6 +9,7 @@ import type {
   NodeId,
 } from '../../types'
 import { hasInputField, hasOutputField } from './helpers'
+import { IMPLICIT_NODE_NAMES } from '../../constants'
 
 export type ValidationResult = { ok: true } | { ok: false, errors: string[] }
 
@@ -114,13 +115,7 @@ export function useValidators(stateRef: Ref<EditorState>) {
 
   function validateGraph(): ValidationResult {
     const errors: string[] = []
-    const implicit = [
-      'request',
-      'service_request',
-      'service_response',
-      'response',
-    ]
-    for (const n of implicit)
+    for (const n of IMPLICIT_NODE_NAMES)
       if (![...nodesById.value.values()].some((node) => node.name === n))
         errors.push(`missing implicit node "${n}"`)
 
