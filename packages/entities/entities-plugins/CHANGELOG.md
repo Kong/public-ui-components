@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.71.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.70.2...@kong-ui-public/entities-plugins@9.71.0) (2025-08-23)
+
+
+### Features
+
+* **entities-plugins:** freeform - support array of array [KM-1521] ([#2370](https://github.com/Kong/public-ui-components/issues/2370)) ([48fd374](https://github.com/Kong/public-ui-components/commit/48fd374752e3ee119ee550ae6041d926196dfb62))
+
+
+
+
+
 ## [9.70.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.70.1...@kong-ui-public/entities-plugins@9.70.2) (2025-08-23)
 
 
