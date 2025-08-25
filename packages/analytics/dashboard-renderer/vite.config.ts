@@ -23,6 +23,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/analytics-config-store',
         '@kong-ui-public/analytics-metric-provider',
         '@kong-ui-public/analytics-utilities',
+        '@kong-ui-public/analytics-geo-map',
         'swrv',
       ],
       output: {
@@ -32,6 +33,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
           '@kong-ui-public/analytics-config-store': 'kong-ui-public-analytics-config-store',
           '@kong-ui-public/analytics-metric-provider': 'kong-ui-public-analytics-metric-provider',
           '@kong-ui-public/analytics-utilities': 'kong-ui-public-analytics-utilities',
+          '@kong-ui-public/analytics-geo-map': 'kong-ui-public-analytics-geo-map',
           swrv: 'swrv',
         },
       },

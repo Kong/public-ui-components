@@ -14,6 +14,7 @@ import {
   relativeTimeRangeValuesV4,
   requestFilterTypeEmptyV2,
 } from './types'
+import { countryISOA2 } from './types/country-codes'
 
 type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaultedPropertiesOptional: true }>
 
@@ -30,6 +31,7 @@ export const dashboardTileTypes = [
   'top_n',
   'slottable',
   'single_value',
+  'choropleth_map',
 ] as const
 export type DashboardTileType = typeof dashboardTileTypes[number]
 
@@ -226,6 +228,58 @@ export const singleValueSchema = {
 } as const satisfies JSONSchema
 
 export type SingleValueOptions = FromSchemaWithOptions<typeof singleValueSchema>
+
+export const choroplethMapSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['choropleth_map'],
+    },
+    chart_title: chartTitle,
+    fit_to_country: {
+      type: 'string',
+      enum: countryISOA2,
+    },
+    with_legend: {
+      type: 'boolean',
+      default: false,
+    },
+    bounds: {
+      oneOf: [
+        {
+          type: 'array',
+          minItems: 2,
+          maxItems: 2,
+          items: {
+            type: 'array',
+            minItems: 2,
+            maxItems: 2,
+            items: [
+              { type: 'number', minimum: -180, maximum: 180 },
+              { type: 'number', minimum: -90, maximum: 90 },
+            ],
+          },
+        },
+        {
+          type: 'array',
+          minItems: 4,
+          maxItems: 4,
+          items: [
+            { type: 'number', minimum: -180, maximum: 180 },
+            { type: 'number', minimum: -90, maximum: 90 },
+            { type: 'number', minimum: -180, maximum: 180 },
+            { type: 'number', minimum: -90, maximum: 90 },
+          ],
+        },
+      ],
+    },
+  },
+  required: ['type'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
+export type ChoroplethMapOptions = FromSchemaWithOptions<typeof choroplethMapSchema>
 
 const exploreV4RelativeTimeSchema = {
   type: 'object',
@@ -459,6 +513,7 @@ export const tileDefinitionSchema = {
         topNTableSchema,
         slottableSchema,
         singleValueSchema,
+        choroplethMapSchema,
       ],
     },
   },

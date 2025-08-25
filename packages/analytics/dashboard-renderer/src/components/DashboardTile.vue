@@ -142,7 +142,7 @@ import {
   TimePeriods,
   getFieldDataSources,
 } from '@kong-ui-public/analytics-utilities'
-import { type Component, computed, inject, nextTick, onMounted, ref, watch } from 'vue'
+import { type Component, computed, defineAsyncComponent, inject, nextTick, onMounted, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -182,6 +182,7 @@ const emit = defineEmits<{
   (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
 }>()
 
+const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.vue'))
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
 const { i18n } = composables.useI18n()
@@ -269,6 +270,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'top_n': TopNTableRenderer,
   'slottable': undefined,
   'single_value': SimpleChartRenderer,
+  'choropleth_map': GeoMapRendererAsync,
 }
 
 const componentEventHandlers = computed(() => ({
