@@ -12,6 +12,7 @@ import type {
   FormSchema,
   ArrayFieldSchema,
   SetFieldSchema,
+  ForeignFieldSchema,
 } from '../../../types/plugins/form-schema'
 
 type AssertFieldOption<T extends UnionFieldSchema = UnionFieldSchema> = {
@@ -80,6 +81,8 @@ export function assertFormRendering(schema: FormSchema, options?: {
       } else {
         assertEnumField({ fieldKey, fieldSchema, labelOption })
       }
+    } else if (fieldSchema.type === 'foreign') {
+      assertForeignField({ fieldKey, fieldSchema, labelOption })
     } else {
       throw new Error(`Unsupported field type "${fieldSchema.type}" for field "${fieldKey}"`)
     }
@@ -458,6 +461,27 @@ export function assertFormRendering(schema: FormSchema, options?: {
 
     if (fieldSchema.description) {
       selector().should('contain.text', fieldSchema.description)
+    }
+  }
+
+  const assertForeignField: AssertFieldFn<ForeignFieldSchema> = ({
+    fieldKey,
+    fieldSchema,
+    labelOption,
+  }) => {
+    // Check input element
+    cy.getTestId(`ff-${fieldKey}`).should('exist')
+
+    cy.getTestId(`ff-${fieldKey}`).should('have.attr', 'type', 'text')
+
+    // Check label
+    assertLabel({ fieldKey, fieldSchema, labelOption })
+
+    // Check default value
+    if (fieldSchema.default) {
+      cy.getTestId(`ff-${fieldKey}`).should('have.value', fieldSchema.default.id)
+      // the placeholder should be `Default: ${fieldSchema.default.id}`
+      cy.getTestId(`ff-${fieldKey}`).should('have.attr', 'placeholder', `Default: ${fieldSchema.default.id}`)
     }
   }
 
