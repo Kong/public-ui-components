@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.15.8...@kong-ui-public/forms@4.16.0) (2025-08-25)
+
+
+### Features
+
+* **core-form:** refactor FieldAutosuggestion ([#2204](https://github.com/Kong/public-ui-components/issues/2204)) ([d08dd49](https://github.com/Kong/public-ui-components/commit/d08dd4930fde20e032663c608d094477b9c19253))
+
+
+
+
+
 ## [4.15.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.15.7...@kong-ui-public/forms@4.15.8) (2025-08-20)
 
 
