@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.10.9...@kong-ui-public/entities-upstreams-targets@3.11.0) (2025-08-25)
+
+
+### Features
+
+* **entities-upstreams-targets:** add new field `failover` ([#2316](https://github.com/Kong/public-ui-components/issues/2316)) ([6f43714](https://github.com/Kong/public-ui-components/commit/6f437147407f04527afd1c714a6018f939615e2c))
+
+
+
+
+
 ## [3.10.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.10.8...@kong-ui-public/entities-upstreams-targets@3.10.9) (2025-08-20)
 
 
