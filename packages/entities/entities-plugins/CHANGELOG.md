@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.73.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.72.1...@kong-ui-public/entities-plugins@9.73.0) (2025-08-25)
+
+
+### Features
+
+* **entities-plugins:** freeform - add foreign field [KM-1522] ([#2386](https://github.com/Kong/public-ui-components/issues/2386)) ([3512168](https://github.com/Kong/public-ui-components/commit/35121685ba66b51df6a0457ee9677eb662700304))
+
+
+
+
+
 ## [9.72.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.72.0...@kong-ui-public/entities-plugins@9.72.1) (2025-08-23)
 
 
