@@ -19,7 +19,7 @@ import PluginFormWrapper from '../shared/PluginFormWrapper.vue'
 import type { PluginFormWrapperProps } from '../shared/PluginFormWrapper.vue'
 import type { GlobalAction } from '../shared/types'
 
-const props = defineProps<PluginFormWrapperProps<any>>()
+const props = defineProps<PluginFormWrapperProps>()
 
 defineEmits<{
   globalAction: [name: GlobalAction, payload: any]
