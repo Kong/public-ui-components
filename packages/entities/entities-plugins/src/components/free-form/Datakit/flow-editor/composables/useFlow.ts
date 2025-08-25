@@ -431,7 +431,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }))
     })
 
-    onEdgeUpdate(({ connection }) => handleConnect(connection))
+    onEdgeUpdate(({ edge, connection }) => {
+      disconnectEdge(edge.id as EdgeId, false)
+      handleConnect(connection)
+    })
 
     function autoLayout() {
       let leftNode: Node<NodeInstance> | undefined
