@@ -35,7 +35,6 @@ import {
 export function initEditorState(
   configNodes: ConfigNode[],
   uiNodes: UINode[],
-  isEditing?: boolean,
 ): EditorState {
   const uiNodesMap = new Map<NodeName, UINode>(
     uiNodes.map((uiNode) => [uiNode.name, uiNode]),
@@ -77,9 +76,14 @@ export function initEditorState(
     }
   }
 
+  let needLayout = false
+
   // config nodes
   for (const configNode of configNodes) {
     const uiNode = uiNodesMap.get(configNode.name)
+    if (!uiNode && !needLayout) {
+      needLayout = true
+    }
     const node = buildNodeInstance(configNode.type, configNode, uiNode)
     nodes.push(node)
     nodesMap.set(node.name, node)
@@ -88,8 +92,14 @@ export function initEditorState(
   // ensure implicit nodes
   for (const implicitName of IMPLICIT_NODE_NAMES) {
     if (!nodesMap.has(implicitName)) {
-      const uiNode =
-        uiNodesMap.get(implicitName) ?? makeDefaultImplicitUINode(implicitName)
+      let uiNode = uiNodesMap.get(implicitName)
+      if (!uiNode) {
+        if (!needLayout) {
+          needLayout = true
+        }
+        uiNode = makeDefaultImplicitUINode(implicitName)
+      }
+
       const node = buildNodeInstance(implicitName, undefined, uiNode)
       nodes.push(node)
       nodesMap.set(node.name, node)
@@ -117,6 +127,8 @@ export function initEditorState(
       continue
     }
 
+    // TODO(Makito): Check if the connection is in sync with the layout (UI data) and update the needLayout flag as well
+
     if (!adjacencies.has(connection.source)) {
       adjacencies.set(connection.source, new Set())
     }
@@ -141,7 +153,9 @@ export function initEditorState(
   // Mark all nodes that should be in 'request' phase
   markRequestNodes(['request', 'service_request'])
 
-  return { nodes, edges, isEditing }
+  // TODO(Makito): Should we clean up stale nodes from the UI data in case the name of a deleted node is reused in the future?
+
+  return { nodes, edges, needLayout }
 }
 
 export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance {

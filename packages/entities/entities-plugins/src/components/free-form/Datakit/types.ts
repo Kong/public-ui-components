@@ -446,9 +446,9 @@ export interface EditorState {
   nodes: NodeInstance[]
   edges: EdgeInstance[]
   /**
-   * Whether the editor is in editing mode (versus the creation mode)
+   * A hint to indicate if the layout (UI data) is out of sync with the configuration
    */
-  isEditing?: boolean
+  needLayout: boolean
 }
 
 export interface MakeNodeInstancePayload {
