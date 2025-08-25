@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.75.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.74.0...@kong-ui-public/entities-plugins@9.75.0) (2025-08-25)
+
+
+### Features
+
+* **entities-plugins:** migrate the jwt-signer plugin to freeform [KM-1523] ([#2388](https://github.com/Kong/public-ui-components/issues/2388)) ([8892f0c](https://github.com/Kong/public-ui-components/commit/8892f0c40a95842d1fdaff94c339c3fbd869bff3))
+
+
+
+
+
 # [9.74.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.73.0...@kong-ui-public/entities-plugins@9.74.0) (2025-08-25)
 
 
