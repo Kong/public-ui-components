@@ -198,11 +198,14 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
   }
 
   function getPlaceholder(fieldPath: string): string | null {
-    const defaultValue = getSchema(fieldPath)?.default
+    const schema = getSchema(fieldPath)
+    const defaultValue = schema?.default
 
     let stringified = null
 
-    if (defaultValue == null || typeof defaultValue === 'object' || defaultValue === '') {
+    if (schema?.type === 'foreign' && !!defaultValue?.id) {
+      stringified = defaultValue.id
+    } else if (defaultValue == null || typeof defaultValue === 'object' || defaultValue === '') {
       return null
     } else if (Array.isArray(defaultValue)) {
       if (defaultValue.length === 0) {

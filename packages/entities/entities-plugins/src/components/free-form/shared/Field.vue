@@ -50,6 +50,7 @@ import EnumField from './EnumField.vue'
 import KeyValueField from './KeyValueField.vue'
 import StringArrayField from './StringArrayField.vue'
 import JsonField from './JsonField.vue'
+import ForeignField from './ForeignField.vue'
 import type { GlobalAction } from './types'
 
 defineOptions({ name: 'AutoField' })
@@ -94,6 +95,8 @@ const fieldRenderer = computed(() => {
       return KeyValueField
     case 'json':
       return JsonField
+    case 'foreign':
+      return ForeignField
     default:
       return undefined
   }
