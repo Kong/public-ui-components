@@ -40,6 +40,19 @@
       <template #target="{ rowValue }">
         <span class="target-address">{{ rowValue }}</span>
       </template>
+
+      <template
+        v-if="failoverEnabled"
+        #failover="{ rowValue }"
+      >
+        <KBadge
+          appearance="info"
+          class="upstream-failover"
+        >
+          {{ rowValue ? t('targets.form.fields.failover.failover_target') : t('targets.form.fields.failover.load_balance_target') }}
+        </KBadge>
+      </template>
+
       <template #tags="{ rowValue }">
         <TableTags
           tag-max-width="auto"
@@ -117,6 +130,8 @@
 
     <TargetForm
       :config="formConfig"
+      :failover-enabled="failoverEnabled"
+      :failover-unsupported="failoverEnabled && !ALGORITHMS_WITH_FAILOVER_SUPPORT.includes(algorithm)"
       :is-visible="isFormModalVisible"
       :target-id="editedTargetId"
       @cancel="handleCloseFormModal"
@@ -157,6 +172,7 @@ import type {
   KongManagerTargetFormConfig,
 } from '../types'
 import composables from '../composables'
+import { ALGORITHMS_WITH_FAILOVER_SUPPORT } from '../constants'
 import type {
   BaseTableHeaders,
   EmptyStateOptions,
@@ -218,6 +234,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  failoverEnabled: {
+    type: Boolean,
+    default: false,
+  },
+  algorithm: {
+    type: String,
+    required: false,
+    default: '',
+  },
 })
 
 const { i18n: { t } } = composables.useI18n()
@@ -232,6 +257,7 @@ const fields: BaseTableHeaders = {
   // the Target Address column is non-hidable
   target: { label: t('targets.list.table_headers.target_address'), sortable: true, hidable: false },
   weight: { label: t('targets.list.table_headers.weight'), sortable: true },
+  ...(props.failoverEnabled ? { failover: { label: t('targets.list.table_headers.target_type'), sortable: false } } : {}),
   tags: { label: t('targets.list.table_headers.tags'), sortable: false },
 }
 const tableHeaders: BaseTableHeaders = fields
