@@ -249,15 +249,20 @@ const experimentalFreeForms = composables.useExperimentalFreeForms()
 const { objectsAreEqual } = useHelpers()
 const { i18n: { t } } = useI18n()
 
+const mapControlPlane = (url: string) => {
+  if (props.config.app === 'konnect') {
+    return url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
+  } else if (props.config.app === 'kongManager') {
+    return url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
+  }
+
+  return url
+}
+
 // define endpoints for use by KFG
 const buildGetOneUrl = (entityType: string, entityId: string): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetOne}`
-
-  if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
-  }
+  url = mapControlPlane(url)
 
   // replace the entity type and id
   url = url.replace(/{entity}/gi, entityType)
@@ -269,11 +274,7 @@ const buildGetOneUrl = (entityType: string, entityId: string): string => {
 const buildGetAllUrl = (entityType: string): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].entityGetAll}`
 
-  if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
-  }
+  url = mapControlPlane(url)
 
   // replace the entity type
   url = url.replace(/{entity}/gi, entityType)
@@ -328,10 +329,76 @@ const getAll = (entityType: string, params: AxiosRequestConfig['params']): Promi
   return axiosInstance.get(url, { params })
 }
 
+const getAllV2 = (entityType: string, params: AxiosRequestConfig['params'], signal: AbortSignal): Promise<AxiosResponse> => {
+  const url = buildGetAllUrl(entityType)
+  // Currently hardcoded to fetch 1000 records, and filter
+  // client side. If more than 1000 records, this won't work
+  if (props.config.app === 'konnect') {
+    const { size, offset, ...others } = params
+    if (entityType === 'consumer_groups') {
+      return axiosInstance.get(url, {
+        params: {
+          size: 1000,
+        },
+        signal,
+      }).then(res => {
+        const { data: { data: instances } } = res
+
+        if (instances.length && Object.keys(others).length === 1) {
+          const queryKey = Object.keys(others)[0]
+          const filteredData = instances.filter((instance: Record<string, any>) => {
+            if (instance[queryKey]) {
+              return !!instance[queryKey].toLowerCase().includes(others[queryKey].toLowerCase())
+            }
+
+            return false
+          })
+
+          res.data.data = filteredData
+        }
+
+        return res
+      })
+    }
+
+    const transformedParams: AxiosRequestConfig['params'] = {
+      size,
+      offset,
+    }
+
+    for (const key of Object.keys(others)) {
+      transformedParams.filter = {
+        [key]: {
+          contains: others[key],
+        },
+      }
+    }
+
+    return axiosInstance.get(url, {
+      params: transformedParams,
+      signal,
+    })
+  }
+
+  return axiosInstance.get(url, { params, signal })
+}
+
+const peek = (entityType: string, size: number = 50): Promise<AxiosResponse> => {
+  const url = buildGetAllUrl(entityType)
+
+  return axiosInstance.get(url, {
+    params: {
+      size,
+    },
+  })
+}
+
 // provide to KFG
 provide(FORMS_API_KEY, {
   getOne,
   getAll,
+  getAllV2,
+  peek,
 })
 
 provide(FORMS_CONFIG, props.config)
