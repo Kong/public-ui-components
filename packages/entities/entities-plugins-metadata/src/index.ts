@@ -430,6 +430,10 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
+  'ace': {
+    group: PluginGroup.AUTHENTICATION,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
 } satisfies Record<string, {
   group: PluginGroup
   scope: PluginScope[]

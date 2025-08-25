@@ -730,6 +730,12 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-aws-guardrails'],
   },
+  ace: {
+    descriptionKey: 'plugins.meta.ace.description',
+    isEnterprise: true,
+    nameKey: 'plugins.meta.ace.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ace'],
+  },
 }
 
 /**
