@@ -100,7 +100,7 @@ Controls whether the failover feature is enabled for the target.
 - required: `false`
 - default: `false`
 
-Differs from `failoverEnabled`, when `failover` is `enabled`, this indicates whether the
+When `failoverEnabled` is `true`, this indicates whether the
 current upstream load balancing target supports `failover` or not.
 
 ### Slots

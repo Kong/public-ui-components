@@ -372,7 +372,7 @@
           "label": "Failover Target",
           "load_balance_target": "Load balance",
           "failover_target": "Failover",
-          "help": "Whether to use this target only as backup or not.",
+          "help": "Whether to use this target only as backup.",
           "unsupported": "The current load balance algorithm does not support failover."
         }
       }
