@@ -86,6 +86,23 @@ Controls whether the form modal is visible or not.
 
 ID of the edited target. If present, the form is `Edit` [type](../../entities-shared/src/types/entity-base-form.ts#L17).
 
+#### `failoverEnabled`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+Controls whether the failover feature is enabled for the target.
+
+#### `failoverUnsupported`
+
+- type: `Boolean`
+- required: `false`
+- default: `false`
+
+When `failoverEnabled` is `true`, this indicates whether the
+current upstream load balancing target supports `failover` or not.
+
 ### Slots
 
 #### info
