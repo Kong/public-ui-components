@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-public-analytics-geo-map">
     <div
-      id="mapContainer"
+      :id="mapContainerId"
       class="analytics-geo-map-container"
     />
     <!-- Legend -->
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed, useId } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
 import type { CountryISOA2, MapFeatureCollection, MetricUnits } from '../types'
@@ -63,9 +63,9 @@ const {
   bounds?: LngLatBoundsLike | undefined
 }>()
 
-const map = ref<Map>()
-
 const { i18n } = composables.useI18n()
+const mapContainerId = useId()
+const map = ref<Map>()
 const geoJsonData = ref<MapFeatureCollection | null>(null)
 
 const layerPaint = computed(() => ({
@@ -215,7 +215,7 @@ const goToCountry = (countryCode: CountryISOA2) => {
 
 const mapOptions = computed(() => {
   const options: MapOptions = {
-    container: 'mapContainer',
+    container: mapContainerId,
     style: { version: 8, sources: {}, layers: [] },
     attributionControl: false,
     // fit bounds for whole world minus antarctica
@@ -234,10 +234,10 @@ const mapOptions = computed(() => {
 
 onMounted(async () => {
   try {
-    const url = new URL('../countries-simple-geo.pbf.gz', import.meta.url)
+    const url = new URL('../countries-simple-geo.pbf', import.meta.url)
     const response = await fetch(url)
-    const arrayBuffer = await response.arrayBuffer()
-    const geoData = geobuf.decode(new Pbf(arrayBuffer)) as MapFeatureCollection
+    const rawBuf = new Uint8Array(await response.arrayBuffer())
+    const geoData = geobuf.decode(new Pbf(rawBuf)) as MapFeatureCollection
     geoJsonData.value = geoData
 
     map.value = new Map(mapOptions.value)
