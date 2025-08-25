@@ -1,6 +1,5 @@
 <template>
   <Form
-    class="ai-mcp-config-form"
     :config="formConfig"
     :data="data"
     :schema="schema"
@@ -81,11 +80,3 @@ const onChange = (newVal: AIMcpPlugin) => {
   emit('change', pluginConfig)
 }
 </script>
-
-<style lang="scss" scoped>
-.ai-mcp-config-form {
-  display: flex;
-  flex-direction: column;
-  gap: $kui-space-100;
-}
-</style>
