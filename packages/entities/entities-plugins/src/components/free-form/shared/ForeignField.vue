@@ -74,7 +74,7 @@ const placeholder = computed(() => {
   return t('plugins.free-form.foreign_placeholder', { entity: field.schema.value?.reference ?? 'entity' })
 })
 
-const rawInputValue = ref('')
+const rawInputValue = ref(initialValue ?? '')
 
 function handleUpdate(value: string) {
   if (initialValue !== undefined && value === '' && value !== initialValue) {
