@@ -28,14 +28,13 @@ import Form from '../shared/Form.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import AdvancedFields from '../shared/AdvancedFields.vue'
 
-import type { FormConfig, GlobalAction } from '../shared/types'
+import type { FormConfig } from '../shared/types'
 import type { FormSchema, RecordFieldSchema } from '../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 import { computed } from 'vue'
 
 const emit = defineEmits<{
   change: [value: FreeFormPluginData]
-  globalAction: [name: GlobalAction, payload: any]
 }>()
 
 const { schema } = defineProps<{
