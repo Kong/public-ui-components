@@ -1,5 +1,5 @@
 <template>
-  <div class="sc-form-pinned-fields">
+  <div class="ff-form-pinned-fields">
     <VueFormGenerator
       :model="formModel"
       :options="formOptions"
@@ -10,7 +10,7 @@
 
   <KCollapse
     v-model="configCollapse"
-    class="sc-form-config-fields"
+    class="ff-form-config-fields"
   >
     <template #title>
       {{ t('plugins.form.grouping.plugin_configuration.title') }}
@@ -19,8 +19,9 @@
       {{ t('plugins.form.grouping.plugin_configuration.description') }}
     </template>
 
-    <div class="sc-form-config-form">
+    <div class="ff-form-config-form">
       <slot
+        class="ff-form"
         :data="pruneData(model)"
         :schema="freeFormSchema"
         @change="onFormChange"
@@ -130,27 +131,23 @@ function pruneData(data: PluginFormWrapperProps<T>['model']) {
 </script>
 
 <style lang="scss" scoped>
-.sc-form-config-fields {
+.ff-form-config-fields {
   border-top: $kui-border-width-10 solid $kui-color-border;
   margin-top: $kui-space-80;
   padding-top: $kui-space-80;
 }
 
-.sc-form-config-form {
+.ff-form-config-form {
   margin: $kui-space-100 0;
-}
 
-:deep(.rc-code textarea) {
-  font-family: $kui-font-family-code !important;
+  & > * {
+    display: flex;
+    flex-direction: column;
+    gap: $kui-space-100;
+  }
 }
 
 :deep(.k-label) {
   font-weight: $kui-font-weight-medium;
-}
-
-:deep(.rc-config-form) {
-  display: flex;
-  flex-direction: column;
-  gap: $kui-space-100;
 }
 </style>

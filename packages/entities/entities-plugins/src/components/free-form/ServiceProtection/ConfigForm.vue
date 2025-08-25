@@ -1,6 +1,5 @@
 <template>
   <Form
-    class="rc-config-form"
     :config="formConfig"
     :data="data"
     :schema="schema"
