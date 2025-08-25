@@ -234,31 +234,9 @@ const mapOptions = computed(() => {
 
 onMounted(async () => {
   try {
-    const url = new URL('../countries-simple-geo.pbf.gz', import.meta.url)
+    const url = new URL('../countries-simple-geo.pbf', import.meta.url)
     const response = await fetch(url)
-    let rawBuf = new Uint8Array(await response.arrayBuffer())
-
-    // Detect gzip (magic bytes 0x1f 0x8b 0x08)
-    const isGzip = rawBuf.length >= 3 &&
-      rawBuf[0] === 0x1f &&
-      rawBuf[1] === 0x8b &&
-      rawBuf[2] === 0x08
-
-    if (isGzip) {
-      try {
-        if (typeof window !== 'undefined' && 'DecompressionStream' in window) {
-          const ds = new DecompressionStream('gzip')
-          const decompressedArrayBuffer = await new Response(
-            new Response(rawBuf).body!.pipeThrough(ds),
-          ).arrayBuffer()
-          rawBuf = new Uint8Array(decompressedArrayBuffer)
-        } else {
-          console.warn('AnalyticsGeoMap - Gzip data detected but DecompressionStream unsupported')
-        }
-      } catch (err) {
-        console.warn('AnalyticsGeoMap - Failed to decompress gzip data:', err)
-      }
-    }
+    const rawBuf = new Uint8Array(await response.arrayBuffer())
     const geoData = geobuf.decode(new Pbf(rawBuf)) as MapFeatureCollection
     geoJsonData.value = geoData
 
