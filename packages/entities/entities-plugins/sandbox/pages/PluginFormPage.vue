@@ -57,7 +57,6 @@ const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 
 useProvideExperimentalFreeForms([
   'service-protection',
-  'jwt-signer',
 ])
 
 const konnectConfig = ref<KonnectPluginFormConfig>({
