@@ -795,7 +795,7 @@
         "component_error": "The vault secret picker is not available"
       },
       "tag_helper": "Use comma to separate values. eg: value1, value2",
-      "foreign_placeholder": "Input a UUID of {entity}"
+      "foreign_placeholder": "Enter a UUID of {entity}"
     }
   },
   "redis": {
