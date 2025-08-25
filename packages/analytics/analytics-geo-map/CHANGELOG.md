@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.0.1...@kong-ui-public/analytics-geo-map@1.0.2) (2025-08-25)
+
+
+### Bug Fixes
+
+* decompress gzipped geometry data ([#2383](https://github.com/Kong/public-ui-components/issues/2383)) ([4666508](https://github.com/Kong/public-ui-components/commit/4666508e0ed64cff894b14a5ab5d12f7d8d22f3f))
+
+
+
+
+
 ## [1.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@0.4.1...@kong-ui-public/analytics-geo-map@1.0.1) (2025-08-22)
 
 
