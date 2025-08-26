@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.77.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.77.0...@kong-ui-public/entities-plugins@9.77.1) (2025-08-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit edge style, ync selection state between two flows ([#2391](https://github.com/Kong/public-ui-components/issues/2391)) ([4086e54](https://github.com/Kong/public-ui-components/commit/4086e5450d8b73840626d3b94c067c25b1544d75))
+
+
+
+
+
 # [9.77.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.76.0...@kong-ui-public/entities-plugins@9.77.0) (2025-08-26)
 
 
