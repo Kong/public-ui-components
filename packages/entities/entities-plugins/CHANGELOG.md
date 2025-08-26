@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.78.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.77.5...@kong-ui-public/entities-plugins@9.78.0) (2025-08-26)
+
+
+### Features
+
+* **entities-plugins:** jwt-signer - using standard layout ([#2398](https://github.com/Kong/public-ui-components/issues/2398)) ([7166a77](https://github.com/Kong/public-ui-components/commit/7166a7759fb6784fff505dc59627d6c11da2c125))
+
+
+
+
+
 ## [9.77.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.77.4...@kong-ui-public/entities-plugins@9.77.5) (2025-08-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
