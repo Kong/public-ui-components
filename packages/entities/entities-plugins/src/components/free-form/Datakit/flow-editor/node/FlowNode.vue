@@ -296,6 +296,8 @@ watch(() => data.fields.output, (output) => {
 @use "sass:math";
 
 $node-border-width: 1px;
+$node-max-width: 246px;
+$node-min-width: 168px;
 $handle-width: 3px;
 $handle-height: 10px;
 
@@ -303,14 +305,15 @@ $handle-height: 10px;
   background-color: $kui-color-background;
   border: 1px solid $kui-color-border-neutral-weak;
   border-radius: $kui-border-radius-20;
-  min-width: 120px;
+  max-width: $node-max-width;
+  min-width: $node-min-width;
   padding: $kui-space-40 0;
 
   .body {
     padding: 0 $kui-space-40;
 
     .info-line {
-      align-items: center;
+      align-items: flex-start;
       display: flex;
       flex-direction: row;
       gap: $kui-space-40;
@@ -321,13 +324,26 @@ $handle-height: 10px;
       .name-and-error {
         align-items: center;
         display: flex;
+        flex: 1 1 auto;
         gap: $kui-space-10;
       }
 
+      .error-icon {
+        align-self: flex-start;
+      }
+
       .name {
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
         font-size: $kui-font-size-20;
         font-weight: $kui-font-weight-semibold;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
         line-height: $kui-line-height-20;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-all;
+        word-wrap: break-word;
       }
     }
   }
