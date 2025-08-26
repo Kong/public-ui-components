@@ -979,9 +979,6 @@ importers:
       '@kong-ui-public/forms':
         specifier: workspace:^
         version: link:../../core/forms
-      focus-trap:
-        specifier: ^7.6.5
-        version: 7.6.5
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -1037,6 +1034,9 @@ importers:
       vue-router:
         specifier: ^4.4.5
         version: 4.5.1(vue@3.5.18(typescript@5.9.2))
+      zod:
+        specifier: ^4.0.17
+        version: 4.0.17
 
   packages/entities/entities-plugins-icon:
     devDependencies:
@@ -9925,6 +9925,9 @@ packages:
 
   zenscroll@4.0.2:
     resolution: {integrity: sha512-jEA1znR7b4C/NnaycInCU6h/d15ZzCd1jmsruqOKnZP6WXQSMH3W2GL+OXbkruslU4h+Tzuos0HdswzRUk/Vgg==}
+
+  zod@4.0.17:
+    resolution: {integrity: sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ==}
 
 snapshots:
 
@@ -20038,3 +20041,5 @@ snapshots:
   yocto-queue@1.2.1: {}
 
   zenscroll@4.0.2: {}
+
+  zod@4.0.17: {}

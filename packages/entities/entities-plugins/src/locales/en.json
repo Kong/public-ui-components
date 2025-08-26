@@ -689,6 +689,7 @@
           "mode": "Flow editor",
           "name": "Datakit flow editor",
           "cta": "Go to flow editor",
+          "disabled_tooltip": "The flow editor is unavailable. To switch, fix configuration errors or remove unsupported nodes.",
           "done": "Done",
           "view_docs": "View docs",
           "expand_panel": "Expand panel",

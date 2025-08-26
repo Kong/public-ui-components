@@ -1,3 +1,4 @@
+import { IMPLICIT_NODE_NAMES } from '../../constants'
 import type {
   ConfigEdge,
   ConfigNode,
@@ -18,7 +19,6 @@ import {
   createId,
   findFieldByName,
   getFieldsFromMeta,
-  IMPLICIT_NODE_NAMES,
   makeDefaultImplicitUINode,
   parseNameConnection,
   toFieldArray,
