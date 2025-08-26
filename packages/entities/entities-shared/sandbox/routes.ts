@@ -11,13 +11,6 @@ export const routes: Array<RouteRecordRaw & { label?: string }> = [
     label: 'EntityLink',
     component: () => import('./pages/EntityLinkPage.vue'),
   },
-
-  {
-    path: '/entity-empty-state',
-    name: 'entity-empty-state',
-    label: 'EntityEmptyState',
-    component: () => import('./pages/EntityEmptyStatePage.vue'),
-  },
   {
     path: '/entity-delete-modal',
     name: 'entity-delete-modal',
