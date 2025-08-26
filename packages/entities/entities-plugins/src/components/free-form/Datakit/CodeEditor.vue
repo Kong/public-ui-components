@@ -50,7 +50,7 @@ const {
 }>()
 
 const emit = defineEmits<{
-  change: [config: DatakitConfig]
+  change: [config: unknown]
   error: [msg: string]
 }>()
 
@@ -116,7 +116,7 @@ onMounted(() => {
       const config = yaml.load(value, {
         schema: JSON_SCHEMA,
         json: true,
-      }) as DatakitConfig
+      })
 
       monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
 

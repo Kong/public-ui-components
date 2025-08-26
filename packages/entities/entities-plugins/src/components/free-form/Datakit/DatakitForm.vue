@@ -38,7 +38,7 @@
           :config="config"
           :is-editing="props.isEditing"
           :ui-data="uiData"
-          @change="handleConfigChange"
+          @change="handleFlowChange"
         />
         <CodeEditor
           v-else-if="finalEditorMode === 'code'"
@@ -64,8 +64,7 @@ import type { Component } from 'vue'
 // import type { ZodError } from 'zod'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { DatakitConfig } from './types'
-import { type DatakitUIData, type EditorMode } from './types'
+import type { DatakitConfig, DatakitUIData, EditorMode } from './types'
 
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
@@ -136,7 +135,7 @@ const description = computed(() => {
 
 // Shared
 
-const config = ref<DatakitConfig>({ ...props.model.config })
+const config = ref({ ...props.model.config })
 const uiData = ref<DatakitUIData | undefined>(props.model.__ui_data ? { ...props.model.__ui_data } : undefined)
 
 watch(realEditorMode, () => {
@@ -146,7 +145,13 @@ watch(realEditorMode, () => {
   })
 })
 
-function handleConfigChange(newConfig: DatakitConfig, newUIData?: DatakitUIData | null) {
+/**
+ * Handle changes to the config and UI data.
+ *
+ * @param newConfig The new config to set.
+ * @param newUIData The new UI data to set. Use `null` to clear the existing UI data.
+ */
+function handleConfigChange(newConfig: unknown, newUIData?: DatakitUIData | null) {
   // update the external form state
   props.onFormChange({
     config: newConfig,
@@ -160,6 +165,17 @@ function handleConfigChange(newConfig: DatakitConfig, newUIData?: DatakitUIData 
   // update the local config as the external form state isn't
   // flowing back down to the component
   config.value = newConfig
+}
+
+/**
+ * Handle changes from the flow editor.
+ *
+ * @param newConfig The new config to set.
+ * @param newUIData The new UI data to set. Use `null` to clear the existing UI data.
+ */
+function handleFlowChange(newConfig: DatakitConfig, newUIData?: DatakitUIData | null) {
+  handleConfigChange(newConfig, newUIData)
+
   if (newUIData !== undefined) {
     uiData.value = newUIData ?? undefined
   }
@@ -191,7 +207,7 @@ function handleConfigChange(newConfig: DatakitConfig, newUIData?: DatakitUIData 
 //     .join('; ')
 // }
 
-function handleCodeChange(newConfig: DatakitConfig) {
+function handleCodeChange(newConfig: unknown) {
   handleConfigChange(newConfig)
 
   // TODO: use strict validation and map back to the exact location of schema validation errors
@@ -224,7 +240,7 @@ function handleFormChange(data: any) {
   for (const key in data.config) {
     // updating nodes can lead to re`load`ing the flow editor state
     if (key !== 'nodes') {
-      config.value[key as keyof DatakitConfig] = data.config[key]
+      config.value[key] = data.config[key]
     }
   }
 }
