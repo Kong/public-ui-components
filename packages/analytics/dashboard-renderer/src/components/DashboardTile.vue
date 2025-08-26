@@ -69,9 +69,9 @@
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLink }"
             />
             <KDropdownItem
-              v-if="hasZoomActions && !!requestsLink"
+              v-if="hasZoomActions && !!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
-              :item="{ label: i18n.t('jumpToRequests'), to: requestsLink }"
+              :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
             <KDropdownItem
               v-if="!('allow_csv_export' in definition.chart) || definition.chart.allow_csv_export"
@@ -236,13 +236,13 @@ const exploreLink = computed(() => {
 
 const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && props.definition.query && props.definition.query?.datasource !== 'llm_usage')
 
-const requestsLink = computed(() => {
+const requestsLinkKebabMenu = computed(() => {
   if (!canGenerateRequestsLink.value || !canShowKebabMenu.value) {
     return ''
   }
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
 
-  const requestsQuery = buildRequestsQuery(
+  const requestsQuery = buildRequestsQueryKebabMenu(
     props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
     filters,
   )
@@ -406,7 +406,18 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
   emit('tile-time-range-zoom', zoomEvent)
 }
 
-const buildRequestsQuery = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
+const buildRequestsQueryKebabMenu = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
+  return {
+    filter: filters,
+    timeframe: {
+      timePeriodsKey: timeRange.type === 'relative' ? timeRange.time_range : 'custom',
+      start: timeRange.type === 'absolute' ? chartData.value?.meta.start_ms : undefined,
+      end: timeRange.type === 'absolute' ? chartData.value?.meta.end_ms : undefined,
+    },
+  }
+}
+
+const buildRequestsQueryZoomActions = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
   return {
     filter: filters,
     timeframe: {
@@ -425,7 +436,7 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
   }
 
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
-  const query = buildRequestsQuery(newTimeRange, filters)
+  const query = buildRequestsQueryZoomActions(newTimeRange, filters)
 
   requestsLinkZoomActions.value = { href: `${requestsBaseUrl.value}?q=${JSON.stringify(query)}` }
 }
