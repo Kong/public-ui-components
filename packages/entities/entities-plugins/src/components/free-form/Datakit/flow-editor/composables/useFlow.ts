@@ -17,6 +17,7 @@ import { isImplicitNode } from '../node/node'
 import { useEditorStore } from '../store/store'
 import { createEdgeConnectionString, createNewConnectionString } from './helpers'
 import { useOptionalConfirm } from './useConflictConnectionConfirm'
+import { KUI_COLOR_BORDER_NEUTRAL_WEAK, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -62,6 +63,37 @@ function createWrapper(): [typeof wrap, typeof copy] {
   }
 
   return [wrap, copy]
+}
+
+const BORDER_COLORS: Record<EdgeState, string> = {
+  default: KUI_COLOR_BORDER_NEUTRAL_WEAK,
+  hover: KUI_COLOR_BORDER_PRIMARY_WEAK,
+  selected: KUI_COLOR_BORDER_PRIMARY,
+}
+
+type EdgeState = 'default' | 'hover' | 'selected'
+let selectedEdgeId: EdgeId | undefined
+let hoverEdgeId: EdgeId | undefined
+
+function updateEdgeStyle(edge: Edge<EdgeData>): Edge<EdgeData> {
+  const state = edge.id === selectedEdgeId ? 'selected' : edge.id === hoverEdgeId ? 'hover' : 'default'
+
+  const color = BORDER_COLORS[state]
+  const { markerEnd } = edge
+
+  const marker = typeof markerEnd === 'object'
+    ? { ...markerEnd, color }
+    : { type: markerEnd as MarkerType, color }
+
+  return {
+    ...edge,
+    style: {
+      ...edge.style,
+      stroke: color,
+    },
+    markerEnd: marker,
+    zIndex: state === 'default' ? undefined : 1,
+  }
 }
 
 export interface LayoutOptions {
@@ -125,6 +157,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     const {
       findNode,
       fitView: flowFitView,
+      deleteKeyCode,
       onNodeClick,
       onNodeDragStop,
       onEdgeClick,
@@ -132,7 +165,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       onNodesChange,
       onEdgesChange,
       onEdgeUpdate,
-      deleteKeyCode,
+      onEdgeMouseEnter,
+      onEdgeMouseLeave,
+      setEdges,
     } = vueFlowStore
 
     // VueFlow has a default delete key code of 'Backspace',
@@ -188,7 +223,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             throw new Error(`Missing target node "${edge.target}" for edge "${edge.id}" in phase "${phase}"`)
           }
 
-          return {
+          return updateEdgeStyle({
             id: edge.id,
             source: edge.source,
             target: edge.target,
@@ -197,7 +232,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             markerEnd: MarkerType.ArrowClosed,
             data: edge,
             updatable: !readonly,
-          }
+          })
         }),
     )
 
@@ -352,11 +387,48 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     // Only triggered by canvas-originated changes
     onEdgesChange((changes) => {
+      const selectionChanges = changes.filter((change) => change.type === 'select')
+      selectionChanges
+        // deselected changes come first
+        .sort((a, b) => (a.selected === b.selected ? 0 : a.selected ? 1 : -1))
+        .forEach((change) => {
+          selectedEdgeId = change.selected ? change.id as EdgeId : undefined
+
+          setEdges((edges) => edges.map((edge) => {
+            if (edge.id !== change.id || !edge.markerEnd) {
+              return edge
+            }
+
+            return updateEdgeStyle({
+              ...edge,
+              zIndex: change.selected ? 1 : undefined,
+            })
+          }))
+        })
+
       changes.forEach((change) => {
         if (change.type === 'remove') {
           disconnectEdge(change.id as EdgeId, true)
         }
       })
+    })
+
+    onEdgeMouseEnter(({ edge: edgeEnter }) => {
+      hoverEdgeId = edgeEnter.id as EdgeId
+
+      setEdges((edges) => edges.map((edge) => {
+        if (edge.id !== edgeEnter.id) return edge
+        return updateEdgeStyle(edge)
+      }))
+    })
+
+    onEdgeMouseLeave(({ edge: edgeLeave }) => {
+      hoverEdgeId = undefined
+
+      setEdges((edges) => edges.map((edge) => {
+        if (edge.id !== edgeLeave.id) return edge
+        return updateEdgeStyle(edge)
+      }))
     })
 
     onEdgeUpdate(({ connection }) => handleConnect(connection))
