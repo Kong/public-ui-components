@@ -1,3 +1,5 @@
+import type { DatakitConfig } from './strict'
+
 import { z } from 'zod'
 import {
   HttpMethodSchema,
@@ -133,7 +135,7 @@ export const DatakitConfigSchema = z
   })
   .strict()
   .superRefine((config, ctx) => {
-    if (!config || !Array.isArray((config as any).nodes)) return
-    validateNamesAndConnections(config as any, IMPLICIT_NODE_NAMES, ctx)
+    if (!config || !Array.isArray(config.nodes)) return
+    validateNamesAndConnections(config as DatakitConfig, IMPLICIT_NODE_NAMES, ctx)
   })
   .nullish()

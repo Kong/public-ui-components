@@ -1,4 +1,5 @@
 import type { z } from 'zod'
+import type { ConfigNode, DatakitConfig } from './strict'
 
 export type ConnectionRef = {
   nodeName: string
@@ -7,7 +8,7 @@ export type ConnectionRef = {
 }
 
 export function collectConnectionRefs(
-  node: any,
+  node: ConfigNode,
   nodeIndex: number,
 ): ConnectionRef[] {
   const out: ConnectionRef[] = []
@@ -22,17 +23,13 @@ export function collectConnectionRefs(
   }
   if ('input' in node && node.input != null) push(['input'], node.input)
   if ('inputs' in node && node.inputs && typeof node.inputs === 'object') {
-    for (const [k, v] of Object.entries(
-      node.inputs as Record<string, unknown>,
-    )) {
+    for (const [k, v] of Object.entries(node.inputs)) {
       if (v != null) push(['inputs', k], v)
     }
   }
   if ('output' in node && node.output != null) push(['output'], node.output)
   if ('outputs' in node && node.outputs && typeof node.outputs === 'object') {
-    for (const [k, v] of Object.entries(
-      node.outputs as Record<string, unknown>,
-    )) {
+    for (const [k, v] of Object.entries(node.outputs)) {
       if (v != null) push(['outputs', k], v)
     }
   }
@@ -40,20 +37,20 @@ export function collectConnectionRefs(
 }
 
 export function isOutRef(ref: ConnectionRef) {
-  const slot = ref.path[2] as string
+  const slot = ref.path[2]
   return slot === 'output' || slot === 'outputs'
 }
 
-export function hasAnyNonNullEntry(obj: unknown): boolean {
-  if (!obj || typeof obj !== 'object') return false
-  for (const v of Object.values(obj as Record<string, unknown>)) {
+export function hasAnyNonNullEntry(obj?: Record<string, unknown> | null): boolean {
+  if (!obj) return false
+  for (const v of Object.values(obj)) {
     if (v != null) return true
   }
   return false
 }
 
 export function validateNamesAndConnections(
-  config: { nodes?: any[] | null },
+  config: DatakitConfig,
   implicitNames: readonly string[],
   ctx: z.RefinementCtx,
 ) {
@@ -74,8 +71,7 @@ export function validateNamesAndConnections(
 
   config.nodes.forEach((node, i) => {
     const hasInput = 'input' in node && node.input != null
-    const hasInputs =
-      'inputs' in node && hasAnyNonNullEntry((node as any).inputs)
+    const hasInputs = 'inputs' in node && hasAnyNonNullEntry(node.inputs)
     if (hasInput && hasInputs) {
       ctx.addIssue({
         code: 'custom',
