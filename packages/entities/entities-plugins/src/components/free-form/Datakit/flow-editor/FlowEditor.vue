@@ -39,7 +39,7 @@ import { useTemplateRef, watch } from 'vue'
 import english from '../../../../locales/en.json'
 import BooleanField from '../../shared/BooleanField.vue'
 import { provideEditorStore } from '../composables'
-import FlowPanels from './modal/EditorCanvas.vue'
+import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)

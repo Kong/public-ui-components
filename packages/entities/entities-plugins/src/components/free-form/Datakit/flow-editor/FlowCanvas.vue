@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DragPayload, NodeId, NodePhase } from '../../types'
+import type { DragPayload, NodeId, NodePhase } from '../types'
 
 import { SparklesIcon } from '@kong/icons'
 import { Background } from '@vue-flow/background'
@@ -61,10 +61,10 @@ import { VueFlow } from '@vue-flow/core'
 import { useElementBounding } from '@vueuse/core'
 import { nextTick, useTemplateRef } from 'vue'
 
-import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
-import { provideFlowStore } from '../composables/useFlow'
-import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from '../constants'
-import FlowNode from '../node/FlowNode.vue'
+import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
+import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
+import FlowNode from './node/FlowNode.vue'
+import { provideFlowStore } from './store/flow'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
