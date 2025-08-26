@@ -730,6 +730,59 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-aws-guardrails'],
   },
+  'ace': {
+    descriptionKey: 'plugins.meta.ace.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ace.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ace'],
+  },
+  'solace-consume': {
+    descriptionKey: 'plugins.meta.solace-consume.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.solace-consume.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['solace-consume'],
+  },
+  'solace-log': {
+    descriptionKey: 'plugins.meta.solace-log.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.solace-log.name',
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['solace-log'],
+  },
+  'ai-llm-as-judge': {
+    descriptionKey: 'plugins.meta.ai-llm-as-judge.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-llm-as-judge.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-llm-as-judge'],
+  },
+  'ai-mcp-proxy': {
+    descriptionKey: 'plugins.meta.ai-mcp-proxy.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-mcp-proxy.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-mcp-proxy'],
+  },
+  'ai-gcp-model-armor': {
+    descriptionKey: 'plugins.meta.ai-gcp-model-armor.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-gcp-model-armor.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-gcp-model-armor'],
+  },
+  'ai-mcp-oauth2': {
+    descriptionKey: 'plugins.meta.ai-mcp-oauth2.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-mcp-oauth2.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-mcp-oauth2'],
+  },
+  'ai-semantic-response-guard': {
+    descriptionKey: 'plugins.meta.ai-semantic-response-guard.description',
+    isEnterprise: false,
+    nameKey: 'plugins.meta.ai-semantic-response-guard.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-response-guard'],
+  },
 }
 
 /**

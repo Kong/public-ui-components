@@ -430,6 +430,38 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
+  'ace': {
+    group: PluginGroup.AUTHENTICATION,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
+  'solace-consume': {
+    group: PluginGroup.TRAFFIC_CONTROL,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
+  'solace-log': {
+    group: PluginGroup.LOGGING,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
+  'ai-llm-as-judge': {
+    group: PluginGroup.AI,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+  },
+  'ai-mcp-proxy': {
+    group: PluginGroup.AI,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
+  'ai-gcp-model-armor': {
+    group: PluginGroup.AI,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+  },
+  'ai-mcp-oauth2': {
+    group: PluginGroup.AI,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
+  },
+  'ai-semantic-response-guard': {
+    group: PluginGroup.AI,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+  },
 } satisfies Record<string, {
   group: PluginGroup
   scope: PluginScope[]
