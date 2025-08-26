@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.18...@kong-ui-public/dashboard-renderer@7.0.19) (2025-08-26)
+
+
+### Bug Fixes
+
+* use start and end from chart data for requests link ([#2394](https://github.com/Kong/public-ui-components/issues/2394)) ([4da1831](https://github.com/Kong/public-ui-components/commit/4da1831459707094cbc1d39515680312212f4a52))
+
+
+
+
+
 ## [7.0.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.17...@kong-ui-public/dashboard-renderer@7.0.18) (2025-08-22)
 
 
