@@ -1197,7 +1197,7 @@ const handleValidityChange = (event: PluginValidityChangeEvent) => {
   }
 
   form.clientErrorMessage = [...clientSideErrors.value.entries()]
-    .map(([model, error]) => `${model}: ${typeof error === 'string' ? error : getMessageFromError(error)}`)
+    .map(([, error]) => `${typeof error === 'string' ? error : getMessageFromError(error)}`)
     .join('; ')
 
   if (form.clientErrorMessage) {
