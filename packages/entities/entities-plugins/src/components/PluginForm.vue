@@ -392,14 +392,23 @@ const fetchUrl = computed((): string => {
     return submitEndpoint
   }
 
+  let endpoint: string
+
   // plugin
   if (props.config.entityType && props.config.entityId) {
-    return endpoints.form[props.config.app].edit.forEntity
+    endpoint = endpoints.form[props.config.app].edit.forEntity
       .replace(/{entityType}/gi, props.config.entityType)
       .replace(/{entityId}/gi, props.config.entityId)
   } else {
-    return endpoints.form[props.config.app].edit.all
+    endpoint = endpoints.form[props.config.app].edit.all
   }
+
+  // UI data is currently only available on Konnect
+  if (props.config.app === 'konnect' && PLUGIN_METADATA[props.pluginType].useUIData) {
+    return `${endpoint}?__ui_data=true`
+  }
+
+  return endpoint
 })
 
 const toggle = (): void => {

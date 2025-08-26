@@ -708,6 +708,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.datakit.description',
     isEnterprise: false,
     nameKey: 'plugins.meta.datakit.name',
+    useUIData: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['datakit'],
   },
   'ai-prompt-compressor': {

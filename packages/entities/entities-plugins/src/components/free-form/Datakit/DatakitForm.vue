@@ -29,7 +29,7 @@
     <template #default="formProps">
       <Form
         v-bind="formProps"
-        :data="{ config }"
+        :data="{ config, __ui_data: uiData }"
         tag="div"
         @change="handleFormChange"
       >
@@ -38,7 +38,7 @@
           :config="config"
           :is-editing="props.isEditing"
           :ui-data="uiData"
-          @change="handleFlowConfigChange"
+          @change="handleConfigChange"
         />
         <CodeEditor
           v-else-if="finalEditorMode === 'code'"
@@ -64,7 +64,8 @@ import type { Component } from 'vue'
 // import type { ZodError } from 'zod'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { DatakitConfig, DatakitUIData, EditorMode } from './types'
+import type { DatakitConfig } from './types'
+import { type DatakitUIData, type EditorMode } from './types'
 
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
@@ -135,8 +136,8 @@ const description = computed(() => {
 
 // Shared
 
-const config = ref({ ...props.model.config })
-const uiData = ref<DatakitUIData>()
+const config = ref<DatakitConfig>({ ...props.model.config })
+const uiData = ref<DatakitUIData | undefined>(props.model.__ui_data ? { ...props.model.__ui_data } : undefined)
 
 watch(realEditorMode, () => {
   props.onValidityChange?.({
@@ -145,10 +146,11 @@ watch(realEditorMode, () => {
   })
 })
 
-function handleConfigChange(newConfig: unknown) {
+function handleConfigChange(newConfig: DatakitConfig, newUIData?: DatakitUIData | null) {
   // update the external form state
   props.onFormChange({
     config: newConfig,
+    ...newUIData !== undefined ? { __ui_data: newUIData ?? undefined } : null,
   })
   props.onValidityChange?.({
     model: 'config',
@@ -158,11 +160,9 @@ function handleConfigChange(newConfig: unknown) {
   // update the local config as the external form state isn't
   // flowing back down to the component
   config.value = newConfig
-}
-
-function handleFlowConfigChange(newConfig: DatakitConfig, newUIData?: DatakitUIData) {
-  handleConfigChange(newConfig)
-  uiData.value = newUIData
+  if (newUIData !== undefined) {
+    uiData.value = newUIData ?? undefined
+  }
 }
 
 // Code editor
