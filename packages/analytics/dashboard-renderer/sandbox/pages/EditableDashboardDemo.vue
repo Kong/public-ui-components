@@ -166,6 +166,30 @@ const dashboardConfig = ref <DashboardConfig>({
         },
       },
     } satisfies TileConfig,
+    {
+      type: 'chart',
+      id: crypto.randomUUID(),
+      definition: {
+        chart: {
+          type: 'choropleth_map',
+        },
+        query: {
+          datasource: 'api_usage',
+          dimensions: ['iso_code'],
+          metrics: ['request_count'],
+        },
+      },
+      layout: {
+        position: {
+          col: 3,
+          row: 2,
+        },
+        size: {
+          cols: 3,
+          rows: 2,
+        },
+      },
+    } satisfies TileConfig,
   ],
 })
 
@@ -183,6 +207,7 @@ const onEditTile = (tile: GridTile<TileDefinition>) => {
     slottable: 'slottable',
     top_n: 'top_n',
     donut: 'donut',
+    choropleth_map: 'choropleth_map',
   }
 
   dashboardConfig.value.tiles = dashboardConfig.value.tiles.map(t => {
