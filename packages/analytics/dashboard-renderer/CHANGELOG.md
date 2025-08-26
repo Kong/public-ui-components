@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.19...@kong-ui-public/dashboard-renderer@7.1.0) (2025-08-26)
+
+
+### Features
+
+* add choropleth_map type to dashboard renderer and schema ([#2392](https://github.com/Kong/public-ui-components/issues/2392)) ([eb7005f](https://github.com/Kong/public-ui-components/commit/eb7005f415735aa76cbda4e60cb077cc1718aa77))
+
+
+
+
+
 ## [7.0.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.18...@kong-ui-public/dashboard-renderer@7.0.19) (2025-08-26)
 
 

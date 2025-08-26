@@ -34,16 +34,18 @@
 import { ref, onMounted, watch, computed, useId } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
-import type { CountryISOA2, MapFeatureCollection, MetricUnits } from '../types'
+import type { MapFeatureCollection, MetricUnits } from '../types'
 import type { Feature, MultiPolygon, Geometry, GeoJsonProperties, FeatureCollection } from 'geojson'
 import composables from '../composables'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import type { ExploreAggregations, CountryISOA2 } from '@kong-ui-public/analytics-utilities'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import lakes from '../ne_110m_lakes.json'
 import * as geobuf from 'geobuf'
 import Pbf from 'pbf'
+
+const countriesPbfUrlPromise = import('../countries-simple-geo.pbf?url').then(m => m.default)
 
 const {
   countryMetrics,
@@ -60,7 +62,7 @@ const {
   withLegend?: boolean
   showTooltipValue?: boolean
   fitToCountry?: CountryISOA2 | undefined
-  bounds?: LngLatBoundsLike | undefined
+  bounds?: Array<[number, number]>
 }>()
 
 const { i18n } = composables.useI18n()
@@ -226,7 +228,7 @@ const mapOptions = computed(() => {
   }
 
   if (bounds) {
-    options.bounds = bounds
+    options.bounds = bounds as LngLatBoundsLike
   }
 
   return options
@@ -234,8 +236,8 @@ const mapOptions = computed(() => {
 
 onMounted(async () => {
   try {
-    const url = new URL('../countries-simple-geo.pbf', import.meta.url)
-    const response = await fetch(url)
+    const countriesPbfUrl = await countriesPbfUrlPromise
+    const response = await fetch(countriesPbfUrl)
     const rawBuf = new Uint8Array(await response.arrayBuffer())
     const geoData = geobuf.decode(new Pbf(rawBuf)) as MapFeatureCollection
     geoJsonData.value = geoData
@@ -277,7 +279,7 @@ onMounted(async () => {
         const feature = e.features?.[0]
         if (feature) {
           const { iso_a2, iso_a2_eh, ISO_A2, admin } = feature.properties
-          const lookup = ISO_A2 ?? iso_a2 === '-99' ? iso_a2_eh : iso_a2
+          const lookup: CountryISOA2 = ISO_A2 ?? iso_a2 === '-99' ? iso_a2_eh : iso_a2
           const metric = countryMetrics[lookup]
           if (metric !== undefined) {
           // @ts-ignore - dynamic i18n key

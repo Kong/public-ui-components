@@ -1,7 +1,7 @@
 import type { Component, Plugin } from 'vue'
 import { nonTsExploreResponse, routeExploreResponse } from './mock-data'
 import { INJECT_QUERY_PROVIDER } from '../src'
-import { generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
+import { generateCrossSectionalData, generateSingleMetricTimeSeriesData } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsBridge, AnalyticsConfigV2, DatasourceAwareQuery, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import { EntityLink } from '@kong-ui-public/entities-shared'
 
@@ -20,6 +20,15 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
       generateSingleMetricTimeSeriesData(
         { name: 'request_count', unit: 'count' },
         { status_code: ['200', '400', '500'] },
+      ),
+    )
+  }
+
+  if (query.query.dimensions && query.query.dimensions.includes('iso_code')) {
+    return await delayedResponse(
+      generateCrossSectionalData(
+        [{ name: 'request_count', unit: 'count' }],
+        { iso_code: ['US', 'GB', 'FR', 'DE', 'RO', 'CN', 'IN', 'BR', 'ZA'] },
       ),
     )
   }
