@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.79.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.78.0...@kong-ui-public/entities-plugins@9.79.0) (2025-08-26)
+
+
+### Features
+
+* **entities-plugins:** add runtime schema validation and compatibility check for datakit flow editor ([#2376](https://github.com/Kong/public-ui-components/issues/2376)) ([4638857](https://github.com/Kong/public-ui-components/commit/46388579d19689ee759dedcb29d918f6b92128b0))
+
+
+
+
+
 # [9.78.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.77.5...@kong-ui-public/entities-plugins@9.78.0) (2025-08-26)
 
 
