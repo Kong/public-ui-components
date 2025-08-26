@@ -1,4 +1,4 @@
-import type { LayoutOptions } from './composables/useFlow'
+import type { LayoutOptions } from './store/flow'
 
 export const DEFAULT_LAYOUT_OPTIONS = {
   padding: 80,
