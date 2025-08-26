@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.77.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.77.1...@kong-ui-public/entities-plugins@9.77.2) (2025-08-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit auto layout conditions ([#2389](https://github.com/Kong/public-ui-components/issues/2389)) ([25c80c4](https://github.com/Kong/public-ui-components/commit/25c80c4b8da616231759d6ec30a6709b2d6de5d0))
+* remove the import of defineProps ([#2395](https://github.com/Kong/public-ui-components/issues/2395)) ([cc2da70](https://github.com/Kong/public-ui-components/commit/cc2da706551832532cab1867f4f8e2bd4dbddd3d))
+
+
+
+
+
 ## [9.77.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.77.0...@kong-ui-public/entities-plugins@9.77.1) (2025-08-26)
 
 
