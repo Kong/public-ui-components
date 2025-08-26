@@ -103,6 +103,10 @@
       }
     },
     "meta": {
+      "ace": {
+        "name": "Konnect Access Control Enforcement",
+        "description": "Enable Developer Self-Service for Konnect Dev Portals"
+      },
       "basic-auth": {
         "name": "Basic Authentication",
         "credential_name": "Basic Auth Credential",
