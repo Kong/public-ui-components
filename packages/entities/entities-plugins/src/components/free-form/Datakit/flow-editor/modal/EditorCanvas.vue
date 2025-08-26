@@ -87,7 +87,7 @@ const { readonly, resizable } = defineProps<{
 }>()
 
 const initialized = ref<[request: boolean, response: boolean]>([false, false])
-const { state } = useEditorStore()
+const { state, markAsLayoutCompleted } = useEditorStore()
 
 const uniqueId = useId()
 const requestFlowId = `${uniqueId}-request`
@@ -180,10 +180,11 @@ const fitView = () => {
 const initWatcher = watch(initialized, ([request, response]) => {
   // Only perform once upon both flow are initialized
   if (request && response) {
-    // Only perform auto layout once in creation mode
-    if (!state.value.isEditing) {
+    // Only perform auto layout if the layout (UI data) is out of sync with the configuration
+    if (state.value.needLayout) {
       requestFlow.value?.autoLayout()
       responseFlow.value?.autoLayout()
+      markAsLayoutCompleted()
     }
     fitView()
     initWatcher.stop()
