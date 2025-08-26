@@ -43,7 +43,7 @@
           </span>
         </KBadge>
         <EditIcon
-          v-if="canShowKebabMenu && context.editable"
+          v-if="canShowKebabMenu && context.editable && !isFullscreen"
           class="edit-icon"
           :color="KUI_COLOR_TEXT_NEUTRAL"
           :data-testid="`edit-tile-${tileId}`"
@@ -51,7 +51,7 @@
           @click="editTile"
         />
         <KDropdown
-          v-if="canShowKebabMenu && kebabMenuHasItems"
+          v-if="canShowKebabMenu && kebabMenuHasItems && !isFullscreen"
           class="dropdown"
           :data-testid="`chart-action-menu-${tileId}`"
           :kpop-attributes="{ placement: 'bottom-end' }"
@@ -168,6 +168,7 @@ const props = withDefaults(defineProps<{
   definition: TileDefinition
   context: DashboardRendererContextInternal
   height?: number
+  isFullscreen?: boolean
   queryReady: boolean
   refreshCounter: number
   tileId: string | number

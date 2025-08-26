@@ -40,6 +40,7 @@ describe('<DashboardTile />', () => {
     editable: true,
     tz: '',
     refreshInterval: 0,
+    zoomable: false,
   }
 
   const mockQueryProvider = {
@@ -64,6 +65,7 @@ describe('<DashboardTile />', () => {
     definition?: TileDefinition
     context?: DashboardRendererContextInternal
     extraProps?: Record<string, any>
+    isFullscreen?: boolean
   }
 
   const mount = ({
@@ -73,6 +75,7 @@ describe('<DashboardTile />', () => {
     definition = mockTileDefinition,
     context = mockContext,
     extraProps = {},
+    isFullscreen = false,
   }: MountOptions = {}) => {
     const attrs = {
       onEditTile,
@@ -85,6 +88,7 @@ describe('<DashboardTile />', () => {
         ...extraProps,
         definition,
         context,
+        isFullscreen,
         queryReady: true,
         refreshCounter: 0,
         tileId: '1',
@@ -155,9 +159,9 @@ describe('<DashboardTile />', () => {
 
   it('jump to explore link should be reactive', () => {
     // Force a different filter so that it actually re-issues the query.
-    const context = {
+    const context: DashboardRendererContextInternal = {
       ...mockContext,
-      filters: [{ field: 'status_code', operator: 'eq', value: 'test1' }],
+      filters: [{ field: 'status_code', operator: 'in', value: ['test1'] }],
     }
     mount({ context })
 
@@ -182,9 +186,9 @@ describe('<DashboardTile />', () => {
 
   it('excludes irrelevant context filters from the jump to explore URL', () => {
     // Passes an llm_usage filter into an api_usage tile
-    const context = {
+    const context: DashboardRendererContextInternal = {
       ...mockContext,
-      filters: [{ field: 'response_model', operator: 'in', value: 'my-model' }],
+      filters: [{ field: 'ai_response_model', operator: 'in', value: ['my-model'] }],
     }
 
     mount({ context })
@@ -283,9 +287,9 @@ describe('<DashboardTile />', () => {
 
   it('jump to requests link should be reactive', () => {
     // Force a different filter so that it actually re-issues the query.
-    const context = {
+    const context: DashboardRendererContextInternal = {
       ...mockContext,
-      filters: [{ field: 'status_code', operator: 'eq', value: 'test1' }],
+      filters: [{ field: 'status_code', operator: 'in', value: ['test1'] }],
     }
     mount({ context })
 
@@ -425,5 +429,12 @@ describe('<DashboardTile />', () => {
 
     cy.getTestId('kebab-action-menu-1').click()
     cy.getTestId('chart-jump-to-requests-1').should('not.exist')
+  })
+
+  it('should hide kebab menu while fullscreen', () => {
+    mount()
+    cy.getTestId('kebab-action-menu-1').should('exist')
+    mount({ isFullscreen: true })
+    cy.getTestId('kebab-action-menu-1').should('not.exist')
   })
 })
