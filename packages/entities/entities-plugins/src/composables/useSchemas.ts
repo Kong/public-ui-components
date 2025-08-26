@@ -20,6 +20,7 @@ import { responseTransformerSchema } from '../definitions/schemas/ResponseTransf
 import { responseTransformerAdvancedSchema } from '../definitions/schemas/ResponseTransformerAdvanced'
 import { routeByHeaderSchema } from '../definitions/schemas/RouteByHeader'
 import { samlSchema } from '../definitions/schemas/SAML'
+import { solaceConsumeSchema } from '../definitions/schemas/SolaceConsume'
 import { statsDSchema } from '../definitions/schemas/StatsD'
 import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
 import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
@@ -231,6 +232,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'kafka-upstream': {
       ...kafkaUpstreamSchema,
+    },
+
+    'solace-consume': {
+      ...solaceConsumeSchema,
     },
 
     'key-auth': genKeyAuthSchema(options),
