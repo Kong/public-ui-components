@@ -56,7 +56,7 @@ const {
   fitToCountry = undefined,
   bounds = undefined,
 } = defineProps<{
-  countryMetrics: Record<CountryISOA2, number>
+  countryMetrics: Record<string, number>
   metricUnit: MetricUnits
   metric: ExploreAggregations
   withLegend?: boolean
