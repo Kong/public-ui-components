@@ -76,7 +76,7 @@ const handleAction = (option: ZoomActionItem) => {
     .zoom-actions-close-icon {
       cursor: pointer;
       margin-right: var(--kui-space-20, $kui-space-20);
-      margin-top: var(--kui-space-20, $kui-space-20);
+      margin-top: var(--kui-space-30, $kui-space-30);
     }
   }
 
@@ -89,7 +89,6 @@ const handleAction = (option: ZoomActionItem) => {
     color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
     cursor: pointer;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
-    margin: 0 var(--kui-space-20, $kui-space-20);
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
     transition: background-color 0.2s;
 
@@ -109,7 +108,7 @@ const handleAction = (option: ZoomActionItem) => {
     }
 
     &:hover {
-      background-color: var(--kui-color-background-neutral-weak, $kui-color-background-neutral-weak);
+      background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
     }
   }
 }
