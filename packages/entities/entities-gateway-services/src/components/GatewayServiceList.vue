@@ -90,7 +90,6 @@
             </KButton>
 
             <KButton
-              v-if="config.app === 'konnect'"
               appearance="secondary"
               data-testid="entity-learn-more-button"
               @click="$emit('click:learn-more')"
