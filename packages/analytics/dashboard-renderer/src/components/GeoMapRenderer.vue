@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import QueryDataProvider from './QueryDataProvider.vue'
-import { AnalyticsGeoMap } from '@kong-ui-public/analytics-geo-map'
+import { AnalyticsGeoMap, exploreResultToCountryMetrics } from '@kong-ui-public/analytics-geo-map'
 import type { MetricUnits } from '@kong-ui-public/analytics-geo-map'
 import type { ChoroplethMapOptions, ExploreAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { RendererProps } from '../types'
@@ -35,21 +35,7 @@ const countryMetrics = computed((): Record<string, number> => {
     return {}
   }
 
-  const metrics = {} as Record<string, number>
-  const data = chartDataRaw.value?.data
-
-  if (data) {
-    for (let row of data) {
-      const countryKey = row?.event?.iso_code
-      const metricKey = chartDataRaw.value?.meta.metric_names?.[0]
-
-      if (countryKey) {
-        metrics[countryKey] = metricKey ? row.event[metricKey] as number : 0
-      }
-    }
-  }
-
-  return metrics as any as Record<string, number>
+  return exploreResultToCountryMetrics(chartDataRaw.value)
 })
 
 const countryMetric = computed(() => {
