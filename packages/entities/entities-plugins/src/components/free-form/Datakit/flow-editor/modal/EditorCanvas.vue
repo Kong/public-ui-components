@@ -74,8 +74,11 @@
 </template>
 
 <script setup lang="ts">
+import type { NodeChange, EdgeChange, VueFlowStore } from '@vue-flow/core'
+
 import { ChevronDownIcon } from '@kong/icons'
 import { useDraggable, useElementBounding } from '@vueuse/core'
+import { useVueFlow } from '@vue-flow/core'
 import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
 
 import { useEditorStore } from '../../composables'
@@ -92,6 +95,33 @@ const { state } = useEditorStore()
 const uniqueId = useId()
 const requestFlowId = `${uniqueId}-request`
 const responseFlowId = `${uniqueId}-response`
+
+const requestFlowStore = useVueFlow(requestFlowId)
+const responseFlowStore = useVueFlow(responseFlowId)
+
+function syncSelectionState(active: VueFlowStore, other: VueFlowStore) {
+  const { onPaneClick, onNodesChange, onEdgesChange, getSelectedNodes, getSelectedEdges } = active
+  const { removeSelectedElements } = other
+
+  function handleSelectionChange(changes?: NodeChange[] | EdgeChange[]) {
+    if (!changes) {
+      removeSelectedElements()
+      return
+    }
+
+    if (!changes.some((change) => change.type === 'select')) return
+
+    if (getSelectedNodes.value.length + getSelectedEdges.value.length > 0) {
+      removeSelectedElements()
+    }
+  }
+
+  onNodesChange(handleSelectionChange)
+  onEdgesChange(handleSelectionChange)
+  onPaneClick(() => handleSelectionChange())
+}
+syncSelectionState(requestFlowStore, responseFlowStore)
+syncSelectionState(responseFlowStore, requestFlowStore)
 
 const flowPanels = useTemplateRef('flowPanels')
 const requestLabel = useTemplateRef('requestLabel')
