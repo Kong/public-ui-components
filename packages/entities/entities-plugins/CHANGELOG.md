@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.76.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.75.0...@kong-ui-public/entities-plugins@9.76.0) (2025-08-26)
+
+
+### Features
+
+* **entities-plugins:** solace consume override ([#2361](https://github.com/Kong/public-ui-components/issues/2361)) ([15d81f6](https://github.com/Kong/public-ui-components/commit/15d81f63a87d7535ef62aa7b866d447eeb570951))
+
+
+
+
+
 # [9.75.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.74.0...@kong-ui-public/entities-plugins@9.75.0) (2025-08-25)
 
 
