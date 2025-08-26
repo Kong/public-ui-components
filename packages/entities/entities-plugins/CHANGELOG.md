@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.77.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.77.2...@kong-ui-public/entities-plugins@9.77.3) (2025-08-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit disconnect before update edges ([#2390](https://github.com/Kong/public-ui-components/issues/2390)) ([c97d69b](https://github.com/Kong/public-ui-components/commit/c97d69bb78500f46cf2ec295746649050d3eb01f))
+
+
+
+
+
 ## [9.77.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.77.1...@kong-ui-public/entities-plugins@9.77.2) (2025-08-26)
 
 
