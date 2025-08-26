@@ -8,12 +8,20 @@
       #plugin-config-extra
     >
       <KSegmentedControl
-        v-model="editorMode"
+        :model-value="realEditorMode"
         :options="editorModes"
+        @update:model-value="editorMode = $event"
       >
         <template #option-label="{ option }">
-          <component :is="icons[option.value]" />
-          {{ option.label }}
+          <KTooltip
+            :disabled="flowAvailable || option.value !== 'flow'"
+            :text="t('plugins.free-form.datakit.flow_editor.disabled_tooltip')"
+          >
+            <div class="option-label">
+              <component :is="icons[option.value]" />
+              {{ option.label }}
+            </div>
+          </KTooltip>
         </template>
       </KSegmentedControl>
     </template>
@@ -28,7 +36,7 @@
         <FlowEditor
           v-if="finalEditorMode === 'flow'"
           :config="config"
-          :is-editing="isEditing"
+          :is-editing="props.isEditing"
           :ui-data="uiData"
           @change="handleFlowConfigChange"
         />
@@ -36,8 +44,8 @@
           v-else-if="finalEditorMode === 'code'"
           class="code-editor"
           :config="config"
-          :editing="isEditing"
-          @change="handleConfigChange"
+          :editing="props.isEditing"
+          @change="handleCodeChange"
           @error="handleCodeError"
         />
       </Form>
@@ -53,6 +61,7 @@
 <script setup lang="ts">
 import type { SegmentedControlOption } from '@kong/kongponents'
 import type { Component } from 'vue'
+// import type { ZodError } from 'zod'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
 import type { DatakitConfig, DatakitUIData, EditorMode } from './types'
@@ -60,7 +69,7 @@ import type { DatakitConfig, DatakitUIData, EditorMode } from './types'
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
 import { KSegmentedControl } from '@kong/kongponents'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 
 import { FEATURE_FLAGS } from '../../../constants'
 import english from '../../../locales/en.json'
@@ -69,6 +78,8 @@ import StandardLayout from '../shared/layout/StandardLayout.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import FlowEditor from './flow-editor/FlowEditor.vue'
+// import { DatakitConfigSchema } from './schema/strict'
+import { DatakitConfigSchema as DatakitConfigCompatSchema } from './schema/compat'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -89,19 +100,30 @@ const icons: Record<EditorMode, Component> = {
   code: CodeblockIcon,
 }
 
-const editorModes = [
-  {
-    label: t('plugins.free-form.datakit.flow_editor.mode'),
-    value: 'flow',
-  },
-  {
-    label: t('plugins.free-form.datakit.code_editor.mode'),
-    value: 'code',
-  },
-] as const satisfies Array<SegmentedControlOption<EditorMode>>
+const flowAvailable = ref<boolean>(true)
+
+const editorModes = computed<Array<SegmentedControlOption<EditorMode>>>(() => {
+  const modes: Array<SegmentedControlOption<EditorMode>> = [
+    {
+      label: t('plugins.free-form.datakit.flow_editor.mode'),
+      value: 'flow',
+    },
+    {
+      label: t('plugins.free-form.datakit.code_editor.mode'),
+      value: 'code',
+    },
+  ]
+
+  modes[0].disabled = !flowAvailable.value
+  return modes
+})
+
+const realEditorMode = computed<EditorMode>(() => {
+  return flowAvailable.value ? editorMode.value : 'code'
+})
 
 const description = computed(() => {
-  switch (editorMode.value) {
+  switch (realEditorMode.value) {
     case 'code':
       return t('plugins.free-form.datakit.description_code')
     case 'flow':
@@ -116,15 +138,12 @@ const description = computed(() => {
 const config = ref({ ...props.model.config })
 const uiData = ref<DatakitUIData>()
 
-// This change comes from freeform fields
-function handleFormChange(data: any) {
-  for (const key in data.config) {
-    // updating nodes can lead to re`load`ing the flow editor state
-    if (key !== 'nodes') {
-      config.value[key] = data.config[key]
-    }
-  }
-}
+watch(realEditorMode, () => {
+  props.onValidityChange?.({
+    model: 'config',
+    valid: true,
+  })
+})
 
 function handleConfigChange(newConfig: unknown) {
   // update the external form state
@@ -148,11 +167,75 @@ function handleFlowConfigChange(newConfig: DatakitConfig, newUIData?: DatakitUID
 
 // Code editor
 
+// function stringifyPath(path: Array<string | number>): string {
+//   return path
+//     .map((k) =>
+//       typeof k === 'number'
+//         ? `[${k}]`
+//         : path.length && typeof k === 'string' && k.includes('.')
+//           ? `["${k}"]`
+//           : `.${k}`,
+//     )
+//     .join('')
+//     .replace(/^\./, '')
+// }
+
+// function getSchemaErrorMessage(error: ZodError): string {
+//   return error.issues
+//     .map(
+//       (issue) =>
+//         `${stringifyPath(issue.path as Array<string | number>)} - ${
+//           issue.message
+//         }`,
+//     )
+//     .join('; ')
+// }
+
+function handleCodeChange(newConfig: unknown) {
+  handleConfigChange(newConfig)
+
+  // TODO: use strict validation and map back to the exact location of schema validation errors
+  // const { success, error } = DatakitConfigSchema.safeParse(newConfig)
+
+  const { success: compatSuccess } = DatakitConfigCompatSchema.safeParse(newConfig)
+  flowAvailable.value = compatSuccess
+
+  // props.onValidityChange?.({
+  //   model: 'config',
+  //   valid: success,
+  //   error: success ? '' : getSchemaErrorMessage(error),
+  // })
+}
+
 function handleCodeError(msg: string) {
+  flowAvailable.value = false
+
   props.onValidityChange?.({
     model: 'config',
     valid: false,
     error: msg,
   })
 }
+
+// Flow editor
+
+// This change comes from freeform fields
+function handleFormChange(data: any) {
+  for (const key in data.config) {
+    // updating nodes can lead to re`load`ing the flow editor state
+    if (key !== 'nodes') {
+      config.value[key] = data.config[key]
+    }
+  }
+}
 </script>
+
+<style lang="scss" scoped>
+.dk-form {
+  .option-label {
+    align-items: center;
+    display: flex;
+    gap: $kui-space-30;
+  }
+}
+</style>
