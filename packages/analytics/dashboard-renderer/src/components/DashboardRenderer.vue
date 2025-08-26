@@ -1,42 +1,60 @@
 <template>
-  <div class="kong-ui-public-dashboard-renderer">
-    <KAlert
-      v-if="!queryBridge"
-      appearance="danger"
+  <div
+    ref="dashboardContainer"
+    class="kong-ui-public-dashboard-renderer"
+    :class="{ 'is-fullscreen': isFullscreen }"
+    @fullscreenchange="onFullscreenChange"
+  >
+    <div
+      ref="layoutContainer"
+      class="layout"
     >
-      {{ i18n.t('renderer.noQueryBridge') }}
-    </KAlert>
-    <component
-      :is="context.editable ? DraggableGridLayout : GridLayout"
-      v-else
-      ref="gridLayoutRef"
-      :tile-height="model.tile_height"
-      :tiles="gridTiles"
-      @update-tiles="handleUpdateTiles"
-    >
-      <template #tile="{ tile }">
-        <div
-          v-if="tile.meta.chart.type === 'slottable'"
-          class="tile-container slottable-tile"
-        >
-          <slot :name="tile.meta.chart.id" />
-        </div>
-        <DashboardTile
-          v-else
-          class="tile-container"
-          :context="mergedContext"
-          :definition="tile.meta"
-          :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
-          :query-ready="queryReady"
-          :refresh-counter="refreshCounter"
-          :tile-id="tile.id"
-          @duplicate-tile="onDuplicateTile(tile)"
-          @edit-tile="onEditTile(tile)"
-          @remove-tile="onRemoveTile(tile)"
-          @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
-        />
-      </template>
-    </component>
+      <div
+        v-if="queryBridge && isFullscreen"
+        class="fullscreen-header"
+      >
+        <slot name="fullscreenHeader" />
+      </div>
+      <KAlert
+        v-if="!queryBridge"
+        appearance="danger"
+      >
+        {{ i18n.t('renderer.noQueryBridge') }}
+      </KAlert>
+      <component
+        :is="context.editable && !isFullscreen ? DraggableGridLayout : GridLayout"
+        v-else
+        ref="gridLayoutRef"
+        :tile-height="model.tile_height"
+        :tiles="gridTiles"
+        @update-tiles="handleUpdateTiles"
+      >
+        <template #tile="{ tile }">
+          <div
+            v-if="tile.meta.chart.type === 'slottable'"
+            class="tile-container slottable-tile"
+          >
+            <slot :name="tile.meta.chart.id" />
+          </div>
+          <DashboardTile
+            v-else
+            :key="isFullscreen ? `${tile.id}-tile` : `${tile.id}-tile-fullscreen`"
+            class="tile-container"
+            :context="mergedContext"
+            :definition="tile.meta"
+            :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
+            :is-fullscreen="isFullscreen"
+            :query-ready="queryReady"
+            :refresh-counter="refreshCounter"
+            :tile-id="tile.id"
+            @duplicate-tile="onDuplicateTile(tile)"
+            @edit-tile="onEditTile(tile)"
+            @remove-tile="onRemoveTile(tile)"
+            @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
+          />
+        </template>
+      </component>
+    </div>
   </div>
 </template>
 
@@ -53,7 +71,7 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import type { ComponentPublicInstance } from 'vue'
-import { computed, getCurrentInstance, inject, ref } from 'vue'
+import { computed, getCurrentInstance, inject, nextTick, ref } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
@@ -61,6 +79,8 @@ import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import {
   DEFAULT_TILE_HEIGHT,
   DEFAULT_TILE_REFRESH_INTERVAL_MS,
+  FULLSCREEN_LONG_REFRESH_INTERVAL_MS,
+  FULLSCREEN_SHORT_REFRESH_INTERVAL_MS,
   INJECT_QUERY_PROVIDER,
   TIMEFRAME_TOKEN,
 } from '../constants'
@@ -81,6 +101,10 @@ const model = defineModel<DashboardConfig>({ required: true })
 const { i18n } = composables.useI18n()
 const refreshCounter = ref(0)
 const gridLayoutRef = ref<ComponentPublicInstance<DraggableGridLayoutExpose<TileDefinition>> | null>(null)
+
+const dashboardContainer = ref()
+const layoutContainer = ref()
+const scale = ref('scale(1)')
 
 // Note: queryBridge is not directly used by the DashboardRenderer component.  It is required by many of the
 // subcomponents that get rendered in the dashboard, however.  Check for its existence here in order to catch
@@ -188,6 +212,35 @@ const mergedContext = computed<DashboardRendererContextInternal>(() => {
     refreshInterval = DEFAULT_TILE_REFRESH_INTERVAL_MS
   }
 
+  if (isFullscreen.value) {
+    // when we're fullscreen, we want to refresh automatically, regardless of
+    // what the configured refreshInterval is.
+    let isShort = false
+    if (timeSpec.value.type === 'relative') {
+      isShort = ['15m', '1h', '6h', '12h', '24h'].includes(timeSpec.value.time_range)
+    } else {
+      const start = timeSpec.value.start.getTime()
+      const end = timeSpec.value.end.getTime()
+      const diffMs = Math.abs(end - start)
+      isShort = diffMs <= 86400000 // less than or equal to 24 hours
+    }
+
+    const now = new Date().getTime()
+    const isPast = timeSpec.value.type === 'absolute'
+      && timeSpec.value.end.getTime() < now
+
+    if (isPast) {
+      // if the timerange is in the past there's no need to refresh
+      refreshInterval = 0
+    } else if (isShort) {
+      // if the timerange is 24 hours or less, refresh more frequently
+      refreshInterval = FULLSCREEN_SHORT_REFRESH_INTERVAL_MS
+    } else {
+      // otherwise, refresh less frequently
+      refreshInterval = FULLSCREEN_LONG_REFRESH_INTERVAL_MS
+    }
+  }
+
   if (editable === undefined) {
     editable = false
   }
@@ -267,12 +320,48 @@ const handleUpdateTiles = (tiles: Array<GridTile<TileDefinition>>) => {
   model.value.tiles = updatedTiles.sort(tileSortFn)
 }
 
-defineExpose({ refresh: refreshTiles })
+const updateScale = async () => {
+  // reset to 1 so we recalculate correctly
+  scale.value = 'scale(1)'
+  // wait for the header and scale to render before calculating heights
+  await nextTick()
 
+  if (layoutContainer.value) {
+    const { availWidth: screenWidth, availHeight: screenHeight } = window.screen
+    const { width, height } = layoutContainer.value.getBoundingClientRect()
+    const newScale = Math.min(screenHeight / height, screenWidth / width)
+    scale.value = `scale(${newScale})`
+  }
+}
+
+const toggleFullscreen = () => {
+  if (dashboardContainer.value) {
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    } else {
+      dashboardContainer.value.requestFullscreen()
+    }
+  }
+}
+
+const isFullscreen = ref(false)
+const onFullscreenChange = () => {
+  isFullscreen.value = document.fullscreenElement !== null
+  if (isFullscreen.value) {
+    updateScale()
+  }
+}
+
+defineExpose({
+  refresh: refreshTiles,
+  toggleFullscreen,
+})
 </script>
 
 <style lang="scss" scoped>
 .kong-ui-public-dashboard-renderer {
+  position: relative;
+
   .tile-container {
     background: var(--kui-color-background-transparent, $kui-color-background-transparent);
     border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
@@ -281,6 +370,49 @@ defineExpose({ refresh: refreshTiles })
 
     &.slottable-tile {
       padding: var(--kui-space-60, $kui-space-60);
+    }
+  }
+
+  &.is-fullscreen {
+    background-color: white;
+
+    .fullscreen-header {
+      margin-bottom: $kui-space-60;
+    }
+
+    .layout {
+      background-color: white;
+      padding: $kui-space-60;
+      transform: v-bind(scale);
+      transform-origin: top;
+    }
+
+    .fullscreen-control {
+      right: 16px;
+    }
+  }
+
+  .fullscreen-control {
+    align-items: center;
+    background-color: $kui-color-background-decorative-purple-weakest;
+    border-radius: 4px;
+    bottom: -10px;
+    color: $kui-color-text-decorative-purple-strong;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 10px;
+    gap: $kui-space-10;
+    line-height: 0;
+    margin: 0;
+    opacity: 0.5;
+    padding: 3px 5px;
+    position: absolute;
+    right: 0;
+    transition: opacity 0.1s ease-in;
+    user-select: none;
+
+    &:hover {
+      opacity: 1;
     }
   }
 }

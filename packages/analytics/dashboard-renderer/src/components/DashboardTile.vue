@@ -168,6 +168,7 @@ const props = withDefaults(defineProps<{
   definition: TileDefinition
   context: DashboardRendererContextInternal
   height?: number
+  isFullscreen?: boolean
   queryReady: boolean
   refreshCounter: number
   tileId: string | number
@@ -255,7 +256,10 @@ const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
 const canShowTitleActions = computed((): boolean => (canShowKebabMenu.value && (kebabMenuHasItems.value || props.context.editable)) || !!badgeData.value)
 
-const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
+const canShowKebabMenu = computed(() => {
+  const tileSupportsKebabMenu = !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type)
+  return tileSupportsKebabMenu && !props.isFullscreen
+})
 
 const kebabMenuHasItems = computed((): boolean => !!exploreLink.value || ('allow_csv_export' in props.definition.chart && props.definition.chart.allow_csv_export) || props.context.editable)
 
