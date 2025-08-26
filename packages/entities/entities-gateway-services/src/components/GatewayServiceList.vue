@@ -62,33 +62,44 @@
         v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
-        <EntityEmptyState
-          :action-button-text="t('gateway_services.empty_state_v2.create')"
-          appearance="secondary"
-          :can-create="() => canCreate()"
+        <KEmptyState
           data-testid="gateway-services-entity-empty-state"
-          :description="t('gateway_services.empty_state_v2.description')"
-          :learn-more="config.app === 'konnect'"
+          icon-background
+          :message="t('gateway_services.empty_state_v2.description')"
           :title="t('gateway_services.empty_state_v2.title')"
-          @click:create="handleCreate"
-          @click:learn-more="$emit('click:learn-more')"
         >
-          <template #image>
-            <div class="empty-state-icon-gateway">
-              <ServicesIcon
-                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
-                :size="KUI_ICON_SIZE_50"
-              />
-            </div>
+          <template #icon>
+            <ServicesIcon decorative />
           </template>
 
           <template
             v-if="config?.isControlPlaneGroup"
-            #message
+            #default
           >
             {{ t('gateway_services.empty_state_v2.group') }}
           </template>
-        </EntityEmptyState>
+
+          <template #action>
+            <KButton
+              v-if="userCanCreate"
+              data-testid="entity-create-button"
+              @click="handleCreate"
+            >
+              <AddIcon decorative />
+              {{ t('gateway_services.empty_state_v2.create') }}
+            </KButton>
+
+            <KButton
+              v-if="config.app === 'konnect'"
+              appearance="secondary"
+              data-testid="entity-learn-more-button"
+              @click="$emit('click:learn-more')"
+            >
+              <BookIcon decorative />
+              {{ t('gateway_services.empty_state_v2.learn_more') }}
+            </KButton>
+          </template>
+        </KEmptyState>
       </template>
 
       <!-- Column Formatting -->
@@ -230,7 +241,6 @@ import {
   EntityFilter,
   EntityToggleModal,
   EntityTypes,
-  EntityEmptyState,
   FetcherStatus,
   PermissionsWrapper,
   useAxios,
@@ -239,7 +249,6 @@ import {
   useDeleteUrlBuilder,
   TableTags,
 } from '@kong-ui-public/entities-shared'
-import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const emit = defineEmits<{

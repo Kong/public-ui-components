@@ -47,7 +47,8 @@
         "title": "Configure your first vault",
         "group": "Vaults created in gateways within this group will automatically appear here.",
         "description": "Vaults securely and centrally store sensitive information, such as credentials, tokens, and keys, to simplify secrets management.",
-        "create_cta": "New vault"
+        "create_cta": "New vault",
+        "learn_more": "Learn more"
       }
     }
   },

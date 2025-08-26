@@ -99,7 +99,8 @@
         "title": "Configure your first plugin",
         "description": "Plugins extend gateways functionalities, offering features like authentication, rate limiting, and request transformations to enhance security and performance.",
         "create_cta": "New plugin",
-        "group": "Plugins created in gateways within this group will automatically appear here."
+        "group": "Plugins created in gateways within this group will automatically appear here.",
+        "learn_more": "Learn more"
       }
     },
     "meta": {

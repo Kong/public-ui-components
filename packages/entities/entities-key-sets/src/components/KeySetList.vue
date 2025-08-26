@@ -61,33 +61,44 @@
         v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
-        <EntityEmptyState
-          :action-button-text="t('keySets.list.empty_state_v2.create_cta')"
-          appearance="secondary"
-          :can-create="() => canCreate()"
+        <KEmptyState
           data-testid="key-sets-entity-empty-state"
-          :description="t('keySets.list.empty_state_v2.description')"
-          :learn-more="config.app === 'konnect'"
+          icon-background
+          :message="t('keySets.list.empty_state_v2.description')"
           :title="t('keySets.list.empty_state_v2.title')"
-          @click:create="handleCreate"
-          @click:learn-more="$emit('click:learn-more')"
         >
           <template #image>
-            <div class="empty-state-icon-gateway">
-              <KeyIcon
-                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
-                :size="KUI_ICON_SIZE_50"
-              />
-            </div>
+            <KeyIcon decorative />
           </template>
 
           <template
             v-if="config?.isControlPlaneGroup"
-            #message
+            #default
           >
             {{ t('keySets.list.empty_state_v2.group') }}
           </template>
-        </EntityEmptyState>
+
+          <template #action>
+            <KButton
+              v-if="userCanCreate"
+              data-testid="entity-create-button"
+              @click="handleCreate"
+            >
+              <AddIcon decorative />
+              {{ t('keySets.list.empty_state_v2.create_cta') }}
+            </KButton>
+
+            <KButton
+              v-if="config.app === 'konnect'"
+              appearance="secondary"
+              data-testid="entity-learn-more-button"
+              @click="$emit('click:learn-more')"
+            >
+              <BookIcon decorative />
+              {{ t('keySets.list.empty_state_v2.learn_more') }}
+            </KButton>
+          </template>
+        </KEmptyState>
       </template>
 
       <!-- Column Formatting -->
@@ -170,7 +181,6 @@ import { AddIcon, BookIcon, KeyIcon } from '@kong/icons'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import endpoints from '../key-sets-endpoints'
-import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import {
   EntityBaseTable,
   EntityDeleteModal,
@@ -179,7 +189,6 @@ import {
   FetcherStatus,
   PermissionsWrapper,
   useAxios,
-  EntityEmptyState,
   useTableState,
   useFetcher,
   useDeleteUrlBuilder,
@@ -504,12 +513,14 @@ const emptyStateOptions = ref<EmptyStateOptions>({
   title: t('keySets.title'),
 })
 
+const userCanCreate = ref<boolean>(false)
+
 onBeforeMount(async () => {
   // Evaluate if the user has create permissions
-  const userCanCreate = await props.canCreate()
+  userCanCreate.value = await props.canCreate()
 
   // If a user can create, we need to modify the empty state actions/messaging
-  if (userCanCreate) {
+  if (userCanCreate.value) {
     emptyStateOptions.value.title = t('keySets.list.empty_state.title')
     emptyStateOptions.value.ctaText = t('keySets.actions.create')
   }

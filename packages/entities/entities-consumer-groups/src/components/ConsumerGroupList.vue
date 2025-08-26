@@ -65,33 +65,44 @@
         v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
-        <EntityEmptyState
-          :action-button-text="t('consumer_groups.list.toolbar_actions.new_consumer_group')"
-          appearance="secondary"
-          :can-create="() => canCreate()"
+        <KEmptyState
           data-testid="consumer-groups-entity-empty-state"
-          :description="t('consumer_groups.list.empty_state_v2.description')"
-          :learn-more="config.app === 'konnect'"
+          icon-background
+          :message="t('consumer_groups.list.empty_state_v2.description')"
           :title="t('consumer_groups.list.empty_state_v2.title')"
-          @click:create="handleCreateClick"
-          @click:learn-more="$emit('click:learn-more')"
         >
-          <template #image>
-            <div class="empty-state-icon-gateway">
-              <TeamIcon
-                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
-                :size="KUI_ICON_SIZE_50"
-              />
-            </div>
+          <template #icon>
+            <TeamIcon decorative />
           </template>
 
           <template
             v-if="config?.isControlPlaneGroup"
-            #message
+            #default
           >
             {{ t('consumer_groups.list.empty_state_v2.group') }}
           </template>
-        </EntityEmptyState>
+
+          <template #action>
+            <KButton
+              v-if="userCanCreate"
+              data-testid="entity-create-button"
+              @click="handleCreateClick"
+            >
+              <AddIcon decorative />
+              {{ t('consumer_groups.list.toolbar_actions.new_consumer_group') }}
+            </KButton>
+
+            <KButton
+              v-if="config.app === 'konnect'"
+              appearance="secondary"
+              data-testid="entity-learn-more-button"
+              @click="$emit('click:learn-more')"
+            >
+              <BookIcon decorative />
+              {{ t('consumer_groups.list.empty_state_v2.learn_more') }}
+            </KButton>
+          </template>
+        </KEmptyState>
       </template>
 
       <!-- Column Formatting -->
@@ -651,12 +662,14 @@ const emptyStateOptions = ref<EmptyStateOptions>({
   title: t('consumer_groups.title'),
 })
 
+const userCanCreate = ref<boolean>(false)
+
 onBeforeMount(async () => {
   // Evaluate if the user has create permissions
-  const userCanCreate = await props.canCreate()
+  userCanCreate.value = await props.canCreate()
 
   // If a user can create consumer groups, we need to modify the empty state actions/messaging
-  if (userCanCreate) {
+  if (userCanCreate.value) {
     emptyStateOptions.value.title = isConsumerPage.value ? t('consumer_groups.list.empty_state.title_for_consumer') : t('consumer_groups.list.empty_state.title')
     emptyStateOptions.value.ctaText = isConsumerPage.value ? t('consumer_groups.actions.add_to_group') : t('consumer_groups.actions.create')
   }

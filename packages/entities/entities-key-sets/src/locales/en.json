@@ -18,7 +18,8 @@
         "title": "Configure your first key set",
         "group": "Key sets created in gateways within this group will automatically appear here.",
         "description": "Key sets centrally manage asymmetric keys for plugins like OpenID Connect and JWT, simplifying configuration and security across services.",
-        "create_cta": "New key set"
+        "create_cta": "New key set",
+        "learn_more": "Learn more"
       }
     },
     "actions": {

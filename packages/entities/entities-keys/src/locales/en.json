@@ -19,7 +19,8 @@
         "title": "Configure your first key",
         "group": "Keys created in gateways within this group will automatically appear here.",
         "description": "Keys hold a representation of asymmetric keys that gateways and plugins can use for secure operations.",
-        "create_cta": "New key"
+        "create_cta": "New key",
+        "learn_more": "Learn more"
       }
     },
     "actions": {

@@ -99,43 +99,43 @@
       <template
         #empty-state
       >
-        <EntityEmptyState
+        <KEmptyState
           :action-button-text="t('list.action')"
-          appearance="secondary"
-          :can-create="() => canCreate()"
+          :action-button-visible="userCanCreate"
           data-testid="redis-entity-empty-state"
-          :description="t('list.empty_state.description')"
           :features="[
             {
+              key: 'feature-1',
               title: t('list.empty_state.feature_1.title'),
               description: t('list.empty_state.feature_1.description'),
             },
             {
+              key: 'feature-2',
               title: t('list.empty_state.feature_2.title'),
               description: t('list.empty_state.feature_2.description'),
             },
           ]"
+          icon-background
+          :message="t('list.empty_state.description')"
           :title="t('redis.title')"
-          @click:create="handleCreate"
-          @click:learn-more="() => emit('click:learn-more')"
+          @click-action="handleCreate"
         >
-          <template #image>
-            <div class="empty-state-icon-gateway">
-              <DeployIcon
-                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
-                :size="KUI_ICON_SIZE_50"
-              />
-            </div>
+          <template #icon>
+            <DeployIcon decorative />
           </template>
 
-          <template #feature-0-icon>
+          <template #feature-icon-feature-1>
             <ClipboardIcon />
           </template>
 
-          <template #feature-1-icon>
+          <template #feature-icon-feature-2>
             <RefreshIcon />
           </template>
-        </EntityEmptyState>
+
+          <template #action-button-icon>
+            <AddIcon decorative />
+          </template>
+        </KEmptyState>
       </template>
     </EntityBaseTable>
 
@@ -179,13 +179,11 @@ import {
   useDeleteUrlBuilder,
   EntityDeleteModal,
   FetcherStatus,
-  EntityEmptyState,
   TableTags,
 } from '@kong-ui-public/entities-shared'
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { AddIcon } from '@kong/icons'
-import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import { RefreshIcon, DeployIcon, ClipboardIcon } from '@kong/icons'
 
 import endpoints from '../partials-endpoints'
@@ -508,12 +506,14 @@ watch(fetcherState, (state) => {
   errorMessage.value = null
 })
 
+const userCanCreate = ref<boolean>(false)
+
 watch(props.canCreate, async (canCreate) => {
   // Evaluate if the user has create permissions
-  const userCanCreate = await canCreate
+  userCanCreate.value = await canCreate
 
   // If a user can create, we need to modify the empty state actions/messaging
-  if (userCanCreate) {
+  if (userCanCreate.value) {
     emptyStateOptions.value.ctaText = t('actions.create')
   } else {
     emptyStateOptions.value.ctaText = undefined

@@ -15,7 +15,8 @@
         "title": "Configure your first upstream",
         "description": "Upstreams route traffic to multiple backend services, handling load balancing, health checks, and circuit breaking for reliability.",
         "create_cta": "New upstream",
-        "group": "Upstreams created in gateways within this group will automatically appear here."
+        "group": "Upstreams created in gateways within this group will automatically appear here.",
+        "learn_more": "Learn more"
       },
       "toolbar_actions": {
         "new_upstream": "New upstream"

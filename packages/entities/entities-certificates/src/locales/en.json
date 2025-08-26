@@ -22,7 +22,8 @@
         "create": "New certificate",
         "title": "Configure your first certificate",
         "group": "Certificates created in gateways within this group will automatically appear here.",
-        "description": "Certificates manage SSL/TLS encryption, ensuring secure communication between clients and your API services."
+        "description": "Certificates manage SSL/TLS encryption, ensuring secure communication between clients and your API services.",
+        "learn_more": "Learn more"
       }
     },
     "form": {
@@ -121,7 +122,8 @@
         "create": "New CA certificate",
         "title": "Configure your first CA certificate",
         "group": "CA Certificates created in gateways within this group will automatically appear here.",
-        "description": "CA Certificates validate the authenticity of client and server certificates, reinforcing the trust and security of your API communications."
+        "description": "CA Certificates validate the authenticity of client and server certificates, reinforcing the trust and security of your API communications.",
+        "learn_more": "Learn more"
       }
     },
     "form": {
