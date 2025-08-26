@@ -56,7 +56,7 @@
 
 <script setup lang="ts">
 
-import { reactive, ref, computed, toRef, inject, watch, onUnmounted, useTemplateRef } from 'vue'
+import { reactive, ref, computed, toRef, inject, watch, onUnmounted, useTemplateRef, onMounted } from 'vue'
 import 'chartjs-adapter-date-fns'
 import 'chart.js/auto'
 import { VerticalLinePlugin } from '../chart-plugins/VerticalLinePlugin'
@@ -221,6 +221,7 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number })
 
 const resetTooltipState = (supressNextClickForHighlight: boolean = true) => {
   tooltipData.interactionMode = 'idle'
+  tooltipData.showTooltip = false
   dragSelectPlugin.clearSelectionArea()
   if (highlightPlugin.isPaused) {
     highlightPlugin.resume(supressNextClickForHighlight)
@@ -307,6 +308,28 @@ const handleDragMove = (event: Event) => {
   }
 }
 
+// Reset tooltip if clicking outside of chart when in interactive mode
+const handleGlobalClick = (evt: MouseEvent) => {
+  // If we are not in an interactive mode, nothing to reset
+  if (!chartParentRef.value || tooltipData.interactionMode === 'idle') {
+    return
+  }
+
+  const target = evt.target
+
+  // Ignore if the click was inside the chart parent (includes tooltip & legend since they are rendered inside)
+  if (target && chartParentRef.value.contains(target as Node)) {
+    return
+  }
+
+  // Ignore while a drag selection is in progress
+  if (isDoingSelection.value) {
+    return
+  }
+
+  resetTooltipState(false)
+}
+
 watch(() => chartInstance.value?.chart, () => {
   if (chartInstance.value?.chart) {
     chartInstance.value.chart.canvas.removeEventListener('dragSelect', handleDragSelect)
@@ -316,11 +339,16 @@ watch(() => chartInstance.value?.chart, () => {
   }
 })
 
+onMounted(() => {
+  document.addEventListener('click', handleGlobalClick, true)
+})
+
 onUnmounted(() => {
   if (chartInstance.value?.chart) {
     chartInstance.value.chart.canvas.removeEventListener('dragSelect', handleDragSelect)
     chartInstance.value.chart.canvas.removeEventListener('dragSelectMove', handleDragMove)
   }
+  document.removeEventListener('click', handleGlobalClick, true)
 })
 
 </script>
