@@ -109,7 +109,7 @@
 </template>
 
 <script lang="ts">
-export type Props<T extends FreeFormPluginData> = {
+export type Props<T extends FreeFormPluginData = any> = {
   generalInfoTitle?: string
   generalInfoDescription?: string
   pluginConfigTitle?: string
@@ -133,13 +133,12 @@ export type ConfigFormProps<T> = {
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, provide, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { VueFormGenerator } from '@kong-ui-public/forms'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { pick } from 'lodash-es'
 import { KRadio } from '@kong/kongponents'
 import english from '../../../../locales/en.json'
-import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { createI18n } from '@kong-ui-public/i18n'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
@@ -150,8 +149,6 @@ const { t } = createI18n<typeof english>('en-us', english)
 const props = defineProps<Props<T>>()
 
 const slots = defineSlots<{
-  [K in typeof AUTOFILL_SLOT_NAME]: () => any
-} & {
   default: (props: ConfigFormProps<T>) => any
   'general-info-title'?: () => any
   'general-info-description'?: () => any
@@ -160,8 +157,6 @@ const slots = defineSlots<{
   'plugin-config-description'?: () => any
   'plugin-config-extra'?: () => any
 }>()
-
-provide(AUTOFILL_SLOT, slots?.[AUTOFILL_SLOT_NAME])
 
 const enabledSchema = computed(() => {
   return {

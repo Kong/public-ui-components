@@ -12,7 +12,7 @@
       :omit="fieldsCategory.nonRequired"
       reset-label-path="reset"
     />
-    <AdvancedFields>
+    <AdvancedFields class="ff-advanced-fields">
       <ObjectField
         as-child
         name="config"
@@ -66,3 +66,13 @@ function handleChange(value: FreeFormPluginData) {
   emit('change', value)
 }
 </script>
+
+<style lang="scss" scoped>
+.ff-advanced-fields {
+  margin-top: $kui-space-80;
+
+  :deep(.collapse-heading) {
+    margin: 0;
+  }
+}
+</style>
