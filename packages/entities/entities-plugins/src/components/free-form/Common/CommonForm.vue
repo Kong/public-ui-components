@@ -1,21 +1,21 @@
 <template>
-  <PluginFormWrapper
+  <StandardLayout
     v-slot="configFormProps"
     v-bind="props"
   >
     <ConfigForm v-bind="configFormProps" />
-  </PluginFormWrapper>
+  </StandardLayout>
 </template>
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
 import { provide } from 'vue'
 import ConfigForm from './ConfigForm.vue'
-import PluginFormWrapper from '../shared/PluginFormWrapper.vue'
+import StandardLayout from '../shared/layout/StandardLayout.vue'
 
-import type { PluginFormWrapperProps } from '../shared/PluginFormWrapper.vue'
+import type { Props } from '../shared/layout/StandardLayout.vue'
 
-const props = defineProps<PluginFormWrapperProps>()
+const props = defineProps<Props>()
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any
