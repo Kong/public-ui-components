@@ -72,7 +72,7 @@ import FlowEditor from './flow-editor/FlowEditor.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const props = defineProps<Props<any>>()
+const props = defineProps<Props>()
 
 // provided by consumer apps
 const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, false)
