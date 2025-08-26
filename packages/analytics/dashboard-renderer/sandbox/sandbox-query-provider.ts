@@ -18,13 +18,22 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
   if (query.query.dimensions && query.query.dimensions.includes('time')) {
     return await delayedResponse(
       generateSingleMetricTimeSeriesData(
-        { name: 'requests', unit: 'count' },
+        { name: 'request_count', unit: 'count' },
         { status_code: ['200', '400', '500'] },
       ),
     )
   }
+
   if (query.query.dimensions && query.query.dimensions.findIndex(d => d === 'route') > -1) {
     return await delayedResponse(routeExploreResponse)
+  }
+
+  if (query.query.dimensions && query.query.dimensions.findIndex(d => d === 'portal') > -1) {
+    const err: any = new Error('ERROR_ANALYTICS_FORBIDDEN')
+    err.status = 403
+    err.response = { message: 'Forbidden' }
+
+    throw err
   }
 
   if (query.query.limit) {

@@ -1,5 +1,4 @@
 export * from './constants'
-export * as dashboardsSchemaV1 from './dashboardSchema'
 export * from './dashboardSchema.v2'
 export * from './types'
 export * from './filters'

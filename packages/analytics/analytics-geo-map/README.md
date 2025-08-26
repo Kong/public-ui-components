@@ -43,13 +43,6 @@ npm install @kong-ui-public/analytics-geo-map
 - **required:** `true`
 - **description:** An object mapping country codes to metric values. These metrics determine the color of each country on the map.
 
-#### `geoJsonData`
-
-- **type:** `Object` ([`MapFeatureCollection`](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-geo-map/src/types/index.ts))
-- **required:** `true`
-- **description:** GeoJSON data for the map, defining the shapes and positions of countries.
-- [See here](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/geojson)
-
 #### `metricUnit`
 
 - **type:** `String` ([`MetricUnits`](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-geo-map/src/types/metric-units.ts))

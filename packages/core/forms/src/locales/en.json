@@ -168,6 +168,17 @@
       "tooltip": "To apply a shared redis configuration, the redis fields must defined as Kong plugins in plugin schema."
     }
   },
+  "fields": {
+    "auto_suggest": {
+      "error": {
+        "load_entity": "There was an error loading {entity}"
+      },
+      "recently_created": "Recently created {entity}",
+      "items_count": "Currently showing {count} {count, plural, =1 {item} other {items}}, type to search",
+      "no_results": "No results",
+      "loading": "Loading..."
+    }
+  },
   "vfg": {
     "labels": {
       "on": "On",

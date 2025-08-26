@@ -32,11 +32,12 @@ export function useTaggedHistory<T>(
     options?.onHistoryChange?.(action, stateRef.value)
   }
 
-
-  function commit(tag?: string, opts?: { replace?: boolean }) {
-    const replace = !!opts?.replace
-    if (replace && tag && lastTag === tag && undoStack.value.length > 0) {
-      undoStack.value.pop()
+  function commit(tag?: string) {
+    if (!tag) {
+      lastTag = undefined
+      baseCommit()
+      notify('commit')
+      return
     }
 
     // first time or switch tag: create a new undo boundary

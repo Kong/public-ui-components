@@ -11,7 +11,6 @@
       <AnalyticsGeoMap
         :country-metrics="countryMetrics"
         :fit-to-country="fitToCountry"
-        :geo-json-data="(countryGeoJson as FeatureCollection)"
         :metric="'request_count'"
         :metric-unit="'requests'"
       />
@@ -22,8 +21,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { AnalyticsGeoMap } from '../src'
-import countryGeoJson from './countries-simple-geo.json'
-import type { FeatureCollection } from 'geojson'
 
 const fitToCountry = ref()
 const selectedCountries = ref<string[]>([])

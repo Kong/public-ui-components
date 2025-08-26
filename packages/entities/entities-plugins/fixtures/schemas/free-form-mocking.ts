@@ -6,6 +6,7 @@ import type {
   StringFieldSchema,
   MapFieldSchema,
   ArrayLikeFieldSchema,
+  ForeignFieldSchema,
 } from '../../src/types/plugins/form-schema'
 
 export function buildStringFieldCases(): Array<{ [name: string]: StringFieldSchema }> {
@@ -288,6 +289,38 @@ export function buildArrayFieldCases(): Array<{ [name: string]: ArrayLikeFieldSc
     //     description: 'An array of records',
     //   },
     // },
+    {
+      array_of_array: {
+        type: 'array',
+        elements: {
+          type: 'array',
+          elements: {
+            type: 'string',
+          },
+        },
+        default: [['foo']],
+      },
+    },
+  ]
+}
+
+export function buildForeignFieldCases(): Array<{ [name: string]: ForeignFieldSchema }> {
+  return [
+    {
+      foreign_simple: {
+        type: 'foreign',
+        reference: 'certificates',
+      },
+    },
+    {
+      foreign_complex: {
+        type: 'foreign',
+        reference: 'certificates',
+        description: 'Certificate reference',
+        required: true,
+        default: { id: '09d83195-e882-4b95-bf0f-9f3615fd2a4f' },
+      },
+    },
   ]
 }
 
@@ -303,6 +336,7 @@ export function buildMockingSchema(): FormSchema {
       ...buildEnumFieldCases(),
       ...buildTagFieldCases(),
       ...buildArrayFieldCases(),
+      ...buildForeignFieldCases(),
     ],
   }
 }

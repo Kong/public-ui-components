@@ -69,12 +69,12 @@
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLink }"
             />
             <KDropdownItem
-              v-if="hasZoomActions && !!requestsLink"
+              v-if="hasZoomActions && !!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
-              :item="{ label: i18n.t('jumpToRequests'), to: requestsLink }"
+              :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="!('allowCsvExport' in definition.chart) || definition.chart.allowCsvExport"
+              v-if="!('allow_csv_export' in definition.chart) || definition.chart.allow_csv_export"
               class="chart-export-button"
               :data-testid="`chart-csv-export-${tileId}`"
               @click="exportCsv()"
@@ -126,13 +126,13 @@
         :is="componentData.component"
         v-if="componentData"
         v-bind="componentData.rendererProps"
+        v-on="componentEventHandlers"
         @chart-data="onChartData"
-        @select-chart-range="onSelectChartRange"
-        @zoom-time-range="onZoom"
       />
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import type { DashboardRendererContextInternal, TileZoomEvent } from '../types'
 import {
@@ -192,6 +192,7 @@ const isTitleTruncated = ref(false)
 const exploreBaseUrl = ref('')
 const requestsBaseUrl = ref('')
 const requestsLinkZoomActions = ref<ExternalLink | undefined>(undefined)
+const loadingChartData = ref(true)
 
 onMounted(async () => {
   // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
@@ -201,9 +202,12 @@ onMounted(async () => {
 
 watch(() => props.definition, async () => {
   await nextTick()
+
   if (titleRef.value) {
     isTitleTruncated.value = titleRef.value.scrollWidth > titleRef.value.clientWidth
   }
+
+  loadingChartData.value = true
 }, { immediate: true, deep: true })
 
 const exploreLink = computed(() => {
@@ -230,13 +234,15 @@ const exploreLink = computed(() => {
   return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
 })
 
-const requestsLink = computed(() => {
-  if (!requestsBaseUrl.value || !props.definition.query || !canShowKebabMenu.value) {
+const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && props.definition.query && props.definition.query?.datasource !== 'llm_usage')
+
+const requestsLinkKebabMenu = computed(() => {
+  if (!canGenerateRequestsLink.value || !canShowKebabMenu.value) {
     return ''
   }
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
 
-  const requestsQuery = buildRequestsQuery(
+  const requestsQuery = buildRequestsQueryKebabMenu(
     props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
     filters,
   )
@@ -265,10 +271,19 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'single_value': SimpleChartRenderer,
 }
 
+const componentEventHandlers = computed(() => ({
+  ...(componentData.value?.rendererEvents.supportsRequests ? { 'select-chart-range': onSelectChartRange } : {}),
+  ...(componentData.value?.rendererEvents.supportsZoom ? { 'zoom-time-range': onZoom } : {}),
+}))
+
 const componentData = computed(() => {
   // Ideally, Typescript would ensure that the prop types of the renderers match
   // the props that they're going to receive.  Unfortunately, actually doing this seems difficult.
   const component = rendererLookup[props.definition.chart.type]
+
+  const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
+  const supportsZoom = !!(component as any)?.emits?.includes('zoom-time-range')
+
   return component && {
     component,
     rendererProps: {
@@ -279,6 +294,10 @@ const componentData = computed(() => {
       height: props.height - PADDING_SIZE * 2,
       refreshCounter: props.refreshCounter,
       requestsLink: requestsLinkZoomActions.value,
+    },
+    rendererEvents: {
+      supportsRequests,
+      supportsZoom,
     },
   }
 })
@@ -313,14 +332,23 @@ const isTimeSeriesChart = computed(() => {
 })
 
 const isAgedOutQuery = computed(() => {
-  const savedGranularity = props.definition.query.granularity
-  const queryGranularity = msToGranularity(chartData.value?.meta.granularity_ms || 0)
-  return isTimeSeriesChart.value && savedGranularity !== queryGranularity
+  if (!isTimeSeriesChart.value || !props.queryReady || loadingChartData.value) {
+    return false
+  }
+
+  const savedGranularity = props.definition?.query?.granularity
+
+  if (!savedGranularity || !chartDataGranularity.value) {
+    return false
+  }
+
+  return savedGranularity !== chartDataGranularity.value
 })
 
 const agedOutWarning = computed(() => {
-  const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms || 0)
-  const savedGranularity = props.definition.query.granularity
+  const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
+  const savedGranularity = props.definition?.query?.granularity ?? 'unknown'
+
   return i18n.t('query_aged_out_warning', {
     currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
     savedGranularity: i18n.t(`granularities.${savedGranularity}` as any),
@@ -359,6 +387,7 @@ const removeTile = () => {
 
 const onChartData = (data: ExploreResultV4) => {
   chartData.value = data
+  loadingChartData.value = false
 }
 
 const setExportModalVisibility = (val: boolean) => {
@@ -377,7 +406,18 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
   emit('tile-time-range-zoom', zoomEvent)
 }
 
-const buildRequestsQuery = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
+const buildRequestsQueryKebabMenu = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
+  return {
+    filter: filters,
+    timeframe: {
+      timePeriodsKey: timeRange.type === 'relative' ? timeRange.time_range : 'custom',
+      start: timeRange.type === 'absolute' ? chartData.value?.meta.start_ms : undefined,
+      end: timeRange.type === 'absolute' ? chartData.value?.meta.end_ms : undefined,
+    },
+  }
+}
+
+const buildRequestsQueryZoomActions = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
   return {
     filter: filters,
     timeframe: {
@@ -389,13 +429,16 @@ const buildRequestsQuery = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
 }
 
 const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
+  if (!canGenerateRequestsLink.value) {
+    requestsLinkZoomActions.value = undefined
+
+    return
+  }
 
   const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
-  const query = buildRequestsQuery(newTimeRange, filters)
+  const query = buildRequestsQueryZoomActions(newTimeRange, filters)
 
-  requestsLinkZoomActions.value = requestsBaseUrl.value ? {
-    href: `${requestsBaseUrl.value}?q=${JSON.stringify(query)}`,
-  } : undefined
+  requestsLinkZoomActions.value = { href: `${requestsBaseUrl.value}?q=${JSON.stringify(query)}` }
 }
 </script>
 

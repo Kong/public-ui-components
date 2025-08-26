@@ -168,3 +168,9 @@ function onChange(newVal?: RequestCalloutPlugin) {
   emit('change', pluginConfig)
 }
 </script>
+
+<style lang="scss" scoped>
+.rc-code textarea {
+  font-family: $kui-font-family-code !important;
+}
+</style>

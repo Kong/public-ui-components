@@ -63,14 +63,15 @@ const context: DashboardRendererContext = {
   refreshInterval: 0,
 }
 
-const dashboardConfig = ref <DashboardConfig>({
-  tileHeight: 167,
+const dashboardConfig = ref<DashboardConfig>({
+  tile_height: 167,
   tiles: [
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'golden_signals',
-          chartTitle: 'Analytics Golden Signals',
+          chart_title: 'Analytics Golden Signals',
           description: '{timeframe}',
         },
         query: {
@@ -89,10 +90,11 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'top_n',
-          chartTitle: 'Top N chart of mock data',
+          chart_title: 'Top N chart of mock data',
           description: '{timeframe}',
         },
         query: {
@@ -108,15 +110,16 @@ const dashboardConfig = ref <DashboardConfig>({
         size: {
           cols: 3,
           rows: 1,
-          fitToContent: true,
+          fit_to_content: true,
         },
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'top_n',
-          chartTitle: 'Top N chart of mock data',
+          chart_title: 'Top N chart of mock data',
           description: 'Description',
         },
         query: {
@@ -136,19 +139,20 @@ const dashboardConfig = ref <DashboardConfig>({
         size: {
           cols: 3,
           rows: 1,
-          fitToContent: true,
+          fit_to_content: true,
         },
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'horizontal_bar',
-          chartTitle: 'This is a really long title lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-          allowCsvExport: true,
+          chart_title: 'This is a really long title lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+          allow_csv_export: false,
         },
         query: {
-          datasource: 'advanced',
+          datasource: 'api_usage',
           dimensions: ['route'],
           metrics: ['request_count'],
           time_range: {
@@ -169,10 +173,11 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_line',
-          chartTitle: 'Timeseries line chart of mock data',
+          chart_title: 'Timeseries line chart of mock data',
           threshold: {
             'request_count': 3200,
           } as Record<ExploreAggregations, number>,
@@ -200,11 +205,12 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'gauge',
-          metricDisplay: 'full',
-          reverseDataset: true,
+          metric_display: 'full',
+          reverse_dataset: true,
           numerator: 0,
         },
         query: {
@@ -223,6 +229,7 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'slottable',
@@ -244,6 +251,7 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'slottable',
@@ -265,10 +273,11 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'timeseries_bar',
-          chartTitle: 'Timeseries bar chart of mock data',
+          chart_title: 'Timeseries bar chart of mock data',
           stacked: true,
         },
         query: {
@@ -288,10 +297,11 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'donut',
-          chartTitle: 'Donut chart of mock data',
+          chart_title: 'Donut chart of mock data',
         },
         query: {
           datasource: 'basic',
@@ -309,12 +319,13 @@ const dashboardConfig = ref <DashboardConfig>({
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'top_n',
-          chartTitle: 'Top N chart of mock data',
+          chart_title: 'Top N chart of mock data',
           description: 'Description',
-          entityLink: 'https://cloud.konghq.tech/us/analytics/entities/{id}',
+          entity_link: 'https://cloud.konghq.tech/us/analytics/entities/{id}',
         },
         query: {
           datasource: 'basic',
@@ -334,15 +345,16 @@ const dashboardConfig = ref <DashboardConfig>({
         size: {
           cols: 3,
           rows: 1,
-          fitToContent: true,
+          fit_to_content: true,
         },
       },
     } satisfies TileConfig,
     {
+      type: 'chart',
       definition: {
         chart: {
           type: 'single_value',
-          chartTitle: 'Single Value chart of mock data',
+          chart_title: 'Single Value chart of mock data',
         },
         query: {
           datasource: 'basic',
@@ -357,7 +369,30 @@ const dashboardConfig = ref <DashboardConfig>({
         size: {
           cols: 3,
           rows: 1,
-          fitToContent: true,
+          fit_to_content: true,
+        },
+      },
+    } satisfies TileConfig,
+    {
+      type: 'chart',
+      definition: {
+        chart: {
+          type: 'donut',
+          chart_title: 'Permissions example',
+        },
+        query: {
+          datasource: 'api_usage',
+          dimensions: ['portal'],
+        },
+      },
+      layout: {
+        position: {
+          col: 0,
+          row: 8,
+        },
+        size: {
+          cols: 1,
+          rows: 2,
         },
       },
     } satisfies TileConfig,

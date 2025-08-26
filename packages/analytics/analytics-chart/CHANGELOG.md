@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.12...@kong-ui-public/analytics-chart@10.0.13) (2025-08-22)
+
+
+### Bug Fixes
+
+* **analytics:** fix uses of `allow_csv_export` ([#2379](https://github.com/Kong/public-ui-components/issues/2379)) ([44ab8e7](https://github.com/Kong/public-ui-components/commit/44ab8e79bcf0d92624cbb9c603d6562026b83fa9))
+
+
+
+
+
+## [10.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.11...@kong-ui-public/analytics-chart@10.0.12) (2025-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.10...@kong-ui-public/analytics-chart@10.0.11) (2025-08-22)
+
+
+### Bug Fixes
+
+* add back no-select css when dragging ([#2377](https://github.com/Kong/public-ui-components/issues/2377)) ([bea4779](https://github.com/Kong/public-ui-components/commit/bea477970000f8e6e6cc67fd73eefb38baf068bd))
+
+
+
+
+
+## [10.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.9...@kong-ui-public/analytics-chart@10.0.10) (2025-08-21)
+
+
+### Bug Fixes
+
+* **analytics-chart:** chart tooltip improvements ([#2362](https://github.com/Kong/public-ui-components/issues/2362)) ([44515d3](https://github.com/Kong/public-ui-components/commit/44515d3f636934c6aeb1e526429c3b18e6223680))
+
+
+
+
+
+## [10.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.8...@kong-ui-public/analytics-chart@10.0.9) (2025-08-21)
+
+
+### Bug Fixes
+
+* align zoom tooltip to design ([#2359](https://github.com/Kong/public-ui-components/issues/2359)) ([aef65c3](https://github.com/Kong/public-ui-components/commit/aef65c398c74b43fcaaab76af96d3e504aa7f823))
+
+
+
+
+
+## [10.0.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.7...@kong-ui-public/analytics-chart@10.0.8) (2025-08-20)
+
+
+### Bug Fixes
+
+* **analytics:** remove extraneous vue warnings [MA-4148] ([#2337](https://github.com/Kong/public-ui-components/issues/2337)) ([2b9a9ba](https://github.com/Kong/public-ui-components/commit/2b9a9ba8a6427ac617795f811a9f5351947ce64c))
+
+
+
+
+
 ## [10.0.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.6...@kong-ui-public/analytics-chart@10.0.7) (2025-08-19)
 
 

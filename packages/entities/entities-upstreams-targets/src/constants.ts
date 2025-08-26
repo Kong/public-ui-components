@@ -396,3 +396,5 @@ export const ActiveHealthyHttpStatuses = ['200', '302']
 export const PassiveHealthyHttpStatuses = ['200', '201', '202', '203', '204', '205', '206', '207', '208', '226', '300', '301', '302', '303', '304', '305', '306', '307', '308']
 export const ActiveUnhealthyHttpStatuses = ['429', '404', '500', '501', '502', '503', '504', '505']
 export const PassiveUnhealthyHttpStatuses = ['429', '500', '503']
+
+export const ALGORITHMS_WITH_FAILOVER_SUPPORT = ['latency', 'least-connections', 'round-robin']

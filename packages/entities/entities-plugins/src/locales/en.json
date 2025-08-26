@@ -538,6 +538,38 @@
       "ai-aws-guardrails": {
         "name": "AI AWS GuardRails",
         "description": "The AI AWS GuardRails enables enforcement of introspection with the AWS GuardRails service for all requests processed by the AI Proxy plugin."
+      },
+      "ace": {
+        "name": "Konnect Access Control Enforcement",
+        "description": "Enable Developer Self-Service for Konnect Dev Portals."
+      },
+      "solace-consume": {
+        "name": "Solace Consume",
+        "description": "Consume messages from Solace and make them available through HTTP endpoints."
+      },
+      "solace-log": {
+        "name": "Solace Log",
+        "description": "Publish request and response logs to a Solace topic."
+      },
+      "ai-llm-as-judge": {
+        "name": "AI LLM Judge",
+        "description": "Evaluate LLM responses with an external LLM service and use accuracy scores to drive dynamic load balancing for `llm/v1/chat` requests."
+      },
+      "ai-mcp-proxy": {
+        "name": "AI MCP Proxy",
+        "description": "Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools, and observe MCP traffic in real time."
+      },
+      "ai-gcp-model-armor": {
+        "name": "AI GCP Model Armor ",
+        "description": "Audit and validate AI Proxy messages with Google Cloud Model Armor before forwarding them to an upstream LLM."
+      },
+      "ai-mcp-oauth2": {
+        "name": "AI MCP OAuth2",
+        "description": "Secure MCP server access with OAuth2 authentication."
+      },
+      "ai-semantic-response-guard": {
+        "name": "AI Semantic Response Guard",
+        "description": "Permit or block prompts based on semantic similarity to known LLM responses, preventing misuse of `llm/v1/chat` or `llm/v1/completions` requests."
       }
     },
     "fields": {
@@ -577,6 +609,8 @@
       }
     },
     "form": {
+      "disable_data_retrieving": "You do not have permission to select {scope}",
+      "disable_source_scope_change": "Changing the {scope} is not allowed when configuring a plugin under it",
       "no_selection": "No selection...",
       "fields": {
         "enabled": {
@@ -601,30 +635,31 @@
       },
       "scoping": {
         "label": "Scoped",
+        "placeholder": "Search by name or UUID",
         "global": {
           "label": "Global",
           "help": "All services, routes, and consumers"
         },
         "gateway_service": {
-          "label": "Gateway Service",
+          "label": "Select a gateway service",
           "help": "The Gateway Service to which this plugin configuration will apply",
           "placeholder": "Select a Gateway Service",
           "plural": "Gateway Services"
         },
         "route": {
-          "label": "Route",
+          "label": "Select a route",
           "help": "The Route that this Plugin configuration will target",
           "placeholder": "Select a Route",
           "plural": "Routes"
         },
         "consumer": {
-          "label": "Consumer",
+          "label": "Select a consumer",
           "help": "The Consumer that this plugin configuration will target",
           "placeholder": "Select a Consumer",
           "plural": "Consumers"
         },
         "consumer_group": {
-          "label": "Consumer Group",
+          "label": "Select a consumer group",
           "help": "The Consumer Group that this plugin configuration will target",
           "placeholder": "Select a Consumer Group",
           "plural": "Consumer Groups"
@@ -663,7 +698,7 @@
         "tool_item_label": "Tool #{index}"
       },
       "request-callout": {
-        "entity_name": "Request Callout",
+        "entity_name": "Request callout",
         "by_lua_placeholder": "Enter Lua script here..."
       },
       "redis_partial": {
@@ -680,14 +715,15 @@
           "manipulate": "Manipulate request headers"
         },
         "flow_editor": {
-          "mode": "Flow Editor",
-          "name": "Datakit Flow Editor",
+          "mode": "Flow editor",
+          "name": "Datakit flow editor",
           "cta": "Go to flow editor",
+          "disabled_tooltip": "The flow editor is unavailable. To switch, fix configuration errors or remove unsupported nodes.",
           "done": "Done",
-          "view_docs": "View Docs",
+          "view_docs": "View docs",
           "expand_panel": "Expand panel",
           "collapse_panel": "Collapse panel",
-          "return_to_config": "Return to Plugin configuration",
+          "return_to_config": "Return to plugin configuration",
           "node_panel": {
             "title": "Node types",
             "description": "Drag a node onto the canvas to add it to your data flow."
@@ -743,8 +779,8 @@
               "add_button": "Add an input"
             },
             "input_name": {
-              "label": "Input Name",
-              "placeholder": "Input Name"
+              "label": "Input name",
+              "placeholder": "Input name"
             },
             "timeout": {
               "label": "Timeout(s)"
@@ -771,17 +807,32 @@
               "not_number": "{fieldName} must be a number",
               "not_unique": "{fieldName} must be unique",
               "number_range": "{fieldName} must be between {min} and {max}",
-              "string_len_range": "{fieldName} must be between {min} and {max} characters"
+              "string_len_range": "{fieldName} must be between {min} and {max} characters",
+              "reserved_node_name": "\"{nodeName}\" is a reserved node name"
             }
+          },
+          "error": {
+            "invalid_connection": "Invalid connection"
+          },
+          "confirm": {
+            "title": "Connection conflict",
+            "message": {
+              "confirm": "Are you sure you want to make this change?",
+              "switch": "You can either connect all outputs from another node or select individual ones.",
+              "override": "Each input can connect to only one output, but one output can connect to many inputs."
+            },
+            "proceed": "Yes, update"
           }
         },
         "code_editor": {
-          "mode": "Code Editor"
+          "mode": "Code editor"
         }
       },
       "vault_picker": {
         "component_error": "The vault secret picker is not available"
-      }
+      },
+      "tag_helper": "Use comma to separate values. eg: value1, value2",
+      "foreign_placeholder": "Enter a UUID of {entity}"
     }
   },
   "redis": {

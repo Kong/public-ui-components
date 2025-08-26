@@ -9,12 +9,10 @@
   >
     <div class="analytics-chart">
       <AnalyticsChart
-        :allow-csv-export="chartOptions.allow_csv_export"
         :chart-data="data"
         :chart-options="options"
         legend-position="bottom"
         :requests-link="requestsLink"
-        :show-menu="context.editable"
         :synthetics-data-key="chartOptions.synthetics_data_key"
         :timeseries-zoom="timeseriesZoom"
         tooltip-title=""
@@ -38,7 +36,7 @@
 <script setup lang="ts">
 import type { RendererProps } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
-import { computed, defineProps } from 'vue'
+import { computed } from 'vue'
 import type { AnalyticsChartOptions } from '@kong-ui-public/analytics-chart'
 import { AnalyticsChart } from '@kong-ui-public/analytics-chart'
 import composables from '../composables'

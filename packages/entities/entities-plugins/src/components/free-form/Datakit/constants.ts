@@ -3,10 +3,16 @@ export const DK_SIDE_PANEL_WIDTH = '220px'
 export const DK_NODE_PROPERTIES_PANEL_WIDTH = '366px'
 export const DK_NODE_PROPERTIES_PANEL_OFFSET_TOP = '52px'
 
-/**
- * Standard HTTP/1.1 verbs accepted by the `call` node.
- * The string must contain only uppercase letters.
- */
+/** The 4 implicit nodes always present. */
+export const IMPLICIT_NODE_TYPES = [
+  'request',
+  'service_request',
+  'service_response',
+  'response',
+] as const
+
+export const IMPLICIT_NODE_NAMES = IMPLICIT_NODE_TYPES
+
 export const HTTP_METHODS = [
   'GET',
   'HEAD',
@@ -18,13 +24,5 @@ export const HTTP_METHODS = [
   'TRACE',
   'CONNECT',
 ] as const
-
-/**
- * The type of HTTP method accepted by the `call` node.
- * The string must contain only uppercase letters.
- *
- * @default 'GET'
- */
-export type HttpMethod = (typeof HTTP_METHODS)[number]
 
 export const DK_DATA_TRANSFER_MIME_TYPE = 'application/x-datakit+json'

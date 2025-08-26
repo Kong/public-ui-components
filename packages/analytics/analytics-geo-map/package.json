@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-geo-map",
-  "version": "0.3.7",
+  "version": "1.0.2",
   "type": "module",
   "main": "./dist/vitals-geo-map.umd.js",
   "module": "./dist/vitals-geo-map.es.js",
@@ -61,7 +61,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "256KB"
+    "errorLimit": "1.3MB"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
@@ -71,6 +71,7 @@
   },
   "dependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
-    "approximate-number": "^2.1.1"
+    "approximate-number": "^2.1.1",
+    "geobuf": "^3.0.2"
   }
 }

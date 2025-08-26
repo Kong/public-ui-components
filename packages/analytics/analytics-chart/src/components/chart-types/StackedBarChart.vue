@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="chartParentRef"
+    ref="chartParent"
     class="chart-parent"
     :class="chartFlexClass[legendPosition]"
   >
@@ -10,10 +10,10 @@
       class="axis"
     />
     <div
-      ref="chartContainerRef"
+      ref="chartContainer"
       class="chart-container"
-      @:scroll="onScrolling"
       @click="handleChartClick()"
+      @scroll="onScrolling"
     >
       <div
         class="chart-body"
@@ -40,6 +40,7 @@
       <ToolTip
         :absolute-left="tooltipAbsoluteLeft"
         :absolute-top="tooltipAbsoluteTop"
+        :chart-parent-ref="chartParentRef"
         :state="tooltipData"
         :tooltip-title="tooltipTitle"
         @dimensions="tooltipDimensions"
@@ -120,8 +121,8 @@ const SCROLL_MAX = 10
 const AXIS_BOTTOM_OFFSET = 10
 const AXIS_RIGHT_PADDING = 1
 
-const chartContainerRef = ref<HTMLDivElement | null>(null)
-const chartParentRef = useTemplateRef('chartParentRef')
+const chartContainerRef = useTemplateRef<HTMLDivElement>('chartContainer')
+const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 
 const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
   const chartData: BarChartData = chart.data as BarChartData
@@ -176,13 +177,13 @@ const makeAnnotations = (data: BarChartData, label: string, unit: string, orient
   }
 }
 
-const canvas = ref<HTMLCanvasElement | null>(null)
-const axis = ref< HTMLCanvasElement>()
-const legendID = ref(uuidv4())
+const canvasRef = useTemplateRef<HTMLCanvasElement>('canvas')
+const axisRef = useTemplateRef<HTMLCanvasElement>('axis')
+const legendID = uuidv4()
 const reactiveAnnotationsID = uuidv4()
 const maxOverflowPluginID = uuidv4()
 const legendItems = ref<EnhancedLegendItem[]>([])
-const legendPosition = ref(inject('legendPosition', ChartLegendPosition.Right))
+const legendPosition = inject('legendPosition', ChartLegendPosition.Right)
 const axesTooltip = reactive<AxesTooltipState>({
   show: false,
   top: '0px',
@@ -192,7 +193,7 @@ const axesTooltip = reactive<AxesTooltipState>({
 })
 const unitsRef = toRef(props, 'metricUnit')
 
-const isHorizontal = computed(() => toRef(props, 'orientation').value === 'horizontal')
+const isHorizontal = computed(() => props.orientation === 'horizontal')
 
 const tooltipData = reactive<TooltipState>({
   showTooltip: false,
@@ -227,7 +228,7 @@ const configureAnnotations = () => props.annotations && props.chartData.labels?.
 )
 
 const htmlLegendPlugin = {
-  id: legendID.value,
+  id: legendID,
   afterUpdate(chart: Chart) {
     // Update any computed properties that depend on chart state.
     // As of writing, this is important for correctly calculating maxOverflow based on dataset visibility.
@@ -328,7 +329,7 @@ const resizeObserver = new ResizeObserver(debounce((entries: ResizeObserverEntry
 
 const chartWidth = computed<string>(() => {
   const numLabels = props.chartData?.labels?.length
-  if (canvas.value && numLabels && !isHorizontal.value) {
+  if (canvasRef.value && numLabels && !isHorizontal.value) {
     const preferredChartWidth = Math.max(numLabels * (MIN_BAR_WIDTH + BAR_MARGIN), baseWidth.value)
 
     return `${preferredChartWidth}px`
@@ -339,7 +340,7 @@ const chartWidth = computed<string>(() => {
 
 const chartHeight = computed<string>(() => {
   const numLabels = props.chartData?.labels?.length
-  if (canvas.value && numLabels && isHorizontal.value) {
+  if (canvasRef.value && numLabels && isHorizontal.value) {
     const preferredChartHeight = Math.max(numLabels * (MIN_BAR_HEIGHT + BAR_MARGIN), baseHeight.value)
 
     return `${preferredChartHeight}px`
@@ -362,28 +363,29 @@ onMounted(() => {
 
   if (chartContainerRef.value) {
     // Initialize base dimensions since resize observer is debounced.
-    baseWidth.value = (chartContainerRef.value as HTMLDivElement).offsetWidth
-    baseHeight.value = (chartContainerRef.value as HTMLDivElement).offsetHeight
-    resizeObserver.observe(chartContainerRef.value as HTMLDivElement)
+    baseWidth.value = chartContainerRef.value.offsetWidth
+    baseHeight.value = chartContainerRef.value.offsetHeight
+    resizeObserver.observe(chartContainerRef.value)
   }
 })
 
 onUnmounted(() => {
   if (chartContainerRef.value) {
-    resizeObserver.unobserve(chartContainerRef.value as HTMLDivElement)
+    resizeObserver.unobserve(chartContainerRef.value)
   }
 })
 
 const options = computed<ChartOptions>(() => {
   const defaultOptions = composables.useBarChartOptions({
     tooltipState: tooltipData,
-    legendID: legendID.value,
+    legendID,
     stacked: toRef(props, 'stacked'),
     metricAxesTitle: toRef(props, 'metricAxesTitle'),
     dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
     indexAxis: isHorizontal.value ? 'y' : 'x',
     numLabels,
   })
+
   return {
     ...defaultOptions.value,
     plugins: {
@@ -405,8 +407,8 @@ const options = computed<ChartOptions>(() => {
 
 const chartInstance = composables.useChartJSCommon(
   'bar',
-  canvas as Ref<HTMLCanvasElement | null>,
-  toRef(props, 'chartData') as Ref<BarChartData>,
+  canvasRef,
+  toRef(props, 'chartData'),
   plugins,
   options,
 ) as Ref<Chart | undefined>
@@ -450,14 +452,14 @@ const chartFlexClass: { [label: string]: string } = {
 }
 
 const axisDimensions = computed(() => {
-  if (axis.value && chartInstance.value) {
+  if (axisRef.value && chartInstance.value) {
     const scale = window.devicePixelRatio
     const chart = chartInstance.value
 
     const width = chart.scales.y.width * scale + AXIS_RIGHT_PADDING // Add 1px to prevent clipping/maintain right border
     const height = (chart.scales.y.height + chart.scales.y.top + chart.scales.x.height) * scale
 
-    const targetCtx = axis.value.getContext('2d') as CanvasRenderingContext2D
+    const targetCtx = axisRef.value.getContext('2d') as CanvasRenderingContext2D
 
     targetCtx.scale(scale, scale)
     targetCtx.canvas.width = width
@@ -518,12 +520,12 @@ const tooltipDimensions = ({ width, height }: { width: number, height: number })
 
 watch(() => props.orientation, () => {
   // Cleanup chart when changing orientation
-  if (axis.value && axisDimensions.value) {
+  if (axisRef.value && axisDimensions.value) {
 
     const width = axisDimensions.value.width
     const height = axisDimensions.value.height
 
-    const targetCtx = axis.value?.getContext('2d') as CanvasRenderingContext2D
+    const targetCtx = axisRef.value?.getContext('2d') as CanvasRenderingContext2D
     targetCtx.clearRect(0, 0, width, height)
   }
 

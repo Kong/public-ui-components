@@ -9,6 +9,7 @@ import type {
   NodeId,
 } from '../../types'
 import { hasInputField, hasOutputField } from './helpers'
+import { IMPLICIT_NODE_NAMES } from '../../constants'
 
 export type ValidationResult = { ok: true } | { ok: false, errors: string[] }
 
@@ -69,13 +70,9 @@ export function useValidators(stateRef: Ref<EditorState>) {
       errors.push('target handle is not an input field')
 
     // phase / implicit rules
-    if (sourceNode.phase === 'response' && targetNode.phase === 'request')
-      errors.push('cannot connect from response phase to request phase')
     if (targetNode.name === 'request') errors.push('cannot target "request"')
     if (sourceNode.name === 'response')
       errors.push('cannot source from "response"')
-    if (sourceNode.phase === 'response' && targetNode.phase !== 'response')
-      errors.push('response-phase output must go to response-phase nodes')
 
     // fan-in rules
     const hasWholeOnTarget = edges.value.some(
@@ -118,26 +115,16 @@ export function useValidators(stateRef: Ref<EditorState>) {
 
   function validateGraph(): ValidationResult {
     const errors: string[] = []
-    const implicit = [
-      'request',
-      'service_request',
-      'service_response',
-      'response',
-    ]
-    for (const n of implicit)
+    for (const n of IMPLICIT_NODE_NAMES)
       if (![...nodesById.value.values()].some((node) => node.name === n))
         errors.push(`missing implicit node "${n}"`)
 
     for (const e of edges.value) {
       const s = nodesById.value.get(e.source)!
       const t = nodesById.value.get(e.target)!
-      if (s.phase === 'response' && t.phase === 'request')
-        errors.push(`edge "${e.id}" crosses phases (response → request)`)
       if (t.name === 'request') errors.push(`edge "${e.id}" targets "request"`)
       if (s.name === 'response')
         errors.push(`edge "${e.id}" sources from "response"`)
-      if (s.phase === 'response' && t.phase !== 'response')
-        errors.push(`edge "${e.id}" violates response-phase rule`)
     }
 
     if (hasCycle(buildAdjacency(edges.value))) errors.push('graph contains cycle')

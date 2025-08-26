@@ -5,13 +5,25 @@
     type="table"
   />
   <KEmptyState
+    v-else-if="hasError && queryError?.type === 'forbidden'"
+    :action-button-visible="false"
+    data-testid="chart-forbidden-state"
+  >
+    <template #default>
+      {{ queryError.message }}
+    </template>
+    <template #icon>
+      <VisibilityOffIcon />
+    </template>
+  </KEmptyState>
+  <KEmptyState
     v-else-if="hasError"
     :action-button-visible="false"
     data-testid="chart-empty-state"
     icon-variant="error"
   >
     <template #default>
-      {{ errorMessage }}
+      {{ queryError?.message }}
     </template>
   </KEmptyState>
 
@@ -49,6 +61,7 @@ import type {
 import { stripUnknownFilters } from '@kong-ui-public/analytics-utilities'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
+import { VisibilityOffIcon } from '@kong/icons'
 
 const props = defineProps<{
   context: DashboardRendererContextInternal
@@ -61,6 +74,11 @@ const emit = defineEmits<{
   (e: 'chart-data', chartData: ExploreResultV4): void
   (e: 'queryComplete'): void
 }>()
+
+interface QueryError {
+  type: 'forbidden' | 'timeout' | 'range_exceeded' | 'other'
+  message: string
+}
 
 const { i18n } = composables.useI18n()
 
@@ -140,21 +158,33 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
 
     // Note that queryBridge is guaranteed to be set here because SWRV won't execute the query if the key is null.
     const result = await queryBridge?.queryFn(mergedQuery, abortController)
-    errorMessage.value = null
+    queryError.value = null
 
     return result
   } catch (e: any) {
     // Note: The error object will contain a response status property at the root when the analytics bridge
     // detects a 403 or 408 status code. This allows us to provide proper error messages for impacted tiles.
     if (e?.status === 403) {
-      errorMessage.value = i18n.t('queryDataProvider.forbidden')
+      queryError.value = {
+        message: i18n.t('queryDataProvider.forbidden'),
+        type: 'forbidden',
+      }
     } else if (e?.status === 408) {
-      errorMessage.value = i18n.t('queryDataProvider.timeout')
+      queryError.value = {
+        message: i18n.t('queryDataProvider.timeout'),
+        type: 'timeout',
+      }
     } else if (e?.response?.data?.message === 'Range not allowed for this tier') {
       // Note: 'Range not allowed' is defined by the API, therefore cannot be stored as string translation
-      errorMessage.value = i18n.t('queryDataProvider.timeRangeExceeded')
+      queryError.value = {
+        message: i18n.t('queryDataProvider.timeRangeExceeded'),
+        type: 'range_exceeded',
+      }
     } else {
-      errorMessage.value = e?.response?.data?.message || e?.message
+      queryError.value = {
+        message: e?.response?.data?.message || e?.message,
+        type: 'other',
+      }
     }
 
     throw e
@@ -169,8 +199,8 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
 
 const { state, swrvState: STATE } = useSwrvState(v4Data, error, isValidating)
 
-const errorMessage = ref<string | null>(null)
-const hasError = computed(() => state.value === STATE.ERROR || !!errorMessage.value)
+const queryError = ref<QueryError | null>(null)
+const hasError = computed(() => state.value === STATE.ERROR || !!queryError.value)
 const isLoading = computed(() => !props.queryReady || state.value === STATE.PENDING)
 
 watch(v4Data, (data) => {

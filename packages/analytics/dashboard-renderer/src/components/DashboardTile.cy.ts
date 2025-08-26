@@ -3,12 +3,14 @@ import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
 import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition } from '@kong-ui-public/analytics-utilities'
 
+const start = Date.now() - 6 * 60 * 60 * 1000
+const end = Date.now()
+
 describe('<DashboardTile />', () => {
   const mockTileDefinition: TileDefinition = {
     chart: {
       type: 'timeseries_line',
       chart_title: 'Test Chart',
-      allow_csv_export: true,
     },
     query: {
       datasource: 'api_usage',
@@ -44,12 +46,15 @@ describe('<DashboardTile />', () => {
     exploreBaseUrl: async () => 'http://test.com/explore',
     requestsBaseUrl: async () => 'http://test.com/requests',
     evaluateFeatureFlagFn: () => true,
-    queryFn: () => Promise.resolve(
-      generateSingleMetricTimeSeriesData(
-        { name: 'TotalRequests', unit: 'count' },
-        { statusCode: ['request_count'] as string[] },
-      ) as ExploreResultV4,
-    ),
+    queryFn: () => {
+      return Promise.resolve(
+        generateSingleMetricTimeSeriesData(
+          { name: 'TotalRequests', unit: 'count' },
+          { statusCode: ['request_count'] as string[] },
+          { start_ms: start, end_ms: end },
+        ) as ExploreResultV4,
+      )
+    },
   }
 
   type MountOptions = {
@@ -58,6 +63,7 @@ describe('<DashboardTile />', () => {
     onDuplicateTile?: sinon.SinonSpy
     definition?: TileDefinition
     context?: DashboardRendererContextInternal
+    extraProps?: Record<string, any>
   }
 
   const mount = ({
@@ -66,6 +72,7 @@ describe('<DashboardTile />', () => {
     onDuplicateTile = cy.spy(),
     definition = mockTileDefinition,
     context = mockContext,
+    extraProps = {},
   }: MountOptions = {}) => {
     const attrs = {
       onEditTile,
@@ -75,6 +82,7 @@ describe('<DashboardTile />', () => {
 
     return cy.mount(DashboardTile, {
       props: {
+        ...extraProps,
         definition,
         context,
         queryReady: true,
@@ -122,6 +130,21 @@ describe('<DashboardTile />', () => {
     cy.getTestId('kebab-action-menu-1').click()
     cy.getTestId('chart-csv-export-1').click()
     cy.getTestId('csv-export-modal').should('exist')
+  })
+
+  it('should not show CSV export if disabled for chart', () => {
+    mount({
+      definition: {
+        query: mockTileDefinition.query,
+        chart: {
+          type: 'vertical_bar',
+          allow_csv_export: false,
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-csv-export-1').should('not.exist')
   })
 
   it('should not show edit button when context is not editable', () => {
@@ -204,6 +227,43 @@ describe('<DashboardTile />', () => {
     cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
   })
 
+  it('should not show aged out warning when query is not ready', () => {
+    mount({
+      definition: {
+        ...mockTileDefinitionWithTimerange,
+        query: {
+          ...mockTileDefinitionWithTimerange.query,
+          granularity: 'hourly',
+        },
+      },
+      extraProps: {
+        queryReady: false,
+      },
+    })
+
+    cy.getTestId('time-range-badge').should('exist')
+    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+  })
+
+  it('should not show aged out warning when saved granularity is missing', () => {
+    // No saved granularity; even with a real query granularity there should be no warning
+    mount({
+      definition: {
+        ...mockTileDefinitionWithTimerange,
+        query: {
+          ...mockTileDefinitionWithTimerange.query,
+          granularity: undefined,
+        },
+      },
+      extraProps: {
+        queryReady: false,
+      },
+    })
+
+    cy.getTestId('time-range-badge').should('exist')
+    cy.getTestId('kui-icon-svg-warning-icon').should('not.exist')
+  })
+
   it('jump to requests link should be reactive', () => {
     // Force a different filter so that it actually re-issues the query.
     const context = {
@@ -229,5 +289,44 @@ describe('<DashboardTile />', () => {
 
     cy.getTestId('kebab-action-menu-1').click()
     cy.getTestId('chart-jump-to-requests-1').should('not.exist')
+  })
+
+  it('should not show jump to requests link if datasource is llm_usage', () => {
+    mount({
+      definition: {
+        chart: mockTileDefinition.chart,
+        query: {
+          datasource: 'llm_usage',
+          metrics: [],
+          filters: [],
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-requests-1').should('not.exist')
+  })
+
+  it('should use start and end from explore result for request link', () => {
+    mount({
+      definition: {
+        chart: mockTileDefinition.chart,
+        query: {
+          datasource: 'api_usage',
+          metrics: [],
+          filters: [],
+          time_range: {
+            type: 'absolute',
+            start: '2025-01-01',
+            end: '2025-02-01',
+          },
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    // generateSingleMetricTimeSeriesData creates data from "6 hours ago" to "now", so the link should reflect that,
+    // not the time range in the query definition.
+    cy.getTestId('chart-jump-to-requests-1').invoke('attr', 'href').should('have.string', `"start":${start},"end":${end}`)
   })
 })

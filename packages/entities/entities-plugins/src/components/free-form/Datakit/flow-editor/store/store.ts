@@ -17,8 +17,8 @@ import type {
 } from '../../types'
 import { IMPLICIT_NODE_META_MAP, isImplicitName, isImplicitType } from '../node/node'
 import {
-  createId,
   clone,
+  createId,
   findFieldById,
   generateNodeName,
 } from './helpers'
@@ -27,7 +27,11 @@ import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
 
 type CreateEditorStoreOptions = {
-  onChange?: (config: { nodes: ConfigNode[] }) => void
+  /**
+   * Whether the editor is in editing mode (versus the creation mode)
+   */
+  isEditing?: boolean
+  onChange?: (configNodes: ConfigNode[], uiNodes: UINode[]) => void
 }
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
@@ -46,13 +50,15 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           return
         }
 
-        options.onChange?.({
-          nodes: toConfigNodes(),
-        })
+        options.onChange?.(toConfigNodes(), toUINodes())
       },
     })
     const newCreatedNodeId = ref<NodeId | null>(null)
     const invalidConfigNodeIds = ref<Set<NodeId>>(new Set())
+
+    function markAsLayoutCompleted() {
+      state.value.needLayout = false
+    }
 
     // maps
     const nodeMapById = computed(
@@ -566,6 +572,9 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       isValidConnection,
       isValidVueFlowConnection,
       validateGraph: () => validateGraph(),
+
+      // layout helpers
+      markAsLayoutCompleted,
     }
   },
 )

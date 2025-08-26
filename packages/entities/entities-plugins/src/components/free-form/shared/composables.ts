@@ -2,7 +2,7 @@ import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, use
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
-import type { ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
+import type { ArrayFieldSchema, ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { get, set, uniqueId } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
 import type { FormConfig, ResetLabelPathRule } from './types'
@@ -30,6 +30,17 @@ export function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''
   const schemaMap: Record<string, UnionFieldSchema> = {}
   const recordSchema = (schema as RecordFieldSchema)
   if (Array.isArray(recordSchema.fields)) {
+    Object.assign(schemaMap, buildRecordSchemaMap(recordSchema, pathPrefix))
+  } else if (schema.type === 'array' && schema.elements) {
+    Object.assign(schemaMap, buildArraySchemaMap(schema, pathPrefix))
+  }
+
+  return schemaMap
+}
+
+function buildRecordSchemaMap(recordSchema: RecordFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
+  const schemaMap: Record<string, UnionFieldSchema> = {}
+  if (Array.isArray(recordSchema.fields)) {
     for (const fieldDef of recordSchema.fields) {
       const fieldName = Object.keys(fieldDef)[0]
       const fieldProps = fieldDef[fieldName]
@@ -38,20 +49,32 @@ export function buildSchemaMap(schema: UnionFieldSchema, pathPrefix: string = ''
       schemaMap[fieldPath] = fieldProps
 
       if (fieldProps.type === 'record' && Array.isArray(fieldProps.fields)) {
-        const subMap = buildSchemaMap(fieldProps, fieldPath)
+        const subMap = buildRecordSchemaMap(fieldProps, fieldPath)
         Object.assign(schemaMap, subMap)
       } else if (fieldProps.type === 'array' && fieldProps.elements) {
-        const elementProps = fieldProps.elements
-        const elementPath = utils.resolve(fieldPath, utils.arraySymbol)
-        schemaMap[elementPath] = elementProps
-        if (elementProps.type === 'record' && Array.isArray(elementProps.fields)) {
-          const subMap = buildSchemaMap(elementProps, elementPath)
-          Object.assign(schemaMap, subMap)
-        }
+        const subMap = buildArraySchemaMap(fieldProps, fieldPath)
+        Object.assign(schemaMap, subMap)
       }
     }
   }
+  return schemaMap
+}
 
+function buildArraySchemaMap(arraySchema: ArrayFieldSchema, pathPrefix: string = ''): Record<string, UnionFieldSchema> {
+  const schemaMap: Record<string, UnionFieldSchema> = {}
+  if (arraySchema.elements) {
+    const elementProps = arraySchema.elements
+    const elementPath = utils.resolve(pathPrefix, utils.arraySymbol)
+    schemaMap[elementPath] = elementProps
+
+    if (elementProps.type === 'record' && Array.isArray(elementProps.fields)) {
+      const subMap = buildRecordSchemaMap(elementProps, elementPath)
+      Object.assign(schemaMap, subMap)
+    } else if (elementProps.type === 'array' && elementProps.elements) {
+      const subMap = buildArraySchemaMap(elementProps, elementPath)
+      Object.assign(schemaMap, subMap)
+    }
+  }
   return schemaMap
 }
 
@@ -175,11 +198,14 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
   }
 
   function getPlaceholder(fieldPath: string): string | null {
-    const defaultValue = getSchema(fieldPath)?.default
+    const schema = getSchema(fieldPath)
+    const defaultValue = schema?.default
 
     let stringified = null
 
-    if (defaultValue == null || typeof defaultValue === 'object' || defaultValue === '') {
+    if (schema?.type === 'foreign' && !!defaultValue?.id) {
+      stringified = defaultValue.id
+    } else if (defaultValue == null || typeof defaultValue === 'object' || defaultValue === '') {
       return null
     } else if (Array.isArray(defaultValue)) {
       if (defaultValue.length === 0) {
@@ -514,32 +540,77 @@ export function useIsAutoFocus(fieldAncestors?: MaybeRefOrGetter<Ancestor>) {
 }
 
 export function useItemKeys<T>(ns: string, items: MaybeRefOrGetter<T[]>) {
-  const keyMap = reactive(new Map<T, string>())
+  // Map content hash to stable ID
+  const keyMap = reactive(new Map<string, string>())
+  // Track used index positions for generating stable keys
+  const indexKeyMap = reactive(new Map<number, string>())
 
   function generateId() {
     return uniqueId(`${ns}-`)
   }
 
+  function getContentHash(item: T): string {
+    if (item == null) return 'null'
+    if (typeof item !== 'object') return String(item)
+
+    // Simple content hash based on JSON serialization
+    try {
+      return JSON.stringify(item, Object.keys(item).sort())
+    } catch {
+      return String(item)
+    }
+  }
+
   function getKey(item: T, index: number) {
-    if (item != null && typeof item === 'object') {
-      return keyMap.get(item)
+    if (item == null || typeof item !== 'object') {
+      return `${ns}-${index}`
     }
 
-    return `${ns}-${index}`
+    const contentHash = getContentHash(item)
+
+    // Try to find existing key using content hash first
+    if (keyMap.has(contentHash)) {
+      return keyMap.get(contentHash)!
+    }
+
+    // If this index position already has a stable key, try to reuse it
+    if (indexKeyMap.has(index)) {
+      const existingKey = indexKeyMap.get(index)!
+      keyMap.set(contentHash, existingKey)
+      return existingKey
+    }
+
+    // Generate new key
+    const newKey = generateId()
+    keyMap.set(contentHash, newKey)
+    indexKeyMap.set(index, newKey)
+    return newKey
   }
 
   watch(items, (newItems) => {
     const itemVal = toValue(newItems)
-    itemVal.forEach((item) => {
-      if (!keyMap.has(item)) {
-        keyMap.set(item, generateId())
+    const currentHashes = new Set<string>()
+    const currentIndices = new Set<number>()
+
+    itemVal.forEach((item, index) => {
+      if (item != null && typeof item === 'object') {
+        const contentHash = getContentHash(item)
+        currentHashes.add(contentHash)
+      }
+      currentIndices.add(index)
+    })
+
+    // Clean up unused content hashes
+    Array.from(keyMap.keys()).forEach((hash) => {
+      if (!currentHashes.has(hash)) {
+        keyMap.delete(hash)
       }
     })
 
-    const current = new Set(itemVal)
-      ;[...keyMap.keys()].forEach((key) => {
-      if (!current.has(key)) {
-        keyMap.delete(key)
+    // Clean up unused indices
+    Array.from(indexKeyMap.keys()).forEach((index) => {
+      if (!currentIndices.has(index)) {
+        indexKeyMap.delete(index)
       }
     })
   }, { immediate: true, deep: true })

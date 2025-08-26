@@ -469,10 +469,10 @@ Each chart type has its own configuration schema with specific options.
 ### Common Chart Properties
 
 Most chart types support these common properties:
-- `chartTitle`: String title for the chart
-- `syntheticsDataKey`: Key for synthetic tests (if applicable)
-- `allowCsvExport`: Boolean to enable/disable CSV export
-- `chartDatasetColors`: Custom colors for datasets (object or array) `{ [key: string]: string } | string[]`
+- `chart_title`: String title for the chart
+- `synthetics_data_key`: Key for synthetic tests (if applicable)
+- `allow_csv_export`: Boolean to enable/disable CSV export
+- `chart_dataset_colors`: Custom colors for datasets (object or array) `{ [key: string]: string } | string[]`
 
 ### Query Configuration
 

@@ -33,6 +33,7 @@ import { fieldValueToStoreValue, renameKeyAndKeepOrder, storeValueToFieldValue, 
 import { useNodeForm, useSubSchema } from '../composables/useNodeForm'
 import { useNodeNameValidator } from '../composables/validation'
 import type { NodeId } from '../../types'
+import NameField from './NameField.vue'
 
 const { nodeId } = defineProps<{
   nodeId: NodeId
@@ -83,8 +84,12 @@ const formData = computed(() => {
   // gather fieldNames from fields
   const outputsFieldNamesFromFields = currentNode.value!.fields.output.map(field => field.name)
 
+  // gather fieldNames from values
+  const outputsFieldNamesFromValues = Object.keys(values)
+
   // combine fieldNames
   const outputsFieldNames = new Set([
+    ...outputsFieldNamesFromValues,
     ...outputsFieldNamesFromEdges,
     ...outputsFieldNamesFromFields,
   ])
@@ -106,8 +111,9 @@ const formData = computed(() => {
 
 function handleAddField(name: FieldName, value?: string) {
   if (!currentNode.value) throw new Error('No selected node')
-  addField(nodeId, 'output', name, !value)
-  if (value) {
+  const isDefined = value !== undefined
+  addField(nodeId, 'output', name, !isDefined)
+  if (isDefined) {
     const next = {
       values: fieldValueToStoreValue({ ...formData.value.values, [name]: value }),
     }

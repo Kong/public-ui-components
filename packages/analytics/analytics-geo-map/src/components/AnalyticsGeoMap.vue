@@ -1,7 +1,7 @@
 <template>
   <div class="kong-ui-public-analytics-geo-map">
     <div
-      id="mapContainer"
+      :id="mapContainerId"
       class="analytics-geo-map-container"
     />
     <!-- Legend -->
@@ -31,9 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue'
+import { ref, onMounted, watch, computed, useId } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
-import type { PropType } from 'vue'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
 import type { CountryISOA2, MapFeatureCollection, MetricUnits } from '../types'
 import type { Feature, MultiPolygon, Geometry, GeoJsonProperties, FeatureCollection } from 'geojson'
@@ -43,60 +42,47 @@ import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 import lakes from '../ne_110m_lakes.json'
+import * as geobuf from 'geobuf'
+import Pbf from 'pbf'
 
-const props = defineProps({
-  countryMetrics: {
-    type: Object as PropType<Record<string, number>>,
-    required: true,
-  },
-  geoJsonData: {
-    type: Object as PropType<MapFeatureCollection>,
-    required: true,
-  },
-  metricUnit: {
-    type: String as PropType<MetricUnits>,
-    required: true,
-  },
-  metric: {
-    type: String as PropType<ExploreAggregations>,
-    required: true,
-  },
-  withLegend: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  showTooltipValue: {
-    type: Boolean,
-    required: false,
-    default: true,
-  },
-  fitToCountry: {
-    type: String as PropType<CountryISOA2 | null>,
-    required: false,
-    default: null,
-  },
-  bounds: {
-    type: Object as PropType<LngLatBoundsLike>,
-    required: false,
-    default: () => null,
-  },
-})
-const map = ref<Map>()
+const {
+  countryMetrics,
+  metricUnit,
+  metric,
+  withLegend = true,
+  showTooltipValue = true,
+  fitToCountry = undefined,
+  bounds = undefined,
+} = defineProps<{
+  countryMetrics: Record<string, number>
+  metricUnit: MetricUnits
+  metric: ExploreAggregations
+  withLegend?: boolean
+  showTooltipValue?: boolean
+  fitToCountry?: CountryISOA2 | undefined
+  bounds?: LngLatBoundsLike | undefined
+}>()
 
 const { i18n } = composables.useI18n()
+const mapContainerId = useId()
+const map = ref<Map>()
+const geoJsonData = ref<MapFeatureCollection | null>(null)
 
 const layerPaint = computed(() => ({
   'fill-color': [
     'match',
     [
-      'case',
-      ['==', ['get', 'iso_a2'], '-99'],
-      ['get', 'iso_a2_eh'],
-      ['get', 'iso_a2'],
+      'coalesce',
+      [
+        'case',
+        ['==', ['get', 'iso_a2'], '-99'],
+        ['get', 'iso_a2_eh'],
+        ['get', 'iso_a2'],
+      ] as ExpressionSpecification,
+      ['get', 'ISO_A2'],
     ] as ExpressionSpecification,
-    ...(Object.keys(props.countryMetrics).length
-      ? Object.entries(props.countryMetrics).flatMap(([code, metric]) => [
+    ...(Object.keys(countryMetrics).length
+      ? Object.entries(countryMetrics).flatMap(([code, metric]) => [
         code,
         getColor(metric),
       ])
@@ -107,11 +93,11 @@ const layerPaint = computed(() => ({
 }))
 
 const showLegend = computed(() => {
-  return props.withLegend && Object.keys(props.countryMetrics).length > 0
+  return withLegend && Object.keys(countryMetrics).length > 0
 })
 
-const logMinMetric = computed(() => Math.log(Math.min(...Object.values(props.countryMetrics))))
-const logMaxMetric = computed(() => Math.log(Math.max(...Object.values(props.countryMetrics))))
+const logMinMetric = computed(() => Math.log(Math.min(...Object.values(countryMetrics))))
+const logMaxMetric = computed(() => Math.log(Math.max(...Object.values(countryMetrics))))
 
 
 const getColor = (metric: number) => {
@@ -128,7 +114,7 @@ const getColor = (metric: number) => {
 
 const legendTitle = computed(() => {
   // @ts-ignore - dynamic i18n key
-  return props.metric && i18n.t(`metrics.${props.metric}`) || ''
+  return metric && i18n.t(`metrics.${metric}`) || ''
 })
 
 const legendData = computed(() => {
@@ -200,7 +186,10 @@ const goToCountry = (countryCode: CountryISOA2) => {
     return
   }
 
-  const found: Feature<Geometry, GeoJsonProperties> | undefined = (props.geoJsonData).features.find((f: Feature) => {
+  const found: Feature<Geometry, GeoJsonProperties> | undefined = geoJsonData.value?.features.find((f: Feature) => {
+    if (f.properties?.ISO_A2) {
+      return f.properties?.ISO_A2 === countryCode
+    }
     return f.properties?.iso_a2 === '-99' ?
       f.properties?.iso_a2_eh === countryCode :
       f.properties?.iso_a2 === countryCode
@@ -226,7 +215,7 @@ const goToCountry = (countryCode: CountryISOA2) => {
 
 const mapOptions = computed(() => {
   const options: MapOptions = {
-    container: 'mapContainer',
+    container: mapContainerId,
     style: { version: 8, sources: {}, layers: [] },
     attributionControl: false,
     // fit bounds for whole world minus antarctica
@@ -236,84 +225,93 @@ const mapOptions = computed(() => {
     ],
   }
 
-  if (props.bounds) {
-    options.bounds = props.bounds
+  if (bounds) {
+    options.bounds = bounds
   }
 
   return options
 })
 
-onMounted(() => {
+onMounted(async () => {
+  try {
+    const url = new URL('../countries-simple-geo.pbf', import.meta.url)
+    const response = await fetch(url)
+    const rawBuf = new Uint8Array(await response.arrayBuffer())
+    const geoData = geobuf.decode(new Pbf(rawBuf)) as MapFeatureCollection
+    geoJsonData.value = geoData
 
-  map.value = new Map(mapOptions.value)
-  map.value.on('load', () => {
-    map.value?.addSource('countries', {
-      type: 'geojson',
-      data: props.geoJsonData,
-    })
+    map.value = new Map(mapOptions.value)
+    map.value.on('load', () => {
+      map.value?.addSource('countries', {
+        type: 'geojson',
+        data: geoData,
+      })
 
-    map.value?.addLayer({
-      id: 'countries-layer',
-      type: 'fill',
-      source: 'countries',
-      paint: layerPaint.value,
-    })
+      map.value?.addLayer({
+        id: 'countries-layer',
+        type: 'fill',
+        source: 'countries',
+        paint: layerPaint.value,
+      })
 
-    map.value?.addSource('lakes', {
-      type: 'geojson',
-      data: lakes as FeatureCollection,
-    })
+      map.value?.addSource('lakes', {
+        type: 'geojson',
+        data: lakes as FeatureCollection,
+      })
 
-    map.value?.addLayer({
-      id: 'lakes-layer',
-      type: 'fill',
-      source: 'lakes',
-      paint: {
-        'fill-color': '#FFFFFF',
-      },
-    })
+      map.value?.addLayer({
+        id: 'lakes-layer',
+        type: 'fill',
+        source: 'lakes',
+        paint: {
+          'fill-color': '#FFFFFF',
+        },
+      })
 
-    const popup = new Popup({
-      closeButton: false,
-      closeOnClick: false,
-    })
+      const popup = new Popup({
+        closeButton: false,
+        closeOnClick: false,
+      })
 
-    map.value?.on('mousemove', 'countries-layer', (e) => {
-      const feature = e.features?.[0]
-      if (feature) {
-        const { iso_a2, iso_a2_eh, admin } = feature.properties
-        const lookup = iso_a2 === '-99' ? iso_a2_eh : iso_a2
-        const metric = props.countryMetrics[lookup]
-        if (metric !== undefined) {
+      map.value?.on('mousemove', 'countries-layer', (e) => {
+        const feature = e.features?.[0]
+        if (feature) {
+          const { iso_a2, iso_a2_eh, ISO_A2, admin } = feature.properties
+          const lookup = ISO_A2 ?? iso_a2 === '-99' ? iso_a2_eh : iso_a2
+          const metric = countryMetrics[lookup]
+          if (metric !== undefined) {
           // @ts-ignore - dynamic i18n key
-          const popupHtml = props.showTooltipValue ? `<strong>${admin}</strong>: ${approxNum(metric, { capital: true })} ${i18n.t(`metricUnits.${props.metricUnit}`, { plural: metric > 1 ? 's' : '' })}` : `<strong>${admin}</strong>`
-          popup.setLngLat(e.lngLat).setHTML(popupHtml).addTo(map.value as Map)
-        } else {
-          popup.remove()
+            const popupHtml = showTooltipValue ? `<strong>${admin}</strong>: ${approxNum(metric, { capital: true })} ${i18n.t(`metricUnits.${metricUnit}`, { plural: metric > 1 ? 's' : '' })}` : `<strong>${admin}</strong>`
+            popup.setLngLat(e.lngLat).setHTML(popupHtml).addTo(map.value as Map)
+          } else {
+            popup.remove()
+          }
         }
+      })
+
+      map.value?.on('mouseleave', 'countries-layer', () => {
+        popup.remove()
+      })
+
+      if (fitToCountry) {
+        goToCountry(fitToCountry)
       }
+
     })
+    // disable map rotation using right click + drag
+    map.value?.dragRotate.disable()
 
-    map.value?.on('mouseleave', 'countries-layer', () => {
-      popup.remove()
-    })
+    // disable map rotation using keyboard
+    map.value?.keyboard.disable()
 
-    if (props.fitToCountry) {
-      goToCountry(props.fitToCountry)
-    }
-
-  })
-  // disable map rotation using right click + drag
-  map.value?.dragRotate.disable()
-
-  // disable map rotation using keyboard
-  map.value?.keyboard.disable()
-
-  // disable map rotation using touch rotation gesture
-  map.value?.touchZoomRotate.disableRotation()
+    // disable map rotation using touch rotation gesture
+    map.value?.touchZoomRotate.disableRotation()
+  } catch (e) {
+    console.error(e)
+  }
 })
 
-watch(() => props.countryMetrics, () => {
+watch(() => countryMetrics, () => {
   if (map.value && map.value.isStyleLoaded()) {
     if (map.value.getLayer('countries-layer')) {
       map.value.removeLayer('countries-layer')
@@ -336,7 +334,7 @@ watch(() => props.countryMetrics, () => {
   }
 })
 
-watch(() => props.fitToCountry, (newVal) => {
+watch(() => fitToCountry, (newVal) => {
   if (map.value && newVal) {
     goToCountry(newVal)
   } else {

@@ -1,7 +1,6 @@
 <template>
   <div
     v-if="open"
-    ref="modal"
     class="dk-editor-modal"
   >
     <EditorNav
@@ -13,39 +12,35 @@
       class="content"
       tabindex="0"
     />
+    <ConflictConnectionConfirmModal ref="confirm-modal" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useScrollLock } from '@vueuse/core'
-import { useFocusTrap } from '@vueuse/integrations/useFocusTrap'
-import { nextTick, useTemplateRef, watch } from 'vue'
+import { ref, useTemplateRef, watch } from 'vue'
 import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../../constants'
+import ConflictConnectionConfirmModal, { type OpenConfirm } from './ConflictConnectionConfirmModal.vue'
 
 import EditorNav from './EditorNav.vue'
 import EditorContent from './EditorContent.vue'
-
-const modal = useTemplateRef('modal')
+import { provideConfirmModal } from '../composables/useConflictConnectionConfirm'
 
 const open = defineModel<boolean>('open')
+const showConfirm = ref(false)
+const confirmModalRef = useTemplateRef('confirm-modal')
 
-const content = useTemplateRef('content')
-const isLocked = useScrollLock(document)
-const { activate, deactivate } = useFocusTrap(modal, {
-  returnFocusOnDeactivate: true,
-  initialFocus: () => content.value?.$el,
+provideConfirmModal(async (...args: Parameters<OpenConfirm>) => {
+  showConfirm.value = true
+  const isConfirmed = await confirmModalRef.value!.open(...args)
+  showConfirm.value = false
+  return isConfirmed
 })
 
-watch(open, async (value) => {
-  isLocked.value = !!value
+const isLocked = useScrollLock(document)
 
-  await nextTick()
-
-  if (value) {
-    activate()
-  } else {
-    deactivate()
-  }
+watch(open, (open) => {
+  isLocked.value = !!open
 }, { immediate: true })
 
 function close() {

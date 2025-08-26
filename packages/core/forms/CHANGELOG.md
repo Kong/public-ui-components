@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.16.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.15.8...@kong-ui-public/forms@4.16.0) (2025-08-25)
+
+
+### Features
+
+* **core-form:** refactor FieldAutosuggestion ([#2204](https://github.com/Kong/public-ui-components/issues/2204)) ([d08dd49](https://github.com/Kong/public-ui-components/commit/d08dd4930fde20e032663c608d094477b9c19253))
+
+
+
+
+
+## [4.15.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.15.7...@kong-ui-public/forms@4.15.8) (2025-08-20)
+
+
+### Bug Fixes
+
+* **analytics:** remove extraneous vue warnings [MA-4148] ([#2337](https://github.com/Kong/public-ui-components/issues/2337)) ([2b9a9ba](https://github.com/Kong/public-ui-components/commit/2b9a9ba8a6427ac617795f811a9f5351947ce64c))
+
+
+
+
+
 ## [4.15.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.15.6...@kong-ui-public/forms@4.15.7) (2025-08-18)
 
 **Note:** Version bump only for package @kong-ui-public/forms

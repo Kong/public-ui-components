@@ -48,8 +48,9 @@ import ObjectField from './ObjectField.vue'
 import NumberField from './NumberField.vue'
 import EnumField from './EnumField.vue'
 import KeyValueField from './KeyValueField.vue'
-import TagField from './TagField.vue'
+import StringArrayField from './StringArrayField.vue'
 import JsonField from './JsonField.vue'
+import ForeignField from './ForeignField.vue'
 import type { GlobalAction } from './types'
 
 defineOptions({ name: 'AutoField' })
@@ -85,7 +86,7 @@ const fieldRenderer = computed(() => {
       return ArrayField
     case 'set':
       if (utils.isTagField(field.schema)) {
-        return TagField
+        return StringArrayField
       }
       return EnumField
     case 'record':
@@ -94,6 +95,8 @@ const fieldRenderer = computed(() => {
       return KeyValueField
     case 'json':
       return JsonField
+    case 'foreign':
+      return ForeignField
     default:
       return undefined
   }

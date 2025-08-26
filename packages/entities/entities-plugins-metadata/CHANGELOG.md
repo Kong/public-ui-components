@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.8.0...@kong-ui-public/entities-plugins-metadata@1.9.0) (2025-08-26)
+
+
+### Features
+
+* **entities-plugins:** add 312 new plugin icon and metadata ([#2401](https://github.com/Kong/public-ui-components/issues/2401)) ([ffecfc3](https://github.com/Kong/public-ui-components/commit/ffecfc3db71a6b79d017912c02194e11fb9b9ef4))
+
+
+
+
+
+# [1.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.7.0...@kong-ui-public/entities-plugins-metadata@1.8.0) (2025-08-26)
+
+
+### Features
+
+* **entities-plugins:** add support for ace plugin ([#2387](https://github.com/Kong/public-ui-components/issues/2387)) ([5610eec](https://github.com/Kong/public-ui-components/commit/5610eec4935ecf998c8f94fc4316dcc35ae104df))
+
+
+
+
+
+# [1.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.6.0...@kong-ui-public/entities-plugins-metadata@1.7.0) (2025-08-22)
+
+
+### Features
+
+* **plugins-metadata:** update kafka-consume scope ([#2369](https://github.com/Kong/public-ui-components/issues/2369)) ([3110bf0](https://github.com/Kong/public-ui-components/commit/3110bf005481be1001ff1d2e0993e7e9458f91e8))
+
+
+
+
+
 # [1.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.5.0...@kong-ui-public/entities-plugins-metadata@1.6.0) (2025-07-04)
 
 

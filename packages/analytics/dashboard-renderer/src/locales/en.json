@@ -12,7 +12,7 @@
     "delete": "Delete"
   },
   "queryDataProvider": {
-    "forbidden": "You do not have permission to query this data.",
+    "forbidden": "To access this data, either filter for an entity you have access to or request analytics viewer access from your administrator.",
     "timeRangeExceeded":  "The time range for this report is outside of your organization's data retention period",
     "timeout": "Query timed out.  Consider querying a shorter time range."
   },
@@ -34,6 +34,7 @@
     "thirtySecondly": "30 seconds",
     "twelveHourly": "12 hours",
     "twoHourly": "2 hours",
-    "weekly": "1 week"
+    "weekly": "1 week",
+    "unknown": "Unknown"
   }
 }

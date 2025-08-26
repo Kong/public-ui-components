@@ -3,6 +3,107 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.18...@kong-ui-public/dashboard-renderer@7.0.19) (2025-08-26)
+
+
+### Bug Fixes
+
+* use start and end from chart data for requests link ([#2394](https://github.com/Kong/public-ui-components/issues/2394)) ([4da1831](https://github.com/Kong/public-ui-components/commit/4da1831459707094cbc1d39515680312212f4a52))
+
+
+
+
+
+## [7.0.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.17...@kong-ui-public/dashboard-renderer@7.0.18) (2025-08-22)
+
+
+### Bug Fixes
+
+* **analytics:** fix uses of `allow_csv_export` ([#2379](https://github.com/Kong/public-ui-components/issues/2379)) ([44ab8e7](https://github.com/Kong/public-ui-components/commit/44ab8e79bcf0d92624cbb9c603d6562026b83fa9))
+
+
+
+
+
+## [7.0.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.16...@kong-ui-public/dashboard-renderer@7.0.17) (2025-08-22)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** gate aged out warning on readiness [MA-4248] ([#2378](https://github.com/Kong/public-ui-components/issues/2378)) ([dab95b4](https://github.com/Kong/public-ui-components/commit/dab95b4588435aaeafa94966ecbd7e68c98b90df))
+
+
+
+
+
+## [7.0.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.15...@kong-ui-public/dashboard-renderer@7.0.16) (2025-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.0.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.14...@kong-ui-public/dashboard-renderer@7.0.15) (2025-08-22)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.0.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.13...@kong-ui-public/dashboard-renderer@7.0.14) (2025-08-22)
+
+
+### Bug Fixes
+
+* **analytics:** improve permission denied error [MA-4249] ([#2375](https://github.com/Kong/public-ui-components/issues/2375)) ([3f0cf93](https://github.com/Kong/public-ui-components/commit/3f0cf932390c4745dc8448e849c24e63fb872d13))
+
+
+
+
+
+## [7.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.12...@kong-ui-public/dashboard-renderer@7.0.13) (2025-08-22)
+
+
+### Bug Fixes
+
+* **dashboardrenderer:** disable jump to request for llm datasource [MA-4246] ([#2368](https://github.com/Kong/public-ui-components/issues/2368)) ([76e1954](https://github.com/Kong/public-ui-components/commit/76e19545c44e6691a4013da41d12f23caf499444))
+
+
+
+
+
+## [7.0.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.11...@kong-ui-public/dashboard-renderer@7.0.12) (2025-08-21)
+
+
+### Bug Fixes
+
+* **analytics-chart:** chart tooltip improvements ([#2362](https://github.com/Kong/public-ui-components/issues/2362)) ([44515d3](https://github.com/Kong/public-ui-components/commit/44515d3f636934c6aeb1e526429c3b18e6223680))
+
+
+
+
+
+## [7.0.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.10...@kong-ui-public/dashboard-renderer@7.0.11) (2025-08-21)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.0.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.9...@kong-ui-public/dashboard-renderer@7.0.10) (2025-08-20)
+
+
+### Bug Fixes
+
+* **analytics:** remove extraneous vue warnings [MA-4148] ([#2337](https://github.com/Kong/public-ui-components/issues/2337)) ([2b9a9ba](https://github.com/Kong/public-ui-components/commit/2b9a9ba8a6427ac617795f811a9f5351947ce64c))
+
+
+
+
+
 ## [7.0.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.0.8...@kong-ui-public/dashboard-renderer@7.0.9) (2025-08-19)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

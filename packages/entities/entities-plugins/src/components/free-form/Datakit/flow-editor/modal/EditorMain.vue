@@ -20,15 +20,7 @@
       ref="canvasContainer"
       class="body"
     >
-      <EditorCanvas>
-        <template #request>
-          <EditorCanvasFlow phase="request" />
-        </template>
-
-        <template #response>
-          <EditorCanvasFlow phase="response" />
-        </template>
-      </EditorCanvas>
+      <FlowPanels resizable />
     </div>
   </div>
 </template>
@@ -37,10 +29,10 @@
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
+
 import english from '../../../../../locales/en.json'
+import FlowPanels from '../FlowPanels.vue'
 import { useEditorStore } from '../store/store'
-import EditorCanvas from './EditorCanvas.vue'
-import EditorCanvasFlow from './EditorCanvasFlow.vue'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
