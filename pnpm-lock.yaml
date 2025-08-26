@@ -979,9 +979,6 @@ importers:
       '@kong-ui-public/forms':
         specifier: workspace:^
         version: link:../../core/forms
-      focus-trap:
-        specifier: ^7.6.5
-        version: 7.6.5
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -991,9 +988,6 @@ importers:
       monaco-editor:
         specifier: 0.52.2
         version: 0.52.2
-      zod:
-        specifier: ^4.0.17
-        version: 4.0.17
     devDependencies:
       '@dagrejs/dagre':
         specifier: ^1.1.5
@@ -1040,6 +1034,9 @@ importers:
       vue-router:
         specifier: ^4.4.5
         version: 4.5.1(vue@3.5.18(typescript@5.9.2))
+      zod:
+        specifier: ^4.0.17
+        version: 4.0.17
 
   packages/entities/entities-plugins-icon:
     devDependencies:

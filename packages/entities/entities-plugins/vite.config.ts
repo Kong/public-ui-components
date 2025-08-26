@@ -33,6 +33,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         'marked',
         'monaco-editor',
         '@kong-ui-public/entities-plugins-icon',
+        'zod',
       ],
     },
   },
