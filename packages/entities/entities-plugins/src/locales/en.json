@@ -103,10 +103,6 @@
       }
     },
     "meta": {
-      "ace": {
-        "name": "Konnect Access Control Enforcement",
-        "description": "Enable Developer Self-Service for Konnect Dev Portals"
-      },
       "basic-auth": {
         "name": "Basic Authentication",
         "credential_name": "Basic Auth Credential",
@@ -541,6 +537,38 @@
       "ai-aws-guardrails": {
         "name": "AI AWS GuardRails",
         "description": "The AI AWS GuardRails enables enforcement of introspection with the AWS GuardRails service for all requests processed by the AI Proxy plugin."
+      },
+      "ace": {
+        "name": "Konnect Access Control Enforcement",
+        "description": "Enable Developer Self-Service for Konnect Dev Portals."
+      },
+      "solace-consume": {
+        "name": "Solace Consume",
+        "description": "Consume messages from Solace and make them available through HTTP endpoints."
+      },
+      "solace-log": {
+        "name": "Solace Log",
+        "description": "Publish request and response logs to a Solace topic."
+      },
+      "ai-llm-as-judge": {
+        "name": "AI LLM Judge",
+        "description": "Evaluate LLM responses with an external LLM service and use accuracy scores to drive dynamic load balancing for `llm/v1/chat` requests."
+      },
+      "ai-mcp-proxy": {
+        "name": "AI MCP Proxy",
+        "description": "Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools, and observe MCP traffic in real time."
+      },
+      "ai-gcp-model-armor": {
+        "name": "AI GCP Model Armor ",
+        "description": "Audit and validate AI Proxy messages with Google Cloud Model Armor before forwarding them to an upstream LLM."
+      },
+      "ai-mcp-oauth2": {
+        "name": "AI MCP OAuth2",
+        "description": "Secure MCP server access with OAuth2 authentication."
+      },
+      "ai-semantic-response-guard": {
+        "name": "AI Semantic Response Guard",
+        "description": "Permit or block prompts based on semantic similarity to known LLM responses, preventing misuse of `llm/v1/chat` or `llm/v1/completions` requests."
       }
     },
     "fields": {
