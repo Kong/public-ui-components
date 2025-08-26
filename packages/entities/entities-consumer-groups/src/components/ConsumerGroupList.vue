@@ -226,13 +226,11 @@ import { computed, ref, watch, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
 import { useRouter } from 'vue-router'
 import { AddIcon, BookIcon, TeamIcon } from '@kong/icons'
-import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
 import composables from '../composables'
 import endpoints from '../consumer-groups-endpoints'
 import {
   EntityBaseTable,
   EntityDeleteModal,
-  EntityEmptyState,
   EntityFilter,
   EntityTypes,
   FetcherStatus,
