@@ -3,6 +3,9 @@ import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
 import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition } from '@kong-ui-public/analytics-utilities'
 
+const start = Date.now() - 6 * 60 * 60 * 1000
+const end = Date.now()
+
 describe('<DashboardTile />', () => {
   const mockTileDefinition: TileDefinition = {
     chart: {
@@ -43,12 +46,15 @@ describe('<DashboardTile />', () => {
     exploreBaseUrl: async () => 'http://test.com/explore',
     requestsBaseUrl: async () => 'http://test.com/requests',
     evaluateFeatureFlagFn: () => true,
-    queryFn: () => Promise.resolve(
-      generateSingleMetricTimeSeriesData(
-        { name: 'TotalRequests', unit: 'count' },
-        { statusCode: ['request_count'] as string[] },
-      ) as ExploreResultV4,
-    ),
+    queryFn: () => {
+      return Promise.resolve(
+        generateSingleMetricTimeSeriesData(
+          { name: 'TotalRequests', unit: 'count' },
+          { statusCode: ['request_count'] as string[] },
+          { start_ms: start, end_ms: end },
+        ) as ExploreResultV4,
+      )
+    },
   }
 
   type MountOptions = {
@@ -299,5 +305,28 @@ describe('<DashboardTile />', () => {
 
     cy.getTestId('kebab-action-menu-1').click()
     cy.getTestId('chart-jump-to-requests-1').should('not.exist')
+  })
+
+  it('should use start and end from explore result for request link', () => {
+    mount({
+      definition: {
+        chart: mockTileDefinition.chart,
+        query: {
+          datasource: 'api_usage',
+          metrics: [],
+          filters: [],
+          time_range: {
+            type: 'absolute',
+            start: '2025-01-01',
+            end: '2025-02-01',
+          },
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    // generateSingleMetricTimeSeriesData creates data from "6 hours ago" to "now", so the link should reflect that,
+    // not the time range in the query definition.
+    cy.getTestId('chart-jump-to-requests-1').invoke('attr', 'href').should('have.string', `"start":${start},"end":${end}`)
   })
 })
