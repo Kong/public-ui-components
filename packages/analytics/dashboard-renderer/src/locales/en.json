@@ -36,5 +36,9 @@
     "twoHourly": "2 hours",
     "weekly": "1 week",
     "unknown": "Unknown"
+  },
+  "empty_tile": {
+    "title":  "Add a tile",
+    "add": "New tile"
   }
 }

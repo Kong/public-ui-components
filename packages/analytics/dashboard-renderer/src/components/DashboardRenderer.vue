@@ -36,6 +36,7 @@
           @tile-time-range-zoom="emit('tile-time-range-zoom', $event)"
         />
       </template>
+      <DashboardEmptyTile />
     </component>
   </div>
 </template>
@@ -52,6 +53,7 @@ import type {
   TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
+import DashboardEmptyTile from './DashboardEmptyTile.vue'
 import type { ComponentPublicInstance } from 'vue'
 import { computed, getCurrentInstance, inject, ref } from 'vue'
 import composables from '../composables'
