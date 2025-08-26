@@ -36,7 +36,7 @@ type CreateEditorStoreOptions = {
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
   function createState(configNodes: ConfigNode[], uiNodes: UINode[], options: CreateEditorStoreOptions = {}) {
-    const state = ref<EditorState>(initEditorState(configNodes, uiNodes, options.isEditing))
+    const state = ref<EditorState>(initEditorState(configNodes, uiNodes))
     const selection = ref<NodeId>()
     const modalOpen = ref(false)
     const propertiesPanelOpen = ref(false)
@@ -55,6 +55,10 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     })
     const newCreatedNodeId = ref<NodeId | null>(null)
     const invalidConfigNodeIds = ref<Set<NodeId>>(new Set())
+
+    function markAsLayoutCompleted() {
+      state.value.needLayout = false
+    }
 
     // maps
     const nodeMapById = computed(
@@ -501,8 +505,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       )
     }
 
-    function load(nextConfig: ConfigNode[], nextUI: UINode[], isEditing?: boolean) {
-      state.value = initEditorState(nextConfig, nextUI, isEditing)
+    function load(nextConfig: ConfigNode[], nextUI: UINode[]) {
+      state.value = initEditorState(nextConfig, nextUI)
       history.reset()
     }
 
@@ -568,6 +572,9 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       isValidConnection,
       isValidVueFlowConnection,
       validateGraph: () => validateGraph(),
+
+      // layout helpers
+      markAsLayoutCompleted,
     }
   },
 )
