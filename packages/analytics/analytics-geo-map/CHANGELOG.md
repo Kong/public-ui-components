@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.0.2...@kong-ui-public/analytics-geo-map@1.1.0) (2025-08-26)
+
+
+### Features
+
+* add choropleth_map type to dashboard renderer and schema ([#2392](https://github.com/Kong/public-ui-components/issues/2392)) ([eb7005f](https://github.com/Kong/public-ui-components/commit/eb7005f415735aa76cbda4e60cb077cc1718aa77))
+
+
+
+
+
 ## [1.0.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.0.1...@kong-ui-public/analytics-geo-map@1.0.2) (2025-08-25)
 
 
