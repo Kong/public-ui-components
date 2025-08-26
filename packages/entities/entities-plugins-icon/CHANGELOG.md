@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.2.2...@kong-ui-public/entities-plugins-icon@1.3.0) (2025-08-26)
+
+
+### Features
+
+* **entities-plugins:** add support for ace plugin ([#2387](https://github.com/Kong/public-ui-components/issues/2387)) ([5610eec](https://github.com/Kong/public-ui-components/commit/5610eec4935ecf998c8f94fc4316dcc35ae104df))
+
+
+
+
+
 ## [1.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.2.1...@kong-ui-public/entities-plugins-icon@1.2.2) (2025-08-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins-icon
