@@ -241,38 +241,23 @@ export const choroplethMapSchema = {
       type: 'string',
       enum: countryISOA2,
     },
-    with_legend: {
+    legend: {
       type: 'boolean',
       default: false,
     },
     bounds: {
-      oneOf: [
-        {
-          type: 'array',
-          minItems: 2,
-          maxItems: 2,
-          items: {
-            type: 'array',
-            minItems: 2,
-            maxItems: 2,
-            items: [
-              { type: 'number', minimum: -180, maximum: 180 },
-              { type: 'number', minimum: -90, maximum: 90 },
-            ],
-          },
-        },
-        {
-          type: 'array',
-          minItems: 4,
-          maxItems: 4,
-          items: [
-            { type: 'number', minimum: -180, maximum: 180 },
-            { type: 'number', minimum: -90, maximum: 90 },
-            { type: 'number', minimum: -180, maximum: 180 },
-            { type: 'number', minimum: -90, maximum: 90 },
-          ],
-        },
-      ],
+      type: 'array',
+      minItems: 2,
+      maxItems: 2,
+      items: {
+        type: 'array',
+        minItems: 2,
+        maxItems: 2,
+        items: [
+          { type: 'number', minimum: -180, maximum: 180 },
+          { type: 'number', minimum: -90, maximum: 90 },
+        ],
+      },
     },
   },
   required: ['type'],

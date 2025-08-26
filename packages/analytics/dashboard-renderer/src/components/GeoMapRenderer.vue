@@ -12,7 +12,7 @@
       :fit-to-country="chartOptions.fit_to_country"
       :metric="(countryMetric as ExploreAggregations)"
       :metric-unit="(countryMetricUnit as MetricUnits)"
-      :with-legend="chartOptions.with_legend || false"
+      :with-legend="chartOptions.legend || false"
     />
   </QueryDataProvider>
 </template>

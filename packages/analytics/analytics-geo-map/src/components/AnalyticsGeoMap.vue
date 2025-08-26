@@ -56,13 +56,13 @@ const {
   fitToCountry = undefined,
   bounds = undefined,
 } = defineProps<{
-  countryMetrics: Record<string, number>
+  countryMetrics: Record<CountryISOA2, number>
   metricUnit: MetricUnits
   metric: ExploreAggregations
   withLegend?: boolean
   showTooltipValue?: boolean
   fitToCountry?: CountryISOA2 | undefined
-  bounds?: Array<[number, number]> | [number, number, number, number]
+  bounds?: Array<[number, number]>
 }>()
 
 const { i18n } = composables.useI18n()
@@ -279,7 +279,7 @@ onMounted(async () => {
         const feature = e.features?.[0]
         if (feature) {
           const { iso_a2, iso_a2_eh, ISO_A2, admin } = feature.properties
-          const lookup = ISO_A2 ?? iso_a2 === '-99' ? iso_a2_eh : iso_a2
+          const lookup: CountryISOA2 = ISO_A2 ?? iso_a2 === '-99' ? iso_a2_eh : iso_a2
           const metric = countryMetrics[lookup]
           if (metric !== undefined) {
           // @ts-ignore - dynamic i18n key
