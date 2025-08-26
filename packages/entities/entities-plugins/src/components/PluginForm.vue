@@ -404,7 +404,7 @@ const fetchUrl = computed((): string => {
   }
 
   // UI data is currently only available on Konnect
-  if (props.config.app === 'konnect' && PLUGIN_METADATA[props.pluginType].useUIData) {
+  if (props.config.app === 'konnect' && PLUGIN_METADATA[props.pluginType]?.useUIData) {
     return `${endpoint}?__ui_data=true`
   }
 
