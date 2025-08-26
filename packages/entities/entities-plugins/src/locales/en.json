@@ -278,6 +278,10 @@
         "name": "AI Azure Content Safety",
         "description": "Allows checking and auditing of AI-Proxy plugin messages, using Azure Cognitive Services, before proxying to upstream large-language model."
       },
+      "ai-semantic-response-guard": {
+        "name": "AI Semantic Response Guard",
+        "description": "The AI Semantic Response Guard plugin allows you to permit or block prompts based on a list of similar LLM responses, helping to prevent misuse of llm/v1/chat or llm/v1/completions requests."
+      },
       "aws-lambda": {
         "name": "AWS Lambda",
         "description": "Invoke and manage AWS Lambda functions from Kong"
