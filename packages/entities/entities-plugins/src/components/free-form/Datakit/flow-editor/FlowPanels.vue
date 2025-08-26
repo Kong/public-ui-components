@@ -78,8 +78,8 @@ import { ChevronDownIcon } from '@kong/icons'
 import { useDraggable, useElementBounding } from '@vueuse/core'
 import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
 
-import { useEditorStore } from '../../composables'
-import FlowCanvas from './EditorCanvasFlow.vue'
+import { useEditorStore } from '../composables'
+import FlowCanvas from './FlowCanvas.vue'
 
 const { readonly, resizable } = defineProps<{
   readonly?: boolean

@@ -12,11 +12,11 @@ import { computed, toRaw, toValue } from 'vue'
 
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
+import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
+import { useOptionalConfirm } from '../composables/useConflictConnectionConfirm'
 import { DEFAULT_LAYOUT_OPTIONS, DEFAULT_VIEWPORT_WIDTH } from '../constants'
 import { isImplicitNode } from '../node/node'
-import { useEditorStore } from '../store/store'
-import { createEdgeConnectionString, createNewConnectionString } from './helpers'
-import { useOptionalConfirm } from './useConflictConnectionConfirm'
+import { useEditorStore } from './store'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
