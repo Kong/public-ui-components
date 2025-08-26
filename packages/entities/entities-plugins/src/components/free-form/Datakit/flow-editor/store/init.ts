@@ -202,7 +202,6 @@ export function buildNodeInstance(
 
 /** Strip identity and IO fields. */
 export function extractConfig(configNode: ConfigNode): Record<string, unknown> {
-  // @ts-ignore it's safe to do this for a discriminated union
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { type, name, input, inputs, output, outputs, ...rest } = configNode
   return clone(rest)

@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import type { SegmentedControlOption } from '@kong/kongponents'
 import type { Component } from 'vue'
-import type { ZodError } from 'zod'
+// import type { ZodError } from 'zod'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
 import type { DatakitConfig, DatakitUIData, EditorMode } from './types'
@@ -78,7 +78,7 @@ import StandardLayout from '../shared/layout/StandardLayout.vue'
 import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import FlowEditor from './flow-editor/FlowEditor.vue'
-import { DatakitConfigSchema } from './schema/strict'
+// import { DatakitConfigSchema } from './schema/strict'
 import { DatakitConfigSchema as DatakitConfigCompatSchema } from './schema/compat'
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -167,43 +167,44 @@ function handleFlowConfigChange(newConfig: DatakitConfig, newUIData?: DatakitUID
 
 // Code editor
 
-function stringifyPath(path: Array<string | number>): string {
-  return path
-    .map((k) =>
-      typeof k === 'number'
-        ? `[${k}]`
-        : path.length && typeof k === 'string' && k.includes('.')
-          ? `["${k}"]`
-          : `.${k}`,
-    )
-    .join('')
-    .replace(/^\./, '')
-}
+// function stringifyPath(path: Array<string | number>): string {
+//   return path
+//     .map((k) =>
+//       typeof k === 'number'
+//         ? `[${k}]`
+//         : path.length && typeof k === 'string' && k.includes('.')
+//           ? `["${k}"]`
+//           : `.${k}`,
+//     )
+//     .join('')
+//     .replace(/^\./, '')
+// }
 
-function getSchemaErrorMessage(error: ZodError): string {
-  return error.issues
-    .map(
-      (issue) =>
-        `${stringifyPath(issue.path as Array<string | number>)} - ${
-          issue.message
-        }`,
-    )
-    .join('; ')
-}
+// function getSchemaErrorMessage(error: ZodError): string {
+//   return error.issues
+//     .map(
+//       (issue) =>
+//         `${stringifyPath(issue.path as Array<string | number>)} - ${
+//           issue.message
+//         }`,
+//     )
+//     .join('; ')
+// }
 
 function handleCodeChange(newConfig: unknown) {
   handleConfigChange(newConfig)
 
-  const { success, error } = DatakitConfigSchema.safeParse(newConfig)
+  // TODO: use strict validation and map back to the exact location of schema validation errors
+  // const { success, error } = DatakitConfigSchema.safeParse(newConfig)
 
   const { success: compatSuccess } = DatakitConfigCompatSchema.safeParse(newConfig)
   flowAvailable.value = compatSuccess
 
-  props.onValidityChange?.({
-    model: 'config',
-    valid: success,
-    error: success ? '' : getSchemaErrorMessage(error),
-  })
+  // props.onValidityChange?.({
+  //   model: 'config',
+  //   valid: success,
+  //   error: success ? '' : getSchemaErrorMessage(error),
+  // })
 }
 
 function handleCodeError(msg: string) {
