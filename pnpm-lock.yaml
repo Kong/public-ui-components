@@ -379,6 +379,9 @@ importers:
       '@kong-ui-public/analytics-config-store':
         specifier: workspace:^
         version: link:../analytics-config-store
+      '@kong-ui-public/analytics-geo-map':
+        specifier: workspace:^
+        version: link:../analytics-geo-map
       '@kong-ui-public/analytics-metric-provider':
         specifier: workspace:^
         version: link:../analytics-metric-provider
