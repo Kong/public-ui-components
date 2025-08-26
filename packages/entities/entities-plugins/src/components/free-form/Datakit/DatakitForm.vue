@@ -191,7 +191,7 @@ function handleConfigChange(newConfig: DatakitConfig, newUIData?: DatakitUIData 
 //     .join('; ')
 // }
 
-function handleCodeChange(newConfig: unknown) {
+function handleCodeChange(newConfig: DatakitConfig) {
   handleConfigChange(newConfig)
 
   // TODO: use strict validation and map back to the exact location of schema validation errors
@@ -224,7 +224,7 @@ function handleFormChange(data: any) {
   for (const key in data.config) {
     // updating nodes can lead to re`load`ing the flow editor state
     if (key !== 'nodes') {
-      config.value[key] = data.config[key]
+      config.value[key as keyof DatakitConfig] = data.config[key]
     }
   }
 }
