@@ -67,7 +67,7 @@
           :message="t('keySets.list.empty_state_v2.description')"
           :title="t('keySets.list.empty_state_v2.title')"
         >
-          <template #image>
+          <template #icon>
             <KeyIcon decorative />
           </template>
 
