@@ -1,6 +1,9 @@
-import { onKeyDown } from '@vueuse/core'
+import { toValue, type MaybeRefOrGetter } from 'vue'
+
+import { onKeyDown, useEventListener } from '@vueuse/core'
 
 interface UseHotkeysOptions {
+  enabled: MaybeRefOrGetter<boolean>
   undo?: () => void
   redo?: () => void
   cut?: () => void
@@ -16,74 +19,92 @@ function isMac() {
     return false
   }
 
-  _isMac = /Mac|iPhone|iPod|iPad/i.test(navigator?.platform) || /macOS|Mac|iPhone|iPod|iPad/i.test((navigator as any)?.userAgentData?.platform)
+  _isMac =
+    /Mac|iPhone|iPod|iPad/i.test(navigator?.platform) ||
+    /macOS|Mac|iPhone|iPod|iPad/i.test(
+      (navigator as any)?.userAgentData?.platform,
+    )
   return _isMac
 }
 
-function isInput(el: HTMLElement) {
-  return el.closest('input, textarea, [contenteditable]:not([contenteditable="false"])') != null
+function isEditable(el: HTMLElement) {
+  return (
+    el.closest(
+      'input, textarea, [contenteditable]:not([contenteditable="false"])',
+    ) != null
+  )
 }
 
-export function useHotkeys({ undo, redo, cut, copy, paste }: UseHotkeysOptions) {
+export function useHotkeys({
+  undo,
+  redo,
+  cut,
+  copy,
+  paste,
+  enabled = true,
+}: UseHotkeysOptions) {
+  if (typeof window === 'undefined') return
+  if (!undo && !redo && !cut && !copy && !paste) return
+
   const mac = isMac()
 
-  if (undo || redo) {
-    onKeyDown('z', (event) => {
-      if (isInput(event.target as HTMLElement)) return
+  return useEventListener(window, 'keydown', (event: KeyboardEvent) => {
+    if (!toValue(enabled)) return
+    if (isEditable(event.target as HTMLElement)) return
 
-      if (undo && (mac ? event.metaKey : event.ctrlKey) && !event.shiftKey) {
-        event.preventDefault()
-        undo()
+    const key = event.key.toLowerCase()
+    const mod = mac ? event.metaKey : event.ctrlKey
+    if (!mod) return
+
+    switch (key) {
+      case 'z': {
+        if (undo && !event.shiftKey) {
+          event.preventDefault()
+          undo()
+          return
+        }
+        if (redo && event.shiftKey) {
+          event.preventDefault()
+          redo()
+          return
+        }
+        break
       }
-
-      if (redo && (mac ? event.metaKey : event.ctrlKey) && event.shiftKey) {
-        event.preventDefault()
-        redo()
+      case 'y': {
+        // ⌘ + Y is redo on Windows
+        if (!mac && redo) {
+          event.preventDefault()
+          redo()
+          return
+        }
+        break
       }
-    })
-  }
-
-  if (redo) {
-    onKeyDown('y', (event) => {
-      if (isInput(event.target as HTMLElement)) return
-
-      if (mac ? event.metaKey : event.ctrlKey) {
-        event.preventDefault()
-        redo()
+      case 'x': {
+        if (cut) {
+          event.preventDefault()
+          cut()
+          return
+        }
+        break
       }
-    })
-  }
-
-  if (cut) {
-    onKeyDown('x', (event) => {
-      if (isInput(event.target as HTMLElement)) return
-
-      if (mac ? event.metaKey : event.ctrlKey) {
-        event.preventDefault()
-        cut()
+      case 'c': {
+        if (copy) {
+          event.preventDefault()
+          copy()
+          return
+        }
+        break
       }
-    })
-  }
-
-  if (copy) {
-    onKeyDown('c', (event) => {
-      if (isInput(event.target as HTMLElement)) return
-
-      if (mac ? event.metaKey : event.ctrlKey) {
-        event.preventDefault()
-        copy()
+      case 'v': {
+        if (paste) {
+          event.preventDefault()
+          paste()
+          return
+        }
+        break
       }
-    })
-  }
-
-  if (paste) {
-    onKeyDown('v', (event) => {
-      if (isInput(event.target as HTMLElement)) return
-
-      if (mac ? event.metaKey : event.ctrlKey) {
-        event.preventDefault()
-        paste()
-      }
-    })
-  }
+    }
+  },
+  { passive: false },
+  )
 }
