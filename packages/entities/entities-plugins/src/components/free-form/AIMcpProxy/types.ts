@@ -1,8 +1,8 @@
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 
-export type AIMcpPlugin = FreeFormPluginData<AIMcp>
+export type AIMcpProxyPlugin = FreeFormPluginData<AIMcpProxy>
 
-export interface AIMcp {
+export interface AIMcpProxy {
   logging: Logging
   server?: Server
   tools?: Tool[]

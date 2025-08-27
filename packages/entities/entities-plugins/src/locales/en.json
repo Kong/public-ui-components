@@ -693,7 +693,7 @@
       }
     },
     "free-form": {
-      "ai-mcp": {
+      "ai-mcp-proxy": {
         "tool_item_label": "Tool #{index}"
       },
       "request-callout": {
