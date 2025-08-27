@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.81.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.80.0...@kong-ui-public/entities-plugins@9.81.0) (2025-08-27)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - output connect to output [KM-1654] ([#2404](https://github.com/Kong/public-ui-components/issues/2404)) ([a3e0392](https://github.com/Kong/public-ui-components/commit/a3e03929482c33199db4ba8983b9e6111ec28f1b))
+
+
+### Features
+
+* **entities-plugins:** datakit save and restore ui data ([#2400](https://github.com/Kong/public-ui-components/issues/2400)) ([4694b7e](https://github.com/Kong/public-ui-components/commit/4694b7e3359cd8a55670f9ad359e744a83afd670))
+
+
+
+
+
 # [9.80.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.79.0...@kong-ui-public/entities-plugins@9.80.0) (2025-08-26)
 
 
