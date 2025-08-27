@@ -309,13 +309,13 @@ const handleDragMove = (event: Event) => {
 }
 
 // Reset tooltip if clicking outside of chart when in interactive mode
-const handleGlobalClick = (evt: MouseEvent) => {
+const handleGlobalClick = (event: MouseEvent) => {
   // If we are not in an interactive mode, nothing to reset
   if (!chartParentRef.value || tooltipData.interactionMode === 'idle') {
     return
   }
 
-  const target = evt.target
+  const target = event.target
 
   // Ignore if the click was inside the chart parent (includes tooltip & legend since they are rendered inside)
   if (target && chartParentRef.value.contains(target as Node)) {
