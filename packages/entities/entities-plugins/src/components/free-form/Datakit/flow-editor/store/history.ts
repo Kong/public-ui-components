@@ -48,14 +48,11 @@ export function useTaggedHistory<T>(
       return
     }
 
-    const keep = undoStack.value[0] ?? null
-
     // same tag: collapse. Commit first, then remove the last boundary
     baseCommit()
-    undoStack.value.shift()
-
-    // put old boundary back, compatible with capacity=1
-    if (keep) undoStack.value.unshift(keep)
+    if (undoStack.value.length > 1) {
+      undoStack.value.splice(1, 1)
+    }
     notify('commit')
   }
 

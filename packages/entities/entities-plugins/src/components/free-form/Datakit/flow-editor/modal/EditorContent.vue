@@ -56,6 +56,8 @@ watch(selectedNode, (node) => {
   }
 })
 
+// A workaround to prevent startup transition when the side panel
+// is collapsed per user preference.
 const inited = ref(false)
 onMounted(() => {
   inited.value = true

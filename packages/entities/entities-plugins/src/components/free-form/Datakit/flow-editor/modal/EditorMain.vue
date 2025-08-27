@@ -2,7 +2,10 @@
   <div class="dk-editor-main">
     <header class="header">
       <div class="actions">
-        <KTooltip :text="t('plugins.free-form.datakit.flow_editor.actions.undo')">
+        <KTooltip
+          :text="t('plugins.free-form.datakit.flow_editor.actions.undo')"
+          :z-index="10000"
+        >
           <KButton
             appearance="tertiary"
             :disabled="!canUndo"
@@ -13,7 +16,10 @@
             <RedoIcon class="flip" />
           </KButton>
         </KTooltip>
-        <KTooltip :text="t('plugins.free-form.datakit.flow_editor.actions.redo')">
+        <KTooltip
+          :text="t('plugins.free-form.datakit.flow_editor.actions.redo')"
+          :z-index="10000"
+        >
           <KButton
             appearance="tertiary"
             :disabled="!canRedo"
@@ -59,6 +65,7 @@ import { useEditorStore } from '../store/store'
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
+import { useHotkeys } from '../composables/useHotkeys'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -71,6 +78,11 @@ const { modalOpen, undo, redo, canUndo, canRedo } = useEditorStore()
 function close() {
   modalOpen.value = false
 }
+
+useHotkeys({
+  undo,
+  redo,
+})
 </script>
 
 <style lang="scss" scoped>
