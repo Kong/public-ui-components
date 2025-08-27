@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.82.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.81.1...@kong-ui-public/entities-plugins@9.82.0) (2025-08-27)
+
+
+### Features
+
+* **entities-plugins:** rename ai-mcp to ai-mcp-proxy ([#2406](https://github.com/Kong/public-ui-components/issues/2406)) ([7cbc4d4](https://github.com/Kong/public-ui-components/commit/7cbc4d40ba01ef44b84a2f1409f74d9861cc6ef3))
+
+
+
+
+
 ## [9.81.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.81.0...@kong-ui-public/entities-plugins@9.81.1) (2025-08-27)
 
 
