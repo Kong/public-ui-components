@@ -29,20 +29,16 @@
         </div>
       </div>
 
-      <div
-        class="document-display-actions"
-      >
-        <PermissionsWrapper
-          :auth-function="() => canEdit()"
-        >
+      <div class="document-display-actions">
+        <PermissionsWrapper :auth-function="() => canEdit()">
           <KInputSwitch
             v-if="!hidePublishToggle && !card"
-            v-model="publishModel"
             class="document-publish-toggle"
             data-testid="document-publish-toggle"
             :label="publishedStatusText"
             label-before
-            @click="handlePublishToggle"
+            :model-value="publishModel"
+            @click="_handlePublishToggle"
           />
         </PermissionsWrapper>
       </div>
@@ -81,15 +77,27 @@
           theme="light"
           @cancel="restoreOriginalDocument"
           @mode="(mode: MarkdownMode) => handleMarkdownUiModeChange(mode)"
-          @save="(payload: EmitUpdatePayload) => emit('save-markdown', payload.content)"
+          @save="(payload: EmitUpdatePayload) => {
+            emit('save-markdown', payload.content)
+            originalMarkdownContent = payload.content // <- add this line
+          }"
         />
       </div>
+      <DiscardChangesPrompt
+        v-if="showDiscardChangesMessage"
+        :visible="showDiscardChangesMessage"
+        @cancel="showDiscardChangesMessage = false"
+        @discard-changes="() => {
+          restoreOriginalDocument()
+          handlePublishToggle()
+        }"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue'
+import { computed, ref, watch, onMounted, nextTick, onBeforeUnmount } from 'vue'
 import composables from '../composables'
 import { isObjectEmpty } from '../helpers'
 import { PermissionsWrapper } from '@kong-ui-public/entities-shared'
@@ -98,6 +106,7 @@ import type { EmitUpdatePayload, MarkdownMode } from '@kong/markdown'
 import '@kong/markdown/dist/style.css'
 import type { PropType } from 'vue'
 import type { DocumentTree } from '../types'
+import DiscardChangesPrompt from './DiscardChangesPrompt.vue'
 
 const props = defineProps({
   /**
@@ -141,6 +150,8 @@ const markdownContent = ref<string>(props.selectedDocument?.markdown || '')
 // Store the previous markdown content in case the user cancels editing
 const originalMarkdownContent = ref<string>(markdownContent.value)
 const defaultDocument = ref<any>(null)
+const showDiscardChangesMessage = ref(false)
+const currentMode = ref<MarkdownMode>('read')
 
 // Handle the download of the markdown content
 const handleDownload = (): void => {
@@ -152,8 +163,52 @@ const handleEdit = (): void => {
   markdownComponent.value.edit()
 }
 
+// helper to attach/detach a native input listener on the editor textarea
+const editorInputRemover = ref<null | (() => void)>(null)
+const attachEditorInputListener = async (): Promise<void> => {
+  await nextTick()
+  try {
+    const root = markdownComponent.value?.$el || markdownComponent.value
+    const textarea: HTMLTextAreaElement | null = root?.querySelector?.('textarea') ?? null
+    if (!textarea) return
+    const handler = (e: Event) => {
+      const t = e.target as HTMLTextAreaElement
+      markdownContent.value = t.value
+    }
+    textarea.addEventListener('input', handler)
+    editorInputRemover.value = () => {
+      textarea.removeEventListener('input', handler)
+      editorInputRemover.value = null
+    }
+  } catch (err) {
+    // noop - defensive
+  }
+}
+const detachEditorInputListener = (): void => {
+  if (editorInputRemover.value) {
+    editorInputRemover.value()
+  }
+}
+
 const handleMarkdownUiModeChange = (mode: MarkdownMode): void => {
+  currentMode.value = mode
   emit('edit-markdown', mode === 'edit')
+
+  // attach/detach native input listener so changes during edit are reflected immediately
+  if (mode === 'edit' || mode === 'split') {
+    attachEditorInputListener()
+  } else {
+    detachEditorInputListener()
+  }
+}
+
+const _handlePublishToggle = (): void => {
+  // check for unsaved changes
+  if ( ['edit', 'split'].includes( currentMode.value) && (markdownContent.value !== originalMarkdownContent.value) ) {
+    showDiscardChangesMessage.value = true
+  } else {
+    handlePublishToggle()
+  }
 }
 
 const handlePublishToggle = (): void => {
@@ -164,6 +219,7 @@ const handlePublishToggle = (): void => {
   publishedStatusText.value = newValue
     ? i18n.t('documentation.common.published')
     : i18n.t('documentation.common.unpublished')
+  showDiscardChangesMessage.value = false
 }
 
 const restoreOriginalDocument = (): void => {
@@ -213,6 +269,11 @@ watch(() => props.selectedDocument, (newVal) => {
 
 onMounted(() => {
   handleDocument()
+})
+
+// cleanup listener on unmount
+onBeforeUnmount(() => {
+  detachEditorInputListener()
 })
 
 // Expose the download and edit methods from Markdown component
