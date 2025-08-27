@@ -288,6 +288,14 @@ watch(outputsCollapsible, (collapsible) => {
     storeToggleExpanded(data.id, 'output', true, false)
   }
 }, { immediate: true })
+
+watch(() => data.fields.input, (input) => {
+  storeToggleExpanded(data.id, 'input', input.length > 0, false)
+}, { deep: true })
+
+watch(() => data.fields.output, (output) => {
+  storeToggleExpanded(data.id, 'output', output.length > 0, false)
+}, { deep: true })
 </script>
 
 <style lang="scss" scoped>
