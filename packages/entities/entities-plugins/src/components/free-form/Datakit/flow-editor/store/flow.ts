@@ -261,7 +261,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       const parsedSource = parseHandle(sourceHandle)
       const parsedTarget = parseHandle(targetHandle)
 
-      if (parsedSource?.io === 'input' || parsedTarget?.io === 'output')
+      if (
+        (parsedSource?.io === 'input' || parsedTarget?.io === 'output')
+        || (sourceHandle === 'output' && targetHandle === 'output')
+      )
         return // Only connect output to input
 
       // Get all incoming edges for the target node
