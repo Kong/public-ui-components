@@ -205,12 +205,14 @@ watchEffect(() => {
       position: absolute;
       right: 8px;
       top: 8px;
+      z-index: 10;
     }
 
     :deep(.card-content) {
       display: flex;
       flex-direction: column;
       gap: $kui-space-40;
+      z-index: 1;
     }
   }
 }
