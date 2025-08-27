@@ -90,7 +90,7 @@ const { readonly, resizable } = defineProps<{
 }>()
 
 const initialized = ref<[request: boolean, response: boolean]>([false, false])
-const { state, markAsLayoutCompleted } = useEditorStore()
+const { state, markAsLayoutCompleted, commit, clear } = useEditorStore()
 
 const uniqueId = useId()
 const requestFlowId = `${uniqueId}-request`
@@ -212,9 +212,11 @@ const initWatcher = watch(initialized, ([request, response]) => {
   if (request && response) {
     // Only perform auto layout if the layout (UI data) is out of sync with the configuration
     if (state.value.needLayout) {
-      requestFlow.value?.autoLayout()
-      responseFlow.value?.autoLayout()
+      requestFlow.value?.autoLayout(false)
+      responseFlow.value?.autoLayout(false)
       markAsLayoutCompleted()
+      commit()
+      clear()
     }
     fitView()
     initWatcher.stop()

@@ -167,7 +167,7 @@ function handlePanelToggle() {
       path {
         color: currentColor;
         fill: currentColor;
-        transition: all .2s ease-out;
+        transition: all .2s ease-in-out;
       }
     }
 
@@ -179,7 +179,7 @@ function handlePanelToggle() {
   .side-panel-toggle {
     left: 0;
     position: absolute;
-    transition: left 0.2s ease-out;
+    transition: left .2s ease-in-out;
     z-index: 1;
 
     &.expanded {

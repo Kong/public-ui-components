@@ -436,7 +436,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       handleConnect(connection)
     })
 
-    function autoLayout() {
+    function autoLayout(commitNow = true) {
       let leftNode: Node<NodeInstance> | undefined
       let rightNode: Node<NodeInstance> | undefined
       const configNodes: Array<Node<NodeInstance>> = []
@@ -608,7 +608,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         y: centerY - rightGraphNode.dimensions.height / 2,
       }, false)
 
-      historyCommit()
+      if (commitNow) {
+        historyCommit(`autolayout-${flowId}`)
+      }
     }
 
     function fitView(paramOverrides?: Partial<FitViewParams>) {

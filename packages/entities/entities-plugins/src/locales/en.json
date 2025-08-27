@@ -718,14 +718,18 @@
           "name": "Datakit flow editor",
           "cta": "Go to flow editor",
           "disabled_tooltip": "The flow editor is unavailable. To switch, fix configuration errors or remove unsupported nodes.",
-          "done": "Done",
-          "view_docs": "View docs",
           "expand_panel": "Expand panel",
           "collapse_panel": "Collapse panel",
           "return_to_config": "Return to plugin configuration",
           "node_panel": {
             "title": "Node types",
             "description": "Drag a node onto the canvas to add it to your data flow."
+          },
+          "actions": {
+            "undo": "Undo",
+            "redo": "Redo",
+            "view_docs": "View docs",
+            "done": "Done"
           },
           "node_types": {
             "call": {
