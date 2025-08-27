@@ -94,7 +94,7 @@ export interface DatakitUIData {
   /**
    * UI nodes that store data like input/output fields, positions, and other metadata.
    */
-  nodes: UINode[]
+  nodes?: UINode[]
 }
 /**
  * The phase of the node in the request/response cycle.

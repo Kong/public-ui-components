@@ -153,8 +153,6 @@ export function initEditorState(
   // Mark all nodes that should be in 'request' phase
   markRequestNodes(['request', 'service_request'])
 
-  // TODO(Makito): Should we clean up stale nodes from the UI data in case the name of a deleted node is reused in the future?
-
   return { nodes, edges, needLayout }
 }
 

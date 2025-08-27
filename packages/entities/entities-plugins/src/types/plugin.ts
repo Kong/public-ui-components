@@ -119,6 +119,7 @@ export type PluginMetaData<I18nMessageSource = void> = {
   isEnterprise: boolean // The value will be True if the Plugin is enterprise only.
   useLegacyForm?: boolean // An optional field to use legacy form for the plugin. Default to false.
   fieldRules?: FieldRules
+  useUIData?: boolean // An optional field that indicates if the plugin may have associated UI data. (via `?__ui_data`)
 }
 
 export interface PluginType extends PluginMetaData {

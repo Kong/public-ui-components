@@ -29,7 +29,7 @@
     <template #default="formProps">
       <Form
         v-bind="formProps"
-        :data="{ config }"
+        :data="{ config, __ui_data: uiData }"
         tag="div"
         @change="handleFormChange"
       >
@@ -38,7 +38,7 @@
           :config="config"
           :is-editing="props.isEditing"
           :ui-data="uiData"
-          @change="handleFlowConfigChange"
+          @change="handleFlowChange"
         />
         <CodeEditor
           v-else-if="finalEditorMode === 'code'"
@@ -136,7 +136,7 @@ const description = computed(() => {
 // Shared
 
 const config = ref({ ...props.model.config })
-const uiData = ref<DatakitUIData>()
+const uiData = ref<DatakitUIData | undefined>(props.model.__ui_data ? { ...props.model.__ui_data } : undefined)
 
 watch(realEditorMode, () => {
   props.onValidityChange?.({
@@ -145,10 +145,17 @@ watch(realEditorMode, () => {
   })
 })
 
-function handleConfigChange(newConfig: unknown) {
+/**
+ * Handle changes to the config and UI data.
+ *
+ * @param newConfig The new config to set.
+ * @param newUIData The new UI data to set. Use `null` to clear the existing UI data.
+ */
+function handleConfigChange(newConfig: unknown, newUIData?: DatakitUIData | null) {
   // update the external form state
   props.onFormChange({
     config: newConfig,
+    ...newUIData !== undefined ? { __ui_data: newUIData ?? undefined } : null,
   })
   props.onValidityChange?.({
     model: 'config',
@@ -160,9 +167,18 @@ function handleConfigChange(newConfig: unknown) {
   config.value = newConfig
 }
 
-function handleFlowConfigChange(newConfig: DatakitConfig, newUIData?: DatakitUIData) {
-  handleConfigChange(newConfig)
-  uiData.value = newUIData
+/**
+ * Handle changes from the flow editor.
+ *
+ * @param newConfig The new config to set.
+ * @param newUIData The new UI data to set. Use `null` to clear the existing UI data.
+ */
+function handleFlowChange(newConfig: DatakitConfig, newUIData?: DatakitUIData | null) {
+  handleConfigChange(newConfig, newUIData)
+
+  if (newUIData !== undefined) {
+    uiData.value = newUIData ?? undefined
+  }
 }
 
 // Code editor
