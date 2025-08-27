@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.81.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.81.0...@kong-ui-public/entities-plugins@9.81.1) (2025-08-27)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit expand handles on i/o fields update ([#2405](https://github.com/Kong/public-ui-components/issues/2405)) ([c2bb73e](https://github.com/Kong/public-ui-components/commit/c2bb73e217a8acdb2cdd85532a9e972766d9243f))
+
+
+
+
+
 # [9.81.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.80.0...@kong-ui-public/entities-plugins@9.81.0) (2025-08-27)
 
 
