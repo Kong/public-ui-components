@@ -86,7 +86,7 @@ const handleAction = (option: ZoomActionItem) => {
   }
 
   &:has(.zoom-actions-heading-divider + .zoom-action-item:hover) .zoom-actions-heading-divider {
-    display: none;
+    opacity: 0;
   }
 
   .zoom-action-item {
