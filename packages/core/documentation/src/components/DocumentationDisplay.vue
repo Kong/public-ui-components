@@ -29,20 +29,16 @@
         </div>
       </div>
 
-      <div
-        class="document-display-actions"
-      >
-        <PermissionsWrapper
-          :auth-function="() => canEdit()"
-        >
+      <div class="document-display-actions">
+        <PermissionsWrapper :auth-function="() => canEdit()">
           <KInputSwitch
             v-if="!hidePublishToggle && !card"
-            v-model="publishModel"
             class="document-publish-toggle"
             data-testid="document-publish-toggle"
             :label="publishedStatusText"
             label-before
-            @click="handlePublishToggle"
+            :model-value="publishModel"
+            @click="_handlePublishToggle"
           />
         </PermissionsWrapper>
       </div>
@@ -84,6 +80,15 @@
           @save="(payload: EmitUpdatePayload) => emit('save-markdown', payload.content)"
         />
       </div>
+      <DiscardChangesPrompt
+        v-if="showDiscardChangesMessage"
+        :visible="showDiscardChangesMessage"
+        @cancel="showDiscardChangesMessage = false"
+        @discard-changes="() => {
+          restoreOriginalDocument()
+          handlePublishToggle()
+        }"
+      />
     </div>
   </div>
 </template>
@@ -98,6 +103,7 @@ import type { EmitUpdatePayload, MarkdownMode } from '@kong/markdown'
 import '@kong/markdown/dist/style.css'
 import type { PropType } from 'vue'
 import type { DocumentTree } from '../types'
+import DiscardChangesPrompt from './DiscardChangesPrompt.vue'
 
 const props = defineProps({
   /**
@@ -141,6 +147,8 @@ const markdownContent = ref<string>(props.selectedDocument?.markdown || '')
 // Store the previous markdown content in case the user cancels editing
 const originalMarkdownContent = ref<string>(markdownContent.value)
 const defaultDocument = ref<any>(null)
+const showDiscardChangesMessage = ref(false)
+const currentMode = ref<MarkdownMode>('read')
 
 // Handle the download of the markdown content
 const handleDownload = (): void => {
@@ -153,7 +161,17 @@ const handleEdit = (): void => {
 }
 
 const handleMarkdownUiModeChange = (mode: MarkdownMode): void => {
+  currentMode.value = mode
   emit('edit-markdown', mode === 'edit')
+}
+
+const _handlePublishToggle = (): void => {
+  // check for unsaved changes
+  if ( ['edit', 'split'].includes( currentMode.value) && (markdownContent.value !== originalMarkdownContent.value) ) {
+    showDiscardChangesMessage.value = true
+  } else {
+    handlePublishToggle()
+  }
 }
 
 const handlePublishToggle = (): void => {
@@ -164,6 +182,7 @@ const handlePublishToggle = (): void => {
   publishedStatusText.value = newValue
     ? i18n.t('documentation.common.published')
     : i18n.t('documentation.common.unpublished')
+  showDiscardChangesMessage.value = false
 }
 
 const restoreOriginalDocument = (): void => {
