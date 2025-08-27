@@ -5,7 +5,7 @@ const mapping = {
     component: 'ServiceProtectionForm',
   },
   'datakit': 'DatakitForm',
-  'ai-mcp': 'AIMcpForm',
+  'ai-mcp-proxy': 'AIMcpProxyForm',
   'jwt-signer': 'CommonForm',
 } as const
 

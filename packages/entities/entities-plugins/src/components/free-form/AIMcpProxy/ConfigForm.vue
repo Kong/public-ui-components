@@ -14,7 +14,7 @@
       <template #tools="{ name }">
         <ArrayField
           appearance="tabs"
-          :item-label="(_, index) => t('plugins.free-form.ai-mcp.tool_item_label', { index: index + 1 })"
+          :item-label="(_, index) => t('plugins.free-form.ai-mcp-proxy.tool_item_label', { index: index + 1 })"
           :name="name"
           sticky-tabs
         />
@@ -33,19 +33,19 @@ import AdvancedFields from '../shared/AdvancedFields.vue'
 import { splitMapValues, joinMapValues } from './utils'
 import composables from '../../../composables'
 
-import type { AIMcpPlugin } from './types'
+import type { AIMcpProxyPlugin } from './types'
 import type { FormConfig } from '../shared/types'
 import type { ConfigFormProps } from '../shared/PluginFormWrapper.vue'
 
-defineProps<ConfigFormProps<AIMcpPlugin>>()
+defineProps<ConfigFormProps<AIMcpProxyPlugin>>()
 
 const emit = defineEmits<{
-  change: [value: AIMcpPlugin]
+  change: [value: AIMcpProxyPlugin]
 }>()
 
 const { i18n: { t } } = composables.useI18n()
 
-const prepareFormData = (data: AIMcpPlugin): AIMcpPlugin => {
+const prepareFormData = (data: AIMcpProxyPlugin): AIMcpProxyPlugin => {
   const pluginConfig = cloneDeep(data)
 
   if (pluginConfig.config?.tools?.length) {
@@ -58,16 +58,16 @@ const prepareFormData = (data: AIMcpPlugin): AIMcpPlugin => {
   return pluginConfig
 }
 
-const hasValue = (data: AIMcpPlugin | undefined): boolean => {
+const hasValue = (data: AIMcpProxyPlugin | undefined): boolean => {
   return !!data?.config
 }
 
-const formConfig: FormConfig<AIMcpPlugin> = {
+const formConfig: FormConfig<AIMcpProxyPlugin> = {
   prepareFormData,
   hasValue,
 }
 
-const onChange = (newVal: AIMcpPlugin) => {
+const onChange = (newVal: AIMcpProxyPlugin) => {
   const pluginConfig = cloneDeep(newVal)
 
   if (pluginConfig.config?.tools?.length) {
