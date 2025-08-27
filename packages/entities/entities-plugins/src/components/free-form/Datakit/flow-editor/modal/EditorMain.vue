@@ -80,6 +80,7 @@ function close() {
 }
 
 useHotkeys({
+  enabled: modalOpen,
   undo,
   redo,
 })

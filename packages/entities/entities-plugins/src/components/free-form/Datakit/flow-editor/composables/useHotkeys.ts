@@ -1,6 +1,6 @@
 import { toValue, type MaybeRefOrGetter } from 'vue'
 
-import { onKeyDown, useEventListener } from '@vueuse/core'
+import { useEventListener } from '@vueuse/core'
 
 interface UseHotkeysOptions {
   enabled: MaybeRefOrGetter<boolean>
