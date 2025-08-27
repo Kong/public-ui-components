@@ -42,7 +42,8 @@
       "empty_state_v2": {
         "title": "Configure your first route",
         "group": "Routes created in gateways within this group will automatically appear here.",
-        "description": "Routes direct incoming API requests to the appropriate gateway service based on paths, methods, and headers, ensuring efficient traffic flow."
+        "description": "Routes direct incoming API requests to the appropriate gateway service based on paths, methods, and headers, ensuring efficient traffic flow.",
+        "learn_more": "Learn more"
       }
     }
   },

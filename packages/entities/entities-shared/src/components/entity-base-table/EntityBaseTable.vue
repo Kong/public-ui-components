@@ -447,13 +447,6 @@ const tablePaginationAttributes = computed((): TablePaginationAttributes => ({
   .hidden {
     display: none;
   }
-
-  // shared styles for entity empty state
-  :deep(.empty-state-icon-gateway) {
-    background-color: $kui-method-color-background-patch;
-    border-radius: $kui-border-radius-20;
-    padding: $kui-space-40;
-  }
 }
 </style>
 

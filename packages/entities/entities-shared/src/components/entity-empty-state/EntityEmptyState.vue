@@ -117,7 +117,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type PropType, computed, ref, onBeforeMount } from 'vue'
+import { type PropType, computed, ref, onBeforeMount, warn, onMounted } from 'vue'
 import { KButton } from '@kong/kongponents'
 import { BookIcon, AddIcon } from '@kong/icons'
 import composables from '../../composables'
@@ -188,6 +188,8 @@ onBeforeMount(async () => {
   // Evaluate if the user has create permissions
   useCanCreate.value = await props.canCreate()
 })
+
+onMounted(() => warn('EntityEmptyState is deprecated and will be removed in future releases. Please use the KEmptyState component instead.\nDocs: https://kongponents.konghq.com/components/empty-state.html.'))
 </script>
 
 <style lang="scss" scoped>

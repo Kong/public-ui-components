@@ -48,7 +48,8 @@
       "create": "New gateway service",
       "title": "Configure your first gateway service",
       "group": "Services created in gateways within this group will automatically appear here.",
-      "description": "Gateway services represent backend APIs or microservices that receive traffic routed through the gateway."
+      "description": "Gateway services represent backend APIs or microservices that receive traffic routed through the gateway.",
+      "learn_more": "Learn more"
     },
     "form": {
       "buttons": {

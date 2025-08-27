@@ -15,7 +15,8 @@
       "empty_state_v2": {
         "title": "Configure your first consumer",
         "group": "Consumers created in gateways within this group will automatically appear here.",
-        "description": "Consumers represent users or apps accessing your APIs, allowing for tailored authentication and individual access control."
+        "description": "Consumers represent users or apps accessing your APIs, allowing for tailored authentication and individual access control.",
+        "learn_more": "Learn more"
       },
       "toolbar_actions": {
         "new_consumer": "New consumer"

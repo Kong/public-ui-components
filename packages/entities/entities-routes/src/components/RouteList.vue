@@ -65,33 +65,43 @@
         v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
-        <EntityEmptyState
-          :action-button-text="t('routes.list.toolbar_actions.new_route')"
-          appearance="secondary"
-          :can-create="() => canCreate()"
+        <KEmptyState
           :data-testid="config.serviceId ? 'nested-routes-entity-empty-state' : 'routes-entity-empty-state'"
-          :description="t('routes.list.empty_state_v2.description')"
-          :learn-more="config.app === 'konnect'"
+          icon-background
+          :message="t('routes.list.empty_state_v2.description')"
           :title="t('routes.list.empty_state_v2.title')"
-          @click:create="handleAddNewRoute"
-          @click:learn-more="$emit('click:learn-more')"
         >
-          <template #image>
-            <div class="empty-state-icon-gateway">
-              <ForwardIcon
-                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
-                :size="KUI_ICON_SIZE_50"
-              />
-            </div>
+          <template #icon>
+            <ForwardIcon decorative />
           </template>
 
           <template
             v-if="config?.isControlPlaneGroup"
-            #message
+            #default
           >
             {{ t('routes.list.empty_state_v2.group') }}
           </template>
-        </EntityEmptyState>
+
+          <template #action>
+            <KButton
+              v-if="userCanCreate"
+              data-testid="entity-create-button"
+              @click="handleAddNewRoute"
+            >
+              <AddIcon decorative />
+              {{ t('routes.list.toolbar_actions.new_route') }}
+            </KButton>
+
+            <KButton
+              appearance="secondary"
+              data-testid="entity-learn-more-button"
+              @click="$emit('click:learn-more')"
+            >
+              <BookIcon decorative />
+              {{ t('routes.list.empty_state_v2.learn_more') }}
+            </KButton>
+          </template>
+        </KEmptyState>
       </template>
 
       <!-- Column Formatting -->
@@ -241,7 +251,6 @@ import {
   EntityFilter,
   EntityTypes,
   FetcherStatus,
-  EntityEmptyState,
   PermissionsWrapper,
   useAxios,
   useFetcher,
@@ -267,7 +276,6 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 
 import composables from '../composables'
 import endpoints from '../routes-endpoints'
-import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void
@@ -622,12 +630,14 @@ const emptyStateOptions = ref<EmptyStateOptions>({
   title: t('routes.title'),
 })
 
+const userCanCreate = ref<boolean>(false)
+
 onBeforeMount(async () => {
   // Evaluate if the user has create permissions
-  const userCanCreate = await props.canCreate()
+  userCanCreate.value = await props.canCreate()
 
   // If a user can create, we need to modify the empty state actions/messaging
-  if (userCanCreate) {
+  if (userCanCreate.value) {
     emptyStateOptions.value.title = t('routes.list.empty_state.title')
     emptyStateOptions.value.ctaText = t('actions.create')
   }

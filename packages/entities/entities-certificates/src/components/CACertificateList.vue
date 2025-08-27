@@ -77,33 +77,43 @@
         v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
-        <EntityEmptyState
-          :action-button-text="t('ca-certificates.list.empty_state_v2.create')"
-          appearance="secondary"
-          :can-create="() => canCreate()"
+        <KEmptyState
           data-testid="ca-certificates-entity-empty-state"
-          :description="t('ca-certificates.list.empty_state_v2.description')"
-          :learn-more="config.app === 'konnect'"
+          icon-background
+          :message="t('ca-certificates.list.empty_state_v2.description')"
           :title="t('ca-certificates.list.empty_state_v2.title')"
-          @click:create="handleCreate"
-          @click:learn-more="$emit('click:learn-more')"
         >
-          <template #image>
-            <div class="empty-state-icon-gateway">
-              <ServiceDocumentIcon
-                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
-                :size="KUI_ICON_SIZE_50"
-              />
-            </div>
+          <template #icon>
+            <ServiceDocumentIcon decorative />
           </template>
 
           <template
             v-if="config?.isControlPlaneGroup"
-            #message
+            #default
           >
             {{ t('ca-certificates.list.empty_state_v2.group') }}
           </template>
-        </EntityEmptyState>
+
+          <template #action>
+            <KButton
+              v-if="userCanCreate"
+              data-testid="entity-create-button"
+              @click="handleCreate"
+            >
+              <AddIcon decorative />
+              {{ t('ca-certificates.list.empty_state_v2.create') }}
+            </KButton>
+
+            <KButton
+              appearance="secondary"
+              data-testid="entity-learn-more-button"
+              @click="$emit('click:learn-more')"
+            >
+              <BookIcon decorative />
+              {{ t('ca-certificates.list.empty_state_v2.learn_more') }}
+            </KButton>
+          </template>
+        </KEmptyState>
       </template>
 
       <!-- Column Formatting -->
@@ -199,8 +209,6 @@ import { useRouter } from 'vue-router'
 import { AddIcon, BookIcon, ServiceDocumentIcon } from '@kong/icons'
 import composables from '../composables'
 import endpoints from '../ca-certificates-endpoints'
-import { KUI_ICON_SIZE_50, KUI_COLOR_TEXT_DECORATIVE_AQUA } from '@kong/design-tokens'
-
 
 import {
   EntityBaseTable,
@@ -209,7 +217,6 @@ import {
   EntityTypes,
   FetcherStatus,
   PermissionsWrapper,
-  EntityEmptyState,
   useAxios,
   useTableState,
   useFetcher,
@@ -536,12 +543,14 @@ const emptyStateOptions = ref<EmptyStateOptions>({
   title: t('ca-certificates.title'),
 })
 
+const userCanCreate = ref<boolean>(false)
+
 onBeforeMount(async () => {
   // Evaluate if the user has create permissions
-  const userCanCreate = await props.canCreate()
+  userCanCreate.value = await props.canCreate()
 
   // If a user can create, we need to modify the empty state actions/messaging
-  if (userCanCreate) {
+  if (userCanCreate.value) {
     emptyStateOptions.value.title = t('ca-certificates.list.empty_state.title')
     emptyStateOptions.value.ctaText = t('ca-certificates.actions.create')
   }

@@ -32,7 +32,8 @@
         "title": "Configure your first SNI",
         "description": "Server Name Indications (SNIs) map hostnames to SSL/TLS certificates, enabling secure connections for domain-specific traffic.",
         "group": "SNIs created in gateways within this group will automatically appear here.",
-        "create_cta": "New SNI"
+        "create_cta": "New SNI",
+        "learn_more": "Learn more"
       }
     }
   },

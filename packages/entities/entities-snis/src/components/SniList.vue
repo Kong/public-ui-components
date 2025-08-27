@@ -78,33 +78,43 @@
         v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
-        <EntityEmptyState
-          :action-button-text="t('snis.list.toolbar_actions.new')"
-          appearance="secondary"
-          :can-create="() => canCreate()"
+        <KEmptyState
           data-testid="snis-entity-empty-state"
-          :description="t('snis.list.empty_state_v2.description')"
-          :learn-more="config.app === 'konnect'"
+          icon-background
+          :message="t('snis.list.empty_state_v2.description')"
           :title="t('snis.list.empty_state_v2.title')"
-          @click:create="handleCreate"
-          @click:learn-more="$emit('click:learn-more')"
         >
-          <template #image>
-            <div class="empty-state-icon-gateway">
-              <CloudIcon
-                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
-                :size="KUI_ICON_SIZE_50"
-              />
-            </div>
+          <template #icon>
+            <CloudIcon decorative />
           </template>
 
           <template
             v-if="config?.isControlPlaneGroup"
-            #message
+            #default
           >
             {{ t('snis.list.empty_state_v2.group') }}
           </template>
-        </EntityEmptyState>
+
+          <template #action>
+            <KButton
+              v-if="userCanCreate"
+              data-testid="entity-create-button"
+              @click="handleCreate"
+            >
+              <AddIcon decorative />
+              {{ t('snis.list.toolbar_actions.new') }}
+            </KButton>
+
+            <KButton
+              appearance="secondary"
+              data-testid="entity-learn-more-button"
+              @click="$emit('click:learn-more')"
+            >
+              <BookIcon decorative />
+              {{ t('snis.list.empty_state_v2.learn_more') }}
+            </KButton>
+          </template>
+        </KEmptyState>
       </template>
 
       <!-- Column Formatting -->
@@ -193,7 +203,6 @@ import {
   PermissionsWrapper,
   useAxios,
   useFetcher,
-  EntityEmptyState,
   useDeleteUrlBuilder,
   useTableState,
   TableTags,
@@ -214,7 +223,6 @@ import type {
 } from '@kong-ui-public/entities-shared'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import { AddIcon, BookIcon, CloudIcon } from '@kong/icons'
-import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 
 const emit = defineEmits<{
   (e: 'error', error: AxiosError): void
@@ -513,12 +521,14 @@ watch(fetcherState, (state) => {
   errorMessage.value = null
 })
 
+const userCanCreate = ref<boolean>(false)
+
 onBeforeMount(async () => {
   // Evaluate if the user has create permissions
-  const userCanCreate = await props.canCreate()
+  userCanCreate.value = await props.canCreate()
 
   // If a user can create snis, we need to modify the empty state actions/messaging
-  if (userCanCreate) {
+  if (userCanCreate.value) {
     emptyStateOptions.value.title = t('snis.list.empty_state.title')
     emptyStateOptions.value.ctaText = t('actions.create')
   }

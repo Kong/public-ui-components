@@ -78,7 +78,6 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 - [`<EntityFormSection.vue />`](docs/entity-form-section.md)
 - [`<EntityFormBlock.vue />`](docs/entity-form-block.md)
 - [`<EntityLink.vue />`](docs/entity-link.md)
-- [`<EntityEmptyState.vue />`](docs/entity-empty-state.md)
 - [`<EntityToggleModal.vue />`](docs/entity-toggle-modal.md)
 - [`<EntityBaseConfigCard.vue />`](docs/entity-base-config-card.md)
 

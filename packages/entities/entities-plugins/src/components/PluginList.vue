@@ -63,33 +63,43 @@
         v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
-        <EntityEmptyState
-          :action-button-text="t('plugins.list.empty_state_v2.create_cta')"
-          appearance="secondary"
-          :can-create="() => canCreate()"
+        <KEmptyState
           :data-testid="config.entityId ? 'nested-plugins-entity-empty-state' : 'plugins-entity-empty-state'"
-          :description="t('plugins.list.empty_state_v2.description')"
-          :learn-more="config.app === 'konnect'"
+          icon-background
+          :message="t('plugins.list.empty_state_v2.description')"
           :title="t('plugins.list.empty_state_v2.title')"
-          @click:create="handleCreate"
-          @click:learn-more="$emit('click:learn-more')"
         >
-          <template #image>
-            <div class="empty-state-icon-gateway">
-              <PlugIcon
-                :color="KUI_COLOR_TEXT_DECORATIVE_AQUA"
-                :size="KUI_ICON_SIZE_50"
-              />
-            </div>
+          <template #icon>
+            <PlugIcon decorative />
           </template>
 
           <template
             v-if="config?.isControlPlaneGroup"
-            #message
+            #default
           >
             {{ t('plugins.list.empty_state_v2.group') }}
           </template>
-        </EntityEmptyState>
+
+          <template #action>
+            <KButton
+              v-if="userCanCreate"
+              data-testid="entity-create-button"
+              @click="handleCreate"
+            >
+              <AddIcon decorative />
+              {{ t('plugins.list.empty_state_v2.create_cta') }}
+            </KButton>
+
+            <KButton
+              appearance="secondary"
+              data-testid="entity-learn-more-button"
+              @click="$emit('click:learn-more')"
+            >
+              <BookIcon decorative />
+              {{ t('plugins.list.empty_state_v2.learn_more') }}
+            </KButton>
+          </template>
+        </KEmptyState>
       </template>
 
 
@@ -263,7 +273,6 @@ import {
   EntityToggleModal,
   EntityFilter,
   EntityTypes,
-  EntityEmptyState,
   FetcherStatus,
   PermissionsWrapper,
   useAxios,
@@ -301,7 +310,6 @@ import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 import type { HeaderTag } from '@kong/kongponents'
 
 import isEmpty from 'lodash-es/isEmpty'
-import { KUI_COLOR_TEXT_DECORATIVE_AQUA, KUI_ICON_SIZE_50 } from '@kong/design-tokens'
 import '@kong-ui-public/entities-shared/dist/style.css'
 
 const pluginMetaData = composables.usePluginMetaData()
@@ -806,12 +814,14 @@ const emptyStateOptions = ref<EmptyStateOptions>({
   title: t('plugins.title'),
 })
 
+const userCanCreate = ref<boolean>(false)
+
 onBeforeMount(async () => {
   // Evaluate if the user has create permissions
-  const userCanCreate = await props.canCreate()
+  userCanCreate.value = await props.canCreate()
 
   // If a user can create, we need to modify the empty state actions/messaging
-  if (userCanCreate) {
+  if (userCanCreate.value) {
     emptyStateOptions.value.title = t('plugins.list.empty_state.title')
     emptyStateOptions.value.ctaText = t('actions.create')
   }
