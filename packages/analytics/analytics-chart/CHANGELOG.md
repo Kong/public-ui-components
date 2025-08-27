@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.15...@kong-ui-public/analytics-chart@10.0.16) (2025-08-27)
+
+
+### Bug Fixes
+
+* style adjustments to zoom tooltip ([#2403](https://github.com/Kong/public-ui-components/issues/2403)) ([0ceef98](https://github.com/Kong/public-ui-components/commit/0ceef988d55babdb49b670d748294f8d775d2ceb))
+
+
+
+
+
 ## [10.0.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.14...@kong-ui-public/analytics-chart@10.0.15) (2025-08-27)
 
 
