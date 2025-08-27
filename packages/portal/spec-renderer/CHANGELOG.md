@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.4.7...@kong-ui-public/spec-renderer@2.4.8) (2025-08-27)
+
+
+### Bug Fixes
+
+* replace and deprecate entity empty state [KHCP-17718] ([#2402](https://github.com/Kong/public-ui-components/issues/2402)) ([a87d994](https://github.com/Kong/public-ui-components/commit/a87d9947b5a088ed2919759dd53d754bc404c02a))
+
+
+
+
+
 ## [2.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.4.6...@kong-ui-public/spec-renderer@2.4.7) (2025-08-20)
 
 

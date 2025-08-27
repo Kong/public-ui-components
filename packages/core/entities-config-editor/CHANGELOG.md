@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.2.2...@kong-ui-public/entities-config-editor@0.2.3) (2025-08-27)
+
+
+### Bug Fixes
+
+* replace and deprecate entity empty state [KHCP-17718] ([#2402](https://github.com/Kong/public-ui-components/issues/2402)) ([a87d994](https://github.com/Kong/public-ui-components/commit/a87d9947b5a088ed2919759dd53d754bc404c02a))
+
+
+
+
+
 ## [0.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.2.1...@kong-ui-public/entities-config-editor@0.2.2) (2025-08-20)
 
 

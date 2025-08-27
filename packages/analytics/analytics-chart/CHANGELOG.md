@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.14...@kong-ui-public/analytics-chart@10.0.15) (2025-08-27)
+
+
+### Bug Fixes
+
+* replace and deprecate entity empty state [KHCP-17718] ([#2402](https://github.com/Kong/public-ui-components/issues/2402)) ([a87d994](https://github.com/Kong/public-ui-components/commit/a87d9947b5a088ed2919759dd53d754bc404c02a))
+
+
+
+
+
 ## [10.0.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.13...@kong-ui-public/analytics-chart@10.0.14) (2025-08-26)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
