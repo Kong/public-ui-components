@@ -11,6 +11,7 @@
       <AnalyticsChart
         :chart-data="data"
         :chart-options="options"
+        :explore-link="exploreLink"
         legend-position="bottom"
         :requests-link="requestsLink"
         :synthetics-data-key="chartOptions.synthetics_data_key"
