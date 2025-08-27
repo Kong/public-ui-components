@@ -1,9 +1,9 @@
 <template>
   <div class="ff-standard-layout">
     <EntityFormBlock
-      :description="t('plugins.form.sections.general_info.description')"
+      :description="generalInfoDescription ?? t('plugins.form.sections.general_info.description')"
       :step="1"
-      :title="t('plugins.form.sections.general_info.title')"
+      :title="generalInfoTitle ?? t('plugins.form.sections.general_info.title')"
     >
       <div class="enabled">
         <VueFormGenerator
@@ -74,9 +74,9 @@
       </template>
     </EntityFormBlock>
     <EntityFormBlock
-      :description="t('plugins.form.sections.plugin_config.description')"
+      :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
       :step="2"
-      :title="t('plugins.form.sections.plugin_config.title')"
+      :title="pluginConfigTitle ?? t('plugins.form.sections.plugin_config.title')"
     >
       <slot
         :data="pruneData(model)"

@@ -688,7 +688,7 @@
         },
         "plugin_config": {
           "title": "Plugin configuration",
-          "description": "Configure parameters for this plugin by using a form or a YAML file."
+          "description": "Set the plugin's behavior by defining its configuration settings."
         }
       }
     },
