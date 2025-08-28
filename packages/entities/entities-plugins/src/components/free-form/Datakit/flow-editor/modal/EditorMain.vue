@@ -2,16 +2,44 @@
   <div class="dk-editor-main">
     <header class="header">
       <div class="actions">
+        <KTooltip
+          :text="t('plugins.free-form.datakit.flow_editor.actions.undo')"
+          :z-index="10000"
+        >
+          <KButton
+            appearance="tertiary"
+            :disabled="!canUndo"
+            icon
+            @click="undo"
+          >
+            <!-- TODO: switch to <UndoIcon /> when available -->
+            <RedoIcon class="flip" />
+          </KButton>
+        </KTooltip>
+        <KTooltip
+          :text="t('plugins.free-form.datakit.flow_editor.actions.redo')"
+          :z-index="10000"
+        >
+          <KButton
+            appearance="tertiary"
+            :disabled="!canRedo"
+            icon
+            @click="redo"
+          >
+            <RedoIcon />
+          </KButton>
+        </KTooltip>
+        <div class="divider" />
         <KButton
           appearance="tertiary"
           target="_blank"
           to="https://developer.konghq.com/plugins/datakit/"
         >
-          {{ t('plugins.free-form.datakit.flow_editor.view_docs') }}
+          {{ t('plugins.free-form.datakit.flow_editor.actions.view_docs') }}
           <ExternalLinkIcon />
         </KButton>
         <KButton @click="close">
-          {{ t('plugins.free-form.datakit.flow_editor.done') }}
+          {{ t('plugins.free-form.datakit.flow_editor.actions.done') }}
         </KButton>
       </div>
     </header>
@@ -27,7 +55,7 @@
 
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
-import { ExternalLinkIcon } from '@kong/icons'
+import { ExternalLinkIcon, RedoIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
 
 import english from '../../../../../locales/en.json'
@@ -37,6 +65,7 @@ import { useEditorStore } from '../store/store'
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
+import { useHotkeys } from '../composables/useHotkeys'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -44,11 +73,17 @@ defineSlots<{
   default(): any
 }>()
 
-const { modalOpen } = useEditorStore()
+const { modalOpen, undo, redo, canUndo, canRedo } = useEditorStore()
 
 function close() {
   modalOpen.value = false
 }
+
+useHotkeys({
+  enabled: modalOpen,
+  undo,
+  redo,
+})
 </script>
 
 <style lang="scss" scoped>
@@ -78,6 +113,14 @@ function close() {
     flex-direction: column;
     height: 100%;
     width: 100%;
+  }
+
+  .divider {
+    border-right: $kui-border-width-10 solid $kui-color-border;
+  }
+
+  .flip {
+    transform: scaleX(-1); // TODO: remove this after switching to `UndoIcon`
   }
 }
 </style>

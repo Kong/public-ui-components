@@ -2,7 +2,7 @@
   <div class="dk-editor-content">
     <aside
       class="side-panel"
-      :class="{ expanded: sidePanelExpanded }"
+      :class="{ expanded: sidePanelExpanded, inited }"
     >
       <header class="header">
         <h2 class="title">
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
 import { usePreferences, useEditorStore } from '../../composables'
@@ -55,6 +55,13 @@ watch(selectedNode, (node) => {
     newCreatedNodeId.value = null
   }
 })
+
+// A workaround to prevent startup transition when the side panel
+// is collapsed per user preference.
+const inited = ref(false)
+onMounted(() => {
+  inited.value = true
+})
 </script>
 
 <style lang="scss" scoped>
@@ -71,9 +78,12 @@ watch(selectedNode, (node) => {
     flex-direction: column;
     /* stylelint-disable-next-line custom-property-pattern */
     margin-left: calc(var(--dk-side-panel-width) * -1);
-    transition: margin-left 0.2s ease-in-out;
     /* stylelint-disable-next-line custom-property-pattern */
     width: var(--dk-side-panel-width);
+
+    &.inited {
+      transition: margin-left $kui-animation-duration-20 ease-in-out;
+    }
 
     &.expanded {
       margin-left: 0;
