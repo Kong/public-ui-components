@@ -31,7 +31,7 @@ export default function useContextLinks(
   const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(definition.value.chart.type))
 
   const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage')
-  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['api_usage', 'llm_usage'].includes(definition.value.query.datasource))
+  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['api_usage', 'llm_usage', 'basic'].includes(definition.value.query.datasource))
 
   const chartDataGranularity = computed(() => {
     return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
@@ -123,7 +123,11 @@ export default function useContextLinks(
     if (!canGenerateExploreLink.value) {
       return ''
     }
-    return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${definition.value.query.datasource}&c=${definition.value.chart.type}`
+
+    // If the datasource is 'basic', we need to map it to 'api_usage' for the explore URL.
+    const datasource = definition.value.query?.datasource === 'basic' ? 'api_usage' : definition.value.query?.datasource
+
+    return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${definition.value.chart.type}`
   }
 
   return {

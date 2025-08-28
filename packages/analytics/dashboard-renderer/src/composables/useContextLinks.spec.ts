@@ -166,6 +166,16 @@ describe('useContextLinks', () => {
     expect(wrapper.vm.canGenerateExploreLink).toBe(false)
   })
 
+  it('maps basic to api_usage for explore link', async () => {
+    const { wrapper } = mountComposable({
+      datasource: 'basic',
+    })
+    await flushPromises()
+
+    const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
+    expect(params.get('d')).toBe('api_usage')
+  })
+
   it('does not build explore link if base URL missing', async () => {
     const { wrapper } = mountComposable({
       exploreBase: '',
