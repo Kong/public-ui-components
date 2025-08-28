@@ -22,7 +22,7 @@
     <div class="ff-form-config-form">
       <slot
         class="ff-form"
-        :data="pruneData(model)"
+        :data="prunedData"
         :schema="freeFormSchema"
         @change="onFormChange"
       />
@@ -118,16 +118,17 @@ const configCollapse = ref(false)
  * Avoid passing freeform data that it can't handle. e.g. `scope`, `update_time`
  * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
  */
-function pruneData(data: PluginFormWrapperProps<T>['model']) {
+const prunedData = computed(() => {
   const ffDataKeys: Array<keyof PluginFormWrapperProps<T>['model']> = [
     'config',
     'instance_name',
     'partials',
     'protocols',
     'tags',
+    '__ui_data',
   ]
-  return pick(data, ffDataKeys)
-}
+  return pick(props.model, ffDataKeys)
+})
 </script>
 
 <style lang="scss" scoped>

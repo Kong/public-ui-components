@@ -191,3 +191,8 @@ export interface DragPayload {
     }
   }
 }
+
+export type DatakitFormData = {
+  config: DatakitConfig
+  __ui_data: DatakitUIData
+}

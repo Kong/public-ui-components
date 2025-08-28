@@ -29,21 +29,16 @@
     <template #default="formProps">
       <Form
         v-bind="formProps"
-        :data="{ config, __ui_data: uiData }"
         tag="div"
-        @change="handleFormChange"
       >
         <FlowEditor
           v-if="finalEditorMode === 'flow'"
-          :config="config"
           :is-editing="props.isEditing"
-          :ui-data="uiData"
           @change="handleFlowChange"
         />
         <CodeEditor
           v-else-if="finalEditorMode === 'code'"
           class="code-editor"
-          :config="config"
           :editing="props.isEditing"
           @change="handleCodeChange"
           @error="handleCodeError"
@@ -64,7 +59,7 @@ import type { Component } from 'vue'
 // import type { ZodError } from 'zod'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { DatakitConfig, DatakitUIData, EditorMode } from './types'
+import type { EditorMode } from './types'
 
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
@@ -133,11 +128,6 @@ const description = computed(() => {
   }
 })
 
-// Shared
-
-const config = ref({ ...props.model.config })
-const uiData = ref<DatakitUIData | undefined>(props.model.__ui_data ? { ...props.model.__ui_data } : undefined)
-
 watch(realEditorMode, () => {
   props.onValidityChange?.({
     model: 'config',
@@ -151,20 +141,11 @@ watch(realEditorMode, () => {
  * @param newConfig The new config to set.
  * @param newUIData The new UI data to set.
  */
-function handleConfigChange(newConfig: unknown, newUIData?: DatakitUIData) {
-  // update the external form state
-  props.onFormChange({
-    config: newConfig,
-    ...newUIData ? { __ui_data: newUIData } : undefined,
-  })
+function handleConfigChange() {
   props.onValidityChange?.({
     model: 'config',
     valid: true,
   })
-
-  // update the local config as the external form state isn't
-  // flowing back down to the component
-  config.value = newConfig
 }
 
 /**
@@ -173,10 +154,8 @@ function handleConfigChange(newConfig: unknown, newUIData?: DatakitUIData) {
  * @param newConfig The new config to set.
  * @param newUIData The new UI data to set.
  */
-function handleFlowChange(newConfig: DatakitConfig, newUIData: DatakitUIData) {
-  handleConfigChange(newConfig, newUIData)
-
-  uiData.value = newUIData
+function handleFlowChange() {
+  handleConfigChange()
 }
 
 // Code editor
@@ -206,7 +185,7 @@ function handleFlowChange(newConfig: DatakitConfig, newUIData: DatakitUIData) {
 // }
 
 function handleCodeChange(newConfig: unknown) {
-  handleConfigChange(newConfig)
+  handleConfigChange()
 
   // TODO: use strict validation and map back to the exact location of schema validation errors
   // const { success, error } = DatakitConfigSchema.safeParse(newConfig)
@@ -232,16 +211,6 @@ function handleCodeError(msg: string) {
 }
 
 // Flow editor
-
-// This change comes from freeform fields
-function handleFormChange(data: any) {
-  for (const key in data.config) {
-    // updating nodes can lead to re`load`ing the flow editor state
-    if (key !== 'nodes') {
-      config.value[key] = data.config[key]
-    }
-  }
-}
 </script>
 
 <style lang="scss" scoped>

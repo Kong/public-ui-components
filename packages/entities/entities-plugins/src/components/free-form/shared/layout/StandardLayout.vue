@@ -79,7 +79,7 @@
       :title="pluginConfigTitle ?? t('plugins.form.sections.plugin_config.title')"
     >
       <slot
-        :data="pruneData(model)"
+        :data="prunedData"
         :schema="freeFormSchema"
         @change="onFormChange"
       />
@@ -196,13 +196,14 @@ const freeFormSchema = computed(() => {
  * Avoid passing freeform data that it can't handle. e.g. `scope`, `update_time`
  * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
  */
-function pruneData(data: Props<T>['model']) {
+const prunedData = computed(() => {
   const ffDataKeys: Array<keyof Props<T>['model']> = [
     'config',
     'partials',
+    '__ui_data',
   ]
-  return pick(data, ffDataKeys)
-}
+  return pick(props.model, ffDataKeys)
+})
 
 const scoped = ref(false)
 const moreCollapsed = ref(true)
