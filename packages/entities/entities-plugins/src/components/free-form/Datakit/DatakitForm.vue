@@ -32,12 +32,12 @@
         tag="div"
       >
         <FlowEditor
-          v-if="finalEditorMode === 'flow'"
+          v-if="realEditorMode === 'flow'"
           :is-editing="props.isEditing"
           @change="handleFlowChange"
         />
         <CodeEditor
-          v-else-if="finalEditorMode === 'code'"
+          v-else-if="realEditorMode === 'code'"
           class="code-editor"
           :editing="props.isEditing"
           @change="handleCodeChange"
@@ -86,9 +86,10 @@ const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITO
 // Editor mode selection
 
 const { editorMode } = usePreferences()
-const finalEditorMode = computed<EditorMode>(() => {
-  return enableFlowEditor ? editorMode.value : 'code'
+const realEditorMode = computed<EditorMode>(() => {
+  return (enableFlowEditor && flowAvailable.value) ? editorMode.value : 'code'
 })
+
 
 const icons: Record<EditorMode, Component> = {
   flow: DesignIcon,
@@ -111,10 +112,6 @@ const editorModes = computed<Array<SegmentedControlOption<EditorMode>>>(() => {
 
   modes[0].disabled = !flowAvailable.value
   return modes
-})
-
-const realEditorMode = computed<EditorMode>(() => {
-  return flowAvailable.value ? editorMode.value : 'code'
 })
 
 const description = computed(() => {
