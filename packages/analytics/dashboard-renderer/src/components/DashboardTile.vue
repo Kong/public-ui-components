@@ -376,15 +376,11 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
 }
 
 const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
-  if (!canGenerateRequestsLink.value) {
-    requestsLinkZoomActions.value = undefined
-  }
-
   const filters = datasourceScopedFilters.value
   const requestsQuery = buildRequestsQueryZoomActions(newTimeRange, filters)
   const exploreQuery = buildExploreQuery(newTimeRange, filters)
 
-  requestsLinkZoomActions.value = { href: buildRequestLink(requestsQuery) }
+  requestsLinkZoomActions.value = canGenerateRequestsLink.value ? { href: buildRequestLink(requestsQuery) } : undefined
   exploreLinkZoomActions.value = { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) }
 }
 </script>
