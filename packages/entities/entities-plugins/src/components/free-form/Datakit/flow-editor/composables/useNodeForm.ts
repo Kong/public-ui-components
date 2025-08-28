@@ -269,7 +269,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     const removedConnections: ConnectionString[] = []
 
     // remove existing edges
-    for (const edge of inputsEdges.value) {
+    for (const edge of inputsEdges.value.concat(inputEdge.value ? [inputEdge.value] : [])) {
       removedConnections.push(createEdgeConnectionString(edge, getNodeById))
       disconnectEdge(edge!.id, false)
     }
