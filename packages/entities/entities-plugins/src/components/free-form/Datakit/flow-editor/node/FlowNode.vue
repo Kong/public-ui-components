@@ -45,20 +45,17 @@
 
             <div class="handle-label-wrapper">
               <div
-                class="handle-label"
+                class="handle-label trigger"
                 :class="{
                   'has-fields': data.fields.input.length > 0,
                   collapsible: inputsCollapsible,
                 }"
+                @click.stop="toggleExpanded('input')"
               >
                 <div class="text">
                   inputs
                 </div>
-                <div
-                  v-if="data.fields.input.length > 0"
-                  class="icon"
-                  @click.stop="toggleExpanded('input')"
-                >
+                <template v-if="data.fields.input.length > 0">
                   <UnfoldMoreIcon
                     v-if="!inputsExpanded"
                     :size="KUI_ICON_SIZE_20"
@@ -68,7 +65,7 @@
                     :color="inputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
                     :size="KUI_ICON_SIZE_20"
                   />
-                </div>
+                </template>
               </div>
               <HandleTwig
                 v-if="inputsExpanded"
@@ -110,20 +107,17 @@
           <div class="handle">
             <div class="handle-label-wrapper">
               <div
-                class="handle-label text"
+                class="handle-label text trigger"
                 :class="{
                   'has-fields': data.fields.output.length > 0,
                   collapsible: outputsCollapsible,
                 }"
+                @click.stop="toggleExpanded('output')"
               >
                 <div class="text">
                   outputs
                 </div>
-                <div
-                  v-if="data.fields.output.length > 0"
-                  class="icon"
-                  @click.stop="toggleExpanded('output')"
-                >
+                <template v-if="data.fields.output.length > 0">
                   <UnfoldMoreIcon
                     v-if="!outputsExpanded"
                     :size="KUI_ICON_SIZE_20"
@@ -133,7 +127,7 @@
                     :color="outputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
                     :size="KUI_ICON_SIZE_20"
                   />
-                </div>
+                </template>
               </div>
               <HandleTwig
                 v-if="outputsExpanded"
@@ -387,11 +381,11 @@ $handle-height: 10px;
             transform: translateY(-0.5px);
           }
 
-          &.has-fields .icon {
+          &.has-fields.trigger {
             cursor: pointer;
           }
 
-          &:not(.collapsible) .icon {
+          &:not(.collapsible).trigger {
             cursor: not-allowed;
           }
         }
