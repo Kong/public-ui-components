@@ -729,6 +729,7 @@
           "actions": {
             "undo": "Undo",
             "redo": "Redo",
+            "delete": "Delete",
             "view_docs": "View docs",
             "done": "Done"
           },

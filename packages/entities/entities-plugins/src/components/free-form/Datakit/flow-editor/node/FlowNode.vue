@@ -34,22 +34,25 @@
         :kpop-attributes="{
           offset: '4px',
         }"
-        width="120"
+        width="160"
       >
         <KButton
           appearance="tertiary"
-          class="trigger"
+          class="menu-trigger"
           icon
           size="small"
         >
           <MoreIcon :color="KUI_COLOR_TEXT" />
         </KButton>
         <template #items>
-          <KDropdownItem danger>
-            <div class="item">
-              Delete
-              <kbd class="key">⌫</kbd>
-            </div>
+          <KDropdownItem
+            danger
+            @click="removeNode(data.id)"
+          >
+            <HotkeyLabel
+              :keys="HOTKEYS.delete"
+              :label="t('plugins.free-form.datakit.flow_editor.actions.delete')"
+            />
           </KDropdownItem>
         </template>
       </KDropdown>
@@ -132,7 +135,7 @@
           <div class="handle">
             <div class="handle-label-wrapper">
               <div
-                class="handle-label text trigger"
+                class="handle-label trigger"
                 :class="{
                   'has-fields': data.fields.output.length > 0,
                   collapsible: outputsCollapsible,
@@ -175,7 +178,7 @@
               class="handle indented"
             >
               <div class="handle-label-wrapper">
-                <div class="handle-label">
+                <div class="handle-label text">
                   {{ field.name }}
                 </div>
                 <HandleTwig
@@ -221,6 +224,8 @@ import { useEditorStore } from '../store/store'
 import HandleTwig from './HandleTwig.vue'
 import { isImplicitNode } from './node'
 import NodeBadge from './NodeBadge.vue'
+import HotkeyLabel from '../HotkeyLabel.vue'
+import { HOTKEYS } from '../../constants'
 
 const { data } = defineProps<{
   data: NodeInstance
@@ -232,7 +237,7 @@ const { t } = createI18n<typeof english>('en-us', english)
 // FlowNode can be used in some tree that does not provide a flow store
 // e.g., as a DND preview
 const flowStore = useOptionalFlowStore()
-const { getInEdgesByNodeId, getOutEdgesByNodeId, toggleExpanded: storeToggleExpanded } = useEditorStore()
+const { getInEdgesByNodeId, getOutEdgesByNodeId, toggleExpanded: storeToggleExpanded, removeNode } = useEditorStore()
 
 const meta = computed(() => getNodeMeta(data.type))
 
@@ -331,6 +336,7 @@ $handle-height: 10px;
   background-color: $kui-color-background;
   border: 1px solid $kui-color-border-neutral-weak;
   border-radius: $kui-border-radius-20;
+  cursor: move;
   max-width: $node-max-width;
   min-width: $node-min-width;
   padding: $kui-space-40 0;
@@ -361,7 +367,7 @@ $handle-height: 10px;
       word-wrap: break-word;
     }
 
-    .trigger {
+    .menu-trigger {
       height: 16px;
       width: 16px;
 
@@ -372,17 +378,6 @@ $handle-height: 10px;
     }
 
     .menu {
-      .item {
-        display: flex;
-        flex-grow: 1;
-        justify-content: space-between;
-      }
-
-      .key {
-        color: $kui-color-text-neutral;
-        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-      }
-
       :deep(.dropdown-trigger) {
         display: flex;
       }
@@ -395,11 +390,9 @@ $handle-height: 10px;
   }
 
   .handles {
-    display: flex;
-    flex-direction: row;
-    gap: $kui-space-80;
-    justify-content: space-between;
-    width: 100%;
+    display: grid;
+    gap: $kui-space-60;
+    grid-template-columns: 1fr 1fr;
 
     &.reversed {
       flex-direction: row-reverse;
@@ -410,6 +403,7 @@ $handle-height: 10px;
   .output-handles {
     display: flex;
     flex-direction: column;
+    min-width: 0;
     position: relative;
 
     .handle {
@@ -418,10 +412,12 @@ $handle-height: 10px;
       flex-direction: row;
       gap: $kui-space-30;
       justify-self: start;
+      max-width: 100%;
       position: relative;
 
       .handle-label-wrapper {
         height: 100%;
+        overflow: hidden;
         padding: $kui-space-20 0;
         position: relative;
 
@@ -431,17 +427,11 @@ $handle-height: 10px;
           border-radius: $kui-border-radius-20;
           color: $kui-color-text-neutral-strong;
           display: flex;
-          flex-direction: row;
           font-size: $kui-font-size-20;
           font-weight: $kui-font-weight-semibold;
-          gap: $kui-space-40;
+          gap: $kui-space-20;
           line-height: $kui-line-height-10;
           padding: $kui-space-10;
-
-          .text {
-            /* improve visual valign for our use case */
-            transform: translateY(-0.5px);
-          }
 
           &.has-fields.trigger {
             cursor: pointer;
@@ -450,15 +440,28 @@ $handle-height: 10px;
           &:not(.collapsible).trigger {
             cursor: not-allowed;
           }
+
+          &.text {
+            display: block;
+          }
+        }
+
+        .text {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          /* improve visual valign for our use case */
+          transform: translateY(-0.5px);
+          white-space: nowrap;
         }
       }
     }
 
     :deep(.vue-flow__handle) {
-      background-color: $kui-color-background-neutral; // gray.60 (we don't have a gray.50 in design tokens)
+      background-color: $kui-color-background-neutral;
       border: none;
       border-radius: $kui-border-radius-round;
       bottom: unset;
+      flex: 1 0 auto;
       height: $handle-height;
       left: unset;
       min-width: 0;
