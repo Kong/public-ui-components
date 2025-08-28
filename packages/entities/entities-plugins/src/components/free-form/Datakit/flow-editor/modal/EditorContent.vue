@@ -82,7 +82,7 @@ onMounted(() => {
     width: var(--dk-side-panel-width);
 
     &.inited {
-      transition: margin-left .2s ease-in-out;
+      transition: margin-left $kui-animation-duration-20 ease-in-out;
     }
 
     &.expanded {

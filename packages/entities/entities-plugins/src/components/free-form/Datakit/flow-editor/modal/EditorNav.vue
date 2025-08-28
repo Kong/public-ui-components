@@ -145,7 +145,7 @@ function handlePanelToggle() {
     height: 36px;
     justify-content: center;
     text-decoration: none;
-    transition: color .2s ease;
+    transition: color $kui-animation-duration-20 ease-in-out;
     white-space: nowrap;
     width: 36px;
 
@@ -167,7 +167,7 @@ function handlePanelToggle() {
       path {
         color: currentColor;
         fill: currentColor;
-        transition: all .2s ease-in-out;
+        transition: all $kui-animation-duration-20 ease-in-out;
       }
     }
 
@@ -179,7 +179,7 @@ function handlePanelToggle() {
   .side-panel-toggle {
     left: 0;
     position: absolute;
-    transition: left .2s ease-in-out;
+    transition: left $kui-animation-duration-20 ease-in-out;
     z-index: 1;
 
     &.expanded {
