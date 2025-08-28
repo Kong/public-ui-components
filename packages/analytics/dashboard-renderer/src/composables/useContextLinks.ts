@@ -1,6 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
 import { getFieldDataSources, msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { ComputedRef } from 'vue'
+import type { DeepReadonly, Ref } from 'vue'
 import type { AiExploreAggregations, AiExploreQuery, AllFilters, ExploreAggregations, ExploreQuery, ExploreResultV4, FilterDatasource, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsBridge, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContextInternal } from '../types'
@@ -13,9 +13,9 @@ export default function useContextLinks(
     chartData,
   }: {
     queryBridge: AnalyticsBridge | undefined
-    context: ComputedRef<DashboardRendererContextInternal>
-    definition: ComputedRef<TileDefinition>
-    chartData: ComputedRef<ExploreResultV4 | undefined>
+    context: Readonly<Ref<DeepReadonly<DashboardRendererContextInternal>>>
+    definition: Readonly<Ref<DeepReadonly<TileDefinition>>>
+    chartData: Readonly<Ref<DeepReadonly<ExploreResultV4 | undefined>>>
   },
 ) {
 
@@ -77,14 +77,14 @@ export default function useContextLinks(
     return buildRequestLink(requestsQuery)
   })
 
-  const buildRequestLink = (requestQuery: { filter: AllFilters[], timeframe: { timePeriodsKey: string, start?: Date | number, end?: Date | number } }) => {
+  const buildRequestLink = (requestQuery: DeepReadonly<{ filter: AllFilters[], timeframe: { timePeriodsKey: string, start?: Date | number, end?: Date | number } }>) => {
     if (!canGenerateRequestsLink.value) {
       return ''
     }
     return `${requestsBaseUrl.value}?q=${JSON.stringify(requestQuery)}`
   }
 
-  const buildRequestsQueryKebabMenu = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
+  const buildRequestsQueryKebabMenu = (timeRange: TimeRangeV4, filters: DeepReadonly<AllFilters[]>) => {
     return {
       filter: filters,
       timeframe: {
@@ -95,7 +95,7 @@ export default function useContextLinks(
     }
   }
 
-  const buildRequestsQueryZoomActions = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
+  const buildRequestsQueryZoomActions = (timeRange: TimeRangeV4, filters: DeepReadonly<AllFilters[]>) => {
     return {
       filter: filters,
       timeframe: {
@@ -106,7 +106,7 @@ export default function useContextLinks(
     }
   }
 
-  const buildExploreQuery = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
+  const buildExploreQuery = (timeRange: TimeRangeV4, filters: DeepReadonly<AllFilters[]>) => {
     const dimensions = definition.value.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
     const exploreQuery: ExploreQuery | AiExploreQuery = {
       filters: filters,

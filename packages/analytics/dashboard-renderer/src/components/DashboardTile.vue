@@ -142,7 +142,7 @@ import {
   TimePeriods,
   getFieldDataSources,
 } from '@kong-ui-public/analytics-utilities'
-import { type Component, computed, defineAsyncComponent, inject, nextTick, ref, watch } from 'vue'
+import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -204,9 +204,9 @@ const {
   buildRequestsQueryZoomActions,
 } = composables.useContextLinks({
   queryBridge,
-  chartData: computed(() => chartData.value),
-  definition: computed(() => props.definition),
-  context: computed(() => props.context),
+  chartData: readonly(chartData),
+  definition: readonly(toRef(props, 'definition')),
+  context: readonly(toRef(props, 'context')),
 })
 
 watch(() => props.definition, async () => {
