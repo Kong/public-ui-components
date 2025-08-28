@@ -1,6 +1,9 @@
 <template>
   <KBadge
     :appearance="appearance"
+    :class="{
+      'icon-only': iconOnly,
+    }"
     :size="size"
   >
     <template #icon>
@@ -19,6 +22,7 @@ import type { BadgeAppearance, BadgeSize } from '@kong/kongponents'
 const { type } = defineProps<{
   type: NodeType
   size?: BadgeSize
+  iconOnly?: boolean
 }>()
 
 const icon = computed(() => {
@@ -47,3 +51,11 @@ const appearance = computed<BadgeAppearance>(() => {
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.icon-only {
+  :deep(.badge-content-wrapper) {
+    display: none;
+  }
+}
+</style>

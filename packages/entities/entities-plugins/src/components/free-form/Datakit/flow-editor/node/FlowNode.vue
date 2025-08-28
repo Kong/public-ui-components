@@ -7,27 +7,52 @@
     }"
   >
     <div class="body">
-      <div class="info-line">
-        <div class="name-and-error">
-          <WarningIcon
-            v-if="error"
-            class="error-icon"
-            :color="KUI_COLOR_TEXT_DANGER"
-            :size="16"
-          />
-          <div class="name">
-            {{ name }}
-          </div>
-        </div>
-
+      <KTooltip
+        v-if="!isImplicit"
+        class="badge"
+        placement="top"
+        :text="data.type"
+      >
         <NodeBadge
-          v-if="!isImplicit"
+          icon-only
           size="small"
           :type="data.type"
         />
+      </KTooltip>
+      <div class="name">
+        {{ name }}
       </div>
-
-      <slot />
+      <WarningIcon
+        v-if="error"
+        class="error-icon"
+        :color="KUI_COLOR_TEXT_DANGER"
+        :size="16"
+      />
+      <KDropdown
+        v-if="!isImplicit"
+        class="menu"
+        :kpop-attributes="{
+          offset: '4px',
+        }"
+        width="120"
+      >
+        <KButton
+          appearance="tertiary"
+          class="trigger"
+          icon
+          size="small"
+        >
+          <MoreIcon :color="KUI_COLOR_TEXT" />
+        </KButton>
+        <template #items>
+          <KDropdownItem danger>
+            <div class="item">
+              Delete
+              <kbd class="key">⌫</kbd>
+            </div>
+          </KDropdownItem>
+        </template>
+      </KDropdown>
     </div>
 
     <div
@@ -179,11 +204,12 @@ import { createI18n } from '@kong-ui-public/i18n'
 import {
   KUI_COLOR_BACKGROUND_NEUTRAL_STRONG,
   KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER,
+  KUI_COLOR_TEXT,
   KUI_COLOR_TEXT_DANGER,
   KUI_COLOR_TEXT_DISABLED,
   KUI_ICON_SIZE_20,
 } from '@kong/design-tokens'
-import { UnfoldLessIcon, UnfoldMoreIcon, WarningIcon } from '@kong/icons'
+import { MoreIcon, UnfoldLessIcon, UnfoldMoreIcon, WarningIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
 import { computed, watch } from 'vue'
 
@@ -310,40 +336,60 @@ $handle-height: 10px;
   padding: $kui-space-40 0;
 
   .body {
+    align-items: flex-start;
+    display: flex;
+    gap: $kui-space-40;
+    margin-bottom: $kui-space-40;
     padding: 0 $kui-space-40;
 
-    .info-line {
-      align-items: flex-start;
-      display: flex;
-      flex-direction: row;
-      gap: $kui-space-40;
-      justify-content: space-between;
-      margin-bottom: $kui-space-40;
-      width: 100%;
+    .error-icon {
+      align-self: flex-start;
+    }
 
-      .name-and-error {
-        align-items: center;
+    .name {
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
+      flex: 1 1 auto;
+      font-size: $kui-font-size-20;
+      font-weight: $kui-font-weight-semibold;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      line-height: $kui-line-height-20;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-all;
+      word-wrap: break-word;
+    }
+
+    .trigger {
+      height: 16px;
+      width: 16px;
+
+      :deep(.kui-icon) {
+        height: 12px !important;
+        width: 12px !important;
+      }
+    }
+
+    .menu {
+      .item {
         display: flex;
-        flex: 1 1 auto;
-        gap: $kui-space-10;
+        flex-grow: 1;
+        justify-content: space-between;
       }
 
-      .error-icon {
-        align-self: flex-start;
+      .key {
+        color: $kui-color-text-neutral;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
       }
 
-      .name {
-        -webkit-box-orient: vertical;
-        display: -webkit-box;
+      :deep(.dropdown-trigger) {
+        display: flex;
+      }
+
+      :deep(.dropdown-item-trigger) {
         font-size: $kui-font-size-20;
-        font-weight: $kui-font-weight-semibold;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        line-height: $kui-line-height-20;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        word-break: break-all;
-        word-wrap: break-word;
+        padding: $kui-space-30 $kui-space-40;
       }
     }
   }
