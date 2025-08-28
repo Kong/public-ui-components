@@ -198,6 +198,7 @@ const {
   requestsLinkKebabMenu,
   canShowKebabMenu,
   canGenerateRequestsLink,
+  canGenerateExploreLink,
   buildExploreQuery,
   buildExploreLink,
   buildRequestLink,
@@ -381,7 +382,7 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
   const exploreQuery = buildExploreQuery(newTimeRange, filters)
 
   requestsLinkZoomActions.value = canGenerateRequestsLink.value ? { href: buildRequestLink(requestsQuery) } : undefined
-  exploreLinkZoomActions.value = { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) }
+  exploreLinkZoomActions.value = canGenerateExploreLink.value ? { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) } : undefined
 }
 </script>
 

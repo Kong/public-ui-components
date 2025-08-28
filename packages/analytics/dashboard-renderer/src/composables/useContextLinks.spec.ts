@@ -156,14 +156,14 @@ describe('useContextLinks', () => {
     expect(parsed.granularity).toBe('daily')
   })
 
-  it('falls back datasource to api_usage when unsupported value provided', async () => {
+  it('cannot generate explore link for unsupported datasource', async () => {
     const { wrapper } = mountComposable({
       datasource: 'random_unsupported_source',
     })
     await flushPromises()
 
-    const params = new URLSearchParams((wrapper.vm.exploreLinkKebabMenu as string).split('?')[1])
-    expect(params.get('d')).toBe('api_usage')
+    expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
+    expect(wrapper.vm.canGenerateExploreLink).toBe(false)
   })
 
   it('does not build explore link if base URL missing', async () => {

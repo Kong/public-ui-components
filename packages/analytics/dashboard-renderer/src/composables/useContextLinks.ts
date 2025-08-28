@@ -31,7 +31,7 @@ export default function useContextLinks(
   const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(definition.value.chart.type))
 
   const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage')
-
+  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['api_usage', 'llm_usage'].includes(definition.value.query.datasource))
 
   const chartDataGranularity = computed(() => {
     return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
@@ -53,7 +53,7 @@ export default function useContextLinks(
   const exploreLinkKebabMenu = computed(() => {
     // There are various factors that mean we might not need to make a go-to-explore URL.
     // For example, golden signal tiles don't show a kebab menu and often don't have a query definition.
-    if (!exploreBaseUrl.value || !definition.value.query || !canShowKebabMenu.value) {
+    if (!canGenerateExploreLink.value || !canShowKebabMenu.value) {
       return ''
     }
 
@@ -120,9 +120,10 @@ export default function useContextLinks(
   }
 
   const buildExploreLink = (exploreQuery: ExploreQuery | AiExploreQuery) => {
-    const datasource = ['api_usage', 'llm_usage'].includes(definition.value.query.datasource) ? definition.value.query.datasource : 'api_usage'
-
-    return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${definition.value.chart.type}`
+    if (!canGenerateExploreLink.value) {
+      return ''
+    }
+    return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${definition.value.query.datasource}&c=${definition.value.chart.type}`
   }
 
   return {
@@ -130,6 +131,7 @@ export default function useContextLinks(
     requestsLinkKebabMenu,
     canShowKebabMenu,
     canGenerateRequestsLink,
+    canGenerateExploreLink,
     buildExploreQuery,
     buildRequestsQueryZoomActions,
     buildExploreLink,
