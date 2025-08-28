@@ -329,4 +329,84 @@ describe('<DashboardTile />', () => {
     // not the time range in the query definition.
     cy.getTestId('chart-jump-to-requests-1').invoke('attr', 'href').should('have.string', `"start":${start},"end":${end}`)
   })
+
+  it('should not show explore if datasource is unsupported', () => {
+    mount({
+      definition: {
+        chart: mockTileDefinition.chart,
+        query: {
+          datasource: 'random_unsupported_source',
+          metrics: [],
+          filters: [],
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-explore-1').should('not.exist')
+  })
+
+  it('should not show explore if exploreBaseUrl is undefined', () => {
+    const mockQueryProviderWithEmptyExplore = {
+      ...mockQueryProvider,
+      exploreBaseUrl: async () => undefined,
+    }
+    cy.mount(DashboardTile, {
+      props: {
+        definition: mockTileDefinition,
+        context: mockContext,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProviderWithEmptyExplore,
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-explore-1').should('not.exist')
+  })
+
+  it('should not show requests if requestsBaseUrl is undefined', () => {
+    const mockQueryProviderWithEmptyRequests = {
+      ...mockQueryProvider,
+      requestsBaseUrl: async () => undefined,
+    }
+    cy.mount(DashboardTile, {
+      props: {
+        definition: mockTileDefinition,
+        context: mockContext,
+        queryReady: true,
+        refreshCounter: 0,
+        tileId: '1',
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProviderWithEmptyRequests,
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-requests-1').should('not.exist')
+  })
+
+  it('should not show requests if datasource is unsupported', () => {
+    mount({
+      definition: {
+        chart: mockTileDefinition.chart,
+        query: {
+          datasource: 'llm_usage',
+          metrics: [],
+          filters: [],
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-requests-1').should('not.exist')
+  })
 })

@@ -26,4 +26,5 @@ export interface RendererProps<T> {
   height: number
   refreshCounter: number
   requestsLink?: ExternalLink
+  exploreLink?: ExternalLink
 }

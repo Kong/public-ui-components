@@ -64,9 +64,9 @@
           />
           <template #items>
             <KDropdownItem
-              v-if="!!exploreLink"
+              v-if="!!exploreLinkKebabMenu"
               :data-testid="`chart-jump-to-explore-${tileId}`"
-              :item="{ label: i18n.t('jumpToExplore'), to: exploreLink }"
+              :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
             <KDropdownItem
               v-if="hasZoomActions && !!requestsLinkKebabMenu"
@@ -142,7 +142,7 @@ import {
   TimePeriods,
   getFieldDataSources,
 } from '@kong-ui-public/analytics-utilities'
-import { type Component, computed, defineAsyncComponent, inject, nextTick, onMounted, ref, watch } from 'vue'
+import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -156,7 +156,7 @@ import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AiExploreAggregations, AiExploreQuery, AnalyticsBridge, ExploreAggregations, ExploreQuery, ExploreResultV4, FilterDatasource, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4, AbsoluteTimeRangeV4, AllFilters } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreQuery, AnalyticsBridge, ExploreQuery, ExploreResultV4, FilterDatasource, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
@@ -190,15 +190,24 @@ const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
-const exploreBaseUrl = ref('')
-const requestsBaseUrl = ref('')
 const requestsLinkZoomActions = ref<ExternalLink | undefined>(undefined)
+const exploreLinkZoomActions = ref<ExternalLink | undefined>(undefined)
 const loadingChartData = ref(true)
-
-onMounted(async () => {
-  // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
-  exploreBaseUrl.value = await queryBridge?.exploreBaseUrl?.() ?? ''
-  requestsBaseUrl.value = await queryBridge?.requestsBaseUrl?.() ?? ''
+const {
+  exploreLinkKebabMenu,
+  requestsLinkKebabMenu,
+  canShowKebabMenu,
+  canGenerateRequestsLink,
+  canGenerateExploreLink,
+  buildExploreQuery,
+  buildExploreLink,
+  buildRequestLink,
+  buildRequestsQueryZoomActions,
+} = composables.useContextLinks({
+  queryBridge,
+  chartData: readonly(chartData),
+  definition: readonly(toRef(props, 'definition')),
+  context: readonly(toRef(props, 'context')),
 })
 
 watch(() => props.definition, async () => {
@@ -211,53 +220,11 @@ watch(() => props.definition, async () => {
   loadingChartData.value = true
 }, { immediate: true, deep: true })
 
-const exploreLink = computed(() => {
-  // There are various factors that mean we might not need to make a go-to-explore URL.
-  // For example, golden signal tiles don't show a kebab menu and often don't have a query definition.
-  if (!exploreBaseUrl.value || !props.definition.query || !canShowKebabMenu.value) {
-    return ''
-  }
-
-  const filters = datasourceScopedFilters.value
-  const dimensions = props.definition.query.dimensions as QueryableExploreDimensions[] | QueryableAiExploreDimensions[] ?? []
-  const exploreQuery: ExploreQuery | AiExploreQuery = {
-    filters: filters,
-    metrics: props.definition.query.metrics as ExploreAggregations[] | AiExploreAggregations[] ?? [],
-    dimensions: dimensions,
-    time_range: props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
-    granularity: props.definition.query.granularity || chartDataGranularity.value,
-
-  } as ExploreQuery | AiExploreQuery
-
-  // Explore only supports API usage and LLM usage.
-  const datasource = ['api_usage', 'llm_usage'].includes(props.definition.query.datasource) ? props.definition.query.datasource : 'api_usage'
-
-  return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${props.definition.chart.type}`
-})
-
-const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && props.definition.query && props.definition.query?.datasource !== 'llm_usage')
-
-const requestsLinkKebabMenu = computed(() => {
-  if (!canGenerateRequestsLink.value || !canShowKebabMenu.value) {
-    return ''
-  }
-  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
-
-  const requestsQuery = buildRequestsQueryKebabMenu(
-    props.definition.query.time_range as TimeRangeV4 || props.context.timeSpec,
-    filters,
-  )
-
-  return `${requestsBaseUrl.value}?q=${JSON.stringify(requestsQuery)}`
-})
-
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
 const canShowTitleActions = computed((): boolean => (canShowKebabMenu.value && (kebabMenuHasItems.value || props.context.editable)) || !!badgeData.value)
 
-const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(props.definition.chart.type))
-
-const kebabMenuHasItems = computed((): boolean => !!exploreLink.value || ('allow_csv_export' in props.definition.chart && props.definition.chart.allow_csv_export) || props.context.editable)
+const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || ('allow_csv_export' in props.definition.chart && props.definition.chart.allow_csv_export) || props.context.editable)
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
@@ -296,6 +263,7 @@ const componentData = computed(() => {
       height: props.height - PADDING_SIZE * 2,
       refreshCounter: props.refreshCounter,
       requestsLink: requestsLinkZoomActions.value,
+      exploreLink: exploreLinkZoomActions.value,
     },
     rendererEvents: {
       supportsRequests,
@@ -408,39 +376,13 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
   emit('tile-time-range-zoom', zoomEvent)
 }
 
-const buildRequestsQueryKebabMenu = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
-  return {
-    filter: filters,
-    timeframe: {
-      timePeriodsKey: timeRange.type === 'relative' ? timeRange.time_range : 'custom',
-      start: timeRange.type === 'absolute' ? chartData.value?.meta.start_ms : undefined,
-      end: timeRange.type === 'absolute' ? chartData.value?.meta.end_ms : undefined,
-    },
-  }
-}
-
-const buildRequestsQueryZoomActions = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
-  return {
-    filter: filters,
-    timeframe: {
-      timePeriodsKey: timeRange.type === 'relative' ? timeRange.time_range : 'custom',
-      start: timeRange.type === 'absolute' ? timeRange.start : undefined,
-      end: timeRange.type === 'absolute' ? timeRange.end : undefined,
-    },
-  }
-}
-
 const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
-  if (!canGenerateRequestsLink.value) {
-    requestsLinkZoomActions.value = undefined
+  const filters = datasourceScopedFilters.value
+  const requestsQuery = buildRequestsQueryZoomActions(newTimeRange, filters)
+  const exploreQuery = buildExploreQuery(newTimeRange, filters)
 
-    return
-  }
-
-  const filters = [...props.context.filters, ...props.definition.query.filters ?? []]
-  const query = buildRequestsQueryZoomActions(newTimeRange, filters)
-
-  requestsLinkZoomActions.value = { href: `${requestsBaseUrl.value}?q=${JSON.stringify(query)}` }
+  requestsLinkZoomActions.value = canGenerateRequestsLink.value ? { href: buildRequestLink(requestsQuery) } : undefined
+  exploreLinkZoomActions.value = canGenerateExploreLink.value ? { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) } : undefined
 }
 </script>
 

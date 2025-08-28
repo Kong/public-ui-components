@@ -251,7 +251,8 @@
   "zoom_action_items": {
     "zoom": "Zoom in",
     "view_requests": "View requests",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "explore": "Explore"
   },
   "zoom_time_range": {
     "from": "From",
