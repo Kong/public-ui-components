@@ -393,4 +393,20 @@ describe('<DashboardTile />', () => {
     cy.getTestId('kebab-action-menu-1').click()
     cy.getTestId('chart-jump-to-requests-1').should('not.exist')
   })
+
+  it('should not show requests if datasource is unsupported', () => {
+    mount({
+      definition: {
+        chart: mockTileDefinition.chart,
+        query: {
+          datasource: 'llm_usage',
+          metrics: [],
+          filters: [],
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-jump-to-requests-1').should('not.exist')
+  })
 })
