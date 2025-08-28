@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.2.0...@kong-ui-public/dashboard-renderer@7.2.1) (2025-08-28)
+
+
+### Bug Fixes
+
+* explore link fall back to `api_usage` if query datasource is undefined ([#2418](https://github.com/Kong/public-ui-components/issues/2418)) ([42aa4b3](https://github.com/Kong/public-ui-components/commit/42aa4b3d371c4431481ba448ff56a8661da2787b))
+
+
+
+
+
 # [7.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.1.3...@kong-ui-public/dashboard-renderer@7.2.0) (2025-08-28)
 
 
