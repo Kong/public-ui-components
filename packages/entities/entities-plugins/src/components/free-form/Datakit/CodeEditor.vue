@@ -37,16 +37,15 @@ import yaml, { JSON_SCHEMA } from 'js-yaml'
 import * as examples from './examples'
 
 import type { YAMLException } from 'js-yaml'
-import type { DatakitConfig } from './types'
+import type { DatakitConfig, DatakitFormData } from './types'
+import { useFormShared } from '../shared/composables'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const {
-  // editing,
-  config,
-} = defineProps<{
+const { formData } = useFormShared<DatakitFormData>()
+
+defineProps<{
   editing: boolean
-  config?: DatakitConfig
 }>()
 
 const emit = defineEmits<{
@@ -100,9 +99,9 @@ onMounted(() => {
   })
   editorRef.value = editor
 
-  if (config && Object.keys(config).length > 0) {
+  if (formData.config && Object.keys(formData.config).length > 0) {
     editor.setValue(
-      yaml.dump(toRaw(config), {
+      yaml.dump(toRaw(formData.config), {
         schema: JSON_SCHEMA,
         noArrayIndent: true,
       }),
@@ -119,7 +118,7 @@ onMounted(() => {
       })
 
       monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
-
+      formData.config = config as DatakitConfig
       emit('change', config)
     } catch (error: unknown) {
       const { message, mark } = error as YAMLException

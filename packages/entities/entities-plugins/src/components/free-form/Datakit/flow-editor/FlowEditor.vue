@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ConfigNode, DatakitConfig, DatakitUIData, UINode } from '../types'
+import type { ConfigNode, DatakitConfig, DatakitFormData, DatakitUIData, UINode } from '../types'
 
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExpandIcon } from '@kong/icons'
@@ -41,12 +41,13 @@ import BooleanField from '../../shared/BooleanField.vue'
 import { provideEditorStore } from '../composables'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
+import { useFormShared } from '../../shared/composables'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { config, uiData, isEditing } = defineProps<{
-  config?: DatakitConfig
-  uiData?: DatakitUIData
+const { formData } = useFormShared<DatakitFormData>()
+
+const { isEditing } = defineProps<{
   isEditing?: boolean
 }>()
 
@@ -58,13 +59,14 @@ const emit = defineEmits<{
 const flowPanels = useTemplateRef('flowPanels')
 
 function onChange(configNodes: ConfigNode[], uiNodes: UINode[]) {
-  emit('change',
-    { ...config, nodes: configNodes },
-    { ...uiData, nodes: uiNodes },
-  )
+  const nextConfig = { ...formData.config, nodes: configNodes }
+  const nextUIData = { ...formData.__ui_data, nodes: uiNodes }
+  formData.config = nextConfig
+  formData.__ui_data = nextUIData
+  emit('change', nextConfig, nextUIData)
 }
 
-const { modalOpen } = provideEditorStore(config?.nodes ?? [], uiData?.nodes ?? [], {
+const { modalOpen } = provideEditorStore(formData.config?.nodes ?? [], formData.__ui_data?.nodes ?? [], {
   onChange,
   isEditing,
 })

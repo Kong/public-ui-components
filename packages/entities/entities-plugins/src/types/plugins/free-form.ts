@@ -4,4 +4,5 @@ export type FreeFormPluginData<T extends Record<string, any> = any> = {
   partials?: Array<{ id: string }>
   protocols?: string[]
   tags?: string[]
+  __ui_data?: Record<string, any>
 }
