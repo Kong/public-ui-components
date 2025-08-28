@@ -1,5 +1,6 @@
-import { toValue, type MaybeRefOrGetter } from 'vue'
+import type { MaybeRefOrGetter } from 'vue'
 
+import { toValue } from 'vue'
 import { useEventListener } from '@vueuse/core'
 
 interface UseHotkeysOptions {
