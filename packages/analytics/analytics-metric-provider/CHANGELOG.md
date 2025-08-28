@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@9.1.12...@kong-ui-public/analytics-metric-provider@10.0.0) (2025-08-28)
+
+
+### chore
+
+* **analytics:** remove metric cards package [MA-4105] ([#2417](https://github.com/Kong/public-ui-components/issues/2417)) ([728ad33](https://github.com/Kong/public-ui-components/commit/728ad337c0cb680a8239610400eb31259fdb3b23))
+
+
+### BREAKING CHANGES
+
+* **analytics:** The packages/analytics/metric-cards package is being deleted in favor of
+analytics-metric-provider
+
+
+
+
+
 ## [9.1.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@9.1.11...@kong-ui-public/analytics-metric-provider@9.1.12) (2025-08-27)
 
 
