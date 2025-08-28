@@ -74,8 +74,15 @@ export default function useContextLinks(
       filters,
     )
 
-    return `${requestsBaseUrl.value}?q=${JSON.stringify(requestsQuery)}`
+    return buildRequestLink(requestsQuery)
   })
+
+  const buildRequestLink = (requestQuery: { filter: AllFilters[], timeframe: { timePeriodsKey: string, start?: Date | number, end?: Date | number } }) => {
+    if (!canGenerateRequestsLink.value) {
+      return ''
+    }
+    return `${requestsBaseUrl.value}?q=${JSON.stringify(requestQuery)}`
+  }
 
   const buildRequestsQueryKebabMenu = (timeRange: TimeRangeV4, filters: AllFilters[]) => {
     return {
@@ -126,5 +133,6 @@ export default function useContextLinks(
     buildExploreQuery,
     buildRequestsQueryZoomActions,
     buildExploreLink,
+    buildRequestLink,
   }
 }

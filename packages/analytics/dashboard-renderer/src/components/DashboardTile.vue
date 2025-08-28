@@ -142,7 +142,7 @@ import {
   TimePeriods,
   getFieldDataSources,
 } from '@kong-ui-public/analytics-utilities'
-import { type Component, computed, defineAsyncComponent, inject, nextTick, onMounted, ref, watch } from 'vue'
+import { type Component, computed, defineAsyncComponent, inject, nextTick, ref, watch } from 'vue'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -190,8 +190,6 @@ const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
-const exploreBaseUrl = ref('')
-const requestsBaseUrl = ref('')
 const requestsLinkZoomActions = ref<ExternalLink | undefined>(undefined)
 const exploreLinkZoomActions = ref<ExternalLink | undefined>(undefined)
 const loadingChartData = ref(true)
@@ -202,18 +200,13 @@ const {
   canGenerateRequestsLink,
   buildExploreQuery,
   buildExploreLink,
+  buildRequestLink,
   buildRequestsQueryZoomActions,
 } = composables.useContextLinks({
   queryBridge,
   chartData: computed(() => chartData.value),
   definition: computed(() => props.definition),
   context: computed(() => props.context),
-})
-
-onMounted(async () => {
-  // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
-  exploreBaseUrl.value = await queryBridge?.exploreBaseUrl?.() ?? ''
-  requestsBaseUrl.value = await queryBridge?.requestsBaseUrl?.() ?? ''
 })
 
 watch(() => props.definition, async () => {
@@ -391,7 +384,7 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
   const requestsQuery = buildRequestsQueryZoomActions(newTimeRange, filters)
   const exploreQuery = buildExploreQuery(newTimeRange, filters)
 
-  requestsLinkZoomActions.value = { href: `${requestsBaseUrl.value}?q=${JSON.stringify(requestsQuery)}` }
+  requestsLinkZoomActions.value = { href: buildRequestLink(requestsQuery) }
   exploreLinkZoomActions.value = { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) }
 }
 </script>

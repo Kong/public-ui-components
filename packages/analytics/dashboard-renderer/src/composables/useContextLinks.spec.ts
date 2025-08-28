@@ -98,8 +98,8 @@ function mountComposable({
     setup() {
       const result = useContextLinks({
         queryBridge: queryBridge as any,
-        context,
-        definition,
+        context: context as any,
+        definition: definition as any,
         chartData,
       })
       return { ...result }
