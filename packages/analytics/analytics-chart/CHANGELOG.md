@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.16...@kong-ui-public/analytics-chart@10.1.0) (2025-08-28)
+
+
+### Features
+
+* add explore link to zoom actions ([#2411](https://github.com/Kong/public-ui-components/issues/2411)) ([306c242](https://github.com/Kong/public-ui-components/commit/306c242e0f0fd90830af74af0d79c72c8430837f))
+
+
+
+
+
 ## [10.0.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.15...@kong-ui-public/analytics-chart@10.0.16) (2025-08-27)
 
 
