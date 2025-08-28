@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.83.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.83.2...@kong-ui-public/entities-plugins@9.83.3) (2025-08-28)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit allow expand/collapse fields by clicking the badge ([#2414](https://github.com/Kong/public-ui-components/issues/2414)) ([89cfa76](https://github.com/Kong/public-ui-components/commit/89cfa76d26d37f89a697f50331448142d38bac1c))
+* **entities-plugins:** datakit editor mode ([#2413](https://github.com/Kong/public-ui-components/issues/2413)) ([4753c66](https://github.com/Kong/public-ui-components/commit/4753c665b7c99487d5cb6ba2a3c0fd9b9f2a1f3b))
+
+
+
+
+
 ## [9.83.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.83.1...@kong-ui-public/entities-plugins@9.83.2) (2025-08-28)
 
 
