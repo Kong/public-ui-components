@@ -149,13 +149,13 @@ watch(realEditorMode, () => {
  * Handle changes to the config and UI data.
  *
  * @param newConfig The new config to set.
- * @param newUIData The new UI data to set. Use `null` to clear the existing UI data.
+ * @param newUIData The new UI data to set.
  */
-function handleConfigChange(newConfig: unknown, newUIData?: DatakitUIData | null) {
+function handleConfigChange(newConfig: unknown, newUIData?: DatakitUIData) {
   // update the external form state
   props.onFormChange({
     config: newConfig,
-    ...newUIData !== undefined ? { __ui_data: newUIData ?? undefined } : null,
+    ...newUIData ? { __ui_data: newUIData } : undefined,
   })
   props.onValidityChange?.({
     model: 'config',
@@ -171,14 +171,12 @@ function handleConfigChange(newConfig: unknown, newUIData?: DatakitUIData | null
  * Handle changes from the flow editor.
  *
  * @param newConfig The new config to set.
- * @param newUIData The new UI data to set. Use `null` to clear the existing UI data.
+ * @param newUIData The new UI data to set.
  */
-function handleFlowChange(newConfig: DatakitConfig, newUIData?: DatakitUIData | null) {
+function handleFlowChange(newConfig: DatakitConfig, newUIData: DatakitUIData) {
   handleConfigChange(newConfig, newUIData)
 
-  if (newUIData !== undefined) {
-    uiData.value = newUIData ?? undefined
-  }
+  uiData.value = newUIData
 }
 
 // Code editor
