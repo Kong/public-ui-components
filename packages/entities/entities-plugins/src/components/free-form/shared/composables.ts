@@ -1,4 +1,4 @@
-import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, provide, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
@@ -539,75 +539,45 @@ export function useIsAutoFocus(fieldAncestors?: MaybeRefOrGetter<Ancestor>) {
   })
 }
 
+/**
+ * To generate uniq key of each item of a list.
+ * The key should be stabled when give the same reference.
+ */
 export function useItemKeys<T>(ns: string, items: MaybeRefOrGetter<T[]>) {
-  // Map content hash to stable ID
-  const keyMap = reactive(new Map<string, string>())
-  // Track used index positions for generating stable keys
-  const indexKeyMap = reactive(new Map<number, string>())
+  const instanceKeyMap = new WeakMap<object, string>()
+  const indexKeyMap = new Map<number, string>()
 
-  function generateId() {
+  function generateId(): string {
     return uniqueId(`${ns}-`)
   }
 
-  function getContentHash(item: T): string {
-    if (item == null) return 'null'
-    if (typeof item !== 'object') return String(item)
-
-    // Simple content hash based on JSON serialization
-    try {
-      return JSON.stringify(item, Object.keys(item).sort())
-    } catch {
-      return String(item)
-    }
-  }
-
-  function getKey(item: T, index: number) {
+  function getKey(item: T, index: number): string {
     if (item == null || typeof item !== 'object') {
       return `${ns}-${index}`
     }
 
-    const contentHash = getContentHash(item)
-
-    // Try to find existing key using content hash first
-    if (keyMap.has(contentHash)) {
-      return keyMap.get(contentHash)!
+    if (instanceKeyMap.has(item as object)) {
+      return instanceKeyMap.get(item as object)!
     }
 
-    // If this index position already has a stable key, try to reuse it
-    if (indexKeyMap.has(index)) {
-      const existingKey = indexKeyMap.get(index)!
-      keyMap.set(contentHash, existingKey)
-      return existingKey
-    }
+    const newKey = indexKeyMap.has(index)
+      ? indexKeyMap.get(index)!
+      : generateId()
 
-    // Generate new key
-    const newKey = generateId()
-    keyMap.set(contentHash, newKey)
     indexKeyMap.set(index, newKey)
+    instanceKeyMap.set(item as object, newKey)
+
     return newKey
   }
 
   watch(items, (newItems) => {
     const itemVal = toValue(newItems)
-    const currentHashes = new Set<string>()
     const currentIndices = new Set<number>()
 
-    itemVal.forEach((item, index) => {
-      if (item != null && typeof item === 'object') {
-        const contentHash = getContentHash(item)
-        currentHashes.add(contentHash)
-      }
+    itemVal.forEach((_, index) => {
       currentIndices.add(index)
     })
 
-    // Clean up unused content hashes
-    Array.from(keyMap.keys()).forEach((hash) => {
-      if (!currentHashes.has(hash)) {
-        keyMap.delete(hash)
-      }
-    })
-
-    // Clean up unused indices
     Array.from(indexKeyMap.keys()).forEach((index) => {
       if (!currentIndices.has(index)) {
         indexKeyMap.delete(index)
