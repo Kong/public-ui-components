@@ -48,7 +48,6 @@
 /packages/analytics/analytics-metric-provider/ @Kong/team-data
 /packages/analytics/analytics-utilities/ @Kong/team-data
 /packages/analytics/dashboard-renderer/ @Kong/team-data
-/packages/analytics/metric-cards/ @Kong/team-data
 /packages/analytics/portal-analytics-bridge/ @Kong/team-data
 
 # ================================================
