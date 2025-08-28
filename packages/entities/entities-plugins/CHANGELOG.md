@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.83.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.82.2...@kong-ui-public/entities-plugins@9.83.0) (2025-08-28)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit cannot clear ui data by null ([#2408](https://github.com/Kong/public-ui-components/issues/2408)) ([fa64018](https://github.com/Kong/public-ui-components/commit/fa64018b98e1f389db40a5aac2e145d45b7812cf))
+
+
+### Features
+
+* **entities-plugins:** datakit ui undo redo buttons and hotkeys ([#2410](https://github.com/Kong/public-ui-components/issues/2410)) ([2796c89](https://github.com/Kong/public-ui-components/commit/2796c89912a2641c131c3b25adbe34a9493dcf4f))
+
+
+
+
+
 ## [9.82.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.82.1...@kong-ui-public/entities-plugins@9.82.2) (2025-08-27)
 
 
