@@ -41,7 +41,6 @@ import { computed, nextTick, shallowRef, useId } from 'vue'
 import { VueFlow } from '@vue-flow/core'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
-import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
 import { useEditorStore } from '../store/store'
 import { CONFIG_NODE_META_MAP } from './node'
 import NodePanelItem from './NodePanelItem.vue'
@@ -51,7 +50,7 @@ import type { ConfigNodeType, NodeInstance, DragPayload } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { createNode } = useEditorStore()
+const { createNode, draggingNodePayload } = useEditorStore()
 
 const previewId = `dk-drag-preview-${useId()}`
 
@@ -112,7 +111,7 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
       anchor,
     },
   }
-  e.dataTransfer?.setData(DK_DATA_TRANSFER_MIME_TYPE, JSON.stringify(payload))
+  draggingNodePayload.value = payload
   e.dataTransfer?.setDragImage(
     clone,
     anchor.offsetX,

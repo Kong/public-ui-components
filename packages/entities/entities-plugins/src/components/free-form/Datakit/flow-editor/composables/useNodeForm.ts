@@ -334,6 +334,9 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       // skip the node that will create a cycle
       if (willCreateCycle(node.id)) continue
 
+      // the nodes in request phase can not connect to response phase
+      if (currentNode.value.phase === 'request' && node.phase === 'response') continue
+
       options.push({ value: node.id, label: node.name })
 
       for (const field of node.fields.output) {
