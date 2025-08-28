@@ -109,11 +109,11 @@ describe('<DashboardRenderer />', () => {
       return Promise.resolve(config)
     }
 
-    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = (key) => {
+    const evaluateFeatureFlagFn: AnalyticsBridge['evaluateFeatureFlagFn'] = () => {
       return true as any
     }
 
-    const fetchComponentFn = (name: string) => {
+    const fetchComponentFn = () => {
       return Promise.resolve(EntityLink)
     }
 
@@ -229,7 +229,7 @@ describe('<DashboardRenderer />', () => {
       cy.get('@fetcher').should('always.have.been.calledWithMatch', Cypress.sinon.match({ query: {
         time_range: { time_range: '24h' },
       } })).then(() => {
-        cy.get('@fetcher').then((m) => m.resetHistory()).then(() => {
+        cy.get('@fetcher').invoke('resetHistory').then(() => {
 
           const sevenDayTimeframe: Timeframe = TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
 
@@ -339,7 +339,7 @@ describe('<DashboardRenderer />', () => {
           filters: Cypress.sinon.match.some(Cypress.sinon.match({ value: ['default_uuid'] })),
         } }))
         .then(() => {
-          cy.get('@fetcher').then((m) => m.resetHistory()).then(() => {
+          cy.get('@fetcher').invoke('resetHistory').then(() => {
             wrapper.setProps({
               context: {
                 filters: [filter2],
@@ -951,5 +951,27 @@ describe('<DashboardRenderer />', () => {
       const tileTypes = ref.value.tiles.map((tile) => tile.type)
       expect(tileTypes).to.deep.equal(Array(4).fill('chart'))
     })
+  })
+
+  it('goes fullscreen when the fullscreen method is called', () => {
+    cy.stub(HTMLElement.prototype, 'requestFullscreen').as('fullscreen')
+    const props = {
+      context: {},
+      modelValue: summaryDashboardConfig,
+      showFullscreenControl: true,
+    }
+
+    cy.mount(DashboardRenderer, {
+      props,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider(),
+        },
+      },
+    }).then(({ wrapper }) => {
+      wrapper.vm.toggleFullscreen()
+    })
+
+    cy.get('@fullscreen').should('have.been.called')
   })
 })
