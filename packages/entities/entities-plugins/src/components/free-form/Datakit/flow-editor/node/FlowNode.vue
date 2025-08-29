@@ -75,7 +75,7 @@
               <div
                 class="handle-label trigger"
                 :class="{
-                  'has-fields': data.fields.input.length > 0,
+                  'has-fields': hasInputFields,
                   collapsible: inputsCollapsible,
                 }"
                 @click.stop="toggleExpanded('input')"
@@ -83,7 +83,7 @@
                 <div class="text">
                   inputs
                 </div>
-                <template v-if="data.fields.input.length > 0">
+                <template v-if="hasInputFields">
                   <UnfoldMoreIcon
                     v-if="!inputsExpanded"
                     :size="KUI_ICON_SIZE_20"
@@ -96,7 +96,7 @@
                 </template>
               </div>
               <HandleTwig
-                v-if="inputsExpanded"
+                v-if="hasInputFields && inputsExpanded"
                 :color="handleTwigColor"
                 :position="inputPosition"
                 type="bar"
@@ -104,7 +104,7 @@
             </div>
           </div>
 
-          <template v-if="inputsExpanded">
+          <template v-if="hasInputFields && inputsExpanded">
             <div
               v-for="(field, i) in data.fields.input"
               :key="`inputs-${field.id}`"
@@ -137,7 +137,7 @@
               <div
                 class="handle-label trigger"
                 :class="{
-                  'has-fields': data.fields.output.length > 0,
+                  'has-fields': hasOutputFields,
                   collapsible: outputsCollapsible,
                 }"
                 @click.stop="toggleExpanded('output')"
@@ -145,7 +145,7 @@
                 <div class="text">
                   outputs
                 </div>
-                <template v-if="data.fields.output.length > 0">
+                <template v-if="hasOutputFields">
                   <UnfoldMoreIcon
                     v-if="!outputsExpanded"
                     :size="KUI_ICON_SIZE_20"
@@ -158,7 +158,7 @@
                 </template>
               </div>
               <HandleTwig
-                v-if="outputsExpanded"
+                v-if="hasOutputFields && outputsExpanded"
                 :color="handleTwigColor"
                 :position="outputPosition"
                 type="bar"
@@ -171,7 +171,7 @@
             />
           </div>
 
-          <template v-if="outputsExpanded">
+          <template v-if="hasOutputFields && outputsExpanded">
             <div
               v-for="(field, i) in data.fields.output"
               :key="`outputs-${field.id}`"
@@ -242,11 +242,14 @@ const { getInEdgesByNodeId, getOutEdgesByNodeId, toggleExpanded: storeToggleExpa
 
 const meta = computed(() => getNodeMeta(data.type))
 
+const hasInputFields = computed(() => data.fields.input.length > 0)
+const hasOutputFields = computed(() => data.fields.output.length > 0)
+
 const inputsCollapsible = computed(() =>
-  getInEdgesByNodeId(data.id).every(edge => edge.targetField === undefined),
+  hasInputFields.value && getInEdgesByNodeId(data.id).every(edge => edge.targetField === undefined),
 )
 const outputsCollapsible = computed(() =>
-  getOutEdgesByNodeId(data.id).every(edge => edge.sourceField === undefined),
+  hasOutputFields.value && getOutEdgesByNodeId(data.id).every(edge => edge.sourceField === undefined),
 )
 
 const inputsExpanded = computed(() => data.expanded.input ?? false)
@@ -438,12 +441,12 @@ $handle-height: 10px;
           line-height: $kui-line-height-10;
           padding: $kui-space-10;
 
-          &.has-fields.trigger {
+          &.trigger.has-fields {
             cursor: pointer;
-          }
 
-          &:not(.collapsible).trigger {
-            cursor: not-allowed;
+            &:not(.collapsible) {
+              cursor: not-allowed;
+            }
           }
 
           &.text {
