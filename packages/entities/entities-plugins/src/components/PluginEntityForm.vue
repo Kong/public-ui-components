@@ -232,6 +232,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
+  engine: {
+    type: String, // vfg or freeform or undefined
+  },
 })
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -863,7 +867,11 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
 
-  freeformName.value = getFreeFormName(form.model.name, experimentalFreeForms)
+  freeformName.value = !props.engine
+    ? getFreeFormName(form.model.name, experimentalFreeForms)
+    : props.engine === 'vfg'
+      ? undefined
+      : 'CommonForm'
   sharedFormName.value = getSharedFormName(form.model.name)
 
   initFormModel()
