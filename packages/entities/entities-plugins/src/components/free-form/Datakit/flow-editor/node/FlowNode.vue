@@ -226,6 +226,7 @@ import { isImplicitNode } from './node'
 import NodeBadge from './NodeBadge.vue'
 import HotkeyLabel from '../HotkeyLabel.vue'
 import { HOTKEYS } from '../../constants'
+import { isEqual } from 'lodash-es'
 
 const { data } = defineProps<{
   data: NodeInstance
@@ -314,12 +315,16 @@ watch(outputsCollapsible, (collapsible) => {
   }
 }, { immediate: true })
 
-watch(() => data.fields.input, (input) => {
-  storeToggleExpanded(data.id, 'input', input.length > 0, false)
+watch(() => data.fields.input, (input, oldInput) => {
+  if (!isEqual(input, oldInput)) {
+    storeToggleExpanded(data.id, 'input', input.length > 0, false)
+  }
 }, { deep: true })
 
-watch(() => data.fields.output, (output) => {
-  storeToggleExpanded(data.id, 'output', output.length > 0, false)
+watch(() => data.fields.output, (output, oldOutput) => {
+  if (!isEqual(output, oldOutput)) {
+    storeToggleExpanded(data.id, 'output', output.length > 0, false)
+  }
 }, { deep: true })
 </script>
 
