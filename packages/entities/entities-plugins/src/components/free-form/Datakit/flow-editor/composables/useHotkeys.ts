@@ -2,6 +2,7 @@ import type { MaybeRefOrGetter } from 'vue'
 
 import { toValue } from 'vue'
 import { useEventListener } from '@vueuse/core'
+import { detectPlatform } from '../utils'
 
 interface UseHotkeysOptions {
   enabled: MaybeRefOrGetter<boolean>
@@ -10,22 +11,6 @@ interface UseHotkeysOptions {
   cut?: () => void
   copy?: () => void
   paste?: () => void
-}
-
-let _isMac: boolean | null = null
-function isMac() {
-  if (_isMac != null) return _isMac
-
-  if (typeof navigator === 'undefined') {
-    return false
-  }
-
-  _isMac =
-    /Mac|iPhone|iPod|iPad/i.test(navigator?.platform) ||
-    /macOS|Mac|iPhone|iPod|iPad/i.test(
-      (navigator as any)?.userAgentData?.platform,
-    )
-  return _isMac
 }
 
 function isEditable(el: HTMLElement) {
@@ -47,14 +32,14 @@ export function useHotkeys({
   if (typeof window === 'undefined') return
   if (!undo && !redo && !cut && !copy && !paste) return
 
-  const mac = isMac()
+  const platform = detectPlatform()
 
   return useEventListener(window, 'keydown', (event: KeyboardEvent) => {
     if (!toValue(enabled)) return
     if (isEditable(event.target as HTMLElement)) return
 
     const key = event.key.toLowerCase()
-    const mod = mac ? event.metaKey : event.ctrlKey
+    const mod = platform === 'mac' ? event.metaKey : event.ctrlKey
     if (!mod) return
 
     switch (key) {
@@ -73,7 +58,7 @@ export function useHotkeys({
       }
       case 'y': {
         // ⌘ + Y is redo on Windows
-        if (!mac && redo) {
+        if (platform === 'windows' && redo) {
           event.preventDefault()
           redo()
           return

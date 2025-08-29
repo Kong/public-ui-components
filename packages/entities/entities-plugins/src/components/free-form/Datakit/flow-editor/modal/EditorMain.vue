@@ -3,7 +3,6 @@
     <header class="header">
       <div class="actions">
         <KTooltip
-          :text="t('plugins.free-form.datakit.flow_editor.actions.undo')"
           :z-index="10000"
         >
           <KButton
@@ -15,9 +14,16 @@
             <!-- TODO: switch to <UndoIcon /> when available -->
             <RedoIcon class="flip" />
           </KButton>
+
+          <template #content>
+            <HotkeyLabel
+              :keys="HOTKEYS.undo"
+              :label="t('plugins.free-form.datakit.flow_editor.actions.undo')"
+              reverse
+            />
+          </template>
         </KTooltip>
         <KTooltip
-          :text="t('plugins.free-form.datakit.flow_editor.actions.redo')"
           :z-index="10000"
         >
           <KButton
@@ -28,6 +34,14 @@
           >
             <RedoIcon />
           </KButton>
+
+          <template #content>
+            <HotkeyLabel
+              :keys="HOTKEYS.redo"
+              :label="t('plugins.free-form.datakit.flow_editor.actions.redo')"
+              reverse
+            />
+          </template>
         </KTooltip>
         <div class="divider" />
         <KButton
@@ -66,6 +80,8 @@ import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
 import { useHotkeys } from '../composables/useHotkeys'
+import HotkeyLabel from '../HotkeyLabel.vue'
+import { HOTKEYS } from '../../constants'
 
 const { t } = createI18n<typeof english>('en-us', english)
 

@@ -86,6 +86,7 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
 
   // Create temporary clone for drag image
   const clone = preview.cloneNode(true) as HTMLElement
+  clone.classList.add('dk-drag-snapshot')
   const { offsetWidth: previewWidth, offsetHeight: previewHeight } = preview
 
   Object.assign(clone.style, {
@@ -94,7 +95,6 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
     left: '-9999px',
     width: `${previewWidth}px`,
     height: `${previewHeight}px`,
-    boxSizing: 'border-box',
   })
 
   document.body.appendChild(clone)
@@ -158,6 +158,16 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
     pointer-events: none;
     position: absolute;
     width: 1px;
+  }
+}
+</style>
+
+<style lang="scss">
+.dk-drag-snapshot, .dk-drag-snapshot * {
+  &,
+  &::before,
+  &::after {
+    box-sizing: border-box;
   }
 }
 </style>
