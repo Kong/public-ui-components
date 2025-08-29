@@ -856,7 +856,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
     return
   }
-  const form: Record<string, any> = parseSchema(newSchema)
+  const form: Record<string, any> = parseSchema(newSchema, undefined, undefined, props.engine as any)
 
   Object.assign(formModel, form.model)
 
@@ -878,7 +878,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 }, { immediate: true, deep: true })
 
 onBeforeMount(() => {
-  form.value = parseSchema(props.schema)
+  form.value = parseSchema(props.schema, undefined, undefined, props.engine as any)
 
   Object.assign(formModel, form.value?.model || {})
   formSchema.value = form.value?.schema || {}
