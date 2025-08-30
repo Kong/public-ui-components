@@ -133,6 +133,12 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
         h: tile.layout.size.rows,
       })
     }
+  } else if (newLen < oldLen && grid) {
+    const currentIds = new Set(props.tiles.map(t => t.id))
+    const tileIDsToRemove = new Set(tilesRef.value.keys()).symmetricDifference(currentIds)
+    for (const id of tileIDsToRemove) {
+      removeWidget(id)
+    }
   }
 })
 
