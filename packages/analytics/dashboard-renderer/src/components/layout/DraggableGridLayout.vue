@@ -66,8 +66,8 @@ const makeTilesFromGridItems = (items: GridStackNode[]) => {
       return {
         ...tile,
         layout: {
-          position: { col: Number(item.x), row: Number(item.y) },
           size: { cols: Number(item.w), rows: Number(item.h) },
+          position: { col: Number(item.x), row: Number(item.y) },
         },
       } satisfies GridTile<T>
     }
@@ -132,6 +132,12 @@ watch(() => props.tiles.length, async (newLen, oldLen) => {
         w: tile.layout.size.cols,
         h: tile.layout.size.rows,
       })
+    }
+  } else if (newLen < oldLen && grid) {
+    const currentIds = new Set(props.tiles.map(t => t.id))
+    const tileIDsToRemove = new Set(tilesRef.value.keys()).symmetricDifference(currentIds)
+    for (const id of tileIDsToRemove) {
+      removeWidget(id)
     }
   }
 })
