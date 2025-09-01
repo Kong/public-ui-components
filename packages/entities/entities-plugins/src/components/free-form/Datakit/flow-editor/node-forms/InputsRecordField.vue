@@ -53,8 +53,6 @@ const childFieldNames = computed(() => {
 @use '../styles/tree-indent' as mixins;
 
 .dk-inputs-field-indent {
-  @include mixins.tree-indent(
-    $line-height: 84px,
-  );
+  @include mixins.tree-indent;
 }
 </style>
