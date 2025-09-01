@@ -12,19 +12,21 @@
       class="content"
       tabindex="0"
     />
-    <ConflictConnectionConfirmModal ref="confirm-modal" />
+    <ConflictModal ref="confirm-modal" />
   </div>
 </template>
 
 <script setup lang="ts">
+import type { OpenConfirm } from './ConflictModal.vue'
+
 import { useScrollLock } from '@vueuse/core'
 import { ref, useTemplateRef, watch } from 'vue'
 import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../../constants'
-import ConflictConnectionConfirmModal, { type OpenConfirm } from './ConflictConnectionConfirmModal.vue'
+import ConflictModal from './ConflictModal.vue'
 
 import EditorNav from './EditorNav.vue'
 import EditorContent from './EditorContent.vue'
-import { provideConfirmModal } from '../composables/useConflictConnectionConfirm'
+import { provideConfirmModal } from '../composables/useConflictConfirm'
 
 const open = defineModel<boolean>('open')
 const showConfirm = ref(false)

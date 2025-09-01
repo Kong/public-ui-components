@@ -3,7 +3,7 @@ import type { Connection, Edge, FitViewParams, Node } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
 import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
-import type { ConnectionString } from '../modal/ConflictConnectionConfirmModal.vue'
+import type { ConnectionString } from '../modal/ConflictModal.vue'
 
 import dagre from '@dagrejs/dagre'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
@@ -14,7 +14,7 @@ import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PR
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
 import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
-import { useOptionalConfirm } from '../composables/useConflictConnectionConfirm'
+import { useOptionalConfirm } from '../composables/useConflictConfirm'
 import { DEFAULT_LAYOUT_OPTIONS, DEFAULT_VIEWPORT_WIDTH } from '../constants'
 import { isImplicitNode } from '../node/node'
 import { useEditorStore } from './store'

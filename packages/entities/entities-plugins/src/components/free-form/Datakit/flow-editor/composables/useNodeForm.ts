@@ -10,9 +10,9 @@ import { isImplicitType } from '../node/node'
 import { ResponseSchema, ServiceRequestSchema } from '../node/schemas'
 import { useFieldNameValidator, useNodeNameValidator } from './validation'
 import { omit } from 'lodash-es'
-import { useConfirm } from './useConflictConnectionConfirm'
+import { useConfirm } from './useConflictConfirm'
 import useI18n from '../../../../../composables/useI18n'
-import type { ConnectionString } from '../modal/ConflictConnectionConfirmModal.vue'
+import type { ConnectionString } from '../modal/ConflictModal.vue'
 import { createEdgeConnectionString, createNewConnectionString } from './helpers'
 
 export type InputOption = {
