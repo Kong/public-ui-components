@@ -41,6 +41,7 @@
             class="ff-kv-field-entry-value"
             clearable
             :data-testid="`ff-value-${field.path.value}.${index}`"
+            enable-filtering
             :items="items"
             :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
             @change="selectItem => handleInputsValueChange(entry, selectItem?.value ?? null)"

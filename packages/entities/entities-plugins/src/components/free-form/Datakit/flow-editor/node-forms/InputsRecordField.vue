@@ -9,6 +9,7 @@
       :key="cname"
       class="dk-inputs-field-indent"
       clearable
+      enable-filtering
       :items="items"
       :name="cname"
       :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
