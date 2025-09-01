@@ -343,7 +343,7 @@ $node-min-width: 168px;
 $handle-width: 3px;
 $handle-height: 10px;
 $io-column-min-width: 80px;
-$io-column-min-width-no-fields: 60px;
+$io-column-min-width-no-fields: 70px;
 
 .flow-node {
   background-color: $kui-color-background;
@@ -404,7 +404,7 @@ $io-column-min-width-no-fields: 60px;
 
   .handles {
     display: flex;
-    gap: $kui-space-60;
+    gap: $kui-space-30;
 
     &.reversed {
       flex-direction: row-reverse;
