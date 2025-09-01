@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.85.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.84.0...@kong-ui-public/entities-plugins@9.85.0) (2025-09-01)
+
+
+### Features
+
+* freeform - use sentence case [KM-1685] ([#2422](https://github.com/Kong/public-ui-components/issues/2422)) ([0087da9](https://github.com/Kong/public-ui-components/commit/0087da9965b379c27c72ea1d2e128ac589adefc8))
+
+
+
+
+
 # [9.84.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.83.4...@kong-ui-public/entities-plugins@9.84.0) (2025-09-01)
 
 

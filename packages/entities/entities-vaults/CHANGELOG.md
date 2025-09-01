@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.23.9...@kong-ui-public/entities-vaults@3.24.0) (2025-09-01)
+
+
+### Features
+
+* freeform - use sentence case [KM-1685] ([#2422](https://github.com/Kong/public-ui-components/issues/2422)) ([0087da9](https://github.com/Kong/public-ui-components/commit/0087da9965b379c27c72ea1d2e128ac589adefc8))
+
+
+
+
+
 ## [3.23.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.23.8...@kong-ui-public/entities-vaults@3.23.9) (2025-08-27)
 
 
