@@ -6,7 +6,7 @@ import type { ArrayFieldSchema, ArrayLikeFieldSchema, FormSchema, RecordFieldSch
 import { get, set, uniqueId } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
 import type { FormConfig, ResetLabelPathRule } from './types'
-import { capitalize } from 'lodash-es'
+import { upperFirst } from 'lodash-es'
 
 export const DATA_INJECTION_KEY = Symbol('free-form-data')
 export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
@@ -388,9 +388,9 @@ export function defaultLabelFormatter(fieldPath: string): string {
   return parts
     .map(fieldName => fieldName
       .split('_')
-      .map(capitalize)
       .map(replaceByDictionary)
       .join(' '))
+    .map(upperFirst)
     .join(' › ')
 }
 
