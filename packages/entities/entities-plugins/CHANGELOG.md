@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.84.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.83.4...@kong-ui-public/entities-plugins@9.84.0) (2025-09-01)
+
+
+### Features
+
+* new flow node layout, truncate text when overflow ([#2419](https://github.com/Kong/public-ui-components/issues/2419)) ([f667c4e](https://github.com/Kong/public-ui-components/commit/f667c4e8de6dfbe94d5df2e8c5f8cfb48b7e354e))
+
+
+
+
+
 ## [9.83.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.83.3...@kong-ui-public/entities-plugins@9.83.4) (2025-09-01)
 
 
