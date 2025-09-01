@@ -186,7 +186,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       disconnectEdge,
       getInEdgesByNodeId,
       commit,
-      undo,
+      reset,
     } = editorStore
 
     function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
@@ -268,6 +268,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
         return // Only connect output to input
 
+      // Save checkpoint
+      commit()
+
       // Get all incoming edges for the target node
       const targetIncomingEdges = getInEdgesByNodeId(target as NodeId)
       let confirmToSwitch = false
@@ -335,32 +338,39 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         ),
       )
 
-      commit()
-      if (connectionSuccess) {
-        // Confirm the changes, undo if users not confirmed
-        if (confirmToSwitch || confirmToOverride) {
-          if (!confirm) {
-            // The code here should not be reachable in a readonly flow
-            throw new Error('Expected confirm modal to be provided here when reachable')
-          }
-          const isConfirmed = await confirm(
-            confirmToSwitch
-              ? t('plugins.free-form.datakit.flow_editor.confirm.message.switch')
-              : t('plugins.free-form.datakit.flow_editor.confirm.message.override'),
-            addedConnections,
-            removedConnections,
-          )
-          if (!isConfirmed) {
-            undo()
-          }
-        }
-      } else {
-        undo()
+      if (!connectionSuccess) {
+        // Reset on failure
+        reset()
         toaster({
           message: t('plugins.free-form.datakit.flow_editor.error.invalid_connection'),
           appearance: 'danger',
         })
+        return
       }
+
+      if (confirmToSwitch || confirmToOverride) {
+        if (!confirm) {
+          // The code here should not be reachable in a readonly flow
+          reset() // In case
+          throw new Error('Expected confirm modal to be provided here when reachable')
+        }
+
+        const isConfirmed = await confirm(
+          confirmToSwitch
+            ? t('plugins.free-form.datakit.flow_editor.confirm.message.switch')
+            : t('plugins.free-form.datakit.flow_editor.confirm.message.override'),
+          addedConnections,
+          removedConnections,
+        )
+        if (!isConfirmed) {
+          // Reset if changes are not confirmed
+          reset()
+          return
+        }
+      }
+
+      // Commit new changes
+      commit()
     }
 
     onConnect(handleConnect)
