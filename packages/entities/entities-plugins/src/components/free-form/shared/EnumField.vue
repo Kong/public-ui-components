@@ -36,10 +36,6 @@ import { useField, useFieldAttrs, useFormShared } from './composables'
 type MultipleSelectProps = { multiple: true } & MultiselectProps<string, false>
 type SingleSelectProps = { multiple?: false } & SelectProps<string, false>
 
-// Vue doesn't support the built-in `InstanceType` utility type, so we have to
-// work around it a bit.
-// Props other than `labelAttributes` here are passed down to the `KSelect` or
-// `KMultiselect` via attribute fallthrough.
 type EnumFieldProps = {
   name: string
   labelAttributes?: LabelAttributes
