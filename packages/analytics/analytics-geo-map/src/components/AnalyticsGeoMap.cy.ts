@@ -1,24 +1,45 @@
 // Cypress component test spec file
-
+import type { CountryISOA2, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import AnalyticsGeoMap from './AnalyticsGeoMap.vue'
-import { defineComponent, h } from 'vue'
+import { defineComponent, h, ref, type Ref } from 'vue'
+import type { MetricUnits } from '../types'
 
-// Needs to be contained in an element that gives it height.
-const WrapperComponent = defineComponent({
-  props: {
-    countryMetrics: {
-      type: Object,
-      required: true,
+const mountComponent = ({
+  countryMetrics,
+  fitToCountry = ref(''),
+  metric = ref('request_count'),
+  metricUnit = ref('requests'),
+  onBoundsChange = cy.spy(),
+}: {
+  countryMetrics: Record<string, number>
+  fitToCountry?: Ref<string>
+  metric?: Ref<ExploreAggregations>
+  metricUnit?: Ref<MetricUnits>
+  onBoundsChange?: (bounds: Array<[number, number]>) => void
+}) => {
+
+  const WrapperComponent = defineComponent({
+    setup() {
+      return { countryMetrics, fitToCountry, metric, metricUnit, onBoundsChange }
     },
-  },
-  setup(props) {
-    return () => h('div', { style: 'height: 500px; width: 500px;' }, [
-      h(AnalyticsGeoMap, {
-        countryMetrics: props.countryMetrics,
-      }),
-    ])
-  },
-})
+    render() {
+      return h('div', { style: 'height: 500px; width: 500px;' }, [
+        h(AnalyticsGeoMap, {
+          countryMetrics: this.countryMetrics,
+          fitToCountry: this.fitToCountry as CountryISOA2,
+          metric: this.metric,
+          metricUnit: this.metricUnit,
+          onBoundsChange: this.onBoundsChange,
+        }),
+      ])
+    },
+  })
+
+  return cy.mount(WrapperComponent)
+}
+
+const romaniaBounds = [[20, 43], [30, 49]]
+
 
 describe('<AnalyticsGeoMap />', () => {
   beforeEach(() => {
@@ -26,16 +47,36 @@ describe('<AnalyticsGeoMap />', () => {
   })
 
   it('Renders map', () => {
-    cy.mount(WrapperComponent, {
-      props: {
-        countryMetrics: {
-          US: 1,
-          CA: 2,
-        },
+
+    mountComponent({
+      countryMetrics: {
+        US: 1,
+        CA: 2,
       },
     })
 
     cy.get('.kong-ui-public-analytics-geo-map').should('be.visible')
     cy.get('.maplibregl-canvas').should('be.visible')
+  })
+
+  it('Emits boundsChange event on map move', () => {
+    const onBoundsChange = cy.spy().as('boundsChangeSpy')
+    const fitToCountry = ref('')
+
+    mountComponent({
+      countryMetrics: {
+        US: 1,
+        CA: 2,
+      },
+      fitToCountry,
+      onBoundsChange,
+    })
+
+    cy.then(() => {
+      fitToCountry.value = 'RO'
+    })
+
+    cy.get('@boundsChangeSpy').should('have.been.calledOnce')
+    cy.get('@boundsChangeSpy').should('have.been.calledWith', romaniaBounds)
   })
 })

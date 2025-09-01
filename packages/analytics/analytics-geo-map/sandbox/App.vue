@@ -13,6 +13,7 @@
         :fit-to-country="fitToCountry"
         :metric="'request_count'"
         :metric-unit="'requests'"
+        @bounds-change="console.log('bounds changed', $event)"
       />
     </div>
   </div>
