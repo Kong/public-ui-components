@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.86.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.85.1...@kong-ui-public/entities-plugins@9.86.0) (2025-09-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - input fields styles ([#2425](https://github.com/Kong/public-ui-components/issues/2425)) ([2017a14](https://github.com/Kong/public-ui-components/commit/2017a145d56c706dbb521947a146c5c802722338))
+* **entities-plugins:** datakit fix min-width, simplify conflict confirm naming ([#2426](https://github.com/Kong/public-ui-components/issues/2426)) ([a481791](https://github.com/Kong/public-ui-components/commit/a481791d5a6fdefcebc2c93f4f6b7eb2ad429bbf))
+
+
+### Features
+
+* **entities-plugins:** datakit - avoid call and exit in response ([#2416](https://github.com/Kong/public-ui-components/issues/2416)) ([75f1429](https://github.com/Kong/public-ui-components/commit/75f142924a489393ede616cd6864476bce0f35fb))
+* **entities-plugins:** datakit - make input field searchable ([#2424](https://github.com/Kong/public-ui-components/issues/2424)) ([fbe7a6f](https://github.com/Kong/public-ui-components/commit/fbe7a6ff060c8147da15cd4f967894e2ec80ba32))
+
+
+
+
+
 ## [9.85.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.85.0...@kong-ui-public/entities-plugins@9.85.1) (2025-09-01)
 
 
