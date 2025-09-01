@@ -25,7 +25,6 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.31.0",
@@ -39,7 +38,6 @@
   },
   "devDependencies": {
     "@dagrejs/dagre": "^1.1.5",
-    "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
@@ -93,6 +91,7 @@
     "@kong-ui-public/entities-consumer-groups": "workspace:^",
     "@kong-ui-public/entities-consumers": "workspace:^",
     "@kong-ui-public/entities-gateway-services": "workspace:^",
+    "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "@kong-ui-public/entities-plugins-metadata": "workspace:^",
     "@kong-ui-public/entities-redis-configurations": "workspace:^",
     "@kong-ui-public/entities-routes": "workspace:^",
