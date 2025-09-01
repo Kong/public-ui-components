@@ -8,7 +8,7 @@
 
   <SelectComponent
     v-else
-    v-bind="fieldAttrs"
+    v-bind="{ ...props, ...fieldAttrs }"
     v-model="fieldValue"
     class="ff-enum-field"
     :clearable="!fieldAttrs.required"
@@ -30,20 +30,18 @@
 
 <script setup lang="ts">
 import { computed, toRef } from 'vue'
-import { KSelect, KMultiselect, type LabelAttributes, type SelectItem } from '@kong/kongponents'
+import { KSelect, KMultiselect, type LabelAttributes, type SelectItem, type SelectProps, type MultiselectProps } from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
 
-// Vue doesn't support the built-in `InstanceType` utility type, so we have to
-// work around it a bit.
-// Props other than `labelAttributes` here are passed down to the `KSelect` or
-// `KMultiselect` via attribute fallthrough.
-interface EnumFieldProps {
+type MultipleSelectProps = { multiple: true } & MultiselectProps<string, false>
+type SingleSelectProps = { multiple?: false } & SelectProps<string, false>
+
+type EnumFieldProps = {
   name: string
   labelAttributes?: LabelAttributes
-  multiple?: boolean
   items?: SelectItem[]
   placeholder?: string
-}
+} & (MultipleSelectProps | SingleSelectProps)
 
 const { name, items, multiple = undefined, ...props } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
