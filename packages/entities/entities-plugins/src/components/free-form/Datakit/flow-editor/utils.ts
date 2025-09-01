@@ -107,15 +107,7 @@ export function formatKeys(spec: KeySpec, opts: FormatOptions = {}): string {
         ? LINUX_KEY_MAP
         : WIN_KEY_MAP
 
-  let combination = null
-
-  if (Array.isArray(spec)) {
-    combination = spec
-  } else {
-    combination = platform === 'mac'
-      ? spec.mac
-      : spec[platform]
-  }
+  const combination = Array.isArray(spec) ? spec : spec[platform]
 
   return combination
     .map((key) => (key in map ? map[key as SpecialKey] : key))

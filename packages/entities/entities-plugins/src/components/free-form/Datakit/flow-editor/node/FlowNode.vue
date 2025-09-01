@@ -62,138 +62,140 @@
       class="handles"
       :class="{ reversed: isReversed }"
     >
-      <div class="input-handles">
-        <template v-if="showInputHandles">
-          <div class="handle">
+      <div
+        v-if="showInputHandles"
+        class="input-handles"
+        :class="{ 'has-fields': hasInputFields }"
+      >
+        <div class="handle">
+          <Handle
+            id="input"
+            :position="inputPosition"
+            type="target"
+          />
+
+          <div class="handle-label-wrapper">
+            <div
+              class="handle-label trigger"
+              :class="{
+                collapsible: inputsCollapsible,
+              }"
+              @click.stop="toggleExpanded('input')"
+            >
+              <div class="text">
+                inputs
+              </div>
+              <template v-if="hasInputFields">
+                <UnfoldMoreIcon
+                  v-if="!inputsExpanded"
+                  :size="KUI_ICON_SIZE_20"
+                />
+                <UnfoldLessIcon
+                  v-if="inputsExpanded"
+                  :color="inputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
+                  :size="KUI_ICON_SIZE_20"
+                />
+              </template>
+            </div>
+            <HandleTwig
+              v-if="hasInputFields && inputsExpanded"
+              :color="handleTwigColor"
+              :position="inputPosition"
+              type="bar"
+            />
+          </div>
+        </div>
+
+        <template v-if="hasInputFields && inputsExpanded">
+          <div
+            v-for="(field, i) in data.fields.input"
+            :key="`inputs-${field.id}`"
+            class="handle indented"
+          >
             <Handle
-              id="input"
+              :id="`inputs@${field.id}`"
               :position="inputPosition"
               type="target"
             />
-
             <div class="handle-label-wrapper">
-              <div
-                class="handle-label trigger"
-                :class="{
-                  'has-fields': hasInputFields,
-                  collapsible: inputsCollapsible,
-                }"
-                @click.stop="toggleExpanded('input')"
-              >
-                <div class="text">
-                  inputs
-                </div>
-                <template v-if="hasInputFields">
-                  <UnfoldMoreIcon
-                    v-if="!inputsExpanded"
-                    :size="KUI_ICON_SIZE_20"
-                  />
-                  <UnfoldLessIcon
-                    v-if="inputsExpanded"
-                    :color="inputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
-                    :size="KUI_ICON_SIZE_20"
-                  />
-                </template>
+              <div class="handle-label text">
+                {{ field.name }}
               </div>
               <HandleTwig
-                v-if="hasInputFields && inputsExpanded"
                 :color="handleTwigColor"
                 :position="inputPosition"
-                type="bar"
+                :type="i < data.fields.input.length - 1 ? 'trident' : 'corner'"
               />
             </div>
           </div>
-
-          <template v-if="hasInputFields && inputsExpanded">
-            <div
-              v-for="(field, i) in data.fields.input"
-              :key="`inputs-${field.id}`"
-              class="handle indented"
-            >
-              <Handle
-                :id="`inputs@${field.id}`"
-                :position="inputPosition"
-                type="target"
-              />
-              <div class="handle-label-wrapper">
-                <div class="handle-label text">
-                  {{ field.name }}
-                </div>
-                <HandleTwig
-                  :color="handleTwigColor"
-                  :position="inputPosition"
-                  :type="i < data.fields.input.length - 1 ? 'trident' : 'corner'"
-                />
-              </div>
-            </div>
-          </template>
         </template>
       </div>
 
-      <div class="output-handles">
-        <template v-if="showOutputHandles">
-          <div class="handle">
+      <div
+        v-if="showOutputHandles"
+        class="output-handles"
+        :class="{ 'has-fields': hasOutputFields }"
+      >
+        <div class="handle">
+          <div class="handle-label-wrapper">
+            <div
+              class="handle-label trigger"
+              :class="{
+                collapsible: outputsCollapsible,
+              }"
+              @click.stop="toggleExpanded('output')"
+            >
+              <div class="text">
+                outputs
+              </div>
+              <template v-if="hasOutputFields">
+                <UnfoldMoreIcon
+                  v-if="!outputsExpanded"
+                  :size="KUI_ICON_SIZE_20"
+                />
+                <UnfoldLessIcon
+                  v-if="outputsExpanded"
+                  :color="outputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
+                  :size="KUI_ICON_SIZE_20"
+                />
+              </template>
+            </div>
+            <HandleTwig
+              v-if="hasOutputFields && outputsExpanded"
+              :color="handleTwigColor"
+              :position="outputPosition"
+              type="bar"
+            />
+          </div>
+          <Handle
+            id="output"
+            :position="outputPosition"
+            type="source"
+          />
+        </div>
+
+        <template v-if="hasOutputFields && outputsExpanded">
+          <div
+            v-for="(field, i) in data.fields.output"
+            :key="`outputs-${field.id}`"
+            class="handle indented"
+          >
             <div class="handle-label-wrapper">
-              <div
-                class="handle-label trigger"
-                :class="{
-                  'has-fields': hasOutputFields,
-                  collapsible: outputsCollapsible,
-                }"
-                @click.stop="toggleExpanded('output')"
-              >
-                <div class="text">
-                  outputs
-                </div>
-                <template v-if="hasOutputFields">
-                  <UnfoldMoreIcon
-                    v-if="!outputsExpanded"
-                    :size="KUI_ICON_SIZE_20"
-                  />
-                  <UnfoldLessIcon
-                    v-if="outputsExpanded"
-                    :color="outputsCollapsible ? undefined : KUI_COLOR_TEXT_DISABLED"
-                    :size="KUI_ICON_SIZE_20"
-                  />
-                </template>
+              <div class="handle-label text">
+                {{ field.name }}
               </div>
               <HandleTwig
-                v-if="hasOutputFields && outputsExpanded"
                 :color="handleTwigColor"
                 :position="outputPosition"
-                type="bar"
+                :type="i < data.fields.output.length - 1 ? 'trident' : 'corner'"
               />
             </div>
             <Handle
-              id="output"
+              :id="`outputs@${field.id}`"
               :position="outputPosition"
               type="source"
             />
           </div>
-
-          <template v-if="hasOutputFields && outputsExpanded">
-            <div
-              v-for="(field, i) in data.fields.output"
-              :key="`outputs-${field.id}`"
-              class="handle indented"
-            >
-              <div class="handle-label-wrapper">
-                <div class="handle-label text">
-                  {{ field.name }}
-                </div>
-                <HandleTwig
-                  :color="handleTwigColor"
-                  :position="outputPosition"
-                  :type="i < data.fields.output.length - 1 ? 'trident' : 'corner'"
-                />
-              </div>
-              <Handle
-                :id="`outputs@${field.id}`"
-                :position="outputPosition"
-                type="source"
-              />
-            </div>
-          </template>
         </template>
       </div>
     </div>
@@ -203,6 +205,8 @@
 <script setup lang="ts">
 import type { NodeInstance } from '../../types'
 
+import { computed, watch } from 'vue'
+import { KTooltip, KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
 import { createI18n } from '@kong-ui-public/i18n'
 import {
   KUI_COLOR_BACKGROUND_NEUTRAL_STRONG,
@@ -214,7 +218,6 @@ import {
 } from '@kong/design-tokens'
 import { MoreIcon, UnfoldLessIcon, UnfoldMoreIcon, WarningIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
-import { computed, watch } from 'vue'
 
 import english from '../../../../../locales/en.json'
 import { isReadableProperty, isWritableProperty } from '../node/property'
@@ -339,6 +342,8 @@ $node-max-width: 246px;
 $node-min-width: 168px;
 $handle-width: 3px;
 $handle-height: 10px;
+$io-column-min-width: 80px;
+$io-column-min-width-no-fields: 60px;
 
 .flow-node {
   background-color: $kui-color-background;
@@ -398,9 +403,8 @@ $handle-height: 10px;
   }
 
   .handles {
-    display: grid;
+    display: flex;
     gap: $kui-space-60;
-    grid-template-columns: 1fr 1fr;
 
     &.reversed {
       flex-direction: row-reverse;
@@ -410,9 +414,22 @@ $handle-height: 10px;
   .input-handles,
   .output-handles {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
-    min-width: 0;
+    min-width: $io-column-min-width-no-fields;
     position: relative;
+
+    &.has-fields {
+      min-width: $io-column-min-width;
+
+      .trigger {
+        cursor: pointer;
+
+        &:not(.collapsible) {
+          cursor: not-allowed;
+        }
+      }
+    }
 
     .handle {
       align-items: center;
@@ -421,6 +438,8 @@ $handle-height: 10px;
       gap: $kui-space-30;
       justify-self: start;
       max-width: 100%;
+      /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+      max-width: calc(100% - $kui-space-30);
       position: relative;
 
       .handle-label-wrapper {
@@ -440,14 +459,6 @@ $handle-height: 10px;
           gap: $kui-space-20;
           line-height: $kui-line-height-10;
           padding: $kui-space-10;
-
-          &.trigger.has-fields {
-            cursor: pointer;
-
-            &:not(.collapsible) {
-              cursor: not-allowed;
-            }
-          }
 
           &.text {
             display: block;
@@ -478,6 +489,30 @@ $handle-height: 10px;
       top: unset;
       transform: unset;
       width: $handle-width;
+
+      &::before {
+        content: "";
+        inset: -4px -8px;
+        position: absolute;
+      }
+
+      &::after {
+        background-color: $kui-color-background-neutral;
+        border-radius: $kui-border-radius-round;
+        content: "";
+        display: block;
+        inset: 0;
+        pointer-events: none;
+        position: absolute;
+        transition: box-shadow $kui-animation-duration-20 ease-in-out;
+      }
+
+      &.connecting::after,
+      &:hover::after {
+        background-color: $kui-color-background-primary;
+        /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+        box-shadow: 0 0 0 1px $kui-color-background-primary;
+      }
     }
   }
 
@@ -541,5 +576,11 @@ $handle-height: 10px;
       }
     }
   }
+}
+</style>
+
+<style>
+.vue-flow__node:has(.vue-flow__handle.connecting) {
+  z-index: 10000 !important;
 }
 </style>
