@@ -49,6 +49,7 @@
         </div>
         <KButton
           appearance="none"
+          class="dk-inputs-map-field-remove-btn"
           :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
           icon
           @click="handleRemoveEntry(entry)"
@@ -216,7 +217,13 @@ function handleInputsValueChange(entry: KVEntry<FieldName, IdConnection>, value:
   }
 
   &-indent {
-    @include mixins.tree-indent;
+    @include mixins.tree-indent(
+      $last-child-height: 31.5px
+    );
+  }
+
+  &-remove-btn {
+    margin-top: 4.5px;
   }
 }
 </style>
