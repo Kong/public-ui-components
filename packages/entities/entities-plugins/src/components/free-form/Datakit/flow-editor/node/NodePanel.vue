@@ -113,6 +113,7 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
     },
   }
   e.dataTransfer?.setData(DK_DATA_TRANSFER_MIME_TYPE, JSON.stringify(payload))
+  e.dataTransfer?.setData(`${DK_DATA_TRANSFER_MIME_TYPE}/${type}`, type)
   e.dataTransfer?.setDragImage(
     clone,
     anchor.offsetX,

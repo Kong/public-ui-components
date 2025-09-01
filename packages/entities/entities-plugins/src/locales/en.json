@@ -827,7 +827,8 @@
               "override": "Each input can connect to only one output, but one output can connect to many inputs."
             },
             "proceed": "Yes, update"
-          }
+          },
+          "phase_mask_help": "Adding Call or Exit nodes in the response phase is not supported."
         },
         "code_editor": {
           "mode": "Code editor"

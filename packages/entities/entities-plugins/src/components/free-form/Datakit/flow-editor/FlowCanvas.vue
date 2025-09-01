@@ -48,6 +48,13 @@
         />
       </template>
     </VueFlow>
+
+    <div
+      v-if="disableDrop"
+      class="dk-flow-mask"
+    >
+      {{ t('plugins.free-form.datakit.flow_editor.phase_mask_help') }}
+    </div>
   </div>
 </template>
 
@@ -59,12 +66,13 @@ import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
 import { useElementBounding } from '@vueuse/core'
-import { nextTick, useTemplateRef } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
 import { provideFlowStore } from './store/flow'
+import useI18n from '../../../../composables/useI18n'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -82,6 +90,7 @@ const emit = defineEmits<{
 
 const flowCanvas = useTemplateRef('flowCanvas')
 const flowCanvasRect = useElementBounding(flowCanvas)
+const { i18n: { t } } = useI18n()
 
 const {
   vueFlowStore,
@@ -104,6 +113,7 @@ const {
 })
 const { addNode, selectNode: selectStoreNode, propertiesPanelOpen, newCreatedNodeId, invalidConfigNodeIds } = editorStore
 const { project, vueFlowRef, addSelectedNodes, getNodes } = vueFlowStore
+const disableDrop = ref(false)
 
 async function selectNode(nodeId?: NodeId) {
   selectStoreNode(nodeId)
@@ -117,8 +127,19 @@ function onNodeClick() {
   propertiesPanelOpen.value = true
 }
 
+function onDragOver(e: DragEvent) {
+  if (phase === 'request' || readonly || disableDrop.value) return
+  const format = e.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
+  if (!format) return
+  const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
+  if (nodeType === 'call' || nodeType === 'exit') {
+    disableDrop.value = true
+  }
+}
+
 function onDrop(e: DragEvent) {
   if (readonly) return
+  if (disableDrop.value) return
 
   const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
   if (!data) return
@@ -161,13 +182,26 @@ const onClickAutoLayout = () => {
   nextTick(() => fitView())
 }
 
+const onDragEnd = () => disableDrop.value = false
+
 defineExpose({ autoLayout, fitView })
+
+onMounted(() => {
+  document.addEventListener('dragover', onDragOver)
+  document.addEventListener('dragend', onDragEnd)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('dragover', onDragOver)
+  document.removeEventListener('dragend', onDragEnd)
+})
 </script>
 
 <style lang="scss" scoped>
 .dk-flow-canvas {
   background-color: $kui-color-background-neutral-weakest;
   height: 100%;
+  position: relative;
   width: 100%;
 
   .flow {
@@ -210,5 +244,18 @@ defineExpose({ autoLayout, fitView })
       stroke-dasharray: 5;
     }
   }
+}
+
+.dk-flow-mask {
+  align-items: center;
+  background: rgba($color: $kui-color-background, $alpha: 0.75);
+  bottom: 0;
+  cursor: not-allowed;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 </style>
