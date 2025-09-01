@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.85.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.85.0...@kong-ui-public/entities-plugins@9.85.1) (2025-09-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** move the icons package to dependencies ([#2421](https://github.com/Kong/public-ui-components/issues/2421)) ([fe7c6a9](https://github.com/Kong/public-ui-components/commit/fe7c6a9a183b0a0d805de32a45567541f0342eb9))
+
+
+
+
+
 # [9.85.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.84.0...@kong-ui-public/entities-plugins@9.85.0) (2025-09-01)
 
 

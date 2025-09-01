@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.3.15...@kong-ui-public/entities-redis-configurations@1.3.16) (2025-09-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** move the icons package to dependencies ([#2421](https://github.com/Kong/public-ui-components/issues/2421)) ([fe7c6a9](https://github.com/Kong/public-ui-components/commit/fe7c6a9a183b0a0d805de32a45567541f0342eb9))
+
+
+
+
+
 ## [1.3.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.3.14...@kong-ui-public/entities-redis-configurations@1.3.15) (2025-09-01)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
