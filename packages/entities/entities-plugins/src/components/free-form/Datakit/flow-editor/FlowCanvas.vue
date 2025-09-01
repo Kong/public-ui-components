@@ -66,6 +66,7 @@ import { VueFlow } from '@vue-flow/core'
 import { useElementBounding } from '@vueuse/core'
 import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 
+import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
 import { provideFlowStore } from './store/flow'
@@ -73,7 +74,6 @@ import { provideFlowStore } from './store/flow'
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
-import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 
 const { flowId, phase, readonly } = defineProps<{
   flowId: string
@@ -143,7 +143,6 @@ function onDrop(e: DragEvent) {
   e.preventDefault()
 
   const payload = JSON.parse(data) as DragPayload
-
   if (payload.action !== 'create-node') return
 
   // VueFlow has a bug where it fails to take the top/left offset of the flow canvas into account

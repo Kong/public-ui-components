@@ -3,7 +3,6 @@ import { computed, ref } from 'vue'
 import type {
   ConfigNode,
   CreateNodePayload,
-  DragPayload,
   EdgeData,
   EdgeId,
   EdgeInstance,
