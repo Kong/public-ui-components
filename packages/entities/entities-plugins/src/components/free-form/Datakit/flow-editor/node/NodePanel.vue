@@ -41,13 +41,13 @@ import { computed, nextTick, shallowRef, useId } from 'vue'
 import { VueFlow } from '@vue-flow/core'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
+import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
 import { useEditorStore } from '../store/store'
 import { CONFIG_NODE_META_MAP } from './node'
 import NodePanelItem from './NodePanelItem.vue'
 import FlowNode from './FlowNode.vue'
 
 import type { ConfigNodeType, NodeInstance, DragPayload } from '../../types'
-import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
