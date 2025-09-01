@@ -10,7 +10,7 @@ import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
 import { computed, toRaw, toValue } from 'vue'
 
-import { KUI_COLOR_BORDER_NEUTRAL_WEAK, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
+import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
 import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
@@ -66,7 +66,7 @@ function createWrapper(): [typeof wrap, typeof copy] {
 }
 
 const BORDER_COLORS: Record<EdgeState, string> = {
-  default: KUI_COLOR_BORDER_NEUTRAL_WEAK,
+  default: KUI_COLOR_BORDER_NEUTRAL,
   hover: KUI_COLOR_BORDER_PRIMARY_WEAK,
   selected: KUI_COLOR_BORDER_PRIMARY,
 }
@@ -90,6 +90,7 @@ function updateEdgeStyle(edge: Edge<EdgeData>): Edge<EdgeData> {
     style: {
       ...edge.style,
       stroke: color,
+      strokeWidth: state === 'selected' ? 1.5 : undefined,
     },
     markerEnd: marker,
     zIndex: state === 'default' ? undefined : 1,
