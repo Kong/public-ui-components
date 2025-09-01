@@ -52,7 +52,9 @@
     <div
       v-if="disableDrop"
       class="dk-flow-mask"
-    />
+    >
+      {{ t('plugins.free-form.datakit.flow_editor.phase_mask_help') }}
+    </div>
   </div>
 </template>
 
@@ -70,6 +72,7 @@ import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
 import { provideFlowStore } from './store/flow'
+import useI18n from '../../../../composables/useI18n'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -87,6 +90,7 @@ const emit = defineEmits<{
 
 const flowCanvas = useTemplateRef('flowCanvas')
 const flowCanvasRect = useElementBounding(flowCanvas)
+const { i18n: { t } } = useI18n()
 
 const {
   vueFlowStore,
@@ -243,9 +247,12 @@ onBeforeUnmount(() => {
 }
 
 .dk-flow-mask {
+  align-items: center;
   background: rgba($color: $kui-color-background, $alpha: 0.75);
   bottom: 0;
   cursor: not-allowed;
+  display: flex;
+  justify-content: center;
   left: 0;
   position: absolute;
   right: 0;
