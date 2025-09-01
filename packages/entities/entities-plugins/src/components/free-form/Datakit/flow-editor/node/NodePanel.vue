@@ -47,10 +47,11 @@ import NodePanelItem from './NodePanelItem.vue'
 import FlowNode from './FlowNode.vue'
 
 import type { ConfigNodeType, NodeInstance, DragPayload } from '../../types'
+import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { createNode, draggingNodePayload } = useEditorStore()
+const { createNode } = useEditorStore()
 
 const previewId = `dk-drag-preview-${useId()}`
 
@@ -111,7 +112,8 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
       anchor,
     },
   }
-  draggingNodePayload.value = payload
+  e.dataTransfer?.setData(DK_DATA_TRANSFER_MIME_TYPE, JSON.stringify(payload))
+  e.dataTransfer?.setData(`${DK_DATA_TRANSFER_MIME_TYPE}/${type}`, type)
   e.dataTransfer?.setDragImage(
     clone,
     anchor.offsetX,

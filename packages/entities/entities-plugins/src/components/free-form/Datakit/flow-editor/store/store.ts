@@ -41,7 +41,6 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     const selection = ref<NodeId>()
     const modalOpen = ref(false)
     const propertiesPanelOpen = ref(false)
-    const draggingNodePayload = ref<DragPayload | null>(null)
 
     const history = useTaggedHistory(state, {
       capacity: 200,
@@ -520,7 +519,6 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       newCreatedNodeId,
       invalidConfigNodeIds,
       propertiesPanelOpen,
-      draggingNodePayload,
 
       // maps & getters
       nodeMapById,

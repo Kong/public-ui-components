@@ -57,23 +57,23 @@
 </template>
 
 <script setup lang="ts">
-import type { NodeId, NodePhase } from '../types'
+import type { DragPayload, NodeId, NodePhase } from '../types'
 
 import { SparklesIcon } from '@kong/icons'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
 import { useElementBounding } from '@vueuse/core'
-import { computed, nextTick, onBeforeUnmount, onMounted, useTemplateRef } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
 import { provideFlowStore } from './store/flow'
-import { useEditorStore } from '../composables'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
+import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 
 const { flowId, phase, readonly } = defineProps<{
   flowId: string
@@ -85,16 +85,8 @@ const emit = defineEmits<{
   initialized: []
 }>()
 
-const { draggingNodePayload } = useEditorStore()
 const flowCanvas = useTemplateRef('flowCanvas')
 const flowCanvasRect = useElementBounding(flowCanvas)
-const disableDrop = computed(() => {
-  // avoid users add `call` and `exit` node to the response phase
-  if (phase === 'request') return false
-  if (!draggingNodePayload.value) return false
-  const type = draggingNodePayload.value.data.type
-  return type === 'call' || type === 'exit'
-})
 
 const {
   vueFlowStore,
@@ -117,6 +109,7 @@ const {
 })
 const { addNode, selectNode: selectStoreNode, propertiesPanelOpen, newCreatedNodeId, invalidConfigNodeIds } = editorStore
 const { project, vueFlowRef, addSelectedNodes, getNodes } = vueFlowStore
+const disableDrop = ref(false)
 
 async function selectNode(nodeId?: NodeId) {
   selectStoreNode(nodeId)
@@ -130,14 +123,26 @@ function onNodeClick() {
   propertiesPanelOpen.value = true
 }
 
+function onDragOver(e: DragEvent) {
+  if (phase === 'request' || readonly || disableDrop.value) return
+  const format = e.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
+  if (!format) return
+  const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
+  if (nodeType === 'call' || nodeType === 'exit') {
+    disableDrop.value = true
+  }
+}
+
 function onDrop(e: DragEvent) {
   if (readonly) return
   if (disableDrop.value) return
 
-  const payload = draggingNodePayload.value
-  if (!payload) return
+  const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
+  if (!data) return
 
   e.preventDefault()
+
+  const payload = JSON.parse(data) as DragPayload
 
   if (payload.action !== 'create-node') return
 
@@ -174,15 +179,17 @@ const onClickAutoLayout = () => {
   nextTick(() => fitView())
 }
 
-const onDragEnd = () => draggingNodePayload.value = null
+const onDragEnd = () => disableDrop.value = false
 
 defineExpose({ autoLayout, fitView })
 
 onMounted(() => {
+  document.addEventListener('dragover', onDragOver)
   document.addEventListener('dragend', onDragEnd)
 })
 
 onBeforeUnmount(() => {
+  document.removeEventListener('dragover', onDragOver)
   document.removeEventListener('dragend', onDragEnd)
 })
 </script>
