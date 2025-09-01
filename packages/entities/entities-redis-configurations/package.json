@@ -39,7 +39,6 @@
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "devDependencies": {
-    "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
@@ -69,7 +68,6 @@
     "errorLimit": "400KB"
   },
   "peerDependencies": {
-    "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
@@ -80,6 +78,7 @@
     "vue-router": "^4.4.5"
   },
   "dependencies": {
+    "@kong-ui-public/entities-plugins-icon": "workspace:^",
     "uuid": "^11.1.0"
   }
 }
