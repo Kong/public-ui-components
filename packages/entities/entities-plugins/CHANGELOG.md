@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.83.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.83.3...@kong-ui-public/entities-plugins@9.83.4) (2025-09-01)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - input can not be changed [KM-1679] ([#2415](https://github.com/Kong/public-ui-components/issues/2415)) ([0a0fdc3](https://github.com/Kong/public-ui-components/commit/0a0fdc340e713ab19ae52c01e7ab5b4a8b28c55c))
+
+
+
+
+
 ## [9.83.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.83.2...@kong-ui-public/entities-plugins@9.83.3) (2025-08-28)
 
 
