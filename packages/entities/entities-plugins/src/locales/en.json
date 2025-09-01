@@ -672,8 +672,8 @@
           "empty": "This plugin does not have required parameters."
         },
         "advanced_parameters": {
-          "view": "View Advanced Parameters",
-          "hide": "Hide Advanced Parameters"
+          "view": "View advanced parameters",
+          "hide": "Hide advanced parameters"
         }
       },
       "field_rules": {
@@ -912,9 +912,9 @@
       "seconds": "Seconds"
     },
     "error_message": {
-      "label": "Error Message",
-      "code_placeholder": "Code Message",
-      "message_placeholder": "Error Message",
+      "label": "Error message",
+      "code_placeholder": "Code message",
+      "message_placeholder": "Error message",
       "help": "Set a custom error code and message to be returned when the rate limit is exceeded."
     },
     "start_with_a_use_case": "Start with a use case:",
