@@ -67,7 +67,8 @@ export default function useContextLinks(
     if (!canGenerateRequestsLink.value || !canShowKebabMenu.value) {
       return ''
     }
-    const filters = [...context.value.filters, ...definition.value.query.filters ?? []]
+
+    const filters = datasourceScopedFilters.value
 
     const requestsQuery = buildRequestsQueryKebabMenu(
       definition.value.query.time_range as TimeRangeV4 || context.value.timeSpec,
