@@ -20,8 +20,8 @@
       :zoom-on-double-click="readonly ? false : undefined"
       :zoom-on-pinch="readonly ? false : undefined"
       :zoom-on-scroll="readonly ? false : undefined"
-      @dragover.prevent
-      @drop="(e: DragEvent) => onDrop(e)"
+      @dragover="onDragOver"
+      @drop="onDrop"
       @node-click="onNodeClick"
       @nodes-initialized="emit('initialized')"
     >
@@ -65,8 +65,8 @@ import { SparklesIcon } from '@kong/icons'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
-import { useElementBounding } from '@vueuse/core'
-import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core'
+import { nextTick, ref, useTemplateRef } from 'vue'
 
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
@@ -128,18 +128,13 @@ function onNodeClick() {
 }
 
 function onDragOver(e: DragEvent) {
-  if (phase === 'request' || readonly || disableDrop.value) return
-  const format = e.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
-  if (!format) return
-  const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
-  if (nodeType === 'call' || nodeType === 'exit') {
-    disableDrop.value = true
-  }
+  if (readonly || disableDrop.value) return
+
+  e.preventDefault()
 }
 
 function onDrop(e: DragEvent) {
-  if (readonly) return
-  if (disableDrop.value) return
+  if (readonly || disableDrop.value) return
 
   const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
   if (!data) return
@@ -182,19 +177,36 @@ const onClickAutoLayout = () => {
   nextTick(() => fitView())
 }
 
-const onDragEnd = () => disableDrop.value = false
+// Check if the dragged node is valid to drop
+if (phase === 'response' && !readonly) {
+  useEventListener('dragstart', (e: DragEvent) => {
+    const format = e.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
+    if (!format) return
+
+    const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
+    if ((nodeType === 'call' || nodeType === 'exit')) {
+      disableDrop.value = true
+    }
+  })
+
+  // `dragend` fires only after the long snap-back animation, so UI feels delayed.
+  // Instead rely on `dragover`: it fires repeatedly at high frequency while dragging.
+  // Restart a short timer on every `dragover`. If no event comes within ~80ms,
+  // assume the user released and reset `disableDrop` immediately.
+  const { start } = useTimeoutFn(() => {
+    disableDrop.value = false
+  }, 80)
+
+  useEventListener('dragover', () => {
+    start()
+  })
+
+  useEventListener('dragend', () => {
+    disableDrop.value = false
+  })
+}
 
 defineExpose({ autoLayout, fitView })
-
-onMounted(() => {
-  document.addEventListener('dragover', onDragOver)
-  document.addEventListener('dragend', onDragEnd)
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('dragover', onDragOver)
-  document.removeEventListener('dragend', onDragEnd)
-})
 </script>
 
 <style lang="scss" scoped>
