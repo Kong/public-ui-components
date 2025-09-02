@@ -1,7 +1,17 @@
-import type { CommonSchemaFields } from '../../types/plugins/shared'
+import { ArrayInputFieldSchema } from './ArrayInputFieldSchema'
+import type { ConfluentConsumeSchema } from '../../types/plugins/confluent-consume'
 import { stripEmptyBasicFields, type SchemaRegistry } from '../../utils/helper'
 
-export const confluentConsumeSchema: CommonSchemaFields = {
+export const confluentConsumeSchema: ConfluentConsumeSchema = {
+  'config-message_by_lua_functions': {
+    ...ArrayInputFieldSchema,
+    inputAttributes: {
+      ...ArrayInputFieldSchema.inputAttributes,
+      type: 'textarea',
+      max: false,
+    },
+  },
+
   // Clean up empty authentication fields in the payload before submission.
   // This removes the empty 'basic' authentication object
   // when both username and password are not provided.

@@ -25,6 +25,8 @@ import type { KafkaUpstreamSchema } from './plugins/kafka-upstream'
 import type { genKeyAuthSchema } from '../definitions/schemas/KeyAuth'
 import type { genKeyAuthEncSchema } from '../definitions/schemas/KeyAuthEnc'
 import type { ConfluentSchema } from './plugins/confluent'
+import type { ConfluentConsumeSchema } from './plugins/confluent-consume'
+import type { KafkaConsumeSchema } from './plugins/kafka-consume'
 import type { SolaceConsumeSchema } from './plugins/solace-consume'
 
 export interface BasePluginSelectConfig {
@@ -232,8 +234,8 @@ export interface CustomSchemas {
   'key-auth': ReturnType<typeof genKeyAuthSchema>
   'key-auth-enc': ReturnType<typeof genKeyAuthEncSchema>
   'confluent': ConfluentSchema
-  'confluent-consume': CommonSchemaFields
-  'kafka-consume': CommonSchemaFields
+  'confluent-consume': ConfluentConsumeSchema
+  'kafka-consume': KafkaConsumeSchema
   'kafka-log': CommonSchemaFields
 }
 
