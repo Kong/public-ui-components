@@ -311,25 +311,25 @@ function toggleExpanded(io: 'input' | 'output') {
 
 watch(inputsCollapsible, (collapsible) => {
   if (!collapsible) {
-    storeToggleExpanded(data.id, 'input', true, false)
+    storeToggleExpanded(data.id, 'input', true, true, '*')
   }
 }, { immediate: true })
 
 watch(outputsCollapsible, (collapsible) => {
   if (!collapsible) {
-    storeToggleExpanded(data.id, 'output', true, false)
+    storeToggleExpanded(data.id, 'output', true, true, '*')
   }
 }, { immediate: true })
 
 watch(() => data.fields.input, (input, oldInput) => {
   if (!isEqual(input, oldInput)) {
-    storeToggleExpanded(data.id, 'input', input.length > 0, false)
+    storeToggleExpanded(data.id, 'input', input.length > 0, true, '*')
   }
 }, { deep: true })
 
 watch(() => data.fields.output, (output, oldOutput) => {
   if (!isEqual(output, oldOutput)) {
-    storeToggleExpanded(data.id, 'output', output.length > 0, false)
+    storeToggleExpanded(data.id, 'output', output.length > 0, true, '*')
   }
 }, { deep: true })
 </script>

@@ -268,9 +268,6 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
         return // Only connect output to input
 
-      // Save checkpoint
-      commit()
-
       // Get all incoming edges for the target node
       const targetIncomingEdges = getInEdgesByNodeId(target as NodeId)
       let confirmToSwitch = false

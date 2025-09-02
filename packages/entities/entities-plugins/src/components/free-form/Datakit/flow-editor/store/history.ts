@@ -41,7 +41,7 @@ export function useTaggedHistory<T>(
     }
 
     // first time or switch tag: create a new undo boundary
-    if (lastTag !== tag) {
+    if (tag !== '*' && lastTag !== tag) {
       lastTag = tag
       baseCommit()
       notify('commit')

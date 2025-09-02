@@ -232,11 +232,12 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       io: 'input' | 'output',
       value?: boolean,
       commitNow = true,
+      tag?: string,
     ) {
       const node = getNodeById(nodeId)
       if (!node) return
       node.expanded[io] = value ?? !node.expanded[io]
-      if (commitNow) history.commit(`toggle:${nodeId}:${io}`)
+      if (commitNow) history.commit(tag ?? `toggle:${nodeId}:${io}`)
     }
 
     function replaceConfig(
