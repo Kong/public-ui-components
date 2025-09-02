@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.2.1...@kong-ui-public/dashboard-renderer@7.2.2) (2025-09-02)
+
+
+### Bug Fixes
+
+* **analytics:** exclude irrelevant filters for view requests [MA-4279] ([#2431](https://github.com/Kong/public-ui-components/issues/2431)) ([32d69cf](https://github.com/Kong/public-ui-components/commit/32d69cf36039d7d8a51a0174dd10dab620436971))
+
+
+
+
+
 ## [7.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.2.0...@kong-ui-public/dashboard-renderer@7.2.1) (2025-08-28)
 
 
