@@ -90,7 +90,7 @@ const { readonly, resizable } = defineProps<{
 }>()
 
 const initialized = ref<[request: boolean, response: boolean]>([false, false])
-const { state, markAsLayoutCompleted, commit, clear } = useEditorStore()
+const { state, markAsLayoutCompleted, commit } = useEditorStore()
 
 const uniqueId = useId()
 const requestFlowId = `${uniqueId}-request`
