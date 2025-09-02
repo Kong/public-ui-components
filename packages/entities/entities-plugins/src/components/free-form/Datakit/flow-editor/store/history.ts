@@ -52,6 +52,10 @@ export function useTaggedHistory<T>(
     baseCommit()
     if (undoStack.value.length > 1) {
       undoStack.value.splice(1, 1)
+    } else if (tag === '*' && undoStack.value.length === 1) {
+      // If `tag` is "*" and only one history checkpoint is present,
+      // remove it as we don't have other checkpoints to collapse into.
+      undoStack.value.splice(0, 1)
     }
     notify('commit')
   }

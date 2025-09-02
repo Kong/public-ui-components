@@ -215,8 +215,7 @@ const initWatcher = watch(initialized, ([request, response]) => {
       requestFlow.value?.autoLayout(false)
       responseFlow.value?.autoLayout(false)
       markAsLayoutCompleted()
-      commit()
-      clear()
+      commit('*')
     }
     fitView()
     initWatcher.stop()
