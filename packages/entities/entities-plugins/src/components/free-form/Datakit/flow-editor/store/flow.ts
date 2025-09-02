@@ -327,6 +327,16 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         targetField: parsedTarget?.field,
       }, false)
 
+      if (!connectionSuccess) {
+        // Reset on failure
+        reset()
+        toaster({
+          message: t('plugins.free-form.datakit.flow_editor.error.invalid_connection'),
+          appearance: 'danger',
+        })
+        return
+      }
+
       // Add the new connection to the display list
       addedConnections.push(
         createNewConnectionString(
@@ -337,16 +347,6 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           getNodeById,
         ),
       )
-
-      if (!connectionSuccess) {
-        // Reset on failure
-        reset()
-        toaster({
-          message: t('plugins.free-form.datakit.flow_editor.error.invalid_connection'),
-          appearance: 'danger',
-        })
-        return
-      }
 
       if (confirmToSwitch || confirmToOverride) {
         if (!confirm) {
