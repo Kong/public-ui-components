@@ -73,13 +73,22 @@ function setExampleCode(example: keyof typeof examples) {
 
   const newCode = examples[example]
   if (editor.getValue() !== newCode) {
-    const fullRange = model.getFullModelRange()
-
     editor.pushUndoStop()
-    editor.executeEdits(EDIT_SOURCE, [{ range: fullRange, text: newCode }])
+    editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: newCode }])
     editor.pushUndoStop()
   }
 
+  focusEnd()
+}
+
+function focusEnd() {
+  const editor = editorRef.value
+  const model = editor?.getModel()
+  if (!editor || !model) {
+    return
+  }
+
+  editor.setPosition(model.getFullModelRange().getEndPosition())
   editor.focus()
 }
 
@@ -100,12 +109,22 @@ onMounted(() => {
   editorRef.value = editor
 
   if (formData.config && Object.keys(formData.config).length > 0) {
-    editor.setValue(
-      yaml.dump(toRaw(formData.config), {
+    const config = { ...formData.config } as any
+
+    if (config.nodes && config.nodes.length === 0) {
+      delete config.nodes
+    }
+
+    const value = Object.keys(config).length === 0
+      ? ''
+      : yaml.dump(toRaw(config), {
         schema: JSON_SCHEMA,
         noArrayIndent: true,
-      }),
-    )
+      })
+
+    editor.setValue(value)
+
+    focusEnd()
   }
 
   editor.onDidChangeModelContent(() => {

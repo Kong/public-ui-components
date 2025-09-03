@@ -828,7 +828,7 @@
             },
             "proceed": "Yes, update"
           },
-          "phase_mask_help": "Adding Call or Exit nodes in the response phase is not supported."
+          "phase_mask_help": "You can't add call or exit nodes in the response phase."
         },
         "code_editor": {
           "mode": "Code editor"

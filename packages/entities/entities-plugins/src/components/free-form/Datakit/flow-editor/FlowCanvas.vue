@@ -262,7 +262,6 @@ defineExpose({ autoLayout, fitView })
   align-items: center;
   background: rgba($color: $kui-color-background, $alpha: 0.75);
   bottom: 0;
-  cursor: not-allowed;
   display: flex;
   justify-content: center;
   left: 0;
