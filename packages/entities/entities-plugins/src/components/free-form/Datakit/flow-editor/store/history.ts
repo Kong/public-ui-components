@@ -41,8 +41,8 @@ export function useTaggedHistory<T>(
    * calling `reset`.
    *
    * @param tag Tag to identify the last undo boundary. When provided, if the tag is identical to
-   *            the last boundary's tag, the new boundary will replace the previous one, without
-   *            creating a new undo boundary.
+   *            the last boundary's tag, or the tag is "*", the new boundary will replace the
+   *            previous one, without creating a new undo boundary.
    */
   function commit(tag?: string) {
     if (!tag) {
