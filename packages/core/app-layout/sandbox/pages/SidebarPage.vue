@@ -24,6 +24,7 @@
   <div class="sandbox-container">
     <AppSidebar
       :bottom-items="sidebarItemsBottom"
+      :group-config="groupConfig"
       :header-height="60"
       mobile-enabled
       :mobile-header-visible="false"
@@ -82,7 +83,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { AppSidebar, AppNavbar, SidebarToggle } from '../../src'
-import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
+import type { GroupConfigMap, SidebarPrimaryItem, SidebarSecondaryItem } from '../../src'
 import { AppLogo, AppGruceLogo } from '../components/icons'
 import '@kong/kongponents/dist/style.css'
 // Sandbox only
@@ -95,6 +96,19 @@ const activeItem = ref<SidebarPrimaryItem | SidebarSecondaryItem>()
 const sidebarItemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void => {
   activeItem.value = item
   console.log('activeItem: %o', activeItem.value)
+}
+
+const groupConfig: GroupConfigMap = {
+  connectivity: {
+    label: 'Connectivity',
+    collapsible: false,
+    collapsed: false,
+  },
+  applications: {
+    label: 'Applications',
+    collapsible: true,
+    collapsed: true,
+  },
 }
 
 const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
@@ -113,7 +127,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       to: '/sidebar/?gateway-manager',
       label: 'retail-sandbox-rg', // runtime group name
       key: 'gateway-manager',
-      group: 'Connectivity',
+      group: 'connectivity',
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'gateway-manager',
       // TODO: actually when you click on Runtime Manager it would not expand until the user picks a runtime group
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'gateway-manager' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'gateway-manager',
@@ -165,7 +179,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       key: 'servicehub',
       to: '/sidebar/?servicehub',
       label: 'Deloreans',
-      group: 'Applications',
+      group: 'applications',
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'servicehub',
       // TODO: actually when you click on Service Hub it would not expand until the user picks a service
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'servicehub' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'servicehub',
@@ -187,7 +201,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       key: 'dev-portal',
       to: '/sidebar/?dev-portal',
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'dev-portal',
-      group: 'Applications',
+      group: 'applications',
       // This item can always show the subnav
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'dev-portal' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'dev-portal',
       items: [
@@ -229,7 +243,7 @@ const sidebarItemsTop = computed((): SidebarPrimaryItem[] => {
       key: 'analytics',
       to: '/sidebar/?analytics',
       active: (activeItem.value as SidebarPrimaryItem)?.key === 'analytics',
-      group: 'Applications',
+      group: 'applications',
       // This item can always show the subnav
       expanded: (activeItem.value as SidebarPrimaryItem)?.key === 'analytics' || (activeItem.value as SidebarSecondaryItem)?.parentKey === 'analytics',
       items: [
