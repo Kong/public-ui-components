@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.0...@kong-ui-public/analytics-chart@10.1.1) (2025-09-03)
+
+
+### Bug Fixes
+
+* **analytics:** add vulnerability_count to locale entries [MA-4255] ([#2438](https://github.com/Kong/public-ui-components/issues/2438)) ([6e50b59](https://github.com/Kong/public-ui-components/commit/6e50b5901721a371c6c5da2f3bd8cdb9a6999120))
+
+
+
+
+
 # [10.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.16...@kong-ui-public/analytics-chart@10.1.0) (2025-08-28)
 
 
