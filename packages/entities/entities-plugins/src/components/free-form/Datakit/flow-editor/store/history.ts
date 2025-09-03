@@ -32,6 +32,18 @@ export function useTaggedHistory<T>(
     options?.onHistoryChange?.(action, stateRef.value)
   }
 
+  /**
+   * Commit the current state to history.
+   *
+   * (By default) The current state (uncommitted changes NOT included) will be taken as a snapshot
+   * and becomes a new undo boundary. A snapshot of the current state WITH uncommitted changes
+   * at this moment will become the new "last" state, which will be used to reset the state on
+   * calling `reset`.
+   *
+   * @param tag Tag to identify the last undo boundary. When provided, if the tag is identical to
+   *            the last boundary's tag, or the tag is "*", the new boundary will replace the
+   *            previous one, without creating a new undo boundary.
+   */
   function commit(tag?: string) {
     if (!tag) {
       lastTag = undefined
@@ -41,7 +53,7 @@ export function useTaggedHistory<T>(
     }
 
     // first time or switch tag: create a new undo boundary
-    if (lastTag !== tag) {
+    if (tag !== '*' && lastTag !== tag) {
       lastTag = tag
       baseCommit()
       notify('commit')
@@ -52,6 +64,11 @@ export function useTaggedHistory<T>(
     baseCommit()
     if (undoStack.value.length > 1) {
       undoStack.value.splice(1, 1)
+    } else if (undoStack.value.length === 1) {
+      // An `undoStack` with a length of 1 means there's no history prior to the most recent
+      // commit, to not create a new undo boundary, we need to clear the `undoStack`.
+      // Call to commit is still necessary as it updates the `last` internally in the history.
+      undoStack.value.splice(0, 1)
     }
     notify('commit')
   }
