@@ -47,6 +47,7 @@
                   'not-collapsible': !isGroupCollapsible(groupName),
                   'ungrouped': groupName === UNGROUPED_NAME,
                 }"
+                :data-testid="groupName === UNGROUPED_NAME ? 'level-primary-group-collapse-ungrouped' : `level-primary-group-collapse-${groupName}`"
                 :model-value="isGroupCollapsible(groupName) ? isGroupCollapsed(groupName) || false : false"
               >
                 <template #trigger="{ isCollapsed, toggle }">
