@@ -65,6 +65,7 @@
       v-if="!sidebar.hidden"
       :bottom-items="sidebar.bottomItems"
       :header-height="navbarHeight"
+      :group-config="groupConfig"
       mobile-enabled
       :mobile-header-visible="false"
       :mobile-top-offset="sidebarMobileTopOffset"
@@ -126,7 +127,7 @@ import { ref, reactive, computed, watchEffect, onMounted, onBeforeUnmount, toRef
 import AppNavbar from './navbar/AppNavbar.vue'
 import AppSidebar from './sidebar/AppSidebar.vue'
 import SidebarToggle from './sidebar/SidebarToggle.vue'
-import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../types'
+import type { GroupConfigMap, SidebarPrimaryItem, SidebarSecondaryItem } from '../types'
 import { useDebounce } from '../composables'
 import { KUI_BORDER_RADIUS_0, KUI_BORDER_RADIUS_20, KUI_COLOR_BACKGROUND, KUI_COLOR_BACKGROUND_INVERSE, KUI_COLOR_TEXT, KUI_COLOR_TEXT_INVERSE } from '@kong/design-tokens'
 
@@ -163,6 +164,10 @@ const props = defineProps({
   sidebarBottomItems: {
     type: Array as PropType<SidebarPrimaryItem[]>,
     default: () => ([]),
+  },
+  groupConfig: {
+    type: Object as PropType<GroupConfigMap>,
+    default: () => ({}),
   },
   theme: {
     type: String as PropType<'light' | 'dark'>,
