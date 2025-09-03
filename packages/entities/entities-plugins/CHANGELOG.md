@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.87.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.87.4...@kong-ui-public/entities-plugins@9.87.5) (2025-09-03)
+
+
+### Bug Fixes
+
+* **plugins:** autofocus plugin filter on creation page ([#2435](https://github.com/Kong/public-ui-components/issues/2435)) ([879c05b](https://github.com/Kong/public-ui-components/commit/879c05bb123d0aa3a6615b742479cbb6a3abad4a))
+
+
+
+
+
 ## [9.87.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.87.3...@kong-ui-public/entities-plugins@9.87.4) (2025-09-03)
 
 
