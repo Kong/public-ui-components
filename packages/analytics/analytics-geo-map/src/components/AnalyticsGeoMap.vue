@@ -245,8 +245,8 @@ const emitBounds = () => {
   const sw = b.getSouthWest()
   const ne = b.getNorthEast()
   emit('boundsChange', [
-    [Math.round(sw.lng), Math.round(sw.lat)],
-    [Math.round(ne.lng), Math.round(ne.lat)],
+    [sw.lng, sw.lat],
+    [ne.lng, ne.lat],
   ])
 }
 
@@ -376,8 +376,13 @@ watch(() => fitToCountry, (newVal) => {
   }
 })
 
-watch(() => bounds, (newVal) => {
-  if (map.value && newVal) {
+watch(() => bounds, (newVal, oldVal) => {
+  if (!newVal) return
+  const newFlattened = newVal?.flat()
+  const oldFlattened = oldVal?.flat()
+  const equal = newFlattened && oldFlattened && newFlattened.length === oldFlattened.length &&
+    newFlattened.every((v, i) => Math.round(v * 100) / 100 === Math.round(oldFlattened[i] * 100) / 100)
+  if (!equal && map.value) {
     map.value.fitBounds(newVal as LngLatBoundsLike)
   }
 })

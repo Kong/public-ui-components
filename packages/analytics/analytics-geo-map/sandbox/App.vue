@@ -7,8 +7,12 @@
       :items="items"
       label="Pick Something"
     />
+    <KButton @click="genNewBounds()">
+      Generate new bounds
+    </KButton>
     <div class="map-container">
       <AnalyticsGeoMap
+        :bounds="bounds"
         :country-metrics="countryMetrics"
         :fit-to-country="fitToCountry"
         :metric="'request_count'"
@@ -25,6 +29,10 @@ import { AnalyticsGeoMap } from '../src'
 
 const fitToCountry = ref()
 const selectedCountries = ref<string[]>([])
+const bounds = ref<Array<[number, number]>>([
+  [-180, -90],
+  [180, 90],
+])
 
 const items = ref([
   { label: 'US', value: 'US' },
@@ -51,6 +59,20 @@ const countryMetrics = computed(() => {
   return metrics
 
 })
+
+const genNewBounds = () => {
+  const sw: [number, number] = [
+    Math.random() * -180,
+    Math.random() * -90,
+  ]
+  const ne: [number, number] = [
+    Math.random() * 180,
+    Math.random() * 90,
+  ]
+
+
+  bounds.value = [sw, ne]
+}
 
 </script>
 

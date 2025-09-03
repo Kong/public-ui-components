@@ -38,7 +38,10 @@ const mountComponent = ({
   return cy.mount(WrapperComponent)
 }
 
-const romaniaBounds = [[20, 43], [30, 49]]
+const romaniaBounds = [
+  [20.220191999999997, 42.637532231814674],
+  [29.6265429999994, 49.17185755292891],
+]
 
 
 describe('<AnalyticsGeoMap />', () => {
