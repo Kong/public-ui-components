@@ -158,7 +158,8 @@
     "llm_cache_fetch_latency_average": "Fetch latency (avg)",
     "llm_latency_average": "Llm latency (avg)",
     "threshold": "Alert threshold",
-    "api": "API"
+    "api": "API",
+    "vulnerability_count": "Vulnerability count"
   },
   "metricAxisTitles": {
     "request_count": "Request count",
