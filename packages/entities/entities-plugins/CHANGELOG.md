@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.87.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.87.1...@kong-ui-public/entities-plugins@9.87.2) (2025-09-03)
+
+
+### Bug Fixes
+
+* **forms,entities-plugins:** fix rla view_advanced label, add testid ([#2433](https://github.com/Kong/public-ui-components/issues/2433)) ([ecf02c3](https://github.com/Kong/public-ui-components/commit/ecf02c322078af58e91a0d8b007bcb8c0f71759f))
+
+
+
+
+
 ## [9.87.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.87.0...@kong-ui-public/entities-plugins@9.87.1) (2025-09-02)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
