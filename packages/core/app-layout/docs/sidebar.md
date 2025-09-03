@@ -122,6 +122,26 @@ An array of `SidebarPrimaryItem` objects to display in the top navigation list (
 
 An array of `SidebarPrimaryItem` objects to display in the bottom navigation list (below the divider).
 
+#### `groupConfig`
+
+- type: Object as PropType<GroupConfigMap>
+- default: `() => ({})`
+
+A map of sidebar group config objects to customize the group's label, collapsibility, etc.
+
+```ts
+// GroupConfig
+{
+  label: string
+  collapsible?: boolean // whether or not the group can be collapsed
+  collapsed?: boolean // initial collapse state of the group
+}
+// GroupConfigMap
+{
+  [key: string]: GroupConfig
+}
+```
+
 #### `headerHeight`
 
 - type: `number`
@@ -512,11 +532,11 @@ const sidebarToggled = (isOpen: boolean) => {
 
 You can customize some of the sidebar CSS by adding CSS variables to your app. In most use-cases, this shouldn't be necessary.
 
-Variable | Description | Default
----------|----------|---------
-`--kong-ui-app-sidebar-background` | The CSS `background` of the sidebar | `transparent`
-`--kong-ui-app-sidebar-header-background` | The CSS `background` of the `.sidebar-header` | `transparent`
-`--kong-ui-app-sidebar-mobile-icon-color` | The color of the "lines" of the mobile menu icon | `#1155cb`
+| Variable                                  | Description                                      | Default       |
+| ----------------------------------------- | ------------------------------------------------ | ------------- |
+| `--kong-ui-app-sidebar-background`        | The CSS `background` of the sidebar              | `transparent` |
+| `--kong-ui-app-sidebar-header-background` | The CSS `background` of the `.sidebar-header`    | `transparent` |
+| `--kong-ui-app-sidebar-mobile-icon-color` | The color of the "lines" of the mobile menu icon | `#1155cb`     |
 
 ### CSS variable example
 
@@ -531,7 +551,7 @@ Variable | Description | Default
 TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/core/app-layout/src/types/sidebar.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
-import type { SidebarPrimaryItem, SidebarSecondaryItem } from '@kong-ui-public/app-layout'
+import type { SidebarPrimaryItem, SidebarSecondaryItem, GroupConfig, GroupConfigMap } from '@kong-ui-public/app-layout'
 ```
 
 ---
