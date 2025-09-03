@@ -65,7 +65,7 @@
     }
   },
   "rla": {
-    "view_advanced_fields": "View Advanced Fields",
+    "view_advanced": "View advanced parameters",
     "window_type": {
       "label": "Rate Limit Window Type",
       "help": "Sets the time window type to either <code>sliding</code> (default) or <code>fixed</code>.<br><ul><li>Sliding windows apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight.</li><li>Fixed windows consist of buckets that are statically assigned to a definitive time range, each request is mapped to only one fixed window based on its timestamp and will affect only that window&#39;s counters.</li></ul>",

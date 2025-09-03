@@ -189,7 +189,8 @@
 
   <KCollapse
     v-model="advancedCollapsed"
-    :trigger-label="t('rla.view_advanced_fields')"
+    data-testid="view-advanced"
+    :trigger-label="t('rla.view_advanced')"
   >
     <VueFormGenerator
       :model="formModel"

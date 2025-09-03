@@ -1,6 +1,7 @@
 <template>
   <KCollapse
     v-model="advancedCollapsed"
+    data-testid="view-advanced"
     :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
   >
     <div class="ff-advanced-fields">
