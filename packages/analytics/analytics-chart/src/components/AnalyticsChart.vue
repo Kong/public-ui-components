@@ -226,6 +226,10 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
 })
 
 const metricAxesTitle = computed<string | undefined>(() => {
+  if (props.chartOptions?.metricAxesTitle) {
+    return props.chartOptions?.metricAxesTitle
+  }
+
   if (!props.chartData?.meta.metric_names || !props.chartData?.meta.metric_units) {
     return undefined
   }
@@ -242,10 +246,6 @@ const metricAxesTitle = computed<string | undefined>(() => {
       // @ts-ignore - dynamic i18n key
       return i18n.t('metricAxisTitles.size_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
     }
-  }
-
-  if (props.chartOptions?.metricAxesTitle) {
-    return props.chartOptions?.metricAxesTitle
   }
 
   // @ts-ignore - dynamic i18n key
