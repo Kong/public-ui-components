@@ -38,9 +38,19 @@ const {
   background: $kui-color-background;
   border: 1px solid $kui-color-border;
   border-radius: $kui-border-radius-20;
+  cursor: grab;
   display: flex;
   gap: $kui-space-40;
   padding: $kui-space-40;
+  transition: border-color $kui-animation-duration-20 ease-in-out;
+
+  &:hover {
+    border-color: $kui-color-border-primary-weak;
+  }
+
+  &:active {
+    border-color: $kui-color-border-primary;
+  }
 
   .icon {
     align-items: center;
