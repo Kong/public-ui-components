@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.2.3...@kong-ui-public/dashboard-renderer@7.3.0) (2025-09-03)
+
+
+### Features
+
+* fullscreen mode for dashboards ma-4270 ([#2382](https://github.com/Kong/public-ui-components/issues/2382)) ([bb9adc2](https://github.com/Kong/public-ui-components/commit/bb9adc29b978d46a02c700e59a9525681a073641))
+
+
+
+
+
 ## [7.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.2.2...@kong-ui-public/dashboard-renderer@7.2.3) (2025-09-03)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
