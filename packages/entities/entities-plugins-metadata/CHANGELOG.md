@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.9.0...@kong-ui-public/entities-plugins-metadata@1.9.1) (2025-09-03)
+
+
+### Bug Fixes
+
+* **entities-plugins-metadata:** adjust the category of kafka consume plugin ([#2434](https://github.com/Kong/public-ui-components/issues/2434)) ([5e3df0c](https://github.com/Kong/public-ui-components/commit/5e3df0c57577ca20642f89b7d45b7b5b9816b2c8))
+
+
+
+
+
 # [1.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.8.0...@kong-ui-public/entities-plugins-metadata@1.9.0) (2025-08-26)
 
 
