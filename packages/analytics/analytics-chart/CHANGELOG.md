@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.1...@kong-ui-public/analytics-chart@10.1.2) (2025-09-03)
+
+
+### Bug Fixes
+
+* **analytics:** improve fallback axes titles [MA-4286] ([#2437](https://github.com/Kong/public-ui-components/issues/2437)) ([ac35733](https://github.com/Kong/public-ui-components/commit/ac35733f61493c5ff36a5e6277836aad6b8c4a68))
+
+
+
+
+
 ## [10.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.0...@kong-ui-public/analytics-chart@10.1.1) (2025-09-03)
 
 
