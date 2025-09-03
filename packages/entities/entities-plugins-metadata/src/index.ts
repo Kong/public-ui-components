@@ -395,7 +395,7 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
   'kafka-consume': {
-    group: PluginGroup.TRANSFORMATIONS,
+    group: PluginGroup.TRAFFIC_CONTROL,
     scope: [PluginScope.GLOBAL, PluginScope.ROUTE, PluginScope.CONSUMER],
   },
   'confluent-consume': {
