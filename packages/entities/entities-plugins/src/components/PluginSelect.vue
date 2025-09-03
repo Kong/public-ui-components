@@ -2,6 +2,7 @@
   <div class="kong-ui-entities-plugin-select-form">
     <div class="plugins-filter-input-container">
       <KInput
+        ref="filter-input"
         v-model.trim="filter"
         class="plugins-filter-input"
         data-testid="plugins-filter"
@@ -124,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onBeforeMount, onMounted, type PropType } from 'vue'
+import { computed, ref, watch, onBeforeMount, onMounted, type PropType, useTemplateRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   PluginGroup,
@@ -496,7 +497,11 @@ onBeforeMount(async () => {
   usercanDeleteCustomPlugin.value = await props.canDeleteCustomPlugin()
 })
 
+const filterInput = useTemplateRef('filter-input')
+
 onMounted(async () => {
+  filterInput.value?.input?.focus()
+
   try {
     const { data } = await axiosInstance.get(availablePluginsUrl.value)
 
