@@ -64,8 +64,8 @@
     <AppSidebar
       v-if="!sidebar.hidden"
       :bottom-items="sidebar.bottomItems"
-      :header-height="navbarHeight"
       :group-config="groupConfig"
+      :header-height="navbarHeight"
       mobile-enabled
       :mobile-header-visible="false"
       :mobile-top-offset="sidebarMobileTopOffset"
