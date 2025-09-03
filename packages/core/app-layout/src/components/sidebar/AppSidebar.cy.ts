@@ -114,6 +114,12 @@ describe('<AppSidebar />', () => {
         })
 
         it('renders a sidebar with top nav with collapsible groups', () => {
+          const gc = {
+            ...groupConfig,
+          }
+          // both groups are collapsible
+          gc.connectivity.collapsible = true
+          gc.applications.collapsible = true
           cy.mount(AppSidebar, {
             props: {
               open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
@@ -121,7 +127,7 @@ describe('<AppSidebar />', () => {
               topItems: groupedItems,
               bottomItems,
               headerHeight: 0,
-              groupConfig,
+              groupConfig: gc,
             },
           })
 
@@ -142,7 +148,7 @@ describe('<AppSidebar />', () => {
           cy.getTestId('level-primary-group-collapse-ungrouped').findTestId('level-primary-group-collapse-icon').should('not.exist')
 
           // check for grouped records/group name
-          Object.keys(groupConfig).forEach((groupName) => {
+          Object.keys(gc).forEach((groupName) => {
             cy.getTestId(`level-primary-group-collapse-${groupName}`).should('be.visible')
             // classes
             cy.getTestId(`level-primary-group-collapse-${groupName}`).should('not.have.class', 'not-collapsible')
@@ -150,7 +156,7 @@ describe('<AppSidebar />', () => {
             // item links
             cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('have.length', groupCounts[groupName as keyof typeof groupCounts] || 0)
             // default collapse state is applied
-            if (groupConfig[groupName].collapsed) {
+            if (gc[groupName].collapsed) {
               cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('not.be.visible')
             } else {
               cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('be.visible')
@@ -159,7 +165,7 @@ describe('<AppSidebar />', () => {
             cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-name').should('be.visible')
             // click toggles collapse
             cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-name').click()
-            if (groupConfig[groupName].collapsed) {
+            if (gc[groupName].collapsed) {
               cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('be.visible')
             } else {
               cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('not.be.visible')
