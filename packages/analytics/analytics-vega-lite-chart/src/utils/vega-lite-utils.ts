@@ -89,6 +89,13 @@ export function createTimeSeriesVegaSpec(
       },
     },
     layer: [
+      {
+        'params': [{
+          'name': 'brush',
+          'select': { 'type': 'interval', 'encodings': ['x'] },
+        }],
+        'mark': 'area',
+      },
       // Dataset layer
       {
         mark: {
