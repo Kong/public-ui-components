@@ -1,5 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
 import { getFieldDataSources, msToGranularity } from '@kong-ui-public/analytics-utilities'
+import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import type { DeepReadonly, Ref } from 'vue'
 import type { AiExploreAggregations, AiExploreQuery, AllFilters, ExploreAggregations, ExploreQuery, ExploreResultV4, FilterDatasource, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsBridge, TileDefinition } from '@kong-ui-public/analytics-utilities'
@@ -21,6 +22,7 @@ export default function useContextLinks(
 
   const exploreBaseUrl = ref('')
   const requestsBaseUrl = ref('')
+  const analyticsConfigStore = useAnalyticsConfigStore()
 
   onMounted(async () => {
     // Since this is async, it can't be in the `computed`.  Just check once, when the component mounts.
@@ -28,10 +30,11 @@ export default function useContextLinks(
     requestsBaseUrl.value = await queryBridge?.requestsBaseUrl?.() ?? ''
   })
 
+  const isAdvancedAnalytics = computed(() => analyticsConfigStore.analytics && analyticsConfigStore.percentiles)
   const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(definition.value.chart.type))
 
-  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage')
-  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['basic', 'api_usage', 'llm_usage', undefined].includes(definition.value.query.datasource))
+  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && isAdvancedAnalytics.value)
+  const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['basic', 'api_usage', 'llm_usage', undefined].includes(definition.value.query.datasource) && isAdvancedAnalytics.value)
 
   const chartDataGranularity = computed(() => {
     return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
