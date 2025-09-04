@@ -33,6 +33,7 @@ describe('<DocumentationDisplay />', () => {
 
     cy.get('.document-title').should('contain', 'Test Document')
   })
+
   it('renders document title when revision', () => {
     cy.mount(DocumentationDisplay as any, {
       props: {
@@ -50,6 +51,7 @@ describe('<DocumentationDisplay />', () => {
 
     cy.get('.document-title').should('contain', 'Test Document - Revision 1')
   })
+
   it('respects hidePublishToggle', () => {
     cy.mount(DocumentationDisplay as any, {
       props: {
@@ -60,6 +62,7 @@ describe('<DocumentationDisplay />', () => {
 
     cy.get('.document-status').should('not.exist')
   })
+
   it('shows publish status', () => {
     cy.mount(DocumentationDisplay as any, {
       props: {
@@ -76,6 +79,7 @@ describe('<DocumentationDisplay />', () => {
 
     cy.get('.document-status').should('exist')
   })
+
   it('can toggle published status', () => {
     cy.mount(DocumentationDisplay as any, {
       props: {
@@ -96,6 +100,7 @@ describe('<DocumentationDisplay />', () => {
     cy.get('.document-publish-toggle .switch-control').click()
     cy.get('.document-status').should('contain', 'Unpublished')
   })
+
   it('shows discard when changes detected and publish state changes', () => {
     cy.mount(DocumentationDisplay as any, {
       props: {
@@ -120,6 +125,7 @@ describe('<DocumentationDisplay />', () => {
     cy.get('.document-status').should('not.contain', 'Unpublished')
     cy.getTestId('discard-changes-prompt').should('exist')
   })
+
   it('does not show created date when createdAt is empty', () => {
     cy.mount(DocumentationDisplay as any, {
       props: { ...baseProps },
@@ -127,6 +133,7 @@ describe('<DocumentationDisplay />', () => {
 
     cy.get('.document-create').should('not.exist')
   })
+
   it('document title shows the .md extension', () => {
     cy.mount(DocumentationDisplay as any, {
       props: { ...baseProps },
@@ -135,6 +142,7 @@ describe('<DocumentationDisplay />', () => {
     cy.get('.document-title .document-title-extension').should('contain', 'md')
     cy.get('.document-title').should('contain', 'Test Document')
   })
+
   it('typing in the editor updates the textarea value', () => {
     cy.mount(DocumentationDisplay as any, {
       props: {

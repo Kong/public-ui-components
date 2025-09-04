@@ -79,7 +79,7 @@
           @mode="(mode: MarkdownMode) => handleMarkdownUiModeChange(mode)"
           @save="(payload: EmitUpdatePayload) => {
             emit('save-markdown', payload.content)
-            originalMarkdownContent = payload.content // <- add this line
+            originalMarkdownContent = payload.content
           }"
         />
       </div>
@@ -204,7 +204,7 @@ const handleMarkdownUiModeChange = (mode: MarkdownMode): void => {
 
 const _handlePublishToggle = (): void => {
   // check for unsaved changes
-  if ( ['edit', 'split'].includes( currentMode.value) && (markdownContent.value !== originalMarkdownContent.value) ) {
+  if (['edit', 'split'].includes(currentMode.value) && (markdownContent.value !== originalMarkdownContent.value)) {
     showDiscardChangesMessage.value = true
   } else {
     handlePublishToggle()
