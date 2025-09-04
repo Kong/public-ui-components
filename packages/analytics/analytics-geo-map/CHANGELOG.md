@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.1.1...@kong-ui-public/analytics-geo-map@1.2.0) (2025-09-04)
+
+
+### Features
+
+* emit new bounds when map zoomed/panned ([#2427](https://github.com/Kong/public-ui-components/issues/2427)) ([c6986ce](https://github.com/Kong/public-ui-components/commit/c6986ce73b7be650063e5d2e1ad7c2e3108d3da3))
+
+
+
+
+
 ## [1.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.1.0...@kong-ui-public/analytics-geo-map@1.1.1) (2025-08-27)
 
 
