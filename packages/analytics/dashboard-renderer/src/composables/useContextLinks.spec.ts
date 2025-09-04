@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { computed } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import useContextLinks from './useContextLinks'
+import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 
 const ONE_HOUR_MS = 3600000
 const ONE_DAY_MS = 86400000
@@ -24,6 +25,12 @@ vi.mock('@kong-ui-public/analytics-utilities', () => ({
     if (ms === ONE_DAY_MS) return 'daily'
     return 'auto'
   }),
+}))
+
+const analyticsConfig = { analytics: true, percentiles: true }
+
+vi.mock('@kong-ui-public/analytics-config-store', () => ({
+  useAnalyticsConfigStore: vi.fn(() => analyticsConfig),
 }))
 
 const makeFilter = (field: string) => ({ field, operator: 'in', value: ['x'] })
@@ -114,6 +121,7 @@ function mountComposable({
 
 describe('useContextLinks', () => {
   beforeEach(() => {
+    setupPiniaTestStore({ createVueApp: true })
     vi.clearAllMocks()
   })
 
@@ -254,5 +262,29 @@ describe('useContextLinks', () => {
     expect(result.timeframe.timePeriodsKey).toBe('custom')
     expect(result.timeframe.start).toBe(1000)
     expect(result.timeframe.end).toBe(5000)
+  })
+
+  it('does not build requests link or explore link if analytics/percentiles disabled', async () => {
+    const { wrapper } = mountComposable({})
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateExploreLink).toBe(true)
+    expect(wrapper.vm.canGenerateRequestsLink).toBe(true)
+    expect(wrapper.vm.exploreLinkKebabMenu).not.toBe('')
+    expect(wrapper.vm.requestsLinkKebabMenu).not.toBe('')
+
+    analyticsConfig.analytics = false
+    analyticsConfig.percentiles = false
+
+    await flushPromises()
+    // Need to remount composable to re-evaluate computed properties
+    const { wrapper: wrapper2 } = mountComposable({})
+    await flushPromises()
+
+    expect(wrapper2.vm.canGenerateExploreLink).toBe(false)
+    expect(wrapper2.vm.canGenerateRequestsLink).toBe(false)
+    expect(wrapper2.vm.exploreLinkKebabMenu).toBe('')
+    expect(wrapper2.vm.requestsLinkKebabMenu).toBe('')
+
   })
 })

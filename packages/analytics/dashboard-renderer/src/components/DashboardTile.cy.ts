@@ -2,6 +2,8 @@ import DashboardTile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
 import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition } from '@kong-ui-public/analytics-utilities'
+import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
+import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
 const start = Date.now() - 6 * 60 * 60 * 1000
 const end = Date.now()
@@ -101,6 +103,13 @@ describe('<DashboardTile />', () => {
       },
     })
   }
+
+  beforeEach(() => {
+    setupPiniaTestStore({ createVueApp: true })
+    const analyticsConfigStore = useAnalyticsConfigStore()
+    // @ts-ignore - mocking just what we need for the test
+    analyticsConfigStore.analyticsConfig = { analytics: { percentiles: true } }
+  })
 
   it('should render tile with title', () => {
     mount()
