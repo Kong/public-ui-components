@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.87.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.87.7...@kong-ui-public/entities-plugins@9.87.8) (2025-09-04)
+
+
+### Bug Fixes
+
+* **entities-plugins:** schema registry data transform [KM-1698] ([#2443](https://github.com/Kong/public-ui-components/issues/2443)) ([1716f5e](https://github.com/Kong/public-ui-components/commit/1716f5ed6f3946e469d72d82651f00eec686396b))
+
+
+
+
+
 ## [9.87.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.87.6...@kong-ui-public/entities-plugins@9.87.7) (2025-09-04)
 
 
