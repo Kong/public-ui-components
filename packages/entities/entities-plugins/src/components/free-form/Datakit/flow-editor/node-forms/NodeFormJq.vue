@@ -79,7 +79,6 @@ const {
   renameFieldByName,
   inputsFieldNames,
   nameValidator,
-  skipValidationOnMount,
   toggleNodeValid,
   fieldNameValidator,
 } = useNodeForm<JqFormData>(nodeId, () => formRef.value!.getInnerData())
@@ -110,7 +109,6 @@ const {
   getValidationData: () => ({
     jq: formData.value.jq,
   }),
-  skipValidationOnMount,
   toggleNodeValid,
 })
 

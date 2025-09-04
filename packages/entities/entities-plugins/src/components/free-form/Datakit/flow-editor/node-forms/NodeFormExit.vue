@@ -68,7 +68,6 @@ const {
   inputsFieldNames,
   nameValidator,
   toggleNodeValid,
-  skipValidationOnMount,
   fieldNameValidator,
 } = useNodeForm<ExitFormData>(nodeId, () => formRef.value!.getInnerData())
 
@@ -84,7 +83,6 @@ const {
   getValidationData: () => ({
     status: formData.value.status,
   }),
-  skipValidationOnMount,
   toggleNodeValid,
 })
 

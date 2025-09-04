@@ -70,7 +70,6 @@ const {
   inputsFieldNames,
   nameValidator,
   toggleNodeValid,
-  skipValidationOnMount,
   fieldNameValidator,
 } = useNodeForm<PropertyFormData>(nodeId, () => formRef.value!.getInnerData())
 
@@ -113,7 +112,6 @@ const {
     property: formData.value.property,
     key: extractKeyFromProperty(formData.value.property),
   }),
-  skipValidationOnMount,
   toggleNodeValid,
 })
 </script>
