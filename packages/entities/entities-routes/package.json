@@ -23,7 +23,7 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.31.0",
+    "@kong/icons": "^1.36.0",
     "@kong/kongponents": "^9.38.8",
     "axios": "^1.11.0",
     "vue": ">= 3.3.13 < 4",
@@ -33,7 +33,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.0",
-    "@kong/icons": "^1.33.2",
+    "@kong/icons": "^1.36.0",
     "@kong/kongponents": "9.38.8",
     "@types/lodash.isequal": "^4.5.8",
     "axios": "^1.7.7",
