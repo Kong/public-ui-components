@@ -44,7 +44,7 @@
     "vue-router": "^4.4.5"
   },
   "dependencies": {
-    "@kong/icons": "^1.33.2",
+    "@kong/icons": "^1.36.0",
     "focus-trap": "^7.6.5",
     "focus-trap-vue": "^4.0.3",
     "lodash.clonedeep": "^4.5.0"
