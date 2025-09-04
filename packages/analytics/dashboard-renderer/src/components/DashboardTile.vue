@@ -225,7 +225,7 @@ const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
 const canShowTitleActions = computed((): boolean => (canShowKebabMenu.value && (kebabMenuHasItems.value || props.context.editable)) || !!badgeData.value)
 
-const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || ('allow_csv_export' in props.definition.chart && props.definition.chart.allow_csv_export) || props.context.editable)
+const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || ('allow_csv_export' in props.definition.chart ? props.definition.chart.allow_csv_export : true) || props.context.editable)
 
 const rendererLookup: Record<DashboardTileType, Component | undefined> = {
   'timeseries_line': TimeseriesChartRenderer,
