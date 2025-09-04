@@ -91,7 +91,7 @@ interface TimeSeriesChartProps {
   syntheticsDataKey?: string
   chartLegendSortFn?: ChartLegendSortFn
   chartTooltipSortFn?: ChartTooltipSortFn
-  zoom?: boolean
+  brush?: boolean
   zoomActionItems?: ZoomActionItem[]
   tooltipMetricDisplay?: string
 }
@@ -111,7 +111,7 @@ const props = withDefaults(
     syntheticsDataKey: '',
     chartLegendSortFn: (a: EnhancedLegendItem, b: EnhancedLegendItem) => a.value && b.value && b.value.raw - a.value.raw,
     chartTooltipSortFn: (a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue,
-    zoom: false,
+    brush: false,
     zoomActionItems: undefined,
     tooltipMetricDisplay: '',
   },
@@ -172,7 +172,7 @@ const htmlLegendPlugin = {
 const plugins = computed(() => [
   htmlLegendPlugin,
   highlightPlugin,
-  ...(props.zoom ? [dragSelectPlugin] : []),
+  ...(props.brush ? [dragSelectPlugin] : []),
   ...(props.type === 'timeseries_line' ? [verticalLinePlugin] : []),
 ])
 

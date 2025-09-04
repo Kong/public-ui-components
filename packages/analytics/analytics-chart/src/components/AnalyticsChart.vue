@@ -41,6 +41,7 @@
     >
       <TimeSeriesChart
         v-if="isTimeSeriesChart"
+        :brush="canBrush"
         :chart-data="computedChartData"
         :chart-legend-sort-fn="chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
@@ -56,7 +57,6 @@
         :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
         :type="(chartOptions.type as ('timeseries_line' | 'timeseries_bar'))"
-        :zoom="timeseriesZoom"
         :zoom-action-items="zoomActionItems"
         @select-chart-range="emit('select-chart-range', $event)"
         @zoom-time-range="(newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange)"
@@ -160,6 +160,10 @@ const computedChartData = computed(() => {
       },
       toRef(props, 'chartData'),
     ).value
+})
+
+const canBrush = computed(() => {
+  return props.timeseriesZoom || !!props.exploreLink || !!props.requestsLink
 })
 
 const timeRangeMs = computed<number | undefined>(() => {
@@ -354,7 +358,10 @@ const chartTooltipSortFn = computed(() => {
 
 const zoomActionItems = computed<ZoomActionItem[]>(() => {
   return [
-    { label: i18n.t('zoom_action_items.zoom'), action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange) },
+    ...(props.timeseriesZoom ? [{
+      label: i18n.t('zoom_action_items.zoom'),
+      action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange),
+    }] : []),
     ...(props.exploreLink ? [{
       label: i18n.t('zoom_action_items.explore'),
       href: props.exploreLink.href,
