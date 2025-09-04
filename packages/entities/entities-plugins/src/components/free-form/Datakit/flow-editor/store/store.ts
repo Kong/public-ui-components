@@ -1,5 +1,4 @@
-import { createInjectionState } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import type { XYPosition } from '@vue-flow/core'
 import type {
   ConfigNode,
   CreateNodePayload,
@@ -15,6 +14,9 @@ import type {
   NodeName,
   UINode,
 } from '../../types'
+
+import { createInjectionState } from '@vueuse/core'
+import { computed, ref } from 'vue'
 import { IMPLICIT_NODE_META_MAP, isImplicitName, isImplicitType } from '../node/node'
 import {
   clone,
@@ -176,13 +178,38 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       })
     }
 
-    function addNode(payload: CreateNodePayload, commitNow = true) {
+    function addNode(payload: CreateNodePayload, commitNow = true): NodeId | undefined {
       const node = createNode(payload)
       if (!node) return
 
       state.value.nodes.push(node)
       if (commitNow) history.commit()
+
+      skipValidation.value = true
+
       return node.id
+    }
+
+    function duplicateNode(nodeId: NodeId, position?: XYPosition, commitNow = true): NodeId | undefined {
+      const node = getNodeById(nodeId)
+      if (!node || isImplicitType(node.type)) return
+
+      const newNode = {
+        ...clone(node),
+        id: createId('node'),
+        name: generateNodeName(node.name, nodeNames.value),
+        position: position ?? {
+          x: node.position.x + 20,
+          y: node.position.y + 20,
+        },
+      }
+
+      state.value.nodes.push(newNode)
+      if (commitNow) history.commit()
+
+      skipValidation.value = true
+
+      return newNode.id
     }
 
     function removeNode(nodeId: NodeId, commitNow = true) {
@@ -218,7 +245,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     // to avoid multiple commits for each drag event.
     function moveNode(
       nodeId: NodeId,
-      position: { x: number, y: number },
+      position: XYPosition,
       commitNow = true,
     ) {
       const node = getNodeById(nodeId)
@@ -537,6 +564,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       // node ops
       createNode,
       addNode,
+      duplicateNode,
       removeNode,
       renameNode,
       moveNode,

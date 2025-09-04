@@ -1,6 +1,7 @@
 // types.ts
 import type { Component } from 'vue'
 import type { ButtonProps } from '@kong/kongponents'
+import type { XYPosition } from '@vue-flow/core'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 import type {
   DatakitConfig,
@@ -121,7 +122,7 @@ export interface NodeField {
 export type UINode = {
   name: NodeName
   phase: NodePhase
-  position: { x: number, y: number }
+  position: XYPosition
   fields: { input?: FieldName[], output?: FieldName[] }
   expanded: { input?: boolean, output?: boolean }
 }
@@ -131,7 +132,7 @@ export interface NodeInstance {
   type: NodeType
   name: NodeName
   phase: NodePhase
-  position: { x: number, y: number }
+  position: XYPosition
   expanded: { input?: boolean, output?: boolean }
   fields: { input: NodeField[], output: NodeField[] }
   config?: Record<string, unknown>
@@ -168,7 +169,7 @@ export interface MakeNodeInstancePayload {
   type: NodeType
   name?: NodeName
   phase?: NodePhase
-  position?: { x: number, y: number }
+  position?: XYPosition
   fields?: { input?: FieldName[], output?: FieldName[] }
   config?: Record<string, unknown>
 }

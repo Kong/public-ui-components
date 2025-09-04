@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { HTTP_METHODS, IMPLICIT_NODE_NAMES, IMPLICIT_NODE_TYPES } from '../constants'
+import { CONFIG_NODE_TYPES, HTTP_METHODS, IMPLICIT_NODE_NAMES, IMPLICIT_NODE_TYPES } from '../constants'
 import { validateNamesAndConnections } from './shared'
 
 export const ImplicitNodeTypeSchema = z.enum(IMPLICIT_NODE_TYPES)
@@ -15,13 +15,7 @@ export type ImplicitNodeName = z.infer<typeof ImplicitNodeNameSchema>
 export const isImplicitName = (s: string) =>
   (IMPLICIT_NODE_TYPES as readonly string[]).includes(s)
 
-export const ConfigNodeTypeSchema = z.enum([
-  'call',
-  'jq',
-  'exit',
-  'property',
-  'static',
-])
+export const ConfigNodeTypeSchema = z.enum(CONFIG_NODE_TYPES)
 const KNOWN_NODE_TYPES = ConfigNodeTypeSchema.options
 
 /** All explicit node types recognised by Datakit. */

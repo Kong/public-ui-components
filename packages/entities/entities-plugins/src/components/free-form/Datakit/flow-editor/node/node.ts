@@ -1,12 +1,3 @@
-import { createI18n } from '@kong-ui-public/i18n'
-import {
-  CodeblockIcon,
-  GatewayIcon,
-  NetworkIcon,
-  StackIcon,
-  VitalsIcon,
-} from '@kong/icons'
-import english from '../../../../../locales/en.json'
 import type {
   FieldId,
   ImplicitNodeName,
@@ -19,6 +10,17 @@ import type {
   ConfigNodeType,
   IOMeta,
 } from '../../types'
+
+import { createI18n } from '@kong-ui-public/i18n'
+import {
+  CodeblockIcon,
+  GatewayIcon,
+  NetworkIcon,
+  StackIcon,
+  VitalsIcon,
+} from '@kong/icons'
+import english from '../../../../../locales/en.json'
+import { CONFIG_NODE_TYPES } from '../../constants'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -159,10 +161,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
     description: getNodeTypeDescription('response'),
     io: {
       input: {
-        fields: [
-          { name: 'headers' },
-          { name: 'body' },
-        ],
+        fields: [{ name: 'headers' }, { name: 'body' }],
       } as IOMeta,
     },
   },
@@ -175,6 +174,9 @@ export const isImplicitName = (name: NodeName): name is ImplicitNodeName =>
 
 export const isImplicitType = (type: NodeType): type is ImplicitNodeType =>
   (IMPLICIT_NODE_TYPES as readonly string[]).includes(type)
+
+export const isConfigType = (type: NodeType): type is ConfigNodeType =>
+  (CONFIG_NODE_TYPES as readonly string[]).includes(type)
 
 export const isImplicitNode = (
   node: NodeMeta | NodeInstance,

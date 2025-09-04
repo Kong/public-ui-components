@@ -733,6 +733,7 @@
             "auto_layout": "Auto layout",
             "undo": "Undo",
             "redo": "Redo",
+            "duplicate": "Duplicate",
             "delete": "Delete",
             "view_docs": "View docs",
             "done": "Done"
