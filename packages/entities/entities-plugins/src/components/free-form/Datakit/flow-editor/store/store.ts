@@ -53,7 +53,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         options.onChange?.(toConfigNodes(), toUINodes())
       },
     })
-    const newCreatedNodeId = ref<NodeId | null>(null)
+    const skipValidation = ref(false)
     const invalidConfigNodeIds = ref<Set<NodeId>>(new Set())
 
     function markAsLayoutCompleted() {
@@ -516,7 +516,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       state,
       selection,
       modalOpen,
-      newCreatedNodeId,
+      skipValidation,
       invalidConfigNodeIds,
       propertiesPanelOpen,
 

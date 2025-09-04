@@ -41,7 +41,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     replaceConfig,
     disconnectEdge,
     connectEdge,
-    newCreatedNodeId,
     invalidConfigNodeIds,
     undo,
     commit,
@@ -353,8 +352,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     return currentNode.value.fields.input.map(f => f.name) || []
   })
 
-  const skipValidationOnMount = computed(() => newCreatedNodeId.value === nodeId)
-
   function toggleNodeValid(isValid: boolean) {
     invalidConfigNodeIds.value.delete(nodeId)
     if (!isValid) {
@@ -382,7 +379,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     inputEdge,
     inputsEdges,
     inputsFieldNames,
-    skipValidationOnMount,
     currentNode,
 
     // form ops

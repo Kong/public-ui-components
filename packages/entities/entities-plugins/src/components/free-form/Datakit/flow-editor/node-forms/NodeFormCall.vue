@@ -91,7 +91,6 @@ const {
   setInput,
   inputsFieldNames,
   nameValidator,
-  skipValidationOnMount,
   toggleNodeValid,
   fieldNameValidator,
 } = useNodeForm<CallFormData>(nodeId, () => formRef.value!.getInnerData())
@@ -113,7 +112,6 @@ const {
     url: formData.value.url,
     timeout: formData.value.timeout,
   }),
-  skipValidationOnMount,
   toggleNodeValid,
 })
 

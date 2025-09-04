@@ -1,6 +1,7 @@
 import { computed, onBeforeUnmount, onMounted, watch, type ComputedRef } from 'vue'
 import type { ValidatorFn } from './basic'
 import { useValidationManager } from './manager'
+import { useEditorStore } from '../../store/store'
 
 /**
  * Configuration for node form validation
@@ -11,8 +12,6 @@ interface UseFormValidationOptions<T extends Record<string, ValidatorFn<any>>> {
   validationConfig: T | (() => T)
   /** Function to get validation data */
   getValidationData: () => Record<keyof T, any>
-  /** Whether to skip validation on mount (optional) */
-  skipValidationOnMount?: ComputedRef<boolean>
   /** Function to toggle node validity */
   toggleNodeValid: (isValid: boolean) => void
 }
@@ -67,7 +66,6 @@ interface UseFormValidationReturn<T extends Record<string, ValidatorFn<any>>> {
  *     url: formData.value.url,
  *     timeout: formData.value.timeout,
  *   }),
- *   skipValidationOnMount,
  *   toggleNodeValid,
  * })
  *
@@ -79,9 +77,10 @@ export function useFormValidation<T extends Record<string, ValidatorFn<any>>>(
   const {
     validationConfig,
     getValidationData,
-    skipValidationOnMount,
     toggleNodeValid,
   } = options
+
+  const { skipValidation } = useEditorStore()
 
   // Resolve validation configuration (static or dynamic)
   const resolvedConfig = computed(() => {
@@ -147,7 +146,9 @@ export function useFormValidation<T extends Record<string, ValidatorFn<any>>>(
 
   // Lifecycle integration: validation on mount
   onMounted(() => {
-    if (!skipValidationOnMount?.value) {
+    if (skipValidation.value) {
+      skipValidation.value = false
+    } else {
       validateAll()
     }
   })

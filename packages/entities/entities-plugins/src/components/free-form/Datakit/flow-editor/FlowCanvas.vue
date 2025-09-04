@@ -111,7 +111,7 @@ const {
   },
   readonly,
 })
-const { addNode, selectNode: selectStoreNode, propertiesPanelOpen, newCreatedNodeId, invalidConfigNodeIds } = editorStore
+const { addNode, selectNode: selectStoreNode, propertiesPanelOpen, skipValidation, invalidConfigNodeIds } = editorStore
 const { project, vueFlowRef, addSelectedNodes, getNodes } = vueFlowStore
 const disableDrop = ref(false)
 
@@ -167,7 +167,7 @@ function onDrop(e: DragEvent) {
   selectNode(nodeId)
 
   if (nodeId) {
-    newCreatedNodeId.value = nodeId
+    skipValidation.value = true
     propertiesPanelOpen.value = true
   }
 }
