@@ -136,6 +136,20 @@ describe('<DashboardTile />', () => {
     cy.getTestId('csv-export-modal').should('exist')
   })
 
+  it('should show CSV export by default', () => {
+    mount({
+      definition: {
+        query: mockTileDefinition.query,
+        chart: {
+          type: 'vertical_bar',
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-csv-export-1').should('exist')
+  })
+
   it('should not show CSV export if disabled for chart', () => {
     mount({
       definition: {
