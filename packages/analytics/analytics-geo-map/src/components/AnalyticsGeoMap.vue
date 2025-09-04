@@ -44,6 +44,7 @@ import approxNum from 'approximate-number'
 import lakes from '../ne_110m_lakes.json'
 import * as geobuf from 'geobuf'
 import Pbf from 'pbf'
+import { debounce } from '../utils'
 
 const countriesPbfUrlPromise = import('../countries-simple-geo.pbf?url').then(m => m.default)
 
@@ -63,6 +64,10 @@ const {
   showTooltipValue?: boolean
   fitToCountry?: CountryISOA2 | undefined
   bounds?: Array<[number, number]>
+}>()
+
+const emit = defineEmits<{
+  (e: 'boundsChange', value: Array<[number, number]>): void
 }>()
 
 const { i18n } = composables.useI18n()
@@ -234,6 +239,19 @@ const mapOptions = computed(() => {
   return options
 })
 
+const emitBounds = () => {
+  if (!map.value) return
+  const b = map.value.getBounds()
+  const sw = b.getSouthWest()
+  const ne = b.getNorthEast()
+  emit('boundsChange', [
+    [sw.lng, sw.lat],
+    [ne.lng, ne.lat],
+  ])
+}
+
+const debouncedEmitBounds = debounce(emitBounds, 300)
+
 onMounted(async () => {
   try {
     const countriesPbfUrl = await countriesPbfUrlPromise
@@ -295,6 +313,8 @@ onMounted(async () => {
         popup.remove()
       })
 
+      map.value?.on('move', debouncedEmitBounds)
+
       if (fitToCountry) {
         goToCountry(fitToCountry)
       }
@@ -353,6 +373,17 @@ watch(() => fitToCountry, (newVal) => {
         map.value?.flyTo({ center: mapOptions.value.center })
       }
     }
+  }
+})
+
+watch(() => bounds, (newVal, oldVal) => {
+  if (!newVal) return
+  const newFlattened = newVal?.flat()
+  const oldFlattened = oldVal?.flat()
+  const equal = newFlattened && oldFlattened && newFlattened.length === oldFlattened.length &&
+    newFlattened.every((v, i) => Math.round(v * 100) / 100 === Math.round(oldFlattened[i] * 100) / 100)
+  if (!equal && map.value) {
+    map.value.fitBounds(newVal as LngLatBoundsLike)
   }
 })
 
