@@ -205,15 +205,16 @@ const prunedData = computed(() => {
   return pick(props.model, ffDataKeys)
 })
 
-const scoped = ref(false)
-const moreCollapsed = ref(true)
-
 const scopeIds: Record<string, string | null> = pick(props.formModel, [
   'service-id',
   'route-id',
   'consumer-id',
   'consumer_group-id',
 ])
+
+// `scopeIds` is not reactive. Initialize `scoped` in one shot.
+const scoped = ref(Object.values(scopeIds).some(id => Boolean(id)))
+const moreCollapsed = ref(true)
 
 function handleScopeUpdate(value: any, model: string) {
   scopeIds[model] = value
