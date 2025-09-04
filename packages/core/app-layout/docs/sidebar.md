@@ -142,6 +142,16 @@ A map of sidebar group config objects to customize the group's label, collapsibi
 }
 ```
 
+The group `key` should match the `SidebarPrimaryItem` `group` value. There will be some minor normalization applied to the `group` string to use it as a key; spaces will be removed and the first character will be lowercased.
+
+```ts
+group: "My Group Name"
+
+groupConfig: {
+  myGroupName: {...}
+}
+```
+
 #### `headerHeight`
 
 - type: `number`

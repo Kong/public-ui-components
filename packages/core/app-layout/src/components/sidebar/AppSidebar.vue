@@ -291,8 +291,8 @@ const topNavGroups = computed((): Map<string, SidebarPrimaryItem[]> => {
   return groups
 })
 
-const getGroupConfig = (groupName: string): GroupConfig | null => {
-  if (groupName === UNGROUPED_NAME) {
+const getGroupConfig = (groupName: string = ''): GroupConfig | null => {
+  if (groupName === UNGROUPED_NAME || !groupName.trim()) {
     return null
   }
 
@@ -302,7 +302,12 @@ const getGroupConfig = (groupName: string): GroupConfig | null => {
     collapsed: false,
   }
 
-  return groupName && props.groupConfig && props.groupConfig[groupName] ? props.groupConfig[groupName] || defaultItem : defaultItem
+  // Remove spaces and lowercase the first character
+  let groupNameKey = groupName.trim().replace(' ', '')
+  groupNameKey = groupNameKey.charAt(0).toLowerCase() + groupNameKey.slice(1)
+
+  const configExists = groupName && props.groupConfig && (props.groupConfig[groupName] || props.groupConfig[groupNameKey])
+  return configExists ? props.groupConfig[groupName] || props.groupConfig[groupNameKey] : defaultItem
 }
 
 const isGroupCollapsible = (groupName: string): boolean => {
