@@ -53,7 +53,7 @@
                 <template #trigger="{ isCollapsed, toggle }">
                   <component
                     :is="isGroupCollapsible(groupName) ? KButton : 'div'"
-                    appearance="none"
+                    :appearance="isGroupCollapsible(groupName) ? 'none' : undefined"
                     class="level-primary-group-collapse-trigger"
                     @click="isGroupCollapsible(groupName) ? toggle() : undefined"
                   >
@@ -302,7 +302,7 @@ const getGroupConfig = (groupName: string): GroupConfig | null => {
     collapsed: false,
   }
 
-  return groupName && props.groupConfig ? props.groupConfig[groupName] || defaultItem : defaultItem
+  return groupName && props.groupConfig && props.groupConfig[groupName] ? props.groupConfig[groupName] || defaultItem : defaultItem
 }
 
 const isGroupCollapsible = (groupName: string): boolean => {
