@@ -15,9 +15,10 @@
     <div class="zoom-actions-heading-divider" />
     <div
       v-for="option in zoomActionItems"
-      :key="option.label"
+      :key="option.key"
       class="zoom-action-item"
       :class="{ 'disabled': option.disabled }"
+      :data-testid="`zoom-action-item-${option.key}`"
     >
       <a
         v-if="option.href"
