@@ -6,7 +6,11 @@ import { exploreResult, emptyExploreResult, multiDimensionExploreResult } from '
 import { INJECT_QUERY_PROVIDER } from '../constants'
 
 function mouseMove({
-  x1, y1, x2, y2, duration,
+  x1,
+  y1,
+  x2,
+  y2,
+  duration,
   withClick = false,
   selector,
 }:
@@ -19,7 +23,7 @@ function mouseMove({
   withClick: boolean
   selector: string
 }) {
-  const stepCount = duration / 100 // change denominator for more or less steps
+  const stepCount = duration / 100
   const dx = (x2 - x1) / stepCount
   const dy = (y2 - y1) / stepCount
 
@@ -34,7 +38,11 @@ function mouseMove({
 }
 
 function mouseDrag({
-  x1, y1, x2, y2, duration,
+  x1,
+  y1,
+  x2,
+  y2,
+  duration,
   selector,
 }: {
   x1: number
@@ -44,7 +52,7 @@ function mouseDrag({
   duration: number
   selector: string
 }) {
-  const stepCount = duration / 100 // change denominator for more or less steps
+  const stepCount = duration / 100
   const dx = (x2 - x1) / stepCount
   const dy = (y2 - y1) / stepCount
 
@@ -59,17 +67,38 @@ function mouseDrag({
   cy.get(selector).trigger('mouseup', x2, y2)
 }
 
+const selectChartArea = () => {
+  // Initiate a mouse move to get the tooltip to show up
+  mouseMove({
+    x1: 0,
+    y1: 0,
+    x2: 1,
+    y2: 1,
+    duration: 500,
+    withClick: true,
+    selector: '.chart-container > canvas',
+  })
+
+  // Drag to select a time range
+  mouseDrag({
+    x1: 400,
+    y1: 50,
+    x2: 500,
+    y2: 50,
+    duration: 500,
+    selector: '.chart-container > canvas',
+  })
+}
+
 const mockQueryProvider = {
   evaluateFeatureFlagFn: () => true,
 }
 
 describe('<AnalyticsChart />', () => {
-
   interface MountOptions {
     chartOptions?: object
     chartData?: object
     tooltipTitle?: string
-    showLegendValues?: boolean
     timeseriesZoom?: boolean
     exploreLink?: { href: string }
     requestsLink?: { href: string }
@@ -121,19 +150,7 @@ describe('<AnalyticsChart />', () => {
   })
 
   it('Renders a line chart for total requests count with status code dimension', () => {
-    cy.mount(AnalyticsChart, {
-      props: {
-        chartData: exploreResult,
-        chartOptions: {
-          type: 'timeseries_line',
-          stacked: true,
-          fill: false,
-          granularity: 'hourly',
-        },
-        tooltipTitle: 'Tooltip Title',
-      },
-    })
-
+    mount({})
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('.debug-tooltip').should('not.exist')
 
@@ -150,33 +167,21 @@ describe('<AnalyticsChart />', () => {
   })
 
   it('shows the empty state with no data', () => {
-    cy.mount(AnalyticsChart, {
-      props: {
-        chartData: emptyExploreResult,
-        chartOptions: {
-          type: 'timeseries_line',
-          stacked: true,
-          fill: false,
-          granularity: 'hourly',
-        },
-        tooltipTitle: 'Tooltip Title',
-      },
+    mount({
+      chartData: emptyExploreResult,
     })
 
     cy.get('[data-testid="no-data-in-report"]').should('be.visible')
   })
 
   it('renders time series bar chart with no dimension and limited results', () => {
-    cy.mount(AnalyticsChart, {
-      props: {
-        chartData: exploreResult,
-        chartOptions: {
-          type: 'timeseries_bar',
-          stacked: false,
-          granularity: 'daily',
-          noLimit: true,
-        },
-        tooltipTitle: 'Tooltip Title',
+
+    mount({
+      chartOptions: {
+        type: 'timeseries_bar',
+        stacked: false,
+        granularity: 'daily',
+        noLimit: false,
       },
     })
 
@@ -192,13 +197,13 @@ describe('<AnalyticsChart />', () => {
   })
 
   it('renders a horizontal bar chart with no legend values', () => {
-    cy.mount(AnalyticsChart, {
-      props: {
-        chartData: exploreResult,
-        chartOptions: {
-          type: 'horizontal_bar',
-        },
-        tooltipTitle: 'Tooltip Title',
+
+    mount({
+      chartData: exploreResult,
+      chartOptions: {
+        type: 'horizontal_bar',
+      },
+      extraProps: {
         showLegendValues: false,
         showAnnotations: false,
       },
@@ -223,13 +228,10 @@ describe('<AnalyticsChart />', () => {
   })
 
   it('renders a vertical bar chart with multi dimension data', () => {
-    cy.mount(AnalyticsChart, {
-      props: {
-        chartData: multiDimensionExploreResult,
-        chartOptions: {
-          type: 'vertical_bar',
-        },
-        tooltipTitle: 'Tooltip Title',
+    mount({
+      chartData: multiDimensionExploreResult,
+      chartOptions: {
+        type: 'vertical_bar',
       },
     })
 
@@ -247,13 +249,10 @@ describe('<AnalyticsChart />', () => {
   })
 
   it('renders a donut chart with multi dimension data', () => {
-    cy.mount(AnalyticsChart, {
-      props: {
-        chartData: multiDimensionExploreResult,
-        chartOptions: {
-          type: 'donut',
-        },
-        tooltipTitle: 'Tooltip Title',
+    mount({
+      chartData: multiDimensionExploreResult,
+      chartOptions: {
+        type: 'donut',
       },
     })
 
@@ -291,12 +290,10 @@ describe('<AnalyticsChart />', () => {
   it('renders an empty state with default title and description text', () => {
     const { i18n } = composables.useI18n()
 
-    cy.mount(AnalyticsChart, {
-      props: {
-        chartData: emptyExploreResult,
-        chartOptions: {
-          type: 'donut',
-        },
+    mount({
+      chartData: emptyExploreResult,
+      chartOptions: {
+        type: 'donut',
       },
     })
 
@@ -389,28 +386,7 @@ describe('<AnalyticsChart />', () => {
 
       cy.get('.analytics-chart-parent').should('be.visible')
       cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
-
-      // Initiate a mouse move to get the tooltip to show up
-      mouseMove({
-        x1: 0,
-        y1: 0,
-        x2: 1,
-        y2: 1,
-        duration: 500,
-        withClick: true,
-        selector: '.chart-container > canvas',
-      })
-
-      // Drag to select a time range
-      mouseDrag({
-        x1: 400,
-        y1: 50,
-        x2: 500,
-        y2: 50,
-        duration: 500,
-        selector: '.chart-container > canvas',
-      })
-
+      selectChartArea()
       cy.get('@onSelectChartRange').should('not.have.been.called')
       cy.get('.zoom-timerange-container').should('not.exist')
     })
@@ -424,28 +400,7 @@ describe('<AnalyticsChart />', () => {
 
       cy.get('.analytics-chart-parent').should('be.visible')
       cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
-
-      // Initiate a mouse move to get the tooltip to show up
-      mouseMove({
-        x1: 0,
-        y1: 0,
-        x2: 1,
-        y2: 1,
-        duration: 500,
-        withClick: true,
-        selector: '.chart-container > canvas',
-      })
-
-      // Drag to select a time range
-      mouseDrag({
-        x1: 400,
-        y1: 50,
-        x2: 500,
-        y2: 50,
-        duration: 500,
-        selector: '.chart-container > canvas',
-      })
-
+      selectChartArea()
       cy.get('@onSelectChartRange').should('have.been.calledOnce')
       cy.get('.zoom-timerange-container').should('be.visible')
       cy.getTestId('zoom-action-item-zoom-in').should('exist')
@@ -461,28 +416,7 @@ describe('<AnalyticsChart />', () => {
 
       cy.get('.analytics-chart-parent').should('be.visible')
       cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
-
-      // Initiate a mouse move to get the tooltip to show up
-      mouseMove({
-        x1: 0,
-        y1: 0,
-        x2: 1,
-        y2: 1,
-        duration: 500,
-        withClick: true,
-        selector: '.chart-container > canvas',
-      })
-
-      // Drag to select a time range
-      mouseDrag({
-        x1: 400,
-        y1: 50,
-        x2: 500,
-        y2: 50,
-        duration: 500,
-        selector: '.chart-container > canvas',
-      })
-
+      selectChartArea()
       cy.get('@onSelectChartRange').should('have.been.calledOnce')
       cy.get('.zoom-timerange-container').should('be.visible')
       cy.getTestId('zoom-action-item-view-requests').should('exist')
@@ -496,28 +430,7 @@ describe('<AnalyticsChart />', () => {
 
       cy.get('.analytics-chart-parent').should('be.visible')
       cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
-
-      // Initiate a mouse move to get the tooltip to show up
-      mouseMove({
-        x1: 0,
-        y1: 0,
-        x2: 1,
-        y2: 1,
-        duration: 500,
-        withClick: true,
-        selector: '.chart-container > canvas',
-      })
-
-      // Drag to select a time range
-      mouseDrag({
-        x1: 400,
-        y1: 50,
-        x2: 500,
-        y2: 50,
-        duration: 500,
-        selector: '.chart-container > canvas',
-      })
-
+      selectChartArea()
       cy.get('@onSelectChartRange').should('have.been.calledOnce')
       cy.get('.zoom-timerange-container').should('be.visible')
       cy.getTestId('zoom-action-item-explore').should('exist')
