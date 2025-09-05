@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.3...@kong-ui-public/analytics-chart@10.1.4) (2025-09-05)
+
+
+### Bug Fixes
+
+* allow view requests and explore independent of zoom ([#2454](https://github.com/Kong/public-ui-components/issues/2454)) ([9701978](https://github.com/Kong/public-ui-components/commit/9701978f5c3a53fb7e20ffa61de5ede39a579f8c))
+
+
+
+
+
 ## [10.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.2...@kong-ui-public/analytics-chart@10.1.3) (2025-09-05)
 
 
