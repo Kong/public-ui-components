@@ -273,7 +273,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
    * @param {Object} frontendSchema the schema defined in the custom js files
    * @returns {Object} an object containing a formModel and formSchema, both of which will be consumed by the VFG form generator
    */
-  const parseSchema = (currentSchema: Record<string, any>, backendSchema?: Record<string, any>, frontendSchema?: Record<string, any>) => {
+  const parseSchema = (currentSchema: Record<string, any>, backendSchema?: Record<string, any>, frontendSchema?: Record<string, any>, engine?: 'vfg' | 'freeform') => {
     let inputSchema: Record<string, any> = {}
     if (backendSchema || currentSchema) {
       inputSchema = backendSchema || (currentSchema.fields ? currentSchema.fields : currentSchema)
@@ -315,7 +315,7 @@ export const useSchemas = (options?: UseSchemasOptions) => {
     formSchema._supported_redis_partial_type = currentSchema._supported_redis_partial_type
     formSchema._redis_partial_path = currentSchema._redis_partial_path
 
-    if (getSharedFormName(pluginName) || getFreeFormName(pluginName, experimentalFreeForms) || metadata?.useLegacyForm || options?.credential) {
+    if (getSharedFormName(pluginName) || getFreeFormName(pluginName, experimentalFreeForms) || metadata?.useLegacyForm || options?.credential || engine === 'freeform') {
       /**
        * Do not generate grouped schema when:
        * - The plugin has a custom layout

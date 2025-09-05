@@ -232,6 +232,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
+  /**
+   * Force the engine type for the form.
+   */
+  engine: {
+    type: String as PropType<'vfg' | 'freeform'>,
+    required: false,
+  },
 })
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
@@ -852,7 +860,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
     return
   }
-  const form: Record<string, any> = parseSchema(newSchema)
+  const form: Record<string, any> = parseSchema(newSchema, undefined, undefined, props.engine)
 
   Object.assign(formModel, form.model)
 
@@ -863,14 +871,18 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   }
   Object.assign(originalModel, JSON.parse(JSON.stringify(form.model)))
 
-  freeformName.value = getFreeFormName(form.model.name, experimentalFreeForms)
+  freeformName.value = !props.engine
+    ? getFreeFormName(form.model.name, experimentalFreeForms)
+    : props.engine === 'vfg'
+      ? undefined
+      : getFreeFormName(form.model.name, experimentalFreeForms) || 'CommonForm'
   sharedFormName.value = getSharedFormName(form.model.name)
 
   initFormModel()
 }, { immediate: true, deep: true })
 
 onBeforeMount(() => {
-  form.value = parseSchema(props.schema)
+  form.value = parseSchema(props.schema, undefined, undefined, props.engine)
 
   Object.assign(formModel, form.value?.model || {})
   formSchema.value = form.value?.schema || {}
