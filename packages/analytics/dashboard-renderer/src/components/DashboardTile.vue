@@ -158,7 +158,16 @@ import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AiExploreQuery, AnalyticsBridge, DatasourceAwareQuery, ExploreQuery, ExploreResultV4, FilterDatasource, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type {
+  AiExploreQuery,
+  AnalyticsBridge,
+  DatasourceAwareQuery,
+  ExploreQuery,
+  ExploreResultV4,
+  FilterDatasource,
+  AbsoluteTimeRangeV4,
+  RelativeTimeRangeV4,
+} from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
@@ -197,6 +206,7 @@ const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
 const exportExploreResult = ref<ExploreResultV4 | null>(null)
 const isExportLoading = ref(false)
+const selectedTimeRange = ref<AbsoluteTimeRangeV4 | undefined>()
 
 const {
   exploreLinkKebabMenu,
@@ -226,6 +236,11 @@ watch(() => props.definition, async () => {
 
   loadingChartData.value = true
 }, { immediate: true, deep: true })
+
+
+const effectiveTimeRange = computed<AbsoluteTimeRangeV4 | RelativeTimeRangeV4 | undefined>(() => {
+  return selectedTimeRange.value ?? props.definition.query?.time_range
+})
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
@@ -377,6 +392,8 @@ const exportCsv = async () => {
 }
 
 const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
+  selectedTimeRange.value = newTimeRange
+
   const zoomEvent: TileZoomEvent = {
     tileId: props.tileId.toString(),
     timeRange: newTimeRange,
@@ -385,6 +402,8 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
 }
 
 const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
+  selectedTimeRange.value = newTimeRange
+
   const filters = datasourceScopedFilters.value
   const requestsQuery = buildRequestsQueryZoomActions(newTimeRange, filters)
   const exploreQuery = buildExploreQuery(newTimeRange, filters)
@@ -402,6 +421,7 @@ const requestExport = async (limit: number = EXPORT_RECORD_LIMIT): Promise<Explo
 
     const baseQuery = {
       ...baseQueryWithoutDatasource,
+      ...(effectiveTimeRange.value ? { time_range: effectiveTimeRange.value } : {}),
       limit,
     }
 
