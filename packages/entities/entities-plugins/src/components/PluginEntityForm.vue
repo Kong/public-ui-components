@@ -240,6 +240,7 @@ const props = defineProps({
    */
   engine: {
     type: String,
+    required: false,
   },
 })
 
