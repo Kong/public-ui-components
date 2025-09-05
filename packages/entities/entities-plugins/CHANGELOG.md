@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.89.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.88.0...@kong-ui-public/entities-plugins@9.89.0) (2025-09-05)
+
+
+### Features
+
+* **entities-plugins:** datakit control icons/tooltips ([#2448](https://github.com/Kong/public-ui-components/issues/2448)) ([3b884b7](https://github.com/Kong/public-ui-components/commit/3b884b71c00ec23529e1de55570b99fb08da6ea1))
+
+
+
+
+
 # [9.88.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.87.10...@kong-ui-public/entities-plugins@9.88.0) (2025-09-05)
 
 
