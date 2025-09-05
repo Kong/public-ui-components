@@ -112,7 +112,7 @@
       </div>
       <CsvExportModal
         v-if="exportModalVisible"
-        :chart-data="(chartData as ExploreResultV4)"
+        :chart-data="(exportExploreResult || (chartData as ExploreResultV4))"
         :data-testid="`csv-export-modal-${tileId}`"
         :filename="csvFilename"
         :is-loading="isExportLoading"
