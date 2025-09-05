@@ -312,11 +312,9 @@ const props = defineProps({
 
   /**
    * Force the engine type for the form.
-   * @enum
-   * 'vfg' | 'freeform'
    */
   engine: {
-    type: String,
+    type: String as PropType<'vfg' | 'freeform'>,
     required: false,
   },
 })

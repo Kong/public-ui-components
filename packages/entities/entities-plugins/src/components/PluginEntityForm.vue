@@ -235,11 +235,9 @@ const props = defineProps({
 
   /**
    * Force the engine type for the form.
-   * @enum
-   * 'vfg' | 'freeform'
    */
   engine: {
-    type: String,
+    type: String as PropType<'vfg' | 'freeform'>,
     required: false,
   },
 })
@@ -862,7 +860,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
   if (objectsAreEqual(newSchema || {}, oldSchema || {})) {
     return
   }
-  const form: Record<string, any> = parseSchema(newSchema, undefined, undefined, props.engine as any)
+  const form: Record<string, any> = parseSchema(newSchema, undefined, undefined, props.engine)
 
   Object.assign(formModel, form.model)
 
