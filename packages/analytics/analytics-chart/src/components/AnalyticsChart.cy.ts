@@ -3,8 +3,22 @@ import AnalyticsChart from './AnalyticsChart.vue'
 import ChartTooltip from './chart-plugins/ChartTooltip.vue'
 import composables from '../composables'
 import { exploreResult, emptyExploreResult, multiDimensionExploreResult } from '../../fixtures/mockData'
+import { INJECT_QUERY_PROVIDER } from '../constants'
 
-function mouseMove(x1: number, y1: number, x2: number, y2: number, duration: number, withClick = false) {
+function mouseMove({
+  x1, y1, x2, y2, duration,
+  withClick = false,
+  selector,
+}:
+{
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  duration: number
+  withClick: boolean
+  selector: string
+}) {
   const stepCount = duration / 100 // change denominator for more or less steps
   const dx = (x2 - x1) / stepCount
   const dy = (y2 - y1) / stepCount
@@ -12,14 +26,93 @@ function mouseMove(x1: number, y1: number, x2: number, y2: number, duration: num
   for (let step = 0; step < stepCount; step++) {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(100) // wait 100ms between each step
-    cy.get('.chart-body > canvas').trigger('mousemove', x1 + dx * step, y1 + dy * step, { force: true })
+    cy.get(selector).trigger('mousemove', x1 + dx * step, y1 + dy * step, { force: true })
     if (withClick) {
-      cy.get('.chart-body > canvas').click()
+      cy.get(selector).click()
     }
   }
 }
 
+function mouseDrag({
+  x1, y1, x2, y2, duration,
+  selector,
+}: {
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  duration: number
+  selector: string
+}) {
+  const stepCount = duration / 100 // change denominator for more or less steps
+  const dx = (x2 - x1) / stepCount
+  const dy = (y2 - y1) / stepCount
+
+  cy.get(selector).trigger('mousedown', x1, y1)
+
+  for (let step = 0; step < stepCount; step++) {
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(100) // wait 100ms between each step
+    cy.get(selector).trigger('mousemove', x1 + dx * step, y1 + dy * step)
+  }
+
+  cy.get(selector).trigger('mouseup', x2, y2)
+}
+
+const mockQueryProvider = {
+  evaluateFeatureFlagFn: () => true,
+}
+
 describe('<AnalyticsChart />', () => {
+
+  interface MountOptions {
+    chartOptions?: object
+    chartData?: object
+    tooltipTitle?: string
+    showLegendValues?: boolean
+    timeseriesZoom?: boolean
+    exploreLink?: { href: string }
+    requestsLink?: { href: string }
+    onZoomTimeRange?: sinon.SinonSpy
+    onSelectChartRange?: sinon.SinonSpy
+    extraProps?: Record<string, any>
+  }
+
+  const mount = ({
+    chartOptions = { type: 'timeseries_line', stacked: true, fill: false, granularity: 'hourly' },
+    chartData = exploreResult,
+    tooltipTitle = 'Tooltip Title',
+    timeseriesZoom = false,
+    exploreLink = undefined,
+    requestsLink = undefined,
+    extraProps = {},
+    onZoomTimeRange = cy.spy(),
+    onSelectChartRange = cy.spy(),
+  }: MountOptions) => {
+    const attrs = {
+      onZoomTimeRange,
+      onSelectChartRange,
+    }
+    return cy.mount(AnalyticsChart, {
+      props: {
+        ...extraProps,
+        chartData,
+        chartOptions,
+        tooltipTitle,
+        timeseriesZoom,
+        exploreLink,
+        requestsLink,
+      },
+      attrs,
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: mockQueryProvider,
+        },
+      },
+    })
+  }
+
+
   beforeEach(() => {
     cy.viewport(1280, 800)
     cy.stub(composables, 'useEvaluateFeatureFlag').returns({
@@ -244,7 +337,7 @@ describe('<AnalyticsChart />', () => {
     cy.get('.analytics-chart-parent').should('be.visible')
 
     // Move mouse from (x1, y1) to (x2, y2), over 400ms, while clicking
-    mouseMove(200, 50, 300, 50, 400, true)
+    mouseMove({ x1: 200, y1: 50, x2: 300, y2: 50, duration: 400, withClick: true, selector: '.chart-body > canvas' })
 
     cy.get('body').should(($body) => {
       const tooltipExists = $body.find('.tooltip-container').length > 0
@@ -270,7 +363,8 @@ describe('<AnalyticsChart />', () => {
 
     cy.get('.analytics-chart-parent').should('be.visible')
 
-    mouseMove(200, 50, 300, 50, 100, true)
+    mouseMove({ x1: 200, y1: 50, x2: 300, y2: 50, duration: 100, withClick: true, selector: '.chart-body > canvas' })
+
     cy.get('body').should(($body) => {
       const tooltipExists = $body.find('.tooltip-container').length > 0
       return expect(tooltipExists).to.be.true
@@ -284,5 +378,149 @@ describe('<AnalyticsChart />', () => {
     cy.get('.tooltip-container')
       .find('.metric')
       .should('exist')
+  })
+
+  describe('Zoom actions', () => {
+
+    it('cannot select area if no zoom actions are present', () => {
+      mount({
+        onSelectChartRange: cy.spy().as('onSelectChartRange'),
+      })
+
+      cy.get('.analytics-chart-parent').should('be.visible')
+      cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+      // Initiate a mouse move to get the tooltip to show up
+      mouseMove({
+        x1: 0,
+        y1: 0,
+        x2: 1,
+        y2: 1,
+        duration: 500,
+        withClick: true,
+        selector: '.chart-container > canvas',
+      })
+
+      // Drag to select a time range
+      mouseDrag({
+        x1: 400,
+        y1: 50,
+        x2: 500,
+        y2: 50,
+        duration: 500,
+        selector: '.chart-container > canvas',
+      })
+
+      cy.get('@onSelectChartRange').should('not.have.been.called')
+      cy.get('.zoom-timerange-container').should('not.exist')
+    })
+
+    it('zoom in option if timeseriesZoom provided', () => {
+      mount({
+        timeseriesZoom: true,
+        onSelectChartRange: cy.spy().as('onSelectChartRange'),
+        onZoomTimeRange: cy.spy().as('onZoomTimeRange'),
+      })
+
+      cy.get('.analytics-chart-parent').should('be.visible')
+      cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+      // Initiate a mouse move to get the tooltip to show up
+      mouseMove({
+        x1: 0,
+        y1: 0,
+        x2: 1,
+        y2: 1,
+        duration: 500,
+        withClick: true,
+        selector: '.chart-container > canvas',
+      })
+
+      // Drag to select a time range
+      mouseDrag({
+        x1: 400,
+        y1: 50,
+        x2: 500,
+        y2: 50,
+        duration: 500,
+        selector: '.chart-container > canvas',
+      })
+
+      cy.get('@onSelectChartRange').should('have.been.calledOnce')
+      cy.get('.zoom-timerange-container').should('be.visible')
+      cy.getTestId('zoom-action-item-zoom-in').should('exist')
+      cy.getTestId('zoom-action-item-zoom-in').click()
+      cy.get('@onZoomTimeRange').should('have.been.calledOnce')
+    })
+
+    it('view requests option if requests link provided', () => {
+      mount({
+        requestsLink: { href: '#requests' },
+        onSelectChartRange: cy.spy().as('onSelectChartRange'),
+      })
+
+      cy.get('.analytics-chart-parent').should('be.visible')
+      cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+      // Initiate a mouse move to get the tooltip to show up
+      mouseMove({
+        x1: 0,
+        y1: 0,
+        x2: 1,
+        y2: 1,
+        duration: 500,
+        withClick: true,
+        selector: '.chart-container > canvas',
+      })
+
+      // Drag to select a time range
+      mouseDrag({
+        x1: 400,
+        y1: 50,
+        x2: 500,
+        y2: 50,
+        duration: 500,
+        selector: '.chart-container > canvas',
+      })
+
+      cy.get('@onSelectChartRange').should('have.been.calledOnce')
+      cy.get('.zoom-timerange-container').should('be.visible')
+      cy.getTestId('zoom-action-item-view-requests').should('exist')
+    })
+
+    it('explore option if explore link provided', () => {
+      mount({
+        exploreLink: { href: '#explore' },
+        onSelectChartRange: cy.spy().as('onSelectChartRange'),
+      })
+
+      cy.get('.analytics-chart-parent').should('be.visible')
+      cy.get('[data-testid="time-series-line-chart"]').should('be.visible')
+
+      // Initiate a mouse move to get the tooltip to show up
+      mouseMove({
+        x1: 0,
+        y1: 0,
+        x2: 1,
+        y2: 1,
+        duration: 500,
+        withClick: true,
+        selector: '.chart-container > canvas',
+      })
+
+      // Drag to select a time range
+      mouseDrag({
+        x1: 400,
+        y1: 50,
+        x2: 500,
+        y2: 50,
+        duration: 500,
+        selector: '.chart-container > canvas',
+      })
+
+      cy.get('@onSelectChartRange').should('have.been.calledOnce')
+      cy.get('.zoom-timerange-container').should('be.visible')
+      cy.getTestId('zoom-action-item-explore').should('exist')
+    })
   })
 })

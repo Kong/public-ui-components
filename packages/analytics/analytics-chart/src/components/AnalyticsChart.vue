@@ -360,14 +360,17 @@ const zoomActionItems = computed<ZoomActionItem[]>(() => {
   return [
     ...(props.timeseriesZoom ? [{
       label: i18n.t('zoom_action_items.zoom'),
+      key: 'zoom-in',
       action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange),
     }] : []),
     ...(props.exploreLink ? [{
       label: i18n.t('zoom_action_items.explore'),
+      key: 'explore',
       href: props.exploreLink.href,
     }] : []),
     ...(props.requestsLink ? [{
       label: i18n.t('zoom_action_items.view_requests'),
+      key: 'view-requests',
       href: props.requestsLink.href,
     }] : []),
   ]
