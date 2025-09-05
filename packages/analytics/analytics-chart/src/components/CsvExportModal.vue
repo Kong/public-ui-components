@@ -104,7 +104,7 @@ const props = withDefaults(defineProps<{
   isLoading: boolean
 }>(), {
   modalDescription: undefined,
-  isLoading: true,
+  isLoading: false,
 })
 
 const emit = defineEmits(['toggleModal'])
