@@ -116,7 +116,6 @@ export type PluginMetaData<I18nMessageSource = void> = {
   description: string // A string to describe a Plugin.
   group: PluginGroup // Plugin categories meta.
   scope: PluginScope[] // The scope supported by the Plugin.
-  isEnterprise: boolean // The value will be True if the Plugin is enterprise only.
   useLegacyForm?: boolean // An optional field to use legacy form for the plugin. Default to false.
   fieldRules?: FieldRules
   useUIData?: boolean // An optional field that indicates if the plugin may have associated UI data. (via `?__ui_data`)
