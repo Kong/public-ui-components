@@ -727,6 +727,10 @@ onBeforeUnmount(() => {
 
   // KCollapse overrides
   .level-primary-group-collapse.k-collapse {
+    &:not(:last-of-type) {
+      margin-bottom: $kui-space-60;
+    }
+
     .collapse-heading {
       margin-bottom: $kui-space-0;
     }
@@ -758,7 +762,7 @@ onBeforeUnmount(() => {
 
   .level-primary-group-collapse-trigger.k-button,
   div.level-primary-group-collapse-trigger {
-    margin-bottom: $kui-space-40;
+    margin-bottom: $kui-space-0;
     padding: $kui-space-0 calc($kui-space-50 + $kui-space-40);
   }
 
