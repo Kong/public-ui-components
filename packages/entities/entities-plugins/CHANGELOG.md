@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.88.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.87.10...@kong-ui-public/entities-plugins@9.88.0) (2025-09-05)
+
+
+### Features
+
+* **entities-plugins:** add engine prop to plugin form ([#2254](https://github.com/Kong/public-ui-components/issues/2254)) ([971017b](https://github.com/Kong/public-ui-components/commit/971017bea2b6d52001ad920c3a5bf87d3db79c93))
+
+
+
+
+
 ## [9.87.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.87.9...@kong-ui-public/entities-plugins@9.87.10) (2025-09-05)
 
 
