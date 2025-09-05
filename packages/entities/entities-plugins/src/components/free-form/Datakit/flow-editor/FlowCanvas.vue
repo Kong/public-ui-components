@@ -81,7 +81,7 @@ import { VueFlow } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { KTooltip } from '@kong/kongponents'
-import { AddIcon, RemoveIcon } from '@kong/icons'
+import { AddIcon, RemoveIcon, AutoLayoutIcon } from '@kong/icons'
 
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
@@ -93,7 +93,6 @@ import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
 import FitIcon from './icons/FitIcon.vue'
-import AutoLayoutIcon from './icons/AutoLayoutIcon.vue'
 
 const { flowId, phase, readonly } = defineProps<{
   flowId: string
