@@ -16,3 +16,5 @@ export const FULLSCREEN_SHORT_REFRESH_INTERVAL_MS = 300000
  * default refresh interval for queries that are greater than 24 hours is 1 hour
  */
 export const FULLSCREEN_LONG_REFRESH_INTERVAL_MS = 3600000
+
+export const EXPORT_RECORD_LIMIT = 1000
