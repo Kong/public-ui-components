@@ -8,6 +8,9 @@ export default defineConfig({
       bundler: 'vite',
       viteConfig: {
         ...sharedViteConfig,
+        define: {
+          'process.env.VSCODE_TEXTMATE_DEBUG': false,
+        },
       },
     },
     supportFile: 'cypress/support/index.ts',
