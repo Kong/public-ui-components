@@ -763,7 +763,13 @@ onBeforeUnmount(() => {
   .level-primary-group-collapse-trigger.k-button,
   div.level-primary-group-collapse-trigger {
     margin-bottom: $kui-space-0;
-    padding: $kui-space-0 calc($kui-space-50 + $kui-space-40);
+    margin-left: $kui-space-50;
+    padding: $kui-space-0 calc($kui-space-50 + $kui-space-40) $kui-space-0 $kui-space-40;
+
+    &:focus-visible {
+      border-radius: $sidebar-item-border-radius;
+      box-shadow: $kui-navigation-shadow-focus;
+    }
   }
 
   .level-primary-group-collapse-icon {
