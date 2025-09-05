@@ -882,7 +882,7 @@ watch(() => props.schema, (newSchema, oldSchema) => {
 }, { immediate: true, deep: true })
 
 onBeforeMount(() => {
-  form.value = parseSchema(props.schema, undefined, undefined, props.engine as any)
+  form.value = parseSchema(props.schema, undefined, undefined, props.engine)
 
   Object.assign(formModel, form.value?.model || {})
   formSchema.value = form.value?.schema || {}
