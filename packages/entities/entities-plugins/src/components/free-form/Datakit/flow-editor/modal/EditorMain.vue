@@ -11,8 +11,7 @@
             icon
             @click="undo"
           >
-            <!-- TODO: switch to <UndoIcon /> when available -->
-            <RedoIcon class="flip" />
+            <UndoIcon />
           </KButton>
 
           <template #content>
@@ -69,7 +68,7 @@
 
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
-import { ExternalLinkIcon, RedoIcon } from '@kong/icons'
+import { ExternalLinkIcon, UndoIcon, RedoIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
 
 import english from '../../../../../locales/en.json'
