@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.24.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.24.0...@kong-ui-public/entities-vaults@3.24.1) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2446](https://github.com/Kong/public-ui-components/issues/2446)) ([baf48b5](https://github.com/Kong/public-ui-components/commit/baf48b551d4a0f4152781d9cd6907bee4969c963))
+
+
+
+
+
 # [3.24.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.23.9...@kong-ui-public/entities-vaults@3.24.0) (2025-09-01)
 
 

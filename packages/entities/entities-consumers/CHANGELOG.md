@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.1.8...@kong-ui-public/entities-consumers@4.1.9) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2446](https://github.com/Kong/public-ui-components/issues/2446)) ([baf48b5](https://github.com/Kong/public-ui-components/commit/baf48b551d4a0f4152781d9cd6907bee4969c963))
+
+
+
+
+
 ## [4.1.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.1.7...@kong-ui-public/entities-consumers@4.1.8) (2025-08-27)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.8.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.8.9...@kong-ui-public/entities-key-sets@3.8.10) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2446](https://github.com/Kong/public-ui-components/issues/2446)) ([baf48b5](https://github.com/Kong/public-ui-components/commit/baf48b551d4a0f4152781d9cd6907bee4969c963))
+
+
+
+
+
 ## [3.8.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.8.8...@kong-ui-public/entities-key-sets@3.8.9) (2025-08-27)
 
 
