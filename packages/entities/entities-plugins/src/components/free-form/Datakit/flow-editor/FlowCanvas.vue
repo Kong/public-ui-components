@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
 import type { Component } from 'vue'
-import type { DragPayload, NodeId, NodePhase } from '../types'
+import type { DragPayload, NodePhase } from '../types'
 
 import { computed, nextTick, ref, useTemplateRef } from 'vue'
 import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core'
@@ -83,16 +83,17 @@ import { ControlButton, Controls } from '@vue-flow/controls'
 import { KTooltip } from '@kong/kongponents'
 import { AddIcon, RemoveIcon, AutoLayoutIcon } from '@kong/icons'
 
+import useI18n from '../../../../composables/useI18n'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
 import { provideFlowStore } from './store/flow'
-import useI18n from '../../../../composables/useI18n'
+import { useHotkeys } from './composables/useHotkeys'
+import FitIcon from './icons/FitIcon.vue'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
-import FitIcon from './icons/FitIcon.vue'
 
 const { flowId, phase, readonly } = defineProps<{
   flowId: string
@@ -116,6 +117,9 @@ const {
   autoLayout,
   fitViewParams,
   fitView,
+  selectNode,
+  placeToRight,
+  scrollRightToReveal,
 } = provideFlowStore({
   phase,
   flowId,
@@ -127,16 +131,10 @@ const {
   },
   readonly,
 })
-const { addNode, selectNode: selectStoreNode, propertiesPanelOpen, skipValidation, invalidConfigNodeIds } = editorStore
-const { project, vueFlowRef, addSelectedNodes, getNodes, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
-const disableDrop = ref(false)
+const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode } = editorStore
+const { project, vueFlowRef, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
 
-async function selectNode(nodeId?: NodeId) {
-  selectStoreNode(nodeId)
-  await nextTick()
-  const selectedNode = getNodes.value.find((n) => n.id === nodeId)
-  addSelectedNodes(selectedNode ? [selectedNode] : [])
-}
+const disableDrop = ref(false)
 
 function onNodeClick() {
   if (readonly) return
@@ -180,15 +178,14 @@ function onDrop(e: DragEvent) {
   }
 
   const nodeId = addNode(newNode)
-  selectNode(nodeId)
 
-  if (nodeId) {
-    skipValidation.value = true
-    propertiesPanelOpen.value = true
-  }
+  if (!nodeId) return
+
+  selectNode(nodeId)
+  propertiesPanelOpen.value = true
 }
 
-const onClickAutoLayout = () => {
+function onClickAutoLayout() {
   autoLayout()
   nextTick(() => fitView())
 }
@@ -236,6 +233,24 @@ if (phase === 'response' && !readonly) {
     disableDrop.value = false
   })
 }
+
+async function duplicate() {
+  const node = selectedNode.value
+  if (readonly || !node || node.phase !== phase) return
+
+  const nodeId = duplicateNode(node.id, placeToRight(node.id))
+
+  if (!nodeId) return
+
+  await selectNode(nodeId)
+  propertiesPanelOpen.value = true
+  scrollRightToReveal(nodeId)
+}
+
+useHotkeys({
+  enabled: computed(() => !!selectedNode.value && !readonly && selectedNode.value.phase === phase),
+  duplicate,
+})
 
 defineExpose({ autoLayout, fitView })
 </script>

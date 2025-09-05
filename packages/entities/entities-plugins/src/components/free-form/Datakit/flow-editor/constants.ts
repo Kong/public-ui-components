@@ -12,5 +12,6 @@ export const DEFAULT_LAYOUT_OPTIONS = {
 export const DEFAULT_VIEWPORT_WIDTH = 1600
 export const MAX_ZOOM_LEVEL = 1.2
 export const MIN_ZOOM_LEVEL = 0
+export const SCROLL_DURATION = 200
 
 export const CONFIRM_MODAL_PROVIDE_KEY = Symbol('confirm-modal')

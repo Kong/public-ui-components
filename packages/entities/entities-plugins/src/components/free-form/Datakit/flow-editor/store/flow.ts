@@ -1,5 +1,5 @@
 import type { Node as DagreNode } from '@dagrejs/dagre'
-import type { Connection, Edge, FitViewParams, Node } from '@vue-flow/core'
+import type { Connection, Edge, FitViewParams, Node, Rect, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
 import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
@@ -15,9 +15,10 @@ import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
 import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
 import { useOptionalConfirm } from '../composables/useConflictConfirm'
-import { DEFAULT_LAYOUT_OPTIONS, DEFAULT_VIEWPORT_WIDTH } from '../constants'
+import { DEFAULT_LAYOUT_OPTIONS, DEFAULT_VIEWPORT_WIDTH, SCROLL_DURATION } from '../constants'
 import { isImplicitNode } from '../node/node'
 import { useEditorStore } from './store'
+import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -44,7 +45,7 @@ function createWrapper(): [typeof wrap, typeof copy] {
     y2: Number.NEGATIVE_INFINITY,
   }
 
-  const wrap = (node: { x: number, y: number, width: number, height: number }) => {
+  const wrap = (node: Rect) => {
     bounding.x1 = Math.min(bounding.x1, node.x)
     bounding.y1 = Math.min(bounding.y1, node.y)
     bounding.x2 = Math.max(bounding.x2, node.x + node.width)
@@ -169,6 +170,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       onEdgeMouseEnter,
       onEdgeMouseLeave,
       setEdges,
+      getNodes,
+      addSelectedNodes,
     } = vueFlowStore
 
     // VueFlow has a default delete key code of 'Backspace',
@@ -179,7 +182,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       state,
       commit: historyCommit,
       moveNode,
-      selectNode,
+      selectNode: selectStoreNode,
       removeNode,
       getNodeById,
       connectEdge,
@@ -379,7 +382,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         // deselected changes come first
         .sort((a, b) => (a.selected === b.selected ? 0 : a.selected ? 1 : -1))
         .forEach((change) => {
-          selectNode(change.selected ? (change.id as NodeId) : undefined)
+          selectStoreNode(change.selected ? (change.id as NodeId) : undefined)
         })
 
       changes.forEach((change) => {
@@ -631,6 +634,103 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       })
     }
 
+    /**
+     * Select a node in the flow editor. This operation ensures that the store state
+     * and the internal state of VueFlow are in sync.
+     */
+    async function selectNode(nodeId?: NodeId) {
+      selectStoreNode(nodeId)
+
+      // Wait until rendering is complete before syncing with VueFlow's internal
+      // selection state. Use setTimeout to ensure all microtasks have finished.
+      return new Promise<void>((resolve) =>
+        setTimeout(() => {
+          const selectedNode = findNode(nodeId)
+          addSelectedNodes(selectedNode ? [selectedNode] : [])
+          resolve()
+        }, 0),
+      )
+    }
+
+    /**
+     * Calculate the position to place a node to the right of a reference node.
+     */
+    function placeToRight(nodeId: NodeId): XYPosition {
+      const nodes = getNodes.value
+
+      const refNode = nodes.find(({ id }) => id === nodeId)
+      if (!refNode) throw new Error(`Node ${nodeId} not found`)
+
+      const {
+        position: { x: refX, y: refY },
+        dimensions: { width: refWidth, height: refHeight },
+      } = refNode
+
+      const rowTop = refY
+      const rowBottom = refY + refHeight
+
+      const intervals = nodes
+        .filter(({ id }) => id !== nodeId)
+        .filter(({ position: { y }, dimensions: { height } }) => {
+          return y < rowBottom && y + height > rowTop
+        })
+        .map(({ position: { x }, dimensions: { width } }) => {
+          return { left: x, right: x + width }
+        })
+        .sort((a, b) => a.left - b.left)
+
+      let cursorX = refX + refWidth + nodeGap
+
+      for (const { left, right } of intervals) {
+        if (right <= cursorX) continue
+        if (cursorX + refWidth <= left) return { x: cursorX, y: rowTop }
+        cursorX = Math.max(cursorX, right) + nodeGap
+      }
+
+      return { x: cursorX, y: rowTop }
+    }
+
+    /**
+     * Scroll the viewport to the right to reveal a node.
+     */
+    function scrollRightToReveal(nodeId?: NodeId) {
+      if (!nodeId) return
+
+      const target = findNode(nodeId)
+      if (!target) throw new Error(`Node ${nodeId} not found`)
+
+      const {
+        position: { x: targetLeft },
+        dimensions: { width: targetWidth },
+      } = target
+
+      const targetRight = targetLeft + targetWidth
+
+      const { viewport, dimensions, setViewport } = vueFlowStore
+
+      const { x: translateX, y: translateY, zoom } = viewport.value
+      const { width: viewportWidth } = dimensions.value
+
+      const nodeLeftScreen = targetLeft * zoom + translateX
+      const nodeRightScreen = targetRight * zoom + translateX
+
+      const visibleRightScreen = viewportWidth - DK_NODE_PROPERTIES_PANEL_WIDTH - nodeGap
+
+      if (nodeRightScreen <= visibleRightScreen) return
+
+      let deltaScreenX = visibleRightScreen - nodeRightScreen
+      if (nodeLeftScreen + deltaScreenX < 0) {
+        deltaScreenX = -nodeLeftScreen
+      }
+
+      if (deltaScreenX === 0) return
+
+      setViewport(
+        { x: translateX + deltaScreenX, y: translateY, zoom },
+        { duration: SCROLL_DURATION },
+      )
+    }
+
     return {
       vueFlowStore,
       editorStore,
@@ -640,7 +740,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       nodes,
       edges,
 
+      selectNode,
       autoLayout,
+      placeToRight,
+      scrollRightToReveal,
 
       fitViewParams,
       fitView,

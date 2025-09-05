@@ -46,6 +46,14 @@
         </KButton>
         <template #items>
           <KDropdownItem
+            @click="duplicate"
+          >
+            <HotkeyLabel
+              :keys="HOTKEYS.duplicate"
+              :label="t('plugins.free-form.datakit.flow_editor.actions.duplicate')"
+            />
+          </KDropdownItem>
+          <KDropdownItem
             danger
             @click="removeNode(data.id)"
           >
@@ -241,7 +249,14 @@ const { t } = createI18n<typeof english>('en-us', english)
 // FlowNode can be used in some tree that does not provide a flow store
 // e.g., as a DND preview
 const flowStore = useOptionalFlowStore()
-const { getInEdgesByNodeId, getOutEdgesByNodeId, toggleExpanded: storeToggleExpanded, removeNode } = useEditorStore()
+const {
+  getInEdgesByNodeId,
+  getOutEdgesByNodeId,
+  toggleExpanded: storeToggleExpanded,
+  duplicateNode,
+  removeNode,
+  propertiesPanelOpen,
+} = useEditorStore()
 
 const meta = computed(() => getNodeMeta(data.type))
 
@@ -301,12 +316,22 @@ const handleTwigColor = computed(() => {
 })
 
 function toggleExpanded(io: 'input' | 'output') {
-  if (flowStore?.readonly) return
+  if (!flowStore || flowStore.readonly) return
 
   if (io === 'input' && !inputsCollapsible.value) return
   if (io === 'output' && !outputsCollapsible.value) return
 
   storeToggleExpanded(data.id, io)
+}
+
+async function duplicate() {
+  if (!flowStore || flowStore.readonly) return
+
+  const newId = duplicateNode(data.id, flowStore.placeToRight(data.id))
+
+  await flowStore.selectNode(newId)
+  flowStore.scrollRightToReveal(newId)
+  propertiesPanelOpen.value = true
 }
 
 watch(inputsCollapsible, (collapsible) => {

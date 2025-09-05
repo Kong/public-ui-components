@@ -19,6 +19,7 @@ import { cloneDeep, uniqueId } from 'lodash-es'
 import {
   CONFIG_NODE_META_MAP,
   IMPLICIT_NODE_META_MAP,
+  isConfigType,
   isImplicitType,
 } from '../node/node'
 
@@ -138,16 +139,14 @@ export function makeDefaultImplicitUINode(name: ImplicitNodeName): UINode {
 
 /** Generate a unique node name when user doesn’t supply one. */
 export function generateNodeName(
-  type: ConfigNodeType,
-  nodeNames: Set<NodeName>,
+  prefixOrType: ConfigNodeType | string,
+  nodeNames: ReadonlySet<NodeName>,
 ): ConfigNodeName {
-  const prefix = type.toUpperCase()
+  const base = isConfigType(prefixOrType as any) ? prefixOrType.toUpperCase() : prefixOrType
+  const prefix = base.replace(/_\d+$/, '')
 
-  let next = 1
-  while (true) {
-    if (!nodeNames.has(`${prefix}_${next}` as ConfigNodeName)) break
-    next++
+  for (let n = 1; ; n++) {
+    const name = `${prefix}_${n}` as ConfigNodeName
+    if (!nodeNames.has(name)) return name
   }
-
-  return `${prefix}_${next}` as ConfigNodeName
 }
