@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.2.10...@kong-ui-public/documentation@1.3.0) (2025-09-05)
+
+
+### Features
+
+* **documentation:** show discard changes warning and allow revert [TDX-6534] ([#2432](https://github.com/Kong/public-ui-components/issues/2432)) ([33570b7](https://github.com/Kong/public-ui-components/commit/33570b72440c1a762f47add93c6b55b5cc3533ec))
+
+
+
+
+
 ## [1.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.2.9...@kong-ui-public/documentation@1.2.10) (2025-09-05)
 
 
