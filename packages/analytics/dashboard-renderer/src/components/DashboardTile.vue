@@ -166,7 +166,7 @@ import type {
   ExploreResultV4,
   FilterDatasource,
   AbsoluteTimeRangeV4,
-  RelativeTimeRangeV4,
+  TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
@@ -209,7 +209,7 @@ const exploreLinkZoomActions = ref<ExternalLink | undefined>(undefined)
 const loadingChartData = ref(true)
 const exportExploreResult = ref<ExploreResultV4 | null>(null)
 const isExportLoading = ref(false)
-const selectedTimeRange = ref<AbsoluteTimeRangeV4 | undefined>()
+const selectedTimeRange = ref<TimeRangeV4 | undefined>()
 
 const {
   exploreLinkKebabMenu,
@@ -238,9 +238,8 @@ watch(() => props.definition, async () => {
   loadingChartData.value = true
 }, { immediate: true, deep: true })
 
-
-const effectiveTimeRange = computed<AbsoluteTimeRangeV4 | RelativeTimeRangeV4 | undefined>(() => {
-  return selectedTimeRange.value ?? props.definition.query?.time_range
+const effectiveTimeRange = computed<TimeRangeV4 | null>(() => {
+  return selectedTimeRange.value ?? props.definition.query?.time_range as TimeRangeV4
 })
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
