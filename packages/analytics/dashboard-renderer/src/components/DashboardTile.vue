@@ -166,7 +166,8 @@ import type {
   ExploreResultV4,
   FilterDatasource,
   AbsoluteTimeRangeV4,
-  RelativeTimeRangeV4,
+  TimeRangeV4,
+  Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
@@ -206,7 +207,7 @@ const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
 const exportExploreResult = ref<ExploreResultV4 | null>(null)
 const isExportLoading = ref(false)
-const selectedTimeRange = ref<AbsoluteTimeRangeV4 | undefined>()
+const selectedTimeRange = ref<TimeRangeV4 | undefined>()
 
 const {
   exploreLinkKebabMenu,
@@ -237,9 +238,12 @@ watch(() => props.definition, async () => {
   loadingChartData.value = true
 }, { immediate: true, deep: true })
 
+const effectiveTimeRange = computed<Timeframe | TimeRangeV4 | null>(() => {
+  const selected = selectedTimeRange.value
+  const fromDefinition = props.definition.query?.time_range as TimeRangeV4
+  const fromContext = props.context.timeSpec
 
-const effectiveTimeRange = computed<AbsoluteTimeRangeV4 | RelativeTimeRangeV4 | undefined>(() => {
-  return selectedTimeRange.value ?? props.definition.query?.time_range
+  return selected ?? fromDefinition ?? fromContext
 })
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
@@ -413,7 +417,10 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
 }
 
 // Build a larger dataset for CSV export
-const requestExport = async (limit: number = EXPORT_RECORD_LIMIT): Promise<ExploreResultV4 | undefined> => {
+const requestExport = async (
+  totalLimit: number = EXPORT_RECORD_LIMIT,
+  batchSize: number = EXPORT_RECORD_LIMIT / 2,
+): Promise<ExploreResultV4 | undefined> => {
   isExportLoading.value = true
 
   try {
@@ -422,22 +429,67 @@ const requestExport = async (limit: number = EXPORT_RECORD_LIMIT): Promise<Explo
     const baseQuery = {
       ...baseQueryWithoutDatasource,
       ...(effectiveTimeRange.value ? { time_range: effectiveTimeRange.value } : {}),
-      limit,
     }
 
-    const data = await queryBridge?.queryFn(
-      {
-        datasource,
-        query: baseQuery,
-      } as DatasourceAwareQuery,
-      abortController,
-    )
+    let fetched = 0
+    let queryId: string | undefined
+    let combinedResults: ExploreResultV4 | undefined
 
-    if (data) {
-      exportExploreResult.value = data
+    while (fetched < totalLimit) {
+      const remaining = totalLimit - fetched
+      const limit = Math.min(batchSize, remaining)
 
-      return data
+      const pageQuery = {
+        ...baseQuery,
+        limit,
+        ...(queryId ? { meta: { query_id: queryId } } : {}), // Use the queryId to fetch the next page
+      }
+
+      const page = await queryBridge?.queryFn(
+        {
+          datasource,
+          query: pageQuery,
+        } as DatasourceAwareQuery,
+        abortController,
+      )
+
+      if (!page) {
+        break
+      }
+
+      if (!combinedResults) {
+        combinedResults = page
+      } else {
+        combinedResults.data.push(...page.data)
+      }
+
+      fetched += page.data.length
+
+      // Set the queryId for the next page
+      queryId = page.meta.query_id
+
+      if (!page.meta.truncated || !queryId) {
+        break
+      }
+
+      // Allow cancellation between pages
+      if (abortController?.signal?.aborted) {
+        break
+      }
     }
+
+    if (combinedResults) {
+      if (Array.isArray(combinedResults.data)) {
+        // Ensure data is not longer than the total limit
+        combinedResults.data = combinedResults.data.slice(0, totalLimit)
+      }
+
+      exportExploreResult.value = combinedResults
+
+      return combinedResults
+    }
+
+    return undefined
   } catch (e) {
     console.warn(e)
   } finally {
