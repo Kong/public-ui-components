@@ -160,7 +160,6 @@ import type { AiExploreQuery, AnalyticsBridge, ExploreQuery, ExploreResultV4, Fi
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
-import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -191,8 +190,6 @@ const chartData = ref<ExploreResultV4>()
 const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
-const requestsLinkZoomActions = ref<ExternalLink | undefined>(undefined)
-const exploreLinkZoomActions = ref<ExternalLink | undefined>(undefined)
 const loadingChartData = ref(true)
 const {
   exploreLinkKebabMenu,
@@ -200,6 +197,8 @@ const {
   canShowKebabMenu,
   canGenerateRequestsLink,
   canGenerateExploreLink,
+  requestsLinkZoomActions,
+  exploreLinkZoomActions,
   buildExploreQuery,
   buildExploreLink,
   buildRequestLink,

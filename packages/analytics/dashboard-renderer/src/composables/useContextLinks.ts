@@ -1,10 +1,11 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { getFieldDataSources, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import type { DeepReadonly, Ref } from 'vue'
 import type { AiExploreAggregations, AiExploreQuery, AllFilters, ExploreAggregations, ExploreQuery, ExploreResultV4, FilterDatasource, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsBridge, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContextInternal } from '../types'
+import type { ExternalLink } from '@kong-ui-public/analytics-chart'
 
 export default function useContextLinks(
   {
@@ -22,6 +23,9 @@ export default function useContextLinks(
 
   const exploreBaseUrl = ref('')
   const requestsBaseUrl = ref('')
+  const requestsLinkZoomActions = ref<ExternalLink | undefined>(undefined)
+  const exploreLinkZoomActions = ref<ExternalLink | undefined>(undefined)
+
   const analyticsConfigStore = useAnalyticsConfigStore()
 
   onMounted(async () => {
@@ -134,12 +138,27 @@ export default function useContextLinks(
     return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${definition.value.chart.type}`
   }
 
+
+  // Need to initialize zoom-action links when they become available.
+  // If we leave them as `undefined` AnalyticsChart will never be able to
+  // register the dragSelect plugin.
+  watch([canGenerateRequestsLink, canGenerateExploreLink], ([canGenerateRequestsLink, canGenerateExploreLink]) => {
+    if (canGenerateRequestsLink) {
+      requestsLinkZoomActions.value = { href: '' }
+    }
+    if (canGenerateExploreLink) {
+      exploreLinkZoomActions.value = { href: '' }
+    }
+  })
+
   return {
     exploreLinkKebabMenu,
     requestsLinkKebabMenu,
     canShowKebabMenu,
     canGenerateRequestsLink,
     canGenerateExploreLink,
+    requestsLinkZoomActions,
+    exploreLinkZoomActions,
     buildExploreQuery,
     buildRequestsQueryZoomActions,
     buildExploreLink,
