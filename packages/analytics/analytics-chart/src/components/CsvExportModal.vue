@@ -22,7 +22,13 @@
               {{ i18n.t('csvExport.exportTimeRange') }}: {{ selectedRange }}
             </p>
           </div>
+          <KSkeleton
+            v-if="isLoadingRef"
+            class="chart-skeleton"
+            type="table"
+          />
           <KTableData
+            v-else
             class="vitals-table"
             :fetcher="fetcher"
             :fetcher-cache-key="String(fetcherCacheKey)"
@@ -45,7 +51,7 @@
             </template>
           </KTableData>
           <div
-            v-if="!isLoading && hasData"
+            v-if="!isLoadingRef && hasData"
             class="text-muted"
             tag="span"
           >
@@ -70,7 +76,7 @@
           <KButton
             appearance="primary"
             data-testid="csv-download-button"
-            :disabled="isLoading || !hasData"
+            :disabled="isLoadingRef || !hasData"
           >
             {{ i18n.t('csvExport.downloadButton') }}
           </KButton>
@@ -95,15 +101,17 @@ const props = withDefaults(defineProps<{
   filename: string
   modalDescription?: string
   chartData: ExploreResultV4
+  isLoading: boolean
 }>(), {
   modalDescription: undefined,
+  isLoading: true,
 })
 
 const emit = defineEmits(['toggleModal'])
 
 const MAX_ROWS = 3
 const reportFilename = `${props.filename.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
-const isLoading = ref<boolean>(true)
+const isLoadingRef = toRef(props, 'isLoading')
 const hasData = computed(() => !!props.chartData?.data?.length)
 const fetcherCacheKey = ref(1)
 const rowsTotal = computed(() => tableData.value.rows.length)
@@ -203,8 +211,6 @@ const tableData = computed(() => {
 
 const fetcher = async (): Promise<any> => {
   const { rows } = tableData.value
-
-  isLoading.value = false
 
   return {
     total: Number(rows.length) || 0,

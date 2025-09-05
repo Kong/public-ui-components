@@ -115,6 +115,7 @@
         :chart-data="(chartData as ExploreResultV4)"
         :data-testid="`csv-export-modal-${tileId}`"
         :filename="csvFilename"
+        :is-loading="isExportLoading"
         @toggle-modal="setExportModalVisibility"
       />
     </div>
@@ -142,12 +143,13 @@ import {
   TimePeriods,
   getFieldDataSources,
 } from '@kong-ui-public/analytics-utilities'
-import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
+import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch, onUnmounted } from 'vue'
+import cloneDeep from 'lodash.clonedeep'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import BarChartRenderer from './BarChartRenderer.vue'
-import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
+import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER, EXPORT_RECORD_LIMIT } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import { KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
@@ -156,7 +158,7 @@ import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
 import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AiExploreQuery, AnalyticsBridge, ExploreQuery, ExploreResultV4, FilterDatasource, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AiExploreQuery, AnalyticsBridge, DatasourceAwareQuery, ExploreQuery, ExploreResultV4, FilterDatasource, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
@@ -183,6 +185,8 @@ const emit = defineEmits<{
   (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
 }>()
 
+const abortController = new AbortController()
+
 const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.vue'))
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
@@ -194,6 +198,9 @@ const isTitleTruncated = ref(false)
 const requestsLinkZoomActions = ref<ExternalLink | undefined>(undefined)
 const exploreLinkZoomActions = ref<ExternalLink | undefined>(undefined)
 const loadingChartData = ref(true)
+const exportExploreResult = ref<ExploreResultV4 | null>(null)
+const isExportLoading = ref(false)
+
 const {
   exploreLinkKebabMenu,
   requestsLinkKebabMenu,
@@ -365,8 +372,9 @@ const setExportModalVisibility = (val: boolean) => {
   exportModalVisible.value = val
 }
 
-const exportCsv = () => {
+const exportCsv = async () => {
   setExportModalVisibility(true)
+  await requestExport()
 }
 
 const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
@@ -385,6 +393,42 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
   requestsLinkZoomActions.value = canGenerateRequestsLink.value ? { href: buildRequestLink(requestsQuery) } : undefined
   exploreLinkZoomActions.value = canGenerateExploreLink.value ? { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) } : undefined
 }
+
+// Build a larger dataset for CSV export
+const requestExport = async (limit: number = EXPORT_RECORD_LIMIT): Promise<ExploreResultV4 | undefined> => {
+  isExportLoading.value = true
+
+  try {
+    const { datasource, ...baseQueryWithoutDatasource } = cloneDeep(props.definition.query)
+
+    const baseQuery = {
+      ...baseQueryWithoutDatasource,
+      limit,
+    }
+
+    const data = await queryBridge?.queryFn(
+      {
+        datasource,
+        query: baseQuery,
+      } as DatasourceAwareQuery,
+      abortController,
+    )
+
+    if (data) {
+      exportExploreResult.value = data
+
+      return data
+    }
+  } catch (e) {
+    console.warn(e)
+  } finally {
+    isExportLoading.value = false
+  }
+}
+
+onUnmounted(() => {
+  abortController.abort()
+})
 </script>
 
 <style lang="scss" scoped>
