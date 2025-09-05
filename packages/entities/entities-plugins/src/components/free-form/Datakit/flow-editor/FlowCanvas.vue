@@ -30,14 +30,27 @@
         v-if="!readonly"
         :fit-view-params="fitViewParams"
         position="bottom-left"
+        :show-fit-view="false"
         :show-interactive="false"
+        :show-zoom="false"
       >
-        <button
-          class="vue-flow__controls-button vue-flow__controls-interactive custom"
-          @click="onClickAutoLayout"
+        <KTooltip
+          v-for="control in controls"
+          :key="control.name"
+          placement="right"
+          :text="t(`plugins.free-form.datakit.flow_editor.actions.${control.name}`)"
         >
-          <SparklesIcon :size="18" /> <!-- TODO: Replace with a better icon for "auto layout" -->
-        </button>
+          <ControlButton
+            class="custom"
+            :disabled="control.disabled"
+            @click.stop="control.action"
+          >
+            <component
+              :is="control.icon"
+              :size="18"
+            />
+          </ControlButton>
+        </KTooltip>
       </Controls>
 
       <!-- To not use the default node style -->
@@ -59,14 +72,16 @@
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue'
 import type { DragPayload, NodeId, NodePhase } from '../types'
 
-import { SparklesIcon } from '@kong/icons'
-import { Background } from '@vue-flow/background'
-import { Controls } from '@vue-flow/controls'
-import { VueFlow } from '@vue-flow/core'
+import { computed, nextTick, ref, useTemplateRef } from 'vue'
 import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core'
-import { nextTick, ref, useTemplateRef } from 'vue'
+import { VueFlow } from '@vue-flow/core'
+import { Background } from '@vue-flow/background'
+import { ControlButton, Controls } from '@vue-flow/controls'
+import { KTooltip } from '@kong/kongponents'
+import { AddIcon, RemoveIcon } from '@kong/icons'
 
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
@@ -77,6 +92,8 @@ import useI18n from '../../../../composables/useI18n'
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
+import FitIcon from './icons/FitIcon.vue'
+import AutoLayoutIcon from './icons/AutoLayoutIcon.vue'
 
 const { flowId, phase, readonly } = defineProps<{
   flowId: string
@@ -112,7 +129,7 @@ const {
   readonly,
 })
 const { addNode, selectNode: selectStoreNode, propertiesPanelOpen, skipValidation, invalidConfigNodeIds } = editorStore
-const { project, vueFlowRef, addSelectedNodes, getNodes } = vueFlowStore
+const { project, vueFlowRef, addSelectedNodes, getNodes, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
 const disableDrop = ref(false)
 
 async function selectNode(nodeId?: NodeId) {
@@ -176,6 +193,21 @@ const onClickAutoLayout = () => {
   autoLayout()
   nextTick(() => fitView())
 }
+
+type ControlAction = 'zoom_in' | 'zoom_out' | 'fit_view' | 'auto_layout'
+type Control = {
+  name: ControlAction
+  icon: Component
+  action: () => void
+  disabled?: boolean
+}
+
+const controls = computed<Control[]>(() => [
+  { name: 'zoom_in', icon: AddIcon, action: zoomIn, disabled: viewport.value.zoom >= maxZoom.value },
+  { name: 'zoom_out', icon: RemoveIcon, action: zoomOut, disabled: viewport.value.zoom <= minZoom.value },
+  { name: 'fit_view', icon: FitIcon, action: fitView },
+  { name: 'auto_layout', icon: AutoLayoutIcon, action: onClickAutoLayout },
+])
 
 // Check if the dragged node is valid to drop
 if (phase === 'response' && !readonly) {

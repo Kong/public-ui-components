@@ -727,6 +727,10 @@
             "description": "Drag a node onto the canvas to add it to your data flow."
           },
           "actions": {
+            "zoom_in": "Zoom in",
+            "zoom_out": "Zoom out",
+            "fit_view": "Fit view",
+            "auto_layout": "Auto layout",
             "undo": "Undo",
             "redo": "Redo",
             "delete": "Delete",
