@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-data-plane-nodes",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "type": "module",
   "main": "./dist/entities-data-plane-nodes.umd.js",
   "module": "./dist/entities-data-plane-nodes.es.js",
