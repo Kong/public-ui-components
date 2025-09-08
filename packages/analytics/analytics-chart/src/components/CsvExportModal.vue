@@ -56,6 +56,16 @@
             tag="span"
           >
             {{ previewMessage }}
+            <KTooltip
+              class="preview-tooltip"
+              placement="right"
+              :text="i18n.t('csvExport.maximumRecordAmount', { value: EXPORT_RECORD_LIMIT })"
+            >
+              <InfoIcon
+                :color="`var(--kui-color-text-neutral, ${KUI_COLOR_TEXT_NEUTRAL})`"
+                :size="KUI_ICON_SIZE_30"
+              />
+            </KTooltip>
           </div>
         </div>
       </template>
@@ -89,8 +99,14 @@
 <script setup lang="ts">
 import { ref, computed, watch, toRef } from 'vue'
 
+import {
+  KUI_ICON_SIZE_30,
+  KUI_COLOR_TEXT_NEUTRAL,
+} from '@kong/design-tokens'
+import { InfoIcon } from '@kong/icons'
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
+import { EXPORT_RECORD_LIMIT } from '../constants'
 import type { ExploreResultV4, RecordEvent } from '@kong-ui-public/analytics-utilities'
 import { format } from 'date-fns-tz'
 import type { CsvData, Header, TimeseriesColumn } from '../types'
@@ -256,6 +272,15 @@ watch(tableData, () => {
       .vitals-report-export-button {
         display: inline-flex;
       }
+    }
+
+    .preview-tooltip {
+      display: inline-flex;
+      margin: var(--kui-space-auto, $kui-space-auto)
+        var(--kui-space-0, $kui-space-0)
+        var(--kui-space-auto, $kui-space-auto)
+        var(--kui-space-20, $kui-space-20);
+      vertical-align: middle;
     }
   }
 }
