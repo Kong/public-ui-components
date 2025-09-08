@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, toRaw } from 'vue'
-import * as monaco from 'monaco-editor'
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
