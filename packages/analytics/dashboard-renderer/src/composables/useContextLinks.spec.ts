@@ -123,6 +123,8 @@ describe('useContextLinks', () => {
   beforeEach(() => {
     setupPiniaTestStore({ createVueApp: true })
     vi.clearAllMocks()
+    analyticsConfig.analytics = true
+    analyticsConfig.percentiles = true
   })
 
   it('builds explore link with datasource-scoped filters and explicit granularity', async () => {
@@ -285,6 +287,23 @@ describe('useContextLinks', () => {
     expect(wrapper2.vm.canGenerateRequestsLink).toBe(false)
     expect(wrapper2.vm.exploreLinkKebabMenu).toBe('')
     expect(wrapper2.vm.requestsLinkKebabMenu).toBe('')
+  })
 
+  it('initializes exploreLinkZoomActions and requestsLinkZoomActions with empty href', async () => {
+    const { wrapper } = mountComposable({})
+    await flushPromises()
+
+    expect(wrapper.vm.canGenerateExploreLink).toBe(true)
+    expect(wrapper.vm.canGenerateRequestsLink).toBe(true)
+    expect(wrapper.vm.exploreLinkZoomActions).toEqual({ href: '' })
+    expect(wrapper.vm.requestsLinkZoomActions).toEqual({ href: '' })
+
+    analyticsConfig.analytics = false
+    analyticsConfig.percentiles = false
+
+    const { wrapper: wrapper2 } = mountComposable({})
+    await flushPromises()
+    expect(wrapper2.vm.exploreLinkZoomActions).toBe(undefined)
+    expect(wrapper2.vm.requestsLinkZoomActions).toBe(undefined)
   })
 })
