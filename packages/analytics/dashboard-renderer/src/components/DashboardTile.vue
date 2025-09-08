@@ -417,10 +417,7 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
 }
 
 // Build a larger dataset for CSV export
-const requestExport = async (
-  totalLimit: number = EXPORT_RECORD_LIMIT,
-  batchSize: number = EXPORT_RECORD_LIMIT / 2,
-): Promise<ExploreResultV4 | undefined> => {
+const requestExport = async (limit: number = EXPORT_RECORD_LIMIT): Promise<ExploreResultV4 | undefined> => {
   isExportLoading.value = true
 
   try {
@@ -429,67 +426,22 @@ const requestExport = async (
     const baseQuery = {
       ...baseQueryWithoutDatasource,
       ...(effectiveTimeRange.value ? { time_range: effectiveTimeRange.value } : {}),
+      limit,
     }
 
-    let fetched = 0
-    let queryId: string | undefined
-    let combinedResults: ExploreResultV4 | undefined
+    const data = await queryBridge?.queryFn(
+      {
+        datasource,
+        query: baseQuery,
+      } as DatasourceAwareQuery,
+      abortController,
+    )
 
-    while (fetched < totalLimit) {
-      const remaining = totalLimit - fetched
-      const limit = Math.min(batchSize, remaining)
+    if (data) {
+      exportExploreResult.value = data
 
-      const pageQuery = {
-        ...baseQuery,
-        limit,
-        ...(queryId ? { meta: { query_id: queryId } } : {}), // Use the queryId to fetch the next page
-      }
-
-      const page = await queryBridge?.queryFn(
-        {
-          datasource,
-          query: pageQuery,
-        } as DatasourceAwareQuery,
-        abortController,
-      )
-
-      if (!page) {
-        break
-      }
-
-      if (!combinedResults) {
-        combinedResults = page
-      } else {
-        combinedResults.data.push(...page.data)
-      }
-
-      fetched += page.data.length
-
-      // Set the queryId for the next page
-      queryId = page.meta.query_id
-
-      if (!page.meta.truncated || !queryId) {
-        break
-      }
-
-      // Allow cancellation between pages
-      if (abortController?.signal?.aborted) {
-        break
-      }
+      return data
     }
-
-    if (combinedResults) {
-      if (Array.isArray(combinedResults.data)) {
-        // Ensure data is not longer than the total limit
-        combinedResults.data = combinedResults.data.slice(0, totalLimit)
-      }
-
-      exportExploreResult.value = combinedResults
-
-      return combinedResults
-    }
-
-    return undefined
   } catch (e) {
     console.warn(e)
   } finally {
