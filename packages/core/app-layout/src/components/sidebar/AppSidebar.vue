@@ -138,7 +138,6 @@ import SidebarItem from '../sidebar/SidebarItem.vue'
 import { FocusTrap } from 'focus-trap-vue'
 import { useDebounce } from '../../composables'
 import clonedeep from 'lodash.clonedeep'
-import useMediaQuery from '@mui/material/useMediaQuery'
 // explicit import for `component` `is` usage
 import { KButton } from '@kong/kongponents'
 
@@ -482,7 +481,7 @@ onMounted(async () => {
   if (props.groupConfig) {
     for (const groupName in props.groupConfig) {
       // auto-expand all groups if the user is on mobile
-      if (useMediaQuery(KUI_BREAKPOINT_MOBILE)) {
+      if (window.matchMedia(`(max-width: ${KUI_BREAKPOINT_MOBILE})`).matches) {
         const group = props.groupConfig[groupName]
         group.collapsed = false
       }
