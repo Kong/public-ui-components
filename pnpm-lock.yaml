@@ -442,6 +442,9 @@ importers:
       '@kong/icons':
         specifier: ^1.36.0
         version: 1.36.0(vue@3.5.18(typescript@5.9.2))
+      '@vueuse/core':
+        specifier: ^13.5.0
+        version: 13.5.0(vue@3.5.18(typescript@5.9.2))
       focus-trap:
         specifier: ^7.6.5
         version: 7.6.5

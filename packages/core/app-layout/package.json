@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@kong/icons": "^1.36.0",
+    "@vueuse/core": "^13.5.0",
     "focus-trap": "^7.6.5",
     "focus-trap-vue": "^4.0.3",
     "lodash.clonedeep": "^4.5.0"

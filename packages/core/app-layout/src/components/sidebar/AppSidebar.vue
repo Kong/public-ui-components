@@ -131,6 +131,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { ref, computed, watch, useSlots, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { useMediaQuery } from '@vueuse/core'
 import { ChevronDownIcon, ChevronRightIcon } from '@kong/icons'
 import { KUI_NAVIGATION_COLOR_TEXT, KUI_ICON_SIZE_30, KUI_BREAKPOINT_MOBILE } from '@kong/design-tokens'
 import type { SidebarPrimaryItem, GroupConfig, GroupConfigMap } from '../../types'
@@ -481,7 +482,7 @@ onMounted(async () => {
   if (props.groupConfig) {
     for (const groupName in props.groupConfig) {
       // auto-expand all groups if the user is on mobile
-      if (window.matchMedia(`(max-width: ${KUI_BREAKPOINT_MOBILE})`).matches) {
+      if (useMediaQuery(`(max-width: ${KUI_BREAKPOINT_MOBILE})`)) {
         const group = props.groupConfig[groupName]
         group.collapsed = false
       }
