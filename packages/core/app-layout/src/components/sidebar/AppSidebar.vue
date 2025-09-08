@@ -132,12 +132,13 @@
 import type { PropType } from 'vue'
 import { ref, computed, watch, useSlots, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { ChevronDownIcon, ChevronRightIcon } from '@kong/icons'
-import { KUI_NAVIGATION_COLOR_TEXT, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
+import { KUI_NAVIGATION_COLOR_TEXT, KUI_ICON_SIZE_30, KUI_BREAKPOINT_MOBILE } from '@kong/design-tokens'
 import type { SidebarPrimaryItem, GroupConfig, GroupConfigMap } from '../../types'
 import SidebarItem from '../sidebar/SidebarItem.vue'
 import { FocusTrap } from 'focus-trap-vue'
 import { useDebounce } from '../../composables'
 import clonedeep from 'lodash.clonedeep'
+import useMediaQuery from '@mui/material/useMediaQuery'
 // explicit import for `component` `is` usage
 import { KButton } from '@kong/kongponents'
 
@@ -477,6 +478,16 @@ onMounted(async () => {
   window.addEventListener('resize', debouncedResizeHandler)
   // Disable mobile sidebar transitions when the window is resized
   window.addEventListener('resize', disableTransitions)
+
+  if (props.groupConfig) {
+    for (const groupName in props.groupConfig) {
+      // auto-expand all groups if the user is on mobile
+      if (useMediaQuery(KUI_BREAKPOINT_MOBILE)) {
+        const group = props.groupConfig[groupName]
+        group.collapsed = false
+      }
+    }
+  }
 
   await nextTick()
   // Adjust the sidebar padding

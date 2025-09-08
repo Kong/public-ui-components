@@ -101,7 +101,7 @@ const sidebarItemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void
 const groupConfig: GroupConfigMap = {
   connectivity: {
     label: 'Connectivity',
-    collapsible: false,
+    collapsible: true,
     collapsed: false,
   },
   applications: {
