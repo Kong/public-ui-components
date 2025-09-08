@@ -77,7 +77,7 @@ const {
   validationConfig: {
     status: compose(
       numberFormat('integer', { fieldName: 'Status' }),
-      numberRange(200, 255, { fieldName: 'Status' }),
+      numberRange(200, 599, { fieldName: 'Status' }),
     ),
   },
   getValidationData: () => ({
