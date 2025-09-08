@@ -280,6 +280,12 @@ A `@toggle` event is emitted whenever the sidebar is opened or closed.
 
 The `toggle` event emits a payload of a `boolean` to indicate if the sidebar is open.
 
+#### `toggle-collapse`
+
+A `@toggle-collapse` event is emitted whenever a collapsible sidenav group is expanded or collapsed.
+
+The `toggle-collapse` event emits a payload of a `string` to indicate the toggled `groupName` and the group's `GroupConfig` object, containing the collapse state.
+
 ### Mobile sidebar
 
 To utilize the mobile version of the sidebar included in the component, you must set the `mobileEnabled` prop to `true` and utilize the `SidebarToggle.vue` component. [Examples can be found below](#sidebartogglevue).

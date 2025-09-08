@@ -55,7 +55,7 @@
                     :is="isGroupCollapsible(groupName) ? KButton : 'div'"
                     :appearance="isGroupCollapsible(groupName) ? 'none' : undefined"
                     class="level-primary-group-collapse-trigger"
-                    @click="isGroupCollapsible(groupName) ? toggle() : undefined"
+                    @click="isGroupCollapsible(groupName) ? handleCollapseToggle(groupName, isCollapsed, toggle) : undefined"
                   >
                     <div
                       v-if="groupName !== UNGROUPED_NAME"
@@ -141,7 +141,7 @@ import clonedeep from 'lodash.clonedeep'
 // explicit import for `component` `is` usage
 import { KButton } from '@kong/kongponents'
 
-const emit = defineEmits(['click', 'toggle'])
+const emit = defineEmits(['click', 'toggle', 'toggle-collapse'])
 
 /** Prevent adding the `group` property to bottom sidebar items. */
 type BottomPrimaryItem = Omit<SidebarPrimaryItem, 'group'>
@@ -316,6 +316,16 @@ const isGroupCollapsible = (groupName: string): boolean => {
 
 const isGroupCollapsed = (groupName: string): boolean => {
   return !!getGroupConfig(groupName)?.collapsed
+}
+
+const handleCollapseToggle = (groupName: string, isCollapsed: boolean, toggle: () => void): void => {
+  const groupConfig = getGroupConfig(groupName)
+  if (groupConfig) {
+    groupConfig.collapsed = isCollapsed
+  }
+
+  toggle()
+  emit('toggle-collapse', groupName, groupConfig)
 }
 
 // Do not manually set the value of `mobileSidebarOpen`; always call `toggleSidebar(true/false)`

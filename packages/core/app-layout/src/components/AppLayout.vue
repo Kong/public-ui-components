@@ -74,6 +74,7 @@
       :top-offset="notificationHeight"
       @click="sidebarItemClicked"
       @toggle="sidebarToggled"
+      @toggle-collapse="(groupName, groupConfig) => emit('toggle-collapse', groupName, groupConfig)"
     >
       <template
         v-if="slotContent.sidebarHeader"
@@ -127,7 +128,7 @@ import { ref, reactive, computed, watchEffect, onMounted, onBeforeUnmount, toRef
 import AppNavbar from './navbar/AppNavbar.vue'
 import AppSidebar from './sidebar/AppSidebar.vue'
 import SidebarToggle from './sidebar/SidebarToggle.vue'
-import type { GroupConfigMap, SidebarPrimaryItem, SidebarSecondaryItem } from '../types'
+import type { GroupConfig, GroupConfigMap, SidebarPrimaryItem, SidebarSecondaryItem } from '../types'
 import { useDebounce } from '../composables'
 import { KUI_BORDER_RADIUS_0, KUI_BORDER_RADIUS_20, KUI_COLOR_BACKGROUND, KUI_COLOR_BACKGROUND_INVERSE, KUI_COLOR_TEXT, KUI_COLOR_TEXT_INVERSE } from '@kong/design-tokens'
 
@@ -179,6 +180,7 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'sidebar-click', item: SidebarPrimaryItem | SidebarSecondaryItem): void
   (e: 'update:topOffset', offset: number): void
+  (e: 'toggle-collapse', groupName: string, groupConfig: GroupConfig): void
 }>()
 
 const slots = useSlots()
