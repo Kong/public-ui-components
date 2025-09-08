@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.0...@kong-ui-public/dashboard-renderer@7.4.1) (2025-09-08)
+
+
+### Bug Fixes
+
+* initialize zoom action links ([#2455](https://github.com/Kong/public-ui-components/issues/2455)) ([69ef344](https://github.com/Kong/public-ui-components/commit/69ef3443d7ba0162f4ac9706db5f5b083b806493))
+
+
+
+
+
 # [7.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.8...@kong-ui-public/dashboard-renderer@7.4.0) (2025-09-08)
 
 
