@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.2.5...@kong-ui-public/entities-config-editor@0.3.0) (2025-09-08)
+
+
+### Features
+
+* **entities-plugins:** datakit multiple fixes ([#2459](https://github.com/Kong/public-ui-components/issues/2459)) ([69ebae1](https://github.com/Kong/public-ui-components/commit/69ebae193825b1513cd44264f2fc54b833acac17))
+
+
+
+
+
 ## [0.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-config-editor@0.2.4...@kong-ui-public/entities-config-editor@0.2.5) (2025-09-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-config-editor

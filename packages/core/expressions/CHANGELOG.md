@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.2.16...@kong-ui-public/expressions@1.3.0) (2025-09-08)
+
+
+### Features
+
+* **entities-plugins:** datakit multiple fixes ([#2459](https://github.com/Kong/public-ui-components/issues/2459)) ([69ebae1](https://github.com/Kong/public-ui-components/commit/69ebae193825b1513cd44264f2fc54b833acac17))
+
+
+
+
+
 ## [1.2.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.2.15...@kong-ui-public/expressions@1.2.16) (2025-09-08)
 
 **Note:** Version bump only for package @kong-ui-public/expressions
