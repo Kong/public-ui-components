@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.6.7...@kong-ui-public/app-layout@4.7.0) (2025-09-08)
+
+
+### Features
+
+* **entities-plugins:** datakit multiple fixes ([#2459](https://github.com/Kong/public-ui-components/issues/2459)) ([69ebae1](https://github.com/Kong/public-ui-components/commit/69ebae193825b1513cd44264f2fc54b833acac17))
+
+
+
+
+
+## [4.6.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.6.6...@kong-ui-public/app-layout@4.6.7) (2025-09-07)
+
+**Note:** Version bump only for package @kong-ui-public/app-layout
+
+
+
+
+
+## [4.6.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.6.5...@kong-ui-public/app-layout@4.6.6) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2446](https://github.com/Kong/public-ui-components/issues/2446)) ([baf48b5](https://github.com/Kong/public-ui-components/commit/baf48b551d4a0f4152781d9cd6907bee4969c963))
+
+
+
+
+
 ## [4.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.6.4...@kong-ui-public/app-layout@4.6.5) (2025-08-27)
 
 

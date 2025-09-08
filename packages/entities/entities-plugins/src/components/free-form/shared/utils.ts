@@ -8,10 +8,10 @@ import english from '../../../locales/en.json'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-export function toSelectItems<T extends string>(
+export function toSelectItems<T extends string | number>(
   items: T[],
-): Array<{ value: T, label: T }> {
-  return items.map((item) => ({ value: item, label: item }))
+): Array<{ value: T, label: `${T}` }> {
+  return items.map((item) => ({ value: item, label: `${item}` }))
 }
 
 export const arraySymbol = '*'

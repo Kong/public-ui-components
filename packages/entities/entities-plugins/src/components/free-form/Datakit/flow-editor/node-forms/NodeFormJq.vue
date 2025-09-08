@@ -11,13 +11,13 @@
     />
 
     <KLabel class="dk-node-configuration-label">
-      {{ t('plugins.free-form.datakit.flow_editor.node_properties.Configuration') }}
+      {{ t('plugins.free-form.datakit.flow_editor.node_properties.configuration') }}
     </KLabel>
 
     <!-- todo(zehao): replace to monaco editor -->
     <StringField
       :error="jqHandler.error.value"
-      :help="jqHandler.errorMessage.value"
+      :error-message="jqHandler.errorMessage.value"
       :label="jqFieldName"
       multiline
       name="jq"
@@ -79,7 +79,6 @@ const {
   renameFieldByName,
   inputsFieldNames,
   nameValidator,
-  skipValidationOnMount,
   toggleNodeValid,
   fieldNameValidator,
 } = useNodeForm<JqFormData>(nodeId, () => formRef.value!.getInnerData())
@@ -110,7 +109,6 @@ const {
   getValidationData: () => ({
     jq: formData.value.jq,
   }),
-  skipValidationOnMount,
   toggleNodeValid,
 })
 

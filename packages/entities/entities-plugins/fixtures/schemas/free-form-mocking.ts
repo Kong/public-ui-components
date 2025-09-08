@@ -56,6 +56,12 @@ function buildNumberFieldCases(): Array<{ [name: string]: NumberLikeFieldSchema 
         between: [1, 100],
       },
     },
+    {
+      number_enum: {
+        type: 'integer',
+        one_of: [-1, 0, 1],
+      },
+    },
   ]
 }
 

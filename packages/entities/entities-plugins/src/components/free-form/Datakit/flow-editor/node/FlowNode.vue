@@ -5,6 +5,7 @@
       reversed: isReversed,
       implicit: isImplicit,
     }"
+    @mousedown="closeMenu"
   >
     <div class="body">
       <KTooltip
@@ -30,11 +31,15 @@
       />
       <KDropdown
         v-if="!isImplicit"
+        ref="menu"
         class="menu"
         :kpop-attributes="{
           offset: '4px',
+          target: 'body',
+          popoverClasses: 'dk-flow-node-menu',
         }"
         width="160"
+        @click.stop
       >
         <KButton
           appearance="tertiary"
@@ -45,6 +50,14 @@
           <MoreIcon :color="KUI_COLOR_TEXT" />
         </KButton>
         <template #items>
+          <KDropdownItem
+            @click="duplicate"
+          >
+            <HotkeyLabel
+              :keys="HOTKEYS.duplicate"
+              :label="t('plugins.free-form.datakit.flow_editor.actions.duplicate')"
+            />
+          </KDropdownItem>
           <KDropdownItem
             danger
             @click="removeNode(data.id)"
@@ -205,7 +218,7 @@
 <script setup lang="ts">
 import type { NodeInstance } from '../../types'
 
-import { computed, watch } from 'vue'
+import { computed, useTemplateRef, watch } from 'vue'
 import { KTooltip, KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
 import { createI18n } from '@kong-ui-public/i18n'
 import {
@@ -241,7 +254,14 @@ const { t } = createI18n<typeof english>('en-us', english)
 // FlowNode can be used in some tree that does not provide a flow store
 // e.g., as a DND preview
 const flowStore = useOptionalFlowStore()
-const { getInEdgesByNodeId, getOutEdgesByNodeId, toggleExpanded: storeToggleExpanded, removeNode } = useEditorStore()
+const {
+  getInEdgesByNodeId,
+  getOutEdgesByNodeId,
+  toggleExpanded: storeToggleExpanded,
+  duplicateNode,
+  removeNode,
+  propertiesPanelOpen,
+} = useEditorStore()
 
 const meta = computed(() => getNodeMeta(data.type))
 
@@ -301,12 +321,22 @@ const handleTwigColor = computed(() => {
 })
 
 function toggleExpanded(io: 'input' | 'output') {
-  if (flowStore?.readonly) return
+  if (!flowStore || flowStore.readonly) return
 
   if (io === 'input' && !inputsCollapsible.value) return
   if (io === 'output' && !outputsCollapsible.value) return
 
   storeToggleExpanded(data.id, io)
+}
+
+async function duplicate() {
+  if (!flowStore || flowStore.readonly) return
+
+  const newId = duplicateNode(data.id, flowStore.placeToRight(data.id))
+
+  await flowStore.selectNode(newId)
+  flowStore.scrollRightToReveal(newId)
+  propertiesPanelOpen.value = true
 }
 
 watch(inputsCollapsible, (collapsible) => {
@@ -332,6 +362,12 @@ watch(() => data.fields.output, (output, oldOutput) => {
     storeToggleExpanded(data.id, 'output', output.length > 0, true, '*')
   }
 }, { deep: true })
+
+
+const menuRef = useTemplateRef('menu')
+function closeMenu() {
+  menuRef.value?.closeDropdown()
+}
 </script>
 
 <style lang="scss" scoped>
@@ -395,9 +431,9 @@ $io-column-min-width-no-fields: 70px;
         display: flex;
       }
 
-      :deep(.dropdown-item-trigger) {
-        font-size: $kui-font-size-20;
-        padding: $kui-space-30 $kui-space-40;
+      :global(.dk-flow-node-menu .dropdown-item-trigger) {
+        font-size: $kui-font-size-20 !important;
+        padding: $kui-space-30 $kui-space-40 !important;
       }
     }
   }
@@ -577,10 +613,8 @@ $io-column-min-width-no-fields: 70px;
     }
   }
 }
-</style>
 
-<style>
-.vue-flow__node:has(.vue-flow__handle.connecting) {
+:global(.vue-flow__node:has(.vue-flow__handle.connecting)) {
   z-index: 10000 !important;
 }
 </style>

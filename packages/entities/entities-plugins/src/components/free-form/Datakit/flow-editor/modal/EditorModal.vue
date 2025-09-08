@@ -64,8 +64,8 @@ function close() {
   z-index: 1000;
 
   /* stylelint-disable custom-property-pattern */
-  --dk-side-panel-width: v-bind('DK_SIDE_PANEL_WIDTH');
-  --dk-header-height: v-bind('DK_HEADER_HEIGHT');
+  --dk-side-panel-width: v-bind('`${DK_SIDE_PANEL_WIDTH}px`');
+  --dk-header-height: v-bind('`${DK_HEADER_HEIGHT}px`');
   /* stylelint-enable custom-property-pattern */
 
   .nav {

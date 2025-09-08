@@ -39,7 +39,11 @@
       "subtitle": "Provide guides, examples and other useful information about this service to developers.",
       "edit_markdown": "To edit the document's markdown content rather than replacing the file, close this modal and click the 'Document Actions' icon button at the top right of the document.",
       "title_label": "Page Name",
-      "title_placeholder": "Enter a page name"
+      "title_placeholder": "Enter a page name",
+      "discard_changes_message": "There are unsaved changes on this page. Would you like to discard changes or continue editing?",
+      "discard_changes_title": "You have unsaved changes",
+      "continue_editing": "Continue Editing",
+      "discard_changes": "Discard Changes"
     },
     "show": {
       "actions": "Actions",

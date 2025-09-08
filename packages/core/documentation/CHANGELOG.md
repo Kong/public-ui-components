@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.3.2...@kong-ui-public/documentation@1.4.0) (2025-09-08)
+
+
+### Features
+
+* **entities-plugins:** datakit multiple fixes ([#2459](https://github.com/Kong/public-ui-components/issues/2459)) ([69ebae1](https://github.com/Kong/public-ui-components/commit/69ebae193825b1513cd44264f2fc54b833acac17))
+
+
+
+
+
+## [1.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.3.1...@kong-ui-public/documentation@1.3.2) (2025-09-08)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+## [1.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.3.0...@kong-ui-public/documentation@1.3.1) (2025-09-07)
+
+**Note:** Version bump only for package @kong-ui-public/documentation
+
+
+
+
+
+# [1.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.2.10...@kong-ui-public/documentation@1.3.0) (2025-09-05)
+
+
+### Features
+
+* **documentation:** show discard changes warning and allow revert [TDX-6534] ([#2432](https://github.com/Kong/public-ui-components/issues/2432)) ([33570b7](https://github.com/Kong/public-ui-components/commit/33570b72440c1a762f47add93c6b55b5cc3533ec))
+
+
+
+
+
+## [1.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.2.9...@kong-ui-public/documentation@1.2.10) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2446](https://github.com/Kong/public-ui-components/issues/2446)) ([baf48b5](https://github.com/Kong/public-ui-components/commit/baf48b551d4a0f4152781d9cd6907bee4969c963))
+
+
+
+
+
 ## [1.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/documentation@1.2.8...@kong-ui-public/documentation@1.2.9) (2025-08-27)
 
 

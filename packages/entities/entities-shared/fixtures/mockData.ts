@@ -117,7 +117,7 @@ export const gatewayServiceRecord = {
     '_KonnectService:a-good-one',
   ],
   tls_verify: true,
-  updated_at: 1686157266,
+  updated_at: '2023-06-07T17:01:06.000Z',
   write_timeout: 60000,
   extra: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
 }

@@ -1,9 +1,12 @@
 import type { KeySpec } from './flow-editor/utils'
 
-export const DK_HEADER_HEIGHT = '44px'
-export const DK_SIDE_PANEL_WIDTH = '220px'
-export const DK_NODE_PROPERTIES_PANEL_WIDTH = '366px'
-export const DK_NODE_PROPERTIES_PANEL_OFFSET_TOP = '52px'
+import { KUI_SPACE_40 } from '@kong/design-tokens'
+
+export const DK_HEADER_HEIGHT = 44
+export const DK_SIDE_PANEL_WIDTH = 220
+export const DK_NODE_PROPERTIES_PANEL_WIDTH = 366
+export const DK_NODE_PROPERTIES_PANEL_OFFSET_TOP =
+  DK_HEADER_HEIGHT + parseFloat(KUI_SPACE_40)
 
 /** The 4 implicit nodes always present. */
 export const IMPLICIT_NODE_TYPES = [
@@ -14,6 +17,14 @@ export const IMPLICIT_NODE_TYPES = [
 ] as const
 
 export const IMPLICIT_NODE_NAMES = IMPLICIT_NODE_TYPES
+
+export const CONFIG_NODE_TYPES = [
+  'call',
+  'jq',
+  'exit',
+  'property',
+  'static',
+] as const
 
 export const HTTP_METHODS = [
   'GET',

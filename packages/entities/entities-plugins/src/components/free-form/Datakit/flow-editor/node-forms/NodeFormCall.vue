@@ -11,7 +11,7 @@
     />
 
     <KLabel class="dk-node-configuration-label">
-      {{ t('plugins.free-form.datakit.flow_editor.node_properties.Configuration') }}
+      {{ t('plugins.free-form.datakit.flow_editor.node_properties.configuration') }}
     </KLabel>
 
     <StringField
@@ -91,7 +91,6 @@ const {
   setInput,
   inputsFieldNames,
   nameValidator,
-  skipValidationOnMount,
   toggleNodeValid,
   fieldNameValidator,
 } = useNodeForm<CallFormData>(nodeId, () => formRef.value!.getInnerData())
@@ -113,7 +112,6 @@ const {
     url: formData.value.url,
     timeout: formData.value.timeout,
   }),
-  skipValidationOnMount,
   toggleNodeValid,
 })
 

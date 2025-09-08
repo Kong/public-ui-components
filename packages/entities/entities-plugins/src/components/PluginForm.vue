@@ -47,6 +47,7 @@
         :editing="formType === EntityBaseFormType.Edit"
         :enable-redis-partial="enableRedisPartial"
         :enable-vault-secret-picker="props.enableVaultSecretPicker"
+        :engine="engine"
         :entity-map="entityMap"
         :raw-schema="loadedSchema"
         :record="record"
@@ -307,6 +308,14 @@ const props = defineProps({
   scopedEntitiesPermissions: {
     type: Object as PropType<ScopedEntitiesPermissions>,
     default: null,
+  },
+
+  /**
+   * Force the engine type for the form.
+   */
+  engine: {
+    type: String as PropType<'vfg' | 'freeform'>,
+    required: false,
   },
 })
 

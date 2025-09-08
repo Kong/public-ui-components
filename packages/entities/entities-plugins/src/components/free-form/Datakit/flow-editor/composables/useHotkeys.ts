@@ -1,96 +1,101 @@
 import type { MaybeRefOrGetter } from 'vue'
+import { toValue, onScopeDispose, warn } from 'vue'
+import { useEventListener, createSharedComposable } from '@vueuse/core'
 
-import { toValue } from 'vue'
-import { useEventListener } from '@vueuse/core'
-import { detectPlatform } from '../utils'
+const ACTIONS = ['undo', 'redo', 'duplicate', 'cut', 'copy', 'paste'] as const
+type Action = typeof ACTIONS[number]
 
-interface UseHotkeysOptions {
-  enabled: MaybeRefOrGetter<boolean>
+type Options = {
+  enabled?: MaybeRefOrGetter<boolean>
   undo?: () => void
   redo?: () => void
+  duplicate?: () => void
   cut?: () => void
   copy?: () => void
   paste?: () => void
 }
 
-function isEditable(el: HTMLElement) {
-  return (
-    el.closest(
-      'input, textarea, [contenteditable]:not([contenteditable="false"])',
-    ) != null
+type Subscriber = Required<Pick<Options, 'enabled'>> &
+  Omit<Options, 'enabled'>
+
+const noop = () => {}
+
+function isEditable(target: EventTarget | null) {
+  const el = target as HTMLElement | null
+  if (!el) return false
+  return !!el.closest(
+    'input, textarea, [contenteditable]:not([contenteditable="false"])',
   )
 }
 
-export function useHotkeys({
-  undo,
-  redo,
-  cut,
-  copy,
-  paste,
-  enabled = true,
-}: UseHotkeysOptions) {
-  if (typeof window === 'undefined') return
-  if (!undo && !redo && !cut && !copy && !paste) return
+function getAction(e: KeyboardEvent): Action | undefined {
+  const mod = e.metaKey || e.ctrlKey
+  if (!mod) return
+  const key = e.key.toLowerCase()
 
-  const platform = detectPlatform()
+  switch (key) {
+    case 'z':
+      return e.shiftKey ? 'redo' : 'undo'
+    case 'y':
+      return 'redo'
+    case 'd':
+      return 'duplicate'
+    case 'x':
+      return 'cut'
+    case 'c':
+      return 'copy'
+    case 'v':
+      return 'paste'
+  }
+}
 
-  return useEventListener(window, 'keydown', (event: KeyboardEvent) => {
-    if (!toValue(enabled)) return
-    if (isEditable(event.target as HTMLElement)) return
+const useHotkeysBus = createSharedComposable(() => {
+  const subs = new Set<Subscriber>()
 
-    const key = event.key.toLowerCase()
-    const mod = platform === 'mac' ? event.metaKey : event.ctrlKey
-    if (!mod) return
+  useEventListener(
+    'keydown',
+    (e: KeyboardEvent) => {
+      if (isEditable(e.target)) return
 
-    switch (key) {
-      case 'z': {
-        if (undo && !event.shiftKey) {
-          event.preventDefault()
-          undo()
+      const action = getAction(e)
+      if (!action) return
+
+      for (const sub of subs) {
+        if (!toValue(sub.enabled)) continue
+        const fn = sub[action]
+        if (fn) {
+          if (e.defaultPrevented) {
+            warn(`[useHotkeys] event for "${action}" was already defaultPrevented. Hotkey ignored.`)
+            return
+          }
+          e.preventDefault()
+          fn()
           return
         }
-        if (redo && event.shiftKey) {
-          event.preventDefault()
-          redo()
-          return
-        }
-        break
       }
-      case 'y': {
-        // ⌘ + Y is redo on Windows
-        if (platform === 'windows' && redo) {
-          event.preventDefault()
-          redo()
-          return
-        }
-        break
-      }
-      case 'x': {
-        if (cut) {
-          event.preventDefault()
-          cut()
-          return
-        }
-        break
-      }
-      case 'c': {
-        if (copy) {
-          event.preventDefault()
-          copy()
-          return
-        }
-        break
-      }
-      case 'v': {
-        if (paste) {
-          event.preventDefault()
-          paste()
-          return
-        }
-        break
-      }
-    }
-  },
-  { passive: false },
+    },
+    { passive: false },
   )
+
+  function subscribe(handlers: Options) {
+    if (!ACTIONS.some((action) => typeof handlers[action] === 'function')) {
+      return noop
+    }
+
+    const entry: Subscriber = {
+      enabled: handlers.enabled ?? true,
+      ...handlers,
+    }
+    subs.add(entry)
+    return () => subs.delete(entry)
+  }
+
+  return { subscribe }
+})
+
+export function useHotkeys(options: Options = {}) {
+  if (typeof window === 'undefined') return noop
+  const unsubscribe = useHotkeysBus().subscribe(options)
+  onScopeDispose(unsubscribe)
+  return unsubscribe
 }

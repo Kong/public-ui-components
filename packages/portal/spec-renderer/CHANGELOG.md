@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.4.10...@kong-ui-public/spec-renderer@2.5.0) (2025-09-08)
+
+
+### Features
+
+* **entities-plugins:** datakit multiple fixes ([#2459](https://github.com/Kong/public-ui-components/issues/2459)) ([69ebae1](https://github.com/Kong/public-ui-components/commit/69ebae193825b1513cd44264f2fc54b833acac17))
+
+
+
+
+
+## [2.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.4.9...@kong-ui-public/spec-renderer@2.4.10) (2025-09-07)
+
+**Note:** Version bump only for package @kong-ui-public/spec-renderer
+
+
+
+
+
+## [2.4.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.4.8...@kong-ui-public/spec-renderer@2.4.9) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2446](https://github.com/Kong/public-ui-components/issues/2446)) ([baf48b5](https://github.com/Kong/public-ui-components/commit/baf48b551d4a0f4152781d9cd6907bee4969c963))
+
+
+
+
+
 ## [2.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/spec-renderer@2.4.7...@kong-ui-public/spec-renderer@2.4.8) (2025-08-27)
 
 

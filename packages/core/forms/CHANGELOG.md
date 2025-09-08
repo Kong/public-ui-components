@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.17.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.16.5...@kong-ui-public/forms@4.17.0) (2025-09-08)
+
+
+### Features
+
+* **entities-plugins:** datakit multiple fixes ([#2459](https://github.com/Kong/public-ui-components/issues/2459)) ([69ebae1](https://github.com/Kong/public-ui-components/commit/69ebae193825b1513cd44264f2fc54b833acac17))
+
+
+
+
+
+## [4.16.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.16.4...@kong-ui-public/forms@4.16.5) (2025-09-08)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.16.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.16.3...@kong-ui-public/forms@4.16.4) (2025-09-07)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+## [4.16.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.16.2...@kong-ui-public/forms@4.16.3) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2446](https://github.com/Kong/public-ui-components/issues/2446)) ([baf48b5](https://github.com/Kong/public-ui-components/commit/baf48b551d4a0f4152781d9cd6907bee4969c963))
+
+
+
+
+
 ## [4.16.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.16.1...@kong-ui-public/forms@4.16.2) (2025-09-03)
 
 

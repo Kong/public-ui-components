@@ -2,6 +2,8 @@ import DashboardTile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
 import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition } from '@kong-ui-public/analytics-utilities'
+import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
+import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
 const start = Date.now() - 6 * 60 * 60 * 1000
 const end = Date.now()
@@ -40,6 +42,7 @@ describe('<DashboardTile />', () => {
     editable: true,
     tz: '',
     refreshInterval: 0,
+    zoomable: false,
   }
 
   const mockQueryProvider = {
@@ -64,6 +67,7 @@ describe('<DashboardTile />', () => {
     definition?: TileDefinition
     context?: DashboardRendererContextInternal
     extraProps?: Record<string, any>
+    isFullscreen?: boolean
   }
 
   const mount = ({
@@ -73,6 +77,7 @@ describe('<DashboardTile />', () => {
     definition = mockTileDefinition,
     context = mockContext,
     extraProps = {},
+    isFullscreen = false,
   }: MountOptions = {}) => {
     const attrs = {
       onEditTile,
@@ -85,6 +90,7 @@ describe('<DashboardTile />', () => {
         ...extraProps,
         definition,
         context,
+        isFullscreen,
         queryReady: true,
         refreshCounter: 0,
         tileId: '1',
@@ -97,6 +103,13 @@ describe('<DashboardTile />', () => {
       },
     })
   }
+
+  beforeEach(() => {
+    setupPiniaTestStore({ createVueApp: true })
+    const analyticsConfigStore = useAnalyticsConfigStore()
+    // @ts-ignore - mocking just what we need for the test
+    analyticsConfigStore.analyticsConfig = { analytics: { percentiles: true } }
+  })
 
   it('should render tile with title', () => {
     mount()
@@ -132,6 +145,20 @@ describe('<DashboardTile />', () => {
     cy.getTestId('csv-export-modal').should('exist')
   })
 
+  it('should show CSV export by default', () => {
+    mount({
+      definition: {
+        query: mockTileDefinition.query,
+        chart: {
+          type: 'vertical_bar',
+        },
+      },
+    })
+
+    cy.getTestId('kebab-action-menu-1').click()
+    cy.getTestId('chart-csv-export-1').should('exist')
+  })
+
   it('should not show CSV export if disabled for chart', () => {
     mount({
       definition: {
@@ -155,9 +182,9 @@ describe('<DashboardTile />', () => {
 
   it('jump to explore link should be reactive', () => {
     // Force a different filter so that it actually re-issues the query.
-    const context = {
+    const context: DashboardRendererContextInternal = {
       ...mockContext,
-      filters: [{ field: 'status_code', operator: 'eq', value: 'test1' }],
+      filters: [{ field: 'status_code', operator: 'in', value: ['test1'] }],
     }
     mount({ context })
 
@@ -182,9 +209,9 @@ describe('<DashboardTile />', () => {
 
   it('excludes irrelevant context filters from the jump to explore URL', () => {
     // Passes an llm_usage filter into an api_usage tile
-    const context = {
+    const context: DashboardRendererContextInternal = {
       ...mockContext,
-      filters: [{ field: 'response_model', operator: 'in', value: 'my-model' }],
+      filters: [{ field: 'ai_response_model', operator: 'in', value: ['my-model'] }],
     }
 
     mount({ context })
@@ -283,9 +310,9 @@ describe('<DashboardTile />', () => {
 
   it('jump to requests link should be reactive', () => {
     // Force a different filter so that it actually re-issues the query.
-    const context = {
+    const context: DashboardRendererContextInternal = {
       ...mockContext,
-      filters: [{ field: 'status_code', operator: 'eq', value: 'test1' }],
+      filters: [{ field: 'status_code', operator: 'in', value: ['test1'] }],
     }
     mount({ context })
 
@@ -425,5 +452,12 @@ describe('<DashboardTile />', () => {
 
     cy.getTestId('kebab-action-menu-1').click()
     cy.getTestId('chart-jump-to-requests-1').should('not.exist')
+  })
+
+  it('should hide kebab menu while fullscreen', () => {
+    mount()
+    cy.getTestId('kebab-action-menu-1').should('exist')
+    mount({ isFullscreen: true })
+    cy.getTestId('kebab-action-menu-1').should('not.exist')
   })
 })

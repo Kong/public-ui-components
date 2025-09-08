@@ -5,7 +5,7 @@ import { ConfigurationSchemaType } from '../../types'
 import ConfigCardItem from './ConfigCardItem.vue'
 
 describe('<ConfigCardItem />', () => {
-  const { i18n: { formatUnixTimeStamp } } = composables.useI18n()
+  const { i18n: { formatUnixTimeStamp, formatIsoDate } } = composables.useI18n()
   describe('Labels & Tooltips', () => {
     it('renders a label and value correctly', () => {
       const label = 'Cool Name'
@@ -195,9 +195,30 @@ describe('<ConfigCardItem />', () => {
       })
     })
 
-    it('renders a Date correctly', () => {
+    it('renders a Date correctly when given a number', () => {
       const date = 1686245746
       const formattedVal = formatUnixTimeStamp(date)
+      const item: RecordItem = {
+        type: ConfigurationSchemaType.Date,
+        key: 'created_at',
+        label: 'Created At',
+        value: date,
+      }
+
+      cy.mount(ConfigCardItem, {
+        props: {
+          item,
+        },
+      })
+
+      cy.get('.config-card-details-row').should('be.visible')
+      cy.getTestId(`${item.key}-date`).should('be.visible')
+      cy.getTestId(`${item.key}-date`).should('contain.text', formattedVal)
+    })
+
+    it('renders a Date correctly when given a ISO date string', () => {
+      const date = '2023-06-08T15:22:26Z'
+      const formattedVal = formatIsoDate(date)
       const item: RecordItem = {
         type: ConfigurationSchemaType.Date,
         key: 'created_at',

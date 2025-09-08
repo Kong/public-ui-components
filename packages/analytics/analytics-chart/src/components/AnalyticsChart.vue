@@ -41,6 +41,7 @@
     >
       <TimeSeriesChart
         v-if="isTimeSeriesChart"
+        :brush="canBrush"
         :chart-data="computedChartData"
         :chart-legend-sort-fn="chartLegendSortFn"
         :chart-tooltip-sort-fn="chartTooltipSortFn"
@@ -56,7 +57,6 @@
         :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
         :type="(chartOptions.type as ('timeseries_line' | 'timeseries_bar'))"
-        :zoom="timeseriesZoom"
         :zoom-action-items="zoomActionItems"
         @select-chart-range="emit('select-chart-range', $event)"
         @zoom-time-range="(newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange)"
@@ -162,6 +162,10 @@ const computedChartData = computed(() => {
     ).value
 })
 
+const canBrush = computed(() => {
+  return props.timeseriesZoom || !!props.exploreLink || !!props.requestsLink
+})
+
 const timeRangeMs = computed<number | undefined>(() => {
   if (!props.chartData?.meta) {
     return 0
@@ -217,12 +221,19 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
     }
   }
 
-  // @ts-ignore - dynamic i18n key
-  return i18n.t(`chartLabels.${metricName}`)
+  if (!metricName) {
+    return undefined
+  }
 
+  // @ts-ignore - dynamic i18n key
+  return i18n.te(`chartLabels.${metricName}`) ? i18n.t(`chartLabels.${metricName}`) : metricName
 })
 
 const metricAxesTitle = computed<string | undefined>(() => {
+  if (props.chartOptions?.metricAxesTitle) {
+    return props.chartOptions?.metricAxesTitle
+  }
+
   if (!props.chartData?.meta.metric_names || !props.chartData?.meta.metric_units) {
     return undefined
   }
@@ -240,26 +251,40 @@ const metricAxesTitle = computed<string | undefined>(() => {
       return i18n.t('metricAxisTitles.size_in', { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })
     }
   }
+
   // @ts-ignore - dynamic i18n key
-  return props.chartOptions?.metricAxesTitle || (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`) &&
+  if (i18n.te(`metricAxisTitles.${metricName}`) && i18n.te(`chartUnits.${metricUnit}`)) {
     // @ts-ignore - dynamic i18n key
-    // Metric units are always pluralized on the axis.
-    i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) })) || undefined
+    return i18n.t(`metricAxisTitles.${metricName}`, { unit: i18n.t(`chartUnits.${metricUnit}`, { plural: 's' }) }) || undefined
+  }
+
+  return metricName || undefined
 })
 
 const dimensionAxesTitle = computed<string | undefined>(() => {
+  if (props.chartOptions?.dimensionAxesTitle) {
+    return props.chartOptions.dimensionAxesTitle
+  }
+
   const dimension = isTimeSeriesChart.value ? 'Time' : Object.keys(props.chartData.meta.display || props.chartData.meta.metric_names as Record<string, any>)[0]
-  const key = `chartLabels.${dimension}`
+
+  if (!dimension) {
+    return undefined
+  }
 
   // @ts-ignore - dynamic i18n key
-  return props.chartOptions.dimensionAxesTitle || (i18n.te(key) && i18n.t(key)) || undefined
+  return i18n.te(`chartLabels.${dimension}`) ? i18n.t(`chartLabels.${dimension}`) : dimension
 })
 
 const timestampAxisTitle = computed(() => {
   const granularity = msToGranularity(Number(props.chartData.meta.granularity_ms))
 
+  if (!granularity) {
+    return undefined
+  }
+
   // @ts-ignore - dynamic i18n key
-  return i18n.t(`granularityAxisTitles.${granularity}`)
+  return i18n.te(`granularityAxisTitles.${granularity}`) ? i18n.t(`granularityAxisTitles.${granularity}`) : granularity
 })
 
 const emptyStateTitle = computed(() => props.emptyStateTitle || i18n.t('noDataAvailableTitle'))
@@ -333,13 +358,19 @@ const chartTooltipSortFn = computed(() => {
 
 const zoomActionItems = computed<ZoomActionItem[]>(() => {
   return [
-    { label: i18n.t('zoom_action_items.zoom'), action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange) },
+    ...(props.timeseriesZoom ? [{
+      label: i18n.t('zoom_action_items.zoom'),
+      key: 'zoom-in',
+      action: (newTimeRange: AbsoluteTimeRangeV4) => emit('zoom-time-range', newTimeRange),
+    }] : []),
     ...(props.exploreLink ? [{
       label: i18n.t('zoom_action_items.explore'),
+      key: 'explore',
       href: props.exploreLink.href,
     }] : []),
     ...(props.requestsLink ? [{
       label: i18n.t('zoom_action_items.view_requests'),
+      key: 'view-requests',
       href: props.requestsLink.href,
     }] : []),
   ]

@@ -68,7 +68,6 @@ const {
   inputsFieldNames,
   nameValidator,
   toggleNodeValid,
-  skipValidationOnMount,
   fieldNameValidator,
 } = useNodeForm<ExitFormData>(nodeId, () => formRef.value!.getInnerData())
 
@@ -78,13 +77,12 @@ const {
   validationConfig: {
     status: compose(
       numberFormat('integer', { fieldName: 'Status' }),
-      numberRange(200, 255, { fieldName: 'Status' }),
+      numberRange(200, 599, { fieldName: 'Status' }),
     ),
   },
   getValidationData: () => ({
     status: formData.value.status,
   }),
-  skipValidationOnMount,
   toggleNodeValid,
 })
 

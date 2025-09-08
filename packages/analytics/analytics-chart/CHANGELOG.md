@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.5...@kong-ui-public/analytics-chart@10.2.0) (2025-09-08)
+
+
+### Features
+
+* **entities-plugins:** datakit multiple fixes ([#2459](https://github.com/Kong/public-ui-components/issues/2459)) ([69ebae1](https://github.com/Kong/public-ui-components/commit/69ebae193825b1513cd44264f2fc54b833acac17))
+
+
+
+
+
+## [10.1.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.4...@kong-ui-public/analytics-chart@10.1.5) (2025-09-07)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.3...@kong-ui-public/analytics-chart@10.1.4) (2025-09-05)
+
+
+### Bug Fixes
+
+* allow view requests and explore independent of zoom ([#2454](https://github.com/Kong/public-ui-components/issues/2454)) ([9701978](https://github.com/Kong/public-ui-components/commit/9701978f5c3a53fb7e20ffa61de5ede39a579f8c))
+
+
+
+
+
+## [10.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.2...@kong-ui-public/analytics-chart@10.1.3) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2446](https://github.com/Kong/public-ui-components/issues/2446)) ([baf48b5](https://github.com/Kong/public-ui-components/commit/baf48b551d4a0f4152781d9cd6907bee4969c963))
+
+
+
+
+
+## [10.1.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.1...@kong-ui-public/analytics-chart@10.1.2) (2025-09-03)
+
+
+### Bug Fixes
+
+* **analytics:** improve fallback axes titles [MA-4286] ([#2437](https://github.com/Kong/public-ui-components/issues/2437)) ([ac35733](https://github.com/Kong/public-ui-components/commit/ac35733f61493c5ff36a5e6277836aad6b8c4a68))
+
+
+
+
+
+## [10.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.0...@kong-ui-public/analytics-chart@10.1.1) (2025-09-03)
+
+
+### Bug Fixes
+
+* **analytics:** add vulnerability_count to locale entries [MA-4255] ([#2438](https://github.com/Kong/public-ui-components/issues/2438)) ([6e50b59](https://github.com/Kong/public-ui-components/commit/6e50b5901721a371c6c5da2f3bd8cdb9a6999120))
+
+
+
+
+
 # [10.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.0.16...@kong-ui-public/analytics-chart@10.1.0) (2025-08-28)
 
 

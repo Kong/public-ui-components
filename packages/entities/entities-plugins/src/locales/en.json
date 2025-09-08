@@ -726,9 +726,19 @@
             "title": "Node types",
             "description": "Drag a node onto the canvas to add it to your data flow."
           },
+          "debug": {
+            "label": "Enable debugging",
+            "description": "Enables detailed error messages in client responses for easier debugging.",
+            "help": "Enabling the debug option in Datakit is considered unsafe for production environments, as it can cause arbitrary information to leak into client responses."
+          },
           "actions": {
+            "zoom_in": "Zoom in",
+            "zoom_out": "Zoom out",
+            "fit_view": "Zoom to fit",
+            "auto_layout": "Auto layout",
             "undo": "Undo",
             "redo": "Redo",
+            "duplicate": "Duplicate",
             "delete": "Delete",
             "view_docs": "View docs",
             "done": "Done"
@@ -778,7 +788,7 @@
           },
           "node_properties": {
             "name": "Name",
-            "Configuration": "Configuration",
+            "configuration": "Configuration",
             "input": {
               "placeholder": "Select output(s)",
               "add_button": "Add an input"

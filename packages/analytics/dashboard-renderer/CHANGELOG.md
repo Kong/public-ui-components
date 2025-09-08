@@ -3,6 +3,109 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.8...@kong-ui-public/dashboard-renderer@7.4.0) (2025-09-08)
+
+
+### Features
+
+* **entities-plugins:** datakit multiple fixes ([#2459](https://github.com/Kong/public-ui-components/issues/2459)) ([69ebae1](https://github.com/Kong/public-ui-components/commit/69ebae193825b1513cd44264f2fc54b833acac17))
+
+
+
+
+
+## [7.3.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.7...@kong-ui-public/dashboard-renderer@7.3.8) (2025-09-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.3.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.6...@kong-ui-public/dashboard-renderer@7.3.7) (2025-09-07)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.5...@kong-ui-public/dashboard-renderer@7.3.6) (2025-09-05)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.4...@kong-ui-public/dashboard-renderer@7.3.5) (2025-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2446](https://github.com/Kong/public-ui-components/issues/2446)) ([baf48b5](https://github.com/Kong/public-ui-components/commit/baf48b551d4a0f4152781d9cd6907bee4969c963))
+
+
+
+
+
+## [7.3.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.3...@kong-ui-public/dashboard-renderer@7.3.4) (2025-09-04)
+
+
+### Bug Fixes
+
+* dont generate links if no advanced analytics ([#2440](https://github.com/Kong/public-ui-components/issues/2440)) ([f73ecad](https://github.com/Kong/public-ui-components/commit/f73ecada7d222f2ca1e180c5db5d66fc625677e4))
+
+
+
+
+
+## [7.3.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.2...@kong-ui-public/dashboard-renderer@7.3.3) (2025-09-04)
+
+
+### Bug Fixes
+
+* **dashboard-renderer:** allow csv export by default [MA-4289] ([#2447](https://github.com/Kong/public-ui-components/issues/2447)) ([70e8c8f](https://github.com/Kong/public-ui-components/commit/70e8c8fed781288ce94cd8e55b060de70a1d13a3))
+
+
+
+
+
+## [7.3.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.1...@kong-ui-public/dashboard-renderer@7.3.2) (2025-09-04)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.0...@kong-ui-public/dashboard-renderer@7.3.1) (2025-09-03)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+# [7.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.2.3...@kong-ui-public/dashboard-renderer@7.3.0) (2025-09-03)
+
+
+### Features
+
+* fullscreen mode for dashboards ma-4270 ([#2382](https://github.com/Kong/public-ui-components/issues/2382)) ([bb9adc2](https://github.com/Kong/public-ui-components/commit/bb9adc29b978d46a02c700e59a9525681a073641))
+
+
+
+
+
+## [7.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.2.2...@kong-ui-public/dashboard-renderer@7.2.3) (2025-09-03)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [7.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.2.1...@kong-ui-public/dashboard-renderer@7.2.2) (2025-09-02)
 
 

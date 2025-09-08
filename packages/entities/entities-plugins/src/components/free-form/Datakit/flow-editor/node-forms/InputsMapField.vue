@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, nextTick, ref } from 'vue'
+import { useTemplateRef, nextTick, ref, watch } from 'vue'
 import { AddIcon, CloseIcon } from '@kong/icons'
 import useI18n from '../../../../../composables/useI18n'
 import { useKeyValueField } from '../../../shared/headless/useKeyValueField'
@@ -189,6 +189,14 @@ function handleInputsValueChange(entry: KVEntry<FieldName, IdConnection>, value:
   if (entry.id === addingEntryId.value) return
   emit('change:inputs', entry.key, value)
 }
+
+watch(() => entries.value, (newEntries) => {
+  if (addingEntryId.value) {
+    if (!newEntries.find(({ id }) => id === addingEntryId.value)) {
+      addingEntryId.value = null
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>

@@ -52,8 +52,8 @@ const { getNodeById } = useEditorStore()
 const currentNode = computed(() => nodeId && getNodeById(nodeId))
 
 const {
-  maxWidth = DK_NODE_PROPERTIES_PANEL_WIDTH,
-  offsetTop = DK_NODE_PROPERTIES_PANEL_OFFSET_TOP,
+  maxWidth = `${DK_NODE_PROPERTIES_PANEL_WIDTH}px`,
+  offsetTop = `${DK_NODE_PROPERTIES_PANEL_OFFSET_TOP}px`,
   visible,
   nodeId,
 } = defineProps<{

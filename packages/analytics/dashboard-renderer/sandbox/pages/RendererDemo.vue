@@ -5,19 +5,26 @@
   >
     <div class="sandbox-container">
       <h2>Static Dashboard</h2>
-      <KInputSwitch
-        v-model="isToggled"
-        :label="isToggled ? 'Custom styling' : 'Normal styling'"
-      />
       <br>
-      <div style="display: flex; gap: 5px; margin: 5px;">
+      <div class="controls">
         <KButton
           appearance="primary"
           size="small"
           @click="refresh"
         >
-          refresh
+          Refresh
         </KButton>
+        <KButton
+          appearance="primary"
+          size="small"
+          @click="toggleFullscreen"
+        >
+          Toggle fullscreen
+        </KButton>
+        <KInputSwitch
+          v-model="isToggled"
+          :label="isToggled ? 'Custom styling' : 'Normal styling'"
+        />
       </div>
       <DashboardRenderer
         ref="dashboardRendererRef"
@@ -25,6 +32,16 @@
         :class="{ 'custom-styling': isToggled }"
         :context="context"
       >
+        <template #fullscreenHeader>
+          <h2>Static Dashboard</h2>
+          <KButton
+            appearance="primary"
+            size="small"
+            @click="toggleFullscreen"
+          >
+            Toggle fullscreen
+          </KButton>
+        </template>
         <template #slot-1>
           <div class="slot-container">
             <h3>Custom Slot</h3>
@@ -407,11 +424,22 @@ const dashboardRendererRef = ref<InstanceType<typeof DashboardRenderer> | null>(
 const refresh = () => {
   dashboardRendererRef.value?.refresh()
 }
+
+const toggleFullscreen = () => {
+  dashboardRendererRef.value?.toggleFullscreen()
+}
 </script>
 
 <style lang="scss" scoped>
-.k-input-switch {
-  margin-bottom: 20px;
+h2 {
+  margin-top: 0;
+}
+
+.controls {
+  align-itmes: center;
+  display: flex;
+  gap: $kui-space-50;
+  margin: 10px 0;
 }
 
 // Custom theme via CSS property overrides
