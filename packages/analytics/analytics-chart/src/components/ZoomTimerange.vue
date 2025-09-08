@@ -46,6 +46,7 @@ watch(() => [props.start, props.end], ([newStart, newEnd]) => {
 
 <style scoped lang="scss">
 .zoom-timerange-container {
+  line-height: var(--kui-line-height-20, $kui-line-height-20);
   margin: 0 var(--kui-space-20, $kui-space-20);
 
   .zoom-timerange-details {
@@ -53,7 +54,7 @@ watch(() => [props.start, props.end], ([newStart, newEnd]) => {
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     gap: var(--kui-space-10, $kui-space-10);
     grid-template-columns: 35px 1fr;
-    margin: var(--kui-space-30, $kui-space-30);
+    margin: var(--kui-space-30, $kui-space-30) var(--kui-space-10, $kui-space-10);
 
     .label {
       color: var(--kui-color-text-netural-strong, $kui-color-text-neutral-strong);
