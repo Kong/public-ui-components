@@ -23,6 +23,11 @@
 
     <div class="field">
       <BooleanField
+        :description="t('plugins.free-form.datakit.flow_editor.debug.help')"
+        :label="t('plugins.free-form.datakit.flow_editor.debug.label')"
+        :label-attributes="{
+          info: t('plugins.free-form.datakit.flow_editor.debug.description'),
+        }"
         name="config.debug"
       />
     </div>
@@ -83,37 +88,37 @@ watch(modalOpen, () => {
   .field {
     margin-top: $kui-space-80;
   }
-}
 
-.flow-panels-container {
-  border: $kui-border-width-10 solid $kui-color-border;
-  border-radius: $kui-border-radius-30;
-  height: 560px;
-  overflow: hidden;
-  position: relative;
+  .flow-panels-container {
+    border: $kui-border-width-10 solid $kui-color-border;
+    border-radius: $kui-border-radius-30;
+    height: 560px;
+    overflow: hidden;
+    position: relative;
 
-  .overlay {
-    align-items: center;
-    backdrop-filter: blur(6px);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: center;
-    left: 0;
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    transition: opacity $kui-animation-duration-20 ease-out;
-    width: 100%;
-    z-index: 200;
+    .overlay {
+      align-items: center;
+      backdrop-filter: blur(6px);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+      left: 0;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      transition: opacity $kui-animation-duration-20 ease-out;
+      width: 100%;
+      z-index: 200;
 
-    &:hover {
-      opacity: 1;
+      &:hover {
+        opacity: 1;
+      }
     }
   }
-}
 
-.button-open-editor {
-  margin-top: $kui-space-70;
+  .button-open-editor {
+    margin-top: $kui-space-70;
+  }
 }
 </style>
