@@ -165,7 +165,7 @@ const emit = defineEmits<{
 const uniqueId = useId()
 
 const slots = useSlots()
-const { i18n: { t, formatUnixTimeStamp } } = composables.useI18n()
+const { i18n: { t, formatIsoDate, formatUnixTimeStamp } } = composables.useI18n()
 
 const itemHasValue = computed((): boolean => props.item.value !== undefined && props.item.value !== null && props.item.value !== '')
 const hasTooltip = computed((): boolean => !!(props.item.tooltip || slots['label-tooltip']))
@@ -230,7 +230,9 @@ const componentAttrsData = computed((): ComponentAttrsData => {
         attrs: {
           'data-testid': `${props.item.key}-date`,
         },
-        text: formatUnixTimeStamp(props.item.value),
+        text: isNaN(Number(props.item.value))
+          ? formatIsoDate(props.item.value)
+          : formatUnixTimeStamp(props.item.value),
       }
 
     case ConfigurationSchemaType.BadgeStatus:

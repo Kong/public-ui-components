@@ -60,6 +60,15 @@
       }"
     />
 
+    <ConfigCardItem
+      :item="{
+        type: ConfigurationSchemaType.Date,
+        key: 'updated_at',
+        label: 'Updated At',
+        value: '2023-06-07T17:01:06.000Z',
+      }"
+    />
+
     <h2>Status Badge</h2>
     <ConfigCardItem
       :item="{
