@@ -11,7 +11,7 @@
     />
 
     <KLabel class="dk-node-configuration-label">
-      {{ t('plugins.free-form.datakit.flow_editor.node_properties.Configuration') }}
+      {{ t('plugins.free-form.datakit.flow_editor.node_properties.configuration') }}
     </KLabel>
 
     <StringField

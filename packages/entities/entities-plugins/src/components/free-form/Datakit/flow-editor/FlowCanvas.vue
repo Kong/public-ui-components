@@ -7,6 +7,7 @@
       :id="flowId"
       class="flow"
       :class="{ readonly }"
+      :connect-on-click="false"
       :edges="edges"
       :elements-selectable="!readonly"
       :max-zoom="MAX_ZOOM_LEVEL"

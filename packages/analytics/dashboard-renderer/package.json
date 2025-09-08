@@ -49,7 +49,7 @@
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.18.0",
     "@kong/icons": "^1.36.0",
-    "@kong/kongponents": "9.39.0",
+    "@kong/kongponents": "9.40.0",
     "ajv": "^8.17.1",
     "cypress-real-events": "^1.14.0",
     "pinia": ">= 2.1.7 < 3",

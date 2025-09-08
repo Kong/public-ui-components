@@ -29,7 +29,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.18.0",
-    "@kong/kongponents": "9.39.0",
+    "@kong/kongponents": "9.40.0",
     "@types/uuid": "^10.0.0",
     "file-saver": "^2.0.5",
     "lodash.mapkeys": "^4.6.0",
