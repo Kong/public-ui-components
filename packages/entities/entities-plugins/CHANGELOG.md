@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.90.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.90.2...@kong-ui-public/entities-plugins@9.90.3) (2025-09-08)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - exit status should be 200 - 599 ([#2458](https://github.com/Kong/public-ui-components/issues/2458)) ([61614da](https://github.com/Kong/public-ui-components/commit/61614da36aded98e01c55baf84e08b6024950bc4))
+
+
+
+
+
 ## [9.90.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.90.1...@kong-ui-public/entities-plugins@9.90.2) (2025-09-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
