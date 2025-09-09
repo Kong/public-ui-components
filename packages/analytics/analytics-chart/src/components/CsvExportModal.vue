@@ -12,7 +12,7 @@
       <template #default>
         <div>
           <div
-            v-if="hasData"
+            v-if="exportState.status === 'success' && hasData"
             class="selected-range"
           >
             <p>
@@ -23,12 +23,12 @@
             </p>
           </div>
           <KSkeleton
-            v-if="isLoadingRef"
+            v-if="exportState.status === 'loading'"
             class="chart-skeleton"
             type="table"
           />
           <KTableData
-            v-else
+            v-else-if="exportState.status === 'success'"
             class="vitals-table"
             :fetcher="fetcher"
             :fetcher-cache-key="String(fetcherCacheKey)"
@@ -50,8 +50,16 @@
               </KEmptyState>
             </template>
           </KTableData>
+          <KEmptyState
+            v-else-if="exportState.status === 'error'"
+            :action-button-visible="false"
+          >
+            <template #title>
+              <h5>{{ i18n.t('csvExport.dataError') }}</h5>
+            </template>
+          </KEmptyState>
           <div
-            v-if="!isLoadingRef && hasData"
+            v-if="exportState.status === 'success' && hasData"
             class="text-muted"
             tag="span"
           >
@@ -86,7 +94,7 @@
           <KButton
             appearance="primary"
             data-testid="csv-download-button"
-            :disabled="isLoadingRef || !hasData"
+            :disabled="exportState.status !== 'success' || !hasData"
           >
             {{ i18n.t('csvExport.downloadButton') }}
           </KButton>
@@ -104,36 +112,43 @@ import {
   KUI_COLOR_TEXT_NEUTRAL,
 } from '@kong/design-tokens'
 import { InfoIcon } from '@kong/icons'
+import type { AllAggregations, CsvExportState, ExploreResultV4, GroupByResult, RecordEvent } from '@kong-ui-public/analytics-utilities'
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
 import { EXPORT_RECORD_LIMIT } from '../constants'
-import type { ExploreResultV4, RecordEvent } from '@kong-ui-public/analytics-utilities'
 import { format } from 'date-fns-tz'
 import type { CsvData, Header, TimeseriesColumn } from '../types'
 
 const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
+  exportState: CsvExportState
   filename: string
   modalDescription?: string
-  chartData: ExploreResultV4
-  isLoading: boolean
 }>(), {
   modalDescription: undefined,
-  isLoading: false,
 })
 
 const emit = defineEmits(['toggleModal'])
 
 const MAX_ROWS = 3
 const reportFilename = `${props.filename.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
-const isLoadingRef = toRef(props, 'isLoading')
-const hasData = computed(() => !!props.chartData?.data?.length)
 const fetcherCacheKey = ref(1)
 const rowsTotal = computed(() => tableData.value.rows.length)
-const selectedRange = composables.useChartSelectedRange(toRef(props, 'chartData'))
+const hasData = computed(() => props.exportState.status === 'success' && !!props.exportState.chartData?.data?.length)
+const selectedRange = computed(() => {
+  if (props.exportState.status !== 'success') {
+    return ''
+  }
+
+  return composables.useChartSelectedRange(toRef(props.exportState, 'chartData'))
+})
 
 const previewMessage = computed(() => {
+  if (props.exportState.status !== 'success') {
+    return ''
+  }
+
   return i18n.t('csvExport.previewRows', {
     rowsMax: Math.min(MAX_ROWS, rowsTotal.value),
     rowsTotal: rowsTotal.value,
@@ -146,22 +161,23 @@ const closeModal = () => {
 }
 
 const tableData = computed(() => {
-  if (!hasData.value || !props.chartData?.meta.metric_names) {
+  if (props.exportState.status !== 'success' || !hasData.value || !props.exportState.chartData?.meta.metric_names) {
     return { headers: [], rows: [], csvHeaders: {} }
   }
 
-  const isTimeseries = props.chartData.data.some(r => r.timestamp !== props.chartData.data[0].timestamp)
+  const chartData: ExploreResultV4 = props.exportState.chartData
+  const isTimeseries = chartData.data.some((result: GroupByResult) => result.timestamp !== chartData.data[0].timestamp)
 
-  const rows = props.chartData.data.map(rec => {
-    const recTs = new Date(rec.timestamp)
+  const rows = chartData.data.map((result: GroupByResult) => {
+    const resultTimestamp = new Date(result.timestamp)
 
-    const translatedEvent = Object.keys(rec.event).reduce((acc: RecordEvent, key) => {
-      if (key in props.chartData.meta.display) {
-        const dimensionId = rec.event[key]
-        const displayEntry = props.chartData.meta.display[key]
-        acc[key] = (dimensionId && displayEntry && displayEntry[dimensionId].name) || rec.event[key]
+    const translatedEvent = Object.keys(result.event).reduce((acc: RecordEvent, key) => {
+      if (key in chartData.meta.display) {
+        const dimensionId = result.event[key]
+        const displayEntry = chartData.meta.display[key]
+        acc[key] = (dimensionId && displayEntry && displayEntry[dimensionId].name) || result.event[key]
       } else {
-        acc[key] = rec.event[key]
+        acc[key] = result.event[key]
       }
       return acc
     }, {})
@@ -170,8 +186,8 @@ const tableData = computed(() => {
       ...translatedEvent,
       ...(isTimeseries
         ? {
-          timestamp: format(recTs, 'yyyy-MM-dd HH:mm:ss'),
-          tzOffset: format(recTs, 'XXX'),
+          timestamp: format(resultTimestamp, 'yyyy-MM-dd HH:mm:ss'),
+          tzOffset: format(resultTimestamp, 'XXX'),
         }
         : {}),
     }
@@ -186,8 +202,8 @@ const tableData = computed(() => {
     ]
   }
 
-  const dimensions = ('display' in props.chartData.meta) && props.chartData.meta?.display
-    ? props.chartData.meta?.display
+  const dimensions = ('display' in props.exportState.chartData.meta) && props.exportState.chartData.meta?.display
+    ? props.exportState.chartData.meta?.display
     : {}
 
   const displayHeaders: Header[] = [
@@ -201,7 +217,7 @@ const tableData = computed(() => {
     })),
 
     // `metricNames` are common to all explore versions
-    ...props.chartData.meta.metric_names.map(key => ({
+    ...props.exportState.chartData.meta.metric_names.map((key: AllAggregations) => ({
       // @ts-ignore - dynamic i18n key
       label: i18n.t(`chartLabels.${key}`),
       key,
@@ -226,6 +242,10 @@ const tableData = computed(() => {
 })
 
 const fetcher = async (): Promise<any> => {
+  if (props.exportState.status !== 'success') {
+    return { total: 0, data: [] }
+  }
+
   const { rows } = tableData.value
 
   return {

@@ -112,10 +112,9 @@
       </div>
       <CsvExportModal
         v-if="exportModalVisible"
-        :chart-data="(exportExploreResult || (chartData as ExploreResultV4))"
         :data-testid="`csv-export-modal-${tileId}`"
+        :export-state="exportState"
         :filename="csvFilename"
-        :is-loading="isExportLoading"
         @toggle-modal="setExportModalVisibility"
       />
     </div>
@@ -136,20 +135,28 @@
 
 <script setup lang="ts">
 import type { DashboardRendererContextInternal, TileZoomEvent } from '../types'
-import {
-  type DashboardTileType,
-  formatTime,
-  type TileDefinition,
-  TimePeriods,
-  getFieldDataSources,
+import type {
+  AbsoluteTimeRangeV4,
+  AiExploreQuery,
+  AnalyticsBridge,
+  DatasourceAwareQuery,
+  DashboardTileType,
+  ExploreQuery,
+  ExploreResultV4,
+  FilterDatasource,
+  TileDefinition,
+  TimeRangeV4,
+  Timeframe,
 } from '@kong-ui-public/analytics-utilities'
+
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch, onUnmounted } from 'vue'
 import cloneDeep from 'lodash.clonedeep'
+import { formatTime, TimePeriods, getFieldDataSources, msToGranularity, useAnalyticsRequestExport, TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
 import BarChartRenderer from './BarChartRenderer.vue'
-import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER, EXPORT_RECORD_LIMIT } from '../constants'
+import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
 import { KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
@@ -157,20 +164,7 @@ import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
-import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type {
-  AiExploreQuery,
-  AnalyticsBridge,
-  DatasourceAwareQuery,
-  ExploreQuery,
-  ExploreResultV4,
-  FilterDatasource,
-  AbsoluteTimeRangeV4,
-  TimeRangeV4,
-  Timeframe,
-} from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
-import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
@@ -205,8 +199,6 @@ const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
-const exportExploreResult = ref<ExploreResultV4 | null>(null)
-const isExportLoading = ref(false)
 const selectedTimeRange = ref<TimeRangeV4 | undefined>()
 
 const {
@@ -226,6 +218,27 @@ const {
   chartData: readonly(chartData),
   definition: readonly(toRef(props, 'definition')),
   context: readonly(toRef(props, 'context')),
+})
+
+const {
+  exportState,
+  requestExport,
+  resetExport,
+} = useAnalyticsRequestExport({
+  buildQuery: (limit: number) => {
+    const { datasource, ...baseQueryWithoutDatasource } = cloneDeep(props.definition.query)
+
+    const query = {
+      ...baseQueryWithoutDatasource,
+      ...(effectiveTimeRange.value ? { time_range: effectiveTimeRange.value } : {}),
+      limit,
+    }
+
+    return {
+      datasource,
+      query,
+    } as DatasourceAwareQuery
+  },
 })
 
 watch(() => props.definition, async () => {
@@ -388,6 +401,10 @@ const onChartData = (data: ExploreResultV4) => {
 
 const setExportModalVisibility = (val: boolean) => {
   exportModalVisible.value = val
+
+  if (!val) {
+    resetExport()
+  }
 }
 
 const exportCsv = async () => {
@@ -416,38 +433,6 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
   exploreLinkZoomActions.value = canGenerateExploreLink.value ? { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) } : undefined
 }
 
-// Build a larger dataset for CSV export
-const requestExport = async (limit: number = EXPORT_RECORD_LIMIT): Promise<ExploreResultV4 | undefined> => {
-  isExportLoading.value = true
-
-  try {
-    const { datasource, ...baseQueryWithoutDatasource } = cloneDeep(props.definition.query)
-
-    const baseQuery = {
-      ...baseQueryWithoutDatasource,
-      ...(effectiveTimeRange.value ? { time_range: effectiveTimeRange.value } : {}),
-      limit,
-    }
-
-    const data = await queryBridge?.queryFn(
-      {
-        datasource,
-        query: baseQuery,
-      } as DatasourceAwareQuery,
-      abortController,
-    )
-
-    if (data) {
-      exportExploreResult.value = data
-
-      return data
-    }
-  } catch (e) {
-    console.warn(e)
-  } finally {
-    isExportLoading.value = false
-  }
-}
 
 onUnmounted(() => {
   abortController.abort()
