@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.92.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.0...@kong-ui-public/entities-plugins@9.92.1) (2025-09-09)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix toggle node expanded ([#2465](https://github.com/Kong/public-ui-components/issues/2465)) ([46de7ed](https://github.com/Kong/public-ui-components/commit/46de7ede0aa40d3d00ae7373471e1ada8dcbc96c))
+
+
+
+
+
 # [9.92.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.91.0...@kong-ui-public/entities-plugins@9.92.0) (2025-09-09)
 
 
