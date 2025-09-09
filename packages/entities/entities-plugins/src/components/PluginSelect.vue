@@ -90,6 +90,8 @@
 
         <template #custom>
           <div data-testid="custom-tab">
+            <slot name="before-custom-tab-content" />
+
             <p class="tab-description">
               {{ t('plugins.select.tabs.custom.description') }}
             </p>
