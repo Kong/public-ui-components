@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.92.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.91.0...@kong-ui-public/entities-plugins@9.92.0) (2025-09-09)
+
+
+### Features
+
+* **entities-plugins:** add a before-custom-tab-content slot ([#2460](https://github.com/Kong/public-ui-components/issues/2460)) ([e61044f](https://github.com/Kong/public-ui-components/commit/e61044f95017e08dacaa8c80dfd3469731e4934f))
+
+
+
+
+
 # [9.91.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.90.3...@kong-ui-public/entities-plugins@9.91.0) (2025-09-08)
 
 
