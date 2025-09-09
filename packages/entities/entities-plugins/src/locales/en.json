@@ -791,12 +791,19 @@
             "name": "Name",
             "configuration": "Configuration",
             "input": {
-              "placeholder": "Select output(s)",
-              "add_button": "Add an input"
+              "label": "Inputs configuration",
+              "placeholder": "Select a source",
+              "add_button": "Add an input",
+              "or": "or",
+              "whole_input": "Whole input",
+              "whole_input_tooltip": "Use one upstream output as this node's entire input value",
+              "pre_field": "Per field",
+              "pre_field_tooltip": "Bind individual fields to sources.",
+              "source": "Source"
             },
             "input_name": {
               "label": "Input name",
-              "placeholder": "Input name"
+              "placeholder": "Enter an input name"
             },
             "timeout": {
               "label": "Timeout(s)"
