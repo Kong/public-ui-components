@@ -14,7 +14,7 @@
     <div
       v-for="(entry, index) of entries"
       :key="entry.id"
-      class="dk-inputs-map-field-entry dk-inputs-map-field-indent"
+      class="dk-inputs-map-field-entry"
       :data-testid="`ff-kv-container-${field.path.value}.${index}`"
     >
       <KLabel :for="`ff-kv-entry-key-${field.path.value}.${index}`">
@@ -43,12 +43,13 @@
             :data-testid="`ff-value-${field.path.value}.${index}`"
             enable-filtering
             :items="items"
+            :label="t('plugins.free-form.datakit.flow_editor.node_properties.input.source')"
             :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
             @change="selectItem => handleInputsValueChange(entry, selectItem?.value ?? null)"
           />
         </div>
         <KButton
-          appearance="none"
+          appearance="tertiary"
           class="dk-inputs-map-field-remove-btn"
           :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
           icon
@@ -59,17 +60,15 @@
       </div>
     </div>
 
-    <div class="dk-inputs-map-field-indent">
-      <KButton
-        appearance="tertiary"
-        :data-testid="`ff-kv-add-btn-${field.path.value}`"
-        :disabled="!!addingEntryId"
-        @click="handleAddClick"
-      >
-        <AddIcon />
-        {{ t('plugins.free-form.datakit.flow_editor.node_properties.input.add_button') }}
-      </KButton>
-    </div>
+    <KButton
+      appearance="tertiary"
+      :data-testid="`ff-kv-add-btn-${field.path.value}`"
+      :disabled="!!addingEntryId"
+      @click="handleAddClick"
+    >
+      <AddIcon />
+      {{ t('plugins.free-form.datakit.flow_editor.node_properties.input.add_button') }}
+    </KButton>
   </div>
 </template>
 
@@ -200,8 +199,6 @@ watch(() => entries.value, (newEntries) => {
 </script>
 
 <style lang="scss" scoped>
-@use '../styles/tree-indent' as mixins;
-
 .dk-inputs-map-field {
   align-items: flex-start;
   display: flex;
@@ -222,12 +219,6 @@ watch(() => entries.value, (newEntries) => {
       flex-direction: column;
       gap: $kui-space-40;
     }
-  }
-
-  &-indent {
-    @include mixins.tree-indent(
-      $last-child-height: 31.5px
-    );
   }
 
   &-remove-btn {

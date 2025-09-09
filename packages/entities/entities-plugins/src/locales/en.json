@@ -791,12 +791,17 @@
             "name": "Name",
             "configuration": "Configuration",
             "input": {
-              "placeholder": "Select output(s)",
-              "add_button": "Add an input"
+              "label": "Inputs configuration",
+              "placeholder": "Select a source",
+              "add_button": "Add an input",
+              "or": "or",
+              "all": "All inputs",
+              "source": "Source",
+              "individual": "Individual input"
             },
             "input_name": {
               "label": "Input name",
-              "placeholder": "Input name"
+              "placeholder": "Enter an input name"
             },
             "timeout": {
               "label": "Timeout(s)"
