@@ -322,10 +322,11 @@ const isGroupCollapsed = (groupName: string): boolean => {
 const handleCollapseToggle = (groupName: string, isCollapsed: boolean, toggle: () => void): void => {
   const groupConfig = getGroupConfig(groupName)
   if (groupConfig) {
-    groupConfig.collapsed = isCollapsed
+    groupConfig.collapsed = !isCollapsed
   }
 
   toggle()
+
   emit('toggle-collapse', groupName, groupConfig)
 }
 
