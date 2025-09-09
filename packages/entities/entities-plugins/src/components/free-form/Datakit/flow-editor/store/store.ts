@@ -263,7 +263,11 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     ) {
       const node = getNodeById(nodeId)
       if (!node) return
-      node.expanded[io] = value ?? !node.expanded[io]
+
+      const newValue = value ?? !node.expanded[io]
+      if (newValue === !!node.expanded[io]) return
+
+      node.expanded[io] = newValue
       if (commitNow) history.commit(tag ?? `toggle:${nodeId}:${io}`)
     }
 
