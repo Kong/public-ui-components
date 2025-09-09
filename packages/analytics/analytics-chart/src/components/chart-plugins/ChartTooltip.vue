@@ -12,12 +12,14 @@
     }"
   >
     <ZoomTimerange
-      v-if="state.interactionMode === 'selecting-chart-area'"
+      v-if="state.interactionMode === 'selecting-chart-area' && granularity"
       :end="zoomTimeRange?.end"
+      :granularity="granularity"
       :start="zoomTimeRange?.start"
     />
     <ZoomActions
-      v-else-if="state.interactionMode === 'zoom-interactive' && zoomTimeRange && zoomActionItems"
+      v-else-if="state.interactionMode === 'zoom-interactive' && zoomTimeRange && zoomActionItems && granularity"
+      :granularity="granularity"
       :new-time-range="zoomTimeRange"
       :zoom-action-items="zoomActionItems"
       @on-action="emit('onAction')"
@@ -72,7 +74,7 @@ import { computed, ref, watch } from 'vue'
 import { DragIcon } from '@kong/icons'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 import type { TooltipState, ZoomActionItem } from 'src/types'
-import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import ZoomActions from '../ZoomActions.vue'
 import ZoomTimerange from '../ZoomTimerange.vue'
 import { useDraggable } from '@vueuse/core'
@@ -89,12 +91,14 @@ const props = withDefaults(defineProps<{
   absoluteTop?: string
   zoomTimeRange?: AbsoluteTimeRangeV4
   zoomActionItems?: ZoomActionItem[]
+  granularity?: GranularityValues
 }>(), {
   tooltipTitle: '',
   absoluteLeft: '0px',
   absoluteTop: '0px',
   zoomTimeRange: undefined,
   zoomActionItems: undefined,
+  granularity: undefined,
 })
 
 const tooltipEl = ref<HTMLElement | null>(null)

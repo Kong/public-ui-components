@@ -3,6 +3,7 @@
     <div class="zoom-actions-heading">
       <ZoomTimerange
         :end="newTimeRange.end"
+        :granularity="granularity"
         :start="newTimeRange.start"
       />
       <CloseIcon
@@ -41,7 +42,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { ZoomActionItem } from '../types'
 import ZoomTimerange from './ZoomTimerange.vue'
 import { CloseIcon } from '@kong/icons'
@@ -50,6 +51,7 @@ import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 const props = defineProps<{
   zoomActionItems: ZoomActionItem[]
   newTimeRange: AbsoluteTimeRangeV4
+  granularity: GranularityValues
 }>()
 
 const emit = defineEmits<{

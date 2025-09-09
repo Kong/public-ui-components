@@ -38,6 +38,7 @@
       :absolute-left="tooltipAbsoluteLeft"
       :absolute-top="tooltipAbsoluteTop"
       data-testid="tooltip"
+      :granularity="granularity"
       :state="tooltipData"
       :tooltip-title="tooltipTitle"
       :zoom-action-items="zoomActionItems"
