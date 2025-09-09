@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.2...@kong-ui-public/dashboard-renderer@7.4.3) (2025-09-09)
+
+
+### Bug Fixes
+
+* view requests kebab menu link behind FF ([#2468](https://github.com/Kong/public-ui-components/issues/2468)) ([7f861a8](https://github.com/Kong/public-ui-components/commit/7f861a87b2f52c56454c270e5a0f7f3caa1083c9))
+
+
+
+
+
 ## [7.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.1...@kong-ui-public/dashboard-renderer@7.4.2) (2025-09-08)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
