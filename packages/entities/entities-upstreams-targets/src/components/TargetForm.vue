@@ -69,7 +69,7 @@
                 class="failover-target"
               >
                 <KCheckbox
-                  v-model="isFailover"
+                  v-model="form.fields.failover as boolean"
                   :disabled="failoverUnsupported"
                   :label="t('targets.form.fields.failover.label')"
                   :label-attributes="{
@@ -101,7 +101,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, reactive, watch, ref } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import type { AxiosError, AxiosResponse } from 'axios'
 import type {
   KonnectTargetFormConfig,
@@ -174,17 +174,17 @@ const form = reactive<TargetFormState>({
     target: '',
     weight: 100,
     tags: '',
+    failover: false,
   },
   isReadonly: false,
   errorMessage: '',
 })
 
-const isFailover = ref(false)
-
 const formFieldsOriginal = reactive<TargetFormFields>({
   target: '',
   weight: 100,
   tags: '',
+  failover: false,
 })
 
 const formFieldsInitial: TargetFormFields = {
@@ -213,6 +213,9 @@ const initForm = (data: Record<string, any>): void => {
   form.fields.target = data?.target || ''
   form.fields.weight = data?.weight ?? '' // if weight is 0, it should not be overwritten
   form.fields.tags = data?.tags?.join(', ') || ''
+  if (props.failoverEnabled) {
+    form.fields.failover = data?.failover || false
+  }
 
   // Set initial state of `formFieldsOriginal` to these values in order to detect changes
   Object.assign(formFieldsOriginal, form.fields)
@@ -274,7 +277,7 @@ const requestBody = computed((): Record<string, any> => {
     weight: parseInt(form.fields.weight as unknown as string),
     tags: form.fields.tags?.split(',')?.map((tag: string) => String(tag || '').trim())?.filter((tag: string) => tag !== ''),
     upstream: { id: props.config.upstreamId },
-    ...(props.failoverEnabled ? { failover: isFailover.value } : {}),
+    ...(props.failoverEnabled ? { failover: form.fields.failover } : {}),
   }
 })
 
