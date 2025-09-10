@@ -135,7 +135,7 @@ const MAX_ROWS = 3
 const reportFilename = `${props.filename.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
 const fetcherCacheKey = ref(1)
 
-const normalizedState = computed(() =>
+const normalizedState = computed<CsvExportState>(() =>
   isRef(props.exportState) ? props.exportState.value : props.exportState,
 )
 
@@ -150,7 +150,7 @@ const selectedRange = computed(() => {
 })
 
 const previewMessage = computed(() => {
-  if (props.exportState.status !== 'success') {
+  if (normalizedState.value.status !== 'success') {
     return ''
   }
 
@@ -166,11 +166,11 @@ const closeModal = () => {
 }
 
 const tableData = computed(() => {
-  if (props.exportState.status !== 'success' || !hasData.value || !props.exportState.chartData?.meta.metric_names) {
+  if (normalizedState.value.status !== 'success' || !hasData.value || !normalizedState.value.chartData?.meta.metric_names) {
     return { headers: [], rows: [], csvHeaders: {} }
   }
 
-  const chartData: ExploreResultV4 = props.exportState.chartData
+  const chartData: ExploreResultV4 = normalizedState.value.chartData
   const isTimeseries = chartData.data.some((result: GroupByResult) => result.timestamp !== chartData.data[0].timestamp)
 
   const rows = chartData.data.map((result: GroupByResult) => {
@@ -207,8 +207,8 @@ const tableData = computed(() => {
     ]
   }
 
-  const dimensions = ('display' in props.exportState.chartData.meta) && props.exportState.chartData.meta?.display
-    ? props.exportState.chartData.meta?.display
+  const dimensions = ('display' in normalizedState.value.chartData.meta) && normalizedState.value.chartData.meta?.display
+    ? normalizedState.value.chartData.meta?.display
     : {}
 
   const displayHeaders: Header[] = [
@@ -222,7 +222,7 @@ const tableData = computed(() => {
     })),
 
     // `metricNames` are common to all explore versions
-    ...props.exportState.chartData.meta.metric_names.map((key: AllAggregations) => ({
+    ...normalizedState.value.chartData.meta.metric_names.map((key: AllAggregations) => ({
       // @ts-ignore - dynamic i18n key
       label: i18n.t(`chartLabels.${key}`),
       key,
@@ -247,7 +247,7 @@ const tableData = computed(() => {
 })
 
 const fetcher = async (): Promise<any> => {
-  if (props.exportState.status !== 'success') {
+  if (normalizedState.value.status !== 'success') {
     return { total: 0, data: [] }
   }
 

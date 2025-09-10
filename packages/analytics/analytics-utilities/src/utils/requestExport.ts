@@ -10,10 +10,12 @@ type RequestExportOptions = {
   buildQuery: (limit: number) => DatasourceAwareQuery
   /** Default limit (e.g. EXPORT_RECORD_LIMIT) */
   defaultLimit?: number
+  /** Injection key (defaults to INJECT_QUERY_PROVIDER) */
+  injectKey?: string
 }
 
-export function useAnalyticsRequestExport({ buildQuery, defaultLimit = EXPORT_RECORD_LIMIT }: RequestExportOptions) {
-  const queryBridge = inject<AnalyticsBridge | undefined>(INJECT_QUERY_PROVIDER)
+export function useAnalyticsRequestExport({ buildQuery, defaultLimit = EXPORT_RECORD_LIMIT, injectKey }: RequestExportOptions) {
+  const queryBridge = inject<AnalyticsBridge | undefined>(injectKey ?? INJECT_QUERY_PROVIDER)
 
   if (!queryBridge?.queryFn) {
     throw new Error('useAnalyticsRequestExport: missing injected query bridge.')
