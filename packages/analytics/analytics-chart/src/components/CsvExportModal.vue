@@ -12,7 +12,7 @@
       <template #default>
         <div>
           <div
-            v-if="exportState.status === 'success' && hasData"
+            v-if="normalizedState.status === 'success' && hasData"
             class="selected-range"
           >
             <p>
@@ -23,12 +23,12 @@
             </p>
           </div>
           <KSkeleton
-            v-if="exportState.status === 'loading'"
+            v-if="normalizedState.status === 'loading'"
             class="chart-skeleton"
             type="table"
           />
           <KTableData
-            v-else-if="exportState.status === 'success'"
+            v-else-if="normalizedState.status === 'success'"
             class="vitals-table"
             :fetcher="fetcher"
             :fetcher-cache-key="String(fetcherCacheKey)"
@@ -51,7 +51,7 @@
             </template>
           </KTableData>
           <KEmptyState
-            v-else-if="exportState.status === 'error'"
+            v-else-if="normalizedState.status === 'error'"
             :action-button-visible="false"
           >
             <template #title>
@@ -59,7 +59,7 @@
             </template>
           </KEmptyState>
           <div
-            v-if="exportState.status === 'success' && hasData"
+            v-if="normalizedState.status === 'success' && hasData"
             class="text-muted"
             tag="span"
           >
@@ -94,7 +94,7 @@
           <KButton
             appearance="primary"
             data-testid="csv-download-button"
-            :disabled="exportState.status !== 'success' || !hasData"
+            :disabled="normalizedState.status !== 'success' || !hasData"
           >
             {{ i18n.t('csvExport.downloadButton') }}
           </KButton>
@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, toRef } from 'vue'
+import { type Ref, ref, computed, watch, isRef, toRef } from 'vue'
 
 import {
   KUI_ICON_SIZE_30,
@@ -122,7 +122,7 @@ import type { CsvData, Header, TimeseriesColumn } from '../types'
 const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
-  exportState: CsvExportState
+  exportState: CsvExportState | Readonly<Ref<CsvExportState>>
   filename: string
   modalDescription?: string
 }>(), {
@@ -134,14 +134,19 @@ const emit = defineEmits(['toggleModal'])
 const MAX_ROWS = 3
 const reportFilename = `${props.filename.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
 const fetcherCacheKey = ref(1)
+
+const normalizedState = computed(() =>
+  isRef(props.exportState) ? props.exportState.value : props.exportState,
+)
+
 const rowsTotal = computed(() => tableData.value.rows.length)
-const hasData = computed(() => props.exportState.status === 'success' && !!props.exportState.chartData?.data?.length)
+const hasData = computed(() => normalizedState.value.status === 'success' && !!normalizedState.value.chartData?.data?.length)
 const selectedRange = computed(() => {
-  if (props.exportState.status !== 'success') {
+  if (normalizedState.value.status !== 'success') {
     return ''
   }
 
-  return composables.useChartSelectedRange(toRef(props.exportState, 'chartData'))
+  return composables.useChartSelectedRange(toRef(normalizedState.value, 'chartData'))
 })
 
 const previewMessage = computed(() => {
