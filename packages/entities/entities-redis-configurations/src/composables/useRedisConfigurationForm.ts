@@ -51,7 +51,7 @@ export const useRedisConfigurationForm = (options: Options) => {
       }
     }
 
-    if (!form.fields.name.length) {
+    if (!form.fields.name?.length) {
       return false
     }
 
