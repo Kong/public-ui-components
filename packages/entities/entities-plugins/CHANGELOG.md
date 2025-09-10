@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.92.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.1...@kong-ui-public/entities-plugins@9.92.2) (2025-09-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** add empty confluent case ([#2466](https://github.com/Kong/public-ui-components/issues/2466)) ([c508092](https://github.com/Kong/public-ui-components/commit/c50809233c2acbe4de5610d2d6aa3f0ab7d00a59))
+
+
+
+
+
 ## [9.92.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.0...@kong-ui-public/entities-plugins@9.92.1) (2025-09-09)
 
 
