@@ -129,6 +129,14 @@ A record to indicate the form fields present in a form. Used to populate the Con
 
 Wrapper component to use at component's root level.
 
+#### `saveButtonText` and `cancelButtonText`
+
+- type: `String`
+- required: `false`
+- default: `undefined`
+
+Text to display in the Save and Cancel buttons. If not provided, defaults to the localized strings for "Save" and "Cancel".
+
 ### Events
 
 #### loading

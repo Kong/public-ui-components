@@ -65,7 +65,7 @@
               type="reset"
               @click="!!actionTeleportTarget && handleClickCancel()"
             >
-              {{ t('baseForm.actions.cancel') }}
+              {{ cancelButtonText ?? t('baseForm.actions.cancel') }}
             </KButton>
             <KButton
               appearance="primary"
@@ -74,7 +74,7 @@
               type="submit"
               @click="!!actionTeleportTarget && handleClickSave()"
             >
-              {{ t('baseForm.actions.save') }}
+              {{ saveButtonText ?? t('baseForm.actions.save') }}
             </KButton>
           </slot>
         </div>
@@ -243,6 +243,17 @@ const props = defineProps({
   alignActionButtonToLeft: {
     type: Boolean,
     default: false,
+  },
+  /**
+   * Save and Cancel button text override
+   */
+  saveButtonText: {
+    type: String,
+    default: undefined,
+  },
+  cancelButtonText: {
+    type: String,
+    default: undefined,
   },
 })
 

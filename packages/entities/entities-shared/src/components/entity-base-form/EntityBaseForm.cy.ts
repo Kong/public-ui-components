@@ -53,6 +53,28 @@ describe('<EntityBaseForm />', () => {
     cy.getTestId(`${entityType}-create-form-submit`).should('be.disabled')
   })
 
+  it('renders custom button text when provided', () => {
+    const saveText = 'custom save'
+    const cancelText = 'custom cancel'
+
+    cy.mount(EntityBaseForm, {
+      props: {
+        config,
+        formFields: route,
+        entityType,
+        canSubmit: true,
+        saveButtonText: saveText,
+        cancelButtonText: cancelText,
+      },
+    })
+
+    cy.getTestId(`${entityType}-create-form-cancel`).should('be.visible')
+    cy.getTestId(`${entityType}-create-form-submit`).should('be.visible')
+
+    cy.getTestId(`${entityType}-create-form-cancel`).should('contain.text', cancelText)
+    cy.getTestId(`${entityType}-create-form-submit`).should('contain.text', saveText)
+  })
+
   it('displays View Configuration and Slideout when FF is enabled', () => {
     cy.mount(EntityBaseForm, {
       props: {
