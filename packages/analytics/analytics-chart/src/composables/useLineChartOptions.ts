@@ -8,7 +8,7 @@ import type {
 import {
   Tooltip,
 } from 'chart.js'
-import { formatByGranularity, horizontalTooltipPositioning, lineChartTooltipBehavior, verticalTooltipPositioning } from '../utils'
+import { formatChartTicksByGranularity, horizontalTooltipPositioning, lineChartTooltipBehavior, verticalTooltipPositioning } from '../utils'
 import { isNullOrUndef } from 'chart.js/helpers'
 import type { ExternalTooltipContext, LineChartOptions } from '../types'
 import { millisecondsToHours } from 'date-fns'
@@ -31,7 +31,11 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
       maxRotation: 0,
       callback: (value: number) => {
         const tickValue = new Date(value)
-        return formatByGranularity(tickValue, chartOptions.granularity.value, dayBoundaryCrossed.value)
+        return formatChartTicksByGranularity({
+          tickValue,
+          granularity: chartOptions.granularity.value,
+          dayBoundaryCrossed: dayBoundaryCrossed.value,
+        })
       },
     },
     title: {
