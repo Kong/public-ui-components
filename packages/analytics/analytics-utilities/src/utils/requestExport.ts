@@ -1,6 +1,5 @@
 import type { Ref } from 'vue'
-import type { AnalyticsBridge, ExploreResultV4, DatasourceAwareQuery } from '@kong-ui-public/analytics-utilities'
-import type { CsvExportState } from '../types'
+import type { AnalyticsBridge, CsvExportState, DatasourceAwareQuery, ExploreResultV4 } from '../types'
 
 import { inject, onUnmounted, ref } from 'vue'
 import { EXPORT_RECORD_LIMIT, INJECT_QUERY_PROVIDER } from '../constants'

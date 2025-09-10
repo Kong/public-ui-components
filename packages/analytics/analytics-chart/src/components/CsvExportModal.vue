@@ -113,9 +113,9 @@ import {
 } from '@kong/design-tokens'
 import { InfoIcon } from '@kong/icons'
 import type { AllAggregations, CsvExportState, ExploreResultV4, GroupByResult, RecordEvent } from '@kong-ui-public/analytics-utilities'
+import { EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
-import { EXPORT_RECORD_LIMIT } from '../constants'
 import { format } from 'date-fns-tz'
 import type { CsvData, Header, TimeseriesColumn } from '../types'
 

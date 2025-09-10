@@ -1,7 +1,7 @@
 import DashboardTile from './DashboardTile.vue'
-import { INJECT_QUERY_PROVIDER, EXPORT_RECORD_LIMIT } from '../constants'
+import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
-import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition } from '@kong-ui-public/analytics-utilities'
+import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
