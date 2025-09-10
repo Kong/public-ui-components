@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.30.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.29.0...@kong-ui-public/entities-shared@3.30.0) (2025-09-10)
+
+
+### Features
+
+* **entities-shared:** add custom button text support to base form ([#2464](https://github.com/Kong/public-ui-components/issues/2464)) ([2ab587a](https://github.com/Kong/public-ui-components/commit/2ab587a5fdebabe0534abc42421d78a9e959ddb1))
+
+
+
+
+
 # [3.29.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.28.0...@kong-ui-public/entities-shared@3.29.0) (2025-09-08)
 
 
