@@ -14,6 +14,7 @@ export interface TargetFormFields {
   target: string
   weight: number
   tags?: string
+  failover?: boolean
 }
 
 export interface TargetFormState {
