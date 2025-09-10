@@ -1,4 +1,4 @@
-import { isTagField, resolve } from '../shared/utils'
+import { getName, isTagField, resolve } from '../shared/utils'
 import { buildAncestor, buildSchemaMap, defaultLabelFormatter, generalizePath } from '../shared/composables'
 
 import type {
@@ -26,6 +26,7 @@ type AssertFieldFn<T extends UnionFieldSchema = UnionFieldSchema> = (option: Ass
 type AssertLabelOption = {
   hide?: boolean
   noAsterisk?: boolean
+  forcePrefix?: string
 }
 
 export function assertFormRendering(schema: FormSchema, options?: {
@@ -37,7 +38,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
 
   const schemaMap = buildSchemaMap(schema)
 
-  function assertFields(fields: NamedFieldSchema[], prefix?: string) {
+  function assertFields(fields: NamedFieldSchema[], prefix?: string, labelOption?: AssertLabelOption) {
     for (const field of fields) {
       const fieldName = Object.keys(field)[0]
       const fieldKey = prefix ? resolve(prefix, fieldName) : fieldName
@@ -46,7 +47,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
 
       assert(fieldSchema, `Field schema for "${fieldKey}" should exist in the schema map`)
 
-      assertField({ fieldSchema, fieldKey })
+      assertField({ fieldSchema, fieldKey, labelOption })
     }
   }
 
@@ -62,7 +63,11 @@ export function assertFormRendering(schema: FormSchema, options?: {
         assertStringField({ fieldKey, fieldSchema, labelOption })
       }
     } else if (fieldSchema.type === 'boolean') {
-      assertBooleanField({ fieldKey, fieldSchema, labelOption })
+      if (fieldSchema.one_of) {
+        assertEnumField({ fieldKey, fieldSchema, labelOption })
+      } else {
+        assertBooleanField({ fieldKey, fieldSchema, labelOption })
+      }
     } else if (fieldSchema.type === 'record') {
       assertRecordField({ fieldKey, fieldSchema, labelOption })
     } else if (fieldSchema.type === 'integer' || fieldSchema.type === 'number') {
@@ -220,7 +225,8 @@ export function assertFormRendering(schema: FormSchema, options?: {
     fieldSchema,
     labelOption,
   }: AssertFieldOption<RecordFieldSchema>) => {
-    const asChild = isArrayItem(fieldKey)
+    const isChildOfArray = isArrayItem(fieldKey)
+    const asChild = isChildOfArray
 
     // Wrapper element should exist
     cy.getTestId(`ff-object-${fieldKey}`).should('exist')
@@ -228,7 +234,6 @@ export function assertFormRendering(schema: FormSchema, options?: {
     // Check label
     assertLabel({
       fieldKey,
-      labelText: asChild ? '' : defaultLabelFormatter(fieldKey),
       fieldSchema,
       labelOption: {
         ...labelOption,
@@ -259,7 +264,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
 
     // Assert child fields
     if (fieldSchema.fields && fieldSchema.fields.length > 0) {
-      assertFields(fieldSchema.fields, fieldKey)
+      assertFields(fieldSchema.fields, fieldKey, { forcePrefix: isChildOfArray ? '' : undefined })
     }
 
     // Click the 'fold/unfold' button
@@ -426,9 +431,11 @@ export function assertFormRendering(schema: FormSchema, options?: {
     fieldSchema: UnionFieldSchema
     labelOption?: AssertLabelOption
   }) {
+    const formattedLabelText = labelText || formatLabelText(fieldKey, labelOption)
+
     assertLabelBySelector({
       selector: () => cy.getTestId(`ff-label-${fieldKey}`),
-      labelText: labelText || defaultLabelFormatter(fieldKey),
+      labelText: formattedLabelText,
       fieldSchema,
       labelOption,
     })
@@ -492,4 +499,18 @@ function isStringArrayOfArray(fieldSchema: UnionFieldSchema) {
   return fieldSchema.type === 'array'
     && fieldSchema.elements.type === 'array'
     && fieldSchema.elements.elements.type === 'string'
+}
+
+function formatLabelText(fieldKey: string, labelOption?: AssertLabelOption): string {
+  let actualLabelText: string
+
+  if (labelOption?.forcePrefix !== undefined) {
+    const name = getName(fieldKey)
+    const newFieldKey = resolve(labelOption.forcePrefix, name)
+    actualLabelText = defaultLabelFormatter(newFieldKey)
+  } else {
+    actualLabelText = defaultLabelFormatter(fieldKey)
+  }
+
+  return actualLabelText
 }

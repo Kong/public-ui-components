@@ -216,20 +216,18 @@ export function buildEnumFieldCases(): Array<{ [name: string]: StringFieldSchema
         default: 'option2',
       },
     },
-    // fixme: this has a bug in number options
-    // {
-    //   enum_number: {
-    //     type: 'number',
-    //     one_of: [1, 2, 3],
-    //   },
-    // },
-    // fixme: this has a bug in boolean options
-    // {
-    //   enum_boolean: {
-    //     type: 'boolean',
-    //     one_of: [true, false],
-    //   },
-    // },
+    {
+      enum_number: {
+        type: 'number',
+        one_of: [1, 2, 3],
+      },
+    },
+    {
+      enum_boolean: {
+        type: 'boolean',
+        one_of: [true, false],
+      },
+    },
   ]
 }
 
@@ -278,23 +276,22 @@ export function buildArrayFieldCases(): Array<{ [name: string]: ArrayLikeFieldSc
         default: [0],
       },
     },
-    // fixme: should support `resetLabelPath` in tests
-    // {
-    //   array_of_records: {
-    //     type: 'array',
-    //     elements: {
-    //       type: 'record',
-    //       fields: [
-    //         {
-    //           foo: {
-    //             type: 'string',
-    //           },
-    //         },
-    //       ],
-    //     },
-    //     description: 'An array of records',
-    //   },
-    // },
+    {
+      array_of_records: {
+        type: 'array',
+        elements: {
+          type: 'record',
+          fields: [
+            {
+              foo: {
+                type: 'string',
+              },
+            },
+          ],
+        },
+        description: 'An array of records',
+      },
+    },
     {
       array_of_array: {
         type: 'array',
