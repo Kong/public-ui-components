@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.1...@kong-ui-public/analytics-chart@10.2.2) (2025-09-10)
+
+
+### Bug Fixes
+
+* add component test for no-select class ([#2474](https://github.com/Kong/public-ui-components/issues/2474)) ([2ea5a9c](https://github.com/Kong/public-ui-components/commit/2ea5a9ca5b1f1d880b3d4b63c44f4b6352cf582a))
+
+
+
+
+
 ## [10.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.0...@kong-ui-public/analytics-chart@10.2.1) (2025-09-08)
 
 
