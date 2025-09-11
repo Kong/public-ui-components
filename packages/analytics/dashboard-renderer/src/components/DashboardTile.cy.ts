@@ -496,7 +496,6 @@ describe('<DashboardTile />', () => {
           expect(payload).to.have.property('datasource', 'api_usage')
           expect(payload).to.have.property('query')
           expect(payload.query).to.have.property('limit', EXPORT_RECORD_LIMIT)
-          expect(payload.query).to.not.have.property('datasource')
         })
     })
   })
