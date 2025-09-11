@@ -225,6 +225,7 @@ const {
   requestExport,
   resetExport,
 } = useAnalyticsRequestExport({
+  injectKey: INJECT_QUERY_PROVIDER,
   buildQuery: (limit: number) => {
     const { datasource, ...baseQueryWithoutDatasource } = cloneDeep(props.definition.query)
 

@@ -12,7 +12,7 @@
       <template #default>
         <div>
           <div
-            v-if="normalizedState.status === 'success' && hasData"
+            v-if="exportState.status === 'success' && hasData"
             class="selected-range"
           >
             <p>
@@ -23,12 +23,12 @@
             </p>
           </div>
           <KSkeleton
-            v-if="normalizedState.status === 'loading'"
+            v-if="exportState.status === 'loading'"
             class="chart-skeleton"
             type="table"
           />
           <KTableData
-            v-else-if="normalizedState.status === 'success'"
+            v-else-if="exportState.status === 'success'"
             class="vitals-table"
             :fetcher="fetcher"
             :fetcher-cache-key="String(fetcherCacheKey)"
@@ -51,7 +51,7 @@
             </template>
           </KTableData>
           <KEmptyState
-            v-else-if="normalizedState.status === 'error'"
+            v-else-if="exportState.status === 'error'"
             :action-button-visible="false"
           >
             <template #title>
@@ -59,7 +59,7 @@
             </template>
           </KEmptyState>
           <div
-            v-if="normalizedState.status === 'success' && hasData"
+            v-if="exportState.status === 'success' && hasData"
             class="text-muted"
             tag="span"
           >
@@ -94,7 +94,7 @@
           <KButton
             appearance="primary"
             data-testid="csv-download-button"
-            :disabled="normalizedState.status !== 'success' || !hasData"
+            :disabled="exportState.status !== 'success' || !hasData"
           >
             {{ i18n.t('csvExport.downloadButton') }}
           </KButton>
@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { type Ref, ref, computed, watch, isRef, toRef } from 'vue'
+import { ref, computed, watch, toRef } from 'vue'
 
 import {
   KUI_ICON_SIZE_30,
@@ -122,7 +122,7 @@ import type { CsvData, Header, TimeseriesColumn } from '../types'
 const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
-  exportState: CsvExportState | Readonly<Ref<CsvExportState>>
+  exportState: CsvExportState
   filename: string
   modalDescription?: string
 }>(), {
@@ -135,22 +135,18 @@ const MAX_ROWS = 3
 const reportFilename = `${props.filename.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
 const fetcherCacheKey = ref(1)
 
-const normalizedState = computed<CsvExportState>(() =>
-  isRef(props.exportState) ? props.exportState.value : props.exportState,
-)
-
 const rowsTotal = computed(() => tableData.value.rows.length)
-const hasData = computed(() => normalizedState.value.status === 'success' && !!normalizedState.value.chartData?.data?.length)
+const hasData = computed(() => props.exportState.status === 'success' && !!props.exportState.chartData?.data?.length)
 const selectedRange = computed(() => {
-  if (normalizedState.value.status !== 'success') {
+  if (props.exportState.status !== 'success') {
     return ''
   }
 
-  return composables.useChartSelectedRange(toRef(normalizedState.value, 'chartData'))
+  return composables.useChartSelectedRange(toRef(props.exportState, 'chartData'))
 })
 
 const previewMessage = computed(() => {
-  if (normalizedState.value.status !== 'success') {
+  if (props.exportState.status !== 'success') {
     return ''
   }
 
@@ -166,11 +162,11 @@ const closeModal = () => {
 }
 
 const tableData = computed(() => {
-  if (normalizedState.value.status !== 'success' || !hasData.value || !normalizedState.value.chartData?.meta.metric_names) {
+  if (props.exportState.status !== 'success' || !hasData.value || !props.exportState.chartData?.meta.metric_names) {
     return { headers: [], rows: [], csvHeaders: {} }
   }
 
-  const chartData: ExploreResultV4 = normalizedState.value.chartData
+  const chartData: ExploreResultV4 = props.exportState.chartData
   const isTimeseries = chartData.data.some((result: GroupByResult) => result.timestamp !== chartData.data[0].timestamp)
 
   const rows = chartData.data.map((result: GroupByResult) => {
@@ -207,8 +203,8 @@ const tableData = computed(() => {
     ]
   }
 
-  const dimensions = ('display' in normalizedState.value.chartData.meta) && normalizedState.value.chartData.meta?.display
-    ? normalizedState.value.chartData.meta?.display
+  const dimensions = ('display' in props.exportState.chartData.meta) && props.exportState.chartData.meta?.display
+    ? props.exportState.chartData.meta?.display
     : {}
 
   const displayHeaders: Header[] = [
@@ -222,7 +218,7 @@ const tableData = computed(() => {
     })),
 
     // `metricNames` are common to all explore versions
-    ...normalizedState.value.chartData.meta.metric_names.map((key: AllAggregations) => ({
+    ...props.exportState.chartData.meta.metric_names.map((key: AllAggregations) => ({
       // @ts-ignore - dynamic i18n key
       label: i18n.t(`chartLabels.${key}`),
       key,
@@ -247,7 +243,7 @@ const tableData = computed(() => {
 })
 
 const fetcher = async (): Promise<any> => {
-  if (normalizedState.value.status !== 'success') {
+  if (props.exportState.status !== 'success') {
     return { total: 0, data: [] }
   }
 
