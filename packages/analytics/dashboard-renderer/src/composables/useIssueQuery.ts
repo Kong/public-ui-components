@@ -39,15 +39,12 @@ export default function useIssueQuery() {
       throw new Error('Query bridge is not defined')
     }
 
-    let {
-      datasource,
+    const {
       limit,
       ...rest
     } = query
 
-    if (!datasource) {
-      datasource = 'basic'
-    }
+    const datasource = query.datasource || 'basic'
 
     const mergedFilters = deriveFilters(datasource, query.filters as Array<FilterTypeMap[typeof datasource]>, context.filters)
 
