@@ -112,7 +112,7 @@ import {
   KUI_COLOR_TEXT_NEUTRAL,
 } from '@kong/design-tokens'
 import { InfoIcon } from '@kong/icons'
-import type { AllAggregations, CsvExportState, ExploreResultV4, GroupByResult, RecordEvent } from '@kong-ui-public/analytics-utilities'
+import type { AllAggregations, ExploreExportState, ExploreResultV4, GroupByResult, RecordEvent } from '@kong-ui-public/analytics-utilities'
 import { EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import DownloadCsv from './DownloadCsv.vue'
 import composables from '../composables'
@@ -122,7 +122,7 @@ import type { CsvData, Header, TimeseriesColumn } from '../types'
 const { i18n } = composables.useI18n()
 
 const props = withDefaults(defineProps<{
-  exportState: CsvExportState
+  exportState: ExploreExportState
   filename: string
   modalDescription?: string
 }>(), {

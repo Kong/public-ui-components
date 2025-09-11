@@ -139,7 +139,7 @@ import type {
   AbsoluteTimeRangeV4,
   AiExploreQuery,
   AnalyticsBridge,
-  CsvExportState,
+  ExploreExportState,
   DashboardTileType,
   ExploreQuery,
   ExploreResultV4,
@@ -190,7 +190,7 @@ const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
-const exportState = ref<CsvExportState>({ status: 'loading' })
+const exportState = ref<ExploreExportState>({ status: 'loading' })
 const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)

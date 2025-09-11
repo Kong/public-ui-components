@@ -40,11 +40,12 @@ export default function useIssueQuery() {
     }
 
     const {
+      datasource: originalDatasource,
       limit,
       ...rest
     } = query
 
-    const datasource = query.datasource || 'basic'
+    const datasource = originalDatasource || 'basic'
 
     const mergedFilters = deriveFilters(datasource, query.filters as Array<FilterTypeMap[typeof datasource]>, context.filters)
 

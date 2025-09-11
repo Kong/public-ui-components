@@ -234,7 +234,7 @@ import {
   ChartLegendPosition,
   CsvExportModal,
 } from '../../src'
-import type { AnalyticsExploreRecord, CsvExportState, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, ExploreExportState, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType } from '../../src/types'
 import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
@@ -305,7 +305,7 @@ const threshold = {
 } as Record<ExploreAggregations, number>
 
 const exportModalVisible = ref(false)
-const exportState = ref<CsvExportState>({ status: 'loading' })
+const exportState = ref<ExploreExportState>({ status: 'loading' })
 
 const setModalVisibility = (val: boolean) => {
   exportModalVisible.value = val
