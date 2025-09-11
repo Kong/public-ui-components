@@ -77,7 +77,7 @@
               v-if="!('allow_csv_export' in definition.chart) || definition.chart.allow_csv_export"
               class="chart-export-button"
               :data-testid="`chart-csv-export-${tileId}`"
-              @click="exportCsv()"
+              @click="exportCsv"
             >
               <span
                 class="chart-export-trigger"
@@ -147,9 +147,7 @@ import type {
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
 
-import {
-  type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch, type Ref,
-} from 'vue'
+import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
 import { formatTime, TimePeriods, getFieldDataSources, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
@@ -374,15 +372,14 @@ const hideExportModal = () => {
 }
 
 const exportCsv = async () => {
-  const result: Ref<CsvExportState> = ref({ status: 'loading' })
+  exportModalVisible.value = true
+  exportState.value = { status: 'loading' }
 
   issueQuery(props.definition.query, props.context, EXPORT_RECORD_LIMIT).then(queryResult => {
-    result.value = { status: 'success', chartData: queryResult }
+    exportState.value = { status: 'success', chartData: queryResult }
   }).catch(error => {
-    result.value = { status: 'error', error: error }
+    exportState.value = { status: 'error', error: error }
   })
-
-  return result
 }
 
 const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
