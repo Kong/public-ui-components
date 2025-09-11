@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.92.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.5...@kong-ui-public/entities-plugins@9.92.6) (2025-09-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit allow exit node in response phase ([#2476](https://github.com/Kong/public-ui-components/issues/2476)) ([11d9764](https://github.com/Kong/public-ui-components/commit/11d976438109da0a8242aae0981c725b29efd9a3))
+
+
+
+
+
 ## [9.92.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.4...@kong-ui-public/entities-plugins@9.92.5) (2025-09-11)
 
 
