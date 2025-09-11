@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.92.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.4...@kong-ui-public/entities-plugins@9.92.5) (2025-09-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** improve datakit conflict modal copy ([#2475](https://github.com/Kong/public-ui-components/issues/2475)) ([0a608e1](https://github.com/Kong/public-ui-components/commit/0a608e11c0f19838c5fa51389c8556f15e2550b4))
+
+
+
+
+
 ## [9.92.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.3...@kong-ui-public/entities-plugins@9.92.4) (2025-09-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
