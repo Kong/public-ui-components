@@ -22,6 +22,7 @@
             />
           </template>
         </KTooltip>
+
         <KTooltip
           :z-index="10000"
         >
@@ -42,7 +43,29 @@
             />
           </template>
         </KTooltip>
+
         <div class="divider" />
+
+        <KDropdown
+          appearance="tertiary"
+          :kpop-attributes="{
+            placement: 'bottom-end',
+            target: 'body',
+          }"
+          show-caret
+          :trigger-text="t('plugins.free-form.datakit.flow_editor.examples')"
+        >
+          <template #items>
+            <KDropdownItem
+              v-for="(example, key) in examples"
+              :key="key"
+              @click="selectExample(example)"
+            >
+              {{ t(`plugins.free-form.datakit.examples.${key}`) }}
+            </KDropdownItem>
+          </template>
+        </KDropdown>
+
         <KButton
           appearance="tertiary"
           target="_blank"
@@ -51,6 +74,7 @@
           {{ t('plugins.free-form.datakit.flow_editor.actions.view_docs') }}
           <ExternalLinkIcon />
         </KButton>
+
         <KButton @click="close">
           {{ t('plugins.free-form.datakit.flow_editor.actions.done') }}
         </KButton>
@@ -68,19 +92,23 @@
 
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
-import { ExternalLinkIcon, UndoIcon, RedoIcon } from '@kong/icons'
+import { ExternalLinkIcon, RedoIcon, UndoIcon } from '@kong/icons'
 import { KButton } from '@kong/kongponents'
+import yaml, { JSON_SCHEMA } from 'js-yaml'
 
 import english from '../../../../../locales/en.json'
+import { HOTKEYS } from '../../constants'
+import * as examples from '../../examples'
+import { useHotkeys } from '../composables/useHotkeys'
 import FlowPanels from '../FlowPanels.vue'
+import HotkeyLabel from '../HotkeyLabel.vue'
 import { useEditorStore } from '../store/store'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
-import { useHotkeys } from '../composables/useHotkeys'
-import HotkeyLabel from '../HotkeyLabel.vue'
-import { HOTKEYS } from '../../constants'
+
+import type { DatakitConfig } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -88,7 +116,22 @@ defineSlots<{
   default(): any
 }>()
 
-const { modalOpen, undo, redo, canUndo, canRedo } = useEditorStore()
+const { modalOpen, undo, redo, canUndo, canRedo, load } = useEditorStore()
+
+function selectExample(example: string) {
+  const maybeConfig = yaml.load(example, {
+    schema: JSON_SCHEMA,
+    json: true,
+  })
+
+  if (typeof maybeConfig !== 'object' || maybeConfig === null)
+    return
+
+  const partialConfig = maybeConfig as Partial<DatakitConfig>
+  const maybeNodes = partialConfig?.nodes
+
+  load(Array.isArray(maybeNodes) ? maybeNodes : [], [], true)
+}
 
 function close() {
   modalOpen.value = false

@@ -60,16 +60,11 @@ export function useTaggedHistory<T>(
       return
     }
 
-    // same tag: collapse. Commit first, then remove the last boundary
+    // tag is * or the previous one: only update 'last' in history, do not keep the new snapshot
     baseCommit()
-    if (undoStack.value.length > 1) {
-      undoStack.value.splice(1, 1)
-    } else if (undoStack.value.length === 1) {
-      // An `undoStack` with a length of 1 means there's no history prior to the most recent
-      // commit, to not create a new undo boundary, we need to clear the `undoStack`.
-      // Call to commit is still necessary as it updates the `last` internally in the history.
-      undoStack.value.splice(0, 1)
-    }
+    // remove the newly added snapshot
+    undoStack.value.shift()
+
     notify('commit')
   }
 

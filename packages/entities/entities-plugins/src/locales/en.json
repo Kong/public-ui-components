@@ -726,6 +726,7 @@
             "title": "Node types",
             "description": "Drag a node onto the canvas to add it to your data flow."
           },
+          "examples": "Examples",
           "debug": {
             "label": "Enable debugging",
             "description": "Enables detailed error messages in client responses for easier debugging.",

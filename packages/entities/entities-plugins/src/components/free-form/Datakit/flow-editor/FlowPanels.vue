@@ -30,7 +30,8 @@
         :flow-id="requestFlowId"
         phase="request"
         :readonly="readonly"
-        @initialized="initialized[0] = true"
+        @initialized="requestInitialized = true"
+        @nodes-change="requestInitialized = false"
       />
     </div>
 
@@ -67,29 +68,31 @@
         :flow-id="responseFlowId"
         phase="response"
         :readonly="readonly"
-        @initialized="initialized[1] = true"
+        @initialized="responseInitialized = true"
+        @nodes-change="responseInitialized = false"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { NodeChange, EdgeChange, VueFlowStore } from '@vue-flow/core'
-
 import { ChevronDownIcon } from '@kong/icons'
-import { useDraggable, useElementBounding } from '@vueuse/core'
 import { useVueFlow } from '@vue-flow/core'
+import { useDraggable, useElementBounding } from '@vueuse/core'
 import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
 
 import { useEditorStore } from '../composables'
 import FlowCanvas from './FlowCanvas.vue'
+
+import type { EdgeChange, NodeChange, VueFlowStore } from '@vue-flow/core'
 
 const { readonly, resizable } = defineProps<{
   readonly?: boolean
   resizable?: boolean
 }>()
 
-const initialized = ref<[request: boolean, response: boolean]>([false, false])
+const requestInitialized = ref(false)
+const responseInitialized = ref(false)
 const { state, markAsLayoutCompleted, commit, clear } = useEditorStore()
 
 const uniqueId = useId()
@@ -200,28 +203,38 @@ const { isDragging } = useDraggable(resizeHandle, {
   },
 })
 
-const fitView = () => {
+function fitView() {
   nextTick(() => {
     requestFlow.value?.fitView()
     responseFlow.value?.fitView()
   })
 }
 
-const initWatcher = watch(initialized, ([request, response]) => {
-  // Only perform once upon both flow are initialized
-  if (request && response) {
-    // Only perform auto layout if the layout (UI data) is out of sync with the configuration
-    if (state.value.needLayout) {
-      requestFlow.value?.autoLayout(false)
-      responseFlow.value?.autoLayout(false)
+watch(
+  [requestInitialized, responseInitialized, () => state.value.needLayout],
+  ([request, response, needLayout]) => {
+    if (!request || !response)
+      return
+
+    // Dismiss the flag to avoid reentering
+    if (needLayout) {
       markAsLayoutCompleted()
-      commit()
-      clear()
     }
-    fitView()
-    initWatcher.stop()
-  }
-}, { deep: true })
+
+    // Wait for VueFlow internal layout measurements. nextTick does not work here.
+    setTimeout(() => {
+      if (needLayout !== false) {
+        requestFlow.value?.autoLayout(false)
+        responseFlow.value?.autoLayout(false)
+        commit('*')
+        if (needLayout === true || !needLayout?.keepHistory) {
+          clear()
+        }
+      }
+      fitView()
+    }, 0)
+  },
+)
 
 defineExpose({ fitView })
 </script>

@@ -17,8 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import type { OpenConfirm } from './ConflictModal.vue'
-
 import { useScrollLock } from '@vueuse/core'
 import { ref, useTemplateRef, watch } from 'vue'
 import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../../constants'
@@ -27,10 +25,14 @@ import ConflictModal from './ConflictModal.vue'
 import EditorNav from './EditorNav.vue'
 import EditorContent from './EditorContent.vue'
 import { provideConfirmModal } from '../composables/useConflictConfirm'
+import { useEditorStore } from '../store/store'
+
+import type { OpenConfirm } from './ConflictModal.vue'
 
 const open = defineModel<boolean>('open')
 const showConfirm = ref(false)
 const confirmModalRef = useTemplateRef('confirm-modal')
+const { clear } = useEditorStore()
 
 provideConfirmModal(async (...args: Parameters<OpenConfirm>) => {
   showConfirm.value = true
@@ -43,6 +45,11 @@ const isLocked = useScrollLock(document)
 
 watch(open, (open) => {
   isLocked.value = !!open
+
+  // Clear the history when the editor is closed
+  if (!open) {
+    clear()
+  }
 }, { immediate: true })
 
 function close() {
