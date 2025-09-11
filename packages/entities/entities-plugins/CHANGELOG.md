@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.93.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.6...@kong-ui-public/entities-plugins@9.93.0) (2025-09-11)
+
+
+### Features
+
+* **entities-plugins:** datakit use examples in flow editor ([#2469](https://github.com/Kong/public-ui-components/issues/2469)) ([ed6f238](https://github.com/Kong/public-ui-components/commit/ed6f23875bdd02df7f653456d65b335f358a88f1))
+
+
+
+
+
 ## [9.92.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.5...@kong-ui-public/entities-plugins@9.92.6) (2025-09-11)
 
 
