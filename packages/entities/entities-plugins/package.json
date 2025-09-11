@@ -32,6 +32,7 @@
     "@vueuse/core": "^13.5.0",
     "@vueuse/integrations": "^13.5.0",
     "axios": "^1.11.0",
+    "monaco-editor": "^0.52.2",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.4.5",
     "zod": "^4.0.17"
@@ -50,6 +51,7 @@
     "@vueuse/core": "^13.5.0",
     "@vueuse/integrations": "^13.5.0",
     "axios": "^1.7.7",
+    "monaco-editor": "^0.52.2",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5",
     "zod": "^4.0.17"
@@ -98,7 +100,6 @@
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "lodash-es": "^4.17.21",
-    "marked": "^14.1.4",
-    "monaco-editor": "0.52.2"
+    "marked": "^14.1.4"
   }
 }
