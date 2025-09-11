@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.3...@kong-ui-public/analytics-chart@10.2.4) (2025-09-11)
+
+
+### Bug Fixes
+
+* add data-testid to zoom-timerange from - to ([#2478](https://github.com/Kong/public-ui-components/issues/2478)) ([7fa7153](https://github.com/Kong/public-ui-components/commit/7fa715385bf5e097e50630d739a0ef4519d53e47))
+
+
+
+
+
 ## [10.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.2...@kong-ui-public/analytics-chart@10.2.3) (2025-09-10)
 
 
