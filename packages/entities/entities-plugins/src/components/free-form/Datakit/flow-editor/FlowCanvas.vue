@@ -213,7 +213,7 @@ if (phase === 'response' && !readonly) {
     if (!format) return
 
     const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
-    if ((nodeType === 'call' || nodeType === 'exit')) {
+    if ((nodeType === 'call')) {
       disableDrop.value = true
     }
   })
