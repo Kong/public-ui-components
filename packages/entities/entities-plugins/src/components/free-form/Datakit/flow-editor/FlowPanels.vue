@@ -217,9 +217,8 @@ watch(
       return
 
     // Dismiss the flag to avoid reentering
-    if (needLayout) {
+    if (needLayout)
       markAsLayoutCompleted()
-    }
 
     // Wait for VueFlow internal layout measurements. nextTick does not work here.
     setTimeout(() => {
@@ -227,9 +226,9 @@ watch(
         requestFlow.value?.autoLayout(false)
         responseFlow.value?.autoLayout(false)
         commit('*')
-        if (needLayout === true || !needLayout?.keepHistory) {
+
+        if (needLayout === true || !needLayout?.keepHistory)
           clear()
-        }
       }
       fitView()
     }, 0)

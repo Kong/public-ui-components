@@ -160,13 +160,11 @@ export interface EditorState {
   nodes: NodeInstance[]
   edges: EdgeInstance[]
   /**
-   * A hint to indicate if a layout should be performed next time the nodes are changed.
+   * A hint to indicate if a layout should be scheduled after the state is loaded.
    *
-   * If set to `false`, no layout will be performed.
+   * If set to `false`, no layout will be scheduled.
    * If set to `true`, an auto-layout will be scheduled and the history will be cleared after layout.
    * Set to an object to schedule an auto-layout and customize the behavior.
-   *
-   * Layout itself is NOT recorded in the history in all cases.
    */
   needLayout?: boolean | {
     /**
