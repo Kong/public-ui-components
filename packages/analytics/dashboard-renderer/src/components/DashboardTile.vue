@@ -115,7 +115,7 @@
         :data-testid="`csv-export-modal-${tileId}`"
         :export-state="exportState"
         :filename="csvFilename"
-        @toggle-modal="setExportModalVisibility"
+        @close-modal="hideExportModal"
       />
     </div>
     <div
@@ -139,19 +139,18 @@ import type {
   AbsoluteTimeRangeV4,
   AiExploreQuery,
   AnalyticsBridge,
-  DatasourceAwareQuery,
+  CsvExportState,
   DashboardTileType,
   ExploreQuery,
   ExploreResultV4,
   FilterDatasource,
   TileDefinition,
-  TimeRangeV4,
-  Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 
-import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch, onUnmounted } from 'vue'
-import cloneDeep from 'lodash.clonedeep'
-import { formatTime, TimePeriods, getFieldDataSources, msToGranularity, useAnalyticsRequestExport, TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
+import {
+  type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch, type Ref,
+} from 'vue'
+import { formatTime, TimePeriods, getFieldDataSources, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -188,18 +187,16 @@ const emit = defineEmits<{
   (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
 }>()
 
-const abortController = new AbortController()
-
 const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.vue'))
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
+const exportState = ref<CsvExportState>({ status: 'loading' })
 const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
-const selectedTimeRange = ref<TimeRangeV4 | undefined>()
 
 const {
   exploreLinkKebabMenu,
@@ -220,27 +217,7 @@ const {
   context: readonly(toRef(props, 'context')),
 })
 
-const {
-  exportState,
-  requestExport,
-  resetExport,
-} = useAnalyticsRequestExport({
-  injectKey: INJECT_QUERY_PROVIDER,
-  buildQuery: (limit: number) => {
-    const { datasource, ...baseQueryWithoutDatasource } = cloneDeep(props.definition.query)
-
-    const query = {
-      ...baseQueryWithoutDatasource,
-      ...(effectiveTimeRange.value ? { time_range: effectiveTimeRange.value } : {}),
-      limit,
-    }
-
-    return {
-      datasource,
-      query,
-    } as DatasourceAwareQuery
-  },
-})
+const { issueQuery } = composables.useIssueQuery()
 
 watch(() => props.definition, async () => {
   await nextTick()
@@ -251,14 +228,6 @@ watch(() => props.definition, async () => {
 
   loadingChartData.value = true
 }, { immediate: true, deep: true })
-
-const effectiveTimeRange = computed<Timeframe | TimeRangeV4 | null>(() => {
-  const selected = selectedTimeRange.value
-  const fromDefinition = props.definition.query?.time_range as TimeRangeV4
-  const fromContext = props.context.timeSpec
-
-  return selected ?? fromDefinition ?? fromContext
-})
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
@@ -400,22 +369,23 @@ const onChartData = (data: ExploreResultV4) => {
   loadingChartData.value = false
 }
 
-const setExportModalVisibility = (val: boolean) => {
-  exportModalVisible.value = val
-
-  if (!val) {
-    resetExport()
-  }
+const hideExportModal = () => {
+  exportModalVisible.value = false
 }
 
 const exportCsv = async () => {
-  setExportModalVisibility(true)
-  await requestExport()
+  const result: Ref<CsvExportState> = ref({ status: 'loading' })
+
+  issueQuery(props.definition.query, props.context, EXPORT_RECORD_LIMIT).then(queryResult => {
+    result.value = { status: 'success', chartData: queryResult }
+  }).catch(error => {
+    result.value = { status: 'error', error: error }
+  })
+
+  return result
 }
 
 const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
-  selectedTimeRange.value = newTimeRange
-
   const zoomEvent: TileZoomEvent = {
     tileId: props.tileId.toString(),
     timeRange: newTimeRange,
@@ -424,8 +394,6 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
 }
 
 const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
-  selectedTimeRange.value = newTimeRange
-
   const filters = datasourceScopedFilters.value
   const requestsQuery = buildRequestsQueryZoomActions(newTimeRange, filters)
   const exploreQuery = buildExploreQuery(newTimeRange, filters)
@@ -433,11 +401,6 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
   requestsLinkZoomActions.value = canGenerateRequestsLink.value ? { href: buildRequestLink(requestsQuery) } : undefined
   exploreLinkZoomActions.value = canGenerateExploreLink.value ? { href: buildExploreLink(exploreQuery as ExploreQuery | AiExploreQuery) } : undefined
 }
-
-
-onUnmounted(() => {
-  abortController.abort()
-})
 </script>
 
 <style lang="scss" scoped>

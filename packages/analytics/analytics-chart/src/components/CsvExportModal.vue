@@ -129,7 +129,7 @@ const props = withDefaults(defineProps<{
   modalDescription: undefined,
 })
 
-const emit = defineEmits(['toggleModal'])
+const emit = defineEmits(['closeModal'])
 
 const MAX_ROWS = 3
 const reportFilename = `${props.filename.replace(/\s+/g, '-').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`
@@ -158,7 +158,7 @@ const previewMessage = computed(() => {
 })
 
 const closeModal = () => {
-  emit('toggleModal', false)
+  emit('closeModal')
 }
 
 const tableData = computed(() => {
