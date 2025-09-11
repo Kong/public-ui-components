@@ -29,12 +29,13 @@ import {
  *
  * @param configNodes The config nodes for the functionality
  * @param uiNodes The UI nodes for the layout
- * @param isEditing Whether the editor is in editing mode (versus the creation mode)
+ * @param keepHistory Whether to keep the history after the initial layout
  * @returns The initial editor state
  */
 export function initEditorState(
   configNodes: ConfigNode[],
   uiNodes: UINode[],
+  keepHistory?: boolean,
 ): EditorState {
   const uiNodesMap = new Map<NodeName, UINode>(
     uiNodes.map((uiNode) => [uiNode.name, uiNode]),
@@ -153,7 +154,11 @@ export function initEditorState(
   // Mark all nodes that should be in 'request' phase
   markRequestNodes(['request', 'service_request'])
 
-  return { nodes, edges, needLayout }
+  return {
+    nodes,
+    edges,
+    needLayout: needLayout && keepHistory ? { keepHistory: true } : needLayout,
+  }
 }
 
 export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance {
