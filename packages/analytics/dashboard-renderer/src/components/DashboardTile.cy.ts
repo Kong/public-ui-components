@@ -1,7 +1,7 @@
 import DashboardTile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
-import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition } from '@kong-ui-public/analytics-utilities'
+import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
@@ -459,5 +459,44 @@ describe('<DashboardTile />', () => {
     cy.getTestId('kebab-action-menu-1').should('exist')
     mount({ isFullscreen: true })
     cy.getTestId('kebab-action-menu-1').should('not.exist')
+  })
+
+  context('export', () => {
+    it('calls queryFn with a limit when exporting CSV (defaults to EXPORT_RECORD_LIMIT)', () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { statusCode: ['request_count'] as string[] },
+            { start_ms: start, end_ms: end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: mockTileDefinition,
+          context: mockContext,
+          tileId: 1,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      })
+
+      cy.getTestId('kebab-action-menu-1').click()
+      cy.getTestId('chart-csv-export-1').click()
+
+      cy.get('@queryFn').should('have.been.calledOnce')
+        .then((stub) => {
+          const payload = stub.getCall(0).args[0]
+
+          expect(payload).to.have.property('datasource', 'api_usage')
+          expect(payload).to.have.property('query')
+          expect(payload.query).to.have.property('limit', EXPORT_RECORD_LIMIT)
+        })
+    })
   })
 })

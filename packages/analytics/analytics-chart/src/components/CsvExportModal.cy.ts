@@ -10,10 +10,20 @@ describe('<CsvExportModal />', () => {
     cy.viewport(800, 800)
   })
 
+  afterEach(() => {
+    cy.then(() => {
+      const wrapper = Cypress.vueWrapper
+
+      if (wrapper) {
+        wrapper.unmount()
+      }
+    })
+  })
+
   it('Export Modal with empty dataset', () => {
     cy.mount(CsvExportModal, {
       props: {
-        chartData: emptyExploreResult,
+        exportState: { status: 'success', chartData: emptyExploreResult },
         filename: 'Total requests',
       },
     })
@@ -26,7 +36,7 @@ describe('<CsvExportModal />', () => {
   it('Export Modal with explore data', () => {
     cy.mount(CsvExportModal, {
       props: {
-        chartData: exploreResult,
+        exportState: { status: 'success', chartData: exploreResult },
         filename: 'Total requests',
       },
     })

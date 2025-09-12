@@ -42,23 +42,15 @@
  * on the third step to ensure that the type is correctly inferred as "not undefined".
  */
 
-import { computed, inject, onUnmounted, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import composables from '../composables'
 import type {
-  AllFilters,
   AnalyticsBridge,
-  DatasourceAwareQuery,
-  ExploreFilterAll,
-  ExploreQuery,
   ExploreResultV4,
-  FilterTypeMap,
-  QueryDatasource,
-  TimeRangeV4,
   ValidDashboardQuery,
 } from '@kong-ui-public/analytics-utilities'
-import { stripUnknownFilters } from '@kong-ui-public/analytics-utilities'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
 import { VisibilityOffIcon } from '@kong/icons'
@@ -81,6 +73,7 @@ interface QueryError {
 }
 
 const { i18n } = composables.useI18n()
+const { issueQuery } = composables.useIssueQuery()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
@@ -93,71 +86,9 @@ const queryKey = () => {
   return null
 }
 
-// Ensure that any pending requests are canceled on unmount.
-const abortController = new AbortController()
-
-onUnmounted(() => {
-  abortController.abort()
-})
-
-const deriveFilters = <D extends QueryDatasource>(datasource: D, queryFilters: Array<FilterTypeMap[D]> | undefined, contextFilters: AllFilters[]): Array<FilterTypeMap[D]> => {
-  const mergedFilters: Array<FilterTypeMap[D]> = []
-
-  if (queryFilters) {
-    // The filters from the query should be safe -- as in, validated to be compatible
-    // with the chosen endpoint.
-    mergedFilters.push(...queryFilters)
-  }
-
-  // The contextual filters may not be compatible and need to be pruned.
-  mergedFilters.push(...stripUnknownFilters(datasource, contextFilters))
-
-  return mergedFilters
-}
-
 const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   try {
-    let {
-      datasource,
-      ...rest
-    } = props.query
-
-    if (!datasource) {
-      datasource = 'basic'
-    }
-
-    const mergedFilters = deriveFilters(datasource, props.query.filters as Array<FilterTypeMap[typeof datasource]>, props.context.filters)
-
-    // TODO: the cast is necessary because TimeRangeV4 specifies date objects for absolute time ranges.
-    // If they're coming from a definition, they're strings; should clean this up as part of the dashboard type work.
-    let time_range = props.query.time_range as TimeRangeV4 | undefined
-
-    if (!time_range) {
-      time_range = {
-        ...props.context.timeSpec,
-        tz: props.context.tz,
-      }
-    } else if (!time_range.tz) {
-      time_range = {
-        ...time_range,
-        tz: props.context.tz,
-      }
-    }
-
-    // TODO: similar to other places, consider adding a type guard to ensure the query
-    // matches the datasource.  Currently, this block effectively pretends all queries
-    // are advanced in order to make the types work out.
-    const mergedQuery: DatasourceAwareQuery = {
-      datasource: datasource as 'api_usage',
-      query: {
-        ...rest as ExploreQuery,
-        time_range,
-        filters: mergedFilters as ExploreFilterAll[],
-      },
-    }
-
-    // Note that queryBridge is guaranteed to be set here because SWRV won't execute the query if the key is null.
-    const result = await queryBridge?.queryFn(mergedQuery, abortController)
+    const result = await issueQuery(props.query, props.context)
     queryError.value = null
 
     return result
