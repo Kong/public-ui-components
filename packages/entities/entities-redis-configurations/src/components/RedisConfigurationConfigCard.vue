@@ -5,7 +5,7 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
-      :entity-type="SupportedEntityType.RedisConfiguration"
+      :entity-type="SupportedEntityType.Partial"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       :record-resolver="recordResolver"
