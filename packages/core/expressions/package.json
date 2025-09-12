@@ -41,6 +41,7 @@
     "@kong/design-tokens": "1.18.0",
     "@kong/kongponents": "9.40.1",
     "@types/uuid": "^10.0.0",
+    "monaco-editor": "^0.52.2",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.4.4",
     "vite-plugin-wasm": "^3.3.0",
@@ -66,6 +67,7 @@
   "peerDependencies": {
     "@kong-ui-public/forms": "workspace:^",
     "@kong/kongponents": "^9.39.0",
+    "monaco-editor": "^0.52.2",
     "vue": "^3.5.12"
   },
   "dependencies": {
@@ -73,7 +75,6 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.36.0",
-    "monaco-editor": "0.52.2",
     "uuid": "^11.1.0"
   }
 }

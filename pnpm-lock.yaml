@@ -571,9 +571,6 @@ importers:
       '@kong/icons':
         specifier: ^1.36.0
         version: 1.36.0(vue@3.5.18(typescript@5.9.2))
-      monaco-editor:
-        specifier: 0.52.2
-        version: 0.52.2
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
@@ -590,6 +587,9 @@ importers:
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
+      monaco-editor:
+        specifier: ^0.52.2
+        version: 0.52.2
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
         version: 1.1.0(monaco-editor@0.52.2)
@@ -938,9 +938,6 @@ importers:
       marked:
         specifier: ^14.1.4
         version: 14.1.4
-      monaco-editor:
-        specifier: 0.52.2
-        version: 0.52.2
     devDependencies:
       '@dagrejs/dagre':
         specifier: ^1.1.5
@@ -978,6 +975,9 @@ importers:
       axios:
         specifier: ^1.7.7
         version: 1.12.0
+      monaco-editor:
+        specifier: ^0.52.2
+        version: 0.52.2
       vue:
         specifier: ^3.5.13
         version: 3.5.18(typescript@5.9.2)
