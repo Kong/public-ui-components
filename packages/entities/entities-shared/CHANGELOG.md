@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.30.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.30.0...@kong-ui-public/entities-shared@3.30.1) (2025-09-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
 # [3.30.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.29.0...@kong-ui-public/entities-shared@3.30.0) (2025-09-10)
 
 
