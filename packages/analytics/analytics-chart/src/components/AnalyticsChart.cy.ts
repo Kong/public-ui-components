@@ -377,6 +377,55 @@ describe('<AnalyticsChart />', () => {
       .should('exist')
   })
 
+  it('renders distinct rows for duplicate labels', () => {
+    cy.mount(ChartTooltip, {
+      props: {
+        state: {
+          showTooltip: true,
+          tooltipSeries: [
+            {
+              backgroundColor: 'rgb(10, 10, 10)',
+              borderColor: 'rgba(0, 0, 0, 1)',
+              label: 'v1',
+              value: '2,092,807',
+              isSegmentEmpty: false,
+            },
+            {
+              backgroundColor: 'rgb(20, 20, 20)',
+              borderColor: 'rgba(0, 0, 0, 1)',
+              label: 'v1',
+              value: '1,705,205',
+              isSegmentEmpty: false,
+            },
+          ],
+        },
+        tooltipTitle: 'Requests count',
+      },
+    })
+
+    cy.get('.tooltip-container').should('be.visible')
+
+    // Both rows render even though labels are identical
+    cy.get('.tooltip-container .display-label').should('have.length', 2)
+
+    cy.get('.tooltip-container .display-label').eq(0).should('have.text', 'v1')
+    cy.get('.tooltip-container .display-value').eq(0).should('have.text', '2,092,807')
+
+    cy.get('.tooltip-container .display-label').eq(1).should('have.text', 'v1')
+    cy.get('.tooltip-container .display-value').eq(1).should('have.text', '1,705,205')
+
+    // ensure the two values are not the same
+    cy.get('.tooltip-container .display-value')
+      .then($vals => {
+        const v0 = $vals.eq(0).text().trim()
+        const v1 = $vals.eq(1).text().trim()
+        expect(v0).to.not.equal(v1)
+      })
+
+    cy.get('.tooltip-container .square-marker').should('have.length', 2)
+  })
+
+
   describe('Zoom actions', () => {
 
     it('cannot select area if no zoom actions are present', () => {

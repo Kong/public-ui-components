@@ -49,8 +49,8 @@
       </div>
       <ul class="tooltip">
         <template
-          v-for="{ backgroundColor, borderColor, label, value, isSegmentEmpty } in (state.tooltipSeries as any)"
-          :key="label"
+          v-for="({ backgroundColor, borderColor, label, value, isSegmentEmpty }, index) in (state.tooltipSeries as any)"
+          :key="label + index"
         >
           <li v-if="state.tooltipSeries.length">
             <div
