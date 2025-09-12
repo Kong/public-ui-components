@@ -164,7 +164,7 @@ describe('formatChartTicksByGranularity', () => {
       ['hourly', 'Dec 10, 2024 3:30 PM'],
       ['twoHourly', 'Dec 10, 2024 3:30 PM'],
       ['twelveHourly', 'Dec 10, 2024 3:30 PM'],
-      ['daily', 'Dec 10, 2024'],
+      ['daily', 'Dec 10, 2024 3:30 PM'],
       ['weekly', '2024 W50'],
     ])('formats \'%s\' granularity in UTC', (granularity, expected) => {
       expect(formatTooltipTimestampByGranularity({
@@ -185,7 +185,7 @@ describe('formatChartTicksByGranularity', () => {
       ['hourly', 'Dec 10, 2024 10:30 AM'],
       ['twoHourly', 'Dec 10, 2024 10:30 AM'],
       ['twelveHourly', 'Dec 10, 2024 10:30 AM'],
-      ['daily', 'Dec 10, 2024'],
+      ['daily', 'Dec 10, 2024 10:30 AM'],
       ['weekly', '2024 W50'],
     ])('formats \'%s\' granularity in America/New_York', (granularity, expected) => {
       expect(formatTooltipTimestampByGranularity({
