@@ -95,6 +95,7 @@
       <KTabs
         data-testid="form-view-configuration-slideout-tabs"
         :tabs="tabs"
+        @change="hash => emit('codeBlockTabChange', hash.replace('#', ''))"
       >
         <template #json>
           <JsonCodeBlock
@@ -137,6 +138,7 @@ const emit = defineEmits<{
   (e: 'fetch:error', error: AxiosError): void
   (e: 'submit'): void
   (e: 'cancel'): void
+  (e: 'codeBlockTabChange', data: string): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
