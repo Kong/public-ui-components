@@ -43,7 +43,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.0",
     "@kong/icons": "^1.36.0",
-    "@kong/kongponents": "9.40.0",
+    "@kong/kongponents": "9.40.1",
     "@vue-flow/background": "^1.3.2",
     "@vue-flow/controls": "^1.1.2",
     "@vue-flow/core": "^1.45.0",
