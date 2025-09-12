@@ -68,14 +68,15 @@ import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
-import type { TooltipState, ZoomActionItem } from '../../types'
+import type { Threshold, TooltipState, ZoomActionItem } from '../../types'
 import { type ChartLegendSortFn, type ChartTooltipSortFn, type EnhancedLegendItem, type KChartData, type LegendValues, type TooltipEntry } from '../../types'
-import type { GranularityValues, AbsoluteTimeRangeV4, AnalyticsBridge } from '@kong-ui-public/analytics-utilities'
+import type { GranularityValues, AbsoluteTimeRangeV4, AnalyticsBridge, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import type { Chart } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import { generateLegendItems } from '../../utils'
 import { hasExactlyOneDatapoint } from '../../utils/commonOptions'
 import { INJECT_QUERY_PROVIDER } from '../../constants'
+import { ThresholdPlugin } from '../chart-plugins/ThresholdPlugin'
 
 interface TimeSeriesChartProps {
   chartData?: KChartData
@@ -95,6 +96,7 @@ interface TimeSeriesChartProps {
   brush?: boolean
   zoomActionItems?: ZoomActionItem[]
   tooltipMetricDisplay?: string
+  threshold?: Record<ExploreAggregations, Threshold[]>
 }
 
 const props = withDefaults(
@@ -115,6 +117,7 @@ const props = withDefaults(
     brush: false,
     zoomActionItems: undefined,
     tooltipMetricDisplay: '',
+    threshold: undefined,
   },
 )
 
@@ -123,9 +126,11 @@ const emit = defineEmits<{
   (e: 'select-chart-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 
+const { i18n } = composables.useI18n()
 const verticalLinePlugin = new VerticalLinePlugin()
 const highlightPlugin = new HighlightPlugin()
 const dragSelectPlugin = new DragSelectPlugin()
+const thresholdPlugin = new ThresholdPlugin(i18n)
 const { translateUnit } = composables.useTranslatedUnits()
 const chartInstance = ref<{ chart: Chart }>()
 const legendID = crypto.randomUUID()
@@ -175,6 +180,7 @@ const plugins = computed(() => [
   highlightPlugin,
   ...(props.brush ? [dragSelectPlugin] : []),
   ...(props.type === 'timeseries_line' ? [verticalLinePlugin] : []),
+  ...(props.threshold ? [thresholdPlugin] : []),
 ])
 
 const remountLineKey = computed(() => `line-${plugins.value.map(p => p.id).join('-')}`)
@@ -199,6 +205,7 @@ const { options } = composables.useLineChartOptions({
   metricAxesTitle: toRef(props, 'metricAxesTitle'),
   dimensionAxesTitle: toRef(props, 'dimensionAxesTitle'),
   pointsWithoutHover: pointsWithoutHover,
+  threshold: toRef(props, 'threshold'),
 })
 
 composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(props, 'syntheticsDataKey'))

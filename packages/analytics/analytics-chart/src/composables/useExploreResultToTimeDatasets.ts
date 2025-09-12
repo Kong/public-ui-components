@@ -1,11 +1,10 @@
-import type { ExploreAggregations, ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
 import {
   defaultLineOptions,
   datavisPalette,
   BORDER_WIDTH,
   NO_BORDER,
   determineBaseColor,
-  thresholdColor,
 } from '../utils'
 import type { Ref } from 'vue'
 import { computed } from 'vue'
@@ -187,34 +186,6 @@ export default function useExploreResultToTimeDataset(
           datasets.sort((a, b) => (Number(a.total) < Number(b.total) ? -1 : 1))
         }
 
-        // Draw threshold lines, if any
-        if (deps.threshold) {
-          for (const key of Object.keys(deps.threshold)) {
-            const threshold = deps.threshold[key as ExploreAggregations]
-
-            if (threshold) {
-              threshold.forEach(t => {
-                datasets.push({
-                  type: 'line',
-                  rawMetric: key,
-                  isThreshold: true,
-                  // @ts-ignore - dynamic i18n key
-                  label: i18n.t(`chartLabels.threshold-${t.type}`),
-                  backgroundColor: thresholdColor(t.type),
-                  borderColor: thresholdColor(t.type),
-                  borderWidth: 1.25,
-                  borderDash: [12, 8],
-                  fill: false,
-                  order: -1, // Display above all other datasets
-                  stack: 'custom', // Never stack this dataset
-                  data: zeroFilledTimeSeries.map(ts => {
-                    return { x: ts, y: t.value }
-                  }),
-                } as Dataset)
-              })
-            }
-          }
-        }
         return {
           datasets,
         }

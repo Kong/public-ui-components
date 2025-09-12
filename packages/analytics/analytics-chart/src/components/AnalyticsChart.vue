@@ -53,6 +53,7 @@
         :metric-unit="computedMetricUnit"
         :stacked="chartOptions.stacked"
         :synthetics-data-key="syntheticsDataKey"
+        :threshold="chartOptions.threshold"
         :time-range-ms="timeRangeMs"
         :tooltip-metric-display="tooltipMetricDisplay"
         :tooltip-title="tooltipTitle"
@@ -149,7 +150,6 @@ const computedChartData = computed(() => {
       {
         fill: props.chartOptions.stacked,
         colorPalette: props.chartOptions.chartDatasetColors || defaultStatusCodeColors,
-        threshold: props.chartOptions.threshold || undefined,
       },
       toRef(props, 'chartData'),
     ).value
