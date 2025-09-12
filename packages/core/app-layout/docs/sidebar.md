@@ -122,6 +122,36 @@ An array of `SidebarPrimaryItem` objects to display in the top navigation list (
 
 An array of `SidebarPrimaryItem` objects to display in the bottom navigation list (below the divider).
 
+#### `groupConfig`
+
+- type: Object as PropType<GroupConfigMap>
+- default: `() => ({})`
+
+A map of sidebar group config objects to customize the group's label, collapsibility, etc.
+
+```ts
+// GroupConfig
+{
+  label: string
+  collapsible?: boolean // whether or not the group can be collapsed
+  collapsed?: boolean // initial collapse state of the group
+}
+// GroupConfigMap
+{
+  [key: string]: GroupConfig
+}
+```
+
+The group `key` should match the `SidebarPrimaryItem` `group` value. If no configuration matches the group `key`, the group will be treated as uncollapsible. There will be some minor normalization applied to the `group` string to use it as a key; spaces will be removed and the first character will be lowercased.
+
+```ts
+group: "My Group Name"
+
+groupConfig: {
+  myGroupName: {...}
+}
+```
+
 #### `headerHeight`
 
 - type: `number`
@@ -249,6 +279,12 @@ The `click` event emits a payload of the `item` that was clicked, along with its
 A `@toggle` event is emitted whenever the sidebar is opened or closed.
 
 The `toggle` event emits a payload of a `boolean` to indicate if the sidebar is open.
+
+#### `toggle-collapse`
+
+A `@toggle-collapse` event is emitted whenever a collapsible sidenav group is expanded or collapsed.
+
+The `toggle-collapse` event emits a payload of a `string` to indicate the toggled `groupName` and the group's `GroupConfig` object, containing the collapse state.
 
 ### Mobile sidebar
 
@@ -512,11 +548,11 @@ const sidebarToggled = (isOpen: boolean) => {
 
 You can customize some of the sidebar CSS by adding CSS variables to your app. In most use-cases, this shouldn't be necessary.
 
-Variable | Description | Default
----------|----------|---------
-`--kong-ui-app-sidebar-background` | The CSS `background` of the sidebar | `transparent`
-`--kong-ui-app-sidebar-header-background` | The CSS `background` of the `.sidebar-header` | `transparent`
-`--kong-ui-app-sidebar-mobile-icon-color` | The color of the "lines" of the mobile menu icon | `#1155cb`
+| Variable                                  | Description                                      | Default       |
+| ----------------------------------------- | ------------------------------------------------ | ------------- |
+| `--kong-ui-app-sidebar-background`        | The CSS `background` of the sidebar              | `transparent` |
+| `--kong-ui-app-sidebar-header-background` | The CSS `background` of the `.sidebar-header`    | `transparent` |
+| `--kong-ui-app-sidebar-mobile-icon-color` | The color of the "lines" of the mobile menu icon | `#1155cb`     |
 
 ### CSS variable example
 
@@ -531,7 +567,7 @@ Variable | Description | Default
 TypeScript interfaces [are available here](https://github.com/Kong/public-ui-components/blob/main/packages/core/app-layout/src/types/sidebar.ts) and can be directly imported into your host application. The following type interfaces are available for import:
 
 ```ts
-import type { SidebarPrimaryItem, SidebarSecondaryItem } from '@kong-ui-public/app-layout'
+import type { SidebarPrimaryItem, SidebarSecondaryItem, GroupConfig, GroupConfigMap } from '@kong-ui-public/app-layout'
 ```
 
 ---

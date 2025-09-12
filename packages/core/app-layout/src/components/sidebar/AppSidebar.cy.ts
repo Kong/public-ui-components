@@ -2,7 +2,7 @@
 
 import AppSidebar from './AppSidebar.vue'
 import { h } from 'vue'
-import { topItems, bottomItems } from '../../../fixtures/sidebar-items'
+import { topItems, bottomItems, groupedItems, groupConfig, groupCounts } from '../../../fixtures/sidebar-items'
 import { RuntimesIcon } from '@kong/icons'
 
 const viewports = {
@@ -56,6 +56,200 @@ describe('<AppSidebar />', () => {
           cy.get('.kong-ui-app-sidebar').find('ul.top-items').find('li a').should('be.visible')
           cy.get('.kong-ui-app-sidebar').find('ul.bottom-items').should('be.visible')
           cy.get('.kong-ui-app-sidebar').find('ul.bottom-items').find('li a').should('be.visible')
+        })
+
+        it('renders a sidebar with top nav with non-collapsible groups', () => {
+          const gc = {
+            ...groupConfig,
+          }
+          // groups are not collapsible
+          gc.connectivity.collapsible = false
+          gc.applications.collapsible = false
+
+          cy.mount(AppSidebar, {
+            props: {
+              open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
+              mobileEnabled: true,
+              topItems: groupedItems,
+              bottomItems,
+              headerHeight: 0,
+              groupConfig: gc,
+            },
+          })
+
+          cy.get('.kong-ui-app-sidebar').should('be.visible')
+
+          cy.get('.kong-ui-app-sidebar').find('ul.top-items').should('be.visible')
+          cy.get('.kong-ui-app-sidebar').find('ul.bottom-items').should('be.visible')
+
+          // check for ungrouped records
+          cy.getTestId('level-primary-group-collapse-ungrouped').should('be.visible')
+          // classes
+          cy.getTestId('level-primary-group-collapse-ungrouped').should('have.class', 'not-collapsible')
+          cy.getTestId('level-primary-group-collapse-ungrouped').should('have.class', 'ungrouped')
+          // item links
+          cy.getTestId('level-primary-group-collapse-ungrouped').find('.sidebar-item-link').should('have.length', 1)
+          // group name + collapse icon
+          cy.getTestId('level-primary-group-collapse-ungrouped').findTestId('level-primary-group-name').should('not.exist')
+          cy.getTestId('level-primary-group-collapse-ungrouped').findTestId('level-primary-group-collapse-icon').should('not.exist')
+
+          // check for grouped records/group name
+          Object.keys(gc).forEach((groupName) => {
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).should('be.visible')
+            // classes
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).should('have.class', 'not-collapsible')
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).should('not.have.class', 'ungrouped')
+            // item links
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('have.length', groupCounts[groupName as keyof typeof groupCounts] || 0)
+            // default collapse state is ignored and items are visible
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('be.visible')
+            // group name
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-name').should('be.visible')
+            // click does not collapse
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-name').click()
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('be.visible')
+            // collapse icon
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-collapse-icon').should('not.exist')
+          })
+        })
+
+        it('renders a sidebar with top nav with collapsible groups', () => {
+          const gc = {
+            ...groupConfig,
+          }
+          // both groups are collapsible
+          gc.connectivity.collapsible = true
+          gc.applications.collapsible = true
+          cy.mount(AppSidebar, {
+            props: {
+              open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
+              mobileEnabled: true,
+              topItems: groupedItems,
+              bottomItems,
+              headerHeight: 0,
+              groupConfig: gc,
+            },
+          })
+
+          cy.get('.kong-ui-app-sidebar').should('be.visible')
+
+          cy.get('.kong-ui-app-sidebar').find('ul.top-items').should('be.visible')
+          cy.get('.kong-ui-app-sidebar').find('ul.bottom-items').should('be.visible')
+
+          // check for ungrouped records
+          cy.getTestId('level-primary-group-collapse-ungrouped').should('be.visible')
+          // classes
+          cy.getTestId('level-primary-group-collapse-ungrouped').should('have.class', 'not-collapsible')
+          cy.getTestId('level-primary-group-collapse-ungrouped').should('have.class', 'ungrouped')
+          // item links
+          cy.getTestId('level-primary-group-collapse-ungrouped').find('.sidebar-item-link').should('have.length', 1)
+          // group name + collapse icon
+          cy.getTestId('level-primary-group-collapse-ungrouped').findTestId('level-primary-group-name').should('not.exist')
+          cy.getTestId('level-primary-group-collapse-ungrouped').findTestId('level-primary-group-collapse-icon').should('not.exist')
+
+          // check for grouped records/group name
+          Object.keys(gc).forEach((groupName) => {
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).should('be.visible')
+            // classes
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).should('not.have.class', 'not-collapsible')
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).should('not.have.class', 'ungrouped')
+            // item links
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('have.length', groupCounts[groupName as keyof typeof groupCounts] || 0)
+            // default collapse state is applied
+            if (gc[groupName].collapsed) {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('not.be.visible')
+            } else {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('be.visible')
+            }
+            // group name
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-name').should('be.visible')
+            // click toggles collapse
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-name').click()
+            if (gc[groupName].collapsed) {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('be.visible')
+            } else {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('not.be.visible')
+            }
+            // collapse icon
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-collapse-icon').should('be.visible')
+          })
+        })
+
+        it('renders a sidebar with top nav with both collapsible and non-collapsible groups', () => {
+          const gc = {
+            ...groupConfig,
+          }
+          // connectivity is not collapsible
+          gc.connectivity.collapsible = false
+
+          cy.mount(AppSidebar, {
+            props: {
+              open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
+              mobileEnabled: true,
+              topItems: groupedItems,
+              bottomItems,
+              headerHeight: 0,
+              groupConfig: gc,
+            },
+          })
+
+          cy.get('.kong-ui-app-sidebar').should('be.visible')
+
+          cy.get('.kong-ui-app-sidebar').find('ul.top-items').should('be.visible')
+          cy.get('.kong-ui-app-sidebar').find('ul.bottom-items').should('be.visible')
+
+          // check for ungrouped records
+          cy.getTestId('level-primary-group-collapse-ungrouped').should('be.visible')
+          // classes
+          cy.getTestId('level-primary-group-collapse-ungrouped').should('have.class', 'not-collapsible')
+          cy.getTestId('level-primary-group-collapse-ungrouped').should('have.class', 'ungrouped')
+          // item links
+          cy.getTestId('level-primary-group-collapse-ungrouped').find('.sidebar-item-link').should('have.length', 1)
+          // group name + collapse icon
+          cy.getTestId('level-primary-group-collapse-ungrouped').findTestId('level-primary-group-name').should('not.exist')
+          cy.getTestId('level-primary-group-collapse-ungrouped').findTestId('level-primary-group-collapse-icon').should('not.exist')
+
+          // check for grouped records/group name
+          Object.keys(gc).forEach((groupName) => {
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).should('be.visible')
+
+            // classes
+            if (gc[groupName].collapsible) {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).should('not.have.class', 'not-collapsible')
+            } else {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).should('have.class', 'not-collapsible')
+            }
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).should('not.have.class', 'ungrouped')
+
+            // item links
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('have.length', groupCounts[groupName as keyof typeof groupCounts] || 0)
+
+            // default collapse state is applied (or not)
+            if (gc[groupName].collapsible && gc[groupName].collapsed) {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('not.be.visible')
+            } else {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('be.visible')
+            }
+            // group name
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-name').should('be.visible')
+
+            // click toggles collapse (or not)
+            cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-name').click()
+            if (gc[groupName].collapsible && gc[groupName].collapsed) {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('be.visible')
+            } else if (gc[groupName].collapsible && !gc[groupName].collapsed) {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('not.be.visible')
+            } else if (!gc[groupName].collapsible) {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).find('.sidebar-item-link').should('be.visible')
+            }
+
+            // collapse icon
+            if (gc[groupName].collapsible) {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-collapse-icon').should('be.visible')
+            } else {
+              cy.getTestId(`level-primary-group-collapse-${groupName}`).findTestId('level-primary-group-collapse-icon').should('not.exist')
+            }
+          })
         })
 
         it('renders a router-link if item.to is an object', () => {
