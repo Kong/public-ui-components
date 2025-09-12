@@ -111,7 +111,7 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
   },
   'request-validator': {
     name: 'Request Validator',
-    description: 'Validate requests before they reach their upstream Service. ',
+    description: 'Validate requests before they reach their upstream Service.',
     group: PluginGroup.TRAFFIC_CONTROL,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER],
   },

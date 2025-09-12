@@ -184,7 +184,7 @@
       },
       "request-validator": {
         "name": "Request Validator",
-        "description": "Validate requests before they reach their upstream Service. "
+        "description": "Validate requests before they reach their upstream Service."
       },
       "acl": {
         "name": "ACL",
