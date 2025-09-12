@@ -51,7 +51,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong/icons": "^1.36.0",
+    "@kong/icons": "^1.37.0",
     "dompurify": "^3.2.6",
     "fecha": "^4.2.3",
     "lodash-es": "^4.17.21"
@@ -59,7 +59,7 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.39.0",
+    "@kong/kongponents": "^9.40.1",
     "vue": "^3.5.12"
   },
   "devDependencies": {
