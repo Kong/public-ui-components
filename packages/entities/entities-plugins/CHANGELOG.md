@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.93.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.93.2...@kong-ui-public/entities-plugins@9.93.3) (2025-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency axios to v1.12.0 [security] ([#2481](https://github.com/Kong/public-ui-components/issues/2481)) ([af05c92](https://github.com/Kong/public-ui-components/commit/af05c92131f666eb7ab89c27149d14d794b9535d))
+
+
+
+
+
 ## [9.93.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.93.1...@kong-ui-public/entities-plugins@9.93.2) (2025-09-12)
 
 
