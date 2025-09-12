@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.2.2...@kong-ui-public/entities-consumer-groups@4.2.3) (2025-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency axios to v1.12.0 [security] ([#2481](https://github.com/Kong/public-ui-components/issues/2481)) ([af05c92](https://github.com/Kong/public-ui-components/commit/af05c92131f666eb7ab89c27149d14d794b9535d))
+
+
+
+
+
+## [4.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.2.1...@kong-ui-public/entities-consumer-groups@4.2.2) (2025-09-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-consumer-groups
+
+
+
+
+
 ## [4.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumer-groups@4.2.0...@kong-ui-public/entities-consumer-groups@4.2.1) (2025-09-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumer-groups

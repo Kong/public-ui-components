@@ -1,13 +1,19 @@
 <template>
   <div class="zoom-timerange-container">
     <div class="zoom-timerange-details">
-      <div class="label">
+      <div
+        class="label"
+        data-testid="zoom-timerange-from"
+      >
         {{ i18n.t('zoom_time_range.from') }}
       </div>
       <div>
         {{ throttledStartTime }}
       </div>
-      <div class="label">
+      <div
+        class="label"
+        data-testid="zoom-timerange-to"
+      >
         {{ i18n.t('zoom_time_range.to') }}
       </div>
       <div>

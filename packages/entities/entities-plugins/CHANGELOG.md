@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.93.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.93.2...@kong-ui-public/entities-plugins@9.93.3) (2025-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency axios to v1.12.0 [security] ([#2481](https://github.com/Kong/public-ui-components/issues/2481)) ([af05c92](https://github.com/Kong/public-ui-components/commit/af05c92131f666eb7ab89c27149d14d794b9535d))
+
+
+
+
+
+## [9.93.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.93.1...@kong-ui-public/entities-plugins@9.93.2) (2025-09-12)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - enum field update event ([#2483](https://github.com/Kong/public-ui-components/issues/2483)) ([698e589](https://github.com/Kong/public-ui-components/commit/698e589c130113b55c672a8d208db1f85554362a))
+
+
+
+
+
+## [9.93.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.93.0...@kong-ui-public/entities-plugins@9.93.1) (2025-09-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.93.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.6...@kong-ui-public/entities-plugins@9.93.0) (2025-09-11)
+
+
+### Features
+
+* **entities-plugins:** datakit use examples in flow editor ([#2469](https://github.com/Kong/public-ui-components/issues/2469)) ([ed6f238](https://github.com/Kong/public-ui-components/commit/ed6f23875bdd02df7f653456d65b335f358a88f1))
+
+
+
+
+
 ## [9.92.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.92.5...@kong-ui-public/entities-plugins@9.92.6) (2025-09-11)
 
 

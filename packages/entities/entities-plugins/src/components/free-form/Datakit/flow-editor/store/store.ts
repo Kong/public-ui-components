@@ -58,8 +58,10 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     const skipValidation = ref(false)
     const invalidConfigNodeIds = ref<Set<NodeId>>(new Set())
 
+    // Should only be called by internal actions instead of user ones.
     function markAsLayoutCompleted() {
       state.value.needLayout = false
+      history.commit('*')
     }
 
     // maps
@@ -537,9 +539,22 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       )
     }
 
-    function load(nextConfig: ConfigNode[], nextUI: UINode[]) {
-      state.value = initEditorState(nextConfig, nextUI)
-      history.reset()
+    /**
+     * Load the given configuration and UI state into the editor.
+     *
+     * This REPLACES the entire editor state.
+     *
+     * To commit the current state in the undo history before load and keep the history,
+     * set `keepHistory` to `true` (default: `false`).
+     */
+    function load(nextConfig: ConfigNode[], nextUI: UINode[], keepHistory?: boolean) {
+      if (keepHistory)
+        history.commit()
+
+      state.value = initEditorState(nextConfig, nextUI, keepHistory)
+
+      if (!keepHistory)
+        history.clear()
     }
 
     return {

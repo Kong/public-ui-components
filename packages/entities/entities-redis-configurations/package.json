@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-redis-configurations",
-  "version": "1.4.2",
+  "version": "1.4.4",
   "type": "module",
   "main": "./dist/entities-redis-configurations.umd.js",
   "module": "./dist/entities-redis-configurations.es.js",
@@ -44,7 +44,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.0",
     "@kong/icons": "^1.36.0",
-    "@kong/kongponents": "9.40.0",
+    "@kong/kongponents": "9.40.1",
     "@types/uuid": "^10.0.0",
     "axios": "^1.7.7",
     "vue": "^3.5.13",
@@ -73,7 +73,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.36.0",
     "@kong/kongponents": "9.39.0",
-    "axios": "^1.11.0",
+    "axios": "^1.12.0",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.4.5"
   },
