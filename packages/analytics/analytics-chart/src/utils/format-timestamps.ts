@@ -15,7 +15,6 @@ const TICK_FMT_DATE = 'yyyy-MM-dd'
 
 const TOOLTIP_FMT_DATE_TIME_SECONDS = 'MMM dd, yyyy h:mm:ss a'
 const TOOLTIP_FMT_DATE_TIME_MINUTES = 'MMM dd, yyyy h:mm a'
-const TOOLTIP_FMT_DATE = 'MMM dd, yyyy'
 
 const tickResolvers: Partial<Record<GranularityValues, TickResolver>> = {
   secondly: (d) => (d ? TICK_FMT_DATE_TIME_SECONDS : TICK_FMT_TIME_SECONDS),
@@ -42,7 +41,7 @@ const tooltipResolvers: Partial<Record<GranularityValues, TooltipResolver>> = {
   hourly: () => TOOLTIP_FMT_DATE_TIME_MINUTES,
   twoHourly: () => TOOLTIP_FMT_DATE_TIME_MINUTES,
   twelveHourly: () => TOOLTIP_FMT_DATE_TIME_MINUTES,
-  daily: () => TOOLTIP_FMT_DATE,
+  daily: () => TOOLTIP_FMT_DATE_TIME_MINUTES,
 }
 
 function formatUsingResolver({
