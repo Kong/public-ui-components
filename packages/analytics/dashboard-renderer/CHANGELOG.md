@@ -3,6 +3,95 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.9...@kong-ui-public/dashboard-renderer@7.4.10) (2025-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2482](https://github.com/Kong/public-ui-components/issues/2482)) ([b45c9dc](https://github.com/Kong/public-ui-components/commit/b45c9dc6a6bbca72f72fa42829caad9bfb92402b))
+
+
+
+
+
+## [7.4.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.8...@kong-ui-public/dashboard-renderer@7.4.9) (2025-09-12)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.7...@kong-ui-public/dashboard-renderer@7.4.8) (2025-09-12)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.6...@kong-ui-public/dashboard-renderer@7.4.7) (2025-09-11)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.5...@kong-ui-public/dashboard-renderer@7.4.6) (2025-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.4...@kong-ui-public/dashboard-renderer@7.4.5) (2025-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.3...@kong-ui-public/dashboard-renderer@7.4.4) (2025-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.2...@kong-ui-public/dashboard-renderer@7.4.3) (2025-09-09)
+
+
+### Bug Fixes
+
+* view requests kebab menu link behind FF ([#2468](https://github.com/Kong/public-ui-components/issues/2468)) ([7f861a8](https://github.com/Kong/public-ui-components/commit/7f861a87b2f52c56454c270e5a0f7f3caa1083c9))
+
+
+
+
+
+## [7.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.1...@kong-ui-public/dashboard-renderer@7.4.2) (2025-09-08)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.0...@kong-ui-public/dashboard-renderer@7.4.1) (2025-09-08)
+
+
+### Bug Fixes
+
+* initialize zoom action links ([#2455](https://github.com/Kong/public-ui-components/issues/2455)) ([69ef344](https://github.com/Kong/public-ui-components/commit/69ef3443d7ba0162f4ac9706db5f5b083b806493))
+
+
+
+
+
 # [7.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.3.8...@kong-ui-public/dashboard-renderer@7.4.0) (2025-09-08)
 
 

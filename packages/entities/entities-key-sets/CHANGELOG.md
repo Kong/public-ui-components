@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.9.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.9.3...@kong-ui-public/entities-key-sets@3.9.4) (2025-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2482](https://github.com/Kong/public-ui-components/issues/2482)) ([b45c9dc](https://github.com/Kong/public-ui-components/commit/b45c9dc6a6bbca72f72fa42829caad9bfb92402b))
+
+
+
+
+
+## [3.9.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.9.2...@kong-ui-public/entities-key-sets@3.9.3) (2025-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency axios to v1.12.0 [security] ([#2481](https://github.com/Kong/public-ui-components/issues/2481)) ([af05c92](https://github.com/Kong/public-ui-components/commit/af05c92131f666eb7ab89c27149d14d794b9535d))
+
+
+
+
+
+## [3.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.9.1...@kong-ui-public/entities-key-sets@3.9.2) (2025-09-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
+## [3.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.9.0...@kong-ui-public/entities-key-sets@3.9.1) (2025-09-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-key-sets
+
+
+
+
+
 # [3.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-key-sets@3.8.12...@kong-ui-public/entities-key-sets@3.9.0) (2025-09-08)
 
 

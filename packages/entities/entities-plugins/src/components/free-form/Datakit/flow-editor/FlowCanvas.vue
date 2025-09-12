@@ -8,12 +8,10 @@
       class="flow"
       :class="{ readonly }"
       :connect-on-click="false"
-      :edges="edges"
       :elements-selectable="!readonly"
       :max-zoom="MAX_ZOOM_LEVEL"
       :min-zoom="MIN_ZOOM_LEVEL"
       :multi-selection-key-code="null"
-      :nodes="nodes"
       :nodes-connectable="!readonly"
       :nodes-draggable="!readonly"
       :pan-on-drag="readonly ? false : undefined"
@@ -24,6 +22,7 @@
       @dragover="onDragOver"
       @drop="onDrop"
       @node-click="onNodeClick"
+      @nodes-change="emit('nodes-change')"
       @nodes-initialized="emit('initialized')"
     >
       <Background />
@@ -73,28 +72,29 @@
 </template>
 
 <script setup lang="ts">
-import type { Component } from 'vue'
-import type { DragPayload, NodePhase } from '../types'
-
-import { computed, nextTick, ref, useTemplateRef } from 'vue'
-import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core'
-import { VueFlow } from '@vue-flow/core'
+import { AddIcon, AutoLayoutIcon, RemoveIcon } from '@kong/icons'
+import { KTooltip } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
-import { KTooltip } from '@kong/kongponents'
-import { AddIcon, RemoveIcon, AutoLayoutIcon } from '@kong/icons'
+import { VueFlow } from '@vue-flow/core'
+import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core'
+import { computed, nextTick, ref, useTemplateRef } from 'vue'
 
 import useI18n from '../../../../composables/useI18n'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
+import { useHotkeys } from './composables/useHotkeys'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
+import FitIcon from './icons/FitIcon.vue'
 import FlowNode from './node/FlowNode.vue'
 import { provideFlowStore } from './store/flow'
-import { useHotkeys } from './composables/useHotkeys'
-import FitIcon from './icons/FitIcon.vue'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
+
+import type { Component } from 'vue'
+
+import type { DragPayload, NodePhase } from '../types'
 
 const { flowId, phase, readonly } = defineProps<{
   flowId: string
@@ -104,6 +104,7 @@ const { flowId, phase, readonly } = defineProps<{
 
 const emit = defineEmits<{
   initialized: []
+  'nodes-change': [] // Omitting the changes as we don't use them currently
 }>()
 
 const flowCanvas = useTemplateRef('flowCanvas')
@@ -113,8 +114,6 @@ const { i18n: { t } } = useI18n()
 const {
   vueFlowStore,
   editorStore,
-  nodes,
-  edges,
   autoLayout,
   fitViewParams,
   fitView,
@@ -132,6 +131,7 @@ const {
   },
   readonly,
 })
+
 const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode } = editorStore
 const { project, vueFlowRef, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
 
@@ -213,7 +213,7 @@ if (phase === 'response' && !readonly) {
     if (!format) return
 
     const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
-    if ((nodeType === 'call' || nodeType === 'exit')) {
+    if ((nodeType === 'call')) {
       disableDrop.value = true
     }
   })

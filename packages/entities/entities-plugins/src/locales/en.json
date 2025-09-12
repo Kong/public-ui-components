@@ -184,7 +184,7 @@
       },
       "request-validator": {
         "name": "Request Validator",
-        "description": "Validate requests before they reach their upstream Service. "
+        "description": "Validate requests before they reach their upstream Service."
       },
       "acl": {
         "name": "ACL",
@@ -560,7 +560,7 @@
         "description": "Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools, and observe MCP traffic in real time."
       },
       "ai-gcp-model-armor": {
-        "name": "AI GCP Model Armor ",
+        "name": "AI GCP Model Armor",
         "description": "Audit and validate AI Proxy messages with Google Cloud Model Armor before forwarding them to an upstream LLM."
       },
       "ai-mcp-oauth2": {
@@ -726,6 +726,7 @@
             "title": "Node types",
             "description": "Drag a node onto the canvas to add it to your data flow."
           },
+          "examples": "Examples",
           "debug": {
             "label": "Enable debugging",
             "description": "Enables detailed error messages in client responses for easier debugging.",
@@ -833,12 +834,12 @@
             "title": "Connection conflict",
             "message": {
               "confirm": "Are you sure you want to make this change?",
-              "switch": "You can either connect all outputs from another node or select individual ones.",
+              "switch": "You can connect an output source to either all inputs of a node or to individual inputs.",
               "override": "Each input can connect to only one output, but one output can connect to many inputs."
             },
             "proceed": "Yes, update"
           },
-          "phase_mask_help": "You can't add call or exit nodes in the response phase."
+          "phase_mask_help": "You can't add call nodes in the response phase."
         },
         "code_editor": {
           "mode": "Code editor"

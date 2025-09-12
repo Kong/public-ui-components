@@ -3,6 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.5...@kong-ui-public/analytics-chart@10.2.6) (2025-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2482](https://github.com/Kong/public-ui-components/issues/2482)) ([b45c9dc](https://github.com/Kong/public-ui-components/commit/b45c9dc6a6bbca72f72fa42829caad9bfb92402b))
+
+
+
+
+
+## [10.2.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.4...@kong-ui-public/analytics-chart@10.2.5) (2025-09-12)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-chart
+
+
+
+
+
+## [10.2.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.3...@kong-ui-public/analytics-chart@10.2.4) (2025-09-11)
+
+
+### Bug Fixes
+
+* add data-testid to zoom-timerange from - to ([#2478](https://github.com/Kong/public-ui-components/issues/2478)) ([7fa7153](https://github.com/Kong/public-ui-components/commit/7fa715385bf5e097e50630d739a0ef4519d53e47))
+
+
+
+
+
+## [10.2.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.2...@kong-ui-public/analytics-chart@10.2.3) (2025-09-10)
+
+
+### Bug Fixes
+
+* update tooltip timestamp format ([#2467](https://github.com/Kong/public-ui-components/issues/2467)) ([c432c33](https://github.com/Kong/public-ui-components/commit/c432c3393b2f8c0bf8724d3415980ae137a12a1f))
+
+
+
+
+
+## [10.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.1...@kong-ui-public/analytics-chart@10.2.2) (2025-09-10)
+
+
+### Bug Fixes
+
+* add component test for no-select class ([#2474](https://github.com/Kong/public-ui-components/issues/2474)) ([2ea5a9c](https://github.com/Kong/public-ui-components/commit/2ea5a9ca5b1f1d880b3d4b63c44f4b6352cf582a))
+
+
+
+
+
+## [10.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.0...@kong-ui-public/analytics-chart@10.2.1) (2025-09-08)
+
+
+### Bug Fixes
+
+* ux tweaks ([#2461](https://github.com/Kong/public-ui-components/issues/2461)) ([ec790e8](https://github.com/Kong/public-ui-components/commit/ec790e82ccd1d3a04a229d03c373c12e811c2ba5))
+
+
+
+
+
 # [10.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.1.5...@kong-ui-public/analytics-chart@10.2.0) (2025-09-08)
 
 

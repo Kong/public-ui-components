@@ -1,10 +1,12 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { getFieldDataSources, msToGranularity } from '@kong-ui-public/analytics-utilities'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 import type { DeepReadonly, Ref } from 'vue'
 import type { AiExploreAggregations, AiExploreQuery, AllFilters, ExploreAggregations, ExploreQuery, ExploreResultV4, FilterDatasource, QueryableAiExploreDimensions, QueryableExploreDimensions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsBridge, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContextInternal } from '../types'
+import type { ExternalLink } from '@kong-ui-public/analytics-chart'
+import composables from '.'
 
 export default function useContextLinks(
   {
@@ -20,8 +22,13 @@ export default function useContextLinks(
   },
 ) {
 
+  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
   const exploreBaseUrl = ref('')
   const requestsBaseUrl = ref('')
+  const requestsLinkZoomActions = ref<ExternalLink | undefined>(undefined)
+  const exploreLinkZoomActions = ref<ExternalLink | undefined>(undefined)
+  const hasViewRequestsActions = evaluateFeatureFlag('analytics-chart-zoom-actions', true)
+
   const analyticsConfigStore = useAnalyticsConfigStore()
 
   onMounted(async () => {
@@ -33,7 +40,7 @@ export default function useContextLinks(
   const isAdvancedAnalytics = computed(() => analyticsConfigStore.analytics && analyticsConfigStore.percentiles)
   const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(definition.value.chart.type))
 
-  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && isAdvancedAnalytics.value)
+  const canGenerateRequestsLink = computed(() => hasViewRequestsActions && requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && isAdvancedAnalytics.value)
   const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['basic', 'api_usage', 'llm_usage', undefined].includes(definition.value.query.datasource) && isAdvancedAnalytics.value)
 
   const chartDataGranularity = computed(() => {
@@ -134,12 +141,27 @@ export default function useContextLinks(
     return `${exploreBaseUrl.value}?q=${JSON.stringify(exploreQuery)}&d=${datasource}&c=${definition.value.chart.type}`
   }
 
+
+  // Need to initialize zoom-action links when they become available.
+  // If we leave them as `undefined` AnalyticsChart will never be able to
+  // register the dragSelect plugin.
+  watch([canGenerateRequestsLink, canGenerateExploreLink], ([canGenerateRequestsLink, canGenerateExploreLink]) => {
+    if (canGenerateRequestsLink) {
+      requestsLinkZoomActions.value = { href: '' }
+    }
+    if (canGenerateExploreLink) {
+      exploreLinkZoomActions.value = { href: '' }
+    }
+  })
+
   return {
     exploreLinkKebabMenu,
     requestsLinkKebabMenu,
     canShowKebabMenu,
     canGenerateRequestsLink,
     canGenerateExploreLink,
+    requestsLinkZoomActions,
+    exploreLinkZoomActions,
     buildExploreQuery,
     buildRequestsQueryZoomActions,
     buildExploreLink,

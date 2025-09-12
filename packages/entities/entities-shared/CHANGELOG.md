@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.30.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.30.2...@kong-ui-public/entities-shared@3.30.3) (2025-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update all [@kong](https://github.com/kong) scoped dependencies ([#2482](https://github.com/Kong/public-ui-components/issues/2482)) ([b45c9dc](https://github.com/Kong/public-ui-components/commit/b45c9dc6a6bbca72f72fa42829caad9bfb92402b))
+
+
+
+
+
+## [3.30.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.30.1...@kong-ui-public/entities-shared@3.30.2) (2025-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency axios to v1.12.0 [security] ([#2481](https://github.com/Kong/public-ui-components/issues/2481)) ([af05c92](https://github.com/Kong/public-ui-components/commit/af05c92131f666eb7ab89c27149d14d794b9535d))
+
+
+
+
+
+## [3.30.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.30.0...@kong-ui-public/entities-shared@3.30.1) (2025-09-12)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
+# [3.30.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.29.0...@kong-ui-public/entities-shared@3.30.0) (2025-09-10)
+
+
+### Features
+
+* **entities-shared:** add custom button text support to base form ([#2464](https://github.com/Kong/public-ui-components/issues/2464)) ([2ab587a](https://github.com/Kong/public-ui-components/commit/2ab587a5fdebabe0534abc42421d78a9e959ddb1))
+
+
+
+
+
 # [3.29.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.28.0...@kong-ui-public/entities-shared@3.29.0) (2025-09-08)
 
 

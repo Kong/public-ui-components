@@ -435,5 +435,26 @@ describe('<AnalyticsChart />', () => {
       cy.get('.zoom-timerange-container').should('be.visible')
       cy.getTestId('zoom-action-item-explore').should('exist')
     })
+
+    it('adds no-select class to body while dragging tooltip', () => {
+      mount({
+        onSelectChartRange: cy.spy().as('onSelectChartRange'),
+        onZoomTimeRange: cy.spy().as('onZoomTimeRange'),
+      })
+
+      cy.get('.analytics-chart-parent').should('be.visible')
+
+      cy.get('.chart-container > canvas').trigger('mousemove', 100, 50)
+      cy.get('.chart-container > canvas').trigger('click', 100, 50)
+
+      cy.getTestId('tooltip')
+        .should('be.visible')
+        .trigger('pointerdown', { button: 0, buttons: 1, pointerType: 'mouse' })
+
+      cy.get('body').trigger('pointermove', { clientX: 50, clientY: 50, button: 0, buttons: 1 })
+      cy.get('body').should('have.class', 'no-select')
+      cy.get('body').trigger('pointerup', { button: 0 })
+      cy.get('body').should('not.have.class', 'no-select')
+    })
   })
 })

@@ -48,7 +48,8 @@ export interface OAuth2ClientConfig {
   ssl_verify?: boolean
 }
 
-const emptyConfluent: ConfluentConfig = { authentication: { mode: 'none' }, ssl_verify: true }
+const defaultConfluent: ConfluentConfig = { authentication: { mode: 'none' }, ssl_verify: true }
+const emptyConfluent: ConfluentConfig = { authentication: { basic: {} } }
 
 export const stripEmptyBasicFields = (schemaRegistry: SchemaRegistry) => {
   // Remove the default values if the mode is 'none'
@@ -70,7 +71,10 @@ export const stripEmptyBasicFields = (schemaRegistry: SchemaRegistry) => {
   }
 
   // Remove the entire confluent if all are empty
-  if (isEqual(schemaRegistry.confluent, emptyConfluent)) {
+  if (
+    isEqual(schemaRegistry.confluent, defaultConfluent)
+    || isEqual(schemaRegistry.confluent, emptyConfluent)
+  ) {
     schemaRegistry.confluent = null
   }
 }

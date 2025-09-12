@@ -24,7 +24,7 @@
 
     <HttpMethodField
       name="method"
-      @update:model-value="setConfig()"
+      @update="setConfig()"
     />
 
     <NumberField

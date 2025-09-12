@@ -160,9 +160,20 @@ export interface EditorState {
   nodes: NodeInstance[]
   edges: EdgeInstance[]
   /**
-   * A hint to indicate if the layout (UI data) is out of sync with the configuration
+   * A hint to indicate if a layout should be scheduled after the state is loaded.
+   *
+   * If set to `false`, no layout will be scheduled.
+   * If set to `true`, an auto-layout will be scheduled and the history will be cleared after layout.
+   * Set to an object to schedule an auto-layout and customize the behavior.
    */
-  needLayout: boolean
+  needLayout?: boolean | {
+    /**
+     * Whether to keep the history after the auto-layout.
+     *
+     * @default false
+     */
+    keepHistory?: boolean
+  }
 }
 
 export interface MakeNodeInstancePayload {

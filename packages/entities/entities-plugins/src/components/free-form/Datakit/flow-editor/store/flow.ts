@@ -8,7 +8,7 @@ import type { ConnectionString } from '../modal/ConflictModal.vue'
 import dagre from '@dagrejs/dagre'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
-import { computed, toRaw, toValue } from 'vue'
+import { computed, toRaw, toValue, watch } from 'vue'
 
 import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 import useI18n from '../../../../../composables/useI18n'
@@ -169,8 +169,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       onEdgeUpdate,
       onEdgeMouseEnter,
       onEdgeMouseLeave,
-      setEdges,
       getNodes,
+      setNodes,
+      setEdges,
       addSelectedNodes,
     } = vueFlowStore
 
@@ -239,6 +240,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           })
         }),
     )
+
+    // Moved away from VueFlow's `:nodes` and `:edges` props because
+    // they have race conditions while being updated simultaneously.
+    watch([nodes, edges], ([newNodes, newEdges]) => {
+      setNodes(newNodes)
+      setEdges(newEdges)
+    }, { immediate: true }) // As `nodes` and `edges` are computed refs, it would be okay without `deep: true`
 
     const fitViewParams = computed<FitViewParams>(() => {
       return {
@@ -375,6 +383,18 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     onConnect(handleConnect)
 
+    // Because `onNodesChange` and `onEdgesChange` are called separately, and the order is not
+    // guaranteed, we need some mechanism to batch them together in the same tick, so that they only
+    // trigger `commit()` once at the end whenever there are removals.
+    let postRemovalScheduled = false
+    const onPostRemoval = () => {
+      if (!postRemovalScheduled)
+        return
+
+      postRemovalScheduled = false
+      commit()
+    }
+
     // Only triggered by canvas-originated changes
     onNodesChange((changes) => {
       changes
@@ -385,11 +405,23 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           selectStoreNode(change.selected ? (change.id as NodeId) : undefined)
         })
 
+      let schedulePostRemoval = false
       changes.forEach((change) => {
         if (change.type === 'remove') {
-          removeNode(change.id as NodeId, true)
+          // !! ATTENTION !!
+          // We assume `onNodesChange` is only triggered when user removes nodes from the canvas.
+          // Removals originated from the node panel (form) does not trigger this, because they
+          // manipulate the state directly.
+          schedulePostRemoval = true
+          removeNode(change.id as NodeId, false) // Hold off committing until sync
         }
       })
+
+      if (schedulePostRemoval && !postRemovalScheduled) {
+        postRemovalScheduled = true
+        // Schedule for the same tick
+        queueMicrotask(onPostRemoval)
+      }
     })
 
     onNodeDragStop(({ node }) => {
@@ -420,11 +452,23 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           }))
         })
 
+      let schedulePostRemoval = false
       changes.forEach((change) => {
         if (change.type === 'remove') {
-          disconnectEdge(change.id as EdgeId, true)
+          // !! ATTENTION !!
+          // We assume `onEdgesChange` is only triggered when user removes edges from the canvas.
+          // Removals originated from the node panel (form) does not trigger this, because they
+          // manipulate the state directly.
+          schedulePostRemoval = true
+          disconnectEdge(change.id as EdgeId, false) // Hold off committing until sync
         }
       })
+
+      if (schedulePostRemoval && !postRemovalScheduled) {
+        postRemovalScheduled = true
+        // Schedule for the same tick
+        queueMicrotask(onPostRemoval)
+      }
     })
 
     onEdgeMouseEnter(({ edge: edgeEnter }) => {

@@ -3,6 +3,7 @@
     <div class="zoom-actions-heading">
       <ZoomTimerange
         :end="newTimeRange.end"
+        :granularity="granularity"
         :start="newTimeRange.start"
       />
       <CloseIcon
@@ -13,33 +14,35 @@
       />
     </div>
     <div class="zoom-actions-heading-divider" />
-    <div
-      v-for="option in zoomActionItems"
-      :key="option.key"
-      class="zoom-action-item"
-      :class="{ 'disabled': option.disabled }"
-      :data-testid="`zoom-action-item-${option.key}`"
-    >
-      <a
-        v-if="option.href"
-        :aria-disabled="option.disabled"
-        class="zoom-action-link"
-        :href="option.href"
-        @click="$emit('onAction')"
-      >
-        {{ option.label }}
-      </a>
+    <div class="zoom-action-select">
       <div
-        v-else
-        @click="handleAction(option)"
+        v-for="option in zoomActionItems"
+        :key="option.key"
+        class="zoom-action-item"
+        :class="{ 'disabled': option.disabled }"
+        :data-testid="`zoom-action-item-${option.key}`"
       >
-        {{ option.label }}
+        <a
+          v-if="option.href"
+          :aria-disabled="option.disabled"
+          class="zoom-action-link"
+          :href="option.href"
+          @click="$emit('onAction')"
+        >
+          {{ option.label }}
+        </a>
+        <div
+          v-else
+          @click="handleAction(option)"
+        >
+          {{ option.label }}
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import type { AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { AbsoluteTimeRangeV4, GranularityValues } from '@kong-ui-public/analytics-utilities'
 import type { ZoomActionItem } from '../types'
 import ZoomTimerange from './ZoomTimerange.vue'
 import { CloseIcon } from '@kong/icons'
@@ -48,6 +51,7 @@ import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_30 } from '@kong/design-tokens'
 const props = defineProps<{
   zoomActionItems: ZoomActionItem[]
   newTimeRange: AbsoluteTimeRangeV4
+  granularity: GranularityValues
 }>()
 
 const emit = defineEmits<{
@@ -69,6 +73,7 @@ const handleAction = (option: ZoomActionItem) => {
   border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
   display: flex;
   flex-direction: column;
+  line-height: var(--kui-line-height-20, $kui-line-height-20);
 
   .zoom-actions-heading {
     align-items: top;
@@ -76,7 +81,7 @@ const handleAction = (option: ZoomActionItem) => {
 
     .zoom-actions-close-icon {
       cursor: pointer;
-      margin-right: var(--kui-space-20, $kui-space-20);
+      margin-right: var(--kui-space-30, $kui-space-30);
       margin-top: var(--kui-space-30, $kui-space-30);
     }
   }
@@ -86,12 +91,14 @@ const handleAction = (option: ZoomActionItem) => {
     margin: 0 var(--kui-space-20, $kui-space-20);
   }
 
-  &:has(.zoom-actions-heading-divider + .zoom-action-item:hover) .zoom-actions-heading-divider {
-    opacity: 0;
+  .zoom-action-select {
+    .zoom-action-item:first-child {
+      margin-top: var(--kui-space-20, $kui-space-20);
+    }
   }
 
   .zoom-action-item {
-    color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+    color: var(--kui-color-text, $kui-color-text);
     cursor: pointer;
     font-size: var(--kui-font-size-20, $kui-font-size-20);
     padding: var(--kui-space-20, $kui-space-20) var(--kui-space-40, $kui-space-40);
@@ -100,10 +107,11 @@ const handleAction = (option: ZoomActionItem) => {
     &:last-of-type {
       border-bottom-left-radius: var(--kui-border-radius-20, $kui-border-radius-20);
       border-bottom-right-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+      margin-bottom: var(--kui-space-20, $kui-space-20)
     }
 
     .zoom-action-link {
-      color: var(--kui-color-text-neutral-stronger, $kui-color-text-neutral-stronger);
+      color: var(--kui-color-text, $kui-color-text);
       display: block;
       text-decoration: none;
     }

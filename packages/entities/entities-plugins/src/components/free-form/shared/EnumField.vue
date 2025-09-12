@@ -15,6 +15,7 @@
     :data-testid="`ff-${field.path.value}`"
     :items="realItems"
     :kpop-attributes="{ 'data-testid': `${field.path.value}-items` }"
+    @update:model-value="(value: string | string[] | null) => emit('update', value)"
   >
     <template
       v-if="fieldAttrs.labelAttributes?.info"
@@ -42,6 +43,10 @@ type EnumFieldProps = {
   items?: SelectItem[]
   placeholder?: string
 } & (MultipleSelectProps | SingleSelectProps)
+
+const emit = defineEmits<{
+  update: [string | string[] | null]
+}>()
 
 const { name, items, multiple = undefined, ...props } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()

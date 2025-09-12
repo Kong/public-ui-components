@@ -12,7 +12,7 @@
 
     <EnumField
       name="content_type"
-      @update:model-value="setConfig"
+      @update="setConfig()"
     />
 
     <PropertiesField

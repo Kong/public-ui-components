@@ -1,5 +1,5 @@
 import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues, EnhancedLegendItem, TooltipInteractionMode } from '../types'
-import { formatByGranularity, formatUnit } from '../utils'
+import { formatTooltipTimestampByGranularity, formatUnit } from '../utils'
 import { isValid } from 'date-fns'
 import type { Chart, Point, ScatterDataPoint } from 'chart.js'
 import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
@@ -22,7 +22,10 @@ export const lineChartTooltipBehavior = (tooltipData: TooltipState, context: Ext
     const colors = tooltip.labelColors
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 
-    tooltipData.tooltipContext = formatByGranularity(new Date(tooltip.dataPoints[0].parsed.x), granularity, true)
+    tooltipData.tooltipContext = formatTooltipTimestampByGranularity({
+      tickValue: new Date(tooltip.dataPoints[0].parsed.x),
+      granularity,
+    })
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
       const rawValue = p.parsed[valueAxis]
