@@ -5,13 +5,14 @@
       :can-submit="canSubmit"
       :config="config"
       :edit-id="partialId"
-      :entity-type="SupportedEntityType.RedisConfiguration"
+      :entity-type="SupportedEntityType.Partial"
       :error-message="form.errorMessage"
       :fetch-url="fetchUrl"
-      :form-fields="payload"
+      :form-fields="formField"
       :is-readonly="form.readonly"
       :slidout-top-offset="slidoutTopOffset"
       @cancel="cancelHandler"
+      @code-block-tab-change="(tab) => codeBlockType = tab"
       @fetch:error="fetchErrorHandler"
       @fetch:success="updateFormValues"
       @loading="loadingHandler"
@@ -450,6 +451,7 @@ import type {
 } from '../types'
 import type { AxiosError } from 'axios'
 import type { SelectItem } from '@kong/kongponents'
+import { omit } from 'lodash-es'
 
 const props = defineProps({
   config: {
@@ -503,6 +505,7 @@ const router = useRouter()
 
 const vaultSecretPickerSetup = ref<string | false>()
 const vaultSecretPickerAutofillAction = ref<(secretRef: string) => void | undefined>()
+const codeBlockType = ref<string>('json')
 const setUpVaultSecretPicker = (setupValue: string, autofillAction: (secretRef: string) => void) => {
   vaultSecretPickerSetup.value = setupValue ?? ''
   vaultSecretPickerAutofillAction.value = autofillAction
@@ -599,6 +602,16 @@ const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)
 const isEditWarningModalVisible = ref(false)
 const isReadEditWarning = ref(false)
 const linksCount = ref(0)
+
+const formField = computed(() => {
+  if (codeBlockType.value === 'terraform') {
+    const terraformPayload = {
+      [payload.value.type]: omit(payload.value, ['type']),
+    }
+    return terraformPayload
+  }
+  return payload.value
+})
 
 const submitHandler = async () => {
   try {

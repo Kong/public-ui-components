@@ -5,10 +5,11 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
-      :entity-type="SupportedEntityType.RedisConfiguration"
+      :entity-type="SupportedEntityType.Partial"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       :record-resolver="recordResolver"
+      @config-format-change="console.log"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
       @fetch:success="handleData"
       @loading="(val: boolean) => $emit('loading', val)"
@@ -43,6 +44,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import endpoints from '../partials-endpoints'
 import { getRedisType } from '../helpers'
 import { DEFAULT_REDIS_TYPE } from '../constants'
+import type { CodeFormat } from '@kong-ui-public/entities-shared/dist/types/components/entity-base-config-card/ConfigCardDisplay.vue.js'
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
@@ -131,8 +133,15 @@ const recordResolver = (data: RedisConfigurationResponse) => {
 /**
  * Put config details into `config` object to display in the code block tab
  */
-const codeBlockRecordFormatter = (record: Record<string, any>) => {
+const codeBlockRecordFormatter = (record: Record<string, any>, codeFormat: CodeFormat) => {
   const { id, name, created_at, updated_at, type, tags, ...config } = record
+  if (codeFormat === 'terraform') {
+    return {
+      [type]: {
+        id, name, tags, created_at, updated_at, config,
+      },
+    }
+  }
   return {
     id, name, tags, created_at, updated_at, type, config,
   }
