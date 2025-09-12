@@ -7,7 +7,6 @@
     <EnumField
       v-for="cname in childFieldNames"
       :key="cname"
-      class="dk-inputs-field-indent"
       clearable
       enable-filtering
       :items="items"

@@ -1,14 +1,33 @@
 <template>
+  <div class="dk-inputs-field-h1">
+    {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.label') }}
+  </div>
+
+  <div class="dk-inputs-field-h2">
+    {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.all') }}
+  </div>
+
   <EnumField
     v-if="getSchema('input')"
     clearable
     enable-filtering
     :items="items"
-    label="Inputs"
+    :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.source')"
+    :label-attributes="{}"
     name="input"
     :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
     @change="handleInputChange"
   />
+
+  <div class="dk-inputs-field-or">
+    <span>
+      {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.or') }}
+    </span>
+  </div>
+
+  <div class="dk-inputs-field-h2">
+    {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.individual') }}
+  </div>
 
   <InputsField
     v-if="InputsField"
@@ -79,3 +98,44 @@ function handleRenameField(oldName: FieldName, newName: FieldName) {
 }
 
 </script>
+
+<style lang="scss" scoped>
+.dk-inputs-field-h1 {
+  color: $kui-color-text;
+  font-size: $kui-font-size-40;
+  font-weight: $kui-font-weight-bold;
+}
+
+.dk-inputs-field-h2 {
+  color: $kui-color-text;
+  font-size: $kui-font-size-30;
+  font-weight: $kui-font-weight-semibold
+}
+
+.dk-inputs-field-or {
+  align-items: center;
+  display: flex;
+  height: $kui-icon-size-50;
+  justify-content: center;
+  position: relative;
+
+  & > span {
+    background-color: $kui-color-background;
+    color: $kui-color-text-neutral;
+    display: inline-flex;
+    padding: 0 $kui-space-30;
+    position: relative;
+    text-transform: uppercase;
+    user-select: none;
+  }
+
+  &::before {
+    border-bottom: 1px solid $kui-color-border;
+    content: ' ';
+    display: block;
+    height: 0px;
+    position: absolute;
+    width: 100%;
+  }
+}
+</style>
