@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.6...@kong-ui-public/analytics-chart@10.2.7) (2025-09-12)
+
+
+### Bug Fixes
+
+* always show time in tooltip timestamp ([#2486](https://github.com/Kong/public-ui-components/issues/2486)) ([181179c](https://github.com/Kong/public-ui-components/commit/181179c44019e756edc2efd83425898678b7f3df))
+
+
+
+
+
 ## [10.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.5...@kong-ui-public/analytics-chart@10.2.6) (2025-09-12)
 
 
