@@ -674,7 +674,7 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE],
   },
   'ai-gcp-model-armor': {
-    name: 'AI GCP Model Armor ',
+    name: 'AI GCP Model Armor',
     description: 'Audit and validate AI Proxy messages with Google Cloud Model Armor before forwarding them to an upstream LLM.',
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],

@@ -560,7 +560,7 @@
         "description": "Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools, and observe MCP traffic in real time."
       },
       "ai-gcp-model-armor": {
-        "name": "AI GCP Model Armor ",
+        "name": "AI GCP Model Armor",
         "description": "Audit and validate AI Proxy messages with Google Cloud Model Armor before forwarding them to an upstream LLM."
       },
       "ai-mcp-oauth2": {
