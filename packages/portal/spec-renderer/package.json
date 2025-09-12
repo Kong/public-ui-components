@@ -40,7 +40,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.39.0",
+    "@kong/kongponents": "^9.40.1",
     "vue": ">= 3.3.13 < 4"
   },
   "devDependencies": {
@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@kong-ui-public/swagger-ui-web-component": "workspace:^0.12.11",
-    "@kong/icons": "^1.36.0",
+    "@kong/icons": "^1.37.0",
     "lodash.clonedeep": "^4.5.0",
     "uuid": "^11.1.0"
   },
