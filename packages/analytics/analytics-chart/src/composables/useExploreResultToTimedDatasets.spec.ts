@@ -6,6 +6,7 @@ import useExploreResultToTimeDataset from './useExploreResultToTimeDatasets'
 import { BORDER_WIDTH, NO_BORDER, defaultStatusCodeColors } from '../utils'
 import { addHours } from 'date-fns'
 import type { MockInstance } from 'vitest'
+import type { Threshold } from 'src/types'
 
 const START_FOR_DAILY_QUERY = new Date(1672560000000)
 const END_FOR_DAILY_QUERY = new Date(1672646400000)
@@ -899,57 +900,5 @@ describe('useVitalsExploreDatasets', () => {
     expect(result.value.datasets[2].backgroundColor).toEqual('#ffe9b8')
     expect(result.value.datasets[3].backgroundColor).toEqual('#ffd5b1')
     expect(result.value.datasets[4].backgroundColor).toEqual('#ffb6b6')
-  })
-
-  it('displays a static threshold line on timeseries charts', () => {
-    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
-      data: [
-        {
-          timestamp: START_FOR_DAILY_QUERY.toISOString(),
-          event: {
-            metric1: 2,
-            metric2: 1,
-          },
-        } as GroupByResult,
-        {
-          timestamp: END_FOR_DAILY_QUERY.toISOString(),
-          event: {
-            metric1: 2,
-            metric2: 1,
-          },
-        } as GroupByResult,
-      ],
-      meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
-        granularity_ms: 86400000,
-        metric_names: ['metric1', 'metric2'] as any as ExploreAggregations[],
-        display: {},
-        query_id: '',
-        metric_units: { metric1: 'units' } as MetricUnit,
-      },
-    }))
-
-    const result = useExploreResultToTimeDataset(
-      {
-        fill: false,
-        threshold: { 'request_count': 320 } as Record<ExploreAggregations, number>,
-      },
-      exploreResult,
-    )
-
-    expect(result.value.datasets[2].label).toEqual('Alert threshold')
-    expect(result.value.datasets[2].data).toEqual(
-      [
-        {
-          x: START_FOR_DAILY_QUERY.getTime(),
-          y: 320,
-        },
-        {
-          x: END_FOR_DAILY_QUERY.getTime(),
-          y: 320,
-        },
-      ],
-    )
   })
 })

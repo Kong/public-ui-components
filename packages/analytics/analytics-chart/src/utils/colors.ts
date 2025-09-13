@@ -1,4 +1,5 @@
-import type { AnalyticsChartColors } from '../../src/types'
+import { KUI_COLOR_BACKGROUND_NEUTRAL, KUI_COLOR_TEXT_DANGER, KUI_COLOR_TEXT_WARNING_WEAK } from '@kong/design-tokens'
+import type { AnalyticsChartColors, ThresholdType } from '../../src/types'
 
 interface StatusCodeColor {
   background: string
@@ -134,4 +135,17 @@ export const determineBaseColor = (i: number, dimensionName: string, isEmpty: bo
   }
 
   return baseColor || lookupDatavisColor(i) // fallback to default datavis palette if no color found
+}
+
+export const thresholdColor = (type: ThresholdType): string => {
+  switch (type) {
+    case 'error':
+      return KUI_COLOR_TEXT_DANGER
+    case 'warning':
+      return KUI_COLOR_TEXT_WARNING_WEAK
+    case 'neutral':
+      return KUI_COLOR_BACKGROUND_NEUTRAL
+    default:
+      return KUI_COLOR_BACKGROUND_NEUTRAL
+  }
 }

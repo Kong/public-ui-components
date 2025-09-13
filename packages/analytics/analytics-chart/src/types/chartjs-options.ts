@@ -1,7 +1,8 @@
 import type { Ref, ComputedRef } from 'vue'
 import type { Chart, ChartType as ChartJsChartType, TooltipModel, Color } from 'chart.js'
 import type { ChartType } from './chart-types'
-import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { ExploreAggregations, GranularityValues } from '@kong-ui-public/analytics-utilities'
+import type { Threshold } from './chart-data'
 
 export interface TooltipEntry {
   backgroundColor: Color
@@ -52,6 +53,7 @@ export interface LineChartOptions extends BaseChartOptions {
   timeRangeMs: Ref<number | undefined> // time range in seconds
   granularity: Ref<GranularityValues>
   pointsWithoutHover?: ComputedRef<boolean | undefined>
+  threshold?: Readonly<Ref<Record<ExploreAggregations, Threshold[]> | undefined>>
 }
 
 export interface DonutChartOptions {
