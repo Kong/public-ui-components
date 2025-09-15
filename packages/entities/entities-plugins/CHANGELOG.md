@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.96.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.95.0...@kong-ui-public/entities-plugins@9.96.0) (2025-09-15)
+
+
+### Features
+
+* **entities-plugins:** add unsupported nodes for preview ([#2493](https://github.com/Kong/public-ui-components/issues/2493)) ([d00c950](https://github.com/Kong/public-ui-components/commit/d00c950a9b383e883d4986c55291f7628268aab1))
+* **entities-plugins:** move datakit debug setting into flow editor modal ([#2491](https://github.com/Kong/public-ui-components/issues/2491)) ([848839f](https://github.com/Kong/public-ui-components/commit/848839f8508e583defcf50d1608d512b0b1c649d))
+
+
+
+
+
 # [9.95.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.94.3...@kong-ui-public/entities-plugins@9.95.0) (2025-09-15)
 
 
