@@ -72,6 +72,7 @@ import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SandboxLayout } from '@kong-ui-public/sandbox-layout'
 import '@kong-ui-public/sandbox-layout/dist/style.css'
 import '@kong-ui-public/entities-shared/dist/style.css'
+import type { Threshold } from '@kong-ui-public/analytics-chart'
 
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
@@ -196,8 +197,11 @@ const dashboardConfig = ref<DashboardConfig>({
           type: 'timeseries_line',
           chart_title: 'Timeseries line chart of mock data',
           threshold: {
-            'request_count': 3200,
-          } as Record<ExploreAggregations, number>,
+            'request_count': [
+              { type: 'warning', value: 1000 },
+              { type: 'error', value: 4000 },
+            ],
+          },
         },
         query: {
           datasource: 'basic',

@@ -96,6 +96,21 @@ export const barChartSchema = {
 
 export type BarChartOptions = FromSchemaWithOptions<typeof barChartSchema>
 
+export const thresholdSchema = {
+  type: 'object',
+  properties: {
+    type: {
+      type: 'string',
+      enum: ['warning', 'error', 'neutral'],
+    },
+    value: {
+      type: 'number',
+    },
+  },
+  required: ['type', 'value'],
+  additionalProperties: false,
+} as const satisfies JSONSchema
+
 export const timeseriesChartSchema = {
   type: 'object',
   properties: {
@@ -109,7 +124,8 @@ export const timeseriesChartSchema = {
     threshold: {
       type: 'object',
       additionalProperties: {
-        type: 'number',
+        type: 'array',
+        items: thresholdSchema,
       },
     },
     chart_dataset_colors: chartDatasetColorsSchema,

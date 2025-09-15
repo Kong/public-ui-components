@@ -56,7 +56,6 @@ export class ThresholdPlugin implements Plugin {
           context.font = KUI_FONT_FAMILY_TEXT
           context.fillText(text, chart.chartArea.left, yValue - 4)
           context.restore()
-
         })
       }
     }
