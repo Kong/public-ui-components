@@ -19,13 +19,27 @@
       :error="jqHandler.error.value"
       :error-message="jqHandler.errorMessage.value"
       :label="jqFieldName"
+      :label-attributes="{}"
       multiline
       name="jq"
       resizable
       rows="2"
       @blur="jqHandler.onBlur"
       @update:model-value="jqHandler.onUpdate"
-    />
+    >
+      <template #help>
+        <i18nT keypath="plugins.free-form.datakit.flow_editor.node_properties.jq.help">
+          <template #link>
+            <KExternalLink
+              hide-icon
+              :href="externalLinks.jqlang"
+            >
+              {{ externalLinks.jqlang }}
+            </KExternalLink>
+          </template>
+        </i18nT>
+      </template>
+    </StringField>
 
     <InputsField
       :field-name-validator="fieldNameValidator"
@@ -52,6 +66,7 @@ import NameField from './NameField.vue'
 import type { NodeId } from '../../types'
 import { useFormValidation } from '../composables/validation'
 import { compose, notEmpty, stringLenRange } from '../composables/validation'
+import externalLinks from '../../../../../external-links'
 
 interface JqFormData extends BaseFormData {
   jq: string
@@ -61,7 +76,7 @@ const { nodeId } = defineProps<{
   nodeId: NodeId
 }>()
 
-const { i18n: { t } } = useI18n()
+const { i18n: { t }, i18nT } = useI18n()
 
 const formRef = useTemplateRef('form')
 
