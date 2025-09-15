@@ -106,6 +106,9 @@ export const thresholdSchema = {
     value: {
       type: 'number',
     },
+    label: {
+      type: 'string',
+    },
   },
   required: ['type', 'value'],
   additionalProperties: false,
