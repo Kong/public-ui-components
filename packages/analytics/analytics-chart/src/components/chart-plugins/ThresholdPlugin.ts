@@ -1,9 +1,10 @@
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
-import { KUI_COLOR_BACKGROUND_NEUTRAL, KUI_COLOR_TEXT_DANGER, KUI_COLOR_TEXT_WARNING_WEAK, KUI_FONT_FAMILY_TEXT } from '@kong/design-tokens'
+import { KUI_FONT_FAMILY_TEXT } from '@kong/design-tokens'
 import type { Chart, Plugin } from 'chart.js'
 import type { Threshold } from 'src/types'
 import type { createI18n } from '@kong-ui-public/i18n'
 import type english from '../../locales/en.json'
+import { thresholdColor } from '../../utils'
 
 interface ThresholdOptions {
   threshold: Record<ExploreAggregations, Threshold[]> | undefined
@@ -28,13 +29,7 @@ export class ThresholdPlugin implements Plugin {
           context.moveTo(chart.chartArea.left, yValue)
           context.lineTo(chart.chartArea.right, yValue)
           context.lineWidth = 1
-          if (t.type === 'warning') {
-            context.strokeStyle = KUI_COLOR_TEXT_WARNING_WEAK
-          } else if (t.type === 'error') {
-            context.strokeStyle = KUI_COLOR_TEXT_DANGER
-          } else {
-            context.strokeStyle = KUI_COLOR_BACKGROUND_NEUTRAL
-          }
+          context.strokeStyle = thresholdColor(t.type)
           context.setLineDash([5, 5])
           context.stroke()
           context.restore()
@@ -46,13 +41,7 @@ export class ThresholdPlugin implements Plugin {
               : this.i18n.t('chartLabels.thatreshold-neutral', { value: t.value })
 
           context.save()
-          if (t.type === 'warning') {
-            context.fillStyle = KUI_COLOR_TEXT_WARNING_WEAK
-          } else if (t.type === 'error') {
-            context.fillStyle = KUI_COLOR_TEXT_DANGER
-          } else {
-            context.fillStyle = KUI_COLOR_BACKGROUND_NEUTRAL
-          }
+          context.fillStyle = thresholdColor(t.type)
           context.font = KUI_FONT_FAMILY_TEXT
           context.fillText(text, chart.chartArea.left, yValue - 4)
           context.restore()

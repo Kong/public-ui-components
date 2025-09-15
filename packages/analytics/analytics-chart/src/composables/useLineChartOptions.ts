@@ -161,7 +161,6 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
         },
         thresholdPlugin: {
           threshold: chartOptions.threshold?.value,
-          test: 'test',
         },
       },
       interaction: {
