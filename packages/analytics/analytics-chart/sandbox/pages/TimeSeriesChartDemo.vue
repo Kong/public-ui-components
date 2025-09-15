@@ -134,7 +134,7 @@
             </button>
             <CsvExportModal
               v-if="exportModalVisible"
-              :chart-data="(exploreResult)"
+              :export-state="exportState"
               filename="asdf.csv"
               @toggle-modal="setModalVisibility"
             />
@@ -234,7 +234,7 @@ import {
   ChartLegendPosition,
   CsvExportModal,
 } from '../../src'
-import type { AnalyticsExploreRecord, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, ExploreExportState, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType } from '../../src/types'
 import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
@@ -305,11 +305,29 @@ const threshold = {
 } as Record<ExploreAggregations, number>
 
 const exportModalVisible = ref(false)
+const exportState = ref<ExploreExportState>({ status: 'loading' })
+
 const setModalVisibility = (val: boolean) => {
   exportModalVisible.value = val
+
+  if (!val) {
+    exportState.value = { status: 'loading' }
+  }
 }
 const exportCsv = () => {
   setModalVisibility(true)
+  requestExport()
+}
+
+const requestExport = () => {
+  // Simulate export data fetch for demo purposes
+  if (emptyState.value) {
+    exportState.value = { status: 'error', error: 'No data available for export.' }
+  } else if (exploreResult.value.data.length > 0) {
+    exportState.value = { status: 'success', chartData: exploreResult.value }
+  } else {
+    exportState.value = { status: 'error', error: 'Failed to fetch data for export.' }
+  }
 }
 
 provide(INJECT_QUERY_PROVIDER, { evaluateFeatureFlagFn: () => true })
