@@ -32,7 +32,7 @@
       <template #item="{ item }">
         <div class="entity-suggestion-item">
           <span class="entity-label">
-            {{ item.label || '–' }}
+            {{ item.label || LABEL_PLACEHOLDER }}
           </span>
           <span class="entity-id">
             {{ item.id }}
@@ -42,7 +42,7 @@
 
       <template #selected-item="{ item }">
         <span class="selected-entity-item">
-          <span class="selected-entity-label">{{ item.label || '–' }}</span>
+          <span class="selected-entity-label">{{ item.label === LABEL_PLACEHOLDER ? item.value : item.label }}</span>
         </span>
       </template>
     </FieldScopedEntitySelect>
@@ -60,6 +60,7 @@ import { FORMS_API_KEY, FIELD_STATES } from '../../const'
 import english from '../../locales/en.json'
 
 const requestResultsLimit = 1000
+const LABEL_PLACEHOLDER = '–'
 
 export default {
   components: {
@@ -76,6 +77,7 @@ export default {
       t,
       KUI_ICON_SIZE_40,
       KUI_COLOR_TEXT_NEUTRAL,
+      LABEL_PLACEHOLDER,
     }
   },
 
@@ -230,8 +232,7 @@ export default {
 
     getSuggestionLabel(item) {
       const labelKey = this.schema?.labelField || 'id'
-
-      return (labelKey && item ? item[labelKey] : '') || '–'
+      return (labelKey && item ? item[labelKey] : '') || LABEL_PLACEHOLDER
     },
 
     updateModel(value) {
