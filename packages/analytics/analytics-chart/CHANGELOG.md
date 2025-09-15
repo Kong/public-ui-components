@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.8...@kong-ui-public/analytics-chart@10.2.9) (2025-09-15)
+
+
+### Bug Fixes
+
+* **analytics:** ensure chart tooltip has unique label keys [MA-4145] ([#2479](https://github.com/Kong/public-ui-components/issues/2479)) ([a49eb56](https://github.com/Kong/public-ui-components/commit/a49eb5653a3e9dad95b6587626f24baad4a34cab))
+
+
+
+
+
 ## [10.2.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.7...@kong-ui-public/analytics-chart@10.2.8) (2025-09-15)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-chart
