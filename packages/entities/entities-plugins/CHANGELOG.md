@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.95.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.94.3...@kong-ui-public/entities-plugins@9.95.0) (2025-09-15)
+
+
+### Features
+
+* **entities-plugins:** datakit - jq field help text [KM-1724] ([#2492](https://github.com/Kong/public-ui-components/issues/2492)) ([887367a](https://github.com/Kong/public-ui-components/commit/887367a9785719aadbdeb62e35b072565c1aaf1a))
+
+
+
+
+
 ## [9.94.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.94.2...@kong-ui-public/entities-plugins@9.94.3) (2025-09-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
