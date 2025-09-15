@@ -728,9 +728,8 @@
           },
           "examples": "Examples",
           "debug": {
-            "label": "Enable debugging",
-            "description": "Enables detailed error messages in client responses for easier debugging.",
-            "help": "Enabling the debug option in Datakit is considered unsafe for production environments, as it can cause arbitrary information to leak into client responses."
+            "label": "Debug",
+            "description": "Enables detailed error messages in client responses, making debugging easier. <a href=\"https://developer.konghq.com/plugins/datakit/#debugging\" target=\"_blank\">See the docs</a> for details."
           },
           "actions": {
             "zoom_in": "Zoom in",
