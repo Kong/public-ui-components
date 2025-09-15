@@ -253,6 +253,7 @@
     "valueError": "Invalid configuration"
   },
   "new_timerange_label": "Time range",
+  "sparkline_no_data": "No data",
   "zoom_action_items": {
     "zoom": "Zoom in",
     "view_requests": "View requests",
