@@ -14,9 +14,8 @@
       <NodePanelItem
         v-for="nodeType in (Object.keys(CONFIG_NODE_META_MAP) as Array<ConfigNodeType>)"
         :key="nodeType"
-        draggable="true"
         :type="nodeType"
-        @dragstart="(e: DragEvent) => handleDragStart(e, nodeType)"
+        @dragstart="handleDragStart"
       />
     </div>
     <div
