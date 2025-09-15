@@ -606,7 +606,7 @@ const linksCount = ref(0)
 const formField = computed(() => {
   if (codeBlockType.value === 'terraform') {
     const terraformPayload = {
-      [payload.value.type]: omit(payload.value, ['type']),
+      [payload.value.type.replaceAll('-', '_')]: omit(payload.value, ['type']),
     }
     return terraformPayload
   }

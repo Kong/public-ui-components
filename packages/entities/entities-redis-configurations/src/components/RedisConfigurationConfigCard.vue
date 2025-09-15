@@ -137,7 +137,7 @@ const codeBlockRecordFormatter = (record: Record<string, any>, codeFormat: CodeF
   const { id, name, created_at, updated_at, type, tags, ...config } = record
   if (codeFormat === 'terraform') {
     return {
-      [type]: {
+      [type.replaceAll('-', '_')]: {
         id, name, tags, created_at, updated_at, config,
       },
     }
