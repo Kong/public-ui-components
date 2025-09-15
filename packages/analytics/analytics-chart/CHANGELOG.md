@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.9...@kong-ui-public/analytics-chart@10.3.0) (2025-09-15)
+
+
+### Features
+
+* **analytics:** increase number of records exported for csv [MA-4298] ([#2453](https://github.com/Kong/public-ui-components/issues/2453)) ([70b2825](https://github.com/Kong/public-ui-components/commit/70b282562d7c7c52b309d88df490268eaefc00fd))
+
+
+
+
+
 ## [10.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.2.8...@kong-ui-public/analytics-chart@10.2.9) (2025-09-15)
 
 
