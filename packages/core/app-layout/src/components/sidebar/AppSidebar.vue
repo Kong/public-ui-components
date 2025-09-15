@@ -41,30 +41,59 @@
               v-for="[groupName, groupItems] in topNavGroups"
               :key="groupName"
             >
-              <div
-                v-if="groupName !== UNGROUPED_NAME"
-                :id="`level-primary-group-${getPrimaryGroupId(groupName)}`"
-                class="level-primary-group-name"
-                data-testid="level-primary-group-name"
-                role="presentation"
+              <KCollapse
+                class="level-primary-group-collapse"
+                :class="{
+                  'not-collapsible': !isGroupCollapsible(groupName),
+                  'ungrouped': groupName === UNGROUPED_NAME,
+                }"
+                :data-testid="groupName === UNGROUPED_NAME ? 'level-primary-group-collapse-ungrouped' : `level-primary-group-collapse-${groupName}`"
+                :model-value="isGroupCollapsible(groupName) ? isGroupCollapsed(groupName) || false : false"
               >
-                {{ groupName }}
-              </div>
-              <ul
-                :aria-labelledby="groupName !== UNGROUPED_NAME ? `level-primary-group-${getPrimaryGroupId(groupName)}` : undefined"
-                class="level-primary top-items"
-              >
-                <SidebarItem
-                  v-for="item in groupItems"
-                  :key="item.name"
-                  :item="item"
-                  @click="itemClick"
+                <template #trigger="{ isCollapsed, toggle }">
+                  <component
+                    :is="isGroupCollapsible(groupName) ? KButton : 'div'"
+                    :appearance="isGroupCollapsible(groupName) ? 'none' : undefined"
+                    class="level-primary-group-collapse-trigger"
+                    @click="isGroupCollapsible(groupName) ? handleCollapseToggle(groupName, isCollapsed, toggle) : undefined"
+                  >
+                    <div
+                      v-if="groupName !== UNGROUPED_NAME"
+                      :id="`level-primary-group-${getPrimaryGroupId(groupName)}`"
+                      class="level-primary-group-name"
+                      data-testid="level-primary-group-name"
+                      role="presentation"
+                    >
+                      {{ getGroupConfig(groupName)?.label || groupName }}
+                    </div>
+
+                    <component
+                      :is="isCollapsed ? ChevronRightIcon : ChevronDownIcon"
+                      v-if="isGroupCollapsible(groupName)"
+                      class="level-primary-group-collapse-icon"
+                      :color="KUI_NAVIGATION_COLOR_TEXT"
+                      data-testid="level-primary-group-collapse-icon"
+                      :size="KUI_ICON_SIZE_30"
+                    />
+                  </component>
+                </template>
+
+                <ul
+                  :aria-labelledby="groupName !== UNGROUPED_NAME ? `level-primary-group-${getPrimaryGroupId(groupName)}` : undefined"
+                  class="level-primary top-items"
                 >
-                  <template #[`sidebar-icon-${item.key}`]>
-                    <slot :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`" />
-                  </template>
-                </SidebarItem>
-              </ul>
+                  <SidebarItem
+                    v-for="item in groupItems"
+                    :key="item.name"
+                    :item="item"
+                    @click="itemClick"
+                  >
+                    <template #[`sidebar-icon-${item.key}`]>
+                      <slot :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`" />
+                    </template>
+                  </SidebarItem>
+                </ul>
+              </KCollapse>
             </template>
           </template>
 
@@ -102,13 +131,18 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { ref, computed, watch, useSlots, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import type { SidebarPrimaryItem } from '../../types'
+import { useMediaQuery } from '@vueuse/core'
+import { ChevronDownIcon, ChevronRightIcon } from '@kong/icons'
+import { KUI_NAVIGATION_COLOR_TEXT, KUI_ICON_SIZE_30, KUI_BREAKPOINT_MOBILE } from '@kong/design-tokens'
+import type { SidebarPrimaryItem, GroupConfig, GroupConfigMap } from '../../types'
 import SidebarItem from '../sidebar/SidebarItem.vue'
 import { FocusTrap } from 'focus-trap-vue'
 import { useDebounce } from '../../composables'
 import clonedeep from 'lodash.clonedeep'
+// explicit import for `component` `is` usage
+import { KButton } from '@kong/kongponents'
 
-const emit = defineEmits(['click', 'toggle'])
+const emit = defineEmits(['click', 'toggle', 'toggle-collapse'])
 
 /** Prevent adding the `group` property to bottom sidebar items. */
 type BottomPrimaryItem = Omit<SidebarPrimaryItem, 'group'>
@@ -121,6 +155,10 @@ const props = defineProps({
   bottomItems: {
     type: Array as PropType<BottomPrimaryItem[]>,
     default: () => ([]),
+  },
+  groupConfig: {
+    type: Object as PropType<GroupConfigMap>,
+    default: () => ({}),
   },
   headerHeight: {
     type: Number,
@@ -253,6 +291,44 @@ const topNavGroups = computed((): Map<string, SidebarPrimaryItem[]> => {
 
   return groups
 })
+
+const getGroupConfig = (groupName: string = ''): GroupConfig | null => {
+  if (groupName === UNGROUPED_NAME || !groupName.trim()) {
+    return null
+  }
+
+  const defaultItem: GroupConfig = {
+    label: groupName,
+    collapsible: false,
+    collapsed: false,
+  }
+
+  // Remove spaces and lowercase the first character
+  let groupNameKey = groupName.trim().replace(' ', '')
+  groupNameKey = groupNameKey.charAt(0).toLowerCase() + groupNameKey.slice(1)
+
+  const configExists = groupName && props.groupConfig && (props.groupConfig[groupName] || props.groupConfig[groupNameKey])
+  return configExists ? props.groupConfig[groupName] || props.groupConfig[groupNameKey] : defaultItem
+}
+
+const isGroupCollapsible = (groupName: string): boolean => {
+  return !!getGroupConfig(groupName)?.collapsible
+}
+
+const isGroupCollapsed = (groupName: string): boolean => {
+  return !!getGroupConfig(groupName)?.collapsed
+}
+
+const handleCollapseToggle = (groupName: string, isCollapsed: boolean, toggle: () => void): void => {
+  const groupConfig = getGroupConfig(groupName)
+  if (groupConfig) {
+    groupConfig.collapsed = !isCollapsed
+  }
+
+  toggle()
+
+  emit('toggle-collapse', groupName, groupConfig)
+}
 
 // Do not manually set the value of `mobileSidebarOpen`; always call `toggleSidebar(true/false)`
 const mobileSidebarOpen = ref<boolean>(props.open)
@@ -403,6 +479,16 @@ onMounted(async () => {
   window.addEventListener('resize', debouncedResizeHandler)
   // Disable mobile sidebar transitions when the window is resized
   window.addEventListener('resize', disableTransitions)
+
+  if (props.groupConfig) {
+    for (const groupName in props.groupConfig) {
+      // auto-expand all groups if the user is on mobile
+      if (useMediaQuery(`(max-width: ${KUI_BREAKPOINT_MOBILE})`)) {
+        const group = props.groupConfig[groupName]
+        group.collapsed = false
+      }
+    }
+  }
 
   await nextTick()
   // Adjust the sidebar padding
@@ -650,10 +736,6 @@ onBeforeUnmount(() => {
     @supports (background: -webkit-named-image(i)) {
       padding: $kui-space-0 $kui-space-40;
     }
-
-    &:last-of-type {
-      margin-bottom: $sidebar-header-spacing * 4;
-    }
   }
 
   .level-primary-group-name {
@@ -661,10 +743,59 @@ onBeforeUnmount(() => {
     font-size: $kui-font-size-20;
     font-weight: $kui-font-weight-medium;
     line-height: $kui-line-height-40;
-    margin-bottom: $kui-space-40;
-    padding: $kui-space-0 calc($kui-space-50 + $kui-space-40);
     text-transform: uppercase;
     user-select: none;
+  }
+
+  // KCollapse overrides
+  .level-primary-group-collapse.k-collapse {
+    &:not(:last-of-type) {
+      margin-bottom: $kui-space-60;
+    }
+
+    .collapse-heading {
+      margin-bottom: $kui-space-0;
+    }
+
+    .collapse-hidden-content {
+      margin-top: $kui-space-0;
+    }
+
+    // overrides for collapsible KCollapse
+    &:not(.not-collapsible) {
+      .collapse-heading.has-trailing-trigger {
+        margin-bottom: $kui-space-40;
+      }
+    }
+
+    // overrides for non-collapsible KCollapse
+    &.not-collapsible {
+      .collapse-trigger {
+        cursor: default;
+      }
+
+      &.ungrouped {
+        .collapse-heading.has-trailing-trigger {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .level-primary-group-collapse-trigger.k-button,
+  div.level-primary-group-collapse-trigger {
+    margin-bottom: $kui-space-0;
+    margin-left: $kui-space-50;
+    padding: $kui-space-0 calc($kui-space-50 + $kui-space-40) $kui-space-0 $kui-space-40;
+
+    &:focus-visible {
+      border-radius: $sidebar-item-border-radius;
+      box-shadow: $kui-navigation-shadow-focus;
+    }
+  }
+
+  .level-primary-group-collapse-icon {
+    margin-left: $kui-space-30;
   }
 }
 

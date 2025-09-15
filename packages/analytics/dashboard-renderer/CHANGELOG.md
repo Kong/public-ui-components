@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.14...@kong-ui-public/dashboard-renderer@7.5.0) (2025-09-15)
+
+
+### Features
+
+* **analytics:** increase number of records exported for csv [MA-4298] ([#2453](https://github.com/Kong/public-ui-components/issues/2453)) ([70b2825](https://github.com/Kong/public-ui-components/commit/70b282562d7c7c52b309d88df490268eaefc00fd))
+
+
+
+
+
+## [7.4.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.13...@kong-ui-public/dashboard-renderer@7.4.14) (2025-09-15)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.4.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.12...@kong-ui-public/dashboard-renderer@7.4.13) (2025-09-15)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [7.4.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.11...@kong-ui-public/dashboard-renderer@7.4.12) (2025-09-12)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
 ## [7.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.4.10...@kong-ui-public/dashboard-renderer@7.4.11) (2025-09-12)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

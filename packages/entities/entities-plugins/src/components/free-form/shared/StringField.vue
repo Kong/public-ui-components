@@ -36,6 +36,9 @@
           <div v-html="fieldAttrs.labelAttributes.info" />
         </slot>
       </template>
+      <template #help>
+        <slot name="help" />
+      </template>
     </EnhancedInput>
     <component
       :is="autofillSlot"

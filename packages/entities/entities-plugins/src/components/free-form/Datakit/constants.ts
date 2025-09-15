@@ -24,6 +24,8 @@ export const CONFIG_NODE_TYPES = [
   'exit',
   'property',
   'static',
+  'branch',
+  'cache',
 ] as const
 
 export const HTTP_METHODS = [

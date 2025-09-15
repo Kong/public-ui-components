@@ -29,3 +29,13 @@ export interface SidebarPrimaryItem extends Omit<SidebarSecondaryItem, 'parentKe
   /** Nested sidebar items (children) without icons */
   items?: SidebarSecondaryItem[]
 }
+
+export interface GroupConfig {
+  label: string
+  collapsible?: boolean // whether or not the group can be collapsed
+  collapsed?: boolean // initial collapse state of the group
+}
+
+export interface GroupConfigMap {
+  [key: string]: GroupConfig
+}

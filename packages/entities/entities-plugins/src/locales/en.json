@@ -728,9 +728,8 @@
           },
           "examples": "Examples",
           "debug": {
-            "label": "Enable debugging",
-            "description": "Enables detailed error messages in client responses for easier debugging.",
-            "help": "Enabling the debug option in Datakit is considered unsafe for production environments, as it can cause arbitrary information to leak into client responses."
+            "label": "Debug",
+            "description": "Enables detailed error messages in client responses, making debugging easier. <a href=\"https://developer.konghq.com/plugins/datakit/#debugging\" target=\"_blank\">See the docs</a> for details."
           },
           "actions": {
             "zoom_in": "Zoom in",
@@ -770,6 +769,16 @@
               "summary": "Define static values to use for call nodes",
               "description": "Emits static values to be used as inputs for other nodes. The static node can help you with hardcoding some known value for an input."
             },
+            "branch": {
+              "name": "branch",
+              "summary": "Coming soon...",
+              "description": "Coming soon..."
+            },
+            "cache": {
+              "name": "cache",
+              "summary": "Coming soon...",
+              "description": "Coming soon..."
+            },
             "request": {
               "name": "request",
               "description": "Reads incoming client request properties. You cannot specify request node input."
@@ -802,7 +811,8 @@
               "label": "Timeout(s)"
             },
             "jq": {
-              "label": "jq script"
+              "label": "jq script",
+              "help": "Refer to {link} for full documentation."
             },
             "output_value": {
               "label": "Output value",

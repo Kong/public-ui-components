@@ -51,9 +51,9 @@ This component takes two properties:
 | Property | Type | Required | Default | Description |
 |----------|------|----------|---------|-------------|
 | filters | [AllFilters[]](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore/all.ts) | Yes | - | Filters to be applied to the dashboard. Context filters are merged into tile specic filters. Filters that are not relevent to the tile's query datasource are ignored. |
-| timeSpec | [TimeRangeV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore/common.ts) | No | 7 days | The time range for queries. Tiles can provide their own time range, which will override the global time range, for that tile. |
+| timeSpec | [TimeRangeV4](https://github.com/Kong/public-ui-components/blob/main/packages/analytics/analytics-utilities/src/types/explore/common.ts) | No | 7 days | The time range for queries. Tiles can provide their own time range, which will override the global time range for that tile. |
 | tz | string | No | Local timezone | Timezone to include with queries, if different than the browser timezone |
-| refreshInterval | number | No | DEFAULT_TILE_REFRESH_INTERVAL_MS | Interval for refreshing tiles |
+| refreshInterval | number | No | `DEFAULT_TILE_REFRESH_INTERVAL_MS` | Interval for refreshing tiles |
 | editable | boolean | No | false | Enables dashboard editing capabilities |
 
 
@@ -63,7 +63,7 @@ The DashboardRenderer component emits the following events.
 
 | Event | Payload | Description |
 |-------|---------|-------------|
-| `zoom-time-range` | [AbsoluteTimeRangeV4](https://github.com/Kong/public-ui-components/blob/1b4a96441f64539895432ae819140c3588ccc9a9/packages/analytics/analytics-utilities/src/types/explore/common.ts#L33) | Emitted when a timeseries chart tile is zoomed by selecting an area within the chart. |
+| `tile-time-range-zoom` | [TileZoomEvent](https://github.com/Kong/public-ui-components/blob/15d1aae35681511b130652ff0acd9ec025ebea34/packages/analytics/dashboard-renderer/src/types/tile-zoom-event.ts#L3) | Emitted when a timeseries chart tile is zoomed by selecting an area within the chart.  |
 
 ### Example
 
@@ -71,7 +71,7 @@ The DashboardRenderer component emits the following events.
 <DashboardRenderer
   v-model="config"
   :context="context"
-  @edit-tile="handleEditTile"
+  @tile-time-range-zoom="onZoom"
 />
 ```
 
@@ -80,7 +80,7 @@ with the following data:
 ```typescript
 
 import type { DashboardRendererContext, DashboardConfig } from '@kong-ui-public/dashboard-renderer'
-import { DashboardRenderer, ChartTypes } from '@kong-ui-public/dashboard-renderer'
+import { DashboardRenderer } from '@kong-ui-public/dashboard-renderer'
 
 const context: DashboardRendererContext = {
   filters: [],
@@ -122,7 +122,7 @@ const config: DashboardConfig = {
       definition: {
         chart: {
           type: 'top_n',
-          chartTitle: 'Top N Table',
+          chart_title: 'Top N Table',
           description: 'Table description',
         },
         // Top 5 routes by request_count
@@ -147,6 +147,10 @@ const config: DashboardConfig = {
     },
   ],
 }
+
+const onZoom = async (tileZoomEvent: TileZoomEvent) => {
+  // Update the time spec passed to the dashboard.
+}
 ```
 
 #### Slotted content
@@ -168,7 +172,7 @@ const config: DashboardConfig = {
 
 ```typescript
 import type { DashboardRendererContext, DashboardConfig } from '@kong-ui-public/dashboard-renderer'
-import { DashboardRenderer, ChartTypes } from '@kong-ui-public/dashboard-renderer'
+import { DashboardRenderer } from '@kong-ui-public/dashboard-renderer'
 
 const context: DashboardRendererContext = {
   filters: [],
@@ -235,14 +239,14 @@ const config: DashboardConfig = {
 
 __Note__: _this will only work in non-editable mode_
 
-This example will create a dynamically-sized row that fits to its content rather than being fixed at the configured row height.  Note that this works because each chart is only rendered in 1 row; if a chart has `fitToContent` and `layout.size.rows > 1`, the `fitToContent` setting will be ignored.
+This example will create a dynamically-sized row that fits to its content rather than being fixed at the configured row height.  Note that this works because each chart is only rendered in 1 row; if a chart has `fit_to_content` and `layout.size.rows > 1`, the `fit_to_content` setting will be ignored.
 
 Rendering `AnalyticsChart` components (e.g., horizontal bar, vertical bar, timeseries charts) with dynamic row heights may lead to undefined behavior.  This option is best used with non-canvas charts (e.g., TopN charts).
 
 
 ```typescript
 import type { DashboardRendererContext, DashboardConfig } from '@kong-ui-public/dashboard-renderer'
-import { DashboardRenderer, ChartTypes } from '@kong-ui-public/dashboard-renderer'
+import { DashboardRenderer } from '@kong-ui-public/dashboard-renderer'
 
 const context: DashboardRendererContext = {
   filters: [],
@@ -258,7 +262,7 @@ const config: DashboardConfig = {
       definition: {
         chart: {
           type: 'top_n',
-          chartTitle: 'Top N chart of mock data',
+          chart_title: 'Top N chart of mock data',
           description: 'Description'
         },
         query: {},
@@ -271,7 +275,7 @@ const config: DashboardConfig = {
         size: {
           cols: 4,
           rows: 1,
-          fitToContent: true,
+          fit_to_content: true,
         },
       },
     },
@@ -279,7 +283,7 @@ const config: DashboardConfig = {
       definition: {
         chart: {
           type: 'top_n',
-          chartTitle: 'Top N chart of mock data',
+          chart_title: 'Top N chart of mock data',
           description: 'Description',
         },
         query: {},
@@ -292,7 +296,7 @@ const config: DashboardConfig = {
         size: {
           cols: 2,
           rows: 1,
-          fitToContent: true,
+          fit_to_content: true,
         },
       },
     },
@@ -413,7 +417,7 @@ The root configuration type for a dashboard.
 ```typescript
 interface DashboardConfig {
   tiles: TileConfig[]         // Array of tile configurations
-  tileHeight?: number         // Optional height of each tile in pixels
+  tile_height?: number         // Optional height of each tile in pixels
 }
 ```
 
@@ -444,10 +448,10 @@ Chart type and options configuration.
 ```typescript
 interface ChartOptions {
   type: DashboardTileType     // The type of chart
-  chartTitle?: string         // Optional title for the chart
-  syntheticsDataKey?: string  // Optional key for synthetic tests
-  allowCsvExport?: boolean    // Optional flag to allow CSV export
-  chartDatasetColors?: AnalyticsChartColors | string[]  // Optional custom colors for datasets
+  chart_title?: string         // Optional title for the chart
+  synthetics_data_key?: string  // Optional key for synthetic tests
+  allow_csv_export?: boolean    // Optional flag to allow CSV export
+  chart_dataset_colors?: AnalyticsChartColors | string[]  // Optional custom colors for datasets
 }
 ```
 
@@ -532,7 +536,7 @@ interface TileLayout {
   size: {
     cols: number           // Number of columns to span
     rows: number           // Number of rows to span
-    fitToContent?: boolean // Enable auto-height for the row
+    fit_to_content?: boolean // Enable auto-height for the row
   }
 }
 ```
@@ -546,7 +550,7 @@ const dashboardConfig: DashboardConfig = {
     definition: {
       chart: {
         type: 'horizontal_bar',
-        chartTitle: 'Requests by Route'
+        chart_title: 'Requests by Route'
       },
       query: {
         datasource: 'advanced',

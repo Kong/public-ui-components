@@ -3,7 +3,10 @@
     class="dk-node-panel-item"
     :class="{
       [`node-type-${type}`]: true,
+      unsupported,
     }"
+    :draggable="!unsupported"
+    @dragstart="handleDragStart"
   >
     <div class="icon">
       <Icon :size="16" />
@@ -25,10 +28,21 @@ import { CONFIG_NODE_META_MAP } from './node'
 import type { ConfigNodeType } from '../../types'
 
 const { type } = defineProps<{ type: ConfigNodeType }>()
+
+const emit = defineEmits<{
+  dragstart: [e: DragEvent, type: ConfigNodeType]
+}>()
+
+const unsupported = type === 'cache' || type === 'branch'
+
 const {
   summary,
   icon: Icon,
 } = CONFIG_NODE_META_MAP[type]
+
+function handleDragStart(e: DragEvent) {
+  emit('dragstart', e, type)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -44,11 +58,11 @@ const {
   padding: $kui-space-40;
   transition: border-color $kui-animation-duration-20 ease-in-out;
 
-  &:hover {
+  &:not(.unsupported):hover {
     border-color: $kui-color-border-primary-weak;
   }
 
-  &:active {
+  &:not(.unsupported):active {
     border-color: $kui-color-border-primary;
   }
 
@@ -85,6 +99,17 @@ const {
     color: $kui-color-text-primary;
   }
 
+  &.node-type-branch .icon {
+    background: $kui-color-background-decorative-aqua-weakest;
+    color: $kui-color-text-decorative-aqua;
+  }
+
+  &.node-type-cache .icon {
+    // background: $kui-color-background-decorative-pink-weakest;
+    background: #FFF0F7; // TODO: add new token
+    color: $kui-color-text-decorative-pink;
+  }
+
   .content {
     font-size: $kui-font-size-20;
     line-height: $kui-line-height-20;
@@ -98,6 +123,12 @@ const {
   .description {
     color: $kui-color-text-neutral;
     margin-top: $kui-space-10;
+  }
+
+  &.unsupported {
+    cursor: default;
+    opacity: 0.5;
+    user-select: none;
   }
 }
 </style>

@@ -77,7 +77,7 @@
               v-if="!('allow_csv_export' in definition.chart) || definition.chart.allow_csv_export"
               class="chart-export-button"
               :data-testid="`chart-csv-export-${tileId}`"
-              @click="exportCsv()"
+              @click="exportCsv"
             >
               <span
                 class="chart-export-trigger"
@@ -112,10 +112,10 @@
       </div>
       <CsvExportModal
         v-if="exportModalVisible"
-        :chart-data="(chartData as ExploreResultV4)"
         :data-testid="`csv-export-modal-${tileId}`"
+        :export-state="exportState"
         :filename="csvFilename"
-        @toggle-modal="setExportModalVisibility"
+        @close-modal="hideExportModal"
       />
     </div>
     <div
@@ -135,14 +135,20 @@
 
 <script setup lang="ts">
 import type { DashboardRendererContextInternal, TileZoomEvent } from '../types'
-import {
-  type DashboardTileType,
-  formatTime,
-  type TileDefinition,
-  TimePeriods,
-  getFieldDataSources,
+import type {
+  AbsoluteTimeRangeV4,
+  AiExploreQuery,
+  AnalyticsBridge,
+  ExploreExportState,
+  DashboardTileType,
+  ExploreQuery,
+  ExploreResultV4,
+  FilterDatasource,
+  TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
+
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
+import { formatTime, TimePeriods, getFieldDataSources, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -155,10 +161,7 @@ import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
-import { msToGranularity } from '@kong-ui-public/analytics-utilities'
-import type { AiExploreQuery, AnalyticsBridge, ExploreQuery, ExploreResultV4, FilterDatasource, AbsoluteTimeRangeV4 } from '@kong-ui-public/analytics-utilities'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
-import { TIMEFRAME_LOOKUP } from '@kong-ui-public/analytics-utilities'
 import DonutChartRenderer from './DonutChartRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
@@ -187,10 +190,12 @@ const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
+const exportState = ref<ExploreExportState>({ status: 'loading' })
 const exportModalVisible = ref<boolean>(false)
 const titleRef = ref<HTMLElement>()
 const isTitleTruncated = ref(false)
 const loadingChartData = ref(true)
+
 const {
   exploreLinkKebabMenu,
   requestsLinkKebabMenu,
@@ -209,6 +214,8 @@ const {
   definition: readonly(toRef(props, 'definition')),
   context: readonly(toRef(props, 'context')),
 })
+
+const { issueQuery } = composables.useIssueQuery()
 
 watch(() => props.definition, async () => {
   await nextTick()
@@ -360,12 +367,19 @@ const onChartData = (data: ExploreResultV4) => {
   loadingChartData.value = false
 }
 
-const setExportModalVisibility = (val: boolean) => {
-  exportModalVisible.value = val
+const hideExportModal = () => {
+  exportModalVisible.value = false
 }
 
-const exportCsv = () => {
-  setExportModalVisibility(true)
+const exportCsv = async () => {
+  exportModalVisible.value = true
+  exportState.value = { status: 'loading' }
+
+  issueQuery(props.definition.query, props.context, EXPORT_RECORD_LIMIT).then(queryResult => {
+    exportState.value = { status: 'success', chartData: queryResult }
+  }).catch(error => {
+    exportState.value = { status: 'error', error: error }
+  })
 }
 
 const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {

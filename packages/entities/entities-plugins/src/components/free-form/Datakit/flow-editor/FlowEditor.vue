@@ -20,17 +20,6 @@
     </div>
 
     <EditorModal v-model:open="modalOpen" />
-
-    <div class="field">
-      <BooleanField
-        :description="t('plugins.free-form.datakit.flow_editor.debug.help')"
-        :label="t('plugins.free-form.datakit.flow_editor.debug.label')"
-        :label-attributes="{
-          info: t('plugins.free-form.datakit.flow_editor.debug.description'),
-        }"
-        name="config.debug"
-      />
-    </div>
   </div>
 </template>
 
@@ -42,7 +31,6 @@ import { ExpandIcon } from '@kong/icons'
 import { useTemplateRef, watch } from 'vue'
 
 import english from '../../../../locales/en.json'
-import BooleanField from '../../shared/BooleanField.vue'
 import { provideEditorStore } from '../composables'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
@@ -85,10 +73,6 @@ watch(modalOpen, () => {
 
 <style lang="scss" scoped>
 .dk-flow-editor {
-  .field {
-    margin-top: $kui-space-80;
-  }
-
   .flow-panels-container {
     border: $kui-border-width-10 solid $kui-color-border;
     border-radius: $kui-border-radius-30;
