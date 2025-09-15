@@ -159,6 +159,9 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
             lineChartTooltipBehavior(chartOptions.tooltipState, context, chartOptions.granularity.value)
           },
         },
+        thresholdPlugin: {
+          threshold: chartOptions.threshold?.value,
+        },
       },
       interaction: {
         mode: 'index',

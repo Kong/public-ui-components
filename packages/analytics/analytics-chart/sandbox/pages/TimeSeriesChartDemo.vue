@@ -235,7 +235,7 @@ import {
   CsvExportModal,
 } from '../../src'
 import type { AnalyticsExploreRecord, ExploreExportState, ExploreAggregations, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
-import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType } from '../../src/types'
+import type { AnalyticsChartColors, AnalyticsChartOptions, ChartType, Threshold } from '../../src/types'
 import { isValidJson, rand } from '../utils/utils'
 import { lookupDatavisColor } from '../../src/utils'
 import { lookupStatusCodeColor } from '../../src/utils/customColors'
@@ -301,8 +301,11 @@ const serviceDimensionValues = ref(new Set([
 ]))
 
 const threshold = {
-  'request_count': 1250,
-} as Record<ExploreAggregations, number>
+  'request_count': [
+    { type: 'warning', value: 700 },
+    { type: 'error', value: 900 },
+  ],
+} as Record<ExploreAggregations, Threshold[]>
 
 const exportModalVisible = ref(false)
 const exportState = ref<ExploreExportState>({ status: 'loading' })

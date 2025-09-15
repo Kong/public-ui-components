@@ -58,6 +58,14 @@ export interface EnhancedLegendItem extends LegendItem {
  */
 export type ChartLegendSortFn = (a: EnhancedLegendItem, b: EnhancedLegendItem) => number
 
+export type ThresholdType = 'warning' | 'error' | 'neutral'
+
+export interface Threshold {
+  type: ThresholdType
+  value: number
+  label?: string
+}
+
 /**
  * Analytics Chart options
  */
@@ -97,7 +105,7 @@ export interface AnalyticsChartOptions {
   /**
    * A static or dynamic metric threshold to be displayed on a timeseries chart
    */
-  threshold?: Record<ExploreAggregations, number>
+  threshold?: Record<ExploreAggregations, Threshold[]>
 }
 
 /**

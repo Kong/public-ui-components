@@ -159,7 +159,9 @@
     "llm_cache_embeddings_latency_average": "Embeddings latency (avg)",
     "llm_cache_fetch_latency_average": "Fetch latency (avg)",
     "llm_latency_average": "Llm latency (avg)",
-    "threshold": "Alert threshold",
+    "threshold-warning": "Warning threshold: {value}",
+    "threshold-error": "Error threshold: {value}",
+    "thatreshold-neutral": "Alert threshold: {value}",
     "api": "API",
     "vulnerability_count": "Vulnerability count"
   },
