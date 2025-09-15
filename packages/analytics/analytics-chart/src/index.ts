@@ -2,8 +2,9 @@ import AnalyticsChart from './components/AnalyticsChart.vue'
 import SimpleChart from './components/SimpleChart.vue'
 import TopNTable from './components/TopNTable.vue'
 import CsvExportModal from './components/CsvExportModal.vue'
+import SparklineChart from './components/SparklineChart.vue'
 
-export { AnalyticsChart, SimpleChart, TopNTable, CsvExportModal }
+export { AnalyticsChart, SimpleChart, TopNTable, CsvExportModal, SparklineChart }
 
 export * from './types'
 export * from './enums'
