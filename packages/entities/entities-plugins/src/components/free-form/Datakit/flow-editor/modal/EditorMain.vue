@@ -46,6 +46,21 @@
 
         <div class="divider" />
 
+        <div class="settings">
+          <BooleanField
+            :label="t('plugins.free-form.datakit.flow_editor.debug.label')"
+            :label-attributes="{
+              info: t('plugins.free-form.datakit.flow_editor.debug.description'),
+              tooltipAttributes: {
+                maxWidth: '300px',
+              },
+            }"
+            name="config.debug"
+          />
+        </div>
+
+        <div class="divider" />
+
         <KDropdown
           appearance="tertiary"
           :kpop-attributes="{
@@ -97,6 +112,7 @@ import { KButton } from '@kong/kongponents'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 
 import english from '../../../../../locales/en.json'
+import BooleanField from '../../../shared/BooleanField.vue'
 import { HOTKEYS } from '../../constants'
 import * as examples from '../../examples'
 import { useHotkeys } from '../composables/useHotkeys'
@@ -171,6 +187,12 @@ useHotkeys({
     flex-direction: column;
     height: 100%;
     width: 100%;
+  }
+
+  .settings {
+    align-items: center;
+    display: flex;
+    padding: 0 $kui-space-40;
   }
 
   .divider {
