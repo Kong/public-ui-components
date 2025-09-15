@@ -802,7 +802,8 @@
               "label": "Timeout(s)"
             },
             "jq": {
-              "label": "jq script"
+              "label": "jq script",
+              "help": "Refer to {link} for full documentation."
             },
             "output_value": {
               "label": "Output value",
