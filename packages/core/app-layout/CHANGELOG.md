@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.7.3...@kong-ui-public/app-layout@4.8.0) (2025-09-15)
+
+
+### Features
+
+* **sidenav:** add collapse support [khcp-17790] ([#2439](https://github.com/Kong/public-ui-components/issues/2439)) ([c916bcf](https://github.com/Kong/public-ui-components/commit/c916bcf20b352152a08833aa142d8b6a0af8d6f6))
+
+
+
+
+
 ## [4.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.7.2...@kong-ui-public/app-layout@4.7.3) (2025-09-15)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
