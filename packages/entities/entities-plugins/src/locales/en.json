@@ -770,6 +770,16 @@
               "summary": "Define static values to use for call nodes",
               "description": "Emits static values to be used as inputs for other nodes. The static node can help you with hardcoding some known value for an input."
             },
+            "branch": {
+              "name": "branch",
+              "summary": "Coming soon...",
+              "description": "Coming soon..."
+            },
+            "cache": {
+              "name": "cache",
+              "summary": "Coming soon...",
+              "description": "Coming soon..."
+            },
             "request": {
               "name": "request",
               "description": "Reads incoming client request properties. You cannot specify request node input."
