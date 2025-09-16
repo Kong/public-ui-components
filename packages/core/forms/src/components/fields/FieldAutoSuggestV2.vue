@@ -32,7 +32,7 @@
       <template #item="{ item }">
         <div class="entity-suggestion-item">
           <span class="entity-label">
-            {{ item.label }}
+            {{ item.label ?? LABEL_PLACEHOLDER }}
           </span>
           <span class="entity-id">
             {{ item.id }}
@@ -42,7 +42,7 @@
 
       <template #selected-item="{ item }">
         <span class="selected-entity-item">
-          <span class="selected-entity-label">{{ item.__no_name ? item.value : item.label }}</span>
+          <span class="selected-entity-label">{{ item.label ?? item.id }}</span>
         </span>
       </template>
     </FieldScopedEntitySelect>
@@ -61,7 +61,6 @@ import english from '../../locales/en.json'
 
 const requestResultsLimit = 1000
 const LABEL_PLACEHOLDER = '-'
-const NO_NAME_SYMBOL = Symbol('no_name')
 
 export default {
   components: {
@@ -184,13 +183,11 @@ export default {
     },
 
     transformItem(item) {
-      const label = this.getSuggestionLabel(item)
       return {
         ...item,
         // This field is for select dropdown item first column.
-        label: label === NO_NAME_SYMBOL ? LABEL_PLACEHOLDER : label,
+        label: this.getSuggestionLabel(item),
         value: item.id,
-        ...(label === NO_NAME_SYMBOL ? { __no_name: true } : {}),
       }
     },
 
@@ -224,7 +221,7 @@ export default {
 
     getSuggestionLabel(item) {
       const labelKey = this.schema?.labelField || 'id'
-      return (labelKey && item ? item[labelKey] : '') || NO_NAME_SYMBOL
+      return labelKey && item ? item[labelKey] : ''
     },
 
     updateModel(value) {
