@@ -32,7 +32,7 @@
       <template #item="{ item }">
         <div class="entity-suggestion-item">
           <span class="entity-label">
-            {{ item.label || LABEL_PLACEHOLDER }}
+            {{ item.label }}
           </span>
           <span class="entity-id">
             {{ item.id }}
@@ -42,7 +42,7 @@
 
       <template #selected-item="{ item }">
         <span class="selected-entity-item">
-          <span class="selected-entity-label">{{ item.label === LABEL_PLACEHOLDER ? item.value : item.label }}</span>
+          <span class="selected-entity-label">{{ item.__no_name ? item.value : item.label }}</span>
         </span>
       </template>
     </FieldScopedEntitySelect>
@@ -60,7 +60,8 @@ import { FORMS_API_KEY, FIELD_STATES } from '../../const'
 import english from '../../locales/en.json'
 
 const requestResultsLimit = 1000
-const LABEL_PLACEHOLDER = '–'
+const LABEL_PLACEHOLDER = '-'
+const NO_NAME_SYMBOL = Symbol('no_name')
 
 export default {
   components: {
@@ -183,23 +184,14 @@ export default {
     },
 
     transformItem(item) {
+      const label = this.getSuggestionLabel(item)
       return {
         ...item,
-        label: this.getSuggestionLabel(item),
+        // This field is for select dropdown item first column.
+        label: label === NO_NAME_SYMBOL ? LABEL_PLACEHOLDER : label,
         value: item.id,
+        ...(label === NO_NAME_SYMBOL ? { __no_name: true } : {}),
       }
-    },
-
-    dedupeSuggestions(items, filteredIds) {
-      const dedupedItems = []
-      items.forEach((item) => {
-        if (!filteredIds.has(item.id)) {
-          filteredIds.add(item.id)
-          dedupedItems.push(item)
-        }
-      })
-
-      return dedupedItems
     },
 
     getItem(data) {
@@ -232,7 +224,7 @@ export default {
 
     getSuggestionLabel(item) {
       const labelKey = this.schema?.labelField || 'id'
-      return (labelKey && item ? item[labelKey] : '') || LABEL_PLACEHOLDER
+      return (labelKey && item ? item[labelKey] : '') || NO_NAME_SYMBOL
     },
 
     updateModel(value) {

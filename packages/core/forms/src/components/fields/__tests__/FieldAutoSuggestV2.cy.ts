@@ -164,4 +164,34 @@ describe.only('<FieldAutoSuggestV2 />', function() {
       })
     })
   })
+
+  describe('suggestions with name `-` as name', () => {
+    it('can fetch and display the entity with name `-` correctly', () => {
+      const getOneReturn = {
+        ...defaultGetOneReturn,
+        name: '-',
+      }
+      createComponent({}, {
+        getOneReturn,
+        getAllReturn: generateServices(49, getOneReturn),
+        peekReturn: generateServices(99, getOneReturn),
+      })
+      cy.clock()
+      cy.getTestId('select-input').click()
+      cy.getTestId('select-input').type(getOneReturn.id)
+      // The cypress.type puts text into the text input sequentially, so that the first request fired
+      // from the input event is `getAll`, after the debounce time, the uuid is put into the text input box
+      // now the exact fetch event is then fired.
+      cy.tick(500).then(() => {
+        expect(getOne).to.have.been.callCount(1)
+        cy.get(`[data-testid="select-item-${getOneReturn.id}"]`).should('exist')
+        cy.clock().then(clock => {
+          clock.restore()
+          cy.get(`[data-testid="select-item-${getOneReturn.id}"] button`).click()
+          // The selected item without a label field should show the id instead of `–`.
+          cy.get('.custom-selected-item-wrapper').should('contain.text', getOneReturn.name)
+        })
+      })
+    })
+  })
 })
