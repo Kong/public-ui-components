@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.97.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.0...@kong-ui-public/entities-plugins@9.97.1) (2025-09-16)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - jq textarea error message ([#2494](https://github.com/Kong/public-ui-components/issues/2494)) ([3564f6b](https://github.com/Kong/public-ui-components/commit/3564f6bc87abecb202b38c35253ac3eef5a8225c))
+
+
+
+
+
 # [9.97.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.96.0...@kong-ui-public/entities-plugins@9.97.0) (2025-09-16)
 
 
