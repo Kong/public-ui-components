@@ -268,7 +268,7 @@ export function collectConnectionsFromConfigNode(
  *
  * - If the node type supports configurable IO, prefer the UI node’s fields when available.
  * - Otherwise, return `undefined` so the default fields from metadata are used.
- * - If `unNode` is not provided (e.g. when importing examples or switching to the flow editor
+ * - If `uiNode` is not provided (e.g. when importing examples or switching to the flow editor
  *   from an existing config), fall back to the config node’s inputs/outputs.
  * - If the config node is of type `static`, also expose its values as output fields.
  */
