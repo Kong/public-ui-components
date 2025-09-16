@@ -5,7 +5,7 @@
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
-      :entity-type="SupportedEntityType.RedisConfiguration"
+      :entity-type="SupportedEntityType.Partial"
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       :record-resolver="recordResolver"
@@ -131,8 +131,15 @@ const recordResolver = (data: RedisConfigurationResponse) => {
 /**
  * Put config details into `config` object to display in the code block tab
  */
-const codeBlockRecordFormatter = (record: Record<string, any>) => {
+const codeBlockRecordFormatter = (record: Record<string, any>, codeFormat: string) => {
   const { id, name, created_at, updated_at, type, tags, ...config } = record
+  if (codeFormat === 'terraform') {
+    return {
+      [type.replaceAll('-', '_')]: {
+        id, name, tags, created_at, updated_at, config,
+      },
+    }
+  }
   return {
     id, name, tags, created_at, updated_at, type, config,
   }

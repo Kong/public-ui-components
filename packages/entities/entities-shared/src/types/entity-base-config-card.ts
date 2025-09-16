@@ -19,7 +19,7 @@ export enum SupportedEntityType {
   Upstream = 'upstream',
   Target = 'target',
   Vault = 'vault',
-  RedisConfiguration = 'redis_configuration',
+  Partial = 'partial',
   BackendCluster = 'backend_cluster',
   VirtualCluster = 'virtual_cluster',
   Listener = 'listener',

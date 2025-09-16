@@ -126,6 +126,7 @@ const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
   (e: 'fetch:success', data: Record<string, any>): void
   (e: 'fetch:error', error: AxiosError): void
+  (e: 'configFormatChange', format: Format): void
 }>()
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props
@@ -274,6 +275,7 @@ const configFormat = ref<Format>(DEFAULT_FORMAT)
 
 const handleChange = (payload: any): void => {
   configFormat.value = payload?.value
+  emit('configFormatChange', configFormat.value)
 }
 
 const persistFormat = (localStorageKey: string, format: Format): void => {

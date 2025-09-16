@@ -117,10 +117,10 @@ describe('<RedisConfigurationForm />', {
         cy.get('.kong-ui-entities-redis-configurations-form form').should('be.visible')
 
         // button state
-        cy.getTestId('redis_configuration-create-form-cancel').should('be.visible')
-        cy.getTestId('redis_configuration-create-form-cancel').should('be.enabled')
-        cy.getTestId('redis_configuration-create-form-submit').should('be.visible')
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-cancel').should('be.visible')
+        cy.getTestId('partial-create-form-cancel').should('be.enabled')
+        cy.getTestId('partial-create-form-submit').should('be.visible')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         // form fields
         cy.getTestId('redis-type-select').should('be.visible')
@@ -231,29 +231,29 @@ describe('<RedisConfigurationForm />', {
           .find(`button[value="${RedisType.HOST_PORT_CE}"]`)
           .click()
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         cy.getTestId('redis-name-input').type('test')
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.enabled')
+        cy.getTestId('partial-create-form-submit').should('be.enabled')
 
         cy.getTestId('redis-host-input').clear()
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         cy.getTestId('redis-host-input').type('localhost')
-        cy.getTestId('redis_configuration-create-form-submit').should('be.enabled')
+        cy.getTestId('partial-create-form-submit').should('be.enabled')
 
         cy.getTestId('redis-port-input').clear()
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         cy.getTestId('redis-port-input').type('6379')
-        cy.getTestId('redis_configuration-create-form-submit')
+        cy.getTestId('partial-create-form-submit')
           .should('be.enabled')
           .click()
 
         cy.wait('@createRedisConfiguration')
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
       })
 
       it('should correctly handle button state - create Host/port EE', () => {
@@ -270,29 +270,29 @@ describe('<RedisConfigurationForm />', {
           .find(`button[value="${RedisType.HOST_PORT_EE}"]`)
           .click()
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         cy.getTestId('redis-name-input').type('test')
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.enabled')
+        cy.getTestId('partial-create-form-submit').should('be.enabled')
 
         cy.getTestId('redis-host-input').clear()
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         cy.getTestId('redis-host-input').type('localhost')
-        cy.getTestId('redis_configuration-create-form-submit').should('be.enabled')
+        cy.getTestId('partial-create-form-submit').should('be.enabled')
 
         cy.getTestId('redis-port-input').clear()
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         cy.getTestId('redis-port-input').type('6379')
-        cy.getTestId('redis_configuration-create-form-submit')
+        cy.getTestId('partial-create-form-submit')
           .should('be.enabled')
           .click()
 
         cy.wait('@createRedisConfiguration')
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
       })
 
       it('should correctly handle button state - create Cluster', () => {
@@ -309,42 +309,42 @@ describe('<RedisConfigurationForm />', {
           .find(`button[value="${RedisType.CLUSTER}"]`)
           .click()
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         cy.getTestId('redis-name-input').type('test')
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         // Add cluster node
         cy.getTestId('redis-add-cluster-node-button').click()
 
         cy.getTestId('redis-cluster-nodes').should('be.visible')
 
-        cy.getTestId('redis_configuration-create-form-submit')
+        cy.getTestId('partial-create-form-submit')
           .should('be.enabled')
 
         // Remove cluster node
         cy.getTestId('redis-cluster-nodes').find('button.array-card-remove-button').click()
 
-        cy.getTestId('redis_configuration-create-form-submit')
+        cy.getTestId('partial-create-form-submit')
           .should('be.disabled')
 
         // Add cluster node again but set invalid values
         cy.getTestId('redis-add-cluster-node-button').click()
         cy.getTestId('redis-cluster-nodes').find('input[name="ip"]').clear()
-        cy.getTestId('redis_configuration-create-form-submit')
+        cy.getTestId('partial-create-form-submit')
           .should('be.disabled')
 
         // Aet valid value
         cy.getTestId('redis-cluster-nodes').find('input[name="ip"]').type('127.0.0.1')
 
-        cy.getTestId('redis_configuration-create-form-submit')
+        cy.getTestId('partial-create-form-submit')
           .should('be.enabled')
           .click()
 
         cy.wait('@createRedisConfiguration')
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
       })
 
       it('should correctly handle button state - create Sentinel', () => {
@@ -361,17 +361,17 @@ describe('<RedisConfigurationForm />', {
           .find(`button[value="${RedisType.SENTINEL}"]`)
           .click()
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         // Set name
         cy.getTestId('redis-name-input').type('test')
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         // Set sentinel master
         cy.getTestId('redis-sentinel-master-input').type('master')
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         // Set sentinel role
         cy.getTestId('redis-sentinel-role-select').click()
@@ -380,38 +380,38 @@ describe('<RedisConfigurationForm />', {
           .find('button:eq(0)')
           .click()
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         // Add sentinel node
         cy.getTestId('redis-add-sentinel-node-button').click()
 
         cy.getTestId('redis-sentinel-nodes').should('be.visible')
 
-        cy.getTestId('redis_configuration-create-form-submit')
+        cy.getTestId('partial-create-form-submit')
           .should('be.enabled')
 
         // Remove sentinel node
         cy.getTestId('redis-sentinel-nodes').find('button.array-card-remove-button').click()
 
-        cy.getTestId('redis_configuration-create-form-submit')
+        cy.getTestId('partial-create-form-submit')
           .should('be.disabled')
 
         // Add sentinel node again but set invalid values
         cy.getTestId('redis-add-sentinel-node-button').click()
         cy.getTestId('redis-sentinel-nodes').find('input[name="host"]').clear()
-        cy.getTestId('redis_configuration-create-form-submit')
+        cy.getTestId('partial-create-form-submit')
           .should('be.disabled')
 
         // Aet valid value
         cy.getTestId('redis-sentinel-nodes').find('input[name="host"]').type('localhost')
 
-        cy.getTestId('redis_configuration-create-form-submit')
+        cy.getTestId('partial-create-form-submit')
           .should('be.enabled')
           .click()
 
         cy.wait('@createRedisConfiguration')
 
-        cy.getTestId('redis_configuration-create-form-submit').should('be.disabled')
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
       })
 
       it('should show edit form', () => {
@@ -431,10 +431,10 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-type-select-popover').should('contain.text', 'Host/Port (Open Source)')
 
         // button state
-        cy.getTestId('redis_configuration-edit-form-submit').should('be.visible')
-        cy.getTestId('redis_configuration-edit-form-submit').should('be.disabled')
-        cy.getTestId('redis_configuration-edit-form-cancel').should('be.visible')
-        cy.getTestId('redis_configuration-edit-form-cancel').should('be.enabled')
+        cy.getTestId('partial-edit-form-submit').should('be.visible')
+        cy.getTestId('partial-edit-form-submit').should('be.disabled')
+        cy.getTestId('partial-edit-form-cancel').should('be.visible')
+        cy.getTestId('partial-edit-form-cancel').should('be.enabled')
 
         // redis type cannot be changed
         cy.getTestId('redis-type-select').should('be.disabled')
@@ -607,17 +607,17 @@ describe('<RedisConfigurationForm />', {
 
         cy.wait('@getRedisConfiguration')
 
-        cy.getTestId('redis_configuration-edit-form-submit').should('be.disabled')
+        cy.getTestId('partial-edit-form-submit').should('be.disabled')
 
         cy.getTestId('redis-host-input').type('1')
 
-        cy.getTestId('redis_configuration-edit-form-submit')
+        cy.getTestId('partial-edit-form-submit')
           .should('be.enabled')
           .click()
 
         cy.wait('@editRedisConfiguration')
 
-        cy.getTestId('redis_configuration-edit-form-submit').should('be.disabled')
+        cy.getTestId('partial-edit-form-submit').should('be.disabled')
       })
 
       it('should show error message', () => {
@@ -656,7 +656,7 @@ describe('<RedisConfigurationForm />', {
         })
 
         cy.getTestId('redis-name-input').type('test')
-        cy.getTestId('redis_configuration-create-form-submit').click()
+        cy.getTestId('partial-create-form-submit').click()
         cy.wait('@createRedisConfiguration')
         cy.get('@onCreateUpdateSpy').should('have.been.calledOnce')
 
@@ -672,7 +672,7 @@ describe('<RedisConfigurationForm />', {
         cy.wait('@getRedisConfiguration')
         cy.getTestId('redis-host-input').type('1')
 
-        cy.getTestId('redis_configuration-edit-form-submit').click()
+        cy.getTestId('partial-edit-form-submit').click()
 
         cy.wait('@editRedisConfiguration')
 
@@ -697,7 +697,7 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-update-warning-alert').should('be.visible')
 
         cy.getTestId('redis-host-input').type('1')
-        cy.getTestId('redis_configuration-edit-form-submit').click()
+        cy.getTestId('partial-edit-form-submit').click()
 
         cy.wait('@getLinkedPlugins')
         cy.getTestId('redis-update-warning-modal').find('.modal-container').should('be.visible')
@@ -725,7 +725,7 @@ describe('<RedisConfigurationForm />', {
           },
         })
 
-        cy.getTestId('redis_configuration-create-form-view-configuration').click()
+        cy.getTestId('partial-create-form-view-configuration').click()
         cy.getTestId('slideout-container').should('be.visible').should('have.css', 'top', '0px')
       })
 
@@ -744,7 +744,7 @@ describe('<RedisConfigurationForm />', {
 
           cy.get('#test')
             .should('be.visible')
-            .findTestId('redis_configuration-create-form-view-configuration').should('be.visible')
+            .findTestId('partial-create-form-view-configuration').should('be.visible')
         })
       })
 
@@ -823,7 +823,7 @@ describe('<RedisConfigurationForm />', {
 
           // Add cluster node
           cy.getTestId('redis-add-cluster-node-button').click()
-          cy.getTestId('redis_configuration-edit-form-submit').click()
+          cy.getTestId('partial-edit-form-submit').click()
 
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
@@ -866,7 +866,7 @@ describe('<RedisConfigurationForm />', {
             .find('button:eq(0)')
             .click()
 
-          cy.getTestId('redis_configuration-edit-form-submit').click()
+          cy.getTestId('partial-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -898,7 +898,7 @@ describe('<RedisConfigurationForm />', {
           cy.getTestId('redis-host-input').type('localhost')
           cy.getTestId('redis-port-input').type('6379')
 
-          cy.getTestId('redis_configuration-edit-form-submit').click()
+          cy.getTestId('partial-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -940,7 +940,7 @@ describe('<RedisConfigurationForm />', {
             .find('button:eq(0)')
             .click()
 
-          cy.getTestId('redis_configuration-edit-form-submit').click()
+          cy.getTestId('partial-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -972,7 +972,7 @@ describe('<RedisConfigurationForm />', {
           cy.getTestId('redis-host-input').type('localhost')
           cy.getTestId('redis-port-input').type('6379')
 
-          cy.getTestId('redis_configuration-edit-form-submit').click()
+          cy.getTestId('partial-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
             // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -1009,7 +1009,7 @@ describe('<RedisConfigurationForm />', {
 
           // Add cluster node
           cy.getTestId('redis-add-cluster-node-button').click()
-          cy.getTestId('redis_configuration-edit-form-submit').click()
+          cy.getTestId('partial-edit-form-submit').click()
 
           cy.wait('@editRedisConfiguration').then(({ request }) => {
             const { body: { config } } = request
