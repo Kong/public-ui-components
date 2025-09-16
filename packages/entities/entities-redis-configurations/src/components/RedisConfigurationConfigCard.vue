@@ -44,7 +44,6 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import endpoints from '../partials-endpoints'
 import { getRedisType } from '../helpers'
 import { DEFAULT_REDIS_TYPE } from '../constants'
-import type { CodeFormat } from '@kong-ui-public/entities-shared/dist/types/components/entity-base-config-card/ConfigCardDisplay.vue.js'
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
 const props = defineProps({
@@ -133,7 +132,7 @@ const recordResolver = (data: RedisConfigurationResponse) => {
 /**
  * Put config details into `config` object to display in the code block tab
  */
-const codeBlockRecordFormatter = (record: Record<string, any>, codeFormat: CodeFormat) => {
+const codeBlockRecordFormatter = (record: Record<string, any>, codeFormat: string) => {
   const { id, name, created_at, updated_at, type, tags, ...config } = record
   if (codeFormat === 'terraform') {
     return {
