@@ -238,6 +238,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
 
       if (!confirmed) {
         reset()
+        return
       }
     }
     commit()
@@ -298,6 +299,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
 
       if (!confirmed) {
         reset()
+        return
       }
     }
     commit()
