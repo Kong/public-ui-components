@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.97.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.6...@kong-ui-public/entities-plugins@9.97.7) (2025-09-16)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit commit on replacing edge via node form ([#2500](https://github.com/Kong/public-ui-components/issues/2500)) ([a4be9bf](https://github.com/Kong/public-ui-components/commit/a4be9bf7c567c31047cd2a2590d1e36cee4cb0ee))
+
+
+
+
+
 ## [9.97.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.5...@kong-ui-public/entities-plugins@9.97.6) (2025-09-16)
 
 

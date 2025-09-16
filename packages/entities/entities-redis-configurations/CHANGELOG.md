@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.4.7...@kong-ui-public/entities-redis-configurations@1.4.8) (2025-09-16)
+
+
+### Bug Fixes
+
+* redis partial terraform format [KM-1717] ([#2484](https://github.com/Kong/public-ui-components/issues/2484)) ([f69a7e5](https://github.com/Kong/public-ui-components/commit/f69a7e5a1f37cc007a526409135d100c1e766e94))
+
+
+
+
+
 ## [1.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.4.6...@kong-ui-public/entities-redis-configurations@1.4.7) (2025-09-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations

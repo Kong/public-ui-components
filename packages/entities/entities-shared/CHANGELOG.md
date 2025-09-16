@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.30.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.30.4...@kong-ui-public/entities-shared@3.30.5) (2025-09-16)
+
+
+### Bug Fixes
+
+* redis partial terraform format [KM-1717] ([#2484](https://github.com/Kong/public-ui-components/issues/2484)) ([f69a7e5](https://github.com/Kong/public-ui-components/commit/f69a7e5a1f37cc007a526409135d100c1e766e94))
+
+
+
+
+
 ## [3.30.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.30.3...@kong-ui-public/entities-shared@3.30.4) (2025-09-15)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
