@@ -7,7 +7,6 @@
     <EnumField
       v-for="cname in childFieldNames"
       :key="cname"
-      class="dk-inputs-field-indent"
       clearable
       enable-filtering
       :items="items"
@@ -49,11 +48,3 @@ const childFieldNames = computed(() => {
   return schema.fields.map(fieldObj => Object.keys(fieldObj)[0]) as FieldName[]
 })
 </script>
-
-<style lang="scss" scoped>
-@use '../styles/tree-indent' as mixins;
-
-.dk-inputs-field-indent {
-  @include mixins.tree-indent;
-}
-</style>

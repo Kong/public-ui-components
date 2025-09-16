@@ -125,6 +125,8 @@ const Form = computed(() => {
   }
 
   :deep(.dk-node-configuration-label) {
+    font-size: $kui-font-size-40;
+    font-weight: 700;
     margin: 0;
   }
 }

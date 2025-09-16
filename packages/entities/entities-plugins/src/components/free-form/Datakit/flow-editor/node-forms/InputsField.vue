@@ -1,14 +1,35 @@
 <template>
+  <div class="dk-inputs-field-h1">
+    {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.label') }}
+  </div>
+
   <EnumField
     v-if="getSchema('input')"
+    class="dk-inputs-field-h2"
     clearable
     enable-filtering
     :items="items"
-    label="Inputs"
+    :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.whole_input')"
+    :label-attributes="{
+      info: i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.whole_input_tooltip'),
+    }"
     name="input"
     :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
     @change="handleInputChange"
   />
+
+  <div class="dk-inputs-field-or">
+    <span>
+      {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.or') }}
+    </span>
+  </div>
+
+  <KLabel
+    class="dk-inputs-field-h2 dk-margin-0"
+    :info="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.pre_field_tooltip')"
+  >
+    {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.pre_field') }}
+  </KLabel>
 
   <InputsField
     v-if="InputsField"
@@ -79,3 +100,49 @@ function handleRenameField(oldName: FieldName, newName: FieldName) {
 }
 
 </script>
+
+<style lang="scss" scoped>
+.dk-inputs-field-h1 {
+  color: $kui-color-text;
+  font-size: $kui-font-size-40;
+  font-weight: $kui-font-weight-bold;
+}
+
+.dk-inputs-field-h2,
+.dk-inputs-field-h2 > :deep(.k-label) {
+  color: $kui-color-text;
+  font-size: $kui-font-size-40;
+  font-weight: $kui-font-weight-semibold;
+}
+
+.dk-margin-0 {
+  margin: 0;
+}
+
+.dk-inputs-field-or {
+  align-items: center;
+  display: flex;
+  height: $kui-icon-size-50;
+  justify-content: center;
+  position: relative;
+
+  & > span {
+    background-color: $kui-color-background;
+    color: $kui-color-text-neutral;
+    display: inline-flex;
+    padding: 0 $kui-space-30;
+    position: relative;
+    text-transform: uppercase;
+    user-select: none;
+  }
+
+  &::before {
+    border-bottom: 1px solid $kui-color-border;
+    content: ' ';
+    display: block;
+    height: 0px;
+    position: absolute;
+    width: 100%;
+  }
+}
+</style>
