@@ -60,6 +60,13 @@
       <template #sidebar-icon-dev-portal>
         <DevPortalIcon :size="KUI_ICON_SIZE_40" />
       </template>
+      <template #sidebar-after-dev-portal>
+        <div class="new-badge-wrapper">
+          <div class="new-badge">
+            New
+          </div>
+        </div>
+      </template>
       <template #sidebar-icon-analytics>
         <BarChartIcon :size="KUI_ICON_SIZE_40" />
       </template>
@@ -381,6 +388,21 @@ main {
 
   @media (min-width: 1024px) { // $kui-breakpoint-tablet
     display: none;
+  }
+}
+
+.new-badge-wrapper {
+  background: linear-gradient(90deg, #000933 2.68%, rgba(0, 9, 51, 0.9) 100%) padding-box,
+    linear-gradient(215.68deg, #00E3C0 7.34%, #1257CA 83.28%) border-box;
+  border: $kui-border-width-10 solid transparent;
+  border-radius: $kui-border-radius-20;
+
+  .new-badge {
+    background: linear-gradient(215.68deg, rgba(0, 227, 192, 0.2) 7.34%, rgba(18, 87, 202, 0.2) 83.28%);
+    border-radius: $kui-border-radius-20;
+    color: $kui-color-text-inverse;
+    padding: 1px $kui-space-30;
+    position: relative;
   }
 }
 </style>

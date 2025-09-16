@@ -101,6 +101,13 @@
       >
         <slot :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`" />
       </template>
+      <template
+        v-for="item in [...(sidebar.topItems || []), ...(sidebar.bottomItems || [])]"
+        :key="`${item.key}-after`"
+        #[`sidebar-after-${item.key}`]
+      >
+        <slot :name="`sidebar-after-${(item as SidebarPrimaryItem).key}`" />
+      </template>
     </AppSidebar>
 
     <main

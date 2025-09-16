@@ -62,10 +62,14 @@
               {{ (item as SidebarPrimaryItem).label }}
             </div>
           </div>
-          <ItemBadge
+          <div
             v-if="itemHasBadge"
-            :count="(item as SidebarSecondaryItem).badgeCount"
-          />
+            class="sidebar-item-icon-after"
+          >
+            <slot :name="`sidebar-after-${(item as SidebarPrimaryItem).key}`">
+              <ItemBadge :count="(item as SidebarSecondaryItem).badgeCount" />
+            </slot>
+          </div>
         </div>
       </a>
     </component>
@@ -87,7 +91,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../types'
 import ItemBadge from './ItemBadge.vue'
 
@@ -104,6 +108,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const slots = useSlots()
 
 // Force anchor tag if `item.newWindow` is true, or `item.to` starts with `http`
 const useAnchorTag = computed((): boolean => {
@@ -123,7 +129,12 @@ const openInNewWindow = computed((): boolean => {
   return props.item.newWindow && (props.item.to.startsWith('http') || props.item.to.startsWith('/'))
 })
 
-const itemHasBadge = computed((): boolean => props.subnavItem && (props.item as SidebarSecondaryItem).badgeCount !== undefined && (props.item as SidebarSecondaryItem).badgeCount !== 0)
+const itemHasBadge = computed((): boolean => props.subnavItem &&
+  // item has non-zero badgeCount OR
+  ((props.item as SidebarSecondaryItem).badgeCount !== undefined && (props.item as SidebarSecondaryItem).badgeCount !== 0) ||
+  // slot content for the badge
+  !!slots[`sidebar-after-${(props.item as SidebarPrimaryItem).key}`],
+)
 
 const itemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void => {
   emit('click', item)
@@ -259,10 +270,17 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     border-radius: $sidebar-item-border-radius;
 
     > .sidebar-item-display {
-
       &.has-label {
         padding-bottom: $kui-space-50;
         padding-top: $kui-space-50;
+      }
+
+      &.has-badge {
+        justify-content: space-between; // for badges
+
+        .has-badge-max-width {
+          max-width: 134px !important;
+        }
       }
     }
   }
@@ -370,6 +388,11 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     align-items: center;
     display: flex;
     line-height: 0; // to align icon with the text baseline
+  }
+
+  .sidebar-item-icon-after {
+    display: flex;
+    margin-left: auto;
   }
 }
 </style>
