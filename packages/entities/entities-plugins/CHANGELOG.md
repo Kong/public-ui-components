@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.97.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.3...@kong-ui-public/entities-plugins@9.97.4) (2025-09-16)
+
+
+### Bug Fixes
+
+* **entities-plugins:** hide __ui_data in config view while editing ([#2498](https://github.com/Kong/public-ui-components/issues/2498)) ([5c31663](https://github.com/Kong/public-ui-components/commit/5c31663164738c3bb6bb02c274e42290a663bf58))
+
+
+
+
+
 ## [9.97.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.2...@kong-ui-public/entities-plugins@9.97.3) (2025-09-16)
 
 
