@@ -16,6 +16,7 @@
 
     <!-- todo(zehao): replace to monaco editor -->
     <StringField
+      autosize
       :error="jqHandler.error.value"
       :error-message="jqHandler.errorMessage.value"
       :label="jqFieldName"
@@ -23,7 +24,6 @@
       multiline
       name="jq"
       resizable
-      rows="2"
       @blur="jqHandler.onBlur"
       @update:model-value="jqHandler.onUpdate"
     >

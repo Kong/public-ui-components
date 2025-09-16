@@ -22,7 +22,7 @@
       :data-testid="`ff-${field.path.value}`"
       :error="error"
       :error-message="errorMessage"
-      :help="help"
+      :help="(multiline && error) ? errorMessage : help"
       :model-value="fieldValue ?? ''"
       :multiline="multiline"
       @update:model-value="handleUpdate"
@@ -36,7 +36,10 @@
           <div v-html="fieldAttrs.labelAttributes.info" />
         </slot>
       </template>
-      <template #help>
+      <template
+        v-if="!(multiline && error)"
+        #help
+      >
         <slot name="help" />
       </template>
     </EnhancedInput>
