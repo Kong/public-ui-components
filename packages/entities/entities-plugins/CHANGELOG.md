@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.97.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.1...@kong-ui-public/entities-plugins@9.97.2) (2025-09-16)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - remove unecessary connection confirm ([#2495](https://github.com/Kong/public-ui-components/issues/2495)) ([b719857](https://github.com/Kong/public-ui-components/commit/b719857edc700d5d0d7a49159f026fea05a8363b))
+
+
+
+
+
 ## [9.97.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.0...@kong-ui-public/entities-plugins@9.97.1) (2025-09-16)
 
 
