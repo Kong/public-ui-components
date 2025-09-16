@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.97.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.96.0...@kong-ui-public/entities-plugins@9.97.0) (2025-09-16)
+
+
+### Features
+
+* **entities-plugins:** datakit - improve input fields [KM-1731] ([#2463](https://github.com/Kong/public-ui-components/issues/2463)) ([bf77a9b](https://github.com/Kong/public-ui-components/commit/bf77a9b15ee1f30f4bfa26fc6c03a1e281ab87dd))
+
+
+
+
+
 # [9.96.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.95.0...@kong-ui-public/entities-plugins@9.96.0) (2025-09-15)
 
 
