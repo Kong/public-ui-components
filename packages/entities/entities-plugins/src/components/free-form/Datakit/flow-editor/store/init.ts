@@ -198,7 +198,7 @@ export function buildNodeInstance(
     name: configNode?.name,
     phase: uiNode?.phase ?? getDefaultPhase(type),
     position: uiNode?.position,
-    fields: resolveFields(type, uiNode),
+    fields: resolveFields(type, uiNode, configNode),
     config: configNode ? extractConfig(configNode) : undefined,
   })
 }
@@ -264,11 +264,19 @@ export function collectConnectionsFromConfigNode(
 }
 
 /**
- * Resolve input and output fields for a node instance.
- * If the node type has configurable IO, use the UI node's fields if provided.
- * Otherwise, return undefined to fallback to the default fields from metadata.
+ * Resolves the input and output fields for a node instance.
+ *
+ * - If the node type supports configurable IO, prefer the UI node’s fields when available.
+ * - Otherwise, return `undefined` so the default fields from metadata are used.
+ * - If `unNode` is not provided (e.g. when importing examples or switching to the flow editor
+ *   from an existing config), fall back to the config node’s inputs/outputs.
+ * - If the config node is of type `static`, also expose its values as output fields.
  */
-function resolveFields(type: NodeType, uiNode?: UINode): MakeNodeInstancePayload['fields'] | undefined {
+function resolveFields(
+  type: NodeType,
+  uiNode?: UINode,
+  configNode?: ConfigNode,
+): MakeNodeInstancePayload['fields'] | undefined {
   const meta = getNodeMeta(type)
   const io = meta?.io
   if (!io) return undefined
@@ -276,10 +284,29 @@ function resolveFields(type: NodeType, uiNode?: UINode): MakeNodeInstancePayload
   const fields: MakeNodeInstancePayload['fields'] = {}
 
   if (io.input?.configurable) {
-    fields.input = uiNode?.fields?.input ?? []
+    if (uiNode) {
+      fields.input = uiNode.fields?.input ?? []
+    } else if (configNode?.inputs) {
+      fields.input = Object.keys(configNode.inputs) as FieldName[]
+    }
   }
+
   if (io.output?.configurable) {
-    fields.output = uiNode?.fields?.output ?? []
+    if (uiNode) {
+      fields.output = uiNode.fields?.output ?? []
+    } else {
+      const out = new Set<FieldName>()
+      if (configNode?.outputs) {
+        Object.keys(configNode.outputs).forEach((fieldName) => out.add(fieldName as FieldName))
+      }
+
+      if (configNode?.type === 'static') {
+        if (configNode.values) {
+          Object.keys(configNode.values).forEach((fieldName) => out.add(fieldName as FieldName))
+        }
+      }
+      if (out.size) fields.output = Array.from(out)
+    }
   }
 
   return Object.keys(fields).length ? fields : undefined
