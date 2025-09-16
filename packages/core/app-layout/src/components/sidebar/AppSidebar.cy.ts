@@ -555,6 +555,33 @@ describe('<AppSidebar />', () => {
           cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items').find('.sidebar-item-icon .kui-icon').should('not.exist')
         })
 
+        it('renders slot content after sidebar item if provided', () => {
+          const afterContent = 'after content'
+
+          cy.mount(AppSidebar, {
+            props: {
+              open: ['mobile', 'tablet'].includes(viewportName), // force mobile sidebar to be open
+              mobileEnabled: true,
+              topItems: [{
+                name: 'Gateway Manager',
+                to: '/?runtime-manager',
+                label: 'runtime-group-rg',
+                key: 'runtime-manager',
+                active: true,
+                expanded: true,
+              }],
+            },
+            slots: {
+              'sidebar-after-runtime-manager': () => h('div', { ['data-testid']: 'sidebar-item-after-slot-content' }, afterContent),
+            },
+          })
+
+          cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items').find('li').eq(0).should('be.visible')
+          cy.get('.kong-ui-app-sidebar').find('.level-primary.top-items').find('.sidebar-item-after').should('be.visible')
+          cy.getTestId('sidebar-item-after-slot-content').should('be.visible')
+          cy.getTestId('sidebar-item-after-slot-content').should('contain.text', afterContent)
+        })
+
         // Expanded
         describe('expanded', () => {
           it('displays L2 items when the parent item `expanded` is true', () => {
