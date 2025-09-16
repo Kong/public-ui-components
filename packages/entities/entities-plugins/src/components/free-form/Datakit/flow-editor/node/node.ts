@@ -175,7 +175,10 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
     description: getNodeTypeDescription('response'),
     io: {
       input: {
-        fields: [{ name: 'headers' }, { name: 'body' }],
+        fields: [
+          { name: 'headers' },
+          { name: 'body' },
+        ],
       } as IOMeta,
     },
   },
