@@ -1337,11 +1337,9 @@ const getRequestBody = computed((): Record<string, any> => {
 
 // Read-only record for the View Configuration feature
 const viewConfigurationRecord = computed(() => {
-  const record = { ...getRequestBody.value }
-
-  // Don't show UI data in the configuration view
-  delete record['__ui_data']
-
+  // __ui_data: Don't show UI data in the configuration view
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { __ui_data, ...record } = { ...getRequestBody.value }
   return record
 })
 
