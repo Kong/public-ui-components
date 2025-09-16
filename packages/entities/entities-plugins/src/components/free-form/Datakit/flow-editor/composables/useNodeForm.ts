@@ -42,8 +42,8 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     disconnectEdge,
     connectEdge,
     invalidConfigNodeIds,
-    undo,
     commit,
+    reset,
   } = useEditorStore()
 
   const { i18n: { t } } = useI18n()
@@ -56,10 +56,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     await nextTick()
     isGlobalStateUpdating = false
   }, { immediate: true, deep: true })
-
-  // todo(zehao): debugging store api, remove later
-  console.log('state', state.value)
-  ;(window as any).store = useEditorStore()
 
   const currentNode = computed(() => {
     const node = getNodeById(nodeId)
@@ -224,9 +220,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       getNodeById,
     )
 
-    commit()
-
-
     // Check if the removed connection and the added connection refer to the same target field.
     // Here, [1] represents the target field name or identifier in the connection string tuple.
     const isReplace = removedConnections[0] && addedConnection
@@ -244,9 +237,10 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       )
 
       if (!confirmed) {
-        undo()
+        reset()
       }
     }
+    commit()
   }
 
   /**
@@ -295,7 +289,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       getNodeById,
     )
 
-    commit()
     if (removedInputs.length > 0) {
       const confirmed = await confirm(
         t('plugins.free-form.datakit.flow_editor.confirm.message.switch'),
@@ -304,9 +297,10 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       )
 
       if (!confirmed) {
-        undo()
+        reset()
       }
     }
+    commit()
   }
 
   const willCreateCycle = (sourceNode: NodeId): boolean => {
