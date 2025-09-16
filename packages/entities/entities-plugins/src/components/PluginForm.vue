@@ -117,18 +117,18 @@
         <template #json>
           <JsonCodeBlock
             :config="config"
-            :entity-record="getRequestBody"
+            :entity-record="viewConfigurationRecord"
             :fetcher-url="submitUrl"
             :request-method="props.pluginId ? 'put' : 'post'"
           />
         </template>
         <template #yaml>
-          <YamlCodeBlock :entity-record="getRequestBody" />
+          <YamlCodeBlock :entity-record="viewConfigurationRecord" />
         </template>
         <template #terraform>
           <TerraformCodeBlock
             :credential-type="credentialType"
-            :entity-record="getRequestBody"
+            :entity-record="viewConfigurationRecord"
             :entity-type="SupportedEntityType.Plugin"
           />
         </template>
@@ -1333,6 +1333,16 @@ const getRequestBody = computed((): Record<string, any> => {
   }
 
   return requestBody
+})
+
+// Read-only record for the View Configuration feature
+const viewConfigurationRecord = computed(() => {
+  const record = { ...getRequestBody.value }
+
+  // Don't show UI data in the configuration view
+  delete record['__ui_data']
+
+  return record
 })
 
 // make the actual API request to save on create/edit
