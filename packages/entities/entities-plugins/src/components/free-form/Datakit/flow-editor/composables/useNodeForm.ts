@@ -226,22 +226,24 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       ? removedConnections[0][1] === addedConnection[1]
       : false
 
-    if (isReplace) return // The connection has been replaced, do nothing
+    if (isReplace) {
+      commit()
+      return
+    }
+
+    // No changes that need confirmation
+    if (removedConnections.length === 0)
+      return
 
     // Confirm the changes, undo if users not confirmed
-    if (removedConnections.length > 0) {
-      const confirmed = await confirm(
-        t('plugins.free-form.datakit.flow_editor.confirm.message.switch'),
-        [addedConnection],
-        removedConnections,
-      )
+    const confirmed = await confirm(
+      t('plugins.free-form.datakit.flow_editor.confirm.message.switch'),
+      [addedConnection],
+      removedConnections,
+    )
 
-      if (!confirmed) {
-        reset()
-        return
-      }
-    }
-    commit()
+    if (!confirmed)
+      reset()
   }
 
   /**
