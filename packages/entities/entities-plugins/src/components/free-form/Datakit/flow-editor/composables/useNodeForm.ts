@@ -265,12 +265,17 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       return
     }
 
-    const removedConnections: ConnectionString[] = []
+    const removedInputs: ConnectionString[] = []
 
-    // remove existing edges
-    for (const edge of inputsEdges.value.concat(inputEdge.value ? [inputEdge.value] : [])) {
-      removedConnections.push(createEdgeConnectionString(edge, getNodeById))
+    // remove inputs edges
+    for (const edge of inputsEdges.value) {
+      removedInputs.push(createEdgeConnectionString(edge, getNodeById))
       disconnectEdge(edge!.id, false)
+    }
+
+    // remove input edge
+    if (inputEdge.value) {
+      disconnectEdge(inputEdge.value.id, false)
     }
 
     // add new edge
@@ -291,11 +296,11 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     )
 
     commit()
-    if (removedConnections.length > 0) {
+    if (removedInputs.length > 0) {
       const confirmed = await confirm(
         t('plugins.free-form.datakit.flow_editor.confirm.message.switch'),
         [addedConnection],
-        removedConnections,
+        removedInputs,
       )
 
       if (!confirmed) {
