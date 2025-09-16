@@ -401,7 +401,8 @@ main {
     background: linear-gradient(215.68deg, rgba(0, 227, 192, 0.2) 7.34%, rgba(18, 87, 202, 0.2) 83.28%);
     border-radius: $kui-border-radius-20;
     color: $kui-color-text-inverse;
-    padding: 1px $kui-space-30;
+    font-size: $kui-font-size-20;
+    padding: $kui-space-0 $kui-space-20;
     position: relative;
   }
 }
