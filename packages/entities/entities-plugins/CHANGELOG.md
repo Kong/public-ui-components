@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.97.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.4...@kong-ui-public/entities-plugins@9.97.5) (2025-09-16)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - confirmation history ops ([#2496](https://github.com/Kong/public-ui-components/issues/2496)) ([23ef508](https://github.com/Kong/public-ui-components/commit/23ef508f66570a798c28d9e7f7fd224bbbb60d6a))
+
+
+
+
+
 ## [9.97.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.3...@kong-ui-public/entities-plugins@9.97.4) (2025-09-16)
 
 
