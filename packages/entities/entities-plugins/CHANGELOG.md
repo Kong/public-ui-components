@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.97.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.5...@kong-ui-public/entities-plugins@9.97.6) (2025-09-16)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit field order should cover pure config ([#2499](https://github.com/Kong/public-ui-components/issues/2499)) ([dbd2f84](https://github.com/Kong/public-ui-components/commit/dbd2f843620c082116b46aec58d545389ab1ac21))
+
+
+
+
+
 ## [9.97.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.4...@kong-ui-public/entities-plugins@9.97.5) (2025-09-16)
 
 
