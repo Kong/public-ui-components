@@ -19,6 +19,7 @@ import {
   createId,
   findFieldByName,
   getFieldsFromMeta,
+  getNodeMeta,
   makeDefaultImplicitUINode,
   parseNameConnection,
   toFieldArray,
@@ -163,7 +164,7 @@ export function initEditorState(
 
 export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance {
   const { type, name, phase, position, fields, config } = payload
-  const defaults = getFieldsFromMeta(type)
+  const defaultFields = getFieldsFromMeta(type)
 
   return {
     id: createId('node'),
@@ -173,8 +174,8 @@ export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance
     position: position ?? { x: 0, y: 0 },
     expanded: {},
     fields: {
-      input: toFieldArray(fields?.input ?? defaults.input),
-      output: toFieldArray(fields?.output ?? defaults.output),
+      input: toFieldArray(fields?.input ?? defaultFields.input),
+      output: toFieldArray(fields?.output ?? defaultFields.output),
     },
     config: config ? clone(config) : {},
   }
@@ -195,10 +196,9 @@ export function buildNodeInstance(
   return makeNodeInstance({
     type,
     name: configNode?.name,
-    phase:
-      uiNode?.phase ?? getDefaultPhase(type),
+    phase: uiNode?.phase ?? getDefaultPhase(type),
     position: uiNode?.position,
-    fields: mergeFieldsFromConfigAndUI(configNode, uiNode),
+    fields: resolveFields(type, uiNode),
     config: configNode ? extractConfig(configNode) : undefined,
   })
 }
@@ -263,44 +263,24 @@ export function collectConnectionsFromConfigNode(
   }
 }
 
-function mergeFieldsFromConfigAndUI(
-  configNode?: ConfigNode,
-  uiNode?: UINode,
-): MakeNodeInstancePayload['fields'] | undefined {
-  if (!configNode && !uiNode) return undefined
+/**
+ * Resolve input and output fields for a node instance.
+ * If the node type has configurable IO, use the UI node's fields if provided.
+ * Otherwise, return undefined to fallback to the default fields from metadata.
+ */
+function resolveFields(type: NodeType, uiNode?: UINode): MakeNodeInstancePayload['fields'] | undefined {
+  const meta = getNodeMeta(type)
+  const io = meta?.io
+  if (!io) return undefined
 
-  const inputsFields = new Set<string>()
-  const outputsFields = new Set<string>()
+  const fields: MakeNodeInstancePayload['fields'] = {}
 
-  // Add fields from configNode
-  if (configNode?.inputs) {
-    Object.keys(configNode.inputs).forEach(fieldName => inputsFields.add(fieldName))
+  if (io.input?.configurable) {
+    fields.input = uiNode?.fields?.input ?? []
+  }
+  if (io.output?.configurable) {
+    fields.output = uiNode?.fields?.output ?? []
   }
 
-  if (configNode?.outputs) {
-    Object.keys(configNode.outputs).forEach(fieldName => outputsFields.add(fieldName))
-  }
-
-  // For static node, the output fields are determined by the config values
-  if (configNode?.type === 'static') {
-    if (configNode.values) {
-      Object.keys(configNode.values).forEach(fieldName => outputsFields.add(fieldName))
-    }
-  }
-
-  // Add fields from uiNode
-  if (uiNode?.fields?.input) {
-    uiNode.fields.input.forEach(fieldName => inputsFields.add(fieldName))
-  }
-
-  if (uiNode?.fields?.output) {
-    uiNode.fields.output.forEach(fieldName => outputsFields.add(fieldName))
-  }
-
-  const result: MakeNodeInstancePayload['fields'] = {}
-
-  if (inputsFields.size) result.input = Array.from(inputsFields) as FieldName[]
-  if (outputsFields.size) result.output = Array.from(outputsFields) as FieldName[]
-
-  return Object.keys(result).length ? result : undefined
+  return Object.keys(fields).length ? fields : undefined
 }
