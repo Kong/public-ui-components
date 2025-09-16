@@ -64,7 +64,7 @@
           </div>
           <div
             v-if="itemHasBadge"
-            class="sidebar-item-icon-after"
+            class="sidebar-item-after"
           >
             <slot :name="`sidebar-after-${(item as SidebarPrimaryItem).key}`">
               <ItemBadge :count="(item as SidebarSecondaryItem).badgeCount" />
@@ -390,7 +390,7 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     line-height: 0; // to align icon with the text baseline
   }
 
-  .sidebar-item-icon-after {
+  .sidebar-item-after {
     display: flex;
     margin-left: auto;
   }
