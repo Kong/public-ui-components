@@ -9,7 +9,6 @@
       :fetch-url="fetchUrl"
       :hide-title="hideTitle"
       :record-resolver="recordResolver"
-      @config-format-change="console.log"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
       @fetch:success="handleData"
       @loading="(val: boolean) => $emit('loading', val)"
