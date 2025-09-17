@@ -17,11 +17,11 @@ describe('exploreResultToCountryMetrics', () => {
     expect(exploreResultToCountryMetrics(exploreResult)).toEqual({})
   })
 
-  it('maps iso_code values to metric values', () => {
+  it('maps country_code values to metric values', () => {
     const exploreResult = {
       data: [
-        { event: { iso_code: 'US', requests: 100 } },
-        { event: { iso_code: 'FR', requests: 50 } },
+        { event: { country_code: 'US', requests: 100 } },
+        { event: { country_code: 'FR', requests: 50 } },
       ],
       meta: { metric_names: ['requests'] },
     } as unknown as ExploreResultV4

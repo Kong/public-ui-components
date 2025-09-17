@@ -175,7 +175,7 @@ const dashboardConfig = ref <DashboardConfig>({
         },
         query: {
           datasource: 'api_usage',
-          dimensions: ['iso_code'],
+          dimensions: ['country_code'],
           metrics: ['request_count'],
         },
       },

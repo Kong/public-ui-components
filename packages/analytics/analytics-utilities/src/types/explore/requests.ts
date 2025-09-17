@@ -20,7 +20,6 @@ export const queryableRequestDimensions = [
   'header_host',
   'header_user_agent',
   'http_method',
-  'iso_code',
   'portal',
   'realm',
   'request_id',

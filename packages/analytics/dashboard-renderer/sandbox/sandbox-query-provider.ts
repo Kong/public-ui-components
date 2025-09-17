@@ -24,11 +24,11 @@ const queryFn = async (query: DatasourceAwareQuery): Promise<ExploreResultV4> =>
     )
   }
 
-  if (query.query.dimensions && query.query.dimensions.includes('iso_code')) {
+  if (query.query.dimensions && query.query.dimensions.includes('country_code')) {
     return await delayedResponse(
       generateCrossSectionalData(
         [{ name: 'request_count', unit: 'count' }],
-        { iso_code: ['US', 'GB', 'FR', 'DE', 'RO', 'CN', 'IN', 'BR', 'ZA'] },
+        { country_code: ['US', 'GB', 'FR', 'DE', 'RO', 'CN', 'IN', 'BR', 'ZA'] },
       ),
     )
   }

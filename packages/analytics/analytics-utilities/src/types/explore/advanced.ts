@@ -7,7 +7,6 @@ export const queryableExploreDimensions = [
   'application',
   'consumer',
   'country_code',
-  'iso_code',
   'upstream_status_code',
   'upstream_status_code_grouped',
   'response_source',

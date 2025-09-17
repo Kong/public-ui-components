@@ -73,7 +73,7 @@
     "control_plane": "Control plane",
     "control_plane_group": "Control plane group",
     "consumer": "Consumer",
-    "iso_code": "Country",
+    "country_code": "Country",
     "country": "Country",
     "data_plane_node": "Data plane node",
     "data_plane_node_version": "Data plane node version",
