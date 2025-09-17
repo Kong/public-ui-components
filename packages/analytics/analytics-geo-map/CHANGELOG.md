@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.3.5...@kong-ui-public/analytics-geo-map@1.3.6) (2025-09-17)
+
+
+### Bug Fixes
+
+* require ctrl/cmnd + scroll to zoom the map by default ([#2507](https://github.com/Kong/public-ui-components/issues/2507)) ([4061cfe](https://github.com/Kong/public-ui-components/commit/4061cfeff74c29b10747c7823b29342d706feece))
+
+
+
+
+
 ## [1.3.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.3.4...@kong-ui-public/analytics-geo-map@1.3.5) (2025-09-15)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-geo-map
