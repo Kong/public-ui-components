@@ -32,7 +32,7 @@
       <template #item="{ item }">
         <div class="entity-suggestion-item">
           <span class="entity-label">
-            {{ item.label || '–' }}
+            {{ item.label ?? EMPTY_VALUE_PLACEHOLDER }}
           </span>
           <span class="entity-id">
             {{ item.id }}
@@ -42,7 +42,7 @@
 
       <template #selected-item="{ item }">
         <span class="selected-entity-item">
-          <span class="selected-entity-label">{{ item.label || '–' }}</span>
+          <span class="selected-entity-label">{{ item.label ?? item.id }}</span>
         </span>
       </template>
     </FieldScopedEntitySelect>
@@ -56,7 +56,7 @@ import { SearchIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40, KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import FieldScopedEntitySelect from './FieldScopedEntitySelect.vue'
 import { getFieldState } from '../../utils/autoSuggest'
-import { FORMS_API_KEY, FIELD_STATES } from '../../const'
+import { FORMS_API_KEY, FIELD_STATES, EMPTY_VALUE_PLACEHOLDER } from '../../const'
 import english from '../../locales/en.json'
 
 const requestResultsLimit = 1000
@@ -76,6 +76,7 @@ export default {
       t,
       KUI_ICON_SIZE_40,
       KUI_COLOR_TEXT_NEUTRAL,
+      EMPTY_VALUE_PLACEHOLDER,
     }
   },
 
@@ -183,21 +184,10 @@ export default {
     transformItem(item) {
       return {
         ...item,
+        // This field is for select dropdown item first column.
         label: this.getSuggestionLabel(item),
         value: item.id,
       }
-    },
-
-    dedupeSuggestions(items, filteredIds) {
-      const dedupedItems = []
-      items.forEach((item) => {
-        if (!filteredIds.has(item.id)) {
-          filteredIds.add(item.id)
-          dedupedItems.push(item)
-        }
-      })
-
-      return dedupedItems
     },
 
     getItem(data) {
@@ -230,8 +220,7 @@ export default {
 
     getSuggestionLabel(item) {
       const labelKey = this.schema?.labelField || 'id'
-
-      return (labelKey && item ? item[labelKey] : '') || '–'
+      return labelKey && item ? item[labelKey] : ''
     },
 
     updateModel(value) {
