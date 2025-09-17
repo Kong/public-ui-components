@@ -43,7 +43,8 @@
     },
     "sections": {
       "advanced": "Advanced",
-      "plugin": "Plugin Specific Configuration"
+      "plugin": "Plugin Specific Configuration",
+      "policy": "Policy Specific Configuration"
     },
     "commonFields": {
       "id_label": "ID",
