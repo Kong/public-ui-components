@@ -238,8 +238,6 @@ watch(
     }, 0)
   },
 )
-
-defineExpose({ fitView })
 </script>
 
 <style lang="scss" scoped>

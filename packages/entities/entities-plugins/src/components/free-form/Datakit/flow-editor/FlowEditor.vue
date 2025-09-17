@@ -1,10 +1,7 @@
 <template>
   <div class="dk-flow-editor">
     <div class="flow-panels-container">
-      <FlowPanels
-        ref="flowPanels"
-        readonly
-      />
+      <FlowPanels readonly />
 
       <div class="overlay">
         <KButton
@@ -24,17 +21,17 @@
 </template>
 
 <script setup lang="ts">
-import type { ConfigNode, DatakitConfig, DatakitFormData, DatakitUIData, UINode } from '../types'
-
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExpandIcon } from '@kong/icons'
-import { useTemplateRef, watch } from 'vue'
+import { watch } from 'vue'
 
 import english from '../../../../locales/en.json'
+import { useFormShared } from '../../shared/composables'
 import { provideEditorStore } from '../composables'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
-import { useFormShared } from '../../shared/composables'
+
+import type { ConfigNode, DatakitConfig, DatakitFormData, DatakitUIData, UINode } from '../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -48,8 +45,6 @@ const emit = defineEmits<{
   change: [config: DatakitConfig, uiData: DatakitUIData]
   error: [msg: string]
 }>()
-
-const flowPanels = useTemplateRef('flowPanels')
 
 function onChange(configNodes: ConfigNode[], uiNodes: UINode[]) {
   const nextConfig = { ...formData.config, nodes: configNodes }
@@ -65,13 +60,8 @@ const { modalOpen, setPendingFitView } = provideEditorStore(formData.config?.nod
 })
 
 watch(modalOpen, () => {
-  if (modalOpen.value) {
-    // Schedule a `fitView` for the opened modal.
-    setPendingFitView(true)
-  } else {
-    // Perform another `fitView` on modal close.
-    flowPanels.value?.fitView()
-  }
+  // `fitView` when model is toggled.
+  setPendingFitView(true)
 })
 </script>
 
