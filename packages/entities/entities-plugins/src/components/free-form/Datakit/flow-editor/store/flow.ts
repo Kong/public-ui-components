@@ -256,18 +256,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
     })
 
-    onNodeClick(({ node }) => {
-      // TODO(Makito): Remove these in the future
-      console.debug('[useFlow] onNodeClick', toRaw(node))
-    })
-
-    onEdgeClick(({ edge }) => {
-      // TODO(Makito): Remove these in the future
-      console.debug('[useFlow] onEdgeClick', toRaw(edge))
-    })
-
     async function handleConnect({ source, sourceHandle, target, targetHandle }: Connection) {
-      console.debug('[useFlow] onConnect', { source, sourceHandle, target, targetHandle })
       if (!sourceHandle || !targetHandle) return
 
       const parsedSource = parseHandle(sourceHandle)
