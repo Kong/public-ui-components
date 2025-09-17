@@ -59,13 +59,17 @@ function onChange(configNodes: ConfigNode[], uiNodes: UINode[]) {
   emit('change', nextConfig, nextUIData)
 }
 
-const { modalOpen } = provideEditorStore(formData.config?.nodes ?? [], formData.__ui_data?.nodes ?? [], {
+const { modalOpen, setPendingFitView } = provideEditorStore(formData.config?.nodes ?? [], formData.__ui_data?.nodes ?? [], {
   onChange,
   isEditing,
 })
 
 watch(modalOpen, () => {
-  if (!modalOpen.value) {
+  if (modalOpen.value) {
+    // Schedule a `fitView` for the opened modal.
+    setPendingFitView(true)
+  } else {
+    // Perform another `fitView` on modal close.
     flowPanels.value?.fitView()
   }
 })

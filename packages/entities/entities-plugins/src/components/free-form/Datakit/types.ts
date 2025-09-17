@@ -159,21 +159,16 @@ export interface EdgeInstance extends EdgeData {
 export interface EditorState {
   nodes: NodeInstance[]
   edges: EdgeInstance[]
+
   /**
-   * A hint to indicate if a layout should be scheduled after the state is loaded.
-   *
-   * If set to `false`, no layout will be scheduled.
-   * If set to `true`, an auto-layout will be scheduled and the history will be cleared after layout.
-   * Set to an object to schedule an auto-layout and customize the behavior.
+   * Whether to schedule an `autoLayout` after the current state is rendered.
    */
-  needLayout?: boolean | {
-    /**
-     * Whether to keep the history after the auto-layout.
-     *
-     * @default false
-     */
-    keepHistory?: boolean
-  }
+  pendingLayout?: false | 'clearHistory' | 'keepHistory'
+
+  /**
+   * Whether to schedule a `fitView` after the current state is rendered.
+   */
+  pendingFitView?: boolean
 }
 
 export interface MakeNodeInstancePayload {

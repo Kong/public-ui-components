@@ -30,13 +30,14 @@ import {
  *
  * @param configNodes The config nodes for the functionality
  * @param uiNodes The UI nodes for the layout
- * @param keepHistory Whether to keep the history after the initial layout
+ * @param keepHistoryAfterLayout Whether to keep the history after the layout. This is helpful when
+ *                               loading another config after the initial state.
  * @returns The initial editor state
  */
 export function initEditorState(
   configNodes: ConfigNode[],
   uiNodes: UINode[],
-  keepHistory?: boolean,
+  keepHistoryAfterLayout?: boolean,
 ): EditorState {
   const uiNodesMap = new Map<NodeName, UINode>(
     uiNodes.map((uiNode) => [uiNode.name, uiNode]),
@@ -78,13 +79,13 @@ export function initEditorState(
     }
   }
 
-  let needLayout = false
+  let isUIDataStale = false
 
   // config nodes
   for (const configNode of configNodes) {
     const uiNode = uiNodesMap.get(configNode.name)
-    if (!uiNode && !needLayout) {
-      needLayout = true
+    if (!uiNode && !isUIDataStale) {
+      isUIDataStale = true
     }
     const node = buildNodeInstance(configNode.type, configNode, uiNode)
     nodes.push(node)
@@ -96,8 +97,8 @@ export function initEditorState(
     if (!nodesMap.has(implicitName)) {
       let uiNode = uiNodesMap.get(implicitName)
       if (!uiNode) {
-        if (!needLayout) {
-          needLayout = true
+        if (!isUIDataStale) {
+          isUIDataStale = true
         }
         uiNode = makeDefaultImplicitUINode(implicitName)
       }
@@ -158,7 +159,8 @@ export function initEditorState(
   return {
     nodes,
     edges,
-    needLayout: needLayout && keepHistory ? { keepHistory: true } : needLayout,
+    pendingLayout: !isUIDataStale ? false : keepHistoryAfterLayout ? 'keepHistory' : 'clearHistory',
+    pendingFitView: true,
   }
 }
 

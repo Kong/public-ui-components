@@ -58,9 +58,18 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     const skipValidation = ref(false)
     const invalidConfigNodeIds = ref<Set<NodeId>>(new Set())
 
-    // Should only be called by internal actions instead of user ones.
-    function markAsLayoutCompleted() {
-      state.value.needLayout = false
+    // This is one way because `pendingLayout` should only be set to `true` on init.
+    function clearPendingLayout() {
+      state.value.pendingLayout = false
+      history.commit('*')
+    }
+
+    // Mark the current state as needing a `fitView`. Does not guarantee the immediate execution.
+    function setPendingFitView(isPending = true) {
+      if (state.value.pendingFitView === isPending)
+        return
+
+      state.value.pendingFitView = isPending
       history.commit('*')
     }
 
@@ -621,8 +630,9 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       isValidVueFlowConnection,
       validateGraph: () => validateGraph(),
 
-      // layout helpers
-      markAsLayoutCompleted,
+      // layout & viewport helpers
+      clearPendingLayout,
+      setPendingFitView,
     }
   },
 )

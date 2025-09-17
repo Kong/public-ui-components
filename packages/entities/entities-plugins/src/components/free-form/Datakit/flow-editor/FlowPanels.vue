@@ -93,7 +93,7 @@ const { readonly, resizable } = defineProps<{
 
 const requestInitialized = ref(false)
 const responseInitialized = ref(false)
-const { state, markAsLayoutCompleted, commit, clear } = useEditorStore()
+const { state, clearPendingLayout, setPendingFitView, commit, clear } = useEditorStore()
 
 const uniqueId = useId()
 const requestFlowId = `${uniqueId}-request`
@@ -211,26 +211,30 @@ function fitView() {
 }
 
 watch(
-  [requestInitialized, responseInitialized, () => state.value.needLayout],
-  ([request, response, needLayout]) => {
+  [requestInitialized, responseInitialized, () => state.value.pendingLayout],
+  ([request, response, pendingLayout]) => {
     if (!request || !response)
       return
 
     // Dismiss the flag to avoid reentering
-    if (needLayout)
-      markAsLayoutCompleted()
+    if (pendingLayout)
+      clearPendingLayout()
 
     // Wait for VueFlow internal layout measurements. nextTick does not work here.
     setTimeout(() => {
-      if (needLayout !== false) {
+      if (pendingLayout) {
         requestFlow.value?.autoLayout(false)
         responseFlow.value?.autoLayout(false)
         commit('*')
 
-        if (needLayout === true || !needLayout?.keepHistory)
+        if (pendingLayout === 'clearHistory')
           clear()
       }
-      fitView()
+
+      if (state.value.pendingFitView) {
+        fitView()
+        setPendingFitView(false)
+      }
     }, 0)
   },
 )
