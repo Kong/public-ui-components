@@ -129,8 +129,6 @@ export function initEditorState(
       continue
     }
 
-    // TODO(Makito): Check if the connection is in sync with the layout (UI data) and update the needLayout flag as well
-
     if (!adjacencies.has(connection.source)) {
       adjacencies.set(connection.source, new Set())
     }
