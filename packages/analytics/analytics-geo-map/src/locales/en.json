@@ -31,5 +31,10 @@
     "request_size_p95": "Request size (p95)",
     "request_size_p50": "Request size (p50)",
     "request_size_sum": "Request size (sum)"
+  },
+  "cooperative_gestures": {
+    "windows_zoom_help_text": "Use Ctrl + Scroll to zoom the map",
+    "mac_zoom_help_text": "Use ⌘ + Scroll to zoom the map",
+    "mobile_zoom_help_text": "Use two fingers to zoom the map"
   }
 }

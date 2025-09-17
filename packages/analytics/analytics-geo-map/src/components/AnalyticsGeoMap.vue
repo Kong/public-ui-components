@@ -230,6 +230,12 @@ const mapOptions = computed(() => {
       [-179, -75], // -75 south tip of south america
       [179, 90],
     ],
+    cooperativeGestures: true,
+    locale: {
+      'CooperativeGesturesHandler.WindowsHelpText': i18n.t('cooperative_gestures.windows_zoom_help_text'),
+      'CooperativeGesturesHandler.MacHelpText': i18n.t('cooperative_gestures.mac_zoom_help_text'),
+      'CooperativeGesturesHandler.MobileHelpText': i18n.t('cooperative_gestures.mobile_zoom_help_text'),
+    },
   }
 
   if (bounds) {
