@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.17.6...@kong-ui-public/forms@4.17.7) (2025-09-17)
+
+
+### Bug Fixes
+
+* **forms:** scoped entities selected default value ([#2490](https://github.com/Kong/public-ui-components/issues/2490)) ([7eb817f](https://github.com/Kong/public-ui-components/commit/7eb817f596d406462e8d7a0b6e90015b740ca472))
+
+
+
+
+
 ## [4.17.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.17.5...@kong-ui-public/forms@4.17.6) (2025-09-16)
 
 **Note:** Version bump only for package @kong-ui-public/forms
