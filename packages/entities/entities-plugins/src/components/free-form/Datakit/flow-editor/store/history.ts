@@ -1,7 +1,7 @@
 import { useManualRefHistory } from '@vueuse/core'
 import type { Ref } from 'vue'
 
-type HistoryAction = 'commit' | 'undo' | 'redo' | 'clear' | 'reset'
+type HistoryAction = 'commit' | 'undo' | 'redo' | 'clear' | 'reset' | 'revert'
 
 /** Minimal tagged history. Same tag + replace drops previous snapshot. */
 export function useTaggedHistory<T>(
@@ -21,6 +21,7 @@ export function useTaggedHistory<T>(
     clear: baseClear,
     reset: baseReset,
     undoStack,
+    redoStack,
   } = useManualRefHistory(stateRef, {
     capacity: options?.capacity ?? 200,
     clone: options?.clone,
@@ -89,6 +90,13 @@ export function useTaggedHistory<T>(
     notify('reset')
   }
 
+  function revert() {
+    baseUndo()
+    redoStack.value.shift()
+    lastTag = undefined
+    notify('revert')
+  }
+
   return {
     canUndo,
     canRedo,
@@ -97,5 +105,6 @@ export function useTaggedHistory<T>(
     redo,
     clear,
     reset,
+    revert,
   }
 }

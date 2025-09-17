@@ -43,7 +43,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     connectEdge,
     invalidConfigNodeIds,
     commit,
-    reset,
+    revert,
   } = useEditorStore()
 
   const { i18n: { t } } = useI18n()
@@ -226,14 +226,12 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       ? removedConnections[0][1] === addedConnection[1]
       : false
 
-    if (isReplace) {
-      commit()
-      return
-    }
+    commit()
 
     // No changes that need confirmation
-    if (removedConnections.length === 0)
+    if (isReplace || removedConnections.length === 0) {
       return
+    }
 
     // Confirm the changes, undo if users not confirmed
     const confirmed = await confirm(
@@ -243,7 +241,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     )
 
     if (!confirmed)
-      reset()
+      revert()
   }
 
   /**
@@ -292,19 +290,21 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       getNodeById,
     )
 
-    if (removedInputs.length > 0) {
-      const confirmed = await confirm(
-        t('plugins.free-form.datakit.flow_editor.confirm.message.switch'),
-        [addedConnection],
-        removedInputs,
-      )
-
-      if (!confirmed) {
-        reset()
-        return
-      }
-    }
     commit()
+
+    // No changes that need confirmation
+    if (removedInputs.length === 0)
+      return
+
+    const confirmed = await confirm(
+      t('plugins.free-form.datakit.flow_editor.confirm.message.switch'),
+      [addedConnection],
+      removedInputs,
+    )
+
+    if (!confirmed) {
+      revert()
+    }
   }
 
   const willCreateCycle = (sourceNode: NodeId): boolean => {
