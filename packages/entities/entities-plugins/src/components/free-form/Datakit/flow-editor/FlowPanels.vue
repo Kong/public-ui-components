@@ -211,14 +211,22 @@ function fitView() {
 }
 
 watch(
-  [requestInitialized, responseInitialized, () => state.value.pendingLayout],
-  ([request, response, pendingLayout]) => {
-    if (!request || !response)
+  [requestInitialized, responseInitialized, () => state.value.pendingLayout, () => state.value.pendingFitView],
+  ([requestReady, responseReady, pendingLayout, pendingFitView]) => {
+    // Not ready
+    if (!requestReady || !responseReady)
       return
 
-    // Dismiss the flag to avoid reentering
+    // Nothing to do here
+    if (!pendingLayout && !pendingFitView)
+      return
+
+    // Clear the pending states to avoid reentrance
     if (pendingLayout)
       clearPendingLayout()
+
+    if (pendingFitView)
+      setPendingFitView(false)
 
     // Wait for VueFlow internal layout measurements. nextTick does not work here.
     setTimeout(() => {
@@ -231,9 +239,8 @@ watch(
           clear()
       }
 
-      if (state.value.pendingFitView) {
+      if (pendingFitView) {
         fitView()
-        setPendingFitView(false)
       }
     }, 0)
   },
