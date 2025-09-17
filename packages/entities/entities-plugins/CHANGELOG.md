@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.97.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.8...@kong-ui-public/entities-plugins@9.97.9) (2025-09-17)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - rewrite history ops of confirmation ([#2504](https://github.com/Kong/public-ui-components/issues/2504)) ([d3785f4](https://github.com/Kong/public-ui-components/commit/d3785f4c2c6e9803e4fa181e573837eaf4f6e954))
+
+
+
+
+
 ## [9.97.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.7...@kong-ui-public/entities-plugins@9.97.8) (2025-09-17)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
