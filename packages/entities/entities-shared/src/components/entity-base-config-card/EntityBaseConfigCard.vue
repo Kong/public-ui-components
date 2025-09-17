@@ -537,8 +537,8 @@ const propListTypes = computed((): string[] => {
     types.push('plugin')
   }
 
-  if (propertyLists.value.plugin.length) {
-    types.push('plugin')
+  if (propertyLists.value.policy.length) {
+    types.push('policy')
   }
 
   return types
