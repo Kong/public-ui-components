@@ -18,3 +18,5 @@ export const FIELD_STATES = {
   UPDATE_ENTITY: 'UPDATE_ENTITY',
   SET_REFERRAL_VALUE: 'SET_REFERRAL_VALUE',
 }
+
+export const EMPTY_VALUE_PLACEHOLDER = '—' // em dash

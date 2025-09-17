@@ -1,6 +1,6 @@
 import FieldAutoSuggestV2 from '../FieldAutoSuggestV2.vue'
 import { v4 } from 'uuid'
-import { FORMS_API_KEY } from '../../../const'
+import { FORMS_API_KEY, EMPTY_VALUE_PLACEHOLDER } from '../../../const'
 
 const schema = {
   entity: 'services',
@@ -157,8 +157,9 @@ describe.only('<FieldAutoSuggestV2 />', function() {
         cy.get(`[data-testid="select-item-${defaultGetOneReturn.id}"]`).should('exist')
         cy.clock().then(clock => {
           clock.restore()
+          cy.get(`[data-testid="select-item-${defaultGetOneReturn.id}"] button`).should('include.text', EMPTY_VALUE_PLACEHOLDER)
           cy.get(`[data-testid="select-item-${defaultGetOneReturn.id}"] button`).click()
-          // The selected item without a label field should show the id instead of `–`.
+          // The selected item without a label field should show the id instead of `—`.
           cy.get('.custom-selected-item-wrapper').should('contain.text', defaultGetOneReturn.id)
         })
       })

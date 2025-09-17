@@ -32,7 +32,7 @@
       <template #item="{ item }">
         <div class="entity-suggestion-item">
           <span class="entity-label">
-            {{ item.label ?? LABEL_PLACEHOLDER }}
+            {{ item.label ?? EMPTY_VALUE_PLACEHOLDER }}
           </span>
           <span class="entity-id">
             {{ item.id }}
@@ -56,11 +56,10 @@ import { SearchIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40, KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import FieldScopedEntitySelect from './FieldScopedEntitySelect.vue'
 import { getFieldState } from '../../utils/autoSuggest'
-import { FORMS_API_KEY, FIELD_STATES } from '../../const'
+import { FORMS_API_KEY, FIELD_STATES, EMPTY_VALUE_PLACEHOLDER } from '../../const'
 import english from '../../locales/en.json'
 
 const requestResultsLimit = 1000
-const LABEL_PLACEHOLDER = '-'
 
 export default {
   components: {
@@ -77,7 +76,7 @@ export default {
       t,
       KUI_ICON_SIZE_40,
       KUI_COLOR_TEXT_NEUTRAL,
-      LABEL_PLACEHOLDER,
+      EMPTY_VALUE_PLACEHOLDER,
     }
   },
 
