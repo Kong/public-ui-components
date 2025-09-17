@@ -615,6 +615,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       canRedo: history.canRedo,
       clear: history.clear,
       reset: history.reset,
+      revert: history.revert,
 
       // validation helpers for UI
       isValidConnection,
