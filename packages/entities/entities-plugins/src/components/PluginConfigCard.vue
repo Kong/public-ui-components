@@ -30,6 +30,7 @@
       :hide-title="hideTitle"
       :plugin-config-key="PLUGIN_CONFIG_KEY"
       :plugin-config-schema="pluginConfigSchema"
+      :record-resolver="resolveRecord"
       @fetch:error="(err: any) => $emit('fetch:error', err)"
       @fetch:success="(entity: any) => $emit('fetch:success', entity)"
       @loading="(val: boolean) => $emit('loading', val)"
@@ -146,7 +147,8 @@
 import type { PropType } from 'vue'
 import { computed, ref, onBeforeMount } from 'vue'
 import type { AxiosError } from 'axios'
-import type { KongManagerPluginEntityConfig, KonnectPluginEntityConfig } from '../types'
+import { PluginScope } from '../types'
+import { type KongManagerPluginEntityConfig, type KonnectPluginEntityConfig, type PluginMetaData } from '../types'
 import type {
   ConfigurationSchema,
   PluginConfigurationSchema,
@@ -326,6 +328,33 @@ const pluginConfigSchema = computed((): PluginConfigurationSchema => {
 
   return customSchema
 })
+
+const resolveRecord = (data: Record<string, any>): Record<string, any> => {
+  const scopes: PluginScope[] | undefined = pluginMetaData.pluginMetaData[props.config.pluginType]?.scope
+
+  // Missing `scope` indicates an unknown plugin. We'd better not touch the data.
+  if (!scopes)
+    return data
+
+  return Object.fromEntries(Object.entries(data).filter(([key, value]) => {
+    // If a scoped field is falsy (e.g., empty), and the plugin doesn't support that scope, remove it.
+    // Keeping non-empty scoping fields in case, in the very rare case, we made a mistake in the metadata.
+
+    if (key === 'service' && !value && !scopes.includes(PluginScope.SERVICE))
+      return false
+
+    if (key === 'route' && !value && !scopes.includes(PluginScope.ROUTE))
+      return false
+
+    if (key === 'consumer' && !value && !scopes.includes(PluginScope.CONSUMER))
+      return false
+
+    if (key === 'consumer_group' && !value && !scopes.includes(PluginScope.CONSUMER_GROUP))
+      return false
+
+    return true
+  }))
+}
 
 const { getMessageFromError } = useErrors()
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
