@@ -8,17 +8,17 @@ import type { ConnectionString } from '../modal/ConflictModal.vue'
 import dagre from '@dagrejs/dagre'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
-import { computed, toRaw, toValue, watch } from 'vue'
+import { computed, toValue, watch } from 'vue'
 
 import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
+import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
 import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
 import { useOptionalConfirm } from '../composables/useConflictConfirm'
 import { DEFAULT_LAYOUT_OPTIONS, DEFAULT_VIEWPORT_WIDTH, SCROLL_DURATION } from '../constants'
 import { isImplicitNode } from '../node/node'
 import { useEditorStore } from './store'
-import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -160,9 +160,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       findNode,
       fitView: flowFitView,
       deleteKeyCode,
-      onNodeClick,
       onNodeDragStop,
-      onEdgeClick,
       onConnect,
       onNodesChange,
       onEdgesChange,
@@ -256,18 +254,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
     })
 
-    onNodeClick(({ node }) => {
-      // TODO(Makito): Remove these in the future
-      console.debug('[useFlow] onNodeClick', toRaw(node))
-    })
-
-    onEdgeClick(({ edge }) => {
-      // TODO(Makito): Remove these in the future
-      console.debug('[useFlow] onEdgeClick', toRaw(edge))
-    })
-
     async function handleConnect({ source, sourceHandle, target, targetHandle }: Connection) {
-      console.debug('[useFlow] onConnect', { source, sourceHandle, target, targetHandle })
       if (!sourceHandle || !targetHandle) return
 
       const parsedSource = parseHandle(sourceHandle)

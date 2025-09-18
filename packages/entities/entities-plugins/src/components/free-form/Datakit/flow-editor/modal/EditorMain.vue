@@ -198,9 +198,5 @@ useHotkeys({
   .divider {
     border-right: $kui-border-width-10 solid $kui-color-border;
   }
-
-  .flip {
-    transform: scaleX(-1); // TODO: remove this after switching to `UndoIcon`
-  }
 }
 </style>
