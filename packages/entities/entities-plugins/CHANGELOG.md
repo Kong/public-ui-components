@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.97.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.10...@kong-ui-public/entities-plugins@9.97.11) (2025-09-18)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit incorrect fitView calls on DND and duplicate ([#2503](https://github.com/Kong/public-ui-components/issues/2503)) ([e84ef62](https://github.com/Kong/public-ui-components/commit/e84ef62246049569ad35f400f01c6b72bfd28753))
+
+
+
+
+
 ## [9.97.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.9...@kong-ui-public/entities-plugins@9.97.10) (2025-09-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
