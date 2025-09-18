@@ -14,7 +14,7 @@ import {
   relativeTimeRangeValuesV4,
   requestFilterTypeEmptyV2,
 } from './types'
-import { countryISOA2 } from './types/country-codes'
+import { COUNTRIES } from './types/country-codes'
 
 type FromSchemaWithOptions<T extends JSONSchema> = FromSchema<T, { keepDefaultedPropertiesOptional: true }>
 
@@ -258,7 +258,7 @@ export const choroplethMapSchema = {
     chart_title: chartTitle,
     fit_to_country: {
       type: 'string',
-      enum: countryISOA2,
+      enum: COUNTRIES.map(c => c.code),
     },
     legend: {
       type: 'boolean',
