@@ -344,17 +344,18 @@ const resolveRecord = (data: Record<string, any>): Record<string, any> => {
   return Object.fromEntries(Object.entries(data).filter(([key, value]) => {
     // If a scoped field is falsy (e.g., empty), and the plugin doesn't support that scope, remove it.
     // Keeping non-empty scoping fields in case, in the very rare case, we made a mistake in the metadata.
+    if (value) return true
 
-    if (key === 'service' && !value && !scopes.includes(PluginScope.SERVICE))
+    if (key === 'service' && !scopes.includes(PluginScope.SERVICE))
       return false
 
-    if (key === 'route' && !value && !scopes.includes(PluginScope.ROUTE))
+    if (key === 'route' && !scopes.includes(PluginScope.ROUTE))
       return false
 
-    if (key === 'consumer' && !value && !scopes.includes(PluginScope.CONSUMER))
+    if (key === 'consumer' && !scopes.includes(PluginScope.CONSUMER))
       return false
 
-    if (key === 'consumer_group' && !value && !scopes.includes(PluginScope.CONSUMER_GROUP))
+    if (key === 'consumer_group' && !scopes.includes(PluginScope.CONSUMER_GROUP))
       return false
 
     return true
