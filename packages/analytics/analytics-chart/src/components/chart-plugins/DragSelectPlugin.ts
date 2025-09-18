@@ -83,7 +83,6 @@ export class DragSelectPlugin implements Plugin {
       if (dragInitiated && this._isDragging) {
         this._endX = event.clientX - rect.left
         dispatchEvent('dragSelectMove', chart, this)
-        chart.update()
       }
     }
 
@@ -93,7 +92,6 @@ export class DragSelectPlugin implements Plugin {
       if (dragInitiated && this._isDragging) {
         this._endX = event.clientX - rect.left
         dispatchEvent('dragSelect', chart, this)
-        chart.update()
         dragInitiated = false
         this._isDragging = false
       }

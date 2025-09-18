@@ -51,7 +51,6 @@ export class ThresholdPlugin implements Plugin {
             }
           }
         }
-        chart.draw()
       }
     }
 
