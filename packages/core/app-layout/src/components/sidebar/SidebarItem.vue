@@ -66,9 +66,14 @@
             v-if="itemHasBadge"
             class="sidebar-item-after"
           >
-            <slot :name="`sidebar-after-${(item as SidebarPrimaryItem).key}`">
-              <ItemBadge :count="(item as SidebarSecondaryItem).badgeCount" />
-            </slot>
+            <ItemBadge
+              v-if="(item as SidebarSecondaryItem).badgeCount"
+              :count="(item as SidebarSecondaryItem).badgeCount"
+            />
+            <slot
+              v-else
+              :name="`sidebar-after-${(item as SidebarPrimaryItem).key}`"
+            />
           </div>
         </div>
       </a>
