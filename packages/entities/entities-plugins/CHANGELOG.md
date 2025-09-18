@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.97.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.12...@kong-ui-public/entities-plugins@9.97.13) (2025-09-18)
+
+
+### Bug Fixes
+
+* **entities-plugins:** remove unsupported scoping fields in detail view ([#2511](https://github.com/Kong/public-ui-components/issues/2511)) ([5e8917d](https://github.com/Kong/public-ui-components/commit/5e8917d64c1c49a7c7d9cd8c6426440c4d2b515b))
+
+
+
+
+
 ## [9.97.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.97.11...@kong-ui-public/entities-plugins@9.97.12) (2025-09-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
