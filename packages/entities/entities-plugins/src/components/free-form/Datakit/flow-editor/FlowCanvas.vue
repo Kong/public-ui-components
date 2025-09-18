@@ -203,12 +203,21 @@ type Control = {
   disabled?: boolean
 }
 
-const controls = computed<Control[]>(() => mode === 'preview' ? [] : [
-  { name: 'zoom_in', icon: AddIcon, action: zoomIn, disabled: viewport.value.zoom >= maxZoom.value },
-  { name: 'zoom_out', icon: RemoveIcon, action: zoomOut, disabled: viewport.value.zoom <= minZoom.value },
-  { name: 'fit_view', icon: FullscreenIcon, action: fitView },
-  ...(mode === 'edit' ? [{ name: 'auto_layout' as const, icon: AutoLayoutIcon, action: onClickAutoLayout }] : []),
-])
+const controls = computed<Control[]>(() => {
+  if (mode === 'preview') return []
+
+  const result: Control[] = [
+    { name: 'zoom_in', icon: AddIcon, action: zoomIn, disabled: viewport.value.zoom >= maxZoom.value },
+    { name: 'zoom_out', icon: RemoveIcon, action: zoomOut, disabled: viewport.value.zoom <= minZoom.value },
+    { name: 'fit_view', icon: FullscreenIcon, action: fitView },
+  ]
+
+  if (mode === 'edit') {
+    result.push({ name: 'auto_layout', icon: AutoLayoutIcon, action: onClickAutoLayout })
+  }
+
+  return result
+})
 
 // Check if the dragged node is valid to drop
 if (phase === 'response' && mode === 'edit') {
