@@ -10,7 +10,7 @@ export const exploreResultToCountryMetrics = (exploreResult: ExploreResultV4): R
 
   if (data) {
     for (const row of data) {
-      const countryKey = row?.event?.iso_code
+      const countryKey = row?.event?.country_code
       const metricKey = exploreResult.meta.metric_names?.[0]
 
       if (countryKey) {
