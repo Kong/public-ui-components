@@ -41,7 +41,6 @@
           :text="t(`plugins.free-form.datakit.flow_editor.actions.${control.name}`)"
         >
           <ControlButton
-            class="custom"
             :disabled="control.disabled"
             @click.stop="control.action"
           >
@@ -72,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { AddIcon, AutoLayoutIcon, RemoveIcon } from '@kong/icons'
+import { AddIcon, AutoLayoutIcon, RemoveIcon, FullscreenIcon } from '@kong/icons'
 import { KTooltip } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
@@ -84,7 +83,6 @@ import useI18n from '../../../../composables/useI18n'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { useHotkeys } from './composables/useHotkeys'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
-import FitIcon from './icons/FitIcon.vue'
 import FlowNode from './node/FlowNode.vue'
 import { provideFlowStore } from './store/flow'
 
@@ -202,7 +200,7 @@ type Control = {
 const controls = computed<Control[]>(() => [
   { name: 'zoom_in', icon: AddIcon, action: zoomIn, disabled: viewport.value.zoom >= maxZoom.value },
   { name: 'zoom_out', icon: RemoveIcon, action: zoomOut, disabled: viewport.value.zoom <= minZoom.value },
-  { name: 'fit_view', icon: FitIcon, action: fitView },
+  { name: 'fit_view', icon: FullscreenIcon, action: fitView },
   { name: 'auto_layout', icon: AutoLayoutIcon, action: onClickAutoLayout },
 ])
 
@@ -268,12 +266,9 @@ defineExpose({ autoLayout, fitView })
       // Ensure it works in both the sandbox and host apps
       box-sizing: content-box;
 
-      // TODO(Makito): Maybe remove this as soon as we find a better icon
-      &.custom {
-        svg {
-          max-height: unset;
-          max-width: unset;
-        }
+      svg {
+        max-height: unset;
+        max-width: unset;
       }
     }
 

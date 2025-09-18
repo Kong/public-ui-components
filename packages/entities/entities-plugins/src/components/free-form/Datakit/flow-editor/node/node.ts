@@ -18,11 +18,11 @@ import {
   NetworkIcon,
   StackIcon,
   VitalsIcon,
+  ArrowSplitIcon,
+  CachedIcon,
 } from '@kong/icons'
 import english from '../../../../../locales/en.json'
 import { CONFIG_NODE_TYPES } from '../../constants'
-import BranchIcon from '../icons/BranchIcon.vue'
-import CachedIcon from '../icons/CachedIcon.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -121,7 +121,7 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     type: 'branch',
     summary: getNodeTypeSummary('branch'),
     description: getNodeTypeDescription('branch'),
-    icon: BranchIcon,
+    icon: ArrowSplitIcon,
   },
   cache: {
     type: 'cache',
