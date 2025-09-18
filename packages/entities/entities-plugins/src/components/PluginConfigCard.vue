@@ -144,30 +144,35 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount } from 'vue'
-import type { AxiosError } from 'axios'
+import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
+import {
+  ConfigurationSchemaSection,
+  ConfigurationSchemaType,
+  EntityBaseConfigCard,
+  InternalLinkItem,
+  SupportedEntityType,
+  useAxios,
+  useErrors,
+  useHelpers,
+  useSchemaProvider,
+} from '@kong-ui-public/entities-shared'
+import { computed, onBeforeMount, ref } from 'vue'
+
+import composables from '../composables'
+import endpoints from '../plugins-endpoints'
 import { PluginScope } from '../types'
-import { type KongManagerPluginEntityConfig, type KonnectPluginEntityConfig, type PluginMetaData } from '../types'
+
+import '@kong-ui-public/entities-shared/dist/style.css'
+
 import type {
   ConfigurationSchema,
   PluginConfigurationSchema,
 } from '@kong-ui-public/entities-shared'
-import {
-  EntityBaseConfigCard,
-  ConfigurationSchemaType,
-  ConfigurationSchemaSection,
-  InternalLinkItem,
-  useAxios,
-  useErrors,
-  useHelpers,
-  SupportedEntityType,
-} from '@kong-ui-public/entities-shared'
-import composables from '../composables'
-import { useSchemaProvider } from '@kong-ui-public/entities-shared'
-import endpoints from '../plugins-endpoints'
-import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
-import '@kong-ui-public/entities-shared/dist/style.css'
+import type { AxiosError } from 'axios'
+import type { PropType } from 'vue'
+
+import type { KongManagerPluginEntityConfig, KonnectPluginEntityConfig } from '../types'
+
 
 const PLUGIN_CONFIG_KEY = 'config'
 
