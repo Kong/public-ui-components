@@ -1,4 +1,11 @@
-import type { ExploreResultV4, AnalyticsExploreRecord } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { Ref } from 'vue'
+import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
+
+import { computed } from 'vue'
+import { isNullOrUndef } from 'chart.js/helpers'
+import { parseISO } from 'date-fns'
+import { getCountryName } from '@kong-ui-public/analytics-utilities'
 import {
   defaultLineOptions,
   datavisPalette,
@@ -6,11 +13,6 @@ import {
   NO_BORDER,
   determineBaseColor,
 } from '../utils'
-import type { Ref } from 'vue'
-import { computed } from 'vue'
-import type { Dataset, KChartData, ExploreToDatasetDeps, DatasetLabel } from '../types'
-import { parseISO } from 'date-fns'
-import { isNullOrUndef } from 'chart.js/helpers'
 import composables from '../composables'
 
 const range = (start: number, stop: number, step: number = 1): number[] =>
@@ -70,10 +72,13 @@ export default function useExploreResultToTimeDataset(
       if (exploreResult.value && 'meta' in exploreResult.value && 'data' in exploreResult.value) {
         const records = exploreResult.value.data as AnalyticsExploreRecord[]
         const { display, metric_names: metricNames, start_ms: startMs, end_ms: endMs } = exploreResult.value.meta
+
         if (!metricNames) {
           console.error('Cannot build chart data from this explore result. Missing metric names.')
+
           return { datasets: [] }
         }
+
         const dimensionFieldNames = (display && Object.keys(display)) || metricNames
 
         // Time based datasets can only display one "dimension"
@@ -81,7 +86,15 @@ export default function useExploreResultToTimeDataset(
         // are provided, then the metric is the primary dimension
         const dimension = (dimensionFieldNames && dimensionFieldNames[0])
         const dimensionDisplay = display[dimension]
-        const datasetLabels: DatasetLabel[] = (display && dimensionDisplay && Object.keys(dimensionDisplay).map(id => ({ id, name: dimensionDisplay[id].name }))) || metricNames.map(name => ({ id: name, name }))
+        let datasetLabels: DatasetLabel[] = (display && dimensionDisplay && Object.keys(dimensionDisplay).map(id => ({ id, name: dimensionDisplay[id].name }))) || metricNames.map(name => ({ id: name, name }))
+
+        // If the dimension is a country_code, get the country's display name
+        if (dimension === 'country_code') {
+          datasetLabels = datasetLabels.map(label => ({
+            ...label,
+            name: getCountryName(label.id as CountryISOA2) || label.name,
+          }))
+        }
 
         // Bail out early if we can't handle the value of `step`.
         // Not sure when this happens, but it seems to at times in production.
