@@ -198,7 +198,14 @@ const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
 
 const { getKey } = useItemKeys('ff-array-field', realItems)
 
-const ListTag = computed(() => props.appearance === 'card' ? KCard : 'div')
+const isRecordArray = computed(() => subSchema.value.type === 'record')
+const appearance = computed(() => {
+  if (props.appearance) return props.appearance
+  if (isRecordArray.value) return 'card'
+  return 'default'
+})
+
+const ListTag = computed(() => appearance.value === 'card' ? KCard : 'div')
 
 function getTabTitle(item: T, index: number) {
   return typeof props.itemLabel === 'function'
@@ -227,7 +234,7 @@ const addItem = async () => {
   fieldValue!.value.push(defaultItemValue)
   emit('add')
 
-  if (props.appearance === 'tabs') {
+  if (appearance.value === 'tabs') {
     await nextTick()
     activeTab.value = tabs.value[tabs.value.length - 1]?.hash
   }
@@ -242,7 +249,7 @@ const removeItem = async (index: number) => {
   }
   emit('remove', index)
 
-  if (props.appearance === 'tabs') {
+  if (appearance.value === 'tabs') {
     activeTab.value = tabs.value[Math.max(0, index - 1)]?.hash
   }
 }
@@ -261,8 +268,8 @@ function focus(index: number) {
 }
 
 const stickyTop = computed(() => {
-  const { appearance, stickyTabs } = props
-  if (appearance !== 'tabs' || stickyTabs == null || stickyTabs === false) {
+  const { stickyTabs } = props
+  if (appearance.value !== 'tabs' || stickyTabs == null || stickyTabs === false) {
     return null
   }
 
