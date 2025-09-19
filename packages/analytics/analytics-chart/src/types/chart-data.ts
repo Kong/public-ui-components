@@ -167,3 +167,12 @@ export interface TopNTableRecord {
   deleted: boolean
   dimension: string
 }
+
+export interface SparklineDataset {
+  color?: string
+  /**
+   * Must be unique for each dataset
+   */
+  label: string
+  timestamps: number[]
+}
