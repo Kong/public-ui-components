@@ -91,6 +91,12 @@
                     <template #[`sidebar-icon-${item.key}`]>
                       <slot :name="`sidebar-icon-${(item as SidebarPrimaryItem).key}`" />
                     </template>
+                    <template
+                      v-if="$slots[`sidebar-after-${item.key}`]"
+                      #[`sidebar-after-${item.key}`]
+                    >
+                      <slot :name="`sidebar-after-${(item as SidebarPrimaryItem).key}`" />
+                    </template>
                   </SidebarItem>
                 </ul>
               </KCollapse>

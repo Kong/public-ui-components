@@ -22,7 +22,7 @@
       >
         <div
           class="sidebar-item-display"
-          :class="{ 'has-label': !!(item as SidebarPrimaryItem).label && (item as SidebarPrimaryItem).expanded, 'has-badge': itemHasBadge }"
+          :class="{ 'has-label': !!(item as SidebarPrimaryItem).label && (item as SidebarPrimaryItem).expanded, 'has-after-content': itemHasAfterContent }"
         >
           <div
             v-if="$slots[`sidebar-icon-${(item as SidebarPrimaryItem).key}`]"
@@ -35,9 +35,9 @@
           </div>
           <div class="sidebar-item-name-container">
             <div
-              v-if="subnavItem && !itemHasBadge ? item.name.length < 25 : item.name.length < 18"
+              v-if="subnavItem && !itemHasAfterContent ? item.name.length < 25 : item.name.length < 18"
               class="sidebar-item-name truncate-text"
-              :class="[subnavItem ? 'has-badge-max-width truncate-24' : 'truncate-17']"
+              :class="[subnavItem ? 'has-after-content-max-width truncate-24' : 'truncate-17']"
             >
               {{ item.name }}
             </div>
@@ -51,7 +51,7 @@
               <div class="sidebar-item-name has-tooltip">
                 <span
                   class="truncate-text"
-                  :class="[subnavItem ? 'truncate-18' : 'truncate-17', { 'has-badge-max-width': itemHasBadge }]"
+                  :class="[subnavItem ? 'truncate-18' : 'truncate-17', { 'has-after-content-max-width': itemHasAfterContent }]"
                 >{{ item.name }}</span>
               </div>
             </KTooltip>
@@ -62,10 +62,19 @@
               {{ (item as SidebarPrimaryItem).label }}
             </div>
           </div>
-          <ItemBadge
-            v-if="itemHasBadge"
-            :count="(item as SidebarSecondaryItem).badgeCount"
-          />
+          <div
+            v-if="itemHasAfterContent"
+            class="sidebar-item-after"
+          >
+            <ItemBadge
+              v-if="(item as SidebarSecondaryItem).badgeCount"
+              :count="(item as SidebarSecondaryItem).badgeCount"
+            />
+            <slot
+              v-else
+              :name="`sidebar-after-${(item as SidebarPrimaryItem).key}`"
+            />
+          </div>
         </div>
       </a>
     </component>
@@ -87,7 +96,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 import type { SidebarPrimaryItem, SidebarSecondaryItem } from '../../types'
 import ItemBadge from './ItemBadge.vue'
 
@@ -104,6 +113,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const slots = useSlots()
 
 // Force anchor tag if `item.newWindow` is true, or `item.to` starts with `http`
 const useAnchorTag = computed((): boolean => {
@@ -123,7 +134,12 @@ const openInNewWindow = computed((): boolean => {
   return props.item.newWindow && (props.item.to.startsWith('http') || props.item.to.startsWith('/'))
 })
 
-const itemHasBadge = computed((): boolean => props.subnavItem && (props.item as SidebarSecondaryItem).badgeCount !== undefined && (props.item as SidebarSecondaryItem).badgeCount !== 0)
+const itemHasAfterContent = computed((): boolean => props.subnavItem &&
+  // item has non-zero badgeCount OR
+  ((props.item as SidebarSecondaryItem).badgeCount !== undefined && (props.item as SidebarSecondaryItem).badgeCount !== 0) ||
+  // slot content for the badge
+  !!slots[`sidebar-after-${(props.item as SidebarPrimaryItem).key}`],
+)
 
 const itemClick = (item: SidebarPrimaryItem | SidebarSecondaryItem): void => {
   emit('click', item)
@@ -259,10 +275,17 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     border-radius: $sidebar-item-border-radius;
 
     > .sidebar-item-display {
-
       &.has-label {
         padding-bottom: $kui-space-50;
         padding-top: $kui-space-50;
+      }
+
+      &.has-after-content {
+        justify-content: space-between; // for badges
+
+        .has-after-content-max-width {
+          max-width: 134px !important;
+        }
       }
     }
   }
@@ -290,10 +313,10 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     transition: all .1s ease-in-out !important;
 
     > .sidebar-item-display {
-      &.has-badge {
+      &.has-after-content {
         justify-content: space-between; // for badges
 
-        .has-badge-max-width {
+        .has-after-content-max-width {
           max-width: 134px !important;
         }
       }
@@ -370,6 +393,11 @@ const navigate = (event: Event, item: SidebarPrimaryItem | SidebarSecondaryItem,
     align-items: center;
     display: flex;
     line-height: 0; // to align icon with the text baseline
+  }
+
+  .sidebar-item-after {
+    display: flex;
+    margin-left: auto;
   }
 }
 </style>
