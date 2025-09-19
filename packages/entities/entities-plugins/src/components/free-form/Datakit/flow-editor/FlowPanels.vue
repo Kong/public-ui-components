@@ -86,7 +86,11 @@ import FlowCanvas from './FlowCanvas.vue'
 
 import type { EdgeChange, NodeChange, VueFlowStore } from '@vue-flow/core'
 
-const { readonly, resizable } = defineProps<{
+const { inactive, readonly, resizable } = defineProps<{
+  /**
+   * Whether current component is inactive (e.g. covered by modal).
+   */
+  inactive?: boolean
   readonly?: boolean
   resizable?: boolean
 }>()
@@ -213,6 +217,10 @@ function fitView() {
 watch(
   [requestInitialized, responseInitialized, () => state.value.pendingLayout, () => state.value.pendingFitView],
   ([requestReady, responseReady, pendingLayout, pendingFitView]) => {
+    // If current component is inactive (e.g. covered by modal), do nothing
+    // Note: `inactive` does not trigger this watcher. Update this BEFORE updating sources that trigger this watcher.
+    if (inactive) return
+
     // Not ready
     if (!requestReady || !responseReady)
       return
@@ -239,9 +247,8 @@ watch(
           clear()
       }
 
-      if (pendingFitView) {
+      if (pendingFitView)
         fitView()
-      }
     }, 0)
   },
 )
