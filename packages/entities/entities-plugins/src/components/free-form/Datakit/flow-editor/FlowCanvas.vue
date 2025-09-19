@@ -6,19 +6,19 @@
     <VueFlow
       :id="flowId"
       class="flow"
-      :class="{ readonly }"
+      :class="{ readonly: mode !== 'edit' }"
       :connect-on-click="false"
-      :elements-selectable="!readonly"
+      :elements-selectable="mode === 'edit'"
       :max-zoom="MAX_ZOOM_LEVEL"
       :min-zoom="MIN_ZOOM_LEVEL"
       :multi-selection-key-code="null"
-      :nodes-connectable="!readonly"
-      :nodes-draggable="!readonly"
-      :pan-on-drag="readonly ? false : undefined"
-      :pan-on-scroll="readonly ? false : undefined"
-      :zoom-on-double-click="readonly ? false : undefined"
-      :zoom-on-pinch="readonly ? false : undefined"
-      :zoom-on-scroll="readonly ? false : undefined"
+      :nodes-connectable="mode === 'edit'"
+      :nodes-draggable="mode === 'edit'"
+      :pan-on-drag="mode === 'preview' ? false : undefined"
+      :pan-on-scroll="mode !== 'edit' ? false : undefined"
+      :zoom-on-double-click="mode !== 'edit' ? false : undefined"
+      :zoom-on-pinch="mode !== 'edit' ? false : undefined"
+      :zoom-on-scroll="mode !== 'edit' ? false : undefined"
       @dragover="onDragOver"
       @drop="onDrop"
       @node-click="onNodeClick"
@@ -27,7 +27,6 @@
     >
       <Background />
       <Controls
-        v-if="!readonly"
         :fit-view-params="fitViewParams"
         position="bottom-left"
         :show-fit-view="false"
@@ -57,6 +56,7 @@
         <FlowNode
           :data="node.data"
           :error="invalidConfigNodeIds.has(node.data.id)"
+          :readonly="mode !== 'edit'"
         />
       </template>
     </VueFlow>
@@ -94,10 +94,16 @@ import type { Component } from 'vue'
 
 import type { DragPayload, NodePhase } from '../types'
 
-const { flowId, phase, readonly } = defineProps<{
+const { flowId, phase, mode } = defineProps<{
   flowId: string
   phase: NodePhase
-  readonly?: boolean
+  /**
+   * Mode of the flow editor
+   * - edit: Flow editor page
+   * - view: Config detail page
+   * - preview: Plugin edit page preview
+   */
+  mode: 'edit' | 'view' | 'preview'
 }>()
 
 const emit = defineEmits<{
@@ -127,7 +133,7 @@ const {
       height: flowCanvasRect.height,
     },
   },
-  readonly,
+  readonly: mode !== 'edit',
 })
 
 const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode } = editorStore
@@ -136,18 +142,18 @@ const { project, vueFlowRef, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vue
 const disableDrop = ref(false)
 
 function onNodeClick() {
-  if (readonly) return
+  if (mode !== 'edit') return
   propertiesPanelOpen.value = true
 }
 
 function onDragOver(e: DragEvent) {
-  if (readonly || disableDrop.value) return
+  if (mode !== 'edit' || disableDrop.value) return
 
   e.preventDefault()
 }
 
 function onDrop(e: DragEvent) {
-  if (readonly || disableDrop.value) return
+  if (mode !== 'edit' || disableDrop.value) return
 
   const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
   if (!data) return
@@ -197,15 +203,24 @@ type Control = {
   disabled?: boolean
 }
 
-const controls = computed<Control[]>(() => [
-  { name: 'zoom_in', icon: AddIcon, action: zoomIn, disabled: viewport.value.zoom >= maxZoom.value },
-  { name: 'zoom_out', icon: RemoveIcon, action: zoomOut, disabled: viewport.value.zoom <= minZoom.value },
-  { name: 'fit_view', icon: FullscreenIcon, action: fitView },
-  { name: 'auto_layout', icon: AutoLayoutIcon, action: onClickAutoLayout },
-])
+const controls = computed<Control[]>(() => {
+  if (mode === 'preview') return []
+
+  const result: Control[] = [
+    { name: 'zoom_in', icon: AddIcon, action: zoomIn, disabled: viewport.value.zoom >= maxZoom.value },
+    { name: 'zoom_out', icon: RemoveIcon, action: zoomOut, disabled: viewport.value.zoom <= minZoom.value },
+    { name: 'fit_view', icon: FullscreenIcon, action: fitView },
+  ]
+
+  if (mode === 'edit') {
+    result.push({ name: 'auto_layout', icon: AutoLayoutIcon, action: onClickAutoLayout })
+  }
+
+  return result
+})
 
 // Check if the dragged node is valid to drop
-if (phase === 'response' && !readonly) {
+if (phase === 'response' && mode === 'edit') {
   useEventListener('dragstart', (e: DragEvent) => {
     const format = e.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
     if (!format) return
@@ -235,7 +250,7 @@ if (phase === 'response' && !readonly) {
 
 async function duplicate() {
   const node = selectedNode.value
-  if (readonly || !node || node.phase !== phase) return
+  if (mode !== 'edit' || !node || node.phase !== phase) return
 
   const nodeId = duplicateNode(node.id, placeToRight(node.id))
 
@@ -247,7 +262,7 @@ async function duplicate() {
 }
 
 useHotkeys({
-  enabled: computed(() => !!selectedNode.value && !readonly && selectedNode.value.phase === phase),
+  enabled: computed(() => !!selectedNode.value && mode === 'edit' && selectedNode.value.phase === phase),
   duplicate,
 })
 

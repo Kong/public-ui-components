@@ -28,8 +28,8 @@
       <FlowCanvas
         ref="requestFlow"
         :flow-id="requestFlowId"
+        :mode="mode"
         phase="request"
-        :readonly="readonly"
         @initialized="requestInitialized = true"
         @nodes-change="requestInitialized = false"
       />
@@ -66,8 +66,8 @@
       <FlowCanvas
         ref="responseFlow"
         :flow-id="responseFlowId"
+        :mode="mode"
         phase="response"
-        :readonly="readonly"
         @initialized="responseInitialized = true"
         @nodes-change="responseInitialized = false"
       />
@@ -86,9 +86,15 @@ import FlowCanvas from './FlowCanvas.vue'
 
 import type { EdgeChange, NodeChange, VueFlowStore } from '@vue-flow/core'
 
-const { readonly, resizable } = defineProps<{
-  readonly?: boolean
+const { mode, resizable } = defineProps<{
   resizable?: boolean
+  /**
+   * Mode of the flow editor
+   * - edit: Flow editor page
+   * - view: Config detail page
+   * - preview: Plugin edit page preview
+   */
+  mode: 'edit' | 'view' | 'preview'
 }>()
 
 const requestInitialized = ref(false)

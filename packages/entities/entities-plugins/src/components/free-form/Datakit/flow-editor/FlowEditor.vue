@@ -1,7 +1,7 @@
 <template>
   <div class="dk-flow-editor">
     <div class="flow-panels-container">
-      <FlowPanels readonly />
+      <FlowPanels mode="preview" />
 
       <div class="overlay">
         <KButton

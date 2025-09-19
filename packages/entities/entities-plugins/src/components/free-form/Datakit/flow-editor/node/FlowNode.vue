@@ -4,6 +4,7 @@
     :class="{
       reversed: isReversed,
       implicit: isImplicit,
+      readonly,
     }"
     @mousedown="closeMenu"
   >
@@ -247,6 +248,7 @@ import { isEqual } from 'lodash-es'
 const { data } = defineProps<{
   data: NodeInstance
   error?: boolean
+  readonly?: boolean
 }>()
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -389,6 +391,12 @@ $io-column-min-width-no-fields: 70px;
   max-width: $node-max-width;
   min-width: $node-min-width;
   padding: $kui-space-40 0;
+
+  &.readonly {
+    .menu {
+      visibility: hidden;
+    }
+  }
 
   .body {
     align-items: flex-start;

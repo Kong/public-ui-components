@@ -89,12 +89,12 @@
         <template
           v-for="slotKey in Object.keys($slots)"
           :key="slotKey"
-          #[slotKey]="{ row, rowValue }"
+          #[slotKey]="slotProps"
         >
           <slot
             :name="slotKey"
-            :row="row"
-            :row-value="rowValue"
+            :record="record"
+            v-bind="slotProps"
           />
         </template>
       </ConfigCardDisplay>
@@ -361,6 +361,7 @@ const orderedRecordArray = computed((): RecordItem[] => {
   const sortableKeys = []
   const fieldCount = Object.keys(record.value).length
   for (const key in record.value) {
+    if (key === '__ui_data') continue // skip ui_data
     const configOrder = props.configSchema?.[key]?.order
     const defaultConfigOrder = DEFAULT_BASIC_FIELDS_CONFIGURATION[key as keyof DefaultCommonFieldsConfigurationSchema]?.order
     // if no order provided, default to end of list

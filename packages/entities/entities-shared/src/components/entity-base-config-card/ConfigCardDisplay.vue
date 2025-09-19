@@ -16,34 +16,37 @@
         {{ pType === 'advanced' ? t('baseConfigCard.sections.advanced') : t('baseConfigCard.sections.plugin') }}
       </div>
 
-      <ConfigCardItem
+      <slot
         v-for="propertyItem in propertyCollections[pType as keyof typeof propertyCollections]"
         :key="propertyItem.key"
         :item="propertyItem"
+        :name="`config-card-item-${propertyItem.key}`"
       >
-        <template #label>
-          <slot
-            :name="`${propertyItem.key}-label`"
-            :row="propertyItem"
-          />
-        </template>
-        <template
-          v-if="hasTooltip(propertyItem)"
-          #label-tooltip
-        >
-          <slot
-            :name="`${propertyItem.key}-label-tooltip`"
-            :row="propertyItem"
-          />
-        </template>
-        <template #[propertyItem.key]="{ rowValue }">
-          <slot
-            :name="propertyItem.key"
-            :row="propertyItem"
-            :row-value="rowValue"
-          />
-        </template>
-      </ConfigCardItem>
+        <ConfigCardItem :item="propertyItem">
+          <template #label>
+            <slot
+              :name="`${propertyItem.key}-label`"
+              :row="propertyItem"
+            />
+          </template>
+          <template
+            v-if="hasTooltip(propertyItem)"
+            #label-tooltip
+          >
+            <slot
+              :name="`${propertyItem.key}-label-tooltip`"
+              :row="propertyItem"
+            />
+          </template>
+          <template #[propertyItem.key]="{ rowValue }">
+            <slot
+              :name="propertyItem.key"
+              :row="propertyItem"
+              :row-value="rowValue"
+            />
+          </template>
+        </ConfigCardItem>
+      </slot>
     </div>
   </div>
 
@@ -51,7 +54,7 @@
     v-if="format === 'json' && entityRecord"
     :config="props.config"
     :entity-record="entityRecord"
-    :fetcher-url="props.fetcherUrl"
+    :fetcher-url="fetchUrlJsonBlock"
     request-method="get"
   />
   <YamlCodeBlock
@@ -152,6 +155,11 @@ const entityRecord = computed((): PropType<Record<string, any>> => {
   delete processedRecord.created_at
   delete processedRecord.updated_at
   return processedRecord
+})
+
+const fetchUrlJsonBlock = computed(() => {
+  return props.fetcherUrl
+    .replace(/(\?|&)__ui_data=true/, '')
 })
 </script>
 
