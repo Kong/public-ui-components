@@ -71,6 +71,7 @@ export enum ConfigurationSchemaSection {
   Basic = 'basic',
   Advanced = 'advanced', // default
   Plugin = 'plugin',
+  Policy = 'policy',
 }
 
 export interface ConfigurationSchemaItem {
@@ -98,6 +99,8 @@ export interface PluginConfigurationSchemaItem extends Omit<ConfigurationSchemaI
 export interface PluginConfigurationSchema {
   [key: string]: PluginConfigurationSchemaItem
 }
+
+export interface PolicyConfigurationSchema extends PluginConfigurationSchema {}
 
 export interface RecordItem extends ConfigurationSchemaItem {
   key: string
