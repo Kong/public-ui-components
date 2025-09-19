@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.8.1...@kong-ui-public/app-layout@4.9.0) (2025-09-19)
+
+
+### Features
+
+* **sidebar:** add badge slot [khcp-17791] ([#2501](https://github.com/Kong/public-ui-components/issues/2501)) ([3d591d3](https://github.com/Kong/public-ui-components/commit/3d591d3f87ce3a3293616ef673ce286693714185))
+
+
+
+
+
 ## [4.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.8.0...@kong-ui-public/app-layout@4.8.1) (2025-09-18)
 
 **Note:** Version bump only for package @kong-ui-public/app-layout
