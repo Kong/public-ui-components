@@ -23,11 +23,13 @@
           <template #sparkline="{ row }">
             <SparklineChart
               :datasets="row.sparkline"
+              :disable-tooltip="disableTooltip"
               :max-count="maxValue"
               :max-stamp="now"
               :min-stamp="minimumDate"
               :point-render-count="pointRenderCount"
               :show-label="showLabel"
+              :tooltip-title="setTitle ? row.name : ''"
               :type="row.type ?? getType(row.sparkline[0].timestamps[0]) as any"
               @max="(val) => onMax(val, row.name)"
             />
@@ -39,13 +41,24 @@
         <div class="controls">
           <h3>Sparkline settings</h3>
           <KInputSwitch
+            v-model="disableTooltip"
+            :label="disableTooltip ? 'Tooltip disabled' : 'Tooltip on hover (default)'"
+          />
+
+          <KInputSwitch
+            v-model="setTitle"
+            :disabled="disableTooltip"
+            :label="setTitle ? 'Tooltip title is set' : 'Tooltip title not set (default)'"
+          />
+
+          <KInputSwitch
             v-model="showLabel"
             :label="showLabel ? 'Label visible' : 'Label hidden (default)'"
           />
 
           <KInputSwitch
             v-model="useColor"
-            :label="useColor ? 'Using custom colors' : 'Using default colors'"
+            :label="useColor ? 'Use custom colors' : 'Colors not set (default)'"
           />
 
           <KSelect
@@ -140,7 +153,9 @@ const onMax = (max: number, key: string) => {
 
 // sparkline settings
 const pointRenderCount = ref<number>(30)
+const disableTooltip = ref(false)
 const showLabel = ref(false)
+const setTitle = ref(false)
 const useColor = ref(false)
 const type = ref('random')
 const getType = (randomKey?: number): string => {
@@ -191,11 +206,12 @@ const generateRandomData = () => {
   return data // unsorted
 }
 
-const generateRandomDatasets = () => {
+
+const generateRandomDatasets = (labels: string[]) => {
   const generatedDatasets = []
   for (let i = 0; i < datasetCount.value; i++) {
     const timestamps = generateRandomData()
-    const label = timestamps[0]?.toString(36) ?? ''
+    const label = labels[i]
     const color = lookupDatavisColor(i)
 
     generatedDatasets.push({
@@ -224,24 +240,32 @@ const fetcherCacheKey = computed<string>(() => {
   return `key-${skipChance.value}-${pointsPerHour.value}-${hours.value}-${datasetCount.value}-${useColor.value}`
 })
 
+const names = ['Anglerfish', 'Bobcat', 'Caracal', 'Duck', 'Eagle', 'Fox', 'Goat', 'Haddock', 'Ibex', 'Jackal', 'Kestrel', 'Lemur', 'Mandrill', 'Newt', 'Okapi', 'Puffin', 'Quail', 'Raccoon', 'Sable', 'Tapir', 'Uakari', 'Vole', 'Wallaby', 'Xerus', 'Yak', 'Zebra']
+
 const fetcher = () => {
-  const sameData = generateRandomDatasets()
+  const nameOffset = getRandomInt(0, 25)
+  let labels: string[] = []
+  for (let i = 0; i < datasetCount.value; i++) {
+    labels.push(names[(nameOffset + (i * 11)) % 26])
+  }
+
+  const sameData = generateRandomDatasets(labels)
   const mockData = [
     { name: 'Same mock data - type bar', sparkline: sameData, type: 'bar' },
     { name: 'Same mock data - type line', sparkline: sameData, type: 'line' },
     { name: 'Same mock data - type step', sparkline: sameData, type: 'step' },
-    { name: 'Mock data 4', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 5', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 6', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 7', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 8', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 9', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 10', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 11', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 12', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 13', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 14', sparkline: generateRandomDatasets() },
-    { name: 'Mock data 15', sparkline: generateRandomDatasets() },
+    { name: 'Mock data 4', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 5', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 6', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 7', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 8', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 9', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 10', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 11', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 12', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 13', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 14', sparkline: generateRandomDatasets(labels) },
+    { name: 'Mock data 15', sparkline: generateRandomDatasets(labels) },
   ]
 
   return {

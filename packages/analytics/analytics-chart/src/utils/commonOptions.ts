@@ -8,7 +8,14 @@ export const isTooltipInteractive = (state: TooltipInteractionMode) => {
   return ['interactive', 'zoom-interactive'].includes(state)
 }
 
-export const lineChartTooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext, granularity: GranularityValues) : void => {
+export const lineChartTooltipBehavior = (
+  tooltipData: TooltipState,
+  context: ExternalTooltipContext,
+  granularity: GranularityValues,
+  options?: {
+    contextFormatter?: (x: number, granularity: GranularityValues) => string | number
+  },
+) : void => {
   const { tooltip } = context
   if (tooltip.opacity === 0 && !isTooltipInteractive(tooltipData.interactionMode)) {
     tooltipData.showTooltip = false
@@ -22,10 +29,12 @@ export const lineChartTooltipBehavior = (tooltipData: TooltipState, context: Ext
     const colors = tooltip.labelColors
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 
-    tooltipData.tooltipContext = formatTooltipTimestampByGranularity({
-      tickValue: new Date(tooltip.dataPoints[0].parsed.x),
-      granularity,
-    })
+    tooltipData.tooltipContext = options?.contextFormatter
+      ? options.contextFormatter(tooltip.dataPoints[0].parsed.x, granularity)
+      : formatTooltipTimestampByGranularity({
+        tickValue: new Date(tooltip.dataPoints[0].parsed.x),
+        granularity,
+      })
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
       const rawValue = p.parsed[valueAxis]
