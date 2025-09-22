@@ -90,6 +90,22 @@ provideEditorStore(nodes ?? [], uidata?.nodes ?? [])
           overflow: hidden;
           width: 100%;
         }
+
+        *,
+        *::before,
+        *::after {
+          box-sizing: border-box;
+        }
+
+        :deep(.vue-flow__controls-button) {
+          // Ensure it works in both the sandbox and host apps
+          box-sizing: content-box;
+
+          svg {
+            max-height: unset;
+            max-width: unset;
+          }
+        }
       }
     }
   }
