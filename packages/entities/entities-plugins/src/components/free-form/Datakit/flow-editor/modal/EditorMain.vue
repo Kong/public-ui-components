@@ -100,7 +100,10 @@
       ref="canvasContainer"
       class="body"
     >
-      <FlowPanels resizable />
+      <FlowPanels
+        mode="edit"
+        resizable
+      />
     </div>
   </div>
 </template>

@@ -22,6 +22,7 @@
     <!-- Record content -->
     <EntityBaseConfigCard
       v-else
+      :code-block-record-formatter="codeBlockRecordFormatter"
       :config="config"
       :config-card-doc="configCardDoc"
       :config-schema="configSchema"
@@ -139,6 +140,16 @@
           :text="getPropValue('rowValue', slotProps)?.[0].id"
         />
       </template>
+
+      <template
+        v-if="enableDatakitCanvas"
+        #config-card-item-nodes="slotProps"
+      >
+        <DatakitConfigCardCanvas
+          :nodes="slotProps.record?.config?.nodes ?? []"
+          :uidata="slotProps.record?.__ui_data || {}"
+        />
+      </template>
     </EntityBaseConfigCard>
   </div>
 </template>
@@ -157,10 +168,12 @@ import {
   useSchemaProvider,
 } from '@kong-ui-public/entities-shared'
 import { computed, onBeforeMount, ref } from 'vue'
+import { omit } from 'lodash-es'
 
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
 import { PluginScope } from '../types'
+import DatakitConfigCardCanvas from './free-form/Datakit/DatakitConfigCardCanvas.vue'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -241,12 +254,25 @@ const pluginMetaData = composables.usePluginMetaData()
 const { setFieldType } = composables.usePluginHelpers()
 const { getPropValue } = useHelpers()
 
-const fetchUrl = computed<string>(
-  () => endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
+const isKonnect = computed(() => props.config.app === 'konnect')
+
+const enableDatakitCanvas = computed(() => {
+  return isKonnect.value && props.config.pluginType === 'datakit'
+})
+
+const fetchUrl = computed<string>(() => {
+  let url = endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
     .replace(/{entityType}/gi, props.scopedEntityType)
     .replace(/{entityId}/gi, props.scopedEntityId)
-    .concat(props.expandPartial ? '?expand_partials=true' : ''),
-)
+    .concat(props.expandPartial ? '?expand_partials=true' : '')
+
+  if (isKonnect.value) {
+    const separator = props.expandPartial ? '&' : '?'
+    url = url.concat(`${separator}__ui_data=true`)
+  }
+
+  return url
+})
 
 // schema for the basic properties
 const configSchema = computed((): ConfigurationSchema => {
@@ -360,6 +386,10 @@ const resolveRecord = (data: Record<string, any>): Record<string, any> => {
 
     return true
   }))
+}
+
+const codeBlockRecordFormatter = (record: Record<string, any>) => {
+  return omit(record, '__ui_data')
 }
 
 const { getMessageFromError } = useErrors()
