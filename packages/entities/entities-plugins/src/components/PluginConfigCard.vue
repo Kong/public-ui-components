@@ -254,8 +254,10 @@ const pluginMetaData = composables.usePluginMetaData()
 const { setFieldType } = composables.usePluginHelpers()
 const { getPropValue } = useHelpers()
 
+const isKonnect = computed(() => props.config.app === 'konnect')
+
 const enableDatakitCanvas = computed(() => {
-  return props.config.app === 'konnect' && props.config.pluginType === 'datakit'
+  return isKonnect.value && props.config.pluginType === 'datakit'
 })
 
 const fetchUrl = computed<string>(() => {
@@ -264,7 +266,7 @@ const fetchUrl = computed<string>(() => {
     .replace(/{entityId}/gi, props.scopedEntityId)
     .concat(props.expandPartial ? '?expand_partials=true' : '')
 
-  if (enableDatakitCanvas.value) {
+  if (isKonnect.value) {
     const separator = props.expandPartial ? '&' : '?'
     url = url.concat(`${separator}__ui_data=true`)
   }
