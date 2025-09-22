@@ -253,8 +253,9 @@ watch(
           clear()
       }
 
-      if (pendingFitView)
+      if (pendingFitView) {
         fitView()
+      }
     }, 0)
   },
 )
