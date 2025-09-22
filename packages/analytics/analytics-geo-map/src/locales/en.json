@@ -36,5 +36,7 @@
     "windows_zoom_help_text": "Use Ctrl + Scroll to zoom the map",
     "mac_zoom_help_text": "Use ⌘ + Scroll to zoom the map",
     "mobile_zoom_help_text": "Use two fingers to zoom the map"
-  }
+  },
+  "no_location_data": "No location",
+  "no_location_data_description": "No location data found."
 }
