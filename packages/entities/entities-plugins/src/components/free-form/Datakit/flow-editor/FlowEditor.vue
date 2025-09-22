@@ -1,7 +1,10 @@
 <template>
   <div class="dk-flow-editor">
     <div class="flow-panels-container">
-      <FlowPanels mode="preview" />
+      <FlowPanels
+        :inactive="modalOpen"
+        mode="preview"
+      />
 
       <div class="overlay">
         <KButton
@@ -62,7 +65,7 @@ const { modalOpen, setPendingFitView } = provideEditorStore(formData.config?.nod
 watch(modalOpen, () => {
   // `fitView` when model is toggled.
   setPendingFitView(true)
-})
+}, { flush: 'post' }) // Safely schedule fitView after <FlowPanels /> receives the latest `inactive` prop
 </script>
 
 <style lang="scss" scoped>
