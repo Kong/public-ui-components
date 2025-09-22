@@ -87,6 +87,7 @@ provideEditorStore(nodes ?? [], uidata?.nodes ?? [])
           border: solid $kui-border-width-10 $kui-color-border;
           border-radius: $kui-border-radius-20;
           height: 560px;
+          overflow: hidden;
           width: 100%;
         }
       }

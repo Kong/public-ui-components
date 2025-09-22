@@ -34,6 +34,7 @@
         v-if="!isImplicit"
         ref="menu"
         class="menu"
+        :disabled="readonly"
         :kpop-attributes="{
           offset: '4px',
           target: 'body',
