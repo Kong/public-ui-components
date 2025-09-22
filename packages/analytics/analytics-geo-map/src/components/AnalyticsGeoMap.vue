@@ -1,6 +1,27 @@
 <template>
   <div class="kong-ui-public-analytics-geo-map">
     <div
+      v-if="showNoLocationOverlay"
+      class="no-location-overlay"
+    >
+      <slot name="no-location-icon">
+        <AnalyticsIcon
+          :color="KUI_ICON_COLOR_NEUTRAL"
+          :size="KUI_ICON_SIZE_60"
+        />
+      </slot>
+      <div class="no-location-overlay-title">
+        <slot name="no-location-title">
+          {{ i18n.t('no_location_data') }}
+        </slot>
+      </div>
+      <div class="no-location-overlay-description">
+        <slot name="no-location-description">
+          <p>{{ i18n.t('no_location_data_description') }}</p>
+        </slot>
+      </div>
+    </div>
+    <div
       :id="mapContainerId"
       class="analytics-geo-map-container"
     />
@@ -45,6 +66,8 @@ import lakes from '../ne_110m_lakes.json'
 import * as geobuf from 'geobuf'
 import Pbf from 'pbf'
 import { debounce } from '../utils'
+import { AnalyticsIcon } from '@kong/icons'
+import { KUI_ICON_COLOR_NEUTRAL, KUI_ICON_SIZE_60 } from '@kong/design-tokens'
 
 const countriesPbfUrlPromise = import('../countries-simple-geo.pbf?url').then(m => m.default)
 
@@ -74,7 +97,9 @@ const { i18n } = composables.useI18n()
 const mapContainerId = useId()
 const map = ref<Map>()
 const geoJsonData = ref<MapFeatureCollection | null>(null)
-
+const showNoLocationOverlay = computed(() => {
+  return Object.keys(countryMetrics).length === 0 && !fitToCountry
+})
 const layerPaint = computed(() => ({
   'fill-color': [
     'match',
@@ -404,6 +429,45 @@ watch(() => bounds, (newVal, oldVal) => {
   .analytics-geo-map-container {
     height: 100%;
     width: 100%;
+  }
+
+  .no-location-overlay {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.7);
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--kui-space-70, $kui-space-70);
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    z-index: 1;
+
+    .no-location-overlay-title {
+      color: var(--kui-color-text, $kui-color-text);
+      font-size: var(--kui-font-size-50, $kui-font-size-50);
+      font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+      line-height: var(--kui-line-height-40, $kui-line-height-40);
+      max-width: 570px;
+    }
+
+    .no-location-overlay-description {
+      color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+      display: flex;
+      flex-direction: column;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+      gap: var(--kui-space-70, $kui-space-70);
+      line-height: var(--kui-line-height-30, $kui-line-height-30);
+      max-width: 640px;
+
+      p {
+        margin: var(--kui-space-0, $kui-space-0);
+      }
+    }
   }
 
   .legend {
