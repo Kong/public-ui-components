@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.98.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.98.1...@kong-ui-public/entities-plugins@9.98.2) (2025-09-23)
+
+
+### Bug Fixes
+
+* **plugins:** remove the size limit against exit transformer plugin ([#2518](https://github.com/Kong/public-ui-components/issues/2518)) ([f0dfac7](https://github.com/Kong/public-ui-components/commit/f0dfac7275e4c3b6cf7c0fa304fec793f331f329))
+
+
+
+
+
 ## [9.98.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.98.0...@kong-ui-public/entities-plugins@9.98.1) (2025-09-22)
 
 
