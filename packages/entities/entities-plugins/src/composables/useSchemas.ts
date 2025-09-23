@@ -9,6 +9,7 @@ import { aiLlmAsJudgeSchema } from '../definitions/schemas/AILLMAsJudge'
 import { applicationRegistrationSchema } from '../definitions/schemas/ApplicationRegistration'
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
 import { dataDogSchema } from '../definitions/schemas/Datadog'
+import { exitTransformerSchema } from '../definitions/schemas/ExitTransformer'
 import { graphqlRateLimitingAdvancedSchema } from '../definitions/schemas/GraphQLRateLimitingAdvanced'
 import { injectionProtectionSchema } from '../definitions/schemas/InjectionProtection'
 import { mockingSchema } from '../definitions/schemas/Mocking'
@@ -123,6 +124,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     datadog: {
       ...dataDogSchema,
+    },
+
+    'exit-transformer': {
+      ...exitTransformerSchema,
     },
 
     'upstream-tls': {
