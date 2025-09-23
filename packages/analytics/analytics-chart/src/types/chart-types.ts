@@ -15,3 +15,5 @@ export const simpleChartTypes = [
 ] as const
 
 export type SimpleChartType = typeof simpleChartTypes[number]
+
+export type SparklineType = 'sparkline_bar' | 'sparkline_line' | 'sparkline_step'
