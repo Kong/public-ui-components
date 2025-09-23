@@ -1,8 +1,10 @@
-import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { lookupDatavisColor, datavisPalette, determineBaseColor } from '../utils'
+import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { Ref } from 'vue'
-import { computed } from 'vue'
 import type { Dataset, ExploreToDatasetDeps, KChartData, BarChartDatasetGenerationParams, DatasetLabel } from '../types'
+
+import { computed } from 'vue'
+import { getCountryName } from '@kong-ui-public/analytics-utilities'
+import { lookupDatavisColor, datavisPalette, determineBaseColor } from '../utils'
 import composables from '../composables'
 
 function generateDatasets(dataSetGenerationParams: BarChartDatasetGenerationParams): Dataset[] {
@@ -111,9 +113,24 @@ export default function useExploreResultToDatasets(
         const sortedDatasetIds = Object.entries(aggregatedPivotRecords).sort(([, a], [, b]) => Number(b) - Number(a)).map(([key]) => key)
         const primaryDimensionDisplay = display[primaryDimension]
         const secondaryDimensionDisplay = display[secondaryDimension]
-        const rowLabels: DatasetLabel[] = (hasDimensions && primaryDimensionDisplay && Object.entries(primaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
-        const barSegmentLabels: DatasetLabel[] = (hasDimensions && secondaryDimensionDisplay && Object.entries(secondaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
 
+        let rowLabels: DatasetLabel[] = (hasDimensions && primaryDimensionDisplay && Object.entries(primaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
+        let barSegmentLabels: DatasetLabel[] = (hasDimensions && secondaryDimensionDisplay && Object.entries(secondaryDimensionDisplay).map(([id, val]) => ({ id, name: val.name }))) || metricNames.map(name => ({ id: name, name }))
+
+        // If the primary or secondary dimension is a country_code, get the country's display name
+        if (hasDimensions && primaryDimension === 'country_code') {
+          rowLabels = rowLabels.map(label => ({
+            ...label,
+            name: getCountryName(label.id as CountryISOA2) || label.name,
+          }))
+        }
+
+        if (hasDimensions && secondaryDimension === 'country_code') {
+          barSegmentLabels = barSegmentLabels.map(label => ({
+            ...label,
+            name: getCountryName(label.id as CountryISOA2) || label.name,
+          }))
+        }
         if (primaryDimension !== 'status_code' && primaryDimension !== 'status_code_grouped') {
           rowLabels.sort((a, b) => sortedDatasetIds.indexOf(a.id) - sortedDatasetIds.indexOf(b.id))
           barSegmentLabels.sort((a, b) => sortedDatasetIds.indexOf(a.id) - sortedDatasetIds.indexOf(b.id))

@@ -1,4 +1,4 @@
-import type { DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, DisplayBlob, ExploreAggregations, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import { describe, it, expect, vitest } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
@@ -900,5 +900,53 @@ describe('useVitalsExploreDatasets', () => {
     expect(result.value.datasets[2].backgroundColor).toEqual('#ffe9b8')
     expect(result.value.datasets[3].backgroundColor).toEqual('#ffd5b1')
     expect(result.value.datasets[4].backgroundColor).toEqual('#ffb6b6')
+  })
+
+  it('maps country_code values to full country names via getCountryName', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: { country_code: 'US', request_count: 10 },
+        },
+        {
+          timestamp: START_FOR_DAILY_QUERY.toISOString(),
+          event: { country_code: 'DE', request_count: 7 },
+        },
+      ] as AnalyticsExploreRecord[],
+      meta: {
+        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
+        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        granularity_ms: 86400000,
+        metric_names: ['request_count'],
+        display: {
+          country_code: {
+            US: { name: 'US' },
+            DE: { name: 'DE' },
+          },
+        } as DisplayBlob,
+        query_id: 'test-country',
+        metric_units: { request_count: 'count' },
+        truncated: false,
+        limit: 1000,
+      } as QueryResponseMeta,
+    }))
+
+    const result = useExploreResultToTimeDataset(
+      { fill: false, colorPalette: defaultStatusCodeColors },
+      exploreResult,
+    )
+
+    const us = result.value.datasets.find(d => d.rawDimension === 'United States')
+    const de = result.value.datasets.find(d => d.rawDimension === 'Germany')
+
+    expect(us).toBeTruthy()
+    expect(de).toBeTruthy()
+
+    expect(Number(us.total)).toBe(10)
+    expect(Number(de.total)).toBe(7)
+
+    expect(us.data.some(p => Number((p as { x: number, y: number }).y) === 10)).toBe(true)
+    expect(de.data.some(p => Number((p as { x: number, y: number }).y) === 7)).toBe(true)
   })
 })
