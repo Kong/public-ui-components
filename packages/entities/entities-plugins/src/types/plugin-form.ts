@@ -6,6 +6,7 @@ import type { ApplicationRegistrationSchema } from './plugins/application-regist
 import type { StatsDSchema } from './plugins/stats-d'
 import type { MockingSchema } from './plugins/mocking'
 import type { DatadogSchema } from './plugins/datadog-schema'
+import type { ExitTransformerSchema } from './plugins/exit-transformer'
 import type { StatsDAdvancedSchema } from './plugins/stats-d-advanced'
 import type { UpstreamTlsSchema } from './plugins/upstream-tls'
 import type { RateLimitingSchema } from './plugins/rate-limiting'
@@ -205,6 +206,7 @@ export type ReturnArrayItem = ArrayItem & Item
 export interface CustomSchemas {
   'application-registration': ApplicationRegistrationSchema
   datadog: DatadogSchema
+  'exit-transformer': ExitTransformerSchema
   'upstream-tls': UpstreamTlsSchema
   statsd: StatsDSchema
   'statsd-advanced': StatsDAdvancedSchema
