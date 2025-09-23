@@ -1,4 +1,4 @@
-import type { DisplayBlob, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, DisplayBlob, ExploreResultV4, GroupByResult, MetricUnit, QueryResponseMeta, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import { describe, it, expect } from 'vitest'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
@@ -554,5 +554,47 @@ describe('useVitalsExploreDatasets', () => {
     )
 
     expect(result.value.labels).toEqual(['route3', 'route2', 'route1'])
+  })
+
+  it('maps country_code values to full country names via getCountryName', () => {
+    const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
+      data: [
+        {
+          timestamp: '2025-01-01T00:00:00Z',
+          event: { country_code: 'US', request_count: 10 },
+        },
+        {
+          timestamp: '2025-01-01T01:00:00Z',
+          event: { country_code: 'DE', request_count: 7 },
+        },
+      ] as AnalyticsExploreRecord[],
+      meta: {
+        start_ms: 1735689600000,
+        end_ms: 1735693200000,
+        granularity_ms: 60000,
+        metric_names: ['request_count'],
+        display: {
+          country_code: {
+            US: { name: 'US' },
+            DE: { name: 'DE' },
+          },
+        } as DisplayBlob,
+        query_id: 'test-country',
+        metric_units: { request_count: 'count' },
+        truncated: false,
+        limit: 1000,
+      } as QueryResponseMeta,
+    }))
+
+    const result = useExploreResultToDatasets(
+      { fill: false, colorPalette: defaultStatusCodeColors },
+      exploreResult,
+    )
+
+    expect(result.value.labels).toEqual(['United States', 'Germany'])
+
+    expect(result.value.datasets).toHaveLength(2)
+    expect(result.value.datasets[0].data).toEqual([10, null])
+    expect(result.value.datasets[1].data).toEqual([null, 7])
   })
 })
