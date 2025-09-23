@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.3.1...@kong-ui-public/analytics-utilities@11.4.0) (2025-09-23)
+
+
+### Features
+
+* **analytics:** add country name lookup and swap for labels [MA-4083] ([#2515](https://github.com/Kong/public-ui-components/issues/2515)) ([aa93ef5](https://github.com/Kong/public-ui-components/commit/aa93ef5895251e1e9958eadc78b3c9aa8bf846cc))
+
+
+
+
+
 ## [11.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.3.0...@kong-ui-public/analytics-utilities@11.3.1) (2025-09-18)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-utilities
