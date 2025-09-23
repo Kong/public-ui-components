@@ -4,7 +4,6 @@ export { default as FieldArrayCardContainer } from '../components/fields/FieldAr
 export { default as FieldArrayItem } from '../components/fields/FieldArrayItem.vue'
 export { default as FieldArrayMultiItem } from '../components/fields/FieldArrayMultiItem.vue'
 export { default as FieldAutoSuggest } from '../components/fields/FieldAutoSuggest.vue'
-export { default as FieldAutoSuggestV2 } from '../components/fields/FieldAutoSuggestV2.vue'
 export { default as FieldCheckbox } from '../components/fields/FieldCheckbox.vue'
 export { default as FieldChecklist } from '../components/fields/FieldChecklist.vue'
 export { default as FieldInput } from '../components/fields/FieldInput.vue'

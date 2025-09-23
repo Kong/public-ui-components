@@ -1,4 +1,4 @@
-import FieldAutoSuggestV2 from '../FieldAutoSuggestV2.vue'
+import FieldAutoSuggest from '../FieldAutoSuggest.vue'
 import { v4 } from 'uuid'
 import { FORMS_API_KEY, EMPTY_VALUE_PLACEHOLDER } from '../../../const'
 
@@ -60,7 +60,7 @@ const defaultAPIReturns = {
   peekReturn: generateServices(49, defaultGetOneReturn),
 }
 
-describe.only('<FieldAutoSuggestV2 />', function() {
+describe.only('<FieldAutoSuggest />', function() {
   let getOne: () => Promise<ReturnType<typeof generateMockServiceData>>
   let getAll: () => Promise<ReturnType<typeof generateServices>>
   let peek: () => Promise<ReturnType<typeof generateServices>>
@@ -70,7 +70,7 @@ describe.only('<FieldAutoSuggestV2 />', function() {
     getAll = cy.stub().as('getAll').resolves(getAllReturn)
     peek = cy.stub().as('peek').resolves(peekReturn)
 
-    cy.mount(FieldAutoSuggestV2, {
+    cy.mount(FieldAutoSuggest, {
       props: {
         model: {
           'service-id': null,

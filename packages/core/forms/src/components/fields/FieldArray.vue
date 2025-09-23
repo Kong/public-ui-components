@@ -128,7 +128,6 @@ import FieldArrayCardContainer from './FieldArrayCardContainer.vue'
 import FieldArrayItem from './FieldArrayItem.vue'
 import FieldArrayMultiItem from './FieldArrayMultiItem.vue'
 import FieldAutoSuggest from './FieldAutoSuggest.vue'
-import FieldAutoSuggestV2 from './FieldAutoSuggestV2.vue'
 import FieldInput from './FieldInput.vue'
 import FieldMetric from './FieldMetric.vue'
 import FieldObject from './FieldObject.vue'
@@ -147,7 +146,6 @@ export default {
     FieldObject,
     FieldObjectAdvanced,
     FieldAutoSuggest,
-    FieldAutoSuggestV2,
     FieldRadio,
     FieldArrayCardContainer,
     FieldInput,
