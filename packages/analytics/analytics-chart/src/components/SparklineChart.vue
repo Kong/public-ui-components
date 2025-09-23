@@ -10,7 +10,7 @@
       </slot>
     </div>
     <Bar
-      v-else-if="type === 'bar'"
+      v-else-if="type === 'sparkline_bar'"
       :chart-id="chartId"
       :data="chartData"
       data-testId="sparkline-bar"
@@ -18,10 +18,10 @@
       :plugins="plugins"
     />
     <Line
-      v-else-if="type === 'line' || type === 'step'"
+      v-else-if="type === 'sparkline_line' || type === 'sparkline_step'"
       :chart-id="chartId"
       :data="chartData"
-      :data-testId="type === 'line' ? 'sparkline-line' : 'sparkline-step'"
+      :data-testId="type === 'sparkline_line' ? 'sparkline-line' : 'sparkline-step'"
       :options="(options as any)"
       :plugins="plugins"
     />
@@ -63,7 +63,7 @@ import { formatTime } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import { lineChartTooltipBehavior } from '../utils'
 import bucketTimestamps from '../utils/bucketTimestamps'
-import type { ExternalTooltipContext, SparklineDataset, TooltipState } from '../types'
+import type { ExternalTooltipContext, SparklineDataset, SparklineType, TooltipState } from '../types'
 import { VerticalLinePlugin } from './chart-plugins/VerticalLinePlugin'
 import ToolTip from './chart-plugins/ChartTooltip.vue'
 
@@ -76,7 +76,7 @@ const {
   pointRenderCount = 24,
   showLabel = false,
   tooltipTitle,
-  type = 'bar',
+  type = 'sparkline_bar',
 } = defineProps<{
   datasets: SparklineDataset[]
   disableTooltip?: boolean
@@ -101,7 +101,7 @@ const {
   pointRenderCount?: number
   showLabel?: boolean
   tooltipTitle?: string
-  type: 'bar' | 'line' | 'step'
+  type: SparklineType
 }>()
 
 const chartId = crypto.randomUUID()
@@ -119,7 +119,7 @@ const tooltipData = reactive<TooltipState>({
   offsetY: 0,
   width: 0,
   height: 0,
-  chartType: type === 'bar' ? 'timeseries_bar' : 'timeseries_line',
+  chartType: type === 'sparkline_bar' ? 'timeseries_bar' : 'timeseries_line',
   chartID: chartId,
   interactionMode: 'idle',
 })
@@ -192,9 +192,9 @@ const chartDatasets = computed<Array<{
   return {
     data,
     label,
-    ...((type === 'bar' || isStacked.value) && color && { backgroundColor: color }),
-    ...(type !== 'bar' && color && { borderColor: color }),
-    ...(isStacked.value && type !== 'bar' && { fill: true }),
+    ...((type === 'sparkline_bar' || isStacked.value) && color && { backgroundColor: color }),
+    ...(type !== 'sparkline_bar' && color && { borderColor: color }),
+    ...(isStacked.value && type !== 'sparkline_bar' && { fill: true }),
   }
 }))
 
@@ -211,7 +211,7 @@ const options = computed<ChartOptions>(() => ({
     barPercentage: 1,
     line: {
       tension: 0,
-      stepped: type === 'step',
+      stepped: type === 'sparkline_step',
       borderWidth: 1,
     },
     point: {

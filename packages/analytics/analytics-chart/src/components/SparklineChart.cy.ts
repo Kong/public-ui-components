@@ -11,7 +11,7 @@ describe('<SparklineChart />', () => {
         maxCount: 10,
         minStamp: 1000,
         pointRenderCount: 100,
-        type: 'bar',
+        type: 'sparkline_bar',
       },
     })
 
@@ -29,7 +29,7 @@ describe('<SparklineChart />', () => {
         maxStamp: 2000,
         minStamp: 100,
         pointRenderCount: 10,
-        type: 'bar',
+        type: 'sparkline_bar',
       },
     })
 
@@ -46,7 +46,7 @@ describe('<SparklineChart />', () => {
         maxStamp: 200000,
         minStamp: 100,
         pointRenderCount: 10,
-        type: 'line',
+        type: 'sparkline_line',
       },
     })
 
@@ -64,7 +64,7 @@ describe('<SparklineChart />', () => {
         maxStamp: 2000,
         minStamp: 100,
         pointRenderCount: 10,
-        type: 'step',
+        type: 'sparkline_step',
       },
     })
 

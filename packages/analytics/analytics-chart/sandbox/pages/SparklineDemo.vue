@@ -68,13 +68,13 @@
               value: 'random',
             }, {
               label: 'Bar',
-              value: 'bar',
+              value: 'sparkline_bar',
             }, {
               label: 'Line',
-              value: 'line',
+              value: 'sparkline_line',
             }, {
               label: 'step',
-              value: 'step',
+              value: 'sparkline_step',
             }]"
             label="Type"
           />
@@ -161,7 +161,7 @@ const type = ref('random')
 const getType = (randomKey?: number): string => {
   if (type.value === 'random') {
     const index = randomKey ? randomKey % 3 : getRandomInt(0, 2)
-    return ['bar', 'line', 'step'][index]
+    return ['sparkline_bar', 'sparkline_line', 'sparkline_step'][index]
   }
 
   return type.value
@@ -251,9 +251,9 @@ const fetcher = () => {
 
   const sameData = generateRandomDatasets(labels)
   const mockData = [
-    { name: 'Same mock data - type bar', sparkline: sameData, type: 'bar' },
-    { name: 'Same mock data - type line', sparkline: sameData, type: 'line' },
-    { name: 'Same mock data - type step', sparkline: sameData, type: 'step' },
+    { name: 'Same mock data - type bar', sparkline: sameData, type: 'sparkline_bar' },
+    { name: 'Same mock data - type line', sparkline: sameData, type: 'sparkline_line' },
+    { name: 'Same mock data - type step', sparkline: sameData, type: 'sparkline_step' },
     { name: 'Mock data 4', sparkline: generateRandomDatasets(labels) },
     { name: 'Mock data 5', sparkline: generateRandomDatasets(labels) },
     { name: 'Mock data 6', sparkline: generateRandomDatasets(labels) },
