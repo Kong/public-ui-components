@@ -1,7 +1,10 @@
 <template>
-  <div class="dk-inputs-field-h1">
-    {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.label') }}
-  </div>
+  <KLabel
+    class="dk-inputs-field-h1"
+    :info="t('plugins.free-form.datakit.flow_editor.node_properties.input.tooltip')"
+  >
+    {{ t('plugins.free-form.datakit.flow_editor.node_properties.input.label') }}
+  </KLabel>
 
   <EnumField
     v-if="getSchema('input')"
@@ -9,26 +12,23 @@
     clearable
     enable-filtering
     :items="items"
-    :label="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.whole_input')"
+    :label="t('plugins.free-form.datakit.flow_editor.node_properties.input.input')"
     :label-attributes="{
-      info: i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.whole_input_tooltip'),
+      info: undefined,
     }"
     name="input"
-    :placeholder="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
+    :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
     @change="handleInputChange"
   />
 
   <div class="dk-inputs-field-or">
     <span>
-      {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.or') }}
+      {{ t('plugins.free-form.datakit.flow_editor.node_properties.input.or') }}
     </span>
   </div>
 
-  <KLabel
-    class="dk-inputs-field-h2 dk-margin-0"
-    :info="i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.pre_field_tooltip')"
-  >
-    {{ i18n.t('plugins.free-form.datakit.flow_editor.node_properties.input.pre_field') }}
+  <KLabel class="dk-inputs-field-h2 dk-margin-0">
+    {{ t('plugins.free-form.datakit.flow_editor.node_properties.input.fields') }}
   </KLabel>
 
   <InputsField
@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-
+import { KLabel } from '@kong/kongponents'
 import { useFormShared } from '../../../shared/composables'
 import EnumField from '../../../shared/EnumField.vue'
 import InputsRecordField from './InputsRecordField.vue'
@@ -70,7 +70,7 @@ const emit = defineEmits<{
 }>()
 
 const { getSchema } = useFormShared()
-const { i18n } = useI18n()
+const { i18n: { t } } = useI18n()
 
 const inputsSchema = computed(() => getSchema('inputs'))
 
