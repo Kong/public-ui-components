@@ -36,10 +36,63 @@
           <!-- JQ Script Editor -->
           <div class="jq-playground-section">
             <KLabel>JQ Script</KLabel>
-            <div
-              ref="jqEditorRef"
-              class="jq-playground-editor"
-            />
+            <div class="jq-editor-container">
+              <div
+                ref="jqEditorRef"
+                class="jq-playground-editor"
+              />
+              <!-- Ask AI Button - 悬浮在右下角 -->
+              <KButton
+                appearance="tertiary"
+                class="ask-ai-floating-button"
+                size="small"
+                @click="openAiPrompt"
+              >
+                <MarkIcon />
+                Ask AI
+              </KButton>
+
+              <!-- AI Prompt - 悬浮在JQ区域下方 -->
+              <div
+                v-if="showAiPrompt"
+                class="ai-prompt-floating"
+              >
+                <div class="ai-prompt-container">
+                  <div class="ai-prompt-header">
+                    <KButton
+                      appearance="tertiary"
+                      class="ai-close-button"
+                      size="small"
+                      @click="closeAiPrompt"
+                    >
+                      ✕
+                    </KButton>
+                  </div>
+                  <div class="ai-prompt-content">
+                    <KTextArea
+                      v-model="aiPrompt"
+                      class="ai-prompt-input"
+                      :disabled="isAiLoading"
+                      placeholder="Describe what you want to do with your JSON data..."
+                      :rows="2"
+                    />
+                    <KButton
+                      appearance="primary"
+                      class="ai-send-button"
+                      :disabled="!aiPrompt.trim() || isAiLoading"
+                      size="small"
+                      @click="submitAiPrompt"
+                    >
+                      <div
+                        v-if="isAiLoading"
+                        class="loading-spinner"
+                      />
+                      <ArrowUpIcon v-else />
+                    </KButton>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -83,7 +136,8 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from 'vue'
-import { KModal, KLabel, KCodeBlock, KAlert, KEmptyState, KSelect } from '@kong/kongponents'
+import { KModal, KLabel, KCodeBlock, KAlert, KEmptyState, KSelect, KTextArea, KButton } from '@kong/kongponents'
+import { MarkIcon, ArrowUpIcon } from '@kong/icons'
 import * as monaco from 'monaco-editor'
 import { evaluate, parse } from '@jq-tools/jq'
 
@@ -117,6 +171,11 @@ const jqScript = ref(props.initialJqScript || '.')
 const output = ref('')
 const error = ref('')
 const selectedExample = ref('')
+
+// AI Assistant state
+const showAiPrompt = ref(false)
+const aiPrompt = ref('')
+const isAiLoading = ref(false)
 
 // Example data
 const examples = [
@@ -326,6 +385,78 @@ function handleExampleSelect(item: { label: string, value: string } | null) {
   processJq()
 }
 
+// AI Assistant functions
+function openAiPrompt() {
+  showAiPrompt.value = true
+  aiPrompt.value = ''
+}
+
+function closeAiPrompt() {
+  showAiPrompt.value = false
+  aiPrompt.value = ''
+}
+
+async function submitAiPrompt() {
+  if (!aiPrompt.value.trim()) return
+
+  isAiLoading.value = true
+
+  // Set editors to readonly mode during processing
+  if (jsonEditor) {
+    jsonEditor.updateOptions({ readOnly: true })
+  }
+  if (jqEditor) {
+    jqEditor.updateOptions({ readOnly: true })
+  }
+
+  try {
+    // Simulate AI processing (replace with actual AI API call)
+    await new Promise(resolve => setTimeout(resolve, 2000))
+
+    // Mock AI response - generate a simple JQ script based on prompt
+    let suggestedJq = '.'
+    const prompt = aiPrompt.value.toLowerCase()
+
+    if (prompt.includes('filter') || prompt.includes('select')) {
+      suggestedJq = '.[] | select(.active == true)'
+    } else if (prompt.includes('map') || prompt.includes('transform')) {
+      suggestedJq = '.[] | {name, value}'
+    } else if (prompt.includes('key') || prompt.includes('property')) {
+      suggestedJq = '.data.items'
+    } else if (prompt.includes('count') || prompt.includes('length')) {
+      suggestedJq = '. | length'
+    } else {
+      suggestedJq = '. | keys'
+    }
+
+    // Update the JQ script
+    jqScript.value = suggestedJq
+    if (jqEditor) {
+      jqEditor.setValue(suggestedJq)
+    }
+
+    // Process the new script
+    processJq()
+
+    // Close the AI prompt
+    closeAiPrompt()
+
+  } catch (err) {
+    console.error('AI processing error:', err)
+    error.value = 'AI processing failed. Please try again.'
+  } finally {
+    isAiLoading.value = false
+
+    // Restore editors to editable mode
+    if (jsonEditor) {
+      jsonEditor.updateOptions({ readOnly: false })
+    }
+    if (jqEditor) {
+      jqEditor.updateOptions({ readOnly: false })
+    }
+  }
+}
+
 // Cleanup on unmount
 onBeforeUnmount(() => {
   disposeEditors()
@@ -408,6 +539,153 @@ onBeforeUnmount(() => {
     display: flex;
     flex: 1;
     justify-content: center;
+  }
+}
+
+// AI 相关样式
+.jq-editor-container {
+  position: relative;
+}
+
+.ask-ai-floating-button {
+  // align-items: center;
+  // background: $kui-color-background-primary !important;
+  // border: none !important;
+  // border-radius: 50% !important;
+  bottom: 8px;
+  // color: white !important;
+  // cursor: pointer;
+  display: flex;
+  // height: 32px !important;
+  // justify-content: center;
+  // min-width: 32px !important;
+  // padding: 0 !important;
+  position: absolute;
+  right: 8px;
+  transition: all 0.2s ease;
+  // width: 32px !important;
+  z-index: 10;
+
+  &:hover {
+    // background: $kui-color-background-primary-strong !important;
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  // svg {
+  //   height: 16px;
+  //   width: 16px;
+  // }
+}
+
+.ai-prompt-floating {
+  bottom: 0;
+  left: 0;
+  margin-top: 8px;
+  position: absolute;
+  right: 0;
+  z-index: 20;
+}
+
+.ai-prompt-container {
+  background: white;
+  border: $kui-border-width-10 solid $kui-color-border;
+  border-radius: $kui-border-radius-30;
+  box-shadow: $kui-shadow-border, 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: $kui-space-40;
+}
+
+.ai-prompt-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: $kui-space-30;
+}
+
+.ai-close-button {
+  align-items: center;
+  border: none !important;
+  border-radius: 50% !important;
+  color: $kui-color-text-neutral !important;
+  cursor: pointer;
+  display: flex;
+  height: 24px !important;
+  justify-content: center;
+  min-width: 24px !important;
+  padding: 0 !important;
+  position: absolute;
+  right: 10px;
+  transition: all 0.2s ease;
+  width: 24px !important;
+
+  &:hover {
+    background: $kui-color-background-neutral-weak !important;
+    color: $kui-color-text !important;
+  }
+}
+
+.ai-prompt-content {
+  display: flex;
+  gap: $kui-space-40;
+}
+
+.ai-prompt-input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.ai-send-button {
+  align-items: center;
+  align-self: flex-end;
+  background: $kui-color-background-primary !important;
+  border: none !important;
+  border-radius: 50% !important;
+  color: white !important;
+  cursor: pointer;
+  display: flex;
+  height: 36px !important;
+  justify-content: center;
+  min-width: 36px !important;
+  padding: 0 !important;
+  transition: all 0.2s ease;
+  width: 36px !important;
+
+  &:hover:not(:disabled) {
+    background: $kui-color-background-primary-strong !important;
+    transform: scale(1.05);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+
+  &:disabled {
+    background: $kui-color-background-disabled !important;
+    cursor: not-allowed;
+  }
+
+  svg {
+    height: 18px;
+    width: 18px;
+  }
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+  border: 2px solid $kui-color-border;
+  border-radius: 50%;
+  border-top-color: $kui-color-border-primary;
+  display: inline-block;
+  height: 16px;
+  margin-right: $kui-space-30;
+  width: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>
