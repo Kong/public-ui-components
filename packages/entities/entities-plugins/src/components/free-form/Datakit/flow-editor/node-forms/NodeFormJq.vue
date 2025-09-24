@@ -14,32 +14,15 @@
       {{ t('plugins.free-form.datakit.flow_editor.node_properties.configuration') }}
     </KLabel>
 
-    <!-- todo(zehao): replace to monaco editor -->
-    <StringField
-      autosize
+    <JqField
       :error="jqHandler.error.value"
       :error-message="jqHandler.errorMessage.value"
       :label="jqFieldName"
-      :label-attributes="{}"
-      multiline
+      :model-value="formData.jq"
       name="jq"
-      resizable
       @blur="jqHandler.onBlur"
-      @update:model-value="jqHandler.onUpdate"
-    >
-      <template #help>
-        <i18nT keypath="plugins.free-form.datakit.flow_editor.node_properties.jq.help">
-          <template #link>
-            <KExternalLink
-              hide-icon
-              :href="externalLinks.jqlang"
-            >
-              {{ externalLinks.jqlang }}
-            </KExternalLink>
-          </template>
-        </i18nT>
-      </template>
-    </StringField>
+      @update:model-value="handleJqUpdate"
+    />
 
     <InputsField
       :field-name-validator="fieldNameValidator"
@@ -58,7 +41,7 @@
 import Form from '../../../shared/Form.vue'
 import InputsField from './InputsField.vue'
 import useI18n from '../../../../../composables/useI18n'
-import StringField from '../../../shared/StringField.vue'
+import JqField from './JqField.vue'
 import { useTemplateRef } from 'vue'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import type { FieldName, IdConnection } from '../../types'
@@ -66,7 +49,6 @@ import NameField from './NameField.vue'
 import type { NodeId } from '../../types'
 import { useFormValidation } from '../composables/validation'
 import { compose, notEmpty, stringLenRange } from '../composables/validation'
-import externalLinks from '../../../../../external-links'
 
 interface JqFormData extends BaseFormData {
   jq: string
@@ -76,7 +58,7 @@ const { nodeId } = defineProps<{
   nodeId: NodeId
 }>()
 
-const { i18n: { t }, i18nT } = useI18n()
+const { i18n: { t } } = useI18n()
 
 const formRef = useTemplateRef('form')
 
@@ -129,4 +111,9 @@ const {
 
 // Create field handlers
 const jqHandler = createFieldHandler('jq', () => setConfig('jq'))
+
+const handleJqUpdate = (value: string) => {
+  formData.value.jq = value
+  jqHandler.onUpdate()
+}
 </script>

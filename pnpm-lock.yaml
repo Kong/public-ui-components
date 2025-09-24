@@ -908,6 +908,9 @@ importers:
 
   packages/entities/entities-plugins:
     dependencies:
+      '@jq-tools/jq':
+        specifier: ^0.0.10
+        version: 0.0.10(tslib@2.8.1)
       '@kong-ui-public/entities-consumer-groups':
         specifier: workspace:^
         version: link:../entities-consumer-groups
@@ -1947,6 +1950,12 @@ packages:
   '@jest/schemas@29.6.3':
     resolution: {integrity: sha512-mo5j5X+jIZmJQveBKeS/clAueipV7KgiX1vMgCxam1RNYiqE1w62n0/tJJnHtjW8ZHcQco5gY85jA3mi0L+nSA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+
+  '@jq-tools/jq@0.0.10':
+    resolution: {integrity: sha512-XHBjZ7A8M5fy2Ugu2FV7ITSMjbQBTjGSdxTHo1xNFLKfaHwBxoY+H1/05bIhzKjBxER40k1I8PN09dYChSVF3w==}
+    hasBin: true
+    peerDependencies:
+      tslib: ^2.3.0
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -8125,7 +8134,7 @@ packages:
   right-pad@1.0.1:
     resolution: {integrity: sha512-bYBjgxmkvTAfgIYy328fmkwhp39v8lwVgWhhrzxPV3yHtcSqyYKe9/XOhvW48UFjATg3VuJbpsp5822ACNvkmw==}
     engines: {node: '>= 0.10'}
-    deprecated: Use String.prototype.padEnd() instead
+    deprecated: Please use String.prototype.padEnd() over this package.
 
   rimraf@2.7.1:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
@@ -10617,6 +10626,10 @@ snapshots:
   '@jest/schemas@29.6.3':
     dependencies:
       '@sinclair/typebox': 0.27.8
+
+  '@jq-tools/jq@0.0.10(tslib@2.8.1)':
+    dependencies:
+      tslib: 2.8.1
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
