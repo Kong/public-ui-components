@@ -27,10 +27,7 @@
     </span>
   </div>
 
-  <KLabel
-    class="dk-inputs-field-h2 dk-margin-0"
-    :info="undefined"
-  >
+  <KLabel class="dk-inputs-field-h2 dk-margin-0">
     {{ t('plugins.free-form.datakit.flow_editor.node_properties.input.fields') }}
   </KLabel>
 
