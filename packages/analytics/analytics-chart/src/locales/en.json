@@ -32,6 +32,20 @@
     "UtcOffset": "UTC offset",
     "Timestamp": "Timestamp"
   },
+  "query_errors": {
+    "forbidden": {
+      "message": "Data request forbidden",
+      "details": "To access this data, either filter for an entity you have access to or request analytics viewer access from your administrator."
+    },
+    "time_range_exceeded": {
+      "message": "Time range exceeded",
+      "details": "The time range for this report is outside of your organization's data retention period"
+    },
+    "timeout": {
+      "message": "Data request timed out",
+      "details": "We're sorry, the request timed out. Please consider using a shorter time period or try again later."
+    }
+  },
   "legend": {
     "datapointValueDisplay": "{value} {unit}"
   },
