@@ -298,6 +298,7 @@ const topNavGroups = computed((): Map<string, SidebarPrimaryItem[]> => {
   return groups
 })
 
+const isMobile = useMediaQuery(`max-width: ${KUI_BREAKPOINT_MOBILE}`)
 const getGroupConfig = (groupName: string = ''): GroupConfig | null => {
   if (groupName === UNGROUPED_NAME || !groupName.trim()) {
     return null
@@ -489,7 +490,7 @@ onMounted(async () => {
   if (props.groupConfig) {
     for (const groupName in props.groupConfig) {
       // auto-expand all groups if the user is on mobile
-      if (useMediaQuery(`(max-width: ${KUI_BREAKPOINT_MOBILE})`)) {
+      if (isMobile.value) {
         const group = props.groupConfig[groupName]
         group.collapsed = false
       }
@@ -505,6 +506,10 @@ onBeforeUnmount(() => {
   // Cleanup event listener(s)
   window.removeEventListener('resize', debouncedResizeHandler)
   window.removeEventListener('resize', disableTransitions)
+})
+
+watch(() => props.groupConfig, (newConfig) => {
+  console.log('groupConfig updated', newConfig)
 })
 </script>
 
