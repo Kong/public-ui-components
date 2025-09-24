@@ -804,11 +804,10 @@
               "placeholder": "Select a source",
               "add_button": "Add an input",
               "or": "or",
-              "whole_input": "Whole input",
-              "whole_input_tooltip": "Use one upstream output as this node's entire input value",
-              "pre_field": "Per field",
-              "pre_field_tooltip": "Bind individual fields to sources.",
-              "source": "Source"
+              "input": "Input",
+              "fields": "Fields",
+              "source": "Source",
+              "tooltip": "Fields are part of the node input. A source can connect to either the fields or the input, but not both."
             },
             "input_name": {
               "label": "Input name",

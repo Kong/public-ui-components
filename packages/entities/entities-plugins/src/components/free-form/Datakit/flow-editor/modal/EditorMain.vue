@@ -51,9 +51,7 @@
             :label="t('plugins.free-form.datakit.flow_editor.debug.label')"
             :label-attributes="{
               info: t('plugins.free-form.datakit.flow_editor.debug.description'),
-              tooltipAttributes: {
-                maxWidth: '300px',
-              },
+              tooltipAttributes,
             }"
             name="config.debug"
           />
@@ -111,7 +109,7 @@
 <script setup lang="ts">
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon, RedoIcon, UndoIcon } from '@kong/icons'
-import { KButton } from '@kong/kongponents'
+import { KButton, KDropdown, KTooltip, KDropdownItem } from '@kong/kongponents'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 
 import english from '../../../../../locales/en.json'
@@ -127,6 +125,7 @@ import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
 
+import type { TooltipAttributes } from '@kong/kongponents'
 import type { DatakitConfig } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -161,6 +160,12 @@ useHotkeys({
   undo,
   redo,
 })
+
+const tooltipAttributes = {
+  maxWidth: '300px',
+  // @ts-ignore-next-line Kongponents hasn't exposed zIndex in the type yet
+  zIndex: 10000,
+} satisfies TooltipAttributes
 </script>
 
 <style lang="scss" scoped>
