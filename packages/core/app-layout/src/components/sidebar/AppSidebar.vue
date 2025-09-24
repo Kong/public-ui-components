@@ -488,9 +488,9 @@ onMounted(async () => {
   window.addEventListener('resize', disableTransitions)
 
   if (props.groupConfig) {
-    for (const groupName in props.groupConfig) {
-      // auto-expand all groups if the user is on mobile
-      if (isMobile.value) {
+    // auto-expand all groups if the user is on mobile
+    if (isMobile.value) {
+      for (const groupName in props.groupConfig) {
         const group = props.groupConfig[groupName]
         group.collapsed = false
       }
