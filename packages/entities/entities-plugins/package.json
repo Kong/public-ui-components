@@ -90,6 +90,7 @@
     "errorLimit": "2.8MB"
   },
   "dependencies": {
+    "@ai-sdk/deepseek": "^1.0.19",
     "@jq-tools/jq": "^0.0.10",
     "@kong-ui-public/entities-consumer-groups": "workspace:^",
     "@kong-ui-public/entities-consumers": "workspace:^",
@@ -100,6 +101,7 @@
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
+    "ai": "^5.0.51",
     "lodash-es": "^4.17.21",
     "marked": "^14.1.4"
   }

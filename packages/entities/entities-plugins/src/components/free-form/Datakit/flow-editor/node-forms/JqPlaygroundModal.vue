@@ -43,6 +43,7 @@
               />
               <!-- Ask AI Button - 悬浮在右下角 -->
               <KButton
+                v-if="isAiAvailable"
                 appearance="tertiary"
                 class="ask-ai-floating-button"
                 size="small"
@@ -135,11 +136,13 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from 'vue'
+import { onBeforeUnmount, ref, watch, computed } from 'vue'
 import { KModal, KLabel, KCodeBlock, KAlert, KEmptyState, KSelect, KTextArea, KButton } from '@kong/kongponents'
 import { MarkIcon, ArrowUpIcon } from '@kong/icons'
 import * as monaco from 'monaco-editor'
 import { evaluate, parse } from '@jq-tools/jq'
+import { generateText } from 'ai'
+import { createDeepSeek } from '@ai-sdk/deepseek'
 
 interface Props {
   visible: boolean
@@ -385,6 +388,16 @@ function handleExampleSelect(item: { label: string, value: string } | null) {
   processJq()
 }
 
+// Initialize DeepSeek AI client
+const deepseekClient = createDeepSeek({
+  apiKey: import.meta.env.VITE_DEEPSEEK_API_KEY || '',
+})
+
+// Check if AI is available
+const isAiAvailable = computed(() => {
+  return Boolean(import.meta.env.VITE_DEEPSEEK_API_KEY)
+})
+
 // AI Assistant functions
 function openAiPrompt() {
   showAiPrompt.value = true
@@ -399,6 +412,12 @@ function closeAiPrompt() {
 async function submitAiPrompt() {
   if (!aiPrompt.value.trim()) return
 
+  // Check if API key is available
+  if (!isAiAvailable.value) {
+    error.value = 'AI service unavailable: API key not configured. Please set VITE_DEEPSEEK_API_KEY in your environment.'
+    return
+  }
+
   isAiLoading.value = true
 
   // Set editors to readonly mode during processing
@@ -410,29 +429,60 @@ async function submitAiPrompt() {
   }
 
   try {
-    // Simulate AI processing (replace with actual AI API call)
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    // Prepare the system prompt for JQ generation
+    const systemPrompt = `You are a JQ expert assistant. Your task is to generate JQ filter expressions based on user requirements and the provided JSON data.
 
-    // Mock AI response - generate a simple JQ script based on prompt
-    let suggestedJq = '.'
-    const prompt = aiPrompt.value.toLowerCase()
+IMPORTANT RULES:
+1. Analyze the provided JSON structure carefully
+2. Generate ONLY the JQ filter expression that addresses the user's request
+3. Do NOT include any explanations, comments, or additional text
+4. Do NOT wrap the result in code blocks or markdown
+5. Return ONLY the raw JQ expression string
+6. Ensure the JQ expression is syntactically correct and will work with the provided JSON
+7. If the request is unclear, generate a reasonable JQ expression based on the JSON structure
 
-    if (prompt.includes('filter') || prompt.includes('select')) {
-      suggestedJq = '.[] | select(.active == true)'
-    } else if (prompt.includes('map') || prompt.includes('transform')) {
-      suggestedJq = '.[] | {name, value}'
-    } else if (prompt.includes('key') || prompt.includes('property')) {
-      suggestedJq = '.data.items'
-    } else if (prompt.includes('count') || prompt.includes('length')) {
-      suggestedJq = '. | length'
-    } else {
-      suggestedJq = '. | keys'
+Examples of valid responses:
+- .users[] | select(.active == true)
+- .data | map(.name)
+- .items | length
+- .[] | {name, email}
+- .products | sort_by(.price)
+
+The JQ expression should be ready to use directly without any modifications.`
+
+    // Prepare the user prompt with JSON context
+    const userPromptWithContext = `JSON Data:
+${jsonInput.value}
+
+User Request: ${aiPrompt.value.trim()}
+
+Generate a JQ expression to fulfill this request based on the provided JSON data.`
+
+    // Call DeepSeek API
+    const { text: jqExpression } = await generateText({
+      model: deepseekClient('deepseek-chat'),
+      system: systemPrompt,
+      prompt: userPromptWithContext,
+      temperature: 0.1,
+    })
+
+    // Clean up the response (remove any potential wrapping)
+    const cleanJqExpression = jqExpression
+      .trim()
+      .replace(/^```.*\n?/, '') // Remove opening code block
+      .replace(/\n?```$/, '') // Remove closing code block
+      .replace(/^`([^`]+)`$/, '$1') // Remove single backticks
+      .trim()
+
+    // Validate that we got a reasonable response
+    if (!cleanJqExpression || cleanJqExpression.length > 500) {
+      throw new Error('Invalid JQ expression received from AI')
     }
 
     // Update the JQ script
-    jqScript.value = suggestedJq
+    jqScript.value = cleanJqExpression
     if (jqEditor) {
-      jqEditor.setValue(suggestedJq)
+      jqEditor.setValue(cleanJqExpression)
     }
 
     // Process the new script
@@ -443,7 +493,20 @@ async function submitAiPrompt() {
 
   } catch (err) {
     console.error('AI processing error:', err)
-    error.value = 'AI processing failed. Please try again.'
+
+    // Show specific error message
+    let errorMessage = 'AI processing failed. Please try again.'
+    if (err instanceof Error) {
+      if (err.message.includes('API key')) {
+        errorMessage = 'AI service unavailable: API key not configured.'
+      } else if (err.message.includes('network') || err.message.includes('fetch')) {
+        errorMessage = 'Network error: Please check your connection and try again.'
+      } else if (err.message.includes('rate limit')) {
+        errorMessage = 'Rate limit exceeded: Please wait a moment and try again.'
+      }
+    }
+
+    error.value = errorMessage
   } finally {
     isAiLoading.value = false
 
