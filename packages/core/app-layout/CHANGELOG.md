@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.9.0...@kong-ui-public/app-layout@4.9.1) (2025-09-24)
+
+
+### Bug Fixes
+
+* **app-sidebar:** mobile check [khcp-17790] ([#2521](https://github.com/Kong/public-ui-components/issues/2521)) ([e6e9f2c](https://github.com/Kong/public-ui-components/commit/e6e9f2cd8f4f7ee67fdd3301171534b6436b2f10))
+
+
+
+
+
 # [4.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.8.1...@kong-ui-public/app-layout@4.9.0) (2025-09-19)
 
 
