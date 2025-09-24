@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.99.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.98.2...@kong-ui-public/entities-plugins@9.99.0) (2025-09-24)
+
+
+### Features
+
+* **entities-plugins:** improve datakit source selector copy ([#2520](https://github.com/Kong/public-ui-components/issues/2520)) ([5f8d8c4](https://github.com/Kong/public-ui-components/commit/5f8d8c4f453b868426723fb703eb7b4f4bf814cf))
+
+
+
+
+
 ## [9.98.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.98.1...@kong-ui-public/entities-plugins@9.98.2) (2025-09-23)
 
 
