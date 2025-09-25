@@ -44,17 +44,19 @@ describe('handleQueryError', () => {
     })
 
     expect(res).toMatchObject({ type: 'other', status: 400 })
-    expect(res.message).toBe('bar, baz')
+    expect(res.message).toBe('Bad request')
+    expect(res.details).toBe('bar, baz')
   })
 
   it('fallback to other (uses error.message)', () => {
     const res = handleQueryError({
       status: 500,
-      message: 'fallback message',
+      message: 'fallback details',
       response: { data: {} },
     })
 
     expect(res).toMatchObject({ type: 'other', status: 500 })
-    expect(res.message).toBe('fallback message')
+    expect(res.message).toBe('Bad request')
+    expect(res.details).toBe('fallback details')
   })
 })
