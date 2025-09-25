@@ -8,13 +8,10 @@
     v-else-if="hasError && queryError"
     :action-button-visible="false"
     data-testid="chart-empty-state"
-    :icon-variant="queryError?.type !== 'forbidden' ? 'error' : undefined"
   >
-    <template
-      v-if="queryError.type === 'forbidden'"
-      #icon
-    >
-      <VisibilityOffIcon />
+    <template #icon>
+      <VisibilityOffIcon v-if="queryError.type === 'forbidden'" />
+      <WarningOutlineIcon v-else />
     </template>
     <template #title>
       <p>{{ queryError.message }}</p>
@@ -56,7 +53,7 @@ import { handleQueryError } from '@kong-ui-public/analytics-chart'
 
 import composables from '../composables'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import { VisibilityOffIcon } from '@kong/icons'
+import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 
 const props = defineProps<{
   context: DashboardRendererContextInternal
