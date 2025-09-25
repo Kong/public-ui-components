@@ -1,12 +1,14 @@
 import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import { KUI_FONT_FAMILY_TEXT } from '@kong/design-tokens'
 import type { Chart, Plugin } from 'chart.js'
-import type { Threshold } from 'src/types'
+import type { Threshold, ThresholdType } from 'src/types'
 import type { createI18n } from '@kong-ui-public/i18n'
 import type english from '../../locales/en.json'
 import { thresholdColor } from '../../utils'
 
 const HOVER_TRIGGER_DELTA = 20
+const THRESHOLD_ERROR_BRUSH_COLOR = 'rgba(255, 171, 171, 0.4)'
+const THRESHOLD_WARNING_BRUSH_COLOR = 'rgba(255, 196, 0, 0.2)'
 
 interface ThresholdOptions {
   threshold: Record<ExploreAggregations, Threshold[]> | undefined
@@ -15,6 +17,102 @@ interface ThresholdOptions {
 type ThresholdExtra = Threshold & {
   hovered?: boolean
 }
+
+type ThresholdIntersection = {
+  start: number
+  end: number
+  type: ThresholdType
+}
+
+type Point = { x: number, y: number }
+
+// Using linear interpolation to find the exact point at which the line intersects the threshold
+const getExactIntersection = (p0: Point, p1: Point, targetY: number): number => {
+  const dy = p1.y - p0.y
+  if (dy === 0) {
+    return p1.x
+  }
+  const f = (targetY - p0.y) / dy
+  return p0.x + f * (p1.x - p0.x)
+}
+
+const getThresholdIntersections = (chart: Chart, thresholds: ThresholdExtra[]): ThresholdIntersection[] => {
+  const intersections: ThresholdIntersection[] = []
+  chart.data.datasets.forEach((dataset) => {
+    if (dataset.hidden) {
+      return
+    }
+
+    const dataPoints = dataset.data as Array<{ x: number, y: number }>
+    if (!dataPoints?.length) {
+      return
+    }
+
+    thresholds.forEach((t) => {
+      const intersectionTrack = dataPoints.map((d) => ({
+        ts: d.x,
+        aboveThreshold: d.y >= t.value,
+      }))
+
+      let intersectionStart: number | undefined = undefined
+      for (let i = 1; i < intersectionTrack.length; i++) {
+        if (!intersectionTrack[i - 1].aboveThreshold && intersectionTrack[i].aboveThreshold) {
+          // If we have a start of an intersection, record it
+          intersectionStart = getExactIntersection(
+            dataPoints[i - 1],
+            dataPoints[i],
+            t.value,
+          )
+        } else if (intersectionTrack[i - 1].aboveThreshold && !intersectionTrack[i].aboveThreshold) {
+          if (intersectionStart !== undefined) {
+            intersections.push({
+              start: intersectionStart,
+              end: getExactIntersection(
+                dataPoints[i - 1],
+                dataPoints[i],
+                t.value,
+              ),
+              type: t.type,
+            })
+            intersectionStart = undefined
+          }
+        }
+      }
+      // If we reach the end and intersectionStart is still defined, it means the intersection goes till the end of the data
+      if (intersectionStart !== undefined) {
+        intersections.push({
+          start: intersectionStart,
+          end: intersectionTrack[intersectionTrack.length - 1].ts,
+          type: t.type,
+        })
+      }
+    })
+  })
+
+  return intersections
+}
+
+const mergeThresholdIntersections = (intersections: ThresholdIntersection[]): ThresholdIntersection[] => {
+  if (!intersections.length) {
+    return []
+  }
+
+  intersections.sort((a, b) => a.type.localeCompare(b.type) || a.start - b.start)
+
+  const merged: ThresholdIntersection[] = []
+
+  for (const curr of intersections) {
+    const last = merged[merged.length - 1]
+    if (last && last.type === curr.type && curr.start <= last.end) {
+      last.end = Math.max(last.end, curr.end)
+    } else {
+      merged.push({ ...curr })
+    }
+  }
+
+  return merged
+}
+
 export class ThresholdPlugin implements Plugin {
   id = 'thresholdPlugin'
   private _thresholds?: Record<ExploreAggregations, ThresholdExtra[]>
@@ -58,7 +156,8 @@ export class ThresholdPlugin implements Plugin {
     this._mouseMoveHandler = onMouseMove
   }
 
-  afterDatasetDraw(chart: Chart): void {
+  afterDatasetsDraw(chart: Chart): void {
+    const context = chart.ctx
     for (const key of Object.keys(this._thresholds || {})) {
       const threshold = this._thresholds?.[key as ExploreAggregations]
 
@@ -67,7 +166,6 @@ export class ThresholdPlugin implements Plugin {
           const yScale = chart.scales['y']
           const yValue = yScale.getPixelForValue(t.value)
 
-          const context = chart.ctx
           context.save()
           context.beginPath()
           context.moveTo(chart.chartArea.left, yValue)
@@ -96,6 +194,29 @@ export class ThresholdPlugin implements Plugin {
             context.fillText(text, chart.chartArea.left, yValue - 4)
             context.restore()
           }
+        })
+
+        const intersections = getThresholdIntersections(chart, threshold)
+        const mergedIntersections = mergeThresholdIntersections(intersections)
+
+        mergedIntersections.forEach((intersection) => {
+          // Draw brushed area between start and end of intersection
+          const xStart = chart.scales['x'].getPixelForValue(intersection.start)
+          const xEnd = chart.scales['x'].getPixelForValue(intersection.end)
+          context.save()
+          context.fillStyle = intersection.type === 'error' ? THRESHOLD_ERROR_BRUSH_COLOR : THRESHOLD_WARNING_BRUSH_COLOR
+          context.fillRect(xStart, chart.chartArea.top, xEnd - xStart, chart.chartArea.bottom - chart.chartArea.top)
+          context.restore()
+
+          // Draw a horizontal line at the bottom of the chart area of thresholdColor(t.type)
+          context.save()
+          context.beginPath()
+          context.moveTo(xStart, chart.chartArea.bottom)
+          context.lineTo(xEnd, chart.chartArea.bottom)
+          context.lineWidth = 2
+          context.strokeStyle = thresholdColor(intersection.type)
+          context.stroke()
+          context.restore()
         })
       }
     }
