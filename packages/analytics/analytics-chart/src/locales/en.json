@@ -44,6 +44,9 @@
     "timeout": {
       "message": "Data request timed out",
       "details": "We're sorry, the request timed out. Please consider using a shorter time period or try again later."
+    },
+    "other": {
+      "message": "Bad request"
     }
   },
   "legend": {
