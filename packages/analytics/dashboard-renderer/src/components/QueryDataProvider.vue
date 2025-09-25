@@ -5,23 +5,17 @@
     type="table"
   />
   <KEmptyState
-    v-else-if="hasError && queryError?.type === 'forbidden'"
-    :action-button-visible="false"
-    data-testid="chart-forbidden-state"
-  >
-    <template #default>
-      {{ queryError.message }}
-    </template>
-    <template #icon>
-      <VisibilityOffIcon />
-    </template>
-  </KEmptyState>
-  <KEmptyState
     v-else-if="hasError && queryError"
     :action-button-visible="false"
     data-testid="chart-empty-state"
-    icon-variant="error"
+    :icon-variant="queryError?.type !== 'forbidden' ? 'error' : undefined"
   >
+    <template
+      v-if="queryError.type === 'forbidden'"
+      #icon
+    >
+      <VisibilityOffIcon />
+    </template>
     <template #title>
       <p>{{ queryError.message }}</p>
     </template>
