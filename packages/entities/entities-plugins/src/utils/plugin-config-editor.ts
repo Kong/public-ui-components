@@ -20,8 +20,8 @@ import {
 
 export const setupMonaco = async () => {
   const [EditorWorker, JSONWorker] = await Promise.all([
-    import('@kong/monaco-editor/esm/vs/editor/editor.worker?worker').then(module => module.default),
-    import('@kong/monaco-editor/esm/vs/language/json/json.worker?worker').then(module => module.default),
+    import('monaco-editor/esm/vs/editor/editor.worker?worker').then(module => module.default),
+    import('monaco-editor/esm/vs/language/json/json.worker?worker').then(module => module.default),
   ])
 
   window.MonacoEnvironment = {

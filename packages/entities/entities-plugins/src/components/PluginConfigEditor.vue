@@ -42,9 +42,10 @@ import type * as Monaco from 'monaco-editor'
 import type { StaticPluginMetaData } from 'src/definitions/metadata'
 import { inject, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue'
 import composables from '../composables'
-import { type EditorLanguage, type FormsApi, type RecordFieldSchema } from '../types'
+// import { type EditorLanguage, type FormsApi, type RecordFieldSchema } from '../types'
 import { isValidUuid, setupMonaco } from '../utils'
 import PropertyPanel from './config-editor/PropertyPanel.vue'
+import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
 
 const languageOptions = [
   { label: 'JSON', value: 'json' },

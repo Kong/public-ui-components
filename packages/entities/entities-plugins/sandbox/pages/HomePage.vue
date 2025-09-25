@@ -15,5 +15,10 @@
         Free Form (Mocking Schema)
       </router-link>
     </li>
+    <li>
+      <router-link :to="{ name: 'code-editor' }">
+        Code Editor
+      </router-link>
+    </li>
   </ul>
 </template>

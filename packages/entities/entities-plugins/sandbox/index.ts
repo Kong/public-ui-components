@@ -88,6 +88,11 @@ const init = async () => {
         name: 'free-form',
         component: () => import('./pages/FreeFormPage.vue'),
       },
+      {
+        path: '/code-editor',
+        name: 'code-editor',
+        component: () => import('./pages/PluginConfigEditorPage.vue'),
+      },
     ],
   })
 
