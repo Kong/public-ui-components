@@ -39,6 +39,7 @@ export interface PluginConfigEditorProps {
 import { FORMS_API_KEY } from '@kong-ui-public/forms'
 import type { ASTNode } from 'vscode-json-languageservice'
 import type * as Monaco from 'monaco-editor'
+import * as Json from 'jsonc-parser'
 import type { StaticPluginMetaData } from 'src/definitions/metadata'
 import { inject, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue'
 import composables from '../composables'
@@ -347,16 +348,36 @@ onMounted(async () => {
     }),
   )
 
+
+  const getNodeFromOffset = (root: ASTNode | undefined, offset: number, includeRightBound = false): ASTNode | undefined => {
+    if (root) {
+      return <ASTNode>Json.findNodeAtOffset(root, offset, includeRightBound)
+    }
+    return undefined
+  }
+
+
   editorDisposables.push(
     monaco.languages.registerCompletionItemProvider('json', {
       triggerCharacters: [' ', ':', '"'],
       provideCompletionItems: async (model, position) => {
-        const node = languageSpecificDocument.value.getNodeFromOffset(
-          textDocument.value.offsetAt({
-            line: position.lineNumber - 1,
-            character: position.column - 1,
-          }),
-        )
+        const offset = model.getOffsetAt(position)
+        console.log(position, offset )
+        const workerGetter = await monaco.languages.json.getWorker()
+
+        const worker = await workerGetter()
+        console.log('worker:', worker)
+        const plainJSONDocument = await worker.parseJSONDocument(model.uri.toString())
+        console.log('plainJSONDocument:', plainJSONDocument)
+        const node = getNodeFromOffset(plainJSONDocument?.root, offset)
+        console.log('node:', node)
+
+        // const node = languageSpecificDocument.value.getNodeFromOffset(
+        //   textDocument.value.offsetAt({
+        //     line: position.lineNumber - 1,
+        //     character: position.column - 1,
+        //   }),
+        // )
 
         if (node?.type === 'property' && node.keyNode.value === 'service') {
           return {

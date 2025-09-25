@@ -51,19 +51,19 @@
             :credential="treatAsCredential"
             :editing="formType === EntityBaseFormType.Edit"
             :enable-redis-partial="enableRedisPartial"
-        :enable-vault-secret-picker="props.enableVaultSecretPicker"
+            :enable-vault-secret-picker="props.enableVaultSecretPicker"
             :engine="engine"
-        :entity-map="entityMap"
+            :entity-map="entityMap"
             :raw-config-schema="configResponse"
             :raw-schema="loadedSchema"
-        :record="record"
+            :record="record"
             :schema="finalSchema"
-        @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
+            @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
             @loading="(val: boolean) => formLoading = val"
             @model-updated="handleUpdate"
             @show-new-partial-modal="(redisType: string) => $emit('showNewPartialModal', redisType)"
-        @validity-change="handleValidityChange"
-      />
+            @validity-change="handleValidityChange"
+          />
         </template>
         <template #code-editor>
           <PluginConfigEditorLoader
