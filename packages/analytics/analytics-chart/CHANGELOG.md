@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.5.0...@kong-ui-public/analytics-chart@10.5.1) (2025-09-25)
+
+
+### Bug Fixes
+
+* **analytics:** handle query errors more gracefully [MA-4332] ([#2522](https://github.com/Kong/public-ui-components/issues/2522)) ([25b2723](https://github.com/Kong/public-ui-components/commit/25b2723ed2eec60587c87a6b2484b130eb8a37c4))
+
+
+
+
+
 # [10.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.4.4...@kong-ui-public/analytics-chart@10.5.0) (2025-09-23)
 
 
