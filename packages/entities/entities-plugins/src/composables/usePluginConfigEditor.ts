@@ -3,7 +3,7 @@ import {
   TextDocument,
   type JSONDocument,
   type JSONSchema,
-} from '@kong/vscode-json-languageservice'
+} from 'vscode-json-languageservice'
 import cloneDeep from 'lodash-es/cloneDeep'
 import type * as Monaco from 'monaco-editor'
 import type { StaticPluginMetaData } from 'src/definitions/metadata'
@@ -52,7 +52,7 @@ export default function usePluginConfigEditor(
           { required: ['name'] },
         ],
         propertyCompletion: {
-          openValues:true,
+          openValues: true,
           suggestAfterCompletion: true,
         },
         // defaultSnippets: [

@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ASTNode } from '@kong/vscode-json-languageservice'
+import type { ASTNode } from 'vscode-json-languageservice'
 import { marked, type MarkedOptions } from 'marked'
 import { computed, type PropType } from 'vue'
 import { FieldSchemaType, type ExtendedJSONSchema } from '../../types'

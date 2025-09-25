@@ -1,4 +1,4 @@
-import type { ASTNode, JSONSchema, PropertyASTNode } from '@kong/vscode-json-languageservice'
+import type { ASTNode, JSONSchema, PropertyASTNode } from 'vscode-json-languageservice'
 import type * as Monaco from 'monaco-editor'
 import {
   isArrayLikeField,

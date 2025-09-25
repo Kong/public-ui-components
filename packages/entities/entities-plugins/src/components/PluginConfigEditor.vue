@@ -29,15 +29,15 @@
 
 <script lang="ts">
 export interface PluginConfigEditorProps {
-  name: string;
-  metadata: StaticPluginMetaData;
-  rawGatewaySchema: RecordFieldSchema;
+  name: string
+  metadata: StaticPluginMetaData
+  rawGatewaySchema: RecordFieldSchema
 }
 </script>
 
 <script setup lang="ts">
 import { FORMS_API_KEY } from '@kong-ui-public/forms'
-import type { ASTNode } from '@kong/vscode-json-languageservice'
+import type { ASTNode } from 'vscode-json-languageservice'
 import type * as Monaco from 'monaco-editor'
 import type { StaticPluginMetaData } from 'src/definitions/metadata'
 import { inject, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue'
