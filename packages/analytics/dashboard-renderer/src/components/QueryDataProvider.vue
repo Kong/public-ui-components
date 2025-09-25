@@ -20,6 +20,7 @@
     v-else-if="hasError && queryError"
     :action-button-visible="false"
     data-testid="chart-empty-state"
+    icon-variant="error"
   >
     <template #title>
       <p>{{ queryError.message }}</p>
