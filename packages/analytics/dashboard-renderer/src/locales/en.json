@@ -13,11 +13,6 @@
     "remove": "Remove",
     "delete": "Delete"
   },
-  "queryDataProvider": {
-    "forbidden": "To access this data, either filter for an entity you have access to or request analytics viewer access from your administrator.",
-    "timeRangeExceeded":  "The time range for this report is outside of your organization's data retention period",
-    "timeout": "Query timed out.  Consider querying a shorter time range."
-  },
   "csvExport": {
     "defaultFilename": "Chart export",
     "exportAsCsv": "Export as CSV"

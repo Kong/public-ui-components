@@ -17,13 +17,19 @@
     </template>
   </KEmptyState>
   <KEmptyState
-    v-else-if="hasError"
+    v-else-if="hasError && queryError"
     :action-button-visible="false"
     data-testid="chart-empty-state"
     icon-variant="error"
   >
-    <template #default>
-      {{ queryError?.message }}
+    <template #title>
+      <p>{{ queryError.message }}</p>
+    </template>
+    <template
+      v-if="queryError.details"
+      #default
+    >
+      <p>{{ queryError.details }}</p>
     </template>
   </KEmptyState>
 
@@ -41,18 +47,21 @@
  * However, TS doesn't seem to narrow this type correctly, so there's an explicit `v-else-if`
  * on the third step to ensure that the type is correctly inferred as "not undefined".
  */
-
-import { computed, inject, ref, watch } from 'vue'
-import useSWRV from 'swrv'
-import { useSwrvState } from '@kong-ui-public/core'
-import composables from '../composables'
 import type {
   AnalyticsBridge,
   ExploreResultV4,
   ValidDashboardQuery,
 } from '@kong-ui-public/analytics-utilities'
-import { INJECT_QUERY_PROVIDER } from '../constants'
+import type { QueryError } from '@kong-ui-public/analytics-chart'
 import type { DashboardRendererContextInternal } from '../types'
+
+import { computed, inject, ref, watch } from 'vue'
+import useSWRV from 'swrv'
+import { useSwrvState } from '@kong-ui-public/core'
+import { handleQueryError } from '@kong-ui-public/analytics-chart'
+
+import composables from '../composables'
+import { INJECT_QUERY_PROVIDER } from '../constants'
 import { VisibilityOffIcon } from '@kong/icons'
 
 const props = defineProps<{
@@ -67,12 +76,6 @@ const emit = defineEmits<{
   (e: 'queryComplete'): void
 }>()
 
-interface QueryError {
-  type: 'forbidden' | 'timeout' | 'range_exceeded' | 'other'
-  message: string
-}
-
-const { i18n } = composables.useI18n()
 const { issueQuery } = composables.useIssueQuery()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
@@ -95,28 +98,7 @@ const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   } catch (e: any) {
     // Note: The error object will contain a response status property at the root when the analytics bridge
     // detects a 403 or 408 status code. This allows us to provide proper error messages for impacted tiles.
-    if (e?.status === 403) {
-      queryError.value = {
-        message: i18n.t('queryDataProvider.forbidden'),
-        type: 'forbidden',
-      }
-    } else if (e?.status === 408) {
-      queryError.value = {
-        message: i18n.t('queryDataProvider.timeout'),
-        type: 'timeout',
-      }
-    } else if (e?.response?.data?.message === 'Range not allowed for this tier') {
-      // Note: 'Range not allowed' is defined by the API, therefore cannot be stored as string translation
-      queryError.value = {
-        message: i18n.t('queryDataProvider.timeRangeExceeded'),
-        type: 'range_exceeded',
-      }
-    } else {
-      queryError.value = {
-        message: e?.response?.data?.message || e?.message,
-        type: 'other',
-      }
-    }
+    queryError.value = handleQueryError(e)
 
     throw e
   } finally {
