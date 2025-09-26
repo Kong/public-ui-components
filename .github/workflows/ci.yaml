@@ -45,7 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ env.GH_TOKEN }}
 
       - name: Checkout Source Code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
         with:
           fetch-depth: 0
 
@@ -299,7 +299,7 @@ jobs:
 
       - name: Save Build Artifacts
         if: ${{ steps.changed_packages.outputs.filter != '' }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: package-dist-artifacts
           path: packages/*/*/dist
@@ -318,7 +318,7 @@ jobs:
 
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
@@ -327,7 +327,7 @@ jobs:
         run: pnpm cypress install
 
       - name: Download build artifacts
-        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: package-dist-artifacts
           path: packages/
@@ -348,7 +348,7 @@ jobs:
           echo "artifactName=component-test-failures-${packageName}" >> $GITHUB_OUTPUT
 
       - name: Upload Component Test Results
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         continue-on-error: true
         if: failure()
         with:
@@ -381,7 +381,7 @@ jobs:
 
       - name: Checkout Source Code
         if: ${{ github.event_name == 'push' }}
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
         with:
           fetch-depth: 0
           token: ${{ secrets.KONGPONENTS_BOT_PAT }}
@@ -392,7 +392,7 @@ jobs:
 
       - name: Download build artifacts
         if: ${{ github.event_name == 'push' }}
-        uses: actions/download-artifact@95815c38cf2ff2164869cbab79da8d1f422bc89e # v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: package-dist-artifacts
           path: packages/
@@ -436,7 +436,7 @@ jobs:
       - finish-test-and-publish
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
 
       - name: Get aggregate Workflow status
         uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
