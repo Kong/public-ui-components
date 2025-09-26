@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.17.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.17.9...@kong-ui-public/forms@4.17.10) (2025-09-26)
+
+
+### Bug Fixes
+
+* increase character limit for textarea [KM-1819] ([#2527](https://github.com/Kong/public-ui-components/issues/2527)) ([233d774](https://github.com/Kong/public-ui-components/commit/233d774dc8164cc92682a88a56ba4583e1239be6))
+
+
+
+
+
 ## [4.17.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.17.8...@kong-ui-public/forms@4.17.9) (2025-09-22)
 
 **Note:** Version bump only for package @kong-ui-public/forms

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.99.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.99.0...@kong-ui-public/entities-plugins@9.99.1) (2025-09-26)
+
+
+### Bug Fixes
+
+* increase character limit for textarea [KM-1819] ([#2527](https://github.com/Kong/public-ui-components/issues/2527)) ([233d774](https://github.com/Kong/public-ui-components/commit/233d774dc8164cc92682a88a56ba4583e1239be6))
+
+
+
+
+
 # [9.99.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.98.2...@kong-ui-public/entities-plugins@9.99.0) (2025-09-24)
 
 
