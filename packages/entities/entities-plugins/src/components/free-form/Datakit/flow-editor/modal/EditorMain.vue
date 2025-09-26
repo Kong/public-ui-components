@@ -126,7 +126,7 @@ import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
 
 import type { TooltipAttributes } from '@kong/kongponents'
-import type { DatakitConfig } from '../../types'
+import type { DatakitConfig, DatakitPluginData } from '../../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -146,9 +146,15 @@ function selectExample(example: string) {
     return
 
   const partialConfig = maybeConfig as Partial<DatakitConfig>
-  const maybeNodes = partialConfig?.nodes
+  // todo(zehao): the scope of example should be expanded to include `partials`
+  const pluginData: DatakitPluginData = {
+    config: {
+      ...partialConfig,
+      nodes: partialConfig.nodes ?? [],
+    },
+  }
 
-  load(Array.isArray(maybeNodes) ? maybeNodes : [], [], true)
+  load(pluginData, true)
 }
 
 function close() {

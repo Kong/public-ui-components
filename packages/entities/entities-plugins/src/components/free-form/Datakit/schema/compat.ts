@@ -5,6 +5,7 @@ import {
   HttpMethodSchema,
   isImplicitName,
   ConfigNodeTypeSchema,
+  ResourcesSchema,
 } from './strict'
 import { validateNamesAndConnections } from './shared'
 import { IMPLICIT_NODE_NAMES } from '../constants'
@@ -132,6 +133,7 @@ export const DatakitConfigSchema = z
   .object({
     nodes: z.array(ConfigNodeSchema).nullish(),
     debug: z.boolean().nullish(),
+    // resources: ResourcesSchema.nullish(), // todo(datakit-m2)
   })
   .strict()
   .superRefine((config, ctx) => {

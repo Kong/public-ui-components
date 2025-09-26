@@ -1,4 +1,4 @@
-import { computed, nextTick, watch } from 'vue'
+import { computed, inject, nextTick, watch } from 'vue'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
@@ -14,6 +14,7 @@ import { useConfirm } from './useConflictConfirm'
 import useI18n from '../../../../../composables/useI18n'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 import { createEdgeConnectionString, createNewConnectionString } from './helpers'
+import { FEATURE_FLAGS } from '../../../../../constants'
 
 export type InputOption = {
   value: IdConnection
@@ -31,6 +32,8 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   // It should return `T`, but we use any to avoid circular dependency issues
   getFormInnerData?: () => any,
 ) {
+  const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
+
   const {
     state,
     renameNode,
@@ -319,6 +322,9 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   const inputOptions = computed<InputOption[]>(() => {
     const options: InputOption[] = []
     for (const node of state.value.nodes) {
+
+      // skip `vault` until M2 is ready
+      if (!enableDatakitM2 && node.type === 'vault') continue
 
       const meta = getNodeMeta(node.type)
       // skip no output nodes

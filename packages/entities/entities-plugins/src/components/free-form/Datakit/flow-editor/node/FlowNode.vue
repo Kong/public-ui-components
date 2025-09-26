@@ -89,6 +89,19 @@
             type="target"
           />
 
+          <!-- ValueIndicator for main input handle -->
+          <ValueIndicator
+            v-if="getSpecialConnection('input')"
+            class="value-indicator"
+            :edge-id="getSpecialConnection('input')!.edgeId"
+            :reversed="isReversed"
+            :selected="selectedEdgeId === getSpecialConnection('input')!.edgeId"
+            :source-field-name="getSpecialConnection('input')!.sourceFieldName"
+            :source-node="getSpecialConnection('input')!.sourceNode"
+            @delete="handleVIDelete"
+            @select="handleVISelect"
+          />
+
           <div class="handle-label-wrapper">
             <div
               class="handle-label trigger"
@@ -132,6 +145,20 @@
               :position="inputPosition"
               type="target"
             />
+
+            <!-- ValueIndicator for special connections -->
+            <ValueIndicator
+              v-if="getSpecialConnection(field.id)"
+              class="value-indicator"
+              :edge-id="getSpecialConnection(field.id)!.edgeId"
+              :reversed="isReversed"
+              :selected="selectedEdgeId === getSpecialConnection(field.id)!.edgeId"
+              :source-field-name="getSpecialConnection(field.id)!.sourceFieldName"
+              :source-node="getSpecialConnection(field.id)!.sourceNode"
+              @delete="handleVIDelete"
+              @select="handleVISelect"
+            />
+
             <div class="handle-label-wrapper">
               <div class="handle-label text">
                 {{ field.name }}
@@ -218,7 +245,7 @@
 </template>
 
 <script setup lang="ts">
-import type { NodeInstance } from '../../types'
+import type { EdgeId, NodeField, NodeInstance } from '../../types'
 
 import { computed, useTemplateRef, watch } from 'vue'
 import { KTooltip, KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
@@ -245,6 +272,7 @@ import NodeBadge from './NodeBadge.vue'
 import HotkeyLabel from '../HotkeyLabel.vue'
 import { HOTKEYS } from '../../constants'
 import { isEqual } from 'lodash-es'
+import ValueIndicator from './ValueIndicator.vue'
 
 const { data } = defineProps<{
   data: NodeInstance
@@ -260,9 +288,11 @@ const flowStore = useOptionalFlowStore()
 const {
   getInEdgesByNodeId,
   getOutEdgesByNodeId,
+  getNodeById,
   toggleExpanded: storeToggleExpanded,
   duplicateNode,
   removeNode,
+  disconnectEdge,
   propertiesPanelOpen,
 } = useEditorStore()
 
@@ -316,12 +346,83 @@ const outputPosition = computed(() => {
 })
 
 const name = computed(() => {
+  // @ts-expect-error
   return isImplicit.value ? t(`plugins.free-form.datakit.flow_editor.node_types.${data.type}.name`) : data.name
 })
 
 const handleTwigColor = computed(() => {
   return isImplicit.value ? KUI_COLOR_BACKGROUND_NEUTRAL_STRONG : KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
 })
+
+// Special input connections (vault or cross-phase)
+const specialInputConnections = computed(() => {
+  const connections = new Map<string, {
+    fieldId: string
+    edgeId: EdgeId
+    field: NodeField | null
+    sourceNode: NodeInstance
+    sourceFieldName?: string
+  }>()
+
+  const inEdges = getInEdgesByNodeId(data.id)
+
+  for (const edge of inEdges) {
+    const sourceNode = getNodeById(edge.source)
+    if (!sourceNode) continue
+
+    const isVault = sourceNode.type === 'vault'
+
+    const isCrossPhase = sourceNode.phase !== data.phase
+
+    if (!isVault && !isCrossPhase) continue
+
+    let sourceFieldName: string | undefined
+    if (edge.sourceField) {
+      const sourceField = sourceNode.fields.output.find(f => f.id === edge.sourceField)
+      sourceFieldName = sourceField?.name
+    }
+
+    if (edge.targetField) {
+      const field = data.fields.input.find(f => f.id === edge.targetField)
+      if (!field) continue
+
+      connections.set(edge.targetField, {
+        fieldId: edge.targetField,
+        edgeId: edge.id,
+        field,
+        sourceNode,
+        sourceFieldName,
+      })
+    } else {
+      connections.set('input', {
+        fieldId: 'input',
+        edgeId: edge.id,
+        field: null,
+        sourceNode,
+        sourceFieldName,
+      })
+    }
+  }
+
+  return connections
+})
+
+const selectedEdgeId = computed(() => {
+  return flowStore?.selectedEdgeId.value
+})
+
+function getSpecialConnection(fieldId: string) {
+  return specialInputConnections.value.get(fieldId)
+}
+
+function handleVISelect(edgeId: EdgeId) {
+  flowStore?.setSelectedEdge?.(edgeId)
+  flowStore?.selectNode()
+}
+
+function handleVIDelete(edgeId: EdgeId) {
+  disconnectEdge(edgeId)
+}
 
 function toggleExpanded(io: 'input' | 'output') {
   if (!flowStore || flowStore.readonly) return
