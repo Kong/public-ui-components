@@ -5,23 +5,14 @@
     type="table"
   />
   <KEmptyState
-    v-else-if="hasError && queryError?.type === 'forbidden'"
-    :action-button-visible="false"
-    data-testid="chart-forbidden-state"
-  >
-    <template #default>
-      {{ queryError.message }}
-    </template>
-    <template #icon>
-      <VisibilityOffIcon />
-    </template>
-  </KEmptyState>
-  <KEmptyState
     v-else-if="hasError && queryError"
     :action-button-visible="false"
     data-testid="chart-empty-state"
-    icon-variant="error"
   >
+    <template #icon>
+      <VisibilityOffIcon v-if="queryError.type === 'forbidden'" />
+      <WarningOutlineIcon v-else />
+    </template>
     <template #title>
       <p>{{ queryError.message }}</p>
     </template>
@@ -62,7 +53,7 @@ import { handleQueryError } from '@kong-ui-public/analytics-chart'
 
 import composables from '../composables'
 import { INJECT_QUERY_PROVIDER } from '../constants'
-import { VisibilityOffIcon } from '@kong/icons'
+import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 
 const props = defineProps<{
   context: DashboardRendererContextInternal
