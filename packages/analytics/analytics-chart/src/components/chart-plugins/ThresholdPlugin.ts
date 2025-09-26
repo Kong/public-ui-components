@@ -39,7 +39,8 @@ const getExactIntersection = (p0: Point, p1: Point, targetY: number): number => 
 const getThresholdIntersections = (chart: Chart, thresholds: ThresholdExtra[]): ThresholdIntersection[] => {
   const intersections: ThresholdIntersection[] = []
   chart.data.datasets.forEach((dataset) => {
-    if (dataset.hidden) {
+    const meta = chart.getDatasetMeta(chart.data.datasets.indexOf(dataset))
+    if (!meta.visible) {
       return
     }
 
@@ -102,8 +103,8 @@ const mergeThresholdIntersections = (intersections: ThresholdIntersection[]): Th
   const merged: ThresholdIntersection[] = []
 
   for (const curr of intersections) {
-    const last = merged[merged.length - 1]
-    if (last && last.type === curr.type && curr.start <= last.end) {
+    const last = merged.findLast(({ type }) => type === curr.type)
+    if (last && curr.start <= last.end) {
       last.end = Math.max(last.end, curr.end)
     } else {
       merged.push({ ...curr })
