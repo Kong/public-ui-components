@@ -289,7 +289,7 @@ defineExpose({ autoLayout, fitView })
 
     &:not(.readonly) {
       :deep(.vue-flow__node) {
-        &:hover .flow-node {
+        &:hover:not(:has(.value-indicator:hover)) .flow-node {
           border-color: $kui-color-border-primary-weak;
         }
 

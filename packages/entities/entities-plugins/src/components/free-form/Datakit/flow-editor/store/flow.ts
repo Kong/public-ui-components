@@ -8,7 +8,7 @@ import type { ConnectionString } from '../modal/ConflictModal.vue'
 import dagre from '@dagrejs/dagre'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
-import { computed, toValue, watch } from 'vue'
+import { computed, ref, toValue, watch, watchEffect } from 'vue'
 
 import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 import useI18n from '../../../../../composables/useI18n'
@@ -73,11 +73,11 @@ const BORDER_COLORS: Record<EdgeState, string> = {
 }
 
 type EdgeState = 'default' | 'hover' | 'selected'
-let selectedEdgeId: EdgeId | undefined
+const selectedEdgeId = ref<EdgeId | undefined>(undefined)
 let hoverEdgeId: EdgeId | undefined
 
 function updateEdgeStyle(edge: Edge<EdgeData>): Edge<EdgeData> {
-  const state = edge.id === selectedEdgeId ? 'selected' : edge.id === hoverEdgeId ? 'hover' : 'default'
+  const state = edge.id === selectedEdgeId.value ? 'selected' : edge.id === hoverEdgeId ? 'hover' : 'default'
 
   const color = BORDER_COLORS[state]
   const { markerEnd } = edge
@@ -167,10 +167,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       onEdgeUpdate,
       onEdgeMouseEnter,
       onEdgeMouseLeave,
+      onPaneClick,
       getNodes,
       setNodes,
       setEdges,
       addSelectedNodes,
+      removeSelectedNodes,
+      getSelectedNodes,
     } = vueFlowStore
 
     // VueFlow has a default delete key code of 'Backspace',
@@ -189,6 +192,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       getInEdgesByNodeId,
       commit,
       reset,
+      selection,
     } = editorStore
 
     function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
@@ -204,7 +208,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     const nodes = computed(() =>
       state.value.nodes
-        .filter((node) => node.phase === phase)
+        .filter((node) => node.phase === phase && !node.hidden)
         .map<Node<NodeInstance>>((node) => ({
           id: node.id,
           type: 'flow',
@@ -217,6 +221,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     const edges = computed(() =>
       state.value.edges
         .filter((edge) => edgeInPhase(edge, phase))
+        .filter((edge) => {
+          const sourceNode = getNodeById(edge.source)
+          const targetNode = getNodeById(edge.target)
+          return !sourceNode?.hidden && !targetNode?.hidden
+        })
         .map<Edge<EdgeData>>((edge) => {
           const sourceNode = getNodeById(edge.source)
           const targetNode = getNodeById(edge.target)
@@ -420,12 +429,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     // Only triggered by canvas-originated changes
     onEdgesChange((changes) => {
+      console.log('phase', phase, changes)
       const selectionChanges = changes.filter((change) => change.type === 'select')
       selectionChanges
         // deselected changes come first
         .sort((a, b) => (a.selected === b.selected ? 0 : a.selected ? 1 : -1))
         .forEach((change) => {
-          selectedEdgeId = change.selected ? change.id as EdgeId : undefined
+          selectedEdgeId.value = change.selected ? change.id as EdgeId : undefined
 
           setEdges((edges) => edges.map((edge) => {
             if (edge.id !== change.id || !edge.markerEnd) {
@@ -450,6 +460,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           disconnectEdge(change.id as EdgeId, false) // Hold off committing until sync
         }
       })
+
+      if (!changes.length || (changes[0].type === 'select' && !changes[0].selected)) {
+        clearSelectedEdge()
+      }
 
       if (schedulePostRemoval && !postRemovalScheduled) {
         postRemovalScheduled = true
@@ -479,6 +493,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     onEdgeUpdate(({ edge, connection }) => {
       disconnectEdge(edge.id as EdgeId, false)
       handleConnect(connection)
+    })
+
+    onPaneClick(() => {
+      clearSelectedEdge()
+      selectNode()
     })
 
     function autoLayout(commitNow = true) {
@@ -676,8 +695,12 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       // selection state. Use setTimeout to ensure all microtasks have finished.
       return new Promise<void>((resolve) =>
         setTimeout(() => {
-          const selectedNode = findNode(nodeId)
-          addSelectedNodes(selectedNode ? [selectedNode] : [])
+          if (nodeId) {
+            const selectedNode = findNode(nodeId)
+            addSelectedNodes(selectedNode ? [selectedNode] : [])
+          } else {
+            clearSelectedNode()
+          }
           resolve()
         }, 0),
       )
@@ -762,6 +785,17 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
     }
 
+    const setSelectedEdge = (edgeId: EdgeId | undefined) => {
+      selectedEdgeId.value = edgeId
+      setEdges((edges) => edges.map(updateEdgeStyle))
+    }
+
+    const clearSelectedNode = () => {
+      removeSelectedNodes(getSelectedNodes.value)
+    }
+
+    const clearSelectedEdge = () => setSelectedEdge(undefined)
+
     return {
       vueFlowStore,
       editorStore,
@@ -772,9 +806,12 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       edges,
 
       selectNode,
+      selectedEdgeId: computed(() => selectedEdgeId.value),
+      setSelectedEdge,
       autoLayout,
       placeToRight,
       scrollRightToReveal,
+      clearSelectedNode,
 
       fitViewParams,
       fitView,

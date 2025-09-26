@@ -37,12 +37,12 @@ import yaml, { JSON_SCHEMA } from 'js-yaml'
 import * as examples from './examples'
 
 import type { YAMLException } from 'js-yaml'
-import type { DatakitConfig, DatakitFormData } from './types'
+import type { DatakitConfig, DatakitPluginData } from './types'
 import { useFormShared } from '../shared/composables'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData } = useFormShared<DatakitFormData>()
+const { formData } = useFormShared<DatakitPluginData>()
 
 defineProps<{
   editing: boolean
