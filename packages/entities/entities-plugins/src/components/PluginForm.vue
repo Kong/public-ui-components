@@ -1034,7 +1034,7 @@ const initScopeFields = (): void => {
       model: 'service-id',
       label: t('plugins.form.scoping.gateway_service.label'),
       placeholder: t('plugins.form.scoping.placeholder'),
-      type: 'AutoSuggestV2',
+      type: 'AutoSuggest',
       labelField: 'name',
       entity,
       inputValues: {
@@ -1055,7 +1055,7 @@ const initScopeFields = (): void => {
       model: 'route-id',
       label: t('plugins.form.scoping.route.label'),
       placeholder: t('plugins.form.scoping.placeholder'),
-      type: 'AutoSuggestV2',
+      type: 'AutoSuggest',
       entity,
       labelField: 'name', // for rendering dropdown item label
       inputValues: {
@@ -1076,7 +1076,7 @@ const initScopeFields = (): void => {
       model: 'consumer-id',
       label: t('plugins.form.scoping.consumer.label'),
       placeholder: t('plugins.form.scoping.placeholder'),
-      type: 'AutoSuggestV2',
+      type: 'AutoSuggest',
       entity,
       labelField: 'username',
       inputValues: {
@@ -1097,7 +1097,7 @@ const initScopeFields = (): void => {
       model: 'consumer_group-id',
       label: t('plugins.form.scoping.consumer_group.label'),
       placeholder: t('plugins.form.scoping.placeholder'),
-      type: 'AutoSuggestV2',
+      type: 'AutoSuggest',
       entity,
       entityDataKey: 'consumer_group',
       labelField: 'name',
