@@ -1,6 +1,7 @@
 <template>
   <InputComponent
     v-bind="$attrs"
+    :character-limit="characterLimit"
     :model-value="modelValue"
     :resizable="multiline ? true : undefined"
     @change="handleChange"
@@ -20,7 +21,7 @@
 
 <script setup lang="ts">
 import { KInput, KTextArea } from '@kong/kongponents'
-import { ref, watch, useSlots, computed } from 'vue'
+import { ref, watch, useSlots, computed, useAttrs } from 'vue'
 import { useFormShared } from './composables'
 
 interface Props {
@@ -29,12 +30,16 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const attrs = useAttrs()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
 const InputComponent = computed(() => props.multiline ? KTextArea : KInput)
+const characterLimit = computed(() => {
+  return (attrs.characterLimit as number) ?? (props.multiline ? false : undefined)
+})
 
 const innerValue = ref(props.modelValue)
 
