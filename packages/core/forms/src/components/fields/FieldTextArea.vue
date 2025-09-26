@@ -5,7 +5,7 @@
       :id="getFieldID(schema)"
       v-model="inputValue"
       autosize
-      :character-limit="schema.max"
+      :character-limit="schema.max ?? false"
       :class="schema.fieldClasses"
       :disabled="disabled || undefined"
       :help="hint || undefined"
