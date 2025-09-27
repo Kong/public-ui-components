@@ -47,7 +47,7 @@ describe('ThresholdPlugin', () => {
   it('calls afterDatasetDraw with appropriate plugin options', () => {
 
     const thresholdPlugin = new ThresholdPlugin(i18nMock)
-    cy.spy(thresholdPlugin, 'afterDatasetDraw').as('afterDatasetDrawSpy')
+    cy.spy(thresholdPlugin, 'afterDatasetsDraw').as('afterDatasetDrawSpy')
 
     mount({
       plugins: [thresholdPlugin],
