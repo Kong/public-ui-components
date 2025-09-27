@@ -303,7 +303,7 @@ const serviceDimensionValues = ref(new Set([
 const threshold = {
   'request_count': [
     { type: 'warning', value: 700 },
-    { type: 'error', value: 900 },
+    { type: 'error', value: 900, highlightIntersections: true },
   ],
 } as Record<ExploreAggregations, Threshold[]>
 

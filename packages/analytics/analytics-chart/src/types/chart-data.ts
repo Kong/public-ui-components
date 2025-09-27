@@ -64,6 +64,7 @@ export interface Threshold {
   type: ThresholdType
   value: number
   label?: string
+  highlightIntersections?: boolean
 }
 
 /**

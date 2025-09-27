@@ -109,6 +109,10 @@ export const thresholdSchema = {
     label: {
       type: 'string',
     },
+    highlightIntersections: {
+      type: 'boolean',
+      default: false,
+    },
   },
   required: ['type', 'value'],
   additionalProperties: false,

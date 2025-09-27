@@ -18,7 +18,7 @@ type ThresholdExtra = Threshold & {
   hovered?: boolean
 }
 
-type ThresholdIntersection = {
+export type ThresholdIntersection = {
   start: number
   end: number
   type: ThresholdType
@@ -36,7 +36,7 @@ const getExactIntersection = (p0: Point, p1: Point, targetY: number): number => 
   return p0.x + f * (p1.x - p0.x)
 }
 
-const getThresholdIntersections = (chart: Chart, thresholds: ThresholdExtra[]): ThresholdIntersection[] => {
+export const getThresholdIntersections = (chart: Chart, thresholds: Threshold[]): ThresholdIntersection[] => {
   const intersections: ThresholdIntersection[] = []
   chart.data.datasets.forEach((dataset) => {
     const meta = chart.getDatasetMeta(chart.data.datasets.indexOf(dataset))
@@ -49,7 +49,7 @@ const getThresholdIntersections = (chart: Chart, thresholds: ThresholdExtra[]): 
       return
     }
 
-    thresholds.forEach((t) => {
+    thresholds.filter(t => t.highlightIntersections).forEach((t) => {
       const intersectionTrack = dataPoints.map((d) => ({
         ts: d.x,
         aboveThreshold: d.y >= t.value,
@@ -93,7 +93,7 @@ const getThresholdIntersections = (chart: Chart, thresholds: ThresholdExtra[]): 
   return intersections
 }
 
-const mergeThresholdIntersections = (intersections: ThresholdIntersection[]): ThresholdIntersection[] => {
+export const mergeThresholdIntersections = (intersections: ThresholdIntersection[]): ThresholdIntersection[] => {
   if (!intersections.length) {
     return []
   }
