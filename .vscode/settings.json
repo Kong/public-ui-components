@@ -22,7 +22,4 @@
     "**/bower_components",
     "**/*/node_modules/@kong/design-tokens",
   ],
-  "cSpell.words": [
-    "Datakit"
-  ],
 }
