@@ -132,6 +132,7 @@ export const DatakitConfigSchema = z
   .object({
     nodes: z.array(ConfigNodeSchema).nullish(),
     debug: z.boolean().nullish(),
+    // resources: ResourcesSchema.nullish(), // todo(datakit-m2)
   })
   .strict()
   .superRefine((config, ctx) => {

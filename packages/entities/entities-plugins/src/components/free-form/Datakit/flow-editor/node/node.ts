@@ -20,6 +20,8 @@ import {
   VitalsIcon,
   ArrowSplitIcon,
   CachedIcon,
+  CloudIcon,
+  KeyIcon,
 } from '@kong/icons'
 import english from '../../../../../locales/en.json'
 import { CONFIG_NODE_TYPES } from '../../constants'
@@ -27,6 +29,7 @@ import { CONFIG_NODE_TYPES } from '../../constants'
 const { t } = createI18n<typeof english>('en-us', english)
 
 export function getNodeTypeDescription(type: NodeType): string {
+  // @ts-expect-error
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.description`)
 }
 
@@ -35,6 +38,7 @@ function getNodeTypeSummary(type: ConfigNodeType): string {
 }
 
 export function getNodeTypeName(type: NodeType): string {
+  // @ts-expect-error
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.name`)
 }
 
@@ -134,6 +138,7 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
 export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   request: {
     type: 'request',
+    icon: CloudIcon,
     description: getNodeTypeDescription('request'),
     io: {
       output: {
@@ -160,6 +165,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   },
   service_response: {
     type: 'service_response',
+    icon: CloudIcon,
     description: getNodeTypeDescription('service_response'),
     io: {
       output: {
@@ -181,6 +187,17 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
+  },
+  vault: {
+    type: 'vault',
+    icon: KeyIcon,
+    io: {
+      output: {
+        fields: [],
+        configurable: true,
+      },
+    },
+    hidden: true,
   },
 }
 

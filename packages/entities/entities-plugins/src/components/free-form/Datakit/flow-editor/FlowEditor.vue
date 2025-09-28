@@ -34,11 +34,11 @@ import { provideEditorStore } from '../composables'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
 
-import type { ConfigNode, DatakitConfig, DatakitFormData, DatakitUIData, UINode } from '../types'
+import type { ConfigNode, DatakitConfig, DatakitPluginData, DatakitUIData, UINode } from '../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData } = useFormShared<DatakitFormData>()
+const { formData } = useFormShared<DatakitPluginData>()
 
 const { isEditing } = defineProps<{
   isEditing?: boolean
@@ -57,7 +57,7 @@ function onChange(configNodes: ConfigNode[], uiNodes: UINode[]) {
   emit('change', nextConfig, nextUIData)
 }
 
-const { modalOpen, setPendingFitView } = provideEditorStore(formData.config?.nodes ?? [], formData.__ui_data?.nodes ?? [], {
+const { modalOpen, setPendingFitView } = provideEditorStore(formData, {
   onChange,
   isEditing,
 })

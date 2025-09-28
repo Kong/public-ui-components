@@ -316,6 +316,7 @@ const outputPosition = computed(() => {
 })
 
 const name = computed(() => {
+  // @ts-expect-error
   return isImplicit.value ? t(`plugins.free-form.datakit.flow_editor.node_types.${data.type}.name`) : data.name
 })
 

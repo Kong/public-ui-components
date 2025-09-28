@@ -204,7 +204,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     const nodes = computed(() =>
       state.value.nodes
-        .filter((node) => node.phase === phase)
+        .filter((node) => node.phase === phase && !node.hidden)
         .map<Node<NodeInstance>>((node) => ({
           id: node.id,
           type: 'flow',
@@ -217,6 +217,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     const edges = computed(() =>
       state.value.edges
         .filter((edge) => edgeInPhase(edge, phase))
+        .filter((edge) => {
+          const sourceNode = getNodeById(edge.source)
+          const targetNode = getNodeById(edge.target)
+          return !sourceNode?.hidden && !targetNode?.hidden
+        })
         .map<Edge<EdgeData>>((edge) => {
           const sourceNode = getNodeById(edge.source)
           const targetNode = getNodeById(edge.target)

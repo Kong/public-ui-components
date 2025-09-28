@@ -2,6 +2,8 @@ import { IMPLICIT_NODE_NAMES } from '../../constants'
 import type {
   ConfigEdge,
   ConfigNode,
+  DatakitConfig,
+  DatakitPluginData,
   EdgeInstance,
   EditorState,
   FieldName,
@@ -35,10 +37,13 @@ import {
  * @returns The initial editor state
  */
 export function initEditorState(
-  configNodes: ConfigNode[],
-  uiNodes: UINode[],
+  pluginData: DatakitPluginData,
   keepHistoryAfterLayout?: boolean,
 ): EditorState {
+  const configNodes = pluginData.config?.nodes ?? []
+  const uiNodes = pluginData.__ui_data?.nodes ?? []
+  const resources = pluginData.config?.resources ?? {}
+
   const uiNodesMap = new Map<NodeName, UINode>(
     uiNodes.map((uiNode) => [uiNode.name, uiNode]),
   )
@@ -87,7 +92,7 @@ export function initEditorState(
     if (!uiNode && !isUIDataStale) {
       isUIDataStale = true
     }
-    const node = buildNodeInstance(configNode.type, configNode, uiNode)
+    const node = buildNodeInstance(configNode.type, configNode, uiNode, resources)
     nodes.push(node)
     nodesMap.set(node.name, node)
   }
@@ -103,7 +108,7 @@ export function initEditorState(
         uiNode = makeDefaultImplicitUINode(implicitName)
       }
 
-      const node = buildNodeInstance(implicitName, undefined, uiNode)
+      const node = buildNodeInstance(implicitName, undefined, uiNode, resources)
       nodes.push(node)
       nodesMap.set(node.name, node)
     }
@@ -165,6 +170,7 @@ export function initEditorState(
 export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance {
   const { type, name, phase, position, fields, config } = payload
   const defaultFields = getFieldsFromMeta(type)
+  const meta = getNodeMeta(type)
 
   return {
     id: createId('node'),
@@ -177,6 +183,7 @@ export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance
       input: toFieldArray(fields?.input ?? defaultFields.input),
       output: toFieldArray(fields?.output ?? defaultFields.output),
     },
+    hidden: payload.hidden || meta.hidden,
     config: config ? clone(config) : {},
   }
 }
@@ -192,13 +199,15 @@ export function buildNodeInstance(
   type: NodeType,
   configNode?: ConfigNode,
   uiNode?: UINode,
+  resources?: DatakitConfig['resources'],
 ): NodeInstance {
   return makeNodeInstance({
     type,
     name: configNode?.name,
     phase: uiNode?.phase ?? getDefaultPhase(type),
     position: uiNode?.position,
-    fields: resolveFields(type, uiNode, configNode),
+    fields: resolveFields(type, uiNode, configNode, resources),
+    hidden: uiNode?.hidden,
     config: configNode ? extractConfig(configNode) : undefined,
   })
 }
@@ -276,6 +285,7 @@ function resolveFields(
   type: NodeType,
   uiNode?: UINode,
   configNode?: ConfigNode,
+  resources?: DatakitConfig['resources'],
 ): MakeNodeInstancePayload['fields'] | undefined {
   const meta = getNodeMeta(type)
   const io = meta?.io
@@ -307,7 +317,16 @@ function resolveFields(
       }
       if (out.size) fields.output = Array.from(out)
     }
+
+    if (type === 'vault') fields.output = genVaultOutputFields(resources)
   }
 
   return Object.keys(fields).length ? fields : undefined
+}
+
+function genVaultOutputFields(resources: DatakitConfig['resources']): FieldName[] {
+  if (resources?.vault) {
+    return Object.keys(resources.vault) as FieldName[]
+  }
+  return []
 }

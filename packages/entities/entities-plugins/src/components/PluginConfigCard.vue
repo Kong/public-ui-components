@@ -145,10 +145,7 @@
         v-if="enableDatakitCanvas"
         #config-card-item-nodes="slotProps"
       >
-        <DatakitConfigCardCanvas
-          :nodes="slotProps.record?.config?.nodes ?? []"
-          :uidata="slotProps.record?.__ui_data || {}"
-        />
+        <DatakitConfigCardCanvas :plugin-data="slotProps.record" />
       </template>
     </EntityBaseConfigCard>
   </div>
