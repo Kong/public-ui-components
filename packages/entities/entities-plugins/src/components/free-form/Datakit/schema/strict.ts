@@ -1,8 +1,8 @@
 import { z } from 'zod'
-import { CONFIG_NODE_TYPES, HTTP_METHODS, IMPLICIT_NODE_NAMES } from '../constants'
+import { CONFIG_NODE_TYPES, HTTP_METHODS, IMPLICIT_NODE_NAMES, IMPLICIT_NODE_TYPES } from '../constants'
 import { validateNamesAndConnections } from './shared'
 
-export const ImplicitNodeTypeSchema = z.enum(IMPLICIT_NODE_NAMES)
+export const ImplicitNodeTypeSchema = z.enum(IMPLICIT_NODE_TYPES)
 
 /** Runtime-reserved implicit node types. */
 export type ImplicitNodeType = z.infer<typeof ImplicitNodeTypeSchema>

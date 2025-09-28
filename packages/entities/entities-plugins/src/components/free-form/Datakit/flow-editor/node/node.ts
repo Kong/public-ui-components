@@ -29,7 +29,6 @@ import { CONFIG_NODE_TYPES } from '../../constants'
 const { t } = createI18n<typeof english>('en-us', english)
 
 export function getNodeTypeDescription(type: NodeType): string {
-  // @ts-expect-error
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.description`)
 }
 
@@ -38,7 +37,6 @@ function getNodeTypeSummary(type: ConfigNodeType): string {
 }
 
 export function getNodeTypeName(type: NodeType): string {
-  // @ts-expect-error
   return t(`plugins.free-form.datakit.flow_editor.node_types.${type}.name`)
 }
 

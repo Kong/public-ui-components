@@ -794,6 +794,10 @@
             "service_response": {
               "name": "service response",
               "description": "Reads response properties from the service being proxied to."
+            },
+            "vault": {
+              "name": "Vault",
+              "description": "Vault is a tool for securely accessing secrets."
             }
           },
           "node_properties": {
