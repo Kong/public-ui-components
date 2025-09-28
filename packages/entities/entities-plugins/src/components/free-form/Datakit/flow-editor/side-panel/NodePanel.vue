@@ -1,6 +1,9 @@
 <template>
   <div class="dk-node-panel">
-    <h3 class="title">
+    <h3
+      v-if="!hideTitle"
+      class="title"
+    >
       <KLabel
         class="label"
         :info="
@@ -42,11 +45,15 @@ import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
 import { useEditorStore } from '../store/store'
-import { CONFIG_NODE_META_MAP } from './node'
-import NodePanelItem from './NodePanelItem.vue'
-import FlowNode from './FlowNode.vue'
+import { CONFIG_NODE_META_MAP } from '../node/node'
+import NodePanelItem from '../node/NodePanelItem.vue'
+import FlowNode from '../node/FlowNode.vue'
 
 import type { ConfigNodeType, NodeInstance, DragPayload } from '../../types'
+
+defineProps<{
+  hideTitle?: boolean
+}>()
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -129,7 +136,6 @@ const handleDragStart = async (e: DragEvent, type: ConfigNodeType) => {
 
 <style lang="scss" scoped>
 .dk-node-panel {
-  padding: $kui-space-60 $kui-space-30;
 
   .title {
     color: $kui-color-text;
