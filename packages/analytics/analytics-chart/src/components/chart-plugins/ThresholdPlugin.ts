@@ -121,8 +121,7 @@ export class ThresholdPlugin implements Plugin {
 
   constructor(private i18n: ReturnType<typeof createI18n<typeof english>>) {}
 
-  beforeInit(chart: Chart, _: any, pluginOptions: ThresholdOptions): void {
-    const canvas = chart.canvas
+  private _syncThresholds(pluginOptions: ThresholdOptions) {
     for (const key of Object.keys(pluginOptions.threshold || {})) {
       const threshold = pluginOptions.threshold?.[key as ExploreAggregations]
       if (threshold) {
@@ -132,6 +131,17 @@ export class ThresholdPlugin implements Plugin {
         } as Record<ExploreAggregations, ThresholdExtra[]>
       }
     }
+  }
+
+  // Gets called when chart options are updated
+  beforeUpdate(chart: Chart, _: any, pluginOptions: ThresholdOptions): void {
+    this._syncThresholds(pluginOptions)
+  }
+
+
+  beforeInit(chart: Chart, _: any, pluginOptions: ThresholdOptions): void {
+    const canvas = chart.canvas
+    this._syncThresholds(pluginOptions)
 
     const onMouseMove = (event: MouseEvent) => {
       if (chart) {
@@ -157,8 +167,9 @@ export class ThresholdPlugin implements Plugin {
     this._mouseMoveHandler = onMouseMove
   }
 
-  afterDatasetsDraw(chart: Chart): void {
+  afterDatasetsDraw(chart: Chart, _: any): void {
     const context = chart.ctx
+
     for (const key of Object.keys(this._thresholds || {})) {
       const threshold = this._thresholds?.[key as ExploreAggregations]
 
