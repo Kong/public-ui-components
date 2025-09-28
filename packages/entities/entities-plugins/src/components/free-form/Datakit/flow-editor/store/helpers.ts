@@ -126,7 +126,7 @@ export const IMPLICIT_NODE_NAMES: ImplicitNodeName[] = [
 /** Default UI blob for an implicit node. */
 export function makeDefaultImplicitUINode(name: ImplicitNodeName): UINode {
   const phase: NodePhase =
-    name === 'request' || name === 'service_request' || name === 'vault' ? 'request' : 'response'
+    ['request', 'service_request', 'vault'].includes(name) ? 'request' : 'response'
   const meta = IMPLICIT_NODE_META_MAP[name]
   return {
     name,
