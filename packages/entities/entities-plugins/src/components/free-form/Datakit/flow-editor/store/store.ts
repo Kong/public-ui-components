@@ -2,6 +2,7 @@ import type { XYPosition } from '@vue-flow/core'
 import type {
   ConfigNode,
   CreateNodePayload,
+  DatakitPluginData,
   EdgeData,
   EdgeId,
   EdgeInstance,
@@ -37,8 +38,8 @@ type CreateEditorStoreOptions = {
 }
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
-  function createState(configNodes: ConfigNode[], uiNodes: UINode[], options: CreateEditorStoreOptions = {}) {
-    const state = ref<EditorState>(initEditorState(configNodes, uiNodes))
+  function createState(pluginData: DatakitPluginData, options: CreateEditorStoreOptions = {}) {
+    const state = ref<EditorState>(initEditorState(pluginData))
     const selection = ref<NodeId>()
     const modalOpen = ref(false)
     const propertiesPanelOpen = ref(false)
@@ -556,11 +557,11 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
      * To commit the current state in the undo history before load and keep the history,
      * set `keepHistory` to `true` (default: `false`).
      */
-    function load(nextConfig: ConfigNode[], nextUI: UINode[], keepHistory?: boolean) {
+    function load(pluginData: DatakitPluginData, keepHistory?: boolean) {
       if (keepHistory)
         history.commit()
 
-      state.value = initEditorState(nextConfig, nextUI, keepHistory)
+      state.value = initEditorState(pluginData, keepHistory)
 
       if (!keepHistory)
         history.clear()

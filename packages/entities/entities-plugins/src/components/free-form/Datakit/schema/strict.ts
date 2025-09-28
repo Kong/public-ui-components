@@ -4,7 +4,7 @@ import { validateNamesAndConnections } from './shared'
 
 export const ImplicitNodeTypeSchema = z.enum(IMPLICIT_NODE_TYPES)
 
-/** Runtime-reserved implicit node typez. */
+/** Runtime-reserved implicit node types. */
 export type ImplicitNodeType = z.infer<typeof ImplicitNodeTypeSchema>
 
 export const ImplicitNodeNameSchema = z.enum(IMPLICIT_NODE_NAMES)
@@ -13,12 +13,12 @@ export const ImplicitNodeNameSchema = z.enum(IMPLICIT_NODE_NAMES)
 export type ImplicitNodeName = z.infer<typeof ImplicitNodeNameSchema>
 
 export const isImplicitName = (s: string) =>
-  (IMPLICIT_NODE_TYPES as readonly string[]).includes(s)
+  (IMPLICIT_NODE_NAMES as readonly string[]).includes(s)
 
 export const ConfigNodeTypeSchema = z.enum(CONFIG_NODE_TYPES)
 const KNOWN_NODE_TYPES = ConfigNodeTypeSchema.options
 
-/** All explicit node types recognised by Datakit. */
+/** All explicit node types recognized by Datakit. */
 export type ConfigNodeType = z.infer<typeof ConfigNodeTypeSchema>
 
 export const NodeTypeSchema = z.union([
@@ -219,14 +219,159 @@ export const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
 /** Discriminated union of all node types. */
 export type ConfigNode = z.infer<typeof ConfigNodeSchema>
 
+export const VaultSchema = z
+  .record(
+    z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/).min(1).max(255),
+    z.string().min(1).max(4095),
+  )
+
+/** cache.memory */
+const CacheMemorySchema = z.object({
+  dictionary_name: z.string().default('kong_db_cache'),
+})
+
+/** cache.redis.sentinel_nodes / cluster_nodes */
+const SentinelNodeSchema = z.object({
+  host: z.string().default('127.0.0.1'),
+  port: z.number().int().min(0).max(65535).default(6379),
+})
+
+const ClusterNodeSchema = z.object({
+  ip: z.string().default('127.0.0.1'),
+  port: z.number().int().min(0).max(65535).default(6379),
+})
+
+/** cache.redis */
+const CacheRedisSchema = z
+  .object({
+    host: z.string().optional().default('127.0.0.1'),
+    port: z.number().int().min(0).max(65535).optional().default(6379),
+
+    connect_timeout: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483646)
+      .default(2000),
+    send_timeout: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483646)
+      .default(2000),
+    read_timeout: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483646)
+      .default(2000),
+
+    username: z.string().optional(),
+    password: z.string().optional(),
+
+    sentinel_username: z.string().optional(),
+    sentinel_password: z.string().optional(),
+
+    database: z.number().int().optional().default(0),
+
+    keepalive_pool_size: z
+      .number()
+      .int()
+      .min(1)
+      .max(2147483646)
+      .default(256),
+    keepalive_backlog: z
+      .number()
+      .int()
+      .min(0)
+      .max(2147483646)
+      .optional(),
+
+    sentinel_master: z.string().optional(),
+    sentinel_role: z.enum(['master', 'slave', 'any']).optional(),
+    sentinel_nodes: z
+      .array(SentinelNodeSchema)
+      .min(1, { message: 'sentinel_nodes must contain at least 1 item' })
+      .optional(),
+
+    cluster_nodes: z
+      .array(ClusterNodeSchema)
+      .min(1, { message: 'cluster_nodes must contain at least 1 item' })
+      .optional(),
+
+    ssl: z.boolean().default(false).optional(),
+    ssl_verify: z.boolean().default(false).optional(),
+    server_name: z.string().optional(),
+    cluster_max_redirections: z.number().int().default(5).optional(),
+    connection_is_proxied: z.boolean().default(false).optional(),
+
+    /** --- Compatibility for deprecated fields (optional) --- */
+    timeout: z.number().int().optional(), // deprecated: use connect_timeout, send_timeout and read_timeout instead
+    sentinel_addresses: z.array(z.string()).min(1).optional(), // deprecated
+    cluster_addresses: z.array(z.string()).min(1).optional(), // deprecated
+  })
+  .superRefine((val, ctx) => {
+    // 1) host & port are mutually required
+    const hasHost = val.host !== undefined && val.host !== null
+    const hasPort = val.port !== undefined && val.port !== null
+    if ((hasHost && !hasPort) || (!hasHost && hasPort)) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'host and port must be specified together',
+        path: hasHost ? ['port'] : ['host'],
+      })
+    }
+
+    // 2) sentinel_master & sentinel_role & sentinel_nodes must appear together or all be missing
+    const hasSentinelMaster = !!val.sentinel_master
+    const hasSentinelRole = !!val.sentinel_role
+    const hasSentinelNodes = !!val.sentinel_nodes?.length
+    const count = [hasSentinelMaster, hasSentinelRole, hasSentinelNodes].filter(
+      Boolean,
+    ).length
+    if (count > 0 && count < 3) {
+      ctx.addIssue({
+        code: 'custom',
+        message:
+          'sentinel_master, sentinel_role and sentinel_nodes must be provided together',
+      })
+    }
+
+    // 3) host is required when connection_is_proxied === true
+    if (val.connection_is_proxied === true && !hasHost) {
+      ctx.addIssue({
+        code: 'custom',
+        message:
+          'host is required when connection_is_proxied is true (host/port should point to the proxy)',
+        path: ['host'],
+      })
+    }
+  })
+
+export const CacheSchema = z.object({
+  strategy: z.enum(['memory', 'redis']).optional(),
+  memory: CacheMemorySchema,
+  redis: CacheRedisSchema,
+})
+
+export const ResourcesSchema = z.object({
+  vault: VaultSchema.nullish(),
+  cache: CacheSchema.nullish(),
+})
+
+export type Resources = z.infer<typeof ResourcesSchema>
+
+export const PartialsSchema = z.array(z.object({ id: z.string() }))
+
 export const DatakitConfigSchema = z
   .object({
     nodes: z.array(ConfigNodeSchema).min(1, 'At least one node is required'),
     debug: z.boolean().nullish(),
+    resources: ResourcesSchema.nullish(),
   })
   .strict()
   .superRefine((config, ctx) => {
-    validateNamesAndConnections(config, IMPLICIT_NODE_TYPES, ctx)
+    validateNamesAndConnections(config, IMPLICIT_NODE_NAMES, ctx)
   })
 
 /** Datakit plugin configuration. */

@@ -60,13 +60,14 @@ export interface NodeMeta {
     input?: IOMeta
     output?: IOMeta
   }
+  /** hidden in UI */
+  hidden?: boolean
 }
 
 /************************************************
  *             Plugin config types              *
  ************************************************/
 
-export type DatakitPlugin = FreeFormPluginData<DatakitConfig>
 export type {
   DatakitConfig,
   ConfigNode,
@@ -125,6 +126,8 @@ export type UINode = {
   position: XYPosition
   fields: { input?: FieldName[], output?: FieldName[] }
   expanded: { input?: boolean, output?: boolean }
+  /** hidden in UI */
+  hidden?: boolean
 }
 
 export interface NodeInstance {
@@ -135,6 +138,8 @@ export interface NodeInstance {
   position: XYPosition
   expanded: { input?: boolean, output?: boolean }
   fields: { input: NodeField[], output: NodeField[] }
+  /** hidden in UI */
+  hidden?: boolean
   config?: Record<string, unknown>
 }
 
@@ -177,6 +182,8 @@ export interface MakeNodeInstancePayload {
   phase?: NodePhase
   position?: XYPosition
   fields?: { input?: FieldName[], output?: FieldName[] }
+  /** hidden in UI */
+  hidden?: boolean
   config?: Record<string, unknown>
 }
 
@@ -199,7 +206,4 @@ export interface DragPayload {
   }
 }
 
-export type DatakitFormData = {
-  config: DatakitConfig
-  __ui_data: DatakitUIData
-}
+export type DatakitPluginData = FreeFormPluginData<DatakitConfig, DatakitUIData>

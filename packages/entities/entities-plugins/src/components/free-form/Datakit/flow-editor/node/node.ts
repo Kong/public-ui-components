@@ -20,6 +20,8 @@ import {
   VitalsIcon,
   ArrowSplitIcon,
   CachedIcon,
+  CloudIcon,
+  KeyIcon,
 } from '@kong/icons'
 import english from '../../../../../locales/en.json'
 import { CONFIG_NODE_TYPES } from '../../constants'
@@ -134,6 +136,7 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
 export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   request: {
     type: 'request',
+    icon: CloudIcon,
     description: getNodeTypeDescription('request'),
     io: {
       output: {
@@ -160,6 +163,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   },
   service_response: {
     type: 'service_response',
+    icon: CloudIcon,
     description: getNodeTypeDescription('service_response'),
     io: {
       output: {
@@ -181,6 +185,17 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
+  },
+  vault: {
+    type: 'vault',
+    icon: KeyIcon,
+    io: {
+      output: {
+        fields: [],
+        configurable: true,
+      },
+    },
+    hidden: true,
   },
 }
 

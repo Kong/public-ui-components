@@ -29,16 +29,15 @@
 </template>
 
 <script setup lang="ts">
-import type { DatakitConfig, DatakitUIData } from './types'
+import type { DatakitPluginData } from './types'
 import FlowPanels from './flow-editor/FlowPanels.vue'
 import { provideEditorStore } from './composables'
 
-const { nodes, uidata } = defineProps<{
-  nodes: DatakitConfig['nodes']
-  uidata?: DatakitUIData
+const { pluginData } = defineProps<{
+  pluginData: DatakitPluginData
 }>()
 
-provideEditorStore(nodes ?? [], uidata?.nodes ?? [])
+provideEditorStore(pluginData)
 </script>
 
 <style lang="scss" scoped>
