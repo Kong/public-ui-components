@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.5.1...@kong-ui-public/analytics-chart@10.6.0) (2025-09-29)
+
+
+### Features
+
+* draw threshold intersection brush ([#2524](https://github.com/Kong/public-ui-components/issues/2524)) ([c75c601](https://github.com/Kong/public-ui-components/commit/c75c60164aa614e5b813948ec7937263c492558c))
+
+
+
+
+
 ## [10.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.5.0...@kong-ui-public/analytics-chart@10.5.1) (2025-09-25)
 
 
