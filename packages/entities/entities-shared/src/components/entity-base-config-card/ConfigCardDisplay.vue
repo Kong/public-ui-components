@@ -13,7 +13,7 @@
         v-if="pType !== 'basic'"
         class="config-card-prop-section-title"
       >
-        {{ pType === 'advanced' ? t('baseConfigCard.sections.advanced') : t('baseConfigCard.sections.plugin') }}
+        {{ pType === 'advanced' ? t('baseConfigCard.sections.advanced') : pType === 'plugin' ? t('baseConfigCard.sections.plugin') : t('baseConfigCard.sections.policy') }}
       </div>
 
       <slot
