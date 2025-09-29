@@ -18,7 +18,12 @@ export const IMPLICIT_NODE_TYPES = [
   'vault',
 ] as const
 
-export const IMPLICIT_NODE_NAMES = IMPLICIT_NODE_TYPES
+export const IMPLICIT_NODE_NAMES = [
+  'request',
+  'service_request',
+  'service_response',
+  'response',
+] as const
 
 export const VISIBLE_IMPLICIT_NODE_NAMES = [
   'request',
@@ -36,6 +41,13 @@ export const CONFIG_NODE_TYPES = [
   'branch',
   'cache',
 ] as const
+
+export const BRANCH_KEYS = [
+  'then',
+  'else',
+] as const
+
+export type BranchKey = typeof BRANCH_KEYS[number]
 
 export const HTTP_METHODS = [
   'GET',

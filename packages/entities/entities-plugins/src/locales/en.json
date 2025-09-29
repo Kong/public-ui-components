@@ -794,8 +794,8 @@
             },
             "branch": {
               "name": "branch",
-              "summary": "Coming soon...",
-              "description": "Coming soon..."
+              "summary": "Conditional execution",
+              "description": "Execute different nodes based on matching input conditions, such as a cache hit or miss."
             },
             "cache": {
               "name": "cache",
@@ -856,6 +856,9 @@
             "property": {
               "get": "get",
               "set": "set"
+            },
+            "branch": {
+              "placeholder": "Select nodes"
             },
             "errors": {
               "invalid_identifier_format": "{fieldName} must start with a letter or underscore and contain only letters, numbers, underscores, or hyphens",

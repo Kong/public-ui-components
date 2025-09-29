@@ -59,6 +59,9 @@
           :readonly="mode !== 'edit'"
         />
       </template>
+      <template #node-group>
+        <GroupNode />
+      </template>
     </VueFlow>
 
     <div
@@ -84,6 +87,7 @@ import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { useHotkeys } from './composables/useHotkeys'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
+import GroupNode from './node/GroupNode.vue'
 import { provideFlowStore } from './store/flow'
 
 import '@vue-flow/controls/dist/style.css'
