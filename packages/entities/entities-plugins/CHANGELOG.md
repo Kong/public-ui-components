@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.100.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.100.0...@kong-ui-public/entities-plugins@9.100.1) (2025-09-29)
+
+
+### Bug Fixes
+
+* **entities-plugins:** confluent auth mode is undefined [KM-1824] ([#2529](https://github.com/Kong/public-ui-components/issues/2529)) ([77f1ceb](https://github.com/Kong/public-ui-components/commit/77f1cebe55415f6eeb4c04f145d48effdfc70339))
+
+
+
+
+
 # [9.100.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.99.1...@kong-ui-public/entities-plugins@9.100.0) (2025-09-28)
 
 
