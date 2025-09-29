@@ -21,6 +21,11 @@ export type InputOption = {
   label: NameConnection
 }
 
+export type BranchOption = {
+  value: NodeId
+  label: NodeName
+}
+
 export type BaseFormData = {
   name: NodeName
   input?: IdConnection
@@ -360,6 +365,12 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     return options
   })
 
+  const branchOptions = computed<BranchOption[]>(() => {
+    return state.value.nodes
+      .filter(node => node.id !== nodeId && !isImplicitType(node.type))
+      .map(node => ({ value: node.id, label: node.name }))
+  })
+
   const inputsFieldNames = computed<FieldName[]>(() => {
     return currentNode.value.fields.input.map(f => f.name) || []
   })
@@ -388,6 +399,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     // states
     formData,
     inputOptions,
+    branchOptions,
     inputEdge,
     inputsEdges,
     inputsFieldNames,

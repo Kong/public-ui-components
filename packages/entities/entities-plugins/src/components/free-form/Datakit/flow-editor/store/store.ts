@@ -25,6 +25,7 @@ import {
   createId,
   findFieldById,
   generateNodeName,
+  getBranchesFromMeta,
 } from './helpers'
 import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'
@@ -125,6 +126,28 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     const nodeNames = computed(
       () => new Set(state.value.nodes.map((node) => node.name)),
     )
+    function removeBranchTarget(targetId: NodeId) {
+      for (const node of state.value.nodes) {
+        const branchKeys = getBranchesFromMeta(node.type)
+        if (!branchKeys.length) continue
+        const config = node.config as Record<string, unknown> | undefined
+        if (!config) continue
+        for (const key of branchKeys) {
+          const raw = config[key]
+          if (!Array.isArray(raw)) continue
+          const list = raw as NodeId[]
+          const filtered = list.filter((entry) => entry !== targetId)
+          if (filtered.length === list.length) {
+            continue
+          }
+          if (filtered.length) {
+            config[key] = filtered
+          } else {
+            delete config[key]
+          }
+        }
+      }
+    }
 
     // validators bound to current maps
     const {
@@ -231,6 +254,9 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     }
 
     function removeNode(nodeId: NodeId, commitNow = true) {
+      const node = getNodeById(nodeId)
+      if (!node) return
+
       state.value.edges = state.value.edges.filter(
         (edge) => edge.source !== nodeId && edge.target !== nodeId,
       )
@@ -238,6 +264,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         (node) => node.id !== nodeId,
       )
       if (selection.value === nodeId) selection.value = undefined
+
+      removeBranchTarget(nodeId)
 
       const topo = validateGraph()
       if (!topo.ok) {
@@ -254,6 +282,9 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         console.warn('[renameNode] implicit node name is reserved.')
         return
       }
+      const prevName = node.name
+      if (prevName === newName) return
+
       node.name = newName
       if (commitNow) history.commit(tag)
     }
@@ -517,6 +548,30 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           name: node.name,
           type: node.type,
         } as ConfigNode
+
+        const branchKeys = getBranchesFromMeta(node.type)
+        if (branchKeys.length) {
+          for (const branchKey of branchKeys) {
+            const raw = (configNode as Record<string, unknown>)[branchKey]
+            if (!Array.isArray(raw)) {
+              continue
+            }
+
+            const names: NodeName[] = []
+            for (const entry of raw as NodeId[]) {
+              const targetNode = getNodeById(entry)
+              if (targetNode) {
+                names.push(targetNode.name)
+              }
+            }
+
+            if (names.length) {
+              (configNode as Record<string, unknown>)[branchKey] = Array.from(new Set(names))
+            } else {
+              delete (configNode as Record<string, unknown>)[branchKey]
+            }
+          }
+        }
 
         const hasNamedInputs = Object.keys(fieldInputs).length > 0
         // inputs and input should be mutually exclusive

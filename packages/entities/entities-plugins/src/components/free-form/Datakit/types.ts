@@ -3,7 +3,6 @@ import type { Component } from 'vue'
 import type { ButtonProps } from '@kong/kongponents'
 import type { XYPosition } from '@vue-flow/core'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
-import type { BranchKey } from './constants'
 import type {
   DatakitConfig,
   HttpMethod,
@@ -22,6 +21,7 @@ import type {
   JqNode,
   PropertyNode,
   StaticNode,
+  BranchNode,
 } from './schema/strict'
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
@@ -55,7 +55,6 @@ export interface IOMeta {
 
 export interface BranchMeta {
   name: BranchName
-  key: BranchKey
 }
 
 export interface NextMeta {
@@ -90,6 +89,7 @@ export type {
   ConfigNodeName,
   NodeName,
   FieldName,
+  BranchName,
   NameConnection,
   CallNode,
   ExitNode,
@@ -97,11 +97,9 @@ export type {
   PropertyNode,
   StaticNode,
   HttpMethod,
+  BranchNode,
 }
 
-export type { BranchKey } from './constants'
-
-export type BranchSelections = Partial<Record<BranchKey, NodeName[]>>
 
 /**
  * UI data that stores layout data for Datakit nodes.
@@ -169,7 +167,6 @@ export interface ConfigEdge {
 export interface EdgeData {
   source: NodeId
   sourceField?: FieldId
-  sourceBranchKey?: BranchKey
   target: NodeId
   targetField?: FieldId
 }
