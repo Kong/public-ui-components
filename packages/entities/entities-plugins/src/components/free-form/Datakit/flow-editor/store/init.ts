@@ -9,6 +9,7 @@ import type {
   FieldName,
   ImplicitNodeName,
   MakeNodeInstancePayload,
+  NodeId,
   NodeInstance,
   NodeName,
   NodePhase,
@@ -20,6 +21,7 @@ import {
   clone,
   createId,
   findFieldByName,
+  getBranchesFromMeta,
   getFieldsFromMeta,
   getNodeMeta,
   makeDefaultImplicitUINode,
@@ -52,7 +54,6 @@ export function initEditorState(
   const nodesMap = new Map<NodeName, NodeInstance>()
   const connections: ConfigEdge[] = []
   const adjacencies = new Map<NodeName, Set<NodeName>>() // Undirected adjacency list
-
   /**
    * [SIDE EFFECT]
    *
@@ -95,6 +96,43 @@ export function initEditorState(
     const node = buildNodeInstance(configNode.type, configNode, uiNode, resources)
     nodes.push(node)
     nodesMap.set(node.name, node)
+  }
+
+  for (const node of nodes) {
+    const branchNames = getBranchesFromMeta(node.type)
+    if (!branchNames.length) {
+      continue
+    }
+
+    const config = node.config as Record<string, unknown> | undefined
+    if (!config) {
+      continue
+    }
+
+    for (const branchName of branchNames) {
+      const raw = config[branchName]
+      if (!Array.isArray(raw)) {
+        continue
+      }
+
+      const ids: NodeId[] = []
+      for (const entry of raw) {
+        if (typeof entry !== 'string') {
+          continue
+        }
+
+        const targetNode = nodesMap.get(entry as NodeName)
+        if (targetNode && !isImplicitType(targetNode.type)) {
+          ids.push(targetNode.id)
+        }
+      }
+
+      if (ids.length) {
+        config[branchName] = ids
+      } else {
+        delete config[branchName]
+      }
+    }
   }
 
   // ensure implicit nodes
