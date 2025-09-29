@@ -3,62 +3,69 @@
     :is="schema.disabled ? 'k-tooltip' : 'div'"
     class="field-wrap autosuggest"
     max-width="300"
-    :text="t('general.disable_source_scope_change', { scope })"
+    :text="schema.disabledTooltip"
   >
-    <KSelect
-      :id="schema.model"
-      ref="suggestion"
-      v-model="idValue"
-      clearable
-      :disabled="schema.disabled"
-      enable-filtering
-      :filter-function="() => true"
-      :items="items"
-      :loading="loading"
-      :placeholder="schema.placeholder"
-      width="100%"
+    <FieldScopedEntitySelect
+      :id="idValue"
+      :allow-uuid-search="allowUuidSearch"
+      :disabled="loading"
+      :dom-id="schema.model"
+      :entity="entity"
+      :field-disabled="schema.disabled"
+      :fields="inputFieldsWithoutId"
+      :get-all="getAll"
+      :get-one="getOne"
+      :get-partial="getPartial"
+      :initial-item-selected="initialValueSelected"
+      :placeholder="loading ? t('fields.auto_suggest.loading') : schema.placeholder"
+      :selected-item="selectedItem"
+      :selected-item-loading="loading"
+      :transform-item="transformItem"
       @change="onSelected"
-      @query-change="onQueryChange"
     >
-      <template #item-template="{ item }">
-        <span
-          class="first-part"
-          :data-testid="item.id && `${item.id}-0`"
-          :data-testlabel="item.label"
-        >
-          {{ getSuggestionLabel(item).split(' - ')[0] }}
-        </span>
-        <span
-          v-for="(field, idx) in getSuggestionLabel(item).split(' - ').slice(1)"
-          :key="idx"
-          class="field-span"
-          :data-testid="(item.id && `${item.id}-${idx + 1}`) || idx + 1"
-        >
-          {{ field }}
-        </span>
+      <template #before>
+        <SearchIcon
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :size="KUI_ICON_SIZE_40"
+        />
       </template>
-      <template #empty>
-        <div class="autosuggest__results_message">
-          <span>{{ message }}</span>
+      <template #item="{ item }">
+        <div class="entity-suggestion-item">
+          <span class="entity-label">
+            {{ item.label ?? EMPTY_VALUE_PLACEHOLDER }}
+          </span>
+          <span class="entity-id">
+            {{ item.id }}
+          </span>
         </div>
       </template>
-    </KSelect>
+
+      <template #selected-item="{ item }">
+        <span class="selected-entity-item">
+          <span class="selected-entity-label">{{ item.label ?? item.id }}</span>
+        </span>
+      </template>
+    </FieldScopedEntitySelect>
   </component>
 </template>
 
 <script>
-import { FORMS_API_KEY } from '../../const'
 import abstractField from './abstractField'
-import debounce from 'lodash-es/debounce'
-import { isValidUuid } from '../../utils/isValidUuid'
 import { createI18n } from '@kong-ui-public/i18n'
-import english from '../../locales/en.json'
+import { SearchIcon } from '@kong/icons'
+import { KUI_ICON_SIZE_40, KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
+import FieldScopedEntitySelect from './FieldScopedEntitySelect.vue'
 import { getFieldState } from '../../utils/autoSuggest'
-import { FIELD_STATES } from '../../const'
+import { FORMS_API_KEY, FIELD_STATES, EMPTY_VALUE_PLACEHOLDER } from '../../const'
+import english from '../../locales/en.json'
 
-const requestResultsLimit = 50
+const requestResultsLimit = 1000
 
 export default {
+  components: {
+    FieldScopedEntitySelect,
+    SearchIcon,
+  },
   mixins: [abstractField],
   inject: [FORMS_API_KEY],
   emits: ['model-updated'],
@@ -67,6 +74,9 @@ export default {
     const { t } = createI18n('en-us', english)
     return {
       t,
+      KUI_ICON_SIZE_40,
+      KUI_COLOR_TEXT_NEUTRAL,
+      EMPTY_VALUE_PLACEHOLDER,
     }
   },
 
@@ -76,8 +86,10 @@ export default {
       idValue: '',
       message: 'Type something to search',
       items: [],
-      initialItems: [],
+      initialItem: null,
+      selectedItem: null,
       loading: false,
+      dataDrained: false,
     }
   },
 
@@ -97,6 +109,18 @@ export default {
     bypassSearch() {
       return this.$route && this.$route.query && this.$route.query.no_search
     },
+    inputFields() {
+      return this.schema?.inputValues?.fields || []
+    },
+    allowUuidSearch() {
+      return this.inputFields.includes('id')
+    },
+    inputFieldsWithoutId() {
+      return this.inputFields.filter(field => field !== 'id')
+    },
+    initialValueSelected() {
+      return this.idValue === this.initialItem?.id
+    },
   },
 
   async created() {
@@ -104,95 +128,66 @@ export default {
     let presetEntity
     let entityData
 
-    switch (this.fieldState) {
-      case FIELD_STATES.UPDATE_ENTITY:
-        if (!this[FORMS_API_KEY]) {
-          console.warn('[@kong-ui-public/forms] No API service provided')
-          break
-        }
-
-        // Get entity data from API. In most cases the data is stored in the `data` key of the response directly
-        // but sometimes it is stored in a nested key inside the `data` key, so we allow the user to specify it in the schema
-        // e.g. entity data returned from `consumer_groups/:id` is stored in `data.consumer_group`
-        entityData = (await this[FORMS_API_KEY].getOne(this.entity, this.model[this.schema.model])).data
-        presetEntity = this.getItem(this.schema.entityDataKey ? entityData[this.schema.entityDataKey] : entityData)
-        this.idValue = presetEntity.id
-        break
-      case FIELD_STATES.CREATE_FROM_ENTITY:
-        this.idValue = this.associatedEntity.id
-        break
-      case FIELD_STATES.SET_REFERRAL_VALUE:
-        this.idValue = this.value
-    }
-
     try {
-      if (presetEntity) {
-        this.initialItems = [{ ...presetEntity, label: this.getSuggestionLabel(presetEntity), value: presetEntity.id }]
+      switch (this.fieldState) {
+        case FIELD_STATES.UPDATE_ENTITY:
+          if (!this[FORMS_API_KEY]) {
+            console.warn('[@kong-ui-public/forms] No API service provided')
+            break
+          }
+          // Get entity data from API. In most cases the data is stored in the `data` key of the response directly
+          // but sometimes it is stored in a nested key inside the `data` key, so we allow the user to specify it in the schema
+          // e.g. entity data returned from `consumer_groups/:id` is stored in `data.consumer_group`
+          this.loading = true
+          entityData = (await this[FORMS_API_KEY].getOne(this.entity, this.model[this.schema.model])).data
+          presetEntity = this.getItem(this.schema.entityDataKey ? entityData[this.schema.entityDataKey] : entityData)
+          this.idValue = presetEntity.id
+          break
+        case FIELD_STATES.CREATE_FROM_ENTITY:
+          this.idValue = this.associatedEntity.id
+          break
+        case FIELD_STATES.SET_REFERRAL_VALUE:
+          this.idValue = this.value
       }
 
-      this.items = this.initialItems
+      if (presetEntity) {
+        this.initialItem = this.transformItem(presetEntity)
+        this.selectedItem = this.initialItem
+      }
+      // putting this here prevents the select value from being 'select' -> 'actual value' after the loading state gets flashed
+      this.loading = false
     } catch (err) {
-      this.message = `There was an error loading ${this.schema.entity}`
+      this.message = this.t('fields.auto_suggest.error.load_entity', { entity: this.schema.entity })
       console.error('err!', err)
     }
   },
 
   methods: {
-    onQueryChange(query) {
-      if (query.trim().length === 0) {
-        this.items = []
-        this.message = 'Type something to search'
-      }
+    getPartial(size) {
+      return this[FORMS_API_KEY].peek(this.entity, size)
+    },
+    async getAll(query, signal) {
+      const result = await this.fetchSuggestions(query, 'name', signal)
 
-      if (typeof this.performSearch !== 'function') {
-        this.performSearch = debounce(
-          this.search,
-          500,
-        )
+      return result
+    },
+    async getOne(id) {
+      if (!this[FORMS_API_KEY]) {
+        console.warn('[@kong-ui-public/forms] No API service provided')
+        return {}
       }
+      const res = await this[FORMS_API_KEY].getOne(this.entity, id)
 
-      this.performSearch(query)
+      return res.data
     },
 
-    async search(query) {
-      if (query.trim().length === 0) {
-        return
+    transformItem(item) {
+      return {
+        ...item,
+        // This field is for select dropdown item first column.
+        label: this.getSuggestionLabel(item),
+        value: item.id,
       }
-
-      this.loading = true
-      const items = []
-      const promises = []
-      const fields = this.getInputFields()
-      const filteredIds = new Set()
-
-      // If query is a valid UUID, do the exact search
-      if (isValidUuid(query) && fields.includes('id')) {
-        promises.push((async () => {
-          const item = await this.fetchExact(query)
-
-          items.push({ ...item, label: this.getSuggestionLabel(item), value: item.id })
-        })())
-      } else {
-        // Search on fields with backend filtering support
-        promises.push(...fields.filter((field) => field !== 'id').map(async (field) => {
-          const result = await this.fetchSuggestions(query, field)
-          result.forEach((item) => {
-            if (!filteredIds.has(item.id)) {
-              filteredIds.add(item.id)
-              items.push({ ...item, label: this.getSuggestionLabel(item), value: item.id })
-            }
-          })
-        }))
-      }
-
-      await Promise.all(promises)
-
-      this.items = items
-      if (this.items.length === 0) {
-        this.message = 'No results'
-      }
-
-      this.loading = false
     },
 
     getItem(data) {
@@ -203,51 +198,29 @@ export default {
       return data
     },
 
-    async fetchUntilLimit(params) {
-      const data = []
-      let offset = null
-
+    async fetchUntilLimit(params, signal) {
       if (!this[FORMS_API_KEY]) {
         console.warn('[@kong-ui-public/forms] No API service provided')
         return []
       }
-      while (data.length < requestResultsLimit) {
-        const res = await this[FORMS_API_KEY].getAll(this.entity, {
-          size: requestResultsLimit > 1000 ? 1000 : requestResultsLimit,
-          offset,
-          ...params,
-        })
 
-        data.push(...res.data.data)
-        offset = res.data.offset
-        if (!offset) break
-      }
+      const fetcher = this[FORMS_API_KEY].getAllV2
 
-      return data.slice(0, requestResultsLimit)
+      const { data } = await fetcher(this.entity, {
+        size: requestResultsLimit,
+        ...params,
+      }, signal)
+
+      return data.data
     },
 
-    async fetchSuggestions(query, field) {
-      return this.fetchUntilLimit({ [field]: query })
-    },
-
-    async fetchExact(id) {
-      if (!this[FORMS_API_KEY]) {
-        console.warn('[@kong-ui-public/forms] No API service provided')
-        return {}
-      }
-      const res = await this[FORMS_API_KEY].getOne(this.entity, id)
-
-      return res.data
-    },
-
-    getInputFields() {
-      return this.schema?.inputValues?.fields || []
+    async fetchSuggestions(query, field, signal) {
+      return this.fetchUntilLimit({ [field]: query }, signal)
     },
 
     getSuggestionLabel(item) {
-      const fields = this.getInputFields()
-
-      return fields.length && item ? fields.map(field => item[field]).filter(Boolean).join(' - ') : ''
+      const labelKey = this.schema?.labelField || 'id'
+      return labelKey && item ? item[labelKey] : ''
     },
 
     updateModel(value) {
@@ -257,6 +230,7 @@ export default {
 
     onSelected(item) {
       this.idValue = item && item.id
+      this.selectedItem = item // This is used for matching value not in the list
       this.updateModel(this.getReturnValue(item || {}))
     },
 
@@ -275,37 +249,60 @@ export default {
 }
 
 .k-select {
-  border: none!important;
-  padding: 0!important;
+  border: none !important;
+  padding: 0 !important;
 
   .autosuggest__results_message {
     color: rgba(0, 0, 0, 0.7);
-    font-size: 14px;
-    padding: 8px 0;
+    font-size: $kui-font-size-30;;
+    padding: $kui-space-40 0;
     text-align: center;
   }
 
   .k-select-item-label span:last-child {
     opacity: 0.7;
   }
+
+  :deep(.select-item > .select-item-container > button:hover > span) {
+    background-color: $kui-color-background-neutral-weaker;
+  }
+
+  :deep(.dropdown-footer) {
+    margin-bottom: -$kui-space-20;
+  }
 }
 
 .field-span {
+  color: $kui-color-text-neutral;
   display: flex;
   justify-content: space-between;
 }
-</style>
 
-<style lang="scss">
-.autosuggest .k-select {
-  .k-select-list .k-select-item {
-    button:active {
-      box-shadow: none;
+.entity-suggestion-item {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', sans-serif;
 
-      &:not(.selected) {
-        background-color: $kui-color-background-neutral-weakest;
-      }
-    }
+  .entity-label {
+    color: $kui-color-text-neutral-stronger;
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-medium;
+  }
+
+  .entity-id {
+    color: $kui-color-text-neutral;
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-medium;
+  }
+}
+
+.selected-entity-item {
+  font-family: 'Iter', sans-serif;
+  padding-left: 28px;
+
+  .selected-entity-label {
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-regular;
   }
 }
 </style>
