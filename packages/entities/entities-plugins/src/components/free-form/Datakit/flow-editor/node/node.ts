@@ -9,6 +9,7 @@ import type {
   NodeType,
   ConfigNodeType,
   IOMeta,
+  NextMeta,
 } from '../../types'
 
 import { createI18n } from '@kong-ui-public/i18n'
@@ -124,6 +125,14 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     summary: getNodeTypeSummary('branch'),
     description: getNodeTypeDescription('branch'),
     icon: ArrowSplitIcon,
+    io: {
+      next: {
+        branches: [
+          { name: 'then' },
+          { name: 'else' },
+        ],
+      } as NextMeta,
+    },
   },
   cache: {
     type: 'cache',

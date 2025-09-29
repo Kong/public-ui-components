@@ -22,6 +22,7 @@ import {
   isConfigType,
   isImplicitType,
 } from '../node/node'
+import type { BranchName } from '../../schema/strict'
 
 /** Deep clone for snapshots and immutable returns. */
 export function clone<T>(value: T): T {
@@ -75,9 +76,14 @@ export function getFieldsFromMeta(type: NodeType): {
 } {
   const meta = getNodeMeta(type)
 
-  const input = meta.io?.input?.fields?.map(({ name }) => name) ?? []
-  const output = meta.io?.output?.fields?.map(({ name }) => name) ?? []
+  const input = meta.io?.input?.fields.map(({ name }) => name) ?? []
+  const output = meta.io?.output?.fields.map(({ name }) => name) ?? []
   return { input, output }
+}
+
+export function getBranchesFromMeta(type: NodeType): BranchName[] {
+  const meta = getNodeMeta(type)
+  return meta.io?.next?.branches.map(({ name }) => name) ?? []
 }
 
 /** Build NodeField array from names. */
