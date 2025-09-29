@@ -6,6 +6,7 @@ export interface SchemaRegistry {
 
 export interface ConfluentConfig {
   authentication?: AuthenticationConfig
+  /** default `true` */
   ssl_verify?: boolean
 }
 
@@ -48,8 +49,29 @@ export interface OAuth2ClientConfig {
   ssl_verify?: boolean
 }
 
+// This is the default value when creating a new plugin.
 const defaultConfluent: ConfluentConfig = { authentication: { mode: 'none' }, ssl_verify: true }
-const emptyConfluent: ConfluentConfig = { authentication: { basic: {} } }
+
+// This is the object structure that VFG creates when `confluent` is null on 3.11 and below
+const emptyConfluent311: ConfluentConfig = { authentication: { basic: {} } }
+
+// This is the object structure that VFG creates when `confluent` is null on 3.12+
+const emptyConfluent312: ConfluentConfig = {
+  authentication: {
+    basic: {},
+    oauth2: {
+      token_headers: {},
+      token_post_args: {},
+    },
+    oauth2_client: {},
+  },
+}
+
+const emptyOrDefaultValues: ConfluentConfig[] = [
+  defaultConfluent,
+  emptyConfluent311,
+  emptyConfluent312,
+]
 
 export const stripEmptyBasicFields = (schemaRegistry: SchemaRegistry) => {
   // Remove the default values if the mode is 'none'
@@ -70,11 +92,8 @@ export const stripEmptyBasicFields = (schemaRegistry: SchemaRegistry) => {
     delete schemaRegistry.confluent.authentication.basic
   }
 
-  // Remove the entire confluent if all are empty
-  if (
-    isEqual(schemaRegistry.confluent, defaultConfluent)
-    || isEqual(schemaRegistry.confluent, emptyConfluent)
-  ) {
+  // Remove the entire confluent if all are empty or default
+  if (emptyOrDefaultValues.some((val) => isEqual(schemaRegistry.confluent, val))) {
     schemaRegistry.confluent = null
   }
 }
