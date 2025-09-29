@@ -125,6 +125,13 @@
             :label="timeSeriesZoomToggle ? 'Zoom enabled' : 'Zoom disabled'"
           />
         </div>
+        <div>
+          <KInput
+            v-model="thresholdValue"
+            label="Eror threshold"
+            type="number"
+          />
+        </div>
         <br>
 
         <div class="config-container">
@@ -273,6 +280,7 @@ const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
   unit: 'count',
 })
+const thresholdValue = ref(500)
 
 const metricItems = [{
   label: 'Total Requests',
@@ -300,12 +308,11 @@ const serviceDimensionValues = ref(new Set([
   'service1', 'service2', 'service3', 'service4', 'service5',
 ]))
 
-const threshold = {
+const threshold = computed(() => ({
   'request_count': [
-    { type: 'warning', value: 700 },
-    { type: 'error', value: 900 },
+    { type: 'error', value: thresholdValue.value, highlightIntersections: true },
   ],
-} as Record<ExploreAggregations, Threshold[]>
+} as Record<ExploreAggregations, Threshold[]>))
 
 const exportModalVisible = ref(false)
 const exportState = ref<ExploreExportState>({ status: 'loading' })
@@ -385,7 +392,7 @@ const analyticsChartOptions = computed<AnalyticsChartOptions>(() => {
   return {
     type: chartType.value,
     stacked: stackToggle.value,
-    threshold,
+    threshold: threshold.value,
     // chartDatasetColors: colorPalette.value,
   }
 })
