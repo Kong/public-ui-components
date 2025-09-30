@@ -34,7 +34,7 @@ import { provideEditorStore } from '../composables'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
 
-import type { ConfigNode, DatakitConfig, DatakitPluginData, DatakitUIData, UINode } from '../types'
+import type { ConfigNode, DatakitConfig, DatakitPluginData, DatakitUIData } from '../types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -49,9 +49,12 @@ const emit = defineEmits<{
   error: [msg: string]
 }>()
 
-function onChange(configNodes: ConfigNode[], uiNodes: UINode[]) {
+function onChange(configNodes: ConfigNode[], uiData: DatakitUIData) {
   const nextConfig = { ...formData.config, nodes: configNodes }
-  const nextUIData = { ...formData.__ui_data, nodes: uiNodes }
+  const nextUIData: DatakitUIData = {
+    ...formData.__ui_data,
+    ...uiData,
+  }
   formData.config = nextConfig
   formData.__ui_data = nextUIData
   emit('change', nextConfig, nextUIData)
