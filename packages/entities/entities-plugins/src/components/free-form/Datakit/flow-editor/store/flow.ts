@@ -7,6 +7,7 @@ import type {
   EdgeId,
   EdgeInstance,
   FieldId,
+  BranchName,
   GroupId,
   GroupInstance,
   NodeId,
@@ -42,6 +43,12 @@ function parseHandle(handle: string): { io: 'input' | 'output', field: FieldId }
     io: parsed[1] as 'input' | 'output',
     field: parsed[2] as FieldId,
   }
+}
+
+function parseBranchHandle(handle: string): BranchName | undefined {
+  const parsed = handle.match(/^branch@(.+)$/)
+  if (!parsed) return undefined
+  return parsed[1] as BranchName
 }
 
 /**
@@ -199,6 +206,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       selectNode: selectStoreNode,
       removeNode,
       getNodeById,
+      addBranchMember,
       connectEdge,
       disconnectEdge,
       getInEdgesByNodeId,
@@ -338,6 +346,27 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       const parsedSource = parseHandle(sourceHandle)
       const parsedTarget = parseHandle(targetHandle)
+      const branchHandle = parseBranchHandle(sourceHandle)
+
+      if (branchHandle) {
+        if (targetHandle !== 'input') {
+          reset()
+          toaster({
+            message: t('plugins.free-form.datakit.flow_editor.error.invalid_connection'),
+            appearance: 'danger',
+          })
+          return
+        }
+
+        const added = addBranchMember(source as NodeId, branchHandle, target as NodeId, false)
+        if (!added) {
+          reset()
+          return
+        }
+
+        commit()
+        return
+      }
 
       if (
         (parsedSource?.io === 'input' || parsedTarget?.io === 'output')

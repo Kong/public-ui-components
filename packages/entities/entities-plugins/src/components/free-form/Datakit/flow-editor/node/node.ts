@@ -126,6 +126,9 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     description: getNodeTypeDescription('branch'),
     icon: ArrowSplitIcon,
     io: {
+      input: {
+        fields: [],
+      },
       next: {
         branches: [
           { name: 'then' },

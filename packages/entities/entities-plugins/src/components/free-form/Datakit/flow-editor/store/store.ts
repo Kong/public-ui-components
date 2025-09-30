@@ -184,6 +184,55 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         ensureGroupForBranch(node, branch, members)
       }
     }
+
+    function addBranchMember(ownerId: NodeId, branch: BranchName, memberId: NodeId, commitNow = true, tag?: string) {
+      const owner = getNodeById(ownerId)
+      const member = getNodeById(memberId)
+      if (!owner || !member) return false
+      if (ownerId === memberId) return false
+      if (isImplicitType(member.type)) return false
+      if (owner.phase !== member.phase) return false
+
+      const branches = getBranchesFromMeta(owner.type)
+      if (!branches.includes(branch)) return false
+
+      const config = (owner.config ??= {}) as Record<string, unknown>
+      const raw = config[branch]
+      const members = Array.isArray(raw)
+        ? (raw as unknown[]).filter((value): value is NodeId => typeof value === 'string' && isNodeId(value))
+        : []
+
+      if (members.includes(memberId)) return false
+
+      config[branch] = [...members, memberId]
+      syncGroupsForNode(ownerId)
+
+      if (commitNow) history.commit(tag ?? `branch:add:${branch}`)
+      return true
+    }
+
+    function removeBranchMember(ownerId: NodeId, branch: BranchName, memberId: NodeId, commitNow = true, tag?: string) {
+      const owner = getNodeById(ownerId)
+      if (!owner?.config) return false
+
+      const raw = owner.config[branch]
+      if (!Array.isArray(raw)) return false
+
+      const members = (raw as unknown[]).filter((value): value is NodeId => typeof value === 'string' && isNodeId(value))
+      if (!members.includes(memberId)) return false
+
+      const nextMembers = members.filter((id) => id !== memberId)
+      if (nextMembers.length) {
+        owner.config[branch] = nextMembers
+      } else {
+        delete owner.config[branch]
+      }
+
+      syncGroupsForNode(ownerId)
+
+      if (commitNow) history.commit(tag ?? `branch:remove:${branch}`)
+      return true
+    }
     function removeBranchTarget(targetId: NodeId) {
       const touched = new Set<NodeId>()
       for (const node of state.value.nodes) {
@@ -774,6 +823,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       moveGroup,
       toggleExpanded,
       replaceConfig,
+      addBranchMember,
+      removeBranchMember,
 
       // field ops
       addField,

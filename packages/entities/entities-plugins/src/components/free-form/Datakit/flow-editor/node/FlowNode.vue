@@ -252,6 +252,29 @@
           </div>
         </template>
       </div>
+
+      <div
+        v-if="hasBranchHandles"
+        class="branch-handles"
+      >
+        <div
+          v-for="branch in branchHandles"
+          :key="`branch-${branch}`"
+          class="handle"
+        >
+          <div class="handle-label-wrapper">
+            <div class="handle-label text">
+              {{ branch }}
+            </div>
+          </div>
+          <Handle
+            :id="`branch@${branch}`"
+            :connectable="false"
+            :position="branchPosition"
+            type="source"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -322,6 +345,9 @@ const outputsCollapsible = computed(() =>
 const inputsExpanded = computed(() => data.expanded.input ?? false)
 const outputsExpanded = computed(() => data.expanded.output ?? false)
 
+const branchHandles = computed(() => meta.value.io?.next?.branches?.map(({ name }) => name) ?? [])
+const hasBranchHandles = computed(() => branchHandles.value.length > 0)
+
 const showInputHandles = computed(() => {
   if (data.type === 'property') {
     // TODO: Should have a specific type for config in property nodes
@@ -353,6 +379,10 @@ const inputPosition = computed(() => {
 })
 
 const outputPosition = computed(() => {
+  return data.phase === 'request' ? Position.Right : Position.Left
+})
+
+const branchPosition = computed(() => {
   return data.phase === 'request' ? Position.Right : Position.Left
 })
 
@@ -536,6 +566,7 @@ $handle-width: 3px;
 $handle-height: 10px;
 $io-column-min-width: 80px;
 $io-column-min-width-no-fields: 70px;
+$branch-handle-size: 4px;
 
 .flow-node {
   background-color: $kui-color-background;
@@ -714,6 +745,55 @@ $io-column-min-width-no-fields: 70px;
     }
   }
 
+  .branch-handles {
+    align-items: flex-end;
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: $kui-space-20;
+
+    .handle {
+      align-items: center;
+      display: flex;
+      gap: $kui-space-30;
+      padding-right: $kui-space-40;
+      position: relative;
+
+      .handle-label-wrapper {
+        padding: $kui-space-20 0;
+
+        .handle-label {
+          background-color: transparent;
+          color: $kui-color-text-neutral-strong;
+          font-size: $kui-font-size-20;
+          font-weight: $kui-font-weight-semibold;
+          gap: $kui-space-20;
+          line-height: $kui-line-height-10;
+        }
+
+        .text {
+          transform: none;
+        }
+      }
+
+      :deep(.vue-flow__handle) {
+        background-color: $kui-color-background-neutral;
+        border: none;
+        border-radius: 0;
+        height: $branch-handle-size;
+        min-height: 0;
+        min-width: 0;
+        right: -0.5px;
+        top: 50%;
+        transform: translate(50%, -50%) rotate(45deg);
+        transition: border-color $kui-animation-duration-20 ease-in-out,
+          box-shadow $kui-animation-duration-20 ease-in-out,
+          background-color $kui-animation-duration-20 ease-in-out;
+        width: $branch-handle-size;
+      }
+    }
+  }
+
   .input-handles {
     align-items: flex-start;
     transform: translateX(math.div($handle-width + $node-border-width, -2));
@@ -734,7 +814,8 @@ $io-column-min-width-no-fields: 70px;
 
   &.reversed {
     .input-handles,
-    .output-handles {
+    .output-handles,
+    .branch-handles {
       .handle {
         flex-direction: row-reverse;
       }
@@ -757,6 +838,21 @@ $io-column-min-width-no-fields: 70px;
       .handle.indented .handle-label {
         margin-left: $kui-space-40;
         margin-right: unset;
+      }
+    }
+
+    .branch-handles {
+      align-items: flex-start;
+
+      .handle {
+        padding-left: $kui-space-40;
+        padding-right: 0;
+      }
+
+      :deep(.vue-flow__handle) {
+        left: -0.5px;
+        right: unset;
+        transform: translate(-50%, -50%) rotate(45deg);
       }
     }
   }
