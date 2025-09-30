@@ -17,6 +17,7 @@ import type {
   UINode,
   BranchName,
   GroupId,
+  GroupInstance,
   UIGroup,
 } from '../../types'
 
@@ -30,7 +31,6 @@ import {
   generateNodeName,
   getBranchesFromMeta,
   makeGroupId,
-  parseGroupId,
   makeGroupName,
   toGroupInstance,
 } from './helpers'
@@ -122,6 +122,12 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     )
     const edgeMapById = computed(() => edgeMaps.value.edgeMapById)
     const edgeIdMapByNodeId = computed(() => edgeMaps.value.edgeIdMapByNodeId)
+    const groupMapById = computed(
+      () =>
+        new Map<GroupId, GroupInstance>(
+          state.value.groups.map((group) => [group.id, group]),
+        ),
+    )
 
     // sets
     const nodeNames = computed(
@@ -137,31 +143,26 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         .filter((value): value is NodeId => typeof value === 'string' && isNodeId(value))
     }
 
-    function getGroupIndex(groupId: GroupId) {
-      return state.value.groups.findIndex((group) => group.id === groupId)
-    }
-
     function ensureGroupForBranch(node: NodeInstance, branch: BranchName, members: NodeId[]) {
       const groupId = makeGroupId(node.id, branch)
-      const index = getGroupIndex(groupId)
+      const existing = groupMapById.value.get(groupId)
 
       if (members.length) {
-        if (index === -1) {
+        if (!existing) {
           state.value.groups.push(toGroupInstance(node.id, branch))
         }
-      } else if (index !== -1) {
-        state.value.groups.splice(index, 1)
-        delete state.value.groupPositions[groupId]
+      } else if (existing) {
+        const index = state.value.groups.findIndex((group) => group.id === groupId)
+        if (index !== -1) {
+          state.value.groups.splice(index, 1)
+        }
       }
     }
 
     function removeGroupsForNode(nodeId: NodeId) {
       for (let i = state.value.groups.length - 1; i >= 0; i--) {
-        const groupId = state.value.groups[i].id
-        const { nodeId: ownerId } = parseGroupId(groupId)
-        if (ownerId === nodeId) {
+        if (state.value.groups[i].ownerId === nodeId) {
           state.value.groups.splice(i, 1)
-          delete state.value.groupPositions[groupId]
         }
       }
     }
@@ -357,6 +358,19 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       const node = getNodeById(nodeId)
       if (!node) return
       node.position = { ...position }
+      if (commitNow) history.commit()
+    }
+
+    function moveGroup(groupId: GroupId, position: XYPosition, commitNow = true) {
+      const group = groupMapById.value.get(groupId)
+      if (!group) return
+
+      const current = group.position
+      if (current && current.x === position.x && current.y === position.y) {
+        return
+      }
+
+      group.position = { ...position }
       if (commitNow) history.commit()
     }
 
@@ -671,13 +685,12 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     function toUIGroups(): UIGroup[] {
       const uiGroups: UIGroup[] = []
       for (const group of state.value.groups) {
-        const { nodeId, branch } = parseGroupId(group.id)
-        const owner = getNodeById(nodeId)
+        const owner = getNodeById(group.ownerId)
         if (!owner) continue
-        const position = state.value.groupPositions[group.id]
+        const position = group.position
         if (!position) continue
         uiGroups.push({
-          name: makeGroupName(owner.name, branch),
+          name: makeGroupName(owner.name, group.branch),
           position: clone(position),
         })
       }
@@ -723,6 +736,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       nodeMapByName,
       edgeMapById,
       edgeIdMapByNodeId,
+      groupMapById,
       getNodeById,
       getNodeByName,
       getEdgeById,
@@ -739,6 +753,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       removeNode,
       renameNode,
       moveNode,
+      moveGroup,
       toggleExpanded,
       replaceConfig,
 

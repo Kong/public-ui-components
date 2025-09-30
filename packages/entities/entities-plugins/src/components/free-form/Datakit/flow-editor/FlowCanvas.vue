@@ -79,6 +79,7 @@ import { KTooltip } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
+import type { NodeMouseEvent } from '@vue-flow/core'
 import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core'
 import { computed, nextTick, ref, useTemplateRef } from 'vue'
 
@@ -145,8 +146,9 @@ const { project, vueFlowRef, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vue
 
 const disableDrop = ref(false)
 
-function onNodeClick() {
+function onNodeClick(event: NodeMouseEvent) {
   if (mode !== 'edit') return
+  if (event?.node?.type === 'group') return
   propertiesPanelOpen.value = true
 }
 

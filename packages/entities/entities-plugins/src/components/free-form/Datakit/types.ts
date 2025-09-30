@@ -180,6 +180,9 @@ export interface EdgeInstance extends EdgeData {
 
 export interface GroupInstance {
   id: GroupId
+  ownerId: NodeId
+  branch: BranchName
+  position?: XYPosition
 }
 
 export interface UIGroup {
@@ -191,7 +194,6 @@ export interface EditorState {
   nodes: NodeInstance[]
   edges: EdgeInstance[]
   groups: GroupInstance[]
-  groupPositions: Record<GroupId, XYPosition>
 
   /**
    * Whether to schedule an `autoLayout` after the current state is rendered.
