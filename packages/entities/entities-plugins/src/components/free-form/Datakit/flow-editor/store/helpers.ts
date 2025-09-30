@@ -1,3 +1,4 @@
+import type { XYPosition } from '@vue-flow/core'
 import type {
   EdgeId,
   FieldId,
@@ -183,6 +184,11 @@ export function parseGroupName(name: GroupName): { nodeName: NodeName, branch: B
   return { nodeName, branch }
 }
 
-export function toGroupInstance(nodeId: NodeId, branch: BranchName): GroupInstance {
-  return { id: makeGroupId(nodeId, branch) }
+export function toGroupInstance(nodeId: NodeId, branch: BranchName, position?: XYPosition): GroupInstance {
+  return {
+    id: makeGroupId(nodeId, branch),
+    ownerId: nodeId,
+    branch,
+    position,
+  }
 }

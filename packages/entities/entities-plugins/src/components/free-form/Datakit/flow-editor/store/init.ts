@@ -1,4 +1,3 @@
-import type { XYPosition } from '@vue-flow/core'
 import { IMPLICIT_NODE_NAMES } from '../../constants'
 import type {
   ConfigEdge,
@@ -16,7 +15,6 @@ import type {
   NodeType,
   UINode,
   GroupInstance,
-  GroupId,
 } from '../../types'
 import { isImplicitName, isImplicitType } from '../node/node'
 import { pluginDataToVaultConfig, pluginDataToVaultOutputFields } from '../node/vault'
@@ -61,7 +59,6 @@ export function initEditorState(
   const edges: EdgeInstance[] = []
   const nodesMap = new Map<NodeName, NodeInstance>()
   const groups: GroupInstance[] = []
-  const groupPositions: Record<GroupId, XYPosition> = {}
   const connections: ConfigEdge[] = []
   const adjacencies = new Map<NodeName, Set<NodeName>>() // Undirected adjacency list
   /**
@@ -149,11 +146,9 @@ export function initEditorState(
         config[branchName] = ids
         const groupName = makeGroupName(node.name, branchName)
         const uiGroup = uiGroupsMap.get(groupName)
-        const group = toGroupInstance(node.id, branchName)
+        const group = toGroupInstance(node.id, branchName, uiGroup ? clone(uiGroup.position) : undefined)
         groups.push(group)
-        if (uiGroup) {
-          groupPositions[group.id] = clone(uiGroup.position)
-        } else if (!isUIDataStale) {
+        if (!uiGroup && !isUIDataStale) {
           isUIDataStale = true
         }
       } else {
@@ -235,7 +230,6 @@ export function initEditorState(
     nodes,
     edges,
     groups,
-    groupPositions,
     pendingLayout: !isUIDataStale ? false : keepHistoryAfterLayout ? 'keepHistory' : 'clearHistory',
     pendingFitView: true,
   }

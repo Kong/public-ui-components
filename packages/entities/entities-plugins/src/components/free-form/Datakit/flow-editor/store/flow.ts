@@ -1,8 +1,18 @@
 import type { Node as DagreNode } from '@dagrejs/dagre'
-import type { Connection, Edge, FitViewParams, Node, Rect, XYPosition } from '@vue-flow/core'
+import type { Connection, Edge, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
-import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
+import type {
+  EdgeData,
+  EdgeId,
+  EdgeInstance,
+  FieldId,
+  GroupId,
+  GroupInstance,
+  NodeId,
+  NodeInstance,
+  NodePhase,
+} from '../../types'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 
 import dagre from '@dagrejs/dagre'
@@ -70,6 +80,10 @@ const BORDER_COLORS: Record<EdgeState, string> = {
   default: KUI_COLOR_BORDER_NEUTRAL,
   hover: KUI_COLOR_BORDER_PRIMARY_WEAK,
   selected: KUI_COLOR_BORDER_PRIMARY,
+}
+
+type FlowGroupNodeData = GroupInstance & {
+  memberIds: NodeId[]
 }
 
 type EdgeState = 'default' | 'hover' | 'selected'
@@ -181,6 +195,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       state,
       commit: historyCommit,
       moveNode,
+      moveGroup,
       selectNode: selectStoreNode,
       removeNode,
       getNodeById,
@@ -202,6 +217,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
     }
 
+    const groupIdSet = computed(() => new Set(state.value.groups.map((group) => group.id)))
+
+    const isGroupId = (id?: string): id is GroupId =>
+      !!id && groupIdSet.value.has(id as GroupId)
+
     const nodes = computed(() =>
       state.value.nodes
         .filter((node) => node.phase === phase && !node.hidden)
@@ -213,6 +233,60 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           deletable: !isImplicitNode(node),
         })),
     )
+
+    function getGroupMembers(group: GroupInstance): NodeInstance[] {
+      const owner = getNodeById(group.ownerId)
+      if (!owner) return []
+
+      const config = owner.config as Record<string, unknown> | undefined
+      if (!config) return []
+
+      const rawMembers = config[group.branch]
+      if (!Array.isArray(rawMembers)) return []
+
+      const resolvedMembers: NodeInstance[] = []
+      for (const candidate of rawMembers as NodeId[]) {
+        const member = getNodeById(candidate)
+        if (member) {
+          resolvedMembers.push(member)
+        }
+      }
+
+      return resolvedMembers
+    }
+
+    const groupNodes = computed(() => {
+      const results: Array<Node<FlowGroupNodeData>> = []
+
+      for (const group of state.value.groups) {
+        const owner = getNodeById(group.ownerId)
+        if (!owner || owner.phase !== phase) continue
+
+        const position = group.position
+        // Groups intentionally render only when persisted UI coordinates exist. This keeps
+        // layout purely data-driven and avoids generating implicit positions that we cannot
+        // serialize back into `DatakitUIData`.
+        if (!position) continue
+
+        const members = getGroupMembers(group).filter((member) => member.phase === phase)
+
+        results.push({
+          id: group.id,
+          type: 'group',
+          position,
+          data: {
+            ...group,
+            memberIds: members.map((member) => member.id),
+          },
+          draggable: !readonly,
+          selectable: false,
+          // Keep groups visually behind concrete nodes while still allowing drag interactions.
+          zIndex: -1,
+        })
+      }
+
+      return results
+    })
 
     const edges = computed(() =>
       state.value.edges
@@ -246,8 +320,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     // Moved away from VueFlow's `:nodes` and `:edges` props because
     // they have race conditions while being updated simultaneously.
-    watch([nodes, edges], ([newNodes, newEdges]) => {
-      setNodes(newNodes)
+    watch([nodes, groupNodes, edges], ([newNodes, newGroupNodes, newEdges]) => {
+      setNodes([...newGroupNodes, ...newNodes])
       setEdges(newEdges)
     }, { immediate: true }) // As `nodes` and `edges` are computed refs, it would be okay without `deep: true`
 
@@ -389,8 +463,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     // Only triggered by canvas-originated changes
     onNodesChange((changes) => {
-      changes
-        .filter((change) => change.type === 'select')
+      const selectionChanges = changes.filter((change): change is NodeSelectionChange => change.type === 'select')
+
+      selectionChanges
+        .filter((change) => !isGroupId(change.id))
         // deselected changes come first
         .sort((a, b) => (a.selected === b.selected ? 0 : a.selected ? 1 : -1))
         .forEach((change) => {
@@ -400,6 +476,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       let schedulePostRemoval = false
       changes.forEach((change) => {
         if (change.type === 'remove') {
+          if (isGroupId(change.id)) {
+            return
+          }
           // !! ATTENTION !!
           // We assume `onNodesChange` is only triggered when user removes nodes from the canvas.
           // Removals originated from the node panel (form) does not trigger this, because they
@@ -418,6 +497,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     onNodeDragStop(({ node }) => {
       if (!node) return
+
+      if (isGroupId(node.id)) {
+        moveGroup(node.id as GroupId, node.position)
+        return
+      }
 
       // Update the node position in the store
       moveNode(node.id as NodeId, node.position)
@@ -692,7 +776,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
      * Calculate the position to place a node to the right of a reference node.
      */
     function placeToRight(nodeId: NodeId): XYPosition {
-      const nodes = getNodes.value
+      const nodes = getNodes.value.filter(({ type }) => type !== 'group')
 
       const refNode = nodes.find(({ id }) => id === nodeId)
       if (!refNode) throw new Error(`Node ${nodeId} not found`)
