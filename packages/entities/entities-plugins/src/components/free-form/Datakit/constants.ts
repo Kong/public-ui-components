@@ -18,12 +18,7 @@ export const IMPLICIT_NODE_TYPES = [
   'vault',
 ] as const
 
-export const IMPLICIT_NODE_NAMES = [
-  'request',
-  'service_request',
-  'service_response',
-  'response',
-] as const
+export const IMPLICIT_NODE_NAMES = IMPLICIT_NODE_TYPES
 
 export const VISIBLE_IMPLICIT_NODE_NAMES = [
   'request',

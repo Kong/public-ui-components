@@ -1,3 +1,4 @@
+import type { XYPosition } from '@vue-flow/core'
 import { IMPLICIT_NODE_NAMES } from '../../constants'
 import type {
   ConfigEdge,
@@ -14,6 +15,8 @@ import type {
   NodePhase,
   NodeType,
   UINode,
+  GroupInstance,
+  GroupId,
 } from '../../types'
 import { isImplicitName, isImplicitType } from '../node/node'
 import { pluginDataToVaultConfig, pluginDataToVaultOutputFields } from '../node/vault'
@@ -27,6 +30,8 @@ import {
   makeDefaultImplicitUINode,
   parseNameConnection,
   toFieldArray,
+  makeGroupName,
+  toGroupInstance,
 } from './helpers'
 
 /**
@@ -44,13 +49,19 @@ export function initEditorState(
 ): EditorState {
   const configNodes = pluginData.config?.nodes ?? []
   const uiNodes = pluginData.__ui_data?.nodes ?? []
+  const uiGroups = pluginData.__ui_data?.groups ?? []
 
   const uiNodesMap = new Map<NodeName, UINode>(
     uiNodes.map((uiNode) => [uiNode.name, uiNode]),
   )
+  const uiGroupsMap = new Map(
+    uiGroups.map((group) => [group.name, group] as const),
+  )
   const nodes: NodeInstance[] = []
   const edges: EdgeInstance[] = []
   const nodesMap = new Map<NodeName, NodeInstance>()
+  const groups: GroupInstance[] = []
+  const groupPositions: Record<GroupId, XYPosition> = {}
   const connections: ConfigEdge[] = []
   const adjacencies = new Map<NodeName, Set<NodeName>>() // Undirected adjacency list
   /**
@@ -116,6 +127,9 @@ export function initEditorState(
     for (const branchName of branchNames) {
       const raw = config[branchName]
       if (!Array.isArray(raw)) {
+        if (uiGroupsMap.has(makeGroupName(node.name, branchName))) {
+          isUIDataStale = true
+        }
         continue
       }
 
@@ -133,8 +147,20 @@ export function initEditorState(
 
       if (ids.length) {
         config[branchName] = ids
+        const groupName = makeGroupName(node.name, branchName)
+        const uiGroup = uiGroupsMap.get(groupName)
+        const group = toGroupInstance(node.id, branchName)
+        groups.push(group)
+        if (uiGroup) {
+          groupPositions[group.id] = clone(uiGroup.position)
+        } else if (!isUIDataStale) {
+          isUIDataStale = true
+        }
       } else {
         delete config[branchName]
+        if (uiGroupsMap.has(makeGroupName(node.name, branchName))) {
+          isUIDataStale = true
+        }
       }
     }
   }
@@ -208,6 +234,8 @@ export function initEditorState(
   return {
     nodes,
     edges,
+    groups,
+    groupPositions,
     pendingLayout: !isUIDataStale ? false : keepHistoryAfterLayout ? 'keepHistory' : 'clearHistory',
     pendingFitView: true,
   }

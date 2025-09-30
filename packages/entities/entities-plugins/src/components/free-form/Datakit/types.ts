@@ -111,6 +111,7 @@ export interface DatakitUIData {
    * UI nodes that store data like input/output fields, positions, and other metadata.
    */
   nodes?: UINode[]
+  groups?: UIGroup[]
 }
 /**
  * The phase of the node in the request/response cycle.
@@ -126,6 +127,8 @@ export type NodePhase = 'request' | 'response'
 export type NodeId = `node:${number}`
 export type EdgeId = `edge:${number}`
 export type FieldId = `field:${number}`
+export type GroupId = `${NodeId}:${BranchName}`
+export type GroupName = `${NodeName}:${BranchName}`
 
 export type IdConnection = NodeId | `${NodeId}.${FieldId}`
 
@@ -175,9 +178,20 @@ export interface EdgeInstance extends EdgeData {
   id: EdgeId
 }
 
+export interface GroupInstance {
+  id: GroupId
+}
+
+export interface UIGroup {
+  name: GroupName
+  position: XYPosition
+}
+
 export interface EditorState {
   nodes: NodeInstance[]
   edges: EdgeInstance[]
+  groups: GroupInstance[]
+  groupPositions: Record<GroupId, XYPosition>
 
   /**
    * Whether to schedule an `autoLayout` after the current state is rendered.

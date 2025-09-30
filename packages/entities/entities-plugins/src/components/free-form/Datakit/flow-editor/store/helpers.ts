@@ -14,6 +14,9 @@ import type {
   ConfigNodeName,
   NameConnection,
   IdConnection,
+  GroupId,
+  GroupName,
+  GroupInstance,
 } from '../../types'
 import { cloneDeep, uniqueId } from 'lodash-es'
 import {
@@ -156,4 +159,30 @@ export function generateNodeName(
     const name = `${prefix}_${n}` as ConfigNodeName
     if (!nodeNames.has(name)) return name
   }
+}
+
+export function makeGroupId(nodeId: NodeId, branch: BranchName): GroupId {
+  return `${nodeId}:${branch}` as GroupId
+}
+
+export function parseGroupId(groupId: GroupId): { nodeId: NodeId, branch: BranchName } {
+  const lastColon = groupId.lastIndexOf(':')
+  const nodeId = groupId.slice(0, lastColon) as NodeId
+  const branch = groupId.slice(lastColon + 1) as BranchName
+  return { nodeId, branch }
+}
+
+export function makeGroupName(nodeName: NodeName, branch: BranchName): GroupName {
+  return `${nodeName}:${branch}` as GroupName
+}
+
+export function parseGroupName(name: GroupName): { nodeName: NodeName, branch: BranchName } {
+  const lastColon = name.lastIndexOf(':')
+  const nodeName = name.slice(0, lastColon) as NodeName
+  const branch = name.slice(lastColon + 1) as BranchName
+  return { nodeName, branch }
+}
+
+export function toGroupInstance(nodeId: NodeId, branch: BranchName): GroupInstance {
+  return { id: makeGroupId(nodeId, branch) }
 }
