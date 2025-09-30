@@ -16,7 +16,6 @@ import type {
   NodeInstance,
   NodeName,
   UINode,
-  BranchName,
   GroupId,
   GroupInstance,
   UIGroup,
@@ -24,17 +23,16 @@ import type {
 
 import { createInjectionState } from '@vueuse/core'
 import { computed, ref } from 'vue'
-import { IMPLICIT_NODE_META_MAP, isImplicitName, isImplicitType, isNodeId } from '../node/node'
+import { IMPLICIT_NODE_META_MAP, isImplicitName, isImplicitType } from '../node/node'
 import {
   clone,
   createId,
   findFieldById,
   generateNodeName,
   getBranchesFromMeta,
-  makeGroupId,
   makeGroupName,
-  toGroupInstance,
 } from './helpers'
+import { createBranchGroupManager } from './branch-group-manager'
 import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
@@ -140,124 +138,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       () => new Set(state.value.nodes.map((node) => node.name)),
     )
 
-    function getBranchMembers(node: NodeInstance, branch: BranchName): NodeId[] {
-      const config = node.config as Record<string, unknown> | undefined
-      if (!config) return []
-      const raw = config[branch]
-      if (!Array.isArray(raw)) return []
-      return (raw as unknown[])
-        .filter((value): value is NodeId => typeof value === 'string' && isNodeId(value))
-    }
-
-    function ensureGroupForBranch(node: NodeInstance, branch: BranchName, members: NodeId[]) {
-      const groupId = makeGroupId(node.id, branch)
-      const existing = groupMapById.value.get(groupId)
-
-      if (members.length) {
-        if (!existing) {
-          state.value.groups.push(toGroupInstance(node.id, branch))
-        }
-      } else if (existing) {
-        const index = state.value.groups.findIndex((group) => group.id === groupId)
-        if (index !== -1) {
-          state.value.groups.splice(index, 1)
-        }
-      }
-    }
-
-    function removeGroupsForNode(nodeId: NodeId) {
-      for (let i = state.value.groups.length - 1; i >= 0; i--) {
-        if (state.value.groups[i].ownerId === nodeId) {
-          state.value.groups.splice(i, 1)
-        }
-      }
-    }
-
-    function syncGroupsForNode(nodeId: NodeId) {
-      const node = getNodeById(nodeId)
-      if (!node) return
-      const branchKeys = getBranchesFromMeta(node.type)
-      if (!branchKeys.length) return
-
-      for (const branch of branchKeys) {
-        const members = getBranchMembers(node, branch)
-        ensureGroupForBranch(node, branch, members)
-      }
-    }
-
-    function addBranchMember(ownerId: NodeId, branch: BranchName, memberId: NodeId, commitNow = true, tag?: string) {
-      const owner = getNodeById(ownerId)
-      const member = getNodeById(memberId)
-      if (!owner || !member) return false
-      if (ownerId === memberId) return false
-      if (isImplicitType(member.type)) return false
-      if (owner.phase !== member.phase) return false
-
-      const branches = getBranchesFromMeta(owner.type)
-      if (!branches.includes(branch)) return false
-
-      const config = (owner.config ??= {}) as Record<string, unknown>
-      const raw = config[branch]
-      const members = Array.isArray(raw)
-        ? (raw as unknown[]).filter((value): value is NodeId => typeof value === 'string' && isNodeId(value))
-        : []
-
-      if (members.includes(memberId)) return false
-
-      config[branch] = [...members, memberId]
-      syncGroupsForNode(ownerId)
-
-      if (commitNow) history.commit(tag ?? `branch:add:${branch}`)
-      return true
-    }
-
-    function removeBranchMember(ownerId: NodeId, branch: BranchName, memberId: NodeId, commitNow = true, tag?: string) {
-      const owner = getNodeById(ownerId)
-      if (!owner?.config) return false
-
-      const raw = owner.config[branch]
-      if (!Array.isArray(raw)) return false
-
-      const members = (raw as unknown[]).filter((value): value is NodeId => typeof value === 'string' && isNodeId(value))
-      if (!members.includes(memberId)) return false
-
-      const nextMembers = members.filter((id) => id !== memberId)
-      if (nextMembers.length) {
-        owner.config[branch] = nextMembers
-      } else {
-        delete owner.config[branch]
-      }
-
-      syncGroupsForNode(ownerId)
-
-      if (commitNow) history.commit(tag ?? `branch:remove:${branch}`)
-      return true
-    }
-    function removeBranchTarget(targetId: NodeId) {
-      const touched = new Set<NodeId>()
-      for (const node of state.value.nodes) {
-        const branchKeys = getBranchesFromMeta(node.type)
-        if (!branchKeys.length) continue
-        const config = node.config as Record<string, unknown> | undefined
-        if (!config) continue
-        for (const key of branchKeys) {
-          const raw = config[key]
-          if (!Array.isArray(raw)) continue
-          const list = raw as NodeId[]
-          const filtered = list.filter((entry) => entry !== targetId)
-          if (filtered.length === list.length) {
-            continue
-          }
-          if (filtered.length) {
-            config[key] = filtered
-          } else {
-            delete config[key]
-          }
-          touched.add(node.id)
-        }
-      }
-      touched.forEach(syncGroupsForNode)
-    }
+    const branchGroups = createBranchGroupManager({ state, groupMapById, getNodeById, history })
 
     // validators bound to current maps
     const {
@@ -371,14 +252,14 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         (edge) => edge.source !== nodeId && edge.target !== nodeId,
       )
 
-      removeGroupsForNode(nodeId)
+      branchGroups.clear(nodeId)
 
       state.value.nodes = state.value.nodes.filter(
         (node) => node.id !== nodeId,
       )
       if (selection.value === nodeId) selection.value = undefined
 
-      removeBranchTarget(nodeId)
+      branchGroups.dropTarget(nodeId)
 
       const topo = validateGraph()
       if (!topo.ok) {
@@ -455,7 +336,6 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       const node = getNodeById(nodeId)
       if (!node) return
       node.config = clone(next)
-      syncGroupsForNode(nodeId)
       if (commitNow) history.commit(tag)
     }
 
@@ -823,8 +703,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       moveGroup,
       toggleExpanded,
       replaceConfig,
-      addBranchMember,
-      removeBranchMember,
+      branchGroups,
 
       // field ops
       addField,

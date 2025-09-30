@@ -206,7 +206,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       selectNode: selectStoreNode,
       removeNode,
       getNodeById,
-      addBranchMember,
+      branchGroups,
       connectEdge,
       disconnectEdge,
       getInEdgesByNodeId,
@@ -358,7 +358,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           return
         }
 
-        const added = addBranchMember(source as NodeId, branchHandle, target as NodeId, false)
+        const added = branchGroups.addMember(source as NodeId, branchHandle, target as NodeId, { commit: false })
         if (!added) {
           reset()
           return

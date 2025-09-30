@@ -19,7 +19,7 @@
       :items="branchOptions"
       multiple
       name="then"
-      @update:model-value="setConfig('then')"
+      @update="() => onBranchChange('then')"
     />
 
     <EnumField
@@ -27,7 +27,7 @@
       :items="branchOptions"
       multiple
       name="else"
-      @update:model-value="setConfig('else')"
+      @update="() => onBranchChange('else')"
     />
   </Form>
 </template>
@@ -40,7 +40,7 @@ import NameField from './NameField.vue'
 import { KLabel } from '@kong/kongponents'
 import useI18n from '../../../../../composables/useI18n'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
-import type { NodeId } from '../../types'
+import type { BranchName, NodeId } from '../../types'
 import EnumField from '../../../shared/EnumField.vue'
 
 type BranchFormData = BaseFormData & Record<string, unknown>
@@ -56,11 +56,17 @@ const {
   formData,
   setName,
   setConfig,
+  syncBranchGroups,
   branchOptions,
   nameValidator,
 } = useNodeForm<BranchFormData>(nodeId, getInnerData)
 
 function getInnerData() {
   return formRef.value?.getInnerData?.() ?? {}
+}
+
+function onBranchChange(branch: BranchName) {
+  setConfig(branch)
+  syncBranchGroups()
 }
 </script>

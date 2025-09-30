@@ -2,7 +2,7 @@ import { computed, inject, nextTick, watch } from 'vue'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
-import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
+import { findFieldById, findFieldByName, getBranchesFromMeta, getNodeMeta, parseIdConnection } from '../store/helpers'
 import { isReadableProperty } from '../node/property'
 import { useFormShared } from '../../../shared/composables'
 import type { ArrayLikeFieldSchema, RecordFieldSchema } from '../../../../../types/plugins/form-schema'
@@ -47,6 +47,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     renameField: storeRenameField,
     removeField: storeRemoveField,
     replaceConfig,
+    branchGroups,
     disconnectEdge,
     connectEdge,
     invalidConfigNodeIds,
@@ -119,6 +120,11 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     const config = omit(getFormInnerData(), ['name', 'input', 'inputs'])
     const finalTag = tag ? `update:${nodeId}:${tag}` : undefined
     replaceConfig(nodeId, config, commitNow, finalTag)
+  }
+
+  const syncBranchGroups = () => {
+    if (!getBranchesFromMeta(currentNode.value.type).length) return
+    branchGroups.sync(nodeId)
   }
 
   const findFieldByNameOrThrow = (
@@ -408,6 +414,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     // form ops
     setName,
     setConfig,
+    syncBranchGroups,
 
     // field ops
     addField,

@@ -108,3 +108,5 @@ export function useTaggedHistory<T>(
     revert,
   }
 }
+
+export type TaggedHistory<T> = ReturnType<typeof useTaggedHistory<T>>
