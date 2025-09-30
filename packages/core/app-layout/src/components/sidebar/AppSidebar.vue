@@ -740,7 +740,7 @@ watch(() => props.groupConfig, (newConfig) => {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    margin-bottom: $kui-space-80;
+    margin-bottom: $kui-space-60;
     padding: $kui-space-0 $kui-space-10 $kui-space-0 $kui-space-50; // if changed, ensure you test in ALL browsers
     width: 100%;
     // Adjust padding for Safari-only
