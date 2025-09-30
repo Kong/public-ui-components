@@ -33,7 +33,7 @@ const emit = defineEmits<{
   dragstart: [e: DragEvent, type: ConfigNodeType]
 }>()
 
-const unsupported = type === 'cache' || type === 'branch'
+const unsupported = type === 'cache'
 
 const {
   summary,
