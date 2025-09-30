@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.9.1...@kong-ui-public/app-layout@4.9.2) (2025-09-30)
+
+
+### Bug Fixes
+
+* **app-sidebar:** margin css ([#2531](https://github.com/Kong/public-ui-components/issues/2531)) ([a19a985](https://github.com/Kong/public-ui-components/commit/a19a985b29695905b1f54e2da45b0526527af4f9))
+
+
+
+
+
 ## [4.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.9.0...@kong-ui-public/app-layout@4.9.1) (2025-09-24)
 
 
