@@ -30,7 +30,8 @@ export const handleQueryError = (error: any): QueryError => {
     return {
       status: error.status,
       type: 'other',
-      message: error.response?.data?.invalid_parameters?.map((e: any) => e.reason).join(', ') || error?.message,
+      message: i18n.t('query_errors.other.message'),
+      details: error.response?.data?.invalid_parameters?.map((e: any) => e.reason).join(', ') || error?.message,
     }
   }
 }
