@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.6.0...@kong-ui-public/analytics-chart@10.6.1) (2025-10-01)
+
+
+### Bug Fixes
+
+* **analytics:** remove duplicate error state when forbidden [MA-4332] ([#2523](https://github.com/Kong/public-ui-components/issues/2523)) ([aa81f2c](https://github.com/Kong/public-ui-components/commit/aa81f2c3e7531a455fe5a20de6dfb8c527a683bb))
+
+
+
+
+
 # [10.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.5.1...@kong-ui-public/analytics-chart@10.6.0) (2025-09-29)
 
 
