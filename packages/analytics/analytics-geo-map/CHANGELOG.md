@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.3...@kong-ui-public/analytics-geo-map@1.4.4) (2025-10-01)
+
+
+### Bug Fixes
+
+* **analytics:** update the font-family in geo map tooltip [MA-4081] ([#2534](https://github.com/Kong/public-ui-components/issues/2534)) ([5963fb7](https://github.com/Kong/public-ui-components/commit/5963fb72468552b17c5a8db32228fe2bbc44602a))
+
+
+
+
+
 ## [1.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.2...@kong-ui-public/analytics-geo-map@1.4.3) (2025-10-01)
 
 
