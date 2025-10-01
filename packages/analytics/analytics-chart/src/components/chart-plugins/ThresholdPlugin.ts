@@ -131,6 +131,18 @@ export class ThresholdPlugin implements Plugin {
         } as Record<ExploreAggregations, ThresholdExtra[]>
       }
     }
+    // Prune any thresholds that are no longer in the options
+    if (this._thresholds) {
+      for (const key of Object.keys(this._thresholds)) {
+        if (!pluginOptions.threshold?.[key as ExploreAggregations]) {
+          delete this._thresholds[key as ExploreAggregations]
+        }
+      }
+    }
+  }
+
+  get thresholds() {
+    return this._thresholds
   }
 
   // Gets called when chart options are updated
