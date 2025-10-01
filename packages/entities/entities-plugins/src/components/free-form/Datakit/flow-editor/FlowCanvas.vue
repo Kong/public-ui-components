@@ -52,15 +52,15 @@
       </Controls>
 
       <!-- To not use the default node style -->
-      <template #node-flow="node">
+      <template #node-flow="{ data }">
         <FlowNode
-          :data="node.data"
-          :error="invalidConfigNodeIds.has(node.data.id)"
+          :data
+          :error="invalidConfigNodeIds.has(data.id)"
           :readonly="mode !== 'edit'"
         />
       </template>
-      <template #node-group>
-        <GroupNode />
+      <template #node-group="{ data }">
+        <GroupNode :data />
       </template>
     </VueFlow>
 
