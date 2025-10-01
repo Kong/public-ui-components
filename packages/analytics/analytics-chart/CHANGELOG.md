@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.6.1...@kong-ui-public/analytics-chart@10.6.2) (2025-10-01)
+
+
+### Bug Fixes
+
+* analytics chart duplicate threshold issue ([#2535](https://github.com/Kong/public-ui-components/issues/2535)) ([766cc10](https://github.com/Kong/public-ui-components/commit/766cc1069817948a177e1092ebc56cf1dc36238a))
+
+
+
+
+
 ## [10.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.6.0...@kong-ui-public/analytics-chart@10.6.1) (2025-10-01)
 
 
