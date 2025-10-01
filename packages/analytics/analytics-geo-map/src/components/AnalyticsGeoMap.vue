@@ -421,6 +421,10 @@ watch(() => bounds, (newVal, oldVal) => {
 </script>
 
 <style lang="scss" scoped>
+:deep(.maplibregl-map) {
+  font-family: var(--kui-font-family-text, $kui-font-family-text);
+}
+
 .kong-ui-public-analytics-geo-map {
   height: 100%;
   position: relative;
