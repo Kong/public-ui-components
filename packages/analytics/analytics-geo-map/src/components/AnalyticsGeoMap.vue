@@ -137,11 +137,11 @@ const getColor = (metric: number) => {
   const range = logMaxMetric.value - logMinMetric.value
   const step = range / 5
 
-  if (logMetric >= logMinMetric.value + 4 * step) return '#296378'
-  if (logMetric >= logMinMetric.value + 3 * step) return '#0D8093'
-  if (logMetric >= logMinMetric.value + 2 * step) return '#009FA9'
-  if (logMetric >= logMinMetric.value + 1 * step) return '#00BDB7'
-  return '#0CDCBD'
+  if (logMetric >= logMinMetric.value + 4 * step) return '#00819d'
+  if (logMetric >= logMinMetric.value + 3 * step) return '#00abd2'
+  if (logMetric >= logMinMetric.value + 2 * step) return '#00c8f4'
+  if (logMetric >= logMinMetric.value + 1 * step) return '#67e3ff'
+  return '#b3f1ff'
 }
 
 const legendTitle = computed(() => {
