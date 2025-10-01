@@ -3,8 +3,62 @@
     :links="appLinks"
     title="Analytics Charts"
   >
-    <template #controls>
-      <div class="sandbox-container">
+    <div class="sandbox-container">
+      <div class="chart-section">
+        <div style="height: 500px">
+          <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
+          <AnalyticsChart
+            :chart-data="(exploreResult)"
+            :chart-options="analyticsChartOptions"
+            :legend-position="legendPosition"
+            :requests-link="{
+              href: '#requests',
+            }"
+            :show-annotations="showAnnotationsToggle"
+            :show-legend-values="showLegendValuesToggle"
+            :threshold="threshold"
+            :timeseries-zoom="timeSeriesZoomToggle"
+            tooltip-title="tooltip title"
+            @select-chart-range="eventLog += 'Select chart range ' + JSON.stringify($event) + '\n'"
+            @zoom-time-range="eventLog += 'Zoomed to ' + JSON.stringify($event) + '\n'"
+          />
+        </div>
+
+
+        <label>Event Log</label>
+        <KCodeBlock
+          id="event-log-codeblock"
+          :code="eventLog"
+          language="json"
+          searchable
+        />
+
+        <br>
+
+        <div class="data-container">
+          <KLabel>ChartData</KLabel>
+          <KCodeBlock
+            v-if="dataCode"
+            id="data-codeblock"
+            :code="dataCode"
+            language="json"
+            searchable
+          />
+        </div>
+        <br>
+
+        <div class="options-container">
+          <KLabel>Chart Options</KLabel>
+          <KCodeBlock
+            v-if="optionsCode"
+            id="options-codeblock"
+            :code="optionsCode"
+            language="json"
+            searchable
+          />
+        </div>
+      </div>
+      <KCard class="controls-section">
         <!-- AnalyticsChart / SimpleChart type selector -->
         <div class="flex-vertical">
           <KLabel>Chart Type</KLabel>
@@ -176,60 +230,7 @@
             </div>
           </div>
         </div>
-      </div>
-    </template>
-
-    <div style="height: 500px">
-      <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
-      <AnalyticsChart
-        :chart-data="(exploreResult)"
-        :chart-options="analyticsChartOptions"
-        :legend-position="legendPosition"
-        :requests-link="{
-          href: '#requests',
-        }"
-        :show-annotations="showAnnotationsToggle"
-        :show-legend-values="showLegendValuesToggle"
-        :threshold="threshold"
-        :timeseries-zoom="timeSeriesZoomToggle"
-        tooltip-title="tooltip title"
-        @select-chart-range="eventLog += 'Select chart range ' + JSON.stringify($event) + '\n'"
-        @zoom-time-range="eventLog += 'Zoomed to ' + JSON.stringify($event) + '\n'"
-      />
-    </div>
-
-
-    <label>Event Log</label>
-    <KCodeBlock
-      id="event-log-codeblock"
-      :code="eventLog"
-      language="json"
-      searchable
-    />
-
-    <br>
-
-    <div class="data-container">
-      <KLabel>ChartData</KLabel>
-      <KCodeBlock
-        v-if="dataCode"
-        id="data-codeblock"
-        :code="dataCode"
-        language="json"
-        searchable
-      />
-    </div>
-    <br>
-
-    <div class="options-container">
-      <KLabel>Chart Options</KLabel>
-      <KCodeBlock
-        v-if="optionsCode"
-        id="options-codeblock"
-        :code="optionsCode"
-        language="json"
-        searchable
-      />
+      </KCard>
     </div>
   </SandboxLayout>
 </template>
@@ -309,7 +310,7 @@ const serviceDimensionValues = ref(new Set([
 ]))
 
 const threshold = computed(() => ({
-  'request_count': [
+  [selectedMetric.value.name]: [
     { type: 'error', value: thresholdValue.value, highlightIntersections: true },
   ],
 } as Record<ExploreAggregations, Threshold[]>))
@@ -437,5 +438,17 @@ watch(multiDimensionToggle, () => {
 </script>
 
 <style lang="scss" scoped>
-@use "../styles/charts-sandbox";
+.sandbox-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 20px;
+
+  .chart-section {
+    flex: 3;
+  }
+  .controls-section {
+    flex: 1;
+  }
+}
 </style>
