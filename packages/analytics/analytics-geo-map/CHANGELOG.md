@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.2...@kong-ui-public/analytics-geo-map@1.4.3) (2025-10-01)
+
+
+### Bug Fixes
+
+* **analytics:** change colors of geo map [MA-4195] ([#2533](https://github.com/Kong/public-ui-components/issues/2533)) ([aa89b71](https://github.com/Kong/public-ui-components/commit/aa89b71dbbed4f3f7aa5202982eff9a2a239eb57))
+
+
+
+
+
 ## [1.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.1...@kong-ui-public/analytics-geo-map@1.4.2) (2025-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-geo-map
