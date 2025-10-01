@@ -786,9 +786,6 @@ $branch-handle-size: 4px;
         right: -0.5px;
         top: 50%;
         transform: translate(50%, -50%) rotate(45deg);
-        transition: border-color $kui-animation-duration-20 ease-in-out,
-          box-shadow $kui-animation-duration-20 ease-in-out,
-          background-color $kui-animation-duration-20 ease-in-out;
         width: $branch-handle-size;
       }
     }
