@@ -1,6 +1,5 @@
 <template>
   <QueryDataProvider
-    :chart-type="chartOptions.type"
     :context="context"
     :limit-override="COUNTRIES.length"
     :query="query"
