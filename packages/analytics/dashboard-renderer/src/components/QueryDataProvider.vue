@@ -40,7 +40,6 @@
  */
 import type {
   AnalyticsBridge,
-  DashboardTileType,
   ExploreResultV4,
   ValidDashboardQuery,
 } from '@kong-ui-public/analytics-utilities'
@@ -51,7 +50,6 @@ import { computed, inject, ref, watch } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import { handleQueryError } from '@kong-ui-public/analytics-chart'
-import { COUNTRIES } from '@kong-ui-public/analytics-utilities'
 
 import composables from '../composables'
 import { INJECT_QUERY_PROVIDER } from '../constants'
@@ -59,7 +57,7 @@ import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 
 const props = defineProps<{
   context: DashboardRendererContextInternal
-  chartType?: DashboardTileType
+  limitOverride?: number
   query: ValidDashboardQuery
   queryReady: boolean
   refreshCounter: number
@@ -85,10 +83,7 @@ const queryKey = () => {
 
 const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   try {
-    // Bump the limit to the number of countries for map charts
-    const limitOverride = props.chartType === 'choropleth_map' ? COUNTRIES.length : undefined
-
-    const result = await issueQuery(props.query, props.context, limitOverride)
+    const result = await issueQuery(props.query, props.context, props.limitOverride)
     queryError.value = null
 
     return result

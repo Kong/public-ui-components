@@ -2,6 +2,7 @@
   <QueryDataProvider
     :chart-type="chartOptions.type"
     :context="context"
+    :limit-override="COUNTRIES.length"
     :query="query"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
@@ -19,12 +20,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import QueryDataProvider from './QueryDataProvider.vue'
-import { AnalyticsGeoMap, exploreResultToCountryMetrics } from '@kong-ui-public/analytics-geo-map'
 import type { MetricUnits } from '@kong-ui-public/analytics-geo-map'
 import type { ChoroplethMapOptions, ExploreAggregations, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { RendererProps } from '../types'
+
+import { ref, computed } from 'vue'
+import QueryDataProvider from './QueryDataProvider.vue'
+import { AnalyticsGeoMap, exploreResultToCountryMetrics } from '@kong-ui-public/analytics-geo-map'
+import { COUNTRIES } from '@kong-ui-public/analytics-utilities'
 import '@kong-ui-public/analytics-geo-map/dist/style.css'
 
 defineProps<RendererProps<ChoroplethMapOptions>>()
