@@ -339,9 +339,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           const parentPosition = parentGroup?.position
           const position = parentGroup && parentPosition
             ? {
-                x: node.position.x - parentPosition.x,
-                y: node.position.y - parentPosition.y,
-              }
+              x: node.position.x - parentPosition.x,
+              y: node.position.y - parentPosition.y,
+            }
             : node.position
 
           const depth = getNodeDepth(node.id)
@@ -471,11 +471,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       ...configEdges.value,
     ])
 
-    const pendingGroupLayouts = new Map<GroupId, { position: XYPosition; dimensions: NodeDimensions }>()
+    const pendingGroupLayouts = new Map<GroupId, { position: XYPosition, dimensions: NodeDimensions }>()
     const pendingParentUpdates = new Set<GroupId>()
     let layoutFlushPromise: Promise<void> | undefined
 
-    function calculateGroupLayout(group: GroupInstance): { position: XYPosition; dimensions: NodeDimensions } | undefined {
+    function calculateGroupLayout(group: GroupInstance): { position: XYPosition, dimensions: NodeDimensions } | undefined {
       if (group.phase !== phase) return undefined
 
       const members = getGroupMembers(group)
@@ -545,7 +545,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         return
       }
 
-      const applied: Array<{ id: GroupId; changed: boolean }> = []
+      const applied: Array<{ id: GroupId, changed: boolean }> = []
 
       pendingGroupLayouts.forEach((layout, id) => {
         const changed = setGroupLayout(id, layout, false)

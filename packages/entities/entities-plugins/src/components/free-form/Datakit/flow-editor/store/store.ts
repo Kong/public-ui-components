@@ -237,6 +237,17 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         },
       }
 
+      const branchKeys = getBranchesFromMeta(newNode.type)
+      if (branchKeys.length && newNode.config) {
+        for (const branch of branchKeys) {
+          delete newNode.config[branch]
+        }
+
+        if (Object.keys(newNode.config).length === 0) {
+          delete newNode.config
+        }
+      }
+
       state.value.nodes.push(newNode)
       if (commitNow) history.commit()
 

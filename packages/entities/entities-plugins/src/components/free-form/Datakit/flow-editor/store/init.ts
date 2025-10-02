@@ -148,9 +148,9 @@ export function initEditorState(
         const uiGroup = uiGroupsMap.get(groupName)
         const layout = uiGroup
           ? {
-              position: clone(uiGroup.position),
-              dimensions: uiGroup.dimensions ? clone(uiGroup.dimensions) : undefined,
-            }
+            position: clone(uiGroup.position),
+            dimensions: uiGroup.dimensions ? clone(uiGroup.dimensions) : undefined,
+          }
           : undefined
         const group = toGroupInstance(node.id, branchName, node.phase, layout)
         groups.push(group)

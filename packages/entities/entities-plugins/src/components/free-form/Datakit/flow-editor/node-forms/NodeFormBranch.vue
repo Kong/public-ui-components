@@ -1,6 +1,6 @@
 <template>
   <Form
-    ref="form"
+    :key="formRenderKey"
     :data="formData"
     :schema="schema"
   >
@@ -19,7 +19,7 @@
       :items="branchOptions"
       multiple
       name="then"
-      @update="() => onBranchChange('then')"
+      @update="(value) => onBranchChange('then', value)"
     />
 
     <EnumField
@@ -27,13 +27,13 @@
       :items="branchOptions"
       multiple
       name="else"
-      @update="() => onBranchChange('else')"
+      @update="(value) => onBranchChange('else', value)"
     />
   </Form>
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
+import { ref } from 'vue'
 
 import Form from '../../../shared/Form.vue'
 import NameField from './NameField.vue'
@@ -50,23 +50,21 @@ const { nodeId } = defineProps<{ nodeId: NodeId }>()
 const { i18n: { t } } = useI18n()
 
 const schema = useSubSchema('branch')
-const formRef = useTemplateRef('form')
+
+const formRenderKey = ref(0)
 
 const {
   formData,
   setName,
-  setConfig,
-  syncBranchGroups,
   branchOptions,
   nameValidator,
-} = useNodeForm<BranchFormData>(nodeId, getInnerData)
+  updateBranchMembers,
+} = useNodeForm<BranchFormData>(nodeId)
 
-function getInnerData() {
-  return formRef.value?.getInnerData?.() ?? {}
-}
-
-function onBranchChange(branch: BranchName) {
-  setConfig(branch)
-  syncBranchGroups()
+async function onBranchChange(branch: BranchName, value: string | string[] | null) {
+  const success = await updateBranchMembers(branch, value)
+  if (!success) {
+    formRenderKey.value += 1
+  }
 }
 </script>

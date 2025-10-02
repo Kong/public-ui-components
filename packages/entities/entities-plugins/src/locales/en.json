@@ -874,14 +874,16 @@
             }
           },
           "error": {
-            "invalid_connection": "Invalid connection"
+            "invalid_connection": "Invalid connection",
+            "branch_cycle": "Cannot create a circular branch relationship"
           },
           "confirm": {
             "title": "Connection conflict",
             "message": {
               "confirm": "Are you sure you want to make this change?",
               "switch": "You can connect an output source to either all inputs of a node or to individual inputs.",
-              "override": "Each input can connect to only one output, but one output can connect to many inputs."
+              "override": "Each input can connect to only one output, but one output can connect to many inputs.",
+              "branch_replace": "This node already belongs to another branch. Move it to the new branch?"
             },
             "proceed": "Yes, update"
           },

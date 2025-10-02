@@ -1,12 +1,12 @@
-import { computed, inject, nextTick, watch } from 'vue'
+import { computed, inject, nextTick, watch, reactive } from 'vue'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
-import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
+import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType, BranchName } from '../../types'
 import { findFieldById, findFieldByName, getBranchesFromMeta, getNodeMeta, parseIdConnection } from '../store/helpers'
 import { isReadableProperty } from '../node/property'
 import { useFormShared } from '../../../shared/composables'
 import type { ArrayLikeFieldSchema, RecordFieldSchema } from '../../../../../types/plugins/form-schema'
-import { isImplicitType } from '../node/node'
+import { isImplicitType, isNodeId } from '../node/node'
 import { ResponseSchema, ServiceRequestSchema } from '../node/schemas'
 import { useFieldNameValidator, useNodeNameValidator } from './validation'
 import { omit } from 'lodash-es'
@@ -15,6 +15,7 @@ import useI18n from '../../../../../composables/useI18n'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 import { createEdgeConnectionString, createNewConnectionString } from './helpers'
 import { FEATURE_FLAGS } from '../../../../../constants'
+import { useToaster } from '../../../../../composables/useToaster'
 
 export type InputOption = {
   value: IdConnection
@@ -57,6 +58,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
 
   const { i18n: { t } } = useI18n()
   const confirm = useConfirm()
+  const toaster = useToaster()
 
   let isGlobalStateUpdating = false
 
@@ -125,6 +127,91 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   const syncBranchGroups = () => {
     if (!getBranchesFromMeta(currentNode.value.type).length) return
     branchGroups.sync(nodeId)
+  }
+
+  function readBranchMembers(branch: BranchName): NodeId[] {
+    const raw = currentNode.value.config?.[branch]
+    if (!Array.isArray(raw)) return []
+    return (raw as unknown[]).filter((value): value is NodeId => typeof value === 'string' && isNodeId(value))
+  }
+
+  const branchKeys = getBranchesFromMeta(currentNode.value.type)
+
+  const pendingBranchValues = reactive<Record<BranchName, NodeId[]>>({} as Record<BranchName, NodeId[]>)
+
+  function hydratePendingBranchValues() {
+    for (const branch of branchKeys) {
+      pendingBranchValues[branch] = readBranchMembers(branch)
+    }
+  }
+
+  hydratePendingBranchValues()
+
+  watch(formData, () => {
+    hydratePendingBranchValues()
+  })
+
+  function createBranchAssignmentString(ownerId: NodeId, branch: BranchName, memberId: NodeId): ConnectionString {
+    const owner = getNodeById(ownerId)
+    const member = getNodeById(memberId)
+    const ownerLabel = owner ? `${owner.name}.${branch}` : `${ownerId}.${branch}`
+    const memberLabel = member ? member.name : memberId
+    return [ownerLabel, memberLabel]
+  }
+
+  function findBranchMembership(memberId: NodeId): { ownerId: NodeId; branch: BranchName } | undefined {
+    for (const node of state.value.nodes) {
+      const branches = getBranchesFromMeta(node.type)
+      if (!branches.length) continue
+
+      const config = node.config as Record<string, unknown> | undefined
+      if (!config) continue
+
+      for (const branch of branches) {
+        const members = config[branch]
+        if (!Array.isArray(members)) continue
+        if ((members as unknown[]).some(id => id === memberId)) {
+          return { ownerId: node.id, branch }
+        }
+      }
+    }
+
+    return undefined
+  }
+
+  function hasBranchDescendant(rootId: NodeId, targetId: NodeId, visited = new Set<NodeId>()): boolean {
+    if (rootId === targetId) return true
+    if (visited.has(rootId)) return false
+    visited.add(rootId)
+
+    const node = getNodeById(rootId)
+    if (!node) return false
+
+    const branches = getBranchesFromMeta(node.type)
+    if (!branches.length) return false
+
+    const config = node.config as Record<string, unknown> | undefined
+    if (!config) return false
+
+    for (const branch of branches) {
+      const raw = config[branch]
+      if (!Array.isArray(raw)) continue
+      for (const memberId of raw as NodeId[]) {
+        if (hasBranchDescendant(memberId, targetId, visited)) {
+          return true
+        }
+      }
+    }
+
+    return false
+  }
+
+  function wouldCreateBranchCycle(ownerId: NodeId, memberId: NodeId): boolean {
+    const memberNode = getNodeById(memberId)
+    if (!memberNode) return false
+    const branches = getBranchesFromMeta(memberNode.type)
+    if (!branches.length) return false
+    return hasBranchDescendant(memberId, ownerId)
   }
 
   const findFieldByNameOrThrow = (
@@ -330,6 +417,95 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     return hasCycle(buildAdjacency(nextEdges))
   }
 
+  async function updateBranchMembers(branch: BranchName, value: string | string[] | null): Promise<boolean> {
+    if (isGlobalStateUpdating) return true
+
+    const owner = currentNode.value
+    const desiredIds = value == null
+      ? []
+      : Array.isArray(value)
+        ? value
+        : [value]
+
+    const nextMembers = Array.from(new Set(desiredIds.filter((id): id is NodeId => isNodeId(id))))
+    const currentMembers = readBranchMembers(branch)
+
+    const toRemove = currentMembers.filter(id => !nextMembers.includes(id))
+    const toAdd = nextMembers.filter(id => !currentMembers.includes(id))
+
+    if (!toRemove.length && !toAdd.length) {
+      return true
+    }
+
+    const conflicts: Array<{ existing: { ownerId: NodeId; branch: BranchName }; memberId: NodeId }> = []
+    const addedAssignments: ConnectionString[] = []
+    const removedAssignments: ConnectionString[] = []
+
+    for (const memberId of toAdd) {
+      if (wouldCreateBranchCycle(owner.id, memberId)) {
+        toaster({
+          message: t('plugins.free-form.datakit.flow_editor.error.branch_cycle'),
+          appearance: 'danger',
+        })
+        syncBranchGroups()
+        hydratePendingBranchValues()
+        return false
+      }
+
+      const existing = findBranchMembership(memberId)
+      if (existing && !(existing.ownerId === owner.id && existing.branch === branch)) {
+        conflicts.push({ existing, memberId })
+        addedAssignments.push(createBranchAssignmentString(owner.id, branch, memberId))
+        removedAssignments.push(createBranchAssignmentString(existing.ownerId, existing.branch, memberId))
+      }
+    }
+
+    let mutated = false
+
+    for (const memberId of toRemove) {
+      mutated = branchGroups.removeMember(owner.id, branch, memberId, { commit: false }) || mutated
+    }
+
+    for (const { existing, memberId } of conflicts) {
+      mutated = branchGroups.removeMember(existing.ownerId, existing.branch, memberId, { commit: false }) || mutated
+    }
+
+    for (const memberId of toAdd) {
+      mutated = branchGroups.addMember(owner.id, branch, memberId, { commit: false }) || mutated
+    }
+
+    if (!mutated) {
+      hydratePendingBranchValues()
+      return true
+    }
+
+    branchGroups.sync(owner.id)
+
+    commit()
+
+    if (conflicts.length) {
+      let confirmed = true
+      if (confirm) {
+        confirmed = await confirm(
+          t('plugins.free-form.datakit.flow_editor.confirm.message.branch_replace'),
+          addedAssignments,
+          removedAssignments,
+        )
+      }
+
+      if (!confirmed) {
+        revert()
+        syncBranchGroups()
+        hydratePendingBranchValues()
+        return false
+      }
+    }
+
+    syncBranchGroups()
+    hydratePendingBranchValues()
+    return true
+  }
+
   const inputOptions = computed<InputOption[]>(() => {
     const options: InputOption[] = []
     for (const node of state.value.nodes) {
@@ -415,6 +591,9 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     setName,
     setConfig,
     syncBranchGroups,
+    readBranchMembers,
+    pendingBranchValues,
+    updateBranchMembers,
 
     // field ops
     addField,
