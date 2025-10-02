@@ -18,6 +18,7 @@ import type {
   GroupId,
   GroupName,
   GroupInstance,
+  NodeDimensions,
 } from '../../types'
 import { cloneDeep, uniqueId } from 'lodash-es'
 import {
@@ -184,11 +185,21 @@ export function parseGroupName(name: GroupName): { nodeName: NodeName, branch: B
   return { nodeName, branch }
 }
 
-export function toGroupInstance(nodeId: NodeId, branch: BranchName, position?: XYPosition): GroupInstance {
+export function toGroupInstance(
+  nodeId: NodeId,
+  branch: BranchName,
+  phase: NodePhase,
+  layout?: {
+    position?: XYPosition
+    dimensions?: NodeDimensions
+  },
+): GroupInstance {
   return {
     id: makeGroupId(nodeId, branch),
     ownerId: nodeId,
     branch,
-    position,
+    phase,
+    position: layout?.position ? { ...layout.position } : undefined,
+    dimensions: layout?.dimensions ? { ...layout.dimensions } : undefined,
   }
 }

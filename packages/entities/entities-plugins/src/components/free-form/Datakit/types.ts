@@ -178,16 +178,24 @@ export interface EdgeInstance extends EdgeData {
   id: EdgeId
 }
 
+export interface NodeDimensions {
+  width: number
+  height: number
+}
+
 export interface GroupInstance {
   id: GroupId
   ownerId: NodeId
   branch: BranchName
+  phase: NodePhase
   position?: XYPosition
+  dimensions?: NodeDimensions
 }
 
 export interface UIGroup {
   name: GroupName
   position: XYPosition
+  dimensions?: NodeDimensions
 }
 
 export interface EditorState {
