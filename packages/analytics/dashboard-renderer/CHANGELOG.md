@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.6.16...@kong-ui-public/dashboard-renderer@7.6.17) (2025-10-02)
+
+
+### Bug Fixes
+
+* **analytics:** bump the limit override for geo map charts [MA-3698] ([#2536](https://github.com/Kong/public-ui-components/issues/2536)) ([09a6d2d](https://github.com/Kong/public-ui-components/commit/09a6d2d1cfca5f2d0a0c2c5b148d1c0051768f31))
+
+
+
+
+
 ## [7.6.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.6.15...@kong-ui-public/dashboard-renderer@7.6.16) (2025-10-01)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
