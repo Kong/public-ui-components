@@ -39,7 +39,9 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
 
     if (members.length) {
       if (!existing) {
-        state.value.groups.push(toGroupInstance(node.id, branch))
+        state.value.groups.push(toGroupInstance(node.id, branch, node.phase))
+      } else if (existing.phase !== node.phase) {
+        existing.phase = node.phase
       }
     } else if (existing) {
       const index = state.value.groups.findIndex((group) => group.id === groupId)
@@ -78,9 +80,12 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     if (!branchNames.includes(branch)) return false
 
     const config = (owner.config ??= {}) as Record<string, unknown>
-    const members = readMembers(owner, branch)
+    const existingMembers = readMembers(owner, branch)
+    if (existingMembers.includes(memberId)) return false
 
-    if (members.includes(memberId)) return false
+    dropTarget(memberId)
+
+    const members = readMembers(owner, branch)
 
     config[branch] = [...members, memberId]
     sync(ownerId)

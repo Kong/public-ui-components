@@ -146,9 +146,15 @@ export function initEditorState(
         config[branchName] = ids
         const groupName = makeGroupName(node.name, branchName)
         const uiGroup = uiGroupsMap.get(groupName)
-        const group = toGroupInstance(node.id, branchName, uiGroup ? clone(uiGroup.position) : undefined)
+        const layout = uiGroup
+          ? {
+              position: clone(uiGroup.position),
+              dimensions: uiGroup.dimensions ? clone(uiGroup.dimensions) : undefined,
+            }
+          : undefined
+        const group = toGroupInstance(node.id, branchName, node.phase, layout)
         groups.push(group)
-        if (!uiGroup && !isUIDataStale) {
+        if ((!uiGroup || !uiGroup.dimensions) && !isUIDataStale) {
           isUIDataStale = true
         }
       } else {

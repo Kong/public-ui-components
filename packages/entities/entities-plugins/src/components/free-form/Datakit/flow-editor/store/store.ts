@@ -19,6 +19,7 @@ import type {
   GroupId,
   GroupInstance,
   UIGroup,
+  NodeDimensions,
 } from '../../types'
 
 import { createInjectionState } from '@vueuse/core'
@@ -308,6 +309,36 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
 
       group.position = { ...position }
       if (commitNow) history.commit()
+    }
+
+    function setGroupLayout(
+      groupId: GroupId,
+      layout: { position: XYPosition; dimensions: NodeDimensions },
+      commitNow = true,
+    ): boolean {
+      const group = groupMapById.value.get(groupId)
+      if (!group) return false
+
+      const nextPosition = { ...layout.position }
+      const nextDimensions = { ...layout.dimensions }
+
+      const samePosition =
+        group.position
+        && group.position.x === nextPosition.x
+        && group.position.y === nextPosition.y
+
+      const sameDimensions =
+        group.dimensions
+        && group.dimensions.width === nextDimensions.width
+        && group.dimensions.height === nextDimensions.height
+
+      if (samePosition && sameDimensions) return false
+
+      group.position = nextPosition
+      group.dimensions = nextDimensions
+
+      if (commitNow) history.commit()
+      return true
     }
 
     function toggleExpanded(
@@ -639,6 +670,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         uiGroups.push({
           name: makeGroupName(owner.name, group.branch),
           position: clone(position),
+          dimensions: group.dimensions ? clone(group.dimensions) : undefined,
         })
       }
       return uiGroups
@@ -701,6 +733,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       renameNode,
       moveNode,
       moveGroup,
+      setGroupLayout,
       toggleExpanded,
       replaceConfig,
       branchGroups,
