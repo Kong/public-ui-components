@@ -1,5 +1,6 @@
 <template>
   <QueryDataProvider
+    :chart-type="chartOptions.type"
     :context="context"
     :query="query"
     :query-ready="queryReady"
