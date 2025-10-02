@@ -57,6 +57,7 @@ import { VisibilityOffIcon, WarningOutlineIcon } from '@kong/icons'
 
 const props = defineProps<{
   context: DashboardRendererContextInternal
+  limitOverride?: number
   query: ValidDashboardQuery
   queryReady: boolean
   refreshCounter: number
@@ -82,7 +83,7 @@ const queryKey = () => {
 
 const { data: v4Data, error, isValidating } = useSWRV(queryKey, async () => {
   try {
-    const result = await issueQuery(props.query, props.context)
+    const result = await issueQuery(props.query, props.context, props.limitOverride)
     queryError.value = null
 
     return result
