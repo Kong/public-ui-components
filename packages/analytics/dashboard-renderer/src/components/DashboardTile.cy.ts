@@ -1,7 +1,7 @@
 import DashboardTile from './DashboardTile.vue'
 import { INJECT_QUERY_PROVIDER } from '../constants'
 import type { DashboardRendererContextInternal } from '../types'
-import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
+import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefinition, EXPORT_RECORD_LIMIT, COUNTRIES } from '@kong-ui-public/analytics-utilities'
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
@@ -459,6 +459,39 @@ describe('<DashboardTile />', () => {
     cy.getTestId('kebab-action-menu-1').should('exist')
     mount({ isFullscreen: true })
     cy.getTestId('kebab-action-menu-1').should('not.exist')
+  })
+
+  it('should include limit override when chart type is choropleth', () => {
+    const provider = { ...mockQueryProvider }
+    cy.spy(provider, 'queryFn').as('fetcher')
+
+    cy.mount(DashboardTile, {
+      props: {
+        definition: {
+          chart: {
+            type: 'choropleth_map',
+          },
+          query: {
+            datasource: 'api_usage',
+            dimensions: ['country_code'],
+            metrics: ['request_count'],
+          },
+        },
+        context: mockContext,
+        tileId: 1,
+        queryReady: true,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: provider,
+        },
+      },
+    }).then(async () => {
+      cy.get('@fetcher').should('have.been.calledOnce')
+      cy.get('@fetcher')
+        .its('firstCall.args.0.query.limit')
+        .should('eq', COUNTRIES.length)
+    })
   })
 
   context('export', () => {
