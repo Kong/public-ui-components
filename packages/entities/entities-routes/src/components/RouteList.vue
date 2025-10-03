@@ -528,7 +528,7 @@ const rowClick = async (row: EntityRow): Promise<void> => {
   const route = props.config.getViewRoute(row.id as string)
   if (typeof route === 'string') {
     // External link
-    window.location.href = route
+    router.replace(route)
   } else {
     // Internal link
     router.push(route)
