@@ -471,9 +471,7 @@ const errorMessage = ref<TableErrorMessage>(null)
  * Copy ID action
  */
 const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
-  const id = row.id as string
-
-  if (!await copyToClipboard(id)) {
+  if (!await copyToClipboard(row.id)) {
     // Emit the error event for the host app
     emit('copy:error', {
       entity: row,
@@ -525,7 +523,7 @@ const rowClick = async (row: EntityRow): Promise<void> => {
     return
   }
 
-  const route = props.config.getViewRoute(row.id as string)
+  const route = props.config.getViewRoute(row.id)
   if (typeof route === 'string' && route.startsWith('http')) {
     // External link
     window.location.assign(route)
