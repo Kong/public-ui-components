@@ -318,7 +318,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
 
     function setGroupLayout(
       groupId: GroupId,
-      layout: { position: XYPosition; dimensions: NodeDimensions },
+      layout: { position: XYPosition, dimensions: NodeDimensions },
       commitNow = true,
     ): boolean {
       const group = groupMapById.value.get(groupId)
