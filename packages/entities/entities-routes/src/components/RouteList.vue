@@ -86,7 +86,7 @@
             <KButton
               v-if="userCanCreate"
               data-testid="entity-create-button"
-              @click="handleAddNewRoute"
+              :to="config.createRoute"
             >
               <AddIcon decorative />
               {{ t('routes.list.toolbar_actions.new_route') }}
@@ -525,7 +525,15 @@ const rowClick = async (row: EntityRow): Promise<void> => {
     return
   }
 
-  router.push(props.config.getViewRoute(row.id as string))
+  const route = props.config.getViewRoute(row.id as string)
+  if (typeof route === 'string') {
+    // External link
+    window.location.href = route
+  } else {
+    // Internal link
+    router.push(route)
+  }
+
 }
 
 // Render the view dropdown item as a router-link
@@ -592,13 +600,6 @@ const confirmDelete = async (): Promise<void> => {
   } finally {
     isDeletePending.value = false
   }
-}
-
-/**
- * Add New Route
- */
-const handleAddNewRoute = (): void => {
-  router.push(props.config.createRoute)
 }
 
 /**
