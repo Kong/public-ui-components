@@ -1,6 +1,6 @@
 <template>
   <div class="sandbox-container">
-    <div class="controls">
+    <div class="row">
       <div>
         <KLabel for="fit">
           Fit to country
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div class="generate-bounds">
+    <div class="row">
       <KButton
         size="medium"
         @click="genNewBounds()"
@@ -30,11 +30,16 @@
         Generate new bounds
       </KButton>
       <KButton
+        appearance="secondary"
         size="medium"
         @click="genNewBounds(true)"
       >
         Reset bounds
       </KButton>
+      <KInputSwitch
+        v-model="truncateMetrics"
+        label="Truncate metrics"
+      />
     </div>
 
 
@@ -45,6 +50,7 @@
         :fit-to-country="fitToCountry"
         :metric="'request_count'"
         :metric-unit="'requests'"
+        :truncated-metric="truncateMetrics"
         @bounds-change="console.log('bounds changed', $event)"
       />
     </div>
@@ -77,6 +83,7 @@ const bounds = ref<Array<[number, number]>>([
   [-180, -90],
   [180, 90],
 ])
+const truncateMetrics = ref(true)
 
 const countryMetrics = computed(() => {
   const metrics: Record<string, number> = {}
@@ -115,19 +122,14 @@ const genNewBounds = (reset = false) => {
 .sandbox-container {
   height: 900px;
 
-  .controls {
+  .row {
+    margin-top: 1em;
     display: flex;
     gap: 2em;
 
     .select-countries {
       width: 50%;
     }
-  }
-
-  .generate-bounds {
-    margin-top: 1em;
-    display: flex;
-    gap: 2em;
   }
 
   .map-container {
