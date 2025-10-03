@@ -10,17 +10,19 @@ const mountComponent = ({
   metric = ref('request_count'),
   metricUnit = ref('requests'),
   onBoundsChange = cy.spy(),
+  truncatedMetric = ref(true),
 }: {
   countryMetrics: Record<string, number>
   fitToCountry?: Ref<string>
   metric?: Ref<ExploreAggregations>
   metricUnit?: Ref<MetricUnits>
   onBoundsChange?: (bounds: Array<[number, number]>) => void
+  truncatedMetric?: Ref<boolean>
 }) => {
 
   const WrapperComponent = defineComponent({
     setup() {
-      return { countryMetrics, fitToCountry, metric, metricUnit, onBoundsChange }
+      return { countryMetrics, fitToCountry, metric, metricUnit, onBoundsChange, truncatedMetric }
     },
     render() {
       return h('div', { style: 'height: 500px; width: 500px;' }, [
@@ -30,6 +32,7 @@ const mountComponent = ({
           metric: this.metric,
           metricUnit: this.metricUnit,
           onBoundsChange: this.onBoundsChange,
+          truncatedMetric: this.truncatedMetric,
         }),
       ])
     },
@@ -43,6 +46,13 @@ const romaniaBounds = [
   [29.6265429999994, 49.17185755292891],
 ]
 
+const COUNTRY_METRICS = {
+  US: 1,
+  CA: 12,
+  MX: 150,
+  BR: 3_100,
+  AR: 75_000,
+}
 
 describe('<AnalyticsGeoMap />', () => {
   beforeEach(() => {
@@ -81,5 +91,38 @@ describe('<AnalyticsGeoMap />', () => {
 
     cy.get('@boundsChangeSpy').should('have.been.calledOnce')
     cy.get('@boundsChangeSpy').should('have.been.calledWith', romaniaBounds)
+  })
+
+  it('renders legend ranges with compact formatting when truncatedMetric is true', () => {
+    mountComponent({ countryMetrics: COUNTRY_METRICS, truncatedMetric: ref(true) })
+
+    cy.get('.legend').should('exist')
+    cy.get('.legend-item').should('have.length', 5)
+
+    // Expect at least one item to use the truncated suffix and none to contain thousands separators
+    cy.get('.legend-item .legend-text').then((items) => {
+      const texts = items.toArray().map(el => el.textContent?.trim() || '')
+
+      // one or more items should include K
+      expect(texts).to.satisfy((arr: string[]) => arr.some(t => /K\b/.test(t)))
+
+      // ensure we didn't get comma-formatted numbers
+      expect(texts).to.satisfy((arr: string[]) => arr.every(t => !t.includes(',')))
+    })
+  })
+
+
+  it('renders legend ranges with comma formatting when truncatedMetric is false', () => {
+    mountComponent({ countryMetrics: COUNTRY_METRICS, truncatedMetric: ref(false) })
+
+    cy.get('.legend').should('exist')
+    cy.get('.legend-item').should('have.length', 5)
+
+    // Expect at least one item to contain thousands separator
+    cy.get('.legend-item .legend-text').then((items) => {
+      const texts = items.toArray().map(el => el.textContent?.trim() || '')
+
+      expect(texts).to.satisfy((arr: string[]) => arr.some(t => t.includes(',')))
+    })
   })
 })
