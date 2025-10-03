@@ -486,7 +486,7 @@ const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<
   emit('copy:success', {
     entity: row,
     field: 'id',
-    message: t('copy.success', { val: id }),
+    message: t('copy.success', { val: row.id }),
   })
 }
 
