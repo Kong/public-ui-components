@@ -52,12 +52,16 @@
       </Controls>
 
       <!-- To not use the default node style -->
-      <template #node-flow="node">
+      <template #node-leaf="node">
         <FlowNode
           :data="node.data"
           :error="invalidConfigNodeIds.has(node.data.id)"
           :readonly="mode !== 'edit'"
         />
+      </template>
+
+      <template #node-group="node">
+        <FlowGroupNode :data="node.data" />
       </template>
     </VueFlow>
 
@@ -71,11 +75,11 @@
 </template>
 
 <script setup lang="ts">
-import { AddIcon, AutoLayoutIcon, RemoveIcon, FullscreenIcon } from '@kong/icons'
+import { AddIcon, AutoLayoutIcon, FullscreenIcon, RemoveIcon } from '@kong/icons'
 import { KTooltip } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
-import { VueFlow } from '@vue-flow/core'
+import { VueFlow, type NodeProps } from '@vue-flow/core'
 import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core'
 import { computed, nextTick, ref, useTemplateRef } from 'vue'
 
@@ -83,7 +87,8 @@ import useI18n from '../../../../composables/useI18n'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { useHotkeys } from './composables/useHotkeys'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
-import FlowNode from './node/FlowNode.vue'
+import FlowGroupNode from './node/CanvasGroupNode.vue'
+import FlowNode from './node/CanvasLeafNode.vue'
 import { provideFlowStore } from './store/flow'
 
 import '@vue-flow/controls/dist/style.css'
@@ -92,7 +97,7 @@ import '@vue-flow/core/dist/theme-default.css'
 
 import type { Component } from 'vue'
 
-import type { DragPayload, NodePhase } from '../types'
+import type { DragPayload, NodeInstance, NodePhase } from '../types'
 
 const { flowId, phase, mode } = defineProps<{
   flowId: string

@@ -24,7 +24,7 @@
       inert
     >
       <VueFlow :nodes="previewNodes">
-        <template #node-flow="node">
+        <template #node-leaf="node">
           <FlowNode
             :id="previewId"
             :data="node.data"
@@ -44,7 +44,7 @@ import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
 import { useEditorStore } from '../store/store'
 import { CONFIG_NODE_META_MAP } from './node'
 import NodePanelItem from './NodePanelItem.vue'
-import FlowNode from './FlowNode.vue'
+import FlowNode from './CanvasLeafNode.vue'
 
 import type { ConfigNodeType, NodeInstance, DragPayload } from '../../types'
 
@@ -62,7 +62,7 @@ const previewNodes = computed(() => {
   return [
     {
       id: 'preview',
-      type: 'flow',
+      type: 'leaf',
       data: previewNode.value,
       position: { x: 0, y: 0 },
     },

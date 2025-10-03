@@ -235,7 +235,7 @@ import { MoreIcon, UnfoldLessIcon, UnfoldMoreIcon, WarningIcon } from '@kong/ico
 import { Handle, Position } from '@vue-flow/core'
 
 import english from '../../../../../locales/en.json'
-import { isReadableProperty, isWritableProperty } from '../node/property'
+import { isReadableProperty, isWritableProperty } from './property'
 import { useOptionalFlowStore } from '../store/flow'
 import { getNodeMeta } from '../store/helpers'
 import { useEditorStore } from '../store/store'

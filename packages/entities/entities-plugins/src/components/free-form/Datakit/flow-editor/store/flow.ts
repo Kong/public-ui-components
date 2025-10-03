@@ -1,16 +1,17 @@
 import type { Node as DagreNode } from '@dagrejs/dagre'
-import type { Connection, Edge, FitViewParams, Node, Rect, XYPosition } from '@vue-flow/core'
+import type { Connection, Edge, FitViewParams, GraphNode, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
-import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
+import type { BranchNode, EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 
 import dagre from '@dagrejs/dagre'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
-import { computed, toValue, watch } from 'vue'
+import { computed, ref, toValue, watch } from 'vue'
 
 import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
+import { cloneDeep } from 'lodash-es'
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
 import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
@@ -37,34 +38,115 @@ function parseHandle(handle: string): { io: 'input' | 'output', field: FieldId }
 /**
  * A helper function to create a bounding box around nodes.
  */
-function createWrapper(): [typeof wrap, typeof copy] {
-  const bounding = {
-    x1: Number.POSITIVE_INFINITY,
-    y1: Number.POSITIVE_INFINITY,
-    x2: Number.NEGATIVE_INFINITY,
-    y2: Number.NEGATIVE_INFINITY,
+function createWrapper() {
+  let x1 = Number.POSITIVE_INFINITY
+  let y1 = Number.POSITIVE_INFINITY
+  let x2 = Number.NEGATIVE_INFINITY
+  let y2 = Number.NEGATIVE_INFINITY
+
+  const add = (node: Rect) => {
+    x1 = Math.min(x1, node.x)
+    y1 = Math.min(y1, node.y)
+    x2 = Math.max(x2, node.x + node.width)
+    y2 = Math.max(y2, node.y + node.height)
   }
 
-  const wrap = (node: Rect) => {
-    bounding.x1 = Math.min(bounding.x1, node.x)
-    bounding.y1 = Math.min(bounding.y1, node.y)
-    bounding.x2 = Math.max(bounding.x2, node.x + node.width)
-    bounding.y2 = Math.max(bounding.y2, node.y + node.height)
-  }
-
-  const copy = () => {
-    const copy = { ...bounding }
-    if (copy.x1 > copy.x2) {
-      copy.x1 = copy.x2 = 0
+  const rect = (): Rect => {
+    return {
+      x: x1 > x2 ? 0 : x1,
+      y: y1 > y2 ? 0 : y1,
+      width: x1 > x2 ? 0 : x2 - x1,
+      height: y1 > y2 ? 0 : y2 - y1,
     }
-    if (copy.y1 > copy.y2) {
-      copy.y1 = copy.y2 = 0
-    }
-    return copy
   }
 
-  return [wrap, copy]
+  return { add, rect }
 }
+
+// export function buildNodeTree(nodes: Array<CanvasLeafNode | CanvasGroupNode>) {
+//   const nodeMap = new Map<string, TreeCanvasNode>()
+//   for (const n of nodes) {
+//     nodeMap.set(n.id, { ...n, children: [] })
+//   }
+
+//   for (const node of nodeMap.values()) {
+//     if (!node.parentNode) continue
+
+//     const parent = nodeMap.get(node.parentNode)
+//     if (!parent) continue
+
+//     node.parent = parent
+//   }
+
+//   const checkCycle = (nodeId: string, parentId: string): boolean => {
+//     let currentId: string | undefined = parentId
+//     const visited = new Set<string>()
+//     while (currentId) {
+//       if (currentId === nodeId) return true
+//       if (visited.has(currentId)) break
+//       visited.add(currentId)
+//       const current = nodeMap.get(currentId)
+//       currentId = current?.parentNode
+//     }
+//     return false
+//   }
+
+//   const roots: TreeCanvasNode[] = []
+//   const levelMap = new Map<string | undefined, { depth: number, nodes: TreeCanvasNode[] }>()
+//   const mapNode = (parentId: string | undefined, node: TreeCanvasNode, depth: number) => {
+//     const mappedNodes = levelMap.get(parentId)
+//     if (!mappedNodes) {
+//       levelMap.set(parentId, { depth, nodes: [node] })
+//     } else {
+//       mappedNodes.nodes.push(node)
+//     }
+//   }
+
+//   for (const node of nodeMap.values()) {
+//     const parentId = node.parentNode
+
+//     if (!parentId || parentId === node.id) {
+//       roots.push(node)
+//       mapNode(undefined, node, 0)
+//       continue
+//     }
+
+//     const parent = nodeMap.get(parentId)
+//     if (!parent) {
+//       console.warn(`Node '${node.id}' has unknown parent '${parentId}'`)
+//       roots.push(node)
+//       mapNode(undefined, node, 0)
+//       continue
+//     }
+
+//     if (checkCycle(node.id, parentId)) {
+//       console.warn(`Node ${node.id} creates a cycle while having parent '${parentId}'`)
+//       roots.push(node)
+//       mapNode(undefined, node, 0)
+//       continue
+//     }
+
+//     if (!parent.children) parent.children = []
+//     parent.children.push(node)
+
+//     const subtree = levelMap.get(parentId)
+//     mapNode(parentId, node, (subtree?.depth ?? 0) + 1)
+//   }
+
+//   return {
+//     roots,
+//     map: nodeMap,
+//     sorted: levelMap.values().toArray().sort((a, b) => b.depth - a.depth),
+//   }
+// }
+
+const initTreeCanvasNode = (canvasNode: CanvasNode): TreeCanvasNode => ({
+  ...canvasNode,
+  treeMeta: {
+    depth: 0,
+    children: [],
+  },
+})
 
 const BORDER_COLORS: Record<EdgeState, string> = {
   default: KUI_COLOR_BORDER_NEUTRAL,
@@ -158,6 +240,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     const {
       findNode,
+      updateNode,
+      updateNodeData,
       fitView: flowFitView,
       deleteKeyCode,
       onNodeDragStop,
@@ -202,17 +286,177 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
     }
 
-    const nodes = computed(() =>
-      state.value.nodes
-        .filter((node) => node.phase === phase && !node.hidden)
-        .map<Node<NodeInstance>>((node) => ({
-          id: node.id,
-          type: 'flow',
-          position: node.position,
-          data: node,
-          deletable: !isImplicitNode(node),
-        })),
-    )
+    const nodes = ref<CanvasNode[]>([])
+    const nodeMapById = ref(new Map<string, CanvasNode>())
+    const sortedNodesForLayout = ref<CanvasNode[][]>([])
+
+    watch(() => state.value.nodes, (stateNodes) => {
+      const treeNodes: TreeCanvasNode[] = []
+      const treeNodeMapById = new Map<string, TreeCanvasNode>()
+      const treeNodeMapByName = new Map<string, TreeCanvasNode>()
+      const branchIds: string[] = []
+
+      stateNodes.forEach((stateNode) => {
+        if (stateNode.phase !== phase || stateNode.hidden)
+          return
+
+        const node = initTreeCanvasNode({
+          id: stateNode.id,
+          type: 'leaf',
+          position: stateNode.position,
+          deletable: !isImplicitNode(stateNode),
+          expandParent: true,
+          data: stateNode,
+        })
+
+        treeNodes.push(node)
+        treeNodeMapById.set(stateNode.id, node)
+        treeNodeMapByName.set(stateNode.name, node)
+
+        // Later
+        if (stateNode.type === 'branch') {
+          branchIds.push(stateNode.id)
+        }
+      })
+
+      const createBranchGroup = (
+        branchNode: TreeCanvasNode,
+        kind: 'then' | 'else',
+        childNames: string[] | null | undefined,
+      ): (TreeCanvasNode & CanvasGroupNode) | undefined => {
+        if (!childNames || childNames.length === 0)
+          return undefined
+
+        const branchGroupId = `group:branch:${branchNode.id}:${kind}`
+        const branchGroupNode = initTreeCanvasNode({
+          id: branchGroupId,
+          type: 'group',
+          position: {
+            x: 0,
+            y: 0,
+          },
+          data: {
+            size: {
+              width: 0,
+              height: 0,
+            },
+          },
+          parentNode: branchNode.parentNode,
+        }) as TreeCanvasNode & CanvasGroupNode
+
+        const wrapper = createWrapper()
+
+        childNames.forEach((name) => {
+          const childNode = treeNodeMapByName.get(name)
+          if (!childNode) {
+            console.warn(`Unknown child node '${name}' for ${kind} branch of '${branchNode.id}'`)
+            return
+          }
+
+          childNode.parentNode = branchGroupId
+        })
+
+        treeNodes.push(branchGroupNode)
+        treeNodeMapById.set(branchGroupId, branchGroupNode)
+
+        // TODO: Connect the branch node to the branch group node
+
+        return branchGroupNode
+      }
+
+      const branchGroupNodes: Array<TreeCanvasNode & CanvasGroupNode> = []
+
+      branchIds.forEach((branchId) => {
+        const branchNode = treeNodeMapById.get(branchId)
+        if (!branchNode) {
+          console.warn(`Unknown branch node '${branchId}'`)
+          return
+        }
+
+        if (branchNode.type !== 'leaf') {
+          console.warn(`Branch node '${branchId}' is not a leaf node`)
+          return
+        }
+
+        const branchThen = branchNode.data?.config?.['then'] as BranchNode['then']
+        const branchElse = branchNode.data?.config?.['else'] as BranchNode['else']
+
+        const branchThenNode = createBranchGroup(branchNode, 'then', branchThen)
+        if (branchThenNode) branchGroupNodes.push(branchThenNode)
+
+        const branchElseNode = createBranchGroup(branchNode, 'else', branchElse)
+        if (branchElseNode) branchGroupNodes.push(branchElseNode)
+      })
+
+      const checkCycle = (nodeId: string, parentId: string): boolean => {
+        let id: string | undefined = parentId
+        const visited = new Set<string>()
+        while (id) {
+          if (id === nodeId) return true
+          if (visited.has(id)) break
+          visited.add(id)
+          const current = treeNodeMapById.get(id)
+          id = current?.parentNode
+        }
+        return false
+      }
+
+      // Pick out root nodes and link parents and children
+      treeNodes.forEach((node) => {
+        if (!node.parentNode) return
+
+        const parentNode = treeNodeMapById.get(node.parentNode)
+        if (!parentNode) {
+          console.warn(`Node '${node.id}' has unknown parent '${node.parentNode}'`)
+          return
+        }
+
+        if (checkCycle(node.id, node.parentNode)) {
+          console.warn(`Node ${node.id} creates a cycle while having parent '${node.parentNode}'`)
+          return
+        }
+
+        node.treeMeta.parent = parentNode
+        parentNode.treeMeta.children.push(node)
+      })
+
+      // Create map unique by depth and parent
+      const depthMap = new Map<number, Map<string | undefined, TreeCanvasNode[]>>()
+      treeNodes.forEach((node) => {
+        if (node.treeMeta.parent) {
+          let depth = 0
+          let parent: TreeCanvasNode | undefined = node.treeMeta.parent
+          while (parent) {
+            depth++
+            parent = parent.treeMeta.parent
+          }
+          node.treeMeta.depth = depth
+        }
+
+        let parentMap = depthMap.get(node.treeMeta.depth)
+        if (!parentMap) {
+          parentMap = new Map()
+          depthMap.set(node.treeMeta.depth, parentMap)
+        }
+
+        const parentId = node.treeMeta.parent?.id
+        const siblings = parentMap.get(parentId)
+        if (!siblings) {
+          parentMap.set(parentId, [node])
+        } else {
+          siblings.push(node)
+        }
+      })
+
+      nodes.value = treeNodes.sort((a, b) => a.treeMeta.depth - b.treeMeta.depth)
+      nodeMapById.value = treeNodeMapById
+      sortedNodesForLayout.value = depthMap.entries().toArray()
+        .sort((a, b) => b[0] - a[0])
+        .reduce((all, [, parentMap]) => {
+          all.push(...parentMap.values().toArray())
+          return all
+        }, [] as TreeCanvasNode[][])
+    }, { deep: true, immediate: true })
 
     const edges = computed(() =>
       state.value.edges
@@ -247,9 +491,15 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     // Moved away from VueFlow's `:nodes` and `:edges` props because
     // they have race conditions while being updated simultaneously.
     watch([nodes, edges], ([newNodes, newEdges]) => {
+      console.log(cloneDeep(newNodes))
       setNodes(newNodes)
       setEdges(newEdges)
     }, { immediate: true }) // As `nodes` and `edges` are computed refs, it would be okay without `deep: true`
+
+    // Reset canvas-only nodes when the entire state changes. NO DEEP.
+    watch(state, () => {
+      canvasOnlyNodes.value.clear()
+    })
 
     const fitViewParams = computed<FitViewParams>(() => {
       return {
@@ -387,27 +637,93 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       commit()
     }
 
+    function adjustGroupSize(node: TreeCanvasNode) {
+      if (!node || node.type !== 'group' || !node.treeMeta.children || node.treeMeta.children.length === 0)
+        return
+
+      const wrapper = createWrapper()
+
+      node.treeMeta.children.forEach((child) => {
+        const childNode = findNode(child.id)
+        if (!childNode) return
+
+        wrapper.add({
+          x: child.position.x,
+          y: child.position.y,
+          width: childNode.dimensions.width,
+          height: childNode.dimensions.height,
+        })
+      })
+
+      const rect = wrapper.rect()
+
+      const offsetX = rect.x
+      const offsetY = rect.y
+
+      const threshold = 0.1
+
+      if (Math.abs(offsetX) > threshold || Math.abs(offsetY) > threshold) {
+        node.position.x += offsetX
+        node.position.y += offsetY
+        updateNode(node.id, { position: node.position })
+
+        node.treeMeta.children.forEach((child) => {
+          child.position.x -= offsetX
+          child.position.y -= offsetY
+          updateNode(child.id, { position: child.position })
+        })
+      }
+
+      updateNode(node.id, {
+        style: {
+          width: `${rect.width}px`,
+          height: `${rect.height}px`,
+        },
+      })
+    }
+
     // Only triggered by canvas-originated changes
     onNodesChange((changes) => {
-      changes
-        .filter((change) => change.type === 'select')
-        // deselected changes come first
+      let schedulePostRemoval = false
+      const parentNodesToUpdate = new Set<TreeCanvasNode>()
+      const selectChanges: NodeSelectionChange[] = []
+
+      for (const change of changes) {
+        switch (change.type) {
+          case 'select':
+            selectChanges.push(change as NodeSelectionChange)
+            break
+          case 'dimensions':
+          case 'position': {
+            const node = nodeMapById.value.get(change.id)
+            if (node?.treeMeta.parent) {
+              parentNodesToUpdate.add(node.treeMeta.parent)
+            }
+            break
+          }
+          case 'remove':
+            // !! ATTENTION !!
+            // We assume `onNodesChange` is only triggered when user removes nodes from the canvas.
+            // Removals originated from the node panel (form) does not trigger this, because they
+            // manipulate the state directly.
+            schedulePostRemoval = true
+            removeNode(change.id as NodeId, false) // Hold off committing until sync
+            break
+          default:
+            break
+        }
+      }
+
+      parentNodesToUpdate.forEach((node) => {
+        adjustGroupSize(node)
+      })
+
+      // Deselection changes come first
+      selectChanges
         .sort((a, b) => (a.selected === b.selected ? 0 : a.selected ? 1 : -1))
         .forEach((change) => {
           selectStoreNode(change.selected ? (change.id as NodeId) : undefined)
         })
-
-      let schedulePostRemoval = false
-      changes.forEach((change) => {
-        if (change.type === 'remove') {
-          // !! ATTENTION !!
-          // We assume `onNodesChange` is only triggered when user removes nodes from the canvas.
-          // Removals originated from the node panel (form) does not trigger this, because they
-          // manipulate the state directly.
-          schedulePostRemoval = true
-          removeNode(change.id as NodeId, false) // Hold off committing until sync
-        }
-      })
 
       if (schedulePostRemoval && !postRemovalScheduled) {
         postRemovalScheduled = true
@@ -418,6 +734,12 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     onNodeDragStop(({ node }) => {
       if (!node) return
+
+      const canvasNode = canvasOnlyNodes.value.get(node.id)
+      if (canvasNode) {
+        canvasNode.position = node.position
+        return
+      }
 
       // Update the node position in the store
       moveNode(node.id as NodeId, node.position)
@@ -486,10 +808,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       handleConnect(connection)
     })
 
-    function autoLayout(commitNow = true) {
+    function doAutoLayout(nodes: TreeCanvasNode[]) {
       let leftNode: Node<NodeInstance> | undefined
       let rightNode: Node<NodeInstance> | undefined
-      const configNodes: Array<Node<NodeInstance>> = []
+      let leftGraphNode: GraphNode | undefined
+      let rightGraphNode: GraphNode | undefined
+
+      const autoNodes: Array<CanvasLeafNode | CanvasGroupNode> = []
 
       /**
        * Check for implicit nodes in the current phase. If the node is an implicit node,
@@ -498,7 +823,12 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
        * @param node Node to check
        * @return Whether the node is an implicit node or not
        */
-      const checkImplicitNode = (node: Node<NodeInstance>): boolean => {
+      const checkImplicitNode = (node: CanvasLeafNode | CanvasGroupNode): boolean => {
+        if (node.type === 'group') {
+          autoNodes.push(node)
+          return false
+        }
+
         switch (node.data!.name) {
           case 'request': {
             if (phase !== 'request') {
@@ -541,7 +871,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             return true
           }
           default: {
-            configNodes.push(node)
+            autoNodes.push(node)
             return false
           }
         }
@@ -549,13 +879,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       let dagreGraph: dagre.graphlib.Graph | undefined
 
-      for (const node of nodes.value) {
+      for (const node of nodes) {
         if (checkImplicitNode(node)) {
           // Skip auto-layout by Dagre for implicit nodes
           continue
         }
 
-        if (configNodes.length > 0) {
+        if (autoNodes.length > 0) {
           if (!dagreGraph) {
             dagreGraph = new dagre.graphlib.Graph({ multigraph: true })
             dagreGraph.setGraph({
@@ -572,31 +902,39 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             throw new Error(`Node ${node.id} is missing from the graph in ${phase} phase`)
           }
 
-          dagreGraph.setNode(node.id, {
-            width: graphNode.dimensions.width,
-            height: graphNode.dimensions.height,
-          })
+          if (node.type === 'group') {
+            dagreGraph.setNode(node.id, node.data!.size)
+          } else {
+            dagreGraph.setNode(node.id, {
+              width: graphNode.dimensions.width,
+              height: graphNode.dimensions.height,
+            })
+          }
         }
       }
 
-      if (!leftNode || !rightNode) {
-        throw new Error(`One or more implicit nodes are missing from ${phase} phase`)
+      if (leftNode) {
+        leftGraphNode = findNode(leftNode.id)
+        if (!leftGraphNode) {
+          throw new Error(`Left implicit node is missing from the graph in ${phase} phase`)
+        }
       }
 
-      const leftGraphNode = findNode(leftNode.id)
-      const rightGraphNode = findNode(rightNode.id)
-      if (!leftGraphNode || !rightGraphNode) {
-        throw new Error(`One or more implicit nodes are missing from the graph in ${phase} phase`)
+      if (rightNode) {
+        rightGraphNode = findNode(rightNode.id)
+        if (!rightGraphNode) {
+          throw new Error(`Right implicit node is missing from the graph in ${phase} phase`)
+        }
       }
 
-      if (configNodes.length > 0) {
+      if (autoNodes.length > 0) {
         if (!dagreGraph) {
           throw new Error('dagreGraph should be defined here if reachable')
         }
 
-        const implicitIds = new Set([leftNode.id, rightNode.id])
+        const implicitIds = new Set([...leftNode ? [leftNode.id] : [], ...rightNode ? [rightNode.id] : []])
         for (const edge of edges.value) {
-          if (!implicitIds.has(edge.source) && !implicitIds.has(edge.target)) {
+          if (implicitIds.size === 0 || (!implicitIds.has(edge.source) && !implicitIds.has(edge.target))) {
             dagreGraph.setEdge(edge.source, edge.target, { points: [] })
           }
         }
@@ -605,7 +943,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         dagre.layout(dagreGraph)
       }
 
-      const [wrapBounding, copyBounding] = createWrapper()
+      const wrapper = createWrapper()
 
       // Positions returned by Dagre are centered
       const normalizePosition = (node: DagreNode) => {
@@ -617,46 +955,83 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         }
       }
 
-      if (configNodes.length > 0) {
+      if (autoNodes.length > 0) {
         if (!dagreGraph) {
           throw new Error('dagreGraph should be defined here if reachable')
         }
 
-        for (const node of configNodes) {
+        for (const node of autoNodes) {
           const dagreNode = dagreGraph.node(node.id)
           const position = normalizePosition(dagreNode)
-          wrapBounding(position)
-          moveNode(node.data!.id, { x: position.x, y: position.y }, false)
+          wrapper.add(position)
+
+          const canvasNode = canvasOnlyNodes.value.get(node.id)
+          if (canvasNode) {
+            canvasNode.position = { x: position.x, y: position.y }
+          } else {
+            moveNode(node.id as NodeId, { x: position.x, y: position.y }, false)
+          }
         }
       }
 
-      const centralBounding = copyBounding()
-      const centralWidth = centralBounding.x2 - centralBounding.x1
-      const centralHeight = centralBounding.y2 - centralBounding.y1
+      const autoNodesRect = wrapper.rect()
 
       // Try to place implicit nodes at both ends when there is much room
       // If horizontalSpace is 0, it means we do not have enough space
       const horizontalSpace = Math.max(
         0,
         Math.min(toValue(viewport?.width) ?? Number.POSITIVE_INFINITY, DEFAULT_VIEWPORT_WIDTH)
-          - centralWidth
+          - autoNodesRect.width
           - 2 * nodeGap
-          - leftGraphNode.dimensions.width
-          - rightGraphNode.dimensions.width
+          - (leftGraphNode?.dimensions.width ?? 0)
+          - (rightGraphNode?.dimensions.width ?? 0)
           - 2 * padding,
       )
 
-      const centerY = centralBounding.y1 + centralHeight / 2
+      const autoNodesCenterY = autoNodesRect.y + autoNodesRect.height / 2
 
-      moveNode(leftNode.data!.id, {
-        x: centralBounding.x1 - nodeGap - horizontalSpace / 2 - leftGraphNode.dimensions.width,
-        y: centerY - leftGraphNode.dimensions.height / 2,
-      }, false)
+      if (leftNode && leftGraphNode) {
+        moveNode(leftNode.data!.id, {
+          x: autoNodesRect.x - nodeGap - horizontalSpace / 2 - leftGraphNode.dimensions.width,
+          y: autoNodesCenterY - leftGraphNode.dimensions.height / 2,
+        }, false)
+      }
 
-      moveNode(rightNode.data!.id, {
-        x: centralBounding.x2 + nodeGap + horizontalSpace / 2,
-        y: centerY - rightGraphNode.dimensions.height / 2,
-      }, false)
+      if (rightNode && rightGraphNode) {
+        moveNode(rightNode.data!.id, {
+          x: autoNodesRect.x + nodeGap + horizontalSpace / 2,
+          y: autoNodesCenterY - rightGraphNode.dimensions.height / 2,
+        }, false)
+      }
+
+      return autoNodesRect
+    }
+
+    function autoLayout(commitNow = true) {
+      sortedNodesForLayout.value.forEach((nodes) => {
+        if (nodes.length === 0) return
+
+        const rect = doAutoLayout(nodes)
+
+        const parentNode = nodes[0].treeMeta.parent
+        if (!parentNode) return
+        if (parentNode.type !== 'group') {
+          console.warn(`Expected node '${parentNode.id}' to be a group node`)
+          return
+        }
+
+        parentNode.position = {
+          x: rect.x,
+          y: rect.y,
+        }
+        parentNode.data!.size = {
+          width: rect.width,
+          height: rect.height,
+        }
+
+        updateNode(parentNode.id, { position: parentNode.position })
+        updateNodeData(parentNode.id, { size: parentNode.data!.size })
+      })
 
       if (commitNow) {
         historyCommit(`autolayout-${flowId}`)

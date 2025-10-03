@@ -1,7 +1,7 @@
 // types.ts
 import type { Component } from 'vue'
 import type { ButtonProps } from '@kong/kongponents'
-import type { XYPosition } from '@vue-flow/core'
+import type { Node, XYPosition } from '@vue-flow/core'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 import type {
   DatakitConfig,
@@ -20,6 +20,7 @@ import type {
   JqNode,
   PropertyNode,
   StaticNode,
+  BranchNode,
 } from './schema/strict'
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
@@ -84,6 +85,7 @@ export type {
   JqNode,
   PropertyNode,
   StaticNode,
+  BranchNode,
   HttpMethod,
 }
 
@@ -97,6 +99,7 @@ export interface DatakitUIData {
    * UI nodes that store data like input/output fields, positions, and other metadata.
    */
   nodes?: UINode[]
+  groups?: UIGroup[]
 }
 /**
  * The phase of the node in the request/response cycle.
@@ -112,6 +115,9 @@ export type NodePhase = 'request' | 'response'
 export type NodeId = `node:${number}`
 export type EdgeId = `edge:${number}`
 export type FieldId = `field:${number}`
+export type GroupId = `group:${number}`
+
+export type GroupType = 'group' // Use a general type for now
 
 export type IdConnection = NodeId | `${NodeId}.${FieldId}`
 
@@ -120,7 +126,7 @@ export interface NodeField {
   name: FieldName
 }
 
-export type UINode = {
+interface BaseUINode {
   name: NodeName
   phase: NodePhase
   position: XYPosition
@@ -130,9 +136,31 @@ export type UINode = {
   hidden?: boolean
 }
 
-export interface NodeInstance {
+interface BranchUINode extends BaseUINode {
+  type: 'branch'
+  branchGroup: {
+    position: XYPosition
+  }
+}
+
+interface OtherUINode extends BaseUINode {
+  type: Exclude<NodeType, 'branch'>
+}
+
+export type UINode = BranchUINode | OtherUINode
+
+export interface UIGroup {
+  type: GroupType
+  name: string
+  phase: NodePhase
+  position: XYPosition
+}
+
+export type CanvasUINode = UINode | UIGroup
+
+interface BaseNodeInstance {
   id: NodeId
-  type: NodeType
+  type: string
   name: NodeName
   phase: NodePhase
   position: XYPosition
@@ -141,6 +169,35 @@ export interface NodeInstance {
   /** hidden in UI */
   hidden?: boolean
   config?: Record<string, unknown>
+}
+
+interface BranchNodeInstance extends BaseNodeInstance {
+  type: 'branch'
+  branchGroup: {
+    position: XYPosition
+  }
+}
+
+interface OtherNodeInstance extends BaseNodeInstance {
+  type: Exclude<NodeType, 'branch'>
+}
+
+export type NodeInstance = BranchNodeInstance | OtherNodeInstance
+
+export interface GroupInstance {
+  id: string
+  type: GroupType
+  name: string
+  phase: NodePhase
+  position: XYPosition
+}
+
+export type CanvasNodeInstance = NodeInstance | GroupInstance
+
+export type CanvasGroupNode = Node<GroupInstance> & {
+  depth: number
+  parent?: GroupInstance
+  children: CanvasNodeInstance[]
 }
 
 export interface ConfigEdge {
@@ -163,6 +220,7 @@ export interface EdgeInstance extends EdgeData {
 
 export interface EditorState {
   nodes: NodeInstance[]
+  groups: GroupInstance[]
   edges: EdgeInstance[]
 
   /**
@@ -185,6 +243,13 @@ export interface MakeNodeInstancePayload {
   /** hidden in UI */
   hidden?: boolean
   config?: Record<string, unknown>
+}
+
+export interface MakeGroupInstancePayload {
+  type: GroupType
+  name: string
+  phase?: NodePhase
+  position?: XYPosition
 }
 
 export interface CreateNodePayload extends MakeNodeInstancePayload {

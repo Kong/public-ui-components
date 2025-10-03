@@ -206,6 +206,15 @@ export const StaticNodeSchema = ConfigNodeBaseSchema.extend({
 /** Produce reusable outputs from statically-configured values. */
 export type StaticNode = z.infer<typeof StaticNodeSchema>
 
+export const BranchNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('branch'),
+  inputs: z.never().optional(),
+  then: z.array(NameConnectionSchema).nullish(),
+  else: z.array(NameConnectionSchema).nullish(),
+})
+
+export type BranchNode = z.infer<typeof BranchNodeSchema>
+
 export const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
   z.discriminatedUnion('type', [
     CallNodeSchema,
@@ -213,6 +222,7 @@ export const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
     JqNodeSchema,
     PropertyNodeSchema,
     StaticNodeSchema,
+    BranchNodeSchema,
   ]),
 )
 

@@ -118,6 +118,13 @@ const StaticNodeSchema = ConfigNodeBaseSchema.extend({
   inputs: z.never().optional(),
 }).strict()
 
+const BranchNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('branch'),
+  inputs: z.never().optional(),
+  then: z.array(LooseConnectionSchema).nullish(),
+  else: z.array(LooseConnectionSchema).nullish(),
+}).strict()
+
 const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
   z.discriminatedUnion('type', [
     CallNodeSchema,
@@ -125,6 +132,7 @@ const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
     JqNodeSchema,
     PropertyNodeSchema,
     StaticNodeSchema,
+    BranchNodeSchema,
   ]),
 )
 

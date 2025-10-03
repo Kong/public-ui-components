@@ -535,8 +535,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     }
 
     function toUINodes(): UINode[] {
-      return state.value.nodes.map((node) =>
-        clone({
+      return state.value.nodes.map((node) => {
+        const uiNode = {
           name: node.name,
           phase: node.phase,
           position: { ...node.position },
@@ -545,8 +545,24 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
             input: node.fields.input.map((field) => field.name),
             output: node.fields.output.map((field) => field.name),
           },
-        }),
-      )
+          ...node.type === 'branch' && {
+            branchGroup: node.branchGroup,
+          },
+        }
+
+        if (node.type === 'branch') {
+          return clone({
+            ...uiNode,
+            type: 'branch',
+            branchGroup: { ...node.branchGroup },
+          })
+        }
+
+        return clone({
+          ...uiNode,
+          type: node.type,
+        })
+      })
     }
 
     /**
