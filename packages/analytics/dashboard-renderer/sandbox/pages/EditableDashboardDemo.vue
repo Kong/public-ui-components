@@ -59,7 +59,6 @@ import { computed, inject, ref } from 'vue'
 import type {
   DashboardConfig,
   DashboardTileType,
-  ExploreAggregations,
   TileConfig,
   TileDefinition,
 } from '@kong-ui-public/analytics-utilities'
@@ -117,8 +116,10 @@ const dashboardConfig = ref <DashboardConfig>({
           type: 'timeseries_line',
           chart_title: 'Timeseries line chart of mock data',
           threshold: {
-            'request_count': 3200,
-          } as Record<ExploreAggregations, number>,
+            request_count: [
+              { type: 'neutral', value: 3200, label: 'FOO' },
+            ],
+          },
         },
         query: {
           datasource: 'basic',
@@ -248,8 +249,10 @@ const addTile = () => {
         type: ['timeseries_line', 'timeseries_bar'][last] as any,
         chart_title: 'Timeseries line chart of mock data',
         threshold: {
-          'request_count': 3200,
-        } as Record<ExploreAggregations, number>,
+          request_count: [
+            { type: 'neutral', value: 3200, label: 'FOO' },
+          ],
+        },
       },
       query: {
         datasource: 'basic',

@@ -197,7 +197,7 @@
               v-if="exportModalVisible"
               :export-state="exportState"
               filename="asdf.csv"
-              @toggle-modal="setModalVisibility"
+              @close-modal="setModalVisibility(false)"
             />
           </div>
         </div>

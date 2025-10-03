@@ -13,6 +13,7 @@
       :fit-to-country="chartOptions.fit_to_country"
       :metric="(countryMetric as ExploreAggregations)"
       :metric-unit="(countryMetricUnit as MetricUnits)"
+      :truncated-metric="truncatedMetric"
       :with-legend="chartOptions.legend || false"
     />
   </QueryDataProvider>
@@ -29,7 +30,7 @@ import { AnalyticsGeoMap, exploreResultToCountryMetrics } from '@kong-ui-public/
 import { COUNTRIES } from '@kong-ui-public/analytics-utilities'
 import '@kong-ui-public/analytics-geo-map/dist/style.css'
 
-defineProps<RendererProps<ChoroplethMapOptions>>()
+const props = defineProps<RendererProps<ChoroplethMapOptions>>()
 
 const chartDataRaw = ref<ExploreResultV4 | undefined>(undefined)
 
@@ -58,6 +59,10 @@ const countryMetricUnit = computed(() => {
   const metricNames = chartDataRaw?.value?.meta?.metric_names
 
   return metricUnits && metricNames && metricUnits[metricNames[0]]
+})
+
+const truncatedMetric = computed(() => {
+  return !props.query.metrics?.some(metric => metric.includes('latency'))
 })
 
 const onChartData = (data: ExploreResultV4) => {
