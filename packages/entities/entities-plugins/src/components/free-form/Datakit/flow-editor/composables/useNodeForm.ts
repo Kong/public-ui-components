@@ -1,8 +1,8 @@
-import { computed, inject, nextTick, watch, reactive } from 'vue'
+import { computed, inject, nextTick, watch } from 'vue'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/validation'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType, BranchName } from '../../types'
-import { findFieldById, findFieldByName, getBranchesFromMeta, getNodeMeta, parseIdConnection } from '../store/helpers'
+import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
 import { isReadableProperty } from '../node/property'
 import { useFormShared } from '../../../shared/composables'
 import type { ArrayLikeFieldSchema, RecordFieldSchema } from '../../../../../types/plugins/form-schema'
@@ -124,94 +124,12 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     replaceConfig(nodeId, config, commitNow, finalTag)
   }
 
-  const syncBranchGroups = () => {
-    if (!getBranchesFromMeta(currentNode.value.type).length) return
-    branchGroups.sync(nodeId)
-  }
-
-  function readBranchMembers(branch: BranchName): NodeId[] {
-    const raw = currentNode.value.config?.[branch]
-    if (!Array.isArray(raw)) return []
-    return (raw as unknown[]).filter((value): value is NodeId => typeof value === 'string' && isNodeId(value))
-  }
-
-  const branchKeys = getBranchesFromMeta(currentNode.value.type)
-
-  const pendingBranchValues = reactive<Record<BranchName, NodeId[]>>({} as Record<BranchName, NodeId[]>)
-
-  function hydratePendingBranchValues() {
-    for (const branch of branchKeys) {
-      pendingBranchValues[branch] = readBranchMembers(branch)
-    }
-  }
-
-  hydratePendingBranchValues()
-
-  watch(formData, () => {
-    hydratePendingBranchValues()
-  })
-
   function createBranchAssignmentString(ownerId: NodeId, branch: BranchName, memberId: NodeId): ConnectionString {
     const owner = getNodeById(ownerId)
     const member = getNodeById(memberId)
     const ownerLabel = owner ? `${owner.name}.${branch}` : `${ownerId}.${branch}`
     const memberLabel = member ? member.name : memberId
     return [ownerLabel, memberLabel]
-  }
-
-  function findBranchMembership(memberId: NodeId): { ownerId: NodeId; branch: BranchName } | undefined {
-    for (const node of state.value.nodes) {
-      const branches = getBranchesFromMeta(node.type)
-      if (!branches.length) continue
-
-      const config = node.config as Record<string, unknown> | undefined
-      if (!config) continue
-
-      for (const branch of branches) {
-        const members = config[branch]
-        if (!Array.isArray(members)) continue
-        if ((members as unknown[]).some(id => id === memberId)) {
-          return { ownerId: node.id, branch }
-        }
-      }
-    }
-
-    return undefined
-  }
-
-  function hasBranchDescendant(rootId: NodeId, targetId: NodeId, visited = new Set<NodeId>()): boolean {
-    if (rootId === targetId) return true
-    if (visited.has(rootId)) return false
-    visited.add(rootId)
-
-    const node = getNodeById(rootId)
-    if (!node) return false
-
-    const branches = getBranchesFromMeta(node.type)
-    if (!branches.length) return false
-
-    const config = node.config as Record<string, unknown> | undefined
-    if (!config) return false
-
-    for (const branch of branches) {
-      const raw = config[branch]
-      if (!Array.isArray(raw)) continue
-      for (const memberId of raw as NodeId[]) {
-        if (hasBranchDescendant(memberId, targetId, visited)) {
-          return true
-        }
-      }
-    }
-
-    return false
-  }
-
-  function wouldCreateBranchCycle(ownerId: NodeId, memberId: NodeId): boolean {
-    const memberNode = getNodeById(memberId)
-    if (!memberNode) return false
-    const branches = getBranchesFromMeta(memberNode.type)
-    if (!branches.length) return false
-    return hasBranchDescendant(memberId, ownerId)
   }
 
   const findFieldByNameOrThrow = (
@@ -417,92 +335,98 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     return hasCycle(buildAdjacency(nextEdges))
   }
 
+  const membersEqual = (a: readonly NodeId[], b: readonly NodeId[]): boolean => {
+    if (a.length !== b.length) return false
+    return a.every((id, index) => id === b[index])
+  }
+
   async function updateBranchMembers(branch: BranchName, value: string | string[] | null): Promise<boolean> {
     if (isGlobalStateUpdating) return true
 
     const owner = currentNode.value
-    const desiredIds = value == null
+    const requested = value == null
       ? []
       : Array.isArray(value)
         ? value
         : [value]
 
-    const nextMembers = Array.from(new Set(desiredIds.filter((id): id is NodeId => isNodeId(id))))
-    const currentMembers = readBranchMembers(branch)
+    const uniqueRequested = Array.from(new Set(requested.filter((id): id is NodeId => isNodeId(id))))
+    const sanitizedMembers: NodeId[] = []
+    for (const memberId of uniqueRequested) {
+      const member = getNodeById(memberId)
+      if (!member) continue
+      if (member.id === owner.id) continue
+      if (isImplicitType(member.type)) continue
+      if (member.phase !== owner.phase) continue
+      sanitizedMembers.push(memberId)
+    }
 
-    const toRemove = currentMembers.filter(id => !nextMembers.includes(id))
-    const toAdd = nextMembers.filter(id => !currentMembers.includes(id))
-
-    if (!toRemove.length && !toAdd.length) {
+    const currentMembers = branchGroups.getMembers(owner.id, branch)
+    if (membersEqual(currentMembers, sanitizedMembers)) {
       return true
     }
 
-    const conflicts: Array<{ existing: { ownerId: NodeId; branch: BranchName }; memberId: NodeId }> = []
+    const toAdd = sanitizedMembers.filter(id => !currentMembers.includes(id))
+
     const addedAssignments: ConnectionString[] = []
     const removedAssignments: ConnectionString[] = []
+    const conflictUpdates: Array<{ ownerId: NodeId, branch: BranchName, members: NodeId[] }> = []
 
     for (const memberId of toAdd) {
-      if (wouldCreateBranchCycle(owner.id, memberId)) {
+      if (branchGroups.wouldCreateCycle(owner.id, memberId)) {
         toaster({
           message: t('plugins.free-form.datakit.flow_editor.error.branch_cycle'),
           appearance: 'danger',
         })
-        syncBranchGroups()
-        hydratePendingBranchValues()
         return false
       }
 
-      const existing = findBranchMembership(memberId)
+      const existing = branchGroups.findMembership(memberId)
       if (existing && !(existing.ownerId === owner.id && existing.branch === branch)) {
-        conflicts.push({ existing, memberId })
+        const remaining = branchGroups
+          .getMembers(existing.ownerId, existing.branch)
+          .filter(id => id !== memberId)
+
+        conflictUpdates.push({
+          ownerId: existing.ownerId,
+          branch: existing.branch,
+          members: remaining,
+        })
+
         addedAssignments.push(createBranchAssignmentString(owner.id, branch, memberId))
         removedAssignments.push(createBranchAssignmentString(existing.ownerId, existing.branch, memberId))
       }
     }
 
-    let mutated = false
-
-    for (const memberId of toRemove) {
-      mutated = branchGroups.removeMember(owner.id, branch, memberId, { commit: false }) || mutated
-    }
-
-    for (const { existing, memberId } of conflicts) {
-      mutated = branchGroups.removeMember(existing.ownerId, existing.branch, memberId, { commit: false }) || mutated
-    }
-
-    for (const memberId of toAdd) {
-      mutated = branchGroups.addMember(owner.id, branch, memberId, { commit: false }) || mutated
-    }
-
-    if (!mutated) {
-      hydratePendingBranchValues()
-      return true
-    }
-
-    branchGroups.sync(owner.id)
-
-    commit()
-
-    if (conflicts.length) {
-      let confirmed = true
-      if (confirm) {
-        confirmed = await confirm(
-          t('plugins.free-form.datakit.flow_editor.confirm.message.branch_replace'),
-          addedAssignments,
-          removedAssignments,
-        )
+    if (conflictUpdates.length) {
+      if (!confirm) {
+        throw new Error('Expected confirmation handler for branch conflict resolution')
       }
 
+      const confirmed = await confirm(
+        t('plugins.free-form.datakit.flow_editor.confirm.message.branch_replace'),
+        addedAssignments,
+        removedAssignments,
+      )
+
       if (!confirmed) {
-        revert()
-        syncBranchGroups()
-        hydratePendingBranchValues()
         return false
       }
     }
 
-    syncBranchGroups()
-    hydratePendingBranchValues()
+    let mutated = false
+
+    for (const conflict of conflictUpdates) {
+      mutated = branchGroups.setMembers(conflict.ownerId, conflict.branch, conflict.members, { commit: false }) || mutated
+    }
+
+    mutated = branchGroups.setMembers(owner.id, branch, sanitizedMembers, { commit: false }) || mutated
+
+    if (!mutated) {
+      return true
+    }
+
+    commit()
     return true
   }
 
@@ -548,8 +472,12 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   })
 
   const branchOptions = computed<BranchOption[]>(() => {
+    const owner = currentNode.value
     return state.value.nodes
-      .filter(node => node.id !== nodeId && !isImplicitType(node.type))
+      .filter(node => node.id !== nodeId)
+      .filter(node => !isImplicitType(node.type))
+      .filter(node => node.phase === owner.phase)
+      .filter(node => !branchGroups.wouldCreateCycle(owner.id, node.id))
       .map(node => ({ value: node.id, label: node.name }))
   })
 
@@ -590,9 +518,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     // form ops
     setName,
     setConfig,
-    syncBranchGroups,
-    readBranchMembers,
-    pendingBranchValues,
     updateBranchMembers,
 
     // field ops

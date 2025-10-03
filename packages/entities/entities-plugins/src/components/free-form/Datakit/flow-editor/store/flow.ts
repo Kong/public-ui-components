@@ -269,23 +269,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     const isBranchEdgeId = (id?: string) => !!id && id.startsWith('branch:')
 
     function getGroupMembers(group: GroupInstance): NodeInstance[] {
-      const owner = getNodeById(group.ownerId)
-      if (!owner) return []
-
-      const config = owner.config as Record<string, unknown> | undefined
-      if (!config) return []
-
-      const rawMembers = config[group.branch]
-      if (!Array.isArray(rawMembers)) return []
-
       const resolvedMembers: NodeInstance[] = []
-      for (const candidate of rawMembers as NodeId[]) {
-        const member = getNodeById(candidate)
+      for (const memberId of group.memberIds) {
+        const member = getNodeById(memberId)
         if (member) {
           resolvedMembers.push(member)
         }
       }
-
       return resolvedMembers
     }
 
@@ -692,13 +682,25 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           return
         }
 
-        const added = branchGroups.addMember(source as NodeId, branchHandle, target as NodeId, { commit: false })
+        const ownerId = source as NodeId
+        const memberId = target as NodeId
+
+        if (branchGroups.wouldCreateCycle(ownerId, memberId)) {
+          reset()
+          toaster({
+            message: t('plugins.free-form.datakit.flow_editor.error.branch_cycle'),
+            appearance: 'danger',
+          })
+          return
+        }
+
+        const added = branchGroups.addMember(ownerId, branchHandle, memberId, { commit: false })
         if (!added) {
           reset()
           return
         }
 
-        const groupId = makeGroupId(source as NodeId, branchHandle)
+        const groupId = makeGroupId(ownerId, branchHandle)
         updateGroupLayout(groupId)
         flushPendingGroupLayouts()
 

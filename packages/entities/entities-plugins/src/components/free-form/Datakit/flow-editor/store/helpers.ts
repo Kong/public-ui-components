@@ -189,6 +189,7 @@ export function toGroupInstance(
   nodeId: NodeId,
   branch: BranchName,
   phase: NodePhase,
+  memberIds: NodeId[],
   layout?: {
     position?: XYPosition
     dimensions?: NodeDimensions
@@ -199,6 +200,7 @@ export function toGroupInstance(
     ownerId: nodeId,
     branch,
     phase,
+    memberIds: [...memberIds],
     position: layout?.position ? { ...layout.position } : undefined,
     dimensions: layout?.dimensions ? { ...layout.dimensions } : undefined,
   }

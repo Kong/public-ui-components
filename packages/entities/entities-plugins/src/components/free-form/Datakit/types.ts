@@ -188,6 +188,7 @@ export interface GroupInstance {
   ownerId: NodeId
   branch: BranchName
   phase: NodePhase
+  memberIds: NodeId[]
   position?: XYPosition
   dimensions?: NodeDimensions
 }
