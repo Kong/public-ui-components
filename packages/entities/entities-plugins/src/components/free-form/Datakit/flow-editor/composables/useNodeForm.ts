@@ -12,10 +12,10 @@ import { useFieldNameValidator, useNodeNameValidator } from './validation'
 import { omit } from 'lodash-es'
 import { useConfirm } from './useConflictConfirm'
 import useI18n from '../../../../../composables/useI18n'
+import { useToaster } from '../../../../../composables/useToaster'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 import { createEdgeConnectionString, createNewConnectionString } from './helpers'
 import { FEATURE_FLAGS } from '../../../../../constants'
-import { useToaster } from '../../../../../composables/useToaster'
 
 export type InputOption = {
   value: IdConnection
@@ -344,22 +344,14 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     if (isGlobalStateUpdating) return true
 
     const owner = currentNode.value
-    const requested = value == null
+    const candidateIds = (value == null
       ? []
       : Array.isArray(value)
         ? value
         : [value]
+    ).filter((id): id is NodeId => isNodeId(id))
 
-    const uniqueRequested = Array.from(new Set(requested.filter((id): id is NodeId => isNodeId(id))))
-    const sanitizedMembers: NodeId[] = []
-    for (const memberId of uniqueRequested) {
-      const member = getNodeById(memberId)
-      if (!member) continue
-      if (member.id === owner.id) continue
-      if (isImplicitType(member.type)) continue
-      if (member.phase !== owner.phase) continue
-      sanitizedMembers.push(memberId)
-    }
+    const sanitizedMembers = branchGroups.prepareMembers(owner.id, branch, candidateIds)
 
     const currentMembers = branchGroups.getMembers(owner.id, branch)
     if (membersEqual(currentMembers, sanitizedMembers)) {

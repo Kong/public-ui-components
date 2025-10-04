@@ -14,8 +14,4 @@ export const MAX_ZOOM_LEVEL = 1.2
 export const MIN_ZOOM_LEVEL = 0
 export const SCROLL_DURATION = 200
 
-export const BRANCH_GROUP_PADDING = 32
-export const BRANCH_GROUP_MIN_WIDTH = 160
-export const BRANCH_GROUP_MIN_HEIGHT = 96
-
 export const CONFIRM_MODAL_PROVIDE_KEY = Symbol('confirm-modal')

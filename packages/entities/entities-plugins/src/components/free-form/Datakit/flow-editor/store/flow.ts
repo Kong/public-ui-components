@@ -29,9 +29,6 @@ import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
 import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
 import { useOptionalConfirm } from '../composables/useConflictConfirm'
 import {
-  BRANCH_GROUP_MIN_HEIGHT,
-  BRANCH_GROUP_MIN_WIDTH,
-  BRANCH_GROUP_PADDING,
   DEFAULT_LAYOUT_OPTIONS,
   DEFAULT_VIEWPORT_WIDTH,
   SCROLL_DURATION,
@@ -97,6 +94,10 @@ const BORDER_COLORS: Record<EdgeState, string> = {
   hover: KUI_COLOR_BORDER_PRIMARY_WEAK,
   selected: KUI_COLOR_BORDER_PRIMARY,
 }
+
+const BRANCH_GROUP_PADDING = 32
+const BRANCH_GROUP_MIN_WIDTH = 160
+const BRANCH_GROUP_MIN_HEIGHT = 96
 
 const Z_LAYER_STEP = 100
 const GROUP_Z_OFFSET = 0

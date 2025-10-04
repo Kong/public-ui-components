@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { BRANCH_KEYS, CONFIG_NODE_TYPES, HTTP_METHODS, IMPLICIT_NODE_NAMES, IMPLICIT_NODE_TYPES } from '../constants'
+import { CONFIG_NODE_TYPES, HTTP_METHODS, IMPLICIT_NODE_NAMES, IMPLICIT_NODE_TYPES } from '../constants'
 import { validateNamesAndConnections } from './shared'
 
 export const ImplicitNodeTypeSchema = z.enum(IMPLICIT_NODE_TYPES)
@@ -49,7 +49,8 @@ export type NodeName = z.infer<typeof NodeNameSchema>
 export const FieldNameSchema = z.string().min(1).brand<'FieldName'>()
 export type FieldName = z.infer<typeof FieldNameSchema>
 
-export const BranchNameSchema = z.enum(BRANCH_KEYS)
+export const BRANCH_NAMES = ['then', 'else'] as const
+export const BranchNameSchema = z.enum(BRANCH_NAMES)
 export type BranchName = z.infer<typeof BranchNameSchema>
 
 export const NameConnectionSchema = z.string().refine((s) => {

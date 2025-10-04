@@ -42,6 +42,11 @@ function membersChanged(prev: readonly NodeId[] | undefined, next: readonly Node
 }
 
 export function createBranchGroupManager({ state, groupMapById, getNodeById, history }: BranchGroupManagerContext) {
+  function supportsBranch(owner: NodeInstance | undefined, branch: BranchName): owner is NodeInstance {
+    if (!owner) return false
+    return getBranchesFromMeta(owner.type).includes(branch)
+  }
+
   function normalizeMembers(owner: NodeInstance, members: readonly NodeId[]): NodeId[] {
     const unique: NodeId[] = []
     const seen = new Set<NodeId>()
@@ -60,6 +65,11 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     }
 
     return unique
+  }
+
+  function prepareMembers(ownerId: NodeId, branch: BranchName, candidates: readonly NodeId[]): NodeId[] {
+    const owner = getNodeById(ownerId)
+    return supportsBranch(owner, branch) ? normalizeMembers(owner, candidates) : []
   }
 
   function ensureGroup(node: NodeInstance, branch: BranchName, members: NodeId[]) {
@@ -92,10 +102,7 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     options: CommitOptions = {},
   ) {
     const owner = getNodeById(ownerId)
-    if (!owner) return false
-
-    const branchNames = getBranchesFromMeta(owner.type)
-    if (!branchNames.includes(branch)) return false
+    if (!supportsBranch(owner, branch)) return false
 
     const normalized = normalizeMembers(owner, members)
     const previous = readMembers(owner, branch)
@@ -195,17 +202,16 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     if (ownerId === memberId) return false
     if (isImplicitType(member.type)) return false
     if (owner.phase !== member.phase) return false
+    if (!supportsBranch(owner, branch)) return false
     if (wouldCreateCycle(ownerId, memberId)) return false
 
-    const branchNames = getBranchesFromMeta(owner.type)
-    if (!branchNames.includes(branch)) return false
-
     const existingMembers = readMembers(owner, branch)
-    if (existingMembers.includes(memberId)) return false
+
+    const nextMembers = prepareMembers(ownerId, branch, [...existingMembers, memberId])
+    if (!nextMembers.includes(memberId)) return false
+    if (!membersChanged(existingMembers, nextMembers)) return false
 
     dropTarget(memberId)
-
-    const nextMembers = [...existingMembers, memberId]
     const changed = setMembers(ownerId, branch, nextMembers, { commit: false })
     if (!changed) return false
 
@@ -246,6 +252,7 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
   return {
     sync,
     setMembers,
+    prepareMembers,
     addMember,
     removeMember,
     dropTarget,
