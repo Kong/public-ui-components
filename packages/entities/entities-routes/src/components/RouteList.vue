@@ -523,16 +523,7 @@ const rowClick = async (row: EntityRow): Promise<void> => {
     return
   }
 
-  const route = props.config.getViewRoute(row.id)
-  if (typeof route === 'string' && route.startsWith('http')) {
-    // External link
-    window.location.assign(route)
-  } else {
-    // Internal link
-    router.push(route)
-  }
-
-  return
+  router.push(props.config.getViewRoute(row.id as string))
 }
 
 // Render the view dropdown item as a router-link
