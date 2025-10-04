@@ -29,6 +29,14 @@
       name="else"
       @update="(value) => onBranchChange('else', value)"
     />
+
+    <InputsField
+      :field-name-validator="fieldNameValidator"
+      :field-names="inputsFieldNames"
+      :items="inputOptions"
+      @change:input="setInput"
+      @change:inputs="setInputs"
+    />
   </Form>
 </template>
 
@@ -37,6 +45,7 @@ import { ref } from 'vue'
 
 import Form from '../../../shared/Form.vue'
 import NameField from './NameField.vue'
+import InputsField from './InputsField.vue'
 import { KLabel } from '@kong/kongponents'
 import useI18n from '../../../../../composables/useI18n'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
@@ -56,8 +65,13 @@ const formRenderKey = ref(0)
 const {
   formData,
   setName,
+  inputOptions,
   branchOptions,
   nameValidator,
+  setInput,
+  setInputs,
+  inputsFieldNames,
+  fieldNameValidator,
   updateBranchMembers,
 } = useNodeForm<BranchFormData>(nodeId)
 
