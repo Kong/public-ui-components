@@ -523,7 +523,7 @@ const rowClick = async (row: EntityRow): Promise<void> => {
     return
   }
 
-  router.push(props.config.getViewRoute(row.id as string))
+  router.push(props.config.getViewRoute(row.id))
 }
 
 // Render the view dropdown item as a router-link
