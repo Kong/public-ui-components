@@ -25,14 +25,7 @@ import type {
 import { createInjectionState } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { IMPLICIT_NODE_META_MAP, isImplicitName, isImplicitType } from '../node/node'
-import {
-  clone,
-  createId,
-  findFieldById,
-  generateNodeName,
-  getBranchesFromMeta,
-  makeGroupName,
-} from './helpers'
+import { clone, createId, findFieldById, generateNodeName, getBranchesFromMeta, makeGroupName } from './helpers'
 import { createBranchGroupManager } from './branch-group-manager'
 import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'

@@ -37,13 +37,6 @@ export const CONFIG_NODE_TYPES = [
   'cache',
 ] as const
 
-export const BRANCH_KEYS = [
-  'then',
-  'else',
-] as const
-
-export type BranchKey = typeof BRANCH_KEYS[number]
-
 export const HTTP_METHODS = [
   'GET',
   'HEAD',
