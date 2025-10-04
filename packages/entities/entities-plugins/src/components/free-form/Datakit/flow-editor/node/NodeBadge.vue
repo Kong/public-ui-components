@@ -1,13 +1,18 @@
 <template>
   <KBadge
-    :appearance="appearance"
+    appearance="neutral"
+    class="dk-node-badge"
     :class="{
       'icon-only': iconOnly,
+      'has-visual': !!visual,
     }"
     :size="size"
   >
-    <template #icon>
-      <component :is="icon" />
+    <template
+      v-if="visual?.icon"
+      #icon
+    >
+      <component :is="visual.icon" />
     </template>
     {{ nodeName }}
   </KBadge>
@@ -16,8 +21,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { NodeType } from '../../types'
-import { CONFIG_NODE_META_MAP, getNodeTypeName, isImplicitType } from './node'
-import type { BadgeAppearance, BadgeSize } from '@kong/kongponents'
+import { CONFIG_NODE_META_MAP, getNodeTypeName, isConfigType } from './node'
+import type { BadgeSize } from '@kong/kongponents'
 
 const { type } = defineProps<{
   type: NodeType
@@ -25,37 +30,29 @@ const { type } = defineProps<{
   iconOnly?: boolean
 }>()
 
-const icon = computed(() => {
-  if (!isImplicitType(type)) {
-    return CONFIG_NODE_META_MAP[type]?.icon ?? undefined
+const visual = computed(() => {
+  if (isConfigType(type)) {
+    const { icon, colors } = CONFIG_NODE_META_MAP[type]
+    return { icon, background: colors?.background, foreground: colors?.foreground }
   }
   return undefined
 })
 
 const nodeName = computed(() => getNodeTypeName(type))
-
-const appearance = computed<BadgeAppearance>(() => {
-  switch (type) {
-    case 'call':
-      return 'warning'
-    case 'jq':
-      return 'decorative'
-    case 'exit':
-      return 'danger'
-    case 'property':
-      return 'success'
-    case 'static':
-      return 'info'
-    default:
-      return 'neutral'
-  }
-})
 </script>
 
 <style lang="scss" scoped>
-.icon-only {
-  :deep(.badge-content-wrapper) {
-    display: none;
+.dk-node-badge {
+  &.has-visual {
+    background: v-bind("visual?.background") !important;
+    color: v-bind("visual?.foreground") !important;
+  }
+
+  &.icon-only {
+    :deep(.badge-content-wrapper) {
+      display: none;
+    }
   }
 }
+
 </style>

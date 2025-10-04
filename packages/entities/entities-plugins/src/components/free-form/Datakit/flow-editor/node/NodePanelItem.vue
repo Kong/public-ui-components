@@ -38,6 +38,10 @@ const unsupported = type === 'cache'
 const {
   summary,
   icon: Icon,
+  colors: {
+    background,
+    foreground,
+  } = {},
 } = CONFIG_NODE_META_MAP[type]
 
 function handleDragStart(e: DragEvent) {
@@ -68,46 +72,11 @@ function handleDragStart(e: DragEvent) {
 
   .icon {
     align-items: center;
-    background: $kui-color-background-warning-weakest;
+    background: v-bind(background);
     border-radius: $kui-border-radius-10;
+    color: v-bind(foreground);
     display: flex;
     padding: $kui-space-30;
-  }
-
-  &.node-type-call .icon {
-    background: $kui-color-background-warning-weakest;
-    color: $kui-color-text-warning;
-  }
-
-  &.node-type-jq .icon {
-    background: $kui-color-background-decorative-purple-weakest;
-    color: $kui-color-text-decorative-purple;
-  }
-
-  &.node-type-exit .icon {
-    background: $kui-color-background-danger-weakest;
-    color: $kui-color-text-danger;
-  }
-
-  &.node-type-property .icon {
-    background: $kui-color-background-success-weakest;
-    color: $kui-color-text-success;
-  }
-
-  &.node-type-static .icon {
-    background: $kui-color-background-primary-weakest;
-    color: $kui-color-text-primary;
-  }
-
-  &.node-type-branch .icon {
-    background: $kui-color-background-decorative-aqua-weakest;
-    color: $kui-color-text-decorative-aqua;
-  }
-
-  &.node-type-cache .icon {
-    // background: $kui-color-background-decorative-pink-weakest;
-    background: #FFF0F7; // TODO: add new token
-    color: $kui-color-text-decorative-pink;
   }
 
   .content {

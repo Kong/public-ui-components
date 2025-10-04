@@ -61,11 +61,18 @@ export interface NextMeta {
   branches: BranchMeta[]
 }
 
-export interface NodeMeta {
+export interface NodeVisual {
+  icon: Component
+  colors: {
+    foreground: string
+    background: string
+  }
+}
+
+export interface NodeMeta extends Partial<NodeVisual> {
   type: NodeType
   summary?: string
   description?: string
-  icon?: Component
   io?: {
     input?: IOMeta
     output?: IOMeta
