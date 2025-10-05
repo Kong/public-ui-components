@@ -22,7 +22,7 @@ import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
 import { computed, nextTick, toValue, watch, watchEffect } from 'vue'
 
-import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
+import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK, KUI_SPACE_90 } from '@kong/design-tokens'
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
 import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
@@ -95,7 +95,7 @@ const BORDER_COLORS: Record<EdgeState, string> = {
   selected: KUI_COLOR_BORDER_PRIMARY,
 }
 
-const BRANCH_GROUP_PADDING = 32
+const BRANCH_GROUP_PADDING = parseInt(KUI_SPACE_90, 10)
 const BRANCH_GROUP_MIN_WIDTH = 160
 const BRANCH_GROUP_MIN_HEIGHT = 96
 
