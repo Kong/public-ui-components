@@ -86,7 +86,7 @@
             <KButton
               v-if="userCanCreate"
               data-testid="entity-create-button"
-              @click="handleAddNewRoute"
+              :to="config.createRoute"
             >
               <AddIcon decorative />
               {{ t('routes.list.toolbar_actions.new_route') }}
@@ -471,9 +471,7 @@ const errorMessage = ref<TableErrorMessage>(null)
  * Copy ID action
  */
 const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<boolean>): Promise<void> => {
-  const id = row.id as string
-
-  if (!await copyToClipboard(id)) {
+  if (!await copyToClipboard(row.id)) {
     // Emit the error event for the host app
     emit('copy:error', {
       entity: row,
@@ -488,7 +486,7 @@ const copyId = async (row: EntityRow, copyToClipboard: (val: string) => Promise<
   emit('copy:success', {
     entity: row,
     field: 'id',
-    message: t('copy.success', { val: id }),
+    message: t('copy.success', { val: row.id }),
   })
 }
 
@@ -525,7 +523,7 @@ const rowClick = async (row: EntityRow): Promise<void> => {
     return
   }
 
-  router.push(props.config.getViewRoute(row.id as string))
+  router.push(props.config.getViewRoute(row.id))
 }
 
 // Render the view dropdown item as a router-link
@@ -592,13 +590,6 @@ const confirmDelete = async (): Promise<void> => {
   } finally {
     isDeletePending.value = false
   }
-}
-
-/**
- * Add New Route
- */
-const handleAddNewRoute = (): void => {
-  router.push(props.config.createRoute)
 }
 
 /**
