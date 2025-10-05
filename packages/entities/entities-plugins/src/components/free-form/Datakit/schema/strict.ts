@@ -212,8 +212,6 @@ export type StaticNode = z.infer<typeof StaticNodeSchema>
 
 export const BranchNodeSchema = ConfigNodeBaseSchema.extend({
   type: z.literal('branch'),
-  /** jq-compatible expression evaluated against the current context. */
-  condition: z.string().min(1).max(10240).nullish(),
   then: z.array(NodeNameSchema).nullish(),
   else: z.array(NodeNameSchema).nullish(),
 }).strict()
