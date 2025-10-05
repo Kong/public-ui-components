@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.16.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.16.12...@kong-ui-public/entities-routes@3.16.13) (2025-10-05)
+
+
+### Bug Fixes
+
+* **entities-routes:** update button links to external in routelist [TDX-6793]" ([#2538](https://github.com/Kong/public-ui-components/issues/2538)) ([c4ce3db](https://github.com/Kong/public-ui-components/commit/c4ce3db08814f4124ecb00cf81c8c8dac9923130))
+
+
+
+
+
 ## [3.16.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.16.11...@kong-ui-public/entities-routes@3.16.12) (2025-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes
