@@ -56,7 +56,7 @@ export const NODE_VISUAL: Record<ConfigNodeType | 'default', NodeVisual> = {
     icon: StackIcon,
     colors: {
       foreground: KUI_COLOR_TEXT_DECORATIVE_PINK,
-      background: '#fff0f7', // TODO: add new token
+      background: '#fff0f7', // Pink-tinted background for cache node
     },
   },
   default: {

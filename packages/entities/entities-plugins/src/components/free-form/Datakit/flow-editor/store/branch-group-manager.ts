@@ -198,23 +198,6 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
   }
 
   /**
-   * Synchronizes groups for a node based on its current config.
-   * Useful after deserialization or manual config changes.
-   */
-  function sync(ownerId: NodeId) {
-    const owner = getNodeById(ownerId)
-    if (!owner) return
-
-    const branchKeys = getBranchesFromMeta(owner.type)
-    if (!branchKeys.length) return
-
-    for (const branch of branchKeys) {
-      const members = readMembers(owner, branch)
-      ensureGroup(owner, branch, members)
-    }
-  }
-
-  /**
    * Removes all groups owned by a node.
    * Called when a node is deleted.
    */
@@ -320,29 +303,6 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
   }
 
   /**
-   * Removes a member from a branch group.
-   *
-   * @returns true if member was removed, false otherwise
-   */
-  function removeMember(ownerId: NodeId, branch: BranchName, memberId: NodeId, options: CommitOptions = {}): boolean {
-    const owner = getNodeById(ownerId)
-    if (!owner?.config) return false
-
-    const members = readMembers(owner, branch)
-    if (!members.includes(memberId)) return false
-
-    const remaining = members.filter(id => id !== memberId)
-    const changed = setMembers(ownerId, branch, remaining, { commit: false })
-    if (!changed) return false
-
-    if (options.commit ?? true) {
-      history.commit(options.tag ?? `branch:remove:${branch}`)
-    }
-
-    return true
-  }
-
-  /**
    * Removes a node from its current group membership, if any.
    * Used internally when moving nodes between groups.
    */
@@ -356,11 +316,9 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
   }
 
   return {
-    sync,
     setMembers,
     prepareMembers,
     addMember,
-    removeMember,
     dropTarget,
     clear,
     getMembers,

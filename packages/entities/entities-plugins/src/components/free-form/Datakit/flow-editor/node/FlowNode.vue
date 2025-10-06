@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flow-node"
+    class="dk-flow-node"
     :class="{
       reversed: isReversed,
       implicit: isImplicit,
@@ -568,7 +568,7 @@ $io-column-min-width: 80px;
 $io-column-min-width-no-fields: 70px;
 $branch-handle-size: 4px;
 
-.flow-node {
+.dk-flow-node {
   background-color: $kui-color-background;
   border: 1px solid $kui-color-border-neutral-weak;
   border-radius: $kui-border-radius-20;
@@ -869,7 +869,7 @@ $branch-handle-size: 4px;
   }
 }
 
-:global(.vue-flow__node:has(.vue-flow__handle.connecting)) {
+:global(.vue-flow__node:has(.dk-flow-node):has(.vue-flow__handle.connecting)) {
   z-index: 10000 !important;
 }
 </style>
