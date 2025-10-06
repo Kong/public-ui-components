@@ -1,3 +1,20 @@
+/**
+ * Branch Group Manager
+ *
+ * Manages logical groups of nodes organized under branch nodes (e.g., "then", "else").
+ * Responsible for:
+ * - Validating membership (phase compatibility, cycle detection, type checking)
+ * - Synchronizing node config with group state
+ * - Managing group lifecycle (create, update, delete)
+ * - Providing query APIs for membership lookup
+ *
+ * Groups are stored in two places:
+ * 1. Node config: `node.config[branchName]` contains NodeId[]
+ * 2. State groups: `state.groups` contains GroupInstance[] with layout info
+ *
+ * @module branch-group-manager
+ */
+
 import type { ComputedRef, Ref } from 'vue'
 import type {
   BranchName,
@@ -8,21 +25,27 @@ import type {
   NodeInstance,
 } from '../../types'
 import { isImplicitType, isNodeId } from '../node/node'
-import { getBranchesFromMeta, makeGroupId, toGroupInstance } from './helpers'
+import { getBranchesFromMeta, makeGroupId, setsEqual, toGroupInstance } from './helpers'
 import type { TaggedHistory } from './history'
 
-type CommitOptions = {
+export interface CommitOptions {
+  /** Whether to commit the change to history. Defaults to true. */
   commit?: boolean
+  /** Optional tag for the history commit. */
   tag?: string
 }
 
-type BranchGroupManagerContext = {
+interface BranchGroupManagerContext {
   state: Ref<EditorState>
   groupMapById: ComputedRef<Map<GroupId, GroupInstance>>
   getNodeById: (id: NodeId) => NodeInstance | undefined
   history: Pick<TaggedHistory<EditorState>, 'commit'>
 }
 
+/**
+ * Reads member node IDs from a branch config field.
+ * Returns empty array if the branch field is missing or malformed.
+ */
 function readMembers(node: NodeInstance, branch: BranchName): NodeId[] {
   const config = node.config as Record<string, unknown> | undefined
   if (!config) return []
@@ -32,21 +55,52 @@ function readMembers(node: NodeInstance, branch: BranchName): NodeId[] {
   return (raw as unknown[]).filter((value): value is NodeId => typeof value === 'string' && isNodeId(value))
 }
 
-function membersChanged(prev: readonly NodeId[] | undefined, next: readonly NodeId[]): boolean {
-  if (!prev) return true
-  if (prev.length !== next.length) return true
-  for (let i = 0; i < prev.length; i++) {
-    if (prev[i] !== next[i]) return true
-  }
-  return false
-}
-
+/**
+ * Creates a manager for branch group operations.
+ * Handles membership validation, cycle detection, and group lifecycle.
+ *
+ * @returns An object with methods for managing branch groups
+ */
 export function createBranchGroupManager({ state, groupMapById, getNodeById, history }: BranchGroupManagerContext) {
+  /**
+   * Builds a reverse index of member -> group for O(1) membership lookups.
+   * Recomputed whenever groups change.
+   */
+  function buildMembershipIndex(): Map<NodeId, { ownerId: NodeId, branch: BranchName }> {
+    const index = new Map<NodeId, { ownerId: NodeId, branch: BranchName }>()
+    for (const group of state.value.groups) {
+      for (const memberId of group.memberIds) {
+        index.set(memberId, { ownerId: group.ownerId, branch: group.branch })
+      }
+    }
+    return index
+  }
+
+  /**
+   * Type guard: checks if a node supports a specific branch.
+   */
   function supportsBranch(owner: NodeInstance | undefined, branch: BranchName): owner is NodeInstance {
     if (!owner) return false
     return getBranchesFromMeta(owner.type).includes(branch)
   }
 
+  /**
+   * Validates if a node can be a member of an owner's branch group.
+   */
+  function isValidMember(owner: NodeInstance, memberId: NodeId): boolean {
+    if (memberId === owner.id) return false
+    const member = getNodeById(memberId)
+    if (!member) return false
+    if (isImplicitType(member.type)) return false
+    if (member.phase !== owner.phase) return false
+    return true
+  }
+
+  /**
+   * Normalizes a list of member IDs by:
+   * - Removing duplicates (preserving first occurrence)
+   * - Filtering out invalid nodes
+   */
   function normalizeMembers(owner: NodeInstance, members: readonly NodeId[]): NodeId[] {
     const unique: NodeId[] = []
     const seen = new Set<NodeId>()
@@ -55,62 +109,68 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
       if (seen.has(memberId)) continue
       seen.add(memberId)
 
-      const member = getNodeById(memberId)
-      if (!member) continue
-      if (member.id === owner.id) continue
-      if (isImplicitType(member.type)) continue
-      if (member.phase !== owner.phase) continue
-
-      unique.push(memberId)
+      if (isValidMember(owner, memberId)) {
+        unique.push(memberId)
+      }
     }
 
     return unique
   }
 
+  /**
+   * Prepares member list for a given owner and branch.
+   * Returns normalized members if owner supports the branch, empty array otherwise.
+   */
   function prepareMembers(ownerId: NodeId, branch: BranchName, candidates: readonly NodeId[]): NodeId[] {
     const owner = getNodeById(ownerId)
     return supportsBranch(owner, branch) ? normalizeMembers(owner, candidates) : []
   }
 
+  /**
+   * Ensures a group exists if it has members, or removes it if empty.
+   * Updates existing groups in-place to avoid unnecessary reactivity triggers.
+   */
   function ensureGroup(node: NodeInstance, branch: BranchName, members: NodeId[]) {
     const groupId = makeGroupId(node.id, branch)
     const existing = groupMapById.value.get(groupId)
 
-    if (members.length) {
+    if (members.length > 0) {
       if (!existing) {
         state.value.groups.push(toGroupInstance(node.id, branch, node.phase, members))
       } else {
         if (existing.phase !== node.phase) {
           existing.phase = node.phase
         }
-        if (membersChanged(existing.memberIds, members)) {
+        if (!setsEqual(existing.memberIds, members)) {
           existing.memberIds = [...members]
         }
       }
     } else if (existing) {
-      const index = state.value.groups.findIndex((group) => group.id === groupId)
-      if (index !== -1) {
-        state.value.groups.splice(index, 1)
-      }
+      state.value.groups = state.value.groups.filter((g) => g.id !== groupId)
     }
   }
 
+  /**
+   * Sets the member list for a branch, updating both node config and group state.
+   *
+   * @returns true if members were changed, false otherwise
+   */
   function setMembers(
     ownerId: NodeId,
     branch: BranchName,
     members: readonly NodeId[],
     options: CommitOptions = {},
-  ) {
+  ): boolean {
     const owner = getNodeById(ownerId)
     if (!supportsBranch(owner, branch)) return false
 
     const normalized = normalizeMembers(owner, members)
     const previous = readMembers(owner, branch)
-    if (!membersChanged(previous, normalized)) return false
+    if (setsEqual(previous, normalized)) return false
 
     const config = (owner.config ??= {}) as Record<string, unknown>
 
-    if (normalized.length) {
+    if (normalized.length > 0) {
       config[branch] = [...normalized]
     } else {
       delete config[branch]
@@ -128,6 +188,10 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     return true
   }
 
+  /**
+   * Synchronizes groups for a node based on its current config.
+   * Useful after deserialization or manual config changes.
+   */
   function sync(ownerId: NodeId) {
     const owner = getNodeById(ownerId)
     if (!owner) return
@@ -141,10 +205,18 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     }
   }
 
+  /**
+   * Removes all groups owned by a node.
+   * Called when a node is deleted.
+   */
   function clear(ownerId: NodeId) {
     state.value.groups = state.value.groups.filter(group => group.ownerId !== ownerId)
   }
 
+  /**
+   * Gets the current member list for a branch.
+   * Checks group state first for performance, falls back to config.
+   */
   function getMembers(ownerId: NodeId, branch: BranchName): NodeId[] {
     const group = groupMapById.value.get(makeGroupId(ownerId, branch))
     if (group) {
@@ -156,22 +228,29 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     return readMembers(owner, branch)
   }
 
+  /**
+   * Finds which group a node belongs to, if any.
+   * Returns undefined if the node is not a member of any group.
+   * Uses cached membership index for O(1) lookup.
+   */
   function findMembership(memberId: NodeId): { ownerId: NodeId, branch: BranchName } | undefined {
-    for (const group of state.value.groups) {
-      if (group.memberIds.includes(memberId)) {
-        return { ownerId: group.ownerId, branch: group.branch }
-      }
-    }
-    return undefined
+    const index = buildMembershipIndex()
+    return index.get(memberId)
   }
 
+  /**
+   * Detects whether adding a member to a branch would create a cycle.
+   * Uses depth-first search to traverse the branch graph.
+   *
+   * @returns true if a cycle would be created
+   */
   function wouldCreateCycle(ownerId: NodeId, memberId: NodeId): boolean {
     if (ownerId === memberId) return true
 
     const visited = new Set<NodeId>()
     const stack: NodeId[] = [memberId]
 
-    while (stack.length) {
+    while (stack.length > 0) {
       const currentId = stack.pop()!
       if (visited.has(currentId)) continue
       visited.add(currentId)
@@ -187,7 +266,9 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
       for (const branch of branchKeys) {
         const members = readMembers(node, branch)
         for (const nextId of members) {
-          stack.push(nextId)
+          if (!visited.has(nextId)) {
+            stack.push(nextId)
+          }
         }
       }
     }
@@ -195,23 +276,31 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     return false
   }
 
-  function addMember(ownerId: NodeId, branch: BranchName, memberId: NodeId, options: CommitOptions = {}) {
+  /**
+   * Adds a member to a branch group with validation.
+   * Performs the following checks:
+   * - Owner exists and supports the branch
+   * - Member is valid (via isValidMember)
+   * - Adding member would not create a cycle
+   * - Member is not already in the list
+   *
+   * If the member is already in another group, it's removed from that group first.
+   *
+   * @returns true if member was added, false otherwise
+   */
+  function addMember(ownerId: NodeId, branch: BranchName, memberId: NodeId, options: CommitOptions = {}): boolean {
     const owner = getNodeById(ownerId)
-    const member = getNodeById(memberId)
-    if (!owner || !member) return false
-    if (ownerId === memberId) return false
-    if (isImplicitType(member.type)) return false
-    if (owner.phase !== member.phase) return false
+    if (!owner) return false
     if (!supportsBranch(owner, branch)) return false
+    if (!isValidMember(owner, memberId)) return false
     if (wouldCreateCycle(ownerId, memberId)) return false
 
     const existingMembers = readMembers(owner, branch)
-
-    const nextMembers = prepareMembers(ownerId, branch, [...existingMembers, memberId])
-    if (!nextMembers.includes(memberId)) return false
-    if (!membersChanged(existingMembers, nextMembers)) return false
+    if (existingMembers.includes(memberId)) return false
 
     dropTarget(memberId)
+
+    const nextMembers = [...existingMembers, memberId]
     const changed = setMembers(ownerId, branch, nextMembers, { commit: false })
     if (!changed) return false
 
@@ -222,7 +311,12 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     return true
   }
 
-  function removeMember(ownerId: NodeId, branch: BranchName, memberId: NodeId, options: CommitOptions = {}) {
+  /**
+   * Removes a member from a branch group.
+   *
+   * @returns true if member was removed, false otherwise
+   */
+  function removeMember(ownerId: NodeId, branch: BranchName, memberId: NodeId, options: CommitOptions = {}): boolean {
     const owner = getNodeById(ownerId)
     if (!owner?.config) return false
 
@@ -240,6 +334,10 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     return true
   }
 
+  /**
+   * Removes a node from its current group membership, if any.
+   * Used internally when moving nodes between groups.
+   */
   function dropTarget(targetId: NodeId) {
     const membership = findMembership(targetId)
     if (!membership) return

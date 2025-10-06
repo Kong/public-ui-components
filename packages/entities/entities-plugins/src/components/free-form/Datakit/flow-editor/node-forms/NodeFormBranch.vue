@@ -48,7 +48,8 @@ import NameField from './NameField.vue'
 import InputsField from './InputsField.vue'
 import { KLabel } from '@kong/kongponents'
 import useI18n from '../../../../../composables/useI18n'
-import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
+import { useSubSchema, type BaseFormData } from '../composables/useNodeForm'
+import { useBranchNodeForm } from '../composables/useBranchNodeForm'
 import type { BranchName, NodeId } from '../../types'
 import EnumField from '../../../shared/EnumField.vue'
 
@@ -73,7 +74,7 @@ const {
   inputsFieldNames,
   fieldNameValidator,
   updateBranchMembers,
-} = useNodeForm<BranchFormData>(nodeId)
+} = useBranchNodeForm<BranchFormData>(nodeId)
 
 async function onBranchChange(branch: BranchName, value: string | string[] | null) {
   const success = await updateBranchMembers(branch, value)

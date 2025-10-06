@@ -34,6 +34,21 @@ export function clone<T>(value: T): T {
   return cloneDeep(value)
 }
 
+/**
+ * Check if two arrays contain the same elements, ignoring order.
+ *
+ * @example
+ * setsEqual([1, 2, 3], [3, 2, 1]) // true
+ * setsEqual([1, 2], [1, 2, 3]) // false
+ */
+export function setsEqual<T>(a: readonly T[], b: readonly T[]): boolean {
+  if (a.length !== b.length) return false
+  if (a.length === 0) return true
+
+  const setB = new Set(b)
+  return a.every(item => setB.has(item))
+}
+
 /** Generate a unique runtime id. */
 export function createId<T extends 'node' | 'edge' | 'field'>(
   type: T,
@@ -88,7 +103,7 @@ export function getFieldsFromMeta(type: NodeType): {
 
 export function getBranchesFromMeta(type: NodeType): BranchName[] {
   const meta = getNodeMeta(type)
-  return meta.io?.next?.branches.map(({ name }) => name) ?? []
+  return meta.io?.next?.branches?.map(({ name }) => name) ?? []
 }
 
 /** Build NodeField array from names. */
@@ -169,6 +184,9 @@ export function makeGroupId(nodeId: NodeId, branch: BranchName): GroupId {
 
 export function parseGroupId(groupId: GroupId): { nodeId: NodeId, branch: BranchName } {
   const lastColon = groupId.lastIndexOf(':')
+  if (lastColon === -1) {
+    throw new Error(`Invalid group ID format: ${groupId}`)
+  }
   const nodeId = groupId.slice(0, lastColon) as NodeId
   const branch = groupId.slice(lastColon + 1) as BranchName
   return { nodeId, branch }
@@ -180,6 +198,9 @@ export function makeGroupName(nodeName: NodeName, branch: BranchName): GroupName
 
 export function parseGroupName(name: GroupName): { nodeName: NodeName, branch: BranchName } {
   const lastColon = name.lastIndexOf(':')
+  if (lastColon === -1) {
+    throw new Error(`Invalid group name format: ${name}`)
+  }
   const nodeName = name.slice(0, lastColon) as NodeName
   const branch = name.slice(lastColon + 1) as BranchName
   return { nodeName, branch }
