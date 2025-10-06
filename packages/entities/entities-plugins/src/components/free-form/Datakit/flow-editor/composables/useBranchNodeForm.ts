@@ -2,7 +2,7 @@ import { computed } from 'vue'
 import { useEditorStore } from '../../composables'
 import type { BranchName, NodeId, NodeName } from '../../types'
 import { isImplicitType, isNodeId } from '../node/node'
-import { setsEqual } from '../store/helpers'
+import { setsEqual, getBranchesFromMeta } from '../store/helpers'
 import { useConfirm } from './useConflictConfirm'
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
@@ -38,6 +38,36 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
   const { i18n: { t } } = useI18n()
   const confirm = useConfirm()
   const toaster = useToaster()
+
+  /**
+   * Extended formData that includes branch members dynamically based on node type.
+   *
+   * Why this is needed:
+   * - node.config[branchName] may not exist for newly created nodes
+   * - EnumField's useField uses lodash.get() which returns undefined for missing keys
+   * - KMultiselect crashes when value is undefined (tries to call .includes())
+   * - This ensures branch fields always have array values (empty or populated)
+   */
+  const formData = computed<T>(() => {
+    const baseData = base.formData.value
+    const owner = base.currentNode.value
+
+    // Get branch names dynamically from node type metadata
+    const branchNames = getBranchesFromMeta(owner.type)
+
+    // Build branch members object, ensuring each branch has an array value
+    // This prevents undefined values that crash KMultiselect
+    const branchMembers = branchNames.reduce((acc, branchName) => {
+      // getMembers returns the array from node.config[branchName] or empty array
+      acc[branchName] = branchGroups.getMembers(owner.id, branchName)
+      return acc
+    }, {} as Record<string, NodeId[]>)
+
+    return {
+      ...baseData,
+      ...branchMembers,
+    } as T
+  })
 
   /**
    * Creates a human-readable string representation of a branch assignment.
@@ -179,6 +209,7 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
 
   return {
     ...base,
+    formData,
     branchOptions,
     updateBranchMembers,
   }
