@@ -15,6 +15,7 @@
  * @module branch-group-manager
  */
 
+import { computed } from 'vue'
 import type { ComputedRef, Ref } from 'vue'
 import type {
   BranchName,
@@ -63,10 +64,11 @@ function readMembers(node: NodeInstance, branch: BranchName): NodeId[] {
  */
 export function createBranchGroupManager({ state, groupMapById, getNodeById, history }: BranchGroupManagerContext) {
   /**
-   * Builds a reverse index of member -> group for O(1) membership lookups.
-   * Recomputed whenever groups change.
+   * Cached membership index for O(1) lookups.
+   * Automatically recomputes when groups change.
+   * Maps member node ID to its owner and branch.
    */
-  function buildMembershipIndex(): Map<NodeId, { ownerId: NodeId, branch: BranchName }> {
+  const membershipIndex = computed(() => {
     const index = new Map<NodeId, { ownerId: NodeId, branch: BranchName }>()
     for (const group of state.value.groups) {
       for (const memberId of group.memberIds) {
@@ -74,7 +76,7 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
       }
     }
     return index
-  }
+  })
 
   /**
    * Type guard: checks if a node supports a specific branch.
@@ -136,16 +138,20 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
 
     if (members.length > 0) {
       if (!existing) {
+        // Create new group
         state.value.groups.push(toGroupInstance(node.id, branch, node.phase, members))
       } else {
+        // Update existing group in-place (avoids unnecessary Vue reactivity)
         if (existing.phase !== node.phase) {
           existing.phase = node.phase
         }
+        // Use setsEqual because [A, B] and [B, A] are the same membership
         if (!setsEqual(existing.memberIds, members)) {
           existing.memberIds = [...members]
         }
       }
     } else if (existing) {
+      // Remove empty group
       state.value.groups = state.value.groups.filter((g) => g.id !== groupId)
     }
   }
@@ -166,6 +172,7 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
 
     const normalized = normalizeMembers(owner, members)
     const previous = readMembers(owner, branch)
+    // Use setsEqual: [A, B] and [B, A] represent the same membership
     if (setsEqual(previous, normalized)) return false
 
     const config = (owner.config ??= {}) as Record<string, unknown>
@@ -173,7 +180,9 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     if (normalized.length > 0) {
       config[branch] = [...normalized]
     } else {
+      // Clean up: remove empty branch field
       delete config[branch]
+      // Clean up: remove empty config object entirely
       if (Object.keys(config).length === 0) {
         delete owner.config
       }
@@ -234,8 +243,7 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
    * Uses cached membership index for O(1) lookup.
    */
   function findMembership(memberId: NodeId): { ownerId: NodeId, branch: BranchName } | undefined {
-    const index = buildMembershipIndex()
-    return index.get(memberId)
+    return membershipIndex.value.get(memberId)
   }
 
   /**

@@ -39,34 +39,19 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
   const confirm = useConfirm()
   const toaster = useToaster()
 
-  /**
-   * Extended formData that includes branch members dynamically based on node type.
-   *
-   * Why this is needed:
-   * - node.config[branchName] may not exist for newly created nodes
-   * - EnumField's useField uses lodash.get() which returns undefined for missing keys
-   * - KMultiselect crashes when value is undefined (tries to call .includes())
-   * - This ensures branch fields always have array values (empty or populated)
-   */
+  // Ensure branch fields are initialized as arrays (prevents KMultiselect crash)
+  // Only fills in missing fields - doesn't override existing data
   const formData = computed<T>(() => {
-    const baseData = base.formData.value
-    const owner = base.currentNode.value
-
-    // Get branch names dynamically from node type metadata
-    const branchNames = getBranchesFromMeta(owner.type)
-
-    // Build branch members object, ensuring each branch has an array value
-    // This prevents undefined values that crash KMultiselect
-    const branchMembers = branchNames.reduce((acc, branchName) => {
-      // getMembers returns the array from node.config[branchName] or empty array
-      acc[branchName] = branchGroups.getMembers(owner.id, branchName)
-      return acc
-    }, {} as Record<string, NodeId[]>)
-
-    return {
-      ...baseData,
-      ...branchMembers,
-    } as T
+    const data = { ...base.formData.value } as any
+    const branchNames = getBranchesFromMeta(base.currentNode.value?.type || 'branch')
+    
+    for (const branchName of branchNames) {
+      if (!(branchName in data) || data[branchName] == null) {
+        data[branchName] = []
+      }
+    }
+    
+    return data as T
   })
 
   /**
@@ -82,11 +67,96 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
   }
 
   /**
+   * Normalizes input value to array of NodeIds.
+   */
+  function normalizeInput(value: string | string[] | null): NodeId[] {
+    return (value == null
+      ? []
+      : Array.isArray(value)
+        ? value
+        : [value]
+    ).filter((id): id is NodeId => isNodeId(id))
+  }
+
+  /**
+   * Checks if adding a member would create a cycle.
+   * Shows error toast if cycle detected.
+   * @returns true if cycle would be created
+   */
+  function checkForCycle(ownerId: NodeId, memberId: NodeId): boolean {
+    if (branchGroups.wouldCreateCycle(ownerId, memberId)) {
+      toaster({
+        message: t('plugins.free-form.datakit.flow_editor.error.branch_cycle'),
+        appearance: 'danger',
+      })
+      return true
+    }
+    return false
+  }
+
+  /**
+   * Detects conflicts when adding new members to a branch.
+   * A conflict occurs when a member is already assigned to a different branch.
+   * @returns Object containing conflict updates and assignment strings for confirmation dialog
+   */
+  function detectConflicts(ownerId: NodeId, branch: BranchName, newMemberIds: NodeId[]) {
+    const addedAssignments: ConnectionString[] = []
+    const removedAssignments: ConnectionString[] = []
+    const conflictUpdates: Array<{ ownerId: NodeId, branch: BranchName, members: NodeId[] }> = []
+
+    for (const memberId of newMemberIds) {
+      const existing = branchGroups.findMembership(memberId)
+      
+      // Skip if not a conflict (member is free or already in this exact branch)
+      if (!existing || (existing.ownerId === ownerId && existing.branch === branch)) {
+        continue
+      }
+
+      // Remove member from old branch
+      const remaining = branchGroups
+        .getMembers(existing.ownerId, existing.branch)
+        .filter(id => id !== memberId)
+
+      conflictUpdates.push({
+        ownerId: existing.ownerId,
+        branch: existing.branch,
+        members: remaining,
+      })
+
+      addedAssignments.push(createBranchAssignmentString(ownerId, branch, memberId))
+      removedAssignments.push(createBranchAssignmentString(existing.ownerId, existing.branch, memberId))
+    }
+
+    return { conflictUpdates, addedAssignments, removedAssignments }
+  }
+
+  /**
+   * Applies branch membership changes atomically.
+   * First removes members from old branches, then adds to new branch.
+   * @returns true if any changes were made
+   */
+  function applyMembershipChanges(
+    ownerId: NodeId,
+    branch: BranchName,
+    members: NodeId[],
+    conflictUpdates: Array<{ ownerId: NodeId, branch: BranchName, members: NodeId[] }>,
+  ): boolean {
+    let mutated = false
+
+    // Remove members from old branches first
+    for (const conflict of conflictUpdates) {
+      mutated = branchGroups.setMembers(conflict.ownerId, conflict.branch, conflict.members, { commit: false }) || mutated
+    }
+
+    // Add members to new branch
+    mutated = branchGroups.setMembers(ownerId, branch, members, { commit: false }) || mutated
+
+    return mutated
+  }
+
+  /**
    * Updates branch members for the current node.
-   * Handles:
-   * - Cycle detection (prevents circular branch dependencies)
-   * - Conflict resolution (member already in another branch)
-   * - User confirmation for conflicts
+   * Handles cycle detection, conflict resolution, and user confirmation.
    *
    * @param branch - The branch name (e.g., 'then', 'else')
    * @param value - New member IDs (string, array, or null)
@@ -94,63 +164,34 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
    */
   async function updateBranchMembers(branch: BranchName, value: string | string[] | null): Promise<boolean> {
     const owner = base.currentNode.value
-
-    // Normalize input to array of NodeIds
-    const candidateIds = (value == null
-      ? []
-      : Array.isArray(value)
-        ? value
-        : [value]
-    ).filter((id): id is NodeId => isNodeId(id))
-
-    // Validate and sanitize members (removes invalid nodes)
+    
+    // Normalize and validate input
+    const candidateIds = normalizeInput(value)
     const sanitizedMembers = branchGroups.prepareMembers(owner.id, branch, candidateIds)
 
-    // Check if anything actually changed (order-insensitive)
+    // Early return if nothing changed (order-insensitive comparison)
     const currentMembers = branchGroups.getMembers(owner.id, branch)
     if (setsEqual(currentMembers, sanitizedMembers)) {
       return true
     }
 
-    // Find newly added members (for cycle detection and conflict checking)
-    const toAdd = sanitizedMembers.filter(id => !currentMembers.includes(id))
-
-    const addedAssignments: ConnectionString[] = []
-    const removedAssignments: ConnectionString[] = []
-    const conflictUpdates: Array<{ ownerId: NodeId, branch: BranchName, members: NodeId[] }> = []
-
-    // Check each new member for cycles and conflicts
-    for (const memberId of toAdd) {
-      // Prevent cycles: member cannot have owner in its branch tree
-      if (branchGroups.wouldCreateCycle(owner.id, memberId)) {
-        toaster({
-          message: t('plugins.free-form.datakit.flow_editor.error.branch_cycle'),
-          appearance: 'danger',
-        })
+    // Check newly added members for cycles
+    const newMembers = sanitizedMembers.filter(id => !currentMembers.includes(id))
+    for (const memberId of newMembers) {
+      if (checkForCycle(owner.id, memberId)) {
         return false
-      }
-
-      // Check if member is already in another branch
-      const existing = branchGroups.findMembership(memberId)
-      if (existing && !(existing.ownerId === owner.id && existing.branch === branch)) {
-        // Prepare to remove member from old branch
-        const remaining = branchGroups
-          .getMembers(existing.ownerId, existing.branch)
-          .filter(id => id !== memberId)
-
-        conflictUpdates.push({
-          ownerId: existing.ownerId,
-          branch: existing.branch,
-          members: remaining,
-        })
-
-        addedAssignments.push(createBranchAssignmentString(owner.id, branch, memberId))
-        removedAssignments.push(createBranchAssignmentString(existing.ownerId, existing.branch, memberId))
       }
     }
 
+    // Detect conflicts with existing branch assignments
+    const { conflictUpdates, addedAssignments, removedAssignments } = detectConflicts(
+      owner.id,
+      branch,
+      newMembers,
+    )
+
     // Ask user to confirm if there are conflicts
-    if (conflictUpdates.length) {
+    if (conflictUpdates.length > 0) {
       if (!confirm) {
         throw new Error('Expected confirmation handler for branch conflict resolution')
       }
@@ -166,22 +207,13 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
       }
     }
 
-    // Apply all changes atomically
-    let mutated = false
+    // Apply all changes atomically (commit: false delays history commit)
+    const mutated = applyMembershipChanges(owner.id, branch, sanitizedMembers, conflictUpdates)
 
-    // Remove member from old branches first
-    for (const conflict of conflictUpdates) {
-      mutated = branchGroups.setMembers(conflict.ownerId, conflict.branch, conflict.members, { commit: false }) || mutated
+    if (mutated) {
+      commit() // Single history entry for all changes
     }
 
-    // Add member to new branch
-    mutated = branchGroups.setMembers(owner.id, branch, sanitizedMembers, { commit: false }) || mutated
-
-    if (!mutated) {
-      return true
-    }
-
-    commit()
     return true
   }
 
