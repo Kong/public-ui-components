@@ -20,7 +20,7 @@ import type { ConnectionString } from '../modal/ConflictModal.vue'
 import dagre from '@dagrejs/dagre'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
-import { computed, nextTick, toValue, watch, watchEffect } from 'vue'
+import { computed, nextTick, toValue, watch } from 'vue'
 
 import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK, KUI_SPACE_90 } from '@kong/design-tokens'
 import useI18n from '../../../../../composables/useI18n'
@@ -465,6 +465,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     const pendingGroupLayouts = new Map<GroupId, { position: XYPosition, dimensions: NodeDimensions }>()
     const pendingParentUpdates = new Set<GroupId>()
     let layoutFlushPromise: Promise<void> | undefined
+    const draggingGroups = new Set<GroupId>()
+    const draggingNodes = new Set<NodeId>()
 
     function calculateGroupLayout(group: GroupInstance): { position: XYPosition, dimensions: NodeDimensions } | undefined {
       if (group.phase !== phase) return undefined
@@ -641,15 +643,63 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         }
       }
 
-      groupsToUpdate.forEach(updateGroupLayout)
+      // Don't update group layouts during drag to avoid flickering
+      // Layouts will be recalculated after drag stops if needed
+      // groupsToUpdate.forEach(updateGroupLayout)
     }
 
-    watchEffect(() => {
-      for (const group of state.value.groups) {
-        if (group.phase !== phase) continue
-        updateGroupLayout(group.id)
-      }
-    })
+    // Watch group membership AND member dimensions to trigger layout updates
+    // Uses signature-based deduplication to prevent infinite loops
+    const lastLayoutSignatures = new Map<GroupId, string>()
+
+    watch(
+      () => {
+        return state.value.groups.map(g => {
+          if (g.phase !== phase) return null
+
+          // Build a signature string that captures both membership and dimensions
+          const memberSignatures = g.memberIds.map(id => {
+            const node = findNode(id)
+            const w = Math.round(node?.dimensions?.width ?? 0)
+            const h = Math.round(node?.dimensions?.height ?? 0)
+            return `${id}:${w}x${h}`
+          })
+
+          return {
+            id: g.id,
+            signature: memberSignatures.join(','),
+          }
+        }).filter(Boolean) as Array<{ id: GroupId, signature: string }>
+      },
+      (groups) => {
+        for (const group of groups) {
+          // Skip groups that are currently being dragged to avoid interference
+          if (draggingGroups.has(group.id)) continue
+
+          // Skip groups whose members are being dragged
+          const groupInstance = groupMapById.value.get(group.id)
+          if (groupInstance?.memberIds.some(id => draggingNodes.has(id))) continue
+
+          // Skip groups whose child groups are being dragged
+          const childGroups = groupInstance?.memberIds.flatMap(memberId =>
+            groupsByOwner.value.get(memberId) ?? [],
+          ) ?? []
+          if (childGroups.some(childGroup => draggingGroups.has(childGroup.id))) continue
+
+          const lastSignature = lastLayoutSignatures.get(group.id)
+
+          // Only update if the signature actually changed
+          if (lastSignature !== group.signature) {
+            lastLayoutSignatures.set(group.id, group.signature)
+            updateGroupLayout(group.id)
+          }
+        }
+      },
+      {
+        deep: true,
+        flush: 'post', // Run after DOM updates to avoid conflicts with VueFlow
+      },
+    )
 
     // Moved away from VueFlow's `:nodes` and `:edges` props because
     // they have race conditions while being updated simultaneously.
@@ -870,6 +920,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       if (isGroupId(node.id)) {
         const groupId = node.id as GroupId
+        draggingGroups.add(groupId)
         const group = groupMapById.value.get(groupId)
         if (!group) return
 
@@ -878,10 +929,19 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         const deltaY = node.position.y - previousPosition.y
 
         translateGroupTree(groupId, node.position, deltaX, deltaY)
+
+        // Update parent group layout in real-time when dragging nested groups
+        // This allows the parent group to expand/shrink as child group moves
+        const parentGroup = memberGroupMap.value.get(group.ownerId)
+        if (parentGroup) {
+          updateGroupLayout(parentGroup.id)
+        }
+
         return
       }
 
       const nodeId = node.id as NodeId
+      draggingNodes.add(nodeId)
       const parentId = node.parentNode
 
       let absolutePosition: XYPosition = { ...node.position }
@@ -898,6 +958,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       moveNode(nodeId, absolutePosition, false)
 
+      // Update group layout in real-time when dragging member nodes
+      // This allows the group to expand/shrink as members move
       const owningGroupId = parentId && isGroupId(parentId)
         ? parentId as GroupId
         : memberGroupMap.value.get(nodeId)?.id
@@ -912,11 +974,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       if (isGroupId(node.id)) {
         const groupId = node.id as GroupId
+        draggingGroups.delete(groupId)
         historyCommit(`drag-group:${groupId}`)
         return
       }
 
       const nodeId = node.id as NodeId
+      draggingNodes.delete(nodeId)
       const parentId = node.parentNode
 
       let absolutePosition: XYPosition = { ...node.position }
