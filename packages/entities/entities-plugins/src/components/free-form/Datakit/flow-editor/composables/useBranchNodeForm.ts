@@ -44,13 +44,13 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
   const formData = computed<T>(() => {
     const data = { ...base.formData.value } as any
     const branchNames = getBranchesFromMeta(base.currentNode.value?.type || 'branch')
-    
+
     for (const branchName of branchNames) {
       if (!(branchName in data) || data[branchName] == null) {
         data[branchName] = []
       }
     }
-    
+
     return data as T
   })
 
@@ -106,7 +106,7 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
 
     for (const memberId of newMemberIds) {
       const existing = branchGroups.findMembership(memberId)
-      
+
       // Skip if not a conflict (member is free or already in this exact branch)
       if (!existing || (existing.ownerId === ownerId && existing.branch === branch)) {
         continue
@@ -164,7 +164,7 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
    */
   async function updateBranchMembers(branch: BranchName, value: string | string[] | null): Promise<boolean> {
     const owner = base.currentNode.value
-    
+
     // Normalize and validate input
     const candidateIds = normalizeInput(value)
     const sanitizedMembers = branchGroups.prepareMembers(owner.id, branch, candidateIds)
