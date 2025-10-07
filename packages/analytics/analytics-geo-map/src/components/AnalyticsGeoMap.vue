@@ -26,33 +26,18 @@
       class="analytics-geo-map-container"
     />
     <!-- Legend -->
-    <div
+    <MapLegend
       v-if="showLegend"
-      class="legend"
-    >
-      <div
-        v-if="metric"
-        class="legend-title"
-      >
-        {{ legendTitle }}
-      </div>
-      <div
-        v-for="(color, index) in legendData"
-        :key="index"
-        class="legend-item"
-      >
-        <span
-          class="legend-color"
-          :style="{ backgroundColor: color.color }"
-        />
-        <span class="legend-text">{{ color.range }}</span>
-      </div>
-    </div>
+      class="legend-container"
+      :data="legendData"
+      :metric="metric"
+      :title="legendTitle"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed, useId } from 'vue'
+import { ref, onMounted, watch, computed, useId, toRef } from 'vue'
 import { Map, Popup } from 'maplibre-gl'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
 import type { MapFeatureCollection, MetricUnits } from '../types'
@@ -60,14 +45,13 @@ import type { Feature, MultiPolygon, Geometry, GeoJsonProperties, FeatureCollect
 import composables from '../composables'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { ExploreAggregations, CountryISOA2 } from '@kong-ui-public/analytics-utilities'
-// @ts-ignore - approximate-number no exported module
-import approxNum from 'approximate-number'
 import lakes from '../ne_110m_lakes.json'
 import * as geobuf from 'geobuf'
 import Pbf from 'pbf'
 import { debounce } from '../utils'
 import { AnalyticsIcon } from '@kong/icons'
 import { KUI_ICON_COLOR_NEUTRAL, KUI_ICON_SIZE_60 } from '@kong/design-tokens'
+import MapLegend from './MapLegend.vue'
 
 const countriesPbfUrlPromise = import('../countries-simple-geo.pbf?url').then(m => m.default)
 
@@ -94,6 +78,10 @@ const emit = defineEmits<{
 }>()
 
 const { i18n } = composables.useI18n()
+const { getColor, formatMetric, legendData } = composables.useMetricUtils({
+  countryMetrics: toRef(() => countryMetrics),
+  metric: toRef(() => metric),
+})
 const mapContainerId = useId()
 const map = ref<Map>()
 const geoJsonData = ref<MapFeatureCollection | null>(null)
@@ -128,72 +116,10 @@ const showLegend = computed(() => {
   return withLegend && Object.keys(countryMetrics).length > 0
 })
 
-const logMinMetric = computed(() => Math.log(Math.min(...Object.values(countryMetrics))))
-const logMaxMetric = computed(() => Math.log(Math.max(...Object.values(countryMetrics))))
-
-const getColor = (linearMetric: number) => {
-  const logMetric = Math.log(linearMetric)
-  const range = logMaxMetric.value - logMinMetric.value
-  const step = range / 5
-
-  if (logMetric >= logMinMetric.value + 4 * step) return '#00819d'
-  if (logMetric >= logMinMetric.value + 3 * step) return '#00abd2'
-  if (logMetric >= logMinMetric.value + 2 * step) return '#00c8f4'
-  if (logMetric >= logMinMetric.value + 1 * step) return '#67e3ff'
-  return '#b3f1ff'
-}
-
 const legendTitle = computed(() => {
   // @ts-ignore - dynamic i18n key
   return metric && i18n.t(`metrics.${metric}`) || ''
 })
-
-const legendData = computed(() => {
-  const range = logMaxMetric.value - logMinMetric.value
-  const step = range / 5
-
-  const intervals = [
-    logMinMetric.value + 4 * step,
-    logMinMetric.value + 3 * step,
-    logMinMetric.value + 2 * step,
-    logMinMetric.value + 1 * step,
-    logMinMetric.value,
-  ]
-
-  return intervals.map((logBoundary, index) => {
-    const nextLogBoundary = index === 0 ? logMaxMetric.value : intervals[index - 1]
-    const lowerLinear = Math.exp(logBoundary)
-    const upperLinear = Math.exp(nextLogBoundary)
-
-    let rangeText = ''
-    if (index === 0) {
-      rangeText = `> ${formatMetric(lowerLinear)}`
-    } else if (index === intervals.length - 1) {
-      rangeText = `< ${formatMetric(upperLinear)}`
-    } else {
-      rangeText = `${formatMetric(lowerLinear)} - ${formatMetric(upperLinear)}`
-    }
-
-    return {
-      color: getColor(lowerLinear),
-      range: rangeText,
-    }
-  })
-})
-
-const shouldTuncateMetric = computed(() => {
-  return !metric?.includes('latency')
-})
-
-const formatMetric = (linearMetric: number) => {
-  const truncated = Math.trunc(linearMetric)
-
-  if (shouldTuncateMetric.value) {
-    return approxNum(truncated, { capital: true })
-  }
-
-  return new Intl.NumberFormat(document?.documentElement?.lang || 'en-US').format(truncated)
-}
 
 // Simplified coords may be 2 or 3 layers
 const flattenPositions = (position: any): number[][] => {
@@ -498,42 +424,9 @@ watch(() => bounds, (newVal, oldVal) => {
     }
   }
 
-  .legend {
-    background: white;
-    border-radius: $kui-border-radius-20;
-    box-shadow: $kui-shadow;
-    display: flex;
-    flex-direction: column;
-    left: 8px;
-    opacity: 0.9;
-    padding: $kui-space-30;
-    position: absolute;
+  .legend-container {
+    right: 8px;
     top: 8px;
-  }
-
-  .legend-title {
-    font-size: $kui-font-size-20;
-    margin-bottom: $kui-space-40;
-  }
-
-  .legend-item {
-    align-items: center;
-    display: flex;
-  }
-
-  .legend-item:not(:last-child) {
-    margin-bottom: $kui-space-30;
-  }
-
-  .legend-color {
-    border-radius: $kui-border-radius-10;
-    height: 20px;
-    margin-right: $kui-space-40;
-    width: 20px;
-  }
-
-  .legend-text {
-    font-size: $kui-font-size-20;
   }
 }
 </style>
