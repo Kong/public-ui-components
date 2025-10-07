@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-geo-map",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "type": "module",
   "main": "./dist/vitals-geo-map.umd.js",
   "module": "./dist/vitals-geo-map.es.js",
