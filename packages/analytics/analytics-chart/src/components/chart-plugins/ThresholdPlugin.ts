@@ -55,16 +55,21 @@ export const getThresholdIntersections = (chart: Chart, thresholds: Threshold[])
         aboveThreshold: d.y >= t.value,
       }))
 
-      let intersectionStart: number | undefined = undefined
+      // the intersectionStart begins with a value if the initial datapoint is above the threshold
+      let intersectionStart: number | undefined = intersectionTrack[0].aboveThreshold
+        ? dataPoints[0].x
+        : undefined
+
       for (let i = 1; i < intersectionTrack.length; i++) {
         if (!intersectionTrack[i - 1].aboveThreshold && intersectionTrack[i].aboveThreshold) {
-          // If we have a start of an intersection, record it
+          // If the series was under the threshold line and goes to above the threshold line
           intersectionStart = getExactIntersection(
             dataPoints[i - 1],
             dataPoints[i],
             t.value,
           )
         } else if (intersectionTrack[i - 1].aboveThreshold && !intersectionTrack[i].aboveThreshold) {
+          // if the series was above the threshold line and goes to below the threshold line
           if (intersectionStart !== undefined) {
             intersections.push({
               start: intersectionStart,
