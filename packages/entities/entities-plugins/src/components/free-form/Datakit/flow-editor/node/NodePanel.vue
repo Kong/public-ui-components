@@ -24,7 +24,7 @@
       inert
     >
       <VueFlow :nodes="previewNodes">
-        <template #node-leaf="node">
+        <template #node-module="node">
           <FlowNode
             :id="previewId"
             :data="node.data"
@@ -62,7 +62,7 @@ const previewNodes = computed(() => {
   return [
     {
       id: 'preview',
-      type: 'leaf',
+      type: 'module',
       data: previewNode.value,
       position: { x: 0, y: 0 },
     },

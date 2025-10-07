@@ -1,5 +1,8 @@
 import { IMPLICIT_NODE_NAMES } from '../../constants'
 import type {
+  BaseMakeNodeInstancePayload,
+  BaseNodeInstance,
+  BranchUINode,
   ConfigEdge,
   ConfigNode,
   DatakitConfig,
@@ -7,16 +10,12 @@ import type {
   EdgeInstance,
   EditorState,
   FieldName,
-  GroupInstance,
-  GroupType,
   ImplicitNodeName,
-  MakeGroupInstancePayload,
   MakeNodeInstancePayload,
   NodeInstance,
   NodeName,
   NodePhase,
   NodeType,
-  UIGroup,
   UINode,
 } from '../../types'
 import { isImplicitName, isImplicitType } from '../node/node'
@@ -46,18 +45,15 @@ export function initEditorState(
 ): EditorState {
   const configNodes = pluginData.config?.nodes ?? []
   const uiNodes = pluginData.__ui_data?.nodes ?? []
-  const uiGroups = pluginData.__ui_data?.groups ?? []
   const resources = pluginData.config?.resources ?? {}
 
   const uiNodesMap = new Map<NodeName, UINode>(
     uiNodes.map((uiNode) => [uiNode.name, uiNode]),
   )
   const nodes: NodeInstance[] = []
-  const groups: GroupInstance[] = []
   const edges: EdgeInstance[] = []
 
   const nodesMap = new Map<NodeName, NodeInstance>()
-  const groupsMap = new Map<string, GroupInstance>()
 
   const connections: ConfigEdge[] = []
   const adjacencies = new Map<NodeName, Set<NodeName>>() // Undirected adjacency list
@@ -95,14 +91,6 @@ export function initEditorState(
 
   let isUIDataStale = false
 
-  for (const uiGroup of uiGroups) {
-    const group = buildGroupInstance(uiGroup.type, uiGroup)
-    groups.push(group)
-    groupsMap.set(group.name, group)
-  }
-
-  const branchNodes: NodeInstance[] = []
-
   // config nodes
   for (const configNode of configNodes) {
     const uiNode = uiNodesMap.get(configNode.name)
@@ -112,29 +100,6 @@ export function initEditorState(
     const node = buildNodeInstance(configNode.type, configNode, uiNode, resources)
     nodes.push(node)
     nodesMap.set(node.name, node)
-
-    if (node.type === 'branch') {
-      branchNodes.push(node)
-    }
-  }
-
-  for (const node of branchNodes) {
-    const branchGroupName = `branch_group_${node.name}`
-    if (groupsMap.has(branchGroupName)) {
-      continue
-    }
-
-    if (!isUIDataStale) {
-      isUIDataStale = true
-    }
-
-    const group = makeGroupInstance({
-      type: 'group',
-      name: branchGroupName,
-      phase: node.phase,
-    })
-    groups.push(group)
-    groupsMap.set(group.name, group)
   }
 
   // ensure implicit nodes
@@ -201,7 +166,6 @@ export function initEditorState(
 
   return {
     nodes,
-    groups,
     edges,
     pendingLayout: !isUIDataStale ? false : keepHistoryAfterLayout ? 'keepHistory' : 'clearHistory',
     pendingFitView: true,
@@ -213,9 +177,8 @@ export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance
   const defaultFields = getFieldsFromMeta(type)
   const meta = getNodeMeta(type)
 
-  return {
+  const base: BaseNodeInstance = {
     id: createId('node'),
-    type,
     name: name ?? (type as ImplicitNodeName),
     phase: phase ?? 'request',
     position: position ?? { x: 0, y: 0 },
@@ -227,17 +190,25 @@ export function makeNodeInstance(payload: MakeNodeInstancePayload): NodeInstance
     hidden: payload.hidden || meta.hidden,
     config: config ? clone(config) : {},
   }
-}
 
-export function makeGroupInstance(payload: MakeGroupInstancePayload): GroupInstance {
-  const { type, name, phase, position } = payload
+  if (type === 'branch') {
+    return {
+      ...base,
+      type: 'branch',
+      branchGroups: {
+        then: {
+          position: { x: base.position.x - 150, y: base.position.y + 100 },
+        },
+        else: {
+          position: { x: base.position.x + 150, y: base.position.y + 100 },
+        },
+      },
+    }
+  }
 
   return {
-    id: createId('group'),
+    ...base,
     type,
-    name,
-    phase: phase ?? 'request',
-    position: position ?? { x: 0, y: 0 },
   }
 }
 
@@ -254,27 +225,26 @@ export function buildNodeInstance(
   uiNode?: UINode,
   resources?: DatakitConfig['resources'],
 ): NodeInstance {
-  return makeNodeInstance({
-    type,
+  const base: BaseMakeNodeInstancePayload = {
     name: configNode?.name,
     phase: uiNode?.phase ?? getDefaultPhase(type),
     position: uiNode?.position,
     fields: resolveFields(type, uiNode, configNode, resources),
     hidden: uiNode?.hidden,
     config: configNode ? extractConfig(configNode) : undefined,
-  })
-}
+  }
 
-export function buildGroupInstance(
-  type: GroupType,
-  uiGroup: UIGroup,
-): GroupInstance {
-  return makeGroupInstance({
-    type,
-    name: uiGroup.name,
-    phase: uiGroup.phase,
-    position: uiGroup.position,
-  })
+  if (type === 'branch') {
+    // Make an assertion
+    const branchUINode = uiNode as BranchUINode
+    return makeNodeInstance({
+      ...base,
+      type: 'branch',
+      branchGroup: branchUINode.branchGroup,
+    })
+  }
+
+  return makeNodeInstance({ ...base, type })
 }
 
 /** Strip identity and IO fields. */

@@ -1,5 +1,7 @@
 import type { XYPosition } from '@vue-flow/core'
 import type {
+  BranchGroupId,
+  BranchKind,
   ConfigNode,
   CreateNodePayload,
   DatakitPluginData,
@@ -263,6 +265,23 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       const node = getNodeById(nodeId)
       if (!node) return
       node.position = { ...position }
+      if (commitNow) history.commit()
+    }
+
+    function moveBranchGroupNode(nodeId: NodeId, kind: BranchKind, position: XYPosition, commitNow = true) {
+      const node = getNodeById(nodeId)
+      if (!node || node.type !== 'branch') {
+        console.warn(`Node '${nodeId}' is not found or not a branch node.`)
+        return
+      }
+
+      const branchGroup = node.branchGroups?.[kind]
+      if (!branchGroup) {
+        console.warn(`Unknown branch kind '${kind}' on branch node '${nodeId}'`)
+        return
+      }
+
+      branchGroup.position = { ...position }
       if (commitNow) history.commit()
     }
 
@@ -546,7 +565,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
             output: node.fields.output.map((field) => field.name),
           },
           ...node.type === 'branch' && {
-            branchGroup: node.branchGroup,
+            branchGroups: node.branchGroups,
           },
         }
 
@@ -554,7 +573,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           return clone({
             ...uiNode,
             type: 'branch',
-            branchGroup: { ...node.branchGroup },
+            branchGroups: { ...node.branchGroups },
           })
         }
 
@@ -613,6 +632,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       removeNode,
       renameNode,
       moveNode,
+      moveBranchGroupNode,
       toggleExpanded,
       replaceConfig,
 

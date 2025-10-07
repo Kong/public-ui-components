@@ -14,7 +14,7 @@ import type {
   ConfigNodeName,
   NameConnection,
   IdConnection,
-  GroupId,
+  BranchGroupId,
 } from '../../types'
 import { cloneDeep, uniqueId } from 'lodash-es'
 import {
@@ -30,16 +30,16 @@ export function clone<T>(value: T): T {
 }
 
 /** Generate a unique runtime id. */
-export function createId<T extends 'node' | 'edge' | 'field' | 'group'>(
+export function createId<T extends 'node' | 'edge' | 'field' | 'branch-group'>(
   type: T,
-): T extends 'node' ? NodeId : T extends 'edge' ? EdgeId : T extends 'field' ? FieldId : GroupId {
+): T extends 'node' ? NodeId : T extends 'edge' ? EdgeId : T extends 'field' ? FieldId : BranchGroupId {
   return `${type}:${uniqueId()}` as unknown as T extends 'node'
     ? NodeId
     : T extends 'edge'
       ? EdgeId
       : T extends 'field'
         ? FieldId
-        : GroupId
+        : BranchGroupId
 }
 
 /** Parse "NODE" or "NODE.FIELD". */

@@ -52,7 +52,7 @@
       </Controls>
 
       <!-- To not use the default node style -->
-      <template #node-leaf="node">
+      <template #node-module="node">
         <FlowNode
           :data="node.data"
           :error="invalidConfigNodeIds.has(node.data.id)"
@@ -60,7 +60,7 @@
         />
       </template>
 
-      <template #node-group="node">
+      <template #node-branch-group="node">
         <FlowGroupNode :data="node.data" />
       </template>
     </VueFlow>
