@@ -79,7 +79,6 @@ const {
   showTooltipValue = true,
   fitToCountry = undefined,
   bounds = undefined,
-  truncatedMetric = true,
 } = defineProps<{
   countryMetrics: Record<string, number>
   metricUnit: MetricUnits
@@ -88,7 +87,6 @@ const {
   showTooltipValue?: boolean
   fitToCountry?: CountryISOA2 | undefined
   bounds?: Array<[number, number]>
-  truncatedMetric?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -183,11 +181,18 @@ const legendData = computed(() => {
   })
 })
 
+const shouldTuncateMetric = computed(() => {
+  return !metric?.includes('latency')
+})
 
 const formatMetric = (linearMetric: number) => {
   const truncated = Math.trunc(linearMetric)
 
-  return truncatedMetric ? approxNum(truncated, { capital: true }) : new Intl.NumberFormat(document?.documentElement?.lang || 'en-US').format(truncated)
+  if (shouldTuncateMetric.value) {
+    return approxNum(truncated, { capital: true })
+  }
+
+  return new Intl.NumberFormat(document?.documentElement?.lang || 'en-US').format(truncated)
 }
 
 // Simplified coords may be 2 or 3 layers

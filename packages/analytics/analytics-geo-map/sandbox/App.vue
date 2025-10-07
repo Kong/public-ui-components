@@ -36,10 +36,6 @@
       >
         Reset bounds
       </KButton>
-      <KInputSwitch
-        v-model="truncateMetrics"
-        label="Truncate metrics"
-      />
     </div>
 
 
@@ -50,7 +46,6 @@
         :fit-to-country="fitToCountry"
         :metric="'request_count'"
         :metric-unit="'requests'"
-        :truncated-metric="truncateMetrics"
         @bounds-change="console.log('bounds changed', $event)"
       />
     </div>
@@ -83,7 +78,6 @@ const bounds = ref<Array<[number, number]>>([
   [-180, -90],
   [180, 90],
 ])
-const truncateMetrics = ref(true)
 
 const countryMetrics = computed(() => {
   const metrics: Record<string, number> = {}

@@ -10,19 +10,17 @@ const mountComponent = ({
   metric = ref('request_count'),
   metricUnit = ref('requests'),
   onBoundsChange = cy.spy(),
-  truncatedMetric = ref(true),
 }: {
   countryMetrics: Record<string, number>
   fitToCountry?: Ref<string>
   metric?: Ref<ExploreAggregations>
   metricUnit?: Ref<MetricUnits>
   onBoundsChange?: (bounds: Array<[number, number]>) => void
-  truncatedMetric?: Ref<boolean>
 }) => {
 
   const WrapperComponent = defineComponent({
     setup() {
-      return { countryMetrics, fitToCountry, metric, metricUnit, onBoundsChange, truncatedMetric }
+      return { countryMetrics, fitToCountry, metric, metricUnit, onBoundsChange }
     },
     render() {
       return h('div', { style: 'height: 500px; width: 500px;' }, [
@@ -32,7 +30,6 @@ const mountComponent = ({
           metric: this.metric,
           metricUnit: this.metricUnit,
           onBoundsChange: this.onBoundsChange,
-          truncatedMetric: this.truncatedMetric,
         }),
       ])
     },
@@ -93,8 +90,8 @@ describe('<AnalyticsGeoMap />', () => {
     cy.get('@boundsChangeSpy').should('have.been.calledWith', romaniaBounds)
   })
 
-  it('renders legend ranges with compact formatting when truncatedMetric is true', () => {
-    mountComponent({ countryMetrics: COUNTRY_METRICS, truncatedMetric: ref(true) })
+  it('renders legend ranges with compact formatting when metric does not include latency', () => {
+    mountComponent({ countryMetrics: COUNTRY_METRICS })
 
     cy.get('.legend').should('exist')
     cy.get('.legend-item').should('have.length', 5)
@@ -112,8 +109,8 @@ describe('<AnalyticsGeoMap />', () => {
   })
 
 
-  it('renders legend ranges with comma formatting when truncatedMetric is false', () => {
-    mountComponent({ countryMetrics: COUNTRY_METRICS, truncatedMetric: ref(false) })
+  it('renders legend ranges with comma formatting when metric includes latency', () => {
+    mountComponent({ countryMetrics: COUNTRY_METRICS, metric: ref('response_latency_p99') })
 
     cy.get('.legend').should('exist')
     cy.get('.legend-item').should('have.length', 5)
