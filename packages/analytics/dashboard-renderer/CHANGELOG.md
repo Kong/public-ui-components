@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.6.17...@kong-ui-public/dashboard-renderer@7.6.18) (2025-10-07)
+
+
+### Bug Fixes
+
+* **analytics:** keep consistent metric formatting for geo maps [MA-4125] ([#2539](https://github.com/Kong/public-ui-components/issues/2539)) ([40a66ae](https://github.com/Kong/public-ui-components/commit/40a66aeed2c564e99671b0e546a69f47c07678fa))
+
+
+
+
+
 ## [7.6.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.6.16...@kong-ui-public/dashboard-renderer@7.6.17) (2025-10-02)
 
 

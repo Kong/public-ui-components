@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.4...@kong-ui-public/analytics-geo-map@1.4.5) (2025-10-07)
+
+
+### Bug Fixes
+
+* **analytics:** keep consistent metric formatting for geo maps [MA-4125] ([#2539](https://github.com/Kong/public-ui-components/issues/2539)) ([40a66ae](https://github.com/Kong/public-ui-components/commit/40a66aeed2c564e99671b0e546a69f47c07678fa))
+
+
+
+
+
 ## [1.4.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.3...@kong-ui-public/analytics-geo-map@1.4.4) (2025-10-01)
 
 
