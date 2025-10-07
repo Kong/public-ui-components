@@ -131,9 +131,8 @@ const showLegend = computed(() => {
 const logMinMetric = computed(() => Math.log(Math.min(...Object.values(countryMetrics))))
 const logMaxMetric = computed(() => Math.log(Math.max(...Object.values(countryMetrics))))
 
-
-const getColor = (metric: number) => {
-  const logMetric = Math.log(metric)
+const getColor = (linearMetric: number) => {
+  const logMetric = Math.log(linearMetric)
   const range = logMaxMetric.value - logMinMetric.value
   const step = range / 5
 
@@ -163,20 +162,38 @@ const legendData = computed(() => {
 
   return intervals.map((logBoundary, index) => {
     const nextLogBoundary = index === 0 ? logMaxMetric.value : intervals[index - 1]
+    const lowerLinear = Math.exp(logBoundary)
+    const upperLinear = Math.exp(nextLogBoundary)
+
     let rangeText = ''
     if (index === 0) {
-      rangeText = `> ${approxNum(Math.trunc(Math.exp(logBoundary)), { capital: true })}`
+      rangeText = `> ${formatMetric(lowerLinear)}`
     } else if (index === intervals.length - 1) {
-      rangeText = `< ${approxNum(Math.trunc(Math.exp(nextLogBoundary)), { capital: true })}`
+      rangeText = `< ${formatMetric(upperLinear)}`
     } else {
-      rangeText = `${approxNum(Math.trunc(Math.exp(logBoundary)), { capital: true })} - ${approxNum(Math.trunc(Math.exp(nextLogBoundary)), { capital: true })}`
+      rangeText = `${formatMetric(lowerLinear)} - ${formatMetric(upperLinear)}`
     }
+
     return {
-      color: getColor(Math.exp(logBoundary)),
+      color: getColor(lowerLinear),
       range: rangeText,
     }
   })
 })
+
+const shouldTuncateMetric = computed(() => {
+  return !metric?.includes('latency')
+})
+
+const formatMetric = (linearMetric: number) => {
+  const truncated = Math.trunc(linearMetric)
+
+  if (shouldTuncateMetric.value) {
+    return approxNum(truncated, { capital: true })
+  }
+
+  return new Intl.NumberFormat(document?.documentElement?.lang || 'en-US').format(truncated)
+}
 
 // Simplified coords may be 2 or 3 layers
 const flattenPositions = (position: any): number[][] => {
@@ -330,9 +347,16 @@ onMounted(async () => {
           const { iso_a2, iso_a2_eh, ISO_A2, admin } = feature.properties
           const lookup: CountryISOA2 = ISO_A2 ?? iso_a2 === '-99' ? iso_a2_eh : iso_a2
           const metric = countryMetrics[lookup]
+
           if (metric !== undefined) {
-          // @ts-ignore - dynamic i18n key
-            const popupHtml = showTooltipValue ? `<strong>${admin}</strong>: ${approxNum(metric, { capital: true })} ${i18n.t(`metricUnits.${metricUnit}`, { plural: metric > 1 ? 's' : '' })}` : `<strong>${admin}</strong>`
+            let popupHtml
+
+            if (showTooltipValue) {
+              popupHtml = `<strong data-testid="geo-map-tooltip">${admin}</strong>: ${formatMetric(metric)} ${i18n.t(`metricUnits.${metricUnit}`, { plural: metric > 1 ? 's' : '' })}`
+            } else {
+              popupHtml = `<strong data-testid="geo-map-tooltip">${admin}</strong>`
+            }
+
             popup.setLngLat(e.lngLat).setHTML(popupHtml).addTo(map.value as Map)
           } else {
             popup.remove()
