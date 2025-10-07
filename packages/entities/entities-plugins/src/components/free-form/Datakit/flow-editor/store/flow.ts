@@ -648,15 +648,35 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       // groupsToUpdate.forEach(updateGroupLayout)
     }
 
+    // Helper function to check if a group should skip layout updates
+    function shouldSkipGroupUpdate(groupId: GroupId, memberIds: NodeId[]): boolean {
+      // Skip if group itself is being dragged
+      if (draggingGroups.has(groupId)) return true
+
+      // Skip if any member is being dragged
+      if (memberIds.some(id => draggingNodes.has(id))) return true
+
+      // Skip if any child group is being dragged
+      for (const memberId of memberIds) {
+        const childGroups = groupsByOwner.value.get(memberId)
+        if (childGroups?.some(g => draggingGroups.has(g.id))) {
+          return true
+        }
+      }
+
+      return false
+    }
+
     // Watch group membership AND member dimensions to trigger layout updates
     // Uses signature-based deduplication to prevent infinite loops
     const lastLayoutSignatures = new Map<GroupId, string>()
 
     watch(
       () => {
-        return state.value.groups.map(g => {
-          if (g.phase !== phase) return null
+        // Only process groups in the current phase
+        const relevantGroups = state.value.groups.filter(g => g.phase === phase)
 
+        return relevantGroups.map(g => {
           // Build a signature string that captures both membership and dimensions
           const memberSignatures = g.memberIds.map(id => {
             const node = findNode(id)
@@ -667,28 +687,18 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
           return {
             id: g.id,
+            memberIds: g.memberIds, // Pass through for skip check
             signature: memberSignatures.join(','),
           }
-        }).filter(Boolean) as Array<{ id: GroupId, signature: string }>
+        })
       },
       (groups) => {
         for (const group of groups) {
-          // Skip groups that are currently being dragged to avoid interference
-          if (draggingGroups.has(group.id)) continue
-
-          // Skip groups whose members are being dragged
-          const groupInstance = groupMapById.value.get(group.id)
-          if (groupInstance?.memberIds.some(id => draggingNodes.has(id))) continue
-
-          // Skip groups whose child groups are being dragged
-          const childGroups = groupInstance?.memberIds.flatMap(memberId =>
-            groupsByOwner.value.get(memberId) ?? [],
-          ) ?? []
-          if (childGroups.some(childGroup => draggingGroups.has(childGroup.id))) continue
-
-          const lastSignature = lastLayoutSignatures.get(group.id)
+          // Skip groups that should not be updated (dragging, etc.)
+          if (shouldSkipGroupUpdate(group.id, group.memberIds)) continue
 
           // Only update if the signature actually changed
+          const lastSignature = lastLayoutSignatures.get(group.id)
           if (lastSignature !== group.signature) {
             lastLayoutSignatures.set(group.id, group.signature)
             updateGroupLayout(group.id)
