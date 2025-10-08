@@ -50,14 +50,11 @@ export function setsEqual<T>(a: readonly T[], b: readonly T[]): boolean {
 }
 
 /** Generate a unique runtime id. */
-export function createId<T extends 'node' | 'edge' | 'field'>(
-  type: T,
-): T extends 'node' ? NodeId : T extends 'edge' ? EdgeId : FieldId {
-  return `${type}:${uniqueId()}` as unknown as T extends 'node'
-    ? NodeId
-    : T extends 'edge'
-      ? EdgeId
-      : FieldId
+export function createId(type: 'node'): NodeId
+export function createId(type: 'edge'): EdgeId
+export function createId(type: 'field'): FieldId
+export function createId(type: string): string {
+  return `${type}:${uniqueId()}`
 }
 
 /** Parse "NODE" or "NODE.FIELD". */
@@ -169,7 +166,9 @@ export function generateNodeName(
   prefixOrType: ConfigNodeType | string,
   nodeNames: ReadonlySet<NodeName>,
 ): ConfigNodeName {
-  const base = isConfigType(prefixOrType as any) ? prefixOrType.toUpperCase() : prefixOrType
+  const base = (typeof prefixOrType === 'string' && isConfigType(prefixOrType as ConfigNodeType))
+    ? prefixOrType.toUpperCase()
+    : prefixOrType
   const prefix = base.replace(/_\d+$/, '')
 
   for (let n = 1; ; n++) {
