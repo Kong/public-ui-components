@@ -465,8 +465,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     const pendingGroupLayouts = new Map<GroupId, { position: XYPosition, dimensions: NodeDimensions }>()
     const pendingParentUpdates = new Set<GroupId>()
     let layoutFlushPromise: Promise<void> | undefined
-    const draggingGroups = new Set<GroupId>()
-    const draggingNodes = new Set<NodeId>()
+    let draggingNodeId: NodeId | GroupId | undefined
 
     function calculateGroupLayout(group: GroupInstance): { position: XYPosition, dimensions: NodeDimensions } | undefined {
       if (group.phase !== phase) return undefined
@@ -651,15 +650,15 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     // Helper function to check if a group should skip layout updates
     function shouldSkipGroupUpdate(groupId: GroupId, memberIds: NodeId[]): boolean {
       // Skip if group itself is being dragged
-      if (draggingGroups.has(groupId)) return true
+      if (draggingNodeId === groupId) return true
 
       // Skip if any member is being dragged
-      if (memberIds.some(id => draggingNodes.has(id))) return true
+      if (memberIds.some(id => draggingNodeId === id)) return true
 
       // Skip if any child group is being dragged
       for (const memberId of memberIds) {
         const childGroups = groupsByOwner.value.get(memberId)
-        if (childGroups?.some(g => draggingGroups.has(g.id))) {
+        if (childGroups?.some(g => draggingNodeId === g.id)) {
           return true
         }
       }
@@ -930,7 +929,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       if (isGroupId(node.id)) {
         const groupId = node.id as GroupId
-        draggingGroups.add(groupId)
+        draggingNodeId = groupId
         const group = groupMapById.value.get(groupId)
         if (!group) return
 
@@ -951,7 +950,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
 
       const nodeId = node.id as NodeId
-      draggingNodes.add(nodeId)
+      draggingNodeId = nodeId
       const parentId = node.parentNode
 
       let absolutePosition: XYPosition = { ...node.position }
@@ -984,13 +983,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       if (isGroupId(node.id)) {
         const groupId = node.id as GroupId
-        draggingGroups.delete(groupId)
+        draggingNodeId = undefined
         historyCommit(`drag-group:${groupId}`)
         return
       }
 
       const nodeId = node.id as NodeId
-      draggingNodes.delete(nodeId)
+      draggingNodeId = undefined
       const parentId = node.parentNode
 
       let absolutePosition: XYPosition = { ...node.position }

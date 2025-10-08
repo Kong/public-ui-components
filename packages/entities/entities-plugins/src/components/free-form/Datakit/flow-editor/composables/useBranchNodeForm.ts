@@ -232,10 +232,12 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
     }
 
     return state.value.nodes
-      .filter(node => node.id !== nodeId)
-      .filter(node => !isImplicitType(node.type))
-      .filter(node => node.phase === owner.phase)
-      .filter(node => !branchGroups.wouldCreateCycle(owner.id, node.id))
+      .filter(node =>
+        node.id !== nodeId &&
+        !isImplicitType(node.type) &&
+        node.phase === owner.phase &&
+        !branchGroups.wouldCreateCycle(owner.id, node.id),
+      )
       .map(node => ({ value: node.id, label: node.name }))
   })
 
