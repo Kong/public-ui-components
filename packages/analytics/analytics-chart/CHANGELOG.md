@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.6.3...@kong-ui-public/analytics-chart@10.7.0) (2025-10-08)
+
+
+### Features
+
+* threshold highlighting highlights things that start over a threshold ([#2541](https://github.com/Kong/public-ui-components/issues/2541)) ([d713643](https://github.com/Kong/public-ui-components/commit/d713643570d097f433dc3d932d4486de8d91c266))
+
+
+
+
+
 ## [10.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.6.2...@kong-ui-public/analytics-chart@10.6.3) (2025-10-07)
 
 
