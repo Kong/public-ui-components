@@ -62,7 +62,7 @@ export default function useMetricUtils({
     return '#b3f1ff'
   }
 
-  const formatMetric = (linearMetric: number) => {
+  const formatMetric = (linearMetric: number): string => {
     const truncated = Math.trunc(linearMetric)
 
     if (shouldTuncateMetric.value) {

@@ -33,12 +33,19 @@
       :metric="metric"
       :title="legendTitle"
     />
+    <MapTooltip
+      v-if="showTooltip && tooltipData"
+      :data="tooltipData"
+      :left="tooltipPosition.left"
+      :show-value="showTooltipValue"
+      :top="tooltipPosition.top"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, watch, computed, useId, toRef } from 'vue'
-import { Map, Popup } from 'maplibre-gl'
+import { Map } from 'maplibre-gl'
 import type { ColorSpecification, DataDrivenPropertyValueSpecification, ExpressionSpecification, LngLatBoundsLike, MapOptions } from 'maplibre-gl'
 import type { MapFeatureCollection, MetricUnits } from '../types'
 import type { Feature, MultiPolygon, Geometry, GeoJsonProperties, FeatureCollection } from 'geojson'
@@ -52,6 +59,8 @@ import { debounce } from '../utils'
 import { AnalyticsIcon } from '@kong/icons'
 import { KUI_ICON_COLOR_NEUTRAL, KUI_ICON_SIZE_60 } from '@kong/design-tokens'
 import MapLegend from './MapLegend.vue'
+import type { MapTooltipData } from './MapTooltip.vue'
+import MapTooltip from './MapTooltip.vue'
 
 const countriesPbfUrlPromise = import('../countries-simple-geo.pbf?url').then(m => m.default)
 
@@ -82,9 +91,12 @@ const { getColor, formatMetric, legendData } = composables.useMetricUtils({
   countryMetrics: toRef(() => countryMetrics),
   metric: toRef(() => metric),
 })
+const tooltipData = ref<MapTooltipData>()
 const mapContainerId = useId()
 const map = ref<Map>()
 const geoJsonData = ref<MapFeatureCollection | null>(null)
+const tooltipPosition = ref({ left: '0px', top: '0px' })
+const showTooltip = ref(false)
 const showNoLocationOverlay = computed(() => {
   return Object.keys(countryMetrics).length === 0 && !fitToCountry
 })
@@ -262,11 +274,6 @@ onMounted(async () => {
         },
       })
 
-      const popup = new Popup({
-        closeButton: false,
-        closeOnClick: false,
-      })
-
       map.value?.on('mousemove', 'countries-layer', (e) => {
         const feature = e.features?.[0]
         if (feature) {
@@ -275,23 +282,24 @@ onMounted(async () => {
           const metric = countryMetrics[lookup]
 
           if (metric !== undefined) {
-            let popupHtml
-
-            if (showTooltipValue) {
-              popupHtml = `<strong data-testid="geo-map-tooltip">${admin}</strong>: ${formatMetric(metric)} ${i18n.t(`metricUnits.${metricUnit}`, { plural: metric > 1 ? 's' : '' })}`
-            } else {
-              popupHtml = `<strong data-testid="geo-map-tooltip">${admin}</strong>`
+            tooltipData.value = {
+              label: admin,
+              color: getColor(metric),
+              value: formatMetric(metric),
+              unit: metricUnit,
             }
 
-            popup.setLngLat(e.lngLat).setHTML(popupHtml).addTo(map.value as Map)
-          } else {
-            popup.remove()
+            showTooltip.value = true
+            tooltipPosition.value = {
+              left: `${e.point.x}px`,
+              top: `${e.point.y}px`,
+            }
           }
         }
       })
 
       map.value?.on('mouseleave', 'countries-layer', () => {
-        popup.remove()
+        showTooltip.value = false
       })
 
       map.value?.on('move', debouncedEmitBounds)
