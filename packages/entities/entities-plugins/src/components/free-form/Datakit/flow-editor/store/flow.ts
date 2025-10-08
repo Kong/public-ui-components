@@ -1,16 +1,13 @@
 import type { Node as DagreNode } from '@dagrejs/dagre'
-import type { Connection, Edge, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
+import type { Connection, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
 import type {
-  EdgeData,
   EdgeId,
   EdgeInstance,
   FieldId,
   BranchName,
   GroupId,
-  GroupInstance,
-  NodeDimensions,
   NodeId,
   NodeInstance,
   NodePhase,
@@ -18,14 +15,21 @@ import type {
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 
 import dagre from '@dagrejs/dagre'
+import type { FlowEdge } from '../../types'
+import { useBranchLayout } from '../composables/useBranchLayout'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
-import { computed, nextTick, toValue, watch } from 'vue'
+import { computed, toValue, watch } from 'vue'
 
-import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK, KUI_SPACE_90 } from '@kong/design-tokens'
+import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
-import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
+import {
+  DK_NODE_PROPERTIES_PANEL_WIDTH,
+  DK_FLOW_Z_LAYER_STEP,
+  DK_FLOW_EDGE_Z_OFFSET,
+  DK_FLOW_NODE_Z_OFFSET,
+} from '../../constants'
 import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
 import { useOptionalConfirm } from '../composables/useConflictConfirm'
 import {
@@ -94,29 +98,6 @@ const BORDER_COLORS: Record<EdgeState, string> = {
   hover: KUI_COLOR_BORDER_PRIMARY_WEAK,
   selected: KUI_COLOR_BORDER_PRIMARY,
 }
-
-const BRANCH_GROUP_PADDING = parseInt(KUI_SPACE_90, 10)
-const BRANCH_GROUP_MIN_WIDTH = 160
-const BRANCH_GROUP_MIN_HEIGHT = 96
-
-const Z_LAYER_STEP = 100
-const GROUP_Z_OFFSET = 0
-const EDGE_Z_OFFSET = 30
-const BRANCH_EDGE_Z_OFFSET = 40
-const NODE_Z_OFFSET = 50
-
-export type FlowGroupNodeData = GroupInstance & {
-  memberIds: NodeId[]
-}
-
-type BranchEdgeData = {
-  type: 'branch'
-  ownerId: NodeId
-  branch: BranchName
-  groupId: GroupId
-}
-
-type FlowEdge = Edge<EdgeData | BranchEdgeData>
 
 type EdgeState = 'default' | 'hover' | 'selected'
 let selectedEdgeId: string | undefined
@@ -235,8 +216,6 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       state,
       commit: historyCommit,
       moveNode,
-      moveGroup,
-      setGroupLayout,
       selectNode: selectStoreNode,
       removeNode,
       getNodeById,
@@ -259,68 +238,24 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
     }
 
-    const groupIdSet = computed(() => new Set(state.value.groups.map((group) => group.id)))
-    const groupMapById = computed(
-      () => new Map<GroupId, GroupInstance>(state.value.groups.map((group) => [group.id, group])),
-    )
-
-    const isGroupId = (id?: string): id is GroupId =>
-      !!id && groupIdSet.value.has(id as GroupId)
-
-    const isBranchEdgeId = (id?: string) => !!id && id.startsWith('branch:')
-
-    function getGroupMembers(group: GroupInstance): NodeInstance[] {
-      const resolvedMembers: NodeInstance[] = []
-      for (const memberId of group.memberIds) {
-        const member = getNodeById(memberId)
-        if (member) {
-          resolvedMembers.push(member)
-        }
-      }
-      return resolvedMembers
-    }
-
-    const memberGroupMap = computed(() => {
-      const map = new Map<NodeId, GroupInstance>()
-      for (const group of state.value.groups) {
-        if (group.phase !== phase) continue
-        if (!group.position) continue
-        const members = getGroupMembers(group)
-          .filter((member) => member.phase === phase && !member.hidden)
-        if (!members.length) continue
-        for (const member of members) {
-          map.set(member.id, group)
-        }
-      }
-      return map
+    const branchLayout = useBranchLayout({
+      phase,
+      readonly,
+      flowId,
     })
-
-    const groupsByOwner = computed(() => {
-      const map = new Map<NodeId, GroupInstance[]>()
-      for (const group of state.value.groups) {
-        if (!map.has(group.ownerId)) {
-          map.set(group.ownerId, [])
-        }
-        map.get(group.ownerId)!.push(group)
-      }
-      return map
-    })
-
-    function getNodeDepth(nodeId: NodeId): number {
-      let depth = 0
-      const visited = new Set<GroupId>()
-      let currentGroup = memberGroupMap.value.get(nodeId)
-      while (currentGroup && !visited.has(currentGroup.id)) {
-        depth++
-        visited.add(currentGroup.id)
-        currentGroup = memberGroupMap.value.get(currentGroup.ownerId)
-      }
-      return depth
-    }
-
-    function getGroupDepth(group: GroupInstance): number {
-      return getNodeDepth(group.ownerId)
-    }
+    const {
+      groupMapById,
+      memberGroupMap,
+      groupNodes,
+      branchEdges,
+      isGroupId,
+      isBranchEdgeId,
+      updateGroupLayout,
+      flushPendingGroupLayouts,
+      translateGroupTree,
+      setDraggingNode,
+      getNodeDepth,
+    } = branchLayout
 
     const nodes = computed(() =>
       state.value.nodes
@@ -344,46 +279,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             data: node,
             deletable: !isImplicitNode(node),
             parentNode: parentGroup && parentGroup.position ? parentGroup.id : undefined,
-            zIndex: depth * Z_LAYER_STEP + NODE_Z_OFFSET,
+            zIndex: depth * DK_FLOW_Z_LAYER_STEP + DK_FLOW_NODE_Z_OFFSET,
           }
         }),
     )
-
-    const groupNodes = computed(() => {
-      const results: Array<Node<FlowGroupNodeData>> = []
-
-      for (const group of state.value.groups) {
-        const owner = getNodeById(group.ownerId)
-        if (!owner || owner.phase !== phase) continue
-
-        const position = group.position
-        const dimensions = group.dimensions
-        // Groups intentionally render only when persisted UI coordinates exist. This keeps
-        // layout purely data-driven and avoids generating implicit positions that we cannot
-        // serialize back into `DatakitUIData`.
-        if (!position || !dimensions) continue
-
-        const members = getGroupMembers(group).filter((member) => member.phase === phase && !member.hidden)
-        const depth = getGroupDepth(group)
-
-        results.push({
-          id: group.id,
-          type: 'group',
-          position,
-          width: dimensions.width,
-          height: dimensions.height,
-          data: {
-            ...group,
-            memberIds: members.map((member) => member.id),
-          },
-          draggable: !readonly,
-          selectable: false,
-          zIndex: depth * Z_LAYER_STEP + GROUP_Z_OFFSET,
-        })
-      }
-
-      return results
-    })
 
     const configEdges = computed<FlowEdge[]>(() =>
       state.value.edges
@@ -413,302 +312,15 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             markerEnd: MarkerType.ArrowClosed,
             data: edge,
             updatable: !readonly,
-            zIndex: depth * Z_LAYER_STEP + EDGE_Z_OFFSET,
+            zIndex: depth * DK_FLOW_Z_LAYER_STEP + DK_FLOW_EDGE_Z_OFFSET,
           })
         }),
     )
-
-    const branchEdges = computed<FlowEdge[]>(() => {
-      const results: FlowEdge[] = []
-
-      for (const group of state.value.groups) {
-        if (group.phase !== phase) continue
-        if (!group.position || !group.dimensions) continue
-
-        const owner = getNodeById(group.ownerId)
-        if (!owner || owner.phase !== phase || owner.hidden) continue
-
-        const members = getGroupMembers(group)
-          .filter((member) => member.phase === phase && !member.hidden)
-        if (!members.length) continue
-
-        const depth = Math.max(getNodeDepth(owner.id), getGroupDepth(group))
-
-        results.push(updateEdgeStyle({
-          id: `branch:${group.id}`,
-          source: owner.id,
-          target: group.id,
-          sourceHandle: `branch@${group.branch}`,
-          targetHandle: 'input',
-          markerEnd: MarkerType.ArrowClosed,
-          selectable: false,
-          focusable: false,
-          updatable: false,
-          data: {
-            type: 'branch',
-            ownerId: owner.id,
-            branch: group.branch,
-            groupId: group.id,
-          },
-          zIndex: depth * Z_LAYER_STEP + BRANCH_EDGE_Z_OFFSET,
-        }))
-      }
-
-      return results
-    })
 
     const edges = computed(() => [
       ...branchEdges.value,
       ...configEdges.value,
     ])
-
-    const pendingGroupLayouts = new Map<GroupId, { position: XYPosition, dimensions: NodeDimensions }>()
-    const pendingParentUpdates = new Set<GroupId>()
-    let layoutFlushPromise: Promise<void> | undefined
-    let draggingNodeId: NodeId | GroupId | undefined
-
-    function calculateGroupLayout(group: GroupInstance): { position: XYPosition, dimensions: NodeDimensions } | undefined {
-      if (group.phase !== phase) return undefined
-
-      const members = getGroupMembers(group)
-        .filter((member) => member.phase === phase && !member.hidden)
-      if (!members.length) return undefined
-
-      let x1 = Number.POSITIVE_INFINITY
-      let y1 = Number.POSITIVE_INFINITY
-      let x2 = Number.NEGATIVE_INFINITY
-      let y2 = Number.NEGATIVE_INFINITY
-
-      for (const member of members) {
-        const vueNode = findNode(member.id)
-        const dimensions = vueNode?.dimensions
-        const width = dimensions?.width ?? 0
-        const height = dimensions?.height ?? 0
-        if (width <= 0 || height <= 0) {
-          return undefined
-        }
-
-        const computedPosition = vueNode?.computedPosition
-        const absoluteX = computedPosition?.x ?? member.position.x
-        const absoluteY = computedPosition?.y ?? member.position.y
-
-        x1 = Math.min(x1, absoluteX)
-        y1 = Math.min(y1, absoluteY)
-        x2 = Math.max(x2, absoluteX + width)
-        y2 = Math.max(y2, absoluteY + height)
-
-        const childGroups = groupsByOwner.value.get(member.id) ?? []
-        for (const child of childGroups) {
-          if (child.phase !== phase) continue
-          const pendingLayout = pendingGroupLayouts.get(child.id)
-          const childPosition = pendingLayout?.position ?? child.position
-          const childDimensions = pendingLayout?.dimensions ?? child.dimensions
-          if (!childPosition || !childDimensions) continue
-
-          x1 = Math.min(x1, childPosition.x)
-          y1 = Math.min(y1, childPosition.y)
-          x2 = Math.max(x2, childPosition.x + childDimensions.width)
-          y2 = Math.max(y2, childPosition.y + childDimensions.height)
-        }
-      }
-
-      if (!Number.isFinite(x1) || !Number.isFinite(y1) || !Number.isFinite(x2) || !Number.isFinite(y2)) {
-        return undefined
-      }
-
-      const paddedWidth = Math.max((x2 - x1) + BRANCH_GROUP_PADDING * 2, BRANCH_GROUP_MIN_WIDTH)
-      const paddedHeight = Math.max((y2 - y1) + BRANCH_GROUP_PADDING * 2, BRANCH_GROUP_MIN_HEIGHT)
-
-      const position: XYPosition = {
-        x: Math.round(x1 - BRANCH_GROUP_PADDING),
-        y: Math.round(y1 - BRANCH_GROUP_PADDING),
-      }
-      const dimensions: NodeDimensions = {
-        width: Math.round(paddedWidth),
-        height: Math.round(paddedHeight),
-      }
-
-      return { position, dimensions }
-    }
-
-    function applyPendingGroupLayouts() {
-      if (pendingGroupLayouts.size === 0) {
-        layoutFlushPromise = undefined
-        return
-      }
-
-      const applied: Array<{ id: GroupId, changed: boolean }> = []
-
-      pendingGroupLayouts.forEach((layout, id) => {
-        const changed = setGroupLayout(id, layout, false)
-        applied.push({ id, changed })
-      })
-
-      pendingGroupLayouts.clear()
-      layoutFlushPromise = undefined
-
-      for (const { id, changed } of applied) {
-        if (!changed) continue
-        const group = groupMapById.value.get(id)
-        if (!group) continue
-        const parent = memberGroupMap.value.get(group.ownerId)
-        if (parent) {
-          pendingParentUpdates.add(parent.id)
-        }
-      }
-
-      if (pendingParentUpdates.size > 0) {
-        const parentIds = Array.from(pendingParentUpdates)
-        pendingParentUpdates.clear()
-        for (const parentId of parentIds) {
-          updateGroupLayout(parentId)
-        }
-      }
-    }
-
-    function flushPendingGroupLayouts() {
-      if (pendingGroupLayouts.size === 0) return
-      if (layoutFlushPromise) return
-
-      layoutFlushPromise = nextTick().then(applyPendingGroupLayouts)
-    }
-
-    function updateGroupLayout(groupId: GroupId) {
-      const group = groupMapById.value.get(groupId)
-      if (!group) return
-
-      const layout = calculateGroupLayout(group)
-      if (!layout) return
-
-      pendingGroupLayouts.set(groupId, layout)
-      flushPendingGroupLayouts()
-    }
-
-    function translateGroupTree(groupId: GroupId, targetPosition: XYPosition, deltaX: number, deltaY: number) {
-      const rootGroup = groupMapById.value.get(groupId)
-      if (!rootGroup) return
-
-      if (!rootGroup.position) {
-        moveGroup(groupId, targetPosition, false)
-        updateGroupLayout(groupId)
-        return
-      }
-
-      if (deltaX === 0 && deltaY === 0) {
-        moveGroup(groupId, targetPosition, false)
-        return
-      }
-
-      moveGroup(groupId, targetPosition, false)
-
-      const groupQueue: GroupId[] = [groupId]
-      const visitedGroups = new Set<GroupId>([groupId])
-      const visitedNodes = new Set<NodeId>()
-      const groupsToUpdate = new Set<GroupId>([groupId])
-
-      while (groupQueue.length) {
-        const currentGroupId = groupQueue.shift()!
-        const currentGroup = groupMapById.value.get(currentGroupId)
-        if (!currentGroup) continue
-
-        const members = getGroupMembers(currentGroup)
-          .filter((member) => member.phase === phase && !member.hidden)
-
-        for (const member of members) {
-          if (!visitedNodes.has(member.id)) {
-            moveNode(member.id, {
-              x: member.position.x + deltaX,
-              y: member.position.y + deltaY,
-            }, false)
-            visitedNodes.add(member.id)
-          }
-
-          const childGroups = groupsByOwner.value.get(member.id) ?? []
-          for (const child of childGroups) {
-            if (visitedGroups.has(child.id)) continue
-
-            const childInstance = groupMapById.value.get(child.id)
-            if (childInstance?.position) {
-              moveGroup(child.id, {
-                x: childInstance.position.x + deltaX,
-                y: childInstance.position.y + deltaY,
-              }, false)
-            }
-
-            visitedGroups.add(child.id)
-            groupQueue.push(child.id)
-            groupsToUpdate.add(child.id)
-          }
-        }
-      }
-
-      // Don't update group layouts during drag to avoid flickering
-      // Layouts will be recalculated after drag stops if needed
-      // groupsToUpdate.forEach(updateGroupLayout)
-    }
-
-    // Helper function to check if a group should skip layout updates
-    function shouldSkipGroupUpdate(groupId: GroupId, memberIds: NodeId[]): boolean {
-      // Skip if group itself is being dragged
-      if (draggingNodeId === groupId) return true
-
-      // Skip if any member is being dragged
-      if (memberIds.some(id => draggingNodeId === id)) return true
-
-      // Skip if any child group is being dragged
-      for (const memberId of memberIds) {
-        const childGroups = groupsByOwner.value.get(memberId)
-        if (childGroups?.some(g => draggingNodeId === g.id)) {
-          return true
-        }
-      }
-
-      return false
-    }
-
-    // Watch group membership AND member dimensions to trigger layout updates
-    // Uses signature-based deduplication to prevent infinite loops
-    const lastLayoutSignatures = new Map<GroupId, string>()
-
-    watch(
-      () => {
-        // Only process groups in the current phase
-        const relevantGroups = state.value.groups.filter(g => g.phase === phase)
-
-        return relevantGroups.map(g => {
-          // Build a signature string that captures both membership and dimensions
-          const memberSignatures = g.memberIds.map(id => {
-            const node = findNode(id)
-            const w = Math.round(node?.dimensions?.width ?? 0)
-            const h = Math.round(node?.dimensions?.height ?? 0)
-            return `${id}:${w}x${h}`
-          })
-
-          return {
-            id: g.id,
-            memberIds: g.memberIds, // Pass through for skip check
-            signature: memberSignatures.join(','),
-          }
-        })
-      },
-      (groups) => {
-        for (const group of groups) {
-          // Skip groups that should not be updated (dragging, etc.)
-          if (shouldSkipGroupUpdate(group.id, group.memberIds)) continue
-
-          // Only update if the signature actually changed
-          const lastSignature = lastLayoutSignatures.get(group.id)
-          if (lastSignature !== group.signature) {
-            lastLayoutSignatures.set(group.id, group.signature)
-            updateGroupLayout(group.id)
-          }
-        }
-      },
-      {
-        deep: true,
-        flush: 'post', // Run after DOM updates to avoid conflicts with VueFlow
-      },
-    )
 
     // Moved away from VueFlow's `:nodes` and `:edges` props because
     // they have race conditions while being updated simultaneously.
@@ -929,7 +541,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       if (isGroupId(node.id)) {
         const groupId = node.id as GroupId
-        draggingNodeId = groupId
+        setDraggingNode(groupId)
         const group = groupMapById.value.get(groupId)
         if (!group) return
 
@@ -950,7 +562,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
 
       const nodeId = node.id as NodeId
-      draggingNodeId = nodeId
+      setDraggingNode(nodeId)
       const parentId = node.parentNode
 
       let absolutePosition: XYPosition = { ...node.position }
@@ -983,13 +595,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       if (isGroupId(node.id)) {
         const groupId = node.id as GroupId
-        draggingNodeId = undefined
+        setDraggingNode(undefined)
         historyCommit(`drag-group:${groupId}`)
         return
       }
 
       const nodeId = node.id as NodeId
-      draggingNodeId = undefined
+      setDraggingNode(undefined)
       const parentId = node.parentNode
 
       let absolutePosition: XYPosition = { ...node.position }
