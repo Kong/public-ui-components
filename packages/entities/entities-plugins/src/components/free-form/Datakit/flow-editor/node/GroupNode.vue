@@ -15,7 +15,7 @@
 import { Handle, Position } from '@vue-flow/core'
 import { computed } from 'vue'
 
-import type { FlowGroupNodeData } from '../store/flow'
+import type { FlowGroupNodeData } from '../../types'
 
 const props = defineProps<{
   data: FlowGroupNodeData
