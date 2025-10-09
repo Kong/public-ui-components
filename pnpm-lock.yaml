@@ -78,7 +78,7 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       cypress:
-        specifier: ^13.15.1
+        specifier: ^13.15.2
         version: 13.15.2
       cz-conventional-changelog:
         specifier: ^3.3.0
