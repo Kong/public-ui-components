@@ -1,6 +1,6 @@
 import type { KeySpec } from './flow-editor/utils'
 
-import { KUI_SPACE_40 } from '@kong/design-tokens'
+import { KUI_SPACE_40, KUI_SPACE_90 } from '@kong/design-tokens'
 
 export const DK_HEADER_HEIGHT = 44
 export const DK_SIDE_PANEL_WIDTH = 220
@@ -69,3 +69,7 @@ export const DK_FLOW_GROUP_Z_OFFSET = 0
 export const DK_FLOW_EDGE_Z_OFFSET = 1
 export const DK_FLOW_BRANCH_EDGE_Z_OFFSET = 2
 export const DK_FLOW_NODE_Z_OFFSET = 3
+
+export const DK_BRANCH_GROUP_PADDING = parseInt(KUI_SPACE_90, 10)
+export const DK_BRANCH_GROUP_MIN_WIDTH = 160
+export const DK_BRANCH_GROUP_MIN_HEIGHT = 96

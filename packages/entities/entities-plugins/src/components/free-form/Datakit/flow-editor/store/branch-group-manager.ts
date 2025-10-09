@@ -29,7 +29,7 @@ import { isImplicitType, isNodeId } from '../node/node'
 import { getBranchesFromMeta, makeGroupId, setsEqual, toGroupInstance } from './helpers'
 import type { TaggedHistory } from './history'
 
-export interface CommitOptions {
+interface CommitOptions {
   /** Whether to commit the change to history. Defaults to true. */
   commit?: boolean
   /** Optional tag for the history commit. */
@@ -40,7 +40,7 @@ interface BranchGroupManagerContext {
   state: Ref<EditorState>
   groupMapById: ComputedRef<Map<GroupId, GroupInstance>>
   getNodeById: (id: NodeId) => NodeInstance | undefined
-  history: Pick<TaggedHistory<EditorState>, 'commit'>
+  history: TaggedHistory<EditorState>
 }
 
 /**

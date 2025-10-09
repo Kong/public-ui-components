@@ -1,6 +1,5 @@
 import type { Node, XYPosition } from '@vue-flow/core'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
-import { KUI_SPACE_90 } from '@kong/design-tokens'
 import { computed, nextTick, ref, watch } from 'vue'
 
 import type {
@@ -16,11 +15,10 @@ import {
   DK_FLOW_Z_LAYER_STEP,
   DK_FLOW_GROUP_Z_OFFSET,
   DK_FLOW_BRANCH_EDGE_Z_OFFSET,
+  DK_BRANCH_GROUP_PADDING,
+  DK_BRANCH_GROUP_MIN_WIDTH,
+  DK_BRANCH_GROUP_MIN_HEIGHT,
 } from '../../constants'
-
-const BRANCH_GROUP_PADDING = parseInt(KUI_SPACE_90, 10)
-const BRANCH_GROUP_MIN_WIDTH = 160
-const BRANCH_GROUP_MIN_HEIGHT = 96
 
 export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase, readonly?: boolean, flowId?: string }) {
   const { findNode } = useVueFlow(flowId)
@@ -233,13 +231,13 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       return undefined
     }
 
-    const paddedWidth = Math.max((x2 - x1) + BRANCH_GROUP_PADDING * 2, BRANCH_GROUP_MIN_WIDTH)
-    const paddedHeight = Math.max((y2 - y1) + BRANCH_GROUP_PADDING * 2, BRANCH_GROUP_MIN_HEIGHT)
+    const paddedWidth = Math.max((x2 - x1) + DK_BRANCH_GROUP_PADDING * 2, DK_BRANCH_GROUP_MIN_WIDTH)
+    const paddedHeight = Math.max((y2 - y1) + DK_BRANCH_GROUP_PADDING * 2, DK_BRANCH_GROUP_MIN_HEIGHT)
 
     return {
       position: {
-        x: Math.round(x1 - BRANCH_GROUP_PADDING),
-        y: Math.round(y1 - BRANCH_GROUP_PADDING),
+        x: Math.round(x1 - DK_BRANCH_GROUP_PADDING),
+        y: Math.round(y1 - DK_BRANCH_GROUP_PADDING),
       },
       dimensions: {
         width: Math.round(paddedWidth),
