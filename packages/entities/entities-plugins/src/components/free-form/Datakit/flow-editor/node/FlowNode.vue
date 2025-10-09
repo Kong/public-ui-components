@@ -568,6 +568,8 @@ $io-column-min-width: 80px;
 $io-column-min-width-no-fields: 70px;
 $branch-handle-size: 4px;
 
+$one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
+
 .dk-flow-node {
   background-color: $kui-color-background;
   border: 1px solid $kui-color-border-neutral-weak;
@@ -777,7 +779,7 @@ $branch-handle-size: 4px;
       }
 
       :deep(.vue-flow__handle) {
-        background-color: $kui-color-background-neutral;
+        background-color: transparent;
         border: none;
         border-radius: 0;
         height: $branch-handle-size;
@@ -787,6 +789,17 @@ $branch-handle-size: 4px;
         top: 50%;
         transform: translate(50%, -50%) rotate(45deg);
         width: $branch-handle-size;
+
+        &::after {
+          background-color: $kui-color-background-neutral;
+          content: "";
+          display: block;
+          height: 100%;
+          left: -$one-over-sqrt2-px;
+          position: relative;
+          top: -$one-over-sqrt2-px;
+          width: 100%;
+        }
       }
     }
   }

@@ -221,7 +221,6 @@ export type PendingGroupLayout = {
 export interface UIGroup {
   name: GroupName
   position: XYPosition
-  dimensions?: NodeDimensions
 }
 
 export interface EditorState {

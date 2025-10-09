@@ -149,12 +149,11 @@ export function initEditorState(
         const layout = uiGroup
           ? {
             position: clone(uiGroup.position),
-            dimensions: uiGroup.dimensions ? clone(uiGroup.dimensions) : undefined,
           }
           : undefined
         const group = toGroupInstance(node.id, branchName, node.phase, ids, layout)
         groups.push(group)
-        if ((!uiGroup || !uiGroup.dimensions) && !isUIDataStale) {
+        if (!uiGroup && !isUIDataStale) {
           isUIDataStale = true
         }
       } else {

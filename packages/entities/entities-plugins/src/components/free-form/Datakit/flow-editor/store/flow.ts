@@ -254,7 +254,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         .map<Node<NodeInstance>>((node) => {
           const parentGroup = memberGroupMap.value.get(node.id)
           const parentPosition = parentGroup?.position
-          const position = parentGroup && parentPosition
+          const parentDimensions = parentGroup?.dimensions
+          const position = parentGroup && parentPosition && parentDimensions
             ? {
               x: node.position.x - parentPosition.x,
               y: node.position.y - parentPosition.y,
@@ -262,7 +263,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             : node.position
 
           const depth = getNodeDepth(node.id)
-          const zLayerDepth = depth + maxGroupDepth.value + 1
+          const parentResolved = !!(parentGroup && parentPosition && parentDimensions)
+          const zLayerDepth = (parentResolved ? depth : 0) + maxGroupDepth.value + 1
 
           return {
             id: node.id,
@@ -270,7 +272,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             position,
             data: node,
             deletable: !isImplicitNode(node),
-            parentNode: parentGroup && parentGroup.position ? parentGroup.id : undefined,
+            parentNode: parentResolved ? parentGroup.id : undefined,
             zIndex: zLayerDepth * DK_FLOW_Z_LAYER_STEP + DK_FLOW_NODE_Z_OFFSET,
           }
         }),

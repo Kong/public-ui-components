@@ -674,7 +674,6 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         uiGroups.push({
           name: makeGroupName(owner.name, group.branch),
           position: clone(position),
-          dimensions: group.dimensions ? clone(group.dimensions) : undefined,
         })
       }
       return uiGroups
