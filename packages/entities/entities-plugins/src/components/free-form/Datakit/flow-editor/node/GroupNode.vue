@@ -27,9 +27,12 @@ const handlePosition = computed(() => reversed.value ? Position.Right : Position
 
 <style scoped lang="scss">
 @use 'sass:color';
+@use "sass:math";
 
 $opacity: 0.2;
 $branch-handle-size: 4px;
+
+$one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
 
 .dk-branch-group-node {
   background: rgba($kui-color-background-neutral-weak, $opacity);
@@ -40,7 +43,7 @@ $branch-handle-size: 4px;
   width: 100%;
 
   :deep(.vue-flow__handle) {
-    background-color: $kui-color-background-neutral;
+    background-color: transparent;
     border: none;
     border-radius: 0;
     height: $branch-handle-size;
@@ -51,6 +54,17 @@ $branch-handle-size: 4px;
     top: 50%;
     transform: translate(-50%, -50%) rotate(45deg);
     width: $branch-handle-size;
+
+    &::after {
+      background-color: $kui-color-background-neutral;
+      content: "";
+      display: block;
+      height: 100%;
+      left: -$one-over-sqrt2-px;
+      position: relative;
+      top: -$one-over-sqrt2-px;
+      width: 100%;
+    }
   }
 
   &.reversed {
