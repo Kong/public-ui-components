@@ -79,6 +79,8 @@ const {
 async function onBranchChange(branch: BranchName, value: string | string[] | null) {
   const success = await updateBranchMembers(branch, value)
   if (!success) {
+    // force re-render to reset the select field if user canceled the change
+    // on conflict (e.g. selecting the same field for both branches)
     formRenderKey.value += 1
   }
 }
