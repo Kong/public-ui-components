@@ -16,6 +16,7 @@ import type {
   UINode,
 } from '../../types'
 import { isImplicitName, isImplicitType } from '../node/node'
+import { pluginDataToVaultConfig, pluginDataToVaultOutputFields } from '../node/vault'
 import {
   clone,
   createId,
@@ -42,7 +43,6 @@ export function initEditorState(
 ): EditorState {
   const configNodes = pluginData.config?.nodes ?? []
   const uiNodes = pluginData.__ui_data?.nodes ?? []
-  const resources = pluginData.config?.resources ?? {}
 
   const uiNodesMap = new Map<NodeName, UINode>(
     uiNodes.map((uiNode) => [uiNode.name, uiNode]),
@@ -92,7 +92,12 @@ export function initEditorState(
     if (!uiNode && !isUIDataStale) {
       isUIDataStale = true
     }
-    const node = buildNodeInstance(configNode.type, configNode, uiNode, resources)
+    const node = buildNodeInstance({
+      type: configNode.type,
+      configNode,
+      uiNode,
+      pluginData,
+    })
     nodes.push(node)
     nodesMap.set(node.name, node)
   }
@@ -108,7 +113,11 @@ export function initEditorState(
         uiNode = makeDefaultImplicitUINode(implicitName)
       }
 
-      const node = buildNodeInstance(implicitName, undefined, uiNode, resources)
+      const node = buildNodeInstance({
+        type: implicitName,
+        uiNode,
+        pluginData,
+      })
       nodes.push(node)
       nodesMap.set(node.name, node)
     }
@@ -195,20 +204,34 @@ function getDefaultPhase(type: NodeType): NodePhase {
   return 'request'
 }
 
-export function buildNodeInstance(
-  type: NodeType,
-  configNode?: ConfigNode,
-  uiNode?: UINode,
-  resources?: DatakitConfig['resources'],
-): NodeInstance {
+export function buildNodeInstance({
+  type,
+  configNode,
+  uiNode,
+  pluginData,
+}: {
+  type: NodeType
+  configNode?: ConfigNode
+  uiNode?: UINode
+  pluginData: DatakitPluginData
+}): NodeInstance {
   return makeNodeInstance({
     type,
     name: configNode?.name,
     phase: uiNode?.phase ?? getDefaultPhase(type),
     position: uiNode?.position,
-    fields: resolveFields(type, uiNode, configNode, resources),
+    fields: resolveFields({
+      type,
+      uiNode,
+      configNode,
+      pluginData,
+    }),
     hidden: uiNode?.hidden,
-    config: configNode ? extractConfig(configNode) : undefined,
+    config: resolveConfig({
+      type,
+      configNode,
+      pluginData,
+    }),
   })
 }
 
@@ -281,12 +304,17 @@ export function collectConnectionsFromConfigNode(
  *   from an existing config), fall back to the config node’s inputs/outputs.
  * - If the config node is of type `static`, also expose its values as output fields.
  */
-function resolveFields(
-  type: NodeType,
-  uiNode?: UINode,
-  configNode?: ConfigNode,
-  resources?: DatakitConfig['resources'],
-): MakeNodeInstancePayload['fields'] | undefined {
+function resolveFields({
+  type,
+  uiNode,
+  configNode,
+  pluginData,
+}: {
+  type: NodeType
+  uiNode?: UINode
+  configNode?: ConfigNode
+  pluginData: DatakitPluginData
+}): MakeNodeInstancePayload['fields'] | undefined {
   const meta = getNodeMeta(type)
   const io = meta?.io
   if (!io) return undefined
@@ -318,15 +346,24 @@ function resolveFields(
       if (out.size) fields.output = Array.from(out)
     }
 
-    if (type === 'vault') fields.output = genVaultOutputFields(resources)
+    if (type === 'vault') fields.output = pluginDataToVaultOutputFields(pluginData)
   }
 
   return Object.keys(fields).length ? fields : undefined
 }
 
-function genVaultOutputFields(resources: DatakitConfig['resources']): FieldName[] {
-  if (resources?.vault) {
-    return Object.keys(resources.vault) as FieldName[]
+function resolveConfig({
+  type,
+  configNode,
+  pluginData,
+}: {
+  type: NodeType
+  configNode?: ConfigNode
+  pluginData: DatakitPluginData
+}): Record<string, unknown> | undefined {
+  if (type === 'vault') {
+    return pluginDataToVaultConfig(pluginData)
   }
-  return []
+
+  return configNode ? extractConfig(configNode) : undefined
 }
