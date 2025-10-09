@@ -230,7 +230,7 @@
           </div>
           <Handle
             :id="`branch@${branch}`"
-            :connectable="!readonly"
+            :connectable="false"
             :position="branchPosition"
             type="source"
           />
