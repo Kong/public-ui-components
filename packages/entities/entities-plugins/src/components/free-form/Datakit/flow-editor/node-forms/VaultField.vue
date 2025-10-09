@@ -44,13 +44,13 @@
               <KDropdownItem
                 @click="handleEdit(entry)"
               >
-                Edit
+                {{ t('plugins.free-form.datakit.flow_editor.panel_segments.resources.vault.edit') }}
               </KDropdownItem>
               <KDropdownItem
                 danger
                 @click="handleRemove(entry)"
               >
-                Remove
+                {{ t('plugins.free-form.datakit.flow_editor.panel_segments.resources.vault.delete') }}
               </KDropdownItem>
             </template>
           </KDropdown>

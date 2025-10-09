@@ -730,7 +730,9 @@
                 "title": "Vault secrets",
                 "add_button": "Add Vault resource",
                 "name_exists_error": "Vault name already exists",
-                "name_required_error": "Vault name is required"
+                "name_required_error": "Vault name is required",
+                "edit": "Edit",
+                "delete": "Delete"
               }
             }
           },
