@@ -28,12 +28,12 @@ const handlePosition = computed(() => reversed.value ? Position.Right : Position
 <style scoped lang="scss">
 @use 'sass:color';
 
-$opacity: 0.5;
+$opacity: 0.2;
 $branch-handle-size: 4px;
 
 .dk-branch-group-node {
-  background: color.adjust($kui-color-background-neutral-weakest, $alpha: 1 - $opacity);
-  border: 1px solid color.adjust($kui-color-border-disabled, $alpha: 1 - $opacity);
+  background: rgba($kui-color-background-neutral-weak, $opacity);
+  border: 1px solid rgba($kui-color-border-disabled, $opacity);
   border-radius: $kui-border-radius-20;
   height: 100%;
   position: relative;

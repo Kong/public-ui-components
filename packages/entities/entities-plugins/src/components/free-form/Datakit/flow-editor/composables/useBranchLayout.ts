@@ -408,7 +408,6 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     isGroupId,
     isBranchEdgeId,
     updateGroupLayout,
-    flushPendingGroupLayouts,
     translateGroupTree,
     setDraggingNode: (id?: NodeId | GroupId) => {
       draggingNodeId.value = id

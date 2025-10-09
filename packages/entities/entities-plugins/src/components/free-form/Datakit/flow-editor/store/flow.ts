@@ -6,7 +6,6 @@ import type {
   EdgeId,
   EdgeInstance,
   FieldId,
-  BranchName,
   GroupId,
   NodeId,
   NodeInstance,
@@ -39,7 +38,6 @@ import {
 } from '../constants'
 import { isImplicitNode } from '../node/node'
 import { useEditorStore } from './store'
-import { makeGroupId } from './helpers'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -53,12 +51,6 @@ function parseHandle(handle: string): { io: 'input' | 'output', field: FieldId }
     io: parsed[1] as 'input' | 'output',
     field: parsed[2] as FieldId,
   }
-}
-
-function parseBranchHandle(handle: string): BranchName | undefined {
-  const parsed = handle.match(/^branch@(.+)$/)
-  if (!parsed) return undefined
-  return parsed[1] as BranchName
 }
 
 /**
@@ -219,7 +211,6 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       selectNode: selectStoreNode,
       removeNode,
       getNodeById,
-      branchGroups,
       connectEdge,
       disconnectEdge,
       getInEdgesByNodeId,
@@ -251,7 +242,6 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       isGroupId,
       isBranchEdgeId,
       updateGroupLayout,
-      flushPendingGroupLayouts,
       translateGroupTree,
       setDraggingNode,
       getNodeDepth,
@@ -342,43 +332,6 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       const parsedSource = parseHandle(sourceHandle)
       const parsedTarget = parseHandle(targetHandle)
-      const branchHandle = parseBranchHandle(sourceHandle)
-
-      if (branchHandle) {
-        if (targetHandle !== 'input') {
-          reset()
-          toaster({
-            message: t('plugins.free-form.datakit.flow_editor.error.invalid_connection'),
-            appearance: 'danger',
-          })
-          return
-        }
-
-        const ownerId = source as NodeId
-        const memberId = target as NodeId
-
-        if (branchGroups.wouldCreateCycle(ownerId, memberId)) {
-          reset()
-          toaster({
-            message: t('plugins.free-form.datakit.flow_editor.error.branch_cycle'),
-            appearance: 'danger',
-          })
-          return
-        }
-
-        const added = branchGroups.addMember(ownerId, branchHandle, memberId, { commit: false })
-        if (!added) {
-          reset()
-          return
-        }
-
-        const groupId = makeGroupId(ownerId, branchHandle)
-        updateGroupLayout(groupId)
-        flushPendingGroupLayouts()
-
-        commit()
-        return
-      }
 
       if (
         (parsedSource?.io === 'input' || parsedTarget?.io === 'output')
