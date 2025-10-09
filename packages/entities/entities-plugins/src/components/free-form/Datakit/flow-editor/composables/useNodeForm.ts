@@ -345,6 +345,9 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       // the nodes in request phase can not connect to response phase
       if (currentNode.value.phase === 'request' && node.phase === 'response') continue
 
+      // skip empty vault node
+      if (node.type === 'vault' && node.fields.output.length === 0) continue
+
       options.push({ value: node.id, label: node.name })
 
       for (const field of node.fields.output) {
