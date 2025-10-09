@@ -17,7 +17,7 @@ export function pluginDataToVaultOutputFields(pluginData: DatakitPluginData): Fi
 
 export function vaultConfigToResources(config: VaultConfig): Resources['vault'] {
   const entries = Object.entries(config)
-  if (entries.length === 0) return null
+  if (entries.length === 0) return
 
   const vault: Resources['vault'] = {}
 

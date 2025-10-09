@@ -558,11 +558,12 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     function toResources(): DatakitConfig['resources'] {
       const vaultNode = getNodeByName('vault')
       // todo(zehao): support `resources.cache`
-      // should only return `null` when both of `vault` and `cache` are not present
-      if (!vaultNode) return null
-      if (!vaultNode.config) return null
+      // Konnect use `PUT` to update the plugin, so we can return undefined to clear the resources
+      if (!vaultNode) return
+      const vault = vaultConfigToResources(vaultNode.config as VaultConfig)
+      if (!vault || Object.keys(vault).length === 0) return
       return {
-        vault: vaultConfigToResources(vaultNode.config as VaultConfig),
+        vault,
       }
     }
 
