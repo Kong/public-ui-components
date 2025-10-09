@@ -557,9 +557,13 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
 
     function toResources(): DatakitConfig['resources'] {
       const vaultNode = getNodeByName('vault')
+      // todo(zehao): support `resources.cache`
+      // should only return `null` when both of `vault` and `cache` are not present
       if (!vaultNode) return null
       if (!vaultNode.config) return null
-      return vaultConfigToResources(vaultNode.config as VaultConfig)
+      return {
+        vault: vaultConfigToResources(vaultNode.config as VaultConfig),
+      }
     }
 
     /**

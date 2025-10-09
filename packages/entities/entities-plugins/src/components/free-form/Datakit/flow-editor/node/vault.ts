@@ -1,4 +1,4 @@
-import type { DatakitConfig, Resources } from '../../schema/strict'
+import type { Resources } from '../../schema/strict'
 import type { DatakitPluginData, FieldName } from '../../types'
 
 export type VaultConfig = Record<FieldName, string>
@@ -15,15 +15,15 @@ export function pluginDataToVaultOutputFields(pluginData: DatakitPluginData): Fi
   return []
 }
 
-export function vaultConfigToResources(config: VaultConfig): DatakitConfig['resources'] {
+export function vaultConfigToResources(config: VaultConfig): Resources['vault'] {
   const entries = Object.entries(config)
   if (entries.length === 0) return null
 
-  const resources: Resources = { vault: {} }
+  const vault: Resources['vault'] = {}
 
   for (const [name, secretRef] of entries) {
-    resources.vault![name] = secretRef
+    vault[name] = secretRef
   }
 
-  return resources
+  return vault
 }
