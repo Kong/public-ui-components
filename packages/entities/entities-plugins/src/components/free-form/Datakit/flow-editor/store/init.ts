@@ -2,7 +2,6 @@ import { IMPLICIT_NODE_NAMES } from '../../constants'
 import type {
   ConfigEdge,
   ConfigNode,
-  DatakitConfig,
   DatakitPluginData,
   EdgeInstance,
   EditorState,
