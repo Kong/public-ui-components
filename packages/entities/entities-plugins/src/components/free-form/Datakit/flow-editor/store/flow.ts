@@ -245,6 +245,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       translateGroupTree,
       setDraggingNode,
       getNodeDepth,
+      maxGroupDepth,
     } = branchLayout
 
     const nodes = computed(() =>
@@ -261,6 +262,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             : node.position
 
           const depth = getNodeDepth(node.id)
+          const zLayerDepth = depth + maxGroupDepth.value + 1
 
           return {
             id: node.id,
@@ -269,7 +271,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             data: node,
             deletable: !isImplicitNode(node),
             parentNode: parentGroup && parentGroup.position ? parentGroup.id : undefined,
-            zIndex: depth * DK_FLOW_Z_LAYER_STEP + DK_FLOW_NODE_Z_OFFSET,
+            zIndex: zLayerDepth * DK_FLOW_Z_LAYER_STEP + DK_FLOW_NODE_Z_OFFSET,
           }
         }),
     )
@@ -291,7 +293,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             throw new Error(`Missing target node "${edge.target}" for edge "${edge.id}" in phase "${phase}"`)
           }
 
-          const depth = Math.max(getNodeDepth(edge.source), getNodeDepth(edge.target))
+          const depth = Math.max(getNodeDepth(edge.source), getNodeDepth(edge.target)) + maxGroupDepth.value + 1
 
           return updateEdgeStyle({
             id: edge.id,
