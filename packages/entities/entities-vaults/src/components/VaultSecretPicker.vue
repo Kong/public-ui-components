@@ -1,10 +1,10 @@
 <template>
   <KModal
     :action-button-disabled="!canProceed"
-    :action-button-text="t('vault_secret_picker.actions.use_key')"
+    :action-button-text="proceedButtonText || t('vault_secret_picker.actions.use_key')"
     class="vault-secret-picker"
     data-testid="vault-secret-picker-modal"
-    :title="t('vault_secret_picker.title')"
+    :title="title || t('vault_secret_picker.title')"
     :visible="props.setup !== false"
     @cancel="() => emit('cancel')"
     @proceed="handleProceed"
@@ -20,6 +20,8 @@
       v-else
       class="inputs-wrapper"
     >
+      <slot name="form-prefix" />
+
       <KSelect
         v-model="selectedVaultPrefix"
         clearable
@@ -147,6 +149,21 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  title: {
+    type: String,
+    required: false,
+    default: undefined,
+  },
+  proceedButtonText: {
+    type: String,
+    required: false,
+    default: undefined,
+  },
+  additionalDisabled: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 })
 
 const emit = defineEmits<{
@@ -262,7 +279,7 @@ const availableSecrets = computed<SelectItem[]>(() => {
 
 const isKonnectVaultSelected = computed(() => selectedVault?.value?.name === 'konnect')
 
-const canProceed = computed(() => Boolean(selectedVault.value) && Boolean(secretId.value))
+const canProceed = computed(() => Boolean(selectedVault.value) && Boolean(secretId.value) && !props.additionalDisabled)
 
 const formatSelectedVault = (item: SelectVaultItem) => {
   return item.label ? `${item.label} - (${item.vault.name} - ${item.vault.id})` : item.value

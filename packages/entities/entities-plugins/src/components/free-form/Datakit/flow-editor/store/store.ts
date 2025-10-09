@@ -2,6 +2,7 @@ import type { XYPosition } from '@vue-flow/core'
 import type {
   ConfigNode,
   CreateNodePayload,
+  DatakitConfig,
   DatakitPluginData,
   EdgeData,
   EdgeId,
@@ -28,13 +29,18 @@ import {
 import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
+import { vaultConfigToResources, type VaultConfig } from '../node/vault'
 
 type CreateEditorStoreOptions = {
   /**
    * Whether the editor is in editing mode (versus the creation mode)
    */
   isEditing?: boolean
-  onChange?: (configNodes: ConfigNode[], uiNodes: UINode[]) => void
+  onChange?: (
+    configNodes: ConfigNode[],
+    uiNodes: UINode[],
+    resources: DatakitConfig['resources']
+  ) => void
 }
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
@@ -53,7 +59,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           return
         }
 
-        options.onChange?.(toConfigNodes(), toUINodes())
+        options.onChange?.(toConfigNodes(), toUINodes(), toResources())
       },
     })
     const skipValidation = ref(false)
@@ -547,6 +553,13 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           },
         }),
       )
+    }
+
+    function toResources(): DatakitConfig['resources'] {
+      const vaultNode = getNodeByName('vault')
+      if (!vaultNode) return null
+      if (!vaultNode.config) return null
+      return vaultConfigToResources(vaultNode.config as VaultConfig)
     }
 
     /**

@@ -225,6 +225,8 @@ export const VaultSchema = z
     z.string().min(1).max(4095),
   )
 
+export type Vault = z.infer<typeof VaultSchema>
+
 /** cache.memory */
 const CacheMemorySchema = z.object({
   dictionary_name: z.string().default('kong_db_cache'),

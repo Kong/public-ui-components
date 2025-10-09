@@ -5,6 +5,7 @@ import { KUI_SPACE_40 } from '@kong/design-tokens'
 export const DK_HEADER_HEIGHT = 44
 export const DK_SIDE_PANEL_WIDTH = 220
 export const DK_NODE_PROPERTIES_PANEL_WIDTH = 366
+export const DK_NODE_PROPERTIES_PANEL_Z_INDEX = 1000 // ensure the panel is under the vault resource modal
 export const DK_NODE_PROPERTIES_PANEL_OFFSET_TOP =
   DK_HEADER_HEIGHT + parseFloat(KUI_SPACE_40)
 
