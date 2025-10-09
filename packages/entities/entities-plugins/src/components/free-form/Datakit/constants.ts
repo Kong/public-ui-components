@@ -64,8 +64,8 @@ export const HOTKEYS = {
   duplicate: ['Mod', 'D'],
 } as const satisfies Record<string, KeySpec>
 
-export const DK_FLOW_Z_LAYER_STEP = 100
+export const DK_FLOW_Z_LAYER_STEP = 1
 export const DK_FLOW_GROUP_Z_OFFSET = 0
-export const DK_FLOW_EDGE_Z_OFFSET = 30
-export const DK_FLOW_BRANCH_EDGE_Z_OFFSET = 40
-export const DK_FLOW_NODE_Z_OFFSET = 50
+export const DK_FLOW_EDGE_Z_OFFSET = 1
+export const DK_FLOW_BRANCH_EDGE_Z_OFFSET = 2
+export const DK_FLOW_NODE_Z_OFFSET = 3

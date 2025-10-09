@@ -129,6 +129,18 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     return results
   })
 
+  const maxGroupDepth = computed(() => {
+    let max = 0
+    for (const group of state.value.groups) {
+      if (group.phase !== phase) continue
+      const depth = getGroupDepth(group)
+      if (depth > max) {
+        max = depth
+      }
+    }
+    return max
+  })
+
   const branchEdges = computed(() => {
     const edges: FlowEdge[] = []
 
@@ -142,7 +154,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
       if (!members.length) continue
 
-      const depth = Math.max(getNodeDepth(owner.id), getGroupDepth(group))
+      const depth = Math.max(getNodeDepth(owner.id), getGroupDepth(group)) + maxGroupDepth.value + 1
 
       const edge: FlowEdge = {
         id: `branch:${group.id}`,
@@ -413,5 +425,6 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       draggingNodeId.value = id
     },
     getNodeDepth,
+    maxGroupDepth,
   }
 }
