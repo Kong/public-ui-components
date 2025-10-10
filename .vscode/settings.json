@@ -17,6 +17,12 @@
     "javascriptreact",
     "vue"
   ],
+  "stylelint.validate": [
+    "css",
+    "postcss",
+    "scss",
+    "vue"
+  ],
   "scss.scannerExclude": [
     "**/.git",
     "**/bower_components",
