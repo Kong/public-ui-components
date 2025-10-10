@@ -147,8 +147,15 @@ const { project, vueFlowRef, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vue
 const disableDrop = ref(false)
 
 function onNodeClick(event: NodeMouseEvent) {
-  if (mode !== 'edit') return
-  if (event?.node?.type === 'group') return
+  if (mode !== 'edit') {
+    return
+  }
+
+  if (event?.node?.type === 'group') {
+    selectNode(undefined)
+    return
+  }
+
   propertiesPanelOpen.value = true
 }
 
