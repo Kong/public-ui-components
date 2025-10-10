@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.100.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.100.4...@kong-ui-public/entities-plugins@9.100.5) (2025-10-10)
+
+
+### Bug Fixes
+
+* **entities-plugins:** change the types of secrest of mock schema for credential ([#2546](https://github.com/Kong/public-ui-components/issues/2546)) ([bca54a2](https://github.com/Kong/public-ui-components/commit/bca54a271c3a8619dd16b547eea7f17917f75e52))
+
+
+
+
+
 ## [9.100.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.100.3...@kong-ui-public/entities-plugins@9.100.4) (2025-10-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
