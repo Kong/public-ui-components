@@ -29,6 +29,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     moveNode,
     moveGroup,
     setGroupLayout,
+    commit,
   } = editorStore
 
   const draggingNodeId = ref<NodeId | GroupId>()
@@ -253,10 +254,14 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     }
 
     const applied: Array<{ id: GroupId, changed: boolean }> = []
+    let hasChanges = false
 
     pendingGroupLayouts.forEach((layout, id) => {
       const changed = setGroupLayout(id, layout, false)
       applied.push({ id, changed })
+      if (changed && !hasChanges) {
+        hasChanges = true
+      }
     })
 
     pendingGroupLayouts.clear()
@@ -278,6 +283,10 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       for (const parentId of parentIds) {
         updateGroupLayout(parentId)
       }
+    }
+
+    if (hasChanges) {
+      commit('*')
     }
   }
 
