@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.6...@kong-ui-public/analytics-geo-map@1.4.7) (2025-10-10)
+
+
+### Bug Fixes
+
+* update map tooltip style ([#2550](https://github.com/Kong/public-ui-components/issues/2550)) ([3d36af5](https://github.com/Kong/public-ui-components/commit/3d36af5dd5279f554a3d7405e751e6b5c6d6f865))
+
+
+
+
+
 ## [1.4.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.5...@kong-ui-public/analytics-geo-map@1.4.6) (2025-10-07)
 
 
