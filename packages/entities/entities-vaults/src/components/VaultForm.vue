@@ -295,7 +295,8 @@
                 :label="t('form.config.hcv.fields.token.label')"
                 :readonly="form.isReadonly"
                 required
-                type="text"
+                show-password-mask-toggle
+                type="password"
               />
             </div>
             <div
@@ -356,7 +357,8 @@
                 data-testid="vault-form-config-hcv-approle_secret_id"
                 :label="t('form.config.hcv.fields.approle_secret_id.label')"
                 :readonly="form.isReadonly"
-                type="text"
+                show-password-mask-toggle
+                type="password"
               />
               <KInput
                 v-model.trim="configFields[VaultProviders.HCV].approle_secret_id_file"
