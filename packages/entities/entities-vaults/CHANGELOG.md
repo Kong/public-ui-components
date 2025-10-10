@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.25.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.25.9...@kong-ui-public/entities-vaults@3.25.10) (2025-10-10)
+
+
+### Bug Fixes
+
+* **entities-vaults:** mask token and app role seceret id fields in vault page ([#2545](https://github.com/Kong/public-ui-components/issues/2545)) ([421ee66](https://github.com/Kong/public-ui-components/commit/421ee6648e66cc49c06ec1368a4b946bffbf276e))
+
+
+
+
+
 ## [3.25.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.25.8...@kong-ui-public/entities-vaults@3.25.9) (2025-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults
