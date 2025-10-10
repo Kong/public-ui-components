@@ -1,6 +1,6 @@
 import { computed, inject, nextTick, watch } from 'vue'
 import { useEditorStore } from '../../composables'
-import { buildAdjacency, hasCycle } from '../store/validation'
+import { buildAdjacency, hasCycle } from '../store/graph'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
 import { isReadableProperty } from '../node/property'

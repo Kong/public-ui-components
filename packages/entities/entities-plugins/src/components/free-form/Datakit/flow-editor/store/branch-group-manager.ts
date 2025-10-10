@@ -28,8 +28,9 @@ import type {
 import { isImplicitType, isNodeId } from '../node/node'
 import { getBranchesFromMeta, makeGroupId, setsEqual, toGroupInstance } from './helpers'
 import type { TaggedHistory } from './history'
+import { buildAdjacency, getCombinedEdges } from './graph'
 
-interface CommitOptions {
+export interface CommitOptions {
   /** Whether to commit the change to history. Defaults to true. */
   commit?: boolean
   /** Optional tag for the history commit. */
@@ -77,6 +78,9 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     }
     return index
   })
+
+  const combinedEdges = computed(() => getCombinedEdges(state.value.edges, state.value.groups))
+  const combinedAdjacency = computed(() => buildAdjacency(combinedEdges.value))
 
   /**
    * Type guard: checks if a node supports a specific branch.
@@ -248,18 +252,12 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
 
       if (currentId === ownerId) return true
 
-      const node = getNodeById(currentId)
-      if (!node) continue
+      const neighbors = combinedAdjacency.value.get(currentId)
+      if (!neighbors) continue
 
-      const branchKeys = getBranchesFromMeta(node.type)
-      if (!branchKeys.length) continue
-
-      for (const branch of branchKeys) {
-        const members = readMembers(node, branch)
-        for (const nextId of members) {
-          if (!visited.has(nextId)) {
-            stack.push(nextId)
-          }
+      for (const nextId of neighbors) {
+        if (!visited.has(nextId)) {
+          stack.push(nextId)
         }
       }
     }
