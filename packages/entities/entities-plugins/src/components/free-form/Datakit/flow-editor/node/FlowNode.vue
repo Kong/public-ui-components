@@ -643,7 +643,7 @@ $io-column-min-width-no-fields: 70px;
       .handle-label-wrapper {
         height: 100%;
         overflow: hidden;
-        padding: $kui-space-20 0;
+        padding: $kui-space-30 0;
         position: relative;
 
         .handle-label {
