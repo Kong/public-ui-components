@@ -74,7 +74,10 @@ import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import FlowEditor from './flow-editor/FlowEditor.vue'
 // import { DatakitConfigSchema } from './schema/strict'
-import { DatakitConfigSchema as DatakitConfigCompatSchema } from './schema/compat'
+import {
+  DatakitConfigSchema as DatakitConfigCompatSchema,
+  DatakitConfigSchemaM2 as DatakitConfigCompatSchemaM2,
+} from './schema/compat'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -82,6 +85,7 @@ const props = defineProps<Props>()
 
 // provided by consumer apps
 const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, false)
+const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
 
 // Editor mode selection
 
@@ -187,7 +191,11 @@ function handleCodeChange(newConfig: unknown) {
   // TODO: use strict validation and map back to the exact location of schema validation errors
   // const { success, error } = DatakitConfigSchema.safeParse(newConfig)
 
-  const { success: compatSuccess } = DatakitConfigCompatSchema.safeParse(newConfig)
+  const schema = enableDatakitM2
+    ? DatakitConfigCompatSchemaM2
+    : DatakitConfigCompatSchema
+
+  const { success: compatSuccess } = schema.safeParse(newConfig)
   flowAvailable.value = compatSuccess
 
   // props.onValidityChange?.({
