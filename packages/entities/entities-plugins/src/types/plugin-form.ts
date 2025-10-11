@@ -29,6 +29,7 @@ import type { ConfluentSchema } from './plugins/confluent'
 import type { ConfluentConsumeSchema } from './plugins/confluent-consume'
 import type { KafkaConsumeSchema } from './plugins/kafka-consume'
 import type { SolaceConsumeSchema } from './plugins/solace-consume'
+import type { SolaceUpstreamSchema } from './plugins/solace-upstream'
 
 export interface BasePluginSelectConfig {
   /** A function that returns the route for creating a plugin */
@@ -227,6 +228,7 @@ export interface CustomSchemas {
   'response-transformer': ResponseTransformerSchema
   'response-transformer-advanced': ResponseTransformerAdvancedSchema
   'solace-consume': SolaceConsumeSchema
+  'solace-upstream': SolaceUpstreamSchema
   zipkin: CommonSchemaFields & Record<string, any>
   saml: SAMLSchema
   'oas-validation': OasValidationSchema

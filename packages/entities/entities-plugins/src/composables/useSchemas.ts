@@ -22,6 +22,7 @@ import { responseTransformerAdvancedSchema } from '../definitions/schemas/Respon
 import { routeByHeaderSchema } from '../definitions/schemas/RouteByHeader'
 import { samlSchema } from '../definitions/schemas/SAML'
 import { solaceConsumeSchema } from '../definitions/schemas/SolaceConsume'
+import { solaceUpstreamSchema } from '../definitions/schemas/SolaceUpstream'
 import { statsDSchema } from '../definitions/schemas/StatsD'
 import { statsDAdvancedSchema } from '../definitions/schemas/StatsDAdvanced'
 import { upstreamOauthSchema } from '../definitions/schemas/UpstreamOauth'
@@ -241,6 +242,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'solace-consume': {
       ...solaceConsumeSchema,
+    },
+
+    'solace-upstream': {
+      ...solaceUpstreamSchema,
     },
 
     'key-auth': genKeyAuthSchema(options),
