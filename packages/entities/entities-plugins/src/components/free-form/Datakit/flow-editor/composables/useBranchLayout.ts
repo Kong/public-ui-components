@@ -421,6 +421,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
 
   return {
     groupMapById,
+    groupsByOwner,
     memberGroupMap,
     groupNodes,
     branchEdges,
