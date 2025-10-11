@@ -11,6 +11,7 @@ import useReportChartDataForSynthetics from './useReportChartDataForSynthetics'
 import useTranslatedUnits from './useTranslatedUnits'
 import useEvaluateFeatureFlag from './useEvauluateFeatureFlag'
 import useTooltipAbsolutePosition from './useTooltipAbsolutePosition'
+import useSparklineSync from './useSparklineSync'
 
 // All composables must be exported as part of the default object for Cypress test stubs
 export default {
@@ -27,4 +28,5 @@ export default {
   useTranslatedUnits,
   useEvaluateFeatureFlag,
   useTooltipAbsolutePosition,
+  useSparklineSync,
 }
