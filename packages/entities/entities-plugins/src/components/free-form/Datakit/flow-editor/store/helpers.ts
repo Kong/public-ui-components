@@ -26,6 +26,7 @@ import {
   IMPLICIT_NODE_META_MAP,
   isConfigType,
   isImplicitType,
+  isNodeType,
 } from '../node/node'
 import type { BranchName } from '../../schema/strict'
 
@@ -166,7 +167,7 @@ export function generateNodeName(
   prefixOrType: ConfigNodeType | string,
   nodeNames: ReadonlySet<NodeName>,
 ): ConfigNodeName {
-  const base = (typeof prefixOrType === 'string' && isConfigType(prefixOrType as ConfigNodeType))
+  const base = (typeof prefixOrType === 'string' && isNodeType(prefixOrType))
     ? prefixOrType.toUpperCase()
     : prefixOrType
   const prefix = base.replace(/_\d+$/, '')

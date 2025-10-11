@@ -203,6 +203,9 @@ const IMPLICIT_NODE_TYPES = Object.keys(IMPLICIT_NODE_META_MAP) as readonly Impl
 export const isImplicitName = (name: NodeName): name is ImplicitNodeName =>
   (IMPLICIT_NODE_TYPES as readonly string[]).includes(name)
 
+export const isNodeType = (type: string): type is NodeType =>
+  ([...IMPLICIT_NODE_TYPES, ...CONFIG_NODE_TYPES] as readonly string[]).includes(type)
+
 export const isImplicitType = (type: NodeType): type is ImplicitNodeType =>
   (IMPLICIT_NODE_TYPES as readonly string[]).includes(type)
 
