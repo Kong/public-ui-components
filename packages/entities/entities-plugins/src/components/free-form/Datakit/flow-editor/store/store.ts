@@ -9,22 +9,23 @@ import type {
   EditorState,
   FieldId,
   FieldName,
+  DatakitUIData,
   NameConnection,
   NodeId,
   NodeInstance,
   NodeName,
   UINode,
+  GroupId,
+  GroupInstance,
+  UIGroup,
+  NodeDimensions,
 } from '../../types'
 
 import { createInjectionState } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { IMPLICIT_NODE_META_MAP, isImplicitName, isImplicitType } from '../node/node'
-import {
-  clone,
-  createId,
-  findFieldById,
-  generateNodeName,
-} from './helpers'
+import { clone, createId, findFieldById, generateNodeName, getBranchesFromMeta, makeGroupName } from './helpers'
+import { createBranchGroupManager } from './branch-group-manager'
 import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
@@ -34,7 +35,7 @@ type CreateEditorStoreOptions = {
    * Whether the editor is in editing mode (versus the creation mode)
    */
   isEditing?: boolean
-  onChange?: (configNodes: ConfigNode[], uiNodes: UINode[]) => void
+  onChange?: (configNodes: ConfigNode[], uiData: DatakitUIData) => void
 }
 
 const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
@@ -52,8 +53,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         if (action === 'clear') {
           return
         }
-
-        options.onChange?.(toConfigNodes(), toUINodes())
+        options.onChange?.(toConfigNodes(), toUIData())
       },
     })
     const skipValidation = ref(false)
@@ -114,11 +114,19 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     )
     const edgeMapById = computed(() => edgeMaps.value.edgeMapById)
     const edgeIdMapByNodeId = computed(() => edgeMaps.value.edgeIdMapByNodeId)
+    const groupMapById = computed(
+      () =>
+        new Map<GroupId, GroupInstance>(
+          state.value.groups.map((group) => [group.id, group]),
+        ),
+    )
 
     // sets
     const nodeNames = computed(
       () => new Set(state.value.nodes.map((node) => node.name)),
     )
+
+    const branchGroups = createBranchGroupManager({ state, groupMapById, getNodeById, history })
 
     // validators bound to current maps
     const {
@@ -216,6 +224,17 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         },
       }
 
+      const branchKeys = getBranchesFromMeta(newNode.type)
+      if (branchKeys.length && newNode.config) {
+        for (const branch of branchKeys) {
+          delete newNode.config[branch]
+        }
+
+        if (Object.keys(newNode.config).length === 0) {
+          delete newNode.config
+        }
+      }
+
       state.value.nodes.push(newNode)
       if (commitNow) history.commit()
 
@@ -225,13 +244,21 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     }
 
     function removeNode(nodeId: NodeId, commitNow = true) {
+      const node = getNodeById(nodeId)
+      if (!node) return
+
       state.value.edges = state.value.edges.filter(
         (edge) => edge.source !== nodeId && edge.target !== nodeId,
       )
+
+      branchGroups.clear(nodeId)
+
       state.value.nodes = state.value.nodes.filter(
         (node) => node.id !== nodeId,
       )
       if (selection.value === nodeId) selection.value = undefined
+
+      branchGroups.dropTarget(nodeId)
 
       const topo = validateGraph()
       if (!topo.ok) {
@@ -248,6 +275,9 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         console.warn('[renameNode] implicit node name is reserved.')
         return
       }
+      const prevName = node.name
+      if (prevName === newName) return
+
       node.name = newName
       if (commitNow) history.commit(tag)
     }
@@ -264,6 +294,49 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       if (!node) return
       node.position = { ...position }
       if (commitNow) history.commit()
+    }
+
+    function moveGroup(groupId: GroupId, position: XYPosition, commitNow = true) {
+      const group = groupMapById.value.get(groupId)
+      if (!group) return
+
+      const current = group.position
+      if (current && current.x === position.x && current.y === position.y) {
+        return
+      }
+
+      group.position = { ...position }
+      if (commitNow) history.commit()
+    }
+
+    function setGroupLayout(
+      groupId: GroupId,
+      layout: { position: XYPosition, dimensions: NodeDimensions },
+      commitNow = true,
+    ): boolean {
+      const group = groupMapById.value.get(groupId)
+      if (!group) return false
+
+      const nextPosition = { ...layout.position }
+      const nextDimensions = { ...layout.dimensions }
+
+      const samePosition =
+        group.position
+        && group.position.x === nextPosition.x
+        && group.position.y === nextPosition.y
+
+      const sameDimensions =
+        group.dimensions
+        && group.dimensions.width === nextDimensions.width
+        && group.dimensions.height === nextDimensions.height
+
+      if (samePosition && sameDimensions) return false
+
+      group.position = nextPosition
+      group.dimensions = nextDimensions
+
+      if (commitNow) history.commit()
+      return true
     }
 
     function toggleExpanded(
@@ -512,6 +585,30 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
           type: node.type,
         } as ConfigNode
 
+        const branchKeys = getBranchesFromMeta(node.type)
+        if (branchKeys.length) {
+          for (const branchKey of branchKeys) {
+            const raw = (configNode as Record<string, unknown>)[branchKey]
+            if (!Array.isArray(raw)) {
+              continue
+            }
+
+            const names: NodeName[] = []
+            for (const entry of raw as NodeId[]) {
+              const targetNode = getNodeById(entry)
+              if (targetNode) {
+                names.push(targetNode.name)
+              }
+            }
+
+            if (names.length) {
+              (configNode as Record<string, unknown>)[branchKey] = Array.from(new Set(names))
+            } else {
+              delete (configNode as Record<string, unknown>)[branchKey]
+            }
+          }
+        }
+
         const hasNamedInputs = Object.keys(fieldInputs).length > 0
         // inputs and input should be mutually exclusive
         if (hasNamedInputs) {
@@ -549,6 +646,28 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       )
     }
 
+    function toUIGroups(): UIGroup[] {
+      const uiGroups: UIGroup[] = []
+      for (const group of state.value.groups) {
+        const owner = getNodeById(group.ownerId)
+        if (!owner) continue
+        const position = group.position
+        if (!position) continue
+        uiGroups.push({
+          name: makeGroupName(owner.name, group.branch),
+          position: clone(position),
+        })
+      }
+      return uiGroups
+    }
+
+    function toUIData(): DatakitUIData {
+      return {
+        nodes: toUINodes(),
+        groups: toUIGroups(),
+      }
+    }
+
     /**
      * Load the given configuration and UI state into the editor.
      *
@@ -581,6 +700,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       nodeMapByName,
       edgeMapById,
       edgeIdMapByNodeId,
+      groupMapById,
       getNodeById,
       getNodeByName,
       getEdgeById,
@@ -597,8 +717,11 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       removeNode,
       renameNode,
       moveNode,
+      moveGroup,
+      setGroupLayout,
       toggleExpanded,
       replaceConfig,
+      branchGroups,
 
       // field ops
       addField,
@@ -615,6 +738,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       // serialization
       toConfigNodes,
       toUINodes,
+      toUIGroups,
+      toUIData,
       load,
 
       // history

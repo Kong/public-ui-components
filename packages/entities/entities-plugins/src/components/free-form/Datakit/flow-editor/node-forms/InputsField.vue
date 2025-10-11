@@ -21,13 +21,19 @@
     @change="handleInputChange"
   />
 
-  <div class="dk-inputs-field-or">
+  <div
+    v-if="InputsField"
+    class="dk-inputs-field-or"
+  >
     <span>
       {{ t('plugins.free-form.datakit.flow_editor.node_properties.input.or') }}
     </span>
   </div>
 
-  <KLabel class="dk-inputs-field-h2 dk-margin-0">
+  <KLabel
+    v-if="InputsField"
+    class="dk-inputs-field-h2 dk-margin-0"
+  >
     {{ t('plugins.free-form.datakit.flow_editor.node_properties.input.fields') }}
   </KLabel>
 

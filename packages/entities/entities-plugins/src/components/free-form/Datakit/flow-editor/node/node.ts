@@ -9,22 +9,13 @@ import type {
   NodeType,
   ConfigNodeType,
   IOMeta,
+  NextMeta,
 } from '../../types'
 
 import { createI18n } from '@kong-ui-public/i18n'
-import {
-  CodeblockIcon,
-  GatewayIcon,
-  NetworkIcon,
-  StackIcon,
-  VitalsIcon,
-  ArrowSplitIcon,
-  CachedIcon,
-  CloudIcon,
-  KeyIcon,
-} from '@kong/icons'
 import english from '../../../../../locales/en.json'
 import { CONFIG_NODE_TYPES } from '../../constants'
+import { NODE_VISUAL } from './node-visual'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -45,7 +36,6 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     type: 'call',
     summary: getNodeTypeSummary('call'),
     description: getNodeTypeDescription('call'),
-    icon: NetworkIcon,
     io: {
       input: {
         fields: [
@@ -62,12 +52,12 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
+    ...NODE_VISUAL.call,
   },
   jq: {
     type: 'jq',
     summary: getNodeTypeSummary('jq'),
     description: getNodeTypeDescription('jq'),
-    icon: CodeblockIcon,
     io: {
       input: {
         fields: [],
@@ -77,12 +67,12 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         fields: [],
       },
     },
+    ...NODE_VISUAL.jq,
   },
   exit: {
     type: 'exit',
     summary: getNodeTypeSummary('exit'),
     description: getNodeTypeDescription('exit'),
-    icon: GatewayIcon,
     io: {
       input: {
         fields: [
@@ -91,12 +81,12 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
+    ...NODE_VISUAL.exit,
   },
   property: {
     type: 'property',
     summary: getNodeTypeSummary('property'),
     description: getNodeTypeDescription('property'),
-    icon: StackIcon,
     io: {
       input: {
         fields: [],
@@ -106,37 +96,48 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
         fields: [],
       },
     },
+    ...NODE_VISUAL.property,
   },
   static: {
     type: 'static',
     summary: getNodeTypeSummary('static'),
     description: getNodeTypeDescription('static'),
-    icon: VitalsIcon,
     io: {
       output: {
         fields: [],
         configurable: true,
       },
     },
+    ...NODE_VISUAL.static,
   },
   branch: {
     type: 'branch',
     summary: getNodeTypeSummary('branch'),
     description: getNodeTypeDescription('branch'),
-    icon: ArrowSplitIcon,
+    io: {
+      input: {
+        fields: [],
+      },
+      next: {
+        branches: [
+          { name: 'then' },
+          { name: 'else' },
+        ],
+      } as NextMeta,
+    },
+    ...NODE_VISUAL.branch,
   },
   cache: {
     type: 'cache',
     summary: getNodeTypeSummary('cache'),
     description: getNodeTypeDescription('cache'),
-    icon: CachedIcon,
+    ...NODE_VISUAL.cache,
   },
 }
 
 export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   request: {
     type: 'request',
-    icon: CloudIcon,
     description: getNodeTypeDescription('request'),
     io: {
       output: {
@@ -163,7 +164,6 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   },
   service_response: {
     type: 'service_response',
-    icon: CloudIcon,
     description: getNodeTypeDescription('service_response'),
     io: {
       output: {
@@ -188,7 +188,6 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
   },
   vault: {
     type: 'vault',
-    icon: KeyIcon,
     io: {
       output: {
         fields: [],
@@ -203,6 +202,9 @@ const IMPLICIT_NODE_TYPES = Object.keys(IMPLICIT_NODE_META_MAP) as readonly Impl
 
 export const isImplicitName = (name: NodeName): name is ImplicitNodeName =>
   (IMPLICIT_NODE_TYPES as readonly string[]).includes(name)
+
+export const isNodeType = (type: string): type is NodeType =>
+  ([...IMPLICIT_NODE_TYPES, ...CONFIG_NODE_TYPES] as readonly string[]).includes(type)
 
 export const isImplicitType = (type: NodeType): type is ImplicitNodeType =>
   (IMPLICIT_NODE_TYPES as readonly string[]).includes(type)

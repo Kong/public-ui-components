@@ -1,6 +1,6 @@
-import { computed, inject, nextTick, watch } from 'vue'
+import { computed, inject } from 'vue'
 import { useEditorStore } from '../../composables'
-import { buildAdjacency, hasCycle } from '../store/validation'
+import { buildAdjacency, hasCycle } from '../store/graph'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
 import { isReadableProperty } from '../node/property'
@@ -52,14 +52,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   const { i18n: { t } } = useI18n()
   const confirm = useConfirm()
 
-  let isGlobalStateUpdating = false
-
-  watch(state, async () => {
-    isGlobalStateUpdating = true
-    await nextTick()
-    isGlobalStateUpdating = false
-  }, { immediate: true, deep: true })
-
   const currentNode = computed(() => {
     const node = getNodeById(nodeId)
     if (!node) throw new Error('Node not existed')
@@ -109,7 +101,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
    * @param commitNow Whether to commit the change immediately.
    */
   const setConfig = (tag?: string, commitNow = true) => {
-    if (isGlobalStateUpdating) return
     if (!getFormInnerData) throw new Error('getFormInnerData is not defined')
     const config = omit(getFormInnerData(), ['name', 'input', 'inputs'])
     const finalTag = tag ? `update:${nodeId}:${tag}` : undefined
@@ -144,7 +135,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
     oldFieldName: FieldName,
     newFieldName: FieldName,
   ) => {
-    if (isGlobalStateUpdating) return
     const fieldId = findFieldByNameOrThrow(io, oldFieldName).id
     storeRenameField(nodeId, fieldId, newFieldName)
   }
@@ -172,7 +162,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
    *   and add new edges for the input fields.
    */
   const setInputs = async (fieldName: FieldName, fieldValue: IdConnection | null) => {
-    if (isGlobalStateUpdating) return
     const clearing = fieldValue == null
 
     const fieldId = findFieldByNameOrThrow('input', fieldName).id
@@ -253,7 +242,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
    * - If user sets a new input, disconnect existing edges and add new edge for the input.
    */
   const setInput = async (value: IdConnection | null) => {
-    if (isGlobalStateUpdating) return
     const clearing = value == null
 
     if (clearing) {

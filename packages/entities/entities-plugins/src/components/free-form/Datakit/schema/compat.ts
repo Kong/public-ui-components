@@ -118,6 +118,17 @@ const StaticNodeSchema = ConfigNodeBaseSchema.extend({
   inputs: z.never().optional(),
 }).strict()
 
+/**
+ * Branch node schema with loose validation.
+ * Supports conditional execution with `then` and `else` branches.
+ * Each branch contains an array of node names to execute.
+ */
+export const BranchNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('branch'),
+  then: z.array(LooseNodeNameSchema).nullish(),
+  else: z.array(LooseNodeNameSchema).nullish(),
+}).strict()
+
 const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
   z.discriminatedUnion('type', [
     CallNodeSchema,
@@ -125,6 +136,7 @@ const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
     JqNodeSchema,
     PropertyNodeSchema,
     StaticNodeSchema,
+    BranchNodeSchema,
   ]),
 )
 
