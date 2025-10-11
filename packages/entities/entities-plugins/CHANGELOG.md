@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.102.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.101.0...@kong-ui-public/entities-plugins@9.102.0) (2025-10-11)
+
+
+### Features
+
+* **entities-plugins:** solace upstream override ([#2554](https://github.com/Kong/public-ui-components/issues/2554)) ([3d0061a](https://github.com/Kong/public-ui-components/commit/3d0061a47747ea043ab3725a2c59c94b4558b008))
+
+
+
+
+
 # [9.101.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.100.5...@kong-ui-public/entities-plugins@9.101.0) (2025-10-11)
 
 
