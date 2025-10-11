@@ -22,11 +22,8 @@ export type BranchOption = {
  * - Branch conflict resolution
  * - Branch cycle detection
  */
-export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
-  nodeId: NodeId,
-  getFormInnerData?: () => any,
-) {
-  const base = useNodeForm<T>(nodeId, getFormInnerData)
+export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(nodeId: NodeId) {
+  const base = useNodeForm<T>(nodeId)
 
   const {
     state,
@@ -192,10 +189,6 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(
 
     // Ask user to confirm if there are conflicts
     if (conflictUpdates.length > 0) {
-      if (!confirm) {
-        throw new Error('Expected confirmation handler for branch conflict resolution')
-      }
-
       const confirmed = await confirm(
         t('plugins.free-form.datakit.flow_editor.confirm.message.branch_replace'),
         addedAssignments,
