@@ -22,18 +22,6 @@
           :placeholder="t('plugins.free-form.request-callout.by_lua_placeholder')"
         />
       </FieldRenderer>
-
-      <!-- Set appearance to `cluster_nodes` and `sentinel_nodes` -->
-      <FieldRenderer
-        v-slot="props"
-        :match="({ path }) => ['cluster_nodes', 'sentinel_nodes']
-          .some(n => path.endsWith(n))"
-      >
-        <ArrayField
-          v-bind="props"
-          appearance="card"
-        />
-      </FieldRenderer>
     </template>
 
     <ObjectField
@@ -44,15 +32,11 @@
       <CalloutsForm />
 
       <ObjectField
-        appearance="card"
         :fields-order="['headers', 'query', 'body', 'by_lua']"
         name="upstream"
       />
 
-      <ObjectField
-        appearance="card"
-        name="cache"
-      >
+      <ObjectField name="cache">
         <template #[`redis`]="props">
           <ObjectField
             v-bind="props"
@@ -75,7 +59,6 @@
 import { cloneDeep } from 'lodash-es'
 import { FIELD_RENDERERS } from '../shared/composables'
 import { getCalloutId } from './utils'
-import ArrayField from '../shared/ArrayField.vue'
 import CalloutsForm from './CalloutsForm.vue'
 import FieldRenderer from '../shared/FieldRenderer.vue'
 import Form from '../shared/Form.vue'

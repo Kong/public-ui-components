@@ -10,7 +10,8 @@
 
   <!-- only render children, no wrapper -->
   <template v-else-if="asChild">
-    <div
+    <component
+      :is="wrapper"
       class="ff-object-field ff-object-field-as-child"
       v-bind="$attrs"
       :data-testid="`ff-object-${field.path.value}`"
@@ -22,11 +23,12 @@
           :name="Object.keys(cfield)[0]"
         />
       </slot>
-    </div>
+    </component>
   </template>
 
   <!-- render children with wrapper -->
-  <div
+  <component
+    :is="wrapper"
     v-else
     class="ff-object-field"
     :class="{ 'ff-object-field-collapsed': !realExpanded }"
@@ -99,7 +101,7 @@
         </slot>
       </div>
     </SlideTransition>
-  </div>
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -120,7 +122,7 @@ defineOptions({
 const {
   defaultExpanded = true, defaultAdded = true, collapsible = true, omit,
   required = undefined, asChild: defaultAsChild = undefined, resetLabelPath,
-  fieldsOrder,
+  fieldsOrder, appearance,
   ...props
 } = defineProps<{
   name: string
@@ -164,6 +166,10 @@ const realResetLabelPath = computed(() => {
 
 const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ required, ...props, resetLabelPath: realResetLabelPath.value })))
 const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
+const wrapper = computed(() => {
+  if (appearance === 'card') return 'KCard'
+  return 'div'
+})
 
 const asChild = computed(() => {
   if (defaultAsChild !== undefined) return defaultAsChild
