@@ -128,11 +128,49 @@ const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
   ]),
 )
 
+export const VaultSchema = z
+  .record(
+    z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/).min(1).max(255),
+    z.string().min(1).max(4095),
+  )
+
+/** cache.memory */
+const CacheMemorySchema = z.object({
+  dictionary_name: z.string().default('kong_db_cache'),
+})
+
+/** cache.redis */
+const LooseCacheRedisSchema = z.object()
+
+export const LooseCacheSchema = z.object({
+  strategy: z.enum(['memory', 'redis']).optional(),
+  memory: CacheMemorySchema.optional(),
+  redis: LooseCacheRedisSchema.optional(),
+})
+
+export const LooseResourcesSchema = z.object({
+  vault: VaultSchema.nullish(),
+  cache: LooseCacheSchema.nullish(),
+})
+
 export const DatakitConfigSchema = z
   .object({
     nodes: z.array(ConfigNodeSchema).nullish(),
     debug: z.boolean().nullish(),
-    // resources: ResourcesSchema.nullish(), // todo(datakit-m2)
+  })
+  .strict()
+  .superRefine((config, ctx) => {
+    if (!config || !Array.isArray(config.nodes)) return
+    validateNamesAndConnections(config as DatakitConfig, IMPLICIT_NODE_NAMES, ctx)
+  })
+  .nullish()
+
+// todo(datakit-m2): rename this to `DatakitConfigSchema` when M2 released
+export const DatakitConfigSchemaM2 = z
+  .object({
+    nodes: z.array(ConfigNodeSchema).nullish(),
+    debug: z.boolean().nullish(),
+    resources: LooseResourcesSchema.nullish(),
   })
   .strict()
   .superRefine((config, ctx) => {
