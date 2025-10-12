@@ -57,7 +57,7 @@ import * as geobuf from 'geobuf'
 import Pbf from 'pbf'
 import { debounce } from '../utils'
 import { AnalyticsIcon } from '@kong/icons'
-import { KUI_ICON_COLOR_NEUTRAL, KUI_ICON_SIZE_60 } from '@kong/design-tokens'
+import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER, KUI_ICON_COLOR_NEUTRAL, KUI_ICON_SIZE_60 } from '@kong/design-tokens'
 import MapLegend from './MapLegend.vue'
 import type { MapTooltipData } from './MapTooltip.vue'
 import MapTooltip from './MapTooltip.vue'
@@ -118,8 +118,8 @@ const layerPaint = computed(() => ({
         code,
         getColor(metric),
       ])
-      : ['#ccc', '#ccc']),
-    '#ccc', // default color if no match
+      : [KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER, KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER]),
+    KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER, // default color if no match
   ] as DataDrivenPropertyValueSpecification<ColorSpecification>,
   'fill-opacity': 0.7,
 }))
