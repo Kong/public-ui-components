@@ -92,8 +92,8 @@ const BORDER_COLORS: Record<EdgeState, string> = {
 }
 
 type EdgeState = 'default' | 'hover' | 'selected'
-let selectedEdgeId: string | undefined
-let hoverEdgeId: string | undefined
+let selectedEdgeId: EdgeId | undefined
+let hoverEdgeId: EdgeId | undefined
 
 function updateEdgeStyle(edge: FlowEdge): FlowEdge {
   const state = edge.id === selectedEdgeId ? 'selected' : edge.id === hoverEdgeId ? 'hover' : 'default'
@@ -594,7 +594,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         .sort((a, b) => (a.selected === b.selected ? 0 : a.selected ? 1 : -1))
         .forEach((change) => {
           if (isBranchEdgeId(change.id)) return
-          selectedEdgeId = change.selected ? change.id : undefined
+          selectedEdgeId = change.selected ? change.id as EdgeId : undefined
 
           setEdges((edges) => edges.map((edge) => {
             if (edge.id !== change.id || !edge.markerEnd) {
@@ -630,7 +630,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     onEdgeMouseEnter(({ edge: edgeEnter }) => {
       if (isBranchEdgeId(edgeEnter.id)) return
-      hoverEdgeId = edgeEnter.id
+      hoverEdgeId = edgeEnter.id as EdgeId
 
       setEdges((edges) => edges.map((edge) => {
         if (edge.id !== edgeEnter.id) return edge

@@ -673,7 +673,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         if (!position) continue
         uiGroups.push({
           name: makeGroupName(owner.name, group.branch),
-          position: clone(position),
+          position: { ...position },
         })
       }
       return uiGroups
