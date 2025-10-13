@@ -59,7 +59,7 @@ import type { Component } from 'vue'
 // import type { ZodError } from 'zod'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { DatakitConfig, DatakitPluginData, EditorMode } from './types'
+import type { DatakitConfig, EditorMode } from './types'
 
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
@@ -195,7 +195,7 @@ function handleCodeChange(newConfig: unknown) {
 
   // check if there are some M2 features existed, they are not supported in the UI yet
   // todo(datakit-m2): remove me later
-  if (isValid) {
+  if (!enableDatakitM2 && isValid) {
     const datakitConfig = newConfig as DatakitConfig
 
     // vault is not support yet.
