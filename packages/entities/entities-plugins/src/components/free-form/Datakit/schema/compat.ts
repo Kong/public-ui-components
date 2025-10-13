@@ -157,19 +157,6 @@ export const DatakitConfigSchema = z
   .object({
     nodes: z.array(ConfigNodeSchema).nullish(),
     debug: z.boolean().nullish(),
-  })
-  .strict()
-  .superRefine((config, ctx) => {
-    if (!config || !Array.isArray(config.nodes)) return
-    validateNamesAndConnections(config as DatakitConfig, IMPLICIT_NODE_NAMES, ctx)
-  })
-  .nullish()
-
-// todo(datakit-m2): rename this to `DatakitConfigSchema` when M2 released
-export const DatakitConfigSchemaM2 = z
-  .object({
-    nodes: z.array(ConfigNodeSchema).nullish(),
-    debug: z.boolean().nullish(),
     resources: LooseResourcesSchema.nullish(),
   })
   .strict()
