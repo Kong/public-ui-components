@@ -313,6 +313,16 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     layoutFlushPromise = nextTick().then(applyPendingGroupLayouts)
   }
 
+  /**
+   * Recalculates and schedules a layout update for the given group:
+   *
+   * 1. Resolve the group instance.
+   * 2. Derive its layout via `calculateGroupLayout`.
+   * 3. Queue the layout in `pendingGroupLayouts`.
+   * 4. Trigger a deferred flush with `flushPendingGroupLayouts`.
+   *
+   * @param groupId - The ID of the group to update.
+   */
   function updateGroupLayout(groupId: GroupId) {
     const group = groupMapById.value.get(groupId)
     if (!group) return
@@ -380,6 +390,18 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     }
   }
 
+  /**
+   * Determines whether a group's layout update should be skipped based on the currently dragging node.
+   *
+   * A group update is skipped if:
+   * - The group itself is being dragged
+   * - Any of the group's member nodes is being dragged
+   * - Any child group of the member nodes is being dragged
+   *
+   * @param groupId - The ID of the group to check
+   * @param memberIds - Array of node IDs that are members of the group
+   * @returns `true` if the group update should be skipped, `false` otherwise
+   */
   function shouldSkipGroupUpdate(groupId: GroupId, memberIds: NodeId[]): boolean {
     const dragging = draggingNodeId.value
     if (!dragging) return false
@@ -399,6 +421,20 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
 
   const lastLayoutSignatures = new Map<GroupId, string>()
 
+  /**
+   * Watches for changes in group member nodes' dimensions and triggers layout updates.
+   *
+   * This watcher:
+   * 1. Monitors all groups in the current phase
+   * 2. Creates a signature for each group based on its member nodes' dimensions
+   * 3. Compares signatures to detect changes
+   * 4. Triggers group layout recalculation when member dimensions change
+   * 5. Skips updates for groups that are currently being dragged
+   *
+   * The signature is a string combining member node IDs with their rounded dimensions
+   * (e.g., "node1:100x50,node2:200x100"). This allows efficient detection of when
+   * member nodes have been resized or changed without triggering unnecessary updates.
+   */
   watch(
     () => {
       const relevantGroups = state.value.groups.filter(group => group.phase === phase)
