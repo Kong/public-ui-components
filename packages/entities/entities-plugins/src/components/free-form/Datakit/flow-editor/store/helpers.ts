@@ -24,7 +24,6 @@ import { cloneDeep, uniqueId } from 'lodash-es'
 import {
   CONFIG_NODE_META_MAP,
   IMPLICIT_NODE_META_MAP,
-  isConfigType,
   isImplicitType,
   isNodeType,
 } from '../node/node'
