@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, computed } from 'vue'
+import { inject, ref, computed, watch } from 'vue'
 import { VaultSecretPicker as VaultSecretPickerComponent } from '@kong-ui-public/entities-vaults'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
@@ -100,4 +100,9 @@ const handleCancel = () => {
   validationError.value = ''
   emit('cancel')
 }
+
+watch(() => propSecretName, (newVal) => {
+  secretName.value = newVal || ''
+  validationError.value = ''
+})
 </script>

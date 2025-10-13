@@ -59,7 +59,6 @@
     </div>
 
     <VaultSecretPicker
-      :key="`dk-vsp-${selectedEntry?.id}`"
       :is-editing="!!selectedEntry && !creatingEntry"
       :secret-name="selectedEntry?.key"
       :secret-ref="selectedEntry?.value"
