@@ -10,14 +10,12 @@ import type {
   NodePhase,
 } from '../../types'
 import { useEditorStore } from '../store/store'
-import type { FlowEdge, FlowGroupNodeData, PendingGroupLayout } from '../../types'
+import type { FlowEdge, FlowGroupNodeData, GroupLayout } from '../../types'
 import {
   DK_FLOW_Z_LAYER_STEP,
   DK_FLOW_GROUP_Z_OFFSET,
   DK_FLOW_BRANCH_EDGE_Z_OFFSET,
   DK_BRANCH_GROUP_PADDING,
-  DK_BRANCH_GROUP_MIN_WIDTH,
-  DK_BRANCH_GROUP_MIN_HEIGHT,
 } from '../../constants'
 
 export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase, readonly?: boolean, flowId?: string }) {
@@ -180,11 +178,29 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     return edges
   })
 
-  const pendingGroupLayouts = new Map<GroupId, PendingGroupLayout>()
+  const pendingGroupLayouts = new Map<GroupId, GroupLayout>()
   const pendingParentUpdates = new Set<GroupId>()
   let layoutFlushPromise: Promise<void> | undefined
 
-  function calculateGroupLayout(group: GroupInstance): PendingGroupLayout | undefined {
+  /**
+   * Calculates the layout (position and dimensions) for a group by determining the bounding box
+   * that encompasses all its member nodes and child groups.
+   *
+   * This function:
+   * 1. Filters group members that match the current phase and are not hidden
+   * 2. Iterates through all members to find their positions and dimensions
+   * 3. Considers child groups and their layouts (pending or current)
+   * 4. Calculates the minimum bounding rectangle that contains all members
+   * 5. Applies padding
+   *
+   * @param group - The group instance for which to calculate the layout
+   * @returns A pending group layout object containing position and dimensions, or undefined if:
+   *   - The group phase doesn't match the current phase
+   *   - There are no valid members in the group
+   *   - Any member node lacks valid dimensions
+   *   - The calculated bounds are invalid (infinite values)
+   */
+  function calculateGroupLayout(group: GroupInstance): GroupLayout | undefined {
     if (group.phase !== phase) return undefined
 
     const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
@@ -196,15 +212,15 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     let y2 = Number.NEGATIVE_INFINITY
 
     for (const member of members) {
-      const vueNode = findNode(member.id)
-      const dimensions = vueNode?.dimensions
+      const flowNode = findNode(member.id)
+      const dimensions = flowNode?.dimensions
       const width = dimensions?.width ?? 0
       const height = dimensions?.height ?? 0
       if (width <= 0 || height <= 0) {
         return undefined
       }
 
-      const computedPosition = vueNode?.computedPosition
+      const computedPosition = flowNode?.computedPosition
       const absoluteX = computedPosition?.x ?? member.position.x
       const absoluteY = computedPosition?.y ?? member.position.y
 
@@ -232,8 +248,8 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       return undefined
     }
 
-    const paddedWidth = Math.max((x2 - x1) + DK_BRANCH_GROUP_PADDING * 2, DK_BRANCH_GROUP_MIN_WIDTH)
-    const paddedHeight = Math.max((y2 - y1) + DK_BRANCH_GROUP_PADDING * 2, DK_BRANCH_GROUP_MIN_HEIGHT)
+    const paddedWidth = (x2 - x1) + DK_BRANCH_GROUP_PADDING * 2
+    const paddedHeight = (y2 - y1) + DK_BRANCH_GROUP_PADDING * 2
 
     return {
       position: {

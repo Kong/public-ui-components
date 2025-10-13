@@ -213,7 +213,7 @@ export type BranchEdgeData = {
 
 export type FlowEdge = Edge<EdgeData | BranchEdgeData>
 
-export type PendingGroupLayout = {
+export type GroupLayout = {
   position: XYPosition
   dimensions: NodeDimensions
 }

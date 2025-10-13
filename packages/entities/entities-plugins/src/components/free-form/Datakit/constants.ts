@@ -71,5 +71,3 @@ export const DK_FLOW_BRANCH_EDGE_Z_OFFSET = 2
 export const DK_FLOW_NODE_Z_OFFSET = 3
 
 export const DK_BRANCH_GROUP_PADDING = parseInt(KUI_SPACE_90, 10)
-export const DK_BRANCH_GROUP_MIN_WIDTH = 160
-export const DK_BRANCH_GROUP_MIN_HEIGHT = 96
