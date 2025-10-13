@@ -2,6 +2,7 @@ import { omit } from 'lodash-es'
 import type { FieldName } from '../../types'
 import { findFieldByName } from '../store/helpers'
 import { useEditorStore } from '../store/store'
+import { computed } from 'vue'
 
 export function useVaultForm() {
   const {
@@ -11,11 +12,19 @@ export function useVaultForm() {
     replaceConfig,
     renameField,
     disconnectOutEdges,
+    nodeMapByName,
   } = useEditorStore()
 
   const vaultNode = getNodeByName('vault')
 
   if (!vaultNode) throw new Error('no vault node')
+
+  const vaultConfig = computed(() => nodeMapByName.value.get('vault')?.config || {})
+  const formData = computed(() => {
+    return {
+      vault: { ...vaultConfig.value },
+    }
+  })
 
   const addVault = (name: FieldName, value: string) => {
     addField(vaultNode.id, 'output', name, false)
@@ -61,6 +70,7 @@ export function useVaultForm() {
   }
 
   return {
+    formData,
     addVault,
     removeVault,
     updateVault,

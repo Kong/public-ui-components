@@ -1,11 +1,54 @@
 <template>
   <div class="dk-resources-panel">
-    <NodeFormVault />
+    <Form
+      :data="formData"
+      :schema="vaultSchema"
+    >
+      <VaultField
+        name="vault"
+        @add="addVault"
+        @remove="removeVault"
+        @update="handleUpdateVault"
+      />
+    </Form>
   </div>
 </template>
 
 <script setup lang="ts">
-import NodeFormVault from '../node-forms/NodeFormVault.vue'
+import { useVaultForm } from '../composables/useVaultForm'
+import Form from '../../../shared/Form.vue'
+import VaultField from './VaultField.vue'
+
+import type { FieldName } from '../../types'
+import type { RecordFieldSchema } from '../../../../../types/plugins/form-schema'
+
+const vaultSchema: RecordFieldSchema = {
+  type: 'record',
+  fields: [
+    {
+      vault: {
+        type: 'map',
+        keys: { type: 'string' },
+        values: { type: 'string' },
+      },
+    },
+  ],
+}
+
+const {
+  addVault,
+  removeVault,
+  updateVault,
+  renameVault,
+  formData,
+} = useVaultForm()
+
+function handleUpdateVault(name: FieldName, value: string, oldName?: FieldName) {
+  if (oldName && oldName !== name) {
+    renameVault(oldName, name, false)
+  }
+  updateVault(name, value)
+}
 </script>
 
 <style lang="scss" scoped>
