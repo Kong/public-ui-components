@@ -59,7 +59,7 @@ import type { Component } from 'vue'
 // import type { ZodError } from 'zod'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { EditorMode } from './types'
+import type { DatakitConfig, EditorMode } from './types'
 
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
@@ -76,7 +76,6 @@ import FlowEditor from './flow-editor/FlowEditor.vue'
 // import { DatakitConfigSchema } from './schema/strict'
 import {
   DatakitConfigSchema as DatakitConfigCompatSchema,
-  DatakitConfigSchemaM2 as DatakitConfigCompatSchemaM2,
 } from './schema/compat'
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -191,12 +190,21 @@ function handleCodeChange(newConfig: unknown) {
   // TODO: use strict validation and map back to the exact location of schema validation errors
   // const { success, error } = DatakitConfigSchema.safeParse(newConfig)
 
-  const schema = enableDatakitM2
-    ? DatakitConfigCompatSchemaM2
-    : DatakitConfigCompatSchema
+  const { success: compatSuccess } = DatakitConfigCompatSchema.safeParse(newConfig)
+  let isValid = compatSuccess
 
-  const { success: compatSuccess } = schema.safeParse(newConfig)
-  flowAvailable.value = compatSuccess
+  // check if there are some M2 features existed, they are not supported in the UI yet
+  // todo(datakit-m2): remove me later
+  if (!enableDatakitM2 && isValid) {
+    const datakitConfig = newConfig as DatakitConfig
+
+    // vault is not support yet.
+    if (datakitConfig.resources?.vault) isValid = false
+
+    // todo: check branch or cache nodes
+  }
+
+  flowAvailable.value = isValid
 
   // props.onValidityChange?.({
   //   model: 'config',
