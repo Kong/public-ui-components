@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.102.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.102.0...@kong-ui-public/entities-plugins@9.102.1) (2025-10-13)
+
+
+### Bug Fixes
+
+* **datakit:** datakit - remove M2 compat schema ([#2557](https://github.com/Kong/public-ui-components/issues/2557)) ([287e5d9](https://github.com/Kong/public-ui-components/commit/287e5d9ae48f81f3432adaf8d3ece1311d90249b))
+
+
+
+
+
 # [9.102.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.101.0...@kong-ui-public/entities-plugins@9.102.0) (2025-10-11)
 
 
