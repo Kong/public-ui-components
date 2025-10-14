@@ -8,7 +8,8 @@
       :text="tooltipText"
     >
       <div class="indicator-box">
-        <icon
+        <component
+          :is="icon"
           v-if="icon"
           :color="KUI_COLOR_TEXT_NEUTRAL"
           :size="16"
@@ -41,9 +42,10 @@ interface Props {
   reversed?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  reversed: false,
-})
+const {
+  reversed = false,
+  ...props
+} = defineProps<Props>()
 
 
 const tooltipText = computed(() => {
@@ -89,9 +91,9 @@ const additionalCount = computed(() => {
 
 const shouldReverse = computed(() => {
   if (props.mode === 'input') {
-    return props.reversed
+    return reversed
   } else {
-    return !props.reversed
+    return !reversed
   }
 })
 </script>
@@ -128,9 +130,9 @@ const shouldReverse = computed(() => {
     content: '';
     height: 1px;
     position: absolute;
-    right: -12px;
+    right: 0;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(100%, -50%);
     transition: border-color $kui-animation-duration-20 ease-in-out;
     width: 12px;
   }
@@ -140,8 +142,9 @@ const shouldReverse = computed(() => {
     left: calc(100% + 12px);
 
     &::after {
-      left: -12px;
+      left: 0;
       right: auto;
+      transform: translate(-100%, -50%);
     }
   }
 }

@@ -257,7 +257,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EdgeId, NodeField, NodeInstance } from '../../types'
+import type { EdgeId, FieldId, FieldName, NodeField, NodeInstance } from '../../types'
 
 import { computed, useTemplateRef, watch } from 'vue'
 import { KTooltip, KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
@@ -367,11 +367,11 @@ const handleTwigColor = computed(() => {
 // Special input connections (vault or cross-phase)
 const specialInputConnections = computed(() => {
   const connections = new Map<string, {
-    fieldId: string
+    fieldId: FieldId | 'input'
     edgeId: EdgeId
     field: NodeField | null
     sourceNode: NodeInstance
-    sourceFieldName?: string
+    sourceFieldName?: FieldName
   }>()
 
   const inEdges = getInEdgesByNodeId(data.id)
@@ -386,7 +386,7 @@ const specialInputConnections = computed(() => {
 
     if (!isVault && !isCrossPhase) continue
 
-    let sourceFieldName: string | undefined
+    let sourceFieldName: FieldName | undefined
     if (edge.sourceField) {
       const sourceField = sourceNode.fields.output.find(f => f.id === edge.sourceField)
       sourceFieldName = sourceField?.name
@@ -420,11 +420,11 @@ const specialInputConnections = computed(() => {
 // Special output connections (cross-phase only)
 const specialOutputConnections = computed(() => {
   const connections = new Map<string, {
-    fieldId: string
+    fieldId: FieldId | 'output'
     edgeIds: EdgeId[]
     field: NodeField | null
     targetNodes: NodeInstance[]
-    targetFieldNames: Array<string | undefined>
+    targetFieldNames: Array<FieldName | undefined>
   }>()
 
   const outEdges = getOutEdgesByNodeId(data.id)
@@ -437,7 +437,7 @@ const specialOutputConnections = computed(() => {
 
     if (!isCrossPhase) continue
 
-    let targetFieldName: string | undefined
+    let targetFieldName: FieldName | undefined
     if (edge.targetField) {
       const targetField = targetNode.fields.input.find(f => f.id === edge.targetField)
       targetFieldName = targetField?.name
@@ -468,11 +468,11 @@ const specialOutputConnections = computed(() => {
   return connections
 })
 
-function getSpecialConnection(fieldId: string) {
+function getSpecialConnection(fieldId: FieldId | 'input') {
   return specialInputConnections.value.get(fieldId)
 }
 
-function getSpecialOutputConnection(fieldId: string) {
+function getSpecialOutputConnection(fieldId: FieldId | 'output') {
   return specialOutputConnections.value.get(fieldId)
 }
 
