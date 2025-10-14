@@ -196,7 +196,7 @@ const partialsSaved = ref<PartialArray | undefined>()
 const { value: redisFieldsValue, ...field } = useField<Redis | undefined>(formRedisPath)
 
 if (field.error) {
-  throw new Error(`Field error: ${field.error.message}`)
+  throw new Error(field.error.message)
 }
 
 // initialize getter and setter for redis partial/redis fields

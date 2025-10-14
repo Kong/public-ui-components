@@ -17,13 +17,6 @@ export type FreeFormOnChangeMeta = {
   originType: 'form'
 }
 
-export type FreeFormStoreOptions<T extends Record<string, any> = Record<string, any>> = {
-  schema: FormSchema | UnionFieldSchema
-  config?: FormConfig<T>
-  data?: ComputedRef<T>
-  onChange?: (newData: T, meta: FreeFormOnChangeMeta) => void
-}
-
 export const [provideFreeFormStore, useOptionalFreeformStore] = createInjectionState(
   function createFreeformStore<T extends Record<string, any> = Record<string, any>>(
     schema: FormSchema | UnionFieldSchema,
@@ -557,9 +550,10 @@ export function useFieldAncestors(fieldPath: MaybeRefOrGetter<string>) {
   })
 }
 
-export function useFormData<T>(name: MaybeRefOrGetter<string>, instanceId: string) {
+export function useFormData<T>(name: MaybeRefOrGetter<string>, instanceId?: string) {
   const { formData, onFieldChange } = useFreeformStore()
   const fieldPath = useFieldPath(name)
+  const fieldInstanceId = instanceId ?? useId()
   const value = computed<T>({
     get: () => get(formData, utils.toArray(fieldPath.value)),
     set: (v) => {
@@ -567,7 +561,7 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>, instanceId: strin
       onFieldChange?.({
         originType: 'field',
         fieldPath: fieldPath.value,
-        fieldInstanceId: instanceId,
+        fieldInstanceId,
       })
     },
   })
