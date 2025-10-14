@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.8](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.7...@kong-ui-public/analytics-geo-map@1.4.8) (2025-10-14)
+
+
+### Bug Fixes
+
+* map legend improvements ([#2556](https://github.com/Kong/public-ui-components/issues/2556)) ([ab91ae0](https://github.com/Kong/public-ui-components/commit/ab91ae0d6eb28c32834c5575872188a8e9001c0b))
+
+
+
+
+
 ## [1.4.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.6...@kong-ui-public/analytics-geo-map@1.4.7) (2025-10-10)
 
 
