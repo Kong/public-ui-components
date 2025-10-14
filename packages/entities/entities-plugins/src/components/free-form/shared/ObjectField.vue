@@ -107,7 +107,7 @@ import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
 import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
 import { computed, onBeforeMount, toRef, watch } from 'vue'
 import SlideTransition from './SlideTransition.vue'
-import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
+import { useField, useFieldAttrs, useFreeformStore, FIELD_RENDERERS } from './composables'
 import Field from './Field.vue'
 
 import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
@@ -138,7 +138,7 @@ const {
 }>()
 
 const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
-const { getSchema, getDefault } = useFormShared()
+const { getSchema, getDefault } = useFreeformStore()
 
 const added = defineModel<boolean>('added', { default: undefined })
 

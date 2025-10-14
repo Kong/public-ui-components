@@ -11,12 +11,12 @@
 import { watchEffect } from 'vue'
 
 import RedisSelector from '../shared/RedisSelector.vue'
-import { useFormShared } from '../shared/composables'
+import { useFreeformStore } from '../shared/composables'
 import SlideTransition from '../shared/SlideTransition.vue'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 import type { GlobalAction } from '../shared/types'
 
-const { formData } = useFormShared<FreeFormPluginData>()
+const { formData } = useFreeformStore<FreeFormPluginData>()
 
 defineEmits<{
   globalAction: [name: GlobalAction, payload: any]

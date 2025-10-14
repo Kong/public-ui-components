@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { computed, toRef } from 'vue'
 import { KSelect, KMultiselect, type LabelAttributes, type SelectItem, type SelectProps, type MultiselectProps } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared } from './composables'
+import { useField, useFieldAttrs, useFreeformStore } from './composables'
 
 type MultipleSelectProps = { multiple: true } & MultiselectProps<string, false>
 type SingleSelectProps = { multiple?: false } & SelectProps<string, false>
@@ -49,7 +49,7 @@ const emit = defineEmits<{
 }>()
 
 const { name, items, multiple = undefined, ...props } = defineProps<EnumFieldProps>()
-const { getSelectItems } = useFormShared()
+const { getSelectItems } = useFreeformStore()
 const { value: fieldValue, ...field } = useField<number | string>(toRef(() => name))
 
 const fieldAttrs = useFieldAttrs(field.path!, props)

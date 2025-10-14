@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { KLabel } from '@kong/kongponents'
-import { useFormShared } from '../../../shared/composables'
+import { useFreeformStore } from '../../../shared/composables'
 import EnumField from '../../../shared/EnumField.vue'
 import InputsRecordField from './InputsRecordField.vue'
 import InputsMapField from './InputsMapField.vue'
@@ -69,7 +69,7 @@ const emit = defineEmits<{
   'rename:field': [oldName: FieldName, newName: FieldName]
 }>()
 
-const { getSchema } = useFormShared()
+const { getSchema } = useFreeformStore()
 const { i18n: { t } } = useI18n()
 
 const inputsSchema = computed(() => getSchema('inputs'))

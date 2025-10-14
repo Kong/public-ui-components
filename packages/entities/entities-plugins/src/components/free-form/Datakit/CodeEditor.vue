@@ -38,11 +38,11 @@ import * as examples from './examples'
 
 import type { YAMLException } from 'js-yaml'
 import type { DatakitConfig, DatakitPluginData } from './types'
-import { useFormShared } from '../shared/composables'
+import { useFreeformStore } from '../shared/composables'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData } = useFormShared<DatakitPluginData>()
+const { formData } = useFreeformStore<DatakitPluginData>()
 
 defineProps<{
   editing: boolean

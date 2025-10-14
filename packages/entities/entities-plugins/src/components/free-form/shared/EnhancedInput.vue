@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { KInput, KTextArea } from '@kong/kongponents'
 import { ref, watch, useSlots, computed, useAttrs } from 'vue'
-import { useFormShared } from './composables'
+import { useFreeformStore } from './composables'
 
 interface Props {
   modelValue?: string
@@ -47,18 +47,18 @@ watch(() => props.modelValue, (newValue) => {
   innerValue.value = newValue
 })
 
-const { formConfig } = useFormShared()
+const { config } = useFreeformStore()
 
 const handleInput = (value: string) => {
   innerValue.value = value
 
-  if (!formConfig.updateOnChange) {
+  if (!config.value.updateOnChange) {
     emit('update:modelValue', value)
   }
 }
 
 const handleChange = () => {
-  if (formConfig.updateOnChange) {
+  if (config.value.updateOnChange) {
     emit('update:modelValue', innerValue.value!)
   }
 }

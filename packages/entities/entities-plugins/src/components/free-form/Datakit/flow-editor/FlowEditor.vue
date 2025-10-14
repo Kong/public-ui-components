@@ -29,7 +29,7 @@ import { ExpandIcon } from '@kong/icons'
 import { watch } from 'vue'
 
 import english from '../../../../locales/en.json'
-import { useFormShared } from '../../shared/composables'
+import { useFreeformStore } from '../../shared/composables'
 import { provideEditorStore } from '../composables'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
@@ -38,7 +38,7 @@ import type { ConfigNode, DatakitConfig, DatakitPluginData, DatakitUIData, UINod
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData } = useFormShared<DatakitPluginData>()
+const { formData } = useFreeformStore<DatakitPluginData>()
 
 const { isEditing } = defineProps<{
   isEditing?: boolean

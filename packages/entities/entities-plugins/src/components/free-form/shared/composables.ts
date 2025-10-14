@@ -1,20 +1,117 @@
-import { computed, inject, provide, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, provide, reactive, readonly, ref, toRef, toValue, useAttrs, useId, useSlots, watch, type ComputedRef, type InjectionKey, type MaybeRefOrGetter, type Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayFieldSchema, ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
-import { get, set, uniqueId } from 'lodash-es'
+import { cloneDeep, get, isFunction, omit, set, uniqueId } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
 import type { FormConfig, ResetLabelPathRule } from './types'
 import { upperFirst } from 'lodash-es'
+import { createInjectionState } from '@vueuse/core'
 
-export const DATA_INJECTION_KEY = Symbol('free-form-data')
-export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
-export const FIELD_PATH_KEY = Symbol('free-form-field-path')
-export const FIELD_RENDERER_SLOTS = Symbol('free-form-field-renderer-slots')
-export const FIELD_RENDERER_MATCHERS_MAP = Symbol('free-form-field-renderer-matchers-map')
-export const FORM_CONFIG = Symbol('free-form-config')
-export const FIELD_RESET_LABEL_PATH_SETTING = Symbol('free-form-field-reset-label-path-setting')
+export type FreeFormOnChangeMeta = {
+  originType: 'field'
+  fieldPath: string
+  fieldInstanceId: string
+} | {
+  originType: 'form'
+}
+
+export type FreeFormStoreOptions<T extends Record<string, any> = Record<string, any>> = {
+  schema: FormSchema | UnionFieldSchema
+  config?: FormConfig<T>
+  data?: ComputedRef<T>
+  onChange?: (newData: T, meta: FreeFormOnChangeMeta) => void
+}
+
+export const [provideFreeFormStore, useOptionalFreeformStore] = createInjectionState(
+  function createFreeformStore<T extends Record<string, any> = Record<string, any>>(
+    schema: FormSchema | UnionFieldSchema,
+    propsData?: ComputedRef<T>,
+    propsConfig?: FormConfig<T>,
+    onChange?: (newData: T, meta: FreeFormOnChangeMeta) => void,
+  ) {
+    const schemaHelpers = useSchemaHelpers(schema)
+    const fieldRendererRegistry: MatchMap = new Map()
+
+    const innerData = reactive<T>({} as T)
+    const config = toRef(() => propsConfig ?? {})
+
+    /**
+     * Reset the inner data to a new value
+     */
+    function resetInnerData(newValue: T) {
+      Object.keys(innerData).forEach((key) => {
+        delete (innerData as any)[key]
+      })
+      Object.assign(innerData, newValue)
+      onChange?.(readonly(toValue(innerData)), { originType: 'form' })
+    }
+
+    /**
+     * Initialize the inner data based on the provided props data or schema defaults
+     */
+    function initInnerData(propsData: T | undefined) {
+      let dataValue: T
+
+      if (!propsData || !hasValue(toValue(propsData))) {
+        dataValue = schemaHelpers.getDefault()
+      } else {
+        dataValue = cloneDeep(toValue(propsData))
+      }
+
+      if (isFunction(config.value.prepareFormData)) {
+        resetInnerData(config.value.prepareFormData(dataValue))
+      } else {
+        resetInnerData(dataValue)
+      }
+    }
+
+    function hasValue(data: T | undefined): boolean {
+      if (isFunction(config.value.hasValue)) {
+        return config.value.hasValue(data)
+      }
+      return !!data
+    }
+
+    // Sync the inner data when the props data changes
+    watch(() => propsData?.value, newData => {
+      initInnerData(newData)
+    }, { deep: true, immediate: true })
+
+    // Init form level field renderer slots
+    const slots = useSlots()
+    provide(FIELD_RENDERER_SLOTS, omit(slots, 'default', FIELD_RENDERERS))
+
+    function handleFieldChange(meta: FreeFormOnChangeMeta) {
+      onChange?.(readonly(toValue(innerData)), meta)
+    }
+
+    return {
+      formData: innerData,
+      schema,
+      ...schemaHelpers,
+      config,
+      fieldRendererRegistry,
+      onFieldChange: handleFieldChange,
+    }
+  },
+)
+
+export function useFreeformStore<T extends Record<string, any> = Record<string, any>>() {
+  const store = useOptionalFreeformStore()
+  if (!store) {
+    throw new Error('useFreeformStore() called without provider.')
+  }
+  return store as ReturnType<typeof useOptionalFreeformStore> & { formData: T, config: ComputedRef<FormConfig<T>> }
+}
+
+export const FIELD_PATH_KEY = Symbol('free-form-field-path') as InjectionKey<ComputedRef<string>>
+export const FIELD_RENDERER_SLOTS = Symbol('free-form-field-renderer-slots') as InjectionKey<MaybeRefOrGetter<Record<string, Slot | undefined>>>
+export const FIELD_RESET_LABEL_PATH_SETTING = Symbol('free-form-field-reset-label-path-setting') as InjectionKey<MaybeRefOrGetter<{
+  parentPath: string | null
+  isolate: boolean
+}>>
 
 export const FIELD_RENDERERS = 'free-form-field-renderers-slot' as const
 
@@ -220,6 +317,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
   }
 
   return {
+    schemaMap,
     getSchema,
     getDefault,
     getSelectItems,
@@ -228,24 +326,8 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
   }
 }
 
-export function useFormShared<T>() {
-  const formData = inject<T>(DATA_INJECTION_KEY)
-  const schemaHelpers = inject<ReturnType<typeof useSchemaHelpers>>(SCHEMA_INJECTION_KEY)
-  const formConfig = inject<FormConfig>(FORM_CONFIG, {})
-
-  if (!formData) {
-    throw new Error('useFormShared() called without form data provider.')
-  }
-
-  if (!schemaHelpers) {
-    throw new Error('useFormShared() called without schema provider.')
-  }
-
-  return { formData, formConfig, ...schemaHelpers }
-}
-
 export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
-  const inheritedPath = inject<ComputedRef<string>>(FIELD_PATH_KEY, computed(() => ''))
+  const inheritedPath = inject(FIELD_PATH_KEY, computed(() => ''))
 
   const fieldPath = computed(() => {
     const nameValue = toValue(name)
@@ -269,11 +351,10 @@ export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
 }
 
 export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
-  const { getSchema } = useFormShared()
+  const { getSchema } = useFreeformStore()
   const { default: defaultSlot, ...slots } = useSlots()
-  const inheritSlots = inject<MaybeRefOrGetter<Record<string, Slot>>>(FIELD_RENDERER_SLOTS)
-
-  const matchMap = inject<MatchMap>(FIELD_RENDERER_MATCHERS_MAP)!
+  const { fieldRendererRegistry } = useFreeformStore()
+  const inheritSlots = inject(FIELD_RENDERER_SLOTS)
 
   const mergedSlots = computed(() => {
     const inheritSlotsValue = toValue(inheritSlots)
@@ -297,7 +378,7 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
     if (matchedByPath) return matchedByPath
 
     // todo(zehao): priority
-    for (const [matcher, slot] of matchMap) {
+    for (const [matcher, slot] of fieldRendererRegistry) {
       if (matcher({ path: pathValue, schema: getSchema(pathValue)! })) {
         return slot
       }
@@ -400,9 +481,8 @@ export function useFieldLabel(
 ) {
   const pathValue = toValue(fieldPath)
   const fieldName = utils.getName(pathValue)
-  const { formConfig } = useFormShared()
+  const { config, getSchema } = useFreeformStore()
   const parentLabelPath = useLabelPath(fieldName, resetLabelPathRule)
-  const { getSchema } = useFormShared()
   const ancestors = useFieldAncestors(fieldPath)
 
   return computed(() => {
@@ -418,7 +498,7 @@ export function useFieldLabel(
       ? '' // hide the label when it is a child of Array
       : defaultLabelFormatter(realPath)
 
-    return formConfig.transformLabel ? formConfig.transformLabel(res, pathValue) : res
+    return config.value.transformLabel ? config.value.transformLabel(res, pathValue) : res
   })
 }
 
@@ -432,7 +512,7 @@ export function useFieldAttrs(
     resetLabelPath?: ResetLabelPathRule
   }>,
 ) {
-  const { getLabelAttributes, getPlaceholder, getSchema } = useFormShared()
+  const { getLabelAttributes, getPlaceholder, getSchema } = useFreeformStore()
 
   const pathValue = toValue(fieldPath)
   const propsValue = toValue(props)
@@ -477,12 +557,19 @@ export function useFieldAncestors(fieldPath: MaybeRefOrGetter<string>) {
   })
 }
 
-export function useFormData<T>(name: MaybeRefOrGetter<string>) {
-  const { formData } = useFormShared()
+export function useFormData<T>(name: MaybeRefOrGetter<string>, instanceId: string) {
+  const { formData, onFieldChange } = useFreeformStore()
   const fieldPath = useFieldPath(name)
   const value = computed<T>({
     get: () => get(formData, utils.toArray(fieldPath.value)),
-    set: (v) => set(formData, utils.toArray(fieldPath.value), v),
+    set: (v) => {
+      set(formData, utils.toArray(fieldPath.value), v)
+      onFieldChange?.({
+        originType: 'field',
+        fieldPath: fieldPath.value,
+        fieldInstanceId: instanceId,
+      })
+    },
   })
 
   return {
@@ -491,10 +578,11 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
 }
 
 export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
-  const { getSchema } = useFormShared()
+  const instanceId = useId()
+  const { getSchema } = useFreeformStore()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
-  const { value } = useFormData<TData>(name)
+  const { value } = useFormData<TData>(name, instanceId)
 
   const schema = computed(() => getSchema<TSchema>(fieldPath.value))
 
@@ -505,6 +593,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
   }
 
   return {
+    instanceId,
     schema,
     path: fieldPath,
     renderer,
@@ -516,7 +605,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
 
 
 export function useIsAutoFocus(fieldAncestors?: MaybeRefOrGetter<Ancestor>) {
-  const { getSchema } = useFormShared()
+  const { getSchema } = useFreeformStore()
   const attrs = useAttrs()
 
   return computed(() => {

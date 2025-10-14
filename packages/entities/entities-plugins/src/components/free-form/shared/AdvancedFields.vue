@@ -30,12 +30,12 @@ import { ref } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KCollapse } from '@kong/kongponents'
 import english from '../../../locales/en.json'
-import { useFormShared } from './composables'
+import { useFreeformStore } from './composables'
 import StringArrayField from './StringArrayField.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { getSchema } = useFormShared()
+const { getSchema } = useFreeformStore()
 
 const advancedCollapsed = ref(true)
 </script>

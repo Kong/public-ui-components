@@ -4,7 +4,7 @@ import { buildAdjacency, hasCycle } from '../store/validation'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
 import { findFieldById, findFieldByName, getNodeMeta, parseIdConnection } from '../store/helpers'
 import { isReadableProperty } from '../node/property'
-import { useFormShared } from '../../../shared/composables'
+import { useFreeformStore } from '../../../shared/composables'
 import type { ArrayLikeFieldSchema, RecordFieldSchema } from '../../../../../types/plugins/form-schema'
 import { isImplicitType } from '../node/node'
 import { ResponseSchema, ServiceRequestSchema } from '../node/schemas'
@@ -413,7 +413,7 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
 }
 
 export function useSubSchema(subSchemaName: Exclude<NodeType, 'request' | 'service_response'>) {
-  const { getSchema } = useFormShared()
+  const { getSchema } = useFreeformStore()
   return computed(() => {
 
     // Implicit nodes do not have schema, we hardcoded schemas for them

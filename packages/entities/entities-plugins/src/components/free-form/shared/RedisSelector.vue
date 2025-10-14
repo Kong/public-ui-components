@@ -193,10 +193,14 @@ const selectedRedisConfigItem = ref<string | number | undefined>(props.defaultRe
 const redisFieldsSaved = ref<Redis>({})
 const partialsSaved = ref<PartialArray | undefined>()
 
-// initialize getter and setter for redis partial/redis fields
-const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.partials')
+const { value: redisFieldsValue, ...field } = useField<Redis | undefined>(formRedisPath)
 
-const { value: redisFieldsValue } = useField<Redis | undefined>(formRedisPath)
+if (field.error) {
+  throw new Error(`Field error: ${field.error.message}`)
+}
+
+// initialize getter and setter for redis partial/redis fields
+const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.partials', field.instanceId)
 
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
 const pageSize = '1000' // the API returns all partials, so we have to set a high page size to filter them on the frontend

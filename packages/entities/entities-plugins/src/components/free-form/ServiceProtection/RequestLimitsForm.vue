@@ -108,7 +108,7 @@ import { get } from 'lodash-es'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../locales/en.json'
 import { computed, nextTick, ref } from 'vue'
-import { useFormShared, useItemKeys } from '../shared/composables'
+import { useFreeformStore, useItemKeys } from '../shared/composables'
 import RadioField from '../shared/RadioField.vue'
 import NumberField from '../shared/NumberField.vue'
 
@@ -138,7 +138,7 @@ interface UseCase {
   }
 }
 
-const { formData, getSelectItems, getSchema } = useFormShared<FormData>()
+const { formData, getSelectItems, getSchema } = useFreeformStore<FormData>()
 
 const requestLimits = computed<RequestLimit[]>(() => {
   const modelValue = formData.config?.limit?.map((limit, index) => {

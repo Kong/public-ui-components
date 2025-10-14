@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import type { SelectItem } from '@kong/kongponents'
 import useI18n from '../../../../../composables/useI18n'
-import { useFormShared } from '../../../shared/composables'
+import { useFreeformStore } from '../../../shared/composables'
 import { computed, ref, watch } from 'vue'
 import {
   extractKeyFromProperty,
@@ -84,7 +84,7 @@ const emit = defineEmits<{
   (e: 'update:property-key', value: string): void
 }>()
 
-const { formData } = useFormShared<{ property: string | null }>()
+const { formData } = useFreeformStore<{ property: string | null }>()
 
 const lastPropertyValueWithoutKey = ref<string | null>(getPropertyWithoutKey(formData.property))
 
