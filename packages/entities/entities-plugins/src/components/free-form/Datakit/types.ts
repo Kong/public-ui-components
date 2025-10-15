@@ -208,9 +208,10 @@ export type BranchEdgeData = {
 
 export type FlowEdge = Edge<EdgeData | BranchEdgeData>
 
-export type GroupLayout = {
+export interface GroupLayout {
   position: XYPosition
   dimensions: Dimensions
+  commit: boolean
 }
 
 export interface UIGroup {

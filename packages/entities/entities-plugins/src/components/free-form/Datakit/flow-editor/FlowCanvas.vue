@@ -74,14 +74,13 @@
 </template>
 
 <script setup lang="ts">
-import { AddIcon, AutoLayoutIcon, RemoveIcon, FullscreenIcon } from '@kong/icons'
+import { AddIcon, AutoLayoutIcon, FullscreenIcon, RemoveIcon } from '@kong/icons'
 import { KTooltip } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
-import type { NodeMouseEvent } from '@vue-flow/core'
 import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core'
-import { computed, nextTick, ref, useTemplateRef } from 'vue'
+import { computed, ref, useTemplateRef } from 'vue'
 
 import useI18n from '../../../../composables/useI18n'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
@@ -95,6 +94,7 @@ import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
 import '@vue-flow/core/dist/theme-default.css'
 
+import type { NodeMouseEvent } from '@vue-flow/core'
 import type { Component } from 'vue'
 
 import type { DragPayload, NodePhase } from '../types'
@@ -203,9 +203,9 @@ function onDrop(e: DragEvent) {
   propertiesPanelOpen.value = true
 }
 
-function onClickAutoLayout() {
-  autoLayout()
-  nextTick(() => fitView())
+async function onClickAutoLayout() {
+  await autoLayout()
+  setTimeout(() => fitView(), 0) // Have to use `setTimeout` here
 }
 
 type ControlAction = 'zoom_in' | 'zoom_out' | 'fit_view' | 'auto_layout'
