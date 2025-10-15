@@ -648,8 +648,13 @@ export const TIMEFRAME_LOOKUP: Record<string, TimeframeKeys> = {
   '24h': TimeframeKeys.ONE_DAY,
   '7d': TimeframeKeys.SEVEN_DAY,
   '30d': TimeframeKeys.THIRTY_DAY,
+  '90d': TimeframeKeys.NINETY_DAY,
+  '180d': TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY,
+  '365d': TimeframeKeys.ONE_YEAR,
   current_week: TimeframeKeys.CURRENT_WEEK,
   current_month: TimeframeKeys.CURRENT_MONTH,
+  current_year: TimeframeKeys.CURRENT_YEAR,
   previous_week: TimeframeKeys.PREVIOUS_WEEK,
   previous_month: TimeframeKeys.PREVIOUS_MONTH,
+  previous_year: TimeframeKeys.PREVIOUS_YEAR,
 }
