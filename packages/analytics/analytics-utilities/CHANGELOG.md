@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.5.0...@kong-ui-public/analytics-utilities@11.5.1) (2025-10-15)
+
+
+### Bug Fixes
+
+* remove country_code from wildcard dimensions ([#2566](https://github.com/Kong/public-ui-components/issues/2566)) ([a71e12d](https://github.com/Kong/public-ui-components/commit/a71e12d245a1f5b729526d8a32f0b8db21dd42fb))
+
+
+
+
+
 # [11.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.4.0...@kong-ui-public/analytics-utilities@11.5.0) (2025-09-29)
 
 
