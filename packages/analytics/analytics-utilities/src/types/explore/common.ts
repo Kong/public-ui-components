@@ -49,6 +49,11 @@ export const relativeTimeRangeValuesV4 = [
   '30d',
   'current_month',
   'previous_month',
+  '90d',
+  '180d',
+  '360d',
+  'current_year',
+  'previous_year',
 ] as const
 
 export type RelativeTimeRangeValuesV4 = typeof relativeTimeRangeValuesV4[number]

@@ -207,6 +207,23 @@ class CurrentMonth extends Timeframe {
   }
 }
 
+class CurrentYear extends Timeframe {
+  rawStart(tz?: string): Date {
+    // `startOfYear` isn't aware of timezones, so the resulting "start of year" time is in the local timezone.
+    let firstOfTheYear = new Date(this.tzAdjustedDate(tz).getFullYear(), 0, 1)
+
+    if (tz) {
+      firstOfTheYear = adjustForTz(firstOfTheYear, tz)
+    }
+
+    return firstOfTheYear
+  }
+
+  maximumTimeframeLength() {
+    return 60 * 60 * 24 * 366
+  }
+}
+
 class PreviousWeek extends Timeframe {
   rawEnd(tz?: string): Date {
     // `startOfWeek` isn't aware of timezones, so the resulting "start of month" time is in the local timezone.
@@ -256,6 +273,30 @@ class PreviousMonth extends Timeframe {
     }
 
     return lastMonth
+  }
+}
+
+class PerviousYear extends Timeframe {
+  rawEnd(tz?: string): Date {
+    // `startOfYear` isn't aware of timezones, so the resulting "start of year" time is in the local timezone.
+    let thisYear = new Date(this.tzAdjustedDate(tz).getFullYear(), 0, 1)
+
+    if (tz) {
+      thisYear = adjustForTz(thisYear, tz)
+    }
+
+    return thisYear
+  }
+
+  rawStart(tz?: string): Date {
+    // `startOfYear` isn't aware of timezones, so the resulting "start of year" time is in the local timezone.
+    let lastYear = new Date(this.tzAdjustedDate(tz).getFullYear() - 1, 0, 1)
+
+    if (tz) {
+      lastYear = adjustForTz(lastYear, tz)
+    }
+
+    return lastYear
   }
 }
 
@@ -372,6 +413,51 @@ export const TimePeriods = new Map<string, Timeframe>([
     }),
   ],
   [
+    TimeframeKeys.NINETY_DAY,
+    new Timeframe({
+      key: TimeframeKeys.NINETY_DAY,
+      display: 'Last 90 days',
+      timeframeText: '90 days',
+      timeframeLength: () => 60 * 60 * 24 * 90,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: true,
+      fineGrainedDefaultGranularity: 'daily',
+      allowedTiers: ['trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['hourly', 'twoHourly', 'twelveHourly', 'daily', 'weekly'],
+    }),
+  ],
+  [
+    TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY,
+    new Timeframe({
+      key: TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY,
+      display: 'Last 180 days',
+      timeframeText: '180 days',
+      timeframeLength: () => 60 * 60 * 24 * 180,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: true,
+      fineGrainedDefaultGranularity: 'daily',
+      allowedTiers: ['trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['hourly', 'twoHourly', 'twelveHourly', 'daily', 'weekly'],
+    }),
+  ],
+  [
+    TimeframeKeys.THREE_HUNDRED_SIXTY_DAY,
+    new Timeframe({
+      key: TimeframeKeys.THREE_HUNDRED_SIXTY_DAY,
+      display: 'Last 360 days',
+      timeframeText: '360 days',
+      timeframeLength: () => 60 * 60 * 24 * 360,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: true,
+      fineGrainedDefaultGranularity: 'daily',
+      allowedTiers: ['trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['hourly', 'twoHourly', 'twelveHourly', 'daily', 'weekly'],
+    }),
+  ],
+  [
     TimeframeKeys.CURRENT_WEEK,
     new CurrentWeek({
       key: TimeframeKeys.CURRENT_WEEK,
@@ -404,6 +490,25 @@ export const TimePeriods = new Map<string, Timeframe>([
         const end = startOfDay(addDays(new Date(), 1))
 
         return (end.getTime() - firstOfTheMonth.getTime()) / 1000
+      },
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: false,
+      allowedTiers: ['plus', 'enterprise'],
+    }),
+  ],
+  [
+    TimeframeKeys.CURRENT_YEAR,
+    new CurrentYear({
+      key: TimeframeKeys.CURRENT_YEAR,
+      display: 'This year',
+      timeframeText: 'Year',
+      timeframeLength: () => {
+        // Jan 1 -> now
+        const firstOfTheYear = new Date(new Date().getFullYear(), 0, 1)
+        const end = startOfDay(addDays(new Date(), 1))
+
+        return (end.getTime() - firstOfTheYear.getTime()) / 1000
       },
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
@@ -446,6 +551,29 @@ export const TimePeriods = new Map<string, Timeframe>([
         return (
           60 * 60 * 24 * getDaysInMonth(new Date().setMonth(new Date().getMonth() - 1)) + hoursToSeconds(offset)
         )
+      },
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: false,
+      allowedTiers: ['plus', 'enterprise'],
+    }),
+  ],
+  [
+    TimeframeKeys.PREVIOUS_YEAR,
+    new PerviousYear({
+      key: TimeframeKeys.PREVIOUS_YEAR,
+      display: 'Previous year',
+      timeframeText: 'Year',
+      timeframeLength: () => {
+        // Not all years have the same number of days (leap years).
+        const end = new Date(new Date().getFullYear(), 0, 1)
+        const start = new Date(new Date().getFullYear() - 1, 0, 1)
+        let offset = 0
+        if (end.getTimezoneOffset() !== start.getTimezoneOffset()) {
+          offset = dstOffsetHours(end, start)
+        }
+
+        return 60 * 60 * 24 * (365 + (start.getFullYear() % 4 === 0 ? 1 : 0)) + hoursToSeconds(offset)
       },
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
