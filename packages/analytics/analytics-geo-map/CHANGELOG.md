@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.9...@kong-ui-public/analytics-geo-map@1.4.10) (2025-10-15)
+
+
+### Bug Fixes
+
+* properly translate metric unit ([#2567](https://github.com/Kong/public-ui-components/issues/2567)) ([75dbdf4](https://github.com/Kong/public-ui-components/commit/75dbdf4085a776d3a889d041cd42445f4ea1b1ef))
+
+
+
+
+
 ## [1.4.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.8...@kong-ui-public/analytics-geo-map@1.4.9) (2025-10-15)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-geo-map
