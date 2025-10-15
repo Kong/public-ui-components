@@ -209,7 +209,6 @@ class CurrentMonth extends Timeframe {
 
 class CurrentYear extends Timeframe {
   rawStart(tz?: string): Date {
-    // `startOfYear` isn't aware of timezones, so the resulting "start of year" time is in the local timezone.
     let firstOfTheYear = new Date(this.tzAdjustedDate(tz).getFullYear(), 0, 1)
 
     if (tz) {
@@ -278,7 +277,6 @@ class PreviousMonth extends Timeframe {
 
 class PerviousYear extends Timeframe {
   rawEnd(tz?: string): Date {
-    // `startOfYear` isn't aware of timezones, so the resulting "start of year" time is in the local timezone.
     let thisYear = new Date(this.tzAdjustedDate(tz).getFullYear(), 0, 1)
 
     if (tz) {
@@ -289,7 +287,6 @@ class PerviousYear extends Timeframe {
   }
 
   rawStart(tz?: string): Date {
-    // `startOfYear` isn't aware of timezones, so the resulting "start of year" time is in the local timezone.
     let lastYear = new Date(this.tzAdjustedDate(tz).getFullYear() - 1, 0, 1)
 
     if (tz) {
@@ -443,12 +440,12 @@ export const TimePeriods = new Map<string, Timeframe>([
     }),
   ],
   [
-    TimeframeKeys.THREE_HUNDRED_SIXTY_DAY,
+    TimeframeKeys.ONE_YEAR,
     new Timeframe({
-      key: TimeframeKeys.THREE_HUNDRED_SIXTY_DAY,
-      display: 'Last 360 days',
-      timeframeText: '360 days',
-      timeframeLength: () => 60 * 60 * 24 * 360,
+      key: TimeframeKeys.ONE_YEAR,
+      display: 'Last 365 days',
+      timeframeText: '365 days',
+      timeframeLength: () => 60 * 60 * 24 * 365,
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
       isRelative: true,

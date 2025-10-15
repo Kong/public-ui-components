@@ -9,7 +9,7 @@ export enum TimeframeKeys {
   THIRTY_DAY = '30d',
   NINETY_DAY = '90d',
   ONE_HUNDRED_EIGHTY_DAY = '180d',
-  THREE_HUNDRED_SIXTY_DAY = '360d',
+  ONE_YEAR = '365d',
   CURRENT_WEEK = 'current_week',
   CURRENT_MONTH = 'current_month',
   CURRENT_QUARTER = 'current_quarter',

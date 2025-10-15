@@ -51,7 +51,7 @@ export const relativeTimeRangeValuesV4 = [
   'previous_month',
   '90d',
   '180d',
-  '360d',
+  '365d',
   'current_year',
   'previous_year',
 ] as const
