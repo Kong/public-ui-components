@@ -1261,24 +1261,6 @@ const handleClickCancel = (): void => {
  */
 
 /**
- * Build the validate URL. Currently doesn't work for credentials.
- */
-const validateSubmitUrl = computed((): string => {
-  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].validate}`
-
-  if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config.workspace ? `/${props.config.workspace}` : '')
-  }
-
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.pluginId)
-
-  return url
-})
-
-/**
  * Build the submit URL
  */
 const submitUrl = computed((): string => {
@@ -1369,12 +1351,6 @@ const saveFormData = async (): Promise<void> => {
         payload,
         schema: finalSchema.value,
       })
-    }
-
-    // TODO: determine validate URL for credentials
-    // don't validate custom plugins
-    if (!treatAsCredential.value && !isCustomPlugin.value) {
-      await axiosInstance.post(validateSubmitUrl.value, payload)
     }
 
     if (formType.value === 'create') {
