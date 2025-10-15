@@ -41,17 +41,6 @@ describe('<CACertificateForm />', () => {
     const interceptUpdate = (status = 200): void => {
       cy.intercept(
         {
-          method: 'POST',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/schemas/ca_certificates/validate`,
-        },
-        {
-          statusCode: status,
-          body: { },
-        },
-      ).as('validateCertificate')
-
-      cy.intercept(
-        {
           method: 'PATCH',
           url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/ca_certificates/*`,
         },
@@ -197,7 +186,6 @@ describe('<CACertificateForm />', () => {
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateCertificate')
       cy.wait('@updateCertificate')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
@@ -222,17 +210,6 @@ describe('<CACertificateForm />', () => {
     }
 
     const interceptUpdate = (status = 200): void => {
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/schemas/json/ca-certificate/validate`,
-        },
-        {
-          statusCode: status,
-          body: { },
-        },
-      ).as('validateCertificate')
-
       cy.intercept(
         {
           method: 'PUT',
@@ -380,7 +357,6 @@ describe('<CACertificateForm />', () => {
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateCertificate')
       cy.wait('@updateCertificate')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')

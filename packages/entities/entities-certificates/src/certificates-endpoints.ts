@@ -10,12 +10,10 @@ export default {
     konnect: {
       create: `${konnectBaseApiUrl}/certificates`,
       edit: `${konnectBaseApiUrl}/certificates/{id}`,
-      validate: `${konnectBaseApiUrl}/v1/schemas/json/certificate/validate`,
     },
     kongManager: {
       create: `${KMBaseApiUrl}/certificates`,
       edit: `${KMBaseApiUrl}/certificates/{id}`,
-      validate: `${KMBaseApiUrl}/schemas/certificates/validate`,
     },
   },
 }
