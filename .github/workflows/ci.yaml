@@ -228,7 +228,7 @@ jobs:
         uses: Kong/github-action-dist-size-checker@main
 
       - name: Publish Previews
-        if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || github.actor != 'mend[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
+        if: ${{ github.event_name == 'pull_request' && steps.changed_packages.outputs.filter != '' && (github.actor != 'renovate[bot]' || contains(github.event.pull_request.labels.*.name, 'create preview package')) && env.GH_TOKEN != '' }}
 
         run: |
           git config user.email "konnectx-engineers+kongponents-bot@konghq.com"
