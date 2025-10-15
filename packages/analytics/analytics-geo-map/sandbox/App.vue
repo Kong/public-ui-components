@@ -45,7 +45,7 @@
         :country-metrics="countryMetrics"
         :fit-to-country="fitToCountry"
         :metric="'request_count'"
-        :metric-unit="'requests'"
+        :metric-unit="'count'"
         @bounds-change="console.log('bounds changed', $event)"
       />
     </div>
@@ -117,9 +117,9 @@ const genNewBounds = (reset = false) => {
   height: 900px;
 
   .row {
-    margin-top: 1em;
     display: flex;
     gap: 2em;
+    margin-top: 1em;
 
     .select-countries {
       width: 50%;
@@ -127,8 +127,8 @@ const genNewBounds = (reset = false) => {
   }
 
   .map-container {
-    margin-top: 1em;
     height: 700px;
+    margin-top: 1em;
     width: 900px;
   }
 }

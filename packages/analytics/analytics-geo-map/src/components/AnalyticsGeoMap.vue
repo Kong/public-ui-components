@@ -286,7 +286,7 @@ onMounted(async () => {
               label: admin,
               color: getColor(metric),
               value: formatMetric(metric),
-              unit: metricUnit,
+              unit: i18n.t(`metricUnits.${metricUnit}`, { plural: metric > 1 ? 's' : '' }),
             }
 
             showTooltip.value = true
