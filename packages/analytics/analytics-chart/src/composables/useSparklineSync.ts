@@ -37,7 +37,7 @@ export default function useSparklineSync({
   maxStamp = undefined,
   minCount = undefined,
   maxCount = undefined,
-  renderPoints = 24,
+  renderPoints = undefined,
   type,
 }: {
   chartKey?: string
@@ -63,6 +63,7 @@ export default function useSparklineSync({
       fill?: boolean
     }>>
   } {
+  const DEFAULT_RENDER_POINTS = 24
 
   const state = groupKey !== undefined && chartKey !== undefined ? getStateByGroup(groupKey) : createState()
   const localKey = chartKey !== undefined ? chartKey : 'static-chart-key'
@@ -88,12 +89,12 @@ export default function useSparklineSync({
     }, 0)
   })
 
-  const actualRenderPoints = computed(() => Math.max(2, renderPoints))
-
   watchEffect(() => {
     state.minStamps[localKey] = actualMinStamp.value
     state.maxStamps[localKey] = actualMaxStamp.value
-    state.renderPoints[localKey] = actualRenderPoints.value
+    if (renderPoints !== undefined) {
+      state.renderPoints[localKey] = renderPoints
+    }
   })
 
   const syncedMinStamp = computed<number>(() => {
@@ -111,10 +112,16 @@ export default function useSparklineSync({
   })
 
   const syncedRenderPoints = computed(() => {
-    return Object.values(state.renderPoints)
-      .reduce((max, points): number => {
-        return Math.max(max, points)
-      }, 0)
+    const values = Object.values(state.renderPoints)
+    if (values.length === 0) {
+      // if no sparkline defined renderPoints, then just use the default
+      return DEFAULT_RENDER_POINTS
+    }
+
+    // otherwise, return the largest count (as long as it's 2 or greater)
+    return values.reduce((max, points): number => {
+      return Math.max(max, points)
+    }, 2)
   })
 
   const syncedGroupSizeMs = computed<number>(() => {
@@ -131,7 +138,7 @@ export default function useSparklineSync({
     fill?: boolean
   }>>(() => datasets.map(({ timestamps, color, label }) => {
     const buckets = bucketTimestamps({
-      groupSizeMs: syncedGroupSizeMs.value,
+      bucketCount: syncedRenderPoints.value,
       minStamp: syncedMinStamp.value,
       maxStamp: syncedMaxStamp.value,
       timestamps,
@@ -151,11 +158,12 @@ export default function useSparklineSync({
     }
   }))
 
-  const allCounts = computed<number[]>(() => {
-    const bucketSize = syncedChartDatasets.value[0]?.data?.length ?? 0
+  const compoundCounts = computed<number[]>(() => {
+    // the counts when all datasets are stacked on top of each other
+    const bucketCount = syncedChartDatasets.value[0]?.data?.length ?? 0
     const counts = []
 
-    for (let i = 0; i < bucketSize; i++) {
+    for (let i = 0; i < bucketCount; i++) {
       let value = 0
       for (let j = 0; j < syncedChartDatasets.value.length; j++) {
         value += syncedChartDatasets.value[j].data[i].y
@@ -166,7 +174,7 @@ export default function useSparklineSync({
   })
 
   const actualMaxCount = computed(() => {
-    const datasetsMax = allCounts.value.reduce((max, count): number => {
+    const datasetsMax = compoundCounts.value.reduce((max, count): number => {
       return Math.max(max, count)
     }, 0)
 
@@ -174,11 +182,18 @@ export default function useSparklineSync({
   })
 
   const actualMinCount = computed(() => {
-    const datasetsMin = allCounts.value.reduce((min, count): number => {
-      return Math.min(min, count)
-    }, 0)
+    const allCounts = syncedChartDatasets.value.reduce((acc, { data }) => {
+      return [...acc, ...data.map(({ y }) => y)]
+    }, [] as number[])
 
-    return Math.min(datasetsMin, minCount ?? 0)
+    const firstValue = allCounts.length ? allCounts[0] : 0
+    const datasetsMin = allCounts.reduce((min, count): number => {
+      return Math.min(min, count)
+    }, firstValue)
+
+    return minCount === undefined
+      ? datasetsMin
+      : Math.min(datasetsMin, minCount)
   })
 
   watchEffect(() => {
@@ -187,10 +202,11 @@ export default function useSparklineSync({
   })
 
   const syncedMinCount = computed(() => {
-    return Object.values(state.minCounts)
-      .reduce((min, count): number => {
-        return Math.min(min, count)
-      }, 0)
+    const values = Object.values(state.minCounts)
+    const firstValue = values.length ? values[0] : 0
+    return values.reduce((min, count): number => {
+      return Math.min(min, count)
+    }, firstValue)
   })
 
   const syncedMaxCount = computed(() => {

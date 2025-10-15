@@ -72,8 +72,8 @@ const {
   disableTooltip = false,
   groupKey = undefined, // highly recommended
   maxCount = undefined,
-  maxStamp = Date.now(),
-  minCount = 0,
+  maxStamp = undefined,
+  minCount = undefined,
   minStamp = undefined,
   pointRenderCount = 24,
   showLabel = false,
@@ -230,78 +230,94 @@ const chartData = computed(() => ({
 
 const isStacked = computed<boolean>(() => datasets.length > 1)
 const positionKey = `SparklineTooltipPosition-${chartId}`
-const options = computed<ChartOptions>(() => ({
-  maintainAspectRatio: false,
-  elements: {
-    categoryPercentage: 1,
-    barPercentage: 1,
-    line: {
-      tension: 0,
-      stepped: type === 'sparkline_step',
-      borderWidth: 1,
-    },
-    point: {
-      radius: 0,
-      pointHitRadius: 11,
-      pointHoverRadius: 0,
-    },
-  },
-  interaction: {
-    intersect: false,
-    mode: 'index',
-  },
-  layout: {
-    padding: 0,
-  },
-  plugins: {
-    legend: {
-      display: false,
-    },
-    tooltip: {
-      enabled: false,
-      position: positionKey,
-      external: (context: ExternalTooltipContext) => {
-        lineChartTooltipBehavior(tooltipData, context, 'minutely', {
-          contextFormatter: (x: number) => {
-            const rangeEnd = x + syncedGroupSizeMs.value
+const options = computed<ChartOptions>(() => {
+  const isBar = type === 'sparkline_bar'
 
-            let end: string | number = ''
-            if (syncedGroupSizeMs.value > 24 * 60 * 60 * 1000) {
-              // more than a day
-              end = format(new Date(rangeEnd), 'MMM dd, yyy hh:mm a')
-            } else {
-              end = format(new Date(rangeEnd), 'hh:mm a')
-            }
+  const xMin = isBar
+    ? syncedMinStamp.value - 1 // offset to handle the half-width of bar centering
+    : syncedMinStamp.value
 
-            return `${formatTime(x)} - ${end}`
-          },
-        })
+  const xMax = isBar
+    ? syncedMaxStamp.value
+    : syncedMaxStamp.value - syncedGroupSizeMs.value // non-bar charts graph from the left edge of the bucket, so the last datapoint is syncedGroupSizeMs away from the edge of the graph
+
+  return {
+    maintainAspectRatio: false,
+    elements: {
+      categoryPercentage: 1,
+      barPercentage: 1,
+      line: {
+        tension: 0,
+        stepped: type === 'sparkline_step',
+        borderWidth: 1,
+      },
+      point: {
+        radius: 0,
+        pointHitRadius: 11,
+        pointHoverRadius: 0,
       },
     },
-  },
-  scales: {
-    x: {
-      min: syncedMinStamp.value - 1, // this allows a value exactly equal to minStamp to be drawn without clipping
-      max: syncedMaxStamp.value,
-      type: 'timeseries',
-      offset: false,
-      grid: {
+    interaction: {
+      intersect: false,
+      mode: 'index',
+    },
+    layout: {
+      padding: {
+        left: isBar ? 0 : 2,
+        right: isBar ? 0 : 2,
+        top: 2,
+      },
+    },
+    plugins: {
+      legend: {
         display: false,
       },
-      display: false,
-      stacked: isStacked.value,
-    },
-    y: {
-      min: syncedMinCount.value,
-      max: syncedMaxCount.value,
-      grid: {
-        display: false,
+      tooltip: {
+        enabled: false,
+        position: positionKey,
+        external: (context: ExternalTooltipContext) => {
+          lineChartTooltipBehavior(tooltipData, context, 'minutely', {
+            contextFormatter: (x: number) => {
+              const rangeEnd = x + syncedGroupSizeMs.value
+
+              let end: string | number = ''
+              if (syncedGroupSizeMs.value > 24 * 60 * 60 * 1000) {
+                // more than a day
+                end = format(new Date(rangeEnd), 'MMM dd, yyy hh:mm a')
+              } else {
+                end = format(new Date(rangeEnd), 'hh:mm a')
+              }
+
+              return `${formatTime(x)} - ${end}`
+            },
+          })
+        },
       },
-      display: false,
-      stacked: isStacked.value,
     },
-  },
-}))
+    scales: {
+      x: {
+        min: xMin,
+        max: xMax,
+        type: 'timeseries',
+        offset: false,
+        grid: {
+          display: false,
+        },
+        display: false,
+        stacked: isStacked.value,
+      },
+      y: {
+        min: Math.max(syncedMinCount.value - 1, 0),
+        max: syncedMaxCount.value,
+        grid: {
+          display: false,
+        },
+        display: false,
+        stacked: isStacked.value,
+      },
+    },
+  }
+})
 
 const tooltipTop = ref('0')
 const tooltipLeft = ref('0')
