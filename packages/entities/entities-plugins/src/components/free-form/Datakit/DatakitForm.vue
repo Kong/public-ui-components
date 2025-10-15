@@ -196,10 +196,10 @@ function handleCodeChange(newConfig: unknown) {
   // check if there are some M2 features existed, they are not supported in the UI yet
   // todo(datakit-m2): remove me later
   if (!enableDatakitM2 && isValid) {
-    const datakitConfig = newConfig as DatakitConfig
+    const datakitConfig = newConfig as (DatakitConfig | undefined)
 
     // vault is not support yet.
-    if (datakitConfig.resources?.vault) isValid = false
+    if (datakitConfig?.resources?.vault) isValid = false
 
     // todo: check branch or cache nodes
   }
