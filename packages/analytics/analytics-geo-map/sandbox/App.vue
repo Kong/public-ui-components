@@ -1,60 +1,99 @@
 <template>
   <div class="sandbox-container">
-    <div class="row">
-      <div>
-        <KLabel for="fit">
-          Fit to country
-        </KLabel>
-        <KInput
-          id="fit"
-          v-model="fitToCountry"
-          help="Enter a country code to fit the map to that country"
-          placeholder="e.g. US, DE, JP"
-        />
+    <KCard>
+      <div class="card-content">
+        <div class="map-container">
+          <AnalyticsGeoMap
+            :bounds="bounds"
+            :country-metrics="countryMetrics"
+            :fit-to-country="fitToCountry"
+            :metric="'request_count'"
+            :metric-unit="'count'"
+            @bounds-change="console.log('bounds changed', $event)"
+          />
+        </div>
+        <div class="controls">
+          <div class="row">
+            <div>
+              <KLabel for="fit">
+                Fit to country
+              </KLabel>
+              <KInput
+                id="fit"
+                v-model="fitToCountry"
+                help="Enter a country code to fit the map to that country"
+                placeholder="e.g. US, DE, JP"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="select-countries">
+              <KMultiselect
+                v-model="selectedCountries"
+                :items="items"
+                label="Filter by country"
+              />
+            </div>
+          </div>
+
+          <div class="row">
+            <KButton
+              size="medium"
+              @click="genNewBounds()"
+            >
+              Generate new bounds
+            </KButton>
+            <KButton
+              appearance="secondary"
+              size="medium"
+              @click="genNewBounds(true)"
+            >
+              Reset bounds
+            </KButton>
+          </div>
+        </div>
       </div>
+    </KCard>
 
-      <div class="select-countries">
-        <KMultiselect
-          v-model="selectedCountries"
-          :items="items"
-          label="Filter by country"
-        />
+    <KCard>
+      <div class="card-content">
+        <div class="map-container">
+          <AnalyticsGeoMap
+            :country-metrics="importedCountryMetrics"
+            :metric="'request_count'"
+            :metric-unit="'count'"
+            :with-legend="true"
+          />
+        </div>
+        <div class="controls">
+          <h3>Imported explore result</h3>
+          <CodeText
+            v-model="exploreResultText"
+          />
+        </div>
       </div>
-    </div>
-
-    <div class="row">
-      <KButton
-        size="medium"
-        @click="genNewBounds()"
-      >
-        Generate new bounds
-      </KButton>
-      <KButton
-        appearance="secondary"
-        size="medium"
-        @click="genNewBounds(true)"
-      >
-        Reset bounds
-      </KButton>
-    </div>
-
-
-    <div class="map-container">
-      <AnalyticsGeoMap
-        :bounds="bounds"
-        :country-metrics="countryMetrics"
-        :fit-to-country="fitToCountry"
-        :metric="'request_count'"
-        :metric-unit="'count'"
-        @bounds-change="console.log('bounds changed', $event)"
-      />
-    </div>
+    </KCard>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { AnalyticsGeoMap } from '../src'
+import { AnalyticsGeoMap, exploreResultToCountryMetrics } from '../src'
+import CodeText from './CodeText.vue'
+
+function isValidJson(str: string): boolean {
+  if (!str) return true
+
+  try {
+    JSON.parse(str)
+  } catch {
+    return false
+  }
+
+  return true
+}
+
 
 const items = ref([
   { label: 'US', value: 'US' },
@@ -73,6 +112,11 @@ const items = ref([
   { label: 'MY', value: 'MY' },
 ])
 const fitToCountry = ref()
+const exploreResultText = ref('')
+const isValid = computed(() => exploreResultText.value !== undefined &&
+  exploreResultText.value !== '' &&
+  isValidJson(exploreResultText.value))
+const hasError = computed(() => !isValidJson(exploreResultText.value))
 const selectedCountries = ref<string[]>(items.value.map(i => i.value))
 const bounds = ref<Array<[number, number]>>([
   [-180, -90],
@@ -82,8 +126,9 @@ const bounds = ref<Array<[number, number]>>([
 const countryMetrics = computed(() => {
   const metrics: Record<string, number> = {}
   selectedCountries.value.forEach((country) => {
-    metrics[country] = Math.floor(Math.random() * 50000)
+    metrics[country] = Math.floor(Math.random() * 1000000)
   })
+
   return metrics
 })
 
@@ -110,11 +155,28 @@ const genNewBounds = (reset = false) => {
   bounds.value = [sw, ne]
 }
 
+const importedCountryMetrics = computed(() => {
+  if (!isValid.value) return {}
+
+  return exploreResultToCountryMetrics(JSON.parse(exploreResultText.value || '{}'))
+})
+
 </script>
 
 <style lang="scss" scoped>
 .sandbox-container {
-  height: 900px;
+  .card-content {
+    display: flex;
+    gap: 50px;
+
+    .map-container {
+      flex: 2;
+    }
+
+    .controls {
+      flex: 1;
+    }
+  }
 
   .row {
     display: flex;

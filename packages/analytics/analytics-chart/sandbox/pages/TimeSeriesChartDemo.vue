@@ -447,6 +447,7 @@ watch(multiDimensionToggle, () => {
   .chart-section {
     flex: 3;
   }
+
   .controls-section {
     flex: 1;
   }
