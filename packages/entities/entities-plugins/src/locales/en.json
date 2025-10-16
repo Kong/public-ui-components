@@ -799,8 +799,8 @@
             },
             "cache": {
               "name": "cache",
-              "summary": "Coming soon...",
-              "description": "Coming soon..."
+              "summary": "Fetch cached data",
+              "description": "Fetch data from the cache."
             },
             "request": {
               "name": "request",
