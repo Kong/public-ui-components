@@ -1,4 +1,4 @@
-import type { XYPosition } from '@vue-flow/core'
+import type { Dimensions, XYPosition } from '@vue-flow/core'
 import type {
   ConfigNode,
   CreateNodePayload,
@@ -19,7 +19,6 @@ import type {
   GroupId,
   GroupInstance,
   UIGroup,
-  NodeDimensions,
 } from '../../types'
 
 import { createInjectionState } from '@vueuse/core'
@@ -317,7 +316,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
 
     function setGroupLayout(
       groupId: GroupId,
-      layout: { position: XYPosition, dimensions: NodeDimensions },
+      layout: { position: XYPosition, dimensions: Dimensions },
       commitNow = true,
     ): boolean {
       const group = groupMapById.value.get(groupId)

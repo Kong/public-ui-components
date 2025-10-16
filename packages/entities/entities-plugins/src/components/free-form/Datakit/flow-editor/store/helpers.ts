@@ -1,4 +1,4 @@
-import type { XYPosition } from '@vue-flow/core'
+import type { Dimensions, XYPosition } from '@vue-flow/core'
 import type {
   EdgeId,
   FieldId,
@@ -18,7 +18,6 @@ import type {
   GroupId,
   GroupName,
   GroupInstance,
-  NodeDimensions,
 } from '../../types'
 import { cloneDeep, uniqueId } from 'lodash-es'
 import {
@@ -212,7 +211,7 @@ export function toGroupInstance(
   memberIds: NodeId[],
   layout?: {
     position?: XYPosition
-    dimensions?: NodeDimensions
+    dimensions?: Dimensions
   },
 ): GroupInstance {
   return {

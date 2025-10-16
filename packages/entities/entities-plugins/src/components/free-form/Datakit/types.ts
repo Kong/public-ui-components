@@ -1,7 +1,7 @@
 // types.ts
 import type { Component } from 'vue'
 import type { ButtonProps } from '@kong/kongponents'
-import type { Edge, XYPosition } from '@vue-flow/core'
+import type { Edge, XYPosition, Dimensions } from '@vue-flow/core'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 import type {
   DatakitConfig,
@@ -185,11 +185,6 @@ export interface EdgeInstance extends EdgeData {
   id: EdgeId
 }
 
-export interface NodeDimensions {
-  width: number
-  height: number
-}
-
 export interface GroupInstance {
   id: GroupId
   ownerId: NodeId
@@ -197,7 +192,7 @@ export interface GroupInstance {
   phase: NodePhase
   memberIds: NodeId[]
   position?: XYPosition
-  dimensions?: NodeDimensions
+  dimensions?: Dimensions
 }
 
 export type FlowGroupNodeData = GroupInstance & {
@@ -215,7 +210,7 @@ export type FlowEdge = Edge<EdgeData | BranchEdgeData>
 
 export type GroupLayout = {
   position: XYPosition
-  dimensions: NodeDimensions
+  dimensions: Dimensions
 }
 
 export interface UIGroup {
