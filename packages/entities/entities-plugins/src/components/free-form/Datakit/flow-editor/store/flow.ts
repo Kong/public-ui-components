@@ -25,7 +25,7 @@ import { useEditorStore } from './store'
  * This function is placed here because it is only used in this file.
  */
 function parseHandle(handle: string): { io: 'input' | 'output', field: FieldId } | undefined {
-  const parsed = handle.match(/^(input|output)s@(.*)$/)
+  const parsed = handle.match(/^(input|output)(?:s@(.*))?$/)
   if (!parsed) return undefined
 
   return {
