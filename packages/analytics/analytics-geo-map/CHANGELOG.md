@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.10...@kong-ui-public/analytics-geo-map@1.4.11) (2025-10-16)
+
+
+### Bug Fixes
+
+* **geo-map:** update how legend scales are generated ([#2574](https://github.com/Kong/public-ui-components/issues/2574)) ([9f962f6](https://github.com/Kong/public-ui-components/commit/9f962f6859e49824962a733ccaf05b9abd86430c))
+
+
+
+
+
 ## [1.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.9...@kong-ui-public/analytics-geo-map@1.4.10) (2025-10-15)
 
 
