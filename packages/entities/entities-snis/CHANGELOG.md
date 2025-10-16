@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.10.9...@kong-ui-public/entities-snis@3.10.10) (2025-10-16)
+
+
+### Bug Fixes
+
+* **entities:** skip validate before submit sni form ([#2558](https://github.com/Kong/public-ui-components/issues/2558)) ([3083d53](https://github.com/Kong/public-ui-components/commit/3083d5384a7c77398697b02d42507baf43886f04))
+
+
+
+
+
 ## [3.10.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-snis@3.10.8...@kong-ui-public/entities-snis@3.10.9) (2025-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-snis
