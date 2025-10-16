@@ -275,7 +275,7 @@ class PreviousMonth extends Timeframe {
   }
 }
 
-class PerviousYear extends Timeframe {
+class PreviousYear extends Timeframe {
   rawEnd(tz?: string): Date {
     let thisYear = new Date(this.tzAdjustedDate(tz).getFullYear(), 0, 1)
 
@@ -557,7 +557,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   ],
   [
     TimeframeKeys.PREVIOUS_YEAR,
-    new PerviousYear({
+    new PreviousYear({
       key: TimeframeKeys.PREVIOUS_YEAR,
       display: 'Previous year',
       timeframeText: 'Year',
