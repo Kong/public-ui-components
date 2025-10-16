@@ -9,6 +9,7 @@ import AppPageHeader from './components/pageHeader/AppPageHeader.vue'
 import AppSidebar from './components/sidebar/AppSidebar.vue'
 import SidebarToggle from './components/sidebar/SidebarToggle.vue'
 import AppPageInfoSection from './components/pageInfoSection/AppPageInfoSection.vue'
+import GradientBadge from './components/gradientBadge/GradientBadge.vue'
 
 // Export Vue plugin as the default
 export default {
@@ -30,6 +31,7 @@ export {
   AppSidebar,
   SidebarToggle,
   AppPageInfoSection,
+  GradientBadge,
 }
 
 export * from './types'

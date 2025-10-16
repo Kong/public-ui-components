@@ -36,12 +36,16 @@ A set of Kong UI application layout components that provides a responsive navbar
 
 ## Included components
 
+- `AccountDropdown.vue`
+- `AppAboutSection.vue`
+- `AppError.vue`
 - `AppLayout.vue`
 - `AppNavbar.vue`
-- `AccountDropdown.vue`
+- `AppPageHeader.vue`
 - `AppSidebar.vue`
 - `SidebarToggle.vue`
-- `AppError.vue`
+- `AppPageInfoSection.vue`
+- `GradientBadge.vue`
 
 Reference the [individual component docs](#individual-component-documentation) for more info.
 
@@ -122,3 +126,6 @@ TypeScript interfaces [are available here](https://github.com/Kong/public-ui-com
 - [`<AppNavbar.vue />`](docs/navbar.md)
 - [`<AppSidebar.vue />`](docs/sidebar.md)
 - [`<AppError.vue />`](docs/error.md)
+- [`<AppPageHeader />`](docs/page-header.md)
+- [`<AppAboutSection />`](docs/about-section.md)
+- [`<AppPageInfoSection`](docs/page-info-section.md)
