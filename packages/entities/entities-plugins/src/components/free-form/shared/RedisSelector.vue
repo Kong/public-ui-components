@@ -200,7 +200,7 @@ if (field.error) {
 }
 
 // initialize getter and setter for redis partial/redis fields
-const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.partials', field.instanceId)
+const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.partials')
 
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
 const pageSize = '1000' // the API returns all partials, so we have to set a high page size to filter them on the frontend

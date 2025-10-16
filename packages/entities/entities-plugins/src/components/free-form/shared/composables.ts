@@ -1,4 +1,4 @@
-import { computed, inject, provide, reactive, readonly, ref, toRef, toValue, useAttrs, useId, useSlots, watch, type ComputedRef, type InjectionKey, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, onBeforeUnmount, provide, reactive, readonly, ref, toRef, toValue, useAttrs, useId, useSlots, watch, type ComputedRef, type InjectionKey, type MaybeRefOrGetter, type Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
@@ -26,6 +26,8 @@ export const [provideFreeFormStore, useOptionalFreeformStore] = createInjectionS
   ) {
     const schemaHelpers = useSchemaHelpers(schema)
     const fieldRendererRegistry: MatchMap = new Map()
+
+    const eventListeners: Set<(formData: T, meta: FreeFormOnChangeMeta) => void> = new Set()
 
     const innerData = reactive<T>({} as T)
     const config = toRef(() => propsConfig ?? {})
@@ -78,6 +80,12 @@ export const [provideFreeFormStore, useOptionalFreeformStore] = createInjectionS
 
     function handleFieldChange(meta: FreeFormOnChangeMeta) {
       onChange?.(readonly(toValue(innerData)), meta)
+      eventListeners.forEach(cb => cb(readonly(toValue(innerData)), meta))
+    }
+
+    function addEventListener(cb: (formData: T, meta: FreeFormOnChangeMeta) => void) {
+      eventListeners.add(cb)
+      return () => eventListeners.delete(cb)
     }
 
     return {
@@ -87,6 +95,7 @@ export const [provideFreeFormStore, useOptionalFreeformStore] = createInjectionS
       config,
       fieldRendererRegistry,
       onFieldChange: handleFieldChange,
+      addEventListener,
     }
   },
 )
@@ -550,19 +559,14 @@ export function useFieldAncestors(fieldPath: MaybeRefOrGetter<string>) {
   })
 }
 
-export function useFormData<T>(name: MaybeRefOrGetter<string>, instanceId?: string) {
-  const { formData, onFieldChange } = useFreeformStore()
+export function useFormData<T>(name: MaybeRefOrGetter<string>, onChange?: () => void) {
+  const { formData } = useFreeformStore()
   const fieldPath = useFieldPath(name)
-  const fieldInstanceId = instanceId ?? useId()
   const value = computed<T>({
     get: () => get(formData, utils.toArray(fieldPath.value)),
     set: (v) => {
       set(formData, utils.toArray(fieldPath.value), v)
-      onFieldChange?.({
-        originType: 'field',
-        fieldPath: fieldPath.value,
-        fieldInstanceId,
-      })
+      onChange?.()
     },
   })
 
@@ -573,10 +577,14 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>, instanceId?: stri
 
 export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
   const instanceId = useId()
-  const { getSchema } = useFreeformStore()
+  const { getSchema, onFieldChange, addEventListener } = useFreeformStore()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
-  const { value } = useFormData<TData>(name, instanceId)
+  const { value } = useFormData<TData>(name, () => onFieldChange?.({
+    originType: 'field',
+    fieldPath: fieldPath.value,
+    fieldInstanceId: instanceId,
+  }))
 
   const schema = computed(() => getSchema<TSchema>(fieldPath.value))
 
@@ -586,6 +594,17 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     }
   }
 
+  const eventCleanupFns: Array<() => void> = []
+
+  function onFormDataChange(cb: (formData: any, meta: FreeFormOnChangeMeta) => void) {
+    const cleanup = addEventListener(cb)
+    eventCleanupFns.push(cleanup)
+  }
+
+  onBeforeUnmount(() => {
+    eventCleanupFns.forEach(clean => clean())
+  })
+
   return {
     instanceId,
     schema,
@@ -594,6 +613,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     value,
     ancestors: useFieldAncestors(fieldPath),
     error: null,
+    onFormDataChange,
   }
 }
 
