@@ -9,6 +9,7 @@ import AppPageHeader from './components/pageHeader/AppPageHeader.vue'
 import AppSidebar from './components/sidebar/AppSidebar.vue'
 import SidebarToggle from './components/sidebar/SidebarToggle.vue'
 import AppPageInfoSection from './components/pageInfoSection/AppPageInfoSection.vue'
+import NewBadge from './components/newBadge/NewBadge.vue'
 
 // Export Vue plugin as the default
 export default {
@@ -30,6 +31,7 @@ export {
   AppSidebar,
   SidebarToggle,
   AppPageInfoSection,
+  NewBadge,
 }
 
 export * from './types'
