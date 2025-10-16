@@ -1,39 +1,37 @@
 export default ({
-  groupSizeMs,
+  bucketCount,
   minStamp,
   maxStamp,
   timestamps,
 }: {
-  groupSizeMs: number
+  bucketCount: number
   minStamp: number
   maxStamp: number
   timestamps: number[]
 }): Array<[number, number]> => {
-  const sorted = [...timestamps].sort((a, b) => a - b)
-  const groupCounts: Array<[number, number]> = []
+  const sorted = [...timestamps]
+    .filter((timestamp) => timestamp >= minStamp && timestamp <= maxStamp)
+    .sort((a, b) => a - b)
+
+  const bucketCounts: Array<[number, number]> = []
+  if ((maxStamp - minStamp) < (bucketCount - 2)) {
+    return []
+  }
+  const bucketSizeMs = (maxStamp - minStamp) / bucketCount
 
   let checkIndex = 0
-  let bucket = minStamp
-  while (bucket <= maxStamp && minStamp < maxStamp) {
-    const nextBucket = bucket + groupSizeMs
-
+  for (let bucket = 0; bucket < bucketCount; bucket++) {
+    const bucketMin = minStamp + (bucket * bucketSizeMs)
+    const bucketMax = minStamp + ((bucket + 1) * bucketSizeMs)
     let count = 0
-    for (let i = checkIndex; i < sorted.length; i++) {
-      if (sorted[i] >= bucket && sorted[i] < nextBucket) {
-        count++
-        checkIndex = i + 1
-      } else {
-        break
-      }
+    while (checkIndex < sorted.length
+           && sorted[checkIndex] >= bucketMin
+           && sorted[checkIndex] <= bucketMax) {
+      count++
+      checkIndex++
     }
-
-    groupCounts.push([
-      bucket,
-      count,
-    ])
-
-    bucket = nextBucket
+    bucketCounts.push([Math.ceil(bucketMin), count])
   }
 
-  return groupCounts
+  return bucketCounts
 }
