@@ -115,7 +115,13 @@ onMounted(() => {
       delete config.nodes
     }
 
-    const value = Object.keys(config).length === 0
+    // Determines if the provided `config` object is empty.
+    // The config is considered empty if all its keys have `null` or `undefined` values.
+    const isEmptyConfig = Object.keys(config)
+      .filter(key => config[key] != null)
+      .length === 0
+
+    const value = isEmptyConfig
       ? ''
       : yaml.dump(toRaw(config), {
         schema: JSON_SCHEMA,
