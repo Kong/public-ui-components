@@ -1,31 +1,11 @@
 <template>
-  <div
-    class="code-text"
-    :class="{
-      'has-error': hasError,
-      'is-valid': isValid,
-    }"
-  >
+  <div class="code-text">
     <textarea v-model="localText" />
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, watch, computed } from 'vue'
-import { watchDebounced } from '@vueuse/core'
-
-function isValidJson(str: string): boolean {
-  if (!str) return true
-
-  try {
-    JSON.parse(str)
-  } catch {
-    return false
-  }
-
-  return true
-}
-
+<script setup>
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -38,14 +18,22 @@ const emit = defineEmits(['update:modelValue'])
 
 const localText = ref(props.modelValue)
 
-const isValid = computed(() => props.modelValue !== undefined &&
-  props.modelValue !== '' &&
-  isValidJson(props.modelValue))
-const hasError = computed(() => !isValidJson(props.modelValue))
+// Custom debounce function
+function debounce(fn, delay) {
+  let timeoutId
+  return (...args) => {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => {
+      fn(...args)
+    }, delay)
+  }
+}
 
-watchDebounced(localText, (newValue) => {
-  emit('update:modelValue', newValue)
-}, { debounce: 300 })
+const debouncedEmit = debounce((newText) => {
+  emit('update:modelValue', newText)
+}, 100)
+
+watch(localText, debouncedEmit)
 
 watch(() => props.modelValue, (newValue) => {
   if (newValue !== localText.value) {
@@ -57,21 +45,21 @@ watch(() => props.modelValue, (newValue) => {
 <style lang="scss" scoped>
 .code-text {
   display: block;
-  margin: 5px 0;
+  margin: 1rem 0;
   transition: filter .3s ease-in;
   width: auto;
 
   &.has-error {
-    filter: drop-shadow(0 0 1px crimson);
+    filter: drop-shadow(0 0 0.15rem crimson);
   }
 
   &.is-valid {
-    filter: drop-shadow(0 0 1px lightgreen);
+    filter: drop-shadow(0 0 0.15rem lightgreen);
   }
 
   textarea {
     background-color: $kui-color-background-neutral-weakest;
-    border: 1px solid #cccccc;
+    border: 1px solid $kui-color-border-primary-weaker;
     border-radius: 4px;
     color: #333333;
     font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
@@ -106,7 +94,7 @@ watch(() => props.modelValue, (newValue) => {
   textarea:focus :not(.has-error),
   textarea:focus-visible :not(.has-error) {
     border-color: white;
-    box-shadow: 0 0 0 2px #fff;
+    box-shadow: 0 0 0 2px $kui-color-background-neutral-weak;
     outline: none;
   }
 }

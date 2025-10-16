@@ -66,18 +66,18 @@ describe('useMetricUtils', () => {
     })
 
     const expectedLegendData = [
-      { color: colors[0], range: '> 4.1K' },
-      { color: colors[1], range: '3.3K - 4.1K' },
-      { color: colors[2], range: '2.5K - 3.3K' },
-      { color: colors[3], range: '1.7K - 2.5K' },
-      { color: colors[4], range: '< 1.7K' },
+      { color: colors[0], range: '> 3.6K' },
+      { color: colors[1], range: '2.6K - 3.6K' },
+      { color: colors[2], range: '1.9K - 2.6K' },
+      { color: colors[3], range: '1.3K - 1.9K' },
+      { color: colors[4], range: '< 1.3K' },
     ]
 
     expect(legendData.value).toEqual(expectedLegendData)
 
     expect(getColor(10000)).toBe(colors[0])
-    expect(getColor(3700)).toBe(colors[1])
-    expect(getColor(2900)).toBe(colors[2])
+    expect(getColor(3400)).toBe(colors[1])
+    expect(getColor(2400)).toBe(colors[2])
     expect(getColor(1900)).toBe(colors[3])
     expect(getColor(1000)).toBe(colors[4])
     expect(getColor(20)).toBe(colors[4])
