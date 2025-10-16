@@ -69,7 +69,7 @@
               :item="{ label: i18n.t('jumpToExplore'), to: exploreLinkKebabMenu }"
             />
             <KDropdownItem
-              v-if="hasZoomActions && !!requestsLinkKebabMenu"
+              v-if="!!requestsLinkKebabMenu"
               :data-testid="`chart-jump-to-requests-${tileId}`"
               :item="{ label: i18n.t('jumpToRequests'), to: requestsLinkKebabMenu }"
             />
@@ -187,7 +187,6 @@ const emit = defineEmits<{
 
 const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.vue'))
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
-const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
 const { i18n } = composables.useI18n()
 const chartData = ref<ExploreResultV4>()
 const exportState = ref<ExploreExportState>({ status: 'loading' })

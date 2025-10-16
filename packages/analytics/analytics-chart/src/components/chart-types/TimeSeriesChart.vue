@@ -33,7 +33,6 @@
       />
     </div>
     <ToolTip
-      v-if="!hideTooltipWhenDragging"
       ref="tooltipElement"
       :absolute-left="tooltipAbsoluteLeft"
       :absolute-top="tooltipAbsoluteTop"
@@ -70,12 +69,11 @@ import { Line, Bar } from 'vue-chartjs'
 import composables from '../../composables'
 import type { Threshold, TooltipState, ZoomActionItem } from '../../types'
 import { type ChartLegendSortFn, type ChartTooltipSortFn, type EnhancedLegendItem, type KChartData, type LegendValues, type TooltipEntry } from '../../types'
-import type { GranularityValues, AbsoluteTimeRangeV4, AnalyticsBridge, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import type { GranularityValues, AbsoluteTimeRangeV4, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import type { Chart } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import { generateLegendItems } from '../../utils'
 import { hasExactlyOneDatapoint } from '../../utils/commonOptions'
-import { INJECT_QUERY_PROVIDER } from '../../constants'
 import { ThresholdPlugin } from '../chart-plugins/ThresholdPlugin'
 
 interface TimeSeriesChartProps {
@@ -141,8 +139,6 @@ const legendPosition = inject('legendPosition', ChartLegendPosition.Right)
 const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 const zoomTimeRange = ref<AbsoluteTimeRangeV4 | undefined>(undefined)
 const isDoingSelection = ref(false)
-const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
-const hasZoomActions = queryBridge?.evaluateFeatureFlagFn('analytics-chart-zoom-actions', false)
 
 const tooltipData = reactive<TooltipState>({
   showTooltip: false,
@@ -188,13 +184,6 @@ const remountBarKey = computed(() => `bar-${plugins.value.map(p => p.id).join('-
 
 const pointsWithoutHover = computed(() => props.chartData && hasExactlyOneDatapoint(props.chartData))
 
-const hideTooltipWhenDragging = computed(() => {
-  if (!hasZoomActions) {
-    return isDoingSelection.value
-  } else {
-    return false
-  }
-})
 
 const { options } = composables.useLineChartOptions({
   tooltipState: tooltipData,
@@ -285,22 +274,14 @@ const handleDragSelect = (event: Event) => {
       end: new Date(xEnd),
       type: 'absolute',
     }
-
-    if (hasZoomActions) {
-      tooltipData.interactionMode = 'zoom-interactive'
-    } else {
-      emit('zoom-time-range', { start: new Date(xStart), end: new Date(xEnd), type: 'absolute' })
-      resetTooltipState()
-    }
+    tooltipData.interactionMode = 'zoom-interactive'
 
     emit('select-chart-range', zoomTimeRange.value)
   }
 }
 
 const handleDragMove = (event: Event) => {
-  if (hasZoomActions) {
-    tooltipData.interactionMode = 'selecting-chart-area'
-  }
+  tooltipData.interactionMode = 'selecting-chart-area'
   isDoingSelection.value = true
   verticalLinePlugin.pause()
   highlightPlugin.pause()
