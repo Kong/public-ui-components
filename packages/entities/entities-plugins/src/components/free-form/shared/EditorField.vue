@@ -73,7 +73,10 @@ type FixedHeightProps = {
 
 type EditorFieldProps = {
   name: string
-  /** default: json */
+  /**
+   * The language of Monaco editor, language is immutable, any update after mount will be ignored
+   * @default 'json'
+   */
   language?: 'json' | 'yaml' | 'plaintext' | 'lua'
   readonly?: boolean
   labelAttributes?: LabelAttributes

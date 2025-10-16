@@ -488,7 +488,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     }
   }
 
-  const assertEditorField: AssertFieldFn<ForeignFieldSchema> = ({
+  const assertEditorField: AssertFieldFn<UnionFieldSchema> = ({
     fieldKey,
     fieldSchema,
     labelOption,
