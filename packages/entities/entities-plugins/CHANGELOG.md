@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.104.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.104.1...@kong-ui-public/entities-plugins@9.104.2) (2025-10-16)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit disallow input-input connection ([#2571](https://github.com/Kong/public-ui-components/issues/2571)) ([de1fd1f](https://github.com/Kong/public-ui-components/commit/de1fd1f6a925a1d4ea4e2a34257bafcdeb676db3))
+
+
+
+
+
 ## [9.104.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.104.0...@kong-ui-public/entities-plugins@9.104.1) (2025-10-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
