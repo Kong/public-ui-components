@@ -10,6 +10,8 @@ import {
 } from 'date-fns'
 
 import {
+  type ExtendedRelativeTimeRangeValues,
+  relativeTimeRangeValuesV4,
   TimeframeKeys,
 } from './types'
 
@@ -29,10 +31,11 @@ const adjustForTz = (d: Date, tz: string) => {
   return new Date(d.getTime() - getTimezoneOffset(tz, d))
 }
 
+
 export class Timeframe implements ITimeframe {
   readonly timeframeText: string
 
-  readonly key: RelativeTimeRangeValuesV4 | 'custom'
+  readonly key: RelativeTimeRangeValuesV4 | ExtendedRelativeTimeRangeValues | 'custom'
 
   readonly display: string
 
@@ -154,11 +157,16 @@ export class Timeframe implements ITimeframe {
       }
     }
 
-    return {
-      type: 'relative',
-      time_range: this.key,
-      tz,
+    if (relativeTimeRangeValuesV4.includes(this.key as any)) {
+      return {
+        type: 'relative',
+        // Safe assertion; we just checked that key is a member of the union.
+        time_range: this.key as RelativeTimeRangeValuesV4,
+        tz,
+      }
     }
+
+    throw new Error('Unsupported relative time value for Explore')
   }
 
   protected tzAdjustedDate(tz?: string): Date {
@@ -412,7 +420,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   [
     TimeframeKeys.NINETY_DAY,
     new Timeframe({
-      key: TimeframeKeys.NINETY_DAY as RelativeTimeRangeValuesV4,
+      key: TimeframeKeys.NINETY_DAY,
       display: 'Last 90 days',
       timeframeText: '90 days',
       timeframeLength: () => 60 * 60 * 24 * 90,
@@ -427,7 +435,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   [
     TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY,
     new Timeframe({
-      key: TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY as RelativeTimeRangeValuesV4,
+      key: TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY,
       display: 'Last 180 days',
       timeframeText: '180 days',
       timeframeLength: () => 60 * 60 * 24 * 180,
@@ -442,7 +450,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   [
     TimeframeKeys.ONE_YEAR,
     new Timeframe({
-      key: TimeframeKeys.ONE_YEAR as RelativeTimeRangeValuesV4,
+      key: TimeframeKeys.ONE_YEAR,
       display: 'Last 365 days',
       timeframeText: '365 days',
       timeframeLength: () => 60 * 60 * 24 * 365,
@@ -497,7 +505,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   [
     TimeframeKeys.CURRENT_YEAR,
     new CurrentYear({
-      key: TimeframeKeys.CURRENT_YEAR as RelativeTimeRangeValuesV4,
+      key: TimeframeKeys.CURRENT_YEAR,
       display: 'This year',
       timeframeText: 'Year',
       timeframeLength: () => {
@@ -558,7 +566,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   [
     TimeframeKeys.PREVIOUS_YEAR,
     new PreviousYear({
-      key: TimeframeKeys.PREVIOUS_YEAR as RelativeTimeRangeValuesV4,
+      key: TimeframeKeys.PREVIOUS_YEAR,
       display: 'Previous year',
       timeframeText: 'Year',
       timeframeLength: () => {
