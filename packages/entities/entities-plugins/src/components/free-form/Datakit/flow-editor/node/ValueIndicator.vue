@@ -30,7 +30,7 @@ import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import type { EdgeId, NodeInstance } from '../../types'
 import { computed } from 'vue'
 import { KTooltip } from '@kong/kongponents'
-import { CONFIG_NODE_META_MAP, IMPLICIT_NODE_META_MAP, isImplicitType } from './node'
+import { NODE_VISUAL } from './node-visual'
 
 interface Props {
   edgeId?: EdgeId
@@ -75,11 +75,7 @@ const icon = computed(() => {
 
   if (!node) return undefined
 
-  if (!isImplicitType(node.type)) {
-    return CONFIG_NODE_META_MAP[node.type]?.icon ?? undefined
-  } else {
-    return IMPLICIT_NODE_META_MAP[node.type]?.icon ?? undefined
-  }
+  return NODE_VISUAL[node.type]?.icon
 })
 
 const additionalCount = computed(() => {
@@ -110,7 +106,7 @@ const shouldReverse = computed(() => {
     align-items: center;
     background-color: $kui-color-background;
     border: 1px solid $kui-color-border-neutral-weak;
-    border-radius: $kui-border-radius-10;
+    border-radius: $kui-border-radius-20;
     display: flex;
     height: 24px;
     justify-content: center;

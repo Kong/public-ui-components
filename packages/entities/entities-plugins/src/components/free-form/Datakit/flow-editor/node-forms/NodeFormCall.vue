@@ -119,4 +119,3 @@ const {
 const urlHandler = createFieldHandler('url', () => setConfig('url'))
 const timeoutHandler = createFieldHandler('timeout', () => setConfig('timeout'))
 </script>
-

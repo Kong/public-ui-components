@@ -10,6 +10,12 @@ import type {
 } from '../../types'
 import { hasInputField, hasOutputField } from './helpers'
 import { IMPLICIT_NODE_NAMES } from '../../constants'
+import type { SimpleEdge } from './graph'
+import {
+  buildAdjacency,
+  getCombinedEdges,
+  hasCycle,
+} from './graph'
 
 export type ValidationResult = { ok: true } | { ok: false, errors: string[] }
 
@@ -27,6 +33,16 @@ export function useValidators(stateRef: Ref<EditorState>) {
   const edges = computed<readonly EdgeInstance[]>(
     () => stateRef.value.edges,
   )
+  const groups = computed(() => stateRef.value.groups)
+
+  const combinedEdges = computed(() => getCombinedEdges(edges.value, groups.value))
+
+  function buildStateAdjacency(extra?: SimpleEdge) {
+    return buildAdjacency(
+      combinedEdges.value,
+      extra ? { source: extra.source, target: extra.target } : undefined,
+    )
+  }
 
   /* ---------- helpers ---------- */
 
@@ -104,7 +120,7 @@ export function useValidators(stateRef: Ref<EditorState>) {
 
     if (edge.source === edge.target) errors.push('self-loop not allowed')
 
-    const adjacency = buildAdjacency(edges.value, edge)
+    const adjacency = buildStateAdjacency({ source: edge.source, target: edge.target })
     if (hasCycle(adjacency))
       errors.push('connection introduces a cycle')
 
@@ -127,7 +143,7 @@ export function useValidators(stateRef: Ref<EditorState>) {
         errors.push(`edge "${e.id}" sources from "response"`)
     }
 
-    if (hasCycle(buildAdjacency(edges.value))) errors.push('graph contains cycle')
+    if (hasCycle(buildStateAdjacency())) errors.push('graph contains cycle')
     return errors.length ? { ok: false, errors } : { ok: true }
   }
 
@@ -160,40 +176,4 @@ export function useValidators(stateRef: Ref<EditorState>) {
     isValidVueFlowConnection,
     buildAdjacency,
   }
-}
-
-export function hasCycle(graph: ReadonlyMap<NodeId, readonly NodeId[]>): boolean {
-  const seen = new Set<NodeId>()
-  const stack = new Set<NodeId>()
-
-  function dfs(n: NodeId): boolean {
-    if (stack.has(n)) return true
-    if (seen.has(n)) return false
-    seen.add(n)
-    stack.add(n)
-    for (const next of graph.get(n) ?? []) if (dfs(next)) return true
-    stack.delete(n)
-    return false
-  }
-
-  for (const id of graph.keys()) if (dfs(id)) return true
-  return false
-}
-
-export function buildAdjacency(
-  edges: ReadonlyArray<{ source: NodeId, target: NodeId }>,
-  extra?: { source: NodeId, target: NodeId } | null,
-) {
-  const map = new Map<NodeId, NodeId[]>()
-  for (const e of edges) {
-    if (!map.has(e.source)) map.set(e.source, [])
-    map.get(e.source)!.push(e.target)
-    if (!map.has(e.target)) map.set(e.target, [])
-  }
-  if (extra) {
-    if (!map.has(extra.source)) map.set(extra.source, [])
-    map.get(extra.source)!.push(extra.target)
-    if (!map.has(extra.target)) map.set(extra.target, [])
-  }
-  return map
 }

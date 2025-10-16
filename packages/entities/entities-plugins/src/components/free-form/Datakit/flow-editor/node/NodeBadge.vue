@@ -1,13 +1,18 @@
 <template>
   <KBadge
-    :appearance="appearance"
+    appearance="neutral"
+    class="dk-node-badge"
     :class="{
       'icon-only': iconOnly,
+      'has-colors': !!visual.colors,
     }"
     :size="size"
   >
-    <template #icon>
-      <component :is="icon" />
+    <template
+      v-if="visual?.icon"
+      #icon
+    >
+      <component :is="visual.icon" />
     </template>
     {{ nodeName }}
   </KBadge>
@@ -15,9 +20,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { NodeType } from '../../types'
-import { CONFIG_NODE_META_MAP, getNodeTypeName, isImplicitType } from './node'
-import type { BadgeAppearance, BadgeSize } from '@kong/kongponents'
+import type { NodeVisual } from '../../types'
+import { type NodeType } from '../../types'
+import { getNodeTypeName } from './node'
+import type { BadgeSize } from '@kong/kongponents'
+import { NODE_VISUAL } from './node-visual'
 
 const { type } = defineProps<{
   type: NodeType
@@ -25,37 +32,22 @@ const { type } = defineProps<{
   iconOnly?: boolean
 }>()
 
-const icon = computed(() => {
-  if (!isImplicitType(type)) {
-    return CONFIG_NODE_META_MAP[type]?.icon ?? undefined
-  }
-  return undefined
-})
+const visual = computed<NodeVisual>(() => NODE_VISUAL[type])
 
 const nodeName = computed(() => getNodeTypeName(type))
-
-const appearance = computed<BadgeAppearance>(() => {
-  switch (type) {
-    case 'call':
-      return 'warning'
-    case 'jq':
-      return 'decorative'
-    case 'exit':
-      return 'danger'
-    case 'property':
-      return 'success'
-    case 'static':
-      return 'info'
-    default:
-      return 'neutral'
-  }
-})
 </script>
 
 <style lang="scss" scoped>
-.icon-only {
-  :deep(.badge-content-wrapper) {
-    display: none;
+.dk-node-badge {
+  &.has-colors {
+    background: v-bind("visual.colors?.background") !important;
+    color: v-bind("visual.colors?.foreground") !important;
+  }
+
+  &.icon-only {
+    :deep(.badge-content-wrapper) {
+      display: none;
+    }
   }
 }
 </style>

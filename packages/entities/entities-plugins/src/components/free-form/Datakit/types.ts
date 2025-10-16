@@ -1,7 +1,7 @@
 // types.ts
 import type { Component } from 'vue'
 import type { ButtonProps } from '@kong/kongponents'
-import type { XYPosition } from '@vue-flow/core'
+import type { Edge, XYPosition, Dimensions } from '@vue-flow/core'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 import type {
   DatakitConfig,
@@ -14,12 +14,14 @@ import type {
   ConfigNodeName,
   NodeName,
   FieldName,
+  BranchName,
   NameConnection,
   CallNode,
   ExitNode,
   JqNode,
   PropertyNode,
   StaticNode,
+  BranchNode,
 } from './schema/strict'
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
@@ -51,14 +53,30 @@ export interface IOMeta {
   configurable?: boolean
 }
 
-export interface NodeMeta {
+export interface BranchMeta {
+  name: BranchName
+}
+
+export interface NextMeta {
+  branches: BranchMeta[]
+}
+
+export interface NodeVisual {
+  icon: Component
+  colors?: {
+    foreground: string
+    background: string
+  }
+}
+
+export interface NodeMeta extends Partial<NodeVisual> {
   type: NodeType
   summary?: string
   description?: string
-  icon?: Component
   io?: {
     input?: IOMeta
     output?: IOMeta
+    next?: NextMeta
   }
   /** hidden in UI */
   hidden?: boolean
@@ -78,6 +96,7 @@ export type {
   ConfigNodeName,
   NodeName,
   FieldName,
+  BranchName,
   NameConnection,
   CallNode,
   ExitNode,
@@ -85,7 +104,9 @@ export type {
   PropertyNode,
   StaticNode,
   HttpMethod,
+  BranchNode,
 }
+
 
 /**
  * UI data that stores layout data for Datakit nodes.
@@ -97,6 +118,7 @@ export interface DatakitUIData {
    * UI nodes that store data like input/output fields, positions, and other metadata.
    */
   nodes?: UINode[]
+  groups?: UIGroup[]
 }
 /**
  * The phase of the node in the request/response cycle.
@@ -112,6 +134,8 @@ export type NodePhase = 'request' | 'response'
 export type NodeId = `node:${number}`
 export type EdgeId = `edge:${number}`
 export type FieldId = `field:${number}`
+export type GroupId = `${NodeId}:${BranchName}`
+export type GroupName = `${NodeName}:${BranchName}`
 
 export type IdConnection = NodeId | `${NodeId}.${FieldId}`
 
@@ -161,9 +185,43 @@ export interface EdgeInstance extends EdgeData {
   id: EdgeId
 }
 
+export interface GroupInstance {
+  id: GroupId
+  ownerId: NodeId
+  branch: BranchName
+  phase: NodePhase
+  memberIds: NodeId[]
+  position?: XYPosition
+  dimensions?: Dimensions
+}
+
+export type FlowGroupNodeData = GroupInstance & {
+  memberIds: NodeId[]
+}
+
+export type BranchEdgeData = {
+  type: 'branch'
+  ownerId: NodeId
+  branch: BranchName
+  groupId: GroupId
+}
+
+export type FlowEdge = Edge<EdgeData | BranchEdgeData>
+
+export type GroupLayout = {
+  position: XYPosition
+  dimensions: Dimensions
+}
+
+export interface UIGroup {
+  name: GroupName
+  position: XYPosition
+}
+
 export interface EditorState {
   nodes: NodeInstance[]
   edges: EdgeInstance[]
+  groups: GroupInstance[]
 
   /**
    * Whether to schedule an `autoLayout` after the current state is rendered.

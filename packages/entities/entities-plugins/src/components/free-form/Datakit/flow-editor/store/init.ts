@@ -8,11 +8,13 @@ import type {
   FieldName,
   ImplicitNodeName,
   MakeNodeInstancePayload,
+  NodeId,
   NodeInstance,
   NodeName,
   NodePhase,
   NodeType,
   UINode,
+  GroupInstance,
 } from '../../types'
 import { isImplicitName, isImplicitType } from '../node/node'
 import { pluginDataToVaultConfig, pluginDataToVaultOutputFields } from '../node/vault'
@@ -20,11 +22,14 @@ import {
   clone,
   createId,
   findFieldByName,
+  getBranchesFromMeta,
   getFieldsFromMeta,
   getNodeMeta,
   makeDefaultImplicitUINode,
   parseNameConnection,
   toFieldArray,
+  makeGroupName,
+  toGroupInstance,
 } from './helpers'
 
 /**
@@ -42,16 +47,20 @@ export function initEditorState(
 ): EditorState {
   const configNodes = pluginData.config?.nodes ?? []
   const uiNodes = pluginData.__ui_data?.nodes ?? []
+  const uiGroups = pluginData.__ui_data?.groups ?? []
 
   const uiNodesMap = new Map<NodeName, UINode>(
     uiNodes.map((uiNode) => [uiNode.name, uiNode]),
   )
+  const uiGroupsMap = new Map(
+    uiGroups.map((group) => [group.name, group] as const),
+  )
   const nodes: NodeInstance[] = []
   const edges: EdgeInstance[] = []
   const nodesMap = new Map<NodeName, NodeInstance>()
+  const groups: GroupInstance[] = []
   const connections: ConfigEdge[] = []
   const adjacencies = new Map<NodeName, Set<NodeName>>() // Undirected adjacency list
-
   /**
    * [SIDE EFFECT]
    *
@@ -99,6 +108,61 @@ export function initEditorState(
     })
     nodes.push(node)
     nodesMap.set(node.name, node)
+  }
+
+  for (const node of nodes) {
+    const branchNames = getBranchesFromMeta(node.type)
+    if (!branchNames.length) {
+      continue
+    }
+
+    const config = node.config as Record<string, unknown> | undefined
+    if (!config) {
+      continue
+    }
+
+    for (const branchName of branchNames) {
+      const raw = config[branchName]
+      if (!Array.isArray(raw)) {
+        if (uiGroupsMap.has(makeGroupName(node.name, branchName))) {
+          isUIDataStale = true
+        }
+        continue
+      }
+
+      const ids: NodeId[] = []
+      for (const entry of raw) {
+        if (typeof entry !== 'string') {
+          continue
+        }
+
+        const targetNode = nodesMap.get(entry as NodeName)
+        if (targetNode && !isImplicitType(targetNode.type)) {
+          ids.push(targetNode.id)
+        }
+      }
+
+      if (ids.length) {
+        config[branchName] = ids
+        const groupName = makeGroupName(node.name, branchName)
+        const uiGroup = uiGroupsMap.get(groupName)
+        const layout = uiGroup
+          ? {
+            position: clone(uiGroup.position),
+          }
+          : undefined
+        const group = toGroupInstance(node.id, branchName, node.phase, ids, layout)
+        groups.push(group)
+        if (!uiGroup && !isUIDataStale) {
+          isUIDataStale = true
+        }
+      } else {
+        delete config[branchName]
+        if (uiGroupsMap.has(makeGroupName(node.name, branchName))) {
+          isUIDataStale = true
+        }
+      }
+    }
   }
 
   // ensure implicit nodes
@@ -170,6 +234,7 @@ export function initEditorState(
   return {
     nodes,
     edges,
+    groups,
     pendingLayout: !isUIDataStale ? false : keepHistoryAfterLayout ? 'keepHistory' : 'clearHistory',
     pendingFitView: true,
   }

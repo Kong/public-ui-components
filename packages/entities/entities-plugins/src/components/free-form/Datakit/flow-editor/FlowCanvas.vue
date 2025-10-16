@@ -52,12 +52,15 @@
       </Controls>
 
       <!-- To not use the default node style -->
-      <template #node-flow="node">
+      <template #node-flow="{ data }">
         <FlowNode
-          :data="node.data"
-          :error="invalidConfigNodeIds.has(node.data.id)"
+          :data
+          :error="invalidConfigNodeIds.has(data.id)"
           :readonly="mode !== 'edit'"
         />
+      </template>
+      <template #node-group="{ data }">
+        <GroupNode :data />
       </template>
     </VueFlow>
 
@@ -76,6 +79,7 @@ import { KTooltip } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
+import type { NodeMouseEvent } from '@vue-flow/core'
 import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core'
 import { computed, nextTick, ref, useTemplateRef } from 'vue'
 
@@ -84,6 +88,7 @@ import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { useHotkeys } from './composables/useHotkeys'
 import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
+import GroupNode from './node/GroupNode.vue'
 import { provideFlowStore } from './store/flow'
 
 import '@vue-flow/controls/dist/style.css'
@@ -141,8 +146,16 @@ const { project, vueFlowRef, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vue
 
 const disableDrop = ref(false)
 
-function onNodeClick() {
-  if (mode !== 'edit') return
+function onNodeClick(event: NodeMouseEvent) {
+  if (mode !== 'edit') {
+    return
+  }
+
+  if (event?.node?.type === 'group') {
+    selectNode(undefined)
+    return
+  }
+
   propertiesPanelOpen.value = true
 }
 
@@ -289,11 +302,11 @@ defineExpose({ autoLayout, fitView })
 
     &:not(.readonly) {
       :deep(.vue-flow__node) {
-        &:hover:not(:has(.value-indicator:hover)) .flow-node {
+        &:hover:not(:has(.value-indicator:hover)) .dk-flow-node {
           border-color: $kui-color-border-primary-weak;
         }
 
-        &.selected .flow-node {
+        &.selected .dk-flow-node {
           border-color: $kui-color-border-primary;
         }
       }

@@ -42,6 +42,7 @@ import NodeFormJq from '../node-forms/NodeFormJq.vue'
 import NodeFormStatic from '../node-forms/NodeFormStatic.vue'
 import NodeFormProperty from '../node-forms/NodeFormProperty.vue'
 import NodeFormExit from '../node-forms/NodeFormExit.vue'
+import NodeFormBranch from '../node-forms/NodeFormBranch.vue'
 
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
@@ -84,6 +85,8 @@ const Form = computed(() => {
       return NodeFormProperty
     case 'exit':
       return NodeFormExit
+    case 'branch':
+      return NodeFormBranch
     default:
       return null
   }

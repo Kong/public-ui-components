@@ -1,11 +1,21 @@
 import type { Node as DagreNode } from '@dagrejs/dagre'
-import type { Connection, Edge, FitViewParams, Node, Rect, XYPosition } from '@vue-flow/core'
+import type { Connection, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
-import type { EdgeData, EdgeId, EdgeInstance, FieldId, NodeId, NodeInstance, NodePhase } from '../../types'
+import type {
+  EdgeId,
+  EdgeInstance,
+  FieldId,
+  GroupId,
+  NodeId,
+  NodeInstance,
+  NodePhase,
+} from '../../types'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 
 import dagre from '@dagrejs/dagre'
+import type { FlowEdge } from '../../types'
+import { useBranchLayout } from '../composables/useBranchLayout'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
 import { computed, toValue, watch } from 'vue'
@@ -13,10 +23,19 @@ import { computed, toValue, watch } from 'vue'
 import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
-import { DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
+import {
+  DK_NODE_PROPERTIES_PANEL_WIDTH,
+  DK_FLOW_Z_LAYER_STEP,
+  DK_FLOW_EDGE_Z_OFFSET,
+  DK_FLOW_NODE_Z_OFFSET,
+} from '../../constants'
 import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
 import { useOptionalConfirm } from '../composables/useConflictConfirm'
-import { DEFAULT_LAYOUT_OPTIONS, DEFAULT_VIEWPORT_WIDTH, SCROLL_DURATION } from '../constants'
+import {
+  DEFAULT_LAYOUT_OPTIONS,
+  DEFAULT_VIEWPORT_WIDTH,
+  SCROLL_DURATION,
+} from '../constants'
 import { isImplicitNode } from '../node/node'
 import { useEditorStore } from './store'
 
@@ -76,7 +95,7 @@ type EdgeState = 'default' | 'hover' | 'selected'
 let selectedEdgeId: EdgeId | undefined
 let hoverEdgeId: EdgeId | undefined
 
-function updateEdgeStyle(edge: Edge<EdgeData>): Edge<EdgeData> {
+function updateEdgeStyle(edge: FlowEdge): FlowEdge {
   const state = edge.id === selectedEdgeId ? 'selected' : edge.id === hoverEdgeId ? 'hover' : 'default'
 
   const color = BORDER_COLORS[state]
@@ -86,6 +105,13 @@ function updateEdgeStyle(edge: Edge<EdgeData>): Edge<EdgeData> {
     ? { ...markerEnd, color }
     : { type: markerEnd as MarkerType, color }
 
+  const baseZIndex = edge.zIndex ?? 0
+  const zIndex = state === 'selected'
+    ? baseZIndex + 2
+    : state === 'hover'
+      ? baseZIndex + 1
+      : baseZIndex
+
   return {
     ...edge,
     style: {
@@ -94,7 +120,7 @@ function updateEdgeStyle(edge: Edge<EdgeData>): Edge<EdgeData> {
       strokeWidth: state === 'selected' ? 1.5 : undefined,
     },
     markerEnd: marker,
-    zIndex: state === 'default' ? undefined : 1,
+    zIndex,
   }
 }
 
@@ -160,6 +186,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       findNode,
       fitView: flowFitView,
       deleteKeyCode,
+      onNodeDrag,
       onNodeDragStop,
       onConnect,
       onNodesChange,
@@ -202,19 +229,56 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
     }
 
+    const branchLayout = useBranchLayout({
+      phase,
+      readonly,
+      flowId,
+    })
+    const {
+      groupMapById,
+      memberGroupMap,
+      groupNodes,
+      branchEdges,
+      isGroupId,
+      isBranchEdgeId,
+      updateGroupLayout,
+      translateGroupTree,
+      setDraggingNode,
+      getNodeDepth,
+      maxGroupDepth,
+    } = branchLayout
+
     const nodes = computed(() =>
       state.value.nodes
         .filter((node) => node.phase === phase && !node.hidden)
-        .map<Node<NodeInstance>>((node) => ({
-          id: node.id,
-          type: 'flow',
-          position: node.position,
-          data: node,
-          deletable: !isImplicitNode(node),
-        })),
+        .map<Node<NodeInstance>>((node) => {
+          const parentGroup = memberGroupMap.value.get(node.id)
+          const parentPosition = parentGroup?.position
+          const parentDimensions = parentGroup?.dimensions
+          const position = parentGroup && parentPosition && parentDimensions
+            ? {
+              x: node.position.x - parentPosition.x,
+              y: node.position.y - parentPosition.y,
+            }
+            : node.position
+
+          const depth = getNodeDepth(node.id)
+          const parentResolved = !!(parentGroup && parentPosition && parentDimensions)
+          const zLayerDepth = (parentResolved ? depth : 0) + maxGroupDepth.value + 1
+
+          return {
+            id: node.id,
+            type: 'flow',
+            position,
+            data: node,
+            deletable: !isImplicitNode(node),
+            parentNode: parentResolved ? parentGroup.id : undefined,
+            zIndex: zLayerDepth * DK_FLOW_Z_LAYER_STEP + DK_FLOW_NODE_Z_OFFSET,
+          }
+        }),
     )
 
-    const edges = computed(() =>
+    const configEdges = computed<FlowEdge[]>(() =>
       state.value.edges
         .filter((edge) => edgeInPhase(edge, phase))
         .filter((edge) => {
@@ -222,7 +286,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           const targetNode = getNodeById(edge.target)
           return !sourceNode?.hidden && !targetNode?.hidden
         })
-        .map<Edge<EdgeData>>((edge) => {
+        .map<FlowEdge>((edge) => {
           const sourceNode = getNodeById(edge.source)
           const targetNode = getNodeById(edge.target)
           if (!sourceNode) {
@@ -230,6 +294,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           } else if (!targetNode) {
             throw new Error(`Missing target node "${edge.target}" for edge "${edge.id}" in phase "${phase}"`)
           }
+
+          const depth = Math.max(getNodeDepth(edge.source), getNodeDepth(edge.target)) + maxGroupDepth.value + 1
 
           return updateEdgeStyle({
             id: edge.id,
@@ -240,14 +306,20 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             markerEnd: MarkerType.ArrowClosed,
             data: edge,
             updatable: !readonly,
+            zIndex: depth * DK_FLOW_Z_LAYER_STEP + DK_FLOW_EDGE_Z_OFFSET,
           })
         }),
     )
 
+    const edges = computed(() => [
+      ...branchEdges.value,
+      ...configEdges.value,
+    ])
+
     // Moved away from VueFlow's `:nodes` and `:edges` props because
     // they have race conditions while being updated simultaneously.
-    watch([nodes, edges], ([newNodes, newEdges]) => {
-      setNodes(newNodes)
+    watch([nodes, groupNodes, edges], ([newNodes, newGroupNodes, newEdges]) => {
+      setNodes([...newGroupNodes, ...newNodes])
       setEdges(newEdges)
     }, { immediate: true }) // As `nodes` and `edges` are computed refs, it would be okay without `deep: true`
 
@@ -389,8 +461,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     // Only triggered by canvas-originated changes
     onNodesChange((changes) => {
-      changes
-        .filter((change) => change.type === 'select')
+      const selectionChanges = changes.filter((change): change is NodeSelectionChange => change.type === 'select')
+
+      selectionChanges
+        .filter((change) => !isGroupId(change.id))
         // deselected changes come first
         .sort((a, b) => (a.selected === b.selected ? 0 : a.selected ? 1 : -1))
         .forEach((change) => {
@@ -400,6 +474,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       let schedulePostRemoval = false
       changes.forEach((change) => {
         if (change.type === 'remove') {
+          if (isGroupId(change.id)) {
+            return
+          }
           // !! ATTENTION !!
           // We assume `onNodesChange` is only triggered when user removes nodes from the canvas.
           // Removals originated from the node panel (form) does not trigger this, because they
@@ -416,11 +493,97 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
     })
 
+    onNodeDrag(({ node }) => {
+      if (!node) return
+
+      if (isGroupId(node.id)) {
+        const groupId = node.id as GroupId
+        setDraggingNode(groupId)
+        const group = groupMapById.value.get(groupId)
+        if (!group) return
+
+        const previousPosition = group.position ?? { ...node.position }
+        const deltaX = node.position.x - previousPosition.x
+        const deltaY = node.position.y - previousPosition.y
+
+        translateGroupTree(groupId, node.position, deltaX, deltaY)
+
+        // Update parent group layout in real-time when dragging nested groups
+        // This allows the parent group to expand/shrink as child group moves
+        const parentGroup = memberGroupMap.value.get(group.ownerId)
+        if (parentGroup) {
+          updateGroupLayout(parentGroup.id)
+        }
+
+        return
+      }
+
+      const nodeId = node.id as NodeId
+      setDraggingNode(nodeId)
+      const parentId = node.parentNode
+
+      let absolutePosition: XYPosition = { ...node.position }
+
+      if (parentId && isGroupId(parentId)) {
+        const parentGroup = groupMapById.value.get(parentId as GroupId)
+        if (parentGroup?.position) {
+          absolutePosition = {
+            x: parentGroup.position.x + node.position.x,
+            y: parentGroup.position.y + node.position.y,
+          }
+        }
+      }
+
+      moveNode(nodeId, absolutePosition, false)
+
+      // Update group layout in real-time when dragging member nodes
+      // This allows the group to expand/shrink as members move
+      const owningGroupId = parentId && isGroupId(parentId)
+        ? parentId as GroupId
+        : memberGroupMap.value.get(nodeId)?.id
+
+      if (owningGroupId) {
+        updateGroupLayout(owningGroupId)
+      }
+    })
+
     onNodeDragStop(({ node }) => {
       if (!node) return
 
-      // Update the node position in the store
-      moveNode(node.id as NodeId, node.position)
+      if (isGroupId(node.id)) {
+        const groupId = node.id as GroupId
+        setDraggingNode(undefined)
+        historyCommit(`drag-group:${groupId}`)
+        return
+      }
+
+      const nodeId = node.id as NodeId
+      setDraggingNode(undefined)
+      const parentId = node.parentNode
+
+      let absolutePosition: XYPosition = { ...node.position }
+
+      if (parentId && isGroupId(parentId)) {
+        const parentGroup = groupMapById.value.get(parentId as GroupId)
+        if (parentGroup?.position) {
+          absolutePosition = {
+            x: parentGroup.position.x + node.position.x,
+            y: parentGroup.position.y + node.position.y,
+          }
+        }
+      }
+
+      moveNode(nodeId, absolutePosition, false)
+
+      const owningGroupId = parentId && isGroupId(parentId)
+        ? parentId as GroupId
+        : memberGroupMap.value.get(nodeId)?.id
+
+      if (owningGroupId) {
+        updateGroupLayout(owningGroupId)
+      }
+
+      historyCommit(`drag-node:${nodeId}`)
     })
 
     // Only triggered by canvas-originated changes
@@ -430,6 +593,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         // deselected changes come first
         .sort((a, b) => (a.selected === b.selected ? 0 : a.selected ? 1 : -1))
         .forEach((change) => {
+          if (isBranchEdgeId(change.id)) return
           selectedEdgeId = change.selected ? change.id as EdgeId : undefined
 
           setEdges((edges) => edges.map((edge) => {
@@ -447,6 +611,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       let schedulePostRemoval = false
       changes.forEach((change) => {
         if (change.type === 'remove') {
+          if (isBranchEdgeId(change.id)) return
           // !! ATTENTION !!
           // We assume `onEdgesChange` is only triggered when user removes edges from the canvas.
           // Removals originated from the node panel (form) does not trigger this, because they
@@ -464,6 +629,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     })
 
     onEdgeMouseEnter(({ edge: edgeEnter }) => {
+      if (isBranchEdgeId(edgeEnter.id)) return
       hoverEdgeId = edgeEnter.id as EdgeId
 
       setEdges((edges) => edges.map((edge) => {
@@ -473,6 +639,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     })
 
     onEdgeMouseLeave(({ edge: edgeLeave }) => {
+      if (isBranchEdgeId(edgeLeave.id)) return
       hoverEdgeId = undefined
 
       setEdges((edges) => edges.map((edge) => {
@@ -482,6 +649,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     })
 
     onEdgeUpdate(({ edge, connection }) => {
+      if (isBranchEdgeId(edge.id)) return
       disconnectEdge(edge.id as EdgeId, false)
       handleConnect(connection)
     })
@@ -692,7 +860,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
      * Calculate the position to place a node to the right of a reference node.
      */
     function placeToRight(nodeId: NodeId): XYPosition {
-      const nodes = getNodes.value
+      const nodes = getNodes.value.filter(({ type }) => type !== 'group')
 
       const refNode = nodes.find(({ id }) => id === nodeId)
       if (!refNode) throw new Error(`Node ${nodeId} not found`)

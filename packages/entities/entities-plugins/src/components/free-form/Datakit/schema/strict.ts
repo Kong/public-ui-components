@@ -49,6 +49,10 @@ export type NodeName = z.infer<typeof NodeNameSchema>
 export const FieldNameSchema = z.string().min(1).brand<'FieldName'>()
 export type FieldName = z.infer<typeof FieldNameSchema>
 
+export const BRANCH_NAMES = ['then', 'else'] as const
+export const BranchNameSchema = z.enum(BRANCH_NAMES)
+export type BranchName = z.infer<typeof BranchNameSchema>
+
 export const NameConnectionSchema = z.string().refine((s) => {
   if (NodeNameSchema.safeParse(s).success) return true
   const m = s.match(/^([^.]+)\.([^.]+)$/)
@@ -206,6 +210,15 @@ export const StaticNodeSchema = ConfigNodeBaseSchema.extend({
 /** Produce reusable outputs from statically-configured values. */
 export type StaticNode = z.infer<typeof StaticNodeSchema>
 
+export const BranchNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('branch'),
+  then: z.array(NodeNameSchema).nullish(),
+  else: z.array(NodeNameSchema).nullish(),
+}).strict()
+
+/** Conditionally route execution to `then` or `else` logical branches. */
+export type BranchNode = z.infer<typeof BranchNodeSchema>
+
 export const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
   z.discriminatedUnion('type', [
     CallNodeSchema,
@@ -213,6 +226,7 @@ export const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
     JqNodeSchema,
     PropertyNodeSchema,
     StaticNodeSchema,
+    BranchNodeSchema,
   ]),
 )
 
