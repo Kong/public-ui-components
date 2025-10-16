@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.103.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.102.2...@kong-ui-public/entities-plugins@9.103.0) (2025-10-16)
+
+
+### Features
+
+* **entities-plugins:** datakit - value indicator ([#2543](https://github.com/Kong/public-ui-components/issues/2543)) ([7826af9](https://github.com/Kong/public-ui-components/commit/7826af9a8b218a08433e9cf4d05923f6b18d96d5))
+
+
+
+
+
 ## [9.102.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.102.1...@kong-ui-public/entities-plugins@9.102.2) (2025-10-15)
 
 
