@@ -7,6 +7,7 @@ import type {
   MapFieldSchema,
   ArrayLikeFieldSchema,
   ForeignFieldSchema,
+  JsonFieldSchema,
 } from '../../src/types/plugins/form-schema'
 
 export function buildStringFieldCases(): Array<{ [name: string]: StringFieldSchema }> {
@@ -330,6 +331,85 @@ export function buildForeignFieldCases(): Array<{ [name: string]: ForeignFieldSc
   ]
 }
 
+export function buildJsonFieldCases(): Array<{ [name: string]: JsonFieldSchema }> {
+  return [
+    {
+      json_default: {
+        type: 'json',
+        required: true,
+        description: 'A JSON field with default value',
+        json_schema: {
+          type: 'object',
+          properties: {
+            key: { type: 'string' },
+          },
+        },
+        default: { key: 'value' },
+      },
+    },
+  ]
+}
+
+export function buildEditorFieldCases(): Array<{ [name: string]: StringFieldSchema }> {
+  return [
+    {
+      editor_lua: {
+        type: 'string',
+        description: 'A Lua editor field',
+        default: `-- Variable declaration and operations
+local name = "Alice"
+local age = 25
+local height = 5.6
+local isStudent = true
+
+print("Name: " .. name)
+print("Age: " .. age)
+print("Height: " .. height .. " feet")
+print("Is student: " .. tostring(isStudent))
+
+-- Variable operations
+age = age + 1
+print("Next year age: " .. age)`,
+      },
+    },
+    {
+      editor_json: {
+        type: 'string',
+        description: 'A JSON editor field',
+        default: {
+          'name': 'Alice',
+          'age': 25,
+          'height': 5.6,
+          'isStudent': true,
+          'courses': ['Math', 'Science', 'History'],
+        },
+      },
+    },
+    {
+      editor_yaml: {
+        type: 'string',
+        description: 'A YAML editor field',
+        default: `name: Alice
+age: 25
+height: 5.6
+isStudent: true
+courses:
+  - Math
+  - Science
+  - History`,
+      },
+    },
+    {
+      editor_plaintext: {
+        type: 'string',
+        description: 'A plaintext editor field',
+        default: `This is a simple plaintext editor.
+You can write any text here without any special formatting.`,
+      },
+    },
+  ]
+}
+
 export function buildMockingSchema(): FormSchema {
   return {
     type: 'record',
@@ -343,6 +423,8 @@ export function buildMockingSchema(): FormSchema {
       ...buildTagFieldCases(),
       ...buildArrayFieldCases(),
       ...buildForeignFieldCases(),
+      ...buildJsonFieldCases(),
+      ...buildEditorFieldCases(),
     ],
   }
 }

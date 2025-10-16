@@ -55,6 +55,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     fieldKey,
     labelOption,
   }) => {
+    // Determine logic should keep in sync with FieldRenderer.vue
     if (fieldSchema.type === 'string') {
       if (fieldSchema.one_of) {
         assertEnumField({ fieldKey, fieldSchema, labelOption })
@@ -83,6 +84,8 @@ export function assertFormRendering(schema: FormSchema, options?: {
       }
     } else if (fieldSchema.type === 'foreign') {
       assertForeignField({ fieldKey, fieldSchema, labelOption })
+    } else if (fieldSchema.type === 'json') {
+      assertEditorField({ fieldKey, fieldSchema, labelOption })
     } else {
       throw new Error(`Unsupported field type "${fieldSchema.type}" for field "${fieldKey}"`)
     }
@@ -483,6 +486,20 @@ export function assertFormRendering(schema: FormSchema, options?: {
       // the placeholder should be `Default: ${fieldSchema.default.id}`
       cy.getTestId(`ff-${fieldKey}`).should('have.attr', 'placeholder', `Default: ${fieldSchema.default.id}`)
     }
+  }
+
+  const assertEditorField: AssertFieldFn<ForeignFieldSchema> = ({
+    fieldKey,
+    fieldSchema,
+    labelOption,
+  }) => {
+    // Check input element
+    cy.getTestId(`ff-${fieldKey}`)
+      .should('exist')
+      .should('have.class', 'editor-container')
+
+    // Check label
+    assertLabel({ fieldKey, fieldSchema, labelOption })
   }
 
   assertFields(schema.fields)
