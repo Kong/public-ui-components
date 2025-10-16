@@ -10,12 +10,10 @@ export default {
     konnect: {
       create: `${konnectBaseApiUrl}/upstreams/{upstreamId}/targets`,
       edit: `${konnectBaseApiUrl}/upstreams/{upstreamId}/targets/{id}`,
-      validate: `${konnectBaseApiUrl}/v1/schemas/json/target/validate`,
     },
     kongManager: {
       create: `${KMBaseApiUrl}/upstreams/{upstreamId}/targets`,
       edit: `${KMBaseApiUrl}/upstreams/{upstreamId}/targets/{id}`,
-      validate: `${KMBaseApiUrl}/schemas/targets/validate`,
     },
   },
 }
