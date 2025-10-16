@@ -41,17 +41,6 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
     const interceptUpdate = (status = 200): void => {
       cy.intercept(
         {
-          method: 'POST',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/schemas/json/service/validate`,
-        },
-        {
-          statusCode: status,
-          body: {},
-        },
-      ).as('validateService')
-
-      cy.intercept(
-        {
           method: 'PUT',
           url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/services/*`,
         },
@@ -399,7 +388,6 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateService')
       cy.wait('@updateService')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
@@ -424,17 +412,6 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
     }
 
     const interceptUpdate = (status = 200): void => {
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/schemas/services/validate`,
-        },
-        {
-          statusCode: status,
-          body: {},
-        },
-      ).as('validateService')
-
       cy.intercept(
         {
           method: 'PATCH',
@@ -766,7 +743,6 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateService')
       cy.wait('@updateService')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
