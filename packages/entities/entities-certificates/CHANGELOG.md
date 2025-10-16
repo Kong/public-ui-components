@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.11.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.11.9...@kong-ui-public/entities-certificates@3.11.10) (2025-10-16)
+
+
+### Bug Fixes
+
+* **entities:** skip validate before submit certificates form ([#2562](https://github.com/Kong/public-ui-components/issues/2562)) ([c51acc0](https://github.com/Kong/public-ui-components/commit/c51acc02140c1964bec4afa8995955d202b47b2d))
+
+
+
+
+
 ## [3.11.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-certificates@3.11.8...@kong-ui-public/entities-certificates@3.11.9) (2025-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-certificates
