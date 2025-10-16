@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.26.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.25.10...@kong-ui-public/entities-vaults@3.26.0) (2025-10-16)
+
+
+### Features
+
+* **entities-*:** datakit - vault resources [KM-1666] ([#2530](https://github.com/Kong/public-ui-components/issues/2530)) ([e438a5d](https://github.com/Kong/public-ui-components/commit/e438a5de99e2bb6bbd9afd48bd0deef42aaedbbe))
+
+
+
+
+
 ## [3.25.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.25.9...@kong-ui-public/entities-vaults@3.25.10) (2025-10-10)
 
 
