@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.2.9...@kong-ui-public/entities-consumers@4.2.10) (2025-10-16)
+
+
+### Bug Fixes
+
+* **entities:** skip validate before submit consumer form ([#2569](https://github.com/Kong/public-ui-components/issues/2569)) ([9c62339](https://github.com/Kong/public-ui-components/commit/9c62339dbe55b384c132eb9a54b4051fb65dfdee))
+
+
+
+
+
 ## [4.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-consumers@4.2.8...@kong-ui-public/entities-consumers@4.2.9) (2025-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-consumers
