@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.9.2...@kong-ui-public/app-layout@4.10.0) (2025-10-16)
+
+
+### Features
+
+* **app-layout:** new badge component [KHCP-18175] ([#2577](https://github.com/Kong/public-ui-components/issues/2577)) ([5fbd271](https://github.com/Kong/public-ui-components/commit/5fbd2715b5276e8fc9bf3ba9627b33abab6d1bed))
+
+
+
+
+
 ## [4.9.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/app-layout@4.9.1...@kong-ui-public/app-layout@4.9.2) (2025-09-30)
 
 
