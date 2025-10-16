@@ -10,6 +10,8 @@ import {
 } from 'date-fns'
 
 import {
+  type ExtendedRelativeTimeRangeValues,
+  relativeTimeRangeValuesV4,
   TimeframeKeys,
 } from './types'
 
@@ -29,10 +31,11 @@ const adjustForTz = (d: Date, tz: string) => {
   return new Date(d.getTime() - getTimezoneOffset(tz, d))
 }
 
+
 export class Timeframe implements ITimeframe {
   readonly timeframeText: string
 
-  readonly key: RelativeTimeRangeValuesV4 | 'custom'
+  readonly key: RelativeTimeRangeValuesV4 | ExtendedRelativeTimeRangeValues | 'custom'
 
   readonly display: string
 
@@ -154,11 +157,16 @@ export class Timeframe implements ITimeframe {
       }
     }
 
-    return {
-      type: 'relative',
-      time_range: this.key,
-      tz,
+    if (relativeTimeRangeValuesV4.includes(this.key as any)) {
+      return {
+        type: 'relative',
+        // Safe assertion; we just checked that key is a member of the union.
+        time_range: this.key as RelativeTimeRangeValuesV4,
+        tz,
+      }
     }
+
+    throw new Error('Unsupported relative time value for Explore')
   }
 
   protected tzAdjustedDate(tz?: string): Date {
@@ -204,6 +212,22 @@ class CurrentMonth extends Timeframe {
 
   maximumTimeframeLength() {
     return 60 * 60 * 24 * 31
+  }
+}
+
+class CurrentYear extends Timeframe {
+  rawStart(tz?: string): Date {
+    let firstOfTheYear = new Date(this.tzAdjustedDate(tz).getFullYear(), 0, 1)
+
+    if (tz) {
+      firstOfTheYear = adjustForTz(firstOfTheYear, tz)
+    }
+
+    return firstOfTheYear
+  }
+
+  maximumTimeframeLength() {
+    return 60 * 60 * 24 * 366
   }
 }
 
@@ -256,6 +280,28 @@ class PreviousMonth extends Timeframe {
     }
 
     return lastMonth
+  }
+}
+
+class PreviousYear extends Timeframe {
+  rawEnd(tz?: string): Date {
+    let thisYear = new Date(this.tzAdjustedDate(tz).getFullYear(), 0, 1)
+
+    if (tz) {
+      thisYear = adjustForTz(thisYear, tz)
+    }
+
+    return thisYear
+  }
+
+  rawStart(tz?: string): Date {
+    let lastYear = new Date(this.tzAdjustedDate(tz).getFullYear() - 1, 0, 1)
+
+    if (tz) {
+      lastYear = adjustForTz(lastYear, tz)
+    }
+
+    return lastYear
   }
 }
 
@@ -372,6 +418,51 @@ export const TimePeriods = new Map<string, Timeframe>([
     }),
   ],
   [
+    TimeframeKeys.NINETY_DAY,
+    new Timeframe({
+      key: TimeframeKeys.NINETY_DAY,
+      display: 'Last 90 days',
+      timeframeText: '90 days',
+      timeframeLength: () => 60 * 60 * 24 * 90,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: true,
+      fineGrainedDefaultGranularity: 'daily',
+      allowedTiers: ['trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['hourly', 'twoHourly', 'twelveHourly', 'daily', 'weekly'],
+    }),
+  ],
+  [
+    TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY,
+    new Timeframe({
+      key: TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY,
+      display: 'Last 180 days',
+      timeframeText: '180 days',
+      timeframeLength: () => 60 * 60 * 24 * 180,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: true,
+      fineGrainedDefaultGranularity: 'daily',
+      allowedTiers: ['trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['hourly', 'twoHourly', 'twelveHourly', 'daily', 'weekly'],
+    }),
+  ],
+  [
+    TimeframeKeys.ONE_YEAR,
+    new Timeframe({
+      key: TimeframeKeys.ONE_YEAR,
+      display: 'Last 365 days',
+      timeframeText: '365 days',
+      timeframeLength: () => 60 * 60 * 24 * 365,
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: true,
+      fineGrainedDefaultGranularity: 'daily',
+      allowedTiers: ['trial', 'plus', 'enterprise'],
+      allowedGranularitiesOverride: ['hourly', 'twoHourly', 'twelveHourly', 'daily', 'weekly'],
+    }),
+  ],
+  [
     TimeframeKeys.CURRENT_WEEK,
     new CurrentWeek({
       key: TimeframeKeys.CURRENT_WEEK,
@@ -404,6 +495,25 @@ export const TimePeriods = new Map<string, Timeframe>([
         const end = startOfDay(addDays(new Date(), 1))
 
         return (end.getTime() - firstOfTheMonth.getTime()) / 1000
+      },
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: false,
+      allowedTiers: ['plus', 'enterprise'],
+    }),
+  ],
+  [
+    TimeframeKeys.CURRENT_YEAR,
+    new CurrentYear({
+      key: TimeframeKeys.CURRENT_YEAR,
+      display: 'This year',
+      timeframeText: 'Year',
+      timeframeLength: () => {
+        // Jan 1 -> now
+        const firstOfTheYear = new Date(new Date().getFullYear(), 0, 1)
+        const end = startOfDay(addDays(new Date(), 1))
+
+        return (end.getTime() - firstOfTheYear.getTime()) / 1000
       },
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
@@ -446,6 +556,29 @@ export const TimePeriods = new Map<string, Timeframe>([
         return (
           60 * 60 * 24 * getDaysInMonth(new Date().setMonth(new Date().getMonth() - 1)) + hoursToSeconds(offset)
         )
+      },
+      defaultResponseGranularity: 'daily',
+      dataGranularity: 'daily',
+      isRelative: false,
+      allowedTiers: ['plus', 'enterprise'],
+    }),
+  ],
+  [
+    TimeframeKeys.PREVIOUS_YEAR,
+    new PreviousYear({
+      key: TimeframeKeys.PREVIOUS_YEAR,
+      display: 'Previous year',
+      timeframeText: 'Year',
+      timeframeLength: () => {
+        // Not all years have the same number of days (leap years).
+        const end = new Date(new Date().getFullYear(), 0, 1)
+        const start = new Date(new Date().getFullYear() - 1, 0, 1)
+        let offset = 0
+        if (end.getTimezoneOffset() !== start.getTimezoneOffset()) {
+          offset = dstOffsetHours(end, start)
+        }
+
+        return 60 * 60 * 24 * (365 + (start.getFullYear() % 4 === 0 ? 1 : 0)) + hoursToSeconds(offset)
       },
       defaultResponseGranularity: 'daily',
       dataGranularity: 'daily',
@@ -523,8 +656,13 @@ export const TIMEFRAME_LOOKUP: Record<string, TimeframeKeys> = {
   '24h': TimeframeKeys.ONE_DAY,
   '7d': TimeframeKeys.SEVEN_DAY,
   '30d': TimeframeKeys.THIRTY_DAY,
+  '90d': TimeframeKeys.NINETY_DAY,
+  '180d': TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY,
+  '365d': TimeframeKeys.ONE_YEAR,
   current_week: TimeframeKeys.CURRENT_WEEK,
   current_month: TimeframeKeys.CURRENT_MONTH,
+  current_year: TimeframeKeys.CURRENT_YEAR,
   previous_week: TimeframeKeys.PREVIOUS_WEEK,
   previous_month: TimeframeKeys.PREVIOUS_MONTH,
+  previous_year: TimeframeKeys.PREVIOUS_YEAR,
 }
