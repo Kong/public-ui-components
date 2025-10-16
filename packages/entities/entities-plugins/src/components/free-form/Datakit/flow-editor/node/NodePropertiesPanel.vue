@@ -6,6 +6,7 @@
     :max-width="maxWidth"
     :offset-top="offsetTop"
     :visible="visible"
+    :z-index="DK_NODE_PROPERTIES_PANEL_Z_INDEX"
     @close="$emit('close')"
   >
     <template
@@ -33,7 +34,7 @@
 <script setup lang="ts">
 import NodeBadge from './NodeBadge.vue'
 
-import { DK_NODE_PROPERTIES_PANEL_OFFSET_TOP, DK_NODE_PROPERTIES_PANEL_WIDTH } from '../../constants'
+import { DK_NODE_PROPERTIES_PANEL_OFFSET_TOP, DK_NODE_PROPERTIES_PANEL_WIDTH, DK_NODE_PROPERTIES_PANEL_Z_INDEX } from '../../constants'
 import NodeFormCall from '../node-forms/NodeFormCall.vue'
 import NodeFormServiceRequest from '../node-forms/NodeFormServiceRequest.vue'
 import NodeFormResponse from '../node-forms/NodeFormResponse.vue'

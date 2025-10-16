@@ -722,6 +722,29 @@
           "expand_panel": "Expand panel",
           "collapse_panel": "Collapse panel",
           "return_to_config": "Return to plugin configuration",
+          "panel_segments": {
+            "nodes": "Nodes",
+            "resources": {
+              "title": "Resources",
+              "vault": {
+                "title": "Vault secrets",
+                "add_button": "Add Vault resource",
+                "name_exists_error": "Vault name already exists",
+                "name_required_error": "Vault name is required",
+                "edit": "Edit",
+                "delete": "Delete"
+              }
+            }
+          },
+          "vault_secret_picker": {
+            "title": "Add secret to Datakit",
+            "proceed_button_text": "Add secret",
+            "secret_name": {
+              "label": "Secret name",
+              "placeholder": "Enter a name",
+              "help": "A unique identifier for this secret in your Datakit configuration"
+            }
+          },
           "node_panel": {
             "title": "Node types",
             "description": "Drag a node onto the canvas to add it to your data flow."
