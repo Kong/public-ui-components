@@ -36,6 +36,7 @@ const { i18n: { t } } = composables.useI18n()
   border-radius: $kui-border-radius-20;
 
   .new-badge {
+    background: linear-gradient(219.69deg, rgba(0, 214, 164, 0.2) 7.34%, rgba(0, 68, 244, 0.2) 83.28%);
     border-radius: $kui-border-radius-20;
     color: $kui-color-text-inverse;
     font-size: $kui-font-size-20;
@@ -43,7 +44,6 @@ const { i18n: { t } } = composables.useI18n()
     line-height: $kui-line-height-20;
     padding: $kui-space-10 $kui-space-20;
     position: relative;
-    background: linear-gradient(219.69deg, rgba(0, 214, 164, 0.2) 7.34%, rgba(0, 68, 244, 0.2) 83.28%);
 
     &.large {
       padding: $kui-space-20 $kui-space-40;
@@ -55,8 +55,8 @@ const { i18n: { t } } = composables.useI18n()
     border: none;
 
     .new-badge {
-      color: $kui-color-text;
       background: none;
+      color: $kui-color-text;
     }
   }
 }
