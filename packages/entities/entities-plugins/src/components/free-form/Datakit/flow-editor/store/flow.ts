@@ -24,13 +24,13 @@ import { useEditorStore } from './store'
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
  * This function is placed here because it is only used in this file.
  */
-function parseHandle(handle: string): { io: 'input' | 'output', field: FieldId } | undefined {
+function parseHandle(handle: string): { io: 'input' | 'output', field?: FieldId } | undefined {
   const parsed = handle.match(/^(input|output)(?:s@(.*))?$/)
   if (!parsed) return undefined
 
   return {
     io: parsed[1] as 'input' | 'output',
-    field: parsed[2] as FieldId,
+    field: parsed[2] as FieldId | undefined,
   }
 }
 
