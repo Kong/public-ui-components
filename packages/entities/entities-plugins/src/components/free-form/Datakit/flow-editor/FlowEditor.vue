@@ -50,7 +50,8 @@ const emit = defineEmits<{
 }>()
 
 function onChange(configNodes: ConfigNode[], uiNodes: UINode[], resources: DatakitConfig['resources']) {
-  const nextConfig = { ...formData.config, nodes: configNodes, resources }
+  const nextConfig = { ...formData.config, nodes: configNodes }
+  if (resources !== undefined) nextConfig.resources = resources
   const nextUIData = { ...formData.__ui_data, nodes: uiNodes }
   formData.config = nextConfig
   formData.__ui_data = nextUIData
