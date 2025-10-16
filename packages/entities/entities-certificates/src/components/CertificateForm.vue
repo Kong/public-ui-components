@@ -262,22 +262,6 @@ const handleRemoveSni = (index: number): void => {
  * ---------------
  */
 /**
- * Build the validate and submit URL
- */
-const validateSubmitUrl = computed((): string => {
-  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].validate}`
-
-  if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-  }
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.certificateId)
-  return url
-})
-
-/**
  * Build the submit URL
  */
 const submitUrl = computed<string>(() => {
@@ -311,8 +295,6 @@ const saveFormData = async (): Promise<void> => {
     form.isReadonly = true
 
     let response: AxiosResponse | undefined
-
-    await axiosInstance.post(validateSubmitUrl.value, requestBody.value)
 
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, requestBody.value)

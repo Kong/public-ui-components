@@ -82,19 +82,6 @@ describe('<CertificateForm />', () => {
       cy.intercept(
         {
           method: 'POST',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/schemas/certificates/validate`,
-        },
-        handleCertificateCreateUpdate((request) => {
-          request.reply({
-            statusCode: status,
-            body: { },
-          })
-        }),
-      ).as('validateCertificate')
-
-      cy.intercept(
-        {
-          method: 'POST',
           url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/certificates`,
         },
         handleCertificateCreateUpdate((request) => {
@@ -260,7 +247,6 @@ describe('<CertificateForm />', () => {
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateCertificate')
       cy.wait('@updateCertificate')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
@@ -296,7 +282,7 @@ describe('<CertificateForm />', () => {
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateCertificate').its('response.statusCode').should('eq', 400)
+      cy.wait('@createCertificate').its('response.statusCode').should('eq', 400)
     })
 
     it('should not fail with valid cert_alt and key_alt', () => {
@@ -329,7 +315,6 @@ describe('<CertificateForm />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateCertificate').its('response.statusCode').should('eq', 200)
       cy.wait('@createCertificate').its('response.statusCode').should('eq', 200)
     })
 
@@ -360,7 +345,6 @@ describe('<CertificateForm />', () => {
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateCertificate').its('response.statusCode').should('eq', 200)
       cy.wait('@createCertificate').its('response.statusCode').should('eq', 200)
     })
   })
@@ -383,19 +367,6 @@ describe('<CertificateForm />', () => {
     }
 
     const interceptUpdate = (status = 200): void => {
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/schemas/json/certificate/validate`,
-        },
-        handleCertificateCreateUpdate((request) => {
-          request.reply({
-            statusCode: status,
-            body: { },
-          })
-        }),
-      ).as('validateCertificate')
-
       cy.intercept(
         {
           method: 'POST',
@@ -564,7 +535,6 @@ describe('<CertificateForm />', () => {
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateCertificate')
       cy.wait('@updateCertificate')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
@@ -600,7 +570,7 @@ describe('<CertificateForm />', () => {
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateCertificate').its('response.statusCode').should('eq', 400)
+      cy.wait('@createCertificate').its('response.statusCode').should('eq', 400)
     })
 
     it('should not fail with valid cert_alt and key_alt', () => {
@@ -633,7 +603,6 @@ describe('<CertificateForm />', () => {
       cy.get('@vueWrapper').then((wrapper: any) => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateCertificate').its('response.statusCode').should('eq', 200)
       cy.wait('@createCertificate').its('response.statusCode').should('eq', 200)
     })
 
@@ -664,7 +633,6 @@ describe('<CertificateForm />', () => {
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateCertificate').its('response.statusCode').should('eq', 200)
       cy.wait('@createCertificate').its('response.statusCode').should('eq', 200)
     })
   })
