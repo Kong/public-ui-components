@@ -412,7 +412,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   [
     TimeframeKeys.NINETY_DAY,
     new Timeframe({
-      key: TimeframeKeys.NINETY_DAY,
+      key: TimeframeKeys.NINETY_DAY as RelativeTimeRangeValuesV4,
       display: 'Last 90 days',
       timeframeText: '90 days',
       timeframeLength: () => 60 * 60 * 24 * 90,
@@ -427,7 +427,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   [
     TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY,
     new Timeframe({
-      key: TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY,
+      key: TimeframeKeys.ONE_HUNDRED_EIGHTY_DAY as RelativeTimeRangeValuesV4,
       display: 'Last 180 days',
       timeframeText: '180 days',
       timeframeLength: () => 60 * 60 * 24 * 180,
@@ -442,7 +442,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   [
     TimeframeKeys.ONE_YEAR,
     new Timeframe({
-      key: TimeframeKeys.ONE_YEAR,
+      key: TimeframeKeys.ONE_YEAR as RelativeTimeRangeValuesV4,
       display: 'Last 365 days',
       timeframeText: '365 days',
       timeframeLength: () => 60 * 60 * 24 * 365,
@@ -497,7 +497,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   [
     TimeframeKeys.CURRENT_YEAR,
     new CurrentYear({
-      key: TimeframeKeys.CURRENT_YEAR,
+      key: TimeframeKeys.CURRENT_YEAR as RelativeTimeRangeValuesV4,
       display: 'This year',
       timeframeText: 'Year',
       timeframeLength: () => {
@@ -558,7 +558,7 @@ export const TimePeriods = new Map<string, Timeframe>([
   [
     TimeframeKeys.PREVIOUS_YEAR,
     new PreviousYear({
-      key: TimeframeKeys.PREVIOUS_YEAR,
+      key: TimeframeKeys.PREVIOUS_YEAR as RelativeTimeRangeValuesV4,
       display: 'Previous year',
       timeframeText: 'Year',
       timeframeLength: () => {
