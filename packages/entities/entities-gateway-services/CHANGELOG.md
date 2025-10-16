@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.13.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.9...@kong-ui-public/entities-gateway-services@3.13.10) (2025-10-16)
+
+
+### Bug Fixes
+
+* **entities:** skip validate before submit gateway service form ([#2570](https://github.com/Kong/public-ui-components/issues/2570)) ([dd96c8c](https://github.com/Kong/public-ui-components/commit/dd96c8c9c8bba4719dd4af4954e9582750121921))
+
+
+
+
+
 ## [3.13.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.8...@kong-ui-public/entities-gateway-services@3.13.9) (2025-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
