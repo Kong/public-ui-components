@@ -4,7 +4,7 @@
     class="dk-node-badge"
     :class="{
       'icon-only': iconOnly,
-      'has-visual': !!visual,
+      'has-colors': !!visual.colors,
     }"
     :size="size"
   >
@@ -20,9 +20,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { NodeType } from '../../types'
-import { CONFIG_NODE_META_MAP, getNodeTypeName, isConfigType } from './node'
+import type { NodeVisual } from '../../types'
+import { type NodeType } from '../../types'
+import { getNodeTypeName } from './node'
 import type { BadgeSize } from '@kong/kongponents'
+import { NODE_VISUAL } from './node-visual'
 
 const { type } = defineProps<{
   type: NodeType
@@ -30,22 +32,16 @@ const { type } = defineProps<{
   iconOnly?: boolean
 }>()
 
-const visual = computed(() => {
-  if (isConfigType(type)) {
-    const { icon, colors } = CONFIG_NODE_META_MAP[type]
-    return { icon, background: colors?.background, foreground: colors?.foreground }
-  }
-  return undefined
-})
+const visual = computed<NodeVisual>(() => NODE_VISUAL[type])
 
 const nodeName = computed(() => getNodeTypeName(type))
 </script>
 
 <style lang="scss" scoped>
 .dk-node-badge {
-  &.has-visual {
-    background: v-bind("visual?.background") !important;
-    color: v-bind("visual?.foreground") !important;
+  &.has-colors {
+    background: v-bind("visual.colors?.background") !important;
+    color: v-bind("visual.colors?.foreground") !important;
   }
 
   &.icon-only {
@@ -54,5 +50,4 @@ const nodeName = computed(() => getNodeTypeName(type))
     }
   }
 }
-
 </style>

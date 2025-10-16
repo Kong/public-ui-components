@@ -63,7 +63,7 @@ export interface NextMeta {
 
 export interface NodeVisual {
   icon: Component
-  colors: {
+  colors?: {
     foreground: string
     background: string
   }

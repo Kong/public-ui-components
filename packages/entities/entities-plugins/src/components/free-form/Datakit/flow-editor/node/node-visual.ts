@@ -7,7 +7,6 @@ import {
   KUI_COLOR_TEXT_DECORATIVE_AQUA,
   KUI_COLOR_TEXT_DECORATIVE_PINK,
   KUI_COLOR_TEXT_DECORATIVE_PURPLE,
-  KUI_COLOR_TEXT_NEUTRAL_STRONGEST,
   KUI_COLOR_TEXT_PRIMARY,
   KUI_COLOR_TEXT_PRIMARY_WEAKEST,
   KUI_COLOR_TEXT_SUCCESS,
@@ -16,15 +15,17 @@ import {
 } from '@kong/design-tokens'
 import {
   ArrowSplitIcon,
+  CloudIcon,
   CodeblockIcon,
   GatewayIcon,
+  KeyIcon,
   NetworkIcon,
   StackIcon,
   VitalsIcon,
 } from '@kong/icons'
-import type { ConfigNodeType, NodeVisual } from '../../types'
+import type { NodeType, NodeVisual } from '../../types'
 
-export const NODE_VISUAL: Record<ConfigNodeType | 'default', NodeVisual> = {
+export const NODE_VISUAL: Record<NodeType, NodeVisual> = {
   call: {
     icon: NetworkIcon,
     colors: {
@@ -74,11 +75,19 @@ export const NODE_VISUAL: Record<ConfigNodeType | 'default', NodeVisual> = {
       background: '#fff0f7', // Pink-tinted background for cache node
     },
   },
-  default: {
-    icon: ArrowSplitIcon,
-    colors: {
-      foreground: KUI_COLOR_TEXT_NEUTRAL_STRONGEST,
-      background: KUI_COLOR_TEXT_NEUTRAL_STRONGEST,
-    },
+  vault: {
+    icon: KeyIcon,
+  },
+  request: {
+    icon: CloudIcon,
+  },
+  service_request: {
+    icon: CloudIcon,
+  },
+  service_response: {
+    icon: CloudIcon,
+  },
+  response: {
+    icon: CloudIcon,
   },
 }

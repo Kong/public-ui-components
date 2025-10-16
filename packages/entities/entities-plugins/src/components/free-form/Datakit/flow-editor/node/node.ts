@@ -148,6 +148,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
+    ...NODE_VISUAL.request,
   },
   service_request: {
     type: 'service_request',
@@ -161,6 +162,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
+    ...NODE_VISUAL.service_request,
   },
   service_response: {
     type: 'service_response',
@@ -173,6 +175,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
+    ...NODE_VISUAL.service_response,
   },
   response: {
     type: 'response',
@@ -185,6 +188,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         ],
       } as IOMeta,
     },
+    ...NODE_VISUAL.response,
   },
   vault: {
     type: 'vault',
@@ -194,6 +198,7 @@ export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {
         configurable: true,
       },
     },
+    ...NODE_VISUAL.vault,
     hidden: true,
   },
 }
