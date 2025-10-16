@@ -14,11 +14,12 @@
         v-slot="props"
         :match="({ path }) => path.endsWith('by_lua')"
       >
-        <StringField
+        <EditorField
           v-bind="props"
           autosize
           class="rc-code"
-          multiline
+          :height="200"
+          language="lua"
           :placeholder="t('plugins.free-form.request-callout.by_lua_placeholder')"
         />
       </FieldRenderer>
@@ -80,13 +81,13 @@ import CalloutsForm from './CalloutsForm.vue'
 import FieldRenderer from '../shared/FieldRenderer.vue'
 import Form from '../shared/Form.vue'
 import ObjectField from '../shared/ObjectField.vue'
-import StringField from '../shared/StringField.vue'
 import useI18n from '../../../composables/useI18n'
 import AdvancedFields from '../shared/AdvancedFields.vue'
 
 import { CalloutId, type Callout, type RequestCalloutPlugin } from './types'
 import type { FormConfig } from '../shared/types'
 import type { ConfigFormProps } from '../shared/PluginFormWrapper.vue'
+import EditorField from '../shared/EditorField.vue'
 
 defineProps<ConfigFormProps<RequestCalloutPlugin>>()
 
