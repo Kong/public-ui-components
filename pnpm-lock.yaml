@@ -455,9 +455,6 @@ importers:
         specifier: ^4.5.0
         version: 4.5.0
     devDependencies:
-      '@kong-ui-public/i18n':
-        specifier: workspace:^
-        version: link:../i18n
       '@kong/design-tokens':
         specifier: 1.18.0
         version: 1.18.0

@@ -1,19 +1,17 @@
 <template>
   <div
-    class="new-badge-wrapper"
+    class="gradient-badge"
     :class="{ inverse }"
   >
     <div
-      :class="['new-badge', { large }]"
+      :class="['gradient-badge-content', { large }]"
     >
-      {{ t('new') }}
+      <slot />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useI18n } from '../../composables'
-
 defineProps({
   large: {
     type: Boolean,
@@ -24,18 +22,16 @@ defineProps({
     default: false,
   },
 })
-
-const { i18n: { t } } = useI18n()
 </script>
 
 <style lang="scss" scoped>
-.new-badge-wrapper {
+.gradient-badge {
   background: linear-gradient(90deg, $kui-color-background-inverse 2.68%, rgba(0, 9, 51, 0.9) 100%) padding-box,
     linear-gradient(219.69deg, $kui-color-background-success-weak 0%, $kui-color-background-primary 74.54%) border-box;
   border: $kui-border-width-10 solid $kui-color-border-transparent;
   border-radius: $kui-border-radius-20;
 
-  .new-badge {
+  .gradient-badge-content {
     background: linear-gradient(219.69deg, rgba(0, 214, 164, 0.2) 7.34%, rgba(0, 68, 244, 0.2) 83.28%);
     border-radius: $kui-border-radius-20;
     color: $kui-color-text-inverse;
@@ -54,7 +50,7 @@ const { i18n: { t } } = useI18n()
     background: linear-gradient(221.99deg, #00E3C0 26.67%, #1257CA 128%);
     border: none;
 
-    .new-badge {
+    .gradient-badge-content {
       background: none;
       color: $kui-color-text;
       // stylelint-disable-next-line @kong/design-tokens/use-proper-token
