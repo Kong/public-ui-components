@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.105.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.104.3...@kong-ui-public/entities-plugins@9.105.0) (2025-10-16)
+
+
+### Features
+
+* **entities-plugins:** add branch node support for datakit flow editor ([#2544](https://github.com/Kong/public-ui-components/issues/2544)) ([dbda65d](https://github.com/Kong/public-ui-components/commit/dbda65da86931b9aa885f26b8ef16f65b752e09d))
+
+
+
+
+
 ## [9.104.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.104.2...@kong-ui-public/entities-plugins@9.104.3) (2025-10-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
