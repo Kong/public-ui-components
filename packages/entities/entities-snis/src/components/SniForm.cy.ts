@@ -61,17 +61,6 @@ describe('<SniForm />', {
     const interceptUpdate = (status = 200): void => {
       cy.intercept(
         {
-          method: 'POST',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/schemas/snis/validate`,
-        },
-        {
-          statusCode: status,
-          body: {},
-        },
-      ).as('validateSni')
-
-      cy.intercept(
-        {
           method: 'PATCH',
           url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/snis/*`,
         },
@@ -344,7 +333,6 @@ describe('<SniForm />', {
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateSni')
       cy.wait('@updateSni')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
@@ -385,17 +373,6 @@ describe('<SniForm />', {
     }
 
     const interceptUpdate = (status = 200): void => {
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/schemas/json/sni/validate`,
-        },
-        {
-          statusCode: status,
-          body: {},
-        },
-      ).as('validateSni')
-
       cy.intercept(
         {
           method: 'PUT',
@@ -669,7 +646,6 @@ describe('<SniForm />', {
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateSni')
       cy.wait('@updateSni')
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
