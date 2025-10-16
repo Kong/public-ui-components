@@ -937,19 +937,6 @@ const handleClickCancel = (): void => {
  * Build the validate and submit URL
  */
 
-const validateSubmitUrl = computed<string>(() => {
-  let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app].validate}`
-
-  if (props.config.app === 'konnect') {
-    url = url.replace(/{controlPlaneId}/gi, props.config?.controlPlaneId || '')
-  } else if (props.config.app === 'kongManager') {
-    url = url.replace(/\/{workspace}/gi, props.config?.workspace ? `/${props.config.workspace}` : '')
-  }
-  // Always replace the id when editing
-  url = url.replace(/{id}/gi, props.gatewayServiceId)
-  return url
-})
-
 const submitUrl = computed<string>(() => {
   let url = `${props.config.apiBaseUrl}${endpoints.form[props.config.app][formType.value]}`
 
@@ -1036,8 +1023,6 @@ const saveFormData = async (): Promise<AxiosResponse | undefined> => {
     saveTlsVerify(payload)
 
     let response: AxiosResponse | undefined
-
-    await axiosInstance.post(validateSubmitUrl.value, payload)
 
     if (formType.value === 'create') {
       response = await axiosInstance.post(submitUrl.value, payload)
