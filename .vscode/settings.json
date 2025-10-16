@@ -28,4 +28,11 @@
     "**/bower_components",
     "**/*/node_modules/@kong/design-tokens",
   ],
+  "i18n-ally.enabledFrameworks": [
+    "vue"
+  ],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.localesPaths": [
+    "packages/**/src/locales",
+  ],
 }
