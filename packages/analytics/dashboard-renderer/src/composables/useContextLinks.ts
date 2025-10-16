@@ -6,7 +6,6 @@ import type { AiExploreAggregations, AiExploreQuery, AllFilters, ExploreAggregat
 import type { AnalyticsBridge, TileDefinition } from '@kong-ui-public/analytics-utilities'
 import type { DashboardRendererContextInternal } from '../types'
 import type { ExternalLink } from '@kong-ui-public/analytics-chart'
-import composables from '.'
 
 export default function useContextLinks(
   {
@@ -22,12 +21,10 @@ export default function useContextLinks(
   },
 ) {
 
-  const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
   const exploreBaseUrl = ref('')
   const requestsBaseUrl = ref('')
   const requestsLinkZoomActions = ref<ExternalLink | undefined>(undefined)
   const exploreLinkZoomActions = ref<ExternalLink | undefined>(undefined)
-  const hasViewRequestsActions = evaluateFeatureFlag('analytics-chart-zoom-actions', true)
 
   const analyticsConfigStore = useAnalyticsConfigStore()
 
@@ -40,7 +37,7 @@ export default function useContextLinks(
   const isAdvancedAnalytics = computed(() => analyticsConfigStore.analytics && analyticsConfigStore.percentiles)
   const canShowKebabMenu = computed(() => !['golden_signals', 'top_n', 'gauge'].includes(definition.value.chart.type))
 
-  const canGenerateRequestsLink = computed(() => hasViewRequestsActions && requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && isAdvancedAnalytics.value)
+  const canGenerateRequestsLink = computed(() => requestsBaseUrl.value && definition.value.query && definition.value.query.datasource !== 'llm_usage' && isAdvancedAnalytics.value)
   const canGenerateExploreLink = computed(() => exploreBaseUrl.value && definition.value.query && ['basic', 'api_usage', 'llm_usage', undefined].includes(definition.value.query.datasource) && isAdvancedAnalytics.value)
 
   const chartDataGranularity = computed(() => {

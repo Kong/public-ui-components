@@ -52,8 +52,6 @@ const emit = defineEmits<{
   (e: 'select-chart-range', newTimeRange: AbsoluteTimeRangeV4): void
 }>()
 const { i18n } = composables.useI18n()
-const { evaluateFeatureFlag } = composables.useEvaluateFeatureFlag()
-const hasZoomOnAllTiles = evaluateFeatureFlag('ma-4135-allow-zooming-all-dashboard-tiles', false)
 
 const options = computed((): AnalyticsChartOptions => ({
   type: props.chartOptions.type,
@@ -62,12 +60,7 @@ const options = computed((): AnalyticsChartOptions => ({
   threshold: props.chartOptions.threshold,
 }))
 
-const timeseriesZoom = computed(() => {
-  if (hasZoomOnAllTiles) {
-    return props.context.zoomable
-  }
-  return props.context.zoomable && !props.query.time_range
-})
+const timeseriesZoom = computed(() => props.context.zoomable)
 
 const editTile = () => {
   emit('edit-tile')
