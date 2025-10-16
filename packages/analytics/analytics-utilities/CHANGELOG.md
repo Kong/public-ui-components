@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.5.1...@kong-ui-public/analytics-utilities@11.6.0) (2025-10-16)
+
+
+### Features
+
+* **analytics:** add more timeframe options ([#2565](https://github.com/Kong/public-ui-components/issues/2565)) ([5d00e85](https://github.com/Kong/public-ui-components/commit/5d00e85c4eb2d9256c24c4655d3cc15126dae405))
+
+
+
+
+
 ## [11.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.5.0...@kong-ui-public/analytics-utilities@11.5.1) (2025-10-15)
 
 
