@@ -204,7 +204,7 @@ const formType = computed((): EntityBaseFormType => props.consumerId
   ? EntityBaseFormType.Edit
   : EntityBaseFormType.Create)
 
-const getUrl = (action: 'validate' | 'create' | 'edit'): string => {
+const getUrl = (action: 'create' | 'edit'): string => {
   let url = `${props.config?.apiBaseUrl}${endpoints.form[props.config?.app][action]}`
 
   if (props.config?.app === 'konnect') {
@@ -235,8 +235,6 @@ const submitData = async (): Promise<void> => {
     state.readonly = true
 
     let response: AxiosResponse | undefined
-
-    await axiosInstance.post(getUrl('validate'), payload.value)
 
     if (formType.value === 'create') {
       response = await axiosInstance.post(getUrl('create'), payload.value)

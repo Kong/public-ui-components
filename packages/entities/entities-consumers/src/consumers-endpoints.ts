@@ -18,12 +18,10 @@ export default {
   },
   form: {
     konnect: {
-      validate: `${konnectBaseApiUrl}/v1/schemas/json/consumer/validate`,
       create: `${konnectBaseApiUrl}/consumers`,
       edit: `${konnectBaseApiUrl}/consumers/{id}`,
     },
     kongManager: {
-      validate: `${KMBaseApiUrl}/schemas/consumers/validate`,
       create: `${KMBaseApiUrl}/consumers`,
       edit: `${KMBaseApiUrl}/consumers/{id}`,
     },

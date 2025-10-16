@@ -135,19 +135,6 @@ describe('<ConsumerForm/>', () => {
       custom_id: '',
       tags: ['tag 1'],
     }
-    const interceptValidation = (status = 200): void => {
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/v1/schemas/json/consumer/validate`,
-        },
-        {
-          statusCode: status,
-          body: payload,
-        },
-      ).as('validateSchema')
-    }
-
     const interceptCreate = (status = 200, data = payload): void => {
       cy.intercept(
         {
@@ -188,7 +175,6 @@ describe('<ConsumerForm/>', () => {
     }
 
     it('Should emit update event after Customer was created', () => {
-      interceptValidation()
       interceptCreate()
 
       cy.mount(ConsumerForm, {
@@ -199,34 +185,13 @@ describe('<ConsumerForm/>', () => {
       }).then(({ wrapper }) => {
         wrapper.findComponent(EntityBaseForm).vm.$emit('submit')
 
-        cy.wait('@validateSchema')
         cy.wait('@createConsumer')
 
         cy.get('@updateSpy').should('have.been.calledOnceWith', payload)
       })
     })
 
-    it('Create Consumer should not have been called and error should be visible when validation fails', () => {
-      interceptValidation(400)
-      interceptCreate()
-
-      cy.mount(ConsumerForm, {
-        props: {
-          config: konnectConfig,
-          onUpdate: cy.spy().as('updateSpy'),
-        },
-      }).then(({ wrapper }) => {
-        wrapper.findComponent(EntityBaseForm).vm.$emit('submit')
-
-        cy.wait('@validateSchema')
-
-        cy.get('@updateSpy').should('not.have.been.called')
-        cy.getTestId('form-error').should('be.visible')
-      })
-    })
-
     it('Error should be visible when creation fails', () => {
-      interceptValidation()
       interceptCreate(400)
 
       cy.mount(ConsumerForm, {
@@ -237,7 +202,6 @@ describe('<ConsumerForm/>', () => {
       }).then(({ wrapper }) => {
         wrapper.findComponent(EntityBaseForm).vm.$emit('submit')
 
-        cy.wait('@validateSchema')
         cy.wait('@createConsumer')
 
         cy.get('@updateSpy').should('not.have.been.called')
@@ -279,7 +243,6 @@ describe('<ConsumerForm/>', () => {
         tags: ['service_1'],
       }
 
-      interceptValidation()
       interceptEdit(200, editedPayload)
 
       cy.mount(ConsumerForm, {
@@ -291,7 +254,6 @@ describe('<ConsumerForm/>', () => {
       }).then(({ wrapper }) => {
         wrapper.findComponent(EntityBaseForm).vm.$emit('submit')
 
-        cy.wait('@validateSchema')
         cy.wait('@editConsumer')
 
         cy.get('@updateSpy').should('have.been.calledOnceWith', editedPayload)
@@ -304,18 +266,6 @@ describe('<ConsumerForm/>', () => {
       username: 'username',
       custom_id: '',
       tags: ['tag 1'],
-    }
-    const interceptValidation = (status = 200): void => {
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${KMConfig.apiBaseUrl}/${KMConfig.workspace}/schemas/consumers/validate`,
-        },
-        {
-          statusCode: status,
-          body: payload,
-        },
-      ).as('validateSchema')
     }
 
     const interceptCreate = (status = 200, data = payload): void => {
@@ -358,7 +308,6 @@ describe('<ConsumerForm/>', () => {
     }
 
     it('Should emit update event after Customer was created', () => {
-      interceptValidation()
       interceptCreate()
 
       cy.mount(ConsumerForm, {
@@ -369,34 +318,13 @@ describe('<ConsumerForm/>', () => {
       }).then(({ wrapper }) => {
         wrapper.findComponent(EntityBaseForm).vm.$emit('submit')
 
-        cy.wait('@validateSchema')
         cy.wait('@createConsumer')
 
         cy.get('@updateSpy').should('have.been.calledOnceWith', payload)
       })
     })
 
-    it('Create Consumer should not have been called and error should be visible when validation fails', () => {
-      interceptValidation(400)
-      interceptCreate()
-
-      cy.mount(ConsumerForm, {
-        props: {
-          config: KMConfig,
-          onUpdate: cy.spy().as('updateSpy'),
-        },
-      }).then(({ wrapper }) => {
-        wrapper.findComponent(EntityBaseForm).vm.$emit('submit')
-
-        cy.wait('@validateSchema')
-
-        cy.get('@updateSpy').should('not.have.been.called')
-        cy.getTestId('form-error').should('be.visible')
-      })
-    })
-
     it('Error should be visible when creation fails', () => {
-      interceptValidation()
       interceptCreate(400)
 
       cy.mount(ConsumerForm, {
@@ -407,7 +335,6 @@ describe('<ConsumerForm/>', () => {
       }).then(({ wrapper }) => {
         wrapper.findComponent(EntityBaseForm).vm.$emit('submit')
 
-        cy.wait('@validateSchema')
         cy.wait('@createConsumer')
 
         cy.get('@updateSpy').should('not.have.been.called')
@@ -449,7 +376,6 @@ describe('<ConsumerForm/>', () => {
         tags: ['service_1'],
       }
 
-      interceptValidation()
       interceptEdit(200, editedPayload)
 
       cy.mount(ConsumerForm, {
@@ -461,7 +387,6 @@ describe('<ConsumerForm/>', () => {
       }).then(({ wrapper }) => {
         wrapper.findComponent(EntityBaseForm).vm.$emit('submit')
 
-        cy.wait('@validateSchema')
         cy.wait('@editConsumer')
 
         cy.get('@updateSpy').should('have.been.calledOnceWith', editedPayload)
