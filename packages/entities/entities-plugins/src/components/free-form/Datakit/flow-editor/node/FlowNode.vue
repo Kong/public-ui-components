@@ -89,6 +89,16 @@
             type="target"
           />
 
+          <!-- ValueIndicator of input -->
+          <ValueIndicator
+            v-if="getSpecialConnection('input')"
+            :edge-id="getSpecialConnection('input')!.edgeId"
+            mode="input"
+            :reversed="isReversed"
+            :source-field-name="getSpecialConnection('input')!.sourceFieldName"
+            :source-node="getSpecialConnection('input')!.sourceNode"
+          />
+
           <div class="handle-label-wrapper">
             <div
               class="handle-label trigger"
@@ -132,6 +142,17 @@
               :position="inputPosition"
               type="target"
             />
+
+            <!-- ValueIndicator of input fields -->
+            <ValueIndicator
+              v-if="getSpecialConnection(field.id)"
+              :edge-id="getSpecialConnection(field.id)!.edgeId"
+              mode="input"
+              :reversed="isReversed"
+              :source-field-name="getSpecialConnection(field.id)!.sourceFieldName"
+              :source-node="getSpecialConnection(field.id)!.sourceNode"
+            />
+
             <div class="handle-label-wrapper">
               <div class="handle-label text">
                 {{ field.name }}
@@ -187,6 +208,15 @@
             :position="outputPosition"
             type="source"
           />
+
+          <!-- ValueIndicator of output -->
+          <ValueIndicator
+            v-if="getSpecialOutputConnection('output')"
+            mode="output"
+            :reversed="isReversed"
+            :target-field-names="getSpecialOutputConnection('output')!.targetFieldNames"
+            :target-nodes="getSpecialOutputConnection('output')!.targetNodes"
+          />
         </div>
 
         <template v-if="hasOutputFields && outputsExpanded">
@@ -210,6 +240,15 @@
               :position="outputPosition"
               type="source"
             />
+
+            <!-- ValueIndicator of output fields -->
+            <ValueIndicator
+              v-if="getSpecialOutputConnection(field.id)"
+              mode="output"
+              :reversed="isReversed"
+              :target-field-names="getSpecialOutputConnection(field.id)!.targetFieldNames"
+              :target-nodes="getSpecialOutputConnection(field.id)!.targetNodes"
+            />
           </div>
         </template>
       </div>
@@ -218,7 +257,7 @@
 </template>
 
 <script setup lang="ts">
-import type { NodeInstance } from '../../types'
+import type { EdgeId, FieldId, FieldName, NodeField, NodeInstance } from '../../types'
 
 import { computed, useTemplateRef, watch } from 'vue'
 import { KTooltip, KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
@@ -245,6 +284,7 @@ import NodeBadge from './NodeBadge.vue'
 import HotkeyLabel from '../HotkeyLabel.vue'
 import { HOTKEYS } from '../../constants'
 import { isEqual } from 'lodash-es'
+import ValueIndicator from './ValueIndicator.vue'
 
 const { data } = defineProps<{
   data: NodeInstance
@@ -260,6 +300,7 @@ const flowStore = useOptionalFlowStore()
 const {
   getInEdgesByNodeId,
   getOutEdgesByNodeId,
+  getNodeById,
   toggleExpanded: storeToggleExpanded,
   duplicateNode,
   removeNode,
@@ -322,6 +363,118 @@ const name = computed(() => {
 const handleTwigColor = computed(() => {
   return isImplicit.value ? KUI_COLOR_BACKGROUND_NEUTRAL_STRONG : KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
 })
+
+// Special input connections (vault or cross-phase)
+const specialInputConnections = computed(() => {
+  const connections = new Map<string, {
+    fieldId: FieldId | 'input'
+    edgeId: EdgeId
+    field: NodeField | null
+    sourceNode: NodeInstance
+    sourceFieldName?: FieldName
+  }>()
+
+  const inEdges = getInEdgesByNodeId(data.id)
+
+  for (const edge of inEdges) {
+    const sourceNode = getNodeById(edge.source)
+    if (!sourceNode) continue
+
+    const isVault = sourceNode.type === 'vault'
+
+    const isCrossPhase = sourceNode.phase !== data.phase
+
+    if (!isVault && !isCrossPhase) continue
+
+    let sourceFieldName: FieldName | undefined
+    if (edge.sourceField) {
+      const sourceField = sourceNode.fields.output.find(f => f.id === edge.sourceField)
+      sourceFieldName = sourceField?.name
+    }
+
+    if (edge.targetField) {
+      const field = data.fields.input.find(f => f.id === edge.targetField)
+      if (!field) continue
+
+      connections.set(edge.targetField, {
+        fieldId: edge.targetField,
+        edgeId: edge.id,
+        field,
+        sourceNode,
+        sourceFieldName,
+      })
+    } else {
+      connections.set('input', {
+        fieldId: 'input',
+        edgeId: edge.id,
+        field: null,
+        sourceNode,
+        sourceFieldName,
+      })
+    }
+  }
+
+  return connections
+})
+
+// Special output connections (cross-phase only)
+const specialOutputConnections = computed(() => {
+  const connections = new Map<string, {
+    fieldId: FieldId | 'output'
+    edgeIds: EdgeId[]
+    field: NodeField | null
+    targetNodes: NodeInstance[]
+    targetFieldNames: Array<FieldName | undefined>
+  }>()
+
+  const outEdges = getOutEdgesByNodeId(data.id)
+
+  for (const edge of outEdges) {
+    const targetNode = getNodeById(edge.target)
+    if (!targetNode) continue
+
+    const isCrossPhase = targetNode.phase !== data.phase
+
+    if (!isCrossPhase) continue
+
+    let targetFieldName: FieldName | undefined
+    if (edge.targetField) {
+      const targetField = targetNode.fields.input.find(f => f.id === edge.targetField)
+      targetFieldName = targetField?.name
+    }
+
+    const fieldKey = edge.sourceField || 'output'
+
+    if (!connections.has(fieldKey)) {
+      const field = edge.sourceField
+        ? data.fields.output.find(f => f.id === edge.sourceField) || null
+        : null
+
+      connections.set(fieldKey, {
+        fieldId: fieldKey,
+        edgeIds: [],
+        field,
+        targetNodes: [],
+        targetFieldNames: [],
+      })
+    }
+
+    const connection = connections.get(fieldKey)!
+    connection.edgeIds.push(edge.id)
+    connection.targetNodes.push(targetNode)
+    connection.targetFieldNames.push(targetFieldName)
+  }
+
+  return connections
+})
+
+function getSpecialConnection(fieldId: FieldId | 'input') {
+  return specialInputConnections.value.get(fieldId)
+}
+
+function getSpecialOutputConnection(fieldId: FieldId | 'output') {
+  return specialOutputConnections.value.get(fieldId)
+}
 
 function toggleExpanded(io: 'input' | 'output') {
   if (!flowStore || flowStore.readonly) return
@@ -490,7 +643,7 @@ $io-column-min-width-no-fields: 70px;
       .handle-label-wrapper {
         height: 100%;
         overflow: hidden;
-        padding: $kui-space-20 0;
+        padding: $kui-space-30 0;
         position: relative;
 
         .handle-label {
