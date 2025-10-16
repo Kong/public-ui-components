@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { Bar, Line } from 'vue-chartjs'
 import { format } from 'date-fns'
 import 'chartjs-adapter-date-fns'
@@ -62,36 +62,79 @@ import { formatTime } from '@kong-ui-public/analytics-utilities'
 
 import composables from '../composables'
 import { lineChartTooltipBehavior } from '../utils'
-import bucketTimestamps from '../utils/bucketTimestamps'
 import type { ExternalTooltipContext, SparklineDataset, SparklineType, TooltipState } from '../types'
 import { VerticalLinePlugin } from './chart-plugins/VerticalLinePlugin'
 import ToolTip from './chart-plugins/ChartTooltip.vue'
 
 const {
-  datasets,
+  chartKey = undefined, // highly recommended
+  datasets, // the only required prop
   disableTooltip = false,
-  maxCount,
-  maxStamp = Date.now(),
-  minStamp,
+  groupKey = undefined, // highly recommended
+  maxCount = undefined,
+  maxStamp = undefined,
+  minCount = undefined,
+  minStamp = undefined,
   pointRenderCount = 24,
   showLabel = false,
-  tooltipTitle,
+  tooltipTitle = undefined,
   type = 'sparkline_bar',
 } = defineProps<{
+  /**
+   * WARNING `chartKey` without `groupKey` does nothing.
+   * WARNING `chartKey` must be static across renders.
+   *
+   * Each sparkline that is a part of a group must provide a unique identifier
+   * that is consistent across renders. This allows all sparklines in that group
+   * to share state. See `groupKey` for details.
+   */
+  chartKey?: string
+  /**
+   * A collection of timestamps. Given the number of `pointRenderCount` and the
+   * range of timestamps to be drawn, the timestamps will be bucketed with a
+   * count of how many timestamps are in each bucket. For example, given
+   * timestamps `[1, 1, 1, 4, 5, 6]` and a `pointRenderCount` of 2, will render
+   * two data points: 1-3: 3, 4-6: 3. However, if your `pointRenderCount` was 3
+   * it would instead render three data points: 1-2: 3, 3-4: 1, 5-6: 2
+   */
   datasets: SparklineDataset[]
   disableTooltip?: boolean
   /**
-   * determines the relative sizes/heights of bars/points after bucketing
+   * WARNING `groupKey` without `chartKey` does nothing.
+   * WARNING `groupKey` must be static across renders.
+   *
+   * Every sparkline that has the same `groupKey` will be forced to render all
+   * data at the same scale in both the X and Y axes. Each one will effectively
+   * inherit the smallest `minStamp`, largest `maxStamp`, and largest `maxCount`.
+   * For each sparkline that doesn't have those props, it will calculate those
+   * props from the dataset it's given and that dataset will be used to
+   * influence other sparklines with this `groupKey` as well.
    */
-  maxCount: number
+  groupKey?: string
   /**
-   * determines the relative position of bars/points, defaults to Date.now()
+   * determines the relative sizes/heights of bars/points on the y axis after
+   * bucketing the timestamps in your datasets. Defaults to the largest count.
+   * If lower than the largest count the data will be truncated.
+   */
+  maxCount?: number
+  /**
+   * determines the relative position of bars/points on the x axis, defaults to
+   * the largest timestamp in your datasets. If set lower than the largest
+   * timestamp, the data will be truncated.
    */
   maxStamp?: number
   /**
-   * determines the relative position of bars/points.
+   * determines the relative sizes/heights of bars/points on the y axis after
+   * bucketing the timestamps in your datasets. Defaults to 0. If higher than
+   * the lowest count the data will be truncated.
    */
-  minStamp: number
+  minCount?: number
+  /**
+   * determines the relative position of bars/points on the x axis, defaults to
+   * the smallest timestamp in your datasets. If set higher than the smallest
+   * timestamp, the data will be truncated
+   */
+  minStamp?: number
   /**
    * The number of datapoints to render. Will bucket timestamps into ranges that
    * are `(maxStamp - minStamp) / pointRenderCount` apart. `pointRenderCount`
@@ -106,6 +149,27 @@ const {
 
 const chartId = crypto.randomUUID()
 const { i18n } = composables.useI18n()
+
+const {
+  syncedGroupSizeMs,
+  syncedMinStamp,
+  syncedMaxStamp,
+  syncedMinCount,
+  syncedMaxCount,
+  syncedRenderPoints,
+  syncedChartDatasets,
+} = composables.useSparklineSync({
+  chartKey,
+  datasets,
+  groupKey,
+  minStamp,
+  maxStamp,
+  minCount,
+  maxCount,
+  renderPoints: pointRenderCount,
+  type,
+})
+
 const tooltipData = reactive<TooltipState>({
   showTooltip: false,
   tooltipContext: 0, // Set in lineChartTooltipBehavior
@@ -131,25 +195,15 @@ const onTooltipDimensions = ({ width, height }: { width: number, height: number 
 
 const plugins = computed(() => disableTooltip ? [] : [new VerticalLinePlugin()])
 
-const emit = defineEmits<{
-  (e: 'max', max: number): void
-}>()
-
-const groupSizeMs = computed<number>(() => {
-  const count = Math.max(2, pointRenderCount)
-  const range = Math.abs(maxStamp - minStamp)
-  return Math.ceil(range / count)
-})
-
 const totalByDataset = computed<Record<string, number>>(() => {
-  return datasets.reduce((acc, { timestamps, label }) => ({
+  return syncedChartDatasets.value.reduce((acc, { data, label }) => ({
     ...acc,
-    [label]: timestamps.length,
+    [label]: data.reduce((total, { y }) => total + y, 0),
   }), {})
 })
 
 const formattedLabel = computed<string>(() => {
-  return datasets
+  return syncedChartDatasets.value
     .map(({ label }): [number, string] => [
       totalByDataset.value[label],
       `${label}: ${totalByDataset.value[label]}`,
@@ -169,113 +223,101 @@ const hasData = computed<boolean>(() => {
   return total.value > 0
 })
 
+const chartData = computed(() => ({
+  labels: new Array(syncedRenderPoints.value).fill(''),
+  datasets: syncedChartDatasets.value,
+}))
+
 const isStacked = computed<boolean>(() => datasets.length > 1)
+const positionKey = `SparklineTooltipPosition-${chartId}`
+const options = computed<ChartOptions>(() => {
+  const isBar = type === 'sparkline_bar'
 
-const chartDatasets = computed<Array<{
-  label: string
-  data: Array<{ x: number, y: number }>
-  backgroundColor?: string
-  fill?: boolean
-}>>(() => datasets.map(({ timestamps, color, label }) => {
-  const buckets = bucketTimestamps({
-    groupSizeMs: groupSizeMs.value,
-    minStamp,
-    maxStamp,
-    timestamps,
-  })
+  const xMin = isBar
+    ? syncedMinStamp.value - 1 // offset to handle the half-width of bar centering
+    : syncedMinStamp.value
 
-  const data = buckets.map(([timestamp, count]) => ({
-    x: timestamp,
-    y: count,
-  }))
+  const xMax = isBar
+    ? syncedMaxStamp.value
+    : syncedMaxStamp.value - syncedGroupSizeMs.value // non-bar charts graph from the left edge of the bucket, so the last datapoint is syncedGroupSizeMs away from the edge of the graph
 
   return {
-    data,
-    label,
-    ...((type === 'sparkline_bar' || isStacked.value) && color && { backgroundColor: color }),
-    ...(type !== 'sparkline_bar' && color && { borderColor: color }),
-    ...(isStacked.value && type !== 'sparkline_bar' && { fill: true }),
+    maintainAspectRatio: false,
+    elements: {
+      categoryPercentage: 1,
+      barPercentage: 1,
+      line: {
+        tension: 0,
+        stepped: type === 'sparkline_step',
+        borderWidth: 1,
+      },
+      point: {
+        radius: 0,
+        pointHitRadius: 11,
+        pointHoverRadius: 0,
+      },
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index',
+    },
+    layout: {
+      padding: {
+        left: isBar ? 0 : 2,
+        right: isBar ? 0 : 2,
+        top: 2,
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        enabled: false,
+        position: positionKey,
+        external: (context: ExternalTooltipContext) => {
+          lineChartTooltipBehavior(tooltipData, context, 'minutely', {
+            contextFormatter: (x: number) => {
+              const rangeEnd = x + syncedGroupSizeMs.value
+
+              let end: string | number = ''
+              if (syncedGroupSizeMs.value > 24 * 60 * 60 * 1000) {
+                // more than a day
+                end = format(new Date(rangeEnd), 'MMM dd, yyy hh:mm a')
+              } else {
+                end = format(new Date(rangeEnd), 'hh:mm a')
+              }
+
+              return `${formatTime(x)} - ${end}`
+            },
+          })
+        },
+      },
+    },
+    scales: {
+      x: {
+        min: xMin,
+        max: xMax,
+        type: 'timeseries',
+        offset: false,
+        grid: {
+          display: false,
+        },
+        display: false,
+        stacked: isStacked.value,
+      },
+      y: {
+        min: Math.max(syncedMinCount.value - 1, 0),
+        max: syncedMaxCount.value,
+        grid: {
+          display: false,
+        },
+        display: false,
+        stacked: isStacked.value,
+      },
+    },
   }
-}))
-
-const chartData = computed(() => ({
-  labels: new Array(pointRenderCount).fill(''),
-  datasets: chartDatasets.value,
-}))
-
-const positionKey = `SparklineTooltipPosition-${chartId}`
-const options = computed<ChartOptions>(() => ({
-  maintainAspectRatio: false,
-  elements: {
-    categoryPercentage: 1,
-    barPercentage: 1,
-    line: {
-      tension: 0,
-      stepped: type === 'sparkline_step',
-      borderWidth: 1,
-    },
-    point: {
-      radius: 0,
-      pointHitRadius: 11,
-      pointHoverRadius: 0,
-    },
-  },
-  interaction: {
-    intersect: false,
-    mode: 'index',
-  },
-  layout: {
-    padding: 0,
-  },
-  plugins: {
-    legend: {
-      display: false,
-    },
-    tooltip: {
-      enabled: false,
-      position: positionKey,
-      external: (context: ExternalTooltipContext) => {
-        lineChartTooltipBehavior(tooltipData, context, 'minutely', {
-          contextFormatter: (x: number) => {
-            const rangeEnd = x + groupSizeMs.value
-
-            let end: string | number = ''
-            if (groupSizeMs.value > 24 * 60 * 60 * 1000) {
-              // more than a day
-              end = format(new Date(rangeEnd), 'MMM dd, yyy hh:mm a')
-            } else {
-              end = format(new Date(rangeEnd), 'hh:mm a')
-            }
-
-            return `${formatTime(x)} - ${end}`
-          },
-        })
-      },
-    },
-  },
-  scales: {
-    x: {
-      max: maxStamp,
-      min: minStamp - 1, // this allows a value exactly equal to minStamp to be drawn without clipping
-      type: 'timeseries',
-      offset: false,
-      grid: {
-        display: false,
-      },
-      display: false,
-      stacked: isStacked.value,
-    },
-    y: {
-      min: 0,
-      ...(maxCount !== undefined && { max: maxCount }),
-      grid: {
-        display: false,
-      },
-      display: false,
-      stacked: isStacked.value,
-    },
-  },
-}))
+})
 
 const tooltipTop = ref('0')
 const tooltipLeft = ref('0')
@@ -320,19 +362,6 @@ onUnmounted(() => {
     delete Tooltip.positioners[positionKey]
   }
 })
-
-watch(chartDatasets, () => {
-  let max = 0
-  for (let i = 0; i < (pointRenderCount + 1); i++) {
-    let pointTotal = 0
-    for (let j = 0; j < chartDatasets.value.length; j++) {
-      pointTotal += chartDatasets.value[j].data[i]?.y ?? 0
-    }
-
-    max = Math.max(max, pointTotal)
-  }
-  emit('max', max)
-}, { immediate: true })
 </script>
 
 <style lang="scss" scoped>

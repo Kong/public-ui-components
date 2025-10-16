@@ -20,18 +20,24 @@
           hide-pagination
           :table-preferences="preferences"
         >
-          <template #sparkline="{ row }">
+          <template #sparkline="{ row, rowKey }">
             <SparklineChart
+              :chart-key="!unsynced ? row.name : undefined"
               :datasets="row.sparkline"
               :disable-tooltip="disableTooltip"
-              :max-count="maxValue"
-              :max-stamp="now"
+              :group-key="rowGroups[rowKey] ? 'a' : 'b'"
               :min-stamp="minimumDate"
               :point-render-count="pointRenderCount"
               :show-label="showLabel"
               :tooltip-title="setTitle ? row.name : ''"
               :type="row.type ?? getType(row.sparkline[0].timestamps[0]) as any"
-              @max="(val) => onMax(val, row.name)"
+            />
+          </template>
+          <template #group="{ rowKey }">
+            <KInputSwitch
+              v-model="rowGroups[rowKey]"
+              :disabled="unsynced"
+              :label="rowGroups[rowKey] ? 'Group A' : 'Group B'"
             />
           </template>
         </KTableData>
@@ -40,6 +46,14 @@
       <KCard class="control-card">
         <div class="controls">
           <h3>Sparkline settings</h3>
+          <div>
+            <KInputSwitch
+              v-model="unsynced"
+              :label="unsynced ? 'Sparklines not synced' : 'Sparklines synced (default)'"
+            />
+            <div>When synced, all charts with the same group name will share bounds and render points. This effectively forces them all to be drawn at the same scale. If not synced, the data will be drawn to fill the available space, regardless of scale. To easily see the difference visually in the Y scale, note that when not synced every graph will draw their largest point at the top of the graph, regardless if it's as large as the largest value in the others. In contrast, while synced, only those graphs with a point value that's the largest across all graphs will draw it at the top of its graph</div>
+          </div>
+
           <KInputSwitch
             v-model="disableTooltip"
             :label="disableTooltip ? 'Tooltip disabled' : 'Tooltip on hover (default)'"
@@ -130,7 +144,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, inject, watch } from 'vue'
+import { computed, ref, inject } from 'vue'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import { SparklineChart } from '../../src'
 import { lookupDatavisColor } from '../../src/utils/colors'
@@ -138,21 +152,9 @@ import { lookupDatavisColor } from '../../src/utils/colors'
 // Inject the app-links from the entry file
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
-// calculate the max value of all sparklines so that all sparklines use the same
-// scale for their graph
-const maxMap = ref<Record<string, number>>({ initial: 1 })
-const maxValue = computed<number>(() => {
-  const max = Object.keys(maxMap.value).reduce((acc, key) => {
-    return Math.max(maxMap.value[key], acc)
-  }, 0)
-  return max
-})
-const onMax = (max: number, key: string) => {
-  maxMap.value[key] = max
-}
-
 // sparkline settings
-const pointRenderCount = ref<number>(30)
+const pointRenderCount = ref<number>(24)
+const unsynced = ref(false)
 const disableTooltip = ref(false)
 const showLabel = ref(false)
 const setTitle = ref(false)
@@ -167,16 +169,15 @@ const getType = (randomKey?: number): string => {
   return type.value
 }
 
+// group column
+const rowGroups = ref<boolean[]>([])
+
 // mock data generator
 const datasetCount = ref(1)
 const hours = ref(5)
 const pointsPerHour = ref(20)
 const skipChance = ref<number>(50)
-const now = ref<number>(Date.now())
 const minimumDate = computed(() => Date.now() - (hours.value * 60 * 60 * 1000))
-watch(minimumDate, () => {
-  now.value = Date.now()
-})
 
 function getRandomInt(min: number, max:number) {
   min = Math.ceil(min)
@@ -227,6 +228,7 @@ const generateRandomDatasets = (labels: string[]) => {
 const headers = [
   { key: 'sparkline', label: 'Sparkline' },
   { key: 'name', label: 'Name' },
+  { key: 'group', label: 'Grouped' },
 ]
 
 const columnWidth = ref<number>(200)
@@ -237,7 +239,7 @@ const preferences = computed(() => ({
 }))
 
 const fetcherCacheKey = computed<string>(() => {
-  return `key-${skipChance.value}-${pointsPerHour.value}-${hours.value}-${datasetCount.value}-${useColor.value}`
+  return `key-${skipChance.value}-${pointsPerHour.value}-${hours.value}-${datasetCount.value}-${useColor.value}-${pointRenderCount.value}-${unsynced.value}-${rowGroups.value.join('.')}`
 })
 
 const names = ['Anglerfish', 'Bobcat', 'Caracal', 'Duck', 'Eagle', 'Fox', 'Goat', 'Haddock', 'Ibex', 'Jackal', 'Kestrel', 'Lemur', 'Mandrill', 'Newt', 'Okapi', 'Puffin', 'Quail', 'Raccoon', 'Sable', 'Tapir', 'Uakari', 'Vole', 'Wallaby', 'Xerus', 'Yak', 'Zebra']
@@ -267,6 +269,10 @@ const fetcher = () => {
     { name: 'Mock data 14', sparkline: generateRandomDatasets(labels) },
     { name: 'Mock data 15', sparkline: generateRandomDatasets(labels) },
   ]
+
+  rowGroups.value = new Array(mockData.length)
+    .fill(true)
+    .map((val, index) => rowGroups.value?.[index] ?? val)
 
   return {
     data: mockData,
