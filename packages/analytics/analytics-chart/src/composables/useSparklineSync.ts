@@ -1,4 +1,4 @@
-import { computed, ref, type Ref, watchEffect } from 'vue'
+import { computed, onUnmounted, ref, type Ref, watchEffect } from 'vue'
 import type { SparklineDataset, SparklineType } from '../types'
 import bucketTimestamps from '../utils/bucketTimestamps'
 
@@ -27,6 +27,37 @@ const getStateByGroup = (groupKey: string): SparkState => {
   }
 
   return globalSparkStates.value[groupKey]
+}
+
+const clearState = (chartKey: string, groupKey: string) => {
+  const state = globalSparkStates.value[groupKey]
+  if (!state) return // the state for this chart/group was ephemeral
+
+  const chartInState = state.minCounts[chartKey] !== undefined
+    || state.maxCounts[chartKey] !== undefined
+    || state.minStamps[chartKey] !== undefined
+    || state.maxStamps[chartKey] !== undefined
+    || state.renderPoints[chartKey] !== undefined
+
+  if (state && chartInState) {
+    // delete the state for this instance
+    delete state.minCounts[chartKey]
+    delete state.maxCounts[chartKey]
+    delete state.minStamps[chartKey]
+    delete state.maxStamps[chartKey]
+    delete state.renderPoints[chartKey]
+
+    const hasOtherState = Object.keys(state.minCounts).length
+      || Object.keys(state.maxCounts).length
+      || Object.keys(state.minStamps).length
+      || Object.keys(state.maxStamps).length
+      || Object.keys(state.renderPoints).length
+
+    if (!hasOtherState) {
+      // if all the state for this group is gone, delete the whole group
+      delete globalSparkStates.value[groupKey]
+    }
+  }
 }
 
 export default function useSparklineSync({
@@ -214,6 +245,14 @@ export default function useSparklineSync({
       .reduce((max, count): number => {
         return Math.max(max, count)
       }, 0)
+  })
+
+  onUnmounted(() => {
+    if (chartKey !== undefined && groupKey !== undefined) {
+      // our state is ephemeral unless we have a chartKey AND a groupKey. In
+      // that case we should clean up after ourselves on unmount.
+      clearState(chartKey, groupKey)
+    }
   })
 
   return {

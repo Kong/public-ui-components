@@ -1,6 +1,8 @@
 import useSparklineSync from './useSparklineSync'
 import type { SparklineDataset, SparklineType } from '../types'
 import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
+import { defineComponent, h } from 'vue'
 
 describe('useSparklineSync', () => {
   let groupIdA = ''
@@ -34,18 +36,57 @@ describe('useSparklineSync', () => {
     renderPoints?: number
     type?: SparklineType
   } = {}) => {
-    return useSparklineSync({
-      datasets,
-      type,
-      chartKey,
-      groupKey,
-      minStamp,
-      maxStamp,
-      minCount,
-      maxCount,
-      renderPoints,
-    })
+    let result: ReturnType<typeof useSparklineSync>
+
+    const wrapper = mount(defineComponent({
+      setup() {
+        result = useSparklineSync({
+          datasets,
+          type,
+          chartKey,
+          groupKey,
+          minStamp,
+          maxStamp,
+          minCount,
+          maxCount,
+          renderPoints,
+        })
+        return () => h('div')
+      },
+    }))
+
+    return {
+      wrapper,
+      // @ts-ignore result is actually defined syncronously but that can't be inferred by typescript
+      ...result,
+    }
   }
+
+  it('removes state on unmount', () => {
+    const {
+      wrapper: aWrap,
+      syncedRenderPoints: aRenderPoints,
+    } = use({ chartKey: 'a', groupKey: groupIdA, renderPoints: 10 })
+    const {
+      wrapper: bWrap,
+      syncedRenderPoints: bRenderPoints,
+    } = use({ chartKey: 'b', groupKey: groupIdA, renderPoints: 15 })
+
+    expect(aRenderPoints.value).toEqual(15)
+    expect(bRenderPoints.value).toEqual(15)
+
+    bWrap.unmount()
+
+    // the largest renderPoint contributer was unmounted so no longer affects things
+    expect(aRenderPoints.value).toEqual(10)
+    expect(bRenderPoints.value).toEqual(10) // irrelevant as b has been unmounted
+
+    aWrap.unmount()
+
+    // both were unmounted, so it just uses defaults now
+    expect(aRenderPoints.value).toEqual(DEFAULT_RENDER_POINTS) // irrelevant as a has been unmounted
+    expect(bRenderPoints.value).toEqual(DEFAULT_RENDER_POINTS) // irrelevant as b has been unmounted
+  })
 
   describe('syncedRenderPoints', () => {
     it('sets a default value when renderPoints not provided', async () => {
@@ -177,6 +218,31 @@ describe('useSparklineSync', () => {
       // the groupB datasets has not been affected by groupA datasets
       expect(abMin.value).toBe(5)
       expect(abMax.value).toBe(9)
+    })
+
+    it('syncs correctly when one dataset is empty', () => {
+      const aDatasets:SparklineDataset[] = [
+        { label: 'a', timestamps: [] },
+        { label: 'b', timestamps: [] },
+      ]
+
+      const bDatasets:SparklineDataset[] = [
+        { label: 'a', timestamps: [5] },
+        { label: 'b', timestamps: [6, 10, 7, 8] },
+      ]
+
+      const { syncedMinStamp: aMin, syncedMaxStamp: aMax } = use({ chartKey: 'a', groupKey: groupIdA, datasets: aDatasets })
+      // because the state doesn't know about the bDatasets yet
+      expect(aMin.value).toBe(0)
+      expect(aMax.value).toBe(0)
+
+      const { syncedMinStamp: bMin, syncedMaxStamp: bMax } = use({ chartKey: 'b', groupKey: groupIdA, datasets: bDatasets })
+      expect(bMin.value).toBe(5)
+      expect(bMax.value).toBe(10)
+
+      // now the state knows about both a and b datasets
+      expect(aMin.value).toBe(5)
+      expect(aMax.value).toBe(10)
     })
   })
 
