@@ -1,7 +1,10 @@
 <template>
-  <div class="new-badge-wrapper">
+  <div
+    class="new-badge-wrapper"
+    :class="{ inverse }"
+  >
     <div
-      :class="['new-badge', { large, inverse }]"
+      :class="['new-badge', { large }]"
     >
       {{ t('newBadge.label') }}
     </div>
@@ -29,7 +32,7 @@ const { i18n: { t } } = composables.useI18n()
 .new-badge-wrapper {
   background: linear-gradient(90deg, $kui-color-background-inverse 2.68%, rgba(0, 9, 51, 0.9) 100%) padding-box,
     linear-gradient(219.69deg, $kui-color-background-success-weak 0%, $kui-color-background-primary 74.54%) border-box;
-  border: $kui-border-width-10 solid transparent;
+  border: $kui-border-width-10 solid $kui-color-border-transparent;
   border-radius: $kui-border-radius-20;
 
   .new-badge {
@@ -40,13 +43,20 @@ const { i18n: { t } } = composables.useI18n()
     line-height: $kui-line-height-20;
     padding: $kui-space-10 $kui-space-20;
     position: relative;
-
-    &:not(.inverse) {
-      background: linear-gradient(219.69deg, rgba(0, 214, 164, 0.2) 7.34%, rgba(0, 68, 244, 0.2) 83.28%);
-    }
+    background: linear-gradient(219.69deg, rgba(0, 214, 164, 0.2) 7.34%, rgba(0, 68, 244, 0.2) 83.28%);
 
     &.large {
       padding: $kui-space-20 $kui-space-40;
+    }
+  }
+
+  &.inverse {
+    background: linear-gradient(221.99deg, #00E3C0 26.67%, #1257CA 128%);
+    border: none;
+
+    .new-badge {
+      color: $kui-color-text;
+      background: none;
     }
   }
 }
