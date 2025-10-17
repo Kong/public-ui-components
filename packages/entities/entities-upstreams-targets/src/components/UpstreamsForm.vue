@@ -493,8 +493,6 @@ const submitData = async (): Promise<void> => {
   try {
     state.readonly = true
 
-    await axiosInstance.post(getUrl('validate'), upstreamPayload.value)
-
     let response: AxiosResponse | undefined
 
     if (formType.value === EntityBaseFormType.Create) {

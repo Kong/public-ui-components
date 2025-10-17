@@ -40,7 +40,6 @@ export default {
         edit: `${konnectBaseApiUrl}/{resourceEndpoint}/{id}`,
       },
       credentialSchema: '/v2/control-planes/{controlPlaneId}/schemas/core-entities/{plugin}',
-      validate: `${konnectBaseApiUrl}/v1/schemas/json/plugin/validate`,
       // VFG endpoints24
       entityGetOne: `${konnectBaseApiUrl}/{entity}/{id}`,
       entityGetAll: `${konnectBaseApiUrl}/{entity}`,
@@ -61,7 +60,6 @@ export default {
         edit: `${KMBaseApiUrl}/{resourceEndpoint}/{id}`,
       },
       credentialSchema: `${KMBaseApiUrl}/schemas/{plugin}`,
-      validate: `${KMBaseApiUrl}/schemas/plugins/validate`,
       // VFG endpoints
       entityGetOne: `${KMBaseApiUrl}/{entity}/{id}`,
       entityGetAll: `${KMBaseApiUrl}/{entity}`,

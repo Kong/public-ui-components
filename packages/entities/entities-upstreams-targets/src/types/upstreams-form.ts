@@ -181,4 +181,4 @@ export interface UpstreamResponse extends Omit<UpstreamFormPayload, 'healthcheck
   }
 }
 
-export type UpstreamsFormActions = 'validate' | 'create' | 'edit'
+export type UpstreamsFormActions = 'create' | 'edit'

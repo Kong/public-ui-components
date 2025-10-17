@@ -23,7 +23,7 @@ const baseConfigKonnect: KonnectPluginFormConfig = {
   cancelRoute: { name: 'home' },
 }
 
-const baseConfigKM:KongManagerPluginFormConfig = {
+const baseConfigKM: KongManagerPluginFormConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
@@ -76,25 +76,6 @@ describe('<PluginForm />', () => {
           body: params?.mockData ?? plugin1,
         },
       ).as(params?.alias ?? 'createPlugin')
-    }
-
-    const interceptKMValidatePlugin = (params?: {
-      mockData?: object
-      alias?: string
-      status?: number
-    }): void => {
-      const url = `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/schemas/plugins/validate`
-
-      cy.intercept(
-        {
-          method: 'POST',
-          url,
-        },
-        {
-          statusCode: params?.status ?? 200,
-          body: params?.mockData ?? plugin1,
-        },
-      ).as(params?.alias ?? 'validatePlugin')
     }
 
     /**
@@ -574,7 +555,6 @@ describe('<PluginForm />', () => {
 
     it('should pick correct url while creating plugin', () => {
       interceptKMSchema()
-      interceptKMValidatePlugin()
       interceptKMCreatePlugin()
       const pluginType = 'cors'
 
@@ -601,7 +581,7 @@ describe('<PluginForm />', () => {
       cy.get('#tags').type('tag1,tag2')
 
       cy.getTestId('plugin-create-form-submit').click()
-      cy.wait(['@validatePlugin', '@createPlugin'])
+      cy.wait('@createPlugin')
     })
 
     it('should pick correct url while creating plugin credential', () => {
@@ -696,7 +676,6 @@ describe('<PluginForm />', () => {
         entityId: scopedService.id,
         entityType: 'services',
       })
-      interceptKMValidatePlugin()
       interceptKMOperatePlugin({
         method: 'PATCH',
         alias: 'updatePlugin',
@@ -731,7 +710,7 @@ describe('<PluginForm />', () => {
 
         cy.getTestId('plugin-edit-form-submit').click()
 
-        cy.wait(['@validatePlugin', '@updatePlugin'])
+        cy.wait('@updatePlugin')
       })
     })
 
@@ -886,28 +865,22 @@ describe('<PluginForm />', () => {
 
     it('should handle error state - validation error', () => {
       interceptKMSchema({ mockData: schemaMocking })
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${baseConfigKM.apiBaseUrl}/${baseConfigKM.workspace}/schemas/plugins/validate`,
+      interceptKMCreatePlugin({
+        status: 400,
+        mockData: {
+          code: 3,
+          message: 'validation error',
+          details: [
+            {
+              '@type': 'type.googleapis.com/kong.admin.model.v1.ErrorDetail',
+              type: 'ERROR_TYPE_ENTITY',
+              messages: [
+                "at least one of these fields must be non-empty: 'config.api_specification_filename', 'config.api_specification'",
+              ],
+            },
+          ],
         },
-        {
-          statusCode: 400,
-          body: {
-            code: 3,
-            message: 'validation error',
-            details: [
-              {
-                '@type': 'type.googleapis.com/kong.admin.model.v1.ErrorDetail',
-                type: 'ERROR_TYPE_ENTITY',
-                messages: [
-                  "at least one of these fields must be non-empty: 'config.api_specification_filename', 'config.api_specification'",
-                ],
-              },
-            ],
-          },
-        },
-      ).as('validate')
+      })
       const pluginType = 'mocking'
 
       cy.mount(PluginForm, {
@@ -922,7 +895,7 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       cy.getTestId('plugin-create-form-submit').click()
-      cy.wait('@validate')
+      cy.wait('@createPlugin')
 
       cy.getTestId('form-error').should('be.visible')
     })
@@ -931,7 +904,6 @@ describe('<PluginForm />', () => {
       const config = { ...baseConfigKM, entityId: scopedService.id, entityType: 'services' }
       interceptKMSchema()
       interceptKMOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
-      interceptKMValidatePlugin()
       interceptKMOperatePlugin({ method: 'PATCH', alias: 'updatePlugin', id: plugin1.id })
       const pluginType = 'cors'
       const stubbedAliases = interceptKMScopedEntity({ entityType: config.entityType }, pluginType)
@@ -963,7 +935,7 @@ describe('<PluginForm />', () => {
 
         cy.getTestId('plugin-edit-form-submit').click()
 
-        cy.wait(['@validatePlugin', '@updatePlugin']).then(() => {
+        cy.wait('@updatePlugin').then(() => {
           cy.get('@onUpdateSpy').should('have.been.calledOnce')
         })
       })
@@ -1010,25 +982,6 @@ describe('<PluginForm />', () => {
           body: params?.mockData ?? plugin1,
         },
       ).as(params?.alias ?? 'createPlugin')
-    }
-
-    const interceptKonnectValidatePlugin = (params?: {
-      mockData?: object
-      alias?: string
-      status?: number
-    }): void => {
-      const url = `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/schemas/json/plugin/validate`
-
-      cy.intercept(
-        {
-          method: 'POST',
-          url,
-        },
-        {
-          statusCode: params?.status ?? 200,
-          body: params?.mockData ?? plugin1,
-        },
-      ).as(params?.alias ?? 'validatePlugin')
     }
 
     const interceptKonnectScopedEntity = (params: {
@@ -1492,7 +1445,6 @@ describe('<PluginForm />', () => {
 
     it('should pick correct url while creating plugin', () => {
       interceptKonnectSchema()
-      interceptKonnectValidatePlugin()
       interceptKonnectCreatePlugin()
       const pluginType = 'cors'
 
@@ -1519,7 +1471,7 @@ describe('<PluginForm />', () => {
       cy.get('#tags').type('tag1,tag2')
 
       cy.getTestId('plugin-create-form-submit').click()
-      cy.wait(['@validatePlugin', '@createPlugin'])
+      cy.wait('@createPlugin')
     })
 
     it('should pick correct url while creating plugin credential', () => {
@@ -1610,7 +1562,6 @@ describe('<PluginForm />', () => {
         entityId: scopedService.id,
         entityType: 'services',
       })
-      interceptKonnectValidatePlugin()
       interceptKonnectOperatePlugin({
         method: 'PUT',
         alias: 'updatePlugin',
@@ -1645,7 +1596,7 @@ describe('<PluginForm />', () => {
 
         cy.getTestId('plugin-edit-form-submit').click()
 
-        cy.wait(['@validatePlugin', '@updatePlugin'])
+        cy.wait('@updatePlugin')
       })
     })
 
@@ -1799,28 +1750,22 @@ describe('<PluginForm />', () => {
 
     it('should handle error state - validation error', () => {
       interceptKonnectSchema({ mockData: schemaMocking })
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${baseConfigKonnect.apiBaseUrl}/v2/control-planes/${baseConfigKonnect.controlPlaneId}/core-entities/v1/schemas/json/plugin/validate`,
+      interceptKonnectCreatePlugin({
+        status: 400,
+        mockData: {
+          code: 3,
+          message: 'validation error',
+          details: [
+            {
+              '@type': 'type.googleapis.com/kong.admin.model.v1.ErrorDetail',
+              type: 'ERROR_TYPE_ENTITY',
+              messages: [
+                "at least one of these fields must be non-empty: 'config.api_specification_filename', 'config.api_specification'",
+              ],
+            },
+          ],
         },
-        {
-          statusCode: 400,
-          body: {
-            code: 3,
-            message: 'validation error',
-            details: [
-              {
-                '@type': 'type.googleapis.com/kong.admin.model.v1.ErrorDetail',
-                type: 'ERROR_TYPE_ENTITY',
-                messages: [
-                  "at least one of these fields must be non-empty: 'config.api_specification_filename', 'config.api_specification'",
-                ],
-              },
-            ],
-          },
-        },
-      ).as('validate')
+      })
       const pluginType = 'mocking'
 
       cy.mount(PluginForm, {
@@ -1835,7 +1780,7 @@ describe('<PluginForm />', () => {
       cy.get('.kong-ui-entities-plugin-form-container').should('be.visible')
 
       cy.getTestId('plugin-create-form-submit').click()
-      cy.wait('@validate')
+      cy.wait('@createPlugin')
 
       cy.getTestId('form-error').should('be.visible')
     })
@@ -1844,7 +1789,6 @@ describe('<PluginForm />', () => {
       const config = { ...baseConfigKonnect, entityId: scopedService.id, entityType: 'services' }
       interceptKonnectSchema()
       interceptKonnectOperatePlugin({ method: 'GET', alias: 'getPlugin', id: plugin1.id })
-      interceptKonnectValidatePlugin()
       interceptKonnectOperatePlugin({ method: 'PUT', alias: 'updatePlugin', id: plugin1.id })
       const pluginType = 'cors'
       interceptKonnectScopedEntity({ entityType: config.entityType }, pluginType)
@@ -1876,7 +1820,7 @@ describe('<PluginForm />', () => {
 
         cy.getTestId('plugin-edit-form-submit').click()
 
-        cy.wait(['@validatePlugin', '@updatePlugin']).then(() => {
+        cy.wait('@updatePlugin').then(() => {
           cy.get('@onUpdateSpy').should('have.been.calledOnce')
         })
       })

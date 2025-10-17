@@ -71,18 +71,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
         },
       ).as('getUpstream')
     }
-    const interceptValidate = (status = 200): void => {
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${konnectConfig.apiBaseUrl}/v2/control-planes/${konnectConfig.controlPlaneId}/core-entities/schemas/upstreams/validate`,
-        },
-        {
-          statusCode: status,
-          body: {},
-        },
-      ).as('validateUpstream')
-    }
 
     it('Should render correctly', () => {
       interceptFetchServices()
@@ -200,7 +188,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
     it('Should emit update event after Upstream was created', () => {
       interceptFetchServices()
       interceptFetchCertificates()
-      interceptValidate()
       interceptCreate()
 
       cy.mount(UpstreamsForm, {
@@ -219,7 +206,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateUpstream')
       cy.wait('@createUpstream')
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', upstreamsResponse)
@@ -228,7 +214,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
     it('Error should be visible when creation fails', () => {
       interceptFetchServices()
       interceptFetchCertificates()
-      interceptValidate()
       interceptCreate(400)
 
       cy.mount(UpstreamsForm, {
@@ -247,7 +232,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateUpstream')
       cy.wait('@createUpstream')
 
       cy.get('@onUpdateSpy').should('not.have.been.called')
@@ -317,7 +301,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       interceptFetchServices()
       interceptFetchCertificates()
       interceptGetUpstream()
-      interceptValidate()
       interceptUpdate()
 
       cy.mount(UpstreamsForm, {
@@ -334,14 +317,12 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateUpstream')
       cy.wait('@updateUpstream')
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', upstreamsResponse)
     })
 
     it('Should set correct values for health checks when turned on', () => {
-      interceptValidate()
       interceptCreate()
 
       cy.mount(UpstreamsForm, {
@@ -389,7 +370,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       interceptFetchServices()
       interceptFetchCertificates()
       interceptGetUpstream(200, upstreamsResponseFull)
-      interceptValidate()
       interceptUpdate()
 
       cy.mount(UpstreamsForm, {
@@ -419,7 +399,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       interceptFetchServices()
       interceptFetchCertificates()
       interceptGetUpstream(200, upstreamsResponseFull)
-      interceptValidate()
       interceptUpdate()
 
       cy.mount(UpstreamsForm, {
@@ -508,18 +487,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
           body: data || upstreamsResponse,
         },
       ).as('getUpstream')
-    }
-    const interceptValidate = (status = 200): void => {
-      cy.intercept(
-        {
-          method: 'POST',
-          url: `${KMConfig.apiBaseUrl}/${KMConfig.workspace}/schemas/upstreams/validate`,
-        },
-        {
-          statusCode: status,
-          body: {},
-        },
-      ).as('validateUpstream')
     }
 
     it('Should render correctly', () => {
@@ -641,7 +608,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
     it('Should emit update event after Upstream was created', () => {
       interceptFetchServices()
       interceptFetchCertificates()
-      interceptValidate()
       interceptCreate()
 
       cy.mount(UpstreamsForm, {
@@ -660,7 +626,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateUpstream')
       cy.wait('@createUpstream')
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', upstreamsResponse)
@@ -669,7 +634,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
     it('Error should be visible when creation fails', () => {
       interceptFetchServices()
       interceptFetchCertificates()
-      interceptValidate()
       interceptCreate(400)
 
       cy.mount(UpstreamsForm, {
@@ -688,7 +652,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateUpstream')
       cy.wait('@createUpstream')
 
       cy.get('@onUpdateSpy').should('not.have.been.called')
@@ -758,7 +721,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       interceptFetchServices()
       interceptFetchCertificates()
       interceptGetUpstream()
-      interceptValidate()
       interceptUpdate()
 
       cy.mount(UpstreamsForm, {
@@ -775,7 +737,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateUpstream')
       cy.wait('@updateUpstream')
 
       cy.get('@onUpdateSpy').should('have.been.calledWith', upstreamsResponse)
@@ -785,7 +746,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       interceptFetchServices()
       interceptFetchCertificates()
       interceptGetUpstream(200, upstreamsKMResponseFull)
-      interceptValidate()
       interceptUpdate(200, upstreamsKMResponseDisableActive)
 
       cy.mount(UpstreamsForm, {
@@ -805,7 +765,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateUpstream')
       cy.wait('@updateUpstream')
 
       cy.get('@onUpdateSpy').should('have.been.calledWithExactly', upstreamsKMResponseDisableActive)
@@ -815,7 +774,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       interceptFetchServices()
       interceptFetchCertificates()
       interceptGetUpstream(200, upstreamsKMResponseFull)
-      interceptValidate()
       interceptUpdate(200, upstreamsKMResponsePassiveDisabled)
 
       cy.mount(UpstreamsForm, {
@@ -835,14 +793,12 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       cy.get('@vueWrapper').then(wrapper => wrapper.findComponent(EntityBaseForm)
         .vm.$emit('submit'))
 
-      cy.wait('@validateUpstream')
       cy.wait('@updateUpstream')
 
       cy.get('@onUpdateSpy').should('have.been.calledWithExactly', upstreamsKMResponsePassiveDisabled)
     })
 
     it('Should set correct values for health checks when turned on', () => {
-      interceptValidate()
       interceptCreate()
 
       cy.mount(UpstreamsForm, {
@@ -890,7 +846,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       interceptFetchServices()
       interceptFetchCertificates()
       interceptGetUpstream(200, upstreamsKMResponseFull)
-      interceptValidate()
       interceptUpdate()
 
       cy.mount(UpstreamsForm, {
@@ -920,7 +875,6 @@ describe('<UpstreamsForm/>', { viewportHeight: 700, viewportWidth: 700 }, () => 
       interceptFetchServices()
       interceptFetchCertificates()
       interceptGetUpstream(200, upstreamsResponseFull)
-      interceptValidate()
       interceptUpdate()
 
       cy.mount(UpstreamsForm, {
