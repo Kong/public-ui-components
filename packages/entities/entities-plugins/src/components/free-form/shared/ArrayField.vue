@@ -151,7 +151,7 @@
 import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs } from 'vue'
 import { AddIcon, TrashIcon } from '@kong/icons'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared, useItemKeys } from './composables'
+import { useField, useFieldAttrs, useFreeformStore, useItemKeys } from './composables'
 import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
@@ -184,7 +184,7 @@ defineSlots<{
 }>()
 
 const { i18n: { t } } = useI18n()
-const { getDefault, getSchema } = useFormShared()
+const { getDefault, getSchema } = useFreeformStore()
 const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 const subSchema = computed(() => {
@@ -238,7 +238,7 @@ const addItem = async () => {
 
 const removeItem = async (index: number) => {
   if (Array.isArray(fieldValue!.value)) {
-    fieldValue!.value.splice(index, 1)
+    fieldValue!.value = fieldValue!.value.filter((_, i) => i !== index)
   }
   emit('remove', index)
 

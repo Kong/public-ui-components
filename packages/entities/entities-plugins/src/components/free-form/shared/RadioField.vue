@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { computed, toRef } from 'vue'
 import { KRadio, type LabelAttributes, type SelectItem } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared } from './composables'
+import { useField, useFieldAttrs, useFreeformStore } from './composables'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
@@ -52,7 +52,7 @@ const emit = defineEmits<{
 }>()
 
 const { name, items, ...props } = defineProps<EnumFieldProps>()
-const { getSelectItems } = useFormShared()
+const { getSelectItems } = useFreeformStore()
 const field = useField<number | string>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
