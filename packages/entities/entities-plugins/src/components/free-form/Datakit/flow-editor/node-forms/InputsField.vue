@@ -112,6 +112,7 @@ function handleRenameField(oldName: FieldName, newName: FieldName) {
   color: $kui-color-text;
   font-size: $kui-font-size-40;
   font-weight: $kui-font-weight-bold;
+  margin-bottom: 0;
 }
 
 .dk-inputs-field-h2,

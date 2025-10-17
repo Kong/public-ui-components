@@ -132,6 +132,23 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     type: 'cache',
     summary: getNodeTypeSummary('cache'),
     description: getNodeTypeDescription('cache'),
+    io: {
+      input: {
+        fields: [
+          { name: 'data' },
+          { name: 'key' },
+          { name: 'ttl' },
+        ],
+      } as IOMeta,
+      output: {
+        fields: [
+          { name: 'data' },
+          { name: 'hit' },
+          { name: 'miss' },
+          { name: 'stored' },
+        ],
+      } as IOMeta,
+    },
     ...NODE_VISUAL.cache,
   },
 }

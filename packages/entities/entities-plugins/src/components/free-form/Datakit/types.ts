@@ -21,6 +21,7 @@ import type {
   JqNode,
   PropertyNode,
   StaticNode,
+  CacheNode,
   BranchNode,
 } from './schema/strict'
 
@@ -103,6 +104,7 @@ export type {
   JqNode,
   PropertyNode,
   StaticNode,
+  CacheNode,
   HttpMethod,
   BranchNode,
 }

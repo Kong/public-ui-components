@@ -49,6 +49,38 @@ export function hasAnyNonNullEntry(obj?: Record<string, unknown> | null): boolea
   return false
 }
 
+type IONode = {
+  input?: unknown
+  inputs?: Record<string, unknown> | null
+  output?: unknown
+  outputs?: Record<string, unknown> | null
+}
+
+export function validateInputOutputExclusivity(
+  node: IONode,
+  ctx: z.RefinementCtx,
+) {
+  const hasInput = node.input !== undefined && node.input !== null
+  const hasInputs = hasAnyNonNullEntry(node.inputs)
+  if (hasInput && hasInputs) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'A node cannot use both "input" and "inputs". Use one or the other.',
+      path: ['inputs'],
+    })
+  }
+
+  const hasOutput = node.output !== undefined && node.output !== null
+  const hasOutputs = hasAnyNonNullEntry(node.outputs)
+  if (hasOutput && hasOutputs) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'A node cannot use both "output" and "outputs". Use one or the other.',
+      path: ['outputs'],
+    })
+  }
+}
+
 export function validateNamesAndConnections(
   config: DatakitConfig,
   implicitNames: readonly string[],
@@ -67,19 +99,6 @@ export function validateNamesAndConnections(
       })
     }
     seen.add(name)
-  })
-
-  config.nodes.forEach((node, i) => {
-    const hasInput = 'input' in node && node.input != null
-    const hasInputs = 'inputs' in node && hasAnyNonNullEntry(node.inputs)
-    if (hasInput && hasInputs) {
-      ctx.addIssue({
-        code: 'custom',
-        message:
-          'A node cannot use both "input" and "inputs". Use one or the other.',
-        path: ['nodes', i, 'inputs'],
-      })
-    }
   })
 
   const allowed = new Set<string>([...implicitNames, ...names])

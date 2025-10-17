@@ -6,7 +6,10 @@ import {
   isImplicitName,
   ConfigNodeTypeSchema,
 } from './strict'
-import { validateNamesAndConnections } from './shared'
+import {
+  validateInputOutputExclusivity,
+  validateNamesAndConnections,
+} from './shared'
 import { IMPLICIT_NODE_NAMES } from '../constants'
 
 const KNOWN_NODE_TYPES = ConfigNodeTypeSchema.options
@@ -39,6 +42,9 @@ export const ConfigNodeBaseSchema = z
     outputs: z.record(z.string(), LooseConnectionSchema.nullish()).nullish(),
   })
   .loose()
+  .superRefine((node, ctx) => {
+    validateInputOutputExclusivity(node, ctx)
+  })
 
 const ConfigNodeBaseGuard = z
   .object({ type: z.string(), name: z.string() })
@@ -118,6 +124,29 @@ const StaticNodeSchema = ConfigNodeBaseSchema.extend({
   inputs: z.never().optional(),
 }).strict()
 
+const CacheNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('cache'),
+  bypass_on_error: z.boolean().nullish(),
+  inputs: z
+    .object({
+      data: LooseConnectionSchema.nullish(),
+      key: LooseConnectionSchema.nullish(),
+      ttl: LooseConnectionSchema.nullish(),
+    })
+    .partial()
+    .nullish(),
+  outputs: z
+    .object({
+      data: LooseConnectionSchema.nullish(),
+      hit: LooseConnectionSchema.nullish(),
+      miss: LooseConnectionSchema.nullish(),
+      stored: LooseConnectionSchema.nullish(),
+    })
+    .partial()
+    .nullish(),
+  ttl: z.union([z.number(), z.string()]).nullish(),
+}).strict()
+
 /**
  * Branch node schema with loose validation.
  * Supports conditional execution with `then` and `else` branches.
@@ -136,6 +165,7 @@ const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
     JqNodeSchema,
     PropertyNodeSchema,
     StaticNodeSchema,
+    CacheNodeSchema,
     BranchNodeSchema,
   ]),
 )

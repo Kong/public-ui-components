@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -->
   <KSlideout
     class="dk-node-properties-panel"
     :close-on-blur="false"
@@ -43,6 +44,7 @@ import NodeFormStatic from '../node-forms/NodeFormStatic.vue'
 import NodeFormProperty from '../node-forms/NodeFormProperty.vue'
 import NodeFormExit from '../node-forms/NodeFormExit.vue'
 import NodeFormBranch from '../node-forms/NodeFormBranch.vue'
+import NodeFormCache from '../node-forms/NodeFormCache.vue'
 
 import { KSlideout } from '@kong/kongponents'
 import { getNodeTypeDescription } from './node'
@@ -87,6 +89,8 @@ const Form = computed(() => {
       return NodeFormExit
     case 'branch':
       return NodeFormBranch
+    case 'cache':
+      return NodeFormCache
     default:
       return null
   }
