@@ -1,3 +1,30 @@
+
+import dagre from '@dagrejs/dagre'
+import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
+import { MarkerType, useVueFlow } from '@vue-flow/core'
+import { createInjectionState } from '@vueuse/core'
+import { computed, nextTick, toValue, watch } from 'vue'
+
+import useI18n from '../../../../../composables/useI18n'
+import { useToaster } from '../../../../../composables/useToaster'
+import {
+  DK_BRANCH_GROUP_PADDING,
+  DK_FLOW_EDGE_Z_OFFSET,
+  DK_FLOW_NODE_Z_OFFSET,
+  DK_FLOW_Z_LAYER_STEP,
+  DK_NODE_PROPERTIES_PANEL_WIDTH,
+} from '../../constants'
+import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
+import { useBranchLayout } from '../composables/useBranchLayout'
+import { useOptionalConfirm } from '../composables/useConflictConfirm'
+import {
+  DEFAULT_LAYOUT_OPTIONS,
+  DEFAULT_VIEWPORT_WIDTH,
+  SCROLL_DURATION,
+} from '../constants'
+import { isGroupInstance, isImplicitNode } from '../node/node'
+import { useEditorStore } from './store'
+
 import type { Node as DagreNode } from '@dagrejs/dagre'
 import type { Connection, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
@@ -6,38 +33,14 @@ import type {
   EdgeId,
   EdgeInstance,
   FieldId,
+  FlowEdge,
   GroupId,
+  GroupInstance,
   NodeId,
   NodeInstance,
   NodePhase,
 } from '../../types'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
-
-import dagre from '@dagrejs/dagre'
-import type { FlowEdge } from '../../types'
-import { useBranchLayout } from '../composables/useBranchLayout'
-import { MarkerType, useVueFlow } from '@vue-flow/core'
-import { createInjectionState } from '@vueuse/core'
-import { computed, toValue, watch } from 'vue'
-
-import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
-import useI18n from '../../../../../composables/useI18n'
-import { useToaster } from '../../../../../composables/useToaster'
-import {
-  DK_NODE_PROPERTIES_PANEL_WIDTH,
-  DK_FLOW_Z_LAYER_STEP,
-  DK_FLOW_EDGE_Z_OFFSET,
-  DK_FLOW_NODE_Z_OFFSET,
-} from '../../constants'
-import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
-import { useOptionalConfirm } from '../composables/useConflictConfirm'
-import {
-  DEFAULT_LAYOUT_OPTIONS,
-  DEFAULT_VIEWPORT_WIDTH,
-  SCROLL_DURATION,
-} from '../constants'
-import { isImplicitNode } from '../node/node'
-import { useEditorStore } from './store'
 
 /**
  * Parse a handle string in the format of "inputs@fieldId" or "outputs@fieldId".
@@ -236,6 +239,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     })
     const {
       groupMapById,
+      groupsByOwner,
       memberGroupMap,
       groupNodes,
       branchEdges,
@@ -654,119 +658,45 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       handleConnect(connection)
     })
 
-    function autoLayout(commitNow = true) {
-      let leftNode: Node<NodeInstance> | undefined
-      let rightNode: Node<NodeInstance> | undefined
-      const configNodes: Array<Node<NodeInstance>> = []
-
-      /**
-       * Check for implicit nodes in the current phase. If the node is an implicit node,
-       * it will be assigned to either leftNode or rightNode based on its type.
-       *
-       * @param node Node to check
-       * @return Whether the node is an implicit node or not
-       */
-      const checkImplicitNode = (node: Node<NodeInstance>): boolean => {
-        switch (node.data!.name) {
-          case 'request': {
-            if (phase !== 'request') {
-              throw new Error(`Unexpected request node in ${phase} phase`)
-            }
-            if (leftNode) {
-              throw new Error('Duplicated request node in request phase')
-            }
-            leftNode = node
-            return true
-          }
-          case 'service_request': {
-            if (phase !== 'request') {
-              throw new Error(`Unexpected service_request node in ${phase} phase`)
-            }
-            if (rightNode) {
-              throw new Error('Duplicated service_request node in request phase')
-            }
-            rightNode = node
-            return true
-          }
-          case 'service_response': {
-            if (phase !== 'response') {
-              throw new Error(`Unexpected service_response node in ${phase} phase`)
-            }
-            if (rightNode) {
-              throw new Error('Duplicated service_response node in response phase')
-            }
-            rightNode = node
-            return true
-          }
-          case 'response': {
-            if (phase !== 'response') {
-              throw new Error(`Unexpected response node in ${phase} phase`)
-            }
-            if (leftNode) {
-              throw new Error('Duplicated response node in response phase')
-            }
-            leftNode = node
-            return true
-          }
-          default: {
-            configNodes.push(node)
-            return false
-          }
-        }
-      }
+    function doAutoLayout(
+      autoNodes: Array<NodeInstance | GroupInstance>,
+      leftNode?: NodeInstance,
+      rightNode?: NodeInstance,
+    ) {
+      const leftGraphNode = leftNode ? findNode(leftNode.id) : undefined
+      const rightGraphNode = rightNode ? findNode(rightNode.id) : undefined
 
       let dagreGraph: dagre.graphlib.Graph | undefined
+      if (autoNodes.length > 0) {
+        dagreGraph = new dagre.graphlib.Graph({ multigraph: true })
+        dagreGraph.setGraph({
+          rankdir: phase === 'request' ? 'LR' : 'RL',
+          nodesep: nodeGap,
+          edgesep: edgeGap,
+          ranksep: rankGap,
+        })
 
-      for (const node of nodes.value) {
-        if (checkImplicitNode(node)) {
-          // Skip auto-layout by Dagre for implicit nodes
-          continue
-        }
+        const autoNodeIds = new Set()
 
-        if (configNodes.length > 0) {
-          if (!dagreGraph) {
-            dagreGraph = new dagre.graphlib.Graph({ multigraph: true })
-            dagreGraph.setGraph({
-              rankdir: phase === 'request' ? 'LR' : 'RL',
-              nodesep: nodeGap,
-              edgesep: edgeGap,
-              ranksep: rankGap,
-            })
-          }
-
-          // Only run for config nodes
+        for (const node of autoNodes) {
           const graphNode = findNode(node.id)
           if (!graphNode) {
-            throw new Error(`Node ${node.id} is missing from the graph in ${phase} phase`)
+            console.warn(`Cannot find graph node '${node.id}' in ${phase} phase`)
+            continue
           }
 
-          dagreGraph.setNode(node.id, {
-            width: graphNode.dimensions.width,
-            height: graphNode.dimensions.height,
-          })
-        }
-      }
-
-      if (!leftNode || !rightNode) {
-        throw new Error(`One or more implicit nodes are missing from ${phase} phase`)
-      }
-
-      const leftGraphNode = findNode(leftNode.id)
-      const rightGraphNode = findNode(rightNode.id)
-      if (!leftGraphNode || !rightGraphNode) {
-        throw new Error(`One or more implicit nodes are missing from the graph in ${phase} phase`)
-      }
-
-      if (configNodes.length > 0) {
-        if (!dagreGraph) {
-          throw new Error('dagreGraph should be defined here if reachable')
+          autoNodeIds.add(node.id)
+          if (isGroupInstance(node)) {
+            // Try `dimensions` from the GroupInstance first
+            dagreGraph!.setNode(node.id, node.dimensions ?? graphNode.dimensions)
+          } else {
+            dagreGraph!.setNode(node.id, graphNode.dimensions)
+          }
         }
 
-        const implicitIds = new Set([leftNode.id, rightNode.id])
         for (const edge of edges.value) {
-          if (!implicitIds.has(edge.source) && !implicitIds.has(edge.target)) {
-            dagreGraph.setEdge(edge.source, edge.target, { points: [] })
-          }
+          if (!autoNodeIds.has(edge.source) || !autoNodeIds.has(edge.target)) continue
+          dagreGraph.setEdge(edge.source, edge.target, { points: [] })
         }
 
         // Layout
@@ -785,16 +715,27 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         }
       }
 
-      if (configNodes.length > 0) {
+      if (autoNodes.length > 0) {
         if (!dagreGraph) {
-          throw new Error('dagreGraph should be defined here if reachable')
+          throw new Error('Expected dagreGraph to be initialized')
         }
 
-        for (const node of configNodes) {
+        for (const node of autoNodes) {
           const dagreNode = dagreGraph.node(node.id)
           const position = normalizePosition(dagreNode)
           wrapBounding(position)
-          moveNode(node.data!.id, { x: position.x, y: position.y }, false)
+
+          if (isGroupInstance(node)) {
+            // moveGroup is not enough
+            translateGroupTree(
+              node.id,
+              position,
+              position.x + DK_BRANCH_GROUP_PADDING,
+              position.y + DK_BRANCH_GROUP_PADDING,
+            )
+          } else {
+            moveNode(node.id, { x: position.x, y: position.y }, false)
+          }
         }
       }
 
@@ -809,22 +750,137 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         Math.min(toValue(viewport?.width) ?? Number.POSITIVE_INFINITY, DEFAULT_VIEWPORT_WIDTH)
           - centralWidth
           - 2 * nodeGap
-          - leftGraphNode.dimensions.width
-          - rightGraphNode.dimensions.width
+          - (leftGraphNode?.dimensions?.width ?? 0)
+          - (rightGraphNode?.dimensions?.width ?? 0)
           - 2 * padding,
       )
 
       const centerY = centralBounding.y1 + centralHeight / 2
 
-      moveNode(leftNode.data!.id, {
-        x: centralBounding.x1 - nodeGap - horizontalSpace / 2 - leftGraphNode.dimensions.width,
-        y: centerY - leftGraphNode.dimensions.height / 2,
-      }, false)
+      if (leftNode) {
+        moveNode(leftNode.id, {
+          x: centralBounding.x1 - nodeGap - horizontalSpace / 2 - (leftGraphNode?.dimensions?.width ?? 0),
+          y: centerY - (leftGraphNode?.dimensions?.height ?? 0) / 2,
+        }, false)
+      }
 
-      moveNode(rightNode.data!.id, {
-        x: centralBounding.x2 + nodeGap + horizontalSpace / 2,
-        y: centerY - rightGraphNode.dimensions.height / 2,
-      }, false)
+      if (rightNode) {
+        moveNode(rightNode.id, {
+          x: centralBounding.x2 + nodeGap + horizontalSpace / 2,
+          y: centerY - (rightGraphNode?.dimensions?.height ?? 0) / 2,
+        }, false)
+      }
+    }
+
+    function pickNodesForAutoLayout(nodes: Array<NodeInstance | GroupInstance>) {
+      let leftNode: NodeInstance | undefined
+      let rightNode: NodeInstance | undefined
+      const autoNodes: Array<NodeInstance | GroupInstance> = []
+
+      for (const node of nodes) {
+        if (isGroupInstance(node)) {
+          autoNodes.push(node)
+          continue
+        }
+
+        switch (node.name) {
+          case 'request': {
+            if (phase !== 'request') {
+              throw new Error(`Unexpected request node in ${phase} phase`)
+            }
+            if (leftNode) {
+              throw new Error('Duplicated request node in request phase')
+            }
+            leftNode = node
+            break
+          }
+          case 'service_request': {
+            if (phase !== 'request') {
+              throw new Error(`Unexpected service_request node in ${phase} phase`)
+            }
+            if (rightNode) {
+              throw new Error('Duplicated service_request node in request phase')
+            }
+            rightNode = node
+            break
+          }
+          case 'service_response': {
+            if (phase !== 'response') {
+              throw new Error(`Unexpected service_response node in ${phase} phase`)
+            }
+            if (rightNode) {
+              throw new Error('Duplicated service_response node in response phase')
+            }
+            rightNode = node
+            break
+          }
+          case 'response': {
+            if (phase !== 'response') {
+              throw new Error(`Unexpected response node in ${phase} phase`)
+            }
+            if (leftNode) {
+              throw new Error('Duplicated response node in response phase')
+            }
+            leftNode = node
+            break
+          }
+          default: {
+            autoNodes.push(node)
+            break
+          }
+        }
+      }
+
+      return { autoNodes, leftNode, rightNode }
+    }
+
+    async function autoLayout(commitNow = true) {
+      const nodeMap = new Map<string, NodeInstance>(
+        nodes.value.map((node) => [node.id, node.data!]),
+      )
+
+      // Bottom-up layout
+      const sortedGroups = state.value.groups.toSorted((a, b) => getNodeDepth(b.ownerId) - getNodeDepth(a.ownerId))
+      for (const group of sortedGroups) {
+        doAutoLayout(
+          group.memberIds.reduce((nodes, memberId) => {
+            const node = getNodeById(memberId)
+            if (!node) {
+              console.warn(`Cannot find node '${memberId}' of group '${group.id}' by getNodeById`)
+              return nodes
+            }
+
+            if (node.phase !== phase) return nodes
+
+            if (node.type === 'branch') {
+              const ownedGroups = groupsByOwner.value.get(node.id)
+              if (ownedGroups) {
+                nodes.push(...ownedGroups)
+              }
+            }
+
+            nodeMap.delete(node!.id)
+            nodes.push(node)
+            return nodes
+          }, [] as Array<NodeInstance | GroupInstance>),
+        )
+        await nextTick() // <- Wait for updates on VueFlow internals
+        updateGroupLayout(group.id, false)
+        await nextTick() // <- Wait for `layoutFlushPromise` in useBranchLayout
+      }
+
+      const rootNodes: Array<NodeInstance | GroupInstance> = nodeMap.values().toArray()
+      for (const node of rootNodes) {
+        if (isGroupInstance(node)) continue
+        if (node.type !== 'branch') continue
+
+        const ownedGroups = groupsByOwner.value.get(node.id)
+        if (!ownedGroups) continue
+        rootNodes.push(...ownedGroups)
+      }
+
+      const { autoNodes, leftNode, rightNode } = pickNodesForAutoLayout(rootNodes)
+      doAutoLayout(autoNodes, leftNode, rightNode)
 
       if (commitNow) {
         historyCommit(`autolayout-${flowId}`)

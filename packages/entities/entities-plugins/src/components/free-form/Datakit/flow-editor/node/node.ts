@@ -10,6 +10,7 @@ import type {
   ConfigNodeType,
   IOMeta,
   NextMeta,
+  GroupInstance,
 } from '../../types'
 
 import { createI18n } from '@kong-ui-public/i18n'
@@ -227,3 +228,6 @@ export const isNodeId = (id?: string): id is NodeId =>
 
 export const isFieldId = (id?: string): id is FieldId =>
   !!id?.startsWith('field:')
+
+export const isGroupInstance = (obj: NodeInstance | GroupInstance): obj is GroupInstance =>
+  Object.prototype.hasOwnProperty.call(obj, 'ownerId')

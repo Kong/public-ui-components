@@ -243,10 +243,10 @@ watch(
       setPendingFitView(false)
 
     // Wait for VueFlow internal layout measurements. nextTick does not work here.
-    setTimeout(() => {
+    setTimeout(async () => {
       if (pendingLayout) {
-        requestFlow.value?.autoLayout(false)
-        responseFlow.value?.autoLayout(false)
+        await requestFlow.value?.autoLayout(false)
+        await responseFlow.value?.autoLayout(false)
         commit('*')
 
         if (pendingLayout === 'clearHistory')
@@ -254,7 +254,7 @@ watch(
       }
 
       if (pendingFitView) {
-        fitView()
+        setTimeout(() => fitView(), 0) // Have to use `setTimeout` here
       }
     }, 0)
   },

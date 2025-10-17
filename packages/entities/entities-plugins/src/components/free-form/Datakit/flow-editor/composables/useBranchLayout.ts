@@ -179,7 +179,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
   })
 
   const pendingGroupLayouts = new Map<GroupId, GroupLayout>()
-  const pendingParentUpdates = new Set<GroupId>()
+  const pendingParentUpdates = new Map<GroupId, { commit: boolean }>()
   let layoutFlushPromise: Promise<void> | undefined
 
   /**
@@ -200,7 +200,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
    *   - Any member node lacks valid dimensions
    *   - The calculated bounds are invalid (infinite values)
    */
-  function calculateGroupLayout(group: GroupInstance): GroupLayout | undefined {
+  function calculateGroupLayout(group: GroupInstance, commit = true): GroupLayout | undefined {
     if (group.phase !== phase) return undefined
 
     const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
@@ -260,6 +260,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
         width: Math.round(paddedWidth),
         height: Math.round(paddedHeight),
       },
+      commit,
     }
   }
 
@@ -269,39 +270,39 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       return
     }
 
-    const applied: Array<{ id: GroupId, changed: boolean }> = []
-    let hasChanges = false
+    const applied: Array<{ id: GroupId, changed: boolean, commit: boolean }> = []
+    let scheduleCommit = false
 
     pendingGroupLayouts.forEach((layout, id) => {
       const changed = setGroupLayout(id, layout, false)
-      applied.push({ id, changed })
-      if (changed && !hasChanges) {
-        hasChanges = true
+      applied.push({ id, changed, commit: layout.commit })
+      if (layout.commit && changed && !scheduleCommit) {
+        scheduleCommit = true
       }
     })
 
     pendingGroupLayouts.clear()
     layoutFlushPromise = undefined
 
-    for (const { id, changed } of applied) {
+    for (const { id, changed, commit } of applied) {
       if (!changed) continue
       const group = groupMapById.value.get(id)
       if (!group) continue
       const parent = memberGroupMap.value.get(group.ownerId)
       if (parent) {
-        pendingParentUpdates.add(parent.id)
+        pendingParentUpdates.set(parent.id, { commit })
       }
     }
 
     if (pendingParentUpdates.size > 0) {
       const parentIds = Array.from(pendingParentUpdates)
       pendingParentUpdates.clear()
-      for (const parentId of parentIds) {
-        updateGroupLayout(parentId)
+      for (const [parentId, { commit }] of parentIds) {
+        updateGroupLayout(parentId, commit)
       }
     }
 
-    if (hasChanges) {
+    if (scheduleCommit) {
       commit('*')
     }
   }
@@ -323,11 +324,11 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
    *
    * @param groupId - The ID of the group to update.
    */
-  function updateGroupLayout(groupId: GroupId) {
+  function updateGroupLayout(groupId: GroupId, commit = true) {
     const group = groupMapById.value.get(groupId)
     if (!group) return
 
-    const layout = calculateGroupLayout(group)
+    const layout = calculateGroupLayout(group, commit)
     if (!layout) return
 
     pendingGroupLayouts.set(groupId, layout)
@@ -473,6 +474,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
 
   return {
     groupMapById,
+    groupsByOwner,
     memberGroupMap,
     groupNodes,
     branchEdges,
