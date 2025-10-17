@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.6.0...@kong-ui-public/analytics-utilities@11.7.0) (2025-10-17)
+
+
+### Features
+
+* increase the CSV export limit to 1000 [MA-4360] ([#2537](https://github.com/Kong/public-ui-components/issues/2537)) ([f581a05](https://github.com/Kong/public-ui-components/commit/f581a05ff91db1cf09b6be53974c86ad502fb7f5))
+
+
+
+
+
 # [11.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.5.1...@kong-ui-public/analytics-utilities@11.6.0) (2025-10-16)
 
 
