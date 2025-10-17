@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.106.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.105.0...@kong-ui-public/entities-plugins@9.106.0) (2025-10-17)
+
+
+### Features
+
+* **entities-plugins:** datakit bottom-up auto layout ([#2555](https://github.com/Kong/public-ui-components/issues/2555)) ([0fb5b1d](https://github.com/Kong/public-ui-components/commit/0fb5b1d07f683e5ead85d51cf144922a1edca4c7))
+
+
+
+
+
 # [9.105.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.104.3...@kong-ui-public/entities-plugins@9.105.0) (2025-10-16)
 
 
