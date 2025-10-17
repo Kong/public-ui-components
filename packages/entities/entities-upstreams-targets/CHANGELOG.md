@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.12.10...@kong-ui-public/entities-upstreams-targets@3.12.11) (2025-10-17)
+
+
+### Bug Fixes
+
+* **entities:** skip validate before submit upstream/target/plugin form ([#2563](https://github.com/Kong/public-ui-components/issues/2563)) ([c902a2f](https://github.com/Kong/public-ui-components/commit/c902a2faebe9ff2a46b72c1b523ff3d6f6538e86))
+
+
+
+
+
 ## [3.12.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.12.9...@kong-ui-public/entities-upstreams-targets@3.12.10) (2025-09-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
