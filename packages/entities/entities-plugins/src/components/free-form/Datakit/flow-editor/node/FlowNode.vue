@@ -6,7 +6,6 @@
       implicit: isImplicit,
       readonly,
     }"
-    @mousedown="closeMenu"
   >
     <div class="body">
       <KTooltip
