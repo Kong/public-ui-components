@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['dk-branch-group-node', { reversed }]"
+    :class="['dk-branch-group-node', { reversed, 'drop-target': isActive }]"
   >
     <Handle
       id="input"
@@ -19,10 +19,12 @@ import type { FlowGroupNodeData } from '../../types'
 
 const props = defineProps<{
   data: FlowGroupNodeData
+  active?: boolean
 }>()
 
 const reversed = computed(() => props.data.phase === 'response')
 const handlePosition = computed(() => reversed.value ? Position.Right : Position.Left)
+const isActive = computed(() => !!props.active)
 </script>
 
 <style scoped lang="scss">
@@ -73,6 +75,10 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       right: -0.5px;
       transform: translate(50%, -50%) rotate(45deg);
     }
+  }
+
+  &.drop-target {
+    border-color: $kui-color-border-primary;
   }
 }
 </style>

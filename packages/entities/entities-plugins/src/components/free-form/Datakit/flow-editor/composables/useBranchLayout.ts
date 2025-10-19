@@ -31,6 +31,8 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
   } = editorStore
 
   const draggingNodeId = ref<NodeId | GroupId>()
+  const panelDragActive = ref(false)
+  const activeGroupId = ref<GroupId>()
 
   const groupMapById = computed(() =>
     new Map<GroupId, GroupInstance>(state.value.groups.map(group => [group.id, group])),
@@ -137,6 +139,51 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     }
     return max
   })
+
+  function containsPoint(group: GroupInstance, point: XYPosition) {
+    const position = group.position
+    const dimensions = group.dimensions
+    if (!position || !dimensions) return false
+    return (
+      point.x >= position.x
+      && point.y >= position.y
+      && point.x <= position.x + dimensions.width
+      && point.y <= position.y + dimensions.height
+    )
+  }
+
+  function findDeepestGroup(point: XYPosition): GroupInstance | undefined {
+    let result: GroupInstance | undefined
+    let depth = -1
+    for (const group of state.value.groups) {
+      if (group.phase !== phase) continue
+      if (!containsPoint(group, point)) continue
+      const d = getGroupDepth(group)
+      if (d > depth) {
+        result = group
+        depth = d
+      }
+    }
+    return result
+  }
+
+  function clearActiveGroup() {
+    activeGroupId.value = undefined
+  }
+
+  function setActiveGroupByPoint(point: XYPosition) {
+    if (!panelDragActive.value && !draggingNodeId.value) return
+    const group = findDeepestGroup(point)
+    activeGroupId.value = group?.id
+  }
+
+  function setActiveGroupForRect(rect: { x: number, y: number, width: number, height: number }) {
+    const center = {
+      x: rect.x + rect.width / 2,
+      y: rect.y + rect.height / 2,
+    }
+    setActiveGroupByPoint(center)
+  }
 
   const branchEdges = computed(() => {
     const edges: FlowEdge[] = []
@@ -484,7 +531,21 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     translateGroupTree,
     setDraggingNode: (id?: NodeId | GroupId) => {
       draggingNodeId.value = id
+      if (!id && !panelDragActive.value) {
+        clearActiveGroup()
+      }
     },
+    setPanelDragActive(active: boolean) {
+      panelDragActive.value = active
+      if (!active && !draggingNodeId.value) {
+        clearActiveGroup()
+      }
+    },
+    panelDragActive,
+    activeGroupId,
+    setActiveGroupByPoint,
+    setActiveGroupForRect,
+    clearActiveGroup,
     getNodeDepth,
     maxGroupDepth,
   }

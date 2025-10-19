@@ -60,7 +60,10 @@
         />
       </template>
       <template #node-group="{ data }">
-        <GroupNode :data />
+        <GroupNode
+          :active="activeGroupId === data.id"
+          :data
+        />
       </template>
     </VueFlow>
 
@@ -89,6 +92,7 @@ import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
 import GroupNode from './node/GroupNode.vue'
 import { provideFlowStore } from './store/flow'
+import { parseGroupId } from './store/helpers'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -129,6 +133,7 @@ const {
   selectNode,
   placeToRight,
   scrollRightToReveal,
+  groupDrop,
 } = provideFlowStore({
   phase,
   flowId,
@@ -141,8 +146,9 @@ const {
   readonly: mode !== 'edit',
 })
 
-const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode } = editorStore
+const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode, branchGroups, commit: commitHistory } = editorStore
 const { project, vueFlowRef, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
+const { activeGroupId, setPanelDragActive, updateActiveGroupByPoint, clearActiveGroup } = groupDrop
 
 const disableDrop = ref(false)
 
@@ -163,6 +169,15 @@ function onDragOver(e: DragEvent) {
   if (mode !== 'edit' || disableDrop.value) return
 
   e.preventDefault()
+
+  const { top = 0, left = 0 } = vueFlowRef.value?.getBoundingClientRect() || {}
+
+  const projected = project({
+    x: e.clientX - left,
+    y: e.clientY - top,
+  })
+
+  updateActiveGroupByPoint(projected)
 }
 
 function onDrop(e: DragEvent) {
@@ -195,12 +210,26 @@ function onDrop(e: DragEvent) {
     },
   }
 
-  const nodeId = addNode(newNode)
+  const dropTargetGroupId = activeGroupId.value
+  const nodeId = addNode(newNode, false)
 
-  if (!nodeId) return
+  if (!nodeId) {
+    setPanelDragActive(false)
+    clearActiveGroup()
+    return
+  }
+
+  if (dropTargetGroupId) {
+    const { nodeId: ownerId, branch } = parseGroupId(dropTargetGroupId)
+    branchGroups.addMember(ownerId, branch, nodeId, { commit: false })
+  }
+
+  commitHistory(`drag-create:${nodeId}`)
 
   selectNode(nodeId)
   propertiesPanelOpen.value = true
+  clearActiveGroup()
+  setPanelDragActive(false)
 }
 
 async function onClickAutoLayout() {
@@ -232,32 +261,42 @@ const controls = computed<Control[]>(() => {
   return result
 })
 
-// Check if the dragged node is valid to drop
-if (phase === 'response' && mode === 'edit') {
+if (mode === 'edit') {
+  const resetMask = () => {
+    disableDrop.value = false
+  }
+
   useEventListener('dragstart', (e: DragEvent) => {
     const format = e.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
     if (!format) return
 
-    const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
-    if ((nodeType === 'call')) {
-      disableDrop.value = true
+    setPanelDragActive(true)
+
+    if (phase === 'response') {
+      const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
+      if (nodeType === 'call') {
+        disableDrop.value = true
+      }
     }
   })
 
-  // `dragend` fires only after the long snap-back animation, so UI feels delayed.
-  // Instead rely on `dragover`: it fires repeatedly at high frequency while dragging.
-  // Restart a short timer on every `dragover`. If no event comes within ~80ms,
-  // assume the user released and reset `disableDrop` immediately.
-  const { start } = useTimeoutFn(() => {
-    disableDrop.value = false
-  }, 80)
-
-  useEventListener('dragover', () => {
-    start()
-  })
+  let restartMaskTimer: (() => void) | undefined
+  if (phase === 'response') {
+    const { start } = useTimeoutFn(() => {
+      disableDrop.value = false
+    }, 80)
+    restartMaskTimer = start
+    useEventListener('dragover', () => {
+      restartMaskTimer?.()
+    })
+  }
 
   useEventListener('dragend', () => {
-    disableDrop.value = false
+    setPanelDragActive(false)
+    clearActiveGroup()
+    if (phase === 'response') {
+      resetMask()
+    }
   })
 }
 
