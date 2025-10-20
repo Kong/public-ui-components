@@ -1,4 +1,3 @@
-
 import dagre from '@dagrejs/dagre'
 import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
@@ -25,6 +24,7 @@ import {
 import { isGroupInstance, isImplicitNode } from '../node/node'
 import { useEditorStore } from './store'
 import { parseGroupId } from './helpers'
+import { useBranchDrop } from '../composables/useBranchDrop'
 
 import type { Node as DagreNode } from '@dagrejs/dagre'
 import type { Connection, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
@@ -221,7 +221,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       branchGroups,
       commit,
       reset,
+      groupMapById,
     } = editorStore
+    const { isGroupId } = branchGroups
 
     function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
       const sourceNode = getNodeById(edge.source)
@@ -234,31 +236,34 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
     }
 
-    const branchLayout = useBranchLayout({
-      phase,
-      readonly,
-      flowId,
-    })
     const {
-      groupMapById,
       groupsByOwner,
       memberGroupMap,
       groupNodes,
       branchEdges,
-      isGroupId,
       isBranchEdgeId,
       updateGroupLayout,
       translateGroupTree,
-      setDraggingNode,
-      setPanelDragActive,
-      panelDragActive,
-      activeGroupId,
-      setActiveGroupByPoint,
-      setActiveGroupForRect,
-      clearActiveGroup,
+      updateDragging,
       getNodeDepth,
       maxGroupDepth,
-    } = branchLayout
+      waitForLayoutFlush,
+    } = useBranchLayout({
+      phase,
+      readonly,
+      flowId,
+    })
+
+    const {
+      activeGroupId,
+      start: startGroupDrag,
+      updateActiveGroup,
+      finish: finishGroupDrag,
+    } = useBranchDrop({
+      phase,
+      groupMapById,
+      getNodeDepth,
+    })
 
     const nodes = computed(() =>
       state.value.nodes
@@ -510,8 +515,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       if (isGroupId(node.id)) {
         const groupId = node.id as GroupId
-        setDraggingNode(groupId)
-        clearActiveGroup()
+        updateDragging(groupId)
+        updateActiveGroup(undefined)
         const group = groupMapById.value.get(groupId)
         if (!group) return
 
@@ -532,7 +537,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
 
       const nodeId = node.id as NodeId
-      setDraggingNode(nodeId)
+      startGroupDrag('canvas')
+      updateDragging(nodeId)
       const parentId = node.parentNode
 
       let absolutePosition: XYPosition = { ...node.position }
@@ -555,7 +561,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         width: node.dimensions?.width ?? 0,
         height: node.dimensions?.height ?? 0,
       }
-      setActiveGroupForRect(rect)
+      updateActiveGroup(rect)
 
       // Update group layout in real-time when dragging member nodes
       // This allows the group to expand/shrink as members move
@@ -573,14 +579,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       if (isGroupId(node.id)) {
         const groupId = node.id as GroupId
-        setDraggingNode(undefined)
+        updateDragging()
         historyCommit(`drag-group:${groupId}`)
         return
       }
 
       const nodeId = node.id as NodeId
-      const dropTargetGroupId = activeGroupId.value
-      setDraggingNode(undefined)
+      updateDragging()
       const parentId = node.parentNode
 
       let absolutePosition: XYPosition = { ...node.position }
@@ -605,12 +610,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         updateGroupLayout(owningGroupId)
       }
 
-      if (dropTargetGroupId) {
-        const { nodeId: ownerId, branch } = parseGroupId(dropTargetGroupId)
-        branchGroups.addMember(ownerId, branch, nodeId, { commit: false })
-      }
-
-      clearActiveGroup()
+      attachNodeToActiveGroup(nodeId)
+      finishGroupDrag()
 
       historyCommit(`drag-node:${nodeId}`)
     })
@@ -891,7 +892,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         )
         await nextTick() // <- Wait for updates on VueFlow internals
         updateGroupLayout(group.id, false)
-        await nextTick() // <- Wait for `layoutFlushPromise` in useBranchLayout
+        await waitForLayoutFlush() // ensure pending group layout writes applied before next iteration
       }
 
       const rootNodes: Array<NodeInstance | GroupInstance> = nodeMap.values().toArray()
@@ -1016,13 +1017,24 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
     }
 
+    function attachNodeToActiveGroup(nodeId: NodeId, options?: { commitTag?: string }) {
+      const targetGroupId = activeGroupId.value
+      if (!targetGroupId) return false
+      const { nodeId: ownerId, branch } = parseGroupId(targetGroupId)
+      const changed = branchGroups.addMember(ownerId, branch, nodeId, { commit: false })
+      if (changed && options?.commitTag) {
+        historyCommit(options.commitTag)
+      }
+      updateActiveGroup(undefined)
+      return changed
+    }
+
     const groupDrop = {
       activeGroupId,
-      panelDragActive,
-      setPanelDragActive,
-      updateActiveGroupByPoint: setActiveGroupByPoint,
-      updateActiveGroupForRect: setActiveGroupForRect,
-      clearActiveGroup,
+      beginPanelDrag: () => startGroupDrag('panel'),
+      endPanelDrag: finishGroupDrag,
+      updateActiveGroup,
+      attachNodeToActiveGroup,
     }
 
     return {

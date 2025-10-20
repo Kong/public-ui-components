@@ -25,7 +25,7 @@ import { createInjectionState } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { IMPLICIT_NODE_META_MAP, isImplicitName, isImplicitType } from '../node/node'
 import { clone, createId, findFieldById, generateNodeName, getBranchesFromMeta, makeGroupName } from './helpers'
-import { createBranchGroupManager } from './branch-group-manager'
+import { createBranchGroups } from './branch-groups'
 import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
@@ -131,7 +131,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       () => new Set(state.value.nodes.map((node) => node.name)),
     )
 
-    const branchGroups = createBranchGroupManager({ state, groupMapById, getNodeById, history })
+    const branchGroups = createBranchGroups({ state, groupMapById, getNodeById, history })
 
     // validators bound to current maps
     const {

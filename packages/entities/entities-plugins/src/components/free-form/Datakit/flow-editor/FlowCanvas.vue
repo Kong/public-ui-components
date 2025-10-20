@@ -92,7 +92,6 @@ import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
 import GroupNode from './node/GroupNode.vue'
 import { provideFlowStore } from './store/flow'
-import { parseGroupId } from './store/helpers'
 
 import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/core/dist/style.css'
@@ -146,9 +145,15 @@ const {
   readonly: mode !== 'edit',
 })
 
-const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode, branchGroups, commit: commitHistory } = editorStore
+const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode, commit: commitHistory } = editorStore
 const { project, vueFlowRef, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
-const { activeGroupId, setPanelDragActive, updateActiveGroupByPoint, clearActiveGroup } = groupDrop
+const {
+  activeGroupId,
+  beginPanelDrag,
+  endPanelDrag,
+  updateActiveGroup,
+  attachNodeToActiveGroup,
+} = groupDrop
 
 const disableDrop = ref(false)
 
@@ -177,7 +182,7 @@ function onDragOver(e: DragEvent) {
     y: e.clientY - top,
   })
 
-  updateActiveGroupByPoint(projected)
+  updateActiveGroup(projected)
 }
 
 function onDrop(e: DragEvent) {
@@ -210,26 +215,22 @@ function onDrop(e: DragEvent) {
     },
   }
 
-  const dropTargetGroupId = activeGroupId.value
   const nodeId = addNode(newNode, false)
 
   if (!nodeId) {
-    setPanelDragActive(false)
-    clearActiveGroup()
+    endPanelDrag()
     return
   }
 
-  if (dropTargetGroupId) {
-    const { nodeId: ownerId, branch } = parseGroupId(dropTargetGroupId)
-    branchGroups.addMember(ownerId, branch, nodeId, { commit: false })
+  const tag = `drag-create:${nodeId}`
+  const joined = attachNodeToActiveGroup(nodeId, { commitTag: tag })
+  if (!joined) {
+    commitHistory(tag)
   }
-
-  commitHistory(`drag-create:${nodeId}`)
 
   selectNode(nodeId)
   propertiesPanelOpen.value = true
-  clearActiveGroup()
-  setPanelDragActive(false)
+  endPanelDrag()
 }
 
 async function onClickAutoLayout() {
@@ -270,7 +271,7 @@ if (mode === 'edit') {
     const format = e.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
     if (!format) return
 
-    setPanelDragActive(true)
+    beginPanelDrag()
 
     if (phase === 'response') {
       const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
@@ -292,8 +293,7 @@ if (mode === 'edit') {
   }
 
   useEventListener('dragend', () => {
-    setPanelDragActive(false)
-    clearActiveGroup()
+    endPanelDrag()
     if (phase === 'response') {
       resetMask()
     }

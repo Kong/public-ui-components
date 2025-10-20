@@ -1,8 +1,8 @@
 /**
- * Branch Group Manager
+ * Branch group helpers
  *
  * Manages logical groups of nodes organized under branch nodes (e.g., "then", "else").
- * Responsible for:
+ * Responsibilities include:
  * - Validating membership (phase compatibility, cycle detection, type checking)
  * - Synchronizing node config with group state
  * - Managing group lifecycle (create, update, delete)
@@ -11,8 +11,6 @@
  * Groups are stored in two places:
  * 1. Node config: `node.config[branchName]` contains NodeId[]
  * 2. State groups: `state.groups` contains GroupInstance[] with layout info
- *
- * @module branch-group-manager
  */
 
 import { computed } from 'vue'
@@ -37,7 +35,7 @@ export interface CommitOptions {
   tag?: string
 }
 
-interface BranchGroupManagerContext {
+interface CreateBranchGroupsContext {
   state: Ref<EditorState>
   groupMapById: ComputedRef<Map<GroupId, GroupInstance>>
   getNodeById: (id: NodeId) => NodeInstance | undefined
@@ -58,12 +56,10 @@ function readMembers(node: NodeInstance, branch: BranchName): NodeId[] {
 }
 
 /**
- * Creates a manager for branch group operations.
- * Handles membership validation, cycle detection, and group lifecycle.
- *
- * @returns An object with methods for managing branch groups
+ * Creates helpers for branch group operations.
+ * Provides computed lookups, lifecycle helpers, and validation utilities.
  */
-export function createBranchGroupManager({ state, groupMapById, getNodeById, history }: BranchGroupManagerContext) {
+export function createBranchGroups({ state, groupMapById, getNodeById, history }: CreateBranchGroupsContext) {
   /**
    * Cached membership index for O(1) lookups.
    * Automatically recomputes when groups change.
@@ -77,6 +73,27 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
       }
     }
     return index
+  })
+
+  const memberGroupMap = computed(() => {
+    const map = new Map<NodeId, GroupInstance>()
+    for (const group of state.value.groups) {
+      for (const memberId of group.memberIds) {
+        map.set(memberId, group)
+      }
+    }
+    return map
+  })
+
+  const groupsByOwner = computed(() => {
+    const map = new Map<NodeId, GroupInstance[]>()
+    for (const group of state.value.groups) {
+      if (!map.has(group.ownerId)) {
+        map.set(group.ownerId, [])
+      }
+      map.get(group.ownerId)!.push(group)
+    }
+    return map
   })
 
   const combinedEdges = computed(() => getCombinedEdges(state.value.edges, state.value.groups))
@@ -313,16 +330,42 @@ export function createBranchGroupManager({ state, groupMapById, getNodeById, his
     setMembers(membership.ownerId, membership.branch, nextMembers, { commit: false })
   }
 
+  function getNodeDepth(nodeId: NodeId): number {
+    let depth = 0
+    const visited = new Set<GroupId>()
+    let currentGroup = memberGroupMap.value.get(nodeId)
+    while (currentGroup && !visited.has(currentGroup.id)) {
+      depth += 1
+      visited.add(currentGroup.id)
+      currentGroup = memberGroupMap.value.get(currentGroup.ownerId)
+    }
+    return depth
+  }
+
+  function getGroupDepth(groupId: GroupId): number {
+    const group = groupMapById.value.get(groupId)
+    if (!group) return 0
+    return getNodeDepth(group.ownerId)
+  }
+
+  function isGroupId(id?: string): id is GroupId {
+    if (!id) return false
+    return groupMapById.value.has(id as GroupId)
+  }
+
   return {
+    memberGroupMap,
+    groupsByOwner,
+    findMembership,
+    getMembers,
+    wouldCreateCycle,
     setMembers,
     prepareMembers,
     addMember,
     dropTarget,
     clear,
-    getMembers,
-    findMembership,
-    wouldCreateCycle,
+    getNodeDepth,
+    getGroupDepth,
+    isGroupId,
   }
 }
-
-export type BranchGroupManager = ReturnType<typeof createBranchGroupManager>

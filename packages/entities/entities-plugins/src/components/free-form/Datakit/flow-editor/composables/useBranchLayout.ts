@@ -23,24 +23,23 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
   const editorStore = useEditorStore()
   const {
     state,
+    groupMapById,
     getNodeById,
     moveNode,
     moveGroup,
     setGroupLayout,
     commit,
+    branchGroups,
   } = editorStore
+  const {
+    memberGroupMap,
+    groupsByOwner,
+    getNodeDepth,
+    getGroupDepth,
+  } = branchGroups
 
   const draggingNodeId = ref<NodeId | GroupId>()
-  const panelDragActive = ref(false)
-  const activeGroupId = ref<GroupId>()
 
-  const groupMapById = computed(() =>
-    new Map<GroupId, GroupInstance>(state.value.groups.map(group => [group.id, group])),
-  )
-
-  const groupIdSet = computed(() => new Set(state.value.groups.map(group => group.id)))
-
-  const isGroupId = (id?: string): id is GroupId => !!id && groupIdSet.value.has(id as GroupId)
   const isBranchEdgeId = (id?: string) => !!id && id.startsWith('branch:')
 
   function getGroupMembers(group: GroupInstance): NodeInstance[] {
@@ -54,46 +53,29 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     return resolved
   }
 
-  const memberGroupMap = computed(() => {
+  const memberGroups = computed(() => {
     const map = new Map<NodeId, GroupInstance>()
-    for (const group of state.value.groups) {
-      if (group.phase !== phase) continue
-      if (!group.position) continue
-      const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
-      if (!members.length) continue
-      for (const member of members) {
-        map.set(member.id, group)
-      }
-    }
+    memberGroupMap.value.forEach((group, nodeId) => {
+      if (group.phase !== phase) return
+      if (!group.position) return
+      const member = getNodeById(nodeId)
+      if (!member) return
+      if (member.phase !== phase || member.hidden) return
+      map.set(nodeId, group)
+    })
     return map
   })
 
-  const groupsByOwner = computed(() => {
+  const groupsByOwnerInPhase = computed(() => {
     const map = new Map<NodeId, GroupInstance[]>()
-    for (const group of state.value.groups) {
-      if (!map.has(group.ownerId)) {
-        map.set(group.ownerId, [])
+    groupsByOwner.value.forEach((groupList, ownerId) => {
+      const filtered = groupList.filter(group => group.phase === phase)
+      if (filtered.length > 0) {
+        map.set(ownerId, filtered)
       }
-      map.get(group.ownerId)!.push(group)
-    }
+    })
     return map
   })
-
-  function getNodeDepth(nodeId: NodeId): number {
-    let depth = 0
-    const visited = new Set<GroupId>()
-    let currentGroup = memberGroupMap.value.get(nodeId)
-    while (currentGroup && !visited.has(currentGroup.id)) {
-      depth += 1
-      visited.add(currentGroup.id)
-      currentGroup = memberGroupMap.value.get(currentGroup.ownerId)
-    }
-    return depth
-  }
-
-  function getGroupDepth(group: GroupInstance): number {
-    return getNodeDepth(group.ownerId)
-  }
 
   const groupNodes = computed(() => {
     const results: Array<Node<FlowGroupNodeData>> = []
@@ -107,7 +89,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       if (!position || !dimensions) continue
 
       const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
-      const depth = getGroupDepth(group)
+      const depth = getGroupDepth(group.id)
 
       results.push({
         id: group.id,
@@ -132,58 +114,13 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     let max = 0
     for (const group of state.value.groups) {
       if (group.phase !== phase) continue
-      const depth = getGroupDepth(group)
+      const depth = getGroupDepth(group.id)
       if (depth > max) {
         max = depth
       }
     }
     return max
   })
-
-  function containsPoint(group: GroupInstance, point: XYPosition) {
-    const position = group.position
-    const dimensions = group.dimensions
-    if (!position || !dimensions) return false
-    return (
-      point.x >= position.x
-      && point.y >= position.y
-      && point.x <= position.x + dimensions.width
-      && point.y <= position.y + dimensions.height
-    )
-  }
-
-  function findDeepestGroup(point: XYPosition): GroupInstance | undefined {
-    let result: GroupInstance | undefined
-    let depth = -1
-    for (const group of state.value.groups) {
-      if (group.phase !== phase) continue
-      if (!containsPoint(group, point)) continue
-      const d = getGroupDepth(group)
-      if (d > depth) {
-        result = group
-        depth = d
-      }
-    }
-    return result
-  }
-
-  function clearActiveGroup() {
-    activeGroupId.value = undefined
-  }
-
-  function setActiveGroupByPoint(point: XYPosition) {
-    if (!panelDragActive.value && !draggingNodeId.value) return
-    const group = findDeepestGroup(point)
-    activeGroupId.value = group?.id
-  }
-
-  function setActiveGroupForRect(rect: { x: number, y: number, width: number, height: number }) {
-    const center = {
-      x: rect.x + rect.width / 2,
-      y: rect.y + rect.height / 2,
-    }
-    setActiveGroupByPoint(center)
-  }
 
   const branchEdges = computed(() => {
     const edges: FlowEdge[] = []
@@ -198,7 +135,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
       if (!members.length) continue
 
-      const depth = Math.max(getNodeDepth(owner.id), getGroupDepth(group)) + maxGroupDepth.value + 1
+      const depth = Math.max(getNodeDepth(owner.id), getGroupDepth(group.id)) + maxGroupDepth.value + 1
 
       const edge: FlowEdge = {
         id: `branch:${group.id}`,
@@ -335,7 +272,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       if (!changed) continue
       const group = groupMapById.value.get(id)
       if (!group) continue
-      const parent = memberGroupMap.value.get(group.ownerId)
+      const parent = memberGroups.value.get(group.ownerId)
       if (parent) {
         pendingParentUpdates.set(parent.id, { commit })
       }
@@ -419,7 +356,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
           visitedNodes.add(member.id)
         }
 
-        const childGroups = groupsByOwner.value.get(member.id) ?? []
+        const childGroups = groupsByOwnerInPhase.value.get(member.id) ?? []
         for (const child of childGroups) {
           if (visitedGroups.has(child.id)) continue
 
@@ -458,7 +395,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     if (memberIds.some(id => dragging === id)) return true
 
     for (const memberId of memberIds) {
-      const childGroups = groupsByOwner.value.get(memberId)
+      const childGroups = groupsByOwnerInPhase.value.get(memberId) ?? []
       if (childGroups?.some(group => group.id === dragging)) {
         return true
       }
@@ -520,33 +457,18 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
   )
 
   return {
-    groupMapById,
-    groupsByOwner,
-    memberGroupMap,
+    groupsByOwner: groupsByOwnerInPhase,
+    memberGroupMap: memberGroups,
     groupNodes,
     branchEdges,
-    isGroupId,
     isBranchEdgeId,
     updateGroupLayout,
     translateGroupTree,
-    setDraggingNode: (id?: NodeId | GroupId) => {
+    updateDragging: (id?: NodeId | GroupId) => {
       draggingNodeId.value = id
-      if (!id && !panelDragActive.value) {
-        clearActiveGroup()
-      }
     },
-    setPanelDragActive(active: boolean) {
-      panelDragActive.value = active
-      if (!active && !draggingNodeId.value) {
-        clearActiveGroup()
-      }
-    },
-    panelDragActive,
-    activeGroupId,
-    setActiveGroupByPoint,
-    setActiveGroupForRect,
-    clearActiveGroup,
     getNodeDepth,
     maxGroupDepth,
+    waitForLayoutFlush: () => layoutFlushPromise ?? Promise.resolve(),
   }
 }
