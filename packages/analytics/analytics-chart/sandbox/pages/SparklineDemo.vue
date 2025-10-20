@@ -25,6 +25,7 @@
               :chart-key="!unsynced ? row.name : undefined"
               :datasets="row.sparkline"
               :disable-tooltip="disableTooltip"
+              :enable-brushing="enableBrushing"
               :group-key="rowGroups[rowKey] ? 'a' : 'b'"
               :min-stamp="minimumDate"
               :point-render-count="pointRenderCount"
@@ -53,6 +54,12 @@
             />
             <div>When synced, all charts with the same group name will share bounds and render points. This effectively forces them all to be drawn at the same scale. If not synced, the data will be drawn to fill the available space, regardless of scale. To easily see the difference visually in the Y scale, note that when not synced every graph will draw their largest point at the top of the graph, regardless if it's as large as the largest value in the others. In contrast, while synced, only those graphs with a point value that's the largest across all graphs will draw it at the top of its graph</div>
           </div>
+
+          <KInputSwitch
+            v-model="enableBrushing"
+            :disabled="unsynced"
+            :label="enableBrushing ? 'Link brushing enabled' : 'Link brushing disabled (default)'"
+          />
 
           <KInputSwitch
             v-model="disableTooltip"
@@ -155,6 +162,7 @@ const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 // sparkline settings
 const pointRenderCount = ref<number>(24)
 const unsynced = ref(false)
+const enableBrushing = ref(false)
 const disableTooltip = ref(false)
 const showLabel = ref(false)
 const setTitle = ref(false)
@@ -239,7 +247,7 @@ const preferences = computed(() => ({
 }))
 
 const fetcherCacheKey = computed<string>(() => {
-  return `key-${skipChance.value}-${pointsPerHour.value}-${hours.value}-${datasetCount.value}-${useColor.value}-${pointRenderCount.value}-${unsynced.value}-${rowGroups.value.join('.')}`
+  return `key-${skipChance.value}-${pointsPerHour.value}-${hours.value}-${datasetCount.value}-${useColor.value}-${pointRenderCount.value}-${unsynced.value}-${rowGroups.value.join('.')}-${enableBrushing.value}`
 })
 
 const names = ['Anglerfish', 'Bobcat', 'Caracal', 'Duck', 'Eagle', 'Fox', 'Goat', 'Haddock', 'Ibex', 'Jackal', 'Kestrel', 'Lemur', 'Mandrill', 'Newt', 'Okapi', 'Puffin', 'Quail', 'Raccoon', 'Sable', 'Tapir', 'Uakari', 'Vole', 'Wallaby', 'Xerus', 'Yak', 'Zebra']
