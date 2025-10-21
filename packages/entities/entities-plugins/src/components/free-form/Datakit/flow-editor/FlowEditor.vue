@@ -49,7 +49,7 @@ const emit = defineEmits<{
   error: [msg: string]
 }>()
 
-function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: DatakitConfig['resources']) {
+function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: DatakitConfig['resources'], partialId?: string) {
   const nextConfig = { ...formData.config, nodes: configNodes }
   if (resources !== undefined) nextConfig.resources = resources
   const nextUIData: DatakitUIData = {
@@ -58,6 +58,7 @@ function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: D
   }
   formData.config = nextConfig
   formData.__ui_data = nextUIData
+  if (partialId !== undefined) formData.partials = [{ id: partialId }]
   emit('change', nextConfig, nextUIData)
 }
 

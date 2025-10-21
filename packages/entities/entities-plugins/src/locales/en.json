@@ -733,6 +733,17 @@
                 "name_required_error": "Vault name is required",
                 "edit": "Edit",
                 "delete": "Delete"
+              },
+              "cache": {
+                "title": "Cache configuration",
+                "add_button": "Add cache configuration",
+                "strategy_options": {
+                  "memory": "Memory",
+                  "redis": "Redis"
+                },
+                "select_redis_configuration": "Select a shared configuration",
+                "inline_config": "Inline config",
+                "inline_config_preview": "You are using a dedicated Redis configuration, This is a preview of your current setup, please edit it in code editor"
               }
             }
           },

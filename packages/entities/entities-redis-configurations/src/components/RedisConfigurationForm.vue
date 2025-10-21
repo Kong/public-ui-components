@@ -491,6 +491,14 @@ const props = defineProps({
     type: String as PropType<PartialType>,
     default: '',
   },
+  /**
+   * Disable automatic redirection to cancel route when cancel is triggered
+   */
+  disableCancelRouteRedirection: {
+    type: Boolean,
+    default: false,
+  },
+
 })
 
 const emit = defineEmits<{
@@ -640,7 +648,7 @@ const confirmEditHandler = () => {
 }
 
 const cancelHandler = (): void => {
-  if (props.config.cancelRoute) {
+  if (!props.disableCancelRouteRedirection && props.config.cancelRoute) {
     router.push(props.config.cancelRoute)
   }
   emit('cancel')

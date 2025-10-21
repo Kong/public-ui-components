@@ -376,6 +376,7 @@ export const ResourcesSchema = z.object({
 })
 
 export type Resources = z.infer<typeof ResourcesSchema>
+export type CacheConfig = z.infer<typeof CacheSchema>
 
 export const PartialsSchema = z.array(z.object({ id: z.string() }))
 
