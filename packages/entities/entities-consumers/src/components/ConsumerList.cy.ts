@@ -120,9 +120,10 @@ describe('<ConsumerList />', () => {
       ).as(params?.alias ?? 'getConsumersMultiPage')
     }
 
-    const triggerQuery = '.kong-ui-entities-consumers-list tbody tr:first-child [data-testid="dropdown-trigger"]'
-    const removeQuery = '.kong-ui-entities-consumers-list tbody tr:first-child [data-testid="action-entity-delete"]'
-    const modalQuery = 'remove-consumer-modal'
+    const actionsDropdownTriggerQuery = '.kong-ui-entities-consumers-list tbody tr:first-child [data-testid="dropdown-trigger"]'
+    const actionsDropdownPopoverQuery = '[data-testid="consumer.1-actions-dropdown-popover"]'
+    const removeActionQuery = `${actionsDropdownPopoverQuery} [data-testid="action-entity-delete"]`
+    const confirmationModalQuery = 'remove-consumer-modal'
 
     it('should show empty state and create consumer cta', () => {
       interceptKM()
@@ -523,14 +524,13 @@ describe('<ConsumerList />', () => {
           .as('vueWrapper')
 
         cy.wait('@getGroupConsumers')
-        const popoverQuery = '.kong-ui-entities-consumers-list tbody tr .popover'
 
         cy.get('.kong-ui-entities-consumers-list').should('be.visible')
-        cy.get(triggerQuery).should('be.visible')
-        cy.get(triggerQuery).click()
-        cy.get(popoverQuery).should('be.visible')
-        cy.get(removeQuery).should('be.visible')
-        cy.get(removeQuery).should('have.text', 'Remove')
+        cy.get(actionsDropdownTriggerQuery).should('be.visible')
+        cy.get(actionsDropdownTriggerQuery).click()
+        cy.get(actionsDropdownPopoverQuery).should('be.visible')
+        cy.get(removeActionQuery).should('be.visible')
+        cy.get(removeActionQuery).should('have.text', 'Remove')
       })
 
     it('should hide Remove Consumer modal when this modal emits cancel event',
@@ -553,17 +553,17 @@ describe('<ConsumerList />', () => {
 
         cy.wait('@getGroupConsumers')
 
-        cy.getTestId(modalQuery).should('not.exist')
+        cy.getTestId(confirmationModalQuery).should('not.exist')
 
-        cy.get(triggerQuery).click()
-        cy.get(removeQuery).should('be.visible').click()
+        cy.get(actionsDropdownTriggerQuery).click()
+        cy.get(removeActionQuery).should('be.visible').click()
 
-        cy.getTestId(modalQuery).should('exist')
+        cy.getTestId(confirmationModalQuery).should('exist')
 
-        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${confirmationModalQuery}"]`)
           .vm.$emit('cancel'))
 
-        cy.getTestId(modalQuery).should('not.exist')
+        cy.getTestId(confirmationModalQuery).should('not.exist')
       })
 
     it('should remove Consumer and emit remove:success event when modal emits proceed event',
@@ -588,21 +588,21 @@ describe('<ConsumerList />', () => {
 
         cy.wait('@getGroupConsumers')
 
-        cy.getTestId(modalQuery).should('not.exist')
+        cy.getTestId(confirmationModalQuery).should('not.exist')
 
-        cy.get(triggerQuery).click()
-        cy.get(removeQuery).should('be.visible').click()
+        cy.get(actionsDropdownTriggerQuery).click()
+        cy.get(removeActionQuery).should('be.visible').click()
 
-        cy.getTestId(modalQuery).should('exist')
+        cy.getTestId(confirmationModalQuery).should('exist')
 
-        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${confirmationModalQuery}"]`)
           .vm.$emit('proceed'))
 
         cy.wait('@removeGroupConsumer')
 
         cy.get('@removeSuccess').should('have.been.called')
 
-        cy.getTestId(modalQuery).should('not.exist')
+        cy.getTestId(confirmationModalQuery).should('not.exist')
       })
 
     it('should emit error event when removing fails',
@@ -627,21 +627,21 @@ describe('<ConsumerList />', () => {
 
         cy.wait('@getGroupConsumers')
 
-        cy.getTestId(modalQuery).should('not.exist')
+        cy.getTestId(confirmationModalQuery).should('not.exist')
 
-        cy.get(triggerQuery).click()
-        cy.get(removeQuery).should('be.visible').click()
+        cy.get(actionsDropdownTriggerQuery).click()
+        cy.get(removeActionQuery).should('be.visible').click()
 
-        cy.getTestId(modalQuery).should('exist')
+        cy.getTestId(confirmationModalQuery).should('exist')
 
-        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${confirmationModalQuery}"]`)
           .vm.$emit('proceed'))
 
         cy.wait('@removeGroupConsumer')
 
         cy.get('@errorSpy').should('have.been.called')
 
-        cy.getTestId(modalQuery).should('exist')
+        cy.getTestId(confirmationModalQuery).should('exist')
       })
   })
 
@@ -737,9 +737,10 @@ describe('<ConsumerList />', () => {
       ).as(params?.alias ?? 'getConsumersMultiPage')
     }
 
-    const triggerQuery = '.kong-ui-entities-consumers-list tbody tr:first-child [data-testid="dropdown-trigger"]'
-    const removeQuery = '.kong-ui-entities-consumers-list tbody tr:first-child [data-testid="action-entity-delete"]'
-    const modalQuery = 'remove-consumer-modal'
+    const actionsDropdownTriggerQuery = '.kong-ui-entities-consumers-list tbody tr:first-child [data-testid="dropdown-trigger"]'
+    const actionsDropdownPopoverQuery = '[data-testid="consumer.1-actions-dropdown-popover"]'
+    const removeActionQuery = `${actionsDropdownPopoverQuery} [data-testid="action-entity-delete"]`
+    const confirmationModalQuery = 'remove-consumer-modal'
 
     it('should show empty state and create consumer cta', () => {
       interceptKonnect()
@@ -1140,14 +1141,13 @@ describe('<ConsumerList />', () => {
           .as('vueWrapper')
 
         cy.wait('@getGroupConsumers')
-        const popoverQuery = '.kong-ui-entities-consumers-list tbody tr .popover'
 
         cy.get('.kong-ui-entities-consumers-list').should('be.visible')
-        cy.get(triggerQuery).should('be.visible')
-        cy.get(triggerQuery).click()
-        cy.get(popoverQuery).should('be.visible')
-        cy.get(removeQuery).should('be.visible')
-        cy.get(removeQuery).should('have.text', 'Remove')
+        cy.get(actionsDropdownTriggerQuery).should('be.visible')
+        cy.get(actionsDropdownTriggerQuery).click()
+        cy.get(actionsDropdownPopoverQuery).should('be.visible')
+        cy.get(removeActionQuery).should('be.visible')
+        cy.get(removeActionQuery).should('have.text', 'Remove')
       })
 
     it('should hide Remove Consumer modal when this modal emits cancel event',
@@ -1170,17 +1170,17 @@ describe('<ConsumerList />', () => {
 
         cy.wait('@getGroupConsumers')
 
-        cy.getTestId(modalQuery).should('not.exist')
+        cy.getTestId(confirmationModalQuery).should('not.exist')
 
-        cy.get(triggerQuery).click()
-        cy.get(removeQuery).should('be.visible').click()
+        cy.get(actionsDropdownTriggerQuery).click()
+        cy.get(removeActionQuery).should('be.visible').click()
 
-        cy.getTestId(modalQuery).should('exist')
+        cy.getTestId(confirmationModalQuery).should('exist')
 
-        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${confirmationModalQuery}"]`)
           .vm.$emit('cancel'))
 
-        cy.getTestId(modalQuery).should('not.exist')
+        cy.getTestId(confirmationModalQuery).should('not.exist')
       })
 
     it('should remove Consumer and emit remove:success event when modal emits proceed event',
@@ -1205,21 +1205,21 @@ describe('<ConsumerList />', () => {
 
         cy.wait('@getGroupConsumers')
 
-        cy.getTestId(modalQuery).should('not.exist')
+        cy.getTestId(confirmationModalQuery).should('not.exist')
 
-        cy.get(triggerQuery).click()
-        cy.get(removeQuery).should('be.visible').click()
+        cy.get(actionsDropdownTriggerQuery).click()
+        cy.get(removeActionQuery).should('be.visible').click()
 
-        cy.getTestId(modalQuery).should('exist')
+        cy.getTestId(confirmationModalQuery).should('exist')
 
-        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${confirmationModalQuery}"]`)
           .vm.$emit('proceed'))
 
         cy.wait('@removeGroupConsumer')
 
         cy.get('@removeSuccess').should('have.been.called')
 
-        cy.getTestId(modalQuery).should('not.exist')
+        cy.getTestId(confirmationModalQuery).should('not.exist')
       })
 
     it('should emit error event when removing fails',
@@ -1244,21 +1244,21 @@ describe('<ConsumerList />', () => {
 
         cy.wait('@getGroupConsumers')
 
-        cy.getTestId(modalQuery).should('not.exist')
+        cy.getTestId(confirmationModalQuery).should('not.exist')
 
-        cy.get(triggerQuery).click()
-        cy.get(removeQuery).should('be.visible').click()
+        cy.get(actionsDropdownTriggerQuery).click()
+        cy.get(removeActionQuery).should('be.visible').click()
 
-        cy.getTestId(modalQuery).should('exist')
+        cy.getTestId(confirmationModalQuery).should('exist')
 
-        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${modalQuery}"]`)
+        cy.get('@vueWrapper').then(wrapper => wrapper.getComponent(`[data-testid="${confirmationModalQuery}"]`)
           .vm.$emit('proceed'))
 
         cy.wait('@removeGroupConsumer')
 
         cy.get('@errorSpy').should('have.been.called')
 
-        cy.getTestId(modalQuery).should('exist')
+        cy.getTestId(confirmationModalQuery).should('exist')
       })
   })
 })

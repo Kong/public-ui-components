@@ -774,7 +774,7 @@ describe('<SniList />', () => {
 
       cy.wait('@getSnisRefetch')
       cy.get(`${l} tbody tr[data-testid="sni-20"] td[data-testid="actions"] button[data-testid="row-actions-dropdown-trigger"]`).click()
-      cy.get(`${l} tbody tr[data-testid="sni-20"] [data-testid="action-entity-delete"]`).click()
+      cy.get('[data-testid="sni-20-actions-dropdown-popover"] [data-testid="action-entity-delete"]').click()
       interceptKonnectRefetch({
         expectedOffset: 0, // after deletion, refetch should be triggered with offset 0
       })
@@ -789,7 +789,7 @@ describe('<SniList />', () => {
       cy.wait('@getSnisRefetch')
 
       cy.get(`${l} tbody tr[data-testid="sni-50"] td[data-testid="actions"] button[data-testid="row-actions-dropdown-trigger"]`).click()
-      cy.get(`${l} tbody tr[data-testid="sni-50"] [data-testid="action-entity-delete"]`).click()
+      cy.get('[data-testid="sni-50-actions-dropdown-popover"] [data-testid="action-entity-delete"]').click()
       interceptKonnectRefetch({
         expectedOffset: 30, // after deletion, refetch should be triggered with offset 30
       })
@@ -810,7 +810,7 @@ describe('<SniList />', () => {
       cy.wait('@getSnisRefetch')
 
       cy.get(`${l} tbody tr[data-testid="sni-99"] td[data-testid="actions"] button[data-testid="row-actions-dropdown-trigger"]`).click()
-      cy.get(`${l} tbody tr[data-testid="sni-99"] [data-testid="action-entity-delete"]`).click()
+      cy.get('[data-testid="sni-99-actions-dropdown-popover"] [data-testid="action-entity-delete"]').click()
       interceptKonnectRefetch({
         expectedOffset: 90, // after deletion, refetch should be triggered with offset 90
       })
