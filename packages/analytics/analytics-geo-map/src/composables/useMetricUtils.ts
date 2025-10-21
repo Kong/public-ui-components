@@ -1,7 +1,7 @@
 import { computed, type Ref } from 'vue'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
-import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import { COUNTRIES, type ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER } from '@kong/design-tokens'
 
 const MAX_LEGEND_BUCKETS = 5
@@ -53,8 +53,19 @@ export default function useMetricUtils({
   countryMetrics: Readonly<Ref<Record<string, number>>>
   metric: Readonly<Ref<ExploreAggregations>>
 }) {
-  const values = computed(() => Object.values(countryMetrics.value) as number[])
-  const datapointCount = computed(() => Object.keys(countryMetrics.value).length)
+
+  const filteredMetrics = computed(() => {
+    const metrics = { ...countryMetrics.value }
+    for (const code of Object.keys(metrics)) {
+      if (!COUNTRIES.find(c => c.code === code)) {
+        delete metrics[code]
+      }
+    }
+    return metrics
+  })
+
+  const values = computed(() => Object.values(filteredMetrics.value) as number[])
+  const datapointCount = computed(() => Object.keys(filteredMetrics.value).length)
   const buckets = computed(() => datapointCount.value < MAX_LEGEND_BUCKETS - 1 ? datapointCount.value : MAX_LEGEND_BUCKETS)
 
   const shouldTuncateMetric = computed(() => {
