@@ -18,13 +18,13 @@
 
 <script setup lang="ts">
 import { getCalloutId } from './utils'
-import { useFormShared } from '../shared/composables'
+import { useFreeformStore } from '../shared/composables'
 import ArrayField from '../shared/ArrayField.vue'
 import CalloutForm from './CalloutForm.vue'
 
 import { type RequestCalloutPlugin, type Callout, CalloutId } from './types'
 
-const { formData } = useFormShared<RequestCalloutPlugin>()
+const { formData } = useFreeformStore<RequestCalloutPlugin>()
 
 function addCallout() {
   const latest = formData.config!.callouts[formData.config!.callouts.length - 1]

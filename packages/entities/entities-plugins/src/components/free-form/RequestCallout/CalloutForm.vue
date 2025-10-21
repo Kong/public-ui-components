@@ -39,7 +39,7 @@
 import { computed, watch } from 'vue'
 
 import { toSelectItems } from '../shared/utils'
-import { useFormShared } from '../shared/composables'
+import { useFreeformStore } from '../shared/composables'
 import EnumField from '../shared/EnumField.vue'
 import ObjectField from '../shared/ObjectField.vue'
 
@@ -51,7 +51,7 @@ const props = defineProps<{
   fieldName: string
 }>()
 
-const { formData } = useFormShared<RequestCalloutPlugin>()
+const { formData } = useFreeformStore<RequestCalloutPlugin>()
 
 const dependableCallouts = computed(() => {
   const { callouts } = formData.config!

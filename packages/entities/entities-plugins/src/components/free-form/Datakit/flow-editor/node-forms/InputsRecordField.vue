@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useFormShared } from '../../../shared/composables'
+import { useFreeformStore } from '../../../shared/composables'
 import ObjectField from '../../../shared/ObjectField.vue'
 import type { RecordFieldSchema } from '../../../../../types/plugins/form-schema'
 import EnumField from '../../../shared/EnumField.vue'
@@ -36,7 +36,7 @@ defineEmits<{
   'change:inputs': [fieldName: FieldName, fieldValue: IdConnection | null]
 }>()
 
-const { getSchema } = useFormShared()
+const { getSchema } = useFreeformStore()
 const { i18n } = useI18n()
 
 const childFieldNames = computed(() => {
