@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.107.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.106.1...@kong-ui-public/entities-plugins@9.107.0) (2025-10-21)
+
+
+### Features
+
+* add cache node support for datakit ([#2573](https://github.com/Kong/public-ui-components/issues/2573)) ([35d19fb](https://github.com/Kong/public-ui-components/commit/35d19fb8431fbb69507178207745f6b3cabcc52b))
+
+
+
+
+
 ## [9.106.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.106.0...@kong-ui-public/entities-plugins@9.106.1) (2025-10-17)
 
 
