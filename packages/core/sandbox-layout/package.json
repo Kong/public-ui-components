@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/sandbox-layout",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "type": "module",
   "main": "./dist/sandbox-layout.umd.js",
   "module": "./dist/sandbox-layout.es.js",

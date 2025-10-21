@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-consumer-credentials",
-  "version": "3.6.9",
+  "version": "3.6.10",
   "type": "module",
   "main": "./dist/entities-consumer-credentials.umd.js",
   "module": "./dist/entities-consumer-credentials.es.js",

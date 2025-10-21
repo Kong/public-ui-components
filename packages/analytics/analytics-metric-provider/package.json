@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-metric-provider",
-  "version": "10.1.14",
+  "version": "10.1.15",
   "type": "module",
   "main": "./dist/vitals-metric-provider.umd.js",
   "module": "./dist/vitals-metric-provider.es.js",

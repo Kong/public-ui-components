@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-keys",
-  "version": "3.10.9",
+  "version": "3.10.10",
   "type": "module",
   "main": "./dist/entities-keys.umd.js",
   "module": "./dist/entities-keys.es.js",

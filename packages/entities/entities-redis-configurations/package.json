@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-redis-configurations",
-  "version": "1.4.13",
+  "version": "1.4.14",
   "type": "module",
   "main": "./dist/entities-redis-configurations.umd.js",
   "module": "./dist/entities-redis-configurations.es.js",
