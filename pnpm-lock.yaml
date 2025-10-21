@@ -1020,6 +1020,9 @@ importers:
       '@kong-ui-public/entities-vaults':
         specifier: workspace:^
         version: link:../entities-vaults
+      '@kong-ui-public/forms':
+        specifier: workspace:^
+        version: link:../../core/forms
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
