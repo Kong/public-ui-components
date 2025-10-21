@@ -11,10 +11,10 @@ import type { RedisConfigurationDTO } from '../types'
 import type { SelectItem } from '@kong/kongponents'
 
 export function useRedisConfigurationSelector(options: {
-  redisType?: 'redis-ce' | 'redis-ee' | 'all' // q: is the `all` option needed?
+  redisType?: 'redis-ce' | 'redis-ee'
 }) {
   const {
-    redisType = 'all',
+    redisType = 'redis-ce',
   } = options
 
   const pageSize = '1000' // the API returns all partials, so we have to set a high page size to filter them on the frontend
@@ -42,11 +42,8 @@ export function useRedisConfigurationSelector(options: {
       // this is needed because the API returns all partials, not just redis configurations.
       .filter(partial => partial.type === 'redis-ce' || partial.type === 'redis-ee')
 
-    if (redisType !== 'all') {
-      // filter redis configs by redis type supported by the plugin
-      return configs.filter((el) => el.type === redisType)
-    }
-    return configs
+    // filter redis configs by redis type supported by the plugin
+    return configs.filter((el) => el.type === redisType)
   })
 
   onBeforeMount(() => {

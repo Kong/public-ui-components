@@ -211,7 +211,7 @@ async function highlight({ codeElement, language, code }: CodeBlockEventData) {
 <style lang="scss" scoped>
 .dk-cache-panel {
   .add-button {
-    margin: $kui-space-40 0;
+    margin-top: $kui-space-40;
   }
 
   .cache-item {
