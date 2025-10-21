@@ -10,7 +10,20 @@
       @fetch:error="(err: any) => $emit('fetch:error', err)"
       @fetch:success="(entity: any) => $emit('fetch:success', entity)"
       @loading="(val: boolean) => $emit('loading', val)"
-    />
+    >
+      <template #config="slotProps">
+        <ConfigCardItem
+          v-for="propKey in Object.keys(getPropValue('rowValue', slotProps) || {})"
+          :key="propKey"
+          :item="{
+            key: propKey,
+            value: getPropItemValue(propKey, slotProps),
+            label: getMetadataLabel(propKey),
+            type: (propKey === 'token' || propKey === 'approle_secret_id') ? ConfigurationSchemaType.Redacted : ConfigurationSchemaType.Text,
+          }"
+        />
+      </template>
+    </EntityBaseConfigCard>
   </div>
 </template>
 
@@ -19,7 +32,10 @@ import {
   EntityBaseConfigCard,
   ConfigurationSchemaSection,
   ConfigurationSchemaType,
+  ConfigCardItem,
   SupportedEntityType,
+  useStringHelpers,
+  useHelpers,
 } from '@kong-ui-public/entities-shared'
 import type { AxiosError } from 'axios'
 import type { PropType } from 'vue'
@@ -69,6 +85,8 @@ const props = defineProps({
 const fetchUrl = computed((): string => endpoints.form[props.config?.app]?.edit)
 
 const { i18n: { t } } = composables.useI18n()
+const { convertKeyToTitle } = useStringHelpers()
+const { getPropValue } = useHelpers()
 
 const configSchema = ref<VaultConfigurationSchema>({
   id: {},
@@ -93,4 +111,19 @@ const configSchema = ref<VaultConfigurationSchema>({
     type: ConfigurationSchemaType.Json,
   },
 })
+
+const getPropItemValue = (propKey: string, slotProps?: Record<string, any>) => {
+  const propValue = getPropValue('rowValue', slotProps)
+
+  if (propValue) {
+    return propValue[propKey]
+  }
+
+  return undefined
+}
+
+const getMetadataLabel = (propKey: string) => {
+  // @ts-ignore - TODO: Fix type interface
+  return configSchema.value?.[propKey as keyof typeof configSchema.value]?.label || convertKeyToTitle(propKey)
+}
 </script>
