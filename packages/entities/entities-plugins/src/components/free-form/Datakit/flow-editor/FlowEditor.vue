@@ -38,7 +38,7 @@ import type { ConfigNode, DatakitConfig, DatakitPluginData, DatakitUIData, UINod
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData } = useFreeformStore<DatakitPluginData>()
+const { formData, setFormData } = useFreeformStore<DatakitPluginData>()
 
 const { isEditing } = defineProps<{
   isEditing?: boolean
@@ -53,12 +53,15 @@ function onChange(configNodes: ConfigNode[], uiNodes: UINode[], resources: Datak
   const nextConfig = { ...formData.config, nodes: configNodes }
   if (resources !== undefined) nextConfig.resources = resources
   const nextUIData = { ...formData.__ui_data, nodes: uiNodes }
-  formData.config = nextConfig
-  formData.__ui_data = nextUIData
-  emit('change', nextConfig, nextUIData)
+  setFormData({
+    ...formData,
+    config: nextConfig,
+    __ui_data: nextUIData,
+  })
+  emit('change', nextConfig as DatakitConfig, nextUIData)
 }
 
-const { modalOpen, setPendingFitView } = provideEditorStore(formData, {
+const { modalOpen, setPendingFitView } = provideEditorStore(formData as DatakitPluginData, {
   onChange,
   isEditing,
 })

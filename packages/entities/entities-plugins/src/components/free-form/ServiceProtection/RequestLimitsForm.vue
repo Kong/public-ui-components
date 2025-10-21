@@ -138,7 +138,7 @@ interface UseCase {
   }
 }
 
-const { formData, getSelectItems, getSchema } = useFreeformStore<FormData>()
+const { formData, setFormData, getSelectItems, getSchema } = useFreeformStore<FormData>()
 
 const requestLimits = computed<RequestLimit[]>(() => {
   const modelValue = formData.config?.limit?.map((limit, index) => {
@@ -160,20 +160,38 @@ const { getKey } = useItemKeys('request-limits', requestLimits)
 const addRequestLimit = (index: number) => {
   selectedUseCase.value = undefined
   if (!formData.config) return
-  if (!formData.config.limit?.length) {
-    formData.config.limit = [null]
-  }
-  if (!formData.config.window_size?.length) {
-    formData.config.window_size = [null]
-  }
-  formData.config.limit.splice(index + 1, 0, null)
-  formData.config.window_size.splice(index + 1, 0, null)
+  setFormData(() => {
+    const newLimit = formData.config!.limit
+      ? [...formData.config!.limit]
+      : []
+    newLimit.splice(index + 1, 0, null)
+
+    const newWindowSize = formData.config!.window_size
+      ? [...formData.config!.window_size]
+      : []
+    newWindowSize.splice(index + 1, 0, null)
+
+    return {
+      ...formData,
+      config: {
+        ...formData.config,
+        limit: newLimit,
+        window_size: newWindowSize,
+      },
+    }
+  })
 }
 
 const removeRequestLimit = (index: number) => {
   if (!formData.config) return
-  formData.config.limit!.splice(index, 1)
-  formData.config.window_size!.splice(index, 1)
+  setFormData({
+    ...formData,
+    config: {
+      ...formData.config,
+      limit: formData.config.limit!.filter((_, i) => i !== index),
+      window_size: formData.config.window_size!.filter((_, i) => i !== index),
+    },
+  })
 }
 
 const windowTypePath = 'config.window_type'
@@ -258,15 +276,27 @@ const toggleUseCase = (useCase: UseCase, useCaseKey: string) => {
     nextTick(() => {
       selectedUseCase.value = undefined
     })
-    formData.config!.limit = []
-    formData.config!.window_size = []
+    setFormData({
+      ...formData,
+      config: {
+        ...formData.config,
+        limit: [],
+        window_size: [],
+      },
+    })
     return
   }
   nextTick(() => {
     selectedUseCase.value = useCaseKey
   })
-  formData.config!.limit = [useCase.config.limit]
-  formData.config!.window_size = [useCase.config.window_size]
+  setFormData({
+    ...formData,
+    config: {
+      ...formData.config,
+      limit: formData.config!.limit,
+      window_size: formData.config!.window_size,
+    },
+  })
 }
 </script>
 

@@ -51,7 +51,7 @@ const props = defineProps<{
   fieldName: string
 }>()
 
-const { formData } = useFreeformStore<RequestCalloutPlugin>()
+const { formData, setFormData } = useFreeformStore<RequestCalloutPlugin>()
 
 const dependableCallouts = computed(() => {
   const { callouts } = formData.config!
@@ -67,14 +67,23 @@ const dependsOnItems = computed<SelectItem[]>(() => {
   return dependableCallouts.value.map(({ [CalloutId]: id, name }) => ({ value: id as string, label: name }))
 })
 
-const callout = computed(() => formData.config!.callouts[props.index])
-
 // remove depends_on values that are not in the dependsOnItems
-// try to mutate the array instead of replacing it
 watch(dependsOnItems, () => {
-  callout.value.depends_on = callout.value.depends_on.filter((name) =>
-    dependsOnItems.value.some((item) => item.value === name),
-  )
+  setFormData({
+    ...formData,
+    config: {
+      ...formData.config,
+      callouts: formData.config!.callouts.map((c, i) => {
+        if (i !== props.index) return c
+        return {
+          ...c,
+          depends_on: c.depends_on?.filter((name) =>
+            dependsOnItems.value.some((item) => item.value === name),
+          ),
+        }
+      }),
+    },
+  })
 })
 
 </script>

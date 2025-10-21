@@ -84,7 +84,7 @@ const emit = defineEmits<{
   (e: 'update:property-key', value: string): void
 }>()
 
-const { formData } = useFreeformStore<{ property: string | null }>()
+const { formData, setFormData } = useFreeformStore<{ property: string | null }>()
 
 const lastPropertyValueWithoutKey = ref<string | null>(getPropertyWithoutKey(formData.property))
 
@@ -117,9 +117,10 @@ function handleKeyChange(value: string | undefined) {
 
   if (!prefix) return
 
-  formData.property = prefix + value
-  props.validators.key.handleChange(formData.property)
-  emit('update:property-key', formData.property)
+  const newProperty = prefix + value
+  setFormData({ ...formData, property: newProperty })
+  props.validators.key.handleChange(newProperty)
+  emit('update:property-key', newProperty)
 }
 
 function handleSelectChange(item: SelectItem<string> | null) {
@@ -128,7 +129,7 @@ function handleSelectChange(item: SelectItem<string> | null) {
   if (lastPropertyValueWithoutKey.value === getPropertyWithoutKey(item?.value)) {
     return
   }
-  formData.property = item?.value || null
+  setFormData({ ...formData, property: item?.value || null })
   lastPropertyValueWithoutKey.value = getPropertyWithoutKey(formData.property)
   props.validators.property.handleBlur(() => formData.property)
   emit('update:model-value', formData.property)

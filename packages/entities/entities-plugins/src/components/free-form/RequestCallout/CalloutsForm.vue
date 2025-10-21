@@ -24,13 +24,19 @@ import CalloutForm from './CalloutForm.vue'
 
 import { type RequestCalloutPlugin, type Callout, CalloutId } from './types'
 
-const { formData } = useFreeformStore<RequestCalloutPlugin>()
+const { formData, setFormData } = useFreeformStore<RequestCalloutPlugin>()
 
 function addCallout() {
   const latest = formData.config!.callouts[formData.config!.callouts.length - 1]
 
   if (latest) {
-    latest[CalloutId] = getCalloutId()
+    setFormData({
+      ...formData,
+      config: {
+        ...formData.config,
+        callouts: [...formData.config!.callouts, { ...latest, [CalloutId]: getCalloutId() }],
+      },
+    })
   }
 }
 </script>

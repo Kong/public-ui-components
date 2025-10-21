@@ -16,7 +16,7 @@ import SlideTransition from '../shared/SlideTransition.vue'
 import type { FreeFormPluginData } from '../../../types/plugins/free-form'
 import type { GlobalAction } from '../shared/types'
 
-const { formData } = useFreeformStore<FreeFormPluginData>()
+const { formData, setFormData } = useFreeformStore<FreeFormPluginData>()
 
 defineEmits<{
   globalAction: [name: GlobalAction, payload: any]
@@ -26,7 +26,10 @@ watchEffect(() => {
   if (formData.config) {
     // reset partials if strategy not redis
     if (formData.config.strategy !== 'redis') {
-      formData.partials = undefined
+      setFormData({
+        ...formData,
+        partials: undefined,
+      })
     }
   }
 })

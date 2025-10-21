@@ -42,7 +42,7 @@ import { useFreeformStore } from '../shared/composables'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData } = useFreeformStore<DatakitPluginData>()
+const { formData, setFormData } = useFreeformStore<DatakitPluginData>()
 
 defineProps<{
   editing: boolean
@@ -137,7 +137,7 @@ onMounted(() => {
       })
 
       monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
-      formData.config = config as DatakitConfig
+      setFormData({ ...formData, config: config as DatakitConfig })
       emit('change', config)
     } catch (error: unknown) {
       const { message, mark } = error as YAMLException
