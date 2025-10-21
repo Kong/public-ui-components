@@ -49,7 +49,7 @@ import NumberField from './NumberField.vue'
 import EnumField from './EnumField.vue'
 import KeyValueField from './KeyValueField.vue'
 import StringArrayField from './StringArrayField.vue'
-import JsonField from './JsonField.vue'
+import EditorField from './EditorField.vue'
 import ForeignField from './ForeignField.vue'
 import type { GlobalAction } from './types'
 
@@ -94,7 +94,7 @@ const fieldRenderer = computed(() => {
     case 'map':
       return KeyValueField
     case 'json':
-      return JsonField
+      return EditorField
     case 'foreign':
       return ForeignField
     default:
