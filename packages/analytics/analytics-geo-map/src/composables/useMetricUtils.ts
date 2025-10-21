@@ -66,12 +66,12 @@ export default function useMetricUtils({
 
     if (values.value.length > 10) {
       const sortedValues = [...values.value].sort((a, b) => a - b)
-      const cutoff = quantile(sortedValues, 0.25)
-      const top25PercentValues = values.value.filter(v => v >= cutoff)
-      const bottom75PercentValues = values.value.filter(v => v < cutoff)
+      const cutoff = quantile(sortedValues, 0.75)
+      const top = values.value.filter(v => v >= cutoff)
+      const bottom = values.value.filter(v => v < cutoff)
 
-      const scale1 = generateLogScale(top25PercentValues, 3)
-      const scale2 = generateLogScale(bottom75PercentValues, 2)
+      const scale1 = generateLogScale(top, 3)
+      const scale2 = generateLogScale(bottom, 2)
       scale.push(...scale1, ...scale2)
       return scale
     }
