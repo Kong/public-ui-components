@@ -1,4 +1,3 @@
-import { format } from 'date-fns'
 import { formatInTimeZone } from 'date-fns-tz'
 
 export interface TimeFormatOptions {
@@ -7,8 +6,14 @@ export interface TimeFormatOptions {
   short?: boolean
 }
 
-export function formatISOTimeWithTZ(ts: number | Date) {
-  return format(ts, "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+export function formatLogTimestamp(ts: number | Date, options: TimeFormatOptions = {}) {
+  const tz = options?.tz || Intl.DateTimeFormat().resolvedOptions().timeZone
+
+  const format = options?.includeTZ
+    ? 'yyyy-MM-dd HH:mm:ss.SSS (z)'
+    : 'yyyy-MM-dd HH:mm:ss.SSS'
+
+  return formatInTimeZone(ts, tz, format)
 }
 
 export function formatTime(ts: number | string, options: TimeFormatOptions = {}) {

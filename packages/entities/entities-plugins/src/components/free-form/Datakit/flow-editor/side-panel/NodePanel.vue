@@ -18,6 +18,7 @@
         v-for="nodeType in (Object.keys(CONFIG_NODE_META_MAP) as Array<ConfigNodeType>)"
         :key="nodeType"
         :type="nodeType"
+        :unsupported="!enableDatakitM2 && M2_NODES.includes(nodeType)"
         @dragstart="handleDragStart"
       />
     </div>
@@ -39,9 +40,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, shallowRef, useId } from 'vue'
+import { computed, inject, nextTick, shallowRef, useId } from 'vue'
 import { VueFlow } from '@vue-flow/core'
 import { createI18n } from '@kong-ui-public/i18n'
+import { FEATURE_FLAGS } from '../../../../../constants'
 import english from '../../../../../locales/en.json'
 import { DK_DATA_TRANSFER_MIME_TYPE } from '../../constants'
 import { useEditorStore } from '../store/store'
@@ -58,6 +60,9 @@ defineProps<{
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { createNode } = useEditorStore()
+
+const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
+const M2_NODES: ConfigNodeType[] = ['branch', 'cache']
 
 const previewId = `dk-drag-preview-${useId()}`
 

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.7.0...@kong-ui-public/analytics-utilities@12.0.0) (2025-10-20)
+
+
+### Bug Fixes
+
+* **analytics-utilities:** update timestamp formatter [MA-4392] ([#2579](https://github.com/Kong/public-ui-components/issues/2579)) ([9d5df47](https://github.com/Kong/public-ui-components/commit/9d5df4794be03657a8bba15d33c836e55175befa))
+
+
+### BREAKING CHANGES
+
+* **analytics-utilities:** rename/update "formatISOTimeWithTZ" fn exported by analytics-utilities
+
+
+
+
+
 # [11.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.6.0...@kong-ui-public/analytics-utilities@11.7.0) (2025-10-17)
 
 
