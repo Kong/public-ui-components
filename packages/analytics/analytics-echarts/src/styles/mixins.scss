@@ -1,0 +1,20 @@
+
+@use "@kong/design-tokens/tokens/scss/variables" as *;
+@mixin scrollbarBase() {
+  -ms-overflow-style: thin;
+  scrollbar-color: var(--kui-color-background-disabled, $kui-color-background-disabled) var(--kui-color-background-transparent, $kui-color-background-transparent);
+  scrollbar-width: auto;
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--kui-color-background-disabled, $kui-color-background-disabled);
+    border-radius: var(--kui-border-radius-50, $kui-border-radius-50);
+  }
+}
