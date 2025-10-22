@@ -70,6 +70,7 @@ const {
   chartKey = undefined, // highly recommended
   datasets, // the only required prop
   disableTooltip = false,
+  enableBrushing = false,
   groupKey = undefined, // highly recommended
   maxCount = undefined,
   maxStamp = undefined,
@@ -99,6 +100,13 @@ const {
    */
   datasets: SparklineDataset[]
   disableTooltip?: boolean
+  /**
+   * WARNING `enableBrushing` without `groupKey` and `chartKey` does nothing.
+   *
+   * When brushing is enabled a vertical line will be drawn at the mouse
+   * position on all sparklines that share the same `groupKey`.
+   */
+  enableBrushing?: boolean
   /**
    * WARNING `groupKey` without `chartKey` does nothing.
    * WARNING `groupKey` must be static across renders.
@@ -193,7 +201,13 @@ const onTooltipDimensions = ({ width, height }: { width: number, height: number 
   tooltipData.height = height
 }
 
-const plugins = computed(() => disableTooltip ? [] : [new VerticalLinePlugin()])
+const plugins = computed(() => disableTooltip ? [] : [new VerticalLinePlugin({
+  // if either groupKey or chartKey is undefined then brushing doesn't make any
+  // sense as the data in this chart isn't related to any other data.
+  enableBrushing: groupKey !== undefined && chartKey !== undefined && enableBrushing,
+  brushStrategy: 'group',
+  brushGroup: groupKey,
+})])
 
 const totalByDataset = computed<Record<string, number>>(() => {
   return syncedChartDatasets.value.reduce((acc, { data, label }) => ({
