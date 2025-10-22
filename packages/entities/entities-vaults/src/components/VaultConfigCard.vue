@@ -19,7 +19,7 @@
             key: propKey,
             value: getPropValue(propKey, rowValue),
             label: getMetadataLabel(propKey),
-            type: (propKey === 'token' || propKey === 'approle_secret_id') ? ConfigurationSchemaType.Redacted : ConfigurationSchemaType.Text,
+            type: SENSITIVE_KEYS.includes(propKey) ? ConfigurationSchemaType.Redacted : ConfigurationSchemaType.Text,
           }"
         />
       </template>
@@ -82,6 +82,7 @@ const props = defineProps({
   },
 })
 
+const SENSITIVE_KEYS = ['token', 'approle_secret_id', 'api_key']
 const fetchUrl = computed((): string => endpoints.form[props.config?.app]?.edit)
 
 const { i18n: { t } } = composables.useI18n()
