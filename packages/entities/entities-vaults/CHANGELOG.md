@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.26.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.26.2...@kong-ui-public/entities-vaults@3.26.3) (2025-10-22)
+
+
+### Bug Fixes
+
+* **entities-vaults:** mask api key field in vault detail page ([#2587](https://github.com/Kong/public-ui-components/issues/2587)) ([9f3f0c1](https://github.com/Kong/public-ui-components/commit/9f3f0c10873f37c592a81af1f808ccdfc8af48ff))
+
+
+
+
+
 ## [3.26.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.26.1...@kong-ui-public/entities-vaults@3.26.2) (2025-10-22)
 
 
