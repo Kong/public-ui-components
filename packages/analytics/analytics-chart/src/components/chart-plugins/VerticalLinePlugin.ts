@@ -27,6 +27,13 @@ const brushingState: {
   group?: string
 } = {}
 
+const clearBrushingState = () => {
+  brushingState.x = undefined
+  brushingState.chart = undefined
+  brushingState.strategy = undefined
+  brushingState.group = undefined
+}
+
 const EVENT_THROTTLE_MS = 10
 
 export class VerticalLinePlugin implements Plugin {
@@ -166,9 +173,23 @@ export class VerticalLinePlugin implements Plugin {
     delete this._clickedSegment
   }
 
-  beforeDestroy() {
+  beforeDestroy(chart: Chart) {
     if (this._clickedSegment) {
       this.destroyClickedSegment()
+    }
+
+    if (this._useBrushingState && brushingState.chart === chart) {
+      // if the chart that initialized the brushState is this chart then cleanup
+      const hadState = brushingState.x !== undefined
+      clearBrushingState()
+      if (hadState) {
+        // redraw all other charts that may have been affected by this brush state
+        for (const instance of Object.values(Chartjs.instances)) {
+          if (instance !== chart) {
+            instance.update('none')
+          }
+        }
+      }
     }
   }
 }
