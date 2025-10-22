@@ -11,13 +11,13 @@
       @fetch:success="(entity: any) => $emit('fetch:success', entity)"
       @loading="(val: boolean) => $emit('loading', val)"
     >
-      <template #config="slotProps">
+      <template #config="{ rowValue }">
         <ConfigCardItem
-          v-for="propKey in Object.keys(getPropValue('rowValue', slotProps) || {})"
+          v-for="propKey in Object.keys(rowValue)"
           :key="propKey"
           :item="{
             key: propKey,
-            value: getPropItemValue(propKey, slotProps),
+            value: getPropValue(propKey, rowValue),
             label: getMetadataLabel(propKey),
             type: (propKey === 'token' || propKey === 'approle_secret_id') ? ConfigurationSchemaType.Redacted : ConfigurationSchemaType.Text,
           }"
@@ -112,18 +112,7 @@ const configSchema = ref<VaultConfigurationSchema>({
   },
 })
 
-const getPropItemValue = (propKey: string, slotProps?: Record<string, any>) => {
-  const propValue = getPropValue('rowValue', slotProps)
-
-  if (propValue) {
-    return propValue[propKey]
-  }
-
-  return undefined
-}
-
 const getMetadataLabel = (propKey: string) => {
-  // @ts-ignore - TODO: Fix type interface
   return configSchema.value?.[propKey as keyof typeof configSchema.value]?.label || convertKeyToTitle(propKey)
 }
 </script>
