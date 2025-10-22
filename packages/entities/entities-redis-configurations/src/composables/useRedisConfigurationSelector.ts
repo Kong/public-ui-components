@@ -43,11 +43,11 @@ export function useRedisConfigurationSelector(options: {
       case RedisType.CLUSTER:
         return t('form.options.type.cluster')
       case RedisType.HOST_PORT_CE:
-        return t('form.options.type.open_source')
+        return t('form.options.type.host_port')
       case RedisType.SENTINEL:
         return t('form.options.type.sentinel')
       case RedisType.HOST_PORT_EE:
-        return t('form.options.type.enterprise')
+        return `${t('form.options.type.host_port')} (${t('form.options.type.enterprise')})`
     }
   }
 
