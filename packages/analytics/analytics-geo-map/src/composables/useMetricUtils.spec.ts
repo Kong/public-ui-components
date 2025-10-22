@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import useMetricUtils from './useMetricUtils'
 import { ref } from 'vue'
-import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import { COUNTRIES, type ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER } from '@kong/design-tokens'
 import { colors } from './useMetricUtils'
 
@@ -17,7 +17,8 @@ describe('useMetricUtils', () => {
   ])('generates correct length scale for %# datapoints', (datapoints, expectedScaleLength) => {
     const countryMetrics = ref<Record<string, number>>({})
     datapoints.forEach((value, index) => {
-      countryMetrics.value[`C${index}`] = value
+      const countryCode = COUNTRIES[index].code
+      countryMetrics.value[countryCode] = value
     })
     const metric = ref<ExploreAggregations>('request_count')
 
@@ -114,5 +115,27 @@ describe('useMetricUtils', () => {
     })
 
     expect(formatMetric(10000)).toBe('10K')
+  })
+
+  it('ignores country codes that are not in the COUNTRIES list', () => {
+    const countryMetrics = ref({
+      US: 1000,
+      empty: 2000,
+      YY: 3000,
+    })
+    const metric = ref<ExploreAggregations>('request_count')
+
+    const { legendData } = useMetricUtils({
+      countryMetrics,
+      metric,
+    })
+
+    // Will generate just one legend item since the other two country codes are invalid and will be ignored
+    expect(legendData.value).toEqual([
+      {
+        'color': '#00819d',
+        'range': '1K',
+      },
+    ])
   })
 })
