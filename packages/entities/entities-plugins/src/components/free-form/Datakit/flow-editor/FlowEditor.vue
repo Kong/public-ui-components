@@ -58,7 +58,11 @@ function onChange(configNodes: ConfigNode[], uiData: DatakitUIData, resources: D
   }
   formData.config = nextConfig
   formData.__ui_data = nextUIData
-  if (partialId !== undefined) formData.partials = [{ id: partialId }]
+  if (partialId != null) {
+    formData.partials = [{ id: partialId }]
+  } else if (formData.partials) {
+    delete formData.partials
+  }
   emit('change', nextConfig, nextUIData)
 }
 

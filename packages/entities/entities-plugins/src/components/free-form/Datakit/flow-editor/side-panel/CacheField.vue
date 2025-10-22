@@ -53,6 +53,7 @@
     </KButton>
 
     <KModal
+      :action-button-disabled="!canSubmit"
       :action-button-text="t('actions.save')"
       max-width="640px"
       :title="t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.title')"
@@ -67,6 +68,7 @@
             { label: t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.strategy_options.redis'), value: 'redis' },
           ]"
           name="strategy"
+          @update:model-value="handleStrategyChange"
         />
 
         <Field
@@ -75,7 +77,7 @@
         />
 
         <div v-if="localStrategy === 'redis'">
-          <KLabel required>
+          <KLabel>
             {{ t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.select_redis_configuration') }}
           </KLabel>
 
@@ -88,7 +90,7 @@
         </div>
 
         <div
-          v-if="localStrategy === 'redis' && !formData.cache?.partial_id"
+          v-if="localStrategy === 'redis' && !formData.cache?.partial_id && !isCreating"
           class="dk-cache-inline-redis"
         >
           <div>{{ t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.inline_config_preview') }}</div>
@@ -127,9 +129,8 @@ import type { CodeBlockEventData } from '@kong/kongponents'
 
 export type FormData = { cache?: CacheConfigFormData | null }
 
-defineProps<{
+const props = defineProps<{
   strategy?: CacheConfigFormData['strategy']
-  isEditing?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -145,6 +146,13 @@ if (field.error) throw new Error('No cache schema')
 
 const modalVisible = ref(false)
 const { i18n: { t } } = composables.useI18n()
+const isCreating = computed(() => !props.strategy)
+const canSubmit = computed(() => {
+  if (localStrategy.value === 'redis' && isCreating.value && !formData.cache!.partial_id) {
+    return false
+  }
+  return true
+})
 
 const localStrategy = computed(() => field.value.value?.strategy)
 
@@ -198,6 +206,12 @@ const {
 } = createSingletonShorthands(
   createHighlighter,
 )
+
+const handleStrategyChange = () => {
+  if (localStrategy.value === 'memory' && formData.cache?.partial_id) {
+    delete formData.cache?.partial_id
+  }
+}
 
 async function highlight({ codeElement, language, code }: CodeBlockEventData) {
   codeElement.innerHTML = await codeToHtml(code, {

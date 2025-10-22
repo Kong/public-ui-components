@@ -741,7 +741,7 @@
                   "memory": "Memory",
                   "redis": "Redis"
                 },
-                "select_redis_configuration": "Select a shared configuration",
+                "select_redis_configuration": "Select a shared Redis configuration",
                 "inline_config": "Inline config",
                 "inline_config_preview": "You are using a dedicated Redis configuration, This is a preview of your current setup, please edit it in code editor"
               }
