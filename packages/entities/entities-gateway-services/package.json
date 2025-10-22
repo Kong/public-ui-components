@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-gateway-services",
-  "version": "3.13.10",
+  "version": "3.13.11",
   "type": "module",
   "main": "./dist/entities-gateway-services.umd.js",
   "module": "./dist/entities-gateway-services.es.js",
@@ -24,7 +24,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.37.0",
-    "@kong/kongponents": "^9.40.1",
+    "@kong/kongponents": "^9.42.11",
     "axios": "^1.12.0",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.4.5"
@@ -34,7 +34,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.0",
     "@kong/icons": "^1.38.0",
-    "@kong/kongponents": "9.41.1",
+    "@kong/kongponents": "9.42.11",
     "axios": "^1.7.7",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"

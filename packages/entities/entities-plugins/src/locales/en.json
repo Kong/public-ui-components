@@ -810,8 +810,8 @@
             },
             "cache": {
               "name": "cache",
-              "summary": "Coming soon...",
-              "description": "Coming soon..."
+              "summary": "Fetch cached data",
+              "description": "Fetch data from the cache."
             },
             "request": {
               "name": "request",
@@ -850,9 +850,6 @@
             "input_name": {
               "label": "Input name",
               "placeholder": "Enter an input name"
-            },
-            "timeout": {
-              "label": "Timeout(s)"
             },
             "jq": {
               "label": "jq script",

@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { CONFIG_NODE_TYPES, HTTP_METHODS, IMPLICIT_NODE_NAMES, IMPLICIT_NODE_TYPES } from '../constants'
-import { validateNamesAndConnections } from './shared'
+import { validateInputOutputExclusivity, validateNamesAndConnections } from './shared'
 
 export const ImplicitNodeTypeSchema = z.enum(IMPLICIT_NODE_TYPES)
 
@@ -85,6 +85,9 @@ export const ConfigNodeBaseSchema = z
     outputs: z.record(z.string(), NullishNameConnectionSchema).nullish(),
   })
   .loose()
+  .superRefine((node, ctx) => {
+    validateInputOutputExclusivity(node, ctx)
+  })
 
 export const ConfigNodeBaseGuard = z
   .object({ type: z.string(), name: z.string() })
@@ -210,6 +213,34 @@ export const StaticNodeSchema = ConfigNodeBaseSchema.extend({
 /** Produce reusable outputs from statically-configured values. */
 export type StaticNode = z.infer<typeof StaticNodeSchema>
 
+export const CacheNodeSchema = ConfigNodeBaseSchema.extend({
+  type: z.literal('cache'),
+  /** When true, skip cache errors and continue execution. */
+  bypass_on_error: z.boolean().nullish(),
+  inputs: z
+    .object({
+      data: NullishNameConnectionSchema,
+      key: NullishNameConnectionSchema,
+      ttl: NullishNameConnectionSchema,
+    })
+    .partial()
+    .nullish(),
+  outputs: z
+    .object({
+      data: NullishNameConnectionSchema,
+      hit: NullishNameConnectionSchema,
+      miss: NullishNameConnectionSchema,
+      stored: NullishNameConnectionSchema,
+    })
+    .partial()
+    .nullish(),
+  /** Cache entry time-to-live in seconds. */
+  ttl: z.number().int().gt(0).nullish(),
+}).strict()
+
+/** Fetch data from configured cache resources. */
+export type CacheNode = z.infer<typeof CacheNodeSchema>
+
 export const BranchNodeSchema = ConfigNodeBaseSchema.extend({
   type: z.literal('branch'),
   then: z.array(NodeNameSchema).nullish(),
@@ -226,6 +257,7 @@ export const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
     JqNodeSchema,
     PropertyNodeSchema,
     StaticNodeSchema,
+    CacheNodeSchema,
     BranchNodeSchema,
   ]),
 )

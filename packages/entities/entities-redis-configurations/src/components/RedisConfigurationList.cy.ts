@@ -267,7 +267,7 @@ describe('<RedisConfigurationList />', () => {
           .find('[data-testid="actions-dropdown"]')
           .click()
 
-        cy.get('[data-testid="redis-config-1"]')
+        cy.get('[data-testid="redis-config-1-actions-dropdown-popover"]')
           .find('[data-testid="action-entity-delete"]')
           .click()
 

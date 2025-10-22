@@ -30,7 +30,6 @@
     <NumberField
       :error="timeoutHandler.error.value"
       :error-message="timeoutHandler.errorMessage.value"
-      :label="t('plugins.free-form.datakit.flow_editor.node_properties.timeout.label')"
       name="timeout"
       @blur="timeoutHandler.onBlur"
       @update:model-value="timeoutHandler.onUpdate"
@@ -104,8 +103,8 @@ const {
       stringFormat('url', { fieldName: 'URL' }),
     ),
     timeout: compose(
-      numberFormat('integer', { fieldName: t('plugins.free-form.datakit.flow_editor.node_properties.timeout.label') }),
-      numberRange(0, 2147483646, { fieldName: t('plugins.free-form.datakit.flow_editor.node_properties.timeout.label') }),
+      numberFormat('integer'),
+      numberRange(0, 2147483646),
     ),
   },
   getValidationData: () => ({

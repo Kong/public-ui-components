@@ -27,21 +27,19 @@ import { CONFIG_NODE_META_MAP } from './node'
 
 import type { ConfigNodeType } from '../../types'
 
-const { type } = defineProps<{ type: ConfigNodeType }>()
+const { type, unsupported } = defineProps<{
+  type: ConfigNodeType
+  unsupported?: boolean
+}>()
 
 const emit = defineEmits<{
   dragstart: [e: DragEvent, type: ConfigNodeType]
 }>()
 
-const unsupported = type === 'cache'
-
 const {
   summary,
   icon: Icon,
-  colors: {
-    background,
-    foreground,
-  } = {},
+  colors: { background, foreground } = {},
 } = CONFIG_NODE_META_MAP[type]
 
 function handleDragStart(e: DragEvent) {
