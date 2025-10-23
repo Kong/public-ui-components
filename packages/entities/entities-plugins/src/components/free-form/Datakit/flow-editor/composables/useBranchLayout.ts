@@ -440,6 +440,14 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       })
     },
     (groups) => {
+      // Clean up signatures for groups that no longer exist
+      const currentGroupIds = new Set(groups.map(g => g.id))
+      for (const groupId of lastLayoutSignatures.keys()) {
+        if (!currentGroupIds.has(groupId)) {
+          lastLayoutSignatures.delete(groupId)
+        }
+      }
+
       for (const group of groups) {
         if (shouldSkipGroupUpdate(group.id, group.memberIds)) continue
 
