@@ -222,12 +222,8 @@ function onDrop(e: DragEvent) {
     return
   }
 
-  const tag = `drag-create:${nodeId}`
-  const joined = attachNodeToActiveGroup(nodeId, { commitTag: tag })
-  if (!joined) {
-    commitHistory(tag)
-  }
-
+  attachNodeToActiveGroup(nodeId)
+  commitHistory()
   selectNode(nodeId)
   propertiesPanelOpen.value = true
   endPanelDrag()

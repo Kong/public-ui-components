@@ -530,7 +530,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         // This allows the parent group to expand/shrink as child group moves
         const parentGroup = memberGroupMap.value.get(group.ownerId)
         if (parentGroup) {
-          updateGroupLayout(parentGroup.id)
+          updateGroupLayout(parentGroup.id, false)
         }
 
         return
@@ -570,11 +570,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         : memberGroupMap.value.get(nodeId)?.id
 
       if (owningGroupId) {
-        updateGroupLayout(owningGroupId)
+        updateGroupLayout(owningGroupId, false)
       }
     })
 
-    onNodeDragStop(({ node }) => {
+    onNodeDragStop(async ({ node }) => {
       if (!node) return
 
       if (isGroupId(node.id)) {
@@ -607,7 +607,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         : memberGroupMap.value.get(nodeId)?.id
 
       if (owningGroupId) {
-        updateGroupLayout(owningGroupId)
+        updateGroupLayout(owningGroupId, false)
       }
 
       attachNodeToActiveGroup(nodeId)
@@ -909,7 +909,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       doAutoLayout(autoNodes, leftNode, rightNode)
 
       if (commitNow) {
-        historyCommit(`autolayout-${flowId}`)
+        historyCommit()
       }
     }
 
@@ -1017,14 +1017,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
     }
 
-    function attachNodeToActiveGroup(nodeId: NodeId, options?: { commitTag?: string }) {
-      const targetGroupId = activeGroupId.value
-      if (!targetGroupId) return false
-      const { nodeId: ownerId, branch } = parseGroupId(targetGroupId)
+    function attachNodeToActiveGroup(nodeId: NodeId) {
+      if (!activeGroupId.value) return false
+      const { nodeId: ownerId, branch } = parseGroupId(activeGroupId.value)
       const changed = branchGroups.addMember(ownerId, branch, nodeId, { commit: false })
-      if (changed && options?.commitTag) {
-        historyCommit(options.commitTag)
-      }
       updateActiveGroup(undefined)
       return changed
     }

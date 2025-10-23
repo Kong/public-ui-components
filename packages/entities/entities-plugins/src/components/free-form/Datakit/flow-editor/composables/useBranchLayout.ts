@@ -452,10 +452,25 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
         if (shouldSkipGroupUpdate(group.id, group.memberIds)) continue
 
         const lastSignature = lastLayoutSignatures.get(group.id)
-        if (lastSignature !== group.signature) {
+        const signatureChanged = lastSignature !== group.signature
+
+        // Always update the signature tracking
+        if (signatureChanged) {
           lastLayoutSignatures.set(group.id, group.signature)
-          updateGroupLayout(group.id)
         }
+
+        // Skip layout recalculation if:
+        // 1. Signature hasn't changed (normal case - nothing to do)
+        // 2. Signature changed AND group already has valid layout (undo/redo case)
+        //    In undo/redo, the snapshot already contains correct layout, so we should
+        //    preserve it instead of recalculating based on potentially stale VueFlow positions
+        const groupInstance = groupMapById.value.get(group.id)
+        const hasValidLayout = !!(groupInstance?.position && groupInstance?.dimensions)
+
+        if (!signatureChanged) continue
+        if (hasValidLayout) continue
+
+        updateGroupLayout(group.id)
       }
     },
     {
