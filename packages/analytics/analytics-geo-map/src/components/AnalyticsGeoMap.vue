@@ -90,6 +90,7 @@ const { i18n } = composables.useI18n()
 const { getColor, formatMetric, legendData } = composables.useMetricUtils({
   countryMetrics: toRef(() => countryMetrics),
   metric: toRef(() => metric),
+  unit: toRef(() => metricUnit),
 })
 const tooltipData = ref<MapTooltipData>()
 const mapContainerId = useId()
@@ -286,7 +287,6 @@ onMounted(async () => {
               label: admin,
               color: getColor(metric),
               value: formatMetric(metric),
-              unit: i18n.t(`metricUnits.${metricUnit}`, { plural: metric > 1 ? 's' : '' }),
             }
 
             showTooltip.value = true

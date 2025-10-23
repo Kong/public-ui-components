@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { COUNTRIES, type ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER } from '@kong/design-tokens'
 import { colors } from './useMetricUtils'
+import type { MetricUnits } from '../types'
 
 describe('useMetricUtils', () => {
   it.each([
@@ -21,10 +22,12 @@ describe('useMetricUtils', () => {
       countryMetrics.value[countryCode] = value
     })
     const metric = ref<ExploreAggregations>('request_count')
+    const unit = ref<MetricUnits>('count')
 
     const { scale } = useMetricUtils({
       countryMetrics,
       metric,
+      unit,
     })
     expect(scale.value.length).toBe(expectedScaleLength)
   })
@@ -34,14 +37,16 @@ describe('useMetricUtils', () => {
       US: 1000,
     })
     const metric = ref<ExploreAggregations>('request_count')
+    const unit = ref<MetricUnits>('count')
 
     const { legendData } = useMetricUtils({
       countryMetrics,
       metric,
+      unit,
     })
 
     const expectedLegendData = [
-      { color: colors[0], range: '1K' },
+      { color: colors[0], range: '1K requests' },
     ]
 
     expect(legendData.value).toEqual(expectedLegendData)
@@ -60,10 +65,12 @@ describe('useMetricUtils', () => {
       FR: 5000,
     })
     const metric = ref<ExploreAggregations>('request_count')
+    const unit = ref<MetricUnits>('count')
 
     const { legendData, getColor } = useMetricUtils({
       countryMetrics,
       metric,
+      unit,
     })
 
     const expectedLegendData = [
@@ -92,13 +99,15 @@ describe('useMetricUtils', () => {
       MX: 300,
     })
     const metric = ref<ExploreAggregations>('kong_latency_average')
+    const unit = ref<MetricUnits>('ms')
 
     const { formatMetric } = useMetricUtils({
       countryMetrics,
       metric,
+      unit,
     })
 
-    expect(formatMetric(10000)).toBe('10,000')
+    expect(formatMetric(10000)).toBe('10,000 ms')
   })
 
   it('metrics truncated properly', () => {
@@ -108,13 +117,15 @@ describe('useMetricUtils', () => {
       MX: 300,
     })
     const metric = ref<ExploreAggregations>('request_count')
+    const unit = ref<MetricUnits>('count')
 
     const { formatMetric } = useMetricUtils({
       countryMetrics,
       metric,
+      unit,
     })
 
-    expect(formatMetric(10000)).toBe('10K')
+    expect(formatMetric(10000)).toBe('10K requests')
   })
 
   it('ignores country codes that are not in the COUNTRIES list', () => {
@@ -124,18 +135,39 @@ describe('useMetricUtils', () => {
       YY: 3000,
     })
     const metric = ref<ExploreAggregations>('request_count')
+    const unit = ref<MetricUnits>('count')
 
     const { legendData } = useMetricUtils({
       countryMetrics,
       metric,
+      unit,
     })
 
     // Will generate just one legend item since the other two country codes are invalid and will be ignored
     expect(legendData.value).toEqual([
       {
         'color': '#00819d',
-        'range': '1K',
+        'range': '1K requests',
       },
     ])
+  })
+
+  it('formats bytes metric correctly', () => {
+    const countryMetrics = ref({
+      US: 100,
+      CA: 200,
+      MX: 300,
+    })
+    const metric = ref<ExploreAggregations>('request_size_average')
+    const unit = ref<MetricUnits>('bytes')
+
+    const { formatMetric, formatMetricRange } = useMetricUtils({
+      countryMetrics,
+      metric,
+      unit,
+    })
+
+    expect(formatMetric(1e6)).toBe('1 MB')
+    expect(formatMetricRange(1e6, 5e6)).toBe('1 MB - 5 MB')
   })
 })
