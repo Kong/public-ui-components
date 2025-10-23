@@ -19,6 +19,11 @@ export interface AiDatasourceQuery {
 
 export type DatasourceAwareQuery = BasicDatasourceQuery | AdvancedDatasourceQuery | AiDatasourceQuery
 
+// All flags in this interface should be optional; defaults are as documented.
+export interface StaticConfig {
+  increaseCsvExportLimit?: boolean // default: true
+}
+
 export interface AnalyticsBridge {
   // Issue queries to the KAnalytics API
   queryFn: (query: DatasourceAwareQuery, abortController: AbortController) => Promise<ExploreResultV4>
@@ -28,6 +33,10 @@ export interface AnalyticsBridge {
 
   // Evaluate feature flags (if applicable)
   evaluateFeatureFlagFn: <T = boolean>(key: string, defaultValue: T) => T
+
+  // Static config flags that may vary by environment
+  // Optional; the environment generally shouldn't have to set this config.
+  staticConfig?: StaticConfig
 
   // Define the location of explore to enable jump-to-explore.
   // Async because there might need to be permissions checks.
