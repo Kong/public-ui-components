@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { useFormatUnit } from './formatUnit'
+import { unitFormatter } from './formatUnit'
 import { createI18n } from '@kong-ui-public/i18n'
 
 const i18n = createI18n('en-us', {} as any)
 
-const { formatBytes, formatCost, formatUnit } = useFormatUnit({ i18n })
+const { formatBytes, formatCost, formatUnit, formatRange } = unitFormatter({ i18n })
 
 describe('formatUnit.formatBytes()', () => {
   it.each([
@@ -108,8 +108,6 @@ describe('formatUnit.formatUnit()', () => {
   })
 
   it('handles formatting range of values', () => {
-    const { formatRange } = useFormatUnit({ i18n })
-
     expect(formatRange(1000, 5000, 'ms')).toBe('1,000 - 5,000 ms')
     expect(formatRange(1000, 5000, 'count', { approximate: true })).toBe('1K - 5K count')
     expect(formatRange(1000, 5000, 'count/minute', { approximate: true })).toBe('1K - 5K count/minute')

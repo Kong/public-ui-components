@@ -1,5 +1,5 @@
 import { computed, type Ref } from 'vue'
-import { COUNTRIES, useFormatUnit, type ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import { COUNTRIES, type ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER } from '@kong/design-tokens'
 import type { MetricUnits } from '../types'
 import composables from '.'
@@ -46,7 +46,7 @@ const generateLogScale = (values: number[], buckets: number): number[] => {
   return cuts.map(e => Math.exp(e)).reverse()
 }
 
-export default function useMetricUtils({
+export default function useLegendScale({
   countryMetrics,
   metric,
   unit,
@@ -56,8 +56,7 @@ export default function useMetricUtils({
   unit: Readonly<Ref<MetricUnits>>
 }) {
 
-  const { i18n } = composables.useI18n()
-  const { formatUnit, formatRange } = useFormatUnit({ i18n })
+  const { formatMetric, formatMetricRange } = composables.useMetricFormat({ unit })
 
   const filteredMetrics = computed(() => {
     const metrics = { ...countryMetrics.value }
@@ -72,8 +71,7 @@ export default function useMetricUtils({
   const values = computed(() => Object.values(filteredMetrics.value) as number[])
   const datapointCount = computed(() => Object.keys(filteredMetrics.value).length)
   const buckets = computed(() => datapointCount.value < MAX_LEGEND_BUCKETS - 1 ? datapointCount.value : MAX_LEGEND_BUCKETS)
-
-  const shouldTuncateMetric = computed(() => {
+  const approximateMetric = computed(() => {
     return !metric.value?.includes('latency')
   })
 
@@ -99,7 +97,10 @@ export default function useMetricUtils({
     if (values.value.length === 1) {
       return [{
         color: getColor(values.value[0]),
-        range: formatMetric(values.value[0]),
+        range: formatMetric(values.value[0], {
+          approximate: approximateMetric.value,
+          showUnit: !unit.value.includes('count'),
+        }).trim(),
       }]
     }
 
@@ -111,11 +112,20 @@ export default function useMetricUtils({
       // Hide unit for count metrics in legend ranges
       let rangeText = ''
       if (index === 0) {
-        rangeText = `> ${formatMetric(lower, { showUnit: !unit.value.includes('count') })}`.trim()
+        rangeText = `> ${formatMetric(lower, {
+          showUnit: !unit.value.includes('count'),
+          approximate: approximateMetric.value,
+        })}`.trim()
       } else if (index === scale.value.length - 1) {
-        rangeText = `< ${formatMetric(upper, { showUnit: !unit.value.includes('count') })}`.trim()
+        rangeText = `< ${formatMetric(upper, {
+          showUnit: !unit.value.includes('count'),
+          approximate: approximateMetric.value,
+        })}`.trim()
       } else {
-        rangeText = formatMetricRange(lower, upper, { showUnit: !unit.value.includes('count') }).trim()
+        rangeText = formatMetricRange(lower, upper, {
+          showUnit: !unit.value.includes('count'),
+          approximate: approximateMetric.value,
+        }).trim()
       }
 
       return {
@@ -137,36 +147,8 @@ export default function useMetricUtils({
     return colors[idx] ?? KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
   }
 
-  const formatMetric = (value: number, {
-    showUnit = true,
-  }: {
-    showUnit?: boolean
-  } = {}): string => {
-    return formatUnit(value, unit.value, {
-      approximate: shouldTuncateMetric.value,
-      translateUnit: (unit: string) => {
-        return showUnit ? i18n.t(`metricUnits.${unit}` as any, { plural: value > 1 ? 's' : '' }) : ''
-      },
-    })
-  }
-
-  const formatMetricRange = (min: number, max: number, {
-    showUnit = true,
-  }: {
-    showUnit?: boolean
-  } = {}): string => {
-    return formatRange(min, max, unit.value, {
-      approximate: shouldTuncateMetric.value,
-      translateUnit: (unit) => {
-        return showUnit ? i18n.t(`metricUnits.${unit}` as any, { plural: max > 1 ? 's' : '' }) : ''
-      },
-    })
-  }
-
   return {
     getColor,
-    formatMetric,
-    formatMetricRange,
     legendData,
     scale,
   }

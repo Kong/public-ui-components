@@ -1,7 +1,7 @@
 import type { ExternalTooltipContext, KChartData, TooltipState, TooltipEntry, Dataset, ChartLegendSortFn, LegendValues, EnhancedLegendItem, TooltipInteractionMode } from '../types'
 import { formatTooltipTimestampByGranularity } from '../utils'
 import { isValid } from 'date-fns'
-import { useFormatUnit } from '@kong-ui-public/analytics-utilities'
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import type { Chart, Point, ScatterDataPoint } from 'chart.js'
 import type { GranularityValues } from '@kong-ui-public/analytics-utilities'
@@ -25,7 +25,7 @@ export const lineChartTooltipBehavior = (
     return
   }
   const { i18n } = composables.useI18n()
-  const { formatUnit } = useFormatUnit({ i18n })
+  const { formatUnit } = unitFormatter({ i18n })
   const sortFn = tooltipData.chartTooltipSortFn || ((a: TooltipEntry, b: TooltipEntry) => b.rawValue - a.rawValue)
 
   if (tooltip.body && !isTooltipInteractive(tooltipData.interactionMode)) {
@@ -65,7 +65,7 @@ export const lineChartTooltipBehavior = (
 export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTooltipContext) : void => {
   const { tooltip } = context
   const { i18n } = composables.useI18n()
-  const { formatUnit } = useFormatUnit({ i18n })
+  const { formatUnit } = unitFormatter({ i18n })
   if (tooltip.opacity === 0 && !isTooltipInteractive(tooltipData.interactionMode)) {
     tooltipData.showTooltip = false
 

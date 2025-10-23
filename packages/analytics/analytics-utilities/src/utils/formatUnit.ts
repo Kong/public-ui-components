@@ -4,7 +4,7 @@ import approxNum from 'approximate-number'
 
 export const numberFormatter = new Intl.NumberFormat(document?.documentElement?.lang || 'en-US')
 
-export function useFormatUnit<T extends Record<string, any>>({
+export function unitFormatter<T extends Record<string, any>>({
   i18n,
 } : {
   i18n: IntlShapeEx<T>

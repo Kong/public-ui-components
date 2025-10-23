@@ -36,10 +36,10 @@ import type { PropType } from 'vue'
 import type { AnalyticsExploreRecord, ExploreResultV4, AllAggregations } from '@kong-ui-public/analytics-utilities'
 import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
 import composables from '../../composables'
-import { useFormatUnit } from '@kong-ui-public/analytics-utilities'
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 
 const { i18n } = composables.useI18n()
-const { formatBytes } = useFormatUnit({ i18n })
+const { formatBytes } = unitFormatter({ i18n })
 
 const props = defineProps({
   data: {

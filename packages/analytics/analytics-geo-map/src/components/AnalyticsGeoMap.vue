@@ -87,11 +87,12 @@ const emit = defineEmits<{
 }>()
 
 const { i18n } = composables.useI18n()
-const { getColor, formatMetric, legendData } = composables.useMetricUtils({
+const { getColor, legendData } = composables.useLegendScale({
   countryMetrics: toRef(() => countryMetrics),
   metric: toRef(() => metric),
   unit: toRef(() => metricUnit),
 })
+const { formatMetric } = composables.useMetricFormat({ unit: toRef(() => metricUnit) })
 const tooltipData = ref<MapTooltipData>()
 const mapContainerId = useId()
 const map = ref<Map>()
