@@ -49,7 +49,7 @@ describe('<DashboardRenderer />', () => {
       const { query } = dsAwareQuery as AdvancedDatasourceQuery
 
       // Dimensions to use if query is not provided
-      const dimensionMap = { statusCode: ['1XX', '2XX', '3XX', '4XX', '5XX'] }
+      const dimensionMap = { status_code: ['1XX', '2XX', '3XX', '4XX', '5XX'] }
 
       if (query.dimensions && query.dimensions.findIndex(d => d === 'route') > -1) {
         return Promise.resolve(routeExploreResponse)
@@ -66,7 +66,7 @@ describe('<DashboardRenderer />', () => {
         // Timeseries Line chart
           const timeSeriesResponse = generateSingleMetricTimeSeriesData(
             { name: 'TotalRequests', unit: 'count' },
-            { statusCode: query.metrics as string[] },
+            { status_code: query.metrics as string[] },
           ) as ExploreResultV4
 
           return Promise.resolve(timeSeriesResponse)
