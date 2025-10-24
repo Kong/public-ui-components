@@ -13,6 +13,7 @@
       {{ t('redis.shared_configuration.title') }}
     </KLabel>
     <div class="shared-redis-config-title" />
+    <!-- TODO: Refactor this select to use the packages/entities/entities-redis-configurations/src/components/RedisConfigurationSelector.vue -->
     <KSelect
       class="redis-config-select-trigger"
       data-testid="redis-config-select-trigger"

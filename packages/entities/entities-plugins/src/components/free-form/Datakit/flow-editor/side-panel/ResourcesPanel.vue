@@ -1,14 +1,29 @@
 <template>
   <div class="dk-resources-panel">
     <Form
-      :data="formData"
-      :schema="vaultSchema"
+      :data="vaultFormData"
+      :schema="resourcesSchema"
     >
       <VaultField
         name="vault"
         @add="addVault"
         @remove="removeVault"
         @update="handleUpdateVault"
+      />
+    </Form>
+
+    <hr class="dk-resources-divider">
+
+    <Form
+      :key="`${cacheFormKey}`"
+      :data="cacheFormData"
+      :schema="resourcesSchema"
+    >
+      <CacheField
+        :strategy="cacheFormData.cache?.strategy"
+        @cancel="handleCancelUpdateCache"
+        @remove="handleRemoveCache"
+        @update="handleUpdateCache"
       />
     </Form>
   </div>
@@ -20,27 +35,20 @@ import Form from '../../../shared/Form.vue'
 import VaultField from './VaultField.vue'
 
 import type { FieldName } from '../../types'
-import type { RecordFieldSchema } from '../../../../../types/plugins/form-schema'
+import { useResourcesSchema } from '../composables/useResourcesSchema'
+import CacheField, { type FormData as CacheFormData } from './CacheField.vue'
+import { useEditorStore } from '../store/store'
+import { computed, ref } from 'vue'
 
-const vaultSchema: RecordFieldSchema = {
-  type: 'record',
-  fields: [
-    {
-      vault: {
-        type: 'map',
-        keys: { type: 'string' },
-        values: { type: 'string' },
-      },
-    },
-  ],
-}
+const resourcesSchema = useResourcesSchema()
+const cacheFormKey = ref(0)
 
 const {
   addVault,
   removeVault,
   updateVault,
   renameVault,
-  formData,
+  formData: vaultFormData,
 } = useVaultForm()
 
 function handleUpdateVault(name: FieldName, value: string, oldName?: FieldName) {
@@ -49,6 +57,26 @@ function handleUpdateVault(name: FieldName, value: string, oldName?: FieldName) 
   }
   updateVault(name, value)
 }
+
+const { state, commit } = useEditorStore()
+
+const cacheFormData = computed<CacheFormData>(() => ({ cache: state.value.cacheConfig }))
+
+function handleUpdateCache(config: CacheFormData) {
+  state.value.cacheConfig = config.cache
+  commit()
+}
+
+function handleRemoveCache() {
+  state.value.cacheConfig = undefined
+  commit()
+}
+
+function handleCancelUpdateCache() {
+  // Force re-render CacheField to reset its internal state
+  cacheFormKey.value++
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -63,6 +91,13 @@ function handleUpdateVault(name: FieldName, value: string, oldName?: FieldName) 
     gap: $kui-space-40;
     line-height: $kui-line-height-30;
     margin: 0;
+  }
+
+  .dk-resources-divider {
+    background-color: $kui-color-background-disabled;
+    border: none;
+    height: 1px;
+    margin: $kui-space-60 0;
   }
 }
 </style>

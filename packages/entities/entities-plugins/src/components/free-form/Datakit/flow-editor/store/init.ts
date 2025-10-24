@@ -15,6 +15,7 @@ import type {
   NodeType,
   UINode,
   GroupInstance,
+  CacheConfigFormData,
 } from '../../types'
 import { isImplicitName, isImplicitType } from '../node/node'
 import { pluginDataToVaultConfig, pluginDataToVaultOutputFields } from '../node/vault'
@@ -231,12 +232,24 @@ export function initEditorState(
   // Mark all nodes that should be in 'request' phase
   markRequestNodes(['request', 'service_request'])
 
+  let cacheConfig: CacheConfigFormData | null = null
+  if (pluginData.config?.resources?.cache) {
+    cacheConfig = {
+      ...pluginData.config.resources.cache,
+    }
+
+    if (pluginData.partials) {
+      cacheConfig.partial_id = pluginData.partials[0].id
+    }
+  }
+
   return {
     nodes,
     edges,
     groups,
     pendingLayout: !isUIDataStale ? false : keepHistoryAfterLayout ? 'keepHistory' : 'clearHistory',
     pendingFitView: true,
+    ...(cacheConfig ? { cacheConfig } : {}),
   }
 }
 
