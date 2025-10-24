@@ -6,7 +6,7 @@
     <div class="map-tooltip-text">
       <div>{{ data.label }}</div>
       <span v-if="showValue">
-        {{ data.value }} {{ data.unit }}
+        {{ data.value }}
       </span>
     </div>
   </div>
@@ -17,7 +17,6 @@ export interface MapTooltipData {
   color: string
   label: string
   value: string
-  unit: string
 }
 
 const {

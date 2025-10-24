@@ -7,8 +7,8 @@
             :bounds="bounds"
             :country-metrics="countryMetrics"
             :fit-to-country="fitToCountry"
-            :metric="'request_count'"
-            :metric-unit="'count'"
+            :metric="selectedMetric"
+            :metric-unit="metricUnit"
             @bounds-change="console.log('bounds changed', $event)"
           />
         </div>
@@ -25,6 +25,19 @@
                 placeholder="e.g. US, DE, JP"
               />
             </div>
+          </div>
+
+          <div class="row">
+            <KSelect
+              v-model="(selectedMetric as any)"
+              :items="[
+                { label: 'Request Count', value: 'request_count' },
+                { label: 'Response Size Average', value: 'response_size_average' },
+                { label: 'Response Latency Average', value: 'response_latency_average' },
+                { label: 'Requests per minute', value: 'request_per_minute' },
+              ]"
+              label="Select Metric"
+            />
           </div>
 
           <div class="row">
@@ -79,8 +92,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import type { MetricUnits } from '../src'
 import { AnalyticsGeoMap, exploreResultToCountryMetrics } from '../src'
 import CodeText from './CodeText.vue'
+import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 
 function isValidJson(str: string): boolean {
   if (!str) return true
@@ -116,13 +131,22 @@ const exploreResultText = ref('')
 const isValid = computed(() => exploreResultText.value !== undefined &&
   exploreResultText.value !== '' &&
   isValidJson(exploreResultText.value))
-const hasError = computed(() => !isValidJson(exploreResultText.value))
+const selectedMetric = ref<ExploreAggregations>('request_count')
 const selectedCountries = ref<string[]>(items.value.map(i => i.value))
 const bounds = ref<Array<[number, number]>>([
   [-180, -90],
   [180, 90],
 ])
+const metricUnit = computed<MetricUnits>(() => {
+  const map: Partial<Record<ExploreAggregations, MetricUnits>> = {
+    request_count: 'count',
+    response_size_average: 'bytes',
+    response_latency_average: 'ms',
+    request_per_minute: 'count/minute',
+  }
 
+  return map[selectedMetric.value as ExploreAggregations] || 'count'
+})
 const countryMetrics = computed(() => {
   const metrics: Record<string, number> = {}
   selectedCountries.value.forEach((country) => {

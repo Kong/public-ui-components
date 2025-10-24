@@ -1,13 +1,15 @@
 import type { Chart, ChartData, DefaultDataPoint } from 'chart.js'
 import { toFont } from 'chart.js/helpers'
-import { formatBytes } from '../utils'
-import { numberFormatter } from './constants'
+import composables from '../composables'
+import { unitFormatter, numberFormatter } from '@kong-ui-public/analytics-utilities'
 
 export type BarChartData = ChartData<'bar', DefaultDataPoint<'bar'>, string>
 
 const labelHeightCache = new Map()
 
 export const formatNumber = (value: number, unit: string) => {
+  const { i18n } = composables.useI18n()
+  const { formatBytes } = unitFormatter({ i18n })
   // TODO use `formatUnit` for all number formatting
   if (unit === 'bytes') {
     return formatBytes(value)

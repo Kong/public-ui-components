@@ -57,11 +57,16 @@
     "errorLimit": "800KB"
   },
   "dependencies": {
+    "approximate-number": "^2.1.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "lodash.clonedeep": "^4.5.0"
   },
+  "peerDependencies": {
+    "@kong-ui-public/i18n": "workspace:^"
+  },
   "devDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.0",
     "json-schema-to-ts": "^3.1.1",
     "vue": "^3.5.13"
