@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.107.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.107.3...@kong-ui-public/entities-plugins@9.107.4) (2025-10-24)
+
+
+### Bug Fixes
+
+* **entities-plugins:** update zod version and use safe extend ([#2590](https://github.com/Kong/public-ui-components/issues/2590)) ([e6b97bd](https://github.com/Kong/public-ui-components/commit/e6b97bd8ab4b2c8b85b205b144a1a0c291fa7ab9))
+
+
+
+
+
 ## [9.107.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.107.2...@kong-ui-public/entities-plugins@9.107.3) (2025-10-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
