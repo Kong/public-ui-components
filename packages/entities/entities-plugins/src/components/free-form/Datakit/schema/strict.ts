@@ -114,7 +114,7 @@ export const ConfigNodeBaseGuard = z
     }
   })
 
-export const CallNodeSchema = ConfigNodeBaseSchema.extend({
+export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('call'),
   /**
    * A string representing an HTTP method, such as GET, POST, PUT, or DELETE.
@@ -154,7 +154,7 @@ export const CallNodeSchema = ConfigNodeBaseSchema.extend({
 /** Make an external HTTP request. */
 export type CallNode = z.infer<typeof CallNodeSchema>
 
-export const ExitNodeSchema = ConfigNodeBaseSchema.extend({
+export const ExitNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('exit'),
   /**
    * HTTP status code.
@@ -170,7 +170,7 @@ export const ExitNodeSchema = ConfigNodeBaseSchema.extend({
 /** Terminate the request and send a response to the client. */
 export type ExitNode = z.infer<typeof ExitNodeSchema>
 
-export const JqNodeSchema = ConfigNodeBaseSchema.extend({
+export const JqNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('jq'),
   /**
    * The jq filter text. Refer to https://jqlang.org/manual/ for full documentation.
@@ -183,7 +183,7 @@ export const JqNodeSchema = ConfigNodeBaseSchema.extend({
 /** Process data using `jq` syntax. */
 export type JqNode = z.infer<typeof JqNodeSchema>
 
-export const PropertyNodeSchema = ConfigNodeBaseSchema.extend({
+export const PropertyNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('property'),
   /**
    * The expected MIME type of the property value. When set to `application/json`,
@@ -202,7 +202,7 @@ export const PropertyNodeSchema = ConfigNodeBaseSchema.extend({
 /** Get or set a property. */
 export type PropertyNode = z.infer<typeof PropertyNodeSchema>
 
-export const StaticNodeSchema = ConfigNodeBaseSchema.extend({
+export const StaticNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('static'),
   /** An object with string keys and free-form values. */
   values: z.record(z.string(), z.unknown()),
@@ -213,7 +213,7 @@ export const StaticNodeSchema = ConfigNodeBaseSchema.extend({
 /** Produce reusable outputs from statically-configured values. */
 export type StaticNode = z.infer<typeof StaticNodeSchema>
 
-export const CacheNodeSchema = ConfigNodeBaseSchema.extend({
+export const CacheNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('cache'),
   /** When true, skip cache errors and continue execution. */
   bypass_on_error: z.boolean().nullish(),
@@ -241,7 +241,7 @@ export const CacheNodeSchema = ConfigNodeBaseSchema.extend({
 /** Fetch data from configured cache resources. */
 export type CacheNode = z.infer<typeof CacheNodeSchema>
 
-export const BranchNodeSchema = ConfigNodeBaseSchema.extend({
+export const BranchNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('branch'),
   then: z.array(NodeNameSchema).nullish(),
   else: z.array(NodeNameSchema).nullish(),
