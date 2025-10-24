@@ -32,6 +32,8 @@ export enum SupportedEntityType {
 
 export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
 
+export const EventGatewayTypesArray = ['backend_cluster', 'virtual_cluster', 'listener', 'policy']
+
 export interface BaseEntityConfig {
   /** the ID of the entity */
   entityId: string

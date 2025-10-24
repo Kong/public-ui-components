@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { type PropType, computed } from 'vue'
-import { type SupportedEntityType, SupportedEntityTypesArray } from '../../types'
+import { EventGatewayTypesArray, type SupportedEntityType, SupportedEntityTypesArray } from '../../types'
 
 const SINGLE_INDENT = '  '
 
@@ -31,6 +31,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+})
+
+const isEventGatewayEntity = computed(() => {
+  return EventGatewayTypesArray.includes(props.entityType)
 })
 
 const buildBasicValString = (value: string | number | boolean, key: string): string => {
@@ -211,8 +215,11 @@ const terraformContent = computed((): string => {
     delete modifiedRecord.set
   }
 
-  // special handling for plugins
-  if (props.entityType === 'plugin') {
+  if (isEventGatewayEntity.value) {
+    // special handling for event gateways
+    content += `resource "konnect_gateway_event_gateway_${props.entityType}" "my_${props.entityType}" {\n`
+    content += 'provider = konnect-beta \n' // remove this line if provider changes
+  } else if (props.entityType === 'plugin') {
     // plugin type is specified separately
     //clone and convert '-' to '_' since terraform doesn't allow '-'
     const pluginType = props.credentialType.replace(/-/g, '_') || (modifiedRecord.name + '').replace(/-/g, '_')
@@ -227,10 +234,9 @@ const terraformContent = computed((): string => {
   content += generateConfig(modifiedRecord)
 
   // control plane id
-  content += `${SINGLE_INDENT}control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id\n`
-
-  // parent entity information if scoped
-  if (parentEntityType) {
+  if (!isEventGatewayEntity.value) {
+    content += `${SINGLE_INDENT}control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id\n`
+  } else if (parentEntityType) { // parent entity information if scoped
     content += `${SINGLE_INDENT}${parentEntityType} = {\n`
     content += `${SINGLE_INDENT}${SINGLE_INDENT}id = konnect_gateway_${parentEntityType}.my_${parentEntityType}.id\n`
     content += `${SINGLE_INDENT}}\n`
