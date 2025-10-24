@@ -82,7 +82,6 @@
           </KLabel>
 
           <RedisConfigurationSelector
-            disable-cancel-route-redirection
             :model-value="formData.cache?.partial_id"
             redis-type="redis-ee"
             @update:model-value="data => formData.cache!.partial_id = data"
@@ -90,7 +89,7 @@
         </div>
 
         <div
-          v-if="localStrategy === 'redis' && !formData.cache?.partial_id && !isCreating"
+          v-if="localStrategy === 'redis' && !formData.cache?.partial_id && redisConfigYaml"
           class="dk-cache-inline-redis"
         >
           <div>{{ t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.inline_config_preview') }}</div>
@@ -129,7 +128,7 @@ import type { CodeBlockEventData } from '@kong/kongponents'
 
 export type FormData = { cache?: CacheConfigFormData | null }
 
-const props = defineProps<{
+defineProps<{
   strategy?: CacheConfigFormData['strategy']
 }>()
 
@@ -146,9 +145,8 @@ if (field.error) throw new Error('No cache schema')
 
 const modalVisible = ref(false)
 const { i18n: { t } } = composables.useI18n()
-const isCreating = computed(() => !props.strategy)
 const canSubmit = computed(() => {
-  if (localStrategy.value === 'redis' && isCreating.value && !formData.cache!.partial_id) {
+  if (localStrategy.value === 'redis' && !formData.cache!.partial_id && !formData.cache!.redis) {
     return false
   }
   return true
@@ -207,6 +205,7 @@ const {
   createHighlighter,
 )
 
+// This is intended to clear partial_id when switching to memory strategy
 const handleStrategyChange = () => {
   if (localStrategy.value === 'memory' && formData.cache?.partial_id) {
     delete formData.cache?.partial_id

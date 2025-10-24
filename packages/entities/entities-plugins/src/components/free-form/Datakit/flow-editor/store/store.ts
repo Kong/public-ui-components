@@ -665,15 +665,12 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       }
 
       if (state.value.cacheConfig) {
-        resources.cache = {
-          strategy: state.value.cacheConfig.strategy,
-          redis: state.value.cacheConfig.redis,
-          memory: state.value.cacheConfig.memory,
-        }
+        const { strategy, redis, memory } = state.value.cacheConfig
+        resources.cache = { strategy, redis, memory }
       }
 
       // Konnect use `PUT` to update the plugin, so we can return undefined to clear the resources
-      if (Object.keys(resources).length === 0) return
+      if (Object.keys(resources).length === 0) return undefined
 
       return resources
     }

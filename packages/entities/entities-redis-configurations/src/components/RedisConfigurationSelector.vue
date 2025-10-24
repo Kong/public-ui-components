@@ -57,7 +57,6 @@
 
   <!-- New Redis Configuration Modal -->
   <RedisConfigurationFormModal
-    :disable-cancel-route-redirection="disableCancelRouteRedirection"
     :partial-type="redisType"
     :visible="isModalVisible"
     @created="onPartialCreated"
@@ -92,10 +91,6 @@ const {
   showCreateButton?: boolean
   /** Text for the create new configuration button */
   createButtonText?: string
-  /**
-   * Disable automatic redirection to cancel route when cancel is triggered
-   */
-  disableCancelRouteRedirection?: boolean
 }>()
 
 const emit = defineEmits<{

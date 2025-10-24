@@ -9,8 +9,7 @@
   >
     <RedisConfigurationForm
       :action-teleport-target="modalActionTeleportTarget"
-      :config="formConfig"
-      :disable-cancel-route-redirection="disableCancelRouteRedirection"
+      :config="realFormConfig"
       :disabled-partial-type="disabledPartialType"
       :slidout-top-offset="0"
       @cancel="handleClose"
@@ -42,10 +41,6 @@ export interface RedisConfigurationFormModalProps {
   visible: boolean
   /** The partial type to create */
   partialType?: 'redis-ce' | 'redis-ee'
-  /**
-   * Disable automatic redirection to cancel route when cancel is triggered
-   */
-  disableCancelRouteRedirection?: boolean
 }
 
 const {
@@ -61,6 +56,12 @@ const emit = defineEmits<{
 
 const { i18n: { t } } = useI18n()
 const formConfig = inject<KonnectBaseFormConfig | KongManagerBaseFormConfig>(FORMS_CONFIG)!
+const realFormConfig = computed(() => {
+  return {
+    ...formConfig,
+    cancelRoute: undefined,
+  }
+})
 const { getMessageFromError } = useErrors()
 const id = useId()
 
