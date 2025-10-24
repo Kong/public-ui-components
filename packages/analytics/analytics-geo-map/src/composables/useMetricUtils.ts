@@ -1,7 +1,7 @@
 import { computed, type Ref } from 'vue'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
-import type { ExploreAggregations } from '@kong-ui-public/analytics-utilities'
+import { COUNTRIES, type ExploreAggregations } from '@kong-ui-public/analytics-utilities'
 import { KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER } from '@kong/design-tokens'
 
 const MAX_LEGEND_BUCKETS = 5
@@ -53,8 +53,19 @@ export default function useMetricUtils({
   countryMetrics: Readonly<Ref<Record<string, number>>>
   metric: Readonly<Ref<ExploreAggregations>>
 }) {
-  const values = computed(() => Object.values(countryMetrics.value) as number[])
-  const datapointCount = computed(() => Object.keys(countryMetrics.value).length)
+
+  const filteredMetrics = computed(() => {
+    const metrics = { ...countryMetrics.value }
+    for (const code of Object.keys(metrics)) {
+      if (!COUNTRIES.find(c => c.code === code)) {
+        delete metrics[code]
+      }
+    }
+    return metrics
+  })
+
+  const values = computed(() => Object.values(filteredMetrics.value) as number[])
+  const datapointCount = computed(() => Object.keys(filteredMetrics.value).length)
   const buckets = computed(() => datapointCount.value < MAX_LEGEND_BUCKETS - 1 ? datapointCount.value : MAX_LEGEND_BUCKETS)
 
   const shouldTuncateMetric = computed(() => {
@@ -66,12 +77,12 @@ export default function useMetricUtils({
 
     if (values.value.length > 10) {
       const sortedValues = [...values.value].sort((a, b) => a - b)
-      const cutoff = quantile(sortedValues, 0.25)
-      const top25PercentValues = values.value.filter(v => v >= cutoff)
-      const bottom75PercentValues = values.value.filter(v => v < cutoff)
+      const cutoff = quantile(sortedValues, 0.75)
+      const top = values.value.filter(v => v >= cutoff)
+      const bottom = values.value.filter(v => v < cutoff)
 
-      const scale1 = generateLogScale(top25PercentValues, 3)
-      const scale2 = generateLogScale(bottom75PercentValues, 2)
+      const scale1 = generateLogScale(top, 3)
+      const scale2 = generateLogScale(bottom, 2)
       scale.push(...scale1, ...scale2)
       return scale
     }

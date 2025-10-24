@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-geo-map",
-  "version": "1.4.15",
+  "version": "1.4.17",
   "type": "module",
   "main": "./dist/vitals-geo-map.umd.js",
   "module": "./dist/vitals-geo-map.es.js",
@@ -62,7 +62,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "1.3MB"
+    "errorLimit": "1.5MB"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",

@@ -53,7 +53,7 @@ describe('<DashboardTile />', () => {
       return Promise.resolve(
         generateSingleMetricTimeSeriesData(
           { name: 'TotalRequests', unit: 'count' },
-          { statusCode: ['request_count'] as string[] },
+          { status_code: ['request_count'] as string[] },
           { start_ms: start, end_ms: end },
         ) as ExploreResultV4,
       )
@@ -500,7 +500,7 @@ describe('<DashboardTile />', () => {
         return Promise.resolve(
           generateSingleMetricTimeSeriesData(
             { name: 'TotalRequests', unit: 'count' },
-            { statusCode: ['request_count'] as string[] },
+            { status_code: ['request_count'] as string[] },
             { start_ms: start, end_ms: end },
           ) as ExploreResultV4,
         )
@@ -530,6 +530,90 @@ describe('<DashboardTile />', () => {
           expect(payload).to.have.property('query')
           expect(payload.query).to.have.property('limit', EXPORT_RECORD_LIMIT)
         })
+    })
+
+    it("doesn't call queryFn with increased limit when not allowed", () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start_ms: start, end_ms: end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: mockTileDefinition,
+          context: mockContext,
+          queryReady: true,
+          refreshCounter: 0,
+          tileId: 1,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn, staticConfig: { increaseCsvExportLimit: false } },
+          },
+        },
+      })
+
+      cy.getTestId('kebab-action-menu-1').click()
+      cy.getTestId('chart-csv-export-1').click()
+      cy.getTestId('csv-export-modal').find('.vitals-table').should('exist')
+
+      cy.get('@queryFn').should('have.been.calledOnce')
+        .then((stub) => {
+          const payload = stub.getCall(0).args[0]
+
+          expect(payload).to.have.property('datasource', 'api_usage')
+          expect(payload).to.have.property('query')
+          expect(payload.query.limit).to.equal(undefined)
+        })
+    })
+
+    it('handles deferred loading', () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start_ms: start, end_ms: end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: mockTileDefinition,
+          context: mockContext,
+          queryReady: false,
+          refreshCounter: 0,
+          tileId: 1,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn, staticConfig: { increaseCsvExportLimit: false } },
+          },
+        },
+      }).then(({ wrapper }) => {
+        cy.getTestId('kebab-action-menu-1').click()
+        cy.getTestId('chart-csv-export-1').click()
+        cy.getTestId('csv-export-modal').should('exist')
+        cy.getTestId('csv-export-modal').find('.vitals-table').should('not.exist')
+        cy.getTestId('csv-export-modal').find('.chart-skeleton').should('exist')
+
+        // Why is the 'then' needed here?  I don't know, but if it's not here, Cypress barges on and
+        // sets props on the wrapper before it finishes its assertions.
+        cy.get('@queryFn').should('not.have.been.called').then(() => {
+          // Update the queryReady prop
+          wrapper.setProps({ queryReady: true }).then(() => {
+            cy.getTestId('csv-export-modal').find('.vitals-table').should('exist')
+
+            cy.get('@queryFn').should('have.been.calledOnce')
+          })
+        })
+      })
     })
   })
 })

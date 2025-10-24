@@ -374,11 +374,25 @@ const exportCsv = async () => {
   exportModalVisible.value = true
   exportState.value = { status: 'loading' }
 
-  issueQuery(props.definition.query, props.context, EXPORT_RECORD_LIMIT).then(queryResult => {
-    exportState.value = { status: 'success', chartData: queryResult }
-  }).catch(error => {
-    exportState.value = { status: 'error', error: error }
-  })
+  // If we're allowed to increase the CSV export limit, issue a new query with an expanded limit.
+  if (queryBridge?.staticConfig?.increaseCsvExportLimit ?? true) {
+    issueQuery(props.definition.query, props.context, EXPORT_RECORD_LIMIT).then(queryResult => {
+      exportState.value = { status: 'success', chartData: queryResult }
+    }).catch(error => {
+      exportState.value = { status: 'error', error: error }
+    })
+  } else if (chartData.value) {
+    // If we're not allowed to increase the limit, and results are available, use them.
+    exportState.value = { status: 'success', chartData: chartData.value }
+  } else {
+    // If results aren't available, wait until they are.
+    const stop = watch(chartData, (newValue) => {
+      if (newValue) {
+        exportState.value = { status: 'success', chartData: newValue }
+        stop()
+      }
+    })
+  }
 }
 
 const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
