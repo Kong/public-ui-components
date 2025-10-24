@@ -1,7 +1,7 @@
 import type { ComputedRef } from 'vue'
 import { shallowRef } from 'vue'
 
-import type { GroupId, GroupInstance, NodeId } from '../../types'
+import type { GroupId, GroupInstance, NodeId, Rect } from '../../types'
 import type { XYPosition } from '@vue-flow/core'
 
 interface UseBranchDropOptions {
@@ -10,21 +10,32 @@ interface UseBranchDropOptions {
   getNodeDepth: (nodeId: NodeId) => number
 }
 
-type DragSource = 'panel' | 'canvas'
+type DragOrigin = 'panel' | 'canvas'
+type DragTarget = XYPosition | Rect | undefined
 
-type DragHitArea = XYPosition | { x: number, y: number, width: number, height: number } | undefined
-
-const isPoint = (value: DragHitArea): value is XYPosition =>
-  typeof value === 'object' && !!value && 'x' in value && 'y' in value && !('width' in value)
-
-const isRect = (value: DragHitArea): value is { x: number, y: number, width: number, height: number } =>
+const isRect = (value: DragTarget): value is Rect =>
   typeof value === 'object' && !!value && 'width' in value && 'height' in value
 
+const isPoint = (value: DragTarget): value is XYPosition =>
+  typeof value === 'object' && !!value && 'x' in value && 'y' in value && !isRect(value)
+
+const toPoint = (value: DragTarget): XYPosition | undefined => {
+  if (!value) return undefined
+  if (isRect(value)) {
+    return {
+      x: value.x + value.width / 2,
+      y: value.y + value.height / 2,
+    }
+  }
+  if (isPoint(value)) return value
+  return undefined
+}
+
 export function useBranchDrop({ phase, groupMapById, getNodeDepth }: UseBranchDropOptions) {
-  const source = shallowRef<DragSource>()
+  const source = shallowRef<DragOrigin>()
   const activeGroupId = shallowRef<GroupId>()
 
-  function start(newSource: DragSource) {
+  function start(newSource: DragOrigin) {
     source.value = newSource
     activeGroupId.value = undefined
   }
@@ -61,24 +72,19 @@ export function useBranchDrop({ phase, groupMapById, getNodeDepth }: UseBranchDr
     return best?.id
   }
 
-  function updateActiveGroup(target: DragHitArea) {
-    if (!target || !source.value) {
+  function updateActiveGroup(target: DragTarget) {
+    if (!source.value) {
       activeGroupId.value = undefined
       return
     }
 
-    if (isRect(target)) {
-      const center = {
-        x: target.x + target.width / 2,
-        y: target.y + target.height / 2,
-      }
-      activeGroupId.value = findDeepestGroup(center)
+    const point = toPoint(target)
+    if (!point) {
+      activeGroupId.value = undefined
       return
     }
 
-    if (isPoint(target)) {
-      activeGroupId.value = findDeepestGroup(target)
-    }
+    activeGroupId.value = findDeepestGroup(point)
   }
 
   function reset() {

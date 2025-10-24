@@ -31,6 +31,8 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
 
 export type EditorMode = 'code' | 'flow'
 
+export type Rect = XYPosition & Dimensions
+
 interface EditorModalNavItemBase {
   label: string
   icon: Component
@@ -140,6 +142,13 @@ export type GroupId = `${NodeId}:${BranchName}`
 export type GroupName = `${NodeName}:${BranchName}`
 
 export type IdConnection = NodeId | `${NodeId}.${FieldId}`
+
+export interface BranchDragSnapshot {
+  source?: 'panel' | 'canvas'
+  draggingId?: NodeId | GroupId
+  hitArea?: XYPosition | Rect | undefined
+  activeGroupId?: GroupId
+}
 
 export interface NodeField {
   id: FieldId

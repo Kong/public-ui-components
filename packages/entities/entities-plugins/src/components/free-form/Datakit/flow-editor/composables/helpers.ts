@@ -1,4 +1,4 @@
-import type { NodeInstance, FieldId, EdgeInstance, NodeId } from '../../types'
+import type { NodeInstance, FieldId, EdgeInstance, NodeId, Rect } from '../../types'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 import { findFieldById } from '../store/helpers'
 
@@ -50,4 +50,34 @@ export function createNewConnectionString(
     formatNodeConnection(sourceNode, sourceFieldId, 'output'),
     formatNodeConnection(targetNode, targetFieldId, 'input'),
   ]
+}
+
+/**
+ * Calculate the minimal bounding rectangle that contains every rect in the iterable.
+ */
+export function getBoundingRect(rects: Iterable<Rect>): Rect | undefined {
+  let minX: number | undefined, minY: number | undefined
+  let maxX: number | undefined, maxY: number | undefined
+
+  for (const { x, y, width, height } of rects) {
+    if (![x, y, width, height].every(Number.isFinite)) continue
+    const x2 = x + width
+    const y2 = y + height
+    minX = minX === undefined ? x : Math.min(minX, x)
+    minY = minY === undefined ? y : Math.min(minY, y)
+    maxX = maxX === undefined ? x2 : Math.max(maxX, x2)
+    maxY = maxY === undefined ? y2 : Math.max(maxY, y2)
+  }
+
+  if (
+    minX === undefined
+    || minY === undefined
+    || maxX === undefined
+    || maxY === undefined
+    || minX > maxX
+    || minY > maxY
+  ) {
+    return undefined
+  }
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
 }

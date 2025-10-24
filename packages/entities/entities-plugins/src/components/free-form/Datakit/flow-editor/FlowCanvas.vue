@@ -146,7 +146,7 @@ const {
 })
 
 const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode, commit: commitHistory } = editorStore
-const { project, vueFlowRef, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
+const { screenToFlowCoordinate, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
 const {
   activeGroupId,
   beginPanelDrag,
@@ -174,15 +174,7 @@ function onDragOver(e: DragEvent) {
   if (mode !== 'edit' || disableDrop.value) return
 
   e.preventDefault()
-
-  const { top = 0, left = 0 } = vueFlowRef.value?.getBoundingClientRect() || {}
-
-  const projected = project({
-    x: e.clientX - left,
-    y: e.clientY - top,
-  })
-
-  updateActiveGroup(projected)
+  updateActiveGroup(screenToFlowCoordinate({ x: e.clientX, y: e.clientY }))
 }
 
 function onDrop(e: DragEvent) {
@@ -196,14 +188,7 @@ function onDrop(e: DragEvent) {
   const payload = JSON.parse(data) as DragPayload
   if (payload.action !== 'create-node') return
 
-  // VueFlow has a bug where it fails to take the top/left offset of the flow canvas into account
-  // when projecting the coordinates from mouse event to viewport coordinates.
-  const { top = 0, left = 0 } = vueFlowRef.value?.getBoundingClientRect() || {}
-
-  const projected = project({
-    x: e.clientX - left,
-    y: e.clientY - top,
-  })
+  const projected = screenToFlowCoordinate({ x: e.clientX, y: e.clientY })
 
   const { type, anchor } = payload.data
   const newNode = {

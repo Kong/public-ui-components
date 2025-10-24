@@ -8,6 +8,7 @@ import type {
   NodeId,
   NodeInstance,
   NodePhase,
+  Rect,
 } from '../../types'
 import { useEditorStore } from '../store/store'
 import type { FlowEdge, FlowGroupNodeData, GroupLayout } from '../../types'
@@ -17,6 +18,7 @@ import {
   DK_FLOW_BRANCH_EDGE_Z_OFFSET,
   DK_BRANCH_GROUP_PADDING,
 } from '../../constants'
+import { getBoundingRect } from './helpers'
 
 export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase, readonly?: boolean, flowId?: string }) {
   const { findNode } = useVueFlow(flowId)
@@ -190,10 +192,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
     if (!members.length) return undefined
 
-    let x1 = Number.POSITIVE_INFINITY
-    let y1 = Number.POSITIVE_INFINITY
-    let x2 = Number.NEGATIVE_INFINITY
-    let y2 = Number.NEGATIVE_INFINITY
+    const rects: Rect[] = []
 
     for (const member of members) {
       const flowNode = findNode(member.id)
@@ -208,10 +207,12 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       const absoluteX = computedPosition?.x ?? member.position.x
       const absoluteY = computedPosition?.y ?? member.position.y
 
-      x1 = Math.min(x1, absoluteX)
-      y1 = Math.min(y1, absoluteY)
-      x2 = Math.max(x2, absoluteX + width)
-      y2 = Math.max(y2, absoluteY + height)
+      rects.push({
+        x: absoluteX,
+        y: absoluteY,
+        width,
+        height,
+      })
 
       const childGroups = groupsByOwner.value.get(member.id) ?? []
       for (const child of childGroups) {
@@ -221,24 +222,28 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
         const childDimensions = pendingLayout?.dimensions ?? child.dimensions
         if (!childPosition || !childDimensions) continue
 
-        x1 = Math.min(x1, childPosition.x)
-        y1 = Math.min(y1, childPosition.y)
-        x2 = Math.max(x2, childPosition.x + childDimensions.width)
-        y2 = Math.max(y2, childPosition.y + childDimensions.height)
+        rects.push({
+          x: childPosition.x,
+          y: childPosition.y,
+          width: childDimensions.width,
+          height: childDimensions.height,
+        })
       }
     }
 
-    if (!Number.isFinite(x1) || !Number.isFinite(y1) || !Number.isFinite(x2) || !Number.isFinite(y2)) {
+    const bounds = getBoundingRect(rects)
+    if (!bounds) {
       return undefined
     }
 
-    const paddedWidth = (x2 - x1) + DK_BRANCH_GROUP_PADDING * 2
-    const paddedHeight = (y2 - y1) + DK_BRANCH_GROUP_PADDING * 2
+    const padding = DK_BRANCH_GROUP_PADDING
+    const paddedWidth = bounds.width + padding * 2
+    const paddedHeight = bounds.height + padding * 2
 
     return {
       position: {
-        x: Math.round(x1 - DK_BRANCH_GROUP_PADDING),
-        y: Math.round(y1 - DK_BRANCH_GROUP_PADDING),
+        x: Math.round(bounds.x - padding),
+        y: Math.round(bounds.y - padding),
       },
       dimensions: {
         width: Math.round(paddedWidth),

@@ -25,9 +25,10 @@ import { isGroupInstance, isImplicitNode } from '../node/node'
 import { useEditorStore } from './store'
 import { parseGroupId } from './helpers'
 import { useBranchDrop } from '../composables/useBranchDrop'
+import { getBoundingRect } from '../composables/helpers'
 
 import type { Node as DagreNode } from '@dagrejs/dagre'
-import type { Connection, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
+import type { Connection, FitViewParams, Node, NodeSelectionChange, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
 import type {
@@ -40,6 +41,7 @@ import type {
   NodeId,
   NodeInstance,
   NodePhase,
+  Rect,
 } from '../../types'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 
@@ -55,38 +57,6 @@ function parseHandle(handle: string): { io: 'input' | 'output', field?: FieldId 
     io: parsed[1] as 'input' | 'output',
     field: parsed[2] as FieldId | undefined,
   }
-}
-
-/**
- * A helper function to create a bounding box around nodes.
- */
-function createWrapper(): [typeof wrap, typeof copy] {
-  const bounding = {
-    x1: Number.POSITIVE_INFINITY,
-    y1: Number.POSITIVE_INFINITY,
-    x2: Number.NEGATIVE_INFINITY,
-    y2: Number.NEGATIVE_INFINITY,
-  }
-
-  const wrap = (node: Rect) => {
-    bounding.x1 = Math.min(bounding.x1, node.x)
-    bounding.y1 = Math.min(bounding.y1, node.y)
-    bounding.x2 = Math.max(bounding.x2, node.x + node.width)
-    bounding.y2 = Math.max(bounding.y2, node.y + node.height)
-  }
-
-  const copy = () => {
-    const copy = { ...bounding }
-    if (copy.x1 > copy.x2) {
-      copy.x1 = copy.x2 = 0
-    }
-    if (copy.y1 > copy.y2) {
-      copy.y1 = copy.y2 = 0
-    }
-    return copy
-  }
-
-  return [wrap, copy]
 }
 
 const BORDER_COLORS: Record<EdgeState, string> = {
@@ -202,6 +172,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       setNodes,
       setEdges,
       addSelectedNodes,
+      screenToFlowCoordinate,
     } = vueFlowStore
 
     // VueFlow has a default delete key code of 'Backspace',
@@ -510,7 +481,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
     })
 
-    onNodeDrag(({ node }) => {
+    onNodeDrag(({ node, event }) => {
       if (!node) return
 
       if (isGroupId(node.id)) {
@@ -561,7 +532,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         width: node.dimensions?.width ?? 0,
         height: node.dimensions?.height ?? 0,
       }
-      updateActiveGroup(rect)
+      const pointer = event && 'clientX' in event
+        ? screenToFlowCoordinate({ x: event.clientX, y: event.clientY })
+        : undefined
+      updateActiveGroup(pointer ?? rect)
 
       // Update group layout in real-time when dragging member nodes
       // This allows the group to expand/shrink as members move
@@ -729,7 +703,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         dagre.layout(dagreGraph)
       }
 
-      const [wrapBounding, copyBounding] = createWrapper()
+      const boundingRects: Rect[] = []
 
       // Positions returned by Dagre are centered
       const normalizePosition = (node: DagreNode) => {
@@ -749,7 +723,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         for (const node of autoNodes) {
           const dagreNode = dagreGraph.node(node.id)
           const position = normalizePosition(dagreNode)
-          wrapBounding(position)
+          boundingRects.push(position)
 
           if (isGroupInstance(node)) {
             // moveGroup is not enough
@@ -765,9 +739,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         }
       }
 
-      const centralBounding = copyBounding()
-      const centralWidth = centralBounding.x2 - centralBounding.x1
-      const centralHeight = centralBounding.y2 - centralBounding.y1
+      const centralRect = getBoundingRect(boundingRects) ?? { x: 0, y: 0, width: 0, height: 0 }
+      const centralWidth = centralRect.width
+      const centralHeight = centralRect.height
+      const centralLeft = centralRect.x
+      const centralRight = centralRect.x + centralRect.width
 
       // Try to place implicit nodes at both ends when there is much room
       // If horizontalSpace is 0, it means we do not have enough space
@@ -781,18 +757,18 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           - 2 * padding,
       )
 
-      const centerY = centralBounding.y1 + centralHeight / 2
+      const centerY = centralRect.y + centralHeight / 2
 
       if (leftNode) {
         moveNode(leftNode.id, {
-          x: centralBounding.x1 - nodeGap - horizontalSpace / 2 - (leftGraphNode?.dimensions?.width ?? 0),
+          x: centralLeft - nodeGap - horizontalSpace / 2 - (leftGraphNode?.dimensions?.width ?? 0),
           y: centerY - (leftGraphNode?.dimensions?.height ?? 0) / 2,
         }, false)
       }
 
       if (rightNode) {
         moveNode(rightNode.id, {
-          x: centralBounding.x2 + nodeGap + horizontalSpace / 2,
+          x: centralRight + nodeGap + horizontalSpace / 2,
           y: centerY - (rightGraphNode?.dimensions?.height ?? 0) / 2,
         }, false)
       }
