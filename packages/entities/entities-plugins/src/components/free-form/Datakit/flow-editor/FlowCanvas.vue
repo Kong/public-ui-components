@@ -149,13 +149,19 @@ const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplic
 const { screenToFlowCoordinate, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
 const {
   activeGroupId,
-  beginPanelDrag,
+  startPanelDrag,
   endPanelDrag,
   updateActiveGroup,
   attachNodeToActiveGroup,
 } = groupDrop
 
 const disableDrop = ref(false)
+
+function getDraggedNodeType(event: DragEvent): string | undefined {
+  const format = event.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
+  if (!format) return undefined
+  return format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
+}
 
 function onNodeClick(event: NodeMouseEvent) {
   if (mode !== 'edit') {
@@ -243,41 +249,41 @@ const controls = computed<Control[]>(() => {
   return result
 })
 
-if (mode === 'edit') {
-  const resetMask = () => {
-    disableDrop.value = false
-  }
-
+// Check if the dragged node is valid to drop
+if (phase === 'response' && mode === 'edit') {
   useEventListener('dragstart', (e: DragEvent) => {
-    const format = e.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
-    if (!format) return
-
-    beginPanelDrag()
-
-    if (phase === 'response') {
-      const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
-      if (nodeType === 'call') {
-        disableDrop.value = true
-      }
+    const nodeType = getDraggedNodeType(e)
+    if (nodeType === 'call') {
+      disableDrop.value = true
     }
   })
 
-  let restartMaskTimer: (() => void) | undefined
-  if (phase === 'response') {
-    const { start } = useTimeoutFn(() => {
-      disableDrop.value = false
-    }, 80)
-    restartMaskTimer = start
-    useEventListener('dragover', () => {
-      restartMaskTimer?.()
-    })
-  }
+  // `dragend` fires only after the long snap-back animation, so UI feels delayed.
+  // Instead rely on `dragover`: it fires repeatedly at high frequency while dragging.
+  // Restart a short timer on every `dragover`. If no event comes within ~80ms,
+  // assume the user released and reset `disableDrop` immediately.
+  const { start } = useTimeoutFn(() => {
+    disableDrop.value = false
+  }, 80)
+
+  useEventListener('dragover', () => {
+    start()
+  })
+
+  useEventListener('dragend', () => {
+    disableDrop.value = false
+  })
+}
+
+if (mode === 'edit') {
+  useEventListener('dragstart', (e: DragEvent) => {
+    const nodeType = getDraggedNodeType(e)
+    if (!nodeType) return
+    startPanelDrag()
+  })
 
   useEventListener('dragend', () => {
     endPanelDrag()
-    if (phase === 'response') {
-      resetMask()
-    }
   })
 }
 

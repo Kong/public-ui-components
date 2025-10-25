@@ -40,7 +40,7 @@ export function useBranchDrop({ phase, groupMapById, getNodeDepth }: UseBranchDr
     activeGroupId.value = undefined
   }
 
-  function finish() {
+  function end() {
     if (!source.value) return
     source.value = undefined
     activeGroupId.value = undefined
@@ -96,7 +96,7 @@ export function useBranchDrop({ phase, groupMapById, getNodeDepth }: UseBranchDr
     activeGroupId,
     start,
     updateActiveGroup,
-    finish,
+    end,
     reset,
   }
 }

@@ -229,7 +229,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       activeGroupId,
       start: startGroupDrag,
       updateActiveGroup,
-      finish: finishGroupDrag,
+      end: endGroupDrag,
     } = useBranchDrop({
       phase,
       groupMapById,
@@ -586,7 +586,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
 
       attachNodeToActiveGroup(nodeId)
-      finishGroupDrag()
+      endGroupDrag()
 
       historyCommit()
     })
@@ -1004,8 +1004,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     const groupDrop = {
       activeGroupId,
-      beginPanelDrag: () => startGroupDrag('panel'),
-      endPanelDrag: finishGroupDrag,
+      startPanelDrag: () => startGroupDrag('panel'),
+      endPanelDrag: endGroupDrag,
       updateActiveGroup,
       attachNodeToActiveGroup,
     }
