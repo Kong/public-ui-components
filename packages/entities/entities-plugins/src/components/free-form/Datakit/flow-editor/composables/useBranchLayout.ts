@@ -231,19 +231,18 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       }
     }
 
-    const bounds = getBoundingRect(rects)
-    if (!bounds) {
+    const rect = getBoundingRect(rects)
+    if (!rect) {
       return undefined
     }
 
-    const padding = DK_BRANCH_GROUP_PADDING
-    const paddedWidth = bounds.width + padding * 2
-    const paddedHeight = bounds.height + padding * 2
+    const paddedWidth = rect.width + DK_BRANCH_GROUP_PADDING * 2
+    const paddedHeight = rect.height + DK_BRANCH_GROUP_PADDING * 2
 
     return {
       position: {
-        x: Math.round(bounds.x - padding),
-        y: Math.round(bounds.y - padding),
+        x: Math.round(rect.x - DK_BRANCH_GROUP_PADDING),
+        y: Math.round(rect.y - DK_BRANCH_GROUP_PADDING),
       },
       dimensions: {
         width: Math.round(paddedWidth),
