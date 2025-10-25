@@ -552,9 +552,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       if (!node) return
 
       if (isGroupId(node.id)) {
-        const groupId = node.id as GroupId
         updateDragging()
-        historyCommit(`drag-group:${groupId}`)
+        historyCommit()
         return
       }
 
@@ -587,7 +586,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       attachNodeToActiveGroup(nodeId)
       finishGroupDrag()
 
-      historyCommit(`drag-node:${nodeId}`)
+      historyCommit()
     })
 
     // Only triggered by canvas-originated changes

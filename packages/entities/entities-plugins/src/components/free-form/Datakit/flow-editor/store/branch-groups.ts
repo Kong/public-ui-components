@@ -168,6 +168,9 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
         }
         // Use setsEqual because [A, B] and [B, A] are the same membership
         if (!setsEqual(existing.memberIds, members)) {
+          // Reset layout so downstream watchers recalculate bounds for new membership
+          existing.position = undefined
+          existing.dimensions = undefined
           existing.memberIds = [...members]
         }
       }
