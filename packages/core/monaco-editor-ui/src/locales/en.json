@@ -1,0 +1,18 @@
+{
+  "editor": {
+    "labels": {
+      "action_search": "Search",
+      "action_full_screen": "Full Screen",
+      "action_search_label": "Search document",
+      "action_format": "Format",
+      "action_format_label": "Format document",
+      "key": "Key: {key}"
+    },
+    "messages": {
+      "empty_message": "The editor is currently empty. Start typing to add content.",
+      "empty_title": "No Content Available",
+      "loading_message": "Please wait while the {type} content is loaded.",
+      "loading_title": "{type} editor"
+    }
+  }
+}
