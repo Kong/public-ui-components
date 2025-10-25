@@ -60,7 +60,10 @@
         />
       </template>
       <template #node-group="{ data }">
-        <GroupNode :data />
+        <GroupNode
+          :active="activeGroupId === data.id"
+          :data
+        />
       </template>
     </VueFlow>
 
@@ -129,6 +132,7 @@ const {
   selectNode,
   placeToRight,
   scrollRightToReveal,
+  groupDrop,
 } = provideFlowStore({
   phase,
   flowId,
@@ -141,10 +145,23 @@ const {
   readonly: mode !== 'edit',
 })
 
-const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode } = editorStore
-const { project, vueFlowRef, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
+const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode, commit: commitHistory } = editorStore
+const { screenToFlowCoordinate, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
+const {
+  activeGroupId,
+  startPanelDrag,
+  endPanelDrag,
+  updateActiveGroup,
+  attachNodeToActiveGroup,
+} = groupDrop
 
 const disableDrop = ref(false)
+
+function getDraggedNodeType(event: DragEvent): string | undefined {
+  const format = event.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
+  if (!format) return undefined
+  return format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
+}
 
 function onNodeClick(event: NodeMouseEvent) {
   if (mode !== 'edit') {
@@ -163,6 +180,7 @@ function onDragOver(e: DragEvent) {
   if (mode !== 'edit' || disableDrop.value) return
 
   e.preventDefault()
+  updateActiveGroup(screenToFlowCoordinate({ x: e.clientX, y: e.clientY }))
 }
 
 function onDrop(e: DragEvent) {
@@ -176,14 +194,7 @@ function onDrop(e: DragEvent) {
   const payload = JSON.parse(data) as DragPayload
   if (payload.action !== 'create-node') return
 
-  // VueFlow has a bug where it fails to take the top/left offset of the flow canvas into account
-  // when projecting the coordinates from mouse event to viewport coordinates.
-  const { top = 0, left = 0 } = vueFlowRef.value?.getBoundingClientRect() || {}
-
-  const projected = project({
-    x: e.clientX - left,
-    y: e.clientY - top,
-  })
+  const projected = screenToFlowCoordinate({ x: e.clientX, y: e.clientY })
 
   const { type, anchor } = payload.data
   const newNode = {
@@ -195,12 +206,18 @@ function onDrop(e: DragEvent) {
     },
   }
 
-  const nodeId = addNode(newNode)
+  const nodeId = addNode(newNode, false)
 
-  if (!nodeId) return
+  if (!nodeId) {
+    endPanelDrag()
+    return
+  }
 
+  attachNodeToActiveGroup(nodeId)
+  commitHistory()
   selectNode(nodeId)
   propertiesPanelOpen.value = true
+  endPanelDrag()
 }
 
 async function onClickAutoLayout() {
@@ -235,11 +252,8 @@ const controls = computed<Control[]>(() => {
 // Check if the dragged node is valid to drop
 if (phase === 'response' && mode === 'edit') {
   useEventListener('dragstart', (e: DragEvent) => {
-    const format = e.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
-    if (!format) return
-
-    const nodeType = format.replace(`${DK_DATA_TRANSFER_MIME_TYPE}/`, '')
-    if ((nodeType === 'call')) {
+    const nodeType = getDraggedNodeType(e)
+    if (nodeType === 'call') {
       disableDrop.value = true
     }
   })
@@ -258,6 +272,18 @@ if (phase === 'response' && mode === 'edit') {
 
   useEventListener('dragend', () => {
     disableDrop.value = false
+  })
+}
+
+if (mode === 'edit') {
+  useEventListener('dragstart', (e: DragEvent) => {
+    const nodeType = getDraggedNodeType(e)
+    if (!nodeType) return
+    startPanelDrag()
+  })
+
+  useEventListener('dragend', () => {
+    endPanelDrag()
   })
 }
 

@@ -13,24 +13,22 @@
       <p>{{ message }}</p>
       <p>{{ t('plugins.free-form.datakit.flow_editor.confirm.message.confirm') }}</p>
 
-      <div class="dk-confirm-modal-connections">
+      <div class="connections">
         <div
           v-for="[source, target] in addedConnections ?? []"
           :key="`${source}-${target}`"
+          class="connection"
         >
           <AddIcon :color="KUI_COLOR_BACKGROUND_SUCCESS" />
-          <span>{{ source }}</span>
-          →
-          <span>{{ target }}</span>
+          {{ source }} → {{ target }}
         </div>
         <div
           v-for="[source, target] in removedConnections ?? []"
           :key="`${source}-${target}`"
+          class="connection"
         >
           <RemoveIcon :color="KUI_COLOR_TEXT_DANGER" />
-          <span>{{ source }}</span>
-          →
-          <span>{{ target }}</span>
+          {{ source }} → {{ target }}
         </div>
       </div>
     </div>
@@ -76,7 +74,6 @@ const message = ref(propMessage)
 const addedConnections = ref<ConnectionString[]>(propAddedConnections ?? [])
 const removedConnections = ref<ConnectionString[]>(propRemovedConnections ?? [])
 let resolveFn: ((result: boolean) => void) | null = null
-
 function handleModalClose() {
   visible.value = false
   emit('cancel')
@@ -114,15 +111,16 @@ defineExpose({
   flex-direction: column;
   gap: $kui-space-80;
 
-  .dk-confirm-modal-connections {
+  .connections {
     display: flex;
     flex-direction: column;
     gap: $kui-space-40;
+  }
 
-    > div {
-      display: flex;
-      gap: $kui-space-40;
-    }
+  .connection {
+    align-items: center;
+    display: flex;
+    gap: $kui-space-40;
   }
 }
 
