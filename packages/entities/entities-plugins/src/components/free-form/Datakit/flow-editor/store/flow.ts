@@ -357,7 +357,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       // Handle conflict edge conflicts based on the opposite connection type
       // This ensures we clean up all incompatible connections
       const conflictEdgesToDisconnect = parsedTarget?.io === 'input'
-        ? targetIncomingEdges.filter(edge => edge.targetField === parsedTarget.field)
+        ? parsedTarget?.field
+          ? targetIncomingEdges.filter(edge => edge.targetField === parsedTarget.field)
+          : targetIncomingEdges.filter(edge => !!edge.targetField)
         : targetIncomingEdges.filter(edge => !edge.targetField)
 
       if (conflictEdgesToDisconnect.length > 0) {
