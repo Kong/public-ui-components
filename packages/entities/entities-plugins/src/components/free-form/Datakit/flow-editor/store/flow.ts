@@ -740,7 +740,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         }
       }
 
-      const centralRect = getBoundingRect(boundingRects) ?? { x: 0, y: 0, width: 0, height: 0 }
+      const centralRect = boundingRects.length > 0
+        ? getBoundingRect(boundingRects)
+        : { x: 0, y: 0, width: 0, height: 0 }
       const centralWidth = centralRect.width
       const centralHeight = centralRect.height
       const centralLeft = centralRect.x

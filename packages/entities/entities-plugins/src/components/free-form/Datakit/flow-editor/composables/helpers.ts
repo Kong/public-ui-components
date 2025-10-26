@@ -53,31 +53,45 @@ export function createNewConnectionString(
 }
 
 /**
- * Calculate the minimal bounding rectangle that contains every rect in the iterable.
+ * Calculate the minimal bounding rectangle that contains every rect in the array.
+ *
+ * @throws {RangeError} When the rect array is empty or any rect has invalid values.
  */
-export function getBoundingRect(rects: Iterable<Rect>): Rect | undefined {
-  let minX: number | undefined, minY: number | undefined
-  let maxX: number | undefined, maxY: number | undefined
+export function getBoundingRect(rects: readonly Rect[]): Rect {
+  if (rects.length === 0) {
+    throw new Error('getBoundingRect requires at least one rect')
+  }
+
+  let minX = Number.POSITIVE_INFINITY
+  let minY = Number.POSITIVE_INFINITY
+  let maxX = Number.NEGATIVE_INFINITY
+  let maxY = Number.NEGATIVE_INFINITY
 
   for (const { x, y, width, height } of rects) {
-    if (![x, y, width, height].every(Number.isFinite)) continue
-    const x2 = x + width
-    const y2 = y + height
-    minX = minX === undefined ? x : Math.min(minX, x)
-    minY = minY === undefined ? y : Math.min(minY, y)
-    maxX = maxX === undefined ? x2 : Math.max(maxX, x2)
-    maxY = maxY === undefined ? y2 : Math.max(maxY, y2)
+    if (![x, y, width, height].every(Number.isFinite)) {
+      throw new Error('Rect values must be finite numbers')
+    }
+    if (width < 0 || height < 0) {
+      throw new RangeError('Rect width and height must be non-negative')
+    }
+
+    const right = x + width
+    const bottom = y + height
+
+    if (!Number.isFinite(right) || !Number.isFinite(bottom)) {
+      throw new RangeError('Rect boundaries must be finite numbers')
+    }
+
+    if (x < minX) minX = x
+    if (y < minY) minY = y
+    if (right > maxX) maxX = right
+    if (bottom > maxY) maxY = bottom
   }
 
-  if (
-    minX === undefined
-    || minY === undefined
-    || maxX === undefined
-    || maxY === undefined
-    || minX > maxX
-    || minY > maxY
-  ) {
-    return undefined
+  return {
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY,
   }
-  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY }
 }

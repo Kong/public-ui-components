@@ -232,9 +232,6 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     }
 
     const rect = getBoundingRect(rects)
-    if (!rect) {
-      return undefined
-    }
 
     const paddedWidth = rect.width + DK_BRANCH_GROUP_PADDING * 2
     const paddedHeight = rect.height + DK_BRANCH_GROUP_PADDING * 2
