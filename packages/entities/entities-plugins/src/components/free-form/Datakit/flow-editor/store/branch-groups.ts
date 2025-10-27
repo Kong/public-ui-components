@@ -2,7 +2,7 @@
  * Branch group helpers
  *
  * Manages logical groups of nodes organized under branch nodes (e.g., "then", "else").
- * Responsibilities include:
+ * Responsible for:
  * - Validating membership (phase compatibility, cycle detection, type checking)
  * - Synchronizing node config with group state
  * - Managing group lifecycle (create, update, delete)

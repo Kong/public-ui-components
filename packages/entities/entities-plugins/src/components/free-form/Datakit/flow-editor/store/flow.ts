@@ -554,18 +554,17 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
     })
 
-    onNodeDragStop(async ({ node }) => {
+    onNodeDragStop(({ node }) => {
       if (!node) return
+      updateDragging(undefined)
 
       if (isGroupId(node.id)) {
-        updateDragging()
         historyCommit()
         return
       }
 
       const nodeId = node.id as NodeId
-      updateDragging()
-      const parentId = node.parentNode
+      const parentId = node.parentNode as NodeId
 
       let absolutePosition: XYPosition = { ...node.position }
 

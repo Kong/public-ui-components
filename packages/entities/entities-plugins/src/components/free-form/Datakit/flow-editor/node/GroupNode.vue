@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['dk-branch-group-node', { reversed, 'drop-target': isActive }]"
+    :class="['dk-branch-group-node', { reversed, 'drop-target': active }]"
   >
     <Handle
       id="input"
@@ -24,7 +24,6 @@ const props = defineProps<{
 
 const reversed = computed(() => props.data.phase === 'response')
 const handlePosition = computed(() => reversed.value ? Position.Right : Position.Left)
-const isActive = computed(() => !!props.active)
 </script>
 
 <style scoped lang="scss">
