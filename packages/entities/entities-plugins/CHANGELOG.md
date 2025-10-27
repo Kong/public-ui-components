@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.108.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.108.0...@kong-ui-public/entities-plugins@9.108.1) (2025-10-27)
+
+
+### Bug Fixes
+
+* **entities-plugins:** mask key field in key auth mock schema used by consumer ([#2594](https://github.com/Kong/public-ui-components/issues/2594)) ([952f7ef](https://github.com/Kong/public-ui-components/commit/952f7ef35f4df1c5b74170f8fbe0f9f485ee4a92))
+
+
+
+
+
 # [9.108.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.107.5...@kong-ui-public/entities-plugins@9.108.0) (2025-10-27)
 
 
