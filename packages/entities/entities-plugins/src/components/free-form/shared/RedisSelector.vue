@@ -44,6 +44,7 @@
         class="redis-config-select"
         data-testid="redis-config-select"
       >
+        <!-- TODO: Refactor this select to use the packages/entities/entities-redis-configurations/src/components/RedisConfigurationSelector.vue -->
         <KSelect
           class="redis-config-select-trigger"
           data-testid="redis-config-select-trigger"
@@ -118,6 +119,7 @@
       :name="formRedisPath"
       reset-label-path="reset"
     />
+    <!-- TODO: Refactor this modal to use the packages/entities/entities-redis-configurations/src/components/RedisConfigurationFormModal.vue -->
     <NewRedisPartialModal
       :partial-type="redisType"
       :visible="redisPartialModalVisible"

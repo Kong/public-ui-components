@@ -174,7 +174,7 @@ const validateName = (name: string, isEditing: boolean): string | undefined => {
 <style lang="scss" scoped>
 .dk-vault-panel {
   .add-button {
-    margin: $kui-space-40 0;
+    margin-top: $kui-space-40;
   }
 
   .vault-list {

@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import {
-  formatBytes,
-  formatCost,
-  formatUnit,
-} from './formatUnit'
+import { unitFormatter } from './formatUnit'
+import { createI18n } from '@kong-ui-public/i18n'
+
+const i18n = createI18n('en-us', {} as any)
+
+const { formatBytes, formatCost, formatUnit, formatRange } = unitFormatter({ i18n })
 
 describe('formatUnit.formatBytes()', () => {
   it.each([
@@ -95,5 +96,22 @@ describe('formatUnit.formatUnit()', () => {
     expect(formatUnit(100, testUnit, {
       translateUnit: (unit, value) => `translated-${value}-${unit}`,
     })).toEqual(`100 translated-100-${testUnit}`)
+  })
+
+  it('approximates large values when approximate option is provided', () => {
+    expect(formatUnit(1234, testUnit, { approximate: true })).toEqual('1.2K ' + testUnit)
+  })
+
+  it('does not approximate when unit is bytes or usd', () => {
+    expect(formatUnit(1234, 'bytes', { approximate: true })).toEqual('1.23 kB')
+    expect(formatUnit(1234, 'usd', { approximate: true })).toEqual('$1,234.00')
+  })
+
+  it('handles formatting range of values', () => {
+    expect(formatRange(1000, 5000, 'ms')).toBe('1,000 - 5,000 ms')
+    expect(formatRange(1000, 5000, 'count', { approximate: true })).toBe('1K - 5K count')
+    expect(formatRange(1000, 5000, 'count/minute', { approximate: true })).toBe('1K - 5K count/minute')
+    expect(formatRange(1000, 5000, 'bytes')).toBe('1 kB - 5 kB')
+    expect(formatRange(0.001, 0.005, 'usd')).toBe('$0.001 - $0.005')
   })
 })

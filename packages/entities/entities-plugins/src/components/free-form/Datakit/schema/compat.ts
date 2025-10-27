@@ -71,7 +71,7 @@ const ConfigNodeBaseGuard = z
     }
   })
 
-const CallNodeSchema = ConfigNodeBaseSchema.extend({
+const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('call'),
   method: HttpMethodSchema.nullish(),
   ssl_server_name: z.string().nullish(),
@@ -95,7 +95,7 @@ const CallNodeSchema = ConfigNodeBaseSchema.extend({
     .nullish(),
 }).strict()
 
-const ExitNodeSchema = ConfigNodeBaseSchema.extend({
+const ExitNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('exit'),
   status: z.union([z.number(), z.string()]).nullish(),
   warn_headers_sent: z.boolean().nullish(),
@@ -103,13 +103,13 @@ const ExitNodeSchema = ConfigNodeBaseSchema.extend({
   outputs: z.never().optional(),
 }).strict()
 
-const JqNodeSchema = ConfigNodeBaseSchema.extend({
+const JqNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('jq'),
   jq: z.string().nullish(),
   outputs: z.never().optional(),
 }).strict()
 
-const PropertyNodeSchema = ConfigNodeBaseSchema.extend({
+const PropertyNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('property'),
   content_type: z.string().nullish(),
   property: z.string().nullish(),
@@ -117,14 +117,14 @@ const PropertyNodeSchema = ConfigNodeBaseSchema.extend({
   outputs: z.never().optional(),
 }).strict()
 
-const StaticNodeSchema = ConfigNodeBaseSchema.extend({
+const StaticNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('static'),
   values: z.record(z.string(), z.unknown()).nullish(),
   input: z.never().optional(),
   inputs: z.never().optional(),
 }).strict()
 
-const CacheNodeSchema = ConfigNodeBaseSchema.extend({
+const CacheNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('cache'),
   bypass_on_error: z.boolean().nullish(),
   inputs: z
@@ -152,7 +152,7 @@ const CacheNodeSchema = ConfigNodeBaseSchema.extend({
  * Supports conditional execution with `then` and `else` branches.
  * Each branch contains an array of node names to execute.
  */
-export const BranchNodeSchema = ConfigNodeBaseSchema.extend({
+export const BranchNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('branch'),
   then: z.array(LooseNodeNameSchema).nullish(),
   else: z.array(LooseNodeNameSchema).nullish(),

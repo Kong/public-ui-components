@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { computed } from 'vue'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
-import { formatBytes } from '../utils'
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 
 export default function useChartLegendValues(
@@ -12,6 +12,7 @@ export default function useChartLegendValues(
   metricUnit: Readonly<Ref<string>>,
 ) {
   const { i18n } = composables.useI18n()
+  const { formatBytes } = unitFormatter({ i18n })
   const { translateUnit } = composables.useTranslatedUnits()
   const legendValues = computed<LegendValues>(() => {
     return chartData.value.datasets.reduce((a, v) => {

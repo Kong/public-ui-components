@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.1.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.1.0...@kong-ui-public/analytics-utilities@12.1.1) (2025-10-24)
+
+
+### Bug Fixes
+
+* metric and unit formatting ([#2588](https://github.com/Kong/public-ui-components/issues/2588)) ([b5b6ec9](https://github.com/Kong/public-ui-components/commit/b5b6ec992c5b9e59214dd1cb8366ad6368513d2b))
+
+
+
+
+
+# [12.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.0.0...@kong-ui-public/analytics-utilities@12.1.0) (2025-10-23)
+
+
+### Features
+
+* **analytics:** don't always issue CSV export query [MA-4445] ([#2589](https://github.com/Kong/public-ui-components/issues/2589)) ([abe6187](https://github.com/Kong/public-ui-components/commit/abe6187f8262dbfd3fdcf9cd2f5a1a30a3832f11))
+
+
+
+
+
 # [12.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@11.7.0...@kong-ui-public/analytics-utilities@12.0.0) (2025-10-20)
 
 
