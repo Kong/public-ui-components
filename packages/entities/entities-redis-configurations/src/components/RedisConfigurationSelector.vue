@@ -65,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue'
+import { watch, ref } from 'vue'
 import { AddIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
 import type { SelectItem } from '@kong/kongponents'
@@ -77,7 +77,6 @@ import type { RedisConfigurationResponse } from '../types'
 const {
   redisType = 'redis-ee',
   showCreateButton = true,
-  ...props
 } = defineProps<{
   /** The selected redis configuration ID */
   modelValue?: string
