@@ -68,7 +68,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     watch(innerData, (newVal) => {
       if (!innerDataInit) return
       onChange?.(toValue(newVal))
-    }, { deep: true, immediate: true })
+    }, { deep: true })
 
     // Init form level field renderer slots
     const slots = useSlots()
@@ -76,11 +76,11 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
 
     return {
       formData: innerData,
-      setFormData: resetFormData,
       schema,
-      ...schemaHelpers,
       config,
       fieldRendererRegistry,
+      resetFormData,
+      ...schemaHelpers,
     }
   },
 )
