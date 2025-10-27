@@ -29,6 +29,10 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.39.0",
     "@kong/kongponents": "^9.43.2",
+    "@shikijs/core": ">= 3.0.0 < 4.0.0",
+    "@shikijs/engine-javascript": ">= 3.0.0 < 4.0.0",
+    "@shikijs/langs": ">= 3.0.0 < 4.0.0",
+    "@shikijs/themes": ">= 3.0.0 < 4.0.0",
     "@vueuse/core": "^13.5.0",
     "@vueuse/integrations": "^13.5.0",
     "axios": "^1.12.0",
@@ -45,6 +49,10 @@
     "@kong/design-tokens": "1.18.0",
     "@kong/icons": "^1.39.0",
     "@kong/kongponents": "9.43.2",
+    "@shikijs/core": "^3.13.0",
+    "@shikijs/engine-javascript": "^3.13.0",
+    "@shikijs/langs": "^3.13.0",
+    "@shikijs/themes": "^3.13.0",
     "@vue-flow/background": "^1.3.2",
     "@vue-flow/controls": "^1.1.2",
     "@vue-flow/core": "^1.45.0",
@@ -87,7 +95,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "2.8MB"
+    "errorLimit": "3MB"
   },
   "dependencies": {
     "@kong-ui-public/entities-consumer-groups": "workspace:^",

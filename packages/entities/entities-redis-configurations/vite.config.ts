@@ -22,6 +22,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/entities-vaults/dist/style.css',
         '@kong-ui-public/entities-plugins-icon',
         '@kong-ui-public/entities-vaults',
+        '@kong-ui-public/forms',
       ],
       output: {
         globals: {

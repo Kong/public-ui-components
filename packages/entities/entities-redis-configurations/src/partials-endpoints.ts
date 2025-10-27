@@ -20,4 +20,8 @@ export default {
     konnect: `${konnectBaseApiUrl}/partials/{id}/links`,
     kongManager: `${KMBaseApiUrl}/partials/{id}/links`,
   },
+  detail: {
+    konnect: `${konnectBaseApiUrl}/partials/{id}`,
+    kongManager: `${KMBaseApiUrl}/partials/{id}`,
+  },
 }

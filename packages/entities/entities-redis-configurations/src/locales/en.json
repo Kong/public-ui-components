@@ -16,6 +16,11 @@
     "placeholder_for_exact_match": "Filter by exact ID",
     "no_results": "No results found"
   },
+  "selector": {
+    "placeholder": "Select a Redis configuration",
+    "empty_state": "No Redis configurations available",
+    "create_new": "Create new Redis configuration"
+  },
   "delete": {
     "title": "Delete Redis configuration",
     "description": "You’re about to delete this item. Are you sure you want to proceed?",
@@ -30,6 +35,8 @@
     "success": "Copied {val} to clipboard"
   },
   "form": {
+    "redis_partial_modal_title": "Create Redis Configuration",
+    "partial_created_success_message": "Redis configuration created successfully",
     "sections": {
       "type": {
         "title": "Redis type",

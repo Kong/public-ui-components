@@ -23,6 +23,7 @@ import type {
   StaticNode,
   CacheNode,
   BranchNode,
+  CacheConfig,
 } from './schema/strict'
 
 type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
@@ -235,6 +236,8 @@ export interface EditorState {
    * Whether to schedule a `fitView` after the current state is rendered.
    */
   pendingFitView?: boolean
+
+  cacheConfig?: CacheConfigFormData | null
 }
 
 export interface MakeNodeInstancePayload {
@@ -268,3 +271,7 @@ export interface DragPayload {
 }
 
 export type DatakitPluginData = FreeFormPluginData<DatakitConfig, DatakitUIData>
+
+export type CacheConfigFormData = CacheConfig & {
+  partial_id?: string
+}
