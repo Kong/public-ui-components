@@ -1,35 +1,16 @@
 import type { ComputedRef } from 'vue'
 import { shallowRef } from 'vue'
 
-import type { GroupId, GroupInstance, NodeId, Rect } from '../../types'
+import type { GroupId, GroupInstance, NodeId, NodePhase } from '../../types'
 import type { XYPosition } from '@vue-flow/core'
 
 interface UseBranchDropOptions {
-  phase: string
+  phase: NodePhase
   groupMapById: ComputedRef<Map<GroupId, GroupInstance>>
   getNodeDepth: (nodeId: NodeId) => number
 }
 
 type DragOrigin = 'panel' | 'canvas'
-type DragTarget = XYPosition | Rect | undefined
-
-const isRect = (value: DragTarget): value is Rect =>
-  typeof value === 'object' && !!value && 'width' in value && 'height' in value
-
-const isPoint = (value: DragTarget): value is XYPosition =>
-  typeof value === 'object' && !!value && 'x' in value && 'y' in value && !isRect(value)
-
-const toPoint = (value: DragTarget): XYPosition | undefined => {
-  if (!value) return undefined
-  if (isRect(value)) {
-    return {
-      x: value.x + value.width / 2,
-      y: value.y + value.height / 2,
-    }
-  }
-  if (isPoint(value)) return value
-  return undefined
-}
 
 export function useBranchDrop({ phase, groupMapById, getNodeDepth }: UseBranchDropOptions) {
   const source = shallowRef<DragOrigin>()
@@ -72,13 +53,12 @@ export function useBranchDrop({ phase, groupMapById, getNodeDepth }: UseBranchDr
     return best?.id
   }
 
-  function updateActiveGroup(target: DragTarget) {
+  function updateActiveGroup(point: XYPosition | undefined) {
     if (!source.value) {
       activeGroupId.value = undefined
       return
     }
 
-    const point = toPoint(target)
     if (!point) {
       activeGroupId.value = undefined
       return

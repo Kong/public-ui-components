@@ -537,7 +537,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       const pointer = event && 'clientX' in event
         ? screenToFlowCoordinate({ x: event.clientX, y: event.clientY })
         : undefined
-      updateActiveGroup(pointer ?? rect)
+      const fallbackPoint = {
+        x: rect.x + rect.width / 2,
+        y: rect.y + rect.height / 2,
+      }
+      updateActiveGroup(pointer ?? fallbackPoint)
 
       // Update group layout in real-time when dragging member nodes
       // This allows the group to expand/shrink as members move

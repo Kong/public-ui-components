@@ -143,13 +143,6 @@ export type GroupName = `${NodeName}:${BranchName}`
 
 export type IdConnection = NodeId | `${NodeId}.${FieldId}`
 
-export interface BranchDragSnapshot {
-  source?: 'panel' | 'canvas'
-  draggingId?: NodeId | GroupId
-  hitArea?: XYPosition | Rect | undefined
-  activeGroupId?: GroupId
-}
-
 export interface NodeField {
   id: FieldId
   name: FieldName
