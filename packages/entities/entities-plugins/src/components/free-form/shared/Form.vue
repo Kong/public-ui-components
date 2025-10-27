@@ -24,14 +24,11 @@ export type Props<T extends Record<string, any> = Record<string, any>> = {
 </script>
 
 <script setup lang="ts" generic="T extends Record<string, any> = Record<string, any>">
-import { provide, reactive, useSlots, type Slot, watch, toValue, computed, onBeforeMount, toRaw } from 'vue'
-import { DATA_INJECTION_KEY, FIELD_RENDERER_MATCHERS_MAP, FIELD_RENDERER_SLOTS, SCHEMA_INJECTION_KEY, useSchemaHelpers, FIELD_RENDERERS, FORM_CONFIG } from './composables'
+import { useSlots, type Slot, computed, toRaw } from 'vue'
+import { FIELD_RENDERERS, provideFormShared } from './composables'
 import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import Field from './Field.vue'
-import { isFunction, omit } from 'lodash-es'
-import type { MatchMap } from './FieldRenderer.vue'
 import type { FormConfig, GlobalAction } from './types'
-import { cloneDeep } from 'lodash-es'
 
 defineOptions({ name: 'SchemaForm' })
 
@@ -42,7 +39,7 @@ defineSlots<
   } & Partial<Record<string, Slot<{ name: string }>>>
 >()
 
-const { tag = 'form', schema, data, config, fieldsOrder } = defineProps<Props<T>>()
+const { tag = 'form', schema, fieldsOrder, config, data } = defineProps<Props<T>>()
 
 const emit = defineEmits<{
   change: [value: T]
@@ -51,18 +48,15 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
-const schemaHelpers = useSchemaHelpers(schema)
-provide(SCHEMA_INJECTION_KEY, schemaHelpers)
-
-const hasValue = (data: T | undefined) => {
-  if (isFunction(config?.hasValue)) {
-    return config.hasValue(data)
-  }
-  return !!data
-}
+const { getSchema, formData } = provideFormShared(
+  schema,
+  computed(() => data as T),
+  config as FormConfig,
+  (value) => emit('change', value as T),
+)
 
 const childFields = computed(() => {
-  let fields = schemaHelpers.getSchema().fields
+  let fields = getSchema().fields
 
   if (!fieldsOrder) return fields
 
@@ -81,64 +75,8 @@ const childFields = computed(() => {
   })
 })
 
-let innerDataInit = false
-const innerData = reactive<T>({} as T)
-
-provide(DATA_INJECTION_KEY, innerData)
-
-provide(FIELD_RENDERER_SLOTS, omit(slots, 'default', FIELD_RENDERERS))
-
-const matchMap: MatchMap = new Map()
-provide(FIELD_RENDERER_MATCHERS_MAP, matchMap)
-
-provide(FORM_CONFIG, config ?? {})
-
-watch(innerData, (newVal) => {
-  if (!innerDataInit) return
-  emit('change', toValue(newVal))
-}, { deep: true, immediate: true })
-
-/**
- * Reset the inner data to a new value
- */
-function resetInnerData(newValue: T) {
-  Object.keys(innerData).forEach((key) => {
-    delete (innerData as any)[key]
-  })
-  Object.assign(innerData, newValue)
-}
-
-/**
- * Initialize the inner data based on the provided props data or schema defaults
- */
-function initInnerData(propsData: T | undefined) {
-  let dataValue: T
-
-  if (!propsData || !hasValue(toValue(propsData))) {
-    dataValue = schemaHelpers.getDefault()
-  } else {
-    dataValue = cloneDeep(toValue(propsData))
-  }
-
-  if (isFunction(config?.prepareFormData)) {
-    resetInnerData(config.prepareFormData(dataValue))
-  } else {
-    resetInnerData(dataValue)
-  }
-
-  innerDataInit = true
-}
-
-onBeforeMount(() => {
-  initInnerData(data)
-})
-
-// Sync the inner data when the props data changes
-watch(() => data, newData => {
-  initInnerData(newData)
-}, { deep: true })
 
 defineExpose({
-  getInnerData: () => toRaw(innerData),
+  getInnerData: () => toRaw(formData),
 })
 </script>
