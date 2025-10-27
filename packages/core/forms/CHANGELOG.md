@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.17.13...@kong-ui-public/forms@4.18.0) (2025-10-27)
+
+
+### Features
+
+* **entities-*:** datakit - resources cache [KM-1859] ([#2582](https://github.com/Kong/public-ui-components/issues/2582)) ([e11650c](https://github.com/Kong/public-ui-components/commit/e11650cc621f65db51b544475143a5c5c57a6b70))
+
+
+
+
+
 ## [4.17.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.17.12...@kong-ui-public/forms@4.17.13) (2025-10-27)
 
 

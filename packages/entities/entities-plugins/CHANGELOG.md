@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.108.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.107.5...@kong-ui-public/entities-plugins@9.108.0) (2025-10-27)
+
+
+### Features
+
+* **entities-*:** datakit - resources cache [KM-1859] ([#2582](https://github.com/Kong/public-ui-components/issues/2582)) ([e11650c](https://github.com/Kong/public-ui-components/commit/e11650cc621f65db51b544475143a5c5c57a6b70))
+
+
+
+
+
 ## [9.107.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.107.4...@kong-ui-public/entities-plugins@9.107.5) (2025-10-27)
 
 
