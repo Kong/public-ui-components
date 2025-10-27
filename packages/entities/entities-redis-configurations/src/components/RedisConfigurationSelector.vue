@@ -6,7 +6,7 @@
     :items="items"
     :loading="loading"
     :model-value="modelValue"
-    :placeholder="placeholder"
+    :placeholder="placeholder || t('selector.placeholder')"
     @change="onSelectionChange"
     @query-change="onQueryChange"
   >
@@ -37,7 +37,7 @@
         class="empty-redis-config"
         data-testid="empty-redis-config"
       >
-        {{ emptyStateText }}
+        {{ emptyStateText || t('selector.empty_state') }}
       </div>
     </template>
     <template
@@ -50,7 +50,7 @@
         @click="onCreateNew"
       >
         <AddIcon :size="KUI_ICON_SIZE_20" />
-        <span>{{ createButtonText }}</span>
+        <span>{{ createButtonText || t('selector.create_new') }}</span>
       </div>
     </template>
   </KSelect>
@@ -119,19 +119,6 @@ const {
 
 // Modal state
 const isModalVisible = ref(false)
-
-// Computed properties for default text values
-const placeholder = computed(() =>
-  props.placeholder || t('selector.placeholder'),
-)
-
-const emptyStateText = computed(() =>
-  props.emptyStateText || t('selector.empty_state'),
-)
-
-const createButtonText = computed(() =>
-  props.createButtonText || t('selector.create_new'),
-)
 
 // Event handlers
 const onSelectionChange = (item: SelectItem<string> | null) => {

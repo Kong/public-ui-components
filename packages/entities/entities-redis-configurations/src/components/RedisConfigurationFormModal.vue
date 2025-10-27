@@ -105,8 +105,8 @@ const handleClose = () => {
 
 watch(
   () => visible,
-  (visible) => {
-    if (visible) {
+  (newVisible) => {
+    if (newVisible) {
       modalVisible.value = true
       nextTick(() => {
         modalActionTeleportTarget.value = `#redis-modal-footer-${id}`

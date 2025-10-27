@@ -11,7 +11,7 @@
       <div class="cache-item-key">
         <DeployIcon
           :color="KUI_COLOR_TEXT_NEUTRAL"
-          :size="16"
+          :size="KUI_ICON_SIZE_30"
         />
         <div class="cache-item-key-text">
           {{ strategy }}
@@ -107,6 +107,9 @@
 </template>
 
 <script setup lang="ts">
+import {
+  KUI_ICON_SIZE_30,
+} from '@kong/design-tokens'
 import composables from '../../../../../composables'
 import { AddIcon, DeployIcon, MoreIcon } from '@kong/icons'
 import type { CacheConfigFormData } from '../../types'

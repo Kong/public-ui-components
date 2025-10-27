@@ -53,10 +53,10 @@ export function useRedisConfigurationSelector(options: {
 
   const availableRedisConfigs = computed((): Array<SelectItem<string>> => {
     const configs = (redisConfigsResults.value || [])
-      .map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: typeToDisplayName(getRedisType(el as RedisConfigurationDTO)) }))
       // filter out non-redis configs
       // this is needed because the API returns all partials, not just redis configurations.
       .filter(partial => partial.type === 'redis-ce' || partial.type === 'redis-ee')
+      .map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: typeToDisplayName(getRedisType(el as RedisConfigurationDTO)) }))
 
     // filter redis configs by redis type supported by the plugin
     return configs.filter((el) => el.type === redisType)

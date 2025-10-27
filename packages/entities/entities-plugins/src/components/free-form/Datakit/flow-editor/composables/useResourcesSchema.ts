@@ -7,8 +7,8 @@ export function useResourcesSchema() {
   const { getSchema } = useFormShared()
 
   return computed(() => {
-    const schema = getSchema('config.resources')
-    if (!schema) {
+    const originResourcesSchema = getSchema('config.resources') as RecordFieldSchema | undefined
+    if (!originResourcesSchema) {
       throw new Error('Failed to get resource schema')
     }
 
@@ -23,7 +23,6 @@ export function useResourcesSchema() {
      * }
      */
 
-    const originResourcesSchema = schema as RecordFieldSchema
     const enhancedResourcesSchema = clone(originResourcesSchema)
 
     // Enhance cache schema
