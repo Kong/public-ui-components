@@ -58,7 +58,7 @@
       max-width="640px"
       :title="t('plugins.free-form.datakit.flow_editor.panel_segments.resources.cache.title')"
       :visible="modalVisible"
-      @cancel="handleClose"
+      @cancel="handleCancel"
       @proceed="handleSave"
     >
       <div class="dk-resource-cache-form">
@@ -169,7 +169,7 @@ const handleOpen = () => {
   modalVisible.value = true
 }
 
-const handleClose = () => {
+const handleCancel = () => {
   modalVisible.value = false
   emit('cancel')
 }
@@ -188,8 +188,8 @@ const handleAdd = () => {
 }
 
 const handleSave = () => {
+  modalVisible.value = false
   emit('update', formData)
-  handleClose()
 }
 
 const createHighlighter = createdBundledHighlighter({
