@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.32.1",
+  "version": "3.32.2",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -22,8 +22,8 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.37.0",
-    "@kong/kongponents": "^9.42.11",
+    "@kong/icons": "^1.39.0",
+    "@kong/kongponents": "^9.43.2",
     "axios": "^1.12.0",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.4.5"
@@ -31,8 +31,8 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.0",
-    "@kong/icons": "^1.38.0",
-    "@kong/kongponents": "9.42.11",
+    "@kong/icons": "^1.39.0",
+    "@kong/kongponents": "9.43.2",
     "axios": "^1.7.7",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"

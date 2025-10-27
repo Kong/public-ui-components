@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-vaults",
-  "version": "3.26.3",
+  "version": "3.26.4",
   "type": "module",
   "main": "./dist/entities-vaults.umd.js",
   "module": "./dist/entities-vaults.es.js",
@@ -23,8 +23,8 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.37.0",
-    "@kong/kongponents": "^9.42.11",
+    "@kong/icons": "^1.39.0",
+    "@kong/kongponents": "^9.43.2",
     "axios": "^1.12.0",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.4.5"
@@ -33,7 +33,7 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.0",
-    "@kong/kongponents": "9.42.11",
+    "@kong/kongponents": "9.43.2",
     "axios": "^1.7.7",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5"

@@ -8,7 +8,7 @@
       class="single-value-error"
       data-testid="single-value-error"
       icon-variant="error"
-      :title="t('singleValue.valueError')"
+      :title="i18n.t('singleValue.valueError')"
     />
     <div
       v-else
@@ -36,9 +36,10 @@ import type { PropType } from 'vue'
 import type { AnalyticsExploreRecord, ExploreResultV4, AllAggregations } from '@kong-ui-public/analytics-utilities'
 import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
 import composables from '../../composables'
-import { formatBytes } from '../../utils'
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 
-const { i18n: { t } } = composables.useI18n()
+const { i18n } = composables.useI18n()
+const { formatBytes } = unitFormatter({ i18n })
 
 const props = defineProps({
   data: {
@@ -59,7 +60,7 @@ const metricName = computed((): AllAggregations | undefined => props.data.meta?.
 const metricUnit = computed((): string | undefined => {
   const unit = metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined
   if (unit) {
-    return t(`chartUnits.${unit as 'count/minute' | 'ms'}`, { plural: '' })
+    return i18n.t(`chartUnits.${unit as 'count/minute' | 'ms'}`, { plural: '' })
   }
 
   return undefined
