@@ -3,9 +3,9 @@
 <template></template>
 
 <script lang="ts" setup>
-import { inject, type Slot } from 'vue'
+import type { Slot } from 'vue'
 import type { UnionFieldSchema } from '../../../types/plugins/form-schema'
-import { FIELD_RENDERER_MATCHERS_MAP } from './composables'
+import { useFormShared } from './composables'
 
 export type Match = (opt: {
   path: string
@@ -21,13 +21,9 @@ const props = defineProps<{
 
 const { default: defaultSlot } = defineSlots<Record<string, Slot<{ name: string }>>>()
 
-const inheritedMatchMap = inject<MatchMap>(FIELD_RENDERER_MATCHERS_MAP)
-
-if (!inheritedMatchMap) {
-  throw new Error(FIELD_RENDERER_MATCHERS_MAP.toString() + 'not provided')
-}
+const { fieldRendererRegistry } = useFormShared()
 
 if (defaultSlot) {
-  inheritedMatchMap.set(props.match, defaultSlot)
+  fieldRendererRegistry.set(props.match, defaultSlot)
 }
 </script>
