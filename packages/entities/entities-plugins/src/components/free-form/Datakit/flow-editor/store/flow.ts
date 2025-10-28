@@ -1,4 +1,3 @@
-
 import dagre from '@dagrejs/dagre'
 import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
@@ -24,6 +23,9 @@ import {
 } from '../constants'
 import { isGroupInstance, isImplicitNode } from '../node/node'
 import { useEditorStore } from './store'
+import { parseGroupId } from './helpers'
+import { useBranchDrop } from '../composables/useBranchDrop'
+import { getBoundingRect } from '../composables/helpers'
 
 import type { Node as DagreNode } from '@dagrejs/dagre'
 import type { Connection, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
@@ -54,38 +56,6 @@ function parseHandle(handle: string): { io: 'input' | 'output', field?: FieldId 
     io: parsed[1] as 'input' | 'output',
     field: parsed[2] as FieldId | undefined,
   }
-}
-
-/**
- * A helper function to create a bounding box around nodes.
- */
-function createWrapper(): [typeof wrap, typeof copy] {
-  const bounding = {
-    x1: Number.POSITIVE_INFINITY,
-    y1: Number.POSITIVE_INFINITY,
-    x2: Number.NEGATIVE_INFINITY,
-    y2: Number.NEGATIVE_INFINITY,
-  }
-
-  const wrap = (node: Rect) => {
-    bounding.x1 = Math.min(bounding.x1, node.x)
-    bounding.y1 = Math.min(bounding.y1, node.y)
-    bounding.x2 = Math.max(bounding.x2, node.x + node.width)
-    bounding.y2 = Math.max(bounding.y2, node.y + node.height)
-  }
-
-  const copy = () => {
-    const copy = { ...bounding }
-    if (copy.x1 > copy.x2) {
-      copy.x1 = copy.x2 = 0
-    }
-    if (copy.y1 > copy.y2) {
-      copy.y1 = copy.y2 = 0
-    }
-    return copy
-  }
-
-  return [wrap, copy]
 }
 
 const BORDER_COLORS: Record<EdgeState, string> = {
@@ -201,6 +171,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       setNodes,
       setEdges,
       addSelectedNodes,
+      screenToFlowCoordinate,
     } = vueFlowStore
 
     // VueFlow has a default delete key code of 'Backspace',
@@ -217,9 +188,12 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       connectEdge,
       disconnectEdge,
       getInEdgesByNodeId,
+      branchGroups,
       commit,
       reset,
+      groupMapById,
     } = editorStore
+    const { isGroupId } = branchGroups
 
     function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
       const sourceNode = getNodeById(edge.source)
@@ -232,25 +206,34 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
     }
 
-    const branchLayout = useBranchLayout({
-      phase,
-      readonly,
-      flowId,
-    })
     const {
-      groupMapById,
       groupsByOwner,
       memberGroupMap,
       groupNodes,
       branchEdges,
-      isGroupId,
       isBranchEdgeId,
       updateGroupLayout,
       translateGroupTree,
-      setDraggingNode,
+      updateDragging,
       getNodeDepth,
       maxGroupDepth,
-    } = branchLayout
+      waitForLayoutFlush,
+    } = useBranchLayout({
+      phase,
+      readonly,
+      flowId,
+    })
+
+    const {
+      activeGroupId,
+      start: startGroupDrag,
+      updateActiveGroup,
+      end: endGroupDrag,
+    } = useBranchDrop({
+      phase,
+      groupMapById,
+      getNodeDepth,
+    })
 
     const nodes = computed(() =>
       state.value.nodes
@@ -373,7 +356,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       // Handle conflict edge conflicts based on the opposite connection type
       // This ensures we clean up all incompatible connections
       const conflictEdgesToDisconnect = parsedTarget?.io === 'input'
-        ? targetIncomingEdges.filter(edge => edge.targetField === parsedTarget.field)
+        ? parsedTarget?.field
+          ? targetIncomingEdges.filter(edge => edge.targetField === parsedTarget.field)
+          : targetIncomingEdges.filter(edge => !!edge.targetField)
         : targetIncomingEdges.filter(edge => !edge.targetField)
 
       if (conflictEdgesToDisconnect.length > 0) {
@@ -497,12 +482,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
     })
 
-    onNodeDrag(({ node }) => {
+    onNodeDrag(({ node, event }) => {
       if (!node) return
 
       if (isGroupId(node.id)) {
         const groupId = node.id as GroupId
-        setDraggingNode(groupId)
+        updateDragging(groupId)
+        updateActiveGroup(undefined)
         const group = groupMapById.value.get(groupId)
         if (!group) return
 
@@ -516,14 +502,15 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         // This allows the parent group to expand/shrink as child group moves
         const parentGroup = memberGroupMap.value.get(group.ownerId)
         if (parentGroup) {
-          updateGroupLayout(parentGroup.id)
+          updateGroupLayout(parentGroup.id, false)
         }
 
         return
       }
 
       const nodeId = node.id as NodeId
-      setDraggingNode(nodeId)
+      startGroupDrag('canvas')
+      updateDragging(nodeId)
       const parentId = node.parentNode
 
       let absolutePosition: XYPosition = { ...node.position }
@@ -539,6 +526,21 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
 
       moveNode(nodeId, absolutePosition, false)
+
+      const rect = {
+        x: absolutePosition.x,
+        y: absolutePosition.y,
+        width: node.dimensions?.width ?? 0,
+        height: node.dimensions?.height ?? 0,
+      }
+      const pointer = event && 'clientX' in event
+        ? screenToFlowCoordinate({ x: event.clientX, y: event.clientY })
+        : undefined
+      const fallbackPoint = {
+        x: rect.x + rect.width / 2,
+        y: rect.y + rect.height / 2,
+      }
+      updateActiveGroup(pointer ?? fallbackPoint)
 
       // Update group layout in real-time when dragging member nodes
       // This allows the group to expand/shrink as members move
@@ -547,23 +549,21 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         : memberGroupMap.value.get(nodeId)?.id
 
       if (owningGroupId) {
-        updateGroupLayout(owningGroupId)
+        updateGroupLayout(owningGroupId, false)
       }
     })
 
     onNodeDragStop(({ node }) => {
       if (!node) return
+      updateDragging(undefined)
 
       if (isGroupId(node.id)) {
-        const groupId = node.id as GroupId
-        setDraggingNode(undefined)
-        historyCommit(`drag-group:${groupId}`)
+        historyCommit()
         return
       }
 
       const nodeId = node.id as NodeId
-      setDraggingNode(undefined)
-      const parentId = node.parentNode
+      const parentId = node.parentNode as NodeId
 
       let absolutePosition: XYPosition = { ...node.position }
 
@@ -584,10 +584,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         : memberGroupMap.value.get(nodeId)?.id
 
       if (owningGroupId) {
-        updateGroupLayout(owningGroupId)
+        updateGroupLayout(owningGroupId, false)
       }
 
-      historyCommit(`drag-node:${nodeId}`)
+      attachNodeToActiveGroup(nodeId)
+      endGroupDrag()
+
+      historyCommit()
     })
 
     // Only triggered by canvas-originated changes
@@ -703,7 +706,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         dagre.layout(dagreGraph)
       }
 
-      const [wrapBounding, copyBounding] = createWrapper()
+      const boundingRects: Rect[] = []
 
       // Positions returned by Dagre are centered
       const normalizePosition = (node: DagreNode) => {
@@ -723,7 +726,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         for (const node of autoNodes) {
           const dagreNode = dagreGraph.node(node.id)
           const position = normalizePosition(dagreNode)
-          wrapBounding(position)
+          boundingRects.push(position)
 
           if (isGroupInstance(node)) {
             // moveGroup is not enough
@@ -739,9 +742,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         }
       }
 
-      const centralBounding = copyBounding()
-      const centralWidth = centralBounding.x2 - centralBounding.x1
-      const centralHeight = centralBounding.y2 - centralBounding.y1
+      const centralRect = boundingRects.length > 0
+        ? getBoundingRect(boundingRects)
+        : { x: 0, y: 0, width: 0, height: 0 }
+      const centralWidth = centralRect.width
+      const centralHeight = centralRect.height
+      const centralLeft = centralRect.x
+      const centralRight = centralRect.x + centralRect.width
 
       // Try to place implicit nodes at both ends when there is much room
       // If horizontalSpace is 0, it means we do not have enough space
@@ -755,18 +762,18 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           - 2 * padding,
       )
 
-      const centerY = centralBounding.y1 + centralHeight / 2
+      const centerY = centralRect.y + centralHeight / 2
 
       if (leftNode) {
         moveNode(leftNode.id, {
-          x: centralBounding.x1 - nodeGap - horizontalSpace / 2 - (leftGraphNode?.dimensions?.width ?? 0),
+          x: centralLeft - nodeGap - horizontalSpace / 2 - (leftGraphNode?.dimensions?.width ?? 0),
           y: centerY - (leftGraphNode?.dimensions?.height ?? 0) / 2,
         }, false)
       }
 
       if (rightNode) {
         moveNode(rightNode.id, {
-          x: centralBounding.x2 + nodeGap + horizontalSpace / 2,
+          x: centralRight + nodeGap + horizontalSpace / 2,
           y: centerY - (rightGraphNode?.dimensions?.height ?? 0) / 2,
         }, false)
       }
@@ -866,7 +873,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         )
         await nextTick() // <- Wait for updates on VueFlow internals
         updateGroupLayout(group.id, false)
-        await nextTick() // <- Wait for `layoutFlushPromise` in useBranchLayout
+        await waitForLayoutFlush() // ensure pending group layout writes applied before next iteration
       }
 
       const rootNodes: Array<NodeInstance | GroupInstance> = nodeMap.values().toArray()
@@ -883,7 +890,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       doAutoLayout(autoNodes, leftNode, rightNode)
 
       if (commitNow) {
-        historyCommit(`autolayout-${flowId}`)
+        historyCommit()
       }
     }
 
@@ -991,6 +998,22 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       )
     }
 
+    function attachNodeToActiveGroup(nodeId: NodeId) {
+      if (!activeGroupId.value) return false
+      const { nodeId: ownerId, branch } = parseGroupId(activeGroupId.value)
+      const changed = branchGroups.addMember(ownerId, branch, nodeId, { commit: false })
+      updateActiveGroup(undefined)
+      return changed
+    }
+
+    const groupDrop = {
+      activeGroupId,
+      startPanelDrag: () => startGroupDrag('panel'),
+      endPanelDrag: endGroupDrag,
+      updateActiveGroup,
+      attachNodeToActiveGroup,
+    }
+
     return {
       vueFlowStore,
       editorStore,
@@ -1007,6 +1030,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       fitViewParams,
       fitView,
+      groupDrop,
     }
   },
 )

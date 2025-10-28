@@ -1,4 +1,4 @@
-import type { Node, XYPosition } from '@vue-flow/core'
+import type { Node, Rect, XYPosition } from '@vue-flow/core'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { computed, nextTick, ref, watch } from 'vue'
 
@@ -17,28 +17,30 @@ import {
   DK_FLOW_BRANCH_EDGE_Z_OFFSET,
   DK_BRANCH_GROUP_PADDING,
 } from '../../constants'
+import { getBoundingRect } from './helpers'
 
 export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase, readonly?: boolean, flowId?: string }) {
   const { findNode } = useVueFlow(flowId)
   const editorStore = useEditorStore()
   const {
     state,
+    groupMapById,
     getNodeById,
     moveNode,
     moveGroup,
     setGroupLayout,
     commit,
+    branchGroups,
   } = editorStore
+  const {
+    memberGroupMap,
+    groupsByOwner,
+    getNodeDepth,
+    getGroupDepth,
+  } = branchGroups
 
   const draggingNodeId = ref<NodeId | GroupId>()
 
-  const groupMapById = computed(() =>
-    new Map<GroupId, GroupInstance>(state.value.groups.map(group => [group.id, group])),
-  )
-
-  const groupIdSet = computed(() => new Set(state.value.groups.map(group => group.id)))
-
-  const isGroupId = (id?: string): id is GroupId => !!id && groupIdSet.value.has(id as GroupId)
   const isBranchEdgeId = (id?: string) => !!id && id.startsWith('branch:')
 
   function getGroupMembers(group: GroupInstance): NodeInstance[] {
@@ -52,46 +54,29 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     return resolved
   }
 
-  const memberGroupMap = computed(() => {
+  const memberGroups = computed(() => {
     const map = new Map<NodeId, GroupInstance>()
-    for (const group of state.value.groups) {
-      if (group.phase !== phase) continue
-      if (!group.position) continue
-      const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
-      if (!members.length) continue
-      for (const member of members) {
-        map.set(member.id, group)
-      }
-    }
+    memberGroupMap.value.forEach((group, nodeId) => {
+      if (group.phase !== phase) return
+      if (!group.position) return
+      const member = getNodeById(nodeId)
+      if (!member) return
+      if (member.phase !== phase || member.hidden) return
+      map.set(nodeId, group)
+    })
     return map
   })
 
-  const groupsByOwner = computed(() => {
+  const groupsByOwnerInPhase = computed(() => {
     const map = new Map<NodeId, GroupInstance[]>()
-    for (const group of state.value.groups) {
-      if (!map.has(group.ownerId)) {
-        map.set(group.ownerId, [])
+    groupsByOwner.value.forEach((groupList, ownerId) => {
+      const filtered = groupList.filter(group => group.phase === phase)
+      if (filtered.length > 0) {
+        map.set(ownerId, filtered)
       }
-      map.get(group.ownerId)!.push(group)
-    }
+    })
     return map
   })
-
-  function getNodeDepth(nodeId: NodeId): number {
-    let depth = 0
-    const visited = new Set<GroupId>()
-    let currentGroup = memberGroupMap.value.get(nodeId)
-    while (currentGroup && !visited.has(currentGroup.id)) {
-      depth += 1
-      visited.add(currentGroup.id)
-      currentGroup = memberGroupMap.value.get(currentGroup.ownerId)
-    }
-    return depth
-  }
-
-  function getGroupDepth(group: GroupInstance): number {
-    return getNodeDepth(group.ownerId)
-  }
 
   const groupNodes = computed(() => {
     const results: Array<Node<FlowGroupNodeData>> = []
@@ -105,7 +90,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       if (!position || !dimensions) continue
 
       const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
-      const depth = getGroupDepth(group)
+      const depth = getGroupDepth(group.id)
 
       results.push({
         id: group.id,
@@ -130,7 +115,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     let max = 0
     for (const group of state.value.groups) {
       if (group.phase !== phase) continue
-      const depth = getGroupDepth(group)
+      const depth = getGroupDepth(group.id)
       if (depth > max) {
         max = depth
       }
@@ -151,7 +136,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
       if (!members.length) continue
 
-      const depth = Math.max(getNodeDepth(owner.id), getGroupDepth(group)) + maxGroupDepth.value + 1
+      const depth = Math.max(getNodeDepth(owner.id), getGroupDepth(group.id)) + maxGroupDepth.value + 1
 
       const edge: FlowEdge = {
         id: `branch:${group.id}`,
@@ -206,10 +191,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     const members = getGroupMembers(group).filter(member => member.phase === phase && !member.hidden)
     if (!members.length) return undefined
 
-    let x1 = Number.POSITIVE_INFINITY
-    let y1 = Number.POSITIVE_INFINITY
-    let x2 = Number.NEGATIVE_INFINITY
-    let y2 = Number.NEGATIVE_INFINITY
+    const rects: Rect[] = []
 
     for (const member of members) {
       const flowNode = findNode(member.id)
@@ -224,10 +206,12 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       const absoluteX = computedPosition?.x ?? member.position.x
       const absoluteY = computedPosition?.y ?? member.position.y
 
-      x1 = Math.min(x1, absoluteX)
-      y1 = Math.min(y1, absoluteY)
-      x2 = Math.max(x2, absoluteX + width)
-      y2 = Math.max(y2, absoluteY + height)
+      rects.push({
+        x: absoluteX,
+        y: absoluteY,
+        width,
+        height,
+      })
 
       const childGroups = groupsByOwner.value.get(member.id) ?? []
       for (const child of childGroups) {
@@ -237,24 +221,24 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
         const childDimensions = pendingLayout?.dimensions ?? child.dimensions
         if (!childPosition || !childDimensions) continue
 
-        x1 = Math.min(x1, childPosition.x)
-        y1 = Math.min(y1, childPosition.y)
-        x2 = Math.max(x2, childPosition.x + childDimensions.width)
-        y2 = Math.max(y2, childPosition.y + childDimensions.height)
+        rects.push({
+          x: childPosition.x,
+          y: childPosition.y,
+          width: childDimensions.width,
+          height: childDimensions.height,
+        })
       }
     }
 
-    if (!Number.isFinite(x1) || !Number.isFinite(y1) || !Number.isFinite(x2) || !Number.isFinite(y2)) {
-      return undefined
-    }
+    const rect = getBoundingRect(rects)
 
-    const paddedWidth = (x2 - x1) + DK_BRANCH_GROUP_PADDING * 2
-    const paddedHeight = (y2 - y1) + DK_BRANCH_GROUP_PADDING * 2
+    const paddedWidth = rect.width + DK_BRANCH_GROUP_PADDING * 2
+    const paddedHeight = rect.height + DK_BRANCH_GROUP_PADDING * 2
 
     return {
       position: {
-        x: Math.round(x1 - DK_BRANCH_GROUP_PADDING),
-        y: Math.round(y1 - DK_BRANCH_GROUP_PADDING),
+        x: Math.round(rect.x - DK_BRANCH_GROUP_PADDING),
+        y: Math.round(rect.y - DK_BRANCH_GROUP_PADDING),
       },
       dimensions: {
         width: Math.round(paddedWidth),
@@ -288,7 +272,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       if (!changed) continue
       const group = groupMapById.value.get(id)
       if (!group) continue
-      const parent = memberGroupMap.value.get(group.ownerId)
+      const parent = memberGroups.value.get(group.ownerId)
       if (parent) {
         pendingParentUpdates.set(parent.id, { commit })
       }
@@ -372,7 +356,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
           visitedNodes.add(member.id)
         }
 
-        const childGroups = groupsByOwner.value.get(member.id) ?? []
+        const childGroups = groupsByOwnerInPhase.value.get(member.id) ?? []
         for (const child of childGroups) {
           if (visitedGroups.has(child.id)) continue
 
@@ -411,7 +395,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     if (memberIds.some(id => dragging === id)) return true
 
     for (const memberId of memberIds) {
-      const childGroups = groupsByOwner.value.get(memberId)
+      const childGroups = groupsByOwnerInPhase.value.get(memberId) ?? []
       if (childGroups?.some(group => group.id === dragging)) {
         return true
       }
@@ -456,14 +440,37 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
       })
     },
     (groups) => {
+      // Clean up signatures for groups that no longer exist
+      const currentGroupIds = new Set(groups.map(g => g.id))
+      for (const groupId of lastLayoutSignatures.keys()) {
+        if (!currentGroupIds.has(groupId)) {
+          lastLayoutSignatures.delete(groupId)
+        }
+      }
+
       for (const group of groups) {
         if (shouldSkipGroupUpdate(group.id, group.memberIds)) continue
 
         const lastSignature = lastLayoutSignatures.get(group.id)
-        if (lastSignature !== group.signature) {
+        const signatureChanged = lastSignature !== group.signature
+
+        // Always update the signature tracking
+        if (signatureChanged) {
           lastLayoutSignatures.set(group.id, group.signature)
-          updateGroupLayout(group.id)
         }
+
+        // Skip layout recalculation if:
+        // 1. Signature hasn't changed (normal case - nothing to do)
+        // 2. Signature changed AND group already has valid layout (undo/redo case)
+        //    In undo/redo, the snapshot already contains correct layout, so we should
+        //    preserve it instead of recalculating based on potentially stale VueFlow positions
+        const groupInstance = groupMapById.value.get(group.id)
+        const hasValidLayout = !!(groupInstance?.position && groupInstance?.dimensions)
+
+        if (!signatureChanged) continue
+        if (hasValidLayout) continue
+
+        updateGroupLayout(group.id)
       }
     },
     {
@@ -473,19 +480,18 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
   )
 
   return {
-    groupMapById,
-    groupsByOwner,
-    memberGroupMap,
+    groupsByOwner: groupsByOwnerInPhase,
+    memberGroupMap: memberGroups,
     groupNodes,
     branchEdges,
-    isGroupId,
     isBranchEdgeId,
     updateGroupLayout,
     translateGroupTree,
-    setDraggingNode: (id?: NodeId | GroupId) => {
+    updateDragging: (id: NodeId | GroupId | undefined) => {
       draggingNodeId.value = id
     },
     getNodeDepth,
     maxGroupDepth,
+    waitForLayoutFlush: () => layoutFlushPromise ?? Promise.resolve(),
   }
 }
