@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.32.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.32.2...@kong-ui-public/entities-shared@3.32.3) (2025-10-28)
+
+
+### Bug Fixes
+
+* **entities-shared:** use margin-inline-start to fix action buttons margin when rtl ([#2596](https://github.com/Kong/public-ui-components/issues/2596)) ([5ecb9e2](https://github.com/Kong/public-ui-components/commit/5ecb9e29561b83ef02702d51d013dfb264a5c3ca))
+
+
+
+
+
 ## [3.32.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.32.1...@kong-ui-public/entities-shared@3.32.2) (2025-10-27)
 
 
