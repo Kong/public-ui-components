@@ -22,7 +22,9 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     const innerData = reactive<T>({} as T)
     const config = toRef(() => propsConfig ?? {})
 
-    let innerDataInit = false
+    // Init form level field renderer slots
+    const slots = useSlots()
+    provide(FIELD_RENDERER_SLOTS, omit(slots, 'default', FIELD_RENDERERS))
 
     function resetFormData(newData: T) {
       Object.keys(innerData).forEach((key) => {
@@ -48,8 +50,6 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       } else {
         resetFormData(dataValue)
       }
-
-      innerDataInit = true
     }
 
     function hasValue(data: T | undefined): boolean {
@@ -59,20 +59,15 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       return !!data
     }
 
+    // Emit changes when the inner data changes
+    watch(innerData, (newVal) => {
+      onChange?.(toValue(newVal))
+    }, { deep: true })
+
     // Sync the inner data when the props data changes
     watch(() => propsData?.value, newData => {
       initInnerData(newData)
     }, { deep: true, immediate: true })
-
-    // Emit changes when the inner data changes
-    watch(innerData, (newVal) => {
-      if (!innerDataInit) return
-      onChange?.(toValue(newVal))
-    }, { deep: true })
-
-    // Init form level field renderer slots
-    const slots = useSlots()
-    provide(FIELD_RENDERER_SLOTS, omit(slots, 'default', FIELD_RENDERERS))
 
     return {
       formData: innerData,

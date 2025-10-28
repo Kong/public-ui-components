@@ -52,10 +52,7 @@ const { getSchema, formData } = provideFormShared(
   schema,
   computed(() => data as T),
   config as FormConfig,
-  (value) => {
-    console.log('onFormChange', value)
-    emit('change', value as T)
-  },
+  (value) => emit('change', value as T),
 )
 
 const childFields = computed(() => {
