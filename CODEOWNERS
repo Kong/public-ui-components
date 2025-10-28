@@ -31,7 +31,7 @@
 /packages/core/copy-uuid/ @Kong/team-km @Kong/team-core-ui
 /packages/core/i18n/ @adamdehaven @ValeryG @jillztom @Kong/team-core-ui
 /packages/core/misc-widgets/ @Kong/team-core-ui
-/packages/core/monaco-editor/ @Kong/team-core-ui @arashsheyda
+/packages/core/monaco-editor/ @Kong/team-core-ui
 /packages/core/forms/ @Kong/team-km @Kong/team-core-ui @LukeSwierlik @QueaT-kong
 /packages/core/documentation/ @Kong/team-core-ui @Kong/team-konnectx-platform-fe @Kong/team-devx
 /packages/core/entities-config-editor/ @Kong/team-km @Kong/team-core-ui
