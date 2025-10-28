@@ -417,7 +417,7 @@ defineExpose({
   :deep(.k-button) {
     &:last-of-type,
     &:nth-last-of-type(2) {
-      margin-left: $kui-space-60;
+      margin-inline-start: $kui-space-60;
     }
   }
 }

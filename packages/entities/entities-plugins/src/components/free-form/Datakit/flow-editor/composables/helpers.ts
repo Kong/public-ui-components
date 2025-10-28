@@ -1,3 +1,4 @@
+import type { Rect } from '@vue-flow/core'
 import type { NodeInstance, FieldId, EdgeInstance, NodeId } from '../../types'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 import { findFieldById } from '../store/helpers'
@@ -50,4 +51,48 @@ export function createNewConnectionString(
     formatNodeConnection(sourceNode, sourceFieldId, 'output'),
     formatNodeConnection(targetNode, targetFieldId, 'input'),
   ]
+}
+
+/**
+ * Calculate the minimal bounding rectangle that contains every rect in the array.
+ *
+ * @throws {RangeError} When the rect array is empty or any rect has invalid values.
+ */
+export function getBoundingRect(rects: readonly Rect[]): Rect {
+  if (rects.length === 0) {
+    throw new Error('getBoundingRect requires at least one rect')
+  }
+
+  let minX = Number.POSITIVE_INFINITY
+  let minY = Number.POSITIVE_INFINITY
+  let maxX = Number.NEGATIVE_INFINITY
+  let maxY = Number.NEGATIVE_INFINITY
+
+  for (const { x, y, width, height } of rects) {
+    if (![x, y, width, height].every(Number.isFinite)) {
+      throw new Error('Rect values must be finite numbers')
+    }
+    if (width < 0 || height < 0) {
+      throw new RangeError('Rect width and height must be non-negative')
+    }
+
+    const right = x + width
+    const bottom = y + height
+
+    if (!Number.isFinite(right) || !Number.isFinite(bottom)) {
+      throw new RangeError('Rect boundaries must be finite numbers')
+    }
+
+    if (x < minX) minX = x
+    if (y < minY) minY = y
+    if (right > maxX) maxX = right
+    if (bottom > maxY) maxY = bottom
+  }
+
+  return {
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY,
+  }
 }

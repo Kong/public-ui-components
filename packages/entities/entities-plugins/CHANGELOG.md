@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.109.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.108.2...@kong-ui-public/entities-plugins@9.109.0) (2025-10-28)
+
+
+### Features
+
+* **entities-plugins:** datakit drag into group ([#2592](https://github.com/Kong/public-ui-components/issues/2592)) ([cb2d773](https://github.com/Kong/public-ui-components/commit/cb2d7738be6e66cddfb8311349e150ba37f52447))
+
+
+
+
+
+## [9.108.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.108.1...@kong-ui-public/entities-plugins@9.108.2) (2025-10-28)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.108.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.108.0...@kong-ui-public/entities-plugins@9.108.1) (2025-10-27)
+
+
+### Bug Fixes
+
+* **entities-plugins:** mask key field in key auth mock schema used by consumer ([#2594](https://github.com/Kong/public-ui-components/issues/2594)) ([952f7ef](https://github.com/Kong/public-ui-components/commit/952f7ef35f4df1c5b74170f8fbe0f9f485ee4a92))
+
+
+
+
+
+# [9.108.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.107.5...@kong-ui-public/entities-plugins@9.108.0) (2025-10-27)
+
+
+### Features
+
+* **entities-*:** datakit - resources cache [KM-1859] ([#2582](https://github.com/Kong/public-ui-components/issues/2582)) ([e11650c](https://github.com/Kong/public-ui-components/commit/e11650cc621f65db51b544475143a5c5c57a6b70))
+
+
+
+
+
+## [9.107.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.107.4...@kong-ui-public/entities-plugins@9.107.5) (2025-10-27)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#2593](https://github.com/Kong/public-ui-components/issues/2593)) ([1283fdd](https://github.com/Kong/public-ui-components/commit/1283fdd7e9f6bccf0fbb5df160917e53d1293a03))
+
+
+
+
+
 ## [9.107.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.107.3...@kong-ui-public/entities-plugins@9.107.4) (2025-10-24)
 
 

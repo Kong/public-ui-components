@@ -25,7 +25,7 @@ import { createInjectionState } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { IMPLICIT_NODE_META_MAP, isImplicitName, isImplicitType } from '../node/node'
 import { clone, createId, findFieldById, generateNodeName, getBranchesFromMeta, makeGroupName } from './helpers'
-import { createBranchGroupManager } from './branch-group-manager'
+import { createBranchGroups } from './branch-groups'
 import { useTaggedHistory } from './history'
 import { initEditorState, makeNodeInstance } from './init'
 import { useValidators } from './validation'
@@ -39,7 +39,8 @@ type CreateEditorStoreOptions = {
   onChange?: (
     configNodes: ConfigNode[],
     uiData: DatakitUIData,
-    resources: DatakitConfig['resources']
+    resources: DatakitConfig['resources'],
+    partialId?: string,
   ) => void
 }
 
@@ -58,7 +59,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         if (action === 'clear') {
           return
         }
-        options.onChange?.(toConfigNodes(), toUIData(), toResources())
+        options.onChange?.(toConfigNodes(), toUIData(), toResources(), state.value.cacheConfig?.partial_id)
       },
     })
     const skipValidation = ref(false)
@@ -131,7 +132,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       () => new Set(state.value.nodes.map((node) => node.name)),
     )
 
-    const branchGroups = createBranchGroupManager({ state, groupMapById, getNodeById, history })
+    const branchGroups = createBranchGroups({ state, groupMapById, getNodeById, history })
 
     // validators bound to current maps
     const {
@@ -652,15 +653,26 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     }
 
     function toResources(): DatakitConfig['resources'] {
+      const resources: DatakitConfig['resources'] = {}
+
       const vaultNode = getNodeByName('vault')
-      // todo(zehao): support `resources.cache`
-      // Konnect use `PUT` to update the plugin, so we can return undefined to clear the resources
-      if (!vaultNode) return
-      const vault = vaultConfigToResources(vaultNode.config as VaultConfig)
-      if (!vault || Object.keys(vault).length === 0) return
-      return {
-        vault,
+
+      if (vaultNode) {
+        const vault = vaultConfigToResources(vaultNode.config as VaultConfig)
+        if (vault && Object.keys(vault).length > 0) {
+          resources.vault = vault
+        }
       }
+
+      if (state.value.cacheConfig) {
+        const { strategy, redis, memory } = state.value.cacheConfig
+        resources.cache = { strategy, redis, memory }
+      }
+
+      // Konnect use `PUT` to update the plugin, so we can return undefined to clear the resources
+      if (Object.keys(resources).length === 0) return undefined
+
+      return resources
     }
 
     function toUIGroups(): UIGroup[] {

@@ -6,7 +6,6 @@
       implicit: isImplicit,
       readonly,
     }"
-    @mousedown="closeMenu"
   >
     <div class="body">
       <KTooltip
@@ -32,7 +31,6 @@
       />
       <KDropdown
         v-if="!isImplicit"
-        ref="menu"
         class="menu"
         :disabled="readonly"
         :kpop-attributes="{
@@ -282,7 +280,7 @@
 <script setup lang="ts">
 import type { EdgeId, FieldId, FieldName, NodeField, NodeInstance } from '../../types'
 
-import { computed, useTemplateRef, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { KTooltip, KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
 import { createI18n } from '@kong-ui-public/i18n'
 import {
@@ -548,12 +546,6 @@ watch(() => data.fields.output, (output, oldOutput) => {
     storeToggleExpanded(data.id, 'output', output.length > 0, true, '*')
   }
 }, { deep: true })
-
-
-const menuRef = useTemplateRef('menu')
-function closeMenu() {
-  menuRef.value?.closeDropdown()
-}
 </script>
 
 <style lang="scss" scoped>
