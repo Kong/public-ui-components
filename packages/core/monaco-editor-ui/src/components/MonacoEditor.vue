@@ -1,26 +1,33 @@
 <template>
   <div
     class="monaco-editor-container"
-    :class="[theme === 'dark' ? 'dark' : 'light', { 'has-toolbar': toolbar }, { 'loading': monacoEditor.editorStates.editorStatus === 'loading' }]"
+    :class="[
+      theme === 'dark' ? 'dark' : 'light',
+      { 'has-toolbar': toolbar },
+      { 'loading': monacoEditor.editorStates.editorStatus === 'loading' },
+    ]"
   >
     <MonacoEditorToolbar
       v-if="toolbar"
       :editor="monacoEditor"
+      :settings="toolbar"
     />
     <div
       ref="editor"
       class="monaco-editor-target"
       :class="[theme === 'dark' ? 'dark' : 'light']"
     />
-    <Transition name="fade">
-      <MonacoEditorEmptyState
-        v-show="monacoEditor.editorStates.editorStatus === 'loading'"
-        :icon="ProgressIcon"
-        :message="i18n.t('editor.messages.loading_message', { type: language })"
-        :title="i18n.t('editor.messages.loading_title', { type: language })"
-      />
-    </Transition>
-    <slot name="empty-state">
+    <slot name="state-loading">
+      <Transition name="fade">
+        <MonacoEditorEmptyState
+          v-show="monacoEditor.editorStates.editorStatus === 'loading'"
+          :icon="ProgressIcon"
+          :message="i18n.t('editor.messages.loading_message', { type: language })"
+          :title="i18n.t('editor.messages.loading_title', { type: language })"
+        />
+      </Transition>
+    </slot>
+    <slot name="state-empty">
       <Transition name="fade">
         <MonacoEditorEmptyState
           v-if="monacoEditor.editorStates.editorStatus === 'ready' && !monacoEditor.editorStates.hasContent"
@@ -35,16 +42,18 @@
 
 <script setup lang="ts">
 import { useTemplateRef } from 'vue'
-import { useMonacoEditor, type EditorThemes } from '../../src'
+import { useMonacoEditor, type EditorThemes, type MonacoEditorToolbarOptions } from '../../src'
 import { CodeblockIcon, ProgressIcon } from '@kong/icons'
 import composables from '../composables'
 import MonacoEditorEmptyState from './MonacoEditorEmptyState.vue'
 import MonacoEditorToolbar from './MonacoEditorToolbar.vue'
+import type { editor as meT } from 'monaco-editor'
 
 const {
   theme = 'light',
   language = 'markdown',
   options = undefined,
+  toolbar,
 } = defineProps<{
   /**
    * The theme of the Monaco Editor instance.
@@ -57,11 +66,11 @@ const {
    */
   language?: string
   // TODO
-  toolbar?: boolean
+  toolbar?: boolean | MonacoEditorToolbarOptions
   /**
    * Additional Monaco Editor options to customize the editor further.
   */
-  options?: any | undefined
+  options?: Partial<meT.IStandaloneEditorConstructionOptions> | undefined
 }>()
 
 /**
@@ -100,11 +109,6 @@ const monacoEditor = useMonacoEditor(editor, {
   &.loading {
     pointer-events: none;
     user-select: none;
-
-
-    :deep(.toolbar-action-button) {
-      color: $kui-color-text-neutral-weak;
-    }
 
     .monaco-editor-target {
       filter: blur(2px);

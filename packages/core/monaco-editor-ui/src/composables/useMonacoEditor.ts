@@ -9,6 +9,10 @@ import type { EditorThemes, UseMonacoEditorOptions } from '../types'
 import type { HighlighterGeneric, BundledLanguage, BundledTheme } from 'shiki'
 import { MonacoEditorDefaultActions, type MarkdownActionIds } from '../utils/actions'
 
+import prettier from 'prettier/standalone'
+import parserMarkdown from 'prettier/plugins/markdown'
+import parserPostCSS from 'prettier/plugins/postcss.js'
+
 // ─────────────────────────────────────────────
 // SINGLETONS
 // ─────────────────────────────────────────────
@@ -78,6 +82,46 @@ async function loadMonaco(language?: string): Promise<typeof monacoType> {
 
 
     monacoInstance = monaco
+
+    // markdown
+    monaco.languages.registerDocumentFormattingEditProvider('markdown', {
+      async provideDocumentFormattingEdits(model) {
+        const text = model.getValue()
+
+        const formatted = await prettier.format(text, {
+          parser: 'markdown',
+          plugins: [parserMarkdown],
+          proseWrap: 'always',
+        })
+
+        return [
+          {
+            range: model.getFullModelRange(),
+            text: formatted,
+          },
+        ]
+      },
+    })
+
+    // css
+    monaco.languages.registerDocumentFormattingEditProvider('css', {
+      async provideDocumentFormattingEdits(model) {
+        const text = model.getValue()
+
+        const formatted = await prettier.format(text, {
+          parser: 'css',
+          plugins: [parserPostCSS],
+        })
+
+        return [
+          {
+            range: model.getFullModelRange(),
+            text: formatted,
+          },
+        ]
+      },
+    })
+
 
 
     return monaco

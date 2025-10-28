@@ -2,14 +2,21 @@
   <div class="sandbox-container">
     <main class="editor-grid-container">
       <MonacoEditor
-        v-for="lang, i in languages"
+        v-model="codes['yaml']"
+        language="yaml"
+        :toolbar="false"
+      >
+      <template #state-empty>
+        sdgsdg
+      </template>
+    </MonacoEditor>
+      <MonacoEditor
+        v-for="lang in languages"
         :key="lang"
         v-model="codes[lang]"
         :language="lang"
-        :theme="languages.length - 1 === i ? 'dark' : 'light'"
         :toolbar="true"
       />
-      <!-- :toolbar="i % 2 !== 0" -->
     </main>
   </div>
 </template>
@@ -18,8 +25,9 @@
 import { reactive } from 'vue'
 import { MonacoEditor } from '../src'
 import { defaultCodes } from './content'
+import { BotIcon, KongIcon } from '@kong/icons'
 
-const languages = ['yaml', 'typescript', 'regex', 'json', 'markdown', 'css']
+const languages = ['typescript', 'regex', 'json', 'markdown', 'css']
 
 const codes = reactive<{ [key in typeof languages[number]]: string }>({ ...defaultCodes })
 </script>

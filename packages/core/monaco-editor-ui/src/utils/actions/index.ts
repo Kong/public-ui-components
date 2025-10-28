@@ -16,11 +16,13 @@ export const MonacoEditorDefaultActions = [
     contextMenuGroupId: 'actions-group:basic',
     actionList: [
       {
-        id: 'actions:format',
+        id: 'actions:format-document',
         label: 'Format Document',
         keybindings: [KeyMod.CtrlCmd | KeyMod.Shift | KeyCode.KeyF],
         contextMenuOrder: 1,
-        run: (editor) => {},
+        run: (editor) => {
+          editor.getAction?.('editor.action.formatDocument')?.run()
+        },
       },
       {
         id: 'actions:full-screen',

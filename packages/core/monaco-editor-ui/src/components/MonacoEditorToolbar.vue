@@ -2,16 +2,19 @@
   <div class="monaco-editor-ui-toolbar">
     <div class="monaco-editor-ui-toolbar-left">
       <div
-        v-for="group, groupIndex in ActionGroups"
+        v-for="group, groupIndex in 1"
         :key="groupIndex"
         class="monaco-editor-ui-toolbar-action-group"
       >
         <ToolbarActionButton
-          v-for="item, index in group"
-          :key="index"
+          v-for="item, index in commands"
+          :key="item.id || index"
+          :active="editor?.editorStates.editorStatus === 'ready'"
           :item="{
             ...item,
-            action: typeof item.action === 'function' ? item.action : () => editor?.triggerKeyboardCommand(item.action as any),
+            action: typeof item.action === 'function'
+              ? item.action
+              : () => editor?.triggerKeyboardCommand(item.action as any),
           }"
           :placement="index === 0 ? 'bottom-start' : 'bottom'"
         />
@@ -21,6 +24,7 @@
     <div class="monaco-editor-ui-toolbar-right">
       <div class="monaco-editor-ui-toolbar-action-group">
         <ToolbarActionButton
+          :active="editor?.editorStates.editorStatus === 'ready'"
           :item="{
             id: 'search',
             icon: SearchIcon,
@@ -39,16 +43,14 @@
 import ToolbarActionButton from './ToolbarActionButton.vue'
 import { CleaningIcon, FullscreenIcon, SearchIcon } from '@kong/icons'
 import composables from '../composables'
-import type { MonacoEditorActionButton } from 'src/types'
+import type { MonacoEditorActionButton, MonacoEditorToolbarOptions } from 'src/types'
 import type useMonacoEditor from 'src/composables/useMonacoEditor'
-// import { MonacoEditorDefaultActions } from 'src/utils/actions'
+import { computed } from 'vue'
 
 const {
   editor = null,
-  active = false,
   items = [],
-  showSearch = true,
-  showFormat = true,
+  settings,
 } = defineProps<{
   /**
    * The editor instance to trigger actions on.
@@ -57,55 +59,75 @@ const {
    */
   editor?: ReturnType<typeof useMonacoEditor> | null
   /**
-   * Whether the toolbar buttons is active or not (disabled).
-   *
-   * @default false
-   */
-  active?: boolean
-  /**
-   * Whether to show the search button or not.
-   *
-   * @default true
-   */
-  showSearch?: boolean
-  /**
-   * Whether to show the format button or not.
-   *
-   * @default true
-   */
-  showFormat?: boolean
-  /**
    * The items to show in the toolbar.
    *
    * @default []
    */
   items?: MonacoEditorActionButton[][]
+  //
+  settings: boolean | MonacoEditorToolbarOptions
 }>()
 
 const { i18n } = composables.useI18n()
 
-const ActionGroups: MonacoEditorActionButton[][] = [
-  [
-    {
-      id: 'format',
-      icon: CleaningIcon,
-      keybindings: [],
-      label: i18n.t('editor.labels.action_format'),
-      // ariaLabel: i18n.t('editor.labels.action_format_label'),
-      action: () => {
-        editor?.formatDocument()
-      },
-    },
-    {
-      id: 'full-screen',
-      icon: FullscreenIcon,
-      keybindings: [],
-      label: i18n.t('editor.labels.action_full_screen'),
-      // ariaLabel: i18n.t('editor.labels.action_format_label'),
-      action: 'actions:full-screen',
-    },
-  ],
-]
+const builtInCommands: Record<string, MonacoEditorActionButton> = {
+  format: {
+    id: 'format',
+    icon: CleaningIcon,
+    keybindings: ['Command', 'Shift', 'F'],
+    label: i18n.t('editor.labels.action_format'),
+    action: 'actions:format-document',
+  },
+  fullScreen: {
+    id: 'full-screen',
+    icon: FullscreenIcon,
+    label: i18n.t('editor.labels.action_full_screen'),
+    action: 'actions:full-screen',
+  },
+  search: {
+    id: 'search',
+    icon: SearchIcon,
+    label: i18n.t('editor.labels.action_search'),
+    action: (editor: any) => editor?.toggleSearchWidget?.(),
+    keybindings: ['Command', 'F'],
+  },
+}
+
+const commands = computed(() => {
+  const result: MonacoEditorActionButton[] = []
+
+  const userCommands = typeof settings === 'object' ? settings?.commands || {} : {}
+
+  // Built-in
+  for (const key in builtInCommands) {
+    const userConfig = userCommands[key]
+    if (userConfig === false) continue // disable
+
+    const merged = {
+      ...builtInCommands[key],
+      ...(typeof userConfig === 'object' ? userConfig : {}),
+    }
+
+    result.push(merged)
+  }
+
+  // Custom user commands
+  for (const key in userCommands) {
+    if (key in builtInCommands) continue
+    const cfg = userCommands[key]
+    if (cfg === false) continue
+
+    result.push({
+      id: key,
+      label: (cfg as any)?.label || key,
+      icon: (cfg as any)?.icon,
+      action: (cfg as any)?.action,
+      // order: (cfg as any)?.order || 99,
+    })
+  }
+
+  return result
+})
 </script>
 
 <style lang="scss" scoped>

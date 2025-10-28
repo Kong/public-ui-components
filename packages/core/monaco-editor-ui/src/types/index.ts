@@ -29,6 +29,22 @@ export interface MonacoEditorActionButton {
   label?: string
   keybindings?: string[]
   icon: Component
-  action: MarkdownActionIds | (() => void)
+  action: MarkdownActionIds | ((editor?: any) => void)
 }
 
+
+// experimenting:
+
+
+export interface MonacoEditorToolbarOptions {
+  commands: {
+    // TODO
+  /** Built-in predefined actions */
+    format?: boolean | Partial<MonacoEditorActionButton>
+    fullScreen?: boolean | Partial<MonacoEditorActionButton>
+    search?: boolean | Partial<MonacoEditorActionButton>
+
+    /** Custom user-defined actions */
+    [key: string]: boolean | Partial<MonacoEditorActionButton> | undefined
+  }
+}

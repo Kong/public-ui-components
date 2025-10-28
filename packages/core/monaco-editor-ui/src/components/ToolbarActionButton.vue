@@ -1,6 +1,5 @@
 <template>
   <KTooltip
-    :class="{ 'is-disabled': !active }"
     :data-testid="`editor-toolbar-mdc-action-${item.id}-tooltip`"
     :placement="placement"
   >
@@ -63,6 +62,11 @@ const {
     ariaLabel?: string
     action?: () => void
   }
+  /**
+   * Whether the button is active (clickable) or not.
+   *
+   * @default true
+   */
   active?: boolean
   /**
    * Placement of the tooltip.
@@ -194,21 +198,12 @@ onMounted(() => {
 .toolbar-action-button {
   color: $kui-color-text-neutral;
 
-  &:hover,
-  &.active {
+  &:hover {
     color: $kui-color-text-neutral-strongest;
   }
-}
-</style>
 
-<style lang="scss">
-.studio-toolbar-action-group {
-  .is-disabled {
-    pointer-events: none;
-
-    .toolbar-action-button {
-      color: $kui-color-text-neutral-weak;
-    }
+  &:disabled {
+    color: $kui-color-text-neutral-weak;
   }
 }
 </style>
