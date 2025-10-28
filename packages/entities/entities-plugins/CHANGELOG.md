@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.109.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.108.2...@kong-ui-public/entities-plugins@9.109.0) (2025-10-28)
+
+
+### Features
+
+* **entities-plugins:** datakit drag into group ([#2592](https://github.com/Kong/public-ui-components/issues/2592)) ([cb2d773](https://github.com/Kong/public-ui-components/commit/cb2d7738be6e66cddfb8311349e150ba37f52447))
+
+
+
+
+
 ## [9.108.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.108.1...@kong-ui-public/entities-plugins@9.108.2) (2025-10-28)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
