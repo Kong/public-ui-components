@@ -67,16 +67,10 @@ export function useBranchDrop({ phase, groupMapById, getNodeDepth }: UseBranchDr
     activeGroupId.value = findDeepestGroup(point)
   }
 
-  function reset() {
-    source.value = undefined
-    activeGroupId.value = undefined
-  }
-
   return {
     activeGroupId,
     start,
     updateActiveGroup,
     end,
-    reset,
   }
 }

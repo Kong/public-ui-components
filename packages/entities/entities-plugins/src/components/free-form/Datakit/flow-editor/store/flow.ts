@@ -28,7 +28,7 @@ import { useBranchDrop } from '../composables/useBranchDrop'
 import { getBoundingRect } from '../composables/helpers'
 
 import type { Node as DagreNode } from '@dagrejs/dagre'
-import type { Connection, FitViewParams, Node, NodeSelectionChange, XYPosition } from '@vue-flow/core'
+import type { Connection, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
 import type {
@@ -41,7 +41,6 @@ import type {
   NodeId,
   NodeInstance,
   NodePhase,
-  Rect,
 } from '../../types'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 

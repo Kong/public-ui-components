@@ -32,8 +32,6 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
 
 export type EditorMode = 'code' | 'flow'
 
-export type Rect = XYPosition & Dimensions
-
 interface EditorModalNavItemBase {
   label: string
   icon: Component

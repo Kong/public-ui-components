@@ -1,4 +1,4 @@
-import type { Node, XYPosition } from '@vue-flow/core'
+import type { Node, Rect, XYPosition } from '@vue-flow/core'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { computed, nextTick, ref, watch } from 'vue'
 
@@ -8,7 +8,6 @@ import type {
   NodeId,
   NodeInstance,
   NodePhase,
-  Rect,
 } from '../../types'
 import { useEditorStore } from '../store/store'
 import type { FlowEdge, FlowGroupNodeData, GroupLayout } from '../../types'
