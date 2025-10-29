@@ -1,13 +1,13 @@
 import { vi, describe, expect } from 'vitest'
 import useMetricFetcher, { buildDeltaMapping, DEFAULT_KEY } from './useMetricFetcher'
 import { ref } from 'vue'
-import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4,
+  Timeframe } from '@kong-ui-public/analytics-utilities'
 import {
   DeltaQueryTime,
   TimeframeKeys,
   TimePeriods,
   UnaryQueryTime,
-  Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import type { MetricFetcherOptions } from '../types'
 import composables from '.'
@@ -21,9 +21,12 @@ const addDays = (date: Date, amount: number) => {
 
 const CHART_REFRESH_INTERVAL_MS = 30 * 1000
 
-const timePeriod = TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe
-const deltaQueryTime = new DeltaQueryTime(timePeriod)
-const unaryQueryTime = new UnaryQueryTime(timePeriod)
+const timeRange = {
+  start: new Date(new Date().getTime() - (24 * 60 * 60 * 1000)), // 1 day ago
+  end: new Date(),
+}
+const deltaQueryTime = new DeltaQueryTime(timeRange, 'hourly')
+const unaryQueryTime = new UnaryQueryTime(timeRange, 'hourly')
 
 const EXPLORE_RESULT_TREND: ExploreResultV4 = {
   data: [
@@ -442,19 +445,11 @@ describe('useMetricFetcher', () => {
         'request_count',
       ],
       filterValues: ['test-org-uuid'],
-      timeframe: ref(new Timeframe({
-        key: 'custom',
-        timeframeText: 'custom',
-        display: 'custom',
-        // Note -- these values don't matter, just the `withTrend` value and the value in the response.
-        startCustom: new Date('2024-01-01T00:00:00Z'),
-        endCustom: new Date('2024-01-02T00:00:00Z'),
-        timeframeLength: () => 0,
-        defaultResponseGranularity: 'daily',
-        dataGranularity: 'daily',
-        isRelative: false,
-        allowedTiers: ['free', 'plus', 'enterprise'],
-      })),
+      timeRange: ref({
+        type: 'absolute',
+        start: new Date('2024-01-01T00:00:00Z'),
+        end: new Date('2024-01-02T00:00:00Z'),
+      }),
       loading: ref(true),
       hasError: ref(false),
       withTrend: ref(true),
@@ -477,19 +472,11 @@ describe('useMetricFetcher', () => {
         'request_count',
       ],
       filterValues: ['test-org-uuid'],
-      timeframe: ref(new Timeframe({
-        key: 'custom',
-        timeframeText: 'custom',
-        display: 'custom',
-        // Note -- these values don't matter, just the `withTrend` value and the value in the response.
-        startCustom: new Date('2024-01-01T00:00:00Z'),
-        endCustom: new Date('2024-01-02T00:00:00Z'),
-        timeframeLength: () => 0,
-        defaultResponseGranularity: 'daily',
-        dataGranularity: 'daily',
-        isRelative: false,
-        allowedTiers: ['free', 'plus', 'enterprise'],
-      })),
+      timeRange: ref({
+        type: 'absolute',
+        start: new Date('2024-01-01T00:00:00Z'),
+        end: new Date('2024-01-02T00:00:00Z'),
+      }),
       loading: ref(true),
       hasError: ref(false),
       withTrend: ref(false),

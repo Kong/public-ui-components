@@ -1,14 +1,14 @@
 import type { CyHttpMessages } from 'cypress/types/net-stubbing'
 import { ALL_STATUS_CODE_GROUPS } from './constants'
 import type {
+  AbsoluteTimeRangeV4,
   Display,
   ExploreQuery,
   ExploreResultV4,
   GroupByResult,
   QueryResponseMeta,
-  Timeframe,
 } from '@kong-ui-public/analytics-utilities'
-import { DeltaQueryTime, TimeframeKeys, TimePeriods, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
+import { DeltaQueryTime, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
 
 // Replicate date-fns `fromUnixTime` here to avoid a dependency.
 const fromUnixTimeMs = (t: number) => new Date(t)
@@ -17,7 +17,7 @@ export interface MockOptions {
   dimensionNames?: string[]
   injectErrors?: 'latency' | 'traffic' | 'all'
   deterministic?: boolean
-  timeFrame?: Timeframe
+  timeRange?: AbsoluteTimeRangeV4
 }
 
 export const mockExploreResponseFromCypress = (
@@ -42,8 +42,21 @@ export const mockExploreResponse = (
   body: ExploreQuery,
   opts?: MockOptions,
 ) => {
-  const timeframe = opts?.timeFrame || TimePeriods.get(TimeframeKeys.ONE_DAY)!
-  const defaultQueryTime = body.granularity === 'trend' ? new DeltaQueryTime(timeframe) : new UnaryQueryTime(timeframe)
+  const timeRange = opts?.timeRange && {
+    start: opts.timeRange.start,
+    end: opts.timeRange.end,
+  } || body.time_range?.type === 'absolute'
+    ? {
+      // @ts-ignore - already asserted time range is absolute above
+      start: new Date(body.time_range.start),
+      // @ts-ignore - already asserted time range is absolute above
+      end: new Date(body.time_range.end),
+    }
+    : {
+      start: new Date(Date.now() - 3600 * 1000 * 24),
+      end: new Date(),
+    }
+  const defaultQueryTime = body.granularity === 'trend' ? new DeltaQueryTime(timeRange, 'secondly') : new UnaryQueryTime(timeRange, 'secondly')
   const end = defaultQueryTime.endMs()
   const start = defaultQueryTime.startMs()
 
