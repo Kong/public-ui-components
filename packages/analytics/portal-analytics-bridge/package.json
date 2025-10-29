@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/portal-analytics-bridge",
-  "version": "0.3.19",
+  "version": "0.3.20",
   "type": "module",
   "main": "./dist/portal-vitals-bridge.umd.js",
   "module": "./dist/portal-vitals-bridge.es.js",
