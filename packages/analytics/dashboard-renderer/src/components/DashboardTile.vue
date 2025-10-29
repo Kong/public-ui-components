@@ -21,27 +21,20 @@
           {{ definition.chart.chart_title }}
         </div>
       </KTooltip>
+
+      <div class="badge-container">
+        <TileBadges
+          :chart-meta="chartData?.meta"
+          :definition="definition"
+          :loading="!queryReady || !chartData"
+        />
+      </div>
+
       <div
         v-if="canShowTitleActions"
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
-        <KBadge
-          v-if="badgeData"
-          data-testid="time-range-badge"
-          :tooltip="isAgedOutQuery ? agedOutWarning : undefined"
-          :tooltip-attributes="{ maxWidth: '320px' }"
-        >
-          <template
-            v-if="isAgedOutQuery"
-            #icon
-          >
-            <WarningIcon :size="KUI_ICON_SIZE_20" />
-          </template>
-          <span class="badge-text">
-            {{ badgeData }}
-          </span>
-        </KBadge>
         <EditIcon
           v-if="canShowKebabMenu && context.editable && !isFullscreen"
           class="edit-icon"
@@ -50,6 +43,7 @@
           :size="KUI_ICON_SIZE_40"
           @click="editTile"
         />
+
         <KDropdown
           v-if="canShowKebabMenu && kebabMenuHasItems && !isFullscreen"
           class="dropdown"
@@ -148,7 +142,7 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 
 import { type Component, computed, defineAsyncComponent, inject, nextTick, readonly, ref, toRef, watch } from 'vue'
-import { formatTime, TimePeriods, getFieldDataSources, msToGranularity, TIMEFRAME_LOOKUP, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
+import { getFieldDataSources, EXPORT_RECORD_LIMIT } from '@kong-ui-public/analytics-utilities'
 import '@kong-ui-public/analytics-chart/dist/style.css'
 import '@kong-ui-public/analytics-metric-provider/dist/style.css'
 import SimpleChartRenderer from './SimpleChartRenderer.vue'
@@ -156,13 +150,14 @@ import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
-import { KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
+import { KUI_SPACE_70 } from '@kong/design-tokens'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
+import { MoreIcon, EditIcon } from '@kong/icons'
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import DonutChartRenderer from './DonutChartRenderer.vue'
+import TileBadges from './TileBadges.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
@@ -228,7 +223,7 @@ watch(() => props.definition, async () => {
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const canShowTitleActions = computed((): boolean => (canShowKebabMenu.value && (kebabMenuHasItems.value || props.context.editable)) || !!badgeData.value)
+const canShowTitleActions = computed((): boolean => canShowKebabMenu.value && (kebabMenuHasItems.value || props.context.editable))
 
 const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || ('allow_csv_export' in props.definition.chart ? props.definition.chart.allow_csv_export : true) || props.context.editable)
 
@@ -276,59 +271,6 @@ const componentData = computed(() => {
       supportsZoom,
     },
   }
-})
-
-const badgeData = computed<string | null>(() => {
-  const timeRange = props.definition.query?.time_range
-
-  if (timeRange?.type === 'relative') {
-    const timeframe = TimePeriods.get(TIMEFRAME_LOOKUP[timeRange.time_range])
-    if (timeframe) {
-      return timeframe.display
-    }
-
-    console.warn('Did not recognize the given relative time range:', timeRange.time_range)
-    return timeRange.time_range
-  } else if (timeRange?.type === 'absolute') {
-    // Fall back to UTC if `tz` isn't explicitly specified because this gives the best results for dates without times.
-    // When we support fine-grained absolute time, this assumption may need to be adjusted.
-    const tz = timeRange.tz || 'Etc/UTC'
-    return `${formatTime(timeRange.start, { short: true, tz })} - ${formatTime(timeRange.end, { short: true, tz })}`
-  }
-
-  return null
-})
-
-const chartDataGranularity = computed(() => {
-  return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
-})
-
-const isTimeSeriesChart = computed(() => {
-  return ['timeseries_line', 'timeseries_bar'].includes(props.definition.chart.type)
-})
-
-const isAgedOutQuery = computed(() => {
-  if (!isTimeSeriesChart.value || !props.queryReady || loadingChartData.value) {
-    return false
-  }
-
-  const savedGranularity = props.definition?.query?.granularity
-
-  if (!savedGranularity || !chartDataGranularity.value) {
-    return false
-  }
-
-  return savedGranularity !== chartDataGranularity.value
-})
-
-const agedOutWarning = computed(() => {
-  const currentGranularity = msToGranularity(chartData.value?.meta.granularity_ms ?? 0) ?? 'unknown'
-  const savedGranularity = props.definition?.query?.granularity ?? 'unknown'
-
-  return i18n.t('query_aged_out_warning', {
-    currentGranularity: i18n.t(`granularities.${currentGranularity}` as any),
-    savedGranularity: i18n.t(`granularities.${savedGranularity}` as any),
-  })
 })
 
 /**
@@ -424,6 +366,13 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
     .tile-header {
       background: $kui-color-background-neutral-weakest;
     }
+  }
+
+  .badge-container {
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+    padding: 0 $kui-space-50;
   }
 
   .tile-header {
