@@ -1,4 +1,5 @@
-import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type InjectionKey, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch } from 'vue'
+import type { ComputedRef, InjectionKey, MaybeRefOrGetter, Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
