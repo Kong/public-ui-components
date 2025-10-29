@@ -53,7 +53,7 @@
     "@kong/design-tokens": "1.18.0",
     "@kong/kongponents": "9.43.2",
     "axios": "^1.7.7",
-    "vue": "^3.5.13"
+    "vue": "^3.5.22"
   },
   "repository": {
     "type": "git",
