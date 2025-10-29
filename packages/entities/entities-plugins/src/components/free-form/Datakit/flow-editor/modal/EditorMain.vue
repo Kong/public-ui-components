@@ -114,7 +114,7 @@ import yaml, { JSON_SCHEMA } from 'js-yaml'
 
 import english from '../../../../../locales/en.json'
 import BooleanField from '../../../shared/BooleanField.vue'
-import { HOTKEYS } from '../../constants'
+import { HOTKEYS } from '../constants'
 import * as examples from '../../examples'
 import { useHotkeys } from '../composables/useHotkeys'
 import FlowPanels from '../FlowPanels.vue'

@@ -12,7 +12,7 @@ import {
   DK_FLOW_NODE_Z_OFFSET,
   DK_FLOW_Z_LAYER_STEP,
   DK_NODE_PROPERTIES_PANEL_WIDTH,
-} from '../../constants'
+} from '../constants'
 import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
 import { useBranchLayout } from '../composables/useBranchLayout'
 import { useOptionalConfirm } from '../composables/useConflictConfirm'

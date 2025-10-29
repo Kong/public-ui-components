@@ -16,7 +16,7 @@ import {
   DK_FLOW_GROUP_Z_OFFSET,
   DK_FLOW_BRANCH_EDGE_Z_OFFSET,
   DK_BRANCH_GROUP_PADDING,
-} from '../../constants'
+} from '../constants'
 import { getBoundingRect } from './helpers'
 
 export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase, readonly?: boolean, flowId?: string }) {
