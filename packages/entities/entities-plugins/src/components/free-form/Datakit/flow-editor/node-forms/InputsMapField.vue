@@ -46,7 +46,17 @@
             :label="t('plugins.free-form.datakit.flow_editor.node_properties.input.source')"
             :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
             @change="selectItem => handleInputsValueChange(entry, selectItem?.value ?? null)"
-          />
+          >
+            <template
+              v-if="$slots['item-label']"
+              #item-template="{ item }"
+            >
+              <slot
+                name="item-label"
+                v-bind="item"
+              />
+            </template>
+          </KSelect>
         </div>
         <KButton
           appearance="tertiary"

@@ -20,7 +20,11 @@
       multiple
       name="then"
       @update="(value) => onBranchChange('then', value)"
-    />
+    >
+      <template #item-label="item">
+        <SourceItem :item="item" />
+      </template>
+    </EnumField>
 
     <EnumField
       enable-filtering
@@ -28,7 +32,11 @@
       multiple
       name="else"
       @update="(value) => onBranchChange('else', value)"
-    />
+    >
+      <template #item-label="item">
+        <SourceItem :item="item" />
+      </template>
+    </EnumField>
 
     <InputsField
       :field-name-validator="fieldNameValidator"
@@ -52,6 +60,7 @@ import { useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import { useBranchNodeForm } from '../composables/useBranchNodeForm'
 import type { BranchName, NodeId } from '../../types'
 import EnumField from '../../../shared/EnumField.vue'
+import SourceItem from './SourceItem.vue'
 
 type BranchFormData = BaseFormData & Record<string, unknown>
 

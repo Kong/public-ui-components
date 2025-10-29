@@ -18,7 +18,7 @@
     @update:model-value="(value: string | string[] | null) => emit('update', value)"
   >
     <template
-      v-if="fieldAttrs.labelAttributes?.info"
+      v-if="'tooltip' in $slots || fieldAttrs.labelAttributes?.info"
       #label-tooltip
     >
       <slot name="tooltip">
@@ -26,12 +26,29 @@
         <div v-html="fieldAttrs.labelAttributes.info" />
       </slot>
     </template>
+
+    <template
+      v-if="$slots['item-label']"
+      #item-template="{ item }"
+    >
+      <slot
+        name="item-label"
+        v-bind="item"
+      />
+    </template>
   </SelectComponent>
 </template>
 
 <script setup lang="ts">
 import { computed, toRef } from 'vue'
-import { KSelect, KMultiselect, type LabelAttributes, type SelectItem, type SelectProps, type MultiselectProps } from '@kong/kongponents'
+import {
+  KSelect,
+  KMultiselect,
+  type LabelAttributes,
+  type SelectItem,
+  type SelectProps,
+  type MultiselectProps,
+} from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
 
 type MultipleSelectProps = { multiple: true } & MultiselectProps<string, false>
@@ -48,9 +65,16 @@ const emit = defineEmits<{
   update: [string | string[] | null]
 }>()
 
-const { name, items, multiple = undefined, ...props } = defineProps<EnumFieldProps>()
+const {
+  name,
+  items,
+  multiple = undefined,
+  ...props
+} = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
-const { value: fieldValue, ...field } = useField<number | string>(toRef(() => name))
+const { value: fieldValue, ...field } = useField<number | string>(
+  toRef(() => name),
+)
 
 const fieldAttrs = useFieldAttrs(field.path!, props)
 

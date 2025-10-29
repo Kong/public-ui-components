@@ -1,18 +1,14 @@
 import { computed } from 'vue'
 import { useEditorStore } from '../../composables'
-import type { BranchName, NodeId, NodeName } from '../../types'
+import type { BranchName, NodeId } from '../../types'
 import { isImplicitType, isNodeId } from '../node/node'
 import { setsEqual, getBranchesFromMeta } from '../store/helpers'
 import { useConfirm } from './useConflictConfirm'
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
-import { useNodeForm, type BaseFormData } from './useNodeForm'
-
-export type BranchOption = {
-  value: NodeId
-  label: NodeName
-}
+import { useNodeForm } from './useNodeForm'
+import type { BaseFormData, InputOption } from './useNodeForm'
 
 /**
  * Branch-specific form composable that extends useNodeForm with branch node functionality.
@@ -218,7 +214,7 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(nodeId:
    * - Nodes in different phase
    * - Nodes that would create cycles
    */
-  const branchOptions = computed<BranchOption[]>(() => {
+  const branchOptions = computed<InputOption[]>(() => {
     const owner = base.currentNode.value
     if (!owner || !branchGroups) {
       return []
@@ -231,7 +227,7 @@ export function useBranchNodeForm<T extends BaseFormData = BaseFormData>(nodeId:
         node.phase === owner.phase &&
         !branchGroups.wouldCreateCycle(owner.id, node.id),
       )
-      .map(node => ({ value: node.id, label: node.name }))
+      .map(node => ({ value: node.id, label: node.name, type: node.type }) )
   })
 
   return {
