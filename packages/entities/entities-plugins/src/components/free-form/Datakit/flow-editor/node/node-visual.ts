@@ -22,6 +22,7 @@ import {
   NetworkIcon,
   StackIcon,
   VitalsIcon,
+  CachedIcon,
 } from '@kong/icons'
 import type { NodeType, NodeVisual } from '../../types'
 
@@ -69,7 +70,7 @@ export const NODE_VISUAL: Record<NodeType, NodeVisual> = {
     },
   },
   cache: {
-    icon: StackIcon,
+    icon: CachedIcon,
     colors: {
       foreground: KUI_COLOR_TEXT_DECORATIVE_PINK,
       background: '#fff0f7', // Pink-tinted background for cache node

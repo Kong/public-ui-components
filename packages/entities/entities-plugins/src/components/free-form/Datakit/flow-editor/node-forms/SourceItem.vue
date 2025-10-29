@@ -2,6 +2,7 @@
   <span class="dk-source-item">
     <component
       :is="NODE_VISUAL[item.type as NodeType].icon"
+      :color="NODE_VISUAL[item.type as NodeType].colors?.foreground"
       :size="KUI_ICON_SIZE_40"
     />
     {{ item.label }}
