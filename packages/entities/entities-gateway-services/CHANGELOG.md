@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.13.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.14...@kong-ui-public/entities-gateway-services@3.13.15) (2025-10-29)
+
+
+### Reverts
+
+* **deps:** vue update and style breakage ([#2606](https://github.com/Kong/public-ui-components/issues/2606)) ([4eefb3e](https://github.com/Kong/public-ui-components/commit/4eefb3e4f61d3f4a0078c142404b12e52ba6e74e)), closes [#2604](https://github.com/Kong/public-ui-components/issues/2604)
+
+
+
+
+
 ## [3.13.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.13...@kong-ui-public/entities-gateway-services@3.13.14) (2025-10-29)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
