@@ -60,7 +60,7 @@
     "@vueuse/integrations": "^13.5.0",
     "axios": "^1.7.7",
     "monaco-editor": "^0.52.2",
-    "vue": "^3.5.13",
+    "vue": "^3.5.22",
     "vue-router": "^4.4.5",
     "zod": "^4.1.12"
   },
