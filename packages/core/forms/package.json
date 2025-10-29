@@ -65,8 +65,8 @@
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.18.0",
-    "@kong/kongponents": "9.43.2",
+    "@kong/design-tokens": "1.18.1",
+    "@kong/kongponents": "9.45.1",
     "@types/lodash-es": "^4.17.12",
     "pug": "^3.0.3"
   },

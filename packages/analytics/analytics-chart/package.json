@@ -28,8 +28,8 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "1.18.0",
-    "@kong/kongponents": "9.43.2",
+    "@kong/design-tokens": "1.18.1",
+    "@kong/kongponents": "9.45.1",
     "@types/uuid": "^10.0.0",
     "file-saver": "^2.0.5",
     "lodash.mapkeys": "^4.6.0",
