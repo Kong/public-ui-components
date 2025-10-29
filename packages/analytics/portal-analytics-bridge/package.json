@@ -64,6 +64,6 @@
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong/sdk-portal-js": "^2.16.0",
     "axios": "^1.7.7",
-    "vue": "^3.5.22"
+    "vue": "^3.5.13"
   }
 }
