@@ -2,7 +2,7 @@
   <span class="dk-source-item">
     <component
       :is="NODE_VISUAL[item.type as NodeType].icon"
-      :color="NODE_VISUAL[item.type as NodeType].colors?.foreground"
+      :color="KUI_COLOR_TEXT_NEUTRAL"
       :size="KUI_ICON_SIZE_40"
     />
     {{ item.label }}
@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import type { NodeType } from '../../types'
 import type { InputOption } from '../composables/useNodeForm'
 import { NODE_VISUAL } from '../node/node-visual'
