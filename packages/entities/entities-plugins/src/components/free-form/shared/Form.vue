@@ -56,7 +56,7 @@ const { getSchema, formData } = provideFormShared(
 )
 
 const childFields = computed(() => {
-  let fields = getSchema().fields
+  const { fields } = getSchema()
 
   if (!fieldsOrder) return fields
 
