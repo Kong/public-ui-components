@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { useScrollLock } from '@vueuse/core'
 import { ref, useTemplateRef, watch } from 'vue'
-import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../../constants'
+import { DK_HEADER_HEIGHT, DK_SIDE_PANEL_WIDTH } from '../constants'
 import ConflictModal from './ConflictModal.vue'
 
 import EditorNav from './EditorNav.vue'

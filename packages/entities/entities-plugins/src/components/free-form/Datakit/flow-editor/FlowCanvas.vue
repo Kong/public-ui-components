@@ -86,9 +86,8 @@ import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core
 import { computed, ref, useTemplateRef } from 'vue'
 
 import useI18n from '../../../../composables/useI18n'
-import { DK_DATA_TRANSFER_MIME_TYPE } from '../constants'
 import { useHotkeys } from './composables/useHotkeys'
-import { MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
+import { DK_DATA_TRANSFER_MIME_TYPE, MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
 import GroupNode from './node/GroupNode.vue'
 import { provideFlowStore } from './store/flow'

@@ -303,7 +303,7 @@ import HandleTwig from './HandleTwig.vue'
 import { isImplicitNode } from './node'
 import NodeBadge from './NodeBadge.vue'
 import HotkeyLabel from '../HotkeyLabel.vue'
-import { HOTKEYS } from '../../constants'
+import { HOTKEYS } from '../constants'
 import { isEqual } from 'lodash-es'
 import ValueIndicator from './ValueIndicator.vue'
 
