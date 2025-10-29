@@ -7,22 +7,23 @@ import {
   granularityMsToQuery,
 } from './granularity'
 import type { DruidGranularity, GranularityValues, QueryTime } from './types'
-import type { Timeframe } from './timeframes'
+
+type TimeRange = { start: Date, end: Date }
 
 abstract class BaseQueryTime implements QueryTime {
-  protected readonly timeframe: Timeframe
+  protected readonly timeRange: TimeRange
   protected readonly tz?: string
-  protected readonly dataGranularity: GranularityValues
+  protected readonly granularity: GranularityValues
 
-  constructor(timeframe: Timeframe, tz?: string, dataGranularity?: GranularityValues) {
+  constructor(timeRange: TimeRange, granularity: GranularityValues, tz?: string) {
     // This is an abstract class.
     if (this.constructor === BaseQueryTime) {
       throw new Error('BaseQueryTime is not meant to be used directly.')
     }
 
-    this.timeframe = timeframe
+    this.timeRange = timeRange
     this.tz = tz
-    this.dataGranularity = dataGranularity ?? timeframe.dataGranularity
+    this.granularity = granularity
   }
 
   abstract startDate(): Date
@@ -31,21 +32,15 @@ abstract class BaseQueryTime implements QueryTime {
 
   abstract granularityMs(): number
 
-  protected calculateStartDate(isRelative: boolean, granularity: GranularityValues, periods = 1) {
-    // `periods` is greater than 1 if we're doing a delta time query.
-    if (isRelative) {
-      return new Date(this.endDate().getTime() - this.timeframe.timeframeLengthMs() * periods)
-    } else {
-      // Custom timeframes need special handling since it's hard to calculate the timeframe length.
-      // For example, a custom timeframe that starts on 1/1 and ends on 1/1 has a length of 1 day, not 0.
-      const ceilEnd = this.endDate()
-      const rawStart = this.timeframe.rawStart(this.tz)
-      const floorStart = floorToNearestTimeGrain(rawStart, granularity, this.tz)
-      const timeframeLengthMs = ceilEnd.getTime() - floorStart.getTime()
-      const periodOffset = timeframeLengthMs * (periods - 1)
+  protected calculateStartDate( granularity: GranularityValues, periods = 1) {
+    // Custom timeframes need special handling since it's hard to calculate the timeframe length.
+    // For example, a custom timeframe that starts on 1/1 and ends on 1/1 has a length of 1 day, not 0.
+    const ceilEnd = this.timeRange.end
+    const floorStart = floorToNearestTimeGrain(this.timeRange.start, granularity, this.tz)
+    const timeframeLengthMs = ceilEnd.getTime() - floorStart.getTime()
+    const periodOffset = timeframeLengthMs * periods
 
-      return new Date(floorStart.getTime() - periodOffset)
-    }
+    return new Date(floorStart.getTime() - periodOffset)
   }
 
   granularitySeconds(): number {
@@ -79,26 +74,17 @@ abstract class BaseQueryTime implements QueryTime {
 
 // We expect to get back a number of values, depending on the selected timeframe and granularity.
 export class TimeseriesQueryTime extends BaseQueryTime {
-  private readonly granularity: GranularityValues
 
-  constructor(timeframe: Timeframe, granularity?: GranularityValues, tz?: string, dataGranularity?: GranularityValues, fineGrain?: boolean) {
-    super(timeframe, tz, dataGranularity)
-
-    if (granularity && timeframe.allowedGranularities(fineGrain).has(granularity)) {
-      this.granularity = granularity
-    } else if (fineGrain) {
-      this.granularity = timeframe.fineGrainedDefaultGranularity ?? timeframe.defaultResponseGranularity
-    } else {
-      this.granularity = timeframe.defaultResponseGranularity
-    }
+  constructor(timeRange: TimeRange, granularity: GranularityValues, tz?: string) {
+    super(timeRange, granularity, tz)
   }
 
   startDate(): Date {
-    return this.calculateStartDate(this.timeframe.isRelative, this.granularity)
+    return this.calculateStartDate(this.granularity)
   }
 
   endDate(): Date {
-    return ceilToNearestTimeGrain(this.timeframe.rawEnd(), this.granularity, this.tz)
+    return ceilToNearestTimeGrain(this.timeRange.end, this.granularity, this.tz)
   }
 
   granularityMs(): number {
@@ -109,11 +95,11 @@ export class TimeseriesQueryTime extends BaseQueryTime {
 // We expect to get back 1 value, such that we can just show a big number without any trend information.
 export class UnaryQueryTime extends BaseQueryTime {
   startDate(): Date {
-    return this.calculateStartDate(this.timeframe.isRelative, this.dataGranularity)
+    return this.calculateStartDate(this.granularity)
   }
 
   endDate(): Date {
-    return ceilToNearestTimeGrain(this.timeframe.rawEnd(this.tz), this.dataGranularity, this.tz)
+    return ceilToNearestTimeGrain(this.timeRange.start, this.granularity, this.tz)
   }
 
   granularityMs(): number {
@@ -126,7 +112,7 @@ export class UnaryQueryTime extends BaseQueryTime {
 // timeframe to calculate a trend.
 export class DeltaQueryTime extends UnaryQueryTime {
   startDate(): Date {
-    return this.calculateStartDate(this.timeframe.isRelative, this.dataGranularity, 2)
+    return this.calculateStartDate(this.granularity, 2)
   }
 
   granularityMs(): number {

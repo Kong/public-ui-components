@@ -1,6 +1,6 @@
 <template>
   <div>
-    <select v-model="timeframeSelection">
+    <select v-model="timeRangeSelection">
       <option value="">
         None
       </option>
@@ -67,7 +67,7 @@
   <div>
     <SandboxBridgeInjector :query-bridge="timeframeProviderBridge">
       <MetricsProvider
-        v-slot="{ timeframe }"
+        v-slot="{ timeRange }"
         v-bind="timeframeProviderProps"
       >
         <div>
@@ -78,41 +78,43 @@
             Randomize Data
           </button>
         </div>
-        <div>Provider timeframe text: {{ timeframe.display }}</div>
+        <div>Provider timeframe text: {{ timeRange.type }}</div>
         <table style="width: 50%">
-          <tr>
-            <th>Name</th>
-            <th>Traffic</th>
-            <th>Errors</th>
-            <th>Latency</th>
-          </tr>
-          <tr>
-            <td>Blah</td>
-            <td>
-              <MetricsConsumer
-                v-slot="{ cardValues }"
-                lookup-key="blah😀😀"
-              >
-                {{ cardValues.trafficCard.currentValue }}
-              </MetricsConsumer>
-            </td>
-            <td>
-              <MetricsConsumer
-                v-slot="{ cardValues }"
-                lookup-key="blah😀😀"
-              >
-                {{ cardValues.errorRateFormatted }}
-              </MetricsConsumer>
-            </td>
-            <td>
-              <MetricsConsumer
-                v-slot="{ cardValues }"
-                lookup-key="blah😀😀"
-              >
-                {{ cardValues.latencyCard.currentValue }}
-              </MetricsConsumer>
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <th>Name</th>
+              <th>Traffic</th>
+              <th>Errors</th>
+              <th>Latency</th>
+            </tr>
+            <tr>
+              <td>Blah</td>
+              <td>
+                <MetricsConsumer
+                  v-slot="{ cardValues }"
+                  lookup-key="blah😀😀"
+                >
+                  {{ cardValues.trafficCard.currentValue }}
+                </MetricsConsumer>
+              </td>
+              <td>
+                <MetricsConsumer
+                  v-slot="{ cardValues }"
+                  lookup-key="blah😀😀"
+                >
+                  {{ cardValues.errorRateFormatted }}
+                </MetricsConsumer>
+              </td>
+              <td>
+                <MetricsConsumer
+                  v-slot="{ cardValues }"
+                  lookup-key="blah😀😀"
+                >
+                  {{ cardValues.latencyCard.currentValue }}
+                </MetricsConsumer>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </MetricsProvider>
     </SandboxBridgeInjector>
@@ -134,13 +136,13 @@ import MetricsProvider from '../src/components/MetricsProvider.vue'
 import type { MockOptions } from '../src/mockExploreResponse'
 import { mockExploreResponse } from '../src/mockExploreResponse'
 import axios from 'axios'
-import type {
-  AnalyticsBridge,
-  DatasourceAwareQuery,
-  ExploreFilter,
-  ExploreQuery,
+import type { TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import {
+  type AbsoluteTimeRangeV4,
+  type AnalyticsBridge,
+  type DatasourceAwareQuery,
+  type ExploreQuery,
 } from '@kong-ui-public/analytics-utilities'
-import { Timeframe, TimePeriods } from '@kong-ui-public/analytics-utilities'
 import { MetricCardSize } from '../src/enums'
 import SandboxBridgeInjector from './SandboxBridgeInjector.vue'
 
@@ -149,19 +151,12 @@ const refreshInterval = 60 * 1000
 // Need to have a local proxy running forwarding traffic to konnect api to hit real data.
 const USE_REAL_DATA = false
 
-const timeframeSelection = ref('15m')
-const custom1hourTimeframe = new Timeframe({
-  key: 'custom',
-  timeframeText: 'Custom Timeframe',
-  display: 'Custom Timeframe',
-  startCustom: new Date('2023-01-01T00:00:00Z'),
-  endCustom: new Date('2023-01-01T01:00:00Z'),
-  isRelative: false,
-  timeframeLength: () => 3600000, // 1 hour in milliseconds,
-  defaultResponseGranularity: 'minutely',
-  dataGranularity: 'minutely',
-  allowedTiers: ['free', 'pro', 'enterprise'],
-})
+const timeRangeSelection = ref('15m')
+const custom1hourTimeframe: AbsoluteTimeRangeV4 = {
+  type: 'absolute',
+  start: new Date(Date.now() - 3600 * 1000),
+  end: new Date(),
+}
 
 const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
 
@@ -201,9 +196,30 @@ const makeQueryBridge = (opts?: MockOptions): AnalyticsBridge => {
   }
 }
 
-const overrideTimeframe = computed(() => {
-  if (timeframeSelection.value) {
-    return TimePeriods.get(timeframeSelection.value)
+const overrideTimeRange = computed<TimeRangeV4 | undefined>(() => {
+  if (timeRangeSelection.value) {
+    switch (timeRangeSelection.value) {
+      case '15m':
+        return {
+          type: 'absolute',
+          start: new Date(Date.now() - 15 * 60 * 1000),
+          end: new Date(),
+        }
+      case '6h':
+        return {
+          type: 'absolute',
+          start: new Date(Date.now() - 6 * 60 * 60 * 1000),
+          end: new Date(),
+        }
+      case '24h':
+        return {
+          type: 'absolute',
+          start: new Date(Date.now() - 24 * 60 * 60 * 1000),
+          end: new Date(),
+        }
+      default:
+        return undefined
+    }
   }
 
   return undefined
@@ -212,7 +228,7 @@ const overrideTimeframe = computed(() => {
 // Query stats for an entire org, no grouping or filtering.
 const globalProviderProps = computed(() => ({
   refreshInterval,
-  overrideTimeframe: overrideTimeframe.value,
+  overrideTimeRange: overrideTimeRange.value,
   longCardTitles: false,
   description: 'Generic Description',
 }))
@@ -223,29 +239,29 @@ const globalBridge = makeQueryBridge()
 const globalProviderPropsCustomTimeframe = computed(() => ({
   ...globalProviderProps.value,
   // 1 hour timeframe
-  overrideTimeframe: custom1hourTimeframe,
+  overrideTimeRange: custom1hourTimeframe,
 }))
 
 const oneHourBridge = makeQueryBridge({
-  timeFrame: custom1hourTimeframe,
+  timeRange: custom1hourTimeframe,
 })
 
 // Query stats for an entire org, but also apply a filter.
 const filteredProviderProps = computed(() => ({
   refreshInterval,
-  overrideTimeframe: overrideTimeframe.value,
+  overrideTimeRange: overrideTimeRange.value,
   additionalFilter: [{
     dimension: 'application',
     type: 'in',
     values: ['app1'],
-  } as ExploreFilter],
+  }],
   containerTitle: 'Analytics',
 }))
 
 // Query stats for a single entity, no grouping.
 const singleProviderProps = computed(() => ({
   refreshInterval,
-  overrideTimeframe: overrideTimeframe.value,
+  overrideTimeRange: overrideTimeRange.value,
   dimension: 'route',
   filterValue: 'blah',
 }))
@@ -255,7 +271,7 @@ const singleProviderBridge = makeQueryBridge({ dimensionNames: ['blah'] })
 const multiProviderProps = computed(() => ({
   refreshInterval,
   dimension: 'route',
-  overrideTimeframe: overrideTimeframe.value,
+  overrideTimeRange: overrideTimeRange.value,
 }))
 const multiProviderBridge = makeQueryBridge({ dimensionNames: ['blah😀😀', 'arrgh'] })
 
@@ -269,7 +285,7 @@ const randomizeData = () => {
 const timeframeProviderProps = computed(() => ({
   refreshInterval,
   dimension: 'route',
-  overrideTimeframe: overrideTimeframe.value,
+  overrideTimeRange: overrideTimeRange.value,
   additionalFilter: [{ dimension: 'control_plane', operator: '=', value: '' + filterCounter.value }],
 }))
 
