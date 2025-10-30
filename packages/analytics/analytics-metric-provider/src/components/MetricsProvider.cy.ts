@@ -545,7 +545,6 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-trend-range').first().should('contain', 'vs previous day')
   })
 
-
   it('1 hour custom time frame', () => {
     const queryBridge = makeQueryBridge({
       timeRange: custom1hourTimeRange,
