@@ -226,7 +226,7 @@ const terraformContent = computed((): string => {
       ? `${props.entityType}_${props.subEntityType}`
       : props.entityType
     content += `resource "konnect_event_gateway_${entityName}" "my_eventgateway${entityName.replaceAll('_', '')}" {\n`
-    content += 'provider = konnect-beta \n' // remove this line if provider changes
+    content += `${SINGLE_INDENT}provider = konnect-beta \n` // remove this line if provider changes
   } else if (props.entityType === 'plugin') {
     // plugin type is specified separately
     //clone and convert '-' to '_' since terraform doesn't allow '-'
