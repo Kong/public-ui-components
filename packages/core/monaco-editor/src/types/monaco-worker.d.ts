@@ -23,5 +23,3 @@ declare module 'monaco-editor/esm/vs/language/typescript/ts.worker?worker' {
   const workerConstructor: any
   export default workerConstructor
 }
-
-export {}
