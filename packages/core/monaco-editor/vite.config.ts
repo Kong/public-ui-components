@@ -23,7 +23,32 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       inline: ['@vueuse/core'],
       external: ['monaco-editor'],
     },
+    alias: {
+      'monaco-editor': resolve(__dirname, './src/tests/mocks/monaco-editor.ts'),
+    },
   },
+  resolve: {
+    alias: {
+      'monaco-editor/esm/vs/editor/editor.worker?worker': 'virtual:monaco-worker-mock',
+      'monaco-editor/esm/vs/language/json/json.worker?worker': 'virtual:monaco-worker-mock',
+      'monaco-editor/esm/vs/language/css/css.worker?worker': 'virtual:monaco-worker-mock',
+      'monaco-editor/esm/vs/language/html/html.worker?worker': 'virtual:monaco-worker-mock',
+      'monaco-editor/esm/vs/language/typescript/ts.worker?worker': 'virtual:monaco-worker-mock',
+    },
+  },
+  plugins: [
+    {
+      name: 'mock-monaco-workers',
+      resolveId(id) {
+        if (id === 'virtual:monaco-worker-mock') return id
+      },
+      load(id) {
+        if (id === 'virtual:monaco-worker-mock') {
+          return 'export default class WorkerMock { constructor() {} postMessage() {} }'
+        }
+      },
+    },
+  ],
 }))
 
 // If we are trying to preview a build of the local `package/monaco-editor/sandbox` directory,
