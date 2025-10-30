@@ -17,6 +17,13 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
   },
+  test: {
+    environment: 'jsdom',
+    deps: {
+      inline: ['@vueuse/core'],
+      external: ['monaco-editor'],
+    },
+  },
 }))
 
 // If we are trying to preview a build of the local `package/monaco-editor/sandbox` directory,
