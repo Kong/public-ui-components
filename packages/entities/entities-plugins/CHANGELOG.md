@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.110.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.109.3...@kong-ui-public/entities-plugins@9.110.0) (2025-10-30)
+
+
+### Features
+
+* **entities-plugins:** add node icon before input source options ([#2602](https://github.com/Kong/public-ui-components/issues/2602)) ([5fff5c2](https://github.com/Kong/public-ui-components/commit/5fff5c236aab2aaaf12c7b509116ea9f67f2edbf))
+
+
+
+
+
 ## [9.109.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.109.2...@kong-ui-public/entities-plugins@9.109.3) (2025-10-29)
 
 
