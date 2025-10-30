@@ -4,10 +4,12 @@ import { useDebounceFn } from '@vueuse/core'
 
 import type { Ref } from 'vue'
 import type * as monacoType from 'monaco-editor'
-import type { EditorStatus, EditorThemes, UseMonacoEditorOptions } from '../types'
+import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
 
 // singletons
+/** The Monaco instance once loaded */
 let monacoInstance: typeof monacoType | undefined
+/** Promise that resolves when Monaco is initialized */
 let monacoInitPromise: Promise<typeof monacoType> | null = null
 
 // cache
@@ -20,7 +22,9 @@ async function loadMonaco(language?: string): Promise<typeof monacoType> {
   if (monacoInstance) return monacoInstance
   if (monacoInitPromise) return monacoInitPromise
 
+  // If Monaco isn't initialized yet, create a new Promise that loads and configures it
   monacoInitPromise = (async () => {
+    // Dynamically import the Monaco Editor core API
     const monaco = await import('monaco-editor/esm/vs/editor/editor.api')
 
     // Configure Monaco Workers
@@ -39,7 +43,7 @@ async function loadMonaco(language?: string): Promise<typeof monacoType> {
       import('monaco-editor/esm/vs/language/typescript/ts.worker?worker'),
     ]).then(mods => mods.map(m => m.default))
 
-    // Only set environment once
+    // Define a global Monaco environment to tell Monaco which worker to use for each language
     if (!window.MonacoEnvironment) {
       window.MonacoEnvironment = {
         getWorker(_: unknown, label: string) {
@@ -59,7 +63,7 @@ async function loadMonaco(language?: string): Promise<typeof monacoType> {
       }
     }
 
-    // register custom language if needed
+    // Optionally register a custom language if it's not already known to Monaco
     if (language && !monaco.languages.getLanguages().some(lang => lang.id === language)) {
       monaco.languages.register({ id: language })
     }
@@ -77,11 +81,11 @@ async function loadMonaco(language?: string): Promise<typeof monacoType> {
 /**
  * Retrieve a cached Monaco model or create one if needed.
  */
-function getOrCreateModel(monaco: typeof monacoType, code: string, language: string) {
+function getOrCreateModel(monaco: typeof monacoType, code: string, language: string): monacoType.editor.ITextModel {
   const uri = monaco.Uri.parse(`inmemory://model/${language}`)
 
   if (modelCache.has(language)) {
-    return modelCache.get(language)
+    return modelCache.get(language)!
   }
 
   const model = monaco.editor.createModel(code, language, uri)
@@ -104,59 +108,34 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
   let editor: monacoType.editor.IStandaloneCodeEditor | undefined
 
   /** Reactive state for the Monaco editor instance. */
-  const editorStates = reactive<{
-    /**
-     * The current status of the editor instance.
-     * @type {'loading' | 'ready'}
-     * @default 'loading'
-    */
-    editorStatus: EditorStatus
-
-    /**
-     * Indicates whether the search box is currently visible.
-     * @default false
-    */
-    searchBoxIsRevealed: boolean
-
-    /**
-     * Whether the editor currently contains any content.
-     * @default false
-    */
-    hasContent: boolean
-
-    /**
-     * The current theme of the editor.
-     * @type {'light' | 'dark'}
-     * @default 'light'
-    */
-    theme: EditorThemes
-  }>({
+  const editorStates = reactive<MonacoEditorStates>({
     editorStatus: 'loading',
     searchBoxIsRevealed: false,
     hasContent: false,
     theme: options.theme || 'light',
   })
 
+  // Internal flag to prevent multiple setups
   const _isSetup = ref(false)
 
   /** Replace the editor content. */
-  const setContent = (content: string) => {
+  const setContent = (content: string): void => {
     if (!_isSetup.value || !editor) return
     editor.setValue(content)
   }
 
   /** Toggle read-only mode. */
-  const setReadOnly = (readOnly: boolean) => editor?.updateOptions({ readOnly })
+  const setReadOnly = (readOnly: boolean): void => editor?.updateOptions({ readOnly })
 
   /** Focus the editor programmatically. */
-  const focus = () => editor?.focus()
+  const focus = (): void => editor?.focus()
 
   /**
    * Triggers a keyboard command in the Monaco editor.
    *
    * @param {string} id - The unique identifier of the editor command to trigger.
    */
-  const triggerKeyboardCommand = (id: string) => {
+  const triggerKeyboardCommand = (id: string): void => {
     try {
       if (!editor || !id) return
       editor.focus()
@@ -167,7 +146,7 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
   }
 
   /** Toggle the status of findController widget */
-  const toggleSearchWidget = () => {
+  const toggleSearchWidget = (): void => {
     try {
       if (!editor) return
 
@@ -186,7 +165,7 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
   const remeasureFonts = useDebounceFn(() => monacoInstance?.editor.remeasureFonts(), 200)
 
 
-  const init = async () => {
+  const init = async (): Promise<void> => {
     const monaco = await loadMonaco(options.language)
 
     watch(target, async (_target) => {
