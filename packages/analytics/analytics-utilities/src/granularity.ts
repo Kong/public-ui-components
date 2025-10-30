@@ -1,6 +1,5 @@
-import type { DruidGranularity, GranularityValues } from './types'
+import type { GranularityValues } from './types'
 import { granularityValues } from './types'
-import { getTimezoneOffset } from 'date-fns-tz'
 
 // Units are milliseconds, which are what Druid expects.
 export const Granularities = {
@@ -19,27 +18,6 @@ export const Granularities = {
   trend: 0,
 }
 
-export function granularitiesToOptions(
-  values: GranularityValues[],
-  i18n: { t: (v: string) => string },
-) {
-  return values.map((v) => ({
-    value: v,
-    label: i18n.t(`configuration.vitals.reports.granularity.${v}`),
-  }))
-}
-
-export function granularityMsToQuery(
-  granularity: number,
-  origin: string,
-): DruidGranularity {
-  return {
-    duration: granularity,
-    type: 'duration',
-    origin,
-  }
-}
-
 export function msToGranularity(ms?: number): GranularityValues | null {
   if (!ms) {
     return null
@@ -49,36 +27,4 @@ export function msToGranularity(ms?: number): GranularityValues | null {
   const key = granularityValues.find((k: GranularityValues) => ms <= Granularities[k])
 
   return key || null
-}
-
-function toNearestTimeGrain(
-  op: (x: number) => number,
-  date: Date,
-  granularity: number,
-  tz?: string,
-): Date {
-  // Days and weeks need special handling because naively trying to `ceil` or `floor` them results in a date ending
-  // in midnight UTC, whereas as of now we want dates ending in midnight local time.
-  // Note: right now we treat daily and weekly granularities the same way, because it's OK to request an
-  // incomplete week (i.e., if it's currently Monday at noon, it's OK to request data up to Tuesday midnight for the current week).
-  // Druid will just limit its query range accordingly.
-  let tzOffsetMs = 0
-
-  if (granularity >= Granularities.daily) {
-    if (tz) {
-      tzOffsetMs = -getTimezoneOffset(tz, date)
-    } else {
-      tzOffsetMs = date.getTimezoneOffset() * 60 * 1000
-    }
-  }
-
-  return new Date(op((date.getTime() - tzOffsetMs) / granularity) * granularity + tzOffsetMs)
-}
-
-export function floorToNearestTimeGrain(date: Date, granularity: number, tz?: string): Date {
-  return toNearestTimeGrain(Math.floor, date, granularity, tz)
-}
-
-export function ceilToNearestTimeGrain(date: Date, granularity: number, tz?: string): Date {
-  return toNearestTimeGrain(Math.ceil, date, granularity, tz)
 }
