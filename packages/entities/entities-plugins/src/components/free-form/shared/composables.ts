@@ -1,20 +1,92 @@
-import { computed, inject, provide, ref, toRef, toValue, useAttrs, useSlots, watch, type ComputedRef, type MaybeRefOrGetter, type Slot } from 'vue'
+import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch } from 'vue'
+import type { ComputedRef, InjectionKey, MaybeRefOrGetter, Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayFieldSchema, ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
-import { get, set, uniqueId } from 'lodash-es'
+import { cloneDeep, get, isFunction, omit, set, uniqueId } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
 import type { FormConfig, ResetLabelPathRule } from './types'
 import { upperFirst } from 'lodash-es'
+import { createInjectionState } from '@vueuse/core'
 
-export const DATA_INJECTION_KEY = Symbol('free-form-data')
-export const SCHEMA_INJECTION_KEY = Symbol('free-form-schema')
-export const FIELD_PATH_KEY = Symbol('free-form-field-path')
-export const FIELD_RENDERER_SLOTS = Symbol('free-form-field-renderer-slots')
-export const FIELD_RENDERER_MATCHERS_MAP = Symbol('free-form-field-renderer-matchers-map')
-export const FORM_CONFIG = Symbol('free-form-config')
-export const FIELD_RESET_LABEL_PATH_SETTING = Symbol('free-form-field-reset-label-path-setting')
+export const [provideFormShared, useOptionalFormShared] = createInjectionState(
+  function createFormShared<T extends Record<string, any> = Record<string, any>>(
+    schema: FormSchema | UnionFieldSchema,
+    propsData?: ComputedRef<T>,
+    propsConfig?: FormConfig<T>,
+    onChange?: (newData: T) => void,
+  ) {
+    const schemaHelpers = useSchemaHelpers(schema)
+    const fieldRendererRegistry: MatchMap = new Map()
+
+    const innerData = reactive<T>({} as T)
+    const config = toRef(() => propsConfig ?? {})
+
+    // Init form level field renderer slots
+    const slots = useSlots()
+    provide(FIELD_RENDERER_SLOTS, omit(slots, 'default', FIELD_RENDERERS))
+
+    function resetFormData(newData: T) {
+      Object.keys(innerData).forEach((key) => {
+        delete (innerData as any)[key]
+      })
+      Object.assign(innerData, newData)
+    }
+
+    /**
+     * Initialize the inner data based on the provided props data or schema defaults
+     */
+    function initInnerData(propsData: T | undefined) {
+      let dataValue: T
+
+      if (!propsData || !hasValue(toValue(propsData))) {
+        dataValue = schemaHelpers.getDefault()
+      } else {
+        dataValue = cloneDeep(toValue(propsData))
+      }
+
+      if (isFunction(config.value.prepareFormData)) {
+        resetFormData(config.value.prepareFormData(dataValue))
+      } else {
+        resetFormData(dataValue)
+      }
+    }
+
+    function hasValue(data: T | undefined): boolean {
+      if (isFunction(config.value.hasValue)) {
+        return config.value.hasValue(data)
+      }
+      return !!data
+    }
+
+    // Emit changes when the inner data changes
+    watch(innerData, (newVal) => {
+      onChange?.(toValue(newVal))
+    }, { deep: true })
+
+    // Sync the inner data when the props data changes
+    watch(() => propsData?.value, newData => {
+      initInnerData(newData)
+    }, { deep: true, immediate: true })
+
+    return {
+      formData: innerData,
+      schema,
+      config,
+      fieldRendererRegistry,
+      resetFormData,
+      ...schemaHelpers,
+    }
+  },
+)
+
+export const FIELD_PATH_KEY = Symbol('free-form-field-path') as InjectionKey<ComputedRef<string>>
+export const FIELD_RENDERER_SLOTS = Symbol('free-form-field-renderer-slots') as InjectionKey<MaybeRefOrGetter<Record<string, Slot | undefined>>>
+export const FIELD_RESET_LABEL_PATH_SETTING = Symbol('free-form-field-reset-label-path-setting') as InjectionKey<MaybeRefOrGetter<{
+  parentPath: string | null
+  isolate: boolean
+}>>
 
 export const FIELD_RENDERERS = 'free-form-field-renderers-slot' as const
 
@@ -219,7 +291,12 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
     return `Default: ${stringified}`
   }
 
+  function getSchemaMap() {
+    return schemaMap.value
+  }
+
   return {
+    getSchemaMap,
     getSchema,
     getDefault,
     getSelectItems,
@@ -228,24 +305,21 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
   }
 }
 
-export function useFormShared<T>() {
-  const formData = inject<T>(DATA_INJECTION_KEY)
-  const schemaHelpers = inject<ReturnType<typeof useSchemaHelpers>>(SCHEMA_INJECTION_KEY)
-  const formConfig = inject<FormConfig>(FORM_CONFIG, {})
-
-  if (!formData) {
-    throw new Error('useFormShared() called without form data provider.')
+export function useFormShared<T extends Record<string, any> = Record<string, any>>() {
+  const store = useOptionalFormShared()
+  if (!store) {
+    throw new Error('useFormShared() called without provider.')
   }
-
-  if (!schemaHelpers) {
-    throw new Error('useFormShared() called without schema provider.')
+  // `createInjectionState` does not support generics, so we need to cast here
+  return store as ReturnType<typeof useOptionalFormShared> & {
+    formData: T
+    config: ComputedRef<FormConfig<T>>
+    onChange?: (newData: T) => void
   }
-
-  return { formData, formConfig, ...schemaHelpers }
 }
 
 export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
-  const inheritedPath = inject<ComputedRef<string>>(FIELD_PATH_KEY, computed(() => ''))
+  const inheritedPath = inject(FIELD_PATH_KEY, computed(() => ''))
 
   const fieldPath = computed(() => {
     const nameValue = toValue(name)
@@ -269,11 +343,9 @@ export const useFieldPath = (name: MaybeRefOrGetter<string>) => {
 }
 
 export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
-  const { getSchema } = useFormShared()
+  const { getSchema, fieldRendererRegistry } = useFormShared()
   const { default: defaultSlot, ...slots } = useSlots()
-  const inheritSlots = inject<MaybeRefOrGetter<Record<string, Slot>>>(FIELD_RENDERER_SLOTS)
-
-  const matchMap = inject<MatchMap>(FIELD_RENDERER_MATCHERS_MAP)!
+  const inheritSlots = inject(FIELD_RENDERER_SLOTS)
 
   const mergedSlots = computed(() => {
     const inheritSlotsValue = toValue(inheritSlots)
@@ -297,7 +369,7 @@ export const useFieldRenderer = (path: MaybeRefOrGetter<string>) => {
     if (matchedByPath) return matchedByPath
 
     // todo(zehao): priority
-    for (const [matcher, slot] of matchMap) {
+    for (const [matcher, slot] of fieldRendererRegistry) {
       if (matcher({ path: pathValue, schema: getSchema(pathValue)! })) {
         return slot
       }
@@ -400,9 +472,8 @@ export function useFieldLabel(
 ) {
   const pathValue = toValue(fieldPath)
   const fieldName = utils.getName(pathValue)
-  const { formConfig } = useFormShared()
+  const { config, getSchema } = useFormShared()
   const parentLabelPath = useLabelPath(fieldName, resetLabelPathRule)
-  const { getSchema } = useFormShared()
   const ancestors = useFieldAncestors(fieldPath)
 
   return computed(() => {
@@ -418,7 +489,7 @@ export function useFieldLabel(
       ? '' // hide the label when it is a child of Array
       : defaultLabelFormatter(realPath)
 
-    return formConfig.transformLabel ? formConfig.transformLabel(res, pathValue) : res
+    return config.value.transformLabel ? config.value.transformLabel(res, pathValue) : res
   })
 }
 

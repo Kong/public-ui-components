@@ -47,20 +47,20 @@ watch(() => props.modelValue, (newValue) => {
   innerValue.value = newValue
 })
 
-const { formConfig } = useFormShared()
+const { config } = useFormShared()
 
 const handleInput = (value: string) => {
   if (value === innerValue.value) return
 
   innerValue.value = value
 
-  if (!formConfig.updateOnChange) {
+  if (!config.value.updateOnChange) {
     emit('update:modelValue', value)
   }
 }
 
 const handleChange = () => {
-  if (formConfig.updateOnChange) {
+  if (config.value.updateOnChange) {
     emit('update:modelValue', innerValue.value!)
   }
 }
