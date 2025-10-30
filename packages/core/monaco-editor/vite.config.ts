@@ -24,7 +24,8 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       external: ['monaco-editor'],
     },
     alias: {
-      'monaco-editor': resolve(__dirname, './src/tests/mocks/monaco-editor.ts'),
+      'monaco-editor/esm/vs/editor/editor.api': resolve(__dirname, './src/tests/mocks/monaco-editor-api.ts'),
+      'monaco-editor': resolve(__dirname, './src/tests/mocks/monaco-editor-api.ts'),
     },
   },
   resolve: {
