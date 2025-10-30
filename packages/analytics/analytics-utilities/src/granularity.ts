@@ -54,7 +54,7 @@ export function msToGranularity(ms?: number): GranularityValues | null {
 function toNearestTimeGrain(
   op: (x: number) => number,
   date: Date,
-  granularity: GranularityValues,
+  granularity: number,
   tz?: string,
 ): Date {
   // Days and weeks need special handling because naively trying to `ceil` or `floor` them results in a date ending
@@ -62,10 +62,9 @@ function toNearestTimeGrain(
   // Note: right now we treat daily and weekly granularities the same way, because it's OK to request an
   // incomplete week (i.e., if it's currently Monday at noon, it's OK to request data up to Tuesday midnight for the current week).
   // Druid will just limit its query range accordingly.
-  const granularityMs = Granularities[granularity]
   let tzOffsetMs = 0
 
-  if (granularityMs >= Granularities.daily) {
+  if (granularity >= Granularities.daily) {
     if (tz) {
       tzOffsetMs = -getTimezoneOffset(tz, date)
     } else {
@@ -73,13 +72,13 @@ function toNearestTimeGrain(
     }
   }
 
-  return new Date(op((date.getTime() - tzOffsetMs) / granularityMs) * granularityMs + tzOffsetMs)
+  return new Date(op((date.getTime() - tzOffsetMs) / granularity) * granularity + tzOffsetMs)
 }
 
-export function floorToNearestTimeGrain(date: Date, granularity: GranularityValues, tz?: string): Date {
+export function floorToNearestTimeGrain(date: Date, granularity: number, tz?: string): Date {
   return toNearestTimeGrain(Math.floor, date, granularity, tz)
 }
 
-export function ceilToNearestTimeGrain(date: Date, granularity: GranularityValues, tz?: string): Date {
+export function ceilToNearestTimeGrain(date: Date, granularity: number, tz?: string): Date {
   return toNearestTimeGrain(Math.ceil, date, granularity, tz)
 }

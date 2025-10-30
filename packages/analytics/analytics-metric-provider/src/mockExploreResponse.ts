@@ -8,11 +8,15 @@ import type {
   GroupByResult,
   QueryResponseMeta,
 } from '@kong-ui-public/analytics-utilities'
-import { DeltaQueryTime, UnaryQueryTime } from '@kong-ui-public/analytics-utilities'
 
 // Replicate date-fns `fromUnixTime` here to avoid a dependency.
 const fromUnixTimeMs = (t: number) => new Date(t)
 
+export const addDays = (date: Date, amount: number) => {
+  const newDate = new Date(date)
+  newDate.setDate(newDate.getDate() + amount)
+  return newDate
+}
 export interface MockOptions {
   dimensionNames?: string[]
   injectErrors?: 'latency' | 'traffic' | 'all'
@@ -56,11 +60,23 @@ export const mockExploreResponse = (
       start: new Date(Date.now() - 3600 * 1000 * 24),
       end: new Date(),
     }
-  const defaultQueryTime = body.granularity === 'trend' ? new DeltaQueryTime(timeRange, 'secondly') : new UnaryQueryTime(timeRange, 'secondly')
-  const end = defaultQueryTime.endMs()
-  const start = defaultQueryTime.startMs()
 
-  const granularity = defaultQueryTime.granularityMs()
+  const timeRangeMs = timeRange.end.getTime() - timeRange.start.getTime()
+  const defaultQueryTime = body.granularity === 'trend'
+    ? {
+      start: new Date(timeRange.start.getTime() - timeRangeMs),
+      end: timeRange.end,
+      granularity: timeRange.end.getTime() - timeRange.start.getTime(),
+    }
+    : {
+      start: timeRange.start,
+      end: timeRange.end,
+      granularity: timeRange.end.getTime() - timeRange.start.getTime(),
+    }
+  const end = defaultQueryTime.end.getTime()
+  const start = defaultQueryTime.start.getTime()
+
+  const granularity = defaultQueryTime.granularity
 
   const numRecords = body.granularity === 'trend' ? 2 : 1
 
