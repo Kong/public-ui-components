@@ -21,7 +21,7 @@ async function loadMonaco(language?: string): Promise<typeof monacoType> {
   if (monacoInitPromise) return monacoInitPromise
 
   monacoInitPromise = (async () => {
-    const monaco = await import('monaco-editor')
+    const monaco = await import('monaco-editor/esm/vs/editor/editor.api')
 
     // Configure Monaco Workers
     // TODO: maybe only import workers as needed based on languages used
