@@ -7,9 +7,9 @@
 </template>
 <script setup lang="ts">
 import type { RendererProps } from '../types'
-import type { MetricCardOptions, TimeRangeV4 } from '@kong-ui-public/analytics-utilities'
+import type { MetricCardOptions } from '@kong-ui-public/analytics-utilities'
 import { MetricsProvider, MetricsConsumer } from '@kong-ui-public/analytics-metric-provider'
-import { computed, type Ref } from 'vue'
+import { computed } from 'vue'
 import type { ExploreFilterAll } from '@kong-ui-public/analytics-utilities'
 
 // Unlike AnalyticsChart, the metric card package doesn't currently expose its options
@@ -18,10 +18,6 @@ type ProviderProps = InstanceType<typeof MetricsProvider>['$props']
 
 const props = defineProps<RendererProps<MetricCardOptions>>()
 
-const overrideTimeRange: Ref<TimeRangeV4> = computed(() => {
-  return props.context.timeSpec
-})
-
 const options = computed<ProviderProps>(() => {
   const datasource = props.query?.datasource
   if (datasource && datasource !== 'api_usage' && datasource !== 'basic') {
@@ -29,7 +25,7 @@ const options = computed<ProviderProps>(() => {
   }
   return {
     datasource: props.query?.datasource,
-    overrideTimeRange: overrideTimeRange.value,
+    overrideTimeRange: props.context.timeSpec,
     tz: props.context.tz,
     additionalFilter: props.context.filters as ExploreFilterAll[], // TODO: Decide how to handle metric card filters.
     longCardTitles: props.chartOptions.long_card_titles,
