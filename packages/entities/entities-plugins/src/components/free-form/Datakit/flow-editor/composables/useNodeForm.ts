@@ -19,6 +19,7 @@ import { FEATURE_FLAGS } from '../../../../../constants'
 export type InputOption = {
   value: IdConnection
   label: NameConnection
+  type: NodeType
 }
 
 export type BaseFormData = {
@@ -336,12 +337,13 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
       // skip empty vault node
       if (node.type === 'vault' && node.fields.output.length === 0) continue
 
-      options.push({ value: node.id, label: node.name })
+      options.push({ value: node.id, label: node.name, type: node.type })
 
       for (const field of node.fields.output) {
         options.push({
           value: `${node.id}.${field.id}`,
           label: `${node.name}.${field.name}`,
+          type: node.type,
         })
       }
     }

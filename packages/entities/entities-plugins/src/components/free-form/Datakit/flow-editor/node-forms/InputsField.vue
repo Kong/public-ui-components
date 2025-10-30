@@ -19,7 +19,16 @@
     name="input"
     :placeholder="t('plugins.free-form.datakit.flow_editor.node_properties.input.placeholder')"
     @change="handleInputChange"
-  />
+  >
+    <template #item-label="item">
+      <slot
+        name="item-label"
+        v-bind="item"
+      >
+        <SourceItem :item="item" />
+      </slot>
+    </template>
+  </EnumField>
 
   <div
     v-if="InputsField"
@@ -47,7 +56,11 @@
     @change:inputs="handleChangeInputs"
     @remove:field="handleRemoveField"
     @rename:field="handleRenameField"
-  />
+  >
+    <template #item-label="item">
+      <SourceItem :item="item" />
+    </template>
+  </InputsField>
 </template>
 
 <script setup lang="ts">
@@ -60,6 +73,7 @@ import InputsMapField from './InputsMapField.vue'
 import useI18n from '../../../../../composables/useI18n'
 import type { InputOption, useNodeForm } from '../composables/useNodeForm'
 import type { FieldName, IdConnection } from '../../types'
+import SourceItem from './SourceItem.vue'
 
 defineProps<{
   items: InputOption[]

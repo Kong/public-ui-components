@@ -728,7 +728,7 @@
               "title": "Resources",
               "vault": {
                 "title": "Vault secrets",
-                "add_button": "Add Vault resource",
+                "add_button": "Add vault resource",
                 "name_exists_error": "Vault name already exists",
                 "name_required_error": "Vault name is required",
                 "edit": "Edit",
