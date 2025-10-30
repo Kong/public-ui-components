@@ -31,6 +31,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  subEntityType: {
+    // only for event gateway entities
+    type: String,
+    default: '',
+  },
 })
 
 const isEventGatewayEntity = computed(() => {
@@ -217,7 +222,10 @@ const terraformContent = computed((): string => {
 
   if (isEventGatewayEntity.value) {
     // special handling for event gateways
-    content += `resource "konnect_gateway_event_gateway_${props.entityType}" "my_${props.entityType}" {\n`
+    const entityName = props.subEntityType
+      ? `${props.entityType}_${props.subEntityType}`
+      : props.entityType
+    content += `resource "konnect_event_gateway_${entityName}" "my_eventgateway${entityName.replaceAll('_', '')}" {\n`
     content += 'provider = konnect-beta \n' // remove this line if provider changes
   } else if (props.entityType === 'plugin') {
     // plugin type is specified separately
