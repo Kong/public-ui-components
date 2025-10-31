@@ -93,16 +93,16 @@ function setExampleCode(example: keyof typeof examples) {
         json: true,
       }) as any
 
-      const exampleJson = yaml.load(newCode, {
+      const exampleConfigJson = yaml.load(newCode, {
         schema: JSON_SCHEMA,
         json: true,
       }) as any
 
-      if (isEqual(config.config, exampleJson)) return
+      if (isEqual(config.config, exampleConfigJson)) return
 
       const nextConfig = omit({
         ...formData,
-        ...(exampleJson.config ? exampleJson : { config: { ...exampleJson } }),
+        config: { ...exampleConfigJson },
       }, ['__ui_data'])
 
       const nextValue = yaml.dump(nextConfig, {

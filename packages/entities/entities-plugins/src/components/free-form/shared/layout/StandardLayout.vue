@@ -258,7 +258,7 @@ const freeFormSchema = computed(() => {
         },
       })
     } else {
-      throw new Error(`Unsupported VFG field: ${field}`)
+      throw new Error(`Unsupported VFG field type '${field.type}' for model '${field.model}'`)
     }
   })
   return result

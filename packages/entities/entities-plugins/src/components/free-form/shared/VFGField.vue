@@ -1,14 +1,15 @@
-⚠️⚠️⚠️
-This is NOT a comprehensive wrapper of VFG!
-We can't guarantee that fields of all types can be written correctly to FreeForm.
-Please do not use this component unless you have confirmed with @Zehao Zhang.
-
-Only tested with the following use cases:
-- the `enable` field
-- scope-related fields: `service`, `route`, `consumer`, `consumer_group`
-- general info fields: `instance_name`, `tags`, `protocols`
-
 <template>
+  <!--
+  ⚠️⚠️⚠️
+  This is NOT a comprehensive wrapper of VFG!
+  We can't guarantee that fields of all types can be written correctly to FreeForm.
+  Please do not use this component unless you have confirmed with @Zehao Zhang.
+
+  Only tested with the following use cases:
+  - the `enabled` field
+  - scope-related fields: `service`, `route`, `consumer`, `consumer_group`
+  - general info fields: `instance_name`, `tags`, `protocols`
+  -->
   <VueFormGenerator
     :model="vfgModel"
     :options="formOptions"
