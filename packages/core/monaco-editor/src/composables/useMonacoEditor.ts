@@ -1,4 +1,4 @@
-import { onActivated, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { onActivated, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import { useDebounceFn } from '@vueuse/core'
 
@@ -157,7 +157,7 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
       }
 
       triggerKeyboardCommand('actions.find')
-    } catch (error: any) {
+    } catch (error) {
       console.error('useMonacoEditor: Failed to close findController.', error)
     }
   }
@@ -172,7 +172,7 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
       // prevent multiple setups
       if (_isSetup.value) return
 
-      const el = (_target as any)?.$el || _target
+      const el = _target.$el || _target
       if (!el) return
 
       const model = getOrCreateModel(monaco, options.code.value, options.language)
@@ -228,8 +228,10 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
   }
 
   // Lifecycle hooks
-  onBeforeMount(init)
-  onMounted(remeasureFonts)
+  onMounted(() => {
+    init().catch(error => console.error('useMonacoEditor: Failed to init:', error))
+    remeasureFonts()
+  })
   onActivated(remeasureFonts)
   onBeforeUnmount(() => {
     if (!editor) return
@@ -244,6 +246,7 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
 
   return {
     editor,
+    editorStates,
     setContent,
     setReadOnly,
     focus,
