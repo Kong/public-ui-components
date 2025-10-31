@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, toRaw } from 'vue'
+import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, toRaw, inject } from 'vue'
 import * as monaco from 'monaco-editor'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton } from '@kong/kongponents'
@@ -35,14 +35,19 @@ import { SparklesIcon } from '@kong/icons'
 import english from '../../../locales/en.json'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 import * as examples from './examples'
+import { FEATURE_FLAGS } from '../../../constants'
 
 import type { YAMLException } from 'js-yaml'
 import type { DatakitConfig, DatakitPluginData } from './types'
 import { useFormShared } from '../shared/composables'
+import { isEqual, omit } from 'lodash-es'
+import { useErrors } from '@kong-ui-public/entities-shared'
+
+const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData } = useFormShared<DatakitPluginData>()
+const { formData, resetFormData } = useFormShared<DatakitPluginData>()
 
 defineProps<{
   editing: boolean
@@ -52,6 +57,8 @@ const emit = defineEmits<{
   change: [config: unknown]
   error: [msg: string]
 }>()
+
+const { getMessageFromError } = useErrors()
 
 const editorRoot = useTemplateRef('editor-root')
 const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
@@ -72,10 +79,43 @@ function setExampleCode(example: keyof typeof examples) {
   }
 
   const newCode = examples[example]
-  if (editor.getValue() !== newCode) {
+  if (!enableDatakitM2 && editor.getValue() !== newCode) {
     editor.pushUndoStop()
     editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: newCode }])
     editor.pushUndoStop()
+  }
+
+  if (enableDatakitM2) {
+    try {
+      const value = editor.getValue() || ''
+      const config = yaml.load(value, {
+        schema: JSON_SCHEMA,
+        json: true,
+      }) as any
+
+      const exampleJson = yaml.load(newCode, {
+        schema: JSON_SCHEMA,
+        json: true,
+      }) as any
+
+      if (isEqual(config.config, exampleJson)) return
+
+      const nextConfig = omit({
+        ...formData,
+        ...(exampleJson.config ? exampleJson : { config: { ...exampleJson } }),
+      }, ['__ui_data'])
+
+      const nextValue = yaml.dump(nextConfig, {
+        schema: JSON_SCHEMA,
+        noArrayIndent: true,
+      })
+
+      editor.pushUndoStop()
+      editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: nextValue }])
+      editor.pushUndoStop()
+    } catch (error: unknown) {
+      emit('error', getMessageFromError(error))
+    }
   }
 
   focusEnd()
@@ -108,7 +148,7 @@ onMounted(() => {
   })
   editorRef.value = editor
 
-  if (formData.config && Object.keys(formData.config).length > 0) {
+  if (!enableDatakitM2 && formData.config && Object.keys(formData.config).length > 0) {
     const config = { ...formData.config } as any
 
     if (config.nodes && config.nodes.length === 0) {
@@ -127,6 +167,16 @@ onMounted(() => {
     focusEnd()
   }
 
+  if (enableDatakitM2) {
+    const initialConfig = omit({ ...formData }, ['__ui_data'])
+    const value = yaml.dump(initialConfig, {
+      schema: JSON_SCHEMA,
+      noArrayIndent: true,
+    })
+    editor.setValue(value)
+    focusEnd()
+  }
+
   editor.onDidChangeModelContent(() => {
     const model = editor.getModel()
     const value = editor.getValue() || ''
@@ -137,7 +187,12 @@ onMounted(() => {
       })
 
       monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
-      formData.config = config as DatakitConfig
+
+      if (enableDatakitM2) {
+        resetFormData(config as DatakitPluginData)
+      } else {
+        formData.config = config as DatakitConfig
+      }
       emit('change', config)
     } catch (error: unknown) {
       const { message, mark } = error as YAMLException
