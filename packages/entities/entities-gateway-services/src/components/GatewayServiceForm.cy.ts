@@ -202,6 +202,35 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
     })
 
+    it('should allow port 80 when protocol is https and port 443 when protocol is http', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+        },
+      })
+
+      cy.getTestId('gateway-service-protocol-radio').click()
+      // Protocol - https; Port - 80
+      cy.getTestId('gateway-service-protocol-select').click()
+      cy.getTestId('select-item-https').click()
+      cy.getTestId('gateway-service-port-input').should('have.value', '443')
+      cy.getTestId('gateway-service-port-input').type('{selectAll}')
+      cy.getTestId('gateway-service-port-input').type('80')
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(500) // wait 500ms to ensure the input value is not modified
+      cy.getTestId('gateway-service-port-input').should('have.value', '80')
+
+      // Protocol - http; Port - 443
+      cy.getTestId('gateway-service-protocol-select').click()
+      cy.getTestId('select-item-http').click()
+      cy.getTestId('gateway-service-port-input').should('have.value', '80')
+      cy.getTestId('gateway-service-port-input').type('{selectAll}')
+      cy.getTestId('gateway-service-port-input').type('443')
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(500) // wait 500ms to ensure the input value is not modified
+      cy.getTestId('gateway-service-port-input').should('have.value', '443')
+    })
+
     it('should clear fields when where to send traffic option is changed', () => {
       cy.mount(GatewayServiceForm, {
         props: {
@@ -573,6 +602,35 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('gateway-service-protocol-select').click()
       cy.getTestId('select-item-udp').click()
       cy.getTestId('gateway-service-port-input').should('have.value', gatewayService1.port)
+    })
+
+    it('should allow port 80 when protocol is https and port 443 when protocol is http', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKM,
+        },
+      })
+
+      cy.getTestId('gateway-service-protocol-radio').click()
+      // Protocol - https; Port - 80
+      cy.getTestId('gateway-service-protocol-select').click()
+      cy.getTestId('select-item-https').click()
+      cy.getTestId('gateway-service-port-input').should('have.value', '443')
+      cy.getTestId('gateway-service-port-input').type('{selectAll}')
+      cy.getTestId('gateway-service-port-input').type('80')
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(500) // wait 500ms to ensure the input value is not modified
+      cy.getTestId('gateway-service-port-input').should('have.value', '80')
+
+      // Protocol - http; Port - 443
+      cy.getTestId('gateway-service-protocol-select').click()
+      cy.getTestId('select-item-http').click()
+      cy.getTestId('gateway-service-port-input').should('have.value', '80')
+      cy.getTestId('gateway-service-port-input').type('{selectAll}')
+      cy.getTestId('gateway-service-port-input').type('443')
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(500) // wait 500ms to ensure the input value is not modified
+      cy.getTestId('gateway-service-port-input').should('have.value', '443')
     })
 
     it('should clear fields when where to send traffic option is changed', () => {

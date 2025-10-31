@@ -103,7 +103,7 @@
               :readonly="form.isReadonly"
               required
               width="100%"
-              @selected="(item: any) => handleItemSelect(form.fields.protocol, item)"
+              @selected="handleProtocolSelect"
             />
 
             <KInput
@@ -658,8 +658,9 @@ const gatewayServiceProtocolItems: SelectItem[] = [
 
 const whereToSendTraffic = { url: 'url', protocol: 'protocol' }
 
-const handleItemSelect = (field: any, item: { value: any }): void => {
-  field = item.value
+const handleProtocolSelect = (item: SelectItem) => {
+  form.fields.protocol = item.value as string
+  form.fields.port = getPort.getPortFromProtocol(form.fields.protocol, String(form.fields.port))
 }
 
 const handleFloatVal = (oVal: string) => {
@@ -1092,8 +1093,7 @@ watch(() => props.gatewayServiceId, () => {
   Object.assign(form.fields, formFieldsOriginal)
 })
 
-watch(form.fields, (newValue) => {
-  form.fields.port = getPort.getPortFromProtocol(newValue.protocol, String(newValue.port))
+watch(form.fields, () => {
   emit('model-updated', getPayload.value)
 })
 
