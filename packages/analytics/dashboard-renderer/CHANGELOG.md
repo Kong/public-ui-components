@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.7.7...@kong-ui-public/dashboard-renderer@7.8.0) (2025-10-31)
+
+
+### Features
+
+* add hide truncation warning option ([#2613](https://github.com/Kong/public-ui-components/issues/2613)) ([099ec10](https://github.com/Kong/public-ui-components/commit/099ec10e94957ec503351b8a64afce983ab79a87))
+
+
+
+
+
 ## [7.7.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.7.6...@kong-ui-public/dashboard-renderer@7.7.7) (2025-10-29)
 
 
