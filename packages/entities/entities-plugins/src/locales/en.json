@@ -790,7 +790,7 @@
             },
             "exit": {
               "name": "exit",
-              "summary": "Return a response directly to the client",
+              "summary": "Return directly to the client",
               "description": "Trigger an early exit that produces a direct response, rather than forwarding a proxied response."
             },
             "property": {
@@ -805,13 +805,13 @@
             },
             "branch": {
               "name": "branch",
-              "summary": "Conditional execution",
+              "summary": "Execute nodes based on matching input conditions",
               "description": "Execute different nodes based on matching input conditions, such as a cache hit or miss."
             },
             "cache": {
               "name": "cache",
-              "summary": "Fetch cached data",
-              "description": "Fetch data from the cache."
+              "summary": "Store and retrieve data from cache",
+              "description": "Stored data into cache and fetch cached data from cache."
             },
             "request": {
               "name": "request",
