@@ -172,7 +172,7 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
       // prevent multiple setups
       if (_isSetup.value) return
 
-      const el = _target.$el || _target
+      const el = _target?.$el || _target
       if (!el) return
 
       const model = getOrCreateModel(monaco, options.code.value, options.language)
