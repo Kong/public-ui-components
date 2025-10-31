@@ -5,6 +5,7 @@
     <div
       v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
       class="chart-header"
+      data-testid="truncation-warning"
     >
       <KTooltip
         class="tooltip"
@@ -189,7 +190,11 @@ const showLegendValues = computed(() => props.showLegendValues && props.legendPo
 const { legendValues } = composables.useChartLegendValues(computedChartData, props.chartOptions.type, computedMetricUnit)
 
 const maxEntitiesShown = computed(() => props.chartData?.meta?.limit?.toString() || null)
-const resultSetTruncated = computed(() => props.chartData?.meta?.truncated || false)
+const resultSetTruncated = computed(() => {
+  return props.chartOptions.hideTruncationWarning
+    ? false
+    : props.chartData?.meta?.truncated || false
+})
 const notAllDataShownTooltipContent = i18n.t('limitedResultsShown', { maxReturned: maxEntitiesShown.value })
 const isBarChart = computed<boolean>(() => [
   'vertical_bar',

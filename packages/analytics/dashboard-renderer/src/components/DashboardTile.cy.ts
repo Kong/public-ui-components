@@ -33,6 +33,28 @@ describe('<DashboardTile />', () => {
     },
   }
 
+  const cacheBustTile = (tile: TileDefinition): TileDefinition => {
+    // When we are mounting a component that calls useSWRV (way deep down) and
+    // need to spy on the fetch, we have to force useSWRV to actually run the
+    // query. Adding a filter forces a cache bust in `QueryDataProvider.vue`
+    const benignFilter = {
+      operator: 'not_in',
+      field: 'control_plane',
+      value: [`${crypto.randomUUID()}`],
+    }
+
+    return {
+      ...tile,
+      query: {
+        ...tile.query,
+        filters: [
+          ...(tile.query?.filters ?? []),
+          benignFilter,
+        ],
+      },
+    } as unknown as TileDefinition
+  }
+
   const mockContext: DashboardRendererContextInternal = {
     filters: [],
     timeSpec: {
@@ -105,6 +127,7 @@ describe('<DashboardTile />', () => {
   }
 
   beforeEach(() => {
+    cy.viewport(1920, 1080)
     setupPiniaTestStore({ createVueApp: true })
     const analyticsConfigStore = useAnalyticsConfigStore()
     // @ts-ignore - mocking just what we need for the test
@@ -228,7 +251,7 @@ describe('<DashboardTile />', () => {
     // Passes an llm_usage filter into an api_usage tile
     const context = {
       ...mockContext,
-      filters: [{ field: 'response_model', operator: 'in', value: 'my-model' }],
+      filters: [{ field: 'response_model', operator: 'in', value: 'my-model' }] as any,
     }
 
     mount({ context })
@@ -379,6 +402,7 @@ describe('<DashboardTile />', () => {
       definition: {
         chart: mockTileDefinition.chart,
         query: {
+          // @ts-ignore intentionally invalid
           datasource: 'random_unsupported_source',
           metrics: [],
           filters: [],
@@ -480,6 +504,7 @@ describe('<DashboardTile />', () => {
         context: mockContext,
         tileId: 1,
         queryReady: true,
+        refreshCounter: 0,
       },
       global: {
         provide: {
@@ -491,6 +516,82 @@ describe('<DashboardTile />', () => {
       cy.get('@fetcher')
         .its('firstCall.args.0.query.limit')
         .should('eq', COUNTRIES.length)
+    })
+  })
+
+  it('hides the truncation warning when a limit is explicitly set', () => {
+    const queryFn = cy.stub().as('queryFn').callsFake(() => {
+      return Promise.resolve(
+        generateSingleMetricTimeSeriesData(
+          { name: 'TotalRequests', unit: 'count' },
+          { status_code: ['request_count'] as string[] },
+          { start_ms: start, end_ms: end, truncated: true, limit: 50 },
+        ) as ExploreResultV4,
+      )
+    })
+
+    // When this tile is mounted we're going to get a response with
+    // `truncated: true` and `limit: 50`. We don't expect to try and hide the
+    // truncation warning as the query we're running doesn't set a limit
+    const noLimitTile = cacheBustTile(mockTileDefinition)
+    expect(noLimitTile.query.limit).to.eq(undefined)
+    cy.mount(DashboardTile, {
+      props: {
+        definition: noLimitTile,
+        context: mockContext,
+        tileId: 1,
+        queryReady: true,
+        refreshCounter: 0,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+        },
+        stubs: {
+          AnalyticsChart: {
+            props: ['chartOptions'],
+            template: '<div data-cy="stubbed" />',
+            mounted() {
+              expect(this.chartOptions.hideTruncationWarning).to.eq(false)
+            },
+          },
+        },
+      },
+    })
+
+    // We get the same response for this tile, but this time we're going to try
+    // to hide the truncation warning because the query explicitly sets a limit
+    // so we don't care what the response from the server is
+    const tile = cacheBustTile(mockTileDefinition)
+    const limitTile = {
+      ...tile,
+      query: {
+        ...tile.query,
+        limit: 10, // this causes `hideTruncationWarning` to be set to `true`
+      },
+    }
+    cy.mount(DashboardTile, {
+      props: {
+        definition: limitTile,
+        context: mockContext,
+        tileId: 1,
+        queryReady: true,
+        refreshCounter: 0,
+      },
+      global: {
+        provide: {
+          [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+        },
+        stubs: {
+          AnalyticsChart: {
+            props: ['chartOptions'],
+            template: '<div data-cy="stubbed" />',
+            mounted() {
+              expect(this.chartOptions.hideTruncationWarning).to.eq(true)
+            },
+          },
+        },
+      },
     })
   })
 
@@ -511,6 +612,8 @@ describe('<DashboardTile />', () => {
           definition: mockTileDefinition,
           context: mockContext,
           tileId: 1,
+          queryReady: true,
+          refreshCounter: 0,
         },
         global: {
           provide: {
@@ -524,6 +627,7 @@ describe('<DashboardTile />', () => {
 
       cy.get('@queryFn').should('have.been.calledOnce')
         .then((stub) => {
+          // @ts-ignore getCall does exist. cypress being cypress
           const payload = stub.getCall(0).args[0]
 
           expect(payload).to.have.property('datasource', 'api_usage')
@@ -545,7 +649,7 @@ describe('<DashboardTile />', () => {
 
       cy.mount(DashboardTile, {
         props: {
-          definition: mockTileDefinition,
+          definition: cacheBustTile(mockTileDefinition),
           context: mockContext,
           queryReady: true,
           refreshCounter: 0,
@@ -564,6 +668,7 @@ describe('<DashboardTile />', () => {
 
       cy.get('@queryFn').should('have.been.calledOnce')
         .then((stub) => {
+          // @ts-ignore getCall does exist. cypress being cypress
           const payload = stub.getCall(0).args[0]
 
           expect(payload).to.have.property('datasource', 'api_usage')
@@ -585,7 +690,7 @@ describe('<DashboardTile />', () => {
 
       cy.mount(DashboardTile, {
         props: {
-          definition: mockTileDefinition,
+          definition: cacheBustTile(mockTileDefinition),
           context: mockContext,
           queryReady: false,
           refreshCounter: 0,

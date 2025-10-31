@@ -58,6 +58,7 @@ const options = computed((): AnalyticsChartOptions => ({
   stacked: props.chartOptions.stacked ?? false,
   chartDatasetColors: props.chartOptions.chart_dataset_colors,
   threshold: props.chartOptions.threshold,
+  hideTruncationWarning: props.query.limit !== undefined && props.query.limit > 0,
 }))
 
 const timeseriesZoom = computed(() => props.context.zoomable)
