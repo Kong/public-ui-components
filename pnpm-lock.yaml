@@ -678,6 +678,10 @@ importers:
         version: 3.5.22(typescript@5.9.2)
 
   packages/core/monaco-editor:
+    dependencies:
+      '@vueuse/core':
+        specifier: ^13.5.0
+        version: 13.5.0(vue@3.5.22(typescript@5.9.2))
     devDependencies:
       '@kong/design-tokens':
         specifier: 1.18.1
@@ -685,6 +689,9 @@ importers:
       '@kong/kongponents':
         specifier: 9.45.1
         version: 9.45.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2))
+      monaco-editor:
+        specifier: ^0.52.2
+        version: 0.52.2
       vue:
         specifier: ^3.5.22
         version: 3.5.22(typescript@5.9.2)
