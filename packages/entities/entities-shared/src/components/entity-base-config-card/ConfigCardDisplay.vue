@@ -65,6 +65,7 @@
     v-if="format === 'terraform' && entityRecord"
     :entity-record="entityRecord"
     :entity-type="props.entityType"
+    :sub-entity-type="props.subEntityType"
   />
 </template>
 
@@ -99,6 +100,11 @@ const props = defineProps({
     type: String as PropType<SupportedEntityType>,
     required: true,
     validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
+  },
+  subEntityType: {
+    // only for event gateway entities
+    type: String,
+    default: '',
   },
   propertyCollections: {
     type: Object as PropType<PropList>,

@@ -84,6 +84,7 @@
         :prop-list-types="propListTypes"
         :property-collections="propertyLists"
         :record="record"
+        :sub-entity-type="subEntityType"
       >
         <!-- Pass all the slots from GrandParent to Child components -->
         <template
@@ -157,6 +158,13 @@ const props = defineProps({
     type: String as PropType<SupportedEntityType>,
     required: true,
     validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
+  },
+  /**
+   * Sub Entity type, required to generate terraform code for event gateway entities
+   */
+  subEntityType: {
+    type: String,
+    default: '',
   },
   /** Record key that contains the plugin configuration */
   pluginConfigKey: {
