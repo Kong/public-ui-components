@@ -1,9 +1,8 @@
 <template>
   <StandardLayout
-    v-slot="configFormProps"
     v-bind="props"
   >
-    <ConfigForm v-bind="configFormProps" />
+    <ConfigForm />
   </StandardLayout>
 </template>
 

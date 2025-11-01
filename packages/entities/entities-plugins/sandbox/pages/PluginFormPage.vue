@@ -1,5 +1,10 @@
 <template>
   <div class="plugin-form-sandbox">
+    <div
+      id="plugin-form-page-actions"
+      class="actions"
+    />
+
     <h2>Konnect API</h2>
     <PluginForm
       :config="konnectConfig"
@@ -96,10 +101,16 @@ const handleGlobalAction = (action: GlobalAction, payload: any) => {
 
 <style lang="scss" scoped>
 .plugin-form-sandbox {
+  display: flex;
+  flex-direction: column;
   padding: 20px;
 
   * {
     box-sizing: border-box;
+  }
+
+  .actions {
+    align-self: flex-end;
   }
 }
 </style>
