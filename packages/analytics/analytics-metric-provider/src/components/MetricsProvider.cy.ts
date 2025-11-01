@@ -1,6 +1,5 @@
 import MetricsTestHarness from './MetricsTestHarness.vue'
 import { ref } from 'vue'
-import { Timeframe } from '@kong-ui-public/analytics-utilities'
 import type {
   AdvancedDatasourceQuery,
   AnalyticsBridge,
@@ -8,6 +7,7 @@ import type {
   DatasourceAwareQuery,
   ExploreFilterAll,
   ExploreResultV4,
+  TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import type { MockOptions } from '../mockExploreResponse'
 import { mockExploreResponse } from '../mockExploreResponse'
@@ -15,43 +15,23 @@ import { INJECT_QUERY_PROVIDER } from '../constants'
 import { createPinia, setActivePinia } from 'pinia'
 
 
-const custom1DayTimeframe = new Timeframe({
-  key: 'custom',
-  timeframeText: 'Custom Timeframe',
-  display: 'Custom Timeframe',
-  startCustom: new Date('2023-01-01T00:00:00Z'),
-  endCustom: new Date('2023-01-02T00:00:00Z'),
-  isRelative: false,
-  timeframeLength: () => 86400000, // 1 day in milliseconds
-  defaultResponseGranularity: 'minutely',
-  dataGranularity: 'minutely',
-  allowedTiers: ['free', 'pro', 'enterprise'],
-})
-const custom10Minuteframe = new Timeframe({
-  key: 'custom',
-  timeframeText: 'Custom Timeframe',
-  display: 'Custom Timeframe',
-  startCustom: new Date('2023-01-01T00:00:00Z'),
-  endCustom: new Date('2023-01-01T00:10:00Z'),
-  isRelative: false,
-  timeframeLength: () => 600000, // 10 minutes in milliseconds
-  defaultResponseGranularity: 'minutely',
-  dataGranularity: 'minutely',
-  allowedTiers: ['free', 'pro', 'enterprise'],
-})
-const custom1hourTimeframe = new Timeframe({
-  key: 'custom',
-  timeframeText: 'Custom Timeframe',
-  display: 'Custom Timeframe',
-  startCustom: new Date('2023-01-01T00:00:00Z'),
-  endCustom: new Date('2023-01-01T01:00:00Z'),
-  isRelative: false,
-  timeframeLength: () => 3600000, // 1 hour in milliseconds,
-  defaultResponseGranularity: 'minutely',
-  dataGranularity: 'minutely',
-  allowedTiers: ['free', 'pro', 'enterprise'],
-})
+const custom1DayTimeRange: TimeRangeV4 = {
+  type: 'absolute',
+  start: new Date('2023-01-01T00:00:00Z'),
+  end: new Date('2023-01-02T00:00:00Z'),
+}
 
+const custom10MinuteTimeRange: TimeRangeV4 = {
+  type: 'absolute',
+  start: new Date('2023-01-01T00:00:00Z'),
+  end: new Date('2023-01-01T00:10:00Z'),
+
+}
+const custom1hourTimeRange: TimeRangeV4 = {
+  type: 'absolute',
+  start: new Date('2023-01-01T00:00:00Z'),
+  end: new Date('2023-01-01T01:00:00Z'),
+}
 
 describe('<AnalyticsMetricProvider />', () => {
 
@@ -547,13 +527,13 @@ describe('<AnalyticsMetricProvider />', () => {
 
   it('1 day custom time frame', () => {
     const queryBridge = makeQueryBridge({
-      timeFrame: custom1DayTimeframe,
+      timeRange: custom1DayTimeRange,
     })
 
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        overrideTimeframe: custom1DayTimeframe,
+        overrideTimeRange: custom1DayTimeRange,
       },
       global: {
         provide: {
@@ -565,16 +545,15 @@ describe('<AnalyticsMetricProvider />', () => {
     cy.get('.metricscard-trend-range').first().should('contain', 'vs previous day')
   })
 
-
   it('1 hour custom time frame', () => {
     const queryBridge = makeQueryBridge({
-      timeFrame: custom1hourTimeframe,
+      timeRange: custom1hourTimeRange,
     })
 
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        overrideTimeframe: custom1hourTimeframe,
+        overrideTimeRange: custom1hourTimeRange,
       },
       global: {
         provide: {
@@ -588,13 +567,13 @@ describe('<AnalyticsMetricProvider />', () => {
 
   it('10 min custom time frame', () => {
     const queryBridge = makeQueryBridge({
-      timeFrame: custom10Minuteframe,
+      timeRange: custom10MinuteTimeRange,
     })
 
     cy.mount(MetricsTestHarness, {
       props: {
         render: 'global',
-        overrideTimeframe: custom10Minuteframe,
+        overrideTimeRange: custom10MinuteTimeRange,
       },
       global: {
         provide: {

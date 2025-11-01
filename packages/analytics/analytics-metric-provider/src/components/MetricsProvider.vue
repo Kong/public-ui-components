@@ -1,7 +1,7 @@
 <template>
   <slot
     :has-trend-access="hasTrendAccess"
-    :timeframe="timeframe"
+    :time-range="timeRange"
   />
 </template>
 <script setup lang="ts">
@@ -11,19 +11,18 @@ import {
   queryableExploreDimensions,
   type FilterableExploreDimensions,
   type QueryDatasource,
-  type Timeframe,
   type ExploreFilterAll,
+  type RelativeTimeRangeValuesV4,
+  type TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
-import { TimePeriods, TimeframeKeys } from '@kong-ui-public/analytics-utilities'
 import { METRICS_PROVIDER_KEY, defaultFetcherDefs } from './metricsProviderUtil'
 import { INJECT_QUERY_PROVIDER, DEFAULT_REFRESH_INTERVAL } from '../constants'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
 const props = withDefaults(defineProps<{
   datasource?: QueryDatasource
-  maxTimeframe?: TimeframeKeys
-  overrideTimeframe?: Timeframe
-  tz?: string
+  maxTimeRange?: RelativeTimeRangeValuesV4
+  overrideTimeRange?: TimeRangeV4
   dimension?: FilterableExploreDimensions
   filterValue?: string
   additionalFilter?: ExploreFilterAll[]
@@ -37,9 +36,8 @@ const props = withDefaults(defineProps<{
   refreshCounter?: number
 }>(), {
   datasource: undefined,
-  maxTimeframe: TimeframeKeys.THIRTY_DAY,
-  overrideTimeframe: undefined,
-  tz: undefined,
+  maxTimeRange: '30d',
+  overrideTimeRange: undefined,
   dimension: undefined,
   filterValue: undefined,
   additionalFilter: undefined,
@@ -79,15 +77,6 @@ const hasTrendAccess = computed<boolean>(() => true)
 // Don't attempt to issue a query until we know what we can query for.
 const queryReady = computed(() => !analyticsConfigStore.loading && props.queryReady)
 
-const tz = computed(() => {
-  if (props.tz) {
-    return props.tz
-  }
-
-  return (new Intl.DateTimeFormat()).resolvedOptions().timeZone
-})
-
-
 const resolvedDatasource = computed<QueryDatasource>(() => {
   if (props.datasource) {
     return props.datasource
@@ -100,8 +89,17 @@ const resolvedDatasource = computed<QueryDatasource>(() => {
 // If they do need to change, then the `useMetricCardGoldenSignals` composable, and dependencies,
 // needs to be reactive as well.  Ideally, this would be the case; we don't have any guarantee that the
 // tier data has finished loading by the time the component mounts, for example.
-const timeframe = computed<Timeframe>(() => {
-  return props.overrideTimeframe || TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
+const timeRange = computed<TimeRangeV4>(() => {
+  const overrideTimeRange = props.overrideTimeRange
+  if (overrideTimeRange && !overrideTimeRange.tz) {
+    overrideTimeRange.tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
+  }
+
+  return overrideTimeRange || {
+    type: 'relative',
+    time_range: '7d',
+    tz: (new Intl.DateTimeFormat()).resolvedOptions().timeZone,
+  }
 })
 
 const averageLatencies = computed<boolean>(() => {
@@ -122,8 +120,7 @@ const {
   dimensionFilterValue: props.filterValue,
   additionalFilter: toRef(props, 'additionalFilter'),
   queryReady,
-  timeframe,
-  tz,
+  timeRange,
   hasTrendAccess,
   refreshInterval: props.refreshInterval,
   queryFn,

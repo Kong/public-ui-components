@@ -1,50 +1,45 @@
 import { vi, describe, expect } from 'vitest'
 import useMetricFetcher, { buildDeltaMapping, DEFAULT_KEY } from './useMetricFetcher'
 import { ref } from 'vue'
-import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4,
+  Timeframe } from '@kong-ui-public/analytics-utilities'
 import {
-  DeltaQueryTime,
   TimeframeKeys,
   TimePeriods,
-  UnaryQueryTime,
-  Timeframe,
 } from '@kong-ui-public/analytics-utilities'
 import type { MetricFetcherOptions } from '../types'
 import composables from '.'
-
-// Stub `addDays` from `date-fns` here to avoid a dependency just for unit testing.
-const addDays = (date: Date, amount: number) => {
-  const newDate = new Date(date)
-  newDate.setDate(newDate.getDate() + amount)
-  return newDate
-}
+import { addDays } from '../mockExploreResponse'
 
 const CHART_REFRESH_INTERVAL_MS = 30 * 1000
 
-const timePeriod = TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe
-const deltaQueryTime = new DeltaQueryTime(timePeriod)
-const unaryQueryTime = new UnaryQueryTime(timePeriod)
+const timeRange = {
+  start: addDays(new Date(), -1),
+  end: new Date(),
+}
+
+const deltaStart = addDays(timeRange.start, -1)
 
 const EXPLORE_RESULT_TREND: ExploreResultV4 = {
   data: [
     {
       version: 'v1',
-      timestamp: deltaQueryTime.startDate().toISOString(),
+      timestamp: deltaStart.toISOString(),
       event: {
         request_count: 10,
       },
     },
     {
       version: 'v1',
-      timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
+      timestamp: timeRange.start.toISOString(),
       event: {
         request_count: 20,
       },
     },
   ],
   meta: {
-    start_ms: deltaQueryTime.startMs(),
-    end_ms: deltaQueryTime.endMs(),
+    start_ms: deltaStart.getTime(),
+    end_ms: timeRange.end.getTime(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -61,15 +56,15 @@ const EXPLORE_RESULT_NO_TREND: ExploreResultV4 = {
   data: [
     {
       version: 'v1',
-      timestamp: unaryQueryTime.startDate().toISOString(),
+      timestamp: timeRange.start.toISOString(),
       event: {
         request_count: 20,
       },
     },
   ],
   meta: {
-    start_ms: unaryQueryTime.startMs(),
-    end_ms: unaryQueryTime.endMs(),
+    start_ms: timeRange.start.getTime(),
+    end_ms: timeRange.end.getTime(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -86,15 +81,15 @@ const EXPLORE_RESULT_PREVIOUS_DATA_ONLY: ExploreResultV4 = {
   data: [
     {
       version: 'v1',
-      timestamp: deltaQueryTime.startDate().toISOString(),
+      timestamp: deltaStart.toISOString(),
       event: {
         request_count: 10,
       },
     },
   ],
   meta: {
-    start_ms: deltaQueryTime.startMs(),
-    end_ms: deltaQueryTime.endMs(),
+    start_ms: deltaStart.getTime(),
+    end_ms: timeRange.end.getTime(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -111,15 +106,15 @@ const EXPLORE_RESULT_CURRENT_DATA_ONLY: ExploreResultV4 = {
   data: [
     {
       version: 'v1',
-      timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
+      timestamp: timeRange.start.toISOString(),
       event: {
         request_count: 20,
       },
     },
   ],
   meta: {
-    start_ms: deltaQueryTime.startMs(),
-    end_ms: deltaQueryTime.endMs(),
+    start_ms: deltaStart.getTime(),
+    end_ms: timeRange.end.getTime(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -135,8 +130,8 @@ const EXPLORE_RESULT_CURRENT_DATA_ONLY: ExploreResultV4 = {
 const EXPLORE_RESULT_NO_RECORDS: ExploreResultV4 = {
   data: [],
   meta: {
-    start_ms: deltaQueryTime.startMs(),
-    end_ms: deltaQueryTime.endMs(),
+    start_ms: deltaStart.getTime(),
+    end_ms: timeRange.start.getTime(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -153,7 +148,7 @@ const EXPLORE_RESULT_CURRENT_DATA_MULTI_DIMENSION: ExploreResultV4 = {
   data: [
     {
       version: 'v1',
-      timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
+      timestamp: addDays(deltaStart, 1).toISOString(),
       event: {
         route: 'route1',
         request_count: 20,
@@ -162,7 +157,7 @@ const EXPLORE_RESULT_CURRENT_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
     {
       version: 'v1',
-      timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
+      timestamp: addDays(deltaStart, 1).toISOString(),
       event: {
         route: 'route1',
         request_count: 10,
@@ -171,7 +166,7 @@ const EXPLORE_RESULT_CURRENT_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
     {
       version: 'v1',
-      timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
+      timestamp: addDays(deltaStart, 1).toISOString(),
       event: {
         route: 'route2',
         request_count: 20,
@@ -180,7 +175,7 @@ const EXPLORE_RESULT_CURRENT_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
     {
       version: 'v1',
-      timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
+      timestamp: addDays(deltaStart, 1).toISOString(),
       event: {
         route: 'route2',
         request_count: 10,
@@ -189,8 +184,8 @@ const EXPLORE_RESULT_CURRENT_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
   ],
   meta: {
-    start_ms: deltaQueryTime.startMs(),
-    end_ms: deltaQueryTime.endMs(),
+    start_ms: deltaStart.getTime(),
+    end_ms: timeRange.end.getTime(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -215,7 +210,7 @@ const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
   data: [
     {
       version: 'v1',
-      timestamp: deltaQueryTime.startDate().toISOString(),
+      timestamp: deltaStart.toISOString(),
       event: {
         request_count: 20,
         route: 'route1',
@@ -224,7 +219,7 @@ const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
     {
       version: 'v1',
-      timestamp: deltaQueryTime.startDate().toISOString(),
+      timestamp: deltaStart.toISOString(),
       event: {
         request_count: 10,
         route: 'route1',
@@ -233,7 +228,7 @@ const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
     {
       version: 'v1',
-      timestamp: deltaQueryTime.startDate().toISOString(),
+      timestamp: deltaStart.toISOString(),
       event: {
         request_count: 25,
         route: 'route2',
@@ -242,7 +237,7 @@ const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
     {
       version: 'v1',
-      timestamp: deltaQueryTime.startDate().toISOString(),
+      timestamp: deltaStart.toISOString(),
       event: {
         request_count: 15,
         route: 'route2',
@@ -251,7 +246,7 @@ const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
     {
       version: 'v1',
-      timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
+      timestamp: addDays(deltaStart, 1).toISOString(),
       event: {
         request_count: 40,
         route: 'route1',
@@ -260,7 +255,7 @@ const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
     {
       version: 'v1',
-      timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
+      timestamp: addDays(deltaStart, 1).toISOString(),
       event: {
         request_count: 20,
         route: 'route1',
@@ -269,7 +264,7 @@ const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
     {
       version: 'v1',
-      timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
+      timestamp: addDays(deltaStart, 1).toISOString(),
       event: {
         request_count: 45,
         route: 'route2',
@@ -278,7 +273,7 @@ const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
     {
       version: 'v1',
-      timestamp: addDays(deltaQueryTime.startDate(), 1).toISOString(),
+      timestamp: addDays(deltaStart, 1).toISOString(),
       event: {
         request_count: 25,
         route: 'route2',
@@ -287,8 +282,8 @@ const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
   ],
   meta: {
-    start_ms: deltaQueryTime.startMs(),
-    end_ms: deltaQueryTime.endMs(),
+    start_ms: deltaStart.getTime(),
+    end_ms: timeRange.end.getTime(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -442,19 +437,11 @@ describe('useMetricFetcher', () => {
         'request_count',
       ],
       filterValues: ['test-org-uuid'],
-      timeframe: ref(new Timeframe({
-        key: 'custom',
-        timeframeText: 'custom',
-        display: 'custom',
-        // Note -- these values don't matter, just the `withTrend` value and the value in the response.
-        startCustom: new Date('2024-01-01T00:00:00Z'),
-        endCustom: new Date('2024-01-02T00:00:00Z'),
-        timeframeLength: () => 0,
-        defaultResponseGranularity: 'daily',
-        dataGranularity: 'daily',
-        isRelative: false,
-        allowedTiers: ['free', 'plus', 'enterprise'],
-      })),
+      timeRange: ref({
+        type: 'absolute',
+        start: new Date('2024-01-01T00:00:00Z'),
+        end: new Date('2024-01-02T00:00:00Z'),
+      }),
       loading: ref(true),
       hasError: ref(false),
       withTrend: ref(true),
@@ -477,19 +464,11 @@ describe('useMetricFetcher', () => {
         'request_count',
       ],
       filterValues: ['test-org-uuid'],
-      timeframe: ref(new Timeframe({
-        key: 'custom',
-        timeframeText: 'custom',
-        display: 'custom',
-        // Note -- these values don't matter, just the `withTrend` value and the value in the response.
-        startCustom: new Date('2024-01-01T00:00:00Z'),
-        endCustom: new Date('2024-01-02T00:00:00Z'),
-        timeframeLength: () => 0,
-        defaultResponseGranularity: 'daily',
-        dataGranularity: 'daily',
-        isRelative: false,
-        allowedTiers: ['free', 'plus', 'enterprise'],
-      })),
+      timeRange: ref({
+        type: 'absolute',
+        start: new Date('2024-01-01T00:00:00Z'),
+        end: new Date('2024-01-02T00:00:00Z'),
+      }),
       loading: ref(true),
       hasError: ref(false),
       withTrend: ref(false),
@@ -540,6 +519,8 @@ describe('buildDeltaMapping', () => {
 
   it('can get metric data when there is only current data', () => {
     const trafficData = buildDeltaMapping(EXPLORE_RESULT_CURRENT_DATA_ONLY, true)
+
+    console.log(trafficData)
 
     const expected = {
       current: {

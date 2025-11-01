@@ -200,11 +200,13 @@ describe('<DashboardRenderer />', () => {
   })
 
   it('Changing the timeframe changes the query', () => {
-    const oneDayTimeframe: Timeframe = TimePeriods.get(TimeframeKeys.ONE_DAY)!
     const props = {
       context: {
         filters: [],
-        timeSpec: oneDayTimeframe.v4Query(),
+        timeSpec: {
+          type: 'relative',
+          time_range: '24h',
+        },
       },
       modelValue: summaryDashboardConfig,
     }
@@ -230,13 +232,13 @@ describe('<DashboardRenderer />', () => {
         time_range: { time_range: '24h' },
       } })).then(() => {
         cy.get('@fetcher').invoke('resetHistory').then(() => {
-
-          const sevenDayTimeframe: Timeframe = TimePeriods.get(TimeframeKeys.SEVEN_DAY)!
-
           wrapper.setProps({
             context: {
               filters: [],
-              timeSpec: sevenDayTimeframe.v4Query(),
+              timeSpec: {
+                type: 'relative',
+                time_range: '7d',
+              },
             },
           }).then(() => {
             // Two more queries for the metric cards, three for the charts
