@@ -786,7 +786,7 @@
             "jq": {
               "name": "jq",
               "summary": "Transform data and cast variables with jq",
-              "description": "The jq node executes a jq script for processing JSON. See the official <a href=\"https://jqlang.org\" target=\"_blank\">jq docs</a> for more details."
+              "description": "The <code>jq</code> node executes a jq script for processing JSON. See the official <a href=\"https://jqlang.org\" target=\"_blank\">jq docs</a> for more details."
             },
             "exit": {
               "name": "exit",
@@ -795,13 +795,13 @@
             },
             "property": {
               "name": "property",
-              "summary": "Get and set gateway configuration data",
-              "description": "Get and set gateway host and request properties."
+              "summary": "Get and set Kong Gateway-specific data",
+              "description": "Get and set Kong Gateway host and request properties."
             },
             "static": {
               "name": "static",
-              "summary": "Define static values to use for call nodes",
-              "description": "Emits static values to be used as inputs for other nodes. The static node can help you with hardcoding some known value for an input."
+              "summary": "Configure static input values ahead of time",
+              "description": "Emits static values to be used as inputs for other nodes. The <code>static</code> node can help you with hardcoding some known value for an input."
             },
             "branch": {
               "name": "branch",
@@ -810,8 +810,8 @@
             },
             "cache": {
               "name": "cache",
-              "summary": "Store and retrieve data from cache",
-              "description": "Stored data into cache and fetch cached data from cache."
+              "summary": "Store and fetch cached data",
+              "description": "Store data into cache and fetch cached data from cache."
             },
             "request": {
               "name": "request",
