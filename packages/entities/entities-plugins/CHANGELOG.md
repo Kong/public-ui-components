@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.111.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.110.2...@kong-ui-public/entities-plugins@9.111.0) (2025-11-01)
+
+
+### Features
+
+* **entities-plugins:** add leave confirmation for flow editor ([#2612](https://github.com/Kong/public-ui-components/issues/2612)) ([476d341](https://github.com/Kong/public-ui-components/commit/476d341e3e631910a6c5b49b53e6d3f6127ae9c4))
+
+
+
+
+
 ## [9.110.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.110.1...@kong-ui-public/entities-plugins@9.110.2) (2025-10-31)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
