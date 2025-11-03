@@ -773,6 +773,7 @@
             "undo": "Undo",
             "redo": "Redo",
             "duplicate": "Duplicate",
+            "remove_from_branch": "Remove from branch",
             "delete": "Delete",
             "view_docs": "View docs",
             "done": "Done"
