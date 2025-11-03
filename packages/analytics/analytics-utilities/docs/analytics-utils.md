@@ -11,7 +11,10 @@
 
 ### Classes
 
+- [DeltaQueryTime](classes/DeltaQueryTime.md)
 - [Timeframe](classes/Timeframe.md)
+- [TimeseriesQueryTime](classes/TimeseriesQueryTime.md)
+- [UnaryQueryTime](classes/UnaryQueryTime.md)
 
 ### Interfaces
 
@@ -28,6 +31,7 @@
 - [DruidGranularity](interfaces/DruidGranularity.md)
 - [GranularityFullObj](interfaces/GranularityFullObj.md)
 - [MetricUnit](interfaces/MetricUnit.md)
+- [QueryTime](interfaces/QueryTime.md)
 - [RecordEvent](interfaces/RecordEvent.md)
 - [TimePeriod](interfaces/TimePeriod.md)
 - [TimeframeOptions](interfaces/TimeframeOptions.md)
