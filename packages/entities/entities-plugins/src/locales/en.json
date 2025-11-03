@@ -787,32 +787,32 @@
             "jq": {
               "name": "jq",
               "summary": "Transform data and cast variables with jq",
-              "description": "The jq node executes a jq script for processing JSON. See the official <a href=\"https://jqlang.org\" target=\"_blank\">jq docs</a> for more details."
+              "description": "The <code>jq</code> node executes a jq script for processing JSON. See the official <a href=\"https://jqlang.org\" target=\"_blank\">jq docs</a> for more details."
             },
             "exit": {
               "name": "exit",
-              "summary": "Return a response directly to the client",
+              "summary": "Return directly to the client",
               "description": "Trigger an early exit that produces a direct response, rather than forwarding a proxied response."
             },
             "property": {
               "name": "property",
-              "summary": "Get and set gateway configuration data",
-              "description": "Get and set gateway host and request properties."
+              "summary": "Get and set Kong Gateway-specific data",
+              "description": "Get and set Kong Gateway host and request properties."
             },
             "static": {
               "name": "static",
-              "summary": "Define static values to use for call nodes",
-              "description": "Emits static values to be used as inputs for other nodes. The static node can help you with hardcoding some known value for an input."
+              "summary": "Configure static input values ahead of time",
+              "description": "Emits static values to be used as inputs for other nodes. The <code>static</code> node can help you with hardcoding some known value for an input."
             },
             "branch": {
               "name": "branch",
-              "summary": "Conditional execution",
+              "summary": "Execute nodes based on matching input conditions",
               "description": "Execute different nodes based on matching input conditions, such as a cache hit or miss."
             },
             "cache": {
               "name": "cache",
-              "summary": "Fetch cached data",
-              "description": "Fetch data from the cache."
+              "summary": "Store and fetch cached data",
+              "description": "Store data into cache and fetch cached data from cache."
             },
             "request": {
               "name": "request",
