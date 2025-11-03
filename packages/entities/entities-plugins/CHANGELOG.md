@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.112.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.0...@kong-ui-public/entities-plugins@9.112.1) (2025-11-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix node type copy ([#2611](https://github.com/Kong/public-ui-components/issues/2611)) ([c3a5017](https://github.com/Kong/public-ui-components/commit/c3a50172b4b04234c1b51bc758457c5b9ec7fd22))
+
+
+
+
+
 # [9.112.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.111.0...@kong-ui-public/entities-plugins@9.112.0) (2025-11-03)
 
 
