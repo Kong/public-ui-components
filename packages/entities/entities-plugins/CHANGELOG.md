@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.112.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.111.0...@kong-ui-public/entities-plugins@9.112.0) (2025-11-03)
+
+
+### Features
+
+* **entities-plugins:** add remove from branch action ([#2614](https://github.com/Kong/public-ui-components/issues/2614)) ([3572b1e](https://github.com/Kong/public-ui-components/commit/3572b1e04b8df11c94b0080a312698f8d9e4ed6a))
+
+
+
+
+
 # [9.111.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.110.2...@kong-ui-public/entities-plugins@9.111.0) (2025-11-01)
 
 
