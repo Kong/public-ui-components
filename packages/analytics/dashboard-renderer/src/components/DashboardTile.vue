@@ -1,7 +1,10 @@
 <template>
   <div
     class="tile-boundary"
-    :class="{ 'editable': context.editable }"
+    :class="{
+      'editable': context.editable,
+      clean,
+    }"
     :data-testid="`tile-${tileId}`"
   >
     <div
@@ -31,7 +34,7 @@
       </div>
 
       <div
-        v-if="canShowTitleActions"
+        v-if="canShowTitleActions && !clean"
         class="tile-actions"
         :data-testid="`tile-actions-${tileId}`"
       >
@@ -162,8 +165,9 @@ import TileBadges from './TileBadges.vue'
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
 const props = withDefaults(defineProps<{
-  definition: TileDefinition
+  clean?: boolean
   context: DashboardRendererContextInternal
+  definition: TileDefinition
   height?: number
   isFullscreen?: boolean
   queryReady: boolean
@@ -171,6 +175,7 @@ const props = withDefaults(defineProps<{
   tileId: string | number
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
+  clean: false,
 })
 
 const emit = defineEmits<{
@@ -370,14 +375,14 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
 
   .badge-container {
     display: flex;
-    justify-content: flex-end;
     flex-grow: 1;
-    padding: 0 $kui-space-50;
+    justify-content: flex-end;
   }
 
   .tile-header {
     align-items: center;
     display: flex;
+    gap: $kui-space-50;
     justify-content: space-between;
     padding: var(--kui-space-50, $kui-space-50) var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
     right: 0;
@@ -448,6 +453,16 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
     flex-grow: 1;
     margin: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60);
     overflow: hidden;
+  }
+
+  &.clean {
+    .tile-content {
+      margin: 0;
+    }
+
+    .tile-header {
+      padding: 0 0 var(--kui-space-40, $kui-space-40) 0;
+    }
   }
 }
 </style>
