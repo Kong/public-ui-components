@@ -2,6 +2,7 @@
   <Teleport to="#plugin-form-page-actions">
     <KSegmentedControl
       v-if="enableDatakitM2"
+      data-testid="datakit-editor-mode-switcher"
       :model-value="realEditorMode"
       :options="editorModes"
       @update:model-value="editorMode = $event"
