@@ -59,6 +59,12 @@
             />
           </KDropdownItem>
           <KDropdownItem
+            v-if="branchMembership"
+            @click="removeFromBranchGroup"
+          >
+            {{ t('plugins.free-form.datakit.flow_editor.actions.remove_from_branch') }}
+          </KDropdownItem>
+          <KDropdownItem
             danger
             @click="removeNode(data.id)"
           >
@@ -307,7 +313,7 @@ import { HOTKEYS } from '../constants'
 import { isEqual } from 'lodash-es'
 import ValueIndicator from './ValueIndicator.vue'
 
-const { data } = defineProps<{
+const { data, readonly } = defineProps<{
   data: NodeInstance
   error?: boolean
   readonly?: boolean
@@ -326,6 +332,7 @@ const {
   duplicateNode,
   removeNode,
   propertiesPanelOpen,
+  branchGroups,
 } = useEditorStore()
 
 const meta = computed(() => getNodeMeta(data.type))
@@ -345,6 +352,7 @@ const outputsExpanded = computed(() => data.expanded.output ?? false)
 
 const branchHandles = computed(() => meta.value.io?.next?.branches?.map(({ name }) => name) ?? [])
 const hasBranchHandles = computed(() => branchHandles.value.length > 0)
+const branchMembership = computed(() => branchGroups.findMembership(data.id))
 
 const showInputHandles = computed(() => {
   if (data.type === 'property') {
@@ -521,6 +529,20 @@ async function duplicate() {
   await flowStore.selectNode(newId)
   flowStore.scrollRightToReveal(newId)
   propertiesPanelOpen.value = true
+}
+
+function removeFromBranchGroup() {
+  if (readonly) return
+  if (flowStore && flowStore.readonly) return
+  if (!branchMembership.value) return
+
+  const { ownerId, branch } = branchMembership.value
+
+  const members = branchGroups.getMembers(ownerId, branch)
+  const nextMembers = members.filter(id => id !== data.id)
+  if (nextMembers.length === members.length) return
+
+  branchGroups.setMembers(ownerId, branch, nextMembers)
 }
 
 watch(inputsCollapsible, (collapsible) => {
