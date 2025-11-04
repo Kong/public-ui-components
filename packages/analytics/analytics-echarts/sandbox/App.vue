@@ -11,10 +11,20 @@
               :requests-link="{ href: '#' }"
               :stacked="stacked"
               :theme="theme"
+              :threshold="chartThreshold"
               timeseries-zoom
               :type="chartType"
+              @select-chart-range="eventLog += 'Select chart range ' + JSON.stringify($event) + '\n'"
+              @zoom-time-range="eventLog += 'Zoomed to ' + JSON.stringify($event) + '\n'"
             />
           </div>
+          <KLabel>Event Log</KLabel>
+          <KCodeBlock
+            id="event-log-codeblock"
+            :code="eventLog"
+            language="json"
+            searchable
+          />
         </KCard>
         <KCard class="controls-section">
           <div class="controls-item">
@@ -54,6 +64,18 @@
           </div>
 
           <div class="controls-item">
+            <KInputSwitch
+              v-model="threshold"
+              label="threshold"
+            />
+            <KInput
+              v-model="thresholdValue"
+              :disabled="!threshold"
+              type="number"
+            />
+          </div>
+
+          <div class="controls-item">
             <KLabel> Import chart data </KLabel>
             <CodeText v-model="exploreResultText" />
           </div>
@@ -64,16 +86,33 @@
 </template>
 
 <script setup lang="ts">
-import { generateSingleMetricTimeSeriesData, type AnalyticsExploreRecord, type ExploreResultV4, type QueryResponseMeta, type ReportChartTypes } from '@kong-ui-public/analytics-utilities'
+import { generateSingleMetricTimeSeriesData, type AnalyticsExploreRecord, type ExploreAggregations, type ExploreResultV4, type QueryResponseMeta, type ReportChartTypes } from '@kong-ui-public/analytics-utilities'
 import { AnalyticsEcharts } from '../src'
 import { computed, ref } from 'vue'
 import CodeText from './CodeText.vue'
+import type { Threshold } from '../src/components/AnalyticsEcharts.vue'
 
 const chartType = ref<ReportChartTypes>('timeseries_line')
 const exploreResultText = ref('')
 const theme = ref<'light' | 'dark'>('light')
 const renderMode = ref<'svg' | 'canvas'>('svg')
 const stacked = ref(false)
+const eventLog = ref('')
+const threshold = ref(false)
+const thresholdValue = ref(100)
+const chartThreshold = computed<Partial<Record<ExploreAggregations, Threshold[]>> | undefined>(() => {
+  if (!threshold.value) return undefined
+
+  return {
+    request_count: [
+      {
+        type: 'error',
+        value: thresholdValue.value,
+        highlightIntersections: true,
+      },
+    ],
+  }
+})
 
 const data = computed<ExploreResultV4>(() => {
   if (exploreResultText.value) {

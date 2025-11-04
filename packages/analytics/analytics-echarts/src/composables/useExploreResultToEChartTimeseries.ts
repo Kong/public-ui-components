@@ -2,19 +2,26 @@
 import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
 import type { SeriesOption } from 'echarts'
-import type { AnalyticsExploreRecord, CountryISOA2, ExploreResultV4, ReportChartTypes } from '@kong-ui-public/analytics-utilities'
+import type { AnalyticsExploreRecord, CountryISOA2, ExploreAggregations, ExploreResultV4, ReportChartTypes } from '@kong-ui-public/analytics-utilities'
 import { getCountryName } from '@kong-ui-public/analytics-utilities'
 import { parseISO } from 'date-fns'
 import {
   datavisPalette,
   determineBaseColor,
+  thresholdColor,
 } from '../utils'
 import composables from '.'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
 import type { TooltipState } from 'src/components/ChartTooltip.vue'
+import type { Threshold, ThresholdType } from 'src/components/AnalyticsEcharts.vue'
 
 // types
 type DatasetLabel = { id: string, name: string }
+export type ThresholdIntersection = {
+  start: number
+  end: number
+  type: ThresholdType
+}
 
 // util: range, origin normalization, zero-fill boundaries
 const range = (start: number, stop: number, step: number = 1): number[] => {
@@ -58,17 +65,102 @@ const createZeroFilledTimeSeries = (
   return range(roundedStart, roundedEnd, stepMs)
 }
 
+const getExactIntersection = (p0: [number, number], p1: [number, number], targetY: number): number => {
+  const dy = p1[1] - p0[1]
+  if (dy === 0) {
+    return p1[0]
+  }
+  const f = (targetY - p0[1]) / dy
+  return p0[0] + f * (p1[0] - p0[0])
+}
+
+
+export const getThresholdIntersections = (data: Array<[number, number]>, thresholds: Threshold[]): ThresholdIntersection[] => {
+  const intersections: ThresholdIntersection[] = []
+
+  thresholds.filter(t => t.highlightIntersections).forEach((t) => {
+    const intersectionTrack = data.map(([x, y]) => ({
+      ts: x,
+      aboveThreshold: y >= t.value,
+    }))
+
+    // the intersectionStart begins with a value if the initial datapoint is above the threshold
+    let intersectionStart: number | undefined = intersectionTrack[0].aboveThreshold
+      ? data[0][0]
+      : undefined
+
+    for (let i = 1; i < intersectionTrack.length; i++) {
+      if (!intersectionTrack[i - 1].aboveThreshold && intersectionTrack[i].aboveThreshold) {
+        // If the series was under the threshold line and goes to above the threshold line
+        intersectionStart = getExactIntersection(
+          data[i - 1],
+          data[i],
+          t.value,
+        )
+      } else if (intersectionTrack[i - 1].aboveThreshold && !intersectionTrack[i].aboveThreshold) {
+        // if the series was above the threshold line and goes to below the threshold line
+        if (intersectionStart !== undefined) {
+          intersections.push({
+            start: intersectionStart,
+            end: getExactIntersection(
+              data[i - 1],
+              data[i],
+              t.value,
+            ),
+            type: t.type,
+          })
+          intersectionStart = undefined
+        }
+      }
+    }
+    // If we reach the end and intersectionStart is still defined, it means the intersection goes till the end of the data
+    if (intersectionStart !== undefined) {
+      intersections.push({
+        start: intersectionStart,
+        end: intersectionTrack[intersectionTrack.length - 1].ts,
+        type: t.type,
+      })
+    }
+  })
+
+  return intersections
+}
+
+export const mergeThresholdIntersections = (intersections: ThresholdIntersection[]): ThresholdIntersection[] => {
+  if (!intersections.length) {
+    return []
+  }
+
+  intersections.sort((a, b) => a.type.localeCompare(b.type) || a.start - b.start)
+
+  const merged: ThresholdIntersection[] = []
+
+  for (const curr of intersections) {
+    const last = merged.findLast(({ type }) => type === curr.type)
+    if (last && curr.start <= last.end) {
+      last.end = Math.max(last.end, curr.end)
+    } else {
+      merged.push({ ...curr })
+    }
+  }
+
+  return merged
+}
+
+
 // main adapter: ExploreResultV4 -> EChartsOption
 export default function useExploreResultToEChartTimeseries({
   exploreResult,
   chartType,
   tooltipState,
   stacked = ref(false),
+  threshold = ref(undefined),
 } : {
   exploreResult: Ref<ExploreResultV4>
   chartType: Ref<ReportChartTypes>
   tooltipState: Ref<TooltipState>
   stacked?: Ref<boolean>
+  threshold?: Ref<Partial<Record<ExploreAggregations, Threshold[]>> | undefined>
 }) {
   const { i18n } = composables.useI18n()
 
@@ -161,6 +253,34 @@ export default function useExploreResultToEChartTimeseries({
           timeseries_bar: 'bar',
         }
 
+        let markAreaData: any[] = []
+        let markLineData: any[] = []
+        if (threshold.value) {
+          const intersections = Object.values(threshold.value)
+            .flatMap(thresh => getThresholdIntersections(filled, thresh))
+
+          // Build markArea data based on intersections
+          markAreaData = intersections.map(intersection => {
+            const { start, end } = intersection
+
+            return [
+              { xAxis: start, yAxis: 0, itemStyle: { color: 'rgba(255, 0, 0, 0.2)' } },
+              { xAxis: end, yAxis: Infinity },
+            ]
+          })
+
+          markLineData = Object.values(threshold.value).flatMap(thresh =>
+            thresh.map(t => ({
+              yAxis: t.value,
+              name: `Threshold: ${t.value}`,
+              lineStyle: {
+                color: thresholdColor(t.type),
+                type: 'dashed',
+              },
+            })),
+          )
+        }
+
         return {
           type: reportChartTypesToEChartTypesMap[chartType.value],
           name: translated as string,
@@ -180,6 +300,14 @@ export default function useExploreResultToEChartTimeseries({
           stack: stacked.value ? 'total' : undefined,
           z: total,
           isSegmentEmpty,
+          // add the threshold line
+          markLine: {
+            data: markLineData,
+          },
+          markArea: {
+            silent: true,
+            data: markAreaData,
+          },
         } as SeriesOption
       })
 
