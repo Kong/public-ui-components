@@ -321,7 +321,7 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
     const existingMembers = readMembers(owner, branch)
     if (existingMembers.includes(memberId)) return false
 
-    dropTarget(memberId)
+    removeMember(memberId, { commit: false })
 
     const nextMembers = [...existingMembers, memberId]
     const changed = setMembers(ownerId, branch, nextMembers, { commit: false })
@@ -335,16 +335,18 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
   }
 
   /**
-   * Removes a node from its current group membership, if any.
-   * Used internally when moving nodes between groups.
+   * Removes a member from its current branch group.
+   * Returns true if membership changed.
    */
-  function dropTarget(targetId: NodeId) {
-    const membership = findMembership(targetId)
-    if (!membership) return
+  function removeMember(memberId: NodeId, options: CommitOptions = {}): boolean {
+    const membership = findMembership(memberId)
+    if (!membership) return false
 
     const members = getMembers(membership.ownerId, membership.branch)
-    const nextMembers = members.filter(id => id !== targetId)
-    setMembers(membership.ownerId, membership.branch, nextMembers, { commit: false })
+    const nextMembers = members.filter(id => id !== memberId)
+    if (nextMembers.length === members.length) return false
+
+    return setMembers(membership.ownerId, membership.branch, nextMembers, options)
   }
 
   function getNodeDepth(nodeId: NodeId): number {
@@ -379,7 +381,7 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
     setMembers,
     prepareMembers,
     addMember,
-    dropTarget,
+    removeMember,
     clear,
     getNodeDepth,
     getGroupDepth,

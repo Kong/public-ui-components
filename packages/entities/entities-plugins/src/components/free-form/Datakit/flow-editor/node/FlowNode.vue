@@ -534,17 +534,7 @@ async function duplicate() {
 }
 
 function removeFromBranchGroup() {
-  if (readonly) return
-  if (flowStore && flowStore.readonly) return
-  if (!branchMembership.value) return
-
-  const { ownerId, branch } = branchMembership.value
-
-  const members = branchGroups.getMembers(ownerId, branch)
-  const nextMembers = members.filter(id => id !== data.id)
-  if (nextMembers.length === members.length) return
-
-  branchGroups.setMembers(ownerId, branch, nextMembers)
+  branchGroups.removeMember(data.id)
 }
 
 watch(inputsCollapsible, (collapsible) => {
