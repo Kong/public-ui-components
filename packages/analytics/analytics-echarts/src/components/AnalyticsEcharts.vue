@@ -321,7 +321,6 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .kong-ui-public-analytics-echarts {
   height: 100%;
-  position: relative;
   width: 100%;
 }
 </style>
