@@ -1,12 +1,7 @@
 import { vi, describe, expect } from 'vitest'
 import useMetricFetcher, { buildDeltaMapping, DEFAULT_KEY } from './useMetricFetcher'
 import { ref } from 'vue'
-import type { ExploreResultV4,
-  Timeframe } from '@kong-ui-public/analytics-utilities'
-import {
-  TimeframeKeys,
-  TimePeriods,
-} from '@kong-ui-public/analytics-utilities'
+import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { MetricFetcherOptions } from '../types'
 import composables from '.'
 import { addDays } from '../mockExploreResponse'
@@ -315,7 +310,10 @@ describe('useMetricFetcher', () => {
       metrics: [
         'request_count',
       ],
-      timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
+      timeRange: ref({
+        type: 'relative',
+        time_range: '24h',
+      }),
       loading: ref(true),
       hasError: ref(false),
       withTrend: ref(true),
@@ -350,7 +348,10 @@ describe('useMetricFetcher', () => {
       metrics: [
         'request_count',
       ],
-      timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
+      timeRange: ref({
+        type: 'relative',
+        time_range: '24h',
+      }),
       loading: ref(true),
       hasError: ref(false),
       withTrend: ref(true),
@@ -380,7 +381,10 @@ describe('useMetricFetcher', () => {
       metrics: [
         'request_count',
       ],
-      timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
+      timeRange: ref({
+        type: 'relative',
+        time_range: '24h',
+      }),
       loading: ref(true),
       hasError: ref(false),
       withTrend: ref(true),
@@ -409,7 +413,10 @@ describe('useMetricFetcher', () => {
         'request_count',
       ],
       filterValues: ['test-org-uuid'],
-      timeframe: ref(TimePeriods.get(TimeframeKeys.ONE_DAY) as Timeframe),
+      timeRange: ref({
+        type: 'relative',
+        time_range: '24h',
+      }),
       loading: ref(true),
       hasError: ref(false),
       withTrend: ref(false),
