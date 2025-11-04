@@ -38,7 +38,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@shikijs/engine-javascript',
         '@shikijs/langs/yaml',
         '@shikijs/themes/github-dark',
-        'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js',
+        /^monaco-editor\//,
       ],
     },
   },
