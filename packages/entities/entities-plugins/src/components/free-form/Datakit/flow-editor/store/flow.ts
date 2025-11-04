@@ -268,6 +268,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     const configEdges = computed<FlowEdge[]>(() =>
       state.value.edges
         .filter((edge) => edgeInPhase(edge, phase))
+        .filter((edge) => !branchGroups.isCrossBranch(edge.source, edge.target))
         .filter((edge) => {
           const sourceNode = getNodeById(edge.source)
           const targetNode = getNodeById(edge.target)

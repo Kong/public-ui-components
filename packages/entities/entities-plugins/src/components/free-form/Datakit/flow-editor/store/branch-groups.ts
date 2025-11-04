@@ -254,6 +254,20 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
   }
 
   /**
+   * Determines whether a connection between two nodes crosses branch boundaries.
+   */
+  function isCrossBranch(nodeAId: NodeId, nodeBId: NodeId): boolean {
+    const membershipA = findMembership(nodeAId)
+    const membershipB = findMembership(nodeBId)
+
+    if (!membershipA && !membershipB) return false
+
+    if (!membershipA || !membershipB) return true
+
+    return membershipA.ownerId !== membershipB.ownerId || membershipA.branch !== membershipB.branch
+  }
+
+  /**
    * Detects whether adding a member to a branch would create a cycle.
    * Uses depth-first search to traverse the branch graph.
    *
@@ -370,5 +384,6 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
     getNodeDepth,
     getGroupDepth,
     isGroupId,
+    isCrossBranch,
   }
 }
