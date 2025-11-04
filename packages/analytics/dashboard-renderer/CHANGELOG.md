@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.8.0...@kong-ui-public/dashboard-renderer@8.0.0) (2025-11-04)
+
+
+### Code Refactoring
+
+* **metric provider:** use explore style time ranges ([#2603](https://github.com/Kong/public-ui-components/issues/2603)) ([b230cb9](https://github.com/Kong/public-ui-components/commit/b230cb905ef54e384ebaabdf5bcb0c91bf45a71a))
+
+
+### BREAKING CHANGES
+
+* **metric provider:** metric provider props updated to accept explore style timerange
+
+* fix: timespec no longer needs to be wrapped in computed
+
+* fix: just remove query time
+
+* fix: remove unused functions from granilarities.ts
+
+* fix: revert analytics-utilities changes
+
+* fix: comment
+
+
+
+
+
 # [7.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@7.7.7...@kong-ui-public/dashboard-renderer@7.8.0) (2025-10-31)
 
 
