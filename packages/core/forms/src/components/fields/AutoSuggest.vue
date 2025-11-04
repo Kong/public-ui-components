@@ -6,7 +6,9 @@
     clearable
     :disabled="disabled"
     enable-filtering
+    :error="error !== null"
     :filter-function="() => true"
+    :help="error !== null ? error : undefined"
     :items="suggestions"
     :loading="loading"
     :placeholder="placeholder"
@@ -75,6 +77,7 @@ const {
   loading?: boolean
   emptyMessage?: string
   domId: string
+  error?: string | null
 }>()
 
 defineEmits<{
