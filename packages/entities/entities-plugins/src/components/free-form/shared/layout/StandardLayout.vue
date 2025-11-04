@@ -1,11 +1,12 @@
 <template>
   <Form
+    ref="form"
     class="ff-standard-layout"
     :config="realFormConfig"
     :data="(prunedData as T)"
     :schema="freeFormSchema"
     tag="div"
-    @change="onFormChange"
+    @change="handleDataChange"
   >
     <template v-if="editorMode === 'form'">
       <EntityFormBlock
@@ -26,6 +27,7 @@
             card-orientation="horizontal"
             v-bind="radioGroup[0]"
             :selected-value="false"
+            @update:model-value="handleScopeChange"
           />
           <KRadio
             v-model="scoped"
@@ -33,6 +35,7 @@
             card-orientation="horizontal"
             v-bind="radioGroup[1]"
             :selected-value="true"
+            @update:model-value="handleScopeChange"
           />
         </div>
         <div
@@ -138,9 +141,9 @@ export type Props<T extends FreeFormPluginData = any> = {
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, useTemplateRef } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
-import { pick } from 'lodash-es'
+import { has, pick } from 'lodash-es'
 import { KRadio } from '@kong/kongponents'
 import english from '../../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
@@ -290,28 +293,82 @@ const prunedData = computed(() => {
   return pick(props.model, ffDataKeys) as Partial<T>
 })
 
-const scopeIds: Record<string, string | null> = pick(props.formModel, [
-  'service-id',
-  'route-id',
-  'consumer-id',
-  'consumer_group-id',
-])
+
+const scopeFields = computed<Array<'service' | 'route' | 'consumer' | 'consumer_group'>>(() => {
+  return scopeEntitiesSchema.value.fields.map((field: any) => field.model.split('-')[0])
+})
+
+// Cache of scope-related fields to restore when toggling scoped on/off
+const scopesCache = ref(pick(prunedData.value, scopeFields.value))
 
 // `scopeIds` is not reactive. Initialize `scoped` in one shot.
-const scoped = ref(Object.values(scopeIds).some(id => Boolean(id)))
+const scoped = ref(Object.values(scopesCache.value).some(hasScopeId))
 const moreCollapsed = ref(true)
 
-watch(scoped, (value: boolean) => {
-  if (!value) {
-    Object.keys(scopeIds).forEach(key => {
-      props.onModelUpdated('', key)
+const formRef = useTemplateRef('form')
+let skipUpdateScopeCache = false
+
+function handleScopeChange() {
+  if (!formRef.value) return
+
+  const { getInnerData, setInnerData } = formRef.value
+  const currentData = getInnerData() as T
+  const nextData = { ...currentData }
+
+  if (scoped.value) {
+    // restore cached scope ids
+    scopeFields.value.forEach((field) => {
+      nextData[field] = scopesCache.value[field] ?? null
     })
   } else {
-    Object.keys(scopeIds).forEach(key => {
-      props.onModelUpdated(scopeIds[key], key)
+    // clear scope ids
+    scopeFields.value.forEach((field) => {
+      nextData[field] = null
     })
   }
-})
+
+  skipUpdateScopeCache = true
+  setInnerData(nextData)
+
+  // Prevent updating the cache right after clearing it
+  nextTick(() => {
+    skipUpdateScopeCache = false
+  })
+}
+
+function handleDataChange(value: T) {
+  if (!skipUpdateScopeCache) {
+    updateScopeCache(value)
+  }
+
+  // Update scoped state based on current form data from code editor mode
+  if (editorMode === 'code') {
+    // Check if at least one scope-related field is filled
+    const nextScoped = scopeFields.value.some((field) => hasScopeId(value[field]))
+
+    // Update scoped state if it differs from the current state
+    if (nextScoped !== scoped.value) {
+      scoped.value = nextScoped
+    }
+  }
+
+  props.onFormChange(value)
+}
+
+function updateScopeCache(value: T) {
+  scopeFields.value.forEach((field) => {
+    const val = value[field]
+    if (has(val, 'id') && val.id != null) {
+      (scopesCache.value[field] as { id: string }) = val
+    } else {
+      (scopesCache.value[field] as null) = null
+    }
+  })
+}
+
+function hasScopeId(value: any): value is { id: string } {
+  return has(value, 'id') && value.id != null
+}
 </script>
 
 <style lang="scss" scoped>
