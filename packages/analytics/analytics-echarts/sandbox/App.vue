@@ -152,7 +152,7 @@ const data = computed<ExploreResultV4>(() => {
     }
 
     .chart-container {
-      // height: 400px;
+      height: 400px;
       width: 100%;
     }
   }
