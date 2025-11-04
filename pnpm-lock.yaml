@@ -415,6 +415,9 @@ importers:
 
   packages/analytics/dashboard-renderer:
     dependencies:
+      '@kong-ui-public/analytics-echarts':
+        specifier: workspace:^
+        version: link:../analytics-echarts
       '@kong-ui-public/core':
         specifier: workspace:^
         version: link:../../core/core

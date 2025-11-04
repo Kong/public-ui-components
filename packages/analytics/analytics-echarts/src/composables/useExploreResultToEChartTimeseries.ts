@@ -272,7 +272,11 @@ export default function useExploreResultToEChartTimeseries({
           markLineData = Object.values(threshold.value).flatMap(thresh =>
             thresh.map(t => ({
               yAxis: t.value,
-              name: `Threshold: ${t.value}`,
+              label: {
+                show: false,
+                position: 'middle',
+                formatter: `${t.type}: ${t.value}`,
+              },
               lineStyle: {
                 color: thresholdColor(t.type),
                 type: 'dashed',
@@ -302,7 +306,7 @@ export default function useExploreResultToEChartTimeseries({
           isSegmentEmpty,
           // add the threshold line
           markLine: {
-            data: markLineData,
+            data: i === 0 ? markLineData : [],
           },
           markArea: {
             silent: true,
@@ -341,22 +345,104 @@ export default function useExploreResultToEChartTimeseries({
           type: 'time',
           scale: true,
           name: '@timestamp per 5 minuntes',
+          nameGap: 30,
           nameLocation: 'middle',
+          axisLabel: { margin: 6 },
         },
         yAxis: {
           type: 'value',
           axisLine: { show: true },
           splitLine: { show: true },
           name: 'Request count',
+          nameGap: 50,
           nameLocation: 'middle',
+          axisLabel: { margin: 6 },
         },
-        legend: { type: 'scroll' },
+        legend: {
+          type: 'scroll',
+          bottom: 0,
+          left: 'center',
+          itemGap: 8,
+        },
         series,
         toolbox: { show: false },
         brush: {
           brushType: 'lineX',
           xAxisIndex: [0],
         },
+        media: [
+          {
+            query: { maxHeight: 200 },
+            option: {
+              grid: {
+                bottom: 0,
+                top: 0,
+                left: 0,
+                right: 0,
+              },
+              xAxis: {
+                name: '',
+              },
+              yAxis: {
+                name: '',
+              },
+              legend: { show: false },
+            },
+          },
+          {
+            query: { minHeight: 200 },
+            option: {
+              grid: {
+                bottom: 45,
+                top: 0,
+                left: 0,
+                right: 0,
+              },
+              xAxis: {
+                name: '@Timestamp per 5 minutes',
+              },
+              yAxis: {
+                name: 'Request count',
+              },
+              legend: { show: true },
+            },
+          },
+          {
+            query: { maxWidth: 500 },
+            option: {
+              grid: {
+                bottom: 45,
+                top: 0,
+                left: 0,
+                right: 0,
+              },
+              xAxis: {
+                name: '',
+              },
+              yAxis: {
+                name: '',
+              },
+            },
+          },
+          {
+            query: { minWidth: 501 },
+            option: {
+              grid: {
+                top: 25,
+                left: 25,
+                right: 25,
+                bottom: 50,
+                containLabel: true,
+              },
+              xAxis: {
+                name: '@timestamp per 5 minutes',
+              },
+              yAxis: {
+                name: 'Request count',
+              },
+            },
+          },
+        ],
       }
 
       return option
