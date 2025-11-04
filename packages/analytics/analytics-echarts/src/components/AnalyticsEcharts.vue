@@ -41,9 +41,11 @@ import {
   GridComponent,
   BrushComponent,
   ToolboxComponent,
+  MarkLineComponent,
+  MarkAreaComponent,
 } from 'echarts/components'
 import { computed, onUnmounted, provide, ref, toRef, useTemplateRef, watch } from 'vue'
-import { msToGranularity, type AbsoluteTimeRangeV4, type ExploreResultV4, type GranularityValues, type ReportChartTypes } from '@kong-ui-public/analytics-utilities'
+import { msToGranularity, type AbsoluteTimeRangeV4, type ExploreAggregations, type ExploreResultV4, type GranularityValues, type ReportChartTypes } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import type { TooltipState } from './ChartTooltip.vue'
 import ChartTooltip from './ChartTooltip.vue'
@@ -54,6 +56,15 @@ interface ExternalLink {
   href: string
 }
 
+export type ThresholdType = 'warning' | 'error' | 'neutral'
+
+export interface Threshold {
+  type: ThresholdType
+  value: number
+  label?: string
+  highlightIntersections?: boolean
+}
+
 const {
   data,
   type,
@@ -61,6 +72,7 @@ const {
   timeseriesZoom = false,
   requestsLink = undefined,
   exploreLink = undefined,
+  threshold = undefined,
   theme = 'light',
   renderMode = 'svg',
 } = defineProps<{
@@ -70,6 +82,7 @@ const {
   timeseriesZoom?: boolean
   requestsLink?: ExternalLink
   exploreLink?: ExternalLink
+  threshold?: Partial<Record<ExploreAggregations, Threshold[]>>
   theme?: 'light' | 'dark'
   renderMode?: 'svg' | 'canvas'
 }>()
@@ -86,6 +99,8 @@ watch(() => renderMode, (newRenderMode) => {
     GridComponent,
     BrushComponent,
     ToolboxComponent,
+    MarkLineComponent,
+    MarkAreaComponent,
   ])
 }, { immediate: true })
 
@@ -113,6 +128,7 @@ const { option } = composables.useExploreResultToEchartTimeseries({
   exploreResult: toRef(() => data),
   chartType: toRef(() => type),
   stacked: toRef(() => stacked),
+  threshold: toRef(() => threshold),
   tooltipState,
 })
 const containerRef = useTemplateRef('container')
@@ -281,6 +297,9 @@ const handleMouseUp = (e: ElementEvent) => {
     brushOption: { brushType: false },
   })
   tooltipState.value.interactionMode = 'zoom-interactive'
+  if (brushTimeRange.value) {
+    emit('select-chart-range', brushTimeRange.value)
+  }
 }
 
 const handleBrush = (e: any) => {
