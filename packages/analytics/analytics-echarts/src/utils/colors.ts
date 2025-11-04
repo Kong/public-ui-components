@@ -1,5 +1,8 @@
 import { KUI_COLOR_BACKGROUND_NEUTRAL, KUI_COLOR_TEXT_DANGER, KUI_COLOR_TEXT_WARNING_WEAK } from '@kong/design-tokens'
-import type { AnalyticsChartColors, ThresholdType } from '../../src/types'
+import type { ThresholdType } from 'src/components/AnalyticsEcharts.vue'
+interface AnalyticsChartColors {
+  [dimensionValue: string]: string
+}
 
 interface StatusCodeColor {
   background: string
