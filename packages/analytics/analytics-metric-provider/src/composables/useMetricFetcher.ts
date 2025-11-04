@@ -103,7 +103,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     ],
     granularity: opts.withTrend.value ? 'trend' : undefined,
     ...(opts.filter.value?.length ? { filters: opts.filter.value } : {}),
-    time_range: opts.timeframe.value.v4Query(opts.tz.value),
+    time_range: opts.timeRange.value,
   } as ExploreQuery))
 
   const cacheKey: Ref<string | null> = computed(() => {
@@ -115,7 +115,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     // need to have some uniqueness in the cache key to avoid collisions.
     // this was happening when there are multiple providers on the same page with the same dimensions and metrics.
     // For example the singleProvider and multiProvider that appear in the test harness.
-    return `metric-fetcher-${opts.timeframe.value.cacheKey()}-${opts.dimensions?.join('-')}-${opts.metrics.value?.join('-')}-${additionalFilterKey}-${opts.refreshCounter.value}`
+    return `metric-fetcher-${JSON.stringify(opts.timeRange.value)}-${opts.dimensions?.join('-')}-${opts.metrics.value?.join('-')}-${additionalFilterKey}-${opts.refreshCounter.value}`
   })
 
   const { response: raw, error: metricError, isValidating: isMetricDataValidating } = composables.useRequest<ExploreResultV4>(
@@ -147,7 +147,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
   // If one of our relative timeframes, we display the requested time frame (if user has trend access); otherwise fall back to one day
   // Else, we have a Custom start and end datetime coming from v-calendar, so we display "vs previous X days"
   const trendRange = computed<string>(() => {
-    if (opts.timeframe.value.key === 'custom') {
+    if (opts.timeRange.value.type === 'absolute') {
       if (!raw.value?.meta?.start_ms) {
         return ''
       }
@@ -178,7 +178,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     } else {
       return opts.withTrend.value
         // @ts-ignore - dynamic i18n key
-        ? i18n.t(`trendRange.${opts.timeframe.value.key}`)
+        ? i18n.t(`trendRange.${opts.timeRange.value.time_range}`)
         // If we're unable to query with a trend, we can't render a meaningful trend range description.
         : ''
     }
