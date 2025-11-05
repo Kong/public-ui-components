@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.33.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.32.5...@kong-ui-public/entities-shared@3.33.0) (2025-11-05)
+
+
+### Features
+
+* **entities-shared:** terraform block compatibility with event gateway entities ([#2591](https://github.com/Kong/public-ui-components/issues/2591)) ([ff23913](https://github.com/Kong/public-ui-components/commit/ff23913f42260d6f7e7b0378203fba286085f41b))
+
+
+
+
+
 ## [3.32.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.32.4...@kong-ui-public/entities-shared@3.32.5) (2025-10-29)
 
 
