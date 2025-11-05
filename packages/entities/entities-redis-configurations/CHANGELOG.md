@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.5.3...@kong-ui-public/entities-redis-configurations@1.5.4) (2025-11-05)
+
+
+### Bug Fixes
+
+* **entities-redis-configurations:** redis config card typeerr [KM-1949] ([#2618](https://github.com/Kong/public-ui-components/issues/2618)) ([d6a820e](https://github.com/Kong/public-ui-components/commit/d6a820e268537d6e3eebf437e56460bb11a2db6e))
+
+
+
+
+
 ## [1.5.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.5.2...@kong-ui-public/entities-redis-configurations@1.5.3) (2025-10-29)
 
 
