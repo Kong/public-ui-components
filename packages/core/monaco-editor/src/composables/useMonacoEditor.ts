@@ -2,6 +2,13 @@ import { onActivated, onBeforeUnmount, onMounted, reactive, ref, watch } from 'v
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import { useDebounceFn } from '@vueuse/core'
 
+// Monaco Editor Workers
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
+import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
+import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
+import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
+
 import type { Ref } from 'vue'
 import type * as monacoType from 'monaco-editor'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
@@ -13,38 +20,31 @@ let monacoInstance: typeof monacoType | undefined
 let monacoInitPromise: Promise<typeof monacoType> | null = null
 
 // cache
-const modelCache = new Map<string, monacoType.editor.ITextModel>()
+const langCache = new Map<string, boolean>()
 
 /**
  * Lazily load Monaco and configure workers only once.
  */
 async function loadMonaco(language?: string): Promise<typeof monacoType> {
-  if (monacoInstance) return monacoInstance
-  if (monacoInitPromise) return monacoInitPromise
+  if (monacoInstance) {
+    if (language) {
+      monacoInstance.languages.register({ id: language })
+    }
 
-  // If Monaco isn't initialized yet, create a new Promise that loads and configures it
+    return monacoInstance
+  }
+  if (monacoInitPromise && language && langCache.get(language)) {
+    return monacoInitPromise
+  }
+
   monacoInitPromise = (async () => {
+    langCache.set(language || 'plaintext', true)
+
     // Dynamically import the Monaco Editor core API
     const monaco = await import('monaco-editor/esm/vs/editor/editor.api')
 
-    // Configure Monaco Workers
-    // TODO: maybe only import workers as needed based on languages used
-    const [
-      EditorWorker,
-      JsonWorker,
-      CssWorker,
-      HtmlWorker,
-      TsWorker,
-    ] = await Promise.all([
-      import('monaco-editor/esm/vs/editor/editor.worker?worker'),
-      import('monaco-editor/esm/vs/language/json/json.worker?worker'),
-      import('monaco-editor/esm/vs/language/css/css.worker?worker'),
-      import('monaco-editor/esm/vs/language/html/html.worker?worker'),
-      import('monaco-editor/esm/vs/language/typescript/ts.worker?worker'),
-    ]).then(mods => mods.map(m => m.default))
-
-    // Define a global Monaco environment to tell Monaco which worker to use for each language
-    if (!window.MonacoEnvironment) {
+    // Only set environment once
+    if (!('MonacoEnvironment' in window) || !window.MonacoEnvironment) {
       window.MonacoEnvironment = {
         getWorker(_: unknown, label: string) {
           switch (label) {
@@ -76,21 +76,6 @@ async function loadMonaco(language?: string): Promise<typeof monacoType> {
   })()
 
   return monacoInitPromise
-}
-
-/**
- * Retrieve a cached Monaco model or create one if needed.
- */
-function getOrCreateModel(monaco: typeof monacoType, code: string, language: string): monacoType.editor.ITextModel {
-  const uri = monaco.Uri.parse(`inmemory://model/${language}`)
-
-  if (modelCache.has(language)) {
-    return modelCache.get(language)!
-  }
-
-  const model = monaco.editor.createModel(code, language, uri)
-  modelCache.set(language, model)
-  return model
 }
 
 /**
@@ -168,14 +153,22 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
   const init = async (): Promise<void> => {
     const monaco = await loadMonaco(options.language)
 
+    // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
+    const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
+    const model = monaco.editor.createModel(options.code.value, options.language, uri)
+
     watch(target, async (_target) => {
+      // if target is null (unmounted), reset setup flag
+      if (_target == null) {
+        _isSetup.value = false
+        return
+      }
+
       // prevent multiple setups
       if (_isSetup.value) return
 
       const el = _target?.$el || _target
       if (!el) return
-
-      const model = getOrCreateModel(monaco, options.code.value, options.language)
 
       editor = monaco.editor.create(el, {
         ...DEFAULT_MONACO_OPTIONS,
@@ -227,9 +220,11 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
     })
   }
 
+  // Start the initialization process
+  init()
+
   // Lifecycle hooks
   onMounted(() => {
-    init().catch(error => console.error('useMonacoEditor: Failed to init:', error))
     remeasureFonts()
   })
   onActivated(remeasureFonts)
@@ -238,8 +233,7 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
 
     const model = editor.getModel()
     editor.dispose()
-
-    if (model && !modelCache.has(model.uri.toString())) {
+    if (model) {
       model.dispose()
     }
   })
