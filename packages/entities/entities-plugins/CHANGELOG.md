@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.112.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.4...@kong-ui-public/entities-plugins@9.112.5) (2025-11-05)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix datakit branch group autosize ([#2616](https://github.com/Kong/public-ui-components/issues/2616)) ([fdf628b](https://github.com/Kong/public-ui-components/commit/fdf628bf6ef99715737465fbb9ca915e536fcf17))
+
+
+
+
+
 ## [9.112.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.3...@kong-ui-public/entities-plugins@9.112.4) (2025-11-05)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
