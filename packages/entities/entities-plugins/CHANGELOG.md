@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.112.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.1...@kong-ui-public/entities-plugins@9.112.2) (2025-11-05)
+
+
+### Bug Fixes
+
+* **credentials:** add ttl unit info to bubble help [KHCP-18286] ([#2617](https://github.com/Kong/public-ui-components/issues/2617)) ([8bedc67](https://github.com/Kong/public-ui-components/commit/8bedc67cc67787fa226cc92721e8e1782c456a16))
+
+
+
+
+
 ## [9.112.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.0...@kong-ui-public/entities-plugins@9.112.1) (2025-11-03)
 
 
