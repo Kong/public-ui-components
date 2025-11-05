@@ -22,7 +22,7 @@ export const keyAuthCredentialSchema = {
     },
     {
       ttl: {
-        help: 'Time-to-live value for data',
+        help: 'Time-to-live (in seconds) value for data',
       },
     },
   ],
