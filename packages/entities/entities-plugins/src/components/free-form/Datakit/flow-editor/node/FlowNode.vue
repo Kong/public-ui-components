@@ -419,9 +419,9 @@ const specialInputConnections = computed(() => {
     const isVault = sourceNode.type === 'vault'
 
     const isCrossPhase = sourceNode.phase !== data.phase
-    const isCrossGroup = branchGroups.isCrossBranch(sourceNode.id, data.id)
+    const isEnteringGroup = branchGroups.isEdgeEnteringGroup(sourceNode.id, data.id)
 
-    if (!isVault && !isCrossPhase && !isCrossGroup) continue
+    if (!isVault && !isCrossPhase && !isEnteringGroup) continue
 
     let sourceFieldName: FieldName | undefined
     if (edge.sourceField) {
@@ -471,9 +471,8 @@ const specialOutputConnections = computed(() => {
     if (!targetNode) continue
 
     const isCrossPhase = targetNode.phase !== data.phase
-    const isCrossGroup = branchGroups.isCrossBranch(data.id, targetNode.id)
 
-    if (!isCrossPhase && !isCrossGroup) continue
+    if (!isCrossPhase) continue
 
     let targetFieldName: FieldName | undefined
     if (edge.targetField) {

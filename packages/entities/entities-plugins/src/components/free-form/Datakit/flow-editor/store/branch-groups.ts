@@ -254,17 +254,33 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
   }
 
   /**
-   * Determines whether a connection between two nodes crosses branch boundaries.
+   * Collects all branch group IDs the node belongs to, ordered from the innermost group
+   * (closest to the node) outward. The list represents the full branch context for the node.
    */
-  function isCrossBranch(nodeAId: NodeId, nodeBId: NodeId): boolean {
-    const membershipA = findMembership(nodeAId)
-    const membershipB = findMembership(nodeBId)
+  function groupChain(nodeId: NodeId): GroupId[] {
+    const chain: GroupId[] = []
 
-    if (!membershipA && !membershipB) return false
+    let group = memberGroupMap.value.get(nodeId)
+    while (group) {
+      chain.push(group.id)
+      group = memberGroupMap.value.get(group.ownerId)
+    }
 
-    if (!membershipA || !membershipB) return true
+    return chain
+  }
 
-    return membershipA.ownerId !== membershipB.ownerId || membershipA.branch !== membershipB.branch
+  /**
+   * Determines whether the connection from `sourceId` to `targetId` crosses into a new branch group.
+   * That happens when the target's group chain contains any group the source never joined.
+   */
+  function isEdgeEnteringGroup(sourceId: NodeId, targetId: NodeId): boolean {
+    const target = groupChain(targetId)
+    if (target.length === 0) return false
+
+    const sourceGroups = new Set(groupChain(sourceId))
+    if (sourceGroups.size === 0) return true
+
+    return target.some(groupId => !sourceGroups.has(groupId))
   }
 
   /**
@@ -386,6 +402,6 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
     getNodeDepth,
     getGroupDepth,
     isGroupId,
-    isCrossBranch,
+    isEdgeEnteringGroup,
   }
 }
