@@ -25,7 +25,7 @@ import { parseGroupId } from './helpers'
 import { useEditorStore } from './store'
 
 import type { Node as DagreNode, Edge } from '@dagrejs/dagre'
-import type { Connection, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
+import type { Connection, FitViewParams, GraphNode, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
 import type {
@@ -846,6 +846,17 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       return { autoNodes, leftNode, rightNode }
     }
 
+    function safeParentId(node: GraphNode): NodeId | GroupId | undefined {
+      if (!isGroupInstance(node.data)) {
+        return node.parentNode as (NodeId | GroupId | undefined)
+      }
+      const ownerNode = findNode(node.data.ownerId)
+      if (!ownerNode) {
+        throw new Error(`Cannot find owner node '${node.data.ownerId}' for group '${node.id}' via findNode`)
+      }
+      return ownerNode.parentNode as (NodeId | GroupId | undefined)
+    }
+
     async function autoLayout(commitNow = true) {
       const nodeMap = new Map<string, NodeInstance>(
         nodes.value.map((node) => [node.id, node.data!]),
@@ -877,7 +888,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
         // Not interested in edges being the direct children at root or within
         // the same group.
-        if (sourceNode.parentNode === targetNode.parentNode)
+        if (safeParentId(sourceNode) === safeParentId(targetNode))
           continue
 
         let sourceStackTop = sourceNode
@@ -888,8 +899,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         let targetStackDepth = getNodeDepth(targetStackTop.id as NodeId)
 
         if (sourceStackDepth > targetStackDepth) {
-          const parentId = sourceStackTop.parentNode as (NodeId | undefined)
+          const parentId = safeParentId(sourceStackTop)
           if (!parentId) continue
+
           const parentNode = findNode(parentId)
           if (!parentNode) {
             throw new Error(`Cannot find parent node '${parentId}' for node '${sourceStackTop.id}' via findNode`)
@@ -897,7 +909,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           sourceStackTop = parentNode
           sourceStackDepth--
         } else if (targetStackDepth > sourceStackDepth) {
-          const parentId = targetStackTop.parentNode as (NodeId | undefined)
+          const parentId = safeParentId(targetStackTop)
           if (!parentId) continue
           const parentNode = findNode(parentId)
           if (!parentNode) {
@@ -908,7 +920,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         }
 
         while (sourceStackDepth >= 0) {
-          if (sourceStackTop.parentNode === targetStackTop.parentNode) {
+          const sourceParentId = safeParentId(sourceStackTop)
+          const targetParentId = safeParentId(targetStackTop)
+
+          if (sourceParentId === targetParentId) {
             if (!virtualEdges.has(sourceStackDepth)) {
               virtualEdges.set(sourceStackDepth, [])
             }
@@ -919,13 +934,14 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             break
           }
 
-          const sourceParentId = sourceStackTop.parentNode as (NodeId | undefined)
-          const targetParentId = targetStackTop.parentNode as (NodeId | undefined)
-
           if (!sourceParentId) {
-            throw new Error(`Expected node '${sourceStackTop.id}' to have parent, but it does not`)
+            const message = `Expected node '${sourceStackTop.id}' to have parent, but it does not`
+            console.error(message, sourceStackTop)
+            throw new Error(message)
           } else if (!targetParentId) {
-            throw new Error(`Expected node '${targetStackTop.id}' to have parent, but it does not`)
+            const message = `Expected node '${targetStackTop.id}' to have parent, but it does not`
+            console.error(message, targetStackTop)
+            throw new Error(message)
           }
 
           const sourceParentNode = findNode(sourceParentId)
