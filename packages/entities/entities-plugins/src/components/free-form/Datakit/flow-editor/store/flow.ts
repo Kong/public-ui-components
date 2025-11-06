@@ -880,7 +880,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         return depth
       }
 
-      // Since group nodes do not have parentNode set, we will use find the parent
+      // Since group nodes do not have parentNode set, we will find the parent
       // via the owner node.
       const safeParentId = (node: GraphNode): NodeId | GroupId | undefined => {
         if (!isGroupInstance(node.data)) {
@@ -947,8 +947,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           } else if (targetStackDepth > sourceStackDepth) {
             const parentId = safeParentId(targetStackTop)
             if (!parentId) {
-              // Assumption: sourceStackDepth > targetStackDepth > 0
-              // sourceStackTop must have a parent
+              // Assumption: targetStackDepth > sourceStackDepth > 0
+              // targetStackTop must have a parent
               throw new Error(`Expected node '${targetStackTop.id}' to have parent, but it does not`)
             }
 
