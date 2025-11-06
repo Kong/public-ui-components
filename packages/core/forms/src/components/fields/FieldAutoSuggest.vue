@@ -143,7 +143,7 @@ export default {
           // but sometimes it is stored in a nested key inside the `data` key, so we allow the user to specify it in the schema
           // e.g. entity data returned from `consumer_groups/:id` is stored in `data.consumer_group`
           this.loading = true
-          entityData = (await this.getOne(this.model[this.schema.model]))
+          entityData = await this.getOne(this.model[this.schema.model])
           presetEntity = this.getItem(this.schema.entityDataKey ? entityData[this.schema.entityDataKey] : entityData)
           this.idValue = presetEntity.id
           break

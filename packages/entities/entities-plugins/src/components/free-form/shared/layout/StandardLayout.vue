@@ -109,7 +109,7 @@
     </template>
     <template v-else>
       <!-- TODO: Implement default code editor -->
-      <slot />
+      <slot name="code-editor" />
     </template>
   </Form>
 </template>
@@ -160,6 +160,7 @@ const { editorMode = 'form', ...props } = defineProps<Props<T>>()
 
 const slots = defineSlots<{
   default: () => any
+  'code-editor'?: () => any
   'general-info-title'?: () => any
   'general-info-description'?: () => any
   'general-info-extra'?: () => any

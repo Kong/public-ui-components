@@ -55,12 +55,21 @@
       @change="handleFlowChange"
     />
     <CodeEditor
-      v-else-if="realEditorMode === 'code'"
+      v-else-if="realEditorMode === 'code' && !enableDatakitM2"
       class="code-editor"
       :editing="props.isEditing"
       @change="handleCodeChange"
       @error="handleCodeError"
     />
+
+    <template #code-editor>
+      <CodeEditor
+        class="code-editor"
+        :editing="props.isEditing"
+        @change="handleCodeChange"
+        @error="handleCodeError"
+      />
+    </template>
 
     <template #plugin-config-description>
       <!-- eslint-disable-next-line vue/no-v-html -->
