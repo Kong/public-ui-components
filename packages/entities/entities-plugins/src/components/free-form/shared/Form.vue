@@ -48,7 +48,7 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
-const { getSchema, formData } = provideFormShared(
+const { getSchema, formData, resetFormData } = provideFormShared(
   schema,
   computed(() => data as T),
   config as FormConfig,
@@ -78,5 +78,6 @@ const childFields = computed(() => {
 
 defineExpose({
   getInnerData: () => toRaw(formData),
+  setInnerData: (data: T) => resetFormData(data),
 })
 </script>
