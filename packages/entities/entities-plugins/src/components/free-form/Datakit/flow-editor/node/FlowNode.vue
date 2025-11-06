@@ -400,7 +400,7 @@ const handleTwigColor = computed(() => {
   return isImplicit.value ? KUI_COLOR_BACKGROUND_NEUTRAL_STRONG : KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
 })
 
-// Special input connections (vault, cross-phase, or cross-branch)
+// Special input connections (vault, cross-phase, or branch-group-entering)
 const specialInputConnections = computed(() => {
   const connections = new Map<string, {
     fieldId: FieldId | 'input'
@@ -454,7 +454,7 @@ const specialInputConnections = computed(() => {
   return connections
 })
 
-// Special output connections (cross-phase or cross-branch)
+// Special output connections (cross-phase or branch-group-entering)
 const specialOutputConnections = computed(() => {
   const connections = new Map<string, {
     fieldId: FieldId | 'output'
@@ -471,8 +471,9 @@ const specialOutputConnections = computed(() => {
     if (!targetNode) continue
 
     const isCrossPhase = targetNode.phase !== data.phase
+    const isEnteringGroup = branchGroups.isEdgeEnteringGroup(data.id, targetNode.id)
 
-    if (!isCrossPhase) continue
+    if (!isCrossPhase && !isEnteringGroup) continue
 
     let targetFieldName: FieldName | undefined
     if (edge.targetField) {
