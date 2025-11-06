@@ -112,6 +112,7 @@
           <TerraformCodeBlock
             :entity-record="props.formFields"
             :entity-type="entityType"
+            :sub-entity-type="subEntityType"
           />
         </template>
       </KTabs>
@@ -167,6 +168,14 @@ const props = defineProps({
     type: String as PropType<SupportedEntityType>,
     required: true,
     validator: (val: SupportedEntityType) => SupportedEntityTypesArray.includes(val),
+  },
+  /**
+   * Sub entity type, required for event gateway entities to generate terraform code
+   */
+  subEntityType: {
+    type: String,
+    required: false,
+    default: '',
   },
   /**
    * Fetch url for the item to edit. We will handle the replacement of {controlPlaneId}, {workspace}, and {id}.
