@@ -846,13 +846,16 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       return { autoNodes, leftNode, rightNode }
     }
 
+    // Since group nodes do not have parentNode set, we will use find the parent
+    // via the owner node.
     function safeParentId(node: GraphNode): NodeId | GroupId | undefined {
       if (!isGroupInstance(node.data)) {
+        // Normal path
         return node.parentNode as (NodeId | GroupId | undefined)
       }
       const ownerNode = findNode(node.data.ownerId)
       if (!ownerNode) {
-        throw new Error(`Cannot find owner node '${node.data.ownerId}' for group '${node.id}' via findNode`)
+        throw new Error(`Cannot find owner node '${node.data.ownerId}' for group node '${node.id}' via findNode`)
       }
       return ownerNode.parentNode as (NodeId | GroupId | undefined)
     }
@@ -898,27 +901,42 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         let sourceStackDepth = getNodeDepth(sourceStackTop.id as NodeId)
         let targetStackDepth = getNodeDepth(targetStackTop.id as NodeId)
 
-        if (sourceStackDepth > targetStackDepth) {
-          const parentId = safeParentId(sourceStackTop)
-          if (!parentId) continue
+        // Pop stacks until both stacks are at the same depth
+        while (sourceStackDepth !== targetStackDepth) {
+          if (sourceStackDepth > targetStackDepth) {
+            const parentId = safeParentId(sourceStackTop)
+            if (!parentId) {
+              // Assumption: sourceStackDepth > targetStackDepth > 0
+              // sourceStackTop must have a parent
+              throw new Error(`Expected node '${sourceStackTop.id}' to have parent, but it does not`)
+            }
 
-          const parentNode = findNode(parentId)
-          if (!parentNode) {
-            throw new Error(`Cannot find parent node '${parentId}' for node '${sourceStackTop.id}' via findNode`)
+            const parentNode = findNode(parentId)
+            if (!parentNode) {
+              throw new Error(`Cannot find parent node '${parentId}' for node '${sourceStackTop.id}' via findNode`)
+            }
+
+            sourceStackTop = parentNode
+            sourceStackDepth--
+          } else if (targetStackDepth > sourceStackDepth) {
+            const parentId = safeParentId(targetStackTop)
+            if (!parentId) {
+              // Assumption: sourceStackDepth > targetStackDepth > 0
+              // sourceStackTop must have a parent
+              throw new Error(`Expected node '${targetStackTop.id}' to have parent, but it does not`)
+            }
+
+            const parentNode = findNode(parentId)
+            if (!parentNode) {
+              throw new Error(`Cannot find parent node '${parentId}' for node '${targetStackTop.id}' via findNode`)
+            }
+
+            targetStackTop = parentNode
+            targetStackDepth--
           }
-          sourceStackTop = parentNode
-          sourceStackDepth--
-        } else if (targetStackDepth > sourceStackDepth) {
-          const parentId = safeParentId(targetStackTop)
-          if (!parentId) continue
-          const parentNode = findNode(parentId)
-          if (!parentNode) {
-            throw new Error(`Cannot find parent node '${parentId}' for node '${targetStackTop.id}' via findNode`)
-          }
-          targetStackTop = parentNode
-          targetStackDepth--
         }
 
+        // Assumption: sourceStackDepth === targetStackDepth, we use either one
         while (sourceStackDepth >= 0) {
           const sourceParentId = safeParentId(sourceStackTop)
           const targetParentId = safeParentId(targetStackTop)
