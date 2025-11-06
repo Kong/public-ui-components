@@ -215,7 +215,7 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
     ensureGroup(owner, branch, normalized)
 
     if (options.commit ?? true) {
-      history.commit(options.tag ?? `branch:set:${branch}`)
+      history.commit(options.tag)
     }
 
     return true
@@ -224,9 +224,20 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
   /**
    * Removes all groups owned by a node.
    * Called when a node is deleted.
+   *
+   * @returns true if any group was removed, false otherwise
    */
-  function clear(ownerId: NodeId) {
-    state.value.groups = state.value.groups.filter(group => group.ownerId !== ownerId)
+  function clear(ownerId: NodeId, options: CommitOptions = {}): boolean {
+    const nextGroups = state.value.groups.filter(group => group.ownerId !== ownerId)
+    if (nextGroups.length === state.value.groups.length) return false
+
+    state.value.groups = nextGroups
+
+    if (options.commit ?? true) {
+      history.commit(options.tag)
+    }
+
+    return true
   }
 
   /**
@@ -344,7 +355,7 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
     if (!changed) return false
 
     if (options.commit ?? true) {
-      history.commit(options.tag ?? `branch:add:${branch}`)
+      history.commit(options.tag)
     }
 
     return true
