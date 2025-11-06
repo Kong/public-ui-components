@@ -6,28 +6,25 @@ import { computed, nextTick, toValue, watch } from 'vue'
 
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
-import {
-  DK_BRANCH_GROUP_PADDING,
-  DK_FLOW_EDGE_Z_OFFSET,
-  DK_FLOW_NODE_Z_OFFSET,
-  DK_FLOW_Z_LAYER_STEP,
-  DK_NODE_PROPERTIES_PANEL_WIDTH,
-} from '../constants'
-import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
+import { createEdgeConnectionString, createNewConnectionString, getBoundingRect } from '../composables/helpers'
+import { useBranchDrop } from '../composables/useBranchDrop'
 import { useBranchLayout } from '../composables/useBranchLayout'
 import { useOptionalConfirm } from '../composables/useConflictConfirm'
 import {
   DEFAULT_LAYOUT_OPTIONS,
   DEFAULT_VIEWPORT_WIDTH,
+  DK_BRANCH_GROUP_PADDING,
+  DK_FLOW_EDGE_Z_OFFSET,
+  DK_FLOW_NODE_Z_OFFSET,
+  DK_FLOW_Z_LAYER_STEP,
+  DK_NODE_PROPERTIES_PANEL_WIDTH,
   SCROLL_DURATION,
 } from '../constants'
 import { isGroupInstance, isImplicitNode } from '../node/node'
-import { useEditorStore } from './store'
 import { parseGroupId } from './helpers'
-import { useBranchDrop } from '../composables/useBranchDrop'
-import { getBoundingRect } from '../composables/helpers'
+import { useEditorStore } from './store'
 
-import type { Node as DagreNode } from '@dagrejs/dagre'
+import type { Node as DagreNode, Edge } from '@dagrejs/dagre'
 import type { Connection, FitViewParams, Node, NodeSelectionChange, Rect, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
@@ -664,9 +661,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     function doAutoLayout(
       autoNodes: Array<NodeInstance | GroupInstance>,
-      leftNode?: NodeInstance,
-      rightNode?: NodeInstance,
+      extraOptions?: {
+        leftNode?: NodeInstance
+        rightNode?: NodeInstance
+        virtualEdges?: Edge[]
+      },
     ) {
+      const { leftNode, rightNode, virtualEdges } = extraOptions || {}
       const leftGraphNode = leftNode ? findNode(leftNode.id) : undefined
       const rightGraphNode = rightNode ? findNode(rightNode.id) : undefined
 
@@ -702,6 +703,9 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           if (!autoNodeIds.has(edge.source) || !autoNodeIds.has(edge.target)) continue
           dagreGraph.setEdge(edge.source, edge.target, { points: [] })
         }
+
+        if (virtualEdges) console.log('Applying virtual edges for auto-layout:', virtualEdges)
+        virtualEdges?.forEach((edge) => dagreGraph!.setEdge(edge, { points: [] }))
 
         // Layout
         dagre.layout(dagreGraph)
@@ -847,8 +851,103 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         nodes.value.map((node) => [node.id, node.data!]),
       )
 
+      // These are Dagre edges for tweaking auto-layout only.
+      const virtualEdges = new Map<number, Edge[]>()
+
+      for (const edge of edges.value) {
+        // Skip branch edges
+        if (isBranchEdgeId(edge.id)) continue
+
+        const source = edge.source as NodeId
+        const target = edge.target as NodeId
+
+        // We have skipped branch edges. By this point, there should be no other
+        // edges connecting to groups.
+        if (isGroupId(source) || isGroupId(target))
+          continue
+
+        const sourceNode = findNode(source)
+        const targetNode = findNode(target)
+
+        if (!sourceNode) {
+          throw new Error(`Cannot find source node '${source}' for edge '${edge.id}' via findNode`)
+        } else if (!targetNode) {
+          throw new Error(`Cannot find target node '${target}' for edge '${edge.id}' via findNode`)
+        }
+
+        // Not interested in edges being the direct children at root or within
+        // the same group.
+        if (sourceNode.parentNode === targetNode.parentNode)
+          continue
+
+        let sourceStackTop = sourceNode
+        let targetStackTop = targetNode
+
+        // Track depths here to avoid repeated `getNodeDepth` calls.
+        let sourceStackDepth = getNodeDepth(sourceStackTop.id as NodeId)
+        let targetStackDepth = getNodeDepth(targetStackTop.id as NodeId)
+
+        if (sourceStackDepth > targetStackDepth) {
+          const parentId = sourceStackTop.parentNode as (NodeId | undefined)
+          if (!parentId) continue
+          const parentNode = findNode(parentId)
+          if (!parentNode) {
+            throw new Error(`Cannot find parent node '${parentId}' for node '${sourceStackTop.id}' via findNode`)
+          }
+          sourceStackTop = parentNode
+          sourceStackDepth--
+        } else if (targetStackDepth > sourceStackDepth) {
+          const parentId = targetStackTop.parentNode as (NodeId | undefined)
+          if (!parentId) continue
+          const parentNode = findNode(parentId)
+          if (!parentNode) {
+            throw new Error(`Cannot find parent node '${parentId}' for node '${targetStackTop.id}' via findNode`)
+          }
+          targetStackTop = parentNode
+          targetStackDepth--
+        }
+
+        while (sourceStackDepth >= 0) {
+          if (sourceStackTop.parentNode === targetStackTop.parentNode) {
+            if (!virtualEdges.has(sourceStackDepth)) {
+              virtualEdges.set(sourceStackDepth, [])
+            }
+            virtualEdges.get(sourceStackDepth)!.push({
+              v: sourceStackTop.id,
+              w: targetStackTop.id,
+            })
+            break
+          }
+
+          const sourceParentId = sourceStackTop.parentNode as (NodeId | undefined)
+          const targetParentId = targetStackTop.parentNode as (NodeId | undefined)
+
+          if (!sourceParentId) {
+            throw new Error(`Expected node '${sourceStackTop.id}' to have parent, but it does not`)
+          } else if (!targetParentId) {
+            throw new Error(`Expected node '${targetStackTop.id}' to have parent, but it does not`)
+          }
+
+          const sourceParentNode = findNode(sourceParentId)
+          const targetParentNode = findNode(targetParentId)
+
+          if (!sourceParentNode) {
+            throw new Error(`Cannot find parent node '${sourceParentId}' for node '${sourceStackTop.id}' via findNode`)
+          } else if (!targetParentNode) {
+            throw new Error(`Cannot find parent node '${targetParentId}' for node '${targetStackTop.id}' via findNode`)
+          }
+
+          sourceStackTop = sourceParentNode
+          targetStackTop = targetParentNode
+          sourceStackDepth--
+          targetStackDepth--
+        }
+      }
+
       // Bottom-up layout
-      const sortedGroups = state.value.groups.toSorted((a, b) => getNodeDepth(b.ownerId) - getNodeDepth(a.ownerId))
+      const sortedGroups = state.value.groups
+        .map((group) => ({ ...group, depth: getNodeDepth(group.ownerId) }))
+        .toSorted((a, b) => getNodeDepth(b.ownerId) - getNodeDepth(a.ownerId))
       for (const group of sortedGroups) {
         doAutoLayout(
           group.memberIds.reduce((nodes, memberId) => {
@@ -871,6 +970,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             nodes.push(node)
             return nodes
           }, [] as Array<NodeInstance | GroupInstance>),
+          { virtualEdges: virtualEdges.get(group.depth) },
         )
         await nextTick() // <- Wait for updates on VueFlow internals
         updateGroupLayout(group.id, false)
@@ -888,7 +988,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
 
       const { autoNodes, leftNode, rightNode } = pickNodesForAutoLayout(rootNodes)
-      doAutoLayout(autoNodes, leftNode, rightNode)
+      doAutoLayout(autoNodes, {
+        leftNode,
+        rightNode,
+        virtualEdges: virtualEdges.get(0),
+      })
 
       if (commitNow) {
         historyCommit()
