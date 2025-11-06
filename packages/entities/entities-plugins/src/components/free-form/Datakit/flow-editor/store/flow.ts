@@ -1005,9 +1005,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       }
 
       // Bottom-up layout
-      const sortedGroups = state.value.groups
-        .map((group) => ({ ...group, depth: cachedGetNodeDepth(group.ownerId) }))
-        .toSorted((a, b) => cachedGetNodeDepth(b.ownerId) - cachedGetNodeDepth(a.ownerId))
+      const sortedGroups = state.value.groups.toSorted((a, b) => cachedGetNodeDepth(b.ownerId) - cachedGetNodeDepth(a.ownerId))
       for (const group of sortedGroups) {
         doAutoLayout(
           group.memberIds.reduce((nodes, memberId) => {
@@ -1031,7 +1029,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             return nodes
           }, [] as Array<NodeInstance | GroupInstance>),
           {
-            virtualEdges: virtualEdges.get(group.depth),
+            virtualEdges: virtualEdges.get(cachedGetNodeDepth(group.ownerId)),
             cachedFindNode,
           },
         )
