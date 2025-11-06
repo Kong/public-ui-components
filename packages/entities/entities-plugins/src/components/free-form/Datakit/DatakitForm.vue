@@ -71,6 +71,10 @@
       />
     </template>
 
+    <template #plugin-config-title>
+      {{ configTitle }}
+    </template>
+
     <template #plugin-config-description>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <span v-html="description" />
@@ -156,6 +160,13 @@ const description = computed(() => {
     default:
       return ''
   }
+})
+
+const configTitle = computed(() => {
+  if (enableDatakitM2) {
+    return t('plugins.free-form.datakit.plugin_config.title')
+  }
+  return t('plugins.form.sections.plugin_config.title')
 })
 
 watch(realEditorMode, () => {
