@@ -704,7 +704,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
           dagreGraph.setEdge(edge.source, edge.target, { points: [] })
         }
 
-        if (virtualEdges) console.log('Applying virtual edges for auto-layout:', virtualEdges)
+        // Apply layout-tweaking virtual edges
         virtualEdges?.forEach((edge) => dagreGraph!.setEdge(edge, { points: [] }))
 
         // Layout
