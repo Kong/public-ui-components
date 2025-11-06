@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-consumers",
-  "version": "4.2.16",
+  "version": "4.2.17",
   "type": "module",
   "main": "./dist/entities-consumers.umd.js",
   "module": "./dist/entities-consumers.es.js",
