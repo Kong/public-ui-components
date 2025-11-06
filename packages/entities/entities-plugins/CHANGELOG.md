@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.113.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.5...@kong-ui-public/entities-plugins@9.113.0) (2025-11-06)
+
+
+### Features
+
+* **entities-plugin:** datakit m2 code editor [KM-1860] ([#2608](https://github.com/Kong/public-ui-components/issues/2608)) ([508d6d9](https://github.com/Kong/public-ui-components/commit/508d6d99916798b265efc5b766f90ed2343fbaf9))
+* **entities-plugins:** customize datakit plugin config title and desc ([#2620](https://github.com/Kong/public-ui-components/issues/2620)) ([81ee459](https://github.com/Kong/public-ui-components/commit/81ee45950567e2fc18273131c26d478b95a3c268))
+
+
+
+
+
 ## [9.112.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.4...@kong-ui-public/entities-plugins@9.112.5) (2025-11-05)
 
 
