@@ -48,7 +48,7 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
-const { getSchema, formData, resetFormData } = provideFormShared(
+const { getSchema, formData, setFormData, getFormData } = provideFormShared(
   schema,
   computed(() => data as T),
   config as FormConfig,
@@ -77,7 +77,10 @@ const childFields = computed(() => {
 
 
 defineExpose({
+  /** Get the form data, same as the param of `onChange` */
+  getData: () => getFormData(),
+  /** Get the inner data, compare to `getData`, it includes the value of the disabled records. */
   getInnerData: () => toRaw(formData),
-  setInnerData: (data: T) => resetFormData(data),
+  setInnerData: (data: T) => setFormData(data),
 })
 </script>

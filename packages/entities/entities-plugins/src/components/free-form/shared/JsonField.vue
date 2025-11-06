@@ -16,6 +16,7 @@
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
       :data-testid="`ff-${field.path.value}`"
+      :disabled="field.isInheritedDisabled.value"
       :model-value="rawInputValue ?? ''"
       multiline
       @update:model-value="handleUpdate"

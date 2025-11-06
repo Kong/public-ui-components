@@ -10,6 +10,7 @@
       :config="konnectConfig"
       enable-redis-partial
       enable-vault-secret-picker
+      :engine="forceFreeForm ? 'freeform' : 'vfg'"
       :plugin-id="id"
       :plugin-type="plugin"
       use-custom-names-for-plugin
@@ -22,6 +23,7 @@
       :config="kongManagerConfig"
       enable-redis-partial
       enable-vault-secret-picker
+      :engine="forceFreeForm ? 'freeform' : 'vfg'"
       :plugin-id="id"
       :plugin-type="plugin"
       @global-action="handleGlobalAction"
@@ -41,6 +43,7 @@ import { ToastManager } from '@kong/kongponents'
 import type { GlobalAction } from '../../src/components/free-form/shared/types'
 
 const toaster = new ToastManager()
+const forceFreeForm = true
 provide(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, true)
 provide(FEATURE_FLAGS.DATAKIT_M2, true)
 

@@ -21,4 +21,8 @@ import Form from '../../src/components/free-form/shared/Form.vue'
   padding: 20px;
   width: 800px;
 }
+
+:global(body) {
+  background: #F9FAFB
+}
 </style>

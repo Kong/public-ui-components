@@ -45,13 +45,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive } from 'vue'
+import { computed, ref, reactive, provide } from 'vue'
 import type { KonnectBaseFormConfig } from '../../src'
-import { EntityBaseForm, EntityFormSection, SupportedEntityType } from '../../src'
+import { EntityBaseForm, EntityFormSection, FEATURE_FLAGS, SupportedEntityType } from '../../src'
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectFetchUrl = ref(`/v2/control-planes/${controlPlaneId}/core-entities/services`)
-const entityType = SupportedEntityType.GatewayService
+const entityType = SupportedEntityType.Plugin
+
+provide(FEATURE_FLAGS.KM_1945_NEW_PLUGIN_CONFIG_FORM, true)
 
 const konnectConfig = ref<KonnectBaseFormConfig>({
   app: 'konnect',

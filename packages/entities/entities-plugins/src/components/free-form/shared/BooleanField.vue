@@ -11,6 +11,7 @@
     v-bind="fieldAttrs"
     class="ff-boolean-field"
     :data-testid="`ff-${field.path.value}`"
+    :disabled="field.isInheritedDisabled.value"
     :model-value="fieldValue ?? false"
     @update:model-value="handleUpdate"
   >
