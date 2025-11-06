@@ -665,11 +665,12 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         leftNode?: NodeInstance
         rightNode?: NodeInstance
         virtualEdges?: Edge[]
+        cachedFindNode?: typeof findNode
       },
     ) {
-      const { leftNode, rightNode, virtualEdges } = extraOptions || {}
-      const leftGraphNode = leftNode ? findNode(leftNode.id) : undefined
-      const rightGraphNode = rightNode ? findNode(rightNode.id) : undefined
+      const { leftNode, rightNode, virtualEdges, cachedFindNode } = extraOptions || {}
+      const leftGraphNode = leftNode ? (cachedFindNode ?? findNode)(leftNode.id) : undefined
+      const rightGraphNode = rightNode ? (cachedFindNode ?? findNode)(rightNode.id) : undefined
 
       let dagreGraph: dagre.graphlib.Graph | undefined
       if (autoNodes.length > 0) {
@@ -684,7 +685,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         const autoNodeIds = new Set()
 
         for (const node of autoNodes) {
-          const graphNode = findNode(node.id)
+          const graphNode = (cachedFindNode ?? findNode)(node.id)
           if (!graphNode) {
             console.warn(`Cannot find graph node '${node.id}' in ${phase} phase`)
             continue
@@ -846,20 +847,6 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       return { autoNodes, leftNode, rightNode }
     }
 
-    // Since group nodes do not have parentNode set, we will use find the parent
-    // via the owner node.
-    function safeParentId(node: GraphNode): NodeId | GroupId | undefined {
-      if (!isGroupInstance(node.data)) {
-        // Normal path
-        return node.parentNode as (NodeId | GroupId | undefined)
-      }
-      const ownerNode = findNode(node.data.ownerId)
-      if (!ownerNode) {
-        throw new Error(`Cannot find owner node '${node.data.ownerId}' for group node '${node.id}' via findNode`)
-      }
-      return ownerNode.parentNode as (NodeId | GroupId | undefined)
-    }
-
     async function autoLayout(commitNow = true) {
       const nodeMap = new Map<string, NodeInstance>(
         nodes.value.map((node) => [node.id, node.data!]),
@@ -867,6 +854,45 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       // These are Dagre edges for tweaking auto-layout only.
       const virtualEdges = new Map<number, Edge[]>()
+
+      // A cached version of `findNode`
+      const findNodeCache = new Map<string, GraphNode>()
+      const cachedFindNode: typeof findNode = (nodeId) => {
+        if (!nodeId) return undefined
+
+        let node = findNodeCache.get(nodeId)
+        if (node) return node
+
+        node = findNode(nodeId)
+        if (node) {
+          findNodeCache.set(nodeId, node)
+        }
+        return node
+      }
+
+      const getNodeDepthCache = new Map<string, number>()
+      const cachedGetNodeDepth: typeof getNodeDepth = (nodeId) => {
+        let depth = getNodeDepthCache.get(nodeId)
+        if (depth !== undefined) return depth
+
+        depth = getNodeDepth(nodeId)
+        getNodeDepthCache.set(nodeId, depth)
+        return depth
+      }
+
+      // Since group nodes do not have parentNode set, we will use find the parent
+      // via the owner node.
+      const safeParentId = (node: GraphNode): NodeId | GroupId | undefined => {
+        if (!isGroupInstance(node.data)) {
+        // Normal path
+          return node.parentNode as (NodeId | GroupId | undefined)
+        }
+        const ownerNode = cachedFindNode(node.data.ownerId)
+        if (!ownerNode) {
+          throw new Error(`Cannot find owner node '${node.data.ownerId}' for group node '${node.id}' via findNode`)
+        }
+        return ownerNode.parentNode as (NodeId | GroupId | undefined)
+      }
 
       for (const edge of edges.value) {
         // Skip branch edges
@@ -880,8 +906,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         if (isGroupId(source) || isGroupId(target))
           continue
 
-        const sourceNode = findNode(source)
-        const targetNode = findNode(target)
+        const sourceNode = cachedFindNode(source)
+        const targetNode = cachedFindNode(target)
 
         if (!sourceNode) {
           throw new Error(`Cannot find source node '${source}' for edge '${edge.id}' via findNode`)
@@ -898,8 +924,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         let targetStackTop = targetNode
 
         // Track depths here to avoid repeated `getNodeDepth` calls.
-        let sourceStackDepth = getNodeDepth(sourceStackTop.id as NodeId)
-        let targetStackDepth = getNodeDepth(targetStackTop.id as NodeId)
+        let sourceStackDepth = cachedGetNodeDepth(sourceStackTop.id as NodeId)
+        let targetStackDepth = cachedGetNodeDepth(targetStackTop.id as NodeId)
 
         // Pop stacks until both stacks are at the same depth
         while (sourceStackDepth !== targetStackDepth) {
@@ -911,7 +937,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
               throw new Error(`Expected node '${sourceStackTop.id}' to have parent, but it does not`)
             }
 
-            const parentNode = findNode(parentId)
+            const parentNode = cachedFindNode(parentId)
             if (!parentNode) {
               throw new Error(`Cannot find parent node '${parentId}' for node '${sourceStackTop.id}' via findNode`)
             }
@@ -926,7 +952,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
               throw new Error(`Expected node '${targetStackTop.id}' to have parent, but it does not`)
             }
 
-            const parentNode = findNode(parentId)
+            const parentNode = cachedFindNode(parentId)
             if (!parentNode) {
               throw new Error(`Cannot find parent node '${parentId}' for node '${targetStackTop.id}' via findNode`)
             }
@@ -962,8 +988,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             throw new Error(message)
           }
 
-          const sourceParentNode = findNode(sourceParentId)
-          const targetParentNode = findNode(targetParentId)
+          const sourceParentNode = cachedFindNode(sourceParentId)
+          const targetParentNode = cachedFindNode(targetParentId)
 
           if (!sourceParentNode) {
             throw new Error(`Cannot find parent node '${sourceParentId}' for node '${sourceStackTop.id}' via findNode`)
@@ -980,8 +1006,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       // Bottom-up layout
       const sortedGroups = state.value.groups
-        .map((group) => ({ ...group, depth: getNodeDepth(group.ownerId) }))
-        .toSorted((a, b) => getNodeDepth(b.ownerId) - getNodeDepth(a.ownerId))
+        .map((group) => ({ ...group, depth: cachedGetNodeDepth(group.ownerId) }))
+        .toSorted((a, b) => cachedGetNodeDepth(b.ownerId) - cachedGetNodeDepth(a.ownerId))
       for (const group of sortedGroups) {
         doAutoLayout(
           group.memberIds.reduce((nodes, memberId) => {
@@ -1004,7 +1030,10 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
             nodes.push(node)
             return nodes
           }, [] as Array<NodeInstance | GroupInstance>),
-          { virtualEdges: virtualEdges.get(group.depth) },
+          {
+            virtualEdges: virtualEdges.get(group.depth),
+            cachedFindNode,
+          },
         )
         await nextTick() // <- Wait for updates on VueFlow internals
         updateGroupLayout(group.id, false)
@@ -1026,6 +1055,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         leftNode,
         rightNode,
         virtualEdges: virtualEdges.get(0),
+        cachedFindNode,
       })
 
       if (commitNow) {
