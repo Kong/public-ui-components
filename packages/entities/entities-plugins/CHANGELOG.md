@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.113.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.113.2...@kong-ui-public/entities-plugins@9.113.3) (2025-11-07)
+
+
+### Bug Fixes
+
+* **entities-plugins:** jwt-singer - remove redundant general infofields ([#2625](https://github.com/Kong/public-ui-components/issues/2625)) ([86484e6](https://github.com/Kong/public-ui-components/commit/86484e67d6d53ebc19c43c19ec7d0730a03c8d86))
+
+
+
+
+
 ## [9.113.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.113.1...@kong-ui-public/entities-plugins@9.113.2) (2025-11-07)
 
 
