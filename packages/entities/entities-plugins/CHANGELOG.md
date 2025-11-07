@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.113.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.113.1...@kong-ui-public/entities-plugins@9.113.2) (2025-11-07)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - check teleport target existence ([#2624](https://github.com/Kong/public-ui-components/issues/2624)) ([7a443fa](https://github.com/Kong/public-ui-components/commit/7a443fa7e1cd25aa485c8c81766a44ed02aac5a5))
+
+
+
+
+
 ## [9.113.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.113.0...@kong-ui-public/entities-plugins@9.113.1) (2025-11-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
