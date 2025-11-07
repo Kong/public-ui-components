@@ -400,7 +400,7 @@ const handleTwigColor = computed(() => {
   return isImplicit.value ? KUI_COLOR_BACKGROUND_NEUTRAL_STRONG : KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
 })
 
-// Special input connections (vault or cross-phase)
+// Special input connections (vault, cross-phase, or branch-group-entering)
 const specialInputConnections = computed(() => {
   const connections = new Map<string, {
     fieldId: FieldId | 'input'
@@ -419,8 +419,9 @@ const specialInputConnections = computed(() => {
     const isVault = sourceNode.type === 'vault'
 
     const isCrossPhase = sourceNode.phase !== data.phase
+    const isEnteringGroup = branchGroups.isEdgeEnteringGroup(sourceNode.id, data.id)
 
-    if (!isVault && !isCrossPhase) continue
+    if (!isVault && !isCrossPhase && !isEnteringGroup) continue
 
     let sourceFieldName: FieldName | undefined
     if (edge.sourceField) {
@@ -453,7 +454,7 @@ const specialInputConnections = computed(() => {
   return connections
 })
 
-// Special output connections (cross-phase only)
+// Special output connections (cross-phase or branch-group-entering)
 const specialOutputConnections = computed(() => {
   const connections = new Map<string, {
     fieldId: FieldId | 'output'
@@ -470,8 +471,9 @@ const specialOutputConnections = computed(() => {
     if (!targetNode) continue
 
     const isCrossPhase = targetNode.phase !== data.phase
+    const isEnteringGroup = branchGroups.isEdgeEnteringGroup(data.id, targetNode.id)
 
-    if (!isCrossPhase) continue
+    if (!isCrossPhase && !isEnteringGroup) continue
 
     let targetFieldName: FieldName | undefined
     if (edge.targetField) {
@@ -532,17 +534,7 @@ async function duplicate() {
 }
 
 function removeFromBranchGroup() {
-  if (readonly) return
-  if (flowStore && flowStore.readonly) return
-  if (!branchMembership.value) return
-
-  const { ownerId, branch } = branchMembership.value
-
-  const members = branchGroups.getMembers(ownerId, branch)
-  const nextMembers = members.filter(id => id !== data.id)
-  if (nextMembers.length === members.length) return
-
-  branchGroups.setMembers(ownerId, branch, nextMembers)
+  branchGroups.removeMember(data.id)
 }
 
 watch(inputsCollapsible, (collapsible) => {

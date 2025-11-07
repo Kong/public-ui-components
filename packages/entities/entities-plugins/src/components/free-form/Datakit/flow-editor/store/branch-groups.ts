@@ -215,7 +215,7 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
     ensureGroup(owner, branch, normalized)
 
     if (options.commit ?? true) {
-      history.commit(options.tag ?? `branch:set:${branch}`)
+      history.commit(options.tag)
     }
 
     return true
@@ -224,9 +224,20 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
   /**
    * Removes all groups owned by a node.
    * Called when a node is deleted.
+   *
+   * @returns true if any group was removed, false otherwise
    */
-  function clear(ownerId: NodeId) {
-    state.value.groups = state.value.groups.filter(group => group.ownerId !== ownerId)
+  function clear(ownerId: NodeId, options: CommitOptions = {}): boolean {
+    const nextGroups = state.value.groups.filter(group => group.ownerId !== ownerId)
+    if (nextGroups.length === state.value.groups.length) return false
+
+    state.value.groups = nextGroups
+
+    if (options.commit ?? true) {
+      history.commit(options.tag)
+    }
+
+    return true
   }
 
   /**
@@ -251,6 +262,36 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
    */
   function findMembership(memberId: NodeId): { ownerId: NodeId, branch: BranchName } | undefined {
     return membershipIndex.value.get(memberId)
+  }
+
+  /**
+   * Collects all branch group IDs the node belongs to, ordered from the innermost group
+   * (closest to the node) outward. The list represents the full branch context for the node.
+   */
+  function groupChain(nodeId: NodeId): GroupId[] {
+    const chain: GroupId[] = []
+
+    let group = memberGroupMap.value.get(nodeId)
+    while (group) {
+      chain.push(group.id)
+      group = memberGroupMap.value.get(group.ownerId)
+    }
+
+    return chain
+  }
+
+  /**
+   * Determines whether the connection from `sourceId` to `targetId` crosses into a new branch group.
+   * That happens when the target's group chain contains any group the source never joined.
+   */
+  function isEdgeEnteringGroup(sourceId: NodeId, targetId: NodeId): boolean {
+    const target = groupChain(targetId)
+    if (target.length === 0) return false
+
+    const sourceGroups = new Set(groupChain(sourceId))
+    if (sourceGroups.size === 0) return true
+
+    return target.some(groupId => !sourceGroups.has(groupId))
   }
 
   /**
@@ -307,30 +348,32 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
     const existingMembers = readMembers(owner, branch)
     if (existingMembers.includes(memberId)) return false
 
-    dropTarget(memberId)
+    removeMember(memberId, { commit: false })
 
     const nextMembers = [...existingMembers, memberId]
     const changed = setMembers(ownerId, branch, nextMembers, { commit: false })
     if (!changed) return false
 
     if (options.commit ?? true) {
-      history.commit(options.tag ?? `branch:add:${branch}`)
+      history.commit(options.tag)
     }
 
     return true
   }
 
   /**
-   * Removes a node from its current group membership, if any.
-   * Used internally when moving nodes between groups.
+   * Removes a member from its current branch group.
+   * Returns true if membership changed.
    */
-  function dropTarget(targetId: NodeId) {
-    const membership = findMembership(targetId)
-    if (!membership) return
+  function removeMember(memberId: NodeId, options: CommitOptions = {}): boolean {
+    const membership = findMembership(memberId)
+    if (!membership) return false
 
     const members = getMembers(membership.ownerId, membership.branch)
-    const nextMembers = members.filter(id => id !== targetId)
-    setMembers(membership.ownerId, membership.branch, nextMembers, { commit: false })
+    const nextMembers = members.filter(id => id !== memberId)
+    if (nextMembers.length === members.length) return false
+
+    return setMembers(membership.ownerId, membership.branch, nextMembers, options)
   }
 
   function getNodeDepth(nodeId: NodeId): number {
@@ -365,10 +408,11 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
     setMembers,
     prepareMembers,
     addMember,
-    dropTarget,
+    removeMember,
     clear,
     getNodeDepth,
     getGroupDepth,
     isGroupId,
+    isEdgeEnteringGroup,
   }
 }
