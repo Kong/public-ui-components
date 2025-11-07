@@ -1,7 +1,10 @@
 <template>
-  <Teleport to="#plugin-form-page-actions">
+  <Teleport
+    v-if="enableDatakitM2"
+    :disabled="!hasTeleportTarget"
+    to="#plugin-form-page-actions"
+  >
     <KSegmentedControl
-      v-if="enableDatakitM2"
       data-testid="datakit-editor-mode-switcher"
       :model-value="realEditorMode"
       :options="editorModes"
@@ -93,7 +96,7 @@ import type { DatakitConfig, EditorMode, DatakitPluginData } from './types'
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
 import { KSegmentedControl } from '@kong/kongponents'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { FEATURE_FLAGS } from '../../../constants'
 import english from '../../../locales/en.json'
@@ -113,6 +116,12 @@ const props = defineProps<Props<DatakitPluginData>>()
 // provided by consumer apps
 const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, false)
 const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
+
+// Check if the teleport target exists
+const hasTeleportTarget = ref(false)
+onMounted(() => {
+  hasTeleportTarget.value = !!document.querySelector('#plugin-form-page-actions')
+})
 
 // Editor mode selection
 
