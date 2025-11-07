@@ -1,6 +1,11 @@
 <template>
   <slot
-    v-if="!loading && passThrough"
+    v-if="!loading && configError"
+    :error="configError"
+    name="error"
+  />
+  <slot
+    v-else-if="!loading && passThrough"
     :has-analytics="analytics"
     :has-percentiles="percentiles"
   />
@@ -22,7 +27,7 @@ const props = defineProps<{
 }>()
 
 const analyticsConfigStore = useAnalyticsConfigStore()
-const { analytics, percentiles, loading } = storeToRefs(analyticsConfigStore)
+const { analytics, percentiles, configError, loading } = storeToRefs(analyticsConfigStore)
 
 const passThrough = computed<boolean>(() =>
   (props.requireAnalytics ? analytics.value : true) &&
