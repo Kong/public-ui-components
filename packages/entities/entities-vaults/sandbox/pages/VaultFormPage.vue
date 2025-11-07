@@ -38,7 +38,6 @@ const konnectConfig = ref<KonnectVaultFormConfig>({
   azureVaultProviderAvailable: true,
   ttl: true,
   hcvAppRoleMethodAvailable: true,
-  konnectConfigStoreAvailable: true,
   conjurVaultProviderAvailable: true,
 })
 

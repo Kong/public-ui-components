@@ -74,12 +74,6 @@ A form component for Vaults.
     - *Specific to Konnect*. Show/hide Azure option.
     - **Note:** This is experimental and not supported by the backend right now
 
-  - `konnectConfigStoreAvailable`
-    - type: `boolean`
-    - required: `false`
-    - default: `undefined`
-    - *Specific to Konnect*. Show/hide Konnect Config Store option.
-
   - `ttl`
     - type: `boolean`
     - required: `true`
