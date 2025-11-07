@@ -5,7 +5,10 @@
     :omit="fieldsCategory.nonRequired"
     reset-label-path="reset"
   />
-  <AdvancedFields class="ff-advanced-fields">
+  <AdvancedFields
+    class="ff-advanced-fields"
+    hide-general-fields
+  >
     <ObjectField
       as-child
       name="config"
