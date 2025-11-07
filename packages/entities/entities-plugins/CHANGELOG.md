@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.114.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.113.3...@kong-ui-public/entities-plugins@9.114.0) (2025-11-07)
+
+
+### Features
+
+* **entities-plugins:** adjust visualization for branch group entering edges ([#2615](https://github.com/Kong/public-ui-components/issues/2615)) ([bcbdb8d](https://github.com/Kong/public-ui-components/commit/bcbdb8dd347dbfd7f58769ceb5f2287714c475ca))
+
+
+
+
+
 ## [9.113.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.113.2...@kong-ui-public/entities-plugins@9.113.3) (2025-11-07)
 
 
