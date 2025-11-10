@@ -1520,10 +1520,6 @@ onBeforeMount(async () => {
       border-bottom: none;
       padding: 0;
     }
-
-    :deep(.ff-form-section .content) {
-      gap: 0;
-    }
   }
 
   .form-action-button {

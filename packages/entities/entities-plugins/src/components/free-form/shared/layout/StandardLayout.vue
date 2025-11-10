@@ -106,6 +106,7 @@
       </EntityFormBlock>
 
       <EntityFormBlock
+        class="ff-plugin-config-group"
         :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
         :step="2"
         :title="pluginConfigTitle ?? t('plugins.form.sections.plugin_config.title')"
@@ -434,6 +435,12 @@ function hasScopeId(value: any): value is { id: string } {
 
   :deep(.form-group) {
     margin-bottom: $kui-space-70;
+  }
+}
+
+.ff-plugin-config-group {
+  :deep(.content) {
+    gap: 0
   }
 }
 </style>
