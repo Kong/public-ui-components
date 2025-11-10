@@ -440,7 +440,7 @@ function hasScopeId(value: any): value is { id: string } {
 
 .ff-plugin-config-group {
   :deep(.content) {
-    gap: 0
+    gap: 0 !important;
   }
 }
 </style>
