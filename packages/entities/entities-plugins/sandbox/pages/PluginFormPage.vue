@@ -46,6 +46,7 @@ const toaster = new ToastManager()
 const forceFreeForm = true
 provide(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, true)
 provide(FEATURE_FLAGS.DATAKIT_M2, true)
+provide(FEATURE_FLAGS.KM_1945_NEW_PLUGIN_CONFIG_FORM, true)
 
 provide(TOASTER_PROVIDER, toaster.open.bind(toaster))
 

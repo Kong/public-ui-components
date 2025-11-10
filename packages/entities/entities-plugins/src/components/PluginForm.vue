@@ -1,5 +1,10 @@
 <template>
-  <div class="kong-ui-entities-plugin-form-container">
+  <div
+    class="kong-ui-entities-plugin-form-container"
+    :class="{
+      'kong-ui-entities-plugin-form-container-new': newUIEnabled,
+    }"
+  >
     <KSkeleton
       v-if="schemaLoading"
       type="form"
@@ -60,8 +65,28 @@
       />
 
       <template #form-actions>
+        <div
+          v-if="newUIEnabled"
+          class="plugin-form-actions-new"
+        >
+          <KButton
+            appearance="primary"
+          >
+            Save and enable
+          </KButton>
+          <KButton
+            appearance="secondary"
+          >
+            Save and disable
+          </KButton>
+          <KButton
+            appearance="secondary"
+          >
+            Cancel
+          </KButton>
+        </div>
         <!-- if isWizardStep is true we don't want any buttons displayed (default EntityBaseForm buttons included) -->
-        <div v-if="isWizardStep" />
+        <div v-else-if="isWizardStep" />
         <PluginFormActionsWrapper
           v-else
           :teleport-target="actionsTeleportTarget"
@@ -154,7 +179,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
-import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
+import { computed, inject, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
@@ -180,6 +205,9 @@ import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
 import type { GlobalAction } from './free-form/shared/types'
+import { FEATURE_FLAGS } from '../constants'
+
+const newUIEnabled = inject(FEATURE_FLAGS.KM_1945_NEW_PLUGIN_CONFIG_FORM, false)
 
 type ScopedEntitiesType = 'consumer' | 'route' | 'service' | 'consumer_group'
 type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
@@ -1484,6 +1512,16 @@ onBeforeMount(async () => {
 .kong-ui-entities-plugin-form-container {
   width: 100%;
 
+  &.kong-ui-entities-plugin-form-container-new {
+    max-width: 760px;
+
+    :deep(.kong-ui-entity-base-form) {
+      border: none;
+      border-bottom: none;
+      padding: 0;
+    }
+  }
+
   .form-action-button {
     margin-left: $kui-space-60;
   }
@@ -1514,6 +1552,18 @@ onBeforeMount(async () => {
   & :deep(.tab-item.active > div.tab-link.has-panels) {
     color: $kui-color-text !important;
     font-weight: $kui-font-weight-semibold !important;
+  }
+
+  .plugin-form-actions-new {
+    display: flex;
+    gap: $kui-space-60;
+    justify-content: flex-start;
+    padding-left: $kui-space-60;
+    width: 100%;
+
+    :deep(.k-button) {
+      margin-inline-start: unset;
+    }
   }
 }
 </style>
