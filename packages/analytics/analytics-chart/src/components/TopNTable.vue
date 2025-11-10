@@ -105,12 +105,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-// @ts-ignore - approximate-number no exported module
-import approxNum from 'approximate-number'
-import composables from '../composables'
+import type { AllAggregations, AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 import type { HeaderTag } from '@kong/kongponents'
+
+import { computed } from 'vue'
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
+import composables from '../composables'
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -128,8 +128,11 @@ const props = withDefaults(defineProps<{
 })
 
 const { i18n } = composables.useI18n()
+const { formatUnit } = unitFormatter({ i18n })
+
 const records = computed((): AnalyticsExploreRecord[] => props.data.data)
 const hasData = computed((): boolean => !!(records.value?.length))
+
 const displayKey = computed((): string => {
   if (!props.data.meta?.display) {
     return ''
@@ -144,12 +147,14 @@ const displayRecord = computed(() => {
 
   return props.data.meta.display[displayKey.value]
 })
-const columnKey = computed((): string => {
-  if (!props.data.meta?.metric_names?.length) {
-    return ''
+
+const columnKey = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
+const columnUnit = computed((): string => {
+  if (!columnKey.value) {
+    return 'count'
   }
 
-  return props.data.meta.metric_names[0]
+  return props.data.meta?.metric_units?.[columnKey.value] || 'count'
 })
 const columnName = computed((): string => {
   if (!columnKey.value) {
@@ -205,14 +210,33 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     return '–'
   }
 
-  const event = record.event
-  const val = event[columnKey.value]
+  const val = record.event[columnKey.value]
 
   if (!val) {
     return '–'
   }
 
-  return approxNum(val, { capital: true, round: true })
+  const value = typeof val === 'number' ? val : Number(val)
+
+  if (Number.isNaN(value)) {
+    return '–'
+  }
+
+  // Only counts should use approximation
+  const approximate = ['count', 'count/minute', 'token count'].includes(columnUnit.value)
+
+  return formatUnit(value, columnUnit.value, {
+    approximate,
+    isBytes1024: true,
+    translateUnit: (unit) => translateChartUnit(unit, value),
+  })
+}
+
+const translateChartUnit = (unit: string, value: number): string => {
+  const plural = value === 1 ? '' : 's'
+
+  // @ts-ignore - dynamic i18n key
+  return i18n.te(`chartUnits.${unit}`) ? i18n.t(`chartUnits.${unit}`, { plural }) : unit
 }
 </script>
 
