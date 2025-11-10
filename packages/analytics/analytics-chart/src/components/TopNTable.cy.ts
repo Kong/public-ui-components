@@ -176,4 +176,137 @@ describe('<TopNTable />', () => {
     cy.get('.kong-ui-public-top-n-table').should('be.visible')
     cy.get('.table-row').last().should('contain', 'deleted')
   })
+
+  describe('formatting', () => {
+    const buildTopNData = (opts: {
+      metricKey: string
+      unit?: string
+      value: number
+      entityKey?: string
+      entityId?: string
+    }) => {
+      const {
+        metricKey,
+        unit,
+        value,
+        entityKey = 'ROUTE',
+        entityId = ROUTE_ID,
+      } = opts
+
+      const meta: any = {
+        display: { [entityKey]: ROUTE_DISPLAY_V2 },
+        end_ms: 1692295253000,
+        granularity_ms: 300000,
+        limit: 50,
+        metric_names: [metricKey],
+        // Only include metric_units when provided; otherwise we test fallback behavior
+        ...(unit ? { metric_units: { [metricKey]: unit } } : {}),
+        query_id: 'unit-format-test',
+        start_ms: 1692294953000,
+        truncated: false,
+      }
+
+      return {
+        meta,
+        data: [
+          {
+            event: {
+              [entityKey]: entityId,
+              [metricKey]: value,
+            },
+            timestamp: '2023-08-17T17:55:53.000Z',
+          },
+        ],
+      } as any
+    }
+
+    const formattingTests = [
+      {
+        description: 'formats latency in ms without approximation (e.g. 12.345 -> 12.35 ms)',
+        metricKey: 'LATENCY_P50',
+        unit: 'ms',
+        value: 12.345,
+        expected: /12\.35\s?ms/,
+        additionalCheck: (el: any) => el.should('contain.text', ROUTE_NAME),
+      },
+      {
+        description: 'keeps very small ms precise (0.009 -> 0.009 ms)',
+        metricKey: 'LATENCY_P50',
+        unit: 'ms',
+        value: 0.009,
+        expected: /0\.009\s?ms/,
+      },
+      {
+        description: 'approximates counts and pluralizes (e.g. 9,483 -> 9.4K requests)',
+        metricKey: 'REQUEST_COUNT',
+        unit: 'count',
+        value: 9483,
+        expected: /9\.4K\s?(requests|count)/,
+      },
+      {
+        description: 'renders singular for count when value === 1 (e.g. 1 -> 1 request)',
+        metricKey: 'REQUEST_COUNT',
+        unit: 'count',
+        value: 1,
+        expected: /1\s?(request|count)/,
+      },
+      {
+        description: 'formats count/minute with approximation and translation (rpm)',
+        metricKey: 'RPM',
+        unit: 'count/minute',
+        value: 98_765,
+        expected: /98K\s?(rpm|count\/minute)/,
+      },
+      {
+        description: 'formats bytes using binary units (isBytes1024: true -> 1 MB)',
+        metricKey: 'BODY_BYTES',
+        unit: 'bytes',
+        value: 1_048_576,
+        expected: /1 MB$/,
+      },
+      {
+        description: 'formats tiny USD values with threshold',
+        metricKey: 'COST',
+        unit: 'usd',
+        value: 0.00005,
+        expected: /<\s?\$0\.0001/,
+      },
+      {
+        description: 'formats standard USD values',
+        metricKey: 'COST',
+        unit: 'usd',
+        value: 12.3,
+        expected: /\$12\.30/,
+      },
+      {
+        description: 'falls back to "count" when metric_units is missing',
+        metricKey: 'test',
+        unit: undefined,
+        value: 5587,
+        expected: /5\.5K\s?(requests|count)/,
+      },
+    ]
+
+    formattingTests.forEach(({ description, metricKey, unit, value, expected }) => {
+      it(description, () => {
+        const result = buildTopNData({
+          metricKey,
+          unit,
+          value,
+        })
+
+        cy.mount(TopNTable, {
+          props: {
+            data: result,
+            title: TITLE,
+            description: DESCRIPTION,
+          },
+        })
+
+        cy.get(`[data-testid="row-${ROUTE_ID}"]`)
+          .contains(expected)
+          .should('exist')
+      })
+    })
+  })
 })
