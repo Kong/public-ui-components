@@ -1,6 +1,6 @@
-import { onActivated, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { onActivated, onBeforeUnmount, onMounted, reactive, ref, toValue, watch } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
-import { useDebounceFn } from '@vueuse/core'
+import { unrefElement, useDebounceFn } from '@vueuse/core'
 
 // Monaco Editor Workers
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
@@ -9,8 +9,8 @@ import CssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker'
 import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
-import type { Ref } from 'vue'
 import type * as monacoType from 'monaco-editor'
+import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
 
 // singletons
@@ -80,11 +80,14 @@ async function loadMonaco(language?: string): Promise<typeof monacoType> {
 
 /**
  * Composable for integrating the Monaco Editor into Vue components.
- * @param {Ref} target - The target DOM element or Vue component ref where the editor will be mounted.
+ * @param {MaybeComputedElementRef} target - The target DOM element or Vue component ref where the editor will be mounted.
  * @param {UseMonacoEditorOptions} options - Configuration options for the Monaco editor.
  * @returns {object} An object containing the editor instance and utility methods.
 */
-export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
+export function useMonacoEditor<T extends MaybeElement>(
+  target: MaybeComputedElementRef<T>,
+  options: UseMonacoEditorOptions,
+) {
   /**
    * The Monaco editor instance.
    * @type {monaco.editor.IStandaloneCodeEditor | undefined}
@@ -157,18 +160,18 @@ export function useMonacoEditor(target: Ref, options: UseMonacoEditorOptions) {
     const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
     const model = monaco.editor.createModel(options.code.value, options.language, uri)
 
-    watch(target, async (_target) => {
-      // if target is null (unmounted), reset setup flag
-      if (_target == null) {
+    // `toValue()` safely unwraps refs, getters, or plain elements
+    watch(() => toValue(target), async (_target) => {
+
+      // This ensures we skip setup if it's null, undefined, or an SVG element (as unrefElement can return SVGElement)
+      const el = unrefElement(_target)
+      if (!(el instanceof HTMLElement)) {
         _isSetup.value = false
         return
       }
 
       // prevent multiple setups
       if (_isSetup.value) return
-
-      const el = _target?.$el || _target
-      if (!el) return
 
       editor = monaco.editor.create(el, {
         ...DEFAULT_MONACO_OPTIONS,
