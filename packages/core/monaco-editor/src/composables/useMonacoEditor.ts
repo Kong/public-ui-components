@@ -41,7 +41,7 @@ async function loadMonaco(language?: string): Promise<typeof monacoType> {
     langCache.set(language || 'plaintext', true)
 
     // Dynamically import the Monaco Editor core API
-    const monaco = await import('monaco-editor/esm/vs/editor/editor.api')
+    const monaco = await import('monaco-editor')
 
     // Only set environment once
     if (!('MonacoEnvironment' in window) || !window.MonacoEnvironment) {
