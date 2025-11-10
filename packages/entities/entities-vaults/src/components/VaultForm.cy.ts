@@ -11,7 +11,6 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
-  konnectConfigStoreAvailable: true,
   ttl: true,
 }
 
@@ -21,7 +20,6 @@ const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cancelRoute,
   azureVaultProviderAvailable: false,
-  konnectConfigStoreAvailable: true,
   ttl: false,
 }
 

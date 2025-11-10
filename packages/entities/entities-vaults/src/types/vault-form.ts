@@ -24,13 +24,10 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
    * Show/hide cert option and corresponding fields
    */
   hcvCertMethodAvailable?: boolean
+
   /**
-   * Show/hide Konnect Config Store option
-   */
-  konnectConfigStoreAvailable?: boolean
-  /**
- * Show/hide AWS StsEndpointUrl field
- */
+  * Show/hide AWS StsEndpointUrl field
+  */
   awsStsEndpointUrlAvailable?: boolean
 
   /**
