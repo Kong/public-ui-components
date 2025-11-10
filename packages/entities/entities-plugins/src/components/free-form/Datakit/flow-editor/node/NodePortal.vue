@@ -1,13 +1,16 @@
 <template>
   <div
-    class="value-indicator"
-    :class="{ reversed: shouldReverse }"
+    class="dk-node-portal"
+    :class="{ reversed }"
+    @click.stop
+    @dragstart.stop
+    @mousedown.stop
   >
     <KTooltip
       placement="top"
       :text="tooltipText"
     >
-      <div class="indicator-box">
+      <div class="target-box">
         <component
           :is="icon"
           v-if="icon"
@@ -27,82 +30,49 @@
 
 <script setup lang="ts">
 import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
-import type { EdgeId, NodeInstance } from '../../types'
+import type { FieldName, NodeInstance, NonEmptyArray } from '../../types'
 import { computed } from 'vue'
 import { KTooltip } from '@kong/kongponents'
 import { NODE_VISUAL } from './node-visual'
 
-interface Props {
-  edgeId?: EdgeId
-  sourceNode?: NodeInstance
-  sourceFieldName?: string
-  targetNodes?: NodeInstance[]
-  targetFieldNames?: Array<string | undefined>
-  mode: 'input' | 'output'
-  reversed?: boolean
+interface PortalTarget {
+  node: NodeInstance
+  fieldName?: FieldName
 }
 
 const {
   reversed = false,
-  ...props
-} = defineProps<Props>()
-
+  targets,
+} = defineProps<{
+  reversed?: boolean
+  targets: NonEmptyArray<PortalTarget>
+}>()
 
 const tooltipText = computed(() => {
-  if (props.mode === 'input' && props.sourceNode) {
-    if (props.sourceFieldName) {
-      return `${props.sourceNode.name}.${props.sourceFieldName}`
-    }
-    return props.sourceNode.name
-  } else if (props.mode === 'output' && props.targetNodes) {
-    const names = props.targetNodes.map((node, index) => {
-      const fieldName = props.targetFieldNames?.[index]
-      return fieldName ? `${node.name}.${fieldName}` : node.name
-    })
-    return names.join(', ')
-  }
-  return ''
+  if (!targets.length) return ''
+
+  return targets
+    .map(({ node, fieldName }) => fieldName ? `${node.name}.${fieldName}` : node.name)
+    .join(', ')
 })
 
 const icon = computed(() => {
-  let node: NodeInstance | undefined
-
-  if (props.mode === 'input' && props.sourceNode) {
-    node = props.sourceNode
-  } else if (props.mode === 'output' && props.targetNodes && props.targetNodes.length > 0) {
-    node = props.targetNodes[0]
-  }
-
-  if (!node) return undefined
-
-  return NODE_VISUAL[node.type]?.icon
+  return NODE_VISUAL[targets[0].node.type]?.icon
 })
 
-const additionalCount = computed(() => {
-  if (props.mode === 'output' && props.targetNodes && props.targetNodes.length > 1) {
-    return props.targetNodes.length - 1
-  }
-  return 0
-})
-
-const shouldReverse = computed(() => {
-  if (props.mode === 'input') {
-    return reversed
-  } else {
-    return !reversed
-  }
-})
+const additionalCount = computed(() => Math.max(targets.length - 1, 0))
 </script>
 
 <style lang="scss" scoped>
-.value-indicator {
+.dk-node-portal {
+  cursor: default;
   left: -36px;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
 
-  .indicator-box {
+  .target-box {
     align-items: center;
     background-color: $kui-color-background;
     border: 1px solid $kui-color-border-neutral-weak;
