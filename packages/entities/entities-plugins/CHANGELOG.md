@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.114.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.2...@kong-ui-public/entities-plugins@9.114.3) (2025-11-11)
+
+
+### Bug Fixes
+
+* **entities:** toggle enabled when filtered ([#2629](https://github.com/Kong/public-ui-components/issues/2629)) ([e8a2955](https://github.com/Kong/public-ui-components/commit/e8a29556442703e09f28e96489795403f2fe14f5))
+
+
+
+
+
 ## [9.114.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.1...@kong-ui-public/entities-plugins@9.114.2) (2025-11-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
