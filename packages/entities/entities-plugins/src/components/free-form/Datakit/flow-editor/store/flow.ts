@@ -528,20 +528,22 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       moveNode(nodeId, absolutePosition, false)
 
-      const rect = {
-        x: absolutePosition.x,
-        y: absolutePosition.y,
-        width: node.dimensions?.width ?? 0,
-        height: node.dimensions?.height ?? 0,
+      if (!isImplicitNode(getNodeById(nodeId)!)) {
+        const rect = {
+          x: absolutePosition.x,
+          y: absolutePosition.y,
+          width: node.dimensions?.width ?? 0,
+          height: node.dimensions?.height ?? 0,
+        }
+        const pointer = event && 'clientX' in event
+          ? screenToFlowCoordinate({ x: event.clientX, y: event.clientY })
+          : undefined
+        const fallbackPoint = {
+          x: rect.x + rect.width / 2,
+          y: rect.y + rect.height / 2,
+        }
+        updateActiveGroup(pointer ?? fallbackPoint)
       }
-      const pointer = event && 'clientX' in event
-        ? screenToFlowCoordinate({ x: event.clientX, y: event.clientY })
-        : undefined
-      const fallbackPoint = {
-        x: rect.x + rect.width / 2,
-        y: rect.y + rect.height / 2,
-      }
-      updateActiveGroup(pointer ?? fallbackPoint)
 
       // Update group layout in real-time when dragging member nodes
       // This allows the group to expand/shrink as members move
