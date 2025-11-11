@@ -687,8 +687,8 @@ importers:
         specifier: 1.18.1
         version: 1.18.1
       '@kong/kongponents':
-        specifier: 9.45.1
-        version: 9.45.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2))
+        specifier: 9.46.1
+        version: 9.46.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2))
       monaco-editor:
         specifier: ^0.54.0
         version: 0.54.0
@@ -2068,6 +2068,13 @@ packages:
 
   '@kong/kongponents@9.45.1':
     resolution: {integrity: sha512-fw9s8+CA47ufmMk2SgOiPFRwvLc36EontCT0bKUJs2NxcCQNDstlx9iijI57kyjfHK/ejCMSHRj5k7KFkWS8fg==}
+    engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0 || >=22.14.0', pnpm: '>=9.11.0 || >=10.10.0'}
+    peerDependencies:
+      vue: ^3.5.22
+      vue-router: ^4.6.3
+
+  '@kong/kongponents@9.46.1':
+    resolution: {integrity: sha512-jwje6Dr0MkShIuITFE9NU0kJQeZupkxA8cl3wgXid33T704ayXA7TGUH5bTlhzqfIRuAXWKh2PP7qtrlKgEoPA==}
     engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0 || >=22.14.0', pnpm: '>=9.11.0 || >=10.10.0'}
     peerDependencies:
       vue: ^3.5.22
@@ -10907,6 +10914,31 @@ snapshots:
       vue-router: 4.5.1(vue@3.5.22(typescript@5.9.2))
 
   '@kong/kongponents@9.45.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2))':
+    dependencies:
+      '@floating-ui/vue': 1.1.9(vue@3.5.22(typescript@5.9.2))
+      '@kong/icons': 1.39.0(vue@3.5.22(typescript@5.9.2))
+      '@popperjs/core': 2.11.8
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
+      focus-trap: 7.6.6
+      focus-trap-vue: 4.1.0(focus-trap@7.6.6)(vue@3.5.22(typescript@5.9.2))
+      lodash-es: 4.17.21
+      nanoid: 5.1.6
+      sortablejs: 1.15.6
+      swrv: 1.1.0(vue@3.5.22(typescript@5.9.2))
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.5.22(typescript@5.9.2))
+      virtua: 0.45.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.22(typescript@5.9.2))
+      vue: 3.5.22(typescript@5.9.2)
+      vue-draggable-next: 2.3.0(sortablejs@1.15.6)(vue@3.5.22(typescript@5.9.2))
+      vue-router: 4.5.1(vue@3.5.22(typescript@5.9.2))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - react
+      - react-dom
+      - solid-js
+      - svelte
+
+  '@kong/kongponents@9.46.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2))':
     dependencies:
       '@floating-ui/vue': 1.1.9(vue@3.5.22(typescript@5.9.2))
       '@kong/icons': 1.39.0(vue@3.5.22(typescript@5.9.2))
