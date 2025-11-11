@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.115.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.3...@kong-ui-public/entities-plugins@9.115.0) (2025-11-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** should not set active group when dragging implicit nodes ([#2632](https://github.com/Kong/public-ui-components/issues/2632)) ([7fe9436](https://github.com/Kong/public-ui-components/commit/7fe94365d141efebf4d6d37f73c5d78eaaaa0fab))
+
+
+### Features
+
+* **entities-plugins:** add fan-out interaction to node portals with more than one connections ([#2631](https://github.com/Kong/public-ui-components/issues/2631)) ([e45819f](https://github.com/Kong/public-ui-components/commit/e45819fea64592ccf42939b69005221b4dbd5647))
+* **entities-plugins:** datakit tweak auto-layout algorithm for depth-crossing nodes ([#2623](https://github.com/Kong/public-ui-components/issues/2623)) ([fafe657](https://github.com/Kong/public-ui-components/commit/fafe6573b81332142af0bf09ceb43c5f27787742))
+
+
+
+
+
 ## [9.114.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.2...@kong-ui-public/entities-plugins@9.114.3) (2025-11-11)
 
 
