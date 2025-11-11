@@ -44,7 +44,7 @@ async function loadMonaco(language?: string): Promise<typeof monacoType> {
     const monaco = await import('monaco-editor')
 
     // Only set environment once
-    if (!('MonacoEnvironment' in window) || !window.MonacoEnvironment) {
+    if (!window.MonacoEnvironment) {
       window.MonacoEnvironment = {
         getWorker(_: unknown, label: string) {
           switch (label) {
@@ -150,6 +150,7 @@ export function useMonacoEditor<T extends MaybeElement>(
     }
   }
 
+  /** Remeasure fonts in the editor with debouncing to optimize performance */
   const remeasureFonts = useDebounceFn(() => monacoInstance?.editor.remeasureFonts(), 200)
 
 
@@ -196,6 +197,8 @@ export function useMonacoEditor<T extends MaybeElement>(
       // TODO: register editor actions
 
       options.onCreated?.()
+
+      // we need to remeasure fonts after the editor is created to ensure proper layout and rendering
       remeasureFonts()
 
 
@@ -227,10 +230,10 @@ export function useMonacoEditor<T extends MaybeElement>(
   init()
 
   // Lifecycle hooks
-  onMounted(() => {
-    remeasureFonts()
-  })
+  onMounted(remeasureFonts)
+
   onActivated(remeasureFonts)
+
   onBeforeUnmount(() => {
     if (!editor) return
 
