@@ -701,10 +701,6 @@
         "entity_name": "Request callout",
         "by_lua_placeholder": "Enter Lua script here..."
       },
-      "redis_partial": {
-        "redis_partial_modal_title": "New shared configuration",
-        "partial_created_success_message": "Successfully created a new Redis configuration."
-      },
       "datakit": {
         "plugin_config": {
           "title": "Flow editor"
@@ -920,29 +916,11 @@
       "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins.",
       "title": "Shared Redis Configuration",
       "error": "Fetching shared Redis configurations failed.",
-      "tooltip": "Only compatible {type} redis configurations will be listed here.",
-      "configuration_selector_label": "Select stored Redis configuration",
-      "configuration_selector_placeholder": "Pick Redis configuration",
-      "create_new_configuration": "New {type} shared configuration",
-      "open_source": "open source",
-      "enterprise": "enterprise",
-      "empty_state": "No shared configurations",
-      "badge": "Recommended",
-      "selector": {
-        "title": "Select a Redis configuration",
-        "placeholder": "Filter Configurations",
-        "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins."
-      },
-      "type_label": {
-        "host_port": "Host/Port",
-        "sentinel": "Sentinel",
-        "cluster": "Cluster"
-      }
+      "badge": "Recommended"
     },
     "dedicated_configuration": {
       "label": "Use dedicated configuration",
-      "description": "Create a Redis configuration exclusively for this plugin, with settings that won’t impact other plugins.",
-      "title": "Connection Settings"
+      "description": "Create a Redis configuration exclusively for this plugin, with settings that won’t impact other plugins."
     },
     "config_card": {
       "common_fields": {
@@ -950,10 +928,6 @@
         "updated_at_label": "Last Updated at",
         "type_label": "Redis Type"
       }
-    },
-    "custom_plugin": {
-      "alert": "Note: For custom plugins, we cannot determine the correct Redis configuration type. Please ensure you select the appropriate option manually.",
-      "tooltip": "To apply a shared redis configuration, the redis fields must defined as Kong plugins in plugin schema."
     }
   },
   "glossary": {

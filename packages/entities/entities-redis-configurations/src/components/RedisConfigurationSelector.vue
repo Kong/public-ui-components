@@ -61,6 +61,7 @@
     :visible="isModalVisible"
     @created="onPartialCreated"
     @modal-close="onModalClose"
+    @toast="payload => emit('toast', payload)"
   />
 </template>
 
@@ -101,7 +102,9 @@ const emit = defineEmits<{
   'create-new': []
   /** Emitted when an error occurs */
   'error': [error: Error]
+  'error-change': [error: Error | null]
   'modal-close': []
+  'toast': [payload: { message: string, appearance: 'success' | 'danger' }]
 }>()
 
 const { i18n: { t } } = useI18n()
@@ -150,6 +153,7 @@ watch(error, (newError) => {
   if (newError) {
     emit('error', new Error(String(newError)))
   }
+  emit('error-change', newError ? new Error(String(newError)) : null)
 })
 </script>
 
