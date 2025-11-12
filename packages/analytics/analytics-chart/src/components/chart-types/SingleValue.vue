@@ -188,14 +188,8 @@ const formattedValue = computed((): string => {
 const change = computed(() => calculateChange(singleValue.value ?? 0, previousValue.value ?? 0) || 0)
 const polarity = computed(() => changePolarity(change.value, true, props.increaseIsBad)) // Assume hasTrendAccess=true
 const trendIcon = computed(() => defineIcon(polarity.value))
-const formattedChange = computed(() => metricChange(change.value, true, 'not available')) // TODO: Update this to translation string
-const containerStyle = computed(() => {
-  const justify = justifyMap[alignXState.value] ?? 'space-evenly'
-
-  return {
-    justifyContent: justify,
-  } as const
-})
+const formattedChange = computed(() => metricChange(change.value, true, i18n.t('singleValue.trend.not_available')))
+const containerStyle = computed(() => ({ justifyContent: justifyMap[alignXState.value] ?? 'space-evenly' }))
 const trendRange = useTrendRange(computed(() => props.showTrend), undefined, computed(() => props.data.meta))
 
 const textColor = (polarityNum: number) => {

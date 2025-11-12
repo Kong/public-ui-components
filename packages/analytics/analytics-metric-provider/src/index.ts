@@ -8,7 +8,7 @@ export {
   MetricsConsumer,
   mockExploreResponseFromCypress,
   mockExploreResponse,
-  useTrendRange
+  useTrendRange,
 }
 
 export * from './types'
