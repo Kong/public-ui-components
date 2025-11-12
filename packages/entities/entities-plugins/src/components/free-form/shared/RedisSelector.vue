@@ -63,7 +63,11 @@
         class="redis-shared-config-error-message"
         data-testid="redis-config-fetch-error"
       >
-        {{ sharedRedisConfigFetchError?.message || t('redis.shared_configuration.error') }}
+        {{
+          sharedRedisConfigFetchError
+            ? getMessageFromError(sharedRedisConfigFetchError)
+            : t('redis.shared_configuration.error')
+        }}
       </p>
     </div>
     <ObjectField
@@ -91,7 +95,7 @@ import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
-import { useAxios, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
+import { useAxios, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RedisPartialType, Redis } from './types'
 import { partialEndpoints, fieldsOrder, REDIS_PARTIAL_INFO } from './const'
 import { useField, useFormData } from './composables'
@@ -129,6 +133,7 @@ const redisType = props.redisType || redisPartialInfo?.redisType?.value
 const useRedisPartial = computed(() => !!redisPartialInfo?.redisType?.value)
 const selectedRedisConfig = ref(null)
 const usePartial = ref(!isFormEditing)
+const { getMessageFromError } = useErrors()
 
 const selectedRedisConfigItem = ref<string | undefined>(props.defaultRedisConfigItem)
 // cache redis partial/redis fields in edition
