@@ -109,6 +109,7 @@ export function useMonacoEditor<T extends MaybeElement>(
   /** Replace the editor content. */
   const setContent = (content: string): void => {
     if (!_isSetup.value || !editor) return
+    // TODO: update this so we can preserve undo/redo stack
     editor.setValue(content)
   }
 
