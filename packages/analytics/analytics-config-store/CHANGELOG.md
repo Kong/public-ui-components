@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@1.1.20...@kong-ui-public/analytics-config-store@1.2.0) (2025-11-07)
+
+
+### Features
+
+* analytics config exposes an awaitable isReady ([#2628](https://github.com/Kong/public-ui-components/issues/2628)) ([acb44b3](https://github.com/Kong/public-ui-components/commit/acb44b32e0f91a0ca499b8dd08c79c9f5644fec8))
+
+
+
+
+
 ## [1.1.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@1.1.19...@kong-ui-public/analytics-config-store@1.1.20) (2025-10-29)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store

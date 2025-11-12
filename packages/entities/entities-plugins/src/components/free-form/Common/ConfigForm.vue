@@ -1,48 +1,35 @@
 <template>
-  <Form
-    :config="formConfig"
-    :data="data"
-    :schema="schema"
-    tag="div"
-    @change="handleChange"
+  <ObjectField
+    as-child
+    name="config"
+    :omit="fieldsCategory.nonRequired"
+    reset-label-path="reset"
+  />
+  <AdvancedFields
+    class="ff-advanced-fields"
+    hide-general-fields
   >
     <ObjectField
       as-child
       name="config"
-      :omit="fieldsCategory.nonRequired"
+      :omit="fieldsCategory.required"
       reset-label-path="reset"
     />
-    <AdvancedFields class="ff-advanced-fields">
-      <ObjectField
-        as-child
-        name="config"
-        :omit="fieldsCategory.required"
-        reset-label-path="reset"
-      />
-    </AdvancedFields>
-  </Form>
+  </AdvancedFields>
 </template>
 
 <script setup lang="ts">
-import Form from '../shared/Form.vue'
 import ObjectField from '../shared/ObjectField.vue'
 import AdvancedFields from '../shared/AdvancedFields.vue'
 
-import type { FormConfig } from '../shared/types'
-import type { FormSchema, RecordFieldSchema } from '../../../types/plugins/form-schema'
-import type { FreeFormPluginData } from '../../../types/plugins/free-form'
+import type { RecordFieldSchema } from '../../../types/plugins/form-schema'
 import { computed } from 'vue'
+import { useFormShared } from '../shared/composables'
 
-const emit = defineEmits<{
-  change: [value: FreeFormPluginData]
-}>()
-
-const { schema } = defineProps<{
-  schema: FormSchema
-  data?: FreeFormPluginData
-}>()
+const { getSchema } = useFormShared()
 
 const fieldsCategory = computed(() => {
+  const schema = getSchema()
   const configFields = (schema.fields.find(field => Object.keys(field)[0] === 'config')!.config as RecordFieldSchema).fields
   const required: string[] = []
   const nonRequired: string[] = []
@@ -57,14 +44,6 @@ const fieldsCategory = computed(() => {
   }
   return { required, nonRequired }
 })
-
-const formConfig: FormConfig = {
-  hasValue: (data?: FreeFormPluginData): boolean => !!data?.config,
-}
-
-function handleChange(value: FreeFormPluginData) {
-  emit('change', value)
-}
 </script>
 
 <style lang="scss" scoped>

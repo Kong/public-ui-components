@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.0.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.0.0...@kong-ui-public/analytics-metric-provider@11.0.1) (2025-11-07)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
+
+
+
+
+
+# [11.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@10.1.20...@kong-ui-public/analytics-metric-provider@11.0.0) (2025-11-04)
+
+
+### Code Refactoring
+
+* **metric provider:** use explore style time ranges ([#2603](https://github.com/Kong/public-ui-components/issues/2603)) ([b230cb9](https://github.com/Kong/public-ui-components/commit/b230cb905ef54e384ebaabdf5bcb0c91bf45a71a))
+
+
+### BREAKING CHANGES
+
+* **metric provider:** metric provider props updated to accept explore style timerange
+
+* fix: timespec no longer needs to be wrapped in computed
+
+* fix: just remove query time
+
+* fix: remove unused functions from granilarities.ts
+
+* fix: revert analytics-utilities changes
+
+* fix: comment
+
+
+
+
+
 ## [10.1.20](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@10.1.19...@kong-ui-public/analytics-metric-provider@10.1.20) (2025-10-29)
 
 

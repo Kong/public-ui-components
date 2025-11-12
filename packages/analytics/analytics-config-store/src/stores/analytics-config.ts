@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import type { AnalyticsBridge, AnalyticsConfigV2 } from '@kong-ui-public/analytics-utilities'
 import {
   DEFAULT_MAX_PARALLEL_REQUESTS,
@@ -14,6 +14,7 @@ export type ConfigStoreState = null | AnalyticsConfigV2
 
 export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
   const analyticsConfig = ref<ConfigStoreState>(null)
+  const configError = ref<Error | null>(null)
 
   const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 
@@ -22,6 +23,7 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
     console.warn("Please ensure your application has a query bridge provided under the key 'analytics-query-provider', as described in")
     console.warn('https://github.com/Kong/public-ui-components/blob/main/packages/analytics/dashboard-renderer/README.md#requirements')
 
+    configError.value = new Error('No analytics bridge provided')
     // Return a mock instance in order to prevent downstream components from waiting forever on the query.
     // This allows, e.g., metric cards to show an error rather than just endlessly "loading".
     analyticsConfig.value = {
@@ -32,6 +34,11 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
     queryBridge.configFn().then(res => {
       analyticsConfig.value = res
     }).catch(err => {
+      configError.value = err
+      analyticsConfig.value = {
+        analytics: null,
+        requests: null,
+      }
       console.warn('Error fetching analytics config')
       console.warn(err)
     })
@@ -49,6 +56,24 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
   const loading = computed<boolean>(() => !analyticsConfig.value)
   const analytics = computed<boolean>(() => !!analyticsConfig.value?.analytics)
   const percentiles = computed<boolean>(() => !!analyticsConfig.value?.analytics?.percentiles)
+
+  /**
+   * An awaitable getter that returns when loading is finished
+   */
+  const isReady = (): Promise<void> => {
+    return new Promise((resolve) => {
+      if (!loading.value) {
+        return Promise.resolve()
+      }
+
+      const unwatch = watch(loading, () => {
+        if (!loading.value) {
+          unwatch() // we only need this watcher once
+          resolve()
+        }
+      })
+    })
+  }
 
   const maxParallelRequests = computed<number>(() =>
     analyticsConfig.value?.ui?.maxParallelRequests ?? DEFAULT_MAX_PARALLEL_REQUESTS,
@@ -72,5 +97,7 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
     maxParallelRequests,
     requestInterval,
     requestIntervalCap,
+    isReady,
+    configError,
   }
 })

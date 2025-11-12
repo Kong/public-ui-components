@@ -30,7 +30,7 @@ import { watch } from 'vue'
 
 import english from '../../../../locales/en.json'
 import { useFormShared } from '../../shared/composables'
-import { provideEditorStore } from '../composables'
+import { provideEditorStore, useLeaveConfirmation } from '../composables'
 import FlowPanels from './FlowPanels.vue'
 import EditorModal from './modal/EditorModal.vue'
 
@@ -77,6 +77,8 @@ watch(modalOpen, () => {
   // `fitView` when model is toggled.
   setPendingFitView(true)
 }, { flush: 'post' }) // Safely schedule fitView after <FlowPanels /> receives the latest `inactive` prop
+
+useLeaveConfirmation({ enabled: modalOpen })
 </script>
 
 <style lang="scss" scoped>

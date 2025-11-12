@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.13.19](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.18...@kong-ui-public/entities-gateway-services@3.13.19) (2025-11-11)
+
+
+### Bug Fixes
+
+* **entities:** toggle enabled when filtered ([#2629](https://github.com/Kong/public-ui-components/issues/2629)) ([e8a2955](https://github.com/Kong/public-ui-components/commit/e8a29556442703e09f28e96489795403f2fe14f5))
+
+
+
+
+
+## [3.13.18](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.17...@kong-ui-public/entities-gateway-services@3.13.18) (2025-11-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.13.17](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.16...@kong-ui-public/entities-gateway-services@3.13.17) (2025-11-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-gateway-services
+
+
+
+
+
+## [3.13.16](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.15...@kong-ui-public/entities-gateway-services@3.13.16) (2025-10-31)
+
+
+### Bug Fixes
+
+* **entities-gateway-services:** port value update ([#2607](https://github.com/Kong/public-ui-components/issues/2607)) ([c10f15a](https://github.com/Kong/public-ui-components/commit/c10f15ae7f1704d4032b0df8075cdd21693e895f))
+
+
+
+
+
 ## [3.13.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.14...@kong-ui-public/entities-gateway-services@3.13.15) (2025-10-29)
 
 

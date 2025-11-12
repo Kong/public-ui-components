@@ -257,14 +257,13 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
         (edge) => edge.source !== nodeId && edge.target !== nodeId,
       )
 
-      branchGroups.clear(nodeId)
+      branchGroups.clear(nodeId, { commit: false })
+      branchGroups.removeMember(nodeId, { commit: false })
 
       state.value.nodes = state.value.nodes.filter(
         (node) => node.id !== nodeId,
       )
       if (selection.value === nodeId) selection.value = undefined
-
-      branchGroups.dropTarget(nodeId)
 
       const topo = validateGraph()
       if (!topo.ok) {

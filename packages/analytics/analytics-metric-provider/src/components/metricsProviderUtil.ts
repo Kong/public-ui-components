@@ -4,7 +4,7 @@ import {
   type ExploreFilterAll,
   type FilterableExploreDimensions,
   type QueryDatasource, stripUnknownFilters,
-  type Timeframe,
+  type TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
 import type { MetricFetcherOptions } from '../types'
@@ -32,8 +32,7 @@ interface FetcherOptions {
   dimensionFilterValue?: string
   additionalFilter: Ref<ExploreFilterAll[] | undefined>
   queryReady: Ref<boolean>
-  timeframe: Ref<Timeframe>
-  tz: Ref<string>
+  timeRange: Ref<TimeRangeV4>
   hasTrendAccess: Ref<boolean>
   refreshInterval: number
   queryFn: AnalyticsBridge['queryFn']
@@ -49,8 +48,7 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
     dimensionFilterValue,
     additionalFilter,
     queryReady,
-    timeframe,
-    tz,
+    timeRange,
     hasTrendAccess,
     refreshInterval,
     abortController,
@@ -100,8 +98,7 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
 
     filter,
     queryReady,
-    timeframe,
-    tz,
+    timeRange,
 
     // Traffic and error rate cards can't query trend if multiple entities are expected.
     withTrend: computed<boolean>(() => hasTrendAccess.value && !multiEntityQuery),
@@ -125,8 +122,7 @@ export const defaultFetcherDefs = (opts: FetcherOptions) => {
 
     filter,
     queryReady,
-    timeframe,
-    tz,
+    timeRange,
 
     // Don't query latency trends in the multi-entity case: it's possible, but wasteful.
     withTrend: computed<boolean>(() => hasTrendAccess.value && !multiEntityQuery),

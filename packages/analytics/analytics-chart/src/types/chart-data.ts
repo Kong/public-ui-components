@@ -107,6 +107,10 @@ export interface AnalyticsChartOptions {
    * A static or dynamic metric threshold to be displayed on a timeseries chart
    */
   threshold?: Record<ExploreAggregations, Threshold[]>
+  /**
+   * Hide the truncation warning. Used if manually setting a limit
+   */
+  hideTruncationWarning?: boolean
 }
 
 /**

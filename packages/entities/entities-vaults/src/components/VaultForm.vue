@@ -763,7 +763,7 @@ const originalFields = reactive<VaultStateFields>({
   tags: '',
 })
 
-const vaultProvider = ref<VaultProviders>(props.config.konnectConfigStoreAvailable ? VaultProviders.KONNECT : VaultProviders.ENV)
+const vaultProvider = ref<VaultProviders>(props.config.app === 'konnect' ? VaultProviders.KONNECT : VaultProviders.ENV)
 const originalVaultProvider = ref<VaultProviders | null>(null)
 const configStoreId = ref<string>()
 
@@ -774,7 +774,7 @@ const isAvailableTTLConfig = computed(() => {
 const providers = computed<Array<{ label: string, value: VaultProviders }>>(() => {
   return [
     ...(
-      props.config.konnectConfigStoreAvailable
+      props.config.app === 'konnect'
         ? [{
           label: t('form.config.konnect.label'),
           value: VaultProviders.KONNECT,

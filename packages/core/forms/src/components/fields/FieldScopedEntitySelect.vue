@@ -4,6 +4,7 @@
     :disabled="fieldDisabled"
     :dom-id="domId"
     :empty-message="message"
+    :error="error"
     :loading="selectedItemLoading || loading"
     :placeholder="placeholder"
     :readonly="disabled"
@@ -94,7 +95,8 @@ const {
   entity: string
   disabled?: boolean
   fieldDisabled?: boolean
-} & AutoSuggestInjection >()
+  error?: string | null
+} & AutoSuggestInjection>()
 
 defineEmits<{
   change: [item: SelectItem<string> | null]

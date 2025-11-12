@@ -23,7 +23,12 @@ export enum SupportedEntityType {
   BackendCluster = 'backend_cluster',
   VirtualCluster = 'virtual_cluster',
   Listener = 'listener',
-  Policy = 'policy',
+  ProducePolicy = 'produce_policy',
+  ConsumePolicy = 'consume_policy',
+  ClusterPolicy = 'cluster_policy',
+  ListenerPolicy = 'listener_policy',
+  SchemaRegistry = 'schema_registry',
+  StaticKey = 'static_key',
   // Use this for any entity type that is not supported by terraform
   // If entityType is 'other' terraform scripts will not be available
   // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!
@@ -31,6 +36,8 @@ export enum SupportedEntityType {
 }
 
 export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
+
+export const EventGatewayTypesArray = ['backend_cluster', 'virtual_cluster', 'listener', 'produce_policy', 'consume_policy', 'cluster_policy', 'listener_policy', 'schema_registry', 'static_key']
 
 export interface BaseEntityConfig {
   /** the ID of the entity */

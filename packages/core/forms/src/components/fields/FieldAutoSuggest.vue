@@ -11,6 +11,7 @@
       :disabled="loading"
       :dom-id="schema.model"
       :entity="entity"
+      :error="error"
       :field-disabled="schema.disabled"
       :fields="inputFieldsWithoutId"
       :get-all="getAll"
@@ -85,6 +86,7 @@ export default {
       suggestions: [],
       idValue: '',
       message: 'Type something to search',
+      error: null,
       items: [],
       initialItem: null,
       selectedItem: null,
@@ -128,6 +130,8 @@ export default {
     let presetEntity
     let entityData
 
+    this.error = null
+
     try {
       switch (this.fieldState) {
         case FIELD_STATES.UPDATE_ENTITY:
@@ -139,7 +143,7 @@ export default {
           // but sometimes it is stored in a nested key inside the `data` key, so we allow the user to specify it in the schema
           // e.g. entity data returned from `consumer_groups/:id` is stored in `data.consumer_group`
           this.loading = true
-          entityData = (await this[FORMS_API_KEY].getOne(this.entity, this.model[this.schema.model])).data
+          entityData = await this.getOne(this.model[this.schema.model])
           presetEntity = this.getItem(this.schema.entityDataKey ? entityData[this.schema.entityDataKey] : entityData)
           this.idValue = presetEntity.id
           break
@@ -154,11 +158,13 @@ export default {
         this.initialItem = this.transformItem(presetEntity)
         this.selectedItem = this.initialItem
       }
-      // putting this here prevents the select value from being 'select' -> 'actual value' after the loading state gets flashed
-      this.loading = false
     } catch (err) {
       this.message = this.t('fields.auto_suggest.error.load_entity', { entity: this.schema.entity })
+      this.error = err.message || this.message
       console.error('err!', err)
+    } finally {
+      // putting this here prevents the select value from being 'select' -> 'actual value' after the loading state gets flashed
+      this.loading = false
     }
   },
 
@@ -176,7 +182,14 @@ export default {
         console.warn('[@kong-ui-public/forms] No API service provided')
         return {}
       }
-      const res = await this[FORMS_API_KEY].getOne(this.entity, id)
+      const res = await this[FORMS_API_KEY].getOne(this.entity, id, {
+        // Avoid full screen 404 error
+        validateStatus: status => (status >= 200 && status < 300) || status === 404,
+      })
+
+      if (res.status === 404) {
+        throw new Error(`Entity of type ${this.entity} with id ${id} not found`)
+      }
 
       return res.data
     },
@@ -229,6 +242,7 @@ export default {
     },
 
     onSelected(item) {
+      this.error = null
       this.idValue = item && item.id
       this.selectedItem = item // This is used for matching value not in the list
       this.updateModel(this.getReturnValue(item || {}))

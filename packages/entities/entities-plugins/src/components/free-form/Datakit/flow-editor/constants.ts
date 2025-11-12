@@ -36,9 +36,9 @@ export const HOTKEYS = {
 export const DEFAULT_LAYOUT_OPTIONS = {
   padding: 80,
   gaps: {
-    nodes: 40,
+    nodes: 60,
     edges: 80,
-    ranks: 40,
+    ranks: 60,
   },
 } as const satisfies Pick<LayoutOptions, 'padding' | 'gaps'>
 

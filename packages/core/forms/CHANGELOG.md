@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.19.0...@kong-ui-public/forms@4.19.1) (2025-11-06)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
+# [4.19.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.18.4...@kong-ui-public/forms@4.19.0) (2025-11-06)
+
+
+### Features
+
+* **entities-plugin:** datakit m2 code editor [KM-1860] ([#2608](https://github.com/Kong/public-ui-components/issues/2608)) ([508d6d9](https://github.com/Kong/public-ui-components/commit/508d6d99916798b265efc5b766f90ed2343fbaf9))
+
+
+
+
+
+## [4.18.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.18.3...@kong-ui-public/forms@4.18.4) (2025-11-05)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.18.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.18.2...@kong-ui-public/forms@4.18.3) (2025-10-29)
 
 

@@ -175,7 +175,6 @@ describe('<AnalyticsChart />', () => {
   })
 
   it('renders time series bar chart with no dimension and limited results', () => {
-
     mount({
       chartOptions: {
         type: 'timeseries_bar',
@@ -197,7 +196,6 @@ describe('<AnalyticsChart />', () => {
   })
 
   it('renders a horizontal bar chart with no legend values', () => {
-
     mount({
       chartData: exploreResult,
       chartOptions: {
@@ -425,9 +423,34 @@ describe('<AnalyticsChart />', () => {
     cy.get('.tooltip-container .square-marker').should('have.length', 2)
   })
 
+  it('renders a truncation warning if truncated', () => {
+    expect(exploreResult.meta.truncated).to.eq(true)
+    mount({ chartData: exploreResult })
+    cy.getTestId('truncation-warning').should('exist')
+  })
+
+  it('does not render a truncation warning if not truncated', () => {
+    expect(multiDimensionExploreResult.meta.truncated).to.eq(false)
+    mount({
+      chartData: multiDimensionExploreResult,
+      chartOptions: { type: 'vertical_bar' },
+    })
+    cy.getTestId('truncation-warning').should('not.exist')
+  })
+
+  it('hides the truncation warning when chartOptions say to', () => {
+    expect(exploreResult.meta.truncated).to.eq(true)
+    mount({
+      chartData: exploreResult,
+      chartOptions: {
+        type: 'timeseries_line',
+        hideTruncationWarning: true,
+      },
+    })
+    cy.getTestId('truncation-warning').should('not.exist')
+  })
 
   describe('Zoom actions', () => {
-
     it('cannot select area if no zoom actions are present', () => {
       mount({
         onSelectChartRange: cy.spy().as('onSelectChartRange'),

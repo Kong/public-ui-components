@@ -30,6 +30,8 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Keys extends any
   ? Omit<T, Keys> & { [K in Keys]-?: T[K] }
   : never
 
+export type NonEmptyArray<T> = [T, ...T[]]
+
 export type EditorMode = 'code' | 'flow'
 
 interface EditorModalNavItemBase {

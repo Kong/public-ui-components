@@ -3,6 +3,182 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.115.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.3...@kong-ui-public/entities-plugins@9.115.0) (2025-11-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** should not set active group when dragging implicit nodes ([#2632](https://github.com/Kong/public-ui-components/issues/2632)) ([7fe9436](https://github.com/Kong/public-ui-components/commit/7fe94365d141efebf4d6d37f73c5d78eaaaa0fab))
+
+
+### Features
+
+* **entities-plugins:** add fan-out interaction to node portals with more than one connections ([#2631](https://github.com/Kong/public-ui-components/issues/2631)) ([e45819f](https://github.com/Kong/public-ui-components/commit/e45819fea64592ccf42939b69005221b4dbd5647))
+* **entities-plugins:** datakit tweak auto-layout algorithm for depth-crossing nodes ([#2623](https://github.com/Kong/public-ui-components/issues/2623)) ([fafe657](https://github.com/Kong/public-ui-components/commit/fafe6573b81332142af0bf09ceb43c5f27787742))
+
+
+
+
+
+## [9.114.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.2...@kong-ui-public/entities-plugins@9.114.3) (2025-11-11)
+
+
+### Bug Fixes
+
+* **entities:** toggle enabled when filtered ([#2629](https://github.com/Kong/public-ui-components/issues/2629)) ([e8a2955](https://github.com/Kong/public-ui-components/commit/e8a29556442703e09f28e96489795403f2fe14f5))
+
+
+
+
+
+## [9.114.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.1...@kong-ui-public/entities-plugins@9.114.2) (2025-11-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.114.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.0...@kong-ui-public/entities-plugins@9.114.1) (2025-11-10)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.114.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.113.3...@kong-ui-public/entities-plugins@9.114.0) (2025-11-07)
+
+
+### Features
+
+* **entities-plugins:** adjust visualization for branch group entering edges ([#2615](https://github.com/Kong/public-ui-components/issues/2615)) ([bcbdb8d](https://github.com/Kong/public-ui-components/commit/bcbdb8dd347dbfd7f58769ceb5f2287714c475ca))
+
+
+
+
+
+## [9.113.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.113.2...@kong-ui-public/entities-plugins@9.113.3) (2025-11-07)
+
+
+### Bug Fixes
+
+* **entities-plugins:** jwt-singer - remove redundant general infofields ([#2625](https://github.com/Kong/public-ui-components/issues/2625)) ([86484e6](https://github.com/Kong/public-ui-components/commit/86484e67d6d53ebc19c43c19ec7d0730a03c8d86))
+
+
+
+
+
+## [9.113.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.113.1...@kong-ui-public/entities-plugins@9.113.2) (2025-11-07)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit - check teleport target existence ([#2624](https://github.com/Kong/public-ui-components/issues/2624)) ([7a443fa](https://github.com/Kong/public-ui-components/commit/7a443fa7e1cd25aa485c8c81766a44ed02aac5a5))
+
+
+
+
+
+## [9.113.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.113.0...@kong-ui-public/entities-plugins@9.113.1) (2025-11-06)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.113.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.5...@kong-ui-public/entities-plugins@9.113.0) (2025-11-06)
+
+
+### Features
+
+* **entities-plugin:** datakit m2 code editor [KM-1860] ([#2608](https://github.com/Kong/public-ui-components/issues/2608)) ([508d6d9](https://github.com/Kong/public-ui-components/commit/508d6d99916798b265efc5b766f90ed2343fbaf9))
+* **entities-plugins:** customize datakit plugin config title and desc ([#2620](https://github.com/Kong/public-ui-components/issues/2620)) ([81ee459](https://github.com/Kong/public-ui-components/commit/81ee45950567e2fc18273131c26d478b95a3c268))
+
+
+
+
+
+## [9.112.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.4...@kong-ui-public/entities-plugins@9.112.5) (2025-11-05)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix datakit branch group autosize ([#2616](https://github.com/Kong/public-ui-components/issues/2616)) ([fdf628b](https://github.com/Kong/public-ui-components/commit/fdf628bf6ef99715737465fbb9ca915e536fcf17))
+
+
+
+
+
+## [9.112.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.3...@kong-ui-public/entities-plugins@9.112.4) (2025-11-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.112.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.2...@kong-ui-public/entities-plugins@9.112.3) (2025-11-05)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.112.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.1...@kong-ui-public/entities-plugins@9.112.2) (2025-11-05)
+
+
+### Bug Fixes
+
+* **credentials:** add ttl unit info to bubble help [KHCP-18286] ([#2617](https://github.com/Kong/public-ui-components/issues/2617)) ([8bedc67](https://github.com/Kong/public-ui-components/commit/8bedc67cc67787fa226cc92721e8e1782c456a16))
+
+
+
+
+
+## [9.112.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.112.0...@kong-ui-public/entities-plugins@9.112.1) (2025-11-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix node type copy ([#2611](https://github.com/Kong/public-ui-components/issues/2611)) ([c3a5017](https://github.com/Kong/public-ui-components/commit/c3a50172b4b04234c1b51bc758457c5b9ec7fd22))
+
+
+
+
+
+# [9.112.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.111.0...@kong-ui-public/entities-plugins@9.112.0) (2025-11-03)
+
+
+### Features
+
+* **entities-plugins:** add remove from branch action ([#2614](https://github.com/Kong/public-ui-components/issues/2614)) ([3572b1e](https://github.com/Kong/public-ui-components/commit/3572b1e04b8df11c94b0080a312698f8d9e4ed6a))
+
+
+
+
+
+# [9.111.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.110.2...@kong-ui-public/entities-plugins@9.111.0) (2025-11-01)
+
+
+### Features
+
+* **entities-plugins:** add leave confirmation for flow editor ([#2612](https://github.com/Kong/public-ui-components/issues/2612)) ([476d341](https://github.com/Kong/public-ui-components/commit/476d341e3e631910a6c5b49b53e6d3f6127ae9c4))
+
+
+
+
+
+## [9.110.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.110.1...@kong-ui-public/entities-plugins@9.110.2) (2025-10-31)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.110.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.110.0...@kong-ui-public/entities-plugins@9.110.1) (2025-10-30)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

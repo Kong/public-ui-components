@@ -295,10 +295,10 @@ const buildGetAllUrl = (entityType: string): string => {
  * @param {entityId} string - the id of the entity to look up
  * @returns {Promise<import('axios').AxiosResponse<T>>}
  */
-const getOne = (entityType: string, entityId: string): Promise<AxiosResponse> => {
+const getOne = (entityType: string, entityId: string, axiosOptions?: AxiosRequestConfig): Promise<AxiosResponse> => {
   const url = buildGetOneUrl(entityType, entityId)
 
-  return axiosInstance.get(url)
+  return axiosInstance.get(url, axiosOptions)
 }
 
 /**

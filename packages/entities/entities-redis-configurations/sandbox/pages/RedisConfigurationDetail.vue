@@ -27,6 +27,7 @@ const konnectConfig: KonnectRedisConfigurationEntityConfig = {
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
   entityId: route.params.id as string,
+  formatPreferenceKey: 'redis_configuration_format_preference',
 }
 
 const kongManagerConfig: KongManagerRedisConfigurationEntityConfig = {

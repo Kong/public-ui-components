@@ -59,6 +59,12 @@
             />
           </KDropdownItem>
           <KDropdownItem
+            v-if="branchMembership"
+            @click="removeFromBranchGroup"
+          >
+            {{ t('plugins.free-form.datakit.flow_editor.actions.remove_from_branch') }}
+          </KDropdownItem>
+          <KDropdownItem
             danger
             @click="removeNode(data.id)"
           >
@@ -87,14 +93,12 @@
             type="target"
           />
 
-          <!-- ValueIndicator of input -->
-          <ValueIndicator
-            v-if="getSpecialConnection('input')"
-            :edge-id="getSpecialConnection('input')!.edgeId"
+          <!-- NodePortal of input -->
+          <NodePortal
+            v-if="inputPortals.has('input')"
             mode="input"
-            :reversed="isReversed"
-            :source-field-name="getSpecialConnection('input')!.sourceFieldName"
-            :source-node="getSpecialConnection('input')!.sourceNode"
+            :reversed="isPortalReversed('input')"
+            :targets="inputPortals.get('input')!"
           />
 
           <div class="handle-label-wrapper">
@@ -141,14 +145,12 @@
               type="target"
             />
 
-            <!-- ValueIndicator of input fields -->
-            <ValueIndicator
-              v-if="getSpecialConnection(field.id)"
-              :edge-id="getSpecialConnection(field.id)!.edgeId"
+            <!-- NodePortal of input fields -->
+            <NodePortal
+              v-if="inputPortals.has(field.id)"
               mode="input"
-              :reversed="isReversed"
-              :source-field-name="getSpecialConnection(field.id)!.sourceFieldName"
-              :source-node="getSpecialConnection(field.id)!.sourceNode"
+              :reversed="isPortalReversed('input')"
+              :targets="inputPortals.get(field.id)!"
             />
 
             <div class="handle-label-wrapper">
@@ -207,13 +209,12 @@
             type="source"
           />
 
-          <!-- ValueIndicator of output -->
-          <ValueIndicator
-            v-if="getSpecialOutputConnection('output')"
+          <!-- NodePortal of output -->
+          <NodePortal
+            v-if="outputPortals.has('output')"
             mode="output"
-            :reversed="isReversed"
-            :target-field-names="getSpecialOutputConnection('output')!.targetFieldNames"
-            :target-nodes="getSpecialOutputConnection('output')!.targetNodes"
+            :reversed="isPortalReversed('output')"
+            :targets="outputPortals.get('output')!"
           />
         </div>
 
@@ -239,13 +240,12 @@
               type="source"
             />
 
-            <!-- ValueIndicator of output fields -->
-            <ValueIndicator
-              v-if="getSpecialOutputConnection(field.id)"
+            <!-- NodePortal of output fields -->
+            <NodePortal
+              v-if="outputPortals.has(field.id)"
               mode="output"
-              :reversed="isReversed"
-              :target-field-names="getSpecialOutputConnection(field.id)!.targetFieldNames"
-              :target-nodes="getSpecialOutputConnection(field.id)!.targetNodes"
+              :reversed="isPortalReversed('output')"
+              :targets="outputPortals.get(field.id)!"
             />
           </div>
         </template>
@@ -278,7 +278,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EdgeId, FieldId, FieldName, NodeField, NodeInstance } from '../../types'
+import type { FieldName, NodeInstance, NonEmptyArray } from '../../types'
 
 import { computed, watch } from 'vue'
 import { KTooltip, KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
@@ -293,21 +293,21 @@ import {
 } from '@kong/design-tokens'
 import { MoreIcon, UnfoldLessIcon, UnfoldMoreIcon, WarningIcon } from '@kong/icons'
 import { Handle, Position } from '@vue-flow/core'
+import { isEqual } from 'lodash-es'
 
 import english from '../../../../../locales/en.json'
 import { isReadableProperty, isWritableProperty } from '../node/property'
 import { useOptionalFlowStore } from '../store/flow'
 import { getNodeMeta } from '../store/helpers'
 import { useEditorStore } from '../store/store'
-import HandleTwig from './HandleTwig.vue'
-import { isImplicitNode } from './node'
-import NodeBadge from './NodeBadge.vue'
-import HotkeyLabel from '../HotkeyLabel.vue'
 import { HOTKEYS } from '../constants'
-import { isEqual } from 'lodash-es'
-import ValueIndicator from './ValueIndicator.vue'
+import { isImplicitNode } from './node'
+import HotkeyLabel from '../HotkeyLabel.vue'
+import NodePortal from './NodePortal.vue'
+import HandleTwig from './HandleTwig.vue'
+import NodeBadge from './NodeBadge.vue'
 
-const { data } = defineProps<{
+const { data, readonly } = defineProps<{
   data: NodeInstance
   error?: boolean
   readonly?: boolean
@@ -326,6 +326,7 @@ const {
   duplicateNode,
   removeNode,
   propertiesPanelOpen,
+  branchGroups,
 } = useEditorStore()
 
 const meta = computed(() => getNodeMeta(data.type))
@@ -345,6 +346,7 @@ const outputsExpanded = computed(() => data.expanded.output ?? false)
 
 const branchHandles = computed(() => meta.value.io?.next?.branches?.map(({ name }) => name) ?? [])
 const hasBranchHandles = computed(() => branchHandles.value.length > 0)
+const branchMembership = computed(() => branchGroups.findMembership(data.id))
 
 const showInputHandles = computed(() => {
   if (data.type === 'property') {
@@ -392,117 +394,67 @@ const handleTwigColor = computed(() => {
   return isImplicit.value ? KUI_COLOR_BACKGROUND_NEUTRAL_STRONG : KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
 })
 
-// Special input connections (vault or cross-phase)
-const specialInputConnections = computed(() => {
-  const connections = new Map<string, {
-    fieldId: FieldId | 'input'
-    edgeId: EdgeId
-    field: NodeField | null
-    sourceNode: NodeInstance
-    sourceFieldName?: FieldName
-  }>()
-
-  const inEdges = getInEdgesByNodeId(data.id)
-
-  for (const edge of inEdges) {
-    const sourceNode = getNodeById(edge.source)
-    if (!sourceNode) continue
-
-    const isVault = sourceNode.type === 'vault'
-
-    const isCrossPhase = sourceNode.phase !== data.phase
-
-    if (!isVault && !isCrossPhase) continue
-
-    let sourceFieldName: FieldName | undefined
-    if (edge.sourceField) {
-      const sourceField = sourceNode.fields.output.find(f => f.id === edge.sourceField)
-      sourceFieldName = sourceField?.name
-    }
-
-    if (edge.targetField) {
-      const field = data.fields.input.find(f => f.id === edge.targetField)
-      if (!field) continue
-
-      connections.set(edge.targetField, {
-        fieldId: edge.targetField,
-        edgeId: edge.id,
-        field,
-        sourceNode,
-        sourceFieldName,
-      })
-    } else {
-      connections.set('input', {
-        fieldId: 'input',
-        edgeId: edge.id,
-        field: null,
-        sourceNode,
-        sourceFieldName,
-      })
-    }
+/**
+ * Determines whether the NodePortal needs to flip to the opposite side.
+ * Inputs inherit the node's reversed flag; outputs take the inverse.
+ */
+function isPortalReversed(mode: 'input' | 'output') {
+  if (mode === 'input') {
+    return isReversed.value
   }
+  return !isReversed.value
+}
 
-  return connections
-})
+type PortalTarget = { node: NodeInstance, fieldName?: FieldName }
 
-// Special output connections (cross-phase only)
-const specialOutputConnections = computed(() => {
-  const connections = new Map<string, {
-    fieldId: FieldId | 'output'
-    edgeIds: EdgeId[]
-    field: NodeField | null
-    targetNodes: NodeInstance[]
-    targetFieldNames: Array<FieldName | undefined>
-  }>()
+function collectPortals(io: 'input' | 'output') {
+  const portals = new Map<string, NonEmptyArray<PortalTarget>>()
+  const edges = io === 'input' ? getInEdgesByNodeId(data.id) : getOutEdgesByNodeId(data.id)
 
-  const outEdges = getOutEdgesByNodeId(data.id)
-
-  for (const edge of outEdges) {
-    const targetNode = getNodeById(edge.target)
+  for (const edge of edges) {
+    const targetNode = getNodeById(io === 'input' ? edge.source : edge.target)
     if (!targetNode) continue
 
-    const isCrossPhase = targetNode.phase !== data.phase
-
-    if (!isCrossPhase) continue
-
-    let targetFieldName: FieldName | undefined
-    if (edge.targetField) {
-      const targetField = targetNode.fields.input.find(f => f.id === edge.targetField)
-      targetFieldName = targetField?.name
+    if (io === 'input') {
+      const isVault = targetNode.type === 'vault'
+      const isCrossPhase = targetNode.phase !== data.phase
+      const isEnteringGroup = branchGroups.isEdgeEnteringGroup(targetNode.id, data.id)
+      if (!(isVault || isCrossPhase || isEnteringGroup)) continue
+    } else {
+      const isCrossPhase = targetNode.phase !== data.phase
+      const isEnteringGroup = branchGroups.isEdgeEnteringGroup(data.id, targetNode.id)
+      if (!(isCrossPhase || isEnteringGroup)) continue
     }
 
-    const fieldKey = edge.sourceField || 'output'
+    const key = io === 'input'
+      ? (edge.targetField || 'input')
+      : (edge.sourceField || 'output')
 
-    if (!connections.has(fieldKey)) {
-      const field = edge.sourceField
-        ? data.fields.output.find(f => f.id === edge.sourceField) || null
-        : null
-
-      connections.set(fieldKey, {
-        fieldId: fieldKey,
-        edgeIds: [],
-        field,
-        targetNodes: [],
-        targetFieldNames: [],
-      })
+    let fieldName: FieldName | undefined
+    if (io === 'input' && edge.sourceField) {
+      const field = targetNode.fields.output.find(f => f.id === edge.sourceField)
+      fieldName = field?.name
+    } else if (io === 'output' && edge.targetField) {
+      const field = targetNode.fields.input.find(f => f.id === edge.targetField)
+      fieldName = field?.name
     }
 
-    const connection = connections.get(fieldKey)!
-    connection.edgeIds.push(edge.id)
-    connection.targetNodes.push(targetNode)
-    connection.targetFieldNames.push(targetFieldName)
+    const targets = portals.get(key)
+    if (targets) {
+      targets.push({ node: targetNode, fieldName })
+    } else {
+      portals.set(key, [{ node: targetNode, fieldName }])
+    }
   }
 
-  return connections
-})
-
-function getSpecialConnection(fieldId: FieldId | 'input') {
-  return specialInputConnections.value.get(fieldId)
+  return portals
 }
 
-function getSpecialOutputConnection(fieldId: FieldId | 'output') {
-  return specialOutputConnections.value.get(fieldId)
-}
+// Input portals (vault, cross-phase, or branch-group-entering)
+const inputPortals = computed(() => collectPortals('input'))
+
+// Output portals (cross-phase or branch-group-entering)
+const outputPortals = computed(() => collectPortals('output'))
 
 function toggleExpanded(io: 'input' | 'output') {
   if (!flowStore || flowStore.readonly) return
@@ -521,6 +473,10 @@ async function duplicate() {
   await flowStore.selectNode(newId)
   flowStore.scrollRightToReveal(newId)
   propertiesPanelOpen.value = true
+}
+
+function removeFromBranchGroup() {
+  branchGroups.removeMember(data.id)
 }
 
 watch(inputsCollapsible, (collapsible) => {

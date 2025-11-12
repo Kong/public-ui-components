@@ -132,6 +132,11 @@ const recordResolver = (data: RedisConfigurationResponse) => {
  * Put config details into `config` object to display in the code block tab
  */
 const codeBlockRecordFormatter = (record: Record<string, any>, codeFormat: string) => {
+  // Prevent type errors, return empty object if no record
+  if (!record || Object.keys(record).length === 0) {
+    return {}
+  }
+
   const { id, name, created_at, updated_at, type, tags, ...config } = record
   if (codeFormat === 'terraform') {
     return {
