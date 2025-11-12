@@ -90,6 +90,7 @@ import { useHotkeys } from './composables/useHotkeys'
 import { DK_DATA_TRANSFER_MIME_TYPE, MAX_ZOOM_LEVEL, MIN_ZOOM_LEVEL } from './constants'
 import FlowNode from './node/FlowNode.vue'
 import GroupNode from './node/GroupNode.vue'
+import { provideAutoLayoutHelper } from './store/auto-layout'
 import { provideFlowStore } from './store/flow'
 
 import '@vue-flow/controls/dist/style.css'
@@ -125,7 +126,6 @@ const { i18n: { t } } = useI18n()
 const {
   vueFlowStore,
   editorStore,
-  autoLayout,
   fitViewParams,
   fitView,
   selectNode,
@@ -143,6 +143,7 @@ const {
   },
   readonly: mode !== 'edit',
 })
+const { autoLayout } = provideAutoLayoutHelper()
 
 const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode, commit: commitHistory, selectPortalEdge } = editorStore
 const { screenToFlowCoordinate, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
