@@ -1,31 +1,36 @@
 import dagre from '@dagrejs/dagre'
 import { useVueFlow } from '@vue-flow/core'
-import { createInjectionState } from '@vueuse/core'
 import { nextTick, toValue } from 'vue'
 
-import { getBoundingRect } from '../composables/helpers'
 import { DEFAULT_LAYOUT_OPTIONS, DEFAULT_VIEWPORT_WIDTH, DK_BRANCH_GROUP_PADDING } from '../constants'
 import { isGroupInstance } from '../node/node'
-import { useFlowStore } from './flow'
+import { useEditorStore } from '../store/store'
+import { getBoundingRect } from './helpers'
 
 import type { Edge as DagreEdge, Node as DagreNode } from '@dagrejs/dagre'
 import type { GraphNode, Rect } from '@vue-flow/core'
 
-import type { GroupId, GroupInstance, NodeId, NodeInstance } from '../../types'
+import type { GroupId, GroupInstance, NodeId, NodeInstance, NodePhase } from '../../types'
+import type { LayoutOptions, useFlowStore } from '../store/flow'
+import type { useBranchLayout } from './useBranchLayout'
 
-const [provideAutoLayoutHelper, useOptionalAutoLayoutHelper] = createInjectionState(() => {
-  const { findNode } = useVueFlow()
+interface useAutoLayoutOptions extends Pick<ReturnType<typeof useFlowStore>, 'nodes' | 'edges'> {
+  phase: NodePhase
+  layoutOptions: LayoutOptions
+  branchLayout: ReturnType<typeof useBranchLayout>
+}
+
+export function useAutoLayout(options: useAutoLayoutOptions) {
   const {
-    editorStore,
-    branchGroups,
     branchLayout,
     phase,
     layoutOptions,
     nodes,
     edges,
-  } = useFlowStore()
+  } = options
 
-  const { state, getNodeById, moveNode, commit: historyCommit } = editorStore
+  const { findNode } = useVueFlow()
+  const { state, branchGroups, getNodeById, moveNode, commit: historyCommit } = useEditorStore()
   const { getNodeDepth, isGroupId, groupsByOwner } = branchGroups
   const {
     isBranchEdgeId,
@@ -448,14 +453,4 @@ const [provideAutoLayoutHelper, useOptionalAutoLayoutHelper] = createInjectionSt
   }
 
   return { autoLayout }
-})
-
-export { provideAutoLayoutHelper, useOptionalAutoLayoutHelper }
-
-export function useAutoLayoutHelper() {
-  const helper = useOptionalAutoLayoutHelper()
-  if (!helper) {
-    throw new Error('AutoLayoutHelper is not provided. Ensure you are using provideAutoLayoutHelper in a parent component.')
-  }
-  return helper
 }

@@ -6,9 +6,11 @@ import { computed, toValue, watch } from 'vue'
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
 import { createEdgeConnectionString, createNewConnectionString } from '../composables/helpers'
+import { useAutoLayout } from '../composables/useAutoLayout'
 import { useBranchDrop } from '../composables/useBranchDrop'
 import { useBranchLayout } from '../composables/useBranchLayout'
 import { useOptionalConfirm } from '../composables/useConflictConfirm'
+import { useNodePortals } from '../composables/useNodePortals'
 import {
   DEFAULT_LAYOUT_OPTIONS,
   DK_FLOW_EDGE_Z_OFFSET,
@@ -21,7 +23,7 @@ import { isImplicitNode } from '../node/node'
 import { parseGroupId } from './helpers'
 import { useEditorStore } from './store'
 
-import type { Connection, FitViewParams, Node, NodeSelectionChange, XYPosition } from '@vue-flow/core'
+import type { Connection, FitViewParams, GraphNode, Node, NodeSelectionChange, XYPosition } from '@vue-flow/core'
 import type { MaybeRefOrGetter } from '@vueuse/core'
 
 import type {
@@ -34,7 +36,6 @@ import type {
   NodeInstance,
   NodePhase,
 } from '../../types'
-import { useNodePortals } from './useNodePortals'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 
 /**
@@ -292,6 +293,15 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       ...branchEdges.value,
       ...configEdges.value,
     ])
+
+
+    const { autoLayout } = useAutoLayout({
+      phase,
+      layoutOptions,
+      branchLayout,
+      nodes,
+      edges,
+    })
 
     useNodePortals({
       readonly,
@@ -779,17 +789,14 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     return {
       vueFlowStore,
       editorStore,
-      branchGroups,
-      branchLayout,
 
-      phase,
       readonly,
-      layoutOptions,
 
       nodes,
       edges,
 
       selectNode,
+      autoLayout,
       placeToRight,
       scrollRightToReveal,
 
