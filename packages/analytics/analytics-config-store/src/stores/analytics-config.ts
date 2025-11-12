@@ -63,7 +63,7 @@ export const useAnalyticsConfigStore = defineStore('analytics-config', () => {
   const isReady = (): Promise<void> => {
     return new Promise((resolve) => {
       if (!loading.value) {
-        return Promise.resolve()
+        return resolve()
       }
 
       const unwatch = watch(loading, () => {
