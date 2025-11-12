@@ -68,6 +68,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
+    "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong/icons": "^1.41.0",
     "@types/file-saver": "^2.0.7",
