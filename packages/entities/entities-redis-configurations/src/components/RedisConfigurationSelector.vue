@@ -7,6 +7,7 @@
     :loading="loading"
     :model-value="modelValue"
     :placeholder="placeholder || t('selector.placeholder')"
+    v-bind="$attrs"
     @change="onSelectionChange"
     @query-change="onQueryChange"
   >
@@ -74,6 +75,10 @@ import { useRedisConfigurationSelector } from '../composables/useRedisConfigurat
 import useI18n from '../composables/useI18n'
 import RedisConfigurationFormModal from './RedisConfigurationFormModal.vue'
 import type { RedisConfigurationResponse } from '../types'
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 const {
   redisType = 'redis-ee',
