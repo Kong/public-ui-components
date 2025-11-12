@@ -33,7 +33,7 @@
       />
     </div>
 
-    <!-- Using `v-show` to keep the option items -->
+    <!-- Using `v-show` instead of `v-if` to preserve component state and avoid re-fetching options when toggling between shared and dedicated configuration -->
     <div
       v-show="usePartial"
       class="shared-redis-config"
