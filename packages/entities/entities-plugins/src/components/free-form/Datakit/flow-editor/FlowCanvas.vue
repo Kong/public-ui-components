@@ -144,7 +144,7 @@ const {
   readonly: mode !== 'edit',
 })
 
-const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode, commit: commitHistory } = editorStore
+const { addNode, propertiesPanelOpen, invalidConfigNodeIds, selectedNode, duplicateNode, commit: commitHistory, selectPortalEdge } = editorStore
 const { screenToFlowCoordinate, zoomIn, zoomOut, viewport, maxZoom, minZoom } = vueFlowStore
 const {
   activeGroupId,
@@ -169,6 +169,7 @@ function onNodeClick(event: NodeMouseEvent) {
 
   if (event?.node?.type === 'group') {
     selectNode(undefined)
+    selectPortalEdge(undefined)
     return
   }
 
@@ -327,7 +328,7 @@ defineExpose({ autoLayout, fitView })
 
     &:not(.readonly) {
       :deep(.vue-flow__node) {
-        &:hover:not(:has(.value-indicator:hover)) .dk-flow-node {
+        &:hover:not(.selected, :has(.value-indicator:hover)) .dk-flow-node {
           border-color: $kui-color-border-primary-weak;
         }
 

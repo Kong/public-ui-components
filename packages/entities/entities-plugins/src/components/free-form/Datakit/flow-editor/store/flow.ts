@@ -39,6 +39,7 @@ import type {
   NodeInstance,
   NodePhase,
 } from '../../types'
+import { useNodePortals } from './useNodePortals'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 
 /**
@@ -300,6 +301,11 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       ...branchEdges.value,
       ...configEdges.value,
     ])
+
+    useNodePortals({
+      readonly,
+      flowId,
+    })
 
     // Moved away from VueFlow's `:nodes` and `:edges` props because
     // they have race conditions while being updated simultaneously.
