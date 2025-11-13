@@ -42,6 +42,8 @@ export interface BasePluginListConfig {
   getConfigureDynamicOrderingRoute: (plugin: EntityRow) => RouteLocationRaw
   /** An synchronous function, that returns a string for a entity row, will be displayed on the switch hover tooltip */
   getToggleDisabledTooltip?: (plugin: EntityRow) => string | null
+  /** Whether enable Plugins Table M1 improvements */
+  isPluginListM1?: boolean
 }
 
 /** Konnect plugin list config */

@@ -4,6 +4,7 @@
       :cache-identifier="cacheIdentifier"
       :disable-sorting="disableSorting"
       :empty-state-options="emptyStateOptions"
+      :enable-client-sort="isClientSort"
       enable-entity-actions
       :error-message="errorMessage"
       :fetcher="fetcher"
@@ -60,6 +61,48 @@
       </template>
 
       <template
+        v-if="isM1"
+        #bulk-actions="{ selectedRows }"
+      >
+        <KDropdown
+          appearance="secondary"
+          show-caret
+          trigger-text="Bulk Actions"
+        >
+          <template #items>
+            <template v-if="selectedRows.length">
+              <KDropdownItem
+                v-show="hasDisabledRow(selectedRows)"
+                data-testid="bulk-action-entity-enable"
+                @click="toggleEnablementForRows(selectedRows, true)"
+              >
+                {{ t('actions.enable') }}
+              </KDropdownItem>
+              <KDropdownItem
+                v-show="hasEnabledRow(selectedRows)"
+                data-testid="bulk-action-entity-disable"
+                @click="toggleEnablementForRows(selectedRows, false)"
+              >
+                {{ t('actions.disable') }}
+              </KDropdownItem>
+              <KDropdownItem
+                danger
+                data-testid="bulk-action-entity-delete"
+                has-divider
+              >
+                {{ t('actions.delete') }}
+              </KDropdownItem>
+            </template>
+            <template v-else>
+              <div class="no-selection-tip">
+                {{ t('plugins.list.bulk_actions.no_selection') }}
+              </div>
+            </template>
+          </template>
+        </KDropdown>
+      </template>
+
+      <template
         v-if="!filterQuery && config.app === 'konnect'"
         #empty-state
       >
@@ -111,7 +154,18 @@
             :name="row.name"
             :size="24"
           />
-          <div class="info-wrapper">
+          <div
+            v-if="isM1"
+            class="info-wrapper"
+          >
+            <span
+              class="info-name"
+            >{{ pluginMetaData.getDisplayName(row.name) }}</span>
+          </div>
+          <div
+            v-else
+            class="info-wrapper"
+          >
             <span
               v-if="row.instance_name"
               class="info-name"
@@ -126,6 +180,10 @@
             >{{ pluginMetaData.getDisplayName(row.name) }}</span>
           </div>
         </div>
+      </template>
+
+      <template #instance_name="{ rowValue }">
+        {{ rowValue ?? '-' }}
       </template>
 
       <template #appliedTo="{ row }">
@@ -149,7 +207,10 @@
         <span v-else>-</span>
       </template>
 
-      <template #enabled="{ row }">
+      <template
+        v-if="!isM1"
+        #enabled="{ row }"
+      >
         <PermissionsWrapper
           :auth-function="async () => !!(await canEdit(row) && await canToggle(row))"
           force-show
@@ -166,9 +227,31 @@
           </template>
         </PermissionsWrapper>
       </template>
+      <template
+        v-else
+        #enabled="{ rowValue }"
+      >
+        <KBadge :appearance="rowValue ? 'success' : 'neutral'">
+          {{
+            rowValue
+              ? t('plugins.list.table_headers.enabled_badge.true')
+              : t('plugins.list.table_headers.enabled_badge.false')
+          }}
+        </KBadge>
+      </template>
 
       <template #ordering="{ rowValue }">
-        <KBadge :appearance="isEmpty(rowValue) ? 'info' : 'warning'">
+        <template v-if="isM1">
+          {{
+            isEmpty(rowValue)
+              ? t('plugins.list.table_headers.ordering_badge.static')
+              : t('plugins.list.table_headers.ordering_badge.dynamic')
+          }}
+        </template>
+        <KBadge
+          v-else
+          :appearance="isEmpty(rowValue) ? 'info' : 'warning'"
+        >
           {{
             isEmpty(rowValue)
               ? t('plugins.list.table_headers.ordering_badge.static')
@@ -222,6 +305,17 @@
             data-testid="action-entity-config-dyn-order"
             :item="getConfigureDynamicOrderingDropdownItem(row)"
           />
+        </PermissionsWrapper>
+        <PermissionsWrapper
+          v-if="isM1"
+          :auth-function="async () => !!(await canEdit(row) && await canToggle(row))"
+        >
+          <KDropdownItem
+            data-testid="action-entity-toggle-enablement"
+            @click="toggleEnableStatus(row)"
+          >
+            {{ row.enabled ? t('actions.disable') : t('actions.enable') }}
+          </KDropdownItem>
         </PermissionsWrapper>
         <PermissionsWrapper :auth-function="() => canDelete(row)">
           <KDropdownItem
@@ -422,17 +516,31 @@ const isOrderingSupported = props.config.app === 'konnect' || useGatewayFeatureS
   },
 })
 
+const isM1 = !!props.config.isPluginListM1
+
 /**
  * Table Headers
  */
-const disableSorting = computed((): boolean => props.config.app !== 'kongManager' || !!props.config.disableSorting)
-const fields: BaseTableHeaders = {
+const disableSorting = computed((): boolean => {
+  if (props.config.app === 'konnect') {
+    // Only enable sorting for in Konnect Plugin Table M1
+    return !isM1
+  } else {
+    return !!props.config.disableSorting
+  }
+})
+const fields: BaseTableHeaders = isM1 ? {
+  bulkActions: { label: 'Bulk actions' },
+  // the Name column is non-hidable
+  name: { label: t('plugins.list.table_headers.plugin'), searchable: true, sortable: true, hidable: false },
+  instance_name: { label: t('plugins.list.table_headers.name'), searchable: true, sortable: false },
+} : {
   // the Name column is non-hidable
   name: { label: t('plugins.list.table_headers.name'), searchable: true, sortable: true, hidable: false },
 }
 // conditional display of Applied To column - hide if on an entity's details page (ie. plugins card on route details view)
 if (!props.config?.entityId) {
-  fields.appliedTo = { label: t('plugins.list.table_headers.applied_to'), sortable: false }
+  fields.appliedTo = { label: isM1 ? t('plugins.list.table_headers.scope') : t('plugins.list.table_headers.applied_to'), sortable: false }
 }
 
 fields.enabled = { label: t('plugins.list.table_headers.enabled'), searchable: true, sortable: true }
@@ -503,9 +611,15 @@ const clearFilter = (): void => {
   filterQuery.value = ''
 }
 
-const resetPagination = (): void => {
-  // Increment the cache key on sort
-  fetcherCacheKey.value++
+const isClientSort = computed(() => {
+  return props.config.app === 'konnect' && isM1
+})
+
+const resetPagination = () => {
+  if ( !isClientSort.value) {
+    // Increment the cache key on sort
+    fetcherCacheKey.value++
+  }
 }
 
 /**
@@ -824,6 +938,27 @@ const emptyStateOptions = ref<EmptyStateOptions>({
   title: t('plugins.title'),
 })
 
+/**
+ * Bulk Actions
+ */
+const hasDisabledRow = (rows: EntityRow[]): boolean => {
+  return rows.some(row => !row.enabled)
+}
+
+const hasEnabledRow = (rows: EntityRow[]): boolean => {
+  return rows.some(row => row.enabled)
+}
+
+const toggleEnablementForRows = async (rows: EntityRow[], enable: boolean): Promise<void> => {
+  for (const row of rows) {
+    if (row.enabled !== enable) {
+      switchEnablementTarget.value = row
+      await confirmSwitchEnablement()
+    }
+  }
+}
+
+
 const userCanCreate = ref<boolean>(false)
 
 onBeforeMount(async () => {
@@ -888,6 +1023,18 @@ onBeforeMount(async () => {
 
   .k-badge.disabled {
     cursor: default;
+  }
+
+  :deep(.toolbar-default-items-container) {
+    align-items: center;
+  }
+
+  .no-selection-tip {
+    color: $kui-color-text-neutral-stronger;
+    font-size: $kui-font-size-30;
+    font-weight: $kui-font-weight-medium;
+    line-height: $kui-line-height-40;
+    padding: $kui-space-40 $kui-space-60;
   }
 }
 </style>

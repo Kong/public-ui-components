@@ -8,6 +8,7 @@
     "copy_json": "Copy JSON",
     "edit": "Edit",
     "enable": "Enable",
+    "disable": "Disable",
     "enabled": "Enabled",
     "delete": "Delete",
     "confirm_delete": "Yes, delete",
@@ -80,8 +81,10 @@
           "service": "Service",
           "consumer_group": "Consumer Group"
         },
+        "scope": "Scope",
         "id": "ID",
         "name": "Name",
+        "plugin": "Plugin",
         "instance_name": "Instance Name",
         "ordering": "Ordering",
         "ordering_badge": {
@@ -89,6 +92,10 @@
           "static": "Static"
         },
         "enabled": "Enabled",
+        "enabled_badge": {
+          "true": "Enabled",
+          "false": "Disabled"
+        },
         "tags": "Tags"
       },
       "empty_state": {
@@ -101,6 +108,9 @@
         "create_cta": "New plugin",
         "group": "Plugins created in gateways within this group will automatically appear here.",
         "learn_more": "Learn more"
+      },
+      "bulk_actions": {
+        "no_selection": "Select items to see more actions"
       }
     },
     "meta": {
