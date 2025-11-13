@@ -15,7 +15,14 @@
         :class="{ collapsed: isRequestCollapsed }"
       />
       <div class="label-content">
-        Request
+        {{ t('plugins.free-form.datakit.flow_editor.canvas_panel.request') }} <span class="count">
+          <template v-if="configNodeCounts.request === 1">
+            ({{ t('plugins.free-form.datakit.flow_editor.canvas_panel.node_count_singular') }})
+          </template>
+          <template v-else>
+            ({{ t('plugins.free-form.datakit.flow_editor.canvas_panel.node_count_plural', { count: configNodeCounts.request }) }})
+          </template>
+        </span>
       </div>
     </div>
 
@@ -53,7 +60,14 @@
         :class="{ collapsed: isResponseCollapsed }"
       />
       <div class="label-content">
-        Response
+        {{ t('plugins.free-form.datakit.flow_editor.canvas_panel.response') }} <span class="count">
+          <template v-if="configNodeCounts.response === 1">
+            ({{ t('plugins.free-form.datakit.flow_editor.canvas_panel.node_count_singular') }})
+          </template>
+          <template v-else>
+            ({{ t('plugins.free-form.datakit.flow_editor.canvas_panel.node_count_plural', { count: configNodeCounts.response }) }})
+          </template>
+        </span>
       </div>
     </div>
 
@@ -76,11 +90,13 @@
 </template>
 
 <script setup lang="ts">
+import { createI18n } from '@kong-ui-public/i18n'
 import { ChevronDownIcon } from '@kong/icons'
 import { useVueFlow } from '@vue-flow/core'
 import { useDraggable, useElementBounding } from '@vueuse/core'
 import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
 
+import english from '../../../../locales/en.json'
 import { useEditorStore } from '../composables'
 import FlowCanvas from './FlowCanvas.vue'
 
@@ -101,9 +117,11 @@ const { inactive, mode, resizable } = defineProps<{
   resizable?: boolean
 }>()
 
+const { t } = createI18n<typeof english>('en-us', english)
+
 const requestInitialized = ref(false)
 const responseInitialized = ref(false)
-const { state, clearPendingLayout, setPendingFitView, commit, clear } = useEditorStore()
+const { state, configNodeCounts, clearPendingLayout, setPendingFitView, commit, clear } = useEditorStore()
 
 const uniqueId = useId()
 const requestFlowId = `${uniqueId}-request`
@@ -290,6 +308,11 @@ watch(
       &.collapsed {
         transform: rotate(-90deg);
       }
+    }
+
+    .label-content .count {
+      color: $kui-color-text-neutral-weak;
+      font-weight: $kui-font-weight-regular;
     }
 
     &.resizable {

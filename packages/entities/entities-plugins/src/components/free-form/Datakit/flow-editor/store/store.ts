@@ -19,6 +19,7 @@ import type {
   GroupId,
   GroupInstance,
   UIGroup,
+  NodePhase,
 } from '../../types'
 
 import { createInjectionState } from '@vueuse/core'
@@ -79,6 +80,17 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       state.value.pendingFitView = isPending
       history.commit('*')
     }
+
+    const configNodeCounts = computed(() => {
+      const result: Record<NodePhase, number> = { request: 0, response: 0 }
+      state.value.nodes.forEach((node) => {
+        if (isImplicitType(node.type))
+          return
+
+        result[node.phase]++
+      })
+      return result
+    })
 
     // maps
     const nodeMapById = computed(
@@ -722,6 +734,8 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       skipValidation,
       invalidConfigNodeIds,
       propertiesPanelOpen,
+
+      configNodeCounts,
 
       // maps & getters
       nodeMapById,
