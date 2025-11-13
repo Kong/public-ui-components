@@ -14,6 +14,7 @@
         {{ title }}
       </span>
     </template>
+
     <template
       v-if="description"
       #actions
@@ -56,61 +57,66 @@
       </template>
     </KEmptyState>
 
-    <div
+    <KTableView
       v-else
       class="top-n-table"
+      :data="tableData"
       data-testid="top-n-table"
+      :headers="tableHeaders"
+      :hide-pagination="true"
+      :hide-toolbar="true"
+      row-key="id"
     >
-      <div class="table-headings">
-        <div class="table-row">
-          <div class="column-1">
-            {{ i18n.t('topNTable.nameLabel') }}
-          </div>
-          <div class="column-2">
-            {{ columnName }}
-          </div>
-        </div>
-      </div>
+      <template #name="{ row }">
+        <span :data-testid="`row-${row.id}`">
+          <slot
+            name="name"
+            :record="{
+              id: row.id,
+              name: row.name,
+              deleted: row.deleted,
+              dimension: displayKey,
+            }"
+          >
+            {{ row.name }}
+          </slot>
+        </span>
+      </template>
 
-      <div
-        class="table-body"
-        data-testid="top-n-data"
-      >
-        <div
-          v-for="(entry, idx) in records"
-          :key="`entry-${idx}`"
-          class="table-row"
-          :data-testid="`row-${getId(entry)}`"
-        >
-          <div class="column-1">
-            <slot
-              name="name"
-              :record="{
-                id: getId(entry),
-                name: getName(entry),
-                deleted: getDeleted(entry),
-                dimension: displayKey,
-              }"
-            >
-              {{ getName(entry) }}
-            </slot>
-          </div>
-          <div class="column-2">
-            &nbsp; {{ getValue(entry) }}
-          </div>
-        </div>
-      </div>
-    </div>
+      <!--
+        'value' is the primary metric in order to be backwards compatible
+        with our original use of a single metric TopNTable
+      -->
+      <template #value="{ row }">
+        <span :data-testid="`row-${row.id}`">{{ row.value }}</span>
+      </template>
+    </KTableView>
   </KCard>
 </template>
 
 <script setup lang="ts">
-import type { AllAggregations, AnalyticsExploreRecord, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import type { HeaderTag } from '@kong/kongponents'
+import type {
+  AllAggregations,
+  AnalyticsExploreRecord,
+  ExploreResultV4,
+} from '@kong-ui-public/analytics-utilities'
+import type {
+  HeaderTag,
+  TableViewHeader,
+  TableViewData,
+} from '@kong/kongponents'
 
 import { computed } from 'vue'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
+
+type TopNRow = {
+  id: string
+  name: string
+  value?: string
+  deleted: boolean
+  original: AnalyticsExploreRecord
+} & Record<string, unknown>
 
 const props = withDefaults(defineProps<{
   title?: string
@@ -140,6 +146,7 @@ const displayKey = computed((): string => {
 
   return Object.keys(props.data.meta.display)?.[0] || ''
 })
+
 const displayRecord = computed(() => {
   if (!displayKey.value) {
     return {}
@@ -148,14 +155,18 @@ const displayRecord = computed(() => {
   return props.data.meta.display[displayKey.value]
 })
 
-const columnKey = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
-const columnUnit = computed((): string => {
-  if (!columnKey.value) {
-    return 'count'
+const metricKeys = computed<AllAggregations[]>(() => {
+  if (!props.data.meta?.metric_names?.length) {
+    return []
   }
 
-  return props.data.meta?.metric_units?.[columnKey.value] || 'count'
+  return props.data.meta.metric_names
 })
+
+const columnKey = computed((): AllAggregations | undefined => {
+  return metricKeys.value[0]
+})
+
 const columnName = computed((): string => {
   if (!columnKey.value) {
     return ''
@@ -164,20 +175,41 @@ const columnName = computed((): string => {
   return i18n.t(`chartLabels.${columnKey.value}` as any) || columnKey.value
 })
 
-const errorMessage = computed((): string => {
-  if (!hasData.value) {
-    return ''
+/**
+ * Headers:
+ * - First column: dimension "Name"
+ * - Second column: primary metric "value" for backwards compatibility
+ * - Additional columns: one per extra metric, keyed by metric name
+ */
+const tableHeaders = computed<TableViewHeader[]>(() => {
+  const headers: TableViewHeader[] = [
+    {
+      key: 'name',
+      label: i18n.t('topNTable.nameLabel') as string,
+    },
+  ]
+
+  if (columnKey.value) {
+    headers.push({
+      key: 'value',
+      label: columnName.value,
+    })
   }
 
-  if (!props.data.meta) {
-    return i18n.t('topNTable.errors.meta')
-  } else if (displayRecord.value && !Object.keys(displayRecord.value).length) {
-    return i18n.t('topNTable.errors.display')
-  } else if (!columnKey.value) {
-    return i18n.t('topNTable.errors.metricNames')
-  }
+  metricKeys.value.forEach((metricKey, index) => {
+    if (index === 0) {
+      return
+    }
 
-  return ''
+    const label = i18n.t(`chartLabels.${metricKey}` as any) || metricKey
+
+    headers.push({
+      key: metricKey,
+      label,
+    })
+  })
+
+  return headers
 })
 
 const getId = (record: AnalyticsExploreRecord): string => {
@@ -185,9 +217,10 @@ const getId = (record: AnalyticsExploreRecord): string => {
 
   return String(event[displayKey.value])
 }
+
 const getName = (record: AnalyticsExploreRecord): string => {
   const id = getId(record)
-  const idRecord = displayRecord.value && displayRecord.value[id]
+  const idRecord = displayRecord.value && (displayRecord.value as any)[id]
 
   if (!idRecord) {
     return '-'
@@ -195,9 +228,10 @@ const getName = (record: AnalyticsExploreRecord): string => {
 
   return idRecord.name
 }
+
 const getDeleted = (record: AnalyticsExploreRecord): boolean => {
   const id = getId(record)
-  const idRecord = displayRecord.value && displayRecord.value[id]
+  const idRecord = displayRecord.value && (displayRecord.value as any)[id]
 
   if (!idRecord) {
     return false
@@ -205,14 +239,11 @@ const getDeleted = (record: AnalyticsExploreRecord): boolean => {
 
   return !!idRecord.deleted
 }
-const getValue = (record: AnalyticsExploreRecord): string => {
-  if (!columnKey.value) {
-    return '–'
-  }
 
-  const val = record.event[columnKey.value]
+const getMetricValue = (record: AnalyticsExploreRecord, metricKey: AllAggregations): string => {
+  const val = record.event[metricKey]
 
-  if (!val) {
+  if (val === null || val === undefined) {
     return '–'
   }
 
@@ -222,15 +253,81 @@ const getValue = (record: AnalyticsExploreRecord): string => {
     return '–'
   }
 
-  // Only counts should use approximation
-  const approximate = ['count', 'count/minute', 'token count'].includes(columnUnit.value)
+  const unit = props.data.meta?.metric_units?.[metricKey] || 'count'
 
-  return formatUnit(value, columnUnit.value, {
+  // Only counts should use approximation
+  const approximate = ['count', 'count/minute', 'token count'].includes(unit)
+
+  return formatUnit(value, unit, {
     approximate,
     isBytes1024: true,
-    translateUnit: (unit) => translateChartUnit(unit, value),
+    translateUnit: (unitName) => translateChartUnit(unitName, value),
   })
 }
+
+/**
+ * Legacy "single metric" formatter
+ */
+const getValue = (record: AnalyticsExploreRecord): string => {
+  if (!columnKey.value) {
+    return '–'
+  }
+
+  return getMetricValue(record, columnKey.value)
+}
+
+/**
+ * Table rows:
+ * - Always include id/name/deleted/original
+ * - `value` is the primary metric for backwards compatibility
+ * - One property per metric key for KTableView (e.g. row['status_4xx'])
+ */
+const tableData = computed<TableViewData>(() => {
+  if (!records.value?.length) {
+    return []
+  }
+
+  return records.value.map((entry) => {
+    const id = getId(entry)
+
+    const row: TopNRow = {
+      id,
+      name: getName(entry),
+      deleted: getDeleted(entry),
+      original: entry,
+    }
+
+    if (columnKey.value) {
+      row.value = getValue(entry)
+    }
+
+    metricKeys.value.forEach((metricKey, index) => {
+      if (index === 0) {
+        return
+      }
+
+      row[metricKey] = getMetricValue(entry, metricKey)
+    })
+
+    return row
+  })
+})
+
+const errorMessage = computed((): string => {
+  if (!hasData.value) {
+    return ''
+  }
+
+  if (!props.data.meta) {
+    return i18n.t('topNTable.errors.meta') as string
+  } else if (displayKey.value && !Object.keys(displayRecord.value).length) {
+    return i18n.t('topNTable.errors.display') as string
+  } else if (!columnKey.value) {
+    return i18n.t('topNTable.errors.metricNames') as string
+  }
+
+  return ''
+})
 
 const translateChartUnit = (unit: string, value: number): string => {
   const plural = value === 1 ? '' : 's'
@@ -275,80 +372,18 @@ const translateChartUnit = (unit: string, value: number): string => {
     flex-direction: column;
     max-height: 100%;
     width: 100%;
-
-    .table-headings {
-      flex-shrink: 0;
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-semibold;
-      line-height: $kui-line-height-40;
-    }
-
-    .table-row {
-      align-self: stretch;
-      border-bottom: $kui-border-width-10 solid $kui-color-border;
-      display: flex;
-      justify-content: space-between;
-
-      &:last-of-type {
-        border-bottom: none;
-      }
-    }
-
-    .column-1 {
-      flex: 1;
-      padding: $kui-space-0 $kui-space-80 $kui-space-50 $kui-space-0;
-    }
-
-    .column-2 {
-      flex: 1;
-      max-width: 110px;
-      padding: $kui-space-0 $kui-space-0 $kui-space-50 $kui-space-0;
-    }
-
-    .table-body {
-      overflow-y: auto;
-
-      .table-row:first-of-type {
-        border-top: $kui-border-width-10 solid $kui-color-border;
-      }
-
-      .column-1, .column-2 {
-        padding-top: $kui-space-50;
-      }
-
-      .column-1 {
-        color: $kui-color-text-neutral-stronger;
-        font-size: $kui-font-size-30;
-
-        :deep(a) {
-          color: $kui-color-text-primary;
-          font-weight: $kui-font-weight-bold;
-          text-decoration: none;
-        }
-      }
-    }
   }
-}
-</style>
 
-<style lang="scss">
-// TODO: clean up these styles after KCard redesign - KHCP-8971
-.kong-ui-public-top-n-table.kong-card.border {
-  border-radius: $kui-border-radius-20;
-  padding: $kui-space-70;
+  // Line up first and last columns with the edge of the table
+  :deep(.k-table-view .table-container .table-wrapper table thead tr th:first-child),
+  :deep(.k-table-view .table-container .table-wrapper table td:first-child) {
+    padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
+  }
 
-  .k-card-header {
-    align-items: baseline;
-    margin-bottom: $kui-space-0 !important;
-
-    .k-card-title {
-      margin-bottom: $kui-space-60;
-
-      h4 {
-        font-size: $kui-font-size-40;
-        font-weight: $kui-font-weight-semibold;
-      }
-    }
+  :deep(.k-table-view .table-container .table-wrapper table thead tr th:last-child),
+  :deep(.k-table-view .table-container .table-wrapper table td:last-child) {
+    padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
+    width: 110px;
   }
 }
 </style>

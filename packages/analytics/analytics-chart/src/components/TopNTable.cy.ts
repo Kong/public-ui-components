@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import TopNTable from './TopNTable.vue'
 
 const ROUTE_ID = 'b486fb30-e058-4b5f-85c2-495ec26ba522:09ba7bc7-58d6-42d5-b9c0-3ffb28b307e6'
@@ -101,8 +102,9 @@ describe('<TopNTable />', () => {
     cy.getTestId('top-n-card-title').should('contain.text', TITLE)
     cy.getTestId('top-n-card-description').should('contain.text', DESCRIPTION)
     cy.getTestId('top-n-table').should('be.visible')
-    cy.get('.table-row').should('have.length', TABLE_DATA_V2.data.length + 1)
-    cy.get('.table-row').last().should('contain.text', DELETED_NAME)
+    cy.get('.table-headers').should('have.length', TABLE_DATA_V2.meta.metric_names.length + 1)
+    cy.get('tbody tr').should('have.length', TABLE_DATA_V2.data.length)
+    cy.get('tbody tr').last().should('contain.text', DELETED_NAME)
   })
 
   it('displays empty state when no records', () => {
@@ -174,7 +176,7 @@ describe('<TopNTable />', () => {
     })
 
     cy.get('.kong-ui-public-top-n-table').should('be.visible')
-    cy.get('.table-row').last().should('contain', 'deleted')
+    cy.get('tbody tr').last().should('contain', 'deleted')
   })
 
   describe('formatting', () => {
@@ -304,8 +306,8 @@ describe('<TopNTable />', () => {
         })
 
         cy.get(`[data-testid="row-${ROUTE_ID}"]`)
-          .contains(expected)
           .should('exist')
+          .contains(expected)
       })
     })
   })
