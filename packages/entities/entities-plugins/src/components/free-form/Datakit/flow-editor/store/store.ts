@@ -49,6 +49,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
   function createState(pluginData: DatakitPluginData, options: CreateEditorStoreOptions = {}) {
     const state = ref<EditorState>(initEditorState(pluginData))
     const selection = ref<NodeId>()
+    const portalSelection = ref<EdgeId>()
     const modalOpen = ref(false)
     const propertiesPanelOpen = ref(false)
 
@@ -192,6 +193,10 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     )
     function selectNode(id?: NodeId) {
       selection.value = id
+    }
+
+    function selectPortalEdge(id?: EdgeId) {
+      portalSelection.value = id
     }
 
     /* ---------- node ops ---------- */
@@ -730,6 +735,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       // state
       state,
       selection,
+      portalSelection,
       modalOpen,
       skipValidation,
       invalidConfigNodeIds,
@@ -751,6 +757,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       getOutEdgesByNodeId,
       selectedNode,
       selectNode,
+      selectPortalEdge,
 
       // node ops
       createNode,

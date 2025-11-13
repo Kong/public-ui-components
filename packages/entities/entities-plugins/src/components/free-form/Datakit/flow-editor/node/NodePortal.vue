@@ -11,18 +11,21 @@
     <div
       class="target-boxes"
       :style="containerStyle"
-      @transitionend="handleTransitionEnd"
     >
       <KTooltip
         v-for="(target, index) in targetBoxItems"
         :key="target.key"
-        :ref="index === 0 ? 'cover' : undefined"
         class="target-box-wrapper"
+        :kpop-attributes="popoverAttributes"
         placement="top"
         :style="target.style"
         :text="target.tooltip"
       >
-        <div class="target-box">
+        <div
+          class="target-box"
+          :class="{ highlighted: target.highlighted }"
+          @click.stop="handleTargetClick(target.edgeId)"
+        >
           <component
             :is="target.icon"
             :color="KUI_COLOR_TEXT_NEUTRAL"
@@ -41,14 +44,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useTemplateRef, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { KUI_COLOR_TEXT_NEUTRAL, KUI_SPACE_10 } from '@kong/design-tokens'
 import { KTooltip } from '@kong/kongponents'
 import { NODE_VISUAL } from './node-visual'
+import { useEditorStore } from '../store/store'
 
-import type { FieldName, NodeInstance, NonEmptyArray } from '../../types'
+import type { EdgeId, FieldName, NodeInstance, NonEmptyArray } from '../../types'
 
 interface PortalTarget {
+  edgeId: EdgeId
   node: NodeInstance
   fieldName?: FieldName
 }
@@ -67,59 +72,54 @@ const {
   targets: NonEmptyArray<PortalTarget>
 }>()
 
+const popoverAttributes = {
+  target: 'body',
+}
+
+const { portalSelection: selectedPortalEdgeId, selectPortalEdge } = useEditorStore()
 const localExpanded = ref(false)
-const isExpanded = computed(() => expanded ?? localExpanded.value)
+
+const hasHighlightedTarget = computed(() => {
+  const current = selectedPortalEdgeId.value
+  if (!current) return false
+  return targets.some((target) => target.edgeId === current)
+})
+
+const isExpanded = computed(() => {
+  if (expanded !== undefined) {
+    return expanded || hasHighlightedTarget.value
+  }
+  return localExpanded.value || hasHighlightedTarget.value
+})
 
 const getExpandedWidth = () =>
   BOX_SIZE * targets.length + BOX_GAP * (targets.length - 1)
 
-const coverTarget = useTemplateRef<HTMLElement>('cover')
-const transitioningWidth = ref<number | null>(null)
-
 const containerStyle = computed(() => ({
-  width:
-    transitioningWidth.value !== null
-      ? `${transitioningWidth.value}px`
-      : isExpanded.value
-        ? `${getExpandedWidth()}px`
-        : 'fit-content',
+  width: isExpanded.value
+    ? `${getExpandedWidth()}px`
+    : 'fit-content',
 }))
 
-const animateWidth = (from: number, to: number) => {
-  transitioningWidth.value = from
-  requestAnimationFrame(() => {
-    transitioningWidth.value = to
-  })
+const handleTargetClick = (edgeId: EdgeId) => {
+  selectPortalEdge(edgeId)
 }
 
-const handleTransitionEnd = () => {
-  transitioningWidth.value = null
-}
-
-watch(isExpanded, (expanded) => {
-  const el = coverTarget.value
-  if (!el) {
-    return
-  }
-
-  const expandedWidth = getExpandedWidth()
-  if (expanded) {
-    animateWidth(el.offsetWidth, expandedWidth)
-  } else {
-    animateWidth(expandedWidth, el.offsetWidth)
-  }
-})
+const isTargetHighlighted = (edgeId: EdgeId) => selectedPortalEdgeId.value === edgeId
 
 const targetBoxItems = computed(() =>
   targets.map((target, index) => {
     const offset = (BOX_SIZE + BOX_GAP) * index
 
     return {
+      edgeId: target.edgeId,
       key: `${target.node.id}-${target.fieldName ?? 'node'}-${index}`,
       icon: NODE_VISUAL[target.node.type]?.icon,
       tooltip: target.fieldName
         ? `${target.node.name}.${target.fieldName}`
         : target.node.name,
+      highlighted: isTargetHighlighted(target.edgeId),
+      tooltipEl: null as HTMLElement | null,
       style:
         index === 0
           ? {
@@ -199,6 +199,16 @@ $box-size: 24px;
       transition: margin-left $kui-animation-duration-20 ease-in-out,
         max-width $kui-animation-duration-20 ease-in-out;
       white-space: nowrap;
+    }
+
+    &:hover {
+      border-color: $kui-color-border-primary-weak;
+    }
+
+    &.highlighted {
+      border-color: $kui-color-border-primary;
+      border-width: 1.5px;
+      padding: 0 ($kui-space-20 - 1.5px);
     }
   }
 

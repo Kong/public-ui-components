@@ -278,7 +278,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FieldName, NodeInstance, NonEmptyArray } from '../../types'
+import type { EdgeId, FieldName, NodeInstance, NonEmptyArray } from '../../types'
 
 import { computed, watch } from 'vue'
 import { KTooltip, KButton, KDropdown, KDropdownItem } from '@kong/kongponents'
@@ -405,7 +405,7 @@ function isPortalReversed(mode: 'input' | 'output') {
   return !isReversed.value
 }
 
-type PortalTarget = { node: NodeInstance, fieldName?: FieldName }
+type PortalTarget = { edgeId: EdgeId, node: NodeInstance, fieldName?: FieldName }
 
 function collectPortals(io: 'input' | 'output') {
   const portals = new Map<string, NonEmptyArray<PortalTarget>>()
@@ -439,11 +439,16 @@ function collectPortals(io: 'input' | 'output') {
       fieldName = field?.name
     }
 
+    const target: PortalTarget = {
+      edgeId: edge.id,
+      node: targetNode,
+      fieldName,
+    }
     const targets = portals.get(key)
     if (targets) {
-      targets.push({ node: targetNode, fieldName })
+      targets.push(target)
     } else {
-      portals.set(key, [{ node: targetNode, fieldName }])
+      portals.set(key, [target])
     }
   }
 

@@ -121,7 +121,7 @@ const { t } = createI18n<typeof english>('en-us', english)
 
 const requestInitialized = ref(false)
 const responseInitialized = ref(false)
-const { state, configNodeCounts, clearPendingLayout, setPendingFitView, commit, clear } = useEditorStore()
+const { state, configNodeCounts, clearPendingLayout, setPendingFitView, commit, clear, portalSelection } = useEditorStore()
 
 const uniqueId = useId()
 const requestFlowId = `${uniqueId}-request`
@@ -153,6 +153,12 @@ function syncSelectionState(active: VueFlowStore, other: VueFlowStore) {
 }
 syncSelectionState(requestFlowStore, responseFlowStore)
 syncSelectionState(responseFlowStore, requestFlowStore)
+
+watch(portalSelection, (edgeId) => {
+  if (!edgeId) return
+  requestFlowStore.removeSelectedElements()
+  responseFlowStore.removeSelectedElements()
+})
 
 const flowPanels = useTemplateRef('flowPanels')
 const requestLabel = useTemplateRef('requestLabel')
