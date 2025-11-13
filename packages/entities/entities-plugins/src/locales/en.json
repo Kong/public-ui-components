@@ -855,6 +855,7 @@
           "node_properties": {
             "name": "Name",
             "configuration": "Configuration",
+            "branch_note": "This node is inside a branch.",
             "input": {
               "label": "Inputs configuration",
               "placeholder": "Select a source",
