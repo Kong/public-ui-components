@@ -196,7 +196,6 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     }
 
     function selectPortalEdge(id?: EdgeId) {
-      console.log('selectPortalEdge', id)
       portalSelection.value = id
     }
 
