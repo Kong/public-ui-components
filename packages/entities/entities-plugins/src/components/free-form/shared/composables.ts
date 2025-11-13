@@ -43,6 +43,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       })
       Object.assign(innerData, newData)
       disabledFields.value.clear()
+      initDisabledFields(schemaHelpers.getSchemaMap(), innerData)
     }
 
     /**
