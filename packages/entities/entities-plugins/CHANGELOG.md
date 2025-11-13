@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.117.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.116.0...@kong-ui-public/entities-plugins@9.117.0) (2025-11-13)
+
+
+### Features
+
+* **entities-plugins:** selectable portals and simplify node portal interactions ([#2635](https://github.com/Kong/public-ui-components/issues/2635)) ([32b6cf2](https://github.com/Kong/public-ui-components/commit/32b6cf29826ad9f25eb726d58b5cb61a96ff6e67))
+
+
+
+
+
 # [9.116.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.115.0...@kong-ui-public/entities-plugins@9.116.0) (2025-11-13)
 
 
