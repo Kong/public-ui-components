@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.116.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.115.0...@kong-ui-public/entities-plugins@9.116.0) (2025-11-13)
+
+
+### Features
+
+* **entities-plugins:** datakit add node counts to canvas panel headers ([#2638](https://github.com/Kong/public-ui-components/issues/2638)) ([d8e56ab](https://github.com/Kong/public-ui-components/commit/d8e56ab673713458704b273b26d9ba087920c3b2))
+
+
+
+
+
 # [9.115.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.3...@kong-ui-public/entities-plugins@9.115.0) (2025-11-11)
 
 
