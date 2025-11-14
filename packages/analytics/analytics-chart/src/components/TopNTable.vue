@@ -374,16 +374,28 @@ const translateChartUnit = (unit: string, value: number): string => {
     width: 100%;
   }
 
-  // Line up first and last columns with the edge of the table
-  :deep(.k-table-view .table-container .table-wrapper table thead tr th:first-child),
-  :deep(.k-table-view .table-container .table-wrapper table td:first-child) {
-    padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
+  :deep(.k-table-view .table-container .table-wrapper table) {
+    // Line up first and last columns with the edge of the table
+    thead tr th:first-child, td:first-child {
+      padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
+    }
+
+    thead tr th:last-child, td:last-child {
+      padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
+      width: 110px;
+    }
+
+    thead tr th .table-headers-container .table-header-label {
+      color: $kui-color-text;
+      font-size: $kui-font-size-30;
+      font-weight: $kui-font-weight-semibold;
+      line-height: $kui-line-height-40;
+    }
   }
 
-  :deep(.k-table-view .table-container .table-wrapper table thead tr th:last-child),
-  :deep(.k-table-view .table-container .table-wrapper table td:last-child) {
-    padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
-    width: 110px;
+  :deep(a) {
+    color: $kui-color-text-primary;
+    text-decoration: none;
   }
 }
 </style>
