@@ -45,7 +45,7 @@ export default function useTrendRange(
     if (meta?.value?.start_ms && meta.value.end_ms) {
       return {
         startMs: meta.value.start_ms,
-        endMs: meta.value.end_ms
+        endMs: meta.value.end_ms,
       }
     }
 
