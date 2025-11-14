@@ -1098,25 +1098,23 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
      * Calculate the position to place a node to the right of a reference node.
      */
     function placeToRight(nodeId: NodeId): XYPosition {
-      const nodes = getNodes.value.filter(({ type }) => type !== 'group')
+      const nodes: Array<GraphNode<NodeInstance>> = getNodes.value.filter(({ type }) => type !== 'group')
 
       const refNode = nodes.find(({ id }) => id === nodeId)
       if (!refNode) throw new Error(`Node ${nodeId} not found`)
 
-      const {
-        position: { x: refX, y: refY },
-        dimensions: { width: refWidth, height: refHeight },
-      } = refNode
+      const { x: refX, y: refY } = refNode.data.position
+      const { width: refWidth, height: refHeight } = refNode.dimensions
 
       const rowTop = refY
       const rowBottom = refY + refHeight
 
       const intervals = nodes
         .filter(({ id }) => id !== nodeId)
-        .filter(({ position: { y }, dimensions: { height } }) => {
+        .filter(({ data: { position: { y } }, dimensions: { height } }) => {
           return y < rowBottom && y + height > rowTop
         })
-        .map(({ position: { x }, dimensions: { width } }) => {
+        .map(({ data: { position: { x } }, dimensions: { width } }) => {
           return { left: x, right: x + width }
         })
         .sort((a, b) => a.left - b.left)
