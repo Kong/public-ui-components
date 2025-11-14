@@ -36,6 +36,7 @@
     :data-testid="`ff-object-${field.path.value}`"
     v-bind="$attrs"
   >
+    <pre>Disabled: {{ field.isInheritedDisabled?.value }}</pre>
     <!-- Collapse header -->
     <header
       class="ff-object-field-header"
