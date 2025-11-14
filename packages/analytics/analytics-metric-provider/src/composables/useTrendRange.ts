@@ -13,51 +13,67 @@ export default function useTrendRange(
 ): Ref<string> {
   const { i18n } = composables.useI18n()
 
-  return computed(() => {
-    if (timeRange?.value?.type === 'absolute') {
-      let startMs: number | undefined
-      let endMs: number | undefined
+  const MS_PER_MINUTE = 1000 * 60
+  const MS_PER_HOUR = MS_PER_MINUTE * 60
+  const MS_PER_DAY = MS_PER_HOUR * 24
 
-      if (meta?.value?.start_ms && meta.value.end_ms) {
-        startMs = meta.value.start_ms
-        endMs = meta.value.end_ms
-      } else if (timeRange.value.start && timeRange.value.end) {
-        startMs = new Date(timeRange.value.start).getTime()
-        endMs = new Date(timeRange.value.end).getTime()
-      } else {
-        return ''
-      }
+  const formatTimeRange = (startMs: number, endMs: number): string => {
+    let duration = endMs - startMs
 
-      let numDays = (endMs - startMs) / (1000 * 60 * 60 * 24)
-      let numHours = (endMs - startMs) / (1000 * 60 * 60)
-      let numMinutes = (endMs - startMs) / (1000 * 60)
-
-      if (withTrend.value) {
-        // If we're querying a trend, then the time range queried is doubled.
-        numDays /= 2
-        numHours /= 2
-        numMinutes /= 2
-      }
-
-      if (numDays >= 1) {
-        return i18n.t('trendRange.custom_days', { numDays: Math.round(numDays) })
-      } else if (numHours >= 1) {
-        return i18n.t('trendRange.custom_hours', { numHours: Math.round(numHours) })
-      } else if (numMinutes >= 1) {
-        return i18n.t('trendRange.custom_minutes', { numMinutes: Math.round(numMinutes) })
-      }
-
-      // Avoid weirdness around daylight savings time by rounding up or down to the nearest day.
-      return i18n.t('trendRange.custom_days', { numDays: Math.round(numDays) })
+    // If we're querying a trend, then the time range queried is doubled
+    if (withTrend.value) {
+      duration /= 2
     }
 
-    // For relative time ranges, only return a value if withTrend is true
+    const numDays = duration / MS_PER_DAY
+    const numHours = duration / MS_PER_HOUR
+    const numMinutes = duration / MS_PER_MINUTE
+
+    if (numDays >= 1) {
+      return i18n.t('trendRange.custom_days', { numDays: Math.round(numDays) })
+    } else if (numHours >= 1) {
+      return i18n.t('trendRange.custom_hours', { numHours: Math.round(numHours) })
+    } else if (numMinutes >= 1) {
+      return i18n.t('trendRange.custom_minutes', { numMinutes: Math.round(numMinutes) })
+    }
+
+    // Avoid weirdness around daylight savings time by rounding up or down to the nearest day
+    return i18n.t('trendRange.custom_days', { numDays: Math.round(numDays) })
+  }
+
+  const getTimestamps = (): { startMs: number, endMs: number } | undefined => {
+    if (meta?.value?.start_ms && meta.value.end_ms) {
+      return {
+        startMs: meta.value.start_ms,
+        endMs: meta.value.end_ms
+      }
+    }
+
+    if (timeRange?.value?.type === 'absolute' && timeRange.value.start && timeRange.value.end) {
+      return {
+        startMs: new Date(timeRange.value.start).getTime(),
+        endMs: new Date(timeRange.value.end).getTime(),
+      }
+    }
+
+    return
+  }
+
+  return computed(() => {
     if (timeRange?.value?.type === 'relative' && withTrend.value) {
       // @ts-ignore - dynamic i18n key
       return i18n.t(`trendRange.${timeRange.value.time_range}`)
     }
 
-    // If we're unable to query with a trend, we can't render a meaningful trend range description.
+    if (withTrend.value || timeRange?.value?.type === 'absolute') {
+      const timestamps = getTimestamps()
+
+      if (timestamps) {
+        return formatTimeRange(timestamps.startMs, timestamps.endMs)
+      }
+    }
+
+    // If we're unable to query with a trend, we can't render a meaningful trend range description
     return ''
   })
 }
