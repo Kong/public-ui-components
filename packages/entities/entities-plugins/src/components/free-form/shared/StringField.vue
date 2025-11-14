@@ -10,7 +10,6 @@
     v-else
     v-bind="$attrs"
   >
-    <pre>Disabled: {{ field.isInheritedDisabled.value }}</pre>
     <EnhancedInput
       v-bind="{
         ...fieldAttrs,

@@ -1,5 +1,4 @@
 <template>
-  <pre>{{ JSON.stringify(Array.from(disabledFields), null, 2) }}</pre>
   <component :is="tag">
     <component :is="slots[FIELD_RENDERERS]" />
 
@@ -49,7 +48,7 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
-const { getSchema, formData, setFormData, getFormData, disabledFields } = provideFormShared(
+const { getSchema, formData, setFormData, getFormData } = provideFormShared(
   schema,
   computed(() => data as T),
   config as FormConfig,

@@ -1,5 +1,4 @@
 <template>
-  <pre>Disabled: {{ field.isInheritedDisabled?.value }}</pre>
   <!-- missing schema alert -->
   <KAlert
     v-if="field.error"

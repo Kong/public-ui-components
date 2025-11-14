@@ -99,7 +99,6 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     }, { deep: true, immediate: true })
 
     return {
-      disabledFields,
       formData: innerData,
       schema,
       config,
