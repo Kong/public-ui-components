@@ -154,7 +154,14 @@ const singleValue = computed<number | null>(() => {
     return null
   }
 
-  return records.value[index].event[metricName.value] as number ?? null
+  const value = records.value[index].event[metricName.value]
+
+  // Check if value is actually a number
+  if (typeof value !== 'number' || isNaN(value)) {
+    return null
+  }
+
+  return value ?? null
 })
 
 const formattedValue = computed((): string => {
@@ -249,6 +256,9 @@ watch(toRef(props, 'alignX'), (v) => {
 
   .single-value-wrapper {
     align-items: baseline;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
     .single-value {
       color: $kui-color-text;
