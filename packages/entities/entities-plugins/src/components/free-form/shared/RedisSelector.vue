@@ -33,8 +33,9 @@
       />
     </div>
 
+    <!-- Using `v-show` instead of `v-if` to preserve component state and avoid re-fetching options when toggling between shared and dedicated configuration -->
     <div
-      v-if="usePartial"
+      v-show="usePartial"
       class="shared-redis-config"
     >
       <div class="shared-redis-config-title">
@@ -44,60 +45,14 @@
         class="redis-config-select"
         data-testid="redis-config-select"
       >
-        <!-- TODO: Refactor this select to use the packages/entities/entities-redis-configurations/src/components/RedisConfigurationSelector.vue -->
-        <KSelect
-          class="redis-config-select-trigger"
+        <RedisConfigurationSelector
           data-testid="redis-config-select-trigger"
-          enable-filtering
-          :filter-function="() => true"
-          :items="availableRedisConfigs"
-          :loading="loadingRedisConfigs"
           :model-value="selectedRedisConfigItem"
-          :placeholder="t('redis.shared_configuration.selector.placeholder')"
-          @change="(item) => redisConfigSelected(item?.value)"
-          @query-change="debouncedRedisConfigsQuery"
-        >
-          <template #selected-item-template="{ item }">
-            <div class="selected-redis-config">
-              {{ (item as SelectItem).name }}
-            </div>
-          </template>
-          <template #item-template="{ item }">
-            <div
-              class="plugin-form-redis-configuration-dropdown-item"
-              :data-testid="`redis-configuration-dropdown-item-${item.name}`"
-            >
-              <span
-                class="select-item-name"
-                data-testid="selected-redis-config"
-              >{{ item.name }}</span>
-              <KBadge
-                appearance="info"
-                class="select-item-label"
-              >
-                {{ item.tag }}
-              </KBadge>
-            </div>
-          </template>
-          <template #empty>
-            <div
-              class="empty-redis-config"
-              data-testid="empty-redis-config"
-            >
-              {{ t('redis.shared_configuration.empty_state') }}
-            </div>
-          </template>
-          <template #dropdown-footer-text>
-            <div
-              class="new-redis-config-area"
-              data-testid="new-redis-config-area"
-              @click="() => redisPartialModalVisible = true"
-            >
-              <AddIcon :size="KUI_ICON_SIZE_20" />
-              <span>{{ t('redis.shared_configuration.create_new_configuration', { type: getPartialTypeDisplay(redisType as RedisPartialType) }) }}</span>
-            </div>
-          </template>
-        </KSelect>
+          :redis-type="redisType"
+          @error-change="err => sharedRedisConfigFetchError = err"
+          @toast="toaster"
+          @update:model-value="data => redisConfigSelected(data)"
+        />
       </div>
       <RedisConfigCard
         v-if="selectedRedisConfig"
@@ -108,24 +63,20 @@
         class="redis-shared-config-error-message"
         data-testid="redis-config-fetch-error"
       >
-        {{ sharedRedisConfigFetchError || t('redis.shared_configuration.error') }}
+        {{
+          sharedRedisConfigFetchError
+            ? getMessageFromError(sharedRedisConfigFetchError)
+            : t('redis.shared_configuration.error')
+        }}
       </p>
     </div>
     <ObjectField
-      v-else
+      v-if="!usePartial"
       v-bind="props"
       as-child
       :fields-order="fieldsOrder"
       :name="formRedisPath"
       reset-label-path="reset"
-    />
-    <!-- TODO: Refactor this modal to use the packages/entities/entities-redis-configurations/src/components/RedisConfigurationFormModal.vue -->
-    <NewRedisPartialModal
-      :partial-type="redisType"
-      :visible="redisPartialModalVisible"
-      @modal-close="redisPartialModalVisible = false"
-      @partial-update-failed="onPartialUpdateFailed"
-      @partial-updated="onPartialUpdated"
     />
   </KCard>
   <ObjectField
@@ -140,23 +91,17 @@
 <script setup lang="ts">
 import ObjectField from '../shared/ObjectField.vue'
 import RedisConfigCard from './RedisConfigCard.vue'
-import NewRedisPartialModal from './NewRedisPartialModal.vue'
 import { onBeforeMount, inject, computed, ref, watch } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
-import { KUI_ICON_SIZE_20 } from '@kong/design-tokens'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
-import { AddIcon } from '@kong/icons'
-import type { SelectItem } from '@kong/kongponents'
-import { useAxios, useDebouncedFilter, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { RedisConfig, RedisPartialType, Redis, PartialNotification, GlobalAction } from './types'
+import { useAxios, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
+import type { RedisPartialType, Redis } from './types'
 import { partialEndpoints, fieldsOrder, REDIS_PARTIAL_INFO } from './const'
-import { getRedisType, getPartialTypeDisplay } from './utils'
 import { useField, useFormData } from './composables'
-const emit = defineEmits<{
-  (e: 'showNewPartialModal'): void
-  (e: 'globalAction', action: GlobalAction, payload?: PartialNotification): void
-}>()
+import { RedisConfigurationSelector } from '@kong-ui-public/entities-redis-configurations'
+import '@kong-ui-public/entities-redis-configurations/dist/style.css'
+import { useToaster } from '../../../composables/useToaster'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -166,9 +111,11 @@ interface RedisSelectorProps {
   redisPath?: string
 }
 
-type PartialArray = Array<{ id: string | number, path?: string | undefined }>
+type PartialArray = Array<{ id: string, path?: string | undefined }>
 
 const props = defineProps<RedisSelectorProps>()
+
+const toaster = useToaster()
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 const isFormEditing = redisPartialInfo?.isEditing || false
@@ -181,15 +128,14 @@ const formRedisPath = computed(() => {
   }
   return '$.config.redis'
 })
-const redisType = props.redisType || redisPartialInfo?.redisType?.value || 'all'
+const redisType = props.redisType || redisPartialInfo?.redisType?.value
 // controls the visibility of the redis partial selector
 const useRedisPartial = computed(() => !!redisPartialInfo?.redisType?.value)
-const redisPartialModalVisible = ref(false)
 const selectedRedisConfig = ref(null)
 const usePartial = ref(!isFormEditing)
 const { getMessageFromError } = useErrors()
 
-const selectedRedisConfigItem = ref<string | number | undefined>(props.defaultRedisConfigItem)
+const selectedRedisConfigItem = ref<string | undefined>(props.defaultRedisConfigItem)
 // cache redis partial/redis fields in edition
 // so that they are reusable when the user switches between partials
 const redisFieldsSaved = ref<Redis>({})
@@ -201,19 +147,8 @@ const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.
 const { value: redisFieldsValue } = useField<Redis | undefined>(formRedisPath)
 
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
-const pageSize = '1000' // the API returns all partials, so we have to set a high page size to filter them on the frontend
-const {
-  debouncedQueryChange: debouncedRedisConfigsQuery,
-  loading: loadingRedisConfigs,
-  error: redisConfigsFetchError,
-  loadItems: loadConfigs,
-  results: redisConfigsResults,
-} = useDebouncedFilter(formConfig!, partialEndpoints[formConfig!.app].getAll, pageSize, {
-  fetchedItemsKey: 'data',
-  searchKeys: ['id', 'name'],
-})
 
-const sharedRedisConfigFetchError = computed(() => redisConfigsFetchError.value ? getMessageFromError(redisConfigsFetchError.value) : '')
+const sharedRedisConfigFetchError = ref<Error | null>(null)
 
 /**
  * Build URL of getting one partial
@@ -230,20 +165,6 @@ const getOnePartialUrl = (partialId: string | number): string => {
   url = url.replace(/{id}/gi, String(partialId))
   return url
 }
-
-const availableRedisConfigs = computed((): SelectItem[] => {
-  const configs = (redisConfigsResults.value || [])
-    .map((el) => ({ label: el.id, name: el.name, value: el.id, type: el.type, tag: getRedisType(el as RedisConfig) }))
-    // filter out non-redis configs
-    // this is needed because the API returns all partials, not just redis configurations.
-    .filter(partial => partial.type === 'redis-ce' || partial.type === 'redis-ee')
-
-  if (redisType !== 'all') {
-    // filter redis configs by redis type supported by the plugin
-    return configs.filter((el) => el.type === redisType)
-  }
-  return configs
-})
 
 const { axiosInstance } = useAxios(formConfig?.axiosRequestConfig)
 
@@ -276,17 +197,7 @@ const handleFormRedisPartialData = () => {
   }
 }
 
-const onPartialUpdated = (payload: PartialNotification) => {
-  // reload configs after partial is created
-  loadConfigs()
-  emit('globalAction', 'notify', payload)
-}
-
-const onPartialUpdateFailed = (payload: PartialNotification) => {
-  emit('globalAction', 'notify', payload)
-}
-
-const redisConfigSelected = async (val: string | number | undefined) => {
+const redisConfigSelected = async (val: string | undefined) => {
   // when selector is cleared, do nothing
   if (!val) return
 
@@ -314,8 +225,6 @@ watch(() => usePartial.value, () => {
 })
 
 onBeforeMount(() => {
-  // load config should not block selecting a default config
-  loadConfigs()
   if (props.defaultRedisConfigItem || partialValue?.value) {
     const defaultRedisConfigItem = props.defaultRedisConfigItem || partialValue?.value?.[0].id
     redisConfigSelected(defaultRedisConfigItem)
@@ -335,17 +244,6 @@ onBeforeMount(() => {
   }
 }
 
-.dedicated-redis-config {
-  margin-top: $kui-space-60;
-
-  .dedicated-redis-config-title {
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-30;
-    margin-bottom: $kui-space-60;
-  }
-}
-
 .shared-redis-config-title {
   font-weight: $kui-font-weight-semibold;
   line-height: $kui-line-height-30;
@@ -361,44 +259,6 @@ onBeforeMount(() => {
 
 .redis-config-select {
   margin: $kui-space-60 0;
-
-  :deep(.k-label) {
-    margin-top: 0;
-  }
-
-  .empty-redis-config {
-    color: $kui-color-text-neutral;
-  }
-
-  .new-redis-config-area {
-    align-items: center;
-    color: $kui-color-text-primary;
-    cursor: pointer;
-    display: flex;
-    gap: $kui-space-10;
-    pointer-events: auto;
-  }
-
-  .plugin-form-redis-configuration-dropdown-item {
-    align-items: center;
-    display: flex;
-    gap: $kui-space-60;
-
-    .select-item-name {
-      color: $kui-color-text-neutral-stronger;
-      line-height: $kui-line-height-40;
-    }
-  }
-
-  .selected-redis-config {
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-40;
-  }
-
-  .plugin-form-selected-redis-config {
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-40;
-  }
 }
 
 .redis-shared-config-error-message {

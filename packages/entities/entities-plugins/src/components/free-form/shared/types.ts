@@ -114,5 +114,8 @@ export type PartialNotification = {
   appearance: string
 }
 
-// Global action that any field can trigger
+/**
+ * Global action that any field can trigger
+ * @deprecated use `useToaster` instead
+ */
 export type GlobalAction = 'notify'

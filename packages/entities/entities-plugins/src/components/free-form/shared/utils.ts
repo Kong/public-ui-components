@@ -1,12 +1,8 @@
 
-import type { FlattendRedisConfigurationFields, RedisConfig, RedisPartialType, RedisTypeDisplay } from './types'
+import type { FlattendRedisConfigurationFields } from './types'
 import type { Field } from '../shared/types'
 import type { UnionFieldSchema } from 'src/types/plugins/form-schema'
 import { toValue, type MaybeRefOrGetter } from 'vue'
-import { createI18n } from '@kong-ui-public/i18n'
-import english from '../../../locales/en.json'
-
-const { t } = createI18n<typeof english>('en-us', english)
 
 export function toSelectItems<T extends string | number>(
   items: T[],
@@ -37,34 +33,6 @@ export function toArray(p: string): string[] {
 export function getName(p: string): string {
   const arr = toArray(p)
   return arr[arr.length - 1]
-}
-
-
-export const getRedisType = (
-  fields: RedisConfig,
-): RedisTypeDisplay => {
-  if (fields.type === 'redis-ce') {
-    return t('redis.shared_configuration.type_label.host_port') as RedisTypeDisplay
-  }
-
-  if (fields.config.sentinel_nodes?.length) {
-    return t('redis.shared_configuration.type_label.sentinel') as RedisTypeDisplay
-  }
-
-  if (fields.config.cluster_nodes?.length) {
-    return t('redis.shared_configuration.type_label.cluster') as RedisTypeDisplay
-  }
-
-  return t('redis.shared_configuration.type_label.host_port') as RedisTypeDisplay
-}
-
-export const partialTypeDisplay = {
-  'redis-ce': t('redis.shared_configuration.open_source'),
-  'redis-ee': t('redis.shared_configuration.enterprise'),
-}
-
-export const getPartialTypeDisplay = (type: RedisPartialType): string => {
-  return partialTypeDisplay[type] ?? ''
 }
 
 export function useRedisNonstandardFields(
