@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.117.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.117.0...@kong-ui-public/entities-plugins@9.117.1) (2025-11-14)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix placeToRight when group nodes exist ([#2641](https://github.com/Kong/public-ui-components/issues/2641)) ([cf73c0d](https://github.com/Kong/public-ui-components/commit/cf73c0d650b89ea5c8cb7babb5dd0fe08b764780))
+
+
+
+
+
 # [9.117.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.116.0...@kong-ui-public/entities-plugins@9.117.0) (2025-11-13)
 
 
