@@ -39,15 +39,6 @@
               <KRadio
                 v-model="legendPosition"
                 name="legendPosition"
-                :selected-value="ChartLegendPosition.Right"
-              >
-                {{ ChartLegendPosition.Right }}
-              </KRadio>
-            </div>
-            <div>
-              <KRadio
-                v-model="legendPosition"
-                name="legendPosition"
                 :selected-value="ChartLegendPosition.Bottom"
               >
                 {{ ChartLegendPosition.Bottom }}
@@ -253,7 +244,7 @@ const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
 const dimensionSelection = ref(['status_code'])
 const chartType = ref<ChartType>('horizontal_bar')
-const legendPosition = ref(ChartLegendPosition.Right)
+const legendPosition = ref(ChartLegendPosition.Bottom)
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
   unit: 'count',
@@ -399,7 +390,7 @@ watch(multiDimensionToggle, () => {
 
 .chart-container {
   height: 500px;
-  max-width:70vw;
+  max-width: 70vw;
 
   @media(max-width: ($kui-breakpoint-laptop - 1px)) {
     max-width: 100vw;

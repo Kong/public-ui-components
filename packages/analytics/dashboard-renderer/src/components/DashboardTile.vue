@@ -1,7 +1,10 @@
 <template>
   <div
     class="tile-boundary"
-    :class="{ 'editable': context.editable }"
+    :class="{
+      'editable': context.editable,
+      'headless': !hasTileHeader,
+    }"
     :data-testid="`tile-${tileId}`"
   >
     <div
@@ -120,6 +123,7 @@
     </div>
     <div
       class="tile-content"
+      :class="`type-${definition.chart.type}`"
       :data-testid="`tile-content-${tileId}`"
     >
       <component
@@ -299,6 +303,21 @@ const badgeData = computed<string | null>(() => {
   return null
 })
 
+const hasTileHeader = computed<boolean>(() => {
+  if (props.definition.chart.type === 'slottable') {
+    return false
+  }
+
+  // @ts-ignore this is erroring because of slottable
+  const hasTitle = Boolean(props.definition.chart.chart_title)
+
+  const hasMenu = canShowTitleActions.value && kebabMenuHasItems.value && !props.isFullscreen
+
+  const hasBadge = Boolean(badgeData.value)
+
+  return hasTitle || hasMenu || hasBadge
+})
+
 const chartDataGranularity = computed(() => {
   return chartData.value ? msToGranularity(chartData.value.meta.granularity_ms) : undefined
 })
@@ -430,7 +449,7 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
     align-items: center;
     display: flex;
     justify-content: space-between;
-    padding: var(--kui-space-50, $kui-space-50) var(--kui-space-50, $kui-space-50) var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
+    padding: $kui-space-40 $kui-space-50 $kui-space-40 $kui-space-50;
     right: 0;
     width: 100%;
 
@@ -497,8 +516,27 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
 
   .tile-content {
     flex-grow: 1;
-    margin: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60);
+    margin: 0;
     overflow: hidden;
+    padding: $kui-space-20 $kui-space-60 0 $kui-space-60;
+
+    &.type-golden_signals {
+      padding: 0;
+    }
+  }
+
+  &.headless {
+    .tile-header {
+      display: none;
+    }
+
+    .tile-content {
+      padding: $kui-space-60 $kui-space-60 0 $kui-space-60;
+
+      &.type-golden_signals {
+        padding: 0;
+      }
+    }
   }
 }
 </style>

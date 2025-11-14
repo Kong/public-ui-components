@@ -1,10 +1,13 @@
 <template>
   <div
     class="analytics-chart-shell"
+    :class="{
+      'show-values': showLegendValues,
+    }"
   >
     <div
       v-if="hasValidChartData && resultSetTruncated && maxEntitiesShown"
-      class="chart-header"
+      class="chart-truncation-warning"
       data-testid="truncation-warning"
     >
       <KTooltip
@@ -134,9 +137,9 @@ const props = withDefaults(defineProps<ChartProps>(), {
   tooltipTitle: '',
   emptyStateTitle: '',
   emptyStateDescription: '',
-  legendPosition: ChartLegendPosition.Right,
+  legendPosition: ChartLegendPosition.Bottom,
   syntheticsDataKey: '',
-  showLegendValues: true,
+  showLegendValues: false,
   showAnnotations: true,
   timeseriesZoom: false,
   requestsLink: undefined,
@@ -185,7 +188,7 @@ const computedMetricUnit = computed<string>(() => {
   return Object.values(props.chartData.meta.metric_units)[0]
 })
 
-const showLegendValues = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Bottom)
+const showLegendValues = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Hidden)
 
 const { legendValues } = composables.useChartLegendValues(computedChartData, props.chartOptions.type, computedMetricUnit)
 
@@ -407,22 +410,16 @@ provide('legendPosition', toRef(props, 'legendPosition'))
       var(--kui-space-0, $kui-space-0);
   }
 
-  .chart-header {
+  .chart-truncation-warning {
     align-items: center;
+    background-color: white;
     display: flex;
     justify-content: flex-start;
-    width: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transform: translateX(-4px); // to align with title offset
     z-index: 999;
-  }
-
-  .tooltip {
-    display: flex;
-    margin-left: var(--kui-space-50, $kui-space-50);
-    margin-top: var(--kui-space-10, $kui-space-10);
-
-    .tooltip-content {
-      max-width: 40vw;
-    }
   }
 }
 </style>

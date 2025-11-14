@@ -71,6 +71,14 @@ export default function useDonutChartOptions(chartOptions: DonutChartOptions) {
           },
         },
       },
+      layout: {
+        padding: {
+          left: 0,
+          right: 0,
+          top: 5,
+          bottom: 0,
+        },
+      },
     }
   })
 

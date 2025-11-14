@@ -13,15 +13,6 @@
               <KRadio
                 v-model="legendPosition"
                 name="legendPosition"
-                :selected-value="ChartLegendPosition.Right"
-              >
-                {{ ChartLegendPosition.Right }}
-              </KRadio>
-            </div>
-            <div>
-              <KRadio
-                v-model="legendPosition"
-                name="legendPosition"
                 :selected-value="ChartLegendPosition.Bottom"
               >
                 {{ ChartLegendPosition.Bottom }}
@@ -111,7 +102,7 @@
       </div>
     </template>
 
-    <div style="height:500px">
+    <div style="height: 500px;">
       <!-- Determine if a full blown chart is to be displayed, or a simplified one -->
       <AnalyticsChart
         :chart-data="(exploreResult as AnalyticsExploreV2Result)"
@@ -185,7 +176,7 @@ const showAnnotationsToggle = ref(true)
 const showLegendValuesToggle = ref(true)
 const emptyState = ref(false)
 const chartType = ref<ChartType>('donut')
-const legendPosition = ref(ChartLegendPosition.Right)
+const legendPosition = ref(ChartLegendPosition.Bottom)
 const selectedMetric = ref<MetricSelection>({
   name: Metrics.TotalRequests,
   unit: 'count',

@@ -135,7 +135,7 @@ const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
 const legendItems = ref<EnhancedLegendItem[]>([])
 const tooltipElement = ref()
-const legendPosition = inject('legendPosition', ChartLegendPosition.Right)
+const legendPosition = inject('legendPosition', ChartLegendPosition.Bottom)
 const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 const zoomTimeRange = ref<AbsoluteTimeRangeV4 | undefined>(undefined)
 const isDoingSelection = ref(false)
@@ -205,7 +205,6 @@ composables.useReportChartDataForSynthetics(toRef(props, 'chartData'), toRef(pro
      */
 const chartFlexClass = (position: `${ChartLegendPosition}`) => {
   return {
-    [ChartLegendPosition.Right]: 'legend-row',
     [ChartLegendPosition.Bottom]: 'column',
     [ChartLegendPosition.Hidden]: 'hidden',
   }[position]

@@ -64,7 +64,7 @@ import type { Ref } from 'vue'
 import ToolTip from '../chart-plugins/ChartTooltip.vue'
 import ChartLegend from '../chart-plugins/ChartLegend.vue'
 import { type BarChartData, generateLegendItems } from '../../utils'
-import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, dataTotal, conditionalDataTotal, debounce } from '../../utils'
+import { accessibleGrey, MAX_LABEL_LENGTH, formatNumber, getTextHeight, getTextWidth, drawPercentage, conditionalDataTotal, debounce } from '../../utils'
 import composables from '../../composables'
 import { v4 as uuidv4 } from 'uuid'
 import { ChartLegendPosition } from '../../enums'
@@ -106,9 +106,6 @@ const { translateUnit } = composables.useTranslatedUnits()
 const axisCanvasId = crypto.randomUUID()
 const chartCanvasId = crypto.randomUUID()
 const highlightPlugin = new HighlightPlugin()
-
-// https://www.chartjs.org/chartjs-plugin-annotation/latest/guide/types/label.html#label-annotation-specific-options
-const LABEL_PADDING = 6
 
 // Parameters for bar sizing.
 const DEFAULT_CHART_WIDTH = '100%'
@@ -181,9 +178,8 @@ const canvasRef = useTemplateRef<HTMLCanvasElement>('canvas')
 const axisRef = useTemplateRef<HTMLCanvasElement>('axis')
 const legendID = uuidv4()
 const reactiveAnnotationsID = uuidv4()
-const maxOverflowPluginID = uuidv4()
 const legendItems = ref<EnhancedLegendItem[]>([])
-const legendPosition = inject('legendPosition', ChartLegendPosition.Right)
+const legendPosition = inject('legendPosition', ChartLegendPosition.Bottom)
 const axesTooltip = reactive<AxesTooltipState>({
   show: false,
   top: '0px',
@@ -246,14 +242,6 @@ const reactiveAnnotationsPlugin = {
   },
 }
 
-const maxOverflowPlugin = {
-  id: maxOverflowPluginID,
-  afterUpdate(chart: Chart) {
-    // @ts-ignore - ChartJS types are incomplete
-    chart.options.layout.padding.right = isHorizontal.value ? maxOverflow.value : 0
-  },
-}
-
 const axesTooltipPlugin = {
   id: 'axisHover',
   // args any because it is not typed by chartjs
@@ -309,7 +297,6 @@ const axesTooltipPlugin = {
 const plugins = [
   htmlLegendPlugin,
   axesTooltipPlugin,
-  maxOverflowPlugin,
   highlightPlugin,
   ...(props.annotations ? [reactiveAnnotationsPlugin] : []),
 ]
@@ -395,13 +382,6 @@ const options = computed<ChartOptions>(() => {
         clip: false,
       },
     },
-    layout: {
-      autoPadding: false,
-      padding: {
-        right: 0,
-        top: 6 * LABEL_PADDING, // Allow for two lines of text above vertical bar
-      },
-    },
   } as unknown as ChartOptions
 })
 
@@ -413,31 +393,6 @@ const chartInstance = composables.useChartJSCommon(
   options,
 ) as Ref<Chart | undefined>
 
-const maxOverflow = computed(() => {
-  // Need this reactive dependency to re-compute the max overflow when the chart updates.
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  dependsOnChartUpdate.value
-
-  // ChartJS says that labels are optional, but we always provide them.
-  const labels = props.chartData.labels as string[]
-  const datasets = props.chartData.datasets
-
-  // Determine the maximum annotation width.
-  const labelTotals: number[] = labels.map((_, i) => datasets.reduce((acc, ds) => isNaN(Number(ds.data[i])) ? acc : acc + Number(ds.data[i]), 0))
-
-  // If this is the first time we're constructing the chart, we might not have access to the chartInstance yet.
-  // This is frustrating, but OK:
-  // an initial chart instance doesn't have any hidden datasets, so the calculation will still be correct.
-  const fullTotal = chartInstance.value
-    ? conditionalDataTotal(chartInstance.value, props.chartData as BarChartData)
-    : dataTotal(props.chartData as BarChartData)
-
-  const datasetLengths = labelTotals.map(labelTotal => getTextWidth(formatNumber(labelTotal, unitsRef.value) + drawPercentage(labelTotal, fullTotal)))
-
-  return datasetLengths.reduce((x, acc) => Math.max(x, acc), 0) + LABEL_PADDING
-})
-
 onBeforeUnmount(() => {
   Chart.unregister(annotationPlugin)
 })
@@ -447,7 +402,6 @@ onBeforeUnmount(() => {
  * Legend list items are allowed to spread horizontally.
  */
 const chartFlexClass: { [label: string]: string } = {
-  [ChartLegendPosition.Right]: 'legend-row',
   [ChartLegendPosition.Bottom]: 'column',
 }
 
