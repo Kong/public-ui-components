@@ -65,6 +65,18 @@ const TABLE_RECORDS = [
   },
 ]
 
+const MULTI_METRIC_TABLE_RECORDS = TABLE_RECORDS.map((entry, index) => {
+  return {
+    ...entry,
+    event: {
+      ...entry.event,
+      '4XX': index + 1,
+      '5XX': index,
+      response_latency_average: index + 100,
+    },
+  }
+})
+
 const TABLE_DATA_V2 = {
   meta: {
     display: {
@@ -85,6 +97,34 @@ const TABLE_DATA_V2 = {
   },
   data: TABLE_RECORDS,
 }
+
+const MULTI_METRIC_TABLE_DATA = {
+  meta: {
+    display: {
+      ROUTE: ROUTE_DISPLAY_V2,
+    },
+    end_ms: 1692295253000,
+    granularity_ms: 300000,
+    limit: 50,
+    metric_names: [
+      'REQUEST_COUNT',
+      '4XX',
+      '5XX',
+      'response_latency_average',
+    ],
+    metric_units: {
+      REQUEST_COUNT: 'count',
+      '4XX': 'count',
+      '5XX': 'count',
+      response_latency_average: 'ms',
+    },
+    query_id: '5be9e04d-b62d-4e52-80ba-0e3a961380fa',
+    start_ms: 1692294953000,
+    truncated: false,
+  },
+  data: MULTI_METRIC_TABLE_RECORDS,
+}
+
 const TITLE = 'Top 5 Routes'
 const DESCRIPTION = 'Last 30-Day Summary'
 
@@ -308,6 +348,46 @@ describe('<TopNTable />', () => {
         cy.get(`[data-testid="row-${ROUTE_ID}"]`)
           .should('exist')
           .contains(expected)
+      })
+    })
+  })
+
+  describe('multiple metrics', () => {
+    it('renders one column per metric plus the name column', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: MULTI_METRIC_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+      })
+
+      const expectedColumnCount = MULTI_METRIC_TABLE_DATA.meta.metric_names.length + 1
+
+      cy.get('.kong-ui-public-top-n-table').should('be.visible')
+      cy.get('.table-headers').should('have.length', expectedColumnCount)
+      cy.get('.table-headers').eq(2).should('contain.text', '4xx')
+      cy.get('.table-headers').eq(3).should('contain.text', '5xx')
+      cy.get('.table-headers').eq(4).should('contain.text', 'Response latency (avg)')
+
+      cy.get('tbody tr').first().within(() => {
+        cy.get('td').should('have.length', expectedColumnCount)
+      })
+    })
+
+    it('renders values for additional metrics in their own columns', () => {
+      cy.mount(TopNTable, {
+        props: {
+          data: MULTI_METRIC_TABLE_DATA,
+          title: TITLE,
+          description: DESCRIPTION,
+        },
+      })
+
+      cy.get('tbody tr').first().within(() => {
+        cy.get('td').eq(2).should('contain.text', '1 request')
+        cy.get('td').eq(3).should('contain.text', '0 requests')
+        cy.get('td').eq(4).should('contain.text', '100 ms')
       })
     })
   })
