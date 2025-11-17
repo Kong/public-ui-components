@@ -142,7 +142,7 @@ describe('<TopNTable />', () => {
     cy.getTestId('top-n-card-title').should('contain.text', TITLE)
     cy.getTestId('top-n-card-description').should('contain.text', DESCRIPTION)
     cy.getTestId('top-n-table').should('be.visible')
-    cy.get('.table-headers').should('have.length', TABLE_DATA_V2.meta.metric_names.length + 1)
+    cy.getTestId('top-n-table-header-column').should('have.length', TABLE_DATA_V2.meta.metric_names.length + 1)
     cy.get('tbody tr').should('have.length', TABLE_DATA_V2.data.length)
     cy.get('tbody tr').last().should('contain.text', DELETED_NAME)
   })
@@ -279,18 +279,18 @@ describe('<TopNTable />', () => {
         expected: /0\.009\s?ms/,
       },
       {
-        description: 'approximates counts and pluralizes (e.g. 9,483 -> 9.4K requests)',
+        description: 'approximates counts and pluralizes (e.g. 9,483 -> 9.4K)',
         metricKey: 'REQUEST_COUNT',
         unit: 'count',
         value: 9483,
-        expected: /9\.4K\s?(requests|count)/,
+        expected: /9\.4K\s?/,
       },
       {
-        description: 'renders singular for count when value === 1 (e.g. 1 -> 1 request)',
+        description: 'renders singular for count when value === 1 (e.g. 1 -> 1)',
         metricKey: 'REQUEST_COUNT',
         unit: 'count',
         value: 1,
-        expected: /1\s?(request|count)/,
+        expected: /1\s?/,
       },
       {
         description: 'formats count/minute with approximation and translation (rpm)',
@@ -319,13 +319,6 @@ describe('<TopNTable />', () => {
         unit: 'usd',
         value: 12.3,
         expected: /\$12\.30/,
-      },
-      {
-        description: 'falls back to "count" when metric_units is missing',
-        metricKey: 'test',
-        unit: undefined,
-        value: 5587,
-        expected: /5\.5K\s?(requests|count)/,
       },
     ]
 
@@ -365,10 +358,10 @@ describe('<TopNTable />', () => {
       const expectedColumnCount = MULTI_METRIC_TABLE_DATA.meta.metric_names.length + 1
 
       cy.get('.kong-ui-public-top-n-table').should('be.visible')
-      cy.get('.table-headers').should('have.length', expectedColumnCount)
-      cy.get('.table-headers').eq(2).should('contain.text', '4xx')
-      cy.get('.table-headers').eq(3).should('contain.text', '5xx')
-      cy.get('.table-headers').eq(4).should('contain.text', 'Response latency (avg)')
+      cy.getTestId('top-n-table-header-column').should('have.length', expectedColumnCount)
+      cy.getTestId('top-n-table-header-column').eq(2).should('contain.text', '4xx')
+      cy.getTestId('top-n-table-header-column').eq(3).should('contain.text', '5xx')
+      cy.getTestId('top-n-table-header-column').eq(4).should('contain.text', 'Response latency (avg)')
 
       cy.get('tbody tr').first().within(() => {
         cy.get('td').should('have.length', expectedColumnCount)
@@ -385,8 +378,8 @@ describe('<TopNTable />', () => {
       })
 
       cy.get('tbody tr').first().within(() => {
-        cy.get('td').eq(2).should('contain.text', '1 request')
-        cy.get('td').eq(3).should('contain.text', '0 requests')
+        cy.get('td').eq(2).should('contain.text', '1')
+        cy.get('td').eq(3).should('contain.text', '0')
         cy.get('td').eq(4).should('contain.text', '100 ms')
       })
     })

@@ -57,40 +57,74 @@
       </template>
     </KEmptyState>
 
-    <KTableView
+    <div
       v-else
       class="top-n-table"
-      :data="tableData"
       data-testid="top-n-table"
-      :headers="tableHeaders"
-      :hide-pagination="true"
-      :hide-toolbar="true"
-      row-key="id"
     >
-      <template #name="{ row }">
-        <span :data-testid="`row-${row.id}`">
-          <slot
-            name="name"
-            :record="{
-              id: row.id,
-              name: row.name,
-              deleted: row.deleted,
-              dimension: displayKey,
-            }"
-          >
-            {{ row.name }}
-          </slot>
-        </span>
-      </template>
+      <table class="top-n-table-table">
+        <thead data-testid="top-n-table-header">
+          <tr class="top-n-table-header-row">
+            <th
+              v-for="header in tableHeaders"
+              :key="header.key"
+              class="top-n-table-header-cell"
+              :class="{ 'top-n-table-header-cell-metric': header.key !== 'name' }"
+              data-testid="top-n-table-header-column"
+            >
+              <span class="table-header-label">
+                {{ header.label }}
+              </span>
+            </th>
+          </tr>
+        </thead>
 
-      <!--
-        'value' is the primary metric in order to be backwards compatible
-        with our original use of a single metric TopNTable
-      -->
-      <template #value="{ row }">
-        <span :data-testid="`row-${row.id}`">{{ row.value }}</span>
-      </template>
-    </KTableView>
+        <tbody>
+          <tr
+            v-for="row in tableData"
+            :key="row.id"
+            class="top-n-table-row"
+          >
+            <!-- Name / dimension column -->
+            <td class="top-n-table-cell top-n-table-cell--name">
+              <span :data-testid="`row-${row.id}`">
+                <slot
+                  name="name"
+                  :record="{
+                    id: row.id,
+                    name: row.name,
+                    deleted: row.deleted,
+                    dimension: displayKey,
+                  }"
+                >
+                  {{ row.name }}
+                </slot>
+              </span>
+            </td>
+
+            <!-- Metric columns (primary 'value' + additional metrics) -->
+            <td
+              v-for="header in metricHeaders"
+              :key="header.key"
+              class="top-n-table-cell top-n-table-cell-metric"
+            >
+              <span
+                v-if="header.key === 'value'"
+                :data-testid="`row-${row.id}`"
+              >
+                {{ getRowMetricDisplayValue(row, header.key) }}
+              </span>
+              <span
+                v-else
+                :data-testid="`row-${row.id}-${header.key}`"
+              >
+                {{ getRowMetricDisplayValue(row, header.key) }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </KCard>
 </template>
 
@@ -102,13 +136,16 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import type {
   HeaderTag,
-  TableViewHeader,
-  TableViewData,
 } from '@kong/kongponents'
 
 import { computed } from 'vue'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import composables from '../composables'
+
+type TableHeader = {
+  key: string
+  label: string
+}
 
 type TopNRow = {
   id: string
@@ -181,8 +218,8 @@ const columnName = computed((): string => {
  * - Second column: primary metric "value" for backwards compatibility
  * - Additional columns: one per extra metric, keyed by metric name
  */
-const tableHeaders = computed<TableViewHeader[]>(() => {
-  const headers: TableViewHeader[] = [
+const tableHeaders = computed<TableHeader[]>(() => {
+  const headers: TableHeader[] = [
     {
       key: 'name',
       label: i18n.t('topNTable.nameLabel') as string,
@@ -210,6 +247,15 @@ const tableHeaders = computed<TableViewHeader[]>(() => {
   })
 
   return headers
+})
+
+/**
+ * All metric-related headers (everything except the "name" column).
+ * Order is preserved: primary "value" first (if present), then any
+ * additional metrics.
+ */
+const metricHeaders = computed<TableHeader[]>(() => {
+  return tableHeaders.value.filter((header) => header.key !== 'name')
 })
 
 const getId = (record: AnalyticsExploreRecord): string => {
@@ -280,9 +326,9 @@ const getValue = (record: AnalyticsExploreRecord): string => {
  * Table rows:
  * - Always include id/name/deleted/original
  * - `value` is the primary metric for backwards compatibility
- * - One property per metric key for KTableView (e.g. row['status_4xx'])
+ * - One property per metric key (e.g. row['status_4xx'])
  */
-const tableData = computed<TableViewData>(() => {
+const tableData = computed<TopNRow[]>(() => {
   if (!records.value?.length) {
     return []
   }
@@ -329,7 +375,30 @@ const errorMessage = computed((): string => {
   return ''
 })
 
+/**
+ * Safe accessor for any metric column in the row.
+ * This keeps the template type-clean and lets you tweak formatting here
+ * if you ever need to.
+ */
+const getRowMetricDisplayValue = (row: TopNRow, key: string): string => {
+  const value = row[key]
+
+  if (typeof value === 'string') {
+    return value
+  }
+
+  if (value === null || value === undefined) {
+    return '–'
+  }
+
+  return String(value)
+}
+
 const translateChartUnit = (unit: string, value: number): string => {
+  if (unit === 'count' || unit === 'requests') {
+    return ''
+  }
+
   const plural = value === 1 ? '' : 's'
 
   // @ts-ignore - dynamic i18n key
@@ -344,6 +413,7 @@ const translateChartUnit = (unit: string, value: number): string => {
   border: none !important;
   max-height: 100%;
   padding: 0 !important;
+  width: 100%;
 
   .top-n-card-description {
     color: $kui-color-text-neutral;
@@ -371,30 +441,67 @@ const translateChartUnit = (unit: string, value: number): string => {
     display: flex;
     flex-direction: column;
     max-height: 100%;
-    width: 100%;
-  }
+    overflow-x: auto;
 
-  :deep(.k-table-view .table-container .table-wrapper table) {
-    // Line up first and last columns with the edge of the table
-    thead tr th:first-child, td:first-child {
-      padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
+    &-table {
+      border-collapse: collapse;
+      table-layout: auto;
     }
 
-    thead tr th:last-child, td:last-child {
-      padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
-      width: 110px;
+    &-header-row {
+      border-bottom: $kui-border-width-10 solid $kui-color-border;
     }
 
-    thead tr th .table-headers-container .table-header-label {
-      color: $kui-color-text;
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-semibold;
-      line-height: $kui-line-height-40;
+    &-header-cell {
+      padding: 0 var(--kui-space-80, $kui-space-80) var(--kui-space-50, $kui-space-50) 0;
+      text-align: left;
+
+      &:last-child {
+        padding-right: 0;
+      }
+
+      .table-header-label {
+        color: $kui-color-text;
+        font-size: $kui-font-size-30;
+        font-weight: $kui-font-weight-semibold;
+        line-height: $kui-line-height-40;
+      }
+    }
+
+    &-row {
+      border-bottom: $kui-border-width-10 solid $kui-color-border;
+
+      &:first-of-type {
+        border-top: $kui-border-width-10 solid $kui-color-border;
+      }
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+    }
+
+    &-header-cell-metric,
+    &-cell-metric {
+      white-space: nowrap;
+      width: 1%;
+    }
+
+    &-cell {
+      min-width: 110px;
+      padding: var(--kui-space-50, $kui-space-50) var(--kui-space-0, $kui-space-0);
+
+      &--name {
+        color: $kui-color-text-neutral-stronger;
+        font-size: $kui-font-size-30;
+        min-width: 200px;
+        padding-right: var(--kui-space-80, $kui-space-80);
+      }
     }
   }
 
   :deep(a) {
     color: $kui-color-text-primary;
+    font-weight: $kui-font-weight-bold;
     text-decoration: none;
   }
 }

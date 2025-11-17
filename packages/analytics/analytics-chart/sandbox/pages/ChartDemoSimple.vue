@@ -236,18 +236,21 @@
         :chart-options="simpleChartOptions"
       />
     </div>
-    <TopNTable
+    <div
       v-else
       class="top-n-sandbox"
-      :data="topNTableData"
-      description="Last 30-Day Summary"
-      :is-loading="showLoadingState"
-      title="Top 5 Routes"
     >
-      <template #name="{ record }">
-        <a href="#">{{ record.name }}</a>
-      </template>
-    </TopNTable>
+      <TopNTable
+        :data="topNTableData"
+        description="Last 30-Day Summary"
+        :is-loading="showLoadingState"
+        title="Top 5 Routes"
+      >
+        <template #name="{ record }">
+          <a href="#">{{ record.name }}</a>
+        </template>
+      </TopNTable>
+    </div>
 
     <div class="data-container">
       <KLabel>ChartData</KLabel>
@@ -535,5 +538,12 @@ const isSingleValue = computed<boolean>(() => {
     overflow-x: auto;
     resize: horizontal;
   }
+}
+
+.top-n-sandbox {
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  width: 100%;
 }
 </style>
