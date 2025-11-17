@@ -29,6 +29,16 @@
     tag="div"
     @change="handleDataChange"
   >
+    <!-- global field templates -->
+    <template #[FIELD_RENDERERS]>
+      <!-- Redis partial selector -->
+      <FieldRenderer
+        :match="({ path }) => path === redisPartialInfo?.redisPath?.value"
+      >
+        <RedisSelector />
+      </FieldRenderer>
+    </template>
+
     <template v-if="editorMode === 'form'">
       <EntityFormBlock
         :description="generalInfoDescription ?? 'Choose whether this plugin applies to all traffic (global) or is scoped to a specific service, route, or consumer.'"
@@ -195,6 +205,10 @@ import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import { FEATURE_FLAGS } from '../../../../constants'
 import GeneralInfoFields from '../GeneralInfoFields.vue'
+import { FIELD_RENDERERS } from '../composables'
+import FieldRenderer from '../FieldRenderer.vue'
+import { REDIS_PARTIAL_INFO } from '../const'
+import RedisSelector from '../RedisSelector.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -202,6 +216,7 @@ const { editorMode = 'form', ...props } = defineProps<Props<T>>()
 
 const config = inject<KonnectBaseFormConfig | KongManagerBaseFormConfig | undefined>(FORMS_CONFIG)
 const newUIEnabled = inject(FEATURE_FLAGS.KM_1945_NEW_PLUGIN_CONFIG_FORM, false)
+const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 
 const slots = defineSlots<{
   default: () => any
