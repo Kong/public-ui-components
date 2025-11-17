@@ -2,7 +2,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import { EntityBaseFormType, useAxios, useErrors } from '@kong-ui-public/entities-shared'
 import { isEqual } from 'lodash-es'
 
-import { getRedisType, mapRedisTypeToPartialType, standardize as s } from '../helpers'
+import { getRedisType, mapRedisTypeToPartialType, standardize as s, pickCloudAuthFields } from '../helpers'
 import { RedisType } from '../types'
 import { DEFAULT_REDIS_TYPE, DEFAULT_FIELDS } from '../constants'
 import endpoints from '../partials-endpoints'
@@ -13,6 +13,7 @@ export type Options = {
   partialId?: string
   defaultRedisType?: RedisType
   config: KonnectRedisConfigurationFormConfig | KongManagerRedisConfigurationFormConfig
+  cloudAuthAvailable?: boolean
 }
 
 export const useRedisConfigurationForm = (options: Options) => {
@@ -60,10 +61,13 @@ export const useRedisConfigurationForm = (options: Options) => {
     switch (redisType.value) {
       case RedisType.HOST_PORT_CE:
       case RedisType.HOST_PORT_EE:
-        return (!!fieldValues.host && fieldValues.host.length > 0) && (!!fieldValues.port && fieldValues.port > 0)
+        return (!!fieldValues.host && fieldValues.host.length > 0)
+          && (!!fieldValues.port && fieldValues.port > 0)
+          && (fieldValues.cloud_authentication.auth_provider !== 'aws' || !!fieldValues.cloud_authentication.aws_cache_name)
       case RedisType.CLUSTER:
         return !!fieldValues.cluster_nodes.length
           && fieldValues.cluster_nodes.every((node) => node.ip.length > 0)
+          && (fieldValues.cloud_authentication.auth_provider !== 'aws' || !!fieldValues.cloud_authentication.aws_cache_name)
       case RedisType.SENTINEL:
         return !!fieldValues.sentinel_nodes.length
           && fieldValues.sentinel_nodes.every((node) => node.host.length > 0)
@@ -75,6 +79,27 @@ export const useRedisConfigurationForm = (options: Options) => {
     }
   })
 
+  const getCloudAuthConfig = () => {
+    if (!options.cloudAuthAvailable) {
+      return undefined
+    }
+    const cloudAuth = pickCloudAuthFields(form.fields.config.cloud_authentication)
+    return cloudAuth?.auth_provider ? {
+      auth_provider: cloudAuth.auth_provider,
+      aws_cache_name: s.str(cloudAuth.aws_cache_name, null),
+      aws_region: s.str(cloudAuth.aws_region, null),
+      aws_is_serverless: cloudAuth.aws_is_serverless,
+      aws_access_key_id: s.str(cloudAuth.aws_access_key_id, null),
+      aws_secret_access_key: s.str(cloudAuth.aws_secret_access_key, null),
+      aws_assume_role_arn: s.str(cloudAuth.aws_assume_role_arn, null),
+      aws_role_session_name: s.str(cloudAuth.aws_role_session_name, null),
+      gcp_service_account_json: s.str(cloudAuth.gcp_service_account_json, null),
+      azure_client_id: s.str(cloudAuth.azure_client_id, null),
+      azure_client_secret: s.str(cloudAuth.azure_client_secret, null),
+      azure_tenant_id: s.str(cloudAuth.azure_tenant_id, null),
+    } : null
+  }
+
   const payload = computed(() => {
     switch (redisType.value) {
       case RedisType.HOST_PORT_CE:
@@ -83,6 +108,7 @@ export const useRedisConfigurationForm = (options: Options) => {
           type: form.fields.type,
           tags: s.stringToArray(form.fields.tags),
           config: {
+            cloud_authentication: getCloudAuthConfig(),
             host: form.fields.config.host,
             port: s.int(form.fields.config.port),
             timeout: s.int(form.fields.config.timeout),
@@ -100,6 +126,7 @@ export const useRedisConfigurationForm = (options: Options) => {
           type: form.fields.type,
           tags: s.stringToArray(form.fields.tags),
           config: {
+            cloud_authentication: getCloudAuthConfig(),
             connect_timeout: s.int(form.fields.config.connect_timeout),
             connection_is_proxied: form.fields.config.connection_is_proxied,
             database: s.int(form.fields.config.database),
@@ -130,6 +157,7 @@ export const useRedisConfigurationForm = (options: Options) => {
           type: form.fields.type,
           tags: s.stringToArray(form.fields.tags),
           config: {
+            cloud_authentication: getCloudAuthConfig(),
             cluster_nodes: s.removeIdClusterNodes(form.fields.config.cluster_nodes),
             cluster_max_redirections: s.int(form.fields.config.cluster_max_redirections),
             username: s.str(form.fields.config.username, null),

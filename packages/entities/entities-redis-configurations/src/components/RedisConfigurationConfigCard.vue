@@ -41,7 +41,7 @@ import { RedisType } from '../types'
 import composables from '../composables'
 import '@kong-ui-public/entities-shared/dist/style.css'
 import endpoints from '../partials-endpoints'
-import { getRedisType } from '../helpers'
+import { getRedisType, pickCloudAuthFields } from '../helpers'
 import { DEFAULT_REDIS_TYPE } from '../constants'
 
 // Component props - This structure must exist in ALL entity components, with the exclusion of unneeded action props (e.g. if you don't need `canDelete`, just exclude it)
@@ -125,6 +125,11 @@ const recordResolver = (data: RedisConfigurationResponse) => {
     updated_at: data.updated_at,
     type: data.type,
     ...data.config,
+    ...(
+      props.config.cloudAuthAvailable
+        ? { cloud_authentication: pickCloudAuthFields(data.config.cloud_authentication) }
+        : null
+    ),
   }
 }
 
@@ -316,6 +321,11 @@ const schemaFieldConfigs: {
     label: t('form.fields.username.label'),
     tooltip: t('form.fields.username.tooltip'),
   },
+  cloud_authentication: {
+    type: ConfigurationSchemaType.Json,
+    section: ConfigurationSchemaSection.Basic,
+    label: t('form.sections.cloud_auth.title'),
+  },
 }
 
 /**
@@ -358,6 +368,7 @@ const configSchema = computed<ConfigurationSchema>(() => {
         'ssl',
         'ssl_verify',
         'server_name',
+        'cloud_authentication',
       ])
     case RedisType.HOST_PORT_EE:
       return pickSchemaFields([
@@ -376,6 +387,7 @@ const configSchema = computed<ConfigurationSchema>(() => {
         'read_timeout',
         'send_timeout',
         'connect_timeout',
+        'cloud_authentication',
       ])
     case RedisType.CLUSTER:
       return pickSchemaFields([
@@ -393,6 +405,7 @@ const configSchema = computed<ConfigurationSchema>(() => {
         'read_timeout',
         'send_timeout',
         'connect_timeout',
+        'cloud_authentication',
       ])
     case RedisType.SENTINEL:
       return pickSchemaFields([
