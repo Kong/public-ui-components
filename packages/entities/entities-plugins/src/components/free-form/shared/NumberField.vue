@@ -53,7 +53,7 @@ const fieldAttrs = useFieldAttrs(field.path!, props)
 const between = computed(() => {
   const schema = (field.schema?.value as NumberLikeFieldSchema)
   if (typeof schema.gt === 'number') {
-    return { min: schema.gt }
+    return { min: schema.type === 'integer' ? schema.gt + 1 : schema.gt }
   }
   const [min, max] = schema.between ?? []
   return {
