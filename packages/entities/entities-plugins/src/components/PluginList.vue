@@ -196,11 +196,21 @@
           >
             <template #default="{ isAllowed }">
               <KBadge
+                v-if="!isM1"
                 :class="isAllowed || 'disabled'"
                 @click.stop="isAllowed && tag.type && handleAppliedToClick(tag.type, row)"
               >
                 {{ tag.badgeText }}
               </KBadge>
+              <RouterLink
+                v-else-if="tag.type && getScopeRoute(tag.type, row)"
+                :to="getScopeRoute(tag.type, row)!"
+              >
+                {{ tag.badgeText }}
+              </RouterLink>
+              <span v-else>
+                {{ tag.badgeText }}
+              </span>
             </template>
           </PermissionsWrapper>
         </KTruncate>
@@ -682,6 +692,14 @@ const handleAppliedToClick = (type: ViewRouteType, row: EntityRow) => {
   if (id && props.config?.getScopedEntityViewRoute) {
     router.push(props.config.getScopedEntityViewRoute(type, id))
   }
+}
+
+const getScopeRoute = (type: ViewRouteType, row: EntityRow) => {
+  const id = row[type]?.id
+  if (!id) {
+    return undefined
+  }
+  return props.config?.getScopedEntityViewRoute?.(type, id)
 }
 
 /**
