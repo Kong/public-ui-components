@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.118.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.118.0...@kong-ui-public/entities-plugins@9.118.1) (2025-11-17)
+
+
+### Bug Fixes
+
+* **entities-plugins:** adjust min value for integer field ([#2644](https://github.com/Kong/public-ui-components/issues/2644)) ([ef13250](https://github.com/Kong/public-ui-components/commit/ef13250e341cf0b1742ed9089431bf79e946b976))
+
+
+
+
+
+# [9.118.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.117.2...@kong-ui-public/entities-plugins@9.118.0) (2025-11-17)
+
+
+### Features
+
+* **entities-plugins:** add redis selector to std layout [KM-1982] ([#2643](https://github.com/Kong/public-ui-components/issues/2643)) ([799895e](https://github.com/Kong/public-ui-components/commit/799895edc98c49ff87de749df3a171144ea88d69))
+
+
+
+
+
 ## [9.117.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.117.1...@kong-ui-public/entities-plugins@9.117.2) (2025-11-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
