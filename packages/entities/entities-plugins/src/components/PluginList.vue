@@ -627,10 +627,20 @@ const confirmSwitchEnablement = async () => {
   const enabled = !switchEnablementTarget.value.enabled
 
   try {
-    const { data } = props.config?.app === 'konnect'
+    const app = props.config?.app
+    let filteredTargetEntity: EntityRow | undefined = undefined
+    if (filterQuery.value && app === 'konnect') {
+      // Fetch the full entity data before updating enablement status
+      // This is needed because in Konnect the data returned from the filtered list endpoint
+      // 1. does not contain all the fields required for the PUT request to succeed
+      // 2. contains fields that are not recognized in the PUT request payload
+      filteredTargetEntity = await axiosInstance.get(url)
+    }
+
+    const { data } = app === 'konnect'
       // TODO: add timeout because when the plugin configuration is too big, the request can take very long.
       // Remove timeout when the request is optimized. KM-267
-      ? await axiosInstance.put(url, { ...switchEnablementTarget.value, enabled }, { timeout: 120000 })
+      ? await axiosInstance.put(url, { ...(filteredTargetEntity?.data || switchEnablementTarget.value), enabled }, { timeout: 120000 })
       : await axiosInstance.patch(url, { ...switchEnablementTarget.value, enabled }, { timeout: 120000 })
     // Emit the success event for the host app
     emit('toggle-enabled', enabled, data)

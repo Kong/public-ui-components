@@ -1,76 +1,181 @@
 <template>
   <div
     class="dk-node-portal"
-    :class="{ reversed }"
+    :class="{ expanded: isExpanded, reversed }"
     @click.stop
     @dragstart.stop
     @mousedown.stop
+    @mouseenter="localExpanded = true"
+    @mouseleave="localExpanded = false"
   >
-    <KTooltip
-      placement="top"
-      :text="tooltipText"
+    <div
+      class="target-boxes"
+      :style="containerStyle"
     >
-      <div class="target-box">
-        <component
-          :is="icon"
-          v-if="icon"
-          :color="KUI_COLOR_TEXT_NEUTRAL"
-          :size="16"
-        />
-        <span
-          v-if="additionalCount > 0"
-          class="additional-count"
+      <KTooltip
+        v-for="(target, index) in targetBoxItems"
+        :key="target.key"
+        class="target-box-wrapper"
+        :kpop-attributes="popoverAttributes"
+        placement="top"
+        :style="target.style"
+        :text="target.tooltip"
+      >
+        <div
+          class="target-box"
+          :class="{ highlighted: target.highlighted }"
+          @click.stop="handleTargetClick(target.edgeId)"
         >
-          +{{ additionalCount }}
-        </span>
-      </div>
-    </KTooltip>
+          <component
+            :is="target.icon"
+            :color="KUI_COLOR_TEXT_NEUTRAL"
+            :size="ICON_SIZE"
+          />
+          <span
+            v-if="index === 0 && additionalCount > 0"
+            class="additional-count"
+          >
+            +{{ additionalCount }}
+          </span>
+        </div>
+      </KTooltip>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
-import type { FieldName, NodeInstance, NonEmptyArray } from '../../types'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_SPACE_10 } from '@kong/design-tokens'
 import { KTooltip } from '@kong/kongponents'
 import { NODE_VISUAL } from './node-visual'
+import { useEditorStore } from '../store/store'
+
+import type { EdgeId, FieldName, NodeInstance, NonEmptyArray } from '../../types'
 
 interface PortalTarget {
+  edgeId: EdgeId
   node: NodeInstance
   fieldName?: FieldName
 }
 
+const BOX_SIZE = 24
+const ICON_SIZE = 16
+const BOX_GAP = Number.parseFloat(KUI_SPACE_10) || 0
+
 const {
-  reversed = false,
+  expanded = undefined,
+  reversed,
   targets,
 } = defineProps<{
+  expanded?: boolean
   reversed?: boolean
   targets: NonEmptyArray<PortalTarget>
 }>()
 
-const tooltipText = computed(() => {
-  if (!targets.length) return ''
+const popoverAttributes = {
+  target: 'body',
+}
 
-  return targets
-    .map(({ node, fieldName }) => fieldName ? `${node.name}.${fieldName}` : node.name)
-    .join(', ')
+const { portalSelection: selectedPortalEdgeId, selectPortalEdge } = useEditorStore()
+const localExpanded = ref(false)
+
+const hasHighlightedTarget = computed(() => {
+  const current = selectedPortalEdgeId.value
+  if (!current) return false
+  return targets.some((target) => target.edgeId === current)
 })
 
-const icon = computed(() => {
-  return NODE_VISUAL[targets[0].node.type]?.icon
+const isExpanded = computed(() => {
+  if (expanded !== undefined) {
+    return expanded || hasHighlightedTarget.value
+  }
+  return localExpanded.value || hasHighlightedTarget.value
 })
+
+const getExpandedWidth = () =>
+  BOX_SIZE * targets.length + BOX_GAP * (targets.length - 1)
+
+const containerStyle = computed(() => ({
+  width: isExpanded.value
+    ? `${getExpandedWidth()}px`
+    : 'fit-content',
+}))
+
+const handleTargetClick = (edgeId: EdgeId) => {
+  selectPortalEdge(edgeId)
+}
+
+const isTargetHighlighted = (edgeId: EdgeId) => selectedPortalEdgeId.value === edgeId
+
+const targetBoxItems = computed(() =>
+  targets.map((target, index) => {
+    const offset = (BOX_SIZE + BOX_GAP) * index
+
+    return {
+      edgeId: target.edgeId,
+      key: `${target.node.id}-${target.fieldName ?? 'node'}-${index}`,
+      icon: NODE_VISUAL[target.node.type]?.icon,
+      tooltip: target.fieldName
+        ? `${target.node.name}.${target.fieldName}`
+        : target.node.name,
+      highlighted: isTargetHighlighted(target.edgeId),
+      tooltipEl: null as HTMLElement | null,
+      style:
+        index === 0
+          ? {
+            width: 'fit-content',
+            zIndex: targets.length,
+          }
+          : {
+            position: 'absolute',
+            ...(reversed
+              ? {
+                left: `${offset}px`,
+                transform: isExpanded.value
+                  ? 'translateX(0)'
+                  : `translateX(-${offset}px)`,
+              }
+              : {
+                right: 0,
+                transform: isExpanded.value
+                  ? `translateX(-${offset}px)`
+                  : 'translateX(0)',
+              }),
+            zIndex: targets.length - index,
+          },
+    }
+  }),
+)
 
 const additionalCount = computed(() => Math.max(targets.length - 1, 0))
 </script>
 
 <style lang="scss" scoped>
+$connector-length: 12px;
+$box-size: 24px;
+
 .dk-node-portal {
   cursor: default;
-  left: -36px;
+  left: -$connector-length;
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
+  transform: translate(-100%, -50%);
+
+  .target-boxes {
+    display: flex;
+    gap: $kui-space-10;
+    justify-content: flex-end;
+    overflow: visible;
+    position: relative;
+    transition: width $kui-animation-duration-20 ease-in-out;
+  }
+
+  .target-box-wrapper {
+    flex-shrink: 0;
+    height: $box-size;
+    transition: transform $kui-animation-duration-20 ease-in-out;
+    width: $box-size;
+  }
 
   .target-box {
     align-items: center;
@@ -78,34 +183,61 @@ const additionalCount = computed(() => Math.max(targets.length - 1, 0))
     border: 1px solid $kui-color-border-neutral-weak;
     border-radius: $kui-border-radius-20;
     display: flex;
-    height: 24px;
+    height: $box-size;
     justify-content: center;
-    min-width: 24px;
-    padding: 0 $kui-space-20;
+    min-width: $box-size;
+    padding: 0 calc($kui-space-20 - 1px);
+    width: 100%;
 
     .additional-count {
       color: $kui-color-text-primary;
+      display: inline-flex;
       font-size: $kui-font-size-10;
       font-weight: $kui-font-weight-semibold;
       margin-left: $kui-space-10;
+      overflow: hidden;
+      transition: margin-left $kui-animation-duration-20 ease-in-out,
+        max-width $kui-animation-duration-20 ease-in-out;
+      white-space: nowrap;
+    }
+
+    &:hover {
+      border-color: $kui-color-border-primary-weak;
+    }
+
+    &.highlighted {
+      border-color: $kui-color-border-primary;
+      border-width: 1.5px;
+      padding: 0 ($kui-space-20 - 1.5px);
+    }
+  }
+
+  &.expanded {
+    .additional-count {
+      margin-left: 0;
+      max-width: 0;
     }
   }
 
   &::after {
     border-top: 1px dashed $kui-color-border-neutral;
-    content: '';
+    content: "";
     height: 1px;
     position: absolute;
     right: 0;
     top: 50%;
     transform: translate(100%, -50%);
-    transition: border-color $kui-animation-duration-20 ease-in-out;
-    width: 12px;
+    width: $connector-length;
   }
 
   // Reversed positioning
   &.reversed {
-    left: calc(100% + 12px);
+    left: calc(100% + $connector-length);
+    transform: translateY(-50%);
+
+    .target-boxes {
+      justify-content: flex-start;
+    }
 
     &::after {
       left: 0;

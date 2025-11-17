@@ -464,8 +464,18 @@ const confirmSwitchEnablement = async () => {
   const enabled = !switchEnablementTarget.value.enabled
 
   try {
-    const { data } = props.config?.app === 'konnect'
-      ? await axiosInstance.put(url, { ...switchEnablementTarget.value, enabled })
+    const app = props.config?.app
+    let filteredTargetEntity: EntityRow | undefined = undefined
+    if (filterQuery.value && app === 'konnect') {
+      // Fetch the full entity data before updating enablement status
+      // This is needed because in Konnect the data returned from the filtered list endpoint
+      // 1. does not contain all the fields required for the PUT request to succeed
+      // 2. contains fields that are not recognized in the PUT request payload
+      filteredTargetEntity = await axiosInstance.get(url)
+    }
+
+    const { data } = app === 'konnect'
+      ? await axiosInstance.put(url, { ...(filteredTargetEntity?.data || switchEnablementTarget.value), enabled })
       : await axiosInstance.patch(url, { ...switchEnablementTarget.value, enabled })
     // Emit the success event for the host app
     emit('toggle:success', data)

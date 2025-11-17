@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.117.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.117.1...@kong-ui-public/entities-plugins@9.117.2) (2025-11-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.117.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.117.0...@kong-ui-public/entities-plugins@9.117.1) (2025-11-14)
+
+
+### Bug Fixes
+
+* **entities-plugins:** fix placeToRight when group nodes exist ([#2641](https://github.com/Kong/public-ui-components/issues/2641)) ([cf73c0d](https://github.com/Kong/public-ui-components/commit/cf73c0d650b89ea5c8cb7babb5dd0fe08b764780))
+
+
+
+
+
+# [9.117.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.116.0...@kong-ui-public/entities-plugins@9.117.0) (2025-11-13)
+
+
+### Features
+
+* **entities-plugins:** selectable portals and simplify node portal interactions ([#2635](https://github.com/Kong/public-ui-components/issues/2635)) ([32b6cf2](https://github.com/Kong/public-ui-components/commit/32b6cf29826ad9f25eb726d58b5cb61a96ff6e67))
+
+
+
+
+
+# [9.116.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.115.0...@kong-ui-public/entities-plugins@9.116.0) (2025-11-13)
+
+
+### Features
+
+* **entities-plugins:** datakit add node counts to canvas panel headers ([#2638](https://github.com/Kong/public-ui-components/issues/2638)) ([d8e56ab](https://github.com/Kong/public-ui-components/commit/d8e56ab673713458704b273b26d9ba087920c3b2))
+
+
+
+
+
+# [9.115.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.3...@kong-ui-public/entities-plugins@9.115.0) (2025-11-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** should not set active group when dragging implicit nodes ([#2632](https://github.com/Kong/public-ui-components/issues/2632)) ([7fe9436](https://github.com/Kong/public-ui-components/commit/7fe94365d141efebf4d6d37f73c5d78eaaaa0fab))
+
+
+### Features
+
+* **entities-plugins:** add fan-out interaction to node portals with more than one connections ([#2631](https://github.com/Kong/public-ui-components/issues/2631)) ([e45819f](https://github.com/Kong/public-ui-components/commit/e45819fea64592ccf42939b69005221b4dbd5647))
+* **entities-plugins:** datakit tweak auto-layout algorithm for depth-crossing nodes ([#2623](https://github.com/Kong/public-ui-components/issues/2623)) ([fafe657](https://github.com/Kong/public-ui-components/commit/fafe6573b81332142af0bf09ceb43c5f27787742))
+
+
+
+
+
+## [9.114.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.2...@kong-ui-public/entities-plugins@9.114.3) (2025-11-11)
+
+
+### Bug Fixes
+
+* **entities:** toggle enabled when filtered ([#2629](https://github.com/Kong/public-ui-components/issues/2629)) ([e8a2955](https://github.com/Kong/public-ui-components/commit/e8a29556442703e09f28e96489795403f2fe14f5))
+
+
+
+
+
 ## [9.114.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.114.1...@kong-ui-public/entities-plugins@9.114.2) (2025-11-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

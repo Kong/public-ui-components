@@ -5,7 +5,6 @@
   >
     <ConfigForm
       v-bind="configFormProps"
-      @global-action="(...args) => $emit('globalAction', ...args)"
     />
   </PluginFormWrapper>
 </template>
@@ -17,13 +16,8 @@ import ConfigForm from './ConfigForm.vue'
 import PluginFormWrapper from '../shared/PluginFormWrapper.vue'
 
 import type { PluginFormWrapperProps } from '../shared/PluginFormWrapper.vue'
-import type { GlobalAction } from '../shared/types'
 
 const props = defineProps<PluginFormWrapperProps<any>>()
-
-defineEmits<{
-  globalAction: [name: GlobalAction, payload: any]
-}>()
 
 const slots = defineSlots<{
   [K in typeof AUTOFILL_SLOT_NAME]: () => any

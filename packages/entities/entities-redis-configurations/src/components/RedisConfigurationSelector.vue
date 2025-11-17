@@ -7,6 +7,7 @@
     :loading="loading"
     :model-value="modelValue"
     :placeholder="placeholder || t('selector.placeholder')"
+    v-bind="$attrs"
     @change="onSelectionChange"
     @query-change="onQueryChange"
   >
@@ -61,6 +62,7 @@
     :visible="isModalVisible"
     @created="onPartialCreated"
     @modal-close="onModalClose"
+    @toast="payload => emit('toast', payload)"
   />
 </template>
 
@@ -73,6 +75,10 @@ import { useRedisConfigurationSelector } from '../composables/useRedisConfigurat
 import useI18n from '../composables/useI18n'
 import RedisConfigurationFormModal from './RedisConfigurationFormModal.vue'
 import type { RedisConfigurationResponse } from '../types'
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 const {
   redisType = 'redis-ee',
@@ -99,9 +105,9 @@ const emit = defineEmits<{
   'change': [item: SelectItem | null]
   /** Emitted when the create new button is clicked */
   'create-new': []
-  /** Emitted when an error occurs */
-  'error': [error: Error]
+  'error-change': [error: Error | null]
   'modal-close': []
+  'toast': [payload: { message: string, appearance: 'success' | 'danger' }]
 }>()
 
 const { i18n: { t } } = useI18n()
@@ -147,9 +153,7 @@ const onPartialCreated = (data: RedisConfigurationResponse) => {
 }
 
 watch(error, (newError) => {
-  if (newError) {
-    emit('error', new Error(String(newError)))
-  }
+  emit('error-change', newError ? new Error(String(newError)) : null)
 })
 </script>
 

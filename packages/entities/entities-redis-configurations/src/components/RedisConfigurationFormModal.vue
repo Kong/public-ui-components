@@ -1,6 +1,6 @@
 <template>
   <KModal
-    class="redis-configuration-partial-form"
+    class="plugin-redis-partial-form"
     data-testid="redis-partial-form-modal"
     full-screen
     :title="t('form.redis_partial_modal_title')"
@@ -117,7 +117,7 @@ watch(
 </script>
 
 <style scoped lang="scss">
-.redis-configuration-partial-form {
+.plugin-redis-partial-form {
   :deep(.modal-full-screen .modal-container:not(.vault-secret-picker .modal-container)) {
     // in figma the modal is 1477px wide, so we set the max-width to 1477px so that when the screen is wider
     // too much space on the sides for the redis partial form can be avoided

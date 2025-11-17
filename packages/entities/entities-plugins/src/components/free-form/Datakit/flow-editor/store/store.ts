@@ -19,6 +19,7 @@ import type {
   GroupId,
   GroupInstance,
   UIGroup,
+  NodePhase,
 } from '../../types'
 
 import { createInjectionState } from '@vueuse/core'
@@ -48,6 +49,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
   function createState(pluginData: DatakitPluginData, options: CreateEditorStoreOptions = {}) {
     const state = ref<EditorState>(initEditorState(pluginData))
     const selection = ref<NodeId>()
+    const portalSelection = ref<EdgeId>()
     const modalOpen = ref(false)
     const propertiesPanelOpen = ref(false)
 
@@ -79,6 +81,17 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       state.value.pendingFitView = isPending
       history.commit('*')
     }
+
+    const configNodeCounts = computed(() => {
+      const result: Record<NodePhase, number> = { request: 0, response: 0 }
+      state.value.nodes.forEach((node) => {
+        if (isImplicitType(node.type))
+          return
+
+        result[node.phase]++
+      })
+      return result
+    })
 
     // maps
     const nodeMapById = computed(
@@ -180,6 +193,10 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
     )
     function selectNode(id?: NodeId) {
       selection.value = id
+    }
+
+    function selectPortalEdge(id?: EdgeId) {
+      portalSelection.value = id
     }
 
     /* ---------- node ops ---------- */
@@ -718,10 +735,13 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       // state
       state,
       selection,
+      portalSelection,
       modalOpen,
       skipValidation,
       invalidConfigNodeIds,
       propertiesPanelOpen,
+
+      configNodeCounts,
 
       // maps & getters
       nodeMapById,
@@ -737,6 +757,7 @@ const [provideEditorStore, useOptionalEditorStore] = createInjectionState(
       getOutEdgesByNodeId,
       selectedNode,
       selectNode,
+      selectPortalEdge,
 
       // node ops
       createNode,
