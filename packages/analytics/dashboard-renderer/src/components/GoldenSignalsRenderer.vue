@@ -42,7 +42,8 @@ const options = computed<ProviderProps>(() => {
   @media (min-width: ($kui-breakpoint-phablet - 1px)) {
     align-items: center;
     display: flex;
-    height: 90%;
+    height: 100%;
+    padding: 24px;
   }
 }
 </style>

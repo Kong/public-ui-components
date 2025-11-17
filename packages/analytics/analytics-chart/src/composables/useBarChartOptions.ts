@@ -108,13 +108,12 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
       skipNull: true,
       scales: {
         x: {
-          border: {
-            display: false,
-          },
           stacked: chartOptions.stacked.value,
           grid: {
-            display: false,
+            offset: false,
+            drawOnChartArea: false,
             drawBorder: false,
+            drawTicks: true,
           },
           ticks: {
             maxRotation: 90,
@@ -132,23 +131,23 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
             text: chartOptions.indexAxis === 'y'
               ? chartOptions.metricAxesTitle?.value
               : chartOptions.dimensionAxesTitle?.value,
-            padding: { top: 10 },
+            padding: { top: 3, bottom: 0, left: 0, right: 0 },
             font: {
               weight: 'bold',
             },
           },
         },
         y: {
-          border: {
-            display: false,
-          },
           stacked: chartOptions.stacked.value,
           beginAtZero: true,
           grid: {
-            display: false,
+            offset: false,
+            drawOnChartArea: false,
             drawBorder: false,
+            drawTicks: true,
           },
           ticks: {
+            padding: 0,
             font: genTickFont,
             callback: function(value: string, index: number): string {
               const that = this as unknown as CategoryScale
@@ -162,7 +161,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
             text: chartOptions.indexAxis === 'x'
               ? chartOptions.metricAxesTitle?.value
               : chartOptions.dimensionAxesTitle?.value,
-            padding: { bottom: 20 },
+            padding: { bottom: 3, top: 0, left: 0, right: 0 },
             font: {
               weight: 'bold',
             },
@@ -189,6 +188,14 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
       },
       maxBarThickness: 60,
       maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+        },
+      },
     }
   })
 

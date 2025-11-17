@@ -150,7 +150,11 @@ describe('<AnalyticsChart />', () => {
   })
 
   it('Renders a line chart for total requests count with status code dimension', () => {
-    mount({})
+    mount({
+      extraProps: {
+        showLegendValues: true,
+      },
+    })
     cy.get('.analytics-chart-parent').should('be.visible')
     cy.get('.debug-tooltip').should('not.exist')
 
@@ -182,6 +186,9 @@ describe('<AnalyticsChart />', () => {
         granularity: 'daily',
         noLimit: false,
       },
+      extraProps: {
+        showLegendValues: true,
+      },
     })
 
     cy.get('.analytics-chart-parent').should('be.visible')
@@ -200,10 +207,6 @@ describe('<AnalyticsChart />', () => {
       chartData: exploreResult,
       chartOptions: {
         type: 'horizontal_bar',
-      },
-      extraProps: {
-        showLegendValues: false,
-        showAnnotations: false,
       },
     })
 
@@ -230,6 +233,9 @@ describe('<AnalyticsChart />', () => {
       chartData: multiDimensionExploreResult,
       chartOptions: {
         type: 'vertical_bar',
+      },
+      extraProps: {
+        showLegendValues: true,
       },
     })
 
@@ -268,6 +274,7 @@ describe('<AnalyticsChart />', () => {
         chartOptions: {
           type: 'donut',
         },
+        showLegendValues: true,
         tooltipTitle: 'Tooltip Title',
       },
     })
@@ -331,8 +338,10 @@ describe('<AnalyticsChart />', () => {
 
     cy.get('.analytics-chart-parent').should('be.visible')
 
-    // Move mouse from (x1, y1) to (x2, y2), over 400ms, while clicking
-    mouseMove({ x1: 200, y1: 50, x2: 300, y2: 50, duration: 400, withClick: true, selector: '.chart-body > canvas' })
+    // Move mouse from (x1, y1) to (x2, y2), over 400ms
+    mouseMove({ x1: 200, y1: 50, x2: 300, y2: 50, duration: 400, withClick: false, selector: '.chart-body > canvas' })
+    // then click
+    cy.get('.chart-body > canvas').click(300, 50)
 
     cy.get('body').should(($body) => {
       const tooltipExists = $body.find('.tooltip-container').length > 0
@@ -358,7 +367,8 @@ describe('<AnalyticsChart />', () => {
 
     cy.get('.analytics-chart-parent').should('be.visible')
 
-    mouseMove({ x1: 200, y1: 50, x2: 300, y2: 50, duration: 100, withClick: true, selector: '.chart-body > canvas' })
+    mouseMove({ x1: 0, y1: 0, x2: 200, y2: 50, duration: 400, withClick: false, selector: '.chart-body > canvas' })
+    cy.get('.chart-body > canvas').click(200, 50)
 
     cy.get('body').should(($body) => {
       const tooltipExists = $body.find('.tooltip-container').length > 0

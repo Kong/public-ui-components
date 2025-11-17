@@ -25,7 +25,7 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
       drawBorder: false,
     },
     ticks: {
-      padding: 10,
+      padding: 0,
       autoSkipPadding: 100,
       source: 'auto',
       maxRotation: 0,
@@ -41,7 +41,7 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
     title: {
       display: !isNullOrUndef(chartOptions.dimensionAxesTitle?.value),
       text: chartOptions.dimensionAxesTitle?.value,
-      padding: { top: 2 }, // Line chart X-axis label seems farther off than Bar charts
+      padding: { top: 3 },
       font: {
         weight: 'bold',
       },
@@ -55,7 +55,7 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
     title: {
       display: !isNullOrUndef(chartOptions.metricAxesTitle?.value),
       text: chartOptions.metricAxesTitle?.value,
-      padding: { bottom: 10 },
+      padding: { bottom: 3 },
       font: {
         weight: 'bold',
       },
@@ -166,6 +166,14 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
       interaction: {
         mode: 'index',
         intersect: false,
+      },
+      layout: {
+        padding: {
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 0,
+        },
       },
     }
   })
