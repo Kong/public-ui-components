@@ -8,6 +8,16 @@
     tag="div"
     @change="handleDataChange"
   >
+    <!-- global field templates -->
+    <template #[FIELD_RENDERERS]>
+      <!-- Redis partial selector -->
+      <FieldRenderer
+        :match="({ path }) => path === redisPartialInfo?.redisPath?.value"
+      >
+        <RedisSelector />
+      </FieldRenderer>
+    </template>
+
     <template v-if="editorMode === 'form'">
       <EntityFormBlock
         :description="generalInfoDescription ?? t('plugins.form.sections.general_info.description')"
@@ -141,7 +151,7 @@ export type Props<T extends FreeFormPluginData = any> = {
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { computed, nextTick, ref, useTemplateRef } from 'vue'
+import { computed, inject, nextTick, ref, useTemplateRef } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
 import { KRadio } from '@kong/kongponents'
@@ -153,10 +163,16 @@ import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { PluginValidityChangeEvent } from '../../../../types'
 import VFGField from '../VFGField.vue'
 import type { FormConfig } from '../types'
+import FieldRenderer from '../FieldRenderer.vue'
+import { REDIS_PARTIAL_INFO } from '../const'
+import RedisSelector from '../RedisSelector.vue'
+import { FIELD_RENDERERS } from '../composables'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { editorMode = 'form', ...props } = defineProps<Props<T>>()
+
+const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 
 const slots = defineSlots<{
   default: () => any
