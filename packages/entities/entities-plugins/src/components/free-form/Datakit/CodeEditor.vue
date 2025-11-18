@@ -34,7 +34,7 @@ import { KAlert, KButton } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
 import english from '../../../locales/en.json'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
-import * as examples from './examples'
+import examples from './examples'
 import { FEATURE_FLAGS } from '../../../constants'
 import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'
 
