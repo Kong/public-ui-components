@@ -311,6 +311,23 @@
           },
           "cert_auth_role_name": {
             "label": "Role Name"
+          },
+          "oauth2_audiences": {
+            "label": "OAuth2 Audiences",
+            "tooltip": "Comma-separated list of OAuth2 audiences."
+          },
+          "oauth2_client_id": {
+            "label": "OAuth2 Client ID"
+          },
+          "oauth2_client_secret": {
+            "label": "OAuth2 Client Secret"
+          },
+          "oauth2_role_name": {
+            "label": "OAuth2 Role Name",
+            "tooltip": "The configured role name in HashiCorp Vault for OAuth2 auth. When creating the role in HashiCorp Vault, make sure that the `role_type` is `jwt` and the `token_policies` have permissions to read the secrets."
+          },
+          "oauth2_token_endpoint": {
+            "label": "OAuth2 Token Endpoint"
           }
         }
       },

@@ -12,6 +12,9 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
   cancelRoute,
   azureVaultProviderAvailable: false,
   ttl: true,
+  hcvAppRoleMethodAvailable: true,
+  hcvCertMethodAvailable: true,
+  hcvOauth2MethodAvailable: true,
 }
 
 const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
@@ -31,6 +34,9 @@ const baseConfigKM: KongManagerVaultFormConfig = {
   azureVaultProviderAvailable: false,
   ttl: true,
   awsStsEndpointUrlAvailable: true,
+  hcvAppRoleMethodAvailable: true,
+  hcvCertMethodAvailable: true,
+  hcvOauth2MethodAvailable: true,
 }
 
 const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
@@ -127,11 +133,30 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-namespace').should('be.visible')
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
-      cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
-      cy.get('[data-testid="select-item-kubernetes"] button').click({ force: true })
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-kubernetes"] button').click()
       cy.getTestId('vault-form-config-hcv-token').should('not.exist')
       cy.getTestId('vault-form-config-hcv-kube_role').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kube_api_token_file').should('be.visible')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-approle"] button').click()
+      cy.getTestId('vault-form-config-hcv-token').should('not.exist')
+      cy.getTestId('vault-form-config-hcv-approle_role_id').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-approle_secret_id').should('be.visible')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-cert"] button').click()
+      cy.getTestId('vault-form-config-hcv-token').should('not.exist')
+      cy.getTestId('vault-form-config-hcv-cert_auth_cert').should('be.visible')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-oauth2"] button').click()
+      cy.getTestId('vault-form-config-hcv-token').should('not.exist')
+      cy.getTestId('vault-form-config-hcv-oauth2_client_id').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-oauth2_audiences').should('be.visible')
+
       cy.getTestId('advanced-fields-collapse').should('be.visible')
     })
 
@@ -250,11 +275,36 @@ describe('<VaultForm />', () => {
       cy.get('[data-testid="select-item-v1"] button').click()
       cy.getTestId('vault-form-config-hcv-token').type('token')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
-      cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
       cy.get('[data-testid="select-item-kubernetes"] button').click()
       cy.getTestId('vault-create-form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-hcv-kube_role').type('role')
       cy.getTestId('vault-form-config-hcv-kube_api_token_file').type('file.txt')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-approle"] button').click()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-hcv-approle_role_id').type('id')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-cert"] button').click()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-hcv-cert_auth_role_name').type('name')
+      cy.getTestId('vault-form-config-hcv-cert_auth_cert').type('cert')
+      cy.getTestId('vault-form-config-hcv-cert_auth_cert_key').type('key')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-oauth2"] button').click()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-hcv-oauth2_client_id').type('id')
+      cy.getTestId('vault-form-config-hcv-oauth2_client_secret').type('secret')
+      cy.getTestId('vault-form-config-hcv-oauth2_role_name').type('name')
+      cy.getTestId('vault-form-config-hcv-oauth2_token_endpoint').type('endpoint')
+      cy.getTestId('vault-form-config-hcv-oauth2_audiences').type('audiences')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       // disables save when required field is cleared - general
@@ -522,11 +572,29 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-namespace').should('be.visible')
       cy.getTestId('vault-form-config-hcv-auth_method').should('be.visible')
       cy.getTestId('vault-form-config-hcv-token').should('be.visible')
-      cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
-      cy.get('[data-testid="select-item-kubernetes"] button').click({ force: true })
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-kubernetes"] button').click()
       cy.getTestId('vault-form-config-hcv-token').should('not.exist')
       cy.getTestId('vault-form-config-hcv-kube_role').should('be.visible')
       cy.getTestId('vault-form-config-hcv-kube_api_token_file').should('be.visible')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-approle"] button').click()
+      cy.getTestId('vault-form-config-hcv-token').should('not.exist')
+      cy.getTestId('vault-form-config-hcv-approle_role_id').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-approle_secret_id').should('be.visible')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-cert"] button').click()
+      cy.getTestId('vault-form-config-hcv-token').should('not.exist')
+      cy.getTestId('vault-form-config-hcv-cert_auth_cert').should('be.visible')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-oauth2"] button').click()
+      cy.getTestId('vault-form-config-hcv-token').should('not.exist')
+      cy.getTestId('vault-form-config-hcv-oauth2_client_id').should('be.visible')
+      cy.getTestId('vault-form-config-hcv-oauth2_audiences').should('be.visible')
 
       cy.getTestId('advanced-fields-collapse').should('be.visible')
     })
@@ -677,11 +745,36 @@ describe('<VaultForm />', () => {
       cy.get('[data-testid="select-item-v1"] button').click()
       cy.getTestId('vault-form-config-hcv-token').type('token')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
-      cy.getTestId('vault-form-config-hcv-auth_method').click({ force: true })
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
       cy.get('[data-testid="select-item-kubernetes"] button').click()
       cy.getTestId('vault-create-form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-hcv-kube_role').type('role')
       cy.getTestId('vault-form-config-hcv-kube_api_token_file').type('file.txt')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-approle"] button').click()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-hcv-approle_role_id').type('id')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-cert"] button').click()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-hcv-cert_auth_role_name').type('name')
+      cy.getTestId('vault-form-config-hcv-cert_auth_cert').type('cert')
+      cy.getTestId('vault-form-config-hcv-cert_auth_cert_key').type('key')
+      cy.getTestId('vault-create-form-submit').should('be.enabled')
+
+      cy.getTestId('vault-form-config-hcv-auth_method').click()
+      cy.get('[data-testid="select-item-oauth2"] button').click()
+      cy.getTestId('vault-create-form-submit').should('be.disabled')
+      cy.getTestId('vault-form-config-hcv-oauth2_client_id').type('id')
+      cy.getTestId('vault-form-config-hcv-oauth2_client_secret').type('secret')
+      cy.getTestId('vault-form-config-hcv-oauth2_role_name').type('name')
+      cy.getTestId('vault-form-config-hcv-oauth2_token_endpoint').type('endpoint')
+      cy.getTestId('vault-form-config-hcv-oauth2_audiences').type('audiences')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       // disables save when required field is cleared - general
