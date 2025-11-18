@@ -52,6 +52,7 @@
         <div
           v-if="trendRange"
           class="single-value-trend-range"
+          data-testid="single-value-trend-range"
         >
           {{ trendRange }}
         </div>
