@@ -10,6 +10,7 @@
       :config="konnectConfig"
       enable-redis-partial
       enable-vault-secret-picker
+      :engine="pluginFormEngine"
       :plugin-id="id"
       :plugin-type="plugin"
       use-custom-names-for-plugin
@@ -22,6 +23,7 @@
       :config="kongManagerConfig"
       enable-redis-partial
       enable-vault-secret-picker
+      :engine="pluginFormEngine"
       :plugin-id="id"
       :plugin-type="plugin"
       @global-action="handleGlobalAction"
@@ -60,6 +62,7 @@ defineProps({
 
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
 
 useProvideExperimentalFreeForms([
   'service-protection',

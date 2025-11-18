@@ -191,14 +191,32 @@ const realFormConfig = computed(() => {
   }
 })
 
+const flattenFormSchemaFields = computed(() => {
+  if (props.formSchema?.groups) {
+    return props.formSchema.groups.reduce(
+      (acc: any[], group: { fields: any[], collapsible?: { nestedCollapsible?: { fields?: any[] } } }) => {
+        const fields = group.fields
+
+        if (group.collapsible?.nestedCollapsible?.fields) {
+          fields.push(...group.collapsible.nestedCollapsible.fields)
+        }
+
+        return acc.concat(fields)
+      },
+      [],
+    )
+  }
+  return props.formSchema?.fields || []
+})
+
 const enabledSchema = computed(() => {
   return {
-    fields: props.formSchema?.fields.filter((field: { model: string }) => field.model === 'enabled'),
+    fields: flattenFormSchemaFields.value.filter((field: { model: string }) => field.model === 'enabled'),
   }
 })
 
 const scopeSchema = computed(() => {
-  return props.formSchema?.fields.find((field: { model: string }) => field.model === 'selectionGroup')
+  return flattenFormSchemaFields.value.find((field: { model: string }) => field.model === 'selectionGroup')
 })
 
 const radioGroup = computed(() => {
@@ -213,7 +231,7 @@ const moreFieldsSchema = computed(() => {
   const fields = ['instance_name', 'protocols', 'tags']
 
   return {
-    fields: props.formSchema?.fields.filter((field: { model: string }) => fields.includes(field.model)),
+    fields: flattenFormSchemaFields.value.filter((field: { model: string }) => fields.includes(field.model)),
   }
 })
 

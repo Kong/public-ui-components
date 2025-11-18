@@ -10,11 +10,51 @@ export type FieldSchemaType = 'string'
   | 'function'
   | 'json'
 
+export interface MatchCondition {
+  eq?: any
+  not_eq?: any
+  one_of?: any[]
+  not_one_of?: any[]
+  len_eq?: number
+  len_not_eq?: number
+  required?: boolean
+  elements?: {
+    type?: string
+    one_of?: any[]
+    not_one_of?: any[]
+  }
+}
+
 export type AtLeastOneOfEntityCheck = { at_least_one_of: string[] }
+
+export type MutuallyRequiredEntityCheck = { mutually_required: string[] }
 
 export type MutuallyExclusiveEntityCheck = { mutually_exclusive: string[] }
 
-export type EntityCheck = AtLeastOneOfEntityCheck | MutuallyExclusiveEntityCheck
+export type ConditionalEntityCheck = {
+  conditional: {
+    if_field: string
+    if_match: MatchCondition
+    then_field: string
+    then_match: MatchCondition
+    then_err?: string
+  }
+}
+
+export type ConditionalAtLeastOneOfEntityCheck = {
+  conditional_at_least_one_of: {
+    if_field: string
+    if_match: MatchCondition
+    then_at_least_one_of: string[]
+  }
+}
+
+export type EntityCheck =
+  | AtLeastOneOfEntityCheck
+  | MutuallyRequiredEntityCheck
+  | MutuallyExclusiveEntityCheck
+  | ConditionalEntityCheck
+  | ConditionalAtLeastOneOfEntityCheck
 
 export interface FieldSchema {
   type: FieldSchemaType
