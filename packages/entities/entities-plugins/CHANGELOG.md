@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.119.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.118.1...@kong-ui-public/entities-plugins@9.119.0) (2025-11-18)
+
+
+### Features
+
+* **entities-plugins:** update examples and change static node icon ([#2649](https://github.com/Kong/public-ui-components/issues/2649)) ([e8645fe](https://github.com/Kong/public-ui-components/commit/e8645fe100056aa8bd0b53d350980b4a4c41e656))
+
+
+
+
+
 ## [9.118.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.118.0...@kong-ui-public/entities-plugins@9.118.1) (2025-11-17)
 
 
