@@ -135,7 +135,7 @@ import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import * as freeForm from './free-form'
 import { getFreeFormName } from '../utils/free-form'
 import type { GlobalAction } from './free-form/shared/types'
-import { appendEntityChecksFromMetadata } from './free-form/shared/schema-enhancment'
+import { appendEntityChecksFromMetadata } from './free-form/shared/schema-enhancement'
 import type { FormSchema } from '../types/plugins/form-schema'
 
 // Need to check for duplicates in sharedForms and freeForm

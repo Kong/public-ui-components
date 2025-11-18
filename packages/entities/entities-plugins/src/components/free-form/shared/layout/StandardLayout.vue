@@ -49,7 +49,7 @@
           />
         </div>
         <div
-          v-if="scoped"
+          v-if="scoped && scopeEntitiesSchema"
           class="scope-detail"
         >
           <VFGField
@@ -191,19 +191,36 @@ const realFormConfig = computed(() => {
   }
 })
 
-const flattenFormSchemaFields = computed(() => {
+interface LegacyFormSchemaField {
+  model: string
+  type: string
+  fields: LegacyFormSchemaField[]
+  label?: string
+  description?: string
+}
+
+interface LegacyFormSchemaGroup {
+  fields: LegacyFormSchemaField[]
+  collapsible?: {
+    nestedCollapsible?: {
+      fields?: LegacyFormSchemaField[]
+    }
+  }
+}
+
+const flattenFormSchemaFields = computed<LegacyFormSchemaField[]>(() => {
   if (props.formSchema?.groups) {
     return props.formSchema.groups.reduce(
-      (acc: any[], group: { fields: any[], collapsible?: { nestedCollapsible?: { fields?: any[] } } }) => {
+      (acc: any[], group: LegacyFormSchemaGroup) => {
         const fields = group.fields
 
-        if (group.collapsible?.nestedCollapsible?.fields) {
-          fields.push(...group.collapsible.nestedCollapsible.fields)
-        }
+        const allFields = group.collapsible?.nestedCollapsible?.fields
+          ? fields.concat(group.collapsible.nestedCollapsible.fields)
+          : fields
 
-        return acc.concat(fields)
+        return acc.concat(allFields)
       },
-      [],
+      [] as LegacyFormSchemaField[],
     )
   }
   return props.formSchema?.fields || []
@@ -211,27 +228,27 @@ const flattenFormSchemaFields = computed(() => {
 
 const enabledSchema = computed(() => {
   return {
-    fields: flattenFormSchemaFields.value.filter((field: { model: string }) => field.model === 'enabled'),
+    fields: flattenFormSchemaFields.value.filter(field => field.model === 'enabled'),
   }
 })
 
 const scopeSchema = computed(() => {
-  return flattenFormSchemaFields.value.find((field: { model: string }) => field.model === 'selectionGroup')
+  return flattenFormSchemaFields.value.find(field => field.type === 'selectionGroup')
 })
 
 const radioGroup = computed(() => {
-  return (scopeSchema.value.fields || []).map(({ label, description }: { label: string, description: string }) => ({ label, description }))
+  return (scopeSchema.value?.fields || []).map(({ label, description }) => ({ label, description }))
 })
 
 const scopeEntitiesSchema = computed(() => {
-  return scopeSchema.value.fields[1]
+  return scopeSchema.value?.fields?.[1]
 })
 
 const moreFieldsSchema = computed(() => {
   const fields = ['instance_name', 'protocols', 'tags']
 
   return {
-    fields: flattenFormSchemaFields.value.filter((field: { model: string }) => fields.includes(field.model)),
+    fields: flattenFormSchemaFields.value.filter(field => fields.includes(field.model!)),
   }
 })
 
@@ -247,7 +264,7 @@ const freeFormSchema = computed(() => {
     // enabled field
     ...enabledSchema.value.fields,
     // scope fields
-    ...scopeEntitiesSchema.value.fields,
+    ...(scopeEntitiesSchema.value?.fields ?? []),
     // general info fields
     ...moreFieldsSchema.value.fields,
   ]
@@ -330,7 +347,7 @@ const prunedData = computed(() => {
 
 
 const scopeFields = computed<Array<'service' | 'route' | 'consumer' | 'consumer_group'>>(() => {
-  return scopeEntitiesSchema.value.fields.map((field: any) => field.model.split('-')[0])
+  return scopeEntitiesSchema.value?.fields.map((field: any) => field.model.split('-')[0]) ?? []
 })
 
 // Cache of scope-related fields to restore when toggling scoped on/off

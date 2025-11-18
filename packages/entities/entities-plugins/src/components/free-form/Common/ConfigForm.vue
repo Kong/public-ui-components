@@ -39,7 +39,12 @@ const fieldsCategory = computed(() => {
   const ruledFields: Set<string> = new Set()
 
   const schema = getSchema()
-  const configSchema = (schema.fields.find(field => Object.keys(field)[0] === 'config')!.config as RecordFieldSchema)
+  const configField = schema.fields.find(field => Object.keys(field)[0] === 'config')
+  if (!configField || !('config' in configField)) {
+    // If 'config' field is missing, return empty categories to avoid runtime error
+    return { defaultVisible, advanced }
+  }
+  const configSchema = configField.config as RecordFieldSchema
 
   // Collect fields that are involved in entity checks
   // These fields should be visible by default as they have validation rules

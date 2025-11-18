@@ -11,17 +11,17 @@ export type FieldSchemaType = 'string'
   | 'json'
 
 export interface MatchCondition {
-  eq?: any
-  not_eq?: any
-  one_of?: any[]
-  not_one_of?: any[]
+  eq?: unknown
+  not_eq?: unknown
+  one_of?: unknown[]
+  not_one_of?: unknown[]
   len_eq?: number
   len_not_eq?: number
   required?: boolean
   elements?: {
-    type?: string
-    one_of?: any[]
-    not_one_of?: any[]
+    type?: FieldSchemaType
+    one_of?: unknown[]
+    not_one_of?: unknown[]
   }
 }
 
