@@ -691,6 +691,12 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
     group: PluginGroup.AI,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },
+  'ai-lakera-guard': {
+    name: 'AI Lakera Guard',
+    description: 'Audit and enforce safety policies on LLM requests and responses using the AI AWS Lakera plugin before they reach upstream LLMs.',
+    group: PluginGroup.AI,
+    scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
+  },
 } satisfies Record<string, {
   name: string
   description: string

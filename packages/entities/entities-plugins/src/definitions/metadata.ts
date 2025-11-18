@@ -669,6 +669,12 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     useLegacyForm: true,
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-semantic-response-guard'],
   },
+  'ai-lakera-guard': {
+    descriptionKey: 'plugins.meta.ai-lakera-guard.description',
+    nameKey: 'plugins.meta.ai-lakera-guard.name',
+    useLegacyForm: true,
+    ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-lakera-guard'],
+  },
 }
 
 /**
