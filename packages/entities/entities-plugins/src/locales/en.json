@@ -714,7 +714,9 @@
         "description_example": "Start with a use case:",
         "examples": {
           "authenticate": "Authenticate Kong to a third-party service",
+          "vault": "Authenticate to a third-party service using vault secrets",
           "combine": "Combine multiple API responses",
+          "cache": "Conditionally fetch or store cache data",
           "manipulate": "Manipulate request headers"
         },
         "flow_editor": {
