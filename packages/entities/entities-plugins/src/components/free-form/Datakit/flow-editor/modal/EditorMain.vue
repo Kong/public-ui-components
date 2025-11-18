@@ -67,6 +67,7 @@
           }"
           show-caret
           :trigger-text="t('plugins.free-form.datakit.flow_editor.examples')"
+          :width="240"
         >
           <template #items>
             <KDropdownItem
@@ -115,7 +116,7 @@ import yaml, { JSON_SCHEMA } from 'js-yaml'
 import english from '../../../../../locales/en.json'
 import BooleanField from '../../../shared/BooleanField.vue'
 import { HOTKEYS } from '../constants'
-import * as examples from '../../examples'
+import examples from '../../examples'
 import { useHotkeys } from '../composables/useHotkeys'
 import FlowPanels from '../FlowPanels.vue'
 import HotkeyLabel from '../HotkeyLabel.vue'

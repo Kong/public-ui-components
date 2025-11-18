@@ -1,0 +1,34 @@
+resources:
+  vault:
+    token: "{vault://my-vault/my-token}"
+nodes:
+- name: STATIC_INPUTS
+  type: static
+  values:
+    headers:
+      Content-Type: application/x-www-form-urlencoded
+    body: grant_type=client_credentials
+- name: BUILD_HEADERS
+  type: jq
+  inputs:
+    headers: STATIC_INPUTS.headers
+    apikey: vault.token
+  jq: |
+    .headers * {
+      "X-Api-Key": .apikey
+    }
+- name: AUTH_REQUEST
+  type: call
+  inputs:
+    headers: BUILD_HEADERS
+    body: STATIC_INPUTS.body
+  url: https://my-token-service/auth-token
+  method: POST
+- name: UPSTREAM_AUTH_HEADER
+  type: jq
+  input: AUTH_REQUEST.body
+  output: service_request.headers
+  jq: |
+    {
+      Authorization: (.token_type + " " + .access_token)
+    }
