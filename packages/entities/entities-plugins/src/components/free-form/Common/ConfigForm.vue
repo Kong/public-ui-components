@@ -55,11 +55,11 @@ const fieldsCategory = computed(() => {
       // Extract field names from different types of entity checks
       if ('at_least_one_of' in check) {
         fields = check.at_least_one_of
-      } else if ('conditional' in check && check.conditional.then_match.required) {
-        // For conditional checks, collect both if_field and then_field
+      } else if ('conditional' in check && getSchema(`config.${check.conditional.if_field}`)?.required && check.conditional.then_match.required) {
+        // For conditional checks, collect if_field and then_field if then_field is required
         fields = [check.conditional.if_field, check.conditional.then_field]
-      } else if ('conditional_at_least_one_of' in check) {
-        // For conditional_at_least_one_of, collect if_field and all then_at_least_one_of fields
+      } else if ('conditional_at_least_one_of' in check && getSchema(`config.${check.conditional_at_least_one_of.if_field}`)?.required) {
+        // For conditional_at_least_one_of checks, collect if_field and all then_at_least_one_of fields if if_field is required
         fields = [check.conditional_at_least_one_of.if_field, ...check.conditional_at_least_one_of.then_at_least_one_of]
       }
 
