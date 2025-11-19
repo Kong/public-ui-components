@@ -13,7 +13,7 @@
     >
       <template #config="{ rowValue }">
         <ConfigCardItem
-          v-for="propKey in Object.keys(rowValue)"
+          v-for="propKey in Object.keys(rowValue).sort()"
           :key="propKey"
           :item="{
             key: propKey,
