@@ -63,11 +63,11 @@ export const useRedisConfigurationForm = (options: Options) => {
       case RedisType.HOST_PORT_EE:
         return (!!fieldValues.host && fieldValues.host.length > 0)
           && (!!fieldValues.port && fieldValues.port > 0)
-          && (fieldValues.cloud_authentication.auth_provider !== 'aws' || !!fieldValues.cloud_authentication.aws_cache_name)
+          && (fieldValues.cloud_authentication?.auth_provider !== 'aws' || !!fieldValues.cloud_authentication.aws_cache_name)
       case RedisType.CLUSTER:
         return !!fieldValues.cluster_nodes.length
           && fieldValues.cluster_nodes.every((node) => node.ip.length > 0)
-          && (fieldValues.cloud_authentication.auth_provider !== 'aws' || !!fieldValues.cloud_authentication.aws_cache_name)
+          && (fieldValues.cloud_authentication?.auth_provider !== 'aws' || !!fieldValues.cloud_authentication.aws_cache_name)
       case RedisType.SENTINEL:
         return !!fieldValues.sentinel_nodes.length
           && fieldValues.sentinel_nodes.every((node) => node.host.length > 0)

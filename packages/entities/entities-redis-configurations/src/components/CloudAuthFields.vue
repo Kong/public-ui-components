@@ -65,7 +65,7 @@ defineProps<{
   config: KonnectRedisConfigurationFormConfig | KongManagerRedisConfigurationFormConfig
   readonly: boolean
 }>()
-const model = defineModel<RedisConfigurationFields['config']['cloud_authentication']>({ required: true })
+const model = defineModel<Required<RedisConfigurationFields['config']>['cloud_authentication']>({ required: true })
 
 const { i18n: { t } } = composables.useI18n()
 const {
@@ -75,7 +75,7 @@ const {
 } = useVaultSecretPicker()
 
 interface Field {
-  key: keyof RedisConfigurationFields['config']['cloud_authentication']
+  key: keyof Required<RedisConfigurationFields['config']>['cloud_authentication']
   group: AuthProvider
   label: string
   tooltip: string

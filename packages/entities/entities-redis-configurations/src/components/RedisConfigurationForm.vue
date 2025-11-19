@@ -93,7 +93,7 @@
         :title="t('form.sections.cloud_auth.title')"
       >
         <KSelect
-          v-model="form.fields.config.cloud_authentication.auth_provider"
+          v-model="form.fields.config.cloud_authentication!.auth_provider"
           clearable
           data-testid="redis-auth-provider-select"
           :items="cloudAuthOptions"
@@ -103,7 +103,7 @@
           :readonly="form.readonly"
         />
         <CloudAuthFields
-          v-model="form.fields.config.cloud_authentication"
+          v-model="form.fields.config.cloud_authentication!"
           :config="props.config"
           :readonly="form.readonly"
         />
