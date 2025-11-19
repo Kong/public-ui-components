@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.120.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.119.1...@kong-ui-public/entities-plugins@9.120.0) (2025-11-19)
+
+
+### Features
+
+* **entities-plugins:** add 313 new plugin icon and metadata ([#2648](https://github.com/Kong/public-ui-components/issues/2648)) ([ace5d47](https://github.com/Kong/public-ui-components/commit/ace5d47b33b1c6a423f15d90e0409fc9af2a4ab5)), closes [#2649](https://github.com/Kong/public-ui-components/issues/2649)
+* **entities-plugins:** disaplay entity checks fields [KM-2016] ([#2647](https://github.com/Kong/public-ui-components/issues/2647)) ([793a7c8](https://github.com/Kong/public-ui-components/commit/793a7c849a181dd99c3c14e4629363ec28316a68))
+
+
+
+
+
 ## [9.119.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.119.0...@kong-ui-public/entities-plugins@9.119.1) (2025-11-19)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
