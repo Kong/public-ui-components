@@ -384,6 +384,7 @@ const labelDictionary: Record<string, string> = {
   ttl: 'TTL',
   url: 'URL',
   http: 'HTTP',
+  api: 'API',
 }
 
 function replaceByDictionary(name: string) {
