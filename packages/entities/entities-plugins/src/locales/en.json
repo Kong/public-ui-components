@@ -570,6 +570,10 @@
       "ai-semantic-response-guard": {
         "name": "AI Semantic Response Guard",
         "description": "Permit or block prompts based on semantic similarity to known LLM responses, preventing misuse of `llm/v1/chat` or `llm/v1/completions` requests."
+      },
+      "ai-lakera-guard": {
+        "name": "AI Lakera Guard",
+        "description": "Audit and enforce safety policies on LLM requests and responses using the AI AWS Lakera plugin before they reach upstream LLMs."
       }
     },
     "fields": {
