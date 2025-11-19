@@ -56,7 +56,7 @@ const fieldsCategory = computed(() => {
       if ('at_least_one_of' in check) {
         fields = check.at_least_one_of
       } else if ('conditional' in check && getSchema(`config.${check.conditional.if_field}`)?.required && check.conditional.then_match.required) {
-        // For conditional checks, collect if_field and then_field if then_field is required
+        // For conditional checks, collect if_field and then_field if if_field is required and then_field is required
         fields = [check.conditional.if_field, check.conditional.then_field]
       } else if ('conditional_at_least_one_of' in check && getSchema(`config.${check.conditional_at_least_one_of.if_field}`)?.required) {
         // For conditional_at_least_one_of checks, collect if_field and all then_at_least_one_of fields if if_field is required
