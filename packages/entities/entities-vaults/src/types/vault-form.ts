@@ -26,6 +26,11 @@ export interface BaseVaultFormConfig extends Omit<BaseFormConfig, 'cancelRoute'>
   hcvCertMethodAvailable?: boolean
 
   /**
+   * Show/hide oauth2 option and corresponding fields
+   */
+  hcvOauth2MethodAvailable?: boolean
+
+  /**
   * Show/hide AWS StsEndpointUrl field
   */
   awsStsEndpointUrlAvailable?: boolean
@@ -63,6 +68,7 @@ export enum VaultAuthMethods {
   K8S = 'kubernetes',
   APP_ROLE = 'approle',
   CERT = 'cert',
+  OAUTH2 = 'oauth2',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
@@ -117,6 +123,11 @@ export interface HCVVaultConfig {
   cert_auth_role_name?: string
   cert_auth_cert?: string
   cert_auth_cert_key?: string
+  oauth2_audiences?: string
+  oauth2_client_id?: string
+  oauth2_client_secret?: string
+  oauth2_role_name?: string
+  oauth2_token_endpoint?: string
 }
 
 export interface AzureVaultConfig {

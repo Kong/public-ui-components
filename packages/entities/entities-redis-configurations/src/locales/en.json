@@ -50,6 +50,10 @@
         "title": "Connection settings",
         "description": "Define the Redis server’s host, port, authentication, and timeout options for establishing a connection."
       },
+      "cloud_auth": {
+        "title": "Cloud authentication settings",
+        "description": "Configure authentication settings for connecting to cloud-hosted Redis services."
+      },
       "cluster": {
         "title": "Cluster configuration",
         "description": "Enables data sharding and distribution across multiple Redis nodes, allowing for scalability and load balancing."
@@ -72,6 +76,56 @@
       }
     },
     "fields": {
+      "cloud_authentication": {
+        "auth_provider": {
+          "label": "Authentication provider",
+          "tooltip": "Auth provider to be used to authenticate to a Cloud Provider's Redis instance."
+        },
+        "aws_cache_name": {
+          "label": "AWS cache name",
+          "tooltip": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`."
+        },
+        "aws_region": {
+          "label": "AWS region",
+          "tooltip": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`."
+        },
+        "aws_is_serverless": {
+          "label": "Serverless ElastiCache",
+          "tooltip": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`."
+        },
+        "aws_access_key_id": {
+          "label": "AWS access key ID",
+          "tooltip": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`."
+        },
+        "aws_secret_access_key": {
+          "label": "AWS secret access key",
+          "tooltip": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`."
+        },
+        "aws_assume_role_arn": {
+          "label": "AWS assume role ARN",
+          "tooltip": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens."
+        },
+        "aws_role_session_name": {
+          "label": "AWS role session name",
+          "tooltip": "The session name for the temporary credentials when assuming the IAM role."
+        },
+        "gcp_service_account_json": {
+          "label": "GCP service account JSON",
+          "tooltip": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`."
+        },
+        "azure_client_id": {
+          "label": "Azure client ID",
+          "tooltip": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`."
+        },
+        "azure_client_secret": {
+          "label": "Azure client secret",
+          "tooltip": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`."
+        },
+        "azure_tenant_id": {
+          "label": "Azure tenant ID",
+          "tooltip": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`."
+        }
+      },
       "type": {
         "label": "Redis type"
       },
@@ -195,6 +249,11 @@
       }
     },
     "options": {
+      "auth_provider": {
+        "aws": "AWS",
+        "azure": "Azure",
+        "gcp": "GCP"
+      },
       "type": {
         "host_port": "Host/Port",
         "cluster": "Cluster",

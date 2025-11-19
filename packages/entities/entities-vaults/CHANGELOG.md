@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.27.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.26.10...@kong-ui-public/entities-vaults@3.27.0) (2025-11-19)
+
+
+### Features
+
+* **entities-vaults:** add oauth2 support for hcv ([#2646](https://github.com/Kong/public-ui-components/issues/2646)) ([c34145f](https://github.com/Kong/public-ui-components/commit/c34145f22881dee7e4db122d387598dff2247588))
+
+
+
+
+
 ## [3.26.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.26.9...@kong-ui-public/entities-vaults@3.26.10) (2025-11-10)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

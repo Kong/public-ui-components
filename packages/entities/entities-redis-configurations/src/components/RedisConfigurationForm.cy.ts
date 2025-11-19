@@ -1,5 +1,5 @@
 import RedisConfigurationForm from './RedisConfigurationForm.vue'
-import { PartialType, RedisType, type RedisConfigurationResponse } from '../types'
+import { PartialType, RedisType, AuthProvider, type RedisConfigurationResponse } from '../types'
 import { redisConfigurationCE, redisConfigurationCluster, redisConfigurationHostPortEE, redisConfigurationSentinel, links } from '../../fixtures/mockData'
 
 import type {
@@ -14,6 +14,7 @@ const baseConfigKM: KongManagerRedisConfigurationFormConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
+  cloudAuthAvailable: true,
   cancelRoute,
 }
 
@@ -21,6 +22,7 @@ const baseConfigKonnect: KonnectRedisConfigurationFormConfig = {
   app: 'konnect',
   controlPlaneId: 'test-control-plane-id',
   apiBaseUrl: '/us/kong-api',
+  cloudAuthAvailable: true,
   cancelRoute,
 }
 
@@ -162,13 +164,14 @@ describe('<RedisConfigurationForm />', {
 
         cy.getTestId('redis-sentinel-configuration-section').should('not.exist')
         cy.getTestId('redis-cluster-configuration-section').should('not.exist')
-        cy.getTestId('.redis-keepalive-section').should('not.exist')
-        cy.getTestId('.redis-read-write-configuration-section').should('not.exist')
+        cy.getTestId('redis-keepalive-section').should('not.exist')
+        cy.getTestId('redis-read-write-configuration-section').should('not.exist')
         cy.getTestId('redis-connection-is-proxied-checkbox').should('not.exist')
 
         cy.getTestId('redis-host-input').should('be.visible')
         cy.getTestId('redis-port-input').should('be.visible')
         cy.getTestId('redis-timeout-input').should('be.visible')
+        cy.getTestId('redis-auth-provider-select').should('be.visible')
 
         // Host/Port EE fields
         cy.getTestId('redis-type-select').click()
@@ -185,6 +188,7 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-connection-is-proxied-checkbox').should('be.visible')
         cy.getTestId('redis-keepalive-section').should('be.visible')
         cy.getTestId('redis-read-write-configuration-section').should('be.visible')
+        cy.getTestId('redis-auth-provider-select').should('be.visible')
 
         // Cluster fields
         cy.getTestId('redis-type-select').click()
@@ -200,6 +204,7 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-keepalive-section').should('be.visible')
         cy.getTestId('redis-read-write-configuration-section').should('be.visible')
         cy.getTestId('redis-cluster-configuration-section').should('be.visible')
+        cy.getTestId('redis-auth-provider-select').should('be.visible')
 
         // Sentinel fields
         cy.getTestId('redis-type-select').click()
@@ -211,6 +216,7 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-host-input').should('not.exist')
         cy.getTestId('redis-port-input').should('not.exist')
         cy.getTestId('redis-timeout-input').should('not.exist')
+        cy.getTestId('redis-auth-provider-select').should('not.exist')
 
         cy.getTestId('redis-keepalive-section').should('be.visible')
         cy.getTestId('redis-read-write-configuration-section').should('be.visible')
@@ -241,6 +247,26 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         cy.getTestId('redis-host-input').type('localhost')
+        cy.getTestId('partial-create-form-submit').should('be.enabled')
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.AWS}"]`)
+          .click()
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
+        cy.getTestId('redis-aws_cache_name-input').type('test-cache')
+        cy.getTestId('partial-create-form-submit').should('be.enabled')
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.GCP}"]`)
+          .click()
+        cy.getTestId('partial-create-form-submit').should('be.enabled')
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.AZURE}"]`)
+          .click()
         cy.getTestId('partial-create-form-submit').should('be.enabled')
 
         cy.getTestId('redis-port-input').clear()
@@ -280,6 +306,26 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('partial-create-form-submit').should('be.disabled')
 
         cy.getTestId('redis-host-input').type('localhost')
+        cy.getTestId('partial-create-form-submit').should('be.enabled')
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.AWS}"]`)
+          .click()
+        cy.getTestId('partial-create-form-submit').should('be.disabled')
+        cy.getTestId('redis-aws_cache_name-input').type('test-cache')
+        cy.getTestId('partial-create-form-submit').should('be.enabled')
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.GCP}"]`)
+          .click()
+        cy.getTestId('partial-create-form-submit').should('be.enabled')
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.AZURE}"]`)
+          .click()
         cy.getTestId('partial-create-form-submit').should('be.enabled')
 
         cy.getTestId('redis-port-input').clear()
@@ -442,9 +488,11 @@ describe('<RedisConfigurationForm />', {
         // CE fields
         cy.getTestId('redis-sentinel-configuration-section').should('not.exist')
         cy.getTestId('redis-cluster-configuration-section').should('not.exist')
-        cy.getTestId('.redis-keepalive-section').should('not.exist')
-        cy.getTestId('.redis-read-write-configuration-section').should('not.exist')
+        cy.getTestId('redis-keepalive-section').should('not.exist')
+        cy.getTestId('redis-read-write-configuration-section').should('not.exist')
         cy.getTestId('redis-connection-is-proxied-checkbox').should('not.exist')
+        cy.getTestId('redis-gcp_service_account_json-input').should('not.exist')
+        cy.getTestId('redis-azure_client_id-input').should('not.exist')
 
         cy.getTestId('redis-name-input').should('be.visible').should('have.value', redisConfigurationCE.name)
         cy.getTestId('redis-host-input').should('be.visible').should('have.value', redisConfigurationCE.config.host)
@@ -453,6 +501,9 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-database-input').should('be.visible').should('have.value', redisConfigurationCE.config.database)
         cy.getTestId('redis-ssl-checkbox').should('be.visible').should('not.be.checked')
         cy.getTestId('redis-ssl-verify-checkbox').should('be.visible').should('not.be.checked')
+        cy.getTestId('redis-auth-provider-select').should('be.visible').should('have.value', 'AWS')
+        cy.getTestId('redis-aws_cache_name-input').should('be.visible').should('have.value', redisConfigurationCE.config.cloud_authentication!.aws_cache_name)
+        cy.getTestId('redis-aws_is_serverless-checkbox').should('be.visible').should('not.be.checked')
 
         // Host/Port EE
         interceptDetail({ body: redisConfigurationHostPortEE })
@@ -477,6 +528,8 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-sentinel-configuration-section').should('not.exist')
         cy.getTestId('redis-cluster-configuration-section').should('not.exist')
         cy.getTestId('redis-timeout-input').should('not.exist')
+        cy.getTestId('redis-gcp_service_account_json-input').should('not.exist')
+        cy.getTestId('redis-azure_client_id-input').should('not.exist')
 
         cy.getTestId('redis-name-input').should('be.visible').should('have.value', redisConfigurationHostPortEE.name)
         cy.getTestId('redis-host-input').should('be.visible').should('have.value', redisConfigurationHostPortEE.config.host)
@@ -489,6 +542,9 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-send-timeout-input').should('be.visible').should('have.value', redisConfigurationHostPortEE.config.send_timeout)
         cy.getTestId('redis-connect-timeout-input').should('be.visible').should('have.value', redisConfigurationHostPortEE.config.connect_timeout)
         cy.getTestId('redis-connect-timeout-input').should('be.visible').should('have.value', redisConfigurationHostPortEE.config.connect_timeout)
+        cy.getTestId('redis-auth-provider-select').should('be.visible').should('have.value', 'AWS')
+        cy.getTestId('redis-aws_cache_name-input').should('be.visible').should('have.value', redisConfigurationCE.config.cloud_authentication!.aws_cache_name)
+        cy.getTestId('redis-aws_is_serverless-checkbox').should('be.visible').should('not.be.checked')
 
         // Cluster EE
         interceptDetail({ body: redisConfigurationCluster })
@@ -514,8 +570,13 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-host-input').should('not.exist')
         cy.getTestId('redis-port-input').should('not.exist')
         cy.getTestId('redis-timeout-input').should('not.exist')
+        cy.getTestId('redis-gcp_service_account_json-input').should('not.exist')
+        cy.getTestId('redis-azure_client_id-input').should('not.exist')
 
         cy.getTestId('redis-name-input').should('be.visible').should('have.value', redisConfigurationCluster.name)
+        cy.getTestId('redis-auth-provider-select').should('be.visible').should('have.value', 'AWS')
+        cy.getTestId('redis-aws_cache_name-input').should('be.visible').should('have.value', redisConfigurationCE.config.cloud_authentication!.aws_cache_name)
+        cy.getTestId('redis-aws_is_serverless-checkbox').should('be.visible').should('not.be.checked')
 
         // Cluster nodes
         cy.getTestId('redis-cluster-nodes')
@@ -618,6 +679,84 @@ describe('<RedisConfigurationForm />', {
         cy.wait('@editRedisConfiguration')
 
         cy.getTestId('partial-edit-form-submit').should('be.disabled')
+      })
+
+      it('should include cloud auth fields in request', () => {
+        stubCreateEdit()
+        interceptDetail()
+        interceptLinkedPlugins()
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+          },
+        })
+
+        cy.getTestId('redis-name-input').type('test')
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.GCP}"]`)
+          .click()
+
+        cy.getTestId('partial-create-form-submit').click()
+
+        cy.wait('@createRedisConfiguration').then(({ request }) => {
+          const { body: { config } } = request
+          expect(config.cloud_authentication.auth_provider).to.equal(AuthProvider.GCP)
+        })
+      })
+
+      it('should set cloud auth fields to null when auth provider is not selected', () => {
+        stubCreateEdit()
+        interceptDetail()
+        interceptLinkedPlugins()
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+          },
+        })
+
+        cy.getTestId('redis-name-input').type('test')
+        cy.getTestId('partial-create-form-submit').click()
+
+        cy.wait('@createRedisConfiguration').then(({ request }) => {
+          const { body: { config } } = request
+          expect(config.cloud_authentication).to.equal(app === 'Konnect' ? undefined : null)
+        })
+      })
+
+      it('should reset AWS fields when cloud auth provider is changed', () => {
+        stubCreateEdit()
+        interceptDetail()
+        interceptLinkedPlugins()
+
+        cy.mount(RedisConfigurationForm, {
+          props: {
+            config,
+            partialId: redisConfigurationCE.id,
+          },
+        })
+
+        cy.wait('@getRedisConfiguration')
+
+        cy.getTestId('redis-auth-provider-select').click()
+        cy.getTestId('redis-auth-provider-select-popover')
+          .find(`button[value="${AuthProvider.GCP}"]`)
+          .click()
+
+        cy.getTestId('partial-edit-form-submit').click()
+
+        cy.wait('@editRedisConfiguration').then(({ request }) => {
+          const { body: { config } } = request
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          expect(config.cloud_authentication.aws_cache_name).to.not.exist
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          expect(config.cloud_authentication.aws_region).to.not.exist
+          // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+          expect(config.cloud_authentication.aws_is_serverless).to.not.exist
+        })
       })
 
       it('should show error message', () => {

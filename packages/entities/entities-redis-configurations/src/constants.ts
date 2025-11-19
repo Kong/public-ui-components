@@ -35,4 +35,7 @@ export const DEFAULT_FIELDS: Readonly<RedisConfigurationFormState['fields']['con
   cluster_max_redirections: 0,
   connection_is_proxied: false,
   timeout: 2000,
+  cloud_authentication: {
+    aws_is_serverless: true,
+  },
 }

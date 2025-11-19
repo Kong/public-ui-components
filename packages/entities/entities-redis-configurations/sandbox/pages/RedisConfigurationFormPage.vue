@@ -38,12 +38,14 @@ const konnectConfig: KonnectRedisConfigurationFormConfig = {
   app: 'konnect',
   apiBaseUrl: '/us/kong-api',
   controlPlaneId,
+  cloudAuthAvailable: true,
 }
 
 const kongManagerConfig: KongManagerRedisConfigurationFormConfig = {
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
+  cloudAuthAvailable: true,
   cancelRoute: { name: 'redis-configuration-list' },
 }
 

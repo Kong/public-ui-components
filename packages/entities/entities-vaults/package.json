@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-vaults",
-  "version": "3.26.10",
+  "version": "3.27.0",
   "type": "module",
   "main": "./dist/entities-vaults.umd.js",
   "module": "./dist/entities-vaults.es.js",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.1.0...@kong-ui-public/dashboard-renderer@8.2.0) (2025-11-18)
+
+
+### Features
+
+* **topn_table:** support multiple metrics in `TopNTable` [MA-4538,MA-4551] ([#2630](https://github.com/Kong/public-ui-components/issues/2630)) ([7e19c6d](https://github.com/Kong/public-ui-components/commit/7e19c6d4b65c8835edf85ec2aaa78acaf32a3fa3))
+
+
+
+
+
 # [8.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.0.4...@kong-ui-public/dashboard-renderer@8.1.0) (2025-11-17)
 
 

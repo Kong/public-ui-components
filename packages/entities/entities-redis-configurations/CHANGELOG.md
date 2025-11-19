@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.5.9...@kong-ui-public/entities-redis-configurations@1.6.0) (2025-11-19)
+
+
+### Features
+
+* **redis-configurations:** cloud auth fields ([#2645](https://github.com/Kong/public-ui-components/issues/2645)) ([e68494b](https://github.com/Kong/public-ui-components/commit/e68494bc2117e71c84f910130ae05d37d6e91fb7))
+
+
+
+
+
 ## [1.5.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.5.8...@kong-ui-public/entities-redis-configurations@1.5.9) (2025-11-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations

@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { DEFAULT_CLUSTER_NODE, DEFAULT_SENTINEL_NODE } from './constants'
 import { PartialType, type ClusterNode, type Identifiable, type RedisConfigurationDTO, type RedisConfigurationFields, type SentinelNode } from './types'
-import { RedisType } from './types'
+import { RedisType, AuthProvider } from './types'
 
 export const shallowCopyWithId = <T extends Record<any, any>>(node: T): Identifiable<T> => {
   return { ...node, id: uuidv4() }
@@ -95,3 +95,35 @@ export const standardize = {
     return value.join(separator)
   },
 }
+
+export const pickCloudAuthFields =
+  (cloudAuth?: (RedisConfigurationFields | RedisConfigurationDTO)['config']['cloud_authentication'] | null):
+    Partial<RedisConfigurationDTO['config']['cloud_authentication']> | null => {
+    switch (cloudAuth?.auth_provider) {
+      case AuthProvider.AWS:
+        return {
+          auth_provider: cloudAuth.auth_provider,
+          aws_cache_name: cloudAuth.aws_cache_name,
+          aws_region: cloudAuth.aws_region,
+          aws_is_serverless: cloudAuth.aws_is_serverless,
+          aws_access_key_id: cloudAuth.aws_access_key_id,
+          aws_secret_access_key: cloudAuth.aws_secret_access_key,
+          aws_assume_role_arn: cloudAuth.aws_assume_role_arn,
+          aws_role_session_name: cloudAuth.aws_role_session_name,
+        }
+      case AuthProvider.GCP:
+        return {
+          auth_provider: cloudAuth.auth_provider,
+          gcp_service_account_json: cloudAuth.gcp_service_account_json,
+        }
+      case AuthProvider.AZURE:
+        return {
+          auth_provider: cloudAuth.auth_provider,
+          azure_client_id: cloudAuth.azure_client_id,
+          azure_client_secret: cloudAuth.azure_client_secret,
+          azure_tenant_id: cloudAuth.azure_tenant_id,
+        }
+      default:
+        return null
+    }
+  }

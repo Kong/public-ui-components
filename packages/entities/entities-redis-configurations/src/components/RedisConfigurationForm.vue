@@ -85,6 +85,30 @@
         />
       </EntityFormSection>
 
+      <!-- cloud auth section -->
+      <EntityFormSection
+        v-if="config.cloudAuthAvailable && redisType !== RedisType.SENTINEL"
+        data-testid="redis-cloud-auth-section"
+        :description="t('form.sections.cloud_auth.description')"
+        :title="t('form.sections.cloud_auth.title')"
+      >
+        <KSelect
+          v-model="form.fields.config.cloud_authentication!.auth_provider"
+          clearable
+          data-testid="redis-auth-provider-select"
+          :items="cloudAuthOptions"
+          :kpop-attributes="{ 'data-testid': 'redis-auth-provider-select-popover' }"
+          :label="t('form.fields.cloud_authentication.auth_provider.label')"
+          :label-attributes="{ info: t('form.fields.cloud_authentication.auth_provider.tooltip') }"
+          :readonly="form.readonly"
+        />
+        <CloudAuthFields
+          v-model="form.fields.config.cloud_authentication!"
+          :config="props.config"
+          :readonly="form.readonly"
+        />
+      </EntityFormSection>
+
       <!-- sentinel configuration section -->
       <EntityFormSection
         v-if="redisType === RedisType.SENTINEL"
@@ -434,11 +458,13 @@ import { ref, computed, onBeforeMount } from 'vue'
 import { VaultSecretPicker, VaultSecretPickerProvider } from '@kong-ui-public/entities-vaults'
 import { useRouter } from 'vue-router'
 
-import { RedisType, PartialType } from '../types'
+import { RedisType, PartialType, AuthProvider } from '../types'
 import { useRedisConfigurationForm } from '../composables/useRedisConfigurationForm'
 import ClusterNodes from './ClusterNodes.vue'
 import composables from '../composables'
+import { useVaultSecretPicker } from '../composables/useVaultSecretPicker'
 import SentinelNodes from './SentinelNodes.vue'
+import CloudAuthFields from './CloudAuthFields.vue'
 import { useLinkedPluginsFetcher } from '../composables/useLinkedPlugins'
 import { DEFAULT_REDIS_TYPE } from '../constants'
 import { mapRedisTypeToPartialType } from '../helpers'
@@ -501,19 +527,14 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t }, i18nT } = composables.useI18n()
+const {
+  vaultSecretPickerSetup,
+  setUpVaultSecretPicker,
+  handleVaultSecretPickerAutofill,
+} = useVaultSecretPicker()
 const router = useRouter()
 
-const vaultSecretPickerSetup = ref<string | false>()
-const vaultSecretPickerAutofillAction = ref<(secretRef: string) => void | undefined>()
 const codeBlockType = ref<string>('json')
-const setUpVaultSecretPicker = (setupValue: string, autofillAction: (secretRef: string) => void) => {
-  vaultSecretPickerSetup.value = setupValue ?? ''
-  vaultSecretPickerAutofillAction.value = autofillAction
-}
-const handleVaultSecretPickerAutofill = (secretRef: string) => {
-  vaultSecretPickerAutofillAction.value?.(secretRef)
-  vaultSecretPickerSetup.value = false
-}
 
 const typeOptions = computed<SelectItem[]>(() => {
   return [
@@ -545,6 +566,23 @@ const typeOptions = computed<SelectItem[]>(() => {
       selected: redisType.value === RedisType.HOST_PORT_CE,
       disabled: (isEdit && redisTypeIsEnterprise.value)
         || (!isEdit && props.disabledPartialType === PartialType.REDIS_CE),
+    },
+  ]
+})
+
+const cloudAuthOptions = computed<SelectItem[]>(() => {
+  return [
+    {
+      label: t('form.options.auth_provider.aws'),
+      value: AuthProvider.AWS,
+    },
+    {
+      label: t('form.options.auth_provider.gcp'),
+      value: AuthProvider.GCP,
+    },
+    {
+      label: t('form.options.auth_provider.azure'),
+      value: AuthProvider.AZURE,
     },
   ]
 })
@@ -595,6 +633,7 @@ const {
   partialId: props.partialId,
   defaultRedisType: getDefaultRedisType(),
   config: props.config,
+  cloudAuthAvailable: props.config.cloudAuthAvailable,
 })
 
 const { fetcher: fetchLinks } = useLinkedPluginsFetcher(props.config)

@@ -1,10 +1,16 @@
 
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { ClusterNode, Identifiable, PartialType, SentinelNode } from './redis-configuration'
+import type { ClusterNode, Identifiable, PartialType, SentinelNode, AuthProvider } from './redis-configuration'
 
-export interface KonnectRedisConfigurationFormConfig extends KonnectBaseFormConfig { }
-export interface KongManagerRedisConfigurationFormConfig extends KongManagerBaseFormConfig { }
+export interface BaseRedisConfigurationFormConfig {
+  /**
+   * Show/hide cloud authentication configuration fields
+   */
+  cloudAuthAvailable?: boolean
+}
 
+export interface KonnectRedisConfigurationFormConfig extends KonnectBaseFormConfig, BaseRedisConfigurationFormConfig { }
+export interface KongManagerRedisConfigurationFormConfig extends KongManagerBaseFormConfig, BaseRedisConfigurationFormConfig { }
 
 export interface RedisConfigurationFields {
   name: string
@@ -33,6 +39,20 @@ export interface RedisConfigurationFields {
     ssl: boolean
     timeout?: number
     username: string
+    cloud_authentication?: {
+      auth_provider?: AuthProvider | null
+      aws_cache_name?: string
+      aws_region?: string
+      aws_is_serverless: boolean
+      aws_access_key_id?: string
+      aws_secret_access_key?: string
+      aws_assume_role_arn?: string
+      aws_role_session_name?: string
+      gcp_service_account_json?: string
+      azure_client_id?: string
+      azure_client_secret?: string
+      azure_tenant_id?: string
+    }
   }
 }
 

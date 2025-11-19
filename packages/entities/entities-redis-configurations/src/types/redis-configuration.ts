@@ -10,6 +10,12 @@ export enum PartialType {
   REDIS_EE = 'redis-ee',
 }
 
+export enum AuthProvider {
+  AWS = 'aws',
+  GCP = 'gcp',
+  AZURE = 'azure',
+}
+
 export type SentinelNode = {
   host: string
   port: number
@@ -50,6 +56,20 @@ export type RedisConfigurationConfigDTO = {
   ssl_verify: boolean | null
   ssl: boolean | null
   username: string | null
+  cloud_authentication: {
+    auth_provider: AuthProvider | null
+    aws_cache_name: string | null
+    aws_region: string | null
+    aws_is_serverless: boolean | null
+    aws_access_key_id: string | null
+    aws_secret_access_key: string | null
+    aws_assume_role_arn: string | null
+    aws_role_session_name: string | null
+    gcp_service_account_json: string | null
+    azure_client_id: string | null
+    azure_client_secret: string | null
+    azure_tenant_id: string | null
+  } | null
 }
 
 export type RedisConfigurationResponse = RedisConfigurationDTO & {

@@ -17,6 +17,7 @@ const kmConfig: KongManagerRedisConfigurationEntityConfig = {
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   entityId: redisConfigurationCE.id,
+  cloudAuthAvailable: true,
 }
 
 const konnectConfig: KonnectRedisConfigurationEntityConfig = {
@@ -24,6 +25,7 @@ const konnectConfig: KonnectRedisConfigurationEntityConfig = {
   controlPlaneId: '1',
   apiBaseUrl: '/us/kong-api',
   entityId: redisConfigurationCE.id,
+  cloudAuthAvailable: true,
 }
 
 describe('<RedisConfigurationConfigCard/>', {
@@ -285,6 +287,44 @@ describe('<RedisConfigurationConfigCard/>', {
             'connection_is_proxied-label',
             'cluster_nodes-label',
             'cluster_max_redirections-label',
+          ]
+
+          fieldsShouldExist.forEach((field) => {
+            cy.getTestId(field).should('exist')
+          })
+
+          fieldsShouldNotExist.forEach((field) => {
+            cy.getTestId(field).should('not.exist')
+          })
+        })
+
+        it('only shows AWS fields in cloud auth', () => {
+          interceptGetRedisConfiguration()
+
+          cy.mount(RedisConfigurationConfigCard, {
+            props: {
+              config: app === 'Konnect' ? konnectConfig : kmConfig,
+            },
+          })
+
+          cy.wait('@getRedisConfiguration')
+
+          const fieldsShouldExist = [
+            'auth_provider-label',
+            'aws_cache_name-label',
+            'aws_region-label',
+            'aws_is_serverless-label',
+            'aws_access_key_id-label',
+            'aws_secret_access_key-label',
+            'aws_assume_role_arn-label',
+            'aws_role_session_name-label',
+          ]
+
+          const fieldsShouldNotExist = [
+            'gcp_service_account_json-label',
+            'azure_client_id-label',
+            'azure_client_secret-label',
+            'azure_tenant_id-label',
           ]
 
           fieldsShouldExist.forEach((field) => {
