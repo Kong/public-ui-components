@@ -269,8 +269,15 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
         .map<FlowEdge>((edge) => {
           const sourceNode = getNodeById(edge.source)
           const targetNode = getNodeById(edge.target)
+
           if (!sourceNode || !targetNode) {
-            throw new Error(`Missing source/target node for edge "${edge.id}" in phase "${phase}"`)
+            const missingNodes: string[] = []
+            if (!sourceNode)
+              missingNodes.push(`source node "${edge.source}"`)
+            if (!targetNode)
+              missingNodes.push(`target node "${edge.target}"`)
+
+            throw new Error(`Missing ${missingNodes.join(' and ')} for edge "${edge.id}" in phase "${phase}"`)
           }
 
           const depth = Math.max(getNodeDepth(edge.source), getNodeDepth(edge.target)) + maxGroupDepth.value + 1
