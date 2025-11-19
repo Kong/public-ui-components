@@ -55,11 +55,7 @@ const fieldsCategory = computed(() => {
       // Extract field names from different types of entity checks
       if ('at_least_one_of' in check) {
         fields = check.at_least_one_of
-      } else if ('mutually_required' in check) {
-        fields = check.mutually_required
-      } else if ('mutually_exclusive' in check) {
-        fields = check.mutually_exclusive
-      } else if ('conditional' in check) {
+      } else if ('conditional' in check && check.conditional.then_match.required) {
         // For conditional checks, collect both if_field and then_field
         fields = [check.conditional.if_field, check.conditional.then_field]
       } else if ('conditional_at_least_one_of' in check) {
