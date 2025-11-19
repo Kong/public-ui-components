@@ -67,6 +67,12 @@ A config card component for Redis Configurations.
     - default: `''`
     - The ID of the Redis Configuration to display the config for
 
+  - `cloudAuthAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Whether to show the Cloud Authentication section in the form.
+
 The base konnect or kongManger config.
 
 #### `configCardDoc`

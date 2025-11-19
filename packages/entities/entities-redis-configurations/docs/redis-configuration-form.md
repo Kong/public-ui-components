@@ -69,6 +69,12 @@ A form component for Redis Configurations.
     - default: `undefined`
     - *Specific to Konnect*. Name of the current control plane.
 
+  - `cloudAuthAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Whether to show the Cloud Authentication fields.
+
 The base konnect or kongManger config.
 
 #### `partialId`
