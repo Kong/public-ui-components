@@ -104,245 +104,24 @@
       }
     },
     "meta": {
-      "ace": {
-        "name": "Konnect Access Control Enforcement",
-        "description": "Enable Developer Self-Service for Konnect Dev Portals."
-      },
-      "acl": {
-        "name": "ACL",
-        "credential_name": "Access Control Group",
-        "description": "Control which consumers can access Services"
-      },
-      "acme": {
-        "name": "ACME",
-        "description": "Let's Encrypt and ACMEv2 integration with Kong"
-      },
-      "ai-aws-guardrails": {
-        "name": "AI AWS GuardRails",
-        "description": "The AI AWS GuardRails enables enforcement of introspection with the AWS GuardRails service for all requests processed by the AI Proxy plugin."
-      },
-      "ai-azure-content-safety": {
-        "name": "AI Azure Content Safety",
-        "description": "Allows checking and auditing of AI-Proxy plugin messages, using Azure Cognitive Services, before proxying to upstream large-language model."
-      },
-      "ai-gcp-model-armor": {
-        "name": "AI GCP Model Armor",
-        "description": "Audit and validate AI Proxy messages with Google Cloud Model Armor before forwarding them to an upstream LLM."
-      },
-      "ai-lakera-guard": {
-        "name": "AI Lakera Guard",
-        "description": "Audit and enforce safety policies on LLM requests and responses using the AI AWS Lakera plugin before they reach upstream LLMs."
-      },
-      "ai-llm-as-judge": {
-        "name": "AI LLM Judge",
-        "description": "Evaluate LLM responses with an external LLM service and use accuracy scores to drive dynamic load balancing for `llm/v1/chat` requests."
-      },
-      "ai-mcp-oauth2": {
-        "name": "AI MCP OAuth2",
-        "description": "Secure MCP server access with OAuth2 authentication."
-      },
-      "ai-mcp-proxy": {
-        "name": "AI MCP Proxy",
-        "description": "Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools, and observe MCP traffic in real time."
-      },
-      "ai-prompt-compressor": {
-        "name": "AI Prompt Compressor",
-        "description": "The AI Prompt Compressor reduces costs associated with LLMs by compressing prompts."
-      },
-      "ai-prompt-decorator": {
-        "name": "AI Prompt Decorator",
-        "description": "Prepend and append chat prompts to AI Proxy plugin LLM requests."
-      },
-      "ai-prompt-guard": {
-        "name": "AI Prompt Guard",
-        "description": "Define a set of valid, and a set of invalid, regular expression patterns when calling LLM models with the AI Proxy plugin."
-      },
-      "ai-prompt-template": {
-        "name": "AI Prompt Template",
-        "description": "Define a set of templates, containing string variable placeholders, that can be consumed by users when used with the AI Proxy plugin."
-      },
-      "ai-proxy": {
-        "name": "AI Proxy",
-        "description": "Directly call a configured LLM, with mediated security and tuning parameters, and using standardised Kong request and response formats."
-      },
-      "ai-proxy-advanced": {
-        "name": "AI Proxy Advanced",
-        "description": "Route across different LLMs and models using advanced load balancing algorithms, including semantic routing."
-      },
-      "ai-rag-injector": {
-        "name": "AI RAG Injector",
-        "description": "Attach contextual knowledge from vector databases with flexible template to LLM prompts."
-      },
-      "ai-rate-limiting-advanced": {
-        "name": "AI Rate Limiting Advanced",
-        "description": "Provides rate limiting for the providers used by any AI plugins."
-      },
-      "ai-request-transformer": {
-        "name": "AI Request Transformer",
-        "description": "Use an LLM to transform API request from a user, before sending to the upstream service."
-      },
-      "ai-response-transformer": {
-        "name": "AI Response Transformer",
-        "description": "Use an LLM to transform API responses from the upstream service, before returning to the user."
-      },
-      "ai-sanitizer": {
-        "name": "AI Sanitizer",
-        "description": "Sanitize personal or sensitive information from prompts before sending to LLM."
-      },
-      "ai-semantic-cache": {
-        "name": "AI Semantic Cache",
-        "description": "Semantically cache AI requests to any LLM to reduce latency, improve end-user experiences and optimize GenAI costs."
-      },
-      "ai-semantic-prompt-guard": {
-        "name": "AI Semantic Prompt Guard",
-        "description": "Semantically and intelligently create allow and deny lists of topics that can be requested across every LLM."
-      },
-      "ai-semantic-response-guard": {
-        "name": "AI Semantic Response Guard",
-        "description": "Permit or block prompts based on semantic similarity to known LLM responses, preventing misuse of `llm/v1/chat` or `llm/v1/completions` requests."
-      },
-      "app-dynamics": {
-        "name": "AppDynamics",
-        "description": "This plugin integrates Kong with the AppDynamics APM platform so that proxy requests handled by Kong can be identified and analyzed in AppDynamics."
-      },
-      "application-registration": {
-        "name": "Portal Application Registration",
-        "description": "Allow portal developers to register applications against services"
-      },
-      "aws-lambda": {
-        "name": "AWS Lambda",
-        "description": "Invoke and manage AWS Lambda functions from Kong"
-      },
-      "azure-functions": {
-        "name": "Azure Functions",
-        "description": "Invoke Azure functions"
-      },
       "basic-auth": {
         "name": "Basic Authentication",
         "credential_name": "Basic Auth Credential",
         "description": "Add Basic Authentication to your Services"
-      },
-      "bot-detection": {
-        "name": "Bot Detection",
-        "description": "Detect and clock bots or custom clients"
-      },
-      "canary": {
-        "name": "Canary Release",
-        "description": "Methodically roll out software changes to a subset of users"
-      },
-      "collector": {
-        "name": "Collector",
-        "description": "Automate spec-driven development & anomaly detection (Early Access)"
-      },
-      "confluent": {
-        "name": "Confluent",
-        "description": "Streamlines integration with Confluent Cloud and transforms requests into messages published to a Confluent topic."
-      },
-      "confluent-consume": {
-        "name": "Confluent Consume",
-        "description": "Consume messages from Confluent Kafka topics over HTTP protocols"
-      },
-      "correlation-id": {
-        "name": "Correlation ID",
-        "description": "Correlate requests and responses using a unique ID"
-      },
-      "cors": {
-        "name": "CORS",
-        "description": "Allow developers to make requests from the browser"
-      },
-      "datadog": {
-        "name": "Datadog",
-        "description": "Visualize metrics on Datadog"
-      },
-      "datakit": {
-        "name": "Datakit",
-        "description": "Datakit is a workflow engine for working with external APIs."
-      },
-      "degraphql": {
-        "name": "DeGraphQL",
-        "description": "Transform a GraphQL upstream into a REST API"
-      },
-      "exit-transformer": {
-        "name": "Exit Transformer",
-        "description": "Customize Kong exit responses sent downstream"
-      },
-      "file-log": {
-        "name": "File Log",
-        "description": "Append request and response data to a log file on disk"
-      },
-      "forward-proxy": {
-        "name": "Forward Proxy",
-        "description": "Allow Kong to connect to intermediary transparent HTTP proxies"
-      },
-      "graphql-proxy-cache-advanced": {
-        "name": "GraphQL Proxy Caching Advanced",
-        "description": "Cache and serve commonly requested responses in Kong"
-      },
-      "graphql-rate-limiting-advanced": {
-        "name": "GraphQL Rate Limiting Advanced",
-        "description": "Rate-limit how many HTTP requests a developer can make"
-      },
-      "grpc-gateway": {
-        "name": "gRPC Gateway",
-        "description": "Access gRPC services through HTTP REST"
-      },
-      "grpc-web": {
-        "name": "gRPC Web",
-        "description": "Allow browser clients to call gRPC services"
-      },
-      "header-cert-auth": {
-        "name": "Header Certificate Authentication",
-        "description": "Authenticate clients with MTLS certificate passed in header by a WAF or load balancer"
       },
       "hmac-auth": {
         "name": "HMAC Authentication",
         "credential_name": "HMAC Credential",
         "description": "Add HMAC Authentication to your Services"
       },
-      "http-log": {
-        "name": "HTTP Log",
-        "description": "Send request and response logs to an HTTP server"
-      },
-      "injection-protection": {
-        "name": "Injection Protection",
-        "description": "Protect against injection attacks by rejecting requests that match common injections patterns."
-      },
-      "ip-restriction": {
-        "name": "IP Restriction",
-        "description": "Whitelist or blacklist IPs that can make requests"
-      },
-      "jq": {
-        "name": "jq",
-        "description": "Transform JSON objects included in API requests or responses using jq programs"
-      },
-      "json-threat-protection": {
-        "name": "JSON Threat Protection",
-        "description": "Apply size checks on JSON payload and minimize risk of content-level attacks"
-      },
-      "jwe-decrypt": {
-        "name": "Kong JWE Decrypt",
-        "description": "The Kong JWE Decrypt plugin makes it possible to decrypt an inbound token(JWE) in a request."
+      "jwt-signer": {
+        "name": "JWT Signer",
+        "description": "Verify and (re-)sign one or two tokens in a request"
       },
       "jwt": {
         "name": "JWT",
         "credential_name": "JWT Credential",
         "description": "Verify and authenticate JSON Web Tokens"
-      },
-      "jwt-signer": {
-        "name": "JWT Signer",
-        "description": "Verify and (re-)sign one or two tokens in a request"
-      },
-      "kafka-consume": {
-        "name": "Kafka Consume",
-        "description": "Consume messages from Kafka topics over HTTP protocols."
-      },
-      "kafka-log": {
-        "name": "Kafka Log",
-        "description": "Publish request and response logs to a Kafka topic"
-      },
-      "kafka-upstream": {
-        "name": "Kafka Upstream",
-        "description": "Transform requests into Kafka messages in a topic"
       },
       "key-auth": {
         "name": "Key Authentication",
@@ -354,74 +133,71 @@
         "credential_name": "Key Auth Encrypted",
         "description": "Add key authentication to your Services with an encrypted token"
       },
-      "konnect-application-auth": {
-        "name": "Konnect Application Auth",
-        "description": "Allow Konnect portal developers to register applications against services"
-      },
-      "kubernetes-sidecar-injector": {
-        "name": "Kubernetes Sidecar Injector",
-        "description": "This plugin will inject Kong dataplane nodes and form a service mesh on top of Kubernetes"
+      "ldap-auth-advanced": {
+        "name": "LDAP Authentication Advanced",
+        "description": "Integrate Kong with a LDAP server"
       },
       "ldap-auth": {
         "name": "LDAP Authentication",
         "description": "Integrate Kong with a LDAP server"
       },
-      "ldap-auth-advanced": {
-        "name": "LDAP Authentication Advanced",
-        "description": "Integrate Kong with a LDAP server"
-      },
-      "loggly": {
-        "name": "Loggly",
-        "description": "Send request and response logs to Loggly"
-      },
-      "mocking": {
-        "name": "Mocking",
-        "description": "Provide mock endpoints to test your APIs in development against your services"
-      },
-      "mtls-auth": {
-        "name": "Mutual TLS Authentication",
-        "description": "Secure routes and services with client certificate and mutual TLS authentication"
-      },
-      "oas-validation": {
-        "name": "OAS Validation",
-        "description": "Validate HTTP requests and responses based on an API Specification."
+      "oauth2-introspection": {
+        "name": "OAuth 2.0 Introspection",
+        "description": "Integrate Kong with a third-party OAuth 2.0 Authorization Server"
       },
       "oauth2": {
         "name": "OAuth 2.0 Authentication",
         "credential_name": "OAuth 2.0 Application",
         "description": "Add OAuth 2.0 authentication to your Services"
       },
-      "oauth2-introspection": {
-        "name": "OAuth 2.0 Introspection",
-        "description": "Integrate Kong with a third-party OAuth 2.0 Authorization Server"
+      "openid-connect": {
+        "name": "OpenID Connect",
+        "description": "Integrate Kong with a third-party OpenID Connect 1.0 Provider"
+      },
+      "mtls-auth": {
+        "name": "Mutual TLS Authentication",
+        "description": "Secure routes and services with client certificate and mutual TLS authentication"
+      },
+      "vault-auth": {
+        "name": "Vault Authentication",
+        "description": "Secure routes and services with an access token and secret token, stored securely via Vault"
+      },
+      "bot-detection": {
+        "name": "Bot Detection",
+        "description": "Detect and clock bots or custom clients"
+      },
+      "cors": {
+        "name": "CORS",
+        "description": "Allow developers to make requests from the browser"
+      },
+      "ip-restriction": {
+        "name": "IP Restriction",
+        "description": "Whitelist or blacklist IPs that can make requests"
       },
       "opa": {
         "name": "OPA",
         "description": "Authorize requests against Open Policy Agent"
       },
-      "openid-connect": {
-        "name": "OpenID Connect",
-        "description": "Integrate Kong with a third-party OpenID Connect 1.0 Provider"
+      "kubernetes-sidecar-injector": {
+        "name": "Kubernetes Sidecar Injector",
+        "description": "This plugin will inject Kong dataplane nodes and form a service mesh on top of Kubernetes"
       },
-      "opentelemetry": {
-        "name": "OpenTelemetry",
-        "description": "Propagate distributed tracing spans and report low-level spans to a OTLP-compatible server"
+      "request-validator": {
+        "name": "Request Validator",
+        "description": "Validate requests before they reach their upstream Service."
       },
-      "openwhisk": {
-        "name": "OpenWhisk",
-        "description": "Invoke and manage OpenWhisk actions from Kong"
+      "acl": {
+        "name": "ACL",
+        "credential_name": "Access Control Group",
+        "description": "Control which consumers can access Services"
       },
-      "post-function": {
-        "name": "Kong Functions (Post-Plugins)",
-        "description": "Add and manage custom lua functions to run after other plugins"
+      "canary": {
+        "name": "Canary Release",
+        "description": "Methodically roll out software changes to a subset of users"
       },
-      "pre-function": {
-        "name": "Kong Functions (Pre-Plugins)",
-        "description": "Add and manage custom lua functions to run before other plugins"
-      },
-      "prometheus": {
-        "name": "Prometheus",
-        "description": "Export performance metrics to Prometheus"
+      "forward-proxy": {
+        "name": "Forward Proxy",
+        "description": "Allow Kong to connect to intermediary transparent HTTP proxies"
       },
       "proxy-cache": {
         "name": "Proxy Caching",
@@ -431,21 +207,25 @@
         "name": "Proxy Caching Advanced",
         "description": "Cache and serve commonly requested responses in Kong"
       },
-      "rate-limiting": {
-        "name": "Rate Limiting",
-        "description": "Rate-limit how many HTTP requests a developer can make"
+      "graphql-proxy-cache-advanced": {
+        "name": "GraphQL Proxy Caching Advanced",
+        "description": "Cache and serve commonly requested responses in Kong"
       },
       "rate-limiting-advanced": {
         "name": "Rate Limiting Advanced",
         "description": "Rate-limit how many HTTP requests a developer can make"
       },
-      "redirect": {
-        "name": "Redirect",
-        "description": "Redirect incoming requests to a new URL"
+      "rate-limiting": {
+        "name": "Rate Limiting",
+        "description": "Rate-limit how many HTTP requests a developer can make"
       },
-      "request-callout": {
-        "name": "Request Callout",
-        "description": "Callout to third party APIs as part of request processing."
+      "graphql-rate-limiting-advanced": {
+        "name": "GraphQL Rate Limiting Advanced",
+        "description": "Rate-limit how many HTTP requests a developer can make"
+      },
+      "mocking": {
+        "name": "Mocking",
+        "description": "Provide mock endpoints to test your APIs in development against your services"
       },
       "request-size-limiting": {
         "name": "Request Size Limiting",
@@ -455,73 +235,141 @@
         "name": "Request Termination",
         "description": "Terminate all requests with a specific response"
       },
-      "request-transformer": {
-        "name": "Request Transformer",
-        "description": "Modify the request before hitting the upstream server"
-      },
-      "request-transformer-advanced": {
-        "name": "Request Transformer Advanced",
-        "description": "Use powerful regular expressions, variables and templates to transform API requests"
-      },
-      "request-validator": {
-        "name": "Request Validator",
-        "description": "Validate requests before they reach their upstream Service."
-      },
       "response-ratelimiting": {
         "name": "Response Rate Limiting",
         "description": "Rate-Limiting based on a custom response header value"
-      },
-      "response-transformer": {
-        "name": "Response Transformer",
-        "description": "Modify the upstream response before returning it to the client"
-      },
-      "response-transformer-advanced": {
-        "name": "Response Transformer Advanced",
-        "description": "Transform the response sent by the upstream server on the fly on Kong, before returning the response to the client."
       },
       "route-by-header": {
         "name": "Route by Header",
         "description": "Route requests based on request headers"
       },
+      "ai-proxy": {
+        "name": "AI Proxy",
+        "description": "Directly call a configured LLM, with mediated security and tuning parameters, and using standardised Kong request and response formats."
+      },
+      "ai-prompt-decorator": {
+        "name": "AI Prompt Decorator",
+        "description": "Prepend and append chat prompts to AI Proxy plugin LLM requests."
+      },
+      "ai-prompt-template": {
+        "name": "AI Prompt Template",
+        "description": "Define a set of templates, containing string variable placeholders, that can be consumed by users when used with the AI Proxy plugin."
+      },
+      "ai-prompt-guard": {
+        "name": "AI Prompt Guard",
+        "description": "Define a set of valid, and a set of invalid, regular expression patterns when calling LLM models with the AI Proxy plugin."
+      },
+      "ai-request-transformer": {
+        "name": "AI Request Transformer",
+        "description": "Use an LLM to transform API request from a user, before sending to the upstream service."
+      },
+      "ai-response-transformer": {
+        "name": "AI Response Transformer",
+        "description": "Use an LLM to transform API responses from the upstream service, before returning to the user."
+      },
+      "ai-rate-limiting-advanced": {
+        "name": "AI Rate Limiting Advanced",
+        "description": "Provides rate limiting for the providers used by any AI plugins."
+      },
+      "ai-azure-content-safety": {
+        "name": "AI Azure Content Safety",
+        "description": "Allows checking and auditing of AI-Proxy plugin messages, using Azure Cognitive Services, before proxying to upstream large-language model."
+      },
+      "aws-lambda": {
+        "name": "AWS Lambda",
+        "description": "Invoke and manage AWS Lambda functions from Kong"
+      },
+      "azure-functions": {
+        "name": "Azure Functions",
+        "description": "Invoke Azure functions"
+      },
+      "openwhisk": {
+        "name": "OpenWhisk",
+        "description": "Invoke and manage OpenWhisk actions from Kong"
+      },
+      "pre-function": {
+        "name": "Kong Functions (Pre-Plugins)",
+        "description": "Add and manage custom lua functions to run before other plugins"
+      },
+      "post-function": {
+        "name": "Kong Functions (Post-Plugins)",
+        "description": "Add and manage custom lua functions to run after other plugins"
+      },
+      "datadog": {
+        "name": "Datadog",
+        "description": "Visualize metrics on Datadog"
+      },
+      "prometheus": {
+        "name": "Prometheus",
+        "description": "Export performance metrics to Prometheus"
+      },
+      "zipkin": {
+        "name": "Zipkin",
+        "description": "Propagate zipkin spans and report spans to a zipkin server"
+      },
+      "collector": {
+        "name": "Collector",
+        "description": "Automate spec-driven development & anomaly detection (Early Access)"
+      },
+      "response-transformer-advanced": {
+        "name": "Response Transformer Advanced",
+        "description": "Transform the response sent by the upstream server on the fly on Kong, before returning the response to the client."
+      },
+      "correlation-id": {
+        "name": "Correlation ID",
+        "description": "Correlate requests and responses using a unique ID"
+      },
+      "request-transformer-advanced": {
+        "name": "Request Transformer Advanced",
+        "description": "Use powerful regular expressions, variables and templates to transform API requests"
+      },
+      "request-transformer": {
+        "name": "Request Transformer",
+        "description": "Modify the request before hitting the upstream server"
+      },
+      "response-transformer": {
+        "name": "Response Transformer",
+        "description": "Modify the upstream response before returning it to the client"
+      },
       "route-transformer-advanced": {
         "name": "Route Transformer Advanced",
         "description": "Transforms the routing on the fly in Kong, changing the upstream server/port/path to hit"
       },
-      "saml": {
-        "name": "SAML",
-        "description": "Security Assertion Markup Language (SAML) is an open standard for exchanging authentication and authorization data between an identity provider and a service provider."
+      "kafka-upstream": {
+        "name": "Kafka Upstream",
+        "description": "Transform requests into Kafka messages in a topic"
       },
-      "service-protection": {
-        "name": "Service Protection",
-        "description": "Prevent abuse and protect services with absolute limits on the number of requests reaching the service."
+      "degraphql": {
+        "name": "DeGraphQL",
+        "description": "Transform a GraphQL upstream into a REST API"
       },
-      "session": {
-        "name": "Session",
-        "description": "Sessions for Kong authentication"
+      "exit-transformer": {
+        "name": "Exit Transformer",
+        "description": "Customize Kong exit responses sent downstream"
       },
-      "solace-consume": {
-        "name": "Solace Consume",
-        "description": "Consume messages from Solace and make them available through HTTP endpoints."
+      "jq": {
+        "name": "jq",
+        "description": "Transform JSON objects included in API requests or responses using jq programs"
       },
-      "solace-log": {
-        "name": "Solace Log",
-        "description": "Publish request and response logs to a Solace topic."
+      "file-log": {
+        "name": "File Log",
+        "description": "Append request and response data to a log file on disk"
       },
-      "solace-upstream": {
-        "name": "Solace Upstream",
-        "description": "Transform requests into Solace messages in a Solace queue or topic."
+      "http-log": {
+        "name": "HTTP Log",
+        "description": "Send request and response logs to an HTTP server"
       },
-      "standard-webhooks": {
-        "name": "Standard Webhooks",
-        "description": "Validate incoming webhooks adhere to the Standard Webhooks specification, to which Kong is a contributor"
-      },
-      "statsd": {
-        "name": "StatsD",
-        "description": "Send request and response logs to StatsD"
+      "loggly": {
+        "name": "Loggly",
+        "description": "Send request and response logs to Loggly"
       },
       "statsd-advanced": {
         "name": "StatsD Advanced",
         "description": "Send traffic and Kong performance metrics to StatsD"
+      },
+      "statsd": {
+        "name": "StatsD",
+        "description": "Send request and response logs to StatsD"
       },
       "syslog": {
         "name": "Syslog",
@@ -531,49 +379,201 @@
         "name": "TCP Log",
         "description": "Send request and response logs to a TCP server"
       },
-      "tls-handshake-modifier": {
-        "name": "TLS Handshake Modifier",
-        "description": "Requests the client certificate and if it exists, makes it available to other plugins acting on the request"
-      },
-      "tls-metadata-headers": {
-        "name": "TLS Metadata Headers",
-        "description": "Detects client certificates in requests, retrieves the TLS metadata, and proxies this metadata via HTTP headers"
-      },
       "udp-log": {
         "name": "UDP Log",
         "description": "Send request and response logs to a UDP server"
       },
-      "upstream-oauth": {
-        "name": "Upstream OAuth",
-        "description": "Configure Kong to obtain a OAuth2 token to consume an upstream API"
+      "kafka-log": {
+        "name": "Kafka Log",
+        "description": "Publish request and response logs to a Kafka topic"
       },
-      "upstream-timeout": {
-        "name": "Upstream Timeout",
-        "description": "Configure read, send and connect timeouts to an upstream"
+      "session": {
+        "name": "Session",
+        "description": "Sessions for Kong authentication"
       },
       "upstream-tls": {
         "name": "Upstream TLS",
         "description": "Enable TLS on upstream traffic by providing Kong with a list of trusted certificates."
       },
-      "vault-auth": {
-        "name": "Vault Authentication",
-        "description": "Secure routes and services with an access token and secret token, stored securely via Vault"
+      "application-registration": {
+        "name": "Portal Application Registration",
+        "description": "Allow portal developers to register applications against services"
       },
-      "websocket-size-limit": {
-        "name": "WebSocket Size Limit",
-        "description": "Allows operators to specify a maximum size for incoming WebSocket messages"
+      "konnect-application-auth": {
+        "name": "Konnect Application Auth",
+        "description": "Allow Konnect portal developers to register applications against services"
+      },
+      "acme": {
+        "name": "ACME",
+        "description": "Let's Encrypt and ACMEv2 integration with Kong"
+      },
+      "grpc-gateway": {
+        "name": "gRPC Gateway",
+        "description": "Access gRPC services through HTTP REST"
+      },
+      "grpc-web": {
+        "name": "gRPC Web",
+        "description": "Allow browser clients to call gRPC services"
+      },
+      "upstream-timeout": {
+        "name": "Upstream Timeout",
+        "description": "Configure read, send and connect timeouts to an upstream"
+      },
+      "opentelemetry": {
+        "name": "OpenTelemetry",
+        "description": "Propagate distributed tracing spans and report low-level spans to a OTLP-compatible server"
       },
       "websocket-validator": {
         "name": "WebSocket Validator",
         "description": "Validate individual WebSocket messages against to a user-specified schema before proxying them"
       },
+      "websocket-size-limit": {
+        "name": "WebSocket Size Limit",
+        "description": "Allows operators to specify a maximum size for incoming WebSocket messages"
+      },
+      "tls-metadata-headers": {
+        "name": "TLS Metadata Headers",
+        "description": "Detects client certificates in requests, retrieves the TLS metadata, and proxies this metadata via HTTP headers"
+      },
+      "tls-handshake-modifier": {
+        "name": "TLS Handshake Modifier",
+        "description": "Requests the client certificate and if it exists, makes it available to other plugins acting on the request"
+      },
+      "oas-validation": {
+        "name": "OAS Validation",
+        "description": "Validate HTTP requests and responses based on an API Specification."
+      },
+      "jwe-decrypt": {
+        "name": "Kong JWE Decrypt",
+        "description": "The Kong JWE Decrypt plugin makes it possible to decrypt an inbound token(JWE) in a request."
+      },
       "xml-threat-protection": {
         "name": "XML Threat Protection",
         "description": "Reduce the risk of XML attacks by checking the structure of XML payloads."
       },
-      "zipkin": {
-        "name": "Zipkin",
-        "description": "Propagate zipkin spans and report spans to a zipkin server"
+      "saml": {
+        "name": "SAML",
+        "description": "Security Assertion Markup Language (SAML) is an open standard for exchanging authentication and authorization data between an identity provider and a service provider."
+      },
+      "app-dynamics": {
+        "name": "AppDynamics",
+        "description": "This plugin integrates Kong with the AppDynamics APM platform so that proxy requests handled by Kong can be identified and analyzed in AppDynamics."
+      },
+      "json-threat-protection": {
+        "name": "JSON Threat Protection",
+        "description": "Apply size checks on JSON payload and minimize risk of content-level attacks"
+      },
+      "standard-webhooks": {
+        "name": "Standard Webhooks",
+        "description": "Validate incoming webhooks adhere to the Standard Webhooks specification, to which Kong is a contributor"
+      },
+      "ai-proxy-advanced": {
+        "name": "AI Proxy Advanced",
+        "description": "Route across different LLMs and models using advanced load balancing algorithms, including semantic routing."
+      },
+      "ai-semantic-cache": {
+        "name": "AI Semantic Cache",
+        "description": "Semantically cache AI requests to any LLM to reduce latency, improve end-user experiences and optimize GenAI costs."
+      },
+      "ai-semantic-prompt-guard": {
+        "name": "AI Semantic Prompt Guard",
+        "description": "Semantically and intelligently create allow and deny lists of topics that can be requested across every LLM."
+      },
+      "header-cert-auth": {
+        "name": "Header Certificate Authentication",
+        "description": "Authenticate clients with MTLS certificate passed in header by a WAF or load balancer"
+      },
+      "upstream-oauth": {
+        "name": "Upstream OAuth",
+        "description": "Configure Kong to obtain a OAuth2 token to consume an upstream API"
+      },
+      "confluent": {
+        "name": "Confluent",
+        "description": "Streamlines integration with Confluent Cloud and transforms requests into messages published to a Confluent topic."
+      },
+      "service-protection": {
+        "name": "Service Protection",
+        "description": "Prevent abuse and protect services with absolute limits on the number of requests reaching the service."
+      },
+      "injection-protection": {
+        "name": "Injection Protection",
+        "description": "Protect against injection attacks by rejecting requests that match common injections patterns."
+      },
+      "redirect": {
+        "name": "Redirect",
+        "description": "Redirect incoming requests to a new URL"
+      },
+      "kafka-consume": {
+        "name": "Kafka Consume",
+        "description": "Consume messages from Kafka topics over HTTP protocols."
+      },
+      "confluent-consume": {
+        "name": "Confluent Consume",
+        "description": "Consume messages from Confluent Kafka topics over HTTP protocols"
+      },
+      "request-callout": {
+        "name": "Request Callout",
+        "description": "Callout to third party APIs as part of request processing."
+      },
+      "ai-sanitizer": {
+        "name": "AI Sanitizer",
+        "description": "Sanitize personal or sensitive information from prompts before sending to LLM."
+      },
+      "ai-rag-injector": {
+        "name": "AI RAG Injector",
+        "description": "Attach contextual knowledge from vector databases with flexible template to LLM prompts."
+      },
+      "datakit": {
+        "name": "Datakit",
+        "description": "Datakit is a workflow engine for working with external APIs."
+      },
+      "ai-prompt-compressor": {
+        "name": "AI Prompt Compressor",
+        "description": "The AI Prompt Compressor reduces costs associated with LLMs by compressing prompts."
+      },
+      "solace-upstream": {
+        "name": "Solace Upstream",
+        "description": "Transform requests into Solace messages in a Solace queue or topic."
+      },
+      "ai-aws-guardrails": {
+        "name": "AI AWS GuardRails",
+        "description": "The AI AWS GuardRails enables enforcement of introspection with the AWS GuardRails service for all requests processed by the AI Proxy plugin."
+      },
+      "ace": {
+        "name": "Konnect Access Control Enforcement",
+        "description": "Enable Developer Self-Service for Konnect Dev Portals."
+      },
+      "solace-consume": {
+        "name": "Solace Consume",
+        "description": "Consume messages from Solace and make them available through HTTP endpoints."
+      },
+      "solace-log": {
+        "name": "Solace Log",
+        "description": "Publish request and response logs to a Solace topic."
+      },
+      "ai-llm-as-judge": {
+        "name": "AI LLM Judge",
+        "description": "Evaluate LLM responses with an external LLM service and use accuracy scores to drive dynamic load balancing for `llm/v1/chat` requests."
+      },
+      "ai-mcp-proxy": {
+        "name": "AI MCP Proxy",
+        "description": "Convert APIs into MCP tools, proxy MCP servers, expose multiple MCP tools, and observe MCP traffic in real time."
+      },
+      "ai-gcp-model-armor": {
+        "name": "AI GCP Model Armor",
+        "description": "Audit and validate AI Proxy messages with Google Cloud Model Armor before forwarding them to an upstream LLM."
+      },
+      "ai-mcp-oauth2": {
+        "name": "AI MCP OAuth2",
+        "description": "Secure MCP server access with OAuth2 authentication."
+      },
+      "ai-semantic-response-guard": {
+        "name": "AI Semantic Response Guard",
+        "description": "Permit or block prompts based on semantic similarity to known LLM responses, preventing misuse of `llm/v1/chat` or `llm/v1/completions` requests."
+      },
+      "ai-lakera-guard": {
+        "name": "AI Lakera Guard",
+        "description": "Audit and enforce safety policies on LLM requests and responses using the AI AWS Lakera plugin before they reach upstream LLMs."
       }
     },
     "fields": {
