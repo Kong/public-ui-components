@@ -1,8 +1,8 @@
 
-import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, BaseFormConfig } from '@kong-ui-public/entities-shared'
+import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { ClusterNode, Identifiable, PartialType, SentinelNode, AuthProvider } from './redis-configuration'
 
-export interface BaseRedisConfigurationFormConfig extends BaseFormConfig {
+export interface BaseRedisConfigurationFormConfig {
   /**
    * Show/hide cloud authentication configuration fields
    */
@@ -11,7 +11,6 @@ export interface BaseRedisConfigurationFormConfig extends BaseFormConfig {
 
 export interface KonnectRedisConfigurationFormConfig extends KonnectBaseFormConfig, BaseRedisConfigurationFormConfig { }
 export interface KongManagerRedisConfigurationFormConfig extends KongManagerBaseFormConfig, BaseRedisConfigurationFormConfig { }
-
 
 export interface RedisConfigurationFields {
   name: string
@@ -40,7 +39,7 @@ export interface RedisConfigurationFields {
     ssl: boolean
     timeout?: number
     username: string
-    cloud_authentication: {
+    cloud_authentication?: {
       auth_provider?: AuthProvider | null
       aws_cache_name?: string
       aws_region?: string
