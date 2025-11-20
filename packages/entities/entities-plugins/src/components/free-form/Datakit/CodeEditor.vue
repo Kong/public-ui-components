@@ -67,7 +67,7 @@ const LINT_SOURCE = 'YAML Syntax'
 
 const EDIT_SOURCE = 'datakit.insert-example'
 
-const M2_EXAMPLES = ['vault', 'cache']
+const M2_EXAMPLES: Array<keyof typeof examples> = ['vault', 'cache']
 const realExamples = computed(() => {
   if (!enableDatakitM2) {
     return omit(examples, M2_EXAMPLES)

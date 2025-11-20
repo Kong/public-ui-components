@@ -142,7 +142,7 @@ const { modalOpen, undo, redo, canUndo, canRedo, load } = useEditorStore()
 
 const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
 
-const M2_EXAMPLES = ['vault', 'cache']
+const M2_EXAMPLES: Array<keyof typeof examples> = ['vault', 'cache']
 const realExamples = computed(() => {
   if (!enableDatakitM2) {
     return omit(examples, M2_EXAMPLES)
