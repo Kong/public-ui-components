@@ -1,6 +1,7 @@
-import { useEventListener } from '@vueuse/core'
 import { useVueFlow } from '@vue-flow/core'
-import { useEditorStore } from './store'
+import { useEventListener } from '@vueuse/core'
+
+import { useEditorStore } from '../store/store'
 
 import type { EdgeChange, NodeChange } from '@vue-flow/core'
 
