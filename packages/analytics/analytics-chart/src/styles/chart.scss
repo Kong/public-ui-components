@@ -1,11 +1,12 @@
 @use "./globals" as *;
 
-$legend-height: $kui-space-110;
+$legend-height: $kui-space-110 + 1px;
+$legend-height-values: $kui-space-140;
 
 .chart-parent {
   align-items: center;
   display: flex;
-  height: inherit;
+  height: 100%;
   justify-content: space-evenly;
   position: relative;
   width: inherit;
@@ -15,35 +16,22 @@ $legend-height: $kui-space-110;
     flex-direction: column;
 
     .chart-container {
-      max-height: calc(100% - #{$legend-height});
+      flex-shrink: 0;
+      height: calc(100% - #{$legend-height});
       width: 100%;
-    }
-  }
-
-  // Chart and Legend on same row
-  &.legend-row {
-    flex-direction: row;
-
-    .chart-container {
-      height: 100%;
-      width: 90%;
-
-      // Allow chart to expand full width on mobile
-      @media (max-width: ($kui-breakpoint-phablet - 1px)) {
-        max-height: calc(100% - #{$legend-height}) !important;
-        width: 100% !important;
-      }
-    }
-    @media (max-width: ($kui-breakpoint-phablet - 1px)) {
-      display: flex;
-      flex-wrap: wrap;
     }
   }
 
   .chart-container {
     flex: 1 1 auto;
+    height: 100%;
     // Per ChartJS docs, the chart container needs to be position: relative and _only_ contain the chart canvas.
     // https://www.chartjs.org/docs/latest/configuration/responsive.html
     position: relative;
   }
+}
+
+.analytics-chart-shell.show-values .chart-parent.column .chart-container {
+  // handle larger legend when values are shown
+  height: calc(100% - #{$legend-height-values});
 }

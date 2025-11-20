@@ -91,15 +91,6 @@
               <KRadio
                 v-model="legendPosition"
                 name="legendPosition"
-                :selected-value="ChartLegendPosition.Right"
-              >
-                {{ ChartLegendPosition.Right }}
-              </KRadio>
-            </div>
-            <div>
-              <KRadio
-                v-model="legendPosition"
-                name="legendPosition"
                 :selected-value="ChartLegendPosition.Bottom"
               >
                 {{ ChartLegendPosition.Bottom }}

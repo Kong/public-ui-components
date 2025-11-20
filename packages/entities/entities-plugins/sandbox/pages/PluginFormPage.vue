@@ -10,7 +10,7 @@
       :config="konnectConfig"
       enable-redis-partial
       enable-vault-secret-picker
-      :engine="forceFreeForm ? 'freeform' : 'vfg'"
+      :engine="pluginFormEngine"
       :plugin-id="id"
       :plugin-type="plugin"
       use-custom-names-for-plugin
@@ -23,7 +23,7 @@
       :config="kongManagerConfig"
       enable-redis-partial
       enable-vault-secret-picker
-      :engine="forceFreeForm ? 'freeform' : 'vfg'"
+      :engine="pluginFormEngine"
       :plugin-id="id"
       :plugin-type="plugin"
       @global-action="handleGlobalAction"
@@ -43,7 +43,6 @@ import { ToastManager } from '@kong/kongponents'
 import type { GlobalAction } from '../../src/components/free-form/shared/types'
 
 const toaster = new ToastManager()
-const forceFreeForm = true
 provide(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, true)
 provide(FEATURE_FLAGS.DATAKIT_M2, true)
 provide(FEATURE_FLAGS.KM_1945_NEW_PLUGIN_CONFIG_FORM, true)
@@ -64,6 +63,7 @@ defineProps({
 
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
+const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
 
 useProvideExperimentalFreeForms([
   'service-protection',

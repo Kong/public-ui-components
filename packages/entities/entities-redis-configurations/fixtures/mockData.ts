@@ -1,4 +1,4 @@
-import { PartialType, type RedisConfigurationLinkedPluginsResponse, type RedisConfigurationResponse } from '../src'
+import { PartialType, AuthProvider, type RedisConfigurationLinkedPluginsResponse, type RedisConfigurationResponse } from '../src'
 import { v4 as uuid } from 'uuid'
 
 export const redisConfigurationCE: Readonly<RedisConfigurationResponse> = {
@@ -34,6 +34,20 @@ export const redisConfigurationCE: Readonly<RedisConfigurationResponse> = {
     ssl_verify: false,
     ssl: false,
     username: '',
+    cloud_authentication: {
+      auth_provider: AuthProvider.AWS,
+      aws_cache_name: 'test-cache',
+      aws_region: '',
+      aws_is_serverless: false,
+      aws_access_key_id: '',
+      aws_secret_access_key: '',
+      aws_assume_role_arn: '',
+      aws_role_session_name: '',
+      gcp_service_account_json: '',
+      azure_client_id: '',
+      azure_client_secret: '',
+      azure_tenant_id: '',
+    },
   },
 }
 
@@ -70,6 +84,20 @@ export const redisConfigurationHostPortEE: Readonly<RedisConfigurationResponse> 
     ssl_verify: false,
     ssl: false,
     username: '',
+    cloud_authentication: {
+      auth_provider: AuthProvider.AWS,
+      aws_cache_name: 'test-cache',
+      aws_region: '',
+      aws_is_serverless: false,
+      aws_access_key_id: '',
+      aws_secret_access_key: '',
+      aws_assume_role_arn: '',
+      aws_role_session_name: '',
+      gcp_service_account_json: '',
+      azure_client_id: '',
+      azure_client_secret: '',
+      azure_tenant_id: '',
+    },
   },
 }
 
@@ -111,6 +139,20 @@ export const redisConfigurationCluster: Readonly<RedisConfigurationResponse> = {
     ssl_verify: false,
     ssl: false,
     username: '',
+    cloud_authentication: {
+      auth_provider: AuthProvider.AWS,
+      aws_cache_name: 'test-cache',
+      aws_region: '',
+      aws_is_serverless: false,
+      aws_access_key_id: '',
+      aws_secret_access_key: '',
+      aws_assume_role_arn: '',
+      aws_role_session_name: '',
+      gcp_service_account_json: '',
+      azure_client_id: '',
+      azure_client_secret: '',
+      azure_tenant_id: '',
+    },
   },
 }
 
@@ -152,6 +194,7 @@ export const redisConfigurationSentinel: Readonly<RedisConfigurationResponse> = 
     ssl_verify: false,
     ssl: false,
     username: '',
+    cloud_authentication: null,
   },
 }
 

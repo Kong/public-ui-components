@@ -21,7 +21,7 @@ import {
   KeyIcon,
   NetworkIcon,
   StackIcon,
-  VitalsIcon,
+  DeployIcon,
   CachedIcon,
 } from '@kong/icons'
 import type { NodeType, NodeVisual } from '../../types'
@@ -56,7 +56,7 @@ export const NODE_VISUAL: Record<NodeType, NodeVisual> = {
     },
   },
   static: {
-    icon: VitalsIcon,
+    icon: DeployIcon,
     colors: {
       foreground: KUI_COLOR_TEXT_PRIMARY,
       background: KUI_COLOR_TEXT_PRIMARY_WEAKEST,

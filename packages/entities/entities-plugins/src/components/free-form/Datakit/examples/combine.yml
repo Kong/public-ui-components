@@ -1,19 +1,19 @@
 nodes:
-- name: CAT_FACT
+- name: AUTHOR
   type: call
-  url: https://catfact.ninja/fact
-- name: DOG_FACT
+  url: https://httpbin.konghq.com/json
+- name: UUID
   type: call
-  url: https://dogapi.dog/api/v1/facts
+  url: https://httpbin.konghq.com/uuid
 - name: JOIN
   type: jq
   inputs:
-    cat: CAT_FACT.body
-    dog: DOG_FACT.body
+    input1: AUTHOR.body
+    input2: UUID.body
   jq: |
     {
-      cat_fact: .cat.fact,
-      dog_fact: .dog.facts[0],
+      author: .input1.slideshow.author,
+      uuid: .input2.uuid,
     }
 - name: EXIT
   type: exit

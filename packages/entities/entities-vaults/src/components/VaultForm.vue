@@ -278,6 +278,7 @@
                 { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S as string },
                 ...(config.hcvAppRoleMethodAvailable ? [{ label: VaultAuthMethods.APP_ROLE, value: VaultAuthMethods.APP_ROLE as string }] : []),
                 ...(config.hcvCertMethodAvailable ? [{ label: VaultAuthMethods.CERT, value: VaultAuthMethods.CERT as string }] : []),
+                ...(config.hcvOauth2MethodAvailable ? [{ label: VaultAuthMethods.OAUTH2, value: VaultAuthMethods.OAUTH2 as string }] : []),
               ]"
               :label="t('form.config.hcv.fields.auth_method.label')"
               :readonly="form.isReadonly"
@@ -399,6 +400,61 @@
                 autocomplete="off"
                 data-testid="vault-form-config-hcv-cert_auth_cert_key"
                 :label="t('form.config.hcv.fields.cert_auth_cert_key.label')"
+                :readonly="form.isReadonly"
+                required
+              />
+            </div>
+            <div
+              v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.OAUTH2"
+              class="vault-form-config-auth-method-container"
+            >
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].oauth2_client_id"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-oauth2_client_id"
+                :label="t('form.config.hcv.fields.oauth2_client_id.label')"
+                :readonly="form.isReadonly"
+                required
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].oauth2_client_secret"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-oauth2_client_secret"
+                :label="t('form.config.hcv.fields.oauth2_client_secret.label')"
+                :readonly="form.isReadonly"
+                required
+                show-password-mask-toggle
+                type="password"
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].oauth2_role_name"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-oauth2_role_name"
+                :label="t('form.config.hcv.fields.oauth2_role_name.label')"
+                :label-attributes="{
+                  info: t('form.config.hcv.fields.oauth2_role_name.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
+                :readonly="form.isReadonly"
+                required
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].oauth2_token_endpoint"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-oauth2_token_endpoint"
+                :label="t('form.config.hcv.fields.oauth2_token_endpoint.label')"
+                :readonly="form.isReadonly"
+                required
+              />
+              <KInput
+                v-model.trim="configFields[VaultProviders.HCV].oauth2_audiences"
+                autocomplete="off"
+                data-testid="vault-form-config-hcv-oauth2_audiences"
+                :label="t('form.config.hcv.fields.oauth2_audiences.label')"
+                :label-attributes="{
+                  info: t('form.config.hcv.fields.oauth2_audiences.tooltip'),
+                  tooltipAttributes: { maxWidth: '400' },
+                }"
                 :readonly="form.isReadonly"
                 required
               />
@@ -860,6 +916,11 @@ const configFields = reactive<ConfigFields>({
     cert_auth_cert: '',
     cert_auth_cert_key: '',
     cert_auth_role_name: '',
+    oauth2_client_id: '',
+    oauth2_client_secret: '',
+    oauth2_role_name: '',
+    oauth2_token_endpoint: '',
+    oauth2_audiences: '',
     ...base64FieldConfig,
   } as HCVVaultConfig,
   [VaultProviders.AZURE]: {
@@ -1093,6 +1154,9 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && ['cert_auth_role_name', 'cert_auth_cert', 'cert_auth_cert_key'].includes(key)) {
         return false
       }
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.OAUTH2 && ['oauth2_client_id', 'oauth2_client_secret', 'oauth2_role_name', 'oauth2_token_endpoint', 'oauth2_audiences'].includes(key)) {
+        return false
+      }
       return isEmpty((configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig])
     }).length
   }
@@ -1182,6 +1246,13 @@ const getPayload = computed((): Record<string, any> => {
       cert_auth_role_name: configFields[VaultProviders.HCV].cert_auth_role_name,
       cert_auth_cert: configFields[VaultProviders.HCV].cert_auth_cert,
       cert_auth_cert_key: configFields[VaultProviders.HCV].cert_auth_cert_key,
+    }),
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.OAUTH2 && {
+      oauth2_audiences: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_audiences,
+      oauth2_client_id: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_client_id,
+      oauth2_client_secret: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_client_secret,
+      oauth2_role_name: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_role_name,
+      oauth2_token_endpoint: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_token_endpoint,
     }),
   }
 

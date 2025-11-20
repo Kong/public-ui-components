@@ -86,6 +86,18 @@ A form component for Vaults.
     - default: `undefined`
     - Show/hide approle option and corresponding fields.
 
+  - `hcvCertMethodAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide cert option and corresponding fields.
+
+  - `hcvOauth2MethodAvailable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Show/hide oauth2 option and corresponding fields. 
+
   - `awsStsEndpointUrlAvailable`
     - type: `boolean`
     - required: `false`

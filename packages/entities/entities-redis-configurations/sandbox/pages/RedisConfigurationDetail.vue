@@ -35,6 +35,7 @@ const kongManagerConfig: KongManagerRedisConfigurationEntityConfig = {
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   entityId: route.params.id as string,
+  cloudAuthAvailable: true,
 }
 
 </script>

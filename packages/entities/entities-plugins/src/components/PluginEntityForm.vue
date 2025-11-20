@@ -20,7 +20,7 @@
         :on-form-change="handleFreeFormUpdate"
         :on-model-updated="onModelUpdated"
         :on-validity-change="onValidityChange"
-        :schema="rawSchema"
+        :schema="freeformSchema"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
       >
         <template
@@ -135,6 +135,8 @@ import PluginFieldRuleAlerts from './PluginFieldRuleAlerts.vue'
 import * as freeForm from './free-form'
 import { getFreeFormName } from '../utils/free-form'
 import type { GlobalAction } from './free-form/shared/types'
+import { appendEntityChecksFromMetadata } from './free-form/shared/schema-enhancement'
+import type { FormSchema } from '../types/plugins/form-schema'
 
 // Need to check for duplicates in sharedForms and freeForm
 // throw an error if there are any
@@ -418,6 +420,10 @@ const formSchema = ref<Record<string, any>>({})
 const originalModel = reactive<Record<string, any>>({})
 const formModel = reactive<Record<string, any>>({})
 const formOptions = computed(() => form.value?.options)
+const freeformSchema = computed(() => appendEntityChecksFromMetadata(
+  formModel.name,
+  props.rawSchema as FormSchema,
+))
 
 const vaultSecretPickerSetup = ref<string | false>(false)
 const vaultSecretPickerAutofillAction = ref<(secretRef: string) => void | undefined>()

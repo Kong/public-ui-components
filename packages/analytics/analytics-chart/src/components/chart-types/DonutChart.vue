@@ -65,7 +65,7 @@ const props = withDefaults(defineProps<{
   tooltipMetricDisplay?: string
 }>(), {
   metricUnit: '',
-  legendPosition: ChartLegendPosition.Right,
+  legendPosition: ChartLegendPosition.Bottom,
   legendValues: undefined,
   syntheticsDataKey: '',
   datasetColors: () => datavisPalette,
@@ -152,7 +152,6 @@ const chartInstance = ref<Chart>()
  */
 const chartFlexClass = (position: `${ChartLegendPosition}`) => {
   return {
-    [ChartLegendPosition.Right]: 'legend-row',
     [ChartLegendPosition.Bottom]: 'column',
     [ChartLegendPosition.Hidden]: 'hidden',
   }[position]
