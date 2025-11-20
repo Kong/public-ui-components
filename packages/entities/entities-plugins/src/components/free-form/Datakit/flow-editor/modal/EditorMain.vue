@@ -71,9 +71,9 @@
         >
           <template #items>
             <KDropdownItem
-              v-for="(example, key) in examples"
+              v-for="(_, key) in realExamples"
               :key="key"
-              @click="selectExample(example)"
+              @click="selectExample(key)"
             >
               {{ t(`plugins.free-form.datakit.examples.${key}`) }}
             </KDropdownItem>
@@ -108,12 +108,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed, inject } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { ExternalLinkIcon, RedoIcon, UndoIcon } from '@kong/icons'
 import { KButton, KDropdown, KTooltip, KDropdownItem } from '@kong/kongponents'
+import { omit } from 'lodash-es'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 
 import english from '../../../../../locales/en.json'
+import { FEATURE_FLAGS } from '../../../../../constants'
 import BooleanField from '../../../shared/BooleanField.vue'
 import { HOTKEYS } from '../constants'
 import examples from '../../examples'
@@ -137,7 +140,18 @@ defineSlots<{
 
 const { modalOpen, undo, redo, canUndo, canRedo, load } = useEditorStore()
 
-function selectExample(example: string) {
+const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
+
+const M2_EXAMPLES: Array<keyof typeof examples> = ['vault', 'cache']
+const realExamples = computed(() => {
+  if (!enableDatakitM2) {
+    return omit(examples, M2_EXAMPLES)
+  }
+  return examples
+})
+
+function selectExample(key: keyof typeof examples) {
+  const example = examples[key]
   const maybeConfig = yaml.load(example, {
     schema: JSON_SCHEMA,
     json: true,
