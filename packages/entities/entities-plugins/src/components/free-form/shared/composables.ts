@@ -742,6 +742,8 @@ function useDisabledFieldsManager(onChange?: () => void) {
         && get(formData, utils.toArray(path)) == null
         // not a child of an array
         && schemaMap[utils.toArray(path).slice(0, -1).join('.')]?.type !== 'array'
+        // A special case for **ai-mcp-oauth2** plugin where config is optional
+        && path === 'config'
       ) {
         disableField(path, false)
       }
