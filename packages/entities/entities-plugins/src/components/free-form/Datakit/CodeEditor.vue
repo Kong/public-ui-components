@@ -5,7 +5,7 @@
         {{ t('plugins.free-form.datakit.description_example') }}
 
         <KButton
-          v-for="(_, key) in examples"
+          v-for="(_, key) in realExamples"
           :key="key"
           appearance="secondary"
           size="small"
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, toRaw, inject } from 'vue'
+import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, toRaw, inject, computed } from 'vue'
 import * as monaco from 'monaco-editor'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton } from '@kong/kongponents'
@@ -66,6 +66,14 @@ const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const LINT_SOURCE = 'YAML Syntax'
 
 const EDIT_SOURCE = 'datakit.insert-example'
+
+const M2_EXAMPLES = ['vault', 'cache']
+const realExamples = computed(() => {
+  if (!enableDatakitM2) {
+    return omit(examples, M2_EXAMPLES)
+  }
+  return examples
+})
 
 /**
  * Sets the example code in the Monaco editor.
