@@ -1,4 +1,3 @@
-// useExploreResultToEchartsOption.ts
 import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
 import type { SeriesOption } from 'echarts'
@@ -155,12 +154,14 @@ export default function useExploreResultToEChartTimeseries({
   tooltipState,
   stacked = ref(false),
   threshold = ref(undefined),
+  colorPalette = ref(datavisPalette),
 } : {
   exploreResult: Ref<ExploreResultV4>
   chartType: Ref<ReportChartTypes>
   tooltipState: Ref<TooltipState>
   stacked?: Ref<boolean>
   threshold?: Ref<Partial<Record<ExploreAggregations, Threshold[]>> | undefined>
+  colorPalette?: Ref<string[]> | Ref<Record<string, string>>
 }) {
   const { i18n } = composables.useI18n()
 
@@ -208,22 +209,29 @@ export default function useExploreResultToEChartTimeseries({
         const timestamp = new Date(druidRow.timestamp).valueOf()
         const event = druidRow.event as Record<string, string | number>
 
-        for (const metric of metricNames) {
-          if (!(timestamp in acc)) acc[timestamp] = {}
-          if (!(metric in acc[timestamp])) acc[timestamp][metric] = {}
-        }
+        if (!(timestamp in acc)) acc[timestamp] = {}
 
-        for (const metric of metricNames) {
-          datasetLabels.forEach(label => {
-            // when dimension field matches segment id OR metric matches segment id (for single-metric cross segments)
-            if (event[dimension] === label.id || metric === label.id) {
-              if (!acc[timestamp][metric]) acc[timestamp][metric] = {}
-              acc[timestamp][metric][label.name] = Math.round(Number(event[metric]) * 1e3) / 1e3
-            } else if (!dimensionFieldNames.length) {
-              if (!acc[timestamp][metric]) acc[timestamp][metric] = {}
-              acc[timestamp][metric][label.name] = Math.round(Number(event[label.id]) * 1e3) / 1e3
+        if (dimensionFieldNames.length === 0) {
+          // No dimensions: each metric maps only to its own value
+          for (const metric of metricNames) {
+            if (!(metric in acc[timestamp])) acc[timestamp][metric] = {}
+            if (event[metric] !== undefined) {
+              acc[timestamp][metric][metric] = Math.round(Number(event[metric]) * 1e3) / 1e3
             }
-          })
+          }
+        } else {
+          // Dimensions present: map by dimension value or metric when applicable
+          for (const metric of metricNames) {
+            if (!(metric in acc[timestamp])) acc[timestamp][metric] = {}
+            datasetLabels.forEach(label => {
+              if (event[dimension] === label.id || metric === label.id) {
+                const val = event[metric]
+                if (val !== undefined) {
+                  acc[timestamp][metric][label.name] = Math.round(Number(val) * 1e3) / 1e3
+                }
+              }
+            })
+          }
         }
 
         return acc
@@ -231,8 +239,10 @@ export default function useExploreResultToEChartTimeseries({
 
       const dimensionsCrossMetrics: Array<[string, string, boolean]> =
         metricNames.length === 1
-          ? metricNames.flatMap(metric => datasetLabels.map(label => [metric, label.name, label.id === 'empty'] as [string, string, boolean]))
-          : datasetLabels.map(label => [label.name, label.name, label.id === 'empty'] as [string, string, boolean])
+          ? metricNames.flatMap<[string, string, boolean]>(metric => {
+            return datasetLabels.map<[string, string, boolean]>(label => [metric, label.name, label.id === 'empty'])
+          })
+          : datasetLabels.map(label => [label.name, label.name, label.id === 'empty'])
 
       // build ECharts series
       const series = dimensionsCrossMetrics.map<SeriesOption>(([metric, dimensionName, isSegmentEmpty], i) => {
@@ -241,7 +251,7 @@ export default function useExploreResultToEChartTimeseries({
           return [ts, y] as [number, number]
         })
 
-        const baseColor = determineBaseColor(i, dimensionName, isSegmentEmpty, datavisPalette!)
+        const baseColor = determineBaseColor(i, dimensionName, isSegmentEmpty, colorPalette.value)
 
         const total = filled.reduce((acc, [, y]) => acc + Number(y), 0)
         const translated = (i18n && typeof i18n.te === 'function' && i18n.te(`chartLabels.${dimensionName}` as any))
@@ -421,7 +431,7 @@ export default function useExploreResultToEChartTimeseries({
           },
         ],
       }
-
+      console.log('EChart option generated:', option)
       return option
     } catch (err) {
       console.error(err)

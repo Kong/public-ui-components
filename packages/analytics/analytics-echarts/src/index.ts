@@ -1,5 +1,6 @@
 // import type { App } from 'vue'
-import AnalyticsEcharts from './components/AnalyticsEcharts.vue'
+import TimeseriesChart from './components/TimeseriesChart.vue'
+import CrossSectionChart from './components/CrossSectionChart.vue'
 
 // Export Vue plugin
 // We rarely want to export components as a plugin as we prefer to support proper tree-shaking in the host application. Only enable if you're packing a Vue plugin.
@@ -12,6 +13,6 @@ import AnalyticsEcharts from './components/AnalyticsEcharts.vue'
 //   },
 // }
 
-export { AnalyticsEcharts }
+export { TimeseriesChart, CrossSectionChart }
 
 export * from './types'
