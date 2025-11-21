@@ -75,6 +75,7 @@
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
+    "@kong-ui-public/analytics-echarts": "workspace:^",
     "@kong-ui-public/analytics-config-store": "workspace:^",
     "@kong-ui-public/analytics-geo-map": "workspace:^",
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
