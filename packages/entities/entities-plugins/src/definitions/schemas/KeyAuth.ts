@@ -1,7 +1,7 @@
 import { markRaw } from 'vue'
 import { tags } from './typedefs'
 
-import KeyAuthIdentityRealms from '../../components/fields/KeyAuthIdentityRealms.vue'
+import KeyAuthIdentityRealms from '../../components/fields/key-auth-identity-realms/VfgAdapter.vue'
 
 import type { UseSchemasOptions } from 'src/composables/useSchemas'
 import type { CommonSchemaFields } from 'src/types/plugins/shared'

@@ -1,49 +1,30 @@
 <template>
-  <div class="field-wrapper">
-    <KMultiselect
-      :items="realms"
-      :loading="isLoadingRealms"
-      :model-value="selectedRealms"
-      @update:model-value="onRealmsUpdate"
-    />
-  </div>
+  <KMultiselect
+    :items="realms"
+    :loading="isLoadingRealms"
+    :model-value="selectedRealms"
+    @update:model-value="onRealmsUpdate"
+  />
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, onMounted, ref, toRef, watch } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 import { useAxios } from '@kong-ui-public/entities-shared'
-import { composables as formComposables, FORMS_CONFIG } from '@kong-ui-public/forms'
-import composables from '../../composables'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import composables from '../../../composables'
 
 import type { MultiselectItem } from '@kong/kongponents'
 import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { AxiosResponse } from 'axios'
+import type { IdentityRealmItem } from './types'
 
-type IdentityRealmItem = { scope: 'cp', id: null } | { scope: 'realm', id: string }
 type KonnectRealmItem = { id: string, name: string }
 type KonnectRealmResponse = { data: KonnectRealmItem[], meta: { next: string | null } }
 
-const props = defineProps<{
-  disabled?: boolean
-  formOptions?: Record<string, any>
-  model?: Record<string, any>
-  schema: Record<string, any>
-  vfg: Record<string, any>
-  errors?: any[]
-  hint?: string
-}>()
+defineOptions({ name: 'KeyAuthIdentityRealmsBase' })
 
-const emit = defineEmits<{
-  (event: 'modelUpdated', value: any, model: Record<string, any>): void
-}>()
-
-const { clearValidationErrors, value: fieldValue } = formComposables.useAbstractFields<IdentityRealmItem[]>({
-  model: toRef(() => props.model),
-  schema: props.schema,
-  formOptions: props.formOptions,
-  emitModelUpdated: (data: { value: any, model: Record<string, any> }): void => {
-    emit('modelUpdated', data.value, data.model)
-  },
+const model = defineModel<IdentityRealmItem[]>({
+  default: [{ scope: 'cp', id: null, region: null }],
 })
 
 const { i18n } = composables.useI18n()
@@ -103,14 +84,14 @@ const fetchRealms = async (): Promise<void> => {
   }
 }
 
-const selectedRealms = computed(() => fieldValue.value.map((realm) => realm.id || 'current-cp'))
+const selectedRealms = computed(() => model.value.map((realm) => realm.id || 'current-cp'))
 
 const onRealmsUpdate = (currentSelected: string[]) => {
 
   const nextCPSlice = currentSelected.includes('current-cp')
-    ? [{ scope: 'cp', id: null } as const] : []
+    ? [{ scope: 'cp', id: null, region: null } as const] : []
 
-  const prevKonnectRealmSelection = fieldValue.value
+  const prevKonnectRealmSelection = model.value
     .filter(({ scope }) => scope !== 'cp')
     .map(({ id }) => id!)
 
@@ -125,33 +106,13 @@ const onRealmsUpdate = (currentSelected: string[]) => {
 
   const nextKonnectRealms = nextKonnectRealmId.map((id) => ({ ...guessRegion(), scope: 'realm', id } as const))
 
-  fieldValue.value = [
+  model.value = [
     ...nextCPSlice,
     ...nextKonnectRealms,
   ]
 }
 
-// set default value if the value is not initialized
-watch(fieldValue, () => {
-  if (!fieldValue.value) {
-    fieldValue.value = [{ scope: 'cp', id: null }]
-  }
-})
-
 onMounted(() => {
   fetchRealms()
 })
-
-defineExpose({
-  clearValidationErrors,
-})
 </script>
-
-<style lang="scss" scoped>
-.field-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-}
-</style>

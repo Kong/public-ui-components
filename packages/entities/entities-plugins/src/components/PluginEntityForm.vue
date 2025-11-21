@@ -20,6 +20,7 @@
         :on-form-change="handleFreeFormUpdate"
         :on-model-updated="onModelUpdated"
         :on-validity-change="onValidityChange"
+        :plugin-name="formModel.name"
         :schema="freeformSchema"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
       >

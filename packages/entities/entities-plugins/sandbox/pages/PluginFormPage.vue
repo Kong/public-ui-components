@@ -77,6 +77,9 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   // entityType: 'services',
   // entityId: '6f1ef200-d3d4-4979-9376-726f2216d90c',
   cancelRoute: { name: 'list-plugin' },
+  experimentalRenders: {
+    keyAuthIdentityRealms: true,
+  },
 })
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({
