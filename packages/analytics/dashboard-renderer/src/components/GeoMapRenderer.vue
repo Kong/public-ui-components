@@ -14,6 +14,7 @@
       :metric="(countryMetric as ExploreAggregations)"
       :metric-unit="(countryMetricUnit as MetricUnits)"
       :with-legend="chartOptions.legend || false"
+      @bounds-change="onBoundsChange"
     />
   </QueryDataProvider>
 </template>
@@ -64,4 +65,10 @@ const onChartData = (data: ExploreResultV4) => {
   chartDataRaw.value = data
 }
 
+const emit = defineEmits<{
+  (e: 'bounds-change', newBounds: Array<[number, number]>): void
+}>()
+const onBoundsChange = (e: Array<[number, number]>) => {
+  emit('bounds-change', e)
+}
 </script>

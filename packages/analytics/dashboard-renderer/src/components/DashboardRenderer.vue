@@ -39,13 +39,13 @@
           <DashboardTile
             v-else
             :key="isFullscreen ? `${tile.id}-tile` : `${tile.id}-tile-fullscreen`"
+            v-model:refresh-counter="refreshCounter"
             class="tile-container"
-            :context="mergedContext"
+            :context="internalContext"
             :definition="tile.meta"
             :height="tile.layout.size.rows * (model.tile_height || DEFAULT_TILE_HEIGHT) + parseInt(KUI_SPACE_70, 10)"
             :is-fullscreen="isFullscreen"
             :query-ready="queryReady"
-            :refresh-counter="refreshCounter"
             :tile-id="tile.id"
             @duplicate-tile="onDuplicateTile(tile)"
             @edit-tile="onEditTile(tile)"
@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContext, DashboardRendererContextInternal, GridTile, TileZoomEvent } from '../types'
+import type { DashboardRendererContext, GridTile, TileZoomEvent } from '../types'
 import type {
   AllFilters,
   AnalyticsBridge,
@@ -71,16 +71,13 @@ import type {
 } from '@kong-ui-public/analytics-utilities'
 import DashboardTile from './DashboardTile.vue'
 import type { ComponentPublicInstance } from 'vue'
-import { computed, getCurrentInstance, inject, nextTick, ref } from 'vue'
+import { computed, inject, nextTick, ref, toRef } from 'vue'
 import composables from '../composables'
 import GridLayout from './layout/GridLayout.vue'
 import type { DraggableGridLayoutExpose } from './layout/DraggableGridLayout.vue'
 import DraggableGridLayout from './layout/DraggableGridLayout.vue'
 import {
   DEFAULT_TILE_HEIGHT,
-  DEFAULT_TILE_REFRESH_INTERVAL_MS,
-  FULLSCREEN_LONG_REFRESH_INTERVAL_MS,
-  FULLSCREEN_SHORT_REFRESH_INTERVAL_MS,
   INJECT_QUERY_PROVIDER,
   TIMEFRAME_TOKEN,
 } from '../constants'
@@ -199,66 +196,6 @@ const gridTiles = computed<Array<GridTile<TileDefinition>>>(() => {
   })
 })
 
-const mergedContext = computed<DashboardRendererContextInternal>(() => {
-  let { tz, refreshInterval, editable } = props.context
-  const filters = [...(props.context.filters ?? []), ...(model.value.preset_filters ?? [])] as AllFilters[]
-
-  if (!tz) {
-    tz = (new Intl.DateTimeFormat()).resolvedOptions().timeZone
-  }
-
-  // Check explicitly against undefined because 0 is a valid refresh interval.
-  if (refreshInterval === undefined) {
-    refreshInterval = DEFAULT_TILE_REFRESH_INTERVAL_MS
-  }
-
-  if (isFullscreen.value) {
-    // when we're fullscreen, we want to refresh automatically, regardless of
-    // what the configured refreshInterval is.
-    let isShort = false
-    if (timeSpec.value.type === 'relative') {
-      isShort = ['15m', '1h', '6h', '12h', '24h'].includes(timeSpec.value.time_range)
-    } else {
-      const start = timeSpec.value.start.getTime()
-      const end = timeSpec.value.end.getTime()
-      const diffMs = Math.abs(end - start)
-      isShort = diffMs <= 86400000 // less than or equal to 24 hours
-    }
-
-    const now = new Date().getTime()
-    const isPast = timeSpec.value.type === 'absolute'
-      && timeSpec.value.end.getTime() < now
-
-    if (isPast) {
-      // if the timerange is in the past there's no need to refresh
-      refreshInterval = 0
-    } else if (isShort) {
-      // if the timerange is 24 hours or less, refresh more frequently
-      refreshInterval = FULLSCREEN_SHORT_REFRESH_INTERVAL_MS
-    } else {
-      // otherwise, refresh less frequently
-      refreshInterval = FULLSCREEN_LONG_REFRESH_INTERVAL_MS
-    }
-  }
-
-  if (editable === undefined) {
-    editable = false
-  }
-
-  // Check if the host app has provided an event handler for zooming.
-  // If there's no handler, disable zooming -- it won't do anything.
-  const zoomable = !!getCurrentInstance()?.vnode?.props?.onTileTimeRangeZoom
-
-  return {
-    filters,
-    tz,
-    timeSpec: timeSpec.value,
-    refreshInterval,
-    editable,
-    zoomable,
-  }
-})
-
 // Right now, tiles don't have unique keys.  Perhaps in the future they will,
 // and we can use that instead of `index` as the fragment key.
 
@@ -351,6 +288,16 @@ const onFullscreenChange = () => {
     updateScale()
   }
 }
+
+const globalFilters = computed<AllFilters[]>(() => {
+  return model.value.preset_filters as AllFilters[] ?? []
+})
+
+const { internalContext } = composables.useDashboardInternalContext({
+  globalFilters,
+  context: toRef(props, 'context'),
+  isFullscreen,
+})
 
 defineExpose({
   refresh: refreshTiles,

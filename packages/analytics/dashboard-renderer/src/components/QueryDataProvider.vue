@@ -108,10 +108,9 @@ const queryError = ref<QueryError | null>(null)
 const hasError = computed(() => state.value === STATE.ERROR || !!queryError.value)
 const isLoading = computed(() => !props.queryReady || state.value === STATE.PENDING)
 
-watch(v4Data, (data) => {
-  if (data) {
+watch([() => v4Data.value, () => state.value], ([data, state]) => {
+  if (data && (state === 'SUCCESS_HAS_DATA' || state === 'SUCCESS')) {
     emit('chart-data', data)
   }
 })
-
 </script>

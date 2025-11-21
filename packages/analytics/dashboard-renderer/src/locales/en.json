@@ -26,7 +26,7 @@
     "hourly": "1 hour",
     "minutely": "1 minute",
     "tenMinutely": "10 minutes",
-    "tensecondly": "10 seconds",
+    "tenSecondly": "10 seconds",
     "thirtyMinutely": "30 minutes",
     "thirtySecondly": "30 seconds",
     "twelveHourly": "12 hours",
