@@ -76,8 +76,16 @@
   },
   "pnpm": {
     "overrides": {
-      "string-width": "4.2.3",
-      "vue": "$vue"
+      "glob@<11.1.0": ">=11.1.0",
+      "dompurify@<3.2.4": ">=3.2.4",
+      "axios@>=1.0.0 <1.12.0": ">=1.12.0",
+      "form-data@>=3.0.0 <3.0.4": ">=3.0.4"
+    },
+    "auditConfig": {
+      "ignoreGhsas": [
+        "GHSA-p6mc-m468-83gw",
+        "GHSA-67hx-6x53-jw92"
+      ]
     },
     "onlyBuiltDependencies": [
       "@evilmartians/lefthook",
