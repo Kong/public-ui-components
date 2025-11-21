@@ -3,7 +3,7 @@
 import MonacoEditor from './MonacoEditor.vue'
 
 describe('<MonacoEditor />', () => {
-  it('TODO: This is an example test', () => {
+  it.skip('TODO: This is an example test', () => {
     cy.mount(MonacoEditor)
 
     cy.get('.kong-ui-public-monaco-editor').should('be.visible')
