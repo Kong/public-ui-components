@@ -35,6 +35,11 @@ const router = createRouter({
       name: 'grid',
       component: () => import('./pages/GridDemo.vue'),
     },
+    {
+      path: '/tile-preview',
+      name: 'preview',
+      component: () => import('./pages/TilePreviewDemo.vue'),
+    },
   ],
 })
 
@@ -55,6 +60,10 @@ const appLinks: SandboxNavigationItem[] = ([
   {
     name: 'Grid Layout',
     to: { name: 'grid' },
+  },
+  {
+    name: 'Tile Preview Component',
+    to: { name: 'preview' },
   },
 ])
 
