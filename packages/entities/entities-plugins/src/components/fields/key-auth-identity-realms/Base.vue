@@ -23,10 +23,6 @@ type KonnectRealmResponse = { data: KonnectRealmItem[], meta: { next: string | n
 
 defineOptions({ name: 'KeyAuthIdentityRealmsBase' })
 
-const emit = defineEmits<{
-  (event: 'modelUpdated', value: IdentityRealmItem[], model: Record<string, any>): void
-}>()
-
 const model = defineModel<IdentityRealmItem[]>({
   default: [{ scope: 'cp', id: null, region: null }],
 })
