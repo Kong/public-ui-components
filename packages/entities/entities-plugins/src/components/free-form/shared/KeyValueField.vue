@@ -33,14 +33,6 @@
           </slot>
         </template>
       </KLabel>
-      <KButton
-        appearance="tertiary"
-        :data-testid="`ff-kv-add-btn-${field.path.value}`"
-        icon
-        @click="handleAddClick"
-      >
-        <AddIcon />
-      </KButton>
     </header>
 
     <div
@@ -54,6 +46,7 @@
         class="ff-kv-field-entry-key"
         :data-key-input="index"
         :data-testid="`ff-key-${field.path.value}.${index}`"
+        :disabled="field.isInheritedDisabled.value"
         :placeholder="keyPlaceholder || 'Key'"
         @keydown.enter.prevent="focus(index, 'value')"
       />
@@ -63,6 +56,7 @@
         class="ff-kv-field-entry-value"
         :data-testid="`ff-value-${field.path.value}.${index}`"
         :data-value-input="index"
+        :disabled="field.isInheritedDisabled.value"
         :placeholder="valuePlaceholder || 'Value'"
         @keydown.enter.prevent="handleValueEnter(index)"
       >
@@ -70,6 +64,7 @@
           <component
             :is="autofillSlot"
             v-if="autofillSlot && realShowVaultSecretPicker"
+            :disabled="field.isInheritedDisabled.value"
             :schema="schema"
             :update="value => handleAutofill(index, value)"
             :value="entry.value"
@@ -83,25 +78,39 @@
         </template>
       </EnhancedInput>
 
-      <KButton
-        appearance="tertiary"
-        :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
-        icon
-        @click="removeEntry(entry.id)"
-      >
-        <TrashIcon />
-      </KButton>
+      <KTooltip :text="`Remove ${labelAttrs.label}`">
+        <KButton
+          appearance="tertiary"
+          :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
+          :disabled="field.isInheritedDisabled.value"
+          icon
+          @click.stop="removeEntry(entry.id)"
+        >
+          <CloseIcon />
+        </KButton>
+      </KTooltip>
     </div>
+
+    <KButton
+      appearance="tertiary"
+      class="ff-kv-add-btn"
+      :data-testid="`ff-kv-add-btn-${field.path.value}`"
+      :disabled="field.isInheritedDisabled.value"
+      @click="handleAddClick"
+    >
+      <AddIcon />
+      Add {{ labelAttrs.label }}
+    </KButton>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useTemplateRef, nextTick, inject, computed } from 'vue'
-import { AddIcon, TrashIcon } from '@kong/icons'
+import { AddIcon, CloseIcon } from '@kong/icons'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import type { MapFieldSchema } from '../../../types/plugins/form-schema'
 import useI18n from '../../../composables/useI18n'
-import { useKeyValueField, type KeyValueFieldEmits, type KeyValueFieldProps } from '../shared/headless/useKeyValueField'
+import { useKeyValueField, type KeyValueFieldEmits, type KeyValueFieldProps } from './headless/useKeyValueField'
 import EnhancedInput from './EnhancedInput.vue'
 
 const { showVaultSecretPicker = undefined, ...props } = defineProps<KeyValueFieldProps>()
@@ -194,6 +203,10 @@ defineExpose({
 
   :deep(.k-tooltip p) {
     margin: 0;
+  }
+
+  .ff-kv-add-btn {
+    align-self: flex-start;
   }
 }
 </style>

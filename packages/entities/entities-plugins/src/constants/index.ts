@@ -1,8 +1,11 @@
+import { FEATURE_FLAGS as SharedFeatureFlags } from '@kong-ui-public/entities-shared'
+
 export const EXPERIMENTAL_FREE_FORM_PROVIDER = Symbol('EXPERIMENTAL_FREE_FORM_PROVIDER')
 
 export const FEATURE_FLAGS = {
   DATAKIT_ENABLE_FLOW_EDITOR: Symbol('DATAKIT_ENABLE_FLOW_EDITOR'),
   DATAKIT_M2: Symbol('DATAKIT_M2'),
+  KM_1945_NEW_PLUGIN_CONFIG_FORM: SharedFeatureFlags.KM_1945_NEW_PLUGIN_CONFIG_FORM,
 }
 
 export const TOASTER_PROVIDER = Symbol('TOASTER_PROVIDER')

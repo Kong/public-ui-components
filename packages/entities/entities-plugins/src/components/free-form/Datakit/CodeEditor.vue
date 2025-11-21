@@ -48,7 +48,7 @@ const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData, resetFormData } = useFormShared<DatakitPluginData>()
+const { formData, setFormData: resetFormData } = useFormShared<DatakitPluginData>()
 
 defineProps<{
   editing: boolean
