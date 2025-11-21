@@ -46,7 +46,7 @@ import type {
 import type { QueryError } from '@kong-ui-public/analytics-chart'
 import type { DashboardRendererContextInternal } from '../types'
 
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, ref, useId, watch } from 'vue'
 import useSWRV from 'swrv'
 import { useSwrvState } from '@kong-ui-public/core'
 import { handleQueryError } from '@kong-ui-public/analytics-chart'
@@ -68,6 +68,7 @@ const emit = defineEmits<{
   (e: 'queryComplete'): void
 }>()
 
+const instanceId = useId()
 const { issueQuery } = composables.useIssueQuery()
 
 const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
@@ -75,7 +76,7 @@ const queryBridge: AnalyticsBridge | undefined = inject(INJECT_QUERY_PROVIDER)
 const queryKey = () => {
   // SWRV can't accept `false` as a key, so use a more complicated conditional to match its `IKey` interface.
   if (props.queryReady && queryBridge) {
-    return JSON.stringify([props.query, props.context, props.refreshCounter])
+    return JSON.stringify([props.query, props.context, props.refreshCounter, instanceId])
   }
 
   return null
