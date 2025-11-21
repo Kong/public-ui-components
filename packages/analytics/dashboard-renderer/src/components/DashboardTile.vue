@@ -8,7 +8,7 @@
     :data-testid="`tile-${tileId}`"
   >
     <div
-      v-if="definition.chart.type !== 'slottable'"
+      v-if="hasTileHeader && definition.chart.type !== 'slottable'"
       class="tile-header"
     >
       <KTooltip
@@ -24,11 +24,8 @@
           {{ definition.chart.chart_title }}
         </div>
       </KTooltip>
-      <div
-        v-if="canShowTitleActions"
-        class="tile-actions"
-        :data-testid="`tile-actions-${tileId}`"
-      >
+
+      <div class="badge-container">
         <KBadge
           v-if="badgeData"
           data-testid="time-range-badge"
@@ -45,6 +42,37 @@
             {{ badgeData }}
           </span>
         </KBadge>
+      </div>
+
+      <div v-if="showRefresh">
+        <KButton
+          appearance="secondary"
+          class="refresh-button"
+          :disabled="loadingChartData"
+          icon
+          size="small"
+          @click="refresh"
+        >
+          <ProgressIcon
+            v-if="loadingChartData"
+            role="button"
+            :size="KUI_ICON_SIZE_60"
+            tabindex="0"
+          />
+          <RefreshIcon
+            v-else
+            role="button"
+            :size="KUI_ICON_SIZE_60"
+            tabindex="0"
+          />
+        </KButton>
+      </div>
+
+      <div
+        v-if="canShowTitleActions"
+        class="tile-actions"
+        :data-testid="`tile-actions-${tileId}`"
+      >
         <EditIcon
           v-if="canShowKebabMenu && context.editable && !isFullscreen"
           class="edit-icon"
@@ -138,7 +166,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardRendererContextInternal, TileZoomEvent } from '../types'
+import type { DashboardRendererContextInternal, TileBoundsChangeEvent, TileZoomEvent } from '../types'
 import type {
   AbsoluteTimeRangeV4,
   AiExploreQuery,
@@ -160,33 +188,44 @@ import BarChartRenderer from './BarChartRenderer.vue'
 import { DEFAULT_TILE_HEIGHT, INJECT_QUERY_PROVIDER } from '../constants'
 import TimeseriesChartRenderer from './TimeseriesChartRenderer.vue'
 import GoldenSignalsRenderer from './GoldenSignalsRenderer.vue'
-import { KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
 import TopNTableRenderer from './TopNTableRenderer.vue'
 import composables from '../composables'
-import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40 } from '@kong/design-tokens'
-import { MoreIcon, EditIcon, WarningIcon } from '@kong/icons'
+import { KUI_COLOR_TEXT_NEUTRAL, KUI_ICON_SIZE_40, KUI_ICON_SIZE_60, KUI_ICON_SIZE_20, KUI_SPACE_70 } from '@kong/design-tokens'
+
+import { MoreIcon, EditIcon, WarningIcon, ProgressIcon, RefreshIcon } from '@kong/icons'
+
 import { CsvExportModal } from '@kong-ui-public/analytics-chart'
 import DonutChartRenderer from './DonutChartRenderer.vue'
 
 const PADDING_SIZE = parseInt(KUI_SPACE_70, 10)
 
 const props = withDefaults(defineProps<{
-  definition: TileDefinition
   context: DashboardRendererContextInternal
+  definition: TileDefinition
   height?: number
   isFullscreen?: boolean
+  hideActions?: boolean
   queryReady: boolean
-  refreshCounter: number
+  showRefresh?: boolean
   tileId: string | number
 }>(), {
   height: DEFAULT_TILE_HEIGHT,
+  hideActions: false,
+  showRefresh: false,
 })
+
+const refreshCounter = defineModel<number>('refreshCounter', { default: 0 })
+const refresh = () => {
+  loadingChartData.value = true
+  refreshCounter.value++
+}
 
 const emit = defineEmits<{
   (e: 'edit-tile', tile: TileDefinition): void
   (e: 'duplicate-tile', tile: TileDefinition): void
   (e: 'remove-tile', tile: TileDefinition): void
   (e: 'tile-time-range-zoom', newTimeRange: TileZoomEvent): void
+  (e: 'tile-bounds-change', boundsEvent: TileBoundsChangeEvent): void
 }>()
 
 const GeoMapRendererAsync = defineAsyncComponent(() => import('./GeoMapRenderer.vue'))
@@ -220,19 +259,26 @@ const {
 
 const { issueQuery } = composables.useIssueQuery()
 
-watch(() => props.definition, async () => {
+watch(() => props.definition, async (newValue, oldValue) => {
   await nextTick()
 
   if (titleRef.value) {
     isTitleTruncated.value = titleRef.value.scrollWidth > titleRef.value.clientWidth
   }
 
-  loadingChartData.value = true
+  try {
+    if (JSON.stringify(newValue?.query) !== JSON.stringify(oldValue?.query)) {
+      // we only want to set this if the query values actually changed
+      loadingChartData.value = true
+    }
+  } catch {
+    // no-op
+  }
 }, { immediate: true, deep: true })
 
 const csvFilename = computed<string>(() => i18n.t('csvExport.defaultFilename'))
 
-const canShowTitleActions = computed((): boolean => (canShowKebabMenu.value && (kebabMenuHasItems.value || props.context.editable)) || !!badgeData.value)
+const canShowTitleActions = computed((): boolean => canShowKebabMenu.value && !props.hideActions && (kebabMenuHasItems.value || props.context.editable))
 
 const kebabMenuHasItems = computed((): boolean => !!exploreLinkKebabMenu.value || ('allow_csv_export' in props.definition.chart ? props.definition.chart.allow_csv_export : true) || props.context.editable)
 
@@ -253,6 +299,7 @@ const rendererLookup: Record<DashboardTileType, Component | undefined> = {
 const componentEventHandlers = computed(() => ({
   ...(componentData.value?.rendererEvents.supportsRequests ? { 'select-chart-range': onSelectChartRange } : {}),
   ...(componentData.value?.rendererEvents.supportsZoom ? { 'zoom-time-range': onZoom } : {}),
+  ...(componentData.value?.rendererEvents.supportsBounds ? { 'bounds-change': onBoundsChange } : {}),
 }))
 
 const componentData = computed(() => {
@@ -262,6 +309,7 @@ const componentData = computed(() => {
 
   const supportsRequests = !!(component as any)?.emits?.includes('select-chart-range')
   const supportsZoom = !!(component as any)?.emits?.includes('zoom-time-range')
+  const supportsBounds = props.definition.chart.type === 'choropleth_map' // can't lookup with emits as this is an async renderer
 
   return component && {
     component,
@@ -271,13 +319,14 @@ const componentData = computed(() => {
       queryReady: props.queryReady,
       chartOptions: props.definition.chart,
       height: props.height - PADDING_SIZE * 2,
-      refreshCounter: props.refreshCounter,
+      refreshCounter: refreshCounter.value,
       requestsLink: requestsLinkZoomActions.value,
       exploreLink: exploreLinkZoomActions.value,
     },
     rendererEvents: {
       supportsRequests,
       supportsZoom,
+      supportsBounds,
     },
   }
 })
@@ -311,11 +360,15 @@ const hasTileHeader = computed<boolean>(() => {
   // @ts-ignore this is erroring because of slottable
   const hasTitle = Boolean(props.definition.chart.chart_title)
 
+  const hasSignalsDescription = props.definition.chart.type === 'golden_signals' && Boolean(props.definition.chart.description)
+
+  const hasRefresh = props.showRefresh
+
   const hasMenu = canShowTitleActions.value && kebabMenuHasItems.value && !props.isFullscreen
 
   const hasBadge = Boolean(badgeData.value)
 
-  return hasTitle || hasMenu || hasBadge
+  return hasTitle || hasMenu || hasBadge || hasSignalsDescription || hasRefresh
 })
 
 const chartDataGranularity = computed(() => {
@@ -422,6 +475,14 @@ const onZoom = (newTimeRange: AbsoluteTimeRangeV4) => {
   emit('tile-time-range-zoom', zoomEvent)
 }
 
+const onBoundsChange = (e: Array<[number, number]>) => {
+  const boundsEvent: TileBoundsChangeEvent = {
+    tileId: props.tileId.toString(),
+    bounds: e,
+  }
+  emit('tile-bounds-change', boundsEvent)
+}
+
 const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
   const filters = datasourceScopedFilters.value
   const requestsQuery = buildRequestsQueryZoomActions(newTimeRange, filters)
@@ -445,9 +506,16 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
     }
   }
 
+  .badge-container {
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+  }
+
   .tile-header {
     align-items: center;
     display: flex;
+    gap: $kui-space-50;
     justify-content: space-between;
     padding: $kui-space-40 $kui-space-50 $kui-space-40 $kui-space-50;
     right: 0;
@@ -459,7 +527,9 @@ const onSelectChartRange = (newTimeRange: AbsoluteTimeRangeV4) => {
     }
 
     .title {
+      font-size: $kui-font-size-40;
       font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+      line-height: 24px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;

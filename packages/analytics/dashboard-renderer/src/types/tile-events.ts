@@ -4,3 +4,9 @@ export interface TileZoomEvent {
   tileId: string
   timeRange: AbsoluteTimeRangeV4
 }
+
+export interface TileBoundsChangeEvent {
+  tileId: string
+  bounds: Array<[number, number]>
+}
+
