@@ -683,7 +683,8 @@
       "field_rules": {
         "at_least_one_of": "At least one of these parameters is required: {parameters}",
         "only_one_of": "Exactly one of these parameters is required: {parameters}",
-        "mutually_required": "All of these parameters are required: {parameters}",
+        "mutually_required": "These parameters are mutually required: {parameters}",
+        "mutually_exclusive": "These parameters are mutually exclusive: {parameters}",
         "only_one_of_mutually_required": "Exactly one of the following parameter combinations is required (all parameters within a chosen combination are required):"
       },
       "sections": {

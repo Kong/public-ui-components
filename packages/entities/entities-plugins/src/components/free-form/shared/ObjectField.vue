@@ -16,6 +16,10 @@
       :data-testid="`ff-object-${field.path.value}`"
     >
       <slot>
+        <EntityChecksAlert
+          :entity-checks="field.schema.value?.entity_checks"
+          :omitted-fields="omit"
+        />
         <Field
           v-for="cfield in childFields"
           :key="Object.keys(cfield)[0]"
@@ -91,6 +95,10 @@
         :data-testid="`ff-object-content-${field.path.value}`"
       >
         <slot>
+          <EntityChecksAlert
+            :entity-checks="field.schema.value?.entity_checks"
+            :omitted-fields="omit"
+          />
           <Field
             v-for="cfield in childFields"
             :key="Object.keys(cfield)[0]"
@@ -109,6 +117,7 @@ import { computed, onBeforeMount, toRef, watch } from 'vue'
 import SlideTransition from './SlideTransition.vue'
 import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
 import Field from './Field.vue'
+import EntityChecksAlert from './EntityChecksAlert.vue'
 
 import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
 import type { ResetLabelPathRule } from './types'
