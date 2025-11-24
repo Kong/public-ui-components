@@ -38,11 +38,6 @@
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
-  "devDependencies": {
-    "@kong/design-tokens": "1.18.1",
-    "@kong/kongponents": "9.45.1",
-    "vue": "^3.5.22"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Kong/public-ui-components.git",
@@ -58,10 +53,21 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "200KB"
+    "warningLimit": "19.5MB",
+    "errorLimit": "20MB"
   },
   "peerDependencies": {
-    "@kong/kongponents": "9.42.11",
+    "@kong/kongponents": ">=9.42.0 <10.0.0",
+    "monaco-editor": ">=0.55.0 <1.0.0",
     "vue": "^3.5.22"
+  },
+  "devDependencies": {
+    "@kong/design-tokens": "1.18.1",
+    "@kong/kongponents": "9.46.1",
+    "monaco-editor": "^0.55.1",
+    "vue": "^3.5.22"
+  },
+  "dependencies": {
+    "@vueuse/core": "^14.0.0"
   }
 }
