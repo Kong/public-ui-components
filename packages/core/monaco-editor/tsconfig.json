@@ -9,8 +9,7 @@
       "vite/client",
       "cypress",
       "cypress/vue",
-      "../../../cypress/support",
-      "./src/types/monaco-worker.d.ts",
+      "../../../cypress/support"
     ]
   },
   "include": [
