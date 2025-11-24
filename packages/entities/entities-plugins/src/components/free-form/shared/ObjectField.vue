@@ -113,14 +113,16 @@
 <script setup lang="ts">
 import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
 import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
-import { computed, onBeforeMount, toRef, watch } from 'vue'
+import { computed, nextTick, onBeforeMount, toRef, watch } from 'vue'
+import { get, isEqual, set } from 'lodash-es'
 import SlideTransition from './SlideTransition.vue'
 import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
 import Field from './Field.vue'
 import EntityChecksAlert from './EntityChecksAlert.vue'
+import { resolve } from '../shared/utils'
 
-import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
-import type { ResetLabelPathRule } from './types'
+import type { RecordFieldSchema, NamedFieldSchema } from 'src/types/plugins/form-schema'
+import type { RenderRules, ResetLabelPathRule } from './types'
 
 defineOptions({
   inheritAttrs: false,
@@ -144,10 +146,13 @@ const {
   asChild?: boolean
   resetLabelPath?: ResetLabelPathRule
   fieldsOrder?: string[]
+  renderRules?: RenderRules
 }>()
 
 const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
-const { getSchema, getDefault } = useFormShared()
+const { getSchema, getDefault, useCurrentRenderRules } = useFormShared()
+
+const currentRenderRules = useCurrentRenderRules(field.path!, toRef(props, 'renderRules'))
 
 const added = defineModel<boolean>('added', { default: undefined })
 
@@ -179,27 +184,119 @@ const asChild = computed(() => {
   return isChildOfArray.value
 })
 
+interface BundleInfo {
+  bundleIndex: number
+  positionInBundle: number
+}
+
+function applyBundlesOrder(
+  fields: NamedFieldSchema[],
+  bundles: string[][],
+): NamedFieldSchema[] {
+  const bundleMap = new Map<string, BundleInfo>()
+  bundles.forEach((bundle, bundleIndex) => {
+    bundle.forEach((fieldName, positionInBundle) => {
+      bundleMap.set(fieldName, { bundleIndex, positionInBundle })
+    })
+  })
+
+  const processedBundles = new Set<number>()
+  const result: NamedFieldSchema[] = []
+  const fieldsMap = new Map(fields.map(f => [Object.keys(f)[0], f]))
+
+  for (const field of fields) {
+    const fieldName = Object.keys(field)[0]
+    const bundleInfo = bundleMap.get(fieldName)
+
+    if (!bundleInfo) {
+      result.push(field)
+      continue
+    }
+
+    const { bundleIndex, positionInBundle } = bundleInfo
+
+    if (processedBundles.has(bundleIndex)) {
+      continue
+    }
+
+    if (positionInBundle === 0) {
+      const bundle = bundles[bundleIndex]
+      bundle.forEach(name => {
+        const bundleField = fieldsMap.get(name)
+        if (bundleField) {
+          result.push(bundleField)
+        }
+      })
+      processedBundles.add(bundleIndex)
+    } else {
+      const bundle = bundles[bundleIndex]
+      bundle.forEach(name => {
+        const bundleField = fieldsMap.get(name)
+        if (bundleField) {
+          result.push(bundleField)
+        }
+      })
+      processedBundles.add(bundleIndex)
+    }
+  }
+
+  return result
+}
+
+function filterByDependencies(
+  fields: NamedFieldSchema[],
+  dependencies: Record<string, [string, any]>,
+  currentFieldValue: any,
+): NamedFieldSchema[] {
+  return fields.filter(field => {
+    const fieldName = Object.keys(field)[0]
+    const dependency = dependencies[fieldName]
+
+    if (!dependency) return true
+
+    const [depField, expectedValue] = dependency
+    const actualValue = get(currentFieldValue, depField)
+
+    return isEqual(actualValue, expectedValue)
+  })
+}
+
 const childFields = computed(() => {
   let fields = (field.schema!.value as RecordFieldSchema).fields
+
   if (omit) {
     fields = fields.filter(f => !omit.includes(Object.keys(f)[0]))
   }
 
-  if (!fieldsOrder) return fields
+  if (fieldsOrder) {
+    fields = fields.sort((a, b) => {
+      const aKey = Object.keys(a)[0]
+      const bKey = Object.keys(b)[0]
 
-  return fields.sort((a, b) => {
-    const aKey = Object.keys(a)[0]
-    const bKey = Object.keys(b)[0]
+      const aIndex = fieldsOrder.indexOf(aKey)
+      const bIndex = fieldsOrder.indexOf(bKey)
 
-    const aIndex = fieldsOrder.indexOf(aKey)
-    const bIndex = fieldsOrder.indexOf(bKey)
+      if (aIndex === -1 && bIndex === -1) return 0
+      if (aIndex === -1) return 1
+      if (bIndex === -1) return -1
 
-    if (aIndex === -1 && bIndex === -1) return 0
-    if (aIndex === -1) return 1
-    if (bIndex === -1) return -1
+      return aIndex - bIndex
+    })
+  }
 
-    return aIndex - bIndex
-  })
+  if (currentRenderRules.value?.bundles) {
+    fields = applyBundlesOrder(fields, currentRenderRules.value.bundles)
+  }
+
+  if (currentRenderRules.value?.dependencies) {
+    fields = filterByDependencies(
+      fields,
+      currentRenderRules.value.dependencies,
+      fieldValue?.value,
+    )
+  }
+
+  return fields
 })
 
 function handleAddOrRemove() {
@@ -217,6 +314,50 @@ watch(realAdded, (value) => {
   }
   expanded.value = value
 })
+
+let isClearing = false
+
+watch(
+  [
+    () => fieldValue?.value,
+    () => currentRenderRules.value?.dependencies,
+  ],
+  ([currentData, deps]) => {
+    if (!deps || !currentData || isClearing) return
+
+    Object.entries(deps).forEach(([fieldName, [depField, expectedValue]]) => {
+      const actualValue = get(currentData, depField)
+
+      // Skip if dependency condition is met
+      if (isEqual(actualValue, expectedValue)) return
+
+      const fieldPath = field.path!.value ? resolve(field.path!.value, fieldName) : fieldName
+      const fieldSchema = getSchema(fieldPath)
+      const currentFieldValue = get(currentData, fieldName)
+
+      // Determine target value and whether to clear
+      let targetValue: any
+      let shouldClear = false
+
+      if (fieldSchema?.required) {
+        targetValue = getDefault(fieldPath)
+        shouldClear = !isEqual(currentFieldValue, targetValue)
+      } else {
+        targetValue = null
+        shouldClear = currentFieldValue !== null && currentFieldValue !== undefined
+      }
+
+      if (shouldClear) {
+        isClearing = true
+        nextTick(() => {
+          set(currentData, fieldName, targetValue)
+          isClearing = false
+        })
+      }
+    })
+  },
+  { deep: true, immediate: true },
+)
 
 onBeforeMount(() => {
   added.value = !!fieldValue?.value

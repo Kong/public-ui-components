@@ -1,4 +1,4 @@
-import { computed, inject, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch } from 'vue'
 import type { ComputedRef, InjectionKey, MaybeRefOrGetter, Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
@@ -6,17 +6,25 @@ import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayFieldSchema, ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { cloneDeep, get, isFunction, omit, set, uniqueId } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
-import type { FormConfig, ResetLabelPathRule } from './types'
+import type { FormConfig, RenderRules, ResetLabelPathRule } from './types'
 import { upperFirst } from 'lodash-es'
 import { createInjectionState } from '@vueuse/core'
 
 export const [provideFormShared, useOptionalFormShared] = createInjectionState(
-  function createFormShared<T extends Record<string, any> = Record<string, any>>(
-    schema: FormSchema | UnionFieldSchema,
-    propsData?: ComputedRef<T>,
-    propsConfig?: FormConfig<T>,
-    onChange?: (newData: T) => void,
-  ) {
+  function createFormShared<T extends Record<string, any> = Record<string, any>>(options: {
+    schema: FormSchema | UnionFieldSchema
+    propsData?: ComputedRef<T>
+    propsConfig?: FormConfig<T>
+    propsRenderRules?: MaybeRefOrGetter<RenderRules | undefined>
+    onChange?: (newData: T) => void
+  }) {
+    const {
+      schema,
+      propsData,
+      onChange,
+      propsRenderRules,
+      propsConfig,
+    } = options
     const schemaHelpers = useSchemaHelpers(schema)
     const fieldRendererRegistry: MatchMap = new Map()
 
@@ -26,6 +34,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     // Init form level field renderer slots
     const slots = useSlots()
     provide(FIELD_RENDERER_SLOTS, omit(slots, 'default', FIELD_RENDERERS))
+
+    const {
+      useCurrentRules: useCurrentRenderRules,
+    } = useRenderRules()
+
+    useCurrentRenderRules(utils.rootSymbol, propsRenderRules)
 
     function resetFormData(newData: T) {
       Object.keys(innerData).forEach((key) => {
@@ -76,6 +90,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       config,
       fieldRendererRegistry,
       resetFormData,
+      useCurrentRenderRules,
       ...schemaHelpers,
     }
   },
@@ -658,4 +673,280 @@ export function useItemKeys<T>(ns: string, items: MaybeRefOrGetter<T[]>) {
   }, { immediate: true, deep: true })
 
   return { getKey }
+}
+
+function useRenderRules() {
+  const registry = ref<Record<string, RenderRules>>({})
+
+  /**
+   * Validates that all fields in a bundle/dependency are at the same level
+   */
+  function validateSameLevel(fields: string[], context: string): void {
+    const levels = fields.map(f => utils.toArray(f).length)
+    const firstLevel = levels[0]
+
+    if (!levels.every(level => level === firstLevel)) {
+      const fieldInfo = fields.map((f, i) => `  - '${f}' is at level ${levels[i]}`).join('\n')
+      throw new Error(
+        `${context}: Fields must be at the same level. Found mixed levels:\n${fieldInfo}`,
+      )
+    }
+  }
+
+  /**
+   * Validates that there are no circular dependencies in the rules
+   */
+  function validateNoCycles(rules: Record<string, RenderRules>): void {
+    for (const [path, rule] of Object.entries(rules)) {
+      if (!rule.dependencies) continue
+
+      // Check each field for circular dependencies using DFS
+      for (const field of Object.keys(rule.dependencies)) {
+        const visited = new Set<string>()
+        const stack: string[] = []
+
+        function dfs(currentField: string): void {
+          if (stack.includes(currentField)) {
+            const cycle = [...stack, currentField].join(' -> ')
+            const selfDep = stack.length === 0 ? ' (self-dependency)' : ''
+            throw new Error(
+              `Circular dependency detected in path '${path}':\n${cycle}${selfDep}`,
+            )
+          }
+
+          if (visited.has(currentField)) return
+
+          visited.add(currentField)
+          stack.push(currentField)
+
+          const dep = rule.dependencies![currentField]
+          if (dep) {
+            const [depField] = dep
+            if (rule.dependencies![depField]) {
+              dfs(depField)
+            }
+          }
+
+          stack.pop()
+        }
+
+        dfs(field)
+      }
+    }
+  }
+
+  /**
+   * Finds the common parent path for a group of fields
+   */
+  function findCommonParentPath(fields: string[], basePath: string): string {
+    const fullPaths = fields.map(f => basePath ? utils.resolve(basePath, f) : f)
+
+    // Get the parent path of the first field
+    const firstFieldParts = fullPaths[0].split('.')
+    firstFieldParts.pop() // Remove the field name
+
+    return utils.resolve(...firstFieldParts)
+  }
+
+  /**
+   * Removes the parent path prefix from a field path
+   */
+  function removePrefix(fieldPath: string, parentPath: string): string {
+    if (!parentPath) return fieldPath
+
+    const prefix = `${parentPath}${utils.separator}`
+    if (fieldPath.startsWith(prefix)) {
+      return fieldPath.slice(prefix.length)
+    }
+
+    return fieldPath
+  }
+
+  /**
+   * Gets the parent path of a field path
+   */
+  function getParentPath(fieldPath: string): string {
+    const parts = utils.toArray(fieldPath)
+    parts.pop()
+    return utils.resolve(...parts)
+  }
+
+  /**
+   * Flattens the render rules from the registry into a path-specific structure.
+   *
+   * This computed property transforms the registered rules by:
+   * 1. Extracting the parent path from each bundle/dependency field
+   * 2. Grouping fields by their common parent path
+   * 3. Removing the parent path prefix from field names
+   * 4. Validating rules (same level, minimum fields, no cycles)
+   *
+   * @example
+   * Input (registry):
+   * {
+   *   '$': {
+   *     bundles: [['config.username', 'config.password']],
+   *     dependencies: { 'config.redis': ['config.strategy', 'redis'] }
+   *   }
+   * }
+   *
+   * Output (flattenedRules):
+   * {
+   *   'config': {
+   *     bundles: [['username', 'password']],
+   *     dependencies: { 'redis': ['strategy', 'redis'] }
+   *   }
+   * }
+   *
+   * @throws {Error} If bundle contains less than 2 fields
+   * @throws {Error} If fields in bundle/dependency are at different levels
+   * @throws {Error} If circular dependencies are detected
+   */
+  const flattenedRules = computed<Record<string, RenderRules>>(() => {
+    const result: Record<string, RenderRules> = {}
+
+    // Iterate through each rule in the registry
+    for (const [registryPath, rules] of Object.entries(registry.value)) {
+      const basePath = registryPath === utils.rootSymbol ? '' : registryPath
+
+      // Process bundles
+      if (rules.bundles) {
+        for (const bundle of rules.bundles) {
+          // Validate: bundle must contain at least 2 fields
+          if (bundle.length < 2) {
+            throw new Error(
+              `Bundle must contain at least 2 fields. Found ${bundle.length} field(s) in bundle: [${bundle.join(', ')}]`,
+            )
+          }
+
+          // Build full paths for validation
+          const fullPaths = bundle.map(f => basePath ? utils.resolve(basePath, f) : f)
+
+          // Validate: all fields in bundle must be at the same level
+          validateSameLevel(fullPaths, `Bundle [${bundle.join(', ')}]`)
+
+          // Find the common parent path for this bundle
+          const parentPath = findCommonParentPath(bundle, basePath)
+
+          if (!result[parentPath]) {
+            result[parentPath] = {}
+          }
+          if (!result[parentPath].bundles) {
+            result[parentPath].bundles = []
+          }
+
+          // Remove parent path prefix from each field
+          const relativeBundle = fullPaths.map(field => removePrefix(field, parentPath))
+          result[parentPath].bundles!.push(relativeBundle)
+        }
+      }
+
+      // Process dependencies
+      if (rules.dependencies) {
+        for (const [fieldPath, [depPath, depValue]] of Object.entries(rules.dependencies)) {
+          // Build full paths
+          const fullFieldPath = basePath ? utils.resolve(basePath, fieldPath) : fieldPath
+          const fullDepPath = basePath ? utils.resolve(basePath, depPath) : depPath
+
+          // Validate: field and its dependency must be at the same level
+          validateSameLevel(
+            [fullFieldPath, fullDepPath],
+            `Dependency '${fieldPath}' -> '${depPath}'`,
+          )
+
+          const parentPath = getParentPath(fullFieldPath)
+
+          if (!result[parentPath]) {
+            result[parentPath] = {}
+          }
+          if (!result[parentPath].dependencies) {
+            result[parentPath].dependencies = {}
+          }
+
+          // Remove parent path prefix from both field and dependency
+          const relativeFieldPath = removePrefix(fullFieldPath, parentPath)
+          const relativeDepPath = removePrefix(fullDepPath, parentPath)
+          result[parentPath].dependencies![relativeFieldPath] = [relativeDepPath, depValue]
+        }
+      }
+    }
+
+    // Validate: no circular dependencies
+    validateNoCycles(result)
+
+    console.log('Flattened RenderRules:', result)
+
+    return result
+  })
+
+  const rules = computed<RenderRules>(() => {
+    const result: RenderRules = {}
+
+    for (const [key, rules] of Object.entries(registry.value)) {
+      if (rules.bundles) {
+        const bundles = key === utils.rootSymbol
+          ? rules.bundles
+          : rules.bundles.map(bundle => bundle.map(field => `${generalizePath(key)}.${field}`))
+        if (!result.bundles) result.bundles = []
+        result.bundles.push(...bundles)
+      }
+
+      if (rules.dependencies) {
+        if (!result.dependencies) result.dependencies = {}
+        for (const [depKey, depValue] of Object.entries(rules.dependencies)) {
+          const fullDepKey = key === utils.rootSymbol ? depKey : utils.resolveRoot(generalizePath(key), depKey)
+          result.dependencies[fullDepKey] = [fullDepKey, depValue]
+        }
+      }
+    }
+
+    return result
+  })
+
+  function getRules(fieldPath?: string): RenderRules | undefined {
+    if (!fieldPath) {
+      return rules.value
+    }
+
+    // Use flattenedRules to get path-specific rules
+    const generalizedPath = generalizePath(fieldPath)
+    return flattenedRules.value[generalizedPath]
+  }
+
+  function createComputedRules(fieldPath: MaybeRefOrGetter<string | undefined>) {
+    return computed(() => {
+      const pathValue = toValue(fieldPath)
+      return getRules(pathValue)
+    })
+  }
+
+  function useCurrentRules(
+    fieldPath: MaybeRefOrGetter<string>,
+    rules?: MaybeRefOrGetter<RenderRules | undefined>,
+  ) {
+    watch([toRef(() => toValue(rules)), toRef(() => toValue(fieldPath))], ([newRules, path], [_oldRules, oldPath]) => {
+      // Set new rules
+      if (newRules) {
+        registry.value[path] = newRules
+      } else {
+        delete registry.value[path]
+      }
+
+      // Clean up old path
+      if (oldPath && oldPath !== path) {
+        delete registry.value[oldPath]
+      }
+    }, { immediate: true, deep: true })
+
+    // Clean up on unmount
+    onBeforeUnmount(() => {
+      const path = toValue(fieldPath)
+      delete registry.value[path]
+    })
+
+    return createComputedRules(fieldPath)
+  }
+
+  return {
+    useCurrentRules,
+  }
 }

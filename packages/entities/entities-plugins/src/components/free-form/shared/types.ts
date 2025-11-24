@@ -119,3 +119,45 @@ export type PartialNotification = {
  * @deprecated use `useToaster` instead
  */
 export type GlobalAction = 'notify'
+
+/**
+ * Rules to control the rendering of form fields.
+ * Only `Form` and `ObjectField` components can accept these rules
+ */
+export interface RenderRules {
+  /**
+   * Bundles of fields to be rendered together.
+   * - Each bundle is an array of field paths.
+   * - Each bundle should be in the same level.
+   * - Circular references between bundles are not allowed.
+   * @example
+   * ```ts
+   * [
+   *   ['config.username', 'config.password'], // first bundle
+   *   ['config.strategy', 'config.redis'], // second bundle
+   *   ['config.strategy', 'config.cache.redis'], // ❌ different levels are not allowed
+   *   ['config.redis', 'config.strategy'], // ❌ circular reference not allowed
+   * ]
+   */
+  bundles?: string[][]
+
+  /**
+   * Dependencies between fields to control their visibility.
+   * - A field will be shown only if it dependency is satisfied.
+   * - A field will have value only if its dependency is satisfied.
+   * - The `fieldValue` will be deeply compared.
+   * - Field and its dependency should be in the same level.
+   * - Circular dependencies are not allowed.
+   * @example
+   * ```ts
+   * {
+   *   'config.redis': ['config.strategy', 'redis'],
+   *   'config.cache.redis': ['config.strategy', 'cache'], // ❌ different levels are not allowed
+   *   'config.strategy': ['config.redis', {}], // ❌ circular dependency not allowed
+   * }
+   * ```
+   */
+  dependencies?: {
+    [fieldPath: string]: [fieldPath: string, fieldValue: any]
+  }
+}

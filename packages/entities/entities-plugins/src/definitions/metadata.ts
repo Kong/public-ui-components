@@ -27,6 +27,11 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
   'basic-auth': {
     descriptionKey: 'plugins.meta.basic-auth.description',
     nameKey: 'plugins.meta.basic-auth.name',
+    freeformRenderRules: {
+      dependencies: {
+        'config.brute_force_protection.redis': ['config.brute_force_protection.strategy', 'redis'],
+      },
+    },
     ...PLUGIN_GROUP_AND_SCOPE_MAP['basic-auth'],
   },
   'hmac-auth': {
@@ -179,6 +184,14 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     nameKey: 'plugins.meta.rate-limiting.name',
     fieldRules: {
       atLeastOneOf: [['config.second', 'config.minute', 'config.hour', 'config.day', 'config.month', 'config.year']],
+    },
+    freeformRenderRules: {
+      bundles: [
+        ['config.policy', 'config.redis'],
+      ],
+      dependencies: {
+        'config.redis': ['config.policy', 'redis'],
+      },
     },
     ...PLUGIN_GROUP_AND_SCOPE_MAP['rate-limiting'],
   },

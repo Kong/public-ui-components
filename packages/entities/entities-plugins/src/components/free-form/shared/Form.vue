@@ -20,15 +20,16 @@ export type Props<T extends Record<string, any> = Record<string, any>> = {
   data?: T
   config?: FormConfig<T>
   fieldsOrder?: string[]
+  renderRules?: RenderRules
 }
 </script>
 
 <script setup lang="ts" generic="T extends Record<string, any> = Record<string, any>">
-import { useSlots, type Slot, computed, toRaw } from 'vue'
+import { useSlots, type Slot, computed, toRaw, toRef } from 'vue'
 import { FIELD_RENDERERS, provideFormShared } from './composables'
 import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import Field from './Field.vue'
-import type { FormConfig, GlobalAction } from './types'
+import type { FormConfig, GlobalAction, RenderRules } from './types'
 
 defineOptions({ name: 'SchemaForm' })
 
@@ -39,7 +40,7 @@ defineSlots<
   } & Partial<Record<string, Slot<{ name: string }>>>
 >()
 
-const { tag = 'form', schema, fieldsOrder, config, data } = defineProps<Props<T>>()
+const { tag = 'form', schema, fieldsOrder, config, data, renderRules } = defineProps<Props<T>>()
 
 const emit = defineEmits<{
   change: [value: T]
@@ -48,12 +49,13 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
-const { getSchema, formData, resetFormData } = provideFormShared(
+const { getSchema, formData, resetFormData } = provideFormShared({
   schema,
-  computed(() => data as T),
-  config as FormConfig,
-  (value) => emit('change', value as T),
-)
+  propsData: computed(() => data as T),
+  propsConfig: config as FormConfig,
+  propsRenderRules: toRef(() => renderRules),
+  onChange: (value) => emit('change', value as T),
+})
 
 const childFields = computed(() => {
   const { fields } = getSchema()

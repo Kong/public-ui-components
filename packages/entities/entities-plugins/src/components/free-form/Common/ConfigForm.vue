@@ -25,13 +25,17 @@ import AdvancedFields from '../shared/AdvancedFields.vue'
 import type { RecordFieldSchema } from '../../../types/plugins/form-schema'
 import { computed } from 'vue'
 import { useFormShared } from '../shared/composables'
+import { resolve } from '../shared/utils'
 
-const { getSchema } = useFormShared()
+const { getSchema, useCurrentRenderRules } = useFormShared()
+
+const currentRenderRules = useCurrentRenderRules('config', undefined)
 
 /**
  * Group configuration fields into defaultVisible and advanced categories
  * - defaultVisible: Required fields and fields involved in entity checks
  * - advanced: Optional fields not involved in entity checks
+ * - Bundles: All fields in a bundle follow the category of the first field
  */
 const fieldsCategory = computed(() => {
   const defaultVisible: string[] = []
@@ -55,10 +59,10 @@ const fieldsCategory = computed(() => {
       // Extract field names from different types of entity checks
       if ('at_least_one_of' in check) {
         fields = check.at_least_one_of
-      } else if ('conditional' in check && getSchema(`config.${check.conditional.if_field}`)?.required && check.conditional.then_match.required) {
+      } else if ('conditional' in check && getSchema(resolve('config', check.conditional.if_field))?.required && check.conditional.then_match.required) {
         // For conditional checks, collect if_field and then_field if if_field is required and then_field is required
         fields = [check.conditional.if_field, check.conditional.then_field]
-      } else if ('conditional_at_least_one_of' in check && getSchema(`config.${check.conditional_at_least_one_of.if_field}`)?.required) {
+      } else if ('conditional_at_least_one_of' in check && getSchema(resolve('config', check.conditional_at_least_one_of.if_field))?.required) {
         // For conditional_at_least_one_of checks, collect if_field and all then_at_least_one_of fields if if_field is required
         fields = [check.conditional_at_least_one_of.if_field, ...check.conditional_at_least_one_of.then_at_least_one_of]
       }
@@ -68,24 +72,63 @@ const fieldsCategory = computed(() => {
     })
   }
 
-  // Categorize each field based on its properties
+  const bundles = currentRenderRules.value?.bundles
+
+  // Build a map from field name to its bundle array
+  // This allows O(1) lookup to check if a field belongs to a bundle
+  const bundleMap = new Map<string, string[]>()
+  if (bundles) {
+    bundles.forEach(bundle => {
+      bundle.forEach(fieldName => {
+        bundleMap.set(fieldName, bundle)
+      })
+    })
+  }
+
+  // Track which fields have been processed to avoid duplicates
+  // This is important because when we encounter a field in a bundle,
+  // we process all fields in that bundle at once
+  const processedFields = new Set<string>()
+
   for (const field of configSchema.fields) {
     const fieldName = Object.keys(field)[0]
 
-    // Required fields should always be visible
-    if (field[fieldName].required) {
-      defaultVisible.push(fieldName)
+    // Skip if this field was already processed as part of a bundle
+    if (processedFields.has(fieldName)) {
       continue
     }
 
-    // Fields involved in entity checks should be visible for better UX
-    if (ruledFields.has(fieldName)) {
-      defaultVisible.push(fieldName)
-      continue
+    // Determine the category for this field based on its properties
+    // Priority: required > involved in entity_checks > advanced
+    let category: 'defaultVisible' | 'advanced'
+    if (field[fieldName].required || ruledFields.has(fieldName)) {
+      category = 'defaultVisible'
+    } else {
+      category = 'advanced'
     }
 
-    // All other optional fields go to advanced section
-    advanced.push(fieldName)
+    // Check if this field is part of a bundle
+    const bundle = bundleMap.get(fieldName)
+    if (bundle) {
+      // Process all fields in the bundle together
+      // All fields in a bundle share the same category as the first field encountered
+      bundle.forEach(bundleFieldName => {
+        if (category === 'defaultVisible') {
+          defaultVisible.push(bundleFieldName)
+        } else {
+          advanced.push(bundleFieldName)
+        }
+        processedFields.add(bundleFieldName)
+      })
+    } else {
+      // Single field not in any bundle
+      if (category === 'defaultVisible') {
+        defaultVisible.push(fieldName)
+      } else {
+        advanced.push(fieldName)
+      }
+      processedFields.add(fieldName)
+    }
   }
 
   return { defaultVisible, advanced }
