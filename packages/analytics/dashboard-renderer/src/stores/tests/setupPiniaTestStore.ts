@@ -12,12 +12,13 @@ interface SetupPiniaTestStoreOptions {
  * @param {'cy.spy' | 'vi.fn} createSpy The test runner your spec file is using.
  * @param {TestingOptions} config @pinia/testing options https://pinia.vuejs.org/api/@pinia/testing/interfaces/TestingOptions.html
  */
-export const setupPiniaTestStore = (options?: SetupPiniaTestStoreOptions) => {
+export const setupPiniaTestStore = (options?: SetupPiniaTestStoreOptions): App | undefined => {
   let app: App
   const pinia = createPinia()
   if (options?.createVueApp) {
     app = createApp({})
     app.use(pinia)
+    return app
   }
   setActivePinia(pinia)
 }
