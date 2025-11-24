@@ -62,8 +62,13 @@ export default function useDashboardInternalContext({
       }
 
       const now = new Date().getTime()
-      const isPast = timeSpec.value.type === 'absolute'
+      const isPast = (
+        timeSpec.value.type === 'absolute'
         && timeSpec.value.end.getTime() < now
+      ) || (
+        timeSpec.value.type === 'relative'
+        && ['previous_week', 'previous_month'].includes(timeSpec.value.time_range)
+      )
 
       if (isPast) {
         // if the timerange is in the past there's no need to refresh
