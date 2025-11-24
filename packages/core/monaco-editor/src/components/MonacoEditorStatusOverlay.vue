@@ -1,6 +1,6 @@
 <template>
   <KEmptyState
-    class="monaco-editor-ui-empty-state"
+    class="monaco-editor-status-overlay"
     :message="message"
     :title="title"
   >
@@ -39,7 +39,7 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-.monaco-editor-ui-empty-state {
+.monaco-editor-status-overlay {
   background: transparent;
   left: 50%;
   pointer-events: none;

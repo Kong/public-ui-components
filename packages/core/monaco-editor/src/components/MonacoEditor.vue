@@ -17,7 +17,7 @@
     >
       <Transition name="fade">
         <!-- TODO: use https://github.com/antfu/v-lazy-show -->
-        <MonacoEditorEmptyState
+        <MonacoEditorStatusOverlay
           v-if="monacoEditor.editorStates.editorStatus === 'loading'"
           :icon="ProgressIcon"
           :message="i18n.t('editor.messages.loading_message', { type: language })"
@@ -30,7 +30,7 @@
       name="state-empty"
     >
       <Transition name="fade">
-        <MonacoEditorEmptyState
+        <MonacoEditorStatusOverlay
           v-if="isEditorEmpty"
           :icon="CodeblockIcon"
           :message="i18n.t('editor.messages.empty_message')"
@@ -46,7 +46,7 @@ import { computed, useTemplateRef } from 'vue'
 import { CodeblockIcon, ProgressIcon } from '@kong/icons'
 import { useMonacoEditor } from '../index'
 import useI18n from '../composables/useI18n'
-import MonacoEditorEmptyState from './MonacoEditorEmptyState.vue'
+import MonacoEditorStatusOverlay from './MonacoEditorStatusOverlay.vue'
 import type { editor as monacoEditorType } from 'monaco-editor'
 import type { EditorThemes } from '../types'
 

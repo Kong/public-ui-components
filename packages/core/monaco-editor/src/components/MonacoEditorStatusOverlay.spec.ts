@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import MonacoEditorEmptyState from './MonacoEditorEmptyState.vue'
+import MonacoEditorStatusOverlay from './MonacoEditorStatusOverlay.vue'
 import { KEmptyState } from '@kong/kongponents'
 
 const stubs = {
@@ -12,9 +12,9 @@ const props = {
   message: 'My Message',
 }
 
-describe('MonacoEditorEmptyState', () => {
+describe('MonacoEditorStatusOverlay', () => {
   it('should render title and message', () => {
-    const wrapper = mount(MonacoEditorEmptyState, {
+    const wrapper = mount(MonacoEditorStatusOverlay, {
       props,
       global: {
         stubs,
@@ -30,7 +30,7 @@ describe('MonacoEditorEmptyState', () => {
       template: '<svg class="test-icon"></svg>',
     }
 
-    const wrapper = mount(MonacoEditorEmptyState, {
+    const wrapper = mount(MonacoEditorStatusOverlay, {
       props: {
         ...props,
         icon: TestIcon,
@@ -44,7 +44,7 @@ describe('MonacoEditorEmptyState', () => {
   })
 
   it('should not render icon when icon prop is missing', () => {
-    const wrapper = mount(MonacoEditorEmptyState, {
+    const wrapper = mount(MonacoEditorStatusOverlay, {
       props: {
         title: 'Empty',
         message: 'Nothing here',
