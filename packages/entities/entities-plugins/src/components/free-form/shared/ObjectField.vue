@@ -16,7 +16,10 @@
       :data-testid="`ff-object-${field.path.value}`"
     >
       <slot>
-        <EntityChecksAlert :entity-checks="field.schema.value?.entity_checks" />
+        <EntityChecksAlert
+          :entity-checks="field.schema.value?.entity_checks"
+          :omitted-fields="omit"
+        />
         <Field
           v-for="cfield in childFields"
           :key="Object.keys(cfield)[0]"
@@ -92,7 +95,10 @@
         :data-testid="`ff-object-content-${field.path.value}`"
       >
         <slot>
-          <EntityChecksAlert :entity-checks="field.schema.value?.entity_checks" />
+          <EntityChecksAlert
+            :entity-checks="field.schema.value?.entity_checks"
+            :omitted-fields="omit"
+          />
           <Field
             v-for="cfield in childFields"
             :key="Object.keys(cfield)[0]"

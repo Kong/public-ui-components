@@ -17,12 +17,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { AtLeastOneOfEntityCheck, EntityCheck, MutuallyExclusiveEntityCheck, MutuallyRequiredEntityCheck } from '../../../types/plugins/form-schema'
+import type { EntityCheck } from '../../../types/plugins/form-schema'
 import composables from '../../../composables'
 import { defaultLabelFormatter } from './composables'
 
-const { entityChecks } = defineProps<{
+const { entityChecks, omittedFields } = defineProps<{
   entityChecks?: EntityCheck[]
+  omittedFields?: string[]
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -34,28 +35,23 @@ const checks = computed(() => {
 
   const checks: string[] = []
 
+  const checkTypes = [
+    { key: 'at_least_one_of', i18nKey: 'plugins.form.field_rules.at_least_one_of' },
+    { key: 'mutually_required', i18nKey: 'plugins.form.field_rules.mutually_required' },
+    { key: 'mutually_exclusive', i18nKey: 'plugins.form.field_rules.mutually_exclusive' },
+  ] as const
+
   for (const check of entityChecks) {
-    if (
-      'at_least_one_of' in (check as AtLeastOneOfEntityCheck)
-      && Array.isArray((check as AtLeastOneOfEntityCheck).at_least_one_of)
-    ) {
-      checks.push(t('plugins.form.field_rules.at_least_one_of', {
-        parameters: formatter((check as AtLeastOneOfEntityCheck).at_least_one_of),
-      }))
-    } else if (
-      'mutually_required' in (check as MutuallyRequiredEntityCheck)
-      && Array.isArray((check as MutuallyRequiredEntityCheck).mutually_required)
-    ) {
-      checks.push(t('plugins.form.field_rules.mutually_required', {
-        parameters: formatter((check as MutuallyRequiredEntityCheck).mutually_required),
-      }))
-    } else if (
-      'mutually_exclusive' in (check as MutuallyExclusiveEntityCheck)
-      && Array.isArray((check as MutuallyExclusiveEntityCheck).mutually_exclusive)
-    ) {
-      checks.push(t('plugins.form.field_rules.mutually_exclusive', {
-        parameters: formatter((check as MutuallyExclusiveEntityCheck).mutually_exclusive),
-      }))
+    for (const { key, i18nKey } of checkTypes) {
+      if (key in check) {
+        const fields = check[key as keyof typeof check] as string[]
+        if (Array.isArray(fields) && fields.length > 0 && fieldsNotOmitted(fields)) {
+          checks.push(t(i18nKey, {
+            parameters: formatter(fields),
+          }))
+        }
+        break
+      }
     }
   }
 
@@ -64,6 +60,16 @@ const checks = computed(() => {
 
 function formatter(fields: string[]): string {
   return fields.map(defaultLabelFormatter).join(', ')
+}
+
+function fieldsNotOmitted(fields: string[]): boolean {
+  if (Array.isArray(omittedFields) && omittedFields.length > 0) {
+    const filteredFields = fields.filter(
+      (field) => !omittedFields.includes(field),
+    )
+    return filteredFields.length > 0
+  }
+  return true
 }
 </script>
 
