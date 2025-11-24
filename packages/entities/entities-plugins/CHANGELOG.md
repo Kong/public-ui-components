@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.121.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.121.0...@kong-ui-public/entities-plugins@9.121.1) (2025-11-21)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.121.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.120.1...@kong-ui-public/entities-plugins@9.121.0) (2025-11-20)
+
+
+### Features
+
+* **entities-plugins:** guard m2 examples ([#2651](https://github.com/Kong/public-ui-components/issues/2651)) ([3031f31](https://github.com/Kong/public-ui-components/commit/3031f31a61a30ac871da2e76cb8a67cfabc1864e))
+
+
+
+
+
+## [9.120.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.120.0...@kong-ui-public/entities-plugins@9.120.1) (2025-11-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 # [9.120.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.119.1...@kong-ui-public/entities-plugins@9.120.0) (2025-11-19)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.5.0...@kong-ui-public/entities-plugins-icon@1.5.1) (2025-11-21)
+
+
+### Bug Fixes
+
+* **plugin-icons:** ai-lakera-guard icon name ([#2653](https://github.com/Kong/public-ui-components/issues/2653)) ([c3cd3e6](https://github.com/Kong/public-ui-components/commit/c3cd3e66e72ca0a9882cbdfba7054bbaeaae9ad2))
+
+
+
+
+
 # [1.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.4.3...@kong-ui-public/entities-plugins-icon@1.5.0) (2025-11-19)
 
 

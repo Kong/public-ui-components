@@ -151,6 +151,89 @@ export function buildRecordFieldCases(): Array<{ [name: string]: RecordFieldSche
   ]
 }
 
+export function buildRecordWithEntityChecksCase(): Array<{ [name: string]: RecordFieldSchema }> {
+  return [
+    {
+      record_empty_entity_checks: {
+        type: 'record',
+        description: 'A record field with empty entity checks',
+        entity_checks: [],
+        fields: [
+          {
+            field_one: {
+              type: 'string',
+            },
+          },
+          {
+            field_two: {
+              type: 'number',
+            },
+          },
+        ],
+      },
+    },
+    {
+      record_single_entity_check: {
+        type: 'record',
+        description: 'A record field with entity checks',
+        entity_checks: [
+          {
+            at_least_one_of: ['field_one', 'field_two'],
+          },
+        ],
+        fields: [
+          {
+            field_one: {
+              type: 'string',
+            },
+          },
+          {
+            field_two: {
+              type: 'number',
+            },
+          },
+        ],
+      },
+    },
+    {
+      record_multiple_entity_checks: {
+        type: 'record',
+        description: 'A record field with multiple entity checks',
+        entity_checks: [
+          {
+            mutually_required: ['field_one', 'field_two'],
+          },
+          {
+            mutually_exclusive: ['field_three', 'field_four'],
+          },
+        ],
+        fields: [
+          {
+            field_one: {
+              type: 'string',
+            },
+          },
+          {
+            field_two: {
+              type: 'number',
+            },
+          },
+          {
+            field_three: {
+              type: 'boolean',
+            },
+          },
+          {
+            field_four: {
+              type: 'string',
+            },
+          },
+        ],
+      },
+    },
+  ]
+}
+
 export function buildMapFieldCases(): Array<{ [name: string]: MapFieldSchema }> {
   return [
     {
@@ -350,6 +433,7 @@ export function buildMockingSchema(): FormSchema {
       ...buildNumberFieldCases(),
       ...buildBooleanFieldCases(),
       ...buildRecordFieldCases(),
+      ...buildRecordWithEntityChecksCase(),
       ...buildMapFieldCases(),
       ...buildEnumFieldCases(),
       ...buildTagFieldCases(),
