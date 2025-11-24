@@ -5,6 +5,7 @@ import { PLUGIN_METADATA } from '../definitions/metadata'
 import { aiPromptDecoratorSchema } from '../definitions/schemas/AIPromptDecorator'
 import { aiPromptTemplateSchema } from '../definitions/schemas/AIPromptTemplate'
 import { aiProxyAdvancedSchema } from '../definitions/schemas/AIProxyAdvanced'
+import { aiPagInjectorSchema } from '../definitions/schemas/AIRagInjector'
 import { aiLlmAsJudgeSchema } from '../definitions/schemas/AILLMAsJudge'
 import { applicationRegistrationSchema } from '../definitions/schemas/ApplicationRegistration'
 import { ArrayInputFieldSchema } from '../definitions/schemas/ArrayInputFieldSchema'
@@ -162,6 +163,10 @@ export const useSchemas = (options?: UseSchemasOptions) => {
 
     'ai-proxy-advanced': {
       ...aiProxyAdvancedSchema,
+    },
+
+    'ai-rag-injector': {
+      ...aiPagInjectorSchema,
     },
 
     'ai-llm-as-judge': {
