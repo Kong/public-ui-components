@@ -6,9 +6,9 @@
         language="yaml"
       >
         <template #state-empty="{ isEmpty }">
-          <template v-if="isEmpty">
+          <span v-if="isEmpty">
             Custom empty state for YAML editor
-          </template>
+          </span>
         </template>
       </MonacoEditor>
       <MonacoEditor

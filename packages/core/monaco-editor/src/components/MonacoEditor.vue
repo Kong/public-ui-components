@@ -131,7 +131,7 @@ const monacoEditor = useMonacoEditor(editor, {
   height: 100%;
   overflow: hidden;
   position: relative;
-  transition: all 0.3s ease-in-out;
+  transition: all $kui-animation-duration-20 ease-in-out;
   width: 100%;
 
   // Customize the editor's light theme
@@ -175,48 +175,10 @@ const monacoEditor = useMonacoEditor(editor, {
     }
   }
 
+  // TODO: add dark theme once the tokens are ready
   // Customize the editor's dark theme
-  &.dark {
-
-    // TODO: for testing, gonna remove it
-    :deep(.monaco-editor) {
-      // Customize monaco editor styles via `--vscode-` variables
-      /* stylelint-disable */
-      // Editor
-      --vscode-editor-background: #{$kui-color-background-inverse};
-      --vscode-editorGutter-background: #{$kui-color-background-inverse};
-      --vscode-editorLineNumber-activeForeground: #{$kui-color-text-primary};
-      // Suggestions
-      --vscode-editorSuggestWidget-background: #{$kui-color-background-inverse};
-      --vscode-editorSuggestWidget-border: #{$kui-color-border-inverse};
-      // Context menu
-      // --vscode-menu-background: #{$kui-color-background-inverse};
-      --vscode-menu-border: #{$kui-color-border-inverse};
-      --vscode-menu-separatorBackground: #{$kui-color-border-inverse};
-      // Other
-      --vscode-focusBorder: #{$kui-color-text-neutral};
-      // --vscode-input-background: #{$kui-color-background-inverse};
-      --vscode-sash-hoverBorder: #{$kui-color-border-primary};
-      /* stylelint-enable */
-
-      // Modify the editor's search box styles
-      .find-widget {
-        background: $kui-color-background-inverse;
-        border-bottom: $kui-border-width-10 solid $kui-color-border-neutral-weaker;
-
-        // the pane to resize the search box
-        .monaco-sash {
-          background-color: $kui-color-background-neutral-weaker;
-        }
-
-        // Modify the search input
-        .monaco-inputbox {
-          background-color: $kui-color-background-inverse !important;
-          border: $kui-border-width-10 solid $kui-color-border-neutral-weaker !important;
-        }
-      }
-    }
-  }
+  // &.dark {
+  // }
 
   /** !Important: Only put non-color related overrides in this block */
   :deep(.monaco-editor) {
@@ -310,15 +272,10 @@ const monacoEditor = useMonacoEditor(editor, {
         width: 1px !important;
       }
 
-      // TODO
-      // The close (x) button
-      // .codicon-widget-close {
-      // }
-
       // Modify the search input
       .monaco-inputbox {
         border-radius: $kui-border-radius-30;
-        padding: 0 $kui-space-10;
+        padding: $kui-space-0 $kui-space-10;
       }
     }
   }
@@ -327,7 +284,7 @@ const monacoEditor = useMonacoEditor(editor, {
 // transitions
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity $kui-animation-duration-20 ease;
 }
 
 .fade-enter-from,
