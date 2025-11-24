@@ -11,6 +11,14 @@
       name="config"
       reset-label-path="reset"
     >
+      <template #default_acl="{ name }">
+        <ArrayField
+          appearance="tabs"
+          :item-label="(_, index) => t('plugins.free-form.ai-mcp-proxy.default_acl_item_label', { index: index + 1 })"
+          :name="name"
+          sticky-tabs
+        />
+      </template>
       <template #tools="{ name }">
         <ArrayField
           appearance="tabs"
