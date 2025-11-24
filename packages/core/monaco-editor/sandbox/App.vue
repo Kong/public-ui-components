@@ -4,7 +4,6 @@
       <MonacoEditor
         v-model="codes['yaml']"
         language="yaml"
-        :toolbar="false"
       >
         <template #state-empty="{ isEmpty }">
           <template v-if="isEmpty">
@@ -17,7 +16,6 @@
         :key="lang"
         v-model="codes[lang]"
         :language="lang"
-        :toolbar="true"
       />
     </main>
   </div>

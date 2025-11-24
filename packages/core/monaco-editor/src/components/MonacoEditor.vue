@@ -134,10 +134,6 @@ const monacoEditor = useMonacoEditor(editor, {
   transition: all 0.3s ease-in-out;
   width: 100%;
 
-  &.has-toolbar {
-    height: calc(100% - 44px);
-  }
-
   // Customize the editor's light theme
   &.light {
     :deep(.monaco-editor) {
