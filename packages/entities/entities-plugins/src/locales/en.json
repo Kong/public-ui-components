@@ -699,6 +699,7 @@
     },
     "free-form": {
       "ai-mcp-proxy": {
+        "default_acl_item_label": "Default ACL #{index}",
         "tool_item_label": "Tool #{index}"
       },
       "request-callout": {
