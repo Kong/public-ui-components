@@ -218,6 +218,7 @@ export interface CustomSchemas {
   'ai-prompt-decorator': AIPromptDecoratorSchema
   'ai-prompt-template': AIPromptTemplateSchema
   'ai-proxy-advanced': CommonSchemaFields
+  'ai-rag-injector': CommonSchemaFields
   'ai-llm-as-judge': AILLMAsJudgeSchema
   'vault-auth': VaultAuthSchema
   'graphql-rate-limiting-advanced': GraphQLRateLimitingAdvancedSchema
