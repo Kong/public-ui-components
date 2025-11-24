@@ -16,8 +16,9 @@
       name="state-loading"
     >
       <Transition name="fade">
+        <!-- TODO: use https://github.com/antfu/v-lazy-show -->
         <MonacoEditorEmptyState
-          v-show="monacoEditor.editorStates.editorStatus === 'loading'"
+          v-if="monacoEditor.editorStates.editorStatus === 'loading'"
           :icon="ProgressIcon"
           :message="i18n.t('editor.messages.loading_message', { type: language })"
           :title="i18n.t('editor.messages.loading_title', { type: language })"
