@@ -257,6 +257,21 @@ export function assertFormRendering(schema: FormSchema, options?: {
       }
     }
 
+    // Check entity checks alert
+    if (fieldSchema.entity_checks && fieldSchema.entity_checks.length > 0) {
+      cy.getTestId(`ff-object-${fieldKey}`)
+        .find('[data-testid="ff-entity-checks-alert"]')
+        .should('exist')
+
+      cy.getTestId(`ff-object-${fieldKey}`)
+        .find('[data-testid="ff-entity-check-item"]')
+        .should('have.length', fieldSchema.entity_checks.length)
+    } else {
+      cy.getTestId(`ff-object-${fieldKey}`)
+        .find('[data-testid="ff-entity-checks-alert"]')
+        .should('not.exist')
+    }
+
     // Assert child fields
     if (fieldSchema.fields && fieldSchema.fields.length > 0) {
       assertFields(fieldSchema.fields, fieldKey)
