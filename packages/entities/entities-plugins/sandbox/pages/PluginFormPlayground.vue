@@ -162,6 +162,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   experimentalRenders: {
     keyAuthIdentityRealms: true,
   },
+  enableDeckTab: true,
 })
 
 const kongManagerConfig = ref<KongManagerPluginFormConfig>({

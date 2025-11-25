@@ -20,6 +20,10 @@ export interface KonnectConfig extends BaseAppConfig {
   isControlPlaneGroup?: boolean
   /** Should use exact match */
   isExactMatch?: boolean
+  /** The control plane name */
+  controlPlaneName?: string
+  /** Geo server api url, e.g. https://us.api.konghq.tech */
+  geoApiServerUrl?: string
 }
 
 /** Base config properties for Kong Manager. All entity configs should extend this interface for the app. */

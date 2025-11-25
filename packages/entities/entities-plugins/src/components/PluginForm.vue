@@ -132,6 +132,14 @@
             :entity-type="SupportedEntityType.Plugin"
           />
         </template>
+        <template #deck>
+          <DeckCodeBlock
+            :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+            :entity-record="viewConfigurationRecord"
+            :entity-type="SupportedEntityType.Plugin"
+            :geo-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+          />
+        </template>
       </KTabs>
     </KSlideout>
   </div>
@@ -144,6 +152,7 @@ import {
   JsonCodeBlock,
   TerraformCodeBlock,
   YamlCodeBlock,
+  DeckCodeBlock,
   SupportedEntityType,
   useAxios,
   useErrors,
@@ -377,13 +386,19 @@ const tabs = ref<Tab[]>([
   },
 ])
 
-// terraform only supported in konnect
+// terraform and decK only supported in konnect
 if (props.config.app === 'konnect') {
   // insert terraform as the second option
   tabs.value.splice(1, 0, {
     title: t('view_configuration.terraform'),
     hash: '#terraform',
   })
+  if (props.config.enableDeckTab) {
+    tabs.value.push({
+      title: t('view_configuration.deck'),
+      hash: '#deck',
+    })
+  }
 }
 
 // For array-typed fields, if their elements are deeply nested objects,

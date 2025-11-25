@@ -61,7 +61,14 @@ export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, Konne
   getCustomEditRoute?: (id: string, type: CustomPluginType) => RouteLocationRaw
 }
 
-export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {}
+export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {
+  /** Whether to enable the deck tab */
+  enableDeckTab?: boolean
+  /** Geo server api url passed to the deck tab, e.g. https://us.api.konghq.tech */
+  geoApiServerUrl?: string
+  /** Control plane name passed to the deck tab */
+  controlPlaneName?: string
+}
 
 /** Kong Manager Plugin form config */
 export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig {}
