@@ -35,11 +35,9 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     const slots = useSlots()
     provide(FIELD_RENDERER_SLOTS, omit(slots, 'default', FIELD_RENDERERS))
 
-    const {
-      useCurrentRules: useCurrentRenderRules,
-    } = useRenderRules()
+    const useCurrentRenderRules = createRenderRuleRegistry()
 
-    const { currentRenderRules } = useCurrentRenderRules({
+    const currentRenderRules = useCurrentRenderRules({
       fieldPath: utils.rootSymbol,
       rules: propsRenderRules,
       parentValue: innerData,
@@ -682,7 +680,7 @@ export function useItemKeys<T>(ns: string, items: MaybeRefOrGetter<T[]>) {
   return { getKey }
 }
 
-function useRenderRules() {
+function createRenderRuleRegistry() {
   type RenderRulesMap = Record<string, RenderRules>
   const registry = ref<RenderRulesMap>({})
 
@@ -1094,12 +1092,8 @@ function useRenderRules() {
       delete registry.value[path]
     })
 
-    return {
-      currentRenderRules: computedRules,
-    }
+    return computedRules
   }
 
-  return {
-    useCurrentRules,
-  }
+  return useCurrentRules
 }

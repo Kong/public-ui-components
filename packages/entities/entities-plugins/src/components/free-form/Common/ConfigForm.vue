@@ -29,7 +29,7 @@ import { resolve } from '../shared/utils'
 
 const { getSchema, useCurrentRenderRules, getDefault, formData } = useFormShared()
 
-const { currentRenderRules } = useCurrentRenderRules({
+const currentRenderRules = useCurrentRenderRules({
   fieldPath: 'config',
   rules: undefined,
   getSchema,

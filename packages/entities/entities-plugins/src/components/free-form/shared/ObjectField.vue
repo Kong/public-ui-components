@@ -152,7 +152,7 @@ const {
 const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
 const { getSchema, getDefault, useCurrentRenderRules } = useFormShared()
 
-const { currentRenderRules } = useCurrentRenderRules({
+const currentRenderRules = useCurrentRenderRules({
   fieldPath: field.path!,
   rules: toRef(props, 'renderRules'),
   getDefault,
