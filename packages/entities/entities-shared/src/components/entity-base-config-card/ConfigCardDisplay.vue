@@ -67,6 +67,13 @@
     :entity-type="props.entityType"
     :sub-entity-type="props.subEntityType"
   />
+  <DeckCodeBlock
+    v-if="format === 'deck' && entityRecord"
+    :control-plane-name="props.config.app === 'konnect' ? props.config.controlPlaneName : undefined"
+    :entity-record="entityRecord"
+    :entity-type="props.entityType as SupportedEntityDeck"
+    :geo-server-url="props.config.app === 'konnect' ? props.config.geoServerUrl : undefined"
+  />
 </template>
 
 <script setup lang="ts">
@@ -74,10 +81,12 @@ import type { PropType } from 'vue'
 import { computed, useSlots } from 'vue'
 import type { RecordItem, KonnectBaseEntityConfig, KongManagerBaseEntityConfig, SupportedEntityType } from '../../types'
 import { SupportedEntityTypesArray } from '../../types'
+import type { SupportedEntityDeck } from '../../types'
 import ConfigCardItem from './ConfigCardItem.vue'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
+import DeckCodeBlock from '../common/DeckCodeBlock.vue'
 import composables from '../../composables'
 
 export interface PropList {
@@ -86,7 +95,7 @@ export interface PropList {
   plugin?: RecordItem[]
 }
 
-export type CodeFormat = 'yaml' | 'json' | 'terraform'
+export type CodeFormat = 'yaml' | 'json' | 'terraform' | 'deck'
 export type Format = 'structured' | CodeFormat
 
 const props = defineProps({
