@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.123.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.122.1...@kong-ui-public/entities-plugins@9.123.0) (2025-11-25)
+
+
+### Features
+
+* **entities-plugins:** otel plugin access_logs_endpoint rule ([#2666](https://github.com/Kong/public-ui-components/issues/2666)) ([7b8c49f](https://github.com/Kong/public-ui-components/commit/7b8c49f045023b6cb4dc0f322f39ca1888b8dd0b))
+
+
+
+
+
+## [9.122.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.122.0...@kong-ui-public/entities-plugins@9.122.1) (2025-11-24)
+
+
+### Bug Fixes
+
+* **entities-plugins:** ai-mcp-proxy default_acl array ([#2662](https://github.com/Kong/public-ui-components/issues/2662)) ([ae1664d](https://github.com/Kong/public-ui-components/commit/ae1664dd3f53fe0b1f91beb74112af2ce364c245))
+* **entities-plugins:** transform ai-rag-injector payload ([#2661](https://github.com/Kong/public-ui-components/issues/2661)) ([bba5ce9](https://github.com/Kong/public-ui-components/commit/bba5ce9e3aac480ed3aef0b1e394fa6c06d46f95))
+
+
+
+
+
 # [9.122.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.121.1...@kong-ui-public/entities-plugins@9.122.0) (2025-11-24)
 
 
