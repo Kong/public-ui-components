@@ -69,7 +69,7 @@ export function sortFieldsByFieldNames(
   fields: NamedFieldSchema[],
   fieldNames: string[],
 ): NamedFieldSchema[] {
-  fields = fields.sort((a, b) => {
+  return [...fields].sort((a, b) => {
     const aKey = Object.keys(a)[0]
     const bKey = Object.keys(b)[0]
 
@@ -82,7 +82,6 @@ export function sortFieldsByFieldNames(
 
     return aIndex - bIndex
   })
-  return fields
 }
 
 /**

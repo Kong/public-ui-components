@@ -69,7 +69,7 @@ const childFields = computed(() => {
   let sortedFields = [...fields]
 
   if (currentRenderRules.value?.bundles) {
-    sortedFields = sortFieldsByBundles(sortedFields, currentRenderRules.value.bundles)
+    sortedFields = sortFieldsByBundles([...sortedFields], currentRenderRules.value.bundles)
   }
 
   if (currentRenderRules.value?.dependencies) {

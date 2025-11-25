@@ -143,8 +143,8 @@ export interface RenderRules {
 
   /**
    * Dependencies between fields to control their visibility.
-   * - A field will be shown only ifs it dependency is satisfied.
-   * - A field will have value only if its dependency is satisfied.
+   * - A field will be shown only if its dependency is satisfied.
+   * - A field will only have a value if its dependency is satisfied.
    * - The `fieldValue` will be deeply compared.
    * - Field and its dependency should be in the same level.
    * - Circular dependencies are not allowed.

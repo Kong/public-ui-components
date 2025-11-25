@@ -268,7 +268,7 @@ describe('Render Rules', () => {
     })
   })
 
-  describe.only('Dependencies', () => {
+  describe('Dependencies', () => {
     describe('Basic dependency functionality', () => {
       it('should show or hide field based on string value dependency', () => {
         const schema = createSchema('a', 'b', 'c')
@@ -744,21 +744,19 @@ describe('Render Rules', () => {
           props: {
             schema,
             renderRules,
-            modelValue: {},
+            data: {},
           },
+        }).then(({ wrapper }) => {
+          cy.wrap(wrapper).as('wrapper')
         })
 
         // field_b should be hidden
         cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.exist')
 
         // Update data prop externally
-        cy.then(() => {
-          cy.mount(Form, {
-            props: {
-              schema,
-              renderRules,
-              modelValue: { [getFieldName('a')]: 'show' },
-            },
+        cy.get('@wrapper').then((wrapper: any) => {
+          wrapper.setProps({
+            data: { [getFieldName('a')]: 'show' },
           })
         })
 

@@ -976,33 +976,9 @@ function useRenderRules() {
     return result
   })
 
-  const rules = computed<RenderRules>(() => {
-    const result: RenderRules = {}
-
-    for (const [key, rules] of Object.entries(registry.value)) {
-      if (rules.bundles) {
-        const bundles = key === utils.rootSymbol
-          ? rules.bundles
-          : rules.bundles.map(bundle => bundle.map(field => `${generalizePath(key)}.${field}`))
-        if (!result.bundles) result.bundles = []
-        result.bundles.push(...bundles)
-      }
-
-      if (rules.dependencies) {
-        if (!result.dependencies) result.dependencies = {}
-        for (const [depKey, depValue] of Object.entries(rules.dependencies)) {
-          const fullDepKey = key === utils.rootSymbol ? depKey : utils.resolveRoot(generalizePath(key), depKey)
-          result.dependencies[fullDepKey] = [fullDepKey, depValue]
-        }
-      }
-    }
-
-    return result
-  })
-
   function getRules(fieldPath?: string): RenderRules | undefined {
     if (!fieldPath) {
-      return rules.value
+      return flattenedRules.value
     }
 
     // Use flattenedRules to get path-specific rules
@@ -1010,9 +986,8 @@ function useRenderRules() {
     return flattenedRules.value[generalizedPath]
   }
 
-  let hasError = false
-
   function createComputedRules(fieldPath: MaybeRefOrGetter<string | undefined>) {
+    let hasError = false
     return computed(() => {
       if (hasError) return undefined
       const pathValue = toValue(fieldPath)
@@ -1062,6 +1037,7 @@ function useRenderRules() {
     const computedRules = createComputedRules(fieldPath)
 
     let isClearing = false
+    const fieldsToClear: Array<{ fieldName: string, targetValue: any }> = []
 
     watch(
       [
@@ -1095,13 +1071,19 @@ function useRenderRules() {
           }
 
           if (shouldClear) {
-            isClearing = true
-            nextTick(() => {
-              set(parent, fieldName, targetValue)
-              isClearing = false
-            })
+            fieldsToClear.push({ fieldName, targetValue })
           }
         })
+
+        if (fieldsToClear.length > 0) {
+          isClearing = true
+          nextTick(() => {
+            fieldsToClear.forEach(({ fieldName, targetValue }) => {
+              set(parent, fieldName, targetValue)
+            })
+            isClearing = false
+          })
+        }
       },
       { deep: true, immediate: true },
     )
