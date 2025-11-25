@@ -81,18 +81,17 @@ const yamlContent = computed((): string => {
     [props.entityType + 's']: [filteredRecord],
   }
 
-  return yaml.dump(fullRecord)
+  return yaml.dump(fullRecord).trim()
 })
 
 const deckCommand = computed((): string => {
-  let command = 'deck gatway apply -'
+  let command = 'deck gateway apply -'
 
   if (props.geoServerUrl) {
     command += ` --konnect-addr ${props.geoServerUrl}`
   }
 
-  return `echo
-'${yamlContent.value}
+  return `echo '${yamlContent.value}
 ' | ${command}`
 })
 
