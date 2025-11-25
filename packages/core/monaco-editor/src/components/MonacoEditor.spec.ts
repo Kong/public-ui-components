@@ -46,8 +46,7 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-
-    expect(wrapper.findComponent(MonacoEditorEmptyState).exists()).toBe(true)
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(true)
     expect(wrapper.text()).toContain('editor.messages.loading_title')
     expect(wrapper.text()).toContain('editor.messages.loading_message')
     expect(wrapper.find('.progress-icon').exists()).toBe(true)
@@ -59,7 +58,7 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-    expect(wrapper.findComponent(MonacoEditorEmptyState).exists()).toBe(true)
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-empty"]').exists()).toBe(true)
     expect(wrapper.text()).toContain('editor.messages.empty_title')
     expect(wrapper.text()).toContain('editor.messages.empty_message')
     expect(wrapper.find('.codeblock-icon').exists()).toBe(true)
@@ -73,7 +72,8 @@ describe('MonacoEditor.vue', () => {
 
     console.log(wrapper.html())
 
-    expect(wrapper.findComponent(MonacoEditorEmptyState).exists()).toBe(false)
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-empty"]').exists()).toBe(false)
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(false)
   })
 
   it('should apply loading class to container', () => {
@@ -81,7 +81,7 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-    expect(wrapper.find('.monaco-editor-container').classes()).toContain('loading')
+    expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).toContain('loading')
   })
 
   it('should not apply loading class when editor is ready', () => {
@@ -89,6 +89,15 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-    expect(wrapper.find('.monaco-editor-container').classes()).not.toContain('loading')
+    expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).not.toContain('loading')
+  })
+
+  it('should always render monaco-editor-target', () => {
+    editorStates.editorStatus = 'loading'
+    editorStates.hasContent = false
+
+    const wrapper = mountComponent()
+
+    expect(wrapper.find('[data-testid="monaco-editor-target"]').exists()).toBe(true)
   })
 })

@@ -1,4 +1,4 @@
-import Github from '../assets/GitHubs.json'
+import GithubSpec from '../assets/specs/Github.json'
 
 export const defaultCodes = {
   yaml: `// Write your YAML code here
@@ -42,7 +42,7 @@ match = pattern.test ? pattern.test(test_string) : pattern.match(test_string)
 print(match)
 `,
 
-  json: JSON.stringify(Github, null, 2),
+  json: JSON.stringify(GithubSpec, null, 2),
 
   markdown: `# Write your Markdown content here
 

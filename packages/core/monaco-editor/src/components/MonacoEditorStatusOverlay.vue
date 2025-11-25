@@ -10,7 +10,6 @@
     >
       <component
         :is="icon"
-        :color="KUI_COLOR_TEXT_NEUTRAL_WEAK"
         decorative
       />
     </template>
@@ -18,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import { KUI_COLOR_TEXT_NEUTRAL_WEAK } from '@kong/design-tokens'
 import type { Component } from 'vue'
 
 defineProps<{
@@ -52,9 +50,10 @@ defineProps<{
     display: flex;
     flex-direction: column;
 
+    .empty-state-icon,
     .empty-state-title,
     .empty-state-message {
-      color: $kui-color-text-neutral-weak;
+      color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak)
     }
 
     .empty-state-title {

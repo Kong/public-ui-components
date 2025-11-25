@@ -5,11 +5,13 @@
       editorTheme,
       { 'loading': monacoEditor.editorStates.editorStatus === 'loading' },
     ]"
+    data-testid="monaco-editor-container"
   >
     <div
-      ref="editor"
+      ref="editorRef"
       class="monaco-editor-target"
       :class="editorTheme"
+      data-testid="monaco-editor-target"
     />
     <slot
       :is-loading="monacoEditor.editorStates.editorStatus === 'loading'"
@@ -19,6 +21,7 @@
         <!-- TODO: use https://github.com/antfu/v-lazy-show -->
         <MonacoEditorStatusOverlay
           v-if="monacoEditor.editorStates.editorStatus === 'loading'"
+          data-testid="monaco-editor-status-overlay-loading"
           :icon="ProgressIcon"
           :message="i18n.t('editor.messages.loading_message', { type: language })"
           :title="i18n.t('editor.messages.loading_title', { type: language })"
@@ -32,6 +35,7 @@
       <Transition name="fade">
         <MonacoEditorStatusOverlay
           v-if="isEditorEmpty"
+          data-testid="monaco-editor-status-overlay-empty"
           :icon="CodeblockIcon"
           :message="i18n.t('editor.messages.empty_message')"
           :title="i18n.t('editor.messages.empty_title')"
@@ -44,10 +48,10 @@
 <script setup lang="ts">
 import { computed, useTemplateRef } from 'vue'
 import { CodeblockIcon, ProgressIcon } from '@kong/icons'
-import { useMonacoEditor } from '../index'
+import { useMonacoEditor } from '../composables/useMonacoEditor'
 import useI18n from '../composables/useI18n'
 import MonacoEditorStatusOverlay from './MonacoEditorStatusOverlay.vue'
-import type { editor as monacoEditorType } from 'monaco-editor'
+import type { editor } from 'monaco-editor'
 import type { EditorThemes } from '../types'
 
 const {
@@ -69,7 +73,7 @@ const {
    * Additional Monaco Editor options to customize the editor further.
    * @default undefined
   */
-  options?: Partial<monacoEditorType.IStandaloneEditorConstructionOptions> | undefined
+  options?: Partial<editor.IStandaloneEditorConstructionOptions> | undefined
 }>()
 
 /**
@@ -82,7 +86,7 @@ const model = defineModel({
 
 const { i18n } = useI18n()
 
-const editor = useTemplateRef('editor')
+const editorRef = useTemplateRef('editorRef')
 
 const editorTheme = computed<EditorThemes>(() => theme === 'dark' ? 'dark' : 'light')
 
@@ -92,7 +96,7 @@ const editorTheme = computed<EditorThemes>(() => theme === 'dark' ? 'dark' : 'li
  */
 const isEditorEmpty = computed<boolean>(() => monacoEditor.editorStates.editorStatus === 'ready' && !monacoEditor.editorStates.hasContent)
 
-const monacoEditor = useMonacoEditor(editor, {
+const monacoEditor = useMonacoEditor(editorRef, {
   language,
   code: model,
   theme: editorTheme.value,
@@ -105,7 +109,7 @@ const monacoEditor = useMonacoEditor(editor, {
 
 <style lang="scss" scoped>
 .monaco-editor-container {
-  background: $kui-color-background;
+  background: var(--kui-color-background, $kui-color-background);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -141,36 +145,36 @@ const monacoEditor = useMonacoEditor(editor, {
       // Customize monaco editor styles via `--vscode-` variables
       /* stylelint-disable */
       // Editor
-      --vscode-editor-background: #{$kui-color-background};
-      --vscode-editorGutter-background: #{$kui-color-background};
-      --vscode-editorLineNumber-activeForeground: #{$kui-color-text-primary};
+      --vscode-editor-background: var(--kui-color-background, #{$kui-color-background});
+      --vscode-editorGutter-background: var(--kui-color-background, #{$kui-color-background});
+      --vscode-editorLineNumber-activeForeground: var(--kui-color-text-primary, #{$kui-color-text-primary});
       // Suggestions
-      --vscode-editorSuggestWidget-background: #{$kui-color-background};
-      --vscode-editorSuggestWidget-border: #{$kui-color-border};
+      --vscode-editorSuggestWidget-background: var(--kui-color-background, #{$kui-color-background});
+      --vscode-editorSuggestWidget-border: var(--kui-color-border, #{$kui-color-border});
       // Context menu
-      --vscode-menu-background: #{$kui-color-background};
-      --vscode-menu-border: #{$kui-color-border};
-      --vscode-menu-separatorBackground: #{$kui-color-border};
+      --vscode-menu-background: #{var(--kui-color-background, $kui-color-background)};
+      --vscode-menu-border: #{var(--kui-color-border, $kui-color-border)};
+      --vscode-menu-separatorBackground: #{var(--kui-color-border, $kui-color-border)};
       // Other
-      --vscode-focusBorder: #{$kui-color-text-neutral};
-      --vscode-input-background: #{$kui-color-background};
-      --vscode-sash-hoverBorder: #{$kui-color-border-primary};
+      --vscode-focusBorder: #{var(--kui-color-text-neutral, $kui-color-text-neutral)};
+      --vscode-input-background: #{var(--kui-color-background, $kui-color-background)};
+      --vscode-sash-hoverBorder: #{var(--kui-color-border-primary, $kui-color-border-primary)};
       /* stylelint-enable */
 
-      // Modify the editor's search box styles
+      // Editor's search box styles
       .find-widget {
-        background: $kui-color-background;
-        border-bottom: $kui-border-width-10 solid $kui-color-border-neutral-weaker;
+        background: var(--kui-color-background, #{$kui-color-background});
+        border-bottom: $kui-border-width-10 solid var(--kui-color-border-neutral-weaker, #{$kui-color-border-neutral-weaker});
 
-        // the pane to resize the search box
+        // The pane to resize the search box
         .monaco-sash {
-          background-color: $kui-color-background-neutral-weaker;
+          background-color: var(--kui-color-background-neutral-weaker, #{$kui-color-background-neutral-weaker});
         }
 
-        // Modify the search input
+        // Search input
         .monaco-inputbox {
-          background-color: $kui-color-background !important;
-          border: $kui-border-width-10 solid $kui-color-border-neutral-weaker !important;
+          background-color: var(--kui-color-background, #{$kui-color-background}) !important;
+          border: $kui-border-width-10 solid var(--kui-color-border-neutral-weaker, #{$kui-color-border-neutral-weaker}) !important;
         }
       }
     }
@@ -181,7 +185,7 @@ const monacoEditor = useMonacoEditor(editor, {
   // &.dark {
   // }
 
-  /** !Important: Only put non-color related overrides in this block */
+  /** !Important: Try to only put non-color related overrides in this block and use CSS variables for colors */
   :deep(.monaco-editor) {
     position: absolute;
 
@@ -189,7 +193,7 @@ const monacoEditor = useMonacoEditor(editor, {
       z-index: 2;
     }
 
-    // Modify the editor's suggestion overlay styles
+    // Editor's suggestion overlay styles
     .suggest-details-container {
       border-radius: $kui-border-radius-50 !important;
 
@@ -204,6 +208,7 @@ const monacoEditor = useMonacoEditor(editor, {
       }
     }
 
+    // Editor's suggestion widget
     .suggest-widget {
       border-radius: $kui-border-radius-50 !important;
       min-height: 30px !important;
@@ -232,11 +237,11 @@ const monacoEditor = useMonacoEditor(editor, {
         padding: $kui-space-0 $kui-space-30;
 
         &.focused {
-          background: $kui-color-background-neutral-weaker;
+          background: var(--kui-color-background-neutral-weaker, #{$kui-color-background-neutral-weaker});
 
           .monaco-icon-label,
           .suggest-icon {
-            color: $kui-color-text-neutral-strongest !important;
+            color: var(--kui-color-text-neutral-strongest, #{$kui-color-text-neutral-strongest}) !important;
           }
         }
 
@@ -246,14 +251,15 @@ const monacoEditor = useMonacoEditor(editor, {
           }
         }
 
+        // The colour of the icons in the suggestion list
         .suggest-icon {
           &:not(.codicon-symbol-property) {
-            color: $kui-color-text-primary;
+            color: var(--kui-color-text-primary, #{$kui-color-text-primary});
           }
         }
 
         .monaco-icon-label {
-          color: $kui-color-text-neutral !important;
+          color: var(--kui-color-text-neutral, #{$kui-color-text-neutral}) !important;
         }
       }
     }
@@ -263,17 +269,17 @@ const monacoEditor = useMonacoEditor(editor, {
       transform: translateY(2px) !important;
     }
 
-    // Modify the editor's search box styles
+    // Editor's search box styles
     .find-widget {
       border-radius: $kui-border-radius-0;
       right: 0px !important;
 
-      // the pane to resize the search box
+      // The pane to resize the search box
       .monaco-sash {
         width: 1px !important;
       }
 
-      // Modify the search input
+      // Search input
       .monaco-inputbox {
         border-radius: $kui-border-radius-30;
         padding: $kui-space-0 $kui-space-10;
@@ -282,7 +288,7 @@ const monacoEditor = useMonacoEditor(editor, {
   }
 }
 
-// transitions
+// Transitions
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity $kui-animation-duration-20 ease;

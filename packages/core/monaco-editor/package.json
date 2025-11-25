@@ -33,8 +33,10 @@
     "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
     "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
-    "test": "cross-env FORCE_COLOR=1 vitest run",
-    "test:open": "cross-env FORCE_COLOR=1 vitest --ui"
+    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
+    "test:unit": "cross-env FORCE_COLOR=1 vitest run",
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
   },
   "repository": {
     "type": "git",
