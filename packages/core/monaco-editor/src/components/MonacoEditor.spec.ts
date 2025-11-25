@@ -19,7 +19,7 @@ const editorStates = reactive({
   hasContent: false,
 })
 
-vi.mock('../index', () => ({
+vi.mock('../composables/useMonacoEditor', () => ({
   useMonacoEditor: () => ({
     editorStates,
   }),
