@@ -145,22 +145,22 @@ const monacoEditor = useMonacoEditor(editorRef, {
     // Customize monaco editor colours via `--vscode-` variables
     /* stylelint-disable */
     // Editor
-    --vscode-editor-background: var(--kui-color-background, #{$kui-color-background});
-    --vscode-editorGutter-background: var(--kui-color-background, #{$kui-color-background});
-    --vscode-editorLineNumber-activeForeground: var(--kui-color-text-primary, #{$kui-color-text-primary});
+    --vscode-editor-background: var(--kui-color-background, $kui-color-background);
+    --vscode-editorGutter-background: var(--kui-color-background, $kui-color-background);
+    --vscode-editorLineNumber-activeForeground: var(--kui-color-text-primary, $kui-color-text-primary);
     // Suggestions
-    --vscode-editorSuggestWidget-background: var(--kui-color-background, #{$kui-color-background});
-    --vscode-editorSuggestWidget-border: var(--kui-color-border, #{$kui-color-border});
-    --vscode-editorSuggestWidget-highlightForeground: var(--kui-color-text-decorative-purple, #{$kui-color-text-decorative-purple});
-    --vscode-editorSuggestWidget-focusHighlightForeground: var(--kui-color-text-decorative-purple, #{$kui-color-text-decorative-purple});
+    --vscode-editorSuggestWidget-background: var(--kui-color-background, $kui-color-background);
+    --vscode-editorSuggestWidget-border: var(--kui-color-border, $kui-color-border);
+    --vscode-editorSuggestWidget-highlightForeground: var(--kui-color-text-decorative-purple, $kui-color-text-decorative-purple);
+    --vscode-editorSuggestWidget-focusHighlightForeground: var(--kui-color-text-decorative-purple, $kui-color-text-decorative-purple);
     // Context menu
-    --vscode-menu-background: var(--kui-color-background, #{$kui-color-background});
-    --vscode-menu-border: var(--kui-color-border, #{$kui-color-border});
-    --vscode-menu-separatorBackground: var(--kui-color-border, #{$kui-color-border});
+    --vscode-menu-background: var(--kui-color-background, $kui-color-background);
+    --vscode-menu-border: var(--kui-color-border, $kui-color-border);
+    --vscode-menu-separatorBackground: var(--kui-color-border, $kui-color-border);
     // Other
-    --vscode-focusBorder: var(--kui-color-text-neutral, #{$kui-color-text-neutral});
-    --vscode-input-background: var(--kui-color-background, #{$kui-color-background});
-    --vscode-sash-hoverBorder: var(--kui-color-border-primary, #{$kui-color-border-primary});
+    --vscode-focusBorder: var(--kui-color-text-neutral, $kui-color-text-neutral);
+    --vscode-input-background: var(--kui-color-background, $kui-color-background);
+    --vscode-sash-hoverBorder: var(--kui-color-border-primary, $kui-color-border-primary);
     /* stylelint-enable */
 
     .sticky-widget {
@@ -169,10 +169,10 @@ const monacoEditor = useMonacoEditor(editorRef, {
 
     // Editor's suggestion overlay styles
     .suggest-details-container {
-      border-radius: var(--kui-border-radius-50, #{$kui-border-radius-50}) !important;
+      border-radius: var(--kui-border-radius-50, $kui-border-radius-50) !important;
 
       .suggest-details {
-        border-radius: var(--kui-border-radius-50, #{$kui-border-radius-50}) !important;
+        border-radius: var(--kui-border-radius-50, $kui-border-radius-50) !important;
         overflow-x: hidden;
         overflow-y: auto;
 
@@ -184,11 +184,11 @@ const monacoEditor = useMonacoEditor(editorRef, {
 
     // Editor's suggestion widget
     .suggest-widget {
-      border-radius: var(--kui-border-radius-50, #{$kui-border-radius-50}) !important;
+      border-radius: var(--kui-border-radius-50, $kui-border-radius-50) !important;
       min-height: 30px !important;
 
       &.shows-details {
-        border-radius: var(--kui-border-radius-50, #{$kui-border-radius-50}) !important;
+        border-radius: var(--kui-border-radius-50, $kui-border-radius-50) !important;
         min-height: 30px !important;
         overflow-x: hidden;
         overflow-y: auto;
@@ -199,7 +199,7 @@ const monacoEditor = useMonacoEditor(editorRef, {
       .monaco-scrollable-element,
       .monaco-list,
       .monaco-list-rows {
-        border-radius: var(--kui-border-radius-40, #{$kui-border-radius-40}) !important;
+        border-radius: var(--kui-border-radius-40, $kui-border-radius-40) !important;
       }
 
       .monaco-list-rows {
@@ -208,42 +208,42 @@ const monacoEditor = useMonacoEditor(editorRef, {
       }
 
       .monaco-list-row {
-        padding: var(--kui-space-0, #{$kui-space-0}) var(--kui-space-30, #{$kui-space-30});
+        padding: var(--kui-space-0, $kui-space-0) var(--kui-space-30, $kui-space-30);
 
         &.focused {
-          background: var(--kui-color-background-neutral-weaker, #{$kui-color-background-neutral-weaker});
+          background: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
 
           .monaco-icon-label,
           .suggest-icon {
-            color: var(--kui-color-text-neutral-strongest, #{$kui-color-text-neutral-strongest}) !important;
+            color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest) !important;
           }
 
           // The label showing additional details about the suggestion
           .details-label {
-            color: var(--kui-color-text-neutral-strongest, #{$kui-color-text-neutral-strongest});
+            color: var(--kui-color-text-neutral-strongest, $kui-color-text-neutral-strongest);
           }
         }
 
         // The matching part of the suggestion
         .highlight {
-          font-weight: var(--kui-font-weight-semibold, #{$kui-font-weight-semibold});
+          font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
         }
 
         &:first-child {
           &.focused {
-            border-top-left-radius: var(--kui-border-radius-30, #{$kui-border-radius-30});
+            border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
           }
         }
 
         // The colour of the icons in the suggestion list
         .suggest-icon {
           &:not(.codicon-symbol-property) {
-            color: var(--kui-color-text-primary, #{$kui-color-text-primary});
+            color: var(--kui-color-text-primary, $kui-color-text-primary);
           }
         }
 
         .monaco-icon-label {
-          color: var(--kui-color-text-neutral, #{$kui-color-text-neutral}) !important;
+          color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
         }
       }
     }
@@ -254,23 +254,23 @@ const monacoEditor = useMonacoEditor(editorRef, {
 
     // Editor's search box styles
     .find-widget {
-      background: var(--kui-color-background, #{$kui-color-background});
-      border-bottom: var(--kui-border-width-10, #{$kui-border-width-10}) solid var(--kui-color-border-neutral-weaker, #{$kui-color-border-neutral-weaker});
-      border-radius: var(--kui-border-radius-0, #{$kui-border-radius-0});
+      background: var(--kui-color-background, $kui-color-background);
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker);
+      border-radius: var(--kui-border-radius-0, $kui-border-radius-0);
       right: 0px !important;
 
       // The pane to resize the search box
       .monaco-sash {
-        background-color: var(--kui-color-background-neutral-weaker, #{$kui-color-background-neutral-weaker});
+        background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
         width: 1px !important;
       }
 
       // Search input
       .monaco-inputbox {
-        background-color: var(--kui-color-background, #{$kui-color-background}) !important;
-        border: var(--kui-border-width-10, #{$kui-border-width-10}) solid var(--kui-color-border-neutral-weaker, #{$kui-color-border-neutral-weaker}) !important;
-        border-radius: var(--kui-border-radius-30, #{$kui-border-radius-30});
-        padding: var(--kui-space-0, #{$kui-space-0}) var(--kui-space-10, #{$kui-space-10});
+        background-color: var(--kui-color-background, $kui-color-background) !important;
+        border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-neutral-weaker, $kui-color-border-neutral-weaker) !important;
+        border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+        padding: var(--kui-space-0, $kui-space-0) var(--kui-space-10, $kui-space-10);
       }
     }
   }
@@ -284,7 +284,7 @@ const monacoEditor = useMonacoEditor(editorRef, {
 // Transitions
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity var(--kui-animation-duration-20, #{$kui-animation-duration-20}) ease;
+  transition: opacity var(--kui-animation-duration-20, $kui-animation-duration-20) ease;
 }
 
 .fade-enter-from,
