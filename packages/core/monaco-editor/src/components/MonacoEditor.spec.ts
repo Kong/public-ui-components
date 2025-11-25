@@ -1,8 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import MonacoEditor from './MonacoEditor.vue'
-import MonacoEditorEmptyState from './MonacoEditorStatusOverlay.vue'
 import { reactive } from 'vue'
+import MonacoEditor from './MonacoEditor.vue'
 import { KEmptyState } from '@kong/kongponents'
 
 // mock i18n
