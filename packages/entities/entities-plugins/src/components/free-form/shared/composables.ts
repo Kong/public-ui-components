@@ -1047,7 +1047,7 @@ function useRenderRules() {
     watch([
       () => toValue(rules),
       () => toValue(fieldPath),
-    ], ([newRules, path], [_oldRules, oldPath]) => {
+    ], ([newRules, path], [, oldPath]) => {
       // Set new rules
       if (newRules) {
         registry.value[path] = newRules
