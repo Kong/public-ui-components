@@ -1,6 +1,10 @@
 {
-  "header": {
-    "title": "Title of the header",
-    "content": "Content of the header"
+  "editor": {
+    "messages": {
+      "empty_message": "The editor is currently empty. Start typing to add content.",
+      "empty_title": "No content available",
+      "loading_message": "Please wait while the {type} content is loaded.",
+      "loading_title": "{type} editor"
+    }
   }
 }

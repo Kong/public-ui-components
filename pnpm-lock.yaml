@@ -683,6 +683,9 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0(vue@3.5.22(typescript@5.9.2))
     devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../i18n
       '@kong/design-tokens':
         specifier: 1.18.1
         version: 1.18.1
