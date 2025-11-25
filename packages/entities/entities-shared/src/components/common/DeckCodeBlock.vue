@@ -81,7 +81,7 @@ const yamlContent = computed((): string => {
     [props.entityType + 's']: [filteredRecord],
   }
 
-  return yaml.dump(fullRecord).trim()
+  return yaml.dump(fullRecord, { quotingType: '"' }).trim()
 })
 
 const deckCommand = computed((): string => {
