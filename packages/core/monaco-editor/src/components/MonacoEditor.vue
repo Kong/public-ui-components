@@ -145,22 +145,22 @@ const monacoEditor = useMonacoEditor(editorRef, {
     // Customize monaco editor colours via `--vscode-` variables
     /* stylelint-disable */
     // Editor
-    --vscode-editor-background: var(--kui-color-background, $kui-color-background);
-    --vscode-editorGutter-background: var(--kui-color-background, $kui-color-background);
-    --vscode-editorLineNumber-activeForeground: var(--kui-color-text-primary, $kui-color-text-primary);
+    --vscode-editor-background: var(--kui-color-background, #{$kui-color-background});
+    --vscode-editorGutter-background: var(--kui-color-background, #{$kui-color-background});
+    --vscode-editorLineNumber-activeForeground: var(--kui-color-text-primary, #{$kui-color-text-primary});
     // Suggestions
-    --vscode-editorSuggestWidget-background: var(--kui-color-background, $kui-color-background);
-    --vscode-editorSuggestWidget-border: var(--kui-color-border, $kui-color-border);
-    --vscode-editorSuggestWidget-highlightForeground: var(--kui-color-text-decorative-purple, $kui-color-text-decorative-purple);
-    --vscode-editorSuggestWidget-focusHighlightForeground: var(--kui-color-text-decorative-purple, $kui-color-text-decorative-purple);
+    --vscode-editorSuggestWidget-background: var(--kui-color-background, #{$kui-color-background});
+    --vscode-editorSuggestWidget-border: var(--kui-color-border, #{$kui-color-border});
+    --vscode-editorSuggestWidget-highlightForeground: var(--kui-color-text-decorative-purple, #{$kui-color-text-decorative-purple});
+    --vscode-editorSuggestWidget-focusHighlightForeground: var(--kui-color-text-decorative-purple, #{$kui-color-text-decorative-purple});
     // Context menu
-    --vscode-menu-background: var(--kui-color-background, $kui-color-background);
-    --vscode-menu-border: var(--kui-color-border, $kui-color-border);
-    --vscode-menu-separatorBackground: var(--kui-color-border, $kui-color-border);
+    --vscode-menu-background: var(--kui-color-background, #{$kui-color-background});
+    --vscode-menu-border: var(--kui-color-border, #{$kui-color-border});
+    --vscode-menu-separatorBackground: var(--kui-color-border, #{$kui-color-border});
     // Other
-    --vscode-focusBorder: var(--kui-color-text-neutral, $kui-color-text-neutral);
-    --vscode-input-background: var(--kui-color-background, $kui-color-background);
-    --vscode-sash-hoverBorder: var(--kui-color-border-primary, $kui-color-border-primary);
+    --vscode-focusBorder: var(--kui-color-text-neutral, #{$kui-color-text-neutral});
+    --vscode-input-background: var(--kui-color-background, #{$kui-color-background});
+    --vscode-sash-hoverBorder: var(--kui-color-border-primary, #{$kui-color-border-primary});
     /* stylelint-enable */
 
     .sticky-widget {
