@@ -102,6 +102,10 @@ import FlowCanvas from './FlowCanvas.vue'
 
 import type { EdgeChange, NodeChange, VueFlowStore } from '@vue-flow/core'
 
+const DEFAULT_SPLIT_RATIO = 0.5
+const SNAPPING_PANEL_RATIO = 0.03
+const MAX_SNAPPING_PANEL_HEIGHT = 30
+
 const { inactive, mode, resizable } = defineProps<{
   /**
    * Whether current component is inactive (e.g. covered by modal).
@@ -177,17 +181,17 @@ const resizeHandleRect = useElementBounding(resizeHandle)
 const responseLabelRect = useElementBounding(responseLabel)
 const responseCanvasContainerRect = useElementBounding(responseCanvasContainer)
 
-const snappingHeight = computed(() => Math.max(30, flowPanelsRect.height.value * 0.03))
+const snappingHeight = computed(() => Math.max(MAX_SNAPPING_PANEL_HEIGHT, flowPanelsRect.height.value * SNAPPING_PANEL_RATIO))
 const requestResizableHeight = computed(() =>
   flowPanelsRect.height.value - requestLabelRect.height.value - resizeHandleRect.height.value - responseLabelRect.height.value,
 )
 const snappingRatio = computed(() => {
   const availableHeight = requestResizableHeight.value
-  if (!availableHeight) return 0.03
-  return Math.max(0.03, snappingHeight.value / availableHeight)
+  if (!availableHeight) return SNAPPING_PANEL_RATIO
+  return Math.max(SNAPPING_PANEL_RATIO, snappingHeight.value / availableHeight)
 })
 
-const split = ref(0.5) // proportion of request panel height
+const split = ref(DEFAULT_SPLIT_RATIO) // proportion of request panel height
 const requestHeight = computed(() => `${split.value * 100}%`)
 const responseHeight = computed(() => `${(1 - split.value) * 100}%`)
 
@@ -204,7 +208,7 @@ function setSplit(value: number, { persist = true }: { persist?: boolean } = {})
 }
 
 function setResponseCollapsed(collapsed: boolean, persist = true) {
-  setSplit(collapsed ? 1 : 0.5, { persist })
+  setSplit(collapsed ? 1 : DEFAULT_SPLIT_RATIO, { persist })
 }
 
 function setRequestCollapsed(persist = true) {
