@@ -997,8 +997,6 @@ function useRenderRules() {
       }
     }
 
-    console.log('result', result)
-
     return result
   })
 
