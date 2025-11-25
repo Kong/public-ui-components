@@ -53,7 +53,7 @@ defineProps<{
     .empty-state-icon,
     .empty-state-title,
     .empty-state-message {
-      color: var(--kui-color-text-neutral-weak, $kui-color-text-neutral-weak)
+      color: var(--kui-color-text-neutral-weak, #{$kui-color-text-neutral-weak});
     }
 
     .empty-state-title {
