@@ -454,7 +454,7 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.opentelemetry.description',
     nameKey: 'plugins.meta.opentelemetry.name',
     fieldRules: {
-      atLeastOneOf: [['config.traces_endpoint', 'config.logs_endpoint']],
+      atLeastOneOf: [['config.access_logs_endpoint', 'config.traces_endpoint', 'config.logs_endpoint']],
     },
     ...PLUGIN_GROUP_AND_SCOPE_MAP.opentelemetry,
   },
