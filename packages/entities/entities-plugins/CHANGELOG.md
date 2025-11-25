@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.123.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.122.1...@kong-ui-public/entities-plugins@9.123.0) (2025-11-25)
+
+
+### Features
+
+* **entities-plugins:** otel plugin access_logs_endpoint rule ([#2666](https://github.com/Kong/public-ui-components/issues/2666)) ([7b8c49f](https://github.com/Kong/public-ui-components/commit/7b8c49f045023b6cb4dc0f322f39ca1888b8dd0b))
+
+
+
+
+
 ## [9.122.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.122.0...@kong-ui-public/entities-plugins@9.122.1) (2025-11-24)
 
 
