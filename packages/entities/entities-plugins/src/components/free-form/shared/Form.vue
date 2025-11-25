@@ -30,6 +30,8 @@ import { FIELD_RENDERERS, provideFormShared } from './composables'
 import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import Field from './Field.vue'
 import type { FormConfig, GlobalAction, RenderRules } from './types'
+import { filterByDependencies, sortFieldsByBundles, sortFieldsByFieldNames } from './utils'
+import { get } from 'lodash-es'
 
 defineOptions({ name: 'SchemaForm' })
 
@@ -49,7 +51,7 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
-const { getSchema, formData, resetFormData } = provideFormShared({
+const { getSchema, formData, resetFormData, currentRenderRules } = provideFormShared({
   schema,
   propsData: computed(() => data as T),
   propsConfig: config as FormConfig,
@@ -60,21 +62,25 @@ const { getSchema, formData, resetFormData } = provideFormShared({
 const childFields = computed(() => {
   const { fields } = getSchema()
 
-  if (!fieldsOrder) return fields
+  if (fieldsOrder) {
+    return sortFieldsByFieldNames(fields, fieldsOrder)
+  }
 
-  return fields.sort((a, b) => {
-    const aKey = Object.keys(a)[0]
-    const bKey = Object.keys(b)[0]
+  let sortedFields = [...fields]
 
-    const aIndex = fieldsOrder.indexOf(aKey)
-    const bIndex = fieldsOrder.indexOf(bKey)
+  if (currentRenderRules.value?.bundles) {
+    sortedFields = sortFieldsByBundles(sortedFields, currentRenderRules.value.bundles)
+  }
 
-    if (aIndex === -1 && bIndex === -1) return 0
-    if (aIndex === -1) return 1
-    if (bIndex === -1) return -1
+  if (currentRenderRules.value?.dependencies) {
+    sortedFields = filterByDependencies(
+      sortedFields,
+      currentRenderRules.value.dependencies,
+      fieldName => get(formData, fieldName),
+    )
+  }
 
-    return aIndex - bIndex
-  })
+  return sortedFields
 })
 
 

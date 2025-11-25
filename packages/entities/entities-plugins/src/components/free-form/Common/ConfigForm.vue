@@ -27,9 +27,15 @@ import { computed } from 'vue'
 import { useFormShared } from '../shared/composables'
 import { resolve } from '../shared/utils'
 
-const { getSchema, useCurrentRenderRules } = useFormShared()
+const { getSchema, useCurrentRenderRules, getDefault, formData } = useFormShared()
 
-const currentRenderRules = useCurrentRenderRules('config', undefined)
+const { currentRenderRules } = useCurrentRenderRules({
+  fieldPath: 'config',
+  rules: undefined,
+  getSchema,
+  getDefault,
+  parentValue: formData.config,
+})
 
 /**
  * Group configuration fields into defaultVisible and advanced categories

@@ -1,10 +1,10 @@
-import { computed, inject, onBeforeUnmount, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch } from 'vue'
 import type { ComputedRef, InjectionKey, MaybeRefOrGetter, Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
 import type { LabelAttributes, SelectItem } from '@kong/kongponents'
 import type { ArrayFieldSchema, ArrayLikeFieldSchema, FormSchema, RecordFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
-import { cloneDeep, get, isFunction, omit, set, uniqueId } from 'lodash-es'
+import { cloneDeep, get, isEqual, isFunction, omit, set, uniqueId } from 'lodash-es'
 import type { MatchMap } from './FieldRenderer.vue'
 import type { FormConfig, RenderRules, ResetLabelPathRule } from './types'
 import { upperFirst } from 'lodash-es'
@@ -39,7 +39,13 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       useCurrentRules: useCurrentRenderRules,
     } = useRenderRules()
 
-    useCurrentRenderRules(utils.rootSymbol, propsRenderRules)
+    const { currentRenderRules } = useCurrentRenderRules({
+      fieldPath: utils.rootSymbol,
+      rules: propsRenderRules,
+      parentValue: innerData,
+      getSchema: schemaHelpers.getSchema,
+      getDefault: schemaHelpers.getDefault,
+    })
 
     function resetFormData(newData: T) {
       Object.keys(innerData).forEach((key) => {
@@ -91,6 +97,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       fieldRendererRegistry,
       resetFormData,
       useCurrentRenderRules,
+      currentRenderRules,
       ...schemaHelpers,
     }
   },
@@ -915,7 +922,7 @@ function useRenderRules() {
           validateSameLevel(fullPaths, `Bundle [${bundle.join(', ')}]`)
 
           // Find the common parent path for this bundle
-          const parentPath = findCommonParentPath(bundle, basePath)
+          const parentPath = findCommonParentPath(bundle, basePath) || utils.rootSymbol
 
           if (!result[parentPath]) {
             result[parentPath] = {}
@@ -943,7 +950,7 @@ function useRenderRules() {
             `Dependency '${fieldPath}' -> '${depPath}'`,
           )
 
-          const parentPath = getParentPath(fullFieldPath)
+          const parentPath = getParentPath(fullFieldPath) || utils.rootSymbol
 
           if (!result[parentPath]) {
             result[parentPath] = {}
@@ -990,6 +997,8 @@ function useRenderRules() {
       }
     }
 
+    console.log('result', result)
+
     return result
   })
 
@@ -1020,14 +1029,24 @@ function useRenderRules() {
     })
   }
 
-  function useCurrentRules(
-    fieldPath: MaybeRefOrGetter<string>,
-    rules?: MaybeRefOrGetter<RenderRules | undefined>,
-  ) {
+  function useCurrentRules(options: {
+    fieldPath: MaybeRefOrGetter<string>
+    rules?: MaybeRefOrGetter<RenderRules | undefined>
+    parentValue?: MaybeRefOrGetter<any>
+    getSchema: ReturnType<typeof useSchemaHelpers>['getSchema']
+    getDefault: ReturnType<typeof useSchemaHelpers>['getDefault']
+  }) {
+    const {
+      fieldPath,
+      rules,
+      parentValue,
+      getSchema,
+      getDefault,
+    } = options
     // Watch for changes in rules or fieldPath
     watch([
-      toRef(() => toValue(rules)),
-      toRef(() => toValue(fieldPath)),
+      () => toValue(rules),
+      () => toValue(fieldPath),
     ], ([newRules, path], [_oldRules, oldPath]) => {
       // Set new rules
       if (newRules) {
@@ -1042,13 +1061,62 @@ function useRenderRules() {
       }
     }, { immediate: true, deep: true })
 
+    const computedRules = createComputedRules(fieldPath)
+
+    let isClearing = false
+
+    watch(
+      [
+        () => toValue(parentValue),
+        () => toValue(computedRules)?.dependencies,
+        () => toValue(fieldPath),
+      ],
+      ([parent, deps, path]) => {
+        if (!deps || !parent || isClearing) return
+
+        Object.entries(deps).forEach(([fieldName, [depField, expectedValue]]) => {
+          const actualValue = get(parent, depField)
+
+          // Skip if dependency condition is met
+          if (isEqual(actualValue, expectedValue)) return
+
+          const fieldPath = path ? utils.resolve(path, fieldName) : fieldName
+          const fieldSchema = getSchema(fieldPath)
+          const currentFieldValue = get(parent, fieldName)
+
+          // Determine target value and whether to clear
+          let targetValue: any
+          let shouldClear = false
+
+          if (fieldSchema?.required) {
+            targetValue = getDefault(fieldPath)
+            shouldClear = !isEqual(currentFieldValue, targetValue)
+          } else {
+            targetValue = null
+            shouldClear = currentFieldValue !== null && currentFieldValue !== undefined
+          }
+
+          if (shouldClear) {
+            isClearing = true
+            nextTick(() => {
+              set(parent, fieldName, targetValue)
+              isClearing = false
+            })
+          }
+        })
+      },
+      { deep: true, immediate: true },
+    )
+
     // Clean up on unmount
     onBeforeUnmount(() => {
       const path = toValue(fieldPath)
       delete registry.value[path]
     })
 
-    return createComputedRules(fieldPath)
+    return {
+      currentRenderRules: computedRules,
+    }
   }
 
   return {
