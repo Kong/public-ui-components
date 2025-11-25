@@ -676,7 +676,8 @@ export function useItemKeys<T>(ns: string, items: MaybeRefOrGetter<T[]>) {
 }
 
 function useRenderRules() {
-  const registry = ref<Record<string, RenderRules>>({})
+  type RenderRulesMap = Record<string, RenderRules>
+  const registry = ref<RenderRulesMap>({})
 
   /**
    * Validates that all fields in a bundle/dependency are at the same level
@@ -694,13 +695,96 @@ function useRenderRules() {
   }
 
   /**
-   * Validates that there are no circular dependencies in the rules
+   * Validates that there are no circular references in the bundles
+   *
+   * @example
+   * Invalid (cycle detected):
+   * bundles: [
+   *   ['field1', 'field2'],
+   *   ['field2', 'field3'],
+   *   ['field3', 'field1'], // ❌ cycle here
+   *   ['field4', 'field5', 'field4'] // ❌ self-dependency
+   * ]
    */
-  function validateNoCycles(rules: Record<string, RenderRules>): void {
+  function validateNoCycleInBundles(rules: RenderRulesMap): void {
+    for (const [path, rule] of Object.entries(rules)) {
+      if (!rule.bundles) continue
+
+      // Check for self-cycles within a single bundle
+      for (const bundle of rule.bundles) {
+        const uniqueFields = new Set(bundle)
+        if (uniqueFields.size !== bundle.length) {
+          const duplicates = bundle.filter((field, index) => bundle.indexOf(field) !== index)
+          throw new Error(
+            `Self-cycle detected in bundle: field '${duplicates[0]}' appears multiple times in [${bundle.join(', ')}]`,
+          )
+        }
+      }
+
+      // Check for cycles between bundles
+      // Build a dependency graph: for bundle [a, b, c], create edges b->a, c->b
+      // This represents that b depends on a, c depends on b
+      const bundleGraph = new Map<string, Set<string>>()
+      for (const bundle of rule.bundles) {
+        for (let i = 1; i < bundle.length; i++) {
+          const dependent = bundle[i]
+          const dependency = bundle[i - 1]
+
+          if (!bundleGraph.has(dependent)) {
+            bundleGraph.set(dependent, new Set())
+          }
+          bundleGraph.get(dependent)!.add(dependency)
+        }
+      }
+
+      // Use DFS to detect cycles
+      for (const field of bundleGraph.keys()) {
+        const visited = new Set<string>()
+        const stack: string[] = []
+
+        function dfs(currentField: string): void {
+          if (stack.includes(currentField)) {
+            const cycle = [...stack, currentField].join(' -> ')
+            throw new Error(
+              `Circular bundle detected in path '${path}':\n${cycle}`,
+            )
+          }
+
+          if (visited.has(currentField)) return
+
+          visited.add(currentField)
+          stack.push(currentField)
+
+          const dependencies = bundleGraph.get(currentField)
+          if (dependencies) {
+            for (const dependency of dependencies) {
+              dfs(dependency)
+            }
+          }
+
+          stack.pop()
+        }
+
+        dfs(field)
+      }
+    }
+  }
+
+  /**
+   * Validates that there are no circular dependencies in the rules
+   * @example
+   * dependencies: {
+   *   'field1': ['field2', 'typeA'],
+   *   'field2': ['field3', 'typeB'],
+   *   'field3': ['field1', 'typeC'], // ❌ cycle here
+   *   'field4': ['field4', 'typeD']  // ❌ self-dependency
+   * }
+   */
+  function validateNoCycleInDeps(rules: RenderRulesMap): void {
     for (const [path, rule] of Object.entries(rules)) {
       if (!rule.dependencies) continue
 
-      // Check each field for circular dependencies using DFS
+      // Check each field for circular dependencies
       for (const field of Object.keys(rule.dependencies)) {
         const visited = new Set<string>()
         const stack: string[] = []
@@ -708,9 +792,8 @@ function useRenderRules() {
         function dfs(currentField: string): void {
           if (stack.includes(currentField)) {
             const cycle = [...stack, currentField].join(' -> ')
-            const selfDep = stack.length === 0 ? ' (self-dependency)' : ''
             throw new Error(
-              `Circular dependency detected in path '${path}':\n${cycle}${selfDep}`,
+              `Circular dependency detected in path '${path}':\n${cycle}`,
             )
           }
 
@@ -737,12 +820,15 @@ function useRenderRules() {
 
   /**
    * Finds the common parent path for a group of fields
+   * @example
+   * Input: ['a.b.c', 'a.b.d', 'a.b.e'], basePath: 'config'
+   * Output: 'config.a.b'
    */
   function findCommonParentPath(fields: string[], basePath: string): string {
     const fullPaths = fields.map(f => basePath ? utils.resolve(basePath, f) : f)
 
     // Get the parent path of the first field
-    const firstFieldParts = fullPaths[0].split('.')
+    const firstFieldParts = utils.toArray(fullPaths[0])
     firstFieldParts.pop() // Remove the field name
 
     return utils.resolve(...firstFieldParts)
@@ -750,6 +836,9 @@ function useRenderRules() {
 
   /**
    * Removes the parent path prefix from a field path
+   * @example
+   * Input: fieldPath: 'config.a.b.c', parentPath: 'config.a.b'
+   * Output: 'c'
    */
   function removePrefix(fieldPath: string, parentPath: string): string {
     if (!parentPath) return fieldPath
@@ -798,11 +887,12 @@ function useRenderRules() {
    * }
    *
    * @throws {Error} If bundle contains less than 2 fields
+   * @throws {Error} If bundles have cycles
    * @throws {Error} If fields in bundle/dependency are at different levels
-   * @throws {Error} If circular dependencies are detected
+   * @throws {Error} If dependencies have cycles
    */
-  const flattenedRules = computed<Record<string, RenderRules>>(() => {
-    const result: Record<string, RenderRules> = {}
+  const flattenedRules = computed<RenderRulesMap>(() => {
+    const result: RenderRulesMap = {}
 
     // Iterate through each rule in the registry
     for (const [registryPath, rules] of Object.entries(registry.value)) {
@@ -870,10 +960,11 @@ function useRenderRules() {
       }
     }
 
-    // Validate: no circular dependencies
-    validateNoCycles(result)
+    // Validate: no circular bundles
+    validateNoCycleInBundles(result)
 
-    console.log('Flattened RenderRules:', result)
+    // Validate: no circular dependencies
+    validateNoCycleInDeps(result)
 
     return result
   })
@@ -912,10 +1003,20 @@ function useRenderRules() {
     return flattenedRules.value[generalizedPath]
   }
 
+  let hasError = false
+
   function createComputedRules(fieldPath: MaybeRefOrGetter<string | undefined>) {
     return computed(() => {
+      if (hasError) return undefined
       const pathValue = toValue(fieldPath)
-      return getRules(pathValue)
+      try {
+        return getRules(pathValue)
+      } catch (error) {
+        hasError = true
+        // If an error occurs (e.g., invalid path), return undefined
+        console.error(`Failed to get render rules for path: \`${pathValue}\`,`, error instanceof Error ? error.message : '')
+        return undefined
+      }
     })
   }
 
@@ -923,7 +1024,11 @@ function useRenderRules() {
     fieldPath: MaybeRefOrGetter<string>,
     rules?: MaybeRefOrGetter<RenderRules | undefined>,
   ) {
-    watch([toRef(() => toValue(rules)), toRef(() => toValue(fieldPath))], ([newRules, path], [_oldRules, oldPath]) => {
+    // Watch for changes in rules or fieldPath
+    watch([
+      toRef(() => toValue(rules)),
+      toRef(() => toValue(fieldPath)),
+    ], ([newRules, path], [_oldRules, oldPath]) => {
       // Set new rules
       if (newRules) {
         registry.value[path] = newRules

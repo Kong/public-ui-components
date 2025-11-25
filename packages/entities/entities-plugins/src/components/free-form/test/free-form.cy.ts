@@ -128,6 +128,10 @@ describe('Free Form', () => {
     })
   })
 
+  describe('Render rules', () => {
+
+  })
+
   describe('Reactivity', () => {
     function getSchema(defaultName?: string) : FormSchema {
       return {
