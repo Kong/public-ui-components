@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.2.0...@kong-ui-public/monaco-editor@0.3.0) (2025-11-25)
+
+
+### Features
+
+* **monaco-editor:** initialize basic MonacoEditor component [KHCP-18442] ([#2664](https://github.com/Kong/public-ui-components/issues/2664)) ([563033b](https://github.com/Kong/public-ui-components/commit/563033b8ca9957ca3afd0ce9d5ad8d62b9bc46a9))
+
+
+
+
+
 # [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.1.1...@kong-ui-public/monaco-editor@0.2.0) (2025-11-24)
 
 
