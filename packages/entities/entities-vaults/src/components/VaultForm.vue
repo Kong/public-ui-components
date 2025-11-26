@@ -1248,7 +1248,7 @@ const getPayload = computed((): Record<string, any> => {
       cert_auth_cert_key: configFields[VaultProviders.HCV].cert_auth_cert_key,
     }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.OAUTH2 && {
-      oauth2_audiences: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_audiences || undefined,
+      oauth2_audiences: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_audiences || null,
       oauth2_client_id: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_client_id,
       oauth2_client_secret: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_client_secret,
       oauth2_role_name: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_role_name,
