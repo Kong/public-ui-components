@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.124.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.123.0...@kong-ui-public/entities-plugins@9.124.0) (2025-11-26)
+
+
+### Features
+
+* **entities-plugins:** freeform identity realms field [KM-2033] ([#2654](https://github.com/Kong/public-ui-components/issues/2654)) ([992acc9](https://github.com/Kong/public-ui-components/commit/992acc9364536335873acb3aa0687a8d08815a15))
+
+
+
+
+
 # [9.123.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.122.1...@kong-ui-public/entities-plugins@9.123.0) (2025-11-25)
 
 
