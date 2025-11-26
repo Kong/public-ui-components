@@ -51,7 +51,7 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
-const { getSchema, formData, resetFormData, currentRenderRules } = provideFormShared({
+const { getSchema, formData, resetFormData, rootRenderRules } = provideFormShared({
   schema,
   propsData: computed(() => data as T),
   propsConfig: config as FormConfig,
@@ -68,14 +68,14 @@ const childFields = computed(() => {
 
   let sortedFields = [...fields]
 
-  if (currentRenderRules.value?.bundles) {
-    sortedFields = sortFieldsByBundles([...sortedFields], currentRenderRules.value.bundles)
+  if (rootRenderRules.value?.bundles) {
+    sortedFields = sortFieldsByBundles([...sortedFields], rootRenderRules.value.bundles)
   }
 
-  if (currentRenderRules.value?.dependencies) {
+  if (rootRenderRules.value?.dependencies) {
     sortedFields = filterByDependencies(
       sortedFields,
-      currentRenderRules.value.dependencies,
+      rootRenderRules.value.dependencies,
       fieldName => get(formData, fieldName),
     )
   }

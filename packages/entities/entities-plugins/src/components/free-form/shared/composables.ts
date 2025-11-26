@@ -35,9 +35,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     const slots = useSlots()
     provide(FIELD_RENDERER_SLOTS, omit(slots, 'default', FIELD_RENDERERS))
 
-    const useCurrentRenderRules = createRenderRuleRegistry()
+    const {
+      useCurrentRules: useCurrentRenderRules,
+      createComputedRules: createComputedRenderRules,
+    } = createRenderRuleRegistry()
 
-    const currentRenderRules = useCurrentRenderRules({
+    const rootRenderRules = useCurrentRenderRules({
       fieldPath: utils.rootSymbol,
       rules: propsRenderRules,
       parentValue: innerData,
@@ -95,7 +98,8 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       fieldRendererRegistry,
       resetFormData,
       useCurrentRenderRules,
-      currentRenderRules,
+      rootRenderRules,
+      createComputedRenderRules,
       ...schemaHelpers,
     }
   },
@@ -1004,6 +1008,7 @@ function createRenderRuleRegistry() {
     fieldPath: MaybeRefOrGetter<string>
     rules?: MaybeRefOrGetter<RenderRules | undefined>
     parentValue?: MaybeRefOrGetter<any>
+    omittedFields?: MaybeRefOrGetter<string[] | undefined>
     getSchema: ReturnType<typeof useSchemaHelpers>['getSchema']
     getDefault: ReturnType<typeof useSchemaHelpers>['getDefault']
   }) {
@@ -1011,6 +1016,7 @@ function createRenderRuleRegistry() {
       fieldPath,
       rules,
       parentValue,
+      omittedFields,
       getSchema,
       getDefault,
     } = options
@@ -1042,11 +1048,15 @@ function createRenderRuleRegistry() {
         () => toValue(parentValue),
         () => toValue(computedRules)?.dependencies,
         () => toValue(fieldPath),
+        () => toValue(omittedFields),
       ],
-      ([parent, deps, path]) => {
+      ([parent, deps, path, omitted]) => {
         if (!deps || !parent || isClearing) return
 
         Object.entries(deps).forEach(([fieldName, [depField, expectedValue]]) => {
+          // Skip omitted fields
+          if (omitted?.includes(fieldName)) return
+
           const actualValue = get(parent, depField)
 
           // Skip if dependency condition is met
@@ -1075,10 +1085,11 @@ function createRenderRuleRegistry() {
 
         if (fieldsToClear.length > 0) {
           isClearing = true
+          while (fieldsToClear.length > 0) {
+            const { fieldName, targetValue } = fieldsToClear.pop()!
+            set(parent, fieldName, targetValue)
+          }
           nextTick(() => {
-            fieldsToClear.forEach(({ fieldName, targetValue }) => {
-              set(parent, fieldName, targetValue)
-            })
             isClearing = false
           })
         }
@@ -1095,5 +1106,8 @@ function createRenderRuleRegistry() {
     return computedRules
   }
 
-  return useCurrentRules
+  return {
+    useCurrentRules,
+    createComputedRules,
+  }
 }

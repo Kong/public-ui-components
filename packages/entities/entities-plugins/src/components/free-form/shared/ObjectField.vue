@@ -155,6 +155,7 @@ const { getSchema, getDefault, useCurrentRenderRules } = useFormShared()
 const currentRenderRules = useCurrentRenderRules({
   fieldPath: field.path!,
   rules: toRef(props, 'renderRules'),
+  omittedFields: toRef(() => omit),
   getDefault,
   getSchema,
   parentValue: fieldValue!,

@@ -27,15 +27,9 @@ import { computed } from 'vue'
 import { useFormShared } from '../shared/composables'
 import { resolve } from '../shared/utils'
 
-const { getSchema, useCurrentRenderRules, getDefault, formData } = useFormShared()
+const { getSchema, createComputedRenderRules } = useFormShared()
 
-const currentRenderRules = useCurrentRenderRules({
-  fieldPath: 'config',
-  rules: undefined,
-  getSchema,
-  getDefault,
-  parentValue: formData.config,
-})
+const configRenderRules = createComputedRenderRules('config')
 
 /**
  * Group configuration fields into defaultVisible and advanced categories
@@ -78,62 +72,71 @@ const fieldsCategory = computed(() => {
     })
   }
 
-  const bundles = currentRenderRules.value?.bundles
+  // Bundle support: Build dependency map from bundles
+  // Each field in a bundle depends on the previous field, forming a dependency chain
+  const bundles = configRenderRules.value?.bundles ?? []
+  const bundleMap = new Map<string, string>()
 
-  // Build a map from field name to its bundle array
-  // This allows O(1) lookup to check if a field belongs to a bundle
-  const bundleMap = new Map<string, string[]>()
-  if (bundles) {
-    bundles.forEach(bundle => {
-      bundle.forEach(fieldName => {
-        bundleMap.set(fieldName, bundle)
-      })
-    })
+  for (const bundle of bundles) {
+    for (let i = 1; i < bundle.length; i++) {
+      // Map each field to its dependency (the previous field in the bundle)
+      bundleMap.set(bundle[i], bundle[i - 1])
+    }
   }
 
-  // Track which fields have been processed to avoid duplicates
-  // This is important because when we encounter a field in a bundle,
-  // we process all fields in that bundle at once
-  const processedFields = new Set<string>()
+  // Helper function to find the root field by recursively following dependencies
+  // This handles transitive dependencies (e.g., [A, B], [B, C] => C's root is A)
+  const findRoot = (field: string): string => {
+    const dep = bundleMap.get(field)
+    return dep ? findRoot(dep) : field
+  }
 
+  // Cache root lookups to avoid redundant recursion
+  const fieldRoots = new Map<string, string>()
+  for (const field of configSchema.fields) {
+    const fieldName = Object.keys(field)[0]
+    fieldRoots.set(fieldName, findRoot(fieldName))
+  }
+
+  // Categorize each field based on its properties
+  // Note: Only process root fields (fields without dependencies) in this loop
   for (const field of configSchema.fields) {
     const fieldName = Object.keys(field)[0]
 
-    // Skip if this field was already processed as part of a bundle
-    if (processedFields.has(fieldName)) {
+    // Skip non-root fields (fields that have dependencies in bundles)
+    // They will be categorized separately to follow their root field's category
+    const root = fieldRoots.get(fieldName)!
+    if (root !== fieldName) {
       continue
     }
 
-    // Determine the category for this field based on its properties
-    // Priority: required > involved in entity_checks > advanced
-    let category: 'defaultVisible' | 'advanced'
-    if (field[fieldName].required || ruledFields.has(fieldName)) {
-      category = 'defaultVisible'
+    let finalCategory: string[]
+
+    if (field[fieldName].required) {
+      // Required fields should always be visible
+      finalCategory = defaultVisible
+    } else if (ruledFields.has(fieldName)) {
+      // Fields involved in entity checks should be visible for better UX
+      finalCategory = defaultVisible
     } else {
-      category = 'advanced'
+      // All other optional fields go to advanced section
+      finalCategory = advanced
     }
 
-    // Check if this field is part of a bundle
-    const bundle = bundleMap.get(fieldName)
-    if (bundle) {
-      // Process all fields in the bundle together
-      // All fields in a bundle share the same category as the first field encountered
-      bundle.forEach(bundleFieldName => {
-        if (category === 'defaultVisible') {
-          defaultVisible.push(bundleFieldName)
-        } else {
-          advanced.push(bundleFieldName)
-        }
-        processedFields.add(bundleFieldName)
-      })
-    } else {
-      // Single field not in any bundle
-      if (category === 'defaultVisible') {
-        defaultVisible.push(fieldName)
-      } else {
-        advanced.push(fieldName)
-      }
-      processedFields.add(fieldName)
+    finalCategory.push(fieldName)
+  }
+
+  // Process fields with dependencies: they follow their root field's category
+  // This ensures bundle priority - even if a field is required, it follows its root
+  for (const field of configSchema.fields) {
+    const fieldName = Object.keys(field)[0]
+    const root = fieldRoots.get(fieldName)!
+
+    // Only process non-root fields (fields that have dependencies)
+    if (root !== fieldName) {
+      // Find which category the root field belongs to and add this field there
+      const category = defaultVisible.includes(root) ? defaultVisible : advanced
+      category.push(fieldName)
     }
   }
 
