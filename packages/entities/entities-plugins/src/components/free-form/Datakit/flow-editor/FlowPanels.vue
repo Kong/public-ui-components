@@ -97,10 +97,14 @@ import { useDraggable, useElementBounding } from '@vueuse/core'
 import { computed, nextTick, ref, useId, useTemplateRef, watch } from 'vue'
 
 import english from '../../../../locales/en.json'
-import { useEditorStore } from '../composables'
+import { useEditorStore, usePreferences } from '../composables'
 import FlowCanvas from './FlowCanvas.vue'
 
 import type { EdgeChange, NodeChange, VueFlowStore } from '@vue-flow/core'
+
+const DEFAULT_SPLIT_RATIO = 0.5
+const SNAPPING_PANEL_RATIO = 0.03
+const MAX_SNAPPING_PANEL_HEIGHT = 30
 
 const { inactive, mode, resizable } = defineProps<{
   /**
@@ -121,6 +125,7 @@ const { t } = createI18n<typeof english>('en-us', english)
 
 const requestInitialized = ref(false)
 const responseInitialized = ref(false)
+const { responsePanelCollapsed } = usePreferences()
 const { state, configNodeCounts, clearPendingLayout, setPendingFitView, commit, clear, portalSelection } = useEditorStore()
 
 const uniqueId = useId()
@@ -176,40 +181,66 @@ const resizeHandleRect = useElementBounding(resizeHandle)
 const responseLabelRect = useElementBounding(responseLabel)
 const responseCanvasContainerRect = useElementBounding(responseCanvasContainer)
 
-const snappingHeight = computed(() => Math.max(30, flowPanelsRect.height.value * 0.03))
-const isRequestCollapsed = computed(() => requestCanvasContainerRect.height.value < snappingHeight.value)
-const isResponseCollapsed = computed(() => responseCanvasContainerRect.height.value < snappingHeight.value)
+const snappingHeight = computed(() => Math.max(MAX_SNAPPING_PANEL_HEIGHT, flowPanelsRect.height.value * SNAPPING_PANEL_RATIO))
+const requestResizableHeight = computed(() =>
+  flowPanelsRect.height.value - requestLabelRect.height.value - resizeHandleRect.height.value - responseLabelRect.height.value,
+)
+const snappingRatio = computed(() => {
+  const availableHeight = requestResizableHeight.value
+  if (!availableHeight) return SNAPPING_PANEL_RATIO
+  return Math.max(SNAPPING_PANEL_RATIO, snappingHeight.value / availableHeight)
+})
 
-const requestHeight = ref('50%')
-const responseHeight = ref('50%')
+const split = ref(DEFAULT_SPLIT_RATIO) // proportion of request panel height
+const requestHeight = computed(() => `${split.value * 100}%`)
+const responseHeight = computed(() => `${(1 - split.value) * 100}%`)
+
+const isRequestCollapsed = computed(() => split.value <= snappingRatio.value)
+const isResponseCollapsed = computed(() => (1 - split.value) <= snappingRatio.value)
+
+function setSplit(value: number, { persist = true }: { persist?: boolean } = {}) {
+  const next = Math.min(1, Math.max(0, value))
+  split.value = next
+
+  if (persist && mode === 'edit') {
+    responsePanelCollapsed.value = isResponseCollapsed.value
+  }
+}
+
+function setResponseCollapsed(collapsed: boolean, persist = true) {
+  setSplit(collapsed ? 1 : DEFAULT_SPLIT_RATIO, { persist })
+}
+
+function setRequestCollapsed(persist = true) {
+  setSplit(0, { persist })
+}
+
+if (mode === 'edit') {
+  // Apply initial state once: collapse response if no response nodes, otherwise follow preference in edit mode.
+  const collapseByNodes = configNodeCounts.value.response === 0
+  const collapseByPreference = responsePanelCollapsed.value
+  setResponseCollapsed(collapseByNodes || collapseByPreference, false)
+} else {
+  watch(() => configNodeCounts.value.response, (count) => {
+    setResponseCollapsed(count === 0, false)
+  }, { immediate: true })
+}
 
 const onRequestLabelClick = () => {
   if (!resizable) return
 
   if (isRequestCollapsed.value) {
-    requestHeight.value = '50%'
-    responseHeight.value = '50%'
+    setResponseCollapsed(false)
   } else {
-    requestHeight.value = '0'
-    responseHeight.value = '100%'
+    setRequestCollapsed()
   }
 }
 
 const onResponseLabelClick = () => {
   if (!resizable) return
 
-  if (isResponseCollapsed.value) {
-    requestHeight.value = '50%'
-    responseHeight.value = '50%'
-  } else {
-    requestHeight.value = '100%'
-    responseHeight.value = '0'
-  }
+  setResponseCollapsed(!isResponseCollapsed.value)
 }
-
-const requestResizableHeight = computed(() =>
-  flowPanelsRect.height.value - requestLabelRect.height.value - resizeHandleRect.height.value - responseLabelRect.height.value,
-)
 
 const { isDragging } = useDraggable(resizeHandle, {
   onMove(position) {
@@ -221,18 +252,17 @@ const { isDragging } = useDraggable(resizeHandle, {
         handleCenterToRequestCanvasTop / requestResizableHeight.value,
       ),
     )
-    requestHeight.value = `${requestProportion * 100}%`
-    responseHeight.value = `${(1 - requestProportion) * 100}%`
+    setSplit(requestProportion, { persist: false })
   },
   onEnd() {
     if (!resizable) return
 
     if (requestCanvasContainerRect.height.value < snappingHeight.value) {
-      requestHeight.value = '0'
-      responseHeight.value = '100%'
+      setRequestCollapsed()
     } else if (responseCanvasContainerRect.height.value < snappingHeight.value) {
-      requestHeight.value = '100%'
-      responseHeight.value = '0'
+      setResponseCollapsed(true)
+    } else {
+      setSplit(split.value)
     }
   },
 })
