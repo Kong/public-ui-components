@@ -48,6 +48,7 @@
             @update:model-value="handleScopeChange"
           />
           <KRadio
+            v-if="radioGroup[1]"
             v-model="scoped"
             card
             card-orientation="horizontal"
@@ -440,8 +441,9 @@ function hasScopeId(value: any): value is { id: string } {
   gap: $kui-space-80;
 
   .scope {
-    display: flex;
+    display: grid;
     gap: $kui-space-50;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   :deep(.form-group) {
