@@ -385,6 +385,7 @@ const labelDictionary: Record<string, string> = {
   url: 'URL',
   http: 'HTTP',
   api: 'API',
+  uri: 'URI',
 }
 
 function replaceByDictionary(name: string) {
