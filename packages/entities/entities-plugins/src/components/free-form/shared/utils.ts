@@ -94,12 +94,11 @@ export function sortFieldsByFieldNames(
  * 3. Dependencies are satisfied before dependent fields are added
  * 4. Transitive dependencies across bundles are handled correctly
  *
- * Algorithm:
- * - Iterates through fields in original order
- * - Skips bundled fields if their dependencies aren't satisfied yet
- * - When a field's dependencies are met, adds it along with all subsequent
- *   fields in the same bundle
- * - Triggers cascade checking to handle transitive dependencies across bundles
+ * Uses a multi-round iteration approach:
+ * - Each round processes fields in original order
+ * - Adds fields whose dependencies are satisfied
+ * - When adding a bundled field, also adds all subsequent fields in that bundle
+ * - Repeats until all fields are added or no progress is made
  *
  * @example
  * // Simple bundle - C and B grouped together
@@ -127,52 +126,41 @@ export function sortFieldsByBundles(
   fields: NamedFieldSchema[],
   bundles: string[][],
 ): NamedFieldSchema[] {
-  interface BundleInfo {
-    bundleIndex: number
-    positionInBundle: number
-  }
-
-  // Build lookup maps for O(1) access
-  // Support fields appearing in multiple bundles
-  const bundleMap = new Map<string, BundleInfo[]>()
-  bundles.forEach((bundle, bundleIndex) => {
-    bundle.forEach((fieldName, positionInBundle) => {
-      if (!bundleMap.has(fieldName)) {
-        bundleMap.set(fieldName, [])
-      }
-      bundleMap.get(fieldName)!.push({ bundleIndex, positionInBundle })
-    })
-  })
-
+  // Build lookup maps
   const fieldMap = new Map<string, NamedFieldSchema>()
   fields.forEach(field => {
     const fieldName = Object.keys(field)[0]
     fieldMap.set(fieldName, field)
   })
 
-  // Track processing state
-  const addedFields = new Set<string>()
+  // Map each field to its bundles and positions
+  const bundleMap = new Map<string, Array<{ bundleIndex: number, position: number }>>()
+  bundles.forEach((bundle, bundleIndex) => {
+    bundle.forEach((fieldName, position) => {
+      if (!bundleMap.has(fieldName)) {
+        bundleMap.set(fieldName, [])
+      }
+      bundleMap.get(fieldName)!.push({ bundleIndex, position })
+    })
+  })
+
+  const added = new Set<string>()
   const result: NamedFieldSchema[] = []
-  const skippedFields = new Set<string>() // Track fields we've seen but skipped due to dependencies
+  const pending = new Set<string>() // Track fields we've seen but couldn't add yet
 
-  // Helper: Get field name from NamedFieldSchema
-  const getFieldName = (field: NamedFieldSchema): string => Object.keys(field)[0]
-
-  // Helper: Check if all dependencies for a field are satisfied
-  // A field's dependencies are satisfied if ALL its bundle dependencies are satisfied
-  const areDependenciesSatisfied = (fieldName: string): boolean => {
-    const bundleInfos = bundleMap.get(fieldName)
-    if (!bundleInfos || bundleInfos.length === 0) return true
+  // Check if a field's dependencies are satisfied
+  const canAdd = (fieldName: string): boolean => {
+    const fieldBundles = bundleMap.get(fieldName)
+    if (!fieldBundles) return true // Not in any bundle
 
     // Check all bundles this field appears in
-    for (const bundleInfo of bundleInfos) {
-      const bundle = bundles[bundleInfo.bundleIndex]
-      // All fields before this one in this bundle must be added
-      // BUT only check dependencies that exist in fieldMap
-      for (let i = 0; i < bundleInfo.positionInBundle; i++) {
-        const dependencyField = bundle[i]
-        // Only check dependency if it exists in the fields list
-        if (fieldMap.has(dependencyField) && !addedFields.has(dependencyField)) {
+    for (const { bundleIndex, position } of fieldBundles) {
+      const bundle = bundles[bundleIndex]
+      // Check all fields before this one in the bundle
+      for (let i = 0; i < position; i++) {
+        const dependency = bundle[i]
+        // Only check if dependency exists in fieldMap
+        if (fieldMap.has(dependency) && !added.has(dependency)) {
           return false
         }
       }
@@ -180,105 +168,58 @@ export function sortFieldsByBundles(
     return true
   }
 
-  // Helper: Add field and cascade to dependent fields
-  const addFieldWithCascade = (fieldName: string, shouldCascade: boolean = true) => {
-    if (addedFields.has(fieldName)) return
+  // Add a field and all subsequent fields in its bundles
+  // Then recursively check if any pending fields can now be added
+  const addField = (fieldName: string) => {
+    if (added.has(fieldName)) return
 
     const field = fieldMap.get(fieldName)
     if (!field) return
 
-    const bundleInfos = bundleMap.get(fieldName)
-
-    // Add current field
+    // Add the field
     result.push(field)
-    addedFields.add(fieldName)
+    added.add(fieldName)
+    pending.delete(fieldName)
 
-    // Add remaining fields in all bundles this field appears in
-    if (bundleInfos) {
-      for (const bundleInfo of bundleInfos) {
-        const bundle = bundles[bundleInfo.bundleIndex]
-        for (let i = bundleInfo.positionInBundle + 1; i < bundle.length; i++) {
+    // Add remaining fields in all bundles this field belongs to
+    const fieldBundles = bundleMap.get(fieldName)
+    if (fieldBundles) {
+      for (const { bundleIndex, position } of fieldBundles) {
+        const bundle = bundles[bundleIndex]
+        for (let i = position + 1; i < bundle.length; i++) {
           const nextFieldName = bundle[i]
-          if (!addedFields.has(nextFieldName)) {
+          if (!added.has(nextFieldName)) {
             const nextField = fieldMap.get(nextFieldName)
             if (nextField) {
               result.push(nextField)
-              addedFields.add(nextFieldName)
+              added.add(nextFieldName)
+              pending.delete(nextFieldName)
             }
           }
         }
       }
     }
 
-    // Cascade: check if newly added fields unlock other bundles
-    // Only cascade if requested and only check previously skipped fields
-    if (shouldCascade) {
-      let hasNewAdditions = true
-      while (hasNewAdditions) {
-        hasNewAdditions = false
-
-        // Only check fields that we've already encountered and skipped
-        for (const candidateFieldName of skippedFields) {
-          if (addedFields.has(candidateFieldName)) {
-            skippedFields.delete(candidateFieldName)
-            continue
-          }
-
-          if (areDependenciesSatisfied(candidateFieldName)) {
-            const candidateField = fieldMap.get(candidateFieldName)
-            if (!candidateField) continue
-
-            const candidateBundleInfos = bundleMap.get(candidateFieldName)
-            if (!candidateBundleInfos) continue
-
-            hasNewAdditions = true
-            result.push(candidateField)
-            addedFields.add(candidateFieldName)
-            skippedFields.delete(candidateFieldName)
-
-            // Add remaining fields in all bundles
-            for (const candidateBundleInfo of candidateBundleInfos) {
-              const bundle = bundles[candidateBundleInfo.bundleIndex]
-              for (let i = candidateBundleInfo.positionInBundle + 1; i < bundle.length; i++) {
-                const nextFieldName = bundle[i]
-                if (!addedFields.has(nextFieldName)) {
-                  const nextField = fieldMap.get(nextFieldName)
-                  if (nextField) {
-                    result.push(nextField)
-                    addedFields.add(nextFieldName)
-                    skippedFields.delete(nextFieldName)
-                  }
-                }
-              }
-            }
-          }
-        }
+    // Cascade: check if newly added fields unlock any pending fields
+    // Use Array.from to avoid modifying Set while iterating
+    const pendingArray = Array.from(pending)
+    for (const pendingFieldName of pendingArray) {
+      if (canAdd(pendingFieldName)) {
+        addField(pendingFieldName) // Recursive call
       }
     }
   }
 
   // Main loop: process fields in original order
   for (const field of fields) {
-    const fieldName = getFieldName(field)
+    const fieldName = Object.keys(field)[0]
 
-    if (addedFields.has(fieldName)) {
-      continue
-    }
+    if (added.has(fieldName)) continue
 
-    const bundleInfos = bundleMap.get(fieldName)
-
-    if (!bundleInfos || bundleInfos.length === 0) {
-      // Not in any bundle - add directly without cascading
-      addFieldWithCascade(fieldName, false)
+    if (canAdd(fieldName)) {
+      addField(fieldName)
     } else {
-      // In a bundle - check dependencies first
-      if (areDependenciesSatisfied(fieldName)) {
-        // Only cascade for bundled fields (to handle transitive deps)
-        addFieldWithCascade(fieldName, true)
-      } else {
-        // Mark as skipped so cascade can process it later
-        skippedFields.add(fieldName)
-      }
+      pending.add(fieldName)
     }
   }
 

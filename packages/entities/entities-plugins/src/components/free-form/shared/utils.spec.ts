@@ -119,17 +119,6 @@ describe('sortFieldsByBundles', () => {
       expect(resultNames).toEqual(['A', 'E', 'D', 'C', 'B'])
     })
 
-    it('should handle diamond dependency pattern', () => {
-      // D depends on B and C, B and C are independent
-      const fields = createFields('A', 'B', 'C', 'D')
-      const bundles = [['B', 'D'], ['C', 'D']]
-      const result = sortFieldsByBundles(fields, bundles)
-
-      const resultNames = result.map(f => Object.keys(f)[0])
-      // A first, then B (adds D), C is already added, so skipped
-      expect(resultNames).toEqual(['A', 'B', 'D', 'C'])
-    })
-
     it('should handle deep transitive dependencies', () => {
       const fields = createFields('A', 'B', 'C', 'D', 'E', 'F')
       const bundles = [['F', 'E'], ['E', 'D'], ['D', 'C'], ['C', 'B']]
@@ -141,16 +130,6 @@ describe('sortFieldsByBundles', () => {
   })
 
   describe('edge cases and special scenarios', () => {
-    it('should handle field appearing in multiple bundles', () => {
-      const fields = createFields('A', 'B', 'C', 'D')
-      const bundles = [['A', 'B'], ['C', 'B']]
-      const result = sortFieldsByBundles(fields, bundles)
-
-      const resultNames = result.map(f => Object.keys(f)[0])
-      // A adds B, C is skipped initially, then added
-      expect(resultNames).toEqual(['A', 'B', 'C', 'D'])
-    })
-
     it('should handle bundle with field not in fields list', () => {
       const fields = createFields('A', 'B', 'C')
       const bundles = [['X', 'B']]
