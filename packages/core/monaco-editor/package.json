@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/monaco-editor",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "main": "./dist/monaco-editor.umd.js",
   "module": "./dist/monaco-editor.es.js",
@@ -57,11 +57,13 @@
     "errorLimit": "20MB"
   },
   "peerDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": ">=9.42.0 <10.0.0",
     "monaco-editor": ">=0.55.0 <1.0.0",
     "vue": "^3.5.22"
   },
   "devDependencies": {
+    "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.1",
     "@kong/kongponents": "9.46.1",
     "monaco-editor": "^0.55.1",
