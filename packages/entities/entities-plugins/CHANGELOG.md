@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.126.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.125.1...@kong-ui-public/entities-plugins@9.126.0) (2025-11-26)
+
+
+### Features
+
+* **entities-plugins:** add 'uri' to freeform dictionary ([#2670](https://github.com/Kong/public-ui-components/issues/2670)) ([1b25dd8](https://github.com/Kong/public-ui-components/commit/1b25dd8caf451fba73496654b2e250661ef72406))
+
+
+
+
+
 ## [9.125.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.125.0...@kong-ui-public/entities-plugins@9.125.1) (2025-11-26)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

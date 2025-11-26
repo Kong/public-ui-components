@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.27.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.27.1...@kong-ui-public/entities-vaults@3.27.2) (2025-11-26)
+
+
+### Bug Fixes
+
+* **entities-vaults:** unable to clear oauth2_audiences ([#2669](https://github.com/Kong/public-ui-components/issues/2669)) ([697ff6e](https://github.com/Kong/public-ui-components/commit/697ff6e2fe69253087defc98e1c60c0079d9f8f4))
+
+
+
+
+
 ## [3.27.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.27.0...@kong-ui-public/entities-vaults@3.27.1) (2025-11-26)
 
 
