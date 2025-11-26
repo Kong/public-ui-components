@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.126.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.126.0...@kong-ui-public/entities-plugins@9.126.1) (2025-11-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** 1 scope option style ([#2671](https://github.com/Kong/public-ui-components/issues/2671)) ([6dea1e2](https://github.com/Kong/public-ui-components/commit/6dea1e2d3d2453cded8034ce2e70b0a2bbb698ba))
+
+
+
+
+
 # [9.126.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.125.1...@kong-ui-public/entities-plugins@9.126.0) (2025-11-26)
 
 
