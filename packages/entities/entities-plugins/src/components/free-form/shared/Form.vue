@@ -62,15 +62,7 @@ const { getSchema, formData, resetFormData, rootRenderRules } = provideFormShare
 const childFields = computed(() => {
   const { fields } = getSchema()
 
-  if (fieldsOrder) {
-    return sortFieldsByFieldNames(fields, fieldsOrder)
-  }
-
   let sortedFields = [...fields]
-
-  if (rootRenderRules.value?.bundles) {
-    sortedFields = sortFieldsByBundles([...sortedFields], rootRenderRules.value.bundles)
-  }
 
   if (rootRenderRules.value?.dependencies) {
     sortedFields = filterByDependencies(
@@ -78,6 +70,14 @@ const childFields = computed(() => {
       rootRenderRules.value.dependencies,
       fieldName => get(formData, fieldName),
     )
+  }
+
+  if (fieldsOrder) {
+    return sortFieldsByFieldNames(sortedFields, fieldsOrder)
+  }
+
+  if (rootRenderRules.value?.bundles) {
+    sortedFields = sortFieldsByBundles([...sortedFields], rootRenderRules.value.bundles)
   }
 
   return sortedFields

@@ -198,20 +198,20 @@ const childFields = computed(() => {
     fields = fields.filter(f => !omit.includes(Object.keys(f)[0]))
   }
 
-  if (fieldsOrder) {
-    return sortFieldsByFieldNames(fields, fieldsOrder)
-  }
-
-  if (currentRenderRules.value?.bundles) {
-    fields = sortFieldsByBundles([...fields], currentRenderRules.value.bundles)
-  }
-
   if (currentRenderRules.value?.dependencies) {
     fields = filterByDependencies(
       fields,
       currentRenderRules.value.dependencies,
       fieldName => get(fieldValue!.value, fieldName),
     )
+  }
+
+  if (fieldsOrder) {
+    return sortFieldsByFieldNames(fields, fieldsOrder)
+  }
+
+  if (currentRenderRules.value?.bundles) {
+    fields = sortFieldsByBundles([...fields], currentRenderRules.value.bundles)
   }
 
   return fields
