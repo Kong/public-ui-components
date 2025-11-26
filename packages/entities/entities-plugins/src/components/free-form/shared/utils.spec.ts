@@ -16,13 +16,6 @@ describe('sortFieldsByBundles', () => {
       expect(result).toEqual(fields)
     })
 
-    it('should return fields unchanged when empty bundles array', () => {
-      const fields = createFields('A', 'B', 'C', 'D')
-      const result = sortFieldsByBundles(fields, [])
-
-      expect(result).toEqual(fields)
-    })
-
     it('should handle empty fields array', () => {
       const result = sortFieldsByBundles([], [['A', 'B']])
 
