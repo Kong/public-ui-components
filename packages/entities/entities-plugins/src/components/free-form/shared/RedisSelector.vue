@@ -237,7 +237,7 @@ onBeforeMount(() => {
 })
 
 const { createComputedRenderRules, formData } = useFormShared()
-const parentPath = computed(() => resolve(...toArray(formRedisPath.value).slice(0, -1)))
+const parentPath = computed(() => removeRootSymbol(resolve(...toArray(formRedisPath.value).slice(0, -1))))
 const redisRenderRulesComputed = createComputedRenderRules(parentPath.value)
 
 // Clear partial value if dependency not met
