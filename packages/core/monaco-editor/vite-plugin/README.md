@@ -2,7 +2,7 @@
 
 A plugin to simplify loading the [Monaco Editor](https://github.com/microsoft/monaco-editor) with [Vite](https://vite.dev/). This plugin can be used standalone with `monaco-editor` or along with the runtime code of `@kong-public-ui/monaco-editor` to reduce bundle size.
 
-This plugin configures and loads the Monaco Editor web workers for you, so you don't need to manually set them up as described in the [official Monaco Editor ESM integration guide](https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md#using-vite).
+This plugin also configures and loads the Monaco Editor web workers for you, so you don't need to manually set them up as described in the [official Monaco Editor ESM integration guide](https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md#using-vite).
 
 ## Usage
 
