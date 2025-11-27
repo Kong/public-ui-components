@@ -36,6 +36,16 @@ export function getName(p: string): string {
   return arr[arr.length - 1]
 }
 
+/**
+ * `$.a.b.c` => `a.b.c`
+ */
+export function removeRootSymbol(path: string) {
+  if (path.startsWith(rootSymbol)) {
+    path = resolve(...toArray(path).slice(1))
+  }
+  return path
+}
+
 export function useRedisNonstandardFields(
   partialFields: FlattendRedisConfigurationFields,
   redisFields: Field[],

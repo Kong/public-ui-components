@@ -985,7 +985,7 @@ function createRenderRuleRegistry() {
     }
 
     // Use flattenedRules to get path-specific rules
-    const generalizedPath = generalizePath(fieldPath)
+    const generalizedPath = utils.removeRootSymbol(generalizePath(fieldPath))
     return flattenedRules.value[generalizedPath]
   }
 

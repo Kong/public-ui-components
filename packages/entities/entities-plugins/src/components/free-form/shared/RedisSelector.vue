@@ -91,17 +91,19 @@
 <script setup lang="ts">
 import ObjectField from '../shared/ObjectField.vue'
 import RedisConfigCard from './RedisConfigCard.vue'
-import { onBeforeMount, inject, computed, ref, watch } from 'vue'
+import { onBeforeMount, inject, computed, ref, watch, onBeforeUnmount } from 'vue'
 import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
 import type { RedisPartialType, Redis } from './types'
 import { partialEndpoints, fieldsOrder, REDIS_PARTIAL_INFO } from './const'
-import { useField, useFormData } from './composables'
+import { useField, useFormData, useFormShared } from './composables'
 import { RedisConfigurationSelector } from '@kong-ui-public/entities-redis-configurations'
 import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import { useToaster } from '../../../composables/useToaster'
+import { removeRootSymbol, resolve, toArray } from './utils'
+import { get } from 'lodash-es'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -231,6 +233,22 @@ onBeforeMount(() => {
     usePartial.value = true
   } else if (redisFieldsValue?.value) {
     redisFieldsSaved.value = redisFieldsValue.value
+  }
+})
+
+const { createComputedRenderRules, formData } = useFormShared()
+const parentPath = computed(() => resolve(...toArray(formRedisPath.value).slice(0, -1)))
+const redisRenderRulesComputed = createComputedRenderRules(parentPath.value)
+
+// Clear partial value if dependency not met
+onBeforeUnmount(() => {
+  if (usePartial.value && partialValue.value && redisRenderRulesComputed.value?.dependencies?.redis) {
+    const [field, value] = redisRenderRulesComputed.value.dependencies.redis
+    const targetFieldPath = resolve(parentPath.value, field)
+    const targetFieldValue = get(formData, removeRootSymbol(targetFieldPath))
+    if (targetFieldValue !== value) {
+      partialValue.value = isFormEditing ? null : undefined
+    }
   }
 })
 </script>
