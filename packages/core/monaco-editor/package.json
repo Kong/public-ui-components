@@ -11,8 +11,13 @@
   "exports": {
     ".": {
       "import": "./dist/monaco-editor.es.js",
-      "require": "./dist/monaco-editor.umd.js",
+      "require": "./dist/monaco-editor.cjs.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./vite-plugin": {
+      "import": "./dist/vite-plugin.es.js",
+      "require": "./dist/vite-plugin.cjs.js",
+      "types": "./dist/types/vite-plugin/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -53,8 +58,8 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "warningLimit": "19.5MB",
-    "errorLimit": "20MB"
+    "warningLimit": "15KB",
+    "errorLimit": "20KB"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
