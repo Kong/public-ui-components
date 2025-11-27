@@ -74,17 +74,19 @@
       v-if="!usePartial"
       v-bind="props"
       as-child
-      :fields-order="fieldsOrder"
+      :fields-order="redisFieldsOrder"
       :name="formRedisPath"
+      :render-rules="redisRenderRules"
       reset-label-path="reset"
     />
   </KCard>
   <ObjectField
     v-else
     v-bind="props"
-    :fields-order="fieldsOrder"
+    :fields-order="redisFieldsOrder"
     hide-required-asterisk
     :name="formRedisPath"
+    :render-rules="redisRenderRules"
   />
 </template>
 
@@ -96,14 +98,43 @@ import english from '../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { useAxios, useErrors, type KongManagerBaseFormConfig, type KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
-import type { RedisPartialType, Redis } from './types'
-import { partialEndpoints, fieldsOrder, REDIS_PARTIAL_INFO } from './const'
+import type { RedisPartialType, Redis, RenderRules } from './types'
+import { partialEndpoints, REDIS_PARTIAL_INFO } from './const'
 import { useField, useFormData } from './composables'
 import { RedisConfigurationSelector } from '@kong-ui-public/entities-redis-configurations'
 import '@kong-ui-public/entities-redis-configurations/dist/style.css'
 import { useToaster } from '../../../composables/useToaster'
 
 const { t } = createI18n<typeof english>('en-us', english)
+
+// Redis configuration fields order
+const redisFieldsOrder = [
+  'host', 'port', 'database', 'username', 'password',
+  'sentinel_master', 'sentinel_role', 'sentinel_nodes', 'sentinel_username', 'sentinel_password',
+  'cluster_nodes', 'cluster_max_redirections', 'ssl', 'ssl_verify', 'server_name',
+  'keepalive_backlog', 'keepalive_pool_size', 'timeout', 'read_timeout', 'send_timeout', 'connect_timeout',
+  'connection_is_proxied', 'redis_proxy_type',
+  'cloud_authentication',
+]
+
+const redisRenderRules: RenderRules = {
+  dependencies: {
+    'cloud_authentication.aws_cache_name': ['cloud_authentication.auth_provider', 'aws'],
+    'cloud_authentication.aws_region': ['cloud_authentication.auth_provider', 'aws'],
+    'cloud_authentication.aws_is_serverless': ['cloud_authentication.auth_provider', 'aws'],
+    'cloud_authentication.aws_access_key_id': ['cloud_authentication.auth_provider', 'aws'],
+    'cloud_authentication.aws_secret_access_key': ['cloud_authentication.auth_provider', 'aws'],
+    'cloud_authentication.aws_assume_role_arn': ['cloud_authentication.auth_provider', 'aws'],
+    'cloud_authentication.aws_role_session_name': ['cloud_authentication.auth_provider', 'aws'],
+
+    'cloud_authentication.gcp_service_account_json': ['cloud_authentication.auth_provider', 'gcp'],
+
+    'cloud_authentication.azure_client_id': ['cloud_authentication.auth_provider', 'azure'],
+    'cloud_authentication.azure_client_secret': ['cloud_authentication.auth_provider', 'azure'],
+    'cloud_authentication.azure_tenant_id': ['cloud_authentication.auth_provider', 'azure'],
+  },
+}
+
 
 interface RedisSelectorProps {
   defaultRedisConfigItem?: string
