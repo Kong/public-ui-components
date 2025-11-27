@@ -17,6 +17,10 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
   },
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/tests/mocks/monaco-editor-api.ts'],
+  },
 }))
 
 // If we are trying to preview a build of the local `package/monaco-editor/sandbox` directory,

@@ -304,7 +304,6 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-oauth2_client_secret').type('secret')
       cy.getTestId('vault-form-config-hcv-oauth2_role_name').type('name')
       cy.getTestId('vault-form-config-hcv-oauth2_token_endpoint').type('endpoint')
-      cy.getTestId('vault-form-config-hcv-oauth2_audiences').type('audiences')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       // disables save when required field is cleared - general
@@ -774,7 +773,6 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-form-config-hcv-oauth2_client_secret').type('secret')
       cy.getTestId('vault-form-config-hcv-oauth2_role_name').type('name')
       cy.getTestId('vault-form-config-hcv-oauth2_token_endpoint').type('endpoint')
-      cy.getTestId('vault-form-config-hcv-oauth2_audiences').type('audiences')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
 
       // disables save when required field is cleared - general

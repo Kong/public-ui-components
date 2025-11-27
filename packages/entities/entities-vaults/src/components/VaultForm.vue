@@ -456,7 +456,6 @@
                   tooltipAttributes: { maxWidth: '400' },
                 }"
                 :readonly="form.isReadonly"
-                required
               />
             </div>
             <KCheckbox
@@ -1132,6 +1131,7 @@ const isVaultConfigValid = computed((): boolean => {
           'approle_auth_path',
           'approle_secret_id',
           'approle_secret_id_file',
+          'oauth2_audiences',
         ].includes(key)
       ) {
         return false
@@ -1154,7 +1154,7 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && ['cert_auth_role_name', 'cert_auth_cert', 'cert_auth_cert_key'].includes(key)) {
         return false
       }
-      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.OAUTH2 && ['oauth2_client_id', 'oauth2_client_secret', 'oauth2_role_name', 'oauth2_token_endpoint', 'oauth2_audiences'].includes(key)) {
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.OAUTH2 && ['oauth2_client_id', 'oauth2_client_secret', 'oauth2_role_name', 'oauth2_token_endpoint'].includes(key)) {
         return false
       }
       return isEmpty((configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig])
@@ -1248,7 +1248,7 @@ const getPayload = computed((): Record<string, any> => {
       cert_auth_cert_key: configFields[VaultProviders.HCV].cert_auth_cert_key,
     }),
     ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.OAUTH2 && {
-      oauth2_audiences: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_audiences,
+      oauth2_audiences: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_audiences || null,
       oauth2_client_id: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_client_id,
       oauth2_client_secret: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_client_secret,
       oauth2_role_name: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_role_name,

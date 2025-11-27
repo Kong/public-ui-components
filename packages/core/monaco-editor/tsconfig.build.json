@@ -1,7 +1,9 @@
 {
   "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "types": []
+   "compilerOptions": {
+    "types": [
+      "vite/client"
+    ]
   },
   "exclude": [
     "src/**/*.cy.ts",

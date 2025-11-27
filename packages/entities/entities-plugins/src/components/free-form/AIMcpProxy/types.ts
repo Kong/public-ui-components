@@ -6,6 +6,7 @@ export interface AIMcpProxy {
   logging: Logging
   server?: Server
   tools?: Tool[]
+  default_acl?: DefaultACL[]
   max_request_body_size?: number | null
 }
 
@@ -49,4 +50,10 @@ export interface Tool {
     idempotent_hint?: boolean
     open_world_hint?: boolean
   }
+}
+
+export interface DefaultACL {
+  allow: string[]
+  deny: string[]
+  scope: string
 }
