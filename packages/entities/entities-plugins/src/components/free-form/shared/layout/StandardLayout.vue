@@ -4,6 +4,7 @@
     class="ff-standard-layout"
     :config="realFormConfig"
     :data="(prunedData as T)"
+    :render-rules="renderRules"
     :schema="freeFormSchema"
     tag="div"
     @change="handleDataChange"
@@ -156,6 +157,7 @@ export type Props<T extends FreeFormPluginData = any> = {
   editorMode?: 'form' | 'code'
   /** FreeForm configuration */
   formConfig?: FormConfig<T>
+  renderRules?: RenderRules
   pluginName: string
 }
 </script>
@@ -172,7 +174,7 @@ import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { PluginValidityChangeEvent } from '../../../../types'
 import VFGField from '../VFGField.vue'
-import type { FormConfig } from '../types'
+import type { FormConfig, RenderRules } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'

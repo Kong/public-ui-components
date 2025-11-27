@@ -21,6 +21,7 @@
         :on-model-updated="onModelUpdated"
         :on-validity-change="onValidityChange"
         :plugin-name="formModel.name"
+        :render-rules="PLUGIN_METADATA[formModel.name]?.freeformRenderRules"
         :schema="freeformSchema"
         @global-action="(name: GlobalAction, payload: any) => $emit('globalAction', name, payload)"
       >
@@ -242,6 +243,7 @@ const props = defineProps({
   engine: {
     type: String as PropType<'vfg' | 'freeform'>,
     required: false,
+    default: undefined,
   },
 })
 
