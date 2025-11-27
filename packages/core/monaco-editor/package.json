@@ -10,13 +10,13 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/monaco-editor.es.js",
-      "require": "./dist/monaco-editor.cjs.js",
+      "import": "./dist/monaco-editor.js",
+      "require": "./dist/monaco-editor.cjs",
       "types": "./dist/types/index.d.ts"
     },
     "./vite-plugin": {
-      "import": "./dist/vite-plugin.es.js",
-      "require": "./dist/vite-plugin.cjs.js",
+      "import": "./dist/vite-plugin.js",
+      "require": "./dist/vite-plugin.cjs",
       "types": "./dist/types/vite-plugin/index.d.ts"
     },
     "./package.json": "./package.json",

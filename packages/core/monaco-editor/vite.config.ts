@@ -18,7 +18,7 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         'monaco-editor': resolve(__dirname, './src/index.ts'),
         'vite-plugin': resolve(__dirname, './vite-plugin/index.ts'),
       },
-      fileName: (format, entryName) => `${entryName}.${format}.js`,
+      fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
     },
     rollupOptions: {
       external: [
