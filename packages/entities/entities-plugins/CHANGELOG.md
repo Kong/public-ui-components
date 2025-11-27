@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.127.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.126.1...@kong-ui-public/entities-plugins@9.127.0) (2025-11-27)
+
+
+### Features
+
+* **entities-plugins:** freeform - render rules [KM-2039] ([#2663](https://github.com/Kong/public-ui-components/issues/2663)) ([959dbe1](https://github.com/Kong/public-ui-components/commit/959dbe175aa8daff720f6e92a0d46c4d4918efd3))
+
+
+
+
+
 ## [9.126.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.126.0...@kong-ui-public/entities-plugins@9.126.1) (2025-11-26)
 
 
