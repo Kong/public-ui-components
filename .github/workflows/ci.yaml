@@ -442,7 +442,7 @@ jobs:
         uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
 
       - name: Post Slack notification
-        uses: Kong/public-shared-actions/slack-actions/workflow-notification@v2
+        uses: Kong/public-shared-actions/slack-actions/workflow-notification@a18abf762d6e2444bcbfd20de70451ea1e3bc1b1 # v4.0.1
         with:
           slack-webhook-url: ${{ env.WORKFLOW_CONCLUSION == 'failure' && secrets.SLACK_WEBHOOK_URL_ALERT || secrets.SLACK_WEBHOOK_URL_NOTIFY }}
           status: ${{ env.WORKFLOW_CONCLUSION == 'failure' && 'failure' || 'success' }}
