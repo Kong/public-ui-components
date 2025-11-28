@@ -1,5 +1,12 @@
+import {
+  KUI_FONT_SIZE_20,
+  KUI_LINE_HEIGHT_30,
+  KUI_FONT_FAMILY_CODE,
+  KUI_FONT_WEIGHT_MEDIUM,
+} from '@kong/design-tokens'
 import type { editor } from 'monaco-editor'
-import { KUI_FONT_FAMILY_CODE, KUI_FONT_SIZE_20, KUI_FONT_WEIGHT_MEDIUM, KUI_LINE_HEIGHT_30 } from '@kong/design-tokens'
+import type { BundledTheme } from 'shiki'
+import type { EditorThemes } from '../types'
 
 export const DEFAULT_MONACO_OPTIONS = Object.freeze<Partial<editor.IStandaloneEditorConstructionOptions>>({
   autoClosingQuotes: 'always',
@@ -44,3 +51,9 @@ export const DEFAULT_MONACO_OPTIONS = Object.freeze<Partial<editor.IStandaloneEd
     addExtraSpaceOnTop: false, // we need this set to false to get the correct absolute position, otherwise when the search box opens the content shifts
   },
 })
+
+export const DEFAULT_SHIKI_LANGS = ['javascript', 'typescript', 'json', 'css', 'html', 'yaml', 'markdown']
+export const SHIKI_THEMES: Record<EditorThemes, BundledTheme> = {
+  light: 'catppuccin-latte',
+  dark: 'catppuccin-mocha',
+}
