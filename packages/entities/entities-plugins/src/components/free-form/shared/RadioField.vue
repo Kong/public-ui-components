@@ -24,6 +24,7 @@
         :key="item.value"
         v-model:model-value="field.value.value"
         card-orientation="horizontal"
+        :disabled="field.isInheritedDisabled.value"
         :label="item.label"
         :selected-value="item.value"
         @update:model-value="onChange"

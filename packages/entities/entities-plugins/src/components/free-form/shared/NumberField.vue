@@ -16,6 +16,7 @@
     }"
     :data-autofocus="isAutoFocus"
     :data-testid="`ff-${field.path.value}`"
+    :disabled="field.isInheritedDisabled.value"
     :model-value="modelValue"
     type="number"
     @update:model-value="handleUpdate"

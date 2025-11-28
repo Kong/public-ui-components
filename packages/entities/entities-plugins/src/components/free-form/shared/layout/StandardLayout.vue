@@ -1,4 +1,25 @@
 <template>
+  <Teleport
+    v-if="config?.app === 'konnect'"
+    defer
+    to="#plugin-form-page-actions"
+  >
+    <div class="plugin-form-page-action-buttons">
+      <KButton
+        appearance="secondary"
+        icon
+      >
+        <BookIcon />
+      </KButton>
+      <KButton
+        appearance="secondary"
+        icon
+      >
+        <CodeblockIcon />
+      </KButton>
+    </div>
+  </Teleport>
+
   <Form
     ref="form"
     class="ff-standard-layout"
@@ -29,11 +50,14 @@
 
     <template v-if="editorMode === 'form'">
       <EntityFormBlock
-        :description="generalInfoDescription ?? t('plugins.form.sections.general_info.description')"
+        :description="generalInfoDescription ?? 'Choose whether this plugin applies to all traffic (global) or is scoped to a specific service, route, or consumer.'"
         :step="1"
-        :title="generalInfoTitle ?? t('plugins.form.sections.general_info.title')"
+        :title="generalInfoTitle ?? 'Plugin scope'"
       >
-        <div class="enabled">
+        <div
+          v-if="!newUIEnabled"
+          class="enabled"
+        >
           <VFGField
             :form-options="formOptions"
             :vfg-schema="enabledSchema"
@@ -67,7 +91,9 @@
             :vfg-schema="scopeEntitiesSchema"
           />
         </div>
+
         <KCollapse
+          v-if="!newUIEnabled"
           v-model="moreCollapsed"
           trigger-label="Show more"
         >
@@ -98,7 +124,9 @@
           <slot name="general-info-extra" />
         </template>
       </EntityFormBlock>
+
       <EntityFormBlock
+        class="ff-plugin-config-group"
         :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
         :step="2"
         :title="pluginConfigTitle ?? t('plugins.form.sections.plugin_config.title')"
@@ -125,6 +153,15 @@
         >
           <slot name="plugin-config-extra" />
         </template>
+      </EntityFormBlock>
+
+      <EntityFormBlock
+        v-if="newUIEnabled"
+        :description="pluginConfigDescription ?? 'Add a name or tags to help you identify and manage this plugin later.'"
+        :step="3"
+        :title="pluginConfigTitle ?? 'General information'"
+      >
+        <GeneralInfoFields />
       </EntityFormBlock>
     </template>
     <template v-else>
@@ -174,6 +211,11 @@ import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { PluginValidityChangeEvent } from '../../../../types'
 import VFGField from '../VFGField.vue'
+import { BookIcon, CodeblockIcon } from '@kong/icons'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import type { KongManagerBaseFormConfig, KonnectBaseFormConfig } from '@kong-ui-public/entities-shared'
+import { FEATURE_FLAGS } from '../../../../constants'
+import GeneralInfoFields from '../GeneralInfoFields.vue'
 import type { FormConfig, RenderRules } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
@@ -185,6 +227,8 @@ const { t } = createI18n<typeof english>('en-us', english)
 
 const { editorMode = 'form', ...props } = defineProps<Props<T>>()
 
+const config = inject<KonnectBaseFormConfig | KongManagerBaseFormConfig | undefined>(FORMS_CONFIG)
+const newUIEnabled = inject(FEATURE_FLAGS.KM_1945_NEW_PLUGIN_CONFIG_FORM, false)
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
 
 const slots = defineSlots<{
@@ -437,6 +481,11 @@ function hasScopeId(value: any): value is { id: string } {
 </script>
 
 <style lang="scss" scoped>
+.plugin-form-page-action-buttons {
+  display: flex;
+  gap: $kui-space-50;
+}
+
 .ff-standard-layout {
   display: flex;
   flex-direction: column;
@@ -450,6 +499,12 @@ function hasScopeId(value: any): value is { id: string } {
 
   :deep(.form-group) {
     margin-bottom: $kui-space-70;
+  }
+}
+
+.ff-plugin-config-group {
+  :deep(.content) {
+    gap: 0 !important;
   }
 }
 </style>
