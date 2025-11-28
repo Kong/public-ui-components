@@ -851,10 +851,10 @@ describe('<DashboardRenderer />', () => {
       },
     })
 
-    cy.get('[data-testid="tile-0"] .tile-actions .k-badge .badge-text').should('have.text', 'Last 24 hours')
-    cy.get('[data-testid="tile-1"] .tile-actions .k-badge .badge-text').should('have.text', 'Jan 01, 2024 - Feb 01, 2024')
-    cy.get('[data-testid="tile-2"] .tile-actions .k-badge').should('not.exist')
-    cy.get('[data-testid="tile-3"] .tile-actions .k-badge .badge-text').should('have.text', 'Last 7 days')
+    cy.get('[data-testid="tile-0"] .badge-container .k-badge .badge-text').should('have.text', 'Last 24 hours')
+    cy.get('[data-testid="tile-1"] .badge-container .k-badge .badge-text').should('have.text', 'Jan 01, 2024 - Feb 01, 2024')
+    cy.get('[data-testid="tile-2"] .badge-container .k-badge').should('not.exist')
+    cy.get('[data-testid="tile-3"] .badge-container .k-badge .badge-text').should('have.text', 'Last 7 days')
 
     cy.get('@fetcher').should('have.callCount', 4)
 

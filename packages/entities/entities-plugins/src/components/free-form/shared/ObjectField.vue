@@ -16,6 +16,10 @@
       :data-testid="`ff-object-${field.path.value}`"
     >
       <slot>
+        <EntityChecksAlert
+          :entity-checks="field.schema.value?.entity_checks"
+          :omitted-fields="omit"
+        />
         <Field
           v-for="cfield in childFields"
           :key="Object.keys(cfield)[0]"
@@ -91,6 +95,10 @@
         :data-testid="`ff-object-content-${field.path.value}`"
       >
         <slot>
+          <EntityChecksAlert
+            :entity-checks="field.schema.value?.entity_checks"
+            :omitted-fields="omit"
+          />
           <Field
             v-for="cfield in childFields"
             :key="Object.keys(cfield)[0]"
@@ -109,9 +117,12 @@ import { computed, onBeforeMount, toRef, watch } from 'vue'
 import SlideTransition from './SlideTransition.vue'
 import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
 import Field from './Field.vue'
+import EntityChecksAlert from './EntityChecksAlert.vue'
+import { filterByDependencies, sortFieldsByBundles, sortFieldsByFieldNames } from '../shared/utils'
 
 import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
-import type { ResetLabelPathRule } from './types'
+import type { RenderRules, ResetLabelPathRule } from './types'
+import { get } from 'lodash-es'
 
 defineOptions({
   inheritAttrs: false,
@@ -135,10 +146,20 @@ const {
   asChild?: boolean
   resetLabelPath?: ResetLabelPathRule
   fieldsOrder?: string[]
+  renderRules?: RenderRules
 }>()
 
 const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
-const { getSchema, getDefault } = useFormShared()
+const { getSchema, getDefault, useCurrentRenderRules } = useFormShared()
+
+const currentRenderRules = useCurrentRenderRules({
+  fieldPath: field.path!,
+  rules: toRef(props, 'renderRules'),
+  omittedFields: toRef(() => omit),
+  getDefault,
+  getSchema,
+  parentValue: fieldValue!,
+})
 
 const added = defineModel<boolean>('added', { default: undefined })
 
@@ -172,25 +193,28 @@ const asChild = computed(() => {
 
 const childFields = computed(() => {
   let fields = (field.schema!.value as RecordFieldSchema).fields
+
   if (omit) {
     fields = fields.filter(f => !omit.includes(Object.keys(f)[0]))
   }
 
-  if (!fieldsOrder) return fields
+  if (currentRenderRules.value?.dependencies) {
+    fields = filterByDependencies(
+      fields,
+      currentRenderRules.value.dependencies,
+      fieldName => get(fieldValue!.value, fieldName),
+    )
+  }
 
-  return fields.sort((a, b) => {
-    const aKey = Object.keys(a)[0]
-    const bKey = Object.keys(b)[0]
+  if (fieldsOrder) {
+    return sortFieldsByFieldNames(fields, fieldsOrder)
+  }
 
-    const aIndex = fieldsOrder.indexOf(aKey)
-    const bIndex = fieldsOrder.indexOf(bKey)
+  if (currentRenderRules.value?.bundles) {
+    fields = sortFieldsByBundles([...fields], currentRenderRules.value.bundles)
+  }
 
-    if (aIndex === -1 && bIndex === -1) return 0
-    if (aIndex === -1) return 1
-    if (bIndex === -1) return -1
-
-    return aIndex - bIndex
-  })
+  return fields
 })
 
 function handleAddOrRemove() {

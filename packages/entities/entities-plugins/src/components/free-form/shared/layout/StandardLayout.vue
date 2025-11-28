@@ -4,6 +4,7 @@
     class="ff-standard-layout"
     :config="realFormConfig"
     :data="(prunedData as T)"
+    :render-rules="renderRules"
     :schema="freeFormSchema"
     tag="div"
     @change="handleDataChange"
@@ -15,6 +16,14 @@
         :match="({ path }) => path === redisPartialInfo?.redisPath?.value"
       >
         <RedisSelector />
+      </FieldRenderer>
+
+      <!-- Identity Realms field (key-auth plugin only) -->
+      <FieldRenderer
+        v-slot="props"
+        :match="({ path }) => pluginName === 'key-auth' && path === 'config.identity_realms'"
+      >
+        <IdentityRealmsField v-bind="props" />
       </FieldRenderer>
     </template>
 
@@ -40,6 +49,7 @@
             @update:model-value="handleScopeChange"
           />
           <KRadio
+            v-if="radioGroup[1]"
             v-model="scoped"
             card
             card-orientation="horizontal"
@@ -147,6 +157,8 @@ export type Props<T extends FreeFormPluginData = any> = {
   editorMode?: 'form' | 'code'
   /** FreeForm configuration */
   formConfig?: FormConfig<T>
+  renderRules?: RenderRules
+  pluginName: string
 }
 </script>
 
@@ -162,11 +174,12 @@ import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
 import type { PluginValidityChangeEvent } from '../../../../types'
 import VFGField from '../VFGField.vue'
-import type { FormConfig } from '../types'
+import type { FormConfig, RenderRules } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
 import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
 import { FIELD_RENDERERS } from '../composables'
+import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFormAdapter.vue'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -430,8 +443,9 @@ function hasScopeId(value: any): value is { id: string } {
   gap: $kui-space-80;
 
   .scope {
-    display: flex;
+    display: grid;
     gap: $kui-space-50;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   :deep(.form-group) {

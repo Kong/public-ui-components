@@ -20,7 +20,11 @@ export const usePreferences = createGlobalState(() => {
     'datakit-editor-sidebar-expanded',
     true,
   )
-  return { editorMode, sidePanelExpanded }
+  const responsePanelCollapsed = useLocalStorage<boolean>(
+    'datakit-editor-response-panel-collapsed',
+    false,
+  )
+  return { editorMode, sidePanelExpanded, responsePanelCollapsed }
 })
 
 interface LeaveConfirmationOptions {

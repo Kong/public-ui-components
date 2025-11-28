@@ -680,13 +680,23 @@ importers:
         version: 3.5.22(typescript@5.9.2)
 
   packages/core/monaco-editor:
+    dependencies:
+      '@vueuse/core':
+        specifier: ^14.0.0
+        version: 14.0.0(vue@3.5.22(typescript@5.9.2))
     devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../i18n
       '@kong/design-tokens':
         specifier: 1.18.1
         version: 1.18.1
       '@kong/kongponents':
-        specifier: 9.45.1
-        version: 9.45.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2))
+        specifier: 9.46.1
+        version: 9.46.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2))
+      monaco-editor:
+        specifier: ^0.55.1
+        version: 0.55.1
       vue:
         specifier: ^3.5.22
         version: 3.5.22(typescript@5.9.2)
@@ -2072,6 +2082,13 @@ packages:
       vue: '>= 3.5.0 < 4'
       vue-router: ^4.6.3
 
+  '@kong/kongponents@9.46.1':
+    resolution: {integrity: sha512-jwje6Dr0MkShIuITFE9NU0kJQeZupkxA8cl3wgXid33T704ayXA7TGUH5bTlhzqfIRuAXWKh2PP7qtrlKgEoPA==}
+    engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0 || >=22.14.0', pnpm: '>=9.11.0 || >=10.10.0'}
+    peerDependencies:
+      vue: ^3.5.22
+      vue-router: ^4.6.3
+
   '@kong/markdown@1.7.32':
     resolution: {integrity: sha512-MSIunqXCgbLExzi44WiGaFkhk4My5BOjNFpzaTiYDqd6M4KhpVygVjJjPcp1+LcqP0zqr81FRY2bvi7lLSktnQ==}
     engines: {node: '>=18.17.0'}
@@ -3410,6 +3427,11 @@ packages:
     peerDependencies:
       vue: ^3.5.0
 
+  '@vueuse/core@14.0.0':
+    resolution: {integrity: sha512-d6tKRWkZE8IQElX2aHBxXOMD478fHIYV+Dzm2y9Ag122ICBpNKtGICiXKOhWU3L1kKdttDD9dCMS4bGP3jhCTQ==}
+    peerDependencies:
+      vue: ^3.5.22
+
   '@vueuse/integrations@13.5.0':
     resolution: {integrity: sha512-7RACJySnlpl0MkSzxbtadioNGSX4TL5/Wl2cUy4nDq/XkeHwPYvVM880HJUSiap/FXhVEup9VKTM9y/n5UspAw==}
     peerDependencies:
@@ -3461,6 +3483,9 @@ packages:
   '@vueuse/metadata@13.5.0':
     resolution: {integrity: sha512-euhItU3b0SqXxSy8u1XHxUCdQ8M++bsRs+TYhOLDU/OykS7KvJnyIFfep0XM5WjIFry9uAPlVSjmVHiqeshmkw==}
 
+  '@vueuse/metadata@14.0.0':
+    resolution: {integrity: sha512-6yoGqbJcMldVCevkFiHDBTB1V5Hq+G/haPlGIuaFZHpXC0HADB0EN1ryQAAceiW+ryS3niUwvdFbGiqHqBrfVA==}
+
   '@vueuse/shared@10.11.1':
     resolution: {integrity: sha512-LHpC8711VFZlDaYUXEBbFBCQ7GS3dVU9mjOhhMhXP6txTV4EhYQg/KGnQuvt/sPAtoUKq7VVUnL6mVtFoL42sA==}
 
@@ -3471,6 +3496,11 @@ packages:
     resolution: {integrity: sha512-K7GrQIxJ/ANtucxIXbQlUHdB0TPA8c+q5i+zbrjxuhJCnJ9GtBg75sBSnvmLSxHKPg2Yo8w62PWksl9kwH0Q8g==}
     peerDependencies:
       vue: ^3.5.0
+
+  '@vueuse/shared@14.0.0':
+    resolution: {integrity: sha512-mTCA0uczBgurRlwVaQHfG0Ja7UdGe4g9mwffiJmvLiTtp1G4AQyIjej6si/k8c8pUwTfVpNufck+23gXptPAkw==}
+    peerDependencies:
+      vue: ^3.5.22
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -10865,6 +10895,31 @@ snapshots:
       - solid-js
       - svelte
 
+  '@kong/kongponents@9.46.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2))':
+    dependencies:
+      '@floating-ui/vue': 1.1.9(vue@3.5.22(typescript@5.9.2))
+      '@kong/icons': 1.39.0(vue@3.5.22(typescript@5.9.2))
+      '@popperjs/core': 2.11.8
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
+      focus-trap: 7.6.6
+      focus-trap-vue: 4.1.0(focus-trap@7.6.6)(vue@3.5.22(typescript@5.9.2))
+      lodash-es: 4.17.21
+      nanoid: 5.1.6
+      sortablejs: 1.15.6
+      swrv: 1.1.0(vue@3.5.22(typescript@5.9.2))
+      v-calendar: 3.1.2(@popperjs/core@2.11.8)(vue@3.5.22(typescript@5.9.2))
+      virtua: 0.45.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue@3.5.22(typescript@5.9.2))
+      vue: 3.5.22(typescript@5.9.2)
+      vue-draggable-next: 2.3.0(sortablejs@1.15.6)(vue@3.5.22(typescript@5.9.2))
+      vue-router: 4.5.1(vue@3.5.22(typescript@5.9.2))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - react
+      - react-dom
+      - solid-js
+      - svelte
+
   '@kong/markdown@1.7.32(@types/markdown-it@14.1.1)(typescript@5.9.2)(vue@3.5.22(typescript@5.9.2))':
     dependencies:
       '@kong/icons': 1.39.0(vue@3.5.22(typescript@5.9.2))
@@ -12832,6 +12887,13 @@ snapshots:
       '@vueuse/shared': 13.5.0(vue@3.5.22(typescript@5.9.2))
       vue: 3.5.22(typescript@5.9.2)
 
+  '@vueuse/core@14.0.0(vue@3.5.22(typescript@5.9.2))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.21
+      '@vueuse/metadata': 14.0.0
+      '@vueuse/shared': 14.0.0(vue@3.5.22(typescript@5.9.2))
+      vue: 3.5.22(typescript@5.9.2)
+
   '@vueuse/integrations@13.5.0(axios@1.12.0)(focus-trap@7.6.6)(sortablejs@1.15.6)(vue@3.5.22(typescript@5.9.2))':
     dependencies:
       '@vueuse/core': 13.5.0(vue@3.5.22(typescript@5.9.2))
@@ -12848,6 +12910,8 @@ snapshots:
 
   '@vueuse/metadata@13.5.0': {}
 
+  '@vueuse/metadata@14.0.0': {}
+
   '@vueuse/shared@10.11.1(vue@3.5.22(typescript@5.9.2))':
     dependencies:
       vue-demi: 0.14.10(vue@3.5.22(typescript@5.9.2))
@@ -12862,6 +12926,10 @@ snapshots:
       - typescript
 
   '@vueuse/shared@13.5.0(vue@3.5.22(typescript@5.9.2))':
+    dependencies:
+      vue: 3.5.22(typescript@5.9.2)
+
+  '@vueuse/shared@14.0.0(vue@3.5.22(typescript@5.9.2))':
     dependencies:
       vue: 3.5.22(typescript@5.9.2)
 

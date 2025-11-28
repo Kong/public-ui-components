@@ -3,4 +3,4 @@
 
 export * from './grid-layout-types'
 export * from './renderer-types'
-export * from './tile-zoom-event'
+export * from './tile-events'

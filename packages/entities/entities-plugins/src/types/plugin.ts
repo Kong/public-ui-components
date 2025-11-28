@@ -1,5 +1,6 @@
 import type { PathToDotNotation } from '@kong-ui-public/i18n'
 import { PluginGroup, PluginScope } from '@kong-ui-public/entities-plugins-metadata'
+import type { RenderRules } from '../components/free-form/shared/types'
 
 export const PluginGroupArray = [
   PluginGroup.AUTHENTICATION,
@@ -119,6 +120,7 @@ export type PluginMetaData<I18nMessageSource = void> = {
   useLegacyForm?: boolean // An optional field to use legacy form for the plugin. Default to false.
   fieldRules?: FieldRules
   useUIData?: boolean // An optional field that indicates if the plugin may have associated UI data. (via `?__ui_data`)
+  freeformRenderRules?: RenderRules // An optional field that indicates the free-form render rules for the plugin
 }
 
 export interface PluginType extends PluginMetaData {

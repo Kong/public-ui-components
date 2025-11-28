@@ -3,6 +3,125 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.129.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.128.0...@kong-ui-public/entities-plugins@9.129.0) (2025-11-28)
+
+
+### Features
+
+* **entities-plugins:** adjust the copy for freeform ([#2675](https://github.com/Kong/public-ui-components/issues/2675)) ([3fa22bd](https://github.com/Kong/public-ui-components/commit/3fa22bd28274c3aff0a7ff8d4ef863c1b933e7ad))
+
+
+
+
+
+# [9.128.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.127.0...@kong-ui-public/entities-plugins@9.128.0) (2025-11-27)
+
+
+### Features
+
+* **datakit:** add configuration conversion modal and extractors for YAML content ([#2650](https://github.com/Kong/public-ui-components/issues/2650)) ([2298d38](https://github.com/Kong/public-ui-components/commit/2298d3892e29da8c6ec59dc2e00be4bda3558d82))
+
+
+
+
+
+# [9.127.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.126.1...@kong-ui-public/entities-plugins@9.127.0) (2025-11-27)
+
+
+### Features
+
+* **entities-plugins:** freeform - render rules [KM-2039] ([#2663](https://github.com/Kong/public-ui-components/issues/2663)) ([959dbe1](https://github.com/Kong/public-ui-components/commit/959dbe175aa8daff720f6e92a0d46c4d4918efd3))
+
+
+
+
+
+## [9.126.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.126.0...@kong-ui-public/entities-plugins@9.126.1) (2025-11-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** 1 scope option style ([#2671](https://github.com/Kong/public-ui-components/issues/2671)) ([6dea1e2](https://github.com/Kong/public-ui-components/commit/6dea1e2d3d2453cded8034ce2e70b0a2bbb698ba))
+
+
+
+
+
+# [9.126.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.125.1...@kong-ui-public/entities-plugins@9.126.0) (2025-11-26)
+
+
+### Features
+
+* **entities-plugins:** add 'uri' to freeform dictionary ([#2670](https://github.com/Kong/public-ui-components/issues/2670)) ([1b25dd8](https://github.com/Kong/public-ui-components/commit/1b25dd8caf451fba73496654b2e250661ef72406))
+
+
+
+
+
+## [9.125.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.125.0...@kong-ui-public/entities-plugins@9.125.1) (2025-11-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.125.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.124.0...@kong-ui-public/entities-plugins@9.125.0) (2025-11-26)
+
+
+### Features
+
+* **entities-plugins:** datakit collapse response flow by default ([#2658](https://github.com/Kong/public-ui-components/issues/2658)) ([611e9b2](https://github.com/Kong/public-ui-components/commit/611e9b23419e72ba7b8b6163dbd73128474c1443))
+
+
+
+
+
+# [9.124.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.123.0...@kong-ui-public/entities-plugins@9.124.0) (2025-11-26)
+
+
+### Features
+
+* **entities-plugins:** freeform identity realms field [KM-2033] ([#2654](https://github.com/Kong/public-ui-components/issues/2654)) ([992acc9](https://github.com/Kong/public-ui-components/commit/992acc9364536335873acb3aa0687a8d08815a15))
+
+
+
+
+
+# [9.123.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.122.1...@kong-ui-public/entities-plugins@9.123.0) (2025-11-25)
+
+
+### Features
+
+* **entities-plugins:** otel plugin access_logs_endpoint rule ([#2666](https://github.com/Kong/public-ui-components/issues/2666)) ([7b8c49f](https://github.com/Kong/public-ui-components/commit/7b8c49f045023b6cb4dc0f322f39ca1888b8dd0b))
+
+
+
+
+
+## [9.122.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.122.0...@kong-ui-public/entities-plugins@9.122.1) (2025-11-24)
+
+
+### Bug Fixes
+
+* **entities-plugins:** ai-mcp-proxy default_acl array ([#2662](https://github.com/Kong/public-ui-components/issues/2662)) ([ae1664d](https://github.com/Kong/public-ui-components/commit/ae1664dd3f53fe0b1f91beb74112af2ce364c245))
+* **entities-plugins:** transform ai-rag-injector payload ([#2661](https://github.com/Kong/public-ui-components/issues/2661)) ([bba5ce9](https://github.com/Kong/public-ui-components/commit/bba5ce9e3aac480ed3aef0b1e394fa6c06d46f95))
+
+
+
+
+
+# [9.122.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.121.1...@kong-ui-public/entities-plugins@9.122.0) (2025-11-24)
+
+
+### Features
+
+* **entities-plugins:** freeform - entity checks alert [KM-2037] ([#2657](https://github.com/Kong/public-ui-components/issues/2657)) ([96b1ee3](https://github.com/Kong/public-ui-components/commit/96b1ee3f6065bbcfe6286560fe270d082a125c09))
+
+
+
+
+
 ## [9.121.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.121.0...@kong-ui-public/entities-plugins@9.121.1) (2025-11-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
