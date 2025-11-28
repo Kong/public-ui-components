@@ -3,12 +3,22 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+      - unlabeled
 
   pull_request_review:
     types:
       - submitted
       - edited
       - dismissed
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}
+  cancel-in-progress: true
 
 jobs:
   pr-audit:
@@ -31,6 +41,6 @@ jobs:
         uses: ./.github/actions/setup-pnpm-with-dependencies/
 
       - name: PR Audit
-        uses: Kong/public-shared-actions/pr-previews/audit@feat/KHCP-18541_pr-audit-2
+        uses: Kong/public-shared-actions/pr-previews/audit@main
         with:
           renovate-pr-author: renovate[bot]
