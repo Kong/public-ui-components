@@ -45,7 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ env.GH_TOKEN }}
 
       - name: Checkout Source Code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
 
@@ -318,7 +318,7 @@ jobs:
 
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup PNPM with Dependencies
         uses: ./.github/actions/setup-pnpm-with-dependencies/
@@ -381,7 +381,7 @@ jobs:
 
       - name: Checkout Source Code
         if: ${{ github.event_name == 'push' }}
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0
           token: ${{ secrets.KONGPONENTS_BOT_PAT }}
@@ -436,7 +436,7 @@ jobs:
       - finish-test-and-publish
     steps:
       - name: Checkout Source Code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Get aggregate Workflow status
         uses: technote-space/workflow-conclusion-action@45ce8e0eb155657ab8ccf346ade734257fd196a5 #v3.0.3
