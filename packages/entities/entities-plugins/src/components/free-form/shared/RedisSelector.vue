@@ -17,11 +17,7 @@
         :description="t('redis.shared_configuration.description')"
         :label="t('redis.shared_configuration.label')"
         :selected-value="true"
-      >
-        <KBadge appearance="success">
-          {{ t('redis.shared_configuration.badge') }}
-        </KBadge>
-      </KRadio>
+      />
       <KRadio
         v-model="usePartial"
         card
