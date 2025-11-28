@@ -132,6 +132,14 @@
             :entity-type="SupportedEntityType.Plugin"
           />
         </template>
+        <template #deck>
+          <DeckCodeBlock
+            :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+            :entity-record="viewConfigurationRecord"
+            :entity-type="SupportedEntityType.Plugin"
+            :geo-server-url="config.app === 'konnect' ? config.geoServerUrl : undefined"
+          />
+        </template>
       </KTabs>
     </KSlideout>
   </div>
@@ -144,6 +152,7 @@ import {
   JsonCodeBlock,
   TerraformCodeBlock,
   YamlCodeBlock,
+  DeckCodeBlock,
   SupportedEntityType,
   useAxios,
   useErrors,
@@ -383,6 +392,10 @@ if (props.config.app === 'konnect') {
   tabs.value.splice(1, 0, {
     title: t('view_configuration.terraform'),
     hash: '#terraform',
+  })
+  tabs.value.push({
+    title: t('view_configuration.deck'),
+    hash: '#deck',
   })
 }
 

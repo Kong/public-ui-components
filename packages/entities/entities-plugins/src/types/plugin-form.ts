@@ -49,6 +49,12 @@ export interface BasePluginFormConfig {
   isNewOtelSchema?: boolean
   /** Whether to enable the experimental renders */
   experimentalRenders?: Record<string, boolean>
+  /** Whether to enable the deck tab */
+  enableDeckTab?: boolean
+  /** Geo server api url passed to the deck tab */
+  geoServerUrl?: string
+  /** Control plane name passed to the deck tab */
+  controlPlaneName?: string
 }
 
 export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}
