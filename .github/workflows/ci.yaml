@@ -34,6 +34,10 @@ jobs:
       GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        with:
+          egress-policy: audit
       # if previous run did create comment with the reference to PR preview package
       # this comment is removed in this step
       - name: Remove preview consumption comment
@@ -317,6 +321,10 @@ jobs:
         container: ${{ fromJSON(needs.build.outputs.componentTestMatrix) }}
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        with:
+          egress-policy: audit
       - name: Checkout Source Code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
@@ -372,6 +380,10 @@ jobs:
       GH_TOKEN: ${{ secrets.KONGPONENTS_BOT_PAT }}
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        with:
+          egress-policy: audit
       - name: Successful tests
         if: ${{ !(contains(needs.*.result, 'failure')) }}
         run: exit 0
@@ -435,6 +447,10 @@ jobs:
     needs:
       - finish-test-and-publish
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        with:
+          egress-policy: audit
       - name: Checkout Source Code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
