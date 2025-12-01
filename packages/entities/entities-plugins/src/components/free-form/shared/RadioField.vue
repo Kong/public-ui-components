@@ -8,7 +8,7 @@
 
   <div
     v-else
-    v-show="!field.hide"
+    v-show="!field.hide.value"
   >
     <KLabel v-bind="fieldAttrs.labelAttributes">
       {{ fieldAttrs.label }}

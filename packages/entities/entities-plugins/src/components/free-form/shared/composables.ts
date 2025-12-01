@@ -1092,7 +1092,9 @@ function createRenderRuleRegistry(onChange: () => void) {
           if (omitted?.includes(fieldName)) return
 
           const depFieldValue = get(parent, depField)
-          const sourceFieldPath = path ? utils.resolve(path, fieldName) : fieldName
+          const sourceFieldPath = path
+            ? utils.removeRootSymbol(utils.resolve(path, fieldName))
+            : fieldName
 
           // Skip if dependency condition is met
           if (isEqual(depFieldValue, expectedDepFieldValue)) {
