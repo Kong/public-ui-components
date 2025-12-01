@@ -4,7 +4,7 @@ export interface TimeFormatOptions {
   includeTZ?: boolean
   tz?: string
   short?: boolean
-  format?: 'year' | 'month' | 'day' | 'hour' | 'minute' | 'second' | 'ms'
+  format?: 'default' | 'short' | 'full'
 }
 
 /**
@@ -12,14 +12,12 @@ export interface TimeFormatOptions {
  *
  * @param ts - timestamp as number or Date
  * @param options - formatting options
- * @param options.format - format of the timestamp. Possible values:
- * - year:    'yyyy'
- * - month:   'MMM yyyy'
- * - day:     'MMM dd, yyyy'
- * - hour:    'MMM dd, yyyy hh a'
- * - minute:  'MMM dd, yyyy hh:mm a'
- * - second:  'MMM dd, yyyy hh:mm:ss a'
- * - ms:      'MMM dd, yyyy hh:mm:ss.SSS a'
+ * @param options.format - format of the timestamp representing the granularity
+ * 'MMM dd, yyyy hh:mm a' (default)
+ * Possible values:
+ * - short:   'MMM dd, yyyy'
+ * - default:  'MMM dd, yyyy hh:mm a'
+ * - full:      'MMM dd, yyyy hh:mm:ss.SSS a'
  * @param options.includeTZ: whether to include the timezone abbreviation in the formatted string
  * @param options.tz: timezone to use for formatting (defaults to system timezone)
  * @returns Formatted timestamp string
@@ -29,25 +27,13 @@ export function formatTimestamp(ts: number | Date, options: TimeFormatOptions = 
   let format = 'MMM dd, yyy hh:mm a'
 
   switch (options.format) {
-    case 'year':
-      format = 'yyyy'
-      break
-    case 'month':
-      format = 'MMM yyyy'
-      break
-    case 'day':
+    case 'short':
       format = 'MMM dd, yyyy'
       break
-    case 'hour':
-      format = 'MMM dd, yyyy hh a'
-      break
-    case 'minute':
+    case 'default':
       format = 'MMM dd, yyyy hh:mm a'
       break
-    case 'second':
-      format = 'MMM dd, yyyy hh:mm:ss a'
-      break
-    case 'ms':
+    case 'full':
       format = 'MMM dd, yyyy hh:mm:ss.SSS a'
       break
   }

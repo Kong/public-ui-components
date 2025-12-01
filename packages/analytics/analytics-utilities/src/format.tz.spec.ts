@@ -7,13 +7,9 @@ const formatCases: Array<{
   pattern: RegExp
   utcExpected: string
 }> = [
-  { format: 'year', pattern: /^\d{4}$/, utcExpected: '2020' },
-  { format: 'month', pattern: /^\w{3} \d{4}$/, utcExpected: 'Jan 2020' },
-  { format: 'day', pattern: /^\w{3} \d{2}, \d{4}$/, utcExpected: 'Jan 01, 2020' },
-  { format: 'hour', pattern: /^\w{3} \d{2}, \d{4} \d{2} [AP]M$/, utcExpected: 'Jan 01, 2020 01 AM' },
-  { format: 'minute', pattern: /^\w{3} \d{2}, \d{4} \d{2}:\d{2} [AP]M$/, utcExpected: 'Jan 01, 2020 01:02 AM' },
-  { format: 'second', pattern: /^\w{3} \d{2}, \d{4} \d{2}:\d{2}:\d{2} [AP]M$/, utcExpected: 'Jan 01, 2020 01:02:03 AM' },
-  { format: 'ms', pattern: /^\w{3} \d{2}, \d{4} \d{2}:\d{2}:\d{2}\.\d{3} [AP]M$/, utcExpected: 'Jan 01, 2020 01:02:03.000 AM' },
+  { format: 'short', pattern: /^\w{3} \d{2}, \d{4}$/, utcExpected: 'Jan 01, 2020' },
+  { format: 'default', pattern: /^\w{3} \d{2}, \d{4} \d{2}:\d{2} [AP]M$/, utcExpected: 'Jan 01, 2020 01:02 AM' },
+  { format: 'full', pattern: /^\w{3} \d{2}, \d{4} \d{2}:\d{2}:\d{2}\.\d{3} [AP]M$/, utcExpected: 'Jan 01, 2020 01:02:03.000 AM' },
 ]
 
 runNonUtcTest('formatTimestamp, non-UTC', () => {
