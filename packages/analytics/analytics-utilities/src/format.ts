@@ -59,7 +59,9 @@ export function formatTimestamp(ts: number | Date, options: TimeFormatOptions = 
   return formatInTimeZone(ts, tz, format)
 }
 
-
+/**
+ * @deprecated use `formatTimestamp` instead
+ */
 export function formatTime(ts: number | string, options: TimeFormatOptions = {}) {
   if (!ts) {
     return ts
