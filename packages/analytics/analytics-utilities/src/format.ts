@@ -4,18 +4,50 @@ export interface TimeFormatOptions {
   includeTZ?: boolean
   tz?: string
   short?: boolean
+  format?: 'default' | 'short' | 'full'
 }
 
-export function formatLogTimestamp(ts: number | Date, options: TimeFormatOptions = {}) {
+/**
+ *Formats a timestamp according to the specified options
+ *
+ * @param ts - timestamp as number or Date
+ * @param options - formatting options
+ * @param options.format - format of the timestamp representing the granularity
+ * 'MMM dd, yyyy hh:mm a' (default)
+ * Possible values:
+ * - short:   'MMM dd, yyyy'
+ * - default:  'MMM dd, yyyy hh:mm a'
+ * - full:      'MMM dd, yyyy hh:mm:ss.SSS a'
+ * @param options.includeTZ: whether to include the timezone abbreviation in the formatted string
+ * @param options.tz: timezone to use for formatting (defaults to system timezone)
+ * @returns Formatted timestamp string
+ */
+export function formatTimestamp(ts: number | Date, options: TimeFormatOptions = {}) {
   const tz = options?.tz || Intl.DateTimeFormat().resolvedOptions().timeZone
+  let format = 'MMM dd, yyy hh:mm a'
 
-  const format = options?.includeTZ
-    ? 'yyyy-MM-dd HH:mm:ss.SSS (z)'
-    : 'yyyy-MM-dd HH:mm:ss.SSS'
+  switch (options.format) {
+    case 'short':
+      format = 'MMM dd, yyyy'
+      break
+    case 'default':
+      format = 'MMM dd, yyyy hh:mm a'
+      break
+    case 'full':
+      format = 'MMM dd, yyyy hh:mm:ss.SSS a'
+      break
+  }
+
+  if (options.includeTZ) {
+    format += ' (z)'
+  }
 
   return formatInTimeZone(ts, tz, format)
 }
 
+/**
+ * @deprecated use `formatTimestamp` instead
+ */
 export function formatTime(ts: number | string, options: TimeFormatOptions = {}) {
   if (!ts) {
     return ts
