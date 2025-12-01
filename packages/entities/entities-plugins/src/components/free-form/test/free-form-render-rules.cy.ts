@@ -570,21 +570,21 @@ describe('Render Rules', () => {
           ])
         })
 
-        // // Show field_c by setting field_a
-        // cy.getTestId(getFieldTestId(getFieldName('a'))).type('value1')
-        // cy.getTestId(getFieldTestId(getFieldName('c'))).should('exist').should('be.visible')
+        // Show field_c by setting field_a
+        cy.getTestId(getFieldTestId(getFieldName('a'))).type('value1')
+        cy.getTestId(getFieldTestId(getFieldName('c'))).should('exist').should('be.visible')
 
-        // // Verify order with c visible: b, a, c, d
-        // cy.get(`[data-testid^="${getFieldTestId(getFieldName())}"]`).then(($fields) => {
-        //   const visibleFields = filterVisibleElements($fields.toArray())
-        //   const order = visibleFields.map(el => el.getAttribute('data-testid'))
-        //   expect(order).to.deep.equal([
-        //     getFieldTestId(getFieldName('b')),
-        //     getFieldTestId(getFieldName('a')),
-        //     getFieldTestId(getFieldName('c')),
-        //     getFieldTestId(getFieldName('d')),
-        //   ])
-        // })
+        // Verify order with c visible: b, a, c, d
+        cy.get(`[data-testid^="${getFieldTestId(getFieldName())}"]`).then(($fields) => {
+          const visibleFields = filterVisibleElements($fields.toArray())
+          const order = visibleFields.map(el => el.getAttribute('data-testid'))
+          expect(order).to.deep.equal([
+            getFieldTestId(getFieldName('b')),
+            getFieldTestId(getFieldName('a')),
+            getFieldTestId(getFieldName('c')),
+            getFieldTestId(getFieldName('d')),
+          ])
+        })
       })
 
       it('should not affect bundle ordering when fields are hidden by dependencies', () => {

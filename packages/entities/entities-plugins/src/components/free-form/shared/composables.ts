@@ -88,12 +88,10 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       const value = toValue(innerData)
       const nextValue = cloneDeep(value)
 
-      // Set hided paths to default or null
+      // Set hidden paths to default or null
       if (hiddenPaths.value.size > 0) {
         for (const path of hiddenPaths.value) {
-          const isRequired = schemaHelpers.getSchema(path)?.required
-          const value = isRequired ? schemaHelpers.getDefault(path) : null
-          set(nextValue, utils.toArray(path), value)
+          set(nextValue, utils.toArray(path), schemaHelpers.getEmptyOrDefault(path))
         }
       }
 
@@ -1091,13 +1089,13 @@ function createRenderRuleRegistry(onChange: () => void) {
           // Skip omitted fields
           if (omitted?.includes(fieldName)) return
 
-          const depFieldValue = get(parent, depField)
+          const actualDepFieldValue = get(parent, depField)
           const sourceFieldPath = path
             ? utils.removeRootSymbol(utils.resolve(path, fieldName))
             : fieldName
 
           // Skip if dependency condition is met
-          if (isEqual(depFieldValue, expectedDepFieldValue)) {
+          if (isEqual(actualDepFieldValue, expectedDepFieldValue)) {
             hiddenPaths.value.delete(sourceFieldPath) // Unhide the field
             onChange()
             return

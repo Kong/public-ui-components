@@ -12,11 +12,8 @@
     <!-- global field templates -->
     <template #[FIELD_RENDERERS]>
       <!-- Redis partial selector -->
-      <FieldRenderer
-        v-slot="props"
-        :match="({ path }) => path === redisPartialInfo?.redisPath?.value"
-      >
-        <RedisSelector v-bind="props" />
+      <FieldRenderer :match="({ path }) => path === redisPartialInfo?.redisPath?.value">
+        <RedisSelector />
       </FieldRenderer>
 
       <!-- Identity Realms field (key-auth plugin only) -->
