@@ -1,5 +1,6 @@
 <template>
   <EnhancedInput
+    v-show="!hide"
     v-bind="fieldAttrs"
     class="ff-foreign-field"
     :data-1p-ignore="is1pIgnore"
@@ -33,6 +34,7 @@ import EnhancedInput from './EnhancedInput.vue'
 import { getName } from './utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
 import type { ForeignFieldSchema } from 'src/types/plugins/form-schema'
+import type { BaseFieldProps } from './types'
 
 defineOptions({
   inheritAttrs: false,
@@ -43,8 +45,7 @@ const { i18n: { t } } = useI18n()
 
 type ForeignFieldValue = { id: string } | null
 
-interface ForeignFieldProps extends InputProps {
-  name: string
+interface ForeignFieldProps extends InputProps, BaseFieldProps {
   labelAttributes?: LabelAttributes
   showPasswordMaskToggle?: boolean
   type?: string
@@ -59,7 +60,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: ForeignFieldValue]
 }>()
 
-const { value: fieldValue, ...field } = useField<ForeignFieldValue, ForeignFieldSchema>(toRef(() => name))
+const { value: fieldValue, hide, ...field } = useField<ForeignFieldValue, ForeignFieldSchema>(toRef(() => name))
 
 if (field.error) {
   throw new Error(field.error.message)

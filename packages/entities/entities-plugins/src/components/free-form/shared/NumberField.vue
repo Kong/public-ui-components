@@ -8,6 +8,7 @@
 
   <EnhancedInput
     v-else
+    v-show="!hide"
     class="ff-number-field"
     v-bind="{
       ...fieldAttrs,
@@ -38,16 +39,16 @@ import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
 import { computed, toRef } from 'vue'
 import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
 import EnhancedInput from './EnhancedInput.vue'
+import type { BaseFieldProps } from './types'
 
-export interface NumberFieldProps extends InputProps {
-  name: string
+export interface NumberFieldProps extends InputProps, BaseFieldProps {
   labelAttributes?: LabelAttributes
   max?: number | string
   min?: number | string
 }
 
 const { name, ...props } = defineProps<NumberFieldProps>()
-const { value: fieldValue, ...field } = useField<number | null>(toRef(() => name))
+const { value: fieldValue, hide, ...field } = useField<number | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, props)
 
 const between = computed(() => {

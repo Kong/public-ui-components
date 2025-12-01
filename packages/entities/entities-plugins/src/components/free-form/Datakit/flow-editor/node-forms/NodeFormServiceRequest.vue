@@ -36,6 +36,6 @@ const {
   setInput,
   inputsFieldNames,
   fieldNameValidator,
-} = useNodeForm<BaseFormData>(nodeId, () => formRef.value!.getInnerData())
+} = useNodeForm<BaseFormData>(nodeId, () => formRef.value!.getValue())
 </script>
 

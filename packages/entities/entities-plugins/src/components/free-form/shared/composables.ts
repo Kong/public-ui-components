@@ -1,4 +1,4 @@
-import { computed, inject, nextTick, onBeforeUnmount, provide, reactive, ref, toRef, toValue, useAttrs, useSlots, watch } from 'vue'
+import { computed, inject, onBeforeUnmount, provide, reactive, readonly, ref, toRef, toValue, useAttrs, useSlots, watch } from 'vue'
 import type { ComputedRef, InjectionKey, MaybeRefOrGetter, Slot } from 'vue'
 import { marked } from 'marked'
 import * as utils from './utils'
@@ -38,17 +38,17 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     const {
       useCurrentRules: useCurrentRenderRules,
       createComputedRules: createComputedRenderRules,
-    } = createRenderRuleRegistry()
+      hiddenPaths,
+      isFieldHidden,
+    } = createRenderRuleRegistry(() => onChange?.(getValue()))
 
     const rootRenderRules = useCurrentRenderRules({
       fieldPath: utils.rootSymbol,
       rules: propsRenderRules,
       parentValue: innerData,
-      getSchema: schemaHelpers.getSchema,
-      getDefault: schemaHelpers.getDefault,
     })
 
-    function resetFormData(newData: T) {
+    function setValue(newData: T) {
       Object.keys(innerData).forEach((key) => {
         delete (innerData as any)[key]
       })
@@ -68,9 +68,9 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       }
 
       if (isFunction(config.value.prepareFormData)) {
-        resetFormData(config.value.prepareFormData(dataValue))
+        setValue(config.value.prepareFormData(dataValue))
       } else {
-        resetFormData(dataValue)
+        setValue(dataValue)
       }
     }
 
@@ -81,9 +81,28 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       return !!data
     }
 
+    /**
+     * Get transformed form data
+     */
+    function getValue(): T {
+      const value = toValue(innerData)
+      const nextValue = cloneDeep(value)
+
+      // Set hided paths to default or null
+      if (hiddenPaths.value.size > 0) {
+        for (const path of hiddenPaths.value) {
+          const isRequired = schemaHelpers.getSchema(path)?.required
+          const value = isRequired ? schemaHelpers.getDefault(path) : null
+          set(nextValue, utils.toArray(path), value)
+        }
+      }
+
+      return nextValue
+    }
+
     // Emit changes when the inner data changes
-    watch(innerData, (newVal) => {
-      onChange?.(toValue(newVal))
+    watch(innerData, () => {
+      onChange?.(getValue())
     }, { deep: true })
 
     // Sync the inner data when the props data changes
@@ -92,15 +111,20 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
     }, { deep: true, immediate: true })
 
     return {
+      /**
+       * The reactive form data object
+       */
       formData: innerData,
       schema,
       config,
       fieldRendererRegistry,
-      resetFormData,
+      setValue,
       useCurrentRenderRules,
       rootRenderRules,
       createComputedRenderRules,
       ...schemaHelpers,
+      getValue,
+      isFieldHidden,
     }
   },
 )
@@ -319,6 +343,15 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
     return schemaMap.value
   }
 
+  /**
+   * Get empty value or default based on whether the field is required
+   */
+  function getEmptyOrDefault(path?: string): unknown {
+    const schema = (getSchema as any)(path)
+    const isRequired = schema?.required
+    return isRequired ? getDefault(path) : null
+  }
+
   return {
     getSchemaMap,
     getSchema,
@@ -326,6 +359,7 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
     getSelectItems,
     getLabelAttributes,
     getPlaceholder,
+    getEmptyOrDefault,
   }
 }
 
@@ -588,12 +622,13 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
 }
 
 export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
-  const { getSchema } = useFormShared()
+  const { getSchema, isFieldHidden } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
   const { value } = useFormData<TData>(name)
 
   const schema = computed(() => getSchema<TSchema>(fieldPath.value))
+  const hide = computed(() => isFieldHidden(fieldPath.value))
 
   if (!schema.value) {
     return {
@@ -607,6 +642,10 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     renderer,
     value,
     ancestors: useFieldAncestors(fieldPath),
+    /**
+     * Hide the field but keep its state.
+     */
+    hide,
     error: null,
   }
 }
@@ -685,9 +724,10 @@ export function useItemKeys<T>(ns: string, items: MaybeRefOrGetter<T[]>) {
   return { getKey }
 }
 
-function createRenderRuleRegistry() {
+function createRenderRuleRegistry(onChange: () => void) {
   type RenderRulesMap = Record<string, RenderRules>
   const registry = ref<RenderRulesMap>({})
+  const hiddenPaths = ref<Set<string>>(new Set())
 
   /**
    * Validates that all fields in a bundle/dependency are at the same level
@@ -1008,18 +1048,14 @@ function createRenderRuleRegistry() {
   function useCurrentRules(options: {
     fieldPath: MaybeRefOrGetter<string>
     rules?: MaybeRefOrGetter<RenderRules | undefined>
-    parentValue?: MaybeRefOrGetter<any>
+    parentValue?: MaybeRefOrGetter<unknown>
     omittedFields?: MaybeRefOrGetter<string[] | undefined>
-    getSchema: ReturnType<typeof useSchemaHelpers>['getSchema']
-    getDefault: ReturnType<typeof useSchemaHelpers>['getDefault']
   }) {
     const {
       fieldPath,
       rules,
       parentValue,
       omittedFields,
-      getSchema,
-      getDefault,
     } = options
     // Watch for changes in rules or fieldPath
     watch([
@@ -1041,9 +1077,6 @@ function createRenderRuleRegistry() {
 
     const computedRules = createComputedRules(fieldPath)
 
-    let isClearing = false
-    const fieldsToClear: Array<{ fieldName: string, targetValue: any }> = []
-
     watch(
       [
         () => toValue(parentValue),
@@ -1052,48 +1085,25 @@ function createRenderRuleRegistry() {
         () => toValue(omittedFields),
       ],
       ([parent, deps, path, omitted]) => {
-        if (!deps || !parent || isClearing) return
+        if (!deps || !parent) return
 
-        Object.entries(deps).forEach(([fieldName, [depField, expectedValue]]) => {
+        Object.entries(deps).forEach(([fieldName, [depField, expectedDepFieldValue]]) => {
           // Skip omitted fields
           if (omitted?.includes(fieldName)) return
 
-          const actualValue = get(parent, depField)
+          const depFieldValue = get(parent, depField)
+          const sourceFieldPath = path ? utils.resolve(path, fieldName) : fieldName
 
           // Skip if dependency condition is met
-          if (isEqual(actualValue, expectedValue)) return
-
-          const fieldPath = path ? utils.resolve(path, fieldName) : fieldName
-          const fieldSchema = getSchema(fieldPath)
-          const currentFieldValue = get(parent, fieldName)
-
-          // Determine target value and whether to clear
-          let targetValue: any
-          let shouldClear = false
-
-          if (fieldSchema?.required) {
-            targetValue = getDefault(fieldPath)
-            shouldClear = !isEqual(currentFieldValue, targetValue)
-          } else {
-            targetValue = null
-            shouldClear = currentFieldValue !== null && currentFieldValue !== undefined
+          if (isEqual(depFieldValue, expectedDepFieldValue)) {
+            hiddenPaths.value.delete(sourceFieldPath) // Unhide the field
+            onChange()
+            return
           }
 
-          if (shouldClear) {
-            fieldsToClear.push({ fieldName, targetValue })
-          }
+          hiddenPaths.value.add(sourceFieldPath) // Mark field as hidden
+          onChange()
         })
-
-        if (fieldsToClear.length > 0) {
-          isClearing = true
-          while (fieldsToClear.length > 0) {
-            const { fieldName, targetValue } = fieldsToClear.pop()!
-            set(parent, fieldName, targetValue)
-          }
-          nextTick(() => {
-            isClearing = false
-          })
-        }
       },
       { deep: true, immediate: true },
     )
@@ -1107,8 +1117,14 @@ function createRenderRuleRegistry() {
     return computedRules
   }
 
+  function isFieldHidden(fieldPath: string): boolean {
+    return hiddenPaths.value.has(fieldPath)
+  }
+
   return {
     useCurrentRules,
     createComputedRules,
+    hiddenPaths: readonly(hiddenPaths),
+    isFieldHidden,
   }
 }

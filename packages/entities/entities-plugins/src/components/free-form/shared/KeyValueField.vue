@@ -8,6 +8,7 @@
 
   <div
     v-else
+    v-show="!field.hide"
     ref="root"
     class="ff-kv-field"
     :data-testid="`ff-kv-${field.path.value}`"
