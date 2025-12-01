@@ -10,16 +10,26 @@ import { features, languages } from 'monaco-editor/esm/metadata.js'
 type Options = {
   /**
    * Include only a subset of the languages supported.
-   * By default, all languages shipped with the `monaco-editor` will be included.
+   *
+   * @type {EditorLanguage[]}
+   * @defaultValue All languages shipped with monaco-editor
+   * @example
+   * ```ts
+   * // Only include JavaScript and JSON support
+   * languages: ['javascript', 'json']
+   * ```
    */
   languages?: EditorLanguage[]
 
   /**
    * Custom languages (outside of the ones shipped with the `monaco-editor`).
+   * Use this to add support for languages not included in monaco-editor by default.
+   *
+   * @type {IFeatureDefinition[]}
    * @example
    * ```ts
    * // Add yaml support from `monaco-yaml`
-   * [
+   * customLanguages: [
    *   {
    *     label: 'yaml',
    *     entry: 'monaco-yaml',
@@ -35,8 +45,18 @@ type Options = {
 
   /**
    * Include only a subset of the editor features.
-   * By default, all features shipped with the `monaco-editor` will be included.
-   * Use e.g. '!contextmenu' to exclude a certain feature.
+   * Prefix a feature with `!` to exclude it instead.
+   *
+   * @type {Array<EditorFeature | NegatedEditorFeature>}
+   * @defaultValue All features shipped with monaco-editor
+   * @example
+   * ```ts
+   * // Exclude context menu and find features
+   * features: ['!contextmenu', '!find']
+   *
+   * // Or only include specific features
+   * features: ['coreCommands', 'coreActions']
+   * ```
    */
   features?: Array<EditorFeature | NegatedEditorFeature>
 }
@@ -52,15 +72,18 @@ const WORKER_ALIASES: Record<string, string> = {
 
 const VIRTUAL_MODULE_ID = '\0virtual:monaco-editor'
 
+// Generate import statements for Monaco Editor feature entries
 function generateImports(entries: string | string[]): string[] {
   const entryArray = Array.isArray(entries) ? entries : [entries]
   return entryArray.map((entry) => `import 'monaco-editor/esm/${entry}'`)
 }
 
+// Resolve which editor features to include based on user options
+// Supports both inclusion (explicit list) and exclusion (prefixed with '!') patterns
 function resolveFeatures(
   requestedFeatures: Options['features'],
   allFeatureIds: EditorFeature[],
-) {
+): EditorFeature[] {
   if (!requestedFeatures) {
     return allFeatureIds
   }
@@ -69,54 +92,71 @@ function resolveFeatures(
     .filter((f): f is NegatedEditorFeature => f.startsWith('!'))
     .map((f) => f.slice(1)) as EditorFeature[]
 
-  if (excludedFeatures.length > 0) {
+  if (excludedFeatures.length) {
     return allFeatureIds.filter((f) => !excludedFeatures.includes(f))
   }
 
   return requestedFeatures as EditorFeature[]
 }
 
+// Generate complete web worker setup code for Monaco Editor
+// Handles worker imports, MonacoEnvironment setup for both built-in and custom languages
 function generateWorkerCode(
   languageIds: string[],
-  workerPaths: Record<string, string>,
+  languagesDict: Record<string, IFeatureDefinition>,
   customLanguages?: IFeatureDefinition[],
-): { imports: string[], assignments: string[] } {
+): string[] {
   const importedWorkers = new Set<string>()
+  const imports: string[] = []
+  const assignments: string[] = []
 
-  const baseWorkers = languageIds.reduce(
-    (acc, langId) => {
-      // Resolve the actual language to use for the worker (handle aliases)
-      const actualLang = WORKER_ALIASES[langId] || langId
-      const workerEntry = workerPaths[actualLang]
+  // Add base editor worker import
+  imports.push("import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'")
 
-      if (!workerEntry) {
-        return acc
-      }
-      const workerVar = `${actualLang}Worker`
-      if (!importedWorkers.has(workerVar)) {
-        acc.imports.push(
-          `import ${workerVar} from 'monaco-editor/esm/${workerEntry}?worker'`,
-        )
-        importedWorkers.add(workerVar)
-      }
-      acc.assignments.push(`workers['${langId}'] ??= ${workerVar}`)
-      return acc
-    },
-    { imports: [] as string[], assignments: [] as string[] },
-  )
+  // Generate imports and assignments for base languages
+  languageIds.forEach((langId) => {
+    // Resolve the actual language to use for the worker (handle aliases)
+    const actualLang = WORKER_ALIASES[langId] || langId
+    const lang = languagesDict[actualLang]
+    const workerEntry = lang?.worker?.entry
 
-  if (!customLanguages) {
-    return baseWorkers
+    if (!workerEntry) {
+      return
+    }
+    const workerVar = `${actualLang}Worker`
+    if (!importedWorkers.has(workerVar)) {
+      imports.push(
+        `import ${workerVar} from 'monaco-editor/esm/${workerEntry}?worker'`,
+      )
+      importedWorkers.add(workerVar)
+    }
+    assignments.push(`workers['${langId}'] ??= ${workerVar}`)
+  })
+
+  // Generate imports and worker assignments for custom languages
+  if (customLanguages) {
+    customLanguages
+      .filter(({ worker }) => worker?.entry)
+      .forEach(({ label, worker }) => {
+        const workerVar = `${label}Worker`
+        imports.push(`import ${workerVar} from '${worker!.entry}?worker'`)
+        assignments.push(`workers['${label}'] ??= ${workerVar}`)
+      })
   }
 
-  return customLanguages
-    .filter(({ worker }) => worker?.entry)
-    .reduce((acc, { label, worker }) => {
-      const workerVar = `${label}Worker`
-      acc.imports.push(`import ${workerVar} from '${worker!.entry}?worker'`)
-      acc.assignments.push(`workers['${label}'] ??= ${workerVar}`)
-      return acc
-    }, baseWorkers)
+  // Build the complete worker setup code
+  return [
+    ...imports,
+    'self.MonacoEnvironment ??= {',
+    '  _workers: {},',
+    '  getWorker: function (_, label) {',
+    '    const worker = this._workers[label] ?? EditorWorker',
+    '    return new worker()',
+    '  },',
+    '}',
+    'const workers = self.MonacoEnvironment._workers',
+    ...assignments,
+  ]
 }
 
 export default function(options?: Options): Plugin {
@@ -171,38 +211,18 @@ export default function(options?: Options): Plugin {
         ({ entry }) => `import '${entry}'`,
       )
 
-      const workerPaths = languages.reduce(
-        (acc, lang) => {
-          if (lang.worker?.entry) {
-            acc[lang.label] = lang.worker.entry
-          }
-          return acc
-        },
-        {} as Record<string, string>,
+      const workerCode = generateWorkerCode(
+        languageIds,
+        languagesDict,
+        options?.customLanguages,
       )
-      const { imports: workerImports, assignments: workerAssignments } =
-        generateWorkerCode(languageIds, workerPaths, options?.customLanguages)
-
-      const globalWorkerSetup = [
-        "import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'",
-        'self.MonacoEnvironment ??= {',
-        '  _workers: {},',
-        '  getWorker: function (_, label) {',
-        '    const worker = this._workers[label] ?? EditorWorker',
-        '    return new worker()',
-        '  },',
-        '}',
-        'const workers = self.MonacoEnvironment._workers',
-      ].join('\n')
 
       return [
         "import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'",
         ...featureImports,
         ...languageImports,
         ...customLanguageImports,
-        ...workerImports,
-        globalWorkerSetup,
-        ...workerAssignments,
+        ...workerCode,
         "export * from 'monaco-editor/esm/vs/editor/editor.api'",
         'export default monaco',
       ].join('\n')
