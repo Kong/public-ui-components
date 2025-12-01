@@ -1,31 +1,60 @@
-import { it, expect } from 'vitest'
-import { formatLogTimestamp } from './format'
+import { it, expect, describe } from 'vitest'
+import { formatTimestamp, type TimeFormatOptions } from './format'
 import { runNonUtcTest, runUtcTest } from './specUtils'
 
-runNonUtcTest('date formatting, non-UTC', () => {
-  it('formatLogTimestamp should work', () => {
-    const pattern = /^20\d{2}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}\.\d{3}(?:Z|[+-]\d{2}:?\d{2})?$/
-    const date = new Date('2021-01-01T06:02:03.000Z')
-    expect(formatLogTimestamp(date)).toMatch(pattern)
-    expect(formatLogTimestamp(date.getTime())).toMatch(pattern)
-  })
+const formatCases: Array<{
+  format: TimeFormatOptions['format']
+  pattern: RegExp
+  utcExpected: string
+}> = [
+  { format: 'year', pattern: /^\d{4}$/, utcExpected: '2020' },
+  { format: 'month', pattern: /^\w{3} \d{4}$/, utcExpected: 'Jan 2020' },
+  { format: 'day', pattern: /^\w{3} \d{2}, \d{4}$/, utcExpected: 'Jan 01, 2020' },
+  { format: 'hour', pattern: /^\w{3} \d{2}, \d{4} \d{2} [AP]M$/, utcExpected: 'Jan 01, 2020 01 AM' },
+  { format: 'minute', pattern: /^\w{3} \d{2}, \d{4} \d{2}:\d{2} [AP]M$/, utcExpected: 'Jan 01, 2020 01:02 AM' },
+  { format: 'second', pattern: /^\w{3} \d{2}, \d{4} \d{2}:\d{2}:\d{2} [AP]M$/, utcExpected: 'Jan 01, 2020 01:02:03 AM' },
+  { format: 'ms', pattern: /^\w{3} \d{2}, \d{4} \d{2}:\d{2}:\d{2}\.\d{3} [AP]M$/, utcExpected: 'Jan 01, 2020 01:02:03.000 AM' },
+]
 
-  it('formatLogTimestamp with TZ should work', () => {
-    const date = new Date('2021-01-01T06:02:03.000Z')
-    const formatted = formatLogTimestamp(date, { tz: 'America/New_York', includeTZ: true })
-    expect(formatted).toBe('2021-01-01 01:02:03.000 (EST)')
+runNonUtcTest('formatTimestamp, non-UTC', () => {
+  describe.each(formatCases)('format: $format', ({ format, pattern }) => {
+    it('should format Date correctly', () => {
+      const date = new Date('2021-01-01T06:02:03.000Z')
+      expect(formatTimestamp(date, { format })).toMatch(pattern)
+    })
+
+    it('should format timestamp number correctly', () => {
+      const date = new Date('2021-01-01T06:02:03.000Z')
+      expect(formatTimestamp(date.getTime(), { format })).toMatch(pattern)
+    })
+
+    it('should include timezone when includeTZ is true', () => {
+      const date = new Date('2021-01-01T06:02:03.000Z')
+      const formatted = formatTimestamp(date, { format, tz: 'America/New_York', includeTZ: true })
+      expect(formatted).toMatch(/\([A-Z]{2,4}\)$/)
+    })
   })
 })
 
-runUtcTest('date formatting in UTC', () => {
-  it('formatLogTimestamp should work', () => {
-    const str = '2020-01-01T01:02:03.000Z'
-    const expectedNoTz = '2020-01-01 01:02:03.000'
-    const expectedWithTz = '2020-01-01 01:02:03.000 (UTC)'
-    const date = new Date(str)
-    expect(formatLogTimestamp(date)).toBe(expectedNoTz)
-    expect(formatLogTimestamp(date.getTime())).toBe(expectedNoTz)
+runUtcTest('formatTimestamp in UTC', () => {
+  describe.each(formatCases)('format: $format', ({ format, pattern, utcExpected }) => {
+    const testDate = new Date('2020-01-01T01:02:03.000Z')
 
-    expect(formatLogTimestamp(date, { tz: 'UTC', includeTZ: true })).toBe(expectedWithTz)
+    it('should format Date correctly', () => {
+      expect(formatTimestamp(testDate, { format, tz: 'UTC' })).toBe(utcExpected)
+    })
+
+    it('should format timestamp number correctly', () => {
+      expect(formatTimestamp(testDate.getTime(), { format, tz: 'UTC' })).toBe(utcExpected)
+    })
+
+    it('should match expected pattern', () => {
+      expect(formatTimestamp(testDate, { format, tz: 'UTC' })).toMatch(pattern)
+    })
+
+    it('should include timezone when includeTZ is true', () => {
+      const formatted = formatTimestamp(testDate, { format, tz: 'UTC', includeTZ: true })
+      expect(formatted).toBe(`${utcExpected} (UTC)`)
+    })
   })
 })
