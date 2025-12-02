@@ -44,6 +44,7 @@ import debounce from 'lodash-es/debounce'
 import objGet from 'lodash-es/get'
 import isFunction from 'lodash-es/isFunction'
 import isNumber from 'lodash-es/isNumber'
+import isFinite from 'lodash-es/isFinite'
 import composables from '../../composables'
 
 const props = defineProps({
@@ -105,6 +106,10 @@ defineExpose({
 const inputType = computed((): string => {
   const iType = props.schema?.inputType.toLowerCase()
 
+  if (iType === 'number' && props.schema?.referenceable === true) {
+    return 'text'
+  }
+
   switch (iType) {
     // 'string' maps to 'text' input type
     case 'string':
@@ -154,10 +159,10 @@ const formatNumberToModel = (newValue: any, oldValue: any): void => {
 const onInput = (val: string): void => {
   let formattedVal: string | number = val
 
-  switch (inputType.value) {
+  switch (props.schema.inputType) {
     case 'number':
     case 'range':
-      if (isNumber(parseFloat(val))) {
+      if (isFinite(parseFloat(val))) {
         formattedVal = parseFloat(val)
       }
       break
