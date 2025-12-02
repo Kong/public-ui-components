@@ -6,7 +6,10 @@
     :message="field.error.message"
   />
 
-  <div v-else>
+  <div
+    v-else
+    v-show="!field.hide.value"
+  >
     <KLabel v-bind="fieldAttrs.labelAttributes">
       {{ fieldAttrs.label }}
       <template
@@ -36,11 +39,11 @@
 import { computed, toRef } from 'vue'
 import { KRadio, type LabelAttributes, type SelectItem } from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
+import type { BaseFieldProps } from './types'
 
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
-interface EnumFieldProps {
-  name: string
+interface EnumFieldProps extends BaseFieldProps {
   labelAttributes?: LabelAttributes
   multiple?: boolean
   items?: SelectItem[]

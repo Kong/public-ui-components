@@ -23,6 +23,16 @@
       ref="editor-root"
       class="editor"
     />
+
+    <KModal
+      :action-button-text="t('plugins.free-form.datakit.detected_config_format_confirm')"
+      :title="t('plugins.free-form.datakit.detected_config_format_title')"
+      :visible="showConvertModal"
+      @cancel="handleConvertCancel"
+      @proceed="handleConvertConfirm"
+    >
+      {{ t('plugins.free-form.datakit.detected_config_format', { format: pendingExtractorName }) }}
+    </KModal>
   </div>
 </template>
 
@@ -30,12 +40,13 @@
 import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, toRaw, inject, computed } from 'vue'
 import * as monaco from 'monaco-editor'
 import { createI18n } from '@kong-ui-public/i18n'
-import { KAlert, KButton } from '@kong/kongponents'
+import { KAlert, KButton, KModal } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
 import english from '../../../locales/en.json'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 import examples from './examples'
 import { FEATURE_FLAGS } from '../../../constants'
+import { extractors } from './config-extractors'
 import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'
 
 import type { YAMLException } from 'js-yaml'
@@ -48,7 +59,7 @@ const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
 
 const { t } = createI18n<typeof english>('en-us', english)
 
-const { formData, resetFormData } = useFormShared<DatakitPluginData>()
+const { formData, setValue } = useFormShared<DatakitPluginData>()
 
 defineProps<{
   editing: boolean
@@ -66,6 +77,40 @@ const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const LINT_SOURCE = 'YAML Syntax'
 
 const EDIT_SOURCE = 'datakit.insert-example'
+const AUTO_CONVERT_SOURCE = 'datakit.auto-convert'
+
+function dumpYaml(config: unknown): string {
+  return yaml.dump(config, {
+    schema: JSON_SCHEMA,
+    noArrayIndent: true,
+  })
+}
+
+const showConvertModal = shallowRef(false)
+const pendingConfig = shallowRef<unknown | null>(null)
+const pendingExtractorName = shallowRef('')
+
+function handleConvertCancel() {
+  showConvertModal.value = false
+  pendingConfig.value = null
+  pendingExtractorName.value = ''
+}
+
+function handleConvertConfirm() {
+  if (!pendingConfig.value) return
+
+  const editor = editorRef.value
+  const model = editor?.getModel()
+  if (!editor || !model) return
+
+  const nextValue = dumpYaml(pendingConfig.value)
+
+  editor.pushUndoStop()
+  editor.executeEdits(AUTO_CONVERT_SOURCE, [{ range: model.getFullModelRange(), text: nextValue }])
+  editor.pushUndoStop()
+
+  handleConvertCancel()
+}
 
 const M2_EXAMPLES: Array<keyof typeof examples> = ['vault', 'cache']
 const realExamples = computed(() => {
@@ -114,13 +159,8 @@ function setExampleCode(example: keyof typeof examples) {
         config: { ...exampleConfigJson },
       }, ['__ui_data'])
 
-      const nextValue = yaml.dump(nextConfig, {
-        schema: JSON_SCHEMA,
-        noArrayIndent: true,
-      })
-
       editor.pushUndoStop()
-      editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: nextValue }])
+      editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: dumpYaml(nextConfig) }])
       editor.pushUndoStop()
     } catch (error: unknown) {
       emit('error', getMessageFromError(error))
@@ -166,10 +206,7 @@ onMounted(() => {
 
     const value = Object.keys(config).length === 0
       ? ''
-      : yaml.dump(toRaw(config), {
-        schema: JSON_SCHEMA,
-        noArrayIndent: true,
-      })
+      : dumpYaml(toRaw(config))
 
     editor.setValue(value)
 
@@ -178,12 +215,26 @@ onMounted(() => {
 
   if (enableDatakitM2) {
     const initialConfig = omit({ ...formData }, ['__ui_data'])
-    const value = yaml.dump(initialConfig, {
-      schema: JSON_SCHEMA,
-      noArrayIndent: true,
-    })
+    const value = dumpYaml(initialConfig)
     editor.setValue(value)
     focusEnd()
+
+    editor.onDidPaste((e) => {
+      const model = editor.getModel()
+      if (!model) return
+
+      const pastedText = model.getValueInRange(e.range)
+
+      for (const extractor of extractors) {
+        const extractedConfig = extractor.extract(pastedText)
+        if (extractedConfig) {
+          pendingConfig.value = extractedConfig
+          pendingExtractorName.value = extractor.name
+          showConvertModal.value = true
+          return
+        }
+      }
+    })
   }
 
   editor.onDidChangeModelContent(() => {
@@ -198,7 +249,7 @@ onMounted(() => {
       monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
 
       if (enableDatakitM2) {
-        resetFormData(config as DatakitPluginData)
+        setValue(config as DatakitPluginData)
       } else {
         formData.config = config as DatakitConfig
       }

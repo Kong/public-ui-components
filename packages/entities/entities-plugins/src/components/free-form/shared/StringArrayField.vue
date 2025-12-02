@@ -8,6 +8,7 @@
 
   <div
     v-else
+    v-show="!hide"
     :data-testid="`ff-tag-${field.path.value}`"
   >
     <EnhancedInput
@@ -40,6 +41,7 @@ import EnhancedInput from './EnhancedInput.vue'
 import * as utils from './utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
 import type { SetFieldSchema } from '../../../types/plugins/form-schema'
+import type { BaseFieldProps } from './types'
 
 defineOptions({
   inheritAttrs: false,
@@ -50,8 +52,7 @@ const attrs = useAttrs()
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
 // Other props are passed down to the `KInput` via attribute fallthrough.
-interface StringFieldProps {
-  name: string
+interface StringFieldProps extends BaseFieldProps {
   labelAttributes?: LabelAttributes
   multiline?: boolean
 }
@@ -64,7 +65,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string[] | null]
 }>()
 
-const { value: fieldValue, ...field } = useField<string[] | null, SetFieldSchema>(toRef(() => name))
+const { value: fieldValue, hide, ...field } = useField<string[] | null, SetFieldSchema>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const noEmptyArray = computed(() => field.schema?.value?.len_min && field.schema.value.len_min > 0)
 
