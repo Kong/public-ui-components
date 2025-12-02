@@ -27,8 +27,25 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     },
   },
   test: {
-    environment: 'jsdom',
-    setupFiles: ['./src/tests/mocks/monaco-editor-api.ts'],
+    // Use workspace to separate different test environments
+    workspace: [
+      {
+        extends: './vite.config.ts',
+        test: {
+          name: 'runtime',
+          environment: 'jsdom',
+          setupFiles: ['./src/tests/setup.ts'],
+          include: ['**/src/**/*.spec.ts'],
+        },
+      },
+      {
+        test: {
+          name: 'vite-plugin',
+          environment: 'node',
+          include: ['**/vite-plugin/**/*.spec.ts'],
+        },
+      },
+    ],
   },
 }))
 

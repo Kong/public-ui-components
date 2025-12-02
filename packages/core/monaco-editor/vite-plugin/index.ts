@@ -108,12 +108,12 @@ function generateWorkerCode(
 ): string[] {
   const importedWorkers = new Set<string>()
   const imports: string[] = []
-  const assignments: string[] = []
+  const workerMapEntries: string[] = []
 
   // Add base editor worker import
   imports.push("import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'")
 
-  // Generate imports and assignments for base languages
+  // Generate imports and worker map entries for base languages
   languageIds.forEach((langId) => {
     // Resolve the actual language to use for the worker (handle aliases)
     const actualLang = WORKER_ALIASES[langId] || langId
@@ -130,32 +130,34 @@ function generateWorkerCode(
       )
       importedWorkers.add(workerVar)
     }
-    assignments.push(`workers['${langId}'] ??= ${workerVar}`)
+    workerMapEntries.push(`  ${langId}: ${workerVar},`)
   })
 
-  // Generate imports and worker assignments for custom languages
+  // Generate imports and worker map entries for custom languages
   if (customLanguages) {
     customLanguages
       .filter(({ worker }) => worker?.entry)
       .forEach(({ label, worker }) => {
         const workerVar = `${label}Worker`
         imports.push(`import ${workerVar} from '${worker!.entry}?worker'`)
-        assignments.push(`workers['${label}'] ??= ${workerVar}`)
+        workerMapEntries.push(`  ${label}: ${workerVar},`)
       })
   }
 
   // Build the complete worker setup code
   return [
     ...imports,
-    'self.MonacoEnvironment ??= {',
-    '  _workers: {},',
-    '  getWorker: function (_, label) {',
-    '    const worker = this._workers[label] ?? EditorWorker',
-    '    return new worker()',
+    '',
+    'const workerMap = {',
+    ...workerMapEntries,
+    '}',
+    '',
+    'self.MonacoEnvironment = {',
+    '  getWorker(_, label) {',
+    '    const Worker = workerMap[label] || EditorWorker',
+    '    return new Worker()',
     '  },',
     '}',
-    'const workers = self.MonacoEnvironment._workers',
-    ...assignments,
   ]
 }
 
