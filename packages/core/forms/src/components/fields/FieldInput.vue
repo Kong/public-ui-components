@@ -106,6 +106,7 @@ defineExpose({
 const inputType = computed((): string => {
   const iType = props.schema?.inputType.toLowerCase()
 
+  // special case: referenceable number type should use text input to allow for vault-formatted strings
   if (iType === 'number' && props.schema?.referenceable === true) {
     return 'text'
   }
