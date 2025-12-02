@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.130.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.130.0...@kong-ui-public/entities-plugins@9.130.1) (2025-12-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.130.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.129.0...@kong-ui-public/entities-plugins@9.130.0) (2025-12-02)
+
+
+### Features
+
+* **entities-plugins:** preserve the values ​​of hidden fields [KM-2052] ([#2684](https://github.com/Kong/public-ui-components/issues/2684)) ([b2b72ed](https://github.com/Kong/public-ui-components/commit/b2b72edf19a05e9bbd9247ce31b9ac152a30a080))
+
+
+
+
+
 # [9.129.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.128.0...@kong-ui-public/entities-plugins@9.129.0) (2025-11-28)
 
 

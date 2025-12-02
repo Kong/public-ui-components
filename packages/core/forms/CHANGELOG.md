@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.19.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.19.1...@kong-ui-public/forms@4.19.2) (2025-12-02)
+
+
+### Bug Fixes
+
+* **entities-plugins:** rla identifiers i18n ([#2687](https://github.com/Kong/public-ui-components/issues/2687)) ([293c453](https://github.com/Kong/public-ui-components/commit/293c453a3b14ab034a5c4211bd35a919bf955a61))
+
+
+
+
+
 ## [4.19.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.19.0...@kong-ui-public/forms@4.19.1) (2025-11-06)
 
 **Note:** Version bump only for package @kong-ui-public/forms
