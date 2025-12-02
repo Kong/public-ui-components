@@ -56,7 +56,6 @@ import type { ECBasicOption } from 'echarts/types/dist/shared'
 const {
   option,
   enableBrush = false,
-  zoom = false,
   granularity = undefined,
   zoomActionItems = undefined,
   theme = 'light',
@@ -64,7 +63,6 @@ const {
 } = defineProps<{
   option: ECBasicOption
   enableBrush?: boolean
-  zoom?: boolean
   granularity?: GranularityValues
   zoomActionItems?: ZoomActionItem[]
   theme?: 'light' | 'dark'

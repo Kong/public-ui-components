@@ -1,5 +1,5 @@
 import { KUI_COLOR_BACKGROUND_NEUTRAL, KUI_COLOR_TEXT_DANGER, KUI_COLOR_TEXT_WARNING_WEAK } from '@kong/design-tokens'
-import type { ThresholdType } from 'src/components/AnalyticsEcharts.vue'
+import type { ThresholdType } from '../types'
 interface AnalyticsChartColors {
   [dimensionValue: string]: string
 }

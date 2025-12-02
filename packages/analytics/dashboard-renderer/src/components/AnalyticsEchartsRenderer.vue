@@ -8,7 +8,7 @@
     @chart-data="onChartData"
   >
     <div class="analytics-chart">
-      <AnalyticsEcharts
+      <TimeseriesChart
         :data="data"
         :stacked="chartOptions.stacked ?? false"
         :threshold="chartOptions.threshold"
@@ -25,7 +25,7 @@
 import type { RendererProps } from '../types'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
-import { AnalyticsEcharts } from '@kong-ui-public/analytics-echarts'
+import { TimeseriesChart } from '@kong-ui-public/analytics-echarts'
 import type { AbsoluteTimeRangeV4, ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
 
 const props = defineProps<RendererProps<any> & { extraProps?: Record<string, any> }>()

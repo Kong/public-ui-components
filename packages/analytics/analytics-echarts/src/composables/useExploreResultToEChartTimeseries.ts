@@ -12,7 +12,7 @@ import {
 import composables from '.'
 import type { ECBasicOption } from 'echarts/types/dist/shared'
 import type { TooltipState } from 'src/components/ChartTooltip.vue'
-import type { Threshold, ThresholdType } from 'src/components/AnalyticsEcharts.vue'
+import type { ThresholdType, Threshold } from 'src/types'
 
 // types
 type DatasetLabel = { id: string, name: string }
