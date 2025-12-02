@@ -12,9 +12,7 @@
     <!-- global field templates -->
     <template #[FIELD_RENDERERS]>
       <!-- Redis partial selector -->
-      <FieldRenderer
-        :match="({ path }) => path === redisPartialInfo?.redisPath?.value"
-      >
+      <FieldRenderer :match="({ path }) => path === redisPartialInfo?.redisPath?.value">
         <RedisSelector />
       </FieldRenderer>
 
@@ -376,8 +374,8 @@ let skipUpdateScopeCache = false
 function handleScopeChange() {
   if (!formRef.value) return
 
-  const { getInnerData, setInnerData } = formRef.value
-  const currentData = getInnerData() as T
+  const { getRawValue, setValue } = formRef.value
+  const currentData = getRawValue() as T
   const nextData = { ...currentData }
 
   if (scoped.value) {
@@ -393,7 +391,7 @@ function handleScopeChange() {
   }
 
   skipUpdateScopeCache = true
-  setInnerData(nextData)
+  setValue(nextData)
 
   // Prevent updating the cache right after clearing it
   nextTick(() => {

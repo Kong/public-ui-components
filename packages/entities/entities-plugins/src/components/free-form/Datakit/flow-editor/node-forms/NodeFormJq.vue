@@ -96,7 +96,7 @@ const {
   nameValidator,
   toggleNodeValid,
   fieldNameValidator,
-} = useNodeForm<JqFormData>(nodeId, () => formRef.value!.getInnerData())
+} = useNodeForm<JqFormData>(nodeId, () => formRef.value!.getValue())
 
 function handleAddField(name: FieldName, value?: IdConnection | null) {
   addField('input', name, value)

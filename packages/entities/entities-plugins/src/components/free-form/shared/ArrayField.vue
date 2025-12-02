@@ -8,6 +8,7 @@
 
   <div
     v-else
+    v-show="!hide"
     ref="root"
     class="ff-array-field"
     :class="{
@@ -157,6 +158,7 @@ import * as utils from './utils'
 import Field from './Field.vue'
 import type { ArrayLikeFieldSchema } from '../../../types/plugins/form-schema'
 import StringArrayField from './StringArrayField.vue'
+import type { BaseFieldProps } from './types'
 
 const props = defineProps<{
   name: string
@@ -166,7 +168,7 @@ const props = defineProps<{
   itemLabel?: string | ((item: T, index: number) => string)
   appearance?: 'default' | 'card' | 'tabs'
   stickyTabs?: boolean | string | number
-}>()
+} & BaseFieldProps>()
 
 const emit = defineEmits<{
   add: []
@@ -185,7 +187,7 @@ defineSlots<{
 
 const { i18n: { t } } = useI18n()
 const { getDefault, getSchema } = useFormShared()
-const { value: fieldValue, ...field } = useField<T[] | null>(toRef(props, 'name'))
+const { value: fieldValue, hide, ...field } = useField<T[] | null>(toRef(props, 'name'))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 const subSchema = computed(() => {
   if (!field.path) throw new Error('Field path is required for sub-schema retrieval')

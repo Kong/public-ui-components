@@ -1,6 +1,7 @@
 <template>
   <KCard
     v-if="useRedisPartial"
+    v-show="!hide"
     class="redis-config-card"
     data-testid="redis-config-card"
     :title="t('redis.title')"
@@ -77,6 +78,7 @@
   </KCard>
   <ObjectField
     v-else
+    v-show="!hide"
     v-bind="props"
     :fields-order="fieldsOrder"
     hide-required-asterisk
@@ -140,7 +142,7 @@ const partialsSaved = ref<PartialArray | undefined>()
 // initialize getter and setter for redis partial/redis fields
 const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.partials')
 
-const { value: redisFieldsValue } = useField<Redis | undefined>(formRedisPath)
+const { value: redisFieldsValue, hide } = useField<Redis | undefined>(formRedisPath)
 
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
 
