@@ -101,7 +101,8 @@
         "service": "Service",
         "header": "Header",
         "path": "Path",
-        "consumer-group": "Consumer Group"
+        "consumer-group": "Consumer Group",
+        "route": "Route"
       }
     },
     "redis": {

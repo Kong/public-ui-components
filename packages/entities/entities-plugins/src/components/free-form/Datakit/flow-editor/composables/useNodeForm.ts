@@ -31,7 +31,7 @@ export type BaseFormData = {
 export function useNodeForm<T extends BaseFormData = BaseFormData>(
   nodeId: NodeId,
   // It should return `T`, but we use any to avoid circular dependency issues
-  getFormInnerData?: () => any,
+  getFormValue?: () => any,
 ) {
   const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
 
@@ -102,8 +102,8 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
    * @param commitNow Whether to commit the change immediately.
    */
   const setConfig = (tag?: string, commitNow = true) => {
-    if (!getFormInnerData) throw new Error('getFormInnerData is not defined')
-    const config = omit(getFormInnerData(), ['name', 'input', 'inputs'])
+    if (!getFormValue) throw new Error('getFormValue is not defined')
+    const config = omit(getFormValue(), ['name', 'input', 'inputs'])
     const finalTag = tag ? `update:${nodeId}:${tag}` : undefined
     replaceConfig(nodeId, config, commitNow, finalTag)
   }

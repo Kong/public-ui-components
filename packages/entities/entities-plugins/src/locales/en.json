@@ -681,10 +681,10 @@
         }
       },
       "field_rules": {
-        "at_least_one_of": "At least one of these parameters is required: {parameters}",
+        "at_least_one_of": "At least one of the following values is required: {parameters}.",
         "only_one_of": "Exactly one of these parameters is required: {parameters}",
-        "mutually_required": "These parameters are mutually required: {parameters}",
-        "mutually_exclusive": "These parameters are mutually exclusive: {parameters}",
+        "mutually_required": "These values must be used together: {parameters}.",
+        "mutually_exclusive": "Only one of these values can be used: {parameters}.",
         "only_one_of_mutually_required": "Exactly one of the following parameter combinations is required (all parameters within a chosen combination are required):"
       },
       "sections": {
@@ -714,6 +714,9 @@
         "description_code": "Configure this plugin by using YAML configuration. If you are copy/pasting in examples from the documentation - paste from below the <code>config</code> block.",
         "description_flow": "Build flows visually with a drag-and-drop editor for Datakit. Visualize node connections, inputs, and outputs as you design.",
         "description_example": "Start with a use case:",
+        "detected_config_format": "Detected {format} configuration. Do you want to convert it to Datakit configuration?",
+        "detected_config_format_title": "Convert configuration",
+        "detected_config_format_confirm": "Convert",
         "examples": {
           "authenticate": "Authenticate Kong to a third-party service",
           "vault": "Authenticate to a third-party service using vault secrets",
@@ -926,15 +929,14 @@
   "redis": {
     "title": "Redis Configuration",
     "shared_configuration": {
-      "label": "Use shared configuration",
-      "description": "Select an existing shared Redis configuration or create a new one. Any updates to this configuration will automatically apply to all associated plugins.",
+      "label": "Shared configuration",
+      "description": "Select an existing shared Redis configuration or create a new one. Changes to this configuration automatically apply to all associated plugins.",
       "title": "Shared Redis Configuration",
-      "error": "Fetching shared Redis configurations failed.",
-      "badge": "Recommended"
+      "error": "Fetching shared Redis configurations failed."
     },
     "dedicated_configuration": {
-      "label": "Use dedicated configuration",
-      "description": "Create a Redis configuration exclusively for this plugin, with settings that won’t impact other plugins."
+      "label": "Dedicated configuration",
+      "description": "Create a Redis configuration that is used only by this plugin. Changes won’t affect other plugins."
     },
     "config_card": {
       "common_fields": {

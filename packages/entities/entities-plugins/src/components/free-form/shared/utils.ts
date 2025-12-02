@@ -3,7 +3,6 @@ import type { FlattendRedisConfigurationFields } from './types'
 import type { Field } from '../shared/types'
 import type { NamedFieldSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import { toValue, type MaybeRefOrGetter } from 'vue'
-import { isEqual } from 'lodash-es'
 
 export function toSelectItems<T extends string | number>(
   items: T[],
@@ -34,6 +33,16 @@ export function toArray(p: string): string[] {
 export function getName(p: string): string {
   const arr = toArray(p)
   return arr[arr.length - 1]
+}
+
+/**
+ * `$.a.b.c` => `a.b.c`
+ */
+export function removeRootSymbol(path: string) {
+  if (path.startsWith(rootSymbol)) {
+    path = resolve(...toArray(path).slice(1))
+  }
+  return path
 }
 
 export function useRedisNonstandardFields(
@@ -224,22 +233,4 @@ export function sortFieldsByBundles(
   }
 
   return result
-}
-
-export function filterByDependencies(
-  fields: NamedFieldSchema[],
-  dependencies: Record<string, [string, any]>,
-  fieldValueGetter: (key: string) => any,
-): NamedFieldSchema[] {
-  return fields.filter(field => {
-    const fieldName = Object.keys(field)[0]
-    const dependency = dependencies[fieldName]
-
-    if (!dependency) return true
-
-    const [depField, expectedValue] = dependency
-    const actualValue = fieldValueGetter(depField)
-
-    return isEqual(actualValue, expectedValue)
-  })
 }

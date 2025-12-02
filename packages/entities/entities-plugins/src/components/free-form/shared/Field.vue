@@ -51,7 +51,7 @@ import KeyValueField from './KeyValueField.vue'
 import StringArrayField from './StringArrayField.vue'
 import JsonField from './JsonField.vue'
 import ForeignField from './ForeignField.vue'
-import type { GlobalAction } from './types'
+import type { GlobalAction, BaseFieldProps } from './types'
 
 defineOptions({ name: 'AutoField' })
 
@@ -59,15 +59,13 @@ defineEmits<{
   (e: 'globalAction', name: GlobalAction, payload: any): void
 }>()
 
-const props = defineProps<{
-  name: string
-}>()
+const props = defineProps<BaseFieldProps>()
 
 defineSlots<
   {
     default?: Slot
-    [FIELD_RENDERERS]?: Slot<{ name: string }>
-  } & Record<string, Slot<{ name: string }>>
+    [FIELD_RENDERERS]?: Slot<BaseFieldProps>
+  } & Record<string, Slot<BaseFieldProps>>
 >()
 
 const field = useField(toRef(props, 'name'))

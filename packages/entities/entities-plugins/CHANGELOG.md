@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.130.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.130.0...@kong-ui-public/entities-plugins@9.130.1) (2025-12-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.130.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.129.0...@kong-ui-public/entities-plugins@9.130.0) (2025-12-02)
+
+
+### Features
+
+* **entities-plugins:** preserve the values ​​of hidden fields [KM-2052] ([#2684](https://github.com/Kong/public-ui-components/issues/2684)) ([b2b72ed](https://github.com/Kong/public-ui-components/commit/b2b72edf19a05e9bbd9247ce31b9ac152a30a080))
+
+
+
+
+
+# [9.129.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.128.0...@kong-ui-public/entities-plugins@9.129.0) (2025-11-28)
+
+
+### Features
+
+* **entities-plugins:** adjust the copy for freeform ([#2675](https://github.com/Kong/public-ui-components/issues/2675)) ([3fa22bd](https://github.com/Kong/public-ui-components/commit/3fa22bd28274c3aff0a7ff8d4ef863c1b933e7ad))
+
+
+
+
+
+# [9.128.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.127.0...@kong-ui-public/entities-plugins@9.128.0) (2025-11-27)
+
+
+### Features
+
+* **datakit:** add configuration conversion modal and extractors for YAML content ([#2650](https://github.com/Kong/public-ui-components/issues/2650)) ([2298d38](https://github.com/Kong/public-ui-components/commit/2298d3892e29da8c6ec59dc2e00be4bda3558d82))
+
+
+
+
+
 # [9.127.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.126.1...@kong-ui-public/entities-plugins@9.127.0) (2025-11-27)
 
 

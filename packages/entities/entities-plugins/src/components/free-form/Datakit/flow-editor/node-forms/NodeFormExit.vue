@@ -69,7 +69,7 @@ const {
   nameValidator,
   toggleNodeValid,
   fieldNameValidator,
-} = useNodeForm<ExitFormData>(nodeId, () => formRef.value!.getInnerData())
+} = useNodeForm<ExitFormData>(nodeId, () => formRef.value!.getValue())
 
 const {
   createFieldHandler,
