@@ -10,20 +10,24 @@ const sanitizedPackageName = sanitizePackageName(packageName)
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
   build: {
+    outDir: 'dist/runtime',
     lib: {
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
       // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
-      entry: {
-        'monaco-editor': resolve(__dirname, './src/index.ts'),
-        'vite-plugin': resolve(__dirname, './vite-plugin/index.ts'),
-      },
-      fileName: (format, entryName) => `${entryName}.${format === 'es' ? 'js' : 'cjs'}`,
+      entry: resolve(__dirname, './src/index.ts'),
+      fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
     rollupOptions: {
       external: [
         /^monaco-editor/,
       ],
+      output: {
+        // Provide global variables to use in the UMD build for externalized deps
+        globals: {
+          'monaco-editor': 'monaco',
+        },
+      },
     },
   },
   test: {

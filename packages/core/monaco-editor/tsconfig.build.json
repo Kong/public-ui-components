@@ -8,6 +8,7 @@
   "exclude": [
     "src/**/*.cy.ts",
     "src/**/*.spec.ts",
+    "vite-plugin/vite.config.ts",
     "sandbox",
     "dist"
   ]
