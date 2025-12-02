@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "8.9.36",
+  "version": "8.2.2",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
       "import": "./dist/dashboard-renderer.es.js",
-      "require": "./dist/dashboard-renderer.umd.js"
+      "require": "./dist/dashboard-renderer.umd.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -47,14 +47,14 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
-    "@kong/design-tokens": "1.20.0",
-    "@kong/icons": "^1.51.0",
-    "@kong/kongponents": "9.52.5",
-    "ajv": "^8.18.0",
-    "cypress-real-events": "^1.15.0",
-    "pinia": ">= 3.0.4 < 4",
-    "swrv": "^1.2.0",
-    "vue": "^3.5.32"
+    "@kong/design-tokens": "1.18.1",
+    "@kong/icons": "^1.39.0",
+    "@kong/kongponents": "9.45.1",
+    "ajv": "^8.17.1",
+    "cypress-real-events": "^1.14.0",
+    "pinia": ">= 2.1.7 < 3",
+    "swrv": "^1.1.0",
+    "vue": "^3.5.22"
   },
   "repository": {
     "type": "git",
@@ -71,7 +71,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "1MB"
+    "errorLimit": "3MB"
   },
   "peerDependencies": {
     "@kong-ui-public/analytics-chart": "workspace:^",
@@ -81,14 +81,14 @@
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.51.0",
-    "@kong/kongponents": "^9.52.5",
-    "swrv": "^1.2.0",
+    "@kong/icons": "^1.39.0",
+    "@kong/kongponents": "^9.43.2",
+    "swrv": "^1.1.0",
     "vue": ">= 3.3.13 < 4"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
     "gridstack": "^11.5.1",
-    "p-queue": "^8.1.1"
+    "p-queue": "^8.1.0"
   }
 }
