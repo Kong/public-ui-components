@@ -42,7 +42,7 @@ const { option } = composables.useExploreResultToEChartCrossSectional({
   exploreResult: toRef(() => data),
   chartType: toRef(() => type),
   stacked: toRef(() => stacked),
-  colorPalette,
+  colorPalette: toRef(() => colorPalette),
   tooltipState,
 })
 </script>

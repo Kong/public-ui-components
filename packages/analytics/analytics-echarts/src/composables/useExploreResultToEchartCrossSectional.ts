@@ -24,7 +24,7 @@ export default function useExploreResultToEChartCrossSectional({
   chartType: Ref<ReportChartTypes>
   tooltipState: Ref<TooltipState>
   stacked?: Ref<boolean>
-  colorPalette?: Ref<string[]> | Ref<Record<string, string>>
+  colorPalette?: Ref<string[] | Record<string, string> | undefined>
 }) {
   const { i18n } = composables.useI18n()
 
@@ -40,7 +40,6 @@ export default function useExploreResultToEChartCrossSectional({
       const dimensionKeys = display && Object.keys(display)
       const isMultiMetric = metricNames && metricNames.length > 1
       const hasDimensions = display && dimensionKeys && dimensionKeys.length > 0
-      const isMultiDimension = hasDimensions && dimensionKeys.length > 1
 
       if (!records.length || !metricNames) {
         return { series: [], xAxis: {}, yAxis: {} }
@@ -201,6 +200,11 @@ export default function useExploreResultToEChartCrossSectional({
             data,
             itemStyle: { color: baseColor },
             stack: stacked.value ? 'total' : undefined,
+            label: {
+              show: true,
+              position: stacked.value ? 'inside' : 'top',
+              formatter: '{c}',
+            },
             selectedMode: 'single', // or 'multiple' if you want multi-select
             select: {
               itemStyle: {
@@ -238,6 +242,11 @@ export default function useExploreResultToEChartCrossSectional({
             itemStyle: { color: baseColor },
             stack: stacked.value ? 'total' : undefined,
             isSegmentEmpty: dimension.id === 'empty',
+            label: {
+              show: true,
+              position: 'top',
+              formatter: '{c} requests',
+            },
             selectedMode: 'single', // or 'multiple' if you want multi-select
             select: {
               itemStyle: {
@@ -327,7 +336,6 @@ export default function useExploreResultToEChartCrossSectional({
             type: 'value',
             axisLine: { show: true },
           },
-        selectedMode: 'single',
         series,
       } as ECBasicOption
     } catch (err) {
