@@ -9,7 +9,6 @@
   <div
     v-else
     v-show="!hide"
-    v-bind="$attrs"
   >
     <EnhancedInput
       class="ff-number-field"
@@ -60,10 +59,6 @@ import type { NumberLikeFieldSchema } from 'src/types/plugins/form-schema'
 import EnhancedInput from './EnhancedInput.vue'
 import type { BaseFieldProps } from './types'
 import useI18n from '../../../composables/useI18n'
-
-defineOptions({
-  inheritAttrs: false,
-})
 
 export interface NumberFieldProps extends InputProps, BaseFieldProps {
   showVaultSecretPicker?: boolean
