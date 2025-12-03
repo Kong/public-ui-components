@@ -287,6 +287,10 @@ watch(() => hide?.value, (newHide) => {
   :deep(.form-group:last-child) {
     margin-bottom: 0;
   }
+
+  :deep(.radio-card-wrapper) {
+    box-sizing: border-box;
+  }
 }
 
 .shared-redis-config-title {

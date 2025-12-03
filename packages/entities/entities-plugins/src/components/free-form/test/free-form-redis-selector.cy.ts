@@ -90,9 +90,32 @@ const createRedisPartialInfo = (isEditing = false) => ({
   redisPath: ref('config.redis'),
 })
 
+const verifyFieldVisibility = ({
+  hiddenFields = [],
+  visibleFields = [],
+}: {
+  hiddenFields?: string[]
+  visibleFields?: string[]
+}) => {
+  hiddenFields.forEach(((fieldName) => {
+    const testId = `ff-config.redis.cloud_authentication.${fieldName}`
+    cy.get(`[data-testid="${testId}"]`).then(($fields) => {
+      const element = $fields.toArray()[0]
+      const offsetParent = element?.offsetParent
+      cy.log(`${fieldName} offsetParent:`, offsetParent)
+      expect(offsetParent).to.equal(null)
+    })
+  }))
+
+  visibleFields.forEach(((fieldName) => {
+    const testId = `ff-config.redis.cloud_authentication.${fieldName}`
+    cy.get(`[data-testid="${testId}"]`).should('be.visible')
+  }))
+}
+
 // Helper function to mount the form with RedisSelector
-const mountForm = (options?: { renderRules?: RenderRules, isEditing?: boolean }) => {
-  const schema = options?.renderRules ? createRedisSchemaWithDependency() : createRedisSchema()
+const mountForm = (options?: { renderRules?: RenderRules, isEditing?: boolean, schema?: FormSchema }) => {
+  const schema = options?.schema ?? (options?.renderRules ? createRedisSchemaWithDependency() : createRedisSchema())
   const redisPartialInfo = createRedisPartialInfo(options?.isEditing ?? false)
   const onChangeSpy = cy.spy().as('onChangeSpy')
 
@@ -447,6 +470,136 @@ describe('RedisSelector', () => {
         // Verify field values are still displayed
         cy.getTestId('ff-config.redis.host').should('have.value', 'localhost')
         cy.getTestId('ff-config.redis.port').should('have.value', '6379')
+      })
+    })
+
+    describe('Auth Provider Dependency Handling', () => {
+      it('Handles visibility of fields based on auth provider selection', () => {
+        const schema: FormSchema = {
+          type: 'record',
+          supported_partials: { 'redis-ce': ['config.redis'] },
+          fields: [{
+            config: {
+              type: 'record',
+              required: true,
+              fields: [{
+                redis: {
+                  type: 'record',
+                  required: true,
+                  fields: [
+                    {
+                      cloud_authentication: {
+                        required: true, // make it required to expand the fields by default
+                        type: 'record',
+                        fields: [
+                          { auth_provider: { type: 'string', one_of: ['aws', 'gcp', 'azure'] } },
+                          { aws_cache_name: { type: 'string' } },
+                          { aws_region: { type: 'string' } },
+                          { aws_is_serverless: { type: 'boolean', default: true } },
+                          { aws_access_key_id: { type: 'string' } },
+                          { aws_secret_access_key: { type: 'string' } },
+                          { aws_assume_role_arn: { type: 'string' } },
+                          { aws_role_session_name: { type: 'string' } },
+                          { gcp_service_account_json: { type: 'string' } },
+                          { azure_client_id: { type: 'string' } },
+                          { azure_client_secret: { type: 'string' } },
+                          { azure_tenant_id: { type: 'string' } },
+                        ],
+                      },
+                    }],
+                },
+              }],
+            },
+          }],
+        }
+
+        mountForm({ schema })
+
+        // Select Dedicated mode
+        cy.getTestId('dedicated-redis-config-radio').click()
+
+        // All other fields are hidden by default
+        verifyFieldVisibility({
+          hiddenFields: [
+            'aws_cache_name',
+            'aws_region',
+            'aws_is_serverless',
+            'aws_access_key_id',
+            'aws_secret_access_key',
+            'aws_assume_role_arn',
+            'aws_role_session_name',
+            'gcp_service_account_json',
+            'azure_client_id',
+            'azure_client_secret',
+            'azure_tenant_id',
+          ],
+        })
+
+        // Select AWS auth provider
+        cy.getTestId('ff-config.redis.cloud_authentication.auth_provider').click()
+        cy.getTestId('select-item-aws').click()
+
+        verifyFieldVisibility({
+          visibleFields: [
+            'aws_cache_name',
+            'aws_region',
+            'aws_is_serverless',
+            'aws_access_key_id',
+            'aws_secret_access_key',
+            'aws_assume_role_arn',
+            'aws_role_session_name',
+          ],
+          hiddenFields: [
+            'gcp_service_account_json',
+            'azure_client_id',
+            'azure_client_secret',
+            'azure_tenant_id',
+          ],
+        })
+
+        // Select GCP auth provider
+        cy.getTestId('ff-config.redis.cloud_authentication.auth_provider').click()
+        cy.getTestId('select-item-gcp').click()
+
+        verifyFieldVisibility({
+          visibleFields: [
+            'gcp_service_account_json',
+          ],
+          hiddenFields: [
+            'aws_cache_name',
+            'aws_region',
+            'aws_is_serverless',
+            'aws_access_key_id',
+            'aws_secret_access_key',
+            'aws_assume_role_arn',
+            'aws_role_session_name',
+            'azure_client_id',
+            'azure_client_secret',
+            'azure_tenant_id',
+          ],
+        })
+
+        // Select Azure auth provider
+        cy.getTestId('ff-config.redis.cloud_authentication.auth_provider').click()
+        cy.getTestId('select-item-azure').click()
+
+        verifyFieldVisibility({
+          visibleFields: [
+            'azure_client_id',
+            'azure_client_secret',
+            'azure_tenant_id',
+          ],
+          hiddenFields: [
+            'gcp_service_account_json',
+            'aws_cache_name',
+            'aws_region',
+            'aws_is_serverless',
+            'aws_access_key_id',
+            'aws_secret_access_key',
+            'aws_assume_role_arn',
+            'aws_role_session_name',
+          ],
+        })
       })
     })
   })
