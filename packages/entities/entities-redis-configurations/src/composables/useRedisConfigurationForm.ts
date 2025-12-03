@@ -62,7 +62,7 @@ export const useRedisConfigurationForm = (options: Options) => {
       case RedisType.HOST_PORT_CE:
       case RedisType.HOST_PORT_EE:
         return (!!fieldValues.host && fieldValues.host.length > 0)
-          && (!!fieldValues.port && fieldValues.port > 0)
+          && (String(fieldValues.port ?? '').length > 0)
           && (fieldValues.cloud_authentication?.auth_provider !== 'aws' || !!fieldValues.cloud_authentication.aws_cache_name)
       case RedisType.CLUSTER:
         return !!fieldValues.cluster_nodes.length
@@ -134,7 +134,9 @@ export const useRedisConfigurationForm = (options: Options) => {
             keepalive_backlog: s.int(form.fields.config.keepalive_backlog),
             keepalive_pool_size: s.int(form.fields.config.keepalive_pool_size),
             password: s.str(form.fields.config.password, null),
-            port: s.int(form.fields.config.port),
+            port: Number.isNaN(Number(form.fields.config.port))
+              ? form.fields.config.port
+              : s.int(form.fields.config.port),
             read_timeout: s.int(form.fields.config.read_timeout),
             send_timeout: s.int(form.fields.config.send_timeout),
             server_name: s.str(form.fields.config.server_name, null),

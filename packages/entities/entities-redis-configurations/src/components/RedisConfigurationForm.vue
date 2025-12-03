@@ -231,7 +231,14 @@
             tooltipAttributes: { maxWidth: '400' },
           }"
           :readonly="form.readonly"
-          type="number"
+        />
+        <VaultSecretPickerProvider
+          v-if="redisType === RedisType.HOST_PORT_EE && config.isPortReferenceable"
+          class="secret-picker-provider"
+          :disabled="form.readonly"
+          :update="v => form.fields.config.port = v"
+          :value="String(form.fields.config.port ?? '')"
+          @open="(value, update) => setUpVaultSecretPicker(value, update)"
         />
 
         <KCheckbox
