@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.132.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.131.0...@kong-ui-public/entities-plugins@9.132.0) (2025-12-03)
+
+
+### Features
+
+* **entities-plugins:** add support for referenceable number field ([#2695](https://github.com/Kong/public-ui-components/issues/2695)) ([1b8bfeb](https://github.com/Kong/public-ui-components/commit/1b8bfebe50a5d72bfd2df23e782861ec6f68b9c0))
+
+
+
+
+
 # [9.131.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.130.2...@kong-ui-public/entities-plugins@9.131.0) (2025-12-03)
 
 
