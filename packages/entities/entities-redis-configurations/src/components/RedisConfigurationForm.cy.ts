@@ -15,6 +15,7 @@ const baseConfigKM: KongManagerRedisConfigurationFormConfig = {
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cloudAuthAvailable: true,
+  isPortReferenceable: true,
   cancelRoute,
 }
 
@@ -23,6 +24,7 @@ const baseConfigKonnect: KonnectRedisConfigurationFormConfig = {
   controlPlaneId: 'test-control-plane-id',
   apiBaseUrl: '/us/kong-api',
   cloudAuthAvailable: true,
+  isPortReferenceable: true,
   cancelRoute,
 }
 
@@ -185,6 +187,7 @@ describe('<RedisConfigurationForm />', {
 
         cy.getTestId('redis-host-input').should('be.visible')
         cy.getTestId('redis-port-input').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-port').should('be.visible')
         cy.getTestId('redis-connection-is-proxied-checkbox').should('be.visible')
         cy.getTestId('redis-keepalive-section').should('be.visible')
         cy.getTestId('redis-read-write-configuration-section').should('be.visible')
