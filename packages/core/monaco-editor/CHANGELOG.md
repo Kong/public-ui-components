@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.3.0...@kong-ui-public/monaco-editor@0.4.0) (2025-12-03)
+
+
+### Features
+
+* **monaco-editor:** add vite plugin ([#2674](https://github.com/Kong/public-ui-components/issues/2674)) ([03ddec7](https://github.com/Kong/public-ui-components/commit/03ddec7fd0f02994527cfbd09fa46c87dad12c03))
+
+
+
+
+
 # [0.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.2.0...@kong-ui-public/monaco-editor@0.3.0) (2025-11-25)
 
 
