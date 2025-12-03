@@ -23,7 +23,6 @@
 <script setup lang="ts">
 import type { RendererProps } from '../types'
 import type { GaugeChartOptions, SingleValueOptions } from '@kong-ui-public/analytics-utilities'
-import { SimpleChart } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
 
