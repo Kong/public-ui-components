@@ -1038,7 +1038,7 @@ describe('<RedisConfigurationForm />', {
             .click()
 
           cy.getTestId('redis-host-input').type('localhost')
-          cy.getTestId('redis-port-input').type('6379')
+          cy.getTestId('redis-port-input').clear().type('6379')
 
           cy.getTestId('partial-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
@@ -1112,7 +1112,7 @@ describe('<RedisConfigurationForm />', {
             .click()
 
           cy.getTestId('redis-host-input').type('localhost')
-          cy.getTestId('redis-port-input').type('6379')
+          cy.getTestId('redis-port-input').clear().type('6379')
 
           cy.getTestId('partial-edit-form-submit').click()
           cy.wait('@editRedisConfiguration').then(({ request }) => {
