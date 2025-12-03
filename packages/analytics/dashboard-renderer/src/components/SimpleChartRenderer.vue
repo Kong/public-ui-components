@@ -10,11 +10,12 @@
       class="analytics-chart"
       :class="{ 'single-value': isSingleValueChart }"
     >
-      <SimpleChart
+      <!-- <SimpleChart
         :chart-data="data"
         :chart-options="chartOptions"
         :synthetics-data-key="isSingleValueChart ? undefined : (chartOptions as GaugeChartOptions).synthetics_data_key"
-      />
+      /> -->
+      {{ data.data }}
     </div>
   </QueryDataProvider>
 </template>
