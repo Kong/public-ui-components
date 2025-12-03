@@ -262,6 +262,22 @@ onBeforeMount(() => {
     redisFieldsSaved.value = redisFieldsValue.value
   }
 })
+
+watch(() => hide?.value, (newHide) => {
+  // If not using partial, do nothing
+  if (!usePartial.value) return
+
+  if (newHide && partialValue.value) {
+    // If the field is being hidden, clear the partial value
+    partialValue.value = isFormEditing ? null : undefined
+  } else if (!newHide ) {
+    // If the field is being shown again, restore the partial value
+    if (partialsSaved.value) {
+      partialValue.value = partialsSaved.value
+      redisConfigSelected(partialsSaved.value[0].id)
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>

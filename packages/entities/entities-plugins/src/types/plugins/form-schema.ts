@@ -180,4 +180,5 @@ export interface RecordFieldSchema extends FieldSchema {
 export interface FormSchema {
   fields: NamedFieldSchema[]
   type: 'record'
+  supported_partials?: Record<string, string[]>
 }
