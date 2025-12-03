@@ -161,7 +161,18 @@ export function assertFormRendering(schema: FormSchema, options?: {
   }) => {
     // Check input element
     cy.getTestId(`ff-${fieldKey}`).should('exist')
-    cy.getTestId(`ff-${fieldKey}`).should('have.attr', 'type', 'number')
+
+    // Check referenceable
+    if (fieldSchema.referenceable) {
+      cy.getTestId(`ff-${fieldKey}`).should('have.attr', 'type', 'text')
+      if (options?.vaultPickerAvailable) {
+        // todo
+      } else {
+        cy.getTestId(`ff-vault-secret-picker-warning-${fieldKey}`).should('exist')
+      }
+    } else {
+      cy.getTestId(`ff-${fieldKey}`).should('have.attr', 'type', 'number')
+    }
 
     // Check max and min attributes
     if (fieldSchema.gt) {
