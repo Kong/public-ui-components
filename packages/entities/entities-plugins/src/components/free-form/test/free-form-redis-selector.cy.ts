@@ -90,6 +90,7 @@ const createRedisPartialInfo = (isEditing = false) => ({
   redisPath: ref('config.redis'),
 })
 
+<<<<<<< HEAD
 const verifyFieldVisibility = ({
   hiddenFields = [],
   visibleFields = [],
@@ -116,6 +117,11 @@ const verifyFieldVisibility = ({
 // Helper function to mount the form with RedisSelector
 const mountForm = (options?: { renderRules?: RenderRules, isEditing?: boolean, schema?: FormSchema }) => {
   const schema = options?.schema ?? (options?.renderRules ? createRedisSchemaWithDependency() : createRedisSchema())
+=======
+// Helper function to mount the form with RedisSelector
+const mountForm = (options?: { renderRules?: RenderRules, isEditing?: boolean }) => {
+  const schema = options?.renderRules ? createRedisSchemaWithDependency() : createRedisSchema()
+>>>>>>> origin/main
   const redisPartialInfo = createRedisPartialInfo(options?.isEditing ?? false)
   const onChangeSpy = cy.spy().as('onChangeSpy')
 

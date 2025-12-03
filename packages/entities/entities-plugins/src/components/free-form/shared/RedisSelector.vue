@@ -270,7 +270,7 @@ watch(() => hide?.value, (newHide) => {
   if (newHide && partialValue.value) {
     // If the field is being hidden, clear the partial value
     partialValue.value = isFormEditing ? null : undefined
-  } else if (!newHide ) {
+  } else if (!newHide) {
     // If the field is being shown again, restore the partial value
     if (partialsSaved.value) {
       partialValue.value = partialsSaved.value
