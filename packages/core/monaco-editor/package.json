@@ -10,9 +10,14 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/monaco-editor.es.js",
-      "require": "./dist/monaco-editor.umd.js",
+      "import": "./dist/runtime/monaco-editor.es.js",
+      "require": "./dist/runtime/monaco-editor.umd.js",
       "types": "./dist/types/index.d.ts"
+    },
+    "./vite-plugin": {
+      "import": "./dist/vite-plugin/index.js",
+      "require": "./dist/vite-plugin/index.cjs",
+      "types": "./dist/types/vite-plugin/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -22,8 +27,9 @@
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "run-s typecheck build:package build:types",
+    "build": "pnpm run typecheck && run-p build:package build:plugin build:types",
     "build:package": "vite build -m production",
+    "build:plugin": "vite build --config './vite-plugin/vite.config.ts'",
     "build:analyzer": "BUILD_VISUALIZER='core/monaco-editor' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
@@ -53,8 +59,8 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "warningLimit": "19.5MB",
-    "errorLimit": "20MB"
+    "warningLimit": "200KB",
+    "errorLimit": "300KB"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
