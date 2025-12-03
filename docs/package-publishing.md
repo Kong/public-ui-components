@@ -18,6 +18,9 @@ Versioning is done via the [`lerna version`](https://github.com/lerna/lerna/tree
 
 ### New Packages
 
+A new package must first be published manually, and then configured for OIDC trusted publishing.
+Please reach out to #ask-eng-enablement-guild for assistance.
+
 Packages are versioned using conventional commits and semantic versioning. When a package is first created it should have `0.0.1` in its `package.json`, which leads to the `0.1.0` being the first package version published during CI given a `feat` commit is used.
 
 When a package is in `0.x.x` stage, any breaking changes will only bump the minor version. It is __STRONGLY SUGGESTED__ to keep new packages in this versioning stage for a period of __at least 6 months__. Breaking changes are inevitable in the early stages of a new package and it takes time for consumers to become more familiar with the package API.
