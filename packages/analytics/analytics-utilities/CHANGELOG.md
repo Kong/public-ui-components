@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.1.4...@kong-ui-public/analytics-utilities@12.2.0) (2025-12-03)
+
+
+### Features
+
+* metering config ([#2700](https://github.com/Kong/public-ui-components/issues/2700)) ([16aedff](https://github.com/Kong/public-ui-components/commit/16aedffb40fd3756bca7338f951b8ab5a759c4fe))
+
+
+
+
+
 ## [12.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.1.3...@kong-ui-public/analytics-utilities@12.1.4) (2025-12-01)
 
 
