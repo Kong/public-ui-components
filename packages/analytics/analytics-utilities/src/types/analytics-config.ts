@@ -14,7 +14,7 @@ export type RequestsRetentionMs =
 
 export interface ControlPlaneConfig {
   analytics: boolean
-  metering: boolean
+  metering?: boolean
 }
 
 export interface ApiAnalyticsV2 {
