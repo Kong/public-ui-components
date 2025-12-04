@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.133.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.132.0...@kong-ui-public/entities-plugins@9.133.0) (2025-12-04)
+
+
+### Features
+
+* **entities-plugins:** update redis fields order and render rules ([#2673](https://github.com/Kong/public-ui-components/issues/2673)) ([9e11401](https://github.com/Kong/public-ui-components/commit/9e11401436e9a7c5dbd00911db0bc561957735d1))
+
+
+
+
+
 # [9.132.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.131.0...@kong-ui-public/entities-plugins@9.132.0) (2025-12-03)
 
 
