@@ -2,9 +2,9 @@
   <KCollapse
     v-model="advancedCollapsed"
     data-testid="view-advanced"
-    :trigger-label="advancedCollapsed ? t('plugins.form.grouping.advanced_parameters.view') : t('plugins.form.grouping.advanced_parameters.hide')"
+    trigger-label="Show additional settings"
   >
-    <div class="ff-advanced-fields">
+    <div class="ff-advanced-fields-container">
       <template v-if="!hideGeneralFields">
         <Field
           v-if="getSchema('instance_name')"
@@ -47,7 +47,7 @@ const advancedCollapsed = ref(true)
 </script>
 
 <style lang="scss" scoped>
-.ff-advanced-fields {
+.ff-advanced-fields-container {
   display: flex;
   flex-direction: column;
   gap: $kui-space-80;

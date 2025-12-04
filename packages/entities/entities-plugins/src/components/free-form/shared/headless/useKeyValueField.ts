@@ -44,6 +44,7 @@ export function useKeyValueField<
   type KVEntries = Array<KVEntry<TKey, TValue>>
 
   const { value: fieldValue, ...field } = useField<Record<TKey, TValue> | null>(toRef(props, 'name'))
+  const isInheritedDisabled = field.isInheritedDisabled
   const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 
   const entries = ref(getEntries(
@@ -110,8 +111,8 @@ export function useKeyValueField<
   let lastUpdatedValue: Record<TKey, TValue> | null = null
 
   // Sync entries to fieldValue
-  watch(entries, (newEntries) => {
-    if (!syncToFieldValue) return
+  watch([entries, isInheritedDisabled!], ([newEntries, isDisabled]) => {
+    if (!syncToFieldValue || isDisabled) return
     const newValue: Record<TKey, TValue> | null = newEntries.length
       ? Object.fromEntries(newEntries.map(({ key, value }) => [key, value]).filter(([key]) => key))
       : null

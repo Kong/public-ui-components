@@ -9,6 +9,18 @@
   <div
     v-else
     v-show="!hide"
+    class="ff-number-field"
+    v-bind="{
+      ...fieldAttrs,
+      min: between.min,
+      max: between.max,
+    }"
+    :data-autofocus="isAutoFocus"
+    :data-testid="`ff-${field.path.value}`"
+    :disabled="field.isInheritedDisabled.value"
+    :model-value="modelValue"
+    type="number"
+    @update:model-value="handleUpdate"
   >
     <EnhancedInput
       class="ff-number-field"
