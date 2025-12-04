@@ -26,6 +26,11 @@ const init = async () => {
         component: () => import('./pages/PluginSelectPage.vue'),
       },
       {
+        path: '/plugin/catalog',
+        name: 'plugin-catalog',
+        component: () => import('./pages/PluginCatalogPage.vue'),
+      },
+      {
         path: '/plugin/create/:plugin',
         name: 'create-plugin',
         props: true,
