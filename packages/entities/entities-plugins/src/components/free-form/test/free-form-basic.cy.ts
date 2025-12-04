@@ -256,6 +256,80 @@ describe('Free Form', () => {
         .should('have.been.calledWith', { name: 'Some Name' })
     })
 
+    describe('KeyValueField', () => {
+      it('should initialize with null value', () => {
+        cy.mount(Form, {
+          props: {
+            schema: {
+              type: 'record',
+              fields: [{
+                kv: { type: 'map', keys: { type: 'string' }, values: { type: 'string' } },
+              }],
+            } as FormSchema,
+            onChange: cy.spy().as('onChangeSpy'),
+          },
+        })
+
+        cy.get('@onChangeSpy')
+          .should('have.been.calledOnce')
+          .should('have.been.calledWith', { kv: null })
+      })
+
+      it('should initialize with {} when required is true', () => {
+        cy.mount(Form, {
+          props: {
+            schema: {
+              type: 'record',
+              fields: [{
+                kv: { type: 'map', keys: { type: 'string' }, values: { type: 'string' }, required: true },
+              }],
+            } as FormSchema,
+            onChange: cy.spy().as('onChangeSpy'),
+          },
+        })
+
+        cy.get('@onChangeSpy')
+          .should('have.been.calledOnce')
+          .should('have.been.calledWith', { kv: {} })
+      })
+
+      it('should initialize with default value', () => {
+        cy.mount(Form, {
+          props: {
+            schema: {
+              type: 'record',
+              fields: [{
+                kv: { type: 'map', keys: { type: 'string' }, values: { type: 'string' }, default: { key1: 'value1' } },
+              }],
+            } as FormSchema,
+            onChange: cy.spy().as('onChangeSpy'),
+          },
+        })
+
+        cy.get('@onChangeSpy')
+          .should('have.been.calledOnce')
+          .should('have.been.calledWith', { kv: { key1: 'value1' } })
+      })
+
+      it('should initialize with {} when default value is {}', () => {
+        cy.mount(Form, {
+          props: {
+            schema: {
+              type: 'record',
+              fields: [{
+                kv: { type: 'map', keys: { type: 'string' }, values: { type: 'string' }, default: {} },
+              }],
+            } as FormSchema,
+            onChange: cy.spy().as('onChangeSpy'),
+          },
+        })
+
+        cy.get('@onChangeSpy')
+          .should('have.been.calledOnce')
+          .should('have.been.calledWith', { kv: {} })
+      })
+    })
+
     /**
      * todo:
      * for every type of field, test that:
