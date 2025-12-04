@@ -177,7 +177,7 @@ const monacoEditor = useMonacoEditor(editorRef, {
         overflow-y: auto;
 
         .type {
-          word-break: break-word !important;
+          overflow-wrap: break-word !important;
         }
       }
     }
