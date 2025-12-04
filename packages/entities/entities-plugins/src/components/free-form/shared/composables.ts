@@ -254,6 +254,8 @@ export function useSchemaHelpers(schema: MaybeRefOrGetter<FormSchema | UnionFiel
         return createRecordDefault(schema, path)
       } else if (schema.type === 'array') {
         return []
+      } else if (schema.type === 'map') {
+        return {}
       } else {
         return null
       }
