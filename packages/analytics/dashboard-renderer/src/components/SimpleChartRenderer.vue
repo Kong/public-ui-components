@@ -9,7 +9,7 @@
     <div
       class="analytics-chart"
       :class="{ 'single-value': isSingleValueChart }"
-      :style="{ height: height ? `${height}px` : 'auto' }"
+      :style="{ height: `${height}px` }"
     >
       <SimpleChart
         :chart-data="data"
