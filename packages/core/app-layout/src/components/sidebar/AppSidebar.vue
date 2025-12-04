@@ -570,6 +570,7 @@ watch(() => props.groupConfig, (newConfig) => {
     width: 100%;
     // Only some browsers support `overflow: overlay`, it's deprecated
     @supports(overflow: overlay) {
+      /* stylelint-disable-next-line declaration-property-value-keyword-no-deprecated */
       overflow-y: overlay;
     }
     @include scrollbarBase;
