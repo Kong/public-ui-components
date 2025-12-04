@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { unitFormatter } from './formatUnit'
+import { unitFormatter, numberFormatter } from './formatUnit'
 import { createI18n } from '@kong-ui-public/i18n'
 
 const i18n = createI18n('en-us', {} as any)
@@ -113,5 +113,18 @@ describe('formatUnit.formatUnit()', () => {
     expect(formatRange(1000, 5000, 'count/minute', { approximate: true })).toBe('1K - 5K count/minute')
     expect(formatRange(1000, 5000, 'bytes')).toBe('1 kB - 5 kB')
     expect(formatRange(0.001, 0.005, 'usd')).toBe('$0.001 - $0.005')
+  })
+})
+
+describe('numberFormatter', () => {
+  it('falls back to en-US locale when document is unavailable', () => {
+    // In a Node/test environment, document.documentElement.lang is not set,
+    // so numberFormatter should default to 'en-US'
+    expect(numberFormatter.resolvedOptions().locale).toBe('en-US')
+  })
+
+  it('formats numbers correctly with the fallback locale', () => {
+    expect(numberFormatter.format(1234.56)).toBe('1,234.56')
+    expect(numberFormatter.format(1000000)).toBe('1,000,000')
   })
 })
