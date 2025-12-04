@@ -3,25 +3,24 @@ import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import { unrefElement, useDebounceFn } from '@vueuse/core'
 
 import * as monaco from 'monaco-editor'
+import { shikiToMonaco } from '@shikijs/monaco'
+import { createHighlighter } from 'shiki'
 
 import type * as monacoType from 'monaco-editor'
 
 import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
 
-// singletons
-/** The Monaco instance once loaded */
-let monacoInstance: typeof monacoType | undefined = undefined
+// Flag if monaco loaded
+let monacoLoaded = false
+let shikiLoaded = false
 
 // cache
 const langCache = new Map<string, boolean>()
 
-/**
- * Lazily load Monaco and configure workers only once.
- */
-function loadMonaco(language?: string): typeof monacoType {
-  if (!monacoInstance) {
-    monacoInstance = monaco
+function loadMonaco(language?: string) {
+  if (monacoLoaded) {
+    return
   }
 
   // TODO: register more languages as needed
@@ -35,7 +34,24 @@ function loadMonaco(language?: string): typeof monacoType {
     }
   }
 
-  return monacoInstance
+  monacoLoaded = true
+}
+
+async function loadShiki() {
+  if (shikiLoaded) {
+    return
+  }
+  const highlighter = await createHighlighter(
+    {
+      themes: ['catppuccin-latte', 'catppuccin-mocha'],
+      langs: ['javascript', 'typescript', 'json', 'css', 'html', 'yaml', 'markdown'],
+    },
+  )
+  highlighter.getLoadedLanguages().forEach((lang) => {
+    monaco.languages.register({ id: lang })
+  })
+  shikiToMonaco(highlighter, monaco)
+  shikiLoaded = true
 }
 
 /**
@@ -112,11 +128,12 @@ export function useMonacoEditor<T extends MaybeElement>(
   }
 
   /** Remeasure fonts in the editor with debouncing to optimize performance */
-  const remeasureFonts = useDebounceFn(() => monacoInstance?.editor.remeasureFonts(), 200)
+  const remeasureFonts = useDebounceFn(() => monaco.editor.remeasureFonts(), 200)
 
 
   const init = (): void => {
-    const monaco = loadMonaco(options.language)
+    loadMonaco(options.language)
+    loadShiki()
 
     // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
     const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
@@ -139,7 +156,7 @@ export function useMonacoEditor<T extends MaybeElement>(
         ...DEFAULT_MONACO_OPTIONS,
         readOnly: options.readOnly || false,
         language: options.language,
-        theme: editorStates.theme,
+        theme: editorStates.theme === 'light' ? 'catppuccin-latte' : 'catppuccin-mocha',
         model,
         ...options.monacoOptions,
       })
