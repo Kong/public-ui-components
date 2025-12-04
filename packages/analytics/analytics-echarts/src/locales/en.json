@@ -1,0 +1,15 @@
+{
+  "header": {
+    "title": "Title of the header",
+    "content": "Content of the header"
+  },
+  "zoom_action_items": {
+    "zoom": "Zoom in",
+    "explore": "Explore",
+    "view_requests": "View requests"
+  },
+  "zoom_time_range": {
+    "from": "From",
+    "to": "To"
+  }
+}
