@@ -7,6 +7,10 @@ export interface BaseRedisConfigurationFormConfig {
    * Show/hide cloud authentication configuration fields
    */
   cloudAuthAvailable?: boolean
+  /**
+   * Whether the port field can accept vault references
+   */
+  isPortReferenceable?: boolean
 }
 
 export interface KonnectRedisConfigurationFormConfig extends KonnectBaseFormConfig, BaseRedisConfigurationFormConfig { }
@@ -26,7 +30,7 @@ export interface RedisConfigurationFields {
     keepalive_backlog: number
     keepalive_pool_size: number
     password: string
-    port?: number
+    port?: number | string
     read_timeout: number
     send_timeout: number
     sentinel_master?: string
