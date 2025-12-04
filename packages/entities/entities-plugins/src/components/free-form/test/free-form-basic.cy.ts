@@ -275,7 +275,7 @@ describe('Free Form', () => {
           .should('have.been.calledWith', { kv: null })
       })
 
-      it('should initialize with {}', () => {
+      it('should initialize with {} when required is true', () => {
         cy.mount(Form, {
           props: {
             schema: {
