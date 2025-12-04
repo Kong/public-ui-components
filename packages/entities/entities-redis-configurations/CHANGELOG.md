@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.6.6...@kong-ui-public/entities-redis-configurations@1.7.0) (2025-12-04)
+
+
+### Features
+
+* **redis:** support referenceable port ([#2696](https://github.com/Kong/public-ui-components/issues/2696)) ([fdc8dbc](https://github.com/Kong/public-ui-components/commit/fdc8dbc4b5eee36bd79860fd36aef7a7718d0c62))
+
+
+
+
+
 ## [1.6.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.6.5...@kong-ui-public/entities-redis-configurations@1.6.6) (2025-12-03)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
