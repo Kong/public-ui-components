@@ -119,7 +119,7 @@ export function useKeyValueField<
       : emptyOrDefaultValue?.value
     // Avoid updating fieldValue to `null` from `{}`
     // Currently, the UI does not distinguish between `null` and `{}` well, we'll improve it later. KM-2069
-    if (newValue === null && lastUpdatedValue !== null && typeof lastUpdatedValue === 'object' && Object.keys(lastUpdatedValue).length === 0) {
+    if (newValue === null && fieldValue!.value !== null && typeof fieldValue!.value === 'object' && Object.keys(fieldValue!.value).length === 0) {
       return
     }
     fieldValue!.value = newValue
