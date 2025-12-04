@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.2.0...@kong-ui-public/analytics-utilities@12.2.1) (2025-12-04)
+
+
+### Bug Fixes
+
+* guard against ssr/non-browser context where document is unavailable ([#2701](https://github.com/Kong/public-ui-components/issues/2701)) ([84e54b9](https://github.com/Kong/public-ui-components/commit/84e54b9fc90c67002dd94bc523bd9f4c8d37f64e))
+
+
+
+
+
 # [12.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.1.4...@kong-ui-public/analytics-utilities@12.2.0) (2025-12-03)
 
 
