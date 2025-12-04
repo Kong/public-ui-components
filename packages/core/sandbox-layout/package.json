@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/sandbox-layout",
-  "version": "2.3.8",
+  "version": "2.3.9",
   "type": "module",
   "main": "./dist/sandbox-layout.umd.js",
   "module": "./dist/sandbox-layout.es.js",
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.18.1",
-    "@kong/kongponents": "9.45.1",
+    "@kong/kongponents": "9.48.0",
     "vue": "^3.5.22",
     "vue-router": "^4.4.5"
   },

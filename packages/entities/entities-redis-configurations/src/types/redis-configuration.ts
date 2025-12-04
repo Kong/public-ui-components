@@ -43,7 +43,7 @@ export type RedisConfigurationConfigDTO = {
   keepalive_backlog: number | null
   keepalive_pool_size: number | null
   password: string | null
-  port: number | null
+  port: number | string | null
   timeout: number | null
   read_timeout: number | null
   send_timeout: number | null

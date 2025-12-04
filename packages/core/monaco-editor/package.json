@@ -1,10 +1,10 @@
 {
   "name": "@kong-ui-public/monaco-editor",
-  "version": "0.4.0",
+  "version": "0.4.2",
   "type": "module",
-  "main": "./dist/monaco-editor.umd.js",
-  "module": "./dist/monaco-editor.es.js",
-  "types": "dist/types/index.d.ts",
+  "main": "./dist/runtime/monaco-editor.umd.js",
+  "module": "./dist/runtime/monaco-editor.es.js",
+  "types": "./dist/types/src/index.d.ts",
   "files": [
     "dist"
   ],
@@ -12,7 +12,7 @@
     ".": {
       "import": "./dist/runtime/monaco-editor.es.js",
       "require": "./dist/runtime/monaco-editor.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "types": "./dist/types/src/index.d.ts"
     },
     "./vite-plugin": {
       "import": "./dist/vite-plugin/index.js",
@@ -71,7 +71,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.1",
-    "@kong/kongponents": "9.46.1",
+    "@kong/kongponents": "9.48.0",
     "monaco-editor": "^0.55.1",
     "vue": "^3.5.22"
   },

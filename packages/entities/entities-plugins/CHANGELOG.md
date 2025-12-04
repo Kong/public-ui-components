@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.133.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.133.2...@kong-ui-public/entities-plugins@9.133.3) (2025-12-04)
+
+
+### Bug Fixes
+
+* **entities-plugins:** avoid updating kv field to null from {} ([#2709](https://github.com/Kong/public-ui-components/issues/2709)) ([48ce1dc](https://github.com/Kong/public-ui-components/commit/48ce1dcab3a5cefd28f21eb6bb77b4cfde5bd536))
+
+
+
+
+
+## [9.133.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.133.1...@kong-ui-public/entities-plugins@9.133.2) (2025-12-04)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#2706](https://github.com/Kong/public-ui-components/issues/2706)) ([2e83580](https://github.com/Kong/public-ui-components/commit/2e835806501a95a5e36e35c36f9bc60aeb678329))
+
+
+
+
+
+## [9.133.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.133.0...@kong-ui-public/entities-plugins@9.133.1) (2025-12-04)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.133.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.132.0...@kong-ui-public/entities-plugins@9.133.0) (2025-12-04)
+
+
+### Features
+
+* **entities-plugins:** update redis fields order and render rules ([#2673](https://github.com/Kong/public-ui-components/issues/2673)) ([9e11401](https://github.com/Kong/public-ui-components/commit/9e11401436e9a7c5dbd00911db0bc561957735d1))
+
+
+
+
+
 # [9.132.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.131.0...@kong-ui-public/entities-plugins@9.132.0) (2025-12-03)
 
 

@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.4.1...@kong-ui-public/monaco-editor@0.4.2) (2025-12-04)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#2706](https://github.com/Kong/public-ui-components/issues/2706)) ([2e83580](https://github.com/Kong/public-ui-components/commit/2e835806501a95a5e36e35c36f9bc60aeb678329))
+
+
+
+
+
+## [0.4.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.4.0...@kong-ui-public/monaco-editor@0.4.1) (2025-12-04)
+
+
+### Bug Fixes
+
+* **monaco-editor:** correct path for types in package.json ([#2703](https://github.com/Kong/public-ui-components/issues/2703)) ([3f8ded6](https://github.com/Kong/public-ui-components/commit/3f8ded6c545bc9534d5cfc72f2a4eb0156cb2c0b))
+
+
+
+
+
 # [0.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.3.0...@kong-ui-public/monaco-editor@0.4.0) (2025-12-03)
 
 
