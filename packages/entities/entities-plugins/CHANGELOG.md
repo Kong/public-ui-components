@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.133.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.133.2...@kong-ui-public/entities-plugins@9.133.3) (2025-12-04)
+
+
+### Bug Fixes
+
+* **entities-plugins:** avoid updating kv field to null from {} ([#2709](https://github.com/Kong/public-ui-components/issues/2709)) ([48ce1dc](https://github.com/Kong/public-ui-components/commit/48ce1dcab3a5cefd28f21eb6bb77b4cfde5bd536))
+
+
+
+
+
 ## [9.133.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.133.1...@kong-ui-public/entities-plugins@9.133.2) (2025-12-04)
 
 
