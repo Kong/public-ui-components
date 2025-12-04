@@ -34,7 +34,6 @@ const isSingleValueChart = computed((): boolean => props.chartOptions.type === '
 .analytics-chart {
   display: flex;
   flex-direction: column;
-  height: v-bind('`${height}px`');
   justify-content: center;
 
   // single value chart adopts the height of the parent container
