@@ -9,6 +9,7 @@
     <div
       class="analytics-chart"
       :class="{ 'single-value': isSingleValueChart }"
+      :style="{ height: height ? `${height}px` : 'auto' }"
     >
       <SimpleChart
         :chart-data="data"
@@ -26,9 +27,7 @@ import { SimpleChart } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
 
-const props = withDefaults(defineProps<RendererProps<GaugeChartOptions | SingleValueOptions>>(), {
-  height: 40,
-})
+const props = defineProps<RendererProps<GaugeChartOptions | SingleValueOptions>>()
 
 const isSingleValueChart = computed((): boolean => props.chartOptions.type === 'single_value')
 </script>
@@ -37,7 +36,6 @@ const isSingleValueChart = computed((): boolean => props.chartOptions.type === '
 .analytics-chart {
   display: flex;
   flex-direction: column;
-  height: v-bind('`${height}px`');
   justify-content: center;
 
   // single value chart adopts the height of the parent container
