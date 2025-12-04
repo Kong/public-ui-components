@@ -1,5 +1,6 @@
 <template>
   <QueryDataProvider
+    v-slot="{ data }"
     :context="context"
     :query="query"
     :query-ready="queryReady"
@@ -9,11 +10,11 @@
       class="analytics-chart"
       :class="{ 'single-value': isSingleValueChart }"
     >
-      <!-- <SimpleChart
+      <SimpleChart
         :chart-data="data"
         :chart-options="chartOptions"
         :synthetics-data-key="isSingleValueChart ? undefined : (chartOptions as GaugeChartOptions).synthetics_data_key"
-      /> -->
+      />
     </div>
   </QueryDataProvider>
 </template>
@@ -21,7 +22,7 @@
 <script setup lang="ts">
 import type { RendererProps } from '../types'
 import type { GaugeChartOptions, SingleValueOptions } from '@kong-ui-public/analytics-utilities'
-// import { SimpleChart } from '@kong-ui-public/analytics-chart'
+import { SimpleChart } from '@kong-ui-public/analytics-chart'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { computed } from 'vue'
 
