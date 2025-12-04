@@ -455,7 +455,10 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     gap: $kui-space-60;
+    height: max-content;
     padding: 0 $kui-space-80;
+    position: sticky;
+    top: 24px;
     width: 280px;
 
     :deep(.k-collapse .collapse-heading .collapse-trigger .collapse-trigger-content) {
