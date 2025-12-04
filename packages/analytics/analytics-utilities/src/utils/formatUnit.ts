@@ -2,7 +2,10 @@ import type { IntlShapeEx } from '@kong-ui-public/i18n'
 // @ts-ignore - approximate-number no exported module
 import approxNum from 'approximate-number'
 
-export const numberFormatter = new Intl.NumberFormat(document?.documentElement?.lang || 'en-US')
+// Guard against SSR/non-browser contexts where `document` is undefined
+const defaultLocale = (typeof document !== 'undefined' && document.documentElement?.lang) || 'en-US'
+
+export const numberFormatter = new Intl.NumberFormat(defaultLocale)
 
 export function unitFormatter<T extends Record<string, any>>({
   i18n,
