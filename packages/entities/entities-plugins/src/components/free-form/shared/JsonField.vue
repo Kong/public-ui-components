@@ -8,6 +8,7 @@
 
   <div
     v-else
+    v-show="!hide"
     :data-testid="`ff-json-${field.path.value}`"
   >
     <EnhancedInput
@@ -43,6 +44,7 @@ import EnhancedInput from './EnhancedInput.vue'
 import * as utils from './utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
 import type { JsonFieldSchema } from '../../../types/plugins/form-schema'
+import type { BaseFieldProps } from './types'
 
 defineOptions({
   inheritAttrs: false,
@@ -53,8 +55,7 @@ const attrs = useAttrs()
 // Vue doesn't support the built-in `InstanceType` utility type, so we have to
 // work around it a bit.
 // Other props are passed down to the `KInput` via attribute fallthrough.
-interface StringFieldProps {
-  name: string
+interface StringFieldProps extends BaseFieldProps {
   labelAttributes?: LabelAttributes
 }
 
@@ -68,7 +69,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: ValueType]
 }>()
 
-const { value: fieldValue, ...field } = useField<ValueType, JsonFieldSchema>(toRef(() => name))
+const { value: fieldValue, hide, ...field } = useField<ValueType, JsonFieldSchema>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 
 const rawInputValue = ref('')

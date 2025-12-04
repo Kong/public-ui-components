@@ -4,9 +4,9 @@ import { useField, useFieldAttrs } from '../composables'
 
 import type { LabelAttributes } from '@kong/kongponents'
 import type { EmitFn, Ref } from 'vue'
+import type { BaseFieldProps } from '../types'
 
-export interface KeyValueFieldProps<TKey extends string = string, TValue extends string = string> {
-  name: string
+export interface KeyValueFieldProps<TKey extends string = string, TValue extends string = string> extends BaseFieldProps {
   initialValue?: Record<TKey, TValue> | null
   label?: string
   keyPlaceholder?: string

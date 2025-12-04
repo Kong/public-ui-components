@@ -92,7 +92,7 @@ const {
   nameValidator,
   toggleNodeValid,
   fieldNameValidator,
-} = useNodeForm<CallFormData>(nodeId, () => formRef.value!.getInnerData())
+} = useNodeForm<CallFormData>(nodeId, () => formRef.value!.getValue())
 
 const {
   createFieldHandler,

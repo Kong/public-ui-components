@@ -1,8 +1,8 @@
 <template>
   <QueryDataProvider
     :context="context"
-    :limit-override="COUNTRIES.length"
-    :query="query"
+    :limit-override="limitOverride"
+    :query="mapQuery"
     :query-ready="queryReady"
     :refresh-counter="refreshCounter"
     @chart-data="onChartData"
@@ -27,10 +27,10 @@ import type { RendererProps } from '../types'
 import { ref, computed } from 'vue'
 import QueryDataProvider from './QueryDataProvider.vue'
 import { AnalyticsGeoMap, exploreResultToCountryMetrics } from '@kong-ui-public/analytics-geo-map'
-import { COUNTRIES } from '@kong-ui-public/analytics-utilities'
+import { COUNTRIES, type ExploreEmptyFilterV2 } from '@kong-ui-public/analytics-utilities'
 import '@kong-ui-public/analytics-geo-map/dist/style.css'
 
-defineProps<RendererProps<ChoroplethMapOptions>>()
+const props = defineProps<RendererProps<ChoroplethMapOptions>>()
 
 const chartDataRaw = ref<ExploreResultV4 | undefined>(undefined)
 
@@ -48,6 +48,47 @@ const countryMetric = computed(() => {
   }
 
   return chartDataRaw.value?.meta.metric_names && chartDataRaw.value.meta.metric_names[0]
+})
+
+const limitOverride = computed(() => {
+  if (props.query.limit !== undefined && props.query.limit > 0) {
+    return props.query.limit
+  }
+
+  return COUNTRIES.length
+})
+
+const mapQuery = computed(() => {
+  const hasExistingCountryFilter = props.query.filters?.find(({ field, operator }) => {
+    const isCountry = field === 'country_code'
+    // if we have an explicit empty or not_empty filter, adding an additional empty filter is wrong
+    const isEmpty = operator === 'not_empty' || operator === 'empty'
+    // if we have an 'in' filter, an additional empty filter does nothing
+    const isIn = operator === 'in'
+    return isCountry && (isEmpty || isIn)
+  })
+
+  if (!hasExistingCountryFilter) {
+    // as long as we don't have a country filter already, add a 'not_empty'
+    // filter for country. The map display doesn't show empty values and a limit
+    // will frequently include empty in the results. For example, if you limit
+    // to 5, you might get US, UK, China, Japan, and empty, which would look
+    // like 4 results.
+    const noEmpty = {
+      field: 'country_code',
+      operator: 'not_empty',
+    } as ExploreEmptyFilterV2
+
+    return {
+      ...props.query,
+      filters: [
+        ...(props.query.filters || []),
+        noEmpty,
+      ] as any,
+    }
+  }
+
+  return props.query
 })
 
 const countryMetricUnit = computed(() => {

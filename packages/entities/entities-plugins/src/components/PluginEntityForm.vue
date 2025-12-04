@@ -537,9 +537,12 @@ const getModel = (): Record<string, any> => {
             break
 
           case 'number':
-            // Use `Number()` to properly convert a string representation to it's
-            // proper sub-type (integer, float)
-            fieldValue = Number(fieldValue)
+            // If the field is referenceable, we allow string values to be passed through
+            if (fieldSchema.referenceable !== true) {
+              // Use `Number()` to properly convert a string representation to it's
+              // proper sub-type (integer, float)
+              fieldValue = Number(fieldValue)
+            }
             break
 
           case 'boolean':

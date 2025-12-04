@@ -30,8 +30,7 @@ import { FIELD_RENDERERS, provideFormShared } from './composables'
 import type { FormSchema, UnionFieldSchema } from '../../../types/plugins/form-schema'
 import Field from './Field.vue'
 import type { FormConfig, GlobalAction, RenderRules } from './types'
-import { filterByDependencies, sortFieldsByBundles, sortFieldsByFieldNames } from './utils'
-import { get } from 'lodash-es'
+import { sortFieldsByBundles, sortFieldsByFieldNames } from './utils'
 
 defineOptions({ name: 'SchemaForm' })
 
@@ -51,7 +50,7 @@ const emit = defineEmits<{
 
 const slots = useSlots()
 
-const { getSchema, formData, setFormData, getFormData, rootRenderRules } = provideFormShared({
+const { getSchema, formData, setValue, getValue, rootRenderRules } = provideFormShared({
   schema,
   propsData: computed(() => data as T),
   propsConfig: config as FormConfig,
@@ -63,14 +62,6 @@ const childFields = computed(() => {
   const { fields } = getSchema()
 
   let sortedFields = [...fields]
-
-  if (rootRenderRules.value?.dependencies) {
-    sortedFields = filterByDependencies(
-      sortedFields,
-      rootRenderRules.value.dependencies,
-      fieldName => get(formData, fieldName),
-    )
-  }
 
   if (fieldsOrder) {
     return sortFieldsByFieldNames(sortedFields, fieldsOrder)
@@ -85,10 +76,8 @@ const childFields = computed(() => {
 
 
 defineExpose({
-  /** Get the form data, same as the param of `onChange` */
-  getData: () => getFormData(),
-  /** Get the inner data, compare to `getData`, it includes the value of the disabled records. */
-  getInnerData: () => toRaw(formData),
-  setInnerData: (data: T) => setFormData(data),
+  getValue,
+  getRawValue: () => toRaw(formData),
+  setValue,
 })
 </script>

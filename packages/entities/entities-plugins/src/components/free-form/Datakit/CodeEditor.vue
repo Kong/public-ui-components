@@ -59,7 +59,11 @@ const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
 
 const { t } = createI18n<typeof english>('en-us', english)
 
+<<<<<<< HEAD
 const { formData, setFormData: resetFormData } = useFormShared<DatakitPluginData>()
+=======
+const { formData, setValue } = useFormShared<DatakitPluginData>()
+>>>>>>> origin/main
 
 defineProps<{
   editing: boolean
@@ -249,7 +253,7 @@ onMounted(() => {
       monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
 
       if (enableDatakitM2) {
-        resetFormData(config as DatakitPluginData)
+        setValue(config as DatakitPluginData)
       } else {
         formData.config = config as DatakitConfig
       }

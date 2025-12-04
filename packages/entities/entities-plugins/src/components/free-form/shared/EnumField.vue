@@ -8,6 +8,7 @@
 
   <SelectComponent
     v-else
+    v-show="!hide"
     v-bind="{ ...props, ...fieldAttrs }"
     v-model="fieldValue"
     class="ff-enum-field"
@@ -51,16 +52,16 @@ import {
   type MultiselectProps,
 } from '@kong/kongponents'
 import { useField, useFieldAttrs, useFormShared } from './composables'
+import type { BaseFieldProps } from './types'
 
 type MultipleSelectProps = { multiple: true } & MultiselectProps<string, false>
 type SingleSelectProps = { multiple?: false } & SelectProps<string, false>
 
 type EnumFieldProps = {
-  name: string
   labelAttributes?: LabelAttributes
   items?: SelectItem[]
   placeholder?: string
-} & (MultipleSelectProps | SingleSelectProps)
+} & (MultipleSelectProps | SingleSelectProps) & BaseFieldProps
 
 const emit = defineEmits<{
   update: [string | string[] | null]
@@ -73,7 +74,7 @@ const {
   ...props
 } = defineProps<EnumFieldProps>()
 const { getSelectItems } = useFormShared()
-const { value: fieldValue, ...field } = useField<number | string>(
+const { value: fieldValue, hide, ...field } = useField<number | string>(
   toRef(() => name),
 )
 

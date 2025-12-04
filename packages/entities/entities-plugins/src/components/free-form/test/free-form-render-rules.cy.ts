@@ -26,11 +26,20 @@ const createSchema = (...fieldNames: string[]): FormSchema => ({
 // Helper function to create render rules with bundles
 const createBundles = (...bundles: string[][]): RenderRules['bundles'] => bundles.map(bundle => bundle.map(name => getFieldName(name)))
 
+// Helper function to filter visible elements (not affected by CSS animations)
+const filterVisibleElements = (elements: HTMLElement[]) => {
+  return elements.filter(el => {
+    // offsetParent is null when element or any ancestor has display:none
+    return el.offsetParent !== null
+  })
+}
+
 // Helper function to verify field rendering order
 const verifyFieldOrder = (expectedOrder: string[], prefix?: string) => {
   const fieldPrefix = prefix ? `${prefix}.` : ''
   cy.get(`[data-testid^="${getFieldTestId(`${fieldPrefix}${getFieldName()}`)}"]`).then(($fields) => {
-    const actualOrder = $fields.toArray().map(el => el.getAttribute('data-testid'))
+    const visibleFields = filterVisibleElements($fields.toArray())
+    const actualOrder = visibleFields.map(el => el.getAttribute('data-testid'))
     expect(actualOrder).to.deep.equal(expectedOrder.map(name => getFieldTestId(`${fieldPrefix}${getFieldName(name)}`)))
   })
 }
@@ -287,20 +296,20 @@ describe('Render Rules', () => {
         })
 
         // Initially field_b should be hidden (field_a has no value)
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
 
         // Set field_a to 'show'
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('show')
 
         // Now field_b should be visible
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist').should('be.visible')
 
         // Change field_a to something else
         cy.getTestId(getFieldTestId(getFieldName('a'))).clear()
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('hide')
 
         // field_b should be hidden again
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
       })
 
       it('should support object value dependency with deep equality comparison', () => {
@@ -333,7 +342,7 @@ describe('Render Rules', () => {
         })
 
         // redis_config should be hidden initially
-        cy.getTestId('ff-redis_config').should('not.exist')
+        cy.getTestId('ff-redis_config').should('not.be.visible')
 
         // TODO: Test with actual object value setting when form supports it
       })
@@ -355,13 +364,13 @@ describe('Render Rules', () => {
         })
 
         // field_b should be visible when field_a is null/undefined
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist').should('be.visible')
 
         // Set field_a to a value
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('value')
 
         // field_b should be hidden
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
       })
     })
 
@@ -375,32 +384,43 @@ describe('Render Rules', () => {
           },
         }
 
+        const onChangeSpy = cy.spy().as('onChangeSpy')
+
         cy.mount(Form, {
           props: {
             schema,
             renderRules,
             modelValue: {},
+            onChange: onChangeSpy,
           },
         })
 
         // Set field_a to 'show' to make field_b visible
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('show')
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist').should('be.visible')
 
         // Enter value in field_b
         cy.getTestId(getFieldTestId(getFieldName('b'))).type('test_value')
+
+        // Verify onChange was called with field_b value set
+        cy.get('@onChangeSpy').should('have.been.calledWith', Cypress.sinon.match((value: any) => {
+          return value[getFieldName('b')] === 'test_value'
+        }))
 
         // Change field_a to hide field_b
         cy.getTestId(getFieldTestId(getFieldName('a'))).clear()
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('hide')
 
         // field_b should be hidden
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
 
-        // TODO: Verify that field_b value is cleared from formData
+        // Verify that field_b value is cleared from formData
+        cy.get('@onChangeSpy').should('have.been.calledWith', Cypress.sinon.match((value: any) => {
+          return value[getFieldName('b')] === null
+        }))
       })
 
-      it('should not restore previous value when dependency is satisfied again', () => {
+      it('should restore previous value when dependency is satisfied again', () => {
         const schema = createSchema('a', 'b')
 
         const renderRules: RenderRules = {
@@ -428,8 +448,8 @@ describe('Render Rules', () => {
         cy.getTestId(getFieldTestId(getFieldName('a'))).clear()
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('show')
 
-        // field_b should be empty, not restored
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('have.value', '')
+        // field_b should be test_value, value restored
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('have.value', 'test_value')
       })
     })
 
@@ -466,26 +486,26 @@ describe('Render Rules', () => {
         })
 
         // Add config object
-        cy.getTestId('ff-object-add-btn-config').should('exist')
+        cy.getTestId('ff-object-add-btn-config').should('exist').should('be.visible')
         cy.getTestId('ff-object-add-btn-config').click()
 
         // Initially field_redis should be hidden (field_strategy has no value)
-        cy.getTestId('ff-config.field_strategy').should('exist')
-        cy.getTestId('ff-config.field_redis').should('not.exist')
-        cy.getTestId('ff-config.field_other').should('exist')
+        cy.getTestId('ff-config.field_strategy').should('exist').should('be.visible')
+        cy.getTestId('ff-config.field_redis').should('not.be.visible')
+        cy.getTestId('ff-config.field_other').should('exist').should('be.visible')
 
         // Set field_strategy to 'redis'
         cy.getTestId('ff-config.field_strategy').type('redis')
 
         // Now field_redis should be visible
-        cy.getTestId('ff-config.field_redis').should('exist')
+        cy.getTestId('ff-config.field_redis').should('exist').should('be.visible')
 
         // Change field_strategy to something else
         cy.getTestId('ff-config.field_strategy').clear()
         cy.getTestId('ff-config.field_strategy').type('local')
 
         // field_redis should be hidden again
-        cy.getTestId('ff-config.field_redis').should('not.exist')
+        cy.getTestId('ff-config.field_redis').should('not.be.visible')
       })
 
       it('should support chained dependencies', () => {
@@ -506,18 +526,18 @@ describe('Render Rules', () => {
         })
 
         // Initially only field_a should be visible
-        cy.getTestId(getFieldTestId(getFieldName('a'))).should('exist')
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.exist')
-        cy.getTestId(getFieldTestId(getFieldName('c'))).should('not.exist')
+        cy.getTestId(getFieldTestId(getFieldName('a'))).should('exist').should('be.visible')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
+        cy.getTestId(getFieldTestId(getFieldName('c'))).should('not.be.visible')
 
         // Show field_b
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('show_b')
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist')
-        cy.getTestId(getFieldTestId(getFieldName('c'))).should('not.exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist').should('be.visible')
+        cy.getTestId(getFieldTestId(getFieldName('c'))).should('not.be.visible')
 
         // Show field_c
         cy.getTestId(getFieldTestId(getFieldName('b'))).type('show_c')
-        cy.getTestId(getFieldTestId(getFieldName('c'))).should('exist')
+        cy.getTestId(getFieldTestId(getFieldName('c'))).should('exist').should('be.visible')
       })
     })
 
@@ -541,7 +561,8 @@ describe('Render Rules', () => {
 
         // Verify bundle order: b, a, d (c is hidden)
         cy.get(`[data-testid^="${getFieldTestId(getFieldName())}"]`).then(($fields) => {
-          const order = $fields.toArray().map(el => el.getAttribute('data-testid'))
+          const visibleFields = filterVisibleElements($fields.toArray())
+          const order = visibleFields.map(el => el.getAttribute('data-testid'))
           expect(order).to.deep.equal([
             getFieldTestId(getFieldName('b')),
             getFieldTestId(getFieldName('a')),
@@ -551,11 +572,12 @@ describe('Render Rules', () => {
 
         // Show field_c by setting field_a
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('value1')
-        cy.getTestId(getFieldTestId(getFieldName('c'))).should('exist')
+        cy.getTestId(getFieldTestId(getFieldName('c'))).should('exist').should('be.visible')
 
         // Verify order with c visible: b, a, c, d
         cy.get(`[data-testid^="${getFieldTestId(getFieldName())}"]`).then(($fields) => {
-          const order = $fields.toArray().map(el => el.getAttribute('data-testid'))
+          const visibleFields = filterVisibleElements($fields.toArray())
+          const order = visibleFields.map(el => el.getAttribute('data-testid'))
           expect(order).to.deep.equal([
             getFieldTestId(getFieldName('b')),
             getFieldTestId(getFieldName('a')),
@@ -587,7 +609,7 @@ describe('Render Rules', () => {
 
         // Show field_b
         cy.getTestId(getFieldTestId(getFieldName('d'))).type('show')
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist').should('be.visible')
 
         // Verify order: a, b, c, d
         verifyFieldOrder(['a', 'b', 'c', 'd'])
@@ -721,14 +743,14 @@ describe('Render Rules', () => {
         })
 
         // field_b should be hidden
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
 
         // Type 'show' character by character and verify real-time updates
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('s')
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
 
         cy.getTestId(getFieldTestId(getFieldName('a'))).type('how')
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist').should('be.visible')
       })
 
       it('should reevaluate dependencies when data prop is updated externally', () => {
@@ -751,7 +773,7 @@ describe('Render Rules', () => {
         })
 
         // field_b should be hidden
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('not.be.visible')
 
         // Update data prop externally
         cy.get('@wrapper').then((wrapper: any) => {
@@ -761,7 +783,7 @@ describe('Render Rules', () => {
         })
 
         // field_b should now be visible
-        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist')
+        cy.getTestId(getFieldTestId(getFieldName('b'))).should('exist').should('be.visible')
       })
     })
   })

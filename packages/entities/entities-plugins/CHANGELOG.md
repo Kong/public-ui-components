@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.132.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.131.0...@kong-ui-public/entities-plugins@9.132.0) (2025-12-03)
+
+
+### Features
+
+* **entities-plugins:** add support for referenceable number field ([#2695](https://github.com/Kong/public-ui-components/issues/2695)) ([1b8bfeb](https://github.com/Kong/public-ui-components/commit/1b8bfebe50a5d72bfd2df23e782861ec6f68b9c0))
+
+
+
+
+
+# [9.131.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.130.2...@kong-ui-public/entities-plugins@9.131.0) (2025-12-03)
+
+
+### Features
+
+* **forms:** support referenceable number ([#2688](https://github.com/Kong/public-ui-components/issues/2688)) ([6c62658](https://github.com/Kong/public-ui-components/commit/6c62658a879905ae923cda8b03d0eb3236c8fb6b))
+
+
+
+
+
+## [9.130.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.130.1...@kong-ui-public/entities-plugins@9.130.2) (2025-12-03)
+
+
+### Bug Fixes
+
+* **entities-plugins:** clear partials if dependency not met ([#2672](https://github.com/Kong/public-ui-components/issues/2672)) ([61acc3f](https://github.com/Kong/public-ui-components/commit/61acc3f817447d55056cccb47e971db9f83caaa7))
+
+
+
+
+
+## [9.130.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.130.0...@kong-ui-public/entities-plugins@9.130.1) (2025-12-02)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.130.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.129.0...@kong-ui-public/entities-plugins@9.130.0) (2025-12-02)
+
+
+### Features
+
+* **entities-plugins:** preserve the values ​​of hidden fields [KM-2052] ([#2684](https://github.com/Kong/public-ui-components/issues/2684)) ([b2b72ed](https://github.com/Kong/public-ui-components/commit/b2b72edf19a05e9bbd9247ce31b9ac152a30a080))
+
+
+
+
+
 # [9.129.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.128.0...@kong-ui-public/entities-plugins@9.129.0) (2025-11-28)
 
 

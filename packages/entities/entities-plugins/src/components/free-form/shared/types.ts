@@ -161,3 +161,7 @@ export interface RenderRules {
     [fieldPath: string]: [fieldPath: string, fieldValue: any]
   }
 }
+
+export interface BaseFieldProps {
+  name: string
+}

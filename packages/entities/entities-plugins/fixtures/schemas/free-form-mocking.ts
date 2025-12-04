@@ -62,6 +62,12 @@ function buildNumberFieldCases(): Array<{ [name: string]: NumberLikeFieldSchema 
         one_of: [-1, 0, 1],
       },
     },
+    {
+      number_referenceable: {
+        type: 'number',
+        referenceable: true,
+      },
+    },
   ]
 }
 

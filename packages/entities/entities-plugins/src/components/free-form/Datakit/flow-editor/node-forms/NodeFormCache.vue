@@ -88,7 +88,7 @@ const {
   nameValidator,
   toggleNodeValid,
   fieldNameValidator,
-} = useNodeForm<CacheFormData>(nodeId, () => formRef.value!.getInnerData())
+} = useNodeForm<CacheFormData>(nodeId, () => formRef.value!.getValue())
 
 const { createFieldHandler } = useFormValidation({
   validationConfig: () => ({
