@@ -43,11 +43,11 @@ export function useKeyValueField<
 ) {
   type KVEntries = Array<KVEntry<TKey, TValue>>
 
-  const { value: fieldValue, ...field } = useField<Record<TKey, TValue> | null>(toRef(props, 'name'))
+  const { value: fieldValue, emptyOrDefaultValue, ...field } = useField<Record<TKey, TValue> | null>(toRef(props, 'name'))
   const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...useAttrs() }))
 
   const entries = ref(getEntries(
-    props.initialValue ?? toValue(fieldValue) ?? ({} as Record<TKey, TValue>),
+    props.initialValue ?? toValue(fieldValue),
     props.keyOrder,
   )) as Ref<KVEntries>
   // the return type of ref(..) is not expected, it includes `UnwrapRef<TKey>` and `UnwrapRef<TValue>`
@@ -69,7 +69,9 @@ export function useKeyValueField<
     return indexA - indexB // sort by order in keyOrder
   }
 
-  function getEntries(value: Record<TKey, TValue>, keyOrder?: TKey[]): KVEntries {
+  function getEntries(value: Record<TKey, TValue> | null | undefined, keyOrder?: TKey[]): KVEntries {
+    if (!value) return []
+
     const entries = Object.entries(value).map(([key, value]) => ({
       id: generateId(),
       key: key as TKey,
@@ -100,21 +102,26 @@ export function useKeyValueField<
   }
 
   function reset() {
-    entries.value = getEntries(props.initialValue || {} as Record<TKey, TValue>, props.keyOrder)
+    entries.value = getEntries(props.initialValue, props.keyOrder)
   }
 
-  function setValue(value: Record<TKey, TValue>) {
+  function setValue(value: Record<TKey, TValue> | null | undefined) {
     entries.value = getEntries(value, props.keyOrder)
   }
 
-  let lastUpdatedValue: Record<TKey, TValue> | null = null
+  let lastUpdatedValue: Record<TKey, TValue> | null | undefined = fieldValue?.value
 
   // Sync entries to fieldValue
   watch(entries, (newEntries) => {
     if (!syncToFieldValue) return
     const newValue: Record<TKey, TValue> | null = newEntries.length
       ? Object.fromEntries(newEntries.map(({ key, value }) => [key, value]).filter(([key]) => key))
-      : null
+      : emptyOrDefaultValue?.value
+    // Avoid updating fieldValue to `null` from `{}`
+    // Currently, the UI does not distinguish between `null` and `{}` well, we'll improve it later. KM-2069
+    if (newValue === null && lastUpdatedValue !== null && typeof lastUpdatedValue === 'object' && Object.keys(lastUpdatedValue).length === 0) {
+      return
+    }
     fieldValue!.value = newValue
     lastUpdatedValue = newValue
     emit('change', newValue)

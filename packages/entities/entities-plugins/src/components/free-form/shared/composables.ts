@@ -620,13 +620,14 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
 }
 
 export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
-  const { getSchema, isFieldHidden } = useFormShared()
+  const { getSchema, isFieldHidden, getEmptyOrDefault } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
   const { value } = useFormData<TData>(name)
 
   const schema = computed(() => getSchema<TSchema>(fieldPath.value))
   const hide = computed(() => isFieldHidden(fieldPath.value))
+  const emptyOrDefaultValue = computed(() => getEmptyOrDefault(fieldPath.value))
 
   if (!schema.value) {
     return {
@@ -644,6 +645,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
      * Hide the field but keep its state.
      */
     hide,
+    emptyOrDefaultValue,
     error: null,
   }
 }
