@@ -75,7 +75,7 @@ A form component for Redis Configurations.
     - default: `undefined`
     - Whether to show the Cloud Authentication fields.
 
-  - `referenceablePort`
+  - `isPortReferenceable`
     - type: `boolean`
     - required: `false`
     - default: `undefined`
