@@ -314,8 +314,8 @@ const getGroupConfig = (groupName: string = ''): GroupConfig | null => {
   let groupNameKey = groupName.trim().replace(' ', '')
   groupNameKey = groupNameKey.charAt(0).toLowerCase() + groupNameKey.slice(1)
 
-  const configExists = groupName && props.groupConfig && (props.groupConfig[groupName] || props.groupConfig[groupNameKey])
-  return configExists ? props.groupConfig[groupName] || props.groupConfig[groupNameKey] : defaultItem
+  const configExists = groupName && props.groupConfig && (props.groupConfig[groupName] ?? props.groupConfig[groupNameKey]) !== null
+  return configExists ? props.groupConfig[groupName] ?? props.groupConfig[groupNameKey] ?? defaultItem : defaultItem
 }
 
 const isGroupCollapsible = (groupName: string): boolean => {
@@ -492,7 +492,9 @@ onMounted(async () => {
     if (isMobile.value) {
       for (const groupName in props.groupConfig) {
         const group = props.groupConfig[groupName]
-        group.collapsed = false
+        if (group) {
+          group.collapsed = false
+        }
       }
     }
   }
