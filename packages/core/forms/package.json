@@ -51,7 +51,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong/icons": "^1.39.0",
+    "@kong/icons": "^1.39.1",
     "dompurify": "^3.2.6",
     "fecha": "^4.2.3",
     "lodash-es": "^4.17.21"
@@ -65,8 +65,8 @@
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.18.1",
-    "@kong/kongponents": "9.48.0",
+    "@kong/design-tokens": "1.18.2",
+    "@kong/kongponents": "9.48.1",
     "@types/lodash-es": "^4.17.12",
     "pug": "^3.0.3"
   },
