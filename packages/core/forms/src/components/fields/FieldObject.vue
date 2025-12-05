@@ -83,9 +83,9 @@ import abstractField from './abstractField'
 export default {
   mixins: [abstractField],
 
-  expose: ['validate', 'clearValidationErrors', 'schema'],
-
   emits: ['modelUpdated'],
+
+  expose: ['validate', 'clearValidationErrors', 'schema'],
 
   data() {
     return {
