@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.2.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.2.6...@kong-ui-public/dashboard-renderer@8.2.7) (2025-12-05)
+
+
+### Bug Fixes
+
+* updated v-bind css to inline ([#2715](https://github.com/Kong/public-ui-components/issues/2715)) ([451a87b](https://github.com/Kong/public-ui-components/commit/451a87b729b5ca97ccf5cf9345240e201de6ea53))
+
+
+
+
+
 ## [8.2.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.2.5...@kong-ui-public/dashboard-renderer@8.2.6) (2025-12-04)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
