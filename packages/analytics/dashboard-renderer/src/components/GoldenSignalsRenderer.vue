@@ -1,5 +1,8 @@
 <template>
-  <div class="metric-card-tile-wrapper">
+  <div
+    class="metric-card-tile-wrapper"
+    :class="{ 'titled': !!props.chartOptions.chart_title }"
+  >
     <MetricsProvider v-bind="options">
       <MetricsConsumer />
     </MetricsProvider>
@@ -43,7 +46,11 @@ const options = computed<ProviderProps>(() => {
     align-items: center;
     display: flex;
     height: 100%;
-    padding: 24px;
+    padding: var(--kui-space-60, $kui-space-60);
+  }
+
+  &.titled {
+    padding: var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60) var(--kui-space-60, $kui-space-60);
   }
 }
 </style>
