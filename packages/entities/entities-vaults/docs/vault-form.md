@@ -92,11 +92,11 @@ A form component for Vaults.
     - default: `undefined`
     - Show/hide cert option and corresponding fields.
 
-  - `hcvOauth2MethodAvailable`
+  - `hcvJwtMethodAvailable`
     - type: `boolean`
     - required: `false`
     - default: `undefined`
-    - Show/hide oauth2 option and corresponding fields. 
+    - Show/hide jwt option and corresponding fields. 
 
   - `awsStsEndpointUrlAvailable`
     - type: `boolean`

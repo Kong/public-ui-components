@@ -14,7 +14,7 @@ const baseConfigKonnect: KonnectVaultFormConfig = {
   ttl: true,
   hcvAppRoleMethodAvailable: true,
   hcvCertMethodAvailable: true,
-  hcvOauth2MethodAvailable: true,
+  hcvJwtMethodAvailable: true,
 }
 
 const baseConfigKonnectTurnOffTTL: KonnectVaultFormConfig = {
@@ -36,7 +36,7 @@ const baseConfigKM: KongManagerVaultFormConfig = {
   awsStsEndpointUrlAvailable: true,
   hcvAppRoleMethodAvailable: true,
   hcvCertMethodAvailable: true,
-  hcvOauth2MethodAvailable: true,
+  hcvJwtMethodAvailable: true,
 }
 
 const baseConfigKMTurnOffTTL: KongManagerVaultFormConfig = {
@@ -302,7 +302,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-create-form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-hcv-oauth2_client_id').type('id')
       cy.getTestId('vault-form-config-hcv-oauth2_client_secret').type('secret')
-      cy.getTestId('vault-form-config-hcv-oauth2_role_name').type('name')
+      cy.getTestId('vault-form-config-hcv-jwt_role').type('name')
       cy.getTestId('vault-form-config-hcv-oauth2_token_endpoint').type('endpoint')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
 
@@ -771,7 +771,7 @@ describe('<VaultForm />', () => {
       cy.getTestId('vault-create-form-submit').should('be.disabled')
       cy.getTestId('vault-form-config-hcv-oauth2_client_id').type('id')
       cy.getTestId('vault-form-config-hcv-oauth2_client_secret').type('secret')
-      cy.getTestId('vault-form-config-hcv-oauth2_role_name').type('name')
+      cy.getTestId('vault-form-config-hcv-jwt_role').type('name')
       cy.getTestId('vault-form-config-hcv-oauth2_token_endpoint').type('endpoint')
       cy.getTestId('vault-create-form-submit').should('be.enabled')
 
