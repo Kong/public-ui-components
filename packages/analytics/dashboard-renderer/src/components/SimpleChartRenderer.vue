@@ -9,7 +9,6 @@
     <div
       class="analytics-chart"
       :class="{ 'single-value': isSingleValueChart }"
-      :style="{ height: `${height}px` }"
     >
       <SimpleChart
         :chart-data="data"
@@ -30,12 +29,15 @@ import { computed } from 'vue'
 const props = defineProps<RendererProps<GaugeChartOptions | SingleValueOptions>>()
 
 const isSingleValueChart = computed((): boolean => props.chartOptions.type === 'single_value')
+
+const tileHeight = computed(() => props.height || 170)
 </script>
 
 <style scoped lang="scss">
 .analytics-chart {
   display: flex;
   flex-direction: column;
+  height: v-bind('`${tileHeight}px`');
   justify-content: center;
 
   // single value chart adopts the height of the parent container
