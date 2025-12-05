@@ -81,19 +81,19 @@ export default function useSparklineSync({
   renderPoints?: number
   type: SparklineType
 }): {
-    syncedGroupSizeMs: Ref<number>
-    syncedMinStamp: Ref<number>
-    syncedMaxStamp: Ref<number>
-    syncedMinCount: Ref<number>
-    syncedMaxCount: Ref<number>
-    syncedRenderPoints: Ref<number>
-    syncedChartDatasets: Ref<Array<{
-      label: string
-      data: Array<{ x: number, y: number }>
-      backgroundColor?: string
-      fill?: boolean
-    }>>
-  } {
+  syncedGroupSizeMs: Ref<number>
+  syncedMinStamp: Ref<number>
+  syncedMaxStamp: Ref<number>
+  syncedMinCount: Ref<number>
+  syncedMaxCount: Ref<number>
+  syncedRenderPoints: Ref<number>
+  syncedChartDatasets: Ref<Array<{
+    label: string
+    data: Array<{ x: number, y: number }>
+    backgroundColor?: string
+    fill?: boolean
+  }>>
+} {
   const DEFAULT_RENDER_POINTS = 24
 
   const state = groupKey !== undefined && chartKey !== undefined ? getStateByGroup(groupKey) : createState()
