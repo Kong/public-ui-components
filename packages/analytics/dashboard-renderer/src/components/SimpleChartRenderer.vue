@@ -30,7 +30,7 @@ const props = defineProps<RendererProps<GaugeChartOptions | SingleValueOptions>>
 
 const isSingleValueChart = computed((): boolean => props.chartOptions.type === 'single_value')
 
-const tileHeight = computed(() => props.height || 170)
+const tileHeight = computed(() => props?.height ? props.height : 170)
 </script>
 
 <style scoped lang="scss">
