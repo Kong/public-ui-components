@@ -322,9 +322,9 @@
           "oauth2_client_secret": {
             "label": "OAuth2 Client Secret"
           },
-          "oauth2_role_name": {
-            "label": "OAuth2 Role Name",
-            "tooltip": "The configured role name in HashiCorp Vault for OAuth2 auth. When creating the role in HashiCorp Vault, make sure that the `role_type` is `jwt` and the `token_policies` have permissions to read the secrets."
+          "jwt_role": {
+            "label": "JWT Role",
+            "tooltip": "The configured role name in HashiCorp Vault for JWT auth. When creating the role in HashiCorp Vault, make sure that the `role_type` is `jwt` and the `token_policies` have permissions to read the secrets."
           },
           "oauth2_token_endpoint": {
             "label": "OAuth2 Token Endpoint"

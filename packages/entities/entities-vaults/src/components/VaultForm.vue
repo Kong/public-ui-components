@@ -278,7 +278,7 @@
                 { label: VaultAuthMethods.K8S, value: VaultAuthMethods.K8S as string },
                 ...(config.hcvAppRoleMethodAvailable ? [{ label: VaultAuthMethods.APP_ROLE, value: VaultAuthMethods.APP_ROLE as string }] : []),
                 ...(config.hcvCertMethodAvailable ? [{ label: VaultAuthMethods.CERT, value: VaultAuthMethods.CERT as string }] : []),
-                ...(config.hcvOauth2MethodAvailable ? [{ label: VaultAuthMethods.OAUTH2, value: VaultAuthMethods.OAUTH2 as string }] : []),
+                ...(config.hcvJwtMethodAvailable ? [{ label: VaultAuthMethods.JWT, value: VaultAuthMethods.JWT as string }] : []),
               ]"
               :label="t('form.config.hcv.fields.auth_method.label')"
               :readonly="form.isReadonly"
@@ -405,7 +405,7 @@
               />
             </div>
             <div
-              v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.OAUTH2"
+              v-else-if="configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.JWT"
               class="vault-form-config-auth-method-container"
             >
               <KInput
@@ -427,12 +427,12 @@
                 type="password"
               />
               <KInput
-                v-model.trim="configFields[VaultProviders.HCV].oauth2_role_name"
+                v-model.trim="configFields[VaultProviders.HCV].jwt_role"
                 autocomplete="off"
-                data-testid="vault-form-config-hcv-oauth2_role_name"
-                :label="t('form.config.hcv.fields.oauth2_role_name.label')"
+                data-testid="vault-form-config-hcv-jwt_role"
+                :label="t('form.config.hcv.fields.jwt_role.label')"
                 :label-attributes="{
-                  info: t('form.config.hcv.fields.oauth2_role_name.tooltip'),
+                  info: t('form.config.hcv.fields.jwt_role.tooltip'),
                   tooltipAttributes: { maxWidth: '400' },
                 }"
                 :readonly="form.isReadonly"
@@ -917,7 +917,7 @@ const configFields = reactive<ConfigFields>({
     cert_auth_role_name: '',
     oauth2_client_id: '',
     oauth2_client_secret: '',
-    oauth2_role_name: '',
+    jwt_role: '',
     oauth2_token_endpoint: '',
     oauth2_audiences: '',
     ...base64FieldConfig,
@@ -1154,7 +1154,7 @@ const isVaultConfigValid = computed((): boolean => {
       if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.CERT && ['cert_auth_role_name', 'cert_auth_cert', 'cert_auth_cert_key'].includes(key)) {
         return false
       }
-      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.OAUTH2 && ['oauth2_client_id', 'oauth2_client_secret', 'oauth2_role_name', 'oauth2_token_endpoint'].includes(key)) {
+      if (configFields[VaultProviders.HCV].auth_method !== VaultAuthMethods.JWT && ['oauth2_client_id', 'oauth2_client_secret', 'jwt_role', 'oauth2_token_endpoint'].includes(key)) {
         return false
       }
       return isEmpty((configFields[vaultProvider.value] as HCVVaultConfig)[key as keyof HCVVaultConfig])
@@ -1247,11 +1247,11 @@ const getPayload = computed((): Record<string, any> => {
       cert_auth_cert: configFields[VaultProviders.HCV].cert_auth_cert,
       cert_auth_cert_key: configFields[VaultProviders.HCV].cert_auth_cert_key,
     }),
-    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.OAUTH2 && {
+    ...(configFields[VaultProviders.HCV].auth_method === VaultAuthMethods.JWT && {
       oauth2_audiences: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_audiences || null,
       oauth2_client_id: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_client_id,
       oauth2_client_secret: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_client_secret,
-      oauth2_role_name: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_role_name,
+      jwt_role: (configFields[VaultProviders.HCV] as HCVVaultConfig).jwt_role,
       oauth2_token_endpoint: (configFields[VaultProviders.HCV] as HCVVaultConfig).oauth2_token_endpoint,
     }),
   }
