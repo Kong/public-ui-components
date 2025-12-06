@@ -355,6 +355,7 @@
         />
         <KInput
           v-model.trim="form.fields.config.server_name"
+          data-testid="redis-server_name-input"
           :label="t('form.fields.server_name.label')"
           :label-attributes="{
             info: t('form.fields.server_name.tooltip'),
