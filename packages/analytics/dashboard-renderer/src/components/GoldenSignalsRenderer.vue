@@ -43,7 +43,7 @@ const options = computed<ProviderProps>(() => {
     align-items: center;
     display: flex;
     height: 100%;
-    padding: 24px;
+    padding: var(--kui-space-20, 4px) var(--kui-space-60, 16px) var(--kui-space-60, 16px) var(--kui-space-60, 16px);
   }
 }
 </style>
