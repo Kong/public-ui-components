@@ -11,6 +11,14 @@ export interface BaseRedisConfigurationFormConfig {
    * Whether the port field can accept vault references
    */
   isPortReferenceable?: boolean
+  /**
+   * Whether the host field can accept vault references
+   */
+  isHostReferenceable?: boolean
+  /**
+   * Whether the server_name field can accept vault references
+   */
+  isServerNameReferenceable?: boolean
 }
 
 export interface KonnectRedisConfigurationFormConfig extends KonnectBaseFormConfig, BaseRedisConfigurationFormConfig { }

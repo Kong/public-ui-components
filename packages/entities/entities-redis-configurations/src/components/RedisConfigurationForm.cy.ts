@@ -16,6 +16,8 @@ const baseConfigKM: KongManagerRedisConfigurationFormConfig = {
   apiBaseUrl: '/kong-manager',
   cloudAuthAvailable: true,
   isPortReferenceable: true,
+  isHostReferenceable: true,
+  isServerNameReferenceable: true,
   cancelRoute,
 }
 
@@ -25,6 +27,8 @@ const baseConfigKonnect: KonnectRedisConfigurationFormConfig = {
   apiBaseUrl: '/us/kong-api',
   cloudAuthAvailable: true,
   isPortReferenceable: true,
+  isHostReferenceable: true,
+  isServerNameReferenceable: true,
   cancelRoute,
 }
 
@@ -186,12 +190,14 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-timeout-input').should('not.exist')
 
         cy.getTestId('redis-host-input').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-host').should('be.visible')
         cy.getTestId('redis-port-input').should('be.visible')
         cy.getTestId('secret-picker-provider-for-port').should('be.visible')
         cy.getTestId('redis-connection-is-proxied-checkbox').should('be.visible')
         cy.getTestId('redis-keepalive-section').should('be.visible')
         cy.getTestId('redis-read-write-configuration-section').should('be.visible')
         cy.getTestId('redis-auth-provider-select').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-server_name').should('be.visible')
 
         // Cluster fields
         cy.getTestId('redis-type-select').click()

@@ -221,6 +221,15 @@
           }"
           :readonly="form.readonly"
         />
+        <VaultSecretPickerProvider
+          v-if="redisType === RedisType.HOST_PORT_EE && config.isHostReferenceable"
+          class="secret-picker-provider"
+          data-testid="secret-picker-provider-for-host"
+          :disabled="form.readonly"
+          :update="v => form.fields.config.host = v"
+          :value="form.fields.config.host ?? ''"
+          @open="(value, update) => setUpVaultSecretPicker(value, update)"
+        />
         <KInput
           v-if="redisType === RedisType.HOST_PORT_CE || redisType === RedisType.HOST_PORT_EE"
           v-model.trim="form.fields.config.port"
@@ -346,12 +355,22 @@
         />
         <KInput
           v-model.trim="form.fields.config.server_name"
+          data-testid="redis-server_name-input"
           :label="t('form.fields.server_name.label')"
           :label-attributes="{
             info: t('form.fields.server_name.tooltip'),
             tooltipAttributes: { maxWidth: '400' },
           }"
           :readonly="form.readonly"
+        />
+        <VaultSecretPickerProvider
+          v-if="redisType === RedisType.HOST_PORT_EE && config.isServerNameReferenceable"
+          class="secret-picker-provider"
+          data-testid="secret-picker-provider-for-server_name"
+          :disabled="form.readonly"
+          :update="v => form.fields.config.server_name = v"
+          :value="form.fields.config.server_name ?? ''"
+          @open="(value, update) => setUpVaultSecretPicker(value, update)"
         />
       </EntityFormSection>
 
