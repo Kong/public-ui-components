@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.7.2...@kong-ui-public/entities-redis-configurations@1.8.0) (2025-12-06)
+
+
+### Features
+
+* **redis:** host and server_name referenceable ([#2717](https://github.com/Kong/public-ui-components/issues/2717)) ([c79853b](https://github.com/Kong/public-ui-components/commit/c79853bbbd32c2b5a40f99e9fd1a8068e4afd5cb))
+
+
+
+
+
 ## [1.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.7.1...@kong-ui-public/entities-redis-configurations@1.7.2) (2025-12-05)
 
 
