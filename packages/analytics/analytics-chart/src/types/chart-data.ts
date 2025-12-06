@@ -120,6 +120,8 @@ export const simpleChartMetricDisplay = ['hidden', 'single', 'full'] as const
 
 export type SimpleChartMetricDisplay = typeof simpleChartMetricDisplay[number]
 
+export type AlignX = 'left' | 'center' | 'right' | 'between' | 'around' | 'evenly'
+
 /**
  * Simple Chart options
  */
@@ -148,6 +150,18 @@ export interface SimpleChartOptions {
    * Determines number of decimal points to display in SingleValue chart
    */
   decimalPoints?: number
+  /**
+   * Determines whether to show trend line in chart
+   */
+  showTrend?: boolean
+  /**
+   * Determines whether increase is bad for trend line
+   */
+  increaseIsBad?: boolean
+  /**
+   * Determines alignment of the chart
+   */
+  alignX?: AlignX
 }
 
 export interface LegendValues {
