@@ -218,6 +218,65 @@ const columnName = computed((): string => {
  * - Second column: primary metric "value" for backwards compatibility
  * - Additional columns: one per extra metric, keyed by metric name
  */
+/**
+ * Determine if the incoming dataset includes more than one dimension.  The
+ * `meta.display` object exposes one property per dimension, keyed by the
+ * dimension name.  In a typical "Top N" table there will be one dimension
+ * (e.g. "route").  When two dimensions are present, the first dimension
+ * will be treated as the row dimension (e.g. "data_plane_node") and the
+ * second dimension will be treated as the pivot dimension (e.g. "status_code").
+ */
+const dimensionKeys = computed((): string[] => {
+  if (!props.data.meta?.display) {
+    return []
+  }
+
+  return Object.keys(props.data.meta.display)
+})
+
+const rowDimensionKey = computed((): string => {
+  return dimensionKeys.value[0] || ''
+})
+
+const pivotDimensionKey = computed((): string => {
+  return dimensionKeys.value.length > 1 ? dimensionKeys.value[1] : ''
+})
+
+const pivotValues = computed((): string[] => {
+  if (!pivotDimensionKey.value || !props.data.meta?.display) {
+    return []
+  }
+
+  const pivotDisplay = props.data.meta.display[pivotDimensionKey.value] || {}
+
+  return Object.keys(pivotDisplay)
+})
+
+const pivotDisplayMap = computed((): Record<string, { name: string, deleted: boolean }> => {
+  if (!pivotDimensionKey.value || !props.data.meta?.display) {
+    return {}
+  }
+
+  return (props.data.meta.display as any)[pivotDimensionKey.value] || {}
+})
+
+/**
+ * Whether this dataset has a secondary dimension that should be pivoted.
+ */
+const hasPivotDimension = computed((): boolean => {
+  return !!pivotDimensionKey.value
+})
+
+/**
+ * Headers:
+ * - Always include a "Name" column keyed by the primary (row) dimension.
+ * - If a pivot dimension is present, include one column per unique pivot value,
+ *   followed by a "Total" column for the primary metric.  Any additional
+ *   metrics beyond the first will be aggregated across all pivot buckets and
+ *   added as separate columns.
+ * - In the absence of a pivot dimension, fall back to the legacy behaviour:
+ *   "value" column for the first metric, plus one column per additional metric.
+ */
 const tableHeaders = computed<TableHeader[]>(() => {
   const headers: TableHeader[] = [
     {
@@ -226,6 +285,57 @@ const tableHeaders = computed<TableHeader[]>(() => {
     },
   ]
 
+  // Pivoted dataset: build headers for each pivot value and a total column.
+  if (hasPivotDimension.value && columnKey.value) {
+    // For each pivot value, use the display name if available.
+    pivotValues.value.forEach((val) => {
+      const displayRecord = pivotDisplayMap.value[val]
+      const label = displayRecord?.name || val
+
+      headers.push({
+        key: val,
+        label,
+      })
+    })
+
+    // Create a totals column header.  Attempt to translate the total key; fall
+    // back to "Total <metric>" if no translation is found.
+    let totalLabel = ''
+
+    // @ts-ignore - dynamic i18n key
+    if (i18n.te(`metricAxisTitles.${columnKey.value}`)) {
+      // @ts-ignore - dynamic i18n key with parameter
+      totalLabel = i18n.t(`metricAxisTitles.${columnKey.value}`)
+    }
+
+    // Fallback: if the translation isn't available, compose the label directly.
+    if (!totalLabel) {
+      totalLabel = `Total ${columnName.value}`.trim()
+    }
+
+    headers.push({
+      key: 'total',
+      label: totalLabel,
+    })
+
+    // For any additional metrics (index > 0), include an aggregated column.
+    metricKeys.value.forEach((metricKey, index) => {
+      if (index === 0) {
+        return
+      }
+
+      const label = i18n.t(`chartLabels.${metricKey}` as any) || metricKey
+
+      headers.push({
+        key: metricKey,
+        label,
+      })
+    })
+
+    return headers
+  }
+
+  // Non-pivoted dataset: legacy behaviour.
   if (columnKey.value) {
     headers.push({
       key: 'value',
@@ -333,6 +443,140 @@ const tableData = computed<TopNRow[]>(() => {
     return []
   }
 
+  // Pivoted dataset: group by the row dimension and aggregate metrics.
+  if (hasPivotDimension.value && columnKey.value) {
+    type Group = {
+      id: string
+      total: number
+      pivotSums: Record<string, number>
+      additionalSums: Record<string, number>
+      original?: AnalyticsExploreRecord
+    }
+    const groups: Record<string, Group> = {}
+
+    records.value.forEach((entry) => {
+      // Determine the row identifier and pivot identifier
+      const rowId = String(entry.event[rowDimensionKey.value])
+      const pivotVal = String(entry.event[pivotDimensionKey.value])
+
+      if (!groups[rowId]) {
+        groups[rowId] = {
+          id: rowId,
+          total: 0,
+          pivotSums: {},
+          additionalSums: {},
+          original: entry,
+        }
+
+        // Initialize pivot sums to zero for all possible pivot values
+        pivotValues.value.forEach((pv) => {
+          groups[rowId].pivotSums[pv] = 0
+        })
+
+        // Initialize additional metric sums to zero.
+        metricKeys.value.forEach((metricKey, index) => {
+          if (index === 0) {
+            return
+          }
+
+          groups[rowId].additionalSums[metricKey] = 0
+        })
+      }
+
+      const group = groups[rowId]
+
+      // Aggregate the first metric across pivot buckets and total
+      const firstMetricKey = metricKeys.value[0]
+      const rawVal = entry.event[firstMetricKey]
+      let numVal = typeof rawVal === 'number' ? rawVal : Number(rawVal)
+
+      if (!Number.isNaN(numVal)) {
+        group.pivotSums[pivotVal] += numVal
+        group.total += numVal
+      }
+
+      // Aggregate additional metrics across all pivot buckets
+      metricKeys.value.forEach((metricKey, index) => {
+        if (index === 0) {
+          return
+        }
+
+        const rawMetric = entry.event[metricKey]
+        let metricNum = typeof rawMetric === 'number' ? rawMetric : Number(rawMetric)
+
+        if (!Number.isNaN(metricNum)) {
+          group.additionalSums[metricKey] += metricNum
+        }
+      })
+    })
+
+    const rows: TopNRow[] = []
+
+    // Determine the unit for the primary metric; default to 'count'
+    const primaryMetricKey = columnKey.value
+    const primaryUnit = props.data.meta?.metric_units?.[primaryMetricKey] || 'count'
+    const approximateUnits = ['count', 'count/minute', 'token count'].includes(primaryUnit)
+
+    // Build each row from the group aggregates.
+    Object.keys(groups).forEach((rowId) => {
+      const group = groups[rowId]
+
+      // Retrieve display name and deletion status from display metadata
+      const rowDisplayRecord = (props.data.meta.display as any)[rowDimensionKey.value]?.[rowId] || {}
+      const rowName = rowDisplayRecord.name || rowId
+      const rowDeleted = !!rowDisplayRecord.deleted
+
+      const row: TopNRow = {
+        id: rowId,
+        name: rowName,
+        deleted: rowDeleted,
+        original: group.original as AnalyticsExploreRecord,
+      }
+
+      // Format each pivot bucket value using the primary metric's unit.
+      pivotValues.value.forEach((pv) => {
+        const val = group.pivotSums[pv] || 0
+
+        row[pv] = formatUnit(val, primaryUnit, {
+          approximate: approximateUnits,
+          isBytes1024: true,
+          translateUnit: (unitName) => translateChartUnit(unitName, val),
+        })
+      })
+
+      // Format the total column.
+      const totalVal = group.total
+
+      row.total = formatUnit(totalVal, primaryUnit, {
+        approximate: approximateUnits,
+        isBytes1024: true,
+        translateUnit: (unitName) => translateChartUnit(unitName, totalVal),
+      })
+
+      // Format aggregated additional metrics.
+      metricKeys.value.forEach((metricKey, index) => {
+        if (index === 0) {
+          return
+        }
+
+        const aggVal = group.additionalSums[metricKey] || 0
+        const unit = props.data.meta?.metric_units?.[metricKey] || 'count'
+        const approx = ['count', 'count/minute', 'token count'].includes(unit)
+
+        row[metricKey] = formatUnit(aggVal, unit, {
+          approximate: approx,
+          isBytes1024: true,
+          translateUnit: (unitName) => translateChartUnit(unitName, aggVal),
+        })
+      })
+
+      rows.push(row)
+    })
+
+    return rows
+  }
+
+  // Non-pivot dataset: legacy behaviour (one row per record)
   return records.value.map((entry) => {
     const id = getId(entry)
 

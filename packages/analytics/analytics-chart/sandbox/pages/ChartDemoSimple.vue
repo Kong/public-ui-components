@@ -189,6 +189,15 @@
               Fallback (no metric_units)
             </KRadio>
           </div>
+
+          <!-- Toggle to enable/disable pivot (multi-dimension) dataset generation -->
+          <br>
+          <div>
+            <KInputSwitch
+              v-model="usePivotDataset"
+              :label="usePivotDataset ? 'Pivot dataset: ON' : 'Use pivot (multi-dimension) data'"
+            />
+          </div>
         </div>
       </div>
       <br>
@@ -311,6 +320,12 @@ const statusCodeDimensionValues = ref(new Set(['200', '300']))
 const topNMetric = ref<TopNMetricKind>('count')
 const topNMetricCount = ref(1)
 
+// Toggle for pivot (multi-dimension) dataset generation.  When enabled,
+// the TopNTable will be supplied with data that includes a second
+// dimension, causing the table to pivot on that dimension.  When
+// disabled, the table behaves as a standard single-dimension Top N table.
+const usePivotDataset = ref(false)
+
 const metricItems = computed<SelectItem[]>(() => {
   let out = []
 
@@ -334,7 +349,7 @@ const exploreResult = computed<ExploreResultV4>(() => {
   return generateCrossSectionalData([{
     name: 'request_count',
     unit: 'count',
-  }], { 'status_code': Array.from(statusCodeDimensionValues.value) })
+  }], { 'status_code_group': Array.from(statusCodeDimensionValues.value) })
 })
 
 const randomizeData = () => {
@@ -359,42 +374,9 @@ const topNTableData = computed<ExploreResultV4>(() => {
     },
   }
 
-  // Keep the "fallback" case as a single-metric scenario so it still
-  // demonstrates the behavior where metric_units is not provided.
-  if (topNMetric.value === 'fallback') {
-    const scenario = {
-      metricKey: 'request_count',
-      values: [5_583, 1_485, 309, 42, 1],
-    }
+  // Determine whether the selected metric corresponds to the fallback scenario.
+  const isFallback = topNMetric.value === 'fallback'
 
-    const meta: QueryResponseMeta = {
-      display,
-      end_ms: 1692295253000,
-      granularity_ms: 300000,
-      limit: 50,
-      metric_names: [scenario.metricKey],
-      query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
-      start_ms: 1692294953000,
-    } as unknown as QueryResponseMeta
-
-    const routeIds = Object.keys(display.route)
-    const rows: AnalyticsExploreRecord[] = routeIds.map((routeId, idx) => {
-      return {
-        event: {
-          [scenario.metricKey]: scenario.values[idx] ?? 0,
-          route: routeId,
-        },
-        timestamp: '2023-08-17T17:55:53.000Z',
-      } as AnalyticsExploreRecord
-    })
-
-    return {
-      meta,
-      data: rows,
-    } as ExploreResultV4
-  }
-
-  // Multi-metric scenarios for all non-fallback kinds
   const metricScenarios: MetricScenario[] = [
     {
       kind: 'count',
@@ -428,45 +410,132 @@ const topNTableData = computed<ExploreResultV4>(() => {
     },
   ]
 
-  let primaryScenario = metricScenarios.find((scenario) => {
-    return scenario.kind === topNMetric.value
-  })
+  let selectedScenarios: MetricScenario[]
 
-  if (!primaryScenario) {
-    primaryScenario = metricScenarios[0]
+  if (isFallback) {
+    selectedScenarios = [
+      {
+        kind: 'count',
+        metricKey: 'request_count',
+        unit: 'count',
+        values: [5_583, 1_485, 309, 42, 1],
+      },
+    ]
+  } else {
+    let primaryScenario = metricScenarios.find((scenario) => scenario.kind === topNMetric.value)
+
+    if (!primaryScenario) {
+      primaryScenario = metricScenarios[0]
+    }
+
+    const otherScenarios = metricScenarios.filter((scenario) => scenario.kind !== primaryScenario!.kind)
+    const maxMetrics = Math.min(topNMetricCount.value, 1 + otherScenarios.length)
+
+    selectedScenarios = [primaryScenario!, ...otherScenarios].slice(0, maxMetrics)
   }
 
-  const otherScenarios = metricScenarios.filter((scenario) => {
-    return scenario.kind !== primaryScenario.kind
-  })
+  const metricUnits: Record<string, string> = {}
 
-  const maxMetrics = Math.min(
-    topNMetricCount.value,
-    1 + otherScenarios.length,
-  )
+  if (!isFallback) {
+    selectedScenarios.forEach((scenario) => {
+      metricUnits[scenario.metricKey] = scenario.unit
+    })
+  }
 
-  const selectedScenarios: MetricScenario[] = [
-    primaryScenario,
-    ...otherScenarios,
-  ].slice(0, maxMetrics)
+  // When the pivot toggle is enabled, generate a dataset with two dimensions:
+  // - row dimension: data_plane_node (single value 'dp1')
+  // - pivot dimension: status_code_group (a set of HTTP status code groups)
+  if (usePivotDataset.value) {
+    const pivotStatuses = ['1xx', '2xx', '3xx', '4xx', '5xx']
+    const statusDisplay: Record<string, { name: string, deleted: boolean }> = {}
 
+    pivotStatuses.forEach((code) => {
+      statusDisplay[code] = { name: code, deleted: false }
+    })
+
+    const pivotMeta: QueryResponseMeta = {
+      display: {
+        data_plane_node: {
+          dp1: { name: 'dev-runtime3-7dcf475689-8x45p (secondaryRuntime)', deleted: false },
+        },
+        status_code_group: statusDisplay,
+      },
+      metric_names: selectedScenarios.map((scenario) => scenario.metricKey),
+      start_ms: 0,
+      end_ms: 0,
+      granularity_ms: 0,
+      limit: 50,
+      query_id: 'pivot-demo',
+    } as unknown as QueryResponseMeta
+
+    // Attach metric_units only for non-fallback cases
+    if (!isFallback && Object.keys(metricUnits).length > 0) {
+      pivotMeta.metric_units = metricUnits
+    }
+
+    // Build records for each status code group
+    const pivotRows: AnalyticsExploreRecord[] = pivotStatuses.map((status, idx) => {
+      const event: Record<string, number | string> = {
+        data_plane_node: 'dp1',
+        status_code_group: status,
+      }
+      selectedScenarios.forEach((scenario) => {
+        const values = scenario.values
+        const value = values[idx % values.length]
+
+        event[scenario.metricKey] = value
+      })
+
+      return {
+        event: event,
+        timestamp: '2025-10-25T04:00:00.000Z',
+      } as AnalyticsExploreRecord
+    })
+
+    return {
+      meta: pivotMeta,
+      data: pivotRows,
+    } as ExploreResultV4
+  }
+
+  if (isFallback) {
+    const scenario = selectedScenarios[0]
+    const meta: QueryResponseMeta = {
+      display,
+      end_ms: 1692295253000,
+      granularity_ms: 300000,
+      limit: 50,
+      metric_names: [scenario.metricKey],
+      query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
+      start_ms: 1692294953000,
+    } as unknown as QueryResponseMeta
+    const routeIds = Object.keys(display.route)
+    const rows: AnalyticsExploreRecord[] = routeIds.map((routeId, idx) => {
+      return {
+        event: {
+          [scenario.metricKey]: scenario.values[idx] ?? 0,
+          route: routeId,
+        },
+        timestamp: '2023-08-17T17:55:53.000Z',
+      } as AnalyticsExploreRecord
+    })
+
+    return {
+      meta,
+      data: rows,
+    } as ExploreResultV4
+  }
+
+  // Multi-metric single-dimension dataset for non-fallback scenarios
   const meta: QueryResponseMeta = {
     display,
     end_ms: 1692295253000,
     granularity_ms: 300000,
     limit: 50,
-    metric_names: selectedScenarios.map((scenario) => {
-      return scenario.metricKey
-    }),
+    metric_names: selectedScenarios.map((scenario) => scenario.metricKey),
     query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
     start_ms: 1692294953000,
   } as unknown as QueryResponseMeta
-
-  const metricUnits: Record<string, string> = {}
-
-  selectedScenarios.forEach((scenario) => {
-    metricUnits[scenario.metricKey] = scenario.unit
-  })
 
   if (Object.keys(metricUnits).length > 0) {
     meta.metric_units = metricUnits
