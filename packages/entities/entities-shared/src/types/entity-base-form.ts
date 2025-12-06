@@ -9,7 +9,10 @@ export interface BaseFormConfig {
 }
 
 /** Konnect base form config */
-export interface KonnectBaseFormConfig extends KonnectConfig, BaseFormConfig {}
+export interface KonnectBaseFormConfig extends KonnectConfig, BaseFormConfig {
+  /** Whether to enable the deck tab */
+  enableDeckTab?: boolean
+}
 
 /** Kong Manager base form config */
 export interface KongManagerBaseFormConfig extends KongManagerConfig, BaseFormConfig {}

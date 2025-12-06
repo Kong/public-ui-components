@@ -23,7 +23,8 @@
       "message": "Export configurations for core Kong Gateway objects, like services, routes, and plugins, to either YAML or JSON. This allows for straightforward importing into APIOps tools like decK with YAML, or Insomnia and cURL with JSON.",
       "yaml": "YAML",
       "json": "JSON",
-      "terraform": "Terraform"
+      "terraform": "Terraform",
+      "deck": "decK"
     },
     "errors": {
       "edit": "The entity could not be edited at this time."
@@ -111,5 +112,9 @@
       "message": "Are you sure you want to disable the {entityType} {entityName}?",
       "confirmText": "Yes, disable"
     }
+  },
+  "deckCodeBlock": {
+    "hint": "The {token} environment variable must be added first. See {link} for details.",
+    "documentation": "the documentation"
   }
 }

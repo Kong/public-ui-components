@@ -115,6 +115,14 @@
             :sub-entity-type="subEntityType"
           />
         </template>
+        <template #deck>
+          <DeckCodeBlock
+            :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+            :entity-record="props.formFields"
+            :entity-type="entityType as SupportedEntityDeck"
+            :geo-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+          />
+        </template>
       </KTabs>
     </KSlideout>
   </component>
@@ -125,13 +133,14 @@ import type { PropType } from 'vue'
 import { computed, ref, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
-import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
-import { SupportedEntityTypesArray, SupportedEntityType } from '../../types'
+import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
+import { SupportedEntityTypesArray, SupportedEntityType, SupportedEntityDeckArray } from '../../types'
 import composables from '../../composables'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
+import DeckCodeBlock from '../common/DeckCodeBlock.vue'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -348,6 +357,14 @@ if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.O
   tabs.value.splice(1, 0, {
     title: t('baseForm.configuration.terraform'),
     hash: '#terraform',
+  })
+}
+// decK is only available for certain entity types
+// https://developer.konghq.com/deck/reference/entities/
+if (props.config.app === 'konnect' && props.config.enableDeckTab && SupportedEntityDeckArray.includes(props.entityType as any)) {
+  tabs.value.push({
+    title: t('baseForm.configuration.deck'),
+    hash: '#deck',
   })
 }
 

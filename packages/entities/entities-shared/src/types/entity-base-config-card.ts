@@ -37,6 +37,24 @@ export enum SupportedEntityType {
 
 export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
 
+export const SupportedEntityDeckArray = [
+  SupportedEntityType.CaCertificate,
+  SupportedEntityType.Certificate,
+  SupportedEntityType.Consumer,
+  SupportedEntityType.ConsumerGroup,
+  SupportedEntityType.GatewayService,
+  SupportedEntityType.Key,
+  SupportedEntityType.KeySet,
+  SupportedEntityType.Plugin,
+  SupportedEntityType.Route,
+  SupportedEntityType.Upstream,
+  SupportedEntityType.Target,
+  SupportedEntityType.Vault,
+  SupportedEntityType.Partial,
+] as const
+
+export type SupportedEntityDeck = typeof SupportedEntityDeckArray[number]
+
 export const EventGatewayTypesArray = ['backend_cluster', 'virtual_cluster', 'listener', 'produce_policy', 'consume_policy', 'cluster_policy', 'listener_policy', 'schema_registry', 'static_key']
 
 export interface BaseEntityConfig {
@@ -107,7 +125,7 @@ export interface PluginConfigurationSchema {
   [key: string]: PluginConfigurationSchemaItem
 }
 
-export interface PolicyConfigurationSchema extends PluginConfigurationSchema {}
+export interface PolicyConfigurationSchema extends PluginConfigurationSchema { }
 
 export interface RecordItem extends ConfigurationSchemaItem {
   key: string
