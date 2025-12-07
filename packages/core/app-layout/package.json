@@ -44,7 +44,7 @@
     "vue-router": "^4.4.5"
   },
   "dependencies": {
-    "@kong/icons": "^1.39.1",
+    "@kong/icons": "^1.41.0",
     "@vueuse/core": "^13.5.0",
     "focus-trap": "^7.6.5",
     "focus-trap-vue": "^4.0.3",
