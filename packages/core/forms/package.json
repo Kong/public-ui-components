@@ -51,7 +51,7 @@
     "extends": "../../../package.json"
   },
   "dependencies": {
-    "@kong/icons": "^1.39.1",
+    "@kong/icons": "^1.41.0",
     "dompurify": "^3.2.6",
     "fecha": "^4.2.3",
     "lodash-es": "^4.17.21"
