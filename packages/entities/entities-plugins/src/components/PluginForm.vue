@@ -137,7 +137,7 @@
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
             :entity-record="viewConfigurationRecord"
             :entity-type="SupportedEntityType.Plugin"
-            :geo-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
           />
         </template>
       </KTabs>
@@ -1529,6 +1529,10 @@ onBeforeMount(async () => {
   & :deep(.tab-item.active > div.tab-link.has-panels) {
     color: $kui-color-text !important;
     font-weight: $kui-font-weight-semibold !important;
+  }
+
+  :deep(.slideout-content) {
+    overflow-y: unset !important;
   }
 }
 </style>

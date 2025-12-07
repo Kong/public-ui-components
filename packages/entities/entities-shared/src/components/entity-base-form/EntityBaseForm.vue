@@ -120,7 +120,7 @@
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
             :entity-record="props.formFields"
             :entity-type="entityType as SupportedEntityDeck"
-            :geo-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
           />
         </template>
       </KTabs>
@@ -431,6 +431,10 @@ defineExpose({
   & :deep(.tab-item.active > div.tab-link.has-panels) {
     color: $kui-color-text !important;
     font-weight: $kui-font-weight-semibold !important;
+  }
+
+  :deep(.slideout-content) {
+    overflow-y: unset !important;
   }
 }
 

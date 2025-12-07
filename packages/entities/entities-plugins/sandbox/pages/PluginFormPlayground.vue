@@ -162,6 +162,7 @@ const konnectConfig = ref<KonnectPluginFormConfig>({
   experimentalRenders: {
     keyAuthIdentityRealms: true,
   },
+  geoApiServerUrl: 'https://us.api.konghq.tech',
   enableDeckTab: true,
 })
 

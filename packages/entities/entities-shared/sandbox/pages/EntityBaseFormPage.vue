@@ -60,6 +60,7 @@ const konnectConfig = ref<KonnectBaseFormConfig>({
   controlPlaneId,
   cancelRoute: { name: '/' },
   enableDeckTab: true,
+  geoApiServerUrl: 'https://us.api.konghq.tech',
 })
 
 const canSubmit = computed((): boolean => !!form.fields.name)

@@ -51,7 +51,7 @@ export interface BasePluginFormConfig {
   experimentalRenders?: Record<string, boolean>
 }
 
-export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig {}
+export interface KongManagerPluginSelectConfig extends BasePluginSelectConfig, KongManagerBaseFormConfig { }
 
 /** Konnect Plugin form config */
 export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, KonnectBaseFormConfig {
@@ -61,17 +61,10 @@ export interface KonnectPluginSelectConfig extends BasePluginSelectConfig, Konne
   getCustomEditRoute?: (id: string, type: CustomPluginType) => RouteLocationRaw
 }
 
-export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig {
-  /** Whether to enable the deck tab */
-  enableDeckTab?: boolean
-  /** Geo server api url passed to the deck tab, e.g. https://us.api.konghq.tech */
-  geoApiServerUrl?: string
-  /** Control plane name passed to the deck tab */
-  controlPlaneName?: string
-}
+export interface KonnectPluginFormConfig extends BasePluginFormConfig, KonnectBaseFormConfig { }
 
 /** Kong Manager Plugin form config */
-export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig {}
+export interface KongManagerPluginFormConfig extends BasePluginFormConfig, KongManagerBaseFormConfig { }
 
 export interface PluginFormFields {
   enabled: boolean

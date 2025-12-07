@@ -65,7 +65,7 @@ const props = defineProps<{
 const { i18n, i18nT } = composables.useI18n()
 
 const shells = [
-  { value: 'bash', label: 'Linux/macOS Shell' },
+  { value: 'bash', label: 'Linux / macOS Bash' },
   { value: 'pwsh', label: 'Windows PowerShell' },
 ]
 
@@ -114,9 +114,12 @@ const yamlContent = computed((): string => {
     }
   }
 
+  // KeySet is 'set' in terraform but 'key_set' in decK
+  const entityKey = props.entityType === SupportedEntityType.KeySet ? 'key_sets' : props.entityType + 's'
+
   const fullRecord = {
     ...baseObject.value,
-    [props.entityType + 's']: [filteredRecord],
+    [entityKey]: [filteredRecord],
   }
 
   return yaml.dump(fullRecord, { quotingType: '"' }).trim()
@@ -153,6 +156,10 @@ ${yamlContent.value}
 
 <style lang="scss" scoped>
 .deck-config {
+  .k-select {
+    margin-bottom: $kui-space-60;
+  }
+
   .k-code-block {
     margin-top: $kui-space-50;
   }
