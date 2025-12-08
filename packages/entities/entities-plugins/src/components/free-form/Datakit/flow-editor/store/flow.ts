@@ -230,6 +230,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     } = useBranchDrop({
       phase,
       groupMapById,
+      memberGroupMap,
       getNodeDepth,
       draggingId: readonlyDraggingId,
     })

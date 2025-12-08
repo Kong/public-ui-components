@@ -1,6 +1,7 @@
 import type { Node, Rect, XYPosition } from '@vue-flow/core'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { computed, nextTick, watch } from 'vue'
+
 import type { Ref } from 'vue'
 
 import type {
@@ -29,7 +30,7 @@ export function useBranchLayout({
   phase: NodePhase
   readonly?: boolean
   flowId?: string
-  draggingId?: Ref<NodeId | GroupId | undefined>
+  draggingId?: Readonly<Ref<NodeId | GroupId | undefined>>
 }) {
   const { findNode } = useVueFlow(flowId)
   const editorStore = useEditorStore()
