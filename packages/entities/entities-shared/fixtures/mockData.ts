@@ -209,3 +209,9 @@ export const route = {
   strip_path: false,
   paths: [],
 }
+
+export const keySetRecord = {
+  id: 'keyset-123',
+  name: 'my-key-set',
+  tags: ['production'],
+}

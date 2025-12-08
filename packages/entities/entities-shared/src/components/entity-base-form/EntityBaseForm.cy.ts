@@ -13,6 +13,7 @@ describe('<EntityBaseForm />', () => {
     // Set the root `.env.development.local` variable to a control plane your PAT can access
     controlPlaneId,
     cancelRoute: { name: '/' },
+    enableDeckTab: true,
   }
   const editId = '1234-ideclare-athumb-war'
   const fetchUrl = `/v2/control-planes/${config.controlPlaneId}/core-entities/routes/{id}`
@@ -91,6 +92,7 @@ describe('<EntityBaseForm />', () => {
     cy.getTestId('form-view-configuration-slideout').should('exist')
     cy.getTestId('form-view-configuration-slideout-tabs').should('exist')
     cy.get('.json-config').should('exist')
+    cy.getTestId('deck-tab').should('exist')
   })
 
   it('displays error message when provided', () => {

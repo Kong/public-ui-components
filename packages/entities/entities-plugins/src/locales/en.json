@@ -23,7 +23,8 @@
     "message": "Export configurations for core Kong Gateway objects, like services, routes, and plugins, to either YAML, JSON, or Terraform. This allows for straightforward importing into APIOps tools like decK with YAML, Insomnia and cURL with JSON, or Terraform products with Terraform.",
     "yaml": "YAML",
     "terraform": "Terraform",
-    "json": "JSON"
+    "json": "JSON",
+    "deck": "decK"
   },
   "delete": {
     "title": "Delete a Plugin",
