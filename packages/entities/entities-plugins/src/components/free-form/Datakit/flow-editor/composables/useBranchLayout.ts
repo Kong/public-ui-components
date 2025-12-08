@@ -1,6 +1,7 @@
 import type { Node, Rect, XYPosition } from '@vue-flow/core'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, watch } from 'vue'
+import type { Ref } from 'vue'
 
 import type {
   GroupId,
@@ -19,7 +20,17 @@ import {
 } from '../constants'
 import { getBoundingRect } from './helpers'
 
-export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase, readonly?: boolean, flowId?: string }) {
+export function useBranchLayout({
+  phase,
+  readonly,
+  flowId,
+  draggingId,
+}: {
+  phase: NodePhase
+  readonly?: boolean
+  flowId?: string
+  draggingId?: Ref<NodeId | GroupId | undefined>
+}) {
   const { findNode } = useVueFlow(flowId)
   const editorStore = useEditorStore()
   const {
@@ -38,8 +49,6 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     getNodeDepth,
     getGroupDepth,
   } = branchGroups
-
-  const draggingNodeId = ref<NodeId | GroupId>()
 
   const isBranchEdgeId = (id?: string) => !!id && id.startsWith('branch:')
 
@@ -384,7 +393,7 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
    * @returns `true` if the group update should be skipped, `false` otherwise
    */
   function shouldSkipGroupUpdate(groupId: GroupId, memberIds: NodeId[]): boolean {
-    const dragging = draggingNodeId.value
+    const dragging = draggingId?.value
     if (!dragging) return false
 
     if (dragging === groupId) return true
@@ -470,9 +479,6 @@ export function useBranchLayout({ phase, readonly, flowId }: { phase: NodePhase,
     isBranchEdgeId,
     updateGroupLayout,
     translateGroupTree,
-    updateDragging: (id: NodeId | GroupId | undefined) => {
-      draggingNodeId.value = id
-    },
     getNodeDepth,
     maxGroupDepth,
     waitForLayoutFlush: () => layoutFlushPromise ?? Promise.resolve(),
