@@ -9,7 +9,7 @@ interface UseBranchDropOptions {
   phase: NodePhase
   groupMapById: ComputedRef<Map<GroupId, GroupInstance>>
   getNodeDepth: (nodeId: NodeId) => number
-  canAddMember?: (ownerId: NodeId, branch: BranchName, memberId: NodeId) => boolean
+  canAddMember: (ownerId: NodeId, branch: BranchName, memberId: NodeId) => boolean
   draggingId?: Readonly<Ref<NodeId | GroupId | undefined>>
 }
 
@@ -42,7 +42,7 @@ export function useBranchDrop({
 
     groupMapById.value.forEach((group) => {
       if (group.phase !== phase) return
-      if (nodeId && isNodeId(nodeId) && !isDropAllowed(nodeId, group.ownerId, group.branch)) return
+      if (nodeId && isNodeId(nodeId) && !canAddMember(group.ownerId, group.branch, nodeId)) return
       const position = group.position
       const dimensions = group.dimensions
       if (!position || !dimensions) return
@@ -76,11 +76,6 @@ export function useBranchDrop({
     }
 
     activeGroupId.value = findDeepestGroup(point)
-  }
-
-  function isDropAllowed(dragNodeId: NodeId, ownerId: NodeId, branch: BranchName): boolean {
-    if (canAddMember && !canAddMember(ownerId, branch, dragNodeId)) return false
-    return true
   }
 
   return {
