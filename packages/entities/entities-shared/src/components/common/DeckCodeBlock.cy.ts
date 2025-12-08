@@ -1,7 +1,7 @@
 // Cypress component test spec file
 import DeckCodeBlock from './DeckCodeBlock.vue'
 import { SupportedEntityType } from '../../types'
-import { route, pluginRecord } from '../../../fixtures/mockData'
+import { route, pluginRecord, keySetRecord } from '../../../fixtures/mockData'
 
 function selectShell(shell: 'bash' | 'pwsh') {
   cy.get('.k-select').click()
@@ -77,5 +77,18 @@ describe('<DeckCodeBlock />', () => {
     cy.get('#deck-codeblock')
       .should('contain.text', 'service: service-123')
       .should('not.contain.text', 'id: service-123')
+  })
+
+  it('generates key_sets field for KeySet entity', () => {
+    cy.mount(DeckCodeBlock, {
+      props: {
+        entityRecord: keySetRecord,
+        entityType: SupportedEntityType.KeySet,
+        controlPlaneName,
+      },
+    })
+
+    cy.get('#deck-codeblock')
+      .should('contain.text', 'key_sets:')
   })
 })
