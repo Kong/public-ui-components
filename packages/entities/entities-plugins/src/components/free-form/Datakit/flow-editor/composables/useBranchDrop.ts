@@ -1,15 +1,15 @@
 import type { ComputedRef, Ref } from 'vue'
 import { shallowRef } from 'vue'
 
-import type { GroupId, GroupInstance, NodeId, NodePhase } from '../../types'
+import type { BranchName, GroupId, GroupInstance, NodeId, NodePhase } from '../../types'
 import { isNodeId } from '../node/node'
 import type { XYPosition } from '@vue-flow/core'
 
 interface UseBranchDropOptions {
   phase: NodePhase
   groupMapById: ComputedRef<Map<GroupId, GroupInstance>>
-  memberGroupMap: ComputedRef<Map<NodeId, GroupInstance>>
   getNodeDepth: (nodeId: NodeId) => number
+  canAddMember?: (ownerId: NodeId, branch: BranchName, memberId: NodeId) => boolean
   draggingId?: Readonly<Ref<NodeId | GroupId | undefined>>
 }
 
@@ -18,8 +18,8 @@ type DragOrigin = 'panel' | 'canvas'
 export function useBranchDrop({
   phase,
   groupMapById,
-  memberGroupMap,
   getNodeDepth,
+  canAddMember,
   draggingId,
 }: UseBranchDropOptions) {
   const source = shallowRef<DragOrigin>()
@@ -42,7 +42,7 @@ export function useBranchDrop({
 
     groupMapById.value.forEach((group) => {
       if (group.phase !== phase) return
-      if (nodeId && isNodeId(nodeId) && isAncestor(nodeId, group.id)) return
+      if (nodeId && isNodeId(nodeId) && !isDropAllowed(nodeId, group.ownerId, group.branch)) return
       const position = group.position
       const dimensions = group.dimensions
       if (!position || !dimensions) return
@@ -78,24 +78,9 @@ export function useBranchDrop({
     activeGroupId.value = findDeepestGroup(point)
   }
 
-  function isAncestor(nodeId: NodeId, groupId: GroupId): boolean {
-    const start = groupMapById.value.get(groupId)
-    if (!start || start.phase !== phase) return false
-
-    if (start.ownerId === nodeId) return true
-
-    let currentOwner = start.ownerId
-    const visited = new Set<GroupId>()
-
-    while (true) {
-      const parentGroup = memberGroupMap.value.get(currentOwner)
-      if (!parentGroup || parentGroup.phase !== phase) return false
-      if (visited.has(parentGroup.id)) return false
-
-      if (parentGroup.ownerId === nodeId) return true
-      visited.add(parentGroup.id)
-      currentOwner = parentGroup.ownerId
-    }
+  function isDropAllowed(dragNodeId: NodeId, ownerId: NodeId, branch: BranchName): boolean {
+    if (canAddMember && !canAddMember(ownerId, branch, dragNodeId)) return false
+    return true
   }
 
   return {

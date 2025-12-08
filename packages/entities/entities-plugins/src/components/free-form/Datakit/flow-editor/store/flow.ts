@@ -185,7 +185,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       reset,
       groupMapById,
     } = editorStore
-    const { isGroupId } = branchGroups
+    const { isGroupId, canAddMember } = branchGroups
 
     const draggingId = shallowRef<NodeId | GroupId>()
     const setDraggingId = (id?: NodeId | GroupId) => {
@@ -230,8 +230,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
     } = useBranchDrop({
       phase,
       groupMapById,
-      memberGroupMap,
       getNodeDepth,
+      canAddMember,
       draggingId: readonlyDraggingId,
     })
 
