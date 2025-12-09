@@ -55,6 +55,7 @@
         class="ff-kv-field-entry-key"
         :data-key-input="index"
         :data-testid="`ff-key-${field.path.value}.${index}`"
+        :disabled="field.isInheritedDisabled.value"
         :placeholder="keyPlaceholder || 'Key'"
         @keydown.enter.prevent="focus(index, 'value')"
       />
@@ -64,6 +65,7 @@
         class="ff-kv-field-entry-value"
         :data-testid="`ff-value-${field.path.value}.${index}`"
         :data-value-input="index"
+        :disabled="field.isInheritedDisabled.value"
         :placeholder="valuePlaceholder || 'Value'"
         @keydown.enter.prevent="handleValueEnter(index)"
       >
@@ -71,6 +73,7 @@
           <component
             :is="autofillSlot"
             v-if="autofillSlot && realShowVaultSecretPicker"
+            :disabled="field.isInheritedDisabled.value"
             :schema="schema"
             :update="value => handleAutofill(index, value)"
             :value="entry.value"
@@ -87,6 +90,7 @@
       <KButton
         appearance="tertiary"
         :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
+        :disabled="field.isInheritedDisabled.value"
         icon
         @click="removeEntry(entry.id)"
       >

@@ -40,7 +40,16 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       createComputedRules: createComputedRenderRules,
       hiddenPaths,
       isFieldHidden,
-    } = createRenderRuleRegistry(() => onChange?.(getValue()))
+    } = createRenderRuleRegistry(handleChange)
+
+    const {
+      disabledFields,
+      initDisabledFields,
+      disableField,
+      enableField,
+      createIsAncestorDisabledComputed,
+      createIsDisabledComputed,
+    } = useDisabledFieldsManager(handleChange)
 
     const rootRenderRules = useCurrentRenderRules({
       fieldPath: utils.rootSymbol,
@@ -53,6 +62,8 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
         delete (innerData as any)[key]
       })
       Object.assign(innerData, newData)
+      disabledFields.value.clear()
+      initDisabledFields(schemaHelpers.getSchemaMap(), innerData)
     }
 
     /**
@@ -72,6 +83,9 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       } else {
         setValue(dataValue)
       }
+
+      // Initialize disabled fields based on schema and data
+      initDisabledFields(schemaHelpers.getSchemaMap(), innerData)
     }
 
     function hasValue(data: T | undefined): boolean {
@@ -95,12 +109,23 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
         }
       }
 
+      // Set disabled fields to null
+      if (disabledFields.value.size > 0) {
+        for (const path of disabledFields.value) {
+          set(nextValue, utils.toArray(path), null)
+        }
+      }
+
       return nextValue
+    }
+
+    function handleChange() {
+      onChange?.(getValue())
     }
 
     // Emit changes when the inner data changes
     watch(innerData, () => {
-      onChange?.(getValue())
+      handleChange()
     }, { deep: true })
 
     // Sync the inner data when the props data changes
@@ -123,6 +148,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       ...schemaHelpers,
       getValue,
       isFieldHidden,
+
+      // disabled fields management
+      disableField,
+      enableField,
+      createIsAncestorDisabledComputed,
+      createIsDisabledComputed,
     }
   },
 )
@@ -622,7 +653,15 @@ export function useFormData<T>(name: MaybeRefOrGetter<string>) {
 }
 
 export function useField<TData = unknown, TSchema extends UnionFieldSchema = UnionFieldSchema>(name: MaybeRefOrGetter<string>) {
-  const { getSchema, isFieldHidden, getEmptyOrDefault } = useFormShared()
+  const {
+    getSchema,
+    isFieldHidden,
+    getEmptyOrDefault,
+    createIsAncestorDisabledComputed,
+    disableField,
+    enableField,
+    createIsDisabledComputed,
+  } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
   const { value } = useFormData<TData>(name)
@@ -630,6 +669,17 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
   const schema = computed(() => getSchema<TSchema>(fieldPath.value))
   const hide = computed(() => isFieldHidden(fieldPath.value))
   const emptyOrDefaultValue = computed(() => getEmptyOrDefault(fieldPath.value))
+  const isInheritedDisabled = createIsAncestorDisabledComputed(fieldPath)
+
+  function disable(trigger = true) {
+    disableField(fieldPath.value, trigger)
+  }
+
+  function enable(trigger = true) {
+    enableField(fieldPath.value, trigger)
+  }
+
+  const isDisabled = createIsDisabledComputed(fieldPath)
 
   if (!schema.value) {
     return {
@@ -648,6 +698,10 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
      */
     hide,
     emptyOrDefaultValue,
+    isInheritedDisabled,
+    isDisabled,
+    disable,
+    enable,
     error: null,
   }
 }
@@ -1087,7 +1141,7 @@ function createRenderRuleRegistry(onChange: () => void) {
         () => toValue(omittedFields),
       ],
       ([parent, deps, path, omitted]) => {
-        if (!deps || !parent) return
+        if (!deps) return
 
         Object.entries(deps).forEach(([fieldName, [depField, expectedDepFieldValue]]) => {
           // Skip omitted fields
@@ -1130,5 +1184,85 @@ function createRenderRuleRegistry(onChange: () => void) {
     createComputedRules,
     hiddenPaths: readonly(hiddenPaths),
     isFieldHidden,
+  }
+}
+
+function useDisabledFieldsManager(onChange?: () => void) {
+  const disabledFields = ref(new Set<string>())
+
+  /**
+   * Initialize disabled fields.
+   * Fields that meet **all of** the following conditions will be disabled by default:
+   * - Is a record type
+   * - Not required
+   * - No default value
+   * - No existing data
+   * - Not a child of an array
+   */
+  function initDisabledFields(
+    schemaMap: Record<string, UnionFieldSchema>,
+    formData: Record<string, any>,
+  ) {
+    for (const [path, schema] of Object.entries(schemaMap)) {
+      if (
+        // is a record
+        schema.type === 'record'
+        // not required
+        && !schema.required
+        // no default value
+        && !schema.default
+        // no existing data
+        && get(formData, utils.toArray(path)) == null
+        // not a child of an array
+        && schemaMap[utils.toArray(path).slice(0, -1).join('.')]?.type !== 'array'
+        // A special case for **ai-mcp-oauth2** plugin where config is optional
+        && path !== 'config'
+      ) {
+        disableField(path, false)
+      }
+    }
+  }
+
+  function disableField(path: string, trigger = true) {
+    disabledFields.value.add(generalizePath(path))
+    if (trigger) onChange?.()
+  }
+
+  function enableField(path: string, trigger = true) {
+    disabledFields.value.delete(generalizePath(path))
+    if (trigger) onChange?.()
+  }
+
+  function isAncestorDisabled(path: string): boolean {
+    const generalizedPath = generalizePath(path)
+    for (const disabledPath of disabledFields.value) {
+      if (generalizedPath.startsWith(disabledPath + utils.separator)) {
+        return true
+      }
+    }
+    return false
+  }
+
+  function createIsAncestorDisabledComputed(path: MaybeRefOrGetter<string>) {
+    return computed(() => {
+      const pathValue = toValue(path)
+      return isAncestorDisabled(pathValue)
+    })
+  }
+
+  function createIsDisabledComputed(path: MaybeRefOrGetter<string>) {
+    return computed(() => {
+      const pathValue = toValue(path)
+      return disabledFields.value.has(generalizePath(pathValue))
+    })
+  }
+
+  return {
+    disabledFields,
+    disableField,
+    enableField,
+    createIsAncestorDisabledComputed,
+    createIsDisabledComputed,
+    initDisabledFields,
   }
 }

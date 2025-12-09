@@ -367,23 +367,22 @@ export function buildArrayFieldCases(): Array<{ [name: string]: ArrayLikeFieldSc
         default: [0],
       },
     },
-    // fixme: should support `resetLabelPath` in tests
-    // {
-    //   array_of_records: {
-    //     type: 'array',
-    //     elements: {
-    //       type: 'record',
-    //       fields: [
-    //         {
-    //           foo: {
-    //             type: 'string',
-    //           },
-    //         },
-    //       ],
-    //     },
-    //     description: 'An array of records',
-    //   },
-    // },
+    {
+      array_of_records: {
+        type: 'array',
+        elements: {
+          type: 'record',
+          fields: [
+            {
+              foo: {
+                type: 'string',
+              },
+            },
+          ],
+        },
+        description: 'An array of records',
+      },
+    },
     {
       array_of_array: {
         type: 'array',

@@ -1,4 +1,4 @@
-import { isTagField, resolve } from '../shared/utils'
+import { getName, isTagField, resolve } from '../shared/utils'
 import { buildAncestor, buildSchemaMap, defaultLabelFormatter, generalizePath } from '../shared/composables'
 
 import type {
@@ -19,6 +19,7 @@ type AssertFieldOption<T extends UnionFieldSchema = UnionFieldSchema> = {
   fieldSchema: T
   fieldKey: string
   labelOption?: AssertLabelOption
+  isParentDisabled?: boolean
 }
 
 type AssertFieldFn<T extends UnionFieldSchema = UnionFieldSchema> = (option: AssertFieldOption<T>) => void
@@ -37,7 +38,17 @@ export function assertFormRendering(schema: FormSchema, options?: {
 
   const schemaMap = buildSchemaMap(schema)
 
-  function assertFields(fields: NamedFieldSchema[], prefix?: string) {
+  function assertFields({
+    fields,
+    prefix,
+    labelOption,
+    isParentDisabled,
+  }: {
+    fields: NamedFieldSchema[]
+    prefix?: string
+    labelOption?: AssertLabelOption
+    isParentDisabled?: boolean
+  }) {
     for (const field of fields) {
       const fieldName = Object.keys(field)[0]
       const fieldKey = prefix ? resolve(prefix, fieldName) : fieldName
@@ -46,7 +57,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
 
       assert(fieldSchema, `Field schema for "${fieldKey}" should exist in the schema map`)
 
-      assertField({ fieldSchema, fieldKey })
+      assertField({ fieldSchema, fieldKey, isParentDisabled })
     }
   }
 
@@ -54,35 +65,36 @@ export function assertFormRendering(schema: FormSchema, options?: {
     fieldSchema,
     fieldKey,
     labelOption,
+    isParentDisabled,
   }) => {
     if (fieldSchema.type === 'string') {
       if (fieldSchema.one_of) {
-        assertEnumField({ fieldKey, fieldSchema, labelOption })
+        assertEnumField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
       } else {
-        assertStringField({ fieldKey, fieldSchema, labelOption })
+        assertStringField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
       }
     } else if (fieldSchema.type === 'boolean') {
-      assertBooleanField({ fieldKey, fieldSchema, labelOption })
+      assertBooleanField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
     } else if (fieldSchema.type === 'record') {
-      assertRecordField({ fieldKey, fieldSchema, labelOption })
+      assertRecordField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
     } else if (fieldSchema.type === 'integer' || fieldSchema.type === 'number') {
       if (fieldSchema.one_of) {
-        assertEnumField({ fieldKey, fieldSchema, labelOption })
+        assertEnumField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
       } else {
-        assertNumberLikeField({ fieldKey, fieldSchema, labelOption })
+        assertNumberLikeField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
       }
     } else if (fieldSchema.type === 'map') {
-      assertKVField({ fieldKey, fieldSchema, labelOption })
+      assertKVField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
     } else if (fieldSchema.type === 'array') {
-      assertArrayField({ fieldKey, fieldSchema, labelOption })
+      assertArrayField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
     } else if (fieldSchema.type === 'set') {
       if (isTagField(fieldSchema)) {
-        assertTagField({ fieldKey, fieldSchema, labelOption })
+        assertTagField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
       } else {
-        assertEnumField({ fieldKey, fieldSchema, labelOption })
+        assertEnumField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
       }
     } else if (fieldSchema.type === 'foreign') {
-      assertForeignField({ fieldKey, fieldSchema, labelOption })
+      assertForeignField({ fieldKey, fieldSchema, labelOption, isParentDisabled })
     } else {
       throw new Error(`Unsupported field type "${fieldSchema.type}" for field "${fieldKey}"`)
     }
@@ -92,6 +104,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     fieldKey,
     fieldSchema,
     labelOption,
+    isParentDisabled,
   }) => {
     // Check input element
     cy.getTestId(`ff-${fieldKey}`).should('exist')
@@ -103,7 +116,17 @@ export function assertFormRendering(schema: FormSchema, options?: {
     }
 
     // Check label
-    assertLabel({ fieldKey, fieldSchema, labelOption })
+    assertLabel({
+      fieldKey,
+      fieldSchema,
+      labelOption,
+      labelText: defaultLabelFormatter(getName(fieldKey)), // use only the field name for label
+    })
+
+    // Check disabled state
+    if (isParentDisabled) {
+      cy.getTestId(`ff-${fieldKey}`).should('be.disabled')
+    }
 
     // Check referenceable
     if (fieldSchema.referenceable) {
@@ -133,7 +156,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     // Check label
     assertLabelBySelector({
       selector: () => cy.getTestId(`ff-${fieldKey}`).parents('.ff-enum-field').children('label'),
-      labelText: defaultLabelFormatter(fieldKey),
+      labelText: defaultLabelFormatter(getName(fieldKey)), // use only the field name for label
       fieldSchema,
       labelOption,
     })
@@ -185,7 +208,12 @@ export function assertFormRendering(schema: FormSchema, options?: {
     }
 
     // Check label
-    assertLabel({ fieldKey, fieldSchema, labelOption })
+    assertLabel({
+      fieldKey,
+      fieldSchema,
+      labelOption,
+      labelText: defaultLabelFormatter(getName(fieldKey)), // use only the field name for label
+    })
 
     // Check default value
     if (fieldSchema.default) {
@@ -212,6 +240,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
         ...labelOption,
         noAsterisk: true, // Boolean fields do not need asterisk
       },
+      labelText: defaultLabelFormatter(getName(fieldKey)), // use only the field name for label
     })
   }
 
@@ -230,6 +259,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     fieldKey,
     fieldSchema,
     labelOption,
+    isParentDisabled,
   }: AssertFieldOption<RecordFieldSchema>) => {
     const asChild = isArrayItem(fieldKey)
 
@@ -239,7 +269,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     // Check label
     assertLabel({
       fieldKey,
-      labelText: asChild ? '' : defaultLabelFormatter(fieldKey),
+      labelText: defaultLabelFormatter(getName(fieldKey)), // use only the field name for label
       fieldSchema,
       labelOption: {
         ...labelOption,
@@ -247,24 +277,42 @@ export function assertFormRendering(schema: FormSchema, options?: {
       },
     })
 
-    // Check if the content is initially existing
-    if (fieldSchema.required || fieldSchema.default) {
+    // Check the visibility of the content
+    if (!asChild) {
       cy.getTestId(`ff-object-content-${fieldKey}`).should('exist')
+      if (fieldSchema.required || fieldSchema.default) {
+        cy.getTestId(`ff-object-content-${fieldKey}`).should('be.visible')
+      } else {
+        cy.getTestId(`ff-object-content-${fieldKey}`).should('not.be.visible')
+        // Expand the content for further assertions
+        cy.getTestId(`ff-object-toggle-btn-${fieldKey}`).should('exist')
+        cy.getTestId(`ff-object-toggle-btn-${fieldKey}`).click()
+        cy.getTestId(`ff-object-content-${fieldKey}`).should('be.visible')
+      }
+    } else {
+      cy.getTestId(`ff-object-content-${fieldKey}`).should('not.exist')
+      cy.getTestId(`ff-object-${fieldKey}`).should('exist')
     }
 
-    // Click the 'add' button
+    // Click the 'enable' switch button
+    // only for non-array-item records
     if (!asChild) {
-      if (!fieldSchema.default && !fieldSchema.required) {
-        cy.getTestId(`ff-object-add-btn-${fieldKey}`).should('exist')
-        cy.getTestId(`ff-object-add-btn-${fieldKey}`).click()
-        cy.getTestId(`ff-object-content-${fieldKey}`).should('exist')
-
-        // If the field is required, the delete button should not exist
-        if (fieldSchema.required) {
-          cy.getTestId(`ff-object-remove-btn-${fieldKey}`).should('not.exist')
+      // Only optional record fields have the switch button
+      if (!fieldSchema.required) {
+        cy.getTestId(`ff-object-switch-btn-${fieldKey}`).should('exist')
+        cy.getTestId(`ff-object-switch-btn-${fieldKey}`).should(fieldSchema.default ? 'be.checked' : 'not.be.checked')
+        cy.log('isParentDisabled:', isParentDisabled)
+        // isParentDisabled check
+        if (isParentDisabled) {
+          cy.getTestId(`ff-object-switch-btn-${fieldKey}`).should('be.disabled')
+          // Enable it for further assertions
+          cy.getTestId(`ff-object-switch-btn-${fieldKey}`).check({ force: true })
         } else {
-          cy.getTestId(`ff-object-remove-btn-${fieldKey}`).should('exist')
+          cy.getTestId(`ff-object-switch-btn-${fieldKey}`).should('not.be.disabled')
         }
+      } else {
+        // Required record fields do not have the switch button
+        cy.getTestId(`ff-object-switch-btn-${fieldKey}`).should('not.exist')
       }
     }
 
@@ -285,23 +333,27 @@ export function assertFormRendering(schema: FormSchema, options?: {
 
     // Assert child fields
     if (fieldSchema.fields && fieldSchema.fields.length > 0) {
-      assertFields(fieldSchema.fields, fieldKey)
+      assertFields({
+        fields: fieldSchema.fields,
+        prefix: fieldKey,
+        labelOption,
+        isParentDisabled: isParentDisabled ?? (
+          !fieldSchema.required // not required
+          && !fieldSchema.default // no default value
+          && !asChild // not a child of an array
+        ), // see `initDisabledFields` logic
+      })
     }
 
     // Click the 'fold/unfold' button
     if (!asChild) {
       cy.getTestId(`ff-object-toggle-btn-${fieldKey}`).should('exist')
       cy.getTestId(`ff-object-toggle-btn-${fieldKey}`).click()
-      cy.getTestId(`ff-object-content-${fieldKey}`).should('not.exist')
-      cy.getTestId(`ff-object-toggle-btn-${fieldKey}`).click()
-      cy.getTestId(`ff-object-content-${fieldKey}`).should('exist')
+      cy.getTestId(`ff-object-content-${fieldKey}`).should('not.be.visible')
 
-      // Click the 'delete' button
+      // Disable the field
       if (!fieldSchema.required) {
-        cy.getTestId(`ff-object-remove-btn-${fieldKey}`).should('exist')
-        cy.getTestId(`ff-object-remove-btn-${fieldKey}`).click()
-        cy.getTestId(`ff-object-content-${fieldKey}`).should('not.exist')
-        cy.getTestId(`ff-object-add-btn-${fieldKey}`).should('exist')
+        cy.getTestId(`ff-object-switch-btn-${fieldKey}`).uncheck({ force: true })
       }
     }
   }
@@ -315,7 +367,12 @@ export function assertFormRendering(schema: FormSchema, options?: {
     cy.getTestId(`ff-kv-${fieldKey}`).should('exist')
 
     // Check label
-    assertLabel({ fieldKey, fieldSchema, labelOption })
+    assertLabel({
+      fieldKey,
+      fieldSchema,
+      labelOption,
+      labelText: defaultLabelFormatter(getName(fieldKey)), // use only the field name for label
+    })
 
     // Check if the content is initially existing
     if (fieldSchema.default && Object.keys(fieldSchema.default).length > 0) {
@@ -373,18 +430,26 @@ export function assertFormRendering(schema: FormSchema, options?: {
     fieldKey,
     fieldSchema,
     labelOption,
+    isParentDisabled,
   }: AssertFieldOption<ArrayFieldSchema>) => {
     // Check wrapper element
     cy.getTestId(`ff-array-${fieldKey}`).should('exist')
 
     // Check label
-    assertLabel({ fieldKey, fieldSchema, labelOption })
+    assertLabel({
+      fieldKey,
+      fieldSchema,
+      labelOption,
+      labelText: defaultLabelFormatter(getName(fieldKey)), // use only the field name for label
+    })
 
     // Check if the content is initially existing
-    if (fieldSchema.default && fieldSchema.default.length > 0) {
-      cy.getTestId(`ff-array-basic-container-${fieldKey}`).should('exist')
-    } else {
-      cy.getTestId(`ff-array-basic-container-${fieldKey}`).should('not.exist')
+    cy.getTestId(`ff-array-basic-container-${fieldKey}`).should('exist')
+
+    // Check disabled state
+    if (isParentDisabled) {
+      cy.getTestId(`ff-add-item-btn-${fieldKey}`).should('be.disabled')
+      return
     }
 
     // Check the 'add' button
@@ -433,7 +498,12 @@ export function assertFormRendering(schema: FormSchema, options?: {
     cy.getTestId(`ff-tag-${fieldKey}`).should('exist')
 
     // Check label
-    assertLabel({ fieldKey, fieldSchema, labelOption })
+    assertLabel({
+      fieldKey,
+      fieldSchema,
+      labelOption,
+      labelText: defaultLabelFormatter(getName(fieldKey)), // use only the field name for label
+    })
 
     // Check default value
     if (fieldSchema.default && fieldSchema.default.length > 0) {
@@ -472,6 +542,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     labelOption?: AssertLabelOption
   }) {
     if (labelOption.hide) {
+      console.trace()
       selector().should('not.exist')
       return
     }
@@ -501,7 +572,12 @@ export function assertFormRendering(schema: FormSchema, options?: {
     cy.getTestId(`ff-${fieldKey}`).should('have.attr', 'type', 'text')
 
     // Check label
-    assertLabel({ fieldKey, fieldSchema, labelOption })
+    assertLabel({
+      fieldKey,
+      fieldSchema,
+      labelOption,
+      labelText: defaultLabelFormatter(getName(fieldKey)), // use only the field name for label
+    })
 
     // Check default value
     if (fieldSchema.default) {
@@ -511,7 +587,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     }
   }
 
-  assertFields(schema.fields)
+  assertFields({ fields: schema.fields })
 }
 
 function isStringArrayOfArray(fieldSchema: UnionFieldSchema) {

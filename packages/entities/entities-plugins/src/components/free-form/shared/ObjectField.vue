@@ -30,69 +30,87 @@
     </div>
   </template>
 
-  <!-- render children with wrapper -->
+  <!-- Collapse wrapper -->
   <div
     v-else
     v-show="!hide"
     class="ff-object-field"
-    :class="{ 'ff-object-field-collapsed': !realExpanded }"
+    :class="{
+      'ff-object-field-collapsed': !expanded,
+      'ff-object-field-sub-level': !isTopLevelField,
+    }"
     :data-testid="`ff-object-${field.path.value}`"
     v-bind="$attrs"
   >
+    <!-- Collapse header -->
     <header
       class="ff-object-field-header"
       :data-testid="`ff-object-header-${field.path.value}`"
     >
-      <KLabel
-        class="ff-object-field-label"
-        :data-testid="`ff-label-${field.path.value}`"
-        v-bind="{
-          ...fieldAttrs,
-          required: false,
-        }"
-        :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
+      <!-- Collapse toggle -->
+      <button
+        :aria-controls="contentId"
+        :aria-expanded="expanded"
+        :aria-label="fieldAttrs.label"
+        class="ff-object-field-toggle-btn"
+        :data-testid="`ff-object-toggle-btn-${field.path.value}`"
+        type="button"
+        @click.prevent.stop="toggleDisplay()"
       >
-        {{ fieldAttrs.label }}
-        <template
-          v-if="fieldAttrs.labelAttributes?.info"
-          #tooltip
+        <ChevronRightIcon
+          class="ff-object-field-toggle-btn-trigger-icon"
+          :class="{ 'collapse-expanded': expanded }"
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          data-testid="collapse-trigger-icon"
+          decorative
+          :size="KUI_ICON_SIZE_40"
+        />
+
+        <KLabel
+          class="ff-object-field-label"
+          :data-testid="`ff-label-${field.path.value}`"
+          v-bind="{
+            ...fieldAttrs,
+            required: false,
+          }"
+          :tooltip-attributes="fieldAttrs.labelAttributes.tooltipAttributes"
         >
-          <slot name="tooltip">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <div v-html="fieldAttrs.labelAttributes.info" />
-          </slot>
-        </template>
-      </KLabel>
-      <div class="ff-object-field-actions">
-        <KButton
-          v-if="collapsible && realAdded"
-          appearance="tertiary"
-          :class="`ff-object-field-button-${realExpanded ? 'collapse' : 'expand'}`"
-          :data-testid="`ff-object-toggle-btn-${field.path.value}`"
-          icon
-          @click="expanded = !realExpanded"
+          {{ fieldAttrs.label }}
+          <template
+            v-if="fieldAttrs.labelAttributes?.info"
+            #tooltip
+          >
+            <slot name="tooltip">
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <div v-html="fieldAttrs.labelAttributes.info" />
+            </slot>
+          </template>
+        </KLabel>
+      </button>
+
+      <!-- switch -->
+      <KTooltip
+        v-if="!fieldAttrs.required"
+        :text="t('plugins.free-form.toggle_field', { field: fieldAttrs.label })"
+      >
+        <div
+          class="ff-object-field-switch-wrapper"
+          @click.stop
         >
-          <ChevronDownIcon
-            v-if="realAdded"
-            class="ff-object-field-button-icon"
+          <KInputSwitch
+            v-model="added"
+            :data-testid="`ff-object-switch-btn-${field.path.value}`"
+            :disabled="field.isInheritedDisabled.value"
+            @update:model-value="handleAddOrRemove"
           />
-        </KButton>
-        <KButton
-          v-if="!fieldAttrs.required"
-          appearance="tertiary"
-          :class="`ff-object-field-button-${realAdded ? 'remove' : 'add'}`"
-          :data-testid="`ff-object-${realAdded ? 'remove' : 'add'}-btn-${field.path.value}`"
-          icon
-          @click="handleAddOrRemove"
-        >
-          <TrashIcon v-if="realAdded" />
-          <AddIcon v-else />
-        </KButton>
-      </div>
+        </div>
+      </KTooltip>
     </header>
+
+    <!-- Collapse content -->
     <SlideTransition>
       <div
-        v-if="realExpanded"
+        v-show="expanded"
         class="ff-object-field-content"
         :data-testid="`ff-object-content-${field.path.value}`"
       >
@@ -113,14 +131,16 @@
 </template>
 
 <script setup lang="ts">
-import { KButton, KLabel, type LabelAttributes } from '@kong/kongponents'
-import { TrashIcon, AddIcon, ChevronDownIcon } from '@kong/icons'
-import { computed, onBeforeMount, toRef, watch } from 'vue'
+import { KLabel, type LabelAttributes } from '@kong/kongponents'
+import { ChevronRightIcon } from '@kong/icons'
+import { computed, onBeforeMount, toRef, useId } from 'vue'
+import { KUI_ICON_SIZE_40, KUI_COLOR_TEXT_NEUTRAL } from '@kong/design-tokens'
 import SlideTransition from './SlideTransition.vue'
 import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
 import Field from './Field.vue'
 import EntityChecksAlert from './EntityChecksAlert.vue'
 import { sortFieldsByBundles, sortFieldsByFieldNames } from '../shared/utils'
+import useI18n from '../../../composables/useI18n'
 
 import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
 import type { RenderRules, ResetLabelPathRule } from './types'
@@ -128,6 +148,8 @@ import type { RenderRules, ResetLabelPathRule } from './types'
 defineOptions({
   inheritAttrs: false,
 })
+
+const contentId = useId()
 
 const {
   defaultExpanded = true, defaultAdded = true, collapsible = true, omit,
@@ -150,6 +172,7 @@ const {
   renderRules?: RenderRules
 }>()
 
+const { i18n: { t } } = useI18n()
 const { value: fieldValue, hide, ...field } = useField(toRef(props, 'name'))
 const {
   getSchema,
@@ -167,7 +190,12 @@ const currentRenderRules = useCurrentRenderRules({
 const added = defineModel<boolean>('added', { default: undefined })
 
 const expanded = defineModel<boolean>('expanded', { default: undefined })
-const realExpanded = computed(() => realAdded.value && (collapsible ? expanded.value ?? defaultExpanded : false))
+
+const isTopLevelField = computed(() => {
+  return field.ancestors?.value.parent === null
+    // special case for the plugin configuration
+    || field.ancestors?.value.parent.path === 'config'
+})
 
 // Determines if the current field is a child element of an array field
 const isChildOfArray = computed(() => {
@@ -182,12 +210,10 @@ const isChildOfArray = computed(() => {
 
 const realResetLabelPath = computed(() => {
   if (resetLabelPath !== undefined) return resetLabelPath
-  if (isChildOfArray.value) return 'reset'
-  return 'inherit'
+  return 'reset'
 })
 
 const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ required, ...props, resetLabelPath: realResetLabelPath.value })))
-const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
 
 const asChild = computed(() => {
   if (defaultAsChild !== undefined) return defaultAsChild
@@ -213,28 +239,39 @@ const childFields = computed(() => {
 })
 
 function handleAddOrRemove() {
-  added.value = !added.value
+  if (field.error) return
+
   if (added.value) {
-    fieldValue!.value = getDefault(field.path!.value)
+    if (fieldValue?.value == null) {
+      fieldValue!.value = getDefault(field.path!.value)
+    }
+    field.enable()
   } else {
-    fieldValue!.value = null
+    field.disable()
   }
 }
 
-watch(realAdded, (value) => {
-  if (!collapsible) {
-    return
-  }
-  expanded.value = value
-})
+function toggleDisplay() {
+  expanded.value = !expanded.value
+}
 
 onBeforeMount(() => {
-  added.value = !!fieldValue?.value
+  if (field.error || !fieldValue) return
+  const hasValue = fieldValue.value != null
+  added.value = hasValue && !field.isDisabled.value
+  // If required or has value, expand by default
+  if (fieldAttrs.value.required || hasValue) {
+    expanded.value = true
+  }
 })
 </script>
 
 <style lang="scss" scoped>
 .ff-object-field {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+
   &-as-child {
     display: flex;
     flex-direction: column;
@@ -247,42 +284,112 @@ onBeforeMount(() => {
     margin-top: 0;
   }
 
+  :deep(.k-tooltip p) {
+    margin: 0;
+  }
+
+  &-switch-wrapper {
+    align-items: center;
+    display: flex;
+  }
+
+  &-toggle-btn {
+    align-items: center;
+    background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
+    border: none;
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+    color: inherit;
+    color: var(--kui-color-text-primary, $kui-color-text-primary);
+    cursor: pointer;
+    display: flex;
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+    gap: var(--kui-space-20, $kui-space-20);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    outline: none;
+    padding: var(--kui-space-10, $kui-space-10);
+
+    &:hover:not(:focus):not(:active) {
+      color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
+    }
+
+    &:focus-visible {
+      box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
+    }
+
+    &:active {
+      color: var(--kui-color-text-primary-stronger, $kui-color-text-primary-stronger);
+    }
+
+    &-trigger-icon {
+      transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
+
+      &.collapse-expanded {
+        transform: rotate(90deg);
+      }
+    }
+
+    label {
+      cursor: unset;
+    }
+  }
+
   &-header {
     align-items: center;
+    align-self: stretch;
+    background: $kui-color-background-neutral-weakest;
+    border: 1px solid $kui-color-border;
+    border-radius: $kui-border-radius-20 $kui-border-radius-20 $kui-border-radius-0 $kui-border-radius-0;
     display: flex;
-    gap: $kui-space-40;
-    height: 32px;
-  }
-
-  &-actions {
-    align-items: center;
-    display: flex;
-    gap: $kui-space-20;
-  }
-
-  &-button-expand,
-  &-button-collapse {
-    .ff-object-field-button-icon {
-      transition: transform $kui-animation-duration-20 ease-in-out;
-    }
-  }
-
-  &-button-expand {
-    .ff-object-field-button-icon {
-      transform: rotate(-90deg);
-    }
+    justify-content: space-between;
+    padding: $kui-space-50 $kui-space-60;
+    transition: background-color $kui-animation-duration-20 ease-in-out;
   }
 
   &-content {
+    align-self: stretch;
+    background: $kui-color-background;
+    border: 1px solid $kui-color-border;
+    border-radius: 0 0 $kui-border-radius-20 $kui-border-radius-20;
+    border-top: none;
     display: flex;
     flex-direction: column;
     gap: $kui-space-80;
-    margin-top: $kui-space-20;
-    padding: $kui-space-60 $kui-space-40 $kui-space-20 $kui-space-60;
+    padding: $kui-space-50 $kui-space-60;
   }
 
-  :deep(.k-tooltip p) {
-    margin: 0;
+  &-sub-level {
+    .ff-object-field-header {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    .ff-object-field-content {
+      border: none;
+      margin-right: -$kui-space-60;
+      padding-bottom: 0;
+      padding-left: 28px;
+      padding-top: $kui-space-70;
+      position: relative;
+
+      &::before {
+        border-left: 1px solid $kui-color-border;
+        content: '';
+        display: block;
+        height: 100%;
+        left: 12px;
+        position: absolute;
+        top: 0;
+        transform: translateX(-50%);
+      }
+    }
+  }
+
+  &-collapsed {
+    .ff-object-field-header {
+      background-color: $kui-color-background;
+    }
   }
 }
 </style>

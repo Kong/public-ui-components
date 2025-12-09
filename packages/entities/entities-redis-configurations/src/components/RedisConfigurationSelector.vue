@@ -1,13 +1,14 @@
 <template>
   <KSelect
     class="redis-config-select-trigger"
+    v-bind="$attrs"
+    :disabled="disabled"
     enable-filtering
     :filter-function="() => true"
     :items="items"
     :loading="loading"
     :model-value="modelValue"
     :placeholder="placeholder || t('selector.placeholder')"
-    v-bind="$attrs"
     @change="onSelectionChange"
     @query-change="onQueryChange"
   >
@@ -96,6 +97,7 @@ const {
   showCreateButton?: boolean
   /** Text for the create new configuration button */
   createButtonText?: string
+  disabled?: boolean
 }>()
 
 const emit = defineEmits<{
