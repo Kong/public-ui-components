@@ -42,6 +42,7 @@
       >
         <KButton
           appearance="none"
+          :aria-label="t('plugins.free-form.datakit.flow_editor.actions.remove_from_branch')"
           class="remove-branch"
           icon
           size="small"
