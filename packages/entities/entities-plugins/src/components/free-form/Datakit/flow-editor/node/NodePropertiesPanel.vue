@@ -170,6 +170,8 @@ const Form = computed(() => {
     border-radius: $kui-border-radius-30;
     display: flex;
     gap: $kui-space-30;
+    /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
+    height: $kui-line-height-40 + $kui-space-40 * 2;
     margin-bottom: $kui-space-60;
     padding: $kui-space-40 $kui-space-50;
   }
@@ -184,7 +186,6 @@ const Form = computed(() => {
 
   .branch-text {
     flex: 1 1 auto;
-    line-height: 24px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
