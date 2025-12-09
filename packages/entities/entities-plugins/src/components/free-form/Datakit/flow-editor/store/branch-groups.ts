@@ -327,6 +327,19 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
   }
 
   /**
+   * Pure validation: can `memberId` be added to `ownerId`'s `branch`?
+   * Mirrors the checks performed by addMember without mutating state.
+   */
+  function canAddMember(ownerId: NodeId, branch: BranchName, memberId: NodeId): boolean {
+    const owner = getNodeById(ownerId)
+    if (!supportsBranch(owner, branch)) return false
+    if (!isValidMember(owner, memberId)) return false
+    if (wouldCreateCycle(ownerId, memberId)) return false
+
+    return true
+  }
+
+  /**
    * Adds a member to a branch group with validation.
    * Performs the following checks:
    * - Owner exists and supports the branch
@@ -341,9 +354,7 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
   function addMember(ownerId: NodeId, branch: BranchName, memberId: NodeId, options: CommitOptions = {}): boolean {
     const owner = getNodeById(ownerId)
     if (!owner) return false
-    if (!supportsBranch(owner, branch)) return false
-    if (!isValidMember(owner, memberId)) return false
-    if (wouldCreateCycle(ownerId, memberId)) return false
+    if (!canAddMember(ownerId, branch, memberId)) return false
 
     const existingMembers = readMembers(owner, branch)
     if (existingMembers.includes(memberId)) return false
@@ -414,5 +425,6 @@ export function createBranchGroups({ state, groupMapById, getNodeById, history }
     getGroupDepth,
     isGroupId,
     isEdgeEnteringGroup,
+    canAddMember,
   }
 }
