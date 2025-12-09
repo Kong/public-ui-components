@@ -9,7 +9,7 @@
       class="cache-item"
     >
       <div class="cache-item-key">
-        <DeployIcon
+        <DatabaseIcon
           :color="KUI_COLOR_TEXT_NEUTRAL"
           :size="KUI_ICON_SIZE_30"
         />
@@ -111,7 +111,7 @@ import {
   KUI_ICON_SIZE_30,
 } from '@kong/design-tokens'
 import composables from '../../../../../composables'
-import { AddIcon, DeployIcon, MoreIcon } from '@kong/icons'
+import { AddIcon, DatabaseIcon, MoreIcon } from '@kong/icons'
 import type { CacheConfigFormData } from '../../types'
 import Field from '../../../shared/Field.vue'
 import RadioField from '../../../shared/RadioField.vue'
