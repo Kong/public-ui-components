@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.134.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.134.0...@kong-ui-public/entities-plugins@9.134.1) (2025-12-09)
+
+
+### Bug Fixes
+
+* **entities-plugins:** improve group activation behavior ([#2720](https://github.com/Kong/public-ui-components/issues/2720)) ([6971cec](https://github.com/Kong/public-ui-components/commit/6971cec3ec8d4f84fd7bb4020467a36bd03adf80))
+
+
+
+
+
 # [9.134.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.133.7...@kong-ui-public/entities-plugins@9.134.0) (2025-12-08)
 
 
