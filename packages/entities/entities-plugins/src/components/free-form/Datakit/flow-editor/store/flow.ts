@@ -1,7 +1,7 @@
 import { KUI_COLOR_BORDER_NEUTRAL, KUI_COLOR_BORDER_PRIMARY, KUI_COLOR_BORDER_PRIMARY_WEAK } from '@kong/design-tokens'
 import { MarkerType, useVueFlow } from '@vue-flow/core'
 import { createInjectionState } from '@vueuse/core'
-import { computed, toValue, watch } from 'vue'
+import { computed, readonly as markReadonly, shallowRef, toValue, watch } from 'vue'
 
 import useI18n from '../../../../../composables/useI18n'
 import { useToaster } from '../../../../../composables/useToaster'
@@ -185,7 +185,13 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       reset,
       groupMapById,
     } = editorStore
-    const { isGroupId } = branchGroups
+    const { isGroupId, canAddMember } = branchGroups
+
+    const draggingId = shallowRef<NodeId | GroupId>()
+    const setDraggingId = (id?: NodeId | GroupId) => {
+      draggingId.value = id
+    }
+    const readonlyDraggingId = markReadonly(draggingId)
 
     function edgeInPhase(edge: EdgeInstance, phase: NodePhase) {
       const sourceNode = getNodeById(edge.source)
@@ -202,6 +208,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       phase,
       readonly,
       flowId,
+      draggingId: readonlyDraggingId,
     })
 
     const {
@@ -211,7 +218,6 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       isBranchEdgeId,
       updateGroupLayout,
       translateGroupTree,
-      updateDragging,
       getNodeDepth,
       maxGroupDepth,
     } = branchLayout
@@ -225,6 +231,8 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
       phase,
       groupMapById,
       getNodeDepth,
+      canAddMember,
+      draggingId: readonlyDraggingId,
     })
 
     const nodes = computed(() =>
@@ -499,7 +507,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       if (isGroupId(node.id)) {
         const groupId = node.id as GroupId
-        updateDragging(groupId)
+        setDraggingId(groupId)
         updateActiveGroup(undefined)
         const group = groupMapById.value.get(groupId)
         if (!group) return
@@ -522,7 +530,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
       const nodeId = node.id as NodeId
       startGroupDrag('canvas')
-      updateDragging(nodeId)
+      setDraggingId(nodeId)
       const parentId = node.parentNode
 
       let absolutePosition: XYPosition = { ...node.position }
@@ -569,7 +577,7 @@ const [provideFlowStore, useOptionalFlowStore] = createInjectionState(
 
     onNodeDragStop(({ node }) => {
       if (!node) return
-      updateDragging(undefined)
+      setDraggingId(undefined)
 
       if (isGroupId(node.id)) {
         historyCommit()

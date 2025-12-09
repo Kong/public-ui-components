@@ -1,18 +1,27 @@
-import type { ComputedRef } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 import { shallowRef } from 'vue'
 
-import type { GroupId, GroupInstance, NodeId, NodePhase } from '../../types'
+import type { BranchName, GroupId, GroupInstance, NodeId, NodePhase } from '../../types'
+import { isNodeId } from '../node/node'
 import type { XYPosition } from '@vue-flow/core'
 
 interface UseBranchDropOptions {
   phase: NodePhase
   groupMapById: ComputedRef<Map<GroupId, GroupInstance>>
   getNodeDepth: (nodeId: NodeId) => number
+  canAddMember: (ownerId: NodeId, branch: BranchName, memberId: NodeId) => boolean
+  draggingId?: Readonly<Ref<NodeId | GroupId | undefined>>
 }
 
 type DragOrigin = 'panel' | 'canvas'
 
-export function useBranchDrop({ phase, groupMapById, getNodeDepth }: UseBranchDropOptions) {
+export function useBranchDrop({
+  phase,
+  groupMapById,
+  getNodeDepth,
+  canAddMember,
+  draggingId,
+}: UseBranchDropOptions) {
   const source = shallowRef<DragOrigin>()
   const activeGroupId = shallowRef<GroupId>()
 
@@ -29,9 +38,11 @@ export function useBranchDrop({ phase, groupMapById, getNodeDepth }: UseBranchDr
 
   function findDeepestGroup(point: XYPosition): GroupId | undefined {
     let best: { depth: number, id: GroupId } | undefined
+    const nodeId = draggingId?.value
 
     groupMapById.value.forEach((group) => {
       if (group.phase !== phase) return
+      if (nodeId && isNodeId(nodeId) && !canAddMember(group.ownerId, group.branch, nodeId)) return
       const position = group.position
       const dimensions = group.dimensions
       if (!position || !dimensions) return

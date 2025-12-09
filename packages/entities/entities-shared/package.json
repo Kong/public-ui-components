@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.33.4",
+  "version": "3.34.0",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -67,7 +67,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "612KB"
+    "errorLimit": "624KB"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",

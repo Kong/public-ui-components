@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.135.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.134.1...@kong-ui-public/entities-plugins@9.135.0) (2025-12-09)
+
+
+### Features
+
+* **entities-plugins:** update icon for datakit cache config ([#2721](https://github.com/Kong/public-ui-components/issues/2721)) ([17d0f5a](https://github.com/Kong/public-ui-components/commit/17d0f5a5eb1ad89fdbb0e4a6a035434530c98745))
+
+
+
+
+
+## [9.134.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.134.0...@kong-ui-public/entities-plugins@9.134.1) (2025-12-09)
+
+
+### Bug Fixes
+
+* **entities-plugins:** improve group activation behavior ([#2720](https://github.com/Kong/public-ui-components/issues/2720)) ([6971cec](https://github.com/Kong/public-ui-components/commit/6971cec3ec8d4f84fd7bb4020467a36bd03adf80))
+
+
+
+
+
+# [9.134.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.133.7...@kong-ui-public/entities-plugins@9.134.0) (2025-12-08)
+
+
+### Features
+
+* **entities-shared, entities-plugin:** add deck tab in entity configuration viewing ([#2665](https://github.com/Kong/public-ui-components/issues/2665)) ([73d690d](https://github.com/Kong/public-ui-components/commit/73d690d7be1d19fab7cfbadf28a325cb3eb9eeb4))
+
+
+
+
+
 ## [9.133.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.133.6...@kong-ui-public/entities-plugins@9.133.7) (2025-12-07)
 
 
