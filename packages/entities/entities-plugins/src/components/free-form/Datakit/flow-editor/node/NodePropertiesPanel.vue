@@ -27,27 +27,21 @@
       v-if="branchMembership"
       class="branch-note"
     >
-      <KTooltip
-        class="note-content"
-        placement="top"
-        :text="t('plugins.free-form.datakit.flow_editor.node_properties.branch_note')"
-      >
-        <span class="branch-label">
-          <ArrowSplitIcon
-            :color="KUI_COLOR_TEXT_NEUTRAL"
-            :size="KUI_ICON_SIZE_40"
-          />
-          <span class="branch-text">
-            {{ branchMembershipLabel }}
-          </span>
+      <span class="branch-label">
+        <ArrowSplitIcon
+          :color="KUI_COLOR_TEXT_NEUTRAL"
+          :size="KUI_ICON_SIZE_40"
+        />
+        <span class="branch-text">
+          {{ branchMembershipLabel }}
         </span>
-      </KTooltip>
+      </span>
       <KTooltip
         placement="top"
         :text="t('plugins.free-form.datakit.flow_editor.actions.remove_from_branch')"
       >
         <KButton
-          appearance="tertiary"
+          appearance="none"
           class="remove-branch"
           icon
           size="small"
@@ -179,23 +173,28 @@ const Form = computed(() => {
     padding: $kui-space-40 $kui-space-50;
   }
 
-  .note-content {
-    flex: 1 1 auto;
-  }
-
   .branch-label {
+    align-items: center;
     display: flex;
+    flex-grow: 1;
     gap: $kui-space-30;
+    min-width: 0;
   }
 
   .branch-text {
+    flex: 1 1 auto;
+    line-height: 24px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .remove-branch {
-    justify-self: flex-end;
+    color: $kui-icon-color-neutral;
+  }
+
+  .branch-note:not(:hover) .remove-branch {
+    display: none;
   }
 
   &-desc {
