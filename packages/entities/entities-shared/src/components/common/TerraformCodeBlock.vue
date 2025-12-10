@@ -249,7 +249,7 @@ const terraformContent = computed((): string => {
   content += generateConfig(modifiedRecord)
 
   // control plane id
-  if (!isEventGatewayEntity.value) {
+  if (!isEventGatewayEntity.value && !isIdentityEntity.value) {
     content += `${SINGLE_INDENT}control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id\n`
   } else if (parentEntityType) { // parent entity information if scoped
     content += `${SINGLE_INDENT}${parentEntityType} = {\n`
