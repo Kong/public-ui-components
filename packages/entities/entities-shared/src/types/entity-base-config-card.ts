@@ -29,6 +29,10 @@ export enum SupportedEntityType {
   ListenerPolicy = 'listener_policy',
   SchemaRegistry = 'schema_registry',
   StaticKey = 'static_key',
+  AuthServer = 'auth_server',
+  AuthServerScopes = 'auth_server_scopes',
+  AuthServerClaims = 'auth_server_claims',
+  AuthServerClients = 'auth_server_clients',
   // Use this for any entity type that is not supported by terraform
   // If entityType is 'other' terraform scripts will not be available
   // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!
