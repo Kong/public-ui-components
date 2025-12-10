@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.10.6...@kong-ui-public/analytics-chart@10.11.0) (2025-12-10)
+
+
+### Features
+
+* update language for truncation warning ([#2725](https://github.com/Kong/public-ui-components/issues/2725)) ([3589f4e](https://github.com/Kong/public-ui-components/commit/3589f4e2fbb2d6f9d3863a81c1d445c584604c4d))
+
+
+
+
+
 ## [10.10.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.10.5...@kong-ui-public/analytics-chart@10.10.6) (2025-12-07)
 
 
