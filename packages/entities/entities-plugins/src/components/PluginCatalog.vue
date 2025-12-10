@@ -1,6 +1,12 @@
 <template>
-  <div class="plugin-catalog">
-    <div class="plugin-filter">
+  <div
+    class="plugin-catalog"
+    data-testid="plugin-catalog"
+  >
+    <div
+      class="plugin-filter"
+      data-testid="plugin-filter"
+    >
       <div class="plugin-filter-title">
         {{ t('plugins.select.filter.title') }}
       </div>
@@ -15,6 +21,7 @@
             v-for="feature in PluginFeaturedArray"
             :key="feature"
             class="plugin-filter-item"
+            :data-testid="`plugin-filter-item-${feature}`"
           >
             <KCheckbox
               v-model="typeFilter[feature]"
@@ -37,6 +44,7 @@
             v-for="group in PluginGroupArray"
             :key="group"
             class="plugin-filter-item"
+            :data-testid="`plugin-filter-item-${group}`"
           >
             <KCheckbox
               v-model="typeFilter[group]"
@@ -55,16 +63,18 @@
           ref="filter-input"
           v-model.trim="searchFilter"
           class="plugins-filter-input"
-          data-testid="plugins-filter"
+          data-testid="plugins-filter-input"
           :placeholder="t('search.placeholder.select')"
           type="search"
         />
-        <component
-          :is="viewModeIcon"
-          class="plugins-filter-icon"
-          :color="KUI_ICON_COLOR_PRIMARY"
-          @click="listView = !listView"
-        />
+        <div class="icon-container">
+          <component
+            :is="viewModeIcon"
+            class="plugins-filter-icon"
+            :color="KUI_ICON_COLOR_PRIMARY"
+            @click="listView = !listView"
+          />
+        </div>
       </div>
 
       <section v-if="isLoading">
@@ -143,6 +153,7 @@ import PluginCatalogGrid from './select/PluginCatalogGrid.vue'
 import { useAxios, useHelpers, useErrors } from '@kong-ui-public/entities-shared'
 import { KUI_ICON_COLOR_PRIMARY } from '@kong/design-tokens'
 import { GridIcon, ListIcon } from '@kong/icons'
+import { lcsRecursive } from '../utils/helper'
 import PluginCatalogListView from './select/PluginCatalogListView.vue'
 
 const emit = defineEmits<{
@@ -157,13 +168,15 @@ const { getMessageFromError } = useErrors()
 const { sortAlpha, objectsAreEqual } = useHelpers()
 
 // Latest version of Plugin Select
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig
   disabledPlugins?: DisabledPlugin
   highlightedPluginIds?: string[]
   customPluginSupport?: CustomPluginSupportLevel
   availableOnServer?: boolean
-}>()
+}>(), {
+  availableOnServer: true,
+})
 
 const { axiosInstance } = useAxios(props.config?.axiosRequestConfig)
 
@@ -246,12 +259,25 @@ const filteredPlugins = computed((): PluginCardList => {
   })
 
   const query = searchFilter.value.toLowerCase()
+  if (!query) {
+    return filtered
+  }
 
   const results = JSON.parse(JSON.stringify(filtered))
 
   for (const type in filtered) {
-    const matches = filtered[type as keyof PluginCardList]?.filter((plugin: PluginType) => plugin.name.toLowerCase().includes(query) || plugin.id.toLowerCase().includes(query) || plugin.group.toLowerCase().includes(query)) || []
-
+    const matches = filtered[type]?.filter((plugin: PluginType) => {
+      const fields = [
+        plugin.name.toLowerCase(),
+        plugin.id.toLowerCase(),
+        // plugin.group.toLowerCase(),
+      ]
+      return fields.some(field => {
+        const lcs = lcsRecursive(query, field)
+        // Only match if LCS covers at least 2/3 of the query length and is not empty
+        return lcs.length === query.length
+      })
+    }) || []
     if (!matches.length) {
       delete results[type]
     } else {
@@ -456,7 +482,6 @@ onMounted(async () => {
     flex-direction: column;
     gap: $kui-space-60;
     height: max-content;
-    padding: 0 $kui-space-80;
     position: sticky;
     top: 24px;
     width: 280px;
@@ -500,6 +525,15 @@ onMounted(async () => {
     flex: 1;
     flex-direction: column;
     gap: $kui-space-60;
+
+    .icon-container {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      height: $kui-icon-size-60;
+      justify-content: center;
+      width: $kui-icon-size-60;
+    }
 
     .plugins-filter-input-container {
       align-items: center;
