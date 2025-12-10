@@ -1,7 +1,7 @@
 {
   "noDataAvailableTitle": "No data in the current time frame",
   "noDataAvailableDescription": "Once there is traffic, it will display here",
-  "limitedResultsShown": "Not all data is shown in the below report. Reports are currently limited to a maximum of {maxReturned} entities.",
+  "limitedResultsShown": "Grouped value limit exceeded, showing the top {maxReturned}",
   "entityNoName": "no-name",
   "debug": "debug",
   "total": "Total",
