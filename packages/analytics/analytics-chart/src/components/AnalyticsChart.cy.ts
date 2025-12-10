@@ -198,7 +198,7 @@ describe('<AnalyticsChart />', () => {
     cy.get(':nth-child(1) > .label-container > .sub-label').should('include.text', '1.2M requests')
     cy.get("[role='tooltip']").should(
       'include.text',
-      'Not all data is shown in the below report. Reports are currently limited to a maximum of 50 entities.',
+      'Grouped value limit exceeded, showing the top 50',
     )
   })
 

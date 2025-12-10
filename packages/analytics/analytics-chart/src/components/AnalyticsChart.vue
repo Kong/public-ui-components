@@ -198,7 +198,7 @@ const resultSetTruncated = computed(() => {
     ? false
     : props.chartData?.meta?.truncated || false
 })
-const notAllDataShownTooltipContent = i18n.t('limitedResultsShown', { maxReturned: maxEntitiesShown.value })
+const notAllDataShownTooltipContent = computed(() => i18n.t('limitedResultsShown', { maxReturned: maxEntitiesShown.value }))
 const isBarChart = computed<boolean>(() => [
   'vertical_bar',
   'horizontal_bar',
