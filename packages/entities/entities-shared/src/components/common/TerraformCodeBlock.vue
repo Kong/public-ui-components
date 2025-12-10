@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { type PropType, computed } from 'vue'
-import { EventGatewayTypesArray, type SupportedEntityType, SupportedEntityTypesArray } from '../../types'
+import { EventGatewayTypesArray, type SupportedEntityType, SupportedEntityTypesArray, IdentityTypesArray } from '../../types'
 
 const SINGLE_INDENT = '  '
 
@@ -40,6 +40,10 @@ const props = defineProps({
 
 const isEventGatewayEntity = computed(() => {
   return EventGatewayTypesArray.includes(props.entityType)
+})
+
+const isIdentityEntity = computed(() => {
+  return IdentityTypesArray.includes(props.entityType)
 })
 
 const buildBasicValString = (value: string | number | boolean, key: string): string => {
@@ -248,6 +252,10 @@ const terraformContent = computed((): string => {
     content += `${SINGLE_INDENT}${parentEntityType} = {\n`
     content += `${SINGLE_INDENT}${SINGLE_INDENT}id = konnect_gateway_${parentEntityType}.my_${parentEntityType}.id\n`
     content += `${SINGLE_INDENT}}\n`
+  }
+
+  if (isIdentityEntity.value) {
+    content += `${SINGLE_INDENT}provider = konnect-beta\n`
   }
 
   content += '}\n'
