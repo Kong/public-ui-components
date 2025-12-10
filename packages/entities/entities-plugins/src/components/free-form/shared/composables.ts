@@ -44,11 +44,12 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
 
     const {
       disabledFields,
-      initDisabledFields,
       disableField,
       enableField,
       createIsAncestorDisabledComputed,
       createIsDisabledComputed,
+      clearAllDisabledFields,
+      setupFieldDisability,
     } = useDisabledFieldsManager(handleChange)
 
     const rootRenderRules = useCurrentRenderRules({
@@ -62,8 +63,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
         delete (innerData as any)[key]
       })
       Object.assign(innerData, newData)
-      disabledFields.value.clear()
-      initDisabledFields(schemaHelpers.getSchemaMap(), innerData)
+      clearAllDisabledFields(false)
     }
 
     /**
@@ -83,9 +83,6 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       } else {
         setValue(dataValue)
       }
-
-      // Initialize disabled fields based on schema and data
-      initDisabledFields(schemaHelpers.getSchemaMap(), innerData)
     }
 
     function hasValue(data: T | undefined): boolean {
@@ -112,7 +109,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       // Set disabled fields to null
       if (disabledFields.value.size > 0) {
         for (const path of disabledFields.value) {
-          set(nextValue, utils.toArray(path), null)
+          utils.safeSet(nextValue, utils.toArray(path), null)
         }
       }
 
@@ -154,6 +151,7 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       enableField,
       createIsAncestorDisabledComputed,
       createIsDisabledComputed,
+      setupFieldDisability,
     }
   },
 )
@@ -661,6 +659,7 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     disableField,
     enableField,
     createIsDisabledComputed,
+    setupFieldDisability,
   } = useFormShared()
   const fieldPath = useFieldPath(name)
   const renderer = useFieldRenderer(fieldPath)
@@ -685,6 +684,18 @@ export function useField<TData = unknown, TSchema extends UnionFieldSchema = Uni
     return {
       error: new Error(`path '${fieldPath.value}' is not found in schema.`),
     }
+  }
+
+  // Setup field disability for record field
+  if (schema.value.type === 'record') {
+    const parentPath = utils.getParentPath(fieldPath.value)
+    const isChildOfArray = !parentPath ? false : getSchema(parentPath)?.type === 'array'
+    setupFieldDisability({
+      fieldPath: toValue(fieldPath),
+      schema: toValue(schema) as RecordFieldSchema,
+      isChildOfArray,
+      data: toValue(value),
+    })
   }
 
   return {
@@ -1191,52 +1202,44 @@ function useDisabledFieldsManager(onChange?: () => void) {
   const disabledFields = ref(new Set<string>())
 
   /**
-   * Initialize disabled fields.
-   * Fields that meet **all of** the following conditions will be disabled by default:
-   * - Is a record type
-   * - Not required
-   * - No default value
-   * - No existing data
-   * - Not a child of an array
+   * Each Record field should call this to initialize its own disabled state.
    */
-  function initDisabledFields(
-    schemaMap: Record<string, UnionFieldSchema>,
-    formData: Record<string, any>,
-  ) {
-    for (const [path, schema] of Object.entries(schemaMap)) {
-      if (
-        // is a record
-        schema.type === 'record'
-        // not required
-        && !schema.required
-        // no default value
-        && !schema.default
-        // no existing data
-        && get(formData, utils.toArray(path)) == null
-        // not a child of an array
-        && schemaMap[utils.toArray(path).slice(0, -1).join('.')]?.type !== 'array'
-        // A special case for **ai-mcp-oauth2** plugin where config is optional
-        && path !== 'config'
-      ) {
-        disableField(path, false)
-      }
+  function setupFieldDisability({
+    schema,
+    data,
+    fieldPath,
+    isChildOfArray,
+  }: {
+    schema: RecordFieldSchema
+    data: unknown
+    fieldPath: string
+    isChildOfArray: boolean
+  }) {
+    if (
+      !schema.required // not required
+      && schema.default === undefined // no default value
+      && data == null // no existing data
+      && !isChildOfArray // not child of array
+      // A special case for **ai-mcp-oauth2** plugin where config is optional
+      && fieldPath !== 'config'
+    ) {
+      disableField(fieldPath, false)
     }
   }
 
   function disableField(path: string, trigger = true) {
-    disabledFields.value.add(generalizePath(path))
+    disabledFields.value.add(path)
     if (trigger) onChange?.()
   }
 
   function enableField(path: string, trigger = true) {
-    disabledFields.value.delete(generalizePath(path))
+    disabledFields.value.delete(path)
     if (trigger) onChange?.()
   }
 
   function isAncestorDisabled(path: string): boolean {
-    const generalizedPath = generalizePath(path)
     for (const disabledPath of disabledFields.value) {
-      if (generalizedPath.startsWith(disabledPath + utils.separator)) {
+      if (path.startsWith(disabledPath + utils.separator)) {
         return true
       }
     }
@@ -1253,8 +1256,13 @@ function useDisabledFieldsManager(onChange?: () => void) {
   function createIsDisabledComputed(path: MaybeRefOrGetter<string>) {
     return computed(() => {
       const pathValue = toValue(path)
-      return disabledFields.value.has(generalizePath(pathValue))
+      return disabledFields.value.has(pathValue)
     })
+  }
+
+  function clearAllDisabledFields(trigger = true) {
+    disabledFields.value.clear()
+    if (trigger) onChange?.()
   }
 
   return {
@@ -1263,6 +1271,7 @@ function useDisabledFieldsManager(onChange?: () => void) {
     enableField,
     createIsAncestorDisabledComputed,
     createIsDisabledComputed,
-    initDisabledFields,
+    setupFieldDisability,
+    clearAllDisabledFields,
   }
 }
