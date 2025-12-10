@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.34.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.34.0...@kong-ui-public/entities-shared@3.34.1) (2025-12-10)
+
+
+### Bug Fixes
+
+* **entity-base-config-card:** kong identity entity types [KHCP-18905] ([#2724](https://github.com/Kong/public-ui-components/issues/2724)) ([6790cc0](https://github.com/Kong/public-ui-components/commit/6790cc07378be104a7fddc57291cfd9eb927a71a))
+
+
+
+
+
 # [3.34.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.33.4...@kong-ui-public/entities-shared@3.34.0) (2025-12-08)
 
 
