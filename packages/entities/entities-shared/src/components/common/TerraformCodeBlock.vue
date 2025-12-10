@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { type PropType, computed } from 'vue'
-import { EventGatewayTypesArray, type SupportedEntityType, SupportedEntityTypesArray } from '../../types'
+import { EventGatewayTypesArray, type SupportedEntityType, SupportedEntityTypesArray, IdentityTypesArray } from '../../types'
 
 const SINGLE_INDENT = '  '
 
@@ -40,6 +40,10 @@ const props = defineProps({
 
 const isEventGatewayEntity = computed(() => {
   return EventGatewayTypesArray.includes(props.entityType)
+})
+
+const isIdentityEntity = computed(() => {
+  return IdentityTypesArray.includes(props.entityType)
 })
 
 const buildBasicValString = (value: string | number | boolean, key: string): string => {
@@ -234,6 +238,9 @@ const terraformContent = computed((): string => {
     delete modifiedRecord.name
 
     content += `resource "konnect_gateway_plugin_${pluginType}" "my_${pluginType}" {\n`
+  } else if (isIdentityEntity.value) {
+    content += `resource "konnect_${props.entityType}" "my_${props.entityType}" {\n`
+    content += `${SINGLE_INDENT}provider = konnect-beta\n`
   } else { // generic entity
     content += `resource "konnect_gateway_${props.entityType}" "my_${props.entityType}" {\n`
   }
@@ -242,7 +249,7 @@ const terraformContent = computed((): string => {
   content += generateConfig(modifiedRecord)
 
   // control plane id
-  if (!isEventGatewayEntity.value) {
+  if (!isEventGatewayEntity.value && !isIdentityEntity.value) {
     content += `${SINGLE_INDENT}control_plane_id = konnect_gateway_control_plane.my_konnect_cp.id\n`
   } else if (parentEntityType) { // parent entity information if scoped
     content += `${SINGLE_INDENT}${parentEntityType} = {\n`
