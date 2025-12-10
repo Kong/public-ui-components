@@ -228,7 +228,7 @@ function buildArraySchemaMap(arraySchema: ArrayFieldSchema, pathPrefix: string =
 }
 
 /**
- * 'a.0.b.1.c' => 'a.*.b.*.c'
+ * 'a.0.b.1.c' => 'a.\*.b.\*.c'
  */
 export function generalizePath(p: string) {
   const parts = utils
