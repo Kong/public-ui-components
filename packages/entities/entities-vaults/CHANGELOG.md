@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.27.6...@kong-ui-public/entities-vaults@4.0.0) (2025-12-10)
+
+
+### Bug Fixes
+
+* **entities-vaults:** rename fields ([#2714](https://github.com/Kong/public-ui-components/issues/2714)) ([fc7d3ae](https://github.com/Kong/public-ui-components/commit/fc7d3ae926771a8795e86de895f600d3b2b7f089))
+
+
+### BREAKING CHANGES
+
+* **entities-vaults:** `hcvOauth2MethodAvailable` is renamed to `hcvJwtMethodAvailable`
+
+* test(*): update
+
+
+
+
+
 ## [3.27.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-vaults@3.27.5...@kong-ui-public/entities-vaults@3.27.6) (2025-12-08)
 
 **Note:** Version bump only for package @kong-ui-public/entities-vaults

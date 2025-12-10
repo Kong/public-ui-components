@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.3.0...@kong-ui-public/dashboard-renderer@8.3.1) (2025-12-09)
+
+
+### Bug Fixes
+
+* **dashboards:** fix padding for golden signals [MA-4653] ([#2716](https://github.com/Kong/public-ui-components/issues/2716)) ([764be7c](https://github.com/Kong/public-ui-components/commit/764be7cb9225ba7a02469c24654efefe644795a2))
+
+
+
+
+
+# [8.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.2.10...@kong-ui-public/dashboard-renderer@8.3.0) (2025-12-09)
+
+
+### Features
+
+* create configure dashboard utility for filtering datasources [MA-4537] ([#2698](https://github.com/Kong/public-ui-components/issues/2698)) ([a7d4bf7](https://github.com/Kong/public-ui-components/commit/a7d4bf78e06f8cf076f94010ccd61900a3b3cb8e))
+
+
+
+
+
 ## [8.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.2.9...@kong-ui-public/dashboard-renderer@8.2.10) (2025-12-08)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
