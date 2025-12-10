@@ -56,8 +56,7 @@ describe('<TerraformCodeBlock />', () => {
         },
       })
 
-      cy.get('.terraform-config').should('be.visible')
-      cy.get('.terraform-config').should('contain.text', 'provider = konnect-beta')
+      cy.get('.terraform-config').should('be.visible').should('contain.text', 'provider = konnect-beta')
     })
   })
 })
