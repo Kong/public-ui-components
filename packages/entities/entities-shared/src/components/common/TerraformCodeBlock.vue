@@ -240,9 +240,9 @@ const terraformContent = computed((): string => {
     content += `resource "konnect_gateway_plugin_${pluginType}" "my_${pluginType}" {\n`
   } else if (isIdentityEntity.value) {
     content += `resource "konnect_${props.entityType}" "my_${props.entityType}" {\n`
+    content += `${SINGLE_INDENT}provider = konnect-beta\n`
   } else { // generic entity
     content += `resource "konnect_gateway_${props.entityType}" "my_${props.entityType}" {\n`
-    content += `${SINGLE_INDENT}provider = konnect-beta\n`
   }
 
   // main config
