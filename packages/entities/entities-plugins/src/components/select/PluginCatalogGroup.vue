@@ -1,5 +1,8 @@
 <template>
-  <div class="group-title">
+  <div
+    class="group-title"
+    :data-testid="`plugin-group-${name}`"
+  >
     <div class="group-icon-wrapper">
       <component
         :is="groupIcon"
@@ -12,12 +15,14 @@
   <div
     ref="pluginCardContainerRef"
     class="plugin-card-container"
+    :data-testid="`plugin-group-${name}`"
   >
     <PluginCatalogCard
       v-for="plugin in displayedPlugins"
       :key="`plugin-card-${plugin.id}`"
       :config="config"
       :plugin="plugin"
+      @custom-plugin-delete="handleCustomPluginDelete(plugin)"
       @plugin-clicked="emit('plugin-clicked', plugin)"
     />
     <div
@@ -28,13 +33,21 @@
       {{ t('plugins.select.show_all') }}
     </div>
   </div>
+  <DeleteCustomPluginSchemaModal
+    v-if="openDeleteModal && selectedPlugin"
+    :config="config"
+    :plugin="selectedPlugin"
+    @closed="handleClose"
+    @proceed="handleClose(true)"
+  />
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import composables from '../../composables'
 import PluginCatalogCard from './PluginCatalogCard.vue'
-import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType } from '../../types'
+import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginSchemaModal.vue'
+import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType } from '../../types'
 import { KUI_COLOR_TEXT_DECORATIVE_PURPLE } from '@kong/design-tokens'
 import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, SparklesIcon, TrafficIcon, TransformationIcon } from '@kong/icons'
 
@@ -75,7 +88,7 @@ const groupIcon = computed(() => {
       return TransformationIcon
     case 'Deployment':
       return DeployIcon
-    case 'Custom':
+    case 'Custom Plugins':
       return CodeblockIcon
     default:
       return null
@@ -84,6 +97,8 @@ const groupIcon = computed(() => {
 
 const emit = defineEmits<{
   'plugin-clicked': [plugin: PluginType]
+  'revalidate': []
+  'delete:success': [pluginName: string]
 }>()
 
 const { i18n: { t } } = composables.useI18n()
@@ -104,6 +119,29 @@ const showShowAllCard = computed(() => !showAll.value && props.plugins.length > 
 function handleShowAll() {
   showAll.value = true
 }
+
+const openDeleteModal = ref(false)
+const selectedPlugin = ref<{ name: string, id: string, customPluginType?: CustomPluginType } | null>(null)
+
+const handleCustomPluginDelete = (plugin: PluginType): void => {
+  openDeleteModal.value = true
+  selectedPlugin.value = {
+    id: plugin.id,
+    name: plugin.name,
+    customPluginType: plugin.customPluginType,
+  }
+}
+
+const handleClose = (revalidate?: boolean): void => {
+  if (revalidate) {
+    emit('revalidate')
+    emit('delete:success', selectedPlugin.value?.name || '')
+  }
+
+  openDeleteModal.value = false
+  selectedPlugin.value = null
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -122,6 +160,11 @@ function handleShowAll() {
     justify-content: center;
     margin-right: $kui-space-40;
     width: 36px;
+
+    :deep(.runtime-serverless-icon svg path) {
+      color: currentColor;
+      fill: currentColor;
+    }
   }
 
   .group-title-text {
@@ -135,7 +178,7 @@ function handleShowAll() {
   display: grid;
   gap: $kui-space-90;
   grid-template-columns: repeat(auto-fit, minmax(0, 335px)); // display as many cards as possible in a row, with a max width of 335px
-  justify-content: space-around;
+  justify-content: start;
 
   @media (min-width: $kui-breakpoint-laptop) {
     justify-content: flex-start;

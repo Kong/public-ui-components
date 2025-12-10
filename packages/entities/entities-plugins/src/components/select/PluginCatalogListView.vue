@@ -1,27 +1,35 @@
 <template>
-  <KCard>
+  <KCard data-testid="plugin-catalog-list-view-card">
     <KTableView
+      :key="tableKey"
       class="plugin-catalog-table"
       client-sort
       :data="paginatedData"
+      data-testid="plugin-catalog-list-view-table"
       :headers="headers"
-      :page-size="10"
       :pagination="true"
       :pagination-attributes="{ totalCount: tableRows.length, currentPage: currentPage,
+                                initialPageSize: paginatedPageSize,
                                 pageSizes: [10, 25, 50] }"
       resize-columns
       :row-key="'id'"
       @page-change="onPageChange"
       @page-size-change="onPageSizeChange"
+      @sort="onSort"
     >
       <template #name="{ row }">
-        <span class="plugin-name-cell">
+        <span
+          class="plugin-name-cell"
+          data-testid="plugin-catalog-list-view-name"
+        >
           <PluginIcon
+            :data-testid="`plugin-catalog-list-view-${row.plugin!.id}-icon`"
             :name="row.plugin!.id"
             :size="20"
           />
           <span
             class="plugin-name-text"
+            data-testid="plugin-catalog-list-view-name-text"
             :title="row.name"
           >{{ row.name }}</span>
         </span>
@@ -29,15 +37,20 @@
       <template #description="{ row }">
         <span
           class="plugin-description-cell"
+          data-testid="plugin-catalog-list-view-description"
           :title="row.description"
         >
           {{ row.description }}
         </span>
       </template>
       <template #action="{ row }">
-        <div class="plugin-action-cell">
+        <div
+          class="plugin-action-cell"
+          data-testid="plugin-catalog-list-view-action"
+        >
           <KButton
             appearance="tertiary"
+            data-testid="plugin-catalog-list-view-configure-btn"
             size="small"
             :to="props.config.getCreateRoute(row.id)"
           >
@@ -50,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import composables from '../../composables'
 import { PluginIcon } from '@kong-ui-public/entities-plugins-icon'
 import {
@@ -58,6 +71,12 @@ import {
   type KonnectPluginSelectConfig,
   type PluginCardList,
 } from '../../types'
+
+interface TableSortPayload {
+  prevKey: string
+  sortColumnKey: string
+  sortColumnOrder: string
+}
 
 const props = defineProps<{
   config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig
@@ -85,22 +104,49 @@ const tableRows = computed(() => {
     plugin,
   }))
 })
+const tableKey = ref(0)
 const paginatedPageSize = ref<number>(10)
 const currentPage = ref<number>(1)
-const paginatedData = ref(tableRows.value.slice(0, paginatedPageSize.value))
+const sortedRows = ref(tableRows.value)
+
+const paginatedData = computed(() => {
+  const total = sortedRows.value.length
+  const maxPage = Math.max(1, Math.ceil(total / paginatedPageSize.value))
+  const safePage = Math.min(currentPage.value, maxPage)
+  const start = (safePage - 1) * paginatedPageSize.value
+  return sortedRows.value.slice(start, start + paginatedPageSize.value)
+})
+
+watch(tableRows, () => {
+  sortedRows.value = [...tableRows.value]
+  currentPage.value = 1
+  tableKey.value++
+})
+
 const onPageChange = ({ page }: { page: number }) => {
   currentPage.value = page
-  if (page === 1) {
-    paginatedData.value = tableRows.value.slice(0, paginatedPageSize.value)
-  } else {
-    paginatedData.value = tableRows.value.slice((paginatedPageSize.value * (page - 1)), (paginatedPageSize.value * (page - 1)) + paginatedPageSize.value)
-  }
 }
 
 const onPageSizeChange = ({ pageSize }: { pageSize: number }) => {
   paginatedPageSize.value = pageSize
-  paginatedData.value = tableRows.value.slice((paginatedPageSize.value * (currentPage.value - 1)), (paginatedPageSize.value * (currentPage.value - 1)) + paginatedPageSize.value)
+  // paginatedData.value = tableRows.value.slice((paginatedPageSize.value * (currentPage.value - 1)), (paginatedPageSize.value * (currentPage.value - 1)) + paginatedPageSize.value)
 }
+
+const onSort = (sortPayload: TableSortPayload) => {
+  const { sortColumnKey, sortColumnOrder } = sortPayload
+  if (sortColumnKey !== 'name') {
+    // only name column is sortable
+    return
+  }
+  sortedRows.value = [...sortedRows.value].sort((a, b) => {
+    const aValue = (a[sortColumnKey] || '').toLowerCase()
+    const bValue = (b[sortColumnKey] || '').toLowerCase()
+    if (aValue < bValue) return sortColumnOrder === 'asc' ? -1 : 1
+    if (aValue > bValue) return sortColumnOrder === 'asc' ? 1 : -1
+    return 0
+  })
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -123,7 +169,7 @@ const onPageSizeChange = ({ pageSize }: { pageSize: number }) => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  word-break: break-word;
+  word-break: word-break;
 }
 
 .plugin-action-cell {

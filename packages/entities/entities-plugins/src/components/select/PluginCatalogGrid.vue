@@ -1,7 +1,7 @@
 <template>
   <div class="plugin-select-grid">
     <KEmptyState
-      v-if="!Object.keys(displayedPlugins).length"
+      v-if="!Object.keys(pluginList || []).length"
       :action-button-visible="false"
       class="plugins-empty-state"
       data-testid="plugins-empty-state"
@@ -23,14 +23,14 @@
 
     <template v-for="group in displayGroups">
       <div
-        v-if="displayedPlugins[group]"
+        v-if="pluginList?.[group]"
         :key="group"
       >
         <PluginCatalogGroup
           v-model="shouldCollapsed[group]"
           :config="config"
           :name="group"
-          :plugins="displayedPlugins[group as keyof PluginCardList] || []"
+          :plugins="pluginList[group as keyof PluginCardList] || []"
           @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
         />
       </div>
@@ -39,11 +39,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import composables from '../../composables'
 import {
   PLUGIN_GROUPS_COLLAPSE_STATUS,
-  PluginGroup,
   PluginFeaturedArray,
   PluginGroupArray,
   type KongManagerPluginSelectConfig,
@@ -53,7 +52,7 @@ import {
 } from '../../types'
 import PluginCatalogGroup from './PluginCatalogGroup.vue'
 
-const props = defineProps<{
+defineProps<{
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig
   /**
@@ -74,17 +73,6 @@ const shouldCollapsed = ref<Record<string, boolean>>(PLUGIN_GROUPS_COLLAPSE_STAT
 const emitPluginData = (plugin: PluginType) => {
   emit('plugin-clicked', plugin)
 }
-
-const displayedPlugins = computed((): PluginCardList => {
-  const kongPlugins = JSON.parse(JSON.stringify(props.pluginList))
-
-  // remove custom plugin from original pluginList in Konnect
-  if (props.config.app === 'konnect') {
-    delete kongPlugins[PluginGroup.CUSTOM_PLUGINS]
-  }
-
-  return kongPlugins as PluginCardList
-})
 </script>
 
 <style lang="scss" scoped>

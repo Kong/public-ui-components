@@ -1,5 +1,8 @@
 <template>
-  <div class="plugin-select-card-wrapper">
+  <div
+    class="plugin-select-card-wrapper"
+    data-testid="plugin-catalog-card-wrapper"
+  >
     <KTooltip :text="plugin.disabledMessage">
       <a
         class="plugin-select-card"
@@ -44,14 +47,12 @@
 
               <template #items>
                 <KDropdownItem
-                  v-if="canDeleteCustomPlugin"
                   data-testid="edit-plugin-schema"
                   @click.stop="handleCustomEdit(plugin.name, plugin.customPluginType!)"
                 >
                   {{ t('actions.edit') }}
                 </KDropdownItem>
                 <KDropdownItem
-                  v-if="canDeleteCustomPlugin"
                   danger
                   data-testid="delete-plugin-schema"
                   has-divider
@@ -66,7 +67,7 @@
 
         <div
           class="plugin-card-body"
-          :data-testid="plugin.name"
+          :data-testid="`${plugin.id}-card-body`"
           :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
           @click="handleCustomClick"
         >
@@ -113,17 +114,10 @@ const emit = defineEmits<{
   (e: 'custom-plugin-delete'): void /** internal use only */
 }>()
 
+// canDeleteCustomPlugin and canEditCustomPlugin are removed because consuming apps are not passing them down
 const props = defineProps<{
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
   config: KonnectPluginSelectConfig | KongManagerPluginSelectConfig
-  /**
-   * Whether or not user has rights to delete custom plugins
-   */
-  canDeleteCustomPlugin?: boolean
-  /**
-   * Whether or not user has rights to edit custom plugins
-   */
-  canEditCustomPlugin?: boolean
   /**
    * Plugin to display in the card
    */
@@ -134,7 +128,7 @@ const router = useRouter()
 const { i18n: { t } } = composables.useI18n()
 const controlPlaneId = computed((): string => props.config.app === 'konnect' ? props.config.controlPlaneId : '')
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
-const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && controlPlaneId.value && (props.canDeleteCustomPlugin || props.canEditCustomPlugin)))
+const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && controlPlaneId.value))
 
 const handleClick = (): void => {
   router.push(props.config.getCreateRoute(props.plugin.id))
