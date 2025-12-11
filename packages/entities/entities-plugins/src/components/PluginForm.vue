@@ -139,7 +139,7 @@
             :entity-record="viewConfigurationRecord"
             :entity-type="SupportedEntityType.Plugin"
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
-            :kong-admin-api-url="config.app === 'kongManager' ? config.kongAdminApiUrl : undefined"
+            :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
             :workspace="config.app === 'kongManager' ? config.workspace : undefined"
           />
         </template>

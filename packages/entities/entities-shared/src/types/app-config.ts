@@ -37,6 +37,4 @@ export interface KongManagerConfig extends BaseAppConfig {
     edition: 'enterprise' | 'community'
     version: string
   }
-  /** Kong Admin API URL, e.g. https://localhost:8001 */
-  kongAdminApiUrl?: string
 }

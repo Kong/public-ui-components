@@ -170,7 +170,6 @@ const kongManagerConfig = ref<KongManagerPluginFormConfig>({
   app: 'kongManager',
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
-  kongAdminApiUrl: 'https://localhost:8001',
   // force the scope
   // entityType: 'consumers',
   // entityId: '123-abc-i-lover-cats',
