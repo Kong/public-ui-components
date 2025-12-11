@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.35.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.34.1...@kong-ui-public/entities-shared@3.35.0) (2025-12-11)
+
+
+### Features
+
+* **entities-shared:** highlight codeblock ([#2723](https://github.com/Kong/public-ui-components/issues/2723)) ([b413990](https://github.com/Kong/public-ui-components/commit/b4139907e6f32f08c4a66a6c4ccb68b7facaaa08))
+
+
+
+
+
 ## [3.34.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.34.0...@kong-ui-public/entities-shared@3.34.1) (2025-12-10)
 
 
