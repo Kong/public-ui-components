@@ -3,7 +3,7 @@ import DeckCodeBlock from './DeckCodeBlock.vue'
 import { SupportedEntityType } from '../../types'
 import { route, pluginRecord, keySetRecord } from '../../../fixtures/mockData'
 
-function selectShell(shell: 'bash' | 'pwsh') {
+function selectShell(shell: 'bash' | 'powershell') {
   cy.get('.k-select').click()
   cy.getTestId(`select-item-${shell}`).click()
 }
@@ -35,7 +35,7 @@ describe('<DeckCodeBlock />', () => {
         controlPlaneName,
       },
     })
-    selectShell('pwsh')
+    selectShell('powershell')
 
     cy.get('#deck-env-codeblock')
       .should('contain.text', '$env:DECK_KONNECT_TOKEN = "YOUR_KONNECT_PAT"')

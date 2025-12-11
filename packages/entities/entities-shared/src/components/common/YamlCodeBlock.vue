@@ -6,6 +6,7 @@
       :code="yamlContent"
       language="yaml"
       theme="dark"
+      @code-block-render="highlightCodeBlock"
     />
   </div>
 </template>
@@ -14,6 +15,7 @@
 import yaml from 'js-yaml'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
+import { highlightCodeBlock } from '../../utils/code-block'
 
 const props = defineProps({
   /** A record to indicate the entity's configuration, used to populate the YAML code block */

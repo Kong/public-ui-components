@@ -6,6 +6,7 @@
       :code="terraformContent"
       language="terraform"
       theme="dark"
+      @code-block-render="highlightCodeBlock"
     />
   </div>
 </template>
@@ -13,6 +14,7 @@
 <script setup lang="ts">
 import { type PropType, computed } from 'vue'
 import { EventGatewayTypesArray, type SupportedEntityType, SupportedEntityTypesArray, IdentityTypesArray } from '../../types'
+import { highlightCodeBlock } from '../../utils/code-block'
 
 const SINGLE_INDENT = '  '
 

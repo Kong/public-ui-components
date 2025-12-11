@@ -5,12 +5,12 @@
       :items="shells"
     >
       <template #item-template="{ item }">
-        <LanguageShellIcon v-if="item.value === 'pwsh'" />
+        <LanguageShellIcon v-if="item.value === 'powershell'" />
         <LanguageBashIcon v-else />
         {{ item.label }}
       </template>
       <template #selected-item-template="{ item }">
-        <LanguageShellIcon v-if="item.value === 'pwsh'" />
+        <LanguageShellIcon v-if="item.value === 'powershell'" />
         <LanguageBashIcon v-else />
         {{ item.label }}
       </template>
@@ -30,16 +30,18 @@
     <KCodeBlock
       id="deck-env-codeblock"
       :code="envCommand"
-      language="shell"
+      :language="shell"
       single-line
       theme="dark"
+      @code-block-render="highlightCodeBlock"
     />
     <KCodeBlock
       v-if="props.entityRecord"
       id="deck-codeblock"
       :code="deckCommand"
-      language="shell"
+      :language="shell"
       theme="dark"
+      @code-block-render="highlightCodeBlock"
     />
   </div>
 </template>
@@ -48,10 +50,11 @@
 import yaml from 'js-yaml'
 import { computed, ref } from 'vue'
 import { KExternalLink } from '@kong/kongponents'
+import { LanguageShellIcon, LanguageBashIcon } from '@kong/icons'
+import { highlightCodeBlock } from '../../utils/code-block'
 import composables from '../../composables'
 import { SupportedEntityType } from '../../types'
 import type { SupportedEntityDeck } from '../../types'
-import { LanguageShellIcon, LanguageBashIcon } from '@kong/icons'
 
 const props = defineProps<{
   /** A record to indicate the entity's configuration, used to populate the decK code block */
@@ -66,13 +69,13 @@ const { i18n, i18nT } = composables.useI18n()
 
 const shells = [
   { value: 'bash', label: 'Linux / macOS Bash' },
-  { value: 'pwsh', label: 'Windows PowerShell' },
+  { value: 'powershell', label: 'Windows PowerShell' },
 ]
 
 const shell = ref((() => {
   const userAgent = navigator.userAgent.toLowerCase()
   if (userAgent.includes('windows')) {
-    return 'pwsh'
+    return 'powershell'
   } else {
     return 'bash'
   }
@@ -142,7 +145,8 @@ const deckCommand = computed((): string => {
 
   if (shell.value === 'bash') {
     // Bash uses echo with single quotes
-    return `echo '${yamlContent.value}
+    return `echo '
+${yamlContent.value}
 ' | ${command}`
   } else {
     // PowerShell uses @' '@ for multi-line strings
