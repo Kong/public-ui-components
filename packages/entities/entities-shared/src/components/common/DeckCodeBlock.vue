@@ -17,7 +17,7 @@
     </KSelect>
     <p>
       <i18nT :keypath="`deckCodeBlock.hint.${app}`">
-        <template #token>
+        <template v-if="app === 'konnect'" #token>
           <KBadge>DECK_KONNECT_TOKEN</KBadge>
         </template>
         <template #link>
