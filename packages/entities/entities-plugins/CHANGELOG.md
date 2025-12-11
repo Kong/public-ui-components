@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.136.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.136.3...@kong-ui-public/entities-plugins@9.136.4) (2025-12-11)
+
+
+### Bug Fixes
+
+* **entities-plugins:** freeform - remove empty helper text slot ([#2727](https://github.com/Kong/public-ui-components/issues/2727)) ([e7ce586](https://github.com/Kong/public-ui-components/commit/e7ce5868d8c718eba5740a72ad443c6495dd84d3))
+
+
+
+
+
 ## [9.136.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.136.2...@kong-ui-public/entities-plugins@9.136.3) (2025-12-11)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
