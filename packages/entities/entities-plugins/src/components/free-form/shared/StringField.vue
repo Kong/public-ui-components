@@ -38,7 +38,7 @@
         </slot>
       </template>
       <template
-        v-if="!(multiline && error)"
+        v-if="!(multiline && error) && $slots.help"
         #help
       >
         <slot name="help" />
