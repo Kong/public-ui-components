@@ -10,7 +10,7 @@
       <KCodeBlock
         id="json-endpoint-codeblock"
         :code="props.fetcherUrl"
-        language="json"
+        language="plaintext"
         single-line
         theme="dark"
       />
@@ -22,6 +22,7 @@
       :code="JSON.stringify(jsonContent, null, 2)"
       language="json"
       theme="dark"
+      @code-block-render="highlightCodeBlock"
     />
   </div>
 </template>
@@ -30,6 +31,7 @@
 import { computed, type PropType } from 'vue'
 import type { BadgeAppearance } from '@kong/kongponents'
 import type { KonnectBaseEntityConfig, KongManagerBaseEntityConfig, KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
+import { highlightCodeBlock } from '../../utils/code-block'
 
 const props = defineProps({
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
