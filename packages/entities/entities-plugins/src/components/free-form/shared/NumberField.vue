@@ -9,6 +9,7 @@
   <div
     v-else
     v-show="!hide"
+    class="ff-number-wrapper"
   >
     <EnhancedInput
       class="ff-number-field"
@@ -19,6 +20,7 @@
       }"
       :data-autofocus="isAutoFocus"
       :data-testid="`ff-${field.path.value}`"
+      :disabled="field.isInheritedDisabled.value"
       :model-value="modelValue"
       :type="inputType"
       @update:model-value="handleUpdate"
@@ -37,6 +39,7 @@
     <component
       :is="autofillSlot"
       v-if="autofillSlot && realShowVaultSecretPicker"
+      :disabled="field.isInheritedDisabled.value"
       :schema="schema"
       :update="handleUpdate"
       :value="fieldValue ?? ''"
@@ -156,5 +159,9 @@ const inputType = computed(() => realShowVaultSecretPicker.value ? 'text' : 'num
   :deep(.k-tooltip p) {
     margin: 0;
   }
+}
+
+.ff-number-wrapper {
+  width: 100%;
 }
 </style>

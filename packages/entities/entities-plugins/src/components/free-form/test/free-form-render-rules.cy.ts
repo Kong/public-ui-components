@@ -185,8 +185,7 @@ describe('Render Rules', () => {
           },
         })
 
-        cy.getTestId('ff-object-add-btn-config').should('exist')
-        cy.getTestId('ff-object-add-btn-config').click()
+        cy.getTestId('ff-object-toggle-btn-config').click()
 
         // Verify order within config object
         cy.getTestId('ff-object-config').within(() => {
@@ -225,9 +224,8 @@ describe('Render Rules', () => {
         cy.getTestId('ff-field_b').should('exist')
         cy.getTestId('ff-field_a').should('exist')
 
-        // Add config object
-        cy.getTestId('ff-object-add-btn-config').should('exist')
-        cy.getTestId('ff-object-add-btn-config').click()
+        // Expand config object
+        cy.getTestId('ff-object-toggle-btn-config').click()
 
         // Verify nested level order: y, x within config
         cy.getTestId('ff-object-config').within(() => {
@@ -485,9 +483,8 @@ describe('Render Rules', () => {
           },
         })
 
-        // Add config object
-        cy.getTestId('ff-object-add-btn-config').should('exist').should('be.visible')
-        cy.getTestId('ff-object-add-btn-config').click()
+        // Expand config object
+        cy.getTestId('ff-object-toggle-btn-config').click()
 
         // Initially field_redis should be hidden (field_strategy has no value)
         cy.getTestId('ff-config.field_strategy').should('exist').should('be.visible')

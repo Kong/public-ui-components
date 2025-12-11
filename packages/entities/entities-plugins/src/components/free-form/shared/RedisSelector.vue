@@ -16,6 +16,7 @@
         card-orientation="horizontal"
         data-testid="shared-redis-config-radio"
         :description="t('redis.shared_configuration.description')"
+        :disabled="isInheritedDisabled"
         :label="t('redis.shared_configuration.label')"
         :selected-value="true"
       />
@@ -25,6 +26,7 @@
         card-orientation="horizontal"
         data-testid="dedicated-redis-config-radio"
         :description="t('redis.dedicated_configuration.description')"
+        :disabled="isInheritedDisabled"
         :label="t('redis.dedicated_configuration.label')"
         :selected-value="false"
       />
@@ -44,6 +46,7 @@
       >
         <RedisConfigurationSelector
           data-testid="redis-config-select-trigger"
+          :disabled="isInheritedDisabled"
           :model-value="selectedRedisConfigItem"
           :redis-type="redisType"
           @error-change="err => sharedRedisConfigFetchError = err"
@@ -173,7 +176,7 @@ const partialsSaved = ref<PartialArray | undefined>()
 // initialize getter and setter for redis partial/redis fields
 const { value: partialValue } = useFormData<PartialArray | null | undefined>('$.partials')
 
-const { value: redisFieldsValue, hide } = useField<Redis | undefined>(formRedisPath)
+const { value: redisFieldsValue, hide, isInheritedDisabled } = useField<Redis | undefined>(formRedisPath)
 
 const formConfig : KonnectBaseFormConfig | KongManagerBaseFormConfig = inject(FORMS_CONFIG)!
 

@@ -14,6 +14,7 @@
     class="ff-enum-field"
     :clearable="!fieldAttrs.required"
     :data-testid="`ff-${field.path.value}`"
+    :disabled="field.isInheritedDisabled.value"
     :items="realItems"
     :kpop-attributes="{ 'data-testid': `${field.path.value}-items` }"
     @update:model-value="(value: string | string[] | null) => emit('update', value)"

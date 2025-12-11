@@ -35,6 +35,11 @@ export function getName(p: string): string {
   return arr[arr.length - 1]
 }
 
+export function getParentPath(p: string): string {
+  const arr = toArray(p)
+  return resolve(...arr.slice(0, -1))
+}
+
 /**
  * `$.a.b.c` => `a.b.c`
  */
@@ -233,4 +238,30 @@ export function sortFieldsByBundles(
   }
 
   return result
+}
+
+/**
+ * Safely set a value at a path only if all intermediate paths exist.
+ * Unlike lodash.set, this will not create missing intermediate objects.
+ */
+export function safeSet(obj: any, path: string[], value: any): void {
+  if (path.length === 0) return
+
+  // Check if all intermediate paths exist
+  let current = obj
+  for (let i = 0; i < path.length - 1; i++) {
+    const key = path[i]
+    const next = current[key]
+
+    // If any intermediate level is null or undefined, skip setting
+    if (next == null) {
+      return
+    }
+
+    current = next
+  }
+
+  // All intermediate paths exist, set the final value
+  const lastKey = path[path.length - 1]
+  current[lastKey] = value
 }

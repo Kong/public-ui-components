@@ -21,6 +21,7 @@
       :data-1p-ignore="is1pIgnore"
       :data-autofocus="isAutoFocus"
       :data-testid="`ff-${field.path.value}`"
+      :disabled="field.isInheritedDisabled.value"
       :error="error"
       :error-message="errorMessage"
       :help="(multiline && error) ? errorMessage : help"
@@ -47,6 +48,7 @@
     <component
       :is="autofillSlot"
       v-if="autofillSlot && realShowVaultSecretPicker"
+      :disabled="field.isInheritedDisabled.value"
       :schema="schema"
       :update="handleUpdate"
       :value="fieldValue ?? ''"
