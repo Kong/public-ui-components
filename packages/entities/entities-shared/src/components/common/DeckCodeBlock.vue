@@ -15,18 +15,23 @@
         {{ item.label }}
       </template>
     </KSelect>
-    <p>
-      <i18nT :keypath="`deckCodeBlock.hint.${app}`">
-        <template v-if="app === 'konnect'" #token>
-          <KBadge>DECK_KONNECT_TOKEN</KBadge>
-        </template>
-        <template #link>
-          <KExternalLink :href="app === 'konnect' ? 'https://developer.konghq.com/deck/get-started/' : 'https://developer.konghq.com/deck/gateway/configuration/'">
-            {{ i18n.t('deckCodeBlock.documentation') }}
-          </KExternalLink>
-        </template>
-      </i18nT>
-    </p>
+    <i18nT
+      :data-testid="`deck-hint-${app}`"
+      :keypath="`deckCodeBlock.hint.${app}`"
+      tag="p"
+    >
+      <template
+        v-if="app === 'konnect'"
+        #token
+      >
+        <KBadge>DECK_KONNECT_TOKEN</KBadge>
+      </template>
+      <template #link>
+        <KExternalLink :href="app === 'konnect' ? 'https://developer.konghq.com/deck/get-started/' : 'https://developer.konghq.com/deck/gateway/configuration/'">
+          {{ i18n.t('deckCodeBlock.documentation') }}
+        </KExternalLink>
+      </template>
+    </i18nT>
     <KCodeBlock
       v-if="app === 'konnect'"
       id="deck-env-codeblock"

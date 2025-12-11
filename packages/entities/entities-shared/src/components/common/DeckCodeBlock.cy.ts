@@ -48,6 +48,42 @@ describe('<DeckCodeBlock />', () => {
       .should('contain.text', '$env:DECK_KONNECT_TOKEN = "YOUR_KONNECT_PAT"')
   })
 
+  it('should not display env command in Kong Manager', () => {
+    cy.mount(DeckCodeBlock, {
+      props: {
+        app: 'kongManager',
+        entityRecord: route,
+        entityType: SupportedEntityType.Route,
+      },
+    })
+
+    cy.get('#deck-env-codeblock').should('not.exist')
+  })
+
+  it('shows Konnect decK hint', () => {
+    cy.mount(DeckCodeBlock, {
+      props: {
+        app: 'konnect',
+        entityRecord: route,
+        entityType: SupportedEntityType.Route,
+      },
+    })
+    cy.getTestId('deck-hint-kongManager').should('not.exist')
+    cy.getTestId('deck-hint-konnect').should('exist')
+  })
+
+  it('shows Kong Manager decK hint', () => {
+    cy.mount(DeckCodeBlock, {
+      props: {
+        app: 'kongManager',
+        entityRecord: route,
+        entityType: SupportedEntityType.Route,
+      },
+    })
+    cy.getTestId('deck-hint-kongManager').should('exist')
+    cy.getTestId('deck-hint-konnect').should('not.exist')
+  })
+
   it('generates deck command with version, control plane name, entity field and server url', () => {
     cy.mount(DeckCodeBlock, {
       props: {
