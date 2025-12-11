@@ -134,10 +134,13 @@
         </template>
         <template #deck>
           <DeckCodeBlock
+            :app="config.app"
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
             :entity-record="viewConfigurationRecord"
             :entity-type="SupportedEntityType.Plugin"
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :kong-admin-api-url="config.app === 'kongManager' ? config.kongAdminApiUrl : undefined"
+            :workspace="config.app === 'kongManager' ? config.workspace : undefined"
           />
         </template>
       </KTabs>
@@ -325,6 +328,7 @@ const props = defineProps({
   engine: {
     type: String as PropType<'vfg' | 'freeform'>,
     required: false,
+    default: undefined,
   },
 })
 
@@ -386,19 +390,20 @@ const tabs = ref<Tab[]>([
   },
 ])
 
-// terraform and decK only supported in konnect
+// terraform only supported in konnect
 if (props.config.app === 'konnect') {
   // insert terraform as the second option
   tabs.value.splice(1, 0, {
     title: t('view_configuration.terraform'),
     hash: '#terraform',
   })
-  if (props.config.enableDeckTab) {
-    tabs.value.push({
-      title: t('view_configuration.deck'),
-      hash: '#deck',
-    })
-  }
+}
+
+if (props.config.app === 'kongManager' || props.config.enableDeckTab) {
+  tabs.value.push({
+    title: t('view_configuration.deck'),
+    hash: '#deck',
+  })
 }
 
 // For array-typed fields, if their elements are deeply nested objects,

@@ -16,18 +16,19 @@
       </template>
     </KSelect>
     <p>
-      <i18nT keypath="deckCodeBlock.hint">
+      <i18nT :keypath="`deckCodeBlock.hint.${app}`">
         <template #token>
           <KBadge>DECK_KONNECT_TOKEN</KBadge>
         </template>
         <template #link>
-          <KExternalLink href="https://developer.konghq.com/deck/get-started/">
+          <KExternalLink :href="app === 'konnect' ? 'https://developer.konghq.com/deck/get-started/' : 'https://developer.konghq.com/deck/gateway/configuration/'">
             {{ i18n.t('deckCodeBlock.documentation') }}
           </KExternalLink>
         </template>
       </i18nT>
     </p>
     <KCodeBlock
+      v-if="app === 'konnect'"
       id="deck-env-codeblock"
       :code="envCommand"
       :language="shell"
@@ -57,12 +58,16 @@ import { SupportedEntityType } from '../../types'
 import type { SupportedEntityDeck } from '../../types'
 
 const props = defineProps<{
+  app: 'konnect' | 'kongManager'
   /** A record to indicate the entity's configuration, used to populate the decK code block */
   entityRecord: Record<string, any>
   entityType: SupportedEntityDeck
   /** e.g. https://us.api.konghq.tech, used to pass --konnect-addr parameter to decK */
   geoApiServerUrl?: string
   controlPlaneName?: string
+  /** e.g. https://localhost:8001, used to pass --kong-addr parameter to decK */
+  kongAdminApiUrl?: string
+  workspace?: string
 }>()
 
 const { i18n, i18nT } = composables.useI18n()
@@ -89,6 +94,8 @@ const baseObject = computed(() => {
     obj._konnect = {
       control_plane_name: props.controlPlaneName,
     }
+  } else if (props.workspace) {
+    obj._workspace = props.workspace
   }
   return obj
 })
@@ -141,6 +148,8 @@ const deckCommand = computed((): string => {
 
   if (props.geoApiServerUrl) {
     command += ` --konnect-addr ${props.geoApiServerUrl}`
+  } else if (props.kongAdminApiUrl) {
+    command += ` --kong-addr ${props.kongAdminApiUrl}`
   }
 
   if (shell.value === 'bash') {

@@ -117,10 +117,13 @@
         </template>
         <template #deck>
           <DeckCodeBlock
+            :app="config.app"
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
             :entity-record="props.formFields"
             :entity-type="entityType as SupportedEntityDeck"
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :kong-admin-api-url="config.app === 'kongManager' ? config.kongAdminApiUrl : undefined"
+            :workspace="config.app === 'kongManager' ? config.workspace : undefined"
           />
         </template>
       </KTabs>
