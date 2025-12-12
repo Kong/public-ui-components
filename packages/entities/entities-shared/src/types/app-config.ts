@@ -22,7 +22,7 @@ export interface KonnectConfig extends BaseAppConfig {
   isExactMatch?: boolean
   /** The control plane name */
   controlPlaneName?: string
-  /** Geo server api url, e.g. https://us.api.konghq.tech */
+  /** Geo server API URL, e.g. https://us.api.konghq.tech */
   geoApiServerUrl?: string
 }
 

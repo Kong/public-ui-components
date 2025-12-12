@@ -114,7 +114,10 @@
     }
   },
   "deckCodeBlock": {
-    "hint": "The {token} environment variable must be added first. See {link} for details.",
+    "hint": {
+      "konnect": "The {token} environment variable must be added first. See {link} for details.",
+      "kongManager": "If your Admin API is secured, set up authentication following {link}."
+    },
     "documentation": "the documentation"
   }
 }

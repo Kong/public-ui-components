@@ -117,10 +117,13 @@
         </template>
         <template #deck>
           <DeckCodeBlock
+            :app="config.app"
             :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
             :entity-record="props.formFields"
             :entity-type="entityType as SupportedEntityDeck"
             :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
+            :workspace="config.app === 'kongManager' ? config.workspace : undefined"
           />
         </template>
       </KTabs>
@@ -359,9 +362,13 @@ if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.O
     hash: '#terraform',
   })
 }
+
 // decK is only available for certain entity types
 // https://developer.konghq.com/deck/reference/entities/
-if (props.config.app === 'konnect' && props.config.enableDeckTab && SupportedEntityDeckArray.includes(props.entityType as any)) {
+const isSupportedEntity = SupportedEntityDeckArray.includes(props.entityType as any)
+const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckTab
+
+if (isDeckEnabled && isSupportedEntity) {
   tabs.value.push({
     title: t('baseForm.configuration.deck'),
     hash: '#deck',
