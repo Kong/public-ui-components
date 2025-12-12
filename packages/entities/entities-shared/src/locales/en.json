@@ -13,7 +13,8 @@
   },
   "baseForm": {
     "actions": {
-      "viewConfiguration": "View Configuration",
+      "viewConfiguration": "View configuration",
+      "hideConfiguration": "Hide configuration",
       "save": "Save",
       "cancel": "Cancel",
       "back": "Back"
