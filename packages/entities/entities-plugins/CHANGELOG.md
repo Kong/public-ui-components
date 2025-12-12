@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.136.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.136.4...@kong-ui-public/entities-plugins@9.136.5) (2025-12-12)
+
+
+### Bug Fixes
+
+* **entities-plugins:** adding wrapper style to number field ([#2728](https://github.com/Kong/public-ui-components/issues/2728)) ([8b789d9](https://github.com/Kong/public-ui-components/commit/8b789d99694e369e67bd642c7ff25cfa54a597ac))
+
+
+
+
+
 ## [9.136.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.136.3...@kong-ui-public/entities-plugins@9.136.4) (2025-12-11)
 
 
