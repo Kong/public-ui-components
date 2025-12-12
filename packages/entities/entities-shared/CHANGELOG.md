@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.36.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.35.0...@kong-ui-public/entities-shared@3.36.0) (2025-12-12)
+
+
+### Features
+
+* **entities-shared,entities-plugins:** add deck tab for kong manager ([#2726](https://github.com/Kong/public-ui-components/issues/2726)) ([316f6f0](https://github.com/Kong/public-ui-components/commit/316f6f067522508542c7aeba9ff6c0465d14eeb1))
+
+
+
+
+
 # [3.35.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.34.1...@kong-ui-public/entities-shared@3.35.0) (2025-12-11)
 
 
