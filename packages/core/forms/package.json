@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@kong/icons": "^1.41.0",
-    "dompurify": "^3.2.6",
+    "dompurify": "^3.3.1",
     "fecha": "^4.2.3",
     "lodash-es": "^4.17.21"
   },
