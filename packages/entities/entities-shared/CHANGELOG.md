@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.36.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.0...@kong-ui-public/entities-shared@3.36.1) (2025-12-12)
+
+
+### Bug Fixes
+
+* **entities-shared:** base form config slideout touchups [KHCP-18926] ([#2731](https://github.com/Kong/public-ui-components/issues/2731)) ([3225df8](https://github.com/Kong/public-ui-components/commit/3225df8a72e5e9c4ea7354e97b380b2d24e70e8a))
+
+
+
+
+
 # [3.36.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.35.0...@kong-ui-public/entities-shared@3.36.0) (2025-12-12)
 
 
