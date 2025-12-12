@@ -311,17 +311,15 @@ const noSearchResults = computed((): boolean => {
 })
 
 const tabs = computed(() => {
-  return props.config.app === 'konnect'
-    ? [{
-      hash: '#kong',
-      title: t('plugins.select.tabs.kong.title'),
-    },
-    {
-      hash: '#custom',
-      title: t('plugins.select.tabs.custom.title'),
-      disabled: ['none', 'disabled'].includes(props.customPluginSupport),
-    }]
-    : []
+  return [{
+    hash: '#kong',
+    title: t('plugins.select.tabs.kong.title'),
+  },
+  {
+    hash: '#custom',
+    title: t('plugins.select.tabs.custom.title'),
+    disabled: ['none', 'disabled'].includes(props.customPluginSupport),
+  }]
 })
 
 const activeTab = computed(() => {
