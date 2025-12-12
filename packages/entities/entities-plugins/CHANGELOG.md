@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.137.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.137.1...@kong-ui-public/entities-plugins@9.137.2) (2025-12-12)
+
+
+### Bug Fixes
+
+* **entities-plugins:** hide mode switcher when enableFlowEditor is false ([#2713](https://github.com/Kong/public-ui-components/issues/2713)) ([bda6767](https://github.com/Kong/public-ui-components/commit/bda676704270b8da1c1b79d4bb8fbf302f326744))
+
+
+
+
+
 ## [9.137.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.137.0...@kong-ui-public/entities-plugins@9.137.1) (2025-12-12)
 
 
