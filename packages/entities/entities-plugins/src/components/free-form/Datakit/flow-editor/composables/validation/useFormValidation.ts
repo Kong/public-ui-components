@@ -20,10 +20,10 @@ interface UseFormValidationOptions<T extends Record<string, ValidatorFn<any>>> {
  * Field handler for convenient error binding and event handling
  */
 interface FieldHandler {
-  onBlur: () => void
-  onUpdate: () => void
-  error: ComputedRef<boolean>
-  errorMessage: ComputedRef<string>
+  validate: () => void
+  update: () => void
+  error: boolean
+  errorMessage: string
 }
 
 /**
@@ -38,7 +38,7 @@ interface UseFormValidationReturn<T extends Record<string, ValidatorFn<any>>> {
   /** Manually trigger full validation */
   validateAll: () => Record<keyof T, string | undefined>
   /** Factory function to create field handlers */
-  createFieldHandler: (fieldName: keyof T, onUpdate?: () => void) => FieldHandler
+  createFieldHandler: (fieldName: keyof T, onUpdate?: () => void) => ComputedRef<FieldHandler>
 }
 
 /**
@@ -116,32 +116,33 @@ export function useFormValidation<T extends Record<string, ValidatorFn<any>>>(
   /**
    * Create a field handler with convenient error binding and event handling
    */
-  function createFieldHandler(fieldName: keyof T, onUpdate?: () => void): FieldHandler {
-    return {
-      onBlur: () => {
-        const data = getValidationData()
-        const field = fields.value[fieldName]
-        if (field) {
-          field.handleBlur(data[fieldName])
-        }
-      },
-      onUpdate: () => {
-        const data = getValidationData()
-        const field = fields.value[fieldName]
-        if (field) {
-          field.handleChange(data[fieldName])
-        }
-        onUpdate?.()
-      },
-      error: computed(() => {
-        const field = fields.value[fieldName]
-        return field ? !field.isValid.value : false
-      }),
-      errorMessage: computed(() => {
-        const field = fields.value[fieldName]
-        return field ? (field.error.value ?? '') : ''
-      }),
+  function createFieldHandler(fieldName: keyof T, onUpdate?: () => void): ComputedRef<FieldHandler> {
+    const validate = () => {
+      const data = getValidationData()
+      const field = fields.value[fieldName]
+      if (field) {
+        field.handleBlur(data[fieldName])
+      }
     }
+
+    const update = () => {
+      onUpdate?.()
+      const data = getValidationData()
+      const field = fields.value[fieldName]
+      if (field) {
+        field.handleChange(data[fieldName])
+      }
+    }
+
+    return computed(() => {
+      const field = fields.value[fieldName]
+      return {
+        validate,
+        update,
+        error: field ? !field.isValid.value : false,
+        errorMessage: field ? (field.error.value ?? '') : '',
+      }
+    })
   }
 
   // Lifecycle integration: validation on mount

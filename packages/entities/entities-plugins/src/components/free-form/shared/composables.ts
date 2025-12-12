@@ -373,6 +373,7 @@ export function useFormShared<T extends Record<string, any> = Record<string, any
     formData: T
     config: ComputedRef<FormConfig<T>>
     onChange?: (newData: T) => void
+    getValue: () => T
   }
 }
 
