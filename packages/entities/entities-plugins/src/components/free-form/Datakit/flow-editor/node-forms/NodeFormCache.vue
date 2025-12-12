@@ -22,11 +22,11 @@
     />
 
     <NumberField
-      :error="ttlHandler.error.value"
-      :error-message="ttlHandler.errorMessage.value"
+      :error="ttlHandler.error"
+      :error-message="ttlHandler.errorMessage"
       name="ttl"
-      @blur="ttlHandler.onBlur"
-      @update:model-value="ttlHandler.onUpdate"
+      @blur="ttlHandler.validate"
+      @update:model-value="ttlHandler.update"
     />
 
     <InputsField

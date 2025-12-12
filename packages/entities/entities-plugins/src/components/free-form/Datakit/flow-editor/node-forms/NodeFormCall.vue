@@ -15,11 +15,11 @@
     </KLabel>
 
     <StringField
-      :error="urlHandler.error.value"
-      :error-message="urlHandler.errorMessage.value"
+      :error="urlHandler.error"
+      :error-message="urlHandler.errorMessage"
       name="url"
-      @blur="urlHandler.onBlur"
-      @update:model-value="urlHandler.onUpdate"
+      @blur="urlHandler.validate"
+      @update:model-value="urlHandler.update"
     />
 
     <HttpMethodField
@@ -28,11 +28,11 @@
     />
 
     <NumberField
-      :error="timeoutHandler.error.value"
-      :error-message="timeoutHandler.errorMessage.value"
+      :error="timeoutHandler.error"
+      :error-message="timeoutHandler.errorMessage"
       name="timeout"
-      @blur="timeoutHandler.onBlur"
-      @update:model-value="timeoutHandler.onUpdate"
+      @blur="timeoutHandler.validate"
+      @update:model-value="timeoutHandler.update"
     />
 
     <StringField

@@ -10,12 +10,18 @@ function selectShell(shell: 'bash' | 'powershell') {
 
 
 describe('<DeckCodeBlock />', () => {
+  // Konnect specific props
   const controlPlaneName = 'test-control-plane'
   const geoApiServerUrl = 'https://us.api.konghq.tech'
+
+  // Kong Manager specific props
+  const workspace = 'default'
+  const kongAdminApiUrl = 'https://localhost:8001'
 
   it('displays bash export command for macOS', () => {
     cy.mount(DeckCodeBlock, {
       props: {
+        app: 'konnect',
         entityRecord: route,
         entityType: SupportedEntityType.Route,
         controlPlaneName,
@@ -30,6 +36,7 @@ describe('<DeckCodeBlock />', () => {
   it('displays PowerShell env command for Windows', () => {
     cy.mount(DeckCodeBlock, {
       props: {
+        app: 'konnect',
         entityRecord: route,
         entityType: SupportedEntityType.Route,
         controlPlaneName,
@@ -41,9 +48,46 @@ describe('<DeckCodeBlock />', () => {
       .should('contain.text', '$env:DECK_KONNECT_TOKEN = "YOUR_KONNECT_PAT"')
   })
 
+  it('should not display env command in Kong Manager', () => {
+    cy.mount(DeckCodeBlock, {
+      props: {
+        app: 'kongManager',
+        entityRecord: route,
+        entityType: SupportedEntityType.Route,
+      },
+    })
+
+    cy.get('#deck-env-codeblock').should('not.exist')
+  })
+
+  it('shows Konnect decK hint', () => {
+    cy.mount(DeckCodeBlock, {
+      props: {
+        app: 'konnect',
+        entityRecord: route,
+        entityType: SupportedEntityType.Route,
+      },
+    })
+    cy.getTestId('deck-hint-kongManager').should('not.exist')
+    cy.getTestId('deck-hint-konnect').should('exist')
+  })
+
+  it('shows Kong Manager decK hint', () => {
+    cy.mount(DeckCodeBlock, {
+      props: {
+        app: 'kongManager',
+        entityRecord: route,
+        entityType: SupportedEntityType.Route,
+      },
+    })
+    cy.getTestId('deck-hint-kongManager').should('exist')
+    cy.getTestId('deck-hint-konnect').should('not.exist')
+  })
+
   it('generates deck command with version, control plane name, entity field and server url', () => {
     cy.mount(DeckCodeBlock, {
       props: {
+        app: 'konnect',
         entityRecord: route,
         entityType: SupportedEntityType.Route,
         controlPlaneName,
@@ -60,6 +104,23 @@ describe('<DeckCodeBlock />', () => {
       .should('contain.text', `--konnect-addr ${geoApiServerUrl}`)
   })
 
+  it('generates deck command for Kong Manager with workspace and kong admin api url', () => {
+    cy.mount(DeckCodeBlock, {
+      props: {
+        app: 'kongManager',
+        entityRecord: route,
+        entityType: SupportedEntityType.Route,
+        workspace,
+        kongAdminApiUrl,
+      },
+    })
+
+    cy.get('#deck-codeblock')
+      .should('be.visible')
+      .should('contain.text', `_workspace: ${workspace}`)
+      .should('contain.text', `--kong-addr ${kongAdminApiUrl}`)
+  })
+
   it('converts referenced id object to id string', () => {
     const pluginWithService = {
       ...pluginRecord,
@@ -68,6 +129,7 @@ describe('<DeckCodeBlock />', () => {
 
     cy.mount(DeckCodeBlock, {
       props: {
+        app: 'konnect',
         entityRecord: pluginWithService,
         entityType: SupportedEntityType.Plugin,
         controlPlaneName,
@@ -82,6 +144,7 @@ describe('<DeckCodeBlock />', () => {
   it('generates key_sets field for KeySet entity', () => {
     cy.mount(DeckCodeBlock, {
       props: {
+        app: 'konnect',
         entityRecord: keySetRecord,
         entityType: SupportedEntityType.KeySet,
         controlPlaneName,

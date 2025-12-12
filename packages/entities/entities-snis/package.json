@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-snis",
-  "version": "3.10.23",
+  "version": "3.10.24",
   "type": "module",
   "main": "./dist/entities-snis.umd.js",
   "module": "./dist/entities-snis.es.js",

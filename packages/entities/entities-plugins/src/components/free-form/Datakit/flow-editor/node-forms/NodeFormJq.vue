@@ -17,15 +17,15 @@
     <!-- todo(zehao): replace to monaco editor -->
     <StringField
       autosize
-      :error="jqHandler.error.value"
-      :error-message="jqHandler.errorMessage.value"
+      :error="jqHandler.error"
+      :error-message="jqHandler.errorMessage"
       :label="jqFieldName"
       :label-attributes="{}"
       multiline
       name="jq"
       resizable
-      @blur="jqHandler.onBlur"
-      @update:model-value="jqHandler.onUpdate"
+      @blur="jqHandler.validate"
+      @update:model-value="jqHandler.update"
     >
       <template #help>
         <i18nT keypath="plugins.free-form.datakit.flow_editor.node_properties.jq.help">

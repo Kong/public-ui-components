@@ -439,6 +439,7 @@ function hasScopeId(value: any): value is { id: string } {
   display: flex;
   flex-direction: column;
   gap: $kui-space-80;
+  padding-bottom: $kui-space-80;
 
   .scope {
     display: grid;

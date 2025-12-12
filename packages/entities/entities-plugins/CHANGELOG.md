@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.137.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.137.1...@kong-ui-public/entities-plugins@9.137.2) (2025-12-12)
+
+
+### Bug Fixes
+
+* **entities-plugins:** hide mode switcher when enableFlowEditor is false ([#2713](https://github.com/Kong/public-ui-components/issues/2713)) ([bda6767](https://github.com/Kong/public-ui-components/commit/bda676704270b8da1c1b79d4bb8fbf302f326744))
+
+
+
+
+
+## [9.137.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.137.0...@kong-ui-public/entities-plugins@9.137.1) (2025-12-12)
+
+
+### Bug Fixes
+
+* **validation:** fix field update timing and improve naming ([#2729](https://github.com/Kong/public-ui-components/issues/2729)) ([3eb27b8](https://github.com/Kong/public-ui-components/commit/3eb27b89ce9feb16bc5c2eb2b6acf567c856b4f6))
+
+
+
+
+
+# [9.137.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.136.5...@kong-ui-public/entities-plugins@9.137.0) (2025-12-12)
+
+
+### Features
+
+* **entities-shared,entities-plugins:** add deck tab for kong manager ([#2726](https://github.com/Kong/public-ui-components/issues/2726)) ([316f6f0](https://github.com/Kong/public-ui-components/commit/316f6f067522508542c7aeba9ff6c0465d14eeb1))
+
+
+
+
+
+## [9.136.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.136.4...@kong-ui-public/entities-plugins@9.136.5) (2025-12-12)
+
+
+### Bug Fixes
+
+* **entities-plugins:** adding wrapper style to number field ([#2728](https://github.com/Kong/public-ui-components/issues/2728)) ([8b789d9](https://github.com/Kong/public-ui-components/commit/8b789d99694e369e67bd642c7ff25cfa54a597ac))
+
+
+
+
+
 ## [9.136.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.136.3...@kong-ui-public/entities-plugins@9.136.4) (2025-12-11)
 
 

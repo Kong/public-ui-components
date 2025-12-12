@@ -11,11 +11,11 @@
     />
 
     <NumberField
-      :error="statusHandler.error.value"
-      :error-message="statusHandler.errorMessage.value"
+      :error="statusHandler.error"
+      :error-message="statusHandler.errorMessage"
       name="status"
-      @blur="statusHandler.onBlur"
-      @update:model-value="statusHandler.onUpdate"
+      @blur="statusHandler.validate"
+      @update:model-value="statusHandler.update"
     />
 
     <BooleanField
