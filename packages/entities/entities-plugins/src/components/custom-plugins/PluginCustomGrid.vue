@@ -147,14 +147,14 @@ const emitPluginData = (plugin: PluginType) => {
 }
 
 const modifiedCustomPlugins = computed((): PluginType[] => {
-  if (props.config.app === 'kongManager') {
-    return []
-  }
+  // if (props.config.app === 'kongManager') {
+  //   return []
+  // }
 
   const customPlugins: PluginType[] = JSON.parse(JSON.stringify(props.pluginList))[PluginGroup.CUSTOM_PLUGINS] || []
 
   // ADD CUSTOM_PLUGIN_CREATE as the first card if allowed creation
-  return props.canCreateCustomPlugin && props.navigateOnClick && props.config.createCustomRoute
+  return props.canCreateCustomPlugin && props.navigateOnClick
     ? ([{
       id: 'custom-plugin-create',
       name: t('plugins.select.tabs.custom.create.name'),
