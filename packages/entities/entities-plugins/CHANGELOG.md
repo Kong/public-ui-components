@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.137.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.137.0...@kong-ui-public/entities-plugins@9.137.1) (2025-12-12)
+
+
+### Bug Fixes
+
+* **validation:** fix field update timing and improve naming ([#2729](https://github.com/Kong/public-ui-components/issues/2729)) ([3eb27b8](https://github.com/Kong/public-ui-components/commit/3eb27b89ce9feb16bc5c2eb2b6acf567c856b4f6))
+
+
+
+
+
 # [9.137.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.136.5...@kong-ui-public/entities-plugins@9.137.0) (2025-12-12)
 
 
