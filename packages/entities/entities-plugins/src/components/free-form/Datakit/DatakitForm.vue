@@ -1,6 +1,6 @@
 <template>
   <Teleport
-    v-if="enableDatakitM2"
+    v-if="enableDatakitM2 && enableFlowEditor"
     :disabled="!hasTeleportTarget"
     to="#plugin-form-page-actions"
   >
