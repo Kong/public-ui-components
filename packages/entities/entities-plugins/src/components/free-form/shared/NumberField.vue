@@ -9,6 +9,7 @@
   <div
     v-else
     v-show="!hide"
+    class="ff-number-field-wrapper"
   >
     <EnhancedInput
       class="ff-number-field"
@@ -152,9 +153,13 @@ const inputType = computed(() => realShowVaultSecretPicker.value ? 'text' : 'num
 </script>
 
 <style lang="scss" scoped>
-.ff-number-field {
-  :deep(.k-tooltip p) {
-    margin: 0;
+.ff-number-field-wrapper {
+  width: 100%;
+
+  .ff-number-field {
+    :deep(.k-tooltip p) {
+      margin: 0;
+    }
   }
 }
 </style>
