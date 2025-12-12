@@ -56,7 +56,7 @@
               :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-view-configuration`"
               @click="toggle()"
             >
-              {{ t('baseForm.actions.viewConfiguration') }}
+              {{ isToggled ? t('baseForm.actions.hideConfiguration') : t('baseForm.actions.viewConfiguration') }}
             </KButton>
             <KButton
               appearance="secondary"
@@ -90,7 +90,9 @@
       @close="toggle()"
     >
       <div>
-        {{ t('baseForm.configuration.message') }}
+        <slot name="configuration-slideout-message">
+          {{ t('baseForm.configuration.message') }}
+        </slot>
       </div>
       <KTabs
         data-testid="form-view-configuration-slideout-tabs"

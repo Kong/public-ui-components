@@ -76,7 +76,7 @@ describe('<EntityBaseForm />', () => {
     cy.getTestId(`${entityType}-create-form-submit`).should('contain.text', saveText)
   })
 
-  it('displays View Configuration and Slideout when FF is enabled', () => {
+  it('displays View Configuration and Slideout when opened', () => {
     cy.mount(EntityBaseForm, {
       props: {
         config,
@@ -93,6 +93,28 @@ describe('<EntityBaseForm />', () => {
     cy.getTestId('form-view-configuration-slideout-tabs').should('exist')
     cy.get('.json-config').should('exist')
     cy.getTestId('deck-tab').should('exist')
+  })
+
+  it('displays slotted message in configuration slideout when provided', () => {
+    const slottedElementTestId = 'custom-slideout-message'
+
+    cy.mount(EntityBaseForm, {
+      props: {
+        config,
+        formFields: route,
+        entityType,
+        canSubmit: true,
+      },
+      slots: {
+        'configuration-slideout-message': `<p data-testid="${slottedElementTestId}">This is a custom slideout message</p>`,
+      },
+    })
+
+    cy.getTestId(`${entityType}-create-form-view-configuration`).should('be.visible')
+    cy.getTestId(`${entityType}-create-form-view-configuration`).click()
+
+    cy.getTestId('form-view-configuration-slideout').should('exist')
+    cy.getTestId(slottedElementTestId).should('exist')
   })
 
   it('displays error message when provided', () => {
