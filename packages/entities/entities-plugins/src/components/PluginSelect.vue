@@ -262,7 +262,7 @@ const flattenPluginMap = computed(() => {
   return Object.entries(pluginsList.value)
     .filter(([group]) => group !== PluginGroup.CUSTOM_PLUGINS)
     .reduce((m, [, plugins]) => {
-      for (const plugin of plugins) {
+      for (const plugin of plugins ?? []) {
         m[plugin.id] = plugin
       }
       return m
