@@ -1,3 +1,5 @@
+import type { ConfigNodeType } from './types'
+
 /** The 5 implicit nodes always present. */
 export const IMPLICIT_NODE_TYPES = [
   'request',
@@ -24,7 +26,16 @@ export const CONFIG_NODE_TYPES = [
   'static',
   'branch',
   'cache',
+  'xml_to_json',
+  'json_to_xml',
 ] as const
+
+export const M2_NODE_TYPES: ConfigNodeType[] = [
+  'branch',
+  'cache',
+  'xml_to_json',
+  'json_to_xml',
+]
 
 export const HTTP_METHODS = [
   'GET',

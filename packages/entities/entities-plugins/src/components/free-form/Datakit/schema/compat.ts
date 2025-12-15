@@ -99,29 +99,69 @@ const ExitNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('exit'),
   status: z.union([z.number(), z.string()]).nullish(),
   warn_headers_sent: z.boolean().nullish(),
-  output: z.never().optional(),
-  outputs: z.never().optional(),
+  output: z.never().nullish(),
+  outputs: z.never().nullish(),
 }).strict()
 
 const JqNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('jq'),
   jq: z.string().nullish(),
-  outputs: z.never().optional(),
+  outputs: z.never().nullish(),
 }).strict()
+
+const XmlToJsonNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('xml_to_json'),
+  recognize_type: z.boolean().nullish(),
+  attributes_block_name: z.string().nullish(),
+  attributes_name_prefix: z.string().nullish(),
+  text_block_name: z.string().nullish(),
+  text_as_property: z.boolean().nullish(),
+  xpath: z.string().nullish(),
+  inputs: z.never().nullish(),
+  outputs: z.never().nullish(),
+})
+  .strict()
+
+const JsonToXmlNodeSchema = ConfigNodeBaseSchema.safeExtend({
+  type: z.literal('json_to_xml'),
+  attributes_block_name: z.string().nullish(),
+  attributes_name_prefix: z.string().nullish(),
+  root_element_name: z.string().nullish(),
+  text_block_name: z.string().nullish(),
+  inputs: z.record(z.string(), LooseConnectionSchema.nullish()).nullish(),
+  outputs: z.never().nullish(),
+})
+  .strict()
+  .superRefine((val, ctx) => {
+    if (!val.attributes_block_name && !val.attributes_name_prefix) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['attributes_block_name'],
+        message:
+          'At least one of attributes_block_name or attributes_name_prefix is required',
+      })
+      ctx.addIssue({
+        code: 'custom',
+        path: ['attributes_name_prefix'],
+        message:
+          'At least one of attributes_block_name or attributes_name_prefix is required',
+      })
+    }
+  })
 
 const PropertyNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('property'),
   content_type: z.string().nullish(),
   property: z.string().nullish(),
-  inputs: z.never().optional(),
-  outputs: z.never().optional(),
+  inputs: z.never().nullish(),
+  outputs: z.never().nullish(),
 }).strict()
 
 const StaticNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('static'),
   values: z.record(z.string(), z.unknown()).nullish(),
-  input: z.never().optional(),
-  inputs: z.never().optional(),
+  input: z.never().nullish(),
+  inputs: z.never().nullish(),
 }).strict()
 
 const CacheNodeSchema = ConfigNodeBaseSchema.safeExtend({
@@ -163,6 +203,8 @@ const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
     CallNodeSchema,
     ExitNodeSchema,
     JqNodeSchema,
+    XmlToJsonNodeSchema,
+    JsonToXmlNodeSchema,
     PropertyNodeSchema,
     StaticNodeSchema,
     CacheNodeSchema,
@@ -170,28 +212,25 @@ const ConfigNodeSchema = ConfigNodeBaseGuard.pipe(
   ]),
 )
 
-export const VaultSchema = z
-  .record(
-    z.string().regex(/^[A-Za-z_][A-Za-z0-9_-]*$/).min(1).max(255),
-    z.string().min(1).max(4095),
-  )
+export const LooseVaultSchema = z
+  .record(z.string(), z.string())
 
 /** cache.memory */
 const CacheMemorySchema = z.object({
-  dictionary_name: z.string().default('kong_db_cache'),
+  dictionary_name: z.string().nullish(),
 })
 
 /** cache.redis */
 const LooseCacheRedisSchema = z.object()
 
 export const LooseCacheSchema = z.object({
-  strategy: z.enum(['memory', 'redis']).optional(),
-  memory: CacheMemorySchema.optional(),
-  redis: LooseCacheRedisSchema.optional(),
+  strategy: z.enum(['memory', 'redis']).nullish(),
+  memory: CacheMemorySchema.nullish(),
+  redis: LooseCacheRedisSchema.nullish(),
 })
 
 export const LooseResourcesSchema = z.object({
-  vault: VaultSchema.nullish(),
+  vault: LooseVaultSchema.nullish(),
   cache: LooseCacheSchema.nullish(),
 })
 

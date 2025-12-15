@@ -12,7 +12,7 @@
     v-bind="fieldAttrs"
     class="ff-boolean-field"
     :data-testid="`ff-${field.path.value}`"
-    :model-value="fieldValue ?? false"
+    :model-value="!!(fieldValue == null ? (emptyOrDefaultValue || false) : fieldValue)"
     @update:model-value="handleUpdate"
   >
     <template
@@ -43,7 +43,7 @@ interface InputProps extends BaseFieldProps {
 }
 
 const { name, ...props } = defineProps<InputProps>()
-const { value: fieldValue, hide, ...field } = useField<boolean>(toRef(() => name))
+const { value: fieldValue, hide, emptyOrDefaultValue, ...field } = useField<boolean>(toRef(() => name))
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
 }>()
