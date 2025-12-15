@@ -83,7 +83,7 @@ async function loadShiki() {
     // TODO: figure out why it doesn't work without a timeout
     setTimeout(() => {
       shikiToMonaco(shikiHighlighter!, monacoInstance)
-    }, 150)
+    }, 250)
   }
 
   return shikiHighlighter
@@ -166,10 +166,10 @@ export function useMonacoEditor<T extends MaybeElement>(
   const remeasureFonts = useDebounceFn(() => monacoInstance?.editor.remeasureFonts(), 200)
 
 
-  const init = async (): Promise<void> => {
+  const init = (): void => {
     const monaco = loadMonaco(options.language)
 
-    await loadShiki()
+    loadShiki()
 
     // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
     const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
