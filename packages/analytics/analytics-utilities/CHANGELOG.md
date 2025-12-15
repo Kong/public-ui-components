@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.2.2...@kong-ui-public/analytics-utilities@12.3.0) (2025-12-15)
+
+
+### Features
+
+* add field for token_metering ([#2735](https://github.com/Kong/public-ui-components/issues/2735)) ([cb7e63a](https://github.com/Kong/public-ui-components/commit/cb7e63a6195cf5e46f59832051b87a95ab34ef36))
+
+
+
+
+
 ## [12.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.2.1...@kong-ui-public/analytics-utilities@12.2.2) (2025-12-05)
 
 
