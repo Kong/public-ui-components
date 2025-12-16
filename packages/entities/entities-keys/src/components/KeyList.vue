@@ -167,7 +167,6 @@
       :entity-name="keyToBeDeleted && (keyToBeDeleted.name || keyToBeDeleted.id)"
       :entity-type="EntityTypes.Key"
       :error="deleteModalError"
-      :need-confirm="false"
       :title="t('keys.delete.title')"
       :visible="isDeleteModalVisible"
       @cancel="hideDeleteModal"
