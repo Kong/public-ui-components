@@ -164,7 +164,7 @@ const buildArrayStr = (arr: any[], key?: string, additionalIndent = ''): string 
 }
 
 const escapeTerraformInterpolation = (input: string): string => {
-  return input.replace(/\$\{/g, '$${')
+  return input.replace(/\$\{/g, () => '$${')
 }
 
 const generateConfig = (record: Record<string, any>): string => {

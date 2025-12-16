@@ -31,6 +31,22 @@ const records = {
     strip_path: true,
     tags: ['dev', 'prod'],
   },
+  [SupportedEntityType.SchemaRegistry]: {
+    provider: 'konnect-beta',
+    confluent: {
+      config: {
+        authentication: {
+          password: '${vault.env.password}',
+          type: 'basic',
+          username: 'bc',
+        },
+        endpoint: 'as',
+        timeout_seconds: 10,
+      },
+    },
+    name: 'schema-registry-demo',
+    gateway_id: '7b2f8c6a-3e4b-4f6e-9a6d-2d8f3c1e9b42',
+  },
 }
 
 describe('<TerraformCodeBlock />', () => {
@@ -57,6 +73,25 @@ describe('<TerraformCodeBlock />', () => {
       })
 
       cy.get('.terraform-config').should('be.visible').should('contain.text', 'provider = konnect-beta')
+    })
+  })
+
+  describe(`entity type: ${SupportedEntityType.SchemaRegistry}`, () => {
+    it('renders and escapes Terraform interpolation in SchemaRegistry config', () => {
+      cy.mount(TerraformCodeBlock, {
+        props: {
+          entityRecord: records[SupportedEntityType.SchemaRegistry],
+          entityType: SupportedEntityType.SchemaRegistry,
+        },
+      })
+
+      cy.get('.terraform-config')
+        .should('be.visible')
+        .and('contain.text', 'provider = konnect-beta')
+        .and('contain.text', 'password = "$${vault.env.password}"')
+        .and('not.contain.text', 'password = "${vault.env.password}"')
+        .and('contain.text', 'name = "schema-registry-demo"')
+        .and('contain.text', 'gateway_id = "7b2f8c6a-3e4b-4f6e-9a6d-2d8f3c1e9b42"')
     })
   })
 })
