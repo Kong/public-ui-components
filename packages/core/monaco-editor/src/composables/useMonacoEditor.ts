@@ -45,7 +45,8 @@ function loadMonaco(language?: string): typeof monaco {
 let shikiReady = false
 const shikiReadyCallbacks = new Set<() => void>()
 
-function onShikiReady(cb: () => void) {
+/** Register a callback to be invoked when Shiki is ready. */
+function onShikiReady(cb: () => void): void {
   if (shikiReady) {
     cb()
   } else {
@@ -53,7 +54,12 @@ function onShikiReady(cb: () => void) {
   }
 }
 
-async function loadShiki() {
+/**
+ * Load and configure Shiki highlighter.
+ *
+ * @return {Promise<HighlighterGeneric<BundledLanguage, BundledTheme>>} The Shiki highlighter instance.
+ */
+async function loadShiki(): Promise<HighlighterGeneric<BundledLanguage, BundledTheme>> {
   if (shikiHighlighter) return shikiHighlighter
 
   shikiHighlighter = await createHighlighter({
@@ -150,6 +156,7 @@ export function useMonacoEditor<T extends MaybeElement>(
   const remeasureFonts = useDebounceFn(() => monacoInstance?.editor.remeasureFonts(), 200)
 
 
+  /** Initializes Monaco, Shiki, the editor model, and sets up the editor instance once the target element becomes available */
   const init = (): void => {
     const monaco = loadMonaco(options.language)
 
