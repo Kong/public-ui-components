@@ -3,7 +3,7 @@ import { unrefElement, useDebounceFn } from '@vueuse/core'
 import { shikiToMonaco } from '@shikijs/monaco'
 import { createHighlighter } from 'shiki'
 
-import { DEFAULT_MONACO_OPTIONS, DEFAULT_SHIKI_LANGS, SHIKI_THEMES } from '../constants'
+import { DEFAULT_MONACO_OPTIONS } from '../constants'
 
 import * as monaco from 'monaco-editor'
 
@@ -63,8 +63,8 @@ async function loadShiki(): Promise<HighlighterGeneric<BundledLanguage, BundledT
   if (shikiHighlighter) return shikiHighlighter
 
   shikiHighlighter = await createHighlighter({
-    themes: Object.values(SHIKI_THEMES),
-    langs: DEFAULT_SHIKI_LANGS,
+    langs: [],
+    themes: [],
   })
 
   if (monacoInstance) {

@@ -59,6 +59,25 @@ type Options = {
    * ```
    */
   features?: Array<EditorFeature | NegatedEditorFeature>
+
+  /**
+   * Shiki configuration options.
+   * @type {{ themes?: string[] }}
+   */
+  shiki?: {
+    /**
+     * Themes to include for Shiki syntax highlighting.
+     *
+     * @type {string[]}
+     * @defaultValue ['catppuccin-latte']
+     * @example
+     * ```ts
+     * // Include the 'nord' theme
+     * themes: ['nord']
+     * ```
+     */
+    themes?: string[]
+  }
 }
 
 // Some languages share the same worker; define aliases here
@@ -71,6 +90,7 @@ const WORKER_ALIASES: Record<string, string> = {
 }
 
 const VIRTUAL_MODULE_ID = '\0virtual:monaco-editor'
+const VIRTUAL_SHIKI_MODULE_ID = '\0virtual:shiki'
 
 // Generate import statements for Monaco Editor feature entries
 function generateImports(entries: string | string[]): string[] {
@@ -170,64 +190,97 @@ export default function(options?: Options): Plugin {
       if (id === 'monaco-editor') {
         return VIRTUAL_MODULE_ID
       }
+      if (id === 'shiki') {
+        return VIRTUAL_SHIKI_MODULE_ID
+      }
     },
 
     load(id) {
-      if (id !== VIRTUAL_MODULE_ID) {
-        return
+      if (id === VIRTUAL_MODULE_ID) {
+        const languagesDict = Object.fromEntries(
+          languages.map((lang) => [lang.label, lang]),
+        )
+
+        const featuresDict = Object.fromEntries(
+          features.map((feat) => [feat.label, feat]),
+        )
+
+        const featuresIds = resolveFeatures(
+          options?.features,
+          Object.keys(featuresDict) as EditorFeature[],
+        )
+
+        const featureImports = featuresIds.flatMap((featureId) => {
+          const feature = featuresDict[featureId]
+          if (!feature?.entry) {
+            return []
+          }
+          return generateImports(feature.entry)
+        })
+
+        const languageIds = options?.languages || (Object.keys(languagesDict) as EditorLanguage[])
+
+        const languageImports = languageIds.flatMap((langId) => {
+          const lang = languagesDict[langId]
+          if (!lang?.entry) {
+            return []
+          }
+          return generateImports(lang.entry)
+        })
+
+        const customLanguageImports = (options?.customLanguages || []).map(
+          ({ entry }) => `import '${entry}'`,
+        )
+
+        const workerCode = generateWorkerCode(
+          languageIds,
+          languagesDict,
+          options?.customLanguages,
+        )
+
+        return [
+          "import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'",
+          ...featureImports,
+          ...languageImports,
+          ...customLanguageImports,
+          ...workerCode,
+          "export * from 'monaco-editor/esm/vs/editor/editor.api'",
+          'export default monaco',
+        ].join('\n')
       }
 
-      const languagesDict = Object.fromEntries(
-        languages.map((lang) => [lang.label, lang]),
-      )
 
-      const featuresDict = Object.fromEntries(
-        features.map((feat) => [feat.label, feat]),
-      )
+      if (id === VIRTUAL_SHIKI_MODULE_ID) {
+        const themes = options?.shiki?.themes || ['catppuccin-latte']
+        const shikiLanguages = options?.languages?.map(lang => lang) || ['javascript', 'typescript', 'json', 'css', 'html']
 
-      const featuresIds = resolveFeatures(
-        options?.features,
-        Object.keys(featuresDict) as EditorFeature[],
-      )
+        const langImports = shikiLanguages.map((lang) => `import Shiki${lang[0].toUpperCase() + lang.slice(1)} from 'shiki/langs/${lang}.mjs'`)
+        const themeImports = themes.map(
+          (theme) => `import ShikiTheme${theme
+            .split('-')
+            .map((t) => t[0].toUpperCase() + t.slice(1))
+            .join('')} from 'shiki/themes/${theme}.mjs'`,
+        )
 
-      const featureImports = featuresIds.flatMap((featureId) => {
-        const feature = featuresDict[featureId]
-        if (!feature?.entry) {
-          return []
-        }
-        return generateImports(feature.entry)
-      })
+        const langVars = shikiLanguages.map((lang) => `Shiki${lang[0].toUpperCase() + lang.slice(1)}`).join(', ')
+        const themeVars = themes
+          .map((theme) => `ShikiTheme${theme.split('-').map((t) => t[0].toUpperCase() + t.slice(1)).join('')}`)
+          .join(', ')
 
-      const languageIds =
-        options?.languages || (Object.keys(languagesDict) as EditorLanguage[])
-
-      const languageImports = languageIds.flatMap((langId) => {
-        const lang = languagesDict[langId]
-        if (!lang?.entry) {
-          return []
-        }
-        return generateImports(lang.entry)
-      })
-
-      const customLanguageImports = (options?.customLanguages || []).map(
-        ({ entry }) => `import '${entry}'`,
-      )
-
-      const workerCode = generateWorkerCode(
-        languageIds,
-        languagesDict,
-        options?.customLanguages,
-      )
-
-      return [
-        "import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'",
-        ...featureImports,
-        ...languageImports,
-        ...customLanguageImports,
-        ...workerCode,
-        "export * from 'monaco-editor/esm/vs/editor/editor.api'",
-        'export default monaco',
-      ].join('\n')
+        return [
+          "import { createHighlighter as shikiCreateHighlighter } from 'shiki/dist/index.mjs'",
+          ...langImports,
+          ...themeImports,
+          '',
+          'export async function createHighlighter(options = {}) {',
+          '  return shikiCreateHighlighter({',
+          `    langs: [${langVars}],`,
+          `    themes: [${themeVars}],`,
+          '    ...options,',
+          '  })',
+          '}',
+        ].join('\n')
+      }
     },
   }
 }
