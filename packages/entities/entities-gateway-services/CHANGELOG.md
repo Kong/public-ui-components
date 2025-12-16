@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.14.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.27...@kong-ui-public/entities-gateway-services@3.14.0) (2025-12-16)
+
+
+### Features
+
+* **entities:** add debugger actrion to routes and services table [KHCP-18920] ([#2734](https://github.com/Kong/public-ui-components/issues/2734)) ([87a2417](https://github.com/Kong/public-ui-components/commit/87a241778f661d5a72552a46bdc359b2c15fcb97))
+
+
+
+
+
 ## [3.13.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.13.26...@kong-ui-public/entities-gateway-services@3.13.27) (2025-12-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
