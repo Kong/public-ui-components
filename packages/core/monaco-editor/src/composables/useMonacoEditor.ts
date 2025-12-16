@@ -7,15 +7,13 @@ import { DEFAULT_MONACO_OPTIONS, DEFAULT_SHIKI_LANGS, SHIKI_THEMES } from '../co
 
 import * as monaco from 'monaco-editor'
 
-import type * as monacoType from 'monaco-editor'
-
 import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
 import type { HighlighterGeneric, BundledLanguage, BundledTheme } from 'shiki'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
 
 // singletons
 /** The Monaco instance once loaded */
-let monacoInstance: typeof monacoType | undefined = undefined
+let monacoInstance: typeof monaco | undefined = undefined
 /** The Shiki highlighter instance */
 let shikiHighlighter: HighlighterGeneric<BundledLanguage, BundledTheme> | undefined = undefined
 
@@ -25,7 +23,7 @@ const langCache = new Map<string, boolean>()
 /**
  * Lazily load Monaco and configure workers only once.
  */
-function loadMonaco(language?: string): typeof monacoType {
+function loadMonaco(language?: string): typeof monaco {
   if (!monacoInstance) {
     monacoInstance = monaco
   }
@@ -44,6 +42,17 @@ function loadMonaco(language?: string): typeof monacoType {
   return monacoInstance
 }
 
+let shikiReady = false
+const shikiReadyCallbacks = new Set<() => void>()
+
+function onShikiReady(cb: () => void) {
+  if (shikiReady) {
+    cb()
+  } else {
+    shikiReadyCallbacks.add(cb)
+  }
+}
+
 async function loadShiki() {
   if (shikiHighlighter) return shikiHighlighter
 
@@ -53,10 +62,12 @@ async function loadShiki() {
   })
 
   if (monacoInstance) {
-    // TODO: figure out why it doesn't work without a timeout
     setTimeout(() => {
       shikiToMonaco(shikiHighlighter!, monacoInstance)
-    }, 250)
+      shikiReady = true
+      shikiReadyCallbacks.forEach(cb => cb())
+      shikiReadyCallbacks.clear()
+    }, 350)
   }
 
   return shikiHighlighter
@@ -77,7 +88,7 @@ export function useMonacoEditor<T extends MaybeElement>(
    * @type {monaco.editor.IStandaloneCodeEditor | undefined}
    * @default undefined
   */
-  let editor: monacoType.editor.IStandaloneCodeEditor | undefined
+  let editor: monaco.editor.IStandaloneCodeEditor | undefined
 
   // Internal flag to prevent multiple setups
   let _isSetup = false
@@ -171,8 +182,14 @@ export function useMonacoEditor<T extends MaybeElement>(
       })
 
       _isSetup = true
-      editorStates.editorStatus = 'ready'
+      editorStates.editorStatus = 'loading'
       editorStates.hasContent = !!options.code.value
+
+      onShikiReady(() => {
+        // guard in case editor was disposed before shiki finished
+        if (!editor) return
+        editorStates.editorStatus = 'ready'
+      })
 
       // Watch content changes and trigger callbacks efficiently
       editor.onDidChangeModelContent(() => {
