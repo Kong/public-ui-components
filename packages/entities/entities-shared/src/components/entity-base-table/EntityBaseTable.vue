@@ -449,11 +449,3 @@ const tablePaginationAttributes = computed((): TablePaginationAttributes => ({
   }
 }
 </style>
-
-<style lang="scss">
-.kong-ui-entity-base-table {
-  :deep(.k-table) {
-    table-layout: fixed;
-  }
-}
-</style>
