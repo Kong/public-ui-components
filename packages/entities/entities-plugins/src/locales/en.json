@@ -913,8 +913,7 @@
             },
             "proceed": "Yes, update"
           },
-          "leave_confirm": "Leave current page? Changes you made may not be saved.",
-          "phase_mask_help": "You can't add call nodes in the response phase."
+          "leave_confirm": "Leave current page? Changes you made may not be saved."
         },
         "code_editor": {
           "mode": "Code editor"
