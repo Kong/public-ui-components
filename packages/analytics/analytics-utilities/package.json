@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-utilities",
-  "version": "12.1.3",
+  "version": "12.3.1",
   "type": "module",
   "main": "./dist/vitals-utilities.umd.js",
   "module": "./dist/vitals-utilities.es.js",
@@ -36,8 +36,8 @@
     "test:unit": "cross-env FORCE_COLOR=1 run-s test:unit:default test:unit:utc test:unit:est",
     "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui",
     "test:unit:default": "vitest run spec.ts",
-    "test:unit:utc": "TZ='US/Eastern' vitest run spec.tz.ts",
-    "test:unit:est": "TZ='UTC' vitest run spec.tz.ts"
+    "test:unit:utc": "TZ='US/Eastern' vitest run tz.spec.ts",
+    "test:unit:est": "TZ='UTC' vitest run tz.spec.ts"
   },
   "repository": {
     "type": "git",
@@ -67,7 +67,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.18.1",
+    "@kong/design-tokens": "1.18.2",
     "json-schema-to-ts": "^3.1.1",
     "vue": "^3.5.22"
   }

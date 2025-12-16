@@ -8,6 +8,7 @@
 
   <div
     v-else
+    v-show="!hide"
     v-bind="$attrs"
   >
     <EnhancedInput
@@ -37,7 +38,7 @@
         </slot>
       </template>
       <template
-        v-if="!(multiline && error)"
+        v-if="!(multiline && error) && $slots.help"
         #help
       >
         <slot name="help" />
@@ -70,6 +71,7 @@ import * as utils from '../shared/utils'
 import { useField, useFieldAttrs, useIsAutoFocus } from './composables'
 
 import type { StringFieldSchema } from 'src/types/plugins/form-schema'
+import type { BaseFieldProps } from './types'
 
 defineOptions({
   inheritAttrs: false,
@@ -78,8 +80,7 @@ defineOptions({
 const attrs = useAttrs()
 const { i18n } = useI18n()
 
-interface StringFieldProps extends InputProps {
-  name: string
+interface StringFieldProps extends InputProps, BaseFieldProps {
   labelAttributes?: LabelAttributes
   multiline?: boolean
   showVaultSecretPicker?: boolean
@@ -99,7 +100,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string | null]
 }>()
 
-const { value: fieldValue, ...field } = useField<string | null>(toRef(() => name))
+const { value: fieldValue, hide, ...field } = useField<string | null>(toRef(() => name))
 const fieldAttrs = useFieldAttrs(field.path!, toRef({ ...props, ...attrs }))
 const initialValue = fieldValue?.value
 

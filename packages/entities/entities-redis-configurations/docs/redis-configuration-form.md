@@ -75,6 +75,24 @@ A form component for Redis Configurations.
     - default: `undefined`
     - Whether to show the Cloud Authentication fields.
 
+  - `isPortReferenceable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Whether the port field can accept vault references.
+
+  - `isHostReferenceable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Whether the host field can accept vault references.
+
+  - `isServerNameReferenceable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Whether the server_name field can accept vault references.
+
 The base konnect or kongManger config.
 
 #### `partialId`

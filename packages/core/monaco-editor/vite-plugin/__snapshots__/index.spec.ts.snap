@@ -1,0 +1,513 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`vite-plugin-monaco > generated code snapshots > should generate code with combined options 1`] = `
+"import 'monaco-editor/esm/vs/editor/editor.api';
+import 'monaco-editor/esm/vs/editor/contrib/contextmenu/browser/contextmenu';
+import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
+import 'monaco-editor/esm/vs/language/json/monaco.contribution';
+import 'monaco-yaml';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import typescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+import yamlWorker from 'monaco-yaml/yaml.worker?worker';
+
+const workerMap = {
+  javascript: typescriptWorker,
+  json: jsonWorker,
+  yaml: yamlWorker,
+};
+
+self.MonacoEnvironment = {
+  getWorker(_, label) {
+    const Worker = workerMap[label] || EditorWorker;
+    return new Worker()
+  },
+};
+"
+`;
+
+exports[`vite-plugin-monaco > generated code snapshots > should generate code with custom languages 1`] = `
+"import 'monaco-editor/esm/vs/editor/editor.api';
+import 'monaco-editor/esm/vs/editor/contrib/anchorSelect/browser/anchorSelect';
+import 'monaco-editor/esm/vs/editor/contrib/bracketMatching/browser/bracketMatching';
+import 'monaco-editor/esm/vs/editor/browser/coreCommands';
+import 'monaco-editor/esm/vs/editor/contrib/caretOperations/browser/transpose';
+import 'monaco-editor/esm/vs/editor/contrib/clipboard/browser/clipboard';
+import 'monaco-editor/esm/vs/editor/contrib/codeAction/browser/codeActionContributions';
+import 'monaco-editor/esm/vs/editor/browser/widget/codeEditor/codeEditorWidget';
+import 'monaco-editor/esm/vs/editor/contrib/codelens/browser/codelensController';
+import 'monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.css';
+import 'monaco-editor/esm/vs/editor/contrib/colorPicker/browser/colorPickerContribution';
+import 'monaco-editor/esm/vs/editor/contrib/comment/browser/comment';
+import 'monaco-editor/esm/vs/editor/contrib/contextmenu/browser/contextmenu';
+import 'monaco-editor/esm/vs/editor/contrib/cursorUndo/browser/cursorUndo';
+import 'monaco-editor/esm/vs/editor/browser/widget/diffEditor/diffEditor.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/diffEditorBreadcrumbs/browser/contribution';
+import 'monaco-editor/esm/vs/editor/contrib/dnd/browser/dnd';
+import 'monaco-editor/esm/vs/editor/contrib/documentSymbols/browser/documentSymbols';
+import 'monaco-editor/esm/vs/editor/contrib/dropOrPasteInto/browser/dropIntoEditorContribution';
+import 'monaco-editor/esm/vs/editor/contrib/find/browser/findController';
+import 'monaco-editor/esm/vs/editor/contrib/floatingMenu/browser/floatingMenu.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/folding/browser/folding';
+import 'monaco-editor/esm/vs/editor/contrib/fontZoom/browser/fontZoom';
+import 'monaco-editor/esm/vs/editor/contrib/format/browser/formatActions';
+import 'monaco-editor/esm/vs/editor/contrib/gotoError/browser/gotoError';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoLineQuickAccess';
+import 'monaco-editor/esm/vs/editor/contrib/gotoSymbol/browser/link/goToDefinitionAtPosition';
+import 'monaco-editor/esm/vs/editor/contrib/gpu/browser/gpuActions';
+import 'monaco-editor/esm/vs/editor/contrib/hover/browser/hoverContribution';
+import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard';
+import 'monaco-editor/esm/vs/editor/contrib/inPlaceReplace/browser/inPlaceReplace';
+import 'monaco-editor/esm/vs/editor/contrib/indentation/browser/indentation';
+import 'monaco-editor/esm/vs/editor/contrib/inlayHints/browser/inlayHintsContribution';
+import 'monaco-editor/esm/vs/editor/contrib/inlineCompletions/browser/inlineCompletions.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/inlineProgress/browser/inlineProgress';
+import 'monaco-editor/esm/vs/editor/contrib/insertFinalNewLine/browser/insertFinalNewLine';
+import 'monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens';
+import 'monaco-editor/esm/vs/editor/internal/initialize';
+import 'monaco-editor/esm/vs/editor/contrib/lineSelection/browser/lineSelection';
+import 'monaco-editor/esm/vs/editor/contrib/linesOperations/browser/linesOperations';
+import 'monaco-editor/esm/vs/editor/contrib/linkedEditing/browser/linkedEditing';
+import 'monaco-editor/esm/vs/editor/contrib/links/browser/links';
+import 'monaco-editor/esm/vs/editor/contrib/longLinesHelper/browser/longLinesHelper';
+import 'monaco-editor/esm/vs/editor/contrib/middleScroll/browser/middleScroll.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/multicursor/browser/multicursor';
+import 'monaco-editor/esm/vs/editor/contrib/parameterHints/browser/parameterHints';
+import 'monaco-editor/esm/vs/editor/contrib/placeholderText/browser/placeholderText.contribution';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneCommandsQuickAccess';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneHelpQuickAccess';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoSymbolQuickAccess';
+import 'monaco-editor/esm/vs/editor/contrib/readOnlyMessage/browser/contribution';
+import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch';
+import 'monaco-editor/esm/vs/editor/contrib/rename/browser/rename';
+import 'monaco-editor/esm/vs/editor/contrib/sectionHeaders/browser/sectionHeaders';
+import 'monaco-editor/esm/vs/editor/contrib/semanticTokens/browser/viewportSemanticTokens';
+import 'monaco-editor/esm/vs/editor/contrib/smartSelect/browser/smartSelect';
+import 'monaco-editor/esm/vs/editor/contrib/snippet/browser/snippetController2';
+import 'monaco-editor/esm/vs/editor/contrib/stickyScroll/browser/stickyScrollContribution';
+import 'monaco-editor/esm/vs/editor/contrib/suggest/browser/suggestInlineCompletions';
+import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast';
+import 'monaco-editor/esm/vs/editor/contrib/toggleTabFocusMode/browser/toggleTabFocusMode';
+import 'monaco-editor/esm/vs/editor/contrib/tokenization/browser/tokenization';
+import 'monaco-editor/esm/vs/editor/contrib/unicodeHighlighter/browser/unicodeHighlighter';
+import 'monaco-editor/esm/vs/editor/contrib/unusualLineTerminators/browser/unusualLineTerminators';
+import 'monaco-editor/esm/vs/editor/contrib/wordHighlighter/browser/wordHighlighter';
+import 'monaco-editor/esm/vs/editor/contrib/wordOperations/browser/wordOperations';
+import 'monaco-editor/esm/vs/editor/contrib/wordPartOperations/browser/wordPartOperations';
+import 'monaco-editor/esm/vs/basic-languages/abap/abap.contribution';
+import 'monaco-editor/esm/vs/basic-languages/apex/apex.contribution';
+import 'monaco-editor/esm/vs/basic-languages/azcli/azcli.contribution';
+import 'monaco-editor/esm/vs/basic-languages/bat/bat.contribution';
+import 'monaco-editor/esm/vs/basic-languages/bicep/bicep.contribution';
+import 'monaco-editor/esm/vs/basic-languages/cameligo/cameligo.contribution';
+import 'monaco-editor/esm/vs/basic-languages/clojure/clojure.contribution';
+import 'monaco-editor/esm/vs/basic-languages/coffee/coffee.contribution';
+import 'monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution';
+import 'monaco-editor/esm/vs/basic-languages/csharp/csharp.contribution';
+import 'monaco-editor/esm/vs/basic-languages/csp/csp.contribution';
+import 'monaco-editor/esm/vs/basic-languages/css/css.contribution';
+import 'monaco-editor/esm/vs/language/css/monaco.contribution';
+import 'monaco-editor/esm/vs/basic-languages/cypher/cypher.contribution';
+import 'monaco-editor/esm/vs/basic-languages/dart/dart.contribution';
+import 'monaco-editor/esm/vs/basic-languages/dockerfile/dockerfile.contribution';
+import 'monaco-editor/esm/vs/basic-languages/ecl/ecl.contribution';
+import 'monaco-editor/esm/vs/basic-languages/elixir/elixir.contribution';
+import 'monaco-editor/esm/vs/basic-languages/flow9/flow9.contribution';
+import 'monaco-editor/esm/vs/basic-languages/freemarker2/freemarker2.contribution';
+import 'monaco-editor/esm/vs/basic-languages/fsharp/fsharp.contribution';
+import 'monaco-editor/esm/vs/basic-languages/go/go.contribution';
+import 'monaco-editor/esm/vs/basic-languages/graphql/graphql.contribution';
+import 'monaco-editor/esm/vs/basic-languages/handlebars/handlebars.contribution';
+import 'monaco-editor/esm/vs/basic-languages/hcl/hcl.contribution';
+import 'monaco-editor/esm/vs/basic-languages/html/html.contribution';
+import 'monaco-editor/esm/vs/language/html/monaco.contribution';
+import 'monaco-editor/esm/vs/basic-languages/ini/ini.contribution';
+import 'monaco-editor/esm/vs/basic-languages/java/java.contribution';
+import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
+import 'monaco-editor/esm/vs/language/json/monaco.contribution';
+import 'monaco-editor/esm/vs/basic-languages/julia/julia.contribution';
+import 'monaco-editor/esm/vs/basic-languages/kotlin/kotlin.contribution';
+import 'monaco-editor/esm/vs/basic-languages/less/less.contribution';
+import 'monaco-editor/esm/vs/basic-languages/lexon/lexon.contribution';
+import 'monaco-editor/esm/vs/basic-languages/liquid/liquid.contribution';
+import 'monaco-editor/esm/vs/basic-languages/lua/lua.contribution';
+import 'monaco-editor/esm/vs/basic-languages/m3/m3.contribution';
+import 'monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution';
+import 'monaco-editor/esm/vs/basic-languages/mdx/mdx.contribution';
+import 'monaco-editor/esm/vs/basic-languages/mips/mips.contribution';
+import 'monaco-editor/esm/vs/basic-languages/msdax/msdax.contribution';
+import 'monaco-editor/esm/vs/basic-languages/mysql/mysql.contribution';
+import 'monaco-editor/esm/vs/basic-languages/objective-c/objective-c.contribution';
+import 'monaco-editor/esm/vs/basic-languages/pascal/pascal.contribution';
+import 'monaco-editor/esm/vs/basic-languages/pascaligo/pascaligo.contribution';
+import 'monaco-editor/esm/vs/basic-languages/perl/perl.contribution';
+import 'monaco-editor/esm/vs/basic-languages/pgsql/pgsql.contribution';
+import 'monaco-editor/esm/vs/basic-languages/php/php.contribution';
+import 'monaco-editor/esm/vs/basic-languages/pla/pla.contribution';
+import 'monaco-editor/esm/vs/basic-languages/postiats/postiats.contribution';
+import 'monaco-editor/esm/vs/basic-languages/powerquery/powerquery.contribution';
+import 'monaco-editor/esm/vs/basic-languages/powershell/powershell.contribution';
+import 'monaco-editor/esm/vs/basic-languages/protobuf/protobuf.contribution';
+import 'monaco-editor/esm/vs/basic-languages/pug/pug.contribution';
+import 'monaco-editor/esm/vs/basic-languages/python/python.contribution';
+import 'monaco-editor/esm/vs/basic-languages/qsharp/qsharp.contribution';
+import 'monaco-editor/esm/vs/basic-languages/r/r.contribution';
+import 'monaco-editor/esm/vs/basic-languages/razor/razor.contribution';
+import 'monaco-editor/esm/vs/basic-languages/redis/redis.contribution';
+import 'monaco-editor/esm/vs/basic-languages/redshift/redshift.contribution';
+import 'monaco-editor/esm/vs/basic-languages/restructuredtext/restructuredtext.contribution';
+import 'monaco-editor/esm/vs/basic-languages/ruby/ruby.contribution';
+import 'monaco-editor/esm/vs/basic-languages/rust/rust.contribution';
+import 'monaco-editor/esm/vs/basic-languages/sb/sb.contribution';
+import 'monaco-editor/esm/vs/basic-languages/scala/scala.contribution';
+import 'monaco-editor/esm/vs/basic-languages/scheme/scheme.contribution';
+import 'monaco-editor/esm/vs/basic-languages/scss/scss.contribution';
+import 'monaco-editor/esm/vs/basic-languages/shell/shell.contribution';
+import 'monaco-editor/esm/vs/basic-languages/solidity/solidity.contribution';
+import 'monaco-editor/esm/vs/basic-languages/sophia/sophia.contribution';
+import 'monaco-editor/esm/vs/basic-languages/sparql/sparql.contribution';
+import 'monaco-editor/esm/vs/basic-languages/sql/sql.contribution';
+import 'monaco-editor/esm/vs/basic-languages/st/st.contribution';
+import 'monaco-editor/esm/vs/basic-languages/swift/swift.contribution';
+import 'monaco-editor/esm/vs/basic-languages/systemverilog/systemverilog.contribution';
+import 'monaco-editor/esm/vs/basic-languages/tcl/tcl.contribution';
+import 'monaco-editor/esm/vs/basic-languages/twig/twig.contribution';
+import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution';
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution';
+import 'monaco-editor/esm/vs/basic-languages/typespec/typespec.contribution';
+import 'monaco-editor/esm/vs/basic-languages/vb/vb.contribution';
+import 'monaco-editor/esm/vs/basic-languages/wgsl/wgsl.contribution';
+import 'monaco-editor/esm/vs/basic-languages/xml/xml.contribution';
+import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution';
+import 'monaco-yaml';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
+import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
+import typescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+import yamlWorker from 'monaco-yaml/yaml.worker?worker';
+
+const workerMap = {
+  css: cssWorker,
+  handlebars: htmlWorker,
+  html: htmlWorker,
+  javascript: typescriptWorker,
+  json: jsonWorker,
+  less: cssWorker,
+  razor: htmlWorker,
+  scss: cssWorker,
+  typescript: typescriptWorker,
+  yaml: yamlWorker,
+};
+
+self.MonacoEnvironment = {
+  getWorker(_, label) {
+    const Worker = workerMap[label] || EditorWorker;
+    return new Worker()
+  },
+};
+"
+`;
+
+exports[`vite-plugin-monaco > generated code snapshots > should generate code with excluded features 1`] = `
+"import 'monaco-editor/esm/vs/editor/editor.api';
+import 'monaco-editor/esm/vs/editor/contrib/anchorSelect/browser/anchorSelect';
+import 'monaco-editor/esm/vs/editor/contrib/bracketMatching/browser/bracketMatching';
+import 'monaco-editor/esm/vs/editor/browser/coreCommands';
+import 'monaco-editor/esm/vs/editor/contrib/caretOperations/browser/transpose';
+import 'monaco-editor/esm/vs/editor/contrib/clipboard/browser/clipboard';
+import 'monaco-editor/esm/vs/editor/contrib/codeAction/browser/codeActionContributions';
+import 'monaco-editor/esm/vs/editor/browser/widget/codeEditor/codeEditorWidget';
+import 'monaco-editor/esm/vs/editor/contrib/codelens/browser/codelensController';
+import 'monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.css';
+import 'monaco-editor/esm/vs/editor/contrib/colorPicker/browser/colorPickerContribution';
+import 'monaco-editor/esm/vs/editor/contrib/comment/browser/comment';
+import 'monaco-editor/esm/vs/editor/contrib/cursorUndo/browser/cursorUndo';
+import 'monaco-editor/esm/vs/editor/browser/widget/diffEditor/diffEditor.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/diffEditorBreadcrumbs/browser/contribution';
+import 'monaco-editor/esm/vs/editor/contrib/dnd/browser/dnd';
+import 'monaco-editor/esm/vs/editor/contrib/documentSymbols/browser/documentSymbols';
+import 'monaco-editor/esm/vs/editor/contrib/dropOrPasteInto/browser/dropIntoEditorContribution';
+import 'monaco-editor/esm/vs/editor/contrib/floatingMenu/browser/floatingMenu.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/folding/browser/folding';
+import 'monaco-editor/esm/vs/editor/contrib/fontZoom/browser/fontZoom';
+import 'monaco-editor/esm/vs/editor/contrib/format/browser/formatActions';
+import 'monaco-editor/esm/vs/editor/contrib/gotoError/browser/gotoError';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoLineQuickAccess';
+import 'monaco-editor/esm/vs/editor/contrib/gotoSymbol/browser/link/goToDefinitionAtPosition';
+import 'monaco-editor/esm/vs/editor/contrib/gpu/browser/gpuActions';
+import 'monaco-editor/esm/vs/editor/contrib/hover/browser/hoverContribution';
+import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard';
+import 'monaco-editor/esm/vs/editor/contrib/inPlaceReplace/browser/inPlaceReplace';
+import 'monaco-editor/esm/vs/editor/contrib/indentation/browser/indentation';
+import 'monaco-editor/esm/vs/editor/contrib/inlayHints/browser/inlayHintsContribution';
+import 'monaco-editor/esm/vs/editor/contrib/inlineCompletions/browser/inlineCompletions.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/inlineProgress/browser/inlineProgress';
+import 'monaco-editor/esm/vs/editor/contrib/insertFinalNewLine/browser/insertFinalNewLine';
+import 'monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens';
+import 'monaco-editor/esm/vs/editor/internal/initialize';
+import 'monaco-editor/esm/vs/editor/contrib/lineSelection/browser/lineSelection';
+import 'monaco-editor/esm/vs/editor/contrib/linesOperations/browser/linesOperations';
+import 'monaco-editor/esm/vs/editor/contrib/linkedEditing/browser/linkedEditing';
+import 'monaco-editor/esm/vs/editor/contrib/links/browser/links';
+import 'monaco-editor/esm/vs/editor/contrib/longLinesHelper/browser/longLinesHelper';
+import 'monaco-editor/esm/vs/editor/contrib/middleScroll/browser/middleScroll.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/multicursor/browser/multicursor';
+import 'monaco-editor/esm/vs/editor/contrib/parameterHints/browser/parameterHints';
+import 'monaco-editor/esm/vs/editor/contrib/placeholderText/browser/placeholderText.contribution';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneCommandsQuickAccess';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneHelpQuickAccess';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoSymbolQuickAccess';
+import 'monaco-editor/esm/vs/editor/contrib/readOnlyMessage/browser/contribution';
+import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch';
+import 'monaco-editor/esm/vs/editor/contrib/rename/browser/rename';
+import 'monaco-editor/esm/vs/editor/contrib/sectionHeaders/browser/sectionHeaders';
+import 'monaco-editor/esm/vs/editor/contrib/semanticTokens/browser/viewportSemanticTokens';
+import 'monaco-editor/esm/vs/editor/contrib/smartSelect/browser/smartSelect';
+import 'monaco-editor/esm/vs/editor/contrib/snippet/browser/snippetController2';
+import 'monaco-editor/esm/vs/editor/contrib/stickyScroll/browser/stickyScrollContribution';
+import 'monaco-editor/esm/vs/editor/contrib/suggest/browser/suggestInlineCompletions';
+import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast';
+import 'monaco-editor/esm/vs/editor/contrib/toggleTabFocusMode/browser/toggleTabFocusMode';
+import 'monaco-editor/esm/vs/editor/contrib/tokenization/browser/tokenization';
+import 'monaco-editor/esm/vs/editor/contrib/unicodeHighlighter/browser/unicodeHighlighter';
+import 'monaco-editor/esm/vs/editor/contrib/unusualLineTerminators/browser/unusualLineTerminators';
+import 'monaco-editor/esm/vs/editor/contrib/wordHighlighter/browser/wordHighlighter';
+import 'monaco-editor/esm/vs/editor/contrib/wordOperations/browser/wordOperations';
+import 'monaco-editor/esm/vs/editor/contrib/wordPartOperations/browser/wordPartOperations';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+
+const workerMap = {
+};
+
+self.MonacoEnvironment = {
+  getWorker(_, label) {
+    const Worker = workerMap[label] || EditorWorker;
+    return new Worker()
+  },
+};
+"
+`;
+
+exports[`vite-plugin-monaco > generated code snapshots > should generate code with specific features 1`] = `
+"import 'monaco-editor/esm/vs/editor/editor.api';
+import 'monaco-editor/esm/vs/editor/contrib/contextmenu/browser/contextmenu';
+import 'monaco-editor/esm/vs/editor/contrib/find/browser/findController';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+
+const workerMap = {
+};
+
+self.MonacoEnvironment = {
+  getWorker(_, label) {
+    const Worker = workerMap[label] || EditorWorker;
+    return new Worker()
+  },
+};
+"
+`;
+
+exports[`vite-plugin-monaco > generated code snapshots > should generate code with specific languages 1`] = `
+"import 'monaco-editor/esm/vs/editor/editor.api';
+import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
+import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution';
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution';
+import 'monaco-editor/esm/vs/language/json/monaco.contribution';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import typescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+
+const workerMap = {
+  javascript: typescriptWorker,
+  typescript: typescriptWorker,
+  json: jsonWorker,
+};
+
+self.MonacoEnvironment = {
+  getWorker(_, label) {
+    const Worker = workerMap[label] || EditorWorker;
+    return new Worker()
+  },
+};
+"
+`;
+
+exports[`vite-plugin-monaco > generated code snapshots > should include all features with default configuration 1`] = `
+"import 'monaco-editor/esm/vs/editor/editor.api';
+import 'monaco-editor/esm/vs/editor/contrib/anchorSelect/browser/anchorSelect';
+import 'monaco-editor/esm/vs/editor/contrib/bracketMatching/browser/bracketMatching';
+import 'monaco-editor/esm/vs/editor/browser/coreCommands';
+import 'monaco-editor/esm/vs/editor/contrib/caretOperations/browser/transpose';
+import 'monaco-editor/esm/vs/editor/contrib/clipboard/browser/clipboard';
+import 'monaco-editor/esm/vs/editor/contrib/codeAction/browser/codeActionContributions';
+import 'monaco-editor/esm/vs/editor/browser/widget/codeEditor/codeEditorWidget';
+import 'monaco-editor/esm/vs/editor/contrib/codelens/browser/codelensController';
+import 'monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.css';
+import 'monaco-editor/esm/vs/editor/contrib/colorPicker/browser/colorPickerContribution';
+import 'monaco-editor/esm/vs/editor/contrib/comment/browser/comment';
+import 'monaco-editor/esm/vs/editor/contrib/contextmenu/browser/contextmenu';
+import 'monaco-editor/esm/vs/editor/contrib/cursorUndo/browser/cursorUndo';
+import 'monaco-editor/esm/vs/editor/browser/widget/diffEditor/diffEditor.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/diffEditorBreadcrumbs/browser/contribution';
+import 'monaco-editor/esm/vs/editor/contrib/dnd/browser/dnd';
+import 'monaco-editor/esm/vs/editor/contrib/documentSymbols/browser/documentSymbols';
+import 'monaco-editor/esm/vs/editor/contrib/dropOrPasteInto/browser/dropIntoEditorContribution';
+import 'monaco-editor/esm/vs/editor/contrib/find/browser/findController';
+import 'monaco-editor/esm/vs/editor/contrib/floatingMenu/browser/floatingMenu.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/folding/browser/folding';
+import 'monaco-editor/esm/vs/editor/contrib/fontZoom/browser/fontZoom';
+import 'monaco-editor/esm/vs/editor/contrib/format/browser/formatActions';
+import 'monaco-editor/esm/vs/editor/contrib/gotoError/browser/gotoError';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoLineQuickAccess';
+import 'monaco-editor/esm/vs/editor/contrib/gotoSymbol/browser/link/goToDefinitionAtPosition';
+import 'monaco-editor/esm/vs/editor/contrib/gpu/browser/gpuActions';
+import 'monaco-editor/esm/vs/editor/contrib/hover/browser/hoverContribution';
+import 'monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard';
+import 'monaco-editor/esm/vs/editor/contrib/inPlaceReplace/browser/inPlaceReplace';
+import 'monaco-editor/esm/vs/editor/contrib/indentation/browser/indentation';
+import 'monaco-editor/esm/vs/editor/contrib/inlayHints/browser/inlayHintsContribution';
+import 'monaco-editor/esm/vs/editor/contrib/inlineCompletions/browser/inlineCompletions.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/inlineProgress/browser/inlineProgress';
+import 'monaco-editor/esm/vs/editor/contrib/insertFinalNewLine/browser/insertFinalNewLine';
+import 'monaco-editor/esm/vs/editor/standalone/browser/inspectTokens/inspectTokens';
+import 'monaco-editor/esm/vs/editor/internal/initialize';
+import 'monaco-editor/esm/vs/editor/contrib/lineSelection/browser/lineSelection';
+import 'monaco-editor/esm/vs/editor/contrib/linesOperations/browser/linesOperations';
+import 'monaco-editor/esm/vs/editor/contrib/linkedEditing/browser/linkedEditing';
+import 'monaco-editor/esm/vs/editor/contrib/links/browser/links';
+import 'monaco-editor/esm/vs/editor/contrib/longLinesHelper/browser/longLinesHelper';
+import 'monaco-editor/esm/vs/editor/contrib/middleScroll/browser/middleScroll.contribution';
+import 'monaco-editor/esm/vs/editor/contrib/multicursor/browser/multicursor';
+import 'monaco-editor/esm/vs/editor/contrib/parameterHints/browser/parameterHints';
+import 'monaco-editor/esm/vs/editor/contrib/placeholderText/browser/placeholderText.contribution';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneCommandsQuickAccess';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneHelpQuickAccess';
+import 'monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoSymbolQuickAccess';
+import 'monaco-editor/esm/vs/editor/contrib/readOnlyMessage/browser/contribution';
+import 'monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch';
+import 'monaco-editor/esm/vs/editor/contrib/rename/browser/rename';
+import 'monaco-editor/esm/vs/editor/contrib/sectionHeaders/browser/sectionHeaders';
+import 'monaco-editor/esm/vs/editor/contrib/semanticTokens/browser/viewportSemanticTokens';
+import 'monaco-editor/esm/vs/editor/contrib/smartSelect/browser/smartSelect';
+import 'monaco-editor/esm/vs/editor/contrib/snippet/browser/snippetController2';
+import 'monaco-editor/esm/vs/editor/contrib/stickyScroll/browser/stickyScrollContribution';
+import 'monaco-editor/esm/vs/editor/contrib/suggest/browser/suggestInlineCompletions';
+import 'monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast';
+import 'monaco-editor/esm/vs/editor/contrib/toggleTabFocusMode/browser/toggleTabFocusMode';
+import 'monaco-editor/esm/vs/editor/contrib/tokenization/browser/tokenization';
+import 'monaco-editor/esm/vs/editor/contrib/unicodeHighlighter/browser/unicodeHighlighter';
+import 'monaco-editor/esm/vs/editor/contrib/unusualLineTerminators/browser/unusualLineTerminators';
+import 'monaco-editor/esm/vs/editor/contrib/wordHighlighter/browser/wordHighlighter';
+import 'monaco-editor/esm/vs/editor/contrib/wordOperations/browser/wordOperations';
+import 'monaco-editor/esm/vs/editor/contrib/wordPartOperations/browser/wordPartOperations';
+import 'monaco-editor/esm/vs/basic-languages/abap/abap.contribution';
+import 'monaco-editor/esm/vs/basic-languages/apex/apex.contribution';
+import 'monaco-editor/esm/vs/basic-languages/azcli/azcli.contribution';
+import 'monaco-editor/esm/vs/basic-languages/bat/bat.contribution';
+import 'monaco-editor/esm/vs/basic-languages/bicep/bicep.contribution';
+import 'monaco-editor/esm/vs/basic-languages/cameligo/cameligo.contribution';
+import 'monaco-editor/esm/vs/basic-languages/clojure/clojure.contribution';
+import 'monaco-editor/esm/vs/basic-languages/coffee/coffee.contribution';
+import 'monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution';
+import 'monaco-editor/esm/vs/basic-languages/csharp/csharp.contribution';
+import 'monaco-editor/esm/vs/basic-languages/csp/csp.contribution';
+import 'monaco-editor/esm/vs/basic-languages/css/css.contribution';
+import 'monaco-editor/esm/vs/language/css/monaco.contribution';
+import 'monaco-editor/esm/vs/basic-languages/cypher/cypher.contribution';
+import 'monaco-editor/esm/vs/basic-languages/dart/dart.contribution';
+import 'monaco-editor/esm/vs/basic-languages/dockerfile/dockerfile.contribution';
+import 'monaco-editor/esm/vs/basic-languages/ecl/ecl.contribution';
+import 'monaco-editor/esm/vs/basic-languages/elixir/elixir.contribution';
+import 'monaco-editor/esm/vs/basic-languages/flow9/flow9.contribution';
+import 'monaco-editor/esm/vs/basic-languages/freemarker2/freemarker2.contribution';
+import 'monaco-editor/esm/vs/basic-languages/fsharp/fsharp.contribution';
+import 'monaco-editor/esm/vs/basic-languages/go/go.contribution';
+import 'monaco-editor/esm/vs/basic-languages/graphql/graphql.contribution';
+import 'monaco-editor/esm/vs/basic-languages/handlebars/handlebars.contribution';
+import 'monaco-editor/esm/vs/basic-languages/hcl/hcl.contribution';
+import 'monaco-editor/esm/vs/basic-languages/html/html.contribution';
+import 'monaco-editor/esm/vs/language/html/monaco.contribution';
+import 'monaco-editor/esm/vs/basic-languages/ini/ini.contribution';
+import 'monaco-editor/esm/vs/basic-languages/java/java.contribution';
+import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
+import 'monaco-editor/esm/vs/language/json/monaco.contribution';
+import 'monaco-editor/esm/vs/basic-languages/julia/julia.contribution';
+import 'monaco-editor/esm/vs/basic-languages/kotlin/kotlin.contribution';
+import 'monaco-editor/esm/vs/basic-languages/less/less.contribution';
+import 'monaco-editor/esm/vs/basic-languages/lexon/lexon.contribution';
+import 'monaco-editor/esm/vs/basic-languages/liquid/liquid.contribution';
+import 'monaco-editor/esm/vs/basic-languages/lua/lua.contribution';
+import 'monaco-editor/esm/vs/basic-languages/m3/m3.contribution';
+import 'monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution';
+import 'monaco-editor/esm/vs/basic-languages/mdx/mdx.contribution';
+import 'monaco-editor/esm/vs/basic-languages/mips/mips.contribution';
+import 'monaco-editor/esm/vs/basic-languages/msdax/msdax.contribution';
+import 'monaco-editor/esm/vs/basic-languages/mysql/mysql.contribution';
+import 'monaco-editor/esm/vs/basic-languages/objective-c/objective-c.contribution';
+import 'monaco-editor/esm/vs/basic-languages/pascal/pascal.contribution';
+import 'monaco-editor/esm/vs/basic-languages/pascaligo/pascaligo.contribution';
+import 'monaco-editor/esm/vs/basic-languages/perl/perl.contribution';
+import 'monaco-editor/esm/vs/basic-languages/pgsql/pgsql.contribution';
+import 'monaco-editor/esm/vs/basic-languages/php/php.contribution';
+import 'monaco-editor/esm/vs/basic-languages/pla/pla.contribution';
+import 'monaco-editor/esm/vs/basic-languages/postiats/postiats.contribution';
+import 'monaco-editor/esm/vs/basic-languages/powerquery/powerquery.contribution';
+import 'monaco-editor/esm/vs/basic-languages/powershell/powershell.contribution';
+import 'monaco-editor/esm/vs/basic-languages/protobuf/protobuf.contribution';
+import 'monaco-editor/esm/vs/basic-languages/pug/pug.contribution';
+import 'monaco-editor/esm/vs/basic-languages/python/python.contribution';
+import 'monaco-editor/esm/vs/basic-languages/qsharp/qsharp.contribution';
+import 'monaco-editor/esm/vs/basic-languages/r/r.contribution';
+import 'monaco-editor/esm/vs/basic-languages/razor/razor.contribution';
+import 'monaco-editor/esm/vs/basic-languages/redis/redis.contribution';
+import 'monaco-editor/esm/vs/basic-languages/redshift/redshift.contribution';
+import 'monaco-editor/esm/vs/basic-languages/restructuredtext/restructuredtext.contribution';
+import 'monaco-editor/esm/vs/basic-languages/ruby/ruby.contribution';
+import 'monaco-editor/esm/vs/basic-languages/rust/rust.contribution';
+import 'monaco-editor/esm/vs/basic-languages/sb/sb.contribution';
+import 'monaco-editor/esm/vs/basic-languages/scala/scala.contribution';
+import 'monaco-editor/esm/vs/basic-languages/scheme/scheme.contribution';
+import 'monaco-editor/esm/vs/basic-languages/scss/scss.contribution';
+import 'monaco-editor/esm/vs/basic-languages/shell/shell.contribution';
+import 'monaco-editor/esm/vs/basic-languages/solidity/solidity.contribution';
+import 'monaco-editor/esm/vs/basic-languages/sophia/sophia.contribution';
+import 'monaco-editor/esm/vs/basic-languages/sparql/sparql.contribution';
+import 'monaco-editor/esm/vs/basic-languages/sql/sql.contribution';
+import 'monaco-editor/esm/vs/basic-languages/st/st.contribution';
+import 'monaco-editor/esm/vs/basic-languages/swift/swift.contribution';
+import 'monaco-editor/esm/vs/basic-languages/systemverilog/systemverilog.contribution';
+import 'monaco-editor/esm/vs/basic-languages/tcl/tcl.contribution';
+import 'monaco-editor/esm/vs/basic-languages/twig/twig.contribution';
+import 'monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution';
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution';
+import 'monaco-editor/esm/vs/basic-languages/typespec/typespec.contribution';
+import 'monaco-editor/esm/vs/basic-languages/vb/vb.contribution';
+import 'monaco-editor/esm/vs/basic-languages/wgsl/wgsl.contribution';
+import 'monaco-editor/esm/vs/basic-languages/xml/xml.contribution';
+import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
+import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
+import typescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+
+const workerMap = {
+  css: cssWorker,
+  handlebars: htmlWorker,
+  html: htmlWorker,
+  javascript: typescriptWorker,
+  json: jsonWorker,
+  less: cssWorker,
+  razor: htmlWorker,
+  scss: cssWorker,
+  typescript: typescriptWorker,
+};
+
+self.MonacoEnvironment = {
+  getWorker(_, label) {
+    const Worker = workerMap[label] || EditorWorker;
+    return new Worker()
+  },
+};
+"
+`;

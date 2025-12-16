@@ -103,7 +103,6 @@ import abstractField from './abstractField'
 
 export default {
   mixins: [abstractField],
-  expose: ['validate', 'clearValidationErrors', 'schema'],
   inject: {
     autofillSlot: {
       from: AUTOFILL_SLOT,
@@ -111,6 +110,7 @@ export default {
     },
   },
   emits: ['model-updated'],
+  expose: ['validate', 'clearValidationErrors', 'schema'],
   data() {
     return {
       newKeyName: '',

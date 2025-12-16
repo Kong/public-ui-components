@@ -16,6 +16,22 @@ export type Options = {
   cloudAuthAvailable?: boolean
 }
 
+const isPortValid = (val: string | number | undefined) => {
+  if (val === undefined || val === null || val === '') {
+    return false
+  }
+  if (typeof val === 'string') {
+    const num = parseInt(val, 10)
+    return !Number.isNaN(num)
+      ? (num >= 0 && num <= 65535)
+      : true // allow for vault references
+  }
+  if (typeof val === 'number') {
+    return val >= 0 && val <= 65535
+  }
+  return false
+}
+
 export const useRedisConfigurationForm = (options: Options) => {
   const { partialId, config, defaultRedisType = DEFAULT_REDIS_TYPE } = options
   const isEdit = !!partialId
@@ -62,7 +78,7 @@ export const useRedisConfigurationForm = (options: Options) => {
       case RedisType.HOST_PORT_CE:
       case RedisType.HOST_PORT_EE:
         return (!!fieldValues.host && fieldValues.host.length > 0)
-          && (!!fieldValues.port && fieldValues.port > 0)
+          && isPortValid(fieldValues.port)
           && (fieldValues.cloud_authentication?.auth_provider !== 'aws' || !!fieldValues.cloud_authentication.aws_cache_name)
       case RedisType.CLUSTER:
         return !!fieldValues.cluster_nodes.length
@@ -134,7 +150,9 @@ export const useRedisConfigurationForm = (options: Options) => {
             keepalive_backlog: s.int(form.fields.config.keepalive_backlog),
             keepalive_pool_size: s.int(form.fields.config.keepalive_pool_size),
             password: s.str(form.fields.config.password, null),
-            port: s.int(form.fields.config.port),
+            port: Number.isNaN(Number(form.fields.config.port))
+              ? form.fields.config.port
+              : s.int(form.fields.config.port),
             read_timeout: s.int(form.fields.config.read_timeout),
             send_timeout: s.int(form.fields.config.send_timeout),
             server_name: s.str(form.fields.config.server_name, null),

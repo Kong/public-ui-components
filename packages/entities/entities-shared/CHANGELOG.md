@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.36.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.0...@kong-ui-public/entities-shared@3.36.1) (2025-12-12)
+
+
+### Bug Fixes
+
+* **entities-shared:** base form config slideout touchups [KHCP-18926] ([#2731](https://github.com/Kong/public-ui-components/issues/2731)) ([3225df8](https://github.com/Kong/public-ui-components/commit/3225df8a72e5e9c4ea7354e97b380b2d24e70e8a))
+
+
+
+
+
+# [3.36.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.35.0...@kong-ui-public/entities-shared@3.36.0) (2025-12-12)
+
+
+### Features
+
+* **entities-shared,entities-plugins:** add deck tab for kong manager ([#2726](https://github.com/Kong/public-ui-components/issues/2726)) ([316f6f0](https://github.com/Kong/public-ui-components/commit/316f6f067522508542c7aeba9ff6c0465d14eeb1))
+
+
+
+
+
+# [3.35.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.34.1...@kong-ui-public/entities-shared@3.35.0) (2025-12-11)
+
+
+### Features
+
+* **entities-shared:** highlight codeblock ([#2723](https://github.com/Kong/public-ui-components/issues/2723)) ([b413990](https://github.com/Kong/public-ui-components/commit/b4139907e6f32f08c4a66a6c4ccb68b7facaaa08))
+
+
+
+
+
+## [3.34.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.34.0...@kong-ui-public/entities-shared@3.34.1) (2025-12-10)
+
+
+### Bug Fixes
+
+* **entity-base-config-card:** kong identity entity types [KHCP-18905] ([#2724](https://github.com/Kong/public-ui-components/issues/2724)) ([6790cc0](https://github.com/Kong/public-ui-components/commit/6790cc07378be104a7fddc57291cfd9eb927a71a))
+
+
+
+
+
+# [3.34.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.33.4...@kong-ui-public/entities-shared@3.34.0) (2025-12-08)
+
+
+### Features
+
+* **entities-shared, entities-plugin:** add deck tab in entity configuration viewing ([#2665](https://github.com/Kong/public-ui-components/issues/2665)) ([73d690d](https://github.com/Kong/public-ui-components/commit/73d690d7be1d19fab7cfbadf28a325cb3eb9eeb4))
+
+
+
+
+
+## [3.33.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.33.3...@kong-ui-public/entities-shared@3.33.4) (2025-12-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.41.0 ([#2718](https://github.com/Kong/public-ui-components/issues/2718)) ([e57e2b2](https://github.com/Kong/public-ui-components/commit/e57e2b2d456aca84b58ab79198b709d6dd360f54))
+
+
+
+
+
+## [3.33.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.33.2...@kong-ui-public/entities-shared@3.33.3) (2025-12-05)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions (patch) ([#2692](https://github.com/Kong/public-ui-components/issues/2692)) ([59b7f66](https://github.com/Kong/public-ui-components/commit/59b7f66f545df44a5327a5fa4c0aa4ea4d137aec))
+
+
+
+
+
+## [3.33.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.33.1...@kong-ui-public/entities-shared@3.33.2) (2025-12-04)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#2706](https://github.com/Kong/public-ui-components/issues/2706)) ([2e83580](https://github.com/Kong/public-ui-components/commit/2e835806501a95a5e36e35c36f9bc60aeb678329))
+
+
+
+
+
 ## [3.33.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.33.0...@kong-ui-public/entities-shared@3.33.1) (2025-11-06)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

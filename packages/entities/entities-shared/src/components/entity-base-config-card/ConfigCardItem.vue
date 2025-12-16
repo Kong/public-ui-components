@@ -321,6 +321,7 @@ const componentAttrsData = computed((): ComponentAttrsData => {
             code: JSON.stringify(props.item.value, null, '  '),
             maxHeight: '480px',
             showLineNumbers: false,
+            onCodeBlockRender: highlightCodeBlock,
           },
         }
       }
@@ -343,6 +344,7 @@ const { isTruncated } = composables.useTruncationDetector(textContent as Ref<HTM
 
 <script lang="ts">
 import { KUI_BORDER_WIDTH_10, KUI_COLOR_BORDER } from '@kong/design-tokens'
+import { highlightCodeBlock } from '../../utils/code-block'
 // Must explicitly define components so <component :is="type"> works
 export default {
   name: 'ConfigCardItem',

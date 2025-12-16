@@ -59,6 +59,8 @@ const konnectConfig = ref<KonnectBaseFormConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   cancelRoute: { name: '/' },
+  enableDeckTab: true,
+  geoApiServerUrl: 'https://us.api.konghq.tech',
 })
 
 const canSubmit = computed((): boolean => !!form.fields.name)

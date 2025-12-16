@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.3.0...@kong-ui-public/analytics-utilities@12.3.1) (2025-12-16)
+
+
+### Reverts
+
+* Revert "feat: add field for token_metering (#2735)" (#2736) ([a3da8c8](https://github.com/Kong/public-ui-components/commit/a3da8c867fefec18c73ffef303287ae80a760c5c)), closes [#2735](https://github.com/Kong/public-ui-components/issues/2735) [#2736](https://github.com/Kong/public-ui-components/issues/2736)
+
+
+
+
+
+# [12.3.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.2.2...@kong-ui-public/analytics-utilities@12.3.0) (2025-12-15)
+
+
+### Features
+
+* add field for token_metering ([#2735](https://github.com/Kong/public-ui-components/issues/2735)) ([cb7e63a](https://github.com/Kong/public-ui-components/commit/cb7e63a6195cf5e46f59832051b87a95ab34ef36))
+
+
+
+
+
+## [12.2.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.2.1...@kong-ui-public/analytics-utilities@12.2.2) (2025-12-05)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions (patch) ([#2692](https://github.com/Kong/public-ui-components/issues/2692)) ([59b7f66](https://github.com/Kong/public-ui-components/commit/59b7f66f545df44a5327a5fa4c0aa4ea4d137aec))
+
+
+
+
+
+## [12.2.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.2.0...@kong-ui-public/analytics-utilities@12.2.1) (2025-12-04)
+
+
+### Bug Fixes
+
+* guard against ssr/non-browser context where document is unavailable ([#2701](https://github.com/Kong/public-ui-components/issues/2701)) ([84e54b9](https://github.com/Kong/public-ui-components/commit/84e54b9fc90c67002dd94bc523bd9f4c8d37f64e))
+
+
+
+
+
+# [12.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.1.4...@kong-ui-public/analytics-utilities@12.2.0) (2025-12-03)
+
+
+### Features
+
+* metering config ([#2700](https://github.com/Kong/public-ui-components/issues/2700)) ([16aedff](https://github.com/Kong/public-ui-components/commit/16aedffb40fd3756bca7338f951b8ab5a759c4fe))
+
+
+
+
+
+## [12.1.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.1.3...@kong-ui-public/analytics-utilities@12.1.4) (2025-12-01)
+
+
+### Bug Fixes
+
+* update timestamp formatter ([#2686](https://github.com/Kong/public-ui-components/issues/2686)) ([1443a9e](https://github.com/Kong/public-ui-components/commit/1443a9e62651cb27ba12d3f258f872b4fa528827))
+
+
+
+
+
 ## [12.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.1.2...@kong-ui-public/analytics-utilities@12.1.3) (2025-10-29)
 
 

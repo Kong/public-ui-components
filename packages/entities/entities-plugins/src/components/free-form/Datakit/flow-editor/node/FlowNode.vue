@@ -559,9 +559,9 @@ $one-over-sqrt2-px: math.pow(2, -0.5) * 1px;
       line-clamp: 2;
       line-height: $kui-line-height-20;
       overflow: hidden;
+      overflow-wrap: break-word;
       text-overflow: ellipsis;
       word-break: break-all;
-      word-wrap: break-word;
     }
 
     .menu-trigger {

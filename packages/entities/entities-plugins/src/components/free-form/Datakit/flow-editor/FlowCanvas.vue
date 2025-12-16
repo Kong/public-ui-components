@@ -66,13 +66,6 @@
         />
       </template>
     </VueFlow>
-
-    <div
-      v-if="disableDrop"
-      class="dk-flow-mask"
-    >
-      {{ t('plugins.free-form.datakit.flow_editor.phase_mask_help') }}
-    </div>
   </div>
 </template>
 
@@ -82,8 +75,8 @@ import { KTooltip } from '@kong/kongponents'
 import { Background } from '@vue-flow/background'
 import { ControlButton, Controls } from '@vue-flow/controls'
 import { VueFlow } from '@vue-flow/core'
-import { useElementBounding, useEventListener, useTimeoutFn } from '@vueuse/core'
-import { computed, ref, useTemplateRef } from 'vue'
+import { useElementBounding, useEventListener } from '@vueuse/core'
+import { computed, useTemplateRef } from 'vue'
 
 import useI18n from '../../../../composables/useI18n'
 import { useHotkeys } from './composables/useHotkeys'
@@ -154,8 +147,6 @@ const {
   attachNodeToActiveGroup,
 } = groupDrop
 
-const disableDrop = ref(false)
-
 function getDraggedNodeType(event: DragEvent): string | undefined {
   const format = event.dataTransfer?.types.find(type => type.startsWith(`${DK_DATA_TRANSFER_MIME_TYPE}/`))
   if (!format) return undefined
@@ -177,14 +168,14 @@ function onNodeClick(event: NodeMouseEvent) {
 }
 
 function onDragOver(e: DragEvent) {
-  if (mode !== 'edit' || disableDrop.value) return
+  if (mode !== 'edit') return
 
   e.preventDefault()
   updateActiveGroup(screenToFlowCoordinate({ x: e.clientX, y: e.clientY }))
 }
 
 function onDrop(e: DragEvent) {
-  if (mode !== 'edit' || disableDrop.value) return
+  if (mode !== 'edit') return
 
   const data = e.dataTransfer?.getData(DK_DATA_TRANSFER_MIME_TYPE)
   if (!data) return
@@ -248,32 +239,6 @@ const controls = computed<Control[]>(() => {
 
   return result
 })
-
-// Check if the dragged node is valid to drop
-if (phase === 'response' && mode === 'edit') {
-  useEventListener('dragstart', (e: DragEvent) => {
-    const nodeType = getDraggedNodeType(e)
-    if (nodeType === 'call') {
-      disableDrop.value = true
-    }
-  })
-
-  // `dragend` fires only after the long snap-back animation, so UI feels delayed.
-  // Instead rely on `dragover`: it fires repeatedly at high frequency while dragging.
-  // Restart a short timer on every `dragover`. If no event comes within ~80ms,
-  // assume the user released and reset `disableDrop` immediately.
-  const { start } = useTimeoutFn(() => {
-    disableDrop.value = false
-  }, 80)
-
-  useEventListener('dragover', () => {
-    start()
-  })
-
-  useEventListener('dragend', () => {
-    disableDrop.value = false
-  })
-}
 
 if (mode === 'edit') {
   useEventListener('dragstart', (e: DragEvent) => {
@@ -352,17 +317,5 @@ defineExpose({ autoLayout, fitView })
       stroke-dasharray: 5;
     }
   }
-}
-
-.dk-flow-mask {
-  align-items: center;
-  background: rgba($color: $kui-color-background, $alpha: 0.75);
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
 }
 </style>

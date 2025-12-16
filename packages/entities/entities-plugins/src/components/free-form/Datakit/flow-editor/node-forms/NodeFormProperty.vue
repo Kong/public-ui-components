@@ -71,7 +71,7 @@ const {
   nameValidator,
   toggleNodeValid,
   fieldNameValidator,
-} = useNodeForm<PropertyFormData>(nodeId, () => formRef.value!.getInnerData())
+} = useNodeForm<PropertyFormData>(nodeId, () => formRef.value!.getValue())
 
 const writable = computed(() => isWritableProperty(formData.value.property))
 

@@ -29,6 +29,10 @@ export enum SupportedEntityType {
   ListenerPolicy = 'listener_policy',
   SchemaRegistry = 'schema_registry',
   StaticKey = 'static_key',
+  AuthServer = 'auth_server',
+  AuthServerScopes = 'auth_server_scopes',
+  AuthServerClaims = 'auth_server_claims',
+  AuthServerClients = 'auth_server_clients',
   // Use this for any entity type that is not supported by terraform
   // If entityType is 'other' terraform scripts will not be available
   // Note: This is currently only supported by EntityBaseForm not EntityBaseConfigCard!!
@@ -37,7 +41,27 @@ export enum SupportedEntityType {
 
 export const SupportedEntityTypesArray = Object.values(SupportedEntityType)
 
+export const SupportedEntityDeckArray = [
+  SupportedEntityType.CaCertificate,
+  SupportedEntityType.Certificate,
+  SupportedEntityType.Consumer,
+  SupportedEntityType.ConsumerGroup,
+  SupportedEntityType.GatewayService,
+  SupportedEntityType.Key,
+  SupportedEntityType.KeySet,
+  SupportedEntityType.Plugin,
+  SupportedEntityType.Route,
+  SupportedEntityType.Upstream,
+  SupportedEntityType.Target,
+  SupportedEntityType.Vault,
+  SupportedEntityType.Partial,
+] as const
+
+export type SupportedEntityDeck = typeof SupportedEntityDeckArray[number]
+
 export const EventGatewayTypesArray = ['backend_cluster', 'virtual_cluster', 'listener', 'produce_policy', 'consume_policy', 'cluster_policy', 'listener_policy', 'schema_registry', 'static_key']
+
+export const IdentityTypesArray = ['auth_server', 'auth_server_scopes', 'auth_server_claims', 'auth_server_clients']
 
 export interface BaseEntityConfig {
   /** the ID of the entity */
@@ -107,7 +131,7 @@ export interface PluginConfigurationSchema {
   [key: string]: PluginConfigurationSchemaItem
 }
 
-export interface PolicyConfigurationSchema extends PluginConfigurationSchema {}
+export interface PolicyConfigurationSchema extends PluginConfigurationSchema { }
 
 export interface RecordItem extends ConfigurationSchemaItem {
   key: string

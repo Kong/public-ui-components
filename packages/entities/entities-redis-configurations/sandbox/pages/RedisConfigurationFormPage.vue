@@ -46,6 +46,9 @@ const kongManagerConfig: KongManagerRedisConfigurationFormConfig = {
   workspace: 'default',
   apiBaseUrl: '/kong-manager', // For local dev server proxy
   cloudAuthAvailable: true,
+  isPortReferenceable: true,
+  isHostReferenceable: true,
+  isServerNameReferenceable: true,
   cancelRoute: { name: 'redis-configuration-list' },
 }
 

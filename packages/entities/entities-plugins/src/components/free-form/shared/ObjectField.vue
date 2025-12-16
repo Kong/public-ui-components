@@ -11,6 +11,7 @@
   <!-- only render children, no wrapper -->
   <template v-else-if="asChild">
     <div
+      v-show="!hide"
       class="ff-object-field ff-object-field-as-child"
       v-bind="$attrs"
       :data-testid="`ff-object-${field.path.value}`"
@@ -32,6 +33,7 @@
   <!-- render children with wrapper -->
   <div
     v-else
+    v-show="!hide"
     class="ff-object-field"
     :class="{ 'ff-object-field-collapsed': !realExpanded }"
     :data-testid="`ff-object-${field.path.value}`"
@@ -118,11 +120,10 @@ import SlideTransition from './SlideTransition.vue'
 import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
 import Field from './Field.vue'
 import EntityChecksAlert from './EntityChecksAlert.vue'
-import { filterByDependencies, sortFieldsByBundles, sortFieldsByFieldNames } from '../shared/utils'
+import { sortFieldsByBundles, sortFieldsByFieldNames } from '../shared/utils'
 
 import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
 import type { RenderRules, ResetLabelPathRule } from './types'
-import { get } from 'lodash-es'
 
 defineOptions({
   inheritAttrs: false,
@@ -149,15 +150,17 @@ const {
   renderRules?: RenderRules
 }>()
 
-const { value: fieldValue, ...field } = useField(toRef(props, 'name'))
-const { getSchema, getDefault, useCurrentRenderRules } = useFormShared()
+const { value: fieldValue, hide, ...field } = useField(toRef(props, 'name'))
+const {
+  getSchema,
+  getDefault,
+  useCurrentRenderRules,
+} = useFormShared()
 
 const currentRenderRules = useCurrentRenderRules({
   fieldPath: field.path!,
   rules: toRef(props, 'renderRules'),
   omittedFields: toRef(() => omit),
-  getDefault,
-  getSchema,
   parentValue: fieldValue!,
 })
 
@@ -196,14 +199,6 @@ const childFields = computed(() => {
 
   if (omit) {
     fields = fields.filter(f => !omit.includes(Object.keys(f)[0]))
-  }
-
-  if (currentRenderRules.value?.dependencies) {
-    fields = filterByDependencies(
-      fields,
-      currentRenderRules.value.dependencies,
-      fieldName => get(fieldValue!.value, fieldName),
-    )
   }
 
   if (fieldsOrder) {

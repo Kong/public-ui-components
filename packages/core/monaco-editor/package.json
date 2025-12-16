@@ -1,18 +1,23 @@
 {
   "name": "@kong-ui-public/monaco-editor",
-  "version": "0.3.0",
+  "version": "0.4.4",
   "type": "module",
-  "main": "./dist/monaco-editor.umd.js",
-  "module": "./dist/monaco-editor.es.js",
-  "types": "dist/types/index.d.ts",
+  "main": "./dist/runtime/monaco-editor.umd.js",
+  "module": "./dist/runtime/monaco-editor.es.js",
+  "types": "./dist/types/src/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "import": "./dist/monaco-editor.es.js",
-      "require": "./dist/monaco-editor.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "import": "./dist/runtime/monaco-editor.es.js",
+      "require": "./dist/runtime/monaco-editor.umd.js",
+      "types": "./dist/types/src/index.d.ts"
+    },
+    "./vite-plugin": {
+      "import": "./dist/vite-plugin/index.js",
+      "require": "./dist/vite-plugin/index.cjs",
+      "types": "./dist/types/vite-plugin/index.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -22,8 +27,9 @@
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "run-s typecheck build:package build:types",
+    "build": "pnpm run typecheck && run-p build:package build:plugin build:types",
     "build:package": "vite build -m production",
+    "build:plugin": "vite build --config './vite-plugin/vite.config.ts'",
     "build:analyzer": "BUILD_VISUALIZER='core/monaco-editor' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
@@ -53,8 +59,8 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "warningLimit": "19.5MB",
-    "errorLimit": "20MB"
+    "warningLimit": "200KB",
+    "errorLimit": "300KB"
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
@@ -64,8 +70,8 @@
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.18.1",
-    "@kong/kongponents": "9.46.1",
+    "@kong/design-tokens": "1.18.2",
+    "@kong/kongponents": "9.48.1",
     "@shikijs/monaco": "^3.15.0",
     "monaco-editor": "^0.55.1",
     "vue": "^3.5.22"

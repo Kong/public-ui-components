@@ -15,6 +15,9 @@ const baseConfigKM: KongManagerRedisConfigurationFormConfig = {
   workspace: 'default',
   apiBaseUrl: '/kong-manager',
   cloudAuthAvailable: true,
+  isPortReferenceable: true,
+  isHostReferenceable: true,
+  isServerNameReferenceable: true,
   cancelRoute,
 }
 
@@ -23,6 +26,9 @@ const baseConfigKonnect: KonnectRedisConfigurationFormConfig = {
   controlPlaneId: 'test-control-plane-id',
   apiBaseUrl: '/us/kong-api',
   cloudAuthAvailable: true,
+  isPortReferenceable: true,
+  isHostReferenceable: true,
+  isServerNameReferenceable: true,
   cancelRoute,
 }
 
@@ -184,11 +190,14 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-timeout-input').should('not.exist')
 
         cy.getTestId('redis-host-input').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-host').should('be.visible')
         cy.getTestId('redis-port-input').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-port').should('be.visible')
         cy.getTestId('redis-connection-is-proxied-checkbox').should('be.visible')
         cy.getTestId('redis-keepalive-section').should('be.visible')
         cy.getTestId('redis-read-write-configuration-section').should('be.visible')
         cy.getTestId('redis-auth-provider-select').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-server_name').should('be.visible')
 
         // Cluster fields
         cy.getTestId('redis-type-select').click()
@@ -1035,6 +1044,7 @@ describe('<RedisConfigurationForm />', {
             .click()
 
           cy.getTestId('redis-host-input').type('localhost')
+          cy.getTestId('redis-port-input').clear()
           cy.getTestId('redis-port-input').type('6379')
 
           cy.getTestId('partial-edit-form-submit').click()
@@ -1109,6 +1119,7 @@ describe('<RedisConfigurationForm />', {
             .click()
 
           cy.getTestId('redis-host-input').type('localhost')
+          cy.getTestId('redis-port-input').clear()
           cy.getTestId('redis-port-input').type('6379')
 
           cy.getTestId('partial-edit-form-submit').click()

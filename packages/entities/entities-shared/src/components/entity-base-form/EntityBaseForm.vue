@@ -56,7 +56,7 @@
               :data-testid="`${entityType}-${isEditing ? 'edit' : 'create'}-form-view-configuration`"
               @click="toggle()"
             >
-              {{ t('baseForm.actions.viewConfiguration') }}
+              {{ isToggled ? t('baseForm.actions.hideConfiguration') : t('baseForm.actions.viewConfiguration') }}
             </KButton>
             <KButton
               appearance="secondary"
@@ -90,7 +90,9 @@
       @close="toggle()"
     >
       <div>
-        {{ t('baseForm.configuration.message') }}
+        <slot name="configuration-slideout-message">
+          {{ t('baseForm.configuration.message') }}
+        </slot>
       </div>
       <KTabs
         data-testid="form-view-configuration-slideout-tabs"
@@ -115,6 +117,17 @@
             :sub-entity-type="subEntityType"
           />
         </template>
+        <template #deck>
+          <DeckCodeBlock
+            :app="config.app"
+            :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+            :entity-record="props.formFields"
+            :entity-type="entityType as SupportedEntityDeck"
+            :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
+            :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+          />
+        </template>
       </KTabs>
     </KSlideout>
   </component>
@@ -125,13 +138,14 @@ import type { PropType } from 'vue'
 import { computed, ref, onBeforeMount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
-import type { KonnectBaseFormConfig, KongManagerBaseFormConfig } from '../../types'
-import { SupportedEntityTypesArray, SupportedEntityType } from '../../types'
+import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
+import { SupportedEntityTypesArray, SupportedEntityType, SupportedEntityDeckArray } from '../../types'
 import composables from '../../composables'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
+import DeckCodeBlock from '../common/DeckCodeBlock.vue'
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -351,6 +365,18 @@ if (props.config.app === 'konnect' && props.entityType !== SupportedEntityType.O
   })
 }
 
+// decK is only available for certain entity types
+// https://developer.konghq.com/deck/reference/entities/
+const isSupportedEntity = SupportedEntityDeckArray.includes(props.entityType as any)
+const isDeckEnabled = props.config.app === 'kongManager' || props.config.enableDeckTab
+
+if (isDeckEnabled && isSupportedEntity) {
+  tabs.value.push({
+    title: t('baseForm.configuration.deck'),
+    hash: '#deck',
+  })
+}
+
 watch(() => isLoading.value, (val: boolean) => {
   // Emit the loading state for the host app
   emit('loading', val)
@@ -414,6 +440,10 @@ defineExpose({
   & :deep(.tab-item.active > div.tab-link.has-panels) {
     color: $kui-color-text !important;
     font-weight: $kui-font-weight-semibold !important;
+  }
+
+  :deep(.slideout-content) {
+    overflow-y: unset !important;
   }
 }
 

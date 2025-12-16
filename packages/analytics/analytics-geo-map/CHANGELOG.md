@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.31](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.30...@kong-ui-public/analytics-geo-map@1.4.31) (2025-12-16)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [1.4.30](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.29...@kong-ui-public/analytics-geo-map@1.4.30) (2025-12-15)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [1.4.29](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.28...@kong-ui-public/analytics-geo-map@1.4.29) (2025-12-07)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.41.0 ([#2718](https://github.com/Kong/public-ui-components/issues/2718)) ([e57e2b2](https://github.com/Kong/public-ui-components/commit/e57e2b2d456aca84b58ab79198b709d6dd360f54))
+
+
+
+
+
+## [1.4.28](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.27...@kong-ui-public/analytics-geo-map@1.4.28) (2025-12-05)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions (patch) ([#2692](https://github.com/Kong/public-ui-components/issues/2692)) ([59b7f66](https://github.com/Kong/public-ui-components/commit/59b7f66f545df44a5327a5fa4c0aa4ea4d137aec))
+
+
+
+
+
+## [1.4.27](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.26...@kong-ui-public/analytics-geo-map@1.4.27) (2025-12-04)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [1.4.26](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.25...@kong-ui-public/analytics-geo-map@1.4.26) (2025-12-04)
+
+
+### Bug Fixes
+
+* **deps:** update non-major [@kong](https://github.com/kong) dependencies with stable versions ([#2706](https://github.com/Kong/public-ui-components/issues/2706)) ([2e83580](https://github.com/Kong/public-ui-components/commit/2e835806501a95a5e36e35c36f9bc60aeb678329))
+
+
+
+
+
+## [1.4.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.24...@kong-ui-public/analytics-geo-map@1.4.25) (2025-12-03)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
+## [1.4.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.23...@kong-ui-public/analytics-geo-map@1.4.24) (2025-12-01)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-geo-map
+
+
+
+
+
 ## [1.4.23](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-geo-map@1.4.22...@kong-ui-public/analytics-geo-map@1.4.23) (2025-10-29)
 
 

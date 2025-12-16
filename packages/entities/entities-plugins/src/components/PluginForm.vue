@@ -132,6 +132,17 @@
             :entity-type="SupportedEntityType.Plugin"
           />
         </template>
+        <template #deck>
+          <DeckCodeBlock
+            :app="config.app"
+            :control-plane-name="config.app === 'konnect' ? config.controlPlaneName : undefined"
+            :entity-record="viewConfigurationRecord"
+            :entity-type="SupportedEntityType.Plugin"
+            :geo-api-server-url="config.app === 'konnect' ? config.geoApiServerUrl : undefined"
+            :kong-admin-api-url="config.app === 'kongManager' ? config.apiBaseUrl : undefined"
+            :workspace="config.app === 'kongManager' ? config.workspace : undefined"
+          />
+        </template>
       </KTabs>
     </KSlideout>
   </div>
@@ -144,6 +155,7 @@ import {
   JsonCodeBlock,
   TerraformCodeBlock,
   YamlCodeBlock,
+  DeckCodeBlock,
   SupportedEntityType,
   useAxios,
   useErrors,
@@ -316,6 +328,7 @@ const props = defineProps({
   engine: {
     type: String as PropType<'vfg' | 'freeform'>,
     required: false,
+    default: undefined,
   },
 })
 
@@ -383,6 +396,13 @@ if (props.config.app === 'konnect') {
   tabs.value.splice(1, 0, {
     title: t('view_configuration.terraform'),
     hash: '#terraform',
+  })
+}
+
+if (props.config.app === 'kongManager' || props.config.enableDeckTab) {
+  tabs.value.push({
+    title: t('view_configuration.deck'),
+    hash: '#deck',
   })
 }
 
@@ -1514,6 +1534,10 @@ onBeforeMount(async () => {
   & :deep(.tab-item.active > div.tab-link.has-panels) {
     color: $kui-color-text !important;
     font-weight: $kui-font-weight-semibold !important;
+  }
+
+  :deep(.slideout-content) {
+    overflow-y: unset !important;
   }
 }
 </style>

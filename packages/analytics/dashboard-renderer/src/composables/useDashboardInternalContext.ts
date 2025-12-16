@@ -20,8 +20,8 @@ export default function useDashboardInternalContext({
   globalFilters?: Readonly<Ref<DeepReadonly<AllFilters[]>>>
   isFullscreen?: Readonly<Ref<boolean>>
 }): {
-    internalContext: Readonly<Ref<DashboardRendererContextInternal>>
-  } {
+  internalContext: Readonly<Ref<DashboardRendererContextInternal>>
+} {
   const configStore = useAnalyticsConfigStore()
 
   const timeSpec = computed<TimeRangeV4>(() => {
