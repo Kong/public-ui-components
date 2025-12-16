@@ -1,6 +1,7 @@
 {
   "actions": {
     "create": "New route",
+    "debugger": "Start debugging",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",

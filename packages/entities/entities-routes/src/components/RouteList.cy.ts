@@ -17,6 +17,7 @@ import RouteList from './RouteList.vue'
 const viewRoute = 'view-route'
 const editRoute = 'edit-route'
 const createRoute = 'create-route'
+const debugRoute = 'debug-route'
 
 const baseConfigKonnect: KonnectRouteListConfig = {
   app: 'konnect',
@@ -25,6 +26,7 @@ const baseConfigKonnect: KonnectRouteListConfig = {
   createRoute,
   getViewRoute: () => viewRoute,
   getEditRoute: () => editRoute,
+  getDebugRoute: () => debugRoute,
 }
 
 const baseConfigKM: KongManagerRouteListConfig = {
@@ -36,6 +38,7 @@ const baseConfigKM: KongManagerRouteListConfig = {
   createRoute,
   getViewRoute: () => viewRoute,
   getEditRoute: () => editRoute,
+  getDebugRoute: () => debugRoute,
 }
 
 describe('<RouteList />', () => {
@@ -137,12 +140,30 @@ describe('<RouteList />', () => {
               canCreate: () => false,
               canEdit: () => expected,
               canDelete: () => false,
+              canDebug: () => false,
               canRetrieve: () => false,
             },
           })
 
           cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-edit').should(`${expected ? '' : 'not.'}exist`)
+        })
+
+        it(`should ${expected ? '' : 'not'} include the Debug action if canDebug evaluates to ${expected}`, () => {
+          cy.mount(RouteList, {
+            props: {
+              cacheIdentifier: `route-list-${uuidv4()}`,
+              config: baseConfigKonnect,
+              canCreate: () => false,
+              canEdit: () => false,
+              canDelete: () => false,
+              canDebug: () => expected,
+              canRetrieve: () => false,
+            },
+          })
+
+          cy.getTestId('dropdown-trigger').eq(0).click()
+          cy.getTestId('action-entity-debug').should(`${expected ? '' : 'not.'}exist`)
         })
 
         it(`should ${expected ? '' : 'not'} include the Delete action if canDelete evaluates to ${expected}`, () => {

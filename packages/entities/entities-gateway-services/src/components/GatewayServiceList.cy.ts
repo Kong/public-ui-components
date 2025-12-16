@@ -16,6 +16,7 @@ describe('<GatewayServiceList />', () => {
   const viewRoute = 'view-gateway-service'
   const editRoute = 'edit-gateway-service'
   const createRoute = 'create-gateway-service'
+  const debugRoute = 'debug-gateway-service'
 
   const baseConfigKM: KongManagerGatewayServiceListConfig = {
     app: 'kongManager',
@@ -26,6 +27,7 @@ describe('<GatewayServiceList />', () => {
     createRoute,
     getViewRoute: () => viewRoute,
     getEditRoute: () => editRoute,
+    getDebugRoute: () => debugRoute,
   }
 
   const baseConfigKonnect: KonnectGatewayServiceListConfig = {
@@ -35,6 +37,7 @@ describe('<GatewayServiceList />', () => {
     createRoute,
     getViewRoute: () => viewRoute,
     getEditRoute: () => editRoute,
+    getDebugRoute: () => debugRoute,
   }
 
   beforeEach(() => {
@@ -119,6 +122,7 @@ describe('<GatewayServiceList />', () => {
               canCreate: () => false,
               canEdit: () => expected,
               canDelete: () => false,
+              canDebug: () => false,
               canRetrieve: () => false,
             },
             router,
@@ -157,6 +161,23 @@ describe('<GatewayServiceList />', () => {
 
           cy.getTestId('dropdown-trigger').eq(0).click()
           cy.getTestId('action-entity-edit').should(`${expected ? '' : 'not.'}exist`)
+        })
+
+        it(`should ${expected ? '' : 'not'} include the Debug action if canDebug evaluates to ${expected}`, () => {
+          cy.mount(GatewayServiceList, {
+            props: {
+              cacheIdentifier: `gateway-service-list-${uuidv4()}`,
+              config: baseConfigKonnect,
+              canCreate: () => false,
+              canEdit: () => false,
+              canDelete: () => false,
+              canDebug: () => expected,
+              canRetrieve: () => false,
+            },
+          })
+
+          cy.getTestId('dropdown-trigger').eq(0).click()
+          cy.getTestId('action-entity-debug').should(`${expected ? '' : 'not.'}exist`)
         })
 
         it(`should ${expected ? '' : 'not'} include the Delete action if canDelete evaluates to ${expected}`, () => {

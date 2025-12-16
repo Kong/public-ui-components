@@ -10,6 +10,8 @@ export interface BaseRouteListConfig {
   getViewRoute: (id: string) => RouteLocationRaw
   /** A function that returns the route for editing a route */
   getEditRoute: (id: string) => RouteLocationRaw
+  /** A function that returns the route for starting a debug session for a Route */
+  getDebugRoute: (id: string) => RouteLocationRaw
 }
 
 /** Konnect route list config */

@@ -203,6 +203,12 @@
             :item="getViewDropdownItem(row.id)"
           />
         </PermissionsWrapper>
+        <PermissionsWrapper :auth-function="() => canDebug(row)">
+          <KDropdownItem
+            data-testid="action-entity-debug"
+            :item="getDebugDropdownItem(row.id)"
+          />
+        </PermissionsWrapper>
         <PermissionsWrapper :auth-function="() => canEdit(row)">
           <KDropdownItem
             data-testid="action-entity-edit"
@@ -326,6 +332,12 @@ const props = defineProps({
     type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
     required: false,
     default: async () => true,
+  },
+  /** A synchronous or asynchronous function, that returns a boolean, that evaluates if the user can start debugger session on a given entity */
+  canDebug: {
+    type: Function as PropType<(row: EntityRow) => boolean | Promise<boolean>>,
+    required: false,
+    default: async () => false,
   },
   title: {
     type: String,
@@ -542,6 +554,13 @@ const getEditDropdownItem = (id: string) => {
   return {
     label: t('actions.edit'),
     to: props.config.getEditRoute(id),
+  }
+}
+
+const getDebugDropdownItem = (id: string) => {
+  return {
+    label: t('actions.debugger'),
+    to: props.config.getDebugRoute(id),
   }
 }
 

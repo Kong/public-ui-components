@@ -1,6 +1,7 @@
 {
   "actions": {
     "create": "New gateway service",
+    "debugger": "Start debugging",
     "serverless_create": "Add a Service",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
