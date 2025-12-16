@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.138.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.137.3...@kong-ui-public/entities-plugins@9.138.0) (2025-12-16)
+
+
+### Features
+
+* **entities-plugins:** datakit call nodes are now allowed in response phase ([#2733](https://github.com/Kong/public-ui-components/issues/2733)) ([dea3cb2](https://github.com/Kong/public-ui-components/commit/dea3cb2f2c78ffda6bb13bdc4916eb98812cac44))
+
+
+
+
+
 ## [9.137.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.137.2...@kong-ui-public/entities-plugins@9.137.3) (2025-12-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
