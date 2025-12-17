@@ -7,6 +7,7 @@ import type { DashboardRendererContext } from '../types'
 import type {
   AllFilters,
   TileDefinition,
+  TimeRangeV4,
 } from '@kong-ui-public/analytics-utilities'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
@@ -18,9 +19,11 @@ describe('<DashboardTilePreview />', () => {
   const setup = async ({
     editable,
     wrappedInDivWithHeight,
+    metrics = ['response_size_p99'],
   }: {
     editable?: boolean
     wrappedInDivWithHeight?: number
+    metrics?: any[]
   } = {}) => {
     const globalFilters: AllFilters[] = []
 
@@ -37,7 +40,7 @@ describe('<DashboardTilePreview />', () => {
       },
       query: {
         datasource: 'api_usage',
-        metrics: ['response_size_p99'],
+        metrics,
         dimensions: ['control_plane'],
         filters: [],
       },
@@ -173,5 +176,10 @@ ${JSON.stringify(props, null, 2)}`,
       time_range: configStore.defaultQueryTimeForOrg,
     })
   })
-})
 
+  it('shows the "Chart not configured" empty state when metrics are not provided', () => {
+    setup({ metrics: [] })
+    cy.getTestId('chart-not-configured-empty-state').should('exist')
+    cy.getTestId('test-stub').should('not.exist')
+  })
+})

@@ -1,5 +1,9 @@
 {
   "renderer": {
+    "not_configured": {
+      "title": "Chart is not fully configured",
+      "description": "Begin by choosing one metric"
+    },
     "noQueryBridge": "No query bridge provided.  Unable to render dashboard.",
     "trendRange": {
       "24h": "Last 24-hour summary",
