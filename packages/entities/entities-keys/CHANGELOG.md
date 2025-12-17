@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.10.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.10.24...@kong-ui-public/entities-keys@3.10.25) (2025-12-17)
+
+
+### Bug Fixes
+
+* **entities-keys:** show confirm input when delete key ([#2739](https://github.com/Kong/public-ui-components/issues/2739)) ([fceb07a](https://github.com/Kong/public-ui-components/commit/fceb07a305371dd4b85f3043595e4202294e870d))
+
+
+
+
+
 ## [3.10.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.10.23...@kong-ui-public/entities-keys@3.10.24) (2025-12-12)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys
