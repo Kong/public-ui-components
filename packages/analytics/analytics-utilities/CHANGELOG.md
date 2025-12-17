@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.3.1...@kong-ui-public/analytics-utilities@12.4.0) (2025-12-17)
+
+
+### Features
+
+* api_package dimension ([#2742](https://github.com/Kong/public-ui-components/issues/2742)) ([7e6250a](https://github.com/Kong/public-ui-components/commit/7e6250af6e76158aa34dd647e0fb467ce4365a5b))
+
+
+
+
+
 ## [12.3.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.3.0...@kong-ui-public/analytics-utilities@12.3.1) (2025-12-16)
 
 
