@@ -3,6 +3,7 @@ import type { ExploreFilterTypesV2, GranularityValues, RequestFilterTypeEmptyV2,
 
 export const queryableBasicExploreDimensions = [
   'api',
+  'api_package',
   'api_product',
   'api_product_version',
   'control_plane',
