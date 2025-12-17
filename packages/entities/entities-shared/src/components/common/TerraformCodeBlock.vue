@@ -163,6 +163,10 @@ const buildArrayStr = (arr: any[], key?: string, additionalIndent = ''): string 
   return content
 }
 
+const escapeTerraformInterpolation = (input: string): string => {
+  return input.replace(/\$\{/g, () => '$${')
+}
+
 const generateConfig = (record: Record<string, any>): string => {
   let content = ''
 
@@ -176,7 +180,7 @@ const generateConfig = (record: Record<string, any>): string => {
     }
   }
 
-  return content
+  return escapeTerraformInterpolation(content)
 }
 
 const terraformContent = computed((): string => {
