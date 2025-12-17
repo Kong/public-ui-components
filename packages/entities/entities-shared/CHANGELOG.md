@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.36.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.1...@kong-ui-public/entities-shared@3.36.2) (2025-12-17)
+
+
+### Bug Fixes
+
+* **entities-shared:** add terraform interpolation escaping ([#2732](https://github.com/Kong/public-ui-components/issues/2732)) ([810b832](https://github.com/Kong/public-ui-components/commit/810b8323b2398e5b1b80af2eff71f38806d77fea))
+
+
+
+
+
 ## [3.36.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.0...@kong-ui-public/entities-shared@3.36.1) (2025-12-12)
 
 
