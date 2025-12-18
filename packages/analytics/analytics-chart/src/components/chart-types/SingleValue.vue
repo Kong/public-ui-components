@@ -1,8 +1,8 @@
 <template>
   <div
     class="chart-parent"
+    :class="alignmentClass"
     data-testid="single-value-parent"
-    :style="containerStyle"
   >
     <KEmptyState
       v-if="singleValue === null"
@@ -65,7 +65,7 @@
 import type { PropType } from 'vue'
 import type { AnalyticsExploreRecord, ExploreResultV4, AllAggregations } from '@kong-ui-public/analytics-utilities'
 
-import { computed, onMounted, ref, toRef, watch } from 'vue'
+import { computed, onMounted } from 'vue'
 import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 import { changePolarity, metricChange, defineIcon, calculateChange, useTrendRange } from '@kong-ui-public/analytics-metric-provider'
 import { EqualIcon } from '@kong/icons'
@@ -112,16 +112,7 @@ const props = defineProps({
   },
 })
 
-const justifyMap: Record<string, string> = {
-  left: 'flex-start',
-  center: 'center',
-  right: 'flex-end',
-  between: 'space-between',
-  around: 'space-around',
-  evenly: 'space-evenly',
-}
-
-const alignXState = ref(props.leftAlign ? 'left' : props.alignX)
+const alignmentClass = computed(() => `align-${props.leftAlign ? 'left' : props.alignX}`)
 
 const records = computed<AnalyticsExploreRecord[]>(() => props.data.data)
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
@@ -141,7 +132,13 @@ const previousValue = computed<number | null>(() => {
     return null
   }
 
-  return records.value[0].event[metricName.value] as number ?? null
+  const value = records.value[0].event[metricName.value]
+
+  if (typeof value !== 'number' || isNaN(value)) {
+    return null
+  }
+
+  return value
 })
 
 const singleValue = computed<number | null>(() => {
@@ -149,20 +146,23 @@ const singleValue = computed<number | null>(() => {
     return null
   }
 
-  const index = props.showTrend ? 1 : 0 // Current is last for trend
+  // With trend: need 2 records (previous at [0], current at [1])
+  // Without trend: need 1 record (current at [0])
+  const requiredRecords = props.showTrend ? 2 : 1
+  const currentIndex = props.showTrend ? 1 : 0
 
-  if (records.value.length <= index) {
+  if (records.value.length < requiredRecords) {
     return null
   }
 
-  const value = records.value[index].event[metricName.value]
+  const value = records.value[currentIndex].event[metricName.value]
 
   // Check if value is actually a number
   if (typeof value !== 'number' || isNaN(value)) {
     return null
   }
 
-  return value ?? null
+  return value
 })
 
 const formattedValue = computed((): string => {
@@ -197,7 +197,6 @@ const change = computed(() => calculateChange(singleValue.value ?? 0, previousVa
 const polarity = computed(() => changePolarity(change.value, true, props.increaseIsBad)) // Assume hasTrendAccess=true
 const trendIcon = computed(() => defineIcon(polarity.value))
 const formattedChange = computed(() => metricChange(change.value, true, i18n.t('singleValue.trend.not_available')))
-const containerStyle = computed(() => ({ justifyContent: justifyMap[alignXState.value] ?? 'space-evenly' }))
 const trendRange = useTrendRange(computed(() => props.showTrend), undefined, computed(() => props.data.meta))
 
 const textColor = (polarityNum: number) => {
@@ -232,12 +231,6 @@ onMounted(() => {
     console.warn('SingleValue with trend expects exactly 2 data points. Data length:', props.data.data.length)
   }
 })
-
-watch(toRef(props, 'alignX'), (v) => {
-  if (v) {
-    alignXState.value = v
-  }
-})
 </script>
 
 <style lang="scss" scoped>
@@ -246,6 +239,30 @@ watch(toRef(props, 'alignX'), (v) => {
 
 .chart-parent {
   container-type: inline-size;
+
+  &.align-left {
+    justify-content: flex-start;
+  }
+
+  &.align-center {
+    justify-content: center;
+  }
+
+  &.align-right {
+    justify-content: flex-end;
+  }
+
+  &.align-between {
+    justify-content: space-between;
+  }
+
+  &.align-around {
+    justify-content: space-around;
+  }
+
+  &.align-evenly {
+    justify-content: space-evenly;
+  }
 
   .single-value-error {
     &:deep(.empty-state-title) {
@@ -376,9 +393,5 @@ watch(toRef(props, 'alignX'), (v) => {
       }
     }
   }
-}
-
-.left-align {
-  justify-content: flex-start;
 }
 </style>

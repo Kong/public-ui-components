@@ -307,7 +307,7 @@ import type { SelectItem } from '@kong/kongponents'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
 import type { AlignX, AnalyticsChartColors, SimpleChartType, SimpleChartOptions, SimpleChartMetricDisplay } from '../../src'
 
-import { computed, ref, inject, watch } from 'vue'
+import { computed, ref, inject } from 'vue'
 import { generateCrossSectionalData } from '@kong-ui-public/analytics-utilities'
 import { SimpleChart, TopNTable } from '../../src'
 
@@ -546,8 +546,8 @@ const simpleChartOptions = computed<SimpleChartOptions>(() => ({
   reverseDataset: reverseDataset.value,
   numerator: gaugeNumerator.value,
   showTrend: showTrend.value,
-  increaseIsBad: increaseIsBad.value,
-  alignX: alignX.value,
+  increaseIsBad: showTrend.value ? increaseIsBad.value : false,
+  alignX: showTrend.value ? alignX.value : 'evenly',
 }))
 
 const dataCode = computed(() => {
@@ -567,13 +567,6 @@ const isTopNTable = computed<boolean>(() => {
 
 const isSingleValue = computed<boolean>(() => {
   return ('single_value' === chartType.value)
-})
-
-watch(showTrend, (trend) => {
-  if (!trend) {
-    increaseIsBad.value = false
-    alignX.value = 'evenly'
-  }
 })
 
 </script>

@@ -101,7 +101,7 @@ describe('<SingleValue />', () => {
     cy.getTestId('single-value-error').should('be.visible')
   })
 
-  it('maps leftAlign and alignX props to container justify-content', () => {
+  it('maps leftAlign and alignX props to container alignment class', () => {
     const exploreResult = buildExploreResult(100, 250)
 
     // leftAlign takes precedence
@@ -113,8 +113,7 @@ describe('<SingleValue />', () => {
     })
 
     cy.getTestId('single-value-parent')
-      .should('have.attr', 'style')
-      .and('contain', 'justify-content: flex-start')
+      .should('have.class', 'align-left')
 
     // alignX is used when leftAlign is false
     cy.mount(SingleValue, {
@@ -126,8 +125,7 @@ describe('<SingleValue />', () => {
     })
 
     cy.getTestId('single-value-parent')
-      .should('have.attr', 'style')
-      .and('contain', 'justify-content: center')
+      .should('have.class', 'align-center')
   })
 
   it('applies positive/negative classes based on increaseIsBad', () => {
