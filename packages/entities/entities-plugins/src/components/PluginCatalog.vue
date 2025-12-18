@@ -162,6 +162,11 @@ const emit = defineEmits<{
   (e: 'delete-custom:success', pluginName: string): void
 }>()
 
+type PluginCardListExtended = PluginCardList & {
+  'Query Result'?: PluginType[]
+
+}
+
 const { i18n: { t } } = composables.useI18n()
 const { pluginMetaData } = composables.usePluginMetaData()
 const { getMessageFromError } = useErrors()
@@ -238,7 +243,7 @@ const fetchEntityPluginsUrl = computed((): string => {
   return ''
 })
 
-const filteredPlugins = computed((): PluginCardList => {
+const filteredPlugins = computed((): PluginCardListExtended => {
   if (!pluginsList.value) {
     return {}
   }
@@ -263,7 +268,7 @@ const filteredPlugins = computed((): PluginCardList => {
     return filtered
   }
 
-  const results = JSON.parse(JSON.stringify(filtered))
+  const results: PluginCardList = JSON.parse(JSON.stringify(filtered))
 
   for (const type in filtered) {
     const matches = filtered[type]?.filter((plugin: PluginType) => {
@@ -285,7 +290,11 @@ const filteredPlugins = computed((): PluginCardList => {
     }
   }
 
-  return results
+  const queryResults = Object.values(results)
+    .flat()
+    .filter((p): p is PluginType => p !== undefined && p !== null)
+
+  return queryResults.length ? { 'Query Result': queryResults } : { }
 })
 
 const hasFilteredResults = computed((): boolean => {
@@ -381,9 +390,9 @@ const buildPluginList = (): PluginCardList => {
 
       return list
     }, {})
-  // Pick highlighted plugin objects from pluginMetaData and assign to 'Popular'
+  // Pick highlighted plugin objects from pluginMetaData and assign to 'Featured'
   if (props.highlightedPluginIds && props.highlightedPluginIds.length > 0) {
-    list['Popular'] = props.highlightedPluginIds
+    list['Featured'] = props.highlightedPluginIds
       .flatMap(pluginId => {
         const meta = pluginMetaData[pluginId]
         if (!meta) return []
@@ -482,9 +491,9 @@ onMounted(async () => {
     flex-direction: column;
     gap: $kui-space-60;
     height: max-content;
+    min-width: 280px;
     position: sticky;
     top: 24px;
-    width: 280px;
 
     :deep(.k-collapse .collapse-heading .collapse-trigger .collapse-trigger-content) {
       color: $kui-color-text-neutral-strong;
