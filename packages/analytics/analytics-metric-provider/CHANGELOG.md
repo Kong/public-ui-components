@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [11.1.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.0.13...@kong-ui-public/analytics-metric-provider@11.1.0) (2025-12-18)
+
+
+### Features
+
+* **analytics:** add trend line and range to SingleValue chart [MA-4512] ([#2637](https://github.com/Kong/public-ui-components/issues/2637)) ([cebf352](https://github.com/Kong/public-ui-components/commit/cebf35261ab0b78729ff7b93b7813edca2725490))
+
+
+
+
+
 ## [11.0.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-metric-provider@11.0.12...@kong-ui-public/analytics-metric-provider@11.0.13) (2025-12-18)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-metric-provider
