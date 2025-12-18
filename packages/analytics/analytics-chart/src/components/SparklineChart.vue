@@ -15,7 +15,7 @@
       :data="chartData"
       data-testId="sparkline-bar"
       :options="(options as any)"
-      :plugins="plugins"
+      :plugins="plugins as Plugin<'bar'>[]"
     />
     <Line
       v-else-if="type === 'sparkline_line' || type === 'sparkline_step'"
@@ -23,7 +23,7 @@
       :data="chartData"
       :data-testId="type === 'sparkline_line' ? 'sparkline-line' : 'sparkline-step'"
       :options="(options as any)"
-      :plugins="plugins"
+      :plugins="plugins as Plugin<'line'>[]"
     />
     <ToolTip
       v-if="!disableTooltip"
@@ -57,7 +57,7 @@ import { computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { Bar, Line } from 'vue-chartjs'
 import { format } from 'date-fns'
 import 'chartjs-adapter-date-fns'
-import { type ChartOptions, Tooltip } from 'chart.js'
+import { type ChartOptions, type Plugin, Tooltip } from 'chart.js'
 import { formatTime } from '@kong-ui-public/analytics-utilities'
 
 import composables from '../composables'
@@ -338,7 +338,7 @@ const tooltipLeft = ref('0')
 
 onMounted(() => {
   Tooltip.positioners[positionKey] = function(elements, position) {
-    if (!elements.length || tooltipData.interactionMode === 'interactive') {
+    if (!elements.length || tooltipData.interactionMode === 'interactive' || position.x === null) {
       return false
     }
 

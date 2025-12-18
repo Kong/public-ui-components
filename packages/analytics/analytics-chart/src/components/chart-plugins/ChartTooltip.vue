@@ -12,7 +12,7 @@
     }"
   >
     <ZoomTimerange
-      v-if="state.interactionMode === 'selecting-chart-area' && granularity"
+      v-if="state.interactionMode === 'selecting-chart-area' && granularity && zoomTimeRange && zoomTimeRange.end && zoomTimeRange.start"
       :end="zoomTimeRange?.end"
       :granularity="granularity"
       :start="zoomTimeRange?.start"

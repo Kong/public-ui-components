@@ -18,7 +18,7 @@
         :data="(chartData as any)"
         data-testid="time-series-line-chart"
         :options="(options as any)"
-        :plugins="plugins"
+        :plugins="plugins as Plugin<'line'>[]"
       />
       <Bar
         v-else-if="type === 'timeseries_bar'"
@@ -29,11 +29,10 @@
         :data="(chartData as any)"
         data-testid="time-series-bar-chart"
         :options="(options as any)"
-        :plugins="plugins"
+        :plugins="plugins as Plugin<'bar'>[]"
       />
     </div>
     <ToolTip
-      ref="tooltipElement"
       :absolute-left="tooltipAbsoluteLeft"
       :absolute-top="tooltipAbsoluteTop"
       data-testid="tooltip"
@@ -70,7 +69,7 @@ import composables from '../../composables'
 import type { Threshold, TooltipState, ZoomActionItem } from '../../types'
 import { type ChartLegendSortFn, type ChartTooltipSortFn, type EnhancedLegendItem, type KChartData, type LegendValues, type TooltipEntry } from '../../types'
 import type { GranularityValues, AbsoluteTimeRangeV4, ExploreAggregations } from '@kong-ui-public/analytics-utilities'
-import type { Chart } from 'chart.js'
+import type { Chart, Plugin } from 'chart.js'
 import { ChartLegendPosition } from '../../enums'
 import { generateLegendItems } from '../../utils'
 import { hasExactlyOneDatapoint } from '../../utils/commonOptions'
@@ -134,7 +133,6 @@ const chartInstance = ref<{ chart: Chart }>()
 const legendID = crypto.randomUUID()
 const chartID = crypto.randomUUID()
 const legendItems = ref<EnhancedLegendItem[]>([])
-const tooltipElement = ref()
 const legendPosition = inject('legendPosition', ChartLegendPosition.Bottom)
 const chartParentRef = useTemplateRef<HTMLDivElement>('chartParent')
 const zoomTimeRange = ref<AbsoluteTimeRangeV4 | undefined>(undefined)
@@ -164,7 +162,7 @@ const { tooltipAbsoluteLeft, tooltipAbsoluteTop } = composables.useTooltipAbsolu
   tooltipData,
 )
 
-const htmlLegendPlugin = {
+const htmlLegendPlugin: Plugin = {
   id: legendID,
   afterUpdate(chart: Chart) {
     legendItems.value = generateLegendItems(chart, props.legendValues, props.chartLegendSortFn)

@@ -30,7 +30,7 @@ export default function useDonutChartOptions(chartOptions: DonutChartOptions) {
   }
 
   Tooltip.positioners[positionKey] = function(elements, position) {
-    if (!elements.length) {
+    if (!elements.length || position.x === null || position.y === null) {
       return false
     }
 

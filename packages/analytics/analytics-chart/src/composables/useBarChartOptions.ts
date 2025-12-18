@@ -33,7 +33,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
   }
 
   Tooltip.positioners[positionKey] = function(elements, position) {
-    if (!elements.length || chartOptions.tooltipState.interactionMode === 'interactive') {
+    if (!elements.length || chartOptions.tooltipState.interactionMode === 'interactive' || position.x === null || position.y === null) {
       return false
     }
 
@@ -70,7 +70,7 @@ export default function useBarChartOptions(chartOptions: BarChartOptions) {
       if (chart.options.indexAxis === 'y' && element.inYRange(position.y, true) && chart.data.datasets[datasetIndex].data[index]) {
         items.push({ element, datasetIndex, index })
       }
-      if (chart.options.indexAxis === 'x' && element.inXRange(position.x, true) && chart.data.datasets[datasetIndex].data[index]) {
+      if (chart.options.indexAxis === 'x' && position.x !== null && element.inXRange(position.x, true) && chart.data.datasets[datasetIndex].data[index]) {
         items.push({ element, datasetIndex, index })
       }
     })

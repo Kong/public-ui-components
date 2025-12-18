@@ -1,7 +1,6 @@
 <template>
   <ul
     v-if="position !== ChartLegendPosition.Hidden"
-    ref="legendContainerRef"
     class="legend-container"
     data-testid="legend"
   >
@@ -69,7 +68,6 @@ const props = defineProps({
 })
 
 const { i18n } = composables.useI18n()
-const legendContainerRef = ref<HTMLElement>()
 const showValues = inject('showLegendValues', false)
 const position = inject('legendPosition', ref(ChartLegendPosition.Bottom))
 

@@ -83,7 +83,7 @@ export default function useLineChartOptions(chartOptions: LineChartOptions) {
   }
 
   Tooltip.positioners[positionKey] = function(elements, position) {
-    if (!elements.length || chartOptions.tooltipState.interactionMode === 'interactive') {
+    if (!elements.length || chartOptions.tooltipState.interactionMode === 'interactive' || position.x === null || position.y === null) {
       return false
     }
 

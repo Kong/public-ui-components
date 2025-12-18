@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ChartDataset, ChartOptions } from 'chart.js'
+import type { ChartOptions } from 'chart.js'
 import { Chart } from 'chart.js'
 import type { EventContext } from 'chartjs-plugin-annotation'
 import annotationPlugin from 'chartjs-plugin-annotation'
@@ -125,7 +125,7 @@ const totalValueOfDataset = ({ chart }: EventContext, label: string) => {
   const chartData: BarChartData = chart.data as BarChartData
   const labelIndex = chartData.labels?.indexOf(label) as number
 
-  return chartData.datasets.reduce((acc: number, current: ChartDataset, idx: number) => {
+  return chartData.datasets.reduce<number>((acc: number, current, idx: number) => {
     if (chart.isDatasetVisible(idx)) {
       const val = current.data[labelIndex] as number
 
