@@ -35,6 +35,14 @@
         />
       </div>
     </template>
+    <div v-if="pluginList?.['Query Result']?.length">
+      <PluginCatalogGroup
+        v-model="shouldCollapsed['Query Result']"
+        :config="config"
+        :plugins="pluginList['Query Result'] || []"
+        @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
+      />
+    </div>
   </div>
 </template>
 

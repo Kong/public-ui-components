@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="name"
     class="group-title"
     :data-testid="`plugin-group-${name}`"
   >
@@ -57,7 +58,7 @@ const props = defineProps<{
   /**
    * Name of the group
    */
-  name: string
+  name?: string
   /**
    * Plugins to display in the grid
    */
@@ -66,9 +67,7 @@ const props = defineProps<{
 
 const groupIcon = computed(() => {
   switch (props.name) {
-    case 'New':
-      return SparklesIcon
-    case 'Popular':
+    case 'Featured':
       return PopularIcon
     case 'AI':
       return BotIcon

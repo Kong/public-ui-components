@@ -3,8 +3,7 @@ import { PluginGroup, PluginScope } from '@kong-ui-public/entities-plugins-metad
 import type { RenderRules } from '../components/free-form/shared/types'
 
 export const PluginFeaturedArray = [
-  'New',
-  'Popular',
+  'Featured',
 ]
 
 type PluginFeatured = (typeof PluginFeaturedArray)[number]
