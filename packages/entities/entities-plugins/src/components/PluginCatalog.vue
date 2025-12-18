@@ -294,9 +294,17 @@ const filteredPlugins = computed((): PluginCardListExtended => {
 
   const queryResults = Object.values(results)
     .flat()
-    .filter((p): p is PluginType => p !== undefined && p !== null)
+    .filter((p): p is PluginType => Boolean(p))
 
-  return queryResults.length ? { 'Query Result': queryResults } : { }
+  // dedupe by id preserving first-seen order using Map + Array.from
+  const uniqueResults = Array.from(
+    queryResults.reduce((m, plugin) => {
+      if (!m.has(plugin.id)) m.set(plugin.id, plugin)
+      return m
+    }, new Map<string, PluginType>()).values(),
+  )
+
+  return uniqueResults.length ? { 'Query Result': uniqueResults } : { }
 })
 
 const hasFilteredResults = computed((): boolean => {

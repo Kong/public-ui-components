@@ -63,6 +63,10 @@ const props = defineProps<{
    * Plugins to display in the grid
    */
   plugins: PluginType[]
+  /**
+   * Whether to show all plugins without collapsing
+   */
+  showAllCard?: boolean
 }>()
 
 const groupIcon = computed(() => {
@@ -107,13 +111,19 @@ const pluginCardContainerRef = ref<HTMLElement | null>(null)
 const showAll = ref(false)
 
 const displayedPlugins = computed(() => {
+  // if parent forces "show all" via prop, always return full list
+  if (props.showAllCard) return props.plugins
+
   if (!showAll.value && props.plugins.length > 9) {
     return props.plugins.slice(0, 8)
   }
   return props.plugins
 })
 
-const showShowAllCard = computed(() => !showAll.value && props.plugins.length > 9)
+const showShowAllCard = computed(() => {
+  // only show the "show all" card when not already expanded and when parent didn't force showing all
+  return !props.showAllCard && !showAll.value && props.plugins.length > 9
+})
 
 function handleShowAll() {
   showAll.value = true
