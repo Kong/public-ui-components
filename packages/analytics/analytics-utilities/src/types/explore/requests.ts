@@ -4,6 +4,7 @@ import type { AbsoluteTimeRangeV4, ExploreFilterTypesV2, RequestFilterTypeEmptyV
 // status_code and upstream_status_code are treated as metric filters
 export const queryableRequestDimensions = [
   'api',
+  'api_package',
   'api_product',
   'api_product_version',
   'application',
