@@ -40,6 +40,7 @@
         v-model="shouldCollapsed['Query Result']"
         :config="config"
         :plugins="pluginList['Query Result'] || []"
+        show-all-card
         @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
       />
     </div>
