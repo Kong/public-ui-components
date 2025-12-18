@@ -120,11 +120,13 @@
           v-if="listView"
           :config="config"
           :plugin-list="filteredPlugins"
+          @delete:success="(name: string) => $emit('delete-custom:success', name)"
         />
         <PluginCatalogGrid
           v-else
           :config="config"
           :plugin-list="filteredPlugins"
+          @delete:success="(name: string) => $emit('delete-custom:success', name)"
           @plugin-clicked="(val: PluginType) => $emit('plugin-clicked', val)"
         />
       </section>
