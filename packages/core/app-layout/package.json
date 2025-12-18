@@ -46,15 +46,15 @@
   "dependencies": {
     "@kong/icons": "^1.41.0",
     "@vueuse/core": "^13.5.0",
-    "focus-trap": "^7.6.5",
-    "focus-trap-vue": "^4.0.3",
+    "focus-trap": "^7.6.6",
+    "focus-trap-vue": "^4.1.0",
     "lodash.clonedeep": "^4.5.0"
   },
   "devDependencies": {
     "@kong/design-tokens": "1.18.2",
     "@kong/kongponents": "9.48.6",
     "@types/lodash.clonedeep": "^4.5.9",
-    "vue": "^3.5.22",
+    "vue": "^3.5.25",
     "vue-router": "^4.4.5"
   },
   "repository": {

@@ -61,6 +61,6 @@
   "dependencies": {
     "@formatjs/intl": "^2.10.15",
     "flat": "^6.0.1",
-    "intl-messageformat": "^10.7.16"
+    "intl-messageformat": "^10.7.18"
   }
 }

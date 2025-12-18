@@ -45,7 +45,7 @@
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-top-level-await": "^1.4.4",
     "vite-plugin-wasm": "^3.3.0",
-    "vue": "^3.5.22"
+    "vue": "^3.5.25"
   },
   "repository": {
     "type": "git",
@@ -68,7 +68,7 @@
     "@kong-ui-public/forms": "workspace:^",
     "@kong/kongponents": "^9.48.6",
     "monaco-editor": "^0.52.2",
-    "vue": "^3.5.12"
+    "vue": "^3.5.25"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
