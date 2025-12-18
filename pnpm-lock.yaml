@@ -188,6 +188,9 @@ importers:
 
   packages/analytics/analytics-chart:
     dependencies:
+      '@kong-ui-public/analytics-metric-provider':
+        specifier: workspace:^
+        version: link:../analytics-metric-provider
       '@kong-ui-public/analytics-utilities':
         specifier: workspace:^
         version: link:../analytics-utilities

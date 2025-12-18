@@ -27,8 +27,11 @@
       />
       <SingleValue
         v-if="isSingleValueChart"
+        :align-x="chartOptions.alignX"
         :data="chartData"
         :decimal-points="chartOptions.decimalPoints"
+        :increase-is-bad="chartOptions.increaseIsBad"
+        :show-trend="chartOptions.showTrend"
       />
     </div>
   </div>
@@ -116,6 +119,11 @@ const hasValidChartData = computed(() => {
   // for single value chart, show empty state if the metric value is null
   if (isSingleValueChart.value) {
     const metricName = props.chartData.meta?.metric_names?.[0]
+    if (props.chartOptions.showTrend) {
+      // For trend, expect exactly 2 records, and check current (last) is not null
+      return hasChartData && props.chartData.data.length >= 2 && props.chartData.data[1].event[metricName!] !== null
+    }
+
     // ignore the scenario where the metric name is undefined or metric value is not a number, the chart will handle it (display error message)
     return hasChartData && props.chartData.data[0].event[metricName!] !== null
   }
