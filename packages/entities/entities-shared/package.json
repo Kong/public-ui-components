@@ -22,8 +22,8 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.39.1",
-    "@kong/kongponents": "^9.43.2",
+    "@kong/icons": "^1.41.0",
+    "@kong/kongponents": "^9.48.6",
     "axios": "^1.12.0",
     "shiki": "^3.0.0",
     "vue": ">= 3.3.13 < 4",

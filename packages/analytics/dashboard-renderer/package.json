@@ -80,8 +80,8 @@
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.39.1",
-    "@kong/kongponents": "^9.43.2",
+    "@kong/icons": "^1.41.0",
+    "@kong/kongponents": "^9.48.6",
     "swrv": "^1.1.0",
     "vue": ">= 3.3.13 < 4"
   },
