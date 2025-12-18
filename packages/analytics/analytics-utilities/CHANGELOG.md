@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.4.0...@kong-ui-public/analytics-utilities@12.5.0) (2025-12-18)
+
+
+### Features
+
+* allow goap datasources to have any filter [MA-4619] ([#2744](https://github.com/Kong/public-ui-components/issues/2744)) ([42f3b78](https://github.com/Kong/public-ui-components/commit/42f3b78cfeabf30fe92f48a7881d973fdba710ac))
+
+
+
+
+
 # [12.4.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.3.1...@kong-ui-public/analytics-utilities@12.4.0) (2025-12-17)
 
 
