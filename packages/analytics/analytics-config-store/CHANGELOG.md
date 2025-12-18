@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@1.2.9...@kong-ui-public/analytics-config-store@1.2.10) (2025-12-18)
+
+**Note:** Version bump only for package @kong-ui-public/analytics-config-store
+
+
+
+
+
 ## [1.2.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-config-store@1.2.8...@kong-ui-public/analytics-config-store@1.2.9) (2025-12-18)
 
 **Note:** Version bump only for package @kong-ui-public/analytics-config-store
