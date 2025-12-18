@@ -660,6 +660,9 @@ importers:
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
+      axios:
+        specifier: ^1.13.2
+        version: 1.13.2
       pug:
         specifier: ^3.0.3
         version: 3.0.3
