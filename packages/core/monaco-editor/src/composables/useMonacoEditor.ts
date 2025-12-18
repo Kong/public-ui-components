@@ -1,17 +1,21 @@
 import { onActivated, onBeforeUnmount, onMounted, reactive, toValue, watch } from 'vue'
-import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import { unrefElement, useDebounceFn } from '@vueuse/core'
+import { shikiToMonaco } from '@shikijs/monaco'
+import { createHighlighter } from 'shiki'
+
+import { DEFAULT_MONACO_OPTIONS } from '../constants'
 
 import * as monaco from 'monaco-editor'
 
-import type * as monacoType from 'monaco-editor'
-
 import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
+import type { HighlighterGeneric, BundledLanguage, BundledTheme } from 'shiki'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
 
 // singletons
 /** The Monaco instance once loaded */
-let monacoInstance: typeof monacoType | undefined = undefined
+let monacoInstance: typeof monaco | undefined = undefined
+/** The Shiki highlighter instance */
+let shikiHighlighter: HighlighterGeneric<BundledLanguage, BundledTheme> | undefined = undefined
 
 // cache
 const langCache = new Map<string, boolean>()
@@ -19,7 +23,7 @@ const langCache = new Map<string, boolean>()
 /**
  * Lazily load Monaco and configure workers only once.
  */
-function loadMonaco(language?: string): typeof monacoType {
+function loadMonaco(language?: string): typeof monaco {
   if (!monacoInstance) {
     monacoInstance = monaco
   }
@@ -38,6 +42,43 @@ function loadMonaco(language?: string): typeof monacoType {
   return monacoInstance
 }
 
+let shikiReady = false
+const shikiReadyCallbacks = new Set<() => void>()
+
+/** Register a callback to be invoked when Shiki is ready. */
+function onShikiReady(cb: () => void): void {
+  if (shikiReady) {
+    cb()
+  } else {
+    shikiReadyCallbacks.add(cb)
+  }
+}
+
+/**
+ * Load and configure Shiki highlighter.
+ *
+ * @return {Promise<HighlighterGeneric<BundledLanguage, BundledTheme>>} The Shiki highlighter instance.
+ */
+async function loadShiki(): Promise<HighlighterGeneric<BundledLanguage, BundledTheme>> {
+  if (shikiHighlighter) return shikiHighlighter
+
+  shikiHighlighter = await createHighlighter({
+    langs: [],
+    themes: [],
+  })
+
+  if (monacoInstance) {
+    setTimeout(() => {
+      shikiToMonaco(shikiHighlighter!, monacoInstance)
+      shikiReady = true
+      shikiReadyCallbacks.forEach(cb => cb())
+      shikiReadyCallbacks.clear()
+    }, 350)
+  }
+
+  return shikiHighlighter
+}
+
 /**
  * Composable for integrating the Monaco Editor into Vue components.
  * @param {MaybeComputedElementRef} target - The target DOM element or Vue component ref where the editor will be mounted.
@@ -53,7 +94,7 @@ export function useMonacoEditor<T extends MaybeElement>(
    * @type {monaco.editor.IStandaloneCodeEditor | undefined}
    * @default undefined
   */
-  let editor: monacoType.editor.IStandaloneCodeEditor | undefined
+  let editor: monaco.editor.IStandaloneCodeEditor | undefined
 
   // Internal flag to prevent multiple setups
   let _isSetup = false
@@ -115,8 +156,11 @@ export function useMonacoEditor<T extends MaybeElement>(
   const remeasureFonts = useDebounceFn(() => monacoInstance?.editor.remeasureFonts(), 200)
 
 
+  /** Initializes Monaco, Shiki, the editor model, and sets up the editor instance once the target element becomes available */
   const init = (): void => {
     const monaco = loadMonaco(options.language)
+
+    loadShiki()
 
     // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
     const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
@@ -145,8 +189,14 @@ export function useMonacoEditor<T extends MaybeElement>(
       })
 
       _isSetup = true
-      editorStates.editorStatus = 'ready'
+      editorStates.editorStatus = 'loading'
       editorStates.hasContent = !!options.code.value
+
+      onShikiReady(() => {
+        // guard in case editor was disposed before shiki finished
+        if (!editor) return
+        editorStates.editorStatus = 'ready'
+      })
 
       // Watch content changes and trigger callbacks efficiently
       editor.onDidChangeModelContent(() => {

@@ -3,6 +3,20 @@ import { describe, it, expect, vi } from 'vitest'
 import { useMonacoEditor } from './useMonacoEditor'
 import { mount } from '@vue/test-utils'
 
+const code = ref('initial code')
+
+const dummyComponent = defineComponent({
+  setup() {
+    const target = ref<HTMLElement | null>(null)
+    const editorApi = useMonacoEditor(target, {
+      code,
+      language: 'javascript',
+    })
+    return { target, editorApi }
+  },
+  template: '<div ref="target" />',
+})
+
 describe('useMonacoEditor', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -12,29 +26,12 @@ describe('useMonacoEditor', () => {
     const el = document.createElement('div')
     document.body.appendChild(el)
 
-    const code = ref('initial code')
-
-    // define a simple dummy component using the composable
-    const wrapper = mount(
-      defineComponent({
-        setup() {
-          const target = ref<HTMLElement | null>(null)
-          const editorApi = useMonacoEditor(target, {
-            code,
-            language: 'javascript',
-            onChanged: vi.fn(),
-            onCreated: vi.fn(),
-          })
-          return { target, editorApi }
-        },
-        template: '<div ref="target" />',
-      }),
-    )
+    const wrapper = mount(dummyComponent)
 
     // wait for next tick so lifecycle hooks run
     await nextTick()
 
-    const { editorApi } = wrapper.vm as any
+    const { editorApi } = wrapper.vm
 
     // ensure methods exist
     expect(editorApi).toHaveProperty('setContent')
@@ -46,5 +43,27 @@ describe('useMonacoEditor', () => {
 
     // call a method safely
     expect(() => editorApi.setContent('new code')).not.toThrow()
+  })
+
+  it('keeps editorStatus as loading until Shiki is ready', async () => {
+    vi.useFakeTimers()
+
+    const wrapper = mount(dummyComponent, {
+      attachTo: document.body,
+    })
+
+    await nextTick()
+
+    const { editorApi } = wrapper.vm
+
+    // it should be loading initially
+    expect(editorApi.editorStates.editorStatus).toBe('loading')
+
+    // it should remain loading for 200ms
+    vi.advanceTimersByTime(200)
+    await nextTick()
+    expect(editorApi.editorStates.editorStatus).toBe('loading')
+
+    vi.useRealTimers()
   })
 })

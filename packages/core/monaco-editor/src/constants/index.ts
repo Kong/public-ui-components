@@ -1,5 +1,10 @@
+import {
+  KUI_FONT_SIZE_20,
+  KUI_LINE_HEIGHT_30,
+  KUI_FONT_FAMILY_CODE,
+  KUI_FONT_WEIGHT_MEDIUM,
+} from '@kong/design-tokens'
 import type { editor } from 'monaco-editor'
-import { KUI_FONT_FAMILY_CODE, KUI_FONT_SIZE_20, KUI_FONT_WEIGHT_MEDIUM, KUI_LINE_HEIGHT_30 } from '@kong/design-tokens'
 
 export const DEFAULT_MONACO_OPTIONS = Object.freeze<Partial<editor.IStandaloneEditorConstructionOptions>>({
   autoClosingQuotes: 'always',
