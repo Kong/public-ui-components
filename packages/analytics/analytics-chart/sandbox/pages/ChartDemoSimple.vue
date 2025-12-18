@@ -190,6 +190,28 @@
             </KRadio>
           </div>
         </div>
+
+        <div v-if="isSingleValue">
+          <KLabel>Trend</KLabel>
+          <div>
+            <KInputSwitch
+              v-model="showTrend"
+              :label="showTrend ? 'Show Trend' : 'Hide Trend'"
+            />
+          </div>
+          <div v-if="showTrend">
+            <KInputSwitch
+              v-model="increaseIsBad"
+              :label="increaseIsBad ? 'Increase Is Bad' : 'Increase Is Good'"
+            />
+            <KSelect
+              v-model="alignX"
+              :items="alignXOptions"
+              label="Align X"
+              placeholder="Select alignment"
+            />
+          </div>
+        </div>
       </div>
       <br>
 
@@ -252,6 +274,8 @@
       </TopNTable>
     </div>
 
+    <br>
+
     <div class="data-container">
       <KLabel>ChartData</KLabel>
       <KCodeBlock
@@ -281,7 +305,7 @@
 import type { AnalyticsExploreRecord, ExploreResultV4, QueryResponseMeta } from '@kong-ui-public/analytics-utilities'
 import type { SelectItem } from '@kong/kongponents'
 import type { SandboxNavigationItem } from '@kong-ui-public/sandbox-layout'
-import type { AnalyticsChartColors, SimpleChartType, SimpleChartOptions, SimpleChartMetricDisplay } from '../../src'
+import type { AlignX, AnalyticsChartColors, SimpleChartType, SimpleChartOptions, SimpleChartMetricDisplay } from '../../src'
 
 import { computed, ref, inject } from 'vue'
 import { generateCrossSectionalData } from '@kong-ui-public/analytics-utilities'
@@ -297,6 +321,18 @@ type MetricScenario = {
   values: number[]
 }
 
+const alignXOptions: Array<{
+  label: string
+  value: AlignX
+}> = [
+  { label: 'Left', value: 'left' },
+  { label: 'Center', value: 'center' },
+  { label: 'Right', value: 'right' },
+  { label: 'Between', value: 'between' },
+  { label: 'Around', value: 'around' },
+  { label: 'Evenly', value: 'evenly' },
+]
+
 // Inject the app-links from the entry file
 const appLinks: SandboxNavigationItem[] = inject('app-links', [])
 
@@ -306,6 +342,9 @@ const chartType = ref<SimpleChartType>('gauge')
 const metricDisplay = ref<SimpleChartMetricDisplay>('full')
 const reverseDataset = ref(true)
 const gaugeNumerator = ref(0)
+const showTrend = ref(false)
+const increaseIsBad = ref(false)
+const alignX = ref<AlignX>('evenly')
 
 const statusCodeDimensionValues = ref(new Set(['200', '300']))
 const topNMetric = ref<TopNMetricKind>('count')
@@ -506,6 +545,9 @@ const simpleChartOptions = computed<SimpleChartOptions>(() => ({
   metricDisplay: metricDisplay.value,
   reverseDataset: reverseDataset.value,
   numerator: gaugeNumerator.value,
+  showTrend: showTrend.value,
+  increaseIsBad: showTrend.value ? increaseIsBad.value : false,
+  alignX: showTrend.value ? alignX.value : 'evenly',
 }))
 
 const dataCode = computed(() => {

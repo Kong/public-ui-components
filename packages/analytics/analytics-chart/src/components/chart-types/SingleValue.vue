@@ -1,6 +1,7 @@
 <template>
   <div
     class="chart-parent"
+    :class="alignmentClass"
     data-testid="single-value-parent"
   >
     <KEmptyState
@@ -26,17 +27,57 @@
       >
         &nbsp;{{ metricUnit }}
       </span>
+      <div
+        v-if="showTrend"
+        class="single-value-trend"
+      >
+        <div
+          class="trend-change"
+          :class="textColor(polarity)"
+          data-testid="single-value-trend"
+        >
+          <component
+            :is="trendIcon"
+            v-if="polarity !== 0"
+            :color="colorAttribute(polarity)"
+            :size="KUI_ICON_SIZE_30"
+          />
+          <EqualIcon
+            v-else
+            :color="`var(--kui-color-text-neutral-strong, ${KUI_COLOR_TEXT_NEUTRAL_STRONG})`"
+            :size="KUI_ICON_SIZE_30"
+          />
+          <div>{{ formattedChange }}</div>
+        </div>
+        <div
+          v-if="trendRange"
+          class="single-value-trend-range"
+          data-testid="single-value-trend-range"
+        >
+          {{ trendRange }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
 import type { PropType } from 'vue'
 import type { AnalyticsExploreRecord, ExploreResultV4, AllAggregations } from '@kong-ui-public/analytics-utilities'
+
+import { computed, onMounted } from 'vue'
+import { unitFormatter } from '@kong-ui-public/analytics-utilities'
+import { changePolarity, metricChange, defineIcon, calculateChange, useTrendRange } from '@kong-ui-public/analytics-metric-provider'
+import { EqualIcon } from '@kong/icons'
+import {
+  KUI_COLOR_TEXT_DANGER_STRONG,
+  KUI_COLOR_TEXT_SUCCESS,
+  KUI_COLOR_TEXT_NEUTRAL_STRONG,
+  KUI_ICON_SIZE_30,
+} from '@kong/design-tokens'
+
 import { SINGLE_VALUE_DEFAULT_DECIMAL_POINTS } from '../../constants'
 import composables from '../../composables'
-import { unitFormatter } from '@kong-ui-public/analytics-utilities'
 
 const { i18n } = composables.useI18n()
 const { formatBytes } = unitFormatter({ i18n })
@@ -53,9 +94,27 @@ const props = defineProps({
     type: Number,
     default: SINGLE_VALUE_DEFAULT_DECIMAL_POINTS,
   },
+  leftAlign: {
+    type: Boolean,
+    default: false,
+  },
+  showTrend: {
+    type: Boolean,
+    default: false,
+  },
+  increaseIsBad: {
+    type: Boolean,
+    default: false,
+  },
+  alignX: {
+    type: String as PropType<'left' | 'center' | 'right' | 'between' | 'around' | 'evenly'>,
+    default: 'space-evenly',
+  },
 })
 
-const record = computed((): AnalyticsExploreRecord => props.data.data[0])
+const alignmentClass = computed(() => `align-${props.leftAlign ? 'left' : props.alignX}`)
+
+const records = computed<AnalyticsExploreRecord[]>(() => props.data.data)
 const metricName = computed((): AllAggregations | undefined => props.data.meta?.metric_names?.[0])
 const metricUnit = computed((): string | undefined => {
   const unit = metricName.value ? props.data.meta?.metric_units?.[metricName.value] : undefined
@@ -68,12 +127,42 @@ const metricUnit = computed((): string | undefined => {
 // by default, display metric units for requests per minute, latency
 const displayMetricUnit = computed((): boolean => metricName.value === 'request_per_minute' || !!metricName.value?.includes('_latency_'))
 
-const singleValue = computed((): number | null => {
-  if (!record.value || !metricName.value || typeof record.value.event[metricName.value] !== 'number') {
+const previousValue = computed<number | null>(() => {
+  if (!props.showTrend || records.value.length < 2 || !metricName.value) {
     return null
   }
 
-  return record.value.event[metricName.value] as number
+  const value = records.value[0].event[metricName.value]
+
+  if (typeof value !== 'number' || isNaN(value)) {
+    return null
+  }
+
+  return value
+})
+
+const singleValue = computed<number | null>(() => {
+  if (!metricName.value) {
+    return null
+  }
+
+  // With trend: need 2 records (previous at [0], current at [1])
+  // Without trend: need 1 record (current at [0])
+  const requiredRecords = props.showTrend ? 2 : 1
+  const currentIndex = props.showTrend ? 1 : 0
+
+  if (records.value.length < requiredRecords) {
+    return null
+  }
+
+  const value = records.value[currentIndex].event[metricName.value]
+
+  // Check if value is actually a number
+  if (typeof value !== 'number' || isNaN(value)) {
+    return null
+  }
+
+  return value
 })
 
 const formattedValue = computed((): string => {
@@ -104,9 +193,42 @@ const formattedValue = computed((): string => {
   return value.toLocaleString('en-US', { maximumFractionDigits: decimalPoints })
 })
 
+const change = computed(() => calculateChange(singleValue.value ?? 0, previousValue.value ?? 0) || 0)
+const polarity = computed(() => changePolarity(change.value, true, props.increaseIsBad)) // Assume hasTrendAccess=true
+const trendIcon = computed(() => defineIcon(polarity.value))
+const formattedChange = computed(() => metricChange(change.value, true, i18n.t('singleValue.trend.not_available')))
+const trendRange = useTrendRange(computed(() => props.showTrend), undefined, computed(() => props.data.meta))
+
+const textColor = (polarityNum: number) => {
+  if (polarityNum > 0) {
+    return 'positive'
+  }
+
+  if (polarityNum < 0) {
+    return 'negative'
+  }
+
+  return 'neutral'
+}
+
+// same for color token mapping
+const colorAttribute = (polarityNum: number) => {
+  if (polarityNum > 0) {
+    return KUI_COLOR_TEXT_SUCCESS
+  }
+
+  if (polarityNum < 0) {
+    return KUI_COLOR_TEXT_DANGER_STRONG
+  }
+
+  return KUI_COLOR_TEXT_NEUTRAL_STRONG
+}
+
 onMounted(() => {
-  if (props.data?.data?.length > 1) {
+  if (!props.showTrend && props.data?.data?.length > 1) {
     console.warn('SingleValue chart should only be used with a single data point. Data length:', props.data.data.length)
+  } else if (props.showTrend && props.data?.data?.length !== 2) {
+    console.warn('SingleValue with trend expects exactly 2 data points. Data length:', props.data.data.length)
   }
 })
 </script>
@@ -118,6 +240,30 @@ onMounted(() => {
 .chart-parent {
   container-type: inline-size;
 
+  &.align-left {
+    justify-content: flex-start;
+  }
+
+  &.align-center {
+    justify-content: center;
+  }
+
+  &.align-right {
+    justify-content: flex-end;
+  }
+
+  &.align-between {
+    justify-content: space-between;
+  }
+
+  &.align-around {
+    justify-content: space-around;
+  }
+
+  &.align-evenly {
+    justify-content: space-evenly;
+  }
+
   .single-value-error {
     &:deep(.empty-state-title) {
       font-size: var(--kui-font-size-20, $kui-font-size-20);
@@ -128,7 +274,9 @@ onMounted(() => {
 
   .single-value-wrapper {
     align-items: baseline;
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 
     .single-value {
       color: $kui-color-text;
@@ -142,6 +290,47 @@ onMounted(() => {
       font-size: $kui-font-size-60;
       font-weight: $kui-font-weight-bold;
       line-height: $kui-line-height-60;
+    }
+
+    .single-value-trend {
+      align-items: center;
+      column-gap: var(--kui-space-40, $kui-space-40);
+      display: flex;
+
+      .trend-change {
+        align-items: center;
+        border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+        display: flex;
+        flex-direction: row;
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+        padding: var(--kui-space-20, $kui-space-20)
+          var(--kui-space-40, $kui-space-40);
+
+        .kui-icon {
+          margin-right: var(--kui-space-20, $kui-space-20);
+        }
+
+        &.positive {
+          background-color: var(--kui-color-background-success-weakest, $kui-color-background-success-weakest);
+          color: var(--kui-color-text-success, $kui-color-text-success);
+        }
+
+        &.negative {
+          background-color: var(--kui-color-background-danger-weakest, $kui-color-background-danger-weakest);
+          color: var(--kui-color-text-danger-strong, $kui-color-text-danger-strong);
+        }
+
+        &.neutral {
+          background-color: var(--kui-color-background-neutral-weaker, $kui-color-background-neutral-weaker);
+          color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+        }
+      }
+
+      .single-value-trend-range {
+        color: var(--kui-color-text, $kui-color-text);
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
+      }
     }
 
     @container (min-width: 300px) {

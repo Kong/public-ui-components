@@ -267,7 +267,10 @@
     }
   },
   "singleValue": {
-    "valueError": "Invalid configuration"
+    "valueError": "Invalid configuration",
+    "trend": {
+      "not_available": "Not available"
+    }
   },
   "new_timerange_label": "Time range",
   "sparkline_no_data": "No data",
