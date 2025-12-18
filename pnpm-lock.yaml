@@ -1231,7 +1231,7 @@ importers:
   packages/entities/entities-vaults:
     dependencies:
       '@kong/icons':
-        specifier: ^1.39.1
+        specifier: ^1.41.0
         version: 1.41.0(vue@3.5.22(typescript@5.9.2))
     devDependencies:
       '@kong-ui-public/entities-shared':
