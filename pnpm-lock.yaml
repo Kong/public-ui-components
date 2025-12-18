@@ -1099,6 +1099,9 @@ importers:
       axios:
         specifier: '>=1.12.2'
         version: 1.13.2
+      swrv:
+        specifier: ^1.1.0
+        version: 1.1.0(vue@3.5.25(typescript@5.9.3))
       vue:
         specifier: ^3.5.25
         version: 3.5.25(typescript@5.9.3)
