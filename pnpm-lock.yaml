@@ -703,6 +703,9 @@ importers:
       '@kong/design-tokens':
         specifier: 1.18.2
         version: 1.18.2
+      '@kong/icons':
+        specifier: ^1.41.0
+        version: 1.41.0(vue@3.5.25(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.48.6
         version: 9.48.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.5.1(vue@3.5.22(typescript@5.9.2)))(vue@3.5.22(typescript@5.9.2))
