@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.6.1...@kong-ui-public/analytics-utilities@12.7.0) (2025-12-19)
+
+
+### Features
+
+* portal_api dimension ([#2745](https://github.com/Kong/public-ui-components/issues/2745)) ([021acf6](https://github.com/Kong/public-ui-components/commit/021acf65027491939e24b37205055a1f921769d1))
+
+
+
+
+
 ## [12.6.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.6.0...@kong-ui-public/analytics-utilities@12.6.1) (2025-12-19)
 
 
