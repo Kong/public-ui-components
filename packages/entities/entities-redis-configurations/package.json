@@ -46,7 +46,7 @@
     "@kong/design-tokens": "1.18.2",
     "@kong/icons": "^1.41.0",
     "@kong/kongponents": "9.48.6",
-    "@types/uuid": "^10.0.0",
+    "@types/uuid": "^11.0.0",
     "axios": "^1.7.7",
     "vue": "^3.5.22",
     "vue-router": "^4.4.5"
