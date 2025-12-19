@@ -24,24 +24,24 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.41.0",
     "@kong/kongponents": "^9.48.6",
-    "@shikijs/core": "^3.19.0",
-    "@shikijs/engine-javascript": "^3.19.0",
-    "axios": "^1.12.2",
-    "shiki": "^3.0.0",
+    "@shikijs/core": "^3.20.0",
+    "@shikijs/engine-javascript": "^3.20.0",
+    "axios": "^1.13.2",
+    "shiki": "^3.20.0",
     "vue": ">= 3.3.13 < 4",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.2",
     "@kong/icons": "^1.41.0",
     "@kong/kongponents": "9.48.6",
-    "@shikijs/core": "^3.19.0",
-    "@shikijs/engine-javascript": "^3.19.0",
+    "@shikijs/core": "^3.20.0",
+    "@shikijs/engine-javascript": "^3.20.0",
     "axios": "^1.7.9",
-    "shiki": "^3.19.0",
+    "shiki": "^3.20.0",
     "vue": "^3.5.25",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.6.4"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",

@@ -75,7 +75,7 @@
     "@types/lodash.mapkeys": "^4.6.9",
     "@types/lodash.pick": "^4.4.9",
     "@types/lodash.pickby": "^4.6.9",
-    "@types/papaparse": "^5.3.16",
+    "@types/papaparse": "^5.5.2",
     "approximate-number": "^2.1.1",
     "chart.js": "^4.5.1",
     "chartjs-adapter-date-fns": "^3.0.0",
