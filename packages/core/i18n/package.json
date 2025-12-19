@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/i18n",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "type": "module",
   "main": "./dist/i18n.umd.js",
   "module": "./dist/i18n.es.js",
