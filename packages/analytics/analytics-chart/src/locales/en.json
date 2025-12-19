@@ -94,6 +94,7 @@
     "country": "Country",
     "data_plane_node": "Data plane node",
     "data_plane_node_version": "Data plane node version",
+    "api_package": "API package",
     "api_product": "API product",
     "api_product_version": "API product version",
     "portal": "Portal",
