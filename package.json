@@ -9,6 +9,7 @@
     "stylelint": "cross-env FORCE_COLOR=1 pnpm -r run stylelint",
     "stylelint:fix": "cross-env FORCE_COLOR=1 pnpm -r run stylelint:fix",
     "typecheck": "cross-env FORCE_COLOR=1 pnpm -r run typecheck",
+    "typecheck:all": "cross-env FORCE_COLOR=1 lerna run typecheck --no-bail",
     "test:component": "BABEL_ENV=cypress pnpm -r run test:component",
     "test:component:open": "BABEL_ENV=cypress cypress open --component -b chrome",
     "test:component:ci": "BABEL_ENV=cypress cypress run --component -b chrome",
