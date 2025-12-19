@@ -38,7 +38,6 @@ const baseConfigKM: KongManagerRouteListConfig = {
   createRoute,
   getViewRoute: () => viewRoute,
   getEditRoute: () => editRoute,
-  getDebugRoute: () => debugRoute,
 }
 
 describe('<RouteList />', () => {

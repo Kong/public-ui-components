@@ -170,6 +170,7 @@
         </PermissionsWrapper>
         <PermissionsWrapper :auth-function="() => canDebug(row)">
           <KDropdownItem
+            v-if="config.getDebugRoute"
             data-testid="action-entity-debug"
             :item="getDebugDropdownItem(row.id)"
           />
@@ -589,9 +590,11 @@ const getEditDropdownItem = (id: string) => {
 }
 
 const getDebugDropdownItem = (id: string) => {
-  return {
-    label: t('actions.debugger'),
-    to: props.config.getDebugRoute(id),
+  if (props.config.getDebugRoute) {
+    return {
+      label: t('actions.debugger'),
+      to: props.config.getDebugRoute(id),
+    }
   }
 }
 
