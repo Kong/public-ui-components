@@ -13,7 +13,7 @@ export interface BaseGatewayServiceListConfig {
   /** A function that returns the route for the belonged control plane */
   getControlPlaneRoute?: (id: string) => RouteLocationRaw
   /** A function that returns the route for starting a debug session for a Gateway Service */
-  getDebugRoute: (id: string) => RouteLocationRaw
+  getDebugRoute?: (id: string) => RouteLocationRaw
 }
 
 /** Konnect GatewayService list config */

@@ -27,7 +27,6 @@ describe('<GatewayServiceList />', () => {
     createRoute,
     getViewRoute: () => viewRoute,
     getEditRoute: () => editRoute,
-    getDebugRoute: () => debugRoute,
   }
 
   const baseConfigKonnect: KonnectGatewayServiceListConfig = {
