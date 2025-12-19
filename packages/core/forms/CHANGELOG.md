@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.20.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.11...@kong-ui-public/forms@4.20.12) (2025-12-19)
+
+**Note:** Version bump only for package @kong-ui-public/forms
+
+
+
+
+
 ## [4.20.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.10...@kong-ui-public/forms@4.20.11) (2025-12-19)
 
 **Note:** Version bump only for package @kong-ui-public/forms
