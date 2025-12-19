@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.13.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.12.5...@kong-ui-public/analytics-chart@10.13.0) (2025-12-19)
+
+
+### Features
+
+* **analytics:** add api_package translation string ([#2752](https://github.com/Kong/public-ui-components/issues/2752)) ([d01fde1](https://github.com/Kong/public-ui-components/commit/d01fde1d8d1f9253605e84452ce3efeb67bb57d8))
+
+
+
+
+
 ## [10.12.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-chart@10.12.4...@kong-ui-public/analytics-chart@10.12.5) (2025-12-19)
 
 
