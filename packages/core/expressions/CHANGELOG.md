@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.3.37...@kong-ui-public/expressions@1.3.38) (2025-12-19)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2693](https://github.com/Kong/public-ui-components/issues/2693)) ([b0fdd32](https://github.com/Kong/public-ui-components/commit/b0fdd32688d039687fd189639021fea2da8ec03e))
+
+
+
+
+
 ## [1.3.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/expressions@1.3.36...@kong-ui-public/expressions@1.3.37) (2025-12-19)
 
 
