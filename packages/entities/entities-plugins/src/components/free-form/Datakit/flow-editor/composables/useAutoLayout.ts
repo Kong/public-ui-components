@@ -299,9 +299,9 @@ export function useAutoLayout(options: useAutoLayoutOptions) {
         autoNodeIds.add(node.id)
         if (isGroupInstance(node)) {
           // Try `dimensions` from the GroupInstance first
-          dagreGraph!.setNode(node.id, node.dimensions ?? graphNode.dimensions)
+          dagreGraph!.setNode(node.id, { ...node.dimensions ?? graphNode.dimensions })
         } else {
-          dagreGraph!.setNode(node.id, graphNode.dimensions)
+          dagreGraph!.setNode(node.id, { ...graphNode.dimensions })
         }
       }
 
