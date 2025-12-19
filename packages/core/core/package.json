@@ -51,7 +51,7 @@
     "errorLimit": "246KB"
   },
   "peerDependencies": {
-    "axios": "^1.12.2",
+    "axios": "^1.13.2",
     "vue": "^3.5.25"
   },
   "dependencies": {
