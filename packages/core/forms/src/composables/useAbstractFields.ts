@@ -248,7 +248,7 @@ export default function useAbstractFields<T = any>(formData: AbstractFieldParams
     while (index < arrLength) {
       const key = arr[index]
 
-      if (index < arrLength - 1) {
+      if (key && index < arrLength - 1) {
         if (dataModel[key] !== undefined) {
           // Found parent property. Step in
           dataModel = dataModel[key]
@@ -257,7 +257,7 @@ export default function useAbstractFields<T = any>(formData: AbstractFieldParams
           dataModel[key] = {}
           dataModel = dataModel[key]
         }
-      } else {
+      } else if (key) {
         // Set final property value
         dataModel[key] = value
 

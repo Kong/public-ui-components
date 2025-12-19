@@ -42,7 +42,7 @@ const resources: Record<string, string> = {
 
   invalidTextContainNumber: t('validators.invalid_text_contain_number'),
   invalidTextContainSpec: t('validators.invalid_tex_contain_spec'),
-}
+} as const
 
 // string substitution for user passed custom messages.
 const msg = (text: string, ...args: any[]): string => {
@@ -53,6 +53,11 @@ const msg = (text: string, ...args: any[]): string => {
   }
 
   return text
+}
+
+// Safely get a message from the messages object, falling back to resources if not found.
+const getMsg = (messages: Record<string, string>, key: keyof typeof resources): string => {
+  return messages[key] ?? resources[key] ?? ''
 }
 
 /**
@@ -66,7 +71,7 @@ const msg = (text: string, ...args: any[]): string => {
 const checkEmpty = (value: any, required: boolean, messages = resources) => {
   if (isNil(value) || value === '') {
     if (required) {
-      return [msg(messages.fieldIsRequired)]
+      return [msg(getMsg(messages, 'fieldIsRequired'))]
     } else {
       return []
     }
@@ -90,14 +95,14 @@ export const validators: Validators = {
     if (isFinite(value)) {
       // min/max check
       if (!isNil(field.min) && value < field.min, messages = resources) {
-        errs.push(msg(messages.numberTooSmall, field.min))
+        errs.push(msg(getMsg(messages, 'numberTooSmall'), field.min))
       }
 
       if (!isNil(field.max) && value > field.max, messages = resources) {
-        errs.push(msg(messages.numberTooBig, field.max))
+        errs.push(msg(getMsg(messages, 'numberTooBig'), field.max))
       }
     } else {
-      errs.push(msg(messages.invalidNumber))
+      errs.push(msg(getMsg(messages, 'invalidNumber')))
     }
 
     return errs
@@ -109,10 +114,12 @@ export const validators: Validators = {
     if (errs != null) return errs
     errs = []
 
-    errs.concat(validators.number(value, field, model, messages))
+    if (typeof validators.number === 'function') {
+      errs = errs.concat(validators.number(value, field, model, messages) ?? [])
+    }
 
     if (!isInteger(value)) {
-      errs.push(msg(messages.invalidInteger))
+      errs.push(msg(getMsg(messages, 'invalidInteger')))
     }
 
     return errs
@@ -124,7 +131,7 @@ export const validators: Validators = {
     if (errs != null) return errs
 
     if (!isNumber(value) || isNaN(value)) {
-      return [msg(messages.invalidNumber)]
+      return [msg(getMsg(messages, 'invalidNumber'))]
     }
 
     return []
@@ -139,14 +146,14 @@ export const validators: Validators = {
     if (isString(value)) {
       // min/max length check
       if (!isNil(field.min) && value.length < field.min) {
-        errs.push(msg(messages.textTooSmall, value.length, field.min))
+        errs.push(msg(getMsg(messages, 'textTooSmall'), value.length, field.min))
       }
 
       if (!isNil(field.max) && value.length > field.max) {
-        errs.push(msg(messages.textTooBig, value.length, field.max))
+        errs.push(msg(getMsg(messages, 'textTooBig'), value.length, field.max))
       }
     } else {
-      errs.push(msg(messages.thisNotText))
+      errs.push(msg(getMsg(messages, 'thisNotText')))
     }
 
     return errs
@@ -156,22 +163,22 @@ export const validators: Validators = {
     // requiredness check
     if (field.required) {
       if (!Array.isArray(value)) {
-        return [msg(messages.thisNotArray)]
+        return [msg(getMsg(messages, 'thisNotArray'))]
       }
 
       if (value.length === 0) {
-        return [msg(messages.fieldIsRequired)]
+        return [msg(getMsg(messages, 'fieldIsRequired'))]
       }
     }
 
     // min/max items check
     if (!isNil(value)) {
       if (!isNil(field.min) && value.length < field.min) {
-        return [msg(messages.selectMinItems, field.min)]
+        return [msg(getMsg(messages, 'selectMinItems'), field.min)]
       }
 
       if (!isNil(field.max) && value.length > field.max) {
-        return [msg(messages.selectMaxItems, field.max)]
+        return [msg(getMsg(messages, 'selectMaxItems'), field.max)]
       }
     }
 
@@ -187,21 +194,21 @@ export const validators: Validators = {
     // valid date check
     const dateVal = new Date(value)
     if (isNaN(dateVal.getDate())) {
-      return [msg(messages.invalidDate)]
+      return [msg(getMsg(messages, 'invalidDate'))]
     }
 
     // min/max check
     if (!isNil(field.min)) {
       const min = new Date(field.min)
       if (dateVal.valueOf() < min.valueOf()) {
-        errs.push(msg(messages.dateIsEarly, fecha.format(dateVal), fecha.format(min)))
+        errs.push(msg(getMsg(messages, 'dateIsEarly'), fecha.format(dateVal), fecha.format(min)))
       }
     }
 
     if (!isNil(field.max)) {
       const max = new Date(field.max)
       if (dateVal.valueOf() > max.valueOf()) {
-        errs.push(msg(messages.dateIsLate, fecha.format(dateVal), fecha.format(max)))
+        errs.push(msg(getMsg(messages, 'dateIsLate'), fecha.format(dateVal), fecha.format(max)))
       }
     }
 
@@ -218,7 +225,7 @@ export const validators: Validators = {
       const re = new RegExp(field.pattern)
 
       if (!re.test(value)) {
-        return [msg(messages.invalidFormat)]
+        return [msg(getMsg(messages, 'invalidFormat'))]
       }
     }
 
@@ -233,7 +240,7 @@ export const validators: Validators = {
     // email regex check
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ // eslint-disable-line no-useless-escape
     if (!re.test(value)) {
-      return [msg(messages.invalidEmail)]
+      return [msg(getMsg(messages, 'invalidEmail'))]
     }
 
     return []
@@ -247,7 +254,7 @@ export const validators: Validators = {
     // url regex check
     const re = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g // eslint-disable-line no-useless-escape
     if (!re.test(value)) {
-      return [msg(messages.invalidURL)]
+      return [msg(getMsg(messages, 'invalidURL'))]
     }
 
     return []
@@ -267,7 +274,7 @@ export const validators: Validators = {
 
     // credit card regex check
     if (!creditCard.test(sanitized)) {
-      return [msg(messages.invalidCard)]
+      return [msg(getMsg(messages, 'invalidCard'))]
     }
 
     let sum = 0
@@ -295,7 +302,7 @@ export const validators: Validators = {
     }
 
     if (!(sum % 10 === 0 ? sanitized : false)) {
-      return [msg(messages.invalidCardNumber)]
+      return [msg(getMsg(messages, 'invalidCardNumber'))]
     }
 
     return []
@@ -309,7 +316,7 @@ export const validators: Validators = {
     // letters only regex check
     const re = /^[a-zA-Z]*$/
     if (!re.test(value)) {
-      return [msg(messages.invalidTextContainNumber)]
+      return [msg(getMsg(messages, 'invalidTextContainNumber'))]
     }
 
     return []
@@ -323,7 +330,7 @@ export const validators: Validators = {
     // letters and numbers only regex check
     const re = /^[a-zA-Z0-9]*$/
     if (!re.test(value)) {
-      return [msg(messages.invalidTextContainSpec)]
+      return [msg(getMsg(messages, 'invalidTextContainSpec'))]
     }
 
     return []

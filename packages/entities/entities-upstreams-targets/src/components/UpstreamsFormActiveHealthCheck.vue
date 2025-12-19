@@ -97,7 +97,7 @@
           :class="{ 'margin-top-6': i > 0 }"
         >
           <KInput
-            v-model="localHeaders[i].key"
+            v-model="localHeaders[i]!.key"
             autocomplete="off"
             :data-testid="`active-healthcheck-headers-header-${i + 1}`"
             :readonly="readonly"
@@ -105,7 +105,7 @@
             @blur="emitHeaders"
           />
           <KInput
-            v-model="localHeaders[i].values"
+            v-model="localHeaders[i]!.values"
             autocomplete="off"
             :data-testid="`active-healthcheck-headers-value-${i + 1}`"
             :readonly="readonly"

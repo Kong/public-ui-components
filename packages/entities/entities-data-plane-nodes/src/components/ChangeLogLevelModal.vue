@@ -120,7 +120,7 @@ const capableInstanceList = computed(() => props.instanceList.filter(node => nod
 
 const title = computed(() => {
   const summary = capableInstanceList.value.length === 1
-    ? i18n.t('modal.change_log_level.summary_with_name', { name: capableInstanceList.value[0].hostname })
+    ? i18n.t('modal.change_log_level.summary_with_name', { name: capableInstanceList.value[0]?.hostname })
     : i18n.t('modal.change_log_level.summary_with_number', { number: `${capableInstanceList.value.length}` })
   return i18n.t('modal.change_log_level.title', { summary })
 })
