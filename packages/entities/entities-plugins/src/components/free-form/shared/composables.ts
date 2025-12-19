@@ -443,8 +443,21 @@ const labelDictionary: Record<string, string> = {
   ttl: 'TTL',
   url: 'URL',
   http: 'HTTP',
+  https: 'HTTPS',
   api: 'API',
   uri: 'URI',
+  jq: 'jq',
+  vpn: 'VPN',
+  id: 'ID',
+  llm: 'LLM',
+  tls: 'TLS',
+  tcp: 'TCP',
+  udp: 'UDP',
+  lua: 'Lua',
+  jwt: 'JWT',
+  aws: 'AWS',
+  gcp: 'GCP',
+  azure: 'Azure',
 }
 
 function replaceByDictionary(name: string) {
