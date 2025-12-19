@@ -71,7 +71,7 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.2",
-    "@kong/kongponents": "9.48.1",
+    "@kong/kongponents": "9.48.6",
     "monaco-editor": "^0.55.1",
     "vue": "^3.5.22"
   },
