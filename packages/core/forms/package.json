@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "@kong/icons": "^1.41.0",
-    "dompurify": "^3.2.6",
+    "dompurify": "^3.2.7",
     "fecha": "^4.2.3",
     "lodash-es": "^4.17.21"
   },
@@ -60,7 +60,8 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/kongponents": "^9.48.6",
-    "vue": "^3.5.12"
+    "axios": "^1.13.2",
+    "vue": "^3.5.25"
   },
   "devDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
@@ -68,6 +69,7 @@
     "@kong/design-tokens": "1.18.2",
     "@kong/kongponents": "9.48.6",
     "@types/lodash-es": "^4.17.12",
+    "axios": "^1.13.2",
     "pug": "^3.0.3"
   },
   "distSizeChecker": {

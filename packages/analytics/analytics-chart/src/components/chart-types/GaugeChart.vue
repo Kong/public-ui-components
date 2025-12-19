@@ -25,7 +25,6 @@
       :style="{ height, width }"
     >
       <Doughnut
-        ref="chartInstance"
         :chart-id="chartID"
         :data="(mutableData as any)"
         :options="(chartOptions as any)"
@@ -46,7 +45,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { Doughnut } from 'vue-chartjs'
 import composables from '../../composables'
 import type { AnalyticsChartColors, KChartData, SimpleChartMetricDisplay } from '../../types'
-import type { Chart, ChartDataset } from 'chart.js'
+import type { ChartDataset } from 'chart.js'
 import type { DonutChartData } from '../../types/chart-data'
 
 const props = defineProps({
@@ -137,8 +136,6 @@ const chartOptions = {
     },
   },
 }
-
-const chartInstance = ref<Chart>()
 
 // The large metric value displayed in the center can be specified; otherwise, default to the first value in the dataset
 const metricHighlight = computed(() => approxNum(formattedDataset?.value[0]?.data[props.numerator], { capital: true }))

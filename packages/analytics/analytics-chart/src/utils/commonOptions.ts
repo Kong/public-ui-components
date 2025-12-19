@@ -32,16 +32,17 @@ export const lineChartTooltipBehavior = (
     const colors = tooltip.labelColors
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 
+    const x = tooltip.dataPoints[0].parsed.x ?? 0 // convert null datapoints to 0
     tooltipData.tooltipContext = options?.contextFormatter
-      ? options.contextFormatter(tooltip.dataPoints[0].parsed.x, granularity)
+      ? options.contextFormatter(x, granularity)
       : formatTooltipTimestampByGranularity({
-        tickValue: new Date(tooltip.dataPoints[0].parsed.x),
+        tickValue: new Date(x),
         granularity,
       })
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
       const rawValue = p.parsed[valueAxis]
-      const value = formatUnit(rawValue, tooltipData.units, { translateUnit: tooltipData.translateUnit })
+      const value = formatUnit(rawValue ?? 0, tooltipData.units, { translateUnit: tooltipData.translateUnit })
 
       const tooltipLabel = p.dataset.label
 
@@ -89,7 +90,7 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
 
     tooltipData.tooltipSeries = tooltip.dataPoints.map((p, i) => {
       const rawValue = isDonutChart ? p.parsed : p.parsed[valueAxis]
-      const value = formatUnit(rawValue, tooltipData.units, { translateUnit: tooltipData.translateUnit })
+      const value = formatUnit(rawValue ?? 0, tooltipData.units, { translateUnit: tooltipData.translateUnit })
 
       let tooltipLabel
       if (isDonutChart) {
@@ -133,7 +134,7 @@ export const hasExactlyOneDatapoint = (chartData: KChartData) =>
 export const hasMillisecondTimestamps = (chartData: KChartData) =>
   hasTimeseriesData(chartData) &&
   chartData.datasets.some(
-    (ds) => ds.data[0] && (ds.data[0] as ScatterDataPoint).x.toString().length >= 13,
+    (ds) => ds.data[0] && ((ds.data[0] as ScatterDataPoint).x ?? 0).toString().length >= 13,
   )
 
 /**
@@ -152,20 +153,21 @@ export const horizontalTooltipPositioning = (position: Point, tooltipWidth: numb
   // Define a scaling factor for when the tooltip is positioned to the left of the cursor.
   // This factor will determine how much to the left the tooltip will be moved.
   const leftScalingFactor = 1.15
+  const xPos = position.x ?? 0
   // Determine the x-coordinate for the tooltip based on the cursor's position relative to the chart's center.
   // If the cursor is to the left of the center, the tooltip will be positioned to the right of the cursor.
   // If the cursor is to the right of the center, the tooltip will be positioned to the left of the cursor.
-  const x = position.x < chartCenterX
+  const x = xPos < chartCenterX
     // The tooltip is positioned to the right of the cursor:
     // Calculate the new x-coordinate by adding a value to the cursor's x-coordinate.
     // The added value is calculated by multiplying the tooltip's width by the right scaling factor.
     // This value is then adjusted by the tooltip width ratio to ensure that as the tooltip gets wider, it's moved to the right by a proportionally smaller amount.
-    ? position.x + (tooltipWidth * rightScalingFactor * (1 - widthRatio))
+    ? xPos + (tooltipWidth * rightScalingFactor * (1 - widthRatio))
     // The tooltip is positioned to the left of the cursor:
     // Calculate the new x-coordinate by subtracting a value from the cursor's x-coordinate.
     // The subtracted value is calculated by multiplying the tooltip's width by the left scaling factor.
     // This value is then adjusted by the tooltip width ratio to ensure that as the tooltip gets wider, it's moved to the left by a proportionally smaller amount.
-    : position.x - (tooltipWidth * leftScalingFactor * (1 - widthRatio))
+    : xPos - (tooltipWidth * leftScalingFactor * (1 - widthRatio))
 
   return x
 }
@@ -174,9 +176,10 @@ export const verticalTooltipPositioning = (position: Point, tooltipHeight: numbe
   // Same thing here but moving the tooltip up or down by an amount proportional to the tooltip height.
   const aboveScalingFactor = 0.15
   const belowScalingFactor = 0.5
-  const y = position.y < chartCenterY
-    ? position.y + (tooltipHeight * aboveScalingFactor)
-    : position.y - (tooltipHeight * belowScalingFactor)
+  const yPos = position.y ?? 0
+  const y = yPos < chartCenterY
+    ? yPos + (tooltipHeight * aboveScalingFactor)
+    : yPos - (tooltipHeight * belowScalingFactor)
 
   return y
 }

@@ -12,7 +12,7 @@
       :is-readonly="form.readonly"
       :slidout-top-offset="slidoutTopOffset"
       @cancel="cancelHandler"
-      @code-block-tab-change="(tab) => codeBlockType = tab"
+      @code-block-tab-change="(tab: string) => codeBlockType = tab"
       @fetch:error="fetchErrorHandler"
       @fetch:success="updateFormValues"
       @loading="loadingHandler"

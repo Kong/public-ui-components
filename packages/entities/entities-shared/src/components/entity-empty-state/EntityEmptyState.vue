@@ -84,7 +84,7 @@
     >
       <template
         v-for="(feature, idx) in features"
-        :key="feature"
+        :key="`feature-${idx}-card`"
       >
         <KCard class="entity-empty-state-card">
           <template #title>

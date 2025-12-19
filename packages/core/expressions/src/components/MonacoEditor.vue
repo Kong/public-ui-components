@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount, defineEmits } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import * as monaco from 'monaco-editor'
 
 const props = defineProps({
