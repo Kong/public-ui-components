@@ -5,7 +5,7 @@ export { customFields } from './components/fields/exports'
 export { VueFormGenerator, sharedForms }
 
 export const getSharedFormName = (modelName: string): string => {
-  const mapping:Record<string, string> = {
+  const mapping: Record<string, string> = {
     'openid-connect': 'OIDCForm',
     'post-function': 'PostFunction',
     // Pre and Post function plugins are using same component
@@ -14,7 +14,7 @@ export const getSharedFormName = (modelName: string): string => {
     'rate-limiting-advanced': 'RLAForm',
   }
 
-  return mapping[modelName]
+  return mapping[modelName] || ''
 }
 
 export * from './const'
