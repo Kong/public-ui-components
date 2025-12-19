@@ -58,7 +58,9 @@ const updateTimeRangeDebounced = (start: Date, end: Date) => {
 }
 
 watch(() => [props.start, props.end], ([newStart, newEnd]) => {
-  updateTimeRangeDebounced(newStart, newEnd)
+  if (newStart !== undefined && newEnd !== undefined) {
+    updateTimeRangeDebounced(newStart, newEnd)
+  }
 }, { immediate: true })
 
 </script>

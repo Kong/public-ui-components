@@ -38,7 +38,7 @@ export const datavisPalette = [
 // Wrap around if we run out of colors.
 export const lookupDatavisColor = (idx: number, customPalette?: string[]) => {
   const colorLookup = customPalette || datavisPalette
-  return colorLookup[idx % datavisPalette.length]
+  return colorLookup[idx % datavisPalette.length] as string
 }
 
 export const darkenColor = (hex: string, amt: number): string => {

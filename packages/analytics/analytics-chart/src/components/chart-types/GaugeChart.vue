@@ -141,7 +141,11 @@ const chartOptions = {
 const metricHighlight = computed(() => approxNum(formattedDataset?.value[0]?.data[props.numerator], { capital: true }))
 
 // When displaying a simple chart, we only expect two values in the dataset
-const metricTotal = computed(() => approxNum(formattedDataset?.value[0]?.data[0] + formattedDataset?.value[0]?.data[1], { capital: true }))
+const metricTotal = computed(() => {
+  const v0 = formattedDataset?.value?.[0]?.data?.[0] ?? 0
+  const v1 = formattedDataset?.value?.[0]?.data?.[1] ?? 0
+  return approxNum(v0 + v1, { capital: true })
+})
 
 // Large metric color should match filled in gauge color
 const metricHighlightColor = computed(() => `color: ${formattedDataset?.value[0]?.backgroundColor[props.numerator]}`)

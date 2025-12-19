@@ -9,8 +9,12 @@ export function dragTile(source: string, destination: string, dragTarget: string
   return cy.get(`[data-testid=${source}]`).then(($sourceTile) => {
     return cy.get(`[data-testid=${destination}]`).then(($destTile) => {
       const dragTargetEl = $sourceTile.find(dragTarget)[0]
-      const sourceRect = dragTargetEl?.getBoundingClientRect() || $sourceTile[0].getBoundingClientRect()
-      const destRect = $destTile[0].getBoundingClientRect()
+      const sourceRect = dragTargetEl?.getBoundingClientRect() || $sourceTile[0]?.getBoundingClientRect()
+      const destRect = $destTile[0]?.getBoundingClientRect()
+
+      if (sourceRect === undefined || destRect === undefined) {
+        return cy.wrap(dragTargetEl)
+      }
 
       const startX = sourceRect.left + (sourceRect.width / 2)
       const startY = sourceRect.top + (sourceRect.height / 2)

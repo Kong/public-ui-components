@@ -46,7 +46,7 @@ const containerWidth = ref(0)
 const resizeObserver = new ResizeObserver(entries => {
   // Wrapper 'window.requestAnimationFrame' is needed for disabling "ResizeObserver loop limit exceeded" error in DD
   window.requestAnimationFrame(() => {
-    if (!Array.isArray(entries) || !entries.length) {
+    if (!Array.isArray(entries) || entries[0] === undefined) {
       return
     }
 

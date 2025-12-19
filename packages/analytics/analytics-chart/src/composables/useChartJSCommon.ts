@@ -56,7 +56,9 @@ export default function useChartJSCommon<T extends ChartType>(
     if (isSameShape(oldData, newData) && !isNullOrUndef(chartInstance.value)) {
       // Update each dataset in-place to avoid ChartJS triggering a re-animate.
       for (const [i, dataset] of newData.datasets.entries()) {
-        Object.assign(chartInstance.value.data.datasets[i], dataset)
+        if (chartInstance.value.data.datasets[i]) {
+          Object.assign(chartInstance.value.data.datasets[i], dataset)
+        }
       }
       chartInstance.value.data.labels = newData.labels
       chartInstance.value.update()

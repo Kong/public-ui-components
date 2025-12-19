@@ -8,7 +8,11 @@ const drawHighlight = (chart: Chart, clickedElements: InteractionItem[]) => {
 
   // When mode is "index" the last element is the top one.
   // We need the top one to get the correct "y" value for the highlight.
-  const clickedElement = clickedElements[clickedElements.length - 1].element
+  const clickedElement = clickedElements[clickedElements.length - 1]?.element
+
+  if (!clickedElement) {
+    return
+  }
 
   ctx.save()
 
@@ -16,10 +20,10 @@ const drawHighlight = (chart: Chart, clickedElements: InteractionItem[]) => {
   ctx.lineWidth = 3
 
   if (chart.options.indexAxis === 'x') {
-    // @ts-ignore element is not typed correctly by ChartJS, it most definitely has "width"
+    // @ts-ignore element is typed generically by ChartJS, all of the chart elements we use include "width"
     ctx.strokeRect(clickedElement.x - (clickedElement.width / 2), clickedElement.y, clickedElement.width, yScale.bottom - clickedElement.y)
   } else {
-    // @ts-ignore element is not typed correctly by ChartJS, it most definitely has "height"
+    // @ts-ignore element is typed generically by ChartJS, all of the chart elements we use include "height"
     ctx.strokeRect(xScale.left, clickedElement.y - (clickedElement.height / 2), clickedElement.x - xScale.left, clickedElement.height)
   }
 

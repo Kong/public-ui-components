@@ -91,7 +91,7 @@ const mapQuery = computed(() => {
   return props.query
 })
 
-const countryMetricUnit = computed(() => {
+const countryMetricUnit = computed<string>(() => {
   if (!chartDataRaw.value) {
     return ''
   }
@@ -99,7 +99,7 @@ const countryMetricUnit = computed(() => {
   const metricUnits = chartDataRaw?.value?.meta.metric_units
   const metricNames = chartDataRaw?.value?.meta?.metric_names
 
-  return metricUnits && metricNames && metricUnits[metricNames[0]]
+  return (metricUnits && metricNames && metricNames[0] !== undefined && metricUnits[metricNames[0]]) as string ?? ''
 })
 
 const onChartData = (data: ExploreResultV4) => {

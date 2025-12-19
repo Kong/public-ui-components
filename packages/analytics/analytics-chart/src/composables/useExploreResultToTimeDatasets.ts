@@ -86,9 +86,9 @@ export default function useExploreResultToTimeDataset(
         // Time based datasets can only display one "dimension"
         // It will either be the first dimension or if no dimensions
         // are provided, then the metric is the primary dimension
-        const dimension = (dimensionFieldNames && dimensionFieldNames[0])
+        const dimension = (dimensionFieldNames && dimensionFieldNames[0]) as string
         const dimensionDisplay = display[dimension]
-        let datasetLabels: DatasetLabel[] = (display && dimensionDisplay && Object.keys(dimensionDisplay).map(id => ({ id, name: dimensionDisplay[id].name }))) || metricNames.map(name => ({ id: name, name }))
+        let datasetLabels: DatasetLabel[] = (display && dimensionDisplay && Object.keys(dimensionDisplay).map(id => ({ id, name: dimensionDisplay[id]?.name ?? '' }))) || metricNames.map(name => ({ id: name, name }))
 
         // If the dimension is a country_code, get the country's display name
         if (dimension === 'country_code') {

@@ -28,8 +28,8 @@ const drawSelectionArea = (chart: Chart, startX: number, endX: number) => {
 }
 
 const dispatchEvent = (eventName: string, chart: Chart, pluginInstance: DragSelectPlugin) => {
-  const xStartValue = chart.scales.x.getValueForPixel(pluginInstance.startX)
-  const xEndValue = chart.scales.x.getValueForPixel(pluginInstance.endX)
+  const xStartValue = chart.scales.x?.getValueForPixel(pluginInstance.startX)
+  const xEndValue = chart.scales.x?.getValueForPixel(pluginInstance.endX)
 
   if (xStartValue && xEndValue) {
     chart.canvas.dispatchEvent(new CustomEvent<DragSelectEventDetail>(eventName, {

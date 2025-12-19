@@ -23,6 +23,11 @@ const quantile = (sorted: number[], p: number): number => {
   const i = (n - 1) * p
   const lower = Math.floor(i)
   const upper = Math.ceil(i)
+
+  if (sorted[lower] === undefined || sorted[upper] === undefined) {
+    return NaN
+  }
+
   if (lower === upper) {
     return sorted[lower]
   }
@@ -94,7 +99,7 @@ export default function useLegendScale({
   })
 
   const legendData = computed(() => {
-    if (values.value.length === 1) {
+    if (values.value[0] !== undefined) {
       return [{
         color: getColor(values.value[0]),
         range: formatMetric(values.value[0], {
@@ -104,8 +109,9 @@ export default function useLegendScale({
       }]
     }
 
+    const maxScale = Math.max(...scale.value)
     return scale.value.map((interval, index) => {
-      const nextLogBoundary = index === 0 ? Math.max(...scale.value) : scale.value[index - 1]
+      const nextLogBoundary = index === 0 ? maxScale : (scale.value[index - 1] ?? 0)
       const lower = interval
       const upper = nextLogBoundary
 
@@ -135,14 +141,14 @@ export default function useLegendScale({
     })
   })
 
-  const getColor = (value: number) => {
+  const getColor = (value: number): string => {
     if (value === 0) {
       return KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
     }
 
     const idx = scale.value.findIndex((interval) => value >= interval)
     if (idx === -1) {
-      return colors[colors.length - 1]
+      return colors[colors.length - 1] as string
     }
     return colors[idx] ?? KUI_COLOR_BACKGROUND_NEUTRAL_WEAKER
   }

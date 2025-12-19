@@ -56,26 +56,27 @@ export const getThresholdIntersections = (chart: Chart, thresholds: Threshold[])
       }))
 
       // the intersectionStart begins with a value if the initial datapoint is above the threshold
-      let intersectionStart: number | undefined = intersectionTrack[0].aboveThreshold
-        ? dataPoints[0].x
-        : undefined
+      // @ts-ignore 0 index exists as we return if dataPoints.length is falsey
+      let intersectionStart: number | undefined = intersectionTrack[0].aboveThreshold ? dataPoints[0].x : undefined
 
       for (let i = 1; i < intersectionTrack.length; i++) {
-        if (!intersectionTrack[i - 1].aboveThreshold && intersectionTrack[i].aboveThreshold) {
+        // all indexes are guaranteed to exist. `intersectionTrack.length === dataPoints.length`
+        // due to assigning `intersectionTrack = dataPoints.map`
+        if (!intersectionTrack[i - 1]!.aboveThreshold && intersectionTrack[i]!.aboveThreshold) {
           // If the series was under the threshold line and goes to above the threshold line
           intersectionStart = getExactIntersection(
-            dataPoints[i - 1],
-            dataPoints[i],
+            dataPoints[i - 1]!,
+            dataPoints[i]!,
             t.value,
           )
-        } else if (intersectionTrack[i - 1].aboveThreshold && !intersectionTrack[i].aboveThreshold) {
+        } else if (intersectionTrack[i - 1]!.aboveThreshold && !intersectionTrack[i]!.aboveThreshold) {
           // if the series was above the threshold line and goes to below the threshold line
           if (intersectionStart !== undefined) {
             intersections.push({
               start: intersectionStart,
               end: getExactIntersection(
-                dataPoints[i - 1],
-                dataPoints[i],
+                dataPoints[i - 1]!,
+                dataPoints[i]!,
                 t.value,
               ),
               type: t.type,
@@ -88,7 +89,7 @@ export const getThresholdIntersections = (chart: Chart, thresholds: Threshold[])
       if (intersectionStart !== undefined) {
         intersections.push({
           start: intersectionStart,
-          end: intersectionTrack[intersectionTrack.length - 1].ts,
+          end: intersectionTrack[intersectionTrack.length - 1]!.ts,
           type: t.type,
         })
       }
@@ -161,9 +162,9 @@ export class ThresholdPlugin implements Plugin {
     this._syncThresholds(pluginOptions)
 
     const onMouseMove = (event: MouseEvent) => {
-      if (chart) {
+      if (chart && chart.scales.y) {
         const yPos = event.clientY
-        const yScale = chart.scales['y']
+        const yScale = chart.scales.y
         const rect = canvas.getBoundingClientRect()
         const yValue = yScale.getValueForPixel(yPos - rect.top)
 
@@ -190,10 +191,10 @@ export class ThresholdPlugin implements Plugin {
     for (const key of Object.keys(this._thresholds || {})) {
       const threshold = this._thresholds?.[key as ExploreAggregations]
 
-      if (threshold) {
+      if (threshold && chart.scales.y !== undefined) {
         threshold.forEach((t) => {
-          const yScale = chart.scales['y']
-          const yValue = yScale.getPixelForValue(t.value)
+          const yScale = chart.scales.y
+          const yValue = yScale!.getPixelForValue(t.value)
 
           context.save()
           context.beginPath()
@@ -229,6 +230,9 @@ export class ThresholdPlugin implements Plugin {
         const mergedIntersections = mergeThresholdIntersections(intersections)
 
         mergedIntersections.forEach((intersection) => {
+          if (!chart.scales.x) {
+            return
+          }
           // Draw brushed area between start and end of intersection
           const xStart = chart.scales['x'].getPixelForValue(intersection.start)
           const xEnd = chart.scales['x'].getPixelForValue(intersection.end)
