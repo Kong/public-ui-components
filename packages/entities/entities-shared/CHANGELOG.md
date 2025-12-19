@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.36.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.3...@kong-ui-public/entities-shared@3.36.4) (2025-12-19)
+
+
+### Bug Fixes
+
+* **entities-shared:** remove unused styles for base table ([#2738](https://github.com/Kong/public-ui-components/issues/2738)) ([39f41bd](https://github.com/Kong/public-ui-components/commit/39f41bd429a96a572da4fa655dc06f363378a111))
+
+
+
+
+
 ## [3.36.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.2...@kong-ui-public/entities-shared@3.36.3) (2025-12-18)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
