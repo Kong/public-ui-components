@@ -70,10 +70,10 @@ import NameField from './NameField.vue'
 import {
   useNodeForm,
   useSubSchema,
-  type BaseFormData,
 } from '../composables/useNodeForm'
 import { compose, stringLenRange, useFormValidation } from '../composables/validation'
 import useI18n from '../../../../../composables/useI18n'
+import type { BaseFormData } from '../composables/useNodeForm'
 import type { FieldName, IdConnection, NodeId } from '../../types'
 
 interface JsonToXmlFormData extends BaseFormData {
