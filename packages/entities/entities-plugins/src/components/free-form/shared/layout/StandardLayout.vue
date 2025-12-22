@@ -150,7 +150,7 @@ export type Props<T extends FreeFormPluginData = any> = {
   isEditing: boolean
   onModelUpdated: (value: any, model: string) => void
   /** Emits the final submission payload to the parent, the payload will be merged with the `formModel` but it has high override priority */
-  onFormChange: (value: Partial<T>) => void
+  onFormChange: (value: Partial<T>, fields?: string[]) => void
   onValidityChange?: (event: PluginValidityChangeEvent) => void
   editorMode?: 'form' | 'code'
   /** FreeForm configuration */
@@ -178,6 +178,25 @@ import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
 import { FIELD_RENDERERS } from '../composables'
 import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFormAdapter.vue'
+
+const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
+  // plugin specific config
+  'config',
+  'partials',
+  '__ui_data',
+
+  // general info
+  'enabled',
+  'protocols',
+  'instance_name',
+  'tags',
+
+  // scope
+  'consumer',
+  'consumer_group',
+  'route',
+  'service',
+]
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -335,25 +354,7 @@ const freeFormSchema = computed(() => {
  * freeform will pass these unknown values back through the update method, resulting in the data being overwritten when it is eventually merged with the vfg's data
  */
 const prunedData = computed(() => {
-  const ffDataKeys: Array<keyof FreeFormPluginData> = [
-    // plugin specific config
-    'config',
-    'partials',
-    '__ui_data',
-
-    // general info
-    'enabled',
-    'protocols',
-    'instance_name',
-    'tags',
-
-    // scope
-    'consumer',
-    'consumer_group',
-    'route',
-    'service',
-  ]
-  return pick(props.model, ffDataKeys) as Partial<T>
+  return pick(props.model, FREE_FORM_CONTROLLED_FIELDS) as Partial<T>
 })
 
 
@@ -415,7 +416,7 @@ function handleDataChange(value: T) {
     }
   }
 
-  props.onFormChange(value)
+  props.onFormChange(value, FREE_FORM_CONTROLLED_FIELDS)
 }
 
 function updateScopeCache(value: T) {
