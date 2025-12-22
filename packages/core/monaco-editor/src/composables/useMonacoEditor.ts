@@ -141,6 +141,7 @@ export function useMonacoEditor<T extends MaybeElement>(
         language: options.language,
         theme: editorStates.theme,
         model,
+        editContext: false,
         ...options.monacoOptions,
       })
 

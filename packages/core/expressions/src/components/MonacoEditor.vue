@@ -62,6 +62,7 @@ onMounted(() => {
       value: props.modelValue,
       theme: props.theme,
       language: props.language,
+      editContext: false,
     },
     props.options,
   )

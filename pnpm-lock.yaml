@@ -612,11 +612,11 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0
       monaco-editor:
-        specifier: ^0.52.2
-        version: 0.52.2
+        specifier: ^0.55.1
+        version: 0.55.1
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
-        version: 1.1.0(monaco-editor@0.52.2)
+        version: 1.1.0(monaco-editor@0.55.1)
       vite-plugin-top-level-await:
         specifier: ^1.6.0
         version: 1.6.0(rollup@4.52.5)(vite@5.4.21(@types/node@24.10.4)(sass-embedded@1.80.3)(sass@1.97.0)(terser@5.43.1))
@@ -1040,8 +1040,8 @@ importers:
         specifier: ^1.13.2
         version: 1.13.2
       monaco-editor:
-        specifier: ^0.52.2
-        version: 0.52.2
+        specifier: ^0.55.1
+        version: 0.55.1
       vue:
         specifier: ^3.5.26
         version: 3.5.26(typescript@5.9.3)
@@ -7201,9 +7201,6 @@ packages:
   modify-values@1.0.1:
     resolution: {integrity: sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==}
     engines: {node: '>=0.10.0'}
-
-  monaco-editor@0.52.2:
-    resolution: {integrity: sha512-GEQWEZmfkOGLdd3XK8ryrfWz3AIP8YymVXiPHEdewrUq7mh0qrKrfHLNCXcbB6sTnMLnOZ3ztSiKcciFUkIJwQ==}
 
   monaco-editor@0.55.1:
     resolution: {integrity: sha512-jz4x+TJNFHwHtwuV9vA9rMujcZRb0CEilTEwG2rRSpe/A7Jdkuj8xPKttCgOh+v/lkHy7HsZ64oj+q3xoAFl9A==}
@@ -17159,8 +17156,6 @@ snapshots:
 
   modify-values@1.0.1: {}
 
-  monaco-editor@0.52.2: {}
-
   monaco-editor@0.55.1:
     dependencies:
       dompurify: 3.2.7
@@ -19931,10 +19926,6 @@ snapshots:
     transitivePeerDependencies:
       - rollup
       - supports-color
-
-  vite-plugin-monaco-editor@1.1.0(monaco-editor@0.52.2):
-    dependencies:
-      monaco-editor: 0.52.2
 
   vite-plugin-monaco-editor@1.1.0(monaco-editor@0.55.1):
     dependencies:

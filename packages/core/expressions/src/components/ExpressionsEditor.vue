@@ -181,6 +181,7 @@ onMounted(() => {
     theme,
     value: expression.value,
     maxTokenizationLineLength: 1000,
+    editContext: false,
     ...props.editorOptions,
   })
 
