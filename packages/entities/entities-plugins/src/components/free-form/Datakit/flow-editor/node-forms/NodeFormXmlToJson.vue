@@ -1,9 +1,6 @@
 <template>
   <Form
     ref="form"
-    :config="{
-      hasValue: (data) => !(data && Object.keys(data).length === 1 && data.name),
-    }"
     :data="formData"
     :schema="schema"
   >
