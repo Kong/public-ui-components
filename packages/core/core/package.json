@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/core",
-  "version": "1.11.8",
+  "version": "1.11.9",
   "type": "module",
   "main": "./dist/core.umd.js",
   "module": "./dist/core.es.js",
@@ -52,13 +52,13 @@
   },
   "peerDependencies": {
     "axios": "^1.13.2",
-    "vue": "^3.5.25"
+    "vue": "^3.5.26"
   },
   "dependencies": {
     "date-fns": "^4.1.0"
   },
   "devDependencies": {
     "@kong/design-tokens": "1.18.2",
-    "axios": "^1.7.9"
+    "axios": "^1.13.2"
   }
 }

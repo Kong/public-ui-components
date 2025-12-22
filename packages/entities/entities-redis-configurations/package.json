@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-redis-configurations",
-  "version": "1.8.14",
+  "version": "1.8.15",
   "type": "module",
   "main": "./dist/entities-redis-configurations.umd.js",
   "module": "./dist/entities-redis-configurations.es.js",
@@ -47,9 +47,9 @@
     "@kong/icons": "^1.41.0",
     "@kong/kongponents": "9.48.6",
     "@types/uuid": "^11.0.0",
-    "axios": "^1.7.9",
+    "axios": "^1.13.2",
     "swrv": "^1.1.0",
-    "vue": "^3.5.25",
+    "vue": "^3.5.26",
     "vue-router": "^4.6.4"
   },
   "repository": {

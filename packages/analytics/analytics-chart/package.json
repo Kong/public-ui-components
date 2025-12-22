@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-chart",
-  "version": "10.13.1",
+  "version": "10.13.2",
   "type": "module",
   "main": "./dist/vitals-chart.umd.js",
   "module": "./dist/vitals-chart.es.js",
@@ -36,7 +36,7 @@
     "lodash.pick": "^4.4.0",
     "lodash.pickby": "^4.6.0",
     "papaparse": "^5.5.3",
-    "vue": "^3.5.25"
+    "vue": "^3.5.26"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
