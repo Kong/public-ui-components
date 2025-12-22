@@ -194,6 +194,7 @@ onMounted(() => {
       alwaysConsumeMouseWheel: false,
     },
     autoIndent: 'keep',
+    editContext: false,
   })
   editorRef.value = editor
 
