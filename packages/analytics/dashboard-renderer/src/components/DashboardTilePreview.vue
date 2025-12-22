@@ -3,7 +3,20 @@
     ref="root"
     data-testid="dashboard-tile-preview-root"
   >
+    <KEmptyState
+      v-if="chartNotConfigured"
+      :action-button-visible="false"
+      data-testid="chart-not-configured-empty-state"
+    >
+      <template #title>
+        <p>{{ i18n.t('renderer.not_configured.title') }}</p>
+      </template>
+      <template #default>
+        <p>{{ i18n.t('renderer.not_configured.description') }}</p>
+      </template>
+    </KEmptyState>
     <DashboardTile
+      v-else
       v-model:refresh-counter="refreshCounter"
       :context="{
         ...internalContext,
@@ -59,6 +72,7 @@ const onBoundsChange = (e: TileBoundsChangeEvent) => {
   emit('tile-bounds-change', e)
 }
 
+const { i18n } = composables.useI18n()
 const { internalContext } = composables.useDashboardInternalContext({
   globalFilters: toRef(() => globalFilters),
   context: toRef(() => context),
@@ -67,6 +81,10 @@ const { internalContext } = composables.useDashboardInternalContext({
 const configStore = useAnalyticsConfigStore()
 const queryReady = computed<boolean>(() => {
   return !!context.timeSpec || !configStore.loading
+})
+
+const chartNotConfigured = computed(() => {
+  return !definition?.query?.metrics || definition.query.metrics.length === 0
 })
 
 const height = ref<number>(DEFAULT_TILE_HEIGHT)
