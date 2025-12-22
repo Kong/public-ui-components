@@ -117,11 +117,6 @@ const {
   fieldNameValidator,
 } = useNodeForm<XmlToJsonFormData>(nodeId, () => formRef.value!.getValue())
 
-console.log('schema', schema.value)
-console.log('formData', formData.value)
-
-
-
 const attributeError = t('plugins.free-form.datakit.flow_editor.node_properties.errors.attributes_required')
 
 const hasAnyAttributeName = () => !!(formData.value.attributes_block_name || formData.value.attributes_name_prefix)

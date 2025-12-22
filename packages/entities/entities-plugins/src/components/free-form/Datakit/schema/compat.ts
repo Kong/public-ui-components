@@ -132,22 +132,6 @@ const JsonToXmlNodeSchema = ConfigNodeBaseSchema.safeExtend({
   outputs: z.never().nullish(),
 })
   .strict()
-  .superRefine((val, ctx) => {
-    if (!val.attributes_block_name && !val.attributes_name_prefix) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['attributes_block_name'],
-        message:
-          'At least one of attributes_block_name or attributes_name_prefix is required',
-      })
-      ctx.addIssue({
-        code: 'custom',
-        path: ['attributes_name_prefix'],
-        message:
-          'At least one of attributes_block_name or attributes_name_prefix is required',
-      })
-    }
-  })
 
 const PropertyNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('property'),
