@@ -58,7 +58,8 @@
       "konnect": "Filter by name",
       "exact": "Filter by exact instance name or ID",
       "kongManager": "Filter by exact instance name or ID",
-      "select": "Filter plugins"
+      "select": "Filter plugins",
+      "search_plugins": "Search plugins"
     },
     "filter": {
       "field": {

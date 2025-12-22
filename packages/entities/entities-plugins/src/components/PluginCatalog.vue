@@ -64,7 +64,7 @@
           v-model.trim="searchFilter"
           class="plugins-filter-input"
           data-testid="plugins-filter-input"
-          :placeholder="t('search.placeholder.select')"
+          :placeholder="t('search.placeholder.search_plugins')"
           type="search"
         />
         <div class="icon-container">

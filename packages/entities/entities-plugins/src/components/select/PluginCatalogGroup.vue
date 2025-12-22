@@ -14,7 +14,6 @@
     <span class="group-title-text">{{ name }}</span>
   </div>
   <div
-    ref="pluginCardContainerRef"
     class="plugin-card-container"
     :data-testid="`plugin-group-${name}`"
   >
@@ -105,8 +104,6 @@ const emit = defineEmits<{
 }>()
 
 const { i18n: { t } } = composables.useI18n()
-
-const pluginCardContainerRef = ref<HTMLElement | null>(null)
 
 const showAll = ref(false)
 

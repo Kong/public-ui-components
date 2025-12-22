@@ -31,6 +31,7 @@
           :config="config"
           :name="group"
           :plugins="pluginList[group as keyof PluginCardList] || []"
+          @delete:success="(pluginName: string) => emit('delete:success', pluginName)"
           @plugin-clicked="(plugin: PluginType) => emitPluginData(plugin)"
         />
       </div>
@@ -74,6 +75,7 @@ const displayGroups = PluginFeaturedArray.concat(PluginGroupArray)
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType): void
+  (e: 'delete:success', pluginName: string): void
 }>()
 
 const { i18n: { t } } = composables.useI18n()
