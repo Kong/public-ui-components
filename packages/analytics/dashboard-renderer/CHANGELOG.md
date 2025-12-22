@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.4.10](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.4.9...@kong-ui-public/dashboard-renderer@8.4.10) (2025-12-22)
+
+
+### Bug Fixes
+
+* **dashboards:** display empty state when metrics are not provided [MA-4649] ([#2740](https://github.com/Kong/public-ui-components/issues/2740)) ([8f020bb](https://github.com/Kong/public-ui-components/commit/8f020bbf25cc2997b07871b27ecc57d281a20a7b))
+
+
+
+
+
 ## [8.4.9](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.4.8...@kong-ui-public/dashboard-renderer@8.4.9) (2025-12-22)
 
 
