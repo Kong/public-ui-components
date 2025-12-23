@@ -440,7 +440,7 @@ const handleVaultSecretPickerAutofill = (secretRef: string) => {
 }
 
 // This function transforms the form data into the correct structure to be submitted to the API
-const getModel = (): Record<string, any> => {
+const getModel = (freeformFields?: string[]): Record<string, any> => {
   const schema = { ...props.schema }
   const inputModel = formModel
   const origModel = originalModel
@@ -664,6 +664,12 @@ const getModel = (): Record<string, any> => {
 
   // Handle the special case of the freeform plugin
   if (freeformName.value) {
+    // remove any freeform fields from the model before merging
+    if (freeformFields && freeformFields.length) {
+      for (const field of freeformFields) {
+        delete model[field]
+      }
+    }
     Object.assign(model, freeformData.value)
   }
 
@@ -770,15 +776,22 @@ const updateModel = (data: Record<string, any>, parent?: string) => {
 }
 
 const freeformData = shallowRef<Record<string, any>>(props.record)
-const handleFreeFormUpdate = (value: Record<string, any>) => {
+const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => {
   freeformData.value = value
+
+  const newModel = { ...formModel }
+
+  // remove previous freeform fields from formModel
+  for (const field of fields || []) {
+    delete newModel[field]
+  }
 
   emit('model-updated', {
     // config change should also update the form model
     // otherwise the submit button will be disabled
-    model: { ...formModel, ...value },
+    model: { ...newModel, ...value },
     originalModel,
-    data: getModel(),
+    data: getModel(fields),
   })
 }
 
