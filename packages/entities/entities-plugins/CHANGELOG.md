@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.138.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.138.12...@kong-ui-public/entities-plugins@9.138.13) (2025-12-23)
+
+
+### Bug Fixes
+
+* **entities-plugins:** cannot remove partials in code editor [KM-2116] ([#2759](https://github.com/Kong/public-ui-components/issues/2759)) ([6f1954f](https://github.com/Kong/public-ui-components/commit/6f1954f718623d27d29923882e0879af2f579399))
+
+
+
+
+
 ## [9.138.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.138.11...@kong-ui-public/entities-plugins@9.138.12) (2025-12-23)
 
 
