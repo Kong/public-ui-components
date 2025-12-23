@@ -779,19 +779,17 @@ const freeformData = shallowRef<Record<string, any>>(props.record)
 const handleFreeFormUpdate = (value: Record<string, any>, fields?: string[]) => {
   freeformData.value = value
 
-  const shallowCopiedModel = { ...formModel }
+  const newModel = { ...formModel }
 
   // remove previous freeform fields from formModel
   for (const field of fields || []) {
-    delete shallowCopiedModel[field]
+    delete newModel[field]
   }
-
-  const newModel = { ...shallowCopiedModel, ...value }
 
   emit('model-updated', {
     // config change should also update the form model
     // otherwise the submit button will be disabled
-    model: newModel,
+    model: { ...newModel, ...value },
     originalModel,
     data: getModel(fields),
   })
