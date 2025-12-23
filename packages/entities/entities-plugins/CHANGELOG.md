@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.138.12](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.138.11...@kong-ui-public/entities-plugins@9.138.12) (2025-12-23)
+
+
+### Bug Fixes
+
+* **entities-plugins:** remove unexpected redis configuration [KM-2114] ([#2758](https://github.com/Kong/public-ui-components/issues/2758)) ([ed4728c](https://github.com/Kong/public-ui-components/commit/ed4728c5efa7c073f8a61ddbd35b3ed2d7dfa8da))
+
+
+
+
+
 ## [9.138.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.138.10...@kong-ui-public/entities-plugins@9.138.11) (2025-12-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
