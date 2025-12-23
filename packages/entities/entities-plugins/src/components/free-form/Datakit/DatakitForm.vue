@@ -99,6 +99,7 @@ import { KSegmentedControl } from '@kong/kongponents'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { FEATURE_FLAGS } from '../../../constants'
+import { M2_NODE_TYPES } from './constants'
 import english from '../../../locales/en.json'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import CodeEditor from './CodeEditor.vue'
@@ -269,11 +270,11 @@ function isM2FeatureUsed(config: DatakitConfig | undefined): boolean {
   // check vault resource
   if (config?.resources?.vault) return true
 
-  // check branch or cache nodes
-  const hasBranchOrCacheNode = config?.nodes?.some((node) => {
-    return node.type === 'branch' || node.type === 'cache'
+  // check nodes gated behind the M2 feature flag
+  const hasUnsupportedNode = config?.nodes?.some((node) => {
+    return M2_NODE_TYPES.includes(node.type)
   })
-  if (hasBranchOrCacheNode) return true
+  if (hasUnsupportedNode) return true
 
   return false
 }

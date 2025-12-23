@@ -151,6 +151,35 @@ export const CONFIG_NODE_META_MAP: Record<ConfigNodeType, NodeMeta> = {
     },
     ...NODE_VISUAL.cache,
   },
+  xml_to_json: {
+    type: 'xml_to_json',
+    summary: getNodeTypeSummary('xml_to_json'),
+    description: getNodeTypeDescription('xml_to_json'),
+    io: {
+      input: {
+        fields: [],
+      },
+      output: {
+        fields: [],
+      },
+    },
+    ...NODE_VISUAL.xml_to_json,
+  },
+  json_to_xml: {
+    type: 'json_to_xml',
+    summary: getNodeTypeSummary('json_to_xml'),
+    description: getNodeTypeDescription('json_to_xml'),
+    io: {
+      input: {
+        fields: [],
+        configurable: true,
+      },
+      output: {
+        fields: [],
+      },
+    },
+    ...NODE_VISUAL.json_to_xml,
+  },
 }
 
 export const IMPLICIT_NODE_META_MAP: Record<ImplicitNodeType, NodeMeta> = {

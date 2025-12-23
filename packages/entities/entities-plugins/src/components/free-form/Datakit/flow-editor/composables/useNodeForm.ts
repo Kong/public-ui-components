@@ -1,4 +1,5 @@
 import { computed, inject } from 'vue'
+import { has, omit } from 'lodash-es'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/graph'
 import type { EdgeInstance, FieldName, IdConnection, NameConnection, NodeId, NodeName, NodeType } from '../../types'
@@ -9,7 +10,6 @@ import type { ArrayLikeFieldSchema, RecordFieldSchema } from '../../../../../typ
 import { isImplicitType } from '../node/node'
 import { ResponseSchema, ServiceRequestSchema } from '../node/schemas'
 import { useFieldNameValidator, useNodeNameValidator } from './validation'
-import { omit } from 'lodash-es'
 import { useConfirm } from './useConflictConfirm'
 import useI18n from '../../../../../composables/useI18n'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
@@ -418,8 +418,18 @@ export function useSubSchema(subSchemaName: Exclude<NodeType, 'request' | 'servi
 
     try {
       const schema = getSchema()
-      const configSchema = schema.fields[0].config as RecordFieldSchema
-      const configFields = configSchema.fields[0].nodes as ArrayLikeFieldSchema
+      const configField = schema.fields.find((field): field is { config: RecordFieldSchema } => has(field, 'config'))
+      if (!configField) {
+        throw new Error('Config field not found in schema.')
+      }
+
+      const configSchema = configField.config
+      const nodesField = configSchema.fields.find((field): field is { nodes: ArrayLikeFieldSchema } => has(field, 'nodes'))
+      if (!nodesField) {
+        throw new Error('Nodes field not found in config schema.')
+      }
+
+      const configFields = nodesField.nodes
       const elements = configFields.elements as RecordFieldSchema
       const subSchema = elements.subschema_definitions![subSchemaName]
       if (!subSchema) throw new Error(`Subschema "${subSchemaName}" not found in the schema.`)

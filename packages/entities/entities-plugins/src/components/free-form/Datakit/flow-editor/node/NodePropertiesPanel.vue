@@ -80,6 +80,8 @@ import NodeFormProperty from '../node-forms/NodeFormProperty.vue'
 import NodeFormExit from '../node-forms/NodeFormExit.vue'
 import NodeFormBranch from '../node-forms/NodeFormBranch.vue'
 import NodeFormCache from '../node-forms/NodeFormCache.vue'
+import NodeFormXmlToJson from '../node-forms/NodeFormXmlToJson.vue'
+import NodeFormJsonToXml from '../node-forms/NodeFormJsonToXml.vue'
 import { getNodeTypeDescription } from './node'
 import NodeBadge from './NodeBadge.vue'
 
@@ -145,6 +147,10 @@ const Form = computed(() => {
       return NodeFormBranch
     case 'cache':
       return NodeFormCache
+    case 'xml_to_json':
+      return NodeFormXmlToJson
+    case 'json_to_xml':
+      return NodeFormJsonToXml
     default:
       return null
   }

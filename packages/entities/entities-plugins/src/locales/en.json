@@ -831,6 +831,16 @@
               "summary": "Store and fetch cached data",
               "description": "Store data into cache and fetch cached data from cache."
             },
+            "xml_to_json": {
+              "name": "xml_to_json",
+              "summary": "Transform XML to JSON",
+              "description": "Transform XML to JSON."
+            },
+            "json_to_xml": {
+              "name": "json_to_xml",
+              "summary": "Transform JSON to XML",
+              "description": "Transform JSON to XML."
+            },
             "request": {
               "name": "request",
               "description": "Reads incoming client request properties. You cannot specify request node input."
@@ -895,8 +905,9 @@
               "not_number": "{fieldName} must be a number",
               "not_unique": "{fieldName} must be unique",
               "number_range": "{fieldName} must be between {min} and {max}",
-              "string_len_range": "{fieldName} must be between {min} and {max} characters",
-              "reserved_node_name": "\"{nodeName}\" is a reserved node name"
+              "string_len_range": "{fieldName} must be between {minLength} and {maxLength} characters",
+              "reserved_node_name": "\"{nodeName}\" is a reserved node name",
+              "attributes_required": "Provide at least one of attributes_block_name or attributes_name_prefix"
             }
           },
           "error": {

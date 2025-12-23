@@ -18,7 +18,7 @@
         v-for="nodeType in (Object.keys(CONFIG_NODE_META_MAP) as Array<ConfigNodeType>)"
         :key="nodeType"
         :type="nodeType"
-        :unsupported="!enableDatakitM2 && M2_NODES.includes(nodeType)"
+        :unsupported="!enableDatakitM2 && M2_NODE_TYPES.includes(nodeType)"
         @dragstart="handleDragStart"
       />
     </div>
@@ -50,6 +50,7 @@ import { useEditorStore } from '../store/store'
 import { CONFIG_NODE_META_MAP } from '../node/node'
 import NodePanelItem from '../node/NodePanelItem.vue'
 import FlowNode from '../node/FlowNode.vue'
+import { M2_NODE_TYPES } from '../../constants'
 
 import type { ConfigNodeType, NodeInstance, DragPayload } from '../../types'
 
@@ -62,7 +63,6 @@ const { t } = createI18n<typeof english>('en-us', english)
 const { createNode } = useEditorStore()
 
 const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
-const M2_NODES: ConfigNodeType[] = ['branch', 'cache']
 
 const previewId = `dk-drag-preview-${useId()}`
 
