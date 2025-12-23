@@ -40,6 +40,16 @@ export function useResourcesSchema() {
             { partial_id: { type: 'string' } },
           ],
         } as RecordFieldSchema
+
+        // Make Redis field optional
+        cacheField.fields.forEach(subField => {
+          const subFieldName = Object.keys(subField)[0]
+          if (subFieldName === 'redis') {
+            const redisField = subField[subFieldName] as RecordFieldSchema
+            subField[subFieldName] = { ...redisField } as RecordFieldSchema
+            delete (subField[subFieldName] as RecordFieldSchema).required
+          }
+        })
       }
     })
 
