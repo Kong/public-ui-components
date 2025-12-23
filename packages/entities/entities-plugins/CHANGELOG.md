@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.138.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.138.13...@kong-ui-public/entities-plugins@9.138.14) (2025-12-23)
+
+
+### Bug Fixes
+
+* **entities-plugins:** datakit fix shifts on autoLayout with fitView ([#2751](https://github.com/Kong/public-ui-components/issues/2751)) ([75a8e9d](https://github.com/Kong/public-ui-components/commit/75a8e9deac4442f2ad041a4085318d78e8c57a0e))
+
+
+
+
+
 ## [9.138.13](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.138.12...@kong-ui-public/entities-plugins@9.138.13) (2025-12-23)
 
 
