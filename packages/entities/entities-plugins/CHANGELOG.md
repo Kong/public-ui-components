@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.139.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.138.14...@kong-ui-public/entities-plugins@9.139.0) (2025-12-23)
+
+
+### Features
+
+* **entities-plugins:** datakit xml-json conversion nodes ([#2757](https://github.com/Kong/public-ui-components/issues/2757)) ([1c915fe](https://github.com/Kong/public-ui-components/commit/1c915fe87cb9a082ca51dbb82a03ae9add945376))
+
+
+
+
+
 ## [9.138.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.138.13...@kong-ui-public/entities-plugins@9.138.14) (2025-12-23)
 
 
