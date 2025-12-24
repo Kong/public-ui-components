@@ -1,8 +1,10 @@
-import { onActivated, onBeforeUnmount, onMounted, reactive, toValue, watch } from 'vue'
-import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import { unrefElement, useDebounceFn } from '@vueuse/core'
-
 import * as monaco from 'monaco-editor'
+import type { editor as Editor } from 'monaco-editor'
+import { onActivated, onBeforeUnmount, onMounted, reactive, shallowRef, toValue, watch } from 'vue'
+
+import { DEFAULT_MONACO_OPTIONS } from '../constants'
+import { lifecycle } from '../singletons'
 
 import type * as monacoType from 'monaco-editor'
 
@@ -50,10 +52,9 @@ export function useMonacoEditor<T extends MaybeElement>(
 ) {
   /**
    * The Monaco editor instance.
-   * @type {monaco.editor.IStandaloneCodeEditor | undefined}
    * @default undefined
   */
-  let editor: monacoType.editor.IStandaloneCodeEditor | undefined
+  const editor = shallowRef<Editor.IStandaloneCodeEditor>()
 
   // Internal flag to prevent multiple setups
   let _isSetup = false
@@ -68,16 +69,16 @@ export function useMonacoEditor<T extends MaybeElement>(
 
   /** Replace the editor content. */
   const setContent = (content: string): void => {
-    if (!_isSetup || !editor) return
+    if (!_isSetup || !editor.value) return
     // TODO: update this so we can preserve undo/redo stack
-    editor.setValue(content)
+    editor.value.setValue(content)
   }
 
   /** Toggle read-only mode. */
-  const setReadOnly = (readOnly: boolean): void => editor?.updateOptions({ readOnly })
+  const setReadOnly = (readOnly: boolean): void => editor.value?.updateOptions({ readOnly })
 
   /** Focus the editor programmatically. */
-  const focus = (): void => editor?.focus()
+  const focus = (): void => editor.value?.focus()
 
   /**
    * Triggers a keyboard command in the Monaco editor.
@@ -86,9 +87,9 @@ export function useMonacoEditor<T extends MaybeElement>(
    */
   const triggerKeyboardCommand = (id: string): void => {
     try {
-      if (!editor || !id) return
-      editor.focus()
-      editor.trigger('keyboard', id, null)
+      if (!editor.value || !id) return
+      editor.value.focus()
+      editor.value.trigger('keyboard', id, null)
     } catch (error) {
       console.error(`useMonacoEditor: Failed to trigger command: ${id}`, error)
     }
@@ -97,12 +98,12 @@ export function useMonacoEditor<T extends MaybeElement>(
   /** Toggle the status of findController widget */
   const toggleSearchWidget = (): void => {
     try {
-      if (!editor) return
+      if (!editor.value) return
 
       // close the widget
       if (editorStates.searchBoxIsRevealed) {
         // @ts-ignore - property exists
-        return editor!.getContribution('editor.contrib.findController')?.closeFindWidget()
+        return editor.value.getContribution('editor.contrib.findController')?.closeFindWidget()
       }
 
       triggerKeyboardCommand('actions.find')
@@ -135,7 +136,7 @@ export function useMonacoEditor<T extends MaybeElement>(
       // prevent multiple setups
       if (_isSetup) return
 
-      editor = monaco.editor.create(el, {
+      editor.value = monaco.editor.create(el, {
         ...DEFAULT_MONACO_OPTIONS,
         readOnly: options.readOnly || false,
         language: options.language,
@@ -150,11 +151,13 @@ export function useMonacoEditor<T extends MaybeElement>(
       editorStates.hasContent = !!options.code.value
 
       // Watch content changes and trigger callbacks efficiently
-      editor.onDidChangeModelContent(() => {
-        const content = editor!.getValue()
-        editorStates.hasContent = !!content.length
-        options.onChanged?.(content)
-      })
+      lifecycle.trackForEditor(editor.value,
+        editor.value.onDidChangeModelContent(() => {
+          const content = editor.value!.getValue()
+          editorStates.hasContent = !!content.length
+          options.onChanged?.(content)
+        }),
+      )
 
       // TODO: register editor actions
 
@@ -166,7 +169,7 @@ export function useMonacoEditor<T extends MaybeElement>(
 
       try {
         // Access the internal "FindController" contribution
-        const findController = editor.getContribution('editor.contrib.findController')
+        const findController = editor.value.getContribution('editor.contrib.findController')
 
         if (findController) {
           // Get the state object from the FindController
@@ -174,9 +177,11 @@ export function useMonacoEditor<T extends MaybeElement>(
           const findState = findController.getState()
 
           // Listen for changes to the state of the "find" panel
-          findState.onFindReplaceStateChange(() => {
-            editorStates.searchBoxIsRevealed = findState.isRevealed
-          })
+          lifecycle.trackForEditor(editor.value,
+            findState.onFindReplaceStateChange(() => {
+              editorStates.searchBoxIsRevealed = findState.isRevealed
+            }), // This returns a disposable
+          )
         }
       } catch (error) {
         console.error('useMonacoEditor: Failed to get the state of findController', error)
@@ -197,10 +202,10 @@ export function useMonacoEditor<T extends MaybeElement>(
   onActivated(remeasureFonts)
 
   onBeforeUnmount(() => {
-    if (!editor) return
+    if (!editor.value) return
 
-    const model = editor.getModel()
-    editor.dispose()
+    const model = editor.value.getModel()
+    editor.value.dispose()
     if (model) {
       model.dispose()
     }
