@@ -5,11 +5,14 @@ vi.mock('monaco-editor', () => {
     parse: vi.fn(() => ({ toString: () => 'mock://uri' })),
   }
 
+  const createDisposable = () => vi.fn()
+
   const editor = {
     create: vi.fn(() => ({
       setValue: vi.fn(),
       getValue: vi.fn(() => 'mocked code'),
-      onDidChangeModelContent: vi.fn(),
+      onDidChangeModelContent: vi.fn(() => createDisposable()),
+      onDidDispose: vi.fn(() => createDisposable()),
       updateOptions: vi.fn(),
       focus: vi.fn(),
       trigger: vi.fn(),
@@ -18,7 +21,7 @@ vi.mock('monaco-editor', () => {
       getContribution: vi.fn(() => ({
         getState: vi.fn(() => ({
           isRevealed: false,
-          onFindReplaceStateChange: vi.fn(),
+          onFindReplaceStateChange: vi.fn(() => createDisposable()),
         })),
         closeFindWidget: vi.fn(),
       })),
