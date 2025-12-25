@@ -104,7 +104,7 @@
               <JsonCardItem
                 v-for="(jitem, idx) in item.value"
                 :key="`json-array-item-${idx}`"
-                :index="idx"
+                :index="Number(idx)"
                 is-array-item
                 :item="jitem"
               />
