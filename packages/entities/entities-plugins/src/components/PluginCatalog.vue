@@ -48,9 +48,13 @@
           >
             <KCheckbox
               v-model="typeFilter[group]"
+              :data-testid="`plugin-filter-checkbox-${group}`"
               :label="group"
             />
-            <KBadge appearance="neutral">
+            <KBadge
+              appearance="neutral"
+              :data-testid="`plugin-filter-count-${group}`"
+            >
               {{ pluginsList?.[group]?.length || 0 }}
             </KBadge>
           </div>
