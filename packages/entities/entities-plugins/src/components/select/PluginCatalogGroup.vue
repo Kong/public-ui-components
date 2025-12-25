@@ -2,7 +2,7 @@
   <div
     v-if="name"
     class="group-title"
-    :data-testid="`plugin-group-${name}`"
+    :data-testid="`plugin-group-${name}-title`"
   >
     <div class="group-icon-wrapper">
       <component
