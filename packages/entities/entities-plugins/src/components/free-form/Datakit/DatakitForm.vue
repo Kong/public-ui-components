@@ -65,7 +65,7 @@ import type { EditorMode, DatakitPluginData } from './types'
 
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
-import { KSegmentedControl } from '@kong/kongponents'
+import { KSegmentedControl, KTooltip } from '@kong/kongponents'
 import { computed, inject, onMounted, ref, watch } from 'vue'
 
 import { FEATURE_FLAGS } from '../../../constants'
