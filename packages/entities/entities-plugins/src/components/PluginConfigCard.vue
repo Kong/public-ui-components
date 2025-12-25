@@ -142,10 +142,13 @@
       </template>
 
       <template
-        v-if="enableDatakitCanvas"
+        v-if="config.pluginType === 'datakit' && enableFlowEditor"
         #config-card-item-nodes="slotProps"
       >
-        <DatakitConfigCardCanvas :plugin-data="slotProps.record" />
+        <DatakitConfigCardCanvas
+          :item="slotProps.row"
+          :plugin-data="slotProps.record"
+        />
       </template>
     </EntityBaseConfigCard>
   </div>
@@ -164,13 +167,14 @@ import {
   useHelpers,
   useSchemaProvider,
 } from '@kong-ui-public/entities-shared'
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, inject, onBeforeMount, ref } from 'vue'
 import { omit } from 'lodash-es'
 
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
 import { PluginScope } from '../types'
 import DatakitConfigCardCanvas from './free-form/Datakit/DatakitConfigCardCanvas.vue'
+import { FEATURE_FLAGS } from '../constants'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -251,11 +255,7 @@ const pluginMetaData = composables.usePluginMetaData()
 const { setFieldType } = composables.usePluginHelpers()
 const { getPropValue } = useHelpers()
 
-const isKonnect = computed(() => props.config.app === 'konnect')
-
-const enableDatakitCanvas = computed(() => {
-  return isKonnect.value && props.config.pluginType === 'datakit'
-})
+const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, false)
 
 const fetchUrl = computed<string>(() => {
   let url = endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
@@ -263,7 +263,7 @@ const fetchUrl = computed<string>(() => {
     .replace(/{entityId}/gi, props.scopedEntityId)
     .concat(props.expandPartial ? '?expand_partials=true' : '')
 
-  if (isKonnect.value) {
+  if (props.config.app === 'konnect') {
     const separator = props.expandPartial ? '&' : '?'
     url = url.concat(`${separator}__ui_data=true`)
   }

@@ -44,7 +44,6 @@ import type { GlobalAction } from '../../src/components/free-form/shared/types'
 
 const toaster = new ToastManager()
 provide(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, true)
-provide(FEATURE_FLAGS.DATAKIT_M2, true)
 
 provide(TOASTER_PROVIDER, toaster.open.bind(toaster))
 
