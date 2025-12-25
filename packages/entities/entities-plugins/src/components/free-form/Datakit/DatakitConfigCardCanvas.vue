@@ -53,9 +53,7 @@ const isCompat = computed(() => {
   return DatakitConfigCompatSchema.safeParse(pluginData?.config).success
 })
 
-if (isCompat.value) {
-  provideEditorStore(pluginData)
-}
+provideEditorStore(pluginData)
 </script>
 
 <style lang="scss" scoped>
