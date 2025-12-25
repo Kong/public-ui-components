@@ -491,7 +491,7 @@ function getScopesFromFormModel(): Partial<T> {
   }
 
   .scope .radio-group,
-  .disabled-scope .radio-group :deep(.popover-trigger-wrapper) {
+  .disabled-scope :deep(.popover-trigger-wrapper) .radio-group {
     display: grid;
     gap: $kui-space-50;
     grid-template-columns: repeat(2, 1fr);
