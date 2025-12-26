@@ -1,41 +1,50 @@
-import { onActivated, onBeforeUnmount, onMounted, reactive, toValue, watch } from 'vue'
+import { onActivated, onBeforeUnmount, onMounted, reactive, toValue, watch, ref } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import { unrefElement, useDebounceFn } from '@vueuse/core'
 
 import * as monaco from 'monaco-editor'
-
-import type * as monacoType from 'monaco-editor'
+import { shikiToMonaco } from '@shikijs/monaco'
+import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'shiki'
 
 import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
 
-// singletons
-/** The Monaco instance once loaded */
-let monacoInstance: typeof monacoType | undefined = undefined
+// Flag if monaco loaded
+const isMonacoLoaded = ref(false)
+let initPromise: Promise<void> | null = null
 
-// cache
-const langCache = new Map<string, boolean>()
-
-/**
- * Lazily load Monaco and configure workers only once.
- */
-function loadMonaco(language?: string): typeof monacoType {
-  if (!monacoInstance) {
-    monacoInstance = monaco
+async function loadMonaco() {
+  if (initPromise) {
+    return initPromise
   }
 
-  // TODO: register more languages as needed
+  initPromise = (async () => {
+    try {
+      // @ts-ignore jsonDefaults location varies across Monaco Editor versions
+      // v0.55.0 introduced breaking changes and issues; Konnect still uses v0.52.x.
+      const jsonDefaults = monaco.json?.jsonDefaults || monaco.languages.json?.jsonDefaults
+      // Disable JSON token provider to prevent conflicts with @shikijs/monaco
+      // https://github.com/shikijs/shiki/issues/865#issuecomment-3689158990
+      jsonDefaults?.setModeConfiguration({ tokens: false })
 
-  // register language once
-  if (language && !langCache.get(language)) {
-    langCache.set(language, true)
-
-    if (!monaco.languages.getLanguages().some(lang => lang.id === language)) {
-      monaco.languages.register({ id: language })
+      const highlighter = await getSingletonHighlighter(
+        {
+          themes: Object.values(bundledThemes),
+          langs: Object.values(bundledLanguages),
+        },
+      )
+      highlighter.getLoadedLanguages().forEach(lang => {
+        monaco.languages.register({ id: lang })
+      })
+      shikiToMonaco(highlighter, monaco)
+      isMonacoLoaded.value = true
+    } catch (error) {
+      initPromise = null
+      throw error
     }
-  }
+  })()
 
-  return monacoInstance
+  return initPromise
 }
 
 /**
@@ -53,7 +62,7 @@ export function useMonacoEditor<T extends MaybeElement>(
    * @type {monaco.editor.IStandaloneCodeEditor | undefined}
    * @default undefined
   */
-  let editor: monacoType.editor.IStandaloneCodeEditor | undefined
+  let editor: monaco.editor.IStandaloneCodeEditor | undefined
 
   // Internal flag to prevent multiple setups
   let _isSetup = false
@@ -112,22 +121,20 @@ export function useMonacoEditor<T extends MaybeElement>(
   }
 
   /** Remeasure fonts in the editor with debouncing to optimize performance */
-  const remeasureFonts = useDebounceFn(() => monacoInstance?.editor.remeasureFonts(), 200)
+  const remeasureFonts = useDebounceFn(() => monaco.editor.remeasureFonts(), 200)
 
 
   const init = (): void => {
-    const monaco = loadMonaco(options.language)
+    loadMonaco()
 
-    // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
-    const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
-    const model = monaco.editor.createModel(options.code.value, options.language, uri)
+    let model: monaco.editor.ITextModel | undefined
 
     // `toValue()` safely unwraps refs, getters, or plain elements
-    watch(() => toValue(target), (_target) => {
+    watch([isMonacoLoaded, () => toValue(target)], ([_isLoaded, _target]) => {
 
       // This ensures we skip setup if it's null, undefined, or an SVG element (as unrefElement can return SVGElement)
       const el = unrefElement(_target)
-      if (!(el instanceof HTMLElement)) {
+      if (!(el instanceof HTMLElement) || !_isLoaded) {
         _isSetup = false
         return
       }
@@ -135,11 +142,17 @@ export function useMonacoEditor<T extends MaybeElement>(
       // prevent multiple setups
       if (_isSetup) return
 
+      if (!model) {
+        // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
+        const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
+        model = monaco.editor.createModel(options.code.value, options.language, uri)
+      }
+
       editor = monaco.editor.create(el, {
         ...DEFAULT_MONACO_OPTIONS,
         readOnly: options.readOnly || false,
         language: options.language,
-        theme: editorStates.theme,
+        theme: editorStates.theme === 'light' ? 'catppuccin-latte' : 'catppuccin-mocha',
         model,
         editContext: false,
         ...options.monacoOptions,

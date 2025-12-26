@@ -13,6 +13,7 @@ export default defineConfig({
     rollupOptions: {
       external: [
         /^monaco-editor/,
+        /^shiki/,
       ],
     },
   },
