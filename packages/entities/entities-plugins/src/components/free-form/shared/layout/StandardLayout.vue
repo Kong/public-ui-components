@@ -40,9 +40,7 @@
         </div>
         <component
           :is="scopeSchema?.disabled ? 'k-tooltip' : 'div'"
-          :class="{ scope: !scopeSchema?.disabled, 'disabled-scope': scopeSchema?.disabled }"
-          max-width="300"
-          :text="t('plugins.form.scoping.disable_global_radio')"
+          v-bind="scopeWrapperAttrs"
         >
           <div class="radio-group">
             <KRadio
@@ -237,6 +235,17 @@ const realFormConfig = computed(() => {
       return { ...data, ... getScopesFromFormModel() }
     },
   }
+})
+
+const scopeWrapperAttrs = computed(() => {
+  if (scopeSchema.value?.disabled) {
+    return {
+      class: 'disabled-scope',
+      maxWidth: '300',
+      text: t('plugins.form.scoping.disable_global_radio'),
+    }
+  }
+  return { class: 'scope' }
 })
 
 interface LegacyFormSchemaField {
