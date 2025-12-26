@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.139.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.139.1...@kong-ui-public/entities-plugins@9.139.2) (2025-12-26)
+
+
+### Bug Fixes
+
+* **entities-plugins:** freeform standard layout prefilled scopes ([#2775](https://github.com/Kong/public-ui-components/issues/2775)) ([b32bb6a](https://github.com/Kong/public-ui-components/commit/b32bb6abe8ec0207bd13efec7fcc34d9ee2e3cb2))
+
+
+
+
+
 ## [9.139.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.139.0...@kong-ui-public/entities-plugins@9.139.1) (2025-12-25)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
