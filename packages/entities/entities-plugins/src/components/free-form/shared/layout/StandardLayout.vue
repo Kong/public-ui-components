@@ -27,6 +27,7 @@
 
     <template v-if="editorMode === 'form'">
       <EntityFormBlock
+        data-testid="form-section-general-info"
         :description="generalInfoDescription ?? t('plugins.form.sections.general_info.description')"
         :step="1"
         :title="generalInfoTitle ?? t('plugins.form.sections.general_info.title')"
@@ -37,27 +38,35 @@
             :vfg-schema="enabledSchema"
           />
         </div>
-        <div class="scope">
-          <KRadio
-            v-model="scoped"
-            card
-            card-orientation="horizontal"
-            v-bind="radioGroup[0]"
-            :selected-value="false"
-            @update:model-value="handleScopeChange"
-          />
-          <KRadio
-            v-if="radioGroup[1]"
-            v-model="scoped"
-            card
-            card-orientation="horizontal"
-            v-bind="radioGroup[1]"
-            :selected-value="true"
-            @update:model-value="handleScopeChange"
-          />
-        </div>
+        <component
+          :is="scopeSchema?.disabled ? KTooltip : 'div'"
+          v-bind="scopeWrapperAttrs"
+        >
+          <div class="radio-group">
+            <KRadio
+              v-model="scoped"
+              card
+              card-orientation="horizontal"
+              v-bind="radioGroup[0]"
+              :disabled="scopeSchema?.disabled"
+              :selected-value="false"
+              @update:model-value="handleScopeChange"
+            />
+            <KRadio
+              v-if="radioGroup[1]"
+              v-model="scoped"
+              card
+              card-orientation="horizontal"
+              v-bind="radioGroup[1]"
+              :disabled="scopeSchema?.disabled"
+              :selected-value="true"
+              @update:model-value="handleScopeChange"
+            />
+          </div>
+        </component>
         <div
-          v-if="scoped && scopeEntitiesSchema"
+          v-if="scopeEntitiesSchema"
+          v-show="scoped"
           class="scope-detail"
         >
           <VFGField
@@ -97,6 +106,7 @@
         </template>
       </EntityFormBlock>
       <EntityFormBlock
+        data-testid="form-section-plugin-config"
         :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
         :step="2"
         :title="pluginConfigTitle ?? t('plugins.form.sections.plugin_config.title')"
@@ -164,7 +174,7 @@ export type Props<T extends FreeFormPluginData = any> = {
 import { computed, inject, nextTick, ref, useTemplateRef } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
-import { KRadio } from '@kong/kongponents'
+import { KRadio, KTooltip } from '@kong/kongponents'
 import english from '../../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import Form from '../Form.vue'
@@ -218,7 +228,24 @@ const slots = defineSlots<{
 const realFormConfig = computed(() => {
   return props.formConfig ?? {
     hasValue: (data?: T): boolean => !!data && Object.keys(data).length > 0,
+    prepareFormData: (data: T): Partial<T> => {
+      if (props.isEditing) return data
+
+      // Init scope-related fields from formModel when creating a new plugin
+      return { ...data, ... getScopesFromFormModel() }
+    },
   }
+})
+
+const scopeWrapperAttrs = computed(() => {
+  if (scopeSchema.value?.disabled) {
+    return {
+      class: 'disabled-scope',
+      maxWidth: '300',
+      text: t('plugins.form.scoping.disable_global_radio'),
+    }
+  }
+  return { class: 'scope' }
 })
 
 interface LegacyFormSchemaField {
@@ -227,6 +254,8 @@ interface LegacyFormSchemaField {
   fields: LegacyFormSchemaField[]
   label?: string
   description?: string
+  disabled?: boolean
+  disabledTooltip?: string
 }
 
 interface LegacyFormSchemaGroup {
@@ -357,13 +386,21 @@ const prunedData = computed(() => {
   return pick(props.model, FREE_FORM_CONTROLLED_FIELDS) as Partial<T>
 })
 
+const formModelScopeFields = computed<string[]>(() => {
+  return scopeEntitiesSchema.value?.fields.map((field: any) => field.model) ?? []
+})
 
 const scopeFields = computed<Array<'service' | 'route' | 'consumer' | 'consumer_group'>>(() => {
-  return scopeEntitiesSchema.value?.fields.map((field: any) => field.model.split('-')[0]) ?? []
+  return formModelScopeFields.value.map((field: any) => field.split('-')[0])
 })
 
 // Cache of scope-related fields to restore when toggling scoped on/off
-const scopesCache = ref(pick(prunedData.value, scopeFields.value))
+const scopesCache = ref(
+  props.isEditing
+    ? pick(prunedData.value, scopeFields.value)
+    // For new plugin, initialize from formModel
+    : getScopesFromFormModel(),
+)
 
 // `scopeIds` is not reactive. Initialize `scoped` in one shot.
 const scoped = ref(Object.values(scopesCache.value).some(hasScopeId))
@@ -433,6 +470,19 @@ function updateScopeCache(value: T) {
 function hasScopeId(value: any): value is { id: string } {
   return has(value, 'id') && value.id != null
 }
+
+function getScopesFromFormModel(): Partial<T> {
+  const data: Partial<T> = {}
+  formModelScopeFields.value.forEach(scopeField => {
+    if (props.formModel[scopeField]) {
+      const fieldName = scopeField.split('-')[0]
+      if (!fieldName) return
+      // Transfer 'service-id' to 'service': { id: '...' }
+      data[fieldName as keyof T] = { id: props.formModel[scopeField] } as any
+    }
+  })
+  return data
+}
 </script>
 
 <style lang="scss" scoped>
@@ -442,7 +492,12 @@ function hasScopeId(value: any): value is { id: string } {
   gap: $kui-space-80;
   padding-bottom: $kui-space-80;
 
-  .scope {
+  .radio-group {
+    width: 100%;
+  }
+
+  .scope .radio-group,
+  .disabled-scope :deep(.popover-trigger-wrapper) .radio-group {
     display: grid;
     gap: $kui-space-50;
     grid-template-columns: repeat(2, 1fr);
