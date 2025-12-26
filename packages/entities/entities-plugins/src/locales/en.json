@@ -641,7 +641,7 @@
       "scoping": {
         "label": "Scoped",
         "placeholder": "Search by name or UUID",
-        "disable_global_radio": "The plugin is set to 'Scoped' by default when configured under a {scope}. To configure a global plugin, navigate to the global plugin list page.",
+        "disable_global_radio": "The plugin is set to 'Scoped' by default. To apply a plugin globally, please navigate to the global plugin list page.",
         "global": {
           "label": "Global",
           "help": "All services, routes, and consumers"

@@ -42,7 +42,7 @@
           :is="scopeSchema?.disabled ? 'k-tooltip' : 'div'"
           :class="{ scope: !scopeSchema?.disabled, 'disabled-scope': scopeSchema?.disabled }"
           max-width="300"
-          :text="t('plugins.form.scoping.disable_global_radio', { scope: scopeType })"
+          :text="t('plugins.form.scoping.disable_global_radio')"
         >
           <div class="radio-group">
             <KRadio
@@ -173,7 +173,6 @@ export type Props<T extends FreeFormPluginData = any> = {
 </script>
 
 <script setup lang="ts" generic="T extends FreeFormPluginData">
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { computed, inject, nextTick, ref, useTemplateRef } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
@@ -183,7 +182,7 @@ import { createI18n } from '@kong-ui-public/i18n'
 import Form from '../Form.vue'
 import type { FormSchema } from '../../../../types/plugins/form-schema'
 import type { FreeFormPluginData } from '../../../../types/plugins/free-form'
-import type { KongManagerPluginFormConfig, KonnectPluginFormConfig, PluginValidityChangeEvent } from '../../../../types'
+import type { PluginValidityChangeEvent } from '../../../../types'
 import VFGField from '../VFGField.vue'
 import type { FormConfig, RenderRules } from '../types'
 import FieldRenderer from '../FieldRenderer.vue'
@@ -216,8 +215,6 @@ const { t } = createI18n<typeof english>('en-us', english)
 const { editorMode = 'form', ...props } = defineProps<Props<T>>()
 
 const redisPartialInfo = inject(REDIS_PARTIAL_INFO)
-const pluginFormConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig | undefined>(FORMS_CONFIG)
-const scopeType = computed(() => pluginFormConfig?.entityType ?? 'scope')
 
 const slots = defineSlots<{
   default: () => any

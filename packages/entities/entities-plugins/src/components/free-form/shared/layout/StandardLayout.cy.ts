@@ -1,5 +1,4 @@
 import StandardLayout from './StandardLayout.vue'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
 
 describe('<StandardLayout />', () => {
   const createBaseSchema = () => ({
@@ -131,17 +130,8 @@ describe('<StandardLayout />', () => {
   })
 
   it('should disable scope selection when disabled flag is true', () => {
-    // Provide FORMS_CONFIG to test tooltip message
-    const pluginFormConfig = {
-      entityType: 'services',
-      app: 'konnect',
-    }
-
     mountStandardLayout({
       formSchema: createFormSchema(true), // disabled = true
-      provide: {
-        [FORMS_CONFIG]: pluginFormConfig,
-      },
     })
 
     // Verify component renders successfully
