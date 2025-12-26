@@ -39,7 +39,7 @@
           />
         </div>
         <component
-          :is="scopeSchema?.disabled ? 'k-tooltip' : 'div'"
+          :is="scopeSchema?.disabled ? KTooltip : 'div'"
           v-bind="scopeWrapperAttrs"
         >
           <div class="radio-group">
@@ -174,7 +174,7 @@ export type Props<T extends FreeFormPluginData = any> = {
 import { computed, inject, nextTick, ref, useTemplateRef } from 'vue'
 import { EntityFormBlock } from '@kong-ui-public/entities-shared'
 import { has, pick } from 'lodash-es'
-import { KRadio } from '@kong/kongponents'
+import { KRadio, KTooltip } from '@kong/kongponents'
 import english from '../../../../locales/en.json'
 import { createI18n } from '@kong-ui-public/i18n'
 import Form from '../Form.vue'
