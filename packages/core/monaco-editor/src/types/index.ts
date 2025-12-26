@@ -1,6 +1,10 @@
 import type { editor } from 'monaco-editor'
 import type { Ref } from 'vue'
 
+export * from './context'
+export * from './json'
+export * from './monaco'
+
 /**
  * Options for the Monaco editor composable
  */

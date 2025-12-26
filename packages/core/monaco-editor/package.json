@@ -74,7 +74,9 @@
     "@kong/design-tokens": "1.18.2",
     "@kong/icons": "^1.41.0",
     "@kong/kongponents": "9.48.7",
+    "jsonc-parser": "^3.3.1",
     "monaco-editor": "^0.55.1",
+    "vscode-json-languageservice": "5.3.11",
     "vue": "^3.5.26"
   },
   "dependencies": {
