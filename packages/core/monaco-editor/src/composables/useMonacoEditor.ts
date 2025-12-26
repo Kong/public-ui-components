@@ -4,7 +4,7 @@ import type { editor as Editor } from 'monaco-editor'
 import { onActivated, onBeforeUnmount, onMounted, reactive, shallowRef, toValue, watch } from 'vue'
 
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
-import { lifecycle } from '../singletons'
+import { lifecycle, observeModelContexts } from '../singletons'
 
 import type * as monacoType from 'monaco-editor'
 
@@ -36,6 +36,8 @@ function loadMonaco(language?: string): typeof monacoType {
       monaco.languages.register({ id: language })
     }
   }
+
+  observeModelContexts(monacoInstance)
 
   return monacoInstance
 }
