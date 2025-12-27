@@ -18,11 +18,13 @@
 
       <slot
         v-for="propertyItem in propertyCollections[pType as keyof typeof propertyCollections]"
-        :key="propertyItem.key"
-        :item="propertyItem"
         :name="`config-card-item-${propertyItem.key}`"
+        :row="propertyItem"
       >
-        <ConfigCardItem :item="propertyItem">
+        <ConfigCardItem
+          :key="propertyItem.key"
+          :item="propertyItem"
+        >
           <template #label>
             <slot
               :name="`${propertyItem.key}-label`"
