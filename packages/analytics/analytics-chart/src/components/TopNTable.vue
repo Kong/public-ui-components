@@ -189,7 +189,7 @@ const displayRecord = computed(() => {
     return {}
   }
 
-  return props.data.meta.display[displayKey.value]
+  return props.data.meta.display[displayKey.value] ?? {}
 })
 
 const metricKeys = computed<AllAggregations[]>(() => {
