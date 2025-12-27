@@ -24,17 +24,27 @@ vi.mock('monaco-editor', () => {
       })),
     })),
     remeasureFonts: vi.fn(),
+    defineTheme: vi.fn(),
+    setTheme: vi.fn(),
     createModel: vi.fn(() => ({})),
   }
 
   const languages = {
     getLanguages: vi.fn(() => [{ id: 'javascript' }]),
     register: vi.fn(),
+    setTokensProvider: vi.fn(),
+  }
+
+  const json = {
+    jsonDefaults: {
+      setModeConfiguration: vi.fn(),
+    },
   }
 
   return {
     Uri,
     editor,
     languages,
+    json,
   }
 })
