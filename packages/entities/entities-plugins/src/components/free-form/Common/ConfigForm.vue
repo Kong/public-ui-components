@@ -154,7 +154,7 @@ const fieldsCategory = computed(() => {
   }
 
   // Hide the advanced fields container if there are no advanced fields to show
-  &:has(.ff-object-field:empty) {
+  &:has(> .collapse-hidden-content > .ff-advanced-fields > .ff-object-field:empty) {
     display: none;
   }
 }
