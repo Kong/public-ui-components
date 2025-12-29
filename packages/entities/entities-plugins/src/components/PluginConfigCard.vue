@@ -142,7 +142,7 @@
       </template>
 
       <template
-        v-if="config.pluginType === 'datakit' && enableFlowEditor"
+        v-if="config.pluginType === 'datakit' && config.app === 'konnect'"
         #config-card-item-nodes="slotProps"
       >
         <DatakitConfigCardCanvas
@@ -253,8 +253,6 @@ const { i18n: { t } } = composables.useI18n()
 const pluginMetaData = composables.usePluginMetaData()
 const { setFieldType } = composables.usePluginHelpers()
 const { getPropValue } = useHelpers()
-
-const enableFlowEditor = props.config.app === 'konnect'
 
 const fetchUrl = computed<string>(() => {
   let url = endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
