@@ -16,10 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref } from 'vue'
+import { ref } from 'vue'
 import type { AxiosError } from 'axios'
 import type { KonnectPluginEntityConfig, KongManagerPluginEntityConfig } from '../../src'
-import { FEATURE_FLAGS, PluginConfigCard } from '../../src'
+import { PluginConfigCard } from '../../src'
 
 const props = defineProps({
   /** Grab the Plugin type & id from the route params */
@@ -34,8 +34,6 @@ const props = defineProps({
     default: '',
   },
 })
-
-provide(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, true)
 
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const konnectConfig = ref<KonnectPluginEntityConfig>({
