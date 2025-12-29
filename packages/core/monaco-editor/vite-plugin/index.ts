@@ -70,7 +70,7 @@ type Options = {
  */
   shiki?: {
     /**
-    * Lanuages to include for Shiki syntax highlighting.
+    * Languages to include for Shiki syntax highlighting.
     *
     * @type {BundledLanguage[]}
     * @defaultValue The same languages specified in the`languages` option above
