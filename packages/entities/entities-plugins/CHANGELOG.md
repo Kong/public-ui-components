@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.140.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.139.3...@kong-ui-public/entities-plugins@9.140.0) (2025-12-29)
+
+
+### Features
+
+* **plugin-form:** hide empty advanced fields ([#2779](https://github.com/Kong/public-ui-components/issues/2779)) ([f6c5c2a](https://github.com/Kong/public-ui-components/commit/f6c5c2ad47fb004f4685ba911b1c283c02284d01))
+
+
+
+
+
 ## [9.139.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.139.2...@kong-ui-public/entities-plugins@9.139.3) (2025-12-27)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
