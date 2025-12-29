@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef } from 'vue'
+import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, inject, toRaw } from 'vue'
 import * as monaco from 'monaco-editor'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton, KModal } from '@kong/kongponents'
@@ -49,14 +49,17 @@ import { extractors } from './config-extractors'
 import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'
 
 import type { YAMLException } from 'js-yaml'
-import type { DatakitPluginData } from './types'
+import type { DatakitConfig, DatakitPluginData } from './types'
+import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../types'
 import { useFormShared } from '../shared/composables'
 import { isEqual, omit } from 'lodash-es'
 import { useErrors } from '@kong-ui-public/entities-shared'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { formData, setValue } = useFormShared<DatakitPluginData>()
+const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
 
 defineProps<{
   editing: boolean
@@ -122,6 +125,19 @@ function setExampleCode(example: keyof typeof examples) {
   }
 
   const newCode = examples[example]
+
+  // Kong Manager's code editor is editing only the config portion
+  if (formConfig.app === 'kongManager') {
+    if (editor.getValue() !== newCode) {
+      editor.pushUndoStop()
+      editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: newCode }])
+      editor.pushUndoStop()
+    }
+
+    focusEnd()
+    return
+  }
+
   try {
     const value = editor.getValue() || ''
     const config = yaml.load(value, {
@@ -179,27 +195,43 @@ onMounted(() => {
   })
   editorRef.value = editor
 
-  const initialConfig = omit({ ...formData }, ['__ui_data'])
-  const value = dumpYaml(initialConfig)
-  editor.setValue(value)
-  focusEnd()
+  if (formConfig.app === 'kongManager' && formData.config && Object.keys(formData.config).length > 0) {
+    const config = { ...formData.config } as any
 
-  editor.onDidPaste((e) => {
-    const model = editor.getModel()
-    if (!model) return
-
-    const pastedText = model.getValueInRange(e.range)
-
-    for (const extractor of extractors) {
-      const extractedConfig = extractor.extract(pastedText)
-      if (extractedConfig) {
-        pendingConfig.value = extractedConfig
-        pendingExtractorName.value = extractor.name
-        showConvertModal.value = true
-        return
-      }
+    if (config.nodes && config.nodes.length === 0) {
+      delete config.nodes
     }
-  })
+
+    const value = Object.keys(config).length === 0
+      ? ''
+      : dumpYaml(toRaw(config))
+
+    editor.setValue(value)
+
+    focusEnd()
+  } else if (formConfig.app === 'konnect') {
+    const initialConfig = omit({ ...formData }, ['__ui_data'])
+    const value = dumpYaml(initialConfig)
+    editor.setValue(value)
+    focusEnd()
+
+    editor.onDidPaste((e) => {
+      const model = editor.getModel()
+      if (!model) return
+
+      const pastedText = model.getValueInRange(e.range)
+
+      for (const extractor of extractors) {
+        const extractedConfig = extractor.extract(pastedText)
+        if (extractedConfig) {
+          pendingConfig.value = extractedConfig
+          pendingExtractorName.value = extractor.name
+          showConvertModal.value = true
+          return
+        }
+      }
+    })
+  }
 
   editor.onDidChangeModelContent(() => {
     const model = editor.getModel()
@@ -212,7 +244,11 @@ onMounted(() => {
 
       monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
 
-      setValue(config as DatakitPluginData)
+      if (formConfig.app === 'konnect') {
+        setValue(config as DatakitPluginData)
+      } else {
+        formData.config = config as DatakitConfig
+      }
       emit('change', config)
     } catch (error: unknown) {
       const { message, mark } = error as YAMLException

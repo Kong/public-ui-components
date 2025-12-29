@@ -1,6 +1,6 @@
 <template>
   <Teleport
-    v-if="enableFlowEditor"
+    v-if="formConfig.app === 'konnect'"
     :disabled="!hasTeleportTarget"
     to="#plugin-form-page-actions"
   >
@@ -63,12 +63,13 @@ import type { Component } from 'vue'
 import type { Props } from '../shared/layout/StandardLayout.vue'
 import type { EditorMode, DatakitPluginData } from './types'
 
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
 import { KSegmentedControl, KTooltip } from '@kong/kongponents'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../types'
 
-import { FEATURE_FLAGS } from '../../../constants'
 import english from '../../../locales/en.json'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import CodeEditor from './CodeEditor.vue'
@@ -84,7 +85,7 @@ const { t } = createI18n<typeof english>('en-us', english)
 const props = defineProps<Props<DatakitPluginData>>()
 
 // provided by consumer apps
-const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, false)
+const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
 
 // Check if the teleport target exists
 const hasTeleportTarget = ref(false)
@@ -96,7 +97,12 @@ onMounted(() => {
 
 const { editorMode } = usePreferences()
 const realEditorMode = computed<EditorMode>(() => {
-  return (enableFlowEditor && flowAvailable.value) ? editorMode.value : 'code'
+  // Disable flow editor for non-Konnect apps or if flow is not available due to incompatible config
+  if (formConfig.app !== 'konnect' || flowAvailable.value === false) {
+    return 'code'
+  }
+
+  return editorMode.value
 })
 const layoutEditorMode = computed<'form' | 'code'>(() => {
   return realEditorMode.value === 'flow' ? 'form' : 'code'
@@ -195,6 +201,10 @@ function handleFlowChange() {
 
 function handleCodeChange(newConfig: unknown) {
   handleConfigChange()
+
+  if (formConfig.app !== 'konnect') {
+    return
+  }
 
   const uncheckedConfig = (newConfig as DatakitPluginData)?.config
 

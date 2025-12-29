@@ -167,14 +167,13 @@ import {
   useHelpers,
   useSchemaProvider,
 } from '@kong-ui-public/entities-shared'
-import { computed, inject, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import { omit } from 'lodash-es'
 
 import composables from '../composables'
 import endpoints from '../plugins-endpoints'
 import { PluginScope } from '../types'
 import DatakitConfigCardCanvas from './free-form/Datakit/DatakitConfigCardCanvas.vue'
-import { FEATURE_FLAGS } from '../constants'
 
 import '@kong-ui-public/entities-shared/dist/style.css'
 
@@ -255,7 +254,7 @@ const pluginMetaData = composables.usePluginMetaData()
 const { setFieldType } = composables.usePluginHelpers()
 const { getPropValue } = useHelpers()
 
-const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, false)
+const enableFlowEditor = props.config.app === 'konnect'
 
 const fetchUrl = computed<string>(() => {
   let url = endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
