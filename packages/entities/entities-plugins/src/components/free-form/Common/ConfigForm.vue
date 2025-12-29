@@ -6,7 +6,8 @@
     reset-label-path="reset"
   />
   <AdvancedFields
-    class="ff-advanced-fields"
+    class="ff-advanced-fields-container"
+    data-testid="ff-advanced-fields-container"
     hide-general-fields
   >
     <ObjectField
@@ -145,11 +146,16 @@ const fieldsCategory = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-.ff-advanced-fields {
+.ff-advanced-fields-container {
   margin-top: $kui-space-80;
 
   :deep(.collapse-heading) {
     margin: 0;
+  }
+
+  // Hide the advanced fields container if there are no advanced fields to show
+  &:has(> .collapse-hidden-content > .ff-advanced-fields > .ff-object-field:empty:only-child) {
+    display: none;
   }
 }
 </style>
