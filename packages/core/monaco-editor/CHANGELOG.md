@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.4.11...@kong-ui-public/monaco-editor@0.5.0) (2025-12-30)
+
+
+### Features
+
+* **monaco-editor:** add shiki support for syntax highlighting ([#2710](https://github.com/Kong/public-ui-components/issues/2710)) ([38895fc](https://github.com/Kong/public-ui-components/commit/38895fcb1ecc4202726e612aff9127f1a8624dd9))
+
+
+
+
+
 ## [0.4.11](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.4.10...@kong-ui-public/monaco-editor@0.4.11) (2025-12-27)
 
 **Note:** Version bump only for package @kong-ui-public/monaco-editor
