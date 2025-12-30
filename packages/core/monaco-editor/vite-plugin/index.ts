@@ -5,7 +5,11 @@ import type {
   NegatedEditorFeature,
   IFeatureDefinition,
 } from 'monaco-editor/esm/metadata.js'
+import type { BundledLanguage, BundledTheme } from 'shiki'
+
 import { features, languages } from 'monaco-editor/esm/metadata.js'
+import { codegen } from 'shiki-codegen'
+import { bundledLanguages } from 'shiki'
 
 type Options = {
   /**
@@ -59,6 +63,38 @@ type Options = {
    * ```
    */
   features?: Array<EditorFeature | NegatedEditorFeature>
+
+  /**
+ * Shiki configuration options.
+ * @type {{ themes?: BundledTheme[]; langs?: BundledLanguage[] }}
+ */
+  shiki?: {
+    /**
+    * Languages to include for Shiki syntax highlighting.
+    *
+    * @type {BundledLanguage[]}
+    * @defaultValue The same languages specified in the`languages` option above
+    * @example
+    * ```ts
+    * // Only include JavaScript and JSON support
+    * langs: ['javascript', 'json']
+    * ```
+    */
+    langs?: BundledLanguage[]
+
+    /**
+     * Themes to include for Shiki syntax highlighting.
+     *
+     * @type {BundledTheme[]}
+     * @defaultValue ['catppuccin-latte', 'catppuccin-mocha']
+     * @example
+     * ```ts
+     * // Include the 'nord' theme
+     * themes: ['nord']
+     * ```
+     */
+    themes?: BundledTheme[]
+  }
 }
 
 // Some languages share the same worker; define aliases here
@@ -70,12 +106,21 @@ const WORKER_ALIASES: Record<string, string> = {
   razor: 'html',
 }
 
-const VIRTUAL_MODULE_ID = '\0virtual:monaco-editor'
+const VIRTUAL_MODULE_MONACO_ID = '\0virtual:monaco-editor'
+const VIRTUAL_MODULE_SHIKI_ID = '\0virtual:shiki'
 
 // Generate import statements for Monaco Editor feature entries
 function generateImports(entries: string | string[]): string[] {
   const entryArray = Array.isArray(entries) ? entries : [entries]
-  return entryArray.map((entry) => `import 'monaco-editor/esm/${entry}'`)
+  return entryArray.map((entry) => {
+    // Start from monaco v0.55.1, languages with monaco.contribution needed to be reexported
+    // https://github.com/microsoft/monaco-editor/issues/5133
+    if (entry.endsWith('monaco.contribution')) {
+      const lang = entry.split('/').at(-2)!
+      return `export * as ${lang} from 'monaco-editor/esm/${entry}'`
+    }
+    return `import 'monaco-editor/esm/${entry}'`
+  })
 }
 
 // Resolve which editor features to include based on user options
@@ -161,73 +206,86 @@ function generateWorkerCode(
   ]
 }
 
-export default function(options?: Options): Plugin {
+export default function plugin(options?: Options): Plugin {
   return {
     name: 'vite-plugin-monaco',
     enforce: 'pre',
 
     resolveId(id) {
       if (id === 'monaco-editor') {
-        return VIRTUAL_MODULE_ID
+        return VIRTUAL_MODULE_MONACO_ID
+      } else if (id === 'shiki') {
+        return VIRTUAL_MODULE_SHIKI_ID
       }
     },
 
     load(id) {
-      if (id !== VIRTUAL_MODULE_ID) {
-        return
+      if (id === VIRTUAL_MODULE_MONACO_ID) {
+        const languagesDict = Object.fromEntries(
+          languages.map((lang) => [lang.label, lang]),
+        )
+
+        const featuresDict = Object.fromEntries(
+          features.map((feat) => [feat.label, feat]),
+        )
+
+        const featuresIds = resolveFeatures(
+          options?.features,
+          Object.keys(featuresDict) as EditorFeature[],
+        )
+
+        const featureImports = featuresIds.flatMap((featureId) => {
+          const feature = featuresDict[featureId]
+          if (!feature?.entry) {
+            return []
+          }
+          return generateImports(feature.entry)
+        })
+
+        const languageIds =
+          options?.languages || (Object.keys(languagesDict) as EditorLanguage[])
+
+        const languageImports = languageIds.flatMap((langId) => {
+          const lang = languagesDict[langId]
+          if (!lang?.entry) {
+            return []
+          }
+          return generateImports(lang.entry)
+        })
+
+        const customLanguageImports = (options?.customLanguages || []).map(
+          ({ entry }) => `import '${entry}'`,
+        )
+
+        const workerCode = generateWorkerCode(
+          languageIds,
+          languagesDict,
+          options?.customLanguages,
+        )
+
+        return [
+          "import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'",
+          ...featureImports,
+          ...languageImports,
+          ...customLanguageImports,
+          ...workerCode,
+          "export * from 'monaco-editor/esm/vs/editor/editor.api'",
+          'export default monaco',
+        ].join('\n')
+      } else if (id === VIRTUAL_MODULE_SHIKI_ID) {
+        const languageIds =
+          options?.shiki?.langs ||
+          (options?.languages || languages.map((lang) => lang.label))
+            // Only include languages that are bundled with shiki
+            .filter((lang): lang is BundledLanguage => lang in bundledLanguages)
+
+        return codegen({
+          themes: options?.shiki?.themes || ['catppuccin-latte', 'catppuccin-mocha'],
+          engine: 'javascript',
+          langs: languageIds,
+          typescript: false,
+        })
       }
-
-      const languagesDict = Object.fromEntries(
-        languages.map((lang) => [lang.label, lang]),
-      )
-
-      const featuresDict = Object.fromEntries(
-        features.map((feat) => [feat.label, feat]),
-      )
-
-      const featuresIds = resolveFeatures(
-        options?.features,
-        Object.keys(featuresDict) as EditorFeature[],
-      )
-
-      const featureImports = featuresIds.flatMap((featureId) => {
-        const feature = featuresDict[featureId]
-        if (!feature?.entry) {
-          return []
-        }
-        return generateImports(feature.entry)
-      })
-
-      const languageIds =
-        options?.languages || (Object.keys(languagesDict) as EditorLanguage[])
-
-      const languageImports = languageIds.flatMap((langId) => {
-        const lang = languagesDict[langId]
-        if (!lang?.entry) {
-          return []
-        }
-        return generateImports(lang.entry)
-      })
-
-      const customLanguageImports = (options?.customLanguages || []).map(
-        ({ entry }) => `import '${entry}'`,
-      )
-
-      const workerCode = generateWorkerCode(
-        languageIds,
-        languagesDict,
-        options?.customLanguages,
-      )
-
-      return [
-        "import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'",
-        ...featureImports,
-        ...languageImports,
-        ...customLanguageImports,
-        ...workerCode,
-        "export * from 'monaco-editor/esm/vs/editor/editor.api'",
-        'export default monaco',
-      ].join('\n')
     },
   }
 }

@@ -21,18 +21,21 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
     rollupOptions: {
       external: [
         /^monaco-editor/,
+        /^@shikijs\//,
+        /^shiki/,
       ],
       output: {
         // Provide global variables to use in the UMD build for externalized deps
         globals: {
           'monaco-editor': 'monaco',
+          'shiki': 'shiki',
         },
       },
     },
   },
   test: {
-    // Use workspace to separate different test environments
-    workspace: [
+    // Use projects to separate different test environments
+    projects: [
       {
         extends: './vite.config.ts',
         test: {
@@ -60,7 +63,7 @@ if (process.env.USE_SANDBOX) {
   config.build.rollupOptions.external = undefined
   config.build.rollupOptions.output.global = undefined
   config.plugins.push(Monaco({
-    languages: ['javascript', 'typescript', 'json', 'css', 'html'],
+    languages: ['javascript', 'typescript', 'json', 'css', 'html', 'yaml', 'markdown'],
   }))
 }
 
