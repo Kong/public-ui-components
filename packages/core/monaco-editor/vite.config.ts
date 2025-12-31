@@ -11,6 +11,7 @@ const sanitizedPackageName = sanitizePackageName(packageName)
 const config = mergeConfig(sharedViteConfig, defineConfig({
   build: {
     outDir: 'dist/runtime',
+    cssCodeSplit: false, // Inline component CSS into the JS bundle so consumers don’t need to import styles manually
     lib: {
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
       // Example: name: 'kong-ui-public-demo-component'
