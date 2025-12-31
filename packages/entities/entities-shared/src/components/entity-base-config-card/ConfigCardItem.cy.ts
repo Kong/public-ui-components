@@ -4,6 +4,7 @@ import type { RecordItem } from '../../types'
 import { ConfigurationSchemaType } from '../../types'
 import ConfigCardItem from './ConfigCardItem.vue'
 
+
 describe('<ConfigCardItem />', () => {
   const { i18n: { formatUnixTimeStamp, formatIsoDate } } = composables.useI18n()
   describe('Labels & Tooltips', () => {
