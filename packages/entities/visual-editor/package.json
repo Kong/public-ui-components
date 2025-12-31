@@ -1,5 +1,5 @@
 {
-  "name": "@kong-ui-public/visual-editor",
+  "name": "apiruler-ui-visual-editor",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/visual-editor.umd.js",
