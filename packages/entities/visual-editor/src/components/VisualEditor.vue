@@ -2,13 +2,22 @@
   <!-- The <div> tag here is just a placeholder for your component content. -->
   <!-- We recommend wrapping your component with a unique class when possible, as shown below. -->
 
-  <div class="container-fluid" style="padding:0;margin:0">
+  <div
+    class="container-fluid"
+    style="margin: 0;padding: 0"
+  >
     <div class="home-flow-container">
-      <VueFlow :nodes="chartNodes" :edges="chartEdges" fit-view-on-init>
-        <DropzoneBackground :style="{
-          backgroundColor: '#e7f3ff',
-          transition: 'background-color 0.2s ease',
-        }" />
+      <VueFlow
+        :edges="chartEdges"
+        fit-view-on-init
+        :nodes="chartNodes"
+      >
+        <DropzoneBackground
+          :style="{
+            backgroundColor: '#e7f3ff',
+            transition: 'background-color 0.2s ease',
+          }"
+        />
 
         <Panel position="top-right">
           <KButton size="large">
@@ -34,7 +43,6 @@
       </VueFlow>
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -62,10 +70,10 @@ onConnect((params) => addEdges(params))
 
 <style lang="scss">
 .home-flow-container {
-  max-width: 100%;
-  height: 700px;
   border: 0.5px solid gray;
   border-radius: 8px;
+  height: 700px;
+  max-width: 100%;
 }
 
 .vue-flow__controls {

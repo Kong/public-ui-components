@@ -20,12 +20,12 @@ export default {
   <!-- Use the `EdgeLabelRenderer` to escape the SVG world of edges and render your own custom label in a `<div>` ctx -->
   <EdgeLabelRenderer>
     <div
+      class="nodrag nopan"
       :style="{
         pointerEvents: 'all',
         position: 'absolute',
         transform: `translate(-50%, -50%) translate(${path[1]}px,${path[2]}px)`,
       }"
-      class="nodrag nopan"
     >
       {{ data.hello }}
     </div>

@@ -4,19 +4,27 @@ import { Position, Handle } from '@vue-flow/core'
 
 <template>
   <div class="main-node">
-    <img src="../assets/apiruler-logo.png" height="80px" width="80px" alt="apiruler-logo">
+    <img
+      alt="apiruler-logo"
+      height="80px"
+      src="../assets/apiruler-logo.png"
+      width="80px"
+    >
 
-    <Handle type="source" :position="Position.Bottom" />
+    <Handle
+      :position="Position.Bottom"
+      type="source"
+    />
   </div>
 </template>
 
 <style lang="css">
 .main-node {
-  width: 80px;
-  height: 80px;
+  align-items: center;
   border-radius: 50%;
   display: flex;
+  height: 80px;
   justify-content: center;
-  align-items: center;
+  width: 80px;
 }
 </style>
