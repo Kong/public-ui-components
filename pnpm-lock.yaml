@@ -12,7 +12,7 @@ overrides:
   axios@>=1.0.0 <1.12.0: '>=1.13.2'
   form-data@>=3.0.0 <3.0.4: '>=4.0.5'
   mermaid@>=11.1.0 <11.10.0: '>=11.12.2'
-  mermaid@>=10.9.0-rc.1 <10.9.4: '>=10.9.5'
+  mermaid@>=10.9.0-rc.1 <10.9.4: '>=11.12.2'
   mermaid@>=11.0.0-alpha.1 <11.10.0: '>=11.12.2'
   tar-fs@>=2.0.0 <2.1.4: '>=2.1.4'
   sha.js@<=2.4.11: '>=2.4.12'
@@ -10303,6 +10303,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@4.0.0:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
