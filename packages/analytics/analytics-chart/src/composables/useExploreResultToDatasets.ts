@@ -78,8 +78,8 @@ export default function useExploreResultToDatasets(
         }
 
         const dimensionFieldNames = (hasDimensions && dimensionKeys) || metricNames
-        const primaryDimension = dimensionFieldNames[0]
-        const secondaryDimension = (dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0])
+        const primaryDimension = dimensionFieldNames[0] as string
+        const secondaryDimension = (dimensionFieldNames.length > 1 ? dimensionFieldNames[1] : dimensionFieldNames[0]) as string
 
         const pivotRecords = isMultiMetric
           ? Object.fromEntries(records.flatMap(e => {
@@ -94,13 +94,14 @@ export default function useExploreResultToDatasets(
             const label = hasDimensions
               ? `${e.event[primaryDimension]},${e.event[secondaryDimension]}`
               : `${primaryDimension},${secondaryDimension}`
+            // @ts-ignore metricNames[0] is guaranteed to exist
             const value = e.event[metricNames[0]]
 
             return [label, value]
           }))
 
         const aggregatedPivotRecords = Object.keys(pivotRecords).reduce((acc, key) => {
-          const [row] = key.split(',')
+          const row = key.split(',')[0] as string
           const pivotEntry = pivotRecords[key] as number
 
           if (acc[row]) {

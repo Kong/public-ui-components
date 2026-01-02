@@ -185,7 +185,7 @@ const computedMetricUnit = computed<string>(() => {
     return ''
   }
 
-  return Object.values(props.chartData.meta.metric_units)[0]
+  return Object.values(props.chartData.meta.metric_units)[0] ?? ''
 })
 
 const showLegendValues = computed(() => props.showLegendValues && props.legendPosition !== ChartLegendPosition.Hidden)
@@ -215,7 +215,7 @@ const tooltipMetricDisplay = computed<string | undefined>(() => {
     return undefined
   }
 
-  const metricName = props.chartData.meta.metric_names[0]
+  const metricName = props.chartData.meta.metric_names[0] ?? ''
   const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
 
   if (props.chartData.meta.metric_names.length > 1) {
@@ -246,7 +246,7 @@ const metricAxesTitle = computed<string | undefined>(() => {
     return undefined
   }
 
-  const metricName = props.chartData.meta.metric_names[0]
+  const metricName = props.chartData.meta.metric_names[0] ?? ''
   const metricUnit = props.chartData.meta.metric_units[metricName as ExploreAggregations]
 
   if (props.chartData.meta.metric_names.length > 1) {
@@ -306,8 +306,11 @@ const hasValidChartData = computed(() => {
 })
 
 const timeSeriesGranularity = computed<GranularityValues>(() => {
-
   if (!props.chartData.meta.granularity_ms) {
+    if (!props.chartData.data[0] || !props.chartData.data[1]) {
+      return 'hourly'
+    }
+
     return msToGranularity(
       new Date(props.chartData.data[1].timestamp).getTime() - new Date(props.chartData.data[0].timestamp).getTime(),
     ) || 'hourly'

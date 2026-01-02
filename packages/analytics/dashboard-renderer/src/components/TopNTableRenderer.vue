@@ -62,6 +62,7 @@ const parseLink = (record: TopNTableRecord) => {
     if (record.id.includes(':')) {
       const [cpId, entityId] = record.id.split(':')
 
+      // @ts-ignore we guarantee both cpId and entityId due to the `includes` check
       return props.chartOptions.entity_link.replace(CP_ID_TOKEN, cpId).replace(ENTITY_ID_TOKEN, entityId)
     } else {
       return props.chartOptions.entity_link.replace(ENTITY_ID_TOKEN, record.id)
