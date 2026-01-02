@@ -725,6 +725,9 @@ importers:
       shiki:
         specifier: ^3.20.0
         version: 3.20.0
+      vite-plugin-css-injected-by-js:
+        specifier: ^3.5.2
+        version: 3.5.2(vite@5.4.21(@types/node@24.10.4)(sass-embedded@1.80.3)(sass@1.97.1)(terser@5.43.1))
       vue:
         specifier: ^3.5.26
         version: 3.5.26(typescript@5.9.3)
@@ -10013,6 +10016,11 @@ packages:
     resolution: {integrity: sha512-EbKSKh+bh1E1IFxeO0pg1n4dvoOTt0UDiXMd/qn++r98+jPO1xtJilvXldeuQ8giIB5IkpjCgMleHMNEsGH6pg==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
+
+  vite-plugin-css-injected-by-js@3.5.2:
+    resolution: {integrity: sha512-2MpU/Y+SCZyWUB6ua3HbJCrgnF0KACAsmzOQt1UvRVJCGF6S8xdA3ZUhWcWdM9ivG4I5az8PnQmwwrkC2CAQrQ==}
+    peerDependencies:
+      vite: '>2.0.0-0'
 
   vite-plugin-externals@0.6.2:
     resolution: {integrity: sha512-R5oVY8xDJjLXLTs2XDYzvYbc/RTZuIwOx2xcFbYf+/VXB6eJuatDgt8jzQ7kZ+IrgwQhe6tU8U2fTyy72C25CQ==}
@@ -20697,6 +20705,10 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  vite-plugin-css-injected-by-js@3.5.2(vite@5.4.21(@types/node@24.10.4)(sass-embedded@1.80.3)(sass@1.97.1)(terser@5.43.1)):
+    dependencies:
+      vite: 5.4.21(@types/node@24.10.4)(sass-embedded@1.80.3)(sass@1.97.1)(terser@5.43.1)
 
   vite-plugin-externals@0.6.2(vite@5.4.21(@types/node@24.10.4)(sass-embedded@1.80.3)(sass@1.97.1)(terser@5.43.1)):
     dependencies:
