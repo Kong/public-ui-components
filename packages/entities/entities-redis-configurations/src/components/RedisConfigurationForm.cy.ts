@@ -175,9 +175,12 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-connection-is-proxied-checkbox').should('not.exist')
 
         cy.getTestId('redis-host-input').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-host').should('be.visible')
         cy.getTestId('redis-port-input').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-port').should('be.visible')
         cy.getTestId('redis-timeout-input').should('be.visible')
         cy.getTestId('redis-auth-provider-select').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-server_name').should('be.visible')
 
         // Host/Port EE fields
         cy.getTestId('redis-type-select').click()
