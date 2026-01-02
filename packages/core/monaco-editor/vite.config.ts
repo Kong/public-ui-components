@@ -2,6 +2,7 @@ import sharedViteConfig, { sanitizePackageName } from '../../../vite.config.shar
 import { resolve } from 'path'
 import { defineConfig, mergeConfig } from 'vite'
 import Monaco from './vite-plugin'
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
 // Package name MUST always match the kebab-case package name inside the component's package.json file and the name of your `/packages/{package-name}` directory
 const packageName = 'monaco-editor'
@@ -67,5 +68,7 @@ if (process.env.USE_SANDBOX) {
     languages: ['javascript', 'typescript', 'json', 'css', 'html', 'yaml', 'markdown'],
   }))
 }
+
+config.plugins.unshift(cssInjectedByJsPlugin())
 
 export default config
