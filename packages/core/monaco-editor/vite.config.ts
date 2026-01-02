@@ -68,6 +68,7 @@ if (process.env.USE_SANDBOX) {
   }))
 }
 
+// Ensure CSS is injected via JS so user does not need to import CSS separately
 config.plugins.unshift(cssInjectedByJsPlugin())
 
 export default config
