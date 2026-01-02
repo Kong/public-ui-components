@@ -5,7 +5,7 @@
         {{ t('plugins.free-form.datakit.description_example') }}
 
         <KButton
-          v-for="(_, key) in realExamples"
+          v-for="(_, key) in examples"
           :key="key"
           appearance="secondary"
           size="small"
@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, toRaw, inject, computed } from 'vue'
+import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, inject, toRaw } from 'vue'
 import * as monaco from 'monaco-editor'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton, KModal } from '@kong/kongponents'
@@ -45,21 +45,21 @@ import { SparklesIcon } from '@kong/icons'
 import english from '../../../locales/en.json'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 import examples from './examples'
-import { FEATURE_FLAGS } from '../../../constants'
 import { extractors } from './config-extractors'
 import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'
 
 import type { YAMLException } from 'js-yaml'
 import type { DatakitConfig, DatakitPluginData } from './types'
+import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../types'
 import { useFormShared } from '../shared/composables'
 import { isEqual, omit } from 'lodash-es'
 import { useErrors } from '@kong-ui-public/entities-shared'
-
-const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { formData, setValue } = useFormShared<DatakitPluginData>()
+const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
 
 defineProps<{
   editing: boolean
@@ -112,14 +112,6 @@ function handleConvertConfirm() {
   handleConvertCancel()
 }
 
-const M2_EXAMPLES: Array<keyof typeof examples> = ['vault', 'cache']
-const realExamples = computed(() => {
-  if (!enableDatakitM2) {
-    return omit(examples, M2_EXAMPLES)
-  }
-  return examples
-})
-
 /**
  * Sets the example code in the Monaco editor.
  * We do not use `setValue` directly because it will clear the undo stack,
@@ -133,38 +125,43 @@ function setExampleCode(example: keyof typeof examples) {
   }
 
   const newCode = examples[example]
-  if (!enableDatakitM2 && editor.getValue() !== newCode) {
-    editor.pushUndoStop()
-    editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: newCode }])
-    editor.pushUndoStop()
+
+  // Kong Manager's code editor is editing only the config portion
+  if (formConfig.app === 'kongManager') {
+    if (editor.getValue() !== newCode) {
+      editor.pushUndoStop()
+      editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: newCode }])
+      editor.pushUndoStop()
+    }
+
+    focusEnd()
+    return
   }
 
-  if (enableDatakitM2) {
-    try {
-      const value = editor.getValue() || ''
-      const config = yaml.load(value, {
-        schema: JSON_SCHEMA,
-        json: true,
-      }) as any
+  try {
+    const value = editor.getValue() || ''
+    const config = yaml.load(value, {
+      schema: JSON_SCHEMA,
+      json: true,
+    }) as any
 
-      const exampleConfigJson = yaml.load(newCode, {
-        schema: JSON_SCHEMA,
-        json: true,
-      }) as any
+    const exampleConfigJson = yaml.load(newCode, {
+      schema: JSON_SCHEMA,
+      json: true,
+    }) as any
 
-      if (isEqual(config.config, exampleConfigJson)) return
+    if (isEqual(config.config, exampleConfigJson)) return
 
-      const nextConfig = omit({
-        ...formData,
-        config: { ...exampleConfigJson },
-      }, ['__ui_data'])
+    const nextConfig = omit({
+      ...formData,
+      config: { ...exampleConfigJson },
+    }, ['__ui_data'])
 
-      editor.pushUndoStop()
-      editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: dumpYaml(nextConfig) }])
-      editor.pushUndoStop()
-    } catch (error: unknown) {
-      emit('error', getMessageFromError(error))
-    }
+    editor.pushUndoStop()
+    editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: dumpYaml(nextConfig) }])
+    editor.pushUndoStop()
+  } catch (error: unknown) {
+    emit('error', getMessageFromError(error))
   }
 
   focusEnd()
@@ -198,7 +195,7 @@ onMounted(() => {
   })
   editorRef.value = editor
 
-  if (!enableDatakitM2 && formData.config && Object.keys(formData.config).length > 0) {
+  if (formConfig.app === 'kongManager' && formData.config && Object.keys(formData.config).length > 0) {
     const config = { ...formData.config } as any
 
     if (config.nodes && config.nodes.length === 0) {
@@ -212,9 +209,7 @@ onMounted(() => {
     editor.setValue(value)
 
     focusEnd()
-  }
-
-  if (enableDatakitM2) {
+  } else if (formConfig.app === 'konnect') {
     const initialConfig = omit({ ...formData }, ['__ui_data'])
     const value = dumpYaml(initialConfig)
     editor.setValue(value)
@@ -249,7 +244,7 @@ onMounted(() => {
 
       monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
 
-      if (enableDatakitM2) {
+      if (formConfig.app === 'konnect') {
         setValue(config as DatakitPluginData)
       } else {
         formData.config = config as DatakitConfig

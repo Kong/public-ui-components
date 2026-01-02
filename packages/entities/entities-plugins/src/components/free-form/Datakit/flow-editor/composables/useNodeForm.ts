@@ -1,4 +1,4 @@
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { has, omit } from 'lodash-es'
 import { useEditorStore } from '../../composables'
 import { buildAdjacency, hasCycle } from '../store/graph'
@@ -14,7 +14,6 @@ import { useConfirm } from './useConflictConfirm'
 import useI18n from '../../../../../composables/useI18n'
 import type { ConnectionString } from '../modal/ConflictModal.vue'
 import { createEdgeConnectionString, createNewConnectionString } from './helpers'
-import { FEATURE_FLAGS } from '../../../../../constants'
 
 export type InputOption = {
   value: IdConnection
@@ -33,8 +32,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   // It should return `T`, but we use any to avoid circular dependency issues
   getFormValue?: () => any,
 ) {
-  const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
-
   const {
     state,
     renameNode,
@@ -311,9 +308,6 @@ export function useNodeForm<T extends BaseFormData = BaseFormData>(
   const inputOptions = computed<InputOption[]>(() => {
     const options: InputOption[] = []
     for (const node of state.value.nodes) {
-
-      // skip `vault` until M2 is ready
-      if (!enableDatakitM2 && node.type === 'vault') continue
 
       const meta = getNodeMeta(node.type)
       // skip no output nodes

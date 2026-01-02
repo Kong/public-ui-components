@@ -1,6 +1,6 @@
 <template>
   <Teleport
-    v-if="enableDatakitM2 && enableFlowEditor"
+    v-if="formConfig.app === 'konnect'"
     :disabled="!hasTeleportTarget"
     to="#plugin-form-page-actions"
   >
@@ -29,40 +29,10 @@
     class="dk-form"
     :editor-mode="layoutEditorMode"
   >
-    <template
-      v-if="enableFlowEditor && !enableDatakitM2"
-      #plugin-config-extra
-    >
-      <KSegmentedControl
-        :model-value="realEditorMode"
-        :options="editorModes"
-        @update:model-value="editorMode = $event"
-      >
-        <template #option-label="{ option }">
-          <KTooltip
-            :disabled="flowAvailable || option.value !== 'flow'"
-            :text="t('plugins.free-form.datakit.flow_editor.disabled_tooltip')"
-          >
-            <div class="dk-option-label">
-              <component :is="icons[option.value]" />
-              {{ option.label }}
-            </div>
-          </KTooltip>
-        </template>
-      </KSegmentedControl>
-    </template>
-
     <FlowEditor
       v-if="realEditorMode === 'flow'"
       :is-editing="props.isEditing"
       @change="handleFlowChange"
-    />
-    <CodeEditor
-      v-else-if="realEditorMode === 'code' && !enableDatakitM2"
-      class="code-editor"
-      :editing="props.isEditing"
-      @change="handleCodeChange"
-      @error="handleCodeError"
     />
 
     <template #code-editor>
@@ -75,7 +45,7 @@
     </template>
 
     <template #plugin-config-title>
-      {{ configTitle }}
+      {{ t('plugins.free-form.datakit.plugin_config.title') }}
     </template>
 
     <template #plugin-config-description>
@@ -91,15 +61,15 @@ import type { Component } from 'vue'
 // import type { ZodError } from 'zod'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
-import type { DatakitConfig, EditorMode, DatakitPluginData } from './types'
+import type { EditorMode, DatakitPluginData } from './types'
 
+import { computed, inject, onMounted, ref, watch } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import { CodeblockIcon, DesignIcon } from '@kong/icons'
-import { KSegmentedControl } from '@kong/kongponents'
-import { computed, inject, onMounted, ref, watch } from 'vue'
+import { KSegmentedControl, KTooltip } from '@kong/kongponents'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../types'
 
-import { FEATURE_FLAGS } from '../../../constants'
-import { M2_NODE_TYPES } from './constants'
 import english from '../../../locales/en.json'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import CodeEditor from './CodeEditor.vue'
@@ -115,8 +85,7 @@ const { t } = createI18n<typeof english>('en-us', english)
 const props = defineProps<Props<DatakitPluginData>>()
 
 // provided by consumer apps
-const enableFlowEditor = inject<boolean>(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, false)
-const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
+const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
 
 // Check if the teleport target exists
 const hasTeleportTarget = ref(false)
@@ -128,12 +97,14 @@ onMounted(() => {
 
 const { editorMode } = usePreferences()
 const realEditorMode = computed<EditorMode>(() => {
-  return (enableFlowEditor && flowAvailable.value) ? editorMode.value : 'code'
+  // Disable flow editor for non-Konnect apps or if flow is not available due to incompatible config
+  if (formConfig.app !== 'konnect' || flowAvailable.value === false) {
+    return 'code'
+  }
+
+  return editorMode.value
 })
 const layoutEditorMode = computed<'form' | 'code'>(() => {
-  if (!enableDatakitM2) {
-    return 'form'
-  }
   return realEditorMode.value === 'flow' ? 'form' : 'code'
 })
 
@@ -170,13 +141,6 @@ const description = computed(() => {
     default:
       return ''
   }
-})
-
-const configTitle = computed(() => {
-  if (enableDatakitM2) {
-    return t('plugins.free-form.datakit.plugin_config.title')
-  }
-  return t('plugins.form.sections.plugin_config.title')
 })
 
 watch(realEditorMode, () => {
@@ -238,45 +202,23 @@ function handleFlowChange() {
 function handleCodeChange(newConfig: unknown) {
   handleConfigChange()
 
-  let uncheckedConfig: unknown = newConfig
+  if (formConfig.app !== 'konnect') {
+    return
+  }
+
+  const uncheckedConfig = (newConfig as DatakitPluginData)?.config
 
   // TODO: use strict validation and map back to the exact location of schema validation errors
   // const { success, error } = DatakitConfigSchema.safeParse(uncheckedConfig)
 
-  if (enableDatakitM2) {
-    uncheckedConfig = (newConfig as DatakitPluginData)?.config
-  }
-
   const { success: compatSuccess } = DatakitConfigCompatSchema.safeParse(uncheckedConfig)
-  let isValid = compatSuccess
-
-  if (!enableDatakitM2 && isValid) {
-    isValid = !isM2FeatureUsed(newConfig as DatakitConfig | undefined)
-  }
-
-  flowAvailable.value = isValid
+  flowAvailable.value = compatSuccess
 
   // props.onValidityChange?.({
   //   model: 'config',
   //   valid: success,
   //   error: success ? '' : getSchemaErrorMessage(error),
   // })
-}
-
-/**
- * Check if there are some M2 features existed, they are not supported in the UI yet
- */
-function isM2FeatureUsed(config: DatakitConfig | undefined): boolean {
-  // check vault resource
-  if (config?.resources?.vault) return true
-
-  // check nodes gated behind the M2 feature flag
-  const hasUnsupportedNode = config?.nodes?.some((node) => {
-    return M2_NODE_TYPES.includes(node.type)
-  })
-  if (hasUnsupportedNode) return true
-
-  return false
 }
 
 function handleCodeError(msg: string) {

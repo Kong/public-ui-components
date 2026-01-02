@@ -1,5 +1,12 @@
 <template>
-  <div class="datakit-config-card-canvas">
+  <ConfigCardItem
+    v-if="!isCompat"
+    :item="item"
+  />
+  <div
+    v-else
+    class="datakit-config-card-canvas"
+  >
     <div
       class="config-card-details-label"
       data-testid="datakit-configuration-label"
@@ -29,13 +36,22 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { ConfigCardItem } from '@kong-ui-public/entities-shared'
 import type { DatakitPluginData } from './types'
+import type { RecordItem } from '@kong-ui-public/entities-shared'
 import FlowPanels from './flow-editor/FlowPanels.vue'
 import { provideEditorStore } from './composables'
+import { DatakitConfigSchema as DatakitConfigCompatSchema } from './schema/compat'
 
-const { pluginData } = defineProps<{
+const { pluginData, item } = defineProps<{
   pluginData: DatakitPluginData
+  item: RecordItem
 }>()
+
+const isCompat = computed(() => {
+  return DatakitConfigCompatSchema.safeParse(pluginData?.config).success
+})
 
 provideEditorStore(pluginData)
 </script>
