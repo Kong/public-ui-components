@@ -211,6 +211,15 @@ export default function plugin(options?: Options): Plugin {
     name: 'vite-plugin-monaco',
     enforce: 'pre',
 
+    config() {
+      return {
+        optimizeDeps: {
+          // allow vite plugin to intercept imports in DEV
+          exclude: ['monaco-editor', 'shiki'],
+        },
+      }
+    },
+
     resolveId(id) {
       if (id === 'monaco-editor') {
         return VIRTUAL_MODULE_MONACO_ID

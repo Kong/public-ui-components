@@ -145,7 +145,7 @@ export function useMonacoEditor<T extends MaybeElement>(
       if (!model) {
         // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
         const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
-        model = monaco.editor.createModel(options.code.value, options.language, uri)
+        model = monaco.editor.createModel(options.code, options.language, uri)
       }
 
       editor = monaco.editor.create(el, {
@@ -160,7 +160,7 @@ export function useMonacoEditor<T extends MaybeElement>(
 
       _isSetup = true
       editorStates.editorStatus = 'ready'
-      editorStates.hasContent = !!options.code.value
+      editorStates.hasContent = !!options.code
 
       // Watch content changes and trigger callbacks efficiently
       editor.onDidChangeModelContent(() => {
