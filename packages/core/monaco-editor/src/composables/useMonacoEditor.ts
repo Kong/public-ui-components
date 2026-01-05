@@ -1,4 +1,4 @@
-import { onActivated, onBeforeUnmount, onMounted, reactive, ref, shallowRef, toValue, watch } from 'vue'
+import { onActivated, onBeforeUnmount, onMounted, onWatcherCleanup, reactive, ref, shallowRef, toValue, watch } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import { unrefElement, useDebounceFn } from '@vueuse/core'
 
@@ -131,17 +131,18 @@ export function useMonacoEditor<T extends MaybeElement>(
     let model: monaco.editor.ITextModel | undefined
 
     // `toValue()` safely unwraps refs, getters, or plain elements
-    watch([isMonacoLoaded, () => toValue(target)], ([_isLoaded, _target]) => {
+    watch([isMonacoLoaded, () => toValue(target)], ([_isLoaded, _target], [, previousTarget]) => {
 
       // This ensures we skip setup if it's null, undefined, or an SVG element (as unrefElement can return SVGElement)
       const el = unrefElement(_target)
+      const previousEl = unrefElement(previousTarget)
       if (!(el instanceof HTMLElement) || !_isLoaded) {
         _isSetup = false
         return
       }
 
-      // prevent multiple setups
-      if (_isSetup) return
+      // Only set up when not already set up or target element changed
+      if (_isSetup && previousEl === el) return
 
       if (!model) {
         // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
@@ -200,6 +201,10 @@ export function useMonacoEditor<T extends MaybeElement>(
         console.error('useMonacoEditor: Failed to get the state of findController', error)
       }
 
+      // Dispose the editor if any
+      onWatcherCleanup(() => {
+        editor.value?.dispose()
+      })
     }, {
       immediate: true,
       flush: 'post',
