@@ -142,10 +142,13 @@
       </template>
 
       <template
-        v-if="enableDatakitCanvas"
+        v-if="config.pluginType === 'datakit' && config.app === 'konnect'"
         #config-card-item-nodes="slotProps"
       >
-        <DatakitConfigCardCanvas :plugin-data="slotProps.record" />
+        <DatakitConfigCardCanvas
+          :item="slotProps.row"
+          :plugin-data="slotProps.record"
+        />
       </template>
     </EntityBaseConfigCard>
   </div>
@@ -251,19 +254,13 @@ const pluginMetaData = composables.usePluginMetaData()
 const { setFieldType } = composables.usePluginHelpers()
 const { getPropValue } = useHelpers()
 
-const isKonnect = computed(() => props.config.app === 'konnect')
-
-const enableDatakitCanvas = computed(() => {
-  return isKonnect.value && props.config.pluginType === 'datakit'
-})
-
 const fetchUrl = computed<string>(() => {
   let url = endpoints.item[props.config.app]?.[props.scopedEntityType ? 'forEntity' : 'all']
     .replace(/{entityType}/gi, props.scopedEntityType)
     .replace(/{entityId}/gi, props.scopedEntityId)
     .concat(props.expandPartial ? '?expand_partials=true' : '')
 
-  if (isKonnect.value) {
+  if (props.config.app === 'konnect') {
     const separator = props.expandPartial ? '&' : '?'
     url = url.concat(`${separator}__ui_data=true`)
   }

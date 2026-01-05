@@ -10,45 +10,40 @@
     </header>
     <div class="body">
       <div class="panel">
-        <template v-if="enableDatakitM2">
-          <KSegmentedControl
-            v-model="selectedOption"
-            :options="[{
-              label: t('plugins.free-form.datakit.flow_editor.panel_segments.nodes'),
-              value: 'nodes',
-            }, {
-              label: t('plugins.free-form.datakit.flow_editor.panel_segments.resources.title'),
-              value: 'resources',
-            }]"
-          />
+        <KSegmentedControl
+          v-model="selectedOption"
+          :options="[{
+            label: t('plugins.free-form.datakit.flow_editor.panel_segments.nodes'),
+            value: 'nodes',
+          }, {
+            label: t('plugins.free-form.datakit.flow_editor.panel_segments.resources.title'),
+            value: 'resources',
+          }]"
+        />
 
-          <NodePanel
-            v-if="selectedOption === 'nodes'"
-            hide-title
-          />
+        <NodePanel
+          v-if="selectedOption === 'nodes'"
+          hide-title
+        />
 
-          <ResourcesPanel v-if="selectedOption === 'resources'" />
-        </template>
-        <NodePanel v-else />
+        <ResourcesPanel v-if="selectedOption === 'resources'" />
       </div>
     </div>
   </aside>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, inject } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { createI18n } from '@kong-ui-public/i18n'
 import english from '../../../../../locales/en.json'
 import { usePreferences, useEditorStore } from '../../composables'
 import NodePanel from './NodePanel.vue'
 import ResourcesPanel from './ResourcesPanel.vue'
-import { FEATURE_FLAGS } from '../../../../../constants'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { sidePanelExpanded } = usePreferences()
 const { propertiesPanelOpen, selectedNode } = useEditorStore()
-const enableDatakitM2 = inject<boolean>(FEATURE_FLAGS.DATAKIT_M2, false)
 
 const selectedOption = ref<'nodes' | 'resources'>('nodes')
 
