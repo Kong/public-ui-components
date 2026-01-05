@@ -15,18 +15,20 @@
       v-else
       class="single-value-wrapper"
     >
-      <span
-        class="single-value"
-        data-testid="single-value-chart"
-      >
-        {{ formattedValue }}
-      </span>
-      <span
-        v-if="displayMetricUnit"
-        class="single-value-unit"
-      >
-        &nbsp;{{ metricUnit }}
-      </span>
+      <div class="single-value-metric">
+        <span
+          class="single-value"
+          data-testid="single-value-chart"
+        >
+          {{ formattedValue }}
+        </span>
+        <span
+          v-if="displayMetricUnit"
+          class="single-value-unit"
+        >
+          &nbsp;{{ metricUnit }}
+        </span>
+      </div>
       <div
         v-if="showTrend"
         class="single-value-trend"
@@ -277,6 +279,11 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: 12px;
+
+    .single-value-metric {
+      align-items: baseline;
+      display: inline-flex;
+    }
 
     .single-value {
       color: $kui-color-text;
