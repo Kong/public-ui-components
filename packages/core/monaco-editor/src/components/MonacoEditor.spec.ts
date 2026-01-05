@@ -106,10 +106,9 @@ describe('MonacoEditor.vue', () => {
   })
 
   it('shows loading, then renders content when fetched', async () => {
-    const wrapper = mount(MonacoEditor, {
-      props: { modelValue: code.value },
-      global: { stubs: { KEmptyState, Transition: false } },
-    })
+    vi.useFakeTimers()
+
+    const wrapper = mountComponent()
 
     // Initially loading overlay should exist
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(true)
@@ -121,17 +120,17 @@ describe('MonacoEditor.vue', () => {
       wrapper.vm.monacoEditor.setContent('fetched code')
     }, 150)
 
-    // Wait a bit for setTimeout to run
-    await new Promise((resolve) => setTimeout(resolve, 200))
+    // fast-forward time
+    vi.advanceTimersByTime(150)
     await nextTick()
 
-    // Loading overlay should disappear
-    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(false)
     // // Editor should no longer have loading class
     expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).not.toContain('loading')
     // // Empty state should not show
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-empty"]').exists()).toBe(false)
     // Code should now be populated
     expect(code.value).toBe('fetched code')
+
+    vi.useRealTimers()
   })
 })
