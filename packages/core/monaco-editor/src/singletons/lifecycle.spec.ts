@@ -49,7 +49,7 @@ describe('lifecycle singleton', () => {
 
     expect(disposable.dispose).toHaveBeenCalledTimes(1)
     expect(() => tracked.dispose()).not.toThrow()
-    expect(disposable.dispose).toHaveBeenCalledTimes(2)
+    expect(disposable.dispose).toHaveBeenCalledTimes(1) // Idempotent
   })
 
   it('disposes scoped disposables when the editor scope disposes', () => {
