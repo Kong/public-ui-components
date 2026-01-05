@@ -7,7 +7,7 @@ export interface UseMonacoEditorOptions {
   /**
    * The initial content of the editor
    */
-  code: string
+  initialCode: string
   /**
    * The programming language for syntax highlighting
    */
