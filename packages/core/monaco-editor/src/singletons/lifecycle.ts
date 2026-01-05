@@ -1,6 +1,6 @@
 import type { editor as Editor, IDisposable } from 'monaco-editor'
 
-const L = '[monaco-editor] [lifecycle]'
+const LOG_PREFIX = '[monaco-editor] [lifecycle]'
 
 type Scope
   = { type: 'editor', source: Editor.ICodeEditor }
@@ -97,7 +97,7 @@ function ensureScopeData(scope: Scope): ScopeData {
         break
       }
       default:
-        throw new Error(`${L} Unknown scope: ${scope}`)
+        throw new Error(`${LOG_PREFIX} Unknown scope: ${scope}`)
     }
 
     scopeData = {
@@ -139,7 +139,7 @@ function disposeMany(disposables: IDisposable[]) {
   })
 
   if (errors.length) {
-    const aggregate = new AggregateError(errors, `${L} One or more disposables threw while being disposed.`)
+    const aggregate = new AggregateError(errors, `${LOG_PREFIX} One or more disposables threw while being disposed.`)
     console.error(aggregate)
     throw aggregate
   }
