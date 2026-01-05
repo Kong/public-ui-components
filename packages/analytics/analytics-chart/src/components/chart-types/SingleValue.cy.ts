@@ -154,6 +154,31 @@ describe('<SingleValue />', () => {
     cy.get('.trend-change').should('have.class', 'negative')
   })
 
+  it('renders value and unit on the same horizontal line', () => {
+    const exploreResult = buildExploreResult(100, 250)
+
+    cy.mount(SingleValue, {
+      props: {
+        data: exploreResult,
+        showTrend: false,
+      },
+    })
+
+    // Verify value and unit appear horizontally, not stacked vertically
+    cy.get('.single-value').then($value => {
+      cy.get('.single-value-unit').then($unit => {
+        const valueRect = $value[0].getBoundingClientRect()
+        const unitRect = $unit[0].getBoundingClientRect()
+
+        // With baseline alignment, bottoms should be identical
+        expect(Math.abs(valueRect.bottom - unitRect.bottom)).to.equal(1)
+
+        // Unit should start after the value horizontally, not below it
+        expect(unitRect.left).to.be.greaterThan(valueRect.left)
+      })
+    })
+  })
+
   it('renders a non-empty trend range when trend is enabled', () => {
     const exploreResultWithMeta = {
       data: [
