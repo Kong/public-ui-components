@@ -64,8 +64,15 @@ export function useMonacoEditor<T extends MaybeElement>(
   */
   let editor: monaco.editor.IStandaloneCodeEditor | undefined
 
+  /** The Monaco text model associated with the editor. */
+  let model: monaco.editor.ITextModel | undefined
+
   // Internal flag to prevent multiple setups
   let _isSetup = false
+
+  // Flag to prevent feedback loops when updating editor from external Vue state
+  // without triggering the editor → Vue onChanged callback
+  let isApplyingExternalUpdate = false
 
   /** Reactive state for the Monaco editor instance. */
   const editorStates = reactive<MonacoEditorStates>({
@@ -127,8 +134,6 @@ export function useMonacoEditor<T extends MaybeElement>(
   const init = (): void => {
     loadMonaco()
 
-    let model: monaco.editor.ITextModel | undefined
-
     // `toValue()` safely unwraps refs, getters, or plain elements
     watch([isMonacoLoaded, () => toValue(target)], ([_isLoaded, _target]) => {
 
@@ -164,6 +169,8 @@ export function useMonacoEditor<T extends MaybeElement>(
 
       // Watch content changes and trigger callbacks efficiently
       editor.onDidChangeModelContent(() => {
+        if (isApplyingExternalUpdate) return
+
         const content = editor!.getValue()
         editorStates.hasContent = !!content.length
         options.onChanged?.(content)
@@ -171,30 +178,28 @@ export function useMonacoEditor<T extends MaybeElement>(
 
       // TODO: register editor actions
 
-      options.onCreated?.()
-
-      // we need to remeasure fonts after the editor is created to ensure proper layout and rendering
-      remeasureFonts()
-
 
       try {
         // Access the internal "FindController" contribution
         const findController = editor.getContribution('editor.contrib.findController')
 
-        if (findController) {
-          // Get the state object from the FindController
-          // @ts-ignore - getState exists
-          const findState = findController.getState()
+        // Get the state object from the FindController
+        // @ts-ignore - getState exists
+        const state = findController?.getState?.()
 
-          // Listen for changes to the state of the "find" panel
-          findState.onFindReplaceStateChange(() => {
-            editorStates.searchBoxIsRevealed = findState.isRevealed
-          })
-        }
+        // Listen for changes to the state of the "find" panel
+        state?.onFindReplaceStateChange(() => {
+          editorStates.searchBoxIsRevealed = state.isRevealed
+        })
       } catch (error) {
         console.error('useMonacoEditor: Failed to get the state of findController', error)
       }
 
+
+      options.onCreated?.()
+
+      // we need to remeasure fonts after the editor is created to ensure proper layout and rendering
+      remeasureFonts()
     }, {
       immediate: true,
       flush: 'post',
@@ -203,6 +208,38 @@ export function useMonacoEditor<T extends MaybeElement>(
 
   // Start the initialization process
   init()
+
+  watch(
+    () => options.code.value,
+    (newValue) => {
+      if (!editor || !model || !_isSetup) return
+
+      const current = model.getValue()
+
+      // skip if the value hasn't changed
+      if (newValue === current) return
+
+      // Temporarily prevent editor → Vue updates to avoid infinite loops
+      isApplyingExternalUpdate = true
+
+      // Update the Monaco model with the new value from Vue
+      // Using executeEdits preserves undo/redo stack better than setValue
+      editor.executeEdits('external', [
+        {
+          range: model.getFullModelRange(),
+          text: newValue,
+        },
+      ])
+
+      editor.pushUndoStop()
+
+      // Update internal state
+      editorStates.hasContent = !!newValue.length
+
+      // Re-enable editor → Vue updates
+      isApplyingExternalUpdate = false
+    },
+  )
 
   // Lifecycle hooks
   onMounted(remeasureFonts)

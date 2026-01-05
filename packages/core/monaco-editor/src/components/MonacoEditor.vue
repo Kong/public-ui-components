@@ -3,7 +3,7 @@
     class="monaco-editor-container"
     :class="[
       editorTheme,
-      { 'loading': monacoEditor.editorStates.editorStatus === 'loading' },
+      { 'loading': isLoading },
     ]"
     data-testid="monaco-editor-container"
   >
@@ -13,13 +13,13 @@
       data-testid="monaco-editor-target"
     />
     <slot
-      :is-loading="monacoEditor.editorStates.editorStatus === 'loading'"
+      :is-loading="isLoading"
       name="state-loading"
     >
       <Transition name="fade">
         <!-- TODO: use https://github.com/antfu/v-lazy-show -->
         <MonacoEditorStatusOverlay
-          v-if="monacoEditor.editorStates.editorStatus === 'loading'"
+          v-if="isLoading"
           data-testid="monaco-editor-status-overlay-loading"
           :icon="ProgressIcon"
           :message="i18n.t('editor.messages.loading_message', { type: language })"
@@ -57,6 +57,7 @@ const {
   theme = 'light',
   language = 'markdown',
   options = undefined,
+  loading = false,
 } = defineProps<{
   /**
    * The theme of the Monaco Editor instance.
@@ -68,6 +69,11 @@ const {
    * @default 'markdown'
    */
   language?: string
+  /**
+   * Whether the editor is in a loading state.
+   * @default false
+   */
+  loading?: boolean
   /**
    * Additional Monaco Editor options to customize the editor further.
    * @default undefined
@@ -88,6 +94,8 @@ const { i18n } = useI18n()
 const editorRef = useTemplateRef('editorRef')
 
 const editorTheme = computed<EditorThemes>(() => theme === 'dark' ? 'dark' : 'light')
+
+const isLoading = computed<boolean>(() => monacoEditor.editorStates.editorStatus === 'loading' || loading)
 
 /**
  * Computed property to determine if the editor is empty.
