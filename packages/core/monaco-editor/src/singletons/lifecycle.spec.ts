@@ -86,6 +86,29 @@ describe('lifecycle singleton', () => {
     expect(modelScope.listenerDisposable.dispose).toHaveBeenCalledTimes(1)
   })
 
+  it('re-scopes when tracking a decorated disposable into another scope', () => {
+    const editorScope = mockEditorScope()
+    const modelScope = mockModelScope()
+
+    const disposable = mockDisposable()
+
+    const decorated = lifecycle.trackForEditor(editorScope.source as editor.ICodeEditor, disposable)
+    const decoratedAgain = lifecycle.trackForModel(modelScope.source as editor.ITextModel, decorated)
+
+    // Should reuse the decorated disposable without creating new ones
+    expect(decoratedAgain).toBe(decorated)
+
+    // Last tracking wins: No-op here
+    editorScope.source.dispose()
+    expect(disposable.dispose).not.toHaveBeenCalled()
+    expect(editorScope.listenerDisposable.dispose).toHaveBeenCalledTimes(1)
+
+    // Last tracking wins
+    modelScope.source.dispose()
+    expect(disposable.dispose).toHaveBeenCalledTimes(1)
+    expect(modelScope.listenerDisposable.dispose).toHaveBeenCalledTimes(1)
+  })
+
   it('disposeScoped clears only that scope and leaves others intact', () => {
     const editorScope = mockEditorScope()
     const modelScope = mockModelScope()
