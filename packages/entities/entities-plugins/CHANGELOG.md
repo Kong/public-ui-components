@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.140.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.140.1...@kong-ui-public/entities-plugins@9.140.2) (2026-01-05)
+
+
+### Bug Fixes
+
+* **entities-plugins:** remove DATAKIT_M2 ff and fix config card preview ([#2770](https://github.com/Kong/public-ui-components/issues/2770)) ([a6d618c](https://github.com/Kong/public-ui-components/commit/a6d618cf4334911dda9f98b2ed4fc185e6cb8730))
+
+
+
+
+
 ## [9.140.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.140.0...@kong-ui-public/entities-plugins@9.140.1) (2025-12-31)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
