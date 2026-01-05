@@ -1,6 +1,6 @@
 import type { editor as Editor, IDisposable } from 'monaco-editor'
 
-const LOG_PREFIX = '[monaco-editor] [lifecycle]'
+const MSG_PREFIX = '[monaco-editor] [lifecycle]'
 
 type Scope
   = { type: 'editor', source: Editor.ICodeEditor }
@@ -51,7 +51,7 @@ function track(disposable: IDisposable, scope?: Scope): IDisposable {
 
   if (existing) {
     // Check if the scope is the same
-    if (existing.scope?.source === scope?.source)
+    if (existing.scope?.type === scope?.type && existing.scope?.source === scope?.source)
       return existing.decorated
 
     detachFromScope(existing.decorated, existing.scope)
@@ -111,7 +111,7 @@ function ensureScopeData(scope: Scope): ScopeData {
         break
       }
       default:
-        throw new Error(`${LOG_PREFIX} Unknown scope: ${scope}`)
+        throw new Error(`${MSG_PREFIX} Unknown scope: ${scope}`)
     }
 
     scopeData = {
@@ -144,16 +144,18 @@ function detachFromScope(disposable: IDisposable, scope?: Scope) {
 function disposeMany(disposables: IDisposable[]) {
   const errors: unknown[] = []
 
-  disposables.forEach((d) => {
+  disposables.forEach((disposable) => {
     try {
-      d.dispose()
+      disposable.dispose()
     } catch (err) {
       errors.push(err)
     }
   })
 
   if (errors.length) {
-    const aggregate = new AggregateError(errors, `${LOG_PREFIX} One or more disposables threw while being disposed.`)
+    const aggregate = new AggregateError(
+      errors, `${MSG_PREFIX} One or more disposables threw while being disposed.`,
+    )
     console.error(aggregate)
     throw aggregate
   }
@@ -162,7 +164,8 @@ function disposeMany(disposables: IDisposable[]) {
 /**
  * Track a disposable for an {@link Editor.ICodeEditor editor}.
  *
- * The tracker uses {@link Editor.ICodeEditor.onDidDispose onDidDispose}. to dispose the tracked disposable.
+ * The tracker uses {@link Editor.ICodeEditor.onDidDispose onDidDispose} to dispose
+ * the tracked disposable.
  *
  * @param editor - The editor to track
  * @param disposable - The disposable to track
@@ -175,7 +178,8 @@ function trackForEditor(editor: Editor.ICodeEditor, disposable: IDisposable): ID
 /**
  * Track a disposable for a {@link Editor.ITextModel text model}.
  *
- * The tracker uses {@link Editor.ITextModel.onWillDispose onWillDispose}. to dispose the tracked disposable.
+ * The tracker uses {@link Editor.ITextModel.onWillDispose onWillDispose} to dispose
+ * the tracked disposable.
  *
  * @param model - The text model to track
  * @param disposable - The disposable to track
