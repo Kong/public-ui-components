@@ -69,11 +69,14 @@ function track(disposable: IDisposable, scope?: Scope): IDisposable {
   const decoratedDisposable = {
     dispose: () => {
       const tracked = allDisposables.get(original)
-      if (tracked?.scope) {
+      if (!tracked) return
+
+      if (tracked.scope) {
         detachFromScope(decoratedDisposable, tracked.scope)
       }
       allDisposables.delete(original)
       reversedLookup.delete(decoratedDisposable)
+
       return originalDispose.call(original)
     },
   }
