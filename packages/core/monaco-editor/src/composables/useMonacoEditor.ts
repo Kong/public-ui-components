@@ -1,6 +1,6 @@
 import { onActivated, onBeforeUnmount, onMounted, reactive, toValue, watch, ref } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
-import { unrefElement, useDebounceFn, watchIgnorable } from '@vueuse/core'
+import { unrefElement, useDebounceFn } from '@vueuse/core'
 
 import * as monaco from 'monaco-editor'
 import { shikiToMonaco } from '@shikijs/monaco'
@@ -69,6 +69,10 @@ export function useMonacoEditor<T extends MaybeElement>(
 
   // Internal flag to prevent multiple setups
   let _isSetup = false
+
+  // Flag to prevent feedback loops when updating editor from external Vue state
+  // without triggering the editor → Vue onChanged callback
+  let _isApplyingExternalUpdate = false
 
   /** Reactive state for the Monaco editor instance. */
   const editorStates = reactive<MonacoEditorStates>({
@@ -163,15 +167,14 @@ export function useMonacoEditor<T extends MaybeElement>(
       editorStates.editorStatus = 'ready'
       editorStates.hasContent = !!options.code.value
 
-      // Watch content changes and update model directly
+      // Watch content changes and trigger callbacks efficiently
       editor.onDidChangeModelContent(() => {
+        if (_isApplyingExternalUpdate) return
+
         const content = editor!.getValue()
         editorStates.hasContent = !!content.length
 
-        // Update the model without triggering the external watcher
-        ignoreUpdates(() => {
-          options.code.value = content
-        })
+        options.code.value = content
       })
 
       // TODO: register editor actions
@@ -207,30 +210,34 @@ export function useMonacoEditor<T extends MaybeElement>(
   // Start the initialization process
   init()
 
-  const { ignoreUpdates } = watchIgnorable(
-    () => options.code.value,
-    (newValue) => {
-      if (!editor || !model || !_isSetup) return
+  watch(() => options.code.value, (newValue) => {
+    if (!editor || !model || !_isSetup) return
 
-      const current = model.getValue()
+    const current = model.getValue()
 
-      // skip if the value hasn't changed
-      if (newValue === current) return
+    // skip if the value hasn't changed
+    if (newValue === current) return
 
-      // Update the Monaco model with the new value from Vue
-      // Using executeEdits preserves undo/redo stack better than setValue
-      editor.executeEdits('external', [
-        {
-          range: model.getFullModelRange(),
-          text: newValue,
-        },
-      ])
+    // Temporarily prevent editor → Vue updates to avoid infinite loops
+    _isApplyingExternalUpdate = true
 
-      editor.pushUndoStop()
+    // Update the Monaco model with the new value from Vue
+    // Using executeEdits preserves undo/redo stack better than setValue
+    editor.executeEdits('external', [
+      {
+        range: model.getFullModelRange(),
+        text: newValue,
+      },
+    ])
 
-      // Update internal state
-      editorStates.hasContent = !!newValue.length
-    },
+    editor.pushUndoStop()
+
+    // Update internal state
+    editorStates.hasContent = !!newValue.length
+
+    // Re-enable editor → Vue updates
+    _isApplyingExternalUpdate = false
+  },
   )
 
   // Lifecycle hooks
