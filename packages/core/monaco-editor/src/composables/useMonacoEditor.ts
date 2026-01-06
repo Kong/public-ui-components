@@ -210,6 +210,7 @@ export function useMonacoEditor<T extends MaybeElement>(
   // Start the initialization process
   init()
 
+  // Watch for external code changes to update the editor content
   watch(() => options.code.value, (newValue) => {
     if (!editor || !model || !_isSetup) return
 
@@ -237,8 +238,7 @@ export function useMonacoEditor<T extends MaybeElement>(
 
     // Re-enable editor → Vue updates
     _isApplyingExternalUpdate = false
-  },
-  )
+  })
 
   // Lifecycle hooks
   onMounted(remeasureFonts)
