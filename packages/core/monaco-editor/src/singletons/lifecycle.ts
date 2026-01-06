@@ -94,8 +94,10 @@ function track(disposable: IDisposable, scope?: Scope): IDisposable {
     if (existing.scope?.type === scope?.type && existing.scope?.source === scope?.source)
       return existing.decorated
 
-    // Scope changed
-    detachFromScope(existing.decorated, existing.scope)
+    if (existing.scope) {
+      detachFromScope(existing.decorated, existing.scope)
+    }
+
     if (scope) {
       attachToScope(existing.decorated, scope)
       existing.scope = scope
@@ -173,9 +175,7 @@ function attachToScope(disposable: IDisposable, scope: Scope): void {
   scopeData.disposables.add(disposable)
 }
 
-function detachFromScope(disposable: IDisposable, scope?: Scope): void {
-  if (!scope) return
-
+function detachFromScope(disposable: IDisposable, scope: Scope): void {
   const scopeData = scopedDisposables.get(scope.source)
   if (!scopeData) return
 
