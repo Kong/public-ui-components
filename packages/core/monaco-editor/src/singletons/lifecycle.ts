@@ -1,5 +1,18 @@
-// Lifecycle tracker for disposables in Monaco Editor.
-// The detailed documentation is available near the export at the bottom.
+/**
+ * Lifecycle tracker for {@link IDisposable disposables} in Monaco Editor.
+ *
+ * In Monaco Editor, when attaching listeners in the global scope (e.g.,
+ * {@link Editor.onDidCreateModel onDidCreateModel}) or in the per-resource scope
+ * (e.g.,{@link Editor.ITextModel.onDidChangeContent onDidChangeContent}), an
+ * {@link IDisposable disposable} is always returned to allow detaching the listener.
+ *
+ * However, per-resource-scoped disposables are not automatically disposed when
+ * the resource is disposed. This can lead to memory leaks if the disposables are
+ * not properly tracked and disposed.
+ *
+ * This tracker is designed to be a singleton to track disposables in all the scopes
+ * mentioned above.
+ */
 
 import type { editor as Editor, IDisposable } from 'monaco-editor'
 
@@ -60,6 +73,83 @@ const allDisposables = new Map<IDisposable, Tracked>() // [Original: Tracked]
  */
 const reversedLookup = new WeakMap<IDisposable, IDisposable>()
 
+function ensureScopeData(scope: Scope): ScopeData {
+  let scopeData = scopedDisposables.get(scope.source)
+
+  if (!scopeData) {
+    let listener: IDisposable
+    switch (scope.type) {
+      case 'editor': {
+        listener = scope.source.onDidDispose(() => disposeScoped(scope.source))
+        break
+      }
+      case 'model': {
+        listener = scope.source.onWillDispose(() => disposeScoped(scope.source))
+        break
+      }
+      default:
+        throw new Error(`${MSG_PREFIX} Unknown scope: ${scope}`)
+    }
+
+    scopeData = {
+      disposables: new Set(),
+      scopeListener: listener,
+    }
+    scopedDisposables.set(scope.source, scopeData)
+  }
+
+  return scopeData
+}
+
+function cleanupScope(source: ScopeSource): void {
+  const data = scopedDisposables.get(source)
+  if (data) {
+    data.scopeListener.dispose()
+    scopedDisposables.delete(source)
+  }
+}
+
+function attachToScope(disposable: IDisposable, scope: Scope): void {
+  const scopeData = ensureScopeData(scope)
+  scopeData.disposables.add(disposable)
+}
+
+function detachFromScope(disposable: IDisposable, scope: Scope): void {
+  const scopeData = scopedDisposables.get(scope.source)
+  if (!scopeData) return
+
+  scopeData.disposables.delete(disposable)
+  if (scopeData.disposables.size === 0) {
+    cleanupScope(scope.source)
+  }
+}
+
+/**
+ * Dispose a list of {@link IDisposable disposables}.
+ *
+ * @throws {@link AggregateError}
+ * Thrown if one or more disposables throw errors while being disposed.
+ */
+function disposeMany(disposables: IDisposable[]): void {
+  const errors: unknown[] = []
+
+  disposables.forEach((disposable) => {
+    try {
+      disposable.dispose()
+    } catch (err) {
+      errors.push(err)
+    }
+  })
+
+  if (errors.length) {
+    const aggregate = new AggregateError(
+      errors, `${MSG_PREFIX} One or more disposables threw while being disposed.`,
+    )
+    console.error(aggregate)
+    throw aggregate
+  }
+}
+
 /**
  * Track a disposable in an optional scope.
  *
@@ -74,7 +164,7 @@ const reversedLookup = new WeakMap<IDisposable, IDisposable>()
  *
  * @returns A decorated disposable to dispose the disposable and untrack it.
  */
-function track(disposable: IDisposable, scope?: Scope): IDisposable {
+export function track(disposable: IDisposable, scope?: Scope): IDisposable {
   let original = disposable // Assume `disposable` is not a decorated one (previously returned by this function)
   let existing = allDisposables.get(original) // Check if already being tracked
 
@@ -134,77 +224,6 @@ function track(disposable: IDisposable, scope?: Scope): IDisposable {
   return decoratedDisposable
 }
 
-function cleanupScope(source: ScopeSource): void {
-  const data = scopedDisposables.get(source)
-  if (data) {
-    data.scopeListener.dispose()
-    scopedDisposables.delete(source)
-  }
-}
-
-function ensureScopeData(scope: Scope): ScopeData {
-  let scopeData = scopedDisposables.get(scope.source)
-
-  if (!scopeData) {
-    let listener: IDisposable
-    switch (scope.type) {
-      case 'editor': {
-        listener = scope.source.onDidDispose(() => disposeScoped(scope.source))
-        break
-      }
-      case 'model': {
-        listener = scope.source.onWillDispose(() => disposeScoped(scope.source))
-        break
-      }
-      default:
-        throw new Error(`${MSG_PREFIX} Unknown scope: ${scope}`)
-    }
-
-    scopeData = {
-      disposables: new Set(),
-      scopeListener: listener,
-    }
-    scopedDisposables.set(scope.source, scopeData)
-  }
-
-  return scopeData
-}
-
-function attachToScope(disposable: IDisposable, scope: Scope): void {
-  const scopeData = ensureScopeData(scope)
-  scopeData.disposables.add(disposable)
-}
-
-function detachFromScope(disposable: IDisposable, scope: Scope): void {
-  const scopeData = scopedDisposables.get(scope.source)
-  if (!scopeData) return
-
-  scopeData.disposables.delete(disposable)
-  if (scopeData.disposables.size === 0) {
-    cleanupScope(scope.source)
-  }
-}
-
-function disposeMany(disposables: IDisposable[]): void {
-  const errors: unknown[] = []
-
-  disposables.forEach((disposable) => {
-    try {
-      disposable.dispose()
-    } catch (err) {
-      errors.push(err)
-    }
-  })
-
-  if (errors.length) {
-    const aggregate = new AggregateError(
-      errors, `${MSG_PREFIX} One or more disposables threw while being disposed.`,
-    )
-    console.error(aggregate)
-    throw aggregate
-  }
-}
-
 /**
  * Track a disposable for an {@link Editor.ICodeEditor editor}.
  *
@@ -215,7 +234,7 @@ function disposeMany(disposables: IDisposable[]): void {
  * @param disposable - The disposable to track
  * @returns A decorated disposable to dispose the disposable and untrack it.
  */
-function trackForEditor(editor: Editor.ICodeEditor, disposable: IDisposable): IDisposable {
+export function trackForEditor(editor: Editor.ICodeEditor, disposable: IDisposable): IDisposable {
   return track(disposable, { type: 'editor', source: editor })
 }
 
@@ -229,7 +248,7 @@ function trackForEditor(editor: Editor.ICodeEditor, disposable: IDisposable): ID
  * @param disposable - The disposable to track
  * @returns A decorated disposable to dispose the disposable and untrack it.
  */
-function trackForModel(model: Editor.ITextModel, disposable: IDisposable): IDisposable {
+export function trackForModel(model: Editor.ITextModel, disposable: IDisposable): IDisposable {
   return track(disposable, { type: 'model', source: model })
 }
 
@@ -238,7 +257,7 @@ function trackForModel(model: Editor.ITextModel, disposable: IDisposable): IDisp
  *
  * @param source - The scope source whose tracked disposables to dispose.
  */
-function disposeScoped(source: ScopeSource): void {
+export function disposeScoped(source: ScopeSource): void {
   const data = scopedDisposables.get(source)
   if (!data) return
 
@@ -250,32 +269,13 @@ function disposeScoped(source: ScopeSource): void {
 /**
  * Dispose all tracked disposables.
  */
-function disposeAll(): void {
+export function disposeAll(): void {
   const toDispose = Array.from(allDisposables.values())
-  disposeMany(toDispose.map(t => t.decorated))
-  allDisposables.clear()
+  try {
+    disposeMany(toDispose.map(t => t.decorated))
+  } catch (e) {
+    console.warn(`${MSG_PREFIX} Encountered errors while disposing all disposables:`, e)
+  } finally {
+    allDisposables.clear()
+  }
 }
-
-// Prefer named exports for easier importing and autocompletion
-/**
- * Lifecycle tracker for {@link IDisposable disposables} in Monaco Editor.
- *
- * In Monaco Editor, when attaching listeners in the global scope (e.g.,
- * {@link Editor.onDidCreateModel onDidCreateModel}) or in the per-resource scope
- * (e.g.,{@link Editor.ITextModel.onDidChangeContent onDidChangeContent}), an
- * {@link IDisposable disposable} is always returned to allow detaching the listener.
- *
- * However, per-resource-scoped disposables are not automatically disposed when
- * the resource is disposed. This can lead to memory leaks if the disposables are
- * not properly tracked and disposed.
- *
- * This tracker is designed to be a singleton to track disposables in all the scopes
- * mentioned above.
- */
-export const lifecycle = {
-  track,
-  trackForEditor,
-  trackForModel,
-  disposeScoped,
-  disposeAll,
-} as const
