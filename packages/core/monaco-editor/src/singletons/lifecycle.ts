@@ -142,11 +142,9 @@ function disposeMany(disposables: IDisposable[]): void {
   })
 
   if (errors.length) {
-    const aggregate = new AggregateError(
+    throw new AggregateError(
       errors, `${MSG_PREFIX} One or more disposables threw while being disposed.`,
     )
-    console.error(aggregate)
-    throw aggregate
   }
 }
 
@@ -262,7 +260,11 @@ export function disposeScoped(source: ScopeSource): void {
   if (!data) return
 
   const toDispose = Array.from(data.disposables)
-  disposeMany(toDispose)
+  try {
+    disposeMany(toDispose)
+  } catch (e) {
+    console.warn(`${MSG_PREFIX} Encountered errors while disposing scoped disposables:`, e, ', Source:', source)
+  }
   cleanupScope(source)
 }
 
@@ -275,7 +277,6 @@ export function disposeAll(): void {
     disposeMany(toDispose.map(t => t.decorated))
   } catch (e) {
     console.warn(`${MSG_PREFIX} Encountered errors while disposing all disposables:`, e)
-  } finally {
-    allDisposables.clear()
   }
+  allDisposables.clear()
 }
