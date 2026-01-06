@@ -14,7 +14,7 @@
  * mentioned above.
  */
 
-import type { editor as Editor, IDisposable } from 'monaco-editor'
+import { editor, type editor as Editor, type IDisposable } from 'monaco-editor'
 
 const MSG_PREFIX = '[monaco-editor] [lifecycle]'
 
@@ -79,14 +79,12 @@ function ensureScopeData(scope: Scope): ScopeData {
   if (!scopeData) {
     let listener: IDisposable
     switch (scope.type) {
-      case 'editor': {
+      case 'editor':
         listener = scope.source.onDidDispose(() => disposeScoped(scope.source))
         break
-      }
-      case 'model': {
+      case 'model':
         listener = scope.source.onWillDispose(() => disposeScoped(scope.source))
         break
-      }
       default:
         throw new Error(`${MSG_PREFIX} Unknown scope: ${scope}`)
     }
