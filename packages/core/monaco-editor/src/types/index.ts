@@ -22,10 +22,6 @@ export interface UseMonacoEditorOptions {
    */
   theme?: EditorThemes
   /**
-   * Callback function triggered when the content changes
-   */
-  onChanged?: (content: string) => void
-  /**
    * Callback function triggered when the editor is created
    */
   onCreated?: () => void
