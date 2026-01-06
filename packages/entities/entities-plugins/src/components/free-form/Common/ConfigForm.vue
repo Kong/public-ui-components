@@ -147,7 +147,7 @@ const fieldsCategory = computed(() => {
 
 <style lang="scss" scoped>
 .ff-advanced-fields-container {
-  margin-top: $kui-space-80;
+  margin-top: var(--kui-space-80, $kui-space-80);
 
   :deep(.collapse-heading) {
     margin: 0;

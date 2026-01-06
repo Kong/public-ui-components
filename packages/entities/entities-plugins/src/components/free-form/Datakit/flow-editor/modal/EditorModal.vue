@@ -59,11 +59,11 @@ function close() {
 
 <style lang="scss" scoped>
 .dk-editor-modal {
-  background-color: $kui-color-background-inverse;
+  background-color: var(--kui-color-background-inverse, $kui-color-background-inverse);
   display: flex;
   height: 100%;
   left: 0;
-  padding-top: $kui-space-40;
+  padding-top: var(--kui-space-40, $kui-space-40);
   position: fixed;
   scrollbar-width: thin;
   top: 0;

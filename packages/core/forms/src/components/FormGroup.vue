@@ -283,11 +283,11 @@ $errorColor: #f00;
   }
 
   &.required > label:before {
-    background-color: $kui-color-background-danger;
-    border-radius: $kui-border-radius-circle;
+    background-color: var(--kui-color-background-danger, $kui-color-background-danger);
+    border-radius: var(--kui-border-radius-circle, $kui-border-radius-circle);
     content: "";
     height: 6px;
-    margin-right: $kui-space-40;
+    margin-right: var(--kui-space-40, $kui-space-40);
     width: 6px;
   }
 

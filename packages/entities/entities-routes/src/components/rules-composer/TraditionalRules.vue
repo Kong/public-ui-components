@@ -332,15 +332,15 @@ const getRoutingRuleLabel = (entity: string): string => {
 @include routing-rules;
 
 .traditional-rules-hint {
-  color: $kui-color-text-neutral-strong;
-  margin-bottom: $kui-space-80;
+  color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+  margin-bottom: var(--kui-space-80, $kui-space-80);
 
   span:not(:first-child) {
-    margin-left: $kui-space-20;
+    margin-left: var(--kui-space-20, $kui-space-20);
   }
 }
 
 .route-form-strip-path {
-  margin-top: $kui-space-80;
+  margin-top: var(--kui-space-80, $kui-space-80);
 }
 </style>

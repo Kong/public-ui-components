@@ -6,11 +6,11 @@
 .kong-ui-app-navbar {
   // Disabling stylelint rule here to allow for deprecated Kongponents theming variables
   /* stylelint-disable-next-line custom-property-pattern */
-  --KInputLabelWeight: #{$kui-font-weight-semibold};
+  --KInputLabelWeight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
   /* stylelint-disable-next-line custom-property-pattern */
-  --KongAuthFontFamily: #{$kui-font-family-text};
+  --KongAuthFontFamily: var(--kui-font-family-text, $kui-font-family-text);
   /* stylelint-disable-next-line custom-property-pattern */
-  --KongAuthFontWeight: #{$kui-font-weight-regular};
+  --KongAuthFontWeight: var(--kui-font-weight-regular, $kui-font-weight-regular);
 }
 
 html.kong-ui-app-layout-html {
@@ -23,22 +23,22 @@ html.kong-ui-app-layout-html,
 body.kong-ui-app-layout-body {
   height: 100%; // Reenable these rules to move the scrollbar under the AppNavbar
   height: 100vh; // Reenable these rules to move the scrollbar under the AppNavbar
-  margin: $kui-space-0;
+  margin: var(--kui-space-0, $kui-space-0);
   overflow: hidden; // Reenable these rules to move the scrollbar under the AppNavbar
   overscroll-behavior-y: none; // Disable elastic overflow scrolling in Chrome and Safari
-  padding: $kui-space-0;
+  padding: var(--kui-space-0, $kui-space-0);
   width: 100%;
 }
 
 body.kong-ui-app-layout-body {
-  background-color: $kui-color-background;
-  color: $kui-color-text;
-  font-family: $kui-font-family-text;
-  font-size: $kui-font-size-40;
+  background-color: var(--kui-color-background, $kui-color-background);
+  color: var(--kui-color-text, $kui-color-text);
+  font-family: var(--kui-font-family-text, $kui-font-family-text);
+  font-size: var(--kui-font-size-40, $kui-font-size-40);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-weight: $kui-font-weight-regular;
-  line-height: $kui-line-height-40;
+  font-weight: var(--kui-font-weight-regular, $kui-font-weight-regular);
+  line-height: var(--kui-line-height-40, $kui-line-height-40);
 }
 
 #app {
@@ -47,7 +47,7 @@ body.kong-ui-app-layout-body {
 
 // Kong Auth Elements overrides
 .kong-auth-element {
-  font-family: $kui-font-family-text !important;
+  font-family: var(--kui-font-family-text, $kui-font-family-text) !important;
 
   .kong-auth-login-form {
     .alert.danger .k-alert-msg {

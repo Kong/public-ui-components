@@ -161,7 +161,7 @@ const Form = computed(() => {
 .dk-node-properties-panel {
   :deep(.slideout-container) {
     box-shadow: none;
-    gap: $kui-space-60;
+    gap: var(--kui-space-60, $kui-space-60);
     padding-left: 0;
   }
 
@@ -172,21 +172,21 @@ const Form = computed(() => {
 
   .branch-note {
     align-items: center;
-    border: 1px solid $kui-color-border;
-    border-radius: $kui-border-radius-30;
+    border: 1px solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     display: flex;
-    gap: $kui-space-30;
+    gap: var(--kui-space-30, $kui-space-30);
     /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-    height: $kui-line-height-40 + $kui-space-40 * 2;
-    margin-bottom: $kui-space-60;
-    padding: $kui-space-40 $kui-space-50;
+    height: var(--kui-line-height-40, $kui-line-height-40) + var(--kui-space-40, $kui-space-40) * 2;
+    margin-bottom: var(--kui-space-60, $kui-space-60);
+    padding: var(--kui-space-40, $kui-space-40) var(--kui-space-50, $kui-space-50);
   }
 
   .branch-label {
     align-items: center;
     display: flex;
     flex-grow: 1;
-    gap: $kui-space-30;
+    gap: var(--kui-space-30, $kui-space-30);
     min-width: 0;
   }
 
@@ -198,7 +198,7 @@ const Form = computed(() => {
   }
 
   .remove-branch {
-    color: $kui-icon-color-neutral;
+    color: var(--kui-icon-color-neutral, $kui-icon-color-neutral);
   }
 
   .branch-note:not(:hover) .remove-branch {
@@ -206,29 +206,29 @@ const Form = computed(() => {
   }
 
   &-desc {
-    color: $kui-color-text;
-    font-size: $kui-font-size-30;
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
     font-weight: normal;
-    line-height: $kui-line-height-30;
-    margin-bottom: $kui-space-60;
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
+    margin-bottom: var(--kui-space-60, $kui-space-60);
   }
 
   &-form {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-60;
+    gap: var(--kui-space-60, $kui-space-60);
 
     & > label {
-      margin-bottom: $kui-space-0;
+      margin-bottom: var(--kui-space-0, $kui-space-0);
     }
 
     :deep(.ff-object-field-as-child) {
-      gap: $kui-space-60
+      gap: var(--kui-space-60, $kui-space-60)
     }
   }
 
   :deep(.dk-node-configuration-label) {
-    font-size: $kui-font-size-40;
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
     font-weight: 700;
     margin: 0;
   }

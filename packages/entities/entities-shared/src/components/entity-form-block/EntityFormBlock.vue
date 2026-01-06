@@ -55,19 +55,19 @@ const slots = defineSlots<{
   .header {
     align-items: flex-start;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
   }
 
   .step {
     align-items: center;
-    background: $kui-color-background;
-    border: 1px solid $kui-color-border-neutral-weak;
-    border-radius: $kui-border-radius-round;
+    background: var(--kui-color-background, $kui-color-background);
+    border: 1px solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
+    border-radius: var(--kui-border-radius-round, $kui-border-radius-round);
     display: flex;
     flex: 0 0 auto;
     height: 32px;
     justify-content: center;
-    padding: $kui-space-20;
+    padding: var(--kui-space-20, $kui-space-20);
     width: 32px;
   }
 
@@ -76,22 +76,22 @@ const slots = defineSlots<{
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    gap: $kui-space-40;
-    padding-top: $kui-space-20;
+    gap: var(--kui-space-40, $kui-space-40);
+    padding-top: var(--kui-space-20, $kui-space-20);
   }
 
   .header-title {
-    color: $kui-color-text;
-    font-size: $kui-font-size-50;
-    font-weight: $kui-font-weight-bold;
-    line-height: $kui-line-height-40;
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-50, $kui-font-size-50);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+    line-height: var(--kui-line-height-40, $kui-line-height-40);
     margin: 0;
   }
 
   .header-description {
-    color: $kui-color-text-neutral-strong;
-    font-size: $kui-font-size-30;
-    line-height: $kui-line-height-30;
+    color: var(--kui-color-text-neutral-strong, $kui-color-text-neutral-strong);
+    font-size: var(--kui-font-size-30, $kui-font-size-30);
+    line-height: var(--kui-line-height-30, $kui-line-height-30);
     margin: 0;
   }
 
@@ -99,20 +99,20 @@ const slots = defineSlots<{
     align-items: center;
     display: flex;
     flex: 0 0 auto;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     justify-content: flex-end;
   }
 
   .content {
-    background: $kui-color-background-neutral-weakest;
-    border: $kui-border-width-10 solid $kui-color-border;
-    border-radius: $kui-border-radius-30;
+    background: var(--kui-color-background-neutral-weakest, $kui-color-background-neutral-weakest);
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     display: flex;
     flex-direction: column;
-    gap: $kui-space-70;
-    margin-left: $kui-space-60;
-    margin-top: $kui-space-70;
-    padding: $kui-space-70 $kui-space-80;
+    gap: var(--kui-space-70, $kui-space-70);
+    margin-left: var(--kui-space-60, $kui-space-60);
+    margin-top: var(--kui-space-70, $kui-space-70);
+    padding: var(--kui-space-70, $kui-space-70) var(--kui-space-80, $kui-space-80);
   }
 }
 </style>

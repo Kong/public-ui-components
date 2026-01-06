@@ -67,7 +67,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .side-panel {
-  border-right: 1px solid $kui-color-border;
+  border-right: 1px solid var(--kui-color-border, $kui-color-border);
   display: flex;
   flex-direction: column;
   /* stylelint-disable-next-line custom-property-pattern */
@@ -76,7 +76,7 @@ onMounted(() => {
   width: var(--dk-side-panel-width);
 
   &.inited {
-    transition: margin-left $kui-animation-duration-20 ease-in-out;
+    transition: margin-left var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
   }
 
   &.expanded {
@@ -85,31 +85,31 @@ onMounted(() => {
 
   .header {
     align-items: center;
-    border-bottom: 1px solid $kui-color-border;
+    border-bottom: 1px solid var(--kui-color-border, $kui-color-border);
     display: flex;
     flex: 0 0 auto;
     /* stylelint-disable-next-line custom-property-pattern */
     height: var(--dk-header-height);
-    padding: 0 $kui-space-40;
+    padding: 0 var(--kui-space-40, $kui-space-40);
   }
 
   .title {
-    color: $kui-color-text;
-    font-size: $kui-font-size-40;
-    font-weight: $kui-font-weight-bold;
+    color: var(--kui-color-text, $kui-color-text);
+    font-size: var(--kui-font-size-40, $kui-font-size-40);
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
     /* stylelint-disable-next-line @kong/design-tokens/use-proper-token */
-    left: $kui-space-40;
+    left: var(--kui-space-40, $kui-space-40);
     margin: 0;
     position: absolute;
   }
 
   .body {
     overflow: auto;
-    padding-bottom: 36px + $kui-space-40 * 2; // Leave space for the toggle button in case it covers the content
+    padding-bottom: 36px + var(--kui-space-40, $kui-space-40) * 2; // Leave space for the toggle button in case it covers the content
   }
 
   .panel {
-    padding: $kui-space-60 $kui-space-40;
+    padding: var(--kui-space-60, $kui-space-60) var(--kui-space-40, $kui-space-40);
   }
 }
 </style>

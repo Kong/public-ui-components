@@ -181,6 +181,6 @@ const visibleFields = computed(() => {
 
 <style lang="scss" scoped>
 .secret-picker-provider {
-  margin-top: $kui-space-40 !important;
+  margin-top: var(--kui-space-40, $kui-space-40) !important;
 }
 </style>

@@ -238,6 +238,6 @@ function handleCodeError(msg: string) {
 .dk-option-label {
   align-items: center;
   display: flex;
-  gap: $kui-space-30;
+  gap: var(--kui-space-30, $kui-space-30);
 }
 </style>

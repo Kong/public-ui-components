@@ -93,11 +93,11 @@ fieldset {
   border: 0;
 
   .form-section-wrapper {
-    column-gap: $kui-space-60;
+    column-gap: var(--kui-space-60, $kui-space-60);
     display: flex;
     flex-direction: column;
-    padding-bottom: $kui-space-130;
-    row-gap: $kui-space-50;
+    padding-bottom: var(--kui-space-130, $kui-space-130);
+    row-gap: var(--kui-space-50, $kui-space-50);
     width: 100%;
 
     @media (min-width: $kui-breakpoint-tablet) {
@@ -112,33 +112,33 @@ fieldset {
 
         &.sticky {
           height: fit-content;
-          margin-bottom: $kui-space-60;
+          margin-bottom: var(--kui-space-60, $kui-space-60);
           position: sticky;
           top: 16px;
         }
       }
 
       .form-section-title {
-        color: $kui-color-text;
-        font-size: $kui-font-size-40;
-        font-weight: $kui-font-weight-bold;
-        line-height: $kui-line-height-30;
-        margin-bottom: $kui-space-40;
-        margin-top: $kui-space-0;
+        color: var(--kui-color-text, $kui-color-text);
+        font-size: var(--kui-font-size-40, $kui-font-size-40);
+        font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold);
+        line-height: var(--kui-line-height-30, $kui-line-height-30);
+        margin-bottom: var(--kui-space-40, $kui-space-40);
+        margin-top: var(--kui-space-0, $kui-space-0);
       }
 
       .form-section-description,
       .form-section-description p,
       .form-section-description :deep(p) {
-        color: $kui-color-text;
-        font-size: $kui-font-size-30;
+        color: var(--kui-color-text, $kui-color-text);
+        font-size: var(--kui-font-size-30, $kui-font-size-30);
         font-weight: 400;
         line-height: 20px;
         margin: 0;
       }
 
       .form-section-footer {
-        margin-top: $kui-space-90;
+        margin-top: var(--kui-space-90, $kui-space-90);
       }
     }
 
@@ -147,7 +147,7 @@ fieldset {
 
       &:deep(> *) {
         &:not(:first-child) {
-          margin-top: $kui-space-80;
+          margin-top: var(--kui-space-80, $kui-space-80);
         }
       }
     }
@@ -155,7 +155,7 @@ fieldset {
 
   &.has-divider {
     .form-section-wrapper {
-      border-bottom: $kui-border-width-10 solid $kui-color-border;
+      border-bottom: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     }
   }
 }

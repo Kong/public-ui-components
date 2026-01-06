@@ -2,4 +2,4 @@
 
 // AppNavbar
 $navbar-height: 60px;
-$header-item-gap: $kui-space-60;
+$header-item-gap: var(--kui-space-60, $kui-space-60);

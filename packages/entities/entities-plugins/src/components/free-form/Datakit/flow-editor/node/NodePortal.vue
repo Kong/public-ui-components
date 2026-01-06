@@ -163,52 +163,52 @@ $box-size: 24px;
 
   .target-boxes {
     display: flex;
-    gap: $kui-space-10;
+    gap: var(--kui-space-10, $kui-space-10);
     justify-content: flex-end;
     overflow: visible;
     position: relative;
-    transition: width $kui-animation-duration-20 ease-in-out;
+    transition: width var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
   }
 
   .target-box-wrapper {
     flex-shrink: 0;
     height: $box-size;
-    transition: transform $kui-animation-duration-20 ease-in-out;
+    transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
     width: $box-size;
   }
 
   .target-box {
     align-items: center;
-    background-color: $kui-color-background;
-    border: 1px solid $kui-color-border-neutral-weak;
-    border-radius: $kui-border-radius-20;
+    background-color: var(--kui-color-background, $kui-color-background);
+    border: 1px solid var(--kui-color-border-neutral-weak, $kui-color-border-neutral-weak);
+    border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
     display: flex;
     height: $box-size;
     justify-content: center;
     min-width: $box-size;
-    padding: 0 calc($kui-space-20 - 1px);
+    padding: 0 calc(var(--kui-space-20, $kui-space-20) - 1px);
     width: 100%;
 
     .additional-count {
-      color: $kui-color-text-primary;
+      color: var(--kui-color-text-primary, $kui-color-text-primary);
       display: inline-flex;
-      font-size: $kui-font-size-10;
-      font-weight: $kui-font-weight-semibold;
-      margin-left: $kui-space-10;
+      font-size: var(--kui-font-size-10, $kui-font-size-10);
+      font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
+      margin-left: var(--kui-space-10, $kui-space-10);
       overflow: hidden;
-      transition: margin-left $kui-animation-duration-20 ease-in-out,
-        max-width $kui-animation-duration-20 ease-in-out;
+      transition: margin-left var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out,
+        max-width var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
       white-space: nowrap;
     }
 
     &:hover {
-      border-color: $kui-color-border-primary-weak;
+      border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
     }
 
     &.highlighted {
-      border-color: $kui-color-border-primary;
+      border-color: var(--kui-color-border-primary, $kui-color-border-primary);
       border-width: 1.5px;
-      padding: 0 ($kui-space-20 - 1.5px);
+      padding: 0 (var(--kui-space-20, $kui-space-20) - 1.5px);
     }
   }
 
@@ -220,7 +220,7 @@ $box-size: 24px;
   }
 
   &::after {
-    border-top: 1px dashed $kui-color-border-neutral;
+    border-top: 1px dashed var(--kui-color-border-neutral, $kui-color-border-neutral);
     content: "";
     height: 1px;
     position: absolute;
