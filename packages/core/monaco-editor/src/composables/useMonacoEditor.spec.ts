@@ -3,13 +3,13 @@ import { describe, it, expect, vi } from 'vitest'
 import { useMonacoEditor } from './useMonacoEditor'
 import { mount } from '@vue/test-utils'
 
-const initialCode = 'initial code'
+const code = ref('initial code')
 
 const dummyComponent = defineComponent({
   setup() {
     const target = ref<HTMLElement | null>(null)
     const editorApi = useMonacoEditor(target, {
-      initialCode,
+      code,
       language: 'javascript',
     })
     return { target, editorApi }

@@ -97,7 +97,7 @@ const isEditorEmpty = computed<boolean>(() => monacoEditor.editorStates.editorSt
 
 const monacoEditor = useMonacoEditor(editorRef, {
   language,
-  initialCode: model.value,
+  code: model,
   theme: editorTheme.value,
   monacoOptions: options,
   onChanged: (content: string): void => {

@@ -1,4 +1,5 @@
 import type { editor } from 'monaco-editor'
+import type { Ref } from 'vue'
 
 /**
  * Options for the Monaco editor composable
@@ -7,7 +8,7 @@ export interface UseMonacoEditorOptions {
   /**
    * The initial content of the editor
    */
-  initialCode: string
+  code: Ref<string>
   /**
    * The programming language for syntax highlighting
    */
