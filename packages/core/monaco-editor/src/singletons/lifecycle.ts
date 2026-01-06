@@ -14,7 +14,7 @@
  * mentioned above.
  */
 
-import { editor, type editor as Editor, type IDisposable } from 'monaco-editor'
+import { type editor as Editor, type IDisposable } from 'monaco-editor'
 
 const MSG_PREFIX = '[monaco-editor] [lifecycle]'
 
