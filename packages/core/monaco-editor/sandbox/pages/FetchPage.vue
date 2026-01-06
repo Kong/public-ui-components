@@ -30,7 +30,6 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .editor-container {
-  height: calc(100vh - 20px);
-  padding: $kui-space-50;
+  height: 100%;
 }
 </style>

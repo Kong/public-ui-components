@@ -16,6 +16,6 @@ const code = ref('')
 
 <style lang="scss" scoped>
 .editor-container {
-  height: calc(100vh);
+  height: 100%;
 }
 </style>
