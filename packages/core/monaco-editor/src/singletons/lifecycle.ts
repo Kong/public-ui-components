@@ -132,7 +132,7 @@ function track(disposable: IDisposable, scope?: Scope): IDisposable {
   return decoratedDisposable
 }
 
-function cleanupScope(source: ScopeSource) {
+function cleanupScope(source: ScopeSource): void {
   const data = scopedDisposables.get(source)
   if (data) {
     data.scopeListener.dispose()
@@ -168,12 +168,12 @@ function ensureScopeData(scope: Scope): ScopeData {
   return scopeData
 }
 
-function attachToScope(disposable: IDisposable, scope: Scope) {
+function attachToScope(disposable: IDisposable, scope: Scope): void {
   const scopeData = ensureScopeData(scope)
   scopeData.disposables.add(disposable)
 }
 
-function detachFromScope(disposable: IDisposable, scope?: Scope) {
+function detachFromScope(disposable: IDisposable, scope?: Scope): void {
   if (!scope) return
 
   const scopeData = scopedDisposables.get(scope.source)
@@ -185,7 +185,7 @@ function detachFromScope(disposable: IDisposable, scope?: Scope) {
   }
 }
 
-function disposeMany(disposables: IDisposable[]) {
+function disposeMany(disposables: IDisposable[]): void {
   const errors: unknown[] = []
 
   disposables.forEach((disposable) => {
@@ -238,7 +238,7 @@ function trackForModel(model: Editor.ITextModel, disposable: IDisposable): IDisp
  *
  * @param source - The scope source whose tracked disposables to dispose.
  */
-function disposeScoped(source: ScopeSource) {
+function disposeScoped(source: ScopeSource): void {
   const data = scopedDisposables.get(source)
   if (!data) return
 
@@ -250,7 +250,7 @@ function disposeScoped(source: ScopeSource) {
 /**
  * Dispose all tracked disposables.
  */
-function disposeAll() {
+function disposeAll(): void {
   const toDispose = Array.from(allDisposables.values())
   disposeMany(toDispose.map(t => t.decorated))
   allDisposables.clear()
