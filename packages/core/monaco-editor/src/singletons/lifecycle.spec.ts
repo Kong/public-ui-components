@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { lifecycle } from './lifecycle'
+import * as lifecycle from './lifecycle'
 
 import type { editor, IDisposable } from 'monaco-editor'
 
@@ -156,12 +156,22 @@ describe('lifecycle singleton', () => {
         throw new Error('Expected error')
       }),
     }
+    const disposableAfterThrow = mockDisposable() // Should also be disposed
 
     lifecycle.track(simpleDisposable)
     lifecycle.track(disposableThatThrows)
+    lifecycle.track(disposableAfterThrow)
 
-    expect(() => lifecycle.disposeAll()).toThrow(AggregateError)
+    const consoleMock = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+    expect(() => lifecycle.disposeAll()).not.toThrow()
+    expect(consoleMock).toHaveBeenCalledWith(
+      expect.stringMatching('Encountered errors while disposing all disposables'),
+      expect.any(AggregateError))
     expect(simpleDisposable.dispose).toHaveBeenCalledTimes(1)
     expect(disposableThatThrows.dispose).toHaveBeenCalledTimes(1)
+    expect(disposableAfterThrow.dispose).toHaveBeenCalledTimes(1)
+
+    consoleMock.mockRestore()
   })
 })
