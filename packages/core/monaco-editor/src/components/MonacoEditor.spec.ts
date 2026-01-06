@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import { nextTick, reactive, ref } from 'vue'
+import { nextTick, reactive } from 'vue'
 import MonacoEditor from './MonacoEditor.vue'
 import { KEmptyState } from '@kong/kongponents'
 
@@ -19,13 +19,12 @@ const editorStates = reactive({
   hasContent: false,
 })
 
-const code = ref('')
-
 vi.mock('../composables/useMonacoEditor', () => ({
-  useMonacoEditor: () => ({
+  useMonacoEditor: (_target: any, options: any) => ({
     editorStates,
     setContent: (value: string) => {
-      code.value = value
+      // Update the code ref that was passed to the composable
+      options.code.value = value
       editorStates.hasContent = !!value
       editorStates.editorStatus = 'ready'
     },
@@ -124,12 +123,13 @@ describe('MonacoEditor.vue', () => {
     vi.advanceTimersByTime(150)
     await nextTick()
 
-    // // Editor should no longer have loading class
+    // Editor should no longer have loading class
     expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).not.toContain('loading')
-    // // Empty state should not show
+    // Empty state should not show
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-empty"]').exists()).toBe(false)
-    // Code should now be populated
-    expect(code.value).toBe('fetched code')
+    // The model value should be updated via the internal ref
+    // @ts-ignore - model exists
+    expect(wrapper.vm.model).toBe('fetched code')
 
     vi.useRealTimers()
   })

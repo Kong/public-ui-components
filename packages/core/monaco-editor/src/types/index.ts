@@ -6,7 +6,7 @@ import type { Ref } from 'vue'
  */
 export interface UseMonacoEditorOptions {
   /**
-   * The initial content of the editor
+   * The content of the editor
    */
   code: Ref<string>
   /**

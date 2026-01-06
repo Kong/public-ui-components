@@ -108,9 +108,6 @@ const monacoEditor = useMonacoEditor(editorRef, {
   code: model,
   theme: editorTheme.value,
   monacoOptions: options,
-  onChanged: (content: string): void => {
-    model.value = content
-  },
 })
 </script>
 
