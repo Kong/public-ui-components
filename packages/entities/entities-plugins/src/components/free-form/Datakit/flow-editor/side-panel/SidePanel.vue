@@ -105,7 +105,7 @@ onMounted(() => {
 
   .body {
     overflow: auto;
-    padding-bottom: 36px + var(--kui-space-40, $kui-space-40) * 2; // Leave space for the toggle button in case it covers the content
+    padding-bottom: calc(36px + calc(var(--kui-space-40, $kui-space-40) * 2)); // Leave space for the toggle button in case it covers the content
   }
 
   .panel {
