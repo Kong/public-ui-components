@@ -5,7 +5,7 @@ import { unrefElement, useDebounceFn } from '@vueuse/core'
 import * as monaco from 'monaco-editor'
 import { shikiToMonaco } from '@shikijs/monaco'
 import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'shiki'
-import { lifecycle } from '../singletons'
+import { lifecycle } from '../singletons/lifecycle'
 
 import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
