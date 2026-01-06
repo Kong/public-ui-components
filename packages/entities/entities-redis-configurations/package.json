@@ -43,7 +43,7 @@
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/design-tokens": "1.18.2",
+    "@kong/design-tokens": "1.18.3-pr.613.f4a145c.0",
     "@kong/icons": "^1.41.0",
     "@kong/kongponents": "9.48.8",
     "@types/uuid": "^11.0.0",
