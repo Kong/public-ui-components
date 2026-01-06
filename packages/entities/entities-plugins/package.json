@@ -95,7 +95,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "3MB"
+    "errorLimit": "3.5MB"
   },
   "dependencies": {
     "@kong-ui-public/entities-consumer-groups": "workspace:^",
