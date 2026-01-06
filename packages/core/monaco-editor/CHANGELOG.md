@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.5.0...@kong-ui-public/monaco-editor@0.6.0) (2026-01-06)
+
+
+### Features
+
+* **monaco-editor:** add pages and routes for sandbox ([#2788](https://github.com/Kong/public-ui-components/issues/2788)) ([e6997a6](https://github.com/Kong/public-ui-components/commit/e6997a636fe2cb8de442dbd7c607380b49a7f21a))
+
+
+
+
+
 # [0.5.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.4.11...@kong-ui-public/monaco-editor@0.5.0) (2025-12-30)
 
 
