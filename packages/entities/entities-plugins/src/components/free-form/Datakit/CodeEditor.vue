@@ -77,22 +77,27 @@ const LINT_SOURCE = 'YAML Syntax'
 
 const EDIT_SOURCE = 'datakit.insert-example'
 const AUTO_CONVERT_SOURCE = 'datakit.auto-convert'
-const code = shallowRef('')
 
-if (formConfig.app === 'kongManager' && formData.config && Object.keys(formData.config).length > 0) {
-  const config = { ...formData.config } as any
+function dumpYaml(config: unknown): string {
+  return yaml.dump(toRaw(config), {
+    schema: JSON_SCHEMA,
+    noArrayIndent: true,
+  })
+}
 
-  if (config.nodes && config.nodes.length === 0) {
-    delete config.nodes
+function formDataToCode(): string {
+  if (formConfig.app === 'kongManager' && formData.config) {
+    return dumpYaml(formData.config)
   }
 
-  code.value = Object.keys(config).length === 0
-    ? ''
-    : dumpYaml(toRaw(config))
-} else if (formConfig.app === 'konnect') {
-  const initialConfig = omit({ ...formData }, ['__ui_data'])
-  code.value = dumpYaml(initialConfig)
+  if (formConfig.app === 'konnect') {
+    return dumpYaml(omit(formData, ['__ui_data']))
+  }
+
+  return ''
 }
+
+const code = shallowRef(formDataToCode())
 
 const { editor: editorRef } = useMonacoEditor(editorRoot, {
   language: 'yaml',
@@ -176,13 +181,6 @@ const { editor: editorRef } = useMonacoEditor(editorRoot, {
     }
   },
 })
-
-function dumpYaml(config: unknown): string {
-  return yaml.dump(config, {
-    schema: JSON_SCHEMA,
-    noArrayIndent: true,
-  })
-}
 
 const showConvertModal = shallowRef(false)
 const pendingConfig = shallowRef<unknown | null>(null)
