@@ -9,7 +9,9 @@ const sanitizedPackageName = sanitizePackageName(packageName)
 
 // Merge the shared Vite config with the local one defined below
 const config = mergeConfig(sharedViteConfig, defineConfig({
-  plugins: [monaco()],
+  plugins: [monaco({
+    languages: ['yaml'],
+  })],
   build: {
     lib: {
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
