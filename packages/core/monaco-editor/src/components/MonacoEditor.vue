@@ -33,7 +33,7 @@
     >
       <Transition name="fade">
         <MonacoEditorStatusOverlay
-          v-if="isEditorEmpty"
+          v-if="isEditorEmpty && !isLoading"
           data-testid="monaco-editor-status-overlay-empty"
           :icon="CodeblockIcon"
           :message="i18n.t('editor.messages.empty_message')"
