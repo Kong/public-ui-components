@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import * as lifecycle from './lifecycle'
+import { disposeAllDisposables, disposeScopedDisposables, trackDisposable, trackDisposableForEditor, trackDisposableForModel } from './lifecycle'
 
 import type { editor, IDisposable } from 'monaco-editor'
 
@@ -43,7 +43,7 @@ const mockModelScope = () => {
 describe('lifecycle singleton', () => {
   it('disposes a globally tracked disposable and untracks it', () => {
     const disposable = mockDisposable()
-    const tracked = lifecycle.track(disposable)
+    const tracked = trackDisposable(disposable)
 
     tracked.dispose()
 
@@ -58,8 +58,8 @@ describe('lifecycle singleton', () => {
     const disposable1 = mockDisposable()
     const disposable2 = mockDisposable()
 
-    lifecycle.trackForEditor(source as editor.ICodeEditor, disposable1)
-    lifecycle.trackForEditor(source as editor.ICodeEditor, disposable2)
+    trackDisposableForEditor(source as editor.ICodeEditor, disposable1)
+    trackDisposableForEditor(source as editor.ICodeEditor, disposable2)
 
     source.dispose()
 
@@ -74,8 +74,8 @@ describe('lifecycle singleton', () => {
 
     const disposable = mockDisposable()
 
-    lifecycle.trackForEditor(editorScope.source as editor.ICodeEditor, disposable)
-    lifecycle.trackForModel(modelScope.source as editor.ITextModel, disposable)
+    trackDisposableForEditor(editorScope.source as editor.ICodeEditor, disposable)
+    trackDisposableForModel(modelScope.source as editor.ITextModel, disposable)
 
     editorScope.source.dispose()
     expect(disposable.dispose).not.toHaveBeenCalled()
@@ -92,8 +92,8 @@ describe('lifecycle singleton', () => {
 
     const disposable = mockDisposable()
 
-    const decorated = lifecycle.trackForEditor(editorScope.source as editor.ICodeEditor, disposable)
-    const decoratedAgain = lifecycle.trackForModel(modelScope.source as editor.ITextModel, decorated)
+    const decorated = trackDisposableForEditor(editorScope.source as editor.ICodeEditor, disposable)
+    const decoratedAgain = trackDisposableForModel(modelScope.source as editor.ITextModel, decorated)
 
     // Should reuse the decorated disposable without creating new ones
     expect(decoratedAgain).toBe(decorated)
@@ -116,10 +116,10 @@ describe('lifecycle singleton', () => {
     const editorDisposable = mockDisposable()
     const modelDisposable = mockDisposable()
 
-    lifecycle.trackForEditor(editorScope.source as editor.ICodeEditor, editorDisposable)
-    lifecycle.trackForModel(modelScope.source as editor.ITextModel, modelDisposable)
+    trackDisposableForEditor(editorScope.source as editor.ICodeEditor, editorDisposable)
+    trackDisposableForModel(modelScope.source as editor.ITextModel, modelDisposable)
 
-    lifecycle.disposeScoped(editorScope.source as editor.ICodeEditor)
+    disposeScopedDisposables(editorScope.source as editor.ICodeEditor)
 
     expect(editorDisposable.dispose).toHaveBeenCalledTimes(1)
     expect(editorScope.listenerDisposable.dispose).toHaveBeenCalledTimes(1)
@@ -137,10 +137,10 @@ describe('lifecycle singleton', () => {
     const editorDisposable = mockDisposable()
     const modelDisposable = mockDisposable()
 
-    lifecycle.track(globalDisposable)
-    lifecycle.trackForEditor(editorScope.source as editor.ICodeEditor, editorDisposable)
-    lifecycle.trackForModel(modelScope.source as editor.ITextModel, modelDisposable)
-    lifecycle.disposeAll()
+    trackDisposable(globalDisposable)
+    trackDisposableForEditor(editorScope.source as editor.ICodeEditor, editorDisposable)
+    trackDisposableForModel(modelScope.source as editor.ITextModel, modelDisposable)
+    disposeAllDisposables()
 
     expect(globalDisposable.dispose).toHaveBeenCalledTimes(1)
     expect(editorDisposable.dispose).toHaveBeenCalledTimes(1)
@@ -158,13 +158,13 @@ describe('lifecycle singleton', () => {
     }
     const disposableAfterThrow = mockDisposable() // Should also be disposed
 
-    lifecycle.track(simpleDisposable)
-    lifecycle.track(disposableThatThrows)
-    lifecycle.track(disposableAfterThrow)
+    trackDisposable(simpleDisposable)
+    trackDisposable(disposableThatThrows)
+    trackDisposable(disposableAfterThrow)
 
     const consoleMock = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
-    expect(() => lifecycle.disposeAll()).not.toThrow()
+    expect(() => disposeAllDisposables()).not.toThrow()
     expect(consoleMock).toHaveBeenCalledWith(
       expect.stringMatching('Encountered errors while disposing all disposables'),
       expect.any(AggregateError))
