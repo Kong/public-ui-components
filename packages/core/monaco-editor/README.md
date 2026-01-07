@@ -48,6 +48,12 @@ Import the styles in your application:
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 ```
 
+or if you prefer css
+
+```css
+@import "@kong-ui-public/monaco-editor/dist/runtime/style.css";
+```
+
 ### Register
 
 You can register the `MonacoEditor` component globally or import it locally in your components.
