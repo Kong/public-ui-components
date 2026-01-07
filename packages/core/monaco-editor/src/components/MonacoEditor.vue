@@ -104,6 +104,10 @@ const monacoEditor = useMonacoEditor(editorRef, {
     model.value = content
   },
 })
+
+defineExpose({
+  monacoEditor,
+})
 </script>
 
 <style lang="scss" scoped>
