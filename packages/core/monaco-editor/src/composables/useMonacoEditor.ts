@@ -5,7 +5,7 @@ import { unrefElement, useDebounceFn } from '@vueuse/core'
 import * as monaco from 'monaco-editor'
 import { shikiToMonaco } from '@shikijs/monaco'
 import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'shiki'
-import * as lifecycle from '../singletons/lifecycle'
+import { trackDisposableForEditor } from '../singletons'
 
 import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
@@ -165,7 +165,7 @@ export function useMonacoEditor<T extends MaybeElement>(
       editorStates.hasContent = !!options.code.value
 
       // Watch content changes and trigger callbacks efficiently
-      lifecycle.trackForEditor(editor.value,
+      trackDisposableForEditor(editor.value,
         editor.value.onDidChangeModelContent(() => {
           const content = editor.value!.getValue()
           editorStates.hasContent = !!content.length
@@ -191,7 +191,7 @@ export function useMonacoEditor<T extends MaybeElement>(
           const findState = findController.getState()
 
           // Listen for changes to the state of the "find" panel
-          lifecycle.trackForEditor(editor.value,
+          trackDisposableForEditor(editor.value,
             findState.onFindReplaceStateChange(() => {
               editorStates.searchBoxIsRevealed = findState.isRevealed
             }), // This returns a disposable

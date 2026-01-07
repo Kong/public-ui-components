@@ -14,7 +14,7 @@
  * mentioned above.
  */
 
-import { type editor as Editor, type IDisposable } from 'monaco-editor'
+import type { editor as Editor, IDisposable } from 'monaco-editor'
 
 const MSG_PREFIX = '[monaco-editor] [lifecycle]'
 
@@ -51,8 +51,9 @@ interface ScopeData {
  */
 interface Tracked {
   /**
-   * The decorated (returned by {@link track} and other track functions) disposable
-   * to dispose the original disposable and untrack the decorated disposable itself.
+   * The decorated (returned by {@link trackDisposable} and other track functions)
+   * disposable to dispose the original disposable and untrack the decorated disposable
+   * itself.
    */
   decorated: IDisposable
 
@@ -69,7 +70,7 @@ const allDisposables = new Map<IDisposable, Tracked>() // [Original: Tracked]
  * A map to find the original disposable from a decorated disposable.
  *
  * This is helpful when checking if a decorated disposable has been provided to
- * {@link track}.
+ * {@link trackDisposable}.
  */
 const reversedLookup = new WeakMap<IDisposable, IDisposable>()
 
@@ -80,10 +81,10 @@ function ensureScopeData(scope: Scope): ScopeData {
     let listener: IDisposable
     switch (scope.type) {
       case 'editor':
-        listener = scope.source.onDidDispose(() => disposeScoped(scope.source))
+        listener = scope.source.onDidDispose(() => disposeScopedDisposables(scope.source))
         break
       case 'model':
-        listener = scope.source.onWillDispose(() => disposeScoped(scope.source))
+        listener = scope.source.onWillDispose(() => disposeScopedDisposables(scope.source))
         break
       default:
         throw new Error(`${MSG_PREFIX} Unknown scope: ${scope}`)
@@ -160,7 +161,7 @@ function disposeMany(disposables: IDisposable[]): void {
  *
  * @returns A decorated disposable to dispose the disposable and untrack it.
  */
-export function track(disposable: IDisposable, scope?: Scope): IDisposable {
+export function trackDisposable(disposable: IDisposable, scope?: Scope): IDisposable {
   let original = disposable // Assume `disposable` is not a decorated one (previously returned by this function)
   let existing = allDisposables.get(original) // Check if already being tracked
 
@@ -224,28 +225,28 @@ export function track(disposable: IDisposable, scope?: Scope): IDisposable {
  * Track a disposable for an {@link Editor.ICodeEditor editor}.
  *
  * The tracker uses {@link Editor.ICodeEditor.onDidDispose onDidDispose} to dispose
- * the tracked disposable.
+ * the tracked disposable automatically upon editor disposal.
  *
  * @param editor - The editor to track
  * @param disposable - The disposable to track
  * @returns A decorated disposable to dispose the disposable and untrack it.
  */
-export function trackForEditor(editor: Editor.ICodeEditor, disposable: IDisposable): IDisposable {
-  return track(disposable, { type: 'editor', source: editor })
+export function trackDisposableForEditor(editor: Editor.ICodeEditor, disposable: IDisposable): IDisposable {
+  return trackDisposable(disposable, { type: 'editor', source: editor })
 }
 
 /**
  * Track a disposable for a {@link Editor.ITextModel text model}.
  *
  * The tracker uses {@link Editor.ITextModel.onWillDispose onWillDispose} to dispose
- * the tracked disposable.
+ * the tracked disposable automatically upon model disposal.
  *
  * @param model - The text model to track
  * @param disposable - The disposable to track
  * @returns A decorated disposable to dispose the disposable and untrack it.
  */
-export function trackForModel(model: Editor.ITextModel, disposable: IDisposable): IDisposable {
-  return track(disposable, { type: 'model', source: model })
+export function trackDisposableForModel(model: Editor.ITextModel, disposable: IDisposable): IDisposable {
+  return trackDisposable(disposable, { type: 'model', source: model })
 }
 
 /**
@@ -253,7 +254,7 @@ export function trackForModel(model: Editor.ITextModel, disposable: IDisposable)
  *
  * @param source - The scope source whose tracked disposables to dispose.
  */
-export function disposeScoped(source: ScopeSource): void {
+export function disposeScopedDisposables(source: ScopeSource): void {
   const data = scopedDisposables.get(source)
   if (!data) return
 
@@ -269,7 +270,7 @@ export function disposeScoped(source: ScopeSource): void {
 /**
  * Dispose all tracked disposables.
  */
-export function disposeAll(): void {
+export function disposeAllDisposables(): void {
   const toDispose = Array.from(allDisposables.values())
   try {
     disposeMany(toDispose.map(t => t.decorated))
