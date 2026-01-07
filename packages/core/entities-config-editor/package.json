@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-config-editor",
-  "version": "0.3.15",
+  "version": "0.3.16",
   "type": "module",
   "main": "./dist/entities-config-editor.umd.js",
   "module": "./dist/entities-config-editor.es.js",
