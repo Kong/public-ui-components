@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.7.2...@kong-ui-public/monaco-editor@0.7.3) (2026-01-07)
+
+
+### Bug Fixes
+
+* **monaco-editor:** sync editor value with external v-model updates [KHCP-19043] ([#2787](https://github.com/Kong/public-ui-components/issues/2787)) ([658dcf9](https://github.com/Kong/public-ui-components/commit/658dcf9bd768f504cefadf0d3c0aef758e8d83c0))
+
+
+
+
+
 ## [0.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.7.1...@kong-ui-public/monaco-editor@0.7.2) (2026-01-07)
 
 **Note:** Version bump only for package @kong-ui-public/monaco-editor
