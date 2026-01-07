@@ -2,6 +2,7 @@
   "name": "@kong-ui-public/monaco-editor",
   "version": "0.7.3",
   "type": "module",
+  "description": "A kong UI Monaco Editor wrapper for Vue 3 with syntax highlighting powered by Shiki.",
   "main": "./dist/runtime/monaco-editor.umd.js",
   "module": "./dist/runtime/monaco-editor.es.js",
   "types": "./dist/types/src/index.d.ts",
