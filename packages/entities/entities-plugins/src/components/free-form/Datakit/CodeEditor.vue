@@ -141,8 +141,6 @@ const { editor: editorRef } = useMonacoEditor(editorRoot, {
     const model = editor?.getModel()
     if (!editor || !model) return
 
-    code.value = content
-
     try {
       const config = yaml.load(content || '', {
         schema: JSON_SCHEMA,
