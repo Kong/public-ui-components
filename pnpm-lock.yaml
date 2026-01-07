@@ -46,8 +46,8 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.5.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.5.1))(typescript@5.9.3)
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@stylistic/stylelint-plugin':
         specifier: ^4.0.0
         version: 4.0.0(stylelint@16.26.1(typescript@5.9.3))
@@ -248,8 +248,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@types/uuid':
         specifier: ^11.0.0
         version: 11.0.0
@@ -303,8 +303,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@types/geobuf':
         specifier: ^3.0.4
         version: 3.0.4
@@ -349,8 +349,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       pinia:
         specifier: '>= 2.1.7 < 3'
         version: 2.1.7(typescript@5.9.3)(vue@3.5.26(typescript@5.9.3))
@@ -426,8 +426,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       ajv:
         specifier: ^8.17.1
         version: 8.17.1
@@ -481,8 +481,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@types/lodash.clonedeep':
         specifier: ^4.5.9
         version: 4.5.9
@@ -549,8 +549,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -564,8 +564,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       vue:
         specifier: ^3.5.26
         version: 3.5.26(typescript@5.9.3)
@@ -607,8 +607,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@types/uuid':
         specifier: ^11.0.0
         version: 11.0.0
@@ -656,8 +656,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -689,8 +689,8 @@ importers:
         specifier: workspace:^
         version: link:../i18n
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       vue:
         specifier: ^3.5.26
         version: 3.5.26(typescript@5.9.3)
@@ -717,8 +717,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       monaco-editor:
         specifier: ^0.55.1
         version: 0.55.1
@@ -739,8 +739,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       vue:
         specifier: ^3.5.26
         version: 3.5.26(typescript@5.9.3)
@@ -767,8 +767,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -794,8 +794,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -821,8 +821,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -848,8 +848,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -875,8 +875,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -902,8 +902,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -926,8 +926,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -953,8 +953,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -1017,8 +1017,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@shikijs/core':
         specifier: ^3.20.0
         version: 3.20.0
@@ -1101,8 +1101,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@types/uuid':
         specifier: ^11.0.0
         version: 11.0.0
@@ -1141,8 +1141,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@types/lodash.isequal':
         specifier: ^4.5.8
         version: 4.5.8
@@ -1178,8 +1178,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@shikijs/core':
         specifier: ^3.20.0
         version: 3.20.0
@@ -1214,8 +1214,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -1241,8 +1241,8 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -1269,8 +1269,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -1294,8 +1294,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@types/prismjs':
         specifier: ^1.26.5
         version: 1.26.5
@@ -1328,8 +1328,8 @@ importers:
         specifier: 1.18.2
         version: 1.18.2
       '@kong/kongponents':
-        specifier: 9.48.9
-        version: 9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.0
+        version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@modyfi/vite-plugin-yaml':
         specifier: ^1.1.1
         version: 1.1.1(rollup@4.52.5)(vite@5.4.21(@types/node@24.10.4)(sass-embedded@1.80.3)(sass@1.97.1)(terser@5.43.1))
@@ -2325,8 +2325,8 @@ packages:
       vue: ^3.5.26
       vue-router: ^4.2.4
 
-  '@kong/kongponents@9.48.9':
-    resolution: {integrity: sha512-RwERum7ORWUZFjCbhuFcMlCqBNbypkMidgaTVFKEgIcKcSQo+VNaMozRWv8iiYII549Ogq1aW8qg5bRtcxXSPg==}
+  '@kong/kongponents@9.49.0':
+    resolution: {integrity: sha512-yeqNpZswG5DkI7sxDTSOhnI1jwoNlEKFiiIdpb1f9+wMF62xy9+hGFco04uYVkP3fWhC/s9dj4qYtd5+1ZNSFw==}
     engines: {node: '>=v16.20.2 || >=18.12.1 || >=20.14.0 || >=22.14.0', pnpm: '>=9.11.0 || >=10.10.0'}
     peerDependencies:
       vue: ^3.5.26
@@ -5851,9 +5851,6 @@ packages:
 
   focus-trap@7.6.6:
     resolution: {integrity: sha512-v/Z8bvMCajtx4mEXmOo7QEsIzlIOqRXTIwgUfsFOF9gEsespdbD0AkPIka1bSXZ8Y8oZ+2IVDQZePkTfEHZl7Q==}
-
-  focus-trap@7.7.0:
-    resolution: {integrity: sha512-DJJDHpEgoSbP8ZE1MNeU2IzCpfFyFdNZZRilqmfH2XiQsPK6PtD8AfJqWzEBudUQB2yHwZc5iq54rjTaGQ+ljw==}
 
   focus-trap@7.7.1:
     resolution: {integrity: sha512-Pkp8m55GjxBLnhBoT6OXdMvfRr4TjMAKLvFM566zlIryq5plbhaTmLAJWTGR0EkRwLjEte1lCOG9MxF1ipJrOg==}
@@ -11555,8 +11552,8 @@ snapshots:
       axios: 1.13.2
       date-fns: 2.30.0
       date-fns-tz: 2.0.1(date-fns@2.30.0)
-      focus-trap: 7.7.0
-      focus-trap-vue: 4.1.0(focus-trap@7.7.0)(vue@3.5.26(typescript@5.9.3))
+      focus-trap: 7.7.1
+      focus-trap-vue: 4.1.0(focus-trap@7.7.1)(vue@3.5.26(typescript@5.9.3))
       popper.js: 1.16.1
       sortablejs: 1.15.6
       swrv: 1.1.0(vue@3.5.26(typescript@5.9.3))
@@ -11566,7 +11563,7 @@ snapshots:
       vue-draggable-next: 2.3.0(sortablejs@1.15.6)(vue@3.5.26(typescript@5.9.3))
       vue-router: 4.6.4(vue@3.5.26(typescript@5.9.3))
 
-  '@kong/kongponents@9.48.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))':
+  '@kong/kongponents@9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))':
     dependencies:
       '@floating-ui/vue': 1.1.9(vue@3.5.26(typescript@5.9.3))
       '@kong/icons': 1.41.0(vue@3.5.26(typescript@5.9.3))
@@ -16028,7 +16025,7 @@ snapshots:
 
   focus-trap-react@10.1.4(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      focus-trap: 7.7.0
+      focus-trap: 7.7.1
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -16039,21 +16036,12 @@ snapshots:
       focus-trap: 7.6.6
       vue: 3.5.26(typescript@5.9.3)
 
-  focus-trap-vue@4.1.0(focus-trap@7.7.0)(vue@3.5.26(typescript@5.9.3)):
-    dependencies:
-      focus-trap: 7.7.0
-      vue: 3.5.26(typescript@5.9.3)
-
   focus-trap-vue@4.1.0(focus-trap@7.7.1)(vue@3.5.26(typescript@5.9.3)):
     dependencies:
       focus-trap: 7.7.1
       vue: 3.5.26(typescript@5.9.3)
 
   focus-trap@7.6.6:
-    dependencies:
-      tabbable: 6.3.0
-
-  focus-trap@7.7.0:
     dependencies:
       tabbable: 6.3.0
 
