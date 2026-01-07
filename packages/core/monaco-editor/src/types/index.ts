@@ -1,5 +1,6 @@
 import type { editor } from 'monaco-editor'
-import type { Ref } from 'vue'
+import type { Component, Ref } from 'vue'
+import type { MarkdownActionIds } from '../utils/actions'
 
 /**
  * Options for the Monaco editor composable
@@ -73,4 +74,29 @@ export interface MonacoEditorStates {
      * @default 'light'
     */
   theme: EditorThemes
+}
+
+export interface MonacoEditorActionButton {
+  id: string
+  label?: string
+  keybindings?: string[]
+  icon: Component
+  action: MarkdownActionIds | ((editor?: any) => void)
+}
+
+
+// experimenting:
+
+
+export interface MonacoEditorToolbarOptions {
+  commands: {
+    // TODO
+    /** Built-in predefined actions */
+    format?: boolean | Partial<MonacoEditorActionButton>
+    fullScreen?: boolean | Partial<MonacoEditorActionButton>
+    search?: boolean | Partial<MonacoEditorActionButton>
+
+    /** Custom user-defined actions */
+    [key: string]: boolean | Partial<MonacoEditorActionButton> | undefined
+  }
 }

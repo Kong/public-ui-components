@@ -7,6 +7,11 @@
     ]"
     data-testid="monaco-editor-container"
   >
+    <MonacoEditorToolbar
+      v-if="toolbar"
+      :editor="monacoEditor"
+      :settings="toolbar"
+    />
     <div
       ref="editorRef"
       class="monaco-editor-target"
@@ -51,7 +56,8 @@ import { useMonacoEditor } from '../composables/useMonacoEditor'
 import useI18n from '../composables/useI18n'
 import MonacoEditorStatusOverlay from './MonacoEditorStatusOverlay.vue'
 import type { editor } from 'monaco-editor'
-import type { EditorThemes } from '../types'
+import type { EditorThemes, MonacoEditorToolbarOptions } from '../types'
+import MonacoEditorToolbar from './MonacoEditorToolbar.vue'
 
 const {
   theme = 'light',
@@ -68,6 +74,8 @@ const {
    * @default 'markdown'
    */
   language?: string
+  // TODO: add comment
+  toolbar?: boolean | MonacoEditorToolbarOptions
   /**
    * Additional Monaco Editor options to customize the editor further.
    * @default undefined
