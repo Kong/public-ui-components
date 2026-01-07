@@ -6,7 +6,7 @@ import type { Ref } from 'vue'
  */
 export interface UseMonacoEditorOptions {
   /**
-   * The initial content of the editor
+   * The content of the editor
    */
   code: Ref<string>
   /**
@@ -21,10 +21,6 @@ export interface UseMonacoEditorOptions {
    * The theme of the editor
    */
   theme?: EditorThemes
-  /**
-   * Callback function triggered when the content changes
-   */
-  onChanged?: (content: string) => void
   /**
    * Callback function triggered when the editor is created
    */

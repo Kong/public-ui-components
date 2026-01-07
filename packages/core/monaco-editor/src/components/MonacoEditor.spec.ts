@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import { reactive } from 'vue'
+import { nextTick, reactive } from 'vue'
 import MonacoEditor from './MonacoEditor.vue'
 import { KEmptyState } from '@kong/kongponents'
 
@@ -20,8 +20,14 @@ const editorStates = reactive({
 })
 
 vi.mock('../composables/useMonacoEditor', () => ({
-  useMonacoEditor: () => ({
+  useMonacoEditor: (_target: any, options: any) => ({
     editorStates,
+    setContent: (value: string) => {
+      // Update the code ref that was passed to the composable
+      options.code.value = value
+      editorStates.hasContent = !!value
+      editorStates.editorStatus = 'ready'
+    },
   }),
 }))
 
@@ -69,8 +75,6 @@ describe('MonacoEditor.vue', () => {
 
     const wrapper = mountComponent()
 
-    console.log(wrapper.html())
-
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-empty"]').exists()).toBe(false)
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(false)
   })
@@ -98,5 +102,35 @@ describe('MonacoEditor.vue', () => {
     const wrapper = mountComponent()
 
     expect(wrapper.find('[data-testid="monaco-editor-target"]').exists()).toBe(true)
+  })
+
+  it('shows loading, then renders content when fetched', async () => {
+    vi.useFakeTimers()
+
+    const wrapper = mountComponent()
+
+    // Initially loading overlay should exist
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(true)
+    expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).toContain('loading')
+
+    // Simulate async fetch of code
+    setTimeout(() => {
+      // @ts-ignore - monacoEditor exists
+      wrapper.vm.monacoEditor.setContent('fetched code')
+    }, 150)
+
+    // fast-forward time
+    vi.advanceTimersByTime(150)
+    await nextTick()
+
+    // Editor should no longer have loading class
+    expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).not.toContain('loading')
+    // Empty state should not show
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-empty"]').exists()).toBe(false)
+    // The model value should be updated via the internal ref
+    // @ts-ignore - model exists
+    expect(wrapper.vm.model).toBe('fetched code')
+
+    vi.useRealTimers()
   })
 })
