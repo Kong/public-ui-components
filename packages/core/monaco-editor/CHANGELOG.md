@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.6.0...@kong-ui-public/monaco-editor@0.7.0) (2026-01-07)
+
+
+### Bug Fixes
+
+* **monaco-editor:** allow the vite plugin to intercept imports in Dev ([#2784](https://github.com/Kong/public-ui-components/issues/2784)) ([6f723f8](https://github.com/Kong/public-ui-components/commit/6f723f8fb967be83de73f956b54c8aef53a52c2b))
+
+
+### Features
+
+* **monaco-editor:** add lifecycle utils for disposables ([#2769](https://github.com/Kong/public-ui-components/issues/2769)) ([495c12a](https://github.com/Kong/public-ui-components/commit/495c12a355f511df7dff7256764f1a071202b565))
+
+
+
+
+
 # [0.6.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.5.0...@kong-ui-public/monaco-editor@0.6.0) (2026-01-06)
 
 
