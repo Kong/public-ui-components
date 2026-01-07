@@ -1022,6 +1022,9 @@ importers:
       '@kong-ui-public/i18n':
         specifier: workspace:^
         version: link:../../core/i18n
+      '@kong-ui-public/monaco-editor':
+        specifier: workspace:^
+        version: link:../../core/monaco-editor
       '@kong/design-tokens':
         specifier: 1.18.2
         version: 1.18.2
