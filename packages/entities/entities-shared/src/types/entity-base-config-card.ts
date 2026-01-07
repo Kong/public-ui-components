@@ -76,7 +76,9 @@ export interface BaseEntityConfig {
 }
 
 /** Konnect base form config */
-export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig { }
+export interface KonnectBaseEntityConfig extends KonnectConfig, BaseEntityConfig {
+  enableDeckConfig?: boolean
+}
 
 /** Kong Manager base form config */
 export interface KongManagerBaseEntityConfig extends KongManagerConfig, BaseEntityConfig { }
