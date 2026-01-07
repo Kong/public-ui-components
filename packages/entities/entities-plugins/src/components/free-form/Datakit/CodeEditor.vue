@@ -37,24 +37,24 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, onMounted, onBeforeUnmount, shallowRef, inject, toRaw } from 'vue'
+import { useTemplateRef, shallowRef, inject, toRaw } from 'vue'
+import { isEqual, omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
+import yaml, { JSON_SCHEMA } from 'js-yaml'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton, KModal } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
+import { useErrors } from '@kong-ui-public/entities-shared'
+import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { useMonacoEditor } from '@kong-ui-public/monaco-editor'
 import english from '../../../locales/en.json'
-import yaml, { JSON_SCHEMA } from 'js-yaml'
+import { useFormShared } from '../shared/composables'
 import examples from './examples'
 import { extractors } from './config-extractors'
-import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'
 
 import type { YAMLException } from 'js-yaml'
 import type { DatakitConfig, DatakitPluginData } from './types'
 import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../types'
-import { useFormShared } from '../shared/composables'
-import { isEqual, omit } from 'lodash-es'
-import { useErrors } from '@kong-ui-public/entities-shared'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -73,11 +73,109 @@ const emit = defineEmits<{
 const { getMessageFromError } = useErrors()
 
 const editorRoot = useTemplateRef('editor-root')
-const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 const LINT_SOURCE = 'YAML Syntax'
 
 const EDIT_SOURCE = 'datakit.insert-example'
 const AUTO_CONVERT_SOURCE = 'datakit.auto-convert'
+const code = shallowRef('')
+
+if (formConfig.app === 'kongManager' && formData.config && Object.keys(formData.config).length > 0) {
+  const config = { ...formData.config } as any
+
+  if (config.nodes && config.nodes.length === 0) {
+    delete config.nodes
+  }
+
+  code.value = Object.keys(config).length === 0
+    ? ''
+    : dumpYaml(toRaw(config))
+} else if (formConfig.app === 'konnect') {
+  const initialConfig = omit({ ...formData }, ['__ui_data'])
+  code.value = dumpYaml(initialConfig)
+}
+
+const { editor: editorRef } = useMonacoEditor(editorRoot, {
+  language: 'yaml',
+  code,
+  theme: 'light',
+  monacoOptions: {
+    scrollbar: {
+      alwaysConsumeMouseWheel: false,
+    },
+    autoIndent: 'keep',
+    editContext: false,
+  },
+  onCreated: () => {
+    const editor = editorRef.value
+    const model = editor?.getModel()
+    if (!editor || !model) return
+
+    if (formConfig.app === 'konnect') {
+      editor.onDidPaste((e) => {
+        const model = editor.getModel()
+        if (!model) return
+
+        const pastedText = model.getValueInRange(e.range)
+
+        for (const extractor of extractors) {
+          const extractedConfig = extractor.extract(pastedText)
+          if (extractedConfig) {
+            pendingConfig.value = extractedConfig
+            pendingExtractorName.value = extractor.name
+            showConvertModal.value = true
+            return
+          }
+        }
+      })
+    }
+
+    focusEnd()
+  },
+  onChanged: (content) => {
+    const editor = editorRef.value
+    const model = editor?.getModel()
+    if (!editor || !model) return
+
+    code.value = content
+
+    try {
+      const config = yaml.load(content || '', {
+        schema: JSON_SCHEMA,
+        json: true,
+      })
+
+      monaco.editor.setModelMarkers(model, LINT_SOURCE, [])
+
+      if (formConfig.app === 'konnect') {
+        setValue(config as DatakitPluginData)
+      } else {
+        formData.config = config as DatakitConfig
+      }
+      emit('change', config)
+    } catch (error: unknown) {
+      const { message, mark } = error as YAMLException
+      const { line, column } = mark || { line: 0, column: 0 }
+
+      const simpleMessage = message.split('\n')[0] // Take the first line of the error message
+
+      const markers: monaco.editor.IMarkerData[] = [
+        {
+          startLineNumber: line + 1,
+          startColumn: column + 1,
+          endLineNumber: line + 1,
+          endColumn: column + 2,
+          message: simpleMessage,
+          severity: monaco.MarkerSeverity.Error,
+          source: LINT_SOURCE,
+        },
+      ]
+
+      monaco.editor.setModelMarkers(model, LINT_SOURCE, markers)
+
+      emit('error', simpleMessage)
+    }
+  },
+})
 
 function dumpYaml(config: unknown): string {
   return yaml.dump(config, {
@@ -177,107 +275,6 @@ function focusEnd() {
   editor.setPosition(model.getFullModelRange().getEndPosition())
   editor.focus()
 }
-
-onMounted(() => {
-  const editor = monaco.editor.create(editorRoot.value!, {
-    language: 'yaml',
-    automaticLayout: true,
-    minimap: {
-      enabled: false,
-    },
-    scrollBeyondLastLine: false,
-    tabSize: 2,
-    scrollbar: {
-      alwaysConsumeMouseWheel: false,
-    },
-    autoIndent: 'keep',
-    editContext: false,
-  })
-  editorRef.value = editor
-
-  if (formConfig.app === 'kongManager' && formData.config && Object.keys(formData.config).length > 0) {
-    const config = { ...formData.config } as any
-
-    if (config.nodes && config.nodes.length === 0) {
-      delete config.nodes
-    }
-
-    const value = Object.keys(config).length === 0
-      ? ''
-      : dumpYaml(toRaw(config))
-
-    editor.setValue(value)
-
-    focusEnd()
-  } else if (formConfig.app === 'konnect') {
-    const initialConfig = omit({ ...formData }, ['__ui_data'])
-    const value = dumpYaml(initialConfig)
-    editor.setValue(value)
-    focusEnd()
-
-    editor.onDidPaste((e) => {
-      const model = editor.getModel()
-      if (!model) return
-
-      const pastedText = model.getValueInRange(e.range)
-
-      for (const extractor of extractors) {
-        const extractedConfig = extractor.extract(pastedText)
-        if (extractedConfig) {
-          pendingConfig.value = extractedConfig
-          pendingExtractorName.value = extractor.name
-          showConvertModal.value = true
-          return
-        }
-      }
-    })
-  }
-
-  editor.onDidChangeModelContent(() => {
-    const model = editor.getModel()
-    const value = editor.getValue() || ''
-    try {
-      const config = yaml.load(value, {
-        schema: JSON_SCHEMA,
-        json: true,
-      })
-
-      monaco.editor.setModelMarkers(model!, LINT_SOURCE, [])
-
-      if (formConfig.app === 'konnect') {
-        setValue(config as DatakitPluginData)
-      } else {
-        formData.config = config as DatakitConfig
-      }
-      emit('change', config)
-    } catch (error: unknown) {
-      const { message, mark } = error as YAMLException
-      const { line, column } = mark || { line: 0, column: 0 }
-
-      const simpleMessage = message.split('\n')[0] // Take the first line of the error message
-
-      const markers: monaco.editor.IMarkerData[] = [
-        {
-          startLineNumber: line + 1,
-          startColumn: column + 1,
-          endLineNumber: line + 1,
-          endColumn: column + 2,
-          message: simpleMessage,
-          severity: monaco.MarkerSeverity.Error,
-          source: LINT_SOURCE,
-        },
-      ]
-
-      monaco.editor.setModelMarkers(model!, LINT_SOURCE, markers)
-
-      emit('error', simpleMessage)
-    }
-  })
-})
-
-onBeforeUnmount(() => {
-  editorRef.value?.dispose()
-})
 
 defineExpose({
   setExampleCode,

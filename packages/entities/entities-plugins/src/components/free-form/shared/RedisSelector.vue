@@ -46,7 +46,7 @@
           data-testid="redis-config-select-trigger"
           :model-value="selectedRedisConfigItem"
           :redis-type="redisType"
-          @error-change="err => sharedRedisConfigFetchError = err"
+          @error-change="(err: unknown) => sharedRedisConfigFetchError = err as Error"
           @toast="toaster"
           @update:model-value="data => redisConfigSelected(data)"
         />
