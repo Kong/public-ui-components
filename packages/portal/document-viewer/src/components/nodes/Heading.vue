@@ -34,50 +34,50 @@ const tag = `h${props.level}`
 
 <style lang="scss" scoped>
 h1, h2, h3, h4, h5, h6 {
-  color: var(--kong-ui-document-viewer-color, $kui-color-text);
-  font-family: var(--kong-ui-document-viewer-font-family-headings, var(--kong-ui-document-viewer-font-family-default, $kui-font-family-text));
-  font-weight: var(--kong-ui-document-viewer-heading-font-weight, $kui-font-weight-medium);
-  margin-top: $kui-space-0;
+  color: var(--kui-color-text, $kui-color-text);
+  font-family: var(--kong-ui-document-viewer-font-family-headings, var(--kui-font-family-text, $kui-font-family-text));
+  font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+  margin-top: var(--kui-space-0, $kui-space-0);
 }
 
 h1 {
-  font-size: $kui-font-size-80;
-  font-weight: $kui-font-weight-medium;
-  line-height: $kui-line-height-80;
-  margin-bottom: $kui-space-90;
+  font-size: var(--kui-font-size-80, $kui-font-size-80);
+  font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+  line-height: var(--kui-line-height-80, $kui-line-height-80);
+  margin-bottom: var(--kui-space-90, $kui-space-90);
 }
 
 h2 {
-  font-size: $kui-font-size-70;
-  line-height: $kui-line-height-70;
-  margin-bottom: $kui-space-80;
+  font-size: var(--kui-font-size-70, $kui-font-size-70);
+  line-height: var(--kui-line-height-70, $kui-line-height-70);
+  margin-bottom: var(--kui-space-80, $kui-space-80);
 }
 
 h3 {
-  font-size: $kui-font-size-60;
-  line-height: $kui-line-height-60;
-  margin-bottom: $kui-space-50;
+  font-size: var(--kui-font-size-60, $kui-font-size-60);
+  line-height: var(--kui-line-height-60, $kui-line-height-60);
+  margin-bottom: var(--kui-space-50, $kui-space-50);
 }
 
 h4 {
-  font-size: $kui-font-size-50;
-  line-height: $kui-line-height-50;
-  margin-bottom: $kui-space-50;
+  font-size: var(--kui-font-size-50, $kui-font-size-50);
+  line-height: var(--kui-line-height-50, $kui-line-height-50);
+  margin-bottom: var(--kui-space-50, $kui-space-50);
 }
 
 h5 {
-  font-size: $kui-font-size-40;
-  line-height: $kui-line-height-40;
-  margin-bottom: $kui-space-50;
+  font-size: var(--kui-font-size-40, $kui-font-size-40);
+  line-height: var(--kui-line-height-40, $kui-line-height-40);
+  margin-bottom: var(--kui-space-50, $kui-space-50);
 }
 
 h6 {
-  font-size: $kui-font-size-30;
-  line-height: $kui-line-height-30;
-  margin-bottom: $kui-space-50;
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  line-height: var(--kui-line-height-30, $kui-line-height-30);
+  margin-bottom: var(--kui-space-50, $kui-space-50);
 }
 
 h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child {
-  margin-top: $kui-space-0;
+  margin-top: var(--kui-space-0, $kui-space-0);
 }
 </style>

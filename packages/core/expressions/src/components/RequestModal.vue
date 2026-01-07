@@ -193,7 +193,7 @@ watch(url, (url) => {
 
 <style scoped lang="scss">
 .url-input {
-  margin-bottom: $kui-space-90;
+  margin-bottom: var(--kui-space-90, $kui-space-90);
   width: 100%;
 }
 

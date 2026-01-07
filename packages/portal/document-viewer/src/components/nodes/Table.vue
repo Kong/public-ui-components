@@ -6,9 +6,9 @@
 
 <style scoped lang="scss">
 table {
-  border: 1px solid var(--kong-ui-document-viewer-color, $kui-color-border);
+  border: 1px solid var(--kui-color-border, $kui-color-border);
   border-collapse: collapse;
-  font-size: $kui-font-size-30;
-  margin-bottom: $kui-space-60;
+  font-size: var(--kui-font-size-30, $kui-font-size-30);
+  margin-bottom: var(--kui-space-60, $kui-space-60);
 }
 </style>

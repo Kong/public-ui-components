@@ -41,8 +41,8 @@ watch(() => props.active, (active) => {
 @use "../../styles/variables" as *;
 
 .sidebar-menu-toggle {
-  border-radius: $kui-border-radius-20;
-  padding: $kui-space-0 $kui-space-20;
+  border-radius: var(--kui-border-radius-20, $kui-border-radius-20);
+  padding: var(--kui-space-0, $kui-space-0) var(--kui-space-20, $kui-space-20);
   position: relative;
   transition: all 0.3s ease-in-out;
 
@@ -55,11 +55,11 @@ watch(() => props.active, (active) => {
   }
 
   .line {
-    background-color: var(--kong-ui-app-sidebar-mobile-icon-color, $kui-color-background);
+    background-color: var(--kui-color-background, $kui-color-background);
     border-radius: $sidebar-item-border-radius;
     display: block;
     height: 2px;
-    margin: $kui-space-30 $kui-space-auto;
+    margin: var(--kui-space-30, $kui-space-30) var(--kui-space-auto, $kui-space-auto);
     transition: all 0.3s ease-in-out;
     width: 24px;
   }

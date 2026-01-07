@@ -73,7 +73,7 @@ const headerStyles = computed(() => ({
 @use "../../styles/variables" as *;
 
 .kong-ui-app-navbar {
-  background: var(--kong-ui-app-navbar-background, $kui-color-background-inverse);
+  background: var(--kui-color-background-inverse, $kui-color-background-inverse);
   left: 0;
   position: fixed;
   right: 0;
@@ -89,7 +89,7 @@ const headerStyles = computed(() => ({
     display: flex;
     height: $navbar-height;
     justify-content: space-between;
-    padding: $kui-space-0 $kui-space-60; // should match the padding of `.sidebar-header` in the sidebar
+    padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60); // should match the padding of `.sidebar-header` in the sidebar
   }
 
   .app-navbar-logo {
@@ -100,7 +100,7 @@ const headerStyles = computed(() => ({
     margin-right: v-bind('appLogoStyles.marginRight');
     max-width: v-bind('appLogoStyles.width');
     min-width: v-bind('appLogoStyles.width');
-    padding-left: $kui-space-60;
+    padding-left: var(--kui-space-60, $kui-space-60);
   }
 
   .mobile-header-left {
@@ -123,24 +123,24 @@ const headerStyles = computed(() => ({
       align-items: center;
       align-self: stretch;
       border-bottom: 4px solid transparent;
-      color: $kui-color-text-inverse;
+      color: var(--kui-color-text-inverse, $kui-color-text-inverse);
       display: flex;
-      font-size: $kui-font-size-30;
-      font-weight: $kui-font-weight-medium;
-      padding: $kui-space-0 $kui-space-40;
+      font-size: var(--kui-font-size-30, $kui-font-size-30);
+      font-weight: var(--kui-font-weight-medium, $kui-font-weight-medium);
+      padding: var(--kui-space-0, $kui-space-0) var(--kui-space-40, $kui-space-40);
       text-decoration: none;
       transition: all .2s ease-in-out;
       white-space: nowrap;
 
       @media (min-width: $kui-breakpoint-phablet) {
-        font-size: $kui-font-size-40;
-        padding: $kui-space-0 $kui-space-60;
+        font-size: var(--kui-font-size-40, $kui-font-size-40);
+        padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60);
       }
 
       &.router-link-active,
       &.active {
         border-color: #84E5AE;
-        font-weight: $kui-font-weight-semibold !important;
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold) !important;
       }
     }
   }
@@ -149,13 +149,13 @@ const headerStyles = computed(() => ({
     align-items: center;
     display: flex;
     flex-direction: row;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     height: 100%;
     justify-content: space-between;
     width: 100%;
 
     @media (min-width: $kui-breakpoint-phablet) {
-      gap: $kui-space-60;
+      gap: var(--kui-space-60, $kui-space-60);
     }
 
     &-left,

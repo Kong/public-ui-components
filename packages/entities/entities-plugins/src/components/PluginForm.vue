@@ -1505,7 +1505,7 @@ onBeforeMount(async () => {
   width: 100%;
 
   .form-action-button {
-    margin-left: $kui-space-60;
+    margin-left: var(--kui-space-60, $kui-space-60);
   }
 
   .plugin-form-actions {
@@ -1513,27 +1513,27 @@ onBeforeMount(async () => {
   }
 
   & :deep(.k-slideout-title) {
-    color: $kui-color-text !important;
-    font-size: $kui-font-size-70 !important;
-    font-weight: $kui-font-weight-bold !important;
-    line-height: $kui-line-height-60 !important;
-    margin-bottom: $kui-space-60 !important;
+    color: var(--kui-color-text, $kui-color-text) !important;
+    font-size: var(--kui-font-size-70, $kui-font-size-70) !important;
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold) !important;
+    line-height: var(--kui-line-height-60, $kui-line-height-60) !important;
+    margin-bottom: var(--kui-space-60, $kui-space-60) !important;
   }
 
   & :deep(.k-card.content-card) {
-    padding: $kui-space-0 $kui-space-60 !important;
+    padding: var(--kui-space-0, $kui-space-0) var(--kui-space-60, $kui-space-60) !important;
   }
 
   & :deep(.tab-item > div.tab-link.has-panels) {
-    color: $kui-color-text-neutral !important;
-    font-size: $kui-font-size-30 !important;
-    font-weight: $kui-font-weight-bold !important;
-    line-height: $kui-line-height-40 !important;
+    color: var(--kui-color-text-neutral, $kui-color-text-neutral) !important;
+    font-size: var(--kui-font-size-30, $kui-font-size-30) !important;
+    font-weight: var(--kui-font-weight-bold, $kui-font-weight-bold) !important;
+    line-height: var(--kui-line-height-40, $kui-line-height-40) !important;
   }
 
   & :deep(.tab-item.active > div.tab-link.has-panels) {
-    color: $kui-color-text !important;
-    font-weight: $kui-font-weight-semibold !important;
+    color: var(--kui-color-text, $kui-color-text) !important;
+    font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold) !important;
   }
 
   :deep(.slideout-content) {

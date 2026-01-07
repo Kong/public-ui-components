@@ -238,7 +238,7 @@ onBeforeMount(() => {
   &-as-child {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-80;
+    gap: var(--kui-space-80, $kui-space-80);
   }
 
   // .k-label is required to override styles correctly in KM
@@ -250,20 +250,20 @@ onBeforeMount(() => {
   &-header {
     align-items: center;
     display: flex;
-    gap: $kui-space-40;
+    gap: var(--kui-space-40, $kui-space-40);
     height: 32px;
   }
 
   &-actions {
     align-items: center;
     display: flex;
-    gap: $kui-space-20;
+    gap: var(--kui-space-20, $kui-space-20);
   }
 
   &-button-expand,
   &-button-collapse {
     .ff-object-field-button-icon {
-      transition: transform $kui-animation-duration-20 ease-in-out;
+      transition: transform var(--kui-animation-duration-20, $kui-animation-duration-20) ease-in-out;
     }
   }
 
@@ -276,9 +276,9 @@ onBeforeMount(() => {
   &-content {
     display: flex;
     flex-direction: column;
-    gap: $kui-space-80;
-    margin-top: $kui-space-20;
-    padding: $kui-space-60 $kui-space-40 $kui-space-20 $kui-space-60;
+    gap: var(--kui-space-80, $kui-space-80);
+    margin-top: var(--kui-space-20, $kui-space-20);
+    padding: var(--kui-space-60, $kui-space-60) var(--kui-space-40, $kui-space-40) var(--kui-space-20, $kui-space-20) var(--kui-space-60, $kui-space-60);
   }
 
   :deep(.k-tooltip p) {

@@ -24,12 +24,12 @@ defineProps({
 
 <style scoped lang="scss">
 a {
-  color: var(--kong-ui-document-viewer-link-color, $kui-color-text-primary);
+  color: var(--kui-color-text-primary, $kui-color-text-primary);
   text-decoration: none;
 }
 
 a:hover {
-  color: var(--kong-ui-document-viewer-link-hover-color, $kui-color-text-primary-strong);
+  color: var(--kui-color-text-primary-strong, $kui-color-text-primary-strong);
   text-decoration: underline;
 }
 </style>

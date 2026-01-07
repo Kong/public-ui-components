@@ -637,12 +637,12 @@ provide('configType', configType)
       flex-direction: column;
 
       .select-item-label {
-        font-weight: $kui-font-weight-semibold;
+        font-weight: var(--kui-font-weight-semibold, $kui-font-weight-semibold);
       }
 
       .select-item-description {
-        color: $kui-color-text-neutral;
-        font-size: $kui-font-size-20;
+        color: var(--kui-color-text-neutral, $kui-color-text-neutral);
+        font-size: var(--kui-font-size-20, $kui-font-size-20);
       }
     }
 

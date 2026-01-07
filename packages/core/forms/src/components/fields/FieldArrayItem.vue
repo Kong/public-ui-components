@@ -44,7 +44,7 @@ defineEmits<{
     &.delete {
       align-self: center;
       height: 100%;
-      margin-left: $kui-space-70;
+      margin-left: var(--kui-space-70, $kui-space-70);
     }
   }
 }

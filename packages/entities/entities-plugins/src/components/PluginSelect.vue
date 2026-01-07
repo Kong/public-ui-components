@@ -559,7 +559,7 @@ onMounted(async () => {
 .kong-ui-entities-plugin-select-form {
   .plugins-skeleton {
     &-title {
-      margin-bottom: $kui-space-50;
+      margin-bottom: var(--kui-space-50, $kui-space-50);
     }
 
     &-cards {
@@ -578,14 +578,14 @@ onMounted(async () => {
     display: flex;
 
     .plugins-filter-input {
-      margin-bottom: $kui-space-60;
+      margin-bottom: var(--kui-space-60, $kui-space-60);
     }
   }
 
   .plugins-results-container {
     .tab-description {
-      margin-bottom: $kui-space-80;
-      margin-top: $kui-space-80;
+      margin-bottom: var(--kui-space-80, $kui-space-80);
+      margin-top: var(--kui-space-80, $kui-space-80);
     }
   }
 }

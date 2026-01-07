@@ -24,6 +24,6 @@ defineProps<{
 .dk-source-item {
   align-items: center;
   display: flex;
-  gap: $kui-space-40;
+  gap: var(--kui-space-40, $kui-space-40);
 }
 </style>
