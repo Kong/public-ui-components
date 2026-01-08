@@ -3,7 +3,7 @@
  *
  * Although it's usually okay to register listeners on a model/editor without manually
  * calling `.dispose()` before or after disposing the model/editor itself, which may
- * also apply to other disposables, as long as the scope they  are attached to correctly
+ * also apply to other disposables, as long as the scope they are attached to correctly
  * disposes them (such bugs once existed in Monaco Editor), it's still a good practice
  * to dispose when a resource is no longer needed.
  *
@@ -294,7 +294,9 @@ export function disposeGlobalDisposables(): void {
  */
 export function disposeAllDisposables(): void {
   const toDispose: IDisposable[] = []
-  allDisposables.values().forEach((t) => toDispose.push(t.decorated))
+  for (const t of allDisposables.values()) {
+    toDispose.push(t.decorated)
+  }
   try {
     disposeMany(toDispose)
   } catch (e) {
