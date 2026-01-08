@@ -16,6 +16,11 @@ const routes = [
     name: 'Fetch',
     component: () => import('./pages/FetchPage.vue'),
   },
+  {
+    path: '/toolbar',
+    name: 'Toolbar',
+    component: () => import('./pages/ToolbarPage.vue'),
+  },
 ]
 
 export const router = createRouter({
