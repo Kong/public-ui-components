@@ -98,7 +98,7 @@ export function useMonacoEditor<T extends MaybeElement>(
 
   const setLanguage = (language: string): void => {
     const model = editor.value?.getModel()
-    if (model) {
+    if (model && model.getLanguageId() !== language) {
       monaco.editor.setModelLanguage(model, language)
     }
   }
