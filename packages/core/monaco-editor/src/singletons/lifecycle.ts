@@ -4,8 +4,8 @@
  * Although it's usually okay to register listeners on a model/editor without manually
  * calling `.dispose()` before or after disposing the model/editor itself, which may
  * also apply to other disposables, as long as the scope they are attached to correctly
- * disposes them (such bugs once existed in Monaco Editor), it's still a good practice
- * to dispose when a resource is no longer needed.
+ * disposes them (though such bugs once existed in Monaco Editor), it's still a good
+ * practice to dispose when a resource is no longer needed.
  *
  * > Many Monaco related objects often implement the `.dispose()` method. This method
  * > is intended to perform cleanups when a resource is no longer needed. For example,
@@ -185,7 +185,7 @@ export function trackDisposable(disposable: IDisposable, scope?: Scope): IDispos
     } else {
       console.warn(
         `${MSG_PREFIX} Re-scoping a tracked disposable from`, existing.scope, 'to', scope, '.',
-        'The scope usually should not change after being tracked. This may indicate a mistake sometimes.',
+        'The scope usually should not change after being tracked. This may sometimes indicate a programming error.',
       )
     }
 

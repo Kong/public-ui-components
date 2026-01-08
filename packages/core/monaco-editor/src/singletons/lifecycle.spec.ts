@@ -109,7 +109,7 @@ describe('lifecycle singleton', () => {
     expect(modelScope.listenerDisposable.dispose).toHaveBeenCalledTimes(1)
   })
 
-  it('disposes only scoped disposables with disposeScoped', () => {
+  it('disposes only scoped disposables with disposeScopedDisposables', () => {
     const editorScope = mockEditorScope()
     const modelScope = mockModelScope()
 
@@ -146,7 +146,7 @@ describe('lifecycle singleton', () => {
     expect(modelDisposable.dispose).not.toHaveBeenCalled()
   })
 
-  it('disposes everything and clears scope listeners with disposeAll', () => {
+  it('disposes everything and clears scope listeners with disposeAllDisposables', () => {
     const editorScope = mockEditorScope()
     const modelScope = mockModelScope()
 
