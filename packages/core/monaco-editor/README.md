@@ -113,6 +113,40 @@ Whether the editor is in a loading state. When true, displays a loading overlay.
 
 Additional Monaco Editor options to customize the editor further. See [Monaco Editor API](https://microsoft.github.io/monaco-editor/typedoc/interfaces/editor.IStandaloneEditorConstructionOptions.html) for available options.
 
+### Events
+
+#### `ready`
+
+Emitted when the Monaco editor instance is initialized and ready for use.
+
+**Payload:**
+
+- `editor`: The Monaco `IStandaloneCodeEditor` instance.
+
+##### Example
+
+```vue
+<template>
+  <MonacoEditor
+    v-model="code"
+    language="javascript"
+    @ready="onEditorReady"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import type { editor } from 'monaco-editor'
+
+const code = ref('// your code here')
+
+function onEditorReady(editorInstance: editor.IStandaloneCodeEditor) {
+  // You can now use the Monaco editor instance
+  editorInstance.focus()
+}
+</script>
+```
+
 ### v-model
 
 The component requires a `v-model` binding to manage the editor content:
