@@ -51,7 +51,7 @@ async function loadMonaco() {
 
 /**
  * Composable for integrating the Monaco Editor into Vue components.
- * @param {MaybeRefOrGetter<HTMLElement | null>} target - The target DOM element or Vue component ref where the editor will be mounted.
+ * @param {MaybeRefOrGetter<HTMLElement | null>} target - The target DOM element/ref/getter where the editor will be mounted.
  * @param {UseMonacoEditorOptions} options - Configuration options for the Monaco editor.
  * @returns {object} An object containing the editor instance and utility methods.
 */
@@ -145,7 +145,7 @@ export function useMonacoEditor<T extends HTMLElement>(
     // `toValue()` safely unwraps refs, getters, or plain elements
     watch([isMonacoLoaded, () => toValue(target)], ([_isLoaded, _target], [, previousTarget]) => {
 
-      // This ensures we skip setup if it's null, undefined, or an SVG element (as unrefElement can return SVGElement)
+      // Ensure the target is specifically a non-null HTMLElement and that Monaco is loaded before setting up
       const el = toValue(_target)
       const previousEl = toValue(previousTarget)
       if (!(el instanceof HTMLElement) || !_isLoaded) {
