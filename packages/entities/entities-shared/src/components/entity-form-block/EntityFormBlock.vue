@@ -4,13 +4,17 @@
       <div
         v-if="step !== undefined || slots.step"
         class="step"
+        data-testid="form-section-step"
       >
         <slot name="step">
           {{ step }}
         </slot>
       </div>
       <div class="header-content">
-        <h2 class="header-title">
+        <h2
+          class="header-title"
+          data-testid="header-title"
+        >
           <slot name="title">
             {{ title }}
           </slot>
@@ -18,6 +22,7 @@
         <div
           v-if="description || slots.description"
           class="header-description"
+          data-testid="header-description"
         >
           <slot name="description">
             {{ description }}
@@ -27,11 +32,15 @@
       <div
         v-if="slots.extra"
         class="header-extra"
+        data-testid="header-extra"
       >
         <slot name="extra" />
       </div>
     </header>
-    <div class="content">
+    <div
+      class="content"
+      data-testid="form-section-content"
+    >
       <slot />
     </div>
   </div>
