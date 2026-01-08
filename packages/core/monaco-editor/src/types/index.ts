@@ -1,6 +1,9 @@
 import type { editor } from 'monaco-editor'
 import type { Ref } from 'vue'
 
+export * from './json'
+export * from './model-context'
+
 /**
  * Options for the Monaco editor composable
  */
@@ -32,7 +35,7 @@ export interface UseMonacoEditorOptions {
   /**
    * Additional Monaco editor settings
    * @see https://microsoft.github.io/monaco-editor/typedoc/interfaces/editor.IStandaloneEditorConstructionOptions.html
-  */
+   */
   monacoOptions?: Partial<editor.IStandaloneEditorConstructionOptions>
 }
 

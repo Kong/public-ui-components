@@ -77,7 +77,7 @@ const {
   /**
    * Additional Monaco Editor options to customize the editor further.
    * @default undefined
-  */
+   */
   options?: Partial<editor.IStandaloneEditorConstructionOptions> | undefined
 }>()
 
