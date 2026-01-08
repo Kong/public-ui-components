@@ -1,7 +1,8 @@
 {
   "name": "@kong-ui-public/monaco-editor",
-  "version": "0.7.0",
+  "version": "0.7.4",
   "type": "module",
+  "description": "A kong UI Monaco Editor wrapper for Vue 3 with syntax highlighting powered by Shiki.",
   "main": "./dist/runtime/monaco-editor.umd.js",
   "module": "./dist/runtime/monaco-editor.es.js",
   "types": "./dist/types/src/index.d.ts",
@@ -74,7 +75,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.2",
     "@kong/icons": "^1.41.0",
-    "@kong/kongponents": "9.48.8",
+    "@kong/kongponents": "9.49.0",
     "monaco-editor": "^0.55.1",
     "shiki": "^3.20.0",
     "vue": "^3.5.26"
