@@ -73,10 +73,8 @@ const emit = defineEmits<{
 const { getMessageFromError } = useErrors()
 
 const editorRoot = useTemplateRef('editor-root')
-const LINT_SOURCE = 'YAML Syntax'
 
-const EDIT_SOURCE = 'datakit.insert-example'
-const AUTO_CONVERT_SOURCE = 'datakit.auto-convert'
+const LINT_SOURCE = 'YAML Syntax'
 
 function dumpYaml(config: unknown): string {
   return yaml.dump(toRaw(config), {
@@ -115,6 +113,45 @@ const { editor: editorRef } = useMonacoEditor(editorRoot, {
     const model = editor?.getModel()
     if (!editor || !model) return
 
+    editor.onDidChangeModelContent(() => {
+      try {
+        const config = yaml.load(editor.getValue() || '', {
+          schema: JSON_SCHEMA,
+          json: true,
+        })
+
+        monaco.editor.setModelMarkers(model, LINT_SOURCE, [])
+
+        if (formConfig.app === 'konnect') {
+          setValue(config as DatakitPluginData)
+        } else {
+          formData.config = config as DatakitConfig
+        }
+        emit('change', config)
+      } catch (error: unknown) {
+        const { message, mark } = error as YAMLException
+        const { line, column } = mark || { line: 0, column: 0 }
+
+        const simpleMessage = message.split('\n')[0] // Take the first line of the error message
+
+        const markers: monaco.editor.IMarkerData[] = [
+          {
+            startLineNumber: line + 1,
+            startColumn: column + 1,
+            endLineNumber: line + 1,
+            endColumn: column + 2,
+            message: simpleMessage,
+            severity: monaco.MarkerSeverity.Error,
+            source: LINT_SOURCE,
+          },
+        ]
+
+        monaco.editor.setModelMarkers(model, LINT_SOURCE, markers)
+
+        emit('error', simpleMessage)
+      }
+    })
+
     if (formConfig.app === 'konnect') {
       editor.onDidPaste((e) => {
         const model = editor.getModel()
@@ -136,48 +173,6 @@ const { editor: editorRef } = useMonacoEditor(editorRoot, {
 
     focusEnd()
   },
-  onChanged: (content) => {
-    const editor = editorRef.value
-    const model = editor?.getModel()
-    if (!editor || !model) return
-
-    try {
-      const config = yaml.load(content || '', {
-        schema: JSON_SCHEMA,
-        json: true,
-      })
-
-      monaco.editor.setModelMarkers(model, LINT_SOURCE, [])
-
-      if (formConfig.app === 'konnect') {
-        setValue(config as DatakitPluginData)
-      } else {
-        formData.config = config as DatakitConfig
-      }
-      emit('change', config)
-    } catch (error: unknown) {
-      const { message, mark } = error as YAMLException
-      const { line, column } = mark || { line: 0, column: 0 }
-
-      const simpleMessage = message.split('\n')[0] // Take the first line of the error message
-
-      const markers: monaco.editor.IMarkerData[] = [
-        {
-          startLineNumber: line + 1,
-          startColumn: column + 1,
-          endLineNumber: line + 1,
-          endColumn: column + 2,
-          message: simpleMessage,
-          severity: monaco.MarkerSeverity.Error,
-          source: LINT_SOURCE,
-        },
-      ]
-
-      monaco.editor.setModelMarkers(model, LINT_SOURCE, markers)
-
-      emit('error', simpleMessage)
-    }
-  },
 })
 
 const showConvertModal = shallowRef(false)
@@ -193,15 +188,7 @@ function handleConvertCancel() {
 function handleConvertConfirm() {
   if (!pendingConfig.value) return
 
-  const editor = editorRef.value
-  const model = editor?.getModel()
-  if (!editor || !model) return
-
-  const nextValue = dumpYaml(pendingConfig.value)
-
-  editor.pushUndoStop()
-  editor.executeEdits(AUTO_CONVERT_SOURCE, [{ range: model.getFullModelRange(), text: nextValue }])
-  editor.pushUndoStop()
+  code.value = dumpYaml(pendingConfig.value)
 
   handleConvertCancel()
 }
@@ -223,9 +210,7 @@ function setExampleCode(example: keyof typeof examples) {
   // Kong Manager's code editor is editing only the config portion
   if (formConfig.app === 'kongManager') {
     if (editor.getValue() !== newCode) {
-      editor.pushUndoStop()
-      editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: newCode }])
-      editor.pushUndoStop()
+      code.value = newCode
     }
 
     focusEnd()
@@ -251,9 +236,7 @@ function setExampleCode(example: keyof typeof examples) {
       config: { ...exampleConfigJson },
     }, ['__ui_data'])
 
-    editor.pushUndoStop()
-    editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: dumpYaml(nextConfig) }])
-    editor.pushUndoStop()
+    code.value = dumpYaml(nextConfig)
   } catch (error: unknown) {
     emit('error', getMessageFromError(error))
   }
