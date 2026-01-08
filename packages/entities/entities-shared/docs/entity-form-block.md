@@ -6,6 +6,7 @@ This component succeeds the `[EntityFormSection](./entity-form-section.md)` comp
   - [Install](#install)
   - [Props](#props)
   - [Slots](#slots)
+  - [extra](#extra)
   - [Usage example](#usage-example)
 
 ## Usage
@@ -51,6 +52,10 @@ Description text. Can also be passed as a prop. This slot will override the `des
 #### default
 
 Form content slot that appears on the right of title and description. Please note that component styling applies default `margin-top` to all top-level slot children, other than the first.
+
+#### step
+
+Step content slot that appears to the left of the form content. This slot will override the `step` prop if both are provided.
 
 #### title
 
