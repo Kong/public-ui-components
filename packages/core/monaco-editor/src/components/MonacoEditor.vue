@@ -111,7 +111,8 @@ const monacoEditor = useMonacoEditor(editorRef, {
 })
 
 // update the editor language when the prop changes so the highlighting updates
-watch(() => language, (newLang) => {
+watch(() => language, (newLang, oldLang) => {
+  if (newLang === oldLang) return
   monacoEditor.setLanguage(newLang)
 })
 </script>
