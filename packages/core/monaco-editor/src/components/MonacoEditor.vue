@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue'
+import { watch, computed, useTemplateRef } from 'vue'
 import { CodeblockIcon, ProgressIcon } from '@kong/icons'
 import { useMonacoEditor } from '../composables/useMonacoEditor'
 import useI18n from '../composables/useI18n'
@@ -123,6 +123,12 @@ const monacoEditor = useMonacoEditor(editorRef, {
 
 defineExpose({
   monacoEditor,
+})
+
+// update the editor language when the prop changes so the highlighting updates
+watch(() => language, (newLang, oldLang) => {
+  if (newLang === oldLang) return
+  monacoEditor.setLanguage(newLang)
 })
 </script>
 

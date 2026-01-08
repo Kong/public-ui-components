@@ -96,6 +96,13 @@ export function useMonacoEditor<T extends MaybeElement>(
   /** Focus the editor programmatically. */
   const focus = (): void => editor.value?.focus()
 
+  const setLanguage = (language: string): void => {
+    const model = editor.value?.getModel()
+    if (model) {
+      monaco.editor.setModelLanguage(model, language)
+    }
+  }
+
   /**
    * Triggers a keyboard command in the Monaco editor.
    *
@@ -219,7 +226,7 @@ export function useMonacoEditor<T extends MaybeElement>(
   init()
 
   // Watch for external code changes to update the editor content
-  watch(() => options.code.value, (newValue) => {
+  watch(options.code, (newValue) => {
     if (!editor.value || !model || !_isSetup) return
 
     const current = model.getValue()
@@ -269,6 +276,7 @@ export function useMonacoEditor<T extends MaybeElement>(
     setContent,
     setReadOnly,
     focus,
+    setLanguage,
     remeasureFonts,
     toggleSearchWidget,
     triggerKeyboardCommand,
