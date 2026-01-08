@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { disposeAllDisposables, disposeScopedDisposables, trackDisposable, trackDisposableForEditor, trackDisposableForModel } from './lifecycle'
+import { disposeAllDisposables, disposeGlobalDisposables, disposeScopedDisposables, trackDisposable, trackDisposableForEditor, trackDisposableForModel } from './lifecycle'
 
 import type { editor, IDisposable } from 'monaco-editor'
 
@@ -109,7 +109,7 @@ describe('lifecycle singleton', () => {
     expect(modelScope.listenerDisposable.dispose).toHaveBeenCalledTimes(1)
   })
 
-  it('disposeScoped clears only that scope and leaves others intact', () => {
+  it('disposes only scoped disposables with disposeScoped', () => {
     const editorScope = mockEditorScope()
     const modelScope = mockModelScope()
 
@@ -129,7 +129,24 @@ describe('lifecycle singleton', () => {
     expect(modelDisposable.dispose).toHaveBeenCalledTimes(1)
   })
 
-  it('disposeAll disposes everything and clears scope listeners', () => {
+  it('disposes only global disposables with disposeGlobalDisposables', () => {
+    const editorScope = mockEditorScope()
+    const modelScope = mockModelScope()
+
+    const globalDisposable = mockDisposable()
+    const editorDisposable = mockDisposable()
+    const modelDisposable = mockDisposable()
+    trackDisposable(globalDisposable)
+    trackDisposableForEditor(editorScope.source as editor.ICodeEditor, editorDisposable)
+    trackDisposableForModel(modelScope.source as editor.ITextModel, modelDisposable)
+
+    disposeGlobalDisposables()
+    expect(globalDisposable.dispose).toHaveBeenCalledTimes(1)
+    expect(editorDisposable.dispose).not.toHaveBeenCalled()
+    expect(modelDisposable.dispose).not.toHaveBeenCalled()
+  })
+
+  it('disposes everything and clears scope listeners with disposeAll', () => {
     const editorScope = mockEditorScope()
     const modelScope = mockModelScope()
 
