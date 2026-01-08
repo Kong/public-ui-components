@@ -115,7 +115,6 @@ describe('MonacoEditor.vue', () => {
 
     // Simulate async fetch of code
     setTimeout(() => {
-      // @ts-ignore - monacoEditor exists
       wrapper.vm.monacoEditor.setContent('fetched code')
     }, 150)
 
@@ -128,9 +127,17 @@ describe('MonacoEditor.vue', () => {
     // Empty state should not show
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-empty"]').exists()).toBe(false)
     // The model value should be updated via the internal ref
-    // @ts-ignore - model exists
     expect(wrapper.vm.model).toBe('fetched code')
 
     vi.useRealTimers()
+  })
+
+  it('should expose monacoEditor instance through defineExpose', async () => {
+    const wrapper = mountComponent()
+
+    expect(wrapper.vm.monacoEditor).toBeDefined()
+    expect(wrapper.vm.monacoEditor).toHaveProperty('editorStates')
+    expect(wrapper.vm.monacoEditor).toHaveProperty('setContent')
+    expect(typeof wrapper.vm.monacoEditor.setContent).toBe('function')
   })
 })
