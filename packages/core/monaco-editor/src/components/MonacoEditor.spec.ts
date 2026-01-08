@@ -19,6 +19,8 @@ const editorStates = reactive({
   hasContent: false,
 })
 
+const mockSetLanguage = vi.fn()
+
 vi.mock('../composables/useMonacoEditor', () => ({
   useMonacoEditor: (_target: any, options: any) => ({
     editorStates,
@@ -28,6 +30,7 @@ vi.mock('../composables/useMonacoEditor', () => ({
       editorStates.hasContent = !!value
       editorStates.editorStatus = 'ready'
     },
+    setLanguage: mockSetLanguage,
   }),
 }))
 
@@ -132,5 +135,22 @@ describe('MonacoEditor.vue', () => {
     expect(wrapper.vm.model).toBe('fetched code')
 
     vi.useRealTimers()
+  })
+
+  it('should call setLanguage when language prop changes', async () => {
+    mockSetLanguage.mockClear()
+
+    const wrapper = mountComponent({ props: { modelValue: 'test', language: 'javascript' } })
+    await nextTick()
+
+    // Initially setLanguage should not be called
+    expect(mockSetLanguage).not.toHaveBeenCalled()
+
+    // Update the language prop
+    await wrapper.setProps({ language: 'typescript' })
+    await nextTick()
+
+    // setLanguage should be called with the new language
+    expect(mockSetLanguage).toHaveBeenCalledWith('typescript')
   })
 })
