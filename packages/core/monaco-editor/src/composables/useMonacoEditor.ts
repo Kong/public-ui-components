@@ -62,7 +62,7 @@ export function useMonacoEditor<T extends HTMLElement>(
   /**
    * The Monaco editor instance.
    * @default undefined
-  */
+   */
   const editor = shallowRef<Editor.IStandaloneCodeEditor>()
 
   /** The Monaco text model associated with the editor. */
