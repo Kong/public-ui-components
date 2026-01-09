@@ -6,7 +6,6 @@ This component succeeds the `[EntityFormSection](./entity-form-section.md)` comp
   - [Install](#install)
   - [Props](#props)
   - [Slots](#slots)
-  - [extra](#extra)
   - [Usage example](#usage-example)
 
 ## Usage
@@ -61,7 +60,7 @@ Step content slot that appears to the left of the form content. This slot will o
 
 Title content slot that goes above the description, allowing for custom rendering of the title. If this slot is provided, the `title` prop will not be rendered.
 
-### extra
+#### extra
 
 Extra content slot that goes under the description, allowing for additional information or actions related to the section. This slot is optional and can be used to enhance the section with more context or controls.
 
