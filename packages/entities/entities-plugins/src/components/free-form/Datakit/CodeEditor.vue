@@ -55,6 +55,7 @@ import { useFormShared } from '../shared/composables'
 import { isEqual, omit } from 'lodash-es'
 import { useErrors } from '@kong-ui-public/entities-shared'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
+import { useEventListener } from '@vueuse/core'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -273,6 +274,24 @@ onMounted(() => {
       emit('error', simpleMessage)
     }
   })
+})
+
+useEventListener(window, 'message', (evt: MessageEvent<any>) => {
+  if (evt.data?.action === 'custom:insert-config') {
+    console.log('APP received insert-config message', evt.data)
+    const { content } = evt.data.customPayload ?? {}
+    const editor = editorRef.value
+
+    if (!content || !editor) return
+
+    const model = editor?.getModel()
+
+    if (!model) return
+
+    editor.pushUndoStop()
+    editor.executeEdits(EDIT_SOURCE, [{ range: model.getFullModelRange(), text: content }])
+    editor.pushUndoStop()
+  }
 })
 
 onBeforeUnmount(() => {
