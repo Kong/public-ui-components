@@ -145,4 +145,5 @@ export interface RequestQuery {
   query_id?: string
   limit?: number
   classified?: boolean
+  cursor?: string
 }
