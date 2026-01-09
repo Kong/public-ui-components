@@ -1,23 +1,35 @@
 <template>
   <BaseAnalyticsEcharts
-    :enable-brush="timeseriesZoom"
-    :enable-zoom="timeseriesZoom"
-    :granularity="timeSeriesGranularity"
+    ref="baseChart"
     :option="option"
     :render-mode="renderMode"
     :theme="theme"
-    :tooltip-state="tooltipState"
-    :zoom-action-items="zoomActionItems"
-    @select-chart-range="emit('select-chart-range', $event)"
-    @zoom-time-range="emit('zoom-time-range', $event)"
-  />
+    @brush="handleBrush"
+    @click="handleSeriesClick"
+    @zr:click="handleClick"
+    @zr:mousedown="handleMouseDown"
+    @zr:mousemove="handleMouseMove"
+    @zr:mouseout="handleMouseOut"
+    @zr:mouseup="handleMouseUp"
+  >
+    <ChartTooltip
+      ref="tooltip"
+      :brush-time-range="brushTimeRange"
+      :granularity="timeSeriesGranularity"
+      :state="tooltipState"
+      :zoom-action-items="zoomActionItems"
+      @on-action="resetTooltipState"
+    />
+  </BaseAnalyticsEcharts>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, toRef } from 'vue'
+import { computed, ref, toRef, useTemplateRef } from 'vue'
 import { msToGranularity, type AbsoluteTimeRangeV4, type ExploreAggregations, type ExploreResultV4, type GranularityValues } from '@kong-ui-public/analytics-utilities'
+import { useElementSize, useElementBounding } from '@vueuse/core'
 import composables from '../composables'
 import type { TooltipState } from './ChartTooltip.vue'
+import ChartTooltip from './ChartTooltip.vue'
 import BaseAnalyticsEcharts from './BaseAnalyticsEcharts.vue'
 import type { ZoomActionItem } from './ZoomActions.vue'
 import type { Threshold, ExternalLink } from '../types'
@@ -57,6 +69,24 @@ const tooltipState = ref<TooltipState>({
   left: 0,
 })
 
+const baseChartRef = useTemplateRef('baseChart')
+const tooltipRef = useTemplateRef('tooltip')
+
+const chartRef = computed(() => baseChartRef.value?.chart)
+const containerRef = computed(() => baseChartRef.value?.container)
+const chartEl = computed(() => chartRef.value?.$el as HTMLElement | undefined)
+
+const { width: chartWidth, height: chartHeight } = useElementSize(chartEl)
+const { top: containerTop, left: containerLeft } = useElementBounding(containerRef)
+
+const tooltipWidth = computed(() => tooltipRef.value?.width)
+const tooltipHeight = computed(() => tooltipRef.value?.height)
+
+const isInteractive = computed(() => {
+  return ['interactive', 'zoom-interactive'].includes(tooltipState.value.interactionMode)
+})
+
+// Chart option generation
 const { i18n } = composables.useI18n()
 const { option } = composables.useExploreResultToEchartTimeseries({
   exploreResult: toRef(() => data),
@@ -94,4 +124,98 @@ const zoomActionItems = computed<ZoomActionItem[]>(() => {
     }] : []),
   ]
 })
+
+// Brush/zoom functionality (only when enabled)
+const {
+  isSelecting,
+  brushTimeRange,
+  clearBrush,
+  handleMouseDown: brushMouseDown,
+  handleMouseMove: brushMouseMove,
+  handleMouseUp: brushMouseUp,
+  handleBrush,
+} = composables.useBrushZoom({
+  chartRef,
+  onSelectionStart: () => {
+    tooltipState.value.interactionMode = 'selecting-chart-area'
+  },
+  onSelectionEnd: (timeRange) => {
+    tooltipState.value.interactionMode = 'zoom-interactive'
+    if (timeRange) {
+      emit('select-chart-range', timeRange)
+    }
+  },
+})
+
+// Tooltip positioning
+const { calculatePosition } = composables.useTooltipPosition({
+  chartWidth,
+  chartHeight,
+  containerTop,
+  containerLeft,
+  tooltipWidth,
+  tooltipHeight,
+})
+
+const resetTooltipState = () => {
+  tooltipState.value.interactionMode = 'idle'
+  tooltipState.value.visible = false
+  if (timeseriesZoom) {
+    clearBrush()
+  }
+}
+
+const handleMouseMove = (e: any) => {
+  if (timeseriesZoom) {
+    brushMouseMove(e)
+  }
+
+  if (!isInteractive.value) {
+    const pos = calculatePosition(e)
+    if (pos) {
+      tooltipState.value.left = pos.left
+      tooltipState.value.top = pos.top
+    }
+  }
+}
+
+const handleMouseDown = (e: any) => {
+  if (timeseriesZoom) {
+    brushMouseDown(e)
+  }
+}
+
+const handleMouseUp = (e: any) => {
+  if (timeseriesZoom) {
+    brushMouseUp(e)
+  }
+}
+
+const handleSeriesClick = (params: any) => {
+  if (params.componentType === 'series') {
+    chartRef.value?.dispatchAction({
+      type: 'toggleSelect',
+      seriesIndex: params.seriesIndex,
+      dataIndex: params.dataIndex,
+    })
+  }
+}
+
+const handleClick = () => {
+  if (timeseriesZoom && isSelecting.value) {
+    return
+  }
+
+  if (tooltipState.value.interactionMode !== 'idle') {
+    resetTooltipState()
+  } else {
+    tooltipState.value.interactionMode = 'interactive'
+  }
+}
+
+const handleMouseOut = () => {
+  if (!isInteractive.value) {
+    tooltipState.value.visible = false
+  }
+}
 </script>
