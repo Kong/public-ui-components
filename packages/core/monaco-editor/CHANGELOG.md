@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.7.5...@kong-ui-public/monaco-editor@0.8.0) (2026-01-09)
+
+
+### Features
+
+* **monaco-editor:** expose editor instance via template ref, onReady callback and ready event ([#2800](https://github.com/Kong/public-ui-components/issues/2800)) ([00bff89](https://github.com/Kong/public-ui-components/commit/00bff892863759ee36a021ecf75716008ef19b4c))
+
+
+
+
+
 ## [0.7.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.7.4...@kong-ui-public/monaco-editor@0.7.5) (2026-01-08)
 
 
