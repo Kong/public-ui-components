@@ -1,6 +1,6 @@
 # @kong-ui-public/split-pane
 
-TBD
+A shared SplitPane layout component for Vue 3 applications.
 
 - [Features](#features)
 - [Requirements](#requirements)

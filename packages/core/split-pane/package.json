@@ -2,6 +2,7 @@
   "name": "@kong-ui-public/split-pane",
   "version": "0.0.1",
   "type": "module",
+  "description": "A shared SplitPane layout component for Vue 3 applications.",
   "main": "./dist/split-pane.umd.js",
   "module": "./dist/split-pane.es.js",
   "types": "dist/types/index.d.ts",
