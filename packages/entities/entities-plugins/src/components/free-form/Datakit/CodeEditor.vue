@@ -19,9 +19,14 @@
         <SparklesIcon />
       </template>
     </KAlert>
-    <div
-      ref="editor-root"
+    <MonacoEditor
+      ref="editor"
+      v-model="code"
       class="editor"
+      language="yaml"
+      :options="monacoOptions"
+      theme="light"
+      @ready="handleEditorReady"
     />
 
     <KModal
@@ -37,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, shallowRef, inject, toRaw } from 'vue'
+import { shallowRef, inject, toRaw } from 'vue'
 import { isEqual, omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
@@ -46,7 +51,8 @@ import { KAlert, KButton, KModal } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
 import { useErrors } from '@kong-ui-public/entities-shared'
 import { FORMS_CONFIG } from '@kong-ui-public/forms'
-import { useMonacoEditor } from '@kong-ui-public/monaco-editor'
+import { MonacoEditor } from '@kong-ui-public/monaco-editor'
+import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import english from '../../../locales/en.json'
 import { useFormShared } from '../shared/composables'
 import examples from './examples'
@@ -72,7 +78,7 @@ const emit = defineEmits<{
 
 const { getMessageFromError } = useErrors()
 
-const editorRoot = useTemplateRef('editor-root')
+const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 
 const LINT_SOURCE = 'YAML Syntax'
 
@@ -96,84 +102,82 @@ function formDataToCode(): string {
 }
 
 const code = shallowRef(formDataToCode())
-
-const { editor: editorRef } = useMonacoEditor(editorRoot, {
-  language: 'yaml',
-  code,
-  theme: 'light',
-  monacoOptions: {
-    scrollbar: {
-      alwaysConsumeMouseWheel: false,
-    },
-    autoIndent: 'keep',
-    editContext: false,
+const monacoOptions = {
+  scrollbar: {
+    alwaysConsumeMouseWheel: false,
   },
-  onCreated: () => {
-    const editor = editorRef.value
-    const model = editor?.getModel()
-    if (!editor || !model) return
+  autoIndent: 'keep',
+  editContext: false,
+} as const satisfies Partial<monaco.editor.IStandaloneEditorConstructionOptions>
 
-    editor.onDidChangeModelContent(() => {
-      try {
-        const config = yaml.load(editor.getValue() || '', {
-          schema: JSON_SCHEMA,
-          json: true,
-        })
+function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
+  const model = editor.getModel()
+  if (!model) {
+    return
+  }
 
-        monaco.editor.setModelMarkers(model, LINT_SOURCE, [])
+  editorRef.value = editor
 
-        if (formConfig.app === 'konnect') {
-          setValue(config as DatakitPluginData)
-        } else {
-          formData.config = config as DatakitConfig
+  editor.onDidChangeModelContent(() => {
+    try {
+      const config = yaml.load(editor.getValue() || '', {
+        schema: JSON_SCHEMA,
+        json: true,
+      })
+
+      monaco.editor.setModelMarkers(model, LINT_SOURCE, [])
+
+      if (formConfig.app === 'konnect') {
+        setValue(config as DatakitPluginData)
+      } else {
+        formData.config = config as DatakitConfig
+      }
+      emit('change', config)
+    } catch (error: unknown) {
+      const { message, mark } = error as YAMLException
+      const { line, column } = mark || { line: 0, column: 0 }
+
+      const simpleMessage = message.split('\n')[0] // Take the first line of the error message
+
+      const markers: monaco.editor.IMarkerData[] = [
+        {
+          startLineNumber: line + 1,
+          startColumn: column + 1,
+          endLineNumber: line + 1,
+          endColumn: column + 2,
+          message: simpleMessage,
+          severity: monaco.MarkerSeverity.Error,
+          source: LINT_SOURCE,
+        },
+      ]
+
+      monaco.editor.setModelMarkers(model, LINT_SOURCE, markers)
+
+      emit('error', simpleMessage)
+    }
+  })
+
+  if (formConfig.app === 'konnect') {
+    editor.onDidPaste((e) => {
+      const model = editor.getModel()
+      if (!model) return
+
+      const pastedText = model.getValueInRange(e.range)
+
+      for (const extractor of extractors) {
+        const extractedConfig = extractor.extract(pastedText)
+        if (extractedConfig) {
+          pendingConfig.value = extractedConfig
+          pendingExtractorName.value = extractor.name
+          showConvertModal.value = true
+          return
         }
-        emit('change', config)
-      } catch (error: unknown) {
-        const { message, mark } = error as YAMLException
-        const { line, column } = mark || { line: 0, column: 0 }
-
-        const simpleMessage = message.split('\n')[0] // Take the first line of the error message
-
-        const markers: monaco.editor.IMarkerData[] = [
-          {
-            startLineNumber: line + 1,
-            startColumn: column + 1,
-            endLineNumber: line + 1,
-            endColumn: column + 2,
-            message: simpleMessage,
-            severity: monaco.MarkerSeverity.Error,
-            source: LINT_SOURCE,
-          },
-        ]
-
-        monaco.editor.setModelMarkers(model, LINT_SOURCE, markers)
-
-        emit('error', simpleMessage)
       }
     })
+  }
 
-    if (formConfig.app === 'konnect') {
-      editor.onDidPaste((e) => {
-        const model = editor.getModel()
-        if (!model) return
-
-        const pastedText = model.getValueInRange(e.range)
-
-        for (const extractor of extractors) {
-          const extractedConfig = extractor.extract(pastedText)
-          if (extractedConfig) {
-            pendingConfig.value = extractedConfig
-            pendingExtractorName.value = extractor.name
-            showConvertModal.value = true
-            return
-          }
-        }
-      })
-    }
-
-    focusEnd()
-  },
-})
+  focusEnd()
+}
 
 const showConvertModal = shallowRef(false)
 const pendingConfig = shallowRef<unknown | null>(null)
@@ -199,27 +203,17 @@ function handleConvertConfirm() {
  * which prevents the user from undoing changes after inserting an example.
  */
 function setExampleCode(example: keyof typeof examples) {
-  const editor = editorRef.value
-  const model = editor?.getModel()
-  if (!editor || !model) {
-    return
-  }
-
   const newCode = examples[example]
 
   // Kong Manager's code editor is editing only the config portion
   if (formConfig.app === 'kongManager') {
-    if (editor.getValue() !== newCode) {
-      code.value = newCode
-    }
-
+    code.value = newCode
     focusEnd()
     return
   }
 
   try {
-    const value = editor.getValue() || ''
-    const config = yaml.load(value, {
+    const config = yaml.load(code.value, {
       schema: JSON_SCHEMA,
       json: true,
     }) as any
