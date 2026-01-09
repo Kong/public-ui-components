@@ -31,6 +31,8 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@kong-ui-public/entities-vaults/dist/style.css',
         '@kong-ui-public/entities-redis-configurations',
         '@kong-ui-public/entities-redis-configurations/dist/style.css',
+        '@kong-ui-public/monaco-editor',
+        '@kong-ui-public/monaco-editor/dist/runtime/style.css',
         '@kong-ui-public/forms',
         '@vueuse/core',
         '@vueuse/integrations',
