@@ -160,4 +160,49 @@ describe('MonacoEditor.vue', () => {
     expect(wrapper.vm.monacoEditor).toHaveProperty('setContent')
     expect(typeof wrapper.vm.monacoEditor.setContent).toBe('function')
   })
+
+  it('should not show loading state overlay when showLoadingState is false', () => {
+    editorStates.editorStatus = 'loading'
+
+    const wrapper = mountComponent({ props: { modelValue: '', showLoadingState: false } })
+
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(false)
+  })
+
+  it('should not show empty state overlay when showEmptyState is false', () => {
+    editorStates.editorStatus = 'ready'
+    editorStates.hasContent = false
+
+    const wrapper = mountComponent({ props: { modelValue: '', showEmptyState: false } })
+
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-empty"]').exists()).toBe(false)
+  })
+
+  it('should show loading state by default when showLoadingState is not provided', () => {
+    editorStates.editorStatus = 'loading'
+
+    const wrapper = mountComponent()
+
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(true)
+  })
+
+  it('should show empty state by default when showEmptyState is not provided', () => {
+    editorStates.editorStatus = 'ready'
+    editorStates.hasContent = false
+
+    const wrapper = mountComponent()
+
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-empty"]').exists()).toBe(true)
+  })
+
+  it('should still apply loading class when showLoadingState is false but editor is loading', () => {
+    editorStates.editorStatus = 'loading'
+
+    const wrapper = mountComponent({ props: { modelValue: '', showLoadingState: false } })
+
+    // The loading class should still be applied to the container
+    expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).toContain('loading')
+    // But the overlay should not be rendered
+    expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(false)
+  })
 })
