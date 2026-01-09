@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.7.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.7.1...@kong-ui-public/analytics-utilities@12.7.2) (2026-01-09)
+
+
+### Bug Fixes
+
+* add cursor to RequestQuery ([#2813](https://github.com/Kong/public-ui-components/issues/2813)) ([4e3bbcf](https://github.com/Kong/public-ui-components/commit/4e3bbcf83f1c354b6f3e303c423413a6dfd5e590))
+
+
+
+
+
 ## [12.7.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.7.0...@kong-ui-public/analytics-utilities@12.7.1) (2025-12-22)
 
 
