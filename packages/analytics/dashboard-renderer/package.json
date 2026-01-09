@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/dashboard-renderer",
-  "version": "8.4.18",
+  "version": "8.4.19",
   "type": "module",
   "main": "./dist/dashboard-renderer.umd.js",
   "module": "./dist/dashboard-renderer.es.js",

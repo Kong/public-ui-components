@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.38.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.37.0...@kong-ui-public/entities-shared@3.38.0) (2026-01-09)
+
+
+### Features
+
+* **entity-form-block:** add step slot [khcp-18937] ([#2806](https://github.com/Kong/public-ui-components/issues/2806)) ([9dcc864](https://github.com/Kong/public-ui-components/commit/9dcc864fe138f8e7b68f0461eaacb259ae2f563a))
+
+
+
+
+
 # [3.37.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.14...@kong-ui-public/entities-shared@3.37.0) (2026-01-09)
 
 
