@@ -421,6 +421,31 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
 
       cy.get('@onUpdateSpy').should('have.been.calledOnce')
     })
+
+    it('should not include UI-only fields in model-updated event payload', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKonnect,
+          onModelUpdated: cy.spy().as('onModelUpdatedSpy'),
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+
+      cy.getTestId('gateway-service-url-input').type('https://example.com')
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
+      cy.getTestId('gateway-service-tls-verify-checkbox').click()
+      cy.getTestId('gateway-service-tls-verify-true-option').click()
+
+      cy.get('@onModelUpdatedSpy').should('have.been.called')
+      cy.get('@onModelUpdatedSpy').then((spy: any) => {
+        const lastCall = spy.lastCall.args[0]
+        // Assert that UI-only fields are not in the payload
+        expect(lastCall).to.not.have.property('tls_verify_enabled')
+        expect(lastCall).to.not.have.property('tls_verify_value')
+        expect(lastCall).to.have.property('tls_verify')
+      })
+    })
   })
 
   describe('Kong Manager', () => {
@@ -826,6 +851,31 @@ describe('<GatewayServiceForm />', { viewportHeight: 800, viewportWidth: 700 }, 
       cy.getTestId('select-item-http').should('exist')
       cy.getTestId('select-item-ws').should('not.exist')
       cy.getTestId('select-item-wss').should('not.exist')
+    })
+
+    it('should not include UI-only fields in model-updated event payload', () => {
+      cy.mount(GatewayServiceForm, {
+        props: {
+          config: baseConfigKM,
+          onModelUpdated: cy.spy().as('onModelUpdatedSpy'),
+        },
+      })
+
+      cy.get('.kong-ui-entities-gateway-service-form').should('be.visible')
+
+      cy.getTestId('gateway-service-url-input').type('https://example.com')
+      cy.getTestId('advanced-fields-collapse').findTestId('collapse-trigger-content').click()
+      cy.getTestId('gateway-service-tls-verify-checkbox').click()
+      cy.getTestId('gateway-service-tls-verify-true-option').click()
+
+      cy.get('@onModelUpdatedSpy').should('have.been.called')
+      cy.get('@onModelUpdatedSpy').then((spy: any) => {
+        const lastCall = spy.lastCall.args[0]
+        // Assert that UI-only fields are not in the payload
+        expect(lastCall).to.not.have.property('tls_verify_enabled')
+        expect(lastCall).to.not.have.property('tls_verify_value')
+        expect(lastCall).to.have.property('tls_verify')
+      })
     })
   })
 })
