@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.38](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.5.37...@kong-ui-public/entities-data-plane-nodes@0.5.38) (2026-01-09)
+
+**Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes
+
+
+
+
+
 ## [0.5.37](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-data-plane-nodes@0.5.36...@kong-ui-public/entities-data-plane-nodes@0.5.37) (2026-01-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-data-plane-nodes

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.37.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.14...@kong-ui-public/entities-shared@3.37.0) (2026-01-09)
+
+
+### Features
+
+* **entities-shared:** add deck in configuration view of entity ([#2792](https://github.com/Kong/public-ui-components/issues/2792)) ([22d0348](https://github.com/Kong/public-ui-components/commit/22d03485653f6c217af99b9064c9e9960a10210b))
+
+
+
+
+
 ## [3.36.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.36.13...@kong-ui-public/entities-shared@3.36.14) (2026-01-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared
