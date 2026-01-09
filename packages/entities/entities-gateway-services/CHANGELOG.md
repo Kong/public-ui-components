@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.14.15](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.14.14...@kong-ui-public/entities-gateway-services@3.14.15) (2026-01-09)
+
+
+### Bug Fixes
+
+* **entities-gateway-services:** remove UI-only fields from payload ([#2809](https://github.com/Kong/public-ui-components/issues/2809)) ([3c227ca](https://github.com/Kong/public-ui-components/commit/3c227ca208ac54c6a299d2f70a01461cf3570962))
+
+
+
+
+
 ## [3.14.14](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-gateway-services@3.14.13...@kong-ui-public/entities-gateway-services@3.14.14) (2026-01-07)
 
 **Note:** Version bump only for package @kong-ui-public/entities-gateway-services
