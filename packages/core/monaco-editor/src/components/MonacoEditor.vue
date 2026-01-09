@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue'
+import { watch, computed, useTemplateRef } from 'vue'
 import { CodeblockIcon, ProgressIcon } from '@kong/icons'
 import { useMonacoEditor } from '../composables/useMonacoEditor'
 import useI18n from '../composables/useI18n'
@@ -81,6 +81,14 @@ const {
   options?: Partial<editor.IStandaloneEditorConstructionOptions> | undefined
 }>()
 
+const emit = defineEmits<{
+  /**
+   * Emitted when the Monaco editor instance is ready.
+   * @param editor The Monaco editor instance
+   */
+  (e: 'ready', editor: editor.IStandaloneCodeEditor): void
+}>()
+
 /**
  * The model content for the Monaco Editor.
  */
@@ -108,6 +116,19 @@ const monacoEditor = useMonacoEditor(editorRef, {
   code: model,
   theme: editorTheme.value,
   monacoOptions: options,
+  onReady: (editor) => {
+    emit('ready', editor)
+  },
+})
+
+defineExpose({
+  monacoEditor,
+})
+
+// update the editor language when the prop changes so the highlighting updates
+watch(() => language, (newLang, oldLang) => {
+  if (newLang === oldLang) return
+  monacoEditor.setLanguage(newLang)
 })
 </script>
 

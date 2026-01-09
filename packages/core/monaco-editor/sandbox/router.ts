@@ -16,6 +16,11 @@ const routes = [
     name: 'Fetch',
     component: () => import('./pages/FetchPage.vue'),
   },
+  {
+    path: '/dynamic-lang',
+    name: 'DynamicLang',
+    component: () => import('./pages/DynamicLangPage.vue'),
+  },
 ]
 
 export const router = createRouter({

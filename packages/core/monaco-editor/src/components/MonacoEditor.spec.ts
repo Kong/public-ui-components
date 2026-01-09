@@ -19,6 +19,8 @@ const editorStates = reactive({
   hasContent: false,
 })
 
+const mockSetLanguage = vi.fn()
+
 vi.mock('../composables/useMonacoEditor', () => ({
   useMonacoEditor: (_target: any, options: any) => ({
     editorStates,
@@ -28,6 +30,7 @@ vi.mock('../composables/useMonacoEditor', () => ({
       editorStates.hasContent = !!value
       editorStates.editorStatus = 'ready'
     },
+    setLanguage: mockSetLanguage,
   }),
 }))
 
@@ -115,7 +118,6 @@ describe('MonacoEditor.vue', () => {
 
     // Simulate async fetch of code
     setTimeout(() => {
-      // @ts-ignore - monacoEditor exists
       wrapper.vm.monacoEditor.setContent('fetched code')
     }, 150)
 
@@ -128,9 +130,34 @@ describe('MonacoEditor.vue', () => {
     // Empty state should not show
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-empty"]').exists()).toBe(false)
     // The model value should be updated via the internal ref
-    // @ts-ignore - model exists
     expect(wrapper.vm.model).toBe('fetched code')
 
     vi.useRealTimers()
+  })
+
+  it('should call setLanguage when language prop changes', async () => {
+    mockSetLanguage.mockClear()
+
+    const wrapper = mountComponent({ props: { modelValue: 'test', language: 'javascript' } })
+    await nextTick()
+
+    // Initially setLanguage should not be called
+    expect(mockSetLanguage).not.toHaveBeenCalled()
+
+    // Update the language prop
+    await wrapper.setProps({ language: 'typescript' })
+    await nextTick()
+
+    // setLanguage should be called with the new language
+    expect(mockSetLanguage).toHaveBeenCalledWith('typescript')
+  })
+
+  it('should expose monacoEditor instance through defineExpose', async () => {
+    const wrapper = mountComponent()
+
+    expect(wrapper.vm.monacoEditor).toBeDefined()
+    expect(wrapper.vm.monacoEditor).toHaveProperty('editorStates')
+    expect(wrapper.vm.monacoEditor).toHaveProperty('setContent')
+    expect(typeof wrapper.vm.monacoEditor.setContent).toBe('function')
   })
 })

@@ -22,9 +22,9 @@ export interface UseMonacoEditorOptions {
    */
   theme?: EditorThemes
   /**
-   * Callback function triggered when the editor is created
+   * Callback function triggered when the editor is ready
    */
-  onCreated?: () => void
+  onReady?: (editor: editor.IStandaloneCodeEditor) => void
   /**
    * Additional actions to be added to the editor
    */
