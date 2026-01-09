@@ -188,7 +188,7 @@ export function useMonacoEditor<T extends MaybeElement>(
 
       // TODO: register editor actions
 
-      options.onCreated?.()
+      options.onReady?.(editor.value)
 
       // we need to remeasure fonts after the editor is created to ensure proper layout and rendering
       remeasureFonts()
