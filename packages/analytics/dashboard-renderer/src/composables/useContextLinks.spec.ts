@@ -230,14 +230,12 @@ describe('useContextLinks', () => {
     expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
   })
 
-  it('shows kebab for top_n chart when context is editable but disables explore link', async () => {
+  it('shows kebab for top_n chart when context is editable', async () => {
     const { wrapper } = mountComposable({ chartType: 'top_n', editable: true })
     await flushPromises()
     expect(wrapper.vm.canShowKebabMenu).toBe(true)
-    // Explore is not supported for top_n charts
-    expect(wrapper.vm.canGenerateExploreLink).toBe(false)
-    expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
-    expect(wrapper.vm.requestsLinkKebabMenu).not.toBe('')
+    expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
+    expect(wrapper.vm.requestsLinkKebabMenu).toContain('#requests?')
   })
 
   it('prevents requests link for llm_usage datasource', async () => {
