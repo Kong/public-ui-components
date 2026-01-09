@@ -82,6 +82,7 @@ const konnectConfig = ref<KonnectBaseEntityConfig>({
   // Set the root `.env.development.local` variable to a control plane your PAT can access
   controlPlaneId,
   entityId,
+  enableDeckConfig: true,
   formatPreferenceKey: 'konnect-entities-base-config-card-format-sandbox',
 })
 const kongManagerConfig = ref<KongManagerBaseEntityConfig>({
