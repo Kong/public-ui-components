@@ -3,7 +3,7 @@
     class="monaco-editor-container"
     :class="[
       editorTheme,
-      { 'loading': isLoading },
+      { 'loading': isLoadingVisible },
     ]"
     data-testid="monaco-editor-container"
   >
@@ -13,13 +13,14 @@
       data-testid="monaco-editor-target"
     />
     <slot
-      :is-loading="isLoading"
+      v-if="showLoadingState"
+      :is-loading="isLoadingVisible"
       name="state-loading"
     >
       <Transition name="fade">
         <!-- TODO: use https://github.com/antfu/v-lazy-show -->
         <MonacoEditorStatusOverlay
-          v-if="isLoading"
+          v-if="isLoadingVisible"
           data-testid="monaco-editor-status-overlay-loading"
           :icon="ProgressIcon"
           :message="i18n.t('editor.messages.loading_message', { type: language })"
@@ -28,12 +29,13 @@
       </Transition>
     </slot>
     <slot
-      :is-empty="isEditorEmpty"
+      v-if="showEmptyState"
+      :is-empty="isEmptyVisible"
       name="state-empty"
     >
       <Transition name="fade">
         <MonacoEditorStatusOverlay
-          v-if="isEditorEmpty && !isLoading"
+          v-if="isEmptyVisible"
           data-testid="monaco-editor-status-overlay-empty"
           :icon="CodeblockIcon"
           :message="i18n.t('editor.messages.empty_message')"
@@ -58,6 +60,8 @@ const {
   language = 'markdown',
   options = undefined,
   loading = false,
+  showLoadingState = true,
+  showEmptyState = true,
 } = defineProps<{
   /**
    * The theme of the Monaco Editor instance.
@@ -79,6 +83,16 @@ const {
    * @default undefined
   */
   options?: Partial<editor.IStandaloneEditorConstructionOptions> | undefined
+  /**
+   * Whether to show the loading state overlay.
+   * @default true
+   */
+  showLoadingState?: boolean
+  /**
+   * Whether to show the empty state overlay.
+   * @default true
+   */
+  showEmptyState?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -103,13 +117,17 @@ const editorRef = useTemplateRef('editorRef')
 
 const editorTheme = computed<EditorThemes>(() => theme === 'dark' ? 'dark' : 'light')
 
-const isLoading = computed<boolean>(() => monacoEditor.editorStates.editorStatus === 'loading' || loading)
-
 /**
- * Computed property to determine if the editor is empty.
+ * Computed property to determine if the loading overlay should be visible.
  * @returns {boolean}
  */
-const isEditorEmpty = computed<boolean>(() => monacoEditor.editorStates.editorStatus === 'ready' && !monacoEditor.editorStates.hasContent)
+const isLoadingVisible = computed<boolean>(() => loading || monacoEditor.editorStates.editorStatus === 'loading')
+
+/**
+* Computed property to determine if the editor is empty.
+* @returns {boolean}
+*/
+const isEmptyVisible = computed<boolean>(() => !isLoadingVisible.value && monacoEditor.editorStates.editorStatus === 'ready' && !monacoEditor.editorStates.hasContent)
 
 const monacoEditor = useMonacoEditor(editorRef, {
   language,
@@ -147,7 +165,6 @@ watch(() => language, (newLang, oldLang) => {
     user-select: none;
 
     .monaco-editor-target {
-      filter: blur(2px);
       opacity: 0;
       pointer-events: none;
       user-select: none;
