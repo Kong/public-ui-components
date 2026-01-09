@@ -2,13 +2,19 @@
   <div class="ff-form-section">
     <header class="header">
       <div
-        v-if="step != null"
+        v-if="step !== undefined || slots.step"
         class="step"
+        data-testid="form-section-step"
       >
-        {{ step }}
+        <slot name="step">
+          {{ step }}
+        </slot>
       </div>
       <div class="header-content">
-        <h2 class="header-title">
+        <h2
+          class="header-title"
+          data-testid="header-title"
+        >
           <slot name="title">
             {{ title }}
           </slot>
@@ -16,6 +22,7 @@
         <div
           v-if="description || slots.description"
           class="header-description"
+          data-testid="header-description"
         >
           <slot name="description">
             {{ description }}
@@ -25,18 +32,22 @@
       <div
         v-if="slots.extra"
         class="header-extra"
+        data-testid="header-extra"
       >
         <slot name="extra" />
       </div>
     </header>
-    <div class="content">
+    <div
+      class="content"
+      data-testid="form-section-content"
+    >
       <slot />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { step, title = '', description = '' } = defineProps<{
+const { step = undefined, title = '', description = '' } = defineProps<{
   step?: number
   title?: string
   description?: string
@@ -44,6 +55,7 @@ const { step, title = '', description = '' } = defineProps<{
 
 const slots = defineSlots<{
   default?: () => any
+  step?: () => any
   title?: () => any
   description?: () => any
   extra?: () => any
