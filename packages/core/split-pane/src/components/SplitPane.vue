@@ -1,8 +1,8 @@
 <template>
   <!-- The <div> tag here is just a placeholder for your component content. -->
   <!-- We recommend wrapping your component with a unique class when possible, as shown below. -->
-  <div class="kong-ui-public-splint-pane">
-    <p>This is the <b>SplintPane</b> content.</p>
+  <div class="kong-ui-public-split-pane">
+    <p>This is the <b>SplitPane</b> content.</p>
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 </script>
 
 <style lang="scss" scoped>
-.kong-ui-public-splint-pane {
+.kong-ui-public-split-pane {
   // Add component styles as needed
 }
 </style>

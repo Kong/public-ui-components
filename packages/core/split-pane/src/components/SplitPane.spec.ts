@@ -2,11 +2,11 @@
 
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import SplintPane from './SplintPane.vue'
+import SplitPane from './SplitPane.vue'
 
-describe('<SplintPane />', () => {
+describe('<SplitPane />', () => {
   it('renders', () => {
-    const wrapper = mount(SplintPane)
+    const wrapper = mount(SplitPane)
 
     expect(wrapper.isVisible()).toBe(true)
   })

@@ -2,11 +2,11 @@
   <div class="sandbox-container">
     <main>
       <p>This is the component sandbox.</p>
-      <SplintPane />
+      <SplitPane />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { SplintPane } from '../src'
+import { SplitPane } from '../src'
 </script>
