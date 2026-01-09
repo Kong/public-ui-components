@@ -132,3 +132,9 @@ export function lcsRecursive(a: string, b: string): string {
   }
   return lcs
 }
+
+export function within16Weeks(targetTs: number, nowTs = Date.now()) {
+  const SIXTEEN_WEEKS_MS = 16 * 7 * 24 * 60 * 60 * 1000
+  console.log('targetTs, nowTs, diff', targetTs, nowTs, Math.abs(nowTs - targetTs))
+  return Math.abs(nowTs - targetTs) <= SIXTEEN_WEEKS_MS
+}

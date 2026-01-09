@@ -22,6 +22,20 @@ export const PluginGroupArray = [
   PluginGroup.CUSTOM_PLUGINS,
 ]
 
+export const PluginGroupArraySortedAlphabetically = [
+  PluginGroup.AI,
+  PluginGroup.ANALYTICS_AND_MONITORING,
+  PluginGroup.AUTHENTICATION,
+  PluginGroup.LOGGING,
+  PluginGroup.SECURITY,
+  PluginGroup.SERVERLESS,
+  PluginGroup.TRAFFIC_CONTROL,
+  PluginGroup.TRANSFORMATIONS,
+  // PluginGroup.DEPLOYMENT, // deployment and websocket plugins are currently not in available plugins API response
+  // PluginGroup.WEBSOCKET,
+  PluginGroup.CUSTOM_PLUGINS,
+]
+
 export const PLUGIN_GROUPS_COLLAPSE_STATUS = {
   [PluginGroup.AUTHENTICATION]: false,
   [PluginGroup.AI]: false,
@@ -123,6 +137,7 @@ export type PluginMetaData<I18nMessageSource = void> = {
   description: string // A string to describe a Plugin.
   group: PluginGroup // Plugin categories meta.
   scope: PluginScope[] // The scope supported by the Plugin.
+  introducedTime: number // The timestamp when the plugin was introduced.
   useLegacyForm?: boolean // An optional field to use legacy form for the plugin. Default to false.
   fieldRules?: FieldRules
   useUIData?: boolean // An optional field that indicates if the plugin may have associated UI data. (via `?__ui_data`)

@@ -24,7 +24,19 @@
       :plugin="plugin"
       @custom-plugin-delete="handleCustomPluginDelete(plugin)"
       @plugin-clicked="emit('plugin-clicked', plugin)"
-    />
+    >
+      <template
+        v-if="within16Weeks(plugin.introducedTime)"
+        #footer-extra
+      >
+        <span
+          class="plugin-card-new-badge"
+          :data-testid="`plugin-card-${plugin.id}-new-badge`"
+        >
+          {{ t('labels.new') }}
+        </span>
+      </template>
+    </PluginCatalogCard>
     <div
       v-if="showShowAllCard"
       class="show-all-plugin-card"
@@ -50,6 +62,7 @@ import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginS
 import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType } from '../../types'
 import { KUI_COLOR_TEXT_DECORATIVE_PURPLE } from '@kong/design-tokens'
 import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon } from '@kong/icons'
+import { within16Weeks } from '../../utils/helper'
 
 const props = defineProps<{
   /** The base konnect or kongManger config. Pass additional config props in the shared entity component as needed. */
@@ -200,6 +213,38 @@ const handleClose = (revalidate?: boolean): void => {
     font-weight: $kui-font-weight-semibold;
     height: 218px;
     justify-content: center;
+  }
+
+  .plugin-card-new-badge {
+    align-items: center;
+    background: linear-gradient(
+      to top right,
+      rgba(0, 68, 244, 0.3),
+      rgba(0, 214, 164, 0.3)
+    );
+    border: 1px solid transparent;
+    border-radius: $kui-border-radius-20;
+    color: $kui-color-text;
+    display: flex;
+    font-weight: $kui-font-weight-medium;
+    gap: $kui-space-40;
+    padding: $kui-space-10 $kui-space-20;
+    position: relative;
+
+    &::before {
+
+      background: linear-gradient(to top right, #0044F4, #00D6A4);
+      border-radius: inherit;
+      content: '';
+      inset: -2px;
+
+      -webkit-mask: linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      padding: 2px;
+      position: absolute;
+    }
   }
 }
 </style>

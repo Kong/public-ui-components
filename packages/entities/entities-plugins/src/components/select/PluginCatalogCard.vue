@@ -87,7 +87,8 @@
           </div>
         </div>
         <div class="plugin-card-footer">
-          {{ isCreateCustomPlugin ? t('actions.create_custom') : t('actions.configure') }}
+          <div>{{ isCreateCustomPlugin ? t('actions.create_custom') : t('actions.configure') }}</div>
+          <slot name="footer-extra" />
         </div>
       </a>
     </KTooltip>
@@ -239,9 +240,11 @@ const handleCustomClick = (): void => {
     }
 
     .plugin-card-footer {
+      align-items: center;
       color: $kui-color-text-primary;
       display: flex;
       font-weight: $kui-font-weight-bold;
+      justify-content: space-between;
       text-align: center;
     }
 

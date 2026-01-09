@@ -68,6 +68,9 @@
     },
     "no_results": "No results found for \"{filter}\""
   },
+  "labels": {
+    "new": "New"
+  },
   "plugins": {
     "title": "Plugins",
     "list": {

@@ -41,7 +41,7 @@
         </template>
         <div class="plugin-type-filter">
           <div
-            v-for="group in PluginGroupArray"
+            v-for="group in PluginGroupArraySortedAlphabetically"
             :key="group"
             class="plugin-filter-item"
             :data-testid="`plugin-filter-item-${group}`"
@@ -144,7 +144,7 @@ import {
   PluginGroup,
   PluginScope,
   PluginFeaturedArray,
-  PluginGroupArray,
+  PluginGroupArraySortedAlphabetically,
   type CustomPluginSupportLevel,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
@@ -170,7 +170,6 @@ const emit = defineEmits<{
 
 type PluginCardListExtended = PluginCardList & {
   'Query Result'?: PluginType[]
-
 }
 
 const { i18n: { t } } = composables.useI18n()
@@ -196,7 +195,7 @@ const searchFilterInput = useTemplateRef('filter-input')
 const searchFilter = ref('')
 const featuredFilterCollapse = ref(false)
 const groupFilterCollapse = ref(false)
-const typeFilter = ref(Object.fromEntries(PluginFeaturedArray.concat(PluginGroupArray).map(item => [item, false])))
+const typeFilter = ref(Object.fromEntries(PluginFeaturedArray.concat(PluginGroupArraySortedAlphabetically).map(item => [item, false])))
 const isLoading = ref(true)
 const hasError = ref(false)
 const fetchErrorMessage = ref('')
@@ -285,7 +284,6 @@ const filteredPlugins = computed((): PluginCardListExtended => {
       ]
       return fields.some(field => {
         const lcs = lcsRecursive(query, field)
-        // Only match if LCS covers at least 2/3 of the query length and is not empty
         return lcs.length === query.length
       })
     }) || []
