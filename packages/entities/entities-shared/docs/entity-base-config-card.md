@@ -68,6 +68,12 @@ A base display component for an entity's record data.
     - default: `undefined`
     - *Specific to Konnect*. Name of the current control plane.
 
+  - `enableDeckConfig`:
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - *Specific to Konnect*. Enable the decK configuration format option.
+
   - `entityId`:
     - type: `Object`
     - required: `true`
