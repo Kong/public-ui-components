@@ -21,6 +21,11 @@ const routes = [
     name: 'DynamicLang',
     component: () => import('./pages/DynamicLangPage.vue'),
   },
+  {
+    path: '/context',
+    name: 'Context',
+    component: () => import('./pages/ContextPage.vue'),
+  },
 ]
 
 export const router = createRouter({
