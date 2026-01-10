@@ -490,7 +490,7 @@ function getScopesFromFormModel(): Partial<T> {
   display: flex;
   flex-direction: column;
   gap: $kui-space-80;
-  padding-bottom: $kui-space-80;
+  isolation: isolate;
 
   .radio-group {
     width: 100%;
@@ -505,6 +505,10 @@ function getScopesFromFormModel(): Partial<T> {
 
   :deep(.form-group) {
     margin-bottom: $kui-space-70;
+  }
+
+  :global(.kong-ui-entities-plugin-form:has(+ .form-error)) & {
+    padding-bottom: $kui-space-80;
   }
 }
 </style>

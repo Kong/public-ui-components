@@ -29,6 +29,7 @@
       :form-fields="getRequestBody"
       :is-readonly="form.isReadonly"
       no-validate
+      sticky-actions
       :wrapper-component="noCardWrapper ? 'div' : undefined"
       @cancel="handleClickCancel"
       @fetch:error="(err: any) => $emit('error', err)"
