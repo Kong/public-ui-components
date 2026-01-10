@@ -107,27 +107,25 @@
 </template>
 
 <script setup lang="ts">
-import {
-  KUI_ICON_SIZE_30,
-} from '@kong/design-tokens'
-import composables from '../../../../../composables'
-import { AddIcon, DatabaseIcon, MoreIcon } from '@kong/icons'
-import type { CacheConfigFormData } from '../../types'
-import Field from '../../../shared/Field.vue'
-import RadioField from '../../../shared/RadioField.vue'
 import { computed, ref } from 'vue'
-import { useField, useFormShared } from '../../../shared/composables'
+import yaml from 'js-yaml'
+import { codeToHtml } from 'shiki'
 import {
   KUI_COLOR_TEXT_NEUTRAL,
   KUI_COLOR_TEXT,
+  KUI_ICON_SIZE_30,
 } from '@kong/design-tokens'
+import { AddIcon, DatabaseIcon, MoreIcon } from '@kong/icons'
 import {
   RedisConfigurationSelector,
 } from '@kong-ui-public/entities-redis-configurations'
-import yaml from 'js-yaml'
-import { createSingletonShorthands, createdBundledHighlighter } from '@shikijs/core'
-import { createJavaScriptRegexEngine } from '@shikijs/engine-javascript'
+import composables from '../../../../../composables'
+import Field from '../../../shared/Field.vue'
+import RadioField from '../../../shared/RadioField.vue'
+import { useField, useFormShared } from '../../../shared/composables'
+
 import type { CodeBlockEventData } from '@kong/kongponents'
+import type { CacheConfigFormData } from '../../types'
 
 export type FormData = { cache?: CacheConfigFormData | null }
 
@@ -192,22 +190,6 @@ const handleSave = () => {
   emit('update', formData)
 }
 
-const createHighlighter = createdBundledHighlighter({
-  langs: {
-    yaml: () => import('@shikijs/langs/yaml'),
-  },
-  themes: {
-    'github-dark': () => import('@shikijs/themes/github-dark'),
-  },
-  engine: () => createJavaScriptRegexEngine(),
-})
-
-const {
-  codeToHtml,
-} = createSingletonShorthands(
-  createHighlighter,
-)
-
 // This is intended to clear partial_id when switching to memory strategy
 const handleStrategyChange = () => {
   if (localStrategy.value === 'memory' && formData.cache?.partial_id) {
@@ -218,7 +200,7 @@ const handleStrategyChange = () => {
 async function highlight({ codeElement, language, code }: CodeBlockEventData) {
   codeElement.innerHTML = await codeToHtml(code, {
     lang: language,
-    theme: 'github-dark',
+    theme: 'catppuccin-mocha',
     structure: 'inline',
   })
 }

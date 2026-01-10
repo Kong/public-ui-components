@@ -34,7 +34,13 @@
       :is-editing="props.isEditing"
       @change="handleFlowChange"
     />
-
+    <CodeEditor
+      v-else-if="realEditorMode === 'code' && formConfig.app === 'kongManager'"
+      class="code-editor"
+      :editing="props.isEditing"
+      @change="handleCodeChange"
+      @error="handleCodeError"
+    />
     <template #code-editor>
       <CodeEditor
         class="code-editor"
@@ -105,6 +111,9 @@ const realEditorMode = computed<EditorMode>(() => {
   return editorMode.value
 })
 const layoutEditorMode = computed<'form' | 'code'>(() => {
+  if (formConfig.app === 'kongManager') {
+    return 'form'
+  }
   return realEditorMode.value === 'flow' ? 'form' : 'code'
 })
 
