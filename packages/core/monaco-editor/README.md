@@ -97,14 +97,6 @@ The theme of the Monaco Editor instance.
 
 The programming language for syntax highlighting. Supports all languages available in [Shiki](https://shiki.matsu.io/languages).
 
-#### `loading`
-
-- type: `boolean`
-- required: `false`
-- default: `false`
-
-Whether the editor is in a loading state. When true, displays a loading overlay.
-
 #### `options`
 
 - type: `Partial<editor.IStandaloneEditorConstructionOptions>`
@@ -113,11 +105,57 @@ Whether the editor is in a loading state. When true, displays a loading overlay.
 
 Additional Monaco Editor options to customize the editor further. See [Monaco Editor API](https://microsoft.github.io/monaco-editor/typedoc/interfaces/editor.IStandaloneEditorConstructionOptions.html) for available options.
 
+#### `loading`
+
+- type: `boolean`
+- required: `false`
+- default: `false`
+
+Indicates that the editor is waiting for external data in addition to its own internal initialization.
+
+> [!WARNING]
+> This prop does not control the Monaco Editor's initialization lifecycle.
+
+The editor manages its own internal loading state while Monaco and syntax highlighting are being initialized.
+The loading prop is additive, it allows consumers to keep the loading overlay visible if additional async work (such as fetching content) is still in progress after the editor itself is ready.
+
+The loading overlay is shown when either:
+- The editor is still initializing internally, or
+- The loading prop is set to true
+
+#### `showLoadingState`
+
+- type: `boolean`
+- required: `false`
+- default: `true`
+
+Controls whether the loading state overlay is rendered.
+
+> [!NOTE]
+> This does not affect editor initialization. When set to false, the editor will still initialize and emit ready, but no loading UI will be displayed.
+
+Useful for constrained layouts where the loading overlay would be visually disruptive.
+
+#### `showEmptyState`
+
+- type: `boolean`
+- required: `false`
+- default: `true`
+
+Controls whether the empty state overlay is rendered when the editor has no content.
+
+> [!NOTE]
+> This does not affect editor initialization. When set to false, the editor will still initialize and emit ready, but no empty state UI will be displayed even if the content is empty.
+
+Useful for embedded or compact layouts where the empty state overlay is unnecessary.
+
 ### Events
 
 #### `ready`
 
-Emitted when the Monaco editor instance is initialized and ready for use.
+Emitted when the Monaco editor instance has finished initializing and is ready for interaction.
+
+This event reflects only the editor's internal readiness, not any external loading state controlled by the loading prop.
 
 **Payload:**
 
