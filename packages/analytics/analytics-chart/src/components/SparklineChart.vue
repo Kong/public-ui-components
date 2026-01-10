@@ -219,7 +219,7 @@ const totalByDataset = computed<Record<string, number>>(() => {
 const formattedLabel = computed<string>(() => {
   return syncedChartDatasets.value
     .map(({ label }): [number, string] => [
-      totalByDataset.value[label],
+      totalByDataset.value[label] ?? 0,
       `${label}: ${totalByDataset.value[label]}`,
     ])
     .sort(([a], [b]) => b - a)
@@ -227,9 +227,10 @@ const formattedLabel = computed<string>(() => {
     .join(', ')
 })
 
-const total = computed<number>(() => {
+const total = computed<number>(():number => {
   return Object.keys(totalByDataset.value)
     .map((key) => totalByDataset.value[key])
+    .filter((v) => v !== undefined)
     .reduce((total, datasetTotal) => total + datasetTotal, 0)
 })
 

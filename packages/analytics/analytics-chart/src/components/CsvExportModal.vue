@@ -167,7 +167,7 @@ const tableData = computed(() => {
   }
 
   const chartData: ExploreResultV4 = props.exportState.chartData
-  const isTimeseries = chartData.data.some((result: GroupByResult) => result.timestamp !== chartData.data[0].timestamp)
+  const isTimeseries = chartData.data.some((result: GroupByResult) => result.timestamp !== chartData.data[0]?.timestamp)
 
   const rows = chartData.data.map((result: GroupByResult) => {
     const resultTimestamp = new Date(result.timestamp)
@@ -176,8 +176,10 @@ const tableData = computed(() => {
       if (key in chartData.meta.display) {
         const dimensionId = result.event[key]
         const displayEntry = chartData.meta.display[key]
+        // @ts-ignore these keys can't be undefined
         acc[key] = (dimensionId && displayEntry && displayEntry[dimensionId].name) || result.event[key]
       } else {
+        // @ts-ignore these keys can't be undefined
         acc[key] = result.event[key]
       }
       return acc

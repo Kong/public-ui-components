@@ -69,6 +69,9 @@ const createPackageFiles = async (workspace: string, packageName: string): Promi
   for (const filename of packageFilesToCreate) {
     const stats = fs.statSync(filename)
     const filenamePath = filename.split('__template__/')
+    if (!filenamePath[1]) {
+      continue
+    }
     const relativePath = filenamePath[1]
     const newFilePath = `${packagePath(workspace, packageName)}/${relativePath.replace(/Template/g, componentName)}`
     // Replace any variation of string 'Analytics' in assets and chunks. These are in order to preserve capitalization.

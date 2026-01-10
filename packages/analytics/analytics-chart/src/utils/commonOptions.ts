@@ -32,7 +32,7 @@ export const lineChartTooltipBehavior = (
     const colors = tooltip.labelColors
     const valueAxis = context.chart.config?.options?.indexAxis === 'y' ? 'x' : 'y'
 
-    const x = tooltip.dataPoints[0].parsed.x ?? 0 // convert null datapoints to 0
+    const x = tooltip.dataPoints[0]?.parsed.x ?? 0 // convert null datapoints to 0
     tooltipData.tooltipContext = options?.contextFormatter
       ? options.contextFormatter(x, granularity)
       : formatTooltipTimestampByGranularity({
@@ -47,8 +47,8 @@ export const lineChartTooltipBehavior = (
       const tooltipLabel = p.dataset.label
 
       return {
-        backgroundColor: colors[i].backgroundColor,
-        borderColor: colors[i].borderColor,
+        backgroundColor: colors[i]?.backgroundColor,
+        borderColor: colors[i]?.borderColor,
         label: tooltipLabel,
         value,
         rawValue,
@@ -81,9 +81,9 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
     const isDonutChart = ['gauge', 'donut'].includes(tooltipData.chartType)
 
     if (isDonutChart) {
-      tooltipData.tooltipContext = tooltipData.dimensionDisplay || tooltip.dataPoints[0].label
+      tooltipData.tooltipContext = tooltipData.dimensionDisplay || tooltip.dataPoints[0]?.label || ''
     } else if ((tooltip.chart.data as KChartData).isMultiDimension) {
-      tooltipData.tooltipContext = tooltip.dataPoints[0].label
+      tooltipData.tooltipContext = tooltip.dataPoints[0]?.label || ''
     } else {
       tooltipData.tooltipContext = tooltipData.dimensionDisplay || ''
     }
@@ -101,8 +101,8 @@ export const tooltipBehavior = (tooltipData: TooltipState, context: ExternalTool
       }
 
       return {
-        backgroundColor: colors[i].backgroundColor,
-        borderColor: colors[i].borderColor,
+        backgroundColor: colors[i]?.backgroundColor,
+        borderColor: colors[i]?.borderColor,
         label: tooltipLabel,
         value,
         rawValue,
@@ -203,7 +203,7 @@ export const generateLegendItems = (chart: Chart, legendValues?: LegendValues, c
     .map(((e, i) => ({
       ...e,
       value: legendValues && legendValues[e.text],
-      isSegmentEmpty: data.datasets[i].isSegmentEmpty,
+      isSegmentEmpty: data.datasets[i]?.isSegmentEmpty,
     } as EnhancedLegendItem)))
     .sort(chartLegendSortFn)
 }
