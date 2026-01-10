@@ -4,6 +4,7 @@
     "view_configuration": "View Configuration",
     "create": "New plugin",
     "create_custom": "Create",
+    "configure": "Configure",
     "copy_id": "Copy ID",
     "copy_json": "Copy JSON",
     "edit": "Edit",
@@ -57,7 +58,8 @@
       "konnect": "Filter by name",
       "exact": "Filter by exact instance name or ID",
       "kongManager": "Filter by exact instance name or ID",
-      "select": "Filter plugins"
+      "select": "Filter plugins",
+      "search_plugins": "Search plugins"
     },
     "filter": {
       "field": {
@@ -65,6 +67,9 @@
       }
     },
     "no_results": "No results found for \"{filter}\""
+  },
+  "labels": {
+    "new": "New"
   },
   "plugins": {
     "title": "Plugins",
@@ -588,8 +593,20 @@
       "unavailable_tooltip": "This plugin is not available",
       "already_exists": "This plugin is already applied to this resource",
       "misc_plugins": "Other Plugins",
+      "show_all": "Show all",
       "view_more": "View more",
       "view_less": "View less",
+      "filter": {
+        "title": "Filter Plugins",
+        "featured": "Featured",
+        "type": "Type"
+      },
+      "list": {
+        "table_headers": {
+          "name": "Plugin",
+          "description": "Description"
+        }
+      },
       "tabs": {
         "kong": {
           "title": "Kong Plugins",
