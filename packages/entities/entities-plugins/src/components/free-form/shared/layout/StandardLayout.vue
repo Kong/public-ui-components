@@ -30,7 +30,7 @@
       <EntityFormBlock
         data-testid="form-section-general-info"
         :description="generalInfoDescription ?? t('plugins.form.sections.plugin_scope.description')"
-        step="1"
+        :step="1"
         :title="generalInfoTitle ?? t('plugins.form.sections.plugin_scope.title')"
       >
         <component
@@ -127,7 +127,7 @@
       <EntityFormBlock
         data-testid="form-section-plugin-general-info"
         :description="t('plugins.form.sections.plugin_general_info.description')"
-        step="3"
+        :step="3"
         :title="t('plugins.form.sections.general_info.title')"
       >
         <VFGField
