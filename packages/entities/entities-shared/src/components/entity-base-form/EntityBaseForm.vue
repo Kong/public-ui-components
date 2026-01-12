@@ -2,6 +2,9 @@
   <component
     :is="wrapperComponent"
     class="kong-ui-entity-base-form"
+    :class="{
+      'new-form-layout': enabledNewPluginLayout,
+    }"
   >
     <!-- Loading -->
     <KSkeleton
@@ -135,7 +138,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch } from 'vue'
+import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
@@ -146,6 +149,9 @@ import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
 import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import DeckCodeBlock from '../common/DeckCodeBlock.vue'
+import { FEATURE_FLAGS } from '../../constants'
+
+const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, false)
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void
@@ -444,6 +450,16 @@ defineExpose({
 
   :deep(.slideout-content) {
     overflow-y: unset !important;
+  }
+
+  &.new-form-layout {
+    border: none;
+    padding: 0;
+
+    .form-actions {
+      justify-content: flex-start;
+      margin-top: $kui-space-70;
+    }
   }
 }
 

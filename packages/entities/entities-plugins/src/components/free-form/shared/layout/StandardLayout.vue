@@ -26,18 +26,13 @@
     </template>
 
     <template v-if="editorMode === 'form'">
+      <!-- Plugin scope -->
       <EntityFormBlock
         data-testid="form-section-general-info"
-        :description="generalInfoDescription ?? t('plugins.form.sections.general_info.description')"
-        :step="1"
-        :title="generalInfoTitle ?? t('plugins.form.sections.general_info.title')"
+        :description="generalInfoDescription ?? t('plugins.form.sections.plugin_scope.description')"
+        step="1"
+        :title="generalInfoTitle ?? t('plugins.form.sections.plugin_scope.title')"
       >
-        <div class="enabled">
-          <VFGField
-            :form-options="formOptions"
-            :vfg-schema="enabledSchema"
-          />
-        </div>
         <component
           :is="scopeSchema?.disabled ? KTooltip : 'div'"
           v-bind="scopeWrapperAttrs"
@@ -74,15 +69,6 @@
             :vfg-schema="scopeEntitiesSchema"
           />
         </div>
-        <KCollapse
-          v-model="moreCollapsed"
-          trigger-label="Show more"
-        >
-          <VFGField
-            :form-options="formOptions"
-            :vfg-schema="moreFieldsSchema"
-          />
-        </KCollapse>
 
         <template
           v-if="slots['general-info-title']"
@@ -105,6 +91,8 @@
           <slot name="general-info-extra" />
         </template>
       </EntityFormBlock>
+
+      <!-- Plugin configuration -->
       <EntityFormBlock
         data-testid="form-section-plugin-config"
         :description="pluginConfigDescription ?? t('plugins.form.sections.plugin_config.description')"
@@ -134,7 +122,35 @@
           <slot name="plugin-config-extra" />
         </template>
       </EntityFormBlock>
+
+      <!-- General information -->
+      <EntityFormBlock
+        data-testid="form-section-plugin-general-info"
+        :description="t('plugins.form.sections.plugin_general_info.description')"
+        step="3"
+        :title="t('plugins.form.sections.general_info.title')"
+      >
+        <VFGField
+          :form-options="formOptions"
+          :vfg-schema="enabledSchema"
+        />
+
+        <StringField
+          :label="t('plugins.form.fields.instance_name.label')"
+          name="instance_name"
+          :placeholder="t('plugins.form.fields.instance_name.placeholder')"
+        />
+
+        <StringArrayField
+          :help="t('plugins.form.fields.tags.help')"
+          name="tags"
+          :placeholder="t('plugins.form.fields.tags.placeholder')"
+        />
+
+        <Field name="protocols" />
+      </EntityFormBlock>
     </template>
+
     <template v-else>
       <!-- TODO: Implement default code editor -->
       <slot name="code-editor" />
@@ -188,6 +204,9 @@ import { REDIS_PARTIAL_INFO } from '../const'
 import RedisSelector from '../RedisSelector.vue'
 import { FIELD_RENDERERS } from '../composables'
 import IdentityRealmsField from '../../../fields/key-auth-identity-realms/FreeFormAdapter.vue'
+import Field from '../Field.vue'
+import StringArrayField from '../StringArrayField.vue'
+import StringField from '../StringField.vue'
 
 const FREE_FORM_CONTROLLED_FIELDS: Array<keyof FreeFormPluginData> = [
   // plugin specific config
@@ -287,7 +306,17 @@ const flattenFormSchemaFields = computed<LegacyFormSchemaField[]>(() => {
 
 const enabledSchema = computed(() => {
   return {
-    fields: flattenFormSchemaFields.value.filter(field => field.model === 'enabled'),
+    fields: flattenFormSchemaFields.value
+      .filter(field => field.model === 'enabled')
+      .map(field => {
+        return {
+          ...field,
+          styleClasses: 'ff-enabled-field',
+          label: 'Plugin status',
+          textOn: 'Enabled',
+          textOff: 'Disabled',
+        }
+      }),
   }
 })
 
@@ -360,6 +389,13 @@ const freeFormSchema = computed(() => {
             one_of: field.values.map((v: any) => v.value),
           },
           default: [...field.default],
+          required: field.required,
+          description: field.help,
+          help: field.default
+            ? t('plugins.form.fields.protocols.placeholderWithDefaultValues', {
+              protocols: field.default.join(', '),
+            })
+            : t('plugins.form.fields.protocols.placeholder'),
         },
       })
     } else if (field.model === 'tags') {
@@ -369,6 +405,8 @@ const freeFormSchema = computed(() => {
           elements: {
             type: 'string',
           },
+          description: field.help,
+          default: field.default || [],
         },
       })
     } else {
@@ -404,7 +442,6 @@ const scopesCache = ref(
 
 // `scopeIds` is not reactive. Initialize `scoped` in one shot.
 const scoped = ref(Object.values(scopesCache.value).some(hasScopeId))
-const moreCollapsed = ref(true)
 
 const formRef = useTemplateRef('form')
 let skipUpdateScopeCache = false
@@ -490,7 +527,6 @@ function getScopesFromFormModel(): Partial<T> {
   display: flex;
   flex-direction: column;
   gap: $kui-space-80;
-  padding-bottom: $kui-space-80;
 
   .radio-group {
     width: 100%;
@@ -505,6 +541,10 @@ function getScopesFromFormModel(): Partial<T> {
 
   :deep(.form-group) {
     margin-bottom: $kui-space-70;
+  }
+
+  :deep(.ff-enabled-field) > .field-wrap label {
+    font-weight: unset;
   }
 }
 </style>

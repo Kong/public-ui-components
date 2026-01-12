@@ -624,7 +624,8 @@
           "off_text": "This plugin is Disabled"
         },
         "instance_name": {
-          "label": "Instance Name",
+          "label": "Name",
+          "placeholder": "Enter a unique name",
           "help": "A custom name for this plugin instance to help identifying from the list view."
         },
         "protocols": {
@@ -634,8 +635,9 @@
           "help": "A list of the request protocols that will trigger this plugin. The default value, as well as the possible values allowed on this field, may change depending on the plugin type."
         },
         "tags": {
+          "label": "Tags",
           "help": "An optional set of strings for grouping and filtering, separated by commas.",
-          "placeholder": "Enter list of tags"
+          "placeholder": "Tag1, Tag2, Tag3"
         }
       },
       "scoping": {
@@ -678,8 +680,8 @@
           "empty": "This plugin does not have required parameters."
         },
         "advanced_parameters": {
-          "view": "View advanced parameters",
-          "hide": "Hide advanced parameters"
+          "view": "Show additional settings",
+          "hide": "Hide additional settings"
         }
       },
       "field_rules": {
@@ -690,6 +692,10 @@
         "only_one_of_mutually_required": "Exactly one of the following parameter combinations is required (all parameters within a chosen combination are required):"
       },
       "sections": {
+        "plugin_scope": {
+          "title": "Plugin scope",
+          "description": "Choose whether this plugin applies to all traffic (global) or is scoped to a specific service, route, or consumer."
+        },
         "general_info": {
           "title": "General information",
           "description": "Add details to help identify and manage your plugin."
@@ -697,6 +703,9 @@
         "plugin_config": {
           "title": "Plugin configuration",
           "description": "Set the plugin's behavior by defining its configuration settings."
+        },
+        "plugin_general_info": {
+          "description": "Add a name or tags to help you identify and manage this plugin later."
         }
       }
     },

@@ -1,5 +1,8 @@
 <template>
-  <div class="kong-ui-entities-plugin-form-container">
+  <div
+    class="kong-ui-entities-plugin-form-container"
+    :class="{ 'new-form-layout': enabledNewPluginLayout }"
+  >
     <KSkeleton
       v-if="schemaLoading"
       type="form"
@@ -166,7 +169,7 @@ import '@kong-ui-public/entities-shared/dist/style.css'
 import type { Tab } from '@kong/kongponents'
 import type { AxiosError, AxiosResponse } from 'axios'
 import { marked, type MarkedOptions } from 'marked'
-import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType } from 'vue'
+import { computed, onBeforeMount, provide, reactive, ref, watch, type PropType, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import composables from '../composables'
 import { CREDENTIAL_METADATA, CREDENTIAL_SCHEMAS, PLUGIN_METADATA } from '../definitions/metadata'
@@ -192,11 +195,14 @@ import PluginFormActionsWrapper from './PluginFormActionsWrapper.vue'
 import unset from 'lodash-es/unset'
 import { REDIS_PARTIAL_INFO } from '../components/free-form/shared/const'
 import type { GlobalAction } from './free-form/shared/types'
+import { FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
 
 type ScopedEntitiesType = 'consumer' | 'route' | 'service' | 'consumer_group'
 type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
 type ScopedEntityPermission = Partial<Record<Permissions, boolean>>
 type ScopedEntitiesPermissions = Partial<Record<ScopedEntitiesType, ScopedEntityPermission>>
+
+const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, false)
 
 const emit = defineEmits<{
   (e: 'cancel'): void
@@ -1538,6 +1544,19 @@ onBeforeMount(async () => {
 
   :deep(.slideout-content) {
     overflow-y: unset !important;
+  }
+
+  &.new-form-layout {
+    .plugin-form-actions {
+      flex-direction: row-reverse;
+      gap: $kui-space-60;
+      padding-left: $kui-space-60;
+      padding-top: $kui-space-70;
+
+      > * {
+        margin: 0;
+      }
+    }
   }
 }
 </style>

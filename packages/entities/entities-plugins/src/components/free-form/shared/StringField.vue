@@ -26,6 +26,7 @@
       :help="(multiline && error) ? errorMessage : help"
       :model-value="fieldValue ?? ''"
       :multiline="multiline"
+      :placeholder="placeholder"
       @update:model-value="handleUpdate"
     >
       <template
@@ -86,6 +87,7 @@ interface StringFieldProps extends InputProps, BaseFieldProps {
   showVaultSecretPicker?: boolean
   showPasswordMaskToggle?: boolean
   type?: string
+  placeholder?: string
 }
 
 const {
