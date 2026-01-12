@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.8.0...@kong-ui-public/monaco-editor@0.8.1) (2026-01-12)
+
+
+### Bug Fixes
+
+* **monaco-editor:** simplify types for target ([#2802](https://github.com/Kong/public-ui-components/issues/2802)) ([fef2da7](https://github.com/Kong/public-ui-components/commit/fef2da71d97e31475396f4938a81baf8985b7d3a))
+
+
+
+
+
 # [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.7.5...@kong-ui-public/monaco-editor@0.8.0) (2026-01-09)
 
 
