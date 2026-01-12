@@ -160,6 +160,8 @@ export function useMonacoEditor<T extends MaybeElement>(
         // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
         const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
         model = monaco.editor.createModel(options.code.value, options.language, uri)
+      } else {
+        model.setValue(options.code.value)
       }
 
       editor.value = monaco.editor.create(el, {
