@@ -52,7 +52,7 @@
           data-testid="form-actions"
         >
           <div
-            v-if="stickyActions"
+            v-if="realStickyActions"
             aria-hidden="true"
             class="form-actions-divider"
           />
@@ -292,7 +292,7 @@ const props = defineProps({
    */
   stickyActions: {
     type: Boolean,
-    default: false,
+    default: undefined,
   },
 })
 
