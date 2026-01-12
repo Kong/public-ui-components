@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.8.1...@kong-ui-public/monaco-editor@0.8.2) (2026-01-12)
+
+
+### Bug Fixes
+
+* **monaco-editor:** add optional empty and loading state visibility controls [KHCP-19126] ([#2808](https://github.com/Kong/public-ui-components/issues/2808)) ([eec7b5c](https://github.com/Kong/public-ui-components/commit/eec7b5c45c2905416342299e77ebc53ddff24e9d))
+
+
+
+
+
 ## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.8.0...@kong-ui-public/monaco-editor@0.8.1) (2026-01-12)
 
 
