@@ -31,6 +31,11 @@ const routes = [
     name: 'Context',
     component: () => import('./pages/ContextPage.vue'),
   },
+  {
+    path: '/code-lenses',
+    name: 'Code Lenses',
+    component: () => import('./pages/CodeLensesPage.vue'),
+  },
 ]
 
 export const router = createRouter({
