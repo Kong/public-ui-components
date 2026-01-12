@@ -48,7 +48,7 @@
       >
         <!-- Form actions -->
         <div
-          :class="['form-actions', { 'form-actions-reverted': alignActionButtonToLeft, 'form-actions-sticky': stickyActions }]"
+          :class="['form-actions', { 'form-actions-reverted': alignActionButtonToLeft, 'form-actions-sticky': realStickyActions }]"
           data-testid="form-actions"
         >
           <div
@@ -141,12 +141,13 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch } from 'vue'
+import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
 import { SupportedEntityTypesArray, SupportedEntityType, SupportedEntityDeckArray } from '../../types'
 import composables from '../../composables'
+import { FEATURE_FLAGS } from '../../constants'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
@@ -307,6 +308,11 @@ const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const disableSave = computed((): boolean => props.canSubmit === false || props.isReadonly)
 const isToggled = ref(false)
+
+const defaultStickyActions = inject(FEATURE_FLAGS.USE_STICKY_FORM_ACTIONS, false)
+const realStickyActions = computed((): boolean => {
+  return props.stickyActions ?? defaultStickyActions
+})
 
 /**
  * Build the fetcher URL
