@@ -1,5 +1,5 @@
 import PluginCatalog from './PluginCatalog.vue'
-import { PluginGroupArray, type KonnectPluginSelectConfig } from '../types'
+import { PluginGroupArraySortedAlphabetically, type KonnectPluginSelectConfig } from '../types'
 import {
   konnectAvailablePlugins,
   konnectStreamingCustomPlugins,
@@ -80,7 +80,7 @@ describe('<PluginCatalog />', {
     cy.getTestId('plugin-catalog').should('exist')
     cy.getTestId('plugin-filter').should('exist')
 
-    PluginGroupArray.forEach((group) => {
+    PluginGroupArraySortedAlphabetically.forEach((group) => {
       cy.getTestId(`plugin-filter-item-${group}`).should('exist')
     })
   })
