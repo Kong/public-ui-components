@@ -2,10 +2,26 @@ import type { ShallowRef } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
 export interface SplitPaneProps {
-  /** Should the center and right panels allow for resizing */
+  /**
+   * Should the center and right panels allow for resizing
+   * @default true
+   */
   resizable?: boolean
-  /** Should the resize handle be hidden */
+  /**
+   *  Should the resize handle be hidden
+   * @default true
+   */
   showResizeHandle?: boolean
+  /**
+   * Show the navigation pane
+   * @default true
+   */
+  showNavigation?: boolean
+  /**
+   * The items to show in the vertical navigation
+   * @default []
+   */
+  navigationItems?: VerticalNavigationItem[]
   paneLeft?: {
     /** Pass false to hide the pane even if it contains slot content */
     visible?: boolean

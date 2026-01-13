@@ -1,8 +1,13 @@
 <template>
-  <div class="kong-ui-public-split-pane">
+  <div
+    class="kong-ui-public-split-pane"
+    :class="{ 'has-navigation': showNavigation }"
+  >
     <div class="kong-ui-public-split-pane-container">
       <VerticalNavigation
+        v-if="showNavigation"
         ref="verticalNavRef"
+        :items="navigationItems"
         :pane-left-visible="paneLeft.visible !== false"
         :pane-left-width="paneLeftWidth"
       />
@@ -88,28 +93,23 @@
 </template>
 
 <script setup lang="ts">
-// Vue core imports
 import { computed, useSlots, useTemplateRef, watch, nextTick } from 'vue'
-// Component constants
 import { PANE_LEFT_MIN_WIDTH, PANE_LEFT_MAX_WIDTH, INNER_PANES_MIN_WIDTH } from '../constants/split-pane'
-// VueUse utilities for DOM element tracking
 import { useElementSize, useElementHover } from '@vueuse/core'
-// Child components
 import VerticalNavigation from './VerticalNavigation.vue'
-// Types
-import type { SplitPaneProps } from 'src/types'
-// Composables
 import useSplitPane from '../composable/useSplitPane'
 import useI18n from '../composable/useI18n'
+import type { SplitPaneProps } from '../types'
 
 // Default max widths for the inner panes (center and right)
 const paneCenterDefaultMaxWidth: string = '50%'
 const paneRightDefaultMaxWidth: string = '50%'
 
-// Define component props with defaults
 const {
-  resizable = true, // Whether the panes can be resized by dragging
-  showResizeHandle = true, // Whether to show the resize handle between panes
+  resizable = true,
+  showResizeHandle = true,
+  showNavigation = true,
+  navigationItems = [],
   paneLeft = {
     /** Pass false to hide the panel even if it contains slot content */
     visible: true,
@@ -216,13 +216,22 @@ $resize-divider-width: 3px;
 $toolbar-height: 44px;
 
 .kong-ui-public-split-pane {
-  background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
   bottom: 0;
   left: 0;
   position: fixed;
   right: 0;
   top: 0;
   z-index: 2000;
+
+  &.has-navigation {
+    background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
+
+    .kong-ui-public-split-pane-container {
+      &-inner {
+        padding-top: var(--kui-space-30, $kui-space-30);
+      }
+    }
+  }
 
   &-container {
     display: flex;
@@ -234,7 +243,6 @@ $toolbar-height: 44px;
       display: flex;
       flex-direction: column;
       height: 100vh;
-      padding-top: var(--kui-space-30, $kui-space-30);
       width: 100%;
 
       &-content {
