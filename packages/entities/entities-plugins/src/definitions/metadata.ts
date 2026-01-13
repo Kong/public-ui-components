@@ -1,4 +1,6 @@
-import { PLUGIN_GROUP_AND_SCOPE_MAP } from '@kong-ui-public/entities-plugins-metadata'
+import {
+  PLUGIN_GROUP_AND_SCOPE_MAP,
+} from '@kong-ui-public/entities-plugins-metadata'
 import { type PluginMetaData } from '../types'
 import { type MessageSource as I18nMessageSource } from '../composables/useI18n'
 import { getColumnFields } from './schemas/typedefs'
