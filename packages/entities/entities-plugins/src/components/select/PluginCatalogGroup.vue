@@ -26,7 +26,7 @@
       @plugin-clicked="emit('plugin-clicked', plugin)"
     >
       <template
-        v-if="within16Weeks(plugin.introducedTime)"
+        v-if="plugin.gatewayVersion ? within16Weeks(GATEWAY_VERSION_TIMESTAMP_MAP[plugin.gatewayVersion]) : false"
         #footer-extra
       >
         <span
@@ -62,6 +62,7 @@ import DeleteCustomPluginSchemaModal from '../custom-plugins/DeleteCustomPluginS
 import type { KongManagerPluginSelectConfig, KonnectPluginSelectConfig, PluginType, CustomPluginType } from '../../types'
 import { KUI_COLOR_TEXT_DECORATIVE_PURPLE } from '@kong/design-tokens'
 import { AnalyticsIcon, BotIcon, CodeblockIcon, DeployIcon, LockIcon, PopularIcon, RuntimeServerlessIcon, SecurityIcon, ServiceDocumentIcon, TrafficIcon, TransformationIcon } from '@kong/icons'
+import { GATEWAY_VERSION_TIMESTAMP_MAP } from '@kong-ui-public/entities-plugins-metadata'
 import { within16Weeks } from '../../utils/helper'
 
 const props = defineProps<{

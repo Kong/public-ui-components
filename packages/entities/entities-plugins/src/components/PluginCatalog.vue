@@ -76,7 +76,7 @@
             :is="viewModeIcon"
             class="plugins-filter-icon"
             :color="KUI_ICON_COLOR_PRIMARY"
-            @click="listView = !listView"
+            @click="isListView = !isListView"
           />
         </div>
       </div>
@@ -121,7 +121,7 @@
         class="plugins-results-container"
       >
         <PluginCatalogListView
-          v-if="listView"
+          v-if="isListView"
           :config="config"
           :plugin-list="filteredPlugins"
           @delete:success="(name: string) => $emit('delete-custom:success', name)"
@@ -203,8 +203,8 @@ const availablePlugins = ref<string[]>([]) // all available plugins
 const streamingCustomPlugins = ref<StreamingCustomPluginSchema[]>([])
 const pluginsList = ref<PluginCardList>({})
 const existingEntityPlugins = ref<string[]>([])
-const listView = ref(false)
-const viewModeIcon = computed(() => (listView.value ? GridIcon : ListIcon))
+const isListView = ref(false)
+const viewModeIcon = computed(() => (isListView.value ? GridIcon : ListIcon))
 
 const availablePluginsUrl = computed((): string => {
   let url = `${props.config.apiBaseUrl}${endpoints.select[props.config.app].availablePlugins}`

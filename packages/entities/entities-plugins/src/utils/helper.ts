@@ -133,11 +133,7 @@ export function lcsRecursive(a: string, b: string): string {
   return lcs
 }
 
-export function within16Weeks(targetTs?: number) {
-  if (!targetTs) {
-    // if no timestamp is provided, the plugin should not have new tag
-    return false
-  }
+export function within16Weeks(targetTs: number) {
   const nowTs = Date.now()
   const SIXTEEN_WEEKS_MS = 16 * 7 * 24 * 60 * 60 * 1000
   return Math.abs(nowTs - targetTs) <= SIXTEEN_WEEKS_MS

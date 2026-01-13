@@ -1,6 +1,5 @@
 import {
   PLUGIN_GROUP_AND_SCOPE_MAP,
-  GATEWAY_VERSION_TIMESTAMP_MAP,
 } from '@kong-ui-public/entities-plugins-metadata'
 import { type PluginMetaData } from '../types'
 import { type MessageSource as I18nMessageSource } from '../composables/useI18n'
@@ -26,7 +25,7 @@ import keyEncCredentialSchema from './schemas/credentials/mockedKeyEncAuthSchema
  * Please be noted that the `name` and `description` fields are not populated here, as they depends
  * on i18n resources. You may use the `usePluginMetaData` composable instead to get the localized metadata.
  */
-const PLUGIN_META: Record<string, Omit<PluginMetaData<I18nMessageSource>, 'introducedTime' | 'name' | 'description'>> = {
+export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSource>, 'introducedTime' | 'name' | 'description'>> = {
   'basic-auth': {
     descriptionKey: 'plugins.meta.basic-auth.description',
     nameKey: 'plugins.meta.basic-auth.name',
@@ -692,22 +691,6 @@ const PLUGIN_META: Record<string, Omit<PluginMetaData<I18nMessageSource>, 'intro
     ...PLUGIN_GROUP_AND_SCOPE_MAP['ai-lakera-guard'],
   },
 }
-
-/**
- * Automatically add introducedTime based on version in which the plugin is released.
- */
-export const PLUGIN_METADATA = Object.fromEntries(
-  Object.entries(PLUGIN_META).map(([key, value]) => [
-    key,
-    {
-      ...value,
-      introducedTime:
-        value?.gatewayVersion ? GATEWAY_VERSION_TIMESTAMP_MAP[
-          value.gatewayVersion
-        ] : undefined,
-    },
-  ]),
-)
 
 /**
  * The *static* metadata of all credential types for faster access with less memory footprint.

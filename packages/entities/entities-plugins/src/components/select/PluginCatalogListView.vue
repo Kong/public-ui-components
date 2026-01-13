@@ -7,12 +7,11 @@
       :data="paginatedData"
       data-testid="plugin-catalog-list-view-table"
       :headers="headers"
-      :pagination="true"
       :pagination-attributes="{ totalCount: tableRows.length, currentPage: currentPage,
                                 initialPageSize: paginatedPageSize,
                                 pageSizes: [10, 25, 50] }"
       resize-columns
-      :row-key="'id'"
+      row-key="id"
       @page-change="onPageChange"
       @page-size-change="onPageSizeChange"
       @sort="onSort"
@@ -215,7 +214,6 @@ const onPageChange = ({ page }: { page: number }) => {
 
 const onPageSizeChange = ({ pageSize }: { pageSize: number }) => {
   paginatedPageSize.value = pageSize
-  // paginatedData.value = tableRows.value.slice((paginatedPageSize.value * (currentPage.value - 1)), (paginatedPageSize.value * (currentPage.value - 1)) + paginatedPageSize.value)
 }
 
 const onSort = (sortPayload: TableSortPayload) => {

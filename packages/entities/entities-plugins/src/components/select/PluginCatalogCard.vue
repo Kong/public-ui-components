@@ -149,7 +149,7 @@ const handleCustomDelete = (): void => {
 
 const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
   const konnectConfig = props.config as KonnectPluginSelectConfig
-  if (props.config.app === 'konnect' && typeof konnectConfig.getCustomEditRoute === 'function' && konnectConfig.getCustomEditRoute) {
+  if (props.config.app === 'konnect' && typeof konnectConfig.getCustomEditRoute === 'function') {
     router.push(konnectConfig.getCustomEditRoute(pluginName, type))
   }
 }
