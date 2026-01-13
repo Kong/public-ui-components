@@ -1,21 +1,16 @@
 <template>
   <main class="editor-container">
-    <div>
-      <input
-        id="tab-a"
+    <div class="tab-container">
+      <KRadio
         v-model="activeTab"
-        type="radio"
-        value="editor"
-      >
-      <label for="tab-a">Editor</label>
-
-      <input
-        id="tab-b"
+        label="Editor"
+        selected-value="editor"
+      />
+      <KRadio
         v-model="activeTab"
-        type="radio"
-        value="textarea"
-      >
-      <label for="tab-b">Textarea</label>
+        label="Textarea"
+        selected-value="textarea"
+      />
     </div>
 
     <div
@@ -23,16 +18,19 @@
       ref="editor"
       class="editor"
     />
-    <textarea
+    <KTextArea
       v-else
       v-model="code"
       class="editor"
+      resizable
+      :rows="20"
     />
   </main>
 </template>
 
 <script setup lang="ts">
 import { ref, useTemplateRef } from 'vue'
+import { KRadio, KTextArea } from '@kong/kongponents'
 import { useMonacoEditor } from '../../src'
 
 const code = ref('')
@@ -45,6 +43,13 @@ useMonacoEditor(editor, { code, language: 'plaintext' })
 <style lang="scss" scoped>
 .editor-container {
   height: 100%;
+  padding: $kui-space-70;
+}
+
+.tab-container {
+  display: flex;
+  gap: $kui-space-60;
+  margin-bottom: $kui-space-60;
 }
 
 .editor {
