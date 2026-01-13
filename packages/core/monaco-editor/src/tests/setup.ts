@@ -29,7 +29,10 @@ vi.mock('monaco-editor', () => {
     remeasureFonts: vi.fn(),
     defineTheme: vi.fn(),
     setTheme: vi.fn(),
-    createModel: vi.fn(() => ({})),
+    createModel: vi.fn(() => ({
+      setValue: vi.fn(),
+      dispose: vi.fn(),
+    })),
   }
 
   const languages = {
