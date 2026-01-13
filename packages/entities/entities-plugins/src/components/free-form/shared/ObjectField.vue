@@ -46,12 +46,12 @@
       <div class="ff-object-field-header-toggle">
         <!-- Collapse toggle -->
         <button
-          v-if="added"
           :aria-controls="contentId"
           :aria-expanded="expanded"
           :aria-label="fieldAttrs.label"
           class="ff-object-field-toggle-btn"
           data-testid="ff-object-field-toggle-btn"
+          :disabled="!added"
           type="button"
           @click.prevent.stop="toggleDisplay()"
         >
@@ -363,7 +363,7 @@ onBeforeMount(() => {
     flex-direction: column;
     gap: $kui-space-80;
     margin-top: $kui-space-20;
-    padding: $kui-space-60 0 $kui-space-20 $kui-space-50;
+    padding: $kui-space-60 0 $kui-space-20 $kui-space-70;
   }
 
   :deep(.k-tooltip p) {
@@ -386,7 +386,7 @@ onBeforeMount(() => {
     outline: none;
     padding: $kui-space-10;
 
-    &:hover:not(:focus):not(:active) {
+    &:hover:not(:focus):not(:active):not(:disabled) {
       color: $kui-color-text-neutral;
     }
 
@@ -400,6 +400,11 @@ onBeforeMount(() => {
       &.collapse-expanded {
         transform: rotate(90deg);
       }
+    }
+
+    &:disabled {
+      color: $kui-color-text-neutral-weak;
+      cursor: not-allowed;
     }
 
     label {
