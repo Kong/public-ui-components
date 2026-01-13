@@ -202,7 +202,7 @@ type Permissions = 'canRetrieve' | 'canEdit' | 'canDelete'
 type ScopedEntityPermission = Partial<Record<Permissions, boolean>>
 type ScopedEntitiesPermissions = Partial<Record<ScopedEntitiesType, ScopedEntityPermission>>
 
-const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, false)
+const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false))
 
 const emit = defineEmits<{
   (e: 'cancel'): void

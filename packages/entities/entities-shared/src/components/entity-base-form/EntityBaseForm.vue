@@ -151,7 +151,7 @@ import TerraformCodeBlock from '../common/TerraformCodeBlock.vue'
 import DeckCodeBlock from '../common/DeckCodeBlock.vue'
 import { FEATURE_FLAGS } from '../../constants'
 
-const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, false)
+const enabledNewPluginLayout = inject(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => false))
 
 const emit = defineEmits<{
   (e: 'loading', isLoading: boolean): void

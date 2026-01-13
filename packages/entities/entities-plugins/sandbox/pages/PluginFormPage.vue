@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref } from 'vue'
+import { computed, provide, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { PluginForm, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '../../src'
 import { FEATURE_FLAGS } from '@kong-ui-public/entities-shared'
@@ -46,7 +46,6 @@ import type { GlobalAction } from '../../src/components/free-form/shared/types'
 const toaster = new ToastManager()
 
 provide(TOASTER_PROVIDER, toaster.open.bind(toaster))
-provide(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, true)
 
 defineProps({
   /** Grab the plugin id and type from the route params */
@@ -63,6 +62,7 @@ defineProps({
 const router = useRouter()
 const controlPlaneId = import.meta.env.VITE_KONNECT_CONTROL_PLANE_ID || ''
 const pluginFormEngine = import.meta.env.VITE_FORCE_PLUGIN_FORM_ENGINE || undefined
+provide(FEATURE_FLAGS.KM_1948_PLUGIN_FORM_LAYOUT, computed(() => pluginFormEngine === 'free-form'))
 
 useProvideExperimentalFreeForms([
   'service-protection',
