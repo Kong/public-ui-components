@@ -71,7 +71,9 @@ export default function useExploreResultToTimeDataset(
     try {
       if (exploreResult.value && 'meta' in exploreResult.value && 'data' in exploreResult.value) {
         const records = exploreResult.value.data as AnalyticsExploreRecord[]
-        const { display, metric_names: metricNames, start_ms: startMs, end_ms: endMs } = exploreResult.value.meta
+        const { display, metric_names: metricNames, start, end } = exploreResult.value.meta
+        const startMs = new Date(start).getTime()
+        const endMs = new Date(end).getTime()
 
         if (!metricNames) {
           console.error('Cannot build chart data from this explore result. Missing metric names.')

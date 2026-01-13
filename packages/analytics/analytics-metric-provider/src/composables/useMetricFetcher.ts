@@ -42,7 +42,7 @@ export function buildDeltaMapping(result: ExploreResultV4, withTrend: boolean): 
   const metricName = result.meta.metric_names?.[0] || ''
 
   // Figure out the first expected timestamp.
-  const queriedStartTime = result.meta.start_ms
+  const queriedStartTime = new Date(result.meta.start).getTime()
 
   // We only ever have 2 dimensions in the response if the second dimension is STATUS_CODE_GROUPED.
   // TIME doesn't show up in the response.

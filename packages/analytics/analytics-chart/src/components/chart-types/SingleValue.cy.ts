@@ -16,8 +16,8 @@ const buildExploreResult = (previous: number, current: number) => ({
     },
   ],
   meta: {
-    start_ms: 1685452140.987,
-    end_ms: 1685473740.987,
+    start: '2023-05-30T13:09:00.987Z',
+    end: '2023-05-30T19:09:00.987Z',
     query_id: 'trend-test',
     metric_names: ['request_per_minute'],
     metric_units: {
@@ -200,8 +200,8 @@ describe('<SingleValue />', () => {
         metric_units: {
           TotalRequests: 'count',
         },
-        start_ms: new Date('2023-05-30T13:00:00.000Z').getTime(),
-        end_ms: new Date('2023-05-31T13:00:00.000Z').getTime(),
+        start: '2023-05-30T13:00:00.000Z',
+        end: '2023-05-31T13:00:00.000Z',
         truncated: false,
         limit: 2,
         granularity_ms: 60 * 60 * 1000,

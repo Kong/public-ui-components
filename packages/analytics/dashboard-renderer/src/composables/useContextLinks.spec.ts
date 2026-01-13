@@ -50,8 +50,8 @@ const mockChartData = (granularityMs = ONE_HOUR_MS) => computed(() => ({
   data: [],
   meta: {
     granularity_ms: granularityMs,
-    start_ms: 1111,
-    end_ms: 2222,
+    start: '1970-01-01T00:00:01.111Z',
+    end: '1970-01-01T00:00:02.222Z',
   },
 })) as any
 
@@ -114,6 +114,7 @@ function mountComposable({
   })
 
   return {
+    chartData,
     wrapper,
     queryBridge,
   }
@@ -222,7 +223,7 @@ describe('useContextLinks', () => {
   })
 
   it('builds requests link for kebab menu (absolute time range uses chartData.meta start/end)', async () => {
-    const { wrapper } = mountComposable({
+    const { wrapper, chartData } = mountComposable({
       timeRange: absoluteTimeRange,
       contextFilters: [makeFilter('gateway_service')],
     })
@@ -235,9 +236,8 @@ describe('useContextLinks', () => {
 
     expect(parsed.filter.length).toBe(1)
     expect(parsed.timeframe.timePeriodsKey).toBe('custom')
-    // Should use chartData.meta values, not the raw timeRange.start/end
-    expect(parsed.timeframe.start).toBe(1111)
-    expect(parsed.timeframe.end).toBe(2222)
+    expect(parsed.timeframe.start).toBe(chartData.value.meta.start)
+    expect(parsed.timeframe.end).toBe(chartData.value.meta.end)
   })
 
   it('builds requests link with relative time range', async () => {

@@ -1,7 +1,7 @@
 import type { Ref } from 'vue'
 import { computed } from 'vue'
 import type { ExploreResultV4 } from '@kong-ui-public/analytics-utilities'
-import { formatTime } from '@kong-ui-public/analytics-utilities'
+import { formatTimestamp } from '@kong-ui-public/analytics-utilities'
 
 export default function useChartSelectedRange(chartData: Ref<ExploreResultV4>): Ref<string> {
   const formattedTimeRange = computed(() => {
@@ -9,11 +9,11 @@ export default function useChartSelectedRange(chartData: Ref<ExploreResultV4>): 
       return ''
     }
 
-    const start = chartData.value.meta.start_ms
-    const end = chartData.value.meta.end_ms
+    const start = chartData.value.meta.start
+    const end = chartData.value.meta.end
 
     return start && end
-      ? `${formatTime(start)} - ${formatTime(end, { includeTZ: true })}`
+      ? `${formatTimestamp(new Date(start))} - ${formatTimestamp(new Date(end), { includeTZ: true })}`
       : ''
   })
 

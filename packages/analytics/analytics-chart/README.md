@@ -158,8 +158,8 @@ export default defineComponent({
         // more data...
       ],
       meta: {
-        start_ms: 1682332042798,
-        end_ms: 1682353642798,
+        start: '2023-04-24T10:27:22.798Z',
+        end: '2023-04-24T16:27:22.798Z',
         granularity_ms: 3600000,
         query_id: '12345',
         display: {
@@ -275,8 +275,8 @@ export default defineComponent({
         },
       ],
       meta: {
-        start_ms: 1682332042798,
-        end_ms: 1682353642798,
+        start: '2023-04-24T10:27:22.798Z',
+        end: '2023-04-24T16:27:22.798Z',
         granularity_ms: 21600000,
         query_id: '12345',
         display: {
@@ -384,8 +384,8 @@ const chartData = ref<ExploreResultV4>({
     },
   ],
   meta: {
-    start_ms: 1682332042798,
-    end_ms: 1682353642798,
+    start: '2023-04-24T10:27:22.798Z',
+    end: '2023-04-24T16:27:22.798Z',
     granularity_ms: 3600000,
     query_id: '12345',
     display: {

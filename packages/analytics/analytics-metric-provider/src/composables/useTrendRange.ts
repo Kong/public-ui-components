@@ -42,10 +42,10 @@ export default function useTrendRange(
   }
 
   const getTimestamps = (): { startMs: number, endMs: number } | undefined => {
-    if (meta?.value?.start_ms && meta.value.end_ms) {
+    if (meta?.value?.start && meta.value.end) {
       return {
-        startMs: meta.value.start_ms,
-        endMs: meta.value.end_ms,
+        startMs: new Date(meta.value.start).getTime(),
+        endMs: new Date(meta.value.end).getTime(),
       }
     }
 
