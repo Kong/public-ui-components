@@ -294,9 +294,9 @@ export function disposeGlobalDisposables(): void {
  */
 export function disposeAllDisposables(): void {
   const toDispose: IDisposable[] = []
-  for (const t of allDisposables.values()) {
+  allDisposables.forEach((t) => {
     toDispose.push(t.decorated)
-  }
+  })
   try {
     disposeMany(toDispose)
   } catch (e) {
