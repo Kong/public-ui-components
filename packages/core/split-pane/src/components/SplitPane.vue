@@ -108,7 +108,7 @@ const paneRightDefaultMaxWidth: string = '50%'
 const {
   resizable = true,
   showResizeHandle = true,
-  showNavigation = true,
+  showNavigation = false,
   navigationItems = [],
   paneLeft = {
     /** Pass false to hide the panel even if it contains slot content */
@@ -216,15 +216,14 @@ $resize-divider-width: 3px;
 $toolbar-height: 44px;
 
 .kong-ui-public-split-pane {
-  bottom: 0;
-  left: 0;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 2000;
-
   &.has-navigation {
     background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 2000;
 
     .kong-ui-public-split-pane-container {
       &-inner {

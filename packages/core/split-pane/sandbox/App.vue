@@ -29,3 +29,12 @@ const props = computed((): SplitPaneProps => ({
   paneRight: { visible: true },
 }))
 </script>
+
+<style lang="scss">
+html,
+body {
+  background: $kui-color-background;
+  margin: $kui-space-0;
+  overflow: hidden;
+}
+</style>
