@@ -69,7 +69,15 @@ export function useSplitPane(options: UseSplitPaneOptions = {
 
   const updatePane = (id: number, patch: Partial<PaneConfig>): void => {
     const pane = indexedPanes.value[id]
-    if (pane) Object.assign(pane, patch)
+    if (!pane) return
+
+    const allowedKeys: Array<keyof PaneConfig> = ['id', 'index', 'size', 'min', 'max', 'givenSize', 'el']
+
+    for (const key of allowedKeys) {
+      if (key in patch) {
+        pane[key] = patch[key]
+      }
+    }
   }
 
   /**
