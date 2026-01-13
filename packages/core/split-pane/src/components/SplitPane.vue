@@ -108,7 +108,7 @@ const paneRightDefaultMaxWidth: string = '50%'
 const {
   resizable = true,
   showResizeHandle = true,
-  showNavigation = false,
+  showNavigation = true,
   navigationItems = [],
   paneLeft = {
     /** Pass false to hide the panel even if it contains slot content */
