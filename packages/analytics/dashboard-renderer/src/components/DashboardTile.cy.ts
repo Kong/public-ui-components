@@ -5,8 +5,8 @@ import { generateSingleMetricTimeSeriesData, type ExploreResultV4, type TileDefi
 import { setupPiniaTestStore } from '../stores/tests/setupPiniaTestStore'
 import { useAnalyticsConfigStore } from '@kong-ui-public/analytics-config-store'
 
-const start = Date.now() - 6 * 60 * 60 * 1000
-const end = Date.now()
+const start = new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
+const end = new Date().toISOString()
 
 describe('<DashboardTile />', () => {
   const mockTileDefinition: TileDefinition = {
@@ -76,7 +76,7 @@ describe('<DashboardTile />', () => {
         generateSingleMetricTimeSeriesData(
           { name: 'TotalRequests', unit: 'count' },
           { status_code: ['request_count'] as string[] },
-          { start_ms: start, end_ms: end },
+          { start, end },
         ) as ExploreResultV4,
       )
     },
@@ -394,7 +394,7 @@ describe('<DashboardTile />', () => {
     cy.getTestId('kebab-action-menu-1').click()
     // generateSingleMetricTimeSeriesData creates data from "6 hours ago" to "now", so the link should reflect that,
     // not the time range in the query definition.
-    cy.getTestId('chart-jump-to-requests-1').invoke('attr', 'href').should('have.string', `"start":${start},"end":${end}`)
+    cy.getTestId('chart-jump-to-requests-1').invoke('attr', 'href').should('have.string', `"start":"${start}","end":"${end}"`)
   })
 
   it('should not show explore if datasource is unsupported', () => {
@@ -525,7 +525,7 @@ describe('<DashboardTile />', () => {
         generateSingleMetricTimeSeriesData(
           { name: 'TotalRequests', unit: 'count' },
           { status_code: ['request_count'] as string[] },
-          { start_ms: start, end_ms: end, truncated: true, limit: 50 },
+          { start, end, truncated: true, limit: 50 },
         ) as ExploreResultV4,
       )
     })
@@ -602,7 +602,7 @@ describe('<DashboardTile />', () => {
           generateSingleMetricTimeSeriesData(
             { name: 'TotalRequests', unit: 'count' },
             { status_code: ['request_count'] as string[] },
-            { start_ms: start, end_ms: end },
+            { start, end },
           ) as ExploreResultV4,
         )
       })
@@ -642,7 +642,7 @@ describe('<DashboardTile />', () => {
           generateSingleMetricTimeSeriesData(
             { name: 'TotalRequests', unit: 'count' },
             { status_code: ['request_count'] as string[] },
-            { start_ms: start, end_ms: end },
+            { start, end },
           ) as ExploreResultV4,
         )
       })
@@ -683,7 +683,7 @@ describe('<DashboardTile />', () => {
           generateSingleMetricTimeSeriesData(
             { name: 'TotalRequests', unit: 'count' },
             { status_code: ['request_count'] as string[] },
-            { start_ms: start, end_ms: end },
+            { start, end },
           ) as ExploreResultV4,
         )
       })

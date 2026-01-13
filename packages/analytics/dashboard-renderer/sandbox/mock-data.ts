@@ -27,8 +27,8 @@ export const nonTsExploreResponse: ExploreResultV4 = {
     timestamp: '2024-03-05T04:49:00.000Z',
   }],
   meta: {
-    start_ms: 1709613240000,
-    end_ms: 1709615040000,
+    start: '2024-03-05T04:34:00.000Z',
+    end: '2024-03-05T05:04:00.000Z',
     granularity_ms: 900000,
     query_id: 'explore-814be27f-ff3c-470e-9a08-3fsv92vbd',
     metric_names: ['request_count'],
@@ -228,8 +228,8 @@ export const timeSeriesExploreResponse: ExploreResultV4 = {
     timestamp: '2024-01-31T19:42:00.000Z',
   }],
   meta: {
-    start_ms: 1706726580000,
-    end_ms: 1706730180000,
+    start: '2024-01-31T18:43:00.000Z',
+    end: '2024-01-31T19:43:00.000Z',
     granularity_ms: 60000,
     query_id: 'explore-814be27f-ff3c-470e-9a08-9cbf45cc3bb9',
     metric_names: ['kong_latency_p99', 'kong_latency_p95', 'kong_latency_p50'],
@@ -486,7 +486,7 @@ export const routeExploreResponse: ExploreResultV4 = {
         'd5ac5d88-efed-4e10-9dfe-0b0a6646c219:b4cd1c10-d77f-41b0-a84d-31fc0d99f0d9': { name: 'GetMeASongRoute (default)', deleted: false },
       },
     },
-    end_ms: 1692295253000,
+    end: '2023-08-17T18:00:53.000Z',
     granularity_ms: 300000,
     limit: 50,
     metric_names: [
@@ -496,7 +496,7 @@ export const routeExploreResponse: ExploreResultV4 = {
       request_count: 'count',
     },
     query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
-    start_ms: 1692294953000,
+    start: '2023-08-17T17:55:53.000Z',
   },
   data: [
     {
