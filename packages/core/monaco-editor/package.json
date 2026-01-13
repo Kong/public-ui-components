@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/monaco-editor",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "type": "module",
   "description": "A kong UI Monaco Editor wrapper for Vue 3 with syntax highlighting powered by Shiki.",
   "main": "./dist/runtime/monaco-editor.umd.js",
