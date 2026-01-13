@@ -33,8 +33,8 @@ const EXPLORE_RESULT_TREND: ExploreResultV4 = {
     },
   ],
   meta: {
-    start_ms: deltaStart.getTime(),
-    end_ms: timeRange.end.getTime(),
+    start: deltaStart.toISOString(),
+    end: timeRange.end.toISOString(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -58,8 +58,8 @@ const EXPLORE_RESULT_NO_TREND: ExploreResultV4 = {
     },
   ],
   meta: {
-    start_ms: timeRange.start.getTime(),
-    end_ms: timeRange.end.getTime(),
+    start: timeRange.start.toISOString(),
+    end: timeRange.end.toISOString(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -83,8 +83,8 @@ const EXPLORE_RESULT_PREVIOUS_DATA_ONLY: ExploreResultV4 = {
     },
   ],
   meta: {
-    start_ms: deltaStart.getTime(),
-    end_ms: timeRange.end.getTime(),
+    start: deltaStart.toISOString(),
+    end: timeRange.end.toISOString(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -108,8 +108,8 @@ const EXPLORE_RESULT_CURRENT_DATA_ONLY: ExploreResultV4 = {
     },
   ],
   meta: {
-    start_ms: deltaStart.getTime(),
-    end_ms: timeRange.end.getTime(),
+    start: deltaStart.toISOString(),
+    end: timeRange.end.toISOString(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -125,8 +125,8 @@ const EXPLORE_RESULT_CURRENT_DATA_ONLY: ExploreResultV4 = {
 const EXPLORE_RESULT_NO_RECORDS: ExploreResultV4 = {
   data: [],
   meta: {
-    start_ms: deltaStart.getTime(),
-    end_ms: timeRange.start.getTime(),
+    start: deltaStart.toISOString(),
+    end: timeRange.start.toISOString(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -179,8 +179,8 @@ const EXPLORE_RESULT_CURRENT_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
   ],
   meta: {
-    start_ms: deltaStart.getTime(),
-    end_ms: timeRange.end.getTime(),
+    start: deltaStart.toISOString(),
+    end: timeRange.end.toISOString(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
@@ -277,8 +277,8 @@ const EXPLORE_RESULT_TREND_DATA_MULTI_DIMENSION: ExploreResultV4 = {
     },
   ],
   meta: {
-    start_ms: deltaStart.getTime(),
-    end_ms: timeRange.end.getTime(),
+    start: deltaStart.toISOString(),
+    end: timeRange.end.toISOString(),
     granularity_ms: 86400000,
     query_id: '',
     metric_names: [
