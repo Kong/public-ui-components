@@ -1,5 +1,5 @@
 import { ref, onUnmounted } from 'vue'
-import { clamp } from '../utils'
+import { clamp } from '../utils/numbers'
 import type { PaneConfig, UseSplitPaneOptions } from '../types'
 
 /**
