@@ -1,12 +1,31 @@
 <template>
   <div class="sandbox-container">
-    <main>
-      <p>This is the component sandbox.</p>
-      <SplitPane />
-    </main>
+    <SplitPane
+      :pane-center="props.paneCenter"
+      :pane-left="props.paneLeft"
+      :pane-right="props.paneRight"
+      :show-resize-handle="true"
+    >
+      <template #pane-left>
+        left
+      </template>
+      <template #pane-center>
+        centre
+      </template>
+      <template #pane-right>
+        right
+      </template>
+    </SplitPane>
   </div>
 </template>
 
 <script setup lang="ts">
-import { SplitPane } from '../src'
+import { computed } from 'vue'
+import { SplitPane, type SplitPaneProps } from '../src'
+
+const props = computed((): SplitPaneProps => ({
+  paneLeft: { visible: true },
+  paneCenter: { visible: true },
+  paneRight: { visible: true },
+}))
 </script>
