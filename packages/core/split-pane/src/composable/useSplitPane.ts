@@ -12,7 +12,6 @@ import type { PaneConfig, UseSplitPaneOptions } from '../types'
 export function useSplitPane(options: UseSplitPaneOptions = {
   horizontal: false,
   storageKey: undefined,
-  pushOtherPanes: false,
 }) {
 
   /** Reference to the container DOM element */
@@ -56,9 +55,8 @@ export function useSplitPane(options: UseSplitPaneOptions = {
   }
 
   // panes
-  const registerPane = (pane: Omit<PaneConfig, 'index'> & { order: number }): void => {
+  const registerPane = (pane: Omit<PaneConfig, 'index'>): void => {
     panes.value.push({ ...pane, index: 0 })
-    panes.value.sort((a: any, b: any) => a.order - b.order)
     rebuildIndex()
     resetPaneSizes()
   }

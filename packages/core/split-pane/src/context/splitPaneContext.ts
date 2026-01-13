@@ -19,9 +19,9 @@ export interface SplitPaneContext {
 
   /**
    * Register a new pane in the split pane container
-   * @param pane - The pane configuration including order but excluding index
+   * @param pane - The pane configuration excluding index
    */
-  registerPane(pane: Omit<PaneConfig, 'index'> & { order: number }): void
+  registerPane(pane: Omit<PaneConfig, 'index'>): void
 
   /**
    * Unregister a pane from the split pane container

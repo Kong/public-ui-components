@@ -19,17 +19,12 @@ import { useSplitPane } from '../composable/useSplitPane'
 
 const {
   horizontal = false,
-  pushOtherPanes = true,
   storageKey = undefined,
 } = defineProps<{
   /**
    * Horizontal layout (false = vertical split with horizontal dividers)
    */
   horizontal?: boolean
-  /**
-   * Whether to push other panes when dragging
-   */
-  pushOtherPanes?: boolean
   /**
    * Unique key for localStorage persistence of pane sizes
    */
@@ -40,7 +35,6 @@ const panesContainerRef = useTemplateRef('panesContainerRef')
 
 const splitPane = useSplitPane({
   horizontal,
-  pushOtherPanes,
   storageKey,
 })
 
@@ -68,8 +62,8 @@ provide<SplitPaneContext>(SplitPaneKey, {
 <style lang="scss" scoped>
 .kong-ui-public-split-pane-content-panes {
   align-items: stretch;
-  background-color: $kui-color-background;
-  border-top-left-radius: $kui-border-radius-30;
+  background-color: var(--kui-color-background, $kui-color-background);
+  border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
   display: flex;
   flex: 1 1 auto;
   height: 100%;

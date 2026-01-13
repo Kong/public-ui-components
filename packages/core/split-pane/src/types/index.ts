@@ -7,10 +7,6 @@ export interface UseSplitPaneOptions {
    */
   horizontal?: boolean
   /**
-   * If true, when resizing one pane, the other panes will adjust their sizes accordingly. Default is false.
-   */
-  pushOtherPanes?: boolean
-  /**
    * Key used for storing pane sizes in local storage.
    */
   storageKey?: string
