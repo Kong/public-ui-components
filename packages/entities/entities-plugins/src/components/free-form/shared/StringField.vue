@@ -26,7 +26,7 @@
       :help="(multiline && error) ? errorMessage : help"
       :model-value="fieldValue ?? ''"
       :multiline="multiline"
-      :placeholder="placeholder"
+      :placeholder="placeholder ?? fieldAttrs.placeholder"
       @update:model-value="handleUpdate"
     >
       <template

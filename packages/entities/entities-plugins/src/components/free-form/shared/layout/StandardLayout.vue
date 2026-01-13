@@ -136,18 +136,23 @@
         />
 
         <StringField
+          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'instance_name')"
           :label="t('plugins.form.fields.instance_name.label')"
           name="instance_name"
           :placeholder="t('plugins.form.fields.instance_name.placeholder')"
         />
 
         <StringArrayField
+          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'tags')"
           :help="t('plugins.form.fields.tags.help')"
           name="tags"
           :placeholder="t('plugins.form.fields.tags.placeholder')"
         />
 
-        <Field name="protocols" />
+        <Field
+          v-if="!!freeFormSchema.fields.find(f => Object.keys(f)[0] === 'protocols')"
+          name="protocols"
+        />
       </EntityFormBlock>
     </template>
 
