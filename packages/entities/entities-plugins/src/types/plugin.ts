@@ -138,7 +138,6 @@ export type PluginMetaData<I18nMessageSource = void> = {
   group: PluginGroup // Plugin categories meta.
   scope: PluginScope[] // The scope supported by the Plugin.
   gatewayVersion?: string // Gateway version in which the plugin was introduced.
-  introducedTime?: number // The timestamp when the plugin was introduced.
   useLegacyForm?: boolean // An optional field to use legacy form for the plugin. Default to false.
   fieldRules?: FieldRules
   useUIData?: boolean // An optional field that indicates if the plugin may have associated UI data. (via `?__ui_data`)

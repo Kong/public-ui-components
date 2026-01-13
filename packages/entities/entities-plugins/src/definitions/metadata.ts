@@ -25,7 +25,7 @@ import keyEncCredentialSchema from './schemas/credentials/mockedKeyEncAuthSchema
  * Please be noted that the `name` and `description` fields are not populated here, as they depends
  * on i18n resources. You may use the `usePluginMetaData` composable instead to get the localized metadata.
  */
-export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSource>, 'introducedTime' | 'name' | 'description'>> = {
+export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSource>, 'name' | 'description'>> = {
   'basic-auth': {
     descriptionKey: 'plugins.meta.basic-auth.description',
     nameKey: 'plugins.meta.basic-auth.name',
