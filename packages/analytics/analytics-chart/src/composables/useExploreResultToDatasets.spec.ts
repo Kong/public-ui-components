@@ -10,8 +10,8 @@ describe('useVitalsExploreDatasets', () => {
     const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
       data: [] as GroupByResult[],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998870000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
         granularity_ms: 8000,
         display: { route: { id: { name: 'dimension' } } } as DisplayBlob,
         metric_names: ['request_count'],
@@ -36,8 +36,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       }],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998870000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
         granularity_ms: 8000,
         display: { route: { id: { name: 'dimension' } } } as DisplayBlob,
         metric_names: ['request_count'],
@@ -92,8 +92,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998870000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
         granularity_ms: 8000,
         display: { route: { 'dimension-uuid': { name: 'dimension1' } } },
         metric_names: ['request_count'],
@@ -154,8 +154,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
       meta: {
-        start_ms: 1669928400000,
-        end_ms: 1670014800000,
+        start: '2022-12-01T21:00:00.000Z',
+        end: '2022-12-02T21:00:00.000Z',
         granularity_ms: 86400000,
         metric_names: ['request_count'],
         display: {
@@ -222,8 +222,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
       meta: {
-        start_ms: 1669928400000,
-        end_ms: 1670014800000,
+        start: '2022-12-01T21:00:00.000Z',
+        end: '2022-12-02T21:00:00.000Z',
         granularity_ms: 86400000,
         metric_names: ['request_count'],
         display: {
@@ -264,8 +264,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998870000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
         granularity_ms: 8000,
         metric_names: ['request_count'],
         query_id: '',
@@ -301,8 +301,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998870000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
         granularity_ms: 8000,
         metric_names: [
           'metric1',
@@ -351,8 +351,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998870000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
         granularity_ms: 8000,
         metric_names: [
           'metric1',
@@ -425,8 +425,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998870000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
         granularity_ms: 86400000,
         metric_names: ['metric1'] as any as ExploreAggregations[],
         display: {
@@ -523,8 +523,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998870000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
         granularity_ms: 86400000,
         metric_names: ['metric1'] as any as ExploreAggregations[],
         display: {
@@ -569,8 +569,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ] as AnalyticsExploreRecord[],
       meta: {
-        start_ms: 1735689600000,
-        end_ms: 1735693200000,
+        start: '2025-01-01T00:00:00.000Z',
+        end: '2025-01-01T01:00:00.000Z',
         granularity_ms: 60000,
         metric_names: ['request_count'],
         display: {

@@ -24,8 +24,8 @@ describe('useVitalsExploreDatasets', () => {
     const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
       data: [],
       meta: {
-        start_ms: 1667308380000,
-        end_ms: 1667481180000,
+        start: '2022-11-01T13:13:00.000Z',
+        end: '2022-11-03T13:13:00.000Z',
         granularity_ms: 0,
         display: { route: { 'dimension-id': { name: 'dimension-name' } } },
         metric_names: ['request_count'],
@@ -46,8 +46,8 @@ describe('useVitalsExploreDatasets', () => {
     const exploreResult: ComputedRef<ExploreResultV4> = computed(() => ({
       data: [],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998870000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:10.000Z',
         granularity_ms: 5000,
         display: { route: { 'dimension-id': { name: 'dimension-name' } } },
         metric_names: ['request_count'],
@@ -76,8 +76,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998872000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:12.000Z',
         granularity_ms: 5000,
         display: { route: { id: { name: 'label' } } },
         metric_names: ['request_count'],
@@ -117,8 +117,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998872000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:12.000Z',
         granularity_ms: 5000,
         display: { route: { id: { name: 'label' } } },
         metric_names: ['request_count'],
@@ -160,8 +160,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
       meta: {
-        start_ms: 1640998862000,
-        end_ms: 1640998872000,
+        start: '2022-01-01T01:01:02.000Z',
+        end: '2022-01-01T01:01:12.000Z',
         granularity_ms: 5000,
         display: { route: { id: { name: 'label' } } },
         metric_names: ['request_count'],
@@ -209,8 +209,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         display: { route: { id: { name: 'label' } } },
         metric_names: ['request_count'],
@@ -256,10 +256,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
-        start: new Date(Math.trunc(START_FOR_DAILY_QUERY.getTime())).toISOString(),
-        end: new Date(Math.trunc(END_FOR_DAILY_QUERY.getTime())).toISOString(),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         metric_names: ['metric1', 'metric2'] as any as ExploreAggregations[],
         display: {},
@@ -320,8 +318,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         metric_names: ['metric1', 'metric2'] as any as ExploreAggregations[],
         display: {},
@@ -370,8 +368,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         metric_names: ['metric1'] as any as ExploreAggregations[],
         display: {
@@ -416,8 +414,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         metric_names: ['metric'] as any as ExploreAggregations[],
         query_id: '',
@@ -465,8 +463,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         metric_names: [
           'metric1',
@@ -571,8 +569,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         metric_names: [
           'request_count',
@@ -663,8 +661,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         metric_names: [
           'metric1',
@@ -699,8 +697,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         metric_names: [
           'metric1',
@@ -737,8 +735,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: START_FOR_DAILY_QUERY.getTime(),
-        end_ms: addHours(START_FOR_DAILY_QUERY, 6).getTime(),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: addHours(START_FOR_DAILY_QUERY, 6).toISOString(),
         granularity_ms: 3600000,
         display: { dimension: { id: { name: 'label' } } } as DisplayBlob,
         metric_names: ['metric'] as any as ExploreAggregations[],
@@ -858,8 +856,8 @@ describe('useVitalsExploreDatasets', () => {
         } as GroupByResult,
       ],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         metric_names: ['metric1'] as any as ExploreAggregations[],
         display: {
@@ -915,8 +913,8 @@ describe('useVitalsExploreDatasets', () => {
         },
       ] as AnalyticsExploreRecord[],
       meta: {
-        start_ms: Math.trunc(START_FOR_DAILY_QUERY.getTime()),
-        end_ms: Math.trunc(END_FOR_DAILY_QUERY.getTime()),
+        start: START_FOR_DAILY_QUERY.toISOString(),
+        end: END_FOR_DAILY_QUERY.toISOString(),
         granularity_ms: 86400000,
         metric_names: ['request_count'],
         display: {

@@ -175,9 +175,13 @@ const timeRangeMs = computed<number | undefined>(() => {
     return 0
   }
 
-  return ('start_ms' in props.chartData.meta)
-    ? props.chartData.meta.end_ms - props.chartData.meta.start_ms
-    : undefined
+  if (props.chartData.meta.start && props.chartData.meta.end) {
+    const startMs = new Date(props.chartData.meta.start).getTime()
+    const endMs = new Date(props.chartData.meta.end).getTime()
+    return endMs - startMs
+  }
+
+  return undefined
 })
 
 const computedMetricUnit = computed<string>(() => {

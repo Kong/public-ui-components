@@ -1,8 +1,8 @@
 export const emptyExploreResult = {
   data: [],
   meta: {
-    start_ms: 1685559600,
-    end_ms: 1685599200,
+    start: '1970-01-20T12:12:39.600Z',
+    end: '1970-01-20T12:13:19.200Z',
     query_id: '12345',
     display: {
       status_code: { 200: { name: '200' }, 300: { name: '300' }, 400: { name: '400' }, 500: { name: '500' } },
@@ -861,8 +861,8 @@ export const exploreResult = {
     },
   ],
   meta: {
-    start_ms: 1707170400000,
-    end_ms: 1707256800000,
+    start: '2024-02-05T22:00:00.000Z',
+    end: '2024-02-06T22:00:00.000Z',
     granularity_ms: 3600000,
     query_id: 'explore-f239c99a-0bef-4256-82e8-c5b73c99956b',
     metric_names: [
@@ -1480,8 +1480,8 @@ export const multiDimensionExploreResult = {
     },
   ],
   meta: {
-    start_ms: 1707174000000,
-    end_ms: 1707260400000,
+    start: '2024-02-05T23:00:00.000Z',
+    end: '2024-02-06T23:00:00.000Z',
     granularity_ms: 86400000,
     query_id: 'explore-16c125d8-1c8a-4598-9c34-f41032303d02',
     metric_names: [
