@@ -5,7 +5,6 @@ import { useDebounceFn } from '@vueuse/core'
 import * as monaco from 'monaco-editor'
 import { shikiToMonaco } from '@shikijs/monaco'
 import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'shiki'
-import * as lifecycle from '../singletons/lifecycle'
 
 import type { MaybeRefOrGetter } from 'vue'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
@@ -177,14 +176,12 @@ export function useMonacoEditor<T extends HTMLElement>(
       editorStates.hasContent = !!options.code.value
 
       // Watch content changes and trigger callbacks efficiently
-      lifecycle.trackForEditor(editor.value,
-        editor.value.onDidChangeModelContent(() => {
-          if (_isApplyingExternalUpdate) return
-          const content = editor.value!.getValue()
-          editorStates.hasContent = !!content.length
-          options.code.value = content
-        }),
-      )
+      editor.value.onDidChangeModelContent(() => {
+        if (_isApplyingExternalUpdate) return
+        const content = editor.value!.getValue()
+        editorStates.hasContent = !!content.length
+        options.code.value = content
+      })
 
       // TODO: register editor actions
 
@@ -202,11 +199,9 @@ export function useMonacoEditor<T extends HTMLElement>(
         const state = findController?.getState()
 
         // Listen for changes to the state of the "find" panel
-        lifecycle.trackForEditor(editor.value,
-          state?.onFindReplaceStateChange(() => {
-            editorStates.searchBoxIsRevealed = state.isRevealed
-          }), // This returns a disposable
-        )
+        state?.onFindReplaceStateChange(() => {
+          editorStates.searchBoxIsRevealed = state.isRevealed
+        })
       } catch (error) {
         console.error('useMonacoEditor: Failed to get the state of findController', error)
       }
