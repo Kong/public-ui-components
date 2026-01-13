@@ -13,8 +13,6 @@ export interface DisplayBlob {
 }
 
 export interface QueryResponseMeta {
-  start_ms: number
-  end_ms: number
   start: string
   end: string
   display: DisplayBlob
