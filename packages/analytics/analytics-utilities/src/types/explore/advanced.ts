@@ -13,6 +13,11 @@ export const queryableExploreDimensions = [
   'data_plane_node_version',
   'realm',
   'portal_api',
+  'mcp_info',
+  'mcp_session_id',
+  'mcp_method',
+  'mcp_tool_name',
+  'mcp_error',
 ] as const
 
 export type QueryableExploreDimensions = typeof queryableExploreDimensions[number]
@@ -52,6 +57,8 @@ export const exploreAggregations = [
   'request_size_p50',
   'request_size_average',
   'request_size_sum',
+  'mcp_response_body_size_sum',
+  'mcp_latency_average',
 ] as const
 
 export type ExploreAggregations = typeof exploreAggregations[number]
