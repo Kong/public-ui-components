@@ -749,10 +749,17 @@ importers:
         version: 4.6.4(vue@3.5.26(typescript@5.9.3))
 
   packages/core/split-pane:
+    dependencies:
+      '@vueuse/core':
+        specifier: ^14.1.0
+        version: 14.1.0(vue@3.5.26(typescript@5.9.3))
     devDependencies:
       '@kong/design-tokens':
         specifier: 1.18.2
         version: 1.18.2
+      '@kong/icons':
+        specifier: ^1.41.0
+        version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
         specifier: 9.49.0
         version: 9.49.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
