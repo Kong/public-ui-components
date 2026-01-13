@@ -75,7 +75,7 @@ export function useSplitPane(options: UseSplitPaneOptions = {
 
     for (const key of allowedKeys) {
       if (key in patch) {
-        pane[key] = patch[key]
+        pane[key] = patch[key] as any
       }
     }
   }
