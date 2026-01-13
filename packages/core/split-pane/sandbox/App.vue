@@ -1,12 +1,19 @@
 <template>
-  <div class="sandbox-container">
-    <main>
-      <p>This is the component sandbox.</p>
-      <SplitPane />
-    </main>
-  </div>
+  <main class="sandbox-container">
+    <SplitPaneLayout>
+      <template #left-pane>
+        left pane for navigation items
+      </template>
+      <template #middle-pane>
+        middle pane for editor
+      </template>
+      <template #right-pane>
+        right pane for preview
+      </template>
+    </SplitPaneLayout>
+  </main>
 </template>
 
 <script setup lang="ts">
-import { SplitPane } from '../src'
+import { SplitPaneLayout } from '../src'
 </script>
