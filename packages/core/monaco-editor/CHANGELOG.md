@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.9.0...@kong-ui-public/monaco-editor@0.9.1) (2026-01-13)
+
+
+### Bug Fixes
+
+* **monaco-editor:** reset model value when editor is recreated ([#2815](https://github.com/Kong/public-ui-components/issues/2815)) ([3865fec](https://github.com/Kong/public-ui-components/commit/3865fecc81a72385d4a20889b2f9ffc1318c2a9d))
+
+
+
+
+
 # [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.8.2...@kong-ui-public/monaco-editor@0.9.0) (2026-01-13)
 
 
