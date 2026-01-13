@@ -701,7 +701,10 @@ export const PLUGIN_METADATA = Object.fromEntries(
     key,
     {
       ...value,
-      introducedTime: GATEWAY_VERSION_TIMESTAMP_MAP[value.gatewayVersion],
+      introducedTime:
+        value?.gatewayVersion ? GATEWAY_VERSION_TIMESTAMP_MAP[
+          value.gatewayVersion
+        ] : undefined,
     },
   ]),
 )
