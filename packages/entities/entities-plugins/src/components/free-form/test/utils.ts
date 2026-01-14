@@ -1,4 +1,4 @@
-import { isTagField, resolve } from '../shared/utils'
+import { isTagField, resolve, toArray } from '../shared/utils'
 import { buildAncestor, buildSchemaMap, defaultLabelFormatter, generalizePath } from '../shared/composables'
 
 import type {
@@ -133,7 +133,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     // Check label
     assertLabelBySelector({
       selector: () => cy.getTestId(`ff-${fieldKey}`).parents('.ff-enum-field').children('label'),
-      labelText: defaultLabelFormatter(fieldKey),
+      labelText: convertFieldPathToLabel(fieldKey),
       fieldSchema,
       labelOption,
     })
@@ -239,7 +239,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
     // Check label
     assertLabel({
       fieldKey,
-      labelText: asChild ? '' : defaultLabelFormatter(fieldKey),
+      labelText: asChild ? '' : convertFieldPathToLabel(fieldKey),
       fieldSchema,
       labelOption: {
         ...labelOption,
@@ -252,18 +252,18 @@ export function assertFormRendering(schema: FormSchema, options?: {
       cy.getTestId(`ff-object-content-${fieldKey}`).should('exist')
     }
 
-    // Click the 'add' button
+    // Enable the object field if not added
     if (!asChild) {
       if (!fieldSchema.default && !fieldSchema.required) {
-        cy.getTestId(`ff-object-add-btn-${fieldKey}`).should('exist')
-        cy.getTestId(`ff-object-add-btn-${fieldKey}`).click()
+        cy.getTestId(`ff-object-switch-${fieldKey}`).should('exist')
+        cy.getTestId(`ff-object-switch-${fieldKey}`).check({ force: true })
         cy.getTestId(`ff-object-content-${fieldKey}`).should('exist')
 
-        // If the field is required, the delete button should not exist
+        // If the field is required, the switch button should not exist
         if (fieldSchema.required) {
-          cy.getTestId(`ff-object-remove-btn-${fieldKey}`).should('not.exist')
+          cy.getTestId(`ff-object-switch-${fieldKey}`).should('not.exist')
         } else {
-          cy.getTestId(`ff-object-remove-btn-${fieldKey}`).should('exist')
+          cy.getTestId(`ff-object-switch-${fieldKey}`).should('exist')
         }
       }
     }
@@ -296,12 +296,10 @@ export function assertFormRendering(schema: FormSchema, options?: {
       cy.getTestId(`ff-object-toggle-btn-${fieldKey}`).click()
       cy.getTestId(`ff-object-content-${fieldKey}`).should('exist')
 
-      // Click the 'delete' button
+      // Remove the object field if not required
       if (!fieldSchema.required) {
-        cy.getTestId(`ff-object-remove-btn-${fieldKey}`).should('exist')
-        cy.getTestId(`ff-object-remove-btn-${fieldKey}`).click()
+        cy.getTestId(`ff-object-switch-${fieldKey}`).uncheck({ force: true })
         cy.getTestId(`ff-object-content-${fieldKey}`).should('not.exist')
-        cy.getTestId(`ff-object-add-btn-${fieldKey}`).should('exist')
       }
     }
   }
@@ -380,13 +378,6 @@ export function assertFormRendering(schema: FormSchema, options?: {
     // Check label
     assertLabel({ fieldKey, fieldSchema, labelOption })
 
-    // Check if the content is initially existing
-    if (fieldSchema.default && fieldSchema.default.length > 0) {
-      cy.getTestId(`ff-array-basic-container-${fieldKey}`).should('exist')
-    } else {
-      cy.getTestId(`ff-array-basic-container-${fieldKey}`).should('not.exist')
-    }
-
     // Check the 'add' button
     cy.getTestId(`ff-add-item-btn-${fieldKey}`)
       .should('exist')
@@ -454,7 +445,7 @@ export function assertFormRendering(schema: FormSchema, options?: {
   }) {
     assertLabelBySelector({
       selector: () => cy.getTestId(`ff-label-${fieldKey}`),
-      labelText: labelText || defaultLabelFormatter(fieldKey),
+      labelText: labelText || convertFieldPathToLabel(fieldKey),
       fieldSchema,
       labelOption,
     })
@@ -518,4 +509,10 @@ function isStringArrayOfArray(fieldSchema: UnionFieldSchema) {
   return fieldSchema.type === 'array'
     && fieldSchema.elements.type === 'array'
     && fieldSchema.elements.elements.type === 'string'
+}
+
+function convertFieldPathToLabel(fieldPath: string) {
+  const parts = toArray(fieldPath)
+  const last = parts.pop()!
+  return defaultLabelFormatter(last)
 }

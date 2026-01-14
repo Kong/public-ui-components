@@ -50,7 +50,7 @@
           :aria-expanded="expanded"
           :aria-label="fieldAttrs.label"
           class="ff-object-field-toggle-btn"
-          data-testid="ff-object-field-toggle-btn"
+          :data-testid="`ff-object-toggle-btn-${field.path.value}`"
           :disabled="!added"
           type="button"
           @click.prevent.stop="toggleDisplay()"
@@ -58,7 +58,7 @@
           <ChevronRightIcon
             class="ff-object-field-toggle-btn-trigger-icon"
             :class="{ 'collapse-expanded': expanded }"
-            data-testid="collapse-trigger-icon"
+            :data-testid="`ff-object-toggle-trigger-icon-${field.path.value}`"
             decorative
             :size="KUI_ICON_SIZE_30"
           />
@@ -90,6 +90,7 @@
       <KInputSwitch
         v-if="!fieldAttrs.required"
         v-model="added"
+        :data-testid="`ff-object-switch-${field.path.value}`"
         @update:model-value="handleToggleSwitch"
       />
     </header>
