@@ -160,6 +160,7 @@ const autofillSlot = inject<AutofillSlot | undefined>(AUTOFILL_SLOT, undefined)
 const realShowVaultSecretPicker = computed(() => {
   return showVaultSecretPicker ?? !!(field.schema!.value as MapFieldSchema)?.values?.referenceable
 })
+
 const schema = computed(() => ({ referenceable: realShowVaultSecretPicker.value }))
 
 function handleAutofill(index: number, value: string) {
@@ -170,6 +171,8 @@ defineExpose({
   reset,
   setValue,
 })
+
+
 </script>
 
 <style lang="scss" scoped>
