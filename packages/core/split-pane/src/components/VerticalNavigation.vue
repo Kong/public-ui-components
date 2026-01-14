@@ -94,9 +94,13 @@ const router = useRouter()
 
 const { paneLeftExpanded, togglePaneLeft, isDraggingPaneLeft, isDraggingInnerPanes } = useSplitPane()
 
+// To manage tooltip visibility during pane toggling and dragging
 const sidePanelToggling = ref<boolean>(false)
+// To avoid layout shift on initial render
+const hasMounted = ref<boolean>(false)
 
 
+// Hide tooltip when the pane is being toggled or dragged
 const hideTogglePanelTooltip = computed<boolean>(() => sidePanelToggling.value || isDraggingPaneLeft.value || isDraggingInnerPanes.value)
 
 // Subtract 8px for the scrollbar
@@ -113,8 +117,6 @@ const onNavItemClick = (item: VerticalNavigationItem): void => {
   }
 }
 
-const hasMounted = ref(false)
-
 onMounted(async () => {
   await nextTick()
   // next tick ensures initial layout is complete
@@ -126,11 +128,11 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .kong-ui-public-split-pane-vertical-navigation {
-  color: $kui-navigation-color-text;
+  color: var(--kui-navigation-color-text, $kui-navigation-color-text);
   display: flex;
   height: 100%;
   justify-content: center;
-  padding: $kui-space-40;
+  padding: var(--kui-space-40, $kui-space-40);
   position: relative;
   width: 52px;
   z-index: 1; // Keep overtop of the panes
@@ -139,7 +141,7 @@ onMounted(async () => {
     align-items: center;
     display: flex;
     flex-direction: column;
-    gap: $kui-space-50;
+    gap: var(--kui-space-50, $kui-space-50);
     justify-content: space-between;
     width: 100%;
 
@@ -148,7 +150,7 @@ onMounted(async () => {
       display: flex;
       flex-direction: column;
       flex-grow: 1;
-      gap: $kui-space-50;
+      gap: var(--kui-space-50, $kui-space-50);
       position: relative;
       width: 100%;
     }
@@ -171,10 +173,10 @@ onMounted(async () => {
 
     &-item {
       align-items: center;
-      background-color: $kui-navigation-color-background;
-      border: $kui-border-width-10 solid $kui-color-border-transparent;
-      border-radius: $kui-border-radius-30;
-      color: $kui-navigation-color-text;
+      background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
+      border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
+      border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+      color: var(--kui-navigation-color-text, $kui-navigation-color-text);
       cursor: pointer;
       display: flex;
       justify-content: center;
@@ -185,15 +187,15 @@ onMounted(async () => {
 
       &:hover,
       &:focus-visible {
-        color: $kui-navigation-color-text-hover;
+        color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
 
         :deep(svg) {
-          color: $kui-navigation-color-text-hover;
+          color: var(--kui-navigation-color-text-hover, $kui-navigation-color-text-hover);
         }
       }
 
       &:focus-visible {
-        box-shadow: $kui-navigation-shadow-focus;
+        box-shadow: var(--kui-navigation-shadow-focus, $kui-navigation-shadow-focus);
         outline: none;
       }
 
@@ -206,22 +208,22 @@ onMounted(async () => {
       }
 
       &.active {
-        background-color: $kui-navigation-color-background-selected;
-        border-color: $kui-navigation-color-border;
-        color: $kui-navigation-color-text-selected;
+        background-color: var(--kui-navigation-color-background-selected, $kui-navigation-color-background-selected);
+        border-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
+        color: var(--kui-navigation-color-text-selected, $kui-navigation-color-text-selected);
 
         &:hover,
         &:focus-visible {
-          color: $kui-navigation-color-text-selected !important;
+          color: var(--kui-navigation-color-text-selected, $kui-navigation-color-text-selected) !important;
 
           :deep(svg) {
-            color: $kui-navigation-color-text-selected;
+            color: var(--kui-navigation-color-text-selected, $kui-navigation-color-text-selected);
           }
         }
       }
 
       &.toggle-left-panel {
-        border-color: $kui-navigation-color-border;
+        border-color: var(--kui-navigation-color-border, $kui-navigation-color-border);
       }
     }
   }

@@ -1,17 +1,27 @@
-import { computed, ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, readonly } from 'vue'
 import { useEventListener } from '@vueuse/core'
 import { PANE_LEFT_MIN_WIDTH, PANE_LEFT_MAX_WIDTH } from '../constants/split-pane'
 import type { useSplitPaneParams } from '../types'
 
 /** Create singletons to track the state */
+
+/** Tracks whether the left pane is currently being dragged/resized */
 const isDraggingPaneLeft = ref<boolean>(false)
+
+/** Tracks whether the inner panes (center/right) are currently being dragged/resized */
 const isDraggingInnerPanes = ref<boolean>(false)
-// Allow the left pane to be collapsed and expanded; initialize as true
+
+/** Controls whether the left pane is expanded or collapsed; initialized as true (expanded) */
 const paneLeftExpanded = ref<boolean>(true)
 
-// The width of the center pane
+/** The current width of the center pane in pixels */
 const centerPaneWidth = ref<number>(0)
 
+/**
+ * Composable for managing split pane layout with resizable panels
+ * @param {useSplitPaneParams} [params]
+ * @returns {Object} Object containing pane state and control functions
+ */
 export default function useSplitPane(params?: useSplitPaneParams) {
   // Template refs
   const _verticalNavRef = params?.verticalNavRef || ref(null)
@@ -20,6 +30,11 @@ export default function useSplitPane(params?: useSplitPaneParams) {
   const _paneCenterRef = params?.paneCenterRef || ref(null)
   const _paneRightRef = params?.paneRightRef || ref(null)
 
+  /**
+   * Gets the current width of a specified pane element
+   * @param {string} el - The pane element identifier
+   * @returns {number} The width of the element in pixels, or 0 if not found
+   */
   const getPaneElementWidth = (el: 'verticalNav' | 'innerPanesContainer' | 'paneLeft' | 'paneCenter' | 'paneRight'): number => {
     switch (el) {
       case 'verticalNav':
@@ -44,7 +59,10 @@ export default function useSplitPane(params?: useSplitPaneParams) {
   const startXPaneLeft = ref<number>(0)
   const startWidthPaneLeft = ref<number>(0)
 
-  /** Set the width on the pane center HTML element */
+  /**
+   * Sets the width on the center pane HTML element
+   * @param {number} [forceWidth] - Optional width percentage to force on the center pane
+   */
   const setCenterPaneWidth = (forceWidth?: number): void => {
     if (_paneCenterRef.value) {
       if (forceWidth) {
@@ -67,6 +85,10 @@ export default function useSplitPane(params?: useSplitPaneParams) {
     }
   }
 
+  /**
+   * Refreshes the sizes of the inner panes (center and right)
+   * If right pane is hidden, forces the center pane to take full width
+   */
   const refreshInnerPaneSizes = (): void => {
     // If center pane showing and right pane is hidden
     if (_paneCenterRef.value && _paneRightRef.value?.style.display === 'none') {
@@ -77,6 +99,10 @@ export default function useSplitPane(params?: useSplitPaneParams) {
     }
   }
 
+  /**
+   * Updates the center pane width ensuring it stays within min/max bounds
+   * Recalculates the percentage width based on container dimensions
+   */
   const updateCenterPaneWidth = (): void => {
     if (!_innerPanesContainerRef.value || !_paneCenterRef.value) return
 
@@ -102,7 +128,11 @@ export default function useSplitPane(params?: useSplitPaneParams) {
     setCenterPaneWidth()
   }
 
-  /** The event to bind to the draggable element's `@mousedown` event */
+  /**
+   * Starts the drag operation for resizing inner panes (center/right)
+   * Binds to the draggable element's mousedown event
+   * @param {MouseEvent} e - The mouse event from the mousedown trigger
+   */
   const startDraggingInnerPanes = (e: MouseEvent): void => {
     // Make sure panel exists and only respond to left-click
     if (!_paneCenterRef.value || e.button !== 0) return
@@ -115,6 +145,11 @@ export default function useSplitPane(params?: useSplitPaneParams) {
     document.body.style.userSelect = 'none'
   }
 
+  /**
+   * Handles the drag operation for inner panes during mouse move
+   * Calculates new width percentage and applies constraints
+   * @param {MouseEvent} e - The mouse event from the mousemove trigger
+   */
   const onDraggingInnerPanes = (e: MouseEvent): void => {
     if (!isDraggingInnerPanes.value || !_innerPanesContainerRef.value || !_paneCenterRef.value) return
 
@@ -134,11 +169,20 @@ export default function useSplitPane(params?: useSplitPaneParams) {
     setCenterPaneWidth()
   }
 
+  /**
+   * Stops the drag operation for inner panes
+   * Resets dragging state and restores text selection
+   */
   const stopDraggingInnerPanes = (): void => {
     isDraggingInnerPanes.value = false
     document.body.style.userSelect = ''
   }
 
+  /**
+   * Starts the drag operation for resizing the left pane
+   * Only works when the left pane is expanded and on left-click
+   * @param {MouseEvent} e - The mouse event from the mousedown trigger
+   */
   const startDraggingPaneLeft = (e: MouseEvent): void => {
     // Make sure panel exists and is expanded, and only respond to left-click
     if (!_paneLeftRef.value || !paneLeftExpanded.value || e.button !== 0) return
@@ -151,6 +195,11 @@ export default function useSplitPane(params?: useSplitPaneParams) {
     document.body.style.userSelect = 'none'
   }
 
+  /**
+   * Handles the drag operation for the left pane during mouse move
+   * Clamps the width between min and max values defined in constants
+   * @param {MouseEvent} e - The mouse event from the mousemove trigger
+   */
   const onDraggingPaneLeft = (e: MouseEvent): void => {
     if (!isDraggingPaneLeft.value || !_paneLeftRef.value) return
 
@@ -172,17 +221,29 @@ export default function useSplitPane(params?: useSplitPaneParams) {
     centerPaneWidth.value = getPaneElementWidth('paneCenter')
   }
 
+  /**
+   * Stops the drag operation for the left pane
+   * Resets dragging state and restores text selection
+   */
   const stopDraggingPaneLeft = (): void => {
     isDraggingPaneLeft.value = false
     document.body.style.userSelect = ''
   }
 
+  /**
+   * Handles window resize events
+   * Updates center pane width if not currently dragging
+   */
   const handleResize = (): void => {
     if (!isDraggingInnerPanes.value) {
       updateCenterPaneWidth()
     }
   }
 
+  /**
+   * Toggles the left pane between expanded and collapsed states
+   * @returns {Promise<void>} Resolves when the toggle is complete
+   */
   const togglePaneLeft = async (): Promise<void> => {
     paneLeftExpanded.value = !paneLeftExpanded.value
   }
@@ -222,12 +283,12 @@ export default function useSplitPane(params?: useSplitPaneParams) {
   })
 
   return {
-    isDraggingPaneLeft: computed(() => isDraggingPaneLeft.value), // readonly
-    isDraggingInnerPanes: computed(() => isDraggingInnerPanes.value), // readonly
+    isDraggingPaneLeft: readonly(isDraggingPaneLeft),
+    isDraggingInnerPanes: readonly(isDraggingInnerPanes),
     startDraggingInnerPanes,
     refreshInnerPaneSizes,
     // Toggle the left pane
-    paneLeftExpanded: computed(() => paneLeftExpanded.value), // readonly
+    paneLeftExpanded: readonly(paneLeftExpanded),
     togglePaneLeft,
     startDraggingPaneLeft,
     centerPaneWidth,

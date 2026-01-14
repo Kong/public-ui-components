@@ -1,4 +1,4 @@
-import type { ShallowRef } from 'vue'
+import type { Component, ShallowRef } from 'vue'
 import type { RouteLocationRaw } from 'vue-router'
 
 export interface SplitPaneProps {
@@ -44,10 +44,25 @@ export interface SplitPaneProps {
 
 
 export interface VerticalNavigationItem {
+  /**
+   * The route location to navigate to
+   */
   to?: RouteLocationRaw
+  /**
+   * The tooltip text to show on hover
+   */
   tooltip: string
+  /**
+   * Is the item currently active
+   */
   active: boolean
-  icon: object
+  /**
+   * The icon to show for the navigation item
+   */
+  icon: Component
+  /**
+   * The test ID for the navigation item
+   */
   testid: string
 }
 

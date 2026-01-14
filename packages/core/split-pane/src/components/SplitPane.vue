@@ -13,6 +13,7 @@
       />
       <div class="kong-ui-public-split-pane-container-inner">
         <div class="kong-ui-public-split-pane-panes">
+          <!-- left pane -->
           <div
             id="kong-ui-public-split-pane-left"
             ref="paneLeftRef"
@@ -25,6 +26,7 @@
             <slot name="pane-left" />
           </div>
 
+          <!-- left pane resize divider -->
           <div
             v-if="showPaneLeft"
             ref="paneLeftDivider"
@@ -36,6 +38,7 @@
             <div class="kong-ui-public-split-pane-drag-handle" />
           </div>
 
+          <!-- inner panes -->
           <div class="kong-ui-public-split-pane-container-inner-content">
             <div
               v-if="!!slots.toolbar"
@@ -50,6 +53,7 @@
               ref="innerPanesContainerRef"
               class="kong-ui-public-split-pane-inner-panes"
             >
+              <!-- center pane -->
               <div
                 v-show="showPaneCenter"
                 ref="paneCenterRef"
@@ -62,6 +66,7 @@
                 <slot name="pane-center" />
               </div>
 
+              <!-- inner panes resize divider -->
               <div
                 v-if="showInnerPanesResizeDivider"
                 ref="innerPanesDivider"
@@ -73,6 +78,7 @@
                 <div class="kong-ui-public-split-pane-drag-handle" />
               </div>
 
+              <!-- right pane -->
               <div
                 v-show="showPaneRight"
                 ref="paneRightRef"

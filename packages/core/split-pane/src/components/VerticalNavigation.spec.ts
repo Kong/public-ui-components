@@ -70,7 +70,7 @@ describe('<VerticalNavigation />', () => {
         },
       ]
       const wrapper = createWrapper({ items })
-      const buttons = wrapper.findAll('.kong-ui-public-split-pane-vertical-navigation-nav-item')
+      const buttons = wrapper.findAll('.split-pane-nav-item')
       // Should have return button + 2 custom items + toggle button = 4
       expect(buttons.length).toBeGreaterThanOrEqual(3)
     })
@@ -100,9 +100,8 @@ describe('<VerticalNavigation />', () => {
         },
       ]
       const wrapper = createWrapper({ items })
-      const buttons = wrapper.findAll('.kong-ui-public-split-pane-vertical-navigation-nav-item')
-      const activeButton = buttons.find((btn) => btn.classes('active'))
-      expect(activeButton).toBeDefined()
+      const activeItem = wrapper.find('[data-testid="kong-ui-public-split-pane-vertical-navigation-nav-item-active-item"]')
+      expect(activeItem.classes('active')).toBe(true)
     })
 
     it('should not apply active class to inactive navigation items', () => {
