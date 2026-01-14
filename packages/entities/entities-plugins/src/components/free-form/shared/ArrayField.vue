@@ -41,7 +41,7 @@
       <KButton
         v-if="appearance === 'tabs'"
         appearance="tertiary"
-        :aria-label="t('actions.add_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
+        :aria-label="t('actions.add_entity', { entity: fieldAttrs.label })"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
         icon
         @click="addItem"
@@ -83,11 +83,11 @@
           </div>
           <KTooltip
             class="ff-array-field-item-remove-tooltip"
-            :text="`Remove ${fieldAttrs.label}`"
+            :text="t('actions.remove_entity', { entity: fieldAttrs.label })"
           >
             <KButton
               appearance="tertiary"
-              :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
+              :aria-label="t('actions.remove_entity', { entity: fieldAttrs.label })"
               class="ff-array-field-item-remove"
               :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
               icon
@@ -101,7 +101,7 @@
 
       <KButton
         appearance="tertiary"
-        :aria-label="t('actions.add_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
+        :aria-label="t('actions.add_entity', { entity: fieldAttrs.label })"
         class="ff-array-field-add-item-btn"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
         @click="addItem"

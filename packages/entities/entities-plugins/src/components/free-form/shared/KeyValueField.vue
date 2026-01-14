@@ -34,14 +34,6 @@
           </slot>
         </template>
       </KLabel>
-      <KButton
-        appearance="tertiary"
-        :data-testid="`ff-kv-add-btn-${field.path.value}`"
-        icon
-        @click="handleAddClick"
-      >
-        <AddIcon />
-      </KButton>
     </header>
 
     <div
@@ -84,21 +76,38 @@
         </template>
       </EnhancedInput>
 
-      <KButton
-        appearance="tertiary"
-        :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
-        icon
-        @click="removeEntry(entry.id)"
+      <KTooltip
+        class="ff-array-field-item-remove-tooltip"
+        :text="i18n.t('actions.remove_entity', { entity: labelAttrs.label })"
       >
-        <TrashIcon />
-      </KButton>
+        <KButton
+          appearance="tertiary"
+          :aria-label="i18n.t('actions.remove_entity', { entity: labelAttrs.label })"
+          :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
+          icon
+          @click="removeEntry(entry.id)"
+        >
+          <CloseIcon />
+        </KButton>
+      </KTooltip>
     </div>
+
+    <KButton
+      appearance="tertiary"
+      :aria-label="i18n.t('actions.add_entity', { entity: labelAttrs.label })"
+      class="ff-kv-field-add-entry-btn"
+      :data-testid="`ff-kv-add-btn-${field.path.value}`"
+      @click="handleAddClick"
+    >
+      <AddIcon />
+      {{ i18n.t('actions.add_entity', { entity: labelAttrs.label }) }}
+    </KButton>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useTemplateRef, nextTick, inject, computed } from 'vue'
-import { AddIcon, TrashIcon } from '@kong/icons'
+import { AddIcon, CloseIcon } from '@kong/icons'
 import { AUTOFILL_SLOT, type AutofillSlot } from '@kong-ui-public/forms'
 import type { MapFieldSchema } from '../../../types/plugins/form-schema'
 import useI18n from '../../../composables/useI18n'
@@ -195,6 +204,10 @@ defineExpose({
 
   :deep(.k-tooltip p) {
     margin: 0;
+  }
+
+  &-add-entry-btn {
+    align-self: flex-start;
   }
 }
 </style>
