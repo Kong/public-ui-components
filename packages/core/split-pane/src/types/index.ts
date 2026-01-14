@@ -53,7 +53,7 @@ export interface VerticalNavigationItem {
 
 
 export interface useSplitPaneParams {
-  /** The `useTemplateRef()` of the Studio Modal Vertical Nav */
+  /** The `useTemplateRef()` of the vertical navigation component */
   verticalNavRef?: Readonly<ShallowRef<any | null>>
   /** The `useTemplateRef()` of the resizable pane's parent element */
   innerPanesContainerRef?: Readonly<ShallowRef<HTMLDivElement | null>>

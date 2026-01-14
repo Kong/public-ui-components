@@ -3,7 +3,7 @@
     <nav class="kong-ui-public-split-pane-vertical-navigation-nav">
       <div class="top">
         <KTooltip
-          v-for="item in topNavItems"
+          v-for="item in items"
           :key="item.tooltip"
           :kpop-attributes="{ offset: '10px' }"
           :label="item.tooltip"
@@ -13,8 +13,8 @@
             appearance="none"
             :aria-label="item.tooltip"
             class="kong-ui-public-split-pane-vertical-navigation-nav-item"
-            :class="[{ 'active': item.active }]"
-            :data-testid="`portal-studio-editor-nav-${item.testid}-button`"
+            :class="{ 'active': item.active }"
+            :data-testid="`kong-ui-public-split-pane-vertical-navigation-nav-item-${item.testid}`"
             icon
             size="large"
             :style="{ cursor: 'pointer' }"
@@ -43,11 +43,11 @@
           >
             <KButton
               appearance="none"
-              aria-controls="studio-modal-pane-left"
+              aria-controls="left-pane"
               :aria-expanded="paneLeftExpanded"
               :aria-label="paneLeftExpanded ? i18n.t('actions.collapse_panel') : i18n.t('actions.expand_panel')"
               class="kong-ui-public-split-pane-vertical-navigation-nav-item toggle-left-panel"
-              data-testid="portal-studio-editor-nav-toggle-left-panel-button"
+              data-testid="kong-ui-public-split-pane-toggle-left-panel-button"
               icon
               size="large"
               @click="togglePaneLeft"
@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { ArrowLeftIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@kong/icons'
+import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import useSplitPane from '../composable/useSplitPane'
 import { useRouter } from 'vue-router'
@@ -97,21 +97,6 @@ const togglePaneLeft = (): void => {
     hideTogglePanelTooltip.value = false
   }, 300)
 }
-
-const topNavItems = computed((): VerticalNavigationItem[] => {
-  let navs = [
-    // Return to Konnect
-    {
-      tooltip: i18n.t('actions.return'),
-      icon: ArrowLeftIcon,
-      active: false, // This item is never active
-      testid: 'return-to-konnect',
-    },
-    ...items,
-  ]
-
-  return navs
-})
 
 // Subtract 8px for the scrollbar
 const toggleLeftPanelOffset = computed((): string => `${paneLeftWidth - 8}px`)
