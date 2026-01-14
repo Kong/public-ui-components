@@ -1,4 +1,4 @@
-import { computed, ref, toRef, onMounted, nextTick } from 'vue'
+import { computed, ref, onMounted, nextTick } from 'vue'
 import { useEventListener } from '@vueuse/core'
 import { PANE_LEFT_MIN_WIDTH, PANE_LEFT_MAX_WIDTH } from '../constants/split-pane'
 import type { useSplitPaneParams } from '../types'
