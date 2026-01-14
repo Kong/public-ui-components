@@ -1,6 +1,6 @@
 <template>
   <div class="kong-ui-public-split-pane-vertical-navigation">
-    <nav class="kong-ui-public-split-pane-vertical-navigation-nav">
+    <nav class="split-pane-nav">
       <div class="top">
         <KTooltip
           v-for="item in items"
@@ -12,7 +12,7 @@
           <KButton
             appearance="none"
             :aria-label="item.tooltip"
-            class="kong-ui-public-split-pane-vertical-navigation-nav-item"
+            class="split-pane-nav-item"
             :class="{ 'active': item.active }"
             :data-testid="`kong-ui-public-split-pane-vertical-navigation-nav-item-${item.testid}`"
             icon
@@ -51,7 +51,7 @@
               aria-controls="left-pane"
               :aria-expanded="paneLeftExpanded"
               :aria-label="paneLeftExpanded ? i18n.t('actions.collapse_panel') : i18n.t('actions.expand_panel')"
-              class="kong-ui-public-split-pane-vertical-navigation-nav-item toggle-left-panel"
+              class="split-pane-nav-item toggle-left-panel"
               data-testid="kong-ui-public-split-pane-toggle-left-panel-button"
               icon
               size="large"
@@ -135,7 +135,7 @@ onMounted(async () => {
   width: 52px;
   z-index: 1; // Keep overtop of the panes
 
-  &-nav {
+  .split-pane-nav {
     align-items: center;
     display: flex;
     flex-direction: column;
