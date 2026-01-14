@@ -214,14 +214,12 @@ const isChildOfArray = computed(() => {
   return false
 })
 
-// const realResetLabelPath = computed(() => {
-//   return 'reset'
-//   // if (resetLabelPath !== undefined) return resetLabelPath
-//   // if (isChildOfArray.value) return 'reset'
-//   // return 'inherit'
-// })
+const realResetLabelPath = computed(() => {
+  if (resetLabelPath !== undefined) return resetLabelPath
+  return 'reset'
+})
 
-const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ required, ...props, resetLabelPath: 'reset' })))
+const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ required, ...props, resetLabelPath: realResetLabelPath.value })))
 const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
 
 const asChild = computed(() => {
