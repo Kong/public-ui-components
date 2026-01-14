@@ -153,7 +153,6 @@
             :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
             class="ff-array-field-item-remove"
             :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
-            :disabled="field.isInheritedDisabled.value"
             icon
             @click.stop="removeItem(index)"
           >
