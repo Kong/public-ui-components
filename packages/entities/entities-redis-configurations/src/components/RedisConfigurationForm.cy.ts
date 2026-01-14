@@ -18,6 +18,7 @@ const baseConfigKM: KongManagerRedisConfigurationFormConfig = {
   isPortReferenceable: true,
   isHostReferenceable: true,
   isServerNameReferenceable: true,
+  isCEFieldsReferenceable: true,
   cancelRoute,
 }
 
@@ -29,6 +30,7 @@ const baseConfigKonnect: KonnectRedisConfigurationFormConfig = {
   isPortReferenceable: true,
   isHostReferenceable: true,
   isServerNameReferenceable: true,
+  isCEFieldsReferenceable: false,
   cancelRoute,
 }
 
@@ -175,9 +177,12 @@ describe('<RedisConfigurationForm />', {
         cy.getTestId('redis-connection-is-proxied-checkbox').should('not.exist')
 
         cy.getTestId('redis-host-input').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-host').should(config.isCEFieldsReferenceable ? 'be.visible' : 'not.exist')
         cy.getTestId('redis-port-input').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-port').should(config.isCEFieldsReferenceable ? 'be.visible' : 'not.exist')
         cy.getTestId('redis-timeout-input').should('be.visible')
         cy.getTestId('redis-auth-provider-select').should('be.visible')
+        cy.getTestId('secret-picker-provider-for-server_name').should(config.isCEFieldsReferenceable ? 'be.visible' : 'not.exist')
 
         // Host/Port EE fields
         cy.getTestId('redis-type-select').click()

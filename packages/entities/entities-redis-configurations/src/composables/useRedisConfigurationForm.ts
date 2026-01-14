@@ -126,7 +126,9 @@ export const useRedisConfigurationForm = (options: Options) => {
           config: {
             cloud_authentication: getCloudAuthConfig(),
             host: form.fields.config.host,
-            port: s.int(form.fields.config.port),
+            port: Number.isNaN(Number(form.fields.config.port))
+              ? form.fields.config.port
+              : s.int(form.fields.config.port),
             timeout: s.int(form.fields.config.timeout),
             username: s.str(form.fields.config.username, null),
             database: s.int(form.fields.config.database),
