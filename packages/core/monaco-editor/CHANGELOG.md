@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.9.0...@kong-ui-public/monaco-editor@0.9.1) (2026-01-13)
+
+
+### Bug Fixes
+
+* **monaco-editor:** reset model value when editor is recreated ([#2815](https://github.com/Kong/public-ui-components/issues/2815)) ([3865fec](https://github.com/Kong/public-ui-components/commit/3865fecc81a72385d4a20889b2f9ffc1318c2a9d))
+
+
+
+
+
+# [0.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.8.2...@kong-ui-public/monaco-editor@0.9.0) (2026-01-13)
+
+
+### Features
+
+* **monaco-editor:** revert unnecessary lifecycle trackings and revise documentation comments ([#2799](https://github.com/Kong/public-ui-components/issues/2799)) ([7929ce3](https://github.com/Kong/public-ui-components/commit/7929ce37ece2c8f5761f8f8c247d2597419a44a1))
+
+
+
+
+
+## [0.8.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.8.1...@kong-ui-public/monaco-editor@0.8.2) (2026-01-12)
+
+
+### Bug Fixes
+
+* **monaco-editor:** add optional empty and loading state visibility controls [KHCP-19126] ([#2808](https://github.com/Kong/public-ui-components/issues/2808)) ([eec7b5c](https://github.com/Kong/public-ui-components/commit/eec7b5c45c2905416342299e77ebc53ddff24e9d))
+
+
+
+
+
+## [0.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.8.0...@kong-ui-public/monaco-editor@0.8.1) (2026-01-12)
+
+
+### Bug Fixes
+
+* **monaco-editor:** simplify types for target ([#2802](https://github.com/Kong/public-ui-components/issues/2802)) ([fef2da7](https://github.com/Kong/public-ui-components/commit/fef2da71d97e31475396f4938a81baf8985b7d3a))
+
+
+
+
+
 # [0.8.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.7.5...@kong-ui-public/monaco-editor@0.8.0) (2026-01-09)
 
 

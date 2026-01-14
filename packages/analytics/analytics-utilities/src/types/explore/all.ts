@@ -2,17 +2,19 @@ import { type BasicExploreAggregations, type BasicExploreFilterAll, type Filtera
 import { type AiExploreAggregations, type AiExploreFilterAll, type FilterableAiExploreDimensions, filterableAiExploreDimensions } from './ai'
 import { type ExploreAggregations, type ExploreFilterAll, type FilterableExploreDimensions, filterableExploreDimensions } from './advanced'
 import { type FilterableRequestDimensions, type FilterableRequestMetrics, type FilterableRequestWildcardDimensions } from './requests'
+import { filterableMcpExploreDimensions, type FilterableMcpExploreDimensions, type McpExploreAggregations, type McpExploreFilterAll } from './mcp'
 
-export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations
-export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll
+export type AllAggregations = BasicExploreAggregations | AiExploreAggregations | ExploreAggregations | McpExploreAggregations
+export type AllFilters = BasicExploreFilterAll | AiExploreFilterAll | ExploreFilterAll | McpExploreFilterAll
 export type AllFilterableDimensionsAndMetrics = FilterableExploreDimensions
   | FilterableAiExploreDimensions
   | FilterableBasicExploreDimensions
+  | FilterableMcpExploreDimensions
   | FilterableRequestDimensions
   | FilterableRequestMetrics
   | FilterableRequestWildcardDimensions
 
-export const queryDatasources = ['basic', 'api_usage', 'llm_usage'] as const
+export const queryDatasources = ['basic', 'api_usage', 'llm_usage', 'mcp_usage'] as const
 
 export type QueryDatasource = typeof queryDatasources[number]
 
@@ -22,12 +24,14 @@ export interface FilterTypeMap extends Record<QueryDatasource, AllFilters> {
   basic: BasicExploreFilterAll
   api_usage: ExploreFilterAll
   llm_usage: AiExploreFilterAll
+  mcp_usage: McpExploreFilterAll
 }
 
 export const datasourceToFilterableDimensions: Record<QueryDatasource, Set<string>> = {
   basic: new Set(filterableBasicExploreDimensions),
   api_usage: new Set(filterableExploreDimensions),
   llm_usage: new Set(filterableAiExploreDimensions),
+  mcp_usage: new Set(filterableMcpExploreDimensions),
 } as const
 
 // Utility for stripping unknown filters

@@ -2,6 +2,12 @@ import type { PathToDotNotation } from '@kong-ui-public/i18n'
 import { PluginGroup, PluginScope } from '@kong-ui-public/entities-plugins-metadata'
 import type { RenderRules } from '../components/free-form/shared/types'
 
+export const PluginFeaturedArray = [
+  'Featured',
+]
+
+type PluginFeatured = (typeof PluginFeaturedArray)[number]
+
 export const PluginGroupArray = [
   PluginGroup.AUTHENTICATION,
   PluginGroup.AI,
@@ -13,6 +19,20 @@ export const PluginGroupArray = [
   PluginGroup.LOGGING,
   PluginGroup.DEPLOYMENT,
   PluginGroup.WEBSOCKET,
+  PluginGroup.CUSTOM_PLUGINS,
+]
+
+export const PluginGroupArraySortedAlphabetically = [
+  PluginGroup.AI,
+  PluginGroup.ANALYTICS_AND_MONITORING,
+  PluginGroup.AUTHENTICATION,
+  PluginGroup.LOGGING,
+  PluginGroup.SECURITY,
+  PluginGroup.SERVERLESS,
+  PluginGroup.TRAFFIC_CONTROL,
+  PluginGroup.TRANSFORMATIONS,
+  // PluginGroup.DEPLOYMENT, // deployment and websocket plugins are currently not in available plugins API response
+  // PluginGroup.WEBSOCKET,
   PluginGroup.CUSTOM_PLUGINS,
 ]
 
@@ -117,6 +137,7 @@ export type PluginMetaData<I18nMessageSource = void> = {
   description: string // A string to describe a Plugin.
   group: PluginGroup // Plugin categories meta.
   scope: PluginScope[] // The scope supported by the Plugin.
+  gatewayVersion?: string // Gateway version in which the plugin was introduced.
   useLegacyForm?: boolean // An optional field to use legacy form for the plugin. Default to false.
   fieldRules?: FieldRules
   useUIData?: boolean // An optional field that indicates if the plugin may have associated UI data. (via `?__ui_data`)
@@ -136,7 +157,7 @@ export type DisabledPlugin = {
 }
 
 export type PluginCardList = {
-  [key in PluginGroup]?: PluginType[]
+  [key in PluginGroup | PluginFeatured]?: PluginType[];
 }
 
 export type TriggerLabels = {

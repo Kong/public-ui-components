@@ -82,7 +82,7 @@ const TABLE_DATA_V2 = {
     display: {
       ROUTE: ROUTE_DISPLAY_V2,
     },
-    end_ms: 1692295253000,
+    end: '2023-08-17T18:00:53.000Z',
     granularity_ms: 300000,
     limit: 50,
     metric_names: [
@@ -92,7 +92,7 @@ const TABLE_DATA_V2 = {
       REQUEST_COUNT: 'count',
     },
     query_id: '4cc77ce4-6458-49f0-8a7e-443a4312dacd',
-    start_ms: 1692294953000,
+    start: '2023-08-17T17:55:53.000Z',
     truncated: false,
   },
   data: TABLE_RECORDS,
@@ -103,7 +103,7 @@ const MULTI_METRIC_TABLE_DATA = {
     display: {
       ROUTE: ROUTE_DISPLAY_V2,
     },
-    end_ms: 1692295253000,
+    end: '2023-08-17T18:00:53.000Z',
     granularity_ms: 300000,
     limit: 50,
     metric_names: [
@@ -119,7 +119,7 @@ const MULTI_METRIC_TABLE_DATA = {
       response_latency_average: 'ms',
     },
     query_id: '5be9e04d-b62d-4e52-80ba-0e3a961380fa',
-    start_ms: 1692294953000,
+    start: '2023-08-17T17:55:53.000Z',
     truncated: false,
   },
   data: MULTI_METRIC_TABLE_RECORDS,
@@ -237,14 +237,14 @@ describe('<TopNTable />', () => {
 
       const meta: any = {
         display: { [entityKey]: ROUTE_DISPLAY_V2 },
-        end_ms: 1692295253000,
+        end: '2023-08-17T18:00:53.000Z',
         granularity_ms: 300000,
         limit: 50,
         metric_names: [metricKey],
         // Only include metric_units when provided; otherwise we test fallback behavior
         ...(unit ? { metric_units: { [metricKey]: unit } } : {}),
         query_id: 'unit-format-test',
-        start_ms: 1692294953000,
+        start: '2023-08-17T17:55:53.000Z',
         truncated: false,
       }
 

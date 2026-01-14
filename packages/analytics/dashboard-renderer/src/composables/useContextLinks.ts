@@ -93,12 +93,15 @@ export default function useContextLinks(
   }
 
   const buildRequestsQueryKebabMenu = (timeRange: TimeRangeV4, filters: DeepReadonly<AllFilters[]>) => {
+    const start = chartData.value?.meta?.start ? new Date(chartData.value.meta.start) : undefined
+    const end = chartData.value?.meta?.end ? new Date(chartData.value.meta.end) : undefined
+
     return {
       filter: filters,
       timeframe: {
         timePeriodsKey: timeRange.type === 'relative' ? timeRange.time_range : 'custom',
-        start: timeRange.type === 'absolute' ? chartData.value?.meta.start_ms : undefined,
-        end: timeRange.type === 'absolute' ? chartData.value?.meta.end_ms : undefined,
+        start: timeRange.type === 'absolute' ? start : undefined,
+        end: timeRange.type === 'absolute' ? end : undefined,
       },
     }
   }

@@ -49,6 +49,7 @@ const kongManagerConfig: KongManagerRedisConfigurationFormConfig = {
   isPortReferenceable: true,
   isHostReferenceable: true,
   isServerNameReferenceable: true,
+  isCEFieldsReferenceable: true,
   cancelRoute: { name: 'redis-configuration-list' },
 }
 

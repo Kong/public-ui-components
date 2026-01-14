@@ -1,13 +1,12 @@
 import { onActivated, onBeforeUnmount, onMounted, onWatcherCleanup, reactive, ref, shallowRef, toValue, watch } from 'vue'
 import { DEFAULT_MONACO_OPTIONS } from '../constants'
-import { unrefElement, useDebounceFn } from '@vueuse/core'
+import { useDebounceFn } from '@vueuse/core'
 
 import * as monaco from 'monaco-editor'
 import { shikiToMonaco } from '@shikijs/monaco'
 import { getSingletonHighlighter, bundledLanguages, bundledThemes } from 'shiki'
-import * as lifecycle from '../singletons/lifecycle'
 
-import type { MaybeComputedElementRef, MaybeElement } from '@vueuse/core'
+import type { MaybeRefOrGetter } from 'vue'
 import type { MonacoEditorStates, UseMonacoEditorOptions } from '../types'
 import type { editor as Editor } from 'monaco-editor'
 
@@ -51,12 +50,12 @@ async function loadMonaco() {
 
 /**
  * Composable for integrating the Monaco Editor into Vue components.
- * @param {MaybeComputedElementRef} target - The target DOM element or Vue component ref where the editor will be mounted.
+ * @param {MaybeRefOrGetter<HTMLElement | null>} target - The target DOM element/ref/getter where the editor will be mounted.
  * @param {UseMonacoEditorOptions} options - Configuration options for the Monaco editor.
  * @returns {object} An object containing the editor instance and utility methods.
 */
-export function useMonacoEditor<T extends MaybeElement>(
-  target: MaybeComputedElementRef<T>,
+export function useMonacoEditor<T extends HTMLElement>(
+  target: MaybeRefOrGetter<T | null>,
   options: UseMonacoEditorOptions,
 ) {
   /**
@@ -145,9 +144,9 @@ export function useMonacoEditor<T extends MaybeElement>(
     // `toValue()` safely unwraps refs, getters, or plain elements
     watch([isMonacoLoaded, () => toValue(target)], ([_isLoaded, _target], [, previousTarget]) => {
 
-      // This ensures we skip setup if it's null, undefined, or an SVG element (as unrefElement can return SVGElement)
-      const el = unrefElement(_target)
-      const previousEl = unrefElement(previousTarget)
+      // Ensure the target is specifically a non-null HTMLElement and that Monaco is loaded before setting up
+      const el = toValue(_target)
+      const previousEl = toValue(previousTarget)
       if (!(el instanceof HTMLElement) || !_isLoaded) {
         _isSetup = false
         return
@@ -160,6 +159,8 @@ export function useMonacoEditor<T extends MaybeElement>(
         // we want to create our model before creating the editor so we don't end up with multiple models for the same editor (v-if toggles, etc.)
         const uri = monaco.Uri.parse(`inmemory://model/${options.language}-${crypto.randomUUID()}`)
         model = monaco.editor.createModel(options.code.value, options.language, uri)
+      } else {
+        model.setValue(options.code.value)
       }
 
       editor.value = monaco.editor.create(el, {
@@ -177,14 +178,12 @@ export function useMonacoEditor<T extends MaybeElement>(
       editorStates.hasContent = !!options.code.value
 
       // Watch content changes and trigger callbacks efficiently
-      lifecycle.trackForEditor(editor.value,
-        editor.value.onDidChangeModelContent(() => {
-          if (_isApplyingExternalUpdate) return
-          const content = editor.value!.getValue()
-          editorStates.hasContent = !!content.length
-          options.code.value = content
-        }),
-      )
+      editor.value.onDidChangeModelContent(() => {
+        if (_isApplyingExternalUpdate) return
+        const content = editor.value!.getValue()
+        editorStates.hasContent = !!content.length
+        options.code.value = content
+      })
 
       // TODO: register editor actions
 
@@ -192,7 +191,6 @@ export function useMonacoEditor<T extends MaybeElement>(
 
       // we need to remeasure fonts after the editor is created to ensure proper layout and rendering
       remeasureFonts()
-
 
       try {
         // Access the internal "FindController" contribution
@@ -203,11 +201,9 @@ export function useMonacoEditor<T extends MaybeElement>(
         const state = findController?.getState()
 
         // Listen for changes to the state of the "find" panel
-        lifecycle.trackForEditor(editor.value,
-          state?.onFindReplaceStateChange(() => {
-            editorStates.searchBoxIsRevealed = state.isRevealed
-          }), // This returns a disposable
-        )
+        state?.onFindReplaceStateChange(() => {
+          editorStates.searchBoxIsRevealed = state.isRevealed
+        })
       } catch (error) {
         console.error('useMonacoEditor: Failed to get the state of findController', error)
       }

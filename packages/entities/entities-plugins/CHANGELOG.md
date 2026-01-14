@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.142.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.142.0...@kong-ui-public/entities-plugins@9.142.1) (2026-01-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.142.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.141.0...@kong-ui-public/entities-plugins@9.142.0) (2026-01-14)
+
+
+### Features
+
+* **entities-plugins:** migrate to shared monaco-editor package, improve styling for code editor ([#2793](https://github.com/Kong/public-ui-components/issues/2793)) ([db5f2ae](https://github.com/Kong/public-ui-components/commit/db5f2aec2938701d75a3b9ce083a7bf708b32221))
+
+
+
+
+
+# [9.141.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.140.7...@kong-ui-public/entities-plugins@9.141.0) (2026-01-13)
+
+
+### Features
+
+* **entities-plugins:** add new plugin catalog ([#2708](https://github.com/Kong/public-ui-components/issues/2708)) ([6d9d0f5](https://github.com/Kong/public-ui-components/commit/6d9d0f5efe16c1dceb32222f177915b24c9dcf57))
+
+
+
+
+
 ## [9.140.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.140.6...@kong-ui-public/entities-plugins@9.140.7) (2026-01-09)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

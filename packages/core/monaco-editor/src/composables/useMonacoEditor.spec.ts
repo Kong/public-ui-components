@@ -23,14 +23,15 @@ const onReadySpy = vi.fn()
 const dummyComponent = defineComponent({
   setup() {
     const target = ref<HTMLElement | null>(null)
+    const show = ref(true)
     const editorApi = useMonacoEditor(target, {
       code,
       language: 'javascript',
       onReady: onReadySpy,
     })
-    return { target, editorApi }
+    return { target, editorApi, show }
   },
-  template: '<div ref="target" />',
+  template: '<div v-if="show" ref="target" />',
 })
 
 
@@ -74,5 +75,24 @@ describe('useMonacoEditor', () => {
       getValue: expect.any(Function),
       focus: expect.any(Function),
     }))
+  })
+
+  it('should call onReady again when target element is toggled', async () => {
+    const wrapper = mount(dummyComponent)
+    await nextTick()
+
+    // onReady should be called once after initial mount
+    expect(onReadySpy).toHaveBeenCalledTimes(1)
+
+    // Toggle off (remove element)
+    wrapper.vm.show = false
+    await nextTick()
+
+    // Toggle on (recreate element)
+    wrapper.vm.show = true
+    await nextTick()
+
+    // onReady should be called again when target is recreated
+    expect(onReadySpy).toHaveBeenCalledTimes(2)
   })
 })
