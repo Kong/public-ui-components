@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.8.25...@kong-ui-public/entities-redis-configurations@1.9.0) (2026-01-14)
+
+
+### Features
+
+* **redis:** referenceable fields in ce ([#2741](https://github.com/Kong/public-ui-components/issues/2741)) ([f7c733e](https://github.com/Kong/public-ui-components/commit/f7c733e94f2be39778b8d5e4351ed2c591bdd3d9))
+
+
+
+
+
 ## [1.8.25](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-redis-configurations@1.8.24...@kong-ui-public/entities-redis-configurations@1.8.25) (2026-01-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-redis-configurations
