@@ -93,6 +93,12 @@ A form component for Redis Configurations.
     - default: `undefined`
     - Whether the server_name field can accept vault references.
 
+  - `isCEFieldsReferenceable`
+    - type: `boolean`
+    - required: `false`
+    - default: `undefined`
+    - Whether the CE partial fields can accept vault references. 
+
 The base konnect or kongManger config.
 
 #### `partialId`

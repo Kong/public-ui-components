@@ -19,6 +19,10 @@ export interface BaseRedisConfigurationFormConfig {
    * Whether the server_name field can accept vault references
    */
   isServerNameReferenceable?: boolean
+  /**
+   * Whether the above three fields can accept vault references in Redis CE partials
+   */
+  isCEFieldsReferenceable?: boolean
 }
 
 export interface KonnectRedisConfigurationFormConfig extends KonnectBaseFormConfig, BaseRedisConfigurationFormConfig { }
