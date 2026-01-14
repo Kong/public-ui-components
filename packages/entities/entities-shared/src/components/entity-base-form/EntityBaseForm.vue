@@ -36,6 +36,7 @@
       <KAlert
         v-if="errorMessage"
         appearance="danger"
+        class="form-error"
         data-testid="form-error"
         :message="errorMessage"
       />
@@ -47,9 +48,14 @@
       >
         <!-- Form actions -->
         <div
-          :class="['form-actions', { 'form-actions-reverted': alignActionButtonToLeft }]"
+          :class="['form-actions', { 'form-actions-reverted': alignActionButtonToLeft, 'form-actions-sticky': realStickyActions }]"
           data-testid="form-actions"
         >
+          <div
+            v-if="realStickyActions"
+            aria-hidden="true"
+            class="form-actions-divider"
+          />
           <slot name="form-actions">
             <KButton
               appearance="tertiary"
@@ -135,12 +141,13 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed, ref, onBeforeMount, watch } from 'vue'
+import { computed, ref, onBeforeMount, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import type { AxiosError } from 'axios'
 import type { KonnectBaseFormConfig, KongManagerBaseFormConfig, SupportedEntityDeck } from '../../types'
 import { SupportedEntityTypesArray, SupportedEntityType, SupportedEntityDeckArray } from '../../types'
 import composables from '../../composables'
+import { FEATURE_FLAGS } from '../../constants'
 import type { Tab } from '@kong/kongponents'
 import JsonCodeBlock from '../common/JsonCodeBlock.vue'
 import YamlCodeBlock from '../common/YamlCodeBlock.vue'
@@ -280,6 +287,13 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
+  /**
+   * Controls whether the form actions bar is sticky at the bottom of the scroll container
+   */
+  stickyActions: {
+    type: Boolean,
+    default: undefined,
+  },
 })
 
 const router = useRouter()
@@ -294,6 +308,11 @@ const fetchDetailsError = ref(false)
 const fetchErrorMessage = ref('')
 const disableSave = computed((): boolean => props.canSubmit === false || props.isReadonly)
 const isToggled = ref(false)
+
+const defaultStickyActions = inject(FEATURE_FLAGS.USE_STICKY_FORM_ACTIONS, false)
+const realStickyActions = computed((): boolean => {
+  return props.stickyActions ?? defaultStickyActions
+})
 
 /**
  * Build the fetcher URL
@@ -461,7 +480,38 @@ defineExpose({
   }
 }
 
+.form-actions-sticky {
+  background-color: $kui-color-background;
+  bottom: 0;
+  container-name: stickybar;
+  container-type: scroll-state;
+  margin-bottom: -$kui-space-60;
+  margin-top: $kui-space-40;
+  padding-bottom: $kui-space-60;
+  padding-top: $kui-space-60;
+  position: sticky;
+  z-index: 1;
+}
+
+.form-actions-divider {
+  border-top: 1px solid $kui-color-border;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: opacity 0.2s ease;
+}
+
 .form-actions-reverted {
   direction: rtl;
+}
+
+@supports (container-type: scroll-state) {
+  @container stickybar scroll-state(stuck: bottom) {
+    .form-actions-divider {
+      opacity: 1;
+    }
+  }
 }
 </style>

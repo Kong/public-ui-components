@@ -211,4 +211,60 @@ describe('<EntityBaseForm />', () => {
     cy.getTestId('form-content').should('contain.text', content)
     cy.getTestId('form-actions').should('contain.text', action)
   })
+
+  it('sticks form actions to the bottom when stickyActions is true', () => {
+    const scrollContainerTestId = 'scroll-container'
+
+    const ScrollWrapper = {
+      setup() {
+        return () => h(
+          'div',
+          {
+            'data-testid': scrollContainerTestId,
+            style: 'height: 300px; overflow-y: auto;',
+          },
+          [
+            h(
+              EntityBaseForm,
+              {
+                config,
+                formFields: route,
+                entityType,
+                canSubmit: true,
+                stickyActions: true,
+              },
+              {
+                default: () => h('div', { style: 'height: 1400px;' }),
+              },
+            ),
+          ],
+        )
+      },
+    }
+
+    cy.mount(ScrollWrapper)
+
+    cy.getTestId(scrollContainerTestId).then($container => {
+      const { scrollHeight, clientHeight } = $container[0]
+      expect(scrollHeight).to.be.greaterThan(clientHeight)
+    })
+
+    cy.getTestId(scrollContainerTestId).scrollTo(0, 200)
+
+    cy.getTestId(scrollContainerTestId).then($container => {
+      const container = $container[0]
+      const containerRect = container.getBoundingClientRect()
+
+      expect(container.scrollTop).to.be.greaterThan(0)
+      expect(container.scrollTop).to.be.lessThan(container.scrollHeight - container.clientHeight)
+
+      cy.getTestId('form-actions')
+        .should('have.class', 'form-actions-sticky')
+        .then($actions => {
+          const actionsRect = $actions[0].getBoundingClientRect()
+
+          expect(Math.abs(actionsRect.bottom - containerRect.bottom)).to.be.lessThan(1)
+        })
+    })
+  })
 })
