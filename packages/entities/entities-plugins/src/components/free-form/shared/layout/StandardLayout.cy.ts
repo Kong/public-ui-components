@@ -115,9 +115,10 @@ describe('<StandardLayout />', () => {
 
     cy.get('.ff-standard-layout').should('exist')
 
-    // Verify both EntityFormBlock sections render
-    cy.get('[data-testid="form-section-general-info"]').should('exist')
+    // Verify all sections render
+    cy.get('[data-testid="form-section-plugin-scope"]').should('exist')
     cy.get('[data-testid="form-section-plugin-config"]').should('exist')
+    cy.get('[data-testid="form-section-general-info"]').should('exist')
 
     // Verify scope radio group renders
     cy.get('.radio-group').should('exist')

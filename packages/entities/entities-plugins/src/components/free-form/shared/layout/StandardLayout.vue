@@ -28,7 +28,7 @@
     <template v-if="editorMode === 'form'">
       <!-- Plugin scope -->
       <EntityFormBlock
-        data-testid="form-section-general-info"
+        data-testid="form-section-plugin-scope"
         :description="generalInfoDescription ?? t('plugins.form.sections.plugin_scope.description')"
         :step="1"
         :title="generalInfoTitle ?? t('plugins.form.sections.plugin_scope.title')"
@@ -125,7 +125,7 @@
 
       <!-- General information -->
       <EntityFormBlock
-        data-testid="form-section-plugin-general-info"
+        data-testid="form-section-general-info"
         :description="t('plugins.form.sections.plugin_general_info.description')"
         :step="3"
         :title="t('plugins.form.sections.general_info.title')"
@@ -317,9 +317,9 @@ const enabledSchema = computed(() => {
         return {
           ...field,
           styleClasses: 'ff-enabled-field',
-          label: 'Plugin status',
-          textOn: 'Enabled',
-          textOff: 'Disabled',
+          label: t('plugins.form.fields.plugin_status.label'),
+          textOn: t('plugins.form.fields.plugin_status.text_on'),
+          textOff: t('plugins.form.fields.plugin_status.text_off'),
         }
       }),
   }

@@ -623,10 +623,15 @@
           "on_text": "This plugin is Enabled",
           "off_text": "This plugin is Disabled"
         },
+        "plugin_status": {
+          "label": "Plugin status",
+          "text_on": "Enabled",
+          "text_off": "Disabled"
+        },
         "instance_name": {
           "label": "Name",
           "placeholder": "Enter a unique name",
-          "help": "A custom name for this plugin instance to help identifying from the list view."
+          "help": "A custom name for this plugin instance to help with identifying from the list view."
         },
         "protocols": {
           "label": "Protocols",
