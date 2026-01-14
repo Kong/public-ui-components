@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.5.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.5.1...@kong-ui-public/dashboard-renderer@8.5.2) (2026-01-14)
+
+
+### Bug Fixes
+
+* **analytics:** remove inline style for single-value charts [MA-4712] ([#2827](https://github.com/Kong/public-ui-components/issues/2827)) ([98c1af7](https://github.com/Kong/public-ui-components/commit/98c1af7e4766b21b00709e90b45ba3f1a1448121))
+
+
+
+
+
 ## [8.5.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.5.0...@kong-ui-public/dashboard-renderer@8.5.1) (2026-01-14)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer
