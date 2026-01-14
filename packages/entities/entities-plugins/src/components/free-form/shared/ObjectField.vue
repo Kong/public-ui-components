@@ -142,7 +142,7 @@ defineOptions({
 })
 
 const {
-  defaultExpanded = true, defaultAdded = true, collapsible = true, omit,
+  defaultAdded = true, collapsible = true, omit,
   required = undefined, asChild: defaultAsChild = undefined, resetLabelPath,
   fieldsOrder,
   ...props
@@ -151,7 +151,6 @@ const {
   label?: string
   labelAttributes?: LabelAttributes
   required?: boolean
-  defaultExpanded?: boolean
   defaultAdded?: boolean
   collapsible?: boolean
   appearance?: 'card' | 'default'
@@ -179,7 +178,6 @@ const currentRenderRules = useCurrentRenderRules({
 const added = defineModel<boolean>('added', { default: undefined })
 
 const expanded = defineModel<boolean>('expanded', { default: undefined })
-// const realExpanded = computed(() => realAdded.value && (collapsible ? expanded.value ?? defaultExpanded : false))
 
 // Determines if the current field is a child element of an array field
 const isChildOfArray = computed(() => {
