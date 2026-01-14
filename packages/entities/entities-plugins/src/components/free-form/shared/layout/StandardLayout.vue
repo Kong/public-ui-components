@@ -317,9 +317,9 @@ const enabledSchema = computed(() => {
         return {
           ...field,
           styleClasses: 'ff-enabled-field',
-          label: 'Plugin status',
-          textOn: 'Enabled',
-          textOff: 'Disabled',
+          label: t('plugins.form.fields.plugin_status.label'),
+          textOn: t('plugins.form.fields.plugin_status.text_on'),
+          textOff: t('plugins.form.fields.plugin_status.text_off'),
         }
       }),
   }
