@@ -215,6 +215,7 @@ watch(() => paneRight.visible, async () => {
 // but must then adjust the center pane's margins to prevent a gap.
 $resize-divider-width: 3px;
 $toolbar-height: 44px;
+$toolbar-adjusted-height: $toolbar-height - 1px; // 43px for calc
 $pane-left-min-width: 260px; // PANE_LEFT_MIN_WIDTH
 $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
 
@@ -358,7 +359,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
     // The pane-right element has a border, so we don't need a background color here
     background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
     cursor: col-resize;
-    height: calc(100% - 43px); // Subtract the $defaultHeight from `Toolbar`, minus 1px for border
+    height: calc(100% - #{$toolbar-adjusted-height});
     position: relative;
     transition: all 0.1s ease-in-out;
     width: $resize-divider-width;
