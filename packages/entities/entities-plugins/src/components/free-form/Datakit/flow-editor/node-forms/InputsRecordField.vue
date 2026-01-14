@@ -29,17 +29,23 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { intersection } from 'lodash-es'
 import { useFormShared } from '../../../shared/composables'
 import ObjectField from '../../../shared/ObjectField.vue'
 import type { RecordFieldSchema } from '../../../../../types/plugins/form-schema'
 import EnumField from '../../../shared/EnumField.vue'
 import useI18n from '../../../../../composables/useI18n'
 import type { InputOption } from '../composables/useNodeForm'
-import type { FieldName, IdConnection } from '../../types'
+import type { FieldName, IdConnection, NodeType } from '../../types'
+import { getCompatInputFieldsByNodeType } from '../../schema/compat'
+import { isImplicitType } from '../node/node'
 
-defineProps<{
+const {
+  nodeType,
+} = defineProps<{
   name: string
   items: InputOption[]
+  nodeType: NodeType
 }>()
 
 defineEmits<{
@@ -55,6 +61,20 @@ const childFieldNames = computed(() => {
     return []
   }
 
-  return schema.fields.map(fieldObj => Object.keys(fieldObj)[0]) as FieldName[]
+  const schemaFieldNames = schema.fields.map(fieldObj => Object.keys(fieldObj)[0]) as FieldName[]
+  if (isImplicitType(nodeType)) {
+    return schemaFieldNames
+  }
+
+  const allowed = getCompatInputFieldsByNodeType(nodeType)
+  if (allowed === null) {
+    return schemaFieldNames
+  }
+
+  if (allowed.length === 0) {
+    return []
+  }
+
+  return intersection(schemaFieldNames, allowed)
 })
 </script>

@@ -8,6 +8,7 @@
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
+      node-type="service_request"
       @change:input="setInput"
       @change:inputs="setInputs"
     />
@@ -38,4 +39,3 @@ const {
   fieldNameValidator,
 } = useNodeForm<BaseFormData>(nodeId, () => formRef.value!.getValue())
 </script>
-
