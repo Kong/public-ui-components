@@ -14,11 +14,11 @@ const centerPaneWidth = ref<number>(0)
 
 export default function useSplitPane(params?: useSplitPaneParams) {
   // Template refs
-  const _verticalNavRef = toRef(params?.verticalNavRef || null)
-  const _innerPanesContainerRef = toRef(params?.innerPanesContainerRef || null)
-  const _paneLeftRef = toRef(params?.paneLeftRef || null)
-  const _paneCenterRef = toRef(params?.paneCenterRef || null)
-  const _paneRightRef = toRef(params?.paneRightRef || null)
+  const _verticalNavRef = params?.verticalNavRef || ref(null)
+  const _innerPanesContainerRef = params?.innerPanesContainerRef || ref(null)
+  const _paneLeftRef = params?.paneLeftRef || ref(null)
+  const _paneCenterRef = params?.paneCenterRef || ref(null)
+  const _paneRightRef = params?.paneRightRef || ref(null)
 
   const getPaneElementWidth = (el: 'verticalNav' | 'innerPanesContainer' | 'paneLeft' | 'paneCenter' | 'paneRight'): number => {
     switch (el) {
