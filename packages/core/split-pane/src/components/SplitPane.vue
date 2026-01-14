@@ -93,17 +93,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useSlots, useTemplateRef, watch, nextTick } from 'vue'
-import { PANE_LEFT_MIN_WIDTH, PANE_LEFT_MAX_WIDTH, INNER_PANES_MIN_WIDTH } from '../constants/split-pane'
+import { computed, useTemplateRef, watch, nextTick } from 'vue'
+import { PANE_LEFT_MIN_WIDTH, PANE_LEFT_MAX_WIDTH, INNER_PANES_MIN_WIDTH, PANE_CENTER_DEFAULT_MAX_WIDTH, PANE_RIGHT_DEFAULT_MAX_WIDTH } from '../constants/split-pane'
 import { useElementSize, useElementHover } from '@vueuse/core'
 import VerticalNavigation from './VerticalNavigation.vue'
 import useSplitPane from '../composable/useSplitPane'
 import useI18n from '../composable/useI18n'
 import type { SplitPaneProps } from '../types'
-
-// Default max widths for the inner panes (center and right)
-const paneCenterDefaultMaxWidth: string = '50%'
-const paneRightDefaultMaxWidth: string = '50%'
 
 const {
   resizable = true,
@@ -118,14 +114,21 @@ const {
   paneCenter = {
     /** Pass false to hide the panel even if it contains slot content */
     visible: true,
-    maxWidth: paneCenterDefaultMaxWidth,
+    maxWidth: PANE_CENTER_DEFAULT_MAX_WIDTH,
   },
   paneRight = {
     /** Pass false to hide the panel even if it contains slot content */
     visible: true,
-    maxWidth: paneRightDefaultMaxWidth,
+    maxWidth: PANE_RIGHT_DEFAULT_MAX_WIDTH,
   },
 } = defineProps<SplitPaneProps>()
+
+const slots = defineSlots<{
+  toolbar?: () => any
+  'pane-left'?: () => any
+  'pane-center'?: () => any
+  'pane-right'?: () => any
+}>()
 
 /**
  * Calculate the maximum width for a given pane
@@ -138,10 +141,10 @@ const getResizableMaxWidth = (pane: 'left' | 'center' | 'right'): string => {
     return paneLeft.maxWidth !== undefined ? paneLeft.maxWidth : PANE_LEFT_MAX_WIDTH
   }
   if (pane === 'center') {
-    return resizable ? 'none' : paneCenter.maxWidth !== undefined ? paneCenter.maxWidth : paneCenterDefaultMaxWidth
+    return resizable ? 'none' : paneCenter.maxWidth !== undefined ? paneCenter.maxWidth : PANE_CENTER_DEFAULT_MAX_WIDTH
   }
   if (pane === 'right') {
-    return resizable ? 'none' : paneRight.maxWidth !== undefined ? paneRight.maxWidth : paneRightDefaultMaxWidth
+    return resizable ? 'none' : paneRight.maxWidth !== undefined ? paneRight.maxWidth : PANE_RIGHT_DEFAULT_MAX_WIDTH
   }
 
   return 'none'
@@ -172,8 +175,6 @@ const { startDraggingInnerPanes, startDraggingPaneLeft, refreshInnerPaneSizes, p
   paneRightRef: paneRightRef,
 })
 
-// Access component slots and i18n
-const slots = useSlots()
 const { i18n } = useI18n()
 
 // Computed properties to determine if each pane should be displayed
@@ -200,7 +201,7 @@ watch(() => paneRight.visible, async () => {
     await nextTick()
     refreshInnerPaneSizes()
   }
-})
+}, { flush: 'post' })
 </script>
 
 <style lang="scss" scoped>
@@ -241,7 +242,6 @@ $toolbar-height: 44px;
     &-inner {
       display: flex;
       flex-direction: column;
-      height: 100vh;
       width: 100%;
 
       &-content {
@@ -300,7 +300,7 @@ $toolbar-height: 44px;
     overflow: hidden;
     pointer-events: none; // Disallow interaction when not expanded
     position: relative;
-    transition: border-color 0.1s ease-in-out, max-width 0.3s ease-in-out, max-width 0.3s ease-in-out;
+    transition: border-color 0.1s ease-in-out, max-width 0.1s ease-in-out;
     width: v-bind('PANE_LEFT_MIN_WIDTH'); // Default width
     will-change: border-color, max-width, min-width;
     z-index: 5; // Keep tooltips above center pane

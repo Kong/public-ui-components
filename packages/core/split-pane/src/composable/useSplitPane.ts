@@ -1,4 +1,4 @@
-import { computed, ref, onUnmounted, toRef, onMounted, nextTick } from 'vue'
+import { computed, ref, toRef, onMounted, nextTick } from 'vue'
 import { useEventListener } from '@vueuse/core'
 import { PANE_LEFT_MIN_WIDTH, PANE_LEFT_MAX_WIDTH } from '../constants/split-pane'
 import type { useSplitPaneParams } from '../types'
@@ -113,8 +113,6 @@ export default function useSplitPane(params?: useSplitPaneParams) {
 
     // Prevent text selection while dragging
     document.body.style.userSelect = 'none'
-    document.addEventListener('mousemove', onDraggingInnerPanes)
-    document.addEventListener('mouseup', stopDraggingInnerPanes)
   }
 
   const onDraggingInnerPanes = (e: MouseEvent): void => {
@@ -139,8 +137,6 @@ export default function useSplitPane(params?: useSplitPaneParams) {
   const stopDraggingInnerPanes = (): void => {
     isDraggingInnerPanes.value = false
     document.body.style.userSelect = ''
-    document.removeEventListener('mousemove', onDraggingInnerPanes)
-    document.removeEventListener('mouseup', stopDraggingInnerPanes)
   }
 
   const startDraggingPaneLeft = (e: MouseEvent): void => {
@@ -153,8 +149,6 @@ export default function useSplitPane(params?: useSplitPaneParams) {
     startWidthPaneLeft.value = _paneLeftRef.value.offsetWidth || 0
 
     document.body.style.userSelect = 'none'
-    document.addEventListener('mousemove', onDraggingPaneLeft)
-    document.addEventListener('mouseup', stopDraggingPaneLeft)
   }
 
   const onDraggingPaneLeft = (e: MouseEvent): void => {
@@ -181,8 +175,6 @@ export default function useSplitPane(params?: useSplitPaneParams) {
   const stopDraggingPaneLeft = (): void => {
     isDraggingPaneLeft.value = false
     document.body.style.userSelect = ''
-    document.removeEventListener('mousemove', onDraggingPaneLeft)
-    document.removeEventListener('mouseup', stopDraggingPaneLeft)
   }
 
   const handleResize = (): void => {
@@ -205,16 +197,28 @@ export default function useSplitPane(params?: useSplitPaneParams) {
       // Update the width on the HTML element
       setCenterPaneWidth()
 
-      // Set the initial center pane width - this is a hack to get the correct width, nextTick doesn't work
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         centerPaneWidth.value = getPaneElementWidth('paneCenter')
-      }, 50)
+      })
     }
   })
 
-  onUnmounted(() => {
-    document.removeEventListener('mousemove', onDraggingInnerPanes)
-    document.removeEventListener('mouseup', stopDraggingInnerPanes)
+  useEventListener(document, 'mousemove', (e: MouseEvent) => {
+    if (isDraggingInnerPanes.value) {
+      onDraggingInnerPanes(e)
+    }
+    if (isDraggingPaneLeft.value) {
+      onDraggingPaneLeft(e)
+    }
+  })
+
+  useEventListener(document, 'mouseup', () => {
+    if (isDraggingInnerPanes.value) {
+      stopDraggingInnerPanes()
+    }
+    if (isDraggingPaneLeft.value) {
+      stopDraggingPaneLeft()
+    }
   })
 
   return {

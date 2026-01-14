@@ -33,7 +33,12 @@
         <div
           v-if="paneLeftVisible"
           class="toggle-left-panel-control"
-          :class="{ 'expanded': paneLeftExpanded, 'disable-animation': preventLeftPanelControlAnimation || isDraggingPaneLeft || isDraggingInnerPanes }"
+          :class="{
+            'expanded': paneLeftExpanded,
+            'disable-animation': isDraggingPaneLeft || isDraggingInnerPanes,
+          }"
+          @transitionend.self="sidePanelToggling = false"
+          @transitionstart.self="sidePanelToggling = true"
         >
           <KTooltip
             :key="String(paneLeftExpanded)"
@@ -66,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_40 } from '@kong/design-tokens'
 import useSplitPane from '../composable/useSplitPane'
@@ -87,19 +92,15 @@ const {
 const { i18n } = useI18n()
 const router = useRouter()
 
-// Allow temporarily hiding the toggle panel tooltip during the expand/collapse animation
-const hideTogglePanelTooltip = ref<boolean>(false)
-const { paneLeftExpanded, togglePaneLeft: _togglePaneLeftInternal, isDraggingPaneLeft, isDraggingInnerPanes } = useSplitPane()
-const togglePaneLeft = (): void => {
-  hideTogglePanelTooltip.value = true
-  _togglePaneLeftInternal()
-  setTimeout(() => {
-    hideTogglePanelTooltip.value = false
-  }, 300)
-}
+const { paneLeftExpanded, togglePaneLeft, isDraggingPaneLeft, isDraggingInnerPanes } = useSplitPane()
+
+const sidePanelToggling = ref<boolean>(false)
+
+
+const hideTogglePanelTooltip = computed<boolean>(() => sidePanelToggling.value || isDraggingPaneLeft.value || isDraggingInnerPanes.value)
 
 // Subtract 8px for the scrollbar
-const toggleLeftPanelOffset = computed((): string => `${paneLeftWidth - 8}px`)
+const toggleLeftPanelOffset = computed<string>(() => `${paneLeftWidth - 8}px`)
 
 const onNavItemClick = (item: VerticalNavigationItem): void => {
   if (!paneLeftExpanded.value) {
@@ -112,11 +113,14 @@ const onNavItemClick = (item: VerticalNavigationItem): void => {
   }
 }
 
-const preventLeftPanelControlAnimation = ref<boolean>(true)
+const hasMounted = ref(false)
+
 onMounted(async () => {
-  setTimeout(() => {
-    preventLeftPanelControlAnimation.value = false
-  }, 1000)
+  await nextTick()
+  // next tick ensures initial layout is complete
+  requestAnimationFrame(() => {
+    hasMounted.value = true
+  })
 })
 </script>
 
