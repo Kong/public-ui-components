@@ -123,9 +123,9 @@
 
 <script setup lang="ts">
 import { KLabel, type LabelAttributes } from '@kong/kongponents'
-import { ChevronRightIcon, AddIcon, RemoveIcon } from '@kong/icons'
+import { ChevronRightIcon } from '@kong/icons'
 import { KUI_ICON_SIZE_30 } from '@kong/design-tokens'
-import { computed, inject, onBeforeMount, ref, toRef, useId, watch } from 'vue'
+import { computed, onBeforeMount, toRef, useId, watch } from 'vue'
 import SlideTransition from './SlideTransition.vue'
 import { useField, useFieldAttrs, useFormShared, FIELD_RENDERERS } from './composables'
 import Field from './Field.vue'
