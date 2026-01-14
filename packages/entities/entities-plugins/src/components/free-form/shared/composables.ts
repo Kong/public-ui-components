@@ -91,7 +91,17 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       // Set hidden paths to default or null
       if (hiddenPaths.value.size > 0) {
         for (const path of hiddenPaths.value) {
-          set(nextValue, utils.toArray(path), schemaHelpers.getEmptyOrDefault(path))
+          const pathArray = utils.toArray(path)
+
+          // Check if the parent path exists before setting
+          // This is a temporary fix to prevent lodash set() from auto-creating intermediate objects
+          // TODO: Refactor data layer to listen to data source changes and clean up hiddenPaths accordingly
+          const parentPath = pathArray.slice(0, -1)
+          const parentExists = parentPath.length === 0 || get(nextValue, parentPath) != null
+
+          if (parentExists) {
+            set(nextValue, pathArray, schemaHelpers.getEmptyOrDefault(path))
+          }
         }
       }
 

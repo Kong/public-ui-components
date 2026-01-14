@@ -84,31 +84,11 @@
             </slot>
           </template>
         </KLabel>
-
-        <!-- +/- button -->
-        <KButton
-          v-if="!fieldAttrs.required && !enableSwitchButton"
-          appearance="tertiary"
-          class="ff-object-field-add-btn"
-          :data-testid="`ff-object-toggle-btn-${field.path.value}`"
-          icon
-          size="small"
-          @click="handleAddOrRemove"
-        >
-          <RemoveIcon
-            v-if="added"
-            class="ff-object-field-button-icon"
-          />
-          <AddIcon
-            v-else
-            class="ff-object-field-button-icon"
-          />
-        </KButton>
       </div>
 
       <!-- Switch button -->
       <KInputSwitch
-        v-if="!fieldAttrs.required && enableSwitchButton"
+        v-if="!fieldAttrs.required"
         v-model="added"
         @update:model-value="handleToggleSwitch"
       />
@@ -156,8 +136,6 @@ import type { RecordFieldSchema } from 'src/types/plugins/form-schema'
 import type { RenderRules, ResetLabelPathRule } from './types'
 
 const contentId = useId()
-
-const enableSwitchButton = inject('enableSwitchButton', ref(true))
 
 defineOptions({
   inheritAttrs: false,
@@ -249,14 +227,6 @@ function toggleDisplay() {
   expanded.value = !expanded.value
 }
 
-function handleAddOrRemove() {
-  added.value = !added.value
-  if (added.value) {
-    fieldValue!.value = getDefault(field.path!.value)
-  } else {
-    fieldValue!.value = null
-  }
-}
 function handleToggleSwitch() {
   if (added.value) {
     fieldValue!.value = getDefault(field.path!.value)
