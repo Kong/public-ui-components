@@ -28,7 +28,7 @@
     <template v-if="editorMode === 'form'">
       <!-- Plugin scope -->
       <EntityFormBlock
-        data-testid="form-section-general-info"
+        data-testid="form-section-plugin-scope"
         :description="generalInfoDescription ?? t('plugins.form.sections.plugin_scope.description')"
         :step="1"
         :title="generalInfoTitle ?? t('plugins.form.sections.plugin_scope.title')"
@@ -125,7 +125,7 @@
 
       <!-- General information -->
       <EntityFormBlock
-        data-testid="form-section-plugin-general-info"
+        data-testid="form-section-general-info"
         :description="t('plugins.form.sections.plugin_general_info.description')"
         :step="3"
         :title="t('plugins.form.sections.general_info.title')"
