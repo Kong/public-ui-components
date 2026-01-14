@@ -6,5 +6,3 @@ export const PANE_LEFT_MAX_WIDTH = '500px'
 export const PANE_CENTER_DEFAULT_MAX_WIDTH: string = '50%'
 /** Default maximum width for the right pane */
 export const PANE_RIGHT_DEFAULT_MAX_WIDTH: string = '50%'
-/** Default minimum width for inner panes (center and right) */
-export const INNER_PANES_MIN_WIDTH = '300px'

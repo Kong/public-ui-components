@@ -94,7 +94,7 @@
 
 <script setup lang="ts">
 import { computed, useTemplateRef, watch, nextTick } from 'vue'
-import { PANE_LEFT_MIN_WIDTH, PANE_LEFT_MAX_WIDTH, INNER_PANES_MIN_WIDTH, PANE_CENTER_DEFAULT_MAX_WIDTH, PANE_RIGHT_DEFAULT_MAX_WIDTH } from '../constants/split-pane'
+import { PANE_LEFT_MAX_WIDTH, PANE_CENTER_DEFAULT_MAX_WIDTH, PANE_RIGHT_DEFAULT_MAX_WIDTH } from '../constants/split-pane'
 import { useElementSize, useElementHover } from '@vueuse/core'
 import VerticalNavigation from './VerticalNavigation.vue'
 import useSplitPane from '../composable/useSplitPane'
@@ -215,6 +215,8 @@ watch(() => paneRight.visible, async () => {
 // but must then adjust the center pane's margins to prevent a gap.
 $resize-divider-width: 3px;
 $toolbar-height: 44px;
+$pane-left-min-width: 260px; // PANE_LEFT_MIN_WIDTH
+$inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
 
 .kong-ui-public-split-pane {
   &.has-navigation {
@@ -301,7 +303,7 @@ $toolbar-height: 44px;
     pointer-events: none; // Disallow interaction when not expanded
     position: relative;
     transition: border-color 0.1s ease-in-out, max-width 0.1s ease-in-out;
-    width: v-bind('PANE_LEFT_MIN_WIDTH'); // Default width
+    width: $pane-left-min-width; // Default width
     will-change: border-color, max-width, min-width;
     z-index: 5; // Keep tooltips above center pane
 
@@ -320,8 +322,8 @@ $toolbar-height: 44px;
 
   &-pane-center {
     max-width: v-bind('centerMaxWidth');
-    min-width: v-bind('INNER_PANES_MIN_WIDTH'); // Do not allow resizing below the minimum
-    width: v-bind('INNER_PANES_MIN_WIDTH');
+    min-width: $inner-panes-min-width; // Do not allow resizing below the minimum
+    width: $inner-panes-min-width;
 
     &.has-resize-divider-left {
       margin-left: calc($resize-divider-width * -1);
@@ -336,7 +338,7 @@ $toolbar-height: 44px;
     border-left: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     flex: 1;
     max-width: v-bind('rightMaxWidth');
-    min-width: v-bind('INNER_PANES_MIN_WIDTH'); // Do not allow resizing below the minimum
+    min-width: $inner-panes-min-width; // Do not allow resizing below the minimum
     transition: border-color 0.1s ease-in-out;
 
     &.is-dragging-inner-panes,
