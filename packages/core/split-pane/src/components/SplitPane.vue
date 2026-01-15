@@ -305,6 +305,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
       // !Important: Disable pointer events when resizing a panel
       pointer-events: none;
       transition: none;
+      user-select: none;
     }
   }
 

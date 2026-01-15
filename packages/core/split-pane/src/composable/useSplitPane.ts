@@ -140,9 +140,6 @@ export default function useSplitPane(params?: useSplitPaneParams) {
     isDraggingInnerPanes.value = true
     startX.value = e.clientX
     startWidth.value = _paneCenterRef.value.offsetWidth || 0
-
-    // Prevent text selection while dragging
-    document.body.style.userSelect = 'none'
   }
 
   /**
@@ -175,7 +172,6 @@ export default function useSplitPane(params?: useSplitPaneParams) {
    */
   const stopDraggingInnerPanes = (): void => {
     isDraggingInnerPanes.value = false
-    document.body.style.userSelect = ''
   }
 
   /**
@@ -191,8 +187,6 @@ export default function useSplitPane(params?: useSplitPaneParams) {
 
     startXPaneLeft.value = e.clientX
     startWidthPaneLeft.value = _paneLeftRef.value.offsetWidth || 0
-
-    document.body.style.userSelect = 'none'
   }
 
   /**
@@ -227,7 +221,6 @@ export default function useSplitPane(params?: useSplitPaneParams) {
    */
   const stopDraggingPaneLeft = (): void => {
     isDraggingPaneLeft.value = false
-    document.body.style.userSelect = ''
   }
 
   /**
