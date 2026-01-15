@@ -78,11 +78,11 @@
 
       <KTooltip
         class="ff-array-field-item-remove-tooltip"
-        :text="i18n.t('actions.remove_entity', { entity: labelAttrs.label })"
+        :text="i18n.t('actions.remove_entity', { entity: fieldName })"
       >
         <KButton
           appearance="tertiary"
-          :aria-label="i18n.t('actions.remove_entity', { entity: labelAttrs.label })"
+          :aria-label="i18n.t('actions.remove_entity', { entity: fieldName })"
           :data-testid="`ff-kv-remove-btn-${field.path.value}.${index}`"
           icon
           @click="removeEntry(entry.id)"
@@ -94,13 +94,13 @@
 
     <KButton
       appearance="tertiary"
-      :aria-label="i18n.t('actions.add_entity', { entity: labelAttrs.label })"
+      :aria-label="i18n.t('actions.add_entity', { entity: fieldName })"
       class="ff-kv-field-add-entry-btn"
       :data-testid="`ff-kv-add-btn-${field.path.value}`"
       @click="handleAddClick"
     >
       <AddIcon />
-      {{ i18n.t('actions.add_entity', { entity: labelAttrs.label }) }}
+      {{ i18n.t('actions.add_entity', { entity: fieldName }) }}
     </KButton>
   </div>
 </template>
@@ -113,6 +113,8 @@ import type { MapFieldSchema } from '../../../types/plugins/form-schema'
 import useI18n from '../../../composables/useI18n'
 import { useKeyValueField, type KeyValueFieldEmits, type KeyValueFieldProps } from '../shared/headless/useKeyValueField'
 import EnhancedInput from './EnhancedInput.vue'
+import { replaceByDictionaryInFieldName } from './composables'
+import { getName } from './utils'
 
 const { showVaultSecretPicker = undefined, ...props } = defineProps<KeyValueFieldProps>()
 
@@ -129,6 +131,13 @@ const {
   labelAttrs,
   field,
 } = useKeyValueField(props, emit)
+
+const fieldName = computed(() => {
+  if (!field.path) return ''
+  const name = getName(field.path.value)
+  return replaceByDictionaryInFieldName(name)
+})
+
 
 const root = useTemplateRef('root')
 
