@@ -2,6 +2,7 @@
   <div
     class="kong-ui-public-split-pane"
     :class="{ 'has-navigation': showNavigation }"
+    data-testid="split-pane"
   >
     <div class="split-pane-container">
       <VerticalNavigation
@@ -30,6 +31,7 @@
             v-if="showPaneLeft"
             ref="paneLeftDivider"
             class="split-pane-resize-divider left"
+            data-testid="split-pane-resize-divider-left"
             tabindex="0"
             :title="i18n.t('actions.drag_to_resize')"
             @mousedown="startDraggingPaneLeft"
@@ -70,6 +72,7 @@
                 v-if="showInnerPanesResizeDivider"
                 ref="innerPanesDivider"
                 class="split-pane-resize-divider right"
+                data-testid="split-pane-resize-divider-right"
                 tabindex="0"
                 :title="i18n.t('actions.drag_to_resize')"
                 @mousedown="startDraggingInnerPanes"
