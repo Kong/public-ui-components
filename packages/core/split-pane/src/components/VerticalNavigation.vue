@@ -35,7 +35,7 @@
           class="toggle-left-panel-control"
           :class="{
             'expanded': paneLeftExpanded,
-            'disable-animation': isDraggingPaneLeft || isDraggingInnerPanes,
+            'disable-animation': !hasMounted || isDraggingPaneLeft || isDraggingInnerPanes,
           }"
           @transitionend.self="sidePanelToggling = false"
           @transitionstart.self="sidePanelToggling = true"
@@ -118,11 +118,10 @@ const onNavItemClick = (item: VerticalNavigationItem): void => {
 }
 
 onMounted(async () => {
+  // await 1 second tick to avoid toggle animation on initial render
   await nextTick()
-  // next tick ensures initial layout is complete
-  requestAnimationFrame(() => {
-    hasMounted.value = true
-  })
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  hasMounted.value = true
 })
 </script>
 
