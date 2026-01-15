@@ -41,7 +41,7 @@
       <KButton
         v-if="appearance === 'tabs'"
         appearance="tertiary"
-        :aria-label="t('actions.add_entity', { entity: fieldAttrs.label })"
+        :aria-label="t('actions.add_entity', { entity: fieldName })"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
         icon
         @click="addItem"
@@ -83,11 +83,11 @@
           </div>
           <KTooltip
             class="ff-array-field-item-remove-tooltip"
-            :text="t('actions.remove_entity', { entity: fieldAttrs.label })"
+            :text="t('actions.remove_entity', { entity: fieldName })"
           >
             <KButton
               appearance="tertiary"
-              :aria-label="t('actions.remove_entity', { entity: fieldAttrs.label })"
+              :aria-label="t('actions.remove_entity', { entity: fieldName })"
               class="ff-array-field-item-remove"
               :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
               icon
@@ -101,13 +101,13 @@
 
       <KButton
         appearance="tertiary"
-        :aria-label="t('actions.add_entity', { entity: fieldAttrs.label })"
+        :aria-label="t('actions.add_entity', { entity: fieldName })"
         class="ff-array-field-add-item-btn"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
         @click="addItem"
       >
         <AddIcon />
-        {{ t('actions.add_entity', { entity: fieldAttrs.label }) }}
+        {{ t('actions.add_entity', { entity: fieldName }) }}
       </KButton>
     </template>
 
@@ -150,7 +150,7 @@
           {{ getTabTitle(item, index) }}
           <KButton
             appearance="tertiary"
-            :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
+            :aria-label="t('actions.remove_entity', { entity: fieldName })"
             class="ff-array-field-item-remove"
             :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
             icon
@@ -168,7 +168,7 @@
 import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs } from 'vue'
 import { AddIcon, TrashIcon, CloseIcon } from '@kong/icons'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared, useItemKeys } from './composables'
+import { replaceByDictionaryInFieldName, useField, useFieldAttrs, useFormShared, useItemKeys } from './composables'
 import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
@@ -210,6 +210,12 @@ const subSchema = computed(() => {
   const schema = getSchema<ArrayLikeFieldSchema>(field.path.value)
   if (!schema) throw new Error(`Schema not found for path: ${field.path.value}`)
   return schema.elements
+})
+
+const fieldName = computed(() => {
+  if (!field.path) return ''
+  const name = utils.getName(field.path.value)
+  return replaceByDictionaryInFieldName(name)
 })
 
 const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])

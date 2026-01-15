@@ -470,8 +470,18 @@ const labelDictionary: Record<string, string> = {
   azure: 'Azure',
 }
 
-function replaceByDictionary(name: string) {
+export function replaceByDictionary(name: string) {
   return labelDictionary[name.toLocaleLowerCase()] ?? name
+}
+
+/**
+ * Replace parts of a field name using a predefined dictionary.
+ * @example 'by_lua' => 'by Lua'
+ */
+export function replaceByDictionaryInFieldName(fieldName: string) {
+  return fieldName.split('_')
+    .map(replaceByDictionary)
+    .join(' ')
 }
 
 export function useLabelPath(fieldName: string, rule: MaybeRefOrGetter<ResetLabelPathRule | undefined>) {
