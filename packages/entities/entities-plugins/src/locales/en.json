@@ -761,7 +761,7 @@
           "mode": "Flow editor",
           "name": "Datakit flow editor",
           "cta": "Go to flow editor",
-          "disabled_tooltip": "The flow editor is unavailable. To switch, fix configuration errors or remove unsupported nodes.",
+          "disabled_tooltip": "The flow editor is unavailable due to critical configuration errors or features not supported in the flow editor:<br/><code>{reason}</code>",
           "expand_panel": "Expand panel",
           "collapse_panel": "Collapse panel",
           "return_to_config": "Return to plugin configuration",

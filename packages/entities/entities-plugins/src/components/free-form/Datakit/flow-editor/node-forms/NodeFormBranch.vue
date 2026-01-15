@@ -42,6 +42,7 @@
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
+      node-type="branch"
       @change:input="setInput"
       @change:inputs="setInputs"
     />

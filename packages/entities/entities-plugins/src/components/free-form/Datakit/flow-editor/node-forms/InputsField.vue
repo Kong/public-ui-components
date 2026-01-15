@@ -48,10 +48,10 @@
 
   <InputsField
     v-if="InputsField"
-    :field-name-validator="fieldNameValidator"
     :items="items"
     :key-order="fieldNames"
     name="inputs"
+    v-bind="InputsField === InputsRecordField ? { nodeType } : { fieldNameValidator }"
     @add:field="handleAddField"
     @change:inputs="handleChangeInputs"
     @remove:field="handleRemoveField"
@@ -72,13 +72,14 @@ import InputsRecordField from './InputsRecordField.vue'
 import InputsMapField from './InputsMapField.vue'
 import useI18n from '../../../../../composables/useI18n'
 import type { InputOption, useNodeForm } from '../composables/useNodeForm'
-import type { FieldName, IdConnection } from '../../types'
+import type { FieldName, IdConnection, NodeType } from '../../types'
 import SourceItem from './SourceItem.vue'
 
 defineProps<{
   items: InputOption[]
   fieldNames: FieldName[]
   fieldNameValidator: ReturnType<typeof useNodeForm>['fieldNameValidator']
+  nodeType: NodeType
 }>()
 
 const emit = defineEmits<{
