@@ -4,7 +4,6 @@ import { exploreAggregations, queryableExploreDimensions } from './advanced'
 
 export const queryableMcpExploreDimensions = [
   ...queryableExploreDimensions,
-  'mcp_info',
   'mcp_session_id',
   'mcp_method',
   'mcp_tool_name',
