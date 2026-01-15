@@ -9,7 +9,7 @@
         :class="{ 'disabled': isDisabled }"
         :data-testid="`${plugin.id}-card`"
         role="button"
-        @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
+        @click="handleClick"
       >
         <div class="plugin-card-header">
           <div class="plugin-card-title">
@@ -69,7 +69,6 @@
           class="plugin-card-body"
           :data-testid="`${plugin.id}-card-body`"
           :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
-          @click="handleCustomClick"
         >
           <div
             v-if="plugin.description || (isCustomPlugin && !isCreateCustomPlugin)"
@@ -132,6 +131,23 @@ const isDisabled = computed((): boolean => !!(!props.plugin.available || props.p
 const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && controlPlaneId.value))
 
 const handleClick = (): void => {
+  if (isDisabled.value) {
+    return
+  }
+
+  // handles custom plugin card click only
+  if (isCustomPlugin.value) {
+    const konnectConfig = props.config as KonnectPluginSelectConfig
+    const dest = (isCreateCustomPlugin.value && konnectConfig.createCustomRoute)
+      ? konnectConfig.createCustomRoute
+      : props.config.getCreateRoute(props.plugin.id)
+
+    router.push(dest)
+
+    return
+  }
+
+  // default navigation for non-custom plugins
   router.push(props.config.getCreateRoute(props.plugin.id))
 }
 
@@ -154,17 +170,6 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
   }
 }
 
-const handleCustomClick = (): void => {
-  // handle custom plugin card click only
-  if (!isDisabled.value && props.config.app === 'konnect') {
-    const konnectConfig = props.config as KonnectPluginSelectConfig
-    if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
-      router.push(konnectConfig.createCustomRoute)
-    } else if (isCustomPlugin.value) {
-      handleClick()
-    }
-  }
-}
 </script>
 
 <style lang="scss" scoped>
