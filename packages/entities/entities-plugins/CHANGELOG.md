@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.143.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.142.1...@kong-ui-public/entities-plugins@9.143.0) (2026-01-15)
+
+
+### Features
+
+* **entities-plugin, entities-shared:** implement new plugin form layout ([#2814](https://github.com/Kong/public-ui-components/issues/2814)) ([7bce311](https://github.com/Kong/public-ui-components/commit/7bce311ed1cb98cbfd2b3df008041e3f7c993886))
+
+
+
+
+
 ## [9.142.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.142.0...@kong-ui-public/entities-plugins@9.142.1) (2026-01-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
