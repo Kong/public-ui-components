@@ -1,6 +1,6 @@
 <template>
   <main class="custom-container">
-    <KCard>
+    <KCard class="my-card">
       <SplitPane
         :pane-center="props.paneCenter"
         :pane-left="props.paneLeft"
@@ -35,5 +35,10 @@ const props = computed((): SplitPaneProps => ({
 <style lang="scss" scoped>
 .custom-container {
   padding: $kui-space-100;
+
+  .my-card {
+    height: 500px;
+    padding: $kui-space-0;
+  }
 }
 </style>

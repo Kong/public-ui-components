@@ -5,6 +5,11 @@
     :pane-left="props.paneLeft"
     :pane-right="props.paneRight"
   >
+    <template #toolbar>
+      <div class="toolbar">
+        my toolbar
+      </div>
+    </template>
     <template #pane-left>
       left
     </template>
@@ -38,3 +43,10 @@ const navItems = computed<VerticalNavigationItem[]>(() => [
   },
 ])
 </script>
+
+<style lang="scss" scoped>
+.toolbar {
+  border-bottom: $kui-border-width-10 solid $kui-color-border;
+  padding: $kui-space-60;
+}
+</style>

@@ -84,7 +84,12 @@
                 ref="paneRightRef"
                 :aria-hidden="showPaneRight ? undefined : 'true'"
                 class="kong-ui-public-split-pane-pane-right"
-                :class="[{ 'show-resize-border': innerPanesDividerIsHovered }, { 'is-dragging-inner-panes': isDraggingInnerPanes }, { 'is-dragging-pane': isDraggingPaneLeft || isDraggingInnerPanes }]"
+                :class="[
+                  { 'has-toolbar': !!slots.toolbar },
+                  { 'show-resize-border': innerPanesDividerIsHovered },
+                  { 'is-dragging-inner-panes': isDraggingInnerPanes },
+                  { 'is-dragging-pane': isDraggingPaneLeft || isDraggingInnerPanes },
+                ]"
                 data-testid="kong-ui-public-split-pane-pane-right"
                 :tabindex="showPaneRight ? 0 : -1"
               >
@@ -226,6 +231,8 @@ $pane-left-min-width: 260px; // PANE_LEFT_MIN_WIDTH
 $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
 
 .kong-ui-public-split-pane {
+  height: 100%;
+
   &.has-navigation {
     background-color: var(--kui-navigation-color-background, $kui-navigation-color-background);
     bottom: 0;
@@ -245,7 +252,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
   &-container {
     display: flex;
     flex-direction: row;
-    height: 100vh;
+    height: 100%;
     width: 100%;
 
     &-inner {
@@ -257,7 +264,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
         display: flex;
         flex: 1 1 auto;
         flex-direction: column;
-        height: 100vh;
+        height: 100%;
         max-height: calc(100vh - 6px); // Subtract 6px to prevent a scrollbar from appearing
         min-width: 0;
         position: relative;
@@ -268,7 +275,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
 
   &-inner-panes {
     display: flex;
-    height: 100vh;
+    height: 100%;
     width: 100%;
   }
 
@@ -286,11 +293,14 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
   &-pane-left,
   &-pane-center,
   &-pane-right {
-    max-height: calc(100vh - $toolbar-height); // 44px for the toolbar height
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
     scrollbar-width: thin;
+
+    &.has-toolbar {
+      max-height: calc(100vh - $toolbar-height); // 44px for the toolbar height
+    }
 
     &.is-dragging-pane {
       // !Important: Disable pointer events when resizing a panel
