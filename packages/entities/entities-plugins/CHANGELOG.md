@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.143.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.143.0...@kong-ui-public/entities-plugins@9.143.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* **entities-plugins:** filter input fields according to compat schema ([#2824](https://github.com/Kong/public-ui-components/issues/2824)) ([266a751](https://github.com/Kong/public-ui-components/commit/266a75187dcfc2b9778343e5b5d036d36ff319b9))
+
+
+
+
+
 # [9.143.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.142.1...@kong-ui-public/entities-plugins@9.143.0) (2026-01-15)
 
 
