@@ -4,11 +4,10 @@
     data-testid="plugin-catalog-card-wrapper"
   >
     <KTooltip :text="plugin.disabledMessage">
-      <a
+      <div
         class="plugin-select-card"
         :class="{ 'disabled': isDisabled }"
         :data-testid="`${plugin.id}-card`"
-        role="button"
         @click="handleClick"
       >
         <div class="plugin-card-header">
@@ -89,7 +88,7 @@
           <div>{{ isCreateCustomPlugin ? t('actions.create_custom') : t('actions.configure') }}</div>
           <slot name="footer-extra" />
         </div>
-      </a>
+      </div>
     </KTooltip>
   </div>
 </template>
