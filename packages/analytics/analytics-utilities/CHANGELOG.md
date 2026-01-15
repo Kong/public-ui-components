@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.9.0...@kong-ui-public/analytics-utilities@12.9.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* **analytics:** make start_ms and end_ms optional [MA-4724] ([#2830](https://github.com/Kong/public-ui-components/issues/2830)) ([1496438](https://github.com/Kong/public-ui-components/commit/1496438fd82e0c1163c7136dfbb89cff32fb44e4))
+
+
+
+
+
 # [12.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.8.1...@kong-ui-public/analytics-utilities@12.9.0) (2026-01-15)
 
 
