@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.9.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.8.1...@kong-ui-public/analytics-utilities@12.9.0) (2026-01-15)
+
+
+### Features
+
+* **analytics:** add top_n to available chart types for dashboards [MA-4534] ([#2805](https://github.com/Kong/public-ui-components/issues/2805)) ([d6cc229](https://github.com/Kong/public-ui-components/commit/d6cc229e92968ae9265a24d0e55426452e6a96b8))
+
+
+
+
+
 ## [12.8.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.8.0...@kong-ui-public/analytics-utilities@12.8.1) (2026-01-14)
 
 
