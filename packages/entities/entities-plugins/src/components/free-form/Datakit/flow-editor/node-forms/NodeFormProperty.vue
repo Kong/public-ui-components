@@ -26,6 +26,7 @@
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
+      node-type="property"
       @change:input="setInput"
       @change:inputs="setInputs"
     />

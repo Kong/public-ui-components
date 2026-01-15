@@ -60,6 +60,7 @@
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
+      node-type="xml_to_json"
       @change:input="setInput"
       @change:inputs="setInputs"
     />
