@@ -85,7 +85,7 @@ describe('<SplitPane />', () => {
         { paneLeft: { visible: true } },
         { 'pane-left': '<div>Left Pane Content</div>' },
       )
-      expect(wrapper.find('.kong-ui-public-split-pane-pane-left').exists()).toBe(true)
+      expect(wrapper.find('.split-pane-left').exists()).toBe(true)
     })
 
     it('should hide pane-left when visible prop is false', () => {
@@ -95,7 +95,7 @@ describe('<SplitPane />', () => {
       )
       // showPaneLeft computed should be false, so pane won't be shown
       // Since mocked composable returns paneLeftExpanded as true, but visible is false the content should still not be visible
-      const paneLeft = wrapper.find('.kong-ui-public-split-pane-pane-left')
+      const paneLeft = wrapper.find('.split-pane-left')
       // The pane element itself may exist but showPaneLeft will be false
       expect(paneLeft.exists()).toBe(true)
     })
@@ -105,7 +105,7 @@ describe('<SplitPane />', () => {
         {},
         { 'pane-center': '<div>Center Pane Content</div>' },
       )
-      expect(wrapper.find('.kong-ui-public-split-pane-pane-center').exists()).toBe(true)
+      expect(wrapper.find('.split-pane-center').exists()).toBe(true)
     })
 
     it('should show pane-right when slot content is provided', () => {
@@ -113,7 +113,7 @@ describe('<SplitPane />', () => {
         {},
         { 'pane-right': '<div>Right Pane Content</div>' },
       )
-      expect(wrapper.find('.kong-ui-public-split-pane-pane-right').exists()).toBe(true)
+      expect(wrapper.find('.split-pane-right').exists()).toBe(true)
     })
 
     it('should hide pane-center when visible prop is false', () => {
@@ -121,7 +121,7 @@ describe('<SplitPane />', () => {
         { paneCenter: { visible: false } },
         { 'pane-center': '<div class="center-pane-content">Center Pane Content</div>' },
       )
-      const paneCenter = wrapper.find('.kong-ui-public-split-pane-pane-center')
+      const paneCenter = wrapper.find('.split-pane-center')
       // Pane uses v-show, so it exists in DOM
       expect(paneCenter.exists()).toBe(true)
       // When showPaneCenter is false, it should have aria-hidden
@@ -133,7 +133,7 @@ describe('<SplitPane />', () => {
         { paneRight: { visible: false } },
         { 'pane-right': '<div class="right-pane-content">Right Pane Content</div>' },
       )
-      const paneRight = wrapper.find('.kong-ui-public-split-pane-pane-right')
+      const paneRight = wrapper.find('.split-pane-right')
       // Pane uses v-show, so it exists in DOM
       expect(paneRight.exists()).toBe(true)
       // When showPaneRight is false, it should have aria-hidden
@@ -192,7 +192,7 @@ describe('<SplitPane />', () => {
         { paneLeft: { visible: true } },
         { 'pane-left': '<div>Left</div>' },
       )
-      const paneLeft = wrapper.find('.kong-ui-public-split-pane-pane-left')
+      const paneLeft = wrapper.find('.split-pane-left')
       expect(paneLeft.classes()).toContain('expanded')
     })
   })

@@ -3,7 +3,7 @@
     class="kong-ui-public-split-pane"
     :class="{ 'has-navigation': showNavigation }"
   >
-    <div class="kong-ui-public-split-pane-container">
+    <div class="split-pane-container">
       <VerticalNavigation
         v-if="showNavigation"
         ref="verticalNavRef"
@@ -11,16 +11,15 @@
         :pane-left-visible="paneLeft.visible !== false"
         :pane-left-width="paneLeftWidth"
       />
-      <div class="kong-ui-public-split-pane-container-inner">
-        <div class="kong-ui-public-split-pane-panes">
+      <div class="split-pane-container-inner">
+        <div class="panes">
           <!-- left pane -->
           <div
-            id="kong-ui-public-split-pane-left"
             ref="paneLeftRef"
             :aria-hidden="showPaneLeft ? undefined : 'true'"
-            class="kong-ui-public-split-pane-pane-left"
+            class="split-pane-left"
             :class="[{ 'expanded': paneLeftExpanded, 'show-resize-border': paneLeftDividerIsHovered }, { 'is-dragging-pane-left': isDraggingPaneLeft }, { 'is-dragging-pane': isDraggingPaneLeft || isDraggingInnerPanes }]"
-            data-testid="kong-ui-public-split-pane-pane-left"
+            data-testid="split-pane-left"
             :tabindex="showPaneLeft ? 0 : -1"
           >
             <slot name="pane-left" />
@@ -30,37 +29,37 @@
           <div
             v-if="showPaneLeft"
             ref="paneLeftDivider"
-            class="kong-ui-public-split-pane-resize-divider left"
+            class="split-pane-resize-divider left"
             tabindex="0"
             :title="i18n.t('actions.drag_to_resize')"
             @mousedown="startDraggingPaneLeft"
           >
-            <div class="kong-ui-public-split-pane-drag-handle" />
+            <div class="split-pane-drag-handle" />
           </div>
 
           <!-- inner panes -->
-          <div class="kong-ui-public-split-pane-container-inner-content">
+          <div class="split-pane-container-inner-content">
             <div
               v-if="!!slots.toolbar"
-              class="kong-ui-public-split-pane-toolbar-container"
+              class="split-pane-toolbar-container"
               :class="{ 'has-resize-divider-left': showPaneLeft }"
-              data-testid="kong-ui-public-split-pane-toolbar"
+              data-testid="split-pane-toolbar"
             >
               <slot name="toolbar" />
             </div>
 
             <div
               ref="innerPanesContainerRef"
-              class="kong-ui-public-split-pane-inner-panes"
+              class="split-pane-inner-panes"
             >
               <!-- center pane -->
               <div
                 v-show="showPaneCenter"
                 ref="paneCenterRef"
                 :aria-hidden="showPaneCenter ? undefined : 'true'"
-                class="kong-ui-public-split-pane-pane-center"
+                class="split-pane-center"
                 :class="[{ 'has-resize-divider-left': showPaneLeft }, { 'has-resize-divider-right': showInnerPanesResizeDivider }, { 'is-dragging-pane': isDraggingPaneLeft || isDraggingInnerPanes }]"
-                data-testid="kong-ui-public-split-pane-pane-center"
+                data-testid="split-pane-center"
                 :tabindex="showPaneCenter ? 0 : -1"
               >
                 <slot name="pane-center" />
@@ -70,12 +69,12 @@
               <div
                 v-if="showInnerPanesResizeDivider"
                 ref="innerPanesDivider"
-                class="kong-ui-public-split-pane-resize-divider right"
+                class="split-pane-resize-divider right"
                 tabindex="0"
                 :title="i18n.t('actions.drag_to_resize')"
                 @mousedown="startDraggingInnerPanes"
               >
-                <div class="kong-ui-public-split-pane-drag-handle" />
+                <div class="split-pane-drag-handle" />
               </div>
 
               <!-- right pane -->
@@ -83,14 +82,14 @@
                 v-show="showPaneRight"
                 ref="paneRightRef"
                 :aria-hidden="showPaneRight ? undefined : 'true'"
-                class="kong-ui-public-split-pane-pane-right"
+                class="split-pane-right"
                 :class="[
                   { 'has-toolbar': !!slots.toolbar },
                   { 'show-resize-border': innerPanesDividerIsHovered },
                   { 'is-dragging-inner-panes': isDraggingInnerPanes },
                   { 'is-dragging-pane': isDraggingPaneLeft || isDraggingInnerPanes },
                 ]"
-                data-testid="kong-ui-public-split-pane-pane-right"
+                data-testid="split-pane-right"
                 :tabindex="showPaneRight ? 0 : -1"
               >
                 <slot name="pane-right" />
@@ -242,14 +241,14 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
     top: 0;
     z-index: 2000;
 
-    .kong-ui-public-split-pane-container {
+    .split-pane-container {
       &-inner {
         padding-top: var(--kui-space-30, $kui-space-30);
       }
     }
   }
 
-  &-container {
+  .split-pane-container {
     display: flex;
     flex-direction: row;
     height: 100%;
@@ -273,13 +272,13 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
     }
   }
 
-  &-inner-panes {
+  .split-pane-inner-panes {
     display: flex;
     height: 100%;
     width: 100%;
   }
 
-  &-panes {
+  .panes {
     align-items: stretch;
     background-color: var(--kui-color-background, $kui-color-background);
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
@@ -290,9 +289,9 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
     z-index: 0;
   }
 
-  &-pane-left,
-  &-pane-center,
-  &-pane-right {
+  .split-pane-left,
+  .split-pane-center,
+  .split-pane-right {
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
@@ -310,7 +309,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
   }
 
   // The resizable min and max widths are also enforced in the `useSplitPane` composable.
-  &-pane-left {
+  .split-pane-left {
     border-right: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border-transparent, $kui-color-border-transparent);
     border-top-left-radius: var(--kui-border-radius-30, $kui-border-radius-30);
     flex: 0 0 auto;
@@ -337,7 +336,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
     }
   }
 
-  &-pane-center {
+  .split-pane-center {
     max-width: v-bind('centerMaxWidth');
     min-width: $inner-panes-min-width; // Do not allow resizing below the minimum
     width: $inner-panes-min-width;
@@ -351,7 +350,7 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
     }
   }
 
-  &-pane-right {
+  .split-pane-right {
     border-left: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
     flex: 1;
     max-width: v-bind('rightMaxWidth');
@@ -364,13 +363,13 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
     }
   }
 
-  &-toolbar-container {
+  .split-pane-toolbar-container {
     &.has-resize-divider-left {
       margin-left: calc($resize-divider-width * -1);
     }
   }
 
-  &-resize-divider {
+  .split-pane-resize-divider {
     align-self: flex-end;
     // The pane-right element has a border, so we don't need a background color here
     background-color: var(--kui-color-background-transparent, $kui-color-background-transparent);
