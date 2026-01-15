@@ -138,7 +138,6 @@ const fieldName = computed(() => {
   return replaceByDictionaryInFieldName(name)
 })
 
-
 const root = useTemplateRef('root')
 
 async function focus(index: number, type: 'key' | 'value' = 'key') {
@@ -180,8 +179,6 @@ defineExpose({
   reset,
   setValue,
 })
-
-
 </script>
 
 <style lang="scss" scoped>

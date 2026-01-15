@@ -144,7 +144,7 @@ defineOptions({
 
 const {
   defaultAdded = true, collapsible = true, omit,
-  required = undefined, asChild: defaultAsChild = undefined, resetLabelPath,
+  required = undefined, asChild: defaultAsChild = undefined, resetLabelPath = 'reset',
   fieldsOrder,
   ...props
 } = defineProps<{
@@ -191,12 +191,7 @@ const isChildOfArray = computed(() => {
   return false
 })
 
-const realResetLabelPath = computed(() => {
-  if (resetLabelPath !== undefined) return resetLabelPath
-  return 'reset'
-})
-
-const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ required, ...props, resetLabelPath: realResetLabelPath.value })))
+const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ required, ...props, resetLabelPath })))
 const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
 
 const asChild = computed(() => {
@@ -298,7 +293,6 @@ onBeforeMount(() => {
     display: flex;
     flex-direction: column;
     gap: $kui-space-40;
-    // height: 32px;
 
     &-toggle {
       align-items: center;
@@ -380,7 +374,7 @@ onBeforeMount(() => {
   }
 
   &-add-btn {
-    margin-left: $kui-space-20
+    margin-left: $kui-space-20;
   }
 }
 </style>
