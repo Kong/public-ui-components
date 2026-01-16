@@ -131,7 +131,7 @@ function injectChecksAtPath(
   path: string,
   checks: EntityCheck[],
 ): void {
-  const parts = path.split('.')
+  const parts = toArray(path)
   let current: RecordFieldSchema = schema
 
   for (const part of parts) {

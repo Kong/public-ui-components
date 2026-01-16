@@ -19,10 +19,15 @@ describe('distributeEntityChecks', () => {
 
   // Helper to get entity_checks at a specific path
   const getEntityChecksAtPath = (schema: FormSchema, path: string[]): EntityCheck[] | undefined => {
-    let current: any = schema.fields.find(f => Object.keys(f)[0] === 'config')?.config
+    const rootConfigEntry = schema.fields.find(
+      (f): f is { config: RecordFieldSchema } => Object.prototype.hasOwnProperty.call(f, 'config'),
+    )
+    let current: RecordFieldSchema | undefined = rootConfigEntry?.config
     for (const part of path) {
       if (!current?.fields) return undefined
-      const field = current.fields.find((f: any) => Object.keys(f)[0] === part)
+      const field = current.fields.find(
+        (f): f is Record<string, RecordFieldSchema> => Object.keys(f)[0] === part,
+      )
       if (!field) return undefined
       current = field[part]
     }
