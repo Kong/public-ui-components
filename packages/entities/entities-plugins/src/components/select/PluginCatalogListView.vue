@@ -75,7 +75,7 @@
             <template #items>
               <KDropdownItem
                 data-testid="edit-plugin-schema"
-                :to="(config as KonnectPluginSelectConfig).getCustomEditRoute?.(row.plugin!.name, row.plugin!.customPluginType!)"
+                :item="{ label: t('actions.edit'), to: (config as KonnectPluginSelectConfig).getCustomEditRoute?.(row.plugin!.name, row.plugin!.customPluginType!) }"
               >
                 {{ t('actions.edit') }}
               </KDropdownItem>
