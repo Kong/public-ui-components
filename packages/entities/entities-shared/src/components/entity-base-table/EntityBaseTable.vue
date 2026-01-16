@@ -89,6 +89,17 @@
       </template>
 
       <template
+        v-if="$slots['bulk-actions']"
+        #bulk-actions="slotProps"
+      >
+        <slot
+          name="bulk-actions"
+          v-bind="slotProps"
+        />
+      </template>
+
+
+      <template
         v-if="!query"
         #empty-state-action-icon
       >
