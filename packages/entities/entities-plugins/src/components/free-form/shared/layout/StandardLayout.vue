@@ -18,10 +18,10 @@
 
       <!-- Identity Realms field (key-auth plugin only) -->
       <FieldRenderer
-        v-slot="props"
+        v-slot="slotProps"
         :match="({ path }) => pluginName === 'key-auth' && path === 'config.identity_realms'"
       >
-        <IdentityRealmsField v-bind="props" />
+        <IdentityRealmsField v-bind="slotProps" />
       </FieldRenderer>
     </template>
 

@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, inject, toRaw } from 'vue'
+import { shallowRef, toRaw } from 'vue'
 import { isEqual, omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
@@ -50,7 +50,6 @@ import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton, KModal } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
 import { useErrors } from '@kong-ui-public/entities-shared'
-import { FORMS_CONFIG } from '@kong-ui-public/forms'
 import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 import '@kong-ui-public/monaco-editor/dist/runtime/style.css'
 import english from '../../../locales/en.json'
@@ -59,13 +58,11 @@ import examples from './examples'
 import { extractors } from './config-extractors'
 
 import type { YAMLException } from 'js-yaml'
-import type { DatakitConfig, DatakitPluginData } from './types'
-import type { KonnectPluginFormConfig, KongManagerPluginFormConfig } from '../../../types'
+import type { DatakitPluginData } from './types'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
 const { formData, setValue } = useFormShared<DatakitPluginData>()
-const formConfig = inject<KonnectPluginFormConfig | KongManagerPluginFormConfig>(FORMS_CONFIG)!
 
 defineProps<{
   editing: boolean
@@ -90,15 +87,7 @@ function dumpYaml(config: unknown): string {
 }
 
 function formDataToCode(): string {
-  if (formConfig.app === 'kongManager' && formData.config) {
-    return dumpYaml(formData.config)
-  }
-
-  if (formConfig.app === 'konnect') {
-    return dumpYaml(omit(formData, ['__ui_data']))
-  }
-
-  return ''
+  return dumpYaml(omit(formData, ['__ui_data']))
 }
 
 const code = shallowRef(formDataToCode())
@@ -125,13 +114,13 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
         json: true,
       })
 
+      if (typeof config !== 'object' || config === null) {
+        return
+      }
+
       monaco.editor.setModelMarkers(model, LINT_SOURCE, [])
 
-      if (formConfig.app === 'konnect') {
-        setValue(config as DatakitPluginData)
-      } else {
-        formData.config = config as DatakitConfig
-      }
+      setValue(config as DatakitPluginData)
       emit('change', config)
     } catch (error: unknown) {
       const { message, mark } = error as YAMLException
@@ -157,24 +146,22 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
     }
   })
 
-  if (formConfig.app === 'konnect') {
-    editor.onDidPaste((e) => {
-      const model = editor.getModel()
-      if (!model) return
+  editor.onDidPaste((e) => {
+    const model = editor.getModel()
+    if (!model) return
 
-      const pastedText = model.getValueInRange(e.range)
+    const pastedText = model.getValueInRange(e.range)
 
-      for (const extractor of extractors) {
-        const extractedConfig = extractor.extract(pastedText)
-        if (extractedConfig) {
-          pendingConfig.value = extractedConfig
-          pendingExtractorName.value = extractor.name
-          showConvertModal.value = true
-          return
-        }
+    for (const extractor of extractors) {
+      const extractedConfig = extractor.extract(pastedText)
+      if (extractedConfig) {
+        pendingConfig.value = extractedConfig
+        pendingExtractorName.value = extractor.name
+        showConvertModal.value = true
+        return
       }
-    })
-  }
+    }
+  })
 
   focusEnd()
 }
@@ -205,13 +192,6 @@ function handleConvertConfirm() {
 function setExampleCode(example: keyof typeof examples) {
   const newCode = examples[example]
 
-  // Kong Manager's code editor is editing only the config portion
-  if (formConfig.app === 'kongManager') {
-    code.value = newCode
-    focusEnd()
-    return
-  }
-
   try {
     const config = yaml.load(code.value, {
       schema: JSON_SCHEMA,
@@ -223,7 +203,7 @@ function setExampleCode(example: keyof typeof examples) {
       json: true,
     }) as any
 
-    if (isEqual(config.config, exampleConfigJson)) return
+    if (typeof config === 'object' && config !== null && isEqual(config.config, exampleConfigJson)) return
 
     const nextConfig = omit({
       ...formData,

@@ -37,13 +37,7 @@
       :is-editing="props.isEditing"
       @change="handleFlowChange"
     />
-    <CodeEditor
-      v-else-if="realEditorMode === 'code' && formConfig.app === 'kongManager'"
-      class="code-editor"
-      :editing="props.isEditing"
-      @change="handleCodeChange"
-      @error="handleCodeError"
-    />
+
     <template #code-editor>
       <CodeEditor
         class="code-editor"
@@ -54,7 +48,7 @@
     </template>
 
     <template #plugin-config-title>
-      {{ t('plugins.free-form.datakit.plugin_config.title') }}
+      {{ t('plugins.free-form.datakit.flow_editor.mode') }}
     </template>
 
     <template #plugin-config-description>
@@ -116,7 +110,7 @@ const realEditorMode = computed<EditorMode>(() => {
 })
 const layoutEditorMode = computed<'form' | 'code'>(() => {
   if (formConfig.app === 'kongManager') {
-    return 'form'
+    return 'code'
   }
   return realEditorMode.value === 'flow' ? 'form' : 'code'
 })
