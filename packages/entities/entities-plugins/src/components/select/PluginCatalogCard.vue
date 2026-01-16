@@ -4,11 +4,12 @@
     data-testid="plugin-catalog-card-wrapper"
   >
     <KTooltip :text="plugin.disabledMessage">
-      <div
+      <RouterLink
         class="plugin-select-card"
         :class="{ 'disabled': isDisabled }"
         :data-testid="`${plugin.id}-card`"
-        @click="handleClick"
+        :disabled="isDisabled"
+        :to="pluginCardLink"
       >
         <div class="plugin-card-header">
           <div class="plugin-card-title">
@@ -31,6 +32,7 @@
               data-testid="custom-plugin-actions"
               :kpop-attributes="{ placement: 'bottom-end' }"
               width="150"
+              @click.stop.prevent
             >
               <template #default>
                 <KButton
@@ -47,7 +49,7 @@
               <template #items>
                 <KDropdownItem
                   data-testid="edit-plugin-schema"
-                  @click.stop="handleCustomEdit(plugin.name, plugin.customPluginType!)"
+                  @click.stop.prevent="handleCustomEdit(plugin.name, plugin.customPluginType!)"
                 >
                   {{ t('actions.edit') }}
                 </KDropdownItem>
@@ -55,7 +57,7 @@
                   danger
                   data-testid="delete-plugin-schema"
                   has-divider
-                  @click.stop="handleCustomDelete"
+                  @click.stop.prevent="handleCustomDelete"
                 >
                   {{ t('actions.delete') }}
                 </KDropdownItem>
@@ -88,7 +90,7 @@
           <div>{{ isCreateCustomPlugin ? t('actions.create_custom') : t('actions.configure') }}</div>
           <slot name="footer-extra" />
         </div>
-      </div>
+      </RouterLink>
     </KTooltip>
   </div>
 </template>
@@ -129,26 +131,20 @@ const controlPlaneId = computed((): string => props.config.app === 'konnect' ? p
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
 const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && controlPlaneId.value))
 
-const handleClick = (): void => {
+const pluginCardLink = computed(() => {
   if (isDisabled.value) {
-    return
+    return {}
   }
 
-  // handles custom plugin card click only
   if (isCustomPlugin.value) {
     const konnectConfig = props.config as KonnectPluginSelectConfig
-    const dest = (isCreateCustomPlugin.value && konnectConfig.createCustomRoute)
+    return isCreateCustomPlugin.value && konnectConfig.createCustomRoute
       ? konnectConfig.createCustomRoute
       : props.config.getCreateRoute(props.plugin.id)
-
-    router.push(dest)
-
-    return
   }
 
-  // default navigation for non-custom plugins
-  router.push(props.config.getCreateRoute(props.plugin.id))
-}
+  return props.config.getCreateRoute(props.plugin.id)
+})
 
 /**
  * Custom Plugin logic
@@ -188,6 +184,7 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
     min-height: 218px;
     overflow: hidden;
     padding: $kui-space-70;
+    text-decoration: none;
     width: 100%;
 
     &:hover {

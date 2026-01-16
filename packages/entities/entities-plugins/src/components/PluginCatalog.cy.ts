@@ -197,4 +197,17 @@ describe('<PluginCatalog />', {
     cy.getTestId('plugins-filter-input').type('non-existent-plugin')
     cy.getTestId('plugin-catalog').contains(/no plugins found|empty|no results/i).should('exist')
   })
+
+  it('should render disabled plugin card', () => {
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        disabledPlugins: { 'acl': 'ACL is not supported for this entity type' },
+      },
+      router,
+    })
+
+    cy.wait('@getAvailablePlugins')
+    cy.getTestId('acl-card').should('have.class', 'disabled')
+  })
 })
