@@ -1,4 +1,4 @@
-import type { DatakitConfig } from './strict'
+import type { ConfigNodeType, DatakitConfig, FieldName } from './strict'
 
 import { z } from 'zod'
 import {
@@ -13,6 +13,7 @@ import {
 import { IMPLICIT_NODE_NAMES } from '../constants'
 
 const KNOWN_NODE_TYPES = ConfigNodeTypeSchema.options
+
 
 const LooseNodeNameSchema = z
   .string()
@@ -31,6 +32,44 @@ const LooseConnectionSchema = z.string().refine((s) => {
   const right = s.slice(i + 1)
   return left.length > 0 && right.length > 0
 }, 'Invalid connection')
+
+const CallInputsSchema = z
+  .object({
+    body: LooseConnectionSchema.nullish(),
+    headers: LooseConnectionSchema.nullish(),
+    query: LooseConnectionSchema.nullish(),
+  })
+  .partial()
+  .strict()
+
+const ExitInputsSchema = z
+  .object({
+    headers: LooseConnectionSchema.nullish(),
+    body: LooseConnectionSchema.nullish(),
+  })
+  .partial()
+  .strict()
+
+const CacheInputsSchema = z
+  .object({
+    data: LooseConnectionSchema.nullish(),
+    key: LooseConnectionSchema.nullish(),
+    ttl: LooseConnectionSchema.nullish(),
+  })
+  .partial()
+  .strict()
+
+const COMPAT_INPUT_SCHEMAS_BY_NODE_TYPE: Partial<Record<ConfigNodeType, z.ZodObject<z.ZodRawShape>>> = {
+  call: CallInputsSchema,
+  exit: ExitInputsSchema,
+  cache: CacheInputsSchema,
+}
+
+export function getCompatInputFieldsByNodeType(type: ConfigNodeType): FieldName[] | null {
+  const schema = COMPAT_INPUT_SCHEMAS_BY_NODE_TYPE[type]
+  if (!schema) return null
+  return Object.keys(schema.shape) as FieldName[]
+}
 
 export const ConfigNodeBaseSchema = z
   .object({
@@ -77,14 +116,7 @@ const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
   ssl_server_name: z.string().nullish(),
   timeout: z.union([z.number(), z.string()]).nullish(),
   url: z.string().nullish(),
-  inputs: z
-    .object({
-      body: LooseConnectionSchema.nullish(),
-      headers: LooseConnectionSchema.nullish(),
-      query: LooseConnectionSchema.nullish(),
-    })
-    .partial()
-    .nullish(),
+  inputs: CallInputsSchema.nullish(),
   outputs: z
     .object({
       body: LooseConnectionSchema.nullish(),
@@ -99,6 +131,7 @@ const ExitNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('exit'),
   status: z.union([z.number(), z.string()]).nullish(),
   warn_headers_sent: z.boolean().nullish(),
+  inputs: ExitInputsSchema.nullish(),
   output: z.never().nullish(),
   outputs: z.never().nullish(),
 }).strict()
@@ -151,14 +184,7 @@ const StaticNodeSchema = ConfigNodeBaseSchema.safeExtend({
 const CacheNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('cache'),
   bypass_on_error: z.boolean().nullish(),
-  inputs: z
-    .object({
-      data: LooseConnectionSchema.nullish(),
-      key: LooseConnectionSchema.nullish(),
-      ttl: LooseConnectionSchema.nullish(),
-    })
-    .partial()
-    .nullish(),
+  inputs: CacheInputsSchema.nullish(),
   outputs: z
     .object({
       data: LooseConnectionSchema.nullish(),

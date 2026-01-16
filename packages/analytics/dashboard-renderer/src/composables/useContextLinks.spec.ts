@@ -65,6 +65,7 @@ function mountComposable({
   contextFilters = [],
   timeRange,
   chartDataGranularityMs = ONE_HOUR_MS,
+  editable = false,
 }: {
   exploreBase?: string
   requestsBase?: string
@@ -75,6 +76,7 @@ function mountComposable({
   contextFilters?: any[]
   timeRange?: any
   chartDataGranularityMs?: number
+  editable?: boolean
 }) {
   const queryBridge = {
     exploreBaseUrl: vi.fn(async () => exploreBase),
@@ -84,6 +86,7 @@ function mountComposable({
   const context = computed(() => ({
     filters: contextFilters,
     timeSpec: relativeTimeRange,
+    editable,
   }))
 
   const definition = computed(() => ({
@@ -204,14 +207,36 @@ describe('useContextLinks', () => {
     expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
   })
 
-  it('hides kebab for golden_signals/top_n/gauge chart types', async () => {
-    for (const type of ['golden_signals', 'top_n', 'gauge']) {
-      const { wrapper } = mountComposable({ chartType: type })
+  it('hides kebab for golden_signals/gauge chart types regardless of editable state', async () => {
+    for (const type of ['golden_signals', 'gauge']) {
+      // Not editable
+      const { wrapper } = mountComposable({ chartType: type, editable: false })
       await flushPromises()
       expect(wrapper.vm.canShowKebabMenu).toBe(false)
       expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
       expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+
+      // Editable, should still hide
+      const { wrapper: editableWrapper } = mountComposable({ chartType: type, editable: true })
+      await flushPromises()
+      expect(editableWrapper.vm.canShowKebabMenu).toBe(false)
     }
+  })
+
+  it('hides kebab for top_n chart when context is not editable', async () => {
+    const { wrapper } = mountComposable({ chartType: 'top_n', editable: false })
+    await flushPromises()
+    expect(wrapper.vm.canShowKebabMenu).toBe(false)
+    expect(wrapper.vm.exploreLinkKebabMenu).toBe('')
+    expect(wrapper.vm.requestsLinkKebabMenu).toBe('')
+  })
+
+  it('shows kebab for top_n chart when context is editable', async () => {
+    const { wrapper } = mountComposable({ chartType: 'top_n', editable: true })
+    await flushPromises()
+    expect(wrapper.vm.canShowKebabMenu).toBe(true)
+    expect(wrapper.vm.exploreLinkKebabMenu).toContain('#explore?')
+    expect(wrapper.vm.requestsLinkKebabMenu).toContain('#requests?')
   })
 
   it('prevents requests link for llm_usage datasource', async () => {

@@ -305,7 +305,7 @@ export const PLUGIN_GROUP_AND_SCOPE_MAP = {
   },
   'response-transformer-advanced': {
     name: 'Response Transformer Advanced',
-    description: 'Transform the response sent by the upstream server on the fly in Kong, before returning the response to the client.',
+    description: 'Transform the response sent by the upstream server on the fly on Kong, before returning the response to the client.',
     group: PluginGroup.TRANSFORMATIONS,
     scope: [PluginScope.GLOBAL, PluginScope.SERVICE, PluginScope.ROUTE, PluginScope.CONSUMER, PluginScope.CONSUMER_GROUP],
   },

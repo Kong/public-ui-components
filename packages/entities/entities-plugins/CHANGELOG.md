@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.143.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.143.1...@kong-ui-public/entities-plugins@9.143.2) (2026-01-16)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.143.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.143.0...@kong-ui-public/entities-plugins@9.143.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* **entities-plugins:** filter input fields according to compat schema ([#2824](https://github.com/Kong/public-ui-components/issues/2824)) ([266a751](https://github.com/Kong/public-ui-components/commit/266a75187dcfc2b9778343e5b5d036d36ff319b9))
+
+
+
+
+
+# [9.143.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.142.1...@kong-ui-public/entities-plugins@9.143.0) (2026-01-15)
+
+
+### Features
+
+* **entities-plugin, entities-shared:** implement new plugin form layout ([#2814](https://github.com/Kong/public-ui-components/issues/2814)) ([7bce311](https://github.com/Kong/public-ui-components/commit/7bce311ed1cb98cbfd2b3df008041e3f7c993886))
+
+
+
+
+
+## [9.142.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.142.0...@kong-ui-public/entities-plugins@9.142.1) (2026-01-14)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.142.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.141.0...@kong-ui-public/entities-plugins@9.142.0) (2026-01-14)
+
+
+### Features
+
+* **entities-plugins:** migrate to shared monaco-editor package, improve styling for code editor ([#2793](https://github.com/Kong/public-ui-components/issues/2793)) ([db5f2ae](https://github.com/Kong/public-ui-components/commit/db5f2aec2938701d75a3b9ce083a7bf708b32221))
+
+
+
+
+
 # [9.141.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.140.7...@kong-ui-public/entities-plugins@9.141.0) (2026-01-13)
 
 

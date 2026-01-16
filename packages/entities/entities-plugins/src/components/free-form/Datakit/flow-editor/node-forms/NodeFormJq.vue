@@ -45,6 +45,7 @@
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
       :items="inputOptions"
+      node-type="jq"
       @add:field="handleAddField"
       @change:input="setInput"
       @change:inputs="setInputs"

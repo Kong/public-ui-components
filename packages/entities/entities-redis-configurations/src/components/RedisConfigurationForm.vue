@@ -222,7 +222,7 @@
           :readonly="form.readonly"
         />
         <VaultSecretPickerProvider
-          v-if="redisType === RedisType.HOST_PORT_EE && config.isHostReferenceable"
+          v-if="isReferenceable.host"
           class="secret-picker-provider"
           data-testid="secret-picker-provider-for-host"
           :disabled="form.readonly"
@@ -242,7 +242,7 @@
           :readonly="form.readonly"
         />
         <VaultSecretPickerProvider
-          v-if="redisType === RedisType.HOST_PORT_EE && config.isPortReferenceable"
+          v-if="isReferenceable.port"
           class="secret-picker-provider"
           data-testid="secret-picker-provider-for-port"
           :disabled="form.readonly"
@@ -364,7 +364,7 @@
           :readonly="form.readonly"
         />
         <VaultSecretPickerProvider
-          v-if="redisType === RedisType.HOST_PORT_EE && config.isServerNameReferenceable"
+          v-if="isReferenceable.serverName"
           class="secret-picker-provider"
           data-testid="secret-picker-provider-for-server_name"
           :disabled="form.readonly"
@@ -562,6 +562,18 @@ const {
 const router = useRouter()
 
 const codeBlockType = ref<string>('json')
+
+const isReferenceable = computed<{ host: boolean, port: boolean, serverName: boolean }>(() => {
+  const canReferenceFields =
+    redisType.value === RedisType.HOST_PORT_EE ||
+    (redisType.value === RedisType.HOST_PORT_CE && !!props.config.isCEFieldsReferenceable)
+
+  return {
+    host: canReferenceFields && !!props.config.isHostReferenceable,
+    port: canReferenceFields && !!props.config.isPortReferenceable,
+    serverName: canReferenceFields && !!props.config.isServerNameReferenceable,
+  }
+})
 
 const typeOptions = computed<SelectItem[]>(() => {
   return [

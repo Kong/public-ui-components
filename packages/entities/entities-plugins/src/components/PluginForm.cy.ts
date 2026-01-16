@@ -218,7 +218,7 @@ describe('<PluginForm />', () => {
         .as('pluginFields')
 
       cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
-        .contains('advanced parameters')
+        .contains('additional settings')
         .parents('.k-collapse.nested-collapse')
         .first()
         .as('advancedFields')
@@ -289,7 +289,7 @@ describe('<PluginForm />', () => {
         .as('pluginFields')
 
       cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
-        .contains('advanced parameters')
+        .contains('additional settings')
         .parents('.k-collapse.nested-collapse')
         .first()
         .as('advancedFields')
@@ -1112,7 +1112,7 @@ describe('<PluginForm />', () => {
         .as('pluginFields')
 
       cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
-        .contains('advanced parameters')
+        .contains('additional settings')
         .parents('.k-collapse.nested-collapse')
         .first()
         .as('advancedFields')
@@ -1183,7 +1183,7 @@ describe('<PluginForm />', () => {
         .as('pluginFields')
 
       cy.get('.k-collapse.nested-collapse [data-testid="collapse-trigger-label"]')
-        .contains('advanced parameters')
+        .contains('additional settings')
         .parents('.k-collapse.nested-collapse')
         .first()
         .as('advancedFields')

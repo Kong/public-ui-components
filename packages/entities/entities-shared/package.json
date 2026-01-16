@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.38.0",
+  "version": "3.39.1",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -23,7 +23,7 @@
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.41.0",
-    "@kong/kongponents": "^9.49.0",
+    "@kong/kongponents": "^9.49.6",
     "@shikijs/core": "^3.20.0",
     "@shikijs/engine-javascript": "^3.20.0",
     "axios": "^1.13.2",
@@ -35,7 +35,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.2",
     "@kong/icons": "^1.41.0",
-    "@kong/kongponents": "9.49.0",
+    "@kong/kongponents": "9.49.6",
     "@shikijs/core": "^3.20.0",
     "@shikijs/engine-javascript": "^3.20.0",
     "axios": "^1.13.2",
@@ -73,7 +73,7 @@
     "extends": "../../../package.json"
   },
   "distSizeChecker": {
-    "errorLimit": "642KB"
+    "errorLimit": "680KB"
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",

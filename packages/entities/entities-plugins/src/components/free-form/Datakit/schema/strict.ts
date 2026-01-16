@@ -71,6 +71,32 @@ export type NameConnection = z.infer<typeof NameConnectionSchema>
 
 export const NullishNameConnectionSchema = NameConnectionSchema.nullish()
 
+const CallInputsSchema = z
+  .object({
+    body: NullishNameConnectionSchema,
+    headers: NullishNameConnectionSchema,
+    query: NullishNameConnectionSchema,
+  })
+  .partial()
+  .strict()
+
+const ExitInputsSchema = z
+  .object({
+    headers: NullishNameConnectionSchema,
+    body: NullishNameConnectionSchema,
+  })
+  .partial()
+  .strict()
+
+const CacheInputsSchema = z
+  .object({
+    data: NullishNameConnectionSchema,
+    key: NullishNameConnectionSchema,
+    ttl: NullishNameConnectionSchema,
+  })
+  .partial()
+  .strict()
+
 export const HttpMethodSchema = z.enum(HTTP_METHODS)
 
 /**
@@ -141,14 +167,7 @@ export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
    * https://example.com/path/to/resource?q=search
    */
   url: z.url(),
-  inputs: z
-    .object({
-      body: NullishNameConnectionSchema,
-      headers: NullishNameConnectionSchema,
-      query: NullishNameConnectionSchema,
-    })
-    .partial()
-    .nullish(),
+  inputs: CallInputsSchema.nullish(),
   outputs: z
     .object({
       body: NullishNameConnectionSchema,
@@ -171,6 +190,7 @@ export const ExitNodeSchema = ConfigNodeBaseSchema.safeExtend({
   status: z.number().int().min(200).max(599).nullish(),
   /** When true, warn if headers have been sent already. */
   warn_headers_sent: z.boolean().nullish(),
+  inputs: ExitInputsSchema.nullish(),
   output: z.never().nullish(),
   outputs: z.never().nullish(),
 }).strict()
@@ -301,14 +321,7 @@ export const CacheNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('cache'),
   /** When true, skip cache errors and continue execution. */
   bypass_on_error: z.boolean().nullish(),
-  inputs: z
-    .object({
-      data: NullishNameConnectionSchema,
-      key: NullishNameConnectionSchema,
-      ttl: NullishNameConnectionSchema,
-    })
-    .partial()
-    .nullish(),
+  inputs: CacheInputsSchema.nullish(),
   outputs: z
     .object({
       data: NullishNameConnectionSchema,
