@@ -1,6 +1,7 @@
 <template>
   <ObjectField
     as-child
+    class="ff-default-visible-fields"
     name="config"
     :omit="fieldsCategory.advanced"
     reset-label-path="reset"
@@ -158,5 +159,14 @@ const fieldsCategory = computed(() => {
   &:has(> .collapse-hidden-content > .ff-advanced-fields > .ff-object-field:empty:only-child) {
     display: none;
   }
+}
+
+:global(.ff-default-visible-fields:empty) {
+  display: none;
+}
+
+.ff-default-visible-fields:empty + .ff-advanced-fields-container {
+  border-top: none;
+  padding-top: 0;
 }
 </style>
