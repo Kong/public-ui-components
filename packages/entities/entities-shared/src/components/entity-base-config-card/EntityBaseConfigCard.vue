@@ -301,7 +301,7 @@ if (isDeckEnabled && isSupportedEntity) {
   })
 }
 
-const DEFAULT_FORMAT = configFormatItems[0].value as Format
+const DEFAULT_FORMAT = configFormatItems[0]!.value as Format
 
 const configFormat = ref<Format>(DEFAULT_FORMAT)
 
@@ -606,7 +606,7 @@ onBeforeMount(async () => {
     }
 
     // Inject forceShow keys into the record
-    const forceShowKeys = Object.keys(props.configSchema).filter(key => props.configSchema[key].forceShow)
+    const forceShowKeys = Object.keys(props.configSchema).filter(key => props.configSchema[key]?.forceShow)
     forceShowKeys.forEach(key => {
       if (record.value && typeof record.value[key] === 'undefined') {
         record.value[key] = null
