@@ -204,6 +204,9 @@ describe('<SplitPane />', () => {
         { 'pane-left': '<div>Left</div>' },
       )
       expect(wrapper.vm).toBeDefined()
+
+      // @ts-expect-error – internal computed
+      expect(wrapper.vm.leftMaxWidth).toBe('500px')
     })
 
     it('should apply custom maxWidth to pane-center when not resizable', () => {
@@ -212,6 +215,9 @@ describe('<SplitPane />', () => {
         { 'pane-center': '<div>Center</div>' },
       )
       expect(wrapper.vm).toBeDefined()
+
+      // @ts-expect-error – internal computed
+      expect(wrapper.vm.centerMaxWidth).toBe('60%')
     })
 
     it('should apply custom maxWidth to pane-right when not resizable', () => {
@@ -220,6 +226,9 @@ describe('<SplitPane />', () => {
         { 'pane-right': '<div>Right</div>' },
       )
       expect(wrapper.vm).toBeDefined()
+
+      // @ts-expect-error – internal computed
+      expect(wrapper.vm.rightMaxWidth).toBe('40%')
     })
 
     it('should set max-width to none for center pane when resizable is true', () => {
@@ -228,6 +237,9 @@ describe('<SplitPane />', () => {
         { 'pane-center': '<div>Center</div>' },
       )
       expect(wrapper.vm).toBeDefined()
+
+      // @ts-expect-error – internal computed
+      expect(wrapper.vm.centerMaxWidth).toBe('none')
     })
 
     it('should set max-width to none for right pane when resizable is true', () => {
@@ -236,6 +248,9 @@ describe('<SplitPane />', () => {
         { 'pane-right': '<div>Right</div>' },
       )
       expect(wrapper.vm).toBeDefined()
+
+      // @ts-expect-error – internal computed
+      expect(wrapper.vm.rightMaxWidth).toBe('none')
     })
   })
 
@@ -279,14 +294,30 @@ describe('<SplitPane />', () => {
         { tooltip: 'Test', icon: 'TestIcon', active: false, testid: 'test' },
       ]
       const wrapper = createWrapper({ navigationItems })
-      expect(wrapper.vm).toBeDefined()
+
+      const nav = wrapper.findComponent(VerticalNavigation)
+      expect(nav.exists()).toBe(true)
+      expect(nav.props('items')).toEqual(navigationItems)
     })
   })
 
   describe('prop defaults', () => {
     it('should use default values when props are not provided', () => {
       const wrapper = createWrapper()
-      expect(wrapper.vm).toBeDefined()
+
+      // showNavigation defaults to true
+      expect(wrapper.find('[data-testid="split-pane"]').classes()).toContain('has-navigation')
+
+      // VerticalNavigation should render by default
+      expect(wrapper.findComponent(VerticalNavigation).exists()).toBe(true)
+
+      // navigationItems default to empty array
+      const nav = wrapper.findComponent(VerticalNavigation)
+      expect(nav.props('items')).toEqual([])
+
+      // resizable + showResizeHandle default to true,
+      // but divider requires both center & right panes
+      expect(wrapper.find('[data-testid="split-pane-resize-divider-right"]').exists()).toBe(false)
     })
 
     it('should apply default maxWidth for panes', () => {
@@ -299,6 +330,13 @@ describe('<SplitPane />', () => {
         },
       )
       expect(wrapper.vm).toBeDefined()
+
+      // @ts-expect-error – internal computed
+      expect(wrapper.vm.leftMaxWidth).toBeDefined()
+      // @ts-expect-error - internal computed
+      expect(wrapper.vm.centerMaxWidth).toBe('none')
+      // @ts-expect-error - internal computed
+      expect(wrapper.vm.rightMaxWidth).toBe('none')
     })
   })
 })
