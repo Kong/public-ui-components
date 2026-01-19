@@ -191,7 +191,7 @@ const isChildOfArray = computed(() => {
   return false
 })
 
-const fieldAttrs = useFieldAttrs(field.path!, toRef(() => ({ required, ...props, resetLabelPath })))
+const fieldAttrs = useFieldAttrs(field.path!, { required, ...props, resetLabelPath })
 const realAdded = computed(() => !fieldAttrs.value.required ? added.value ?? defaultAdded : true)
 
 const asChild = computed(() => {
@@ -250,16 +250,20 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
+$intent-guide-width: 6px;
+$intent-guide-left-offset: -10px;
+$intent-guide-top-offset: 20px;
+
 .ff-object-field {
   position: relative;
 
   .intent-guide {
     bottom: 0;
-    left: -10px;
+    left: $intent-guide-left-offset;
     position: absolute;
-    top: 20px;
+    top: $intent-guide-top-offset;
     transform: translateX(-50%);
-    width: 6px;
+    width: $intent-guide-width;
 
     &::before {
       border-left: 1px solid $kui-color-border-neutral-weaker;
@@ -347,7 +351,7 @@ onBeforeMount(() => {
     outline: none;
     padding: $kui-space-10;
 
-    &:hover:not(:focus):not(:active):not(:disabled) {
+    &:hover:not(:focus, :active, :disabled) {
       color: $kui-color-text-neutral;
     }
 

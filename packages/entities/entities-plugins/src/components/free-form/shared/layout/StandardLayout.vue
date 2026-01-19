@@ -554,7 +554,7 @@ function getScopesFromFormModel(): Partial<T> {
     }
 
     & > label > .icon-wrapper {
-      font-weight: 600;
+      font-weight: $kui-font-weight-semibold;
     }
   }
 }
