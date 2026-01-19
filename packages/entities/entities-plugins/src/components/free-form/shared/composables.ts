@@ -458,6 +458,8 @@ const labelDictionary: Record<string, string> = {
   aws: 'AWS',
   gcp: 'GCP',
   azure: 'Azure',
+  acl: 'ACL',
+  cookie: 'Cookie',
 }
 
 function replaceByDictionary(name: string) {
