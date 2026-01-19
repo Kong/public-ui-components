@@ -15,8 +15,8 @@ describe('<EntityFormBlock />', () => {
       },
     })
 
-    cy.getTestId('form-section-step').should('be.visible')
-    cy.getTestId('form-section-step').should('contain.text', step)
+    cy.getTestId('form-block-step').should('be.visible')
+    cy.getTestId('form-block-step').should('contain.text', step)
     cy.getTestId('header-title').should('be.visible')
     cy.getTestId('header-title').should('contain.text', title)
     cy.getTestId('header-description').should('be.visible')
@@ -40,16 +40,16 @@ describe('<EntityFormBlock />', () => {
       },
     })
 
-    cy.getTestId('form-section-step').should('be.visible')
-    cy.getTestId('form-section-step').should('contain.text', stepSlotContent)
+    cy.getTestId('form-block-step').should('be.visible')
+    cy.getTestId('form-block-step').should('contain.text', stepSlotContent)
     cy.getTestId('header-title').should('be.visible')
     cy.getTestId('header-title').should('contain.text', titleSlotContent)
     cy.getTestId('header-description').should('be.visible')
     cy.getTestId('header-description').should('contain.text', descriptionSlotContent)
     cy.getTestId('header-extra').should('be.visible')
     cy.getTestId('header-extra').should('contain.text', extraSlotContent)
-    cy.getTestId('form-section-content').should('be.visible')
-    cy.getTestId('form-section-content').should('contain.text', defaultSlotContent)
+    cy.getTestId('form-block-content').should('be.visible')
+    cy.getTestId('form-block-content').should('contain.text', defaultSlotContent)
   })
 })
 

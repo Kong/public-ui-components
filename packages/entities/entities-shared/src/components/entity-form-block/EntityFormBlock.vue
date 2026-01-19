@@ -1,10 +1,15 @@
 <template>
-  <div class="ff-form-section">
+  <div
+    class="kong-ui-entity-form-block"
+    :class="{
+      'stepped': step !== undefined || slots.step,
+    }"
+  >
     <header class="header">
       <div
         v-if="step !== undefined || slots.step"
         class="step"
-        data-testid="form-section-step"
+        data-testid="form-block-step"
       >
         <slot name="step">
           {{ step }}
@@ -39,7 +44,7 @@
     </header>
     <div
       class="content"
-      data-testid="form-section-content"
+      data-testid="form-block-content"
     >
       <slot />
     </div>
@@ -63,7 +68,7 @@ const slots = defineSlots<{
 </script>
 
 <style lang="scss" scoped>
-.ff-form-section {
+.kong-ui-entity-form-block {
   .header {
     align-items: flex-start;
     display: flex;
@@ -122,9 +127,14 @@ const slots = defineSlots<{
     display: flex;
     flex-direction: column;
     gap: $kui-space-70;
-    margin-left: $kui-space-60;
     margin-top: $kui-space-70;
     padding: $kui-space-70 $kui-space-80;
+  }
+
+  &.stepped {
+    .content {
+      margin-left: $kui-space-60;
+    }
   }
 }
 </style>
