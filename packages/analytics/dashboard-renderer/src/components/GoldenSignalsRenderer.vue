@@ -29,7 +29,6 @@ const options = computed<ProviderProps>(() => {
   return {
     datasource: props.query?.datasource,
     overrideTimeRange: props.context.timeSpec,
-    tz: props.context.tz,
     additionalFilter: props.context.filters as ExploreFilterAll[], // TODO: Decide how to handle metric card filters.
     longCardTitles: props.chartOptions.long_card_titles,
     percentileLatency: props.chartOptions.percentile_latency,
