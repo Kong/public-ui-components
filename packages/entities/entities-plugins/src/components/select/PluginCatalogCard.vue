@@ -8,7 +8,6 @@
         class="plugin-select-card"
         :class="{ 'disabled': isDisabled }"
         :data-testid="`${plugin.id}-card`"
-        :disabled="isDisabled"
         :to="pluginCardLink"
       >
         <div class="plugin-card-header">
