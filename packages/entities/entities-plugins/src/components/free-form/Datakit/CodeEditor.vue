@@ -22,6 +22,7 @@
     <MonacoEditor
       ref="editor"
       v-model="code"
+      appearance="standalone"
       class="editor"
       language="yaml"
       :options="monacoOptions"
