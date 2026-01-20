@@ -53,7 +53,7 @@
           :data-testid="`ff-object-toggle-btn-${field.path.value}`"
           :disabled="!added"
           type="button"
-          @click.prevent.stop="toggleDisplay()"
+          @click.prevent.stop="toggleDisplay"
         >
           <ChevronRightIcon
             class="ff-object-field-toggle-btn-trigger-icon"
@@ -117,7 +117,7 @@
 
     <div
       v-if="expanded"
-      class="intent-guide"
+      class="indent-guide"
     />
   </div>
 </template>
@@ -250,20 +250,20 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
-$intent-guide-width: 6px;
-$intent-guide-left-offset: -10px;
-$intent-guide-top-offset: 20px;
+$indent-guide-width: 6px;
+$indent-guide-left-offset: -10px;
+$indent-guide-top-offset: 20px;
 
 .ff-object-field {
   position: relative;
 
-  .intent-guide {
+  .indent-guide {
     bottom: 0;
-    left: $intent-guide-left-offset;
+    left: $indent-guide-left-offset;
     position: absolute;
-    top: $intent-guide-top-offset;
+    top: $indent-guide-top-offset;
     transform: translateX(-50%);
-    width: $intent-guide-width;
+    width: $indent-guide-width;
 
     &::before {
       border-left: 1px solid $kui-color-border-neutral-weaker;
