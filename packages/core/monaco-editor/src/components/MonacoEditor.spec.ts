@@ -1,8 +1,10 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
-import { nextTick, reactive } from 'vue'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { nextTick, reactive, shallowRef } from 'vue'
 import MonacoEditor from './MonacoEditor.vue'
 import { KEmptyState } from '@kong/kongponents'
+import type { editor } from 'monaco-editor'
+import type { UseMonacoEditorOptions } from '../types'
 
 // mock i18n
 vi.mock('../composables/useI18n', () => ({
@@ -20,21 +22,44 @@ const editorStates = reactive({
 })
 
 const mockSetLanguage = vi.fn()
+const mockUpdateOptions = vi.fn()
+let lastUseMonacoOptions: UseMonacoEditorOptions | null = null
+
+const expectStandaloneOptions = (
+  options: Partial<editor.IStandaloneEditorConstructionOptions> | undefined,
+  expectedMinChars: number,
+): void => {
+  expect(options?.lineNumbersMinChars).toBe(expectedMinChars)
+  expect(typeof options?.padding?.top).toBe('number')
+  expect(typeof options?.padding?.bottom).toBe('number')
+}
 
 vi.mock('../composables/useMonacoEditor', () => ({
-  useMonacoEditor: (_target: any, options: any) => ({
-    editorStates,
-    setContent: (value: string) => {
+  useMonacoEditor: (_target: unknown, options: UseMonacoEditorOptions) => {
+    lastUseMonacoOptions = options
+    return {
+      editor: shallowRef({
+        updateOptions: mockUpdateOptions,
+      }),
+      editorStates,
+      setContent: (value: string) => {
       // Update the code ref that was passed to the composable
-      options.code.value = value
-      editorStates.hasContent = !!value
-      editorStates.editorStatus = 'ready'
-    },
-    setLanguage: mockSetLanguage,
-  }),
+        options.code.value = value
+        editorStates.hasContent = !!value
+        editorStates.editorStatus = 'ready'
+      },
+      setLanguage: mockSetLanguage,
+    }
+  },
 }))
 
 describe('MonacoEditor.vue', () => {
+  beforeEach(() => {
+    lastUseMonacoOptions = null
+    mockSetLanguage.mockClear()
+    mockUpdateOptions.mockClear()
+  })
+
   const mountComponent = (overrides: Record<string, any> = {}) =>
     mount(MonacoEditor, {
       props: { modelValue: '', ...overrides.props },
@@ -204,5 +229,54 @@ describe('MonacoEditor.vue', () => {
     expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).toContain('loading')
     // But the overlay should not be rendered
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(false)
+  })
+
+  it('should apply embedded appearance class by default', () => {
+    editorStates.editorStatus = 'ready'
+
+    const wrapper = mountComponent()
+
+    expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).toContain('embedded')
+  })
+
+  it('should apply standalone appearance class when appearance is standalone', () => {
+    editorStates.editorStatus = 'ready'
+
+    const wrapper = mountComponent({ props: { modelValue: '', appearance: 'standalone' } })
+
+    expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).toContain('standalone')
+  })
+
+  it('should update editor options with standalone padding and lineNumbersMinChars', async () => {
+    editorStates.editorStatus = 'ready'
+
+    const wrapper = mountComponent({ props: { modelValue: 'line1\nline2' } })
+
+    await wrapper.setProps({ appearance: 'standalone' })
+    await nextTick()
+
+    const [options] = mockUpdateOptions.mock.calls[mockUpdateOptions.mock.calls.length - 1]
+    expectStandaloneOptions(options, 3)
+  })
+
+  it('should pass standalone options on initial mount when appearance is standalone', () => {
+    editorStates.editorStatus = 'ready'
+
+    mountComponent({ props: { modelValue: 'line1\nline2', appearance: 'standalone' } })
+
+    expectStandaloneOptions(lastUseMonacoOptions?.monacoOptions, 3)
+  })
+
+  it('should not inject standalone options when appearance is embedded', async () => {
+    editorStates.editorStatus = 'ready'
+
+    const wrapper = mountComponent({ props: { modelValue: 'line1\nline2' } })
+
+    await wrapper.setProps({ options: { readOnly: true } })
+    await nextTick()
+
+    expect(mockUpdateOptions).toHaveBeenCalled()
+    const [options] = mockUpdateOptions.mock.calls[mockUpdateOptions.mock.calls.length - 1]
+    expect(options).toEqual({ readOnly: true })
   })
 })
