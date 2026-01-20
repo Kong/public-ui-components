@@ -73,6 +73,7 @@ export default function useSplitPane(params?: useSplitPaneParams) {
         return
       } else if (typeof resizablePercentageWidth.value !== 'number' || !isFinite(resizablePercentageWidth.value)) {
         // Set to approximately the correct default width
+        // TODO: find exactly how this number is calculated
         resizablePercentageWidth.value = 38
         // don't exit
       }

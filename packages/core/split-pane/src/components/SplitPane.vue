@@ -210,8 +210,6 @@ const { width: paneLeftWidth } = useElementSize(paneLeftRef)
 // This ensures proper layout recalculation when the right pane is shown/hidden
 watch(() => paneRight.visible, async () => {
   if (resizable) {
-    // Important: await nextTick() to ensure the DOM has updated
-    await nextTick()
     refreshInnerPaneSizes()
   }
 }, { flush: 'post' })

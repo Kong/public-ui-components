@@ -104,6 +104,7 @@ const hasMounted = ref<boolean>(false)
 const hideTogglePanelTooltip = computed<boolean>(() => sidePanelToggling.value || isDraggingPaneLeft.value || isDraggingInnerPanes.value)
 
 // Subtract 8px for the scrollbar
+// TODO: calculate the scrollbar width on runtime
 const toggleLeftPanelOffset = computed<string>(() => `${paneLeftWidth - 8}px`)
 
 const onNavItemClick = (item: VerticalNavigationItem): void => {
@@ -120,7 +121,7 @@ const onNavItemClick = (item: VerticalNavigationItem): void => {
 onMounted(async () => {
   // await 1 second tick to avoid toggle animation on initial render
   await nextTick()
-  await new Promise((resolve) => setTimeout(resolve, 500))
+  // await new Promise((resolve) => setTimeout(resolve, 500))
   hasMounted.value = true
 })
 </script>
