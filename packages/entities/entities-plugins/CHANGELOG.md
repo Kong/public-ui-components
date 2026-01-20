@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.145.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.144.2...@kong-ui-public/entities-plugins@9.145.0) (2026-01-20)
+
+
+### Features
+
+* **entities-plugin:** update freeform fields style ([#2798](https://github.com/Kong/public-ui-components/issues/2798)) ([1037ff4](https://github.com/Kong/public-ui-components/commit/1037ff406b9205be8f79d7c088877120abe1c32f))
+
+
+
+
+
 ## [9.144.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.144.1...@kong-ui-public/entities-plugins@9.144.2) (2026-01-20)
 
 
