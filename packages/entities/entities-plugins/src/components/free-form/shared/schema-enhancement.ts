@@ -16,14 +16,14 @@ type SupportedEntityCheck =
   | MutuallyExclusiveEntityCheck
 
 /**
- * Calculate the Lowest Common Ancestor (LCA) of multiple field paths
- * Returns empty string if no common ancestor (keep in place)
+ * Find the longest common path prefix of multiple field paths
+ * Returns empty string if no common path prefix exists (keep in place)
  * @example
- * getLCA(['a.b.c', 'a.b.d']) => 'a.b'
- * getLCA(['a.b.c', 'a.c.d']) => 'a'
- * getLCA(['a.b.c', 'b.c.d']) => ''
+ * findLongestCommonPath(['a.b.c', 'a.b.d']) => 'a.b'
+ * findLongestCommonPath(['a.b.c', 'a.c.d']) => 'a'
+ * findLongestCommonPath(['a.b.c', 'b.c.d']) => ''
  */
-function getLCA(paths: string[]): string {
+function findLongestCommonPath(paths: string[]): string {
   if (paths.length === 0) return ''
   if (paths.length === 1) {
     const parts = toArray(paths[0])
@@ -33,17 +33,17 @@ function getLCA(paths: string[]): string {
   const splitPaths = paths.map(p => toArray(p))
   const minLen = Math.min(...splitPaths.map(p => p.length))
 
-  const lcaParts: string[] = []
+  const lcpParts: string[] = []
   for (let i = 0; i < minLen - 1; i++) {
     const segment = splitPaths[0][i]
     if (splitPaths.every(p => p[i] === segment)) {
-      lcaParts.push(segment)
+      lcpParts.push(segment)
     } else {
       break
     }
   }
 
-  return resolve(...lcaParts)
+  return resolve(...lcpParts)
 }
 
 /**
@@ -104,20 +104,20 @@ function analyzeChecks(checks: EntityCheck[]): CheckDistribution {
       continue
     }
 
-    const lca = getLCA(fields)
+    const lcp = findLongestCommonPath(fields)
 
     // No common ancestor, keep in place
-    if (!lca) {
+    if (!lcp) {
       keep.push(check)
       continue
     }
 
-    // Move to LCA level
-    const relocated = relocateCheck(check as SupportedEntityCheck, lca)
-    if (!move.has(lca)) {
-      move.set(lca, [])
+    // Move to LCP level
+    const relocated = relocateCheck(check as SupportedEntityCheck, lcp)
+    if (!move.has(lcp)) {
+      move.set(lcp, [])
     }
-    move.get(lca)!.push(relocated)
+    move.get(lcp)!.push(relocated)
   }
 
   return { keep, move }
@@ -175,7 +175,7 @@ function processRecordSchema(schema: RecordFieldSchema): void {
 }
 
 /**
- * Distribute entity checks to their appropriate levels based on field path LCA
+ * Distribute entity checks to their appropriate levels based on field path LCP
  * @param schema - The form schema to process
  * @returns A new schema with entity checks distributed to appropriate levels
  */

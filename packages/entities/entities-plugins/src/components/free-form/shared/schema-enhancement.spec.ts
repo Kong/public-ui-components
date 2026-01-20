@@ -35,7 +35,7 @@ describe('distributeEntityChecks', () => {
   }
 
   describe('basic move scenarios', () => {
-    it('should move at_least_one_of check to LCA level', () => {
+    it('should move at_least_one_of check to the longest common path level', () => {
       const schema = createFormSchema(
         [
           {
@@ -69,7 +69,7 @@ describe('distributeEntityChecks', () => {
       expect(checksAtConfig).toBeUndefined()
     })
 
-    it('should move mutually_required check to LCA level', () => {
+    it('should move mutually_required check to the longest common path level', () => {
       const schema = createFormSchema(
         [
           {
@@ -91,7 +91,7 @@ describe('distributeEntityChecks', () => {
       expect(checksAtA).toEqual([{ mutually_required: ['x', 'y'] }])
     })
 
-    it('should move mutually_exclusive check to LCA level', () => {
+    it('should move mutually_exclusive check to the longest common path level', () => {
       const schema = createFormSchema(
         [
           {
@@ -220,7 +220,7 @@ describe('distributeEntityChecks', () => {
 
       const result = distributeEntityChecks(schema)
 
-      // LCA is 'a', so check should be at 'a' level with relative paths
+      // Longest common path is 'a', so check should be at 'a' level with relative paths
       const checksAtA = getEntityChecksAtPath(result, ['a'])
       expect(checksAtA).toEqual([{ mutually_required: ['x', 'b.y'] }])
     })
@@ -249,7 +249,7 @@ describe('distributeEntityChecks', () => {
 
       const result = distributeEntityChecks(schema)
 
-      // LCA of single path 'a.b.c' is 'a.b'
+      // Longest common path of single path 'a.b.c' is 'a.b'
       const checksAtAB = getEntityChecksAtPath(result, ['a', 'b'])
       expect(checksAtAB).toEqual([{ at_least_one_of: ['c'] }])
     })
