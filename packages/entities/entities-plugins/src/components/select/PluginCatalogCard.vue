@@ -137,9 +137,9 @@ const pluginCardLink = computed(() => {
 
   if (isCustomPlugin.value) {
     const konnectConfig = props.config as KonnectPluginSelectConfig
-    return isCreateCustomPlugin.value && konnectConfig.createCustomRoute
-      ? konnectConfig.createCustomRoute
-      : props.config.getCreateRoute(props.plugin.id)
+    if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
+      return konnectConfig.createCustomRoute
+    }
   }
 
   return props.config.getCreateRoute(props.plugin.id)
