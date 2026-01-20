@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef, watch, nextTick } from 'vue'
+import { computed, useTemplateRef, watch } from 'vue'
 import { PANE_LEFT_MAX_WIDTH, PANE_CENTER_DEFAULT_MAX_WIDTH, PANE_RIGHT_DEFAULT_MAX_WIDTH } from '../constants/split-pane'
 import { useElementSize, useElementHover } from '@vueuse/core'
 import VerticalNavigation from './VerticalNavigation.vue'

@@ -121,7 +121,7 @@ const onNavItemClick = (item: VerticalNavigationItem): void => {
 onMounted(async () => {
   // await 1 second tick to avoid toggle animation on initial render
   await nextTick()
-  // await new Promise((resolve) => setTimeout(resolve, 500))
+  await new Promise((resolve) => setTimeout(resolve, 500))
   hasMounted.value = true
 })
 </script>
