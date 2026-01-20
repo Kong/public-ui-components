@@ -157,8 +157,13 @@
     </template>
 
     <template v-else>
-      <!-- TODO: Implement default code editor -->
-      <slot name="code-editor" />
+      <EntityFormBlock
+        :description="t('plugins.form.sections.code_mode.description')"
+        :title="t('plugins.form.sections.code_mode.title')"
+      >
+        <!-- TODO: Implement default code editor -->
+        <slot name="code-editor" />
+      </EntityFormBlock>
     </template>
   </Form>
 </template>

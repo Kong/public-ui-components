@@ -728,6 +728,10 @@
         },
         "plugin_general_info": {
           "description": "Add a name or tags to help you identify and manage this plugin later."
+        },
+        "code_mode": {
+          "title": "Code editor",
+          "description": "Configure this plugin by using YAML configuration."
         }
       }
     },
