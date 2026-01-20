@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.147.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.146.0...@kong-ui-public/entities-plugins@9.147.0) (2026-01-20)
+
+
+### Features
+
+* **entities-plugins:** use EntityFormBlock for plugin code editor ([#2839](https://github.com/Kong/public-ui-components/issues/2839)) ([789ad8f](https://github.com/Kong/public-ui-components/commit/789ad8f848a25815dcfdec4431a3d025ad46c576))
+
+
+
+
+
 # [9.146.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.145.1...@kong-ui-public/entities-plugins@9.146.0) (2026-01-20)
 
 
