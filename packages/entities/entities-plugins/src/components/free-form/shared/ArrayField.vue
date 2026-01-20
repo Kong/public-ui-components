@@ -350,7 +350,7 @@ const stickyTop = computed(() => {
   }
 
   &-sticky-tabs {
-    :deep(.k-tabs ul) {
+    :deep(.k-tabs > ul) {
       background-color: $kui-color-background;
       position: sticky;
       top: v-bind('stickyTop');
