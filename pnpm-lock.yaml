@@ -20,7 +20,7 @@ overrides:
   ws@>=7.0.0 <7.5.10: '>=7.5.10'
   qs@<6.14.1: '>=6.14.1'
   esbuild@<=0.24.2: '>=0.25.0'
-  cookie@<0.7.0: '>=0.7.0'
+  cookie@<0.7.0: '>=0.7.2'
   prismjs@<1.30.0: '>=1.30.0'
   tmp@<=0.2.3: '>=0.2.4'
   js-yaml@>=4.0.0 <4.1.1: '>=4.1.1'
@@ -4788,6 +4788,10 @@ packages:
     resolution: {integrity: sha512-6DnInpx7SJ2AK3+CTUE/ZM0vWTUboZCegxhC2xiIydHR9jNuTAASBrfEpHhiGOZw/nX51bHt6YQl8jsGo4y/0w==}
     engines: {node: '>= 0.6'}
 
+  cookie@1.1.1:
+    resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
+    engines: {node: '>=18'}
+
   copy-anything@4.0.5:
     resolution: {integrity: sha512-7Vv6asjS4gMOuILabD3l739tsaxFQmC+a7pLZm02zyvs8p977bL3zEgq3yDk5rn9B0PbYgIv++jmHcuUab4RhA==}
     engines: {node: '>=18'}
@@ -9430,6 +9434,7 @@ packages:
   tar@7.5.3:
     resolution: {integrity: sha512-ENg5JUHUm2rDD7IvKNFGzyElLXNjachNLp6RaGf4+JOgxXHkqA+gq81ZAMCUmtMtqBsoU62lcp6S27g1LCYGGQ==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   temp-dir@1.0.0:
     resolution: {integrity: sha512-xZFXEGbG7SNC3itwBzI3RYjq/cEhBkx2hJuKGIUOcEULmkQExXiHat2z/qkISYsuR+IKumhEfKKbV5qXmhICFQ==}
@@ -14729,6 +14734,8 @@ snapshots:
 
   cookie@0.7.1: {}
 
+  cookie@1.1.1: {}
+
   copy-anything@4.0.5:
     dependencies:
       is-what: 5.5.0
@@ -19924,7 +19931,7 @@ snapshots:
       '@swagger-api/apidom-json-pointer': 0.99.2
       '@swagger-api/apidom-ns-openapi-3-1': 0.99.2
       '@swagger-api/apidom-reference': 0.99.2
-      cookie: 0.7.1
+      cookie: 1.1.1
       deepmerge: 4.3.1
       fast-json-patch: 3.1.1
       is-plain-object: 5.0.0
