@@ -1,7 +1,7 @@
 import type { editor } from 'monaco-editor'
 import { KUI_FONT_FAMILY_CODE, KUI_FONT_SIZE_20, KUI_FONT_WEIGHT_MEDIUM, KUI_LINE_HEIGHT_30 } from '@kong/design-tokens'
 
-export const DEFAULT_MONACO_OPTIONS = Object.freeze<Partial<editor.IStandaloneEditorConstructionOptions>>({
+export const DEFAULT_MONACO_OPTIONS = Object.freeze({
   autoClosingQuotes: 'always',
   automaticLayout: true, // Auto resize layout
   bracketPairColorization: {
@@ -14,6 +14,10 @@ export const DEFAULT_MONACO_OPTIONS = Object.freeze<Partial<editor.IStandaloneEd
   lineHeight: Number(KUI_LINE_HEIGHT_30.replace('px', '')),
   formatOnPaste: true,
   formatOnType: true, // Add to enable automatic formatting as the user types.
+  padding: {
+    top: 0,
+    bottom: 0,
+  },
   lineNumbersMinChars: 3,
   minimap: {
     enabled: false,
@@ -43,4 +47,4 @@ export const DEFAULT_MONACO_OPTIONS = Object.freeze<Partial<editor.IStandaloneEd
   find: {
     addExtraSpaceOnTop: false, // we need this set to false to get the correct absolute position, otherwise when the search box opens the content shifts
   },
-})
+} as const satisfies Partial<editor.IStandaloneEditorConstructionOptions>)

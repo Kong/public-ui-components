@@ -54,6 +54,7 @@ import { CodeblockIcon, ProgressIcon } from '@kong/icons'
 import { useMonacoEditor } from '../composables/useMonacoEditor'
 import useI18n from '../composables/useI18n'
 import MonacoEditorStatusOverlay from './MonacoEditorStatusOverlay.vue'
+import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import type { editor } from 'monaco-editor'
 import type { EditorThemes } from '../types'
 
@@ -128,15 +129,26 @@ const editorRef = useTemplateRef('editorRef')
 const editorTheme = computed<EditorThemes>(() => theme === 'dark' ? 'dark' : 'light')
 
 const realMonacoOptions = computed(() => {
+  const {
+    padding: defaultPadding,
+    lineNumbersMinChars: defaultLineNumbersMinChars,
+  } = DEFAULT_MONACO_OPTIONS
+
   if (appearance === 'embedded') {
-    return options
+    return {
+      ...options,
+      // Ensure standalone padding is cleared when switching back to embedded.
+      padding: options?.padding ?? { ...defaultPadding },
+      // Reset to default unless consumer provides a specific value.
+      lineNumbersMinChars: options?.lineNumbersMinChars ?? defaultLineNumbersMinChars,
+    }
   }
 
   return {
     ...options,
     // Add some padding for standalone appearance
     // Monaco editor only supports vertical paddings
-    padding: {
+    padding: options?.padding ?? {
       top: PADDING_Y,
       bottom: PADDING_Y,
     },
@@ -144,7 +156,7 @@ const realMonacoOptions = computed(() => {
     // to create some space on the left.
     // Technically we could precisely calculate the number of chars needed based on the font size
     // and the padding we want, but this is a close enough approximation.
-    lineNumbersMinChars: String(model.value.split('\n').length).length + 2,
+    lineNumbersMinChars: options?.lineNumbersMinChars ?? String(model.value.split('\n').length).length + 2,
   }
 })
 

@@ -3,8 +3,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { nextTick, reactive, shallowRef } from 'vue'
 import MonacoEditor from './MonacoEditor.vue'
 import { KEmptyState } from '@kong/kongponents'
-import type { editor } from 'monaco-editor'
 import type { UseMonacoEditorOptions } from '../types'
+import { DEFAULT_MONACO_OPTIONS } from '../constants'
 
 // mock i18n
 vi.mock('../composables/useI18n', () => ({
@@ -24,15 +24,10 @@ const editorStates = reactive({
 const mockSetLanguage = vi.fn()
 const mockUpdateOptions = vi.fn()
 let lastUseMonacoOptions: UseMonacoEditorOptions | null = null
-
-const expectStandaloneOptions = (
-  options: Partial<editor.IStandaloneEditorConstructionOptions> | undefined,
-  expectedMinChars: number,
-): void => {
-  expect(options?.lineNumbersMinChars).toBe(expectedMinChars)
-  expect(typeof options?.padding?.top).toBe('number')
-  expect(typeof options?.padding?.bottom).toBe('number')
-}
+const {
+  lineNumbersMinChars: defaultLineNumbersMinChars,
+  padding: defaultPadding,
+} = DEFAULT_MONACO_OPTIONS
 
 vi.mock('../composables/useMonacoEditor', () => ({
   useMonacoEditor: (_target: unknown, options: UseMonacoEditorOptions) => {
@@ -231,52 +226,74 @@ describe('MonacoEditor.vue', () => {
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(false)
   })
 
-  it('should apply embedded appearance class by default', () => {
+  it('should apply appearance classes', () => {
     editorStates.editorStatus = 'ready'
 
-    const wrapper = mountComponent()
+    const embedded = mountComponent()
+    expect(embedded.find('[data-testid="monaco-editor-container"]').classes()).toContain('embedded')
 
-    expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).toContain('embedded')
+    const standalone = mountComponent({ props: { modelValue: '', appearance: 'standalone' } })
+    expect(standalone.find('[data-testid="monaco-editor-container"]').classes()).toContain('standalone')
   })
 
-  it('should apply standalone appearance class when appearance is standalone', () => {
+  it('should update editor options when appearance toggles', async () => {
     editorStates.editorStatus = 'ready'
 
-    const wrapper = mountComponent({ props: { modelValue: '', appearance: 'standalone' } })
-
-    expect(wrapper.find('[data-testid="monaco-editor-container"]').classes()).toContain('standalone')
-  })
-
-  it('should update editor options with standalone padding and lineNumbersMinChars', async () => {
-    editorStates.editorStatus = 'ready'
-
-    const wrapper = mountComponent({ props: { modelValue: 'line1\nline2' } })
+    const code = 'line1\nline2'
+    const expectedMinChars = String(code.split('\n').length).length + 2
+    const wrapper = mountComponent({ props: { modelValue: code } })
 
     await wrapper.setProps({ appearance: 'standalone' })
     await nextTick()
 
-    const [options] = mockUpdateOptions.mock.calls[mockUpdateOptions.mock.calls.length - 1]
-    expectStandaloneOptions(options, 3)
+    const [standaloneOptions] = mockUpdateOptions.mock.calls[mockUpdateOptions.mock.calls.length - 1]
+    expect(standaloneOptions.lineNumbersMinChars).toBe(expectedMinChars)
+    expect(standaloneOptions.padding.top).toBeGreaterThan(0)
+    expect(standaloneOptions.padding.bottom).toBeGreaterThan(0)
+
+    await wrapper.setProps({ appearance: 'embedded', options: { readOnly: true } })
+    await nextTick()
+
+    const [embeddedOptions] = mockUpdateOptions.mock.calls[mockUpdateOptions.mock.calls.length - 1]
+    expect(embeddedOptions.readOnly).toBe(true)
+    expect(embeddedOptions.lineNumbersMinChars).toBe(defaultLineNumbersMinChars)
+    expect(embeddedOptions.padding.top).toBe(defaultPadding.top)
+    expect(embeddedOptions.padding.bottom).toBe(defaultPadding.bottom)
   })
 
   it('should pass standalone options on initial mount when appearance is standalone', () => {
     editorStates.editorStatus = 'ready'
 
-    mountComponent({ props: { modelValue: 'line1\nline2', appearance: 'standalone' } })
+    const code = 'line1\nline2'
+    const expectedMinChars = String(code.split('\n').length).length + 2
+    mountComponent({ props: { modelValue: code, appearance: 'standalone' } })
 
-    expectStandaloneOptions(lastUseMonacoOptions?.monacoOptions, 3)
+    const options = lastUseMonacoOptions?.monacoOptions
+    expect(options?.lineNumbersMinChars).toBe(expectedMinChars)
+    expect(options?.padding?.top).toBeGreaterThan(0)
+    expect(options?.padding?.bottom).toBeGreaterThan(0)
   })
 
-  it('should not inject standalone options when appearance is embedded', async () => {
+  it('should respect user-provided padding and lineNumbersMinChars in standalone', () => {
     editorStates.editorStatus = 'ready'
 
-    const wrapper = mountComponent({ props: { modelValue: 'line1\nline2' } })
+    const customPadding = { top: 12, bottom: 8 }
+    const customMinChars = 9
+    mountComponent({
+      props: {
+        modelValue: 'line1\nline2',
+        appearance: 'standalone',
+        options: {
+          padding: customPadding,
+          lineNumbersMinChars: customMinChars,
+        },
+      },
+    })
 
-    await wrapper.setProps({ options: { readOnly: true } })
-    await nextTick()
-
-    expect(mockUpdateOptions).toHaveBeenCalled()
-    const [options] = mockUpdateOptions.mock.calls[mockUpdateOptions.mock.calls.length - 1]
-    expect(options).toEqual({ readOnly: true })
+    const options = lastUseMonacoOptions?.monacoOptions
+    expect(options?.lineNumbersMinChars).toBe(customMinChars)
+    expect(options?.padding?.top).toBe(customPadding.top)
+    expect(options?.padding?.bottom).toBe(customPadding.bottom)
   })
+
 })
