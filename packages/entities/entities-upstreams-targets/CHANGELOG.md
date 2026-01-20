@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.12.45](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.12.44...@kong-ui-public/entities-upstreams-targets@3.12.45) (2026-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
+## [3.12.44](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.12.43...@kong-ui-public/entities-upstreams-targets@3.12.44) (2026-01-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets
+
+
+
+
+
 ## [3.12.43](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-upstreams-targets@3.12.42...@kong-ui-public/entities-upstreams-targets@3.12.43) (2026-01-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-upstreams-targets

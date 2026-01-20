@@ -12,7 +12,7 @@
     ref="root"
     class="ff-array-field"
     :class="{
-      [`ff-array-field-${appearance ?? 'default'}`]: true,
+      [`ff-array-field-${realAppearance ?? 'default'}`]: true,
       'ff-array-field-sticky-tabs': stickyTabs,
     }"
     :data-testid="`ff-array-${field.path.value}`"
@@ -39,8 +39,9 @@
         </template>
       </KLabel>
       <KButton
+        v-if="appearance === 'tabs'"
         appearance="tertiary"
-        :aria-label="t('actions.add_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
+        :aria-label="t('actions.add_entity', { entity: fieldName })"
         :data-testid="`ff-add-item-btn-${field.path.value}`"
         icon
         @click="addItem"
@@ -49,11 +50,8 @@
       </KButton>
     </header>
 
-    <template
-      v-if="realItems.length"
-    >
+    <template v-if="realAppearance !== 'tabs'">
       <div
-        v-if="appearance !== 'tabs'"
         class="ff-array-field-container"
         :data-testid="`ff-array-basic-container-${field.path.value}`"
       >
@@ -61,6 +59,7 @@
           v-for="(item, index) of realItems"
           :key="getKey(item, index)"
           class="ff-array-field-item"
+          :class="{ 'ff-array-field-item-card': realAppearance === 'card' }"
           :data-index="index"
           :data-testid="`ff-array-item-${field.path.value}.${index}`"
         >
@@ -82,77 +81,94 @@
               :name="String(index)"
             />
           </div>
-          <KButton
-            appearance="tertiary"
-            :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
-            class="ff-array-field-item-remove"
-            :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
-            icon
-            @click="removeItem(index)"
+          <KTooltip
+            class="ff-array-field-item-remove-tooltip"
+            :text="t('actions.remove_entity', { entity: fieldName })"
           >
-            <TrashIcon />
-          </KButton>
-        </ListTag>
-      </div>
-      <KCard
-        v-else
-        :data-testid="`ff-array-tab-container-${field.path.value}`"
-      >
-        <KTabs
-          v-model="activeTab"
-          :data-testid="`ff-array-tabs-${field.path.value}`"
-          :tabs="tabs"
-        >
-          <template
-            v-for="(item, index) of realItems"
-            :key="getKey(item, index)"
-            #[getKey(item,index)]
-          >
-            <div
-              class="ff-array-field-item"
-              :data-index="index"
-              :data-testid="`ff-array-item-${field.path.value}.${index}`"
-            >
-              <slot
-                v-if="$slots.item"
-                :field-name="String(index)"
-                :index="index"
-                name="item"
-              />
-              <Field
-                v-else
-                :name="String(index)"
-              />
-            </div>
-          </template>
-          <template
-            v-for="(item, index) of realItems"
-            :key="getKey(item, index)"
-            #[`${getKey(item,index)}-anchor`]
-          >
-            {{ getTabTitle(item, index) }}
             <KButton
               appearance="tertiary"
-              :aria-label="t('actions.remove_entity', { entity: t('plugins.free-form.request-callout.entity_name') })"
+              :aria-label="t('actions.remove_entity', { entity: fieldName })"
               class="ff-array-field-item-remove"
               :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
               icon
               @click.stop="removeItem(index)"
             >
-              <TrashIcon />
+              <CloseIcon />
             </KButton>
-          </template>
-        </KTabs>
-      </KCard>
+          </KTooltip>
+        </ListTag>
+      </div>
+
+      <KButton
+        appearance="tertiary"
+        :aria-label="t('actions.add_entity', { entity: fieldName })"
+        class="ff-array-field-add-item-btn"
+        :data-testid="`ff-add-item-btn-${field.path.value}`"
+        @click="addItem"
+      >
+        <AddIcon />
+        {{ t('actions.add_entity', { entity: fieldName }) }}
+      </KButton>
     </template>
+
+    <KCard
+      v-else-if="realItems.length"
+      :data-testid="`ff-array-tab-container-${field.path.value}`"
+    >
+      <KTabs
+        v-model="activeTab"
+        :data-testid="`ff-array-tabs-${field.path.value}`"
+        :tabs="tabs"
+      >
+        <template
+          v-for="(item, index) of realItems"
+          :key="getKey(item, index)"
+          #[getKey(item,index)]
+        >
+          <div
+            class="ff-array-field-item"
+            :data-index="index"
+            :data-testid="`ff-array-item-${field.path.value}.${index}`"
+          >
+            <slot
+              v-if="$slots.item"
+              :field-name="String(index)"
+              :index="index"
+              name="item"
+            />
+            <Field
+              v-else
+              :name="String(index)"
+            />
+          </div>
+        </template>
+        <template
+          v-for="(item, index) of realItems"
+          :key="getKey(item, index)"
+          #[`${getKey(item,index)}-anchor`]
+        >
+          {{ getTabTitle(item, index) }}
+          <KButton
+            appearance="tertiary"
+            :aria-label="t('actions.remove_entity', { entity: fieldName })"
+            class="ff-array-field-item-remove"
+            :data-testid="`ff-array-remove-item-btn-${field.path.value}.${index}`"
+            icon
+            @click.stop="removeItem(index)"
+          >
+            <TrashIcon />
+          </KButton>
+        </template>
+      </KTabs>
+    </KCard>
   </div>
 </template>
 
 <script setup lang="ts" generic="T">
 import { useTemplateRef, nextTick, computed, ref, toValue, toRef, useAttrs } from 'vue'
-import { AddIcon, TrashIcon } from '@kong/icons'
+import { AddIcon, TrashIcon, CloseIcon } from '@kong/icons'
 import { KCard, type LabelAttributes } from '@kong/kongponents'
-import { useField, useFieldAttrs, useFormShared, useItemKeys } from './composables'
+import { replaceByDictionaryInFieldName, useField, useFieldAttrs, useFormShared, useItemKeys } from './composables'
 import useI18n from '../../../composables/useI18n'
 import * as utils from './utils'
 import Field from './Field.vue'
@@ -196,11 +212,31 @@ const subSchema = computed(() => {
   return schema.elements
 })
 
+const fieldName = computed(() => {
+  if (!field.path) return ''
+  const name = utils.getName(field.path.value)
+  return replaceByDictionaryInFieldName(name)
+})
+
 const realItems = computed(() => props.items ?? toValue(fieldValue) ?? [])
 
 const { getKey } = useItemKeys('ff-array-field', realItems)
 
-const ListTag = computed(() => props.appearance === 'card' ? KCard : 'div')
+const realAppearance = computed(() => {
+  if (props.appearance) {
+    return props.appearance
+  }
+
+  if (subSchema.value.type === 'record') {
+    return 'card'
+  }
+
+  return 'default'
+})
+
+const ListTag = computed(() => {
+  return realAppearance.value === 'card' ? KCard : 'div'
+})
 
 function getTabTitle(item: T, index: number) {
   return typeof props.itemLabel === 'function'
@@ -350,7 +386,7 @@ const stickyTop = computed(() => {
   }
 
   &-sticky-tabs {
-    :deep(.k-tabs ul) {
+    :deep(.k-tabs > ul) {
       background-color: $kui-color-background;
       position: sticky;
       top: v-bind('stickyTop');
@@ -364,6 +400,18 @@ const stickyTop = computed(() => {
 
   :deep(.k-tooltip p) {
     margin: 0;
+  }
+
+  &-add-item-btn {
+    align-self: flex-start;
+  }
+
+  &-item-card {
+    padding: $kui-space-70;
+
+    .ff-array-field-item-remove-tooltip {
+      align-self: flex-start;
+    }
   }
 }
 </style>

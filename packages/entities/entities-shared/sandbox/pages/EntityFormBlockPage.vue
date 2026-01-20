@@ -28,6 +28,20 @@
         </div>
       </template>
     </EntityFormBlock>
+
+    <EntityFormBlock
+      description="Descriptive description. This can also be slotted in."
+      title="Descriptive Title. This can also be slotted in."
+    >
+      <KInput
+        label="Input 1"
+        placeholder="Foo"
+      />
+      <KInput
+        label="Input 2"
+        placeholder="Bar"
+      />
+    </EntityFormBlock>
   </div>
 </template>
 
@@ -37,16 +51,26 @@ import { KongIcon } from '@kong/icons'
 </script>
 
 <style lang="scss" scoped>
+.sandbox-container {
+  display: flex;
+  flex-direction: column;
+  gap: $kui-space-80;
+}
+
+p {
+  margin: 0;
+}
+
 .footer {
   display: flex;
   flex-direction: column;
 
   .footer-title {
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-bottom: $kui-space-40;
-    font-size: $kui-font-size-20;
     color: $kui-color-text-neutral;
+    font-size: $kui-font-size-20;
+    font-weight: 600;
+    margin-bottom: $kui-space-40;
+    text-transform: uppercase;
   }
 }
 </style>

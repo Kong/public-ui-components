@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [8.6.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.6.4...@kong-ui-public/dashboard-renderer@8.6.5) (2026-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.6.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.6.3...@kong-ui-public/dashboard-renderer@8.6.4) (2026-01-19)
+
+**Note:** Version bump only for package @kong-ui-public/dashboard-renderer
+
+
+
+
+
+## [8.6.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.6.2...@kong-ui-public/dashboard-renderer@8.6.3) (2026-01-16)
+
+
+### Bug Fixes
+
+* **analytics:** remove extraneous unnecessary tz prop ([#2829](https://github.com/Kong/public-ui-components/issues/2829)) ([6c13245](https://github.com/Kong/public-ui-components/commit/6c132454c335da8d1688eb182edeb6574bf7d862))
+
+
+
+
+
 ## [8.6.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/dashboard-renderer@8.6.1...@kong-ui-public/dashboard-renderer@8.6.2) (2026-01-16)
 
 **Note:** Version bump only for package @kong-ui-public/dashboard-renderer

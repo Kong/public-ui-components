@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.39.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.2...@kong-ui-public/entities-shared@3.39.3) (2026-01-20)
+
+
+### Bug Fixes
+
+* **entities-shared:** fix styles for stepless EntityFormBlock ([#2836](https://github.com/Kong/public-ui-components/issues/2836)) ([a507bb0](https://github.com/Kong/public-ui-components/commit/a507bb00dca9d66305401818284179d8a2f5a775))
+
+
+
+
+
+## [3.39.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.1...@kong-ui-public/entities-shared@3.39.2) (2026-01-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-shared
+
+
+
+
+
 ## [3.39.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-shared@3.39.0...@kong-ui-public/entities-shared@3.39.1) (2026-01-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-shared

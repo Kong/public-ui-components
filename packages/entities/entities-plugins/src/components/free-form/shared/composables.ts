@@ -91,7 +91,17 @@ export const [provideFormShared, useOptionalFormShared] = createInjectionState(
       // Set hidden paths to default or null
       if (hiddenPaths.value.size > 0) {
         for (const path of hiddenPaths.value) {
-          set(nextValue, utils.toArray(path), schemaHelpers.getEmptyOrDefault(path))
+          const pathArray = utils.toArray(path)
+
+          // Check if the parent path exists before setting
+          // This is a temporary fix to prevent lodash set() from auto-creating intermediate objects
+          // todo(KM-2182): Refactor data layer to listen to data source changes and clean up hiddenPaths accordingly
+          const parentPath = pathArray.slice(0, -1)
+          const parentExists = parentPath.length === 0 || get(nextValue, parentPath) != null
+
+          if (parentExists) {
+            set(nextValue, pathArray, schemaHelpers.getEmptyOrDefault(path))
+          }
         }
       }
 
@@ -458,10 +468,22 @@ const labelDictionary: Record<string, string> = {
   aws: 'AWS',
   gcp: 'GCP',
   azure: 'Azure',
+  acl: 'ACL',
+  cookie: 'Cookie',
 }
 
-function replaceByDictionary(name: string) {
+export function replaceByDictionary(name: string) {
   return labelDictionary[name.toLocaleLowerCase()] ?? name
+}
+
+/**
+ * Replace parts of a field name using a predefined dictionary.
+ * @example 'by_lua' => 'by Lua'
+ */
+export function replaceByDictionaryInFieldName(fieldName: string) {
+  return fieldName.split('_')
+    .map(replaceByDictionary)
+    .join(' ')
 }
 
 export function useLabelPath(fieldName: string, rule: MaybeRefOrGetter<ResetLabelPathRule | undefined>) {

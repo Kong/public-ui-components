@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.147.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.146.0...@kong-ui-public/entities-plugins@9.147.0) (2026-01-20)
+
+
+### Features
+
+* **entities-plugins:** use EntityFormBlock for plugin code editor ([#2839](https://github.com/Kong/public-ui-components/issues/2839)) ([789ad8f](https://github.com/Kong/public-ui-components/commit/789ad8f848a25815dcfdec4431a3d025ad46c576))
+
+
+
+
+
+# [9.146.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.145.1...@kong-ui-public/entities-plugins@9.146.0) (2026-01-20)
+
+
+### Features
+
+* **entities-plugins:** entity checks distribution ([#2832](https://github.com/Kong/public-ui-components/issues/2832)) ([1d6ac4d](https://github.com/Kong/public-ui-components/commit/1d6ac4da1ee593c5e425305c972b6094785f7db2))
+
+
+
+
+
+## [9.145.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.145.0...@kong-ui-public/entities-plugins@9.145.1) (2026-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.145.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.144.2...@kong-ui-public/entities-plugins@9.145.0) (2026-01-20)
+
+
+### Features
+
+* **entities-plugin:** update freeform fields style ([#2798](https://github.com/Kong/public-ui-components/issues/2798)) ([1037ff4](https://github.com/Kong/public-ui-components/commit/1037ff406b9205be8f79d7c088877120abe1c32f))
+
+
+
+
+
+## [9.144.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.144.1...@kong-ui-public/entities-plugins@9.144.2) (2026-01-20)
+
+
+### Bug Fixes
+
+* style of entity checks alert ([#2835](https://github.com/Kong/public-ui-components/issues/2835)) ([2369f0e](https://github.com/Kong/public-ui-components/commit/2369f0ee092141a5d6eb8bc0fb623e5bc7999331))
+
+
+
+
+
+## [9.144.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.144.0...@kong-ui-public/entities-plugins@9.144.1) (2026-01-20)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.144.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.143.3...@kong-ui-public/entities-plugins@9.144.0) (2026-01-19)
+
+
+### Features
+
+* **entities-plugins:** adjust scope to include top level fields for datakit form in KM ([#2831](https://github.com/Kong/public-ui-components/issues/2831)) ([97434d7](https://github.com/Kong/public-ui-components/commit/97434d7a629fcb6036c717a9cb99e9c12d5529c7))
+
+
+
+
+
+## [9.143.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.143.2...@kong-ui-public/entities-plugins@9.143.3) (2026-01-19)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.143.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.143.1...@kong-ui-public/entities-plugins@9.143.2) (2026-01-16)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins

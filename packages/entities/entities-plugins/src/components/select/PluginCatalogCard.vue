@@ -4,12 +4,11 @@
     data-testid="plugin-catalog-card-wrapper"
   >
     <KTooltip :text="plugin.disabledMessage">
-      <a
+      <RouterLink
         class="plugin-select-card"
         :class="{ 'disabled': isDisabled }"
         :data-testid="`${plugin.id}-card`"
-        role="button"
-        @click="isDisabled || isCustomPlugin ? undefined : handleClick()"
+        :to="pluginCardLink"
       >
         <div class="plugin-card-header">
           <div class="plugin-card-title">
@@ -32,6 +31,7 @@
               data-testid="custom-plugin-actions"
               :kpop-attributes="{ placement: 'bottom-end' }"
               width="150"
+              @click.stop.prevent
             >
               <template #default>
                 <KButton
@@ -48,7 +48,7 @@
               <template #items>
                 <KDropdownItem
                   data-testid="edit-plugin-schema"
-                  @click.stop="handleCustomEdit(plugin.name, plugin.customPluginType!)"
+                  @click.stop.prevent="handleCustomEdit(plugin.name, plugin.customPluginType!)"
                 >
                   {{ t('actions.edit') }}
                 </KDropdownItem>
@@ -56,7 +56,7 @@
                   danger
                   data-testid="delete-plugin-schema"
                   has-divider
-                  @click.stop="handleCustomDelete"
+                  @click.stop.prevent="handleCustomDelete"
                 >
                   {{ t('actions.delete') }}
                 </KDropdownItem>
@@ -69,7 +69,6 @@
           class="plugin-card-body"
           :data-testid="`${plugin.id}-card-body`"
           :title="!plugin.available ? t('plugins.select.unavailable_tooltip') : plugin.name"
-          @click="handleCustomClick"
         >
           <div
             v-if="plugin.description || (isCustomPlugin && !isCreateCustomPlugin)"
@@ -90,7 +89,7 @@
           <div>{{ isCreateCustomPlugin ? t('actions.create_custom') : t('actions.configure') }}</div>
           <slot name="footer-extra" />
         </div>
-      </a>
+      </RouterLink>
     </KTooltip>
   </div>
 </template>
@@ -131,9 +130,20 @@ const controlPlaneId = computed((): string => props.config.app === 'konnect' ? p
 const isDisabled = computed((): boolean => !!(!props.plugin.available || props.plugin.disabledMessage))
 const hasActions = computed((): boolean => !!(isCustomPlugin.value && !isCreateCustomPlugin.value && controlPlaneId.value))
 
-const handleClick = (): void => {
-  router.push(props.config.getCreateRoute(props.plugin.id))
-}
+const pluginCardLink = computed(() => {
+  if (isDisabled.value) {
+    return {}
+  }
+
+  if (isCustomPlugin.value) {
+    const konnectConfig = props.config as KonnectPluginSelectConfig
+    if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
+      return konnectConfig.createCustomRoute
+    }
+  }
+
+  return props.config.getCreateRoute(props.plugin.id)
+})
 
 /**
  * Custom Plugin logic
@@ -154,17 +164,6 @@ const handleCustomEdit = (pluginName: string, type: CustomPluginType): void => {
   }
 }
 
-const handleCustomClick = (): void => {
-  // handle custom plugin card click only
-  if (!isDisabled.value && props.config.app === 'konnect') {
-    const konnectConfig = props.config as KonnectPluginSelectConfig
-    if (isCreateCustomPlugin.value && konnectConfig.createCustomRoute) {
-      router.push(konnectConfig.createCustomRoute)
-    } else if (isCustomPlugin.value) {
-      handleClick()
-    }
-  }
-}
 </script>
 
 <style lang="scss" scoped>
@@ -184,6 +183,7 @@ const handleCustomClick = (): void => {
     min-height: 218px;
     overflow: hidden;
     padding: $kui-space-70;
+    text-decoration: none;
     width: 100%;
 
     &:hover {
