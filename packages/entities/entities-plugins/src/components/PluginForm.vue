@@ -1555,6 +1555,7 @@ onBeforeMount(async () => {
 
       > * {
         margin: 0;
+        margin-inline-start: unset!important;
       }
     }
   }

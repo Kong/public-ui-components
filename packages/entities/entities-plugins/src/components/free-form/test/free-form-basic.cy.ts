@@ -5,15 +5,13 @@ import type { FormSchema } from 'src/types/plugins/form-schema'
 import StringField from '../shared/StringField.vue'
 import FieldRenderer from '../shared/FieldRenderer.vue'
 import { FIELD_RENDERERS } from '../shared/composables'
-import { ref } from 'vue'
+import { ref, h } from 'vue'
 
 describe('Free Form', () => {
   it('Auto render', () => {
     const schema = buildMockingSchema()
 
-    cy.mount(Form, {
-      props: { schema },
-    })
+    cy.mount(() => h('div', { style: 'padding: 20px' }, h(Form, { schema })))
 
     assertFormRendering(schema)
   })

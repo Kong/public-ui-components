@@ -548,8 +548,14 @@ function getScopesFromFormModel(): Partial<T> {
     margin-bottom: $kui-space-70;
   }
 
-  :deep(.ff-enabled-field) > .field-wrap label {
-    font-weight: unset;
+  :deep(.ff-enabled-field) {
+    & > .field-wrap label {
+      font-weight: unset;
+    }
+
+    & > label > .icon-wrapper {
+      font-weight: $kui-font-weight-semibold;
+    }
   }
 }
 </style>
