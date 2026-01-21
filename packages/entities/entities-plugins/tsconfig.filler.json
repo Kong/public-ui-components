@@ -1,0 +1,28 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/filter",
+    "declarationDir": "./dist/filter",
+    "sourceMap": true,
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "types": [
+      "node",
+      "vite/client",
+      "cypress",
+      "cypress/vue",
+      "../../../cypress/support"
+    ],
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/components/free-form/filler/**/*"
+  ],
+  "exclude": [
+    "src/components/free-form/filler/**/*.cy.ts",
+    "src/components/free-form/filler/**/*.spec.ts"
+  ]
+}

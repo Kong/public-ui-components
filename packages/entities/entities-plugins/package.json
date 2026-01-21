@@ -21,12 +21,12 @@
       "require": "./dist/endpoints/plugins-endpoints.js"
     },
     "./filler/cypress": {
-      "types": "./dist/filler/cypress/index.d.ts",
-      "import": "./dist/filler/cypress/index.js"
+      "types": "./dist/filler/packages/entities/entities-plugins/src/filler/cypress/index.d.ts",
+      "import": "./dist/filler/packages/entities/entities-plugins/src/filler/cypress/index.js"
     },
     "./filler/playwright": {
-      "types": "./dist/filler/playwright/index.d.ts",
-      "import": "./dist/filler/playwright/index.js"
+      "types": "./dist/filler/packages/entities/entities-plugins/src/filler/playwright/index.d.ts",
+      "import": "./dist/filler/packages/entities/entities-plugins/src/filler/playwright/index.js"
     }
   },
   "publishConfig": {
@@ -78,11 +78,12 @@
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
-    "build": "run-s typecheck build:package build:types build:endpoints",
+    "build": "run-s typecheck build:package build:types build:endpoints build:filler",
     "build:package": "vite build -m production",
     "build:analyzer": "BUILD_VISUALIZER='entities/entities-plugins' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
     "build:endpoints": "tsc -p './tsconfig.endpoints.json'",
+    "build:filler": "tsc -p './tsconfig.filler.json'",
     "build:sandbox": "cross-env USE_SANDBOX=true vite build -m production",
     "preview": "cross-env USE_SANDBOX=true vite preview",
     "lint": "eslint",

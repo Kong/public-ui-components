@@ -1,4 +1,5 @@
-import type { ComponentPublicInstance, Ref } from 'vue'
+import type { UnionFieldSchema } from '../../../types/plugins/form-schema'
+import type { ComponentPublicInstance, Ref, Slot } from 'vue'
 
 type ComponentPublicInstanceConstructor = {
   new (...args: any[]): ComponentPublicInstance<any>
@@ -165,3 +166,10 @@ export interface RenderRules {
 export interface BaseFieldProps {
   name: string
 }
+
+export type Match = (opt: {
+  path: string
+  schema: UnionFieldSchema
+}) => boolean
+
+export type MatchMap = Map<Match, Slot<{ name: string }>>
