@@ -77,12 +77,12 @@
     "@kong/icons": "^1.41.0",
     "@kong/kongponents": "9.49.7",
     "monaco-editor": "^0.55.1",
-    "shiki": "^3.20.0",
+    "shiki": "^3.21.0",
     "vue": "^3.5.26"
   },
   "dependencies": {
-    "@shikijs/monaco": "^3.20.0",
+    "@shikijs/monaco": "^3.21.0",
     "@vueuse/core": "^14.1.0",
-    "shiki-codegen": "^3.20.0"
+    "shiki-codegen": "^3.21.0"
   }
 }
