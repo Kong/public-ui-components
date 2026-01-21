@@ -142,10 +142,7 @@ const realMonacoOptions = computed(() => {
 
   return {
     // Ensure standalone padding is cleared when switching back to embedded.
-    // Monaco editor only supports vertical paddings.
     padding: { ...DEFAULT_MONACO_OPTIONS.padding },
-    // Horizontal padding is not supported, so we increase the minimum chars for line numbers
-    // to create some space on the left when standalone. Embedded uses the default value.
     lineNumbersMinChars: DEFAULT_MONACO_OPTIONS.lineNumbersMinChars,
     ...options,
   }
