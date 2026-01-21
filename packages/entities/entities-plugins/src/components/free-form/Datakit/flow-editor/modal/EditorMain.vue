@@ -122,10 +122,6 @@ import FlowPanels from '../FlowPanels.vue'
 import HotkeyLabel from '../HotkeyLabel.vue'
 import { useEditorStore } from '../store/store'
 
-import '@vue-flow/controls/dist/style.css'
-import '@vue-flow/core/dist/style.css'
-import '@vue-flow/core/dist/theme-default.css'
-
 import type { TooltipAttributes } from '@kong/kongponents'
 import type { DatakitConfig, DatakitPluginData } from '../../types'
 
