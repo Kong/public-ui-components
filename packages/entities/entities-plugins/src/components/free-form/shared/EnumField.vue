@@ -15,7 +15,7 @@
     :clearable="!fieldAttrs.required"
     :data-testid="`ff-${field.path.value}`"
     :items="realItems"
-    :kpop-attributes="{ 'data-testid': `${field.path.value}-items` }"
+    :kpop-attributes="{ 'data-testid': `ff-enum-${field.path.value}-items` }"
     @update:model-value="(value: string | string[] | null) => emit('update', value)"
   >
     <template

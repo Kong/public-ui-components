@@ -10,15 +10,23 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-plugins.es.js",
-      "require": "./dist/entities-plugins.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-plugins.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*",
     "./endpoints": {
-      "require": "./dist/endpoints/plugins-endpoints.js",
-      "types": "./dist/endpoints/plugins-endpoints.d.ts"
+      "types": "./dist/endpoints/plugins-endpoints.d.ts",
+      "require": "./dist/endpoints/plugins-endpoints.js"
+    },
+    "./filler/cypress": {
+      "types": "./dist/filler/cypress/index.d.ts",
+      "import": "./dist/filler/cypress/index.js"
+    },
+    "./filler/playwright": {
+      "types": "./dist/filler/playwright/index.d.ts",
+      "import": "./dist/filler/playwright/index.js"
     }
   },
   "publishConfig": {

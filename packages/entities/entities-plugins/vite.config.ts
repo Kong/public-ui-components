@@ -14,11 +14,23 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
   })],
   build: {
     lib: {
+      // Multiple entry points
+      entry: {
+        [sanitizedPackageName]: resolve(__dirname, './src/index.ts'),
+        'filler/cypress/index': resolve(__dirname, './src/components/free-form/filler/cypress/index.ts'),
+        'filler/playwright/index': resolve(__dirname, './src/components/free-form/filler/playwright/index.ts'),
+      },
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
-      // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
-      entry: resolve(__dirname, './src/index.ts'),
-      fileName: (format) => `${sanitizedPackageName}.${format}.js`,
+      formats: ['es'],
+      fileName: (format, entryName) => {
+        // Main entry uses the original naming
+        if (entryName === sanitizedPackageName) {
+          return `${sanitizedPackageName}.${format}.js`
+        }
+        // Filler entries use their path structure
+        return `${entryName}.js`
+      },
     },
     rollupOptions: {
       external: [
