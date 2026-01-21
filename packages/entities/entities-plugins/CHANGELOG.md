@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.147.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.147.0...@kong-ui-public/entities-plugins@9.147.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2760](https://github.com/Kong/public-ui-components/issues/2760)) ([bf9e70f](https://github.com/Kong/public-ui-components/commit/bf9e70ff7cb0dbbf141deccd2578c9c62f5fea48))
+* **entities-plugins:** externalize vue-flow related packages ([#2844](https://github.com/Kong/public-ui-components/issues/2844)) ([180865f](https://github.com/Kong/public-ui-components/commit/180865ff982261269859b00a9eeee328b43e9be1))
+
+
+
+
+
 # [9.147.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.146.0...@kong-ui-public/entities-plugins@9.147.0) (2026-01-20)
 
 
