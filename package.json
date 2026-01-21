@@ -96,7 +96,7 @@
       "tmp@<=0.2.3": ">=0.2.4",
       "js-yaml@>=4.0.0 <4.1.1": ">=4.1.1",
       "diff@<8.0.3": ">=8.0.3",
-      "tar@<=7.5.2": ">=7.5.3"
+      "tar@<=7.5.2": ">=7.5.4"
     },
     "onlyBuiltDependencies": [
       "@evilmartians/lefthook",

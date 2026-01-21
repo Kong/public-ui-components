@@ -25,7 +25,7 @@ overrides:
   tmp@<=0.2.3: '>=0.2.4'
   js-yaml@>=4.0.0 <4.1.1: '>=4.1.1'
   diff@<8.0.3: '>=8.0.3'
-  tar@<=7.5.2: '>=7.5.3'
+  tar@<=7.5.2: '>=7.5.4'
 
 importers:
 
@@ -9378,10 +9378,9 @@ packages:
   tar-stream@3.1.7:
     resolution: {integrity: sha512-qJj60CXt7IU1Ffyc3NJMjh6EkuCFej46zUqJ4J7pqYlThyd9bO0XBTmcOIhSzZJVWfsLks0+nle/j538YAW9RQ==}
 
-  tar@7.5.3:
-    resolution: {integrity: sha512-ENg5JUHUm2rDD7IvKNFGzyElLXNjachNLp6RaGf4+JOgxXHkqA+gq81ZAMCUmtMtqBsoU62lcp6S27g1LCYGGQ==}
+  tar@7.5.6:
+    resolution: {integrity: sha512-xqUeu2JAIJpXyvskvU3uvQW8PAmHrtXp2KDuMJwQqW8Sqq0CaZBAQ+dKS3RBXVhU4wC5NjAdKrmh84241gO9cA==}
     engines: {node: '>=18'}
-    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   temp-dir@1.0.0:
     resolution: {integrity: sha512-xZFXEGbG7SNC3itwBzI3RYjq/cEhBkx2hJuKGIUOcEULmkQExXiHat2z/qkISYsuR+IKumhEfKKbV5qXmhICFQ==}
@@ -11646,7 +11645,7 @@ snapshots:
       slash: 3.0.0
       ssri: 12.0.0
       string-width: 4.2.3
-      tar: 7.5.3
+      tar: 7.5.6
       temp-dir: 1.0.0
       through: 2.3.8
       tinyglobby: 0.2.12
@@ -14215,7 +14214,7 @@ snapshots:
       minipass-pipeline: 1.2.4
       p-map: 7.0.4
       ssri: 12.0.0
-      tar: 7.5.3
+      tar: 7.5.6
       unique-filename: 4.0.0
 
   cacache@20.0.3:
@@ -17103,7 +17102,7 @@ snapshots:
       slash: 3.0.0
       ssri: 12.0.0
       string-width: 4.2.3
-      tar: 7.5.3
+      tar: 7.5.6
       temp-dir: 1.0.0
       through: 2.3.8
       tinyglobby: 0.2.12
@@ -17787,7 +17786,7 @@ snapshots:
       nopt: 8.1.0
       proc-log: 5.0.0
       semver: 7.7.2
-      tar: 7.5.3
+      tar: 7.5.6
       tinyglobby: 0.2.15
       which: 5.0.0
     transitivePeerDependencies:
@@ -18158,7 +18157,7 @@ snapshots:
       promise-retry: 2.0.1
       sigstore: 4.1.0
       ssri: 12.0.0
-      tar: 7.5.3
+      tar: 7.5.6
     transitivePeerDependencies:
       - supports-color
 
@@ -18180,7 +18179,7 @@ snapshots:
       promise-retry: 2.0.1
       sigstore: 4.1.0
       ssri: 13.0.0
-      tar: 7.5.3
+      tar: 7.5.6
     transitivePeerDependencies:
       - supports-color
 
@@ -19929,7 +19928,7 @@ snapshots:
       - react-native-b4a
     optional: true
 
-  tar@7.5.3:
+  tar@7.5.6:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
