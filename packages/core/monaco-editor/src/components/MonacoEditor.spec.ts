@@ -24,10 +24,6 @@ const editorStates = reactive({
 const mockSetLanguage = vi.fn()
 const mockUpdateOptions = vi.fn()
 let lastUseMonacoOptions: UseMonacoEditorOptions | null = null
-const {
-  lineNumbersMinChars: defaultLineNumbersMinChars,
-  padding: defaultPadding,
-} = DEFAULT_MONACO_OPTIONS
 
 vi.mock('../composables/useMonacoEditor', () => ({
   useMonacoEditor: (_target: unknown, options: UseMonacoEditorOptions) => {
@@ -241,7 +237,7 @@ describe('MonacoEditor.vue', () => {
 
     const code = 'line1\nline2'
     const lineCountDigits = String(code.split('\n').length).length
-    const expectedMinChars = Math.max(defaultLineNumbersMinChars, lineCountDigits) + 2
+    const expectedMinChars = Math.max(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars, lineCountDigits) + 2
     const wrapper = mountComponent({ props: { modelValue: code } })
 
     await wrapper.setProps({ appearance: 'standalone' })
@@ -257,9 +253,9 @@ describe('MonacoEditor.vue', () => {
 
     const [embeddedOptions] = mockUpdateOptions.mock.calls[mockUpdateOptions.mock.calls.length - 1]
     expect(embeddedOptions.readOnly).toBe(true)
-    expect(embeddedOptions.lineNumbersMinChars).toBe(defaultLineNumbersMinChars)
-    expect(embeddedOptions.padding.top).toBe(defaultPadding.top)
-    expect(embeddedOptions.padding.bottom).toBe(defaultPadding.bottom)
+    expect(embeddedOptions.lineNumbersMinChars).toBe(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars)
+    expect(embeddedOptions.padding.top).toBe(DEFAULT_MONACO_OPTIONS.padding.top)
+    expect(embeddedOptions.padding.bottom).toBe(DEFAULT_MONACO_OPTIONS.padding.bottom)
   })
 
   it('should apply standalone defaults on initial mount', () => {
@@ -267,7 +263,7 @@ describe('MonacoEditor.vue', () => {
 
     const code = Array.from({ length: 1000 }, (_, i) => `line${i}`).join('\n')
     const lineCountDigits = String(code.split('\n').length).length
-    const expectedMinChars = Math.max(defaultLineNumbersMinChars, lineCountDigits) + 2
+    const expectedMinChars = Math.max(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars, lineCountDigits) + 2
     mountComponent({ props: { modelValue: code, appearance: 'standalone' } })
 
     const options = lastUseMonacoOptions?.monacoOptions
@@ -281,7 +277,7 @@ describe('MonacoEditor.vue', () => {
 
     const code = 'line1\nline2'
     const lineCountDigits = String(code.split('\n').length).length
-    const expectedMinChars = Math.max(defaultLineNumbersMinChars, lineCountDigits) + 2
+    const expectedMinChars = Math.max(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars, lineCountDigits) + 2
     const customPadding = { top: 12, bottom: 8 }
     const customMinChars = 9
     mountComponent({
