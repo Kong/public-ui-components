@@ -40,7 +40,6 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
         '@vue-flow/core',
         '@vue-flow/core/dist/style.css',
         '@vue-flow/core/dist/theme-default.css',
-        '@vue-flow/background',
         '@vueuse/core',
         '@vueuse/integrations',
         'marked',
