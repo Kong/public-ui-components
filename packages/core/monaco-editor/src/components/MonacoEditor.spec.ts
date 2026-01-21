@@ -240,7 +240,8 @@ describe('MonacoEditor.vue', () => {
     editorStates.editorStatus = 'ready'
 
     const code = 'line1\nline2'
-    const expectedMinChars = String(code.split('\n').length).length + 2
+    const lineCountDigits = String(code.split('\n').length).length
+    const expectedMinChars = Math.max(defaultLineNumbersMinChars, lineCountDigits) + 2
     const wrapper = mountComponent({ props: { modelValue: code } })
 
     await wrapper.setProps({ appearance: 'standalone' })
@@ -264,8 +265,9 @@ describe('MonacoEditor.vue', () => {
   it('should apply standalone defaults on initial mount', () => {
     editorStates.editorStatus = 'ready'
 
-    const code = 'line1\nline2'
-    const expectedMinChars = String(code.split('\n').length).length + 2
+    const code = Array.from({ length: 1000 }, (_, i) => `line${i}`).join('\n')
+    const lineCountDigits = String(code.split('\n').length).length
+    const expectedMinChars = Math.max(defaultLineNumbersMinChars, lineCountDigits) + 2
     mountComponent({ props: { modelValue: code, appearance: 'standalone' } })
 
     const options = lastUseMonacoOptions?.monacoOptions
@@ -274,15 +276,40 @@ describe('MonacoEditor.vue', () => {
     expect(options?.padding?.bottom).toBeGreaterThan(0)
   })
 
-  it('should keep user-provided padding and lineNumbersMinChars in standalone', () => {
+  it('should ignore user-provided padding and lineNumbersMinChars in standalone', () => {
     editorStates.editorStatus = 'ready'
 
+    const code = 'line1\nline2'
+    const lineCountDigits = String(code.split('\n').length).length
+    const expectedMinChars = Math.max(defaultLineNumbersMinChars, lineCountDigits) + 2
     const customPadding = { top: 12, bottom: 8 }
     const customMinChars = 9
     mountComponent({
       props: {
-        modelValue: 'line1\nline2',
+        modelValue: code,
         appearance: 'standalone',
+        options: {
+          padding: customPadding,
+          lineNumbersMinChars: customMinChars,
+        },
+      },
+    })
+
+    const options = lastUseMonacoOptions?.monacoOptions
+    expect(options?.lineNumbersMinChars).toBe(expectedMinChars)
+    expect(options?.padding?.top).toBeGreaterThan(0)
+    expect(options?.padding?.bottom).toBeGreaterThan(0)
+  })
+
+  it('should allow user-provided padding and lineNumbersMinChars in embedded', () => {
+    editorStates.editorStatus = 'ready'
+
+    const customPadding = { top: 6, bottom: 4 }
+    const customMinChars = 12
+    mountComponent({
+      props: {
+        modelValue: 'line1\nline2',
+        appearance: 'embedded',
         options: {
           padding: customPadding,
           lineNumbersMinChars: customMinChars,

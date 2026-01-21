@@ -130,13 +130,16 @@ const editorTheme = computed<EditorThemes>(() => theme === 'dark' ? 'dark' : 'li
 
 const realMonacoOptions = computed(() => {
   if (appearance === 'standalone') {
+    const lineCountDigits = String(model.value.split('\n').length).length
+
     return {
+      ...options,
+      // Standalone uses fixed layout values so user overrides are intentionally ignored.
       // Monaco editor only supports vertical paddings.
       padding: { top: PADDING_Y, bottom: PADDING_Y },
       // Horizontal padding is not supported, so we increase the minimum chars for line numbers
       // to create some space on the left when standalone.
-      lineNumbersMinChars: String(model.value.split('\n').length).length + 2,
-      ...options,
+      lineNumbersMinChars: Math.max(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars, lineCountDigits) + 2,
     }
   }
 
@@ -144,6 +147,7 @@ const realMonacoOptions = computed(() => {
     // Ensure standalone padding is cleared when switching back to embedded.
     padding: { ...DEFAULT_MONACO_OPTIONS.padding },
     lineNumbersMinChars: DEFAULT_MONACO_OPTIONS.lineNumbersMinChars,
+    // Embedded allows user overrides.
     ...options,
   }
 })
