@@ -37,6 +37,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/icons": "^1.41.0",
     "@kong/kongponents": "^9.49.7",
+    "@playwright/test": ">= 1.0.0 < 2.0.0",
     "@shikijs/core": ">= 3.0.0 < 4.0.0",
     "@shikijs/engine-javascript": ">= 3.0.0 < 4.0.0",
     "@shikijs/langs": ">= 3.0.0 < 4.0.0",
@@ -52,6 +53,11 @@
     "vue-router": "^4.6.4",
     "zod": ">= 4.1.3 < 5"
   },
+  "peerDependenciesMeta": {
+    "@playwright/test": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@dagrejs/dagre": "^1.1.8",
     "@kong-ui-public/entities-shared": "workspace:^",
@@ -61,6 +67,7 @@
     "@kong/design-tokens": "1.18.2",
     "@kong/icons": "^1.41.0",
     "@kong/kongponents": "9.49.7",
+    "@playwright/test": "^1.57.0",
     "@shikijs/core": "^3.21.0",
     "@shikijs/engine-javascript": "^3.21.0",
     "@shikijs/langs": "^3.21.0",
