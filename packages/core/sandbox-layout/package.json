@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.18.2",
-    "@kong/kongponents": "9.49.7",
+    "@kong/kongponents": "9.49.8",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
   },
