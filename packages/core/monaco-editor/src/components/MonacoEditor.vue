@@ -129,34 +129,25 @@ const editorRef = useTemplateRef('editorRef')
 const editorTheme = computed<EditorThemes>(() => theme === 'dark' ? 'dark' : 'light')
 
 const realMonacoOptions = computed(() => {
-  const {
-    padding: defaultPadding,
-    lineNumbersMinChars: defaultLineNumbersMinChars,
-  } = DEFAULT_MONACO_OPTIONS
-
-  if (appearance === 'embedded') {
+  if (appearance === 'standalone') {
     return {
+      // Monaco editor only supports vertical paddings.
+      padding: { top: PADDING_Y, bottom: PADDING_Y },
+      // Horizontal padding is not supported, so we increase the minimum chars for line numbers
+      // to create some space on the left when standalone.
+      lineNumbersMinChars: String(model.value.split('\n').length).length + 2,
       ...options,
-      // Ensure standalone padding is cleared when switching back to embedded.
-      padding: options?.padding ?? { ...defaultPadding },
-      // Reset to default unless consumer provides a specific value.
-      lineNumbersMinChars: options?.lineNumbersMinChars ?? defaultLineNumbersMinChars,
     }
   }
 
   return {
-    ...options,
-    // Add some padding for standalone appearance
-    // Monaco editor only supports vertical paddings
-    padding: options?.padding ?? {
-      top: PADDING_Y,
-      bottom: PADDING_Y,
-    },
+    // Ensure standalone padding is cleared when switching back to embedded.
+    // Monaco editor only supports vertical paddings.
+    padding: { ...DEFAULT_MONACO_OPTIONS.padding },
     // Horizontal padding is not supported, so we increase the minimum chars for line numbers
-    // to create some space on the left.
-    // Technically we could precisely calculate the number of chars needed based on the font size
-    // and the padding we want, but this is a close enough approximation.
-    lineNumbersMinChars: options?.lineNumbersMinChars ?? String(model.value.split('\n').length).length + 2,
+    // to create some space on the left when standalone. Embedded uses the default value.
+    lineNumbersMinChars: DEFAULT_MONACO_OPTIONS.lineNumbersMinChars,
+    ...options,
   }
 })
 
@@ -194,7 +185,9 @@ watch(() => language, (newLang, oldLang) => {
 
 // update the editor options when the prop changes
 watch([monacoEditor.editor, realMonacoOptions], ([editor, options]) => {
-  editor?.updateOptions(options || {})
+  if (editor && options) {
+    editor.updateOptions(options)
+  }
 }, {
   deep: true,
 })

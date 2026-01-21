@@ -226,7 +226,7 @@ describe('MonacoEditor.vue', () => {
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(false)
   })
 
-  it('should apply appearance classes', () => {
+  it('should apply appearance classes on render', () => {
     editorStates.editorStatus = 'ready'
 
     const embedded = mountComponent()
@@ -236,7 +236,7 @@ describe('MonacoEditor.vue', () => {
     expect(standalone.find('[data-testid="monaco-editor-container"]').classes()).toContain('standalone')
   })
 
-  it('should update editor options when appearance toggles', async () => {
+  it('should use standalone defaults, then reset to embedded defaults when toggled', async () => {
     editorStates.editorStatus = 'ready'
 
     const code = 'line1\nline2'
@@ -261,7 +261,7 @@ describe('MonacoEditor.vue', () => {
     expect(embeddedOptions.padding.bottom).toBe(defaultPadding.bottom)
   })
 
-  it('should pass standalone options on initial mount when appearance is standalone', () => {
+  it('should apply standalone defaults on initial mount', () => {
     editorStates.editorStatus = 'ready'
 
     const code = 'line1\nline2'
@@ -274,7 +274,7 @@ describe('MonacoEditor.vue', () => {
     expect(options?.padding?.bottom).toBeGreaterThan(0)
   })
 
-  it('should respect user-provided padding and lineNumbersMinChars in standalone', () => {
+  it('should keep user-provided padding and lineNumbersMinChars in standalone', () => {
     editorStates.editorStatus = 'ready'
 
     const customPadding = { top: 12, bottom: 8 }
