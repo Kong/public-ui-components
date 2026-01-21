@@ -44,7 +44,7 @@
     "@kong/kongponents": "9.49.7",
     "@types/geobuf": "^3.0.4",
     "@types/geojson": "^7946.0.16",
-    "maplibre-gl": "^4.7.1",
+    "maplibre-gl": "^5.16.0",
     "vue": "^3.5.26"
   },
   "repository": {
