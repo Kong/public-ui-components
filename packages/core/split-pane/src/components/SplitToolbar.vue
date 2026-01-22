@@ -1,20 +1,26 @@
 <template>
-  <div class="kong-ui-public-split-pane-toolbar">
+  <div
+    class="kong-ui-public-split-pane-toolbar"
+    data-testid="kong-ui-public-split-pane-toolbar"
+  >
     <div
       v-if="!!$slots.left"
       class="left"
+      data-testid="split-toolbar-left"
     >
       <slot name="left" />
     </div>
     <div
       v-if="!!$slots.center"
       class="center"
+      data-testid="split-toolbar-center"
     >
       <slot name="center" />
     </div>
     <div
       v-if="!!$slots.right"
       class="right"
+      data-testid="split-toolbar-right"
     >
       <slot name="right" />
     </div>
