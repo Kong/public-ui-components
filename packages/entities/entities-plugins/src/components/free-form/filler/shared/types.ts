@@ -6,8 +6,8 @@ export interface ActionOptions {
 }
 
 export const defaultActionOptions: ActionOptions = {
-  type: {},
-  click: {},
+  type: { force: true },
+  click: { force: true },
   check: { force: true },
-  clear: {},
+  clear: { force: true },
 }
