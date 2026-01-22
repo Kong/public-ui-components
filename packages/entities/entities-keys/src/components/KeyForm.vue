@@ -271,7 +271,15 @@ const formType = computed((): EntityBaseFormType => props.keyId ? EntityBaseForm
 
 const form = reactive<KeyFormState>({
   fields: {
-    name: '',
+    /**
+    * Generates a unique key name using the current timestamp.
+    * The name format is "new-key-" followed by numbers from the ISO timestamp.
+    *
+    * Example output: "new-key-20250307123045789"
+    */
+    name: formType.value === EntityBaseFormType.Create
+      ? `new-key-${new Date().toISOString().replace(/\D/g, '').slice(0, 17)}`
+      : '',
     tags: '',
     key_id: '',
     key_format: 'jwk',
