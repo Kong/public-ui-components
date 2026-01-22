@@ -114,6 +114,7 @@ const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('call'),
   method: HttpMethodSchema.nullish(),
   ssl_server_name: z.string().nullish(),
+  ssl_verify: z.boolean().nullish(),
   timeout: z.union([z.number(), z.string()]).nullish(),
   url: z.string().nullish(),
   inputs: CallInputsSchema.nullish(),
