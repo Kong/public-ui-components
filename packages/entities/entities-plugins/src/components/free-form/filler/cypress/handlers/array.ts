@@ -31,6 +31,12 @@ export function fillArray(option: ArrayHandlerOption): void {
         return
       }
 
+      // Save original scroll behavior and temporarily disable auto-scroll for sticky tab containers
+      const originalScrollBehavior = Cypress.config('scrollBehavior')
+      if (hasTabContainer) {
+        Cypress.config('scrollBehavior', 'center')
+      }
+
       // Add items and fill each one
       for (let i = 0; i < value.length; i++) {
         // Click add button to add more items
@@ -39,6 +45,11 @@ export function fillArray(option: ArrayHandlerOption): void {
 
         // Fill the item
         onFillItem(i, value[i])
+      }
+
+      // Restore original scroll behavior
+      if (hasTabContainer) {
+        Cypress.config('scrollBehavior', originalScrollBehavior)
       }
     }
   })
