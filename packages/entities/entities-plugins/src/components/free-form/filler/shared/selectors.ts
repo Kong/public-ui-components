@@ -10,8 +10,8 @@ export const selectors = {
 
   // ArrayField
   array: (path: string) => `[data-testid="ff-array-${path}"]`,
-  arrayTabContainer: (path: string) => `[data-testid="ff-array-tab-container-${path}"]`,
-  arrayBasicContainer: (path: string) => `[data-testid="ff-array-basic-container-${path}"]`,
+  arrayTabContainer: (path: string) => `[data-appearance="tabs"][data-testid="ff-array-${path}"]`,
+  arrayBasicContainer: (path: string) => `[data-testid="ff-array-${path}"]:not([data-appearance="tabs"])`,
   arrayTabs: (path: string) => `[data-testid="ff-array-tabs-${path}"]`,
   arrayItem: (path: string, index: number) => `[data-testid="ff-array-item-${path}.${index}"]`,
   arrayAddBtn: (path: string) => `[data-testid="ff-add-item-btn-${path}"]`,
