@@ -52,7 +52,7 @@
     "@kong/kongponents": "9.49.8",
     "ajv": "^8.17.1",
     "cypress-real-events": "^1.15.0",
-    "pinia": ">= 2.1.7 < 3",
+    "pinia": ">= 2.1.7 < 4",
     "swrv": "^1.1.0",
     "vue": "^3.5.26"
   },
