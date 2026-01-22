@@ -147,7 +147,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
   return {
     isLoading: computed(() => STATE.PENDING === metricRequestState.value),
     hasError: computed(() => STATE.ERROR === metricRequestState.value),
-    raw,
+    raw: raw as unknown as Ref<ExploreResultV4 | undefined>,
     mapped,
     trendRange,
   }
