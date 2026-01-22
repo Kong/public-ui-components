@@ -1039,16 +1039,11 @@ importers:
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
       '@kong/kongponents':
-<<<<<<< HEAD
-        specifier: 9.49.7
-        version: 9.49.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
+        specifier: 9.49.8
+        version: 9.49.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@playwright/test':
         specifier: ^1.57.0
         version: 1.57.0
-=======
-        specifier: 9.49.8
-        version: 9.49.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
->>>>>>> origin/main
       '@shikijs/core':
         specifier: ^3.21.0
         version: 3.21.0
