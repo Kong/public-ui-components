@@ -1,6 +1,8 @@
 {
-  "header": {
-    "title": "Title of the header",
-    "content": "Content of the header"
+  "actions": {
+    "return": "Return",
+    "collapse_panel": "Collapse panel",
+    "expand_panel": "Expand panel",
+    "drag_to_resize": "Click and drag to resize"
   }
 }

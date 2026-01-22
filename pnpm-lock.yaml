@@ -756,7 +756,14 @@ importers:
         version: 4.6.4(vue@3.5.26(typescript@5.9.3))
 
   packages/core/split-pane:
+    dependencies:
+      '@kong/icons':
+        specifier: ^1.41.0
+        version: 1.41.0(vue@3.5.26(typescript@5.9.3))
     devDependencies:
+      '@kong-ui-public/i18n':
+        specifier: workspace:^
+        version: link:../i18n
       '@kong/design-tokens':
         specifier: 1.18.2
         version: 1.18.2
