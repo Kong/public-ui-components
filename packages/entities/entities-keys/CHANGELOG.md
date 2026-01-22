@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.11.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.10.46...@kong-ui-public/entities-keys@3.11.0) (2026-01-22)
+
+
+### Features
+
+* **entities-routes, entities-keys:** prepopulate name when create entity ([#2846](https://github.com/Kong/public-ui-components/issues/2846)) ([cbfefc1](https://github.com/Kong/public-ui-components/commit/cbfefc13488fc804a42c0dff65bb9289043ba7db))
+
+
+
+
+
 ## [3.10.46](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-keys@3.10.45...@kong-ui-public/entities-keys@3.10.46) (2026-01-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-keys
