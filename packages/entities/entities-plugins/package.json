@@ -21,12 +21,12 @@
       "require": "./dist/endpoints/plugins-endpoints.js"
     },
     "./filler/cypress": {
-      "types": "./dist/filler/packages/entities/entities-plugins/src/filler/cypress/index.d.ts",
-      "import": "./dist/filler/packages/entities/entities-plugins/src/filler/cypress/index.js"
+      "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/filler/cypress/index.d.ts",
+      "import": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/filler/cypress/index.js"
     },
     "./filler/playwright": {
-      "types": "./dist/filler/packages/entities/entities-plugins/src/filler/playwright/index.d.ts",
-      "import": "./dist/filler/packages/entities/entities-plugins/src/filler/playwright/index.js"
+      "types": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/filler/playwright/index.d.ts",
+      "import": "./dist/filler/packages/entities/entities-plugins/src/components/free-form/filler/playwright/index.js"
     }
   },
   "publishConfig": {

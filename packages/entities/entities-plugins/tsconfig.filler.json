@@ -1,9 +1,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./dist/filter",
-    "declarationDir": "./dist/filter",
-    "sourceMap": true,
+    "outDir": "./dist/filler",
+    "declarationDir": "./dist/filler",
+    "sourceMap": false,
     "lib": [
       "esnext",
       "dom",
