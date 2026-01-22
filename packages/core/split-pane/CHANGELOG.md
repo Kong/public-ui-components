@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.1.3...@kong-ui-public/split-pane@0.2.0) (2026-01-22)
+
+
+### Features
+
+* **split-pane:** add splitpane component [KHCP-19160] ([#2823](https://github.com/Kong/public-ui-components/issues/2823)) ([50ea9ca](https://github.com/Kong/public-ui-components/commit/50ea9ca485b0f3dd42cba678f7784652fbb6e0a4))
+
+
+
+
+
 ## [0.1.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/split-pane@0.1.2...@kong-ui-public/split-pane@0.1.3) (2026-01-21)
 
 **Note:** Version bump only for package @kong-ui-public/split-pane
