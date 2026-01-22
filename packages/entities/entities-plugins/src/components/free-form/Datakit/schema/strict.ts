@@ -75,7 +75,12 @@ const CallInputsSchema = z
   .object({
     body: NullishNameConnectionSchema,
     headers: NullishNameConnectionSchema,
+    http_proxy: NullishNameConnectionSchema,
+    https_proxy: NullishNameConnectionSchema,
+    proxy_auth_password: NullishNameConnectionSchema,
+    proxy_auth_username: NullishNameConnectionSchema,
     query: NullishNameConnectionSchema,
+    url: NullishNameConnectionSchema,
   })
   .partial()
   .strict()
@@ -154,9 +159,11 @@ export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
    * A string representing an HTTP method, such as GET, POST, PUT, or DELETE.
    * The string must contain only uppercase letters.
    */
-  method: HttpMethodSchema.nullish(),
+  method: HttpMethodSchema.default('GET').nullish(),
   /** A string representing an SNI (server name indication) value for TLS. */
   ssl_server_name: z.string().min(1).nullish(),
+  /** Whether to verify the TLS certificate when making HTTPS requests. */
+  ssl_verify: z.boolean().nullish(),
   /**
    * An integer representing a timeout in milliseconds.
    * Must be between 0 and 2^31-2.
@@ -166,12 +173,13 @@ export const CallNodeSchema = ConfigNodeBaseSchema.safeExtend({
    * A string representing a URL, such as
    * https://example.com/path/to/resource?q=search
    */
-  url: z.url(),
+  url: z.url().nullish(),
   inputs: CallInputsSchema.nullish(),
   outputs: z
     .object({
       body: NullishNameConnectionSchema,
       headers: NullishNameConnectionSchema,
+      raw_body: NullishNameConnectionSchema,
       status: NullishNameConnectionSchema,
     })
     .partial()
@@ -187,7 +195,7 @@ export const ExitNodeSchema = ConfigNodeBaseSchema.safeExtend({
    * HTTP status code.
    * 200–599
    */
-  status: z.number().int().min(200).max(599).nullish(),
+  status: z.number().int().min(200).max(599).default(200).nullish(),
   /** When true, warn if headers have been sent already. */
   warn_headers_sent: z.boolean().nullish(),
   inputs: ExitInputsSchema.nullish(),
@@ -220,7 +228,7 @@ export const XmlToJsonNodeSchema = ConfigNodeBaseSchema.safeExtend({
   /**
    * JSON block name to store XML attributes. Optional when attributes_name_prefix is set.
    */
-  attributes_block_name: z.string().min(1).max(32).nullish().default('#attr'),
+  attributes_block_name: z.string().min(1).max(32).nullish(),
   /**
    * Prefix for XML attribute names. Optional when attributes_block_name is set.
    */
@@ -257,7 +265,7 @@ export type XmlToJsonNode = z.infer<typeof XmlToJsonNodeSchema>
 
 export const JsonToXmlNodeSchema = ConfigNodeBaseSchema.safeExtend({
   type: z.literal('json_to_xml'),
-  attributes_block_name: z.string().min(1).max(32).nullish().default('#attr'),
+  attributes_block_name: z.string().min(1).max(32).nullish(),
   attributes_name_prefix: z.string().min(1).max(32).nullish(),
   root_element_name: z.string().min(1).max(64).nullish(),
   text_block_name: z.string().min(1).max(32).nullish().default('#text'),
@@ -456,6 +464,23 @@ const CacheRedisSchema = z
     cluster_max_redirections: z.number().int().default(5).nullish(),
     connection_is_proxied: z.boolean().default(false).nullish(),
 
+    cloud_authentication: z
+      .object({
+        auth_provider: z.enum(['aws', 'azure', 'gcp']).nullish(),
+        aws_access_key_id: z.string().nullish(),
+        aws_assume_role_arn: z.string().nullish(),
+        aws_cache_name: z.string().nullish(),
+        aws_is_serverless: z.boolean().default(true).nullish(),
+        aws_region: z.string().nullish(),
+        aws_role_session_name: z.string().nullish(),
+        aws_secret_access_key: z.string().nullish(),
+        azure_client_id: z.string().nullish(),
+        azure_client_secret: z.string().nullish(),
+        azure_tenant_id: z.string().nullish(),
+        gcp_service_account_json: z.string().nullish(),
+      })
+      .nullish(),
+
     /** Compatibility for deprecated fields (optional) */
     timeout: z.number().int().nullish(), // deprecated: use connect_timeout, send_timeout and read_timeout instead
     sentinel_addresses: z.array(z.string()).min(1).nullish(), // deprecated
@@ -517,8 +542,11 @@ export const PartialsSchema = z.array(z.object({ id: z.string() }))
 
 export const DatakitConfigSchema = z
   .object({
-    nodes: z.array(ConfigNodeSchema).min(1, 'At least one node is required'),
-    debug: z.boolean().nullish(),
+    nodes: z
+      .array(ConfigNodeSchema)
+      .min(1, 'At least one node is required')
+      .max(64),
+    debug: z.boolean().default(false).nullish(),
     resources: ResourcesSchema.nullish(),
   })
   .strict()

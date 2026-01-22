@@ -40,6 +40,11 @@
       @update:model-value="setConfig('ssl_server_name')"
     />
 
+    <BooleanField
+      name="ssl_verify"
+      @update:model-value="setConfig('ssl_verify')"
+    />
+
     <InputsField
       :field-name-validator="fieldNameValidator"
       :field-names="inputsFieldNames"
@@ -57,6 +62,7 @@ import HttpMethodField from './HttpMethodField.vue'
 import InputsField from './InputsField.vue'
 import useI18n from '../../../../../composables/useI18n'
 import NumberField from '../../../shared/NumberField.vue'
+import BooleanField from '../../../shared/BooleanField.vue'
 import { useNodeForm, useSubSchema, type BaseFormData } from '../composables/useNodeForm'
 import StringField from '../../../shared/StringField.vue'
 import { useTemplateRef } from 'vue'
@@ -80,6 +86,7 @@ interface CallFormData extends BaseFormData {
   method?: string
   timeout?: number
   ssl_server_name?: string
+  ssl_verify?: boolean
 }
 
 const {
