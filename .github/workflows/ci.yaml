@@ -238,7 +238,7 @@ jobs:
           tag="pr-${{ github.event.pull_request.number }}"
           echo "preid=${preid}"
 
-          git checkout ${{ github.head_ref }}
+          git checkout "${{ github.head_ref }}"
 
           versions=$(pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json --no-git-tag-version || true)
           if [[ "${versions}" == "" ]]; then
