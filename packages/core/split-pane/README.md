@@ -86,9 +86,9 @@ interface VerticalNavigationItem {
 #### Default Constraints
 
 - **Left pane**: Min width `260px`, max width `500px` (customizable)
-- *# Slots
-
-The SplitPanWhen `resizable` is `false`, center and right panes respect the `maxWidth` prop
+- **Center/Right panes**: Min width `300px` each
+- When `resizable` is `true`, center and right panes have no max-width constraint
+- When `resizable` is `false`, center and right panes respect the `maxWidth` prop
 
 ### Slots
 

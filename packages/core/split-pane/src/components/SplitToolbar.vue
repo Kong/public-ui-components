@@ -7,10 +7,7 @@
       class="left"
       data-testid="split-toolbar-left"
     >
-      <slot
-        v-if="!!$slots.left"
-        name="left"
-      />
+      <slot name="left" />
     </div>
     <div
       v-if="!!$slots.center"

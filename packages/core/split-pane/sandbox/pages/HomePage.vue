@@ -23,7 +23,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SplitPane, type SplitPaneProps } from '../../src'
+import { SplitPane } from '../../src'
+import type { SplitPaneProps } from '../../src'
 
 const props = computed((): SplitPaneProps => ({
   paneLeft: { visible: true },
