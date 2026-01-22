@@ -38,9 +38,10 @@ describe('SplitToolbar', () => {
     expect(wrapper.find('.test-right').text()).toBe('Right Content')
   })
 
-  it('should not render slots when not provided', () => {
+  it('should not render slot content when not provided', () => {
     const wrapper = mount(SplitToolbar)
-    expect(wrapper.find('[data-testid="split-toolbar-left"]').exists()).toBe(false)
+    // left slot will render an empty div so centre is in it place (centred)
+    expect(wrapper.find('[data-testid="split-toolbar-left"]').text()).toBe('')
     expect(wrapper.find('[data-testid="split-toolbar-center"]').exists()).toBe(false)
     expect(wrapper.find('[data-testid="split-toolbar-right"]').exists()).toBe(false)
   })

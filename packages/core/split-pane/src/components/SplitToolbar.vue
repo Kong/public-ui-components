@@ -4,11 +4,13 @@
     data-testid="kong-ui-public-split-pane-toolbar"
   >
     <div
-      v-if="!!$slots.left"
       class="left"
       data-testid="split-toolbar-left"
     >
-      <slot name="left" />
+      <slot
+        v-if="!!$slots.left"
+        name="left"
+      />
     </div>
     <div
       v-if="!!$slots.center"
