@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [12.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.9.1...@kong-ui-public/analytics-utilities@12.10.0) (2026-01-22)
+
+
+### Features
+
+* new metric error_rate ([#2853](https://github.com/Kong/public-ui-components/issues/2853)) ([99f2d1e](https://github.com/Kong/public-ui-components/commit/99f2d1ec082c66005f656a15de1b4b67a97b7470))
+
+
+
+
+
 ## [12.9.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/analytics-utilities@12.9.0...@kong-ui-public/analytics-utilities@12.9.1) (2026-01-15)
 
 
