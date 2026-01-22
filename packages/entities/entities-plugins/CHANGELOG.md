@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.148.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.147.3...@kong-ui-public/entities-plugins@9.148.0) (2026-01-22)
+
+
+### Features
+
+* **entities-plugins:** add support for ssl_verify in datakit call node ([#2852](https://github.com/Kong/public-ui-components/issues/2852)) ([a87f042](https://github.com/Kong/public-ui-components/commit/a87f042a95e547161790d9b5ea91b7fb7bd65201))
+
+
+
+
+
 ## [9.147.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.147.2...@kong-ui-public/entities-plugins@9.147.3) (2026-01-22)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
