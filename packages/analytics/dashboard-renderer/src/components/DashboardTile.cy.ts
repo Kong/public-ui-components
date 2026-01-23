@@ -622,6 +622,11 @@ describe('<DashboardTile />', () => {
         },
       })
 
+      // Wait for initial chart render, then reset the spy to count CSV export call
+      cy.get('@queryFn').should('have.been.called').then(() => {
+        queryFn.resetHistory()
+      })
+
       cy.getTestId('kebab-action-menu-1').click()
       cy.getTestId('chart-csv-export-1').click()
 
