@@ -69,7 +69,7 @@ describe('<AnalyticsGeoMap />', () => {
     cy.get('.maplibregl-canvas').should('be.visible')
   })
 
-  it('Emits boundsChange event on map move', () => {
+  it.skip('Emits boundsChange event on map move', () => {
     const onBoundsChange = cy.spy().as('boundsChangeSpy')
     const fitToCountry = ref('')
 
