@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/split-pane",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "A shared SplitPane layout component for Vue 3 applications.",
   "main": "./dist/split-pane.umd.js",
@@ -11,9 +11,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/split-pane.es.js",
-      "require": "./dist/split-pane.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/split-pane.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -67,5 +67,8 @@
     "@kong/icons": "^1.42.0",
     "@kong/kongponents": ">=9.42.0 <10.0.0",
     "vue": "^3.5.26"
+  },
+  "dependencies": {
+    "@vueuse/core": "^14.1.0"
   }
 }
