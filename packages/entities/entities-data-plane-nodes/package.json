@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-data-plane-nodes.es.js",
-      "require": "./dist/entities-data-plane-nodes.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-data-plane-nodes.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

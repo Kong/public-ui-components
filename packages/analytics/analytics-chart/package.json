@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/vitals-chart.es.js",
-      "require": "./dist/vitals-chart.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/vitals-chart.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

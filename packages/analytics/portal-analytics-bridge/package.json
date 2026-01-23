@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/portal-vitals-bridge.es.js",
-      "require": "./dist/portal-vitals-bridge.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/portal-vitals-bridge.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

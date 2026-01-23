@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-consumer-groups.es.js",
-      "require": "./dist/entities-consumer-groups.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-consumer-groups.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-snis.es.js",
-      "require": "./dist/entities-snis.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-snis.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

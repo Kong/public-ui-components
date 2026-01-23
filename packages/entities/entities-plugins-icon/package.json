@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-plugins-icon.es.js",
-      "require": "./dist/entities-plugins-icon.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-plugins-icon.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

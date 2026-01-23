@@ -11,9 +11,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/split-pane.es.js",
-      "require": "./dist/split-pane.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/split-pane.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

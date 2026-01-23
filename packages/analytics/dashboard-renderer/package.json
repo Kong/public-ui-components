@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/dashboard-renderer.es.js",
-      "require": "./dist/dashboard-renderer.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/dashboard-renderer.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

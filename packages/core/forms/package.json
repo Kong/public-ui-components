@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/forms.es.js",
-      "require": "./dist/forms.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/forms.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-upstreams-targets.es.js",
-      "require": "./dist/entities-upstreams-targets.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-upstreams-targets.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

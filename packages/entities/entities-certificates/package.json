@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-certificates.es.js",
-      "require": "./dist/entities-certificates.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-certificates.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
