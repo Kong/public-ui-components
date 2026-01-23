@@ -760,6 +760,9 @@ importers:
       '@kong/icons':
         specifier: ^1.41.0
         version: 1.41.0(vue@3.5.26(typescript@5.9.3))
+      '@vueuse/core':
+        specifier: ^14.1.0
+        version: 14.1.0(vue@3.5.26(typescript@5.9.3))
     devDependencies:
       '@kong-ui-public/i18n':
         specifier: workspace:^

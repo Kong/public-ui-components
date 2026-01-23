@@ -6,26 +6,35 @@
     :pane-right="props.paneRight"
   >
     <template #toolbar>
-      <div class="toolbar">
-        my toolbar
-      </div>
+      <SplitToolbar>
+        <template #left>
+          Left Toolbar
+        </template>
+        <template #center>
+          Center Toolbar
+        </template>
+        <template #right>
+          Right Toolbar
+        </template>
+      </SplitToolbar>
     </template>
     <template #pane-left>
-      left
+      left pane
     </template>
     <template #pane-center>
-      centre
+      centre pane
     </template>
     <template #pane-right>
-      right
+      right pane
     </template>
   </SplitPane>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { SplitPane, type SplitPaneProps, type VerticalNavigationItem } from '../../src'
 import { ArrowLeftIcon } from '@kong/icons'
+import { SplitPane, SplitToolbar } from '../../src'
+import type { SplitPaneProps, VerticalNavigationItem } from '../../src'
 
 const props = computed((): SplitPaneProps => ({
   paneLeft: { visible: true },
@@ -43,10 +52,3 @@ const navItems = computed<VerticalNavigationItem[]>(() => [
   },
 ])
 </script>
-
-<style lang="scss" scoped>
-.toolbar {
-  border-bottom: $kui-border-width-10 solid $kui-color-border;
-  padding: $kui-space-60;
-}
-</style>

@@ -9,6 +9,9 @@ A shared SplitPane component for Vue 3 applications with resizable panes, vertic
   - [Props](#props)
   - [Slots](#slots)
   - [Composables](#composables)
+- [Components](#components)
+  - [SplitPane](#splitpane)
+  - [SplitToolbar](#splittoolbar)
 - [Examples](#examples)
 
 ## Features
@@ -18,7 +21,7 @@ A shared SplitPane component for Vue 3 applications with resizable panes, vertic
 - **Collapsible left pane**: Expand/collapse the left pane with smooth transitions
 - **Vertical navigation**: Optional navigation sidebar with icon buttons and tooltips
 - **Flexible configuration**: Control pane visibility and maximum widths
-- **Toolbar support**: Optional toolbar slot above the panes
+- **Toolbar support**: Optional toolbar slot above the panes, with dedicated SplitToolbar component
 - **Responsive**: Automatically adjusts to window resizing
 - **Accessible**: Full keyboard support and ARIA attributes
 
@@ -38,9 +41,13 @@ Install the package in your host application:
 pnpm add @kong-ui-public/split-pane
 ```
 
-### Props
+## Components
 
-#### `SplitPane` Component
+### SplitPane
+
+The main layout component providing a three-pane split view with optional navigation, resizable panes, and a collapsible left panel.
+
+#### Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -93,6 +100,29 @@ The component provides four named slots:
 | `pane-left` | Content for the collapsible left pane |
 | `pane-center` | Content for the resizable center pane |
 | `pane-right` | Content for the right pane |
+
+### SplitToolbar
+
+A toolbar component designed to be used within the `toolbar` slot of SplitPane. It provides a three-section layout (left, center, right) with consistent styling and spacing.
+
+#### Features
+
+- **Three-section layout**: Left, center, and right sections for organizing toolbar content
+- **Consistent spacing**: Center section always remains centered, even when left or right sections are empty
+- **Sticky positioning**: Stays at the top of the pane during scrolling
+- **Flexible content**: Each section can contain any Vue components or HTML elements
+
+#### Slots
+
+The SplitToolbar component provides three named slots:
+
+| Slot | Description |
+|------|-------------|
+| `left` | Left-aligned toolbar content (e.g., navigation, back buttons) |
+| `center` | Center-aligned toolbar content (e.g., titles, search) |
+| `right` | Right-aligned toolbar content (e.g., actions, buttons) |
+
+**Note**: The center section will remain centered regardless of whether the left or right sections contain content, ensuring consistent visual alignment.
 
 ### Composables
 
@@ -174,10 +204,17 @@ const navItems = [
 <template>
   <SplitPane>
     <template #toolbar>
-      <div class="toolbar">
-        <h1>Page Title</h1>
-        <button>Action</button>
-      </div>
+      <SplitToolbar>
+        <template #left>
+          Left Toolbar
+        </template>
+        <template #center>
+          Center Toolbar
+        </template>
+        <template #right>
+          Right Toolbar
+        </template>
+      </SplitToolbar>
     </template>
 
     <template #pane-center>
