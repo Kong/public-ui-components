@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@kong-ui-public/swagger-ui-web-component": "workspace:^0.12.13",
-    "@kong/icons": "^1.41.0",
+    "@kong/icons": "^1.42.0",
     "lodash.clonedeep": "^4.5.0",
     "uuid": "^11.1.0"
   },
