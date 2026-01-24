@@ -48,7 +48,7 @@
     "@kong-ui-public/i18n": "workspace:^",
     "@kong-ui-public/sandbox-layout": "workspace:^",
     "@kong/design-tokens": "1.18.2",
-    "@kong/icons": "^1.41.0",
+    "@kong/icons": "^1.42.0",
     "@kong/kongponents": "9.49.8",
     "ajv": "^8.17.1",
     "cypress-real-events": "^1.15.0",
@@ -80,7 +80,7 @@
     "@kong-ui-public/analytics-metric-provider": "workspace:^",
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.41.0",
+    "@kong/icons": "^1.42.0",
     "@kong/kongponents": "^9.49.8",
     "swrv": "^1.1.0",
     "vue": ">= 3.3.13 < 4"

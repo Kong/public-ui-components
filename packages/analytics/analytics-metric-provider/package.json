@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@kong-ui-public/core": "workspace:^",
-    "@kong/icons": "^1.41.0",
+    "@kong/icons": "^1.42.0",
     "approximate-number": "^2.1.1",
     "axios": "^1.13.2",
     "swrv": "^1.1.0"

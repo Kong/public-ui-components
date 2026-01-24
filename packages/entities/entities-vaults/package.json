@@ -23,7 +23,7 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.41.0",
+    "@kong/icons": "^1.42.0",
     "@kong/kongponents": "^9.49.8",
     "axios": "^1.13.2",
     "vue": ">= 3.3.13 < 4",
