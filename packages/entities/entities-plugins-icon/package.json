@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@kong-ui-public/entities-plugins-metadata": "workspace:^",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   },
   "repository": {
     "type": "git",
@@ -61,6 +61,6 @@
   },
   "peerDependencies": {
     "@kong-ui-public/entities-plugins-metadata": "workspace:^",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   }
 }

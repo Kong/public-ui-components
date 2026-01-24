@@ -19,19 +19,19 @@
     "lerna": "lerna"
   },
   "devDependencies": {
-    "@babel/types": "^7.28.5",
+    "@babel/types": "^7.28.6",
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
     "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.1",
-    "@evilmartians/lefthook": "^2.0.13",
+    "@evilmartians/lefthook": "^2.0.15",
     "@kong/design-tokens": "1.18.2",
     "@kong/eslint-config-kong-ui": "^1.6.0",
     "@kong/kongponents": "9.49.8",
-    "@stylistic/stylelint-plugin": "^4.0.0",
+    "@stylistic/stylelint-plugin": "^4.0.1",
     "@types/flat": "^5.0.5",
     "@types/js-yaml": "^4.0.9",
     "@types/jsdom": "^27.0.0",
-    "@types/node": "^24.10.4",
+    "@types/node": "^24.10.9",
     "@types/uuid": "^11.0.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
@@ -50,7 +50,7 @@
     "npm-run-all2": "^8.0.4",
     "postcss": "^8.5.6",
     "postcss-custom-properties": "^14.0.6",
-    "postcss-html": "^1.8.0",
+    "postcss-html": "^1.8.1",
     "rimraf": "^6.1.2",
     "rollup-plugin-visualizer": "^5.14.0",
     "sass": "^1.97.2",
@@ -70,7 +70,7 @@
     "vite-plugin-externals": "^0.6.2",
     "vite-plugin-vue-devtools": "^7.7.9",
     "vitest": "^3.2.4",
-    "vue": "^3.5.26",
+    "vue": "^3.5.27",
     "vue-router": "^4.6.4",
     "vue-tsc": "^3.2.2"
   },
@@ -96,7 +96,7 @@
       "tmp@<=0.2.3": ">=0.2.5",
       "js-yaml@>=4.0.0 <4.1.1": ">=4.1.1",
       "diff@<8.0.3": ">=8.0.3",
-      "tar@<=7.5.2": ">=7.5.4"
+      "tar@<=7.5.2": ">=7.5.6"
     },
     "onlyBuiltDependencies": [
       "@evilmartians/lefthook",
@@ -138,7 +138,7 @@
   },
   "volta": {
     "node": "24.12.0",
-    "pnpm": "10.28.0"
+    "pnpm": "10.28.1"
   },
-  "packageManager": "pnpm@10.28.0"
+  "packageManager": "pnpm@10.28.1"
 }

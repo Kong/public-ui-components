@@ -58,12 +58,12 @@
   "peerDependencies": {
     "@kong/sdk-portal-js": "^2.16.0",
     "axios": "^1.13.2",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   },
   "devDependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "@kong/sdk-portal-js": "^2.16.0",
     "axios": "^1.13.2",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   }
 }
