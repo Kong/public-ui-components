@@ -298,10 +298,6 @@ $inner-panes-min-width: 300px; // INNER_PANES_MIN_WIDTH
     position: relative;
     scrollbar-width: thin;
 
-    &.has-toolbar {
-      max-height: calc(100vh - $toolbar-height); // 44px for the toolbar height
-    }
-
     &.is-dragging-pane {
       // !Important: Disable pointer events when resizing a panel
       pointer-events: none;
