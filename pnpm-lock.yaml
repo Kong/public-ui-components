@@ -7,7 +7,7 @@ settings:
 overrides:
   string-width: 4.2.3
   vue: ^3.5.27
-  glob@<11.1.0: '>=11.1.0'
+  glob@<11.1.0: '>=13.0.0'
   dompurify@<3.2.4: '>=3.3.1'
   axios@>=1.0.0 <1.12.0: '>=1.13.2'
   form-data@>=3.0.0 <3.0.4: '>=4.0.5'
