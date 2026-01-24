@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-utilities",
-  "version": "12.10.0",
+  "version": "12.10.1",
   "type": "module",
   "main": "./dist/vitals-utilities.umd.js",
   "module": "./dist/vitals-utilities.es.js",
