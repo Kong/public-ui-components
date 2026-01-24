@@ -47,7 +47,7 @@
     "@kong/kongponents": "9.49.8",
     "@types/prismjs": "^1.26.5",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   },
   "dependencies": {
     "prismjs": "^1.30.0"

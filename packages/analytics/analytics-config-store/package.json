@@ -41,7 +41,7 @@
   "devDependencies": {
     "@kong-ui-public/analytics-utilities": "workspace:^",
     "pinia": ">= 3.0.4 < 4",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   },
   "repository": {
     "type": "git",
