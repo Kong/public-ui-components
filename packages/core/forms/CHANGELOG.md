@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.20.33](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.32...@kong-ui-public/forms@4.20.33) (2026-01-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2863](https://github.com/Kong/public-ui-components/issues/2863)) ([21b16f7](https://github.com/Kong/public-ui-components/commit/21b16f7e606c235bf2b307be839c5c507b969291))
+
+
+
+
+
 ## [4.20.32](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/forms@4.20.31...@kong-ui-public/forms@4.20.32) (2026-01-24)
 
 **Note:** Version bump only for package @kong-ui-public/forms
