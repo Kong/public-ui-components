@@ -111,7 +111,7 @@
     "@kong-ui-public/entities-routes": "workspace:^",
     "@kong-ui-public/entities-vaults": "workspace:^",
     "@kong-ui-public/forms": "workspace:^",
-    "lodash-es": "^4.17.22",
+    "lodash-es": "^4.17.23",
     "marked": "^14.1.4"
   }
 }
