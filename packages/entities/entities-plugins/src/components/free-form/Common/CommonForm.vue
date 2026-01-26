@@ -32,12 +32,12 @@ import { computed, provide, ref, toRaw, useTemplateRef, watch } from 'vue'
 import ConfigForm from './ConfigForm.vue'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import YamlEditor from '../shared/YamlEditor.vue'
-import { postKonnectMessage, type PostKonnectMessageData } from '@kong-ui/konnect-app-shell'
 import yaml, { JSON_SCHEMA } from 'js-yaml'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
 import type { SegmentedControlOption } from '@kong/kongponents'
 import { useEventListener } from '@vueuse/core'
+import { postKonnectMessage, type PostKonnectMessageData } from './post-konnect-message'
 
 const props = defineProps<Props>()
 
