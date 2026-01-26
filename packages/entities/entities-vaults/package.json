@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-vaults.es.js",
-      "require": "./dist/entities-vaults.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-vaults.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

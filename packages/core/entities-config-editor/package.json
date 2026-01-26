@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-config-editor.es.js",
-      "require": "./dist/entities-config-editor.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-config-editor.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

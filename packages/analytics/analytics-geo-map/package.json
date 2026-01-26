@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/vitals-geo-map.es.js",
-      "require": "./dist/vitals-geo-map.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/vitals-geo-map.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/error-boundary.es.js",
-      "require": "./dist/error-boundary.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/error-boundary.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

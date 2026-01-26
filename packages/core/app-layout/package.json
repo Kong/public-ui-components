@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/app-layout.es.js",
-      "require": "./dist/app-layout.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/app-layout.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

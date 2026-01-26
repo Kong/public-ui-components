@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-consumer-credentials.es.js",
-      "require": "./dist/entities-consumer-credentials.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-consumer-credentials.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

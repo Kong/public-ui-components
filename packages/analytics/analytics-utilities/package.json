@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/vitals-utilities.es.js",
-      "require": "./dist/vitals-utilities.cjs",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/vitals-utilities.cjs"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

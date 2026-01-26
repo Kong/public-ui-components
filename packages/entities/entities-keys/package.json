@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-keys.es.js",
-      "require": "./dist/entities-keys.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-keys.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
