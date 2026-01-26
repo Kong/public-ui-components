@@ -70,6 +70,8 @@ const emit = defineEmits<{
   change: [config: unknown]
   sourceChange: [config: string]
   error: [msg: string]
+  diffApplied: []
+  diffCancelled: []
 }>()
 
 const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
@@ -164,10 +166,12 @@ function focusEnd() {
 
 function handleApply() {
   diffControls.value?.apply()
+  emit('diffApplied')
 }
 
 function handleCancel() {
   diffControls.value?.cancel()
+  emit('diffCancelled')
 }
 
 /**

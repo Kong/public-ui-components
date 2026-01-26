@@ -20,6 +20,8 @@
     <template #code-editor>
       <YamlEditor
         ref="yaml-editor"
+        @diff-applied="resetPendingUpdate"
+        @diff-cancelled="resetPendingUpdate"
         @source-change="handleCodeChange"
       />
     </template>
@@ -66,15 +68,19 @@ const editorModes = computed<Array<SegmentedControlOption<'form' | 'code'>>>(() 
 
 const codeEditorRef = useTemplateRef('yaml-editor')
 
+// Reentrancy guard to prevent processing messages while an update is pending
+const isPendingUpdate = ref(false)
+
 async function updateCodeContent(newContent: string) {
   if (layoutEditorMode.value !== 'code') {
     layoutEditorMode.value = 'code'
 
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise(resolve => setTimeout(resolve, 1000))
   }
 
   const yamlEditor = codeEditorRef.value
   if (!yamlEditor) return
+
   yamlEditor.updateContentWithDiff(newContent)
 }
 
@@ -109,11 +115,19 @@ useEventListener(window, 'message', (evt: MessageEvent<MessageFromDrWho>) => {
 
   if (evt.data.app !== 'dr-who-agent') return
   if (evt.data.action !== 'custom:update-plugin-config') return
+
+  // Reentrancy guard: ignore if there's a pending update
+  if (isPendingUpdate.value) {
+    console.log('Blocked message from dr-who: update pending')
+    return
+  }
+
   console.log('Received message from dr-who:', evt)
 
   const newConfig = evt.data.customPayload?.params?.config
   if (typeof newConfig !== 'string') return
   updateCodeContent(newConfig)
+  isPendingUpdate.value = true
 })
 
 const msgToDrWho = ref<MessageToDrWho>({
@@ -139,6 +153,10 @@ function handleFormChange(formData: any) {
     noArrayIndent: true,
   })
   handleCodeChange(yamlString)
+}
+
+function resetPendingUpdate() {
+  isPendingUpdate.value = false
 }
 
 // Send message to Dr.Who
