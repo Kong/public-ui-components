@@ -5,14 +5,22 @@ export default defineConfig({
     devServer: {
       framework: 'vue',
       bundler: 'vite',
-      // Cypress 15.x early validation triggers Vite's deprecated CJS Node API
-      // Dynamic import avoids CJS path and loads in proper ESM context
+      // Switch to inline config with dynamic imports to avoid CJS path errors
       viteConfig: async () => {
-        const sharedViteConfig = await import('./vite.config.shared')
+        const vue = await import('@vitejs/plugin-vue')
+
         return {
-          ...sharedViteConfig.default,
+          plugins: [vue.default()],
           define: {
             'process.env.VSCODE_TEXTMATE_DEBUG': false,
+          },
+          css: {
+            preprocessorOptions: {
+              scss: {
+                api: 'modern',
+                additionalData: '@use "@kong/design-tokens/tokens/scss/variables" as *;',
+              },
+            },
           },
         }
       },
