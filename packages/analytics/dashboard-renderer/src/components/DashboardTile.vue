@@ -446,8 +446,14 @@ const exportCsv = async () => {
   exportModalVisible.value = true
   exportState.value = { status: 'loading' }
 
-  // If we're allowed to increase the CSV export limit, issue a new query with an expanded limit.
-  if (queryBridge?.staticConfig?.increaseCsvExportLimit ?? true) {
+  // goap datasources don't allow limit increases
+  const isGoapDatasource = props.definition.query.datasource?.startsWith('goap')
+
+  // we intentionally default to true if unset
+  const queryBridgeIncreases = queryBridge?.staticConfig?.increaseCsvExportLimit !== false
+
+  if (queryBridgeIncreases && !isGoapDatasource) {
+    // If we're allowed to increase the CSV export limit, issue a new query with an expanded limit.
     issueQuery(props.definition.query, props.context, EXPORT_RECORD_LIMIT).then(queryResult => {
       exportState.value = { status: 'success', chartData: queryResult }
     }).catch(error => {
