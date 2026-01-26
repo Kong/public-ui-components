@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { distributeEntityChecks } from './schema-enhancement'
+import { appendEntityChecksFromMetadata } from './schema-enhancement'
+import { PLUGIN_METADATA } from '../../../definitions/metadata'
 import type { EntityCheck, FormSchema, RecordFieldSchema } from '../../../types/plugins/form-schema'
 
 describe('distributeEntityChecks', () => {
@@ -494,5 +496,47 @@ describe('distributeEntityChecks', () => {
       const checksAtConfig = getEntityChecksAtPath(result, [])
       expect(checksAtConfig).toBeUndefined()
     })
+  })
+})
+
+describe('appendEntityChecksFromMetadata dedupe', () => {
+  it('removes identical checks when appending additionalEntityChecks', () => {
+    // prepare test plugin metadata that would produce a mutually_exclusive check
+    PLUGIN_METADATA['__dedupe_test__'] = {
+      // minimal shape — only fieldRules is used by the function
+      // include a duplicate rule and a unique rule to ensure dedupe only removes exact duplicates
+      // and add another rule type (onlyOneOf) to ensure different kinds are not deduped
+      fieldRules: {
+        atLeastOneOf: [['config.x', 'config.y'], ['config.x', 'config.z']],
+        onlyOneOf: [['config.x', 'config.z']],
+      },
+    } as any
+
+    const schema: FormSchema = {
+      type: 'record',
+      fields: [
+        {
+          config: {
+            type: 'record',
+            fields: [
+              { x: { type: 'string' } },
+              { y: { type: 'string' } },
+              { z: { type: 'string' } },
+            ],
+            entity_checks: [{ at_least_one_of: ['x', 'y'] }],
+          },
+        },
+      ],
+    }
+
+    const result = appendEntityChecksFromMetadata('__dedupe_test__', schema)
+
+    const checks = (result.fields[0] as any).config.entity_checks as EntityCheck[]
+    // duplicate should be removed, non-duplicated at_least_one_of should be appended,
+    // and onlyOneOf should produce a mutually_exclusive check which should also be appended
+    expect(checks).toHaveLength(3)
+    expect(checks).toContainEqual({ at_least_one_of: ['x', 'y'] })
+    expect(checks).toContainEqual({ at_least_one_of: ['x', 'z'] })
+    expect(checks).toContainEqual({ mutually_exclusive: ['x', 'z'] })
   })
 })

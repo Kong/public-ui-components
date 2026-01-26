@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-config-editor",
-  "version": "0.3.19",
+  "version": "0.3.21",
   "type": "module",
   "main": "./dist/entities-config-editor.umd.js",
   "module": "./dist/entities-config-editor.es.js",
@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "@kong/design-tokens": "1.18.2",
-    "@kong/kongponents": "9.49.8",
-    "vue": "^3.5.26"
+    "@kong/kongponents": "9.50.0",
+    "vue": "^3.5.27"
   },
   "repository": {
     "type": "git",
@@ -61,7 +61,7 @@
     "errorLimit": "200KB"
   },
   "peerDependencies": {
-    "@kong/kongponents": "9.49.8",
-    "vue": "^3.5.26"
+    "@kong/kongponents": "9.50.0",
+    "vue": "^3.5.27"
   }
 }
