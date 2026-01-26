@@ -13,24 +13,31 @@
   <StandardLayout
     v-bind="props"
     :editor-mode="layoutEditorMode"
+    :on-form-change="handleFormChange"
   >
     <ConfigForm />
 
     <template #code-editor>
-      <YamlEditor />
+      <YamlEditor
+        ref="yaml-editor"
+        @source-change="handleCodeChange"
+      />
     </template>
   </StandardLayout>
 </template>
 
 <script setup lang="ts">
 import { AUTOFILL_SLOT, AUTOFILL_SLOT_NAME } from '@kong-ui-public/forms'
-import { computed, provide, ref } from 'vue'
+import { computed, provide, ref, toRaw, useTemplateRef, watch } from 'vue'
 import ConfigForm from './ConfigForm.vue'
 import StandardLayout from '../shared/layout/StandardLayout.vue'
 import YamlEditor from '../shared/YamlEditor.vue'
+import { postKonnectMessage, type PostKonnectMessageData } from '@kong-ui/konnect-app-shell'
+import yaml, { JSON_SCHEMA } from 'js-yaml'
 
 import type { Props } from '../shared/layout/StandardLayout.vue'
 import type { SegmentedControlOption } from '@kong/kongponents'
+import { useEventListener } from '@vueuse/core'
 
 const props = defineProps<Props>()
 
@@ -56,4 +63,94 @@ const editorModes = computed<Array<SegmentedControlOption<'form' | 'code'>>>(() 
 
   return modes
 })
+
+const codeEditorRef = useTemplateRef('yaml-editor')
+
+async function updateCodeContent(newContent: string) {
+  if (layoutEditorMode.value !== 'code') {
+    layoutEditorMode.value = 'code'
+
+    await new Promise(resolve => setTimeout(resolve, 100))
+  }
+
+  const yamlEditor = codeEditorRef.value
+  if (!yamlEditor) return
+  yamlEditor.updateContentWithDiff(newContent)
+}
+
+interface MessageToDrWho extends PostKonnectMessageData {
+  app: 'dr-who-agent'
+  action: 'custom:route-context'
+  customPayload: {
+    params: {
+      // The current plugin name
+      plugin: string
+      // The current config content (YAML string)
+      config: string
+    }
+    query: Record<string, string>
+  }
+}
+
+interface MessageFromDrWho extends PostKonnectMessageData {
+  app: 'dr-who-agent'
+  action: 'custom:update-plugin-config'
+  customPayload: {
+    params: {
+      // The generated config content from KAi
+      config: string
+    }
+    query: Record<string, string>
+  }
+}
+
+// Handle messages from Dr.Who Agent to update plugin config
+useEventListener(window, 'message', (evt: MessageEvent<MessageFromDrWho>) => {
+
+  if (evt.data.app !== 'dr-who-agent') return
+  if (evt.data.action !== 'custom:update-plugin-config') return
+  console.log('Received message from dr-who:', evt)
+
+  const newConfig = evt.data.customPayload?.params?.config
+  if (typeof newConfig !== 'string') return
+  updateCodeContent(newConfig)
+})
+
+const msgToDrWho = ref<MessageToDrWho>({
+  app: 'dr-who-agent',
+  action: 'custom:route-context',
+  customPayload: {
+    params: {
+      plugin: props.pluginName,
+      config: '',
+    },
+    query: {},
+  },
+})
+
+function handleCodeChange(newContent: string) {
+  msgToDrWho.value.customPayload.params.config = newContent
+}
+
+const isConfigInitialized = ref(false)
+
+function handleFormChange(formData: any) {
+  if (isConfigInitialized.value) return
+  const yamlString = yaml.dump(toRaw(formData), {
+    schema: JSON_SCHEMA,
+    noArrayIndent: true,
+  })
+  handleCodeChange(yamlString)
+  isConfigInitialized.value = true
+}
+
+// Send message to Dr.Who
+watch(() => msgToDrWho.value, (newMessage) => {
+  try {
+    console.log('Posting message to dr-who:', newMessage)
+    postKonnectMessage(newMessage)
+  } catch (e) {
+    console.error('Failed to log message to dr-who:', e)
+  }
+}, { deep: true, immediate: true })
 </script>

@@ -1023,6 +1023,9 @@ importers:
       '@kong-ui-public/forms':
         specifier: workspace:^
         version: link:../../core/forms
+      '@kong-ui/konnect-app-shell':
+        specifier: ^2.128.0
+        version: 2.128.0(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(@shikijs/core@3.21.0)(@shikijs/engine-javascript@3.21.0)(cheerio@1.2.0)(encoding@0.1.13)(shiki@3.21.0)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
       lodash-es:
         specifier: ^4.17.23
         version: 4.17.23
@@ -1829,6 +1832,20 @@ packages:
     resolution: {integrity: sha512-mepCf/e9+SKYy1d02/UkvSy6+6MoyXhVxP8lLDfA7BPE1X1d4dR0sZznmbM8/XVJ1GPM+Svnx7Xj6ZweByWUkw==}
     engines: {node: '>17.0.0'}
 
+  '@datadog/browser-core@5.35.1':
+    resolution: {integrity: sha512-zjmw3WkF5syMq5+2jneSgSILxO3DTS+hKw270tzk/yQUfJIGInyGrkHUYYGLmZaVuVp+6F7iO3tUAwIqQYGBFw==}
+
+  '@datadog/browser-rum-core@5.35.1':
+    resolution: {integrity: sha512-+WMHeL83BvFTE618SBx7VKT3gwJ/c1DuNehvv+ZbbMqRgrl2hBng5cLfhcEW/U6bLOyr08ZfaZ1m2r/xs2n4aA==}
+
+  '@datadog/browser-rum@5.35.1':
+    resolution: {integrity: sha512-/I3mQpnAuGZ1DU3wevgirKfT1DXuWY1eg4gOHjmONN91KThVoiuHg9HiAowfFFtQArsbcP5HqdA4lLJvH6w17A==}
+    peerDependencies:
+      '@datadog/browser-logs': 5.35.1
+    peerDependenciesMeta:
+      '@datadog/browser-logs':
+        optional: true
+
   '@digitalroute/cz-conventional-changelog-for-jira@8.0.1':
     resolution: {integrity: sha512-I7uNQ2R5LnDYVhQ01sfNvaxqe1PutXyDl8Kltj4L8uDa1LTYqQgWWp3yEj3XYDNjhUjsAheHW0lsmF1oiAjWVg==}
     engines: {node: '>= 10'}
@@ -2374,6 +2391,93 @@ packages:
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
+  '@kong-ui-public/app-layout@4.10.21':
+    resolution: {integrity: sha512-6JjINDsF78D0d/p8oHIzdy/nvSmIrwJ0jjODOiDCFbKJQWjbLAl0TLcvFtk1qIYl0J+hyL1bJ4JRaaxnmHGT+g==}
+    peerDependencies:
+      '@kong/kongponents': ^9.49.8
+      vue: ^3.5.27
+      vue-router: ^4.6.4
+
+  '@kong-ui-public/core@1.10.11':
+    resolution: {integrity: sha512-NRwLTYRnlO2Qmr0gCqCudovXhRMgJMNoBNiD5klvAmrBITFn+EVm6S1+H3z1yN6y2JHjjksljXO53JSdb9UIBA==}
+    peerDependencies:
+      axios: '>=1.13.2'
+      vue: ^3.5.27
+
+  '@kong-ui-public/core@1.11.10':
+    resolution: {integrity: sha512-1EbrrhEgOMU9XqVeGA6BKgCPKgP70qG1EfJAO+9x8FcD0eliitX4rveZui1n/z1uRDUw2xA/08VwlY1CPd7+BQ==}
+    peerDependencies:
+      axios: ^1.13.2
+      vue: ^3.5.27
+
+  '@kong-ui-public/entities-shared@3.39.8':
+    resolution: {integrity: sha512-OjLGQnswIyuiCWJf7qKSUdB4lu9xJxiOg44EJxA5QJLigKq8s9Yl6Uh/AAi4HO2S+f7lKpGDQOxYF45iPuBWMg==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^2.4.5
+      '@kong/icons': ^1.42.0
+      '@kong/kongponents': ^9.50.0
+      '@shikijs/core': ^3.21.0
+      '@shikijs/engine-javascript': ^3.21.0
+      axios: ^1.13.2
+      shiki: ^3.21.0
+      vue: ^3.5.27
+      vue-router: ^4.6.4
+
+  '@kong-ui-public/error-boundary@2.1.28':
+    resolution: {integrity: sha512-4+R7A8zMfBSPZF5OLCKDHCc1lNqTu8L/8GDFE7BPFcuuXeRAwPpzlElDCfav5Wq9E4KgJmbjRWY1dgX5AuSZ7Q==}
+    peerDependencies:
+      vue: ^3.5.27
+
+  '@kong-ui-public/misc-widgets@2.3.22':
+    resolution: {integrity: sha512-iyTm7Pmk2KRC2ukYbT5zN7f+ZlH+DhqhUWvgGV5nLpgOE4cMPSwYfPGl8QCvcMSFaM+x8jnPT8i7z+2n4p+W8g==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^2.4.5
+      '@kong/kongponents': ^9.50.0
+      vue: ^3.5.27
+
+  '@kong-ui/konnect-app-shell@2.128.0':
+    resolution: {integrity: sha512-VnoBIzwq7S/zDfu0GWXh9kf/got2bx20HmYiMCE3rMmyROsy5m/CQMzCtCd+kowwE4whs9Z+0qGvNqmX+k927g==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^2.3.2
+      '@kong/kongponents': ^9.49.7
+      cheerio: ^1.0.0
+      vue: ^3.5.27
+      vue-router: ^4.5.0
+
+  '@kong-ui/konnect-ksearch@1.9.10':
+    resolution: {integrity: sha512-slGETlipt7q2nXUVLQcnHyu7y3BHdrOfhVXWJH+U6YL37inEhwzDilWJheImGJzTAjg1ssgtY+9PSMP5lwysZg==}
+    peerDependencies:
+      '@kong-ui-public/app-layout': '>=4.10.21'
+      '@kong-ui-public/i18n': ^2.3.2
+      '@kong/kongponents': ^9.49.7
+      axios: ^1.12.0
+      vue: ^3.5.27
+
+  '@kong-ui/konnect-notifications@1.10.8':
+    resolution: {integrity: sha512-k9Dh0LWP6In2F8d1DbwEolcQQ779YYeNGeOUzbM+rMKzmfFJeajVVGenhHA6F2/X569BLP16oyeH14Fhrnd+6g==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^2.3.2
+      '@kong/icons': ^1.42.0
+      '@kong/kongponents': ^9.49.7
+      axios: ^1.12.0
+      vue: ^3.5.27
+
+  '@kong-ui/konnect-product-announcements@0.2.0':
+    resolution: {integrity: sha512-ohEtUkMeFdEObDTWX8QZulb1tzRfEJLVdeEgqkIhbmW3SUnGd6nzVCpNUcZNfsnknFTUqe1RPC8c/PQZe578iQ==}
+    peerDependencies:
+      '@kong/icons': ^1.41.0
+      '@kong/kongponents': 9.48.6
+      vue: ^3.5.27
+
+  '@kong-ui/konnect-support-form@0.4.4':
+    resolution: {integrity: sha512-Ub+/oS3bUxLs3lo5eDJH8dN8vSbqZAfVgGvhiWzvVPMqg/uKzweXWrxolGtU0HFCHKVZb/dP72LtRRSOrrrYKQ==}
+    peerDependencies:
+      '@kong-ui-public/i18n': ^2.3.2
+      '@kong/icons': ^1.42.0
+      '@kong/kongponents': ^9.49.7
+      axios: ^1.12.0
+      vue: ^3.5.27
+
   '@kong/atc-router@1.6.0-rc.1':
     resolution: {integrity: sha512-nFR01kKK4vAsXGZ0g8YPzJSOrTEPzgtVm3iWv4JPNx1kFFRKDTJrmDFSWZmEPC2VtsSdglewGB3Sqzpi/DfiIg==}
 
@@ -2408,6 +2512,9 @@ packages:
       vue: ^3.5.27
       vue-router: ^4.6.4
 
+  '@kong/kquery-parser@0.43.0':
+    resolution: {integrity: sha512-MT49MjU+Yqx+VuOuvYjkHJuuIqE/G55SHO2eOoRSpUA004XaK/HYv75IpPzRluMTcVcm24vfdBUvIeYcCrhPtA==}
+
   '@kong/markdown@1.8.1':
     resolution: {integrity: sha512-YT7/nPD7G0L5XBy07vTfYxngf/mqsVgY3FU4dqa+7MLj1Rt57j0LdHvs5jeJnZUvk6WQVRxsSnpsmhtTIPXWUA==}
     engines: {node: '>=18.17.0'}
@@ -2438,6 +2545,14 @@ packages:
   '@ljharb/through@2.3.13':
     resolution: {integrity: sha512-/gKJun8NNiWGZJkGzI/Ragc53cOdcLNdzjLaIa+GEjguQs0ulsurx8WN0jijdK9yPqDvziX995sMRLyLt1uZMQ==}
     engines: {node: '>= 0.4'}
+
+  '@lukeed/csprng@1.1.0':
+    resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
+    engines: {node: '>=8'}
+
+  '@lukeed/uuid@2.0.1':
+    resolution: {integrity: sha512-qC72D4+CDdjGqJvkFMMEAtancHUQ7/d/tAiHf64z8MopFDmcrtbcJuerDtFceuAfQJ2pDSfCKCtbqoGBNnwg0w==}
+    engines: {node: '>=8'}
 
   '@mapbox/geojson-rewind@0.5.2':
     resolution: {integrity: sha512-tJaT+RbYGJYStt7wI3cq4Nl4SXxG8W7JDG5DMJu97V25RnbNg3QtQtf+KD+VLjNpWKYsRvXDNmNrBgEETr1ifA==}
@@ -2977,6 +3092,30 @@ packages:
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
+
+  '@segment/analytics-core@1.8.2':
+    resolution: {integrity: sha512-5FDy6l8chpzUfJcNlIcyqYQq4+JTUynlVoCeCUuVz+l+6W0PXg+ljKp34R4yLVCcY5VVZohuW+HH0VLWdwYVAg==}
+
+  '@segment/analytics-generic-utils@1.2.0':
+    resolution: {integrity: sha512-DfnW6mW3YQOLlDQQdR89k4EqfHb0g/3XvBXkovH1FstUN93eL1kfW9CsDcVQyH3bAC5ZsFyjA/o/1Q2j0QeoWw==}
+
+  '@segment/analytics-next@1.81.1':
+    resolution: {integrity: sha512-nVHNhriViptjkp4004qBbvmnW9/3brjhBv2P5Cvcg7iWW41fBzUY8FbLi+8wkmSbycT9fH1pTM3TUxB6+h0Fcg==}
+
+  '@segment/analytics-page-tools@1.0.0':
+    resolution: {integrity: sha512-o9OVB91qLB9qb0Bw1HfjmWm5AnrMNULRjx++4lBqLt8InKRX1urrRBparVlpj+yJA0sckN5ZcsfazRLuPgBYDQ==}
+
+  '@segment/analytics.js-video-plugins@0.2.1':
+    resolution: {integrity: sha512-lZwCyEXT4aaHBLNK433okEKdxGAuyrVmop4BpQqQSJuRz0DglPZgd9B/XjiiWs1UyOankg2aNYMN3VcS8t4eSQ==}
+
+  '@segment/facade@3.4.10':
+    resolution: {integrity: sha512-xVQBbB/lNvk/u8+ey0kC/+g8pT3l0gCT8O2y9Z+StMMn3KAFAQ9w8xfgef67tJybktOKKU7pQGRPolRM1i1pdA==}
+
+  '@segment/isodate-traverse@1.1.1':
+    resolution: {integrity: sha512-+G6e1SgAUkcq0EDMi+SRLfT48TNlLPF3QnSgFGVs0V9F3o3fq/woQ2rHFlW20W0yy5NnCUH0QGU3Am2rZy/E3w==}
+
+  '@segment/isodate@1.0.3':
+    resolution: {integrity: sha512-BtanDuvJqnACFkeeYje7pWULVv8RgZaqKHWwGFnL/g/TH/CcZjkIVTfGDp/MAxmilYHUkrX70SqwnYSTNEaN7A==}
 
   '@shikijs/core@3.21.0':
     resolution: {integrity: sha512-AXSQu/2n1UIQekY8euBJlvFYZIw0PHY63jUzGbrOma4wPxzznJXTXkri+QcHeBNaFxiiOljKxxJkVSoB3PjbyA==}
@@ -3768,6 +3907,9 @@ packages:
   '@vueuse/core@10.11.1':
     resolution: {integrity: sha512-guoy26JQktXPcz+0n3GukWIy/JDNKti9v6VEMu6kV2sYBsWuGiTU8OWdg+ADfUbHg3/3DlqySDe7JmdHrktiww==}
 
+  '@vueuse/core@11.3.0':
+    resolution: {integrity: sha512-7OC4Rl1f9G8IT6rUfi9JrKiXy4bfmHhZ5x2Ceojy0jnd3mHNEvV4JaRygH362ror6/NZ+Nl+n13LPzGiPN8cKA==}
+
   '@vueuse/core@12.7.0':
     resolution: {integrity: sha512-jtK5B7YjZXmkGNHjviyGO4s3ZtEhbzSgrbX+s5o+Lr8i2nYqNyHuPVOeTdM1/hZ5Tkxg/KktAuAVDDiHMraMVA==}
 
@@ -3826,6 +3968,9 @@ packages:
   '@vueuse/metadata@10.11.1':
     resolution: {integrity: sha512-IGa5FXd003Ug1qAZmyE8wF3sJ81xGLSqTqtQ6jaVfkeZ4i5kS2mwQF61yhVqojRnenVew5PldLyRgvdl4YYuSw==}
 
+  '@vueuse/metadata@11.3.0':
+    resolution: {integrity: sha512-pwDnDspTqtTo2HwfLw4Rp6yywuuBdYnPYDq+mO38ZYKGebCUQC/nVj/PXSiK9HX5otxLz8Fn7ECPbjiRz2CC3g==}
+
   '@vueuse/metadata@12.7.0':
     resolution: {integrity: sha512-4VvTH9mrjXqFN5LYa5YfqHVRI6j7R00Vy4995Rw7PQxyCL3z0Lli86iN4UemWqixxEvYfRjG+hF9wL8oLOn+3g==}
 
@@ -3837,6 +3982,9 @@ packages:
 
   '@vueuse/shared@10.11.1':
     resolution: {integrity: sha512-LHpC8711VFZlDaYUXEBbFBCQ7GS3dVU9mjOhhMhXP6txTV4EhYQg/KGnQuvt/sPAtoUKq7VVUnL6mVtFoL42sA==}
+
+  '@vueuse/shared@11.3.0':
+    resolution: {integrity: sha512-P8gSSWQeucH5821ek2mn/ciCk+MS/zoRKqdQIM3bHq6p7GXDAJLmnRRKmF5F65sAVJIfzQlwR3aDzwCn10s8hA==}
 
   '@vueuse/shared@12.7.0':
     resolution: {integrity: sha512-coLlUw2HHKsm7rPN6WqHJQr18WymN4wkA/3ThFaJ4v4gWGWAQQGK+MJxLuJTBs4mojQiazlVWAKNJNpUWGRkNw==}
@@ -4064,6 +4212,10 @@ packages:
     resolution: {integrity: sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==}
     engines: {node: '>=12'}
 
+  antlr4@4.13.2:
+    resolution: {integrity: sha512-QiVbZhyy4xAZ17UPEuG3YTOt8ZaoeOR1CvEAqrEsDBsOqINslaB147i9xqljZqoyf5S+EUlGStaj+t22LT9MOg==}
+    engines: {node: '>=16'}
+
   anymatch@3.1.3:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
     engines: {node: '>= 8'}
@@ -4166,6 +4318,12 @@ packages:
 
   aws4@1.13.2:
     resolution: {integrity: sha512-lHe62zvbTB5eEABUVi/AwVh0ZKY9rMMDhmm+eeyuuUQbQ3+J+fONVQOZyj+DdrvD4BY33uYniyRJ4UJIaSKAfw==}
+
+  axios-cache-interceptor@1.11.4:
+    resolution: {integrity: sha512-xZ4OZUxdpcFUpZjrqfYlGK0VglpPRKKSoE3vMHrstxolixQNs/MrbMezOAO5uS454hIEcWpnk75RZK26WkPW/g==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      axios: '>=1.13.2'
 
   axios@1.13.2:
     resolution: {integrity: sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==}
@@ -4398,6 +4556,9 @@ packages:
     resolution: {integrity: sha512-3pUp4e8hv07k1QlijZu6Kn7c9+ZpWWk4j3F8N3xPuCExULobqJydKYOTj1FTq58srkJsXvO7LbGAH4C0ZU3WGw==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
+  cache-parser@1.2.6:
+    resolution: {integrity: sha512-SjjnKlWgrhDrAWKUxAvmZLRGDa6JExMfjSu59/pvpNoI6mEHYSLcLKUw2RtECEOINvf6dxJo35fY+T/scA0SUA==}
+
   cacheable@2.3.1:
     resolution: {integrity: sha512-yr+FSHWn1ZUou5LkULX/S+jhfgfnLbuKQjE40tyEd4fxGZVMbBL5ifno0J0OauykS8UiCSgHi+DV/YD+rjFxFg==}
 
@@ -4534,6 +4695,13 @@ packages:
   check-more-types@2.24.0:
     resolution: {integrity: sha512-Pj779qHxV2tuapviy1bSZNEL1maXr13bPYpsvSDB68HlYcYuhlDrmGd63i0JHMCLKzc7rUSNIrpdJlhVlNwrxA==}
     engines: {node: '>= 0.8.0'}
+
+  cheerio-select@2.1.0:
+    resolution: {integrity: sha512-9v9kG0LvzrlcungtnJtpGNxY+fzECQKhK4EGJX2vByejiMX84MFNQw4UxPJl3bFbTMw+Dfs37XaIkCwTZfLh4g==}
+
+  cheerio@1.2.0:
+    resolution: {integrity: sha512-WDrybc/gKFpTYQutKIK6UvfcuxijIZfMfXaYm8NMsPQxSYvf+13fXUJ4rztGGbJcBQ/GF55gvrZ0Bc0bj/mqvg==}
+    engines: {node: '>=20.18.1'}
 
   chevrotain-allstar@0.3.1:
     resolution: {integrity: sha512-b7g+y9A0v4mxCW1qUhf3BSVPg+/NvGErk/dOkrDaHA0nQIQGAtrOjlX//9OQtRlSCy+x9rfB5N8yC71lH1nvMw==}
@@ -4884,9 +5052,16 @@ packages:
       webpack:
         optional: true
 
+  css-select@5.2.2:
+    resolution: {integrity: sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==}
+
   css-tree@3.1.0:
     resolution: {integrity: sha512-0eW44TGN5SQXU1mWSkKwFstI/22X2bG1nYzZTYMAWjylYURhse752YgbE4Cx46AC+bAvI+/dYTPRk1LqSUnu6w==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
+
+  css-what@6.2.2:
+    resolution: {integrity: sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==}
+    engines: {node: '>= 6'}
 
   css.escape@1.5.1:
     resolution: {integrity: sha512-YUifsXXuknHlUsmlgyY0PKzgPOr7/FjCePfHNt0jxm83wHZi44VDMQ7/fGNkjY3/jV1MC+1CmZbaHzugyeRtpg==}
@@ -5347,6 +5522,10 @@ packages:
     resolution: {integrity: sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==}
     engines: {node: '>=4'}
 
+  dset@3.1.4:
+    resolution: {integrity: sha512-2QF/g9/zTaPDc3BjNcVTGoBbXBgYfMTTceLaYcFJ/W9kggFUkhxD/hMEeuLKbugyef9SqAx8cpgwlIP/jinUTA==}
+    engines: {node: '>=4'}
+
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
@@ -5399,6 +5578,9 @@ packages:
   encodeurl@2.0.0:
     resolution: {integrity: sha512-Q0n9HRi4m6JuGIV1eFlmvJB7ZEVxu93IrMyiMsGC0lrMJMWzRgx6WGquyfQgZVb31vhGgXnfmPNNXmxnOkRBrg==}
     engines: {node: '>= 0.8'}
+
+  encoding-sniffer@0.2.1:
+    resolution: {integrity: sha512-5gvq20T6vfpekVtqrYQsSCFZ1wEg5+wW0/QaZMWkFr6BqD3NfKs0rLCx4rrVlSWJeZb5NBJgVLswK/w2MWU+Gw==}
 
   encoding@0.1.13:
     resolution: {integrity: sha512-ETBauow1T35Y/WZMkio9jiM0Z5xjHHmJ4XmjZOq1l/dXz3lr2sRn87nJy20RupqSh1F2m3HHPSp8ShIPQJrJ3A==}
@@ -5740,8 +5922,14 @@ packages:
     resolution: {integrity: sha512-11Ndz7Nv+mvAC1j0ktTa7fAb0vLyGGX+rMHNBYQviQDGU0Hw7lhctJANqbPhu9nV9/izT/IntTgZ7Im/9LJs9g==}
     engines: {'0': node >=0.6.0}
 
+  fast-deep-equal@2.0.1:
+    resolution: {integrity: sha512-bCK/2Z4zLidyB4ReuIsvALH6w31YfAQDmXMqMx6FyfHqvBxtjC0eRumeSu4Bs3XtXwpyIywtSTrVT99BxY1f9w==}
+
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
+
+  fast-defer@1.1.9:
+    resolution: {integrity: sha512-JP7Xm9HuePSeTT1DI78NeE9eAQvgNb9qNP2jlyQrcx4jiWM189omV6oyd0xaUPWHPlKmvDzz6H1FfPWIDU+xfg==}
 
   fast-fifo@1.3.2:
     resolution: {integrity: sha512-/d9sfos4yxzpwkDkuN7k2SqFKtYNmCTzgfEpz82x34IM9/zc8KGxQoXg1liNC/izpRM/MBdt44Nmx41ZWqk+FQ==}
@@ -6296,6 +6484,9 @@ packages:
   html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
 
+  htmlparser2@10.1.0:
+    resolution: {integrity: sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==}
+
   htmlparser2@8.0.2:
     resolution: {integrity: sha512-GYdjWKDkbRLkZ5geuHs5NY1puJ+PXwP7+fHPRz06Eirsb9ugf6d8kkXav6ADhcODhFFPMIXyxkxSuMf3D6NCFA==}
 
@@ -6336,6 +6527,9 @@ packages:
   http-signature@1.4.0:
     resolution: {integrity: sha512-G5akfn7eKbpDN+8nPS/cb57YeA1jLTVxjpCj7tmm3QKPdyDy7T+qSC40e9ptydSWvkwjSXw1VbkpyEm39ukeAg==}
     engines: {node: '>=0.10'}
+
+  http-vary@1.0.3:
+    resolution: {integrity: sha512-sx7Y8YTqF3o0mFJJvF66n8dbaE8v3liV1RgCz46XP5xK7dnzyZHvwMWRA115q5kjbCPBV65/nOMlgW54WLyiag==}
 
   https-proxy-agent@7.0.6:
     resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
@@ -6803,6 +6997,10 @@ packages:
     engines: {node: '>=12'}
     hasBin: true
 
+  js-cookie@3.0.1:
+    resolution: {integrity: sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==}
+    engines: {node: '>=12'}
+
   js-file-download@0.4.12:
     resolution: {integrity: sha512-rML+NkoD08p5Dllpjo0ffy4jRHeY6Zsapvr/W86N7E0yuzAO6qa5X9+xog6zQNlH102J7IXljNY2FtS6Lj3ucg==}
 
@@ -6962,6 +7160,12 @@ packages:
 
   launch-editor@2.11.0:
     resolution: {integrity: sha512-R/PIF14L6e2eHkhvQPu7jDRCr0msfCYCxbYiLgkkAGi0dVPWuM+RrsPu0a5dpuNe0KWGL3jpAkOlv53xGfPheQ==}
+
+  launchdarkly-js-client-sdk@3.9.0:
+    resolution: {integrity: sha512-uPL9il6dOZrVQqEcpjDYc2c7HtBTlKpLJb1Q0187i4UokBVZwBXWKjTnNk9hkwaDD5PGD4puoe7POikrR8ACwQ==}
+
+  launchdarkly-js-sdk-common@5.8.0:
+    resolution: {integrity: sha512-9X70K3kN1fuR6ZnRudkH7etMgFhi3sEU0mnJ+y2nhID+DpfkNDVnYUGnUs8/s4tsSDs7Q7Gpm4qnr3oqOqT9+A==}
 
   layout-base@1.0.2:
     resolution: {integrity: sha512-8h2oVEZNktL4BH2JCOI90iD1yXwL6iNW7KcCKT2QZgQJR2vbqDsldCTPRU9NifTCqHZci57XvQQ15YTu+sTYPg==}
@@ -7564,6 +7768,9 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
+  new-date@1.0.3:
+    resolution: {integrity: sha512-0fsVvQPbo2I18DT2zVHpezmeeNYV2JaJSrseiHLc17GNOxJzUdx5mvSigPu8LtIfZSij5i1wXnXFspEs2CD6hA==}
+
   next-tick@1.1.0:
     resolution: {integrity: sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==}
 
@@ -7589,6 +7796,15 @@ packages:
   node-fetch-commonjs@3.3.2:
     resolution: {integrity: sha512-VBlAiynj3VMLrotgwOS3OyECFxas5y7ltLcK4t41lMUZeaK15Ym4QRkqN0EQKAFL42q9i21EPKjzLUPfltR72A==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  node-fetch@2.7.0:
+    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
+    engines: {node: 4.x || >=6.0.0}
+    peerDependencies:
+      encoding: ^0.1.0
+    peerDependenciesMeta:
+      encoding:
+        optional: true
 
   node-gyp@11.5.0:
     resolution: {integrity: sha512-ra7Kvlhxn5V9Slyus0ygMa2h+UqExPqUIkfk7Pc8QTLT956JLSy51uWFwHtIYy0vI8cB4BDhc/S03+880My/LQ==}
@@ -7701,9 +7917,15 @@ packages:
       '@swc/core':
         optional: true
 
+  obj-case@0.2.1:
+    resolution: {integrity: sha512-PquYBBTy+Y6Ob/O2574XHhDtHJlV1cJHMCgW+rDRc9J5hhmRelJB3k5dTK/3cVmFVtzvAKuENeuLpoyTzMzkOg==}
+
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
+
+  object-code@2.0.0:
+    resolution: {integrity: sha512-qOwMF43O/VAD51nJAB7MKsf1yWksql6O1i0DHRo1yaOQM6xJQH0NAE9UKJzYB7lyKw1jnpeb2BmB8qakjxiYZA==}
 
   object-inspect@1.13.2:
     resolution: {integrity: sha512-IRZSRuzJiynemAXPYtPe5BoI/RESNYR7TYm50MC5Mqbd3Jmw5y790sErYw3V6SryFJD64b74qQQs9wn5Bg/k3g==}
@@ -7919,8 +8141,17 @@ packages:
   parse-url@8.1.0:
     resolution: {integrity: sha512-xDvOoLU5XRrcOZvnI6b8zA6n9O9ejNk/GExuz1yBuWUGn9KA97GI6HTs6u02wKara1CeVmZhH+0TZFdWScR89w==}
 
+  parse5-htmlparser2-tree-adapter@7.1.0:
+    resolution: {integrity: sha512-ruw5xyKs6lrpo9x9rCZqZZnIUntICjQAd0Wsmp396Ul9lN/h+ifgVV1x1gZHi8euej6wTfpqX8j+BFQxF0NS/g==}
+
+  parse5-parser-stream@7.1.2:
+    resolution: {integrity: sha512-JyeQc9iwFLn5TbvvqACIF/VXG6abODeB3Fwmv/TGdLk2LfbWkaySGY72at4+Ty7EkPZj854u4CrICqNk2qIbow==}
+
   parse5@7.1.2:
     resolution: {integrity: sha512-Czj1WaSVpaoj0wbhMzLmWD69anp2WH7FXMB9n1Sy8/ZFF9jolSQVMu1Ij5WIyGmcBmhk7EOndpO4mIpihVqAXw==}
+
+  parse5@7.3.0:
+    resolution: {integrity: sha512-IInvU7fabl34qmi9gY8XOVxhYyMyuH2xUNpb2q8/Y+7552KlejkRvqvD19nMoUW/uQGGbqNpA6Tufu5FL5BZgw==}
 
   parse5@8.0.0:
     resolution: {integrity: sha512-9m4m5GSgXjL4AjumKzq1Fgfp3Z8rsvjRNbnkVwfu2ImRqE5D0LnY2QfDen18FSY9C573YU5XxSapdHZTZ2WolA==}
@@ -9558,6 +9789,9 @@ packages:
     resolution: {integrity: sha512-kXuRi1mtaKMrsLUxz3sQYvVl37B0Ns6MzfrtV5DvJceE9bPyspOqk9xxv7XbZWcfLWbFmm997vl83qUWVJA64w==}
     engines: {node: '>=16'}
 
+  tr46@0.0.3:
+    resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+
   tr46@6.0.0:
     resolution: {integrity: sha512-bLVMLPtstlZ4iMQHpFHTR7GAGj2jxi8Dg0s2h2MafAE4uSWF98FC/3MomU51iQAMf8/qDUbKWf5GxuvvVcXEhw==}
     engines: {node: '>=20'}
@@ -9595,6 +9829,9 @@ packages:
   trim-newlines@3.0.1:
     resolution: {integrity: sha512-c1PTsA3tYrIsLGkJkzHF+w9F2EyxfXGo4UyJc4pFL++FMjnq0HJS69T3M7d//gKrFKwy429bouPescbjecU+Zw==}
     engines: {node: '>=8'}
+
+  try@1.0.3:
+    resolution: {integrity: sha512-AHA8khVCII6zKyRkyPo6pRwoR9v5jb7QFw6e5avtaVSkxVfaEucYIo06xnwB+pJaEarfYNbs7W3Vq+LZLZiWyA==}
 
   ts-algebra@2.0.0:
     resolution: {integrity: sha512-FPAhNPFMrkwz76P7cdjdmiShwMynZYN6SgOujD1urY4oNm80Ou9oMdmbR45LotcKOXoy7wSmHkRFE6Mxbrhefw==}
@@ -9782,6 +10019,16 @@ packages:
 
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
+
+  undici@7.19.1:
+    resolution: {integrity: sha512-Gpq0iNm5M6cQWlyHQv9MV+uOj1jWk7LpkoE5vSp/7zjb4zMdAcUD+VL5y0nH4p9EbUklq00eVIIX/XcDHzu5xg==}
+    engines: {node: '>=20.18.1'}
+
+  unfetch@3.1.2:
+    resolution: {integrity: sha512-L0qrK7ZeAudGiKYw6nzFjnJ2D5WHblUBwmHIqtPS6oKUd+Hcpk7/hKsSmcHsTlpd1TbTNsiRBUKRq3bHLNIqIw==}
+
+  unfetch@4.2.0:
+    resolution: {integrity: sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==}
 
   unicode-emoji-modifier-base@1.0.0:
     resolution: {integrity: sha512-yLSH4py7oFH3oG/9K+XWrz1pSi3dfUrWEnInbxMfArOfc1+33BlGPQtLsOYwvdMy11AwUBetYuaRxSPqgkq+8g==}
@@ -10178,6 +10425,9 @@ packages:
   web-tree-sitter@0.20.3:
     resolution: {integrity: sha512-zKGJW9r23y3BcJusbgvnOH2OYAW40MXAOi9bi3Gcc7T4Gms9WWgXF8m6adsJWpGJEhgOzCrfiz1IzKowJWrtYw==}
 
+  webidl-conversions@3.0.1:
+    resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+
   webidl-conversions@8.0.0:
     resolution: {integrity: sha512-n4W4YFyz5JzOfQeA8oN7dUYpR+MBP3PIUsn2jLjWXwK5ASUzt0Jc/A5sAUZoCYFJRGF0FBKJ+1JjN43rNdsQzA==}
     engines: {node: '>=20'}
@@ -10252,6 +10502,11 @@ packages:
     resolution: {integrity: sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==}
     engines: {node: '>=0.8.0'}
 
+  whatwg-encoding@3.1.1:
+    resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
+    engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+
   whatwg-mimetype@4.0.0:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
     engines: {node: '>=18'}
@@ -10259,6 +10514,9 @@ packages:
   whatwg-url@15.1.0:
     resolution: {integrity: sha512-2ytDk0kiEj/yu90JOAp44PVPUkO9+jVhyf+SybKlRHSDlvOOZhdPIrr7xTH64l4WixO2cP+wQIcgujkGBPPz6g==}
     engines: {node: '>=20'}
+
+  whatwg-url@5.0.0:
+    resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
 
   which-boxed-primitive@1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
@@ -10981,6 +11239,17 @@ snapshots:
 
   '@dagrejs/graphlib@2.2.4': {}
 
+  '@datadog/browser-core@5.35.1': {}
+
+  '@datadog/browser-rum-core@5.35.1':
+    dependencies:
+      '@datadog/browser-core': 5.35.1
+
+  '@datadog/browser-rum@5.35.1':
+    dependencies:
+      '@datadog/browser-core': 5.35.1
+      '@datadog/browser-rum-core': 5.35.1
+
   '@digitalroute/cz-conventional-changelog-for-jira@8.0.1(@types/node@24.10.9)(typescript@5.9.3)':
     dependencies:
       boxen: 5.1.2
@@ -11475,6 +11744,137 @@ snapshots:
 
   '@keyv/serialize@1.1.1': {}
 
+  '@kong-ui-public/app-layout@4.10.21(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      '@kong/icons': 1.42.0(vue@3.5.27(typescript@5.9.3))
+      '@kong/kongponents': 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@vueuse/core': 13.9.0(vue@3.5.27(typescript@5.9.3))
+      focus-trap: 7.8.0
+      focus-trap-vue: 4.1.0(focus-trap@7.8.0)(vue@3.5.27(typescript@5.9.3))
+      lodash.clonedeep: 4.5.0
+      vue: 3.5.27(typescript@5.9.3)
+      vue-router: 4.6.4(vue@3.5.27(typescript@5.9.3))
+
+  '@kong-ui-public/core@1.10.11(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      axios: 1.13.2
+      date-fns: 4.1.0
+      vue: 3.5.27(typescript@5.9.3)
+
+  '@kong-ui-public/core@1.11.10(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      axios: 1.13.2
+      date-fns: 4.1.0
+      vue: 3.5.27(typescript@5.9.3)
+
+  '@kong-ui-public/entities-shared@3.39.8(@kong-ui-public/i18n@packages+core+i18n)(@kong/icons@1.42.0(vue@3.5.27(typescript@5.9.3)))(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(@shikijs/core@3.21.0)(@shikijs/engine-javascript@3.21.0)(axios@1.13.2)(shiki@3.21.0)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      '@kong-ui-public/core': 1.11.10(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/icons': 1.42.0(vue@3.5.27(typescript@5.9.3))
+      '@kong/kongponents': 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@shikijs/core': 3.21.0
+      '@shikijs/engine-javascript': 3.21.0
+      axios: 1.13.2
+      compare-versions: 6.1.1
+      shiki: 3.21.0
+      vue: 3.5.27(typescript@5.9.3)
+      vue-router: 4.6.4(vue@3.5.27(typescript@5.9.3))
+
+  '@kong-ui-public/error-boundary@2.1.28(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      vue: 3.5.27(typescript@5.9.3)
+
+  '@kong-ui-public/misc-widgets@2.3.22(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/kongponents': 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      vue: 3.5.27(typescript@5.9.3)
+
+  '@kong-ui/konnect-app-shell@2.128.0(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(@shikijs/core@3.21.0)(@shikijs/engine-javascript@3.21.0)(cheerio@1.2.0)(encoding@0.1.13)(shiki@3.21.0)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      '@datadog/browser-rum': 5.35.1
+      '@kong-ui-public/app-layout': 4.10.21(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui-public/core': 1.10.11(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui-public/error-boundary': 2.1.28(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong-ui-public/misc-widgets': 2.3.22(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui/konnect-ksearch': 1.9.10(@kong-ui-public/app-layout@4.10.21(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui/konnect-notifications': 1.10.8(@kong-ui-public/i18n@packages+core+i18n)(@kong/icons@1.42.0(vue@3.5.27(typescript@5.9.3)))(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui/konnect-product-announcements': 0.2.0(@kong/icons@1.42.0(vue@3.5.27(typescript@5.9.3)))(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui/konnect-support-form': 0.4.4(@kong-ui-public/i18n@packages+core+i18n)(@kong/icons@1.42.0(vue@3.5.27(typescript@5.9.3)))(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(@shikijs/core@3.21.0)(@shikijs/engine-javascript@3.21.0)(axios@1.13.2)(shiki@3.21.0)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@kong/icons': 1.42.0(vue@3.5.27(typescript@5.9.3))
+      '@kong/kongponents': 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@segment/analytics-next': 1.81.1(encoding@0.1.13)
+      '@vueuse/core': 11.3.0(vue@3.5.27(typescript@5.9.3))
+      axios: 1.13.2
+      axios-cache-interceptor: 1.11.4(axios@1.13.2)
+      cheerio: 1.2.0
+      launchdarkly-js-client-sdk: 3.9.0
+      uuid: 11.1.0
+      vue: 3.5.27(typescript@5.9.3)
+      vue-router: 4.6.4(vue@3.5.27(typescript@5.9.3))
+    transitivePeerDependencies:
+      - '@datadog/browser-logs'
+      - '@shikijs/core'
+      - '@shikijs/engine-javascript'
+      - '@vue/composition-api'
+      - debug
+      - encoding
+      - shiki
+
+  '@kong-ui/konnect-ksearch@1.9.10(@kong-ui-public/app-layout@4.10.21(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(@kong-ui-public/i18n@packages+core+i18n)(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      '@datadog/browser-rum': 5.35.1
+      '@kong-ui-public/app-layout': 4.10.21(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui-public/core': 1.10.11(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/design-tokens': 1.18.2
+      '@kong/icons': 1.42.0(vue@3.5.27(typescript@5.9.3))
+      '@kong/kongponents': 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@kong/kquery-parser': 0.43.0
+      '@vueuse/core': 11.3.0(vue@3.5.27(typescript@5.9.3))
+      antlr4: 4.13.2
+      axios: 1.13.2
+      vue: 3.5.27(typescript@5.9.3)
+    transitivePeerDependencies:
+      - '@datadog/browser-logs'
+      - '@vue/composition-api'
+
+  '@kong-ui/konnect-notifications@1.10.8(@kong-ui-public/i18n@packages+core+i18n)(@kong/icons@1.42.0(vue@3.5.27(typescript@5.9.3)))(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      '@kong-ui-public/core': 1.10.11(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/icons': 1.42.0(vue@3.5.27(typescript@5.9.3))
+      '@kong/kongponents': 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@vueuse/core': 11.3.0(vue@3.5.27(typescript@5.9.3))
+      axios: 1.13.2
+      date-fns: 4.1.0
+      vue: 3.5.27(typescript@5.9.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+
+  '@kong-ui/konnect-product-announcements@0.2.0(@kong/icons@1.42.0(vue@3.5.27(typescript@5.9.3)))(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      '@kong/icons': 1.42.0(vue@3.5.27(typescript@5.9.3))
+      '@kong/kongponents': 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      vue: 3.5.27(typescript@5.9.3)
+
+  '@kong-ui/konnect-support-form@0.4.4(@kong-ui-public/i18n@packages+core+i18n)(@kong/icons@1.42.0(vue@3.5.27(typescript@5.9.3)))(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(@shikijs/core@3.21.0)(@shikijs/engine-javascript@3.21.0)(axios@1.13.2)(shiki@3.21.0)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      '@kong-ui-public/core': 1.10.11(axios@1.13.2)(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui-public/entities-shared': 3.39.8(@kong-ui-public/i18n@packages+core+i18n)(@kong/icons@1.42.0(vue@3.5.27(typescript@5.9.3)))(@kong/kongponents@9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3)))(@shikijs/core@3.21.0)(@shikijs/engine-javascript@3.21.0)(axios@1.13.2)(shiki@3.21.0)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      '@kong-ui-public/i18n': link:packages/core/i18n
+      '@kong/icons': 1.42.0(vue@3.5.27(typescript@5.9.3))
+      '@kong/kongponents': 9.50.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vue-router@4.6.4(vue@3.5.27(typescript@5.9.3)))(vue@3.5.27(typescript@5.9.3))
+      axios: 1.13.2
+      vue: 3.5.27(typescript@5.9.3)
+    transitivePeerDependencies:
+      - '@shikijs/core'
+      - '@shikijs/engine-javascript'
+      - shiki
+      - vue-router
+
   '@kong/atc-router@1.6.0-rc.1': {}
 
   '@kong/design-tokens@1.18.2': {}
@@ -11543,6 +11943,10 @@ snapshots:
       - react-dom
       - solid-js
       - svelte
+
+  '@kong/kquery-parser@0.43.0':
+    dependencies:
+      antlr4: 4.13.2
 
   '@kong/markdown@1.8.1(@types/markdown-it@14.1.2)(typescript@5.9.3)(vue@3.5.27(typescript@5.9.3))':
     dependencies:
@@ -11695,6 +12099,12 @@ snapshots:
   '@ljharb/through@2.3.13':
     dependencies:
       call-bind: 1.0.7
+
+  '@lukeed/csprng@1.1.0': {}
+
+  '@lukeed/uuid@2.0.1':
+    dependencies:
+      '@lukeed/csprng': 1.1.0
 
   '@mapbox/geojson-rewind@0.5.2':
     dependencies:
@@ -12297,6 +12707,54 @@ snapshots:
     optional: true
 
   '@sec-ant/readable-stream@0.4.1': {}
+
+  '@segment/analytics-core@1.8.2':
+    dependencies:
+      '@lukeed/uuid': 2.0.1
+      '@segment/analytics-generic-utils': 1.2.0
+      dset: 3.1.4
+      tslib: 2.8.1
+
+  '@segment/analytics-generic-utils@1.2.0':
+    dependencies:
+      tslib: 2.8.1
+
+  '@segment/analytics-next@1.81.1(encoding@0.1.13)':
+    dependencies:
+      '@lukeed/uuid': 2.0.1
+      '@segment/analytics-core': 1.8.2
+      '@segment/analytics-generic-utils': 1.2.0
+      '@segment/analytics-page-tools': 1.0.0
+      '@segment/analytics.js-video-plugins': 0.2.1
+      '@segment/facade': 3.4.10
+      dset: 3.1.4
+      js-cookie: 3.0.1
+      node-fetch: 2.7.0(encoding@0.1.13)
+      tslib: 2.8.1
+      unfetch: 4.2.0
+    transitivePeerDependencies:
+      - encoding
+
+  '@segment/analytics-page-tools@1.0.0':
+    dependencies:
+      tslib: 2.8.1
+
+  '@segment/analytics.js-video-plugins@0.2.1':
+    dependencies:
+      unfetch: 3.1.2
+
+  '@segment/facade@3.4.10':
+    dependencies:
+      '@segment/isodate-traverse': 1.1.1
+      inherits: 2.0.4
+      new-date: 1.0.3
+      obj-case: 0.2.1
+
+  '@segment/isodate-traverse@1.1.1':
+    dependencies:
+      '@segment/isodate': 1.0.3
+
+  '@segment/isodate@1.0.3': {}
 
   '@shikijs/core@3.21.0':
     dependencies:
@@ -13578,6 +14036,16 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
+  '@vueuse/core@11.3.0(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      '@types/web-bluetooth': 0.0.20
+      '@vueuse/metadata': 11.3.0
+      '@vueuse/shared': 11.3.0(vue@3.5.27(typescript@5.9.3))
+      vue-demi: 0.14.10(vue@3.5.27(typescript@5.9.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
   '@vueuse/core@12.7.0(typescript@5.9.3)':
     dependencies:
       '@types/web-bluetooth': 0.0.20
@@ -13613,6 +14081,8 @@ snapshots:
 
   '@vueuse/metadata@10.11.1': {}
 
+  '@vueuse/metadata@11.3.0': {}
+
   '@vueuse/metadata@12.7.0': {}
 
   '@vueuse/metadata@13.9.0': {}
@@ -13620,6 +14090,13 @@ snapshots:
   '@vueuse/metadata@14.1.0': {}
 
   '@vueuse/shared@10.11.1(vue@3.5.27(typescript@5.9.3))':
+    dependencies:
+      vue-demi: 0.14.10(vue@3.5.27(typescript@5.9.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
+
+  '@vueuse/shared@11.3.0(vue@3.5.27(typescript@5.9.3))':
     dependencies:
       vue-demi: 0.14.10(vue@3.5.27(typescript@5.9.3))
     transitivePeerDependencies:
@@ -13846,6 +14323,8 @@ snapshots:
 
   ansi-styles@6.2.1: {}
 
+  antlr4@4.13.2: {}
+
   anymatch@3.1.3:
     dependencies:
       normalize-path: 3.0.0
@@ -13932,6 +14411,15 @@ snapshots:
   aws-sign2@0.7.0: {}
 
   aws4@1.13.2: {}
+
+  axios-cache-interceptor@1.11.4(axios@1.13.2):
+    dependencies:
+      axios: 1.13.2
+      cache-parser: 1.2.6
+      fast-defer: 1.1.9
+      http-vary: 1.0.3
+      object-code: 2.0.0
+      try: 1.0.3
 
   axios@1.13.2:
     dependencies:
@@ -14254,6 +14742,8 @@ snapshots:
       ssri: 13.0.0
       unique-filename: 5.0.0
 
+  cache-parser@1.2.6: {}
+
   cacheable@2.3.1:
     dependencies:
       '@cacheable/memory': 2.0.6
@@ -14385,6 +14875,29 @@ snapshots:
   check-error@2.1.1: {}
 
   check-more-types@2.24.0: {}
+
+  cheerio-select@2.1.0:
+    dependencies:
+      boolbase: 1.0.0
+      css-select: 5.2.2
+      css-what: 6.2.2
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
+
+  cheerio@1.2.0:
+    dependencies:
+      cheerio-select: 2.1.0
+      dom-serializer: 2.0.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      encoding-sniffer: 0.2.1
+      htmlparser2: 10.1.0
+      parse5: 7.3.0
+      parse5-htmlparser2-tree-adapter: 7.1.0
+      parse5-parser-stream: 7.1.2
+      undici: 7.19.1
+      whatwg-mimetype: 4.0.0
 
   chevrotain-allstar@0.3.1(chevrotain@11.0.3):
     dependencies:
@@ -14746,10 +15259,20 @@ snapshots:
     optionalDependencies:
       webpack: 5.104.1(@swc/core@1.15.7)(webpack-cli@5.1.4)
 
+  css-select@5.2.2:
+    dependencies:
+      boolbase: 1.0.0
+      css-what: 6.2.2
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      nth-check: 2.1.1
+
   css-tree@3.1.0:
     dependencies:
       mdn-data: 2.12.2
       source-map-js: 1.2.1
+
+  css-what@6.2.2: {}
 
   css.escape@1.5.1: {}
 
@@ -15236,6 +15759,8 @@ snapshots:
 
   drange@1.1.1: {}
 
+  dset@3.1.4: {}
+
   dunder-proto@1.0.1:
     dependencies:
       call-bind-apply-helpers: 1.0.2
@@ -15279,6 +15804,11 @@ snapshots:
   encodeurl@1.0.2: {}
 
   encodeurl@2.0.0: {}
+
+  encoding-sniffer@0.2.1:
+    dependencies:
+      iconv-lite: 0.6.3
+      whatwg-encoding: 3.1.1
 
   encoding@0.1.13:
     dependencies:
@@ -15786,7 +16316,11 @@ snapshots:
 
   extsprintf@1.3.0: {}
 
+  fast-deep-equal@2.0.1: {}
+
   fast-deep-equal@3.1.3: {}
+
+  fast-defer@1.1.9: {}
 
   fast-fifo@1.3.2:
     optional: true
@@ -16379,6 +16913,13 @@ snapshots:
 
   html-void-elements@3.0.0: {}
 
+  htmlparser2@10.1.0:
+    dependencies:
+      domelementtype: 2.3.0
+      domhandler: 5.0.3
+      domutils: 3.2.2
+      entities: 7.0.1
+
   htmlparser2@8.0.2:
     dependencies:
       domelementtype: 2.3.0
@@ -16439,6 +16980,8 @@ snapshots:
       assert-plus: 1.0.0
       jsprim: 2.0.2
       sshpk: 1.18.0
+
+  http-vary@1.0.3: {}
 
   https-proxy-agent@7.0.6:
     dependencies:
@@ -16889,6 +17432,8 @@ snapshots:
       glob: 13.0.0
       nopt: 6.0.0
 
+  js-cookie@3.0.1: {}
+
   js-file-download@0.4.12: {}
 
   js-stringify@1.0.2: {}
@@ -17053,6 +17598,17 @@ snapshots:
     dependencies:
       picocolors: 1.1.1
       shell-quote: 1.8.3
+
+  launchdarkly-js-client-sdk@3.9.0:
+    dependencies:
+      escape-string-regexp: 4.0.0
+      launchdarkly-js-sdk-common: 5.8.0
+
+  launchdarkly-js-sdk-common@5.8.0:
+    dependencies:
+      base64-js: 1.5.1
+      fast-deep-equal: 2.0.1
+      uuid: 8.3.2
 
   layout-base@1.0.2: {}
 
@@ -17772,6 +18328,10 @@ snapshots:
 
   neo-async@2.6.2: {}
 
+  new-date@1.0.3:
+    dependencies:
+      '@segment/isodate': 1.0.3
+
   next-tick@1.1.0: {}
 
   node-abi@3.68.0:
@@ -17797,6 +18357,12 @@ snapshots:
     dependencies:
       node-domexception: 1.0.0
       web-streams-polyfill: 3.3.3
+
+  node-fetch@2.7.0(encoding@0.1.13):
+    dependencies:
+      whatwg-url: 5.0.0
+    optionalDependencies:
+      encoding: 0.1.13
 
   node-gyp@11.5.0:
     dependencies:
@@ -17985,7 +18551,11 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
+  obj-case@0.2.1: {}
+
   object-assign@4.1.1: {}
+
+  object-code@2.0.0: {}
 
   object-inspect@1.13.2: {}
 
@@ -18249,9 +18819,22 @@ snapshots:
     dependencies:
       parse-path: 7.1.0
 
+  parse5-htmlparser2-tree-adapter@7.1.0:
+    dependencies:
+      domhandler: 5.0.3
+      parse5: 7.3.0
+
+  parse5-parser-stream@7.1.2:
+    dependencies:
+      parse5: 7.3.0
+
   parse5@7.1.2:
     dependencies:
       entities: 4.5.0
+
+  parse5@7.3.0:
+    dependencies:
+      entities: 6.0.1
 
   parse5@8.0.0:
     dependencies:
@@ -20092,6 +20675,8 @@ snapshots:
     dependencies:
       tldts: 7.0.19
 
+  tr46@0.0.3: {}
+
   tr46@6.0.0:
     dependencies:
       punycode: 2.3.1
@@ -20133,6 +20718,8 @@ snapshots:
   trim-lines@3.0.1: {}
 
   trim-newlines@3.0.1: {}
+
+  try@1.0.3: {}
 
   ts-algebra@2.0.0: {}
 
@@ -20338,6 +20925,12 @@ snapshots:
   underscore@1.13.6: {}
 
   undici-types@7.16.0: {}
+
+  undici@7.19.1: {}
+
+  unfetch@3.1.2: {}
+
+  unfetch@4.2.0: {}
 
   unicode-emoji-modifier-base@1.0.0: {}
 
@@ -20750,6 +21343,8 @@ snapshots:
   web-tree-sitter@0.20.3:
     optional: true
 
+  webidl-conversions@3.0.1: {}
+
   webidl-conversions@8.0.0: {}
 
   webpack-bundle-analyzer@4.10.2:
@@ -20889,12 +21484,21 @@ snapshots:
 
   websocket-extensions@0.1.4: {}
 
+  whatwg-encoding@3.1.1:
+    dependencies:
+      iconv-lite: 0.6.3
+
   whatwg-mimetype@4.0.0: {}
 
   whatwg-url@15.1.0:
     dependencies:
       tr46: 6.0.0
       webidl-conversions: 8.0.0
+
+  whatwg-url@5.0.0:
+    dependencies:
+      tr46: 0.0.3
+      webidl-conversions: 3.0.1
 
   which-boxed-primitive@1.0.2:
     dependencies:
