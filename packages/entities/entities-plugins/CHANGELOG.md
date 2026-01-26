@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [9.149.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.148.4...@kong-ui-public/entities-plugins@9.149.0) (2026-01-26)
+
+
+### Features
+
+* **monaco-editor:** add standalone appearance ([#2840](https://github.com/Kong/public-ui-components/issues/2840)) ([4f582fd](https://github.com/Kong/public-ui-components/commit/4f582fd4cf684559c558ef80806850987cfc1f1c))
+
+
+
+
+
 ## [9.148.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.148.3...@kong-ui-public/entities-plugins@9.148.4) (2026-01-25)
 
 
