@@ -157,8 +157,13 @@
     </template>
 
     <template v-else>
-      <!-- TODO: Implement default code editor -->
-      <slot name="code-editor" />
+      <EntityFormBlock
+        :description="t('plugins.form.sections.code_mode.description')"
+        :title="t('plugins.form.sections.code_mode.title')"
+      >
+        <!-- TODO: Implement default code editor -->
+        <slot name="code-editor" />
+      </EntityFormBlock>
     </template>
   </Form>
 </template>
@@ -548,8 +553,14 @@ function getScopesFromFormModel(): Partial<T> {
     margin-bottom: $kui-space-70;
   }
 
-  :deep(.ff-enabled-field) > .field-wrap label {
-    font-weight: unset;
+  :deep(.ff-enabled-field) {
+    & > .field-wrap label {
+      font-weight: unset;
+    }
+
+    & > label > .icon-wrapper {
+      font-weight: $kui-font-weight-semibold;
+    }
   }
 }
 </style>

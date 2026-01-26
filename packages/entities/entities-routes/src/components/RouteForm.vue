@@ -342,6 +342,19 @@ const formType = computed((): EntityBaseFormType => props.routeId
   ? EntityBaseFormType.Edit
   : EntityBaseFormType.Create)
 
+/**
+* Generates a unique route name using the current timestamp.
+* The name format is "new-route-" followed by numbers from the ISO timestamp.
+*
+* Example output: "new-route-20250307123045789"
+*/
+if (formType.value === EntityBaseFormType.Create) {
+  state.fields.name = `new-route-${new Date()
+    .toISOString() // Convert date to ISO string format (e.g., "2025-03-07T12:30:45.789Z")
+    .replace(/\D/g, '') // Remove all non-digit characters
+    .slice(0, 17)}` // Take the first 17 digits
+}
+
 const fetchUrl = computed<string>(() => endpoints.form[props.config?.app]?.fetch?.[props.serviceId ? 'forGatewayService' : 'all'].replace(/{serviceId}/gi, props.serviceId || ''))
 
 const cancelHandler = (): void => {

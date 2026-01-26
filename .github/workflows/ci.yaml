@@ -238,7 +238,7 @@ jobs:
           tag="pr-${{ github.event.pull_request.number }}"
           echo "preid=${preid}"
 
-          git checkout ${{ github.head_ref }}
+          git checkout "${{ github.head_ref }}"
 
           versions=$(pnpm --silent lerna version prerelease --preid ${preid} --allow-branch ${{ github.head_ref }} --conventional-prerelease --yes --amend --json --no-git-tag-version || true)
           if [[ "${versions}" == "" ]]; then
@@ -333,7 +333,7 @@ jobs:
           path: packages/
 
       - name: Run Component Tests
-        uses: cypress-io/github-action@e3ff965ee85ae28bdd2ea32c3e22a7fa12e02f2b # v6.10.5
+        uses: cypress-io/github-action@2ad32e649e4db26c07674ebae31a297601dbcbaf # v6.10.8
         with:
           install: false
           command: pnpm run test:component:ci --spec ${{ matrix.container }}

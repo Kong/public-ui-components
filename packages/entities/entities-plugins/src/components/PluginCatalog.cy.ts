@@ -61,6 +61,9 @@ describe('<PluginCatalog />', {
     router = createRouter({
       routes: [
         { path: '/', name: 'list-plugin', component: { template: '<div>ListPage</div>' } },
+        { path: '/create-plugin', name: 'create-plugin', component: { template: '<div>CreatePlugin</div>' } },
+        { path: '/create-custom-plugin', name: 'create-custom-plugin', component: { template: '<div>CreateCustomPlugin</div>' } },
+        { path: '/edit-custom-plugin', name: 'edit-custom-plugin', component: { template: '<div>EditCustomPlugin</div>' } },
       ],
       history: createMemoryHistory(),
     })
@@ -196,5 +199,19 @@ describe('<PluginCatalog />', {
     cy.wait('@getAvailablePlugins')
     cy.getTestId('plugins-filter-input').type('non-existent-plugin')
     cy.getTestId('plugin-catalog').contains(/no plugins found|empty|no results/i).should('exist')
+  })
+
+  it('should render disabled plugin card', () => {
+    interceptKonnect()
+    cy.mount(PluginCatalog, {
+      props: {
+        config: baseConfigKonnect,
+        disabledPlugins: { 'acl': 'ACL is not supported for this entity type' },
+      },
+      router,
+    })
+
+    cy.wait('@getAvailablePlugins')
+    cy.getTestId('acl-card').should('have.class', 'disabled')
   })
 })

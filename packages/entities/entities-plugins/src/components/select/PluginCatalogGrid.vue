@@ -54,7 +54,7 @@ import composables from '../../composables'
 import {
   PLUGIN_GROUPS_COLLAPSE_STATUS,
   PluginFeaturedArray,
-  PluginGroupArray,
+  PluginGroupArraySortedAlphabetically,
   type KongManagerPluginSelectConfig,
   type KonnectPluginSelectConfig,
   type PluginCardList,
@@ -71,7 +71,7 @@ defineProps<{
   pluginList?: PluginCardList
 }>()
 
-const displayGroups = PluginFeaturedArray.concat(PluginGroupArray)
+const displayGroups = PluginFeaturedArray.concat(PluginGroupArraySortedAlphabetically)
 
 const emit = defineEmits<{
   (e: 'plugin-clicked', plugin: PluginType): void

@@ -131,7 +131,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
     },
   )
 
-  const { state: metricRequestState, swrvState: STATE } = useSwrvState(raw, metricError, isMetricDataValidating)
+  const { state: metricRequestState, swrvState: STATE } = useSwrvState(raw as unknown as Ref<ExploreResultV4 | undefined>, metricError as unknown as Ref<{ message: string } | undefined>, isMetricDataValidating as unknown as Ref<boolean>)
 
   const mapped = computed<ChronologicalMappedMetrics>(() => {
     if (!raw.value?.data?.length || !raw.value?.meta?.display || !raw.value?.meta?.metric_names?.length) {
@@ -147,7 +147,7 @@ export default function useMetricFetcher(opts: MetricFetcherOptions): FetcherRes
   return {
     isLoading: computed(() => STATE.PENDING === metricRequestState.value),
     hasError: computed(() => STATE.ERROR === metricRequestState.value),
-    raw,
+    raw: raw as unknown as Ref<ExploreResultV4 | undefined>,
     mapped,
     trendRange,
   }
