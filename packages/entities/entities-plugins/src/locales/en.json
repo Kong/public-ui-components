@@ -599,7 +599,8 @@
       "filter": {
         "title": "Filter Plugins",
         "featured": "Featured",
-        "type": "Type"
+        "type": "Type",
+        "clear_selection": "Clear Selection"
       },
       "list": {
         "table_headers": {
