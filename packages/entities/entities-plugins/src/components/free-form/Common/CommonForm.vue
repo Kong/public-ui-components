@@ -132,16 +132,13 @@ function handleCodeChange(newContent: string) {
   msgToDrWho.value.customPayload.params.config = newContent
 }
 
-const isConfigInitialized = ref(false)
-
 function handleFormChange(formData: any) {
-  if (isConfigInitialized.value) return
+  if (layoutEditorMode.value === 'code') return
   const yamlString = yaml.dump(toRaw(formData), {
     schema: JSON_SCHEMA,
     noArrayIndent: true,
   })
   handleCodeChange(yamlString)
-  isConfigInitialized.value = true
 }
 
 // Send message to Dr.Who
