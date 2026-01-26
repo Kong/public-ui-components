@@ -81,6 +81,17 @@ import { MonacoEditor } from '@kong-ui-public/monaco-editor'
 
 ### Props
 
+#### `appearance`
+
+- type: `'embedded' | 'standalone'`
+- required: `false`
+- default: `'embedded'`
+
+The appearance style of the Monaco Editor container.
+
+- `embedded`: minimal styling, intended to blend into the surrounding layout.
+- `standalone`: renders with an input-like border and adds extra editor padding for more comfortable editing.
+
 #### `theme`
 
 - type: `'light' | 'dark'`
@@ -227,6 +238,7 @@ Slot for customizing the empty state overlay. Receives `isEmpty` as a slot prop.
     <MonacoEditor
       v-model="code"
       :theme="isDark ? 'dark' : 'light'"
+      appearance="standalone"
       language="json"
       :options="{
         readOnly: false,

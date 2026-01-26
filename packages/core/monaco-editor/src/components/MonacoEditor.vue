@@ -2,6 +2,7 @@
   <div
     class="monaco-editor-container"
     :class="[
+      appearance,
       editorTheme,
       { 'loading': isLoadingVisible },
     ]"
@@ -48,14 +49,19 @@
 
 <script setup lang="ts">
 import { watch, computed, useTemplateRef } from 'vue'
+import { KUI_SPACE_40 } from '@kong/design-tokens'
 import { CodeblockIcon, ProgressIcon } from '@kong/icons'
 import { useMonacoEditor } from '../composables/useMonacoEditor'
 import useI18n from '../composables/useI18n'
 import MonacoEditorStatusOverlay from './MonacoEditorStatusOverlay.vue'
+import { DEFAULT_MONACO_OPTIONS } from '../constants'
 import type { editor } from 'monaco-editor'
 import type { EditorThemes } from '../types'
 
+const PADDING_Y = parseInt(KUI_SPACE_40, 10)
+
 const {
+  appearance = 'embedded',
   theme = 'light',
   language = 'markdown',
   options = undefined,
@@ -63,6 +69,11 @@ const {
   showLoadingState = true,
   showEmptyState = true,
 } = defineProps<{
+  /**
+   * The appearance style of the Monaco Editor.
+   * @default 'embedded'
+   */
+  appearance?: 'embedded' | 'standalone'
   /**
    * The theme of the Monaco Editor instance.
    * @default 'light'
@@ -117,6 +128,40 @@ const editorRef = useTemplateRef('editorRef')
 
 const editorTheme = computed<EditorThemes>(() => theme === 'dark' ? 'dark' : 'light')
 
+const realMonacoOptions = computed(() => {
+  if (appearance === 'standalone') {
+    const lineCountDigits = String(model.value.split('\n').length).length
+
+    return {
+      ...options,
+      // Standalone uses fixed layout values so user overrides are intentionally ignored.
+      // Monaco editor only supports vertical paddings.
+      padding: { top: PADDING_Y, bottom: PADDING_Y },
+      // Horizontal padding is not supported, so we increase the minimum chars for line numbers
+      // to create some space on the left when standalone.
+      lineNumbersMinChars: Math.max(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars, lineCountDigits) + 2,
+    }
+  }
+
+  return {
+    // Ensure standalone padding is cleared when switching back to embedded.
+    padding: { ...DEFAULT_MONACO_OPTIONS.padding },
+    lineNumbersMinChars: DEFAULT_MONACO_OPTIONS.lineNumbersMinChars,
+    // Embedded allows user overrides.
+    ...options,
+  }
+})
+
+const monacoEditor = useMonacoEditor(editorRef, {
+  language,
+  code: model,
+  theme: editorTheme.value,
+  monacoOptions: realMonacoOptions.value,
+  onReady: (editor) => {
+    emit('ready', editor)
+  },
+})
+
 /**
  * Computed property to determine if the loading overlay should be visible.
  * @returns {boolean}
@@ -129,16 +174,6 @@ const isLoadingVisible = computed<boolean>(() => loading || monacoEditor.editorS
 */
 const isEmptyVisible = computed<boolean>(() => !isLoadingVisible.value && monacoEditor.editorStates.editorStatus === 'ready' && !monacoEditor.editorStates.hasContent)
 
-const monacoEditor = useMonacoEditor(editorRef, {
-  language,
-  code: model,
-  theme: editorTheme.value,
-  monacoOptions: options,
-  onReady: (editor) => {
-    emit('ready', editor)
-  },
-})
-
 defineExpose({
   monacoEditor,
 })
@@ -147,6 +182,15 @@ defineExpose({
 watch(() => language, (newLang, oldLang) => {
   if (newLang === oldLang) return
   monacoEditor.setLanguage(newLang)
+})
+
+// update the editor options when the prop changes
+watch([monacoEditor.editor, realMonacoOptions], ([editor, options]) => {
+  if (editor && options) {
+    editor.updateOptions(options)
+  }
+}, {
+  deep: true,
 })
 </script>
 
@@ -172,6 +216,20 @@ watch(() => language, (newLang, oldLang) => {
 
   }
 
+  &.standalone {
+    border: var(--kui-border-width-10, $kui-border-width-10) solid var(--kui-color-border, $kui-color-border);
+    border-radius: var(--kui-border-radius-30, $kui-border-radius-30);
+    transition: border-color var(--kui-animation-duration-20, .2s) ease-in-out, box-shadow var(--kui-animation-duration-20, .2s) ease-in-out;
+
+    &:hover {
+      border-color: var(--kui-color-border-primary-weak, $kui-color-border-primary-weak);
+    }
+
+    &:focus-within {
+      border-color: var(--kui-color-border-primary, $kui-color-border-primary);
+      box-shadow: var(--kui-shadow-focus, $kui-shadow-focus);
+    }
+  }
 }
 
 .monaco-editor-target {

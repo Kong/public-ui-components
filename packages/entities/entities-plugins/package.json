@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-plugins",
-  "version": "9.148.4",
+  "version": "9.149.1",
   "type": "module",
   "main": "./dist/entities-plugins.umd.js",
   "module": "./dist/entities-plugins.es.js",
@@ -66,7 +66,7 @@
     "monaco-editor": "^0.55.1",
     "vue": "^3.5.27",
     "vue-router": "^4.6.4",
-    "zod": "^4.3.5"
+    "zod": "^4.3.6"
   },
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
