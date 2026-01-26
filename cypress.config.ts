@@ -1,16 +1,20 @@
 import { defineConfig } from 'cypress'
-import sharedViteConfig from './vite.config.shared'
 
 export default defineConfig({
   component: {
     devServer: {
       framework: 'vue',
       bundler: 'vite',
-      viteConfig: {
-        ...sharedViteConfig,
-        define: {
-          'process.env.VSCODE_TEXTMATE_DEBUG': false,
-        },
+      // Cypress 15.x early validation triggers Vite's deprecated CJS Node API
+      // Dynamic import avoids CJS path and loads in proper ESM context
+      viteConfig: async () => {
+        const sharedViteConfig = await import('./vite.config.shared')
+        return {
+          ...sharedViteConfig.default,
+          define: {
+            'process.env.VSCODE_TEXTMATE_DEBUG': false,
+          },
+        }
       },
     },
     supportFile: 'cypress/support/index.ts',
