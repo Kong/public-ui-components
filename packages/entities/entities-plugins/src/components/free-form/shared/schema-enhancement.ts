@@ -223,7 +223,7 @@ export function appendEntityChecksFromMetadata(
       const normalize = (c: EntityCheck) => {
         const fields = getFieldsFromCheck(c) ?? []
         const sorted = [...fields].slice().sort()
-        const kind = 'at_least_one_of' in c ? 'at_least_one_of' : 'mutually_required' in c ? 'mutually_required' : 'mutually_exclusive'
+        const kind = Object.keys(c)[0]
         return `${kind}:${sorted.join(',')}`
       }
 
