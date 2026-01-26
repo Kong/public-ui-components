@@ -145,7 +145,7 @@ function handleFormChange(formData: any) {
 watch(() => msgToDrWho.value, (newMessage) => {
   try {
     console.log('Posting message to dr-who:', newMessage)
-    postKonnectMessage(newMessage)
+    postKonnectMessage(toRaw(newMessage))
   } catch (e) {
     console.error('Failed to log message to dr-who:', e)
   }
