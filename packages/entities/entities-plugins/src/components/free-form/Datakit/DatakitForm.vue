@@ -44,6 +44,7 @@
         :editing="props.isEditing"
         @change="handleCodeChange"
         @error="handleCodeError"
+        @validation="handleCodeValidation"
       />
     </template>
 
@@ -80,9 +81,6 @@ import CodeEditor from './CodeEditor.vue'
 import { usePreferences } from './composables'
 import FlowEditor from './flow-editor/FlowEditor.vue'
 // import { DatakitConfigSchema } from './schema/strict'
-import {
-  DatakitConfigSchema as DatakitConfigCompatSchema,
-} from './schema/compat'
 
 const { t } = createI18n<typeof english>('en-us', english)
 
@@ -216,27 +214,12 @@ function getSchemaErrorMessage(error: ZodError): string {
     .join('; ')
 }
 
-function handleCodeChange(newConfig: unknown) {
+function handleCodeChange(_newConfig: unknown) {
   handleConfigChange()
 
   if (formConfig.app !== 'konnect') {
     return
   }
-
-  const uncheckedConfig = (newConfig as DatakitPluginData)?.config
-
-  // TODO: use strict validation and map back to the exact location of schema validation errors
-  // const { success, error } = DatakitConfigSchema.safeParse(uncheckedConfig)
-
-  const { success: compatSuccess, error: compatError } = DatakitConfigCompatSchema.safeParse(uncheckedConfig)
-  flowUnavailableReason.value = compatSuccess || !compatError ? '' : getSchemaErrorMessage(compatError)
-  flowAvailable.value = compatSuccess
-
-  // props.onValidityChange?.({
-  //   model: 'config',
-  //   valid: success,
-  //   error: success ? '' : getSchemaErrorMessage(error),
-  // })
 }
 
 function handleCodeError(msg: string) {
@@ -247,6 +230,38 @@ function handleCodeError(msg: string) {
     model: 'config',
     valid: false,
     error: msg,
+  })
+}
+
+function handleCodeValidation(payload: {
+  compatSuccess: boolean
+  compatError: ZodError | null
+  strictSuccess: boolean
+  strictError: ZodError | null
+}) {
+  if (formConfig.app === 'konnect') {
+    flowUnavailableReason.value = payload.compatSuccess || !payload.compatError
+      ? ''
+      : getSchemaErrorMessage(payload.compatError)
+    flowAvailable.value = payload.compatSuccess
+  }
+
+  if (payload.strictSuccess) {
+    props.onValidityChange?.({
+      model: 'config',
+      valid: true,
+    })
+    return
+  }
+
+  const errorMessage = payload.strictError
+    ? getSchemaErrorMessage(payload.strictError)
+    : ''
+
+  props.onValidityChange?.({
+    model: 'config',
+    valid: false,
+    error: errorMessage,
   })
 }
 

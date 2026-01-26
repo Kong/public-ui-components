@@ -1028,6 +1028,9 @@ importers:
       marked:
         specifier: ^14.1.4
         version: 14.1.4
+      yaml:
+        specifier: ^2.8.2
+        version: 2.8.2
     devDependencies:
       '@dagrejs/dagre':
         specifier: ^1.1.8

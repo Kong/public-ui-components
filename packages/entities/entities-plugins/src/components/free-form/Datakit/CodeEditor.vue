@@ -46,7 +46,7 @@
 import { shallowRef, toRaw } from 'vue'
 import { isEqual, omit } from 'lodash-es'
 import * as monaco from 'monaco-editor'
-import yaml, { JSON_SCHEMA } from 'js-yaml'
+import { LineCounter, parseDocument, stringify } from 'yaml'
 import { createI18n } from '@kong-ui-public/i18n'
 import { KAlert, KButton, KModal } from '@kong/kongponents'
 import { SparklesIcon } from '@kong/icons'
@@ -57,8 +57,12 @@ import english from '../../../locales/en.json'
 import { useFormShared } from '../shared/composables'
 import examples from './examples'
 import { extractors } from './config-extractors'
+import { DatakitConfigSchema as DatakitConfigCompatSchema } from './schema/compat'
+import { DatakitConfigSchema as DatakitConfigStrictSchema } from './schema/strict'
+import { buildPathIndex } from './code-editor/yaml-path-index'
+import { zodIssuesToMarkers } from './code-editor/zod-issue-markers'
 
-import type { YAMLException } from 'js-yaml'
+import type { ZodError } from 'zod'
 import type { DatakitPluginData } from './types'
 
 const { t } = createI18n<typeof english>('en-us', english)
@@ -72,6 +76,12 @@ defineProps<{
 const emit = defineEmits<{
   change: [config: unknown]
   error: [msg: string]
+  validation: [{
+    compatSuccess: boolean
+    compatError: ZodError | null
+    strictSuccess: boolean
+    strictError: ZodError | null
+  }]
 }>()
 
 const { getMessageFromError } = useErrors()
@@ -79,11 +89,15 @@ const { getMessageFromError } = useErrors()
 const editorRef = shallowRef<monaco.editor.IStandaloneCodeEditor | null>(null)
 
 const LINT_SOURCE = 'YAML Syntax'
+const COMPAT_SCHEMA_SOURCE = 'Datakit Schema (Compat)'
+const STRICT_SCHEMA_SOURCE = 'Datakit Schema (Strict)'
 
 function dumpYaml(config: unknown): string {
-  return yaml.dump(toRaw(config), {
-    schema: JSON_SCHEMA,
-    noArrayIndent: true,
+  return stringify(toRaw(config), {
+    indentSeq: false,
+    schema: 'yaml-1.1',
+    defaultKeyType: 'PLAIN',
+    defaultStringType: 'PLAIN',
   })
 }
 
@@ -109,42 +123,110 @@ function handleEditorReady(editor: monaco.editor.IStandaloneCodeEditor) {
   editorRef.value = editor
 
   editor.onDidChangeModelContent(() => {
-    try {
-      const config = yaml.load(editor.getValue() || '', {
-        schema: JSON_SCHEMA,
-        json: true,
-      })
+    const codeText = editor.getValue() || ''
+    const lineCounter = new LineCounter()
+    const doc = parseDocument(codeText, {
+      lineCounter,
+      schema: 'yaml-1.1',
+    })
 
-      if (typeof config !== 'object' || config === null) {
-        return
-      }
+    if (doc.errors.length > 0) {
+      const markers = doc.errors.map((error) => {
+        const message = error.message.split('\n')[0]
+        const pos = Array.isArray(error.pos)
+          ? error.pos
+          : typeof error.pos === 'number'
+            ? [error.pos, error.pos + 1]
+            : [0, 1]
+        const startOffset = Number.isFinite(pos?.[0]) ? pos?.[0] ?? 0 : 0
+        const endOffset = Number.isFinite(pos?.[1])
+          ? pos?.[1] ?? startOffset + 1
+          : startOffset + 1
+        const start = lineCounter.linePos(startOffset)
+        const end = lineCounter.linePos(endOffset)
+        const endColumn = end.line === start.line ? Math.max(end.col, start.col + 1) : end.col
 
-      monaco.editor.setModelMarkers(model, LINT_SOURCE, [])
-
-      setValue(config as DatakitPluginData)
-      emit('change', config)
-    } catch (error: unknown) {
-      const { message, mark } = error as YAMLException
-      const { line, column } = mark || { line: 0, column: 0 }
-
-      const simpleMessage = message.split('\n')[0] // Take the first line of the error message
-
-      const markers: monaco.editor.IMarkerData[] = [
-        {
-          startLineNumber: line + 1,
-          startColumn: column + 1,
-          endLineNumber: line + 1,
-          endColumn: column + 2,
-          message: simpleMessage,
+        return {
+          startLineNumber: start.line,
+          startColumn: start.col,
+          endLineNumber: end.line,
+          endColumn,
+          message,
           severity: monaco.MarkerSeverity.Error,
           source: LINT_SOURCE,
-        },
-      ]
+        }
+      })
 
       monaco.editor.setModelMarkers(model, LINT_SOURCE, markers)
+      monaco.editor.setModelMarkers(model, COMPAT_SCHEMA_SOURCE, [])
+      monaco.editor.setModelMarkers(model, STRICT_SCHEMA_SOURCE, [])
 
-      emit('error', simpleMessage)
+      emit('error', doc.errors[0]?.message.split('\n')[0] ?? 'Invalid YAML')
+      return
     }
+
+    monaco.editor.setModelMarkers(model, LINT_SOURCE, [])
+
+    const parsed = doc.toJS()
+
+    if (typeof parsed === 'object' && parsed !== null) {
+      setValue(parsed as DatakitPluginData)
+      emit('change', parsed)
+    }
+
+    const configValue = (parsed as DatakitPluginData | undefined)?.config
+    const compatResult = DatakitConfigCompatSchema.safeParse(configValue)
+    const strictResult = DatakitConfigStrictSchema.safeParse(configValue)
+
+    emit('validation', {
+      compatSuccess: compatResult.success,
+      compatError: compatResult.success ? null : compatResult.error,
+      strictSuccess: strictResult.success,
+      strictError: strictResult.success ? null : strictResult.error,
+    })
+
+    const index = buildPathIndex(doc.contents)
+
+    if (compatResult.success) {
+      monaco.editor.setModelMarkers(model, COMPAT_SCHEMA_SOURCE, [])
+    } else {
+      const issueMarkers = zodIssuesToMarkers(compatResult.error.issues, {
+        index,
+        lineCounter,
+        prefixPath: ['config'],
+        maxMarkers: 200,
+      })
+
+      const markers: monaco.editor.IMarkerData[] = issueMarkers.map((marker) => ({
+        ...marker.range,
+        message: marker.message,
+        severity: monaco.MarkerSeverity.Warning,
+        source: COMPAT_SCHEMA_SOURCE,
+      }))
+
+      monaco.editor.setModelMarkers(model, COMPAT_SCHEMA_SOURCE, markers)
+    }
+
+    if (strictResult.success) {
+      monaco.editor.setModelMarkers(model, STRICT_SCHEMA_SOURCE, [])
+      return
+    }
+
+    const issueMarkers = zodIssuesToMarkers(strictResult.error.issues, {
+      index,
+      lineCounter,
+      prefixPath: ['config'],
+      maxMarkers: 200,
+    })
+
+    const markers: monaco.editor.IMarkerData[] = issueMarkers.map((marker) => ({
+      ...marker.range,
+      message: marker.message,
+      severity: monaco.MarkerSeverity.Error,
+      source: STRICT_SCHEMA_SOURCE,
+    }))
+
+    monaco.editor.setModelMarkers(model, STRICT_SCHEMA_SOURCE, markers)
   })
 
   editor.onDidPaste((e) => {
@@ -194,15 +276,9 @@ function setExampleCode(example: keyof typeof examples) {
   const newCode = examples[example]
 
   try {
-    const config = yaml.load(code.value, {
-      schema: JSON_SCHEMA,
-      json: true,
-    }) as any
+    const config = parseDocument(code.value, { schema: 'yaml-1.1' }).toJS() as any
 
-    const exampleConfigJson = yaml.load(newCode, {
-      schema: JSON_SCHEMA,
-      json: true,
-    }) as any
+    const exampleConfigJson = parseDocument(newCode, { schema: 'yaml-1.1' }).toJS() as any
 
     if (typeof config === 'object' && config !== null && isEqual(config.config, exampleConfigJson)) return
 
