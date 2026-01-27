@@ -23,14 +23,16 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
         : selectors.selectItem(String(optionValue))
 
       // clear default value
-      cy.get(itemSelector).within(($el) => {
-        if ($el.find('button.selected').length > 0) {
-          cy.get('button').click(actionOptions.click)
-        }
-      })
+      if (isMulti) {
+        cy.get(itemSelector).within(($el) => {
+          if ($el.find('button.selected').length > 0) {
+            cy.get('button').click()
+          }
+        })
+      }
 
       if (values.includes(optionValue)) {
-        cy.get(itemSelector).click(actionOptions.click)
+        cy.get(itemSelector).click()
       }
     }
   }

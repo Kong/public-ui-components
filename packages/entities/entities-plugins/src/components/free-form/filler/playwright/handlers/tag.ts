@@ -6,7 +6,7 @@ export async function fillTag(option: HandlerOption<SetFieldSchema>): Promise<vo
   const { page, fieldKey, value } = option
 
   const values = Array.isArray(value) ? value : [value]
-  const selector = selectors.tag(fieldKey)
+  const selector = selectors.tagInput(fieldKey)
   const element = page.locator(selector)
 
   await element.fill(values.join(','))

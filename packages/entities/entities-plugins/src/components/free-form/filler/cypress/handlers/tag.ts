@@ -7,7 +7,7 @@ export function fillTag(option: HandlerOption<SetFieldSchema>): void {
   const { fieldKey, value, actionOptions = defaultActionOptions } = option
 
   const values = Array.isArray(value) ? value : [value]
-  const selector = selectors.tag(fieldKey)
+  const selector = selectors.tagInput(fieldKey)
 
   cy.get(selector).type(values.join(','), actionOptions.type)
 }

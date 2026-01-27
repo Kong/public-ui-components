@@ -35,6 +35,7 @@ export const selectors = {
 
   // StringArrayField
   tag: (path: string) => `[data-testid="ff-tag-${path}"]`,
+  tagInput: (path: string) => `[data-testid="ff-tag-${path}"] input`,
 
   // JsonField
   json: (path: string) => `[data-testid="ff-json-${path}"]`,

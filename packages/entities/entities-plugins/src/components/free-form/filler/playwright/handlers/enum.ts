@@ -21,9 +21,11 @@ export async function fillEnum(option: HandlerOption<StringFieldSchema | NumberL
         : selectors.selectItem(String(optionValue))
 
       // clear default value
-      const isSelected = await page.locator(`${itemSelector} button.selected`).count() > 0
-      if (isSelected) {
-        await page.locator(itemSelector).click()
+      if (isMulti) {
+        const isSelected = await page.locator(`${itemSelector} button.selected`).count() > 0
+        if (isSelected) {
+          await page.locator(itemSelector).click()
+        }
       }
 
       if (values.includes(optionValue)) {
