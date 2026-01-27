@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.149.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.149.2...@kong-ui-public/entities-plugins@9.149.3) (2026-01-27)
+
+
+### Bug Fixes
+
+* pass path in FreeFormAdapter ([#2841](https://github.com/Kong/public-ui-components/issues/2841)) ([5ff3913](https://github.com/Kong/public-ui-components/commit/5ff39131442ead4fcc49c282fa895bceafb842f4))
+
+
+
+
+
 ## [9.149.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.149.1...@kong-ui-public/entities-plugins@9.149.2) (2026-01-26)
 
 
