@@ -9,7 +9,7 @@ export function fillRecord(option: RecordHandlerOption): void {
   cy.get('body').then(($body) => {
     const hasSwitch = $body.find(objectSwitchSelector).length > 0
 
-    if (value === null || value === undefined && hasSwitch) {
+    if ((value === null || value === undefined) && hasSwitch) {
       // Disable the object via switch
       cy.get(objectSwitchSelector).uncheck({ force: true })
       return

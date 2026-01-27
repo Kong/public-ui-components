@@ -9,7 +9,7 @@ export async function fillRecord(option: RecordHandlerOption): Promise<void> {
 
   const hasSwitch = await page.locator(objectSwitchSelector).count() > 0
 
-  if (option.value === null || option.value === undefined && hasSwitch) {
+  if ((option.value === null || option.value === undefined) && hasSwitch) {
     // Disable the object via switch
     await page.locator(objectSwitchSelector).uncheck({ force: true })
     return
