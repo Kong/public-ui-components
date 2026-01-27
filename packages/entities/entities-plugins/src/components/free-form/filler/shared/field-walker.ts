@@ -40,17 +40,11 @@ export function getHandlerType(fieldSchema: UnionFieldSchema): HandlerType {
   if (isEnumField(fieldSchema)) return 'enum'
 
   switch (fieldSchema.type) {
-    case 'string': return 'string'
     case 'number':
     case 'integer': return 'number'
-    case 'boolean': return 'boolean'
-    case 'array': return 'array'
-    case 'record': return 'record'
-    case 'map': return 'map'
     case 'set': return isTagField(fieldSchema) ? 'tag' : 'enum'
-    case 'json': return 'json'
-    case 'foreign': return 'foreign'
-    default: throw new Error(`Unsupported field type: ${(fieldSchema as UnionFieldSchema).type}`)
+    default:
+      return fieldSchema.type
   }
 }
 

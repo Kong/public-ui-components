@@ -14,9 +14,10 @@ const config = mergeConfig(sharedViteConfig, defineConfig({
   })],
   build: {
     lib: {
-      entry: resolve(__dirname, './src/index.ts'),
       // The kebab-case name of the exposed global variable. MUST be in the format `kong-ui-public-{package-name}`
+      // Example: name: 'kong-ui-public-demo-component'
       name: `kong-ui-public-${sanitizedPackageName}`,
+      entry: resolve(__dirname, './src/index.ts'),
       fileName: (format) => `${sanitizedPackageName}.${format}.js`,
     },
     rollupOptions: {

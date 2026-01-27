@@ -98,11 +98,4 @@ filler/
 2. Implement handler in `cypress/handlers/` and `playwright/handlers/`
 3. Update `getHandlerType()` in `shared/field-walker.ts`
 4. Add case in `fillFieldByInfo()` in both `create-filler.ts` files
-
-### Testing
-
-```bash
-pnpm test:component:open
-```
-
-See `fill-form.cy.ts` for test examples.
+5. Add tests in `fill-form.cy.ts`
