@@ -45,5 +45,6 @@ if (error) {
   throw error
 }
 
-const fieldAttrs = useFieldAttrs(toRef(props, 'name'), props)
+// path stripped of the leading '$.'
+const fieldAttrs = useFieldAttrs(path, props)
 </script>
