@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.18.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.18.4...@kong-ui-public/entities-routes@3.18.5) (2026-01-26)
+
+
+### Bug Fixes
+
+* update exports field order in package.json files ([#2856](https://github.com/Kong/public-ui-components/issues/2856)) ([2ffc4ee](https://github.com/Kong/public-ui-components/commit/2ffc4ee18597ff0d19afd037a8679e0791dfbd03))
+
+
+
+
+
+## [3.18.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.18.3...@kong-ui-public/entities-routes@3.18.4) (2026-01-25)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.18.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.18.2...@kong-ui-public/entities-routes@3.18.3) (2026-01-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-routes
+
+
+
+
+
+## [3.18.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.18.1...@kong-ui-public/entities-routes@3.18.2) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2854](https://github.com/Kong/public-ui-components/issues/2854)) ([8db6a9b](https://github.com/Kong/public-ui-components/commit/8db6a9bfffb91a72a5c436cf2cfb8e2c5fdb66a2))
+
+
+
+
+
+## [3.18.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.18.0...@kong-ui-public/entities-routes@3.18.1) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.42.0 ([#2857](https://github.com/Kong/public-ui-components/issues/2857)) ([bb65b9e](https://github.com/Kong/public-ui-components/commit/bb65b9eea7489142268aee86d5cdb6de338762f9))
+
+
+
+
+
+# [3.18.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.17.24...@kong-ui-public/entities-routes@3.18.0) (2026-01-22)
+
+
+### Features
+
+* **entities-routes, entities-keys:** prepopulate name when create entity ([#2846](https://github.com/Kong/public-ui-components/issues/2846)) ([cbfefc1](https://github.com/Kong/public-ui-components/commit/cbfefc13488fc804a42c0dff65bb9289043ba7db))
+
+
+
+
+
 ## [3.17.24](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-routes@3.17.23...@kong-ui-public/entities-routes@3.17.24) (2026-01-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-routes

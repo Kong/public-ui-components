@@ -1,8 +1,10 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
-import { nextTick, reactive } from 'vue'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { nextTick, reactive, shallowRef } from 'vue'
 import MonacoEditor from './MonacoEditor.vue'
 import { KEmptyState } from '@kong/kongponents'
+import type { UseMonacoEditorOptions } from '../types'
+import { DEFAULT_MONACO_OPTIONS } from '../constants'
 
 // mock i18n
 vi.mock('../composables/useI18n', () => ({
@@ -20,21 +22,35 @@ const editorStates = reactive({
 })
 
 const mockSetLanguage = vi.fn()
+const mockUpdateOptions = vi.fn()
+let lastUseMonacoOptions: UseMonacoEditorOptions | null = null
 
 vi.mock('../composables/useMonacoEditor', () => ({
-  useMonacoEditor: (_target: any, options: any) => ({
-    editorStates,
-    setContent: (value: string) => {
+  useMonacoEditor: (_target: unknown, options: UseMonacoEditorOptions) => {
+    lastUseMonacoOptions = options
+    return {
+      editor: shallowRef({
+        updateOptions: mockUpdateOptions,
+      }),
+      editorStates,
+      setContent: (value: string) => {
       // Update the code ref that was passed to the composable
-      options.code.value = value
-      editorStates.hasContent = !!value
-      editorStates.editorStatus = 'ready'
-    },
-    setLanguage: mockSetLanguage,
-  }),
+        options.code.value = value
+        editorStates.hasContent = !!value
+        editorStates.editorStatus = 'ready'
+      },
+      setLanguage: mockSetLanguage,
+    }
+  },
 }))
 
 describe('MonacoEditor.vue', () => {
+  beforeEach(() => {
+    lastUseMonacoOptions = null
+    mockSetLanguage.mockClear()
+    mockUpdateOptions.mockClear()
+  })
+
   const mountComponent = (overrides: Record<string, any> = {}) =>
     mount(MonacoEditor, {
       props: { modelValue: '', ...overrides.props },
@@ -205,4 +221,102 @@ describe('MonacoEditor.vue', () => {
     // But the overlay should not be rendered
     expect(wrapper.find('[data-testid="monaco-editor-status-overlay-loading"]').exists()).toBe(false)
   })
+
+  it('should apply appearance classes on render', () => {
+    editorStates.editorStatus = 'ready'
+
+    const embedded = mountComponent()
+    expect(embedded.find('[data-testid="monaco-editor-container"]').classes()).toContain('embedded')
+
+    const standalone = mountComponent({ props: { modelValue: '', appearance: 'standalone' } })
+    expect(standalone.find('[data-testid="monaco-editor-container"]').classes()).toContain('standalone')
+  })
+
+  it('should use standalone defaults, then reset to embedded defaults when toggled', async () => {
+    editorStates.editorStatus = 'ready'
+
+    const code = 'line1\nline2'
+    const lineCountDigits = String(code.split('\n').length).length
+    const expectedMinChars = Math.max(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars, lineCountDigits) + 2
+    const wrapper = mountComponent({ props: { modelValue: code } })
+
+    await wrapper.setProps({ appearance: 'standalone' })
+    await nextTick()
+
+    const [standaloneOptions] = mockUpdateOptions.mock.calls[mockUpdateOptions.mock.calls.length - 1]
+    expect(standaloneOptions.lineNumbersMinChars).toBe(expectedMinChars)
+    expect(standaloneOptions.padding.top).toBeGreaterThan(0)
+    expect(standaloneOptions.padding.bottom).toBeGreaterThan(0)
+
+    await wrapper.setProps({ appearance: 'embedded', options: { readOnly: true } })
+    await nextTick()
+
+    const [embeddedOptions] = mockUpdateOptions.mock.calls[mockUpdateOptions.mock.calls.length - 1]
+    expect(embeddedOptions.readOnly).toBe(true)
+    expect(embeddedOptions.lineNumbersMinChars).toBe(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars)
+    expect(embeddedOptions.padding.top).toBe(DEFAULT_MONACO_OPTIONS.padding.top)
+    expect(embeddedOptions.padding.bottom).toBe(DEFAULT_MONACO_OPTIONS.padding.bottom)
+  })
+
+  it('should apply standalone defaults on initial mount', () => {
+    editorStates.editorStatus = 'ready'
+
+    const code = Array.from({ length: 1000 }, (_, i) => `line${i}`).join('\n')
+    const lineCountDigits = String(code.split('\n').length).length
+    const expectedMinChars = Math.max(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars, lineCountDigits) + 2
+    mountComponent({ props: { modelValue: code, appearance: 'standalone' } })
+
+    const options = lastUseMonacoOptions?.monacoOptions
+    expect(options?.lineNumbersMinChars).toBe(expectedMinChars)
+    expect(options?.padding?.top).toBeGreaterThan(0)
+    expect(options?.padding?.bottom).toBeGreaterThan(0)
+  })
+
+  it('should ignore user-provided padding and lineNumbersMinChars in standalone', () => {
+    editorStates.editorStatus = 'ready'
+
+    const code = 'line1\nline2'
+    const lineCountDigits = String(code.split('\n').length).length
+    const expectedMinChars = Math.max(DEFAULT_MONACO_OPTIONS.lineNumbersMinChars, lineCountDigits) + 2
+    const customPadding = { top: 12, bottom: 8 }
+    const customMinChars = 9
+    mountComponent({
+      props: {
+        modelValue: code,
+        appearance: 'standalone',
+        options: {
+          padding: customPadding,
+          lineNumbersMinChars: customMinChars,
+        },
+      },
+    })
+
+    const options = lastUseMonacoOptions?.monacoOptions
+    expect(options?.lineNumbersMinChars).toBe(expectedMinChars)
+    expect(options?.padding?.top).toBeGreaterThan(0)
+    expect(options?.padding?.bottom).toBeGreaterThan(0)
+  })
+
+  it('should allow user-provided padding and lineNumbersMinChars in embedded', () => {
+    editorStates.editorStatus = 'ready'
+
+    const customPadding = { top: 6, bottom: 4 }
+    const customMinChars = 12
+    mountComponent({
+      props: {
+        modelValue: 'line1\nline2',
+        appearance: 'embedded',
+        options: {
+          padding: customPadding,
+          lineNumbersMinChars: customMinChars,
+        },
+      },
+    })
+
+    const options = lastUseMonacoOptions?.monacoOptions
+    expect(options?.lineNumbersMinChars).toBe(customMinChars)
+    expect(options?.padding?.top).toBe(customPadding.top)
+    expect(options?.padding?.bottom).toBe(customPadding.bottom)
+  })
+
 })

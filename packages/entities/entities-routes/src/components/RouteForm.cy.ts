@@ -118,6 +118,9 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-methods').should('be.visible')
       cy.getTestId('route-form-hosts-input-1').should('be.visible')
 
+      // Name is prepopulated with pattern "new-route-<timestamp>"
+      cy.getTestId('route-form-name').invoke('val').should('match', /^new-route-\d+$/)
+
       cy.getTestId('add-paths').should('not.exist')
       cy.getTestId('add-hosts').should('not.exist')
     })
@@ -1075,6 +1078,9 @@ describe('<RouteForm />', { viewportHeight: 700, viewportWidth: 700 }, () => {
       cy.getTestId('route-form-strip-path').should('be.visible')
       cy.getTestId('route-form-methods').should('be.visible')
       cy.getTestId('route-form-hosts-input-1').should('be.visible')
+
+      // Name is prepopulated with pattern "new-route-<timestamp>"
+      cy.getTestId('route-form-name').invoke('val').should('match', /^new-route-\d+$/)
 
       cy.getTestId('add-paths').should('not.exist')
       cy.getTestId('add-hosts').should('not.exist')

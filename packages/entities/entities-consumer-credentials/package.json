@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-consumer-credentials",
-  "version": "3.6.45",
+  "version": "3.6.49",
   "type": "module",
   "main": "./dist/entities-consumer-credentials.umd.js",
   "module": "./dist/entities-consumer-credentials.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-consumer-credentials.es.js",
-      "require": "./dist/entities-consumer-credentials.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-consumer-credentials.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -23,8 +23,8 @@
   "peerDependencies": {
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.41.0",
-    "@kong/kongponents": "^9.49.8",
+    "@kong/icons": "^1.42.0",
+    "@kong/kongponents": "^9.50.0",
     "axios": "^1.13.2",
     "vue": ">= 3.3.13 < 4",
     "vue-router": "^4.6.4"
@@ -33,10 +33,10 @@
     "@kong-ui-public/entities-shared": "workspace:^",
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.2",
-    "@kong/icons": "^1.41.0",
-    "@kong/kongponents": "9.49.8",
+    "@kong/icons": "^1.42.0",
+    "@kong/kongponents": "9.50.0",
     "axios": "^1.13.2",
-    "vue": "^3.5.26",
+    "vue": "^3.5.27",
     "vue-router": "^4.6.4"
   },
   "scripts": {

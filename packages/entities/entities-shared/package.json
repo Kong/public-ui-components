@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.39.5",
+  "version": "3.39.9",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-shared.es.js",
-      "require": "./dist/entities-shared.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-shared.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -22,8 +22,8 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/icons": "^1.41.0",
-    "@kong/kongponents": "^9.49.8",
+    "@kong/icons": "^1.42.0",
+    "@kong/kongponents": "^9.50.0",
     "@shikijs/core": "^3.21.0",
     "@shikijs/engine-javascript": "^3.21.0",
     "axios": "^1.13.2",
@@ -34,13 +34,13 @@
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.2",
-    "@kong/icons": "^1.41.0",
-    "@kong/kongponents": "9.49.8",
+    "@kong/icons": "^1.42.0",
+    "@kong/kongponents": "9.50.0",
     "@shikijs/core": "^3.21.0",
     "@shikijs/engine-javascript": "^3.21.0",
     "axios": "^1.13.2",
     "shiki": "^3.21.0",
-    "vue": "^3.5.26",
+    "vue": "^3.5.27",
     "vue-router": "^4.6.4"
   },
   "scripts": {

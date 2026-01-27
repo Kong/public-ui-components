@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.7](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.5.6...@kong-ui-public/entities-plugins-icon@1.5.7) (2026-01-26)
+
+
+### Bug Fixes
+
+* update exports field order in package.json files ([#2856](https://github.com/Kong/public-ui-components/issues/2856)) ([2ffc4ee](https://github.com/Kong/public-ui-components/commit/2ffc4ee18597ff0d19afd037a8679e0791dfbd03))
+
+
+
+
+
+## [1.5.6](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.5.5...@kong-ui-public/entities-plugins-icon@1.5.6) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2854](https://github.com/Kong/public-ui-components/issues/2854)) ([8db6a9b](https://github.com/Kong/public-ui-components/commit/8db6a9bfffb91a72a5c436cf2cfb8e2c5fdb66a2))
+
+
+
+
+
 ## [1.5.5](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-icon@1.5.4...@kong-ui-public/entities-plugins-icon@1.5.5) (2026-01-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins-icon

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.12.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.12.1...@kong-ui-public/entities-plugins-metadata@1.12.2) (2026-01-26)
+
+
+### Bug Fixes
+
+* update exports field order in package.json files ([#2856](https://github.com/Kong/public-ui-components/issues/2856)) ([2ffc4ee](https://github.com/Kong/public-ui-components/commit/2ffc4ee18597ff0d19afd037a8679e0791dfbd03))
+
+
+
+
+
 ## [1.12.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins-metadata@1.12.0...@kong-ui-public/entities-plugins-metadata@1.12.1) (2026-01-14)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins-metadata

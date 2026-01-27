@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/document-viewer",
-  "version": "2.3.20",
+  "version": "2.3.23",
   "type": "module",
   "main": "./dist/document-viewer.umd.js",
   "module": "./dist/document-viewer.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/document-viewer.es.js",
-      "require": "./dist/document-viewer.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/document-viewer.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
@@ -38,16 +38,16 @@
   },
   "peerDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
-    "@kong/kongponents": "^9.49.8",
+    "@kong/kongponents": "^9.50.0",
     "vue": ">= 3.3.13 < 4"
   },
   "devDependencies": {
     "@kong-ui-public/i18n": "workspace:^",
     "@kong/design-tokens": "1.18.2",
-    "@kong/kongponents": "9.49.8",
+    "@kong/kongponents": "9.50.0",
     "@types/prismjs": "^1.26.5",
     "@vitejs/plugin-vue-jsx": "^4.2.0",
-    "vue": "^3.5.26"
+    "vue": "^3.5.27"
   },
   "dependencies": {
     "prismjs": "^1.30.0"

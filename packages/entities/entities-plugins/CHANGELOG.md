@@ -3,6 +3,96 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.149.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.149.1...@kong-ui-public/entities-plugins@9.149.2) (2026-01-26)
+
+
+### Bug Fixes
+
+* update exports field order in package.json files ([#2856](https://github.com/Kong/public-ui-components/issues/2856)) ([2ffc4ee](https://github.com/Kong/public-ui-components/commit/2ffc4ee18597ff0d19afd037a8679e0791dfbd03))
+
+
+
+
+
+## [9.149.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.149.0...@kong-ui-public/entities-plugins@9.149.1) (2026-01-26)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+# [9.149.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.148.4...@kong-ui-public/entities-plugins@9.149.0) (2026-01-26)
+
+
+### Features
+
+* **monaco-editor:** add standalone appearance ([#2840](https://github.com/Kong/public-ui-components/issues/2840)) ([4f582fd](https://github.com/Kong/public-ui-components/commit/4f582fd4cf684559c558ef80806850987cfc1f1c))
+
+
+
+
+
+## [9.148.4](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.148.3...@kong-ui-public/entities-plugins@9.148.4) (2026-01-25)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2863](https://github.com/Kong/public-ui-components/issues/2863)) ([21b16f7](https://github.com/Kong/public-ui-components/commit/21b16f7e606c235bf2b307be839c5c507b969291))
+
+
+
+
+
+## [9.148.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.148.2...@kong-ui-public/entities-plugins@9.148.3) (2026-01-24)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
+## [9.148.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.148.1...@kong-ui-public/entities-plugins@9.148.2) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies with stable versions ([#2854](https://github.com/Kong/public-ui-components/issues/2854)) ([8db6a9b](https://github.com/Kong/public-ui-components/commit/8db6a9bfffb91a72a5c436cf2cfb8e2c5fdb66a2))
+
+
+
+
+
+## [9.148.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.148.0...@kong-ui-public/entities-plugins@9.148.1) (2026-01-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @kong/icons to ^1.42.0 ([#2857](https://github.com/Kong/public-ui-components/issues/2857)) ([bb65b9e](https://github.com/Kong/public-ui-components/commit/bb65b9eea7489142268aee86d5cdb6de338762f9))
+
+
+
+
+
+# [9.148.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.147.3...@kong-ui-public/entities-plugins@9.148.0) (2026-01-22)
+
+
+### Features
+
+* **entities-plugins:** add support for ssl_verify in datakit call node ([#2852](https://github.com/Kong/public-ui-components/issues/2852)) ([a87f042](https://github.com/Kong/public-ui-components/commit/a87f042a95e547161790d9b5ea91b7fb7bd65201))
+
+
+
+
+
+## [9.147.3](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.147.2...@kong-ui-public/entities-plugins@9.147.3) (2026-01-22)
+
+**Note:** Version bump only for package @kong-ui-public/entities-plugins
+
+
+
+
+
 ## [9.147.2](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/entities-plugins@9.147.1...@kong-ui-public/entities-plugins@9.147.2) (2026-01-21)
 
 **Note:** Version bump only for package @kong-ui-public/entities-plugins
