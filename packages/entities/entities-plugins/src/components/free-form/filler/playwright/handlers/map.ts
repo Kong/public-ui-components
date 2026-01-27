@@ -8,11 +8,11 @@ export async function fillMap(option: HandlerOption<MapFieldSchema>): Promise<vo
   // Clear existing entries
   const removeNext = async () => {
     const removeBtnSelector = selectors.kvRemoveBtns(fieldKey)
-    const removeBtns = await page.locator(removeBtnSelector).elementHandles()
-    if (removeBtns.length === 0) {
+    const removeBtnCount = await page.locator(removeBtnSelector).count()
+    if (removeBtnCount === 0) {
       return
     }
-    await removeBtns[0].click()
+    await page.locator(removeBtnSelector).first().click()
     await removeNext()
   }
   await removeNext()

@@ -1,7 +1,7 @@
 import type { StringFieldSchema, NumberLikeFieldSchema, SetFieldSchema } from '../../../../../types/plugins/form-schema'
 import type { HandlerOption } from './types'
 import { selectors } from '../../shared/selectors'
-import { defaultActionOptions } from '../../shared/types'
+import { defaultActionOptions } from './types'
 import { isMultiEnumField } from '../../shared/schema-utils'
 
 export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFieldSchema | SetFieldSchema>): void {

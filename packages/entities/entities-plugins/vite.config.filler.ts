@@ -15,10 +15,9 @@ export default defineConfig({
     },
     rollupOptions: {
       external: [
-        // Cypress is external
         'cypress',
-        // Playwright is external
         '@playwright/test',
+        'lodash-es',
       ],
     },
   },

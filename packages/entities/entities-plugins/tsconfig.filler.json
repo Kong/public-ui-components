@@ -14,7 +14,8 @@
       "vite/client",
       "cypress",
       "cypress/vue",
-      "../../../cypress/support"
+      "../../../cypress/support",
+      "@playwright/test"
     ],
     "skipLibCheck": true
   },

@@ -1,7 +1,7 @@
 import type { JsonFieldSchema } from '../../../../../types/plugins/form-schema'
 import type { HandlerOption } from './types'
 import { selectors } from '../../shared/selectors'
-import { defaultActionOptions } from '../../shared/types'
+import { defaultActionOptions } from './types'
 
 export function fillJson(option: HandlerOption<JsonFieldSchema>): void {
   const { fieldKey, value, actionOptions = defaultActionOptions } = option

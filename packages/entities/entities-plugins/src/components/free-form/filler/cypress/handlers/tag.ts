@@ -1,7 +1,7 @@
 import type { SetFieldSchema } from '../../../../../types/plugins/form-schema'
 import type { HandlerOption } from './types'
 import { selectors } from '../../shared/selectors'
-import { defaultActionOptions } from '../../shared/types'
+import { defaultActionOptions } from './types'
 
 export function fillTag(option: HandlerOption<SetFieldSchema>): void {
   const { fieldKey, value, actionOptions = defaultActionOptions } = option

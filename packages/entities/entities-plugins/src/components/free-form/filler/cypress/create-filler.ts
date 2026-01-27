@@ -1,4 +1,4 @@
-import { handlers, type Handlers } from './handlers'
+import { handlers, type Handlers, type ActionOptions } from './handlers'
 import type {
   FormSchema,
   UnionFieldSchema,
@@ -10,7 +10,6 @@ import type {
   JsonFieldSchema,
   ForeignFieldSchema,
 } from '../../../../types/plugins/form-schema'
-import type { ActionOptions } from '../shared/types'
 import {
   createContext,
   walkFields,
