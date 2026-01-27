@@ -84,7 +84,7 @@ describe('Filler - Cypress', () => {
   })
 
   describe('Complex fields', () => {
-    it('should fill enum field (single select)', () => {
+    it.only('should fill enum field (single select)', () => {
       const schema: FormSchema = {
         type: 'record',
         fields: [

@@ -9,10 +9,10 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
 
   const isMulti = isMultiEnumField(fieldSchema)
   const values = isMulti ? (Array.isArray(value) ? value : [value]) : [value]
-  cy.log('isMulti', String(isMulti))
 
   // Click to open dropdown
   const fieldSelector = selectors.field(fieldKey)
+  cy.get(fieldSelector).should('be.visible').scrollIntoView()
   cy.get(fieldSelector).click(actionOptions.click)
 
   // Select each value within the dropdown
@@ -26,13 +26,13 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
       if (isMulti) {
         cy.get(itemSelector).within(($el) => {
           if ($el.find('button.selected').length > 0) {
-            cy.get('button').click()
+            cy.get('button').click() // Value can't be selected when force: true is set, not sure why
           }
         })
       }
 
       if (values.includes(optionValue)) {
-        cy.get(itemSelector).click()
+        cy.get(itemSelector).click() // Value can't be selected when force: true is set, not sure why
       }
     }
   }
