@@ -217,12 +217,30 @@ export function appendEntityChecksFromMetadata(
   enhancedSchema.fields = enhancedSchema.fields.map(field => {
     const fieldName = Object.keys(field)[0]
     if (fieldName === 'config') {
+      // Merge and dedupe existing and additional checks
+      const existing: EntityCheck[] = field.config.entity_checks || []
+
+      const normalize = (c: EntityCheck) => {
+        const fields = getFieldsFromCheck(c) ?? []
+        const sorted = [...fields].slice().sort()
+        const kind = Object.keys(c)[0]
+        return `${kind}:${sorted.join(',')}`
+      }
+
+      const seen = new Set<string>(existing.map(normalize))
+      const filteredAdditions = additionalEntityChecks.filter(c => {
+        const key = normalize(c)
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      })
+
       return {
         config: {
           ...field.config,
           entity_checks: [
-            ...(field.config.entity_checks || []),
-            ...additionalEntityChecks,
+            ...existing,
+            ...filteredAdditions,
           ],
         },
       }

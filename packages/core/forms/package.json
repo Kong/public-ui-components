@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/forms",
-  "version": "4.20.33",
+  "version": "4.20.34",
   "type": "module",
   "main": "./dist/forms.umd.js",
   "module": "./dist/forms.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/forms.es.js",
-      "require": "./dist/forms.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/forms.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

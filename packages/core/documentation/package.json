@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/documentation",
-  "version": "1.4.48",
+  "version": "1.4.49",
   "type": "module",
   "main": "./dist/documentation.umd.js",
   "module": "./dist/documentation.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/documentation.es.js",
-      "require": "./dist/documentation.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/documentation.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

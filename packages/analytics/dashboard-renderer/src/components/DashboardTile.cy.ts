@@ -21,6 +21,18 @@ describe('<DashboardTile />', () => {
     },
   }
 
+  const mockGoapTileDefinition: TileDefinition = {
+    chart: {
+      type: 'timeseries_line',
+      chart_title: 'Test Chart',
+    },
+    query: {
+      datasource: 'goap_event_gateway',
+      metrics: [],
+      filters: [],
+    },
+  }
+
   const mockTileDefinitionWithTimerange: TileDefinition = {
     ...mockTileDefinition,
     query: {
@@ -609,7 +621,7 @@ describe('<DashboardTile />', () => {
 
       cy.mount(DashboardTile, {
         props: {
-          definition: mockTileDefinition,
+          definition: cacheBustTile(mockTileDefinition),
           context: mockContext,
           tileId: 1,
           queryReady: true,
@@ -681,6 +693,48 @@ describe('<DashboardTile />', () => {
           expect(payload.query.limit).to.equal(undefined)
         })
     })
+
+    it("doesn't call queryFn with increased limit when using goap datasource", () => {
+      const queryFn = cy.stub().as('queryFn').callsFake(() => {
+        return Promise.resolve(
+          generateSingleMetricTimeSeriesData(
+            { name: 'TotalRequests', unit: 'count' },
+            { status_code: ['request_count'] as string[] },
+            { start, end },
+          ) as ExploreResultV4,
+        )
+      })
+
+      cy.mount(DashboardTile, {
+        props: {
+          definition: cacheBustTile(mockGoapTileDefinition),
+          context: mockContext,
+          queryReady: true,
+          refreshCounter: 0,
+          tileId: 1,
+        },
+        global: {
+          provide: {
+            [INJECT_QUERY_PROVIDER]: { ...mockQueryProvider, queryFn },
+          },
+        },
+      })
+
+      cy.getTestId('kebab-action-menu-1').click()
+      cy.getTestId('chart-csv-export-1').click()
+      cy.getTestId('csv-export-modal').find('.vitals-table').should('exist')
+
+      cy.get('@queryFn').should('have.been.calledOnce')
+        .then((stub) => {
+          // @ts-ignore getCall does exist. cypress being cypress
+          const payload = stub.getCall(0).args[0]
+
+          expect(payload).to.have.property('datasource', 'goap_event_gateway')
+          expect(payload).to.have.property('query')
+          expect(payload.query.limit).to.equal(undefined)
+        })
+    })
+
 
     it('handles deferred loading', () => {
       const queryFn = cy.stub().as('queryFn').callsFake(() => {

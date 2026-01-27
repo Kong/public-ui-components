@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/analytics-geo-map",
-  "version": "1.4.56",
+  "version": "1.4.57",
   "type": "module",
   "main": "./dist/vitals-geo-map.umd.js",
   "module": "./dist/vitals-geo-map.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/vitals-geo-map.es.js",
-      "require": "./dist/vitals-geo-map.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/vitals-geo-map.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

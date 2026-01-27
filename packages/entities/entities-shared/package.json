@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-shared",
-  "version": "3.39.8",
+  "version": "3.39.9",
   "type": "module",
   "main": "./dist/entities-shared.umd.js",
   "module": "./dist/entities-shared.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-shared.es.js",
-      "require": "./dist/entities-shared.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-shared.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

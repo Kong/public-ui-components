@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-data-plane-nodes",
-  "version": "0.5.48",
+  "version": "0.5.49",
   "type": "module",
   "main": "./dist/entities-data-plane-nodes.umd.js",
   "module": "./dist/entities-data-plane-nodes.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-data-plane-nodes.es.js",
-      "require": "./dist/entities-data-plane-nodes.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-data-plane-nodes.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

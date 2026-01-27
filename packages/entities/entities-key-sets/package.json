@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-key-sets",
-  "version": "3.9.48",
+  "version": "3.9.49",
   "type": "module",
   "main": "./dist/entities-key-sets.umd.js",
   "module": "./dist/entities-key-sets.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-key-sets.es.js",
-      "require": "./dist/entities-key-sets.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-key-sets.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

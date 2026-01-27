@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/entities-certificates",
-  "version": "3.11.49",
+  "version": "3.11.50",
   "type": "module",
   "main": "./dist/entities-certificates.umd.js",
   "module": "./dist/entities-certificates.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/entities-certificates.es.js",
-      "require": "./dist/entities-certificates.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/entities-certificates.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

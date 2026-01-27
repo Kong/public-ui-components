@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.1](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.10.0...@kong-ui-public/monaco-editor@0.10.1) (2026-01-26)
+
+
+### Bug Fixes
+
+* update exports field order in package.json files ([#2856](https://github.com/Kong/public-ui-components/issues/2856)) ([2ffc4ee](https://github.com/Kong/public-ui-components/commit/2ffc4ee18597ff0d19afd037a8679e0791dfbd03))
+
+
+
+
+
 # [0.10.0](https://github.com/Kong/public-ui-components/compare/@kong-ui-public/monaco-editor@0.9.8...@kong-ui-public/monaco-editor@0.10.0) (2026-01-26)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/portal-analytics-bridge",
-  "version": "0.3.42",
+  "version": "0.3.43",
   "type": "module",
   "main": "./dist/portal-vitals-bridge.umd.js",
   "module": "./dist/portal-vitals-bridge.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/portal-vitals-bridge.es.js",
-      "require": "./dist/portal-vitals-bridge.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/portal-vitals-bridge.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"

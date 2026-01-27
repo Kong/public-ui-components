@@ -1,6 +1,6 @@
 {
   "name": "@kong-ui-public/misc-widgets",
-  "version": "2.3.22",
+  "version": "2.3.23",
   "type": "module",
   "main": "./dist/misc-widgets.umd.js",
   "module": "./dist/misc-widgets.es.js",
@@ -10,9 +10,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/misc-widgets.es.js",
-      "require": "./dist/misc-widgets.umd.js",
-      "types": "./dist/types/index.d.ts"
+      "require": "./dist/misc-widgets.umd.js"
     },
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
