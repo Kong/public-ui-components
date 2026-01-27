@@ -12,7 +12,7 @@ export function fillEnum(option: HandlerOption<StringFieldSchema | NumberLikeFie
 
   // Click to open dropdown
   const fieldSelector = selectors.field(fieldKey)
-  cy.get(fieldSelector).should('be.visible').scrollIntoView()
+  cy.get(fieldSelector).scrollIntoView()
   cy.get(fieldSelector).click(actionOptions.click)
 
   // Select each value within the dropdown
