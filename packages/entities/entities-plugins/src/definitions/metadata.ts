@@ -568,6 +568,14 @@ export const PLUGIN_METADATA: Record<string, Omit<PluginMetaData<I18nMessageSour
     descriptionKey: 'plugins.meta.upstream-oauth.description',
     nameKey: 'plugins.meta.upstream-oauth.name',
     ...PLUGIN_GROUP_AND_SCOPE_MAP['upstream-oauth'],
+    freeformRenderRules: {
+      bundles: [
+        ['config.cache.strategy', 'config.cache.redis'],
+      ],
+      dependencies: {
+        'config.cache.redis': ['config.cache.strategy', 'redis'],
+      },
+    },
   },
   'confluent': {
     descriptionKey: 'plugins.meta.confluent.description',
