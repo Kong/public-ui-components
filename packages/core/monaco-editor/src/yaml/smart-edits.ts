@@ -109,6 +109,14 @@ function handleColon(
   const schemaKind = getSchemaKind(
     getSchemaAtPath(schema, ctx.path, doc.data, { discriminatedUnion: options.discriminatedUnion }),
   )
+  const valueSchema = getSchemaAtPath(
+    schema,
+    ctx.path,
+    doc.data,
+    { discriminatedUnion: options.discriminatedUnion },
+  )
+  const enumValues = getEnumValues(valueSchema)
+  const hasValueSuggestions = enumValues.some((value) => value !== null)
 
   const lineText = model.getLineContent(position.lineNumber)
   const colonIndex = position.column - 1
@@ -124,7 +132,9 @@ function handleColon(
       ])
       editor.setPosition(new monacoApi.Position(position.lineNumber, position.column + 1))
     }
-    editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+    if (hasValueSuggestions) {
+      editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+    }
     return
   }
 
@@ -141,7 +151,7 @@ function handleColon(
       },
     ])
   }
-  editor.trigger('yaml-smart-edit', 'editor.action.triggerSuggest', null)
+  // For non-scalar values, let Enter/newline handling decide when to suggest.
 }
 
 function handleEnter(
@@ -268,6 +278,36 @@ export function registerYamlSmartEdits(
           isApplying = false
         }
       })
+    }))
+
+    disposables.push(model.onDidChangeContent((event) => {
+      if (isApplying) return
+      const change = event.changes[event.changes.length - 1]
+      if (!change) return
+      if (/[\r\n]/.test(change.text)) return
+      if (!change.text.includes(' ')) return
+      const model = editor.getModel()
+      if (!model) return
+      const endOffset = change.rangeOffset + change.text.length
+      const position = model.getPositionAt(endOffset)
+      const lineText = model.getLineContent(position.lineNumber)
+      const prefix = lineText.slice(0, Math.max(0, position.column - 1))
+      const match = prefix.match(/:\s{2,}$/)
+      if (!match) return
+      const excess = match[0].length - 2
+      if (excess <= 0) return
+      const startColumn = Math.max(1, position.column - excess)
+      isApplying = true
+      try {
+        editor.executeEdits('yaml-smart-edit', [
+          {
+            range: new monacoApi.Range(position.lineNumber, startColumn, position.lineNumber, position.column),
+            text: '',
+          },
+        ])
+      } finally {
+        isApplying = false
+      }
     }))
 
     disposables.push(model.onDidChangeContent((event) => {

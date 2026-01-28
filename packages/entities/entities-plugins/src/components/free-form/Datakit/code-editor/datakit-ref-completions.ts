@@ -101,6 +101,10 @@ export function getDatakitRefSuggestions(
   const insertTextPrefix = linePrefix.endsWith(':') ? ' ' : ''
 
   if (isBranchPath(yamlPath)) {
+    const linePrefix = model.getLineContent(position.lineNumber).slice(0, position.column - 1)
+    if (/\.[A-Za-z0-9_-]*$/.test(linePrefix)) {
+      return []
+    }
     const names = nodeNames
       .filter((name) => !ioIndex.implicitNames.includes(name))
       .filter((name) => !currentNodeName || name !== currentNodeName)

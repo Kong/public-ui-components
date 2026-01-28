@@ -526,8 +526,8 @@ const CacheRedisSchema = z
 
 export const CacheSchema = z.object({
   strategy: z.enum(['memory', 'redis']).nullish(),
-  memory: CacheMemorySchema,
-  redis: CacheRedisSchema,
+  memory: CacheMemorySchema.nullish(),
+  redis: CacheRedisSchema.nullish(),
 })
 
 export const ResourcesSchema = z.object({

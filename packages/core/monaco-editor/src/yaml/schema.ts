@@ -144,14 +144,95 @@ function getDiscriminatorCandidates(
   return entries
 }
 
-function branchMatches(schema: JsonSchema, data: unknown, root: JsonSchema): boolean {
+function getRequiredKeys(schema: JsonSchema, root: JsonSchema): Set<string> {
+  const resolved = deref(schema, root)
+  const required = Array.isArray(resolved.required)
+    ? resolved.required.filter((key): key is string => typeof key === 'string')
+    : []
+  return new Set(required)
+}
+
+function pickDiscriminatorKey(
+  branches: JsonSchema[],
+  root: JsonSchema,
+): string | null {
+  const total = branches.length
+  const stats = new Map<string, {
+    present: number
+    required: number
+    totalValues: number
+    distinct: Set<string | number | boolean | null>
+  }>()
+
+  for (const branch of branches) {
+    const resolved = deref(branch, root)
+    const props = isObject(resolved.properties) ? (resolved.properties as Record<string, JsonSchema>) : {}
+    const required = getRequiredKeys(resolved, root)
+    for (const [key, value] of Object.entries(props)) {
+      if (!isObject(value)) continue
+      const allowed = getAllowedValues(value as JsonSchema, root)
+      if (allowed.length === 0) continue
+      const entry = stats.get(key) ?? {
+        present: 0,
+        required: 0,
+        totalValues: 0,
+        distinct: new Set(),
+      }
+      entry.present += 1
+      if (required.has(key)) entry.required += 1
+      entry.totalValues += allowed.length
+      for (const v of allowed) {
+        entry.distinct.add(v)
+      }
+      stats.set(key, entry)
+    }
+  }
+
+  let bestKey: string | null = null
+  let bestScore = -1
+  let bestCoverage = 0
+  let bestDistinctRatio = 0
+
+  for (const [key, entry] of stats) {
+    if (entry.present < 2) continue
+    const coverage = entry.present / total
+    const requiredCoverage = entry.required / total
+    const distinctRatio = entry.totalValues > 0 ? entry.distinct.size / entry.totalValues : 0
+    const score = coverage * 10 + requiredCoverage * 2 + distinctRatio * 5
+    if (
+      score > bestScore ||
+      (score === bestScore && coverage > bestCoverage) ||
+      (score === bestScore && coverage === bestCoverage && distinctRatio > bestDistinctRatio)
+    ) {
+      bestKey = key
+      bestScore = score
+      bestCoverage = coverage
+      bestDistinctRatio = distinctRatio
+    }
+  }
+
+  return bestKey
+}
+
+function branchMatches(
+  schema: JsonSchema,
+  data: unknown,
+  root: JsonSchema,
+  discriminatorKey: string | null,
+): boolean {
   if (!isObject(data)) return false
+  if (discriminatorKey) {
+    if (!(discriminatorKey in data)) return false
+    const allowed = getPropertyAllowedValues(schema, root, discriminatorKey)
+    if (!allowed.length) return false
+    const value = (data as Record<string, unknown>)[discriminatorKey]
+    return allowed.includes(value as any)
+  }
+
   const candidates = getDiscriminatorCandidates(schema, root)
-  const typeCandidates = candidates.filter((candidate) => candidate.key === 'type')
-  const effectiveCandidates = typeCandidates.length ? typeCandidates : candidates
-  if (effectiveCandidates.length === 0) return false
+  if (candidates.length === 0) return false
   let matched = false
-  for (const candidate of effectiveCandidates) {
+  for (const candidate of candidates) {
     if (!(candidate.key in data)) continue
     const value = (data as Record<string, unknown>)[candidate.key]
     if (candidate.allowed.includes(value as any)) {
@@ -200,7 +281,8 @@ function collectObjectSchema(
       return { properties: baseProps, required: baseRequired }
     }
 
-    const matching = objectBranches.filter((branch) => branchMatches(branch, data, root))
+    const discriminatorKey = pickDiscriminatorKey(objectBranches, root)
+    const matching = objectBranches.filter((branch) => branchMatches(branch, data, root, discriminatorKey))
     if (matching.length === 1) {
       const branch = matching[0]
       const branchInfo = collectObjectSchema(branch, root, data, opts)
