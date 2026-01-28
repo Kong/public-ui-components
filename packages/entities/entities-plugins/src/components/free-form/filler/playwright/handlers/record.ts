@@ -11,14 +11,25 @@ export async function fillRecord(option: RecordHandlerOption): Promise<void> {
 
   if ((option.value === null || option.value === undefined) && hasSwitch) {
     // Disable the object via switch
-    await page.locator(objectSwitchSelector).uncheck({ force: true })
+    await page
+      .locator(objectSwitchSelector)
+      .locator('..')
+      .locator('[data-testid="switch-control"]')
+      .click({ force: true })
     return
   }
 
   if (hasSwitch) {
     // Enable the object via switch
-    await page.locator(objectSwitchSelector).check({ force: true })
+    await page
+      .locator(objectSwitchSelector)
+      .locator('..')
+      .locator('[data-testid="switch-control"]')
+      .click({ force: true })
   }
+
+  // eslint-disable-next-line promise/param-names
+  await new Promise(r => setTimeout(r, 300)) // wait for animation
 
   // Fill children fields
   await onFillChildren()

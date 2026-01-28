@@ -29,11 +29,9 @@ export async function fillMap(option: HandlerOption<MapFieldSchema>): Promise<vo
   for (let i = 0; i < entries.length; i++) {
     const [key, val] = entries[i]
 
-    if (i > 0) {
-      // Click add button for additional entries
-      const addBtnSelector = selectors.kvAddBtn(fieldKey)
-      await page.locator(addBtnSelector).click()
-    }
+    // Click add button for additional entries
+    const addBtnSelector = selectors.kvAddBtn(fieldKey)
+    await page.locator(addBtnSelector).click()
 
     // Fill key
     const keySelector = selectors.kvKey(fieldKey, i)

@@ -70,7 +70,8 @@
     "@kong/design-tokens": "1.18.2",
     "@kong/icons": "^1.42.0",
     "@kong/kongponents": "9.50.0",
-    "@playwright/test": "^1.57.0",
+    "@playwright/experimental-ct-vue": "^1.58.0",
+    "@playwright/test": "^1.58.0",
     "@shikijs/core": "^3.21.0",
     "@shikijs/engine-javascript": "^3.21.0",
     "@shikijs/langs": "^3.21.0",
@@ -89,6 +90,7 @@
   "scripts": {
     "dev": "cross-env USE_SANDBOX=true vite",
     "build": "run-s typecheck build:package build:types build:endpoints build:filler",
+    "postinstall": "playwright install chromium",
     "build:package": "vite build -m production",
     "build:analyzer": "BUILD_VISUALIZER='entities/entities-plugins' vite build -m production",
     "build:types": "vue-tsc -p './tsconfig.build.json' --emitDeclarationOnly",
@@ -101,10 +103,13 @@
     "stylelint": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}'",
     "stylelint:fix": "stylelint --allow-empty-input './src/**/*.{css,scss,sass,less,styl,vue}' --fix",
     "typecheck": "vue-tsc -p './tsconfig.build.json' --noEmit",
-    "test:component": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:component": "run-s test:cy test:pw",
     "test:component:open": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress open --component -b chrome --project '../../../.'",
     "test:unit": "cross-env FORCE_COLOR=1 vitest run",
-    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui"
+    "test:unit:open": "cross-env FORCE_COLOR=1 vitest --ui",
+    "test:cy": "BABEL_ENV=cypress cross-env FORCE_COLOR=1 cypress run --component -b chrome --spec './src/**/*.cy.ts' --project '../../../.'",
+    "test:pw": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts",
+    "test:pw:open": "cross-env FORCE_COLOR=1 playwright test -c playwright.config.ts --ui"
   },
   "repository": {
     "type": "git",
